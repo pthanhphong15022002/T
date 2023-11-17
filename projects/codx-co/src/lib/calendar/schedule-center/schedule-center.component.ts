@@ -41,9 +41,9 @@ export class ScheduleCenterComponent
   fields2 = {
     IdField: 'resourceID',
   };
-  btnAdd = {
+  btnAdd = [{
     id: 'btnAdd',
-  };
+  }];
   dayoff: any;
   calendarID = 'STD';
   schedule_center: any;

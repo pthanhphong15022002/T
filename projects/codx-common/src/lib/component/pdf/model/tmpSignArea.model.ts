@@ -27,6 +27,7 @@ export class tmpSignArea {
   modifiedBy: string;
   stepNo: number;
   recID?: string;
+  objectID: string;
 }
 
 export class tmpAreaName {

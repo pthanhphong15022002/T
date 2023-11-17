@@ -37,7 +37,7 @@ export class ReportinglineComponent extends UIComponent {
   @ViewChild('orgChart') orgChart: ReportinglineOrgChartComponent;
   @ViewChild('searchBar') searchBar: CodxSearchBarComponent;
   views: Array<ViewModel> = [];
-  button?: ButtonModel;
+  button?: ButtonModel[];
   dialog!: DialogRef;
   moreFuncs: Array<ButtonModel> = [];
   employees: any = [];
@@ -105,9 +105,9 @@ export class ReportinglineComponent extends UIComponent {
     this.request.autoLoad = false;
     this.request.parentIDField = 'ReportTo';
 
-    this.button = {
+    this.button = [{
       id: 'btnAdd',
-    };
+    }];
     this.views = [
       {
         id: '1',

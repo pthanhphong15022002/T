@@ -22,7 +22,7 @@ import { CodxShareService } from 'projects/codx-share/src/lib/codx-share.service
 })
 export class EmployeeListComponent extends UIComponent {
   views: Array<ViewModel> = [];
-  button: ButtonModel = null;
+  button: ButtonModel[] = null;
   columnsGrid = [];
   itemSelected: any;
   sysMoreFunc: any[] = [];
@@ -72,7 +72,7 @@ export class EmployeeListComponent extends UIComponent {
       // xử lý ẩn hiện button thêm trên toolbar
       this.funcID == 'HRT03a2'
         ? (this.button = null)
-        : (this.button = { id: 'btnAdd' });
+        : (this.button = [{ id: 'btnAdd' }]);
       this.getFunction(this.funcID);
     });
     // get more funtion hệ thống

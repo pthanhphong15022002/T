@@ -56,7 +56,7 @@ export class StatusCodeComponent extends UIComponent implements OnInit {
   columnGrids = [];
   arrFieldIsVisible: any[];
 
-  button: ButtonModel;
+  button: ButtonModel[];
   dataSelected: any;
   gridViewSetup: any;
   // const set value
@@ -78,9 +78,9 @@ export class StatusCodeComponent extends UIComponent implements OnInit {
 
   onInit(): void {
     // this.afterLoad();
-    this.button = {
+    this.button = [{
       id: this.btnAdd,
-    };
+    }];
   }
 
   ngAfterViewInit(): void {

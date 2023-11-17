@@ -37,11 +37,11 @@ export class CashreceiptsComponent extends UIComponent {
   legalName: any; //? tên công ty
   dataDefault: any; //? data default của phiếu
   hideFields: Array<any> = []; //? array field được ẩn lấy từ journal
-  button: ButtonModel = {
+  button: ButtonModel[] = [{
     //? nút thêm phiếu
     id: 'btnAdd',
     icon: 'icon-i-file-earmark-plus',
-  };
+  }];
   bhLogin: boolean = false;
   optionSidebar: SidebarModel = new SidebarModel();
   bankPayID: any;

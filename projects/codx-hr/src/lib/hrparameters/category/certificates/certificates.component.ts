@@ -16,7 +16,7 @@ export class CertificatesComponent implements OnInit {
   @ViewChild('itemStopCheck', { static: true }) itemStopCheck: TemplateRef<any>;
 
   views: Array<ViewModel> = [];
-  button?: ButtonModel;
+  button?: ButtonModel[];
   itemSelected: any;
 
 

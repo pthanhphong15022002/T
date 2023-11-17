@@ -91,7 +91,7 @@ export class SignatureComponent implements OnInit, AfterViewInit {
     this.formModel = this.viewBase?.formModel;
   }
 
-  button: ButtonModel;
+  button: ButtonModel[];
   funcID: string;
   service = 'ES';
   assemblyName = 'ES';
@@ -107,9 +107,9 @@ export class SignatureComponent implements OnInit, AfterViewInit {
     this.viewBase.dataService.methodSave = 'AddNewAsync';
     this.viewBase.dataService.methodUpdate = 'EditAsync';
 
-    this.button = {
+    this.button = [{
       id: 'btnAdd',
-    };
+    }];
 
     this.cr.detectChanges();
   }

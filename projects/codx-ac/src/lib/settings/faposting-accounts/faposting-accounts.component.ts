@@ -37,9 +37,9 @@ export class FAPostingAccountsComponent
   menuItems: Array<any> = [];
   selectedValue: string;
   defaultPostType: string;
-  btnAdd = {
+  btnAdd = [{
     id: 'btnAdd',
-  };
+  }];
   functionName: string;
 
   constructor(inject: Injector) {

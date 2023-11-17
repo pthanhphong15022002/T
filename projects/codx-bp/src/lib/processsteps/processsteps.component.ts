@@ -70,7 +70,7 @@ export class ProcessStepsComponent
   modelResource: ResourceModel;
   resource: ResourceModel;
   views: Array<ViewModel> = [];
-  button?: ButtonModel;
+  button?: ButtonModel[];
   moreFuncs: Array<ButtonModel> = [];
   dialog!: DialogRef;
   user: any;
@@ -213,10 +213,10 @@ export class ProcessStepsComponent
         return menu;
       });
     }
-    this.button = {
+    this.button = [{
       id: 'btnAdd',
       items: items,
-    };
+    }];
     // this.childFunc.forEach((obj) => {
     //   if (obj.id != 'P') this.childFuncOfP.push(obj);
     // });
@@ -724,7 +724,7 @@ export class ProcessStepsComponent
     this.parentID = '';
     if (evt.id == 'btnAdd') {
       this.stepType = 'P';
-      var p = this.button.items.find((x) => (x.id = this.stepType));
+      var p = this.button[0].items.find((x) => (x.id = this.stepType));
       if (!p) return;
       this.titleAction =
         evt.text +
@@ -867,7 +867,7 @@ export class ProcessStepsComponent
   }
 
   getTitleAction(action, stepType): string {
-    var menu = this.button.items.find((x) => x.id == stepType);
+    var menu = this.button[0].items.find((x) => x.id == stepType);
     if (!menu) return action;
     return (
       action +
@@ -1245,7 +1245,7 @@ export class ProcessStepsComponent
   }
 
   showIconByStepType(stepType) {
-    var type = this.button?.items.find((x) => x.id == stepType);
+    var type = this.button[0].items.find((x) => x.id == stepType);
     return type?.icon;
   }
   checkReferencesByStepType(data, stepType): boolean {

@@ -86,7 +86,7 @@ export class IncommingComponent
   public objectType = 'OD_Dispatches';
   recID: any;
   dialog!: DialogRef;
-  button?: ButtonModel;
+  button?: ButtonModel[];
   request: ResourceModel;
   resourceKanban?: ResourceModel;
   userPermission: any;
@@ -197,9 +197,9 @@ export class IncommingComponent
     this.view.dataService.methodSave = 'SaveDispatchAsync';
     this.view.dataService.methodDelete = 'DeleteDispatchByIDAsync';
     this.getGridViewSetup(this.view.formModel.funcID);
-    this.button = {
+    this.button = [{
       id: 'btnAdd',
-    };
+    }];
     this.detectorRef.detectChanges();
   }
 
@@ -614,7 +614,7 @@ export class IncommingComponent
   viewChange(e: any) {
     var funcID = e?.component?.instance?.funcID;
     //this.button.disabled = false;
-    if (funcID == 'ODT81') this.button.disabled = true;
+    if (funcID == 'ODT81') this.button[0].disabled = true;
     this.getGridViewSetup(funcID);
     this.lstDtDis = null;
   }

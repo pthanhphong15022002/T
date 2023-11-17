@@ -42,9 +42,9 @@ export class EmployeeBusinessTravelComponent extends UIComponent {
 
   views: Array<ViewModel> = [];
   method = 'LoadDataEBTravelsAsync';
-  buttonAdd: ButtonModel = {
+  buttonAdd: ButtonModel[] = [{
     id: 'btnAdd',
-  };
+  }];
   currentEmpObj: any = null;
   grvSetup: any;
 

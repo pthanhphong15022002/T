@@ -18,9 +18,9 @@ export class PeriodicComponent extends UIComponent {
   //#region Constructor
   @ViewChild('itemTemplate') itemTemplate?: TemplateRef<any>;
   views: Array<ViewModel> = [];
-  button: ButtonModel = {
+  button: ButtonModel[] = [{
     id: 'btnAdd',
-  };
+  }];
 
   user: any;
 

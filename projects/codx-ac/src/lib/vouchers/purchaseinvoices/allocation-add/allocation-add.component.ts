@@ -29,7 +29,7 @@ export class AllocationAddComponent extends UIComponent {
   //#region Init
 
   onInit(): void {
-    this.acService.setPopupSize(this.dialog, '80%', '90%');
+    this.acService.setPopupSize(this.dialog, '60%', '80%');
   }
 
   ngAfterViewInit() {}

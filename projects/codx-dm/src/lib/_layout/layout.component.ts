@@ -21,6 +21,7 @@ import {
   CallFuncService,
   CacheService,
   Util,
+  CodxService,
 } from 'codx-core';
 
 import { Observable } from 'rxjs';
@@ -95,10 +96,8 @@ db.DM_FolderInfo.updateMany(
     private fileService: FileService,
     private callfc: CallFuncService,
     private changeDetectorRef: ChangeDetectorRef,
-    private renderer: Renderer2,
     private cache: CacheService,
-    private elRef: ElementRef,
-    private router: Router
+    private router: Router,
   ) {
     super(injector);
 

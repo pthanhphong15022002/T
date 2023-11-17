@@ -35,7 +35,7 @@ export class DetailNoteBooksComponent extends UIComponent {
   columnsGrid;
   predicate = 'TransID=@0 && IsNote = false';
   dataValue = '';
-  button?: ButtonModel;
+  button?: ButtonModel[];
   itemSelected: any;
   dialog!: DialogRef;
   functionList = {
@@ -71,9 +71,9 @@ export class DetailNoteBooksComponent extends UIComponent {
   }
 
   onInit(): void {
-    this.button = {
+    this.button = [{
       id: 'btnAdd',
-    };
+    }];
     this.route.params.subscribe((params) => {
       if(params){
         this.funcID = params['funcID'];

@@ -33,7 +33,7 @@ export class ItemsComponent extends UIComponent {
   column3Template: TemplateRef<any>;
 
   views: Array<ViewModel> = [];
-  btnAdd: ButtonModel = { id: 'btnAdd' };
+  btnAdd: ButtonModel[] = [{ id: 'btnAdd' }];
   functionName: string;
 
   constructor(inject: Injector, private acService: CodxAcService) {

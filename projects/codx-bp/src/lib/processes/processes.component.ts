@@ -92,7 +92,7 @@ export class ProcessesComponent
   // titleUpdateFolder = 'Cập nhật thư mục';
   viewMode: any;
   views: Array<ViewModel> = [];
-  button?: ButtonModel;
+  button?: ButtonModel[];
   moreFuncs: Array<ButtonModel> = [];
   user: any;
   method = 'GetListProcessesAsync';
@@ -183,9 +183,9 @@ export class ProcessesComponent
       this.crrFunID = this.funcID;
     }
 
-    this.button = {
+    this.button = [{
       id: 'btnAdd',
-    };
+    }];
     this.columnsGrid = [
       {
         width: 250,

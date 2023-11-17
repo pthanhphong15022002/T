@@ -19,7 +19,7 @@ export class WalletsEmpComponent extends UIComponent {
   user = null;
   grvSetup: any;
   views: Array<ViewModel> = [];
-  button: ButtonModel = null;
+  button: ButtonModel[] = null;
   itemSelected: any = null;
   cardType = '';
   selectedID: string = '';

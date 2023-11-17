@@ -57,7 +57,7 @@ export class MWPBookingCarComponent extends UIComponent implements AfterViewInit
   isCollapsed = true;
   dialog!: DialogRef;
   views: Array<ViewModel> = [];
-  buttons: ButtonModel;
+  buttons: ButtonModel[];
   moreFunc: Array<ButtonModel> = [];
   fields: any;
   resourceField: any;
@@ -159,9 +159,9 @@ export class MWPBookingCarComponent extends UIComponent implements AfterViewInit
       Title: 'Resources',
     };
 
-    this.buttons = {
+    this.buttons = [{
       id: 'btnAdd',
-    };
+    }];
 
     this.codxEpService.getListResource('2').subscribe((res:any)=>{
       if(res){

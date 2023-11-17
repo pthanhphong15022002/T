@@ -38,9 +38,9 @@ export class EmployeePolicyalComponent extends UIComponent {
   formGroup: FormGroup;
   dialog!: DialogRef;
   grvSetup: any;
-  buttonAdd: ButtonModel = {
+  buttonAdd: ButtonModel[] = [{
     id: 'btnAdd',
-  };
+  }];
 
   constructor(
     inject: Injector,

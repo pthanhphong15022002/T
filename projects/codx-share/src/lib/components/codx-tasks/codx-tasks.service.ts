@@ -338,6 +338,11 @@ export class CodxTasksService {
         service = 'ES';
         className = 'SignFilesBusiness';
         break;
+      case 'CO_Meetings':
+        service = 'CO';
+        className = 'MeetingsBusiness';
+        break;
+      //case 'TM_Sprints':
       case 'TM_Tasks':
         service = 'TM';
         className = 'TaskBusiness';
@@ -360,7 +365,7 @@ export class CodxTasksService {
         if (result && result?.length > 0) {
           dataReferences = result;
         }
-        getRef(dataReferences)
+        getRef(dataReferences);
       });
   }
 }

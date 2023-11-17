@@ -90,12 +90,12 @@
                                     
                                   </div>
                                   <codx-temp-full cardCss="card-template p-3"
-                                    [imageId]="approver?.roleType =='U' ? approver?.approver : approver?.userID"
+                                    [imageId]="approver?.roleType =='U' ? approver?.approver : approver?.userIDs"
                                     [title]="approver?.userName ? approver?.userName : approver?.name ? approver?.name : approver?.approver ? (approver?.approver | vll : 'ES014' : 'text' | async) : (approver?.roleType | vll : 'ES014' : 'text' | async)"
                                     [subTitle]="approver?.orgUnitName"
                                     [desc]="approver?.position ? approver?.position: approver?.roleType | vll : 'ES014' : 'text' | async"
-                                    [dataItem]="item"
-                                    [imageSrc]="approver?.roleType !='U' && !approver?.userID ? './assets/themes/sys/default/img/' + (approver?.icon ? approver?.icon : 'share_default.svg') : null"
+                                    [dataItem]="item" 
+                                    [imageSrc]="(approver?.roleType !='U' && !approver?.userID ) || approver?.userIDs ? './assets/themes/sys/default/img/' + (approver?.icon ? approver?.icon : 'share_default.svg') : null"
                                     [imgCss]="approver?.roleType !='U' && !approver?.userID ? 'w-30px p-2 me-3 user-mini-icon' :'w-35px me-3'"
                                     [imageObjType]="'AD_Users'" [modeImgs]="true" [titleLine]="3" [footer]="footer1">
                                   </codx-temp-full>
@@ -115,10 +115,13 @@
                                         </codx-input>
                                       </div>
                                     </div>
-  
+                                    <div class="pt-2" *ngIf="approver?.userIDs">
+                                      <codx-imgs [objectId]=" approver?.userIDs"
+                                      objectType="AD_Users"
+                                      [numberImages]="3"
+                                      [width]="30"></codx-imgs>
+                                    </div>
                                   </div>
-  
-  
                                 </ng-template>
   
                               </div>

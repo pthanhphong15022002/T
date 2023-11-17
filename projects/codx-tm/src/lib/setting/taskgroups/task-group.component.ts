@@ -86,7 +86,7 @@ export class TaskGroupComponent extends UIComponent implements OnInit {
   popoverList: any;
   popoverDetail: any;
   isAfterRender = false;
-  button?: ButtonModel;
+  button?: ButtonModel[];
   moreFuncs: Array<ButtonModel> = [];
   headerStyle = {
     textAlign: 'center',
@@ -117,9 +117,9 @@ export class TaskGroupComponent extends UIComponent implements OnInit {
   }
 
   onInit(): void {
-    this.button = {
+    this.button = [{
       id: 'btnAdd',
-    };
+    }];
 
     this.moreFuncs = [
       {

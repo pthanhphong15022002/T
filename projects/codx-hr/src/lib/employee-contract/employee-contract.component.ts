@@ -51,9 +51,9 @@ export class EmployeeContractComponent extends UIComponent {
   views: Array<ViewModel> = [];
   dataCategory;
   itemDetail;
-  buttonAdd: ButtonModel = {
+  buttonAdd: ButtonModel[] = [{
     id: 'btnAdd',
-  };
+  }];
   formGroup: FormGroup;
   editStatusObj: any;
   cmtStatus: string = '';

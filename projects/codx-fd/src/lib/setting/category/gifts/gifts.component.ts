@@ -76,7 +76,7 @@ export class GiftsComponent extends UIComponent implements OnInit {
   description: any;
   functionList: any;
   gridViewSetup: any;
-  button?: ButtonModel;
+  button?: ButtonModel[];
   dialog!: DialogRef;
   viewType = ViewType;
   headerText = '';
@@ -105,9 +105,9 @@ export class GiftsComponent extends UIComponent implements OnInit {
   }
 
   onInit(): void {
-    this.button = {
+    this.button = [{
       id: 'btnAdd',
-    };
+    }];
     this.user = this.auth?.get();
     this.loadSettingMoreFunction();
     this.changedr.detectChanges();
