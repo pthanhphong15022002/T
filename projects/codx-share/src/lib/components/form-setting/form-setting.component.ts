@@ -325,6 +325,26 @@ initData(){
 
   }
 
+  valueShareAddChange(e:any){
+    if(e.data.length){
+      this.lstShared[this.addData.recID]=[];
+      for(let i =0; i< e.data.length;i++){
+        let objShare:any={};
+        objShare.dataValue=this.addData.recID;
+        objShare.predicate = 'RecID=@0';
+        objShare.shareType='2';
+        objShare.entityID='SYS_FormSettings';
+        objShare.shareToType = e.data[i].objectType;
+        objShare.shareToID= e.data[i].id;
+        objShare.text = e.data[i].text;
+        objShare.objectName = e.data[i].objectName;
+        objShare.icon = this.vllShared.find((x:any)=>x.value==objShare.shareToType)?.icon;
+        this.lstShared[this.addData.recID].push(objShare);
+      }
+      this.lstShared = {...this.lstShared}
+    }
+  }
+
   isEnableEdit:boolean=true;
   valueCbbChange(e:any){
     if(e.data.dataSelected[0]){
@@ -480,7 +500,7 @@ initData(){
 
       })
     }
-    this.api.execAction('SYS_FormSettings',arrFormSetting,'UpdateAsync',true).subscribe((res:any)=>{
+    this.api.execAction('SYS_FormSettings',this.datasource,'UpdateAsync',true).subscribe((res:any)=>{
 
      if(!res.error){
       setTimeout(()=>{
@@ -514,8 +534,16 @@ initData(){
       if(!res.error){
         if(this.user.administrator || this.user.systemAdmin) delete this.addData.userID;
         this.api.execAction('SYS_FormSettings',[this.addData],'SaveAsync',true).subscribe((res:any)=>{
-          console.log(res);
+         if(this.user.systemAdmin || this.user.administrator){
+          if(this.lstShared.length){
+              for(let key in this.lstShared){
+              this.api.execSv('SYS','SYS','FormSettingsBusiness','UpdateFormSharedAsync',[key,this.lstShared[key]]).subscribe((res:any)=>{
+                console.log(res);
 
+              })
+              }
+          }
+         }
           if(!res.error){
             setTimeout(()=>{
               this.notificationsService.notifyCode('SYS007');
