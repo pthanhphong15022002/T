@@ -73,18 +73,18 @@ export class PopupEexperiencesComponent extends UIComponent implements OnInit {
     //     JSON.stringify(this.lstExperience[this.indexSelected])
     //   );
     }
-    ngAfterViewInit(){
-      this.dialog && this.dialog.closed.subscribe(res => {
-        if(!res.event){
-          if(this.successFlag == true){
-            this.dialog.close(this.data);
-          }
-          else{
-            this.dialog.close(null);
-          }
-        }
-      })
-    }
+    // ngAfterViewInit(){
+    //   this.dialog && this.dialog.closed.subscribe(res => {
+    //     if(!res.event){
+    //       if(this.successFlag == true){
+    //         this.dialog.close(this.data);
+    //       }
+    //       else{
+    //         this.dialog.close(null);
+    //       }
+    //     }
+    //   })
+    // }
 
     ClickCalendar(event){
       this.changedInForm = true;
@@ -100,6 +100,7 @@ export class PopupEexperiencesComponent extends UIComponent implements OnInit {
         )
         .subscribe((res: any) => {
           if (res) {
+
             this.data = res?.data;
             this.data.beginDate = null;
             this.data.endDate = null;

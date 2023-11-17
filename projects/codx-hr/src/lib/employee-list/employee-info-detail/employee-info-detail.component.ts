@@ -4777,6 +4777,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
 
   // Hàm handle không sử dụng form động, bây giờ chỉ có chức năng xem chi tiết
   handlEmployeeExperiences(actionHeaderText, actionType: string, data: any) {
+    debugger
     let option = new SidebarModel();
     option.FormModel = this.eExperienceFormModel;
     option.Width = '550px';
@@ -5021,6 +5022,8 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       ).subscribe((res: any) => {
         debugger
         tempData = res?.data;
+        tempData.issuedDate = null;
+        tempData.expiredDate = null;
         tempData.employeeID = this.employeeID;
         dataService.addDatas.set(tempData.recID, tempData);
         this.openFormEPassport(actionHeaderText, actionType, dataService, tempData, data);
@@ -5259,6 +5262,8 @@ export class EmployeeInfoDetailComponent extends UIComponent {
         'RecID'
       ).subscribe((res: any) => {
         tempData = res?.data;
+        tempData.fromDate = null
+        tempData.toDate = null
         tempData.employeeID = this.employeeID;
         dataService.addDatas.set(tempData.recID, tempData);
         this.openFormEWorkpermit(actionHeaderText, actionType, dataService, tempData, data);
@@ -5484,6 +5489,8 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       ).subscribe((res: any) => {
         debugger
         tempData = res?.data;
+        tempData.effectedDate = null;
+        tempData.expiredDate = null;
         tempData.employeeID = this.employeeID;
         dataService.addDatas.set(tempData.recID, tempData);
         this.openFormEVisas(actionHeaderText, actionType, dataService, tempData, data);
@@ -5934,6 +5941,7 @@ dataService.clear();
     );
 
     dialogAdd.closed.subscribe((res) => {
+      debugger
       if (res.event)
         this.updateGridView(this.eDegreeGrid, actionType, res.event, data);
       this.df.detectChanges();
