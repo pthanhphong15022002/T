@@ -136,18 +136,16 @@
       </div>
     </ng-container>
     <ng-container *ngSwitchCase="'assignto'">
-      <div>
-        <codx-view-assign
-          #viewTreeAssign
-          [dataTree]="dataTree"
-          [refID]='refID'
-          [refType]="refType"
-          [isLoadedTree]="isLoadedTree"
-          [sessionID]="sessionID"
-          [formModel]="formModel"
-          referType="source"
-        ></codx-view-assign>
-      </div>
+      <codx-view-assign
+        #viewTreeAssign
+        [dataTree]="dataTree"
+        [refID]="refID"
+        [refType]="refType"
+        [isLoadedTree]="isLoadedTree"
+        [sessionID]="sessionID"
+        [formModel]="formModel"
+        referType="source"
+      ></codx-view-assign>
     </ng-container>
     <ng-container *ngSwitchCase="'references'">
       <codx-references
