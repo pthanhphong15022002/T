@@ -31,8 +31,13 @@ import { PopupAddComponent } from '../codx-tasks/popup-add/popup-add.component';
 export class CodxViewAssignComponent implements OnInit, OnChanges {
   @Input() formModel?: FormModel;
   @Input() dataTree = [];
+  @Input() refID = '';
+  @Input() refType = '';
+  @Input() sessionID = '';
+  @Input() isLoadedTree= true //bang true neu da co dataTree , con khong se load tree
   @Input() referType = 'source';
   @Input() showMore = false; //show moreFunc
+
   listRoles = [];
   vllStatusAssign = 'TM007';
   vllStatus = 'TM004';
@@ -64,9 +69,11 @@ export class CodxViewAssignComponent implements OnInit, OnChanges {
         this.listRoles = res.datas;
       }
     });
+  
   }
 
   ngOnChanges(changes: SimpleChanges): void {
+    if(!this.isLoadedTree) this.loadTree()
     this.dt.detectChanges();
   }
 
@@ -303,5 +310,22 @@ export class CodxViewAssignComponent implements OnInit, OnChanges {
 
   afterSaveTask(data) {
     //data tra ve
+  }
+
+  //load Tree
+  loadTree() {
+    this.tmSv.getTreeAssign(
+      this.refID,
+      this.refType,
+      this.getTree.bind(this)
+    );
+  }
+
+  getTree(dataTree) {
+    if (dataTree) {
+      this.dataTree = dataTree; 
+    }
+    this.isLoadedTree = true ;
+    this.detectorRef.detectChanges();
   }
 }

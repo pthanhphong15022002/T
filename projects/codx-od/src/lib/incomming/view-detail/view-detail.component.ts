@@ -58,6 +58,7 @@ import { Permission } from '@shared/models/file.model';
 import { UpdateVersionComponent } from '../updateversion/updateversion.component';
 import { ApproveProcess } from 'projects/codx-share/src/lib/models/ApproveProcess.model';
 import { CodxTasksService } from 'projects/codx-share/src/lib/components/codx-tasks/codx-tasks.service';
+import { CodxTabsComponent } from 'projects/codx-share/src/lib/components/codx-tabs/codx-tabs.component';
 
 @Component({
   selector: 'app-view-detail',
@@ -70,6 +71,7 @@ export class ViewDetailComponent
   implements OnChanges, AfterViewInit
 {
   @ViewChild('reference') reference: TemplateRef<ElementRef>;
+  @ViewChild('footTabs') footTabs: CodxTabsComponent;
   @Input() data: any = { category: 'Phân loại công văn' };
   @Input() gridViewSetup: any;
   @Input() view: ViewsComponent;
@@ -1309,11 +1311,13 @@ export class ViewDetailComponent
             datas.approveStatus = '3';
             //get tree task
             // VTHAO - fix con lỗi vẫn chưa gen lại sau nhé..về nhà đã
-            this.taskService.getTreeAssign(
-              this.data.recID,
-              'OD_Dispatches',
-              this.getTree.bind(this)
-            );
+            // this.taskService.getTreeAssign(
+            //   this.data.recID,
+            //   'OD_Dispatches',
+            //   this.getTree.bind(this)
+            // );
+            //change lại tree VTHAO - đã sửa component để cho hợp lý
+            if(this.footTabs) this.footTabs.changeTreeAssign()
             that.odService
               .updateDispatch(
                 datas,

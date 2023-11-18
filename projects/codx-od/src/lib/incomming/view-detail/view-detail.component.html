@@ -426,10 +426,13 @@
       </ng-template>
       <ng-template #footer>
         <codx-tabs
+          #footTabs
           [entityName]="formModel?.entityName"
           [objectID]="data?.recID"
           [funcID]="formModel?.funcID"
           [dataTree]="dataTree"
+          [refID]="data?.recID"
+          [refType]="'OD_Dispatches'"
           [TabControl]="tabControl"
           [transID]="data?.recID"
           [approveStatus]="data?.approveStatus"
