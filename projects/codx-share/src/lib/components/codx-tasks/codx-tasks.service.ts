@@ -369,7 +369,7 @@ export class CodxTasksService {
       });
   }
 
-  //get Task Tree-- OD --chưa xử lý chỗ khác gom về
+  //get Task Tree-- OD +ES + TM + .. --chưa xử lý hết chỗ khác gom về
   getTreeAssign(refID, refType, getTree?: Function, sessionID = null) {
     let methol = 'GetListTaskTreeByRefIDAsync';
     if (!sessionID) {
