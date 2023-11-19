@@ -14,11 +14,11 @@ import {
 } from '@angular/core';
 import { ApiHttpService, DialogData, DialogRef, FormModel } from 'codx-core';
 import { TM_Parameter, TM_TaskGroups } from '../model/task.model';
-import { CRUDService } from 'codx-core/public-api';
+import { CRUDService} from 'codx-core/public-api';
 import { DomSanitizer } from '@angular/platform-browser';
 import { tmpReferences } from '../../../models/assign-task.model';
 import { CodxTasksService } from '../codx-tasks.service';
-
+import { CodxService} from 'codx-core';
 @Component({
   selector: 'share-view-detail',
   templateUrl: './view-detail.component.html',
@@ -100,16 +100,22 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
   loadedHisPro = false;
 
   constructor(
+    private codxService: CodxService,
     private api: ApiHttpService,
     private taskService: CodxTasksService,
     public sanitizer: DomSanitizer,
     private changeDetectorRef: ChangeDetectorRef,
+  
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {}
   //#endregion
   //#region Init
-  ngOnInit(): void {}
+  ngOnInit(): void {
+
+    if(this.codxService.asideMode == '2') this.showMoreFunc = false;
+
+  }
 
   ngAfterViewInit(): void {
     this.tabControl.push({

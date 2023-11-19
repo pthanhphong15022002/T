@@ -129,7 +129,8 @@ export class ViewDetailComponent extends  UIDetailComponent implements OnChanges
     this.dataRq.entityName = this.formModel?.entityName;
     this.dataRq.formName = this.formModel?.formName;
     this.dataRq.funcID = this.formModel?.funcID;
-    this.getGridViewSetup(this.funcID);
+    //this.getGridViewSetup(this.funcID);
+    this.userID = this.authStore.get().userID;
     if(this.codxService.asideMode == "2") this.hideMF = true;
   }
 
@@ -162,22 +163,16 @@ export class ViewDetailComponent extends  UIDetailComponent implements OnChanges
   ngOnChanges(changes: SimpleChanges): void {
     if (
       changes?.dataItem &&
+      !changes?.dataItem?.firstChange &&
       changes?.dataItem?.currentValue != changes?.dataItem?.previousValue
     )
+    {
       this.dataItem = changes?.dataItem?.currentValue;
-    if (
-      changes?.recID &&
-      changes.recID?.previousValue != changes.recID?.currentValue
-    ) {
-      this.userID = this.authStore.get().userID;
-      this.recID = changes.recID?.currentValue;
-      if (!this.data) this.data = {};
-
-      this.getDtDis(this.recID)
-      this.getPermission(this.recID);
-
-      this.detectorRef.detectChanges();
+      this.getDtDis(this.dataItem.recID)
+      this.getPermission(this.dataItem.recID);
     }
+      
+    
     if (changes?.view?.currentValue != changes?.view?.previousValue)
       this.formModel = changes?.view?.currentValue?.formModel;
     if (changes?.funcID?.currentValue != changes?.funcID?.previousValue) {
@@ -205,6 +200,7 @@ export class ViewDetailComponent extends  UIDetailComponent implements OnChanges
           if (item) {
             this.data = formatDtDis(item);
             this.updateTabControl();
+            this.detectorRef.detectChanges();
           }
         });
     }
@@ -213,17 +209,18 @@ export class ViewDetailComponent extends  UIDetailComponent implements OnChanges
   updateTabControl()
   {
     if (
-      this.defaultValue == '2' ||
+      (this.defaultValue == '2' ||
       (this.defaultValue == '3' && this.data?.dispatchType == '3') ||
-      this.xd
+      this.xd) && this.tabControl.filter(e => e.name === 'Approve').length == 0
     )
       this.tabControl.push({
         name: 'Approve',
         textDefault: 'Xét duyệt',
         isActive: false,
       });
+     
 
-    if (this.defaultValue != '2' && this.defaultValue != '3') {
+    if (this.defaultValue != '2' && this.defaultValue != '3' && this.tabControl.filter(e => e.name === 'AssignTo').length == 0) {
       this.tabControl.push({
         name: 'AssignTo',
         textDefault: 'Giao việc',
@@ -292,7 +289,7 @@ export class ViewDetailComponent extends  UIDetailComponent implements OnChanges
           this.gridViewSetup = gw;
           this.getDataValuelist();
         }
-        this.getDtDis(this.recID)
+        //this.getDtDis(this.recID)
       });
     } else {
       this.funcList = funcList;
@@ -304,7 +301,7 @@ export class ViewDetailComponent extends  UIDetailComponent implements OnChanges
         gridViewName: this.funcList?.gridViewName,
       };
       if (!this.formModel) this.formModel = this.formModels;
-      this.getDtDis(this.recID)
+      //this.getDtDis(this.recID)
       var gw = this.codxODService.loadGridView(
         this.funcList?.formName,
         this.funcList?.gridViewName
