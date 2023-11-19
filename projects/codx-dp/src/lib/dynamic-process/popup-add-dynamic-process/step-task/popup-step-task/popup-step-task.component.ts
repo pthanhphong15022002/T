@@ -188,7 +188,7 @@ export class PopupJobComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.detroyFormTask$))
       .subscribe((res) => {
         for (let key in res) {
-          if (res[key]['isRequire']) {
+          if (res[key]) {
             let keyConvert = key.charAt(0).toLowerCase() + key.slice(1);
             this.view[keyConvert] = res[key]['headerText'];
           }
@@ -285,6 +285,10 @@ export class PopupJobComponent implements OnInit, OnDestroy {
     if (!this.stepsTasks['durationDay'] && !this.stepsTasks['durationHour']) {
       message.push(this.view['durationDay']);
     }
+    if(this.typeTask?.value === 'F'){
+      message.push(this.view['fieldID']);
+    }
+
     if (message.length > 0) {
       this.notiService.notifyCode('SYS009', 0, message.join(', '));
     } else {
