@@ -58,9 +58,9 @@ initData(){
       return x;
     })
 
-    //this.data = [...this.data,...arrButtons];
+    this.data = [...this.data,...arrButtons];
     this.field = {
-      dataSource: this.data, id:'recID', text: 'customName', parentID: 'parentID',imageUrl:'smallIcon', hasChildren:'hasChild'
+      dataSource: this.data, id:'recID', text: 'customName', parentID: 'parentID', hasChildren:'hasChild'
     }
     if(lstRecID.length){
       this.api.execSv('SYS','SYS','FormSettingsBusiness','GetListFormsAsync',{RecID: lstRecID}).subscribe((res:any)=>{
@@ -236,8 +236,18 @@ initData(){
         let data = this.datasource.find((x:any)=>x[idField]==item.recID);
         let targetData = this.datasource.find((x:any)=>x[idField]==targetNode.id);
         if(data && targetData){
-          data.parentID = targetData.recID;
+          if(data.category == 'F')
+            data.parentID = targetData.recID;
         }
+      }
+      else{
+        let data = this.datasource.find((x:any)=>x[idField]==item.recID);
+        let targetData = this.datasource.find((x:any)=>x[idField]==targetNode.parentID);
+        if(data && targetData){
+          if(data.category == 'F')
+            data.parentID = targetData.recID;
+        }
+
       }
 
 
@@ -396,8 +406,11 @@ initData(){
     },200)
   }
 
-  onAddNewFunc(parentID){
+  onAddNewFunc(parentID,nodeData:any){
     if(this.tree){
+      let idField = 'recID';
+      if(this.datasource[0].oldID) idField='oldID'
+
       this.addData = {
         userID: this.user.userID,
         recID: Util.uid(),
@@ -408,16 +421,29 @@ initData(){
         sorting: this.datasource.length,
         name:'Chức năng mới'
       }
+      let parent = this.datasource.find((x:any)=>x[idField]==parentID);
+      if(parent){
+        this.addData.parentID = parent.recID;
+      }
       let item: { [key: string]: Object } = { recID: this.addData.recID, customName: "Chức năng mới",parentID:parentID, functionType:'F',isAddNew:true };
       this.tree?.addNodes([item], parentID, null as any);
       this.data.push(item);
-      //this.tree.refresh()
-      this.tree.selectedNodes= [this.addData.recID];
-      this.tree?.beginEdit(this.addData.recID);
-      this.isEditFunc = false;
-      this.isAddGroup = false;
-      this.isEditGroup = false;
-      this.isAddFunc = true;
+      this.data.sort((x:any, y:any)=> {
+        return (x.isButton === y.isButton)? 0 : x.isButton? 1 : -1;
+
+      });
+
+      this.tree.refresh()
+      setTimeout(()=>{
+        this.tree.selectedNodes= [this.addData.recID];
+        this.tree?.beginEdit(this.addData.recID);
+        this.isEnableEdit=true;
+        this.isEditFunc = false;
+        this.isAddGroup = false;
+        this.isEditGroup = false;
+        this.isAddFunc = true;
+      })
+
 
 
     }
@@ -459,27 +485,36 @@ initData(){
     let idField = 'recID';
     if(this.datasource[0].oldID) idField='oldID'
     if(this.tree && (this.tree as any).liList.length){
-      let newDatasource:any=[];
+      //let newDatasource:any=[];
       for(let i =0;i< (this.tree as any).liList.length;i++){
         let id = (this.tree as any).liList[i].getAttribute('data-uid');
+
         if(id){
+          let dataId = this.data.find((x:any)=>x.recID==id);
+        if(dataId && !dataId.isButton){
           let item = this.datasource.find((x:any)=> x[idField] == id);
           if(item){
             item.sorting = i+1;
-            newDatasource.push(item);
+            //newDatasource.push(item);
           }
+        }
+        else{
+          continue;
+        }
+
         }
       }
       //debugger
-      this.datasource = newDatasource;
+      //this.datasource = newDatasource;
     }
     this.api.execAction('SYS_FormSettings',this.datasource,this.datasource[0].oldID ? 'SaveAsync' : 'UpdateAsync',true).subscribe((res:any)=>{
-      console.log(res);
 
       if(!res.error){
         setTimeout(()=>{
           this.notificationsService.notifyCode('SYS007');
-          this.dialogRef.close()},1000)
+          this.dialogRef.close();
+          window.location.reload();
+        },1000)
        }
 
     })
@@ -488,15 +523,12 @@ initData(){
   }
 
   onSaveAdmin(){
-    console.log(this.editedFunc,this.lstShared);
     let arrFormSetting:any=[];
     for(let key in this.editedFunc){
       arrFormSetting.push(this.editedFunc[key])
     }
-    let arrShared:any=[];
     for(let key in this.lstShared){
       this.api.execSv('SYS','SYS','FormSettingsBusiness','UpdateFormSharedAsync',[key,this.lstShared[key]]).subscribe((res:any)=>{
-        console.log(res);
 
       })
     }
@@ -505,7 +537,9 @@ initData(){
      if(!res.error){
       setTimeout(()=>{
         this.notificationsService.notifyCode('SYS007');
-        this.dialogRef.close()},1000)
+        this.dialogRef.close();
+        window.location.reload();
+      },1000)
      }
 
     })
@@ -519,10 +553,16 @@ initData(){
       for(let i =0;i< (this.tree as any).liList.length;i++){
         let id = (this.tree as any).liList[i].getAttribute('data-uid');
         if(id){
-          let item = this.datasource.find((x:any)=> x[idField] == id);
-          if(item){
-            item.sorting = i+1;
-            newDatasource.push(item);
+          let dataId = this.data.find((x:any)=>x.recID==id);
+          if(dataId && !dataId.isButton){
+            let item = this.datasource.find((x:any)=> x[idField] == id);
+            if(item){
+              item.sorting = i+1;
+              newDatasource.push(item);
+            }
+          }
+          else{
+            continue;
           }
         }
       }
@@ -535,12 +575,11 @@ initData(){
         if(this.user.administrator || this.user.systemAdmin) delete this.addData.userID;
         this.api.execAction('SYS_FormSettings',[this.addData],'SaveAsync',true).subscribe((res:any)=>{
          if(this.user.systemAdmin || this.user.administrator){
-          if(this.lstShared.length){
+          if(Object.keys(this.lstShared).length){
               for(let key in this.lstShared){
-              this.api.execSv('SYS','SYS','FormSettingsBusiness','UpdateFormSharedAsync',[key,this.lstShared[key]]).subscribe((res:any)=>{
-                console.log(res);
+                this.api.execSv('SYS','SYS','FormSettingsBusiness','UpdateFormSharedAsync',[key,this.lstShared[key]]).subscribe((res:any)=>{
 
-              })
+                })
               }
           }
          }
@@ -581,9 +620,9 @@ initData(){
           if(idx>-1){
             this.datasource.splice(idx,1);
             this.api.execAction('SYS_FormSettings',this.datasource,'SaveAsync',true).subscribe((res:any)=>{
-              console.log(res);
 
               if(!res.error){
+
                 setTimeout(()=>{
                   this.initData();
                 }
@@ -593,17 +632,57 @@ initData(){
           return;
         }
         else{
+          let arrRelated = this.datasource.filter((x:any)=>x.parentID==item.recID);
+          arrRelated.push(item)
           this.api.execAction('SYS_FormSettings',[item],'DeleteAsync',true).subscribe((res:any)=>{
             if(!res.error){
-              this.initData();
+              this.api.execSv('SYS','SYS','FormSettingsBusiness','DeleteFormSharingAsync',{RecID:[arrRelated.map((x:any)=> x.recID)]}).subscribe((res:any)=>{
+                if(res){
+                  this.initData();
+                }
+              })
+
             }
           })
+        }
+      }
+      else{
+        let dataIdx= this.data.findIndex((x:any)=>x.recID==recID)
+        if(dataIdx >-1){
+          this.data.splice(dataIdx,1);
+          this.tree?.refresh();
         }
       }
     }
   }
 
+  onUndo(){
+    if(this.addData){
+      let dataIdx= this.data.findIndex((x:any)=>x.recID==this.addData.recID)
+        if(dataIdx >-1){
+          this.data.splice(dataIdx,1);
+          this.tree?.refresh();
+          this.isAddFunc=false;
+          this.isAddGroup=false;
+          if(this.tree && (this.tree as any).liList.length){
+            let id = (this.tree as any).liList[0].getAttribute('data-uid');
+            this.tree.selectedNodes=[id];
+          }
+
+        }
+        else if(this.addData.category=='G'){
+          this.isAddFunc=false;
+          this.isAddGroup=false;
+          if(this.tree && (this.tree as any).liList.length){
+            let id = (this.tree as any).liList[0].getAttribute('data-uid');
+            this.tree.selectedNodes=[id];
+          }
+        }
+        this.addData=undefined;
+    }
+  }
   nodeEdited(e:any){
+    this.isEnableEdit=true;
     this.addData.name = e.newText;
   }
 }

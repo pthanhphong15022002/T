@@ -1013,6 +1013,7 @@ export class InstancesComponent
     this.dataSelected = data;
     this.titleAction = e.text;
     this.moreFunc = e.functionID;
+    this.stepIdClick = '';
     switch (e.functionID) {
       case 'SYS03':
         this.edit(data, e.text);
@@ -1230,7 +1231,7 @@ export class InstancesComponent
       let startControl = this.process.steps.filter(
         (x) => x.recID === data.stepID
       )[0]?.startControl;
-      var obj = {
+      let obj = {
         recID: data?.recID,
         //refID: data?.recID,
         processID: data?.processID,
@@ -1238,7 +1239,7 @@ export class InstancesComponent
         data: data,
         gridViewSetup: this.grvSetup,
         formModel: this.view.formModel,
-        applyFor: '0',
+        applyFor: this.process.applyFor,
         titleAction: this.titleAction,
         owner: data.owner,
         startControl: startControl,
@@ -1276,7 +1277,7 @@ export class InstancesComponent
     switch (e.type) {
       case 'drop':
         this.dataDrop = e.data;
-        this.stepIdClick = JSON.parse(JSON.stringify(this.dataDrop.stepID));
+        this.stepIdClick = JSON.parse(JSON.stringify(this.dataDrop?.stepID));
         // xử lý data chuyển công đoạn
         if (this.crrStepID != this.dataDrop.stepID)
           this.dropInstance(this.dataDrop);

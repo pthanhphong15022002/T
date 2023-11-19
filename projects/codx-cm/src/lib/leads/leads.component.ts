@@ -704,6 +704,7 @@ export class LeadsComponent
   clickMF(e, data) {
     this.titleAction = e.text;
     this.dataSelected = data;
+    this.stepIdClick = '';
     let lst = [];
     lst.push(Object.assign({}, data)); // Đùng để cập nhật tự động address
     const functionMappings = {
