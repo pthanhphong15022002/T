@@ -3,7 +3,7 @@ import { CodxFormComponent, CodxGridviewV2Component, DialogData, DialogModel, Di
 import { CodxAcService, fmGeneralJournalsLines, fmGeneralJournalsLinesOne, fmSettledInvoices, fmVATInvoices } from '../../../codx-ac.service';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-approval/tab/model/tabControl.model';
 import { RoundService } from '../../../round.service';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 import { AC_GeneralJournalsLines } from '../../../models/AC_GeneralJournalsLines.model';
 import { SettledInvoicesAdd } from '../../../share/settledinvoices-add/settledinvoices-add.component';
 
@@ -55,6 +55,7 @@ export class GeneralJournalAddComponent extends UIComponent {
   baseCurr: any; //? đồng tiền hạch toán
   vatAccount: any; //? tài khoản thuế của hóa đơn GTGT (xử lí cho chi khác)?
   isPreventChange:any = false;
+  postDateControl:any;
   private destroy$ = new Subject<void>(); //? list observable hủy các subscribe api
   constructor(
     inject: Injector,
@@ -76,7 +77,18 @@ export class GeneralJournalAddComponent extends UIComponent {
 
   //#region Init
   onInit(): void {
-    
+    this.acService.setPopupSize(this.dialog, '100%', '100%');
+    this.cache
+      .viewSettingValues('ACParameters')
+      .pipe(
+        takeUntil(this.destroy$),
+        map((arr: any[]) => arr.find((a) => a.category === '1')),
+        map((data) => JSON.parse(data.dataValue))
+      ).subscribe((res:any)=>{
+        if (res) {
+          this.postDateControl = res?.PostedDateControl;
+        }
+      })
   }
 
   ngAfterViewInit() {

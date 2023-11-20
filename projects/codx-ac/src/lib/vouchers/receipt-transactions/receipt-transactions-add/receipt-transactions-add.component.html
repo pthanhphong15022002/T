@@ -19,9 +19,11 @@
         </div>
         <div class="input-circle input-sm" *ngIf="formVouchers?.formGroup">
           <span class="me-2">
-            <codx-vll [name]="'AC040'" [formModel]="dialog.formModel" [field]="'Status'"
-              [value]="formVouchers.data?.status" [showText]="true" [showBgColor]="true"
-              class="badge badge-light badge-sm">
+            <codx-vll *ngIf="formVouchers.data?.status == '1'" [formModel]="dialog.formModel" [field]="'Status'"
+              [value]="formVouchers.data?.validated ? '1' : '7'" [showText]="true" [showBgColor]="true" class="badge badge-light badge-sm">
+            </codx-vll>
+            <codx-vll *ngIf="formVouchers.data?.status != '1'" [formModel]="dialog.formModel" [field]="'Status'" [value]="formVouchers.data?.status"
+              [showText]="true" [showBgColor]="true" class="badge badge-light badge-sm">
             </codx-vll>
           </span>
         </div>

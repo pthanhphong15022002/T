@@ -57,7 +57,7 @@ export class WarehouseTransfersAddComponent extends UIComponent {
 
   //#region Init
   onInit(): void {
-
+    this.acService.setPopupSize(this.dialog, '100%', '100%');
   }
 
   ngAfterViewInit() {

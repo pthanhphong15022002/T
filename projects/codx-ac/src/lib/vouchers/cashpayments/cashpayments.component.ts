@@ -169,7 +169,6 @@ export class CashPaymentsComponent extends UIComponent {
 
     this.optionSidebar.DataService = this.view?.dataService;
     this.optionSidebar.FormModel = this.view?.formModel;
-    this.optionSidebar.isFull = true;
   }
 
   ngOnDestroy() {
@@ -381,7 +380,14 @@ export class CashPaymentsComponent extends UIComponent {
     this.view?.currentView?.dataService
       .delete([dataDelete], true)
       .pipe(takeUntil(this.destroy$))
-      .subscribe((res: any) => {});
+      .subscribe((res: any) => {
+        if (res && !res?.error) {
+          if(this.view.dataService.data.length == 0){
+            this.itemSelected = undefined;
+            this.detectorRef.detectChanges();
+          } 
+        }
+      });
   }
 
   /**
