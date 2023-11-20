@@ -203,8 +203,8 @@ export class CodxInputCustomFieldComponent implements OnInit {
               if (idx != -1) {
                 let arr = values[idx].text.split('/');
                 if (arr?.length > 1) {
-                  this.titleRadioYes = arr[0];
-                  this.titleRadioNo = arr[1];
+                  this.titleRadioYes = arr[1];
+                  this.titleRadioNo = arr[0];
                 }
                 this.checkedRadio =
                   this.customField.dataValue == '1' ? true : false;
@@ -895,6 +895,7 @@ export class CodxInputCustomFieldComponent implements OnInit {
         this.checkedRadio = false;
         value = '0';
       }
+      //chua check vi sao
 
       this.customField.dataValue = this.valueChangeCustom.emit({
         e: value,
