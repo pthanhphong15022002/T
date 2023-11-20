@@ -1,8 +1,7 @@
 <!-- Start: template listdetail -->
 <ng-container *ngIf="itemSelected">
     <codx-detail-tmp [header]="TmpHeaderDetail" [body]="TmpBodyDetail" [hideMF]="false" [formModel]="formModel"
-        [dataItem]="itemSelected" (changeDataMF)="changeMFDetail($event, itemSelected)" [footer]="TmpFooterDetail"
-        (clickMF)="clickMoreFunction($event, itemSelected)">
+        [dataItem]="itemSelected" [footer]="TmpFooterDetail" [hideMF]="codxService.asideMode == '2'">
     </codx-detail-tmp>
 </ng-container>
 <!-- End: template listdetail -->
@@ -11,17 +10,7 @@
 <ng-template #TmpHeaderDetail>
     <ng-container *ngIf="itemSelected">
         <div style="position: relative;z-index: 1000;width: 50%;"
-            class="d-flex align-items-center ac-cashID mt-n8 mb-2">
-            <!-- <ejs-tooltip id='tooltip' target="#tipsub" position='BottomRight'>
-                  <div id="tipsub" style="background-color: var(--primary-dark)"
-                      class="w-25px symbol h-25px fs-6 d-flex justify-content-center align-items-center rounded-circle me-3">
-                      <i style="font-size: 13px !important;" class="text-white"
-                          [class]="itemSelected?.subType | vll : 'AC100' : 'text' | async"></i>
-                  </div>
-                  <ng-template #content>
-                      <span>{{itemSelected?.subType | vll : 'AC063' : 'text' | async}}</span>
-                  </ng-template>
-              </ejs-tooltip> -->
+            class="d-flex align-items-center ac-cashID mb-2">
             <span *ngIf="itemSelected?.voucherNo"
                 class="fw-bold line-clamp line-clamp-1 mt-1 fs-5-sm text-uppercase me-5">
                 {{ itemSelected?.voucherNo }}
@@ -83,8 +72,9 @@
                     [value]="itemSelected?.validated ? '1' : '7'" [showText]="true" [showBgColor]="true"
                     class="badge badge-light badge-sm">
                 </codx-vll>
-                <codx-vll *ngIf="itemSelected?.status != '1'" [formModel]="formModel" [field]="'Status'" [value]="itemSelected?.status"
-                    [showText]="true" [showBgColor]="true" class="badge badge-light badge-sm">
+                <codx-vll *ngIf="itemSelected?.status != '1'" [formModel]="formModel" [field]="'Status'"
+                    [value]="itemSelected?.status" [showText]="true" [showBgColor]="true"
+                    class="badge badge-light badge-sm">
                 </codx-vll>
             </div>
         </div>

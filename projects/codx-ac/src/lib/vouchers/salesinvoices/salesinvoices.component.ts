@@ -175,7 +175,7 @@ export class SalesinvoicesComponent extends UIComponent
         this.copyVoucher(data); //? sao chép chứng từ
         break;
       case 'SYS002':
-        //this.exportVoucher(data); //? xuất dữ liệu chứng từ
+        this.exportVoucher(data); //? xuất dữ liệu chứng từ
         break;
       case 'ACT060504':
         this.releaseVoucher(e.text, data); //? gửi duyệt chứng từ

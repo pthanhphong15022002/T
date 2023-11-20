@@ -127,7 +127,7 @@
         data-kt-scroll-wrappers=".stepper-body .no-header"
         [attr.data-kt-scroll-offset]="offset"
       >
-        <ng-container *ngIf="name == 'Dashboard'">
+        <ng-container *ngIf="name == 'Dashboard'" class="container h-100 p-0">
           <codx-sprintdetails-dashboard
             [projectID]="projectID"
             [resources]="resources"

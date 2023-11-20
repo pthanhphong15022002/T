@@ -749,9 +749,14 @@ export class SalesinvoicesAddComponent extends UIComponent{
    */
   copyRow(data) {
     if (this.eleGridSalesInvoice && this.elementTabDetail?.selectingID == '0') {
-      data.recID = Util.uid();
-      data.index = this.eleGridSalesInvoice.dataSource.length;
-      this.eleGridSalesInvoice.addRow(data, this.eleGridSalesInvoice.dataSource.length);
+      this.eleGridSalesInvoice.saveRow((res:any)=>{ //? save lưới trước
+        if(res){
+          data.recID = Util.uid();
+          data.index = this.eleGridSalesInvoice.dataSource.length;
+          delete data?._oldData;
+          this.eleGridSalesInvoice.addRow(data, this.eleGridSalesInvoice.dataSource.length);
+        }
+      })
     }
   }
 
@@ -761,7 +766,11 @@ export class SalesinvoicesAddComponent extends UIComponent{
    */
   deleteRow(data) {
     if (this.eleGridSalesInvoice && this.elementTabDetail?.selectingID == '0') {
-      this.eleGridSalesInvoice.deleteRow(data);
+      this.eleGridSalesInvoice.saveRow((res:any)=>{ //? save lưới trước
+        if(res){
+          this.eleGridSalesInvoice.deleteRow(data);
+        }
+      })
     }
   }
 
