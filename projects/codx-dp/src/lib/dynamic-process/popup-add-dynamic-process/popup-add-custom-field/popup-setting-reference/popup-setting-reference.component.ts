@@ -108,20 +108,16 @@ export class PopupSettingReferenceComponent implements OnInit, AfterViewInit {
           format = data.refType == '2' ? 'V' : 'C';
         } else {
           let fiedname = data.fieldName.toLocaleLowerCase();
-          if (fiedname == 'createdby' || fiedname == 'modifiedon') {
-            type = 'L';
-            format = 'C';
-            refType = '3';
-            refValue = 'Users';
-          } else {
-            type = 'T';
-            format = data.dataFormat.includes('ed') ? 'L' : 'S';
-          }
+          let convert = this.defaultConvertData(fiedname, data.dataFormat);
+          type = convert[0];
+          format = convert[1];
+          refType = convert[2];
+          refValue = convert[3];
         }
         break;
       case 'bool':
-        type = 'T';
-        format = '';
+        type = 'L';
+        format = 'B';
         break;
       case 'datetime':
         type = 'D';
@@ -143,5 +139,44 @@ export class PopupSettingReferenceComponent implements OnInit, AfterViewInit {
     field.refValue = refValue;
 
     return field;
+  }
+
+  defaultConvertData(fiedname, dataFormatGrv) {
+    let type = 'L';
+    let format = 'C';
+    let refType = '3';
+    let refValue = '';
+    switch (fiedname) {
+      case 'createdby':
+      case 'owner':
+      case 'modifiedby':
+        refValue = 'Users';
+        break;
+      case 'deepartmentid':
+        refValue = 'Share_Departments';
+        break;
+      case 'divisionid':
+        refValue = 'Divisions';
+        break;
+      case 'employeeid':
+        refValue = 'EmployeeUser';
+        break;
+      case 'orgunitid':
+        refValue = 'Share_OrgUnits';
+        break;
+      case 'positionid':
+        refValue = 'Share_Positions';
+        break;
+      case 'buid':
+        refValue = 'BusinessUnits';
+        break;
+      default:
+        type = 'T';
+        format = dataFormatGrv.includes('ed') ? 'L' : 'S';
+        refType = '';
+        refValue = '';
+        break;
+    }
+    return [type, format, refType, refValue];
   }
 }

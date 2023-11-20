@@ -55,6 +55,7 @@ export class DynamicFormComponent extends UIComponent {
   function: any = {};
   tabs: TabModel[] = [];
   authStore;
+  itemSelected:any;
   constructor(
     private inject: Injector,
     private callfunc: CallFuncService,
@@ -616,4 +617,9 @@ export class DynamicFormComponent extends UIComponent {
     // }
   }
   //#endregion
+
+  selectedChange(e:any)
+  {
+    this.itemSelected = e?.data;
+  }
 }

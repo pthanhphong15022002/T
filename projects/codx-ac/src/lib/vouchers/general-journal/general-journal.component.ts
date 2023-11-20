@@ -1,10 +1,11 @@
 import { ChangeDetectionStrategy, Component, Injector, TemplateRef, ViewChild } from '@angular/core';
-import { AuthStore, ButtonModel, NotificationsService, SidebarModel, TenantStore, UIComponent, ViewModel, ViewType } from 'codx-core';
+import { AuthStore, ButtonModel, DataRequest, NotificationsService, SidebarModel, TenantStore, UIComponent, ViewModel, ViewType } from 'codx-core';
 import { Subject, takeUntil } from 'rxjs';
 import { CodxAcService } from '../../codx-ac.service';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { JournalService } from '../../journals/journals.service';
 import { GeneralJournalAddComponent } from './general-journal-add/general-journal-add.component';
+import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
 
 @Component({
   selector: 'lib-general-journal',
@@ -168,7 +169,7 @@ export class GeneralJournalComponent extends UIComponent {
         this.copyVoucher(data); //? sao chép chứng từ
         break;
       case 'SYS002':
-        //this.exportVoucher(data); //? xuất dữ liệu chứng từ
+        this.exportVoucher(data); //? xuất dữ liệu chứng từ
         break;
       case 'ACT090102':
         this.releaseVoucher(e.text, data); //? gửi duyệt chứng từ
@@ -449,6 +450,34 @@ export class GeneralJournalComponent extends UIComponent {
       reportType,
       params,
       this.view?.formModel
+    );
+  }
+
+  /**
+   * *Xuất file theo template(Excel,PDF,...)
+   * @param data
+   */
+  exportVoucher(data) {
+    var gridModel = new DataRequest();
+    gridModel.formName = this.view.formModel.formName;
+    gridModel.entityName = this.view.formModel.entityName;
+    gridModel.funcID = this.view.formModel.funcID;
+    gridModel.gridViewName = this.view.formModel.gridViewName;
+    gridModel.page = this.view.dataService.request.page;
+    gridModel.pageSize = this.view.dataService.request.pageSize;
+    gridModel.predicate = this.view.dataService.request.predicates;
+    gridModel.dataValue = this.view.dataService.request.dataValues;
+    gridModel.entityPermission = this.view.formModel.entityPer;
+    //Chưa có group
+    gridModel.groupFields = 'createdBy';
+    this.callfc.openForm(
+      CodxExportComponent,
+      null,
+      900,
+      700,
+      '',
+      [gridModel, data.recID],
+      null
     );
   }
 

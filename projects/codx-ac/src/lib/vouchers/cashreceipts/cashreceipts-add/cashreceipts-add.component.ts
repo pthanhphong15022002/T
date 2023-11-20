@@ -206,10 +206,10 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
    */
   clickMF(event: any, data) {
     switch (event.functionID) {
-      case 'ACT041011':
+      case 'SYS104':
         this.copyRow(data);
         break;
-      case 'ACT041012':
+      case 'SYS102':
         this.deleteRow(data);
         break;
     }
@@ -489,7 +489,21 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
    * @param data
    */
   deleteRow(data) {
-    this.eleGridCashReceipt.deleteRow(data);
+    if (this.eleGridCashReceipt && this.elementTabDetail?.selectingID == '0') {
+      this.eleGridCashReceipt.saveRow((res:any)=>{ //? save lưới trước
+        if(res){
+          this.eleGridCashReceipt.deleteRow(data);
+        }
+      })
+    }
+
+    if (this.eleGridSettledInvoices && this.elementTabDetail?.selectingID == '1') {
+      this.eleGridSettledInvoices.saveRow((res:any)=>{ //? save lưới trước
+        if(res){
+          this.eleGridSettledInvoices.deleteRow(data);
+        }
+      })
+    }
   }
 
   /**
@@ -497,9 +511,16 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
    * @param data
    */
   copyRow(data) {
-    data.recID = Util.uid();
-    data.index = this.eleGridCashReceipt.dataSource.length;
-    this.eleGridCashReceipt.addRow(data,this.eleGridCashReceipt.dataSource.length);
+    if (this.eleGridCashReceipt && this.elementTabDetail?.selectingID == '0') {
+      this.eleGridCashReceipt.saveRow((res:any)=>{ //? save lưới trước
+        if(res){
+          data.recID = Util.uid();
+          data.index = this.eleGridCashReceipt.dataSource.length;
+          delete data?._oldData;
+          this.eleGridCashReceipt.addRow(data, this.eleGridCashReceipt.dataSource.length);
+        }
+      })
+    }
   }
 
   /**
@@ -1250,13 +1271,26 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
    * *Hàm ẩn các morefunction trong lưới
    * @param event
    */
-  hideMF(event) {
-    var bm = event.filter(
-      (x) => x.functionID != 'ACT041011' && x.functionID != 'ACT041012'
-    ); //? ẩn các morefunction ngoại trừ MF sao chép và MF xóa của lưới
-    bm.forEach((element) => {
-      element.disabled = true;
-    });
+  changeMF(event,type = '') {
+    if (type === 'gridcash') {
+      event.forEach((element) => {
+        if (element.functionID == 'SYS104' || element.functionID == 'SYS102') {
+          element.disabled = false;
+          element.isbookmark = false;
+        }else{
+          element.disabled = true;
+        }
+      });
+    }else{
+      event.forEach((element) => {
+        if (element.functionID == 'SYS102') {
+          element.disabled = false;
+          element.isbookmark = false;
+        }else{
+          element.disabled = true;
+        }
+      });
+    }
   }
 
   /**

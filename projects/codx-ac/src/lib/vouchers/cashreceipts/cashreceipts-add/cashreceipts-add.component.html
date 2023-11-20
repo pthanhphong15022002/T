@@ -405,7 +405,7 @@
         [autoFitColumns]="false" [formName]="journal.entryMode == '1'? 'CashReceiptsLines' : 'CashReceiptsLinesOneAccount'"
         [gridViewName]="journal.entryMode == '1' ? 'grvCashReceiptsLines' : 'grvCashReceiptsLinesOneAccount'"
         entityName="AC_CashReceiptsLines" predicates="TransID=@0" [dataValues]="formCashReceipt.data.recID"
-        (beforeSaveRow)="beforeSaveRow($event)" [templateMore]="TmpMFCashReceipts" service="AC"
+        (beforeSaveRow)="beforeSaveRow($event)" [templateMore]="templateMore" service="AC"
         [editOnClick]="true" (gridInit)="beforeInitGridCashReceipt($event)" rowNoField="rowNo"
         (eventAction)="onActionGridCashReceipt($event)" (actionCompleted)="onActionGridCashReceipt($event)"
         (cellChanged)="valueChangeLine($event)"></codx-gridview-v2>
@@ -466,8 +466,8 @@
 <!-- End: Grid SettledInvoices -->
 
 <!-- Start: More function CashReceipts -->
-<ng-template #TmpMFCashReceipts let-data>
-  <codx-mfunc [formModel]="fmCashReceiptsLine" (changeDataMF)="hideMF($event)" (clickMF)="clickMF($event, data)"
+<ng-template #templateMore let-data>
+  <codx-mfunc [formModel]="dialog.formModel" (changeDataMF)="changeMF($event,'gridcash')" (clickMF)="clickMF($event, data)"
     type="view"></codx-mfunc>
 </ng-template>
 <!-- End: More function CashReceipts -->

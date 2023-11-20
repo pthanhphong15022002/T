@@ -917,14 +917,25 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
    */
   copyRow(data) {
     if (this.eleGridPurchaseInvoice && this.elementTabDetail?.selectingID == '0') {
-      data.recID = Util.uid();
-      data.index = this.eleGridPurchaseInvoice.dataSource.length;
-      this.eleGridPurchaseInvoice.addRow(data, this.eleGridPurchaseInvoice.dataSource.length);
+      this.eleGridPurchaseInvoice.saveRow((res:any)=>{ //? save lưới trước
+        if(res){
+          data.recID = Util.uid();
+          data.index = this.eleGridPurchaseInvoice.dataSource.length;
+          delete data?._oldData;
+          this.eleGridPurchaseInvoice.addRow(data, this.eleGridPurchaseInvoice.dataSource.length);
+        }
+      })
     }
-    if (this.eleGridVatInvoices && this.elementTabDetail?.selectingID == '1') {
-      data.recID = Util.uid();
-      data.index = this.eleGridVatInvoices.dataSource.length;
-      this.eleGridVatInvoices.addRow(data, this.eleGridVatInvoices.dataSource.length);
+
+    if (this.eleGridVatInvoices && this.elementTabDetail?.selectingID == '2') {
+      this.eleGridVatInvoices.saveRow((res:any)=>{ //? save lưới trước
+        if(res){
+          data.recID = Util.uid();
+          data.index = this.eleGridVatInvoices.dataSource.length;
+          delete data?._oldData;
+          this.eleGridVatInvoices.addRow(data, this.eleGridVatInvoices.dataSource.length);
+        }
+      })
     }
   }
 
@@ -934,10 +945,19 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
    */
   deleteRow(data) {
     if (this.eleGridPurchaseInvoice && this.elementTabDetail?.selectingID == '0') {
-      this.eleGridPurchaseInvoice.deleteRow(data);
+      this.eleGridPurchaseInvoice.saveRow((res:any)=>{ //? save lưới trước
+        if(res){
+          this.eleGridPurchaseInvoice.deleteRow(data);
+        }
+      })
     }
-    if (this.eleGridVatInvoices && this.elementTabDetail?.selectingID == '1') {
-      this.eleGridVatInvoices.deleteRow(data);
+
+    if (this.eleGridVatInvoices && this.elementTabDetail?.selectingID == '2') {
+      this.eleGridVatInvoices.saveRow((res:any)=>{ //? save lưới trước
+        if(res){
+          this.eleGridVatInvoices.deleteRow(data);
+        }
+      })
     }
   }
 

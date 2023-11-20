@@ -9,6 +9,9 @@
   [button]="buttons"
   (buttonClick)="click($event)"
   (viewChanged)="viewChanged($event, view)"
+  (selectedChange)="selectedChange($event)"
+  (clickMF)="clickMF($event, itemSelected)"
+  (changeDataMF)="changeDataMF($event, itemSelected)"
 >
 </codx-views>
 
@@ -20,7 +23,7 @@
       [formModel]="viewBase.formModel"
       (clickMF)="clickMF($event, data)"
       (changeDataMF)="changeDataMF($event, data)"
-      type="view"
+      type="grid"
     >
     </codx-mfunc>
     <!-- </div> -->
