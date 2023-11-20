@@ -13,6 +13,7 @@ import {
   ApiHttpService,
   AuthService,
   CacheService,
+  CodxService,
   FormModel,
 } from 'codx-core';
 import { environment } from 'src/environments/environment';
@@ -33,7 +34,7 @@ export class ViewDetailCardsComponent implements OnInit, OnChanges {
   @Output() reject = new EventEmitter();
   @Output() changeStatus = new EventEmitter();
 
-
+  hidebuttonMF: boolean = false;
   isShowCard: boolean = true;
 
   data: any = null;
@@ -81,7 +82,8 @@ export class ViewDetailCardsComponent implements OnInit, OnChanges {
     private route: ActivatedRoute,
     private cache: CacheService,
     private dt: ChangeDetectorRef,
-    private auth: AuthService
+    private auth: AuthService,
+    private codxService : CodxService,
   ) {
     this.user = this.auth.userValue;
   }
@@ -95,6 +97,9 @@ export class ViewDetailCardsComponent implements OnInit, OnChanges {
 
   ngOnInit() {
     // this.getDataCard();
+    if(this.codxService.asideMode == '2') {
+      this.hidebuttonMF = true;
+    }
   }
 
   getDataCard() {

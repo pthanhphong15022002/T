@@ -162,9 +162,11 @@ export class DynamicProcessComponent
   }
 
   onInit(): void {
-    this.button = [{
-      id: this.btnAdd,
-    }];
+    this.button = [
+      {
+        id: this.btnAdd,
+      },
+    ];
     if (!this.funcID) {
       this.funcID = this.activedRouter.snapshot.params['funcID'];
       this.crrFunID = this.funcID;
@@ -178,7 +180,10 @@ export class DynamicProcessComponent
   }
 
   afterLoad() {
-    this.showButtonAdd = this.funcID == 'DP01' || this.funcID == 'DP0101';
+    this.showButtonAdd =
+      this.funcID == 'DP01' ||
+      this.funcID == 'DP0101' ||
+      this.funcID == 'DP0204'; // this.funcID == 'DP01' || this.funcID == 'DP0101'  2 cái này Khanh đổi rồi để vậy xóa sau
   }
 
   //chang data
@@ -625,123 +630,129 @@ export class DynamicProcessComponent
   }
 
   changeDataMF(e, data) {
-    if (e != null && data != null) {
-      e.forEach((res) => {
-        switch (res.functionID) {
-          // case 'SYS005':
-          // case 'SYS004':
-          // case 'SYS001':
-          // case 'SYS002':
-          // case 'SYS003':
-          //more core - thay doi nhieu dong, bo chon, chon tat ca..
-          case 'SYS007':
-          case 'SYS006':
-            res.disabled = true;
-            break;
-          case 'SYS104':
-          case 'SYS04':
-            if (
-              this.funcID == 'DP0201' ||
-              this.funcID == 'DP0202' ||
-              this.funcID == 'DP0203' ||
-              this.funcID === 'DP04' ||
-              !data.allowCopy
-            )
+    if (e) {
+      if (!data) {
+        e.forEach((res) => {
+          res.disabled = true;
+        });
+      } else if (data) {
+        e.forEach((res) => {
+          switch (res.functionID) {
+            // case 'SYS005':
+            // case 'SYS004':
+            // case 'SYS001':
+            // case 'SYS002':
+            // case 'SYS003':
+            //more core - thay doi nhieu dong, bo chon, chon tat ca..
+            case 'SYS007':
+            case 'SYS006':
               res.disabled = true;
-            break;
-          //Xem chi tiết
-          case 'DP01011':
-          case 'DP02011':
-          case 'DP02021':
-          case 'DP02031':
-          case 'DP031':
-            let isRead = this.checkPermissionRead(data);
-            if (!isRead) {
-              res.isblur = true;
-            }
-            break;
-          //Đổi tên, chỉnh sửa.
-          case 'DP01012':
-          case 'DP02012':
-          case 'DP02022':
-          case 'DP02032':
-          case 'DP032':
-            if (
-              data.category === '0' ||
-              !data.write ||
-              this.funcID == 'DP0203' ||
-              this.funcID === 'DP04'
-            ) {
-              res.disabled = true;
-            }
-            break;
-          case 'SYS03':
-            if (
-              !data.write ||
-              this.funcID == 'DP0203' ||
-              this.funcID === 'DP04'
-            ) {
-              if (res.functionID == 'SYS03') res.disabled = true;
-              else res.isblur = true;
-            }
-            break;
-          //Phân quyền:
-          case 'DP01014':
-          case 'DP02014':
-          case 'DP02024':
-          case 'DP02034':
-          case 'DP034':
-            if (!data.assign) res.isblur = true;
-            break;
-          case 'SYS02': // xoa
-            if (
-              data.category === '0' ||
-              !data.delete ||
-              data.deleted ||
-              this.funcID == 'DP0203' ||
-              this.funcID === 'DP04'
-            ) {
-              res.disabled = true;
-            }
-            break;
-          //Phát hành
-          case 'DP01015':
-          case 'DP02015':
-          case 'DP02025':
-          case 'DP02035':
-          case 'DP035':
-            if (!data.write) {
-              res.disabled = true;
-            } else if (!data.approveRule) {
-              res.isblur = true;
-            }
-            break;
-          case 'DP01016':
-          case 'DP02016':
-          case 'DP02026':
-          case 'DP02036':
-          case 'DP036':
-            if (data.category === '0' || data.released || !data?.publish)
-              res.disabled = true;
-            break;
-          case 'DP01017':
-          case 'DP02017':
-          case 'DP02027':
-          case 'DP02037':
-          case 'DP037':
-            if (data.category === '0' || !data.released || !data?.publish)
-              res.disabled = true;
-            break;
-          case 'DP01018':
-          case 'DP02018':
-          case 'DP02028':
-          case 'DP02038':
-          case 'DP038':
-            if (data.category === '0' || !data.released || !data?.publish)
-              res.disabled = true;
-            break;
-        }
-      });
+              break;
+            case 'SYS104':
+            case 'SYS04':
+              if (
+                this.funcID == 'DP0201' ||
+                this.funcID == 'DP0202' ||
+                this.funcID == 'DP0203' ||
+                this.funcID === 'DP04' ||
+                !data.allowCopy
+              )
+                res.disabled = true;
+              break;
+            //Xem chi tiết
+            case 'DP01011':
+            case 'DP02011':
+            case 'DP02021':
+            case 'DP02031':
+            case 'DP031':
+              let isRead = this.checkPermissionRead(data);
+              if (!isRead) {
+                res.isblur = true;
+              }
+              break;
+            //Đổi tên, chỉnh sửa.
+            case 'DP01012':
+            case 'DP02012':
+            case 'DP02022':
+            case 'DP02032':
+            case 'DP032':
+              if (
+                data.category === '0' ||
+                !data.write ||
+                this.funcID == 'DP0203' ||
+                this.funcID === 'DP04'
+              ) {
+                res.disabled = true;
+              }
+              break;
+            case 'SYS03':
+              if (
+                !data.write ||
+                this.funcID == 'DP0203' ||
+                this.funcID === 'DP04'
+              ) {
+                if (res.functionID == 'SYS03') res.disabled = true;
+                else res.isblur = true;
+              }
+              break;
+            //Phân quyền:
+            case 'DP01014':
+            case 'DP02014':
+            case 'DP02024':
+            case 'DP02034':
+            case 'DP034':
+              if (!data.assign) res.isblur = true;
+              break;
+            case 'SYS02': // xoa
+              if (
+                data.category === '0' ||
+                !data.delete ||
+                data.deleted ||
+                this.funcID == 'DP0203' ||
+                this.funcID === 'DP04'
+              ) {
+                res.disabled = true;
+              }
+              break;
+            //Phát hành
+            case 'DP01015':
+            case 'DP02015':
+            case 'DP02025':
+            case 'DP02035':
+            case 'DP035':
+              if (!data.write) {
+                res.disabled = true;
+              } else if (!data.approveRule) {
+                res.isblur = true;
+              }
+              break;
+            case 'DP01016':
+            case 'DP02016':
+            case 'DP02026':
+            case 'DP02036':
+            case 'DP036':
+              if (data.category === '0' || data.released || !data?.publish)
+                res.disabled = true;
+              break;
+            case 'DP01017':
+            case 'DP02017':
+            case 'DP02027':
+            case 'DP02037':
+            case 'DP037':
+              if (data.category === '0' || !data.released || !data?.publish)
+                res.disabled = true;
+              break;
+            case 'DP01018':
+            case 'DP02018':
+            case 'DP02028':
+            case 'DP02038':
+            case 'DP038':
+              if (data.category === '0' || !data.released || !data?.publish)
+                res.disabled = true;
+              break;
+          }
+        });
+      }
     }
   }
 
@@ -1313,4 +1324,13 @@ export class DynamicProcessComponent
     return regex.test(haystackLower);
   }
   //end
+
+  selectedChange(process: any) {
+    this.itemSelected = process?.data ? process?.data : process;
+    this.detectorRef.detectChanges();
+  }
+  changeItemSelect(process) {
+    this.itemSelected = process;
+    this.detectorRef.detectChanges();
+  }
 }

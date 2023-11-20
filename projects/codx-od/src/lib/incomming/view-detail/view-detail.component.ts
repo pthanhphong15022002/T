@@ -670,7 +670,7 @@ export class ViewDetailComponent
             if (x.event) {
               //this.detectorRef.detectChanges();
               //var index = this.view.dataService.data.findIndex(i => i.recID === x.event.recID);
-              //this.view.dataService.update(x.event).subscribe();
+             
               //this.view.dataService.add(x.event,index,true).subscribe((index)=>{
               //this.view.dataService.update(x.event).subscribe();
 
@@ -683,6 +683,7 @@ export class ViewDetailComponent
                 .subscribe((item) => {
                   this.data = item;
                   this.data.lstUserID = getListImg(item.relations);
+                  this.view.dataService.update(this.data).subscribe();
                   /*  var foundIndex = this.view.dataService.data.findIndex((a: { recID: string }) => a.recID == x.event.recID);
                     this.view.dataService.setDataSelected(x.event); */
                 });

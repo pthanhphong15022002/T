@@ -35,6 +35,8 @@ export class ApproversComponent extends UIComponent implements AfterViewInit {
   popoverCrr: any;
   //End tooltip
   moreFuncName: string = '';
+  itemSelected:any;
+  
   @ViewChild('item2') itemTemplate: TemplateRef<any>;
   constructor(
     injector: Injector,
@@ -233,4 +235,9 @@ export class ApproversComponent extends UIComponent implements AfterViewInit {
     return true;
   }
   //#endregion
+
+  selectedChange(val:any)
+  {
+    this.itemSelected = val?.data;
+  }
 }

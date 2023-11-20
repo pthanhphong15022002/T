@@ -530,7 +530,25 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
     this.setDefaultCreatedBy();
   }
 
-  ngAfterViewInit(): void {}
+  ngAfterViewInit(): void {
+    if (
+      this.process?.tabControl == null ||
+      this.process?.tabControl?.trim() == '' ||
+      this.process.tabControl == '31'
+    ) {
+      this.cache.valueList('DP053').subscribe((res) => {
+        if (res && res?.datas?.length > 0) {
+          let tabControl = '';
+          res.datas.forEach((element) => {
+            tabControl =
+              tabControl != '' ? tabControl + ';' + element.value : element.value;
+          });
+          this.process.tabControl = tabControl;
+          this.changeDetectorRef.markForCheck();
+        }
+      });
+    }
+  }
 
   setDefaultOwner() {
     let perm = new DP_Processes_Permission();

@@ -10,6 +10,9 @@
     formName="Roles"
     gridViewName="grvRoles"
     service="SYS"
+    (selectedChange)="selectedChange($event)"
+    (changeDataMF)="changeDataMF($event, itemSelected)"
+    (clickMF)="clickMF($event, itemSelected)"
   >
   </codx-views>
 </div>
@@ -60,7 +63,7 @@
 <ng-template #templateListView let-data>
   <codx-temp-full
     (clickMF)="clickMF($event, data)"
-    (click)="LinkDetail(data.recID, data.roleName, data.isSystem)"
+    (dblclick)="LinkDetail(data.recID, data.roleName, data.isSystem)"
     (changeDataMF)="changeDataMF($event, data)"
     [typeMF]="'hover'"
     cardCss="card-template border-bottom border-gray-150 p-3"
@@ -72,6 +75,7 @@
     [imageId]="data.recID"
     imageWidth="35"
     imageObjType="AD_Roles"
+    [hideMF]="codxService.asideMode == '2'"
   >
   </codx-temp-full>
 </ng-template>

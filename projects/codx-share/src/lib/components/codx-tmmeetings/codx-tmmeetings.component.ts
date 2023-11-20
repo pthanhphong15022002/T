@@ -134,9 +134,11 @@ export class CodxTmmeetingsComponent
   }
 
   onInit(): void {
-    this.button = [{
-      id: 'btnAdd',
-    }];
+    this.button = [
+      {
+        id: 'btnAdd',
+      },
+    ];
     if (!this.funcID)
       this.funcID = this.activedRouter.snapshot.params['funcID'];
 
@@ -796,5 +798,10 @@ export class CodxTmmeetingsComponent
   }
   openLinkMeeting(data) {
     window.open(data?.link);
+  }
+
+  selectedChange(meeting: any) {
+    this.itemSelected = meeting?.data ? meeting?.data : meeting;
+    this.detectorRef.detectChanges();
   }
 }
