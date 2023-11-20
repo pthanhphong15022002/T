@@ -81,6 +81,7 @@ export class PopupUpdateReasonCodeComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
+    this.parentID = null;
     if (this.data?.scheduleStart && this.data?.scheduleEnd) {
       this.data.scheduleStart = new Date(this.data?.scheduleStart);
       this.data.scheduleEnd = new Date(this.data?.scheduleEnd);
