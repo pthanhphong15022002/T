@@ -10,7 +10,7 @@
 <ng-template #body>
     <ng-container *ngIf="data">
         <div class="w-100 d-flex flex-column" id="erm_content">
-            <div *ngIf="showApproveButton && data.approveStatus == '0'" class="d-flex" style="justify-content: right;">
+            <div *ngIf="showApproveButton && data.approveStatus == '0' && !hidebuttonMF" class="d-flex" style="justify-content: right;">
                 <div (click)="approve.emit(data)">
                     <span class="icon-16 mx-2 icon-check" style="color:green"></span>
                     <codx-label formName="" name="lblreject" default="Duyệt"></codx-label>

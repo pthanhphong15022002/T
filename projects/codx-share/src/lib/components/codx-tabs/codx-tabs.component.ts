@@ -8,12 +8,14 @@ import {
   OnInit,
   Output,
   SimpleChanges,
+  ViewChild,
 } from '@angular/core';
 import { Permission } from '@shared/models/file.model';
 import { ApiHttpService } from 'codx-core';
 import { TabModel } from './model/tabControl.model';
 import { CodxShareService } from '../../codx-share.service';
 import { isObservable } from 'rxjs';
+import { CodxViewAssignComponent } from '../codx-view-assign/codx-view-assign.component';
 
 @Component({
   selector: 'codx-tabs',
@@ -31,7 +33,12 @@ export class CodxTabsComponent implements OnInit {
   @Input() listTab: string[] = [];
   //tree task
   @Input() dataTree: any[] = [];
+  @Input() refID = '';  //
+  @Input() refType = '';  // nghiep vụ giao việc
+  @Input() sessionID = ''; // 
+  @Input() isLoadedTree = true; //bang true neu da co dataTree truyền qua, bằng false để component se load tree
   @Input() vllStatus: any;
+  @ViewChild('viewTreeAssign') viewTreeAssign : CodxViewAssignComponent
   //references
   @Input() dataReferences: any[] = [];
   @Input() vllRefType: any = 'TM018';
@@ -252,5 +259,10 @@ export class CodxTabsComponent implements OnInit {
     oCountFooter[key] = value;
     this.oCountFooter = JSON.parse(JSON.stringify(oCountFooter));
     this.changeDetectorRef.detectChanges();
+  }
+
+  //giao việc nếu dataTree thay đổi mà nv hiện tại ko get lai data để truyền qua thì gọi hàm này đê componet tự get
+  changeTreeAssign(){
+   if(this.viewTreeAssign) this.viewTreeAssign.loadTree();else this.isLoadedTree= false
   }
 }

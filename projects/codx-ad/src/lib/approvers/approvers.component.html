@@ -9,6 +9,8 @@
   idField="groupID"
   [selectedFirst]="true"
   (buttonClick)="tbBtnclick($event)"
+  (selectedChange)="selectedChange($event)"
+  (clickMF)="moreFunction($event, itemSelected)"
 >
 </codx-views>
 
@@ -100,7 +102,7 @@
           </codx-imgs>
         </ng-container>
       </div>
-      <div class="w-100px min-w-100px">
+      <div class="w-100px min-w-100px" *ngIf="codxService.asideMode != '2'">
         <codx-mfunc
           [formModel]="view.formModel"
           (clickMF)="moreFunction($event, data)"

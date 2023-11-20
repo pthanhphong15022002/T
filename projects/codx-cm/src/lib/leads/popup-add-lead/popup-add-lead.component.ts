@@ -98,6 +98,7 @@ export class PopupAddLeadComponent
   lstContactDeletes: any[] = [];
   listIndustries: any[] = [];
   listCategory: any[] = [];
+  listFields:any[]=[];
   // const
   readonly actionAdd: string = 'add';
   readonly actionCopy: string = 'copy';
@@ -168,6 +169,7 @@ export class PopupAddLeadComponent
   disabledShowInput: boolean = true;
   isExist: boolean = false;
   applyProcess: boolean = true;
+  isBlock: boolean = true;
 
   // number
   leverSetting: number;
@@ -369,6 +371,7 @@ export class PopupAddLeadComponent
   }
 
   async saveLead() {
+    if (!this.isBlock) return;
     if (!this.lead?.leadName?.trim()) {
       this.notificationsService.notifyCode(
         'SYS009',
@@ -998,18 +1001,34 @@ export class PopupAddLeadComponent
     }
   }
 
-  ischeckFields(steps: any): boolean {
-    if (steps?.length > 0) {
-      if (this.action != 'edit') {
-        if (steps[0].fields?.length > 0) return true;
-      } else {
-        let stepCurrent = steps.filter((x) => x.stepID == this.lead.stepID)[0];
-        if (stepCurrent) {
-          if (stepCurrent.fields?.length > 0) return true;
+  ischeckFields(liststeps: any): boolean {
+    this.listFields = [];
+    if(this.action !== this.actionEdit) {
+      let stepCurrent = liststeps[0];
+      if(stepCurrent && stepCurrent.fields?.length > 0 ) {
+        let filteredTasks = stepCurrent.tasks.filter(task => task?.fieldID !== null && task?.fieldID?.trim() !== '')
+        .map(task => task.fieldID)
+        .flatMap(item => item.split(';').filter(item => item !== ''));
+        let listFields = stepCurrent.fields.filter(field => !filteredTasks.includes(field?.recID));
+        this.listFields = [...this.listFields, ...listFields];
+      }
+     }
+     else {
+      let idxCrr = liststeps.findIndex((x) => x.stepID == this.lead?.stepID);
+      if (idxCrr != -1) {
+        for (let i = 0; i <= idxCrr; i++) {
+          let stepCurrent = liststeps[i];
+          if(stepCurrent && stepCurrent.fields?.length > 0 ) {
+            let filteredTasks = stepCurrent?.tasks.filter(task => task?.fieldID !== null && task?.fieldID?.trim() !== '')
+            .map(task => task?.fieldID)
+            .flatMap(item => item.split(';').filter(item => item !== ''));
+            let listFields = stepCurrent?.fields.filter(field => !filteredTasks.includes(field?.recID));
+            this.listFields = [...this.listFields, ...listFields];
+          }
         }
       }
     }
-    return false;
+    return this.listFields != null && this.listFields?.length > 0;
   }
 
   checkAddField(stepCrr, idx) {
@@ -1144,5 +1163,8 @@ export class PopupAddLeadComponent
       }
       this.isExist = res;
     });
+  }
+  addFileCompleted(e) {
+    this.isBlock = e;
   }
 }

@@ -551,6 +551,7 @@ export class IncommingComponent
     if (id) {
       this.lstUserID = '';
       this.recID = id;
+      //this.detectorRef.detectChanges();
     }
   }
 

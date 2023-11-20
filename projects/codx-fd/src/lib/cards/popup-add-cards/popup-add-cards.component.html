@@ -275,8 +275,11 @@
                                     <span class="icon-add icon-18 "></span>
                                 </button>
                             </div> -->
-                            <codx-input type="number" [crrValue]="givePoint" [min]="0"
+                            <!-- <codx-input type="number" [crrValue]="givePoint" [min]="0" 
                                 [step]="1" field="coins" (valueChange)="valueChange($event)">
+                            </codx-input> -->
+                            <codx-input ControlName="number" [formModel]="dialog.formModel" [Group]="form"
+                                type="number" field="coins" [min]="0" [step]="1" (valueChange)="valueChange($event)">
                             </codx-input>
                         </div>
 

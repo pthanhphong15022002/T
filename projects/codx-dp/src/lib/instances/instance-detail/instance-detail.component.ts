@@ -27,6 +27,7 @@ import {
   AuthStore,
   CodxDetailTmpComponent,
   SidebarModel,
+  CodxService,
 } from 'codx-core';
 import { PopupMoveStageComponent } from '../popup-move-stage/popup-move-stage.component';
 import { InstancesComponent } from '../instances.component';
@@ -274,6 +275,7 @@ export class InstanceDetailComponent implements OnInit {
   approveStatus = '0';
   aproveTranID = ''; //instance CRR
   listIDTransApprove = [];
+  asideMode: string;
 
   constructor(
     private callfc: CallFuncService,
@@ -286,12 +288,14 @@ export class InstanceDetailComponent implements OnInit {
     public sanitizer: DomSanitizer,
     private authStore: AuthStore,
     private router: ActivatedRoute,
-    private serviceInstance: InstancesComponent
+    private serviceInstance: InstancesComponent,
+    private codxService: CodxService
   ) {
     this.cache.functionList('DPT03').subscribe((fun) => {
       if (fun) this.titleDefault = fun.customName || fun.description;
     });
     this.user = this.authStore.get();
+    this.asideMode = codxService.asideMode;
     this.cache.functionList('DPT040102').subscribe((res) => {
       if (res) {
         let formModel = new FormModel();
