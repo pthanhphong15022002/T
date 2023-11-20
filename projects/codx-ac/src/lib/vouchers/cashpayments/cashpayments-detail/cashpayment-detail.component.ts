@@ -122,7 +122,6 @@ export class CashpaymentDetailComponent extends UIComponent {
   getDataDetail(dataItem, recID) {
     if (dataItem) {
       this.itemSelected = dataItem;
-      console.log(this.itemSelected);
       this.showHideTab(this.itemSelected?.subType); // ẩn hiện các tab detail
       this.detectorRef.detectChanges();
     } else {

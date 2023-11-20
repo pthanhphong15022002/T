@@ -35,7 +35,7 @@
       </div>
     </div>
     <ng-container>
-      <div style="margin-left: 30px" *ngIf="!formCashReceipt.data?.validated"
+      <div style="margin-left: 28px" *ngIf="!formCashReceipt.data?.validated"
         class="input-circle h-20px input-border-0 w-400px mb-1">
         <codx-dropdown-select #eleCbxSubType [showFooter]="false" [isToolbar]="false"
           [cssClass]="'rounded-pill border-1'" cssPopup="h-350px w-550px" [isMulti]="false" type="valuelist"
@@ -374,7 +374,7 @@
                 </div>
               </div>
             </div>
-            <div class="row justify-content-end">
+            <div *ngIf="postDateControl == '1'" class="row justify-content-end">
               <div class="col-9">
                 <div class="form-group">
                   <codx-label style="white-space: nowrap !important" fiedName="PostedDate"

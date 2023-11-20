@@ -112,7 +112,7 @@ export class WarehouseTransfersDetailComponent extends UIComponent {
 
   //#region Function
   changeMFDetail(event: any, data: any, type: any = '') {
-
+    
   }
 
   /**

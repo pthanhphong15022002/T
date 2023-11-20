@@ -123,7 +123,6 @@ export class SalesinvoicesComponent extends UIComponent
     //* thiết lập cấu hình sidebar
     this.optionSidebar.DataService = this.view.dataService;
     this.optionSidebar.FormModel = this.view.formModel;
-    this.optionSidebar.isFull = true;
   }
 
   ngDoCheck() {

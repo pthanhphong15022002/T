@@ -68,6 +68,7 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
     { name: 'References', textDefault: 'Liên kết', isActive: false },
   ];
   isPreventChange:any = false;
+  postDateControl:any;
   private destroy$ = new Subject<void>(); //? list observable hủy các subscribe api
 
   constructor(
@@ -91,6 +92,7 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
 
   //#region Init
   onInit(): void {
+    this.acService.setPopupSize(this.dialog, '100%', '100%');
     this.cache
       .viewSettingValues('ACParameters')
       .pipe(
@@ -100,6 +102,7 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
       ).subscribe((res:any)=>{
         if (res) {
           this.taxCurr = res?.TaxCurr;
+          this.postDateControl = res?.PostedDateControl;
         }
       })
   }
