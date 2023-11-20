@@ -1971,12 +1971,16 @@ export class CodxTasksComponent
       case 'drag':
         this.crrStatus = e?.data?.status;
         break;
-      case 'dbClick':
-        this.viewTask(e?.data);
+      case 'dbClick': //kaban
+      case 'doubleClick': //lich
+        if (e?.data) {
+          this.itemSelected = e?.data;
+          this.viewTask(e?.data);
+        }
         break;
-      case 'doubleClick':
-        this.viewTask(e?.data);
-        break;
+      // case 'doubleClick':
+      //   this.viewTask(e?.data);
+      //   break;
       case 'pined-filter':
         // var index = this.view.views.findIndex((x) => x.active == true);
         // if (index != 1) {
