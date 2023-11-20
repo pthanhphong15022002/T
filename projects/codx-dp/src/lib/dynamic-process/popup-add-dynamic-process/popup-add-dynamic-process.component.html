@@ -1010,8 +1010,8 @@
               <codx-input
                 field="autoNameTabFields"
                 type="text"
-                [crrValue]="process?.autoNameTabFields"
-                [placeholder]="gridViewSetup?.AutoNameTabFields?.description"
+                [crrValue]="process?.autoNameTabFields ?? null"
+                [placeholder]="gridViewSetup?.AutoNameTabFields?.description ?? gridViewSetup?.AutoNameTabFields?.headerText"
                 (valueChange)="valueChange($event)"
               >
               </codx-input>
