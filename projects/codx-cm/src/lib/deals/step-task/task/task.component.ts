@@ -35,6 +35,8 @@ import { CodxTypeTaskComponent } from 'projects/codx-share/src/lib/components/co
 import { CodxViewTaskComponent } from 'projects/codx-share/src/lib/components/codx-step/codx-view-task/codx-view-task.component';
 import { CodxCmService } from '../../../codx-cm.service';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
+import { ActivatedRoute } from '@angular/router';
+import { ExportData } from 'projects/codx-share/src/lib/models/ApproveProcess.model';
 @Component({
   selector: 'task',
   templateUrl: './task.component.html',
@@ -68,6 +70,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
   listActivitie: DP_Activities[] = [];
   isLoad = false;
   taskApproval: DP_Activities;
+  funcID = '';
   moreDefaut = {
     share: true,
     write: true,
@@ -84,9 +87,11 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
     private codxCmService: CodxCmService,
     private detectorRef: ChangeDetectorRef,
     private notiService: NotificationsService,
-    private codxShareService: CodxShareService
+    private codxShareService: CodxShareService,
+    private activedRouter: ActivatedRoute,
   ) {
     this.user = this.authstore.get();
+    this.funcID = this.activedRouter.snapshot.params['funcID'];
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -721,43 +726,78 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
   }
 
   //#region duyet
+
   approvalTrans(task: DP_Activities) {
-    if (task?.approveRule && task?.recID) {
-      this.api
-        .execSv<any>(
-          'ES',
-          'ES',
-          'CategoriesBusiness',
-          'GetByCategoryIDAsync',
-          task?.recID
-        )
-        .subscribe((res) => {
-          if (!res) {
-            this.notiService.notifyCode('ES028');
-            return;
-          }
-          this.taskApproval = task;
-          if (res.eSign) {
-            //kys soos
-          } else {
-            this.release(task, res);
-          }
-        });
+    if(task?.approveRule && task?.recID){
+      this.api.execSv<any>(
+        'ES',
+        'ES',
+        'CategoriesBusiness',
+        'GetByCategoryIDAsync',
+        task?.recID
+      ).subscribe(res => {
+        if(!res){
+          this.notiService.notifyCode('ES028');
+          return;
+        }else {
+          let exportData: ExportData = {
+            funcID: this.funcID,
+            recID: task?.recID,
+            data: null,
+          };
+          this.release(task, res, exportData);
+        }
+      })
     } else {
       this.notiService.notifyCode('DP040');
     }
   }
-  release(data: any, category: any) {
+
+  release(data: any, category: any, exportData = null) {
     this.codxShareService.codxReleaseDynamic(
-      'DP',
+      'CM',
       data,
       category,
-      ' ',
-      'CM0201',
-      data?.title,
-      this.releaseCallback.bind(this)
+      'DP_Activities',
+      this.funcID,
+      data?.taskName,
+      this.releaseCallback.bind(this),
+      null,
+      null,
+      'DP_Activities',
+      null,
+      null,
+      exportData
     );
   }
+
+  // approvalTrans(task: DP_Activities) {
+  //   if (task?.approveRule && task?.recID) {
+  //     this.api
+  //       .execSv<any>(
+  //         'ES',
+  //         'ES',
+  //         'CategoriesBusiness',
+  //         'GetByCategoryIDAsync',
+  //         task?.recID
+  //       )
+  //       .subscribe((res) => {
+  //         if (!res) {
+  //           this.notiService.notifyCode('ES028');
+  //           return;
+  //         }
+  //         this.taskApproval = task;
+  //         if (res.eSign) {
+  //           //kys soos
+  //         } else {
+  //           this.release(task, res);
+  //         }
+  //       });
+  //   } else {
+  //     this.notiService.notifyCode('DP040');
+  //   }
+  // }
+
   releaseCallback(res: any, t: any = null) {
     if (res?.msgCodeError) this.notiService.notify(res?.msgCodeError);
     else {
