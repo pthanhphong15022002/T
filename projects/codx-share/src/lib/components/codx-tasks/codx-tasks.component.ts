@@ -1845,7 +1845,24 @@ export class CodxTasksComponent
               x.disabled = true;
             break;
           //an voi ca TMT026
+          //Xóa
           case 'SYS02':
+            if (
+              !data.write ||
+              data.category == '2' ||
+              data.status == '90' ||
+              this.funcID == 'TMT0402' ||
+              this.funcID == 'TMT0401' ||
+              this.funcID == 'TMT0206' ||
+              this.funcID == 'MWP0063' ||
+              ((this.funcID == 'TMT03011' || this.funcID == 'TMT05011') &&
+                data.category == '1' &&
+                data.createdBy != this.user?.userID &&
+                !this.user?.administrator)
+            )
+              x.disabled = true;
+            break;
+          // Edit
           case 'SYS03':
             if (
               !data.write ||

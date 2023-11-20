@@ -1,7 +1,7 @@
 <codx-views #view [views]="views" [funcID]="funcID" [service]="service" [assemblyName]="assemblyName"
   [className]="className" [method]="method" [entityName]="entityName" [button]="button"
   [idField]="idField" [selectedFirst]="true" (selectedChange)="selectedChange($event)"
-  (viewChanging)="viewChanging($event)" (viewChanged)="viewChanged($event)">
+  (viewChanging)="viewChanging($event)" (viewChanged)="viewChanged($event)" (clickMF)="clickMF($event, itemSelected)">
 </codx-views>
 
 <!-- tree_masterDetail -->

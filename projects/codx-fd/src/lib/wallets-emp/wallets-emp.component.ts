@@ -9,6 +9,8 @@ import {
   ViewModel,
   ViewType,
 } from 'codx-core';
+import { CodxFdService } from '../codx-fd.service';
+import { PopupWalletHistoryComponent } from './popup-wallet-history/popup-wallet-history.component';
 
 @Component({
   selector: 'lib-wallets-emp',
@@ -25,6 +27,7 @@ export class WalletsEmpComponent extends UIComponent {
   selectedID: string = '';
   grdViewSetup: any = null;
   ratingVLL: string = '';
+  policyID: string;
 
   /* #region request */
   request: ResourceModel;
@@ -49,13 +52,16 @@ export class WalletsEmpComponent extends UIComponent {
     private notifiSV: NotificationsService,
     private auth: AuthService,
     private notiService: NotificationsService,
-    private callFC: CallFuncService
+    private callFC: CallFuncService,
+    private fdService: CodxFdService,
   ) {
     super(inject);
     this.user = this.auth.userValue;
   }
 
-  onInit(): void {}
+  onInit(): void {
+    this.getPolicy();
+  }
 
   ngAfterViewInit(): void {
     this.request = new ResourceModel();
@@ -108,5 +114,63 @@ export class WalletsEmpComponent extends UIComponent {
     if (event?.view?.id == '2' || event?.id == '2') {
       this.view.currentView.dataService.load().subscribe();
     }
+  }
+
+  getPolicy() {
+    const predicates = 'Category = @0 and ApplyFor = @1 and ItemType = @2';
+    let dataValue = '3;5;4';
+    this.fdService
+      .getListPolicyByPredicate(predicates, dataValue)
+      .subscribe((res) => {
+        if (res) {
+          this.policyID = res[0]?.policyID;
+        }
+      });
+  }
+
+  clickMF(moreFunc: any, data: any) {
+    this.itemSelected = data;
+    if (moreFunc.functionID == 'FDK0111' || moreFunc.functionID == 'FDW0111') {
+      // xem lịch sử xu hoặc điểm
+      this.openPopupHistory(data);
+    } else if (moreFunc.functionID == 'FDW0112') {
+      // kích hoạt ví
+      this.fdService
+        .activeWallet(this.itemSelected.domainUser)
+        .subscribe((res) => {
+          if (res) this.notiService.notifyCode('SYS007');
+        });
+    } else if (
+      moreFunc.functionID == 'FDW0113' ||
+      moreFunc.functionID == 'FDK0112'
+    ) {
+      // chạy lại số dư
+      this.fdService
+        .refreshWallet('2', this.policyID, this.itemSelected.domainUser)
+        .subscribe((res) => {
+          if (res) this.notiService.notifyCode('SYS007');
+        });
+    }
+  }
+
+  openPopupHistory(item) {
+    var obj = {
+      userID: item.domainUser,
+      formModel: this.view.formModel,
+      modeView: 'wallet',
+    };
+
+    let popup = this.callfc.openForm(
+      PopupWalletHistoryComponent,
+      '',
+      1400,
+      1500,
+      '',
+      obj,
+      ''
+    );
+    popup.closed.subscribe((res: any) => {
+      if (!res || res.closedBy == 'escape' || !res.event) return;
+    });
   }
 }

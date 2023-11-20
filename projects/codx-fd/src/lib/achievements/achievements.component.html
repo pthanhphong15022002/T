@@ -1,7 +1,7 @@
 <codx-views #view [views]="views" [funcID]="funcID" [service]="service" [assemblyName]="assemblyName"
   [className]="className" [method]="method" [entityName]="entityName" [button]="button" [autoLoad]="false"
   [idField]="idField" [selectedFirst]="true" (selectedChange)="selectedChange($event)"
-  (viewChanging)="viewChanging($event)" (viewChanged)="viewChanged($event)">
+  (viewChanging)="viewChanging($event)" (viewChanged)="viewChanged($event)" (clickMF)="clickMF($event, itemSelected)">
 </codx-views>
 
 <!-- tree_masterDetail -->
@@ -12,7 +12,7 @@
     </div>
 </ng-template>
 <ng-template #tmpMasterDetail>
-  <lib-wallets-list-by-org [formModel]="view.formModel" [grvSetup]="grvSetup"
+  <lib-wallets-list-by-org #listWallet [formModel]="view.formModel" [grvSetup]="grvSetup"
   [funcID]="funcID" [rowHeight]="100" [orgUnitID]="itemSelected?.orgUnitID" [view]="view"
   [showRowNumber]="false" [modeView]="'achievement'">
 </lib-wallets-list-by-org>
