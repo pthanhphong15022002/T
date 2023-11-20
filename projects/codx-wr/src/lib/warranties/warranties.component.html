@@ -18,6 +18,8 @@
   (viewChanged)="changeView($event)"
   (searchChanged)="searchChanged($event)"
   [viewActiveType]="viewMode"
+  (changeDataMF)="changeDataMF($event, dataSelected)"
+  (clickMF)="clickMF($event, dataSelected)"
 ></codx-views>
 
 <ng-template #itemViewList let-dataList>
