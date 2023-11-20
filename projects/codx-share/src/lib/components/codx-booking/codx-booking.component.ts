@@ -856,7 +856,8 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
   //---------------------------------------------------------------------------------//
 
   release(data: any) {
-    if (this.curUser?.userID == data?.createdBy) {
+    if (this.curUser?.userID == data?.createdBy ||
+      this.codxBookingService.checkAdminRole(this.curUser, this.isAdmin)) {
       if (
         this.resourceType == EPCONST.VLL.ResourceType.Room ||
         this.resourceType == EPCONST.VLL.ResourceType.Car
