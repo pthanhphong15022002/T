@@ -24,7 +24,7 @@ import {
   Util,
   ViewsComponent,
   UIDetailComponent,
-  CodxService
+  CodxService,
 } from 'codx-core';
 import { ES_SignFile, File } from 'projects/codx-es/src/lib/codx-es.model';
 import { PopupAddSignFileComponent } from 'projects/codx-es/src/lib/sign-file/popup-add-sign-file/popup-add-sign-file.component';
@@ -57,6 +57,8 @@ import { UpdateExtendComponent } from '../update/update.component';
 import { Permission } from '@shared/models/file.model';
 import { UpdateVersionComponent } from '../updateversion/updateversion.component';
 import { ApproveProcess } from 'projects/codx-share/src/lib/models/ApproveProcess.model';
+import { CodxTasksService } from 'projects/codx-share/src/lib/components/codx-tasks/codx-tasks.service';
+import { CodxTabsComponent } from 'projects/codx-share/src/lib/components/codx-tabs/codx-tabs.component';
 
 @Component({
   selector: 'app-view-detail',
@@ -64,8 +66,12 @@ import { ApproveProcess } from 'projects/codx-share/src/lib/models/ApproveProces
   styleUrls: ['./view-detail.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class ViewDetailComponent extends  UIDetailComponent implements OnChanges, AfterViewInit {
+export class ViewDetailComponent
+  extends UIDetailComponent
+  implements OnChanges, AfterViewInit
+{
   @ViewChild('reference') reference: TemplateRef<ElementRef>;
+  @ViewChild('footTabs') footTabs: CodxTabsComponent;
   @Input() data: any = { category: 'Phân loại công văn' };
   @Input() gridViewSetup: any;
   @Input() view: ViewsComponent;
@@ -106,12 +112,15 @@ export class ViewDetailComponent extends  UIDetailComponent implements OnChanges
   vllStatus = 'TM004';
   vllStatusAssign = 'TM007';
   funcList: any;
-  defaultValue:any;
+  defaultValue: any;
   dataRq = new DataRequest();
   listPermission = [];
+  dataTree = [];
+
   constructor(
     inject: Injector,
     private odService: DispatchService,
+    private taskService: CodxTasksService,
     private authStore: AuthStore,
     private notifySvr: NotificationsService,
     private codxODService: CodxOdService,
@@ -129,7 +138,8 @@ export class ViewDetailComponent extends  UIDetailComponent implements OnChanges
     this.dataRq.entityName = this.formModel?.entityName;
     this.dataRq.formName = this.formModel?.formName;
     this.dataRq.funcID = this.formModel?.funcID;
-    this.getGridViewSetup(this.funcID);
+    //this.getGridViewSetup(this.funcID);
+    this.userID = this.authStore.get().userID;
     if(this.codxService.asideMode == "2") this.hideMF = true;
   }
 
@@ -154,47 +164,23 @@ export class ViewDetailComponent extends  UIDetailComponent implements OnChanges
         icon: 'icon-i-chat-right',
       },
     ];
-    if (
-      this.defaultValue == '2' ||
-      (this.defaultValue == '3' && this.dataItem?.dispatchType == '3') ||
-      this.xd
-    )
-      this.tabControl.push({
-        name: 'Approve',
-        textDefault: 'Xét duyệt',
-        isActive: false,
-      });
 
-    if (this.defaultValue != '2' && this.defaultValue != '3') {
-      this.tabControl.push({
-        name: 'AssignTo',
-        textDefault: 'Giao việc',
-        isActive: false,
-        icon: 'icon-i-clipboard-check',
-      });
-    }
     this.setHeight();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (
       changes?.dataItem &&
+      !changes?.dataItem?.firstChange &&
       changes?.dataItem?.currentValue != changes?.dataItem?.previousValue
     )
+    {
       this.dataItem = changes?.dataItem?.currentValue;
-    if (
-      changes?.recID &&
-      changes.recID?.previousValue != changes.recID?.currentValue
-    ) {
-      this.userID = this.authStore.get().userID;
-      this.recID = changes.recID?.currentValue;
-      if (!this.data) this.data = {};
-
-      this.getDtDis(this.recID)
-      this.getPermission(this.recID);
-
-      this.detectorRef.detectChanges();
+      this.getDtDis(this.dataItem.recID)
+      this.getPermission(this.dataItem.recID);
     }
+      
+    
     if (changes?.view?.currentValue != changes?.view?.previousValue)
       this.formModel = changes?.view?.currentValue?.formModel;
     if (changes?.funcID?.currentValue != changes?.funcID?.previousValue) {
@@ -211,20 +197,52 @@ export class ViewDetailComponent extends  UIDetailComponent implements OnChanges
     this.addPermission();
   }
 
-
   //Hàm lấy thông tin chi tiết của công văn
   getDtDis(id: any) {
     this.data = null;
     if (id) {
       this.odService
-        .getDetailDispatch(id, this.formModel.entityName , this.referType , false , this.funcID)
+        .getDetailDispatch(
+          id,
+          this.formModel?.entityName,
+          this.referType,
+          false,
+          this.funcID
+        )
         .subscribe((item) => {
           if (item) {
+            this.dataTree = item?.tasks ?? [];
             this.data = formatDtDis(item);
+            this.updateTabControl();
+            this.detectorRef.detectChanges();
           }
         });
     }
   }
+
+  updateTabControl() {
+    if (
+      (this.defaultValue == '2' ||
+      (this.defaultValue == '3' && this.data?.dispatchType == '3') ||
+      this.xd) && this.tabControl.filter(e => e.name === 'Approve').length == 0
+    )
+      this.tabControl.push({
+        name: 'Approve',
+        textDefault: 'Xét duyệt',
+        isActive: false,
+      });
+     
+
+    if (this.defaultValue != '2' && this.defaultValue != '3' && this.tabControl.filter(e => e.name === 'AssignTo').length == 0) {
+      this.tabControl.push({
+        name: 'AssignTo',
+        textDefault: 'Giao việc',
+        isActive: false,
+        icon: 'icon-i-clipboard-check',
+      });
+    }
+  }
+
   setHeight() {
     let main = 0,
       header = 0;
@@ -240,7 +258,7 @@ export class ViewDetailComponent extends  UIDetailComponent implements OnChanges
     ) as HTMLCollectionOf<HTMLElement>;
     if (ele) {
       header = Array.from(eleheader)[0]?.offsetHeight;
-      header = (!header || header< 220) ? 220 : header;
+      header = !header || header < 220 ? 220 : header;
     }
 
     let nodes = document.getElementsByClassName(
@@ -263,7 +281,7 @@ export class ViewDetailComponent extends  UIDetailComponent implements OnChanges
     if (isObservable(funcList)) {
       funcList.subscribe((fuc) => {
         this.funcList = fuc;
-        this.defaultValue = (this.funcList?.defaultValue ?? "").split(";")[0];
+        this.defaultValue = (this.funcList?.defaultValue ?? '').split(';')[0];
         this.formModels = {
           entityName: this.funcList?.entityName,
           formName: this.funcList?.formName,
@@ -284,11 +302,11 @@ export class ViewDetailComponent extends  UIDetailComponent implements OnChanges
           this.gridViewSetup = gw;
           this.getDataValuelist();
         }
-        this.getDtDis(this.recID)
+        //this.getDtDis(this.recID)
       });
     } else {
       this.funcList = funcList;
-      this.defaultValue = (this.funcList?.defaultValue ?? "").split(";")[0];
+      this.defaultValue = (this.funcList?.defaultValue ?? '').split(';')[0];
       this.formModels = {
         entityName: this.funcList?.entityName,
         formName: this.funcList?.formName,
@@ -296,7 +314,7 @@ export class ViewDetailComponent extends  UIDetailComponent implements OnChanges
         gridViewName: this.funcList?.gridViewName,
       };
       if (!this.formModel) this.formModel = this.formModels;
-      this.getDtDis(this.recID)
+      //this.getDtDis(this.recID)
       var gw = this.codxODService.loadGridView(
         this.funcList?.formName,
         this.funcList?.gridViewName
@@ -606,34 +624,33 @@ export class ViewDetailComponent extends  UIDetailComponent implements OnChanges
     delete datas.includeTables;
     switch (funcID) {
       //chỉ xem
-      case 'read':
-        {
-          let option = new SidebarModel();
-          option.DataService = this.view?.currentView?.dataService;
-          datas.relations = this.data.relations
-          this.dialog = this.callfc.openSide(
-            IncommingAddComponent,
-            {
-              gridViewSetup: this.gridViewSetup,
-              headerText:
-                val?.data?.customName +
-                ' ' +
-                (this.funcList?.customName).toLowerCase(),
-              formModel: this.formModel,
-              type: 'read',
-              data: datas,
-              defaultValue: this.defaultValue
-            },
-            option
-          );
-          break;
-        }
+      case 'read': {
+        let option = new SidebarModel();
+        option.DataService = this.view?.currentView?.dataService;
+        datas.relations = this.data.relations;
+        this.dialog = this.callfc.openSide(
+          IncommingAddComponent,
+          {
+            gridViewSetup: this.gridViewSetup,
+            headerText:
+              val?.data?.customName +
+              ' ' +
+              (this.funcList?.customName).toLowerCase(),
+            formModel: this.formModel,
+            type: 'read',
+            data: datas,
+            defaultValue: this.defaultValue,
+          },
+          option
+        );
+        break;
+      }
       //Sửa
       case 'SYS03': {
         this.view.dataService.edit(datas).subscribe((res: any) => {
           let option = new SidebarModel();
           option.DataService = this.view?.currentView?.dataService;
-          datas.relations = this.data.relations
+          datas.relations = this.data.relations;
           this.dialog = this.callfc.openSide(
             IncommingAddComponent,
             {
@@ -645,7 +662,7 @@ export class ViewDetailComponent extends  UIDetailComponent implements OnChanges
               formModel: this.formModel,
               type: 'edit',
               data: datas,
-              defaultValue: this.defaultValue
+              defaultValue: this.defaultValue,
             },
             option
           );
@@ -653,7 +670,7 @@ export class ViewDetailComponent extends  UIDetailComponent implements OnChanges
             if (x.event) {
               //this.detectorRef.detectChanges();
               //var index = this.view.dataService.data.findIndex(i => i.recID === x.event.recID);
-              //this.view.dataService.update(x.event).subscribe();
+             
               //this.view.dataService.add(x.event,index,true).subscribe((index)=>{
               //this.view.dataService.update(x.event).subscribe();
 
@@ -666,6 +683,7 @@ export class ViewDetailComponent extends  UIDetailComponent implements OnChanges
                 .subscribe((item) => {
                   this.data = item;
                   this.data.lstUserID = getListImg(item.relations);
+                  this.view.dataService.update(this.data).subscribe();
                   /*  var foundIndex = this.view.dataService.data.findIndex((a: { recID: string }) => a.recID == x.event.recID);
                     this.view.dataService.setDataSelected(x.event); */
                 });
@@ -722,7 +740,7 @@ export class ViewDetailComponent extends  UIDetailComponent implements OnChanges
                 (this.funcList?.customName).toLowerCase(),
               type: 'copy',
               formModel: this.formModel,
-              defaultValue: this.defaultValue
+              defaultValue: this.defaultValue,
             },
             option
           );
@@ -914,8 +932,10 @@ export class ViewDetailComponent extends  UIDetailComponent implements OnChanges
               );
               this.dialog.closed.subscribe((x) => {
                 if (x.event) {
-                  var index = this.data.files.findIndex(a=>a.recID == x.event.recID);
-                  if(index >=0 ) this.data.files[index] = x.event;
+                  var index = this.data.files.findIndex(
+                    (a) => a.recID == x.event.recID
+                  );
+                  if (index >= 0) this.data.files[index] = x.event;
                 }
               });
             }
@@ -1153,7 +1173,7 @@ export class ViewDetailComponent extends  UIDetailComponent implements OnChanges
           .closed.subscribe((x) => {
             if (x?.event == 0) {
               datas.status = '7';
-              this.data.status = "7";
+              this.data.status = '7';
               this.view.dataService.update(datas).subscribe();
             }
           });
@@ -1182,8 +1202,8 @@ export class ViewDetailComponent extends  UIDetailComponent implements OnChanges
           )
           .closed.subscribe((x) => {
             if (x.event) {
-              this.view.dataService.update(x.event).subscribe(item=>{
-                this.data.status = "4";
+              this.view.dataService.update(x.event).subscribe((item) => {
+                this.data.status = '4';
                 this.data = [...this.data];
               });
             }
@@ -1213,10 +1233,11 @@ export class ViewDetailComponent extends  UIDetailComponent implements OnChanges
             option
           )
           .closed.subscribe((x) => {
-            if (x.event) this.view.dataService.update(x.event).subscribe(item=>{
-              this.data.status = "3";
-              this.data = [...this.data];
-            });
+            if (x.event)
+              this.view.dataService.update(x.event).subscribe((item) => {
+                this.data.status = '3';
+                this.data = [...this.data];
+              });
           });
         // this.refuse(datas);
         break;
@@ -1283,6 +1304,15 @@ export class ViewDetailComponent extends  UIDetailComponent implements OnChanges
           if (e?.event && e?.event[0]) {
             datas.status = '3';
             datas.approveStatus = '3';
+            //get tree task
+            // VTHAO - fix con lỗi vẫn chưa gen lại sau nhé..về nhà đã
+            // this.taskService.getTreeAssign(
+            //   this.data.recID,
+            //   'OD_Dispatches',
+            //   this.getTree.bind(this)
+            // );
+            //change lại tree VTHAO - đã sửa component để cho hợp lý
+            if(this.footTabs) this.footTabs.changeTreeAssign()
             that.odService
               .updateDispatch(
                 datas,
@@ -1293,10 +1323,10 @@ export class ViewDetailComponent extends  UIDetailComponent implements OnChanges
               )
               .subscribe((item) => {
                 if (item.status == 0) {
-                  this.data.tasks = e?.event[1];
+                  // // // this.data.tasks = e?.event[1]; //cái này không phải tree
                   this.data.status = '3';
                   this.data.approveStatus = '3';
-                  e.data.tasks = e?.event[1];
+                  // // // e.data.tasks = e?.event[1];
                   this.data = [...this.data];
                   this.detectorRef.detectChanges();
                   that.view.dataService.update(e.data).subscribe();
@@ -1307,15 +1337,13 @@ export class ViewDetailComponent extends  UIDetailComponent implements OnChanges
         break;
       }
       default: {
-
         //Biến động , tự custom
-        var customData =
-        {
-          refID : "",
-          refType : this.formModel?.entityName,
+        var customData = {
+          refID: '',
+          refType: this.formModel?.entityName,
           //dataSource: datas,
-          addPermissions: this.listPermission
-        }
+          addPermissions: this.listPermission,
+        };
 
         this.shareService.defaultMoreFunc(
           val,
@@ -1411,7 +1439,6 @@ export class ViewDetailComponent extends  UIDetailComponent implements OnChanges
 
   //Duyệt công văn
   documentApproval(datas: any) {
-
     if (datas.bsCategory) {
       //Có thiết lập bước duyệt
       if (datas.bsCategory.approval) {
@@ -1483,8 +1510,7 @@ export class ViewDetailComponent extends  UIDetailComponent implements OnChanges
         break;
       }
       //Gửi mail
-      case "SYS004":
-      {
+      case 'SYS004': {
         this.data = e?.result[0];
         this.data.lstUserID = getListImg(e?.result[0].relations);
         this.data.listInformationRel = e?.result[1];
@@ -1501,8 +1527,10 @@ export class ViewDetailComponent extends  UIDetailComponent implements OnChanges
     shareBy: any,
     agencies = null
   ) {
-    if (relationType == '1' || (this.defaultValue == '2' && relationType == '2'))
-    {
+    if (
+      relationType == '1' ||
+      (this.defaultValue == '2' && relationType == '2')
+    ) {
       if (this.defaultValue == '1') {
         var text = this.ms020?.customName;
         if (!text) text = '';
@@ -1533,9 +1561,7 @@ export class ViewDetailComponent extends  UIDetailComponent implements OnChanges
     this.view.dataService.data[index] = data;
   }
   changeDataMF(e: any, data: any) {
-    var funcList = this.codxODService.loadFunctionList(
-      this.funcID
-    );
+    var funcList = this.codxODService.loadFunctionList(this.funcID);
     if (isObservable(funcList)) {
       funcList.subscribe((fc) => {
         this.changeDataMFBefore(e, data, fc);
@@ -1573,8 +1599,7 @@ export class ViewDetailComponent extends  UIDetailComponent implements OnChanges
         if (bm[0]) bm[0].disabled = false;
       }
       if (
-        (this.defaultValue == '2' ||
-        this.defaultValue == '3') &&
+        (this.defaultValue == '2' || this.defaultValue == '3') &&
         data?.status != '1' &&
         data?.status != '2' &&
         data?.approveStatus != '2' &&
@@ -1583,10 +1608,7 @@ export class ViewDetailComponent extends  UIDetailComponent implements OnChanges
       ) {
       }
 
-      if (
-        this.defaultValue == '2' ||
-        this.defaultValue == '3'
-      ) {
+      if (this.defaultValue == '2' || this.defaultValue == '3') {
         if (
           data?.status != '1' &&
           data?.status != '2' &&
@@ -1720,7 +1742,7 @@ export class ViewDetailComponent extends  UIDetailComponent implements OnChanges
           data.status = '3';
           data.approveStatus = '3';
           this.notifySvr.notifyCode('ES007');
-     
+
           this.odService
             .updateDispatch(
               data,
@@ -1793,10 +1815,10 @@ export class ViewDetailComponent extends  UIDetailComponent implements OnChanges
               signFile.files.push(file);
             }
           }
-          let ap= new ApproveProcess();
-          ap.funcID= this.view?.formModel?.funcID;
-          ap.entityName= this.view?.formModel?.entityName;
-          ap.module= 'OD';
+          let ap = new ApproveProcess();
+          ap.funcID = this.view?.formModel?.funcID;
+          ap.entityName = this.view?.formModel?.entityName;
+          ap.module = 'OD';
           let dialogApprove = this.callfc.openForm(
             PopupAddSignFileComponent,
             'Chỉnh sửa',
@@ -1811,7 +1833,7 @@ export class ViewDetailComponent extends  UIDetailComponent implements OnChanges
               refType: this.formModel?.entityName,
               refID: datas.recID,
               //formModel: this.view?.currentView?.formModel,
-              approverProcess:ap,// thêm điều kiện
+              approverProcess: ap, // thêm điều kiện
             },
             '',
             dialogModel
@@ -1842,8 +1864,8 @@ export class ViewDetailComponent extends  UIDetailComponent implements OnChanges
           //this.callfc.openForm();
         }
         if (res2?.eSign == false)
-        //xét duyệt
-        this.release(datas, processID);
+          //xét duyệt
+          this.release(datas, processID);
         // else
         //   this.shareService
         //     .codxReleaseDynamic(
@@ -1921,6 +1943,18 @@ export class ViewDetailComponent extends  UIDetailComponent implements OnChanges
           this.listPermission.push(p);
         }
       });
+    }
+  }
+
+  //Thao fix giao task
+
+  getTree(treeTask) {
+    if (treeTask) {
+      this.dataTree = treeTask;
+      this.data.status = '3';
+      this.data.approveStatus = '3';
+      this.view.dataService.update(this.data).subscribe();
+      this.detectorRef.detectChanges();
     }
   }
 }

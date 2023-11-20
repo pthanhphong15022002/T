@@ -86,6 +86,7 @@ export class PopupAddDealComponent
   lstContactAdd: any[] = [];
   lstContactOld: any[] = [];
   listInstanceSteps: any[] = [];
+  listFields:any[];
 
   // const
   readonly actionAdd: string = 'add';
@@ -125,7 +126,7 @@ export class PopupAddDealComponent
   listProcess: any;
   user: any;
   owner: any;
-  idxCrr: any = -1;
+  // idxCrr: any = -1;
   instanceRes: any;
   instanceReason: any;
   dateMessage: any;
@@ -756,8 +757,7 @@ export class PopupAddDealComponent
                   ? null
                   : this.deal.createdOn
               );
-              this.setAutoNameTabFields(result?.autoNameTabFields);
-              this.itemTabsInput(this.ischeckFields(this.listInstanceSteps));
+              this.getSettingFields(result?.autoNameTabFields,this.listInstanceSteps)
               if (this.listParticipants && this.listParticipants?.length > 0) {
                 let index = this.listParticipants.findIndex(
                   (x) => x.userID === this.user.userID
@@ -954,9 +954,7 @@ export class PopupAddDealComponent
                     ? null
                     : this.deal.createdOn
                 );
-                this.setAutoNameTabFields(result?.autoNameTabFields);
-                this.itemTabsInput(this.ischeckFields(this.listInstanceSteps));
-
+                this.getSettingFields(result?.autoNameTabFields,this.listInstanceSteps);
                 this.changeDetectorRef.detectChanges();
               } else {
                 this.getListInstanceSteps(this.deal.processID);
@@ -965,6 +963,11 @@ export class PopupAddDealComponent
           }
         }
       });
+  }
+  getSettingFields(autoNameTabFields,listInstanceSteps) {
+    this.setAutoNameTabFields(autoNameTabFields);
+    this.itemTabsInput(this.ischeckFields(listInstanceSteps));
+
   }
   async getListInstanceSteps(processId: any) {
     let data = [processId, this.deal?.refID, this.action, '1'];
@@ -982,9 +985,7 @@ export class PopupAddDealComponent
           this.listMemorySteps.push(obj);
         }
         this.listInstanceSteps = res[0];
-        const autoNameTabFields = res[3];
-        this.setAutoNameTabFields(autoNameTabFields);
-        this.itemTabsInput(this.ischeckFields(this.listInstanceSteps));
+        this.getSettingFields(res[3],this.listInstanceSteps);
         this.listParticipants = [];
         this.listParticipants = JSON.parse(JSON.stringify(obj.permissions));
         if (this.action === this.actionEdit) {
@@ -1192,7 +1193,7 @@ export class PopupAddDealComponent
   }
 
   // --------------------------lOad Tabs ----------------------- //
-  itemTabsInput(check: boolean): void {
+  itemTabsInput(check: boolean,): void {
     let menuInput = this.tabInfo.findIndex(
       (item) => item?.name === this.menuInputInfo?.name //Phúc gắn thêm name để nó lấy chính xác hơn.
     );
@@ -1207,6 +1208,7 @@ export class PopupAddDealComponent
       this.tabContent.splice(tabInput, 1);
     }
   }
+
 
   itemTabContact(check: boolean): void {
     let menuContact = this.tabInfo.findIndex(
@@ -1223,40 +1225,52 @@ export class PopupAddDealComponent
       this.tabContent.splice(tabContact, 1);
     }
   }
-  ischeckFields(steps: any): boolean {
-    if (steps?.length > 0) {
-      if (this.action != 'edit') {
-        if (steps[0].fields?.length > 0) return true;
-        return false;
+  ischeckFields(liststeps: any): boolean {
+    this.listFields = [];
+    if(this.action !== this.actionEdit) {
+      let stepCurrent = liststeps[0];
+      if(stepCurrent && stepCurrent.fields?.length > 0 ) {
+        let filteredTasks = stepCurrent.tasks.filter(task => task?.fieldID !== null && task?.fieldID?.trim() !== '')
+        .map(task => task.fieldID)
+        .flatMap(item => item.split(';').filter(item => item !== ''));
+        this.listFields = stepCurrent.fields.filter(field => !filteredTasks.includes(field?.recID));
       }
-      let check = false;
-      this.idxCrr = steps.findIndex((x) => x.stepID == this.deal.stepID);
-      if (this.idxCrr != -1) {
-        for (let i = 0; i <= this.idxCrr; i++) {
-          if (steps[i]?.fields?.length > 0) {
-            check = true;
-            break;
+     }
+     else {
+      let idxCrr = liststeps.findIndex((x) => x.stepID == this.deal?.stepID);
+      if (idxCrr != -1) {
+        for (let i = 0; i <= idxCrr; i++) {
+          let stepCurrent = liststeps[i];
+          if(stepCurrent && stepCurrent.fields?.length > 0 ) {
+            let filteredTasks = stepCurrent?.tasks.filter(task => task?.fieldID !== null && task?.fieldID?.trim() !== '')
+            .map(task => task?.fieldID)
+            .flatMap(item => item.split(';').filter(item => item !== ''));
+            let listFields = stepCurrent?.fields.filter(field => !filteredTasks.includes(field?.recID));
+            this.listFields = [...this.listFields, ...listFields];
           }
         }
       }
-      return check;
     }
-    return false;
+    return this.listFields != null && this.listFields?.length > 0;
   }
   ischeckCategoryCustomer(value: any): boolean {
     return value == '1';
   }
 
-  checkAddField(stepCrr, idx) {
-    if (stepCrr) {
-      if (this.action == 'edit' && this.idxCrr != -1 && this.idxCrr >= idx) {
-        return true;
-      }
-      if (idx == 0) return true;
-      return false;
-    }
-    return false;
-  }
+  // checkAddField(stepCrr, idx, field) {
+  //   if (stepCrr) {
+  //     if (this.action == 'edit' && this.idxCrr != -1 && this.idxCrr >= idx) {
+  //       return true;
+  //     }
+  //     if (idx == 0) return true;
+  //     return false;
+
+  //     //
+  //   }
+  //   return false;
+  // }
+
+
   //----------------------------end---------------------------//
 
   setTitle(e: any) {

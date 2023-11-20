@@ -551,6 +551,7 @@ export class IncommingComponent
     if (id) {
       this.lstUserID = '';
       this.recID = id;
+      //this.detectorRef.detectChanges();
     }
   }
 
@@ -572,6 +573,7 @@ export class IncommingComponent
   }
 
   valueChange(dt: any) {
+    debugger
     var recID = null;
 
     if (dt?.data) {
