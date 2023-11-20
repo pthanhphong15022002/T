@@ -4,8 +4,10 @@ import {
   Injector,
   Input,
   OnInit,
+  QueryList,
   TemplateRef,
   ViewChild,
+  ViewChildren,
   ViewEncapsulation,
 } from '@angular/core';
 import { RangeColorModel } from '@syncfusion/ej2-angular-progressbar';
@@ -24,8 +26,18 @@ export class DashboardComponent
   implements OnInit, AfterViewInit
 {
   @ViewChild('tooltip') tooltip: TemplateRef<any>;
+  @ViewChildren('template') templates: QueryList<any>;
+
   @Input() projectID?: any;
   @Input() resources?: any;
+
+  panels:any = JSON.parse(
+    '[{"id":"0.1636284528927885_layout","row":0,"col":0,"sizeX":7,"sizeY":3,"minSizeX":0,"minSizeY":0,"maxSizeX":null,"maxSizeY":null},{"id":"0.5801149283702021_layout","row":0,"col":7,"sizeX":7,"sizeY":3,"minSizeX":0,"minSizeY":0,"maxSizeX":null,"maxSizeY":null},{"id":"0.6937258303982936_layout","row":0,"col":28,"sizeX":7,"sizeY":3,"minSizeX":0,"minSizeY":0,"maxSizeX":null,"maxSizeY":null},{"id":"0.5667390469747078_layout","row":0,"col":14,"sizeX":7,"sizeY":3,"minSizeX":0,"minSizeY":0,"maxSizeX":null,"maxSizeY":null},{"id":"0.4199281088325755_layout","row":3,"col":12,"sizeX":12,"sizeY":13,"minSizeX":0,"minSizeY":0,"maxSizeX":null,"maxSizeY":null},{"header":"Danh sách nhân viên thực hiện công việc","id":"0.4592017601751599_layout","row":0,"col":35,"sizeX":13,"sizeY":27,"minSizeX":0,"minSizeY":0,"maxSizeX":null,"maxSizeY":null},{"header":"Thống kê công việc hoàn thành và số giờ thực hiện","id":"0.06496875406606994_layout","row":16,"col":0,"sizeX":35,"sizeY":11,"minSizeX":0,"minSizeY":0,"maxSizeX":null,"maxSizeY":null},{"header":"Thống kê theo nhóm công việc","id":"0.21519762020962552_layout","row":3,"col":0,"sizeX":12,"sizeY":13,"minSizeX":0,"minSizeY":0,"maxSizeX":null,"maxSizeY":null},{"id":"0.36601875176456145_layout","row":3,"col":24,"sizeX":11,"sizeY":13,"minSizeX":0,"minSizeY":0,"maxSizeX":null,"maxSizeY":null},{"id":"0.6732337306858613_layout","row":0,"col":21,"sizeX":7,"sizeY":3,"minSizeX":1,"minSizeY":1,"maxSizeX":null,"maxSizeY":null}]'
+  );
+  datas:any = JSON.parse(
+    '[{"panelId":"0.1636284528927885_layout","data":"1"},{"panelId":"0.5801149283702021_layout","data":"5"},{"panelId":"0.6937258303982936_layout","data":"2"},{"panelId":"0.5667390469747078_layout","data":"3"},{"panelId":"0.4199281088325755_layout","data":"7"},{"panelId":"0.4592017601751599_layout","data":"10"},{"panelId":"0.06496875406606994_layout","data":"9"},{"panelId":"0.36601875176456145_layout","data":"8"},{"panelId":"0.6732337306858613_layout","data":"4"},{"panelId":"0.6937258303982936_layout","data":"5"},{"panelId":"0.21519762020962552_layout","data":"6"}]'
+  );
+
   model: DataRequest;
   daySelected: Date;
   fromDate: Date;
@@ -514,6 +526,10 @@ export class DashboardComponent
           data['taskGroupName'] + ': <b>' + data['countTasks'] + '</b>';
       }
     }
+  }
+
+  getTaskStatus(status:any){
+    return status;
   }
   //#endregion
 }

@@ -7,7 +7,7 @@
       [formModel]="formModel"
       [body]="body"
       [dataItem]="dataSelect"
-      [hideMF]="hideMF"
+      [hideMF]="viewsCurrent == 'd-' && asideMode == '2' ? true : hideMF"
       [footer]="tabs"
       (changeDataMF)="changeDataMF($event, dataSelect)"
       (clickMF)="clickMF($event, dataSelect)"

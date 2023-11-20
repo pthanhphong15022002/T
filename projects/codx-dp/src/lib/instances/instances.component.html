@@ -18,6 +18,8 @@
   (viewChanged)="changeView($event)"
   [viewActiveType]="viewMode"
   (filterReportChange)="filterChange($event)"
+  (changeDataMF)="changeDataMF($event, dataSelected)"
+  (clickMF)="clickMF($event, dataSelected)"
 >
 </codx-views>
 <!-- Dashboard -->

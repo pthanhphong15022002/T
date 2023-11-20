@@ -25,6 +25,7 @@
       [dataItem]="dataSelected"
       [footer]="tabs"
       (clickMF)="clickMF($event, dataSelected)"
+      [hideMF]="!isDoubleClick && asideMode == '2'"
     >
       <ng-template #header let-data>
         <div class="container_detail">
