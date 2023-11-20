@@ -162,9 +162,11 @@ export class DynamicProcessComponent
   }
 
   onInit(): void {
-    this.button = [{
-      id: this.btnAdd,
-    }];
+    this.button = [
+      {
+        id: this.btnAdd,
+      },
+    ];
     if (!this.funcID) {
       this.funcID = this.activedRouter.snapshot.params['funcID'];
       this.crrFunID = this.funcID;
@@ -1313,4 +1315,9 @@ export class DynamicProcessComponent
     return regex.test(haystackLower);
   }
   //end
+
+  selectedChange(process: any) {
+    this.itemSelected = process?.data ? process?.data : process;
+    this.detectorRef.detectChanges();
+  }
 }

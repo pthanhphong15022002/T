@@ -822,5 +822,7 @@
   [selectedFirst]="selectedFirst"
   [autoLoad]="true"
   [viewActiveType]="viewMode"
+  (clickMF)="clickMF($event, itemSelected)"
+  (changeDataMF)="changeDataMF($event, itemSelected)"
 >
 </codx-views>
