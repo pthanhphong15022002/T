@@ -167,8 +167,10 @@ export class CardsComponent extends UIComponent {
   selectedItem(event: any) {
     if (!event || !event.data) {
       this.selectedID = '';
+      this.itemSelected = null;
     } else {
       this.selectedID = event.data.recID;
+      this.itemSelected = event.data;
     }
     // this.detectorRef.detectChanges();
   }

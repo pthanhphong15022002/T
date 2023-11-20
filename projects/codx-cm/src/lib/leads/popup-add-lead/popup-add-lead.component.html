@@ -671,23 +671,21 @@
 </ng-template>
 
 <ng-template #tabCustomFieldDetail let-form>
-  <ng-container *ngIf="listInstanceSteps?.length > 0; else dataIsEmpty">
-    <ng-container *ngFor="let step of listInstanceSteps; let idx = index">
-      <ng-container *ngIf="step?.fields?.length > 0">
-        <ng-container *ngFor="let item of step.fields">
-          <div class="form-group" *ngIf="checkAddField(step, idx)">
-            <codx-input-custom-field
-              [customField]="item"
-              [checkValid]="false"
-              [objectId]="item.recID"
-              [objectType]="'DP_Instances_Steps_Fields'"
-              [formModel]="dialog.formModel"
-              (valueChangeCustom)="valueChangeCustom($event)"
-            >
-            </codx-input-custom-field>
-          </div>
-        </ng-container>
-      </ng-container>
+  <ng-container *ngIf="listFields &&listFields?.length > 0">
+    <ng-container *ngFor="let item of listFields">
+      <div class="form-group">
+        <codx-input-custom-field
+        [customField]="item"
+        [checkValid]="false"
+        [objectId]="item.recID"
+        [objectType]="'DP_Instances_Steps_Fields'"
+        [formModel]="dialog.formModel"
+        [objectIdParent]="lead?.recID"
+        (valueChangeCustom)="valueChangeCustom($event)"
+        (addFileCompleted)="addFileCompleted($event)"
+      >
+      </codx-input-custom-field>
+      </div>
     </ng-container>
   </ng-container>
 </ng-template>
