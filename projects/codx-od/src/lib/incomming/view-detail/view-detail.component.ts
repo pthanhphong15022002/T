@@ -1305,9 +1305,29 @@ export class ViewDetailComponent
         );
         dialog.closed.subscribe((e) => {
           if (e?.event && e?.event[0]) {
-            debugger
             datas.status = '3';
             datas.approveStatus = '3';
+
+            //Xét quyền công văn
+            if(e?.event[2] && e?.event[2].length > 0)
+            {
+              if(!Array.isArray(datas?.permission)) datas.permission = [];
+
+              e?.event[2].forEach(elm => {
+                var per = 
+                {
+                  recID: Util.uid(),
+                  roleType: elm.roleType,
+                  objectID: elm.resourceID,
+                  objectName: elm.resourceName,
+                  objectType: "U",
+                  read: true,
+                  download: true,
+                  share: true
+                }
+                datas.permission.push(per);
+              });
+            }
             //get tree task
             // VTHAO - fix con lỗi vẫn chưa gen lại sau nhé..về nhà đã
             // this.taskService.getTreeAssign(
