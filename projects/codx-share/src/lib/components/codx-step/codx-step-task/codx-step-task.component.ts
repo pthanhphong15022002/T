@@ -2551,7 +2551,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       'DP',
       data,
       category,
-      'DP_Activities',
+      'DP_Instances_Steps_Tasks',
       'CM0201',
       data?.title,
       this.releaseCallback.bind(this)
@@ -2591,7 +2591,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
                       .codxCancel(
                         'CM',
                         task?.recID,
-                        'DP_Activities',
+                        'DP_Instances_Steps_Tasks',
                         null,
                         null
                       )

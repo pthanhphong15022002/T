@@ -172,9 +172,11 @@ export class CmCustomerComponent
   }
 
   async onInit() {
-    this.button = [{
-      id: this.btnAdd,
-    }];
+    this.button = [
+      {
+        id: this.btnAdd,
+      },
+    ];
     this.showButtonAdd = true;
     this.checkAdmin();
     var param = await firstValueFrom(
@@ -380,85 +382,89 @@ export class CmCustomerComponent
   changeDataMF(e, data, type = 2) {
     if (e != null && data != null) {
       e.forEach((res) => {
-        if (type == 11) res.isbookmark = false;
-        if (data?.status != '99') {
-          switch (res.functionID) {
-            case 'SYS03':
-              if (!data.write) res.disabled = true;
-              break;
-            case 'SYS02':
-              if (!data.delete) res.disabled = true;
-              break;
-            case 'CM0105_5':
-            case 'CM0101_5':
-            case 'CM0105_1':
-            case 'CM0101_1':
-              if (!data.write || data.isBlackList) res.disabled = true;
-              break;
-            case 'CM0105_3':
-            case 'CM0101_3':
-              if (!data.write || !data.isBlackList) res.disabled = true;
-              break;
-            case 'CM0102_4':
-            case 'CM0102_1':
-              res.disabled = true;
-              break;
-            case 'CM0102_2':
-              if (
-                data.objectType == null ||
-                data.objectType.trim() == '' ||
-                data.objectType != '1'
-              )
+        if (this.dataSelected != null) {
+          if (type == 11) res.isbookmark = false;
+          if (data?.status != '99') {
+            switch (res.functionID) {
+              case 'SYS03':
+                if (!data.write) res.disabled = true;
+                break;
+              case 'SYS02':
+                if (!data.delete) res.disabled = true;
+                break;
+              case 'CM0105_5':
+              case 'CM0101_5':
+              case 'CM0105_1':
+              case 'CM0101_1':
+                if (!data.write || data.isBlackList) res.disabled = true;
+                break;
+              case 'CM0105_3':
+              case 'CM0101_3':
+                if (!data.write || !data.isBlackList) res.disabled = true;
+                break;
+              case 'CM0102_4':
+              case 'CM0102_1':
                 res.disabled = true;
-              break;
-            case 'CM0102_3':
-              if (
-                data.objectType == null ||
-                data.objectType.trim() == '' ||
-                data.objectType != '3'
-              )
+                break;
+              case 'CM0102_2':
+                if (
+                  data.objectType == null ||
+                  data.objectType.trim() == '' ||
+                  data.objectType != '1'
+                )
+                  res.disabled = true;
+                break;
+              case 'CM0102_3':
+                if (
+                  data.objectType == null ||
+                  data.objectType.trim() == '' ||
+                  data.objectType != '3'
+                )
+                  res.disabled = true;
+                break;
+              case 'CM0101_4':
+              case 'CM0105_4':
+                if (
+                  data?.owner != this.user?.userID &&
+                  !data.assign &&
+                  !data.allowPermit &&
+                  !this.isAdmin
+                )
+                  res.disabled = true;
+                break;
+              case 'SYS003':
+              case 'SYS004':
+              case 'SYS001':
+              case 'SYS002':
+                res.disabled = false;
+                break;
+            }
+          } else {
+            switch (res.functionID) {
+              case 'CM0105_6':
+              case 'CM0101_6':
+              case 'SYS003':
+              case 'SYS004':
+              case 'SYS001':
+              case 'SYS002':
+                res.disabled = false;
+                break;
+              case 'CM0101_4':
+                if (
+                  data?.owner != this.user?.userID &&
+                  !data.assign &&
+                  !data.allowPermit &&
+                  !this.isAdmin
+                )
+                  res.disabled = true;
+                break;
+              default:
                 res.disabled = true;
-              break;
-            case 'CM0101_4':
-            case 'CM0105_4':
-              if (
-                data?.owner != this.user?.userID &&
-                !data.assign &&
-                !data.allowPermit &&
-                !this.isAdmin
-              )
-                res.disabled = true;
-              break;
-            case 'SYS003':
-            case 'SYS004':
-            case 'SYS001':
-            case 'SYS002':
-              res.disabled = false;
-              break;
+                break;
+            }
           }
         } else {
-          switch (res.functionID) {
-            case 'CM0105_6':
-            case 'CM0101_6':
-            case 'SYS003':
-            case 'SYS004':
-            case 'SYS001':
-            case 'SYS002':
-              res.disabled = false;
-              break;
-            case 'CM0101_4':
-              if (
-                data?.owner != this.user?.userID &&
-                !data.assign &&
-                !data.allowPermit &&
-                !this.isAdmin
-              )
-                res.disabled = true;
-              break;
-            default:
-              res.disabled = true;
-              break;
-          }
+          res.disabled = true;
         }
       });
     }
@@ -1043,7 +1049,7 @@ export class CmCustomerComponent
           dialogCustomDeal.closed.subscribe((e) => {
             if (e && e.event != null) {
               this.notiService.notifyCode('SYS007');
-          //    this.view.dataService.update(e.event).subscribe();
+              //    this.view.dataService.update(e.event).subscribe();
               //   this.detailViewDeal.promiseAllAsync();
               this.detectorRef.detectChanges();
             }
