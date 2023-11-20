@@ -209,7 +209,12 @@
         >
         </codx-input>
       </div>
-      <ng-container *ngIf="field.dataType == 'L' || field.dataType == 'PA'">
+      <ng-container
+        *ngIf="
+          (field.dataType == 'L' && field.dataFormat != 'B') ||
+          field.dataType == 'PA'
+        "
+      >
         <div class="form-group">
           <div class="d-flex justify-content-between">
             <div class="'justify-content-start">

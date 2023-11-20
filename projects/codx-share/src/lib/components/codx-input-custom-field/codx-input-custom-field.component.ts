@@ -46,7 +46,16 @@ export class CodxInputCustomFieldComponent implements OnInit {
   @Input() viewFieldName = false; //hiện field name bên cạnh title
   @Input() objectIdParent: any = ''; //recID của model cha
   @Input() customerID: string = ''; //Khách hàng cơ hội
+
+  @ViewChild('attachment') attachment: AttachmentComponent;
+  @ViewChild('comboxValue') comboxValue: ComboBoxComponent; ///value seclect 1
+  @ViewChild('comboxValueMutilSelect')
+  comboxValueMutilSelect: ComboBoxComponent;
   placeholderRole = 'Vai trò........';
+
+  titleRadioYes = 'True';
+  titleRadioNo = 'False';
+  checkedRadio = true;
 
   moreDefaults = {
     share: true,
@@ -58,10 +67,6 @@ export class CodxInputCustomFieldComponent implements OnInit {
   dataRef = '';
 
   // @Input() readonly = false;
-  @ViewChild('attachment') attachment: AttachmentComponent;
-  @ViewChild('comboxValue') comboxValue: ComboBoxComponent; ///value seclect 1
-  @ViewChild('comboxValueMutilSelect')
-  comboxValueMutilSelect: ComboBoxComponent;
 
   addSuccess = true;
   errorMessage = '';
@@ -118,6 +123,8 @@ export class CodxInputCustomFieldComponent implements OnInit {
   settingWidth = false;
   settingCount = false;
   fieldCurrent = '';
+  valueF = 'no';
+  valueT = 'yes';
 
   constructor(
     private cache: CacheService,
@@ -188,6 +195,24 @@ export class CodxInputCustomFieldComponent implements OnInit {
         break;
       case 'L':
         if (this.customField.dataFormat == 'V') this.loadDataVll();
+        if (this.customField.dataFormat == 'B') {
+          this.cache.valueList('DP0272').subscribe((res) => {
+            if (res) {
+              let values = res.datas;
+              let idx = values.findIndex((x) => x.value == 'B');
+              if (idx != -1) {
+                let arr = values[idx].text.split('/');
+                if (arr?.length > 1) {
+                  this.titleRadioYes = arr[0];
+                  this.titleRadioNo = arr[1];
+                }
+                this.checkedRadio =
+                  this.customField.dataValue == '1' ? true : false;
+              }
+            }
+          });
+        }
+
         break;
       case 'C':
         this.formModelContact = new FormModel();
@@ -856,5 +881,27 @@ export class CodxInputCustomFieldComponent implements OnInit {
       this.dataRef = this.dataRef.substring(0, this.dataRef.length - 2);
     }
   }
+  //-----------------------------//
+
+  //-------------RADIO-----------------//
+  valueChangeRadio(e) {
+    let value = '0';
+    if (e) {
+      let checked = e?.component?.checked;
+      if (e.field == 'yes' && checked) {
+        this.checkedRadio = true;
+        value = '1';
+      } else if (e.field == 'no' && checked) {
+        this.checkedRadio = false;
+        value = '0';
+      }
+
+      this.customField.dataValue = this.valueChangeCustom.emit({
+        e: value,
+        data: this.customField,
+      });
+    }
+  }
+
   //-----------------------------//
 }
