@@ -648,7 +648,7 @@
         <ng-container *ngFor="let perm of process.permissions; index as i">
           <div
             *ngIf="perm.roleType == 'P'"
-            class="cursor-pointer has-action-menu-od me-6 d-flex align-items-center mb-2 position-relative"
+            class="cursor-pointer has-action-menu-od me-5 d-flex align-items-center mt-1 mb-3 position-relative"
           >
             <div class="me-2">
               <codx-img
@@ -667,15 +667,17 @@
             </ng-container>
           </div>
         </ng-container>
-        <codx-input
-          #inputUser
-          class="min-w-250px"
-          field="searchUser"
-          type="combobox"
-          refValue="Users"
-          (valueChange)="searchAddUsers($event, 'P')"
-        >
-        </codx-input>
+        <div class="input-sm w-250px mb-3">
+          <codx-input
+            #inputUser
+            class="w-250px"
+            field="searchUser"
+            type="combobox"
+            refValue="Users"
+            (valueChange)="searchAddUsers($event, 'P')"
+          >
+          </codx-input>
+        </div>
       </div>
 
       <hr />
@@ -723,7 +725,7 @@
         <ng-container *ngFor="let perm of process.permissions; index as i">
           <div
             *ngIf="perm.roleType == 'F'"
-            class="cursor-pointer has-action-menu-od me-6 d-flex align-items-center mb-2 position-relative"
+            class="cursor-pointer has-action-menu-od me-6 d-flex align-items-center mt-1 mb-3 position-relative"
           >
             <div class="me-2">
               <codx-img
@@ -742,15 +744,16 @@
             </ng-container>
           </div>
         </ng-container>
-        <codx-input
-          #inputUser
-          class="min-w-250px"
-          field="searchUser"
-          type="combobox"
-          refValue="Users"
-          (valueChange)="searchAddUsers($event, 'F')"
-        >
-        </codx-input>
+        <div class="input-sm w-250px mb-3">
+          <codx-input
+            #inputUser
+            field="searchUser"
+            type="combobox"
+            refValue="Users"
+            (valueChange)="searchAddUsers($event, 'F')"
+          >
+          </codx-input>
+        </div>
       </div>
       <hr />
       <div class="d-flex flex-column mb-4">
