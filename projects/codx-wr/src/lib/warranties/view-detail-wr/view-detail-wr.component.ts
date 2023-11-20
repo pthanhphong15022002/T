@@ -14,6 +14,7 @@ import {
   AuthStore,
   CacheService,
   CallFuncService,
+  CodxService,
   NotificationsService,
 } from 'codx-core';
 import { CodxWrService } from '../../codx-wr.service';
@@ -31,7 +32,7 @@ export class ViewDetailWrComponent implements OnInit {
   @Input() gridViewSetup: any;
   @Input() entityName = '';
   @Input() listRoles = [];
-
+  @Input() isDbClick: boolean = false;
   @ViewChild('viewUpdate') viewUpdate: ViewTabUpdateComponent;
   @ViewChild('problem', { read: ElementRef }) memo: ElementRef<HTMLElement>;
 
@@ -78,12 +79,17 @@ export class ViewDetailWrComponent implements OnInit {
     },
   ];
   isShow = false;
+  asideMode: string;
 
   constructor(
     private authstore: AuthStore,
-    private changeDetectorRef: ChangeDetectorRef
+    private changeDetectorRef: ChangeDetectorRef,
+    private codxService: CodxService
+
   ) {
     this.user = this.authstore.get();
+    this.asideMode = codxService.asideMode;
+
   }
 
   ngOnInit(): void {}
@@ -128,8 +134,11 @@ export class ViewDetailWrComponent implements OnInit {
   }
 
   listOrderUpdate(lstUpdate) {
-    this.viewUpdate.lstUpdate = JSON.parse(JSON.stringify(lstUpdate));
-    this.changeDetectorRef.detectChanges();
+    if(this.viewUpdate){
+      this.viewUpdate.lstUpdate = JSON.parse(JSON.stringify(lstUpdate));
+      this.changeDetectorRef.detectChanges();
+    }
+
   }
 
   getIcon($event) {

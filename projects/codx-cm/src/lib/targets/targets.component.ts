@@ -684,6 +684,7 @@ export class TargetsComponent
   changeDataMF(e, data, type = 'schedule') {
     if (e != null && data != null) {
       e.forEach((res) => {
+        res.isbookmark = false;
         switch (res.functionID) {
           case 'SYS04':
             res.disabled = true;

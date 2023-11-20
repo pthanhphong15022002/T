@@ -80,9 +80,11 @@ export class DynamicFormComponent extends UIComponent {
       //   if (state.urlOld) this.layout.setUrl(state.urlOld);
       // }
     });
-    this.buttons = [{
-      id: 'btnAdd',
-    }];
+    this.buttons = [
+      {
+        id: 'btnAdd',
+      },
+    ];
   }
 
   ngAfterViewInit(): void {
@@ -176,7 +178,7 @@ export class DynamicFormComponent extends UIComponent {
         this.openEditProcess(data, evt, '1');
         break;
       case 'CMS0105_2':
-        this.openEditProcess(data, evt, '5');
+        this.openEditProcess(data, evt, '4');
         break;
       //resend active tenant email
       case 'TNT0015': {
@@ -500,7 +502,7 @@ export class DynamicFormComponent extends UIComponent {
         'ERM.Business.DP',
         'ProcessesBusiness',
         'GetProcessSettingAsync',
-        [data?.processID]
+        [applyFor == '1' ? data?.processID : data?.processContractID]
       )
       .subscribe((res) => {
         if (res && res?.length > 0) {
@@ -545,18 +547,11 @@ export class DynamicFormComponent extends UIComponent {
           );
           dialogProcess.closed.subscribe((e) => {
             if (e && e?.event && e?.event?.recID && action == 'add') {
-              data.processID = e.event?.recID;
+              if (applyFor == '1') data.processID = e.event?.recID;
+              if (applyFor == '4') data.processContractID = e.event?.recID;
               let updateData = JSON.parse(JSON.stringify(data));
-              this.viewBase.dataService.update(updateData).subscribe();
-              this.api
-                .execSv<any>(
-                  'CM',
-                  'ERM.Business.CM',
-                  'BusinessLinesBusiness',
-                  'SetProcessIDAsync',
-                  [data?.businessLineID, e.event?.recID]
-                )
-                .subscribe();
+              this.view.dataService.update(updateData, true).subscribe();
+              this.detectorRef.detectChanges();
             }
           });
         }
