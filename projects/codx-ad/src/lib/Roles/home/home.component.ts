@@ -46,7 +46,7 @@ export class RolesComponent extends UIComponent implements OnInit, OnDestroy {
   dialog: DialogRef;
   urlDetailRoles: any;
   headerText = '';
-
+  itemSelected:any;
   @ViewChild('templateListView') templateListView!: TemplateRef<any>;
 
   constructor(
@@ -269,5 +269,10 @@ export class RolesComponent extends UIComponent implements OnInit, OnDestroy {
         });
         break;
     }
+  }
+
+  selectedChange(val:any)
+  {
+    this.itemSelected = val?.data;
   }
 }
