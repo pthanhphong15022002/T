@@ -1,6 +1,7 @@
 <codx-views class="ac-views" #view idField="recID" [views]="views" [button]="button" [entityName]="view.entityName"
   (buttonClick)="toolbarClick($event)" [predicates]="runmode == '1' ? '' : 'JournalNo=@0'" assemblyName="AC"
-  className="CashPaymentsBusiness" service="AC" method="GetDataAsync" idField="recID"
+  className="CashPaymentsBusiness" service="AC" method="GetDataAsync" idField="recID" [hideMoreFuncs]="!itemSelected"
+  (changeDataMF)="changeMFDetail($event, itemSelected,'viewdetail')" (clickMF)="clickMoreFunction($event, itemSelected)"
   [dataValues]="runmode == '1' ? '' : journalNo" (selectedChange)="onSelectedItem($event)" [isSubView]="true">
 </codx-views>
 <!-- Start: templateGrid -->
@@ -13,8 +14,8 @@
 <!-- Start: template listdetail -->
 <ng-template #templateDetailLeft let-data>
   <codx-temp-full [titleTmp]="titleTmp" cardCss="card-template border-bottom p-3" [formModel]="view.formModel"
-    [modeImgs]="true" [titleLine]="2" [dataItem]="data" [hideMF]="false" [typeMF]="'hover'" [moreFuncCss]="'me-15'"
-    (changeDataMF)="changeMFDetail($event, data,'viewdetail')" (clickMF)="clickMoreFunction($event, data)">
+    [modeImgs]="true" [titleLine]="2" [dataItem]="data" [typeMF]="'hover'" [moreFuncCss]="'me-15'"
+    [hideMF]="codxService.asideMode == '2'">
   </codx-temp-full>
 </ng-template>
 <ng-template #templateDetailRight>
@@ -26,21 +27,11 @@
   </ng-container>
 </ng-template>
 <ng-template #titleTmp let-data>
-  <!-- <ejs-tooltip position="RightCenter" id="tooltip" target="#tipsub">
-    <div id="tipsub" style="background-color: var(--primary-dark)"
-      class="w-30px symbol h-30px fs-6 d-flex justify-content-center align-items-center rounded-circle me-3">
-      <i style="font-size: 16px !important" class="text-white"
-        [class]="data?.subType | vll : 'AC100' : 'icon' | async"></i>
-    </div>
-    <ng-template #content>
-      <span *ngIf="this.view.funcID == 'ACT0410' || this.view.funcID == 'ACT0429'">{{ data?.subType | vll : "AC063" :
-        "text" | async }}</span>
-    </ng-template>
-  </ejs-tooltip> -->
   <div class="d-flex flex-column text-content flex-grow-1">
     <div class="d-flex justify-content-between">
       <div class="d-flex align-items-center">
-        <span *ngIf="data?.voucherNo" class="fw-bold line-clamp line-clamp-1 fs-6 text-uppercase me-2">{{ data?.voucherNo
+        <span *ngIf="data?.voucherNo" class="fw-bold line-clamp line-clamp-1 fs-6 text-uppercase me-2">{{
+          data?.voucherNo
           }}</span>
         <span *ngIf="
             (data?.voucherNo == '' || data?.voucherNo == null) &&
@@ -50,24 +41,12 @@
         </span>
       </div>
       <div>
-        <!-- <span *ngIf="data?.totalDR != 0" class="fw-bold line-clamp line-clamp-1 fs-6 text-uppercase" #totalDR
-          [innerHTML]="(data?.totalDR
-                | formatvalue : view.formModel : 'totalDR' : totalDR
-                | async)+ ' ' +data?.currencyID"></span>
-        <span *ngIf="data?.totalDR == 0" class="fw-bold line-clamp line-clamp-1 fs-6 text-uppercase">{{'0 ' +
-          data?.currencyID}}</span> -->
         <span class="fw-bold line-clamp line-clamp-1 fs-6 text-uppercase"
           [innerHTML]="(data?.totalDR | tranformValueNumber : (data?.currencyID !=  baseCurr ? 'S' : 'B') | async)+' '+data?.currencyID"></span>
       </div>
     </div>
     <div class="d-flex justify-content-between">
       <div class="d-flex align-items-center">
-        <!-- <ejs-tooltip *ngIf="data?.memo" id="tooltip" target="#tipmemo">
-          <span id="tipmemo" class="text-gray-600 line-clamp line-clamp-1 me-3">{{ data?.memo }}</span>
-          <ng-template #content>
-            <span id="tipmemo">{{ data?.memo }}</span>
-          </ng-template>
-        </ejs-tooltip> -->
         <span *ngIf="data?.memo" id="tipmemo" class="text-gray-600 line-clamp line-clamp-2 me-3">{{ data?.memo }}</span>
         <span *ngIf="
             (data?.memo == '' || data?.memo == null) && view?.gridViewSetup
@@ -79,18 +58,19 @@
       <div class="d-flex">
         <i class="icon-i-building me-2 icon-16"></i>
         <span *ngIf="data?.objectName" class="text-gray-600 line-clamp line-clamp-1">{{data?.objectName}}</span>
-        <!-- <span *ngIf="data?.objectID" class="text-gray-600 line-clamp line-clamp-1"
-          [innerHTML]="data?.objectID | tranformSubobject : view.formModel"></span> -->
-        <span *ngIf="(data?.objectName == '' || data?.objectName == null) && view?.gridViewSetup" class="place-holder text-gray-600 line-clamp line-clamp-1">{{ view?.gridViewSetup["ObjectID"].headerText}}</span>
+        <span *ngIf="(data?.objectName == '' || data?.objectName == null) && view?.gridViewSetup"
+          class="place-holder text-gray-600 line-clamp line-clamp-1">{{
+          view?.gridViewSetup["ObjectID"].headerText}}</span>
       </div>
     </div>
     <div style="height: 35px !important" class="d-flex justify-content-between align-items-center">
       <div class="d-flex align-items-end codx-badge">
         <codx-vll *ngIf="data?.status == '1'" [formModel]="view.formModel" [field]="'Status'"
-          [value]="data?.validated ? '1' : '7'" [showText]="true" [showBgColor]="true" class="badge badge-light badge-sm">
+          [value]="data?.validated ? '1' : '7'" [showText]="true" [showBgColor]="true"
+          class="badge badge-light badge-sm">
         </codx-vll>
-        <codx-vll *ngIf="data?.status != '1'" [formModel]="view.formModel" [field]="'Status'"
-          [value]="data?.status" [showText]="true" [showBgColor]="true" class="badge badge-light badge-sm">
+        <codx-vll *ngIf="data?.status != '1'" [formModel]="view.formModel" [field]="'Status'" [value]="data?.status"
+          [showText]="true" [showBgColor]="true" class="badge badge-light badge-sm">
         </codx-vll>
         <div class="d-flex align-items-center">
           <img style="width: 18px; height: 18px; margin-top: -1px" src="../assets/themes/ac/default/img/calendar.svg"
@@ -133,31 +113,41 @@
             "></span>
         </div>
         <div class="d-flex align-items-center">
-          <span *ngIf="data?.memo" id="tipmemo" class="text-gray-600 line-clamp line-clamp-1 me-3">{{ data?.memo }}</span>
-          <span *ngIf="(data?.memo == '' || data?.memo == null) && view?.gridViewSetup" class="place-holder text-gray-600 line-clamp line-clamp-1 me-3">{{ view?.gridViewSetup["Memo"].headerText}}</span>
+          <span *ngIf="data?.memo" id="tipmemo" class="text-gray-600 line-clamp line-clamp-1 me-3">{{ data?.memo
+            }}</span>
+          <span *ngIf="(data?.memo == '' || data?.memo == null) && view?.gridViewSetup"
+            class="place-holder text-gray-600 line-clamp line-clamp-1 me-3">{{
+            view?.gridViewSetup["Memo"].headerText}}</span>
         </div>
         <div class="d-flex align-items-center">
-          <span *ngIf="data?.objectName" class="text-gray-600 line-clamp line-clamp-1" >{{data?.objectName}}</span>
-          <span *ngIf="(data?.objectName == '' || data?.objectName == null) && view.gridViewSetup" class="place-holder text-gray-600" >{{view.gridViewSetup['ObjectID'].headerText}}</span>
+          <span *ngIf="data?.objectName" class="text-gray-600 line-clamp line-clamp-1">{{data?.objectName}}</span>
+          <span *ngIf="(data?.objectName == '' || data?.objectName == null) && view.gridViewSetup"
+            class="place-holder text-gray-600">{{view.gridViewSetup['ObjectID'].headerText}}</span>
         </div>
       </div>
       <div class="col-3">
         <div class="d-flex align-items-center">
           <span class="fw-bold text-nowrap me-2">{{ "1" | vll : "AC091" : "text" | async }}:
           </span>
-          <span *ngIf="(view.formModel.funcID == 'ACT0410' && data?.cashBookName)" class="text-gray-600">{{data?.cashBookName}}</span>
-          <span *ngIf="(view.formModel.funcID == 'ACT0410' && (data?.cashBookName == '' || data?.cashBookName == null) && view.gridViewSetup)" class="place-holder text-gray-600">{{view.gridViewSetup['CashBookID'].headerText}}</span>
+          <span *ngIf="(view.formModel.funcID == 'ACT0410' && data?.cashBookName)"
+            class="text-gray-600">{{data?.cashBookName}}</span>
+          <span
+            *ngIf="(view.formModel.funcID == 'ACT0410' && (data?.cashBookName == '' || data?.cashBookName == null) && view.gridViewSetup)"
+            class="place-holder text-gray-600">{{view.gridViewSetup['CashBookID'].headerText}}</span>
         </div>
         <div class="d-flex align-items-center">
           <codx-label class="fw-bold label-colon text-nowrap" fiedName="ReasonID" [formModel]="view.formModel">
           </codx-label>
           <span *ngIf="data?.reasonName" class="text-gray-600">{{data?.reasonName}}</span>
-          <span *ngIf="(data?.reasonName == '' || data?.reasonName == null) && view.gridViewSetup" class="place-holder text-gray-600">{{view.gridViewSetup['ReasonID'].headerText}}</span>
+          <span *ngIf="(data?.reasonName == '' || data?.reasonName == null) && view.gridViewSetup"
+            class="place-holder text-gray-600">{{view.gridViewSetup['ReasonID'].headerText}}</span>
         </div>
         <div class="d-flex align-items-center">
           <span class="fw-bold me-2">Người nhận tiền:</span>
           <span *ngIf="view.formModel.funcID == 'ACT0410' && data?.payee" class="text-gray-600">{{data?.payee}}</span>
-          <span *ngIf="view.formModel.funcID == 'ACT0410' && (data?.payee == '' || data?.payee == null) && view.gridViewSetup" class="place-holder text-gray-600">{{view.gridViewSetup['Payee'].headerText}}</span>
+          <span
+            *ngIf="view.formModel.funcID == 'ACT0410' && (data?.payee == '' || data?.payee == null) && view.gridViewSetup"
+            class="place-holder text-gray-600">{{view.gridViewSetup['Payee'].headerText}}</span>
         </div>
       </div>
       <div class="col-3">
@@ -169,7 +159,8 @@
           <codx-label class="fw-bold label-colon text-nowrap" fiedName="refDocs" [formModel]="view.formModel">
           </codx-label>
           <span *ngIf="data?.refDocs" class="text-gray-600">{{data?.refDocs}}</span>
-          <span *ngIf="(data?.refDocs == '' || data?.refDocs == null) && view.gridViewSetup" class="place-holder text-gray-600">{{view.gridViewSetup['RefDocs'].headerText}}</span>
+          <span *ngIf="(data?.refDocs == '' || data?.refDocs == null) && view.gridViewSetup"
+            class="place-holder text-gray-600">{{view.gridViewSetup['RefDocs'].headerText}}</span>
         </div>
         <div class="d-flex align-items-center">
           <codx-vll [name]="'AC040'" [formModel]="view.formModel" [field]="'Status'" [value]="data?.status"

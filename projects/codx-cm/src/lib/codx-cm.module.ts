@@ -181,6 +181,14 @@ export const routes: Routes = [
         data: { noReuse: true },
       },
       {
+        path: 'approvals/:funcID',
+        loadChildren: () =>
+          import('projects/codx-dp/src/lib/codx-dp-approver.module').then(
+            (m) => m.ApprovelDpModule
+          ),
+        data: { noReuse: true },
+      },
+      {
         path: '**',
         redirectTo: 'error/404',
       },

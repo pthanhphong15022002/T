@@ -111,6 +111,7 @@ export class CashPaymentAddComponent extends UIComponent implements OnInit {
   subTypeAdv: any = '1'; //? loại chi liên kết (xử lí lấy loại chi của chứng từ liên kết cho loại chi tạm ứng & chi thanh toán)
   vatAccount: any; //? tài khoản thuế của hóa đơn GTGT (xử lí cho chi khác)?
   isPreventChange:any = false;
+  postDateControl:any;
   private destroy$ = new Subject<void>(); //? list observable hủy các subscribe api
   constructor(
     inject: Injector,
@@ -133,7 +134,18 @@ export class CashPaymentAddComponent extends UIComponent implements OnInit {
 
   //#region Init
   onInit(): void {
-    
+    this.acService.setPopupSize(this.dialog, '100%', '100%');
+    this.cache
+      .viewSettingValues('ACParameters')
+      .pipe(
+        takeUntil(this.destroy$),
+        map((arr: any[]) => arr.find((a) => a.category === '1')),
+        map((data) => JSON.parse(data.dataValue))
+      ).subscribe((res:any)=>{
+        if (res) {
+          this.postDateControl = res?.PostedDateControl;
+        }
+      })
   }
 
   ngAfterViewInit() {
@@ -602,10 +614,18 @@ export class CashPaymentAddComponent extends UIComponent implements OnInit {
       })
     }
     if (this.eleGridSettledInvoices && this.elementTabDetail?.selectingID == '1') {
-      this.eleGridSettledInvoices.deleteRow(data);
+      this.eleGridSettledInvoices.saveRow((res:any)=>{ //? save lưới trước
+        if(res){
+          this.eleGridSettledInvoices.deleteRow(data);
+        }
+      })
     }
     if (this.eleGridVatInvoices && this.elementTabDetail?.selectingID == '2') {
-      this.eleGridVatInvoices.deleteRow(data);
+      this.eleGridVatInvoices.saveRow((res:any)=>{ //? save lưới trước
+        if(res){
+          this.eleGridVatInvoices.deleteRow(data);
+        }
+      })
     }
   }
 
@@ -630,10 +650,9 @@ export class CashPaymentAddComponent extends UIComponent implements OnInit {
           data.recID = Util.uid();
           data.index = this.eleGridVatInvoices.dataSource.length;
           delete data?._oldData;
-          this.eleGridVatInvoices.addRow(data, this.eleGridCashPayment.dataSource.length);
+          this.eleGridVatInvoices.addRow(data, this.eleGridVatInvoices.dataSource.length);
         }
       })
-      
     }
   }
 

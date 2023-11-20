@@ -151,7 +151,6 @@ export class PurchaseinvoicesComponent extends UIComponent {
     //* thiết lập cấu hình sidebar
     this.optionSidebar.DataService = this.view.dataService;
     this.optionSidebar.FormModel = this.view.formModel;
-    this.optionSidebar.isFull = true;
   }
 
   ngOnDestroy() {
@@ -595,13 +594,15 @@ export class PurchaseinvoicesComponent extends UIComponent {
    * @returns
    */
   changeMFDetail(event: any, data: any, type: any = '') {
-    this.acService.changeMFPur(
-      event,
-      data,
-      type,
-      this.journal,
-      this.view.formModel
-    );
+    if (data) {
+      this.acService.changeMFPur(
+        event,
+        data,
+        type,
+        this.journal,
+        this.view.formModel
+      ); 
+    }
   }
 
   /**
@@ -613,7 +614,6 @@ export class PurchaseinvoicesComponent extends UIComponent {
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
         if (res) {
-          console.log(res);
           this.journal = res[0]; // data journal
           this.hideFields = res[1]; // array field ẩn từ sổ nhật kí
         }

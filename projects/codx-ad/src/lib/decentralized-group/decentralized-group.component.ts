@@ -23,6 +23,7 @@ export class DecentralizedGroupComponent extends UIComponent {
   groupType = '3';
   moreFuncName: string = '';
   func: any;
+  itemSelected:any;
   constructor(private inject: Injector, private adService: CodxAdService) {
     super(inject);
   }
@@ -121,5 +122,9 @@ export class DecentralizedGroupComponent extends UIComponent {
         });
       }
     });
+  }
+
+  selectedChange(val: any) {
+    this.itemSelected = val.data;
   }
 }

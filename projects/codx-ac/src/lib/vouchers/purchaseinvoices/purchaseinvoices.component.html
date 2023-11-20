@@ -1,5 +1,6 @@
 <codx-views class="ac-views" #view idField="recID" [views]="views" [button]="button" [moreFuncs]="moreFuncs"
   [entityName]="view.entityName" (buttonClick)="toolbarClick($event)"
+  (changeDataMF)="changeMFDetail($event, itemSelected,'viewdetail')" (clickMF)="clickMoreFunction($event, itemSelected)"
   [predicates]="runmode == '1' ? '' : 'JournalNo=@0'" assemblyName="AC" className="PurchaseInvoicesBusiness"
   service="AC" method="GetDataAsync" idField="recID" [dataValues]="runmode == '1' ? '' : journalNo"
   (selectedChange)="onSelectedItem($event)" [isSubView]="true">
@@ -15,8 +16,8 @@
 <!-- Start: template listdetail -->
 <ng-template #templateDetailLeft let-data>
   <codx-temp-full [titleTmp]="titleTmp" cardCss="card-template border-bottom p-3" [formModel]="view.formModel"
-    [modeImgs]="true" [titleLine]="2" [dataItem]="data" [hideMF]="false" [typeMF]="'hover'" [moreFuncCss]="'me-15'"
-    (changeDataMF)="changeMFDetail($event, data,'viewdetail')" (clickMF)="clickMoreFunction($event, data)">
+    [modeImgs]="true" [titleLine]="2" [dataItem]="data" [hideMF]="codxService.asideMode == '2'" [typeMF]="'hover'"
+    [moreFuncCss]="'me-15'">
   </codx-temp-full>
 </ng-template>
 

@@ -292,7 +292,7 @@ export class CodxAddTaskComponent implements OnInit {
     role.objectID = this.user?.userID;
     role.createdOn = new Date();
     role.createdBy = this.user?.userID;
-    role.roleType = 'U';
+    role.roleType = 'O';
     role.objectType = this.user?.objectType;
     this.stepsTasks.owner = role.objectID;
     this.stepsTasks.roles = [role];
@@ -779,7 +779,7 @@ export class CodxAddTaskComponent implements OnInit {
     if (role) {
       if (role?.objectType == 'U') {
         role['taskID'] = this.stepsTasks?.recID;
-        role['roleType'] = 'U';
+        role['roleType'] = 'O';
         this.owner = [role];
         this.stepsTasks.owner = role?.objectID;
         this.removeRoleDuplicate();
@@ -797,7 +797,7 @@ export class CodxAddTaskComponent implements OnInit {
             role.objectID = res?.userID;
             role.objectName = res?.userName;
             role.taskID = this.stepsTasks?.recID;
-            role.roleType = 'U';
+            role.roleType = 'O';
             this.owner = [role];
             this.stepsTasks.owner = role?.objectID;
           });
@@ -836,7 +836,7 @@ export class CodxAddTaskComponent implements OnInit {
                 role['objectID'] = res?.userID;
                 role['objectName'] = res?.userName;
                 role['objectType'] = 'U';
-                role['roleType'] = 'U';
+                role['roleType'] = 'O';
                 role['taskID'] = this.stepsTasks?.recID;
                 this.owner = [role];
                 this.stepsTasks.owner = role?.objectID;

@@ -1,16 +1,15 @@
 <!-- Start: template listdetail -->
 <ng-container *ngIf="itemSelected">
-  <codx-detail-tmp [header]="TmpHeaderDetail" [body]="TmpBodyDetail" [hideMF]="false" [formModel]="formModel"
-  [dataItem]="itemSelected" (changeDataMF)="changeMFDetail($event, itemSelected)" [footer]="TmpFooterDetail"
-  (clickMF)="clickMoreFunction($event, itemSelected)">
-</codx-detail-tmp>
+  <codx-detail-tmp [header]="TmpHeaderDetail" [body]="TmpBodyDetail" [hideMF]="codxService.asideMode == '2'"
+    [formModel]="formModel" [dataItem]="itemSelected" [footer]="TmpFooterDetail">
+  </codx-detail-tmp>
 </ng-container>
 <!-- End: template listdetail -->
 
 <!-- Start: template listdetail Header-->
 <ng-template #TmpHeaderDetail>
   <ng-container *ngIf="itemSelected">
-    <div style="position: relative;z-index: 1000;width: 50%;" class="d-flex align-items-center ac-cashID mt-n8 mb-2">
+    <div style="position: relative;z-index: 1000;width: 50%;" class="d-flex align-items-center ac-cashID mb-2">
       <!-- <ejs-tooltip id='tooltip' target="#tipsub" position='BottomRight'>
           <div id="tipsub" style="background-color: var(--primary-dark)"
               class="w-25px symbol h-25px fs-6 d-flex justify-content-center align-items-center rounded-circle me-3">
@@ -22,40 +21,41 @@
           </ng-template>
       </ejs-tooltip> -->
       <span *ngIf="itemSelected?.voucherNo" class="fw-bold line-clamp line-clamp-1 mt-1 fs-5-sm text-uppercase me-5">
-          {{ itemSelected?.voucherNo }}
+        {{ itemSelected?.voucherNo }}
       </span>
-      <span *ngIf="(itemSelected?.voucherNo == '' || itemSelected?.voucherNo == null) && gridViewSetup" class="place-holder fw-bold line-clamp line-clamp-1 mt-1 fs-5-sm text-uppercase me-5">
+      <span *ngIf="(itemSelected?.voucherNo == '' || itemSelected?.voucherNo == null) && gridViewSetup"
+        class="place-holder fw-bold line-clamp line-clamp-1 mt-1 fs-5-sm text-uppercase me-5">
         {{ gridViewSetup['VoucherNo'].headerText }}
-    </span>
+      </span>
       <div class="d-flex align-items-center me-3">
-          <img style="width: 18px;height: 18px;" class="me-2" src="../assets/themes/ac/default/img/calendar.svg">
-          <codx-label class="fw-bold label-colon mt-1" default="Ngày chứng từ" [formModel]="formModel">
-          </codx-label>
-          <span #voucherDate [innerHTML]="
+        <img style="width: 18px;height: 18px;" class="me-2" src="../assets/themes/ac/default/img/calendar.svg">
+        <codx-label class="fw-bold label-colon mt-1" default="Ngày chứng từ" [formModel]="formModel">
+        </codx-label>
+        <span #voucherDate [innerHTML]="
             itemSelected?.voucherDate
                   | formatvalue : formModel : 'voucherDate' : voucherDate
                   | async
               " class="text-gray-600 mt-1"></span>
       </div>
-  </div>
-  <div class="d-flex justify-content-between flex-grow-1 mb-2">
-    <div style="height: 27px !important;" class="d-flex align-items-center">
-      <span *ngIf="itemSelected?.warehouseName"
-        class="fw-bold line-clamp line-clamp-1 fs-5 text-uppercase me-5 mt-1">{{itemSelected?.warehouseName}}</span>
-      <span *ngIf="(itemSelected?.warehouseName == '' || itemSelected?.warehouseName == null) && gridViewSetup"
-        class="place-holder line-clamp line-clamp-1 fs-5 text-uppercase me-5 mt-1">{{gridViewSetup['WarehouseID'].headerText}}</span>
     </div>
-    <div class="d-flex align-self-center">
-      <span class="badge badge-pill badge-primary me-3">
-        <!-- <span class="fw-bold" [innerHTML]="(itemSelected?.totalDR
+    <div class="d-flex justify-content-between flex-grow-1 mb-2">
+      <div style="height: 27px !important;" class="d-flex align-items-center">
+        <span *ngIf="itemSelected?.warehouseName"
+          class="fw-bold line-clamp line-clamp-1 fs-5 text-uppercase me-5 mt-1">{{itemSelected?.warehouseName}}</span>
+        <span *ngIf="(itemSelected?.warehouseName == '' || itemSelected?.warehouseName == null) && gridViewSetup"
+          class="place-holder line-clamp line-clamp-1 fs-5 text-uppercase me-5 mt-1">{{gridViewSetup['WarehouseID'].headerText}}</span>
+      </div>
+      <div class="d-flex align-self-center">
+        <span class="badge badge-pill badge-primary me-3">
+          <!-- <span class="fw-bold" [innerHTML]="(itemSelected?.totalDR
               | tranformValueNumber : formModel
               | async)+ ' ' +itemSelected?.currencyID"></span> -->
-        <span class="fw-bold" [innerHTML]="(itemSelected?.totalAmt | tranformValueNumber : 'B' | async)"></span>
-        <!-- <span *ngIf="itemSelected?.totalDR == 0" class="fw-bold">{{'0 '+
+          <span class="fw-bold" [innerHTML]="(itemSelected?.totalAmt | tranformValueNumber : 'B' | async)"></span>
+          <!-- <span *ngIf="itemSelected?.totalDR == 0" class="fw-bold">{{'0 '+
                   itemSelected?.currencyID}}</span> -->
-      </span>
+        </span>
+      </div>
     </div>
-  </div>
   </ng-container>
 </ng-template>
 <!-- End: template listdetail Header-->
@@ -65,23 +65,29 @@
   <ng-container *ngIf="itemSelected">
     <div class="d-flex justify-content-between flex-grow-1">
       <div class="float-left">
-        <div [style]="itemSelected.subType == '0311' ? '' : 'display:none !important'" class="d-flex align-items-center">
+        <div [style]="itemSelected.subType == '0311' ? '' : 'display:none !important'"
+          class="d-flex align-items-center">
           <codx-label class="fw-bold label-colon text-nowrap" fiedName="DIM1" [formModel]="formModel">
           </codx-label>
           <span *ngIf="itemSelected?.diM1Name" class="text-gray-600">{{itemSelected?.diM1Name}}</span>
-          <span *ngIf="(itemSelected?.diM1Name == '' || itemSelected?.diM1Name == null) && gridViewSetup" class="place-holder text-gray-600">{{gridViewSetup['DIM1'].headerText}}</span>
+          <span *ngIf="(itemSelected?.diM1Name == '' || itemSelected?.diM1Name == null) && gridViewSetup"
+            class="place-holder text-gray-600">{{gridViewSetup['DIM1'].headerText}}</span>
         </div>
-        <div [style]="itemSelected.subType == '0312' ? '' : 'display:none !important'" class="d-flex align-items-center me-6">
+        <div [style]="itemSelected.subType == '0312' ? '' : 'display:none !important'"
+          class="d-flex align-items-center me-6">
           <codx-label class="fw-bold label-colon text-nowrap" fiedName="ObjectID" [formModel]="formModel">
           </codx-label>
           <span *ngIf="itemSelected?.objectName" class="text-gray-600">{{itemSelected?.objectName}}</span>
-          <span *ngIf="(itemSelected?.objectName == '' || itemSelected?.objectName == null) && gridViewSetup" class="place-holder text-gray-600">{{gridViewSetup['ObjectID'].headerText}}</span>
+          <span *ngIf="(itemSelected?.objectName == '' || itemSelected?.objectName == null) && gridViewSetup"
+            class="place-holder text-gray-600">{{gridViewSetup['ObjectID'].headerText}}</span>
         </div>
-        <div [style]="itemSelected.subType == '0312' ? '' : 'display:none !important'" class="d-flex align-items-center me-6">
+        <div [style]="itemSelected.subType == '0312' ? '' : 'display:none !important'"
+          class="d-flex align-items-center me-6">
           <codx-label class="fw-bold label-colon text-nowrap" fiedName="Requester" [formModel]="formModel">
           </codx-label>
           <span *ngIf="itemSelected?.requesterName" class="text-gray-600">{{itemSelected?.requesterName}}</span>
-          <span *ngIf="(itemSelected?.requesterName == '' || itemSelected?.requesterName == null) && gridViewSetup" class="place-holder text-gray-600">{{gridViewSetup['Requester'].headerText}}</span>
+          <span *ngIf="(itemSelected?.requesterName == '' || itemSelected?.requesterName == null) && gridViewSetup"
+            class="place-holder text-gray-600">{{gridViewSetup['Requester'].headerText}}</span>
         </div>
       </div>
       <div class="d-flex align-self-center">
@@ -89,19 +95,22 @@
           [value]="itemSelected?.validated ? '1' : '7'" [showText]="true" [showBgColor]="true"
           class="badge badge-light badge-sm">
         </codx-vll>
-        <codx-vll *ngIf="itemSelected?.status != '1'" [formModel]="formModel" [field]="'Status'" [value]="itemSelected?.status"
-          [showText]="true" [showBgColor]="true" class="badge badge-light badge-sm">
+        <codx-vll *ngIf="itemSelected?.status != '1'" [formModel]="formModel" [field]="'Status'"
+          [value]="itemSelected?.status" [showText]="true" [showBgColor]="true" class="badge badge-light badge-sm">
         </codx-vll>
       </div>
     </div>
     <div class="d-flex justify-content-between flex-grow-1">
-      <div [style]="itemSelected.subType == '0311' ? '' : 'display:none !important'"  class="d-flex align-items-top mb-1">
+      <div [style]="itemSelected.subType == '0311' ? '' : 'display:none !important'"
+        class="d-flex align-items-top mb-1">
         <codx-label class="fw-bold label-colon text-nowrap" fiedName="DIM2" [formModel]="formModel">
         </codx-label>
         <span *ngIf="itemSelected?.diM2Name" class="text-gray-600">{{itemSelected?.diM2Name}}</span>
-        <span *ngIf="(itemSelected?.diM2Name == '' || itemSelected?.diM2Name == null) && gridViewSetup" class="place-holder text-gray-600">{{gridViewSetup['DIM2'].headerText}}</span>
+        <span *ngIf="(itemSelected?.diM2Name == '' || itemSelected?.diM2Name == null) && gridViewSetup"
+          class="place-holder text-gray-600">{{gridViewSetup['DIM2'].headerText}}</span>
       </div>
-      <div [style]="itemSelected.subType == '0312' ? '' : 'display:none !important'"  class="d-flex align-items-top mb-1">
+      <div [style]="itemSelected.subType == '0312' ? '' : 'display:none !important'"
+        class="d-flex align-items-top mb-1">
         <codx-label class="fw-bold label-colon text-nowrap" fiedName="RequestDate" [formModel]="formModel">
         </codx-label>
         <span #requestDate [innerHTML]="
@@ -116,7 +125,8 @@
         <codx-label class="fw-bold label-colon text-nowrap" fiedName="ReasonID" [formModel]="formModel">
         </codx-label>
         <span *ngIf="itemSelected?.reasonName" class="text-gray-600">{{itemSelected?.reasonName}}</span>
-        <span *ngIf="(itemSelected?.reasonName == '' || itemSelected?.reasonName == null) && gridViewSetup" class="place-holder text-gray-600">{{gridViewSetup['ReasonID'].headerText}}</span>
+        <span *ngIf="(itemSelected?.reasonName == '' || itemSelected?.reasonName == null) && gridViewSetup"
+          class="place-holder text-gray-600">{{gridViewSetup['ReasonID'].headerText}}</span>
       </div>
     </div>
     <div class="d-flex justify-content-between flex-grow-1">
@@ -124,10 +134,11 @@
         <codx-label class="fw-bold label-colon text-nowrap" fiedName="Memo" [formModel]="formModel">
         </codx-label>
         <span *ngIf="itemSelected?.memo" class="text-gray-600">{{itemSelected?.memo}}</span>
-        <span *ngIf="(itemSelected?.memo == '' || itemSelected?.memo == null) && gridViewSetup" class="place-holder text-gray-600">{{gridViewSetup['Memo'].headerText}}</span>
+        <span *ngIf="(itemSelected?.memo == '' || itemSelected?.memo == null) && gridViewSetup"
+          class="place-holder text-gray-600">{{gridViewSetup['Memo'].headerText}}</span>
       </div>
     </div>
-    <div class="card-add mt-5">
+    <div class="card-add card-pur">
       <ejs-tab>
         <e-tabitems>
           <!--Start tab Thông tin chi tiết -->
@@ -170,8 +181,8 @@
 <ng-template #TmpFooterDetail let-data>
   <ng-container *ngIf="itemSelected">
     <codx-tabs [entityName]="formModel.entityName" [formModel]="formModel" [objectID]="itemSelected?.recID"
-        [funcID]="formModel.funcID" [TabControl]="tabInfo"></codx-tabs>
-</ng-container>
+      [funcID]="formModel.funcID" [TabControl]="tabInfo"></codx-tabs>
+  </ng-container>
 </ng-template>
 <!-- End: template listdetail Footer-->
 
@@ -185,6 +196,5 @@
   <ng-container *ngIf="itemSelected">
     <acctrants-table [itemSelected]="itemSelected" [baseCurr]="baseCurr">
     </acctrants-table>
-</ng-container>
+  </ng-container>
 </ng-template>
-
