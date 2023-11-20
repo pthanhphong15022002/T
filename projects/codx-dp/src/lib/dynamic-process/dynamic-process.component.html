@@ -16,6 +16,9 @@
   [autoSearch]="true"
   (viewChanged)="viewChanged($event)"
   (searchChanged)="searchDynamicProcess($event)"
+  (selectedChange)="selectedChange($event)"
+  (clickMF)="clickMF($event, itemSelected)"
+  (changeDataMF)="changeDataMF($event, itemSelected)"
 ></codx-views>
 
 <ng-template #templateViewCard let-data>
@@ -161,7 +164,6 @@
                   <ng-container *ngIf="i < 2">
                     <div style="position: relative" [ngbTooltip]="permTooltip">
                       <codx-imgs
-
                         [objectId]="item?.objectID"
                         [objectName]="item?.objectName"
                         objectType="AD_Users"

@@ -173,9 +173,11 @@ export class DynamicFormComponent extends UIComponent {
       }
       //form edit quy trinh by dong san pham
       case 'CMS0105_1':
-        this.openEditProcess(data, evt);
+        this.openEditProcess(data, evt, '1');
         break;
-
+      case 'CMS0105_2':
+        this.openEditProcess(data, evt, '5');
+        break;
       //resend active tenant email
       case 'TNT0015': {
         this.sendActiveTenantEmail(data);
@@ -490,7 +492,7 @@ export class DynamicFormComponent extends UIComponent {
   }
 
   //#region Edit process by dong san pham
-  async openEditProcess(data, evt) {
+  async openEditProcess(data, evt, applyFor) {
     //VTHAO-2/10/2023
     this.api
       .execSv<any>(
@@ -511,6 +513,7 @@ export class DynamicFormComponent extends UIComponent {
             process.businessLineID?.trim() == ''
           )
             process.businessLineID = data.businessLineID;
+          process.applyFor = applyFor;
           let dialogModel = new DialogModel();
           dialogModel.IsFull = true;
           dialogModel.zIndex = 999;

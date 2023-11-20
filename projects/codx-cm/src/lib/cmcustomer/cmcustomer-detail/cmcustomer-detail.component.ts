@@ -21,6 +21,7 @@ import {
   Util,
   ApiHttpService,
   AuthStore,
+  CodxService,
 } from 'codx-core';
 import { PopupQuickaddContactComponent } from './codx-list-contacts/popup-quickadd-contact/popup-quickadd-contact.component';
 import { CM_Contacts } from '../../models/cm_model';
@@ -80,7 +81,8 @@ export class CmCustomerDetailComponent implements OnInit {
     private api: ApiHttpService,
     private authstore: AuthStore,
     private changeDetectorRef: ChangeDetectorRef,
-    private notiService: NotificationsService
+    private notiService: NotificationsService,
+    private codxService: CodxService
   ) {
     this.user = this.authstore.get();
   }
