@@ -4178,6 +4178,22 @@ codx-aside-v2.aside-v2-lighter{
       display: none;
     }
   }
+  #kt_aside_menu div.mx-6{
+    margin-left:10px!important;
+    margin-right:10px!important;
+    .menu-link{
+      width: 100%!important;
+      border-radius: 4px!important;
+    }
+    .menu-item.here.show{
+      .menu-link{
+        background-color: var(--border-light);
+      }
+    }
+    .menu-link:hover{
+      background-color: var(--border-light);
+    }
+  }
 }
 
 [data-kt-aside-minimize=on].aside-minimize-icon-title {

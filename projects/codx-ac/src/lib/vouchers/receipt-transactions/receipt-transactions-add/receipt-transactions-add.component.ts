@@ -64,7 +64,9 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
 
   //#region Init
 
-  onInit(): void {}
+  onInit(): void {
+    this.acService.setPopupSize(this.dialog, '100%', '100%');
+  }
 
   ngAfterViewInit() {
     console.log(this.formVouchers);
