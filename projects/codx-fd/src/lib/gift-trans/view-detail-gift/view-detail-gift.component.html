@@ -4,7 +4,7 @@
 </ng-container>
 <ng-template #body>
     <div class="fd-giftdetail pt-3">
-        <ng-container *ngIf="functionID === 'FDT091'">
+        <ng-container *ngIf="functionID === 'FDT091' && !hidebuttonMF">
             <div class="d-flex flex-row-reverse">
                 <button class="btn btn-sm" [disabled]="data.status != '1'" (click)="sendGift()"
                     [ngClass]="data.status == '1'? 'btn-light-primary' : 'btn-light-primary'">

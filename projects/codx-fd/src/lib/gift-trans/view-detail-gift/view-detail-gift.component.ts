@@ -42,6 +42,7 @@ export class ViewDetailGiftComponent extends UIComponent implements OnInit, OnCh
       icon: 'icon-i-chat-right',
     }
   ];
+  hidebuttonMF: boolean = false;
   constructor(
     inject: Injector,
     private dt: ChangeDetectorRef,
@@ -54,6 +55,9 @@ export class ViewDetailGiftComponent extends UIComponent implements OnInit, OnCh
   onInit(): void {
     if (this.objectID) {
       this.getDataInfor(this.objectID);
+    }
+    if(this.codxService.asideMode == '2') {
+      this.hidebuttonMF = true;
     }
     this.serviceFD.getSettingValueByModule("FDParameters", "ActiveCoins").subscribe((res: any) => {
       if (res) {
