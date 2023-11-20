@@ -284,7 +284,6 @@
         <codx-label
           fiedName="fieldID"
           [formModel]="form?.formModel"
-          default="Trường tùy chỉnh"
         >
         </codx-label>
         <span  *ngIf="typeTask?.value === 'F'" class="default">*</span>
@@ -302,7 +301,7 @@
       </div>
     </div>
     
-    <div class="form-group">
+    <div class="form-group" *ngIf="typeTask?.value != 'F'" >
       <div>
         <codx-label
           fiedName="dependRule"
@@ -411,7 +410,7 @@
       ></codx-label>
     </div>
 
-    <div class="d-flex align-items-center justify-content-between form-group" *ngIf="isBoughtTM">
+    <div class="d-flex align-items-center justify-content-between form-group" *ngIf="isBoughtTM && typeTask?.value != 'F'">
       <div class="d-flex align-items-center">
         <codx-input
           type="switch"
