@@ -683,7 +683,10 @@ export class CodxDashboardComponent implements OnInit, AfterViewInit {
   }
 
   onCreate($event: any) {
-    document.getElementsByClassName('icon-close icon-18')[0]?.remove();
+    console.log(document.getElementsByClassName('icon-close icon-18'));
+
+    // document.getElementsByClassName('icon-close icon-18')[document.getElementsByClassName('icon-close icon-18').length -1]?.remove();
+
 
     if (this.panels && this.panels.length > 0) {
       if (!this.objDashboard) {
