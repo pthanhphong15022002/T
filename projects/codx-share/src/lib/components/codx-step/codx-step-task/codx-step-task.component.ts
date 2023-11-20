@@ -53,6 +53,8 @@ import {
 } from '../../codx-tmmeetings/models/CO_Meetings.model';
 import { CodxBookingService } from '../../codx-booking/codx-booking.service';
 import { CodxShareService } from '../../../codx-share.service';
+import { ActivatedRoute } from '@angular/router';
+import { ExportData } from '../../../models/ApproveProcess.model';
 
 @Component({
   selector: 'codx-step-task',
@@ -153,7 +155,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   isZoomIn = false;
   isZoomOut = false;
   isShow = true;
-
+  funcID = '';
   moreDefaut = {
     share: true,
     write: true,
@@ -180,9 +182,11 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     private changeDetectorRef: ChangeDetectorRef,
     private bookingService: CodxBookingService,
     private codxShareService: CodxShareService,
+    private activedRouter: ActivatedRoute,
   ) {
     this.user = this.authStore.get();
     this.id = Util.uid();
+    this.funcID = this.activedRouter.snapshot.params['funcID'];
   }
 
   async ngOnInit(): Promise<void> {
@@ -2523,6 +2527,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   }
 
   //#endregion
+
   approvalTrans(task: DP_Instances_Steps_Tasks) {
     if(task?.approveRule && task?.recID){
       this.api.execSv<any>(
@@ -2535,28 +2540,38 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         if(!res){
           this.notiService.notifyCode('ES028');
           return;
-        }
-        if (res.eSign) {
-          //kys soos
-        } else {
-          this.release(task, res);
+        }else {
+          let exportData: ExportData = {
+            funcID: this.funcID,
+            recID: task?.recID,
+            data: null,
+          };
+          this.release(task, res, exportData);
         }
       })
     } else {
       this.notiService.notifyCode('DP040');
     }
   }
-  release(data: any, category: any) {
+
+  release(data: any, category: any, exportData = null) {
     this.codxShareService.codxReleaseDynamic(
       'DP',
       data,
       category,
       'DP_Instances_Steps_Tasks',
-      'CM0201',
-      data?.title,
-      this.releaseCallback.bind(this)
+      this.funcID,
+      data?.taskName,
+      this.releaseCallback.bind(this),
+      null,
+      null,
+      'DP_Instances_Steps_Tasks',
+      null,
+      null,
+      exportData
     );
   }
+
   releaseCallback(res: any, t: any = null) {
     if (res?.msgCodeError) this.notiService.notify(res?.msgCodeError);
     else {
@@ -2572,6 +2587,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     //     });
     }
   }
+
   cancelApprover(task) {
     this.notiService.alertCode('ES016').subscribe((x) => {
       if (x.event.status == 'Y') {

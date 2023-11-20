@@ -444,6 +444,7 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
       .subscribe((res) => {
         if (res && res[0]) {
           this.notiService.notifyCode('TM006');
+          res[2] = this.listTaskResources; // trả về cho OD xét quyền công văn
           this.dialog.close(res);
         } else {
           this.notiService.notifyCode('TM038');
@@ -882,7 +883,7 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
     if (dataReferences && dataReferences?.length > 0)
       this.dataReferences = dataReferences;
   }
- //code cu roi cmt xoa sau
+  //code cu roi cmt xoa sau
   // getReferencesByCategory3(task) {
   //   var listUser = [];
   //   switch (task.refType) {

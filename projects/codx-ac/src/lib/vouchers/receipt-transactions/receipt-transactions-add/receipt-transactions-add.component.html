@@ -35,7 +35,7 @@
       </div>
     </div>
     <ng-container>
-      <div style="margin-left: 25px" *ngIf="!formVouchers.data?._isEdit || formVouchers.data?.status == '7'"
+      <div style="margin-left: 25px" *ngIf="!formVouchers.data?.validated"
         class="input-circle h-20px input-border-0 w-400px mb-1">
         <codx-dropdown-select #eleCbxSubType [showFooter]="false" [isToolbar]="false"
           [cssClass]="'rounded-pill border-1'" cssPopup="h-250px w-550px" [isMulti]="false" type="valuelist"
@@ -43,7 +43,7 @@
           [value]="formVouchers.data.subType" emptyText="Loại phiếu"
           (valueChange)="changeSubType($event)"></codx-dropdown-select>
       </div>
-      <span style="margin-left: 30px" *ngIf="formVouchers.data?._isEdit && formVouchers.data?.status != '7'">
+      <span style="margin-left: 30px" *ngIf="formVouchers.data?.validated">
         <codx-vll [name]="formVouchers?.gridviewSetup['SubType'].referedValue" [formModel]="dialog.formModel"
           [field]="'SubType'" [value]="formVouchers.data?.subType" [showText]="true" [showBgColor]="true"
           class="badge badge-light-primary badge-lg mt-1">
@@ -105,7 +105,7 @@
     class="codx-detail-footer dialog-footer align-items-center collape" *ngIf="formVouchers.data">
     <div class="d-flex align-items-center justify-content-end btn-ac-footer mt-1">
       <button id="btncancle" [shortcut]="'alt+c'" [autoClick]="true" tab-index="14"
-        *ngIf="formVouchers.data?.status == '7'" style="border: 1px solid" type="button"
+      *ngIf="!formVouchers.data?.validated" style="border: 1px solid" type="button"
         class="btn btn-md btn-light-danger me-2 rounded-15"
         (keydown.enter)="onDiscardVoucher(); $event.preventDefault()" (click)="onDiscardVoucher()">
         <div class="d-flex align-items-center">

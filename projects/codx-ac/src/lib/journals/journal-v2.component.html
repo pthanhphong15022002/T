@@ -35,9 +35,8 @@
         </codx-toolbar-choose>
       </div>
     </div>
-    <div class="row" data-kt-scroll="true" data-kt-scroll-activate="{default: true}" data-kt-scroll-height="auto"
-      data-kt-scroll-dependencies=".hhder, .header" data-kt-scroll-wrappers=".wrapper" data-kt-scroll-offset="0px">
-      <div style="overflow: auto !important;"   class="h-100" [ngStyle]="viewActive == ViewType.list ? '' : { display: 'none' }">
+    <div style="height: calc(100vh - 190px);">
+      <div class="h-100 overflow-auto" [ngStyle]="viewActive == ViewType.list ? '' : { display: 'none' }">
         <codx-listview class="h-100 d-block animate__animated animate__slideInRight py-5" type="listView" funcId="ACT" service="AC" [entityName]="view.entityName"
           [dataService]="view.dataService" [itemTemplate]="listItemTemplate">
         </codx-listview>
