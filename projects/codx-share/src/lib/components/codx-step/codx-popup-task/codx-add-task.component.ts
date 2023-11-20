@@ -280,10 +280,10 @@ export class CodxAddTaskComponent implements OnInit {
     }
     this.roles = this.stepsTasks?.roles || [];
     this.owner = this.roles?.filter(
-      (role) => role.objectID == this.stepsTasks?.owner && role.roleType == 'U'
+      (role) => role.objectID == this.stepsTasks?.owner && role.roleType == 'O'
     );
     this.participant = this.roles?.filter((role) => role.roleType == 'P');
-    this.ownerDefaut = this.roles?.filter((role) => role.roleType == 'O');
+    this.ownerDefaut = this.roles?.filter((role) => role.roleType == 'R');
   }
   setRole() {
     let role = new DP_Instances_Steps_Tasks_Roles();
