@@ -5,7 +5,7 @@
       [formModel]="formModel"
       [body]="body"
       [dataItem]="dataSelected"
-      [hideMF]="funcID == 'CM0101' || this.funcID == 'CM0105' ? true : false"
+      [hideMF]="codxService.asideMode != '2' ? (funcID == 'CM0101' || this.funcID == 'CM0105' ? true : false) : true"
       [footer]="tabs"
       (changeDataMF)="changeDataMF($event, dataSelected)"
       (clickMF)="clickMF($event, dataSelected)"
@@ -80,7 +80,7 @@
             *ngIf="funcID == 'CM0101' || funcID == 'CM0105'"
           >
             <codx-mfunc
-              [hideMF]="false"
+              [hideMF]="codxService.asideMode != '2' ? false : true"
               [dataItem]="dataSelected"
               [formModel]="formModel"
               (changeDataMF)="changeDataMF($event, dataSelected)"
