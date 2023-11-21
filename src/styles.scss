@@ -4216,8 +4216,9 @@ codx-aside-v2{
     justify-content: center;
   }
 }
-codx-header-v2{
-  .flex-shrink-0 .btn.btn-icon{
+
+codx-header-v2, codx-ws-header{
+  codx-chat .btn.btn-icon.btn-sm{
     width: auto!important;
   }
   .badge.badge-sm {
@@ -4225,10 +4226,9 @@ codx-header-v2{
     padding-left: 3px!important;
     padding-right: 3px!important;
     margin-left: -6px;
-    margin-top: -5px;
+    top: 3px!important;
   }
 }
-
 
 codx-view-list-tree
 codx-view-schedule{
@@ -4258,8 +4258,10 @@ codx-dropdown-calendar .dropdown-toggle>.d-flex {
     margin-right: 25px;
   }
 }
+.codx-theme.light{
 codx-view-list-detail ejs-splitter .e-pane.e-static-pane .e-content{
   border-top: 1px var(--white) solid;
+}
 }
 
 
