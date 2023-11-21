@@ -18,7 +18,7 @@ export class ApproveProcess {
   curComponent: any;//this: component gọi hàm
   template: any;//ES_SignFile Template 
   exportData: ExportData;//biến lấy data export (funcID: Để lấy bộ EntityName,FormName,GridViewName; recID : Để lấy ra data cần Export)
-  customParam:string;//Json string chứa tham số tùy chỉnh (Ex:JSON.stringify(object))
+  customParam:string;//Json string chứa tham số tùy chỉnh (Ex:JSON.stringify({ParentID:"xxxxx"}))
 }
 export class Approver {
   approver: string;

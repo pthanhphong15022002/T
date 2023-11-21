@@ -87,6 +87,7 @@ export class ResourcesComponent extends UIComponent {
   fmGetCard: FormModel;
   fmReturnCard: FormModel;
   dataSelected: any;
+  hideMF: boolean =false;
   constructor(
     private injector: Injector,
     private codxEpService: CodxEpService,
@@ -100,8 +101,8 @@ export class ResourcesComponent extends UIComponent {
   //-----------------------------------Base Func-------------------------------------//
   //---------------------------------------------------------------------------------//
   onInit(): void {
-    this.getCacheData();
-    
+    this.getCacheData();    
+    if(this.codxService.asideMode == "2") this.hideMF = true;
     if(this.funcID==EPCONST.FUNCID.S_Category){
       this.popupComponent= PopupAddStationeryComponent;
     }

@@ -14,6 +14,7 @@ import {
   CallFuncService,
   ViewsComponent,
   Util,
+  CodxService,
 } from 'codx-core';
 import { ActivatedRoute } from '@angular/router';
 import { CO_Permissions } from '../models/CO_Meetings.model';
@@ -44,10 +45,13 @@ export class ViewListMeetComponent implements OnInit {
   funcID: any;
   widthWin: any;
   heightWin: any;
+  showMF: boolean = true;
+
   constructor(
     private activedRouter: ActivatedRoute,
     private callFc: CallFuncService,
     private detectorRef: ChangeDetectorRef,
+    private codxService: CodxService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -59,7 +63,7 @@ export class ViewListMeetComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log(this.data);
+    if (this.codxService.asideMode == '2') this.showMF = false;
     this.getDate();
     this.getResourceID();
   }
@@ -68,7 +72,7 @@ export class ViewListMeetComponent implements OnInit {
     this.clickMoreFunction.emit({ e: e, data: dt });
   }
   changeDataMF(e: any, data: any) {
-    this.changeMF.emit({e: e, data: data});
+    this.changeMF.emit({ e: e, data: data });
   }
   getResourceID() {
     this.permissions = this.data.permissions;
@@ -132,6 +136,4 @@ export class ViewListMeetComponent implements OnInit {
   dbClick(data) {
     this.viewDetail.emit(data);
   }
-
-
 }
