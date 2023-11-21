@@ -33,17 +33,17 @@
             </codx-label>
           </div>
           <codx-input
-          type="datetime"
-          class="test-datetime"
-          [crrValue]="data?.scheduleStart"
-          (valueChange)="valueDateChange($event)"
-          field="scheduleStart"
-          format="d"
-          [placeholder]="gridViewSetup?.ScheduleStart?.description"
-        >
-        </codx-input>
+            type="datetime"
+            class="test-datetime"
+            [crrValue]="data?.startDate"
+            (valueChange)="valueDateChange($event)"
+            field="startDate"
+            format="d"
+            [placeholder]="gridViewSetup?.ScheduleStart?.description"
+          >
+          </codx-input>
         </div>
-        <div class="col-3">
+        <div class="col-3" *ngIf="dateControl == '1'">
           <div>
             <codx-label
               name="lblScheduleStartTime"
@@ -60,15 +60,28 @@
           >
           </codx-input>
         </div>
-        <div class="col-3">
-          <div>
-            <codx-label
-              name="lblScheduleEndTime"
-              [formModel]="form.formModel"
-              default="Đến giờ"
-            >
-            </codx-label>
-          </div>
+        <div class="col-3" *ngIf="dateControl == '1'">
+          <codx-label
+            name="lblScheduleEndTime"
+            [formModel]="form.formModel"
+            default="Đến giờ"
+          >
+          </codx-label>
+          <codx-input
+            type="datetime"
+            [crrValue]="endTime"
+            format="t"
+            (valueChange)="valueEndTimeChange($event)"
+          >
+          </codx-input>
+        </div>
+        <div class="col-6" *ngIf="dateControl != '1'">
+          <codx-label
+            name="lblScheduleTime"
+            [formModel]="form.formModel"
+            default="Thời gian"
+          >
+          </codx-label>
           <codx-input
             type="datetime"
             [crrValue]="endTime"
@@ -79,14 +92,17 @@
         </div>
       </div>
       <div class="form-group" *ngIf="parentID">
-        <codx-label name="lblParentID" default="parentID" [formModel]="form.formModel">
+        <codx-label
+          name="lblParentID"
+          default="parentID"
+          [formModel]="form.formModel"
+        >
         </codx-label>
         <codx-input
           field="parentID"
           type="combobox"
           refValue="WRCommentTemplates"
           [model]="{ ParentID: parentID }"
-          [crrValue]="dataParentID"
           (valueChange)="valueChangeParent($event)"
         ></codx-input>
       </div>

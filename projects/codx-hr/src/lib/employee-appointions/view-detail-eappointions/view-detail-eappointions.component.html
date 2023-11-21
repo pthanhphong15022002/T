@@ -1,6 +1,7 @@
 <codx-detail-tmp
   #itemDetailTemplate
   [header]="header"
+  [hideMF]="codxService.asideMode == '2' ? true: false"
   [dataItem]="itemDetail"
   [footer]="!hideFooter ? footer : null"
   [formModel]="view.formModel"

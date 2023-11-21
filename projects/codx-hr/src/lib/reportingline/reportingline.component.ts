@@ -5,7 +5,7 @@ import {
   ViewChild
 } from '@angular/core';
 import {
-  ButtonModel, CodxSearchBarComponent, CodxTreeviewComponent,
+  ButtonModel, CodxSearchBarComponent, CodxService, CodxTreeviewComponent,
   CRUDService,
   DialogModel,
   DialogRef,
@@ -56,7 +56,7 @@ export class ReportinglineComponent extends UIComponent {
   posEmpPageIndex: number = 2;
   viewEmpPosition: string = '';
   searchText: string = "";
-
+  dataSelect: any
   empList = [];
   empListLength = 0;
   currentChartData: any = null;
@@ -67,6 +67,7 @@ export class ReportinglineComponent extends UIComponent {
     private adService: CodxAdService,
     private notiService: NotificationsService,
     private shareService: CodxShareService,
+    public override codxService : CodxService
   ) {
     super(inject);
   }
@@ -334,7 +335,7 @@ export class ReportinglineComponent extends UIComponent {
   // selected data
   onSelectionChanged(event) {
     if (this.view) {
-      // this.dataSelected = event.data;
+      this.dataSelect = event.data;
       if (this.views[1].active && this.currentChartData != null) {
         this.positionID = this.currentChartData.positionID;
         this.view.dataService.setDataSelected(event);
