@@ -416,15 +416,16 @@ export class LoginComponent extends UIComponent implements OnInit, OnDestroy {
         this.f.email.value,
         this.f.password.value,
         type,
-        false,
+        true,
         JSON.stringify(this.loginDevice)
       )
       .pipe()
       .subscribe((data) => {
         if (!data.error) {
+          console.log(this.auth.get());
           let trust2FA = data?.data?.extends?.Trust2FA ?? '';
           let objData = {
-            data: data,
+            data: data.data,
             login2FA: data?.data?.extends?.TwoFA,
             hubConnectionID: this.hubConnectionID,
             loginDevice: this.loginDevice,
@@ -441,7 +442,7 @@ export class LoginComponent extends UIComponent implements OnInit, OnDestroy {
             );
             lg2FADialog.closed.subscribe((lg2FAEvt) => {
               console.log('close popup ', lg2FAEvt);
-              if (lg2FAEvt.event.data.error) return;
+              if (!lg2FAEvt.event || lg2FAEvt.event?.data?.error) return;
               this.authService.setLogin(data.data);
               this.loginService.loginAfter(lg2FAEvt.event.data);
             });
