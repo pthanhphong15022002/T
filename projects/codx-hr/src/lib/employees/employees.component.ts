@@ -67,6 +67,7 @@ export class EmployeesComponent extends UIComponent {
   @ViewChild('panelLeftRef') panelLeftRef: TemplateRef<any>;
   @ViewChild('templateTree') templateTree: TemplateRef<any>;
   dataSelected: any;
+  hideMF: boolean =false;
 
   constructor(
     private injector: Injector,
@@ -78,6 +79,8 @@ export class EmployeesComponent extends UIComponent {
   }
 
   onInit(): void {
+    
+    if(this.codxService.asideMode == "2") this.hideMF = true;
     this.router.params.subscribe((param: any) => {
       if (param) {
         let funcID = param['funcID'];

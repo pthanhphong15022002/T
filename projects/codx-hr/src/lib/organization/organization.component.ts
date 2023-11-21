@@ -61,7 +61,8 @@ export class OrgorganizationComponent extends UIComponent {
     super(inject);
   }
 
-  onInit(): void {
+  onInit(): void {    
+    if(this.codxService.asideMode == "2") this.activeMFC = false;
     this.hrService.getFormModel('HRT03a1').then((res) => {
       if (res) {
         this.formModelEmployee = res;

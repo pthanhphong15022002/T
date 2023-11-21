@@ -61,6 +61,7 @@ export class ReportinglineComponent extends UIComponent {
   empListLength = 0;
   currentChartData: any = null;
   dataSelected: any;
+  hideMF: boolean =false;
   constructor(
     inject: Injector,
     private adService: CodxAdService,
@@ -71,7 +72,8 @@ export class ReportinglineComponent extends UIComponent {
   }
 
   onInit(): void {
-    this.funcID = this.router.snapshot.params['funcID'];
+    this.funcID = this.router.snapshot.params['funcID'];    
+    if(this.codxService?.asideMode == "2") this.hideMF = true;
     this.adService.getListCompanySettings()
       .subscribe((res) => {
         if (res) {
