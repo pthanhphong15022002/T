@@ -193,8 +193,8 @@ export class PopupUpdateReasonCodeComponent implements OnInit, AfterViewInit {
       this.data.scheduleTime = this.dateControl == '1' ? this.startTime + ' - ' + this.endTime : this.endTime;
       const startDate = new Date(this.data.scheduleStart);
       const endDate = new Date(this.data.scheduleEnd);
-      this.data.startDate = startDate;
-      this.data.endDate = endDate;
+      this.data.startDate = JSON.parse(JSON.stringify(startDate));
+      this.data.endDate = JSON.parse(JSON.stringify(endDate));
       if(this.dateControl == '0'){
         this.data.scheduleStart = null;
         this.data.scheduleEnd = null;
