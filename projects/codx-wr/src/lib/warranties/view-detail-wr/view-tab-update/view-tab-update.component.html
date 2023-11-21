@@ -115,10 +115,8 @@
     <span
       *ngIf="data?.scheduleTime"
       class="text-gray-800"
-      [innerHTML]="
-        data?.scheduleTime | formatvalue : formModel : 'ScheduleTime' | async
-      "
-    >
+
+    >{{data?.scheduleTime}}
     </span>
   </div>
 </ng-template>
