@@ -198,14 +198,15 @@ export class PopupAddCustomFieldComponent implements OnInit {
       this.field[e.field] = e.data;
       return;
     }
-    if (e.field == 'dataType') {
-      if (e.data != this.field.dataType) {
-        this.field.refType = null;
-        this.field.refValue = null;
-        this.field.dataFormat = null;
-        this.field.multiselect = false;
-        this.fieldCus = null;
-      }
+    if (
+      (e.field == 'dataType' && e.data != this.field.dataType) ||
+      (e.field == 'dataFormat' && e.data != this.field.dataFormat)
+    ) {
+      this.field.refType = null;
+      this.field.refValue = null;
+      this.field.dataFormat = null;
+      this.field.multiselect = false;
+      this.fieldCus = null;
     }
 
     if (e && e.field) this.field[e.field] = e?.data;
@@ -246,7 +247,8 @@ export class PopupAddCustomFieldComponent implements OnInit {
           this.field.dataType == 'P' ||
           this.field.dataType == 'T')) ||
       ((this.field.dataType == 'L' || this.field.dataType == 'PA') &&
-        this.field.refValue)
+        this.field.refValue) ||
+      (this.field.dataType == 'L' && this.field.dataFormat == 'B')
     ) {
       this.fieldCus = JSON.parse(
         JSON.stringify(
@@ -356,7 +358,11 @@ export class PopupAddCustomFieldComponent implements OnInit {
     //   return;
     // }
 
-    if (this.field.dataType == 'L' && !this.field.refValue) {
+    if (
+      this.field.dataType == 'L' &&
+      this.field.dataFormat != 'B' &&
+      !this.field.refValue
+    ) {
       this.notiService.notifyCode(
         'SYS009',
         0,

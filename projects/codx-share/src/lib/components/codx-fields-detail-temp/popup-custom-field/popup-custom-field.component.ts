@@ -69,7 +69,6 @@ export class PopupCustomFieldComponent implements OnInit {
           result = event.e;
           break;
       }
-
       var index = this.fields.findIndex((x) => x.recID == field.recID);
       if (index != -1) {
         this.fields[index].dataValue = result;
