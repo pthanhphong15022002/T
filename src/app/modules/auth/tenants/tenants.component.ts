@@ -5,6 +5,8 @@ import {
   AuthService,
   AuthStore,
   CallFuncService,
+  ResponseModel,
+  UserModel,
 } from 'codx-core';
 import { Login2FAComponent } from '../login/login2-fa/login2-fa.component';
 import { Device } from 'projects/codx-ad/src/lib/models/userLoginExtend.model';
@@ -46,7 +48,6 @@ export class TenantsComponent implements OnInit {
   loginDevice: Device;
 
   ngOnInit(): void {
-    // this.router.navigate(['/tester']);
     this.loginService
       .getTenants(this.user.email)
       .subscribe((tenants: Array<any>) => {
@@ -58,6 +59,8 @@ export class TenantsComponent implements OnInit {
     this.api
       .exec('AD', 'UsersBusiness', 'CreateUserLoginAsync', [
         tn,
+        '', //userID
+        '', //pw
         JSON.stringify(this.loginDevice),
       ])
       .subscribe((res: any) => {
@@ -65,7 +68,7 @@ export class TenantsComponent implements OnInit {
           this.loginDevice.tenantID = tn;
           let trust2FA = res?.extends?.Trust2FA;
           let objData = {
-            data: { data: res },
+            data: res,
             login2FA: res?.extends?.TwoFA,
             hubConnectionID: '',
             loginDevice: this.loginDevice,
@@ -80,7 +83,7 @@ export class TenantsComponent implements OnInit {
               objData
             );
             lg2FADialog.closed.subscribe((lg2FAEvt) => {
-              if (lg2FAEvt.event.data.error) return;
+              if (!lg2FAEvt.event || lg2FAEvt.event?.data?.error) return;
               this.authService.setLogin(lg2FAEvt.event.data.data);
               this.loginService.loginAfter(lg2FAEvt.event.data);
             });
@@ -91,10 +94,5 @@ export class TenantsComponent implements OnInit {
         }
         return res;
       });
-    // this.authService.createUserToken(tn).subscribe((res) => {
-    //   console.log('login success', res);
-
-    //   // if (res) this.router.navigate(['/' + tn]);
-    // });
   }
 }
