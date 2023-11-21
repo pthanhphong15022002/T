@@ -63,7 +63,9 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
 
   //#region Init
 
-  onInit(): void {}
+  onInit(): void {
+    this.acService.setPopupSize(this.dialog, '100%', '100%');
+  }
 
   ngAfterViewInit() {
     console.log(this.formVouchers);

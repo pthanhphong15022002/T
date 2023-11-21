@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, HostListener, Injector, OnInit, Optional, ViewChild, ViewEncapsulation } from '@angular/core';
 import { UIComponent, CodxGridviewV2Component, CodxFormComponent, DialogRef, FormModel, NotificationsService, AuthStore, DialogData, Util, DialogModel } from 'codx-core';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 import { CodxAcService } from '../../../codx-ac.service';
 import { RoundService } from '../../../round.service';
 import { TabComponent } from '@syncfusion/ej2-angular-navigations';
@@ -57,6 +57,7 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
   subTypeAdv: any = '1'; //? loại chi liên kết (xử lí lấy loại chi của chứng từ liên kết cho loại chi tạm ứng & chi thanh toán)
   vatAccount: any; //? tài khoản thuế của hóa đơn GTGT (xử lí cho chi khác)?
   isPreventChange:any = false;
+  postDateControl:any;
   private destroy$ = new Subject<void>(); //? list observable hủy các subscribe api
   constructor(
     inject: Injector,
@@ -70,7 +71,7 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
     this.dialog = dialog; //? dialog truyền vào
     this.dialogData = dialogData; //? data dialog truyền vào
     this.headerText = dialogData.data?.headerText; //? get tên tiêu đề
-    this.dataDefault = { ...dialogData.data?.oData }; //? get data của Cashpayments
+    this.dataDefault = { ...dialogData.data?.oData }; 
     this.journal = { ...dialogData.data?.journal }; //? get data sổ nhật kí
     this.baseCurr = dialogData.data?.baseCurr; //? get đồng tiền hạch toán
     this.legalName = this.dialogData.data?.legalName;
@@ -78,7 +79,20 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
   //#endregion Contructor
 
   //#region Init
-  onInit(): void {}
+  onInit(): void {
+    this.acService.setPopupSize(this.dialog, '100%', '100%');
+    this.cache
+      .viewSettingValues('ACParameters')
+      .pipe(
+        takeUntil(this.destroy$),
+        map((arr: any[]) => arr.find((a) => a.category === '1')),
+        map((data) => JSON.parse(data.dataValue))
+      ).subscribe((res:any)=>{
+        if (res) {
+          this.postDateControl = res?.PostedDateControl;
+        }
+      })
+  }
 
   ngAfterViewInit() {}
 

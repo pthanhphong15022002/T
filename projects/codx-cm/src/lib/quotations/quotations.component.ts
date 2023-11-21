@@ -117,9 +117,11 @@ export class QuotationsComponent extends UIComponent implements OnInit {
   }
 
   onInit(): void {
-    this.button = [{
-      id: 'btnAdd',
-    }];
+    this.button = [
+      {
+        id: 'btnAdd',
+      },
+    ];
     this.loadSetting();
   }
 

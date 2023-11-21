@@ -501,6 +501,7 @@ export class DP_Instances_Steps_Tasks {
   objectType: string;
   approvedBy: string;
   assigned: string;
+  approveStatus: string;
 }
 
 export class DP_Instances_Steps_Tasks_Roles {

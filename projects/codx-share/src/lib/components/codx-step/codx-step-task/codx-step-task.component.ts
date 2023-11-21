@@ -101,6 +101,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   @Input() contractName: string;
   @Input() leadName: string;
   @Input() instanceName: string;
+  @Input() entity = 'DP';
 
   @Output() saveAssign = new EventEmitter<any>();
   @Output() continueStep = new EventEmitter<any>();
@@ -164,6 +165,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     delete: true,
   };
 
+  taskApproval: DP_Instances_Steps_Tasks;
   frmModelInstances: FormModel = {
     funcID: 'DPT04',
     formName: 'DPInstances',
@@ -578,10 +580,10 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
             }
             break;
           case 'DP32': // gởi duyệt 
-            res.disabled =  !(task?.approveRule);
+            res.disabled = (!task?.approveRule || (task?.approveRule && ["3","5"].includes(task?.approveStatus)));
             break;
           case 'DP33': // hủy duyệt
-            res.disabled =  true;
+            res.disabled = !(task?.approveRule && task?.approveStatus == "3");
             break;
         }
       });
@@ -2529,6 +2531,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   //#endregion
 
   approvalTrans(task: DP_Instances_Steps_Tasks) {
+    this.taskApproval = task;
     if(task?.approveRule && task?.recID){
       this.api.execSv<any>(
         'ES',
@@ -2556,7 +2559,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
 
   release(data: any, category: any, exportData = null) {
     this.codxShareService.codxReleaseDynamic(
-      'DP',
+      "DP",
       data,
       category,
       'DP_Instances_Steps_Tasks',
@@ -2575,16 +2578,21 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   releaseCallback(res: any, t: any = null) {
     if (res?.msgCodeError) this.notiService.notify(res?.msgCodeError);
     else {
-    //   this.codxCmService
-    //     .getOneObject(this.dataSelected.recID, 'DealsBusiness')
-    //     .subscribe((q) => {
-    //       if (q) {
-    //         this.dataSelected = q;
-    //         this.view.dataService.update(this.dataSelected, true).subscribe();
-    //         if (this.kanban) this.kanban.updateCard(this.dataSelected);
-    //       }
-    //       this.notificationsService.notifyCode('ES007');
-    //     });
+      this.api
+        .exec<any>(
+          'DP',
+          'InstancesStepsTasksBusiness',
+          'UpdateApproveStatusTaskAsync',
+          [this.taskApproval?.stepID,this.taskApproval?.recID, "3"]
+        )
+        .subscribe((res) => {
+          if (res) {
+            this.taskApproval.approvedBy = this.user?.userID;
+            this.taskApproval.approveStatus = "3";
+            this.taskApproval = null;
+            this.changeDetectorRef.markForCheck();
+          }
+        });
     }
   }
 

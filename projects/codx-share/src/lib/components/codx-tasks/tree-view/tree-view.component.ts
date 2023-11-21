@@ -76,7 +76,6 @@ export class TreeViewComponent implements OnInit, AfterViewInit {
         this.favorite = x?.favorite;
       });
     }
-  
   }
   //#endregion
 
@@ -84,6 +83,7 @@ export class TreeViewComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {}
 
   ngAfterViewInit(): void {
+    // if (this.codxService.asideMode == '2') this.showMoreFunc = false;
     // this.loaded = false ;
     // this.gridModelTree.formName = this.formModel.formName;
     // this.gridModelTree.entityName = this.formModel.entityName;

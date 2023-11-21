@@ -59,6 +59,7 @@ export class SalesinvoicesAddComponent extends UIComponent{
     { name: 'References', textDefault: 'Liên kết', isActive: false },
   ];
   isPreventChange:any = false;
+  postDateControl:any;
   private destroy$ = new Subject<void>(); //? list observable hủy các subscribe api
 
   constructor(
@@ -82,6 +83,7 @@ export class SalesinvoicesAddComponent extends UIComponent{
   //#region Init
   
   onInit(): void {
+    this.acService.setPopupSize(this.dialog, '100%', '100%');
     this.cache
       .viewSettingValues('ACParameters')
       .pipe(
@@ -91,6 +93,7 @@ export class SalesinvoicesAddComponent extends UIComponent{
       ).subscribe((res:any)=>{
         if (res) {
           this.taxCurr = res?.TaxCurr;
+          this.postDateControl = res?.PostedDateControl;
         }
       })
   }

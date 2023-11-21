@@ -145,7 +145,6 @@ export class ReceiptTransactionsComponent extends UIComponent {
     //* thiết lập cấu hình sidebar
     this.optionSidebar.DataService = this.view.dataService;
     this.optionSidebar.FormModel = this.view.formModel;
-    this.optionSidebar.isFull = true;
   }
 
   ngDoCheck(){
@@ -194,7 +193,7 @@ export class ReceiptTransactionsComponent extends UIComponent {
         this.copyVoucher(data); //? sao chép chứng từ
         break;
       case 'SYS002':
-        //this.exportVoucher(data); //? xuất dữ liệu chứng từ
+        this.exportVoucher(data); //? xuất dữ liệu chứng từ
         break;
       case 'ACT070804':
         this.releaseVoucher(e.text, data); //? gửi duyệt chứng từ
@@ -471,6 +470,35 @@ export class ReceiptTransactionsComponent extends UIComponent {
         }
       });
   }
+
+  /**
+   * *Xuất file theo template(Excel,PDF,...)
+   * @param data
+   */
+  exportVoucher(data) {
+    var gridModel = new DataRequest();
+    gridModel.formName = this.view.formModel.formName;
+    gridModel.entityName = this.view.formModel.entityName;
+    gridModel.funcID = this.view.formModel.funcID;
+    gridModel.gridViewName = this.view.formModel.gridViewName;
+    gridModel.page = this.view.dataService.request.page;
+    gridModel.pageSize = this.view.dataService.request.pageSize;
+    gridModel.predicate = this.view.dataService.request.predicates;
+    gridModel.dataValue = this.view.dataService.request.dataValues;
+    gridModel.entityPermission = this.view.formModel.entityPer;
+    //Chưa có group
+    gridModel.groupFields = 'createdBy';
+    this.callfc.openForm(
+      CodxExportComponent,
+      null,
+      900,
+      700,
+      '',
+      [gridModel, data.recID],
+      null
+    );
+  }
+
 
   /**
    * *Hàm ẩn hiện các morefunction của từng chứng từ ( trên view danh sách và danh sách chi tiết)

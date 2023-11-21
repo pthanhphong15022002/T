@@ -1780,7 +1780,7 @@ export class CodxTasksComponent
   }
 
   changeDataMF(e, data) {
-    if (e) {
+    if (e && data) {
       // sua ngay 08/06/2023
       e.forEach((x) => {
         switch (x.functionID) {

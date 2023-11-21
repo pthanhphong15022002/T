@@ -81,6 +81,7 @@ export class PopupUpdateReasonCodeComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
+    this.parentID = null;
     if (this.data?.scheduleStart && this.data?.scheduleEnd) {
       this.data.scheduleStart = new Date(this.data?.scheduleStart);
       this.data.scheduleEnd = new Date(this.data?.scheduleEnd);
@@ -100,11 +101,8 @@ export class PopupUpdateReasonCodeComponent implements OnInit, AfterViewInit {
         )
         .subscribe((res) => {
           if (res) {
-            this.setDataCommentAndDate(
-              res?.dateControl,
-              res?.leadTime,
-              res?.parentID
-            );
+            this.dateControl = res?.dateControl;
+            this.setDataCommentAndDate(res?.parentID);
             this.setTimeEdit();
           }
         });
@@ -192,9 +190,15 @@ export class PopupUpdateReasonCodeComponent implements OnInit, AfterViewInit {
 
   async setStartAndEndTime() {
     if (this.data?.scheduleStart && this.data?.scheduleEnd) {
-      this.data.scheduleTime = this.startTime + ' - ' + this.endTime;
-      this.data.startDate = new Date(this.data.scheduleStart);
-      this.data.endDate = new Date(this.data.scheduleEnd);
+      this.data.scheduleTime = this.dateControl == '1' ? this.startTime + ' - ' + this.endTime : this.endTime;
+      const startDate = new Date(this.data.scheduleStart);
+      const endDate = new Date(this.data.scheduleEnd);
+      this.data.startDate = startDate;
+      this.data.endDate = endDate;
+      if(this.dateControl == '0'){
+        this.data.scheduleStart = null;
+        this.data.scheduleEnd = null;
+      }
     }
   }
 
@@ -210,21 +214,29 @@ export class PopupUpdateReasonCodeComponent implements OnInit, AfterViewInit {
   async valueChange(e) {
     this.data[e?.field] = e?.data;
     if (e?.field == 'statusCode') {
-      this.setDataCommentAndDate(
-        e?.component?.itemsSelected[0]?.DateControl,
-        e?.component?.itemsSelected[0]?.Leadtime,
-        e?.component?.itemsSelected[0]?.ParentID
+      this.parentID = null;
+      this.dataParentID = null;
+      this.data.comment = null;
+      this.setDataCommentAndDate(e?.component?.itemsSelected[0]?.ParentID);
+      this.setComment(
+        e?.component?.itemsSelected[0]?.Comment,
+        e?.component?.itemsSelected[0]?.CommentControl
       );
+
+      this.dateControl = e?.component?.itemsSelected[0]?.DateControl;
       if (this.dateControl) {
-        this.defaultTime(e?.component?.itemsSelected[0]?.Leadtime);
+        this.defaultTime(e?.component?.itemsSelected[0]?.Leadtime, this.dateControl);
       }
     }
     this.detectorRef.detectChanges();
   }
 
-  setDataCommentAndDate(dateControl, leadTime, parentID) {
-    this.dateControl = dateControl;
+  setDataCommentAndDate(parentID) {
     this.parentID = parentID;
+    if (this.parentID == null) {
+      this.dataParentID = null;
+      this.data.comment = null;
+    }
     // this.setComment(comment, this.commentControl);
   }
 
@@ -294,8 +306,10 @@ export class PopupUpdateReasonCodeComponent implements OnInit, AfterViewInit {
         }
       }
 
-      if (this.scheduleTime)
-        commentRep = commentRep.replace('{1}', this.scheduleTime);
+      if (this.startTime && this.endTime) {
+        this.data.scheduleTime = this.dateControl == '1' ? this.startTime + ' - ' + this.endTime : this.endTime;
+        commentRep = commentRep.replace('{1}', this.data.scheduleTime);
+      }
 
       if (this.data.scheduleStart) {
         let date = moment(new Date(this.data.scheduleStart)).format(
@@ -308,7 +322,7 @@ export class PopupUpdateReasonCodeComponent implements OnInit, AfterViewInit {
   }
 
   //#region date schedule
-  defaultTime(leadTime) {
+  defaultTime(leadTime, dateControl) {
     const dateNow = new Date();
     const minutes = dateNow.getMinutes();
     const remainder = minutes % 30;
@@ -318,9 +332,10 @@ export class PopupUpdateReasonCodeComponent implements OnInit, AfterViewInit {
     this.data.scheduleStart = dateNow;
     let dateEnd = JSON.parse(JSON.stringify(this.data.scheduleStart));
     this.data.scheduleEnd = new Date(dateEnd);
-    const parseLeadTime = parseFloat(leadTime) > 0 ? parseFloat(leadTime) : 30;
-    this.data.scheduleEnd.setMinutes(minutes + minutesToAdd + parseLeadTime);
-
+    if(dateControl == '1'){
+      const parseLeadTime = parseFloat(leadTime) > 0 ? parseFloat(leadTime) : 30;
+      this.data.scheduleEnd.setMinutes(minutes + minutesToAdd + parseLeadTime);
+    }
     this.setTimeEdit();
   }
 

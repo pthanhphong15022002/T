@@ -131,6 +131,8 @@
   [idField]="idField"
   (requestEnded)="closeAddForm($event)"
   (viewChanged)="viewChange($event)"
+  (clickMF)="clickMF($event, itemDetail)"
+  (changeDataMF)="changeDataMF($event, itemDetail)"
   [moreFuncs]="moreFunc"
 >
 </codx-views>
