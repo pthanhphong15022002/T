@@ -7,7 +7,7 @@ import {
   LayoutBaseComponent,
   SidebarModel,
 } from 'codx-core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { environment } from 'src/environments/environment';
 
@@ -24,11 +24,13 @@ export class LayoutPortalComponent extends LayoutBaseComponent {
     private route: ActivatedRoute,
     private callfc: CallFuncService,
     private cache: CacheService,
-    private shareService: CodxShareService
+    private shareService: CodxShareService,
+    private routers : Router,
   ) {
     super(inject);
     this.module = 'WP';
-    if(environment.asideMode != "2") this.layoutModel.asideFixed = false;
+    let tenant = this.routers?.url.split("/")[1];
+    if(environment.asideMode.includes(tenant)) this.layoutModel.asideFixed = false;
     this.layoutModel.asideTheme = 'transparent';
     this.layoutModel.asideMinimize = 'icon';
     this.layoutModel.toolbarDisplay = false;
@@ -49,6 +51,8 @@ export class LayoutPortalComponent extends LayoutBaseComponent {
     //     console.log(res);
     //   });
   }
+
+  this.router?.url.split("/")[2].toUpperCase();
   asideClick(evt: any) {
     if (evt?.function?.assemblyName == 'HCS') {
       evt.cancel = true;
