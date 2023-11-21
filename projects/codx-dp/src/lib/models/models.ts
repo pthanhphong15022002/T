@@ -616,6 +616,7 @@ export class DP_Activities {
   modifiedBy: string;
   approvedBy: string;
   approveRule: string;
+  approveStatus: string;
 }
 export class DP_Activities_Roles {
   recID: string;

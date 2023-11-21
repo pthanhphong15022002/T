@@ -35,10 +35,10 @@ export class PopupCustomFieldComponent implements OnInit {
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
-    this.fields = JSON.parse(JSON.stringify(dt.data.data));
-    this.titleHeader = dt.data?.titleHeader;
-    this.objectIdParent = dt.data?.objectIdParent;
-    this.customerID = dt.data?.customerID;
+    this.fields = JSON.parse(JSON.stringify(dt?.data?.data));
+    this.titleHeader = dt?.data?.titleHeader;
+    this.objectIdParent = dt?.data?.objectIdParent;
+    this.customerID = dt?.data?.customerID;
     this.dialog = dialog;
   }
 
@@ -64,7 +64,6 @@ export class PopupCustomFieldComponent implements OnInit {
         case 'C':
         case 'L':
         case 'TA':
-        case 'PA':
         case 'PA':
           result = event.e;
           break;

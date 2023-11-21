@@ -352,8 +352,8 @@ export class ViewTabUpdateComponent implements OnInit {
                 this.lstUpdate = JSON.parse(JSON.stringify(this.lstUpdate));
                 this.wrSv.listOrderUpdateSubject.next({
                   e: this.lstUpdate,
-                  date: new Date(),
-                  update: null,
+                  date: new Date(data.createdOn),
+                  update: data,
                 });
 
                 this.detectorRef.detectChanges();
