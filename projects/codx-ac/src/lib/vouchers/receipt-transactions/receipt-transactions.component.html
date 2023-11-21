@@ -1,6 +1,7 @@
 <codx-views class="ac-views" #view idField="recID" [views]="views" [button]="button" [entityName]="view.entityName"
   (buttonClick)="toolbarClick($event)" [predicates]="runmode == '1' ? '' : 'JournalNo=@0'" assemblyName="IV"
-  className="VouchersBusiness" service="IV" method="GetDataAsync" idField="recID"
+  className="VouchersBusiness" service="IV" method="GetDataAsync" idField="recID" [hideMoreFuncs]="!itemSelected"
+  (changeDataMF)="changeMFDetail($event, itemSelected,'viewdetail')" (clickMF)="clickMoreFunction($event, itemSelected)"
   [dataValues]="runmode == '1' ? '' : journalNo" (selectedChange)="onSelectedItem($event)" [isSubView]="true">
 </codx-views>
 
@@ -14,16 +15,16 @@
 <!-- Start: template listdetail -->
 <ng-template #templateDetailLeft let-data>
   <codx-temp-full [titleTmp]="titleTmp" cardCss="card-template border-bottom p-3" [formModel]="view.formModel"
-    [modeImgs]="true" [titleLine]="2" [dataItem]="data" [hideMF]="false" [typeMF]="'hover'" [moreFuncCss]="'me-15'"
-    (changeDataMF)="changeMFDetail($event, data ,'viewdetail')" (clickMF)="clickMoreFunction($event, data)">
+    [modeImgs]="true" [titleLine]="2" [dataItem]="data" [hideMF]="codxService.asideMode == '2'" [typeMF]="'hover'"
+    [moreFuncCss]="'me-15'">
   </codx-temp-full>
 </ng-template>
 
 <ng-template #templateDetailRight>
   <ng-container *ngIf="itemSelected">
-    <receipt-transactions-detail [formModel]="view.formModel" [dataService]="this.view.dataService" [dataItem]="itemSelected"
-      [recID]="itemSelected?.recID" [baseCurr]="baseCurr" [journal]="journal" [headerText]="headerText"
-      [gridViewSetup]="view?.gridViewSetup" [hideFields]="hideFields"
+    <receipt-transactions-detail [formModel]="view.formModel" [dataService]="this.view.dataService"
+      [dataItem]="itemSelected" [recID]="itemSelected?.recID" [baseCurr]="baseCurr" [journal]="journal"
+      [headerText]="headerText" [gridViewSetup]="view?.gridViewSetup" [hideFields]="hideFields"
       [dataDefault]="dataDefault"></receipt-transactions-detail>
   </ng-container>
 </ng-template>
@@ -63,13 +64,16 @@
     <div style="height: 18px !important" class="d-flex justify-content-between">
       <div class="d-flex align-items-center">
         <span *ngIf="data?.warehouseName" class="text-gray-600 line-clamp line-clamp-1">{{data?.warehouseName}}</span>
-        <span *ngIf="(data?.warehouseName == '' || data?.warehouseName == null) && view?.gridViewSetup" class="place-holder text-gray-600 line-clamp line-clamp-1">{{ view?.gridViewSetup["WarehouseID"].headerText}}</span>
+        <span *ngIf="(data?.warehouseName == '' || data?.warehouseName == null) && view?.gridViewSetup"
+          class="place-holder text-gray-600 line-clamp line-clamp-1">{{
+          view?.gridViewSetup["WarehouseID"].headerText}}</span>
       </div>
     </div>
     <div style="height: 35px !important" class="d-flex justify-content-between align-items-center">
       <div class="d-flex align-items-end codx-badge">
         <codx-vll *ngIf="data?.status == '1'" [formModel]="view.formModel" [field]="'Status'"
-          [value]="data?.validated ? '1' : '7'" [showText]="true" [showBgColor]="true" class="badge badge-light badge-sm">
+          [value]="data?.validated ? '1' : '7'" [showText]="true" [showBgColor]="true"
+          class="badge badge-light badge-sm">
         </codx-vll>
         <codx-vll *ngIf="data?.status != '1'" [formModel]="view.formModel" [field]="'Status'" [value]="data?.status"
           [showText]="true" [showBgColor]="true" class="badge badge-light badge-sm">
@@ -115,12 +119,16 @@
             "></span>
         </div>
         <div class="d-flex align-items-center">
-          <span *ngIf="data?.memo" id="tipmemo" class="text-gray-600 line-clamp line-clamp-1 me-3">{{ data?.memo }}</span>
-          <span *ngIf="(data?.memo == '' || data?.memo == null) && view?.gridViewSetup" class="place-holder text-gray-600 line-clamp line-clamp-1 me-3">{{ view?.gridViewSetup["Memo"].headerText}}</span>
+          <span *ngIf="data?.memo" id="tipmemo" class="text-gray-600 line-clamp line-clamp-1 me-3">{{ data?.memo
+            }}</span>
+          <span *ngIf="(data?.memo == '' || data?.memo == null) && view?.gridViewSetup"
+            class="place-holder text-gray-600 line-clamp line-clamp-1 me-3">{{
+            view?.gridViewSetup["Memo"].headerText}}</span>
         </div>
         <div class="d-flex align-items-center">
-          <span *ngIf="data?.warehouseName" class="text-gray-600 line-clamp line-clamp-1" >{{data?.warehouseName}}</span>
-          <span *ngIf="(data?.warehouseName == '' || data?.warehouseName == null) && view.gridViewSetup" class="place-holder text-gray-600" >{{view.gridViewSetup['WarehouseID'].headerText}}</span>
+          <span *ngIf="data?.warehouseName" class="text-gray-600 line-clamp line-clamp-1">{{data?.warehouseName}}</span>
+          <span *ngIf="(data?.warehouseName == '' || data?.warehouseName == null) && view.gridViewSetup"
+            class="place-holder text-gray-600">{{view.gridViewSetup['WarehouseID'].headerText}}</span>
         </div>
       </div>
     </div>

@@ -55,6 +55,7 @@ export class DynamicFormComponent extends UIComponent {
   function: any = {};
   tabs: TabModel[] = [];
   authStore;
+  itemSelected:any;
   constructor(
     private inject: Injector,
     private callfunc: CallFuncService,
@@ -80,9 +81,11 @@ export class DynamicFormComponent extends UIComponent {
       //   if (state.urlOld) this.layout.setUrl(state.urlOld);
       // }
     });
-    this.buttons = [{
-      id: 'btnAdd',
-    }];
+    this.buttons = [
+      {
+        id: 'btnAdd',
+      },
+    ];
   }
 
   ngAfterViewInit(): void {
@@ -173,9 +176,11 @@ export class DynamicFormComponent extends UIComponent {
       }
       //form edit quy trinh by dong san pham
       case 'CMS0105_1':
-        this.openEditProcess(data, evt);
+        this.openEditProcess(data, evt, '1');
         break;
-
+      case 'CMS0105_2':
+        this.openEditProcess(data, evt, '4');
+        break;
       //resend active tenant email
       case 'TNT0015': {
         this.sendActiveTenantEmail(data);
@@ -490,7 +495,7 @@ export class DynamicFormComponent extends UIComponent {
   }
 
   //#region Edit process by dong san pham
-  async openEditProcess(data, evt) {
+  async openEditProcess(data, evt, applyFor) {
     //VTHAO-2/10/2023
     this.api
       .execSv<any>(
@@ -498,7 +503,7 @@ export class DynamicFormComponent extends UIComponent {
         'ERM.Business.DP',
         'ProcessesBusiness',
         'GetProcessSettingAsync',
-        [data?.processID]
+        [applyFor == '1' ? data?.processID : data?.processContractID]
       )
       .subscribe((res) => {
         if (res && res?.length > 0) {
@@ -511,6 +516,7 @@ export class DynamicFormComponent extends UIComponent {
             process.businessLineID?.trim() == ''
           )
             process.businessLineID = data.businessLineID;
+          process.applyFor = applyFor;
           let dialogModel = new DialogModel();
           dialogModel.IsFull = true;
           dialogModel.zIndex = 999;
@@ -542,18 +548,11 @@ export class DynamicFormComponent extends UIComponent {
           );
           dialogProcess.closed.subscribe((e) => {
             if (e && e?.event && e?.event?.recID && action == 'add') {
-              data.processID = e.event?.recID;
+              if (applyFor == '1') data.processID = e.event?.recID;
+              if (applyFor == '4') data.processContractID = e.event?.recID;
               let updateData = JSON.parse(JSON.stringify(data));
-              this.viewBase.dataService.update(updateData).subscribe();
-              this.api
-                .execSv<any>(
-                  'CM',
-                  'ERM.Business.CM',
-                  'BusinessLinesBusiness',
-                  'SetProcessIDAsync',
-                  [data?.businessLineID, e.event?.recID]
-                )
-                .subscribe();
+              this.view.dataService.update(updateData, true).subscribe();
+              this.detectorRef.detectChanges();
             }
           });
         }
@@ -618,4 +617,9 @@ export class DynamicFormComponent extends UIComponent {
     // }
   }
   //#endregion
+
+  selectedChange(e:any)
+  {
+    this.itemSelected = e?.data;
+  }
 }

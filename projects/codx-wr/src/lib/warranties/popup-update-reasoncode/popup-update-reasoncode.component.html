@@ -19,7 +19,10 @@
           (valueChange)="valueChange($event)"
         ></codx-input>
       </div>
-      <div class="form-group row mt-3" *ngIf="dateControl != '0'">
+      <div
+        class="form-group row mt-3"
+        *ngIf="dateControl && dateControl?.trim() != ''"
+      >
         <div class="col-6">
           <div class="d-flex">
             <codx-label
@@ -28,65 +31,80 @@
               [formModel]="form.formModel"
             >
             </codx-label>
-            <span
-              *ngIf="gridViewSetup?.ScheduleStart?.isRequire"
-              class="text-danger ms-1"
-              >*</span
-            >
           </div>
           <codx-input
-            [formModel]="form.formModel"
-            [Group]="form?.formGroup"
-            field="scheduleStart"
+            type="datetime"
+            class="test-datetime"
+            [crrValue]="data?.startDate"
+            (valueChange)="valueDateChange($event)"
+            field="startDate"
+            format="d"
+            [placeholder]="gridViewSetup?.ScheduleStart?.description"
           >
           </codx-input>
         </div>
-        <div class="col-6">
-          <div class="d-flex">
+        <div class="col-3" *ngIf="dateControl == '1'">
+          <div>
             <codx-label
-              fiedName="ScheduleTime"
-              [setRequire]="gridViewSetup?.ScheduleTime?.isRequire"
+              name="lblScheduleStartTime"
               [formModel]="form.formModel"
+              default="Từ giờ"
             >
             </codx-label>
-            <span
-              *ngIf="gridViewSetup?.ScheduleTime?.isRequire"
-              class="text-danger ms-1"
-              >*</span
-            >
           </div>
           <codx-input
-            [field]="'scheduleTime'"
-            [crrValue]="data.scheduleTime"
-            [formModel]="form.formModel"
-            (valueChange)="valueTimeChange($event)"
+            type="datetime"
+            [crrValue]="startTime"
+            format="t"
+            (valueChange)="valueStartTimeChange($event)"
           >
           </codx-input>
         </div>
-        <!-- <div class="col-3">
-        <div class="d-flex">
+        <div class="col-3" *ngIf="dateControl == '1'">
           <codx-label
             name="lblScheduleEndTime"
-            [setRequire]="gridViewSetup?.ScheduleEnd?.isRequire"
             [formModel]="form.formModel"
             default="Đến giờ"
           >
           </codx-label>
-          <span
-            *ngIf="gridViewSetup?.ScheduleEnd?.isRequire"
-            class="text-danger ms-1"
-            >*</span
+          <codx-input
+            type="datetime"
+            [crrValue]="endTime"
+            format="t"
+            (valueChange)="valueEndTimeChange($event)"
           >
+          </codx-input>
         </div>
-        <codx-input
-          type="datetime"
-          [crrValue]="endTime"
-          format="t"
-          placeholder="pTimeFrom"
-          (valueChange)="valueEndTimeChange($event)"
+        <div class="col-6" *ngIf="dateControl != '1'">
+          <codx-label
+            name="lblScheduleTime"
+            [formModel]="form.formModel"
+            default="Thời gian"
+          >
+          </codx-label>
+          <codx-input
+            type="datetime"
+            [crrValue]="endTime"
+            format="t"
+            (valueChange)="valueEndTimeChange($event)"
+          >
+          </codx-input>
+        </div>
+      </div>
+      <div class="form-group" *ngIf="parentID">
+        <codx-label
+          name="lblParentID"
+          default="parentID"
+          [formModel]="form.formModel"
         >
-        </codx-input>
-      </div> -->
+        </codx-label>
+        <codx-input
+          field="parentID"
+          type="combobox"
+          refValue="WRCommentTemplates"
+          [model]="{ ParentID: parentID }"
+          (valueChange)="valueChangeParent($event)"
+        ></codx-input>
       </div>
       <div class="form-group">
         <div class="d-flex">

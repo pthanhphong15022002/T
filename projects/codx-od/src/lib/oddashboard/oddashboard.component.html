@@ -158,7 +158,7 @@
           radius="70%"
           [explode]="true"
           [explodeOffset]="'10%'"
-          [palettes]="['#005dc7', '#21b3d2', '#06ddb8', '#00f5e9', '#a6dff5']"
+          [palettes]="palettes"
           legendShape="Rectangle"
         >
         </e-accumulation-series>
@@ -173,25 +173,25 @@
       id="treemap"
       style="display: block"
       height="100%"
-      [dataSource]="data3"
-      weightValuePath="percentage"
+      [dataSource]="statByCategory"
+      weightValuePath="quantity"
       [leafItemSettings]="{
-      labelPath: 'moduleName',
+      labelPath: 'category',
       labelStyle: {
         color: '#fff'
       },
-      labelFormat: '${moduleName}<br>${percentage} %',
+      labelFormat: '${categoryName}<br>${percentage} %',
       templatePosition: 'Center',
     }"
       enableDrillDown="false"
-      [palette]="['#005dc7', '#0078ff', '#3699ff', '#d3e8ff']"
+      [palette]="palettes"
     >
     </ejs-treemap>
   </div>
 </ng-template>
 
 <ng-template #od_dashboard>
-  <div class="w-100 h-100 p-3" id="4">
+  <div class="w-100 h-100 p-0" id="4">
     <div style="height: 10%">
       <div class="d-flex justify-content-around align-items-center">
         <div class="d-flex align-items-center">
@@ -204,162 +204,38 @@
         </div>
       </div>
     </div>
-    <div class="position-relative" style="height: 90%">
+    <div class="position-relative m-2" style="height: 90%">
       <div
         class="scroll-hover position-absolute"
         style="max-height: 100%; width: 100%"
+        *ngIf="statBySource.length"
       >
-        <div class="my-2">
-          <div class="fw-bold">Cơ quan nhà nước</div>
+        <div class="my-2" *ngFor="let item of statBySource" >
+          <div class="fw-bold">{{item.sourceName}}</div>
           <div
             class="d-flex flex-row justify-content-between align-items-center"
           >
             <div class="d-block w-100">
               <div class="progress border">
                 <div
-                  class="progress-bar bg-warning"
-                  [style.width]="'30%'"
-                  [title]="'30%'"
-                ></div>
-                <div
-                  class="progress-bar bg-success"
-                  [style.width]="'70%'"
-                  [title]="'70%'"
-                ></div>
-              </div>
-            </div>
-            <div class="ms-2">
-              <span class="fw-bold">346</span>
-            </div>
-          </div>
-        </div>
-        <div class="my-2">
-          <div class="fw-bold">Đảng</div>
-          <div
-            class="d-flex flex-row justify-content-between align-items-center"
-          >
-            <div class="d-block" style="width: 80%">
-              <div class="progress border">
-                <div
-                  class="progress-bar bg-warning"
-                  [style.width]="'34%'"
-                  [title]="'30%'"
-                ></div>
-                <div
-                  class="progress-bar bg-success"
-                  [style.width]="'66%'"
-                  [title]="'60%'"
-                ></div>
-              </div>
-            </div>
-            <div class="ms-2">
-              <span class="fw-bold">266</span>
-            </div>
-          </div>
-        </div>
-        <div class="my-2">
-          <div class="fw-bold">Đoàn thể</div>
-          <div
-            class="d-flex flex-row justify-content-between align-items-center"
-          >
-            <div class="d-block" style="width: 40%">
-              <div class="progress border">
-                <div
-                  class="progress-bar bg-warning"
-                  [style.width]="'34%'"
-                  [title]="'10%'"
-                ></div>
-                <div
-                  class="progress-bar bg-success"
-                  [style.width]="'66%'"
-                  [title]="'30%'"
-                ></div>
-              </div>
-            </div>
-            <div class="ms-2">
-              <span class="fw-bold">111</span>
-            </div>
-          </div>
-        </div>
-        <div class="my-2">
-          <div class="fw-bold">Tổ chức</div>
-          <div
-            class="d-flex flex-row justify-content-between align-items-center"
-          >
-            <div class="d-block" style="width: 40%">
-              <div class="progress border">
-                <div
-                  class="progress-bar bg-warning"
-                  [style.width]="'85%'"
-                  [title]="'35%'"
-                ></div>
-                <div
-                  class="progress-bar bg-success"
-                  [style.width]="'15%'"
-                  [title]="'5%'"
-                ></div>
-              </div>
-            </div>
-            <div class="ms-2">
-              <span class="fw-bold">78</span>
-            </div>
-          </div>
-        </div>
-        <div class="my-2">
-          <div class="fw-bold">Doanh nghiệp</div>
-          <div
-            class="d-flex flex-row justify-content-between align-items-center"
-          >
-            <div class="d-block" style="width: 40%">
-              <div class="progress border">
-                <div
                   class="progress-bar"
-                  [style.width]="'10%'"
-                  [title]="'10%'"
+                  [style.width]="(item.internal/item.quantity)*100 +'%'"
+                  [title]="'Nội bộ'"
                 ></div>
                 <div
                   class="progress-bar bg-warning"
-                  [style.width]="'85%'"
-                  [title]="'25%'"
+                  [style.width]="(item.incoming/item.quantity)*100 +'%'"
+                  [title]="'Công văn đến'"
                 ></div>
                 <div
                   class="progress-bar bg-success"
-                  [style.width]="'5%'"
-                  [title]="'5%'"
+                  [style.width]="(item.outgoing/item.quantity)*100 +'%'"
+                  [title]="'Công văn đi'"
                 ></div>
               </div>
             </div>
             <div class="ms-2">
-              <span class="fw-bold">78</span>
-            </div>
-          </div>
-        </div>
-        <div class="my-2">
-          <div class="fw-bold">Khác</div>
-          <div
-            class="d-flex flex-row justify-content-between align-items-center"
-          >
-            <div class="d-block" style="width: 40%">
-              <div class="progress border">
-                <div
-                  class="progress-bar"
-                  [style.width]="'10%'"
-                  [title]="'10%'"
-                ></div>
-                <div
-                  class="progress-bar bg-warning"
-                  [style.width]="'85%'"
-                  [title]="'25%'"
-                ></div>
-                <div
-                  class="progress-bar bg-success"
-                  [style.width]="'5%'"
-                  [title]="'5%'"
-                ></div>
-              </div>
-            </div>
-            <div class="ms-2">
-              <span class="fw-bold">78</span>
+              <span class="fw-bold">{{item.quantity}}</span>
             </div>
           </div>
         </div>
@@ -423,130 +299,80 @@
             type="radio"
             class="btn-check"
             name="btnradio"
-            id="btnradio1"
+            id="Incoming"
+            #inputIn
             autocomplete="off"
             checked
+            (change)="onAgencyDispathChange(inputIn,{objIn: {inputIn,eleIn},objOut:{inputOut,eleOut}})"
           />
           <label
             class="btn btn-outline-primary"
             style="width: 100%"
-            for="btnradio1"
-            >Gửi</label
+            for="Incoming"
+            >Nhận</label
           >
 
           <input
             type="radio"
             class="btn-check"
             name="btnradio"
-            id="btnradio2"
+            id="Outgoing"
             autocomplete="off"
+            #inputOut
+            (change)="onAgencyDispathChange(inputOut,{objIn: {inputIn,eleIn},objOut:{inputOut,eleOut}})"
           />
-          <label class="btn btn-outline-primary" for="btnradio2">Nhận</label>
+          <label class="btn btn-outline-primary" for="Outgoing">Gửi</label>
         </div>
       </div>
     </div>
-    <div class="position-relative w-100" style="height: 80%">
+    <div class="position-relative w-100" style="height: 80%" #eleIn [ngClass]="activeTab=='Incoming' ? '' : 'd-none' ">
       <div
         class="position-absolute scroll-hover"
         style="max-height: 100%; width: 100%"
+        *ngIf="statByAgency.length"
       >
         <div
           class="topchart-item d-flex align-items-center justify-content-end"
+          *ngFor="let item of sortByProp(statByAgency,'incoming','desc',10),let idx =index"
         >
-          <div class="fw-bold me-2">123</div>
+          <div class="fw-bold me-2">{{item.incoming}}</div>
           <div
             class="topchart-user"
-            style="background-color: #005dc7; color: #fff"
-            [style.width]="'100%'"
-            [title]="'BTT UB Mặt trận Tổ quốc Việt Nam'"
+            style="color: #fff"
+            [style.backgroundColor]="palettes[idx]"
+            [style.width]="item.incomingPercentage + '%'"
+            [title]="item.agencyName"
           >
-            <span class="fw-bold">BTT UB Mặt trận Tổ quốc Việt Nam</span>
+            <span class="fw-bold">{{item.agencyName}}</span>
           </div>
         </div>
 
+
+      </div>
+    </div>
+    <div class="position-relative w-100" style="height: 80%" #eleOut [ngClass]="activeTab=='Outgoing' ? '' : 'd-none' ">
+      <div
+        class="position-absolute scroll-hover"
+        style="max-height: 100%; width: 100%"
+        *ngIf="statByAgency.length"
+      >
         <div
           class="topchart-item d-flex align-items-center justify-content-end"
+          *ngFor="let item of sortByProp(statByAgency,'outgoing','desc',10),let idx =index"
         >
-          <div class="fw-bold me-2">100</div>
+          <div class="fw-bold me-2">{{item.outgoing}}</div>
           <div
             class="topchart-user"
-            style="background-color: #0078ff; color: #fff"
-            [style.width]="'90%'"
-            [title]="'Sở Thông tin và Truyền thông Tp.HCM'"
+            style="color: #fff"
+            [style.backgroundColor]="palettes[idx]"
+            [style.width]="item.outgoingPercentage + '%'"
+            [title]="item.agencyName"
           >
-            <span class="fw-bold">Sở Thông tin và Truyền thông Tp.HCM</span>
+            <span class="fw-bold">{{item.agencyName}}</span>
           </div>
         </div>
 
-        <div
-          class="topchart-item d-flex align-items-center justify-content-end"
-        >
-          <div class="fw-bold me-2">90</div>
-          <div
-            class="topchart-user"
-            style="background-color: #3699ff; color: #fff"
-            [style.width]="'80%'"
-            [title]="'Cty TNHH TUV Rheinland Việt Nam'"
-          >
-            <span class="fw-bold">Cty TNHH TUV Rheinland Việt Nam</span>
-          </div>
-        </div>
 
-        <div
-          class="topchart-item d-flex align-items-center justify-content-end"
-        >
-          <div class="fw-bold me-2">80</div>
-          <div
-            class="topchart-user"
-            style="background-color: #d3e7ff"
-            [style.width]="'70%'"
-            [title]="'Cty TNHH phần mềm FAST'"
-          >
-            <span class="fw-bold">Cty TNHH phần mềm FAST</span>
-          </div>
-        </div>
-
-        <div
-          class="topchart-item d-flex align-items-center justify-content-end"
-        >
-          <div class="fw-bold me-2">70</div>
-          <div
-            class="topchart-user"
-            style="background-color: #eaf0ff"
-            [style.width]="'60%'"
-            [title]="'Văn phòng UBND TP.HCM'"
-          >
-            <span class="fw-bold">Văn phòng UBND TP.HCM</span>
-          </div>
-        </div>
-
-        <div
-          class="topchart-item d-flex align-items-center justify-content-end"
-        >
-          <div class="fw-bold me-2">60</div>
-          <div
-            class="topchart-user"
-            style="background-color: #56ebff"
-            [style.width]="'50%'"
-            [title]="'Cty TNHH Tân Quang Việt'"
-          >
-            <span class="fw-bold">Cty TNHH Tân Quang Việt</span>
-          </div>
-        </div>
-
-        <div
-          class="topchart-item d-flex align-items-center justify-content-end"
-        >
-          <div class="fw-bold me-2">50</div>
-          <div
-            class="topchart-user"
-            style="background-color: #a6f8ff"
-            [style.width]="'40%'"
-            [title]="'Sở Xây dựng TP.HCM'"
-          >
-            <span class="fw-bold">Sở Xây dựng TP.HCM</span>
-          </div>
-        </div>
       </div>
     </div>
   </div>
@@ -564,26 +390,25 @@
         alignment: 'Far'
       }"
       [chartArea]="{border: { width:0}}"
+      [palettes]="palettes"
     >
       <e-series-collection>
         <e-series
-          [dataSource]="groupByOrgUnit('orgUnitName', '2')"
+          [dataSource]="statByDept"
           type="Column"
-          xName="orgUnitName"
-          yName="quantity"
+          xName="departmentName"
+          yName="incoming"
           name="Công văn đến"
           columnWidth="0.25"
-          fill="#0079ff"
           legendShape="Rectangle"
         ></e-series>
         <e-series
-          [dataSource]="groupByOrgUnit('orgUnitName', '1')"
+          [dataSource]="statByDept"
           type="Column"
-          xName="orgUnitName"
-          yName="quantity"
+          xName="departmentName"
+          yName="outgoing"
           name="Công văn đi"
           columnWidth="0.25"
-          fill="#05ddb8"
           legendShape="Rectangle"
         ></e-series>
       </e-series-collection>

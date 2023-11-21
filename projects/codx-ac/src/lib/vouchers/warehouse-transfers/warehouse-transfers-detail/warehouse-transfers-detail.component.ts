@@ -58,6 +58,10 @@ export class WarehouseTransfersDetailComponent extends UIComponent {
     this.getDataDetail(this.dataItem, this.recID);
   }
 
+  ngDoCheck() {
+    this.detectorRef.detectChanges();
+  }
+
   ngOnDestroy() {
     this.onDestroy();
   }
@@ -112,7 +116,7 @@ export class WarehouseTransfersDetailComponent extends UIComponent {
 
   //#region Function
   changeMFDetail(event: any, data: any, type: any = '') {
-
+    
   }
 
   /**

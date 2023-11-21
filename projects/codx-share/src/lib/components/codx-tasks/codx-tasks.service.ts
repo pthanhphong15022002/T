@@ -368,4 +368,39 @@ export class CodxTasksService {
         getRef(dataReferences);
       });
   }
+
+  //get Task Tree-- OD +ES  + .. --chưa xử lý hết chỗ khác gom về
+  getTreeAssign(
+    refID,
+    refType,
+    getTree?: Function,
+    sessionID = null,
+    taskID = null //dùng cho serviceTask gọi riêng- chưa đưa về
+  ) {
+    let methol = 'GetListTaskTreeByRefIDAsync';
+    if (!sessionID) {
+      if (refID && refType) {
+        switch (refType) {
+          case 'OD_Dispatches':
+          case 'ES_SignFiles':
+            //  case 'TM_Tasks':  //truong hop nay dacbiet hon tí chuyển sau tính sau
+            methol = 'GetListTaskTreeByRefIDAsync';
+            break;
+          default:
+            debugger;
+            getTree([]);
+            return;
+        }
+        this.api
+          .execSv<any>('TM', 'ERM.Business.TM', 'TaskBusiness', methol, refID)
+          .subscribe((res) => {
+            debugger;
+            getTree(res);
+          });
+      } else getTree([]);
+    } else {
+      //chua chuyen code xong
+      getTree([]);
+    }
+  }
 }

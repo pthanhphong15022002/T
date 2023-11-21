@@ -17,6 +17,7 @@ import {
   ButtonModel,
   CallFuncService,
   CodxListviewComponent,
+  CodxService,
   DialogModel,
   DialogRef,
   FormModel,
@@ -43,6 +44,7 @@ import { CodxShareService } from 'projects/codx-share/src/lib/codx-share.service
 })
 export class SignFileComponent extends UIComponent {
   runMode;
+  hideMF: boolean;
   constructor(
     private inject: Injector,
     private esService: CodxEsService,
@@ -51,7 +53,7 @@ export class SignFileComponent extends UIComponent {
     private notifySv: NotificationsService,
     private callfunc: CallFuncService,
     private activedRouter: ActivatedRoute,
-    private authStore: AuthStore
+    private authStore: AuthStore,
   ) {
     super(inject);
     this.funcID = this.view?.formModel?.funcID ?? this.activedRouter.snapshot.params['funcID'] ;
@@ -281,7 +283,8 @@ export class SignFileComponent extends UIComponent {
     return styles;
   }
 
-  clickMF(event: any, data) {
+  clickMF(event: any, data) {    
+    if(!data) data = this.view?.dataService?.dataSelected;
     this.viewdetail.openFormFuncID(event, data);
   }
 

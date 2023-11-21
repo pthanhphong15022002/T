@@ -1,6 +1,6 @@
 <codx-detail-tmp class="booking-main" #itemDetailTemplate [formModel]="formModel" [dataItem]="itemDetail"
   [header]="header" [body]="body" [footer]="footer" (clickMF)="childClickMF($event, itemDetail)"
-  (changeDataMF)="changeDataMF($event, itemDetail)">
+  (changeDataMF)="changeDataMF($event, itemDetail)" [hideMF]="hideMF">
 
   <!----------------------------------Header---------------------------------->
   <ng-template #header>

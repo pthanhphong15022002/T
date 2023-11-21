@@ -1,3 +1,4 @@
+import { firstValueFrom } from 'rxjs';
 import {
   AfterViewInit,
   ChangeDetectorRef,
@@ -13,6 +14,7 @@ import {
   CodxFormComponent,
   DialogData,
   DialogRef,
+  FormatvaluePipe,
   NotificationsService,
 } from 'codx-core';
 import { WR_WorkOrderUpdates } from '../../_models-wr/wr-model.model';
@@ -24,6 +26,7 @@ import moment from 'moment';
   selector: 'lib-popup-update-reasoncode',
   templateUrl: './popup-update-reasoncode.component.html',
   styleUrls: ['./popup-update-reasoncode.component.css'],
+  providers: [FormatvaluePipe],
 })
 export class PopupUpdateReasonCodeComponent implements OnInit, AfterViewInit {
   @ViewChild('attachment') attachment: AttachmentComponent;
@@ -55,7 +58,9 @@ export class PopupUpdateReasonCodeComponent implements OnInit, AfterViewInit {
   lstTimeVll = [];
   lstUsers = [];
   scheduleTime: any;
-
+  parentID: any;
+  dataParentID: any;
+  action = '';
   constructor(
     private detectorRef: ChangeDetectorRef,
     private callFc: CallFuncService,
@@ -63,6 +68,7 @@ export class PopupUpdateReasonCodeComponent implements OnInit, AfterViewInit {
     private notiService: NotificationsService,
     private wrSv: CodxWrService,
     private cache: CacheService,
+    private format: FormatvaluePipe,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -72,10 +78,16 @@ export class PopupUpdateReasonCodeComponent implements OnInit, AfterViewInit {
     this.data.transID = dt?.data?.transID;
     this.data.engineerID = dt?.data?.engineerID;
     this.createdBy = dt?.data?.createdBy;
+    this.action = dt?.data?.action;
     this.gridViewSetup = JSON.parse(JSON.stringify(dt?.data?.gridViewSetup));
   }
 
   ngOnInit(): void {
+    this.parentID = null;
+    if (this.data?.startDate && this.data?.endDate) {
+      this.data.startDate = new Date(this.data?.startDate);
+      this.data.endDate = new Date(this.data?.endDate);
+    }
     if (
       this.data != null &&
       this.data?.statusCode != null &&
@@ -91,11 +103,9 @@ export class PopupUpdateReasonCodeComponent implements OnInit, AfterViewInit {
         )
         .subscribe((res) => {
           if (res) {
-            this.setDataCommentAndDate(
-              res?.dateControl,
-              res?.commentControl,
-              res?.comment
-            );
+            this.dateControl = res?.dateControl;
+            this.setDataCommentAndDate(res?.parentID);
+            this.setTimeEdit();
           }
         });
     }
@@ -142,8 +152,8 @@ export class PopupUpdateReasonCodeComponent implements OnInit, AfterViewInit {
     if (this.countValidate > 0) {
       return;
     }
-    if (this.data.scheduleStart) {
-      if (new Date(this.data.scheduleStart).getDate() < new Date().getDate()) {
+    if (this.data.startDate) {
+      if (new Date(this.data.startDate).getDate() < new Date().getDate()) {
         this.notiService.notifyCode('WR003');
         return;
       }
@@ -164,12 +174,13 @@ export class PopupUpdateReasonCodeComponent implements OnInit, AfterViewInit {
   }
 
   updateReason() {
+    let method = this.action == 'edit' ? 'SaveAsync' : 'UpdateAsync';
     this.api
       .execSv<any>(
         'WR',
         'ERM.Business.WR',
         'WorkOrderUpdatesBusiness',
-        'UpdateReasonCodeAsync',
+        method,
         [this.data]
       )
       .subscribe((res) => {
@@ -180,84 +191,62 @@ export class PopupUpdateReasonCodeComponent implements OnInit, AfterViewInit {
       });
   }
 
-  setStartAndEndTime() {
-    if (
-      this.data?.scheduleTime != null &&
-      this.data?.scheduleTime?.trim() != ''
-    ) {
-      const idx = this.lstTimeVll.findIndex(
-        (x) => x.value == this.data?.scheduleTime
-      );
-      if (idx != -1) {
-        const timeRange = this.lstTimeVll[idx]?.text?.split(' - ');
-        const startTime = timeRange[0];
-        const endTime = timeRange[1];
-        const [startHour, startMinute] = startTime.split('h').map(Number);
-        const [endHour, endMinute] = endTime.split('h').map(Number);
-        let date = new Date(this.data?.scheduleStart);
-        this.data.scheduleEnd = new Date(
-          date.getFullYear(),
-          date.getMonth(),
-          date.getDate(),
-          endHour,
-          endMinute
-        );
-        this.data.scheduleStart = new Date(
-          date.getFullYear(),
-          date.getMonth(),
-          date.getDate(),
-          startHour,
-          startMinute
-        );
-        this.data.startDate = this.data.scheduleStart;
-        this.data.endDate = this.data.scheduleEnd;
+  async setStartAndEndTime() {
+    if (this.data?.startDate && this.data?.endDate) {
+      this.data.scheduleTime =
+        this.dateControl == '1'
+          ? this.startTime + ' - ' + this.endTime
+          : this.endTime;
+      const startDate = new Date(this.data.startDate);
+      const endDate = new Date(this.data.endDate);
+      this.data.scheduleStart = JSON.parse(JSON.stringify(startDate));
+      this.data.scheduleEnd = JSON.parse(JSON.stringify(endDate));
+      if (this.dateControl == '0') {
+        this.data.scheduleStart = null;
+        this.data.scheduleEnd = null;
       }
     }
   }
 
   //#endregion
-
+  valueChangeParent(e) {
+    this.dataParentID = e?.data;
+    this.setComment(
+      e?.component?.itemsSelected[0]?.Comment,
+      e?.component?.itemsSelected[0]?.CommentControl
+    );
+    this.detectorRef.detectChanges();
+  }
   async valueChange(e) {
     this.data[e?.field] = e?.data;
     if (e?.field == 'statusCode') {
-      this.setDataCommentAndDate(
-        e?.component?.itemsSelected[0]?.DateControl,
-        e?.component?.itemsSelected[0]?.CommentControl,
-        e?.component?.itemsSelected[0]?.Comment
+      this.parentID = null;
+      this.dataParentID = null;
+      this.data.comment = null;
+      this.setDataCommentAndDate(e?.component?.itemsSelected[0]?.ParentID);
+      this.setComment(
+        e?.component?.itemsSelected[0]?.Comment,
+        e?.component?.itemsSelected[0]?.CommentControl
       );
-      // if (e?.data) {
-      //   let wordOrder = await firstValueFrom(
-      //     this.api.execSv<any>(
-      //       'WR',
-      //       'ERM.Business.WR',
-      //       'WorkOrderUpdatesBusiness',
-      //       'GetWorkOrderUpdateByStatusCodeAsync',
-      //       [this.data?.statusCode, this.data.transID]
-      //     )
-      //   );
-      //   if (wordOrder != null) {
-      //     this.data.recID = wordOrder?.recID;
-      //     this.data.attachments = wordOrder?.attachments ?? 0;
-      //     this.edit = true;
-      //   } else {
-      //     this.data.recID = Util.uid();
-      //     this.data.attachments = 0;
-      //     this.countFile = 0;
-      //     this.edit = false;
-      //   }
-      // }
+
+      this.dateControl = e?.component?.itemsSelected[0]?.DateControl;
+      if (this.dateControl) {
+        this.defaultTime(
+          e?.component?.itemsSelected[0]?.Leadtime,
+          this.dateControl
+        );
+      }
     }
     this.detectorRef.detectChanges();
   }
 
-  setDataCommentAndDate(dateControl, commentControl, comment) {
-    this.dateControl = dateControl;
-    this.gridViewSetup.ScheduleStart.isRequire = true;
-    this.gridViewSetup.ScheduleTime.isRequire = true;
-    this.setSchedule();
-
-    this.commentControl = commentControl;
-    this.setComment(comment, this.commentControl);
+  setDataCommentAndDate(parentID) {
+    this.parentID = parentID;
+    if (this.parentID == null) {
+      this.dataParentID = null;
+      this.data.comment = null;
+    }
+    // this.setComment(comment, this.commentControl);
   }
 
   setSchedule() {
@@ -283,7 +272,7 @@ export class PopupUpdateReasonCodeComponent implements OnInit, AfterViewInit {
       closestStartTime = timeList[0]?.value;
       scheduleTime = timeList[0]?.text;
     }
-    this.data.scheduleStart = currentDate;
+    this.data.startDate = currentDate;
     this.data.scheduleTime = closestStartTime;
     this.scheduleTime = scheduleTime;
     if (this.form) this.form?.formGroup?.patchValue(this.data);
@@ -326,28 +315,52 @@ export class PopupUpdateReasonCodeComponent implements OnInit, AfterViewInit {
         }
       }
 
-      if (this.scheduleTime)
-        commentRep = commentRep.replace('{1}', this.scheduleTime);
+      if (this.startTime && this.endTime) {
+        this.data.scheduleTime =
+          this.dateControl == '1'
+            ? this.startTime + ' - ' + this.endTime
+            : this.endTime;
+        commentRep = commentRep.replace('{1}', this.data.scheduleTime);
+      }
 
-      if (this.data.scheduleStart) {
-        let date = moment(new Date(this.data.scheduleStart)).format(
-          'DD/MM/YYYY'
-        );
+      if (this.data.startDate) {
+        let date = moment(new Date(this.data.startDate)).format('DD/MM/YYYY');
         commentRep = commentRep.replace('{2}', date);
       }
     }
     this.data.comment = commentRep;
   }
+
   //#region date schedule
+  defaultTime(leadTime, dateControl) {
+    const dateNow = new Date();
+    const minutes = dateNow.getMinutes();
+    const remainder = minutes % 30;
+    const minutesToAdd = remainder === 0 ? 0 : 30 - remainder;
+    dateNow.setMinutes(minutes + minutesToAdd);
+
+    this.data.startDate = dateNow;
+    let dateEnd = JSON.parse(JSON.stringify(this.data.startDate));
+    this.data.endDate = new Date(dateEnd);
+    if (dateControl == '1') {
+      const parseLeadTime =
+        parseFloat(leadTime) > 0 ? parseFloat(leadTime) : 30;
+      this.data.endDate.setMinutes(minutes + minutesToAdd + parseLeadTime);
+    }
+    this.setTimeEdit();
+  }
 
   setTimeEdit() {
-    var getStartTime = new Date(this.data?.scheduleStart);
+    this.selectedDate = moment(new Date(this.data?.startDate))
+      .set({ hour: 0, minute: 0, second: 0 })
+      .toDate();
+    var getStartTime = new Date(this.data?.startDate);
     var current =
       this.padTo2Digits(getStartTime.getHours()) +
       ':' +
       this.padTo2Digits(getStartTime.getMinutes());
     this.startTime = current;
-    var getEndTime = new Date(this.data?.scheduleEnd);
+    var getEndTime = new Date(this.data?.endDate);
     var current1 =
       this.padTo2Digits(getEndTime.getHours()) +
       ':' +
@@ -361,13 +374,20 @@ export class PopupUpdateReasonCodeComponent implements OnInit, AfterViewInit {
     return String(num).padStart(2, '0');
   }
   valueDateChange(event: any) {
-    if (this.data.scheduleStart != event?.data?.fromDate) {
-      this.data.scheduleStart = event?.data?.fromDate;
+    if (this.data.startDate != event?.data?.fromDate) {
+      this.data.startDate = event?.data?.fromDate;
+      this.selectedDate = moment(new Date(this.data.startDate))
+        .set({ hour: 0, minute: 0, second: 0 })
+        .toDate();
+      this.setDate();
     }
   }
 
-  valueTimeChange(event: any) {
-    this.data.scheduleTime = event?.data;
+  valueStartTimeChange(event: any) {
+    this.startTime = event.data.fromDate;
+    // this.fullDayChangeWithTime();
+    // this.isFullDay = false;
+    this.setDate();
     this.detectorRef.detectChanges();
   }
 
@@ -390,7 +410,7 @@ export class PopupUpdateReasonCodeComponent implements OnInit, AfterViewInit {
               this.selectedDate.setHours(this.beginHour, this.beginMinute, 0)
             );
             if (this.startDate) {
-              this.data.scheduleStart = this.startDate;
+              this.data.startDate = this.startDate;
             }
           }
         }
@@ -404,7 +424,7 @@ export class PopupUpdateReasonCodeComponent implements OnInit, AfterViewInit {
               this.selectedDate.setHours(this.endHour, this.endMinute, 0)
             );
             if (this.endDate) {
-              this.data.scheduleEnd = this.endDate;
+              this.data.endDate = this.endDate;
             }
           }
         }

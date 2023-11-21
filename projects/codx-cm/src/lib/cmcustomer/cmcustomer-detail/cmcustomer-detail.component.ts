@@ -21,6 +21,7 @@ import {
   Util,
   ApiHttpService,
   AuthStore,
+  CodxService,
 } from 'codx-core';
 import { PopupQuickaddContactComponent } from './codx-list-contacts/popup-quickadd-contact/popup-quickadd-contact.component';
 import { CM_Contacts } from '../../models/cm_model';
@@ -48,6 +49,7 @@ export class CmCustomerDetailComponent implements OnInit {
   @Input() gridViewSetup: any;
   @Input() lstCustGroups = [];
   @Input() isAdmin: boolean = false;
+  @Input() isDbClick: boolean = false;
   @Output() changeMoreMF = new EventEmitter<any>();
   @Output() clickMoreFunc = new EventEmitter<any>();
   @Output() addressNameCMEmit = new EventEmitter<any>();
@@ -73,6 +75,7 @@ export class CmCustomerDetailComponent implements OnInit {
   category = '';
   user: any;
   isShow = false;
+  asideMode: string;
   constructor(
     private callFc: CallFuncService,
     private cache: CacheService,
@@ -80,9 +83,11 @@ export class CmCustomerDetailComponent implements OnInit {
     private api: ApiHttpService,
     private authstore: AuthStore,
     private changeDetectorRef: ChangeDetectorRef,
-    private notiService: NotificationsService
+    private notiService: NotificationsService,
+    private codxService: CodxService
   ) {
     this.user = this.authstore.get();
+    this.asideMode = codxService.asideMode;
   }
 
   async ngOnInit() {

@@ -66,7 +66,7 @@ export class SalesinvoicesComponent extends UIComponent
           this.baseCurr = res[0].baseCurr; //? get đồng tiền hạch toán
         }
       });
-    this.router.queryParams
+    this.router.params
       .pipe(takeUntil(this.destroy$))
       .subscribe((params) => {
         this.journalNo = params?.journalNo; //? get số journal từ router
@@ -123,7 +123,6 @@ export class SalesinvoicesComponent extends UIComponent
     //* thiết lập cấu hình sidebar
     this.optionSidebar.DataService = this.view.dataService;
     this.optionSidebar.FormModel = this.view.formModel;
-    this.optionSidebar.isFull = true;
   }
 
   ngDoCheck() {
@@ -175,7 +174,7 @@ export class SalesinvoicesComponent extends UIComponent
         this.copyVoucher(data); //? sao chép chứng từ
         break;
       case 'SYS002':
-        //this.exportVoucher(data); //? xuất dữ liệu chứng từ
+        this.exportVoucher(data); //? xuất dữ liệu chứng từ
         break;
       case 'ACT060504':
         this.releaseVoucher(e.text, data); //? gửi duyệt chứng từ

@@ -1,5 +1,14 @@
-<div class="page-content d-flex flex-row h-100 border-top" *ngIf="loaded">
-  <div class="w-100 scroll-y h-100 pe-5">
+<div class=" border-top w-100 container-fluid h-100  p-0 overflow-scroll" *ngIf="loaded">
+  <codx-dashboard
+  #dashboard
+  [templates]="templates"
+  [panels]="panels"
+  [datas]="datas"
+  [isEditMode]="false"
+  [cellSpacing]="[10, 10]"
+></codx-dashboard>
+
+  <!-- <div class="w-100 scroll-y h-100 pe-5">
     <div class="d-flex mb-3 mt-5">
       <div
         class="d-flex justify-content-between p-5 me-3"
@@ -140,7 +149,6 @@
           default="Thống kê theo nhóm công việc"
         ></codx-label>
       </div>
-      <!-- ti lệ -->
       <div class="col-4">
         <ejs-accumulationchart
           id="chart-group-task"
@@ -473,7 +481,7 @@
         </ejs-tab>
       </div>
     </div>
-  </div>
+  </div> -->
 </div>
 
 <!-- Khối lượng công việc -->
@@ -713,5 +721,436 @@
       </p>
       <p style="text-align: center">1000</p>
     </div>
+  </div>
+</ng-template>
+
+<ng-template #template>
+  <div class="w-100 h-100" id="1">
+    <div
+    class="w-100 h-100 border  border-secondary rounded border-2"
+      style="cursor: pointer"
+
+    >
+      <count-chart
+        class="w-100 h-100"
+        [hasIcon]="true"
+        [iconUrl]="'assets/themes/tm/default/img/DB_Chuathuchien.svg'"
+        [title]="'Chưa thực hiện'"
+        [value]="statistical?.newTasks || 0"
+      ></count-chart>
+    </div>
+  </div>
+</ng-template>
+<ng-template #template>
+  <div class="w-100 h-100" id="2">
+    <div
+    class="w-100 h-100 border  border-warning rounded border-2"
+      style="cursor: pointer"
+
+    >
+      <count-chart
+        class="w-100 h-100"
+        [hasIcon]="true"
+        [iconUrl]="'assets/themes/tm/default/img/DB_Dangthuchien.svg'"
+        [title]="'Đang thực hiện'"
+        [value]="statistical?.processingTasks || 0"
+      ></count-chart>
+    </div>
+  </div>
+</ng-template>
+<ng-template #template>
+  <div class="w-100 h-100" id="3">
+    <div
+    class="w-100 h-100 border  border-danger rounded border-2"
+      style="cursor: pointer"
+
+    >
+      <count-chart
+        class="w-100 h-100"
+        [hasIcon]="true"
+        [iconUrl]="'assets/themes/tm/default/img/DB_Quahan.svg'"
+        [title]="'Quá hạn'"
+        [value]="statistical?.overdueTasks || 0"
+      ></count-chart>
+    </div>
+  </div>
+</ng-template>
+<ng-template #template>
+  <div class="w-100 h-100" id="4">
+    <div
+      class="w-100 h-100 border  border-success rounded border-2"
+      style="cursor: pointer"
+
+    >
+      <count-chart
+        class="w-100 h-100"
+        [hasIcon]="true"
+        [iconUrl]="'assets/themes/tm/default/img/DB_Hoantat.svg'"
+        [title]="'Hoàn tất'"
+        [value]="statistical?.completed || 0"
+      ></count-chart>
+    </div>
+  </div>
+</ng-template>
+<ng-template #template>
+  <div class="w-100 h-100" id="5">
+    <div
+      class="w-100 h-100 border border-secondary   rounded border-2"
+      style="cursor: pointer"
+
+    >
+      <count-chart
+        class="w-100 h-100"
+        [hasIcon]="true"
+        [iconUrl]="'assets/themes/tm/default/img/DB_Chuathuchien.svg'"
+        [title]="'Hoãn lại'"
+        [value]=" statistical?.canceledTasks || 0"
+      ></count-chart>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #template>
+  <div class="container w-100 h-100 p-0" id="6">
+    <div class="row h-75">
+      <ejs-accumulationchart
+      id="chart-group-task"
+      width="100%"
+      height="100%"
+      [legendSettings]="{ visible: false }"
+      [centerLabel]="centerLabel"
+      [tooltip]="{
+        header: '',
+        enable: true,
+        format: '${point.tooltip}'
+      }"
+      (pointRender)="formatCrrView($event)"
+    >
+      <e-accumulation-series-collection>
+        <e-accumulation-series
+          [dataSource]="lstTaskByTGroups"
+          xName="x"
+          yName="y"
+          [startAngle]="0"
+          [endAngle]="360"
+          innerRadius="82%"
+        >
+        </e-accumulation-series>
+      </e-accumulation-series-collection>
+    </ejs-accumulationchart>
+    </div>
+    <div class="row h-25">
+      <div class="d-flex flex-column" *ngFor="let item of lstTaskByTGroups">
+        <div class="d-flex flex-column">
+          <div class="d-flex align-items-center justify-content-end">
+            <span class="me-3">{{ item?.taskGroupName }}</span>
+          </div>
+          <div class="d-flex align-items-center">
+            <span class="fw-bold w-50px pe-3 text-end">{{
+              item?.countTasks
+            }}</span>
+            <div class="progress" style="width: calc(100% - 60px)">
+              <div
+                class="progress-bar progress-bar-done"
+                role="progressbar"
+                [style.width.%]="item?.status?.done"
+              ></div>
+              <div
+                class="progress-bar progress-bar-processing"
+                role="progressbar"
+                [style.backgroundColor]=""
+                [style.width.%]="item?.status?.processing"
+              ></div>
+              <div
+                class="progress-bar progress-bar-postpone"
+                role="progressbar"
+                [style.width.%]="item?.status?.postpone"
+              ></div>
+              <div
+                class="progress-bar progress-bar-cancel"
+                role="progressbar"
+                [style.width.%]="item?.status?.cancel"
+              ></div>
+            </div>
+          </div>
+        </div>
+         </div>
+    </div>
+
+  </div>
+</ng-template>
+
+<ng-template #template>
+  <div class="container h-100 w-100 p-0 " id="7">
+    <div class="row h-75">
+      <ejs-circulargauge class="d-block" width="80%" height="60%">
+        <e-axes>
+          <e-axis
+            radius="100%"
+            startAngle="0"
+            endAngle="360"
+            minimum="0"
+            maximum="150"
+            [lineStyle]="lineStyle"
+            [labelStyle]="labelStyle2"
+            [majorTicks]="majorTicks2"
+            [minorTicks]="minorTicks"
+          >
+            <e-ranges>
+              <e-range
+                start="0"
+                end="150"
+                radius="90%"
+                startWidth="12"
+                endWidth="12"
+                color="#F0F0F0"
+              >
+              </e-range>
+            </e-ranges>
+            <e-pointers>
+              <e-pointer
+                type="RangeBar"
+                roundedCornerRadius="10"
+                radius="90%"
+                color="#04DEB7"
+                pointerWidth="12"
+                [value]="rateDoneTaskOnTime"
+              >
+              </e-pointer>
+            </e-pointers>
+          </e-axis>
+          <e-axis
+            radius="80%"
+            startAngle="0"
+            endAngle="360"
+            minimum="0"
+            maximum="150"
+            [lineStyle]="lineStyle"
+            [labelStyle]="labelStyle2"
+            [majorTicks]="majorTicks2"
+            [minorTicks]="minorTicks"
+          >
+            <e-ranges>
+              <e-range
+                start="0"
+                end="150"
+                radius="115%"
+                startWidth="12"
+                endWidth="12"
+                color="#F0F0F0"
+              >
+              </e-range>
+            </e-ranges>
+            <e-pointers>
+              <e-pointer
+                type="RangeBar"
+                roundedCornerRadius="10"
+                radius="115%"
+                color="#5465FF"
+                markerWidth="12"
+                pointerWidth="12"
+                [value]="rateDoneTask"
+              >
+              </e-pointer>
+            </e-pointers>
+          </e-axis>
+        </e-axes>
+      </ejs-circulargauge>
+    </div>
+
+    <div class="row h-25">
+      <div class="d-flex flex-column">
+        <div class="m-2 d-flex">
+          <div class="d-flex align-items-center">
+            <div
+              class="me-2"
+              style="
+                height: 15px;
+                width: 15px;
+                border-radius: 10%;
+                background-color: #5465ff;
+              "
+            ></div>
+            <span>Tỷ lệ hoàn thành công việc</span>
+          </div>
+          <div class="ms-6">
+            <span class="fw-bold fs-3">{{ rateDoneTask }}%</span>
+          </div>
+        </div>
+        <div class="m-2 d-flex">
+          <div class="d-flex align-items-center">
+            <div
+              class="me-2"
+              style="
+                height: 15px;
+                width: 15px;
+                border-radius: 10%;
+                background-color: #04deb7;
+              "
+            ></div>
+            <span>Tỷ lệ hoàn thành công việc đúng hạn</span>
+          </div>
+          <div class="ms-6">
+            <span class="fw-bold fs-3">{{ rateDoneTaskOnTime }}%</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #template>
+  <div class ="container h-100 w-100 p-0" id="8">
+    <div class="row" style="height:80%">'
+      <ejs-circulargauge class="d-block" width="200px" height="200px">
+        <e-axes>
+          <e-axis
+            [lineStyle]="lineStyle"
+            radius="100%"
+            startAngle="230"
+            endAngle="130"
+            minimum="0"
+            maximum="150"
+            [labelStyle]="labelStyle1"
+            [majorTicks]="majorTicks1"
+            [minorTicks]="minorTicks"
+          >
+            <e-ranges>
+              <e-range
+                start="0"
+                end="150"
+                radius="100%"
+                roundedCornerRadius="15"
+                color="#FF8008"
+                [linearGradient]="rangeLinearGradient2"
+                startWidth="15"
+                endWidth="15"
+              >
+              </e-range>
+            </e-ranges>
+            <e-pointers>
+              <e-pointer
+                type="Marker"
+                [value]="kpi"
+                markerShape="Image"
+                imageUrl="./assets/themes/tm/default/img/Button.svg"
+                radius="90%"
+                markerWidth="30"
+                markerHeight="30"
+              >
+              </e-pointer>
+            </e-pointers>
+          </e-axis>
+        </e-axes>
+      </ejs-circulargauge>
+    </div>
+    <div class="row" style="height:20%">'
+      <div class="d-flex justify-content-around">
+        <div>
+          <div>Tổng thời gian hoàn thành thực tế</div>
+          <div class="d-flex justify-content-center align-items-center">
+            <span class="fw-bold fs-3">116</span>
+            <span class="ms-2">giờ</span>
+          </div>
+        </div>
+        <div>
+          <div>Tổng thời gian làm việc</div>
+          <div class="d-flex justify-content-center align-items-center">
+            <span class="fw-bold fs-3">176</span>
+            <span class="ms-2">giờ</span>
+          </div>
+        </div>
+      </div>
+      <div
+        *ngIf="kpi"
+        style="
+          position: absolute;
+          top: 25%;
+          right: 50%;
+          transform: translate(50%, -50%);
+        "
+      >
+        <div class="text-center fs-20 text-gray-600 text-nowrap">KPI</div>
+        <p class="text-center text-gray-900 fw-bold fs-4" style="margin: 0px">
+          {{ kpi }}
+        </p>
+      </div>
+    </div>
+
+
+  </div>
+</ng-template>
+
+<ng-template #template>
+  <div class="container h-100 w-100 p-0" id="9">
+    <ejs-chart
+          style="display: block"
+          background="transparent"
+          [chartArea]="chartArea"
+          width="100%"
+          [align]="'center'"
+          id="chartbar"
+          [primaryXAxis]="columnXAxis"
+          [primaryYAxis]="columnYAxis"
+          [legendSettings]="legendSettings"
+        >
+          <e-axes>
+            <e-axis
+              rowIndex="0"
+              name="WorkHours"
+              opposedPosition="true"
+              title=""
+              labelFormat=""
+              [minimum]="0"
+              [maximum]="100"
+            >
+            </e-axis>
+          </e-axes>
+          <e-series-collection>
+            <e-series
+              fill="#005DC7"
+              [dataSource]="dataBarChart?.barChart"
+              type="Column"
+              name="Tasks"
+              xName="label"
+              yName="value"
+              [cornerRadius]="radius"
+            >
+            </e-series>
+            <e-series
+              fill="#F9D923"
+              [dataSource]="dataBarChart?.lineChart"
+              type="Line"
+              name="WorkHours"
+              yName="value"
+              xName="label"
+              yAxisName="WorkHours"
+            >
+            </e-series>
+          </e-series-collection>
+        </ejs-chart>
+  </div>
+</ng-template>
+<ng-template #template>
+  <div class="container w-100 h-100 p-2 border border-top" id="10">
+    <ejs-tab id="element">
+      <e-tabitems>
+        <e-tabitem
+          class="ps-0"
+          [header]="headerText[0]"
+          [content]="volumeWork"
+        ></e-tabitem>
+        <e-tabitem
+          class="ps-0"
+          [header]="headerText[1]"
+          [content]="workHours"
+        ></e-tabitem>
+        <e-tabitem
+          class="ps-0"
+          [header]="headerText[2]"
+          [content]="workPerformance"
+        ></e-tabitem>
+      </e-tabitems>
+    </ejs-tab>
   </div>
 </ng-template>

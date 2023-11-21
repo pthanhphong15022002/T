@@ -11,6 +11,7 @@ import {
 import { ActivatedRoute } from '@angular/router';
 import {
   ButtonModel,
+  CacheService,
   PageTitleService,
   UIComponent,
   ViewModel,
@@ -62,10 +63,12 @@ primaryXAxis: Object = {
   lineStyle: { width: 0 },
   valueType: 'Category'
 };
+palettes:any=['#1BA3C6','#2CB5C0','#30BCAD','#21B087','#33A65C','#57A337','#57A337','#D5BB21','#F8B620','#F89217','#F06719','#E03426','#EB364A','#F64971','#FC719E','#EB73B3','#CE69BE','#A26DC2','#7873C0','#4F7CBA']
   constructor(
     inject: Injector,
     private pageTitle: PageTitleService,
-    private routerActive: ActivatedRoute
+    private routerActive: ActivatedRoute,
+    private cacheService: CacheService,
   ) {
     super(inject);
     this.reportID = this.router.snapshot.params['funcID'];
@@ -78,6 +81,15 @@ primaryXAxis: Object = {
     this.datas = JSON.parse(
       '[{"panelId":"0.6040886186158714_layout","data":"1"},{"panelId":"0.9388300157966656_layout","data":"2"},{"panelId":"0.6750473923075015_layout","data":"3"},{"panelId":"0.6740612302375084_layout","data":"4"},{"panelId":"0.9809454927792045_layout","data":"5"},{"panelId":"0.5374926060585523_layout","data":"6"},{"panelId":"0.29608212645829535_layout","data":"7"}]'
     );
+    this.cacheService.valueList('SYS062').subscribe((res) => {
+      if (res.datas) {
+        this.palettes=[];
+        res.datas.map((x:any)=>{
+          this.palettes.push(x.value);
+          return x;
+        })
+      }
+    });
   }
 
   ngAfterViewInit() {
@@ -107,25 +119,11 @@ primaryXAxis: Object = {
           let pinnedParams = reportItem.parameters?.filter((x: any) => x.isPin);
           if (pinnedParams) this.view.pinedReportParams = pinnedParams;
           this.funcID = reportItem.reportID
+          if(!reportItem.parameters){
+            this.getDashboardData();
+          }
         }
-        if (this.funcID === 'ODD001') {
-          this.subscription && this.subscription.unsubscribe();
-         this.subscription =this.api
-            .execSv(
-              'rptod',
-              'Codx.RptBusiness.OD',
-              'DispatchDataSetBusiness',
-              'GetReportSourceAsync',
-              []
-            )
-            .subscribe((res: OD_DispatchDashBoard[]) => {
-              this.dataset = res;
 
-              setTimeout(() => {
-                this.isLoaded = true;
-              }, 500);
-            });
-        }
       }
     });
     this.detectorRef.detectChanges();
@@ -133,18 +131,9 @@ primaryXAxis: Object = {
 
   filterChange(e) {
     this.isLoaded = false;
-    const { predicates, dataValues } = e[0];
     const param = e[1];
 
-    // switch (this.reportID) {
-    //   case 'DMD001':
-    //     this.getDashboardData(predicates, dataValues, param);
-    //     break;
-    //   default:
-    //     break;
-    // }
-
-    this.isLoaded = true;
+    this.getDashboardData(param)
 
     this.detectorRef.detectChanges();
   }
@@ -281,4 +270,127 @@ primaryXAxis: Object = {
       }
     }).length;
   }
+
+  statBySource:any=[];
+  statByCategory:any=[];
+  statByAgency:any=[];
+  statByDept:any=[];
+  getDashboardData(parameters?:any){
+    this.isLoaded=false;
+    this.statBySource = [];
+    this.statByCategory = [];
+    this.statByAgency = [];
+    this.subscription && this.subscription.unsubscribe();
+    this.subscription =this.api
+       .execSv(
+         'rptod',
+         'Codx.RptBusiness.OD',
+         'DispatchDataSetBusiness',
+         'GetReportSourceAsync',
+         [parameters ? parameters : {}]
+       )
+       .subscribe((res: OD_DispatchDashBoard[]) => {
+         this.dataset = res;
+         if(this.dataset.length){
+          let objSource = this.groupBy(this.dataset,'source');
+            for(let key in objSource){
+              let obj:any={};
+              obj.source=key == 'null' ? 'Khác' : key;
+              obj.sourceName = objSource[key][0].sourceName ? objSource[key][0].sourceName : 'Khác';
+              obj.quantity = objSource[key].length;
+              obj.outgoing = objSource[key].filter((x:any)=>x.dispatchType=='2').length;
+              obj.incoming = objSource[key].filter((x:any)=>x.dispatchType=='1').length;
+              obj.internal = objSource[key].filter((x:any)=>x.dispatchType=='3').length;
+              this.statBySource.push(obj);
+            }
+            let objCategory = this.groupBy(this.dataset,'categoryID');
+            for(let key in objCategory){
+              let obj:any={};
+              obj.category=key;
+              obj.categoryName = objCategory[key][0].categoryName;
+              obj.quantity = objCategory[key].length;
+              obj.percentage = this.toFixed((obj.quantity/this.dataset.length)*100)
+              this.statByCategory.push(obj);
+            }
+            let objAgency = this.groupBy(this.dataset.filter((x:any)=>x.agencyID),'agencyID')
+            for(let key in objAgency){
+              let obj:any={};
+              obj.agencyID = key;
+              obj.agencyName = objAgency[key][0].agencyName;
+              obj.quantity = objAgency[key].length;
+              obj.incoming = objAgency[key].filter((x:any)=>x.dispatchType == '1').length;
+              obj.outgoing = objAgency[key].filter((x:any)=>x.dispatchType == '2').length;
+              obj.incomingPercentage = this.toFixed((obj.incoming/this.dataset.filter((x:any)=> x.agencyID && x.dispatchType=='1').length)*200)
+              obj.outgoingPercentage = this.toFixed((obj.outgoing/this.dataset.filter((x:any)=> x.agencyID && x.dispatchType=='2').length)*200)
+              this.statByAgency.push(obj);
+            }
+            let objDept= this.groupBy(this.dataset.filter((x:any)=>x.departmentID),'departmentID');
+            for(let key in objDept){
+              let obj:any={};
+              obj.departmentID = key;
+              obj.departmentName = objDept[key][0].departmentName;
+              obj.quantity = objDept[key].length;
+              obj.incoming = objDept[key].filter((x:any)=>x.dispatchType == '1').length;
+              obj.outgoing = objDept[key].filter((x:any)=>x.dispatchType == '2').length;
+
+              this.statByDept.push(obj);
+            }
+
+          }
+         setTimeout(() => {
+           this.isLoaded = true;
+         }, 500);
+       });
+  }
+
+  sortByProp(arr:any[],property:string,dir:string='asc',take:number=0){
+    if(arr.length && property){
+      if(dir == 'asc'){
+        if(take){
+          return JSON.parse(JSON.stringify(arr)).sort((a:any,b:any)=> a[property]-b[property]).slice(0,take)
+        }
+        return JSON.parse(JSON.stringify(arr)).sort((a:any,b:any)=> a[property]-b[property]);
+      }
+      else{
+        if(take){
+          return JSON.parse(JSON.stringify(arr)).sort((a:any,b:any)=> b[property]-a[property]).slice(0,take)
+        }
+        return JSON.parse(JSON.stringify(arr)).sort((a:any,b:any)=> b[property]-a[property]);
+      }
+
+    }
+    return [];
+  }
+
+  private groupBy(arr: any, key: any) {
+    return arr.reduce(function (r: any, a: any) {
+      r[a[key]] = r[a[key]] || [];
+      r[a[key]].push(a);
+      return r;
+    }, Object.create(null));
+  }
+
+  sumByProp(arr:any[],property:string){
+    if(arr && arr.length){
+      return arr.reduce((accumulator:any, object:any) => {
+        return accumulator + object[property];
+      }, 0);
+    }
+    return 0;
+  }
+
+  activeTab:string='Incoming'
+  onAgencyDispathChange(ele:any,obj:any){
+    if(ele.id == this.activeTab) return;
+    this.activeTab = ele.id;
+    if(ele.id == 'Incoming'){
+      obj.objIn.eleIn.classList.contains('d-none') && obj.objIn.eleIn.classList.remove('d-none') ;
+      !obj.objOut.eleOut.classList.contains('d-none') && obj.objOut.eleOut.classList.add('d-none') ;
+    }
+    if(ele.id == 'Outgoing'){
+      !obj.objIn.eleIn.classList.contains('d-none') && obj.objIn.eleIn.classList.add('d-none');
+      obj.objOut.eleOut.classList.contains('d-none') && obj.objOut.eleOut.classList.remove('d-none');
+    }
+  }
+
 }

@@ -18,7 +18,13 @@
               <codx-temp-full
                 [title]="data?.title"
                 [titleCss]="'fs-5 mb-2'"
-                [desc]="convertHtmlAgency(data?.agencyName, data?.deptName, data?.agencies)"
+                [desc]="
+                  convertHtmlAgency(
+                    data?.agencyName,
+                    data?.deptName,
+                    data?.agencies
+                  )
+                "
                 [bookmark]="false"
                 [titleLine]="2"
               >
@@ -70,7 +76,9 @@
               </div>
               <div
                 class="d-flex align-items-center me-5 mb-1"
-                *ngIf="gridViewSetup && gridViewSetup['Urgency'].allowPopup == '1'"
+                *ngIf="
+                  gridViewSetup && gridViewSetup['Urgency'].allowPopup == '1'
+                "
               >
                 <codx-label
                   [gridViewName]="formModel['gridViewName']"
@@ -91,7 +99,9 @@
               </div>
               <div
                 class="d-flex align-items-center me-5 mb-1"
-                *ngIf="gridViewSetup && gridViewSetup['Security'].allowPopup == '1'"
+                *ngIf="
+                  gridViewSetup && gridViewSetup['Security'].allowPopup == '1'
+                "
               >
                 <codx-label
                   [gridViewName]="formModel['gridViewName']"
@@ -138,7 +148,9 @@
               </div>
               <div
                 class="d-flex align-items-center me-5 mb-1"
-                *ngIf="gridViewSetup && gridViewSetup['Deadline'].allowPopup == '1'"
+                *ngIf="
+                  gridViewSetup && gridViewSetup['Deadline'].allowPopup == '1'
+                "
               >
                 <codx-label
                   [gridViewName]="formModel['gridViewName']"
@@ -258,7 +270,7 @@
                   ><span
                     ><codx-label
                       [default]="
-                      defaultValue == '1' ||
+                        defaultValue == '1' ||
                         (defaultValue == '4' && data?.dispatchType == '4')
                           ? 'Nơi nhận'
                           : 'Nơi gửi'
@@ -272,15 +284,30 @@
               <ng-template ngbNavContent>
                 <ng-container
                   *ngIf="
-                    data?.listInformationRel && data?.listInformationRel.length > 0
+                    data?.listInformationRel &&
+                    data?.listInformationRel.length > 0
                   "
                 >
-                  <ng-container *ngFor="let item of data?.listInformationRel ; let i = index">
-                    <ng-container *ngIf="((data?.listInformationRel.length > 1 && i>0 && data?.dispatchType == '2') || (data?.dispatchType == '2' && data?.listInformationRel.length == 1) || data?.dispatchType != '2')">
+                  <ng-container
+                    *ngFor="let item of data?.listInformationRel; let i = index"
+                  >
+                    <ng-container
+                      *ngIf="
+                        (data?.listInformationRel.length > 1 &&
+                          i > 0 &&
+                          data?.dispatchType == '2') ||
+                        (data?.dispatchType == '2' &&
+                          data?.listInformationRel.length == 1) ||
+                        data?.dispatchType != '2'
+                      "
+                    >
                       <ng-container
                         *ngIf="
                           defaultValue != '2' ||
-                          (defaultValue == '2' && ((item.relationType != '1' && data?.listInformationRel.length > 1) || (item.relationType == '1' )))
+                          (defaultValue == '2' &&
+                            ((item.relationType != '1' &&
+                              data?.listInformationRel.length > 1) ||
+                              item.relationType == '1'))
                         "
                       >
                         <div class="list-item has-action-menu-od mb-6">
@@ -359,7 +386,6 @@
                         </div>
                       </ng-container>
                     </ng-container>
-                  
                   </ng-container>
                 </ng-container>
               </ng-template>
@@ -400,10 +426,13 @@
       </ng-template>
       <ng-template #footer>
         <codx-tabs
+          #footTabs
           [entityName]="formModel?.entityName"
           [objectID]="data?.recID"
           [funcID]="formModel?.funcID"
-          [dataTree]="data?.tasks ? data.tasks : []"
+          [dataTree]="dataTree"
+          [refID]="data?.recID"
+          [refType]="'OD_Dispatches'"
           [TabControl]="tabControl"
           [transID]="data?.recID"
           [approveStatus]="data?.approveStatus"

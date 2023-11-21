@@ -83,9 +83,11 @@ export class PopupAddInstanceComponent implements OnInit {
 
   dialog: DialogRef;
   // step = new DP_Instances_Steps() ;
-  listStep = [];
   recID: any;
   lstParticipants = [];
+  listCustomFile = [];
+  listFields:any[]=[];
+  listStep = [];
   userName = '';
   positionName = '';
   owner = '';
@@ -96,7 +98,6 @@ export class PopupAddInstanceComponent implements OnInit {
   oldIdInstance: string;
   user: any;
   autoName: string = '';
-  listCustomFile = [];
   instanceNoSetting: any;
   processID: string = '';
   idxCrr: number = -1;
@@ -230,7 +231,7 @@ export class PopupAddInstanceComponent implements OnInit {
       this.tabInfo = [this.menuGeneralInfo, this.menuInputInfo];
       this.tabContent = [this.tabGeneralInfo, this.tabInputInfo];
     }
-    if (!this.checkOnTab()) {
+    if (!this.ischeckFields(this.listStep)) {
       this.tabInfo.pop();
       this.tabContent.pop();
     }
@@ -485,35 +486,45 @@ export class PopupAddInstanceComponent implements OnInit {
     return listStep;
   }
 
-  checkAddField(stepCrr, idx) {
-    if (stepCrr) {
-      if (this.action == 'edit' && this.idxCrr != -1 && this.idxCrr >= idx) {
-        return true;
-      }
-      if (idx == 0) return true;
-      return false;
-    }
-    return false;
-  }
+  // checkAddField(stepCrr, idx) {
+  //   if (stepCrr) {
+  //     if (this.action == 'edit' && this.idxCrr != -1 && this.idxCrr >= idx) {
+  //       return true;
+  //     }
+  //     if (idx == 0) return true;
+  //     return false;
+  //   }
+  //   return false;
+  // }
 
-  checkOnTab() {
-    if (this.listStep?.length > 0) {
-      if (this.action != 'edit') {
-        if (this.listStep[0].fields?.length > 0) return true;
-        return false;
+  ischeckFields(liststeps: any): boolean {
+    this.listFields = [];
+    if(this.action !== 'edit') {
+      let stepCurrent = liststeps[0];
+      if(stepCurrent && stepCurrent.fields?.length > 0 ) {
+        let filteredTasks = stepCurrent.tasks.filter(task => task?.fieldID !== null && task?.fieldID?.trim() !== '')
+        .map(task => task.fieldID)
+        .flatMap(item => item.split(';').filter(item => item !== ''));
+        let listFields = stepCurrent.fields.filter(field => !filteredTasks.includes(this.action === 'copy'? field?.reCID: field?.refID));
+        this.listFields = [...this.listFields, ...listFields];
       }
-      let check = false;
-      if (this.idxCrr != -1) {
-        for (let i = 0; i <= this.idxCrr; i++) {
-          if (this.listStep[i]?.fields?.length > 0) {
-            check = true;
-            break;
+     }
+     else {
+      let idxCrr = liststeps.findIndex((x) => x.stepID == this.instance?.stepID);
+      if (idxCrr != -1) {
+        for (let i = 0; i <= idxCrr; i++) {
+          let stepCurrent = liststeps[i];
+          if(stepCurrent && stepCurrent.fields?.length > 0 ) {
+            let filteredTasks = stepCurrent?.tasks.filter(task => task?.fieldID !== null && task?.fieldID?.trim() !== '')
+            .map(task => task?.fieldID)
+            .flatMap(item => item.split(';').filter(item => item !== ''));
+            let listFields = stepCurrent?.fields.filter(field => !filteredTasks.includes(field?.recID));
+            this.listFields = [...this.listFields, ...listFields];
           }
         }
       }
-      return check;
     }
-    return false;
+    return this.listFields != null && this.listFields?.length > 0;
   }
   HandleEndDate(listSteps: any, action: string, endDateValue: any) {
     endDateValue =

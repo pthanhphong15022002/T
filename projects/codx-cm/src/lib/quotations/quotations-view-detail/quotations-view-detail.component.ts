@@ -12,7 +12,7 @@ import {
 } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { EditSettingsModel } from '@syncfusion/ej2-angular-grids';
-import { ApiHttpService, FormModel } from 'codx-core';
+import { ApiHttpService, CodxService, FormModel } from 'codx-core';
 import { CodxCmService } from '../../codx-cm.service';
 import { CM_Contracts } from '../../models/cm_model';
 
@@ -90,10 +90,13 @@ export class QuotationsViewDetailComponent implements OnChanges, OnInit {
   constructor(
     private api: ApiHttpService,
     private codxCM: CodxCmService,
+    private codxService: CodxService,
     protected sanitizer: DomSanitizer,
     private changeDef: ChangeDetectorRef
   ) {}
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    if (this.codxService.asideMode == '2') this.hideMF = true;
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (!this.itemSelected) return;

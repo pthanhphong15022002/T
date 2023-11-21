@@ -63,6 +63,7 @@ import { CdkTableModule } from '@angular/cdk/table';
 import { PopupSettingTableComponent } from './dynamic-process/popup-add-dynamic-process/popup-add-custom-field/popup-setting-table/popup-setting-table.component';
 import { PopupSettingReferenceComponent } from './dynamic-process/popup-add-dynamic-process/popup-add-custom-field/popup-setting-reference/popup-setting-reference.component';
 import { ReplaceProgressPipe } from './pipes/replace-progress.pipe';
+import { StepTaskInstanceComponent } from './instances/instance-detail/step-task-instance/step-task-instance.component';
 
 export const routes: Routes = [
   {
@@ -154,6 +155,7 @@ const T_Component: Type<any>[] = [
   PopupSettingReferenceComponent,
   ViewInstancesComponent,
   ReplaceProgressPipe,
+  StepTaskInstanceComponent,
 ];
 
 @NgModule({

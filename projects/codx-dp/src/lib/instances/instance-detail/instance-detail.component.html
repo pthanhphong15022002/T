@@ -7,7 +7,7 @@
       [formModel]="formModel"
       [body]="body"
       [dataItem]="dataSelect"
-      [hideMF]="hideMF"
+      [hideMF]="viewsCurrent == 'd-' && asideMode == '2' ? true : hideMF"
       [footer]="tabs"
       (changeDataMF)="changeDataMF($event, dataSelect)"
       (clickMF)="clickMF($event, dataSelect)"
@@ -435,10 +435,25 @@
   </div> -->
   <div class="border border-gray-150">
     <div class="w-100 h-100" id="tabGantt">
-      <codx-step-chart
+      <!-- <codx-step-chart
         [instance]="this.dataSelect"
         [type]="'DP'"
-      ></codx-step-chart>
+      ></codx-step-chart> -->
+<div *ngIf="listSteps?.length > 0 && listSteps">
+  <step-task-instance
+  [entityName]="'DP_Instances'"
+  [isDataLoading]="false"
+  [instance]="dataSelect"
+  [listInstanceStep]="listSteps"
+  [formModel]="formModel"
+  [applyFor]="'0'"
+  (saveAssignTask)="saveAssignTask($event)"
+  (changeProgress)="autoStart($event)"
+  [dealName]="dataSelect?.title"
+  [ownerInstance]="dataSelect?.owner"
+  >
+  </step-task-instance>
+</div>
     </div>
     <!-- <codx-gantt-chart
       [dataSource]="ganttDs"

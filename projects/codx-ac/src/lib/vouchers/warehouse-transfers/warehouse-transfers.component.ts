@@ -55,7 +55,7 @@ export class WarehouseTransfersComponent extends UIComponent {
           this.baseCurr = res[0].baseCurr; //? get đồng tiền hạch toán
         }
       });
-    this.router.queryParams
+    this.router.params
       .pipe(takeUntil(this.destroy$))
       .subscribe((params) => {
         this.journalNo = params?.journalNo; //? get số journal từ router
@@ -141,7 +141,6 @@ export class WarehouseTransfersComponent extends UIComponent {
 
     this.optionSidebar.DataService = this.view?.dataService;
     this.optionSidebar.FormModel = this.view?.formModel;
-    this.optionSidebar.isFull = true;
   }
 
   ngOnDestroy() {

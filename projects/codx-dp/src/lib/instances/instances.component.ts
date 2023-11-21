@@ -378,9 +378,11 @@ export class InstancesComponent
   //   this.setColorKanban();
   // }
   onInit() {
-    this.button = [{
-      id: 'btnAdd',
-    }];
+    this.button = [
+      {
+        id: 'btnAdd',
+      },
+    ];
     if (this.funcID == 'DPT04') {
       this.dataObj = {
         processID: this.processID,
@@ -817,7 +819,7 @@ export class InstancesComponent
       .subscribe((info) => {
         if (info?.event?.status == 'Y') {
           this.codxDpService
-            .openOrClosedInstance(data.recID, check,this.process.applyFor)
+            .openOrClosedInstance(data.recID, check, this.process.applyFor)
             .subscribe((res) => {
               if (res) {
                 this.dataSelected.closed = check;
@@ -868,6 +870,9 @@ export class InstancesComponent
   }
 
   changeDataMF(e, data) {
+    // data.permissionMoveInstances = true;
+    // data.permissionCloseInstances = true;
+   // data.isAdminAll = true;
     if (e != null && data != null) {
       if (data?.approveStatus == '3') {
         e.forEach((res) => {
@@ -881,7 +886,7 @@ export class InstancesComponent
             switch (res.functionID) {
               case 'SYS003':
                 if (
-                  data.status != '2' ||
+                  ( data.status != '2' &&  !data.isAdminAll )||
                   data.closed ||
                   !data.permissionCloseInstances
                 )
@@ -892,7 +897,7 @@ export class InstancesComponent
                 let isUpdate = data.write;
                 if (
                   !isUpdate ||
-                  data.status != '2' ||
+                  ( data.status != '2' &&  !data.isAdminAll ) ||
                   data.closed ||
                   !data.permissionMoveInstances
                 )
@@ -906,7 +911,7 @@ export class InstancesComponent
               //Copy
               case 'SYS104':
               case 'SYS04':
-                if (!this.isCreate || this.checkMoreReason(data, null))
+                if (!this.isCreate || this.checkMoreReasonCopy(data, null) )
                   res.disabled = true;
                 break;
               //xóa
@@ -916,7 +921,7 @@ export class InstancesComponent
                 if (
                   !isDelete ||
                   data.closed ||
-                  data.status != '2' ||
+                 ( data.status != '2' &&  !data.isAdminAll )||
                   !data.permissionMoveInstances
                 )
                   res.disabled = true;
@@ -933,12 +938,12 @@ export class InstancesComponent
                 }
                 break;
               case 'DP02':
-                if (this.checkMoreReason(data, !this.isUseFail)) {
+                if (this.checkMoreReasonCopy(data, !this.isUseFail)) {
                   res.disabled = true;
                 }
                 break;
               case 'DP10':
-                if (this.checkMoreReason(data, !this.isUseSuccess)) {
+                if (this.checkMoreReasonCopy(data, !this.isUseSuccess)) {
                   res.disabled = true;
                 }
                 break;
@@ -957,7 +962,7 @@ export class InstancesComponent
                 break;
               case 'DP22':
                 if (
-                  data.status != '2' ||
+                 data.status != '2'||
                   data.closed ||
                   !data.permissionCloseInstances
                 )
@@ -997,7 +1002,6 @@ export class InstancesComponent
               // case 'SYS004':
               // case 'SYS002':
               case 'DP02':
-              case 'DP22':
               case 'DP14':
               case 'DP15':
               case 'DP23':
@@ -1014,6 +1018,7 @@ export class InstancesComponent
     this.dataSelected = data;
     this.titleAction = e.text;
     this.moreFunc = e.functionID;
+    this.stepIdClick = '';
     switch (e.functionID) {
       case 'SYS03':
         this.edit(data, e.text);
@@ -1137,15 +1142,16 @@ export class InstancesComponent
   }
   //End
   checkMoreReason(data, isUseReason) {
-    if (data.status != '2' || isUseReason) {
-      return true;
-    }
-    if (data.closed) {
-      return true;
-    }
-    if (!data.permissionMoveInstances) {
-      return true;
-    }
+    if (data.closed)    return true;
+    if(data.isAdminAll) return false
+    if (data.status != '2' || isUseReason)  return true;
+    if (!data.permissionMoveInstances) return true;
+    return false;
+  }
+  checkMoreReasonCopy(data, isUseReason) {
+    if (data.closed)    return true;
+    if (data.status != '2' || isUseReason)  return true;
+    if (!data.permissionMoveInstances) return true;
     return false;
   }
 
@@ -1231,7 +1237,7 @@ export class InstancesComponent
       let startControl = this.process.steps.filter(
         (x) => x.recID === data.stepID
       )[0]?.startControl;
-      var obj = {
+      let obj = {
         recID: data?.recID,
         //refID: data?.recID,
         processID: data?.processID,
@@ -1239,7 +1245,7 @@ export class InstancesComponent
         data: data,
         gridViewSetup: this.grvSetup,
         formModel: this.view.formModel,
-        applyFor: '0',
+        applyFor: this.process.applyFor,
         titleAction: this.titleAction,
         owner: data.owner,
         startControl: startControl,
@@ -1277,7 +1283,7 @@ export class InstancesComponent
     switch (e.type) {
       case 'drop':
         this.dataDrop = e.data;
-        this.stepIdClick = JSON.parse(JSON.stringify(this.dataDrop.stepID));
+        this.stepIdClick = JSON.parse(JSON.stringify(this.dataDrop?.stepID));
         // xử lý data chuyển công đoạn
         if (this.crrStepID != this.dataDrop.stepID)
           this.dropInstance(this.dataDrop);
@@ -1334,7 +1340,7 @@ export class InstancesComponent
       this.changeDetectorRef.detectChanges();
       return;
     }
-    if (data.status != '1' && data.status != '2') {
+    if (data.status != '1' && data.status != '2' && !data.isAdminAll) {
       this.notificationsService.notifyCode('DP037', 0, '"' + data.title + '"');
       this.changeDetectorRef.detectChanges();
       return;
@@ -2116,19 +2122,44 @@ export class InstancesComponent
     this.tabControl =
       this.process?.tabControl != null && this.process?.tabControl?.trim() != ''
         ? this.process?.tabControl
-        : '31';
-    this.viewModeDetail =
-      this.tabControl == '1'
-        ? 'S'
-        : this.tabControl == '11'
-        ? this.process?.viewModeDetail != 'F'
-          ? this.process?.viewModeDetail
-          : 'S'
-        : this.tabControl == '12'
-        ? this.process?.viewModeDetail != 'G'
-          ? this.process?.viewModeDetail
-          : 'S'
-        : this.process?.viewModeDetail ?? 'S';
+        : '31'; //31 la tat ca.
+
+    this.viewModeDetail = this.process?.viewModeDetail ?? 'S';
+    if (this.tabControl && this.tabControl.trim() != '') {
+      const dataTabs = this.tabControl.split(';');
+      this.tabControl =
+        dataTabs.length == 3
+          ? '31'
+          : dataTabs.length == 1
+          ? dataTabs[0]
+          : dataTabs.some((q) => q == '1') && dataTabs.some((x) => x == '3')
+          ? '11'
+          : dataTabs.some((q) => q == '1') && dataTabs.some((x) => x == '5')
+          ? '12'
+          : '13';
+      //tab control = 31 - tat ca, 1 - giai doan, 3 - nhap lieu, 5 - cong viec, 11 - (giai doan + nhap lieu), 12 - (giai doan + cong viec), 13 - (giai doan + cong viec)
+      this.viewModeDetail =
+        this.tabControl == '1'
+          ? 'S'
+          : this.tabControl == '3'
+          ? 'F'
+          : this.tabControl == '5'
+          ? 'G'
+          : this.tabControl == '11'
+          ? this.process?.viewModeDetail == 'F'
+            ? this.process?.viewModeDetail
+            : 'S'
+          : this.tabControl == '12'
+          ? this.process?.viewModeDetail == 'G'
+            ? this.process?.viewModeDetail
+            : 'S'
+          : this.tabControl == '13'
+          ? this.process?.viewModeDetail == 'F'
+            ? this.process?.viewModeDetail
+            : 'G'
+          : this.process?.viewModeDetail ?? 'S';
+    }
+
     this.loadTabControl();
     this.loadEx();
     this.loadWord();
@@ -2224,8 +2255,24 @@ export class InstancesComponent
                 tabIns.push(tab);
               }
               break;
-            case '11': // hiển thị 2tab: gai đoạn, gantt
-              if (element?.value == 'S' || element?.value == 'G') {
+            case '3': // xem view nhap lieu
+              if (element?.value == 'F') {
+                var tab = {};
+                tab['viewModelDetail'] = element?.value;
+                tab['textDefault'] = element?.text;
+                tab['icon'] = element?.icon;
+                if (tab['viewModelDetail'] == 'F') {
+                  tab['textDefault'] =
+                    this.process?.autoNameTabFields != null &&
+                    this.process?.autoNameTabFields?.trim() != ''
+                      ? this.process?.autoNameTabFields
+                      : element?.text;
+                }
+                tabIns.push(tab);
+              }
+              break;
+            case '5': // xem view cong viec
+              if (element?.value == 'G') {
                 var tab = {};
                 tab['viewModelDetail'] = element?.value;
                 tab['textDefault'] = element?.text;
@@ -2233,8 +2280,34 @@ export class InstancesComponent
                 tabIns.push(tab);
               }
               break;
-            case '12': // 2 tab: giai đoạn, trường nhập liệu;
+            case '11': // hiển thị 2tab: gai đoạn, nhap lieu
               if (element?.value == 'S' || element?.value == 'F') {
+                var tab = {};
+                tab['viewModelDetail'] = element?.value;
+                tab['textDefault'] = element?.text;
+                tab['icon'] = element?.icon;
+                if (tab['viewModelDetail'] == 'F') {
+                  tab['textDefault'] =
+                    this.process?.autoNameTabFields != null &&
+                    this.process?.autoNameTabFields?.trim() != ''
+                      ? this.process?.autoNameTabFields
+                      : element?.text;
+                }
+                tabIns.push(tab);
+              }
+              break;
+            case '12': // 2 tab: giai đoạn, cong viec;
+              if (element?.value == 'S' || element?.value == 'G') {
+                var tab = {};
+                tab['viewModelDetail'] = element?.value;
+                tab['textDefault'] = element?.text;
+                tab['icon'] = element?.icon;
+
+                tabIns.push(tab);
+              }
+              break;
+            case '13': // 2 tab: nhap lieu, cong viec;
+              if (element?.value == 'F' || element?.value == 'G') {
                 var tab = {};
                 tab['viewModelDetail'] = element?.value;
                 tab['textDefault'] = element?.text;
@@ -2262,7 +2335,6 @@ export class InstancesComponent
                     : element?.text;
               }
               tabIns.push(tab);
-
               break;
           }
         });

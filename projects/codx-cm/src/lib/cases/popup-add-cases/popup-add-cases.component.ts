@@ -68,6 +68,7 @@ export class PopupAddCasesComponent
 
   listTypeCases: any[] = [];
   listCbxContacts: any[] = [];
+  listFields:any[]=[];
 
   // const
   readonly actionAdd: string = 'add';
@@ -126,6 +127,7 @@ export class PopupAddCasesComponent
   isLoading: boolean = false;
   processID: string = '';
   applyProcess = false;
+  isBlock: boolean = true;
   caseNoSetting: any;
   idxCrr: any = -1;
 
@@ -205,6 +207,7 @@ export class PopupAddCasesComponent
     }
   }
   saveCases() {
+    if (!this.isBlock) return;
     if (!this.cases?.processID && this.applyProcess) {
       this.notificationsService.notifyCode(
         'SYS009',
@@ -226,14 +229,6 @@ export class PopupAddCasesComponent
         'SYS009',
         0,
         '"' + this.gridViewSetup['CustomerID']?.headerText + '"'
-      );
-      return;
-    }
-    if (!this.owner && this.applyProcess) {
-      this.notificationsService.notifyCode(
-        'SYS009',
-        0,
-        '"' + this.gridViewSetup['Owner']?.headerText + '"'
       );
       return;
     }
@@ -1033,25 +1028,34 @@ export class PopupAddCasesComponent
       this.tabContent = [this.tabGeneralInfoDetail];
     }
   }
-  ischeckFields(steps: any): boolean {
-    if (steps?.length > 0) {
-      if (this.action != 'edit') {
-        if (steps[0].fields?.length > 0) return true;
-        return false;
+  ischeckFields(liststeps: any): boolean {
+    this.listFields = [];
+    if(this.action !== 'edit') {
+      let stepCurrent = liststeps[0];
+      if(stepCurrent && stepCurrent.fields?.length > 0 ) {
+        let filteredTasks = stepCurrent.tasks.filter(task => task?.fieldID !== null && task?.fieldID?.trim() !== '')
+        .map(task => task.fieldID)
+        .flatMap(item => item.split(';').filter(item => item !== ''));
+        let listFields = stepCurrent.fields.filter(field => !filteredTasks.includes(this.action === 'copy'? field?.reCID: field?.refID));
+        this.listFields = [...this.listFields, ...listFields];
       }
-      let check = false;
-      this.idxCrr = steps.findIndex((x) => x.stepID == this.cases.stepID);
-      if (this.idxCrr != -1) {
-        for (let i = 0; i <= this.idxCrr; i++) {
-          if (steps[i]?.fields?.length > 0) {
-            check = true;
-            break;
+     }
+     else {
+      let idxCrr = liststeps.findIndex((x) => x.stepID == this.instance?.stepID);
+      if (idxCrr != -1) {
+        for (let i = 0; i <= idxCrr; i++) {
+          let stepCurrent = liststeps[i];
+          if(stepCurrent && stepCurrent.fields?.length > 0 ) {
+            let filteredTasks = stepCurrent?.tasks.filter(task => task?.fieldID !== null && task?.fieldID?.trim() !== '')
+            .map(task => task?.fieldID)
+            .flatMap(item => item.split(';').filter(item => item !== ''));
+            let listFields = stepCurrent?.fields.filter(field => !filteredTasks.includes(field?.recID));
+            this.listFields = [...this.listFields, ...listFields];
           }
         }
       }
-      return check;
     }
-    return false;
+    return this.listFields != null && this.listFields?.length > 0;
   }
 
   checkAddField(stepCrr, idx) {
@@ -1063,6 +1067,9 @@ export class PopupAddCasesComponent
       return false;
     }
     return false;
+  }
+  addFileCompleted(e) {
+    this.isBlock = e;
   }
   //----------------------------end---------------------------//
 }

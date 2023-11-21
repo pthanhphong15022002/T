@@ -108,6 +108,7 @@ export class CodxTmmeetingsComponent
   widthWin: any;
   disabledProject = false;
   queryParams: any;
+  showMF: boolean = true;
 
   constructor(
     inject: Injector,
@@ -134,9 +135,12 @@ export class CodxTmmeetingsComponent
   }
 
   onInit(): void {
-    this.button = [{
-      id: 'btnAdd',
-    }];
+    if (this.codxService.asideMode == '2') this.showMF = false;
+    this.button = [
+      {
+        id: 'btnAdd',
+      },
+    ];
     if (!this.funcID)
       this.funcID = this.activedRouter.snapshot.params['funcID'];
 
@@ -796,5 +800,10 @@ export class CodxTmmeetingsComponent
   }
   openLinkMeeting(data) {
     window.open(data?.link);
+  }
+
+  selectedChange(meeting: any) {
+    this.itemSelected = meeting?.data ? meeting?.data : meeting;
+    this.detectorRef.detectChanges();
   }
 }

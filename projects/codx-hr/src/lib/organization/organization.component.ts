@@ -56,6 +56,7 @@ export class OrgorganizationComponent extends UIComponent {
   // child: OrganizationOrgchartComponent;
 
   @ViewChild('tmpMasterDetail') tmpMasterDetail: TemplateRef<any>;
+  dataSelected: any;
   // inject: Injector;
 
   constructor(inject: Injector, private hrService: CodxHrService,
@@ -64,7 +65,8 @@ export class OrgorganizationComponent extends UIComponent {
     super(inject);
   }
 
-  onInit(): void {
+  onInit(): void {    
+    if(this.codxService.asideMode == "2") this.activeMFC = false;
     this.hrService.getFormModel('HRT03a1').then((res) => {
       if (res) {
         this.formModelEmployee = res;
@@ -160,6 +162,7 @@ export class OrgorganizationComponent extends UIComponent {
   // loadEmployList(h, orgUnitID: string, abc) {}
   // click moreFC
   clickMF(event: any, data: any) {
+    if(!data) data = this?.view?.dataService?.dataSelected;
     if (event) {
       switch (event.functionID) {
         case 'SYS02': //delete
@@ -287,8 +290,19 @@ export class OrgorganizationComponent extends UIComponent {
       }
       // this.detectorRef.detectChanges();
     }
+    if (evt?.data) {
+      this.dataSelected = evt?.data;
+    } else if (evt?.recID) {
+      this.dataSelected = evt;
+    }
+    if(this.dataSelected){
+      this.view.dataService.dataSelected = this.dataSelected;
+    }
   }
 
+  changeDataMF(event: any){
+
+  }
   selectItemFromChild: string = '';
 
   getIdFromChild(e) {
