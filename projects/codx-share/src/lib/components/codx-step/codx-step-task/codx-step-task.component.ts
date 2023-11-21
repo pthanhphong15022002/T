@@ -2557,7 +2557,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
 
   release(data: any, category: any, exportData = null) {
     this.codxShareService.codxReleaseDynamic(
-      this.entity,
+      "DP",
       data,
       category,
       'DP_Instances_Steps_Tasks',
