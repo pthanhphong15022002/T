@@ -4276,6 +4276,11 @@ codx-view-list-detail ejs-splitter .e-pane.e-static-pane .e-content{
 .card-save-note .codx-image.h-100{
   margin-bottom: 5px;
 }
-.aside-menu .menu-item .menu-icon > img, .aside-menu .menu-item .menu-icon .svg-icon, .aside-footer .menu-item .menu-icon > img, .aside-footer .menu-item .menu-icon .svg-icon {
-  width: 21px;
+.aside-menu .menu-item .menu-icon > img{
+  width: 22px;
+}
+.page-dashboard{
+  .aside-menu .menu-item .menu-icon > img{
+    width: 25px;
+  }
 }
