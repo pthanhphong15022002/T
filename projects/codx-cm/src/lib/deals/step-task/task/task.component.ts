@@ -755,7 +755,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
 
   release(data: any, category: any, exportData = null) {
     this.codxShareService.codxReleaseDynamic(
-      'CM',
+      'DP',
       data,
       category,
       'DP_Activities',
