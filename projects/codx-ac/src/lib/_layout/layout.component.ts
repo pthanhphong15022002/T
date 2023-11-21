@@ -20,7 +20,6 @@ import { RoundService } from '../round.service';
   templateUrl: './layout.component.html',
   styleUrls: ['./layout.component.scss', '../codx-ac.component.scss'],
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LayoutComponent extends LayoutBaseComponent {
   dialog!: DialogRef;

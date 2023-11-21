@@ -3381,6 +3381,9 @@ codx-card-center .card.codx_cardcenter{
 .role-group ejs-listview .e-ul > li .d-flex.user-card {
   border-bottom: 1px var(--gray-150) solid;
 }
+
+
+
 #Content-Fillter{
   .e-tab .e-tab-header .e-tab-wrap{
     min-width: auto;
@@ -3413,6 +3416,15 @@ codx-card-center .card.codx_cardcenter{
   top: 0;
 }
 
+codx-tasks-share{
+  #Content-Fillter.filter-form {
+    top: 0;
+    //left: -20px;
+   // left: auto!important;
+    //right: 0;
+    height: 100%;
+  }
+}
 #Content-Fillter.filter-form {
   height: calc(100% + 16px);
 }
@@ -3420,13 +3432,7 @@ codx-card-center .card.codx_cardcenter{
   padding-left: 0px!important;
   padding-right: 12px!important;
 }
-codx-tasks-share{
-  #Content-Fillter.filter-form {
-    top: 0;
-    left: -20px;
-    height: 100%;
-  }
-}
+
 /***/
 .e-tab .e-tab-header.e-vertical .e-toolbar-item:not(.e-separator) {
   min-height: 36px!important;

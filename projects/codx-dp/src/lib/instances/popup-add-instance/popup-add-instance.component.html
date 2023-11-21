@@ -134,6 +134,7 @@
       [placeholder]="gridViewSetup?.Owner?.description"
       [allowFiltering]="true"
       [value]="owner"
+      [enabled]="!['3', '4', '5','6'].includes(instance?.status)"
     ></ejs-combobox>
     <!-- <codx-popup-participants
       [lstParticipants]="lstParticipants"
