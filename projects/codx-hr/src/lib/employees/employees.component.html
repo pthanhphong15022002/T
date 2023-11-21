@@ -243,7 +243,7 @@
         ></codx-vll>
       </div>
     </div>
-    <codx-mfunc
+    <codx-mfunc *ngIf="!hideMF"
       [formModel]="view.formModel"
       (changeDataMF)="changeDataMF($event)"
       (clickMF)="clickMF($event, data)"

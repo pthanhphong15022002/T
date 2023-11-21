@@ -108,6 +108,7 @@ export class CodxTmmeetingsComponent
   widthWin: any;
   disabledProject = false;
   queryParams: any;
+  showMF: boolean = true;
 
   constructor(
     inject: Injector,
@@ -134,6 +135,7 @@ export class CodxTmmeetingsComponent
   }
 
   onInit(): void {
+    if (this.codxService.asideMode == '2') this.showMF = false;
     this.button = [
       {
         id: 'btnAdd',

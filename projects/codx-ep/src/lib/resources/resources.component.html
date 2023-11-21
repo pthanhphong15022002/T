@@ -284,7 +284,7 @@
             <span class="text-gray-500">{{ data?.position }}</span>
           </div>
         </div>
-        <codx-mfunc [dataItem]="data" [formModel]="formModel" (clickMF)="clickMF($event, data)"
+        <codx-mfunc *ngIf="!hideMF" [dataItem]="data" [formModel]="formModel" (clickMF)="clickMF($event, data)"
           type="hover"></codx-mfunc>
       </div>
     </div>
@@ -295,7 +295,7 @@
   <codx-card-img cardCss="border w-250px h-200px card-vpp" [formModel]="formModel"
     [imageObjType]="view.formModel?.entityName" [imageObjName]="data?.resourceName" [imageId]="data?.recID"
     [hideMF]="false" (clickMF)="clickMF($event, data)" (changeDataMF)="changeDataMF($event, data)" [typeMF]="'hover'"
-    [rootData]="data" [footer]="cardItemFooter" [imgOn]="data?.modifiedOn" [imageWidth]="700">
+    [rootData]="data" [footer]="cardItemFooter" [imgOn]="data?.modifiedOn" [imageWidth]="700" [hideMF]="hideMF">
   </codx-card-img>
 </ng-template>
 
