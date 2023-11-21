@@ -888,10 +888,11 @@ export class CodxInputCustomFieldComponent implements OnInit {
     let value = '0';
     if (e) {
       let checked = e?.component?.checked;
-      if (e.field == 'yes' && checked) {
+      if (!checked) return;
+      if (e.field == 'yes') {
         this.checkedRadio = true;
         value = '1';
-      } else if (e.field == 'no' && checked) {
+      } else if (e.field == 'no') {
         this.checkedRadio = false;
         value = '0';
       }

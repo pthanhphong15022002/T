@@ -1003,18 +1003,18 @@ export class PopupAddLeadComponent
 
   ischeckFields(liststeps: any): boolean {
     this.listFields = [];
-    if(this.action !== this.actionEdit) {
+    if(this.action !== 'edit') {
       let stepCurrent = liststeps[0];
       if(stepCurrent && stepCurrent.fields?.length > 0 ) {
         let filteredTasks = stepCurrent.tasks.filter(task => task?.fieldID !== null && task?.fieldID?.trim() !== '')
         .map(task => task.fieldID)
         .flatMap(item => item.split(';').filter(item => item !== ''));
-        let listFields = stepCurrent.fields.filter(field => !filteredTasks.includes(field?.recID));
+        let listFields = stepCurrent.fields.filter(field => !filteredTasks.includes(this.action === 'copy'? field?.reCID: field?.refID));
         this.listFields = [...this.listFields, ...listFields];
       }
      }
      else {
-      let idxCrr = liststeps.findIndex((x) => x.stepID == this.lead?.stepID);
+      let idxCrr = liststeps.findIndex((x) => x.stepID == this.instance?.stepID);
       if (idxCrr != -1) {
         for (let i = 0; i <= idxCrr; i++) {
           let stepCurrent = liststeps[i];

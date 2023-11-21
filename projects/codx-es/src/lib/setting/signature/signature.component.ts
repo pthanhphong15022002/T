@@ -363,10 +363,17 @@ export class SignatureComponent implements OnInit, AfterViewInit {
     //this.dialog && this.dialog.close();
   }
 
+  changeItemDetail(event) {
+    if (event?.data) {
+      this.dataSelected = event?.data;
+    } else if (event?.recID) {
+      this.dataSelected = event;
+    }
+  }
   clickMF(event: any, data) {
     
     this.viewBase.dataService.service=this.service;
-    event.data = data;
+    event.data = data ?? this.viewBase?.dataService?.dataSelected;;
     switch (event?.functionID) {
       case 'SYS03':
         this.edit(event);

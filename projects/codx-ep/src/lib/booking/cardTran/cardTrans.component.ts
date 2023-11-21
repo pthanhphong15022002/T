@@ -36,6 +36,7 @@ export class CardTransComponent
   fGroupResourceTran: FormGroup;
   id: any;
   popupTitle: any;
+  dataSelected: any;
   constructor(
     private injector: Injector,
     private codxEpService: CodxEpService,
@@ -53,7 +54,6 @@ export class CardTransComponent
     this.codxEpService.getFormModel(this.funcID).then((res) => {
       if (res) {
         this.formModel = res;
-
       }
     });
   }
@@ -64,6 +64,37 @@ export class CardTransComponent
     
   }
   
+  changeItemDetail(event) {
+    if (event?.data) {
+      this.dataSelected = event?.data;
+    } else if (event?.recID) {
+      this.dataSelected = event;
+    }
+  }
+  clickMF(event, data) {
+    if(!data) data = this.view?.dataService?.dataSelected;
+    if(!data) return;    
+    switch (event?.functionID) {      
+        default:
+          //Biến động , tự custom
+          var customData = {
+            refID: '',
+            refType: this.formModel?.entityName,
+            dataSource: data,
+          };
+
+          this.codxShareService.defaultMoreFunc(
+            event,
+            data,
+            null,
+            this.formModel,
+            this.view?.dataService,
+            this,
+            customData
+          );
+          break;
+    }
+  }
   ngAfterViewInit(): void { }
   onLoading(evt: any) {
     let formModel = this.view.formModel;
