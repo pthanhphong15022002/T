@@ -55,7 +55,7 @@ export class PopupAddCustomerWrComponent implements OnInit {
   }
 
   //#region
-  onSave() {
+  async onSave() {
     if (this.data.category == '2') this.data.mobile = null;
 
     if (this.data.customerName == null || this.data.customerName.trim() == '') {
@@ -95,6 +95,26 @@ export class PopupAddCustomerWrComponent implements OnInit {
       ) {
         return;
       }
+    if(this.data?.address != null && this.data?.address?.trim() != ''){
+      let json = await firstValueFrom(
+        this.api.execSv<any>(
+          'BS',
+          'ERM.Business.BS',
+          'ProvincesBusiness',
+          'GetLocationAsync',
+          [this.data.address, this.leverSetting]
+        )
+      );
+
+      if (json != null && json.trim() != '' && json != "null") {
+        let lstDis = JSON.parse(json);
+        this.data.province = lstDis?.ProvinceID;
+        this.data.district = lstDis?.DistrictID;
+      } else {
+        this.data.province = null;
+        this.data.district = null;
+      }
+    }
     this.dialog.close([this.data, this.radioChecked]);
     this.data = null;
   }
@@ -212,26 +232,6 @@ export class PopupAddCustomerWrComponent implements OnInit {
       this.data[e?.field] = e?.data;
       if (this.data.category == '2') {
         this.data.contactName = '';
-      }
-      if (e?.field == 'address') {
-        let json = await firstValueFrom(
-          this.api.execSv<any>(
-            'BS',
-            'ERM.Business.BS',
-            'ProvincesBusiness',
-            'GetLocationAsync',
-            [this.data.address, this.leverSetting]
-          )
-        );
-
-        if (json != null && json.trim() != '' && json != "null") {
-          let lstDis = JSON.parse(json);
-          this.data.province = lstDis?.ProvinceID;
-          this.data.district = lstDis?.DistrictID;
-        } else {
-          this.data.province = null;
-          this.data.district = null;
-        }
       }
     }
     this.changeDetectoref.detectChanges();

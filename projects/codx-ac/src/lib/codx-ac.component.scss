@@ -10,7 +10,7 @@
 }
 
 .table-ac {
-    height: calc(100vh - 429px);
+    height: calc(100vh - 460px);
 }
 
 .table-thead-ac {
@@ -44,13 +44,13 @@
 
 .ac-empty {
     width: 100%;
-    height: calc(100vh - 470px) !important;
+    height: calc(100vh - 500px) !important;
     justify-content: center !important;
     display: flex;
     align-items: center;
     flex-direction: column !important;
     img{
-        width: 15% !important;
+        width: 12% !important;
     }
 }
 
@@ -81,6 +81,10 @@
 
 .tabcash-content .e-content {
     height: calc(90vh - 350px) !important
+}
+
+.taballow-content .e-content {
+    height: calc(90vh - 355px) !important
 }
 
 .e-gridfooter {
@@ -220,6 +224,17 @@
     width: 100%;
     border: 1px solid #ced4da;
     height: 34px !important;
+}
+
+.ac-input codx-dropdown-calendar button{
+    border: none !important;
+}
+
+.ac-input codx-dropdown-calendar .dropdown{
+    justify-content: center !important;
+    padding-left: 8px !important;
+    display: flex !important;
+    margin-top: 3px !important;
 }
 
 .ac-input-disable {
@@ -425,12 +440,13 @@
 /* css custom animation gridviewv2 */
 
 .ac-hide-toolbar{
-    margin-top: -4rem;
-    height: calc(100vh - 75px);
+    margin-top: -6.2rem;
+    height: calc(100vh - 90px);
     background-color: white;
     background-clip: content-box;
-    width: 100%;
-    padding-right: 9.5rem;
+    width: -webkit-fill-available;
+    padding-right: 1rem;
+    position: fixed;
     codx-toolbar{
         display: none !important;
     }
@@ -463,9 +479,27 @@
   }
 
   .card-general .table-ac{
-    height: calc(100vh - 390px) !important;
+    height: calc(100vh - 420px) !important;
+  }
+
+  .card-pur .table-ac{
+    height: calc(100vh - 445px) !important;
   }
 
   .card-transfer .table-ac{
-    height: calc(100vh - 405px) !important;
+    height: calc(100vh - 440px) !important;
+  }
+
+  .ac-allowcation-animate {
+    animation: opacity 500ms both;
+  }
+
+  @keyframes opacity {
+    0% {
+      opacity: 0;
+    }
+
+    100% {
+      opacity: 1;
+    }
   }

@@ -309,12 +309,8 @@ export class JournalV2Component extends UIComponent implements OnInit {
       if (func) {
         let urlRedirect = '/' + UrlUtil.getTenant();
         if (func && func.url && func.url.charAt(0) != '/') urlRedirect += '/';
-        urlRedirect += func.url;
-        this.route.navigate([urlRedirect], {
-          queryParams: {
-            journalNo: data.journalNo,
-          },
-        });
+        urlRedirect += func.url + '/' + data?.journalNo;
+        this.route.navigate([urlRedirect]);
       }
     });
   }

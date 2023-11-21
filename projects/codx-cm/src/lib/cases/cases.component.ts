@@ -483,6 +483,7 @@ export class CasesComponent
   clickMF(e, data) {
     this.dataSelected = data;
     this.titleAction = e.text;
+    this.stepIdClick = '';
     const functionMappings = {
       SYS03: () => this.edit(data),
       SYS04: () => this.copy(data),

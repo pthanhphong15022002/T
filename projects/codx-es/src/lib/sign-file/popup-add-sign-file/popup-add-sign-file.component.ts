@@ -137,6 +137,7 @@ export class PopupAddSignFileComponent implements OnInit {
   templateRefType: any;
   templateRefID: any;
   processRecID: any;
+  tempProcessRecID: any;
   tempSampleProcessName: any;
   reloadedStep= true;
   constructor(
@@ -783,7 +784,7 @@ export class PopupAddSignFileComponent implements OnInit {
                   this.data.categoryID = event.data;
                   //Xóa vùng ký mẫu cũ
                   if(this.data.files?.length>0){
-                    this.data?.files?.foreach(f=>{
+                    this.data?.files?.forEach(f=>{
                       f.areas = null;
                     })
                   }
@@ -1063,6 +1064,7 @@ export class PopupAddSignFileComponent implements OnInit {
   processIDChange(event) {
     if (event?.field && event?.component && event?.data != '') {
       if (event?.field == 'processID') {
+        this.tempProcessRecID =this.processRecID;
         this.processRecID = event?.data;
         if (
           this.cbbProcess.length == 0 &&
@@ -1103,7 +1105,7 @@ export class PopupAddSignFileComponent implements OnInit {
             this.sampleProcessName = this.tempSampleProcessName;  
             //Xóa vùng ký mẫu cũ
             if(this.data.files?.length>0){
-              this.data?.files?.foreach(f=>{
+              this.data?.files?.forEach(f=>{
                 f.areas = null;
               })
             }       
@@ -1137,7 +1139,8 @@ export class PopupAddSignFileComponent implements OnInit {
                 dialogTmp && dialogTmp.close();
               });
           } else {
-            this.processID == '';
+            this.processRecID = this.tempProcessRecID;     
+            this.cr.detectChanges();     
             return;
           }
         });
@@ -1481,9 +1484,7 @@ export class PopupAddSignFileComponent implements OnInit {
       }
       this.codxShareService
         .codxRelease(
-          this.approverProcess?.module != null
-            ? this.approverProcess?.module
-            : 'ES',
+          this.approverProcess?.module != null ? this.approverProcess?.module: 'ES',
           this.data?.recID,
           this.data.approveControl == '1'
             ? this.data?.recID
@@ -1498,7 +1499,9 @@ export class PopupAddSignFileComponent implements OnInit {
           this.data?.title,
           this.approverProcess?.customEntityName != null
             ? this.approverProcess?.customEntityName
-            : this.data?.refType
+            : this.data?.refType,
+          [],
+          this.approverProcess?.customParam,
         )
         .subscribe((res) => {
           if (res?.msgCodeError == null && res?.rowCount > 0) {

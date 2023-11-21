@@ -13,6 +13,7 @@ import {
   FormModel,
   CallFuncService,
   AuthStore,
+  CodxService,
 } from 'codx-core';
 
 @Component({
@@ -50,11 +51,14 @@ export class ViewListComponent implements OnInit {
   constructor(
     private api: ApiHttpService,
     private callfc: CallFuncService,
+    private codxService: CodxService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    if (this.codxService.asideMode == '2') this.showMoreFunc = false;
+  }
 
   clickMF(e: any, dt?: any) {
     this.clickMoreFunction.emit({ e: e, data: dt });
@@ -65,7 +69,7 @@ export class ViewListComponent implements OnInit {
   }
 
   changeDataMF(e, data) {
-    this.changeMoreFunction.emit({e:e,data:data})
+    this.changeMoreFunction.emit({ e: e, data: data });
     // if (e) {
     //   e.forEach((x) => {
     //     if (
@@ -190,9 +194,9 @@ export class ViewListComponent implements OnInit {
                 t.listTaskResousceSearch = res;
                 t.countResource = res.length;
                 if (t.isHoverPop && p) p.open();
-              }else{
+              } else {
                 this.listTaskResousceSearch = [];
-                this.countResource =0;
+                this.countResource = 0;
               }
               if (p) t.popoverCrr = p;
               t.isHoverPop = false;

@@ -83,7 +83,7 @@ export class CashPaymentsComponent extends UIComponent {
           this.legalName = res[0].legalName; //? get tên company
         }
       });
-    this.router.queryParams
+    this.router.params
       .pipe(takeUntil(this.destroy$))
       .subscribe((params) => {
         this.journalNo = params?.journalNo; //? get số journal từ router
@@ -169,7 +169,6 @@ export class CashPaymentsComponent extends UIComponent {
 
     this.optionSidebar.DataService = this.view?.dataService;
     this.optionSidebar.FormModel = this.view?.formModel;
-    this.optionSidebar.isFull = true;
   }
 
   ngOnDestroy() {
@@ -381,7 +380,14 @@ export class CashPaymentsComponent extends UIComponent {
     this.view?.currentView?.dataService
       .delete([dataDelete], true)
       .pipe(takeUntil(this.destroy$))
-      .subscribe((res: any) => {});
+      .subscribe((res: any) => {
+        if (res && !res?.error) {
+          if(this.view.dataService.data.length == 0){
+            this.itemSelected = undefined;
+            this.detectorRef.detectChanges();
+          } 
+        }
+      });
   }
 
   /**
@@ -419,175 +425,15 @@ export class CashPaymentsComponent extends UIComponent {
    * @returns
    */
   changeMFDetail(event: any, data: any, type: any = '') {
-    this.acService.changeMFCashPayment(
-      event,
-      data,
-      type,
-      this.journal,
-      this.view.formModel
-    );
-    // let arrBookmark = event.filter(
-    //   // danh sách các morefunction
-    //   (x: { functionID: string }) =>
-    //     x.functionID == 'ACT041003' || // MF ghi sổ (PC)
-    //     x.functionID == 'ACT042905' || // MF ghi sổ (UNC)
-    //     x.functionID == 'ACT041002' || // MF gửi duyệt (PC)
-    //     x.functionID == 'ACT042903' || // MF gửi duyệt (UNC)
-    //     x.functionID == 'ACT041004' || // MF hủy yêu cầu duyệt (PC)
-    //     x.functionID == 'ACT042904' || // MF hủy yêu cầu duyệt (UNC)
-    //     x.functionID == 'ACT041008' || // Mf khôi phục (PC)
-    //     x.functionID == 'ACT042906' || // Mf khôi phục (UNC)
-    //     x.functionID == 'ACT042901' || // Mf chuyển tiền điện tử
-    //     x.functionID == 'ACT041010' || // Mf in (PC)
-    //     x.functionID == 'ACT042907' || // Mf in (UNC)
-    //     x.functionID == 'ACT041009' || // MF kiểm tra tính hợp lệ (PC)
-    //     x.functionID == 'ACT042902' // MF kiểm tra tính hợp lệ (UNC)
-    // );
-    // if (arrBookmark.length > 0) {
-    //   if (type == 'viewgrid') {
-    //     arrBookmark.forEach((element) => {
-    //       element.isbookmark = false;
-    //     });
-    //   }
-    //   switch (data?.status) {
-    //     case '1':
-    //       if (this.journal.approvalControl == '0') {
-    //         arrBookmark.forEach((element) => {
-    //           if (
-    //             element.functionID == 'ACT041003' ||
-    //             element.functionID == 'ACT041010' ||
-    //             element.functionID == 'ACT042905' ||
-    //             element.functionID == 'ACT042907' ||
-    //             (element.functionID == 'ACT042901' &&
-    //               this.view.formModel.funcID == 'ACT0429')
-    //           ) {
-    //             element.disabled = false;
-    //           } else {
-    //             element.disabled = true;
-    //           }
-    //         });
-    //       } else {
-    //         arrBookmark.forEach((element) => {
-    //           if (
-    //             element.functionID == 'ACT041002' ||
-    //             element.functionID == 'ACT041010' ||
-    //             element.functionID == 'ACT042903' ||
-    //             element.functionID == 'ACT042907'
-    //           ) {
-    //             element.disabled = false;
-    //           } else {
-    //             element.disabled = true;
-    //           }
-    //         });
-    //       }
-    //       break;
-    //     case '3':
-    //       arrBookmark.forEach((element) => {
-    //         if (
-    //           element.functionID == 'ACT041004' ||
-    //           element.functionID == 'ACT041010' ||
-    //           element.functionID == 'ACT042904' ||
-    //           element.functionID == 'ACT042907'
-    //         ) {
-    //           element.disabled = false;
-    //         } else {
-    //           element.disabled = true;
-    //         }
-    //       });
-    //       break;
-    //     case '5':
-    //       arrBookmark.forEach((element) => {
-    //         if (
-    //           element.functionID == 'ACT041003' ||
-    //           element.functionID == 'ACT041010' ||
-    //           element.functionID == 'ACT042905' ||
-    //           element.functionID == 'ACT042907' ||
-    //           (element.functionID == 'ACT042901' &&
-    //             this.view.formModel.funcID == 'ACT0429')
-    //         ) {
-    //           element.disabled = false;
-    //         } else {
-    //           element.disabled = true;
-    //         }
-    //       });
-    //       break;
-    //     case '6':
-    //       arrBookmark.forEach((element) => {
-    //         if (
-    //           element.functionID == 'ACT041008' ||
-    //           element.functionID == 'ACT041010' ||
-    //           element.functionID == 'ACT042906' ||
-    //           element.functionID == 'ACT042907'
-    //         ) {
-    //           element.disabled = false;
-    //         } else {
-    //           element.disabled = true;
-    //         }
-    //       });
-    //       break;
-    //     case '2':
-    //     case '7':
-    //       arrBookmark.forEach((element) => {
-    //         if (
-    //           element.functionID == 'ACT041009' ||
-    //           element.functionID == 'ACT041010' ||
-    //           element.functionID == 'ACT042902' ||
-    //           element.functionID == 'ACT042907'
-    //         ) {
-    //           element.disabled = false;
-    //         } else {
-    //           element.disabled = true;
-    //         }
-    //       });
-    //       break;
-    //     case '8':
-    //     case '11':
-    //       arrBookmark.forEach((element) => {
-    //         if (
-    //           element.functionID == 'ACT042907' &&
-    //           this.view.formModel.funcID == 'ACT0429'
-    //         ) {
-    //           element.disabled = false;
-    //         } else {
-    //           element.disabled = true;
-    //         }
-    //       });
-    //       break;
-    //     case '9':
-    //       arrBookmark.forEach((element) => {
-    //         if (
-    //           element.functionID == 'ACT041003' ||
-    //           element.functionID == 'ACT041010' ||
-    //           element.functionID == 'ACT042905' ||
-    //           element.functionID == 'ACT042907'
-    //         ) {
-    //           element.disabled = false;
-    //         } else {
-    //           element.disabled = true;
-    //         }
-    //       });
-    //       break;
-    //     case '10':
-    //       arrBookmark.forEach((element) => {
-    //         if (
-    //           element.functionID == 'ACT042905' ||
-    //           (element.functionID == 'ACT042907' &&
-    //             this.view.formModel.funcID == 'ACT0429')
-    //         ) {
-    //           element.disabled = false;
-    //         } else {
-    //           element.disabled = true;
-    //         }
-    //       });
-    //       break;
-    //     default:
-    //       arrBookmark.forEach((element) => {
-    //         element.disabled = true;
-    //       });
-    //       break;
-    //   }
-    // }
-    // return;
+    if (data) {
+      this.acService.changeMFCashPayment(
+        event,
+        data,
+        type,
+        this.journal,
+        this.view.formModel
+      );
+    }
   }
 
   /**

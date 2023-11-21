@@ -17,9 +17,12 @@
                 </div>
                 <div class="input-circle input-sm" *ngIf="formWareHouse?.formGroup">
                     <span class="me-2">
-                        <codx-vll [name]="'AC040'" [formModel]="dialog.formModel" [field]="'Status'"
-                            [value]="formWareHouse.data?.status" [showText]="true" [showBgColor]="true"
+                        <codx-vll *ngIf="formWareHouse.data?.status == '1'" [formModel]="dialog.formModel" [field]="'Status'"
+                            [value]="formWareHouse.data?.validated ? '1' : '7'" [showText]="true" [showBgColor]="true"
                             class="badge badge-light badge-sm">
+                        </codx-vll>
+                        <codx-vll *ngIf="formWareHouse.data?.status != '1'" [formModel]="dialog.formModel" [field]="'Status'"
+                            [value]="formWareHouse.data?.status" [showText]="true" [showBgColor]="true" class="badge badge-light badge-sm">
                         </codx-vll>
                     </span>
                 </div>
@@ -33,7 +36,7 @@
             </div>
         </div>
         <ng-container>
-          <div style="margin-left: 25px" *ngIf="!formWareHouse.data?._isEdit || formWareHouse.data?.status == '7'"
+          <div style="margin-left: 25px" *ngIf="!formWareHouse.data?.validated"
             class="input-circle h-20px input-border-0 w-400px mb-1">
             <codx-dropdown-select #eleCbxSubType [showFooter]="false" [isToolbar]="false"
               [cssClass]="'rounded-pill border-1'" cssPopup="h-250px w-550px" [isMulti]="false" type="valuelist"
@@ -41,12 +44,12 @@
               [value]="formWareHouse.data.subType" emptyText="Loại phiếu"
               (valueChange)="changeSubType($event)"></codx-dropdown-select>
           </div>
-          <!-- <span style="margin-left: 30px" *ngIf="formWareHouse.data?._isEdit && formWareHouse.data?.status != '7'">
+          <span style="margin-left: 30px" *ngIf="formWareHouse.data?.validated">
             <codx-vll [name]="formWareHouse?.gridviewSetup['SubType'].referedValue" [formModel]="dialog.formModel"
               [field]="'SubType'" [value]="formWareHouse.data?.subType" [showText]="true" [showBgColor]="true"
               class="badge badge-light-primary badge-lg mt-1">
             </codx-vll>
-          </span> -->
+          </span>
         </ng-container>
     </div>
 </ng-template>

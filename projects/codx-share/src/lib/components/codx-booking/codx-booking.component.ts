@@ -547,6 +547,7 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
   }
 
   clickMF(event, item) {
+    if(!item) item = this.view?.dataService?.dataSelected;
     this.codxBookingService.getBookingByID(item?.recID).subscribe((data) => {
       if (data) {
         this.popupTitle = event?.text + ' ' + this.funcIDName;
@@ -856,7 +857,8 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
   //---------------------------------------------------------------------------------//
 
   release(data: any) {
-    if (this.curUser?.userID == data?.createdBy) {
+    if (this.curUser?.userID == data?.createdBy ||
+      this.codxBookingService.checkAdminRole(this.curUser, this.isAdmin)) {
       if (
         this.resourceType == EPCONST.VLL.ResourceType.Room ||
         this.resourceType == EPCONST.VLL.ResourceType.Car

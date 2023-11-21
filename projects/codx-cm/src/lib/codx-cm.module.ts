@@ -181,16 +181,31 @@ export const routes: Routes = [
         data: { noReuse: true },
       },
       {
+        path: 'approvals/:funcID',
+        loadChildren: () =>
+          import('projects/codx-dp/src/lib/codx-dp-approver.module').then(
+            (m) => m.ApprovelDpModule
+          ),
+        data: { noReuse: true },
+      },
+      {
         path: '**',
         redirectTo: 'error/404',
       },
     ],
   },
-
   {
     path: '',
     loadChildren: () =>
       import('./settings/settings.module').then((m) => m.SettingsCmModule),
+  },
+  {
+    path: 'approvals/:funcID',
+    loadChildren: () =>
+      import('projects/codx-cm/src/lib/codx-cm-approver.module').then(
+        (m) => m.ApprovelCmModule
+      ),
+    data: { noReuse: true },
   },
 ];
 
@@ -305,7 +320,7 @@ const T_Component: Type<any>[] = [
     TreeMapAllModule,
     ChartModule,
     BulletChartModule,
-    AccumulationChartModule
+    AccumulationChartModule,
   ],
   exports: [RouterModule],
   providers: [
@@ -315,7 +330,7 @@ const T_Component: Type<any>[] = [
     BubbleSeriesService,
     PieSeriesService,
     AccumulationDataLabelService,
-    BulletTooltipService
+    BulletTooltipService,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

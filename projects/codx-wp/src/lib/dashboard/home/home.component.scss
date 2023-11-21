@@ -1,6 +1,7 @@
 .wp-home {
   //max-width: 980px;
   margin: 0 auto;
+  padding-right: 30px;
 
   [data-kt-aside-minimize="on"] .aside:not(.aside-hoverable) .aside-menu .menu-title,
   [data-kt-aside-minimize="on"] .aside:not(:hover) .aside-menu .menu-title {
@@ -83,6 +84,9 @@
       width: 250px;    
     }
   }
+  codx-aside-v1.aside.aside-transparent{
+    padding-left: 20px;
+  }
   .aside-menu .menu-item .menu-link, .aside-footer .menu-item .menu-link {
     padding-top: 0.5rem;
     padding-bottom: 0.5rem;
@@ -110,7 +114,6 @@
 .dashboard-main {
  // width: 1286px;
   width: 100%;
-  margin: 0 15px;
 }
 
 // .dashboard-content {
@@ -118,8 +121,10 @@
 // }
 
 .home-left {
-  width: 617px !important;
+  width: 680px !important;
   min-width: 617px !important;
+  max-width: 100%;
+  margin: 0 auto;
 }
 
 .overflow-hidden {

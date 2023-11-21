@@ -59,6 +59,7 @@ export class SalesinvoicesAddComponent extends UIComponent{
     { name: 'References', textDefault: 'Liên kết', isActive: false },
   ];
   isPreventChange:any = false;
+  postDateControl:any;
   private destroy$ = new Subject<void>(); //? list observable hủy các subscribe api
 
   constructor(
@@ -82,6 +83,7 @@ export class SalesinvoicesAddComponent extends UIComponent{
   //#region Init
   
   onInit(): void {
+    this.acService.setPopupSize(this.dialog, '100%', '100%');
     this.cache
       .viewSettingValues('ACParameters')
       .pipe(
@@ -91,6 +93,7 @@ export class SalesinvoicesAddComponent extends UIComponent{
       ).subscribe((res:any)=>{
         if (res) {
           this.taxCurr = res?.TaxCurr;
+          this.postDateControl = res?.PostedDateControl;
         }
       })
   }
@@ -749,9 +752,14 @@ export class SalesinvoicesAddComponent extends UIComponent{
    */
   copyRow(data) {
     if (this.eleGridSalesInvoice && this.elementTabDetail?.selectingID == '0') {
-      data.recID = Util.uid();
-      data.index = this.eleGridSalesInvoice.dataSource.length;
-      this.eleGridSalesInvoice.addRow(data, this.eleGridSalesInvoice.dataSource.length);
+      this.eleGridSalesInvoice.saveRow((res:any)=>{ //? save lưới trước
+        if(res){
+          data.recID = Util.uid();
+          data.index = this.eleGridSalesInvoice.dataSource.length;
+          delete data?._oldData;
+          this.eleGridSalesInvoice.addRow(data, this.eleGridSalesInvoice.dataSource.length);
+        }
+      })
     }
   }
 
@@ -761,7 +769,11 @@ export class SalesinvoicesAddComponent extends UIComponent{
    */
   deleteRow(data) {
     if (this.eleGridSalesInvoice && this.elementTabDetail?.selectingID == '0') {
-      this.eleGridSalesInvoice.deleteRow(data);
+      this.eleGridSalesInvoice.saveRow((res:any)=>{ //? save lưới trước
+        if(res){
+          this.eleGridSalesInvoice.deleteRow(data);
+        }
+      })
     }
   }
 

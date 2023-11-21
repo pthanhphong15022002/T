@@ -69,6 +69,7 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
   dataSelected: any;
   dialog: DialogRef;
   isES = false;
+  itemSelected: any;
 
   constructor(
     private cacheSv: CacheService,
@@ -248,6 +249,13 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
         break;
     }
   }
+  changeItemDetail(event) {
+    if (event?.data) {
+      this.itemSelected = event?.data;
+    } else if (event?.recID) {
+      this.itemSelected = event;
+    }
+  }
 
   add(evt?: any) {
     this.viewBase.dataService.addNew().subscribe((res) => {
@@ -362,7 +370,7 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
   }
 
   clickMF(event, data) {
-    event.data = data;
+    event.data = data ?? this.viewBase?.dataService?.dataSelected;
     switch (event?.functionID) {
       //edit
       case 'SYS03':

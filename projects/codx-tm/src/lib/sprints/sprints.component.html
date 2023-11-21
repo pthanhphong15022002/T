@@ -11,6 +11,9 @@
     [button]="button"
     [autoLoad]="true"
     (buttonClick)="click($event)"
+    (selectedChange)="selectedChange($event)"
+    (clickMF)="clickMF($event, itemSelected)"
+    (changeDataMF)="changeDataMF($event, itemSelected)"
   >
   </codx-views>
 </ng-container>
@@ -32,6 +35,7 @@
             | async
         "
         [footer]="cardImgFooter"
+        [hideMF]="hidenMF"
         (clickMF)="clickMF($event, data)"
         (changeDataMF)="changeDataMF($event, data)"
         [moreFuncCss]="'me-8'"
@@ -107,8 +111,8 @@
     <codx-attachment-temp
       [objectID]="data?.iterationID"
       [formModel]="view.formModel"
-      [viewType]="1" 
-       referType="source"
+      [viewType]="1"
+      referType="source"
     ></codx-attachment-temp>
   </div>
 

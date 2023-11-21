@@ -291,6 +291,7 @@ export class ViewTabUpdateComponent implements OnInit {
   changeDataMF(e, data) {
     if (e != null && data != null) {
       e.forEach((res) => {
+        res.isbookmark = false;
         switch (res.functionID) {
           case 'SYS04':
             res.disabled = true;
@@ -324,6 +325,7 @@ export class ViewTabUpdateComponent implements OnInit {
             engineerID: data?.engineerID,
             createdBy: this.dataWorkOrder?.createdBy,
             gridViewSetup: res,
+            action: 'edit'
           };
           this.callFc
             .openForm(
@@ -371,7 +373,7 @@ export class ViewTabUpdateComponent implements OnInit {
             'WR',
             'ERM.Business.WR',
             'WorkOrderUpdatesBusiness',
-            'DeleteReasonCodeAsync',
+            'DeleteAsync',
             [data.recID, this.transID]
           )
           .subscribe((res) => {

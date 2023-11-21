@@ -81,6 +81,7 @@ export class CodxApprovalComponent
   esService: CodxEsService;
   routers: Router;
   allMFunc: any;
+  hideMF: boolean = false;
   constructor(inject: Injector) {
     super(inject);
     this.routers = inject.get(Router);
@@ -92,7 +93,10 @@ export class CodxApprovalComponent
   }
 
   ngOnChanges(changes: SimpleChanges): void {}
-  onInit(): void {}
+  onInit(): void {
+    
+    if(this.codxService.asideMode == "2") this.hideMF = true;
+  }
   ngAfterViewInit(): void {
     this.tabControl = [
       { name: 'History', textDefault: 'Lịch sử', isActive: true },

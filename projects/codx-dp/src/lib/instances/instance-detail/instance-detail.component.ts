@@ -27,6 +27,7 @@ import {
   AuthStore,
   CodxDetailTmpComponent,
   SidebarModel,
+  CodxService,
 } from 'codx-core';
 import { PopupMoveStageComponent } from '../popup-move-stage/popup-move-stage.component';
 import { InstancesComponent } from '../instances.component';
@@ -77,6 +78,9 @@ export class InstanceDetailComponent implements OnInit {
   @Output() moreFunctionEvent = new EventEmitter<any>();
   @Output() outStepInstance = new EventEmitter<any>();
   @Output() changeMF = new EventEmitter<any>();
+
+  @Output() changeProgress = new EventEmitter<any>();
+
   id: any;
   totalInSteps: any;
   tmpDataSteps: DP_Instances_Steps;
@@ -271,6 +275,7 @@ export class InstanceDetailComponent implements OnInit {
   approveStatus = '0';
   aproveTranID = ''; //instance CRR
   listIDTransApprove = [];
+  asideMode: string;
 
   constructor(
     private callfc: CallFuncService,
@@ -283,12 +288,14 @@ export class InstanceDetailComponent implements OnInit {
     public sanitizer: DomSanitizer,
     private authStore: AuthStore,
     private router: ActivatedRoute,
-    private serviceInstance: InstancesComponent
+    private serviceInstance: InstancesComponent,
+    private codxService: CodxService
   ) {
     this.cache.functionList('DPT03').subscribe((fun) => {
       if (fun) this.titleDefault = fun.customName || fun.description;
     });
     this.user = this.authStore.get();
+    this.asideMode = codxService.asideMode;
     this.cache.functionList('DPT040102').subscribe((res) => {
       if (res) {
         let formModel = new FormModel();
@@ -650,7 +657,6 @@ export class InstanceDetailComponent implements OnInit {
     };
     this.serviceInstance.autoMoveStage(dataInstance);
   }
-
   checkContinueStep(isDefault, step) {
     let check = true;
     let listTask = isDefault
@@ -906,4 +912,82 @@ export class InstanceDetailComponent implements OnInit {
   }
 
   getDetailSignFile(e) {}
+
+  //continueStep(event) {
+  //   let isTaskEnd = event?.isTaskEnd;
+  //   let step = event?.step;
+
+  //   let transferControl = this.dataSelected.steps.transferControl;
+  //   if (transferControl == '0') return;
+
+  //   let isShowFromTaskEnd = !this.checkContinueStep(true, step);
+  //   let isContinueTaskEnd = isTaskEnd;
+  //   let isContinueTaskAll = this.checkContinueStep(false, step);
+  //   let isShowFromTaskAll = !isContinueTaskAll;
+
+  //   if (transferControl == '1' && isContinueTaskAll) {
+  //     isShowFromTaskAll && this.dealComponent.moveStage(this.dataSelected);
+  //     !isShowFromTaskAll &&
+  //       this.handleMoveStage(this.completedAllTasks(step), step.stepID);
+  //   }
+
+  //   if (transferControl == '2' && isContinueTaskEnd) {
+  //     isShowFromTaskEnd && this.dealComponent.moveStage(this.dataSelected);
+  //     !isShowFromTaskEnd &&
+  //       this.handleMoveStage(this.completedAllTasks(step), step.stepID);
+  //   }
+  //}
+   handleMoveStage(isStopAuto, stepID) {
+  //   if (!isStopAuto) {
+  //     this.dealComponent.moveStage(this.dataSelected);
+  //   } else {
+  //     let index = this.listSteps.findIndex((x) => x.stepID === stepID);
+  //     let isUpdate = false;
+  //     let nextStep;
+  //     if (index != -1) {
+  //       nextStep = this.listSteps.findIndex(
+  //         (x) => x.stepID == this.listSteps[index + 1].stepID
+  //       );
+  //       if (nextStep != -1) {
+  //         isUpdate = true;
+  //       }
+  //     }
+  //     if (isUpdate) {
+  //       var config = new AlertConfirmInputConfig();
+  //       config.type = 'YesNo';
+  //       this.notificationsService.alertCode('DP034', config).subscribe((x) => {
+  //         if (x.event?.status == 'Y') {
+  //           this.listSteps[nextStep].stepStatus = '1';
+  //           this.listSteps[nextStep].actualStart = new Date();
+  //           this.listSteps[index].stepStatus = '3';
+  //           if (this.listSteps[index].actualEnd !== null) {
+  //             this.listSteps[index].actualEnd = new Date();
+  //           }
+
+  //           var listInstanceStep = [];
+  //           listInstanceStep.push(this.listSteps[index]);
+  //           listInstanceStep.push(this.listSteps[nextStep]);
+  //           var nextStepDeal = this.listSteps.find(
+  //             (x) => x.stepID == this.listSteps[nextStep + 1].stepID
+  //           );
+  //           this.dataSelected.stepID = this.listSteps[nextStep].stepID;
+  //           if (nextStepDeal) {
+  //             this.dataSelected.nextStep = nextStepDeal.stepID;
+  //           } else {
+  //             this.dataSelected.nextStep = null;
+  //           }
+
+  //           this.promiseAll(listInstanceStep);
+  //         }
+  //       });
+  //     }
+  //   }
+  }
+  saveAssignTask(e) {
+    // if (e) this.saveAssign.emit(e);
+    //if (e) this.getTree();
+  }
+  autoStart(event) {
+    this.changeProgress.emit(event);
+  }
 }

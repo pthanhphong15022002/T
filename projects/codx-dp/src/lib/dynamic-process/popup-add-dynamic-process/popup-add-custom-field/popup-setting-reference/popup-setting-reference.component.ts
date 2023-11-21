@@ -90,35 +90,38 @@ export class PopupSettingReferenceComponent implements OnInit, AfterViewInit {
     field.recID = data.recID; ///Util.uid();
     field.fieldName = data.fieldName;
     field.title = data.headerText;
-    field.refType = data.referedType;
-    field.refValue = data.referedValue;
-    field.dataType = this.convertDataTypeAndFormat(
-      data.dataType,
-      data.dataFormat
-    )[0];
-    field.dataFormat = this.convertDataTypeAndFormat(
-      data.dataType,
-      data.dataFormat
-    )[1];
+    field = this.convertDataTypeAndFormat(data, field);
+
     return field;
   }
-  convertDataTypeAndFormat(dataType, dataFormat): any[] {
+  convertDataTypeAndFormat(data, field): any[] {
     let type = 'T';
     let format = 'S';
-    //hoi laiKhanh
-    switch (dataType.toLocaleLowerCase()) {
+    let refType = data.referedType;
+    let refValue = data.referedValue;
+
+    switch (data.dataType.toLocaleLowerCase()) {
       case 'string':
       case 'guild':
-        type = 'T';
-        format = dataFormat.includes('ed') ? 'L' : 'S';
+        if (refType && refValue) {
+          type = 'L';
+          format = data.refType == '2' ? 'V' : 'C';
+        } else {
+          let fiedname = data.fieldName.toLocaleLowerCase();
+          let convert = this.defaultConvertData(fiedname, data.dataFormat);
+          type = convert[0];
+          format = convert[1];
+          refType = convert[2];
+          refValue = convert[3];
+        }
         break;
       case 'bool':
-        type = 'T';
-        format = '';
+        type = 'L';
+        format = 'B';
         break;
       case 'datetime':
         type = 'D';
-        format = dataFormat == 'g' ? '3' : '2'; //DD/MM/YYYY
+        format = data.dataFormat == 'g' ? '3' : '2'; //DD/MM/YYYY
         break;
       case 'int':
       case 'short':
@@ -130,6 +133,50 @@ export class PopupSettingReferenceComponent implements OnInit, AfterViewInit {
         format = 'D';
         break;
     }
-    return [type, format];
+    field.dataType = type;
+    field.dataFormat = format;
+    field.refType = refType;
+    field.refValue = refValue;
+
+    return field;
+  }
+
+  defaultConvertData(fiedname, dataFormatGrv) {
+    let type = 'L';
+    let format = 'C';
+    let refType = '3';
+    let refValue = '';
+    switch (fiedname) {
+      case 'createdby':
+      case 'owner':
+      case 'modifiedby':
+        refValue = 'Users';
+        break;
+      case 'deepartmentid':
+        refValue = 'Share_Departments';
+        break;
+      case 'divisionid':
+        refValue = 'Divisions';
+        break;
+      case 'employeeid':
+        refValue = 'EmployeeUser';
+        break;
+      case 'orgunitid':
+        refValue = 'Share_OrgUnits';
+        break;
+      case 'positionid':
+        refValue = 'Share_Positions';
+        break;
+      case 'buid':
+        refValue = 'BusinessUnits';
+        break;
+      default:
+        type = 'T';
+        format = dataFormatGrv.includes('ed') ? 'L' : 'S';
+        refType = '';
+        refValue = '';
+        break;
+    }
+    return [type, format, refType, refValue];
   }
 }

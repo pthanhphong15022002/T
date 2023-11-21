@@ -156,6 +156,7 @@
         [dealName]="dealName"
         [customerName]="customerName"
         [ownerInstance]="owner"
+        [entity]="'CM'"
       ></codx-step-task>
       <div
         *ngIf="
@@ -267,7 +268,7 @@
       [typeTime]="typeTime"
       [instance]="dataCM"
       [listSteps]="listInstanceStepShow"
-      [isRoleAll]="dataCM?.roles?.isOnwer || false"
+      [isRoleAll]="dataCM?.alloweStatus || dataCM?.full "
       [type]="'CM'"
     ></codx-step-chart>
   </div>
