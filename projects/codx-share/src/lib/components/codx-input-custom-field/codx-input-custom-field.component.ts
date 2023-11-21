@@ -896,13 +896,12 @@ export class CodxInputCustomFieldComponent implements OnInit {
         this.checkedRadio = false;
         value = '0';
       }
-      //chua check vi sao
-
-      this.customField.dataValue = this.valueChangeCustom.emit({
-        e: value,
-        data: this.customField,
-      });
     }
+    //chua check vi sao
+    this.customField.dataValue = this.valueChangeCustom.emit({
+      e: value,
+      data: this.customField,
+    });
   }
 
   //-----------------------------//

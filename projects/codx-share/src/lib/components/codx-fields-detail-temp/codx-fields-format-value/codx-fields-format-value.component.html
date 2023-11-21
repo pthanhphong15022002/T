@@ -203,6 +203,21 @@
         </div>
       </div>
     </ng-container>
+
+    <ng-container *ngIf="data.dataFormat == 'B'">
+      <div class="flex flex-column">
+        <span
+          [innerHTML]="
+            data.dataValue
+              | formatDataValue
+                : data.dataType
+                : data.dataFormat
+                : data.refValue
+              | async
+          "
+        ></span>
+      </div>
+    </ng-container>
   </ng-container>
 
   <!-- table -->

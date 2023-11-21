@@ -17,6 +17,7 @@ import {
   ViewType,
   FormModel,
   DialogModel,
+  CodxService,
 } from 'codx-core';
 import { CodxHrService } from '../codx-hr.service';
 import { ActivatedRoute } from '@angular/router';
@@ -40,6 +41,7 @@ export class EmployeePolicyalComponent extends UIComponent {
   views: Array<ViewModel> = [];
   formGroup: FormGroup;
   dialog!: DialogRef;
+  itemSelected: any;
   grvSetup: any;
   buttonAdd: ButtonModel[] = [{
     id: 'btnAdd',
@@ -52,7 +54,8 @@ export class EmployeePolicyalComponent extends UIComponent {
     private df: ChangeDetectorRef,
     private callfunc: CallFuncService,
     private shareService: CodxShareService,
-    private notify: NotificationsService
+    private notify: NotificationsService,
+    public override codxService : CodxService
   ) {
     super(inject);
   }
@@ -86,6 +89,10 @@ export class EmployeePolicyalComponent extends UIComponent {
         },
       },
     ];
+  }
+
+  changeItemDetail(evt){
+    this.itemSelected = evt.data;
   }
 
   ngAfterViewChecked() {

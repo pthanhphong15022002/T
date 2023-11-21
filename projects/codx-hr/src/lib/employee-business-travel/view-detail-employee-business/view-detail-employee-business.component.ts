@@ -12,6 +12,7 @@ import { FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import {
   AuthStore,
+  CodxService,
   FormModel,
   NotificationsService,
   ViewsComponent,
@@ -35,7 +36,8 @@ export class ViewDetailEmployeeBusinessComponent implements OnInit {
     private df: ChangeDetectorRef,
     private notify: NotificationsService,
     private shareService: CodxShareService,
-    private codxODService: CodxOdService
+    private codxODService: CodxOdService,
+    public codxService : CodxService
   ) {
     this.user = this.authStore.get();
   }

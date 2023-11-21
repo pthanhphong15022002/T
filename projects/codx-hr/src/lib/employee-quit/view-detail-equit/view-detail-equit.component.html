@@ -3,6 +3,7 @@
   #itemDetailTemplate
   [header]="header"
   [dataItem]="itemDetail"
+  [hideMF]="codxService.asideMode == '2' ? true: false"
   [footer]="footer"
   [body]="body"
   [formModel]="view?.formModel || formModel"

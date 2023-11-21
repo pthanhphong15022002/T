@@ -1,7 +1,9 @@
 <codx-views #view [views]="views" [funcID]="funcID" [service]="service" [assemblyName]="assemblyName"
   [entityName]="entityName" [className]="className" [method]="method" [button]="button" (buttonClick)="add()"
   [idField]="idField" [selectedFirst]="true" (selectedChange)="selectedChange($event)"
-  (viewChanging)="viewChanging($event)" (viewChanged)="viewChanged($event)">
+  (viewChanging)="viewChanging($event)" (viewChanged)="viewChanged($event)"
+  (clickMF)="clickMF($event, itemSelected)"
+  >
 </codx-views>
 <!-- <codx-views #view [views]="views" [button]="button" (buttonClick)="add()" service="HR" idField="employeeID"
   [selectedFirst]="true" (selectedChange)="selectedChange($event)"> -->
@@ -220,7 +222,7 @@
           </div>
         </div>
         <div class="align-self-center">
-          <div style="height: 35px" class="has-action-menu">
+          <div style="height: 35px" class="has-action-menu" *ngIf="codxService.asideMode == '1'">
             <codx-mfunc [formModel]="view.formModel" (clickMF)="clickMF($event, data)"
               (changeDataMF)="clickMF($event, data)" [dataItem]="data" type="hover">
             </codx-mfunc>
