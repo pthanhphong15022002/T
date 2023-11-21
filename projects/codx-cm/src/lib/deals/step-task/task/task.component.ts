@@ -85,10 +85,10 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
     private stepService: StepService,
     private callFunc: CallFuncService,
     private codxCmService: CodxCmService,
-    private detectorRef: ChangeDetectorRef,
     private notiService: NotificationsService,
     private codxShareService: CodxShareService,
     private activedRouter: ActivatedRoute,
+    private changeDetectorRef: ChangeDetectorRef,
   ) {
     this.user = this.authstore.get();
     this.funcID = this.activedRouter.snapshot.params['funcID'];
@@ -245,13 +245,11 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
               res.disabled = true;
             }
             break;
-          case 'DP32': // gởi duyệt
-            res.disabled = !(task?.approveRule && !task?.approvedBy);
+          case 'DP32': // gởi duyệt 
+            res.disabled = (!task?.approveRule || (task?.approveRule && ["3","5"].includes(task?.approveStatus)));
             break;
           case 'DP33': // hủy duyệt
-            if (!(task?.approveRule && task?.approvedBy)) {
-              res.disabled = true;
-            }
+            res.disabled = !(task?.approveRule && task?.approveStatus == "3");
             break;
         }
       });
@@ -341,7 +339,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
             this.listActivitie.push(res);
             this.isNoData = false;
             this.notiService.notifyCode('SYS006');
-            this.detectorRef.detectChanges();
+            this.changeDetectorRef.markForCheck();
           }
         });
     }
@@ -367,7 +365,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
             );
             this.listActivitie?.splice(index, 1, res);
             this.notiService.notifyCode('SYS007');
-            this.detectorRef.detectChanges();
+            this.changeDetectorRef.markForCheck();
           }
         });
     }
@@ -390,7 +388,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
               );
               this.listActivitie?.splice(index, 1);
               this.notiService.notifyCode('SYS008');
-              this.detectorRef.detectChanges();
+              this.changeDetectorRef.markForCheck();
             }
           });
       }
@@ -436,7 +434,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
           if (res) {
             this.listActivitie.push(res);
             this.notiService.notifyCode('SYS006');
-            this.detectorRef.detectChanges();
+            this.changeDetectorRef.markForCheck();
           }
         });
     }
@@ -538,7 +536,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
             task.note = res?.note;
             this.listActivitie;
             this.notiService.notifyCode('SYS007');
-            this.detectorRef.detectChanges();
+            this.changeDetectorRef.markForCheck();
           }
         });
     }
@@ -759,7 +757,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
       data,
       category,
       'DP_Activities',
-      this.funcID,
+      'DPT04',
       data?.taskName,
       this.releaseCallback.bind(this),
       null,
@@ -771,56 +769,30 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
     );
   }
 
-  // approvalTrans(task: DP_Activities) {
-  //   if (task?.approveRule && task?.recID) {
-  //     this.api
-  //       .execSv<any>(
-  //         'ES',
-  //         'ES',
-  //         'CategoriesBusiness',
-  //         'GetByCategoryIDAsync',
-  //         task?.recID
-  //       )
-  //       .subscribe((res) => {
-  //         if (!res) {
-  //           this.notiService.notifyCode('ES028');
-  //           return;
-  //         }
-  //         this.taskApproval = task;
-  //         if (res.eSign) {
-  //           //kys soos
-  //         } else {
-  //           this.release(task, res);
-  //         }
-  //       });
-  //   } else {
-  //     this.notiService.notifyCode('DP040');
-  //   }
-  // }
-
   releaseCallback(res: any, t: any = null) {
     if (res?.msgCodeError) this.notiService.notify(res?.msgCodeError);
     else {
-      this.api
-        .exec<any>(
-          'DP',
-          'ActivitiesBusiness',
-          'UpdateStatusApprovalTaskAsync',
-          [this.taskApproval?.recID, true]
-        )
-        .subscribe((res) => {
-          if (res) {
-            this.taskApproval.approvedBy = res;
-            this.moreDefaut = {
-              share: true,
-              write: true,
-              read: true,
-              download: true,
-              delete: true,
-            };
-            this.taskApproval = null;
-          }
-        });
+      this.taskApproval.approvedBy = this.user?.userID;
+      this.taskApproval.approveStatus = "3";
+      this.taskApproval = null;
+      this.changeDetectorRef.markForCheck();
+      this.taskApproval = null;
+      // this.api
+      //   .exec<any>(
+      //     'DP',
+      //     'ActivitiesBusiness',
+      //     'UpdateApproveStatusTaskAsync',
+      //     [this.taskApproval?.recID, true]
+      //   )
+      //   .subscribe((res) => {
+      //     if (res) {
+      //       this.taskApproval.approvedBy = this.user?.userID;
+      //       this.taskApproval.approveStatus = "3";
+      //       this.taskApproval = null;
+      //       this.changeDetectorRef.markForCheck();
+      //       this.taskApproval = null;
+      //     }
+      //   });
     }
   }
   //Huy duyet
