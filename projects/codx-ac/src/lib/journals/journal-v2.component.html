@@ -1,5 +1,5 @@
 <codx-views #view [views]="views" service="AC" entityName="AC_Journals" predicates="Status=@0"
-  [dataValues]="mainFilterValue ?? '1'" [autoLoad]="true" class="ac-hide-toolbar">
+  [dataValues]="mainFilterValue ?? '1'" [autoLoad]="true" class="">
 </codx-views>
 
 <ng-template #contentTemplate>
@@ -18,7 +18,8 @@
           </div>
           <div class="codx-breadcrumb">
             <ol class="breadcrumb breadcrumb-dot fs-6 fw-bold">
-              <li class="breadcrumb-item" [ngClass]="item.value === subFilterValue ? 'text-dark' : 'text-muted'" *ngFor="let item of vll85; let i = index">
+              <li class="breadcrumb-item" [ngClass]="item.value === subFilterValue ? 'text-dark' : 'text-muted'"
+                *ngFor="let item of vll85; let i = index">
                 <a href="javascript:void(0)" (click)="changePredicate(item.value, 'subFilterValue')"
                   style="color: inherit">{{ item.text }}</a>
                 <i class="icon-i-caret-down-fill font-12" style="color: inherit"></i>
@@ -35,21 +36,25 @@
         </codx-toolbar-choose>
       </div>
     </div>
-    <div style="height: calc(100vh - 190px);">
+    <div class="row" data-kt-scroll="true" data-kt-scroll-activate="{default: true}" data-kt-scroll-height="auto"
+      data-kt-scroll-dependencies=".hhder, .header" data-kt-scroll-wrappers=".wrapper" data-kt-scroll-offset="0px">
       <div class="h-100 overflow-auto" [ngStyle]="viewActive == ViewType.list ? '' : { display: 'none' }">
-        <codx-listview class="h-100 d-block animate__animated animate__slideInRight py-5" type="listView" funcId="ACT" service="AC" [entityName]="view.entityName"
-          [dataService]="view.dataService" [itemTemplate]="listItemTemplate">
+        <codx-listview class="h-100 d-block animate__animated animate__slideInRight py-5" type="listView" funcId="ACT"
+          service="AC" [entityName]="view.entityName" [dataService]="view.dataService"
+          [itemTemplate]="listItemTemplate">
         </codx-listview>
       </div>
 
       <div class="h-100" [ngStyle]="viewActive == ViewType.smallcard ? '' : { display: 'none' }">
-        <codx-listview class="h-100 d-block animate__animated animate__slideInRight py-5" [itemTemplate]="templateListCard" type="cardView" funcId="ACT" service="AC"
-        [entityName]="view.entityName" [dataService]="view.dataService">
+        <codx-listview class="h-100 d-block animate__animated animate__slideInRight py-5"
+          [itemTemplate]="templateListCard" type="cardView" funcId="ACT" service="AC" [entityName]="view.entityName"
+          [dataService]="view.dataService">
         </codx-listview>
       </div>
 
       <div class="h-100" *ngIf="viewActive == ViewType.grid">
-        <codx-gridview-v2 class="h-100 d-block animate__animated animate__slideInRight py-5" #grid [formName]="view.formModel.formName" [gridViewName]="view.formModel.gridViewName"
+        <codx-gridview-v2 class="h-100 d-block animate__animated animate__slideInRight py-5" #grid
+          [formName]="view.formModel.formName" [gridViewName]="view.formModel.gridViewName"
           [entityName]="view.formModel.entityName" [templateMore]="moreTemplate" service="AC" [isMainView]="true"
           [dataSource]="view.dataService.data">
         </codx-gridview-v2>
@@ -65,8 +70,8 @@
           (data.journalType | vll : 'AC078' : 'text' | async)
         : ''
     " [imageId]="data.recID" [imageObjType]="'AC_Journals'" [rootData]="data" [imgOn]="data?.modifiedOn"
-    imgCss="w-100 h-150px" [imageWidth]="1000" [dataItem]="data" [formModel]="view.formModel"
-    [typeMF]="'hover'" (changeDataMF)="changeMF($event)" [titleTmp]="titleTmp" (clickMF)="clickMF($event, data)" (click)="dbClick(data)">
+    imgCss="w-100 h-150px" [imageWidth]="1000" [dataItem]="data" [formModel]="view.formModel" [typeMF]="'hover'"
+    (changeDataMF)="changeMF($event)" [titleTmp]="titleTmp" (clickMF)="clickMF($event, data)" (click)="dbClick(data)">
   </codx-card-img>
 </ng-template>
 
@@ -228,13 +233,14 @@
 </ng-template>
 
 <ng-template #moreTemplate let-data>
-  <codx-mfunc [dataItem]="data" [formModel]="view.formModel" (changeDataMF)="changeMF($event)" (clickMF)="clickMF($event, data)" [isBookMark]="true"
-    type="view"></codx-mfunc>
+  <codx-mfunc [dataItem]="data" [formModel]="view.formModel" (changeDataMF)="changeMF($event)"
+    (clickMF)="clickMF($event, data)" [isBookMark]="true" type="view"></codx-mfunc>
 </ng-template>
 
 <ng-template #listItemTemplate let-data>
-  <codx-mfunc [dataItem]="data" [formModel]="view.formModel" (changeDataMF)="changeMF($event)" (clickMF)="clickMF($event, data)" [isBookMark]="true"
-    type="hover" style="top: 50%; transform: translateY(-50%)"></codx-mfunc>
+  <codx-mfunc [dataItem]="data" [formModel]="view.formModel" (changeDataMF)="changeMF($event)"
+    (clickMF)="clickMF($event, data)" [isBookMark]="true" type="hover"
+    style="top: 50%; transform: translateY(-50%)"></codx-mfunc>
 
   <div (click)="dbClick(data)" class="row align-items-center"
     style="border-bottom: 1px solid var(--bs-border-color); margin-left: 0; margin-right: 0;">

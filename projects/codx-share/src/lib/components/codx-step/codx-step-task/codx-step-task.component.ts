@@ -101,6 +101,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   @Input() contractName: string;
   @Input() leadName: string;
   @Input() instanceName: string;
+  @Input() entity = 'DP';
 
   @Output() saveAssign = new EventEmitter<any>();
   @Output() continueStep = new EventEmitter<any>();
@@ -2556,7 +2557,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
 
   release(data: any, category: any, exportData = null) {
     this.codxShareService.codxReleaseDynamic(
-      'DP',
+      "DP",
       data,
       category,
       'DP_Instances_Steps_Tasks',

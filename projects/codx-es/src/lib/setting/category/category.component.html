@@ -1,7 +1,7 @@
 <codx-views #base [funcID]="funcID" [service]="service" [assemblyName]="assemblyName" [entityName]="entityName"
   [predicate]="predicate" [dataValue]="dataValue" [views]="views" [button]="button" (buttonClick)="click($event)"
-  [moreFuncs]="moreFunc" [idField]="idField" [className]="className" [method]="method"
-  (requestEnded)="closeEditForm($event)" (onLoading)="onLoading($event)">
+  [moreFuncs]="moreFunc" [idField]="idField" [className]="className" [method]="method"  [selectedFirst]="true"
+  (requestEnded)="closeEditForm($event)" (onLoading)="onLoading($event)" (clickMF)="clickMF($event, itemSelected)" (selectedChange)="changeItemDetail($event)">
 </codx-views>
 
 <ng-template #process let-data>
@@ -116,7 +116,7 @@
 
 <ng-template #itemAction let-data>
   <div class='d-flex justify-content-center'>
-    <codx-mfunc [formModel]="viewBase.formModel" (clickMF)="clickMF($event, data)" [dataItem]="data">
+    <codx-mfunc [formModel]="viewBase.formModel" type="grid" (clickMF)="clickMF($event, data)" [dataItem]="data">
     </codx-mfunc>
   </div>
 </ng-template>
