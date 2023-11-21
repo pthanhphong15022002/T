@@ -86,6 +86,7 @@ export class ResourcesComponent extends UIComponent {
   //---------------------------------------------------------//
   fmGetCard: FormModel;
   fmReturnCard: FormModel;
+  dataSelected: any;
   constructor(
     private injector: Injector,
     private codxEpService: CodxEpService,
@@ -184,6 +185,8 @@ export class ResourcesComponent extends UIComponent {
   //-----------------------------------Base Event------------------------------------//
   //---------------------------------------------------------------------------------//
   clickMF(event, data) {
+    if(!data) data = this.view?.dataService?.dataSelected;
+    if(!data) return;
     this.popupTitle = event?.text + ' ' + this.funcIDName;
     switch (event?.functionID) {
       case EPCONST.MFUNCID.Delete:
@@ -276,6 +279,13 @@ export class ResourcesComponent extends UIComponent {
           });
         }
       });
+    }
+  }
+  changeItemDetail(event) {
+    if (event?.data) {
+      this.dataSelected = event?.data;
+    } else if (event?.recID) {
+      this.dataSelected = event;
     }
   }
   //---------------------------------------------------------------------------------//

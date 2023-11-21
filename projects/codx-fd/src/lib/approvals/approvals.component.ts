@@ -205,8 +205,10 @@ export class ApprovalsComponent extends UIComponent {
   selectedItem(event: any) {
     if (!event || !event.data) {
       this.selectedID = '';
+      this.itemSelected = null;
     } else {
       this.selectedID = event.data.recID;
+      this.itemSelected = event.data;
     }
     this.detectorRef.detectChanges();
   }
@@ -277,7 +279,7 @@ export class ApprovalsComponent extends UIComponent {
       if (mf) {
         mf.disabled = true;
       }
-      if (data.approveStatus != '0') {
+      if (data?.approveStatus != '0') {
         const fdt1001 = event.find((i) => i.functionID === 'FDT1001');
         if (fdt1001) {
           fdt1001.disabled = true;

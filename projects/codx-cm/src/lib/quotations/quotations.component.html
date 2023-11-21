@@ -16,6 +16,8 @@
   [autoSearch]="true"
   (onActions)="onActions($event)"
   (selectedChange)="selectedChange($event)"
+  (clickMF)="clickMF($event, itemSelected)"
+  (changeDataMF)="changeDataMF($event, itemSelected)"
 ></codx-views>
 <!-- view detail -->
 <ng-template #templateDetail>

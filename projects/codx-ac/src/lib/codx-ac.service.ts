@@ -115,6 +115,20 @@ export const fmReceiptTransfersLines: FormModel = {
   entityPer: 'IV_TransfersLines',
 };
 
+export const fmPurchaseInvoicesAllocation: FormModel = {
+  entityName: 'AC_PurchaseInvoices',
+  formName: 'PurchaseInvoicesAllocation',
+  gridViewName: 'grvPurchaseInvoicesAllocation',
+  entityPer: 'AC_PurchaseInvoices',
+};
+
+export const fmPurchaseInvoicesLinesAllocation: FormModel = {
+  entityName: 'AC_PurchaseInvoicesLines',
+  formName: 'PurchaseInvoicesLinesAllocation',
+  gridViewName: 'grvPurchaseInvoicesLinesAllocation',
+  entityPer: 'AC_PurchaseInvoicesLines',
+};
+
 export enum MorfuncCash {
   GhiSoPC = 'ACT041003',
   GhiSoUPC = 'ACT042905',
@@ -811,6 +825,7 @@ export class CodxAcService {
       'SYS02',
       'SYS03',
       'SYS04',
+      'SYS002'
     ];
     let arrBookmark = [];
     event.forEach((element) => {
@@ -830,7 +845,8 @@ export class CodxAcService {
         if (
           element.functionID != 'SYS02' &&
           element.functionID != 'SYS03' &&
-          element.functionID != 'SYS04'
+          element.functionID != 'SYS04' && 
+          element.functionID != 'SYS002'
         ) {
           let item = event.find(
             (x) =>
@@ -945,10 +961,11 @@ export class CodxAcService {
       MorfuncPur.KhoiPhuc,
       MorfuncPur.In,
       MorfuncPur.KiemTraHopLe,
-      //MorfuncPur.PhanBoChiPhi,
+      MorfuncPur.PhanBoChiPhi,
       'SYS02',
       'SYS03',
       'SYS04',
+      'SYS002'
     ];
     let arrBookmark = [];
     event.forEach((element) => {
@@ -968,7 +985,8 @@ export class CodxAcService {
         if (
           element.functionID != 'SYS02' &&
           element.functionID != 'SYS03' &&
-          element.functionID != 'SYS04'
+          element.functionID != 'SYS04' && 
+          element.functionID != 'SYS002'
         ) {
           let item = event.find(
             (x) =>
@@ -1092,6 +1110,7 @@ export class CodxAcService {
       'SYS02',
       'SYS03',
       'SYS04',
+      'SYS002'
     ];
     let arrBookmark = [];
     event.forEach((element) => {
@@ -1111,7 +1130,8 @@ export class CodxAcService {
         if (
           element.functionID != 'SYS02' &&
           element.functionID != 'SYS03' &&
-          element.functionID != 'SYS04'
+          element.functionID != 'SYS04' &&
+          element.functionID != 'SYS002'
         ) {
           let item = event.find(
             (x) =>
@@ -1366,6 +1386,7 @@ export class CodxAcService {
       'SYS02',
       'SYS03',
       'SYS04',
+      'SYS002'
     ];
     let arrBookmark = [];
     event.forEach((element) => {
@@ -1385,7 +1406,8 @@ export class CodxAcService {
         if (
           element.functionID != 'SYS02' &&
           element.functionID != 'SYS03' &&
-          element.functionID != 'SYS04'
+          element.functionID != 'SYS04' && 
+          element.functionID != 'SYS002'
         ) {
           let item = event.find(
             (x) =>

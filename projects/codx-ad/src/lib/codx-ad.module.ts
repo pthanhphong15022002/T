@@ -52,6 +52,7 @@ import { PopupExtendModuleComponent } from './company-setting/popup-extend-modul
 import { CodxReportViewsComponent } from 'projects/codx-report/src/lib/codx-report-views/codx-report-views.component';
 import { CodxReportViewDetailComponent } from 'projects/codx-report/src/lib/codx-report-view-detail/codx-report-view-detail.component';
 import { LayoutComponent } from 'projects/codx-share/src/lib/components/layout/layout.component';
+import { DynamicFormComponent } from 'projects/codx-share/src/lib/components/dynamic-form/dynamic-form.component';
 
 export const routes: Routes = [
   {
@@ -87,6 +88,10 @@ export const routes: Routes = [
       {
         path: 'report/detail/:funcID',
         component: CodxReportViewDetailComponent,
+      },
+      {
+        path: 'shared/dynamic/:funcID',
+        component: DynamicFormComponent,
       },
     ],
   },

@@ -273,11 +273,10 @@ export class PopupJobComponent implements OnInit, OnDestroy {
     this.stepsTasks['fieldID'] = this.listFieldID.join(';');
     let message = [];
     for (let key of this.REQUIRE) {
-      if (
-        (typeof this.stepsTasks[key] === 'string' &&
-          !this.stepsTasks[key].trim()) ||
-        !this.stepsTasks[key] ||
-        this.stepsTasks[key]?.length === 0
+      if(this.typeTask?.value == "F" && key == "dependRule"){
+        continue;
+      }
+      if ((typeof this.stepsTasks[key] === 'string' && !this.stepsTasks[key].trim()) ||!this.stepsTasks[key] ||this.stepsTasks[key]?.length === 0
       ) {
         message.push(this.view[key]);
       }

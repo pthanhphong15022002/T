@@ -4178,6 +4178,22 @@ codx-aside-v2.aside-v2-lighter{
       display: none;
     }
   }
+  #kt_aside_menu div.mx-6{
+    margin-left:10px!important;
+    margin-right:10px!important;
+    .menu-link{
+      width: 100%!important;
+      border-radius: 4px!important;
+    }
+    .menu-item.here.show{
+      .menu-link{
+        background-color: var(--border-light);
+      }
+    }
+    .menu-link:hover{
+      background-color: var(--border-light);
+    }
+  }
 }
 
 [data-kt-aside-minimize=on].aside-minimize-icon-title {
@@ -4189,11 +4205,11 @@ codx-aside-v2.aside-v2-lighter{
 }
 
 
-body.light.default{
-  .aside.aside-v2-lighter {
-    background-color: var(--white);
-}
-}
+// body.light.default{
+//   .aside.aside-v2-lighter {
+//     background-color: #f5f8fa;
+// }
+// }
 codx-aside-v2{
   .aside-menu .menu-item .menu-icon .svg-icon{
     display: flex;
@@ -4210,7 +4226,7 @@ codx-header-v2{
     padding-right: 3px!important;
     margin-left: -6px;
     margin-top: -5px;
-}
+  }
 }
 
 
@@ -4244,4 +4260,9 @@ codx-dropdown-calendar .dropdown-toggle>.d-flex {
 }
 codx-view-list-detail ejs-splitter .e-pane.e-static-pane .e-content{
   border-top: 1px var(--white) solid;
+}
+
+
+.card-save-note .codx-image.h-100{
+  margin-bottom: 5px;
 }

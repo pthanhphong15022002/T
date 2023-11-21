@@ -1,7 +1,21 @@
-<codx-views #view entityName="AD_Users" service="SYS" assemblyName="ERM.Business.AD" className="UsersBusiness"
-  method="GetListUserAsync" [views]="views" idField="userID" [selectedFirst]="true" [button]="button"
-  (buttonClick)="pleaseUse($event)" (viewChanged)="changeView($event)" (selectedChange)="selectedChange($event)"
-  (doubleClick)="viewInfo('view', $event)">
+<codx-views 
+  #view 
+  entityName="AD_Users" 
+  service="SYS" 
+  assemblyName="ERM.Business.AD" 
+  className="UsersBusiness"
+  method="GetListUserAsync" 
+  [views]="views" 
+  idField="userID" 
+  [selectedFirst]="true" 
+  [button]="button"
+  (buttonClick)="pleaseUse($event)" 
+  (viewChanged)="changeView($event)" 
+  (selectedChange)="selectedChange($event)"
+  (doubleClick)="viewInfo('view', $event)"
+  (changeDataMF)="changeDataMF($event, itemSelected)"
+  (clickMF)="clickMF($event, itemSelected)"
+  >
 </codx-views>
 
 <ng-template #itemTemplate let-data>
@@ -108,7 +122,7 @@
           </div> -->
         </div>
         <div class="w-10px min-w-10px">
-          <codx-mfunc [formModel]="view.formModel" (clickMF)="clickMF($event, data)" [dataItem]="data"
+          <codx-mfunc *ngIf="codxService.asideMode != '2'" [formModel]="view.formModel" (clickMF)="clickMF($event, data)" [dataItem]="data"
             (changeDataMF)="changeDataMF($event, data)" type="hover">
           </codx-mfunc>
         </div>

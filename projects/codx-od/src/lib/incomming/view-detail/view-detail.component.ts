@@ -93,6 +93,7 @@ export class ViewDetailComponent
   active = 1;
   checkUserPer: any;
   userID: any;
+  user:any;
   referType = 'source';
   dvlSecurity: any;
   dvlUrgency: any;
@@ -134,6 +135,7 @@ export class ViewDetailComponent
     this.active = 1;
     this.formModel = this.view?.formModel;
     //this.data = this.view.dataService.dataSelected;
+    this.user = this.authStore.get();
     this.userID = this.authStore.get().userID;
     this.dataRq.entityName = this.formModel?.entityName;
     this.dataRq.formName = this.formModel?.formName;
@@ -939,6 +941,7 @@ export class ViewDetailComponent
                 }
               });
             }
+            else this.notifySvr.notifyCode("DM001",0, " đính kèm ");
           });
         break;
       }
@@ -1304,6 +1307,27 @@ export class ViewDetailComponent
           if (e?.event && e?.event[0]) {
             datas.status = '3';
             datas.approveStatus = '3';
+
+            //Xét quyền công văn
+            if(e?.event[2] && e?.event[2].length > 0)
+            {
+              if(!Array.isArray(datas?.permission)) datas.permission = [];
+
+              e?.event[2].forEach(elm => {
+                var per = 
+                {
+                  recID: Util.uid(),
+                  roleType: elm.roleType,
+                  objectID: elm.resourceID,
+                  objectName: elm.resourceName,
+                  objectType: "U",
+                  read: true,
+                  download: true,
+                  share: true
+                }
+                datas.permission.push(per);
+              });
+            }
             //get tree task
             // VTHAO - fix con lỗi vẫn chưa gen lại sau nhé..về nhà đã
             // this.taskService.getTreeAssign(
@@ -1312,7 +1336,8 @@ export class ViewDetailComponent
             //   this.getTree.bind(this)
             // );
             //change lại tree VTHAO - đã sửa component để cho hợp lý
-            if(this.footTabs) this.footTabs.changeTreeAssign()
+            if(this.footTabs) this.footTabs.changeTreeAssign();
+
             that.odService
               .updateDispatch(
                 datas,
@@ -1598,6 +1623,7 @@ export class ViewDetailComponent
         if (unbm[0]) unbm[0].disabled = true;
         if (bm[0]) bm[0].disabled = false;
       }
+      
       if (
         (this.defaultValue == '2' || this.defaultValue == '3') &&
         data?.status != '1' &&
@@ -1646,7 +1672,7 @@ export class ViewDetailComponent
         }
 
         //Hiện thị chức năng gửi duyệt khi xét duyệt
-        if (data?.approveStatus == '1' && data?.status == '3') {
+        if (data?.approveStatus == '1' && data?.status == '3' && (data.createdBy == this.userID || this.user?.administrator || this.user?.functionAdmin)) {
           //Chức năng Gửi duyệt
           var approvel = e.filter(
             (x: { functionID: string }) =>
@@ -1721,6 +1747,28 @@ export class ViewDetailComponent
         if (approvel[0]) approvel[0].disabled = true;
         if (approvelCL[0]) approvelCL[0].disabled = false;
       }
+
+      //Chức năng cập nhật tiến độ
+      var progressUpdate = e.filter(
+        (x: { functionID: string }) =>
+          x.functionID == 'ODT103' || x.functionID == 'ODT202' || x.functionID == 'ODT3002' || x.functionID == 'ODT5102' || x.functionID == 'ODT5203'
+      );
+      if (progressUpdate[0]) progressUpdate[0].disabled = true;
+
+      //Chức năng cập nhật phiên bản
+      var updateVer = e.filter(
+        (x: { functionID: string }) =>
+          x.functionID == 'ODT108' || x.functionID == 'ODT207' || x.functionID == 'ODT3007' || x.functionID == 'ODT5107' || x.functionID == 'ODT5208'
+      );
+      if (updateVer[0]) updateVer[0].disabled = true;
+      
+      //Chức năng cập nhật tiến độ || //Chức năng cập nhật phiên bản
+      if(data.owner == this.userID || data.createdBy == this.userID || this.user?.administrator || this.user?.functionAdmin)
+      {
+        if (updateVer[0]) updateVer[0].disabled = false;
+        if (progressUpdate[0]) progressUpdate[0].disabled = false;
+      }
+
     }
   }
   //Gửi duyệt

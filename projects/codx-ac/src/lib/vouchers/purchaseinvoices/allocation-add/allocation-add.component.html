@@ -37,7 +37,7 @@
                 <i class="icon-18 text-primary icon-radio_button_checked"></i>
               </div>
               <div class="stepper-label text-primary fw-bold">
-                <codx-label name="lblGeneral" default="Chọn hóa đơn nhận chi phí"></codx-label>
+                <codx-label name="lblGeneral" default="Chọn hóa đơn"></codx-label>
               </div>
             </div>
           </div>
@@ -47,7 +47,7 @@
                 <i [ngClass]="isStep ? 'text-primary' : ''" class="icon-18 icon-radio_button_checked"></i>
               </div>
               <div [ngClass]="isStep ? 'text-primary' : 'text-gray-600'" class="stepper-label fw-bold">
-                <codx-label name="lblStage" [formModel]="dialog.formModel" default="Phân bổ chi phí"></codx-label>
+                <codx-label name="lblStage" [formModel]="dialog.formModel" default="Phân bổ"></codx-label>
               </div>
             </div>
           </div>
@@ -55,7 +55,7 @@
       </div>
     </div>
   </div>
-  <div class="mt-5">
+  <div [style]="!isStep ? '' : 'display:none'" class="mt-5 ac-allowcation-animate">
     <div class="card-add">
       <ejs-tab #cashRef>
         <e-tabitems>
@@ -73,7 +73,7 @@
           </e-tabitem>
         </e-tabitems>
       </ejs-tab>
-      <div tabindex="-1" style="height: calc(90vh - 348px) !important;">
+      <div tabindex="-1" style="height: calc(90vh - 335px) !important;">
         <ejs-tab #tabObj>
           <e-tabitems>
             <e-tabitem>
@@ -96,34 +96,155 @@
     </div>
   </div>
 
-  <ng-template #tabBasic></ng-template>
-  <ng-template #tabDetail></ng-template>
-  
+  <div [style]="isStep ? '' : 'display:none'" class="mt-5 ac-allowcation-animate">
+    <div class="card-add">
+      <ejs-tab #cashRef>
+        <e-tabitems>
+          <e-tabitem>
+            <ng-template #headerText>
+              <div class="d-flex align-items-top me-2">
+                <i class="icon-filter_list icon-18 me-2"></i>
+                <codx-label class="fw-bold fs-6" fiedName="lblGeneral" [formModel]="form.formModel"
+                  default="Điều kiện lọc"></codx-label>
+              </div>
+            </ng-template>
+            <ng-template #content>
+              <ng-container *ngTemplateOutlet="tabBasic2"></ng-container>
+            </ng-template>
+          </e-tabitem>
+        </e-tabitems>
+      </ejs-tab>
+      <div tabindex="-1" style="height: calc(90vh - 335px) !important;">
+        <ejs-tab #tabObj>
+          <e-tabitems>
+            <e-tabitem>
+              <ng-template #headerText>
+                <div #cashRef class="d-flex align-items-top me-2 mt-2">
+                  <i class="icon-i-list-check icon-18 me-2"></i>
+                  <codx-label class="fw-bold fs-6" fiedName="lblDetail1" [formModel]="form.formModel"
+                    default="Dữ liệu"></codx-label>
+                </div>
+              </ng-template>
+              <ng-template #content>
+                <ng-container *ngTemplateOutlet="tabDetail2"></ng-container>
+              </ng-template>
+            </e-tabitem>
+          </e-tabitems>
+        </ejs-tab>
+      </div>
+      <div style="height: 36px !important;" class="row ac-empty-record">
+      </div>
+    </div>
+  </div>
 
+  <ng-template #tabBasic>
+    <div class="mt-4">
+      <div class="row">
+        <div class="col-2">
+          <div class="form-group">
+            <codx-label style="white-space: nowrap !important" default="Thời gian">
+            </codx-label>
+            <div class="ac-input">
+              <codx-dropdown-calendar (change)="changeDate($event)" #calendarDrop cssPopup="h-450px w-650px mt-3"></codx-dropdown-calendar>
+            </div> 
+          </div>
+        </div>
+        <div class="col-4">
+          <div class="form-group">
+            <codx-label style="white-space: nowrap !important" default="Nhà cung cấp">
+            </codx-label>
+            <div class="ac-input">
+              <codx-input field="objectID" type="combobox"
+                refType="4" refValue="SubObjectsVendorsName" (valueChange)="valueChange($event)">
+              </codx-input>
+            </div>
+          </div>
+        </div>
+        <div class="col-2">
+          <div class="form-group">
+            <codx-label style="white-space: nowrap !important" default="Số chứng từ">
+            </codx-label>
+            <div class="ac-input">
+              <codx-input field="recID" type="combobox"
+                refType="4" refValue="VoucherNoAllocation" (valueChange)="valueChange($event)">
+              </codx-input>
+            </div>
+          </div>
+        </div>
+        <div class="col-2 d-flex align-items-center">
+          <button type="button" class="btn btn-md btn-light-primary rounded-15 mt-1" style="border: 1px solid var(--primary-dark) !important;"
+              (click)="onSubmit()">
+              <codx-label style="white-space: nowrap;" class="fs-6 fw-normal" fiedName="lblSave" default="Lấy dữ liệu"></codx-label>
+            </button>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+  
+  <ng-template #tabBasic2>
+    <div class="mt-4">
+      <div class="row">
+        <div class="col-4">
+          <div class="form-group">
+            <codx-label style="white-space: nowrap !important" default="Phương thức phân bổ">
+            </codx-label>
+            <div class="ac-input">
+              <codx-input type="valuelist"
+                refValue="AC149" (valueChange)="valueChange($event)">
+              </codx-input>
+            </div>
+          </div>
+        </div>
+        <div class="col-2 d-flex align-items-center">
+          <button type="button" class="btn btn-md btn-light-primary rounded-15 mt-1" style="border: 1px solid var(--primary-dark) !important;"
+              (click)="onAllocation()">
+              <codx-label style="white-space: nowrap;" class="fs-6 fw-normal" fiedName="lblSave" default="Phân bổ"></codx-label>
+            </button>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+  <ng-template #tabDetail>
+    <div class="taballow-content position-relative">
+      <codx-gridview-v2 #gridPur [checkboxSelect]="true" [formName]="fmPurchaseInvoicesAllocation.formName" [gridViewName]="fmPurchaseInvoicesAllocation.gridViewName"
+        [entityName]="fmPurchaseInvoicesAllocation.entityName" [dataSource]="oPurchase" service="AC"
+        (onSelected)="onSelected($event)" (onDeselected)="onDeselected($event)" hideMoreFunc="true" [autoFitColumns]="false"
+        ></codx-gridview-v2>
+    </div>
+  </ng-template>
+
+  <ng-template #tabDetail2>
+    <div class="taballow-content position-relative">
+      <codx-gridview-v2 #gridPur [checkboxSelect]="true" [formName]="fmPurchaseInvoicesLinesAllocation.formName" [gridViewName]="fmPurchaseInvoicesLinesAllocation.gridViewName"
+        [entityName]="fmPurchaseInvoicesLinesAllocation.entityName" [dataSource]="oPurchaseLine" service="AC"
+        (onSelected)="onSelected($event)" (onDeselected)="onDeselected($event)" hideMoreFunc="true" [autoFitColumns]="false"
+        ></codx-gridview-v2>
+    </div>
+  </ng-template>
 </ng-template>
 
 <ng-template #footer>
   <div class="d-flex align-items-center justify-content-end btn-ac-footer mt-1">
     <button *ngIf="!isStep" [shortcut]="'alt+s'" [autoClick]="true" tab-index="16" id="btnsave" type="button"
-        class="btn btn-md btn-light-primary rounded-15" style="border: 1px solid var(--primary-dark) !important"
-        (click)="onNextStep()">
-        <div class="d-flex align-items-center">
-          <codx-label class="fw-normal" fiedName="lblSave" default="Tiếp tục"></codx-label>
-        </div>
+      class="btn btn-md btn-light-primary rounded-15" style="border: 1px solid var(--primary-dark) !important"
+      (click)="onNextStep()">
+      <div class="d-flex align-items-center">
+        <codx-label class="fw-normal" fiedName="lblSave" default="Tiếp tục"></codx-label>
+      </div>
     </button>
     <button *ngIf="isStep" [shortcut]="'alt+s'" [autoClick]="true" tab-index="16" id="btnsave" type="button"
-        class="btn btn-md btn-light-primary rounded-15 me-2" style="border: 1px solid var(--primary-dark) !important"
-        (click)="onBack()">
-        <div class="d-flex align-items-center">
-          <codx-label class="fw-normal" fiedName="lblSave" default="Quay lại"></codx-label>
-        </div>
+      class="btn btn-md btn-light-primary rounded-15 me-2" style="border: 1px solid var(--primary-dark) !important"
+      (click)="onBack()">
+      <div class="d-flex align-items-center">
+        <codx-label class="fw-normal" fiedName="lblSave" default="Quay lại"></codx-label>
+      </div>
     </button>
     <button *ngIf="isStep" [shortcut]="'alt+s'" [autoClick]="true" tab-index="16" id="btnsave" type="button"
-        class="btn btn-md btn-light-primary rounded-15" style="border: 1px solid var(--primary-dark) !important"
-        (click)="onAccept()">
-        <div class="d-flex align-items-center">
-          <codx-label class="fw-normal" fiedName="lblSave" default="Nhận"></codx-label>
-        </div>
+      class="btn btn-md btn-light-primary rounded-15" style="border: 1px solid var(--primary-dark) !important"
+      (click)="onAccept()">
+      <div class="d-flex align-items-center">
+        <codx-label class="fw-normal" fiedName="lblSave" default="Nhận"></codx-label>
+      </div>
     </button>
   </div>
 </ng-template>

@@ -1,6 +1,7 @@
 <codx-views #view [funcID]="funcID" [service]="service" [assemblyName]="assemblyName" [entityName]="entityName"
   [views]="views" [button]="buttons" (buttonClick)="click($event)" [idField]="idField" [className]="className"
-  [method]="method" (onLoading)="onLoading($event)" [toolbarDisplay]="true"></codx-views>
+  [method]="method" (onLoading)="onLoading($event)" [toolbarDisplay]="true" 
+  (selectedChange)="changeItemDetail($event)" (clickMF)="clickMF($event, dataSelected)" (changeDataMF)="changeDataMF($event,dataSelected)"></codx-views>
 
 <ng-template #mfCol let-data>
   <codx-mfunc [formModel]="view.formModel" (clickMF)="clickMF($event, data)" [dataItem]="data"

@@ -173,6 +173,33 @@
         ></ejs-multiselect>
       </ng-container>
     </ng-container>
+
+    <ng-container *ngIf="customField.dataFormat == 'B'">
+      <div class="d-flex align-items-center">
+        <div class="me-5">
+          <codx-input
+            type="radio"
+            field="no"
+            [checked]="!this.checkedRadio"
+            [label]="titleRadioNo"
+            (valueChange)="valueChangeRadio($event)"
+            [disabled]="disable"
+          >
+          </codx-input>
+        </div>
+        <div class="me-5">
+          <codx-input
+            type="radio"
+            field="yes"
+            [label]="titleRadioYes"
+            [checked]="this.checkedRadio"
+            (valueChange)="valueChangeRadio($event)"
+            [disabled]="disable"
+          >
+          </codx-input>
+        </div>
+      </div>
+    </ng-container>
   </ng-container>
 
   <ng-container *ngIf="customField.dataType == 'P'">
