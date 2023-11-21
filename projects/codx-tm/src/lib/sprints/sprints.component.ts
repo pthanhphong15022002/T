@@ -65,6 +65,7 @@ export class SprintsComponent extends UIComponent {
   heightWin: any;
   widthWin: any;
   toolbarCls: string;
+  hidenMF: boolean = false;
 
   constructor(
     inject: Injector,
@@ -89,13 +90,16 @@ export class SprintsComponent extends UIComponent {
     });
     this.heightWin = Util.getViewPort().height - 100;
     this.widthWin = Util.getViewPort().width - 100;
+    if (this.codxService.asideMode == '2') this.hidenMF = true;
   }
 
   //#region Init
   onInit(): void {
-    this.button = [{
-      id: 'btnAdd',
-    }];
+    this.button = [
+      {
+        id: 'btnAdd',
+      },
+    ];
 
     let body = document.body;
     if (body.classList.contains('toolbar-fixed'))
@@ -430,4 +434,9 @@ export class SprintsComponent extends UIComponent {
   //         })
   //       );
   //   }
+
+  selectedChange(sprint: any) {
+    this.itemSelected = sprint?.data ? sprint?.data : sprint;
+    this.detectorRef.detectChanges();
+  }
 }
