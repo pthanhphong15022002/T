@@ -12,6 +12,7 @@ import {
   AuthStore,
   ButtonModel,
   CallFuncService,
+  CodxService,
   DialogModel,
   DialogRef,
   NotificationsService,
@@ -93,7 +94,8 @@ export class EmployeeContractComponent extends UIComponent {
     private df: ChangeDetectorRef,
     private callfunc: CallFuncService,
     private codxODService: CodxOdService,
-    private notify: NotificationsService
+    private notify: NotificationsService,
+    public override codxService : CodxService
   ) {
     super(inject);
   }
@@ -106,12 +108,14 @@ export class EmployeeContractComponent extends UIComponent {
         .subscribe((res) => {
           this.grvSetup = res;
         });
+
     });
   }
 
   onInit(): void {
     this.user = this.authStore.get();
     this.GetGvSetup();
+    console.log('lay ra aside mode', this.codxService.asideMode );
   }
 
   ngAfterViewInit(): void {
@@ -254,8 +258,27 @@ export class EmployeeContractComponent extends UIComponent {
     });
   }
 
+  changeDataMFCdxView(e: any, data: any) {
+    this.hrService.handleShowHideMF(e, data, this.view.formModel);
+
+    var funcList = this.codxODService.loadFunctionList(
+      this.view.formModel.funcID
+    );
+    if (isObservable(funcList)) {
+      funcList.subscribe((fc) => {
+        this.changeDataMFBeforeCdxView(e, data, fc);
+      });
+    } else this.changeDataMFBeforeCdxView(e, data, funcList);
+  }
+
+  changeDataMFBeforeCdxView(e: any, data: any, fc: any) {
+    if (fc.runMode == '1') {
+      this.codxShareService.changeMFApproval(e, data?.unbounds);
+    }
+  }
+
   changeDataMf(event, data) {
-    //this.hrService.handleShowHideMF(event, data, this.view.formModel);
+    this.hrService.handleShowHideMF(event, data, this.view.formModel);
 
     var funcList = this.codxODService.loadFunctionList(
       this.view.formModel.funcID
@@ -268,6 +291,7 @@ export class EmployeeContractComponent extends UIComponent {
   }
 
   clickEvent(event) {
+    debugger
     this.clickMF(event?.event, event?.data);
   }
 

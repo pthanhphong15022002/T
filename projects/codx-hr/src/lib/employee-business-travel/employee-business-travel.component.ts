@@ -499,6 +499,25 @@ export class EmployeeBusinessTravelComponent extends UIComponent {
     this.clickMF(event?.event, event?.data);
   }
 
+  changeDataMFCdxView(e: any, data: any) {
+    this.hrService.handleShowHideMF(e, data, this.view.formModel);
+
+    var funcList = this.codxODService.loadFunctionList(
+      this.view.formModel.funcID
+    );
+    if (isObservable(funcList)) {
+      funcList.subscribe((fc) => {
+        this.changeDataMFBeforeCdxView(e, data, fc);
+      });
+    } else this.changeDataMFBeforeCdxView(e, data, funcList);
+  }
+
+  changeDataMFBeforeCdxView(e: any, data: any, fc: any) {
+    if (fc.runMode == '1') {
+      this.codxShareService.changeMFApproval(e, data?.unbounds);
+    }
+  }
+
   //#endregion
 
   viewDetail(data) {

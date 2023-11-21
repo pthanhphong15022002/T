@@ -10,8 +10,9 @@
     idField="recID"
     [button]="buttonAdd"
     (buttonClick)="addPolicyGeneral($event)"
+    (selectedChange)="changeItemDetail($event)"
+    (clickMF)="clickMF($event, itemSelected)"
     >
-    <!-- (selectedChange)="changeItemDetail($event)" -->
 
 </codx-views>
 
@@ -78,6 +79,7 @@
         <div class="align-self-center">
             <div style="height: 35px" class="has-action-menu">
               <codx-mfunc
+              *ngIf="codxService.asideMode == '1'"
                 [formModel]="view.formModel"
                 (clickMF)="clickMF($event, data)"
                 [dataItem]="data"
