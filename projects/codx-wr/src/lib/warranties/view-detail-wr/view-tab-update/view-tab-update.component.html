@@ -105,10 +105,10 @@
 <ng-template #tempScheduleTime let-data>
   <div class="d-flex justify-content-start align-items-center">
     <span
-      *ngIf="data?.scheduleStart"
+      *ngIf="data?.startDate"
       class="text-gray-800 me-2"
       [innerHTML]="
-        data?.scheduleStart | formatvalue : formModel : 'ScheduleStart' | async
+        data?.startDate | formatvalue : formModel : 'StartDate' | async
       "
     >
     </span>

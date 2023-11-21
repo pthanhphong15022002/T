@@ -8,7 +8,7 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import { AuthStore, CacheService, ViewsComponent } from 'codx-core';
+import { AuthStore, CacheService, CodxService, ViewsComponent } from 'codx-core';
 import { CodxHrService } from '../../codx-hr.service';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
 import { isObservable } from 'rxjs';
@@ -29,7 +29,8 @@ export class ViewBasicSalaryDetailComponent implements OnInit {
     private authStore: AuthStore,
     private cache: CacheService,
     private shareService: CodxShareService,
-    private codxODService: CodxOdService
+    private codxODService: CodxOdService,
+    public codxService : CodxService
   ) {
     this.user = this.authStore.get();
   }

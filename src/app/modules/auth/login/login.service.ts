@@ -116,26 +116,29 @@ export class LoginService {
     } else {
       if (data.error.errorCode === 'AD027')
         return this.navRouter.navigate(['/']);
-      // this.notificationsService.notify(data.error.errorMessage);
     }
     return false;
   }
 
   navigate(tn) {
     this.api
-      .exec('AD', 'UsersBusiness', 'CreateUserLoginAsync', [
+      .call('AD', 'UsersBusiness', 'CreateUserLoginAsync', [
         tn,
+        '', //userID
+        '', //pw
         JSON.stringify(this.loginDevice),
       ])
       .subscribe((res: any) => {
-        if (res) {
+        if (!res.error) {
           this.loginDevice.tenantID = tn;
           let trust2FA = res?.extends?.Trust2FA;
+          let hideTrustDevice = res?.extends?.HideTrustDevice;
           let objData = {
-            data: { data: res },
+            data: res,
             login2FA: res?.extends?.TwoFA,
             hubConnectionID: '',
             loginDevice: this.loginDevice,
+            hideTrustDevice,
           };
           if (!trust2FA) {
             let lg2FADialog = this.callfc.openForm(
@@ -147,7 +150,7 @@ export class LoginService {
               objData
             );
             lg2FADialog.closed.subscribe((lg2FAEvt) => {
-              if (lg2FAEvt.event.data.error) return;
+              if (!lg2FAEvt.event || lg2FAEvt.event?.data?.error) return;
               this.authService.setLogin(lg2FAEvt.event.data.data);
               this.loginAfter(lg2FAEvt.event.data);
             });

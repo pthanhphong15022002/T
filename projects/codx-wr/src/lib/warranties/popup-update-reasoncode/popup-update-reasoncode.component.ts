@@ -60,6 +60,7 @@ export class PopupUpdateReasonCodeComponent implements OnInit, AfterViewInit {
   scheduleTime: any;
   parentID: any;
   dataParentID: any;
+  action = '';
   constructor(
     private detectorRef: ChangeDetectorRef,
     private callFc: CallFuncService,
@@ -77,14 +78,15 @@ export class PopupUpdateReasonCodeComponent implements OnInit, AfterViewInit {
     this.data.transID = dt?.data?.transID;
     this.data.engineerID = dt?.data?.engineerID;
     this.createdBy = dt?.data?.createdBy;
+    this.action = dt?.data?.action;
     this.gridViewSetup = JSON.parse(JSON.stringify(dt?.data?.gridViewSetup));
   }
 
   ngOnInit(): void {
     this.parentID = null;
-    if (this.data?.scheduleStart && this.data?.scheduleEnd) {
-      this.data.scheduleStart = new Date(this.data?.scheduleStart);
-      this.data.scheduleEnd = new Date(this.data?.scheduleEnd);
+    if (this.data?.startDate && this.data?.endDate) {
+      this.data.startDate = new Date(this.data?.startDate);
+      this.data.endDate = new Date(this.data?.endDate);
     }
     if (
       this.data != null &&
@@ -150,8 +152,8 @@ export class PopupUpdateReasonCodeComponent implements OnInit, AfterViewInit {
     if (this.countValidate > 0) {
       return;
     }
-    if (this.data.scheduleStart) {
-      if (new Date(this.data.scheduleStart).getDate() < new Date().getDate()) {
+    if (this.data.startDate) {
+      if (new Date(this.data.startDate).getDate() < new Date().getDate()) {
         this.notiService.notifyCode('WR003');
         return;
       }
@@ -172,12 +174,13 @@ export class PopupUpdateReasonCodeComponent implements OnInit, AfterViewInit {
   }
 
   updateReason() {
+    let method = this.action == 'edit' ? 'SaveAsync' : 'UpdateAsync';
     this.api
       .execSv<any>(
         'WR',
         'ERM.Business.WR',
         'WorkOrderUpdatesBusiness',
-        'UpdateReasonCodeAsync',
+        method,
         [this.data]
       )
       .subscribe((res) => {
@@ -189,13 +192,16 @@ export class PopupUpdateReasonCodeComponent implements OnInit, AfterViewInit {
   }
 
   async setStartAndEndTime() {
-    if (this.data?.scheduleStart && this.data?.scheduleEnd) {
-      this.data.scheduleTime = this.dateControl == '1' ? this.startTime + ' - ' + this.endTime : this.endTime;
-      const startDate = new Date(this.data.scheduleStart);
-      const endDate = new Date(this.data.scheduleEnd);
-      this.data.startDate = startDate;
-      this.data.endDate = endDate;
-      if(this.dateControl == '0'){
+    if (this.data?.startDate && this.data?.endDate) {
+      this.data.scheduleTime =
+        this.dateControl == '1'
+          ? this.startTime + ' - ' + this.endTime
+          : this.endTime;
+      const startDate = new Date(this.data.startDate);
+      const endDate = new Date(this.data.endDate);
+      this.data.scheduleStart = JSON.parse(JSON.stringify(startDate));
+      this.data.scheduleEnd = JSON.parse(JSON.stringify(endDate));
+      if (this.dateControl == '0') {
         this.data.scheduleStart = null;
         this.data.scheduleEnd = null;
       }
@@ -225,7 +231,10 @@ export class PopupUpdateReasonCodeComponent implements OnInit, AfterViewInit {
 
       this.dateControl = e?.component?.itemsSelected[0]?.DateControl;
       if (this.dateControl) {
-        this.defaultTime(e?.component?.itemsSelected[0]?.Leadtime, this.dateControl);
+        this.defaultTime(
+          e?.component?.itemsSelected[0]?.Leadtime,
+          this.dateControl
+        );
       }
     }
     this.detectorRef.detectChanges();
@@ -263,7 +272,7 @@ export class PopupUpdateReasonCodeComponent implements OnInit, AfterViewInit {
       closestStartTime = timeList[0]?.value;
       scheduleTime = timeList[0]?.text;
     }
-    this.data.scheduleStart = currentDate;
+    this.data.startDate = currentDate;
     this.data.scheduleTime = closestStartTime;
     this.scheduleTime = scheduleTime;
     if (this.form) this.form?.formGroup?.patchValue(this.data);
@@ -307,14 +316,15 @@ export class PopupUpdateReasonCodeComponent implements OnInit, AfterViewInit {
       }
 
       if (this.startTime && this.endTime) {
-        this.data.scheduleTime = this.dateControl == '1' ? this.startTime + ' - ' + this.endTime : this.endTime;
+        this.data.scheduleTime =
+          this.dateControl == '1'
+            ? this.startTime + ' - ' + this.endTime
+            : this.endTime;
         commentRep = commentRep.replace('{1}', this.data.scheduleTime);
       }
 
-      if (this.data.scheduleStart) {
-        let date = moment(new Date(this.data.scheduleStart)).format(
-          'DD/MM/YYYY'
-        );
+      if (this.data.startDate) {
+        let date = moment(new Date(this.data.startDate)).format('DD/MM/YYYY');
         commentRep = commentRep.replace('{2}', date);
       }
     }
@@ -329,27 +339,28 @@ export class PopupUpdateReasonCodeComponent implements OnInit, AfterViewInit {
     const minutesToAdd = remainder === 0 ? 0 : 30 - remainder;
     dateNow.setMinutes(minutes + minutesToAdd);
 
-    this.data.scheduleStart = dateNow;
-    let dateEnd = JSON.parse(JSON.stringify(this.data.scheduleStart));
-    this.data.scheduleEnd = new Date(dateEnd);
-    if(dateControl == '1'){
-      const parseLeadTime = parseFloat(leadTime) > 0 ? parseFloat(leadTime) : 30;
-      this.data.scheduleEnd.setMinutes(minutes + minutesToAdd + parseLeadTime);
+    this.data.startDate = dateNow;
+    let dateEnd = JSON.parse(JSON.stringify(this.data.startDate));
+    this.data.endDate = new Date(dateEnd);
+    if (dateControl == '1') {
+      const parseLeadTime =
+        parseFloat(leadTime) > 0 ? parseFloat(leadTime) : 30;
+      this.data.endDate.setMinutes(minutes + minutesToAdd + parseLeadTime);
     }
     this.setTimeEdit();
   }
 
   setTimeEdit() {
-    this.selectedDate = moment(new Date(this.data?.scheduleStart))
+    this.selectedDate = moment(new Date(this.data?.startDate))
       .set({ hour: 0, minute: 0, second: 0 })
       .toDate();
-    var getStartTime = new Date(this.data?.scheduleStart);
+    var getStartTime = new Date(this.data?.startDate);
     var current =
       this.padTo2Digits(getStartTime.getHours()) +
       ':' +
       this.padTo2Digits(getStartTime.getMinutes());
     this.startTime = current;
-    var getEndTime = new Date(this.data?.scheduleEnd);
+    var getEndTime = new Date(this.data?.endDate);
     var current1 =
       this.padTo2Digits(getEndTime.getHours()) +
       ':' +
@@ -363,9 +374,9 @@ export class PopupUpdateReasonCodeComponent implements OnInit, AfterViewInit {
     return String(num).padStart(2, '0');
   }
   valueDateChange(event: any) {
-    if (this.data.scheduleStart != event?.data?.fromDate) {
-      this.data.scheduleStart = event?.data?.fromDate;
-      this.selectedDate = moment(new Date(this.data.scheduleStart))
+    if (this.data.startDate != event?.data?.fromDate) {
+      this.data.startDate = event?.data?.fromDate;
+      this.selectedDate = moment(new Date(this.data.startDate))
         .set({ hour: 0, minute: 0, second: 0 })
         .toDate();
       this.setDate();
@@ -399,7 +410,7 @@ export class PopupUpdateReasonCodeComponent implements OnInit, AfterViewInit {
               this.selectedDate.setHours(this.beginHour, this.beginMinute, 0)
             );
             if (this.startDate) {
-              this.data.scheduleStart = this.startDate;
+              this.data.startDate = this.startDate;
             }
           }
         }
@@ -413,7 +424,7 @@ export class PopupUpdateReasonCodeComponent implements OnInit, AfterViewInit {
               this.selectedDate.setHours(this.endHour, this.endMinute, 0)
             );
             if (this.endDate) {
-              this.data.scheduleEnd = this.endDate;
+              this.data.endDate = this.endDate;
             }
           }
         }

@@ -12,6 +12,7 @@ import {
   ApiHttpService,
   AuthStore,
   CacheService,
+  CodxService,
   ViewsComponent,
 } from 'codx-core';
 import { CodxHrService } from '../../codx-hr.service';
@@ -33,7 +34,8 @@ export class ViewAwardDetailComponent {
     private authStore: AuthStore,
     private cache: CacheService,
     private shareService: CodxShareService,
-    private codxODService: CodxOdService
+    private codxODService: CodxOdService,
+    public codxService : CodxService
   ) {}
 
   @Input() itemDetail: any;
