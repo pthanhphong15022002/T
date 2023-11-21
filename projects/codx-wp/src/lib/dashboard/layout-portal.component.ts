@@ -52,7 +52,6 @@ export class LayoutPortalComponent extends LayoutBaseComponent {
     //   });
   }
 
-  this.router?.url.split("/")[2].toUpperCase();
   asideClick(evt: any) {
     if (evt?.function?.assemblyName == 'HCS') {
       evt.cancel = true;
