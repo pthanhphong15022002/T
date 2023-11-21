@@ -88,6 +88,7 @@ export class PopupMoveStageComponent implements OnInit {
 
   oldStatus: string = '';
   oldStepID: string = '';
+  actionBack: string = '';
 
   formModelDeal: FormModel = {
     formName: 'CMDeals',
@@ -108,6 +109,7 @@ export class PopupMoveStageComponent implements OnInit {
   isLockStep: boolean = false;
   isUpdateFail: boolean = false;
   isCallInstance: boolean = false;
+  isMoveBackStage: boolean = false;
 
   constructor(
     private codxDpService: CodxDpService,
@@ -134,6 +136,7 @@ export class PopupMoveStageComponent implements OnInit {
       //  this.listStepProccess = this.datas?.listStepProccess;
       this.instance = this.datas?.instance;
       this.isDurationControl = this.datas?.isDurationControl;
+      this.isMoveBackStage = !['1', '2', '15'].includes(this.instance?.status);
       //   this.getIdReason();
     } else if (this.applyFor != '0') {
       this.dataCM = JSON.parse(JSON.stringify(this.datas?.dataCM));
@@ -193,6 +196,7 @@ export class PopupMoveStageComponent implements OnInit {
       this.stepID,
       this.applyFor,
       this.isCallInstance,
+      this.isMoveBackStage
     ];
     this.codxDpService.getInstanceStepsMoveStage(datas).subscribe((res) => {
       if (res && res.length > 0) {
@@ -204,6 +208,10 @@ export class PopupMoveStageComponent implements OnInit {
         this.getListParticipants(res[2]);
         this.getIdReason();
         this.removeReasonInStepsAuto(res[3], res[4], res[1]);
+        if(this.isMoveBackStage) {
+          this.stepIdClick = res[6];
+          this.actionBack = res[7];
+        }
         !this.stepIdClick &&
           this.stepIdClick != this.stepIdOld &&
           this.autoClickedSteps(this.listStepsCbx);
@@ -385,6 +393,10 @@ export class PopupMoveStageComponent implements OnInit {
 
   onSave() {
     if (this.isLockStep) return;
+    if(this.applyFor == '0' &&  this.instance.stepID == this.stepIdClick) {
+      this.dialog.close();
+      return;
+    }
     if (this.isMoveNext) {
       if (this.totalRequireCompletedChecked !== this.totalRequireCompleted) {
         this.notiService.notifyCode('DP022');
@@ -461,7 +473,30 @@ export class PopupMoveStageComponent implements OnInit {
       return;
     }
 
-    this.beforeSave();
+    !this.isMoveBackStage && this.beforeSave();
+    this.isMoveBackStage && this.beforeSaveBack();
+  }
+  beforeSaveBack() {
+    this.instancesStepOld.actualEnd = new Date();
+    let data = [
+      this.recID,
+      this.stepIdClick,
+      this.actionBack,
+      this.listStepsCbx,
+    ];
+    this.isLockStep = true;
+    this.codxDpService.moveStageBackInstance(data).subscribe((res) => {
+      if (res) {
+        this.instance = res[0];
+        this.listStep = res[1];
+        let obj = {
+          listStep: this.listStep,
+          instance: this.instance,
+        };
+        this.dialog.close(obj);
+        this.changeDetectorRef.detectChanges();
+      }
+    });
   }
   beforeSave() {
     if (!this.owner && this.isMoveNext) {

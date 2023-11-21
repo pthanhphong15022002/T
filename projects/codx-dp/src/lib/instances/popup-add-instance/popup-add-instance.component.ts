@@ -505,7 +505,7 @@ export class PopupAddInstanceComponent implements OnInit {
         let filteredTasks = stepCurrent.tasks.filter(task => task?.fieldID !== null && task?.fieldID?.trim() !== '')
         .map(task => task.fieldID)
         .flatMap(item => item.split(';').filter(item => item !== ''));
-        let listFields = stepCurrent.fields.filter(field => !filteredTasks.includes(field?.recID));
+        let listFields = stepCurrent.fields.filter(field => !filteredTasks.includes(this.action === 'copy'? field?.reCID: field?.refID));
         this.listFields = [...this.listFields, ...listFields];
       }
      }

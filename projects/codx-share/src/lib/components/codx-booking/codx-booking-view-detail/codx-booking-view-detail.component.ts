@@ -117,7 +117,8 @@ export class CodxBookingViewDetailComponent
   //---------------------------------------------------------------------------------//
   //-----------------------------------Base Func-------------------------------------//
   //---------------------------------------------------------------------------------//
-  onInit(): void {
+  onInit(): void {    
+    if(this.codxService.asideMode == "2") this.hideMF = true;
     this.cache
       .gridViewSetup(this.formModel?.formName, this.formModel?.gridViewName)
       .subscribe((grv) => {
@@ -710,11 +711,15 @@ export class CodxBookingViewDetailComponent
       'codx-detail-body'
     ) as HTMLCollectionOf<HTMLElement>;
     if (nodes.length > 0) {
+      let subtractHeight= 27;
+      if(this.hideMF){
+        subtractHeight=60;
+      }
       Array.from(
         document.getElementsByClassName(
           'codx-detail-body'
         ) as HTMLCollectionOf<HTMLElement>
-      )[0].style.height = main - header - 27 + 'px';
+      )[0].style.height = main - header - subtractHeight + 'px';
     }
   }
 

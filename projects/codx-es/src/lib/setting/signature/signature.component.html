@@ -12,9 +12,10 @@
   [moreFuncs]="moreFunc"
   [idField]="idField"
   [className]="className"
-  [method]="method"
+  [method]="method"  [selectedFirst]="true"
   (requestEnded)="closeEditForm($event)"
   (onLoading)="onLoading($event)"
+  (selectedChange)="changeItemDetail($event)" (clickMF)="clickMF($event, dataSelected)" (changeDataMF)="changeDataMF($event)"
 >
 </codx-views>
 

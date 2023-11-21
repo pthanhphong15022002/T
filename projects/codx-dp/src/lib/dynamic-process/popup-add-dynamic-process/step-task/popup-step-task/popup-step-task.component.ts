@@ -284,7 +284,7 @@ export class PopupJobComponent implements OnInit, OnDestroy {
     if (!this.stepsTasks['durationDay'] && !this.stepsTasks['durationHour']) {
       message.push(this.view['durationDay']);
     }
-    if(this.typeTask?.value === 'F'){
+    if(this.typeTask?.value === 'F' && !this.stepsTasks?.fieldID){
       message.push(this.view['fieldID']);
     }
 
