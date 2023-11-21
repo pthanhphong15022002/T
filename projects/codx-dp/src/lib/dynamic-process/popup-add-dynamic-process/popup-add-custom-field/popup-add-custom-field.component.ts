@@ -250,6 +250,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
         this.field.refValue) ||
       (this.field.dataType == 'L' && this.field.dataFormat == 'B')
     ) {
+      debugger;
       this.fieldCus = JSON.parse(
         JSON.stringify(
           Object.assign(this.field, {
@@ -778,19 +779,19 @@ export class PopupAddCustomFieldComponent implements OnInit {
 
   //----------------Data Referent__PA-------------------------//
   clickSettingReference() {
-    // if (!this.field.refValue || !this.entityNamePA) {
-    //   this.notiService.notify(
-    //     'Hãy chọn đối tượng liên kết trước khi thiết lập',
-    //     '3'
-    //   );
-    //   return;
-    // }
+    if (!this.field.refValue || !this.entityNamePA) {
+      this.notiService.notify(
+        'Hãy chọn đối tượng liên kết trước khi thiết lập',
+        '3'
+      );
+      return;
+    }
 
     //bùa vậy vì ko có cách nào lấy grv bằng entityname cả
-    // let formName = this.entityNamePA.replace('_', '');
-    // let gridViewName = 'grv' + formName;
-    let formName = 'CMCustomers';
+    let formName = this.entityNamePA.replace('_', '');
     let gridViewName = 'grv' + formName;
+    // let formName = 'CMCustomers';
+    // let gridViewName = 'grv' + formName;
 
     this.cache.gridViewSetup(formName, gridViewName).subscribe((grv) => {
       if (grv) {
@@ -830,7 +831,11 @@ export class PopupAddCustomFieldComponent implements OnInit {
               this.tempView.parseValuePA(this.fieldCus.dataValue);
           }
         });
-      } else this.notiService.alertCode('SYS001');
+      } else
+        this.notiService.notify(
+          'Grid View Setup chưa được thiết lập, hãy chọn đối tượng khác !',
+          '3'
+        );
     });
   }
 

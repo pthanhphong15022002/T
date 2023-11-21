@@ -79,9 +79,9 @@ export class PopupCustomFieldComponent implements OnInit {
       }
     }
   }
-  partValue(item) {
-    return JSON.parse(JSON.stringify(item));
-  }
+  // partValue(item) {
+  //   return JSON.parse(JSON.stringify(item));
+  // }
 
   checkFormat(field) {
     if (field.dataType == 'T') {
