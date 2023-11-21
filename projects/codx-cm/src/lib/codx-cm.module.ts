@@ -202,8 +202,8 @@ export const routes: Routes = [
   {
     path: 'approvals/:funcID',
     loadChildren: () =>
-      import('projects/codx-dp/src/lib/codx-dp-approver.module').then(
-        (m) => m.ApprovelDpModule
+      import('projects/codx-cm/src/lib/codx-cm-approver.module').then(
+        (m) => m.ApprovelCmModule
       ),
     data: { noReuse: true },
   },

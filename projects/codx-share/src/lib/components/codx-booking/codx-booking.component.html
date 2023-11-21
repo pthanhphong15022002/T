@@ -2,7 +2,7 @@
   [views]="views" [button]="funcID != allocateFuncID ? buttons : ''" (buttonClick)="click($event)" [moreFuncs]="moreFunc" [idField]="idField"
   [className]="className" [method]="method" (selectedChange)="changeItemDetail($event)" [selectedFirst]="true"
   [autoLoad]="true" (onActions)="onActionClick($event)" (onLoading)="onLoading($event)" 
-  (viewChanged)="viewChanged($event)" [viewActiveType]="crrViewMode">
+  (viewChanged)="viewChanged($event)" [viewActiveType]="crrViewMode"  (changeDataMF)="changeDataMF($event, itemDetail)" (clickMF)="clickMF($event, itemDetail)">
 </codx-views>
 
 

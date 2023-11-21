@@ -48,6 +48,7 @@
         [dataItem]="data"
         [footer]="footer"
         [typeMF]="'hover'"
+        [hideMF]="!showMF"
         (clickMF)="clickMF($event, data)"
         (changeDataMF)="changeDataMF($event, data)"
         [moreFuncCss]="'me-0'"
@@ -340,6 +341,7 @@
 <ng-template #mfButton let-data>
   <div class="mt-2 me-2">
     <codx-mfunc
+      *ngIf="this.showMF"
       [dataItem]="data"
       [formModel]="view.formModel"
       (clickMF)="clickMF($event, data)"
