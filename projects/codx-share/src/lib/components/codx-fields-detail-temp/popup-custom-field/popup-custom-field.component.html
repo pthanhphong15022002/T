@@ -11,7 +11,7 @@
   <ng-container *ngFor="let item of fields">
     <div class="form-group">
       <codx-input-custom-field
-        [customField]="item"
+        [customField]="item | changeMemoryCells"
         [objectId]="item.recID"
         [objectType]="'DP_Instances_Steps_Fields'"
         [objectIdParent]="objectIdParent"

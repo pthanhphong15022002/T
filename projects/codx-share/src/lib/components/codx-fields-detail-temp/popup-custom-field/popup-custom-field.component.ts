@@ -68,11 +68,19 @@ export class PopupCustomFieldComponent implements OnInit {
           result = event.e;
           break;
       }
-      var index = this.fields.findIndex((x) => x.recID == field.recID);
+
+      // this.fields.forEach((x) => {
+      //   if (x.recID == field.recID) x.dataValue = result;
+      // });
+      //no bij map nguoc dataa
+      let index = this.fields.findIndex((x) => x.recID == field.recID);
       if (index != -1) {
         this.fields[index].dataValue = result;
       }
     }
+  }
+  partValue(item) {
+    return JSON.parse(JSON.stringify(item));
   }
 
   checkFormat(field) {
@@ -123,7 +131,7 @@ export class PopupCustomFieldComponent implements OnInit {
     if (!check || !checkFormat) return;
     if (this.isSaving) return;
     this.isSaving = true;
-    var data = [this.fields[0]?.stepID, this.fields];
+    let data = [this.fields[0]?.stepID, this.fields];
     this.api
       .exec<any>(
         'DP',
