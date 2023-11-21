@@ -12,6 +12,7 @@ import {
   AuthStore,
   CacheService,
   CallFuncService,
+  CodxService,
   NotificationsService,
   ViewsComponent,
 } from 'codx-core';
@@ -38,7 +39,8 @@ export class ViewDayOffDetailComponent implements OnChanges {
     private authStore: AuthStore,
     private cache: CacheService,
     private shareService: CodxShareService,
-    private codxODService: CodxOdService
+    private codxODService: CodxOdService,
+    public codxService : CodxService
   ) {
     this.user = this.authStore.get();
   }

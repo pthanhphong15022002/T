@@ -4797,12 +4797,12 @@ export class EmployeeInfoDetailComponent extends UIComponent {
     dialogAdd.closed.subscribe((res) => {
       if (res.event) {
         res.event.fromDate = res.event.fromDate.toISOString();
+        let temp = JSON.parse(JSON.stringify(res.event));
         if (actionType == 'add' || actionType == 'copy') {
-
-          this.lstExperiences.push(res.event);
+          this.lstExperiences.push(temp);
         } else if (actionType == 'edit') {
           let index = this.lstExperiences.indexOf(data);
-          this.lstExperiences[index] = res.event;
+          this.lstExperiences[index] = temp;
         }
         let sortedList = this.hrService.sortAscByProperty(
           this.lstExperiences,
@@ -4883,7 +4883,6 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       if (!res?.event) {
         (this.basicSalaryGridview?.dataService as CRUDService)?.clear();
       } else {
-        debugger
         if (res.event){
           if(this.checkIsNewestDate(res.event.effectedDate, res.event.expiredDate) == true){
             this.crrEBSalary = res.event;
