@@ -1,7 +1,7 @@
 <codx-views #view [views]="views" idField="positionID" [selectedFirst]="true"
     (selectedChange)="onSelectionChanged($event)" [button]="button" [service]="'HR'" [assemblyName]="'ERM.Business.HR'"
     [className]="'PositionsBusiness'" [method]="'GetPositionsAsync'" (buttonClick)="btnClick($event)"
-    (viewChanged)="viewChanged($event)">
+    (viewChanged)="viewChanged($event)"  (changeDataMF)="changeDataMF($event)" (selectedChange)="changeItemDetail($event)" (clickMF)="clickMF($event, dataSelected)">
 </codx-views>
 
 <ng-template #tmpTree let-data>
@@ -105,8 +105,8 @@
                 </ng-container>
             </div>
         </div>
-        <div class="d-flex align-items-center justify-content-end w-10 min-w-150px">
-            <div style="height: 30px" class="has-action-menu">
+        <div *ngIf="!hideMF" class="d-flex align-items-center justify-content-end w-10 min-w-150px">
+            <div style="height: 30px" class="has-action-menu" >
                 <codx-mfunc [formModel]="view?.formModel" (clickMF)="clickMF($event, data)" [isBookMark]="false"
                     [dataItem]="data" type="hover">
                 </codx-mfunc>

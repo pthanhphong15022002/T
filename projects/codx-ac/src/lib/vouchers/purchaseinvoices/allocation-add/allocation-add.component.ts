@@ -1,18 +1,29 @@
-import { ChangeDetectionStrategy, Component, Injector, Optional } from '@angular/core';
-import { DialogData, DialogRef, NotificationsService, UIComponent } from 'codx-core';
-import { Subject } from 'rxjs';
-import { CodxAcService } from '../../../codx-ac.service';
+import { ChangeDetectionStrategy, Component, Injector, Optional, ViewChild } from '@angular/core';
+import { CodxGridviewV2Component, DialogData, DialogRef, NotificationsService, UIComponent } from 'codx-core';
+import { Subject, takeUntil } from 'rxjs';
+import { CodxAcService, fmPurchaseInvoicesAllocation, fmPurchaseInvoicesLinesAllocation } from '../../../codx-ac.service';
 
 @Component({
   selector: 'lib-allocation-add',
   templateUrl: './allocation-add.component.html',
   styleUrls: ['./allocation-add.component.css'],
-  changeDetection : ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AllocationAddComponent extends UIComponent { 
+export class AllocationAddComponent extends UIComponent {
   //#region Constructor
+  @ViewChild('gridPur') public gridPur: CodxGridviewV2Component;
   dialog!: DialogRef;
-  isStep:any = false;
+  isStep: any = false;
+  fromDate: any;
+  toDate: any;
+  objectID: any;
+  recID: any;
+  oPurchase: any;
+  oPurchaseLine: any;
+  oData:any;
+  fmPurchaseInvoicesAllocation: any = fmPurchaseInvoicesAllocation;
+  fmPurchaseInvoicesLinesAllocation:any = fmPurchaseInvoicesLinesAllocation;
+  allocation:any = '1';
   private destroy$ = new Subject<void>();
   constructor(
     inject: Injector,
@@ -23,17 +34,18 @@ export class AllocationAddComponent extends UIComponent {
   ) {
     super(inject);
     this.dialog = dialog;
-    
+    this.oData = {...dialogData.data?.data};
+
   }
   //#endregion Constructor
 
   //#region Init
 
   onInit(): void {
-    this.acService.setPopupSize(this.dialog, '60%', '80%');
+    this.acService.setPopupSize(this.dialog, '80%', '90%');
   }
 
-  ngAfterViewInit() {}
+  ngAfterViewInit() { }
 
   ngDoCheck() {
     this.detectorRef.detectChanges();
@@ -47,24 +59,72 @@ export class AllocationAddComponent extends UIComponent {
   //#endregion Init
 
   //#region Event
-  close(){
+  close() {
     this.dialog.close();
     this.onDestroy();
+  }
+
+  changeDate(event: any) {
+    if (event) {
+      this.fromDate = event?.fromDate;
+      this.toDate = event?.toDate;
+    }
+  }
+
+  valueChange(event: any) {
+    if (event) {
+      this[event.field] = event?.data;
+    }
   }
   //#endregion Event
 
   //#region Function
-  onNextStep(){
+  onDeselected(event: any) {
+    let arrdata = [];
+    if(event && !event?.data.length) return;
+    arrdata = event?.data;
+    arrdata.forEach(data => {
+      let index = this.gridPur.arrSelectedRows.findIndex(
+        (x) => x.recID == data.recID
+      );
+      if(index > -1) this.gridPur.arrSelectedRows.splice(index,1);
+    });
+    this.detectorRef.detectChanges();
+  }
+
+  onSubmit() {
+    this.api.exec('AC', 'PurchaseInvoicesBusiness', 'GetPurchaseInvoicesAsync', [this.fromDate, this.toDate, this.objectID, this.recID])
+    .pipe(takeUntil(this.destroy$))
+    .subscribe((res: any) => {
+      if (res && res.length > 0) {
+        if(JSON.stringify(this.oPurchase) == JSON.stringify(res)) return;
+        this.oPurchase = [...res];
+        this.gridPur.refresh();
+      }else{
+        this.notification.notifyCode('AC0027');
+      }
+    })
+  }
+
+  onAllocation() {
+    this.api.exec('AC', 'PurchaseInvoicesBusiness', 'AddAllocationAsync',[this.gridPur.arrSelectedRows,this.oData,this.allocation])
+    .pipe(takeUntil(this.destroy$))
+    .subscribe((res: any) => {
+
+    })
+  }
+
+  onNextStep() {
     this.isStep = true;
     this.detectorRef.detectChanges();
   }
 
-  onBack(){
+  onBack() {
     this.isStep = false;
     this.detectorRef.detectChanges();
   }
 
-  onAccept(){
+  onAccept() {
 
   }
   //#endregion Function

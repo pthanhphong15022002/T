@@ -305,7 +305,7 @@
                 </div>
               </div>
             </div>
-            <div class="row justify-content-end">
+            <div *ngIf="postDateControl == '1'" class="row justify-content-end">
               <div class="col-9">
                 <div class="form-group">
                   <codx-label style="white-space: nowrap !important" fiedName="PostedDate"
@@ -361,7 +361,7 @@
   <ng-container>
     <div class="tablinegeneral-content scroll-ac header-table-ac position-relative">
       <codx-gridview-v2 #eleGridSettledInvoices [formName]="fmSettledInvoices.formName"
-        [gridViewName]="fmSettledInvoices.gridViewName" [editOnClick]="true" [templateMore]="templateMore2"
+        [gridViewName]="fmSettledInvoices.gridViewName" [editOnClick]="true" [templateMore]="templateMore"
         [showEmptyRecord]="false" [entityName]="fmSettledInvoices.entityName" [showEmptyRecord]="false"
         rowNoField="rowNo" gridLines="Both" service="AC" predicates="TransID=@0" [dataValues]="formGeneral.data.recID"
         [autoFitColumns]="false" (gridInit)="beforeInitGridSettledInvoices($event)"
@@ -416,9 +416,4 @@
 <ng-template #templateMore let-data>
   <codx-mfunc [formModel]="dialog.formModel" (changeDataMF)="changeMF($event,'gridgeneral')"
     (clickMF)="clickMF($event, data)" type="view"></codx-mfunc>
-</ng-template>
-
-<ng-template #templateMore2 let-data>
-  <codx-mfunc [formModel]="dialog.formModel" (changeDataMF)="changeMF($event,'')" (clickMF)="clickMF($event, data)"
-    type="view"></codx-mfunc>
 </ng-template>

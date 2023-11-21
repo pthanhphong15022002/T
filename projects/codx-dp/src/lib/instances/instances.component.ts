@@ -870,6 +870,9 @@ export class InstancesComponent
   }
 
   changeDataMF(e, data) {
+    // data.permissionMoveInstances = true;
+    // data.permissionCloseInstances = true;
+   // data.isAdminAll = true;
     if (e != null && data != null) {
       if (data?.approveStatus == '3') {
         e.forEach((res) => {
@@ -883,7 +886,7 @@ export class InstancesComponent
             switch (res.functionID) {
               case 'SYS003':
                 if (
-                  data.status != '2' ||
+                  ( data.status != '2' &&  !data.isAdminAll )||
                   data.closed ||
                   !data.permissionCloseInstances
                 )
@@ -894,7 +897,7 @@ export class InstancesComponent
                 let isUpdate = data.write;
                 if (
                   !isUpdate ||
-                  data.status != '2' ||
+                  ( data.status != '2' &&  !data.isAdminAll ) ||
                   data.closed ||
                   !data.permissionMoveInstances
                 )
@@ -908,7 +911,7 @@ export class InstancesComponent
               //Copy
               case 'SYS104':
               case 'SYS04':
-                if (!this.isCreate || this.checkMoreReason(data, null))
+                if (!this.isCreate || this.checkMoreReasonCopy(data, null) )
                   res.disabled = true;
                 break;
               //xóa
@@ -918,7 +921,7 @@ export class InstancesComponent
                 if (
                   !isDelete ||
                   data.closed ||
-                  data.status != '2' ||
+                 ( data.status != '2' &&  !data.isAdminAll )||
                   !data.permissionMoveInstances
                 )
                   res.disabled = true;
@@ -935,12 +938,12 @@ export class InstancesComponent
                 }
                 break;
               case 'DP02':
-                if (this.checkMoreReason(data, !this.isUseFail)) {
+                if (this.checkMoreReasonCopy(data, !this.isUseFail)) {
                   res.disabled = true;
                 }
                 break;
               case 'DP10':
-                if (this.checkMoreReason(data, !this.isUseSuccess)) {
+                if (this.checkMoreReasonCopy(data, !this.isUseSuccess)) {
                   res.disabled = true;
                 }
                 break;
@@ -959,7 +962,7 @@ export class InstancesComponent
                 break;
               case 'DP22':
                 if (
-                  data.status != '2' ||
+                 data.status != '2'||
                   data.closed ||
                   !data.permissionCloseInstances
                 )
@@ -1139,15 +1142,16 @@ export class InstancesComponent
   }
   //End
   checkMoreReason(data, isUseReason) {
-    if (data.status != '2' || isUseReason) {
-      return true;
-    }
-    if (data.closed) {
-      return true;
-    }
-    if (!data.permissionMoveInstances) {
-      return true;
-    }
+    if (data.closed)    return true;
+    if(data.isAdminAll) return false
+    if (data.status != '2' || isUseReason)  return true;
+    if (!data.permissionMoveInstances) return true;
+    return false;
+  }
+  checkMoreReasonCopy(data, isUseReason) {
+    if (data.closed)    return true;
+    if (data.status != '2' || isUseReason)  return true;
+    if (!data.permissionMoveInstances) return true;
     return false;
   }
 
@@ -1336,7 +1340,7 @@ export class InstancesComponent
       this.changeDetectorRef.detectChanges();
       return;
     }
-    if (data.status != '1' && data.status != '2') {
+    if (data.status != '1' && data.status != '2' && !data.isAdminAll) {
       this.notificationsService.notifyCode('DP037', 0, '"' + data.title + '"');
       this.changeDetectorRef.detectChanges();
       return;

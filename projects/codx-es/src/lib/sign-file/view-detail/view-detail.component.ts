@@ -19,6 +19,7 @@ import {
   AuthStore,
   CacheService,
   CallFuncService,
+  CodxService,
   DataRequest,
   DialogModel,
   DialogRef,
@@ -50,7 +51,8 @@ export class ViewDetailComponent extends UIDetailComponent implements OnInit {
     private callfunc: CallFuncService,
     private notify: NotificationsService,
     private router: ActivatedRoute,
-    private authStore: AuthStore
+    private authStore: AuthStore,
+    private codxService : CodxService,
   ) {
     super(inject);
     this.cache.functionList(this.funcID).subscribe((func) => {
@@ -105,6 +107,7 @@ export class ViewDetailComponent extends UIDetailComponent implements OnInit {
     { name: 'References', textDefault: 'Nguồn công việc', isActive: false },
   ];
   override onInit(): void {
+    if(this.codxService.asideMode == "2") this.hideMF = true;
     this.itemDetailStt = 1;
     this.itemDetailDataStt = 1;
     this.cache.functionList(this.funcID).subscribe((func) => {

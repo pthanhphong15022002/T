@@ -3,6 +3,7 @@ import {
   ChangeDetectorRef,
   Component,
   Injector,
+  OnInit,
   ViewEncapsulation,
 } from '@angular/core';
 import {
@@ -13,27 +14,19 @@ import {
   UIComponent,
 } from 'codx-core';
 
-import { CodxAcService } from '../codx-ac.service';
 import { RoundService } from '../round.service';
-import { Router } from '@angular/router';
 @Component({
   selector: 'lib-layout',
   templateUrl: './layout.component.html',
   styleUrls: ['./layout.component.scss', '../codx-ac.component.scss'],
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LayoutComponent extends LayoutBaseComponent {
   dialog!: DialogRef;
   funcID: any;
   constructor(
     inject: Injector,
-    private callfc: CallFuncService,
-    private codxAC: CodxAcService,
     private round: RoundService,
-    private detectorRef: ChangeDetectorRef,
-    private router: Router,
-    private authStore: AuthStore
   ) {
     super(inject);
     this.module = 'AC';
@@ -42,7 +35,10 @@ export class LayoutComponent extends LayoutBaseComponent {
     this.round.initCache();
   }
 
-  onInit(): void {}
+  onInit(): void {
+    
+  }
+
   onAfterViewInit(): void {
     // this.layoutModel.toolbarDisplay = false;
     // this.codxAC.changeToolBar.subscribe((funcID:any)=>{

@@ -9,7 +9,7 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import { CRUDService } from 'codx-core';
+import { CRUDService, CodxService } from 'codx-core';
 
 @Component({
   selector: 'codx-campaigns-detail',
@@ -50,10 +50,16 @@ export class CampaignsDetailComponent implements OnInit {
     },
     { name: 'Task', textDefault: 'Công việc', isActive: false, template: null },
   ];
+  asideMode: string;
+
   constructor(
     private detectorRef: ChangeDetectorRef,
-    private elementRef: ElementRef
-  ) {}
+    private elementRef: ElementRef,
+    private codxService: CodxService
+  ) {
+    this.asideMode = codxService.asideMode;
+
+  }
   ngOnInit(): void {}
 
   ngOnChanges(changes: SimpleChanges): void {

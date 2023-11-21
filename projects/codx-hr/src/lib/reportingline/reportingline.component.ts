@@ -60,6 +60,8 @@ export class ReportinglineComponent extends UIComponent {
   empList = [];
   empListLength = 0;
   currentChartData: any = null;
+  dataSelected: any;
+  hideMF: boolean =false;
   constructor(
     inject: Injector,
     private adService: CodxAdService,
@@ -70,7 +72,8 @@ export class ReportinglineComponent extends UIComponent {
   }
 
   onInit(): void {
-    this.funcID = this.router.snapshot.params['funcID'];
+    this.funcID = this.router.snapshot.params['funcID'];    
+    if(this.codxService?.asideMode == "2") this.hideMF = true;
     this.adService.getListCompanySettings()
       .subscribe((res) => {
         if (res) {
@@ -208,8 +211,19 @@ export class ReportinglineComponent extends UIComponent {
       });
     }
   }
+  changeItemDetail(event) {
+    if (event?.data) {
+      this.dataSelected = event?.data;
+    } else if (event?.recID) {
+      this.dataSelected = event;
+    }
+  }
+  changeDataMF(event: any){
+
+  }
   // click moreFunction
   clickMF(event: any, data: any = null) {
+    if(!data) data = this.view?.dataService?.dataSelected;
     if (event) {
       switch (event.functionID) {
         case 'SYS03':

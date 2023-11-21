@@ -118,11 +118,11 @@ export const routes: Routes = [
     path: '',
     component: LayoutComponent,
     children: [
-      {
-        path: 'journalnames/:funcID',
-        component: JournalV2Component,
-        data: { noReuse: true },
-      },
+      // {
+      //   path: 'journalnames/:funcID',
+      //   component: JournalV2Component,
+      //   data: { noReuse: true },
+      // },
       {
         path: 'report/:funcID',                
         component: CodxReportViewsComponent,
@@ -137,22 +137,22 @@ export const routes: Routes = [
         data: { noReuse: true },
       },
       {
-        path: 'cashpayments/:funcID',
+        path: 'cashpayments/:funcID/:journalNo',
         component: CashPaymentsComponent,
         data: { noReuse: true },
       },
       {
-        path: 'generaljournals/:funcID',
+        path: 'generaljournals/:funcID/:journalNo',
         component: GeneralJournalComponent,
         data: { noReuse: true },
       },
       {
-        path: 'cashreceipts/:funcID',
+        path: 'cashreceipts/:funcID/:journalNo',
         component: CashreceiptsComponent,
         data: { noReuse: true },
       },
       {
-        path: 'purchaseinvoices/:funcID',
+        path: 'purchaseinvoices/:funcID/:journalNo',
         component: PurchaseinvoicesComponent,
         data: { noReuse: true },
       },
@@ -177,7 +177,7 @@ export const routes: Routes = [
         data: { noReuse: true },
       },
       {
-        path: 'salesinvoices/:funcID',
+        path: 'salesinvoices/:funcID/:journalNo',
         component: SalesinvoicesComponent,
         data: { noReuse: true },
       },
@@ -192,12 +192,12 @@ export const routes: Routes = [
       //   data: { noReuse: true },
       // },
       {
-        path: 'receipttransaction/:funcID',
+        path: 'receipttransaction/:funcID/:journalNo',
         component: ReceiptTransactionsComponent,
         data: { noReuse: true },
       },
       {
-        path: 'issuetransaction/:funcID',
+        path: 'issuetransaction/:funcID/:journalNo',
         component: IssueTransactionsComponent,
         data: { noReuse: true },
       },
@@ -257,7 +257,7 @@ export const routes: Routes = [
         data: { noReuse: true },
       },
       {
-        path: 'warehousetransfers/:funcID',
+        path: 'warehousetransfers/:funcID/:journalNo',
         component: WarehouseTransfersComponent,
         data: { noReuse: true },
       },
@@ -265,18 +265,18 @@ export const routes: Routes = [
     ],
   },
 
-  // {
-  //   path: '',
-  //   component: LayoutNoToolbarComponent,
-  //   children: [
-  //     {
-  //       path: 'journalnames/:funcID',
-  //       component: JournalV2Component,
-  //       data: { noReuse: true },
-  //     },
-  //     { path: '', redirectTo: 'journalnames/ACT', pathMatch: 'full' },
-  //   ],
-  // },
+  {
+    path: '',
+    component: LayoutNoToolbarComponent,
+    children: [
+      {
+        path: 'journalnames/:funcID',
+        component: JournalV2Component,
+        data: { noReuse: true },
+      },
+      { path: '', redirectTo: 'journalnames/ACT', pathMatch: 'full' },
+    ],
+  },
   // {
   //   path: '',
   //   component: LayloutJournalComponent,
