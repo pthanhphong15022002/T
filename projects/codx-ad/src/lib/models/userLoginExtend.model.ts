@@ -13,4 +13,5 @@ export class Device {
   public times: string;
   public tenantID: string;
   public createdOn?: Date;
+  public loginType?: string;
 }
