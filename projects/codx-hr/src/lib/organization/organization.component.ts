@@ -2,6 +2,7 @@ import { Component, Injector, TemplateRef, ViewChild } from '@angular/core';
 import {
   ButtonModel,
   CRUDService,
+  CodxService,
   CodxTreeviewComponent,
   RequestOption,
   ResourceModel,
@@ -44,6 +45,7 @@ export class OrgorganizationComponent extends UIComponent {
   activeMFC: boolean = true; // ẩn hiện morefunction trong trang SDTC ngoài portal
   flagLoaded: boolean = false;
   funcIDCheck;
+  itemSelected;
   @ViewChild('tempTree') tempTree: TemplateRef<any>;
   @ViewChild('panelRightLef') panelRightLef: TemplateRef<any>;
   @ViewChild('tmpOrgChart') tmpOrgChart: TemplateRef<any>;
@@ -56,7 +58,9 @@ export class OrgorganizationComponent extends UIComponent {
   @ViewChild('tmpMasterDetail') tmpMasterDetail: TemplateRef<any>;
   // inject: Injector;
 
-  constructor(inject: Injector, private hrService: CodxHrService) {
+  constructor(inject: Injector, private hrService: CodxHrService,
+    public override codxService : CodxService
+    ) {
     super(inject);
   }
 
@@ -270,7 +274,9 @@ export class OrgorganizationComponent extends UIComponent {
   }
   // selected change
   onSelectionChanged(evt: any) {
+    
     if (this.view) {
+      this.itemSelected = evt.data;
       //Fix load when click on mode list
       let viewActive = this.view.views.find((e) => e.active == true);
       if (viewActive?.id == '1') {

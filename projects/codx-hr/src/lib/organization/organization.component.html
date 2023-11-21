@@ -11,6 +11,7 @@
   (selectedChange)="onSelectionChanged($event)"
   (buttonClick)="btnClick($event)"
   (viewChanged)="viewChanged($event)"
+  (clickMF)="clickMF($event, itemSelected)"
 >
 </codx-views>
 <!-- tree -->
@@ -216,8 +217,9 @@
       </div> -->
     </div>
 
-    <div class="w-100px" *ngIf="activeMFC">
+    <div class="w-100px" *ngIf="activeMFC == true">
       <codx-mfunc
+      *ngIf="codxService.asideMode == '1'"
         [formModel]="view.formModel"
         (clickMF)="clickMF($event, item)"
         [dataItem]="item"
@@ -375,6 +377,7 @@
 
     <div class="w-150px" *ngIf="activeMFC">
       <codx-mfunc
+      *ngIf="codxService.asideMode == '1'"
         [formModel]="view.formModel"
         (clickMF)="clickMF($event, item)"
         [dataItem]="item"
