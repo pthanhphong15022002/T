@@ -60,6 +60,7 @@ export class PopupUpdateReasonCodeComponent implements OnInit, AfterViewInit {
   scheduleTime: any;
   parentID: any;
   dataParentID: any;
+  action = '';
   constructor(
     private detectorRef: ChangeDetectorRef,
     private callFc: CallFuncService,
@@ -77,6 +78,7 @@ export class PopupUpdateReasonCodeComponent implements OnInit, AfterViewInit {
     this.data.transID = dt?.data?.transID;
     this.data.engineerID = dt?.data?.engineerID;
     this.createdBy = dt?.data?.createdBy;
+    this.action = dt?.data?.action;
     this.gridViewSetup = JSON.parse(JSON.stringify(dt?.data?.gridViewSetup));
   }
 
@@ -172,12 +174,13 @@ export class PopupUpdateReasonCodeComponent implements OnInit, AfterViewInit {
   }
 
   updateReason() {
+    let method = this.action == 'edit' ? 'UpdateAsync' : 'SaveAsync';
     this.api
       .execSv<any>(
         'WR',
         'ERM.Business.WR',
         'WorkOrderUpdatesBusiness',
-        'UpdateReasonCodeAsync',
+        method,
         [this.data]
       )
       .subscribe((res) => {
@@ -190,12 +193,16 @@ export class PopupUpdateReasonCodeComponent implements OnInit, AfterViewInit {
 
   async setStartAndEndTime() {
     if (this.data?.startDate && this.data?.endDate) {
-      this.data.scheduleTime = this.dateControl == '1' ? this.startTime + ' - ' + this.endTime : this.endTime;
+      this.data.scheduleTime =
+      this.dateControl == '1'
+        ? this.startTime + ' - ' + this.endTime
+        : this.endTime;
+
       const startDate = new Date(this.data.startDate);
       const endDate = new Date(this.data.endDate);
       this.data.scheduleStart = JSON.parse(JSON.stringify(startDate));
       this.data.scheduleEnd = JSON.parse(JSON.stringify(endDate));
-      if(this.dateControl == '0'){
+      if (this.dateControl == '0') {
         this.data.scheduleStart = null;
         this.data.scheduleEnd = null;
       }
@@ -217,16 +224,21 @@ export class PopupUpdateReasonCodeComponent implements OnInit, AfterViewInit {
       this.parentID = null;
       this.dataParentID = null;
       this.data.comment = null;
+      this.dateControl = e?.component?.itemsSelected[0]?.DateControl;
+
       this.setDataCommentAndDate(e?.component?.itemsSelected[0]?.ParentID);
+      if (this.dateControl) {
+        this.defaultTime(
+          e?.component?.itemsSelected[0]?.Leadtime,
+          this.dateControl
+        );
+      }
       this.setComment(
         e?.component?.itemsSelected[0]?.Comment,
         e?.component?.itemsSelected[0]?.CommentControl
       );
 
-      this.dateControl = e?.component?.itemsSelected[0]?.DateControl;
-      if (this.dateControl) {
-        this.defaultTime(e?.component?.itemsSelected[0]?.Leadtime, this.dateControl);
-      }
+
     }
     this.detectorRef.detectChanges();
   }
@@ -235,7 +247,6 @@ export class PopupUpdateReasonCodeComponent implements OnInit, AfterViewInit {
     this.parentID = parentID;
     if (this.parentID == null) {
       this.dataParentID = null;
-      this.data.comment = null;
     }
     // this.setComment(comment, this.commentControl);
   }
@@ -307,14 +318,15 @@ export class PopupUpdateReasonCodeComponent implements OnInit, AfterViewInit {
       }
 
       if (this.startTime && this.endTime) {
-        this.data.scheduleTime = this.dateControl == '1' ? this.startTime + ' - ' + this.endTime : this.endTime;
+        this.data.scheduleTime =
+          this.dateControl == '1'
+            ? this.startTime + ' - ' + this.endTime
+            : this.endTime;
         commentRep = commentRep.replace('{1}', this.data.scheduleTime);
       }
 
       if (this.data.startDate) {
-        let date = moment(new Date(this.data.startDate)).format(
-          'DD/MM/YYYY'
-        );
+        let date = moment(new Date(this.data.startDate)).format('DD/MM/YYYY');
         commentRep = commentRep.replace('{2}', date);
       }
     }
@@ -332,8 +344,9 @@ export class PopupUpdateReasonCodeComponent implements OnInit, AfterViewInit {
     this.data.startDate = dateNow;
     let dateEnd = JSON.parse(JSON.stringify(this.data.startDate));
     this.data.endDate = new Date(dateEnd);
-    if(dateControl == '1'){
-      const parseLeadTime = parseFloat(leadTime) > 0 ? parseFloat(leadTime) : 30;
+    if (dateControl == '1') {
+      const parseLeadTime =
+        parseFloat(leadTime) > 0 ? parseFloat(leadTime) : 30;
       this.data.endDate.setMinutes(minutes + minutesToAdd + parseLeadTime);
     }
     this.setTimeEdit();
