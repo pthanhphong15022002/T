@@ -13,6 +13,7 @@ import { ActivatedRoute } from '@angular/router';
 import {
   ApiHttpService,
   AuthStore,
+  CodxService,
   FormModel,
   ViewsComponent,
 } from 'codx-core';
@@ -51,7 +52,8 @@ export class ViewDetailContractsComponent implements OnInit {
     private df: ChangeDetectorRef,
     private api: ApiHttpService,
     private shareService: CodxShareService,
-    private codxODService: CodxOdService
+    private codxODService: CodxOdService,
+    public codxService : CodxService
   ) {
     this.user = this.authStore.get();
   }
@@ -82,7 +84,7 @@ export class ViewDetailContractsComponent implements OnInit {
 
   ngOnInit(): void {
     // this.userID = this.authStore.get().userID;
-
+    
     this.hrService.getFormModel(this.benefitFuncID).then((formModel) => {
       if (formModel) {
         this.benefitFormModel = formModel;

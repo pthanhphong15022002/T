@@ -4211,11 +4211,13 @@ codx-aside-v2.aside-v2-lighter{
 }
 
 
-// body.light.default{
-//   .aside.aside-v2-lighter {
-//     background-color: #f5f8fa;
-// }
-// }
+ body.light.default{
+  .aside.aside-v2-lighter {
+     background-color: #f5f8fa;
+  }
+}
+
+
 codx-aside-v2{
   .aside-menu .menu-item .menu-icon .svg-icon{
     display: flex;
@@ -4273,4 +4275,7 @@ codx-view-list-detail ejs-splitter .e-pane.e-static-pane .e-content{
 
 .card-save-note .codx-image.h-100{
   margin-bottom: 5px;
+}
+.aside-menu .menu-item .menu-icon > img, .aside-menu .menu-item .menu-icon .svg-icon, .aside-footer .menu-item .menu-icon > img, .aside-footer .menu-item .menu-icon .svg-icon {
+  width: 21px;
 }

@@ -115,8 +115,16 @@ export class CodxViewApprovalStepComponent
                   }                 
                   this.process = tempListStep?.sort((a,b)=> a?.stepNo - b?.stepNo);;  
                   this.cr.detectChanges();              
-                }                              
-              }              
+                }
+                else{
+                  this.process=[];
+                  this.cr.detectChanges();  
+                }                           
+              } 
+              else{
+                this.process=[];
+                this.cr.detectChanges();  
+              }             
               this.cr.detectChanges();  
             });
           }
