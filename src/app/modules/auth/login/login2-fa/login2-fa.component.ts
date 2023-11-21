@@ -318,7 +318,6 @@ export class Login2FAComponent extends UIComponent implements AfterViewInit {
         userName,
         password,
         JSON.stringify(this.loginDevice),
-        true,
       ])
       // const login2FASubscr = this.authService
       //   .login(
