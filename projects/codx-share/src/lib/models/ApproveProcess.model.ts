@@ -11,7 +11,6 @@ export class ApproveProcess {
   tranRecID: string; //RecID của ES_ApprovalTran hiện hành
   processID: string; //ProcessID của quy trình hiện hành
   data: any; //Data của nghiệp vụ gốc
-  tenant: string; //ProcessID của quy trình hiện hành
   comment: string; //Ghi chú
   approvers: Array<Approver>; //Danh sách userID của Approver
   category: any; //ES_Category của nghiệp vụ
@@ -19,6 +18,7 @@ export class ApproveProcess {
   curComponent: any;//this: component gọi hàm
   template: any;//ES_SignFile Template 
   exportData: ExportData;//biến lấy data export (funcID: Để lấy bộ EntityName,FormName,GridViewName; recID : Để lấy ra data cần Export)
+  customParam:string;//Json string chứa tham số tùy chỉnh (Ex:JSON.stringify(object))
 }
 export class Approver {
   approver: string;
@@ -26,10 +26,10 @@ export class Approver {
 }
 
 export class ResponseModel {
-  rowCount: number;
-  msgCodeError: string;
-  returnStatus: string;
-  isLastStep: boolean;
+  rowCount: number;//Số dòng thực thi
+  msgCodeError: string;//Mã lỗi nếu có
+  returnStatus: string;//Trạng thái sau cùng
+  isLastStep: boolean;//Kiểm tra bước duyệt cuối
 }
 
 export class ExportUpload {

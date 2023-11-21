@@ -1,7 +1,7 @@
 <codx-views #view [funcID]="funcID" [service]="service" [assemblyName]="assemblyName" [entityName]="entityName"
   [views]="views" [idField]="idField" [button]="button" [className]="className" [method]="method"
   (onLoading)="onLoading($event)" [viewActiveType]="viewType.grid" (buttonClick)="click($event)"
-  (viewChanged)="viewChanged($event)">
+  (viewChanged)="viewChanged($event)" (clickMF)="clickMF($event, dataSelected)" (selectedChange)="changeItemDetail($event)">
 
 </codx-views>
 <ng-template #tranTypeCol let-data>
