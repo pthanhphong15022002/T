@@ -325,6 +325,7 @@ export class ViewTabUpdateComponent implements OnInit {
             engineerID: data?.engineerID,
             createdBy: this.dataWorkOrder?.createdBy,
             gridViewSetup: res,
+            action: 'edit'
           };
           this.callFc
             .openForm(
@@ -372,7 +373,7 @@ export class ViewTabUpdateComponent implements OnInit {
             'WR',
             'ERM.Business.WR',
             'WorkOrderUpdatesBusiness',
-            'DeleteReasonCodeAsync',
+            'DeleteAsync',
             [data.recID, this.transID]
           )
           .subscribe((res) => {

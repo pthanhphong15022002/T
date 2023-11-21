@@ -594,6 +594,7 @@ export class WarrantiesComponent
             engineerID: data?.engineerID,
             createdBy: data?.createdBy,
             gridViewSetup: res,
+            action: 'add'
           };
           this.callFc
             .openForm(
