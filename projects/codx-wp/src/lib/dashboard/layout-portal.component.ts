@@ -30,7 +30,7 @@ export class LayoutPortalComponent extends LayoutBaseComponent {
     super(inject);
     this.module = 'WP';
     let tenant = this.routers?.url.split("/")[1];
-    if(environment.asideMode.includes(tenant)) this.layoutModel.asideFixed = false;
+    if(!environment.asideMode.includes(tenant)) this.layoutModel.asideFixed = false;
     this.layoutModel.asideTheme = 'transparent';
     this.layoutModel.asideMinimize = 'icon';
     this.layoutModel.toolbarDisplay = false;
