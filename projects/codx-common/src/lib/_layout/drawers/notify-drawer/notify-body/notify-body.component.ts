@@ -128,7 +128,16 @@ export class NotifyBodyComponent implements OnInit {
       var queryParam = { predicate:"RecID=@0",dataValue:item.transID};
       if(item.view)
         Object.assign(queryParam, {view: item.view});
-      this.codxService.openUrlNewTab(item.function,"",queryParam);
+      if(item?.parentID){
+        this.cache.functionList(item.function).subscribe(func=>{
+          if(func?.url){
+            this.codxService.openUrlNewTab(null,func?.url+"/"+item?.parentID,queryParam);
+          }
+        });
+      }
+      else{
+        this.codxService.openUrlNewTab(item.function,"",queryParam);
+      }
     }
   }
 

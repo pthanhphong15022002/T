@@ -1484,9 +1484,7 @@ export class PopupAddSignFileComponent implements OnInit {
       }
       this.codxShareService
         .codxRelease(
-          this.approverProcess?.module != null
-            ? this.approverProcess?.module
-            : 'ES',
+          this.approverProcess?.module != null ? this.approverProcess?.module: 'ES',
           this.data?.recID,
           this.data.approveControl == '1'
             ? this.data?.recID
@@ -1501,7 +1499,9 @@ export class PopupAddSignFileComponent implements OnInit {
           this.data?.title,
           this.approverProcess?.customEntityName != null
             ? this.approverProcess?.customEntityName
-            : this.data?.refType
+            : this.data?.refType,
+          [],
+          this.approverProcess?.customParam,
         )
         .subscribe((res) => {
           if (res?.msgCodeError == null && res?.rowCount > 0) {

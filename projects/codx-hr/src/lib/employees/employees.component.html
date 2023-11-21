@@ -9,6 +9,8 @@
   assemblyName="ERM.Business.HR"
   className="EmployeesBusiness"
   method="GetModelFormEmployAsync"
+  (changeDataMF)="changeDataMF($event)"
+  (clickMF)="clickMF($event, dataSelected)"
   [selectedFirst]="true"
 >
 </codx-views>
@@ -241,7 +243,7 @@
         ></codx-vll>
       </div>
     </div>
-    <codx-mfunc
+    <codx-mfunc *ngIf="!hideMF"
       [formModel]="view.formModel"
       (changeDataMF)="changeDataMF($event)"
       (clickMF)="clickMF($event, data)"
