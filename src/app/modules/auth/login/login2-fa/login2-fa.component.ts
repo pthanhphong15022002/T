@@ -44,6 +44,7 @@ export class Login2FAComponent extends UIComponent implements AfterViewInit {
   ) {
     super(inject);
     this.user = dt?.data?.data;
+    this.hideTrustDevice = dt.data.hideTrustDevice;
     this.hubConnectionID = dt?.data?.hubConnectionID;
     this.email = this.user?.email;
     this.clickQueue.push(dt?.data?.login2FA);
@@ -71,6 +72,7 @@ export class Login2FAComponent extends UIComponent implements AfterViewInit {
   loginDevice: Device;
   // #region QR
   // testQRContent = '';
+  hideTrustDevice = false;
   askState = false;
   isFirstQR = true;
   qrTimeout: number = 0;

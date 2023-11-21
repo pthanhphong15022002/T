@@ -132,11 +132,13 @@ export class LoginService {
         if (!res.error) {
           this.loginDevice.tenantID = tn;
           let trust2FA = res?.extends?.Trust2FA;
+          let hideTrustDevice = res?.extends?.HideTrustDevice;
           let objData = {
             data: res,
             login2FA: res?.extends?.TwoFA,
             hubConnectionID: '',
             loginDevice: this.loginDevice,
+            hideTrustDevice,
           };
           if (!trust2FA) {
             let lg2FADialog = this.callfc.openForm(

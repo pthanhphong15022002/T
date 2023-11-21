@@ -424,11 +424,13 @@ export class LoginComponent extends UIComponent implements OnInit, OnDestroy {
         if (!data.error) {
           console.log(this.auth.get());
           let trust2FA = data?.data?.extends?.Trust2FA ?? '';
+          let hideTrustDevice = data?.data?.extends?.HideTrustDevice;
           let objData = {
             data: data.data,
             login2FA: data?.data?.extends?.TwoFA,
             hubConnectionID: this.hubConnectionID,
             loginDevice: this.loginDevice,
+            hideTrustDevice,
           };
 
           if (!trust2FA) {
