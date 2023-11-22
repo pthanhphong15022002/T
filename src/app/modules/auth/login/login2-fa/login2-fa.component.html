@@ -44,7 +44,7 @@
       <ng-container *ngSwitchCase="'4'" [ngTemplateOutlet]="tmpOTP">
       </ng-container>
       <ng-container *ngIf="clickQueue[clickQueue.length - 1] != '1'">
-        <div class="d-flex align-items-center mt-6 ms-4">
+        <div class="d-flex align-items-center mt-6 ms-4" *ngif="!hideTrustDevice">
           <div class="d-flex justify-content-start me-3">
             <!--begin::Switch-->
             <codx-input type="checkbox" labelPosition="After" field="" [crrValue]="askState"

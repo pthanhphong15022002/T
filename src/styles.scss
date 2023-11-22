@@ -3381,13 +3381,16 @@ codx-card-center .card.codx_cardcenter{
 .role-group ejs-listview .e-ul > li .d-flex.user-card {
   border-bottom: 1px var(--gray-150) solid;
 }
+
+
+
 #Content-Fillter{
   .e-tab .e-tab-header .e-tab-wrap{
     min-width: auto;
   }
    &.width-20{
     // min-width: 250px;
-    left: -16px;
+    //left: -16px;
    }
   &.width-0{
     box-shadow: none;
@@ -3400,7 +3403,7 @@ codx-card-center .card.codx_cardcenter{
     position: relative;
   }
   &.filter-form {
-    top: -16px;
+    //top: -16px;
     //left: -6px;
     //box-shadow: #c1b0b03b 0 5px 5px;
   }
@@ -3413,6 +3416,15 @@ codx-card-center .card.codx_cardcenter{
   top: 0;
 }
 
+codx-tasks-share{
+  #Content-Fillter.filter-form {
+    top: 0;
+    //left: -20px;
+   // left: auto!important;
+    //right: 0;
+    height: 100%;
+  }
+}
 #Content-Fillter.filter-form {
   height: calc(100% + 16px);
 }
@@ -3420,13 +3432,7 @@ codx-card-center .card.codx_cardcenter{
   padding-left: 0px!important;
   padding-right: 12px!important;
 }
-codx-tasks-share{
-  #Content-Fillter.filter-form {
-    top: 0;
-    left: -20px;
-    height: 100%;
-  }
-}
+
 /***/
 .e-tab .e-tab-header.e-vertical .e-toolbar-item:not(.e-separator) {
   min-height: 36px!important;
@@ -4146,7 +4152,7 @@ app-setting .e-tab .e-tab-header.e-vertical:before {
 
 
  //// theme for aside mode 2
-/// 
+///
 codx-aside-v2.aside-v2-lighter{
   .menu-state-primary .menu-item > .menu-link {
     //padding-left: 5px!important; tbchung sửa á sai kiếm nó nha
@@ -4154,7 +4160,7 @@ codx-aside-v2.aside-v2-lighter{
   .menu-state-primary .menu-item.here > .menu-link {
     background-color: var(--primary-lighter);
   }
-  .menu-state-title-primary .menu-item .menu-link.active .menu-title, 
+  .menu-state-title-primary .menu-item .menu-link.active .menu-title,
   .menu-state-title-primary .menu-item .menu-link:hover .menu-title {
     color: var(--primary-dark) !important;
   }
@@ -4162,7 +4168,7 @@ codx-aside-v2.aside-v2-lighter{
   .menu-state-title-primary .menu-item .menu-link:hover .menu-title {
     color: var(--primary) !important;
   }
-  .menu-item.active 
+  .menu-item.active
   {
     .menu-title
     {
@@ -4170,7 +4176,7 @@ codx-aside-v2.aside-v2-lighter{
     }
     background-color: var(--primary-lighter);
   }
- 
+
 }
 [data-kt-aside-minimize="on"]{
   codx-aside-v2.aside-v2-lighter{
@@ -4205,11 +4211,13 @@ codx-aside-v2.aside-v2-lighter{
 }
 
 
-// body.light.default{
-//   .aside.aside-v2-lighter {
-//     background-color: #f5f8fa;
-// }
-// }
+ body.light.default{
+  .aside.aside-v2-lighter {
+     background-color: #f5f8fa;
+  }
+}
+
+
 codx-aside-v2{
   .aside-menu .menu-item .menu-icon .svg-icon{
     display: flex;
@@ -4267,4 +4275,12 @@ codx-view-list-detail ejs-splitter .e-pane.e-static-pane .e-content{
 
 .card-save-note .codx-image.h-100{
   margin-bottom: 5px;
+}
+.aside-menu .menu-item .menu-icon > img{
+  width: 22px;
+}
+.page-dashboard{
+  .aside-menu .menu-item .menu-icon > img{
+    width: 25px;
+  }
 }

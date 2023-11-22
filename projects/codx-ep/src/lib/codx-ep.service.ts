@@ -11,6 +11,7 @@ import {
   FormModel,
   NotificationsService,
   UserModel,
+  Util,
 } from 'codx-core';
 import { map, mergeMap, of } from 'rxjs';
 import { Observable } from 'rxjs/internal/Observable';
@@ -513,13 +514,13 @@ export class CodxEpService {
         break;
       }
     }
-    let fieldName = invalid[0].charAt(0).toUpperCase() + invalid[0].slice(1);
+    let fieldName = invalid[0];
     if (gridViewSetup == null) {
       this.cache
         .gridViewSetup(formModel.formName, formModel.gridViewName)
         .subscribe((res) => {
           if (res) {
-            gridViewSetup = res;
+            gridViewSetup = Util.camelizekeyObj(res);
             this.notificationsService.notifyCode(
               'SYS009',
               0,

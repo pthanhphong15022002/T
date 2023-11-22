@@ -11,6 +11,7 @@ export class QuickLinksInnerComponent {
   @Input() buttonMarginClass: any;
   @Input() buttonIconClass: any;
   @Input() buttonHeightClass: any;
+  @Input() show = false;
   lstFull: any[] = [];
   lstModule: any[] = [];
   lstGroup: any[] = [];
