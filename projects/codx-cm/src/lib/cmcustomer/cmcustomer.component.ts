@@ -386,7 +386,6 @@ export class CmCustomerComponent
     if (e != null && data != null) {
       e.forEach((res) => {
         if (this.dataSelected != null) {
-          if (type == 11) res.isbookmark = false;
           if (data?.status != '99') {
             switch (res.functionID) {
               case 'SYS03':

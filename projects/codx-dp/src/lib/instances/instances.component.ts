@@ -2122,44 +2122,9 @@ export class InstancesComponent
     this.tabControl =
       this.process?.tabControl != null && this.process?.tabControl?.trim() != ''
         ? this.process?.tabControl
-        : '31'; //31 la tat ca.
+        : '1;3;5'; //31 la tat ca.
 
     this.viewModeDetail = this.process?.viewModeDetail ?? 'S';
-    if (this.tabControl && this.tabControl.trim() != '') {
-      const dataTabs = this.tabControl.split(';');
-      this.tabControl =
-        dataTabs.length == 3
-          ? '31'
-          : dataTabs.length == 1
-          ? dataTabs[0]
-          : dataTabs.some((q) => q == '1') && dataTabs.some((x) => x == '3')
-          ? '11'
-          : dataTabs.some((q) => q == '1') && dataTabs.some((x) => x == '5')
-          ? '12'
-          : '13';
-      //tab control = 31 - tat ca, 1 - giai doan, 3 - nhap lieu, 5 - cong viec, 11 - (giai doan + nhap lieu), 12 - (giai doan + cong viec), 13 - (giai doan + cong viec)
-      this.viewModeDetail =
-        this.tabControl == '1'
-          ? 'S'
-          : this.tabControl == '3'
-          ? 'F'
-          : this.tabControl == '5'
-          ? 'G'
-          : this.tabControl == '11'
-          ? this.process?.viewModeDetail == 'F'
-            ? this.process?.viewModeDetail
-            : 'S'
-          : this.tabControl == '12'
-          ? this.process?.viewModeDetail == 'G'
-            ? this.process?.viewModeDetail
-            : 'S'
-          : this.tabControl == '13'
-          ? this.process?.viewModeDetail == 'F'
-            ? this.process?.viewModeDetail
-            : 'G'
-          : this.process?.viewModeDetail ?? 'S';
-    }
-
     this.loadTabControl();
     this.loadEx();
     this.loadWord();
@@ -2244,101 +2209,32 @@ export class InstancesComponent
     this.cache.valueList('DP034').subscribe((res) => {
       if (res && res.datas) {
         var tabIns = [];
-        res.datas.forEach((element) => {
-          switch (this.tabControl) {
-            case '1': // xem view giai đoạn
-              if (element?.value == 'S') {
-                var tab = {};
-                tab['viewModelDetail'] = element?.value;
-                tab['textDefault'] = element?.text;
-                tab['icon'] = element?.icon;
-                tabIns.push(tab);
-              }
-              break;
-            case '3': // xem view nhap lieu
-              if (element?.value == 'F') {
-                var tab = {};
-                tab['viewModelDetail'] = element?.value;
-                tab['textDefault'] = element?.text;
-                tab['icon'] = element?.icon;
-                if (tab['viewModelDetail'] == 'F') {
-                  tab['textDefault'] =
-                    this.process?.autoNameTabFields != null &&
-                    this.process?.autoNameTabFields?.trim() != ''
-                      ? this.process?.autoNameTabFields
-                      : element?.text;
-                }
-                tabIns.push(tab);
-              }
-              break;
-            case '5': // xem view cong viec
-              if (element?.value == 'G') {
-                var tab = {};
-                tab['viewModelDetail'] = element?.value;
-                tab['textDefault'] = element?.text;
-                tab['icon'] = element?.icon;
-                tabIns.push(tab);
-              }
-              break;
-            case '11': // hiển thị 2tab: gai đoạn, nhap lieu
-              if (element?.value == 'S' || element?.value == 'F') {
-                var tab = {};
-                tab['viewModelDetail'] = element?.value;
-                tab['textDefault'] = element?.text;
-                tab['icon'] = element?.icon;
-                if (tab['viewModelDetail'] == 'F') {
-                  tab['textDefault'] =
-                    this.process?.autoNameTabFields != null &&
-                    this.process?.autoNameTabFields?.trim() != ''
-                      ? this.process?.autoNameTabFields
-                      : element?.text;
-                }
-                tabIns.push(tab);
-              }
-              break;
-            case '12': // 2 tab: giai đoạn, cong viec;
-              if (element?.value == 'S' || element?.value == 'G') {
-                var tab = {};
-                tab['viewModelDetail'] = element?.value;
-                tab['textDefault'] = element?.text;
-                tab['icon'] = element?.icon;
-
-                tabIns.push(tab);
-              }
-              break;
-            case '13': // 2 tab: nhap lieu, cong viec;
-              if (element?.value == 'F' || element?.value == 'G') {
-                var tab = {};
-                tab['viewModelDetail'] = element?.value;
-                tab['textDefault'] = element?.text;
-                tab['icon'] = element?.icon;
-                if (tab['viewModelDetail'] == 'F') {
-                  tab['textDefault'] =
-                    this.process?.autoNameTabFields != null &&
-                    this.process?.autoNameTabFields?.trim() != ''
-                      ? this.process?.autoNameTabFields
-                      : element?.text;
-                }
-                tabIns.push(tab);
-              }
-              break;
-            case '31': // xem tất cả tab
-              var tab = {};
-              tab['viewModelDetail'] = element?.value;
-              tab['textDefault'] = element?.text;
-              tab['icon'] = element?.icon;
-              if (tab['viewModelDetail'] == 'F') {
-                tab['textDefault'] =
-                  this.process?.autoNameTabFields != null &&
-                  this.process?.autoNameTabFields?.trim() != ''
-                    ? this.process?.autoNameTabFields
-                    : element?.text;
-              }
-              tabIns.push(tab);
-              break;
+        const tabs = this.tabControl.split(';');
+        for (let item of tabs) {
+          let value = item == '1' ? 'S' : item == '3' ? 'F' : 'G';
+          let findDatas = res.datas.find((x) => x.value == value);
+          if (findDatas) {
+            var tab = {};
+            tab['viewModelDetail'] = findDatas?.value;
+            tab['textDefault'] = findDatas?.text;
+            tab['icon'] = findDatas?.icon;
+            if (tab['viewModelDetail'] == 'F') {
+              tab['textDefault'] =
+                this.process?.autoNameTabFields != null &&
+                this.process?.autoNameTabFields?.trim() != ''
+                  ? this.process?.autoNameTabFields
+                  : findDatas?.text;
+            }
+            tabIns.push(tab);
           }
-        });
+        }
         this.tabInstances = tabIns;
+        if (tabIns?.length > 0) {
+          const checkTab = tabIns.some(
+            (x) => x.viewModelDetail == this.viewModeDetail
+          );
+          this.viewModeDetail = checkTab ? this.viewModeDetail : tabIns[0]['viewModelDetail'];
+        }
       }
     });
   }
