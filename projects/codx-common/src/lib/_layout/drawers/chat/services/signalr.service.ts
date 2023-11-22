@@ -92,9 +92,10 @@ export class SignalRService {
 
 
   hubConnectionstart() {
+    var t = this;
     this.hubConnection.start().catch(function () {
         setTimeout(function () {
-          this.hubConnectionstart();
+          t.hubConnectionstart();
         }, 5000);
     });
   }
