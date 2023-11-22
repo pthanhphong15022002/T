@@ -13,7 +13,6 @@ export class AllocationAddComponent extends UIComponent {
   //#region Constructor
   @ViewChild('gridPur') public gridPur: CodxGridviewV2Component;
   dialog!: DialogRef;
-  isStep: any = false;
   fromDate: any;
   toDate: any;
   objectID: any;
@@ -112,20 +111,6 @@ export class AllocationAddComponent extends UIComponent {
     .subscribe((res: any) => {
 
     })
-  }
-
-  onNextStep() {
-    this.isStep = true;
-    this.detectorRef.detectChanges();
-  }
-
-  onBack() {
-    this.isStep = false;
-    this.detectorRef.detectChanges();
-  }
-
-  onAccept() {
-
   }
   //#endregion Function
 }
