@@ -872,7 +872,7 @@ export class InstancesComponent
   changeDataMF(e, data) {
     // data.permissionMoveInstances = true;
     // data.permissionCloseInstances = true;
-   // data.isAdminAll = true;
+    // data.isAdminAll = true;
     if (e != null && data != null) {
       if (data?.approveStatus == '3') {
         e.forEach((res) => {
@@ -886,7 +886,7 @@ export class InstancesComponent
             switch (res.functionID) {
               case 'SYS003':
                 if (
-                  ( data.status != '2' &&  !data.isAdminAll )||
+                  (data.status != '2' && !data.isAdminAll) ||
                   data.closed ||
                   !data.permissionCloseInstances
                 )
@@ -897,7 +897,7 @@ export class InstancesComponent
                 let isUpdate = data.write;
                 if (
                   !isUpdate ||
-                  ( data.status != '2' &&  !data.isAdminAll ) ||
+                  (data.status != '2' && !data.isAdminAll) ||
                   data.closed ||
                   !data.permissionMoveInstances
                 )
@@ -911,7 +911,7 @@ export class InstancesComponent
               //Copy
               case 'SYS104':
               case 'SYS04':
-                if (!this.isCreate || this.checkMoreReasonCopy(data, null) )
+                if (!this.isCreate || this.checkMoreReasonCopy(data, null))
                   res.disabled = true;
                 break;
               //xóa
@@ -921,7 +921,7 @@ export class InstancesComponent
                 if (
                   !isDelete ||
                   data.closed ||
-                 ( data.status != '2' &&  !data.isAdminAll )||
+                  (data.status != '2' && !data.isAdminAll) ||
                   !data.permissionMoveInstances
                 )
                   res.disabled = true;
@@ -962,7 +962,7 @@ export class InstancesComponent
                 break;
               case 'DP22':
                 if (
-                 data.status != '2'||
+                  data.status != '2' ||
                   data.closed ||
                   !data.permissionCloseInstances
                 )
@@ -1142,15 +1142,15 @@ export class InstancesComponent
   }
   //End
   checkMoreReason(data, isUseReason) {
-    if (data.closed)    return true;
-    if(data.isAdminAll) return false
-    if (data.status != '2' || isUseReason)  return true;
+    if (data.closed) return true;
+    if (data.isAdminAll) return false;
+    if (data.status != '2' || isUseReason) return true;
     if (!data.permissionMoveInstances) return true;
     return false;
   }
   checkMoreReasonCopy(data, isUseReason) {
-    if (data.closed)    return true;
-    if (data.status != '2' || isUseReason)  return true;
+    if (data.closed) return true;
+    if (data.status != '2' || isUseReason) return true;
     if (!data.permissionMoveInstances) return true;
     return false;
   }
@@ -2577,7 +2577,7 @@ export class InstancesComponent
       category,
       'DP_Instances_Steps',
       this.view.formModel.funcID,
-      this.dataSelected.title,
+      this.dataSelected.title, //html truyen qua
       this.releaseCallback.bind(this),
       null,
       null,
@@ -2592,20 +2592,10 @@ export class InstancesComponent
     if (res?.msgCodeError) this.notificationsService.notify(res?.msgCodeError);
     else {
       ///do corre share ko tra ve status
-      this.dataSelected.approveStatus = '3';
+      this.dataSelected.approveStatus = res?.returnStatus ?? '3';
       this.view.dataService.update(this.dataSelected).subscribe();
       if (this.kanban) this.kanban.updateCard(this.dataSelected);
-      // if (this.detailViewInstance) {
-      //   this.detailViewInstance.getViewApprove();
-      // }
-      // if (this.detailViewPopup) {
-      //   this.detailViewPopup.getViewApprove();
-      // }
-
-      //da cap nhat tai BE
-      // this.codxDpService
-      //   .updateApproverStatusInstance([this.dataSelected?.recID, '3'])
-      //   .subscribe();
+      this.notificationsService.notifyCode('ES007');
     }
   }
 
@@ -2624,18 +2614,10 @@ export class InstancesComponent
   releaseCallbackInstances(res: any, t: any = null) {
     if (res?.msgCodeError) this.notificationsService.notify(res?.msgCodeError);
     else {
-      this.dataSelected.approveStatus = '3';
+      this.dataSelected.approveStatus = res?.returnStatus ?? '3';
       this.view.dataService.update(this.dataSelected).subscribe();
       if (this.kanban) this.kanban.updateCard(this.dataSelected);
-      ///do corre share ko tra ve status
-      // this.codxDpService
-      //   .getOneObject(this.dataSelected.recID, 'InstancesBusiness')
-      //   .subscribe((ins) => {
-      //     this.dataSelected.approveStatus = ins.approveStatus;
-      //     this.view.dataService.update(this.dataSelected).subscribe();
-      //     if (this.kanban) this.kanban.updateCard(this.dataSelected);
-      //     // this.notificationsService.notifyCode('ES007');
-      //   });
+      this.notificationsService.notifyCode('ES007');
     }
   }
 

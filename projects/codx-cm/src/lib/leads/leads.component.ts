@@ -185,9 +185,11 @@ export class LeadsComponent
   }
 
   onInit(): void {
-    this.button = [{
-      id: this.btnAdd,
-    }];
+    this.button = [
+      {
+        id: this.btnAdd,
+      },
+    ];
   }
 
   async ngAfterViewInit() {
@@ -1798,16 +1800,20 @@ export class LeadsComponent
   releaseCallback(res: any, t: any = null) {
     if (res?.msgCodeError) this.notificationsService.notify(res?.msgCodeError);
     else {
-      this.codxCmService
-        .getOneObject(this.dataSelected.recID, 'LeadsBusiness')
-        .subscribe((c) => {
-          if (c) {
-            this.dataSelected = c;
-            this.view.dataService.update(this.dataSelected, true).subscribe();
-            if (this.kanban) this.kanban.updateCard(this.dataSelected);
-          }
-          this.notificationsService.notifyCode('ES007');
-        });
+      this.dataSelected.approveStatus = res?.returnStatus;
+      this.dataSelected.status = res?.returnStatus;
+      this.view.dataService.update(this.dataSelected).subscribe();
+      this.notificationsService.notifyCode('ES007');
+      // this.codxCmService
+      //   .getOneObject(this.dataSelected.recID, 'LeadsBusiness')
+      //   .subscribe((c) => {
+      //     if (c) {
+      //       this.dataSelected = c;
+      //       this.view.dataService.update(this.dataSelected, true).subscribe();
+      //       if (this.kanban) this.kanban.updateCard(this.dataSelected);
+      //     }
+      //     this.notificationsService.notifyCode('ES007');
+      //   });
     }
   }
 

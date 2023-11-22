@@ -1,20 +1,26 @@
-<div class="h-100" *ngIf="loaded">
-  <codx-gridview-v2
-    #grid
-    service="WR"
-    [formModel]="formModel"
-    [dataSource]="lstUpdate"
-    [templateMore]="tempMorefunction"
-    rowHeight="40"
-    [height]="'100%'"
-    [hideMoreFunc]="false"
-    [columnsGrid]="columnsGrid"
-  ></codx-gridview-v2>
-</div>
+<ng-container *ngIf="loaded">
+  <div class="h-100" [ngClass]="isShow ? 'grid-full' : 'scroll-grid'">
+    <codx-gridview-v2
+      #grid
+      service="WR"
+      [formModel]="formModel"
+      [dataSource]="lstUpdate"
+      [templateMore]="tempMorefunction"
+      [rowHeight]="40"
+      [height]="'100%'"
+      [hideMoreFunc]="false"
+      [columnsGrid]="columnsGrid"
+    ></codx-gridview-v2>
+  </div>
+</ng-container>
 
 <!--temp Grids-->
 <ng-template #tempMorefunction let-data>
-  <div class="" style="height: 30px">
+  <div
+    class=""
+    style="height: 30px"
+    *ngIf="dataWorkOrder?.status != '5' && dataWorkOrder?.status != '7'"
+  >
     <codx-mfunc
       [dataItem]="data"
       [formModel]="formModel"
@@ -55,7 +61,10 @@
   </codx-label>
 </ng-template>
 <ng-template #tempComment let-data>
-  <div class="d-flex justify-content-start align-items-center w-400px" style="white-space: pre-wrap">
+  <div
+    class="d-flex justify-content-start align-items-center w-400px"
+    style="white-space: pre-wrap"
+  >
     <div
       class="mt-1"
       [innerHTML]="data?.comment | formatvalue : formModel : 'comment' | async"
@@ -112,11 +121,8 @@
       "
     >
     </span>
-    <span
-      *ngIf="data?.scheduleTime"
-      class="text-gray-800"
-
-    >{{data?.scheduleTime}}
+    <span *ngIf="data?.scheduleTime" class="text-gray-800"
+      >{{ data?.scheduleTime }}
     </span>
   </div>
 </ng-template>
@@ -162,8 +168,9 @@
 <ng-template #tempAttachment let-data>
   <div class="d-flex justify-content-start align-items-center">
     <codx-attachment-temp
-        [objectID]="data?.recID"
-        [hideMoreF]="0"
-        [hideDelete]="1"></codx-attachment-temp>
+      [objectID]="data?.recID"
+      [hideMoreF]="0"
+      [hideDelete]="1"
+    ></codx-attachment-temp>
   </div>
 </ng-template>
