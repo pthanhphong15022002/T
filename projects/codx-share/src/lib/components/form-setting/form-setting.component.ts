@@ -468,7 +468,9 @@ initData(){
   }
   imgChanged(e:any){
     if(this.selectedData && e.length){
-      this.selectedData.image = e[0].pathDisk
+      this.selectedData.image = e[0].pathDisk;
+      this.selectedData.icon = null;
+      this.selectedData.color = null;
       this.editedFunc[this.selectedData.recID] = this.selectedData;
     }
   }
@@ -476,6 +478,8 @@ initData(){
   imgAddChanged(e:any){
     if(this.addData && e.length){
       this.addData.image = e[0].pathDisk
+      this.addData.icon = null;
+      this.addData.color = null;
       //this.editedFunc[this.selectedData.recID] = this.selectedData;
     }
   }
@@ -636,7 +640,7 @@ initData(){
           arrRelated.push(item)
           this.api.execAction('SYS_FormSettings',[item],'DeleteAsync',true).subscribe((res:any)=>{
             if(!res.error){
-              this.api.execSv('SYS','SYS','FormSettingsBusiness','DeleteFormSharingAsync',{RecID:[arrRelated.map((x:any)=> x.recID)]}).subscribe((res:any)=>{
+              this.api.execSv('SYS','SYS','FormSettingsBusiness','DeleteFormSharingAsync',[{RecID:arrRelated.map((x:any)=> x.recID)}]).subscribe((res:any)=>{
                 if(res){
                   this.initData();
                 }

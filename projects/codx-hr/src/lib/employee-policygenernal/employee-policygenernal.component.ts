@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, Injector, TemplateRef, ViewChild } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { ButtonModel, CallFuncService, DialogRef, NotificationsService, SidebarModel, UIComponent, ViewModel, ViewType } from 'codx-core';
+import { ButtonModel, CallFuncService, CodxService, DialogRef, NotificationsService, SidebarModel, UIComponent, ViewModel, ViewType } from 'codx-core';
 import { CodxHrService } from '../codx-hr.service';
 import { ActivatedRoute } from '@angular/router';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
@@ -23,6 +23,7 @@ export class EmployeePolicygenernalComponent extends UIComponent {
   formGroup: FormGroup;
   dialog!: DialogRef;
   grvSetup: any;
+  itemSelected: any;
   buttonAdd: ButtonModel[] = [{
     id: 'btnAdd',
   }];
@@ -33,7 +34,8 @@ export class EmployeePolicygenernalComponent extends UIComponent {
     private df: ChangeDetectorRef,
     private callfunc: CallFuncService,
     private shareService: CodxShareService,
-    private notify: NotificationsService
+    private notify: NotificationsService,
+    public override codxService : CodxService
   ){
     super(inject)
   }
@@ -90,6 +92,10 @@ export class EmployeePolicygenernalComponent extends UIComponent {
         null
       );
     }
+  }
+
+  changeItemDetail(evt){
+    this.itemSelected = evt.data;
   }
 
   clickMF(event, data){

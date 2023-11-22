@@ -6,7 +6,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ApiHttpService, AuthStore, ViewsComponent } from 'codx-core';
+import { ApiHttpService, AuthStore, CodxService, ViewsComponent } from 'codx-core';
 import { CodxHrService } from 'projects/codx-hr/src/lib/codx-hr.service';
 import { CodxOdService } from 'projects/codx-od/src/public-api';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
@@ -59,7 +59,8 @@ export class ViewDetailEappointionsComponent {
     private router: ActivatedRoute,
     private api: ApiHttpService,
     private shareService: CodxShareService,
-    private codxODService: CodxOdService
+    private codxODService: CodxOdService,
+    public codxService : CodxService
   ) {
     this.user = this.authStore.get();
   }

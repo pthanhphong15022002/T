@@ -13,15 +13,16 @@ export class AllocationAddComponent extends UIComponent {
   //#region Constructor
   @ViewChild('gridPur') public gridPur: CodxGridviewV2Component;
   dialog!: DialogRef;
-  isStep: any = false;
   fromDate: any;
   toDate: any;
   objectID: any;
   recID: any;
   oPurchase: any;
   oPurchaseLine: any;
+  oData:any;
   fmPurchaseInvoicesAllocation: any = fmPurchaseInvoicesAllocation;
   fmPurchaseInvoicesLinesAllocation:any = fmPurchaseInvoicesLinesAllocation;
+  allocation:any = '1';
   private destroy$ = new Subject<void>();
   constructor(
     inject: Injector,
@@ -32,6 +33,7 @@ export class AllocationAddComponent extends UIComponent {
   ) {
     super(inject);
     this.dialog = dialog;
+    this.oData = {...dialogData.data?.data};
 
   }
   //#endregion Constructor
@@ -39,7 +41,7 @@ export class AllocationAddComponent extends UIComponent {
   //#region Init
 
   onInit(): void {
-    this.acService.setPopupSize(this.dialog, '70%', '90%');
+    this.acService.setPopupSize(this.dialog, '80%', '90%');
   }
 
   ngAfterViewInit() { }
@@ -76,12 +78,17 @@ export class AllocationAddComponent extends UIComponent {
   //#endregion Event
 
   //#region Function
-  onSelected(event: any) {
-
-  }
-
   onDeselected(event: any) {
-
+    let arrdata = [];
+    if(event && !event?.data.length) return;
+    arrdata = event?.data;
+    arrdata.forEach(data => {
+      let index = this.gridPur.arrSelectedRows.findIndex(
+        (x) => x.recID == data.recID
+      );
+      if(index > -1) this.gridPur.arrSelectedRows.splice(index,1);
+    });
+    this.detectorRef.detectChanges();
   }
 
   onSubmit() {
@@ -99,21 +106,11 @@ export class AllocationAddComponent extends UIComponent {
   }
 
   onAllocation() {
+    this.api.exec('AC', 'PurchaseInvoicesBusiness', 'AddAllocationAsync',[this.gridPur.arrSelectedRows,this.oData,this.allocation])
+    .pipe(takeUntil(this.destroy$))
+    .subscribe((res: any) => {
 
-  }
-
-  onNextStep() {
-    this.isStep = true;
-    this.detectorRef.detectChanges();
-  }
-
-  onBack() {
-    this.isStep = false;
-    this.detectorRef.detectChanges();
-  }
-
-  onAccept() {
-
+    })
   }
   //#endregion Function
 }

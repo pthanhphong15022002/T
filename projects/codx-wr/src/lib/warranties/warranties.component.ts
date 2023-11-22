@@ -101,6 +101,7 @@ export class WarrantiesComponent
   popupOld: any;
   popoverList: any;
   moreFuncEdit = '';
+  asideMode: string = '1';
   constructor(
     private inject: Injector,
     private cacheSv: CacheService,
@@ -110,17 +111,19 @@ export class WarrantiesComponent
     private changeDetectorRef: ChangeDetectorRef,
     private notificationsService: NotificationsService,
     private codxShareService: CodxShareService,
-    private authStore: AuthStore
+    private authStore: AuthStore,
+
   ) {
     super(inject);
     if (!this.funcID) {
       this.funcID = this.activedRouter.snapshot.params['funcID'];
     }
-
     this.executeApiCalls();
   }
 
   onInit(): void {
+    this.asideMode = this.codxService?.asideMode;
+
     this.button = [{
       id: this.btnAdd,
     }];
@@ -131,6 +134,7 @@ export class WarrantiesComponent
           this.dataSelected.lastUpdatedOn = res?.date;
           if (res?.update) {
             this.dataSelected.statusCode = res?.update?.statusCode;
+            this.dataSelected.status = res?.update?.status;
           }
           if (this.lstOrderUpdate == null || this.lstOrderUpdate.length == 0)
             this.dataSelected.status = '1';
@@ -594,6 +598,7 @@ export class WarrantiesComponent
             engineerID: data?.engineerID,
             createdBy: data?.createdBy,
             gridViewSetup: res,
+            action: 'add'
           };
           this.callFc
             .openForm(
@@ -611,7 +616,7 @@ export class WarrantiesComponent
                 this.dataSelected.statusCode = e?.event?.statusCode;
                 this.dataSelected.scheduleStart = e?.event?.scheduleStart;
                 this.dataSelected.lastUpdatedOn = new Date();
-                this.dataSelected.status = '3';
+                this.dataSelected.status = e?.event?.status;
                 let index = this.lstOrderUpdate.findIndex(
                   (x) =>
                     x.recID == e?.event?.recID && x.transID == e?.event?.transID
@@ -707,7 +712,6 @@ export class WarrantiesComponent
       if (ele && ele?.event) {
         this.dataSelected.serviceLocator = this.serviceLocator;
         this.dataSelected.zone = this.zone;
-        this.dataSelected.lastUpdatedOn = new Date();
         this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
         this.view.dataService.update(this.dataSelected).subscribe();
         this.notificationsService.notifyCode('SYS007');
@@ -743,7 +747,6 @@ export class WarrantiesComponent
               if (ele && ele?.event) {
                 this.dataSelected.status = this.status;
                 this.dataSelected.cancelledNote = this.cancelledNote;
-                this.dataSelected.lastUpdatedOn = new Date();
                 this.dataSelected = JSON.parse(
                   JSON.stringify(this.dataSelected)
                 );
@@ -767,7 +770,6 @@ export class WarrantiesComponent
                   this.dataSelected = JSON.parse(
                     JSON.stringify(this.dataSelected)
                   );
-                  this.dataSelected.lastUpdatedOn = new Date();
                   this.view.dataService.update(this.dataSelected).subscribe();
                   this.notificationsService.notifyCode('SYS007');
                   this.detectorRef.detectChanges();
@@ -785,7 +787,6 @@ export class WarrantiesComponent
     this.dialogStatus.closed.subscribe((ele) => {
       if (ele && ele?.event) {
         this.dataSelected.priority = ele?.event;
-        this.dataSelected.lastUpdatedOn = new Date();
         this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
         this.view.dataService.update(this.dataSelected).subscribe();
         this.notificationsService.notifyCode('SYS007');
@@ -804,7 +805,6 @@ export class WarrantiesComponent
     this.dialogStatus.closed.subscribe((ele) => {
       if (ele && ele?.event) {
         this.dataSelected.comment = this.comment;
-        this.dataSelected.lastUpdatedOn = new Date();
         this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
         this.view.dataService.update(this.dataSelected).subscribe();
         this.notificationsService.notifyCode('SYS007');

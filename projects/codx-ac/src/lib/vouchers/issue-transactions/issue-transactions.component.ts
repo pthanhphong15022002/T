@@ -85,7 +85,7 @@ export class IssueTransactionsComponent extends UIComponent {
           this.baseCurr = res[0].baseCurr; //? get đồng tiền hạch toán
         }
       });
-    this.router.queryParams
+    this.router.params
       .pipe(takeUntil(this.destroy$))
       .subscribe((params) => {
         this.journalNo = params?.journalNo; //? get số journal từ router
@@ -119,7 +119,7 @@ export class IssueTransactionsComponent extends UIComponent {
           template: this.templateDetailLeft,
           panelRightRef: this.templateDetailRight,
           collapsed: true,
-          widthLeft:'25%'
+          widthLeft:'23%'
           //separatorSize:3
         },
       },

@@ -58,7 +58,7 @@ export class GeneralJournalComponent extends UIComponent {
           this.legalName = res[0].legalName; //? get tên company
         }
       });
-    this.router.queryParams
+    this.router.params
       .pipe(takeUntil(this.destroy$))
       .subscribe((params) => {
         this.journalNo = params?.journalNo; //? get số journal từ router
@@ -96,7 +96,7 @@ export class GeneralJournalComponent extends UIComponent {
           template: this.templateDetailLeft,
           panelRightRef: this.templateDetailRight,
           collapsed: true,
-          widthLeft:'22%'
+          widthLeft:'23%'
           //separatorSize:3
         },
       },

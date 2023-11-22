@@ -548,6 +548,10 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
 
   clickMF(event, item) {
     if(!item) item = this.view?.dataService?.dataSelected;
+    if(!item && this.view?.dataService?.data?.length>0) {
+      item = this.view?.dataService?.data[0];
+      this.view.dataService.dataSelected = item;
+    }  
     this.codxBookingService.getBookingByID(item?.recID).subscribe((data) => {
       if (data) {
         this.popupTitle = event?.text + ' ' + this.funcIDName;

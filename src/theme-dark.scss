@@ -92,7 +92,8 @@ codx-view-list-detail .e-pane {
 }
 
 .dropdown-menu {
-    background-color: #27273a !important;
+    border:1px #27273a solid!important;
+    background-color: var(--bg-card) !important;
     color: var(--text-body);
 
     .dropdown-item {
@@ -747,7 +748,7 @@ label,
 
 .btn {
     color: var(--primary);
-    border-color:var(--border-light) ;
+    //border-color:var(--border-light) ;
 }
 
 .btn.btn-primary {
@@ -923,3 +924,10 @@ ejs-tab#calendarTab .e-calendar {
     color: var(--primary-dark);
 }
 //end dark
+.div-btn-tab-attachment.active {
+    background-color: #080f2478;
+}
+.nav-export .active
+{
+  background-color: #f4f7ff18;
+}

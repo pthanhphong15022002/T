@@ -61,6 +61,7 @@ export class JournalV2Component extends UIComponent implements OnInit {
     id: 'btnAdd',
   }];
   optionSidebar: SidebarModel = new SidebarModel();
+  itemSelected: any;
   private destroy$ = new Subject<void>(); //? list observable hủy các subscribe api
   constructor(
     inject: Injector,
@@ -228,11 +229,13 @@ export class JournalV2Component extends UIComponent implements OnInit {
   //#region Event
   viewChanged(view) {
     if(view && view.type == this.viewActive) return;
+    this.itemSelected = undefined;
     this.viewActive = view.type;
     this.subViews?.filter(function (v) {
       if (v.type == view.type) v.active = true;
       else v.active = false;
     });
+    this.detectorRef.detectChanges();
   }
 
   clickMF(e, data) {
@@ -288,7 +291,7 @@ export class JournalV2Component extends UIComponent implements OnInit {
       if (!(array.includes(element.functionID))) {
         element.disabled = true;
       }else{
-        element.isbookmark = false;
+        if(element.functionID == 'SYS02' || element.functionID == 'SYS04') element.isbookmark = false;
       }
     })
   }
@@ -309,14 +312,15 @@ export class JournalV2Component extends UIComponent implements OnInit {
       if (func) {
         let urlRedirect = '/' + UrlUtil.getTenant();
         if (func && func.url && func.url.charAt(0) != '/') urlRedirect += '/';
-        urlRedirect += func.url;
-        this.route.navigate([urlRedirect], {
-          queryParams: {
-            journalNo: data.journalNo,
-          },
-        });
+        urlRedirect += func.url + '/' + data?.journalNo;
+        this.route.navigate([urlRedirect]);
       }
     });
+  }
+
+  onDoubleClick(event){
+    let data = event?.rowData;
+    this.dbClick(data);
   }
 
   toolbarClick(event) {
@@ -534,6 +538,32 @@ export class JournalV2Component extends UIComponent implements OnInit {
         this.journalTypes138.includes(j.journalType)
       ),
     ];
+  }
+
+  /**
+   * * select item in view card
+   * @param event
+   * @returns
+   */
+  onSelected(data) {
+    if(data) this.itemSelected = data;
+    this.detectorRef.detectChanges();
+  }
+
+  /**
+   * * select item in view list
+   * @param event
+   * @returns
+   */
+  onSelectedViewList(event) {
+    if (typeof event?.data !== 'undefined') {
+      if (event?.data?.data || event?.data?.error) {
+        return;
+      } else {
+        this.itemSelected = event?.data;
+        this.detectorRef.detectChanges();
+      }
+    }
   }
   //#endregion
 }

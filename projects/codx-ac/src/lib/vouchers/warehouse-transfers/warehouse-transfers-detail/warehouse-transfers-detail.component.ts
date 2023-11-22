@@ -58,6 +58,10 @@ export class WarehouseTransfersDetailComponent extends UIComponent {
     this.getDataDetail(this.dataItem, this.recID);
   }
 
+  ngDoCheck() {
+    this.detectorRef.detectChanges();
+  }
+
   ngOnDestroy() {
     this.onDestroy();
   }

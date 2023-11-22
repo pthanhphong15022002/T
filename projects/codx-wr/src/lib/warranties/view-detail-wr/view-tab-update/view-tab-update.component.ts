@@ -29,11 +29,12 @@ import { PopupUpdateReasonCodeComponent } from '../../popup-update-reasoncode/po
 @Component({
   selector: 'wr-view-tab-update',
   templateUrl: './view-tab-update.component.html',
-  styleUrls: ['./view-tab-update.component.css'],
+  styleUrls: ['./view-tab-update.component.scss'],
 })
 export class ViewTabUpdateComponent implements OnInit {
   @Input() transID: any;
   @Input() dataWorkOrder: any;
+  @Input() isShow: boolean
   @Output() listChange = new EventEmitter<any>();
   @ViewChild('headerStatusCode') headerStatusCode: TemplateRef<any>;
   @ViewChild('tempStatusCode') tempStatusCode: TemplateRef<any>;
@@ -325,6 +326,7 @@ export class ViewTabUpdateComponent implements OnInit {
             engineerID: data?.engineerID,
             createdBy: this.dataWorkOrder?.createdBy,
             gridViewSetup: res,
+            action: 'edit'
           };
           this.callFc
             .openForm(
@@ -351,8 +353,8 @@ export class ViewTabUpdateComponent implements OnInit {
                 this.lstUpdate = JSON.parse(JSON.stringify(this.lstUpdate));
                 this.wrSv.listOrderUpdateSubject.next({
                   e: this.lstUpdate,
-                  date: new Date(),
-                  update: null,
+                  date: new Date(data.createdOn),
+                  update: data,
                 });
 
                 this.detectorRef.detectChanges();
@@ -372,7 +374,7 @@ export class ViewTabUpdateComponent implements OnInit {
             'WR',
             'ERM.Business.WR',
             'WorkOrderUpdatesBusiness',
-            'DeleteReasonCodeAsync',
+            'DeleteAsync',
             [data.recID, this.transID]
           )
           .subscribe((res) => {

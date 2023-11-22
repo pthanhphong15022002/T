@@ -87,7 +87,7 @@ export class PurchaseinvoicesComponent extends UIComponent {
           this.baseCurr = res[0].baseCurr; //? get đồng tiền hạch toán
         }
       });
-    this.router.queryParams
+    this.router.params
       .pipe(takeUntil(this.destroy$))
       .subscribe((params) => {
         this.journalNo = params?.journalNo; //? get số journal từ router
@@ -124,7 +124,7 @@ export class PurchaseinvoicesComponent extends UIComponent {
           template: this.templateDetailLeft,
           panelRightRef: this.templateDetailRight,
           collapsed: true,
-          widthLeft: '22%',
+          widthLeft: '23%',
           //separatorSize:3
         },
       },
@@ -221,7 +221,7 @@ export class PurchaseinvoicesComponent extends UIComponent {
         this.printVoucher(data, e.functionID); //? in chứng từ
         break;
       case 'ACT060108':
-        this.allocationVoucher(data, e.functionID); //? phân bổ chi phí chứng từ
+        this.allocationVoucher(data, data); //? phân bổ chi phí chứng từ
         break;
     }
   }

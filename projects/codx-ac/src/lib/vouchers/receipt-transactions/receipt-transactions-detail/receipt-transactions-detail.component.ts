@@ -61,6 +61,10 @@ export class ReceiptTransactionsDetailComponent extends UIComponent {
     this.optionSidebar.isFull = true;
   }
 
+  ngDoCheck() {
+    this.detectorRef.detectChanges();
+  }
+
   ngOnChanges(value: SimpleChange) {
     this.getDataDetail(this.dataItem, this.recID);
   }

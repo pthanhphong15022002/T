@@ -66,7 +66,6 @@ export class EmployeesComponent extends UIComponent {
   @ViewChild('grid', { static: true }) grid: TemplateRef<any>;
   @ViewChild('panelLeftRef') panelLeftRef: TemplateRef<any>;
   @ViewChild('templateTree') templateTree: TemplateRef<any>;
-  dataSelected: any;
   hideMF: boolean =false;
 
   constructor(
@@ -155,13 +154,6 @@ export class EmployeesComponent extends UIComponent {
       }
     });
   }
-  changeItemDetail(event) {
-    if (event?.data) {
-      this.dataSelected = event?.data;
-    } else if (event?.recID) {
-      this.dataSelected = event;
-    }
-  }
   getSetup(functionID: string) {
     if (functionID) {
       this.cache.functionList(functionID).subscribe((func: any) => {
@@ -215,9 +207,10 @@ export class EmployeesComponent extends UIComponent {
       });
     }
   }
-
+  
   clickMF(event: any, data: any) {
-    if(!data) data =this.view?.dataService?.dataSelected 
+    if(!data) data = this.view?.dataService?.dataSelected ;
+    if(!data) data = this.view?.dataService?.data?.length>0 ? this.view?.dataService?.data[0] : null;
     if (event && data) {
       this.view.dataService.dataSelected = data;
       switch (event.functionID) {
@@ -328,10 +321,10 @@ export class EmployeesComponent extends UIComponent {
   }
 
   async onSelectionChanged($event) {
+    
     await this.setEmployeePredicate($event.dataItem.orgUnitID);
     // this.employList.onChangeSearch();
   }
-
   setEmployeePredicate(orgUnitID): Promise<any> {
     return new Promise((resolve, reject) => {
       this.loadEOrgChartListChild(orgUnitID)

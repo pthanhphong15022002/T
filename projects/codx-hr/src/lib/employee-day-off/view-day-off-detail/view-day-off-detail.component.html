@@ -2,6 +2,7 @@
   #itemDetailTemplate
   [header]="header"
   [dataItem]="itemDetail"
+  [hideMF]="codxService.asideMode == '2' ? true: false"
   [footer]="!hideFooter ? footer : null"
   [body]="body"
   [formModel]="formModel"

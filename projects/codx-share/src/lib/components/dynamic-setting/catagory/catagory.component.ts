@@ -1114,7 +1114,7 @@ export class CatagoryComponent implements OnInit {
           formModel.entityName = 'DP_Processes';
           formModel.formName = 'DPProcesses';
           formModel.gridViewName = 'grvDPProcesses';
-          formModel.funcID = 'DP01';
+          formModel.funcID = 'DP0204'; //'DP01';
           // dialogModel.DataService = this.view?.dataService;
           dialogModel.FormModel = formModel;
           var obj = {
