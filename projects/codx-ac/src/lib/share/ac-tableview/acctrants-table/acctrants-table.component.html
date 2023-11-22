@@ -153,14 +153,6 @@
                     </td>
                     <td class="text-center">
                         <div *ngIf="item.crediting" class="d-flex align-items-center justify-content-end ps-3">
-                            <!-- <ng-container *ngIf="baseCurr && itemSelected?.currencyID == baseCurr">
-                  <span class="fw-bold line-clamp line-clamp-1" [innerHTML]="item?.transAmt
-                  | tranformValueNumber : 'B' | async"></span>
-                </ng-container>
-                <ng-container *ngIf="baseCurr && itemSelected?.currencyID != baseCurr">
-                  <span class="fw-bold line-clamp line-clamp-1" [innerHTML]="item?.transAmt2
-                  | tranformValueNumber : 'B' | async"></span>
-                </ng-container> -->
                             <span class="fw-bold line-clamp line-clamp-1" [innerHTML]="item?.transAmt2
                   | tranformValueNumber : 'B' | async"></span>
                         </div>
@@ -171,17 +163,10 @@
                 | tranformValueNumber : 'S' | async"></span>
                         </div>
                     </td>
-                    <td>
-                        <ejs-tooltip position="BottomLeft" id='tooltip' target="#tipmemo">
-                            <div id="tipmemo" *ngIf="item.memo != null && item.memo != ''" class="d-flex flex-wrap">
-                                <div class="d-flex align-items-center mb-1 ps-3">
-                                    <span class="line-clamp line-clamp-1 text-gray-600 fs-7">{{ item.memo }}</span>
-                                </div>
-                            </div>
-                            <ng-template #content>
-                                <span>{{ item.memo }}</span>
-                            </ng-template>
-                        </ejs-tooltip>
+                    <td class="text-center">
+                        <div *ngIf="item.memo != null && item.memo != ''" class="d-flex align-items-center justify-content-start ps-3">
+                            <span class="line-clamp line-clamp-2 text-gray-600 fs-7">{{ item.memo }}</span>
+                        </div>
                     </td>
                 </tr>
             </ng-container>

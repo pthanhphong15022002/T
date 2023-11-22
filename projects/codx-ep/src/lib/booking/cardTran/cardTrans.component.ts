@@ -155,6 +155,9 @@ export class CardTransComponent
     }
 
   }
+  changeDataMF(evt,data){
+
+  }
   viewChanged(evt: any) {
     this.funcID = this.router.snapshot.params['funcID'];
     this.cache.functionList(this.funcID).subscribe((res) => {

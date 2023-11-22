@@ -713,15 +713,19 @@ export class QuotationsComponent extends UIComponent implements OnInit {
   releaseCallback(res: any, t: any = null) {
     if (res?.msgCodeError) this.notiService.notify(res?.msgCodeError);
     else {
-      this.codxCmService
-        .getOneObject(this.itemSelected.recID, 'QuotationsBusiness')
-        .subscribe((q) => {
-          if (q) {
-            this.itemSelected = q;
-            this.view.dataService.update(this.itemSelected).subscribe();
-          }
-          this.notiService.notifyCode('ES007');
-        });
+      this.itemSelected.approveStatus = res?.returnStatus;
+      this.itemSelected.status = res?.returnStatus;
+      this.view.dataService.update(this.itemSelected).subscribe();
+      this.notiService.notifyCode('ES007');
+      // this.codxCmService
+      //   .getOneObject(this.itemSelected.recID, 'QuotationsBusiness')
+      //   .subscribe((q) => {
+      //     if (q) {
+      //       this.itemSelected = q;
+      //       this.view.dataService.update(this.itemSelected).subscribe();
+      //     }
+      //     this.notiService.notifyCode('ES007');
+      //   });
     }
   }
 

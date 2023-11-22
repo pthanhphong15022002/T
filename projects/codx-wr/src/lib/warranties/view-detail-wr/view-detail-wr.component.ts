@@ -33,6 +33,7 @@ export class ViewDetailWrComponent implements OnInit {
   @Input() entityName = '';
   @Input() listRoles = [];
   @Input() isDbClick: boolean = false;
+  @Input() asideMode: string;
   @ViewChild('viewUpdate') viewUpdate: ViewTabUpdateComponent;
   @ViewChild('problem', { read: ElementRef }) memo: ElementRef<HTMLElement>;
 
@@ -79,16 +80,14 @@ export class ViewDetailWrComponent implements OnInit {
     },
   ];
   isShow = false;
-  asideMode: string;
 
   constructor(
     private authstore: AuthStore,
     private changeDetectorRef: ChangeDetectorRef,
-    private codxService: CodxService
 
   ) {
     this.user = this.authstore.get();
-    this.asideMode = codxService.asideMode;
+
 
   }
 

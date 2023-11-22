@@ -38,6 +38,7 @@
     [formModel]="view.formModel"
     [footer]="footerCard"
     [typeMF]="'hover'"
+    [hideMF]="asideMode == '2'"
     (clickMF)="clickMF($event, data)"
     (dblclick)="doubleClickDetail(data)"
   >
@@ -296,6 +297,7 @@
     [dataSelected]="dataSelected"
     [formModel]="view.formModel"
     [gridViewSetup]="gridViewSetup"
+    [asideMode]="asideMode"
     (clickMoreFunc)="clickMoreFunc($event)"
   ></codx-campaigns-detail>
 </ng-template>
@@ -327,6 +329,7 @@
         [formModel]="view.formModel"
         [gridViewSetup]="gridViewSetup"
         (clickMoreFunc)="clickMoreFunc($event)"
+        [asideMode]="asideMode"
         [isDoubleClick]="true"
       ></codx-campaigns-detail>
     </div>

@@ -218,9 +218,11 @@ export class DealsComponent
 
   async onInit(): Promise<void> {
     this.afterLoad();
-    this.button = [{
-      id: this.btnAdd,
-    }];
+    this.button = [
+      {
+        id: this.btnAdd,
+      },
+    ];
   }
 
   ngAfterViewInit(): void {}
@@ -1377,16 +1379,22 @@ export class DealsComponent
   releaseCallback(res: any, t: any = null) {
     if (res?.msgCodeError) this.notificationsService.notify(res?.msgCodeError);
     else {
-      this.codxCmService
-        .getOneObject(this.dataSelected.recID, 'DealsBusiness')
-        .subscribe((q) => {
-          if (q) {
-            this.dataSelected = q;
-            this.view.dataService.update(this.dataSelected, true).subscribe();
-            if (this.kanban) this.kanban.updateCard(this.dataSelected);
-          }
-          this.notificationsService.notifyCode('ES007');
-        });
+      this.dataSelected.approveStatus = res?.returnStatus;
+      this.dataSelected.status = res?.returnStatus;
+      this.view.dataService.update(this.dataSelected).subscribe();
+      if (this.kanban) this.kanban.updateCard(this.dataSelected);
+      this.notificationsService.notifyCode('ES007');
+
+      // this.codxCmService
+      //   .getOneObject(this.dataSelected.recID, 'DealsBusiness')
+      //   .subscribe((q) => {
+      //     if (q) {
+      //       this.dataSelected = q;
+      //       this.view.dataService.update(this.dataSelected, true).subscribe();
+      //       if (this.kanban) this.kanban.updateCard(this.dataSelected);
+      //     }
+      //     this.notificationsService.notifyCode('ES007');
+      //   });
     }
   }
 
