@@ -2592,9 +2592,10 @@ export class InstancesComponent
     if (res?.msgCodeError) this.notificationsService.notify(res?.msgCodeError);
     else {
       ///do corre share ko tra ve status
-      this.dataSelected.approveStatus = '3';
+      this.dataSelected.approveStatus = res?.returnStatus ?? '3';
       this.view.dataService.update(this.dataSelected).subscribe();
       if (this.kanban) this.kanban.updateCard(this.dataSelected);
+      this.notificationsService.notifyCode('ES007');
     }
   }
 
@@ -2613,18 +2614,10 @@ export class InstancesComponent
   releaseCallbackInstances(res: any, t: any = null) {
     if (res?.msgCodeError) this.notificationsService.notify(res?.msgCodeError);
     else {
-      this.dataSelected.approveStatus = '3';
+      this.dataSelected.approveStatus = res?.returnStatus ?? '3';
       this.view.dataService.update(this.dataSelected).subscribe();
       if (this.kanban) this.kanban.updateCard(this.dataSelected);
-      ///do corre share ko tra ve status
-      // this.codxDpService
-      //   .getOneObject(this.dataSelected.recID, 'InstancesBusiness')
-      //   .subscribe((ins) => {
-      //     this.dataSelected.approveStatus = ins.approveStatus;
-      //     this.view.dataService.update(this.dataSelected).subscribe();
-      //     if (this.kanban) this.kanban.updateCard(this.dataSelected);
-      //     // this.notificationsService.notifyCode('ES007');
-      //   });
+      this.notificationsService.notifyCode('ES007');
     }
   }
 

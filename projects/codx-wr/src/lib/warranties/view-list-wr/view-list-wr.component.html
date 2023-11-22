@@ -418,7 +418,7 @@
       </div>
     </div>
 
-    <div class="w-50px min-w-50px" (mouseenter)="closePopover()">
+    <div class="w-50px min-w-50px" *ngIf="asideMode != '2'" (mouseenter)="closePopover()">
       <codx-mfunc
         [formModel]="formModel"
         (clickMF)="clickMF($event, data)"
