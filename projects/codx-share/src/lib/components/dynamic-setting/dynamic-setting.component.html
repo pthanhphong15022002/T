@@ -12,18 +12,21 @@
     id="kt_content"
   >
     <!--<app-subheader></app-subheader>-->
-    <div class="d-flex align-items-center flex-grow-0" *ngIf="codxService.asideMode == '2'">
+    <div
+      class="d-flex align-items-center flex-grow-0"
+      *ngIf="codxService.asideMode == '2'"
+    >
       <!-- <a href="#" (click)="clickBack($event)">
         <span
           class="logo justify-content-start svg-icon svg-icon-1 icon-arrow_back"
         ></span>
       </a> -->
-      <codx-page-title
+      <!-- <codx-page-title
         #codxPageTitle
         class="page-title d-flex ms-0"
         [ngClass]="pageTitleCssClasses"
       >
-      </codx-page-title>
+      </codx-page-title> -->
     </div>
     <div id="erm_content" class="d-flex flex-column-fluid h-100">
       <div class="d-flex container h-100">
