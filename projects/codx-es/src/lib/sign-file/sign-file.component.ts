@@ -293,7 +293,7 @@ export class SignFileComponent extends UIComponent {
   }
 
   changeDataMF(e: any, data: any) {
-    if(!data) data = this.view?.dataService?.dataSelected;
+    if(!data) data = this.view?.dataService?.dataSelected;// check
     if(this.runMode == "1")
     {
       this.shareService.changeMFApproval(e,data.unbounds);
