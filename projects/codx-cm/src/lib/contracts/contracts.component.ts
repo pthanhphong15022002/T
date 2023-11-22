@@ -687,15 +687,19 @@ export class ContractsComponent extends UIComponent {
   releaseCallback(res: any, t: any = null) {
     if (res?.msgCodeError) this.notiService.notify(res?.msgCodeError);
     else {
-      this.cmService
-        .getOneObject(this.itemSelected.recID, 'ContractsBusiness')
-        .subscribe((q) => {
-          if (q) {
-            this.itemSelected = q;
-            this.view.dataService.update(this.itemSelected).subscribe();
-          }
-          this.notiService.notifyCode('ES007');
-        });
+      this.itemSelected.approveStatus = res?.returnStatus;
+      this.itemSelected.status = res?.returnStatus;
+      this.view.dataService.update(this.itemSelected).subscribe();
+      this.notiService.notifyCode('ES007');
+      // this.cmService
+      //   .getOneObject(this.itemSelected.recID, 'ContractsBusiness')
+      //   .subscribe((q) => {
+      //     if (q) {
+      //       this.itemSelected = q;
+      //       this.view.dataService.update(this.itemSelected).subscribe();
+      //     }
+      //     this.notiService.notifyCode('ES007');
+      //   });
     }
   }
 

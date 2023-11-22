@@ -21,6 +21,7 @@ export class ViewListWrComponent {
   @Input() entityName: any;
   @Input() gridViewSetup: any;
   @Input() listRoles = [];
+  @Input() asideMode: string;
 
   @Output() clickMoreFunc = new EventEmitter<any>();
   @Output() changeMoreMF = new EventEmitter<any>();
