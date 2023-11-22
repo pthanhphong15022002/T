@@ -4246,6 +4246,9 @@ codx-header-v2, codx-ws-header{
   codx-chat .btn.btn-icon.btn-sm{
     width: auto!important;
   }
+  button#chat-box{
+    font-weight: 400!important;
+  }
   .badge.badge-sm {
     font-size: 6px;
     padding-left: 3px!important;
@@ -4254,7 +4257,11 @@ codx-header-v2, codx-ws-header{
     top: 3px!important;
   }
 }
-
+@media (min-width: 992px){
+[data-kt-aside-minimize=on].aside-minimize-icon-title.header-fixed-2 .menu-link {
+    max-height: 45px!important;
+}
+}
 codx-view-list-tree
 codx-view-schedule{
   .fit-content{

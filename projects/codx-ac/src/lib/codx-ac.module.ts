@@ -119,11 +119,11 @@ export const routes: Routes = [
     path: '',
     component: LayoutComponent,
     children: [
-      // {
-      //   path: 'journalnames/:funcID',
-      //   component: JournalV2Component,
-      //   data: { noReuse: true },
-      // },
+      {
+        path: 'journalnames/:funcID',
+        component: JournalV2Component,
+        data: { noReuse: true },
+      },
       {
         path: 'report/:funcID',                
         component: CodxReportViewsComponent,
@@ -266,18 +266,18 @@ export const routes: Routes = [
     ],
   },
 
-  {
-    path: '',
-    component: LayoutNoToolbarComponent,
-    children: [
-      {
-        path: 'journalnames/:funcID',
-        component: JournalV2Component,
-        data: { noReuse: true },
-      },
-      { path: '', redirectTo: 'journalnames/ACT', pathMatch: 'full' },
-    ],
-  },
+  // {
+  //   path: '',
+  //   component: LayoutNoToolbarComponent,
+  //   children: [
+  //     {
+  //       path: 'journalnames/:funcID',
+  //       component: JournalV2Component,
+  //       data: { noReuse: true },
+  //     },
+  //     { path: '', redirectTo: 'journalnames/ACT', pathMatch: 'full' },
+  //   ],
+  // },
   // {
   //   path: '',
   //   component: LayloutJournalComponent,

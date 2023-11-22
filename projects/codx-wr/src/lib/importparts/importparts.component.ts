@@ -136,16 +136,14 @@ export class ImportpartsComponent extends UIComponent {
   }
 
   changeDataMF(e, data) {
-    if (e != null && data != null) {
+    if (e != null) {
       e.forEach((res) => {
-        if (this.dataSelected != null) {
-          switch (e?.functionID) {
-            case 'SYS02':
-            case 'SYS03':
-            case 'SYS04':
-              res.disabled = true;
-              break;
-          }
+        switch (res?.functionID) {
+          case 'SYS02':
+          case 'SYS03':
+          case 'SYS04':
+            res.disabled = true;
+            break;
         }
       });
     }
