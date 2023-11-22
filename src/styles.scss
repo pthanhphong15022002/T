@@ -4213,7 +4213,10 @@ codx-aside-v2.aside-v2-lighter{
 
  body.light.default{
   .aside.aside-v2-lighter {
-     background-color: #f5f8fa;
+      background-color: var(--white);
+      #kt_aside_menu{
+        background-color: var(--white);
+      }
   }
 }
 
