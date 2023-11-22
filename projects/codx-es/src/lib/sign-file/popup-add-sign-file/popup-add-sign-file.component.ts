@@ -707,7 +707,6 @@ export class PopupAddSignFileComponent implements OnInit {
   valueChange(event) {
     if (event?.field && event?.component && event?.data != '') {
       this.isEdit = true;
-
       switch (event.field) {
         case 'categoryID': {
           if (this.data.categoryID != event.data) {
@@ -907,9 +906,18 @@ export class PopupAddSignFileComponent implements OnInit {
           });
 
           this.cr.detectChanges();
-        }
+          break;
+        }        
       }
     }
+    
+  }
+  tagsChanged(evt){
+    this.data.tags =evt?.data;
+    this.dialogSignFile.patchValue({
+      tags: evt?.data,
+    });      
+    
   }
 
   getCurrentCate(cateID: string) {
