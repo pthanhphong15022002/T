@@ -9,6 +9,7 @@
           [headerBar]="headerBar"
           class="header align-items-stretch news-header"
           [headerRightBar]="headerRightBar"
+          [breadCrumbs]="logo"
           #codxHeader
         >
         </codx-header>
@@ -39,7 +40,7 @@
     <codx-activies-approval-list></codx-activies-approval-list>
 
     <!-- Home -->
-    <div class="align-items-center d-flex ms-1 ms-lg-3">
+    <div class="align-items-center d-flex ms-1 ms-lg-3" *ngIf="codxService.asideMode != '2'">
       <a
         class="d-flex align-items-center"
         (click)="codxService.navigate(null, '/')"
@@ -96,7 +97,10 @@
   <!-- end::TOPBAR -->
   <ng-template #headerBar>
     <ng-container *ngIf="valueList">
-      <div class="d-flex align-items-center justify-content-between w-100">
+      <div 
+        class="d-flex align-items-center"
+        [ngClass]=" codxService.asideMode != '2' ? 'justify-content-between w-100' : ''"
+      >
         <div class="me-4 cursor-pointer">
           <span
             [class.text-primary]="category == 'home'"
@@ -198,3 +202,6 @@
     </ng-container>
   </ng-template>
 </ng-container>
+<ng-template #logo>
+  <h1 *ngIf="codxService.asideMode == '2'" class="d-flex align-items-center text-dark fw-bolder ms-2 my-1 fs-3"><span class="text-dark text-hover-primary cursor-pointer">{{title$ | async}}</span></h1>
+</ng-template>

@@ -153,15 +153,16 @@ export class CodxFieldsDetailTempComponent implements OnInit {
     //   this.clickInput(this.elmIDCrr);
     // }
     // this.elmIDCrr = this.currentElmID = null;
-    this.inputElmIDCF.emit(null);
-    if (this.currentElmID) var list = [];
+    // this.inputElmIDCF.emit(null);
+    // if (this.currentElmID) var list = [];
+    let list = [];
     if (Array.isArray(data) && data.length > 0) {
       list = data;
     } else {
       list.push(data);
     }
-    var obj = {
-      data: list,
+    let obj = {
+      data: JSON.parse(JSON.stringify(list)),
       titleHeader: this.titleHeaderFormCF,
       objectIdParent: this.objectIdParent,
       customerID: this.customerID,
