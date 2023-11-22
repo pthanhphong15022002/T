@@ -174,7 +174,7 @@ export class PopupUpdateReasonCodeComponent implements OnInit, AfterViewInit {
   }
 
   updateReason() {
-    let method = this.action == 'edit' ? 'SaveAsync' : 'UpdateAsync';
+    let method = this.action == 'edit' ? 'UpdateAsync' : 'SaveAsync';
     this.api
       .execSv<any>(
         'WR',
@@ -194,9 +194,10 @@ export class PopupUpdateReasonCodeComponent implements OnInit, AfterViewInit {
   async setStartAndEndTime() {
     if (this.data?.startDate && this.data?.endDate) {
       this.data.scheduleTime =
-        this.dateControl == '1'
-          ? this.startTime + ' - ' + this.endTime
-          : this.endTime;
+      this.dateControl == '1'
+        ? this.startTime + ' - ' + this.endTime
+        : this.endTime;
+
       const startDate = new Date(this.data.startDate);
       const endDate = new Date(this.data.endDate);
       this.data.scheduleStart = JSON.parse(JSON.stringify(startDate));
@@ -223,19 +224,21 @@ export class PopupUpdateReasonCodeComponent implements OnInit, AfterViewInit {
       this.parentID = null;
       this.dataParentID = null;
       this.data.comment = null;
-      this.setDataCommentAndDate(e?.component?.itemsSelected[0]?.ParentID);
-      this.setComment(
-        e?.component?.itemsSelected[0]?.Comment,
-        e?.component?.itemsSelected[0]?.CommentControl
-      );
-
       this.dateControl = e?.component?.itemsSelected[0]?.DateControl;
+
+      this.setDataCommentAndDate(e?.component?.itemsSelected[0]?.ParentID);
       if (this.dateControl) {
         this.defaultTime(
           e?.component?.itemsSelected[0]?.Leadtime,
           this.dateControl
         );
       }
+      this.setComment(
+        e?.component?.itemsSelected[0]?.Comment,
+        e?.component?.itemsSelected[0]?.CommentControl
+      );
+
+
     }
     this.detectorRef.detectChanges();
   }
@@ -244,7 +247,6 @@ export class PopupUpdateReasonCodeComponent implements OnInit, AfterViewInit {
     this.parentID = parentID;
     if (this.parentID == null) {
       this.dataParentID = null;
-      this.data.comment = null;
     }
     // this.setComment(comment, this.commentControl);
   }

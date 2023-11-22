@@ -44,7 +44,7 @@
       <ng-container *ngSwitchCase="'4'" [ngTemplateOutlet]="tmpOTP">
       </ng-container>
       <ng-container *ngIf="clickQueue[clickQueue.length - 1] != '1'">
-        <div class="d-flex align-items-center mt-6 ms-4">
+        <div class="d-flex align-items-center mt-6 ms-4" *ngif="!hideTrustDevice">
           <div class="d-flex justify-content-start me-3">
             <!--begin::Switch-->
             <codx-input type="checkbox" labelPosition="After" field="" [crrValue]="askState"
@@ -52,7 +52,7 @@
             </codx-input>
             <!--end::Switch-->
           </div>
-          <div class="text-gray-600 text-nowrap" *ngif="!hideTrustDevice">
+          <div class="text-gray-600 text-nowrap">
             <codx-label name="lblLg2FAAsk" default="Không hỏi lại trên thiết bị này" class="fw-bold"></codx-label>
           </div>
         </div>

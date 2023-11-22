@@ -11,7 +11,7 @@
      <codx-notify-drawer></codx-notify-drawer>
      <codx-activies-approval-list></codx-activies-approval-list>
      <!-- Home -->
-    <div class="align-items-center d-flex ms-1 ms-lg-3">
+    <div class="align-items-center d-flex ms-1 ms-lg-3" *ngIf="codxService.asideMode != '2'">
       <a
         class="d-flex align-items-center"
         (click)="codxService.navigate(null, '/')"
@@ -50,34 +50,61 @@
 </div>
 <!-- begin::Brand -->
 <ng-template #brand>
-    <div class="aside-logo flex-column-auto" id="kt_aside_logo">
-      <!-- begin::Logo -->
-      <ng-container *ngIf="asideTheme === 'dark'">
-        <a
-          class="brand-logo d-flex align-items-center flex-grow-1"
+    <div class="d-flex align-items-center">
+      <div class="d-flex align-items-center" *ngIf="codxService.asideMode == '2'">
+         <!-- Quick links -->
+          <erm-quick-links-inner
+          [buttonMarginClass]="codxService.toolbarButtonMarginClass"
+          [buttonIconClass]="codxService.toolbarButtonIconSizeClass"
+          [buttonHeightClass]="codxService.toolbarButtonHeightClass"
+          [show]="true"
+        ></erm-quick-links-inner>
+        <!-- End: Quick links -->
+         <!-- Logo -->
+        <div
+          class="d-flex align-items-center flex-grow-0 cursor-pointer mx-2"
+          (click)="codxService.navigate('', 'wp/portal/WP')"
         >
-          <img
-            alt="Logo"
-            class="mh-30px logo justify-content-start"
-            src="{{logo$ | async}}"
-          />
-        </a>
-      </ng-container>
-  
-      <ng-container *ngIf="asideTheme === 'light'">
-        <a
-          class="brand-logo d-flex align-items-center flex-grow-1"
-        >
-          <img
-            alt="Logo"
-            class="mh-30px logo justify-content-start"
-            src="{{logo$ | async}}"
-          />
-        </a>
-      </ng-container>
-  
-      <!-- end::Logo -->
+          <a>
+            <img
+              alt="Logo"
+              [src]="'./assets/themes/wp/default/img/WP.svg'"
+              class="h-30px h-sm-30px"
+            />
+          </a>
+        </div>
+      <!-- End: Logo -->
+      </div>
+      <div class="aside-logo flex-column-auto" id="kt_aside_logo"  *ngIf="codxService.asideMode != '2'">
+        <!-- begin::Logo -->
+        <ng-container *ngIf="asideTheme === 'dark'">
+          <a
+            class="brand-logo d-flex align-items-center flex-grow-1"
+          >
+            <img
+              alt="Logo"
+              class="mh-30px logo justify-content-start"
+              src="{{logo$ | async}}"
+            />
+          </a>
+        </ng-container>
+    
+        <ng-container *ngIf="asideTheme === 'light'">
+          <a
+            class="brand-logo d-flex align-items-center flex-grow-1"
+          >
+            <img
+              alt="Logo"
+              class="mh-30px logo justify-content-start"
+              src="{{logo$ | async}}"
+            />
+          </a>
+        </ng-container>
+    
+        <!-- end::Logo -->
+      </div>
     </div>
+   
 </ng-template>
 <!-- end::Brand  -->
 
