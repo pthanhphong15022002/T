@@ -95,6 +95,10 @@ export class AddDedicationRankComponent extends UIComponent implements OnInit {
       formGroup.breakValue.status == 'VALID' &&
       formGroup.color.status == 'VALID'
     ) {
+      this.dataUpdate = {
+        ...this.dataUpdate,
+        ...this.form.formGroup.value,
+      };
       this.dialog.dataService
         .save((option: any) => this.beforeSave(option), 0)
         .subscribe((res) => {

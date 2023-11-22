@@ -124,7 +124,7 @@
         </div>
         <div class="w-100 bg-body">
           <div class="p-2 border-top">
-            <div class="d-flex justify-content-between align-items-center nav">
+            <div class=" px-5 d-flex justify-content-between align-items-center nav">
               <div class="d-flex flex-column justify-content-between nav-item"
                 [ngClass]="{ active: calendarID == 'COT03' }"
                 (click)="changeCalendarType('COT03')">
@@ -168,7 +168,8 @@
                   </codx-label>
                 </div>
               </div> 
-              <div
+              <!-- chờ có chức năng thì mở cmt -->
+              <!-- <div 
                 class="d-flex flex-column justify-content-between nav-item disabled"
               >
                 <span class="text-center">
@@ -179,7 +180,7 @@
                   default="Thiết lập"
                   class="fw-bold">
                 </codx-label></div>
-              </div>
+              </div> -->
               <!-- <ng-container *ngFor="let func of lstCalendars">
                 <div class="col cursor-pointer"
                   [class.active]="calendarID === func.functionID"
