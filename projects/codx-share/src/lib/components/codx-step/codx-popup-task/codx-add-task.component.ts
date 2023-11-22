@@ -1201,7 +1201,7 @@ export class CodxAddTaskComponent implements OnInit {
             category.categoryName = this.stepsTasks.taskName;
             category.createdBy = this.user.userID;
             category.owner = this.user.userID;
-            category.FunctionApproval = 'DP01';
+            category.FunctionApproval = 'DP0204';
             this.actionOpenFormApprove2(category, true);
           }
         });
