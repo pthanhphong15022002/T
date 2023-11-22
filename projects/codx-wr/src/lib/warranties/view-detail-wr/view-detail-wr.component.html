@@ -85,7 +85,7 @@
             ></codx-label>
           </div>
         </div>
-        <div class="mb-1">
+        <div class="mb-1" *ngIf="dataSelected?.status">
           <codx-vll
             [name]="gridViewSetup?.Status?.referedValue"
             [field]="'Status'"
@@ -801,6 +801,10 @@
                                 "
                               ></span>
                               <span
+                                *ngIf="
+                                  dataSelected?.status != '5' &&
+                                  dataSelected?.status != '7'
+                                "
                                 class="icon-edit text-hover-primary text-primary icon-16 ms-2 cursor-pointer"
                                 (click)="updateServiceLocator(dataSelected)"
                               ></span>
@@ -944,12 +948,12 @@
                   </div>
                 </ng-template>
                 <ng-template #content>
-                  <div class="mt-5">
-                    <wr-view-tab-update
-                      #viewUpdate
-                      [transID]="dataSelected?.recID"
-                    ></wr-view-tab-update>
-                  </div>
+                  <wr-view-tab-update
+                    #viewUpdate
+                    [transID]="dataSelected?.recID"
+                    [isShow]="isShow"
+                    [dataWorkOrder]="dataSelected"
+                  ></wr-view-tab-update>
                 </ng-template>
               </e-tabitem>
               <e-tabitem>
