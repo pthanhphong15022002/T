@@ -260,7 +260,7 @@ export class CodxAddTaskComponent implements OnInit {
       this.stepsTasks.status = '1';
       this.stepsTasks.taskName = this.typeTask?.text;
       this.stepsTasks.taskType = this.typeTask?.value;
-      this.stepsTasks.approveStatus = "0";
+      this.stepsTasks.approveStatus = "1";
       this.setRole();
     } else if (this.action == 'copy') {
       this.stepsTasks = JSON.parse(JSON.stringify(this.taskInput));
@@ -275,7 +275,7 @@ export class CodxAddTaskComponent implements OnInit {
       this.stepsTasks.requireCompleted = false;
       this.stepsTasks.approvedBy = null;
       this.stepsTasks.assigned = '0';
-      this.stepsTasks.approveStatus = '0';
+      this.stepsTasks.approveStatus = '1';
     } else if (this.action == 'edit') {
       this.stepsTasks = JSON.parse(JSON.stringify(this.taskInput));
       this.loadListApproverStep();
