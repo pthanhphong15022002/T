@@ -2595,6 +2595,7 @@ export class InstancesComponent
       this.dataSelected.approveStatus = res?.returnStatus ?? '3';
       this.view.dataService.update(this.dataSelected).subscribe();
       if (this.kanban) this.kanban.updateCard(this.dataSelected);
+      this.notificationsService.notifyCode('ES007');
     }
   }
 
@@ -2616,15 +2617,7 @@ export class InstancesComponent
       this.dataSelected.approveStatus = res?.returnStatus ?? '3';
       this.view.dataService.update(this.dataSelected).subscribe();
       if (this.kanban) this.kanban.updateCard(this.dataSelected);
-      ///do corre share ko tra ve status
-      // this.codxDpService
-      //   .getOneObject(this.dataSelected.recID, 'InstancesBusiness')
-      //   .subscribe((ins) => {
-      //     this.dataSelected.approveStatus = ins.approveStatus;
-      //     this.view.dataService.update(this.dataSelected).subscribe();
-      //     if (this.kanban) this.kanban.updateCard(this.dataSelected);
-      //     // this.notificationsService.notifyCode('ES007');
-      //   });
+      this.notificationsService.notifyCode('ES007');
     }
   }
 
