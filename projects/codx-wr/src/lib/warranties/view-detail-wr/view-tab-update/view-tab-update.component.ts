@@ -29,11 +29,12 @@ import { PopupUpdateReasonCodeComponent } from '../../popup-update-reasoncode/po
 @Component({
   selector: 'wr-view-tab-update',
   templateUrl: './view-tab-update.component.html',
-  styleUrls: ['./view-tab-update.component.css'],
+  styleUrls: ['./view-tab-update.component.scss'],
 })
 export class ViewTabUpdateComponent implements OnInit {
   @Input() transID: any;
   @Input() dataWorkOrder: any;
+  @Input() isShow: boolean
   @Output() listChange = new EventEmitter<any>();
   @ViewChild('headerStatusCode') headerStatusCode: TemplateRef<any>;
   @ViewChild('tempStatusCode') tempStatusCode: TemplateRef<any>;
