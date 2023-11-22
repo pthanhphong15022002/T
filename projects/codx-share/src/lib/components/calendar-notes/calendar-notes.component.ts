@@ -496,6 +496,7 @@ export class CalendarNotesComponent
               .childNodes[0] as HTMLElement;
             let numbL = this.convertStrToDate(eleToDate);
             const lDayOfMonth = moment(numbL).add(1, 'day').toJSON();
+            debugger
             this.getParamCalendar(fDayOfMonth, lDayOfMonth, false);
             this.setDate(this.FDdate, this.lstView);
             this.change.detectChanges();
@@ -517,6 +518,7 @@ export class CalendarNotesComponent
       )
       .subscribe((res) => {
         if (res) {
+          debugger
           let dt = res;
           this.countEvent = dt[1];
           const dataValue = fDayOfMonth + ';' + lDayOfMonth;
@@ -664,20 +666,20 @@ export class CalendarNotesComponent
     let setting = this.settingCalendar.find(x => x.transType == "CO_Meetings");
     if(setting)
     {
-      let json = JSON.parse(setting.dataValue);  
+      let json = JSON.parse(setting.dataValue);
       let date = new Date();
       let funcID = "COT03"; // lịch cá nhân
       let predicates = json.Predicate;
       let startDate = new Date(date.getFullYear(),date.getMonth(),1);
       let endDate = moment(date).add(1, 'M').add(-1,'s').toDate();
       this.codxShareSV.getDataCO_Meetings(funcID,predicates,"","",startDate,endDate).subscribe((res) => {
-        if (res) 
+        if (res)
         {
           this.getModelShare(res[0], param.Template, 'CO_Meetings');
         }
       });
     }
-    
+
   }
 
   getRequestEP_BookingRoom(predicate, dataValue, param, showEvent) {
@@ -730,6 +732,7 @@ export class CalendarNotesComponent
     this.WP_Notes = [];
     this.codxShareSV.getDataWP_Notes(predicate, dataValue).subscribe((res) => {
       // this.countNotePin = 0;
+      debugger
       this.countNotePin = res[1];
       if (res) {
         this.getModelShare(res[0], param.Template, 'WP_Notes');
@@ -831,13 +834,19 @@ export class CalendarNotesComponent
               ];
               break;
             case 'WP_Notes':
+              debugger
+              // this.lstView.dataService.data = [
+              //   ...this.WP_Notes.filter((x) => {
+              //     let xDate = new Date(x.calendarDate).toLocaleDateString();
+              //     return xDate == curDateSelected;
+              //   }).sort(this.orderByStartTime),
+              //   ...this.lstView.dataService.data,
+              // ];
               this.lstView.dataService.data = [
-                ...this.WP_Notes.filter((x) => {
-                  let xDate = new Date(x.calendarDate).toLocaleDateString();
-                  return xDate == curDateSelected;
-                }).sort(this.orderByStartTime),
+                ...this.WP_Notes.sort(this.orderByStartTime),
                 ...this.lstView.dataService.data,
               ];
+
               break;
             case 'CO_Meetings':
               this.lstView.dataService.data = [
