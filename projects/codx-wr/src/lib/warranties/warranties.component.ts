@@ -101,6 +101,7 @@ export class WarrantiesComponent
   popupOld: any;
   popoverList: any;
   moreFuncEdit = '';
+  asideMode: string = '1';
   constructor(
     private inject: Injector,
     private cacheSv: CacheService,
@@ -110,17 +111,19 @@ export class WarrantiesComponent
     private changeDetectorRef: ChangeDetectorRef,
     private notificationsService: NotificationsService,
     private codxShareService: CodxShareService,
-    private authStore: AuthStore
+    private authStore: AuthStore,
+
   ) {
     super(inject);
     if (!this.funcID) {
       this.funcID = this.activedRouter.snapshot.params['funcID'];
     }
-
     this.executeApiCalls();
   }
 
   onInit(): void {
+    this.asideMode = this.codxService?.asideMode;
+
     this.button = [{
       id: this.btnAdd,
     }];

@@ -21,6 +21,7 @@
     (searchChanged)="searchChanged($event)"
     (filterChange)="filterChange($event)"
     (filterReportChange)="filterReportChange($event)"
+    [hideMoreFuncs]="true"
   ></codx-views>
 </ng-container>
 <ng-container *ngIf="viewDashboard && loadedTree">

@@ -541,7 +541,9 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
           let tabControl = '';
           res.datas.forEach((element) => {
             tabControl =
-              tabControl != '' ? tabControl + ';' + element.value : element.value;
+              tabControl != ''
+                ? tabControl + ';' + element.value
+                : element.value;
           });
           this.process.tabControl = tabControl;
           this.changeDetectorRef.markForCheck();
@@ -2023,7 +2025,7 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
             category.categoryName = this.process.processName;
             category.createdBy = this.user.userID;
             category.owner = this.user.userID;
-            category.FunctionApproval = 'DP01';
+            category.FunctionApproval = 'DP0204'; //'DP01'; Khanh đã đỏi fun
             this.actionOpenFormApprove2(category, true);
           }
         });
