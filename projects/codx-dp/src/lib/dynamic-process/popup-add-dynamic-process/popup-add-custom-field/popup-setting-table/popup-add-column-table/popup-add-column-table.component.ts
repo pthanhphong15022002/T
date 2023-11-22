@@ -242,7 +242,7 @@ export class PopupAddColumnTableComponent implements OnInit, AfterViewInit {
         }
         if (!this.processNo) {
           this.processNo = await firstValueFrom(
-            this.dpService.genAutoNumber('DP01', 'DP_Processes', 'ProcessNo')
+            this.dpService.genAutoNumber('DP0204', 'DP_Processes', 'ProcessNo')
           );
         }
         this.crrVll.listName = 'DPF' + this.processNo + '-' + this.maxNumber;
@@ -339,7 +339,7 @@ export class PopupAddColumnTableComponent implements OnInit, AfterViewInit {
     if (this.loaded) return;
     if (!this.processNo) {
       this.processNo = await firstValueFrom(
-        this.dpService.genAutoNumber('DP01', 'DP_Processes', 'ProcessNo')
+        this.dpService.genAutoNumber('DP0204', 'DP_Processes', 'ProcessNo')
       );
     }
     this.requestTemp.entityName = 'SYS_ValueList';
@@ -548,7 +548,7 @@ export class PopupAddColumnTableComponent implements OnInit, AfterViewInit {
       if (this.loaded) {
         if (!this.processNo)
           this.processNo = await firstValueFrom(
-            this.dpService.genAutoNumber('DP01', 'DP_Processes', 'ProcessNo')
+            this.dpService.genAutoNumber('DP0204', 'DP_Processes', 'ProcessNo')
           );
 
         this.crrVll.listName = 'DPF' + this.processNo + '-' + this.maxNumber;
