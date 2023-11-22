@@ -579,7 +579,7 @@ export class DealsComponent
       CM0201_13: () => this.confirmOrRefuse(false, data),
       CM0201_14: () => this.openFormBANT(data),
       CM0201_16: () => this.cancelApprover(data),
-      // SYS002: () => this.exportFiles(e, data),
+      SYS002: () => this.exportTemplet(e, data),
       CM0201_15: () => this.popupPermissions(data),
       CM0201_17: () => this.openFormChangeStatus(data),
       CM0201_18: () => this.addTask(data),
@@ -2012,5 +2012,41 @@ export class DealsComponent
       };
       let task = await this.stepService.openPopupCodxTask(dataAddTask, 'right');
     }
+  }
+
+  exportTemplet(e, data) {
+    this.api
+      .execSv<any>(
+        'CM',
+        'CM',
+        'DealsBusiness',
+        'GetDataSourceExportAsync',
+        data.recID
+      )
+      .subscribe((str) => {
+        if (str && str?.length > 0) {
+          let datas = str[1];
+          if (datas && datas.includes('[{')) datas = datas.substring(2);
+          let fix = str[0];
+          fix = fix.substring(1, fix.length - 1);
+          let dataSource = '[{ ' + fix + ',' + datas;
+          // let dataSource = '[' + str + ']';
+          var customData = {
+            refID: data.processID,
+            refType: 'DP_Processes',
+            dataSource: dataSource,
+          };
+          this.codxShareService.defaultMoreFunc(
+            e,
+            data,
+            this.afterSave,
+            this.view.formModel,
+            this.view.dataService,
+            this,
+            customData
+          );
+          this.detectorRef.detectChanges();
+        }
+      });
   }
 }

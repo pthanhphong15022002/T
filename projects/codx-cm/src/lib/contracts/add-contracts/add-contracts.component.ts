@@ -5,6 +5,7 @@ import {
   Component,
   TemplateRef,
   ChangeDetectorRef,
+  AfterViewInit,
 } from '@angular/core';
 import {
   CM_Contracts,
@@ -45,7 +46,11 @@ import { tmpInstances } from '../../models/tmpModel';
   templateUrl: './add-contracts.component.html',
   styleUrls: ['./add-contracts.component.scss'],
 })
-export class AddContractsComponent implements OnInit {
+export class AddContractsComponent implements OnInit, AfterViewInit{
+  @ViewChild('information') information: TemplateRef<any>;
+  @ViewChild('reference') reference: TemplateRef<any>;
+  @ViewChild('extend') extend: TemplateRef<any>;
+
   @ViewChild('more') more: TemplateRef<any>;
   @ViewChild('inputDeal') inputDeal: CodxInputComponent;
   @ViewChild('attachment') attachment: AttachmentComponent;
@@ -146,6 +151,33 @@ export class AddContractsComponent implements OnInit {
   leadNoSetting: any;
   idxCrr: number = -1;
 
+  // Tab control
+  menuGeneralInfo = {
+    icon: 'icon-info',
+    text: 'Thông tin chung',
+    name: 'GeneralInfo',
+    subName: 'General information',
+    subText: 'General information',
+  };
+
+  menuInputInfo = {
+    icon: 'icon-reorder',
+    text: 'Tham chiếu',
+    name: 'InputInfo',
+    subName: 'Input information',
+    subText: 'Input information',
+  };
+
+  menuGeneralContact = {
+    icon: 'icon-contact_phone',
+    text: 'Mở rộng',
+    name: 'GeneralContact',
+    subName: 'General contact',
+    subText: 'General contact',
+  };
+
+  tabInfo: any[] = [];
+  tabContent: any[] = [];
   constructor(
     private cache: CacheService,
     private api: ApiHttpService,
@@ -211,6 +243,12 @@ export class AddContractsComponent implements OnInit {
       );
   }
 
+  async ngAfterViewInit(): Promise<void> {
+    this.tabInfo = [this.menuGeneralInfo, this.menuInputInfo, this.menuGeneralContact,];
+    this.tabContent = [this.information,this.reference,this.extend];
+  }
+  setTitle(e: any) {
+  }
   //#region setData
   async setDataContract(data) {
     switch (this.action) {
@@ -678,6 +716,7 @@ export class AddContractsComponent implements OnInit {
       this.disabledDelActualDate =
         event?.data == '0' || event?.data == '1' ? true : false;
     }
+    //component itemsSelected
   }
 
   valueChangeOwner(event) {

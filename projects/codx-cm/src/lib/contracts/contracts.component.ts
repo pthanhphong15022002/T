@@ -569,12 +569,12 @@ export class ContractsComponent extends UIComponent {
     };
     let option = new SidebarModel();
     option.Width = '800px';
-    option.zIndex = 1001;
+    option.zIndex = 1010;
     option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;
     
     let popupContract = this.callfc.openSide(
-      PopupAddContractsComponent,
+      AddContractsComponent,
       data,
       option
     );
