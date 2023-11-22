@@ -373,7 +373,7 @@
         <span class="text-gray-900">{{ countDealCompetitor }}</span>
       </div>
     </div>
-    <div class="w-50px min-w-50px">
+    <div class="w-50px min-w-50px" *ngIf="asideMode != '2'">
       <codx-mfunc
         [formModel]="formModel"
         (clickMF)="clickMF($event, dataSelected)"
@@ -400,6 +400,7 @@
     [funcID]="funcID"
     (clickMoreFunc)="clickMoreFuncDetail($event)"
     [entityName]="entityName"
+    [asideMode]="asideMode"
     (changeMoreMF)="changeDataDetailMF($event)"
     [isDbClick]="true"
   >

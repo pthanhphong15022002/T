@@ -134,6 +134,7 @@ export class DynamicProcessComponent
   lstGroup: any = [];
   isSaveName: boolean = true;
   lstVllRoles = [];
+  asideMode: string;
   constructor(
     private inject: Injector,
     private activedRouter: ActivatedRoute,
@@ -162,6 +163,7 @@ export class DynamicProcessComponent
   }
 
   onInit(): void {
+    this.asideMode = this.codxService?.asideMode;
     this.button = [
       {
         id: this.btnAdd,
