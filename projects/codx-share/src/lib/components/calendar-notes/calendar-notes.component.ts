@@ -779,6 +779,9 @@ export class CalendarNotesComponent
             this.TM_Tasks.push(paramValue);
             break;
           case 'WP_Notes':
+            if(paramValue.data && paramValue.data.createdOn){
+              paramValue.calendarDate = paramValue.data.createdOn;
+            }
             this.WP_Notes.push(paramValue);
             break;
           case 'CO_Meetings':
@@ -834,19 +837,13 @@ export class CalendarNotesComponent
               ];
               break;
             case 'WP_Notes':
-              debugger
-              // this.lstView.dataService.data = [
-              //   ...this.WP_Notes.filter((x) => {
-              //     let xDate = new Date(x.calendarDate).toLocaleDateString();
-              //     return xDate == curDateSelected;
-              //   }).sort(this.orderByStartTime),
-              //   ...this.lstView.dataService.data,
-              // ];
               this.lstView.dataService.data = [
-                ...this.WP_Notes.sort(this.orderByStartTime),
+                ...this.WP_Notes.filter((x) => {
+                  let xDate = new Date(x.calendarDate).toLocaleDateString();
+                  return xDate == curDateSelected;
+                }).sort(this.orderByStartTime),
                 ...this.lstView.dataService.data,
               ];
-
               break;
             case 'CO_Meetings':
               this.lstView.dataService.data = [
