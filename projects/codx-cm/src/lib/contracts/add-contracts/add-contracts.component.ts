@@ -716,6 +716,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit{
       this.disabledDelActualDate =
         event?.data == '0' || event?.data == '1' ? true : false;
     }
+    //component itemsSelected
   }
 
   valueChangeOwner(event) {
