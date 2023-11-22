@@ -2592,7 +2592,7 @@ export class InstancesComponent
     if (res?.msgCodeError) this.notificationsService.notify(res?.msgCodeError);
     else {
       ///do corre share ko tra ve status
-      this.dataSelected.approveStatus = '3';
+      this.dataSelected.approveStatus = res?.returnStatus ?? '3';
       this.view.dataService.update(this.dataSelected).subscribe();
       if (this.kanban) this.kanban.updateCard(this.dataSelected);
     }
@@ -2613,7 +2613,7 @@ export class InstancesComponent
   releaseCallbackInstances(res: any, t: any = null) {
     if (res?.msgCodeError) this.notificationsService.notify(res?.msgCodeError);
     else {
-      this.dataSelected.approveStatus = '3';
+      this.dataSelected.approveStatus = res?.returnStatus ?? '3';
       this.view.dataService.update(this.dataSelected).subscribe();
       if (this.kanban) this.kanban.updateCard(this.dataSelected);
       ///do corre share ko tra ve status
