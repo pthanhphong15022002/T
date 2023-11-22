@@ -174,10 +174,9 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
       event.forEach((res) => {
         switch (res.functionID) {
           case 'SYS02': //xóa
-            break;
           case 'SYS03': //sửa
-            break;
           case 'SYS04': //copy
+            res.disabled = task?.approveStatus == "3";
             break;
           case 'DP25':
           case 'DP26':
@@ -188,6 +187,9 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
             res.disabled = true;
             break;
           case 'DP13': //giao việc
+            if(task?.approveStatus == "3"){
+              res.disabled = true;
+            }
             if (!task?.createTask) {
               res.isblur = true;
             }
@@ -236,12 +238,12 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
             res.disabled = true;
             break;
           case 'DP31': //Bắt đầu
-            if (task?.status != '1') {
+            if (task?.status != '1' || task?.approveStatus == "3") {
               res.disabled = true;
             }
             break;
           case 'DP20': // tiến độ
-            if (task?.status != '1') {
+            if (task?.status != '1' || task?.approveStatus == "3") {
               res.disabled = true;
             }
             break;

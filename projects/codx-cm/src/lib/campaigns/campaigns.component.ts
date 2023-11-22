@@ -72,13 +72,15 @@ export class CampaignsComponent
 
   heightWin: any;
   widthWin: any;
+  asideMode: string;
   constructor(
     private inject: Injector,
     private cacheSv: CacheService,
     private activedRouter: ActivatedRoute,
     private notiService: NotificationsService,
     private cmSv: CodxCmService,
-    private codxShareService: CodxShareService
+    private codxShareService: CodxShareService,
+
   ) {
     super(inject);
     if (!this.funcID)
@@ -88,6 +90,8 @@ export class CampaignsComponent
   }
 
   onInit(): void {
+    this.asideMode = this.codxService.asideMode;
+
     this.button = [{
       id: this.btnAdd,
     }];
