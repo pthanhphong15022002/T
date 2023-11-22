@@ -47,6 +47,7 @@ initData(){
         x.smallIcon = environment.urlUpload+'/'+x.smallIcon;
       }
       if(x.functionType == 'G'){
+        x.parentID=undefined;
         let objButton:any={};
         objButton.recID = Util.uid();
         objButton.parentID = x.recID;
@@ -463,6 +464,7 @@ initData(){
     this.addData.category = 'G';
     this.addData.formName='Comments';
     this.addData.settingType='1';
+    this.addData.parentID='WP'
     this.addData.userID = this.user.userID;
     this.addData.sorting = this.datasource.length
   }
