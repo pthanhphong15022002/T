@@ -284,7 +284,7 @@ export class DealDetailComponent implements OnInit {
         this.grvSetupQuotation = res[0];
         this.grvSetupContract = res[1];
         this.grvSetupLead = res[2];
-        this.listRoles = res[3].datas;
+        this.listRoles = res[3]?.datas;
       }
     });
   }

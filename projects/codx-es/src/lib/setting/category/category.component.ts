@@ -370,6 +370,11 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
   }
 
   clickMF(event, data) {
+  if(!data) data = this.viewBase?.dataService?.dataSelected;
+    if(!data && this.viewBase?.dataService?.data?.length>0) {
+      data = this.viewBase?.dataService?.data[0];
+      this.viewBase.dataService.dataSelected = data;
+    }  
     event.data = data ?? this.viewBase?.dataService?.dataSelected;
     switch (event?.functionID) {
       //edit

@@ -130,7 +130,8 @@
         <div class="col-8">
           <div class="container h-100">
             <div class="row">
-              <div class="col d-flex justify-content-start" *ngIf="isEditGroup">
+              <div class="col d-flex justify-content-start" style="transition: width .25s;
+              transition-timing-function: ease-in-out;" *ngIf="isEditGroup">
                 <div class="container p-0 h-100" *ngIf="selectedData">
                   <span class="fs-5 fw-bold text-dark"
                   ><codx-label
@@ -186,7 +187,8 @@
                 </div>
                 </div>
               </div>
-              <div class="col d-flex justify-content-start" *ngIf="isEditFunc">
+              <div class="col d-flex justify-content-start" style="transition: width .25s;
+              transition-timing-function: ease-in-out;" *ngIf="isEditFunc">
                 <div class="container p-0 h-100" *ngIf="selectedData">
                   <span class="fs-5 fw-bold text-dark"
                     ><codx-label
@@ -354,7 +356,8 @@
                   </div>
                 </div>
               </div>
-              <div class="col d-flex justify-content-start" *ngIf="isAddFunc">
+              <div class="col d-flex justify-content-start" style=" transition: width .25s;
+              transition-timing-function: ease-in-out;" *ngIf="isAddFunc">
                 <div class="container p-0 h-100" *ngIf="addData">
                   <span class="fs-5 fw-bold text-dark"
                     ><codx-label
@@ -520,7 +523,8 @@
                   </div>
                 </div>
               </div>
-              <div class="col d-flex justify-content-start" *ngIf="isAddGroup">
+              <div class="col d-flex justify-content-start" style="transition: width .25s;
+              transition-timing-function: ease-in-out;" *ngIf="isAddGroup">
                 <div class="container p-0 h-100">
                   <span class="fs-5 fw-bold text-dark"
                   ><codx-label

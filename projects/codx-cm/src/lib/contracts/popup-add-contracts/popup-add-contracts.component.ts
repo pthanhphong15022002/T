@@ -37,7 +37,7 @@ import { firstValueFrom } from 'rxjs';
 import { Contact } from 'projects/codx-sm/src/lib/models/Contact.model';
 
 @Component({
-  selector: 'lib-popup-add-contracts',
+  selector: 'popup-add-contracts',
   templateUrl: './popup-add-contracts.component.html',
   styleUrls: ['./popup-add-contracts.component.scss']
 })

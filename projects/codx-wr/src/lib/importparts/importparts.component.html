@@ -25,6 +25,7 @@
       [dataItem]="data"
       [formModel]="view.formModel"
       (clickMF)="clickMF($event, data)"
+      (changeDataMF)="changeDataMF($event, dataSelected)"
       [isBookMark]="false"
       type="view"
     ></codx-mfunc>
