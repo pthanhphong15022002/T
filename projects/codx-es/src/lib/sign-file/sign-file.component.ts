@@ -293,6 +293,7 @@ export class SignFileComponent extends UIComponent {
   }
 
   changeDataMF(e: any, data: any) {
+    if(!data) data = this.view?.dataService?.dataSelected;
     if(this.runMode == "1")
     {
       this.shareService.changeMFApproval(e,data.unbounds);
@@ -330,13 +331,13 @@ export class SignFileComponent extends UIComponent {
         if (bm?.length) bm[0].disabled = false;
       }
   
-      if (data.approveStatus != 3) {
+      if (data?.approveStatus != 3) {
         var cancel = e.filter(
           (x: { functionID: string }) => x.functionID == 'EST01101'
         );
         if (cancel?.length) cancel[0].disabled = true;
       }
-      if (data.approveStatus != 1 && data.approveStatus != 2) {
+      if (data?.approveStatus != 1 && data?.approveStatus != 2) {
         if (edit?.length) edit[0].disabled = true;
         if (release?.length) release[0].disabled = true;
         if (del?.length) del[0].disabled = true;
