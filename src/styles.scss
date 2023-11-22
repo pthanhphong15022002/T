@@ -4308,3 +4308,19 @@ codx-view-list-detail ejs-splitter .e-pane.e-static-pane .e-content{
     width: 25px;
   }
 }
+
+codx-view-schedule .container-fluid.h-50px {
+  background-color: var(--bg-body);
+  .w-300px{
+    width: 200px!important;
+  }
+  .w-250px {
+    width: 150px !important;
+    .text-center.fw-bold.text-hover-primary{
+      color: var(--gray-600)!important;
+      &:hover{
+        color: var(--gray-900)!important;
+      }
+    }
+  }
+}
