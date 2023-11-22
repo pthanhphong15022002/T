@@ -187,7 +187,10 @@ export class ResourcesComponent extends UIComponent {
   //---------------------------------------------------------------------------------//
   clickMF(event, data) {
     if(!data) data = this.view?.dataService?.dataSelected;
-    if(!data) return;
+    if(!data && this.view?.dataService?.data?.length>0) {
+      data = this.view?.dataService?.data[0];
+      this.view.dataService.dataSelected = data;
+    }  
     this.popupTitle = event?.text + ' ' + this.funcIDName;
     switch (event?.functionID) {
       case EPCONST.MFUNCID.Delete:

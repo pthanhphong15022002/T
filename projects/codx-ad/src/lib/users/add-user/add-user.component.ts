@@ -101,7 +101,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
     this.formType = dt?.data?.formType;
     this.data = dialog.dataService!.dataSelected;
     this.dataCopy = dt?.data?.dataCopy;
-    this.adUser = JSON.parse(JSON.stringify(this.data?.data));
+    this.adUser = JSON.parse(JSON.stringify(this.data));
     if (this.formType == 'invite') {
       this.isSaved = false;
       this.viewChooseRole = this.data?.chooseRoles;
