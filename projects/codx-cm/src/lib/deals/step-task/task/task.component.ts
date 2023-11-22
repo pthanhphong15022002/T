@@ -117,7 +117,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
     });
   }
 
-  ngAfterViewInit(): void {}
+  ngAfterViewInit(): void { }
 
   //#region get data
   getActivities(): void {
@@ -174,10 +174,9 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
       event.forEach((res) => {
         switch (res.functionID) {
           case 'SYS02': //xóa
-            break;
           case 'SYS03': //sửa
-            break;
           case 'SYS04': //copy
+            res.disabled = task?.approveStatus == "3";
             break;
           case 'DP25':
           case 'DP26':
@@ -188,6 +187,9 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
             res.disabled = true;
             break;
           case 'DP13': //giao việc
+            if(task?.approveStatus == "3"){
+              res.disabled = true;
+            }
             if (!task?.createTask) {
               res.isblur = true;
             }
@@ -236,17 +238,17 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
             res.disabled = true;
             break;
           case 'DP31': //Bắt đầu
-            if (task?.status != '1') {
+            if (task?.status != '1' || task?.approveStatus == "3") {
               res.disabled = true;
             }
             break;
           case 'DP20': // tiến độ
-            if (task?.status != '1') {
+            if (task?.status != '1' || task?.approveStatus == "3") {
               res.disabled = true;
             }
             break;
           case 'DP32': // gởi duyệt 
-            res.disabled = (!task?.approveRule || (task?.approveRule && ["3","5"].includes(task?.approveStatus)));
+            res.disabled = (!task?.approveRule || (task?.approveRule && ["3", "5"].includes(task?.approveStatus)));
             break;
           case 'DP33': // hủy duyệt
             res.disabled = !(task?.approveRule && task?.approveStatus == "3");
@@ -726,7 +728,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
   //#region duyet
 
   approvalTrans(task: DP_Activities) {
-    if(task?.approveRule && task?.recID){
+    if (task?.approveRule && task?.recID) {
       this.api.execSv<any>(
         'ES',
         'ES',
@@ -734,10 +736,10 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
         'GetByCategoryIDAsync',
         task?.recID
       ).subscribe(res => {
-        if(!res){
+        if (!res) {
           this.notiService.notifyCode('ES028');
           return;
-        }else {
+        } else {
           let exportData: ExportData = {
             funcID: this.funcID,
             recID: task?.recID,
@@ -752,6 +754,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
   }
 
   release(data: any, category: any, exportData = null) {
+    this.taskApproval = data;
     this.codxShareService.codxReleaseDynamic(
       'DP',
       data,
@@ -773,79 +776,42 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
     if (res?.msgCodeError) this.notiService.notify(res?.msgCodeError);
     else {
       this.taskApproval.approvedBy = this.user?.userID;
-      this.taskApproval.approveStatus = "3";
+      this.taskApproval.approveStatus = res?.returnStatus || '3';
       this.taskApproval = null;
+      this.moreDefaut = JSON.parse(JSON.stringify(this.moreDefaut));
       this.changeDetectorRef.markForCheck();
-      this.taskApproval = null;
-      // this.api
-      //   .exec<any>(
-      //     'DP',
-      //     'ActivitiesBusiness',
-      //     'UpdateApproveStatusTaskAsync',
-      //     [this.taskApproval?.recID, true]
-      //   )
-      //   .subscribe((res) => {
-      //     if (res) {
-      //       this.taskApproval.approvedBy = this.user?.userID;
-      //       this.taskApproval.approveStatus = "3";
-      //       this.taskApproval = null;
-      //       this.changeDetectorRef.markForCheck();
-      //       this.taskApproval = null;
-      //     }
-      //   });
     }
   }
-  //Huy duyet
   //Huy duyet
   cancelApprover(task) {
     this.notiService.alertCode('ES016').subscribe((x) => {
       if (x.event.status == 'Y') {
-        this.taskApproval = task;
         this.codxCmService
-          .getESCategoryByCategoryID(this.taskApproval?.recID)
-          .subscribe((res2: any) => {
-            if (res2) {
-              if (res2?.eSign == true) {
-                //trình ký
-              } else if (res2?.eSign == false) {
-                //kí duyet
-                this.codxShareService
-                  .codxCancel(
-                    'DP',
-                    this.taskApproval?.recID,
-                    'DP_Activities',
-                    null,
-                    null
-                  )
-                  .subscribe((res3) => {
-                    if (res3) {
-                      this.api
-                        .exec<any>(
-                          'DP',
-                          'ActivitiesBusiness',
-                          'UpdateStatusApprovalTaskAsync',
-                          [this.taskApproval?.recID, false]
-                        )
-                        .subscribe((res) => {                      
-                            this.taskApproval.approvedBy = res;
-                            this.moreDefaut = {
-                              share: true,
-                              write: true,
-                              read: true,
-                              download: true,
-                              delete: true,
-                            };
-                            this.taskApproval = null;
-                            this.notiService.notifyCode('SYS007');
-                        });
-                    } else this.notiService.notifyCode('SYS021');
-                  });
-              }
+          .getESCategoryByCategoryID(task?.recID)
+          .subscribe((res: any) => {
+            if (res) {
+              this.codxShareService
+                .codxCancel(
+                  'DP',
+                  task?.recID,
+                  'DP_Activities',
+                  null,
+                  null
+                ).subscribe((res2: any) => {
+                  if (res2?.msgCodeError) this.notiService.notify(res?.msgCodeError);
+                  else {
+                    task.approveStatus = res2?.returnStatus || '0';
+                    this.moreDefaut = JSON.parse(JSON.stringify(this.moreDefaut));
+                    this.changeDetectorRef.markForCheck();
+                  }
+                })
+            } else {
+              this.notiService.notifyCode('SYS021');
             }
           });
       }
     });
   }
-  //end duyet
+
   //#endregion
 }

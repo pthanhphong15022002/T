@@ -119,7 +119,7 @@ export class ReceiptTransactionsComponent extends UIComponent {
           template: this.templateDetailLeft,
           panelRightRef: this.templateDetailRight,
           collapsed: true,
-          widthLeft:'25%'
+          widthLeft:'23%'
           //separatorSize:3
         },
       },
