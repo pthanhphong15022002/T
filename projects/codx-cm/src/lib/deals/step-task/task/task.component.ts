@@ -752,6 +752,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
   }
 
   release(data: any, category: any, exportData = null) {
+    this.taskApproval = data;
     this.codxShareService.codxReleaseDynamic(
       'DP',
       data,
@@ -775,6 +776,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
       this.taskApproval.approvedBy = this.user?.userID;
       this.taskApproval.approveStatus = res?.returnStatus || '3';
       this.taskApproval = null;
+      this.moreDefaut = JSON.parse(JSON.stringify(this.moreDefaut));
       this.changeDetectorRef.markForCheck();
     }
   }
@@ -796,7 +798,8 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
                 ).subscribe((res2: any) => {
                   if (res2?.msgCodeError) this.notiService.notify(res?.msgCodeError);
                   else {
-                    this.taskApproval.approveStatus = res2?.returnStatus || '0';
+                    task.approveStatus = res2?.returnStatus || '0';
+                    this.moreDefaut = JSON.parse(JSON.stringify(this.moreDefaut));
                     this.changeDetectorRef.markForCheck();
                   }
                 })
