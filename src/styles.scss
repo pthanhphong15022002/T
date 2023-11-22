@@ -3633,7 +3633,7 @@ codx-view-list-tree{
   &.tab-off{
     .py-5.tab-content {
       padding-top: 0px !important;
-      border: 1px aqua solid;
+     // border: 1px aqua solid;
     }
   }
   position: relative;
@@ -4189,6 +4189,12 @@ codx-aside-v2.aside-v2-lighter{
   codx-aside-v2.aside-v2-lighter{
     .menu-sub.menu-sub-accordion{
       display: none;
+    }
+    .menu-icon.me-2{
+      margin-right: 0!important;
+    }
+    .menu.menu-column.menu-sub-item{
+      display: none!important;
     }
   }
   #kt_aside_menu div.mx-6{
