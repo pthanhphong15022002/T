@@ -1199,7 +1199,8 @@ export class CodxTasksComponent
     if (
       this.funcID == 'TMT0206' ||
       this.funcID == 'MWP0063' ||
-      this.moreFunction?.length == 0
+      this.moreFunction?.length == 0 ||
+      !this.validateDropKaban(data, this.crrStatus, data.status) // chan keo kanban
     ) {
       data.status = this.crrStatus;
       return;
