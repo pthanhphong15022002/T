@@ -46,7 +46,7 @@ export class RolesComponent extends UIComponent implements OnInit, OnDestroy {
   dialog: DialogRef;
   urlDetailRoles: any;
   headerText = '';
-  itemSelected:any;
+  itemSelected: any;
   @ViewChild('templateListView') templateListView!: TemplateRef<any>;
 
   constructor(
@@ -67,9 +67,11 @@ export class RolesComponent extends UIComponent implements OnInit, OnDestroy {
   }
 
   onInit(): void {
-    this.button = [{
-      id: 'btnAdd',
-    }];
+    this.button = [
+      {
+        id: 'btnAdd',
+      },
+    ];
   }
 
   ngOnDestroy(): void {}
@@ -99,7 +101,7 @@ export class RolesComponent extends UIComponent implements OnInit, OnDestroy {
   }
 
   changeDataMF(evt: any, item: any) {
-    if (item.isSystem) {
+    if (item && item.isSystem) {
       var dl = evt.find((x: { functionID: string }) => x.functionID == 'SYS02');
       if (dl) dl.disabled = true;
     }
@@ -271,8 +273,7 @@ export class RolesComponent extends UIComponent implements OnInit, OnDestroy {
     }
   }
 
-  selectedChange(val:any)
-  {
+  selectedChange(val: any) {
     this.itemSelected = val?.data;
   }
 }
