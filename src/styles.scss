@@ -3387,7 +3387,7 @@ codx-card-center .card.codx_cardcenter{
   }
    &.width-20{
     // min-width: 250px;
-    left: -16px;
+    //left: -16px;
    }
   &.width-0{
     box-shadow: none;
@@ -3400,7 +3400,7 @@ codx-card-center .card.codx_cardcenter{
     position: relative;
   }
   &.filter-form {
-    top: -16px;
+    //top: -16px;
     //left: -6px;
     //box-shadow: #c1b0b03b 0 5px 5px;
   }
@@ -4146,7 +4146,7 @@ app-setting .e-tab .e-tab-header.e-vertical:before {
 
 
  //// theme for aside mode 2
-/// 
+///
 codx-aside-v2.aside-v2-lighter{
   .menu-state-primary .menu-item > .menu-link {
     //padding-left: 5px!important; tbchung sửa á sai kiếm nó nha
@@ -4154,7 +4154,7 @@ codx-aside-v2.aside-v2-lighter{
   .menu-state-primary .menu-item.here > .menu-link {
     background-color: var(--primary-lighter);
   }
-  .menu-state-title-primary .menu-item .menu-link.active .menu-title, 
+  .menu-state-title-primary .menu-item .menu-link.active .menu-title,
   .menu-state-title-primary .menu-item .menu-link:hover .menu-title {
     color: var(--primary-dark) !important;
   }
@@ -4162,7 +4162,7 @@ codx-aside-v2.aside-v2-lighter{
   .menu-state-title-primary .menu-item .menu-link:hover .menu-title {
     color: var(--primary) !important;
   }
-  .menu-item.active 
+  .menu-item.active
   {
     .menu-title
     {
@@ -4170,7 +4170,7 @@ codx-aside-v2.aside-v2-lighter{
     }
     background-color: var(--primary-lighter);
   }
- 
+
 }
 [data-kt-aside-minimize="on"]{
   codx-aside-v2.aside-v2-lighter{
