@@ -172,21 +172,27 @@ export class CashreceiptsComponent extends UIComponent {
         this.exportVoucher(data); //? xuất dữ liệu chứng từ
         break;
       case 'ACT040104':
+      case 'ACT042802':
         this.releaseVoucher(e.text, data); //? gửi duyệt chứng từ
         break;
       case 'ACT040105':
+      case 'ACT042803':
         this.cancelReleaseVoucher(e.text, data); //? hủy yêu cầu duyệt chứng từ
         break;
       case 'ACT040103':
+      case 'ACT042801':
         this.validateVourcher(e.text, data); //? kiểm tra tính hợp lệ chứng từ
         break;
       case 'ACT040106':
+      case 'ACT042804':
         this.postVoucher(e.text, data); //? ghi sổ chứng từ
         break;
       case 'ACT040107':
+      case 'ACT042805':
         this.unPostVoucher(e.text, data); //? khôi phục chứng từ
         break;
       case 'ACT040108':
+      case 'ACT042806':
         this.printVoucher(data, e.functionID); //? in chứng từ
         break;
     }

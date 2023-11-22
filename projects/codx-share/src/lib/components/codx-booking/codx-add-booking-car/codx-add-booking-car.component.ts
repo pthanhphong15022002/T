@@ -914,16 +914,16 @@ export class CodxAddBookingCarComponent
           new Date(endDate),
           recID
         )
-        .subscribe((res) => {
-          if (res != null) {
-            this.driverCheck = true;
-            if (res == true) {
-              this.driver = this.tempDriver;
-            }
-            if (res == false) {
-              this.driver = null;
-            }
+        .subscribe((res:any) => {
+          
+          this.driverCheck = true;
+          if (res == true) {
+            this.driver = this.tempDriver;
           }
+          else {
+            this.driver = null;
+          }
+          
           this.detectorRef.detectChanges();
         });
     }
