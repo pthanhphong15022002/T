@@ -807,7 +807,6 @@ export class HomeComponent extends UIComponent implements OnDestroy {
       if (res && res[0]) {
         if (res[0][0].read) {
           this.getDataFolder(res[0][0].recID);
-
           var breadcumb = [];
           var breadcumbLink = [];
           breadcumb.push(this.dmSV.menuActive.getValue(), res[0][0].folderName);
@@ -1151,6 +1150,7 @@ export class HomeComponent extends UIComponent implements OnDestroy {
   //   .subscribe();
   // }
   onSelectionChanged($data, noTree = false) {
+    debugger
     if (this.funcID == 'DMT00' && $data.data.folderId == 'DM') return;
     ScrollComponent.reinitialization();
     this.scrollTop();
