@@ -1,6 +1,6 @@
 import { Component, Injector, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ApiHttpService, CacheService, LayoutBaseComponent } from 'codx-core';
+import { ApiHttpService, CacheService, LayoutBaseComponent, PageTitleService } from 'codx-core';
 @Component({
   selector: 'lib-layout-news',
   templateUrl: './layout-news.component.html',
@@ -11,13 +11,13 @@ export class LayoutNewsComponent extends LayoutBaseComponent {
   category: string = 'home';
   funcID: string | null = '';
   userPermission: any = null;
-
+  title$ :any;
   constructor(
     private route: ActivatedRoute,
     private cache: CacheService,
     private dt: ChangeDetectorRef,
     private api: ApiHttpService,
-
+    private pageTitle: PageTitleService,
     inject: Injector
   ) 
   {
@@ -28,6 +28,7 @@ export class LayoutNewsComponent extends LayoutBaseComponent {
   }
 
   onInit(): void {
+    this.title$ = this.pageTitle.title.asObservable();
     this.getUserPermission('WPT022');
     this.cache.valueList('WP002').subscribe((vll:any) => {
       if(vll)

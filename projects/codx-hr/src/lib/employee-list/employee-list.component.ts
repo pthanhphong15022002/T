@@ -9,6 +9,7 @@ import {
   RequestOption,
   ResourceModel,
   NotificationsService,
+  CodxService,
 } from 'codx-core';
 import { PopupAddEmployeeComponent } from './popup/popup-add-employee/popup-add-employee.component';
 import { ActivatedRoute } from '@angular/router';
@@ -61,7 +62,9 @@ export class EmployeeListComponent extends UIComponent {
     private injector: Injector,
     private routerActive: ActivatedRoute,
     private shareService: CodxShareService,
-    private notificationSv: NotificationsService
+    private notificationSv: NotificationsService,
+    public override codxService : CodxService
+
   ) {
     super(injector);
     this.funcID = this.routerActive.snapshot.params['funcID'];

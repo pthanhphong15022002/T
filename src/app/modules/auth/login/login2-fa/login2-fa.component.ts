@@ -1,6 +1,14 @@
-import { AfterViewInit, Component, Injector, Optional } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  Injector,
+  Optional,
+  TemplateRef,
+  ViewChildren,
+} from '@angular/core';
 import { AngularDeviceInformationService } from 'angular-device-information';
 import {
+  AESCryptoService,
   AuthService,
   AuthStore,
   DialogData,
@@ -9,6 +17,7 @@ import {
   RealHub,
   RealHubService,
   UIComponent,
+  UserModel,
 } from 'codx-core';
 import { CodxAdService } from 'projects/codx-ad/src/public-api';
 import { FormControl, FormGroup } from '@angular/forms';
@@ -23,22 +32,21 @@ import { LoginService } from '../login.service';
 })
 export class Login2FAComponent extends UIComponent implements AfterViewInit {
   constructor(
-    private inject: Injector,
-    private authStore: AuthStore,
+    inject: Injector,
     private deviceInfo: AngularDeviceInformationService,
     private realHub: RealHubService,
-    private authService: AuthService,
-    private adService: CodxAdService,
+    private aesCrypto: AESCryptoService,
     private notiService: NotificationsService,
     private loginService: LoginService,
-
+    private authStore: AuthStore,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
     super(inject);
     this.user = dt?.data?.data;
+    this.hideTrustDevice = dt.data.hideTrustDevice;
     this.hubConnectionID = dt?.data?.hubConnectionID;
-    this.email = this.user.data.email;
+    this.email = this.user?.email;
     this.clickQueue.push(dt?.data?.login2FA);
     this.dialog = dialog;
     this.changeLogin2FAType(dt?.data?.login2FA);
@@ -58,13 +66,13 @@ export class Login2FAComponent extends UIComponent implements AfterViewInit {
         tenantID: '',
       };
     }
-    console.log('login2fa device info', this.loginDevice);
   }
   user;
   dialog;
   loginDevice: Device;
   // #region QR
   // testQRContent = '';
+  hideTrustDevice = false;
   askState = false;
   isFirstQR = true;
   qrTimeout: number = 0;
@@ -77,6 +85,7 @@ export class Login2FAComponent extends UIComponent implements AfterViewInit {
   curLgType: string = '';
   email;
   unsubscribe: Subscription[] = [];
+  @ViewChildren('ipotp') ipOTP: TemplateRef<any>;
   // #endregion
 
   //#region OTP
@@ -90,8 +99,9 @@ export class Login2FAComponent extends UIComponent implements AfterViewInit {
   loginFG: FormGroup;
   //#endregion
   onInit() {
+    console.log(this.authStore.get());
     this.loginFG = new FormGroup({
-      email: new FormControl(this.user.data.email),
+      email: new FormControl(this.user?.email),
       password: new FormControl(),
     });
     this.cache.valueList('SYS060').subscribe((vll) => {
@@ -99,7 +109,7 @@ export class Login2FAComponent extends UIComponent implements AfterViewInit {
     });
 
     if (this.hubConnectionID == '') {
-      this.realHub.start('ad').then((x: RealHub) => {
+      this.realHub.start('ad').then(() => {
         this.hubConnectionID = this.realHub['hubConnectionID'];
       });
     }
@@ -297,31 +307,37 @@ export class Login2FAComponent extends UIComponent implements AfterViewInit {
 
   login2FAOTP() {
     this.loginFG.controls['password'].setValue(this.otpValues.join(''));
-
-    // switch (type) {
-    //   case 'otp': {
-    //     break;
-    //   }
-    //   case 'totp': {
-    //     this.loginFG.controls['password'].setValue(this.TOTPValues.join(''));
-    //   }
-    // }
     this.loginDevice.trust = this.askState;
-    const login2FASubscr = this.authService
-      .login(
-        this.loginFG.controls['email'].value,
-        this.loginFG.controls['password'].value,
-        this.curLgType,
-        true,
-        JSON.stringify(this.loginDevice)
-      )
-      .pipe()
+    let userName = this.loginFG.controls['email'].value;
+    let password = this.loginFG.controls['password'].value;
+    userName = this.aesCrypto.encrypt(userName.trim());
+    password = this.aesCrypto.encrypt(password);
+    this.loginDevice.loginType = this.curLgType;
+
+    const login2FASubscr = this.api
+      .callSv('SYS', 'AD', 'UsersBusiness', 'CreateUserLoginAsync', [
+        this.user.tenant,
+        userName,
+        password,
+        JSON.stringify(this.loginDevice),
+      ])
+      // const login2FASubscr = this.authService
+      //   .login(
+      //     this.loginFG.controls['email'].value,
+      //     this.loginFG.controls['password'].value,
+      //     this.curLgType,
+      //     true,
+      //     JSON.stringify(this.loginDevice)
+      //   )
+      //.pipe()
       .subscribe((data) => {
-        if (!data.error)
+        if (!data.error) {
+          const user = data?.read<UserModel>();
+          const r = { error: data.error, data: user };
           this.dialog.close({
-            data,
+            data: r,
           });
-        else {
+        } else {
           this.notiService.notifyCode('');
         }
       });

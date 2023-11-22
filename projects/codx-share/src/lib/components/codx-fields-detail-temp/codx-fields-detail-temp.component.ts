@@ -145,22 +145,24 @@ export class CodxFieldsDetailTempComponent implements OnInit {
   }
 
   popupCustomField(data) {
-    if (this.currentElmID && this.currentElmID != this.elmIDCrr) {
-      this.clickInput(this.currentElmID);
-    }
-    if (this.elmIDCrr) {
-      this.clickInput(this.elmIDCrr);
-    }
-    this.elmIDCrr = this.currentElmID = null;
-    this.inputElmIDCF.emit(null);
-    if (this.currentElmID) var list = [];
-    if (data && data.length > 0) {
+    //nếu nhấn tại ô input mới dùng cái này tabs mơi dùng
+    // if (this.currentElmID && this.currentElmID != this.elmIDCrr) {
+    //   this.clickInput(this.currentElmID);
+    // }
+    // if (this.elmIDCrr) {
+    //   this.clickInput(this.elmIDCrr);
+    // }
+    // this.elmIDCrr = this.currentElmID = null;
+    // this.inputElmIDCF.emit(null);
+    // if (this.currentElmID) var list = [];
+    let list = [];
+    if (Array.isArray(data) && data.length > 0) {
       list = data;
     } else {
       list.push(data);
     }
-    var obj = {
-      data: list,
+    let obj = {
+      data: JSON.parse(JSON.stringify(list)),
       titleHeader: this.titleHeaderFormCF,
       objectIdParent: this.objectIdParent,
       customerID: this.customerID,

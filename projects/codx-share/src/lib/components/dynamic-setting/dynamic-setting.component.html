@@ -1,20 +1,53 @@
-<codx-views #view [views]="views" [autoLoad]="false" (viewChanged)="viewChanged($event, view)">
+<codx-views
+  #view
+  [views]="views"
+  [autoLoad]="false"
+  (viewChanged)="viewChanged($event, view)"
+>
 </codx-views>
 
 <ng-template #template>
-  <div class="content h-100 d-flex flex-column flex-column-fluid p-0" id="kt_content">
+  <div
+    class="content h-100 d-flex flex-column flex-column-fluid p-0"
+    id="kt_content"
+  >
     <!--<app-subheader></app-subheader>-->
+    <div class="d-flex align-items-center flex-grow-0" *ngIf="codxService.asideMode == '2'">
+      <!-- <a href="#" (click)="clickBack($event)">
+        <span
+          class="logo justify-content-start svg-icon svg-icon-1 icon-arrow_back"
+        ></span>
+      </a> -->
+      <codx-page-title
+        #codxPageTitle
+        class="page-title d-flex ms-0"
+        [ngClass]="pageTitleCssClasses"
+      >
+      </codx-page-title>
+    </div>
     <div id="erm_content" class="d-flex flex-column-fluid h-100">
       <div class="d-flex container h-100">
         <div class="aside-detail flex-row-auto w-250px me-6">
           <div class="aside-menu">
             <ul class="menu-nav p-0">
-              <li class="menu-item" *ngFor="let item of itemMenu" (click)="loadContent($event, item)"
-                [ngClass]="catagory === item ? 'menu-item-active' : ''">
-                <a class="menu-link d-flex align-items-center fw-bold text-dark">
+              <li
+                class="menu-item"
+                *ngFor="let item of itemMenu"
+                (click)="loadContent($event, item)"
+                [ngClass]="catagory === item ? 'menu-item-active' : ''"
+              >
+                <a
+                  class="menu-link d-flex align-items-center fw-bold text-dark"
+                >
                   <!-- <i class="me-2" [ngClass]="item | vll: listName:'icon' | async"></i>
                   {{ item | vll: listName:"text" | async }} -->
-                  <codx-vll [name]="listName" [value]="item" [showIcon]="true" [showText]="true" icoCss="me-2">
+                  <codx-vll
+                    [name]="listName"
+                    [value]="item"
+                    [showIcon]="true"
+                    [showText]="true"
+                    icoCss="me-2"
+                  >
                   </codx-vll>
                 </a>
               </li>

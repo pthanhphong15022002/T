@@ -83,7 +83,7 @@ export class CashPaymentsComponent extends UIComponent {
           this.legalName = res[0].legalName; //? get tên company
         }
       });
-    this.router.queryParams
+    this.router.params
       .pipe(takeUntil(this.destroy$))
       .subscribe((params) => {
         this.journalNo = params?.journalNo; //? get số journal từ router

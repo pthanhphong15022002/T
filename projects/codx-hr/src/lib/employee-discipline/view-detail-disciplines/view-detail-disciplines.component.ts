@@ -11,6 +11,7 @@ import {
 import { isObservable } from 'rxjs';
 import {
   AuthStore,
+  CodxService,
   FormModel,
   NotificationsService,
   ViewsComponent,
@@ -34,7 +35,8 @@ export class ViewDetailDisciplinesComponent {
     private df: ChangeDetectorRef,
     private notify: NotificationsService,
     private shareService: CodxShareService,
-    private codxODService: CodxOdService
+    private codxODService: CodxOdService,
+    public codxService : CodxService
   ) {}
 
   @ViewChild('attachment') attachment;

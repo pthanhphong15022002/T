@@ -1024,6 +1024,14 @@ export class CodxHrService {
     );
   }
 
+  UpdateEmployeeAppointionsInfoCore(data) {
+    return this.api.execAction(
+      'HR_EAppointions',
+      [data],
+      'UpdateAsync'
+    );
+  }
+
   DeleteEmployeeAppointionsInfo(data) {
     return this.api.execSv<any>(
       'HR',

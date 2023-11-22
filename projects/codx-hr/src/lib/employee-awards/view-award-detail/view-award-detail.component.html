@@ -4,7 +4,7 @@
   [dataItem]="itemDetail"
   [footer]="!hideFooter ? footer : null"
   [body]="body"
-  [hideMF]="hideMF"
+  [hideMF]="codxService.asideMode == '2' ? true: false"
   [formModel]="formModel"
   (clickMF)="clickMF($event, itemDetail)"
   (changeDataMF)="changeDataMF($event, itemDetail)"
