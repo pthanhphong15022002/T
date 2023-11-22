@@ -332,7 +332,8 @@ export class DedicationRankComponent extends UIComponent implements OnInit {
         );
         dialog.closed.subscribe((e: any) => {
           if (e?.event?.data) e.event.data.modifiedOn = new Date();
-          this.view.dataService.update(e.event?.data).subscribe();
+          // this.view.dataService.update(e.event?.data).subscribe();
+          this.view.dataService.refresh();
           this.changedr.detectChanges();
         });
       });

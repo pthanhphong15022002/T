@@ -193,8 +193,9 @@
                         </codx-label>
                     </div>
                 </div>
-                <div class="card-slider d-flex align-items-center mt-4 w-100">
-                    <ngb-carousel #carousel [wrap]="false" [interval]="0" [keyboard]="false" [pauseOnHover]="false"
+                <!-- <div class="card-slider d-flex align-items-center mt-4 w-100"> -->
+                    <div>
+                    <!-- <ngb-carousel #carousel [wrap]="false" [interval]="0" [keyboard]="false" [pauseOnHover]="false"
                         [showNavigationArrows]="showNavigationArrows" [showNavigationIndicators]="false">
                         <ng-container *ngFor="let item of lstPattern; let i = index;">
                             <ng-template ngbSlide *ngIf="i <= lstPattern.length">
@@ -223,6 +224,32 @@
                                 </div>
                             </ng-template>
                         </ng-container>
+                    </ngb-carousel> -->
+                    <ngb-carousel #carousel [pauseOnFocus]="true" [pauseOnHover]="true" [wrap]="false" [interval]="false"
+                        [keyboard]="false" [showNavigationIndicators]="false" [showNavigationArrows]="true">
+                            <ng-template ngbSlide *ngFor="let slide of slides">
+                                <div class="d-flex flex-wrap align-items-center justify-content-center">
+                                    <ng-container *ngFor="let itemChild of slide">
+                                            <div class="mb-3 fd-parttern-item me-5 position-relative">
+                                                <ng-container *ngIf="itemChild.backgroundColor;else noBackgroundColor">
+                                                    <div class="w-100 h-100 rounded-2"
+                                                        [style.background-color]="itemChild.backgroundColor"
+                                                        (click)="selectCard(itemChild)">
+                                                    </div>
+                                                </ng-container>
+                                                <ng-template #noBackgroundColor>
+                                                    <codx-img [objectId]="itemChild.recID" [funcId]="funcID"
+                                                        [isDefaulImg]="true" [imageType]="'square'" referType="image"
+                                                        objectType="FD_Patterns" [width]="100"
+                                                        (click)="selectCard(itemChild)">
+                                                    </codx-img>
+                                                </ng-template>
+                                                <i *ngIf="itemChild.patternID == patternSelected.patternID"
+                                                    class="icon-i-check2-circle pattern-selected"></i>
+                                            </div>
+                                    </ng-container>
+                                </div>
+                            </ng-template>
                     </ngb-carousel>
                 </div>
             </ng-container>

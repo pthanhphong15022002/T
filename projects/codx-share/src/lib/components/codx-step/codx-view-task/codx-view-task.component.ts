@@ -232,6 +232,8 @@ export class CodxViewTaskComponent implements OnInit {
       } else {
         this.dataView = this.dataInput;
       }
+      let fieldID =  this.dataView?.fieldID;
+      this.listField = fieldID ? this.listField?.filter(field => fieldID.includes(field?.recID)) : [];
     }
   }
   settingData() {

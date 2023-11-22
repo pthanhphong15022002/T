@@ -4193,9 +4193,9 @@ codx-aside-v2.aside-v2-lighter{
     .menu-icon.me-2{
       margin-right: 0!important;
     }
-    .menu.menu-column.menu-sub-item{
-      display: none!important;
-    }
+    // .menu.menu-column.menu-sub-item{
+    //   display: none!important;
+    // }
   }
   #kt_aside_menu div.mx-6{
     margin-left:10px!important;
@@ -4246,6 +4246,9 @@ codx-header-v2, codx-ws-header{
   codx-chat .btn.btn-icon.btn-sm{
     width: auto!important;
   }
+  button#chat-box{
+    font-weight: 400!important;
+  }
   .badge.badge-sm {
     font-size: 6px;
     padding-left: 3px!important;
@@ -4254,7 +4257,11 @@ codx-header-v2, codx-ws-header{
     top: 3px!important;
   }
 }
-
+@media (min-width: 992px){
+[data-kt-aside-minimize=on].aside-minimize-icon-title.header-fixed-2 .menu-link {
+    max-height: 45px!important;
+}
+}
 codx-view-list-tree
 codx-view-schedule{
   .fit-content{
@@ -4299,5 +4306,21 @@ codx-view-list-detail ejs-splitter .e-pane.e-static-pane .e-content{
 .page-dashboard{
   .aside-menu .menu-item .menu-icon > img{
     width: 25px;
+  }
+}
+
+codx-view-schedule .container-fluid.h-50px {
+  background-color: var(--bg-body);
+  .w-300px{
+    width: 200px!important;
+  }
+  .w-250px {
+    width: 150px !important;
+    .text-center.fw-bold.text-hover-primary{
+      color: var(--gray-600)!important;
+      &:hover{
+        color: var(--gray-900)!important;
+      }
+    }
   }
 }

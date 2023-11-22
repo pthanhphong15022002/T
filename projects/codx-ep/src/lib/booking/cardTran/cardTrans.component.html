@@ -4,6 +4,11 @@
   (viewChanged)="viewChanged($event)" (clickMF)="clickMF($event, dataSelected)" (changeDataMF)="changeDataMF($event,dataSelected)" (selectedChange)="changeItemDetail($event)">
 
 </codx-views>
+<ng-template #mfCol let-data>
+  <codx-mfunc [formModel]="view.formModel" (clickMF)="clickMF($event, data)" [dataItem]="data"
+    (changeDataMF)="changeDataMF($event,data)">
+  </codx-mfunc>
+</ng-template>
 <ng-template #tranTypeCol let-data>
   <div class="ms-3">
     <codx-vll [showText]="true" [showBgColor]="true" [name]="'EP019'" [value]="data?.transType"
