@@ -4316,5 +4316,8 @@ codx-view-schedule .container-fluid.h-50px {
   }
   .w-250px {
     width: 150px !important;
+    .text-center.fw-bold.text-hover-primary{
+      color: var(--gray-600)!important;
+    }
   }
 }
