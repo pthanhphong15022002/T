@@ -1,3 +1,38 @@
+<ng-container *ngIf="addFieldsControl == '1'">
+  <codx-layout-add
+    #formlayoutadd
+    [title]="title"
+    [subHeader]="subHeader"
+    [tabInfo]="tabInfo"
+    [tabContent]="tabContent"
+    [openMore]="true"
+    [dialog]="dialog"
+    [formModel]="formModel"
+    [footer]="footer"
+    [data]="deal"
+    (setTitle)="setTitle($event)"
+  ></codx-layout-add>
+
+  <ng-template #tabGeneralInfoDetail>
+    <ng-container
+      [ngTemplateOutlet]="body"
+      [ngTemplateOutletContext]="{ $implicit: formlayoutadd }"
+    ></ng-container>
+  </ng-template>
+  <ng-template #tabCustomFieldDetail>
+    <ng-container
+      [ngTemplateOutlet]="fieldDetail"
+      [ngTemplateOutletContext]="{ $implicit: formlayoutadd }"
+    ></ng-container>
+  </ng-template>
+
+  <ng-template #tabGeneralContactDetail>
+    <ng-container
+      [ngTemplateOutlet]="contact"
+      [ngTemplateOutletContext]="{ $implicit: formlayoutadd }"
+    ></ng-container>
+  </ng-template>
+</ng-container>
 <ng-template #subHeader let-form>
    <codx-tag
      field="tags"
@@ -412,43 +447,6 @@
      </ng-container>
    </ng-container>
  </ng-template>
- 
- 
- <ng-container *ngIf="addFieldsControl == '1'">
-   <codx-layout-add
-     #formlayoutadd
-     [title]="title"
-     [subHeader]="subHeader"
-     [tabInfo]="tabInfo"
-     [tabContent]="tabContent"
-     [openMore]="true"
-     [dialog]="dialog"
-     [formModel]="formModel"
-     [footer]="footer"
-     [data]="deal"
-     (setTitle)="setTitle($event)"
-   ></codx-layout-add>
- 
-   <ng-template #tabGeneralInfoDetail>
-     <ng-container
-       [ngTemplateOutlet]="body"
-       [ngTemplateOutletContext]="{ $implicit: formlayoutadd }"
-     ></ng-container>
-   </ng-template>
-   <ng-template #tabCustomFieldDetail>
-     <ng-container
-       [ngTemplateOutlet]="fieldDetail"
-       [ngTemplateOutletContext]="{ $implicit: formlayoutadd }"
-     ></ng-container>
-   </ng-template>
- 
-   <ng-template #tabGeneralContactDetail>
-     <ng-container
-       [ngTemplateOutlet]="contact"
-       [ngTemplateOutletContext]="{ $implicit: formlayoutadd }"
-     ></ng-container>
-   </ng-template>
- </ng-container>
  
  <ng-template #dataIsEmpty>
    <codx-no-data> </codx-no-data>
