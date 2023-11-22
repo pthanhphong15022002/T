@@ -23,6 +23,7 @@ export class ViewListCmComponent implements OnInit {
   @Input() vllPriority = '';
   @Input() funcID = 'CM0101';
   @Input() entityName: any;
+  @Input() asideMode: string;
   @Output() clickMoreFunc = new EventEmitter<any>();
   @Output() changeMoreMF = new EventEmitter<any>();
   @ViewChild('popDetail') popDetail: TemplateRef<any>;

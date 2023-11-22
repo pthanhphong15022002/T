@@ -13,12 +13,14 @@
   (buttonClick)="click($event)"
   (selectedChange)="selectedChange($event)"
   (onActions)="onActions($event)"
+  (clickMF)="clickMF($event, dataSelected)"
+  (changeDataMF)="changeDataMF($event, dataSelected)"
 >
 </codx-views>
 
 <!--grid view-->
 <ng-template #templateMore let-data>
-  <div class="" style="height: 30px">
+  <div class="" style="height: 30px" *ngIf="asideMode != '2'">
     <codx-mfunc
       [dataItem]="data"
       [formModel]="view.formModel"
