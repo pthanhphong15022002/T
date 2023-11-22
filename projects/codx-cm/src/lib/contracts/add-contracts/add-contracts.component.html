@@ -197,8 +197,7 @@
         type="combobox"
         [model]="{ ProcessID: contracts?.processID }"
         refValue="DPUserProcess"
-        [placeholder]="gridViewSetup?.owner?.description"
-        [value]="owner"
+        [value]="contracts?.owner"
         (valueChange)="valueChangeOwner($event)"
       >
       </codx-input>
