@@ -1,0 +1,152 @@
+<div class="table-responsive table-ac">
+    <table style="table-layout: fixed;" class="table mb-0">
+        <thead class="border-gray-200 table-thead-ac">
+            <tr class="border-bottom">
+                <th class="w-30 border-bottom">
+                    <div class="d-flex align-items-center justify-content-start ps-3">
+                        <codx-label class="fw-bold" fiedName="lblInvoiceNo" default="Mặt hàng">
+                        </codx-label>
+                    </div>
+                </th>
+                <th class="w-15 border-bottom">
+                    <div class="d-flex align-items-center justify-content-end ps-3">
+                        <codx-label class="fw-bold" fiedName="lblInvoiceDate" default="Số lượng">
+                        </codx-label>
+                    </div>
+                </th>
+                <th class="w-15 border-bottom">
+                    <div class="d-flex align-items-center justify-content-end ps-3">
+                        <codx-label class="fw-bold" fiedName="lblDueDate" default="Thành tiền">
+                        </codx-label>
+                    </div>
+                </th>
+                <th class="w-15 border-bottom">
+                    <div class="d-flex align-items-center justify-content-end ps-3">
+                        <codx-label class="fw-bold" fiedName="lblBalanceAmt" default="Chi phí">
+                        </codx-label>
+                    </div>
+                </th>
+                <th class="w-15 border-bottom">
+                    <div class="d-flex align-items-center justify-content-start ps-3">
+                        <codx-label class="fw-bold" fiedName="lblSettledAmt" default="Số chứng từ">
+                        </codx-label>
+                    </div>
+                </th>
+                <th class="w-20 border-bottom">
+                    <div class="d-flex align-items-center justify-content-start ps-3">
+                        <codx-label class="fw-bold" fiedName="lblNote" default="Ngày chứng từ">
+                        </codx-label>
+                    </div>
+                </th>
+                <th class="w-15 border-bottom">
+                    <div class="d-flex align-items-center justify-content-start ps-3">
+                        <codx-label class="fw-bold" fiedName="lblNote" default="Số hóa đơn">
+                        </codx-label>
+                    </div>
+                </th>
+            </tr>
+        </thead>
+        <tbody class="border-bottom">
+            <tr *ngFor="let item of listAllocation;trackBy: trackByFn">
+                <td>
+                    <div class="d-flex align-items-center justify-content-start ps-3">
+                        <ng-container *ngIf="(item.itemName != null && item.itemName != '')">
+                            <span class="fw-bold line-clamp line-clamp-1">{{item.itemName}}</span>
+                        </ng-container>
+                    </div>
+                </td>
+                <td>
+                    <div class="d-flex align-items-center justify-content-end ps-3">
+                        <ng-container *ngIf="(item.quantity != null && item.quantity != '')">
+                            <span class="fw-bold" [innerHTML]="item?.quantity
+                | tranformValueNumber : 'B' | async"></span>
+                        </ng-container>
+                    </div>
+                </td>
+                <td>
+                    <div class="d-flex align-items-center justify-content-end ps-3">
+                        <ng-container *ngIf="(item.costAmt != null && item.costAmt != '')">
+                            <span class="fw-bold" [innerHTML]="item?.costAmt
+                | tranformValueNumber : 'B' | async"></span>
+                        </ng-container>
+                    </div>
+                </td>
+                <td>
+                    <div class="d-flex align-items-center justify-content-end ps-3">
+                        <ng-container *ngIf="(item.adjustedAmt != null && item.adjustedAmt != '')">
+                            <span class="fw-bold" [innerHTML]="item?.adjustedAmt
+                  | tranformValueNumber : 'B' | async"></span>
+                        </ng-container>
+                    </div>
+                </td>
+                <td>
+                    <div class="d-flex align-items-center justify-content-start ps-3">
+                        <ng-container *ngIf="(item.refNo != null && item.refNo != '')">
+                            <span class="fw-bold">{{item.refNo}}</span>
+                        </ng-container>
+                    </div>
+                </td>
+                <td>
+                    <div class="d-flex align-items-center justify-content-start ps-3">
+                        <ng-container *ngIf="(item.refDate != null && item.refDate != '')">
+                            <span #refDate [innerHTML]="
+                    item?.refDate
+              | formatvalue : fmPurchaseInvoicesAllocation : 'refDate' : refDate | async
+          " class="text-gray-600"></span>
+                        </ng-container>
+                    </div>
+                </td>
+                <td>
+                    <div class="d-flex align-items-center justify-content-start ps-3">
+                        <ng-container *ngIf="(item.invoiceNo != null && item.invoiceNo != '')">
+                            <span class="fw-bold line-clamp line-clamp-1">{{item.invoiceNo}}</span>
+                        </ng-container>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <div *ngIf="listAllocation && listAllocation.length == 0" class="ac-empty">
+        <img src="../assets/themes/sys/default/img/DataEmpty.svg" />
+        <div class="fs-6 text-dark mt-2 text-center">
+            {{ "SYS011" | mssg | async }}
+        </div>
+    </div>
+</div>
+<table style="table-layout: fixed;" class="table mb-0">
+    <tfoot class="table-footer-ac">
+        <td class="w-30">
+            <div class="d-flex align-items-center justify-content-end ps-3 h-30px">
+                <codx-label *ngIf="listAllocation && listAllocation.length > 0" class="fw-bold line-clamp line-clamp-1"
+                    fiedName="lblTotal" default="Tổng cộng">
+                </codx-label>
+            </div>
+        </td>
+        <td class="w-15">
+            <div class="d-flex align-items-center justify-content-end ps-3 h-30px">
+                <span *ngIf="listAllocation && listAllocation.length > 0" class="fw-bold line-clamp line-clamp-1"
+                    [innerHTML]="totalQuantity
+                    | tranformValueNumber : 'B' | async"></span>
+            </div>
+        </td>
+        <td class="w-15">
+            <div class="d-flex align-items-center justify-content-end ps-3 h-30px">
+                <span *ngIf="listAllocation && listAllocation.length > 0" class="fw-bold line-clamp line-clamp-1"
+                    [innerHTML]="totalCostAmt
+                    | tranformValueNumber : 'B' | async"></span>
+            </div>
+        </td>
+        <td class="w-15">
+            <div class="d-flex align-items-center justify-content-end ps-3 h-30px">
+                <span *ngIf="listAllocation && listAllocation.length > 0" class="fw-bold line-clamp line-clamp-1"
+                    [innerHTML]="totalAdjustedAmt
+                    | tranformValueNumber : 'B' | async"></span>
+            </div>
+        </td>
+        <td class="w-15">
+        </td>
+        <td class="w-20">
+        </td>
+        <td class="w-15"></td>
+    </tfoot>
+</table>

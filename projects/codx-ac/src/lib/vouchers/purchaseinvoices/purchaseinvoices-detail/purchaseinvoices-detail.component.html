@@ -163,6 +163,19 @@
               <ng-container *ngTemplateOutlet="tabVatInvoices"></ng-container>
             </ng-template>
           </e-tabitem>
+
+          <e-tabitem>
+            <ng-template #headerText>
+              <div class="d-flex align-items-top me-2 mt-2">
+                <i class="icon-clear_all icon-16 me-2"></i>
+                <codx-label class="fw-bold fs-6" fiedName="lblDetail4" [formModel]="formModel"
+                  default="Phân bổ chi phí"></codx-label>
+              </div>
+            </ng-template>
+            <ng-template #content>
+              <ng-container *ngTemplateOutlet="tabAllocation"></ng-container>
+            </ng-template>
+          </e-tabitem>
           <!-- Tab Hóa đơn GTGT -->
 
           <!--Start tab hạch toán -->
@@ -220,3 +233,11 @@
   </ng-container>
 </ng-template>
 <!-- End: template Tab VatInvoices-->
+
+<!-- Start: template Tab tabAllocation-->
+<ng-template #tabAllocation>
+  <ng-container *ngIf="itemSelected">
+    <allocation-table [itemSelected]="itemSelected"></allocation-table>
+  </ng-container>
+</ng-template>
+<!-- End: template Tab tabAllocation-->
