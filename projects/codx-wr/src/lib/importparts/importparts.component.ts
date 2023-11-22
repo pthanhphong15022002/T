@@ -31,8 +31,8 @@ export class ImportpartsComponent extends UIComponent {
     formName: 'WRtempImportParts',
     gridViewName: 'grvWRtempImportParts',
     entityName: 'WR_tempImportParts',
-    funcID: 'WR0105'
-  }
+    funcID: 'WR0105',
+  };
   views: Array<ViewModel> = [];
   titleAction = '';
   // config api get data
@@ -49,6 +49,7 @@ export class ImportpartsComponent extends UIComponent {
   lstImportParts = [];
   loaded: boolean;
   titleView = '';
+  asideMode: string;
   constructor(
     private inject: Injector,
     private codxShareService: CodxShareService,
@@ -58,9 +59,12 @@ export class ImportpartsComponent extends UIComponent {
   }
 
   onInit(): void {
-    this.button = [{
-      id: 'btnAdd',
-    }];
+    this.asideMode = this.codxService?.asideMode;
+    this.button = [
+      {
+        id: 'btnAdd',
+      },
+    ];
     this.cache.moreFunction('IELogs', 'grvIELogs').subscribe((res) => {
       if (res && res.length) {
         let m = res.find((x) => x.functionID == 'WR0105_1');
@@ -82,7 +86,10 @@ export class ImportpartsComponent extends UIComponent {
     ];
   }
 
-  selectedChange(e) {}
+  selectedChange(data) {
+    this.dataSelected = data?.data ? data?.data : data;
+    this.detectorRef.detectChanges();
+  }
 
   click(evt: ButtonModel) {
     // this.titleAction = evt.text;
@@ -125,6 +132,20 @@ export class ImportpartsComponent extends UIComponent {
         );
         // this.df.detectChanges();
         break;
+    }
+  }
+
+  changeDataMF(e, data) {
+    if (e != null) {
+      e.forEach((res) => {
+        switch (res?.functionID) {
+          case 'SYS02':
+          case 'SYS03':
+          case 'SYS04':
+            res.disabled = true;
+            break;
+        }
+      });
     }
   }
 

@@ -5,6 +5,7 @@ import { CodxEpService } from '../../codx-ep.service';
 import { PopupAddCardTransComponent } from './popup-add-cardTrans/popup-add-cardTrans.component';
 import { ResourceTrans } from '../../models/resource.model';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
+import { EPCONST } from '../../codx-ep.constant';
 
 @Component({
   selector: 'booking-cardTran',
@@ -14,6 +15,7 @@ import { CodxShareService } from 'projects/codx-share/src/public-api';
 export class CardTransComponent
   extends UIComponent
   implements AfterViewInit {
+    @ViewChild('mfCol') mfCol: TemplateRef<any>;
   @ViewChild('tranTypeCol') tranTypeCol: TemplateRef<any>;
   @ViewChild('userIDCol') userIDCol: TemplateRef<any>;
   @ViewChild('createByCol') createByCol: TemplateRef<any>;
@@ -73,7 +75,10 @@ export class CardTransComponent
   }
   clickMF(event, data) {
     if(!data) data = this.view?.dataService?.dataSelected;
-    if(!data) return;    
+    if(!data && this.view?.dataService?.data?.length>0) {
+      data = this.view?.dataService?.data[0];
+      this.view.dataService.dataSelected = data;
+    }     
     switch (event?.functionID) {      
         default:
           //Biến động , tự custom
@@ -104,6 +109,13 @@ export class CardTransComponent
         .subscribe((gv) => {
           if(gv){
             this.columnGrids = [
+              {
+                field: '',
+                headerText: '',
+                width: '40',
+                template: this.mfCol,
+                textAlign: 'Center',
+              },
               {
                 field: 'transType',
                 headerText: gv?.TransType?.headerText,
@@ -146,7 +158,7 @@ export class CardTransComponent
               active: true,
               model: {
                 resources: this.columnGrids,
-
+                hideMoreFunc: true,
               },
             },
           ];
@@ -154,6 +166,23 @@ export class CardTransComponent
         });
     }
 
+  }
+  changeDataMF(evt,data){
+    if (evt != null) {
+      evt.forEach((func) => {
+        if (
+          func.functionID == EPCONST.MFUNCID.Edit ||
+          func.functionID == EPCONST.MFUNCID.Delete ||
+          func.functionID == EPCONST.MFUNCID.Copy ||
+          func.functionID == "SYS102" ||
+          func.functionID == "SYS104" ||
+          func.functionID == "SYS103" 
+        ) {
+          func.disabled = true;
+        }        
+      });      
+      this.detectorRef.detectChanges();
+    }
   }
   viewChanged(evt: any) {
     this.funcID = this.router.snapshot.params['funcID'];

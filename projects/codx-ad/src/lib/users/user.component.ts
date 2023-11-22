@@ -340,7 +340,8 @@ export class UserComponent extends UIComponent {
   }
   //#endregion
 
-  changeDataMF(e: any, data) {
+  changeDataMF(e: any, data: any) {
+    if (!data) return;
     let dl = e.filter((x: { functionID: string }) => x.functionID == 'SYS02');
     dl[0].disabled = true;
     let copyMF = e.filter((x) => x.functionID == 'SYS04');

@@ -10,7 +10,8 @@
   className="EmployeesBusiness"
   method="GetModelFormEmployAsync"
   (changeDataMF)="changeDataMF($event)"
-  (clickMF)="clickMF($event, dataSelected)"
+  (clickMF)="clickMF($event, itemSelected)"
+  (selectedChange)="selectedChange($event)"
   [selectedFirst]="true"
 >
 </codx-views>

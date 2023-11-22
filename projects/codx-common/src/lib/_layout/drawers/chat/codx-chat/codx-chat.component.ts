@@ -38,15 +38,16 @@ export class CodxChatComponent implements OnInit, AfterViewInit {
     );
   }
   loaded = false;
-  count:number = 0;
-  formModel:FormModel = null;
-  user:any = null;
+  count: number = 0;
+  formModel: FormModel = null;
+  user: any = null;
   funcID: string = 'WPT11';
   function: any = null;
   grdViewSetUp: any = null;
   moreFC: any = null;
   autoClose: boolean = true;
   lstBoxChat: any[] = [];
+  hideChat: boolean = true;
   @ViewChild('codxChatContainer', { static: true })
   codxChatContainer: TemplateRef<any>;
   @ViewChild('listChat') listChat: CodxChatListComponent;
@@ -70,10 +71,8 @@ export class CodxChatComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     // get function - gridViewsetup
     if (this.funcID) {
-      this.cache.functionList(this.funcID)
-      .subscribe((func: any) => {
-        if (func) 
-        {
+      this.cache.functionList(this.funcID).subscribe((func: any) => {
+        if (func) {
           this.function = JSON.parse(JSON.stringify(func));
           this.formModel.funcID = func.functionID;
           this.formModel.entityName = func.entityName;
@@ -103,18 +102,15 @@ export class CodxChatComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.signalRSV.openBoxChat.subscribe((res:any) => {
+    this.signalRSV.openBoxChat.subscribe((res: any) => {
       this.getTotalMessage();
     });
   }
   // get count message
-  getTotalMessage(){
-    this.api.execSv(
-      "WP",
-      "ERM.Business.WP",
-      "ChatBusiness",
-      "GetTotalMessageAsync")
-      .subscribe((res:any) => {
+  getTotalMessage() {
+    this.api
+      .execSv('WP', 'ERM.Business.WP', 'ChatBusiness', 'GetTotalMessageAsync')
+      .subscribe((res: any) => {
         this.count = res;
       });
   }
@@ -156,8 +152,7 @@ export class CodxChatComponent implements OnInit, AfterViewInit {
       option
     );
     popup.closed.subscribe((res: any) => {
-      if (res.event) 
-      {
+      if (res.event) {
         this.listChat.addGroup(res.event);
       }
       this.autoClose = true;
@@ -177,16 +172,14 @@ export class CodxChatComponent implements OnInit, AfterViewInit {
   }
   // searrch
   search(event: any) {
-    if (this.listChat) 
-    {
+    if (this.listChat) {
       this.listChat.search(event);
     }
   }
   //select goup chat
   selectItem(group: any) {
     group.isRead = true;
-    if (group.messageMissed > 0) 
-    {
+    if (group.messageMissed > 0) {
       group.messageMissed = 0;
       this.count -= group.messageMissed;
     }
@@ -204,6 +197,5 @@ export class CodxChatComponent implements OnInit, AfterViewInit {
   }
 
   // close ngbDropdown
-  clickBtnDropdown(){
-  }
+  clickBtnDropdown() {}
 }

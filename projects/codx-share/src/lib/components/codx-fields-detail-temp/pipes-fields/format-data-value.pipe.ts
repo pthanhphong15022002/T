@@ -23,6 +23,7 @@ export class FormatDataValuePipe implements PipeTransform {
     switch (dataType) {
       case 'L':
         if (dataFormat == 'C') return this.formatCombox(value, refValue);
+        if (dataFormat == 'B') return this.formatBool(value);
         break;
       case 'N':
         return this.formatNumber(value, dataFormat);
@@ -157,5 +158,23 @@ export class FormatDataValuePipe implements PipeTransform {
     tetxFormart = tetxFormart.replace('yyyy', year);
 
     return tetxFormart;
+  }
+
+  //fort mat bool
+  formatBool(value) {
+    return this.cache.valueList('DP0272').pipe(
+      mergeMap((res) => {
+        if (res && res?.datas?.length > 0) {
+          var text = res?.datas.filter((x) => x.value == 'B')[0]?.text;
+          if (text) {
+            let arr = text.split('/');
+            if (arr?.length > 1) {
+              value = arr[Number.parseInt(value)];
+            }
+          }
+        }
+        return of(value || '');
+      })
+    );
   }
 }

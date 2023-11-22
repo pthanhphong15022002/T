@@ -129,29 +129,42 @@ export const fmPurchaseInvoicesLinesAllocation: FormModel = {
   entityPer: 'AC_PurchaseInvoicesLines',
 };
 
+export enum MorfuncDefault {
+  Sua = 'SYS03',
+  Xoa = 'SYS02',
+  SaoChep = 'SYS04',
+  XuatDuLieu = 'SYS002'
+}
+
 export enum MorfuncCash {
   GhiSoPC = 'ACT041003',
-  GhiSoUPC = 'ACT042905',
+  GhiSoUNC = 'ACT042905',
   GuiDuyetPC = 'ACT041002',
-  GuiDuyetUPC = 'ACT042903',
+  GuiDuyetUNC = 'ACT042903',
   HuyDuyetPC = 'ACT041004',
-  HuyDuyetUPC = 'ACT042904',
+  HuyDuyetUNC = 'ACT042904',
   KhoiPhucPC = 'ACT041008',
-  KhoiPhucUPC = 'ACT042906',
+  KhoiPhucUNC = 'ACT042906',
   ChuyenTienDienTu = 'ACT042901',
   InPC = 'ACT041010',
-  InUPC = 'ACT042907',
+  InUNC = 'ACT042907',
   KiemTraHopLePC = 'ACT041009',
-  KiemTraHopLeUPC = 'ACT042902',
+  KiemTraHopLeUNC = 'ACT042902',
 }
 
 export enum MorfuncCashReceipt {
-  GhiSo = 'ACT040106',
-  GuiDuyet = 'ACT040104',
-  HuyDuyet = 'ACT040105',
-  KhoiPhuc = 'ACT040107',
-  In = 'ACT040108',
-  KiemTraHopLe = 'ACT040103',
+  GhiSoPT = 'ACT040106',
+  GhiSoBC = 'ACT042804',
+  GuiDuyetPT = 'ACT040104',
+  GuiDuyetBC = 'ACT042802',
+  HuyDuyetPT = 'ACT040105',
+  HuyDuyetBC = 'ACT042803',
+  KhoiPhucPT = 'ACT040107',
+  KhoiPhucBC = 'ACT042805',
+  InPT = 'ACT040108',
+  InBC = 'ACT042806',
+  KiemTraHopLePT = 'ACT040103',
+  KiemTraHopLeBC = 'ACT042801',
 }
 
 export enum MorfuncPur {
@@ -488,1029 +501,479 @@ export class CodxAcService {
   }
 
   changeMFCashPayment(event, data, type: any = '', journal, formModel) {
-    let array = [
-      MorfuncCash.GhiSoPC,
-      MorfuncCash.GhiSoUPC,
-      MorfuncCash.GuiDuyetPC,
-      MorfuncCash.GuiDuyetUPC,
-      MorfuncCash.HuyDuyetPC,
-      MorfuncCash.HuyDuyetUPC,
-      MorfuncCash.KhoiPhucPC,
-      MorfuncCash.KhoiPhucUPC,
-      MorfuncCash.ChuyenTienDienTu,
-      MorfuncCash.InPC,
-      MorfuncCash.InUPC,
-      MorfuncCash.KiemTraHopLePC,
-      MorfuncCash.KiemTraHopLeUPC,
-      'SYS02',
-      'SYS03',
-      'SYS04',
-      'SYS002'
-    ];
-    let arrBookmark = [];
     event.forEach((element) => {
-      if (!array.includes(element.functionID)) {
-        element.disabled = true;
-      } else {
-        if (type === 'viewgrid') {
+      //* thiet lap bookmark cac morefunc tai cac mode view
+      if (type === 'viewgrid') element.isbookmark = false; //? viewgrid tất cả ko bookmark ra ngoài
+      if (type === 'viewdetail') { //? viewdetail morefunc mac dinh ko bookmark ra ngoai
+        if (Object.values(MorfuncDefault).includes(element.functionID)) {
           element.isbookmark = false;
-        }
-        if (type === 'viewdetail') {
-          if (Object.values(MorfuncCash).includes(element.functionID)) {
-            element.isbookmark = true;
-          } else {
-            element.isbookmark = false;
-          }
-        }
-        if (
-          element.functionID != 'SYS02' &&
-          element.functionID != 'SYS03' &&
-          element.functionID != 'SYS04' &&
-          element.functionID != 'SYS002'
-        ) {
-          let item = event.find(
-            (x) =>
-              x.functionID.toLowerCase() == element.functionID.toLowerCase()
-          );
-          if (item != null) arrBookmark.push(item);
+        }else{
+          element.isbookmark = true;
         }
       }
-    });
-
-    switch (data?.status) {
-      case '1':
-        if (!data?.validated) {
-          arrBookmark.forEach((element) => {
-            if (
-              element.functionID == MorfuncCash.KiemTraHopLePC ||
-              element.functionID == MorfuncCash.KiemTraHopLeUPC ||
-              element.functionID == MorfuncCash.InPC ||
-              element.functionID == MorfuncCash.InUPC
-            ) {
+      //* an hien morefunc theo nghiep vu
+      if(element.functionID == MorfuncDefault.Sua && data?.status != '1' && data?.status != '2') element.disabled = true; //? an morefunc chinh sua khi trang thai khac hop le,lm lại
+      switch (data?.status) {
+        case '1':
+          if (!data?.validated) {
+            if([MorfuncCash.KiemTraHopLePC,MorfuncCash.KiemTraHopLeUNC,MorfuncCash.InPC,MorfuncCash.InUNC].includes(element.functionID))
               element.disabled = false;
-            } else {
+            else if (!Object.values(MorfuncDefault).includes(element.functionID))
               element.disabled = true;
+          }else{
+            if (journal.approvalControl == '0') {
+              if([MorfuncCash.GhiSoPC,MorfuncCash.GhiSoUNC,MorfuncCash.InPC,MorfuncCash.InUNC].includes(element.functionID) 
+              || (element.functionID == MorfuncCash.ChuyenTienDienTu && formModel.funcID == 'ACT0429'))
+                  element.disabled = false;
+              else if (!Object.values(MorfuncDefault).includes(element.functionID))
+              element.disabled = true;
+            }else{
+              if([MorfuncCash.GuiDuyetPC,MorfuncCash.GuiDuyetUNC,MorfuncCash.InPC,MorfuncCash.InUNC].includes(element.functionID))
+                element.disabled = false;
+              else if (!Object.values(MorfuncDefault).includes(element.functionID))
+                element.disabled = true;
             }
-          });
-        }else{
-          if (journal.approvalControl == '0') {
-            arrBookmark.forEach((element) => {
-              if (
-                element.functionID == MorfuncCash.GhiSoPC ||
-                element.functionID == MorfuncCash.GhiSoUPC ||
-                element.functionID == MorfuncCash.InPC ||
-                element.functionID == MorfuncCash.InUPC ||
-                (element.functionID == MorfuncCash.ChuyenTienDienTu &&
-                  formModel.funcID == 'ACT0429')
-              ) {
-                element.disabled = false;
-              } else {
-                element.disabled = true;
-              }
-            });
-          } else {
-            arrBookmark.forEach((element) => {
-              if (
-                element.functionID == MorfuncCash.GuiDuyetPC ||
-                element.functionID == MorfuncCash.GuiDuyetUPC ||
-                element.functionID == MorfuncCash.InPC ||
-                element.functionID == MorfuncCash.InUPC
-              ) {
-                element.disabled = false;
-              } else {
-                element.disabled = true;
-              }
-            });
           }
-        }
-        break;
-      case '3':
-        arrBookmark.forEach((element) => {
-          if (
-            element.functionID == MorfuncCash.HuyDuyetPC ||
-            element.functionID == MorfuncCash.HuyDuyetUPC ||
-            element.functionID == MorfuncCash.InPC ||
-            element.functionID == MorfuncCash.InUPC
-          ) {
+          break;
+        case '2':
+          if([MorfuncCash.KiemTraHopLePC,MorfuncCash.KiemTraHopLeUNC,MorfuncCash.InPC,MorfuncCash.InUNC].includes(element.functionID))
             element.disabled = false;
-          } else {
+          else if (!Object.values(MorfuncDefault).includes(element.functionID))
             element.disabled = true;
-          }
-        });
-        break;
-      case '5':
-      case '9':
-        arrBookmark.forEach((element) => {
-          if (
-            element.functionID == MorfuncCash.GhiSoPC ||
-            element.functionID == MorfuncCash.GhiSoUPC ||
-            element.functionID == MorfuncCash.InPC ||
-            element.functionID == MorfuncCash.InUPC ||
-            (element.functionID == MorfuncCash.ChuyenTienDienTu &&
-              formModel.funcID == 'ACT0429')
-          ) {
+          break;
+        case '3':
+          if([MorfuncCash.HuyDuyetPC,MorfuncCash.HuyDuyetUNC,MorfuncCash.InPC,MorfuncCash.InUNC].includes(element.functionID))
             element.disabled = false;
-          } else {
+          else if (!Object.values(MorfuncDefault).includes(element.functionID))
             element.disabled = true;
-          }
-        });
-        break;
-      case '6':
-        arrBookmark.forEach((element) => {
-          if (
-            element.functionID == MorfuncCash.KhoiPhucPC ||
-            element.functionID == MorfuncCash.KhoiPhucUPC ||
-            element.functionID == MorfuncCash.InPC ||
-            element.functionID == MorfuncCash.InUPC
-          ) {
+          break;
+        case '5':
+        case '9':
+          if([MorfuncCash.GhiSoPC,MorfuncCash.GhiSoUNC,MorfuncCash.InPC,MorfuncCash.InUNC].includes(element.functionID)
+          || (element.functionID == MorfuncCash.ChuyenTienDienTu && formModel.funcID == 'ACT0429'))
+              element.disabled = false;
+          else if (!Object.values(MorfuncDefault).includes(element.functionID))
+              element.disabled = true;
+          break;
+        case '6':
+          if([MorfuncCash.KhoiPhucPC,MorfuncCash.KhoiPhucUNC,MorfuncCash.InPC,MorfuncCash.InUNC].includes(element.functionID))
             element.disabled = false;
-          } else {
+          else if (!Object.values(MorfuncDefault).includes(element.functionID))
             element.disabled = true;
-          }
-        });
-        break;
-      case '2':
-        arrBookmark.forEach((element) => {
-          if (
-            element.functionID == MorfuncCash.KiemTraHopLePC ||
-            element.functionID == MorfuncCash.KiemTraHopLeUPC ||
-            element.functionID == MorfuncCash.InPC ||
-            element.functionID == MorfuncCash.InUPC
-          ) {
+          break;
+        case '10':
+          if([MorfuncCash.GhiSoUNC,MorfuncCash.InUNC].includes(element.functionID) && formModel.funcID == 'ACT0429')
             element.disabled = false;
-          } else {
+          else if (!Object.values(MorfuncDefault).includes(element.functionID))
             element.disabled = true;
-          }
-        });
-        break;
-      case '8':
-      case '11':
-        arrBookmark.forEach((element) => {
-          if (
-            element.functionID == MorfuncCash.InUPC &&
-            formModel.funcID == 'ACT0429'
-          ) {
+          break;
+        case '8':
+        case '11':
+          if([MorfuncCash.InUNC].includes(element.functionID) && formModel.funcID == 'ACT0429')
             element.disabled = false;
-          } else {
+          else if (!Object.values(MorfuncDefault).includes(element.functionID))
             element.disabled = true;
-          }
-        });
-        break;
-      case '10':
-        arrBookmark.forEach((element) => {
-          if (
-            (element.functionID == MorfuncCash.GhiSoUPC ||
-              element.functionID == MorfuncCash.InUPC) &&
-            formModel.funcID == 'ACT0429'
-          ) {
-            element.disabled = false;
-          } else {
-            element.disabled = true;
-          }
-        });
-        break;
-      default:
-        arrBookmark.forEach((element) => {
+          break;
+        default:
           element.disabled = true;
-        });
-        break;
-    }
-  }
-
-  changeMFVoucher(event, data, type: any = '', journal, formModel) {
-    let array = [
-      MorfuncVoucher.GhiSo,
-      MorfuncVoucher.GuiDuyet,
-      MorfuncVoucher.HuyDuyet,
-      MorfuncVoucher.KhoiPhuc,
-      MorfuncVoucher.In,
-      MorfuncVoucher.KiemTraHopLe,
-      'SYS02',
-      'SYS03',
-      'SYS04',
-    ];
-    let arrBookmark = [];
-    event.forEach((element) => {
-      if (!array.includes(element.functionID)) {
-        element.disabled = true;
-      } else {
-        if (type === 'viewgrid') {
-          element.isbookmark = false;
-        }
-        if (type === 'viewdetail') {
-          if (Object.values(MorfuncVoucher).includes(element.functionID)) {
-            element.isbookmark = true;
-          } else {
-            element.isbookmark = false;
-          }
-        }
-        if (
-          element.functionID != 'SYS02' &&
-          element.functionID != 'SYS03' &&
-          element.functionID != 'SYS04'
-        ) {
-          let item = event.find(
-            (x) =>
-              x.functionID.toLowerCase() == element.functionID.toLowerCase()
-          );
-          if (item != null) arrBookmark.push(item);
-        }
+          break;
       }
-    });
-
-    switch (data?.status) {
-      case '1':
-        if (!data?.validated) {
-          arrBookmark.forEach((element) => {
-            if (
-              element.functionID == MorfuncVoucher.KiemTraHopLe ||
-              element.functionID == MorfuncVoucher.In
-            ) {
-              element.disabled = false;
-            } else {
-              element.disabled = true;
-            }
-          });
-        }else{
-          if (journal.approvalControl == '0') {
-            arrBookmark.forEach((element) => {
-              if (
-                element.functionID == MorfuncVoucher.GhiSo ||
-                element.functionID == MorfuncVoucher.In
-              ) {
-                element.disabled = false;
-              } else {
-                element.disabled = true;
-              }
-            });
-          } else {
-            arrBookmark.forEach((element) => {
-              if (
-                element.functionID == MorfuncVoucher.GuiDuyet ||
-                element.functionID == MorfuncVoucher.In
-              ) {
-                element.disabled = false;
-              } else {
-                element.disabled = true;
-              }
-            });
-          }
-        }
-        break;
-      case '3':
-        arrBookmark.forEach((element) => {
-          if (
-            element.functionID == MorfuncVoucher.HuyDuyet ||
-            element.functionID == MorfuncVoucher.In
-          ) {
-            element.disabled = false;
-          } else {
-            element.disabled = true;
-          }
-        });
-        break;
-      case '5':
-      case '9':
-        arrBookmark.forEach((element) => {
-          if (
-            element.functionID == MorfuncVoucher.GhiSo ||
-            element.functionID == MorfuncVoucher.In
-          ) {
-            element.disabled = false;
-          } else {
-            element.disabled = true;
-          }
-        });
-        break;
-      case '6':
-        arrBookmark.forEach((element) => {
-          if (
-            element.functionID == MorfuncVoucher.KhoiPhuc ||
-            element.functionID == MorfuncVoucher.In
-          ) {
-            element.disabled = false;
-          } else {
-            element.disabled = true;
-          }
-        });
-        break;
-      case '2':
-        arrBookmark.forEach((element) => {
-          if (
-            element.functionID == MorfuncVoucher.KiemTraHopLe ||
-            element.functionID == MorfuncVoucher.In
-          ) {
-            element.disabled = false;
-          } else {
-            element.disabled = true;
-          }
-        });
-        break;
-      default:
-        arrBookmark.forEach((element) => {
-          element.disabled = true;
-        });
-        break;
-    }
+    })
   }
 
   changeMFCashReceipt(event, data, type: any = '', journal, formModel) {
-    let array = [
-      MorfuncCashReceipt.GhiSo,
-      MorfuncCashReceipt.GuiDuyet,
-      MorfuncCashReceipt.HuyDuyet,
-      MorfuncCashReceipt.KhoiPhuc,
-      MorfuncCashReceipt.In,
-      MorfuncCashReceipt.KiemTraHopLe,
-      'SYS02',
-      'SYS03',
-      'SYS04',
-      'SYS002'
-    ];
-    let arrBookmark = [];
     event.forEach((element) => {
-      if (!array.includes(element.functionID)) {
-        element.disabled = true;
-      } else {
-        if (type === 'viewgrid') {
+      //* thiet lap bookmark cac morefunc tai cac mode view
+      if (type === 'viewgrid') element.isbookmark = false; //? viewgrid tất cả ko bookmark ra ngoài
+      if (type === 'viewdetail') { //? viewdetail morefunc mac dinh ko bookmark ra ngoai
+        if (Object.values(MorfuncDefault).includes(element.functionID)) {
           element.isbookmark = false;
-        }
-        if (type === 'viewdetail') {
-          if (Object.values(MorfuncCashReceipt).includes(element.functionID)) {
-            element.isbookmark = true;
-          } else {
-            element.isbookmark = false;
-          }
-        }
-        if (
-          element.functionID != 'SYS02' &&
-          element.functionID != 'SYS03' &&
-          element.functionID != 'SYS04' && 
-          element.functionID != 'SYS002'
-        ) {
-          let item = event.find(
-            (x) =>
-              x.functionID.toLowerCase() == element.functionID.toLowerCase()
-          );
-          if (item != null) arrBookmark.push(item);
+        }else{
+          element.isbookmark = true;
         }
       }
-    });
-
-    switch (data?.status) {
-      case '1':
-        if (!data?.validated) {
-          arrBookmark.forEach((element) => {
-            if (
-              element.functionID == MorfuncCashReceipt.KiemTraHopLe ||
-              element.functionID == MorfuncCashReceipt.In
-            ) {
+      //* an hien morefunc theo nghiep vu
+      if(element.functionID == MorfuncDefault.Sua && data?.status != '1' && data?.status != '2') element.disabled = true; //? an morefunc chinh sua khi trang thai khac hop le,lm lại
+      switch (data?.status) {
+        case '1':
+          if (!data?.validated) {
+            if([MorfuncCashReceipt.KiemTraHopLePT,MorfuncCashReceipt.KiemTraHopLeBC,MorfuncCashReceipt.InPT,MorfuncCashReceipt.InBC].includes(element.functionID))
               element.disabled = false;
-            } else {
+            else if (!Object.values(MorfuncDefault).includes(element.functionID))
               element.disabled = true;
+          }else{
+            if (journal.approvalControl == '0') {
+              if([MorfuncCashReceipt.GhiSoPT,MorfuncCashReceipt.GhiSoBC,MorfuncCashReceipt.InPT,MorfuncCashReceipt.InBC].includes(element.functionID))
+                element.disabled = false;
+              else if (!Object.values(MorfuncDefault).includes(element.functionID))
+                element.disabled = true;
+            }else{
+              if([MorfuncCashReceipt.GuiDuyetPT,MorfuncCashReceipt.GuiDuyetBC,MorfuncCashReceipt.InPT,MorfuncCashReceipt.InBC].includes(element.functionID))
+                element.disabled = false;
+              else if (!Object.values(MorfuncDefault).includes(element.functionID))
+                element.disabled = true;
             }
-          });
-        }else{
-          if (journal.approvalControl == '0') {
-            arrBookmark.forEach((element) => {
-              if (
-                element.functionID == MorfuncCashReceipt.GhiSo ||
-                element.functionID == MorfuncCashReceipt.In
-              ) {
-                element.disabled = false;
-              } else {
-                element.disabled = true;
-              }
-            });
-          } else {
-            arrBookmark.forEach((element) => {
-              if (
-                element.functionID == MorfuncCashReceipt.GuiDuyet ||
-                element.functionID == MorfuncCashReceipt.In
-              ) {
-                element.disabled = false;
-              } else {
-                element.disabled = true;
-              }
-            });
           }
-        }
-        break;
-      case '3':
-        arrBookmark.forEach((element) => {
-          if (
-            element.functionID == MorfuncCashReceipt.HuyDuyet ||
-            element.functionID == MorfuncCashReceipt.In
-          ) {
+          break;
+        case '2':
+          if([MorfuncCashReceipt.KiemTraHopLePT,MorfuncCashReceipt.KiemTraHopLeBC,MorfuncCashReceipt.InPT,MorfuncCashReceipt.InBC].includes(element.functionID))
             element.disabled = false;
-          } else {
+          else if (!Object.values(MorfuncDefault).includes(element.functionID))
             element.disabled = true;
-          }
-        });
-        break;
-      case '5':
-      case '9':
-        arrBookmark.forEach((element) => {
-          if (
-            element.functionID == MorfuncCashReceipt.GhiSo ||
-            element.functionID == MorfuncCashReceipt.In
-          ) {
+          break;
+        case '3':
+          if([MorfuncCashReceipt.HuyDuyetPT,MorfuncCashReceipt.HuyDuyetBC,MorfuncCashReceipt.InPT,MorfuncCashReceipt.InBC].includes(element.functionID))
             element.disabled = false;
-          } else {
+          else if (!Object.values(MorfuncDefault).includes(element.functionID))
             element.disabled = true;
-          }
-        });
-        break;
-      case '6':
-        arrBookmark.forEach((element) => {
-          if (
-            element.functionID == MorfuncCashReceipt.KhoiPhuc ||
-            element.functionID == MorfuncCashReceipt.In
-          ) {
+          break;
+        case '5':
+        case '9':
+          if([MorfuncCashReceipt.GhiSoPT,MorfuncCashReceipt.GhiSoBC,MorfuncCashReceipt.InPT,MorfuncCashReceipt.InBC].includes(element.functionID))
+              element.disabled = false;
+          else if (!Object.values(MorfuncDefault).includes(element.functionID))
+              element.disabled = true;
+          break;
+        case '6':
+          if([MorfuncCashReceipt.KhoiPhucPT,MorfuncCashReceipt.KhoiPhucBC,MorfuncCashReceipt.InPT,MorfuncCashReceipt.InBC].includes(element.functionID))
             element.disabled = false;
-          } else {
+          else if (!Object.values(MorfuncDefault).includes(element.functionID))
             element.disabled = true;
-          }
-        });
-        break;
-      case '2':
-        arrBookmark.forEach((element) => {
-          if (
-            element.functionID == MorfuncCashReceipt.KiemTraHopLe ||
-            element.functionID == MorfuncCashReceipt.In
-          ) {
-            element.disabled = false;
-          } else {
-            element.disabled = true;
-          }
-        });
-        break;
-      default:
-        arrBookmark.forEach((element) => {
+          break;
+        default:
           element.disabled = true;
-        });
-        break;
-    }
-  }
-
-  changeMFPur(event, data, type: any = '', journal, formModel) {
-    let array = [
-      MorfuncPur.GhiSo,
-      MorfuncPur.GuiDuyet,
-      MorfuncPur.HuyDuyet,
-      MorfuncPur.KhoiPhuc,
-      MorfuncPur.In,
-      MorfuncPur.KiemTraHopLe,
-      MorfuncPur.PhanBoChiPhi,
-      'SYS02',
-      'SYS03',
-      'SYS04',
-      'SYS002'
-    ];
-    let arrBookmark = [];
-    event.forEach((element) => {
-      if (!array.includes(element.functionID)) {
-        element.disabled = true;
-      } else {
-        if (type === 'viewgrid') {
-          element.isbookmark = false;
-        }
-        if (type === 'viewdetail') {
-          if (Object.values(MorfuncPur).includes(element.functionID)) {
-            element.isbookmark = true;
-          } else {
-            element.isbookmark = false;
-          }
-        }
-        if (
-          element.functionID != 'SYS02' &&
-          element.functionID != 'SYS03' &&
-          element.functionID != 'SYS04' && 
-          element.functionID != 'SYS002'
-        ) {
-          let item = event.find(
-            (x) =>
-              x.functionID.toLowerCase() == element.functionID.toLowerCase()
-          );
-          if (item != null) arrBookmark.push(item);
-        }
+          break;
       }
-    });
-
-    switch (data?.status) {
-      case '1':
-        if (!data?.validated) {
-          arrBookmark.forEach((element) => {
-            if (
-              element.functionID == MorfuncPur.KiemTraHopLe ||
-              element.functionID == MorfuncPur.In
-            ) {
-              element.disabled = false;
-            } else {
-              element.disabled = true;
-            }
-          });
-        }else{
-          if (journal.approvalControl == '0') {
-            arrBookmark.forEach((element) => {
-              if (
-                element.functionID == MorfuncPur.GhiSo ||
-                element.functionID == MorfuncPur.In ||
-                element.functionID == MorfuncPur.PhanBoChiPhi
-              ) {
-                element.disabled = false;
-              } else {
-                element.disabled = true;
-              }
-            });
-          } else {
-            arrBookmark.forEach((element) => {
-              if (
-                element.functionID == MorfuncPur.GuiDuyet ||
-                element.functionID == MorfuncPur.In ||
-                element.functionID == MorfuncPur.PhanBoChiPhi
-              ) {
-                element.disabled = false;
-              } else {
-                element.disabled = true;
-              }
-            });
-          }
-        }   
-        break;
-      case '3':
-        arrBookmark.forEach((element) => {
-          if (
-            element.functionID == MorfuncPur.HuyDuyet ||
-            element.functionID == MorfuncPur.In ||
-            element.functionID == MorfuncPur.PhanBoChiPhi
-          ) {
-            element.disabled = false;
-          } else {
-            element.disabled = true;
-          }
-        });
-        break;
-      case '5':
-      case '9':
-        arrBookmark.forEach((element) => {
-          if (
-            element.functionID == MorfuncPur.GhiSo ||
-            element.functionID == MorfuncPur.In ||
-            element.functionID == MorfuncPur.PhanBoChiPhi
-          ) {
-            element.disabled = false;
-          } else {
-            element.disabled = true;
-          }
-        });
-        break;
-      case '6':
-        arrBookmark.forEach((element) => {
-          if (
-            element.functionID == MorfuncPur.KhoiPhuc ||
-            element.functionID == MorfuncPur.In ||
-            element.functionID == MorfuncPur.PhanBoChiPhi
-          ) {
-            element.disabled = false;
-          } else {
-            element.disabled = true;
-          }
-        });
-        break;
-      case '2':
-        arrBookmark.forEach((element) => {
-          if (
-            element.functionID == MorfuncPur.KiemTraHopLe ||
-            element.functionID == MorfuncPur.In ||
-            element.functionID == MorfuncPur.PhanBoChiPhi
-          ) {
-            element.disabled = false;
-          } else {
-            element.disabled = true;
-          }
-        });
-        break;
-      default:
-        arrBookmark.forEach((element) => {
-          element.disabled = true;
-        });
-        break;
-    }
-  }
-
-  changeMFSale(event, data, type: any = '', journal, formModel) {
-    let array = [
-      MorfuncSale.GhiSo,
-      MorfuncSale.GuiDuyet,
-      MorfuncSale.HuyDuyet,
-      MorfuncSale.KhoiPhuc,
-      MorfuncSale.In,
-      MorfuncSale.KiemTraHopLe,
-      'SYS02',
-      'SYS03',
-      'SYS04',
-      'SYS002'
-    ];
-    let arrBookmark = [];
-    event.forEach((element) => {
-      if (!array.includes(element.functionID)) {
-        element.disabled = true;
-      } else {
-        if (type === 'viewgrid') {
-          element.isbookmark = false;
-        }
-        if (type === 'viewdetail') {
-          if (Object.values(MorfuncSale).includes(element.functionID)) {
-            element.isbookmark = true;
-          } else {
-            element.isbookmark = false;
-          }
-        }
-        if (
-          element.functionID != 'SYS02' &&
-          element.functionID != 'SYS03' &&
-          element.functionID != 'SYS04' &&
-          element.functionID != 'SYS002'
-        ) {
-          let item = event.find(
-            (x) =>
-              x.functionID.toLowerCase() == element.functionID.toLowerCase()
-          );
-          if (item != null) arrBookmark.push(item);
-        }
-      }
-    });
-
-    switch (data?.status) {
-      case '1':
-        if (!data?.validated) {
-          arrBookmark.forEach((element) => {
-            if (
-              element.functionID == MorfuncSale.KiemTraHopLe ||
-              element.functionID == MorfuncSale.In
-            ) {
-              element.disabled = false;
-            } else {
-              element.disabled = true;
-            }
-          });
-        }else{
-          if (journal.approvalControl == '0') {
-            arrBookmark.forEach((element) => {
-              if (
-                element.functionID == MorfuncSale.GhiSo ||
-                element.functionID == MorfuncSale.In
-              ) {
-                element.disabled = false;
-              } else {
-                element.disabled = true;
-              }
-            });
-          } else {
-            arrBookmark.forEach((element) => {
-              if (
-                element.functionID == MorfuncSale.GuiDuyet ||
-                element.functionID == MorfuncSale.In
-              ) {
-                element.disabled = false;
-              } else {
-                element.disabled = true;
-              }
-            });
-          }
-        }
-        break;
-      case '3':
-        arrBookmark.forEach((element) => {
-          if (
-            element.functionID == MorfuncSale.HuyDuyet ||
-            element.functionID == MorfuncSale.In
-          ) {
-            element.disabled = false;
-          } else {
-            element.disabled = true;
-          }
-        });
-        break;
-      case '5':
-      case '9':
-        arrBookmark.forEach((element) => {
-          if (
-            element.functionID == MorfuncPur.GhiSo ||
-            element.functionID == MorfuncPur.In
-          ) {
-            element.disabled = false;
-          } else {
-            element.disabled = true;
-          }
-        });
-        break;
-      case '6':
-        arrBookmark.forEach((element) => {
-          if (
-            element.functionID == MorfuncSale.KhoiPhuc ||
-            element.functionID == MorfuncSale.In
-          ) {
-            element.disabled = false;
-          } else {
-            element.disabled = true;
-          }
-        });
-        break;
-      case '2':
-        arrBookmark.forEach((element) => {
-          if (
-            element.functionID == MorfuncSale.KiemTraHopLe ||
-            element.functionID == MorfuncSale.In
-          ) {
-            element.disabled = false;
-          } else {
-            element.disabled = true;
-          }
-        });
-        break;
-      default:
-        arrBookmark.forEach((element) => {
-          element.disabled = true;
-        });
-        break;
-    }
-  }
-
-  changeMFIssueVoucher(event, data, type: any = '', journal, formModel) {
-    let array = [
-      MorfuncIssueVoucher.GhiSo,
-      MorfuncIssueVoucher.GuiDuyet,
-      MorfuncIssueVoucher.HuyDuyet,
-      MorfuncIssueVoucher.KhoiPhuc,
-      MorfuncIssueVoucher.In,
-      MorfuncIssueVoucher.KiemTraHopLe,
-      'SYS02',
-      'SYS03',
-      'SYS04',
-    ];
-    let arrBookmark = [];
-    event.forEach((element) => {
-      if (!array.includes(element.functionID)) {
-        element.disabled = true;
-      } else {
-        if (type === 'viewgrid') {
-          element.isbookmark = false;
-        }
-        if (type === 'viewdetail') {
-          if (Object.values(MorfuncIssueVoucher).includes(element.functionID)) {
-            element.isbookmark = true;
-          } else {
-            element.isbookmark = false;
-          }
-        }
-        if (
-          element.functionID != 'SYS02' &&
-          element.functionID != 'SYS03' &&
-          element.functionID != 'SYS04'
-        ) {
-          let item = event.find(
-            (x) =>
-              x.functionID.toLowerCase() == element.functionID.toLowerCase()
-          );
-          if (item != null) arrBookmark.push(item);
-        }
-      }
-    });
-
-    switch (data?.status) {
-      case '1':
-        if (!data.validated) {
-          arrBookmark.forEach((element) => {
-            if (
-              element.functionID == MorfuncIssueVoucher.KiemTraHopLe ||
-              element.functionID == MorfuncIssueVoucher.In
-            ) {
-              element.disabled = false;
-            } else {
-              element.disabled = true;
-            }
-          });
-        }else{
-          if (journal.approvalControl == '0') {
-            arrBookmark.forEach((element) => {
-              if (
-                element.functionID == MorfuncIssueVoucher.GhiSo ||
-                element.functionID == MorfuncIssueVoucher.In
-              ) {
-                element.disabled = false;
-              } else {
-                element.disabled = true;
-              }
-            });
-          } else {
-            arrBookmark.forEach((element) => {
-              if (
-                element.functionID == MorfuncIssueVoucher.GuiDuyet ||
-                element.functionID == MorfuncIssueVoucher.In
-              ) {
-                element.disabled = false;
-              } else {
-                element.disabled = true;
-              }
-            });
-          }
-        }
-        break;
-      case '3':
-        arrBookmark.forEach((element) => {
-          if (
-            element.functionID == MorfuncIssueVoucher.HuyDuyet ||
-            element.functionID == MorfuncIssueVoucher.In
-          ) {
-            element.disabled = false;
-          } else {
-            element.disabled = true;
-          }
-        });
-        break;
-      case '5':
-      case '9':
-        arrBookmark.forEach((element) => {
-          if (
-            element.functionID == MorfuncIssueVoucher.GhiSo ||
-            element.functionID == MorfuncIssueVoucher.In
-          ) {
-            element.disabled = false;
-          } else {
-            element.disabled = true;
-          }
-        });
-        break;
-      case '6':
-        arrBookmark.forEach((element) => {
-          if (
-            element.functionID == MorfuncIssueVoucher.KhoiPhuc ||
-            element.functionID == MorfuncIssueVoucher.In
-          ) {
-            element.disabled = false;
-          } else {
-            element.disabled = true;
-          }
-        });
-        break;
-      case '2':
-        arrBookmark.forEach((element) => {
-          if (
-            element.functionID == MorfuncIssueVoucher.KiemTraHopLe ||
-            element.functionID == MorfuncIssueVoucher.In
-          ) {
-            element.disabled = false;
-          } else {
-            element.disabled = true;
-          }
-        });
-        break;
-      default:
-        arrBookmark.forEach((element) => {
-          element.disabled = true;
-        });
-        break;
-    }
+    })
   }
 
   changeMFGeneralJournal(event, data, type: any = '', journal, formModel) {
-    let array = [
-      MorfuncGeneralJournals.GhiSo,
-      MorfuncGeneralJournals.GuiDuyet,
-      MorfuncGeneralJournals.HuyDuyet,
-      MorfuncGeneralJournals.KhoiPhuc,
-      MorfuncGeneralJournals.In,
-      MorfuncGeneralJournals.KiemTraHopLe,
-      'SYS02',
-      'SYS03',
-      'SYS04',
-      'SYS002'
-    ];
-    let arrBookmark = [];
     event.forEach((element) => {
-      if (!array.includes(element.functionID)) {
-        element.disabled = true;
-      } else {
-        if (type === 'viewgrid') {
+      //* thiet lap bookmark cac morefunc tai cac mode view
+      if (type === 'viewgrid') element.isbookmark = false; //? viewgrid tất cả ko bookmark ra ngoài
+      if (type === 'viewdetail') { //? viewdetail morefunc mac dinh ko bookmark ra ngoai
+        if (Object.values(MorfuncDefault).includes(element.functionID)) {
           element.isbookmark = false;
-        }
-        if (type === 'viewdetail') {
-          if (Object.values(MorfuncGeneralJournals).includes(element.functionID)) {
-            element.isbookmark = true;
-          } else {
-            element.isbookmark = false;
-          }
-        }
-        if (
-          element.functionID != 'SYS02' &&
-          element.functionID != 'SYS03' &&
-          element.functionID != 'SYS04' && 
-          element.functionID != 'SYS002'
-        ) {
-          let item = event.find(
-            (x) =>
-              x.functionID.toLowerCase() == element.functionID.toLowerCase()
-          );
-          if (item != null) arrBookmark.push(item);
+        }else{
+          element.isbookmark = true;
         }
       }
-    });
-
-    switch (data?.status) {
-      case '1':
-        if (!data?.validated) {
-          arrBookmark.forEach((element) => {
-            if (
-              element.functionID == MorfuncGeneralJournals.KiemTraHopLe ||
-              element.functionID == MorfuncGeneralJournals.In
-            ) {
+      //* an hien morefunc theo nghiep vu
+      if(element.functionID == MorfuncDefault.Sua && data?.status != '1' && data?.status != '2') element.disabled = true; //? an morefunc chinh sua khi trang thai khac hop le,lm lại
+      switch (data?.status) {
+        case '1':
+          if (!data?.validated) {
+            if([MorfuncGeneralJournals.KiemTraHopLe,MorfuncGeneralJournals.In].includes(element.functionID))
               element.disabled = false;
-            } else {
+            else if (!Object.values(MorfuncDefault).includes(element.functionID))
               element.disabled = true;
+          }else{
+            if (journal.approvalControl == '0') {
+              if([MorfuncGeneralJournals.GhiSo,MorfuncGeneralJournals.In].includes(element.functionID))
+                element.disabled = false;
+              else if (!Object.values(MorfuncDefault).includes(element.functionID))
+                element.disabled = true;
+            }else{
+              if([MorfuncGeneralJournals.GuiDuyet,MorfuncGeneralJournals.In].includes(element.functionID))
+                element.disabled = false;
+              else if (!Object.values(MorfuncDefault).includes(element.functionID))
+                element.disabled = true;
             }
-          });
-        }else{
-          if (journal.approvalControl == '0') {
-            arrBookmark.forEach((element) => {
-              if (
-                element.functionID == MorfuncGeneralJournals.GhiSo ||
-                element.functionID == MorfuncGeneralJournals.In
-                ) {
-                element.disabled = false;
-              } else {
-                element.disabled = true;
-              }
-            });
-          } else {
-            arrBookmark.forEach((element) => {
-              if (
-                element.functionID == MorfuncGeneralJournals.GuiDuyet ||
-                element.functionID == MorfuncGeneralJournals.In
-              ) {
-                element.disabled = false;
-              } else {
-                element.disabled = true;
-              }
-            });
           }
-        }
-        break;
-      case '3':
-        arrBookmark.forEach((element) => {
-          if (
-            element.functionID == MorfuncGeneralJournals.HuyDuyet ||
-            element.functionID == MorfuncGeneralJournals.In
-          ) {
+          break;
+        case '2':
+          if([MorfuncGeneralJournals.KiemTraHopLe,MorfuncGeneralJournals.In].includes(element.functionID))
             element.disabled = false;
-          } else {
+          else if (!Object.values(MorfuncDefault).includes(element.functionID))
             element.disabled = true;
-          }
-        });
-        break;
-      case '5':
-      case '9':
-        arrBookmark.forEach((element) => {
-          if (
-            element.functionID == MorfuncGeneralJournals.GhiSo ||
-            element.functionID == MorfuncGeneralJournals.In
-          ) {
+          break;
+        case '3':
+          if([MorfuncGeneralJournals.HuyDuyet,MorfuncGeneralJournals.In].includes(element.functionID))
             element.disabled = false;
-          } else {
+          else if (!Object.values(MorfuncDefault).includes(element.functionID))
             element.disabled = true;
-          }
-        });
-        break;
-      case '6':
-        arrBookmark.forEach((element) => {
-          if (
-            element.functionID == MorfuncGeneralJournals.KhoiPhuc ||
-            element.functionID == MorfuncGeneralJournals.In
-          ) {
+          break;
+        case '5':
+        case '9':
+          if([MorfuncGeneralJournals.GhiSo,MorfuncGeneralJournals.In].includes(element.functionID))
+              element.disabled = false;
+          else if (!Object.values(MorfuncDefault).includes(element.functionID))
+              element.disabled = true;
+          break;
+        case '6':
+          if([MorfuncGeneralJournals.KhoiPhuc,MorfuncGeneralJournals.In].includes(element.functionID))
             element.disabled = false;
-          } else {
+          else if (!Object.values(MorfuncDefault).includes(element.functionID))
             element.disabled = true;
-          }
-        });
-        break;
-      case '2':
-        arrBookmark.forEach((element) => {
-          if (
-            element.functionID == MorfuncGeneralJournals.KiemTraHopLe ||
-            element.functionID == MorfuncGeneralJournals.In
-          ) {
-            element.disabled = false;
-          } else {
-            element.disabled = true;
-          }
-        });
-        break;
-      default:
-        arrBookmark.forEach((element) => {
+          break;
+        default:
           element.disabled = true;
-        });
-        break;
-    }
+          break;
+      }
+    })
+  }
+
+  changeMFPur(event, data, type: any = '', journal, formModel) {
+    event.forEach((element) => {
+      //* thiet lap bookmark cac morefunc tai cac mode view
+      if (type === 'viewgrid') element.isbookmark = false; //? viewgrid tất cả ko bookmark ra ngoài
+      if (type === 'viewdetail') { //? viewdetail morefunc mac dinh ko bookmark ra ngoai
+        if (Object.values(MorfuncDefault).includes(element.functionID)) {
+          element.isbookmark = false;
+        }else{
+          element.isbookmark = true;
+        }
+      }
+      //* an hien morefunc theo nghiep vu
+      if(element.functionID == MorfuncDefault.Sua && data?.status != '1' && data?.status != '2') element.disabled = true; //? an morefunc chinh sua khi trang thai khac hop le,lm lại
+      switch (data?.status) {
+        case '1':
+          if (!data?.validated) {
+            if([MorfuncPur.KiemTraHopLe,MorfuncPur.In].includes(element.functionID))
+              element.disabled = false;
+            else if (!Object.values(MorfuncDefault).includes(element.functionID))
+              element.disabled = true;
+          }else{
+            if (journal.approvalControl == '0') {
+              if([MorfuncPur.GhiSo,MorfuncPur.In].includes(element.functionID))
+                element.disabled = false;
+              else if (!Object.values(MorfuncDefault).includes(element.functionID))
+                element.disabled = true;
+            }else{
+              if([MorfuncPur.GuiDuyet,MorfuncPur.In].includes(element.functionID))
+                element.disabled = false;
+              else if (!Object.values(MorfuncDefault).includes(element.functionID))
+                element.disabled = true;
+            }
+          }
+          break;
+        case '2':
+          if([MorfuncPur.KiemTraHopLe,MorfuncPur.In].includes(element.functionID))
+            element.disabled = false;
+          else if (!Object.values(MorfuncDefault).includes(element.functionID))
+            element.disabled = true;
+          break;
+        case '3':
+          if([MorfuncPur.HuyDuyet,MorfuncPur.In].includes(element.functionID))
+            element.disabled = false;
+          else if (!Object.values(MorfuncDefault).includes(element.functionID))
+            element.disabled = true;
+          break;
+        case '5':
+        case '9':
+          if([MorfuncPur.GhiSo,MorfuncPur.In].includes(element.functionID))
+              element.disabled = false;
+          else if (!Object.values(MorfuncDefault).includes(element.functionID))
+              element.disabled = true;
+          break;
+        case '6':
+          if([MorfuncPur.KhoiPhuc,MorfuncPur.In,MorfuncPur.PhanBoChiPhi].includes(element.functionID))
+            element.disabled = false;
+          else if (!Object.values(MorfuncDefault).includes(element.functionID))
+            element.disabled = true;
+          break;
+        default:
+          element.disabled = true;
+          break;
+      }
+    })
+  }
+
+  changeMFSale(event, data, type: any = '', journal, formModel) {
+    event.forEach((element) => {
+      //* thiet lap bookmark cac morefunc tai cac mode view
+      if (type === 'viewgrid') element.isbookmark = false; //? viewgrid tất cả ko bookmark ra ngoài
+      if (type === 'viewdetail') { //? viewdetail morefunc mac dinh ko bookmark ra ngoai
+        if (Object.values(MorfuncDefault).includes(element.functionID)) {
+          element.isbookmark = false;
+        }else{
+          element.isbookmark = true;
+        }
+      }
+      //* an hien morefunc theo nghiep vu
+      if(element.functionID == MorfuncDefault.Sua && data?.status != '1' && data?.status != '2') element.disabled = true; //? an morefunc chinh sua khi trang thai khac hop le,lm lại
+      switch (data?.status) {
+        case '1':
+          if (!data?.validated) {
+            if([MorfuncSale.KiemTraHopLe,MorfuncSale.In].includes(element.functionID))
+              element.disabled = false;
+            else if (!Object.values(MorfuncDefault).includes(element.functionID))
+              element.disabled = true;
+          }else{
+            if (journal.approvalControl == '0') {
+              if([MorfuncSale.GhiSo,MorfuncSale.In].includes(element.functionID))
+                element.disabled = false;
+              else if (!Object.values(MorfuncDefault).includes(element.functionID))
+                element.disabled = true;
+            }else{
+              if([MorfuncSale.GuiDuyet,MorfuncSale.In].includes(element.functionID))
+                element.disabled = false;
+              else if (!Object.values(MorfuncDefault).includes(element.functionID))
+                element.disabled = true;
+            }
+          }
+          break;
+        case '2':
+          if([MorfuncSale.KiemTraHopLe,MorfuncSale.In].includes(element.functionID))
+            element.disabled = false;
+          else if (!Object.values(MorfuncDefault).includes(element.functionID))
+            element.disabled = true;
+          break;
+        case '3':
+          if([MorfuncSale.HuyDuyet,MorfuncSale.In].includes(element.functionID))
+            element.disabled = false;
+          else if (!Object.values(MorfuncDefault).includes(element.functionID))
+            element.disabled = true;
+          break;
+        case '5':
+        case '9':
+          if([MorfuncSale.GhiSo,MorfuncSale.In].includes(element.functionID))
+              element.disabled = false;
+          else if (!Object.values(MorfuncDefault).includes(element.functionID))
+              element.disabled = true;
+          break;
+        case '6':
+          if([MorfuncSale.KhoiPhuc,MorfuncSale.In].includes(element.functionID))
+            element.disabled = false;
+          else if (!Object.values(MorfuncDefault).includes(element.functionID))
+            element.disabled = true;
+          break;
+        default:
+          element.disabled = true;
+          break;
+      }
+    })
+  }
+
+  changeMFVoucher(event, data, type: any = '', journal, formModel) {
+    event.forEach((element) => {
+      //* thiet lap bookmark cac morefunc tai cac mode view
+      if (type === 'viewgrid') element.isbookmark = false; //? viewgrid tất cả ko bookmark ra ngoài
+      if (type === 'viewdetail') { //? viewdetail morefunc mac dinh ko bookmark ra ngoai
+        if (Object.values(MorfuncDefault).includes(element.functionID)) {
+          element.isbookmark = false;
+        }else{
+          element.isbookmark = true;
+        }
+      }
+      //* an hien morefunc theo nghiep vu
+      if(element.functionID == MorfuncDefault.Sua && data?.status != '1' && data?.status != '2') element.disabled = true; //? an morefunc chinh sua khi trang thai khac hop le,lm lại
+      switch (data?.status) {
+        case '1':
+          if (!data?.validated) {
+            if([MorfuncVoucher.KiemTraHopLe,MorfuncVoucher.In].includes(element.functionID))
+              element.disabled = false;
+            else if (!Object.values(MorfuncDefault).includes(element.functionID))
+              element.disabled = true;
+          }else{
+            if (journal.approvalControl == '0') {
+              if([MorfuncVoucher.GhiSo,MorfuncVoucher.In].includes(element.functionID))
+                element.disabled = false;
+              else if (!Object.values(MorfuncDefault).includes(element.functionID))
+                element.disabled = true;
+            }else{
+              if([MorfuncVoucher.GuiDuyet,MorfuncVoucher.In].includes(element.functionID))
+                element.disabled = false;
+              else if (!Object.values(MorfuncDefault).includes(element.functionID))
+                element.disabled = true;
+            }
+          }
+          break;
+        case '2':
+          if([MorfuncVoucher.KiemTraHopLe,MorfuncVoucher.In].includes(element.functionID))
+            element.disabled = false;
+          else if (!Object.values(MorfuncDefault).includes(element.functionID))
+            element.disabled = true;
+          break;
+        case '3':
+          if([MorfuncVoucher.HuyDuyet,MorfuncVoucher.In].includes(element.functionID))
+            element.disabled = false;
+          else if (!Object.values(MorfuncDefault).includes(element.functionID))
+            element.disabled = true;
+          break;
+        case '5':
+        case '9':
+          if([MorfuncVoucher.GhiSo,MorfuncVoucher.In].includes(element.functionID))
+              element.disabled = false;
+          else if (!Object.values(MorfuncDefault).includes(element.functionID))
+              element.disabled = true;
+          break;
+        case '6':
+          if([MorfuncVoucher.KhoiPhuc,MorfuncVoucher.In].includes(element.functionID))
+            element.disabled = false;
+          else if (!Object.values(MorfuncDefault).includes(element.functionID))
+            element.disabled = true;
+          break;
+        default:
+          element.disabled = true;
+          break;
+      }
+    })
+  }
+
+  changeMFIssueVoucher(event, data, type: any = '', journal, formModel) {
+    event.forEach((element) => {
+      //* thiet lap bookmark cac morefunc tai cac mode view
+      if (type === 'viewgrid') element.isbookmark = false; //? viewgrid tất cả ko bookmark ra ngoài
+      if (type === 'viewdetail') { //? viewdetail morefunc mac dinh ko bookmark ra ngoai
+        if (Object.values(MorfuncDefault).includes(element.functionID)) {
+          element.isbookmark = false;
+        }else{
+          element.isbookmark = true;
+        }
+      }
+      //* an hien morefunc theo nghiep vu
+      if(element.functionID == MorfuncDefault.Sua && data?.status != '1' && data?.status != '2') element.disabled = true; //? an morefunc chinh sua khi trang thai khac hop le,lm lại
+      switch (data?.status) {
+        case '1':
+          if (!data?.validated) {
+            if([MorfuncIssueVoucher.KiemTraHopLe,MorfuncIssueVoucher.In].includes(element.functionID))
+              element.disabled = false;
+            else if (!Object.values(MorfuncDefault).includes(element.functionID))
+              element.disabled = true;
+          }else{
+            if (journal.approvalControl == '0') {
+              if([MorfuncIssueVoucher.GhiSo,MorfuncIssueVoucher.In].includes(element.functionID))
+                element.disabled = false;
+              else if (!Object.values(MorfuncDefault).includes(element.functionID))
+                element.disabled = true;
+            }else{
+              if([MorfuncIssueVoucher.GuiDuyet,MorfuncIssueVoucher.In].includes(element.functionID))
+                element.disabled = false;
+              else if (!Object.values(MorfuncDefault).includes(element.functionID))
+                element.disabled = true;
+            }
+          }
+          break;
+        case '2':
+          if([MorfuncIssueVoucher.KiemTraHopLe,MorfuncIssueVoucher.In].includes(element.functionID))
+            element.disabled = false;
+          else if (!Object.values(MorfuncDefault).includes(element.functionID))
+            element.disabled = true;
+          break;
+        case '3':
+          if([MorfuncIssueVoucher.HuyDuyet,MorfuncIssueVoucher.In].includes(element.functionID))
+            element.disabled = false;
+          else if (!Object.values(MorfuncDefault).includes(element.functionID))
+            element.disabled = true;
+          break;
+        case '5':
+        case '9':
+          if([MorfuncIssueVoucher.GhiSo,MorfuncIssueVoucher.In].includes(element.functionID))
+              element.disabled = false;
+          else if (!Object.values(MorfuncDefault).includes(element.functionID))
+              element.disabled = true;
+          break;
+        case '6':
+          if([MorfuncIssueVoucher.KhoiPhuc,MorfuncIssueVoucher.In].includes(element.functionID))
+            element.disabled = false;
+          else if (!Object.values(MorfuncDefault).includes(element.functionID))
+            element.disabled = true;
+          break;
+        default:
+          element.disabled = true;
+          break;
+      }
+    })
   }
 }

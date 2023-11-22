@@ -40,6 +40,7 @@ export class DynamicSettingComponent extends UIComponent implements OnInit {
   @ViewChild('template') template: TemplateRef<any>;
   @ViewChild('content', { read: ViewContainerRef, static: false })
   content!: ViewContainerRef;
+  pageTitleCssClasses = '';
   constructor(
     private inject: Injector,
     private layout: LayoutService,
@@ -50,7 +51,9 @@ export class DynamicSettingComponent extends UIComponent implements OnInit {
     super(inject);
   }
 
-  onInit(): void {}
+  onInit(): void {
+    this.pageTitleCssClasses = this.layout.getStringCSSClasses('pageTitle');
+  }
 
   ngAfterViewInit(): void {
     this.views = [
@@ -162,5 +165,13 @@ export class DynamicSettingComponent extends UIComponent implements OnInit {
           }
         });
       });
+  }
+
+  clickBack(evt: any) {
+    evt.preventDefault();
+    window.history.back();
+    // this.route.params.subscribe((routeParams) => {
+    //     var a = this.router;
+    // });
   }
 }
