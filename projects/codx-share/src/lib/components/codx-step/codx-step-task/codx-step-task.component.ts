@@ -931,7 +931,31 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         '',
         option
       );
-      console.log(dialog.close());
+      dialog.closed.subscribe((e) => {
+        if(e?.event){
+          let quotatision  = e?.event;
+          let task = new DP_Instances_Steps_Tasks();
+          task['taskType'] = this.taskType?.value;
+          task['stepID'] = this.currentStep?.recID;
+          task['progress'] = 0;
+          task['taskGroupID'] = null;
+          task['refID'] = Util.uid();
+          task['isTaskDefault'] = false;
+          task['dependRule'] = '0';
+          task.objectLinked = quotatision?.recID;
+          task.taskName = quotatision?.quotationName;
+          task.owner = this.user?.userID; 
+          let role = new DP_Instances_Steps_Tasks_Roles();
+            role.recID = Util.uid();
+            role.objectName =this.user?.objectName;
+            role.objectID = this.user?.userID;
+            role.roleType = 'O';
+          task.roles = [role];
+          task.startDate = quotatision?.createdOn;
+          task.endDate = quotatision?.deadline;
+          this.saveTask(task); 
+        }
+      })
       
     });
     
