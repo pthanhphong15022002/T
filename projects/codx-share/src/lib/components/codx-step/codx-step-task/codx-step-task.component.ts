@@ -2809,7 +2809,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     let mehthol = 'GetDataSourceExportTaskAsync';
     let className = 'ContractsBusiness';
     let service = 'CM';
-    let request = [this.currentStep.instanceID, data.objectLink];
+    let request = [this.currentStep.instanceID, data.objectLinked];
     switch (this.taskAdd.taskType) {
       case 'CO':
         className = 'ContractsBusiness';
