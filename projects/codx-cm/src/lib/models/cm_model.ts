@@ -862,4 +862,5 @@ export class CM_Contracts {
   orgUnitID: string;
   divisionID: string;
   departmentID: string;
+  ContactID: string;
 }

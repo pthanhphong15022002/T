@@ -285,6 +285,10 @@ export class SignFileComponent extends UIComponent {
 
   clickMF(event: any, data) {    
     if(!data) data = this.view?.dataService?.dataSelected;
+    if(!data && this.view?.dataService?.data?.length>0) {
+      data = this.view?.dataService?.data[0];
+      this.view.dataService.dataSelected = data;
+    } 
     this.viewdetail.openFormFuncID(event, data);
   }
 
@@ -294,6 +298,10 @@ export class SignFileComponent extends UIComponent {
 
   changeDataMF(e: any, data: any) {
     if(!data) data = this.view?.dataService?.dataSelected;// check
+    if(!data && this.view?.dataService?.data?.length>0) {
+      data = this.view?.dataService?.data[0];
+      this.view.dataService.dataSelected = data;
+    } 
     if(this.runMode == "1")
     {
       this.shareService.changeMFApproval(e,data.unbounds);
@@ -341,6 +349,11 @@ export class SignFileComponent extends UIComponent {
         if (edit?.length) edit[0].disabled = true;
         if (release?.length) release[0].disabled = true;
         if (del?.length) del[0].disabled = true;
+      }
+      else{
+        if (edit?.length) edit[0].disabled = false;
+        if (release?.length) release[0].disabled = false;
+        if (del?.length) del[0].disabled = false;
       }
     }
   }

@@ -162,5 +162,8 @@
       display: unset !important;
       max-height: 120px !important;
     }
+    .card-body {
+      height: auto!important;
+    }
   }
 }
