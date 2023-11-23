@@ -360,8 +360,8 @@ export class PopupAddDealComponent
   }
 
   valueChangeOwner($event) {
-    if ($event && $event?.data) {
-      this.owner = $event?.data;
+    if ($event ) {
+      this.owner = $event;
       let ownerName = '';
       if (this.listParticipants.length > 0 && this.listParticipants) {
         ownerName = this.listParticipants.filter(
