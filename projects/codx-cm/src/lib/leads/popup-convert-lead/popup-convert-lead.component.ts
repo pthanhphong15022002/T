@@ -633,6 +633,8 @@ export class PopupConvertLeadComponent implements OnInit {
       this.customer.recID = this.customerID;
     }
     this.deal.customerID = this.customer?.recID;
+    this.deal.customerName = this.customer?.customerName;
+    this.deal.customerCategory = this.customer?.category;
     // if (this.lstContactDeal != null) {
     //   this.lstContactDeal.forEach((res) => {
     //     res.recID = Util.uid();
@@ -1049,6 +1051,7 @@ export class PopupConvertLeadComponent implements OnInit {
         }
         if (e?.data != null && e?.data?.trim() != '') {
           this.customer.category = e.component?.itemsSelected[0]?.Category;
+          this.deal.customerCategory = this.customer.category;
           this.isCheckTab();
         }
       }
