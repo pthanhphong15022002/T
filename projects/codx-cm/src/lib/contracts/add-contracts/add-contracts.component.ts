@@ -56,16 +56,15 @@ export class AddContractsComponent implements OnInit, AfterViewInit{
   @ViewChild('attachment') attachment: AttachmentComponent;
   @ViewChild('inputQuotation') inputQuotation: CodxInputComponent;
   REQUIRE = [
-    'contractName',
     'contractID',
-    'useType',
     'contractType',
-    'pmtMethodID',
-    'pmtStatus',
-    'delModeID',
-    'delStatus',
+    'businessLineID',
+    'contractName',
     'customerID',
-    'currencyID',
+    'contractAmt',
+    'pmtMethodID',
+    'pmtMethodID',
+    'effectiveFrom',
   ];
   customer: CM_Customers;
   contracts: CM_Contracts;
@@ -203,7 +202,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit{
     this.getFormModel();
 
     this.user = this.authStore.get();
-    this.listTypeContract = contractService.listTypeContractAdd;
+    // this.listTypeContract = contractService.listTypeContractAdd;
 
     this.cache.functionList(this.dialog?.formModel.funcID).subscribe((f) => {
       if (f) {
@@ -228,6 +227,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit{
 
   async ngOnInit() {
     this.setDataContract(this.contractsInput);
+
     this.disabledDelActualDate =
       !this.contracts?.delStatus ||
       this.contracts?.delStatus == '0' ||
@@ -265,15 +265,9 @@ export class AddContractsComponent implements OnInit, AfterViewInit{
         this.contracts.projectID = this.projectID;
         this.contracts.contractDate = new Date();
         this.contracts.effectiveFrom = new Date();
-        if (this.processID) {
-          this.cbxProcessChange({ data: this.processID });
-        }
-        this.contracts.pmtStatus = this.contracts.pmtStatus
-          ? this.contracts.pmtStatus
-          : '0';
-        this.contracts.contractType = this.contracts.contractType
-          ? this.contracts.contractType
-          : '1';
+        if (this.processID) {this.cbxProcessChange({ data: this.processID });}
+        this.contracts.pmtStatus = this.contracts.pmtStatus ? this.contracts.pmtStatus : '0';
+        this.contracts.contractType = this.contracts.contractType ? this.contracts.contractType : '1';
         await this.getSettingContract();
         this.loadExchangeRate(this.contracts.currencyID);
         this.setContractByDataOutput();
@@ -715,6 +709,13 @@ export class AddContractsComponent implements OnInit, AfterViewInit{
     if (event?.field == 'delStatus') {
       this.disabledDelActualDate =
         event?.data == '0' || event?.data == '1' ? true : false;
+    }
+    if (event?.field == 'businessLineID' && event?.data) {
+      let processID = event?.component?.itemsSelected ? event?.component?.itemsSelected[0]?.ProcessID : null;
+      this.contracts.businessLineID = event?.data;
+      if(processID){
+        this.contracts.processID = processID;
+      }
     }
     //component itemsSelected
   }

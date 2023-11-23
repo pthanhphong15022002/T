@@ -78,9 +78,7 @@
           field="contractID"
           type="text"
           [crrValue]="contracts?.contractID"
-          [placeholder]="
-            planceHolderAutoNumber ?? grvSetup['ContractID'].headerText
-          "
+          [placeholder]="planceHolderAutoNumber ?? grvSetup['ContractID'].headerText"
           [disabled]="disabledShowInput || action === 'edit'"
         ></codx-input>
       </div>
@@ -90,13 +88,13 @@
       <div class="form-group">
         <codx-label
           [formModel]="dialog.formModel"
-          fiedName="effectiveFrom"
-          default="Ngày hiệu lực"
+          fiedName="contractDate"
+          default="Ngày tạo hợp đồng"
         ></codx-label>
         <codx-input
-          field="effectiveFrom"
+          field="contractDate"
           type="datetime"
-          [crrValue]="contracts?.effectiveFrom"
+          [crrValue]="contracts?.contractDate"
           (valueChange)="changeValueDate($event)"
         ></codx-input>
       </div>
@@ -224,7 +222,7 @@
         [formModel]="dialog.formModel"
         field="area"
         [crrValue]="contracts?.area"
-        (valueChange)="valueChangeCombobox($event)"
+        (valueChange)="valueChangeText($event)"
       >
       </codx-input>
     </div>
@@ -238,7 +236,7 @@
         [formModel]="dialog.formModel"
         field="assetID"
         [crrValue]="contracts?.assetID"
-        (valueChange)="valueChangeCombobox($event)"
+        (valueChange)="valueChangeText($event)"
       >
       </codx-input>
     </div>
@@ -254,7 +252,7 @@
       [formModel]="dialog.formModel"
       field="purpose"
       [crrValue]="contracts?.purpose"
-      (valueChange)="valueChangeCombobox($event)"
+      (valueChange)="valueChangeText($event)"
     >
     </codx-input>
   </div>
@@ -270,7 +268,7 @@
         [formModel]="dialog.formModel"
         field="contractAmt"
         [crrValue]="contracts?.contractAmt"
-        (valueChange)="valueChangeCombobox($event)"
+        (valueChange)="valueChangeText($event)"
       >
       </codx-input>
     </div>
@@ -315,7 +313,7 @@
         [formModel]="dialog.formModel"
         field="disposalBefore"
         [crrValue]="contracts?.disposalBefore"
-        (valueChange)="valueChangeCombobox($event)"
+        (valueChange)="valueChangeText($event)"
       >
       </codx-input>
     </div>
@@ -399,6 +397,7 @@
     ></codx-input>
   </div>
 </ng-template>
+
 <ng-template #extendTemp>
   <div class="row form-group">
     <div class="col-6">
@@ -414,7 +413,7 @@
           [formModel]="dialog.formModel"
           field="adjustYear"
           [crrValue]="contracts?.adjustYear"
-          (valueChange)="valueChangeCombobox($event)"
+          (valueChange)="valueChangeText($event)"
         >
         </codx-input>
       </div>
@@ -433,7 +432,7 @@
           [formModel]="dialog.formModel"
           field="adjustPercent"
           [crrValue]="contracts?.adjustPercent"
-          (valueChange)="valueChangeCombobox($event)"
+          (valueChange)="valueChangeText($event)"
         >
         </codx-input>
       </div>
@@ -453,12 +452,24 @@
         [formModel]="dialog.formModel"
         field="note"
         [crrValue]="contracts?.note"
-        (valueChange)="valueChangeCombobox($event)"
+        (valueChange)="valueChangeText($event)"
       >
       </codx-input>
     </div>
   </div>
 </ng-template>
+
+
+
+
+
+
+
+
+
+
+
+
 
 <div class="py-5" *ngIf="false">
   <header
