@@ -193,6 +193,7 @@ export class CampaignContactsComponent implements OnInit {
     this.request.pageLoading = false;
     this.request.funcID = this.formModel.funcID;
     this.fetch().subscribe(async (item) => {
+      this.loaded = true;
       this.lstCampContacts = item ?? [];
       if (
         this.objectType == '3' &&
@@ -208,7 +209,9 @@ export class CampaignContactsComponent implements OnInit {
           }
         }
       }
-      this.loaded = true;
+      if(this.grid){
+        this.grid.refresh();
+      }
       // this.grid.showRowNumber = false;
     });
   }

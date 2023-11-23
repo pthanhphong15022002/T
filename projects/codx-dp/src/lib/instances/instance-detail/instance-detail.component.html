@@ -315,7 +315,7 @@
               </div>
               <ng-container *ngIf="viewModelDetail == 'F'">
                 <div class="px-3">
-                  <ng-container *ngFor="let item of listSteps">
+                  <!-- <ng-container *ngFor="let item of listSteps">
                     <codx-fields-detail-temp
                       *ngIf="item?.fields?.length > 0"
                       [dataStep]="item"
@@ -337,7 +337,34 @@
                       (saveDataStep)="saveDataStep($event)"
                     >
                     </codx-fields-detail-temp>
-                  </ng-container>
+                  </ng-container> -->
+
+                  <div class="d-flex flex-column mt-5">
+                    <ng-container *ngFor="let item of listSteps">
+                      <codx-fields-detail-temp
+                        *ngIf="item?.fields?.length > 0"
+                        [dataStep]="item"
+                        [showColumnControl]="showColumnControl(item.stepID)"
+                        [isUpdate]="
+                        dataSelect.write &&
+                        !dataSelect.closed &&
+                        (dataSelect.status == '1' ||
+                          dataSelect.status == '2') &&
+                        dataSelect?.approveStatus != '3'
+                      "
+                        [objectIdParent]="dataSelect.recID"
+                        (saveDataStep)="saveDataStep($event)"
+                        [currentElmID]="currentElmID"
+                        (inputElmIDCF)="inputElmIDCustomField($event)"
+                        [isSaving]="isSaving"
+                        (actionSaveCF)="actionSaveCustomField($event)"
+                        [titleHeaderFormCF]="titleDefault"
+                        [viewsCurrent]="viewsCurrent"
+                      >
+                      </codx-fields-detail-temp>
+                    </ng-container>
+                  </div>
+
                 </div>
               </ng-container>
             </div>
@@ -446,11 +473,12 @@
   [instance]="dataSelect"
   [listInstanceStep]="listSteps"
   [formModel]="formModel"
-  [applyFor]="'0'"
+  [applyFor]="applyFor"
   (saveAssignTask)="saveAssignTask($event)"
   (changeProgress)="autoStart($event)"
   [dealName]="dataSelect?.title"
   [ownerInstance]="dataSelect?.owner"
+  [isChangeOwner]="isChangeOwner"
   >
   </step-task-instance>
 </div>

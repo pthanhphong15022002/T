@@ -852,7 +852,7 @@ export class PopupAddLeadComponent
           steps: res[0],
           permissions: await this.getListPermission(res[1]),
           leadID: this.action !== this.actionEdit ? res[2] : this.lead.leadID,
-          autoNameTabFields: res[3],
+          autoNameTabFields: res[3]?.autoNameTabFields,
         };
         this.leadNoProcess = res[2];
         var isExist = this.listMemorySteps.some((x) => x.id === processId);
