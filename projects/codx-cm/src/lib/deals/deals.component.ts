@@ -427,8 +427,7 @@ export class DealsComponent
     let isOwner = (eventItem, data) => {
       eventItem.disabled =
         data?.alloweStatus == '1'
-          ? !['1', '2', '15'].includes(data.status) ||
-            data.closed
+          ? !['1', '2', '15'].includes(data.status) || data.closed
           : true;
     };
     let isConfirmOrRefuse = (eventItem, data) => {
@@ -2024,12 +2023,14 @@ export class DealsComponent
       )
       .subscribe((str) => {
         if (str && str?.length > 0) {
-          let datas = str[1];
-          if (datas && datas.includes('[{')) datas = datas.substring(2);
-          let fix = str[0];
-          fix = fix.substring(1, fix.length - 1);
-          let dataSource = '[{ ' + fix + ',' + datas;
-          // let dataSource = '[' + str + ']';
+          let dataSource = '[' + str[0] + ']';
+          if (str[1]) {
+            let datas = str[1];
+            if (datas && datas.includes('[{')) datas = datas.substring(2);
+            let fix = str[0];
+            fix = fix.substring(1, fix.length - 1);
+            dataSource = '[{ ' + fix + ',' + datas;
+          }
           var customData = {
             refID: data.processID,
             refType: 'DP_Processes',
