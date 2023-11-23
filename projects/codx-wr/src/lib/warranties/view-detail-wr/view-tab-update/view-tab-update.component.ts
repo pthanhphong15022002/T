@@ -56,7 +56,7 @@ export class ViewTabUpdateComponent implements OnInit {
     formName: 'WRWorkOrderUpdates',
     gridViewName: 'grvWRWorkOrderUpdates',
     entityName: 'WR_WorkOrderUpdates',
-    funcID: 'WR0101',
+    funcID: 'WR0101_1',
   };
   editSettings: EditSettingsModel = {
     allowEditing: true,
