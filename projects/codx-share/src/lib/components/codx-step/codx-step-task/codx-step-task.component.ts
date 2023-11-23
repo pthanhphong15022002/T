@@ -990,7 +990,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         450,
         580,
         '',
-        { isShowGroup: showTask }
+        { isShowGroup: showTask, isShowF: false}
       );
       let dataOutput = await firstValueFrom(popupTypeTask.closed);
       if (dataOutput?.event?.value) {
