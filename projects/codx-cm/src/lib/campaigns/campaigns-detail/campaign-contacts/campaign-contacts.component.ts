@@ -120,7 +120,6 @@ export class CampaignContactsComponent implements OnInit {
   }
 
   ngAfterViewInit(): void {
-    this.rollHeight();
     //Called after ngAfterContentInit when the component's view has been initialized. Applies to components only.
     //Add 'implements AfterViewInit' to the class.
     this.columnsGrid = [
@@ -208,9 +207,6 @@ export class CampaignContactsComponent implements OnInit {
             this.lstProcesss = ele[1] ?? [];
           }
         }
-      }
-      if(this.grid){
-        this.grid.refresh();
       }
       // this.grid.showRowNumber = false;
     });
