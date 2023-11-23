@@ -475,6 +475,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         }
       }
       event.forEach((res) => {
+        res.isbookmark = false;
         switch (res.functionID) {
           case 'SYS001':
           case 'SYS002':
@@ -604,6 +605,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         isGroup = this.checRoleOwner(group);
       }
       event.forEach((res) => {
+        res.isbookmark = false;
         switch (res.functionID) {
           case 'DP13':
           case 'DP27': // đặt xe
@@ -674,6 +676,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   async changeDataMFStep(event, stepData) {
     if (event != null) {
       event.forEach((res) => {
+        res.isbookmark = false;
         switch (res.functionID) {
           case 'SYS02': //xóa
           case 'SYS03': //sửa
