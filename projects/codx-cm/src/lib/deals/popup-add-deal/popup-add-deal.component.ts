@@ -445,7 +445,7 @@ export class PopupAddDealComponent
     permission.assign = roleType === 'O';
     permission.delete = roleType === 'O';
     permission.allowPermit = roleType === 'O';
-
+    this.deal.permissions = this.deal.permissions ? this.deal.permissions: [];
     this.deal.permissions.push(permission);
   }
   addPermission(permissionDP) {
