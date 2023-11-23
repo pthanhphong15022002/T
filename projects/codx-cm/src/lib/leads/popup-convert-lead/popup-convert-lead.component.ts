@@ -343,7 +343,7 @@ export class PopupConvertLeadComponent implements OnInit {
           steps: res[0],
           permissions: await this.getListPermission(res[1]),
           dealId: this.deal.dealID,
-          autoNameTabFields: res[3],
+          autoNameTabFields: res[3]?.autoNameTabFields,
         };
         this.listInstanceSteps = res[0];
         this.listParticipants = obj.permissions;

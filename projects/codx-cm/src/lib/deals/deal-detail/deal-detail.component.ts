@@ -14,6 +14,7 @@ import {
   ApiHttpService,
   CRUDService,
   CacheService,
+  CodxService,
   FormModel,
   NotificationsService,
 } from 'codx-core';
@@ -84,6 +85,7 @@ export class DealDetailComponent implements OnInit {
 
   viewTag: string = '';
   oldRecId: string = '';
+  asideMode: string = '';
   treeTask = [];
   grvSetupQuotation: any[] = [];
   grvSetupLead: any[] = [];
@@ -116,8 +118,10 @@ export class DealDetailComponent implements OnInit {
     private codxCmService: CodxCmService,
     private cache: CacheService,
     private notificationsService: NotificationsService,
-    private dealComponent: DealsComponent
+    private dealComponent: DealsComponent,
+    private codxService: CodxService
   ) {
+    this.asideMode = codxService.asideMode;
     this.executeApiCalls();
   }
 
@@ -367,9 +371,10 @@ export class DealDetailComponent implements OnInit {
       this.codxCmService.getViewDetailDealAsync(data).subscribe((res) => {
         if (res) {
           if(res[0] && res[0].length > 0 ) {
-              let contactMain = res.filter((res) => res.isDefault)[0];
+              let listContact = res[0];
+              let contactMain = listContact.filter(x=>x.isDefault)[0];
               this.contactPerson = contactMain ? contactMain : null;
-              this.loadContactDeal && this.loadContactDeal?.loadListContact(res);
+              this.loadContactDeal && this.loadContactDeal?.loadListContact(listContact);
           }
           else {
             this.contactPerson = null;
