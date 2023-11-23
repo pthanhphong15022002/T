@@ -27,7 +27,7 @@ import {
   DialogModel,
   CodxFormComponent,
 } from 'codx-core';
-import { CM_Contacts, CM_Deals, CM_Permissions } from '../../models/cm_model';
+import { CM_Contacts, CM_Contracts, CM_Deals, CM_Permissions } from '../../models/cm_model';
 import { CodxCmService } from '../../codx-cm.service';
 import { tmpInstances } from '../../models/tmpModel';
 import { debug } from 'console';
@@ -107,7 +107,7 @@ export class PopupAddContractsComponent
 
   menuInputInfo = {
     icon: 'icon-reorder',
-    text: 'Thông tin mở rộng',
+    text: 'Tham chiếu',
     name: 'InputInfo',
     subName: 'Input information',
     subText: 'Input information',
@@ -115,7 +115,7 @@ export class PopupAddContractsComponent
 
   menuGeneralContact = {
     icon: 'icon-contact_phone',
-    text: 'Người liên hệ',
+    text: 'Mở rộng',
     name: 'GeneralContact',
     subName: 'General contact',
     subText: 'General contact',
@@ -157,6 +157,13 @@ export class PopupAddContractsComponent
   isviewCustomer: boolean = false;
   currencyIDOld: string;
   autoNameTabFields: string;
+
+  contracts: CM_Contracts;
+  planceHolderAutoNumber: any = '';
+  grvSetup: any;
+  disabledShowInput: boolean = false;
+  processID = '';
+
   constructor(
     private inject: Injector,
     private changeDetectorRef: ChangeDetectorRef,
@@ -221,13 +228,25 @@ export class PopupAddContractsComponent
       this.deal.salespersonID = null;
       this.oldIdInstance = this.deal.refID;
     }
+
+    this.cache
+    .gridViewSetup(
+      this.dialog?.formModel.formName,
+      this.dialog?.formModel.gridViewName
+    )
+    .subscribe((grv) => {
+      this.grvSetup = grv;
+    });
+
   }
 
-  onInit(): void {}
+  onInit(): void {
+    this.tabInfo = [this.menuGeneralInfo, this.menuInputInfo, this.menuGeneralContact,];
+    this.tabContent = [this.tabGeneralInfoDetail,this.tabCustomFieldDetail,this.tabGeneralContactDetail];
+  }
 
   async ngAfterViewInit(): Promise<void> {
-    this.tabInfo = [this.menuGeneralInfo];
-    this.tabContent = [this.tabGeneralInfoDetail];
+  
     if (this.action !== this.actionAdd || this.isviewCustomer) {
       if (this.isviewCustomer) {
         this.categoryCustomer = this.customerView?.category;
@@ -238,6 +257,118 @@ export class PopupAddContractsComponent
       this.isviewCustomer && (await this.getContactDefault(this.customerID));
     }
   }
+
+  // changeAutoNum(e) {
+  //   // check trùm mã khi nhạp tay
+  //   if (!this.disabledShowInput && this.action !== 'edit' && e) {
+  //     this.contracts.contractID = e?.crrValue;
+  //     if (
+  //       this.contracts.contractID &&
+  //       this.contracts.contractID.includes(' ')
+  //     ) {
+  //       this.notiService.notifyCode(
+  //         'CM026',
+  //         0,
+  //         '"' + this.grvSetup['ContractID'].headerText + '"'
+  //       );
+  //       return;
+  //     }
+  //     this.cmService
+  //       .isExitsAutoCodeNumber('ContractsBusiness', this.contracts.contractID)
+  //       .subscribe((res) => {
+  //         this.isExitAutoNum = res;
+  //         if (this.isExitAutoNum)
+  //           this.notiService.notifyCode(
+  //             'CM003',
+  //             0,
+  //             '"' + this.grvSetup['ContractID'].headerText + '"'
+  //           );
+  //       });
+  //   }
+  // }
+
+  // async setDataContract(data) {
+  //   switch (this.action) {
+  //     case 'add':
+  //       this.contracts = data ? data : new CM_Contracts();
+  //       this.contracts.paidAmt = 0;
+  //       this.contracts.status = '1';
+  //       this.contracts.remainAmt = 0;
+  //       this.contracts.useType = '1';
+  //       this.contracts.pmtStatus = '1';
+  //       this.contracts.delStatus = '1';
+  //       this.contracts.recID = Util.uid();
+  //       this.contracts.pmtMethodID = 'ATM';
+  //       this.contracts.projectID = this.projectID;
+  //       this.contracts.contractDate = new Date();
+  //       this.contracts.effectiveFrom = new Date();
+  //       if (this.processID) {
+  //         this.cbxProcessChange({ data: this.processID });
+  //       }
+  //       this.contracts.pmtStatus = this.contracts.pmtStatus
+  //         ? this.contracts.pmtStatus
+  //         : '0';
+  //       this.contracts.contractType = this.contracts.contractType
+  //         ? this.contracts.contractType
+  //         : '1';
+  //       await this.getSettingContract();
+  //       this.loadExchangeRate(this.contracts.currencyID);
+  //       this.setContractByDataOutput();
+  //       if (!this.contracts.applyProcess) {
+  //         this.getAutoNumber();
+  //       } else {
+  //         this.disabledShowInput = true;
+  //       }
+  //       break;
+  //     case 'edit':
+  //       if (data) {
+  //         this.contracts = data;
+  //       } else if (this.contractRefID) {
+  //         let dataEdit = await firstValueFrom(
+  //           this.contractService.getContractByRefID(this.contractRefID)
+  //         );
+  //         if (dataEdit) {
+  //           this.contracts = dataEdit;
+  //         }
+  //       }
+  //       this.getQuotationsLinesInContract(
+  //         this.contracts?.recID,
+  //         this.contracts?.quotationID
+  //       );
+  //       this.getPayMentByContractID(this.contracts?.recID);
+  //       this.getCustomersDefaults(this.contracts?.customerID);
+  //       break;
+  //     case 'copy':
+  //       if (data) {
+  //         this.contracts = data;
+  //       } else if (this.contractRefID) {
+  //         let dataCopy = await firstValueFrom(
+  //           this.contractService.getContractByRefID(this.contractRefID)
+  //         );
+  //         if (dataCopy) {
+  //           this.contracts = dataCopy;
+  //         }
+  //       }
+  //       delete this.contracts['id'];
+  //       this.contracts.recID = Util.uid();
+  //       this.getQuotationsLinesInContract(
+  //         this.contracts?.recID,
+  //         this.contracts?.quotationID
+  //       );
+  //       this.getPayMentByContractID(this.contracts?.recID);
+  //       if (!this.contracts.applyProcess) {
+  //         this.getAutoNumber();
+  //       } else {
+  //         this.disabledShowInput = true;
+  //       }
+  //       this.getListInstanceSteps(
+  //         this.contracts?.processID,
+  //         this.contractRefID
+  //       );
+  //       break;
+  //     default:
+  //   }
+  // }
 
   async getContactDefault(customerID) {
     let res = await firstValueFrom(

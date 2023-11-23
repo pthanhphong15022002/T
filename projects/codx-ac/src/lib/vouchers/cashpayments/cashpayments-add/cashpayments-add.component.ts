@@ -1505,8 +1505,10 @@ export class CashPaymentAddComponent extends UIComponent implements OnInit {
         this.onAddLine('1');
         break;
       case 'add':
-      case 'update': //? sau khi thêm dòng thành công
-        
+      case 'update':
+      case 'delete':
+        this.formCashPayment.setValue('validated',false,{});
+        this.dialog.dataService.update(this.formCashPayment.data).subscribe();
         break;
       case 'closeEdit': //? khi thoát dòng
       if (this.eleGridCashPayment && this.eleGridCashPayment.rowDataSelected) {
@@ -1550,76 +1552,6 @@ export class CashPaymentAddComponent extends UIComponent implements OnInit {
         break;
     }
   }
-
-  // /**
-  //  * *Hàm tạo hạch toán trước khi lưu hóa đơn GTGT
-  //  * @param data
-  //  */
-  // addLineBeforeSaveVatInvoices(data) {
-  //   let totalVatAtm = 0;
-  //   this.eleGridVatInvoices.dataSource.forEach((item) => {
-  //     totalVatAtm += item.vatAmt;
-  //   });
-  //   if (this.journal.entryMode == '1') {
-  //     let oLine = this.setDefaultLine();
-  //     oLine.dr = totalVatAtm;
-  //     if (this.vatAccount) {
-  //       oLine.accountID = this.vatAccount;
-  //     }
-  //     data.lineID = oLine.recID;
-  //     this.eleGridCashPayment.dataSource.push(oLine);
-  //   } else {
-  //     for (let index = 1; index <= 2; index++) {
-  //       let oLine = this.setDefaultLine();
-  //       if (index == 1) {
-  //         oLine.dr = totalVatAtm;
-  //         if (this.vatAccount) {
-  //           oLine.accountID = this.vatAccount;
-  //         }
-  //         this.eleGridCashPayment.dataSource.push(oLine);
-  //         data.lineID = oLine.recID;
-  //       } else {
-  //         oLine.accountID = this.eleCbxCashBook.ComponentCurrent.itemsSelected[0].CashAcctID;
-  //         oLine.cr = totalVatAtm;
-  //         this.eleGridCashPayment.dataSource.push(oLine);
-  //       }
-  //     }
-  //   }
-  // }
-
-  // /**
-  //  * *Hàm update hạch toán trước khi lưu hóa đơn GTGT
-  //  * @param data
-  //  */
-  // updateLineBeforeSaveVatInvoices(data) {
-  //   let totalVatAtm = 0;
-  //   this.eleGridVatInvoices.dataSource.forEach((item) => {
-  //     totalVatAtm += item.vatAmt;
-  //   });
-  //   if (this.journal.entryMode == '1') {
-  //     let idx = this.eleGridCashPayment.dataSource.findIndex((x) => x.recID == data.lineID);
-  //     if (idx > -1) {
-  //       this.eleGridCashPayment.dataSource[idx].dr = totalVatAtm;
-  //       if (this.vatAccount) {
-  //         this.eleGridCashPayment.dataSource[idx].accountID = this.vatAccount;
-  //       }
-  //     }
-  //   } else {
-  //     let l1 = this.eleGridCashPayment.dataSource.findIndex((x) => x.recID == data.lineID);
-  //     if (l1 > -1) {
-  //       this.eleGridCashPayment.dataSource[l1].dr = totalVatAtm;
-  //       if (this.vatAccount) {
-  //         this.eleGridCashPayment.dataSource[l1].accountID = this.vatAccount;
-  //       }
-  //     }
-  //     let l2 = this.eleGridCashPayment.dataSource.findIndex(
-  //       (x) => x.rowNo == this.eleGridCashPayment.dataSource[l1].rowNo + 1
-  //     );
-  //     if (l2 > -1) {
-  //       this.eleGridCashPayment.dataSource[l2].cr = totalVatAtm;
-  //     }
-  //   }
-  // }
 
   /**
    * *Hàm refresh tất cả dữ liệu chi tiết của tab detail

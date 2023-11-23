@@ -178,10 +178,10 @@ export class CodxApproveStepsComponent
                           (x) => x?.roleType == ap?.roleType
                         );
                       }
-                      if (curAp?.length > 0) {                        
+                      if (curAp?.length > 0) {
                         ap.userIDs = curAp[0]?.userIDs;
                         //Nếu role Position có nhiều người thì hiện thông tin postion và ds người (ko hiện người cụ thể)
-                        if(ap.userIDs?.length==0){
+                        if(ap?.userIDs == null || ap.userIDs?.length==0){
                           ap.userID = curAp[0]?.userID;
                           ap.userName = curAp[0]?.userName;
                           ap.employeeID = curAp[0]?.employeeID;

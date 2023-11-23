@@ -9,6 +9,7 @@ import {
   ChangeDetectorRef,
   ViewChild,
   ChangeDetectionStrategy,
+  TemplateRef,
 } from '@angular/core';
 import {
   AuthStore,
@@ -28,6 +29,7 @@ import {
   DP_Instances_Steps,
   DP_Instances_Steps_TaskGroups,
   DP_Instances_Steps_Tasks,
+  DP_Instances_Steps_Tasks_Roles,
 } from 'projects/codx-dp/src/lib/models/models';
 import { firstValueFrom } from 'rxjs';
 import { FormGroup } from '@angular/forms';
@@ -55,6 +57,8 @@ import { CodxBookingService } from '../../codx-booking/codx-booking.service';
 import { CodxShareService } from '../../../codx-share.service';
 import { ActivatedRoute } from '@angular/router';
 import { ExportData } from '../../../models/ApproveProcess.model';
+import { CodxViewApproveComponent } from '../codx-step-common/codx-view-approve/codx-view-approve.component';
+import { PopupCustomFieldComponent } from '../../codx-fields-detail-temp/popup-custom-field/popup-custom-field.component';
 
 @Component({
   selector: 'codx-step-task',
@@ -64,6 +68,7 @@ import { ExportData } from '../../../models/ApproveProcess.model';
 })
 export class CodxStepTaskComponent implements OnInit, OnChanges {
   @ViewChild('popupGuide') popupGuide;
+  @ViewChild('popupApprover') popupApprover: TemplateRef<any>;;
   //#region Input
   @Input() stepId: any;
   @Input() formModel: FormModel;
@@ -164,7 +169,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     download: true,
     delete: true,
   };
-
+  url='';
   taskApproval: DP_Instances_Steps_Tasks;
   frmModelInstances: FormModel = {
     funcID: 'DPT04',
@@ -172,6 +177,8 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     entityName: 'DP_Instances',
     gridViewName: 'grvDPInstances',
   };
+  taskApprover;
+  approverDialog;
   //#endregion
   constructor(
     private cache: CacheService,
@@ -184,7 +191,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     private changeDetectorRef: ChangeDetectorRef,
     private bookingService: CodxBookingService,
     private codxShareService: CodxShareService,
-    private activedRouter: ActivatedRoute,
+    private activedRouter: ActivatedRoute
   ) {
     this.user = this.authStore.get();
     this.id = Util.uid();
@@ -250,11 +257,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         group?.task?.push(this.taskAdd);
       }
     }
-    if (
-      changes?.isAddTask &&
-      this.isRoleAll &&
-      this.isAddTask
-    ) {
+    if (changes?.isAddTask && this.isRoleAll && this.isAddTask) {
       this.chooseTypeTask();
     }
 
@@ -474,12 +477,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       event.forEach((res) => {
         switch (res.functionID) {
           case 'SYS02': //xóa
-            if (
-              !(
-                !task?.isTaskDefault &&
-                (this.isRoleAll || isGroup)
-              )
-            ) {
+            if (!(!task?.isTaskDefault && (this.isRoleAll || isGroup))) {
               res.disabled = true;
             }
             break;
@@ -512,9 +510,15 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
               : !(this.isTaskFirst && this.isRoleAll);
             break;
           case 'DP13': //giao việc
-            if(task?.assigned == '1'){
+            if (task?.assigned == '1') {
               res.disabled = true;
-            }else if (!(task?.createTask && this.isOnlyView &&(this.isRoleAll || isGroup || isTask))) {
+            } else if (
+              !(
+                task?.createTask &&
+                this.isOnlyView &&
+                (this.isRoleAll || isGroup || isTask)
+              )
+            ) {
               res.isblur = true;
             }
             break;
@@ -579,11 +583,13 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
               res.isblur = true;
             }
             break;
-          case 'DP32': // gởi duyệt 
-            res.disabled = (!task?.approveRule || (task?.approveRule && ["3","5"].includes(task?.approveStatus)));
+          case 'DP32': // gởi duyệt
+            res.disabled =
+              !task?.approveRule ||
+              (task?.approveRule && ['3', '5'].includes(task?.approveStatus));
             break;
           case 'DP33': // hủy duyệt
-            res.disabled = !(task?.approveRule && task?.approveStatus == "3");
+            res.disabled = !(task?.approveRule && task?.approveStatus == '3');
             break;
         }
       });
@@ -810,13 +816,13 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
 
   //#region start task
   startTask(task: DP_Instances_Steps_Tasks, groupTask) {
-    if (task?.taskType == 'Q') {
-      //báo giá
-      this.addQuotation();
-    } else if (task?.taskType == 'CO') {
-      // hợp đồng
-      this.openPopupContract('add');
-    }
+    // if (task?.taskType == 'Q') {
+    //   //báo giá
+    //   this.addQuotation();
+    // } else if (task?.taskType == 'CO') {
+    //   // hợp đồng
+    //   this.openPopupContract('add');
+    // }
     this.api
       .exec<any>('DP', 'InstancesStepsBusiness', 'StartTaskAsync', [
         task?.stepID,
@@ -923,38 +929,6 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     );
   }
 
-  async openPopupContract(action, contract?) {
-    let data = {
-      action,
-      contract: contract || null,
-      // account: this.account,
-      type: 'task',
-    };
-    let formModel: FormModel = {
-      entityName: 'CM_Contracts',
-      entityPer: 'CM_Contracts',
-      formName: 'CMContracts',
-      funcID: 'CM0204',
-      gridViewName: 'grvCMContracts',
-    };
-    let option = new DialogModel();
-    option.IsFull = true;
-    option.zIndex = 1010;
-    option.FormModel = formModel;
-    let popupContract = this.callfc.openForm(
-      AddContractsComponent,
-      '',
-      null,
-      null,
-      '',
-      data,
-      '',
-      option
-    );
-    let dataPopupOutput = await firstValueFrom(popupContract.closed);
-    return dataPopupOutput;
-  }
-
   getTaskEnd() {
     let countGroup = this.listGroupTask?.length;
     if (countGroup > 0) {
@@ -998,6 +972,46 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     }, 0);
   }
   //#endregion
+  saveTask(task){
+    this.api
+    .exec<any>('DP', 'InstancesStepsBusiness', 'AddTaskStepAsync', [
+      task
+    ])
+    .subscribe((res) => {
+      if (res) {
+        if (res[0]) {
+          let taskInput = res[0];
+          let groupData = this.currentStep?.taskGroups.find((group) =>
+            this.comparison(group.refID, taskInput?.taskGroupID)
+          );
+          if (this.listGroupTask && this.listGroupTask?.length <= 0) {
+            let taskGroup = {};
+            taskGroup['recID'] = null; //tạo group task rỗng
+            taskGroup['refID'] = null;
+            this.listGroupTask.push(taskGroup);
+          }
+          let group = this.listGroupTask.find((group) =>
+            this.comparison(group.refID, taskInput?.taskGroupID)
+          );
+  
+          if (group) {
+            if (!group?.task) {
+              group['task'] = [];
+            }
+            group?.task?.push(taskInput);
+            group['progress'] = res[1];
+          }
+          if (groupData) {
+            groupData['progress'] = res[1];
+          }
+          this.currentStep?.tasks?.push(taskInput);
+          this.currentStep['progress'] = res[2];
+          this.notiService.notifyCode('SYS006');
+        }
+        this.changeDetectorRef.detectChanges();
+      }
+    });
+  }
 
   //#region CRUD Task
   async addTask(groupID) {
@@ -1009,38 +1023,71 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     task['refID'] = Util.uid();
     task['isTaskDefault'] = false;
     task['dependRule'] = '0';
-    let type  = groupID ? 'group' : 'step';
-    let taskOutput = await this.openPopupTask('add', type ,task, groupID);
-    if (taskOutput?.task) {
-      let data = taskOutput;
-      let groupData = this.currentStep?.taskGroups.find((group) =>
-        this.comparison(group.refID, data.task?.taskGroupID)
-      );
-      if (this.listGroupTask && this.listGroupTask?.length <= 0) {
-        let taskGroup = {};
-        taskGroup['recID'] = null; //tạo group task rỗng
-        taskGroup['refID'] = null;
-        this.listGroupTask.push(taskGroup);
-      }
-      let group = this.listGroupTask.find((group) =>
-        this.comparison(group.refID, data.task?.taskGroupID)
-      );
-
-      if (group) {
-        if (!group?.task) {
-          group['task'] = [];
+    if (this.taskType?.value == 'Q') {
+      //báo giá
+      this.addQuotation();
+    } else if (this.taskType?.value == 'CO') {
+      // hợp đồng
+      let contractOutput = await this.stepService.openPopupContract('add', 'task');
+      let contract = contractOutput?.event?.contract; 
+      if(contract){
+        task.callType = contract?.recID;
+        task.taskName = contract?.contractName;
+        task.owner = contract?.owner; 
+        if(contract?.permissions?.length > 0) {
+          let roles = contract?.permissions?.map(x => {
+            let role = new DP_Instances_Steps_Tasks_Roles();
+            role.recID = Util.uid();
+            role.objectName = x?.objectName;
+            role.objectID = x?.objectID;
+            role.createdOn = x?.createdOn;
+            role.createdBy = x?.createdBy;
+            role.roleType = 'O';
+            role.objectType = x?.objectType;
+            return role;
+          })
+          task.roles = roles;
         }
-        group?.task?.push(data.task);
-        group['progress'] = data.progressGroup;
+        task.startDate = contract?.effectiveFrom;
+        task.endDate = contract?.effectiveTo;
+        this.saveTask(task); 
       }
-      if (groupData) {
-        groupData['progress'] = data.progressGroup;
-      }
-      this.currentStep?.tasks?.push(data.task);
-      this.currentStep['progress'] = data?.progressStep;
-      this.notiService.notifyCode('SYS006');
-      if (taskOutput?.event?.isCreateMeeting) {
-        this.addMeetings(data.task);
+    }else if(this.taskType?.value == "Q"){
+
+    } else {
+      let type = groupID ? 'group' : 'step';
+      let taskOutput = await this.openPopupTask('add', type, task, groupID);
+      if (taskOutput?.task) {
+        let data = taskOutput;
+        let groupData = this.currentStep?.taskGroups.find((group) =>
+          this.comparison(group.refID, data.task?.taskGroupID)
+        );
+        if (this.listGroupTask && this.listGroupTask?.length <= 0) {
+          let taskGroup = {};
+          taskGroup['recID'] = null; //tạo group task rỗng
+          taskGroup['refID'] = null;
+          this.listGroupTask.push(taskGroup);
+        }
+        let group = this.listGroupTask.find((group) =>
+          this.comparison(group.refID, data.task?.taskGroupID)
+        );
+
+        if (group) {
+          if (!group?.task) {
+            group['task'] = [];
+          }
+          group?.task?.push(data.task);
+          group['progress'] = data.progressGroup;
+        }
+        if (groupData) {
+          groupData['progress'] = data.progressGroup;
+        }
+        this.currentStep?.tasks?.push(data.task);
+        this.currentStep['progress'] = data?.progressStep;
+        this.notiService.notifyCode('SYS006');
+        if (taskOutput?.event?.isCreateMeeting) {
+          this.addMeetings(data.task);
+        }
       }
       this.changeDetectorRef.detectChanges();
     }
@@ -1111,7 +1158,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       this.taskType = this.listTaskType.find(
         (type) => type.value == taskEdit?.taskType
       );
-      let dataOutput = await this.openPopupTask('edit', 'step',taskEdit);
+      let dataOutput = await this.openPopupTask('edit', 'step', taskEdit);
       if (dataOutput?.task) {
         let taskOutput = dataOutput?.task;
         let group = this.listGroupTask.find((group) =>
@@ -1157,7 +1204,9 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
 
   async copyTask(task) {
     if (task) {
-      this.taskType = this.listTaskType.find((type) => type.value == task?.taskType);
+      this.taskType = this.listTaskType.find(
+        (type) => type.value == task?.taskType
+      );
       let taskOutput = await this.openPopupTask('copy', 'step', task);
 
       if (taskOutput?.task) {
@@ -1237,9 +1286,12 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       isBoughtTM: this.isBoughtTM,
       ownerInstance: this.ownerInstance,
       isRoleFull: this.isRoleAll,
-      type:type,
+      type: type,
     };
-    let dataPopupOutput = await this.stepService.openPopupCodxTask(dataInput, 'right');
+    let dataPopupOutput = await this.stepService.openPopupCodxTask(
+      dataInput,
+      'right'
+    );
     // let frmModel: FormModel = {
     //   entityName: 'DP_Instances_Steps_Tasks',
     //   formName: 'DPInstancesStepsTasks',
@@ -1734,74 +1786,87 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
 
   //#region view
   viewTask(data, type) {
-    if (data && !this.isViewStep && !this.isMoveStage) {
-      let frmModel: FormModel = {
-        entityName: 'DP_Instances_Steps_Tasks',
-        formName: 'DPInstancesStepsTasks',
-        gridViewName: 'grvDPInstancesStepsTasks',
-      };
-      //a thao laasy refID
-      let listRefIDAssign = '';
-      switch (type) {
-        case 'T':
-          listRefIDAssign = data.recID;
-          break;
-        case 'G':
-          if (data.task?.length > 0) {
-            let arrRecIDTask = data.task.map((x) => x.recID);
-            listRefIDAssign = arrRecIDTask.join(';');
+    if(data?.taskType == 'CO'){
+        this.cache.functionList('CM0204').subscribe((res) => {
+          if (res) {
+            this.url = res?.url;
+            this.codxService.navigate('', this.url, {
+              recID: data?.callType,
+            });
           }
-          break;
-        case 'P':
-          if (data.taskGroup?.length > 0) {
-            if (data.taskGroup?.task?.length > 0) {
-              let arrRecIDTask = data.taskGroup.task.map((x) => x.recID);
-              if (listRefIDAssign && listRefIDAssign.trim() != '')
-                listRefIDAssign += ';' + arrRecIDTask.join(';');
-              else listRefIDAssign = arrRecIDTask.split(';');
-            }
-            //thieu cong task ngooai mai hoir thuan de xets
-          }
-          break;
-      }
+        });
 
-      let listData = {
-        type,
-        value: data,
-        step: this.currentStep,
-        isRoleAll: this.isRoleAll,
-        isUpdate: this.isUpdate,
-        isOnlyView: this.isOnlyView,
-        isUpdateProgressGroup: this.isUpdateProgressGroup,
-        listRefIDAssign: listRefIDAssign,
-        instanceStep: this.currentStep,
-        sessionID: this.sessionID, // session giao việc
-        formModelAssign: this.formModelAssign, // formModel của giao việc
-        customerName: this.customerName,
-        dealName: this.dealName,
-        contractName: this.contractName,
-        leadName: this.leadName,
-        listField: this.listFieldTask,
-      };
-      let option = new SidebarModel();
-      option.Width = '550px';
-      option.zIndex = 1011;
-      option.FormModel = frmModel;
-      let dialog = this.callfc.openSide(
-        CodxViewTaskComponent,
-        listData,
-        option
-      );
-      dialog.closed.subscribe(async (dataOuput) => {
-        if (dataOuput?.event?.dataProgress) {
-          this.handelProgress(data, dataOuput?.event?.dataProgress);
+    }else{
+      if (data && !this.isViewStep && !this.isMoveStage) {
+        let frmModel: FormModel = {
+          entityName: 'DP_Instances_Steps_Tasks',
+          formName: 'DPInstancesStepsTasks',
+          gridViewName: 'grvDPInstancesStepsTasks',
+        };
+        //a thao laasy refID
+        let listRefIDAssign = '';
+        switch (type) {
+          case 'T':
+            listRefIDAssign = data.recID;
+            break;
+          case 'G':
+            if (data.task?.length > 0) {
+              let arrRecIDTask = data.task.map((x) => x.recID);
+              listRefIDAssign = arrRecIDTask.join(';');
+            }
+            break;
+          case 'P':
+            if (data.taskGroup?.length > 0) {
+              if (data.taskGroup?.task?.length > 0) {
+                let arrRecIDTask = data.taskGroup.task.map((x) => x.recID);
+                if (listRefIDAssign && listRefIDAssign.trim() != '')
+                  listRefIDAssign += ';' + arrRecIDTask.join(';');
+                else listRefIDAssign = arrRecIDTask.split(';');
+              }
+              //thieu cong task ngooai mai hoir thuan de xets
+            }
+            break;
         }
-        if (dataOuput?.event?.task || dataOuput?.event?.group) {
-          await this.getStepById();
-        }
-        this.moreDefaut = { ...this.moreDefaut };
-      });
+  
+        let listData = {
+          type,
+          value: data,
+          step: this.currentStep,
+          isRoleAll: this.isRoleAll,
+          isUpdate: this.isUpdate,
+          isOnlyView: this.isOnlyView,
+          isUpdateProgressGroup: this.isUpdateProgressGroup,
+          listRefIDAssign: listRefIDAssign,
+          instanceStep: this.currentStep,
+          sessionID: this.sessionID, // session giao việc
+          formModelAssign: this.formModelAssign, // formModel của giao việc
+          customerName: this.customerName,
+          dealName: this.dealName,
+          contractName: this.contractName,
+          leadName: this.leadName,
+          listField: this.listFieldTask,
+        };
+        let option = new SidebarModel();
+        option.Width = '550px';
+        option.zIndex = 1011;
+        option.FormModel = frmModel;
+        let dialog = this.callfc.openSide(
+          CodxViewTaskComponent,
+          listData,
+          option
+        );
+        dialog.closed.subscribe(async (dataOuput) => {
+          if (dataOuput?.event?.dataProgress) {
+            this.handelProgress(data, dataOuput?.event?.dataProgress);
+          }
+          if (dataOuput?.event?.task || dataOuput?.event?.group) {
+            await this.getStepById();
+          }
+          this.moreDefaut = { ...this.moreDefaut };
+        });
+      }
     }
+    
   }
   //#endregion
 
@@ -2532,26 +2597,28 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
 
   approvalTrans(task: DP_Instances_Steps_Tasks) {
     this.taskApproval = task;
-    if(task?.approveRule && task?.recID){
-      this.api.execSv<any>(
-        'ES',
-        'ES',
-        'CategoriesBusiness',
-        'GetByCategoryIDAsync',
-        task?.recID
-      ).subscribe(res => {
-        if(!res){
-          this.notiService.notifyCode('ES028');
-          return;
-        }else {
-          let exportData: ExportData = {
-            funcID: this.funcID,
-            recID: task?.recID,
-            data: null,
-          };
-          this.release(task, res, exportData);
-        }
-      })
+    if (task?.approveRule && task?.recID) {
+      this.api
+        .execSv<any>(
+          'ES',
+          'ES',
+          'CategoriesBusiness',
+          'GetByCategoryIDAsync',
+          task?.recID
+        )
+        .subscribe((res) => {
+          if (!res) {
+            this.notiService.notifyCode('ES028');
+            return;
+          } else {
+            let exportData: ExportData = {
+              funcID: this.funcID,
+              recID: task?.recID,
+              data: null,
+            };
+            this.release(task, res, exportData);
+          }
+        });
     } else {
       this.notiService.notifyCode('DP040');
     }
@@ -2559,7 +2626,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
 
   release(data: any, category: any, exportData = null) {
     this.codxShareService.codxReleaseDynamic(
-      "DP",
+      'DP',
       data,
       category,
       'DP_Instances_Steps_Tasks',
@@ -2578,62 +2645,87 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   releaseCallback(res: any, t: any = null) {
     if (res?.msgCodeError) this.notiService.notify(res?.msgCodeError);
     else {
-      this.api
-        .exec<any>(
-          'DP',
-          'InstancesStepsTasksBusiness',
-          'UpdateApproveStatusTaskAsync',
-          [this.taskApproval?.stepID,this.taskApproval?.recID, "3"]
-        )
-        .subscribe((res) => {
-          if (res) {
-            this.taskApproval.approvedBy = this.user?.userID;
-            this.taskApproval.approveStatus = "3";
-            this.taskApproval = null;
-            this.changeDetectorRef.markForCheck();
-          }
-        });
+      this.taskApproval.approveStatus = res?.returnStatus || '0';
+      this.moreDefaut = JSON.parse(JSON.stringify(this.moreDefaut));
+      this.changeDetectorRef.markForCheck();
+      // this.api
+      //   .exec<any>(
+      //     'DP',
+      //     'InstancesStepsTasksBusiness',
+      //     'UpdateApproveStatusTaskAsync',
+      //     [this.taskApproval?.stepID,this.taskApproval?.recID, "3"]
+      //   )
+      //   .subscribe((res) => {
+      //     if (res) {
+      //       this.taskApproval.approvedBy = this.user?.userID;
+      //       this.taskApproval.approveStatus = "3";
+      //       this.taskApproval = null;
+      //       this.moreDefaut = JSON.parse(JSON.stringify(this.moreDefaut));
+      //       this.changeDetectorRef.markForCheck();
+      //     }
+      //   });
     }
   }
 
   cancelApprover(task) {
     this.notiService.alertCode('ES016').subscribe((x) => {
       if (x.event.status == 'Y') {
-        this.api.execSv<any>(
-          'ES',
-          'ES',
-          'CategoriesBusiness',
-          'GetByCategoryIDAsync',
-          task?.recID
-        ).subscribe((res2: any) => {
-                if (res2) {
-                  if (res2?.eSign == true) {
-                    //trình ký
-                  } else if (res2?.eSign == false) {
-                    //kí duyet
-                    this.codxShareService
-                      .codxCancel(
-                        'CM',
-                        task?.recID,
-                        'DP_Instances_Steps_Tasks',
-                        null,
-                        null
-                      )
-                      .subscribe((res3) => {
-                        if (res3) {
-                          // this.dataSelected.approveStatus = '0';
-                          // this.view.dataService
-                          //   .update(this.dataSelected)
-                          //   .subscribe();
-                          // if (this.kanban)
-                          //   this.kanban.updateCard(this.dataSelected);
-                          // this.notificationsService.notifyCode('SYS007');
-                        } else this.notiService.notifyCode('SYS021');
-                      });
+        this.api
+          .execSv<any>(
+            'ES',
+            'ES',
+            'CategoriesBusiness',
+            'GetByCategoryIDAsync',
+            task?.recID
+          )
+          .subscribe((res: any) => {
+            if (res) {
+              this.codxShareService
+                .codxCancel(
+                  'DP',
+                  task?.recID,
+                  'DP_Instances_Steps_Tasks',
+                  null,
+                  null
+                )
+                .subscribe((res2: any) => {
+                  if (res2?.msgCodeError)
+                    this.notiService.notify(res?.msgCodeError);
+                  else {
+                    task.approveStatus = res2?.returnStatus || '0';
+                    this.moreDefaut = JSON.parse(
+                      JSON.stringify(this.moreDefaut)
+                    );
+                    this.changeDetectorRef.markForCheck();
                   }
-                }
-              });
+                });
+            } else {
+              this.notiService.notifyCode('SYS021');
+            }
+          });
       }
     });
+  }
+  openFormApprover(task){
+    this.taskApproval = task;
+    this.approverDialog = this.callfc.openForm(CodxViewApproveComponent, '', 500, 550,'',{categoryID:task?.recID, type: "2"});
+  }
+  openFormField(task){
+    let listField = this.getFields(this.currentStep?.fields, task?.fieldID)
+    let obj = {
+      data: JSON.parse(JSON.stringify(listField)),
+      titleHeader: 'Chỉnh sửa trường tùy chỉnh',
+      objectIdParent: 'task?.stepID',
+      customerID: '',
+    };
+    let formModel: FormModel = {
+      entityName: 'DP_Instances_Steps_Fields',
+      formName: 'DPInstancesStepsFields',
+      gridViewName: 'grvDPInstancesStepsFields',
+    };
+    let option = new DialogModel();
+    option.FormModel = formModel;
+    option.zIndex = 1000;
+    this.callfc.openForm(PopupCustomFieldComponent, '', 550, 800,'',obj,'',option);
   }
 }

@@ -29,9 +29,9 @@
       </div>
       <div class="d-flex align-items-center me-3">
         <div class="ms-2">
-          <div class="btn btn-icon btn-light-danger btn-circle" (click)="closeForm()">
+          <button class="btn btn-icon btn-light-danger btn-circle" (click)="closeForm()">
             <i class="icon-close icon-18"></i>
-          </div>
+          </button>
         </div>
       </div>
     </div>
@@ -46,7 +46,7 @@
       <span style="margin-left: 30px" *ngIf="formCashPayment.data?.validated">
         <codx-vll [name]="'AC063'" [formModel]="dialog.formModel" [field]="'SubType'"
           [value]="formCashPayment.data?.subType" [showText]="true" [showBgColor]="true"
-          class="badge badge-light-primary badge-lg mt-1">
+          class="badge badge-light-primary badge-sm mt-1">
         </codx-vll>
       </span>
     </ng-container>
@@ -547,7 +547,7 @@
 <!-- Start: Grid CashPaymentLine -->
 <ng-template #TmpTabLine>
   <ng-container *ngIf="formCashPayment?.data?.subType == '1' || formCashPayment?.data?.subType == '9'">
-    <div id="gridcash" class="tabline-content scroll-ac header-table-ac position-relative">
+    <div id="gridcash" class="tabline-content header-table-ac position-relative">
       <codx-gridview-v2 #eleGridCashPayment class="tabLine" [showEmptyRecord]="false" gridLines="Both" [autoFitColumns]="false"
         [formName]="journal.entryMode == '1'? fmCashpaymentLine.formName : fmCashpaymentLineOne.formName" [childModel]="formCashPayment?.data?.subType == '9' ? childModelCashPayment : ''"
         [gridViewName]="journal.entryMode == '1' ? fmCashpaymentLine.gridViewName : fmCashpaymentLineOne.gridViewName" (beforeSaveRow)="beforeSaveRowCashPayment($event)"
@@ -586,7 +586,7 @@
 <!-- Start: Grid SettledInvoices -->
 <ng-template #TmpTabSettledInvoices>
   <ng-container *ngIf="formCashPayment?.data?.subType == '2' || formCashPayment?.data?.subType == '9'">
-    <div class="tabline-content scroll-ac header-table-ac position-relative">
+    <div class="tabline-content header-table-ac position-relative">
       <codx-gridview-v2 #eleGridSettledInvoices [formName]="fmSettledInvoices.formName" [gridViewName]="fmSettledInvoices.gridViewName" [editOnClick]="true"
         [showEmptyRecord]="false" [entityName]="fmSettledInvoices.entityName" [showEmptyRecord]="false" rowNoField="rowNo" gridLines="Both"
         [hideMoreFunc]="true" service="AC" predicates="TransID=@0" [dataValues]="formCashPayment.data.recID" [autoFitColumns]="false"
@@ -633,7 +633,7 @@
 <!-- Start: Grid VATInvoices -->
 <ng-template #TmpTabVATInvoices>
   <ng-container *ngIf="formCashPayment?.data?.subType == '9'">
-    <div class="tabline-content scroll-ac header-table-ac position-relative">
+    <div class="tabline-content header-table-ac position-relative">
       <codx-gridview-v2 #eleGridVatInvoices [formName]="fmVATInvoices.formName" [gridViewName]="fmVATInvoices.gridViewName"
         [entityName]="fmVATInvoices.entityName" rowNoField="rowNo" (cellChanged)="valueChangeLineVATInvoices($event)" (beforeSaveRow)="beforeSaveRowVATInvoice($event)"
         (eventAction)="onActionGridVatInvoice($event)" [showEmptyRecord]="false" [editOnClick]="true" [templateMore]="templateMore"

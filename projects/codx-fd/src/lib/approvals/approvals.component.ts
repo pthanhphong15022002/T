@@ -174,8 +174,11 @@ export class ApprovalsComponent extends UIComponent {
   }
 
   updateApproveStatus(item, status) {
-    item.approveStatus = status;
-    this.viewComponent.dataService.update(item).subscribe();
+    let find = this.viewComponent.dataService.data.find(x => x.recID == item.recID);
+    if(find) {
+      find.approveStatus = status;
+      this.viewComponent.dataService.update(find).subscribe();
+    }
   }
 
   // popup chọn điểm và ý kiến

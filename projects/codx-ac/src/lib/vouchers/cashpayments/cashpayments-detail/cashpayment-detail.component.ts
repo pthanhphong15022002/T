@@ -1,6 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  ElementRef,
   Injector,
   Input,
   SimpleChange,
@@ -59,13 +60,16 @@ export class CashpaymentDetailComponent extends UIComponent {
     { name: 'References', textDefault: 'Liên kết', isActive: false },
   ];
   private destroy$ = new Subject<void>(); //? list observable hủy các subscribe api
+  isShowLess: any = false;
+  isShowMore:any = true;
+  isReadMore:any = false;
   constructor(
     private inject: Injector,
     private acService: CodxAcService,
     private authStore: AuthStore,
     private shareService: CodxShareService,
     private notification: NotificationsService,
-    private tenant: TenantStore
+    private tenant: TenantStore,
   ) {
     super(inject);
     this.authStore = inject.get(AuthStore);
@@ -96,6 +100,7 @@ export class CashpaymentDetailComponent extends UIComponent {
   }
 
   ngDoCheck() {
+    this.onReadMore();
     this.detectorRef.detectChanges();
   }
 
@@ -122,6 +127,9 @@ export class CashpaymentDetailComponent extends UIComponent {
   getDataDetail(dataItem, recID) {
     if (dataItem) {
       this.itemSelected = dataItem;
+      this.isReadMore = false;
+      this.isShowMore = true;
+      this.isShowLess = false;
       this.showHideTab(this.itemSelected?.subType); // ẩn hiện các tab detail
       this.detectorRef.detectChanges();
     } else {
@@ -170,6 +178,36 @@ export class CashpaymentDetailComponent extends UIComponent {
    */
   trackByFn(index, item) {
     return item.recID;
+  }
+
+  /**
+   * *Ham xem them & an bot dien giai
+   * @param type 
+   */
+  onShowMoreLess(type){
+    if(type === 'showmore'){
+      this.isShowMore = false;
+      this.isShowLess = true;
+    }else{
+      this.isShowMore = true;
+      this.isShowLess = false;
+    }
+    this.detectorRef.detectChanges();
+  }
+
+  /**
+   * *Ham kiem tra dien giai khi vuot qua 2 dong
+   */
+  onReadMore(){
+    let ele = document.getElementById('eleMemo');
+    if (ele) {
+      if (ele.offsetHeight < ele.scrollHeight || ele.offsetWidth < ele.scrollWidth){
+        this.isReadMore = true;
+      }else{
+        this.isReadMore = false;
+      }
+      this.detectorRef.detectChanges();
+    }
   }
   //#endregion Function
 }
