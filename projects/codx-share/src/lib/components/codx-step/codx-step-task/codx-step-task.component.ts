@@ -893,7 +893,8 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     );
   }
 
-  openPopup(res, action) {
+  openPopup(res?, action?) {
+    res = {};
     res.versionNo = res.versionNo ?? 'V1';
     res.revision = res.revision ?? 0;
     res.versionName = res.versionNo + '.' + res.revision;
@@ -917,16 +918,19 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     let option = new DialogModel();
     option.IsFull = true;
     option.FormModel = formModel;
-    let dialog = this.callfc.openForm(
-      PopupAddQuotationsComponent,
-      '',
-      null,
-      null,
-      '',
-      obj,
-      '',
-      option
-    );
+    this.cache.gridViewSetup('CMQuotations','grvCMQuotations').subscribe(res => {
+      let dialog = this.callfc.openForm(
+        PopupAddQuotationsComponent,
+        '',
+        null,
+        null,
+        '',
+        obj,
+        '',
+        option
+      );
+    });
+    
   }
 
   getTaskEnd() {
@@ -1024,7 +1028,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     task['isTaskDefault'] = false;
     task['dependRule'] = '0';
     if (this.taskType?.value == 'Q') {
-      //báo giá
+      this.openPopup();
       this.addQuotation();
     } else if (this.taskType?.value == 'CO') {
       // hợp đồng
