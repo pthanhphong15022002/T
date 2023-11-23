@@ -473,11 +473,12 @@
   [instance]="dataSelect"
   [listInstanceStep]="listSteps"
   [formModel]="formModel"
-  [applyFor]="'0'"
+  [applyFor]="applyFor"
   (saveAssignTask)="saveAssignTask($event)"
   (changeProgress)="autoStart($event)"
   [dealName]="dataSelect?.title"
   [ownerInstance]="dataSelect?.owner"
+  [isChangeOwner]="isChangeOwner"
   >
   </step-task-instance>
 </div>

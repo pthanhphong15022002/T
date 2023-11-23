@@ -29,7 +29,7 @@ export class StepTaskInstanceComponent implements OnInit, AfterViewInit, OnChang
   @Input() contractName: string;
   @Input() leadName: string;
   @Input() isHeightAuto = false;
-
+  @Input() isChangeOwner: string;
   @Output() continueStep = new EventEmitter<any>();
   @Output() saveAssignTask = new EventEmitter<any>();
   @Output() changeProgress = new EventEmitter<any>();
