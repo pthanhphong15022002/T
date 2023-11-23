@@ -24,7 +24,7 @@
 
     <div class="progress-approval" *ngIf="listApprover?.length > 0">
       <ng-container *ngFor="let item of listApprover; let i = index">
-        <div class="process-step1 d-flex" placement="top">
+        <div class="process-step1 d-flex" [ngClass]="i < listApprover?.length - 1 ? 'boder_left' : ''" placement="top">
           <div
             class="step-node cursor-pointer d-flex flex-center m-1"
             [style.color]="''"
