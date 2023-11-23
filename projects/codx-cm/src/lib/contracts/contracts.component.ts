@@ -196,9 +196,10 @@ export class ContractsComponent extends UIComponent {
     this.actionName = e?.text;
     switch (e.id) {
       case 'btnAdd':
+        this.addContract();
         if (this.isAddContract) {
           this.isAddContract = false;
-          this.addContract();
+          
         }
         break;
     }

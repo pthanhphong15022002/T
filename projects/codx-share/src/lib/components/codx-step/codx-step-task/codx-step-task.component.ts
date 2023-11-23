@@ -476,6 +476,9 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       }
       event.forEach((res) => {
         switch (res.functionID) {
+          case 'SYS001':
+          case 'SYS002':
+            break;
           case 'SYS02': //xóa
             if (!(!task?.isTaskDefault && (this.isRoleAll || isGroup))) {
               res.disabled = true;
@@ -538,8 +541,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
           case 'DP25':
           case 'DP26':
           case 'SYS004':
-          case 'SYS001':
-          case 'SYS002':
+
             res.disabled = true;
             break;
           case 'DP27': // đặt xe
@@ -893,7 +895,8 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     );
   }
 
-  openPopup(res, action) {
+  openPopup(res?, action?) {
+    res = {};
     res.versionNo = res.versionNo ?? 'V1';
     res.revision = res.revision ?? 0;
     res.versionName = res.versionNo + '.' + res.revision;
@@ -917,16 +920,21 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     let option = new DialogModel();
     option.IsFull = true;
     option.FormModel = formModel;
-    let dialog = this.callfc.openForm(
-      PopupAddQuotationsComponent,
-      '',
-      null,
-      null,
-      '',
-      obj,
-      '',
-      option
-    );
+    this.cache.gridViewSetup('CMQuotations','grvCMQuotations').subscribe(res => {
+      let dialog = this.callfc.openForm(
+        PopupAddQuotationsComponent,
+        '',
+        null,
+        null,
+        '',
+        obj,
+        '',
+        option
+      );
+      console.log(dialog.close());
+      
+    });
+    
   }
 
   getTaskEnd() {
@@ -1024,14 +1032,13 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     task['isTaskDefault'] = false;
     task['dependRule'] = '0';
     if (this.taskType?.value == 'Q') {
-      //báo giá
       this.addQuotation();
     } else if (this.taskType?.value == 'CO') {
       // hợp đồng
       let contractOutput = await this.stepService.openPopupContract('add', 'task');
       let contract = contractOutput?.event?.contract; 
       if(contract){
-        task.callType = contract?.recID;
+        task.objectLinked = contract?.recID;
         task.taskName = contract?.contractName;
         task.owner = contract?.owner; 
         if(contract?.permissions?.length > 0) {
@@ -1157,7 +1164,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         //báo giá
         this.addQuotation();
       } else if (task?.taskType == 'CO') {
-        let contractOutput = await this.stepService.openPopupContract('edit', 'task', task?.callType);
+        let contractOutput = await this.stepService.openPopupContract('edit', 'task', task?.objectLinked);
       }else{
         let taskEdit = JSON.parse(JSON.stringify(task));
         let groupIdOld = taskEdit?.taskGroupID;
@@ -1798,7 +1805,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
           if (res) {
             this.url = res?.url;
             this.codxService.navigate('', this.url, {
-              recID: data?.callType,
+              recID: data?.objectLinked,
             });
           }
         });
