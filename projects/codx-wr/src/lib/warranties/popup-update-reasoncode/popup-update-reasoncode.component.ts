@@ -103,7 +103,8 @@ export class PopupUpdateReasonCodeComponent implements OnInit, AfterViewInit {
         .subscribe((res) => {
           if (res) {
             this.dateControl = res?.dateControl;
-            this.setDataCommentAndDate(res?.parentID);
+            this.dataParentID = res?.comment;
+            this.parentID = res?.parentID;
             this.setTimeEdit();
           }
         });
@@ -210,43 +211,38 @@ export class PopupUpdateReasonCodeComponent implements OnInit, AfterViewInit {
 
   //#endregion
   valueChangeParent(e) {
-    this.dataParentID = e?.data;
-    this.setComment(
-      e?.component?.itemsSelected[0]?.Comment,
-      e?.component?.itemsSelected[0]?.CommentControl
-    );
-    this.detectorRef.detectChanges();
-  }
-  async valueChange(e) {
-    this.data[e?.field] = e?.data;
-    if (e?.field == 'statusCode') {
-      this.parentID = null;
-      this.dataParentID = null;
-      this.data.comment = null;
-      this.dateControl = e?.component?.itemsSelected[0]?.DateControl;
-
-      this.setDataCommentAndDate(e?.component?.itemsSelected[0]?.ParentID);
-      if (this.dateControl) {
-        this.defaultTime(
-          e?.component?.itemsSelected[0]?.Leadtime,
-          this.dateControl
-        );
-      }
+    if (e?.data != null && e?.data?.trim() != '') {
+      this.dataParentID = e?.data;
       this.setComment(
         e?.component?.itemsSelected[0]?.Comment,
         e?.component?.itemsSelected[0]?.CommentControl
       );
+      this.detectorRef.detectChanges();
+    }
+  }
+  async valueChange(e) {
+    this.data[e?.field] = e?.data;
+    if (e?.field == 'statusCode') {
+      if (e?.data != null && e?.data?.trim() != '') {
+        this.dataParentID = e?.component?.itemsSelected[0]?.Comment;
+        this.parentID = e?.component?.itemsSelected[0]?.ParentID;
+        this.data.comment = null;
+        this.dateControl = e?.component?.itemsSelected[0]?.DateControl;
+        if (this.dateControl) {
+          this.defaultTime(
+            e?.component?.itemsSelected[0]?.Leadtime,
+            this.dateControl
+          );
+        }
+        this.setComment(
+          e?.component?.itemsSelected[0]?.Comment,
+          e?.component?.itemsSelected[0]?.CommentControl
+        );
+      }
     }
     this.detectorRef.detectChanges();
   }
 
-  setDataCommentAndDate(parentID) {
-    this.parentID = parentID;
-    if (this.parentID == null) {
-      this.dataParentID = null;
-    }
-    // this.setComment(comment, this.commentControl);
-  }
 
   setSchedule() {
     let timeList = this.lstTimeVll ?? [];
