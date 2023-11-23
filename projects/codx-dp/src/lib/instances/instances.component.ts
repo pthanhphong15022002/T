@@ -243,6 +243,7 @@ export class InstancesComponent
   runMode: any; //view detail
   tabControl = '';
   asideMode: string;
+  isChangeOwner: boolean = false;
 
   constructor(
     inject: Injector,
@@ -680,6 +681,7 @@ export class InstancesComponent
   }
 
   async openPopupEdit(applyFor, formMD, option, titleAction) {
+    let ownerIdOld = this.dataSelected?.owner;
     var obj = {
       action: 'edit',
       applyFor: applyFor,
@@ -719,7 +721,7 @@ export class InstancesComponent
           this.detailViewPopup.dataSelect = this.dataSelected;
           this.detailViewPopup.loadChangeData();
         }
-
+        this.isChangeOwner = ownerIdOld != e?.event?.owner;
         this.detectorRef.detectChanges();
       }
     });
@@ -1116,12 +1118,15 @@ export class InstancesComponent
       )
       .subscribe((str) => {
         if (str && str?.length > 0) {
-          let datas = str[1];
-          if (datas && datas.includes('[{')) datas = datas.substring(2);
-          let fix = str[0];
-          fix = fix.substring(1, fix.length - 1);
-          let dataSource = '[{ ' + fix + ',' + datas;
-          // let dataSource = '[' + str + ']';
+          let dataSource = '[' + str[0] + ']';
+          if (str[1]) {
+            let datas = str[1];
+            if (datas && datas.includes('[{')) datas = datas.substring(2);
+            let fix = str[0];
+            fix = fix.substring(1, fix.length - 1);
+            dataSource = '[{ ' + fix + ',' + datas;
+          }
+
           var customData = {
             refID: data.processID,
             refType: 'DP_Processes',
@@ -1199,6 +1204,7 @@ export class InstancesComponent
 
   popupOwnerRoles(data) {
     this.dataSelected = data;
+    let ownerIdOld = data?.owner;
     this.cache.functionList('DPT0402').subscribe((fun) => {
       // var formMD = new FormModel();
       // let dialogModel = new DialogModel();
@@ -1271,6 +1277,7 @@ export class InstancesComponent
           this.dataSelected.owner = e.event;
           this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
           // this.detailViewInstance.loadOwnerStep(e.event.owner);
+          this.isChangeOwner = ownerIdOld != e?.event?.owner;
           this.view.dataService.update(this.dataSelected).subscribe();
           this.detectorRef.detectChanges();
         }
@@ -2237,7 +2244,9 @@ export class InstancesComponent
           const checkTab = tabIns.some(
             (x) => x.viewModelDetail == this.viewModeDetail
           );
-          this.viewModeDetail = checkTab ? this.viewModeDetail : tabIns[0]['viewModelDetail'];
+          this.viewModeDetail = checkTab
+            ? this.viewModeDetail
+            : tabIns[0]['viewModelDetail'];
         }
       }
     });

@@ -55,6 +55,14 @@ initData(){
         objButton.isButton = true;
         arrButtons.push(objButton);
         x.hasChild = true;
+        if(x.childs && x.childs.length){
+          x.childs.map((y:any)=>{
+            if(y.smallIcon && y.smallIcon.includes('api/')){
+              y.smallIcon = environment.urlUpload+'/'+y.smallIcon;
+            }
+            return y;
+          })
+        }
        }
       return x;
     })
@@ -365,6 +373,7 @@ initData(){
       this.selectedData.url = item.Url
       this.selectedData.refID=item.FunctionID;
       this.selectedData.name=item.CustomName;
+
     }
     this.editedFunc[this.selectedData.recID] = this.selectedData;
     this.changeDetect.detectChanges();
@@ -471,6 +480,7 @@ initData(){
   imgChanged(e:any){
     if(this.selectedData && e.length){
       this.selectedData.image = e[0].pathDisk;
+      debugger
       this.selectedData.icon = null;
       this.selectedData.color = null;
       this.editedFunc[this.selectedData.recID] = this.selectedData;
@@ -479,6 +489,7 @@ initData(){
 
   imgAddChanged(e:any){
     if(this.addData && e.length){
+      debugger
       this.addData.image = e[0].pathDisk
       this.addData.icon = null;
       this.addData.color = null;

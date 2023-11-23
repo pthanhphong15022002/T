@@ -246,7 +246,7 @@ export class PopupAddContractsComponent
   }
 
   async ngAfterViewInit(): Promise<void> {
-  
+
     if (this.action !== this.actionAdd || this.isviewCustomer) {
       if (this.isviewCustomer) {
         this.categoryCustomer = this.customerView?.category;
@@ -1109,7 +1109,7 @@ export class PopupAddContractsComponent
           steps: res[0],
           permissions: await this.getListPermission(res[1]),
           dealId: this.action !== this.actionEdit ? res[2] : this.deal.dealID,
-          autoNameTabFields: res[3],
+          autoNameTabFields: res[3].autoNameTabFields,
         };
         let isExist = this.listMemorySteps.some((x) => x.id === processId);
         if (!isExist) {

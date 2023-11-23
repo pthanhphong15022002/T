@@ -600,7 +600,7 @@ export class PopupAddCasesComponent
           steps: res[0],
           permissions: await this.getListPermission(res[1]),
           caseNO: this.action !== this.actionEdit ? this.cases.caseNo : res[2],
-          autoNameTabFields: res[3],
+          autoNameTabFields: res[3]?.autoNameTabFields,
         };
         var isExist = this.listMemorySteps.some((x) => x.id === processId);
         if (!isExist) {
