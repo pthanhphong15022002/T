@@ -296,7 +296,7 @@
 
 <!-- Start: Grid Tranfer -->
 <ng-template #TmpTabLine>
-    <div class="tablinetranfer-content scroll-ac header-table-ac position-relative">
+    <div class="tablinetranfer-content header-table-ac position-relative">
         <codx-gridview-v2 #eleGridIssue [showEmptyRecord]="false" gridLines="Both" [autoFitColumns]="false"
             [formName]="fmIssueTransfersLines.formName" [gridViewName]="fmIssueTransfersLines.gridViewName"
             [templateMore]="templateMore" [entityName]="fmIssueTransfersLines.entityName" predicates="TransID=@0"
@@ -320,7 +320,7 @@
 </ng-template>
 
 <ng-template #TmpTabLine2>
-    <div class="tablinetranfer-content scroll-ac header-table-ac position-relative">
+    <div class="tablinetranfer-content  header-table-ac position-relative">
         <codx-gridview-v2 #eleGridReceipt [showEmptyRecord]="false" gridLines="Both" [autoFitColumns]="false"
             [formName]="fmReceiptTransfersLines.formName" [gridViewName]="fmReceiptTransfersLines.gridViewName"
             [templateMore]="templateMore" [entityName]="fmReceiptTransfersLines.entityName" predicates="TransID=@0"

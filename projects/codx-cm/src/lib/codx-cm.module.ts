@@ -119,6 +119,7 @@ import { ViewLeadDetailComponent } from './leads/view-lead-detail/view-lead-deta
 import { CustomIconPipe } from './pipes/customIcon.pipe';
 import { FormatTargetPipe } from './pipes/format-target.pipe';
 import { PopupAddContractsComponent } from './contracts/popup-add-contracts/popup-add-contracts.component';
+import { FormatStatusPipe } from './pipes/format-status.pipe';
 
 export const routes: Routes = [
   {
@@ -300,6 +301,7 @@ const T_Component: Type<any>[] = [
     ViewLeadDetailComponent,
     CustomIconPipe,
     FormatTargetPipe,
+    FormatStatusPipe
   ],
   imports: [
     CodxCoreModule.forRoot({ environment }),
