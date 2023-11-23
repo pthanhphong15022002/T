@@ -238,14 +238,14 @@
 
 
 <ng-template #noEmail>
-  <span class="place-holder">{{grvSetup['Email']?.headerText}}</span>
+  <span *ngIf="grvSetup && grvSetup['Email']?.headerText" class="place-holder">{{grvSetup['Email']?.headerText}}</span>
 </ng-template>
 <ng-template #noPhone>
-  <span class="place-holder">{{grvSetup['Phone']?.headerText}}</span>
+  <span *ngIf="grvSetup && grvSetup['Phone']?.headerText" class="place-holder">{{grvSetup['Phone']?.headerText}}</span>
 </ng-template>
 <ng-template #noBirthDay>
-  <span class="place-holder">{{grvSetup['Birthday']?.headerText}}</span>
+  <span *ngIf="grvSetup && grvSetup['Birthday']?.headerText" class="place-holder">{{grvSetup['Birthday']?.headerText}}</span>
 </ng-template>
 <ng-template #noJoinedOn>
-  <span class="place-holder">{{grvSetup['JoinedOn']?.headerText}}</span>
+  <span *ngIf="grvSetup && grvSetup['JoinedOn']?.headerText" class="place-holder">{{grvSetup['JoinedOn']?.headerText}}</span>
 </ng-template>

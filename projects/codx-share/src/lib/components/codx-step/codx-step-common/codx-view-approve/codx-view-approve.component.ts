@@ -4,9 +4,10 @@ import {
   Input,
   OnChanges,
   OnInit,
+  Optional,
   SimpleChanges,
 } from '@angular/core';
-import { ApiHttpService } from 'codx-core';
+import { ApiHttpService, DialogData, DialogRef } from 'codx-core';
 import { Subject, takeUntil } from 'rxjs';
 
 @Component({
@@ -18,26 +19,33 @@ export class CodxViewApproveComponent implements OnInit, OnChanges {
   @Input() listApprover;
   @Input() change;
   @Input() categoryID;
+  @Input() type = 1;
   
   viewApprover;
+  dialog;
 
   private destroyFrom$: Subject<void> = new Subject<void>();
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private api: ApiHttpService,
-
-  ) {}
+    @Optional() dialog?: DialogRef,
+    @Optional() dt?: DialogData
+  ) {
+    this.dialog = dialog;
+    this.categoryID = dt?.data?.categoryID;
+    this.type = dt?.data?.type || "1";
+  }
 
   ngOnInit(): void {
-    
+    this.loadListApproverStep();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if(changes?.listApprover || changes?.categoryID ||  changes?.change){
-      if(!this.listApprover && this.categoryID){
-        this.loadListApproverStep();
-      }
-    }
+    // if(changes?.listApprover || changes?.categoryID ||  changes?.change){
+    //   if(!this.listApprover && this.categoryID){
+    //     this.loadListApproverStep();
+    //   }
+    // }
   }
  
   loadListApproverStep() {
@@ -67,4 +75,5 @@ export class CodxViewApproveComponent implements OnInit, OnChanges {
     this.viewApprover = data;
     p.open();
   }
+  
 }

@@ -114,7 +114,6 @@
       *ngFor="let instanceStep of listInstanceStepShow; let i = index"
       class="list-step mt-3"
     >
-
       <codx-step-task
         *ngIf="!instanceStep?.isSuccessStep && !instanceStep?.isFailStep"
         [instanceStep]="instanceStep"
@@ -124,8 +123,8 @@
         [isDeepCopy]="false"
         [isShowStep]="true"
         [isStart]="instance?.status == '2'"
-        [isClose]="instance?.permissionCloseInstances"
-        [isRoleAll]="instance?.permissionCloseInstances || instance?.permissionMoveInstances || instance?.full || instance?.edit "
+        [isClose]="instance?.closed"
+        [isRoleAll]="instance?.full || instance?.permissionCloseInstances || instance?.permissionMoveInstances || instance?.edit "
         [isShowElement]="isShowElement"
         [isAddTask]="i == indexAddTask"
         [isTaskFirst]="i == 0 ? true : false"
@@ -135,8 +134,11 @@
         (isSuccessStep)="susscessStepEnd($event, instanceStep)"
         [sessionID]="instance?.recID"
         [formModelAssign]="formModel"
+        [isChangeOwner]="isChangeOwner"
         [ownerInstance]="owner"
+        [entity]="'DP'"
       ></codx-step-task>
+
       <div
         *ngIf="
           (instanceStep?.isFailStep || instanceStep?.isSuccessStep) &&

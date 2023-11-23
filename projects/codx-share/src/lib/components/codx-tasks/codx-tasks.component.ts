@@ -1859,6 +1859,7 @@ export class CodxTasksComponent
               data.status == '90' ||
               this.funcID == 'TMT0402' ||
               this.funcID == 'TMT0401' ||
+              this.funcID == 'TMT0403' ||
               this.funcID == 'TMT0206' ||
               this.funcID == 'MWP0063' ||
               ((this.funcID == 'TMT03011' || this.funcID == 'TMT05011') &&
@@ -1875,6 +1876,7 @@ export class CodxTasksComponent
               data.status == '90' ||
               this.funcID == 'TMT0402' ||
               this.funcID == 'TMT0401' ||
+              this.funcID == 'TMT0403' ||
               this.funcID == 'TMT0206' ||
               this.funcID == 'MWP0063' ||
               ((this.funcID == 'TMT03011' || this.funcID == 'TMT05011') &&
@@ -1890,10 +1892,12 @@ export class CodxTasksComponent
               this.funcID == 'TMT0206' ||
               this.funcID == 'MWP0063' ||
               this.funcID == 'TMT0402' ||
-              this.funcID == 'TMT0401'
+              this.funcID == 'TMT0401' ||
+              this.funcID == 'TMT0403'
             )
               x.disabled = true;
             break;
+
           //ẩn more theo yêu cầu
           //Hoàn tất
           case 'TMT02011':

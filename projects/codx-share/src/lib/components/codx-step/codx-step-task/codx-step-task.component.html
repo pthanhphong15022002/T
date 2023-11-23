@@ -253,7 +253,13 @@
                         ></ng-container>
                       </div>
                       <div class="d-flex align-items-center">
-                        <ng-container *ngIf="task?.approveRule && task?.approveStatus && task?.approveStatus != '1'">
+                        <ng-container
+                          *ngIf="
+                            task?.approveRule &&
+                            task?.approveStatus &&
+                            task?.approveStatus != '1'
+                          "
+                        >
                           <codx-vll
                             [name]="'DP043'"
                             [field]="'ApproveStatus'"
@@ -273,17 +279,27 @@
                       </div>
                     </div>
 
-                    <div class="ms-12">
-                      <codx-fields-detail-temp
-                        *ngIf="task?.fieldID"
-                        [listFields]="
-                          getFields(currentStep?.fields, task?.fieldID)
-                        "
-                        [showColumnControl]="1"
-                        [isShowTitle]="false"
-                      >
-                      </codx-fields-detail-temp>
-                      <codx-view-approve *ngIf="task?.approveRule" [categoryID]="task?.recID" [change]="task"></codx-view-approve>
+                    <div class="ms-12 d-flex align-items-center">
+                      <div *ngIf="task?.approveRule" class="d-flex align-items-center cursor-pointer"  (click)="openFormApprover(task)">
+                        <span
+                          class="icon-20 icon-text_snippet text-primary "
+                        ></span>
+                        <codx-label
+                          class="text-gray-500"
+                          name="progressDefault2"
+                          [formModel]="grvMoreFunction"
+                          default="Các bước duyệt"
+                        ></codx-label>
+                      </div>
+                      <div *ngIf="task?.fieldID" class="d-flex align-items-center cursor-pointer" (click)="openFormField(task)" [ngClass]="task?.approveRule ? 'ms-2' : ''">
+                        <span class="icon-check-correct icon-20 text-primary"></span>
+                        <codx-label
+                          class="text-gray-500"
+                          name="progressDefault1 "
+                          [formModel]="grvMoreFunction"
+                          default="Trường tùy chỉnh"
+                        ></codx-label>
+                      </div>
                       <ng-container
                         [ngTemplateOutlet]="fileTemplate"
                         [ngTemplateOutletContext]="{ value: task }"
@@ -435,7 +451,7 @@
         *ngIf="
           data?.value?.startDate &&
           data?.value?.endDate &&
-          data?.value?.status != '3' && 
+          data?.value?.status != '3' &&
           data?.value?.progress != 100
         "
       >
@@ -444,7 +460,11 @@
       >
       <span
         class="date text-nowrap text-gray-500"
-        *ngIf="data?.value?.actualEnd && data?.value?.status == '3' && data?.value?.progress == 100 "
+        *ngIf="
+          data?.value?.actualEnd &&
+          data?.value?.status == '3' &&
+          data?.value?.progress == 100
+        "
       >
         {{ data?.value?.actualEnd | date : dateFomat }}
       </span>
@@ -602,7 +622,7 @@
       <div>
         <codx-label
           *ngIf="dataTooltipDay?.actualEnd"
-          class="label-colon text-gray-600 codx-textlabel"
+          class="label-colon text-gray-600 codx-textlabel"popupApprover
           fiedName="actualEnd"
           [formModel]="grvMoreFunction"
           [setRequire]="false"
@@ -618,6 +638,31 @@
       </div>
     </div>
   </div>
+</ng-template>
+
+<ng-template #popupApprover>
+  <div class="p-3">
+    <div class="d-flex justify-content-between">
+      <codx-label
+        class="h3"
+        [formModel]="grvMoreFunction"
+        [default]="'Các bước xét duyệt'"
+      ></codx-label>
+      <span
+        class="icon-close icon-18 cursor-pointer"
+        (click)="approverDialog.close()"
+      ></span>
+    </div>
+    thuận
+    {{taskApprover?.approveRule}}
+    <div>
+      <codx-view-approve
+       *ngIf="taskApprover?.approveRule"
+       [categoryID]="taskApprover?.recID"
+       [change]="taskApprover"
+       ></codx-view-approve>
+    </div>
+  </div> 
 </ng-template>
 <!-- <codx-vll
       *ngIf="data?.group && !isMoveStage && !isViewStep"

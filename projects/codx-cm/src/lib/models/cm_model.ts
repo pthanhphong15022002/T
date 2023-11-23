@@ -203,6 +203,8 @@ export class CM_Deals {
   divisionID: string;
   departmentID: string;
   companyID: string;
+  customerName: string;
+  customerCategory: string;
 }
 
 export class CM_Permissions {
@@ -851,10 +853,10 @@ export class CM_Contracts {
   purpose: string;
   area: number;
   adjustYear: number;
-  adjustPercent: number; 
+  adjustPercent: number;
   statusCode: string;
-  assignType: string; 
-  groupUserID: string; 
+  assignType: string;
+  groupUserID: string;
   datas: string;
   approvedDate: string;
   employeeID: string;
@@ -862,4 +864,5 @@ export class CM_Contracts {
   orgUnitID: string;
   divisionID: string;
   departmentID: string;
+  objectLinked: string;
 }

@@ -428,8 +428,7 @@ export class DealsComponent
       eventItem.disabled =
         data?.alloweStatus == '1'
           ? !['1', '2', '15'].includes(data.status) ||
-            data.closed ||
-            ['1', '0'].includes(data.status)
+            data.closed
           : true;
     };
     let isConfirmOrRefuse = (eventItem, data) => {
@@ -579,7 +578,7 @@ export class DealsComponent
       CM0201_13: () => this.confirmOrRefuse(false, data),
       CM0201_14: () => this.openFormBANT(data),
       CM0201_16: () => this.cancelApprover(data),
-      // SYS002: () => this.exportFiles(e, data),
+      SYS002: () => this.exportTemplet(e, data),
       CM0201_15: () => this.popupPermissions(data),
       CM0201_17: () => this.openFormChangeStatus(data),
       CM0201_18: () => this.addTask(data),
@@ -1160,8 +1159,8 @@ export class DealsComponent
       functionModule: this.functionModule,
       currencyIDDefault: this.currencyIDDefault,
       exchangeRateDefault: this.exchangeRateDefault,
-      categoryCustomer:
-        action === 'add' ? '' : this.dataSelected?.categoryCustomer,
+      customerCategory:
+        action === 'add' ? '' : this.dataSelected?.customerCategory,
     };
     let dialogCustomDeal = this.callfc.openSide(
       PopupAddDealComponent,
@@ -1207,7 +1206,7 @@ export class DealsComponent
           formMD: formMD,
           titleAction: this.formatTitleMore(this.titleAction),
           gridViewSetup: this.gridViewSetup,
-          categoryCustomer: this.dataSelected?.categoryCustomer,
+          customerCategory: this.dataSelected?.customerCategory,
         };
         let dialogCustomDeal = this.callfc.openSide(
           PopupAddDealComponent,
@@ -2012,5 +2011,41 @@ export class DealsComponent
       };
       let task = await this.stepService.openPopupCodxTask(dataAddTask, 'right');
     }
+  }
+
+  exportTemplet(e, data) {
+    this.api
+      .execSv<any>(
+        'CM',
+        'CM',
+        'DealsBusiness',
+        'GetDataSourceExportAsync',
+        data.recID
+      )
+      .subscribe((str) => {
+        if (str && str?.length > 0) {
+          let datas = str[1];
+          if (datas && datas.includes('[{')) datas = datas.substring(2);
+          let fix = str[0];
+          fix = fix.substring(1, fix.length - 1);
+          let dataSource = '[{ ' + fix + ',' + datas;
+          // let dataSource = '[' + str + ']';
+          var customData = {
+            refID: data.processID,
+            refType: 'DP_Processes',
+            dataSource: dataSource,
+          };
+          this.codxShareService.defaultMoreFunc(
+            e,
+            data,
+            this.afterSave,
+            this.view.formModel,
+            this.view.dataService,
+            this,
+            customData
+          );
+          this.detectorRef.detectChanges();
+        }
+      });
   }
 }

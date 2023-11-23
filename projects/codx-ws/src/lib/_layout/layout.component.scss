@@ -12,21 +12,24 @@ codx-view-list-detail .codx-detail-footer {
 {
     margin-top: 1px;
 }
-.ws-body
-{
-    .container-fluid
-    {
+.ws-body{
+    .container-fluid{
         padding: 0 15px !important;
     }
-   
-    .ws-approval
-    {
-        .container-fluid
-        {
+    codx-views .container-toolbar + .container-fluid{
+        max-height: calc(100vh - 165px);
+    }
+    co-calendar .container-toolbar + .container-fluid{
+        max-height: calc(100vh - 52px);
+        codx-content codx-views .container-toolbar + .container-fluid{
+            max-height: calc(100vh - 174px);
+        }
+    }
+    .ws-approval{
+        .container-fluid{
             padding: 0 13px 0 0 !important;
         }
     }
-   
 }
 .ws-body{
     height: calc(100vh - 55px);
