@@ -84,9 +84,8 @@ export class PopupUpdateReasonCodeComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.parentID = null;
-    if (this.data?.startDate && this.data?.endDate) {
-      this.data.startDate = new Date(this.data?.startDate);
-      this.data.endDate = new Date(this.data?.endDate);
+    if (this.action != 'edit') {
+      this.defaultTime(0, '0');
     }
     if (
       this.data != null &&
@@ -194,9 +193,9 @@ export class PopupUpdateReasonCodeComponent implements OnInit, AfterViewInit {
   async setStartAndEndTime() {
     if (this.data?.startDate && this.data?.endDate) {
       this.data.scheduleTime =
-      this.dateControl == '1'
-        ? this.startTime + ' - ' + this.endTime
-        : this.endTime;
+        this.dateControl == '1'
+          ? this.startTime + ' - ' + this.endTime
+          : this.endTime;
 
       const startDate = new Date(this.data.startDate);
       const endDate = new Date(this.data.endDate);
@@ -237,8 +236,6 @@ export class PopupUpdateReasonCodeComponent implements OnInit, AfterViewInit {
         e?.component?.itemsSelected[0]?.Comment,
         e?.component?.itemsSelected[0]?.CommentControl
       );
-
-
     }
     this.detectorRef.detectChanges();
   }

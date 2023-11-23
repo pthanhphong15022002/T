@@ -45,8 +45,8 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
   adUserGroup = new AD_UserGroups();
   adRoles: AD_Roles = new AD_Roles();
   adUserRoles: AD_UserRoles = new AD_UserRoles();
-  countListViewChooseRoleApp: Number = 0;
-  countListViewChooseRoleService: Number = 0;
+  countListViewChooseRoleApp = 0;
+  countListViewChooseRoleService = 0;
   viewChooseRole: tmpformChooseRole[] = [];
   viewChooseRoleTemp: tmpformChooseRole[] = [];
   formModel: FormModel;
