@@ -203,7 +203,7 @@ export class PopupAddDealComponent
         this.action != this.actionAdd
           ? JSON.parse(JSON.stringify(dialog.dataService.dataSelected))
           : this.deal;
-      this.customerCategory = dt?.data?.categoryCustomer;
+      this.customerCategory = dt?.data?.customerCategory;
       if (this.action === this.actionAdd) {
         this.deal.exchangeRate = dt?.data?.exchangeRateDefault;
         this.deal.currencyID = dt?.data?.currencyIDDefault;
@@ -360,8 +360,8 @@ export class PopupAddDealComponent
   }
 
   valueChangeOwner($event) {
-    if ($event && $event?.data) {
-      this.owner = $event?.data;
+    if ($event ) {
+      this.owner = $event;
       let ownerName = '';
       if (this.listParticipants.length > 0 && this.listParticipants) {
         ownerName = this.listParticipants.filter(
@@ -1296,7 +1296,7 @@ export class PopupAddDealComponent
 
   setTitle(e: any) {
     this.title = this.titleAction;
-    this.changeDetectorRef.detectChanges();
+   // this.changeDetectorRef.detectChanges();
   }
 
   covnertListContact(listOld, listNew) {
