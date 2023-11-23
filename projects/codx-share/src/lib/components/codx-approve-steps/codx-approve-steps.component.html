@@ -90,7 +90,7 @@
                                     
                                   </div>
                                   <codx-temp-full cardCss="card-template p-3"
-                                    [imageId]="approver?.roleType =='U' ? approver?.approver : approver?.userIDs"
+                                    [imageId]="approver?.roleType =='U' ? approver?.approver : approver?.userID "
                                     [title]="approver?.userName ? approver?.userName : approver?.name ? approver?.name : approver?.approver ? (approver?.approver | vll : 'ES014' : 'text' | async) : (approver?.roleType | vll : 'ES014' : 'text' | async)"
                                     [subTitle]="approver?.orgUnitName"
                                     [desc]="approver?.position ? approver?.position: approver?.roleType | vll : 'ES014' : 'text' | async"

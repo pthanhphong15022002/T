@@ -242,6 +242,8 @@ export class InstancesComponent
   crrFunc: any;
   runMode: any; //view detail
   tabControl = '';
+  asideMode: string;
+
   constructor(
     inject: Injector,
     private callFunc: CallFuncService,
@@ -378,6 +380,8 @@ export class InstancesComponent
   //   this.setColorKanban();
   // }
   onInit() {
+    this.asideMode = this.codxService.asideMode;
+
     this.button = [
       {
         id: 'btnAdd',
