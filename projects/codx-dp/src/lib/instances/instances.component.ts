@@ -243,6 +243,7 @@ export class InstancesComponent
   runMode: any; //view detail
   tabControl = '';
   asideMode: string;
+  isChangeOwner:boolean = false;
 
   constructor(
     inject: Injector,
@@ -680,6 +681,7 @@ export class InstancesComponent
   }
 
   async openPopupEdit(applyFor, formMD, option, titleAction) {
+    let ownerIdOld = this.dataSelected?.owner;
     var obj = {
       action: 'edit',
       applyFor: applyFor,
@@ -719,7 +721,7 @@ export class InstancesComponent
           this.detailViewPopup.dataSelect = this.dataSelected;
           this.detailViewPopup.loadChangeData();
         }
-
+        this.isChangeOwner = ownerIdOld != e?.event?.owner;
         this.detectorRef.detectChanges();
       }
     });
@@ -1199,6 +1201,7 @@ export class InstancesComponent
 
   popupOwnerRoles(data) {
     this.dataSelected = data;
+    let ownerIdOld = data?.owner;
     this.cache.functionList('DPT0402').subscribe((fun) => {
       // var formMD = new FormModel();
       // let dialogModel = new DialogModel();
@@ -1271,6 +1274,7 @@ export class InstancesComponent
           this.dataSelected.owner = e.event;
           this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
           // this.detailViewInstance.loadOwnerStep(e.event.owner);
+          this.isChangeOwner = ownerIdOld != e?.event?.owner;
           this.view.dataService.update(this.dataSelected).subscribe();
           this.detectorRef.detectChanges();
         }

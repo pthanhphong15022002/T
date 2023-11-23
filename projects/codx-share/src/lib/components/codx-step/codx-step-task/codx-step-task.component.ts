@@ -1153,51 +1153,58 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
 
   async editTask(task) {
     if (task) {
-      let taskEdit = JSON.parse(JSON.stringify(task));
-      let groupIdOld = taskEdit?.taskGroupID;
-      this.taskType = this.listTaskType.find(
-        (type) => type.value == taskEdit?.taskType
-      );
-      let dataOutput = await this.openPopupTask('edit', 'step', taskEdit);
-      if (dataOutput?.task) {
-        let taskOutput = dataOutput?.task;
-        let group = this.listGroupTask.find((group) =>
-          this.comparison(group.refID, taskOutput?.taskGroupID)
+      if (task?.taskType == 'Q') {
+        //báo giá
+        this.addQuotation();
+      } else if (task?.taskType == 'CO') {
+        let contractOutput = await this.stepService.openPopupContract('edit', 'task', task?.callType);
+      }else{
+        let taskEdit = JSON.parse(JSON.stringify(task));
+        let groupIdOld = taskEdit?.taskGroupID;
+        this.taskType = this.listTaskType.find(
+          (type) => type.value == taskEdit?.taskType
         );
-        let indexTask = this.currentStep?.tasks?.findIndex(
-          (taskFind) => taskFind.recID == task.recID
-        );
-
-        if (taskOutput?.taskGroupID != groupIdOld) {
-          let groupOld = this.listGroupTask.find(
-            (group) => group.refID == groupIdOld
+        let dataOutput = await this.openPopupTask('edit', 'step', taskEdit);
+        if (dataOutput?.task) {
+          let taskOutput = dataOutput?.task;
+          let group = this.listGroupTask.find((group) =>
+            this.comparison(group.refID, taskOutput?.taskGroupID)
           );
-          if (groupOld) {
-            let index = groupOld?.task?.findIndex(
-              (taskFind) => taskFind.recID == task.recID
+          let indexTask = this.currentStep?.tasks?.findIndex(
+            (taskFind) => taskFind.recID == task.recID
+          );
+  
+          if (taskOutput?.taskGroupID != groupIdOld) {
+            let groupOld = this.listGroupTask.find(
+              (group) => group.refID == groupIdOld
             );
-            if (index >= 0) {
-              groupOld?.task?.splice(index, 1);
+            if (groupOld) {
+              let index = groupOld?.task?.findIndex(
+                (taskFind) => taskFind.recID == task.recID
+              );
+              if (index >= 0) {
+                groupOld?.task?.splice(index, 1);
+              }
+            }
+            if (group) {
+              group?.task?.push(taskOutput);
+            }
+          } else {
+            if (group) {
+              let index = group?.task?.findIndex(
+                (taskFind) => taskFind.recID == task.recID
+              );
+              if (index >= 0) {
+                group?.task?.splice(index, 1, taskOutput);
+              }
             }
           }
-          if (group) {
-            group?.task?.push(taskOutput);
+          if (indexTask >= 0) {
+            this.currentStep?.tasks?.splice(indexTask, 1, taskOutput);
           }
-        } else {
-          if (group) {
-            let index = group?.task?.findIndex(
-              (taskFind) => taskFind.recID == task.recID
-            );
-            if (index >= 0) {
-              group?.task?.splice(index, 1, taskOutput);
-            }
-          }
+          this.changeDetectorRef.markForCheck();
+          this.notiService.notifyCode('SYS007');
         }
-        if (indexTask >= 0) {
-          this.currentStep?.tasks?.splice(indexTask, 1, taskOutput);
-        }
-        this.changeDetectorRef.markForCheck();
-        this.notiService.notifyCode('SYS007');
       }
     }
   }

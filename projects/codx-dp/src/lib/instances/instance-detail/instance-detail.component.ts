@@ -73,6 +73,7 @@ export class InstanceDetailComponent implements OnInit {
   @Input() hideMF = false;
   @Input() autoNameTabFields: string;
   @Input() applyFor: any;
+  @Input() isChangeOwner: any;
   @Input() progressControl: any;
   @Output() progressEvent = new EventEmitter<object>();
   @Output() moreFunctionEvent = new EventEmitter<any>();

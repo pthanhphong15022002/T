@@ -113,6 +113,14 @@ export class AddContractsComponent implements OnInit, AfterViewInit{
 
   listParticipants;
   objPermissions = {};
+  formModel: FormModel = {
+    entityName: 'CM_Contracts',
+    entityPer: 'CM_Contracts',
+    formName: 'CMContracts',
+    funcID: 'CM0204',
+    gridViewName: 'grvCMContracts',
+  };
+
   readonly fieldCbxParticipants = { text: 'objectName', value: 'objectID' };
 
   moreDefaut = {
@@ -285,6 +293,13 @@ export class AddContractsComponent implements OnInit, AfterViewInit{
         } else if (this.contractRefID) {
           let dataEdit = await firstValueFrom(
             this.contractService.getContractByRefID(this.contractRefID)
+          );
+          if (dataEdit) {
+            this.contracts = dataEdit;
+          }
+        }else if (this.recIDContract){
+          let dataEdit = await firstValueFrom(
+            this.contractService.getContractByRecID(this.recIDContract)
           );
           if (dataEdit) {
             this.contracts = dataEdit;
