@@ -196,13 +196,13 @@ export class CM_Deals {
   expectedTo: Date;
   datas: string;
   industries: string;
-  shortName:string;
+  shortName: string;
   employeeID: string;
-  positionID:string;
+  positionID: string;
   orgUnitID: string;
-  divisionID:string;
+  divisionID: string;
   departmentID: string;
-  companyID:string;
+  companyID: string;
 }
 
 export class CM_Permissions {
@@ -447,92 +447,6 @@ export class CM_ContractsPayments {
   modifiedOn: Date; //Ngày chỉnh sửa
   modifiedBy: string; //Người chỉnh sửa
 }
-export class CM_Contracts {
-  recID: string = Util.uid(); //Mã hợp đồng
-  stepID: string; //Mã hợp đồng
-  contractID: string; //Mã hợp đồng
-  contractDate: Date; //Ngày lập hợp đồng
-  contractName: string; //Tên hợp đồng
-  contractType: string; //Loại hợp đồng
-  useType: string; //Loại hợp đồng sử dụng: Một lần, nhiều lần
-  category: string; //Phân loại
-  assetID: string; //Mã tài sản
-  projectID: string; //Mã dự án
-  quotationID: string; //Báo giá
-  orderID: string; //Đơn hàng
-  dealID: string; //Cơ hội
-  objectType: string; //Loại đối tượng
-  objectID: string; //Mã đối tượng
-  objectName: string; //Tên đối tượng
-  contactID: string; //Liên hệ
-  customerID: string; //Khách hàng
-  currencyID: string; //Tiền tệ
-  exchangeRate: number; //Tỷ giá hối đoái
-  contractAmt: number; //Giá trị hợp đồng
-  VATID: string; //VAT
-  paymentStatus: string; //Trạng thái thanh toán
-  paidAmt: number; //Số tiền đã thanh toán
-  remainAmt: number; //Số tiền còn lại
-  terms: string; //Điều khoản hợp đồng -- thiếu vll
-  status: string; //Trạng thái
-  periods: number; //Giai đoạn
-  numbererval: string; //Khoảng thời gian
-  effectiveFrom: Date; //Hiệu lực từ
-  effectiveTo: Date; //Hiệu lực đến
-  extendOn: Date; //Ngày gia hạn
-  disposalOn: Date; //Ngày thanh lý
-  warantyMonths: number; //Số tháng bảo hành
-  warantyExpired: Date; //Ngày hết hạn bảo hành
-  salespersonID: string; //Mã nhân viên kinh doanh
-  consultantID: string; //Mã nhân viên tư vấn
-  pmtMethodID: string; //Phương thức thanh toán
-  pmtTermID: string; //Điều khoản thanh toán
-  pmtStatus: string; //Tình trạng thanh toán
-  delModeID: string; //Hình thức giao hàng
-  delTermID: string; //Điều khoản giao hàng
-  delPrice: number; //Phí vận chuyển
-  delStatus: string; //Tình trạng giao hàng
-  parentID: string; //Tham chiếu cha
-  refType: string; //Loại tham chiếu
-  refID: string; //Mã tham chiếu
-  refNo: string; //Số tham chiếu
-  attachments: number; //Số lượng file đính kèm
-  note: string; //Diễn giải
-  stop: boolean; //Tạm ngừng
-  companyID: string; //Bên A
-  companyName: string; //Tên công ty
-  taxCode: string; //Mã số thuế
-  address: string; //Địa chỉ
-  phone: string; //Số điện thoại
-  faxNo: string; //Số Fax
-  representative: string; //Người đại diện
-  jobTitle: string; //Chức vụ
-  bankAccount: string; //Tài khoản ngân hàng
-  bankID: string; //Mở tại ngân hàng
-  owner: string; //Người sở hữu
-  bUID: string; //Đơn vị
-  createdOn: Date; //Ngày tạo
-  createdBy: string; //Người tạo
-  modifiedOn: Date; //Ngày chỉnh sửa
-  modifiedBy: string; //Người chỉnh sửa
-
-  contactName: string; //Người đại diện -- thiếu
-  pmtDeadline: Date; // Hạn thanh toán
-  delDeadline: Date; // Hạn giao hàng
-
-  delActualDate: Date; // Ngày giao hàng
-  delAddress: string; // Địa chỉ giao hàng
-  delPhone: string;
-  delContactID: string; // Liên hệ giao hàng
-  processID: string; // Liên hệ giao hàng
-  applyProcess: boolean = false;
-  approveStatus: string;
-  closed: boolean;
-  closedOn: Date;
-  closedBy: string;
-  permissions: CM_Permissions[];
-  // Điều khoản hồ sơ liên quan -- memo
-}
 
 export class CM_DealsCompetitors {
   recID: string;
@@ -618,11 +532,11 @@ export class CM_Cases {
   permissions: CM_Permissions[];
   datas: string;
   employeeID: string;
-  positionID:string;
+  positionID: string;
   orgUnitID: string;
-  divisionID:string;
+  divisionID: string;
   departmentID: string;
-  companyID:string;
+  companyID: string;
 }
 
 export class CM_Partners {
@@ -734,7 +648,7 @@ export class CM_Leads {
   mobile: string;
   status: string;
   statusCode: string;
-  statusCodeCmt:string;
+  statusCodeCmt: string;
   stepID: string;
   nextStep: string;
   lastUpdated: Date;
@@ -771,13 +685,13 @@ export class CM_Leads {
   exchangeRate: number;
   dealValue: number = 0;
   permissions: CM_Permissions[] = [];
-  datas:string;
+  datas: string;
   employeeID: string;
-  positionID:string;
+  positionID: string;
   orgUnitID: string;
-  divisionID:string;
+  divisionID: string;
   departmentID: string;
-  companyID:string;
+  companyID: string;
 }
 
 export class CM_Targets {
@@ -846,4 +760,107 @@ export class CM_StatusCode {
   createdBy: string;
   modifiedOn: Date;
   modifiedBy: string;
+}
+export class CM_Contracts {
+  recID: string = Util.uid(); //Mã hợp đồng
+  stepID: string; //Mã hợp đồng
+  contractID: string; //Mã hợp đồng
+  contractDate: Date; //Ngày lập hợp đồng
+  contractName: string; //Tên hợp đồng
+  contractType: string; //Loại hợp đồng
+  useType: string; //Loại hợp đồng sử dụng: Một lần, nhiều lần
+  category: string; //Phân loại
+  assetID: string; //Mã tài sản
+  projectID: string; //Mã dự án
+  quotationID: string; //Báo giá
+  orderID: string; //Đơn hàng
+  dealID: string; //Cơ hội
+  objectType: string; //Loại đối tượng
+  objectID: string; //Mã đối tượng
+  objectName: string; //Tên đối tượng
+  contactID: string; //Liên hệ
+  customerID: string; //Khách hàng
+  currencyID: string; //Tiền tệ
+  exchangeRate: number; //Tỷ giá hối đoái
+  contractAmt: number; //Giá trị hợp đồng
+  VATID: string; //VAT
+  paymentStatus: string; //Trạng thái thanh toán
+  paidAmt: number; //Số tiền đã thanh toán
+  remainAmt: number; //Số tiền còn lại
+  terms: string; //Điều khoản hợp đồng -- thiếu vll
+  status: string; //Trạng thái
+  periods: number; //Giai đoạn
+  numbererval: string; //Khoảng thời gian
+  effectiveFrom: Date; //Hiệu lực từ
+  effectiveTo: Date; //Hiệu lực đến
+  extendOn: Date; //Ngày gia hạn
+  disposalOn: Date; //Ngày thanh lý
+  warantyMonths: number; //Số tháng bảo hành
+  warantyExpired: Date; //Ngày hết hạn bảo hành
+  salespersonID: string; //Mã nhân viên kinh doanh
+  consultantID: string; //Mã nhân viên tư vấn
+  pmtMethodID: string; //Phương thức thanh toán
+  pmtTermID: string; //Điều khoản thanh toán
+  pmtStatus: string; //Tình trạng thanh toán
+  delModeID: string; //Hình thức giao hàng
+  delTermID: string; //Điều khoản giao hàng
+  delPrice: number; //Phí vận chuyển
+  delStatus: string; //Tình trạng giao hàng
+  parentID: string; //Tham chiếu cha
+  refType: string; //Loại tham chiếu
+  refID: string; //Mã tham chiếu
+  refNo: string; //Số tham chiếu
+  attachments: number; //Số lượng file đính kèm
+  note: string; //Diễn giải
+  stop: boolean; //Tạm ngừng
+  companyID: string; //Bên A
+  companyName: string; //Tên công ty
+  taxCode: string; //Mã số thuế
+  address: string; //Địa chỉ
+  phone: string; //Số điện thoại
+  faxNo: string; //Số Fax
+  representative: string; //Người đại diện
+  jobTitle: string; //Chức vụ
+  bankAccount: string; //Tài khoản ngân hàng
+  bankID: string; //Mở tại ngân hàng
+  owner: string; //Người sở hữu
+  bUID: string; //Đơn vị
+  createdOn: Date; //Ngày tạo
+  createdBy: string; //Người tạo
+  modifiedOn: Date; //Ngày chỉnh sửa
+  modifiedBy: string; //Người chỉnh sửa
+  contactName: string; //Người đại diện -- thiếu
+  pmtDeadline: Date; // Hạn thanh toán
+  delDeadline: Date; // Hạn giao hàng
+  delActualDate: Date; // Ngày giao hàng
+  delAddress: string; // Địa chỉ giao hàng
+  delPhone: string;
+  delContactID: string; // Liên hệ giao hàng
+  processID: string; // Liên hệ giao hàng
+  applyProcess: boolean = false;
+  approveStatus: string;
+  closed: boolean;
+  closedOn: Date;
+  closedBy: string;
+  permissions: CM_Permissions[];
+  businessLineID: string;
+  statusCodeCmt: string;
+  interval: string;
+  effectiveOn: Date;
+  disposalBefore: Date;
+  purpose: string;
+  area: number;
+  adjustYear: number;
+  adjustPercent: number; 
+  statusCode: string;
+  assignType: string; 
+  groupUserID: string; 
+  datas: string;
+  approvedDate: string;
+  employeeID: string;
+  positionID: string;
+  orgUnitID: string;
+  divisionID: string;
+  departmentID: string;
+  ContactID: string;
 }

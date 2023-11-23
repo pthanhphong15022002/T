@@ -1,3 +1,38 @@
+<ng-container *ngIf="addFieldsControl == '1'">
+  <codx-layout-add
+    #formlayoutadd
+    [title]="'Thêm hợp đồng'"
+    [subHeader]="subHeader"
+    [tabInfo]="tabInfo"
+    [tabContent]="tabContent"
+    [openMore]="true"
+    [dialog]="dialog"
+    [formModel]="formModel"
+    [footer]="footer"
+    [data]="deal"
+    (setTitle)="setTitle($event)"
+  ></codx-layout-add>
+
+  <ng-template #tabGeneralInfoDetail>
+    <ng-container
+      [ngTemplateOutlet]="body"
+      [ngTemplateOutletContext]="{ $implicit: formlayoutadd }"
+    ></ng-container>
+  </ng-template>
+  <ng-template #tabCustomFieldDetail>
+    <ng-container
+    [ngTemplateOutlet]="body"
+    [ngTemplateOutletContext]="{ $implicit: formlayoutadd }"
+  ></ng-container>
+  </ng-template>
+
+  <ng-template #tabGeneralContactDetail>
+    <ng-container
+      [ngTemplateOutlet]="body"
+      [ngTemplateOutletContext]="{ $implicit: formlayoutadd }"
+    ></ng-container>
+  </ng-template>
+</ng-container>
 <ng-template #subHeader let-form>
    <codx-tag
      field="tags"
@@ -12,20 +47,23 @@
    <div class="row">
      <div class="col-6">
        <div class="form-group">
-         <codx-label
-           fiedName="DealID"
-           [formModel]="form.formModel"
-           [Group]="form.formGroup"
-         >
-         </codx-label>
-         <codx-input
-           type="text"
-           field="dealID"
-           [crrValue]="deal?.dealID"
-           [disabled]="true"
-           (valueChange)="valueChange($event)"
-         >
-         </codx-input>
+        <codx-label
+          [formModel]="dialog.formModel"
+          fiedName="contractID"
+          default="Mã hợp đồng"
+        >
+        </codx-label>
+        <codx-input
+              [formModel]="dialog.formModel"
+              field="contractID"
+              type="text"
+              [crrValue]="contracts?.contractID"
+              [placeholder]="
+                planceHolderAutoNumber ?? grvSetup['ContractID'].headerText
+              "
+              [disabled]="disabledShowInput || action === 'edit'"
+            >
+            </codx-input>
        </div>
      </div>
  
@@ -136,34 +174,6 @@
                (valueChange)="valueChange($event)"
              >
              </codx-input>
-             <!-- <codx-input
-             field="currencyID"
-             [formModel]="form.formModel"
-             [Group]="form.formGroup"
-             (valueChange)="valueChange($event)"
-           >
-           </codx-input> -->
-         <!-- <div class="d-flex flex-row">
-           <div class="col-8 pe-2">
-             <codx-input
-               type="number"
-               field="dealValue"
-               [min]="0"
-               [crrValue]="deal?.dealValue"
-               (valueChange)="valueChange($event)"
-             >
-             </codx-input>
-           </div>
-           <div class="col-4">
-             <codx-input
-               field="currencyID"
-               [formModel]="form.formModel"
-               [Group]="form.formGroup"
-               (valueChange)="valueChange($event)"
-             >
-             </codx-input>
-           </div>
-         </div> -->
        </div>
      </div>
  
@@ -186,26 +196,6 @@
      </div>
    </div>
    <div class="row">
-     <!-- <div class="col-6">
-       <div class="form-group">
-         <codx-label
-           [formModel]="form.formModel"
-           [Group]="form.formGroup"
-           fiedName="Probability"
-         >
-         </codx-label>
-         <codx-input
-           type="number"
-           [min]="0"
-           [max]="100"
-           [placeholder]="gridViewSetup?.Probability?.description"
-           field="probability"
-           [crrValue]="deal?.probability"
-           (valueChange)="valueChange($event)"
-         >
-         </codx-input>
-       </div>
-     </div> -->
      <div class="col-6">
        <div class="form-group">
          <codx-label
@@ -223,16 +213,6 @@
            [filterType]="'Contains'"
            [value]="owner"
          ></ejs-combobox>
- 
- 
-   <!-- <codx-input
-       type="combobox"
-       [model]="{ ProcessID: deal.processID }"
-       refValue="UserProcess"
-       (valueChange)="valueChange($event)"
-      >
-   </codx-input> -->
- 
  
        </div>
      </div>
@@ -273,44 +253,6 @@
          </codx-input>
        </div>
      </div>
- 
- 
-     <!-- <div class="col-6">
-       <div class="form-group">
-         <codx-label
-           [formModel]="form.formModel"
-           [Group]="form.formGroup"
-           fiedName="ExpectedClosed"
-         >
-         </codx-label>
-         <codx-input
-           [formModel]="form.formModel"
-           [Group]="form.formGroup"
-           field="expectedClosed"
-           (valueChange)="valueChange($event)"
-         >
-         </codx-input>
-       </div>
-     </div> -->
-     <!-- <div class="col-6">
-       <div class="form-group">
-         <codx-label
-           [formModel]="form.formModel"
-           [Group]="form.formGroup"
-           fiedName="EndDate"
-         >
-         </codx-label>
-         <codx-input
-           type="datetime"
-           field="endDate"
-           format="d"
-           [crrValue]="deal?.endDate"
-           (valueChange)="valueChangeDate($event)"
-         >
-         </codx-input>
-       </div>
-     </div> -->
- 
  
    </div>
  
@@ -371,105 +313,14 @@
  </ng-template>
  
  <ng-template #fieldDetail let-form>
-   <!-- <ng-container *ngIf="listInstanceSteps?.length > 0; else dataIsEmpty">
-     <ng-container *ngFor="let step of listInstanceSteps; let idx = index">
-       <ng-container *ngIf="step?.fields?.length > 0">
-         <ng-container *ngFor="let item of step.fields">
-           <div class="form-group">
-             <codx-input-custom-field
-               [customField]="item"
-               [checkValid]="false"
-               [objectId]="item.recID"
-               [objectType]="'DP_Instances_Steps_Fields'"
-               [objectIdParent]="deal?.recID"
-               [customerID]="deal?.customerID"
-               [formModel]="dialog.formModel"
-               (valueChangeCustom)="valueChangeCustom($event)"
-               (addFileCompleted)="addFileCompleted($event)"
-             >
-             </codx-input-custom-field>
-           </div>
-         </ng-container>
-       </ng-container>
-     </ng-container>
-   </ng-container> -->
-   <ng-container *ngIf="listFields &&listFields?.length > 0">
-     <ng-container *ngFor="let item of listFields">
-       <div class="form-group">
-         <codx-input-custom-field
-           [customField]="item"
-           [checkValid]="false"
-           [objectId]="item.recID"
-           [objectType]="'DP_Instances_Steps_Fields'"
-           [objectIdParent]="deal?.recID"
-           [customerID]="deal?.customerID"
-           [formModel]="dialog.formModel"
-           (valueChangeCustom)="valueChangeCustom($event)"
-           (addFileCompleted)="addFileCompleted($event)"
-         >
-         </codx-input-custom-field>
-       </div>
-     </ng-container>
-   </ng-container>
+   <h1>Thuận</h1>
  </ng-template>
- 
- 
- <ng-container *ngIf="addFieldsControl == '1'">
-   <codx-layout-add
-     #formlayoutadd
-     [title]="title"
-     [subHeader]="subHeader"
-     [tabInfo]="tabInfo"
-     [tabContent]="tabContent"
-     [openMore]="true"
-     [dialog]="dialog"
-     [formModel]="formModel"
-     [footer]="footer"
-     [data]="deal"
-     (setTitle)="setTitle($event)"
-   ></codx-layout-add>
- 
-   <ng-template #tabGeneralInfoDetail>
-     <ng-container
-       [ngTemplateOutlet]="body"
-       [ngTemplateOutletContext]="{ $implicit: formlayoutadd }"
-     ></ng-container>
-   </ng-template>
-   <ng-template #tabCustomFieldDetail>
-     <ng-container
-       [ngTemplateOutlet]="fieldDetail"
-       [ngTemplateOutletContext]="{ $implicit: formlayoutadd }"
-     ></ng-container>
-   </ng-template>
- 
-   <ng-template #tabGeneralContactDetail>
-     <ng-container
-       [ngTemplateOutlet]="contact"
-       [ngTemplateOutletContext]="{ $implicit: formlayoutadd }"
-     ></ng-container>
-   </ng-template>
- </ng-container>
  
  <ng-template #dataIsEmpty>
    <codx-no-data> </codx-no-data>
  </ng-template>
  
  <ng-template #contact>
-   <ng-container>
-     <codx-list-contacts
-       #loadContactDeal
-       [selectAll]="false"
-       [funcID]="'CM0201'"
-       [objectID]="deal?.recID"
-       [listContacts]="lstContactDeal"
-       [customerID]="customerID"
-       (lstContactEmit)="lstContactEmit($event)"
-       (lstContactDeleteEmit)="lstContactDeleteEmit($event)"
-       [objectType]="'4'"
-       [objectName]="deal?.dealName"
-       [hidenMF]="false"
-       [type]="'formAdd'"
-     ></codx-list-contacts>
-   </ng-container>
+   <h1>Thuận 2</h1>
  </ng-template>
  
