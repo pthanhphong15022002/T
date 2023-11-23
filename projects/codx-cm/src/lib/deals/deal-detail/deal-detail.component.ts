@@ -192,7 +192,7 @@ export class DealDetailComponent implements OnInit {
         if (this.oldRecId !== changes['dataSelected'].currentValue?.recID) {
           this.promiseAllAsync();
           this.hasRunOnce = true;
-          this.resetTab(this.dataSelected.categoryCustomer);
+          this.resetTab(this.dataSelected.customerCategory);
         }
         this.oldRecId = changes['dataSelected'].currentValue.recID;
         this.dataSelected = this.dataSelected;
@@ -225,7 +225,7 @@ export class DealDetailComponent implements OnInit {
   }
   ngAfterViewChecked() {
     if (!this.hasRunOnce) {
-      this.resetTab(this.dataSelected?.categoryCustomer);
+      this.resetTab(this.dataSelected?.customerCategory);
     }
   }
 
@@ -368,7 +368,7 @@ export class DealDetailComponent implements OnInit {
   // }
   async getViewDetailDeal() {
     if (this.dataSelected?.recID) {
-      let data = [this.dataSelected?.recID,this.dataSelected?.categoryCustomer];
+      let data = [this.dataSelected?.recID,this.dataSelected?.customerCategory];
       this.codxCmService.getViewDetailDealAsync(data).subscribe((res) => {
         if (res) {
           if(res[0] && res[0].length > 0 ) {

@@ -148,7 +148,7 @@ export class PopupAddDealComponent
 
   processIdDefault: string = '';
   defaultDeal: string = '';
-  categoryCustomer: string = '';
+  customerCategory: string = '';
   isShowField: boolean = false;
 
   // load data form DP
@@ -189,7 +189,7 @@ export class PopupAddDealComponent
       if (this.action != this.actionAdd) {
         this.deal = dt?.data?.dataCM;
         //       this.owner = this.deal.owner;
-        this.categoryCustomer = dt?.data?.categoryCustomer;
+        this.customerCategory = dt?.data?.customerCategory;
       }
       this.instanceReason = dt?.data?.instanceReason;
       // if(this.instanceReason) {
@@ -203,7 +203,7 @@ export class PopupAddDealComponent
         this.action != this.actionAdd
           ? JSON.parse(JSON.stringify(dialog.dataService.dataSelected))
           : this.deal;
-      this.categoryCustomer = dt?.data?.categoryCustomer;
+      this.customerCategory = dt?.data?.categoryCustomer;
       if (this.action === this.actionAdd) {
         this.deal.exchangeRate = dt?.data?.exchangeRateDefault;
         this.deal.currencyID = dt?.data?.currencyIDDefault;
@@ -233,10 +233,10 @@ export class PopupAddDealComponent
     this.tabContent = [this.tabGeneralInfoDetail];
     if (this.action !== this.actionAdd || this.isviewCustomer) {
       if (this.isviewCustomer) {
-        this.categoryCustomer = this.customerView?.category;
+        this.customerCategory = this.customerView?.category;
       }
       this.customerID = this.deal?.customerID;
-      this.itemTabContact(this.ischeckCategoryCustomer(this.categoryCustomer));
+      this.itemTabContact(this.ischeckCategoryCustomer(this.customerCategory));
       this.getListContactByObjectID(this.customerID);
       this.isviewCustomer && (await this.getContactDefault(this.customerID));
     }
@@ -278,7 +278,7 @@ export class PopupAddDealComponent
     deal.industries = data.industries;
     deal.channelID = data.channelID;
     deal.shortName = data.shortName;
-    this.categoryCustomer = data.category;
+    this.customerCategory = data.category;
 
     //this.itemTabContact(this.ischeckCategoryCustomer(this.categoryCustomer));
   }
