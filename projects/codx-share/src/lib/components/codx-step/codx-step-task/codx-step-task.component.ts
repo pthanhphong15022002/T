@@ -476,6 +476,9 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       }
       event.forEach((res) => {
         switch (res.functionID) {
+          case 'SYS001':
+          case 'SYS002':
+            break;
           case 'SYS02': //xóa
             if (!(!task?.isTaskDefault && (this.isRoleAll || isGroup))) {
               res.disabled = true;
@@ -538,8 +541,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
           case 'DP25':
           case 'DP26':
           case 'SYS004':
-          case 'SYS001':
-          case 'SYS002':
+
             res.disabled = true;
             break;
           case 'DP27': // đặt xe
@@ -929,6 +931,8 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         '',
         option
       );
+      console.log(dialog.close());
+      
     });
     
   }
@@ -1028,7 +1032,6 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     task['isTaskDefault'] = false;
     task['dependRule'] = '0';
     if (this.taskType?.value == 'Q') {
-      this.openPopup();
       this.addQuotation();
     } else if (this.taskType?.value == 'CO') {
       // hợp đồng
