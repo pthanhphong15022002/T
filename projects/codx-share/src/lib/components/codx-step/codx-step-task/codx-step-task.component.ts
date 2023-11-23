@@ -57,6 +57,8 @@ import { CodxBookingService } from '../../codx-booking/codx-booking.service';
 import { CodxShareService } from '../../../codx-share.service';
 import { ActivatedRoute } from '@angular/router';
 import { ExportData } from '../../../models/ApproveProcess.model';
+import { CodxViewApproveComponent } from '../codx-step-common/codx-view-approve/codx-view-approve.component';
+import { PopupCustomFieldComponent } from '../../codx-fields-detail-temp/popup-custom-field/popup-custom-field.component';
 
 @Component({
   selector: 'codx-step-task',
@@ -175,6 +177,8 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     entityName: 'DP_Instances',
     gridViewName: 'grvDPInstances',
   };
+  taskApprover;
+  approverDialog;
   //#endregion
   constructor(
     private cache: CacheService,
@@ -1048,6 +1052,8 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         task.endDate = contract?.effectiveTo;
         this.saveTask(task); 
       }
+    }else if(this.taskType?.value == "Q"){
+
     } else {
       let type = groupID ? 'group' : 'step';
       let taskOutput = await this.openPopupTask('add', type, task, groupID);
@@ -1785,7 +1791,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
           if (res) {
             this.url = res?.url;
             this.codxService.navigate('', this.url, {
-              recID: data?.CallType,
+              recID: data?.callType,
             });
           }
         });
@@ -2700,10 +2706,26 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       }
     });
   }
-  openFormApprover(){
-    let popupTask = this.callfc.openForm(this.popupApprover, '', 500, 550);
+  openFormApprover(task){
+    this.taskApproval = task;
+    this.approverDialog = this.callfc.openForm(CodxViewApproveComponent, '', 500, 550,'',{categoryID:task?.recID, type: "2"});
   }
-  openFormField(){
-    let popupTask = this.callfc.openForm(this.popupApprover, '', 500, 550);
+  openFormField(task){
+    let listField = this.getFields(this.currentStep?.fields, task?.fieldID)
+    let obj = {
+      data: JSON.parse(JSON.stringify(listField)),
+      titleHeader: 'Chỉnh sửa trường tùy chỉnh',
+      objectIdParent: 'task?.stepID',
+      customerID: '',
+    };
+    let formModel: FormModel = {
+      entityName: 'DP_Instances_Steps_Fields',
+      formName: 'DPInstancesStepsFields',
+      gridViewName: 'grvDPInstancesStepsFields',
+    };
+    let option = new DialogModel();
+    option.FormModel = formModel;
+    option.zIndex = 1000;
+    this.callfc.openForm(PopupCustomFieldComponent, '', 550, 800,'',obj,'',option);
   }
 }

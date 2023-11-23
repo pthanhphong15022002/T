@@ -177,6 +177,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit{
 
   tabInfo: any[] = [];
   tabContent: any[] = [];
+  recIDContract = '';
   constructor(
     private cache: CacheService,
     private api: ApiHttpService,
@@ -199,6 +200,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit{
     this.contractsInput = dt?.data?.contract || dt?.data?.dataCM || null;
     this.processID = dt?.data?.processID;
     this.contractRefID = dt?.data?.contractRefID;
+    this.recIDContract = dt?.data?.recIDContract;
     this.getFormModel();
 
     this.user = this.authStore.get();
