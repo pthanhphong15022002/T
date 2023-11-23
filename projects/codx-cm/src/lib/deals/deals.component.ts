@@ -428,8 +428,7 @@ export class DealsComponent
       eventItem.disabled =
         data?.alloweStatus == '1'
           ? !['1', '2', '15'].includes(data.status) ||
-            data.closed ||
-            ['1', '0'].includes(data.status)
+            data.closed
           : true;
     };
     let isConfirmOrRefuse = (eventItem, data) => {
