@@ -322,6 +322,13 @@ export class AddContractsComponent implements OnInit, AfterViewInit{
           if (dataCopy) {
             this.contracts = dataCopy;
           }
+        }else if (this.recIDContract){
+          let dataCopy = await firstValueFrom(
+            this.contractService.getContractByRecID(this.recIDContract)
+          );
+          if (dataCopy) {
+            this.contracts = dataCopy;
+          }
         }
         delete this.contracts['id'];
         this.contracts.recID = Util.uid();

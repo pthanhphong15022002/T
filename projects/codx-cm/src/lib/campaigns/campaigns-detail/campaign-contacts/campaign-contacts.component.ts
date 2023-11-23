@@ -300,31 +300,6 @@ export class CampaignContactsComponent implements OnInit {
     );
   }
 
-  getStepToStatus(objectID) {
-    var obj = {};
-    var idx = this.lstLeads.findIndex((x) => x.recID == objectID);
-
-    if (idx != -1) {
-      const data = this.lstLeads[idx];
-      obj['applyProcess'] = data?.applyProcess;
-      const process = this.lstProcesss.find(
-        (x) => x.processId == data?.processID
-      );
-      if (process != null) {
-        const stepCurrent = process?.tmpSteps?.find(
-          (x) => x.stepId == data?.stepID
-        );
-        if (stepCurrent != null) {
-          obj['icon'] = stepCurrent?.icon;
-          obj['iconColor'] = stepCurrent?.iconColor;
-          obj['textColor'] = stepCurrent?.textColor;
-          obj['backgroundColor'] = stepCurrent?.backgroundColor;
-          obj['currentStepName'] = stepCurrent?.stepName;
-        }
-      }
-    }
-    return obj;
-  }
 
   getFunctionList(funcID) {
     this.cache.functionList(funcID).subscribe((res) => {
