@@ -1242,22 +1242,29 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
 
   async copyTask(task) {
     if (task) {
-      this.taskType = this.listTaskType.find(
-        (type) => type.value == task?.taskType
-      );
-      let taskOutput = await this.openPopupTask('copy', 'step', task);
-
-      if (taskOutput?.task) {
-        let data = taskOutput;
-        this.currentStep?.tasks?.push(data.task);
-        this.currentStep['progress'] = data.progressStep;
-        let group = this.listGroupTask.find((group) =>
-          this.comparison(group.refID, data.task.taskGroupID)
+      if (task?.taskType == 'Q') {
+        //báo giá
+        this.addQuotation();
+      } else if (task?.taskType == 'CO') {
+        let contractOutput = await this.stepService.openPopupContract('copy', 'task', task?.objectLinked);
+      }else{
+        this.taskType = this.listTaskType.find(
+          (type) => type.value == task?.taskType
         );
-        if (group) {
-          group?.task.push(data.task);
-          group['progress'] = data.progressGroup;
-          this.changeDetectorRef.markForCheck();
+        let taskOutput = await this.openPopupTask('copy', 'step', task);
+  
+        if (taskOutput?.task) {
+          let data = taskOutput;
+          this.currentStep?.tasks?.push(data.task);
+          this.currentStep['progress'] = data.progressStep;
+          let group = this.listGroupTask.find((group) =>
+            this.comparison(group.refID, data.task.taskGroupID)
+          );
+          if (group) {
+            group?.task.push(data.task);
+            group['progress'] = data.progressGroup;
+            this.changeDetectorRef.markForCheck();
+          }
         }
       }
     }
