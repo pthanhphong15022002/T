@@ -11,6 +11,7 @@ export class CodxTypeTaskComponent implements OnInit {
   dialog!: DialogRef;
   jobType: any;
   isShowGroup = true;
+  isShowF = true;
   constructor(
     private cache: CacheService,
     @Optional() dt?: DialogData,
@@ -18,6 +19,7 @@ export class CodxTypeTaskComponent implements OnInit {
   ) { 
    this.dialog = dialog;
    this.isShowGroup = dt?.data?.isShowGroup == undefined ? this.isShowGroup : dt?.data?.isShowGroup;
+   this.isShowF = dt?.data?.isShowF;
   }
 
   ngOnInit(): void {
@@ -31,6 +33,9 @@ export class CodxTypeTaskComponent implements OnInit {
         });
         if(!this.isShowGroup){
           this.listJobType = this.listJobType.filter((item) => item?.value != 'G')
+        }
+        if(!this.isShowF){
+          this.listJobType = this.listJobType.filter((item) => item?.value != 'F')
         }
         this.listJobType
         this.jobType = this.isShowGroup ? this.listJobType[1] : this.listJobType[0];

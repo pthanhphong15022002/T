@@ -4,11 +4,13 @@ import {
   Input,
   OnChanges,
   OnInit,
+  Optional,
   SimpleChanges,
 } from '@angular/core';
-import { ApiHttpService } from 'codx-core';
+import { ApiHttpService, AuthStore, CacheService, CallFuncService, DialogData, DialogModel, DialogRef, FormModel, SidebarModel, Util } from 'codx-core';
+import { PopupAddCategoryComponent } from 'projects/codx-es/src/lib/setting/category/popup-add-category/popup-add-category.component';
 import { Subject, takeUntil } from 'rxjs';
-
+import { firstValueFrom } from 'rxjs';
 @Component({
   selector: 'codx-view-approve',
   templateUrl: './codx-view-approve.component.html',
@@ -18,26 +20,39 @@ export class CodxViewApproveComponent implements OnInit, OnChanges {
   @Input() listApprover;
   @Input() change;
   @Input() categoryID;
+  @Input() type = 1;
   
   viewApprover;
-
+  dialog;
+  stepsTasks;
+  user;
   private destroyFrom$: Subject<void> = new Subject<void>();
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private api: ApiHttpService,
-
-  ) {}
+    private callfc: CallFuncService,
+    private cache: CacheService,
+    private authStore: AuthStore,
+    @Optional() dialog?: DialogRef,
+    @Optional() dt?: DialogData
+  ) {
+    this.dialog = dialog;
+    this.categoryID = dt?.data?.categoryID;
+    this.type = dt?.data?.type || "1";
+    this.stepsTasks = dt?.data?.stepsTasks;
+    this.user = this.authStore.get();
+  }
 
   ngOnInit(): void {
-    
+    this.loadListApproverStep();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if(changes?.listApprover || changes?.categoryID ||  changes?.change){
-      if(!this.listApprover && this.categoryID){
-        this.loadListApproverStep();
-      }
-    }
+    // if(changes?.listApprover || changes?.categoryID ||  changes?.change){
+    //   if(!this.listApprover && this.categoryID){
+    //     this.loadListApproverStep();
+    //   }
+    // }
   }
  
   loadListApproverStep() {
@@ -67,4 +82,98 @@ export class CodxViewApproveComponent implements OnInit, OnChanges {
     this.viewApprover = data;
     p.open();
   }
+  async clickSettingApprove() {
+    let category;
+    category = await firstValueFrom(
+      this.api.execSv<any>(
+        'ES',
+        'ES',
+        'CategoriesBusiness',
+        'GetByCategoryIDAsync',
+        this.categoryID
+      ));
+      
+    if(category) {
+      //this.actionOpenFormApprove(category.recID);
+      this.actionOpenFormApprove2(category);
+    } else {
+      //let transID = Util.uid();
+      // this.actionOpenFormApprove(transID);
+      this.api
+        .execSv<any>('ES', 'Core', 'DataBusiness', 'GetDefaultAsync', [
+          'ESS22',
+          'ES_Categories',
+        ])
+        .subscribe(async (res) => {
+          if (res && res?.data) {
+            category = res.data;
+            category.recID = res?.recID ?? Util.uid();
+            category.eSign = false;
+            category.Category = 'DP_Processes';
+            category.categoryID = this.stepsTasks.recID;
+            category.categoryName = this.stepsTasks.taskName;
+            category.createdBy = this.user.userID;
+            category.owner = this.user.userID;
+            category.FunctionApproval = 'DP0204';
+            this.actionOpenFormApprove2(category, true);
+          }
+        });
+    }
+  }
+  titleAction: any;
+
+  actionOpenFormApprove2(item, isAdd = false) {
+    this.cache.functionList('ESS22').subscribe((f) => {
+      if (f) {
+        if (!f || !f.gridViewName || !f.formName) return;
+        this.cache.gridView(f.gridViewName).subscribe((gridview) => {
+          this.cache
+            .gridViewSetup(f.formName, f.gridViewName)
+            .pipe(takeUntil(this.destroyFrom$))
+            .subscribe((grvSetup) => {
+              let formES = new FormModel();
+              formES.funcID = f?.functionID;
+              formES.entityName = f?.entityName;
+              formES.formName = f?.formName;
+              formES.gridViewName = f?.gridViewName;
+              formES.currentData = item;
+              let option = new SidebarModel();
+              option.Width = '800px';
+              option.FormModel = formES;
+              let opt = new DialogModel();
+              opt.FormModel = formES;
+              option.zIndex = 1100;
+              let popupEditES = this.callfc.openForm(
+                PopupAddCategoryComponent,
+                '',
+                800,
+                800,
+                '',
+                {
+                  disableCategoryID: '1',
+                  data: item,
+                  isAdd: isAdd,
+                  headerText: this.titleAction,
+                  dataType: 'auto',
+                  templateRefID: this.stepsTasks.recID,
+                  templateRefType: 'DP_Processes',
+                },
+                '',
+                opt
+              );
+
+              popupEditES.closed.subscribe((res) => {
+                if (res?.event) {
+                  this.loadListApproverStep();
+                  // this.loadEx();
+                  // this.loadWord();
+                  // this.recIDCategory = res?.event?.recID;
+                }
+              });
+            });
+        });
+      }
+    });
+  }
+
 }

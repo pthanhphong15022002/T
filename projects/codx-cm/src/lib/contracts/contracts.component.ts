@@ -41,7 +41,7 @@ import { PopupMoveStageComponent } from 'projects/codx-dp/src/lib/instances/popu
 import { PopupMoveReasonComponent } from 'projects/codx-dp/src/lib/instances/popup-move-reason/popup-move-reason.component';
 import { ContractsViewDetailComponent } from './contracts-view-detail/contracts-view-detail.component';
 import { PopupAssginDealComponent } from '../deals/popup-assgin-deal/popup-assgin-deal.component';
-import { PopupAddContractsComponent } from './popup-add-contracts/popup-add-contracts.component';
+import { StepService } from 'projects/codx-share/src/lib/components/codx-step/step.service';
 
 @Component({
   selector: 'contracts-detail',
@@ -146,6 +146,7 @@ export class ContractsComponent extends UIComponent {
     private contractService: ContractsService,
     private notiService: NotificationsService,
     private codxShareService: CodxShareService,
+    private stepService: StepService,
     @Optional() dialog?: DialogRef
   ) {
     super(inject);
@@ -195,9 +196,10 @@ export class ContractsComponent extends UIComponent {
     this.actionName = e?.text;
     switch (e.id) {
       case 'btnAdd':
+        this.addContract();
         if (this.isAddContract) {
           this.isAddContract = false;
-          this.addContract();
+          
         }
         break;
     }
@@ -558,7 +560,7 @@ export class ContractsComponent extends UIComponent {
   }
 
   async openPopupContract(projectID, action, contract?) {
-    
+    // this.stepService.openPopupContract('add');
     let data = {
       projectID,
       action,
@@ -569,7 +571,7 @@ export class ContractsComponent extends UIComponent {
     };
     let option = new SidebarModel();
     option.Width = '800px';
-    option.zIndex = 1010;
+    option.zIndex = 1001;
     option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;
     
@@ -578,16 +580,6 @@ export class ContractsComponent extends UIComponent {
       data,
       option
     );
-    // let popupContract = this.callFunc.openForm(
-    //   PopupAddContractsComponent,
-    //   '',
-    //   null,
-    //   null,
-    //   '',
-    //   data,
-    //   '',
-    //   option
-    // );
     let dataPopupOutput = await firstValueFrom(popupContract.closed);
     this.isAddContract = true;
     return dataPopupOutput;

@@ -177,56 +177,46 @@ body.tailwind #selected {
 }
 
 .calendar-left {
-  position: relative;
-  width: 100%;
-  height: calc(100% - 70px);
-  padding-bottom: 15px;
   background-color: #fff;
 }
 
-.nav-item {
+.nav-item:hover {
   cursor: pointer;
-  p {
-    font-weight: 500;
-    color: #8f9596;
-  }
+  background-color: var(--primary-lighter);
 }
 
 .nav-item.active {
-  p {
-    font-weight: 500 !important;
-    color: var(--primary) !important;
-  }
-
-  i {
-    color: var(--primary) !important;
-  }
+ background-color: var(--primary-light);
+ *{
+  color: var(--primary-dark);
+ }
 }
 
 .nav-item.disabled {
   cursor: default !important;
-}
-.calendar-left-main{
-  height: calc(100% - 50px);
-  overflow: auto;
+  *{
+    color: var(--gray-300);
+  }
 }
 
-.h-20{
-  height: 20%;
-}
-.h-80{
-  height: 80%;
-}
-.max-h-50{
-  height: auto;
-  max-height: 50%;
-}
+
 .e-cell{
   vertical-align: sub;
 }
 .e-cell.special.e-day span.e-day{
   display: block;
 }
-.max-h-50{
-  max-height: 50%;
+.cal-main{
+  height: calc(100vh - 365px);
+  overflow: auto;
+  .card-body.p-0{
+    height: 100%!important;
+  }
+}
+.cal-setting-content{
+  height: 188px;
+  overflow: auto;
+}
+.cal-footer{
+  height: 58px;
 }

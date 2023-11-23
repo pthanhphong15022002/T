@@ -638,12 +638,13 @@ export class StepService {
     );
   }
 
-  async openPopupContract(action, contract?) {
+  async openPopupContract(action, type,recIDContract?, projectID?, contract?) {
     let data = {
+      projectID,
       action,
+      recIDContract,
       contract: contract || null,
-      // account: this.account,
-      type: 'task',
+      type,
     };
     let formModel: FormModel = {
       entityName: 'CM_Contracts',
@@ -652,18 +653,15 @@ export class StepService {
       funcID: 'CM0204',
       gridViewName: 'grvCMContracts',
     };
-    let option = new DialogModel();
-    option.IsFull = true;
-    option.zIndex = 1010;
+    let option = new SidebarModel();
+    option.Width = '800px';
+    option.zIndex = 1001;
+    // option.DataService = this.view.dataService;
     option.FormModel = formModel;
-    let popupContract = this.callFunc.openForm(
+    await firstValueFrom(this.cache.gridViewSetup('CMContracts','grvCMContracts'));
+    let popupContract = this.callFunc.openSide(
       AddContractsComponent,
-      '',
-      null,
-      null,
-      '',
       data,
-      '',
       option
     );
     let dataPopupOutput = await firstValueFrom(popupContract.closed);

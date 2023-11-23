@@ -193,20 +193,6 @@
     white-space: nowrap;
 }
 
-.scroll-ac .e-content::-webkit-scrollbar {
-    width: 4px !important;
-    height: 4px !important;
-}
-
-.scroll-act .e-content::-webkit-scrollbar-thumb {
-    background: #dee2e6 !important;
-    border-radius: 10px;
-}
-
-.scroll-ac .e-content::-webkit-scrollbar-thumb:hover {
-    background: grey !important;
-}
-
 .input-circle .icon-keyboard_arrow_down {
     display: none;
 }
@@ -367,7 +353,7 @@
         height: 100% !important;
     }
     .e-pane.e-pane-horizontal.e-scrollable.e-static-pane.e-collapsible{
-        max-width: 450px !important;
+        max-width: 365px !important;
     }
 }
 
@@ -480,6 +466,10 @@
 
   .card-general .table-ac{
     height: calc(100vh - 420px) !important;
+  }
+
+  .card-cash .table-ac{
+    height: calc(100vh - 495px) !important;
   }
 
   .card-pur .table-ac{

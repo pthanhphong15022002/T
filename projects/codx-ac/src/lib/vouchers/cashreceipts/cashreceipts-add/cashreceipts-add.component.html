@@ -400,7 +400,7 @@
 <!-- Start: Grid CashPaymentLine -->
 <ng-template #TmpTabLine>
   <ng-container *ngIf="formCashReceipt.data?.subType == '11'">
-    <div id="gridcash" class="tabline-content scroll-ac header-table-ac position-relative">
+    <div id="gridcash" class="tabline-content header-table-ac position-relative">
       <codx-gridview-v2 #eleGridCashReceipt class="tabLine" [showEmptyRecord]="false" gridLines="Both"
         [autoFitColumns]="false" [formName]="journal.entryMode == '1'? 'CashReceiptsLines' : 'CashReceiptsLinesOneAccount'"
         [gridViewName]="journal.entryMode == '1' ? 'grvCashReceiptsLines' : 'grvCashReceiptsLinesOneAccount'"
@@ -440,7 +440,7 @@
 <!-- Start: Grid SettledInvoices -->
 <ng-template #TmpTabSettledInvoices>
   <ng-container *ngIf="formCashReceipt.data?.subType == '12'">
-    <div id="gridset" class="tabline-content scroll-ac header-table-ac position-relative">
+    <div id="gridset" class="tabline-content header-table-ac position-relative">
       <codx-gridview-v2 #eleGridSettledInvoices formName="SettledInvoices" gridViewName="grvSettledInvoices"
         [showEmptyRecord]="false" entityName="AC_SettledInvoices" rowHeight="35" [showEmptyRecord]="false"
         gridLines="Both" [hideMoreFunc]="true" service="AC" predicates="TransID=@0"
