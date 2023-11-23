@@ -21,7 +21,6 @@
       </div>
       <div
         class="form-group row mt-3"
-        *ngIf="dateControl && dateControl?.trim() != ''"
       >
         <div class="col-6">
           <div class="d-flex">
@@ -91,7 +90,7 @@
           </codx-input>
         </div>
       </div>
-      <div class="form-group" *ngIf="parentID">
+      <div class="form-group">
         <codx-label
           name="lblParentID"
           default="Ghi chú mẫu khác"
@@ -102,6 +101,7 @@
           field="parentID"
           type="combobox"
           refValue="WRCommentTemplates"
+          [crrValue]="dataParentID"
           [model]="{ ParentID: parentID }"
           (valueChange)="valueChangeParent($event)"
         ></codx-input>
