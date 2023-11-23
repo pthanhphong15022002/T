@@ -530,8 +530,9 @@ export class PopupAddCardsComponent implements OnInit {
         if (data) {
           if (this.parameter.MaxPointPerOnceControl === '1') {
             if (data > this.parameter.MaxPointPerOnce) {
-              this.notifySV.notify('Vượt quá số xu cho phép tặng trong 1 lần');
+              this.notifySV.notify('Vượt quá số xu cho phép tặng trong 1 lần', '2');
               data = this.givePoint;
+              this.form.patchValue({ coins: this.givePoint });
             }
           }
           if(data && this.parameter.MaxPointControl === '1'){
