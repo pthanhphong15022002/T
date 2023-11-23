@@ -1,7 +1,7 @@
 <codx-form
   *ngIf="type == 2"
   #form
-  [headerText]="'Thêm nhóm công việc'"
+  [headerText]="'Các bước xét duyệt'"
   [body]="popupApprover"
   [dialog]="dialog"
 ></codx-form>
@@ -17,7 +17,7 @@
         default="Các bước duyệt"
       >
       </codx-label>
-      <button type="button" class="btn btn-icon btn-sm btn-light-primary ms-">
+      <button type="button" class="btn btn-icon btn-sm btn-light-primary ms-" (click)="clickSettingApprove()">
         <i class="icon-settings icon-16"></i>
       </button>
     </div>

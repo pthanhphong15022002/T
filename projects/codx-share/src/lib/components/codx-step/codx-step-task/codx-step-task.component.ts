@@ -990,7 +990,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         450,
         580,
         '',
-        { isShowGroup: showTask }
+        { isShowGroup: showTask, isShowF: false}
       );
       let dataOutput = await firstValueFrom(popupTypeTask.closed);
       if (dataOutput?.event?.value) {
@@ -2746,7 +2746,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   }
   openFormApprover(task){
     this.taskApproval = task;
-    this.approverDialog = this.callfc.openForm(CodxViewApproveComponent, '', 500, 550,'',{categoryID:task?.recID, type: "2"});
+    this.approverDialog = this.callfc.openForm(CodxViewApproveComponent, '', 500, 550,'',{categoryID:task?.recID, type: "2",stepsTasks:task });
   }
   openFormField(task){
     let listField = this.getFields(this.currentStep?.fields, task?.fieldID)

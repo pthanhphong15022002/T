@@ -1439,7 +1439,7 @@ export class CodxShareService {
     funcID: string, //FunctionID nghiệp vụ gốc
     userID: string, //Mã người dùng (ko bắt buộc - nếu ko có mặc định lấy UserID hiện hành)
     title: string, //Tiêu đề (truyền kiểu chuỗi thường)
-    customEntityName: string, //EntityName tùy chỉnh (ko bắt buộc - xử lí cho trường hợp đặc biệt)
+    processType: string, //EntityName tùy chỉnh (lưu processType cho ES_ApprovalTrans)
     approvers: Array<Approver> = null, //Danh sách userID của RO
     customParam:string=null,
     ): Observable<any> {
@@ -1451,7 +1451,7 @@ export class CodxShareService {
     approveProcess.funcID = funcID;
     approveProcess.htmlView = '<div>' + title + '</div>';
     approveProcess.module = module;
-    approveProcess.customEntityName = customEntityName;
+    approveProcess.processType = processType;
     approveProcess.approvers = approvers;
     approveProcess.title = title;
     approveProcess.customParam = customParam;
@@ -1475,7 +1475,7 @@ export class CodxShareService {
     releaseCallback: (response: ResponseModel, component: any) => void, //Hàm xử lí kết quả trả về
     userID: string = null, //Mã người dùng (ko bắt buộc - nếu ko có mặc định lấy UserID hiện hành)
     approvers: Array<Approver> = null, //Danh sách userID của RO hoặc người duyệt chỉ định
-    customEntityName: string = null, //EntityName tùy chỉnh (ko bắt buộc - xử lí cho trường hợp đặc biệt)
+    processType: string = null, //EntityName tùy chỉnh (ko bắt buộc - xử lí cho trường hợp đặc biệt)
     releaseOnly: boolean = false, //tham số xử lí tại module ES - chỉ gửi duyệt mà ko kiểm tra thiết lập
     curComponent: any = null, //biến this: tại component gọi hàm
     exportData: ExportData = null, //biến lấy data export (funcID: Để lấy bộ EntityName,FormName,GridViewName; recID : Để lấy ra data cần Export)
@@ -1490,7 +1490,7 @@ export class CodxShareService {
     approveProcess.htmlView = '<div>' + title + '</div>';
     approveProcess.module = module;
     approveProcess.title = title;
-    approveProcess.customEntityName = customEntityName;
+    approveProcess.processType = processType;
     approveProcess.approvers = approvers;
     approveProcess.category = category;
     approveProcess.data = data;
