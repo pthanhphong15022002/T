@@ -433,7 +433,8 @@ export class InstanceDetailComponent implements OnInit {
         this.stepName = data.stepName;
         this.currentStep = stepNo;
         this.currentNameStep = this.currentStep;
-        this.tmpDataSteps = JSON.parse(JSON.stringify(data));
+       // this.tmpDataSteps = JSON.parse(JSON.stringify(data));
+       this.tmpDataSteps = data;
         this.outStepInstance.emit({ data: this.tmpDataSteps });
         this.stepValue = {
           textColor: data.textColor,

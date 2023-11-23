@@ -219,6 +219,7 @@ export class DealDetailComponent implements OnInit {
   reloadListStep(listSteps: any) {
     this.isDataLoading = true;
     this.listSteps = listSteps;
+    this.getStepCurrent(this.dataSelected);
     this.isDataLoading = false;
     this.changeDetectorRef.detectChanges();
   }
