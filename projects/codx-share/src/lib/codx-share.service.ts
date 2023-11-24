@@ -276,8 +276,8 @@ export class CodxShareService {
               this.codxApprove(
                 data?.unbounds?.approvalRecID,
                 status,
-                oComment.comment,
-                oComment.reasonID,
+                oComment?.comment,
+                oComment?.reasonID,
                 null
               ).subscribe((res2: any) => {
                 if (!res2?.msgCodeError) {

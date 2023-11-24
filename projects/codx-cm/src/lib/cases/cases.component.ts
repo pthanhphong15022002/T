@@ -461,24 +461,8 @@ export class CasesComponent
     this.changeDataMF(e.e, e.data);
   }
 
-  checkMoreReason(tmpPermission) {
-    if (
-      tmpPermission.isReasonSuccess &&
-      tmpPermission.isReasonFail &&
-      tmpPermission.isMoveStage
-    ) {
-      return true;
-    }
-    if (tmpPermission.isReasonSuccess) {
-      return true;
-    }
-    if (tmpPermission.IsReasonFail) {
-      return true;
-    }
-    if (tmpPermission.isMoveStage) {
-      return true;
-    }
-    return false;
+  checkMoreReason(data) {
+    return data?.status != '1' && data?.status != '2' && data?.status != '15';
   }
 
   clickMoreFunc(e) {
@@ -1188,14 +1172,11 @@ export class CasesComponent
           this.notificationsService.notifyCode('ES028');
           return;
         }
-        if (category.eSign) {
-          //kys soos
-        } else {
-          this.release(data, category);
-        }
+        //ko phân biệt eSign
+        this.release(data, category);
       });
   }
-  release(data: any, category: any) {
+  release(data: any, category: any, exportData = null) {
     //duyet moi
     this.codxShareService.codxReleaseDynamic(
       this.view.service,
@@ -1204,7 +1185,13 @@ export class CasesComponent
       this.view.formModel.entityName,
       this.view.formModel.funcID,
       data?.title,
-      this.releaseCallback.bind(this)
+      this.releaseCallback.bind(this),
+      null,
+      null,
+      null,
+      null,
+      null,
+      exportData
     );
   }
   //call Back

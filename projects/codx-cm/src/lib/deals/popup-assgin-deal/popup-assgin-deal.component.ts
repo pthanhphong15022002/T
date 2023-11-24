@@ -306,10 +306,11 @@ export class PopupAssginDealComponent
         ownerName = this.listParticipants.filter(
           (x) => x.userID === this.owner
         )[0]?.userName;
-
         this.employeeName = ownerName;
+
+        this.employeeName && this.searchOwner('1', 'O', '0', this.owner, ownerName,this.data?.permissions);
       }
-      this.searchOwner('1', 'O', '0', this.owner, ownerName,this.data?.permissions);
+
     }
     else if ($event == null || $event == '') {
       this.deleteOwner('1', 'O', '0','owner',this.data);
@@ -340,20 +341,23 @@ export class PopupAssginDealComponent
     // this.data.owner = this.owner;
   }
   deleteOrg() {
-    this.employeeName = null;
+   // this.employeeName = null;
     // this.orgUnitName = null;
     // this.positionName = null;
 
     this.owner = null;
     this.data.owner = this.owner;
+    if(!this.applyProcess) {
+      (this.cbxOwner.ComponentCurrent as CodxComboboxComponent).dataService.data =[];
+      this.cbxOwner.crrValue = this.owner;
+    }
     // if (this.cbxOwner) {
     //   (
     //     this.cbxOwner.ComponentCurrent as CodxComboboxComponent
     //   ).dataService.data = [];
     //   this.cbxOwner.crrValue = this.owner;
     // }
-    (this.cbxOwner.ComponentCurrent as CodxComboboxComponent).dataService.data =[];
-    this.cbxOwner.crrValue = this.owner;
+
     this.form.formGroup.patchValue(this.data);
     this.detectorRef.detectChanges();
   }
