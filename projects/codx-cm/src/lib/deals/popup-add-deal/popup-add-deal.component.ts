@@ -325,6 +325,8 @@ export class PopupAddDealComponent
           this.customerNameTmp = this.customerName?.trim();
           this.deal.industries = $event.component?.itemsSelected[0]?.Industries;
           this.deal.shortName = $event.component?.itemsSelected[0]?.ShortName;
+          this.deal.customerName = $event.component?.itemsSelected[0]?.CustomerName;
+          this.deal.customerCategory = $event.component?.itemsSelected[0]?.Category;
 
           if (this.bussineLineNameTmp?.trim()) {
             this.deal.dealName = this.customerNameTmp + ' mua '+  this.bussineLineNameTmp?.trim();

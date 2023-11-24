@@ -797,7 +797,6 @@ export class DealsComponent
             // listStepCbx: this.lstStepInstances,
           };
           let obj = {
-            stepName: data?.currentStepName,
             formModel: formMD,
             deal: data,
             stepReason: stepReason,
@@ -895,22 +894,6 @@ export class DealsComponent
                 0,
                 "'" + data.dealName + "'"
               );
-              if (data.showInstanceControl === '1') {
-                this.view.dataService
-                  .update(this.dataSelected, true)
-                  .subscribe();
-              }
-              if (
-                data.showInstanceControl === '0' ||
-                data.showInstanceControl === '2'
-              ) {
-                this.view.dataService.remove(this.dataSelected).subscribe();
-                this.dataSelected = this.view.dataService.data[0];
-                this.view.dataService.onAction.next({
-                  type: 'delete',
-                  data: data,
-                });
-              }
               if (this.kanban) {
                 this.renderKanban(this.dataSelected);
               }
@@ -1078,7 +1061,7 @@ export class DealsComponent
       applyFor: '1',
       titleAction: this.titleAction,
       owner: data.owner,
-      startControl: data.steps.startControl,
+      // startControl: data.startControl,
       applyProcess: true,
       buid: data.buid,
     };

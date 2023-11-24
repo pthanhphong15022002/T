@@ -461,24 +461,8 @@ export class CasesComponent
     this.changeDataMF(e.e, e.data);
   }
 
-  checkMoreReason(tmpPermission) {
-    if (
-      tmpPermission.isReasonSuccess &&
-      tmpPermission.isReasonFail &&
-      tmpPermission.isMoveStage
-    ) {
-      return true;
-    }
-    if (tmpPermission.isReasonSuccess) {
-      return true;
-    }
-    if (tmpPermission.IsReasonFail) {
-      return true;
-    }
-    if (tmpPermission.isMoveStage) {
-      return true;
-    }
-    return false;
+  checkMoreReason(data) {
+    return data?.status != '1' && data?.status != '2' && data?.status != '15';
   }
 
   clickMoreFunc(e) {

@@ -449,6 +449,26 @@
             [filterType]="'Contains'"
             [value]="owner"
           ></ejs-combobox>
+
+          <!-- <codx-input
+          [formModel]="form.formModel"
+          field="owner"
+
+          [crrValue]="lead?.owner"
+          [model]="{ ProcessID: lead?.processID }"
+        >
+        </codx-input> -->
+
+        <codx-input
+      type="combobox"
+      [model]="{ ProcessID: lead?.processID }"
+      refValue="DPUserProcess"
+      [placeholder]="gridViewSetup?.SalespersonID?.description"
+      [crrValue]="owner"
+      (valueChange)="valueChangeOwner($event, viewOwnerProcess)"
+     >
+       </codx-input>
+
         </ng-template>
       </div>
     </div>
