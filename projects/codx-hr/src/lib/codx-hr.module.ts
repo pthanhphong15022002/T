@@ -448,7 +448,7 @@ const T_Component: Type<any>[] = [
   PopupEquitComponent,
   PopupEdocumentsComponent,
   EmployeeQuitComponent,
-  ViewDetailEquitComponent,
+  ViewDetailEquitComponent
 ];
 @NgModule({
   imports: [

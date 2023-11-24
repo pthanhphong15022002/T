@@ -12,6 +12,7 @@ import {
   CacheService,
   CallFuncService,
   CodxFormComponent,
+  CodxInputComponent,
   DialogData,
   DialogRef,
   FormatvaluePipe,
@@ -31,6 +32,8 @@ import moment from 'moment';
 export class PopupUpdateReasonCodeComponent implements OnInit, AfterViewInit {
   @ViewChild('attachment') attachment: AttachmentComponent;
   @ViewChild('form') form: CodxFormComponent;
+  @ViewChild('inputParent') inputParent: CodxInputComponent;
+
   data = new WR_WorkOrderUpdates();
   dialog: DialogRef;
   dataWorkOrder: any;
@@ -238,8 +241,8 @@ export class PopupUpdateReasonCodeComponent implements OnInit, AfterViewInit {
           e?.component?.itemsSelected[0]?.Comment,
           e?.component?.itemsSelected[0]?.CommentControl
         );
-        if(this?.form?.formGroup){
-          this?.form?.formGroup?.patchValue(this.data);
+        if(this.inputParent && this.inputParent?.ComponentCurrent){
+          this.inputParent.ComponentCurrent?.setValue(this.dataParentID);
         }
       }
     }

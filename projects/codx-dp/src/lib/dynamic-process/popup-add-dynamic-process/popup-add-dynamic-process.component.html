@@ -468,11 +468,9 @@
               </codx-label>
             </div>
             <codx-input
+              [formModel]="dialog?.formModel"
               field="businessLineID"
               [disabled]="action === 'edit' || systemProcess == '2'"
-              type="combobox"
-              [placeholder]="gridViewSetup?.BusinessLineID?.description"
-              [refValue]="gridViewSetup?.BusinessLineID?.referedValue"
               [model]="{ ProcessID: process?.recID }"
               [crrValue]="process?.businessLineID"
               (valueChange)="valueChangebusinessLineID($event)"
