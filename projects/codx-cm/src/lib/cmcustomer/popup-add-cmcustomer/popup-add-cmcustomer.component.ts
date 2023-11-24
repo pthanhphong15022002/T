@@ -419,7 +419,7 @@ export class PopupAddCmCustomerComponent implements OnInit {
           'ERM.Business.BS',
           'ProvincesBusiness',
           'GetLocationAsync',
-          [name, this.leverSetting]
+          [this.data?.address, this.leverSetting]
         )
       );
       if (json != null && json.trim() != '' && json != "null") {
