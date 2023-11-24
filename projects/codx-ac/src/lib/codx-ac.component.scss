@@ -44,7 +44,7 @@
 
 .ac-empty {
     width: 100%;
-    height: calc(100vh - 500px) !important;
+    height: calc(100vh - 500px);
     justify-content: center !important;
     display: flex;
     align-items: center;
@@ -464,17 +464,52 @@
     background-image: var(--url);
   }
 
-  .card-general .table-ac{
-    height: calc(100vh - 420px) !important;
+  .card-general-more {
+    .table-ac{
+        height: calc(100vh - 450px) !important;
+    }
+
+    .ac-empty {
+        height: calc(100vh - 490px) !important;
+    }
+  } 
+
+  .card-general-less{
+    .table-ac{
+        height: calc(100vh - 415px) !important;
+    }
+    .ac-empty {
+        height: calc(100vh - 455px) !important;
+    }
+  } 
+
+  .card-cash {
+    .table-ac{
+        height: calc(100vh - 495px) !important;
+    }
+    .ac-empty {
+        height: calc(100vh - 540px) !important;
+    }
   }
 
-  .card-cash .table-ac{
-    height: calc(100vh - 495px) !important;
-  }
+  .card-pur-more{
+    .table-ac{
+        height: calc(100vh - 475px) !important;
+    }
 
-  .card-pur .table-ac{
-    height: calc(100vh - 445px) !important;
-  }
+    .ac-empty {
+        height: calc(100vh - 515px) !important;
+    }
+  } 
+
+  .card-pur-less{
+    .table-ac{
+        height: calc(100vh - 445px) !important;
+    }
+    .ac-empty {
+        height: calc(100vh - 485px) !important;
+    }
+  } 
 
   .card-transfer .table-ac{
     height: calc(100vh - 440px) !important;
