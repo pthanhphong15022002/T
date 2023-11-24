@@ -483,20 +483,18 @@ export class ViewCalendarComponent
     this.handleTask('calendar', taskType, "add");
   }
 
-  async handleTask(type, dataType, action, taskData = null, listInsStep = null) {
-    let taskOutput = await this.stepService.openPopupTask(
-      type,
+  async handleTask(type, taskType, action, taskData = null, listInsStep = null) {
+    let dataInput = {
       action,
-      '',
-      dataType,
-      this.insStep,
-      listInsStep,
-      taskData,
-      null,
-      false,
-      null,
-      'right'
-    );
+      titleName: this.titleAction,
+      taskType,
+      instanceStep: this.insStep,
+      dataTask: taskData || {},
+      type: type,
+      isSave: false,
+    };
+
+    let taskOutput = await this.stepService.openPopupCodxTask(dataInput,'right');
     let task = taskOutput?.task;
     this.isActivitie = taskOutput?.isActivitie;
     if (task && (action == 'add' || action == 'copy')) {

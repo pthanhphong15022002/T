@@ -257,10 +257,16 @@ export class CodxAddTaskComponent implements OnInit {
   setData() {
     if (this.action == 'add') {
       this.stepsTasks = new DP_Instances_Steps_Tasks();
+      this.stepsTasks.refID = Util.uid();;
       this.stepsTasks.status = '1';
       this.stepsTasks.taskName = this.typeTask?.text;
       this.stepsTasks.taskType = this.typeTask?.value;
       this.stepsTasks.approveStatus = "1";
+      this.stepsTasks.dependRule = "0";
+      this.stepsTasks.isTaskDefault = false;
+      this.stepsTasks.progress = 0;
+      this.stepsTasks.assigned = '0';
+      this.stepsTasks.approveStatus = '1';
       this.setRole();
     } else if (this.action == 'copy') {
       this.stepsTasks = JSON.parse(JSON.stringify(this.taskInput));
