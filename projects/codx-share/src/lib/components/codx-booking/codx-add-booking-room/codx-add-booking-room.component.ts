@@ -1539,7 +1539,7 @@ export class CodxAddBookingRoomComponent extends UIComponent {
       this.codxBookingService
         .getProcessByCategoryID(this.categoryID)
         .subscribe((category: any) => {
-          this.codxComonService.codxReleaseDynamic(
+          this.codxShareService.codxReleaseDynamic(
             'EP',
             this.returnData,
             category,
