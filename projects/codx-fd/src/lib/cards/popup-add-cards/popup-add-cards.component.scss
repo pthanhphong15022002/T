@@ -72,11 +72,8 @@
     margin-right: 5px;
 }
 
-.carousel-control-prev-icon {
-    background-color: black;
-}
-
-.carousel-control-next-icon {
-    background-color: black;
-
+.carousel-control-prev-icon, .carousel-control-next-icon {
+    background-color: var(--primary-dark);
+    background-size: 76%;
+    border-radius: 4px;
 }

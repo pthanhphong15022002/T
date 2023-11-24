@@ -63,7 +63,7 @@ export class PopupAssginDealComponent
   buid: any;
   user: any;
   groupUserID: any;
-  startControl: string = '';
+  // startControl: string = '';
   applyFor: string = '';
   orgUnitName: string = '';
   positionName: string = '';
@@ -105,7 +105,7 @@ export class PopupAssginDealComponent
     this.owner = JSON.parse(JSON.stringify(this.data?.owner));
     this.gridViewSetup = dialogData?.data.gridViewSetup;
     this.formModel = dialogData?.data.formModel;
-    //this.startControl = dialogData?.data.startControl;
+    // this.startControl = dialogData?.data.startControl;
     this.promiseAll();
   }
 

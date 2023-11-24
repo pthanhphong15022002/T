@@ -74,6 +74,10 @@ import { FilterPipe } from './pipe/filterObject.pipe';
 import { TimeFromPipe } from './pipe/format-datetime.pipe';
 import { MessageReplacePipe } from './pipe/mssgReplace.pipe';
 import { BackHomeComponent } from './_layout/back-home/back-home.component';
+import { CoDxAddApproversComponent } from './component/codx-approval-procress/codx-add-approvers/codx-add-approvers.component';
+import { CoDxViewReleaseSignFileComponent } from './component/codx-approval-procress/codx-view-release-sign-file/codx-view-release-sign-file.component';
+import { CoDxGetTemplateSignFileComponent } from './component/codx-approval-procress/codx-get-template-sign-file/codx-get-template-sign-file.component';
+
 //#endregion
 
 const T_Component: Type<any>[] = [
@@ -115,7 +119,13 @@ const T_Component: Type<any>[] = [
   AttachmentWebComponent,
   //#endregion
 
-  BackHomeComponent
+  BackHomeComponent,
+
+  //Approval Process
+  CoDxAddApproversComponent,
+  CoDxViewReleaseSignFileComponent,
+  CoDxGetTemplateSignFileComponent,
+  
 ];
 
 const T_Pipe: Type<any>[] = [

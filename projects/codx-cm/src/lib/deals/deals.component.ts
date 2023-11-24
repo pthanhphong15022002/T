@@ -39,6 +39,7 @@ import { PopupPermissionsComponent } from '../popup-permissions/popup-permission
 import { PopupAssginDealComponent } from './popup-assgin-deal/popup-assgin-deal.component';
 import { PopupUpdateStatusComponent } from './popup-update-status/popup-update-status.component';
 import { StepService } from 'projects/codx-share/src/lib/components/codx-step/step.service';
+import { ExportData } from 'projects/codx-share/src/lib/models/ApproveProcess.model';
 
 @Component({
   selector: 'lib-deals',
@@ -427,8 +428,7 @@ export class DealsComponent
     let isOwner = (eventItem, data) => {
       eventItem.disabled =
         data?.alloweStatus == '1'
-          ? !['1', '2', '15'].includes(data.status) ||
-            data.closed
+          ? !['1', '2', '15'].includes(data.status) || data.closed
           : true;
     };
     let isConfirmOrRefuse = (eventItem, data) => {
@@ -1061,7 +1061,7 @@ export class DealsComponent
       applyFor: '1',
       titleAction: this.titleAction,
       owner: data.owner,
-      // startControl: data.startControl,
+      //startControl: data.steps.startControl,
       applyProcess: true,
       buid: data.buid,
     };
@@ -1328,11 +1328,13 @@ export class DealsComponent
                 this.notificationsService.notifyCode('ES028');
                 return;
               }
-              if (res.eSign) {
-                //kys soos
-              } else {
-                this.release(dt, res);
-              }
+              //ko phân biệt eSign - nếu cần thì phải get
+              // let exportData: ExportData = {
+              //   funcID: this.view.formModel.funcID,
+              //   recID: this.dataSelected.recID,
+              //   data: dt?.datas,
+              // };
+              this.release(dt, res);
             });
         } else {
           this.notificationsService.notifyCode(
@@ -1345,7 +1347,7 @@ export class DealsComponent
     });
   }
 
-  release(data: any, category: any) {
+  release(data: any, category: any, exportData = null) {
     // new function release
     this.codxShareService.codxReleaseDynamic(
       this.view.service,
@@ -1354,7 +1356,13 @@ export class DealsComponent
       this.view.formModel.entityName,
       this.view.formModel.funcID,
       data?.title,
-      this.releaseCallback.bind(this)
+      this.releaseCallback.bind(this),
+      null,
+      null,
+      null,
+      null,
+      null,
+      exportData
     );
   }
   //call Back
@@ -2007,12 +2015,14 @@ export class DealsComponent
       )
       .subscribe((str) => {
         if (str && str?.length > 0) {
-          let datas = str[1];
-          if (datas && datas.includes('[{')) datas = datas.substring(2);
-          let fix = str[0];
-          fix = fix.substring(1, fix.length - 1);
-          let dataSource = '[{ ' + fix + ',' + datas;
-          // let dataSource = '[' + str + ']';
+          let dataSource = '[' + str[0] + ']';
+          if (str[1]) {
+            let datas = str[1];
+            if (datas && datas.includes('[{')) datas = datas.substring(2);
+            let fix = str[0];
+            fix = fix.substring(1, fix.length - 1);
+            dataSource = '[{ ' + fix + ',' + datas;
+          }
           var customData = {
             refID: data.processID,
             refType: 'DP_Processes',

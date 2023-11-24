@@ -124,6 +124,12 @@ export class MACContentComponent extends UIComponent {
     this.view = view;
   }
 
+  clickclick(evt: any, btn: any) {
+    if (btn) {
+      btn.ComponentCurrent?.setValue('2307070011');
+    }
+  }
+
   select(evt: any) {
     console.log(evt);
     if (evt.itemData) this.quaterID = evt.itemData['value'];

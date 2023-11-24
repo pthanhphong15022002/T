@@ -58,6 +58,7 @@ export class UserInnerComponent implements OnInit, OnDestroy {
   formModel: any;
   modifiedOn = new Date();
   sysSetting;
+  profileURL=null;
   constructor(
     public codxService: CodxService,
     private auth: AuthService,
@@ -359,8 +360,18 @@ export class UserInnerComponent implements OnInit, OnDestroy {
   }
   // link my profile
   myProfile() {
-    debugger;
-    this.codxService.navigate('MWP009', '', { funcID: 'MWP009' });
+    if(this.profileURL!=null){
+      this.codxService.navigate(null,this.profileURL);
+    }
+    else{
+      this.cache.functionList("WS006").subscribe(res=>{
+        if(res?.url){
+          this.profileURL=res?.url;
+          this.codxService.navigate(null,this.profileURL);
+        }
+      });
+    }
+    
   }
 
   formSetting(){
