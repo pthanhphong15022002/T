@@ -256,7 +256,7 @@ export class JournalV2Component extends UIComponent implements OnInit {
     if(field === 'mainFilterValue' && this.mainFilterValue == value) return;
     if(field === 'subFilterValue' && this.subFilterValue == value) return;
     this[field] = value;
-
+    this.itemSelected = undefined;
     let journalTypes: string = '';
     switch (this.subFilterValue) {
       case '1':
@@ -283,6 +283,7 @@ export class JournalV2Component extends UIComponent implements OnInit {
     this.view.dataService.setPredicates(predicates, dataValues, () => {
       this.grid?.refresh();
     });
+    this.detectorRef.detectChanges();
   }
 
   changeMF(event){
