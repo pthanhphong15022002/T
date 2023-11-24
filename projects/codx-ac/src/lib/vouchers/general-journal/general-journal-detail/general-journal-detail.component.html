@@ -87,19 +87,19 @@
                   [formModel]="formModel">
             </codx-input> -->
         </div>
-        <div class="d-flex align-items-top mb-1">
+        <div class="d-flex align-items-top">
             <codx-label class="fw-bold label-colon text-nowrap" fiedName="Memo" [formModel]="formModel">
             </codx-label>
-            <ejs-tooltip *ngIf="itemSelected?.memo" id='tooltip' target="#tipmemo">
-                <span id="tipmemo" class="text-gray-600 line-clamp line-clamp-1 me-3">{{itemSelected?.memo}}</span>
-                <ng-template #content>
-                    <span id="tipmemo">{{itemSelected?.memo}}</span>
-                </ng-template>
-            </ejs-tooltip>
+            <span *ngIf="isShowMore" id="eleMemo" class="text-gray-600 line-clamp line-clamp-2">{{itemSelected?.memo}}</span>
+            <span *ngIf="isShowLess" class="text-gray-600 me-3">{{itemSelected?.memo}}</span>
             <span *ngIf="(itemSelected?.memo == '' || itemSelected?.memo == null) && gridViewSetup"
-                class="place-holder text-gray-600 line-clamp line-clamp-1 me-3">{{gridViewSetup['Memo'].headerText}}</span>
-        </div>
-        <div class="card-add card-general mt-1" #cardbodyRef>
+              class="place-holder text-gray-600 line-clamp line-clamp-1 me-3">{{gridViewSetup['Memo'].headerText}}</span>
+          </div>
+          <div *ngIf="isReadMore" style="padding-left: 5rem" class="align-items-top cursor-pointer">
+            <span *ngIf="isShowMore" (click)="onShowMoreLess('showmore')" class="text-primary fw-bold text-underline">Xem Thêm</span>
+            <span *ngIf="isShowLess" (click)="onShowMoreLess('showless')" class="text-primary fw-bold text-underline">Ẩn bớt</span>
+          </div>
+        <div [ngClass]="isReadMore ? 'card-general-more' : 'card-general-less'">
             <ejs-tab>
                 <e-tabitems>
                     <!--Start tab hạch toán -->
