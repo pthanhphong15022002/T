@@ -238,6 +238,9 @@ export class PopupUpdateReasonCodeComponent implements OnInit, AfterViewInit {
           e?.component?.itemsSelected[0]?.Comment,
           e?.component?.itemsSelected[0]?.CommentControl
         );
+        if(this?.form?.formGroup){
+          this?.form?.formGroup?.patchValue(this.data);
+        }
       }
     }
     this.detectorRef.detectChanges();
