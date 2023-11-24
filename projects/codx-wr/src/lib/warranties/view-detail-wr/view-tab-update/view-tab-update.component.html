@@ -3,7 +3,11 @@
     <codx-gridview-v2
       #grid
       service="WR"
-      [formModel]="formModel"
+      [formName]="formModel.formName"
+      [gridViewName]="formModel.gridViewName"
+      [entityName]="formModel.entityName"
+      [funcId]="formModel.funcID"
+      [sorts]="[sortField]"
       [dataSource]="lstUpdate"
       [templateMore]="tempMorefunction"
       [rowHeight]="40"

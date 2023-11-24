@@ -336,7 +336,7 @@ export class CodxShareService {
               );
               if (index >= 0)
                 dataService.data[index].unbounds.statusApproval = res?.status;
-
+              afterSave(data);
               dataService.update(data).subscribe();
               this.notificationsService.notifyCode('SYS007');
             } else this.notificationsService.notify(res?.msgCodeError);
@@ -1372,13 +1372,18 @@ export class CodxShareService {
       [companyID, roleType]
     );
   }
-  getRPList(ids: any,option :string, isLite :boolean = false,reportType :string = null) {
+  getRPList(
+    ids: any,
+    option: string,
+    isLite: boolean = false,
+    reportType: string = null
+  ) {
     return this.api.execSv(
       'rptrp',
       'Codx.RptBusiness.RP',
       'ReportListBusiness',
       'GetRPAsync',
-      [ids,option,isLite,reportType]
+      [ids, option, isLite, reportType]
     );
   }
   viewApprovalStep(transID, isSettingMode = true, dynamicApprovers = null) {
@@ -1441,8 +1446,8 @@ export class CodxShareService {
     title: string, //Tiêu đề (truyền kiểu chuỗi thường)
     processType: string, //EntityName tùy chỉnh (lưu processType cho ES_ApprovalTrans)
     approvers: Array<Approver> = null, //Danh sách userID của RO
-    customParam:string=null,
-    ): Observable<any> {
+    customParam: string = null
+  ): Observable<any> {
     let approveProcess = new ApproveProcess();
     approveProcess.recID = recID;
     approveProcess.processID = processID;
@@ -1466,21 +1471,23 @@ export class CodxShareService {
   }
 
   codxReleaseDynamic(
+    //Tham số bắt buộc
     module: string, //Tên service
-    data: any, //data nghiệp vụ gốc – thay cho việc truyền recID như trước: phục vụ cho việc xuất dữ liệu
-    category: any, //Phân loại tài liệu hiện hành - thay cho việc truyền processID như trước: phục vụ cho việc kiểm tra loại quy trình gửi duyệt và tích hợp với form trình kí số.
+    data: any, //data nghiệp vụ gốc
+    category: any, //Phân loại tài liệu hiện hành (ES_Categories) phục vụ cho việc kiểm tra loại quy trình gửi duyệt và tích hợp với form trình kí số.
     entityName: string, //EntityName nghiệp vụ gốc
     funcID: string, //FunctionID nghiệp vụ gốc
     title: string, //Tiêu đề (truyền kiểu chuỗi thường)
     releaseCallback: (response: ResponseModel, component: any) => void, //Hàm xử lí kết quả trả về
+    //Tham số không bắt buộc
     userID: string = null, //Mã người dùng (ko bắt buộc - nếu ko có mặc định lấy UserID hiện hành)
     approvers: Array<Approver> = null, //Danh sách userID của RO hoặc người duyệt chỉ định
     processType: string = null, //EntityName tùy chỉnh (ko bắt buộc - xử lí cho trường hợp đặc biệt)
     releaseOnly: boolean = false, //tham số xử lí tại module ES - chỉ gửi duyệt mà ko kiểm tra thiết lập
     curComponent: any = null, //biến this: tại component gọi hàm
-    exportData: ExportData = null, //biến lấy data export (funcID: Để lấy bộ EntityName,FormName,GridViewName; recID : Để lấy ra data cần Export)
-    customParam:string = null,//Json string chứa tham số tùy chỉnh
-    ) {
+    exportData: ExportData = null, //biến lấy data export (funcID: Để lấy bộ EntityName, FormName, GridViewName; recID : Để lấy ra dữ liệu cần export ,data: data export lấy sẵn nếu có sẽ ưu tiên dùng thay cho việc dùng recID để đi lấy dữ liệu)
+    customParam: string = null //Json string chứa tham số tùy chỉnh
+  ) {
     let approveProcess = new ApproveProcess();
     approveProcess.recID = data?.recID;
     approveProcess.processID = category?.processID;
@@ -1495,8 +1502,8 @@ export class CodxShareService {
     approveProcess.category = category;
     approveProcess.data = data;
     approveProcess.exportData = exportData;
-    approveProcess.customParam = customParam; 
-    if(approveProcess.approvers== null){
+    approveProcess.customParam = customParam;
+    if (approveProcess.approvers == null) {
       approveProcess.approvers = [];
     }
     this.callBackComponent = curComponent;
@@ -1654,21 +1661,26 @@ export class CodxShareService {
     //   signFile.templateID = template[0].templateID;
     // }
     if (approveProcess?.template?.length > 0) {
-      if(signFile.files?.length ==1 && approveProcess?.template?.length==1 && approveProcess?.template[0]?.files?.length==1){
+      if (
+        signFile.files?.length == 1 &&
+        approveProcess?.template?.length == 1 &&
+        approveProcess?.template[0]?.files?.length == 1
+      ) {
         signFile.files[0].areas = approveProcess?.template[0]?.files[0]?.areas;
-      }
-      else{
-        Array.from(approveProcess?.template).forEach((tp:any)=>{
-          if(tp?.files?.length>0){
-            tp?.files?.forEach(file => {
-              if(file?.areas?.length>0){
+      } else {
+        Array.from(approveProcess?.template).forEach((tp: any) => {
+          if (tp?.files?.length > 0) {
+            tp?.files?.forEach((file) => {
+              if (file?.areas?.length > 0) {
                 let fName = file?.fileName?.split('.')[0];
-                if(fName!=null && fName !=""){
-                  let sfNewFile=signFile.files.filter(x=>x.fileName?.startsWith(fName));
-                  if(sfNewFile?.length>0){
-                    sfNewFile?.forEach((sfn:any)=>{
-                      sfn.areas = file?.areas;                    
-                    })
+                if (fName != null && fName != '') {
+                  let sfNewFile = signFile.files.filter((x) =>
+                    x.fileName?.startsWith(fName)
+                  );
+                  if (sfNewFile?.length > 0) {
+                    sfNewFile?.forEach((sfn: any) => {
+                      sfn.areas = file?.areas;
+                    });
                   }
                 }
               }
@@ -1676,7 +1688,6 @@ export class CodxShareService {
           }
         });
       }
-      
     }
     return signFile;
   }
@@ -1949,20 +1960,18 @@ export class CodxShareService {
       case '3': //Export và view trc khi gửi duyệt (ko tạo ES_SignFiles)
         this.getFileByObjectID(approveProcess.recID).subscribe(
           (lstFile: any) => {
-            
             if (lstFile?.length > 0) {
               let signFile = this.apCreateSignFile(approveProcess, lstFile);
               this.createNewESSF(signFile).subscribe((res) => {
-                if (res) {                 
+                if (res) {
                   this.apOpenViewSignFile(
                     approveProcess,
                     releaseCallback,
                     res,
                     lstFile
-                  );                  
+                  );
                 }
               });
-              
             } else {
               this.notificationsService.notify('Không tìm thấy tài liệu!', '2');
             }
@@ -1984,8 +1993,7 @@ export class CodxShareService {
                   null,
                   approveProcess.approvers,
                   false,
-                ])
-                .subscribe((res: any) => {
+                ]).subscribe((res: any) => {
                   this.apBaseRelease(approveProcess, releaseCallback);
                 });
               }
@@ -2186,15 +2194,15 @@ export class CodxShareService {
   ) {
     this.getRPByIDAndType(reportID, reportType).subscribe((rpList: any) => {
       if (rpList != null) {
-        let tenantName = this.tenant.getName();        
+        let tenantName = this.tenant.getName();
         let params = {
           ReportID: reportID,
         };
-        if(paras){
-          for(const p in paras){
+        if (paras) {
+          for (const p in paras) {
             params[p] = paras[p];
           }
-        } 
+        }
         //let paramURL = this.shareService.genURLParamObject(params);
         let paramURL = encodeURIComponent(JSON.stringify(params));
         let rpOpenReportUI = function (recID, module) {
@@ -2202,7 +2210,7 @@ export class CodxShareService {
           window.open(url);
         };
         if (rpList?.length > 1) {
-          this.rpViewReportList(rpList, formModel,params, rpOpenReportUI);
+          this.rpViewReportList(rpList, formModel, params, rpOpenReportUI);
         } else if (rpList?.length == 1) {
           rpOpenReportUI(rpList[0]?.recID, rpList[0]?.moduleID?.toLowerCase());
         }
@@ -2218,12 +2226,12 @@ export class CodxShareService {
   ) {
     let moduleID = reportList[0]?.moduleID?.toLowerCase();
     var obj = {
-      reportID:reportList[0]?.reportID,
+      reportID: reportList[0]?.reportID,
       reportList: reportList,
       url: moduleID + '/report/detail/',
       formModel: formModel,
-      headerText:"Chọn mẫu in",
-      parameters: params
+      headerText: 'Chọn mẫu in',
+      parameters: params,
     };
     let opt = new DialogModel();
     let dialogViewRP = this.callfunc.openForm(

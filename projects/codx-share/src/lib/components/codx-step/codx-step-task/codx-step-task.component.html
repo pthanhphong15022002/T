@@ -50,7 +50,7 @@
             class="icon-i-info-circle icon-18 text-hover-primary cursor-pointer text-gray-500"
           ></span>
         </div>
-        <codx-mfunc
+        <!-- <codx-mfunc
           [formModel]="grvMoreFunction"
           [isBookMark]="true"
           [dataItem]="moreDefaut"
@@ -58,9 +58,9 @@
           (clickMF)="clickMFStep($event, currentStep)"
           *ngIf="!isMoveStage"
         >
-        </codx-mfunc>
+        </codx-mfunc> -->
       </div>
-      <div class="d-flex align-items-center ms-5">
+      <div class="d-flex align-items-center ms-3">
         <div
           class="me-2"
           #popoverTooltip="ngbPopover"
@@ -97,7 +97,7 @@
         >
         </codx-imgs>
         <div
-          class="disabled-inline me-1"
+          class="disabled-inline me-2"
           (click)="openPopupUpdateProgress(currentStep, 'P')"
           [ngClass]="
             checkRoleUpdateProgress(currentStep, 'P')
@@ -119,6 +119,18 @@
             container="body"
             placement="top bottom"
           ></codx-progressbar>
+        </div>
+        <div class="model-func">
+          <codx-mfunc
+          [formModel]="grvMoreFunction"
+          [isBookMark]="true"
+          [dataItem]="moreDefaut"
+          (changeDataMF)="changeDataMFStep($event, currentStep)"
+          (clickMF)="clickMFStep($event, currentStep)"
+          [type]="'view'"
+          *ngIf="!isMoveStage"
+        >
+        </codx-mfunc>
         </div>
       </div>
     </div>
@@ -206,6 +218,17 @@
                   }"
                 >
                 </ng-container>
+                <div class="model-func">
+                <codx-mfunc
+                  *ngIf="!isMoveStage && !isViewStep"
+                  [formModel]="grvMoreFunction"
+                  [isBookMark]="false"
+                  [dataItem]="moreDefaut"
+                  [type]="'view'"
+                  (clickMF)="clickMFTaskGroup($event, groupTask)"
+                  (changeDataMF)="changeDataMFGroupTask($event, groupTask)"
+                >
+                </codx-mfunc></div>
               </div>
               <div
                 *ngIf="!groupTask?.recID"
@@ -276,6 +299,17 @@
                             value: { value: task, group: groupTask, type: 'T' }
                           }"
                         ></ng-container>
+                        <div class="model-func">
+                        <codx-mfunc
+                          *ngIf="(!isMoveStage && !isViewStep && !isClose) || (isClose && !task?.isTaskDefault)"
+                          [formModel]="grvMoreFunction"
+                          [isBookMark]="true"
+                          [dataItem]="moreDefaut"
+                          [type]="'view'"
+                          (clickMF)="clickMFTask($event, groupTask, task)"
+                          (changeDataMF)="changeDataMFTask($event,task, groupTask)"
+                        >
+                        </codx-mfunc> </div>
                       </div>
                     </div>
 
@@ -344,7 +378,7 @@
         {{ groupTask?.taskGroupName }}
       </div>
     </div>
-    <codx-mfunc
+    <!-- <codx-mfunc
       *ngIf="!isMoveStage && !isViewStep"
       [formModel]="grvMoreFunction"
       [isBookMark]="true"
@@ -353,7 +387,7 @@
       (clickMF)="clickMFTaskGroup($event, groupTask)"
       (changeDataMF)="changeDataMFGroupTask($event, groupTask)"
     >
-    </codx-mfunc>
+    </codx-mfunc> -->
   </div>
 </ng-template>
 
@@ -380,7 +414,7 @@
         </div>
       </div>
     </div>
-    <codx-mfunc
+    <!-- <codx-mfunc
       *ngIf="
         (!isMoveStage && !isViewStep && !isClose) ||
         (isClose && !data?.task?.isTaskDefault)
@@ -392,7 +426,7 @@
       (clickMF)="clickMFTask($event, data?.group, data?.task)"
       (changeDataMF)="changeDataMFTask($event, data?.task, data?.group)"
     >
-    </codx-mfunc>
+    </codx-mfunc> -->
   </div>
 </ng-template>
 

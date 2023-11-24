@@ -1,0 +1,24 @@
+<codx-form #form [headerText]="headerText" [body]="body" [footer]="footer" [dialog]="dialogRef"
+   >
+  <ng-template #body let-dialog>
+    <div>
+      <div class="form-group">
+        <codx-label name="lblApprovers" default="Người duyệt"></codx-label>
+        <codx-input placeholder="Chọn người duyệt" field="approvers" [crrValue]="approvers" type="combobox" refValue="Users" (valueChange)="valueChange($event)" >
+        </codx-input>
+      </div>     
+      
+    </div>
+  </ng-template>
+
+
+</codx-form>
+<ng-template #footer>
+  <div class="">
+    <div class="form-group d-flex justify-content-end flex-row">
+      <button type="button" class="btn btn-primary" (click)="onSaveForm()">
+        <codx-label name="lblSave" default="Lưu"></codx-label>
+      </button>
+    </div>
+  </div>
+</ng-template>
