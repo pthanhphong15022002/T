@@ -17,7 +17,8 @@ codx-view-list-detail .codx-detail-footer {
         padding: 0 15px !important;
     }
     codx-views .container-toolbar + .container-fluid{
-        max-height: calc(100vh - 165px);
+        //max-height: calc(100vh - 165px);
+        max-height: calc(100vh - 115px);
     }
     co-calendar .container-toolbar + .container-fluid{
         max-height: calc(100vh - 52px);
@@ -48,4 +49,16 @@ codx-view-list-detail .codx-detail-footer {
         margin-bottom:0!important;
     }
 
+}
+
+// ws-body fd
+.ws-body .fd-personal-achieve{
+    .fd-achieve-info{
+        padding-top: 15px!important;
+    }
+}
+
+//
+.ws-body lib-employee-info-detail codx-views .container-toolbar + .container-fluid {
+    max-height: calc(100vh - 75px);
 }
