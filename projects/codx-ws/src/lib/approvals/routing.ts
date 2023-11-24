@@ -2,6 +2,7 @@ import { IncommingComponent } from "projects/codx-od/src/lib/incomming/incomming
 import { EmployeeContractComponent } from "projects/codx-hr/src/lib/employee-contract/employee-contract.component";
 import { SignFileComponent } from "projects/codx-es/src/lib/sign-file/sign-file.component";
 import { RequestReviewComponent } from "./request-review/request-review.component";
+import { EPApprovalComponent } from "projects/codx-ep/src/lib/approval/ep-approval.component";
 
 //Routing component xét duyệt
 export let components = {
@@ -11,5 +12,7 @@ export let components = {
     //Nhân sự
     cpnEmployeeContract : EmployeeContractComponent,
     //Trình ký
-    cpnSignFile : SignFileComponent
+    cpnSignFile : SignFileComponent,
+    //Dịch vụ hành chính
+    cpnBooking : EPApprovalComponent
   };

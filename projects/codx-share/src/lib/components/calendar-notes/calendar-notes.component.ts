@@ -496,7 +496,6 @@ export class CalendarNotesComponent
               .childNodes[0] as HTMLElement;
             let numbL = this.convertStrToDate(eleToDate);
             const lDayOfMonth = moment(numbL).add(1, 'day').toJSON();
-            debugger
             this.getParamCalendar(fDayOfMonth, lDayOfMonth, false);
             this.setDate(this.FDdate, this.lstView);
             this.change.detectChanges();
@@ -518,7 +517,6 @@ export class CalendarNotesComponent
       )
       .subscribe((res) => {
         if (res) {
-          debugger
           let dt = res;
           this.countEvent = dt[1];
           const dataValue = fDayOfMonth + ';' + lDayOfMonth;
@@ -732,7 +730,6 @@ export class CalendarNotesComponent
     this.WP_Notes = [];
     this.codxShareSV.getDataWP_Notes(predicate, dataValue).subscribe((res) => {
       // this.countNotePin = 0;
-      debugger
       this.countNotePin = res[1];
       if (res) {
         this.getModelShare(res[0], param.Template, 'WP_Notes');

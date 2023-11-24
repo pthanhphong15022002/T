@@ -184,7 +184,6 @@
     [titleCss]="'fs-6 mb-1'"
     [descTmp]="descTmp"
     (clickMF)="clickMF($event, data)"
-    [hideMF]="asideMode == '2'"
     [moreFuncCss]="'me-9'"
     [typeMF]="'hover'"
     [formModel]="view.formModel"
@@ -323,7 +322,7 @@
     </div>
   </ng-template>
   <ng-template #dbClickDetail>
-    <div class="scroll-detail">
+    <div style="height: 100% !important;">
       <codx-campaigns-detail
         [dataService]="view.dataService"
         [dataSelected]="dataSelected"

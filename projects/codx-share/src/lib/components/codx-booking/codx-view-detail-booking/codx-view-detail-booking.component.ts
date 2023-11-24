@@ -118,6 +118,11 @@ export class CodxViewDetailBookingComponent extends UIDetailComponent implements
           this.grView = Util.camelizekeyObj(grv);
         }
       });
+
+    if(this.recID)
+    {
+      this.getData();
+    }
     this.detectorRef.detectChanges();
     this.setHeight();
   }
@@ -127,20 +132,26 @@ export class CodxViewDetailBookingComponent extends UIDetailComponent implements
   ngOnChanges(changes: SimpleChanges) {
     if (changes?.itemDetail) {
       this.loadedData=false;
-      if (this.viewMode == '1' && changes.itemDetail?.currentValue?.recID!=null) {
-        this.codxEpService
-          .getBookingByRecID(changes.itemDetail?.currentValue?.recID)
-          .subscribe((res) => {
-            if (res) {
-              this.itemDetail = res;
-              this.refeshData(this.itemDetail);
-              this.loadedData=true;
-              this.detectorRef.detectChanges();
-            }
-          });
+      if (this.viewMode == '1' && changes.recID!=null) {
+       this.getData();
       }
     }
     this.setHeight();
+  }
+
+
+  getData()
+  {
+    this.codxEpService
+    .getBookingByRecID(this.recID)
+    .subscribe((res) => {
+      if (res) {
+        this.data = res;
+        this.refeshData(this.data);
+        this.loadedData=true;
+        this.detectorRef.detectChanges();
+      }
+    });
   }
   //---------------------------------------------------------------------------------//
   //-----------------------------------Get Cache Data--------------------------------//

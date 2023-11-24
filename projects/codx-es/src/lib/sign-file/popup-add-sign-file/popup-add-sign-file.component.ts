@@ -1202,11 +1202,6 @@ export class PopupAddSignFileComponent implements OnInit {
     }
   }
 
-  getSampleProcessName(processID: any) {
-    //Lấy tên quy trình mẫu
-    
-  }
-
   saveTemplate(dialogTemplateName) {
     if (this.templateName != '') {
       this.esService
@@ -1505,8 +1500,8 @@ export class PopupAddSignFileComponent implements OnInit {
             : this.formModelCustom.funcID,
           '',
           this.data?.title,
-          this.approverProcess?.customEntityName != null
-            ? this.approverProcess?.customEntityName
+          this.approverProcess?.processType != null
+            ? this.approverProcess?.processType
             : this.data?.refType,
           [],
           this.approverProcess?.customParam,

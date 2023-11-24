@@ -109,7 +109,7 @@ export class RequestReviewComponent
     {
       case "ES":
       {
-        funcID = "EST012";
+        funcID = "EST011";
         component = this.components.cpnDtESSignFile;
         break;
       }
@@ -119,9 +119,14 @@ export class RequestReviewComponent
         component = this.components.cpnDtDispatches;
         break;
       }
+      case "EP":
+      {
+        funcID = this.dataItem.functionID;
+        component = this.components.cpnDtEPBooking;
+      }
     }
   
-    this.content.clear();
+    if(this.content) this.content.clear();
     if(component) this.loadContent(component,dt?.data?.transID,funcID)
   }
 

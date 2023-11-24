@@ -50,7 +50,7 @@
             class="icon-i-info-circle icon-18 text-hover-primary cursor-pointer text-gray-500"
           ></span>
         </div>
-        <codx-mfunc
+        <!-- <codx-mfunc
           [formModel]="grvMoreFunction"
           [isBookMark]="true"
           [dataItem]="moreDefaut"
@@ -58,9 +58,9 @@
           (clickMF)="clickMFStep($event, currentStep)"
           *ngIf="!isMoveStage"
         >
-        </codx-mfunc>
+        </codx-mfunc> -->
       </div>
-      <div class="d-flex align-items-center ms-5">
+      <div class="d-flex align-items-center ms-3">
         <div
           class="me-2"
           #popoverTooltip="ngbPopover"
@@ -97,7 +97,7 @@
         >
         </codx-imgs>
         <div
-          class="disabled-inline me-1"
+          class="disabled-inline me-2"
           (click)="openPopupUpdateProgress(currentStep, 'P')"
           [ngClass]="
             checkRoleUpdateProgress(currentStep, 'P')
@@ -119,6 +119,18 @@
             container="body"
             placement="top bottom"
           ></codx-progressbar>
+        </div>
+        <div class="model-func">
+          <codx-mfunc
+          [formModel]="grvMoreFunction"
+          [isBookMark]="true"
+          [dataItem]="moreDefaut"
+          (changeDataMF)="changeDataMFStep($event, currentStep)"
+          (clickMF)="clickMFStep($event, currentStep)"
+          [type]="'view'"
+          *ngIf="!isMoveStage"
+        >
+        </codx-mfunc>
         </div>
       </div>
     </div>
@@ -206,6 +218,17 @@
                   }"
                 >
                 </ng-container>
+                <div class="model-func">
+                <codx-mfunc
+                  *ngIf="!isMoveStage && !isViewStep"
+                  [formModel]="grvMoreFunction"
+                  [isBookMark]="false"
+                  [dataItem]="moreDefaut"
+                  [type]="'view'"
+                  (clickMF)="clickMFTaskGroup($event, groupTask)"
+                  (changeDataMF)="changeDataMFGroupTask($event, groupTask)"
+                >
+                </codx-mfunc></div>
               </div>
               <div
                 *ngIf="!groupTask?.recID"
@@ -276,40 +299,41 @@
                             value: { value: task, group: groupTask, type: 'T' }
                           }"
                         ></ng-container>
+                        <div class="model-func">
+                        <codx-mfunc
+                          *ngIf="(!isMoveStage && !isViewStep && !isClose) || (isClose && !task?.isTaskDefault)"
+                          [formModel]="grvMoreFunction"
+                          [isBookMark]="true"
+                          [dataItem]="moreDefaut"
+                          [type]="'view'"
+                          (clickMF)="clickMFTask($event, groupTask, task)"
+                          (changeDataMF)="changeDataMFTask($event,task, groupTask)"
+                        >
+                        </codx-mfunc> </div>
                       </div>
                     </div>
 
-                    <div class="ms-12">
-                      <div class="d-flex align-items-center">
+                    <div class="ms-12 d-flex align-items-center">
+                      <div *ngIf="task?.approveRule" class="d-flex align-items-center cursor-pointer"  (click)="openFormApprover(task)">
                         <span
-                          *ngIf="task?.approveRule"
-                          class="cricle icon-20 icon-text_snippet text-primary cursor-pointer"
-                          [ngbTooltip]="'Các bước duyệt'"
-                          (click)="openFormApprover()"
+                          class="icon-20 icon-text_snippet text-primary "
                         ></span>
-                        <span
-                          *ngIf="task?.fieldID"
-                          class="icon-check-correct icon-20 text-primary cursor-pointer"
-                          [ngbTooltip]="'Trường tùy chỉnh'"
-                          (click)="openFormField()"
-                        ></span>
+                        <codx-label
+                          class="text-gray-500"
+                          name="progressDefault2"
+                          [formModel]="grvMoreFunction"
+                          default="Các bước duyệt"
+                        ></codx-label>
                       </div>
-
-                      <!-- <codx-fields-detail-temp
-                        *ngIf="task?.fieldID"
-                        [listFields]="
-                          getFields(currentStep?.fields, task?.fieldID)
-                        "
-                        [showColumnControl]="1"
-                        [isShowTitle]="false"
-                      >
-                      </codx-fields-detail-temp> -->
-
-                      <!-- <codx-view-approve
-                        *ngIf="task?.approveRule"
-                        [categoryID]="task?.recID"
-                        [change]="task"
-                      ></codx-view-approve> -->
+                      <div *ngIf="task?.fieldID" class="d-flex align-items-center cursor-pointer" (click)="openFormField(task)" [ngClass]="task?.approveRule ? 'ms-2' : ''">
+                        <span class="icon-check-correct icon-20 text-primary"></span>
+                        <codx-label
+                          class="text-gray-500"
+                          name="progressDefault1 "
+                          [formModel]="grvMoreFunction"
+                          default="Trường tùy chỉnh"
+                        ></codx-label>
+                      </div>
                       <ng-container
                         [ngTemplateOutlet]="fileTemplate"
                         [ngTemplateOutletContext]="{ value: task }"
@@ -354,7 +378,7 @@
         {{ groupTask?.taskGroupName }}
       </div>
     </div>
-    <codx-mfunc
+    <!-- <codx-mfunc
       *ngIf="!isMoveStage && !isViewStep"
       [formModel]="grvMoreFunction"
       [isBookMark]="true"
@@ -363,7 +387,7 @@
       (clickMF)="clickMFTaskGroup($event, groupTask)"
       (changeDataMF)="changeDataMFGroupTask($event, groupTask)"
     >
-    </codx-mfunc>
+    </codx-mfunc> -->
   </div>
 </ng-template>
 
@@ -390,7 +414,7 @@
         </div>
       </div>
     </div>
-    <codx-mfunc
+    <!-- <codx-mfunc
       *ngIf="
         (!isMoveStage && !isViewStep && !isClose) ||
         (isClose && !data?.task?.isTaskDefault)
@@ -402,7 +426,7 @@
       (clickMF)="clickMFTask($event, data?.group, data?.task)"
       (changeDataMF)="changeDataMFTask($event, data?.task, data?.group)"
     >
-    </codx-mfunc>
+    </codx-mfunc> -->
   </div>
 </ng-template>
 
@@ -632,7 +656,7 @@
       <div>
         <codx-label
           *ngIf="dataTooltipDay?.actualEnd"
-          class="label-colon text-gray-600 codx-textlabel"
+          class="label-colon text-gray-600 codx-textlabel"popupApprover
           fiedName="actualEnd"
           [formModel]="grvMoreFunction"
           [setRequire]="false"
@@ -651,9 +675,28 @@
 </ng-template>
 
 <ng-template #popupApprover>
-  <div>
-    thuan
-  </div>
+  <div class="p-3">
+    <div class="d-flex justify-content-between">
+      <codx-label
+        class="h3"
+        [formModel]="grvMoreFunction"
+        [default]="'Các bước xét duyệt'"
+      ></codx-label>
+      <span
+        class="icon-close icon-18 cursor-pointer"
+        (click)="approverDialog.close()"
+      ></span>
+    </div>
+    thuận
+    {{taskApprover?.approveRule}}
+    <div>
+      <codx-view-approve
+       *ngIf="taskApprover?.approveRule"
+       [categoryID]="taskApprover?.recID"
+       [change]="taskApprover"
+       ></codx-view-approve>
+    </div>
+  </div> 
 </ng-template>
 <!-- <codx-vll
       *ngIf="data?.group && !isMoveStage && !isViewStep"

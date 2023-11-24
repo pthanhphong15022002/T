@@ -13,7 +13,7 @@
 </div>
 <ng-template #body>
     <ng-container *ngIf="formModel">
-        <codx-view2
+        <lib-codx-view-ws
             #codxview2
             service="WP"
             [entityName]="formModel?.entityName"
@@ -24,7 +24,7 @@
             [tmpItem]="tmp"
             (btnClick)="addClick($event)"
         >
-        </codx-view2>
+        </lib-codx-view-ws>
     </ng-container>
 </ng-template>
 

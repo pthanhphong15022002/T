@@ -428,7 +428,9 @@
                   : 'DP002'
               "
               (valueChange)="valueChange($event)"
-              [disabled]="action == 'edit' || systemProcess == '1' || systemProcess == '2'"
+              [disabled]="
+                action == 'edit' || systemProcess == '1' || systemProcess == '2'
+              "
               [placeholder]="gridViewSetup['ApplyFor']?.description"
             >
             </codx-input>
@@ -818,7 +820,10 @@
                   {{ i + 1 }}
                 </div>
                 <div class="text-gray-700 mt-3">
-                  {{ item?.stepName ?? (item?.stepType | vll : "ES002" : "text" | async ) }}
+                  {{
+                    item?.stepName ??
+                      (item?.stepType | vll : "ES002" : "text" | async)
+                  }}
                 </div>
               </div>
             </ng-container>
@@ -840,7 +845,10 @@
       <ng-template #popupViewApproverStep>
         <div class>
           <div class="text-gray-600 fw-bold">
-            {{ viewApproverStep?.stepName ?? (viewApproverStep?.stepType | vll : "ES002" : "text" | async ) }}
+            {{
+              viewApproverStep?.stepName ??
+                (viewApproverStep?.stepType | vll : "ES002" : "text" | async)
+            }}
           </div>
           <div class="d-flex flex-wrap">
             <ng-container *ngFor="let approver of viewApproverStep.approvers">
@@ -848,12 +856,41 @@
                 class="border border-1 border-gray-300 rounded min-w-250px mw-250px me-4 mb-2"
               >
                 <codx-temp-full
-                class="p-1"
-                [imageId]=" approver?.roleType =='U' ? approver?.approver : approver?.userID" [imageObjType]="'AD_Users'" [imageWidth]="30"
-                [title]="approver?.userName ? approver?.userName : approver?.name ? approver?.name : approver?.approver ? (approver?.approver | vll : 'ES014' : 'text' | async) : (approver?.roleType | vll : 'ES014' : 'text' | async)"
-                [subTitle]="approver?.position ? approver?.position: approver?.roleType | vll : 'ES014' : 'text' | async"
-                [imageSrc]="(approver?.roleType !='U' && !approver?.userID) || approver?.roleType =='PA' ? './assets/themes/sys/default/img/' + (approver?.icon ? approver?.icon : 'share_default.svg') : null"
-                [imgCss]="(approver?.roleType !='U' && !approver?.userID) || approver?.roleType =='PA' ? 'w-30px p-2 me-3 user-mini-icon' :'w-35px me-3'"
+                  class="p-1"
+                  [imageId]="
+                    approver?.roleType == 'U'
+                      ? approver?.approver
+                      : approver?.userID
+                  "
+                  [imageObjType]="'AD_Users'"
+                  [imageWidth]="30"
+                  [title]="
+                    approver?.userName
+                      ? approver?.userName
+                      : approver?.name
+                      ? approver?.name
+                      : approver?.approver
+                      ? (approver?.approver | vll : 'ES014' : 'text' | async)
+                      : (approver?.roleType | vll : 'ES014' : 'text' | async)
+                  "
+                  [subTitle]="
+                    approver?.position
+                      ? approver?.position
+                      : (approver?.roleType | vll : 'ES014' : 'text' | async)
+                  "
+                  [imageSrc]="
+                    (approver?.roleType != 'U' && !approver?.userID) ||
+                    approver?.roleType == 'PA'
+                      ? './assets/themes/sys/default/img/' +
+                        (approver?.icon ? approver?.icon : 'share_default.svg')
+                      : null
+                  "
+                  [imgCss]="
+                    (approver?.roleType != 'U' && !approver?.userID) ||
+                    approver?.roleType == 'PA'
+                      ? 'w-30px p-2 me-3 user-mini-icon'
+                      : 'w-35px me-3'
+                  "
                 >
                 </codx-temp-full>
 
@@ -1014,7 +1051,10 @@
                 field="autoNameTabFields"
                 type="text"
                 [crrValue]="process?.autoNameTabFields ?? null"
-                [placeholder]="gridViewSetup?.AutoNameTabFields?.description ?? gridViewSetup?.AutoNameTabFields?.headerText"
+                [placeholder]="
+                  gridViewSetup?.AutoNameTabFields?.description ??
+                  gridViewSetup?.AutoNameTabFields?.headerText
+                "
                 (valueChange)="valueChange($event)"
               >
               </codx-input>
@@ -1406,6 +1446,7 @@
     type="inline"
     allowMultiFile="0"
     [formModel]="dialog.formModel"
+    [functionID]="funcID"
     allowExtensions=".jpg,.png"
     [isSaveSelected]="0"
     (fileAdded)="fileImgAdded($event)"
@@ -2536,6 +2577,7 @@
                             allowMultiFile="1"
                             referType="source"
                             [formModel]="dialog.formModel"
+                            [functionID]="funcID"
                             displayThumb="full"
                           >
                           </codx-attachment>

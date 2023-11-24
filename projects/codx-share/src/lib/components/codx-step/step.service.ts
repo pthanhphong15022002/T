@@ -638,10 +638,11 @@ export class StepService {
     );
   }
 
-  async openPopupContract(action, type, projectID?, contract?) {
+  async openPopupContract(action, type,recIDContract?, projectID?, contract?) {
     let data = {
       projectID,
       action,
+      recIDContract,
       contract: contract || null,
       type,
     };
@@ -657,7 +658,7 @@ export class StepService {
     option.zIndex = 1001;
     // option.DataService = this.view.dataService;
     option.FormModel = formModel;
-    
+    await firstValueFrom(this.cache.gridViewSetup('CMContracts','grvCMContracts'));
     let popupContract = this.callFunc.openSide(
       AddContractsComponent,
       data,

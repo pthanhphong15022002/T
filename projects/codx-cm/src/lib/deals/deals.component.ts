@@ -427,9 +427,7 @@ export class DealsComponent
     let isOwner = (eventItem, data) => {
       eventItem.disabled =
         data?.alloweStatus == '1'
-          ? !['1', '2', '15'].includes(data.status) ||
-            data.closed ||
-            ['1', '0'].includes(data.status)
+          ? !['1', '2', '15'].includes(data.status) || data.closed
           : true;
     };
     let isConfirmOrRefuse = (eventItem, data) => {
@@ -1079,7 +1077,7 @@ export class DealsComponent
       applyFor: '1',
       titleAction: this.titleAction,
       owner: data.owner,
-      startControl: data.steps.startControl,
+      //startControl: data.steps.startControl,
       applyProcess: true,
       buid: data.buid,
     };
@@ -1160,8 +1158,8 @@ export class DealsComponent
       functionModule: this.functionModule,
       currencyIDDefault: this.currencyIDDefault,
       exchangeRateDefault: this.exchangeRateDefault,
-      categoryCustomer:
-        action === 'add' ? '' : this.dataSelected?.categoryCustomer,
+      customerCategory:
+        action === 'add' ? '' : this.dataSelected?.customerCategory,
     };
     let dialogCustomDeal = this.callfc.openSide(
       PopupAddDealComponent,
@@ -1207,7 +1205,7 @@ export class DealsComponent
           formMD: formMD,
           titleAction: this.formatTitleMore(this.titleAction),
           gridViewSetup: this.gridViewSetup,
-          categoryCustomer: this.dataSelected?.categoryCustomer,
+          customerCategory: this.dataSelected?.customerCategory,
         };
         let dialogCustomDeal = this.callfc.openSide(
           PopupAddDealComponent,
@@ -2025,12 +2023,14 @@ export class DealsComponent
       )
       .subscribe((str) => {
         if (str && str?.length > 0) {
-          let datas = str[1];
-          if (datas && datas.includes('[{')) datas = datas.substring(2);
-          let fix = str[0];
-          fix = fix.substring(1, fix.length - 1);
-          let dataSource = '[{ ' + fix + ',' + datas;
-          // let dataSource = '[' + str + ']';
+          let dataSource = '[' + str[0] + ']';
+          if (str[1]) {
+            let datas = str[1];
+            if (datas && datas.includes('[{')) datas = datas.substring(2);
+            let fix = str[0];
+            fix = fix.substring(1, fix.length - 1);
+            dataSource = '[{ ' + fix + ',' + datas;
+          }
           var customData = {
             refID: data.processID,
             refType: 'DP_Processes',

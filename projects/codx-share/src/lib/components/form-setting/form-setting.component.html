@@ -42,8 +42,8 @@
                           style="width: 90%"
                           class="d-flex align-items-center justify-content-start"
                         >
-                          <span class="me-2" [ngClass]="data.largeIcon" [ngStyle]="{'color': data.color ? data.color : '#000'}" *ngIf="data.largeIcon"></span>
-                          <img class="w-20px h-20px me-2" [src]="data.smallIcon" *ngIf="data.smallIcon && !data.largeIcon">
+                          <span class="me-2" [ngClass]="data.largeIcon" [ngStyle]="{'color': data.color ? data.color : '#000'}" *ngIf="data.largeIcon && !data.smallIcon"></span>
+                          <img class="w-20px h-20px me-2" [src]="data.smallIcon" *ngIf="data.smallIcon">
                           <span class="text-dark fs-6 text-hover-primary">{{
                             data.customName
                           }}</span>

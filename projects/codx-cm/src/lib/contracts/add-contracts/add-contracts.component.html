@@ -68,13 +68,13 @@
     <div class="col-6">
       <div class="form-group">
         <codx-label
-          [formModel]="dialog.formModel"
+          [formModel]="dialog?.formModel"
           fiedName="contractID"
           default="Mã hợp đồng"
         >
         </codx-label>
         <codx-input
-          [formModel]="dialog.formModel"
+          [formModel]="dialog?.formModel"
           field="contractID"
           type="text"
           [crrValue]="contracts?.contractID"
@@ -87,7 +87,7 @@
     <div class="col-6">
       <div class="form-group">
         <codx-label
-          [formModel]="dialog.formModel"
+          [formModel]="dialog?.formModel"
           fiedName="contractDate"
           default="Ngày tạo hợp đồng"
         ></codx-label>
@@ -104,12 +104,12 @@
   <div class="row form-group">
     <div class="col-6">
       <codx-label
-        [formModel]="dialog.formModel"
+        [formModel]="dialog?.formModel"
         fiedName="contractType"
         default="Loại hợp đồng"
       ></codx-label>
       <codx-input
-        [formModel]="dialog.formModel"
+        [formModel]="dialog?.formModel"
         field="contractType"
         [crrValue]="contracts?.contractType"
         (valueChange)="valueChangeCombobox($event)"
@@ -118,12 +118,12 @@
     </div>
     <div class="col-6">
       <codx-label
-        [formModel]="dialog.formModel"
+        [formModel]="dialog?.formModel"
         fiedName="businessLineID"
         default="Dòng sản phẩm"
       ></codx-label>
       <codx-input
-        [formModel]="dialog.formModel"
+        [formModel]="dialog?.formModel"
         field="businessLineID"
         [crrValue]="contracts?.businessLineID"
         (valueChange)="valueChangeCombobox($event)"
@@ -134,12 +134,12 @@
 
   <div class="row form-group">
     <codx-label
-      [formModel]="dialog.formModel"
+      [formModel]="dialog?.formModel"
       fiedName="contractName"
       default="Tên hợp đồng"
     ></codx-label>
     <codx-input
-      [formModel]="dialog.formModel"
+      [formModel]="dialog?.formModel"
       field="contractName"
       type="text"
       [crrValue]="contracts?.contractName"
@@ -151,14 +151,14 @@
   <div class="row form-group">
     <div>
       <codx-label
-        [formModel]="dialog.formModel"
+        [formModel]="dialog?.formModel"
         fiedName="customerID"
         default="Khách hàng"
       ></codx-label>
     </div>
     <div class>
       <codx-input
-        [formModel]="dialog.formModel"
+        [formModel]="dialog?.formModel"
         field="customerID"
         type="combobox"
         (valueChange)="valueChangeCombobox($event)"
@@ -172,21 +172,21 @@
   <div class="row form-group">
     <div class="col-6">
       <codx-label
-        [formModel]="dialog.formModel"
+        [formModel]="dialog?.formModel"
         fiedName="ContactID"
         default="Người đại diện"
       ></codx-label>
       <codx-input
-        [formModel]="dialog.formModel"
+        [formModel]="dialog?.formModel"
         field="ContactID"
         (valueChange)="valueChangeCombobox($event)"
-        [crrValue]="contracts?.ContactID"
+        [crrValue]="contracts?.contactID"
       >
       </codx-input>
     </div>
     <div class="col-6">
       <codx-label
-        [formModel]="dialog.formModel"
+        [formModel]="dialog?.formModel"
         fiedName="owner"
         default="Người phụ trách"
       ></codx-label>
@@ -202,7 +202,7 @@
       <div [ngClass]="contracts?.applyProcess ? 'd-none' :''">
         <codx-input
           field="owner"
-          [formModel]="dialog.formModel"
+          [formModel]="dialog?.formModel"
           (valueChange)="valueChangeOwner($event)"
           [crrValue]="contracts?.owner"
         >
@@ -214,12 +214,12 @@
   <div class="row form-group">
     <div class="col-6">
       <codx-label
-        [formModel]="dialog.formModel"
+        [formModel]="dialog?.formModel"
         fiedName="area"
         default="Diện tích thuê"
       ></codx-label>
       <codx-input
-        [formModel]="dialog.formModel"
+        [formModel]="dialog?.formModel"
         field="area"
         [crrValue]="contracts?.area"
         (valueChange)="valueChangeText($event)"
@@ -228,12 +228,12 @@
     </div>
     <div class="col-6">
       <codx-label
-        [formModel]="dialog.formModel"
+        [formModel]="dialog?.formModel"
         fiedName="assetID"
         default="Ví trí thuê"
       ></codx-label>
       <codx-input
-        [formModel]="dialog.formModel"
+        [formModel]="dialog?.formModel"
         field="assetID"
         [crrValue]="contracts?.assetID"
         (valueChange)="valueChangeText($event)"
@@ -244,12 +244,12 @@
 
   <div class="row form-group">
     <codx-label
-      [formModel]="dialog.formModel"
+      [formModel]="dialog?.formModel"
       fiedName="purpose"
       default="Mục đích thuê"
     ></codx-label>
     <codx-input
-      [formModel]="dialog.formModel"
+      [formModel]="dialog?.formModel"
       field="purpose"
       [crrValue]="contracts?.purpose"
       (valueChange)="valueChangeText($event)"
@@ -260,12 +260,12 @@
   <div class="row form-group">
     <div class="col-6">
       <codx-label
-        [formModel]="dialog.formModel"
+        [formModel]="dialog?.formModel"
         fiedName="contractAmt"
         default="Giá trị hợp đồng"
       ></codx-label>
       <codx-input
-        [formModel]="dialog.formModel"
+        [formModel]="dialog?.formModel"
         field="contractAmt"
         [crrValue]="contracts?.contractAmt"
         (valueChange)="valueChangeText($event)"
@@ -274,12 +274,12 @@
     </div>
     <div class="col-6">
       <codx-label
-        [formModel]="dialog.formModel"
+        [formModel]="dialog?.formModel"
         fiedName="pmtMethodID"
         default="Phương thức thanh toán"
       ></codx-label>
       <codx-input
-        [formModel]="dialog.formModel"
+        [formModel]="dialog?.formModel"
         field="pmtMethodID"
         [crrValue]="contracts?.pmtMethodID"
         (valueChange)="valueChangeCombobox($event)"
@@ -291,12 +291,12 @@
   <div class="row form-group">
     <div class="col-6">
       <codx-label
-        [formModel]="dialog.formModel"
+        [formModel]="dialog?.formModel"
         fiedName="interval"
         default="Thời hạn hợp đồng"
       ></codx-label>
       <codx-input
-        [formModel]="dialog.formModel"
+        [formModel]="dialog?.formModel"
         field="interval"
         [crrValue]="contracts?.interval"
         (valueChange)="valueChangeCombobox($event)"
@@ -305,12 +305,12 @@
     </div>
     <div class="col-6">
       <codx-label
-        [formModel]="dialog.formModel"
+        [formModel]="dialog?.formModel"
         fiedName="disposalBefore"
         default="Gởi đề nghị thanh toàn hợp đồng"
       ></codx-label>
       <codx-input
-        [formModel]="dialog.formModel"
+        [formModel]="dialog?.formModel"
         field="disposalBefore"
         [crrValue]="contracts?.disposalBefore"
         (valueChange)="valueChangeText($event)"
@@ -323,7 +323,7 @@
     <div class="col-6">
       <div>
         <codx-label
-          [formModel]="dialog.formModel"
+          [formModel]="dialog?.formModel"
           fiedName="effectiveFrom"
           default="Ngày hiệu lực"
         ></codx-label>
@@ -341,7 +341,7 @@
     <div class="col-6">
       <div>
         <codx-label
-          [formModel]="dialog.formModel"
+          [formModel]="dialog?.formModel"
           fiedName="effectiveTo"
           default="Ngày hết hiệu lực"
         >
@@ -349,7 +349,6 @@
       </div>
       <div class="">
         <codx-input
-          [formModel]=""
           field="effectiveTo"
           type="datetime"
           [crrValue]="contracts?.effectiveTo"
@@ -364,13 +363,13 @@
 <ng-template #referenceTemp>
   <div class="row form-group">
     <codx-label
-      [formModel]="dialog.formModel"
+      [formModel]="dialog?.formModel"
       fiedName="dealID"
       default="Cơ hội"
     ></codx-label>
     <codx-input
       #inputDeal
-      [formModel]="dialog.formModel"
+      [formModel]="dialog?.formModel"
       field="dealID"
       [crrValue]="contracts?.dealID"
       (valueChange)="valueChangeCombobox($event)"
@@ -382,13 +381,13 @@
 
   <div class="row form-group">
     <codx-label
-      [formModel]="dialog.formModel"
+      [formModel]="dialog?.formModel"
       fiedName="quotationID"
       default="Báo giá"
     ></codx-label>
     <codx-input
       #inputQuotation
-      [formModel]="dialog.formModel"
+      [formModel]="dialog?.formModel"
       field="quotationID"
       [crrValue]="contracts?.quotationID"
       (valueChange)="valueChangeCombobox($event)"
@@ -403,14 +402,14 @@
     <div class="col-6">
       <div>
         <codx-label
-          [formModel]="dialog.formModel"
+          [formModel]="dialog?.formModel"
           fiedName="adjustYear"
           default="Số năm điều chỉnh tiền thuế"
         ></codx-label>
       </div>
       <div class>
         <codx-input
-          [formModel]="dialog.formModel"
+          [formModel]="dialog?.formModel"
           field="adjustYear"
           [crrValue]="contracts?.adjustYear"
           (valueChange)="valueChangeText($event)"
@@ -421,15 +420,14 @@
     <div class="col-6">
       <div>
         <codx-label
-          [formModel]="dialog.formModel"
+          [formModel]="dialog?.formModel"
           fiedName="adjustPercent"
           default="% điều chỉnh"
         ></codx-label>
       </div>
       <div class>
         <codx-input
-          #inputQuotation
-          [formModel]="dialog.formModel"
+          [formModel]="dialog?.formModel"
           field="adjustPercent"
           [crrValue]="contracts?.adjustPercent"
           (valueChange)="valueChangeText($event)"
@@ -441,7 +439,7 @@
   <div class="row form-group">
     <div>
       <codx-label
-        [formModel]="dialog.formModel"
+        [formModel]="dialog?.formModel"
         fiedName="note"
         default="Ghi chú"
       ></codx-label>
@@ -449,7 +447,7 @@
     <div class>
       <codx-input
         #inputQuotation
-        [formModel]="dialog.formModel"
+        [formModel]="dialog?.formModel"
         field="note"
         [crrValue]="contracts?.note"
         (valueChange)="valueChangeText($event)"
@@ -483,7 +481,7 @@
       </button>
       <codx-label
         class="fs-3 fw-bold"
-        [formModel]="dialog.formModel"
+        [formModel]="formModel"
         fiedName
         [default]="headerTest"
       ></codx-label>
@@ -495,7 +493,7 @@
         (click)="handleSaveContract()"
       >
         <codx-label
-          [formModel]="dialog.formModel"
+          [formModel]="formModel"
           fiedName
           default="Lưu"
         ></codx-label>
@@ -550,14 +548,14 @@
       <div class="row form-group">
         <div>
           <codx-label
-            [formModel]="dialog.formModel"
+            [formModel]="formModel"
             fiedName="customerID"
             default="Bên B"
           ></codx-label>
         </div>
         <div class>
           <codx-input
-            [formModel]="dialog.formModel"
+            [formModel]="formModel"
             field="customerID"
             type="combobox"
             (valueChange)="valueChangeCombobox($event)"
@@ -572,14 +570,14 @@
       <div class="row form-group">
         <div>
           <codx-label
-            [formModel]="dialog.formModel"
+            [formModel]="formModel"
             fiedName="contractName"
             default="Tên hợp đồng"
           ></codx-label>
         </div>
         <div class>
           <codx-input
-            [formModel]="dialog.formModel"
+            [formModel]="formModel"
             field="contractName"
             type="text"
             [crrValue]="contracts?.contractName"
@@ -592,7 +590,7 @@
         <div class="col-6">
           <div>
             <codx-label
-              [formModel]="dialog.formModel"
+              [formModel]="formModel"
               fiedName="dealID"
               default="Cơ hội"
             ></codx-label>
