@@ -1,4 +1,4 @@
-<codx-views class="ac-views" #view idField="recID" [views]="views" [button]="button" [moreFuncs]="moreFuncs"
+<codx-views class="ac-views" #view idField="recID" [views]="views" [button]="button"
   [entityName]="view.entityName" (buttonClick)="toolbarClick($event)"
   (changeDataMF)="changeMFDetail($event, itemSelected,'viewdetail')" (clickMF)="clickMoreFunction($event, itemSelected)"
   [predicates]="runmode == '1' ? '' : 'JournalNo=@0'" assemblyName="AC" className="PurchaseInvoicesBusiness"

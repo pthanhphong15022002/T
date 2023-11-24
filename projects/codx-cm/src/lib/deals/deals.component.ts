@@ -1077,7 +1077,7 @@ export class DealsComponent
       applyFor: '1',
       titleAction: this.titleAction,
       owner: data.owner,
-      startControl: data.steps.startControl,
+      //startControl: data.steps.startControl,
       applyProcess: true,
       buid: data.buid,
     };

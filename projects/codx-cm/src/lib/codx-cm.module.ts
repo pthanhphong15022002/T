@@ -42,8 +42,8 @@ import { DealDetailComponent } from './deals/deal-detail/deal-detail.component';
 import { TabDetailCustomComponent } from './deals/deal-detail/tab-detail-custom/tab-detail-custom.component';
 import { AddContractsComponent } from './contracts/add-contracts/add-contracts.component';
 import { ListContractsComponent } from './contracts/list-contracts/list-contracts.component';
-import { QuotationsLinesComponent } from './quotations-lines/quotations-lines.component';
-import { PopupAddQuotationsLinesComponent } from './quotations-lines/popup-add-quotations-lines/popup-add-quotations-lines.component';
+import { QuotationsLinesComponent } from './quotations/quotations-lines/quotations-lines.component';
+import { PopupAddQuotationsLinesComponent } from './quotations/quotations-lines/popup-add-quotations-lines/popup-add-quotations-lines.component';
 import { CodxListContactsComponent } from './cmcustomer/cmcustomer-detail/codx-list-contacts/codx-list-contacts.component';
 import { CodxListDealsComponent } from './cmcustomer/cmcustomer-detail/codx-list-deals/codx-list-deals.component';
 import { CodxTabDealcompetitorsComponent } from './deals/deal-detail/codx-tab-dealcompetitors/codx-tab-dealcompetitors.component';
@@ -118,7 +118,6 @@ import { ViewDealDetailComponent } from './deals/view-deal-detail/view-deal-deta
 import { ViewLeadDetailComponent } from './leads/view-lead-detail/view-lead-detail.component';
 import { CustomIconPipe } from './pipes/customIcon.pipe';
 import { FormatTargetPipe } from './pipes/format-target.pipe';
-import { PopupAddContractsComponent } from './contracts/popup-add-contracts/popup-add-contracts.component';
 import { FormatStatusPipe } from './pipes/format-status.pipe';
 
 export const routes: Routes = [
@@ -285,7 +284,6 @@ const T_Component: Type<any>[] = [
   ViewCalendarComponent,
   ProgressSliderComponent,
   ViewHistoryCustomerComponent,
-  PopupAddContractsComponent,
 ];
 
 @NgModule({
@@ -301,7 +299,7 @@ const T_Component: Type<any>[] = [
     ViewLeadDetailComponent,
     CustomIconPipe,
     FormatTargetPipe,
-    FormatStatusPipe
+    FormatStatusPipe,
   ],
   imports: [
     CodxCoreModule.forRoot({ environment }),

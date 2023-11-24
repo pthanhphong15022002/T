@@ -1466,19 +1466,21 @@ export class CodxShareService {
   }
 
   codxReleaseDynamic(
+    //Tham số bắt buộc
     module: string, //Tên service
-    data: any, //data nghiệp vụ gốc – thay cho việc truyền recID như trước: phục vụ cho việc xuất dữ liệu
-    category: any, //Phân loại tài liệu hiện hành - thay cho việc truyền processID như trước: phục vụ cho việc kiểm tra loại quy trình gửi duyệt và tích hợp với form trình kí số.
+    data: any, //data nghiệp vụ gốc 
+    category: any, //Phân loại tài liệu hiện hành (ES_Categories) phục vụ cho việc kiểm tra loại quy trình gửi duyệt và tích hợp với form trình kí số.
     entityName: string, //EntityName nghiệp vụ gốc
     funcID: string, //FunctionID nghiệp vụ gốc
     title: string, //Tiêu đề (truyền kiểu chuỗi thường)
     releaseCallback: (response: ResponseModel, component: any) => void, //Hàm xử lí kết quả trả về
+    //Tham số không bắt buộc
     userID: string = null, //Mã người dùng (ko bắt buộc - nếu ko có mặc định lấy UserID hiện hành)
     approvers: Array<Approver> = null, //Danh sách userID của RO hoặc người duyệt chỉ định
     processType: string = null, //EntityName tùy chỉnh (ko bắt buộc - xử lí cho trường hợp đặc biệt)
     releaseOnly: boolean = false, //tham số xử lí tại module ES - chỉ gửi duyệt mà ko kiểm tra thiết lập
     curComponent: any = null, //biến this: tại component gọi hàm
-    exportData: ExportData = null, //biến lấy data export (funcID: Để lấy bộ EntityName,FormName,GridViewName; recID : Để lấy ra data cần Export)
+    exportData: ExportData = null, //biến lấy data export (funcID: Để lấy bộ EntityName, FormName, GridViewName; recID : Để lấy ra dữ liệu cần export ,data: data export lấy sẵn nếu có sẽ ưu tiên dùng thay cho việc dùng recID để đi lấy dữ liệu)
     customParam:string = null,//Json string chứa tham số tùy chỉnh
     ) {
     let approveProcess = new ApproveProcess();

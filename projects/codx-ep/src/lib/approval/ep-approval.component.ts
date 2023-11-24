@@ -99,7 +99,14 @@ export class EPApprovalComponent extends UIComponent {
     private notificationsService: NotificationsService
   ) {
     super(injector);
-    this.funcID = this.router.snapshot.params['funcID'];
+    
+  }
+
+  //---------------------------------------------------------------------------------//
+  //-----------------------------------Base Func-------------------------------------//
+  //---------------------------------------------------------------------------------//
+  onInit(): void {
+    this.funcID = this.funcID || this.router.snapshot.params['funcID'];
     this.queryParams = this.router.snapshot.queryParams;
     this.codxEpService.getFormModel(this.funcID).then((res) => {
       if (res) {
@@ -111,16 +118,11 @@ export class EPApprovalComponent extends UIComponent {
         this.crrEntityName= funcList?.entityName;
       }
     });
-  }
-
-  //---------------------------------------------------------------------------------//
-  //-----------------------------------Base Func-------------------------------------//
-  //---------------------------------------------------------------------------------//
-  onInit(): void {
     this.getBaseVariable();
     this.getCacheData();
   }
   ngAfterViewInit(): void {
+    
     this.getView();
     this.detectorRef.detectChanges();
   }
@@ -130,7 +132,7 @@ export class EPApprovalComponent extends UIComponent {
   //---------------------------------------------------------------------------------//
   getBaseVariable() {
     
-      this.funcID = this.activatedRoute.snapshot.params['funcID'];
+      //this.funcID = this.activatedRoute.snapshot.params['funcID'];
       this.cache.functionList(this.funcID).subscribe(funcList=>{
         if(funcList){
           this.crrEntityName= funcList?.entityName;

@@ -345,3 +345,10 @@ li {
    color: #0e9c25;
   }
 }
+.model-func{
+  margin-top: 3px;
+}
+.model-func:hover{
+  border-radius: 5px;
+  box-shadow: 0px -1px 5px 3px var(--primary-light) inset;
+}
