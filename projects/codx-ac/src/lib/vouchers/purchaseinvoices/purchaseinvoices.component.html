@@ -1,5 +1,5 @@
 <codx-views class="ac-views" #view idField="recID" [views]="views" [button]="button"
-  [entityName]="view.entityName" (buttonClick)="toolbarClick($event)"
+  [entityName]="view.entityName" (buttonClick)="toolbarClick($event)" [hideMoreFuncs]="!itemSelected"
   (changeDataMF)="changeMFDetail($event, itemSelected,'viewdetail')" (clickMF)="clickMoreFunction($event, itemSelected)"
   [predicates]="runmode == '1' ? '' : 'JournalNo=@0'" assemblyName="AC" className="PurchaseInvoicesBusiness"
   service="AC" method="GetDataAsync" idField="recID" [dataValues]="runmode == '1' ? '' : journalNo"

@@ -286,14 +286,9 @@ export class JournalV2Component extends UIComponent implements OnInit {
   }
 
   changeMF(event){
-    let array = ['SYS02','SYS03','SYS04'];
-    event.forEach(element => {
-      if (!(array.includes(element.functionID))) {
-        element.disabled = true;
-      }else{
-        if(element.functionID == 'SYS02' || element.functionID == 'SYS04') element.isbookmark = false;
-      }
-    })
+    if (event) {
+      this.acService.changeMFJournal(event); 
+    }
   }
 
   search(e) {
