@@ -181,7 +181,7 @@ export class CodxReportViewDetailComponent
           //   res.displayMode == '2' ||
           //   res.displayMode == '3' ||
           //   res.displayMode == '4'
-          // ) 
+          // )
           // {
 
           //   this.getReportPDF(res.recID);
@@ -329,8 +329,9 @@ export class CodxReportViewDetailComponent
 
   screenshot() {
     let recID = this.router.snapshot.params['funcID'];
+    if(!document.querySelector('iframe')) return;
     this.captureService
-      .getImage(document.body, true)
+      .getImage(document.querySelector('iframe'), true)
       .subscribe((imgBase64: string) => {
         this.api
           .execSv(
@@ -458,7 +459,7 @@ export class CodxReportViewDetailComponent
   }
 
   url: string = '';
-  getReportPDF(recID: string) 
+  getReportPDF(recID: string)
   {
     let sk =
       'sk=' +

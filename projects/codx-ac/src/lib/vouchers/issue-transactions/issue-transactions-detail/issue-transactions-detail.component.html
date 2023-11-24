@@ -129,16 +129,21 @@
           class="place-holder text-gray-600">{{gridViewSetup['ReasonID'].headerText}}</span>
       </div>
     </div>
-    <div class="d-flex justify-content-between flex-grow-1">
-      <div class="d-flex align-items-top mb-1">
-        <codx-label class="fw-bold label-colon text-nowrap" fiedName="Memo" [formModel]="formModel">
-        </codx-label>
-        <span *ngIf="itemSelected?.memo" class="text-gray-600">{{itemSelected?.memo}}</span>
+    <div class="d-flex align-items-top">
+      <codx-label class="fw-bold label-colon text-nowrap" fiedName="Memo" [formModel]="formModel">
+      </codx-label>
+      <div>
+        <span *ngIf="isShowMore" id="eleMemo" class="text-gray-600 line-clamp line-clamp-2">{{itemSelected?.memo}}</span>
+        <span *ngIf="isShowLess" class="text-gray-600 me-3">{{itemSelected?.memo}}</span>
         <span *ngIf="(itemSelected?.memo == '' || itemSelected?.memo == null) && gridViewSetup"
-          class="place-holder text-gray-600">{{gridViewSetup['Memo'].headerText}}</span>
+          class="place-holder text-gray-600 line-clamp line-clamp-1 me-3">{{gridViewSetup['Memo'].headerText}}</span>
+        <div *ngIf="isReadMore" class="align-items-top cursor-pointer">
+          <span *ngIf="isShowMore" (click)="onShowMoreLess('showmore')" class="text-primary fw-bold text-underline">Xem Thêm</span>
+          <span *ngIf="isShowLess" (click)="onShowMoreLess('showless')" class="text-primary fw-bold text-underline">Ẩn bớt</span>
+        </div>
       </div>
     </div>
-    <div class="card-add card-pur">
+    <div [ngClass]="isReadMore ? 'card-pur-more' : 'card-pur-less'">
       <ejs-tab>
         <e-tabitems>
           <!--Start tab Thông tin chi tiết -->

@@ -108,7 +108,7 @@
 </ng-template>
 
 <ng-template #column1Template let-data>
-  <div class="d-flex gap-5 p-2">
+  <div class="d-flex gap-5 p-3">
     <codx-img id="lImg" [imgSource]="
           !data.hasImage
             ? 'assets/themes/ac/default/img/' +
@@ -129,6 +129,7 @@
 </ng-template>
 
 <ng-template #column2Template let-data>
+  <div class="py-3">
   <div class="d-flex gap-2 mb-1">
     <div class="mw-45 text-truncate">
       <codx-label fiedName="drAcctControl" [formModel]="view.formModel"></codx-label>
@@ -216,6 +217,7 @@
           "></span>
     </div>
   </div>
+</div>
 </ng-template>
 
 <ng-template #column3Template let-data>

@@ -119,7 +119,12 @@
                   >
                   </codx-vll>
                 </ng-container>
-                <ng-container *ngIf="itemSelected.approveStatus">
+                <ng-container
+                  *ngIf="
+                    itemSelected.approveStatus &&
+                    itemSelected.approveStatus != '0'
+                  "
+                >
                   <codx-vll
                     [name]="vllApprove"
                     [field]="'ApproveStatus'"

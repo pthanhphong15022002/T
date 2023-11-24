@@ -96,7 +96,7 @@ export class IssueTransactionsComponent extends UIComponent {
   //#region Init
 
   onInit(): void {
-    //this.getJournal(); //? lấy data journal và các field ẩn từ sổ nhật kí
+    this.getJournal(); //? lấy data journal và các field ẩn từ sổ nhật kí
   }
 
   ngAfterViewInit() {
