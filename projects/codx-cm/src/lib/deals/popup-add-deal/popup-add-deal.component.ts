@@ -155,11 +155,12 @@ export class PopupAddDealComponent
   isLoading: boolean = false;
   isBlock: boolean = true;
   isviewCustomer: boolean = false;
+
   currencyIDOld: string;
   autoNameTabFields: string;
-
   bussineLineNameTmp: string = '';
   customerNameTmp: string = '';
+  shortNameTmp: string = '';
   constructor(
     private inject: Injector,
     private changeDetectorRef: ChangeDetectorRef,
@@ -323,13 +324,15 @@ export class PopupAddDealComponent
           this.deal.customerID = this.customerID;
           this.customerName = $event.component?.itemsSelected[0]?.CustomerName;
           this.customerNameTmp = this.customerName?.trim();
+
           this.deal.industries = $event.component?.itemsSelected[0]?.Industries;
           this.deal.shortName = $event.component?.itemsSelected[0]?.ShortName;
           this.deal.customerName = $event.component?.itemsSelected[0]?.CustomerName;
           this.deal.customerCategory = $event.component?.itemsSelected[0]?.Category;
+          this.shortNameTmp =  this.deal?.shortName?.trim();
 
           if (this.bussineLineNameTmp?.trim()) {
-            this.deal.dealName = this.customerNameTmp + ' mua '+  this.bussineLineNameTmp?.trim();
+            this.deal.dealName = (this.shortNameTmp ? this.shortNameTmp: this.customerNameTmp ) + ' mua '+  this.bussineLineNameTmp?.trim();
           }
           else if(!this.deal.dealName?.trim()) {
             this.deal.dealName = this.customerNameTmp;
@@ -738,7 +741,7 @@ export class PopupAddDealComponent
       this.deal.businessLineID = $event?.data;
       this.bussineLineNameTmp = $event?.component?.itemsSelected[0]?.BusinessLineName;
       if(this.customerNameTmp?.trim()) {
-         this.deal.dealName = this.customerNameTmp.trim() + ' mua ' + this.bussineLineNameTmp;
+         this.deal.dealName = (this.shortNameTmp ? this.shortNameTmp?.trim(): this.customerNameTmp?.trim() ) + ' mua ' + this.bussineLineNameTmp;
       }
       if (this.deal.businessLineID && this.action !== this.actionEdit) {
         if (

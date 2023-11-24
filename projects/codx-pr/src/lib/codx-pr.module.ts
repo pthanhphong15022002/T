@@ -20,6 +20,7 @@ import { ChartAllModule } from '@syncfusion/ej2-angular-charts';
 import { OverTimeComponent } from './over-time/over-time.component';
 import { PopupOverTimeComponent } from './over-time/popup-over-time/popup-over-time.component';
 import { ViewDetailOtComponent } from './over-time/view-detail-over-time/view-detail-ot.component';
+import { EmployeeKowdsComponent } from './employee-kowds/employee-kowds.component';
 
 export const routes: Routes = [
   {
@@ -30,6 +31,10 @@ export const routes: Routes = [
         path: 'TimeKeepingRequestOT/:funcID',
         component: OverTimeComponent,
       },
+      {
+        path: 'KowDs/:funcID',
+        component: EmployeeKowdsComponent,
+      },
     ],
   },
 ];
@@ -38,7 +43,8 @@ const T_Component: Type<any>[] = [
   LayoutComponent,
   OverTimeComponent,
   PopupOverTimeComponent,
-  ViewDetailOtComponent
+  ViewDetailOtComponent,
+  EmployeeKowdsComponent
 ];
 
 @NgModule({
@@ -57,7 +63,7 @@ const T_Component: Type<any>[] = [
     NgbModule,
   ],
   exports: [RouterModule],
-  declarations: [T_Component],
+  declarations: [T_Component, EmployeeKowdsComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class CodxPrModule {
