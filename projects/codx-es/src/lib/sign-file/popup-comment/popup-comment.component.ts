@@ -49,23 +49,27 @@ export class PopupCommentComponent extends UIComponent implements OnInit {
     this.formModel = this.data.formModel;
     this.funcControl = this.data?.approveControl;
     this.user = this.authStore.get();
+    
+  }
+
+  onInit(): void {
     this.cache
       .gridViewSetup(
-        this.data.formModel.formName,
-        this.data.formModel.gridViewName
+        // this.data.formModel.formName,
+        // this.data.formModel.gridViewName
+        "SignFiles","grvSignFiles"
       )
       .subscribe((grv) => {
         if (grv) {
           this.grvSetup = grv;
-          this.isAfterRender = true;
         }
+        this.title = this.data.title;
+        this.subTitle = this.data.subTitle;
+        this.controlName = this.mode != 2 ? 'RejectControl' : 'RedoControl';
+        this.isAfterRender = true;
+        this.detectorRef.detectChanges();
       });
-  }
-
-  onInit(): void {
-    this.title = this.data.title;
-    this.subTitle = this.data.subTitle;
-    this.controlName = this.mode != 2 ? 'RejectControl' : 'RedoControl';
+    
   }
 
   onSaveForm() {

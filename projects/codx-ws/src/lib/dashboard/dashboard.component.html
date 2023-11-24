@@ -1,6 +1,6 @@
 <ng-container *ngIf="listDashboard">
   <div class="mt-4 h-100">
-    <codx-view2
+    <lib-codx-view-ws
       [dataSource]="listDashboard"
       [tmpHeader]="tmpHeader"
       [tmpItem]="tmp"
@@ -8,7 +8,7 @@
       [bodyCss]="'px-4 pb-5'"
       [isAdd]="false"
     >
-    </codx-view2>
+    </lib-codx-view-ws>
   </div>
 </ng-container>
 <ng-template #tmpHeader>

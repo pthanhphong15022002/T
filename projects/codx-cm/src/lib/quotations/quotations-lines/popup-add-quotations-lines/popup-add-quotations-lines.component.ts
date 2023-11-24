@@ -8,7 +8,7 @@ import {
   DialogRef,
   NotificationsService,
 } from 'codx-core';
-import { CodxCmService } from '../../codx-cm.service';
+import { CodxCmService } from '../../../codx-cm.service';
 
 @Component({
   selector: 'lib-popup-add-quotations-lines',

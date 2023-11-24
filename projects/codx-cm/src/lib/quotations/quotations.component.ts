@@ -330,7 +330,7 @@ export class QuotationsComponent extends UIComponent implements OnInit {
             break;
           //huy duyet
           case 'CM0202_2':
-            if (data.status != '1' || this.applyApprover != '1') {
+            if (data.approveStatus != '3' || this.applyApprover != '1') {
               res.disabled = true;
             }
             break;
@@ -665,11 +665,8 @@ export class QuotationsComponent extends UIComponent implements OnInit {
           return;
         }
 
-        if (res.eSign) {
-          //kys soos
-        } else {
-          this.release(dt, res);
-        }
+        //ko phân biệt eSign
+        this.release(dt, res);
       });
   }
   //Gửi duyệt
@@ -714,18 +711,20 @@ export class QuotationsComponent extends UIComponent implements OnInit {
     if (res?.msgCodeError) this.notiService.notify(res?.msgCodeError);
     else {
       this.itemSelected.approveStatus = res?.returnStatus;
-      this.itemSelected.status = res?.returnStatus;
+      switch (this.itemSelected.approveStatus) {
+        case '5':
+          this.itemSelected.status = '2';
+          break;
+        case '4':
+        case '2':
+          this.itemSelected.status = '3';
+          break;
+        case '3':
+          this.itemSelected.status = '1';
+          break;
+      }
       this.view.dataService.update(this.itemSelected).subscribe();
       this.notiService.notifyCode('ES007');
-      // this.codxCmService
-      //   .getOneObject(this.itemSelected.recID, 'QuotationsBusiness')
-      //   .subscribe((q) => {
-      //     if (q) {
-      //       this.itemSelected = q;
-      //       this.view.dataService.update(this.itemSelected).subscribe();
-      //     }
-      //     this.notiService.notifyCode('ES007');
-      //   });
     }
   }
 
