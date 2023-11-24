@@ -665,11 +665,8 @@ export class QuotationsComponent extends UIComponent implements OnInit {
           return;
         }
 
-        if (res.eSign) {
-          //kys soos
-        } else {
-          this.release(dt, res);
-        }
+        //ko phân biệt eSign
+        this.release(dt, res);
       });
   }
   //Gửi duyệt

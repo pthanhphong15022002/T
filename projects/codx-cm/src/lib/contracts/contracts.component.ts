@@ -662,15 +662,13 @@ export class ContractsComponent extends UIComponent {
           this.notiService.notifyCode('ES028');
           return;
         }
-        if (category.eSign) {
-          //kys soos
-        } else {
-          this.release(data, category);
-        }
+
+        //ko phân biệt eSign
+        this.release(data, category);
       });
   }
   //Gửi duyệt
-  release(data: any, category: any) {
+  release(data: any, category: any, exportData = null) {
     //duyet moi
     this.codxShareService.codxReleaseDynamic(
       this.view.service,
@@ -679,7 +677,13 @@ export class ContractsComponent extends UIComponent {
       this.view.formModel.entityName,
       this.view.formModel.funcID,
       data?.title,
-      this.releaseCallback.bind(this)
+      this.releaseCallback.bind(this),
+      null,
+      null,
+      null,
+      null,
+      null,
+      exportData
     );
   }
   //call Back
