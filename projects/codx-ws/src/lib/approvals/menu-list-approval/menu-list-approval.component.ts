@@ -37,7 +37,9 @@ export class MenuListApprovalComponent implements OnInit{
   getParentGroup()
   {
     var parentG = this.codxWsService.loadParentGroup(this.funcID);
-    if(isObservable(parentG)) parentG.subscribe(item=>{if(item) this.listParentGroup = item})
+    if(isObservable(parentG)) parentG.subscribe(item=>{
+      if(item) this.listParentGroup = item
+    })
     else this.listParentGroup = parentG
   }
 

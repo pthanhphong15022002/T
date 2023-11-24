@@ -27,7 +27,8 @@ import { EditSettingsModel } from '@syncfusion/ej2-angular-grids';
 import { TabComponent } from '@syncfusion/ej2-angular-navigations';
 import { CM_Quotations, CM_QuotationsLines } from '../../models/cm_model';
 import { CodxCmService } from '../../codx-cm.service';
-import { QuotationsLinesComponent } from '../../quotations-lines/quotations-lines.component';
+import { QuotationsLinesComponent } from '../quotations-lines/quotations-lines.component';
+
 @Component({
   selector: 'lib-popup-add-quotations',
   templateUrl: './popup-add-quotations.component.html',

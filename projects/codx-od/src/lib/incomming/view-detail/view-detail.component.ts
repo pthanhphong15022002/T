@@ -143,6 +143,13 @@ export class ViewDetailComponent
     //this.getGridViewSetup(this.funcID);
     this.userID = this.authStore.get().userID;
     if(this.codxService.asideMode == "2") this.hideMF = true;
+
+    if(this.recID)
+    {
+      this.getGridViewSetup(this.funcID);
+      this.getDtDis(this.recID)
+      this.getPermission(this.recID);
+    }
   }
 
   ngAfterViewInit(): void {
@@ -174,7 +181,8 @@ export class ViewDetailComponent
     if (
       changes?.dataItem &&
       !changes?.dataItem?.firstChange &&
-      changes?.dataItem?.currentValue != changes?.dataItem?.previousValue
+      changes?.dataItem?.currentValue != changes?.dataItem?.previousValue && 
+      !this.recID
     )
     {
       this.dataItem = changes?.dataItem?.currentValue;
