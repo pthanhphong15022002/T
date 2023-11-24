@@ -32,6 +32,7 @@ import { EPCONST } from 'projects/codx-ep/src/lib/codx-ep.constant';
 import { CodxShareService } from '../../../codx-share.service';
 import { Approver, ResponseModel } from '../../../models/ApproveProcess.model';
 import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
+import { CodxCommonService } from 'projects/codx-common/src/lib/codx-common.service';
 const _addMF = EPCONST.MFUNCID.Add;
 const _copyMF = EPCONST.MFUNCID.Copy;
 const _editMF = EPCONST.MFUNCID.Edit;
@@ -173,6 +174,7 @@ export class CodxAddBookingRoomComponent extends UIComponent {
     private notificationsService: NotificationsService,
     private codxBookingService: CodxBookingService,
     private codxShareService: CodxShareService,
+    private codxComonService: CodxCommonService,
     private authService: AuthService,
     private cacheService: CacheService,
     private changeDetectorRef: ChangeDetectorRef,
@@ -1537,7 +1539,7 @@ export class CodxAddBookingRoomComponent extends UIComponent {
       this.codxBookingService
         .getProcessByCategoryID(this.categoryID)
         .subscribe((category: any) => {
-          this.codxShareService.codxReleaseDynamic(
+          this.codxComonService.codxReleaseDynamic(
             'EP',
             this.returnData,
             category,
