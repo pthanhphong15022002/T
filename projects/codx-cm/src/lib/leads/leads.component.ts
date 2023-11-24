@@ -728,7 +728,7 @@ export class LeadsComponent
       CM0205_14: () => this.updateProcess(data, true),
       CM0205_15: () => this.updateProcess(data, false),
       CM0205_16: () => this.popupPermissions(data),
-      //SYS002: () => this.exportFiles(e, data),
+      SYS002: () => this.exportTemplet(e, data),
       CM0205_17: () => this.cancelApprover(data),
       CM0205_18: () => this.updateAutoAddress(lst),
     };
@@ -1723,7 +1723,7 @@ export class LeadsComponent
               ...JSON.parse(dts),
             ]);
           } else formatDatas = dts;
-          debugger;
+
           customData = {
             refID: data.processID,
             refType: 'DP_Processes',
@@ -1895,5 +1895,49 @@ export class LeadsComponent
       this.funcIDCrr.customName.charAt(0).toLocaleLowerCase() +
       this.funcIDCrr.customName.slice(1)
     );
+  }
+
+  //Export----------------------------------------------------//
+  exportTemplet(e, data) {
+    this.api
+      .execSv<any>(
+        'CM',
+        'CM',
+        'LeadsBusiness',
+        'GetDataSourceExportAsync',
+        data.recID
+      )
+      .subscribe((str) => {
+        if (str && str?.length > 0) {
+          let dataSource = '[' + str[0] + ']';
+          if (str[1]) {
+            let datas = str[1];
+            if (datas && datas.includes('[{')) datas = datas.substring(2);
+            let fix = str[0];
+            fix = fix.substring(1, fix.length - 1);
+            dataSource = '[{ ' + fix + ',' + datas;
+          }
+
+          let customData = {
+            refID: data.recID,
+            refType: this.view.entityName,
+            dataSource: dataSource,
+          };
+          if (data?.refID && data.applyProcess) {
+            customData.refID = data.processID;
+            customData.refType = 'DP_Processes';
+          }
+          this.codxShareService.defaultMoreFunc(
+            e,
+            data,
+            this.afterSave,
+            this.view.formModel,
+            this.view.dataService,
+            this,
+            customData
+          );
+          this.detectorRef.detectChanges();
+        }
+      });
   }
 }
