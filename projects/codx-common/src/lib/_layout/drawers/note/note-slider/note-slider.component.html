@@ -67,8 +67,9 @@
                             </div>
                         </div>
                         <div class="note-date format-date d-flex justify-content-end">
-                            <span #createdOn class=" text-primary" [innerHTML]="item.createdOn | formatvalue: listview.formModel : 'createdOn' : createdOn | async"></span>
-                        </div>
+                            <span #createdOn class=" text-primary" [innerHTML]="item.createdOn | fmDT: 'dmy'"></span>
+                            <!-- <span #createdOn class=" text-primary" [innerHTML]="item.createdOn | formatvalue: listview.formModel : 'createdOn' : createdOn | async"></span>-->
+                        </div> 
 
                     </div>
                     <div class="py-3 px-5" *ngIf="item.noteType == 'check' || item.noteType == 'list'">

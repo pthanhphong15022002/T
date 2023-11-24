@@ -24,6 +24,7 @@ export class CampaignsDetailComponent implements OnInit {
   @Input() dataService: CRUDService;
   @Input() formModel: any;
   @Input() gridViewSetup: any;
+  @Input() asideMode: string;
   @Input() isDoubleClick: boolean = false;
   @Output() clickMoreFunc = new EventEmitter<any>();
 
@@ -50,14 +51,11 @@ export class CampaignsDetailComponent implements OnInit {
     },
     { name: 'Task', textDefault: 'Công việc', isActive: false, template: null },
   ];
-  asideMode: string;
 
   constructor(
     private detectorRef: ChangeDetectorRef,
     private elementRef: ElementRef,
-    private codxService: CodxService
   ) {
-    this.asideMode = codxService.asideMode;
 
   }
   ngOnInit(): void {}

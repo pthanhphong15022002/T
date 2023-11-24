@@ -102,6 +102,7 @@ export class CmCustomerComponent
   user: any;
   isAdmin: boolean = false;
   // const set value
+  asideMode: string;
   readonly btnAdd: string = 'btnAdd';
   constructor(
     private inject: Injector,
@@ -172,6 +173,8 @@ export class CmCustomerComponent
   }
 
   async onInit() {
+    this.asideMode = this.codxService.asideMode;
+
     this.button = [
       {
         id: this.btnAdd,
@@ -383,7 +386,6 @@ export class CmCustomerComponent
     if (e != null && data != null) {
       e.forEach((res) => {
         if (this.dataSelected != null) {
-          if (type == 11) res.isbookmark = false;
           if (data?.status != '99') {
             switch (res.functionID) {
               case 'SYS03':

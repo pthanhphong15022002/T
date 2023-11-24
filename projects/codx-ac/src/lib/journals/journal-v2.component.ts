@@ -61,6 +61,7 @@ export class JournalV2Component extends UIComponent implements OnInit {
     id: 'btnAdd',
   }];
   optionSidebar: SidebarModel = new SidebarModel();
+  itemSelected: any;
   private destroy$ = new Subject<void>(); //? list observable hủy các subscribe api
   constructor(
     inject: Injector,
@@ -228,11 +229,13 @@ export class JournalV2Component extends UIComponent implements OnInit {
   //#region Event
   viewChanged(view) {
     if(view && view.type == this.viewActive) return;
+    this.itemSelected = undefined;
     this.viewActive = view.type;
     this.subViews?.filter(function (v) {
       if (v.type == view.type) v.active = true;
       else v.active = false;
     });
+    this.detectorRef.detectChanges();
   }
 
   clickMF(e, data) {
@@ -253,7 +256,7 @@ export class JournalV2Component extends UIComponent implements OnInit {
     if(field === 'mainFilterValue' && this.mainFilterValue == value) return;
     if(field === 'subFilterValue' && this.subFilterValue == value) return;
     this[field] = value;
-
+    this.itemSelected = undefined;
     let journalTypes: string = '';
     switch (this.subFilterValue) {
       case '1':
@@ -280,17 +283,13 @@ export class JournalV2Component extends UIComponent implements OnInit {
     this.view.dataService.setPredicates(predicates, dataValues, () => {
       this.grid?.refresh();
     });
+    this.detectorRef.detectChanges();
   }
 
   changeMF(event){
-    let array = ['SYS02','SYS03','SYS04'];
-    event.forEach(element => {
-      if (!(array.includes(element.functionID))) {
-        element.disabled = true;
-      }else{
-        element.isbookmark = false;
-      }
-    })
+    if (event) {
+      this.acService.changeMFJournal(event); 
+    }
   }
 
   search(e) {
@@ -313,6 +312,11 @@ export class JournalV2Component extends UIComponent implements OnInit {
         this.route.navigate([urlRedirect]);
       }
     });
+  }
+
+  onDoubleClick(event){
+    let data = event?.rowData;
+    this.dbClick(data);
   }
 
   toolbarClick(event) {
@@ -530,6 +534,32 @@ export class JournalV2Component extends UIComponent implements OnInit {
         this.journalTypes138.includes(j.journalType)
       ),
     ];
+  }
+
+  /**
+   * * select item in view card
+   * @param event
+   * @returns
+   */
+  onSelected(data) {
+    if(data) this.itemSelected = data;
+    this.detectorRef.detectChanges();
+  }
+
+  /**
+   * * select item in view list
+   * @param event
+   * @returns
+   */
+  onSelectedViewList(event) {
+    if (typeof event?.data !== 'undefined') {
+      if (event?.data?.data || event?.data?.error) {
+        return;
+      } else {
+        this.itemSelected = event?.data;
+        this.detectorRef.detectChanges();
+      }
+    }
   }
   //#endregion
 }

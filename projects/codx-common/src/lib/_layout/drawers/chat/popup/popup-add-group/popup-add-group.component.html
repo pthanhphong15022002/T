@@ -11,7 +11,7 @@
     <div class="col-2">
       <codx-img
         #codxImg
-        [objectId]="group.groupID"
+        [objectId]="group?.groupID"
         [objectType]="'WP_Groups'"
         [width]="40"
         [isDefaulImg]="true"
@@ -23,7 +23,7 @@
       <codx-input
         [type]="'text'"
         [field]="'groupName'"
-        [crrValue]="group.groupName"
+        [crrValue]="group?.groupName"
         (valueChange)="valueChange($event)"
       >
       </codx-input>
@@ -98,21 +98,21 @@
       <div class="d-flex align-items-center justify-content-between">
         <codx-img
           [width]="30"
-          [objectId]="item.UserID"
-          [objectName]="item.UserName"
+          [objectId]="item?.UserID"
+          [objectName]="item?.UserName"
           objectType="AD_Users"
           imageType="circle"
         >
         </codx-img>
         <div class="text-left ms-2">
-          <p class="m-0 fw-bold" *ngIf="item.UserName">{{ item.UserName }}</p>
+          <p class="m-0 fw-bold" *ngIf="item?.UserName">{{ item?.UserName }}</p>
         </div>
       </div>
       <div>
         <codx-input
           [disabled]="true"
           [checked]="false"
-          [attr.data-id]="item.UserID"
+          [attr.data-id]="item?.UserID"
           type="checkbox"
           [class]="'check-circle'"
         >
@@ -125,14 +125,14 @@
       <div class="d-flex justify-content-between">
         <codx-img
           [width]="30"
-          [objectId]="item.UserID"
-          [objectName]="item.UserName"
+          [objectId]="item?.UserID"
+          [objectName]="item?.UserName"
           objectType="AD_Users"
           imageType="circle"
         >
         </codx-img>
         <div class="text-left ms-2">
-          <p class="m-0 fw-bold" *ngIf="item.UserName">{{ item.UserName }}</p>
+          <p class="m-0 fw-bold" *ngIf="item?.UserName">{{ item?.UserName }}</p>
         </div>
       </div>
       <div (click)="removeMember(item)">

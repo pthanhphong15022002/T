@@ -287,7 +287,7 @@
                   class="d-inline"
                 >
                   <span
-                    class="text-gray-700"
+                    class="text-dark fw-bold codx-textcontent"
                     [innerHTML]="
                       item | formatvalue : formModel : 'Industries' | async
                     "
@@ -528,7 +528,7 @@
                               : true
                             : true
                         "
-                        [objectName]="getNameCrm(this.funcID)"
+                        [objectName]="getNameCrm(dataSelected)"
                       ></codx-address-cm>
                     </div>
                   </ng-template>

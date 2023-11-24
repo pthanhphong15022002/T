@@ -60,13 +60,13 @@ export class PurchaseinvoicesComponent extends UIComponent {
     icon: 'icon-i-file-earmark-plus',
   }];
 
-  moreFuncs: Array<ButtonModel> = [
-    {
-      id: 'btnImportXml',
-      icon: '',
-      text: 'Đọc file xml',
-    },
-  ];
+  // moreFuncs: Array<ButtonModel> = [
+  //   {
+  //     id: 'btnImportXml',
+  //     icon: '',
+  //     text: 'Đọc file xml',
+  //   },
+  // ];
   optionSidebar: SidebarModel = new SidebarModel();
   private destroy$ = new Subject<void>(); //? list observable hủy các subscribe api
   constructor(
@@ -124,7 +124,7 @@ export class PurchaseinvoicesComponent extends UIComponent {
           template: this.templateDetailLeft,
           panelRightRef: this.templateDetailRight,
           collapsed: true,
-          widthLeft: '22%',
+          widthLeft: '23%',
           //separatorSize:3
         },
       },
@@ -177,9 +177,6 @@ export class PurchaseinvoicesComponent extends UIComponent {
       case 'btnAdd':
         this.addNewVoucher(); //? thêm mới chứng từ
         break;
-      case 'btnImportXml':
-        this.xml.nativeElement.click();
-        break;
     }
   }
 
@@ -222,6 +219,9 @@ export class PurchaseinvoicesComponent extends UIComponent {
         break;
       case 'ACT060108':
         this.allocationVoucher(data, data); //? phân bổ chi phí chứng từ
+        break;
+      case 'ACT060109':
+        this.xml.nativeElement.click(); //? doc xml chứng từ
         break;
     }
   }

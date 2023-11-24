@@ -53,6 +53,7 @@ import {
   ProgressTheme,
 } from '@syncfusion/ej2-angular-progressbar';
 import { CodxShareService } from '../../codx-share.service';
+import { truncate } from 'fs/promises';
 
 @Component({
   selector: 'codx-tasks-share', ///tên vậy để sửa lại sau
@@ -1195,7 +1196,12 @@ export class CodxTasksComponent
 
   onDragDrop(data) {
     if (this.crrStatus == data?.status) return;
-    if (this.funcID == 'TMT0206' || this.moreFunction?.length == 0) {
+    if (
+      this.funcID == 'TMT0206' ||
+      this.funcID == 'MWP0063' ||
+      this.moreFunction?.length == 0 ||
+      !this.validateDropKaban(data, this.crrStatus, data.status) // chan keo kanban
+    ) {
       data.status = this.crrStatus;
       return;
     }
@@ -1853,6 +1859,7 @@ export class CodxTasksComponent
               data.status == '90' ||
               this.funcID == 'TMT0402' ||
               this.funcID == 'TMT0401' ||
+              this.funcID == 'TMT0403' ||
               this.funcID == 'TMT0206' ||
               this.funcID == 'MWP0063' ||
               ((this.funcID == 'TMT03011' || this.funcID == 'TMT05011') &&
@@ -1869,6 +1876,7 @@ export class CodxTasksComponent
               data.status == '90' ||
               this.funcID == 'TMT0402' ||
               this.funcID == 'TMT0401' ||
+              this.funcID == 'TMT0403' ||
               this.funcID == 'TMT0206' ||
               this.funcID == 'MWP0063' ||
               ((this.funcID == 'TMT03011' || this.funcID == 'TMT05011') &&
@@ -1884,10 +1892,12 @@ export class CodxTasksComponent
               this.funcID == 'TMT0206' ||
               this.funcID == 'MWP0063' ||
               this.funcID == 'TMT0402' ||
-              this.funcID == 'TMT0401'
+              this.funcID == 'TMT0401' ||
+              this.funcID == 'TMT0403'
             )
               x.disabled = true;
             break;
+
           //ẩn more theo yêu cầu
           //Hoàn tất
           case 'TMT02011':
@@ -2239,5 +2249,41 @@ export class CodxTasksComponent
 
   changeMF(e) {
     this.changeDataMF(e.e, e.data);
+  }
+
+  //return kanban ko cho kéo
+  validateDropKaban(data, oldStatus, newStatus) {
+    if (!data.write) return false;
+    let check = true;
+    switch (newStatus) {
+      case '00':
+        break;
+      case '05':
+        check = false;
+        break;
+      case '07':
+        check = false;
+        break;
+      case '09':
+        break;
+      case '10':
+        break;
+      case '20':
+        if (oldStatus == '00' || oldStatus == '05' || oldStatus == '07')
+          check = false;
+        break;
+      case '50':
+        if (oldStatus == '90' || oldStatus == '00' || oldStatus == '05')
+          check = false;
+        break;
+      case '80':
+        if (oldStatus == '90' || oldStatus == '00' || oldStatus == '05')
+          check = false;
+        break;
+      case '90':
+        if (oldStatus != '20' && oldStatus != '10') check = false;
+        break;
+    }
+    return check;
   }
 }

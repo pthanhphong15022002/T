@@ -51,3 +51,10 @@
   top: 0;
   width: 14px;
 }
+.boder_left::before{
+  content: "";
+  border-left: 2px solid #80808099;
+  position: relative;
+  left: 17px;
+  top: 7px;
+}

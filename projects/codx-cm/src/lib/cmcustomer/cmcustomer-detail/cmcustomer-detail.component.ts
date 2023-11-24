@@ -50,6 +50,7 @@ export class CmCustomerDetailComponent implements OnInit {
   @Input() lstCustGroups = [];
   @Input() isAdmin: boolean = false;
   @Input() isDbClick: boolean = false;
+  @Input() asideMode: string;
   @Output() changeMoreMF = new EventEmitter<any>();
   @Output() clickMoreFunc = new EventEmitter<any>();
   @Output() addressNameCMEmit = new EventEmitter<any>();
@@ -75,7 +76,6 @@ export class CmCustomerDetailComponent implements OnInit {
   category = '';
   user: any;
   isShow = false;
-  asideMode: string;
   constructor(
     private callFc: CallFuncService,
     private cache: CacheService,
@@ -87,7 +87,6 @@ export class CmCustomerDetailComponent implements OnInit {
     private codxService: CodxService
   ) {
     this.user = this.authstore.get();
-    this.asideMode = codxService.asideMode;
   }
 
   async ngOnInit() {

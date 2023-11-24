@@ -19,6 +19,7 @@ import {
   DialogModel,
   FormModel,
   NotificationsService,
+  SortModel,
   Util,
 } from 'codx-core';
 import { Observable, finalize, firstValueFrom, map } from 'rxjs';
@@ -29,11 +30,12 @@ import { PopupUpdateReasonCodeComponent } from '../../popup-update-reasoncode/po
 @Component({
   selector: 'wr-view-tab-update',
   templateUrl: './view-tab-update.component.html',
-  styleUrls: ['./view-tab-update.component.css'],
+  styleUrls: ['./view-tab-update.component.scss'],
 })
 export class ViewTabUpdateComponent implements OnInit {
   @Input() transID: any;
   @Input() dataWorkOrder: any;
+  @Input() isShow: boolean;
   @Output() listChange = new EventEmitter<any>();
   @ViewChild('headerStatusCode') headerStatusCode: TemplateRef<any>;
   @ViewChild('tempStatusCode') tempStatusCode: TemplateRef<any>;
@@ -55,8 +57,11 @@ export class ViewTabUpdateComponent implements OnInit {
     formName: 'WRWorkOrderUpdates',
     gridViewName: 'grvWRWorkOrderUpdates',
     entityName: 'WR_WorkOrderUpdates',
-    funcID: 'WR0101',
+    funcID: 'WR0101_1',
   };
+
+  sortField = new SortModel();
+
   editSettings: EditSettingsModel = {
     allowEditing: true,
     allowDeleting: true,
@@ -106,6 +111,9 @@ export class ViewTabUpdateComponent implements OnInit {
 
   ngOnInit(): void {
     // this.getGridViewSetup();
+    this.sortField = new SortModel();
+    this.sortField.field = 'statusCode';
+    this.sortField.dir = 'asc';
   }
 
   ngAfterViewInit(): void {
@@ -325,7 +333,7 @@ export class ViewTabUpdateComponent implements OnInit {
             engineerID: data?.engineerID,
             createdBy: this.dataWorkOrder?.createdBy,
             gridViewSetup: res,
-            action: 'edit'
+            action: 'edit',
           };
           this.callFc
             .openForm(
@@ -352,8 +360,8 @@ export class ViewTabUpdateComponent implements OnInit {
                 this.lstUpdate = JSON.parse(JSON.stringify(this.lstUpdate));
                 this.wrSv.listOrderUpdateSubject.next({
                   e: this.lstUpdate,
-                  date: new Date(),
-                  update: null,
+                  date: new Date(data.createdOn),
+                  update: data,
                 });
 
                 this.detectorRef.detectChanges();

@@ -55,7 +55,7 @@ export class DynamicFormComponent extends UIComponent {
   function: any = {};
   tabs: TabModel[] = [];
   authStore;
-  itemSelected:any;
+  itemSelected: any;
   constructor(
     private inject: Injector,
     private callfunc: CallFuncService,
@@ -524,7 +524,7 @@ export class DynamicFormComponent extends UIComponent {
           formModel.entityName = 'DP_Processes';
           formModel.formName = 'DPProcesses';
           formModel.gridViewName = 'grvDPProcesses';
-          formModel.funcID = 'DP01';
+          formModel.funcID = 'DP0204'; //DP01 đôi đi vì Khanh đã đổi func
 
           dialogModel.FormModel = JSON.parse(JSON.stringify(formModel));
 
@@ -618,8 +618,7 @@ export class DynamicFormComponent extends UIComponent {
   }
   //#endregion
 
-  selectedChange(e:any)
-  {
+  selectedChange(e: any) {
     this.itemSelected = e?.data;
   }
 }

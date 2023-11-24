@@ -484,7 +484,6 @@ export class PopupMoveStageComponent implements OnInit {
       this.actionBack,
       this.listStepsCbx,
     ];
-    this.isLockStep = true;
     this.codxDpService.moveStageBackInstance(data).subscribe((res) => {
       if (res) {
         this.instance = res[0];

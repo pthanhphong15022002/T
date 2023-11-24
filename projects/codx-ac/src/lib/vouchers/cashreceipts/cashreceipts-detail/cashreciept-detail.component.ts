@@ -1,4 +1,5 @@
 import {
+  ChangeDetectionStrategy,
   Component,
   Injector,
   Input,
@@ -30,6 +31,7 @@ declare var jsBh: any;
   selector: 'cashreciept-detail',
   templateUrl: './cashreciept-detail.component.html',
   styleUrls: ['./cashreciept-detail.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CashrecieptDetailComponent extends UIComponent {
   //#region Constructor
@@ -89,6 +91,9 @@ export class CashrecieptDetailComponent extends UIComponent {
     gridViewName: 'grvVATInvoices',
     entityName: 'AC_VATInvoices',
   };
+  isShowLess: any = false;
+  isShowMore:any = true;
+  isReadMore:any = false;
   private destroy$ = new Subject<void>(); //? list observable hủy các subscribe api
   constructor(
     private inject: Injector,
@@ -112,6 +117,11 @@ export class CashrecieptDetailComponent extends UIComponent {
     this.optionSidebar.DataService = this.dataService;
     this.optionSidebar.FormModel = this.formModel;
     this.optionSidebar.isFull = true;
+  }
+
+  ngDoCheck() {
+    this.onReadMore();
+    this.detectorRef.detectChanges();
   }
 
   ngOnChanges(value: SimpleChange) {
@@ -148,6 +158,9 @@ export class CashrecieptDetailComponent extends UIComponent {
   getDataDetail(dataItem, recID) {
     if (dataItem) {
       this.itemSelected = dataItem;
+      this.isReadMore = false;
+      this.isShowMore = true;
+      this.isShowLess = false;
       this.showHideTab(this.itemSelected?.subType); // ẩn hiện các tab detail
       this.detectorRef.detectChanges();
     } else {
@@ -257,6 +270,36 @@ export class CashrecieptDetailComponent extends UIComponent {
    */
   trackByFn(index, item) {
     return item.recID;
+  }
+
+  /**
+   * *Ham xem them & an bot dien giai
+   * @param type 
+   */
+  onShowMoreLess(type){
+    if(type === 'showmore'){
+      this.isShowMore = false;
+      this.isShowLess = true;
+    }else{
+      this.isShowMore = true;
+      this.isShowLess = false;
+    }
+    this.detectorRef.detectChanges();
+  }
+
+  /**
+   * *Ham kiem tra dien giai khi vuot qua 2 dong
+   */
+  onReadMore(){
+    let ele = document.getElementById('eleMemo');
+    if (ele) {
+      if (ele.offsetHeight < ele.scrollHeight || ele.offsetWidth < ele.scrollWidth){
+        this.isReadMore = true;
+      }else{
+        this.isReadMore = false;
+      }
+      this.detectorRef.detectChanges();
+    }
   }
   //#endregion Function
 }

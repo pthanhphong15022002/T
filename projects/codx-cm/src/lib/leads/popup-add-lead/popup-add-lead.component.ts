@@ -206,15 +206,15 @@ export class PopupAddLeadComponent
           ? dt?.data?.contactIdOld
           : this.lead.contactID;
       this.leadId =
-        this.action === this.actionCopy ? dt?.data?.leadIdOld : this.lead.recID;
+        this.action === this.actionCopy ? dt?.data?.leadIdOld : this.lead?.recID;
       if (this.action === this.actionCopy) {
-        this.oldIdInstance = this.lead.refID;
+        this.oldIdInstance = this.lead?.refID;
         this.lead.applyProcess = dt?.data?.applyProcess;
         this.lead.leadID = '';
         this.lead.contactID = Util.uid();
         this.lead.recID = Util.uid();
       } else {
-        this.planceHolderAutoNumber = this.lead.leadID;
+        this.planceHolderAutoNumber = this.lead?.leadID;
       }
     } else {
       //Phúc bổ sung đoạn này để convert customer qua Lead nếu lỗi thì liên hệ phúc nha
@@ -239,6 +239,7 @@ export class PopupAddLeadComponent
     this.lead.permissions = !this.lead?.permissions
       ? []
       : this.lead?.permissions;
+      this.owner = this.lead?.owner;
   }
 
   async getParameterAddress() {
@@ -542,12 +543,12 @@ export class PopupAddLeadComponent
     permission.update = true;
     permission.upload = true;
     permission.download = true;
-    permission.allowUpdateStatus =
-      roleType === 'O' || roleType === 'S' ? '1' : '0';
+    permission.allowUpdateStatus = roleType === 'O' || roleType === 'S' ? '1' : '0';
     permission.full = roleType === 'O';
     permission.assign = roleType === 'O';
     permission.delete = roleType === 'O';
     permission.allowPermit = roleType === 'O';
+    this.lead.permissions = this.lead?.permissions ? this.lead?.permissions:[];
     this.lead.permissions.push(permission);
   }
   // valueChangeIndustries($event) {
@@ -818,44 +819,43 @@ export class PopupAddLeadComponent
       }
       this.lead.currencyID = this.currencyIDDefault;
       this.lead.applyProcess = this.applyProcess;
-      this.lead.applyProcess && this.getProcessSetting();
+      this.lead.applyProcess && this.getListInstanceSteps('');
       this.checkApplyProcess(this.lead.applyProcess);
     }
 
     if (!this.lead.applyProcess) {
       if (this.action !== this.actionEdit) this.getAutoNumber();
-      this.itemTabsInput(this.lead.applyProcess);
+      // this.itemTabsInput(this.lead.applyProcess);
       this.owner = this.lead.owner;
     } else if (this.action !== this.actionAdd) {
       this.getListInstanceSteps(this.lead.processID);
     }
     this.itemTabsInputContact(this.isCategory);
   }
-  async getProcessSetting() {
-    this.codxCmService.getListProcessDefault(['5']).subscribe((res) => {
-      if (res) {
-        // this.processId = res.recID;
-        // this.dataObj = { processID: res.recID };
-        // this.afterLoad();
-        this.getListInstanceSteps(res.recID);
-        this.lead.processID = res.recID;
-        this.setAutoNameTabFields(res?.autoNameTabFields);
-      }
-    });
-  }
+  // async getProcessSetting() {
+  //   this.codxCmService.getListProcessDefault(['5']).subscribe((res) => {
+  //     if (res) {
+  //       // this.processId = res.recID;
+  //       // this.dataObj = { processID: res.recID };
+  //       // this.afterLoad();
+  //       this.getListInstanceSteps(res.recID);
+  //       this.lead.processID = res.recID;
+  //       this.setAutoNameTabFields(res?.autoNameTabFields);
+  //     }
+  //   });
+  // }
   async getListInstanceSteps(processId: any) {
     var data = [processId, this.lead?.refID, this.action, '5'];
     this.codxCmService.getInstanceSteps(data).subscribe(async (res) => {
       if (res && res.length > 0) {
-        var obj = {
-          id: processId,
+        let obj = {
+          id: res[3].processId,
           steps: res[0],
-          permissions: await this.getListPermission(res[1]),
           leadID: this.action !== this.actionEdit ? res[2] : this.lead.leadID,
-          autoNameTabFields: res[3],
+          processSetting: res[3],
         };
         this.leadNoProcess = res[2];
-        var isExist = this.listMemorySteps.some((x) => x.id === processId);
+        let isExist = this.listMemorySteps.some((x) => x.id === processId);
         if (!isExist) {
           this.listMemorySteps.push(obj);
         }
@@ -863,10 +863,12 @@ export class PopupAddLeadComponent
         this.idxCrr = this.listInstanceSteps.findIndex(
           (x) => x.stepID == this.lead.stepID
         );
-        this.setAutoNameTabFields(obj?.autoNameTabFields);
+
+        this.lead.processID = obj?.processSetting?.processId;
+        this.setAutoNameTabFields(obj?.processSetting?.autoNameTabFields);
         this.itemTabsInput(this.ischeckFields(this.listInstanceSteps));
-        this.listParticipants = null;
-        this.listParticipants = JSON.parse(JSON.stringify(obj.permissions));
+        // this.listParticipants = null;
+        // this.listParticipants = JSON.parse(JSON.stringify(obj.permissions));
         if (this.action === this.actionEdit) {
           this.owner = this.lead.owner;
         } else {
@@ -887,26 +889,12 @@ export class PopupAddLeadComponent
 
         this.changeDetectorRef.detectChanges();
       }
+      else {
+        this.lead.applyProcess = false;
+      }
     });
   }
 
-  // HandleEndDate(listSteps: any, action: string, endDateValue: any) {
-  //   var dateNow =
-  //     action == 'add' || action == 'copy' ? new Date() : new Date(endDateValue);
-  //   var endDate =
-  //     action == 'add' || action == 'copy' ? new Date() : new Date(endDateValue);
-  //   for (let i = 0; i < listSteps.length; i++) {
-  //     endDate.setDate(endDate.getDate() + listSteps[i].durationDay);
-  //     endDate.setHours(endDate.getHours() + listSteps[i].durationHour);
-  //     endDate = this.setTimeHoliday(
-  //       dateNow,
-  //       endDate,
-  //       listSteps[i]?.excludeDayoff
-  //     );
-  //     dateNow = endDate;
-  //   }
-  //   return endDate;
-  // }
   HandleEndDate(listSteps: any, action: string, endDateValue: any) {
     endDateValue =
       action === this.actionAdd ||
@@ -962,12 +950,12 @@ export class PopupAddLeadComponent
     return endDay;
   }
 
-  async getListPermission(permissions) {
-    this.listParticipants = permissions;
-    return this.listParticipants != null && this.listParticipants?.length > 0
-      ? await this.codxCmService.getListUserByOrg(this.listParticipants)
-      : this.listParticipants;
-  }
+  // async getListPermission(permissions) {
+  //   this.listParticipants = permissions;
+  //   return this.listParticipants != null && this.listParticipants?.length > 0
+  //     ? await this.codxCmService.getListUserByOrg(this.listParticipants)
+  //     : this.listParticipants;
+  // }
   // an tat theo truong tuy chinh
 
   itemTabsInput(check: boolean): void {

@@ -123,16 +123,21 @@
         class="place-holder text-gray-600">{{gridViewSetup['Buyer'].headerText}}</span>
       <!-- Nhân viên mua hàng  -->
     </div>
-    <div class="d-flex align-items-top mb-1">
-      <!-- Diễn giải -->
+    <div class="d-flex align-items-top">
       <codx-label class="fw-bold label-colon text-nowrap" fiedName="Memo" [formModel]="formModel">
       </codx-label>
-      <span *ngIf="itemSelected?.memo" class="text-gray-600">{{itemSelected?.memo}}</span>
-      <span *ngIf="(itemSelected?.memo == '' || itemSelected?.memo == null) && gridViewSetup"
-        class="place-holder text-gray-600">{{gridViewSetup['Memo'].headerText}}</span>
-      <!-- Diễn giải  -->
+      <div>
+        <span *ngIf="isShowMore" id="eleMemo" class="text-gray-600 line-clamp line-clamp-2">{{itemSelected?.memo}}</span>
+        <span *ngIf="isShowLess" class="text-gray-600 me-3">{{itemSelected?.memo}}</span>
+        <span *ngIf="(itemSelected?.memo == '' || itemSelected?.memo == null) && gridViewSetup"
+          class="place-holder text-gray-600 line-clamp line-clamp-1 me-3">{{gridViewSetup['Memo'].headerText}}</span>
+        <div *ngIf="isReadMore" class="align-items-top cursor-pointer">
+          <span *ngIf="isShowMore" (click)="onShowMoreLess('showmore')" class="text-primary fw-bold text-underline">Xem Thêm</span>
+          <span *ngIf="isShowLess" (click)="onShowMoreLess('showless')" class="text-primary fw-bold text-underline">Ẩn bớt</span>
+        </div>
+      </div>
     </div>
-    <div class="card-add card-pur">
+    <div [ngClass]="isReadMore ? 'card-pur-more' : 'card-pur-less'">
       <ejs-tab #elementTabDetail (created)="createTab($event, elementTabDetail)">
         <e-tabitems>
           <!--Start tab Thông tin hóa đơn -->
@@ -161,6 +166,19 @@
             </ng-template>
             <ng-template #content>
               <ng-container *ngTemplateOutlet="tabVatInvoices"></ng-container>
+            </ng-template>
+          </e-tabitem>
+
+          <e-tabitem>
+            <ng-template #headerText>
+              <div class="d-flex align-items-top me-2 mt-2">
+                <i class="icon-clear_all icon-16 me-2"></i>
+                <codx-label class="fw-bold fs-6" fiedName="lblDetail4" [formModel]="formModel"
+                  default="Phân bổ chi phí"></codx-label>
+              </div>
+            </ng-template>
+            <ng-template #content>
+              <ng-container *ngTemplateOutlet="tabAllocation"></ng-container>
             </ng-template>
           </e-tabitem>
           <!-- Tab Hóa đơn GTGT -->
@@ -220,3 +238,11 @@
   </ng-container>
 </ng-template>
 <!-- End: template Tab VatInvoices-->
+
+<!-- Start: template Tab tabAllocation-->
+<ng-template #tabAllocation>
+  <ng-container *ngIf="itemSelected">
+    <allocation-table [itemSelected]="itemSelected"></allocation-table>
+  </ng-container>
+</ng-template>
+<!-- End: template Tab tabAllocation-->

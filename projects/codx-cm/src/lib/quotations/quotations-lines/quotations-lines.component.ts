@@ -19,9 +19,9 @@ import {
   UIComponent,
   Util,
 } from 'codx-core';
-import { CodxCmService } from '../codx-cm.service';
 import { PopupAddQuotationsLinesComponent } from './popup-add-quotations-lines/popup-add-quotations-lines.component';
-import { CM_QuotationsLines } from '../models/cm_model';
+import { CodxCmService } from '../../codx-cm.service';
+import { CM_QuotationsLines } from '../../models/cm_model';
 
 @Component({
   selector: 'codx-quotations-lines',

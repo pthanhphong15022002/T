@@ -242,6 +242,9 @@ export class InstancesComponent
   crrFunc: any;
   runMode: any; //view detail
   tabControl = '';
+  asideMode: string;
+  isChangeOwner: boolean = false;
+
   constructor(
     inject: Injector,
     private callFunc: CallFuncService,
@@ -378,6 +381,8 @@ export class InstancesComponent
   //   this.setColorKanban();
   // }
   onInit() {
+    this.asideMode = this.codxService.asideMode;
+
     this.button = [
       {
         id: 'btnAdd',
@@ -676,6 +681,7 @@ export class InstancesComponent
   }
 
   async openPopupEdit(applyFor, formMD, option, titleAction) {
+    let ownerIdOld = this.dataSelected?.owner;
     var obj = {
       action: 'edit',
       applyFor: applyFor,
@@ -715,7 +721,7 @@ export class InstancesComponent
           this.detailViewPopup.dataSelect = this.dataSelected;
           this.detailViewPopup.loadChangeData();
         }
-
+        this.isChangeOwner = ownerIdOld != e?.event?.owner;
         this.detectorRef.detectChanges();
       }
     });
@@ -872,7 +878,7 @@ export class InstancesComponent
   changeDataMF(e, data) {
     // data.permissionMoveInstances = true;
     // data.permissionCloseInstances = true;
-   // data.isAdminAll = true;
+    // data.isAdminAll = true;
     if (e != null && data != null) {
       if (data?.approveStatus == '3') {
         e.forEach((res) => {
@@ -886,7 +892,7 @@ export class InstancesComponent
             switch (res.functionID) {
               case 'SYS003':
                 if (
-                  ( data.status != '2' &&  !data.isAdminAll )||
+                  (data.status != '2' && !data.isAdminAll) ||
                   data.closed ||
                   !data.permissionCloseInstances
                 )
@@ -897,7 +903,7 @@ export class InstancesComponent
                 let isUpdate = data.write;
                 if (
                   !isUpdate ||
-                  ( data.status != '2' &&  !data.isAdminAll ) ||
+                  (data.status != '2' && !data.isAdminAll) ||
                   data.closed ||
                   !data.permissionMoveInstances
                 )
@@ -911,7 +917,7 @@ export class InstancesComponent
               //Copy
               case 'SYS104':
               case 'SYS04':
-                if (!this.isCreate || this.checkMoreReasonCopy(data, null) )
+                if (!this.isCreate || this.checkMoreReasonCopy(data, null))
                   res.disabled = true;
                 break;
               //xóa
@@ -921,7 +927,7 @@ export class InstancesComponent
                 if (
                   !isDelete ||
                   data.closed ||
-                 ( data.status != '2' &&  !data.isAdminAll )||
+                  (data.status != '2' && !data.isAdminAll) ||
                   !data.permissionMoveInstances
                 )
                   res.disabled = true;
@@ -962,7 +968,7 @@ export class InstancesComponent
                 break;
               case 'DP22':
                 if (
-                 data.status != '2'||
+                  data.status != '2' ||
                   data.closed ||
                   !data.permissionCloseInstances
                 )
@@ -1112,12 +1118,15 @@ export class InstancesComponent
       )
       .subscribe((str) => {
         if (str && str?.length > 0) {
-          let datas = str[1];
-          if (datas && datas.includes('[{')) datas = datas.substring(2);
-          let fix = str[0];
-          fix = fix.substring(1, fix.length - 1);
-          let dataSource = '[{ ' + fix + ',' + datas;
-          // let dataSource = '[' + str + ']';
+          let dataSource = '[' + str[0] + ']';
+          if (str[1]) {
+            let datas = str[1];
+            if (datas && datas.includes('[{')) datas = datas.substring(2);
+            let fix = str[0];
+            fix = fix.substring(1, fix.length - 1);
+            dataSource = '[{ ' + fix + ',' + datas;
+          }
+
           var customData = {
             refID: data.processID,
             refType: 'DP_Processes',
@@ -1142,15 +1151,15 @@ export class InstancesComponent
   }
   //End
   checkMoreReason(data, isUseReason) {
-    if (data.closed)    return true;
-    if(data.isAdminAll) return false
-    if (data.status != '2' || isUseReason)  return true;
+    if (data.closed) return true;
+    if (data.isAdminAll) return false;
+    if (data.status != '2' || isUseReason) return true;
     if (!data.permissionMoveInstances) return true;
     return false;
   }
   checkMoreReasonCopy(data, isUseReason) {
-    if (data.closed)    return true;
-    if (data.status != '2' || isUseReason)  return true;
+    if (data.closed) return true;
+    if (data.status != '2' || isUseReason) return true;
     if (!data.permissionMoveInstances) return true;
     return false;
   }
@@ -1195,6 +1204,7 @@ export class InstancesComponent
 
   popupOwnerRoles(data) {
     this.dataSelected = data;
+    let ownerIdOld = data?.owner;
     this.cache.functionList('DPT0402').subscribe((fun) => {
       // var formMD = new FormModel();
       // let dialogModel = new DialogModel();
@@ -1267,6 +1277,7 @@ export class InstancesComponent
           this.dataSelected.owner = e.event;
           this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
           // this.detailViewInstance.loadOwnerStep(e.event.owner);
+          this.isChangeOwner = ownerIdOld != e?.event?.owner;
           this.view.dataService.update(this.dataSelected).subscribe();
           this.detectorRef.detectChanges();
         }
@@ -2122,44 +2133,9 @@ export class InstancesComponent
     this.tabControl =
       this.process?.tabControl != null && this.process?.tabControl?.trim() != ''
         ? this.process?.tabControl
-        : '31'; //31 la tat ca.
+        : '1;3;5'; //31 la tat ca.
 
     this.viewModeDetail = this.process?.viewModeDetail ?? 'S';
-    if (this.tabControl && this.tabControl.trim() != '') {
-      const dataTabs = this.tabControl.split(';');
-      this.tabControl =
-        dataTabs.length == 3
-          ? '31'
-          : dataTabs.length == 1
-          ? dataTabs[0]
-          : dataTabs.some((q) => q == '1') && dataTabs.some((x) => x == '3')
-          ? '11'
-          : dataTabs.some((q) => q == '1') && dataTabs.some((x) => x == '5')
-          ? '12'
-          : '13';
-      //tab control = 31 - tat ca, 1 - giai doan, 3 - nhap lieu, 5 - cong viec, 11 - (giai doan + nhap lieu), 12 - (giai doan + cong viec), 13 - (giai doan + cong viec)
-      this.viewModeDetail =
-        this.tabControl == '1'
-          ? 'S'
-          : this.tabControl == '3'
-          ? 'F'
-          : this.tabControl == '5'
-          ? 'G'
-          : this.tabControl == '11'
-          ? this.process?.viewModeDetail == 'F'
-            ? this.process?.viewModeDetail
-            : 'S'
-          : this.tabControl == '12'
-          ? this.process?.viewModeDetail == 'G'
-            ? this.process?.viewModeDetail
-            : 'S'
-          : this.tabControl == '13'
-          ? this.process?.viewModeDetail == 'F'
-            ? this.process?.viewModeDetail
-            : 'G'
-          : this.process?.viewModeDetail ?? 'S';
-    }
-
     this.loadTabControl();
     this.loadEx();
     this.loadWord();
@@ -2244,101 +2220,34 @@ export class InstancesComponent
     this.cache.valueList('DP034').subscribe((res) => {
       if (res && res.datas) {
         var tabIns = [];
-        res.datas.forEach((element) => {
-          switch (this.tabControl) {
-            case '1': // xem view giai đoạn
-              if (element?.value == 'S') {
-                var tab = {};
-                tab['viewModelDetail'] = element?.value;
-                tab['textDefault'] = element?.text;
-                tab['icon'] = element?.icon;
-                tabIns.push(tab);
-              }
-              break;
-            case '3': // xem view nhap lieu
-              if (element?.value == 'F') {
-                var tab = {};
-                tab['viewModelDetail'] = element?.value;
-                tab['textDefault'] = element?.text;
-                tab['icon'] = element?.icon;
-                if (tab['viewModelDetail'] == 'F') {
-                  tab['textDefault'] =
-                    this.process?.autoNameTabFields != null &&
-                    this.process?.autoNameTabFields?.trim() != ''
-                      ? this.process?.autoNameTabFields
-                      : element?.text;
-                }
-                tabIns.push(tab);
-              }
-              break;
-            case '5': // xem view cong viec
-              if (element?.value == 'G') {
-                var tab = {};
-                tab['viewModelDetail'] = element?.value;
-                tab['textDefault'] = element?.text;
-                tab['icon'] = element?.icon;
-                tabIns.push(tab);
-              }
-              break;
-            case '11': // hiển thị 2tab: gai đoạn, nhap lieu
-              if (element?.value == 'S' || element?.value == 'F') {
-                var tab = {};
-                tab['viewModelDetail'] = element?.value;
-                tab['textDefault'] = element?.text;
-                tab['icon'] = element?.icon;
-                if (tab['viewModelDetail'] == 'F') {
-                  tab['textDefault'] =
-                    this.process?.autoNameTabFields != null &&
-                    this.process?.autoNameTabFields?.trim() != ''
-                      ? this.process?.autoNameTabFields
-                      : element?.text;
-                }
-                tabIns.push(tab);
-              }
-              break;
-            case '12': // 2 tab: giai đoạn, cong viec;
-              if (element?.value == 'S' || element?.value == 'G') {
-                var tab = {};
-                tab['viewModelDetail'] = element?.value;
-                tab['textDefault'] = element?.text;
-                tab['icon'] = element?.icon;
-
-                tabIns.push(tab);
-              }
-              break;
-            case '13': // 2 tab: nhap lieu, cong viec;
-              if (element?.value == 'F' || element?.value == 'G') {
-                var tab = {};
-                tab['viewModelDetail'] = element?.value;
-                tab['textDefault'] = element?.text;
-                tab['icon'] = element?.icon;
-                if (tab['viewModelDetail'] == 'F') {
-                  tab['textDefault'] =
-                    this.process?.autoNameTabFields != null &&
-                    this.process?.autoNameTabFields?.trim() != ''
-                      ? this.process?.autoNameTabFields
-                      : element?.text;
-                }
-                tabIns.push(tab);
-              }
-              break;
-            case '31': // xem tất cả tab
-              var tab = {};
-              tab['viewModelDetail'] = element?.value;
-              tab['textDefault'] = element?.text;
-              tab['icon'] = element?.icon;
-              if (tab['viewModelDetail'] == 'F') {
-                tab['textDefault'] =
-                  this.process?.autoNameTabFields != null &&
-                  this.process?.autoNameTabFields?.trim() != ''
-                    ? this.process?.autoNameTabFields
-                    : element?.text;
-              }
-              tabIns.push(tab);
-              break;
+        const tabs = this.tabControl.split(';');
+        for (let item of tabs) {
+          let value = item == '1' ? 'S' : item == '3' ? 'F' : 'G';
+          let findDatas = res.datas.find((x) => x.value == value);
+          if (findDatas) {
+            var tab = {};
+            tab['viewModelDetail'] = findDatas?.value;
+            tab['textDefault'] = findDatas?.text;
+            tab['icon'] = findDatas?.icon;
+            if (tab['viewModelDetail'] == 'F') {
+              tab['textDefault'] =
+                this.process?.autoNameTabFields != null &&
+                this.process?.autoNameTabFields?.trim() != ''
+                  ? this.process?.autoNameTabFields
+                  : findDatas?.text;
+            }
+            tabIns.push(tab);
           }
-        });
+        }
         this.tabInstances = tabIns;
+        if (tabIns?.length > 0) {
+          const checkTab = tabIns.some(
+            (x) => x.viewModelDetail == this.viewModeDetail
+          );
+          this.viewModeDetail = checkTab
+            ? this.viewModeDetail
+            : tabIns[0]['viewModelDetail'];
+        }
       }
     });
   }
@@ -2577,7 +2486,7 @@ export class InstancesComponent
       category,
       'DP_Instances_Steps',
       this.view.formModel.funcID,
-      this.dataSelected.title,
+      this.dataSelected.title, //html truyen qua
       this.releaseCallback.bind(this),
       null,
       null,
@@ -2592,20 +2501,10 @@ export class InstancesComponent
     if (res?.msgCodeError) this.notificationsService.notify(res?.msgCodeError);
     else {
       ///do corre share ko tra ve status
-      this.dataSelected.approveStatus = '3';
+      this.dataSelected.approveStatus = res?.returnStatus ?? '3';
       this.view.dataService.update(this.dataSelected).subscribe();
       if (this.kanban) this.kanban.updateCard(this.dataSelected);
-      // if (this.detailViewInstance) {
-      //   this.detailViewInstance.getViewApprove();
-      // }
-      // if (this.detailViewPopup) {
-      //   this.detailViewPopup.getViewApprove();
-      // }
-
-      //da cap nhat tai BE
-      // this.codxDpService
-      //   .updateApproverStatusInstance([this.dataSelected?.recID, '3'])
-      //   .subscribe();
+      this.notificationsService.notifyCode('ES007');
     }
   }
 
@@ -2624,18 +2523,10 @@ export class InstancesComponent
   releaseCallbackInstances(res: any, t: any = null) {
     if (res?.msgCodeError) this.notificationsService.notify(res?.msgCodeError);
     else {
-      this.dataSelected.approveStatus = '3';
+      this.dataSelected.approveStatus = res?.returnStatus ?? '3';
       this.view.dataService.update(this.dataSelected).subscribe();
       if (this.kanban) this.kanban.updateCard(this.dataSelected);
-      ///do corre share ko tra ve status
-      // this.codxDpService
-      //   .getOneObject(this.dataSelected.recID, 'InstancesBusiness')
-      //   .subscribe((ins) => {
-      //     this.dataSelected.approveStatus = ins.approveStatus;
-      //     this.view.dataService.update(this.dataSelected).subscribe();
-      //     if (this.kanban) this.kanban.updateCard(this.dataSelected);
-      //     // this.notificationsService.notifyCode('ES007');
-      //   });
+      this.notificationsService.notifyCode('ES007');
     }
   }
 

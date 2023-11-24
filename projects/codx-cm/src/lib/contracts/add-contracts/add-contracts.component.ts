@@ -5,6 +5,7 @@ import {
   Component,
   TemplateRef,
   ChangeDetectorRef,
+  AfterViewInit,
 } from '@angular/core';
 import {
   CM_Contracts,
@@ -45,22 +46,25 @@ import { tmpInstances } from '../../models/tmpModel';
   templateUrl: './add-contracts.component.html',
   styleUrls: ['./add-contracts.component.scss'],
 })
-export class AddContractsComponent implements OnInit {
+export class AddContractsComponent implements OnInit, AfterViewInit{
+  @ViewChild('information') information: TemplateRef<any>;
+  @ViewChild('reference') reference: TemplateRef<any>;
+  @ViewChild('extend') extend: TemplateRef<any>;
+
   @ViewChild('more') more: TemplateRef<any>;
   @ViewChild('inputDeal') inputDeal: CodxInputComponent;
   @ViewChild('attachment') attachment: AttachmentComponent;
   @ViewChild('inputQuotation') inputQuotation: CodxInputComponent;
   REQUIRE = [
-    'contractName',
     'contractID',
-    'useType',
     'contractType',
-    'pmtMethodID',
-    'pmtStatus',
-    'delModeID',
-    'delStatus',
+    'businessLineID',
+    'contractName',
     'customerID',
-    'currencyID',
+    'contractAmt',
+    'pmtMethodID',
+    'pmtMethodID',
+    'effectiveFrom',
   ];
   customer: CM_Customers;
   contracts: CM_Contracts;
@@ -109,6 +113,14 @@ export class AddContractsComponent implements OnInit {
 
   listParticipants;
   objPermissions = {};
+  formModel: FormModel = {
+    entityName: 'CM_Contracts',
+    entityPer: 'CM_Contracts',
+    formName: 'CMContracts',
+    funcID: 'CM0204',
+    gridViewName: 'grvCMContracts',
+  };
+
   readonly fieldCbxParticipants = { text: 'objectName', value: 'objectID' };
 
   moreDefaut = {
@@ -146,6 +158,34 @@ export class AddContractsComponent implements OnInit {
   leadNoSetting: any;
   idxCrr: number = -1;
 
+  // Tab control
+  menuGeneralInfo = {
+    icon: 'icon-info',
+    text: 'Thông tin chung',
+    name: 'GeneralInfo',
+    subName: 'General information',
+    subText: 'General information',
+  };
+
+  menuInputInfo = {
+    icon: 'icon-reorder',
+    text: 'Tham chiếu',
+    name: 'InputInfo',
+    subName: 'Input information',
+    subText: 'Input information',
+  };
+
+  menuGeneralContact = {
+    icon: 'icon-contact_phone',
+    text: 'Mở rộng',
+    name: 'GeneralContact',
+    subName: 'General contact',
+    subText: 'General contact',
+  };
+
+  tabInfo: any[] = [];
+  tabContent: any[] = [];
+  recIDContract = '';
   constructor(
     private cache: CacheService,
     private api: ApiHttpService,
@@ -168,10 +208,11 @@ export class AddContractsComponent implements OnInit {
     this.contractsInput = dt?.data?.contract || dt?.data?.dataCM || null;
     this.processID = dt?.data?.processID;
     this.contractRefID = dt?.data?.contractRefID;
+    this.recIDContract = dt?.data?.recIDContract;
     this.getFormModel();
 
     this.user = this.authStore.get();
-    this.listTypeContract = contractService.listTypeContractAdd;
+    // this.listTypeContract = contractService.listTypeContractAdd;
 
     this.cache.functionList(this.dialog?.formModel.funcID).subscribe((f) => {
       if (f) {
@@ -196,6 +237,7 @@ export class AddContractsComponent implements OnInit {
 
   async ngOnInit() {
     this.setDataContract(this.contractsInput);
+
     this.disabledDelActualDate =
       !this.contracts?.delStatus ||
       this.contracts?.delStatus == '0' ||
@@ -211,6 +253,12 @@ export class AddContractsComponent implements OnInit {
       );
   }
 
+  async ngAfterViewInit(): Promise<void> {
+    this.tabInfo = [this.menuGeneralInfo, this.menuInputInfo, this.menuGeneralContact,];
+    this.tabContent = [this.information,this.reference,this.extend];
+  }
+  setTitle(e: any) {
+  }
   //#region setData
   async setDataContract(data) {
     switch (this.action) {
@@ -227,15 +275,9 @@ export class AddContractsComponent implements OnInit {
         this.contracts.projectID = this.projectID;
         this.contracts.contractDate = new Date();
         this.contracts.effectiveFrom = new Date();
-        if (this.processID) {
-          this.cbxProcessChange({ data: this.processID });
-        }
-        this.contracts.pmtStatus = this.contracts.pmtStatus
-          ? this.contracts.pmtStatus
-          : '0';
-        this.contracts.contractType = this.contracts.contractType
-          ? this.contracts.contractType
-          : '1';
+        if (this.processID) {this.cbxProcessChange({ data: this.processID });}
+        this.contracts.pmtStatus = this.contracts.pmtStatus ? this.contracts.pmtStatus : '0';
+        this.contracts.contractType = this.contracts.contractType ? this.contracts.contractType : '1';
         await this.getSettingContract();
         this.loadExchangeRate(this.contracts.currencyID);
         this.setContractByDataOutput();
@@ -255,6 +297,13 @@ export class AddContractsComponent implements OnInit {
           if (dataEdit) {
             this.contracts = dataEdit;
           }
+        }else if (this.recIDContract){
+          let dataEdit = await firstValueFrom(
+            this.contractService.getContractByRecID(this.recIDContract)
+          );
+          if (dataEdit) {
+            this.contracts = dataEdit;
+          }
         }
         this.getQuotationsLinesInContract(
           this.contracts?.recID,
@@ -269,6 +318,13 @@ export class AddContractsComponent implements OnInit {
         } else if (this.contractRefID) {
           let dataCopy = await firstValueFrom(
             this.contractService.getContractByRefID(this.contractRefID)
+          );
+          if (dataCopy) {
+            this.contracts = dataCopy;
+          }
+        }else if (this.recIDContract){
+          let dataCopy = await firstValueFrom(
+            this.contractService.getContractByRecID(this.recIDContract)
           );
           if (dataCopy) {
             this.contracts = dataCopy;
@@ -678,6 +734,14 @@ export class AddContractsComponent implements OnInit {
       this.disabledDelActualDate =
         event?.data == '0' || event?.data == '1' ? true : false;
     }
+    if (event?.field == 'businessLineID' && event?.data) {
+      let processID = event?.component?.itemsSelected ? event?.component?.itemsSelected[0]?.ProcessID : null;
+      this.contracts.businessLineID = event?.data;
+      if(processID){
+        this.contracts.processID = processID;
+      }
+    }
+    //component itemsSelected
   }
 
   valueChangeOwner(event) {

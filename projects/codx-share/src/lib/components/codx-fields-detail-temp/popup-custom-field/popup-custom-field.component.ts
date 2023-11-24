@@ -35,10 +35,10 @@ export class PopupCustomFieldComponent implements OnInit {
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
-    this.fields = JSON.parse(JSON.stringify(dt.data.data));
-    this.titleHeader = dt.data?.titleHeader;
-    this.objectIdParent = dt.data?.objectIdParent;
-    this.customerID = dt.data?.customerID;
+    this.fields = JSON.parse(JSON.stringify(dt?.data?.data));
+    this.titleHeader = dt?.data?.titleHeader;
+    this.objectIdParent = dt?.data?.objectIdParent;
+    this.customerID = dt?.data?.customerID;
     this.dialog = dialog;
   }
 
@@ -65,16 +65,23 @@ export class PopupCustomFieldComponent implements OnInit {
         case 'L':
         case 'TA':
         case 'PA':
-        case 'PA':
           result = event.e;
           break;
       }
-      var index = this.fields.findIndex((x) => x.recID == field.recID);
+
+      // this.fields.forEach((x) => {
+      //   if (x.recID == field.recID) x.dataValue = result;
+      // });
+      //no bij map nguoc dataa
+      let index = this.fields.findIndex((x) => x.recID == field.recID);
       if (index != -1) {
         this.fields[index].dataValue = result;
       }
     }
   }
+  // partValue(item) {
+  //   return JSON.parse(JSON.stringify(item));
+  // }
 
   checkFormat(field) {
     if (field.dataType == 'T') {
@@ -124,7 +131,7 @@ export class PopupCustomFieldComponent implements OnInit {
     if (!check || !checkFormat) return;
     if (this.isSaving) return;
     this.isSaving = true;
-    var data = [this.fields[0]?.stepID, this.fields];
+    let data = [this.fields[0]?.stepID, this.fields];
     this.api
       .exec<any>(
         'DP',

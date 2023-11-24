@@ -502,6 +502,7 @@ export class DP_Instances_Steps_Tasks {
   approvedBy: string;
   assigned: string;
   approveStatus: string;
+  objectLinked: string;
 }
 
 export class DP_Instances_Steps_Tasks_Roles {
@@ -616,6 +617,7 @@ export class DP_Activities {
   modifiedBy: string;
   approvedBy: string;
   approveRule: string;
+  approveStatus: string;
 }
 export class DP_Activities_Roles {
   recID: string;

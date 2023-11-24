@@ -44,7 +44,6 @@ import { AngularDeviceInformationService } from 'angular-device-information';
 import { Device } from 'projects/codx-ad/src/lib/models/userLoginExtend.model';
 import { SignalRService } from 'projects/codx-common/src/lib/_layout/drawers/chat/services/signalr.service';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
-import { env } from 'process';
 
 @Component({
   selector: 'app-login',
@@ -424,11 +423,13 @@ export class LoginComponent extends UIComponent implements OnInit, OnDestroy {
         if (!data.error) {
           console.log(this.auth.get());
           let trust2FA = data?.data?.extends?.Trust2FA ?? '';
+          let hideTrustDevice = data?.data?.extends?.HideTrustDevice;
           let objData = {
             data: data.data,
             login2FA: data?.data?.extends?.TwoFA,
             hubConnectionID: this.hubConnectionID,
             loginDevice: this.loginDevice,
+            hideTrustDevice,
           };
 
           if (!trust2FA) {

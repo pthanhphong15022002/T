@@ -182,10 +182,18 @@
         <div class="card-body scroll-y" data-kt-scroll-height="auto"
           data-kt-scroll-dependencies=".tab-pane-header,.tab-pane-footer" data-kt-scroll-wrappers=".stepper-body"
           data-kt-scroll-offset="0px">
-          <div class="tab-content">
-            <div class="tab-pane fade" id="pane_1" [ngClass]="currentTab == 0 ? 'active show' : ''">
+          <div class="tab-content">             
+            <div class="tab-pane fade" id="pane_1" [ngClass]="currentTab == 0 ? 'active show' : ''">              
               <div class="w-100 form-content mw-550px mx-auto">
-                <div class="w-100 d-flex flex-column justify-content-center" *ngIf="isTemplate">
+                <!-- <div class="mb-2"><codx-tag
+                  [entityName]="formModelCustom?.entityName"
+                  [value]="data?.tags || ''"
+                  [isEdit]="true"
+                  field ="tags"
+                  (valueChange)="tagsChanged($event)"
+                ></codx-tag></div> -->
+                
+                <div class=" w-100 d-flex flex-column justify-content-center" *ngIf="isTemplate">
                   <div class="px-5 d-flex flex-row justify-content-between align-items-center">
                     <button class="col-5 px-1 es-button" role="button" (click)="chooseTemplateType(null)">
                       <span
@@ -227,7 +235,7 @@
                     <codx-thumbnail *ngIf="oSignFile" [files]="lstFile" displayThumb="simple" [hideDelete]="'1'"
                       [hideMoreF]="'0'" [tmpRight]="tmpRightAttach"></codx-thumbnail>
                   </div>
-                  <div class="text-center sign-attachment" *ngIf="(oSignFile==null)&& showAttachment">
+                  <div class="text-center sign-attachment" *ngIf="showAttachment">
                     <codx-attachment #attachment
                       [objectType]="data?.refType!=null && !isTemplate ? data?.refType : 'ES_SignFiles'" [hideDes]="'1'"
                       hideImageUpload="0" [objectId]="data?.recID" hideBtnSave="1" hideFolder="1"

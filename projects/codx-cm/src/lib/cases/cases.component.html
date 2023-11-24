@@ -20,6 +20,8 @@
   (onLoading)="onLoading($event)"
   (viewChanged)="changeView($event)"
   [viewActiveType]="viewMode"
+  (clickMF)="clickMF($event, dataSelected)"
+  (changeDataMF)="changeDataMF($event, dataSelected)"
 ></codx-views>
 
 <!-- KANBAN -->

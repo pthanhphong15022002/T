@@ -13,6 +13,7 @@ import {
 } from 'codx-core';
 import { CodxHrService } from '../codx-hr.service';
 import { PopupAddOrganizationComponent } from './popup-add-organization/popup-add-organization.component';
+import { CodxShareService } from 'projects/codx-share/src/lib/codx-share.service';
 @Component({
   selector: 'lib-organization',
   templateUrl: './organization.component.html',
@@ -59,7 +60,7 @@ export class OrgorganizationComponent extends UIComponent {
   dataSelected: any;
   // inject: Injector;
 
-  constructor(inject: Injector, private hrService: CodxHrService,
+  constructor(inject: Injector, private hrService: CodxHrService, private shareService: CodxShareService,
     public override codxService : CodxService
     ) {
     super(inject);
@@ -176,8 +177,16 @@ export class OrgorganizationComponent extends UIComponent {
           this.copyData(data, event);
           //this.df.detectChanges();
           break;
-        default:
-          break;
+          default:
+            this.shareService.defaultMoreFunc(
+              event,
+              data,
+              null,
+              this.view.formModel,
+              this.view.dataService,
+              this
+            );
+            break;
       }
     }
   }

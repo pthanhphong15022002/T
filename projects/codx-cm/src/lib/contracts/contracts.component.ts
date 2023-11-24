@@ -41,6 +41,7 @@ import { PopupMoveStageComponent } from 'projects/codx-dp/src/lib/instances/popu
 import { PopupMoveReasonComponent } from 'projects/codx-dp/src/lib/instances/popup-move-reason/popup-move-reason.component';
 import { ContractsViewDetailComponent } from './contracts-view-detail/contracts-view-detail.component';
 import { PopupAssginDealComponent } from '../deals/popup-assgin-deal/popup-assgin-deal.component';
+import { StepService } from 'projects/codx-share/src/lib/components/codx-step/step.service';
 
 @Component({
   selector: 'contracts-detail',
@@ -145,6 +146,7 @@ export class ContractsComponent extends UIComponent {
     private contractService: ContractsService,
     private notiService: NotificationsService,
     private codxShareService: CodxShareService,
+    private stepService: StepService,
     @Optional() dialog?: DialogRef
   ) {
     super(inject);
@@ -194,9 +196,9 @@ export class ContractsComponent extends UIComponent {
     this.actionName = e?.text;
     switch (e.id) {
       case 'btnAdd':
+        this.addContract();
         if (this.isAddContract) {
           this.isAddContract = false;
-          this.addContract();
         }
         break;
     }
@@ -557,6 +559,7 @@ export class ContractsComponent extends UIComponent {
   }
 
   async openPopupContract(projectID, action, contract?) {
+    // this.stepService.openPopupContract('add');
     let data = {
       projectID,
       action,
@@ -565,19 +568,15 @@ export class ContractsComponent extends UIComponent {
       type: 'view',
       actionName: this.actionName || '',
     };
-    let option = new DialogModel();
-    option.IsFull = true;
+    let option = new SidebarModel();
+    option.Width = '800px';
     option.zIndex = 1001;
     option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;
-    let popupContract = this.callFunc.openForm(
+
+    let popupContract = this.callfc.openSide(
       AddContractsComponent,
-      '',
-      null,
-      null,
-      '',
       data,
-      '',
       option
     );
     let dataPopupOutput = await firstValueFrom(popupContract.closed);
@@ -663,15 +662,13 @@ export class ContractsComponent extends UIComponent {
           this.notiService.notifyCode('ES028');
           return;
         }
-        if (category.eSign) {
-          //kys soos
-        } else {
-          this.release(data, category);
-        }
+
+        //ko phân biệt eSign
+        this.release(data, category);
       });
   }
   //Gửi duyệt
-  release(data: any, category: any) {
+  release(data: any, category: any, exportData = null) {
     //duyet moi
     this.codxShareService.codxReleaseDynamic(
       this.view.service,
@@ -680,22 +677,32 @@ export class ContractsComponent extends UIComponent {
       this.view.formModel.entityName,
       this.view.formModel.funcID,
       data?.title,
-      this.releaseCallback.bind(this)
+      this.releaseCallback.bind(this),
+      null,
+      null,
+      null,
+      null,
+      null,
+      exportData
     );
   }
   //call Back
   releaseCallback(res: any, t: any = null) {
     if (res?.msgCodeError) this.notiService.notify(res?.msgCodeError);
     else {
-      this.cmService
-        .getOneObject(this.itemSelected.recID, 'ContractsBusiness')
-        .subscribe((q) => {
-          if (q) {
-            this.itemSelected = q;
-            this.view.dataService.update(this.itemSelected).subscribe();
-          }
-          this.notiService.notifyCode('ES007');
-        });
+      this.itemSelected.approveStatus = res?.returnStatus;
+      this.itemSelected.status = res?.returnStatus;
+      this.view.dataService.update(this.itemSelected).subscribe();
+      this.notiService.notifyCode('ES007');
+      // this.cmService
+      //   .getOneObject(this.itemSelected.recID, 'ContractsBusiness')
+      //   .subscribe((q) => {
+      //     if (q) {
+      //       this.itemSelected = q;
+      //       this.view.dataService.update(this.itemSelected).subscribe();
+      //     }
+      //     this.notiService.notifyCode('ES007');
+      //   });
     }
   }
 
@@ -1139,5 +1146,49 @@ export class ContractsComponent extends UIComponent {
         // this.detectorRef.detectChanges();
       }
     });
+  }
+
+  //Export----------------------------------------------------//
+  exportTemplet(e, data) {
+    this.api
+      .execSv<any>(
+        'CM',
+        'CM',
+        'ContractsBusiness',
+        'GetDataSourceExportAsync',
+        data.recID
+      )
+      .subscribe((str) => {
+        if (str && str?.length > 0) {
+          let dataSource = '[' + str[0] + ']';
+          if (str[1]) {
+            let datas = str[1];
+            if (datas && datas.includes('[{')) datas = datas.substring(2);
+            let fix = str[0];
+            fix = fix.substring(1, fix.length - 1);
+            dataSource = '[{ ' + fix + ',' + datas;
+          }
+
+          let customData = {
+            refID: data.recID,
+            refType: this.view.entityName,
+            dataSource: dataSource,
+          };
+          if (data?.refID && data.applyProcess) {
+            customData.refID = data.processID;
+            customData.refType = 'DP_Processes';
+          }
+          this.codxShareService.defaultMoreFunc(
+            e,
+            data,
+            this.afterSave,
+            this.view.formModel,
+            this.view.dataService,
+            this,
+            customData
+          );
+          this.detectorRef.detectChanges();
+        }
+      });
   }
 }

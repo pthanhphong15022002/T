@@ -189,6 +189,7 @@ import { CodxViewDetailSignFileComponent } from './components/codx-approval-proc
 import { CodxViewApproveComponent } from './components/codx-step/codx-step-common/codx-view-approve/codx-view-approve.component';
 import { LayoutComponent } from './components/layout/layout.component';
 import { FormSettingComponent } from './components/form-setting/form-setting.component';
+import { ChangeMemoryCellsPipe } from './components/codx-fields-detail-temp/pipes-fields/change-memory-cells.pipe';
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
   // AttachmentComponent,
@@ -387,6 +388,7 @@ const T_Pipe: Type<any>[] = [FormatDataValuePipe];
     CodxDateComponent,
     LayoutComponent,
     T_Pipe,
+    ChangeMemoryCellsPipe,
   ],
   exports: [T_Component, T_Pipe, CodxCommonModule],
   imports: [

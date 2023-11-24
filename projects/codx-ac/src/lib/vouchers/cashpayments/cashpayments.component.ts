@@ -121,7 +121,7 @@ export class CashPaymentsComponent extends UIComponent {
           template: this.templateDetailLeft,
           panelRightRef: this.templateDetailRight,
           collapsed: true,
-          widthLeft: '22%',
+          widthLeft: '23%',
           //separatorSize:3
         },
       },
@@ -426,13 +426,7 @@ export class CashPaymentsComponent extends UIComponent {
    */
   changeMFDetail(event: any, data: any, type: any = '') {
     if (data) {
-      this.acService.changeMFCashPayment(
-        event,
-        data,
-        type,
-        this.journal,
-        this.view.formModel
-      );
+      this.acService.changeMFCashPayment(event,data,type,this.journal,this.view.formModel);
     }
   }
 

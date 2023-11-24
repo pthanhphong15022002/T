@@ -8,7 +8,20 @@
 
 <ng-template #template>
   <div class="divControl">
-    <table>
+    <codx-input
+      #d
+      field="periodID"
+      type="combobox"
+      [refValue]="'Users'"
+      [refType]="'3'"
+      [crrValue]=""
+      [model]="{}"
+      (valueChange)="valueChange($event)"
+      placeholder="Kỳ"
+    ></codx-input>
+
+    <button (click)="clickclick($event, d)">nút nè</button>
+    <!-- <table>
       <tr>
         <td class="divOptions">
           <div>
@@ -33,9 +46,10 @@
             <codx-input
               field="periodID"
               type="combobox"
-              [refValue]="'DPProcessSteps'"
-              [crrValue]="1"
-              [model]="{ processNo: '2307180001' }"
+              [refValue]="'DP009'"
+              [refType]="'5'"
+              [crrValue]=""
+              [model]="{}"
               (valueChange)="valueChange($event)"
               placeholder="Kỳ"
             ></codx-input>
@@ -94,7 +108,7 @@
           </button>
         </td>
       </tr>
-    </table>
+    </table> -->
   </div>
   <div class="divContent"></div>
 </ng-template>

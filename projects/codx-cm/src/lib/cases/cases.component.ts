@@ -162,9 +162,11 @@ export class CasesComponent
 
   onInit(): void {
     //test no chosse
-    this.button = [{
-      id: this.btnAdd,
-    }];
+    this.button = [
+      {
+        id: this.btnAdd,
+      },
+    ];
     this.afterLoad();
   }
 
@@ -246,20 +248,21 @@ export class CasesComponent
   async executeApiCalls() {
     try {
       await this.getColorReason();
-
     } catch (error) {}
   }
   async getListStatusCode() {
-    this.codxCmService.getListStatusCode([this.caseType == '1'? '9':'11']).subscribe((res) => {
-      if (res) {
-        this.valueListStatusCode = res.map((item) => ({
-          text: item.statusName,
-          value: item.statusID,
-        }));
-      } else {
-        this.valueListStatusCode = [];
-      }
-    });
+    this.codxCmService
+      .getListStatusCode([this.caseType == '1' ? '9' : '11'])
+      .subscribe((res) => {
+        if (res) {
+          this.valueListStatusCode = res.map((item) => ({
+            text: item.statusName,
+            value: item.statusID,
+          }));
+        } else {
+          this.valueListStatusCode = [];
+        }
+      });
   }
 
   async getColorReason() {
@@ -418,34 +421,36 @@ export class CasesComponent
       eventItem.disabled = true;
     };
 
-
     functionMappings = {
-      ...['CM0401_1', 'CM0401_3', 'CM0401_4','SYS101',
-      'CM0402_1', 'CM0402_3', 'CM0402_4',
-    ].reduce(
-        (fundID, more) => ({ ...fundID, [more]: isDisabled }),
-        {}
-      ),
+      ...[
+        'CM0401_1',
+        'CM0401_3',
+        'CM0401_4',
+        'SYS101',
+        'CM0402_1',
+        'CM0402_3',
+        'CM0402_4',
+      ].reduce((fundID, more) => ({ ...fundID, [more]: isDisabled }), {}),
       ...['SYS101', 'SYS102', 'SYS103', 'SYS104'].reduce(
         (fundID, more) => ({ ...fundID, [more]: isDisabledDefault }),
         {}
       ),
-        CM0401_2: isStartDay,
-        CM0402_7:isOwner,
-        CM0401_7:isOwner,
-        CM0401_8: isClosed,
-        CM0401_9: isOpened,
-        CM0402_2: isStartDay,
-        CM0402_8: isClosed,
-        CM0402_9: isOpened,
-        SYS03: isEdit,
-        SYS04: isCopy,
-        SYS02: isDelete,
-        CM0401_6: isApprover,
-        CM0402_6: isApprover,
-        CM0401_11: isRejectApprover,
-        CM0402_11: isRejectApprover,
-      };
+      CM0401_2: isStartDay,
+      CM0402_7: isOwner,
+      CM0401_7: isOwner,
+      CM0401_8: isClosed,
+      CM0401_9: isOpened,
+      CM0402_2: isStartDay,
+      CM0402_8: isClosed,
+      CM0402_9: isOpened,
+      SYS03: isEdit,
+      SYS04: isCopy,
+      SYS02: isDelete,
+      CM0401_6: isApprover,
+      CM0402_6: isApprover,
+      CM0401_11: isRejectApprover,
+      CM0402_11: isRejectApprover,
+    };
     return functionMappings[type];
   }
   checkApplyProcess(data) {
@@ -456,24 +461,8 @@ export class CasesComponent
     this.changeDataMF(e.e, e.data);
   }
 
-  checkMoreReason(tmpPermission) {
-    if (
-      tmpPermission.isReasonSuccess &&
-      tmpPermission.isReasonFail &&
-      tmpPermission.isMoveStage
-    ) {
-      return true;
-    }
-    if (tmpPermission.isReasonSuccess) {
-      return true;
-    }
-    if (tmpPermission.IsReasonFail) {
-      return true;
-    }
-    if (tmpPermission.isMoveStage) {
-      return true;
-    }
-    return false;
+  checkMoreReason(data) {
+    return data?.status != '1' && data?.status != '2' && data?.status != '15';
   }
 
   clickMoreFunc(e) {
@@ -502,7 +491,8 @@ export class CasesComponent
       CM0401_11: () => this.cancelApprover(data),
       CM0402_11: () => this.cancelApprover(data),
       CM0401_10: () => this.popupPermissions(data),
-      CM0401_12:() => this.openFormChangeStatus(data),
+      CM0401_12: () => this.openFormChangeStatus(data),
+      SYS002: () => this.exportTemplet(e, data),
     };
 
     const executeFunction = functionMappings[e.functionID];
@@ -530,8 +520,6 @@ export class CasesComponent
         customData
       );
     }
-
-
   }
   openFormChangeStatus(data) {
     this.dataSelected = data;
@@ -553,7 +541,7 @@ export class CasesComponent
       recID: this.dataSelected.recID,
       valueListStatusCode: this.valueListStatusCode,
       gridViewSetup: this.gridViewSetup,
-      applyFor:this.applyFor
+      applyFor: this.applyFor,
     };
     var dialog = this.callfc.openForm(
       PopupUpdateStatusComponent,
@@ -1184,14 +1172,11 @@ export class CasesComponent
           this.notificationsService.notifyCode('ES028');
           return;
         }
-        if (category.eSign) {
-          //kys soos
-        } else {
-          this.release(data, category);
-        }
+        //ko phân biệt eSign
+        this.release(data, category);
       });
   }
-  release(data: any, category: any) {
+  release(data: any, category: any, exportData = null) {
     //duyet moi
     this.codxShareService.codxReleaseDynamic(
       this.view.service,
@@ -1200,23 +1185,34 @@ export class CasesComponent
       this.view.formModel.entityName,
       this.view.formModel.funcID,
       data?.title,
-      this.releaseCallback.bind(this)
+      this.releaseCallback.bind(this),
+      null,
+      null,
+      null,
+      null,
+      null,
+      exportData
     );
   }
   //call Back
   releaseCallback(res: any, t: any = null) {
     if (res?.msgCodeError) this.notificationsService.notify(res?.msgCodeError);
     else {
-      this.codxCmService
-        .getOneObject(this.dataSelected.recID, 'CasesBusiness')
-        .subscribe((c) => {
-          if (c) {
-            this.dataSelected = c;
-            this.view.dataService.update(this.dataSelected).subscribe();
-            if (this.kanban) this.kanban.updateCard(this.dataSelected);
-          }
-          this.notificationsService.notifyCode('ES007');
-        });
+      this.dataSelected.approveStatus = res?.returnStatus;
+      this.dataSelected.status = res?.returnStatus;
+      this.view.dataService.update(this.dataSelected).subscribe();
+      if (this.kanban) this.kanban.updateCard(this.dataSelected);
+      this.notificationsService.notifyCode('ES007');
+      // this.codxCmService
+      //   .getOneObject(this.dataSelected.recID, 'CasesBusiness')
+      //   .subscribe((c) => {
+      //     if (c) {
+      //       this.dataSelected = c;
+      //       this.view.dataService.update(this.dataSelected).subscribe();
+      //       if (this.kanban) this.kanban.updateCard(this.dataSelected);
+      //     }
+      //     this.notificationsService.notifyCode('ES007');
+      //   });
     }
   }
 
@@ -1568,30 +1564,74 @@ export class CasesComponent
     let test = this.funcID;
     return;
     this.notificationsService
-    .alertCode('DP033', null, ['"' + data?.leadName + '"' || ''])
-    .subscribe((x) => {
-      if (x.event && x.event.status == 'Y') {
-        this.codxCmService
-          .startInstance([data.refID, data.recID, 'CM0205', 'CM_Leads'])
-          .subscribe((resDP) => {
-            if (resDP) {
-              var datas = [data.recID, resDP[0]];
-              this.codxCmService.startLead(datas).subscribe((res) => {
-                if (res) {
-                  this.dataSelected = res;
-                  this.dataSelected = JSON.parse(
-                    JSON.stringify(this.dataSelected)
-                  );
-                  this.detailViewCase.reloadListStep(resDP[1]);
-                  this.notificationsService.notifyCode('SYS007');
-                  this.view.dataService.update(this.dataSelected).subscribe();
-                }
-                this.detectorRef.detectChanges();
-              });
-            }
-          });
-      }
-    });
+      .alertCode('DP033', null, ['"' + data?.leadName + '"' || ''])
+      .subscribe((x) => {
+        if (x.event && x.event.status == 'Y') {
+          this.codxCmService
+            .startInstance([data.refID, data.recID, 'CM0205', 'CM_Leads'])
+            .subscribe((resDP) => {
+              if (resDP) {
+                var datas = [data.recID, resDP[0]];
+                this.codxCmService.startLead(datas).subscribe((res) => {
+                  if (res) {
+                    this.dataSelected = res;
+                    this.dataSelected = JSON.parse(
+                      JSON.stringify(this.dataSelected)
+                    );
+                    this.detailViewCase.reloadListStep(resDP[1]);
+                    this.notificationsService.notifyCode('SYS007');
+                    this.view.dataService.update(this.dataSelected).subscribe();
+                  }
+                  this.detectorRef.detectChanges();
+                });
+              }
+            });
+        }
+      });
   }
   //#endregion
+
+  //Export----------------------------------------------------//
+  exportTemplet(e, data) {
+    this.api
+      .execSv<any>(
+        'CM',
+        'CM',
+        'CasesBusiness',
+        'GetDataSourceExportAsync',
+        data.recID
+      )
+      .subscribe((str) => {
+        if (str && str?.length > 0) {
+          let dataSource = '[' + str[0] + ']';
+          if (str[1]) {
+            let datas = str[1];
+            if (datas && datas.includes('[{')) datas = datas.substring(2);
+            let fix = str[0];
+            fix = fix.substring(1, fix.length - 1);
+            dataSource = '[{ ' + fix + ',' + datas;
+          }
+
+          let customData = {
+            refID: data.recID,
+            refType: this.view.entityName,
+            dataSource: dataSource,
+          };
+          if (data?.refID && data.applyProcess) {
+            customData.refID = data.processID;
+            customData.refType = 'DP_Processes';
+          }
+          this.codxShareService.defaultMoreFunc(
+            e,
+            data,
+            this.afterSave,
+            this.view.formModel,
+            this.view.dataService,
+            this,
+            customData
+          );
+          this.detectorRef.detectChanges();
+        }
+      });
+  }
 }
