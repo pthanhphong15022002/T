@@ -39,6 +39,7 @@ import { PopupPermissionsComponent } from '../popup-permissions/popup-permission
 import { PopupAssginDealComponent } from './popup-assgin-deal/popup-assgin-deal.component';
 import { PopupUpdateStatusComponent } from './popup-update-status/popup-update-status.component';
 import { StepService } from 'projects/codx-share/src/lib/components/codx-step/step.service';
+import { ExportData } from 'projects/codx-share/src/lib/models/ApproveProcess.model';
 
 @Component({
   selector: 'lib-deals',
@@ -796,7 +797,6 @@ export class DealsComponent
             // listStepCbx: this.lstStepInstances,
           };
           let obj = {
-            stepName: data?.currentStepName,
             formModel: formMD,
             deal: data,
             stepReason: stepReason,
@@ -894,22 +894,6 @@ export class DealsComponent
                 0,
                 "'" + data.dealName + "'"
               );
-              if (data.showInstanceControl === '1') {
-                this.view.dataService
-                  .update(this.dataSelected, true)
-                  .subscribe();
-              }
-              if (
-                data.showInstanceControl === '0' ||
-                data.showInstanceControl === '2'
-              ) {
-                this.view.dataService.remove(this.dataSelected).subscribe();
-                this.dataSelected = this.view.dataService.data[0];
-                this.view.dataService.onAction.next({
-                  type: 'delete',
-                  data: data,
-                });
-              }
               if (this.kanban) {
                 this.renderKanban(this.dataSelected);
               }
@@ -1344,11 +1328,13 @@ export class DealsComponent
                 this.notificationsService.notifyCode('ES028');
                 return;
               }
-              if (res.eSign) {
-                //kys soos
-              } else {
-                this.release(dt, res);
-              }
+              //ko phân biệt eSign - nếu cần thì phải get
+              // let exportData: ExportData = {
+              //   funcID: this.view.formModel.funcID,
+              //   recID: this.dataSelected.recID,
+              //   data: dt?.datas,
+              // };
+              this.release(dt, res);
             });
         } else {
           this.notificationsService.notifyCode(
@@ -1361,7 +1347,7 @@ export class DealsComponent
     });
   }
 
-  release(data: any, category: any) {
+  release(data: any, category: any, exportData = null) {
     // new function release
     this.codxShareService.codxReleaseDynamic(
       this.view.service,
@@ -1370,7 +1356,13 @@ export class DealsComponent
       this.view.formModel.entityName,
       this.view.formModel.funcID,
       data?.title,
-      this.releaseCallback.bind(this)
+      this.releaseCallback.bind(this),
+      null,
+      null,
+      null,
+      null,
+      null,
+      exportData
     );
   }
   //call Back

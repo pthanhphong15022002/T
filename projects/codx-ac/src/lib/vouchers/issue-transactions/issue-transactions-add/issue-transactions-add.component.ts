@@ -85,12 +85,12 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
     this.destroy$.complete();
   }
 
-  beforeInitGrid(event){
+  beforeInitGrid(eleGrid:CodxGridviewV2Component){
     let hideFields = [];
     if (this.dialogData?.data.hideFields && this.dialogData?.data.hideFields.length > 0) {
       hideFields = [...this.dialogData?.data.hideFields]; //? get danh sách các field ẩn được truyền vào từ dialogdata
     }
-    this.eleGridVouchers.showHideColumns(hideFields);
+    eleGrid.showHideColumns(hideFields);
   }
 
   //#endregion Init

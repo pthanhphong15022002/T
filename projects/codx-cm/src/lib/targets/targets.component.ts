@@ -15,6 +15,7 @@ import {
   AuthStore,
   ButtonModel,
   CodxGridviewV2Component,
+  CodxInputComponent,
   DataRequest,
   DialogModel,
   FormModel,
@@ -50,7 +51,7 @@ export class TargetsComponent
   @Input() viewDashboard = false;
   @Input() viewMode = 16;
   //schedule view
-  @ViewChild('codxInput') codxInput: any;
+  @ViewChild('codxInputCurrentID') codxInputCurrentID: CodxInputComponent;
   @ViewChild('calendarDrop') calendarDrop: any;
   @ViewChild('resourceHeader') resourceHeader!: TemplateRef<any>;
   @ViewChild('resourceTootip') resourceTootip!: TemplateRef<any>;
@@ -566,77 +567,81 @@ export class TargetsComponent
       let exchangeRate = await firstValueFrom(
         this.cmSv.getExchangeRate(currencyID, day)
       );
-
+      let exchRate = 1;
       if (exchangeRate?.exchRate > 0) {
-        this.lstDataTree.forEach((element) => {
-          element.target =
-            (element.target / exchangeRate?.exchRate) * element.exchangeRate;
-          element.dealValue =
-            (element.dealValue / exchangeRate?.exchRate) * element.exchangeRate;
-          element.currencyID = currencyID;
-          element.exchangeRate = exchangeRate?.exchRate ?? 1;
-          if (element?.targetsLines != null) {
-            element?.targetsLines.forEach((line) => {
-              line.target =
-                (line.target / exchangeRate?.exchRate) * line.exchangeRate;
-              line.currencyID = currencyID;
-              line.exchangeRate = exchangeRate?.exchRate ?? 1;
-            });
-          }
-
-          if (element?.deals != null) {
-            element?.deals.forEach((deal) => {
-              deal.dealValue =
-                (deal.dealValue / exchangeRate?.exchRate) * deal.exchangeRate;
-              deal.currencyID = currencyID;
-              deal.exchangeRate = exchangeRate?.exchRate ?? 1;
-            });
-          }
-
-          if (element?.items != null) {
-            element?.items.forEach((item) => {
-              item.target =
-                (item.target / exchangeRate?.exchRate) * item.exchangeRate;
-              item.dealValue =
-                (item.dealValue / exchangeRate?.exchRate) * item.exchangeRate;
-              if (item?.targetsLines != null) {
-                item?.targetsLines.forEach((line) => {
-                  line.target =
-                    (line.target / exchangeRate?.exchRate) * line.exchangeRate;
-                  line.currencyID = currencyID;
-                  line.exchangeRate = exchangeRate?.exchRate ?? 1;
-                });
-              }
-
-              if (item?.deals != null) {
-                item?.deals.forEach((deal) => {
-                  deal.dealValue =
-                    (deal.dealValue / exchangeRate?.exchRate) *
-                    deal.exchangeRate;
-                  deal.currencyID = currencyID;
-                  deal.exchangeRate = exchangeRate?.exchRate ?? 1;
-                });
-              }
-
-              item.currencyID = currencyID;
-              item.exchangeRate = exchangeRate?.exchRate ?? 1;
-            });
-          }
-        });
-        if (this.lstDataTree != null && this.viewMode == 9) {
-          this.lstDataTree = JSON.parse(JSON.stringify(this.lstDataTree));
-        }
+        exchRate = exchangeRate?.exchRate;
       } else {
-        exchangeRate.exchRate = this.exchangeRate;
-        currencyID = this.currencyID;
-        this.currencyID = null;
-        this.codxInput.crrValue = null;
-        this.codxInput.value = null;
+        currencyID = 'VND';
+        exchRate = 1;
       }
+      this.setTargetByExchangeRate(currencyID, exchRate);
       this.currencyID = currencyID;
-      this.exchangeRate = exchangeRate?.exchRate;
-
+      this.exchangeRate = exchRate;
+      if(this.codxInputCurrentID && this.codxInputCurrentID?.ComponentCurrent){
+        this.codxInputCurrentID.ComponentCurrent?.setValue(this.currencyID);
+      }
       this.changeDetec.detectChanges();
+    }
+  }
+
+  setTargetByExchangeRate(currencyID, exchRate){
+    this.lstDataTree.forEach((element) => {
+      element.target =
+        (element.target / exchRate) * element.exchangeRate;
+      element.dealValue =
+        (element.dealValue / exchRate) * element.exchangeRate;
+      element.currencyID = currencyID;
+      element.exchangeRate = exchRate ?? 1;
+      if (element?.targetsLines != null) {
+        element?.targetsLines.forEach((line) => {
+          line.target =
+            (line.target /exchRate) * line.exchangeRate;
+          line.currencyID = currencyID;
+          line.exchangeRate = exchRate ?? 1;
+        });
+      }
+
+      if (element?.deals != null) {
+        element?.deals.forEach((deal) => {
+          deal.dealValue =
+            (deal.dealValue / exchRate) * deal.exchangeRate;
+          deal.currencyID = currencyID;
+          deal.exchangeRate = exchRate ?? 1;
+        });
+      }
+
+      if (element?.items != null) {
+        element?.items.forEach((item) => {
+          item.target =
+            (item.target / exchRate) * item.exchangeRate;
+          item.dealValue =
+            (item.dealValue / exchRate) * item.exchangeRate;
+          if (item?.targetsLines != null) {
+            item?.targetsLines.forEach((line) => {
+              line.target =
+                (line.target / exchRate) * line.exchangeRate;
+              line.currencyID = currencyID;
+              line.exchangeRate = exchRate ?? 1;
+            });
+          }
+
+          if (item?.deals != null) {
+            item?.deals.forEach((deal) => {
+              deal.dealValue =
+                (deal.dealValue / exchRate) *
+                deal.exchangeRate;
+              deal.currencyID = currencyID;
+              deal.exchangeRate = exchRate ?? 1;
+            });
+          }
+
+          item.currencyID = currencyID;
+          item.exchangeRate = exchRate ?? 1;
+        });
+      }
+    });
+    if (this.lstDataTree != null && this.viewMode == 9) {
+      this.lstDataTree = JSON.parse(JSON.stringify(this.lstDataTree));
     }
   }
 

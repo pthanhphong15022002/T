@@ -199,7 +199,6 @@ export class ContractsComponent extends UIComponent {
         this.addContract();
         if (this.isAddContract) {
           this.isAddContract = false;
-          
         }
         break;
     }
@@ -574,7 +573,7 @@ export class ContractsComponent extends UIComponent {
     option.zIndex = 1001;
     option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;
-    
+
     let popupContract = this.callfc.openSide(
       AddContractsComponent,
       data,
@@ -663,15 +662,13 @@ export class ContractsComponent extends UIComponent {
           this.notiService.notifyCode('ES028');
           return;
         }
-        if (category.eSign) {
-          //kys soos
-        } else {
-          this.release(data, category);
-        }
+
+        //ko phân biệt eSign
+        this.release(data, category);
       });
   }
   //Gửi duyệt
-  release(data: any, category: any) {
+  release(data: any, category: any, exportData = null) {
     //duyet moi
     this.codxShareService.codxReleaseDynamic(
       this.view.service,
@@ -680,7 +677,13 @@ export class ContractsComponent extends UIComponent {
       this.view.formModel.entityName,
       this.view.formModel.funcID,
       data?.title,
-      this.releaseCallback.bind(this)
+      this.releaseCallback.bind(this),
+      null,
+      null,
+      null,
+      null,
+      null,
+      exportData
     );
   }
   //call Back
@@ -1143,5 +1146,49 @@ export class ContractsComponent extends UIComponent {
         // this.detectorRef.detectChanges();
       }
     });
+  }
+
+  //Export----------------------------------------------------//
+  exportTemplet(e, data) {
+    this.api
+      .execSv<any>(
+        'CM',
+        'CM',
+        'ContractsBusiness',
+        'GetDataSourceExportAsync',
+        data.recID
+      )
+      .subscribe((str) => {
+        if (str && str?.length > 0) {
+          let dataSource = '[' + str[0] + ']';
+          if (str[1]) {
+            let datas = str[1];
+            if (datas && datas.includes('[{')) datas = datas.substring(2);
+            let fix = str[0];
+            fix = fix.substring(1, fix.length - 1);
+            dataSource = '[{ ' + fix + ',' + datas;
+          }
+
+          let customData = {
+            refID: data.recID,
+            refType: this.view.entityName,
+            dataSource: dataSource,
+          };
+          if (data?.refID && data.applyProcess) {
+            customData.refID = data.processID;
+            customData.refType = 'DP_Processes';
+          }
+          this.codxShareService.defaultMoreFunc(
+            e,
+            data,
+            this.afterSave,
+            this.view.formModel,
+            this.view.dataService,
+            this,
+            customData
+          );
+          this.detectorRef.detectChanges();
+        }
+      });
   }
 }

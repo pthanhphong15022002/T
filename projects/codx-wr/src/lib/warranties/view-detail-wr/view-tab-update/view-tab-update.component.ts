@@ -112,8 +112,8 @@ export class ViewTabUpdateComponent implements OnInit {
   ngOnInit(): void {
     // this.getGridViewSetup();
     this.sortField = new SortModel();
-    this.sortField.field = 'CreatedOn';
-    this.sortField.dir = 'desc';
+    this.sortField.field = 'statusCode';
+    this.sortField.dir = 'asc';
   }
 
   ngAfterViewInit(): void {
