@@ -14,6 +14,8 @@ class permissionDis
     description    : string;
     funcID         : string;
     inforSentEMail : inforSentEMail 
+    desc           : string;
+    emailTemplates  : any;
 }
 
 class ShowData {
