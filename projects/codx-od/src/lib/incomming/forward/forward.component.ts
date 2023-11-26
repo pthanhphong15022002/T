@@ -27,7 +27,7 @@ export class ForwardComponent implements OnInit {
   forwardForm = new FormGroup({
     userID: new FormControl(),
     comment : new FormControl(),
-    sendMail: new FormControl(),
+    sendMail: new FormControl(true),
     emailTemplates: new FormControl()
   });
   constructor(
@@ -60,12 +60,12 @@ export class ForwardComponent implements OnInit {
     if(isObservable(alertRule))
     {
       alertRule.subscribe((item:any)=>{
-        this.forwardForm.controls['sendMail'].setValue(item?.isMail);
+        if(item) this.forwardForm.controls['sendMail'].setValue(item?.isMail);
         if(item?.emailTemplate) this.getEmailTmp(item.emailTemplate);
       })
     }
     else {
-      this.forwardForm.controls['sendMail'].setValue(alertRule?.isMail);
+      if(alertRule) this.forwardForm.controls['sendMail'].setValue(alertRule?.isMail);
       if(alertRule?.emailTemplate) this.getEmailTmp(alertRule.emailTemplate);
     }
   }

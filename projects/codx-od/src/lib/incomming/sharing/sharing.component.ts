@@ -32,7 +32,7 @@ export class SharingComponent implements OnInit {
     download : new FormControl(),
     formDate: new FormControl(),
     toDate : new FormControl(),
-    sendMail: new FormControl(),
+    sendMail: new FormControl(true),
     emailTemplates: new FormControl()
   });
   constructor(
@@ -63,12 +63,12 @@ export class SharingComponent implements OnInit {
     if(isObservable(alertRule))
     {
       alertRule.subscribe((item:any)=>{
-        this.shareForm.controls['sendMail'].setValue(item?.isMail);
+        if(item) this.shareForm.controls['sendMail'].setValue(item?.isMail);
         if(item?.emailTemplate) this.getEmailTmp(item.emailTemplate);
       })
     }
     else {
-      this.shareForm.controls['sendMail'].setValue(alertRule?.isMail);
+      if(alertRule) this.shareForm.controls['sendMail'].setValue(alertRule?.isMail);
       if(alertRule?.emailTemplate) this.getEmailTmp(alertRule.emailTemplate);
     }
   }
