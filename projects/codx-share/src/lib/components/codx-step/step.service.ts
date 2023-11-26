@@ -593,6 +593,24 @@ export class StepService {
       [id]
     );
   }
+  getOneQuotation(id) {
+    return this.api.execSv<any>(
+      'CM',
+      'ERM.Business.CM',
+      'QuotationsBusiness',
+      'GetOneAsync',
+      [id]
+    );
+  }
+  getOneContract(id) {
+    return this.api.execSv<any>(
+      'CM',
+      'ERM.Business.CM',
+      'ContractsBusiness',
+      'GetOneAsync',
+      [id]
+    );
+  }
 
 
   async openPopupTaskContract(data,action,task,stepID,groupTaskID,) {
@@ -736,7 +754,17 @@ export class StepService {
     // return this.popupClosedSubject.asObservable();
   }
 
-  addQuotation(action, titleAction) {
+  async addQuotation(action, titleAction, quotationID) {
+    if((action == 'edit' || action == 'copy') && quotationID){
+      let quotation = await firstValueFrom(this.getOneQuotation(quotationID));
+      if(quotation){
+
+      }else{
+
+      }
+    }else{
+
+    }
     let quotation;
     this.getDefault('CM0202', 'CM_Quotations', 'quotationsID').subscribe((res) => {
       if (res) {
