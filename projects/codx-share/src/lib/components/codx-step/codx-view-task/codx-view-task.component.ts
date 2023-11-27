@@ -556,17 +556,16 @@ export class CodxViewTaskComponent implements OnInit {
 
   async addTask(type, dataType) {
     let groupId = this.type == 'G' ? this.dataView?.refID : null;
-    let taskOutput = await this.stepService.addTask(
-      type,
-      'add',
-      '',
-      null,
-      dataType,
-      this.instanceStep,
-      null,
+
+    let dataInput = {
+      action: 'add',
+      taskType: dataType,
+      instanceStep: this.instanceStep,
+      type: type,
       groupId,
-      true,
-      null,
+    };
+    let taskOutput = await this.stepService.openPopupCodxTask(
+      dataInput,
       'center'
     );
     if (taskOutput?.task) {

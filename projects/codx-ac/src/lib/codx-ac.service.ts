@@ -843,4 +843,14 @@ export class CodxAcService {
           break;
     }
   }
+
+  changeMFJournal(event) {
+    event.filter((x) => !Object.values(MorfuncDefault).includes(x.functionID)) 
+      .reduce((pre, element) => { element.disabled = true }, {});
+    event = event.filter((x) => Object.values(MorfuncDefault).includes(x.functionID));
+    event.forEach(element => {
+      if([MorfuncDefault.XuatDuLieu].includes(element.functionID)) element.disabled = true;
+      element.isbookmark = true;
+    });
+  }
 }

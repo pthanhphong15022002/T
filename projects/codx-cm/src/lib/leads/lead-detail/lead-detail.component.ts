@@ -13,6 +13,7 @@ import {
   ApiHttpService,
   CRUDService,
   CacheService,
+  CodxService,
   DataRequest,
   FormModel,
   ImageViewerComponent,
@@ -59,6 +60,7 @@ export class LeadDetailComponent implements OnInit {
   oCountFooter: any = {};
   contactPerson: any;
   gridViewSetupDeal: any;
+  stepCurrent:any;
   request: ResourceModel;
   formModelDeal: FormModel;
 
@@ -70,6 +72,8 @@ export class LeadDetailComponent implements OnInit {
   customerNo: string = '';
   companyName: string = '';
   customerName: string = '';
+  asideMode: string = '';
+  statusCodeName: string = '';
 
   isHidden: boolean = true;
   isBool: boolean = false;
@@ -108,9 +112,11 @@ export class LeadDetailComponent implements OnInit {
     private changeDetectorRef: ChangeDetectorRef,
     private cache: CacheService,
     private codxCmService: CodxCmService,
-    private api: ApiHttpService
+    private api: ApiHttpService,
+    private codxService: CodxService
   ) {
     this.isDataLoading = true;
+    this.asideMode = codxService.asideMode;
     this.executeApiCalls();
   }
 
@@ -158,6 +164,7 @@ export class LeadDetailComponent implements OnInit {
         }
       }
       this.getTags(this.dataSelected);
+      this.statusCodeName = this.getStatusCode(this.dataSelected?.statusCode);
     }
     if (
       changes['listCategory']?.currentValue &&
@@ -246,6 +253,7 @@ export class LeadDetailComponent implements OnInit {
       if (res) {
         this.listSteps = res;
         this.isDataLoading = false;
+        this.getStepCurrent(this.dataSelected);
         this.checkCompletedInstance(this.dataSelected?.status);
       } else {
         this.listSteps = null;
@@ -327,6 +335,7 @@ export class LeadDetailComponent implements OnInit {
   reloadListStep(listSteps: any) {
     this.isDataLoading = true;
     this.listSteps = listSteps;
+    this.getStepCurrent(this.dataSelected);
     this.isDataLoading = false;
     this.changeDetectorRef.detectChanges();
   }
@@ -367,7 +376,9 @@ export class LeadDetailComponent implements OnInit {
         return result?.text;
       }
     }
-
     return '';
+  }
+  getStepCurrent(data) {
+    this.stepCurrent = this.listSteps.filter(x=>x.stepID == data.stepID)[0];
   }
 }
