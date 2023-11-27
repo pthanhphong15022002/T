@@ -837,14 +837,20 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   //#endregion
 
   //#region start task
-  startTask(task: DP_Instances_Steps_Tasks, groupTask) {
-    // if (task?.taskType == 'Q') {
-    //   //báo giá
-    //   this.addQuotation();
-    // } else if (task?.taskType == 'CO') {
-    //   // hợp đồng
-    //   this.openPopupContract('add');
-    // }
+  async startTask(task: DP_Instances_Steps_Tasks, groupTask) {
+    if (task?.taskType == 'Q') {
+      //báo giá
+      this.addQuotation();
+    } else if (task?.taskType == 'CO' && !task?.objectLinked) {
+      let data = { action: "add", type: "task",}
+      let taskContract = await this.stepService.openPopupTaskContract(data,'add',null, this.currentStep?.recID, groupTask);
+      this.api
+      .exec<any>('DP', 'InstancesStepsBusiness', 'AddTaskStepAsync', [taskContract])
+      .subscribe((res) => {
+        if (res) {
+          this.changeTaskAdd(res[0],res[1],res[2],false);
+        }});
+    }
     this.api
       .exec<any>('DP', 'InstancesStepsBusiness', 'StartTaskAsync', [
         task?.stepID,
