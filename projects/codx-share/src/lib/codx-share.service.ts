@@ -76,6 +76,8 @@ export class CodxShareService {
   //
   //
   //listApproveMF = [];
+  dataApproveTrans = new BehaviorSubject<any>(null); //data Approvel Trans- cần ở DP- CM để khỏi gọi- VTHAO
+
   constructor(
     private notificationsService: NotificationsService,
     private callfunc: CallFuncService,
