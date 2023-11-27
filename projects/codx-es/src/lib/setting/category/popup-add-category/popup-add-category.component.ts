@@ -37,6 +37,7 @@ import { CodxEsService, GridModels } from '../../../codx-es.service';
 //import { ApprovalStepComponent } from '../../approval-step/approval-step.component';
 import { PopupAddAutoNumberComponent } from '../popup-add-auto-number/popup-add-auto-number.component';
 import { PopupAddSignFileComponent } from '../../../sign-file/popup-add-sign-file/popup-add-sign-file.component';
+import { PopupAddTemplateSignFileComponent } from '../../../template-sign-file/popup-add-template-sign-file.component';
 @Component({
   selector: 'popup-add-category',
   templateUrl: './popup-add-category.component.html',
@@ -818,54 +819,7 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
       return;
     }
   }
-
-  // openPopupSignFile() {
-  //   let option = new SidebarModel();
-  //   option.FormModel = this.signFileFM;
-  //   let isAddNew = false;
-  //   this.esService
-  //     .getTemplateOfCategory(this.data?.categoryID)
-  //     .subscribe((res: any) => {
-  //       if (res) {
-  //         let signFile = res;
-  //         if (signFile.categoryID == null || signFile.categoryID == '') {
-  //           signFile.title = this.data?.categoryName;
-  //           signFile.categoryID = this.data?.categoryID;
-  //           signFile.category = this.data?.category;
-  //           signFile.refType = 'ES_SignFiles';
-  //           signFile.owner = this.authService?.userValue?.userID;
-  //           signFile.isTemplate = true;
-  //           signFile.processID = this.data?.recID;
-  //           signFile.approveControl = '3';
-  //           signFile.buid = this.curUser?.buid;
-  //           signFile.createdBy = this.authService?.userValue?.userID;
-  //           signFile.createdOn = new Date();
-  //           isAddNew=true;
-  //         }
-  //         let dialogModel = new DialogModel();
-  //         dialogModel.IsFull = true;
-  //         let dialogAdd = this.callfunc.openForm(
-  //           PopupAddSignFileComponent,
-  //           'Thêm mới',
-  //           700,
-  //           650,
-  //           this.signFileFM.funcID,
-  //           {
-  //             data: signFile,
-  //             isAddNew: isAddNew,
-  //             formModel: this.signFileFM,
-  //             option: option,
-  //             disableCateID: true,
-  //             isTemplate: true,
-  //             refType:'ES_Categories'
-  //           },
-  //           '',
-  //           dialogModel
-  //         );
-  //       }
-  //     });
-  // }
-
+  
   setViewAutoNumber(modelAutoNumber) {
     let vllDateFormat;
     let vllStringFormat;
