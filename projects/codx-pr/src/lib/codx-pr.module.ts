@@ -21,6 +21,7 @@ import { OverTimeComponent } from './over-time/over-time.component';
 import { PopupOverTimeComponent } from './over-time/popup-over-time/popup-over-time.component';
 import { ViewDetailOtComponent } from './over-time/view-detail-over-time/view-detail-ot.component';
 import { EmployeeKowdsComponent } from './employee-kowds/employee-kowds.component';
+import { KowdsScheduleComponent } from './employee-kowds/kowds-schedule/kowds-schedule.component';
 
 export const routes: Routes = [
   {
@@ -44,7 +45,8 @@ const T_Component: Type<any>[] = [
   OverTimeComponent,
   PopupOverTimeComponent,
   ViewDetailOtComponent,
-  EmployeeKowdsComponent
+  EmployeeKowdsComponent,
+  KowdsScheduleComponent
 ];
 
 @NgModule({
@@ -63,7 +65,7 @@ const T_Component: Type<any>[] = [
     NgbModule,
   ],
   exports: [RouterModule],
-  declarations: [T_Component, EmployeeKowdsComponent],
+  declarations: [T_Component, EmployeeKowdsComponent, KowdsScheduleComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class CodxPrModule {
