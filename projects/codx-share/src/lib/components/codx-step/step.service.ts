@@ -20,7 +20,6 @@ import { Subject, firstValueFrom } from 'rxjs';
 import {
   DP_Instances_Steps,
   DP_Instances_Steps_TaskGroups,
-  DP_Instances_Steps_Tasks,
   DP_Instances_Steps_Tasks_Roles,
 } from 'projects/codx-dp/src/lib/models/models';
 import { CodxAddGroupTaskComponent } from './codx-popup-group/codx-add-group-task.component';
@@ -35,7 +34,7 @@ import { CodxBookingService } from '../codx-booking/codx-booking.service';
   providedIn: 'root',
 })
 export class StepService {
-  private popupClosedSubject: Subject<any> = new Subject<any>();
+  public popupClosedSubject: Subject<any> = new Subject<any>();
   formModelAssignDefault: FormModel = {
     funcID: 'DPT04',
     entityName: 'DP_Instances',
@@ -258,9 +257,9 @@ export class StepService {
   //   return check;
   // }
   //setDeFault
-  getDefault(funcID, entityName, id = null) {
+  getDefault(service,funcID, entityName, id = null) {
     return this.api.execSv<any>(
-      'CO',
+      service,
       'Core',
       'DataBusiness',
       'GetDefaultAsync',
@@ -434,7 +433,7 @@ export class StepService {
   }
 
   async createMeeting(data, titleAction) {
-    this.getDefault('TMT0501', 'CO_Meetings').subscribe(async (res) => {
+    this.getDefault('CO','TMT0501', 'CO_Meetings').subscribe(async (res) => {
       if (res && res?.data) {
         let meeting = res.data;
         meeting['_uuid'] = meeting['meetingID'] ?? Util.uid();
@@ -754,50 +753,65 @@ export class StepService {
     // return this.popupClosedSubject.asObservable();
   }
 
-  async addQuotation(action, titleAction, quotationID) {
+  async addQuotation(action, titleAction, task, stepID, groupTaskID) {
+    let quotationID = task?.objectLinked;
     if((action == 'edit' || action == 'copy') && quotationID){
-      let quotation = await firstValueFrom(this.getOneQuotation(quotationID));
-      if(quotation){
-
-      }else{
-
-      }
+      this.getOneQuotation(quotationID).subscribe(res => {
+        if(res){
+          let quotation = res;
+          if(action == 'edit'){
+            this.openPopupQuotation(quotation, action, titleAction, task, stepID, groupTaskID);
+          }else{
+            quotation['_uuid'] = quotation['quotationsID'] ?? Util.uid();
+            quotation['idField'] = 'quotationsID';
+            quotation.versionNo = quotation.versionNo ?? 'V1';
+            quotation.revision = quotation.revision ?? 0;
+            quotation.versionName = quotation.versionNo + '.' + quotation.revision;
+            quotation.status = quotation.status ?? '0';
+            quotation.exchangeRate = quotation.exchangeRate ?? 1;
+            quotation.totalAmt = quotation.totalAmt ?? 0;
+            quotation.currencyID = quotation.currencyID ?? 'VND';
+            this.openPopupQuotation(action,quotation, titleAction, task, stepID, groupTaskID);
+          }
+        }else{
+          this.notiService.notifyCode('Báo giá không tồn tại');
+        }
+      });
     }else{
-
+      this.getDefault('CM','CM0202', 'CM_Quotations', 'quotationsID').subscribe((res) => {
+        if (res) {
+          let quotation = res.data;
+          quotation['_uuid'] = quotation['quotationsID'] ?? Util.uid();
+          quotation['idField'] = 'quotationsID';
+          quotation.versionNo = quotation.versionNo ?? 'V1';
+          quotation.revision = quotation.revision ?? 0;
+          quotation.versionName = quotation.versionNo + '.' + quotation.revision;
+          quotation.status = quotation.status ?? '0';
+          quotation.exchangeRate = quotation.exchangeRate ?? 1;
+          quotation.totalAmt = quotation.totalAmt ?? 0;
+          quotation.currencyID = quotation.currencyID ?? 'VND';
+          if (!quotation.quotationsID) {
+            this.api
+              .execSv<any>(
+                'SYS',
+                'AD',
+                'AutoNumbersBusiness',
+                'GenAutoNumberAsync',
+                ['CM0202', 'CM_Quotations', 'QuotationsID']
+              )
+              .subscribe((id) => {
+                quotation.quotationID = id;
+                this.openPopupQuotation(action, quotation, titleAction, task, stepID, groupTaskID);
+              });
+          } else{
+            this.openPopupQuotation(action,quotation, titleAction, task, stepID, groupTaskID);
+          }
+        }
+      });
     }
-    let quotation;
-    this.getDefault('CM0202', 'CM_Quotations', 'quotationsID').subscribe((res) => {
-      if (res) {
-        let data = res.data;
-        data['_uuid'] = data['quotationsID'] ?? Util.uid();
-        data['idField'] = 'quotationsID';
-        quotation = data;
-        if (!quotation.quotationsID) {
-          this.api
-            .execSv<any>(
-              'SYS',
-              'AD',
-              'AutoNumbersBusiness',
-              'GenAutoNumberAsync',
-              ['CM0202', 'CM_Quotations', 'QuotationsID']
-            )
-            .subscribe((id) => {
-              quotation.quotationID = id;
-              this.openPopupQuotation(quotation, action, titleAction);
-            });
-        } else this.openPopupQuotation(quotation, action, titleAction);
-      }
-    });
   }
 
-  openPopupQuotation(res, action, titleAction) {
-    res.versionNo = res.versionNo ?? 'V1';
-    res.revision = res.revision ?? 0;
-    res.versionName = res.versionNo + '.' + res.revision;
-    res.status = res.status ?? '0';
-    res.exchangeRate = res.exchangeRate ?? 1;
-    res.totalAmt = res.totalAmt ?? 0;
-    res.currencyID = res.currencyID ?? 'VND';
+  openPopupQuotation(action, quotation, titleAction,task,stepID,groupTaskID) {
     let formModel: FormModel = {
       entityName: 'CM_Quotations',
       formName: 'CMQuotations',
@@ -805,7 +819,7 @@ export class StepService {
       funcID: 'CM0202',
     };
     var obj = {
-      data: res,
+      data: quotation,
       disableRefID: false,
       action,
       headerText: titleAction,
@@ -828,27 +842,59 @@ export class StepService {
         );
         dialog.closed.subscribe((e) => {
           if (e?.event) {
-            let quotatision = e?.event;
-            let task = new DP_Instances_Steps_Tasks();
-            task['taskType'] = "Q";
-            // task['stepID'] = this.currentStep?.recID;
-            task['progress'] = 0;
-            task['taskGroupID'] = null;
-            task['refID'] = Util.uid();
-            task['isTaskDefault'] = false;
-            task['dependRule'] = '0';
-            task.objectLinked = quotatision?.recID;
+            let quotatision = e?.event;            
+            if(action == 'add'){
+              task = task ? task : {};
+              task.recID = Util.uid();
+              task.refID = Util.uid();
+              task.status = '1';
+              task.progress = 0;
+              task.taskType = "Q";
+              task.stepID = stepID;
+              task.taskGroupID = groupTaskID;
+              task.isTaskDefault = false;
+              task.dependRule = '0';
+              task.assigned = '0';
+              task.approveStatus = '1';
+              task.objectLinked = quotatision?.recID;
+            }else if(action == 'copy'){
+              task = JSON.parse(JSON.stringify(task));
+              task.recID = Util.uid();
+              task.refID = Util.uid();
+              task.status = '1';
+              task.progress = 0;
+              task.fieldID = null;
+              task.dependRule = '0';
+              task.parentID = null;
+              task.isTaskDefault = false;
+              task.requireCompleted = false;
+              task.approvedBy = null;
+              task.assigned = '0';
+              task.approveStatus = '1';
+              task.objectLinked = quotatision?.recID;
+            }else if(action == "edit"){
+              task = JSON.parse(JSON.stringify(task));
+            }     
             task.taskName = quotatision?.quotationName;
-            task.owner = this.user?.userID;
+            task.owner =  this.user?.userID;
+            task.startDate = Date.parse(quotatision?.createdOn) ? quotatision?.createdOn : new Date();
+            task.endDate = Date.parse(quotatision?.deadline) ? quotatision?.deadline : null;
+            let minus = this.minusDate(task.endDate, task.startDate, 'hours');
+            task.durationDay = minus ? minus % 24 : 0;
+            task.durationHour =  minus ? Math.floor(minus / 24) : 0;      
+            task.roles = [];
             let role = new DP_Instances_Steps_Tasks_Roles();
-            role.recID = Util.uid();
-            role.objectName = this.user?.objectName;
-            role.objectID = this.user?.userID;
-            role.roleType = 'O';
-            task.roles = [role];
-            task.startDate = quotatision?.createdOn;
-            task.endDate = quotatision?.deadline;
-            // this.saveTask(task);
+            role['recID'] = Util.uid();
+            role['objectName'] = this.user?.userName;
+            role['objectID'] = this.user?.userID;
+            role['createdOn'] = new Date();
+            role['createdBy'] = this.user?.userID;
+            role['roleType'] = 'O';
+            role['objectType'] = this.user?.objectType;
+            role['taskID'] = task?.recID;
+            task.roles.push(role);
+            this.popupClosedSubject.next(task);
+            this.popupClosedSubject.asObservable();
           }
         });
       });
