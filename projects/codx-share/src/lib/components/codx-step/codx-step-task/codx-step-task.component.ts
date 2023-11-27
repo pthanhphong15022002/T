@@ -858,7 +858,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
           let indexTaskView = groupTask?.task?.findIndex(
             (taskFind) => taskFind?.recID == task?.recID
           );
-          task.objectLinked = 
+          task.objectLinked = objectLinked;
           task.status = '2';
           task.actualStart = res;
           task.modifiedBy = this.user.userID;
