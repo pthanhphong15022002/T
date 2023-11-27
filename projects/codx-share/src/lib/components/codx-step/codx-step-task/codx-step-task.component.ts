@@ -31,7 +31,6 @@ import {
   DP_Instances_Steps_Tasks,
   DP_Instances_Steps_Tasks_Roles,
 } from 'projects/codx-dp/src/lib/models/models';
-import { firstValueFrom } from 'rxjs';
 import { FormGroup } from '@angular/forms';
 import { StepService } from '../step.service';
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
@@ -39,13 +38,11 @@ import { TM_Tasks } from '../../codx-tasks/model/task.model';
 import { AssignTaskModel } from '../../../models/assign-task.model';
 import { CodxEmailComponent } from '../../codx-email/codx-email.component';
 import { AssignInfoComponent } from '../../assign-info/assign-info.component';
-import { CodxAddTaskComponent } from '../codx-popup-task/codx-add-task.component';
 import { CodxTypeTaskComponent } from '../codx-step-common/codx-type-task/codx-type-task.component';
 import { UpdateProgressComponent } from '../codx-progress/codx-progress.component';
 import { CodxViewTaskComponent } from '../codx-view-task/codx-view-task.component';
 import { CodxAddGroupTaskComponent } from '../codx-popup-group/codx-add-group-task.component';
 import { PopupAddMeetingComponent } from '../../codx-tmmeetings/popup-add-meeting/popup-add-meeting.component';
-import { AddContractsComponent } from 'projects/codx-cm/src/lib/contracts/add-contracts/add-contracts.component';
 import { CodxAddBookingCarComponent } from '../../codx-booking/codx-add-booking-car/codx-add-booking-car.component';
 import { PopupAddQuotationsComponent } from 'projects/codx-cm/src/lib/quotations/popup-add-quotations/popup-add-quotations.component';
 import { TN_OrderModule } from 'projects/codx-ad/src/lib/models/tmpModule.model';
@@ -59,8 +56,7 @@ import { ActivatedRoute } from '@angular/router';
 import { ExportData } from '../../../models/ApproveProcess.model';
 import { CodxViewApproveComponent } from '../codx-step-common/codx-view-approve/codx-view-approve.component';
 import { PopupCustomFieldComponent } from '../../codx-fields-detail-temp/popup-custom-field/popup-custom-field.component';
-import { NullLogger } from '@microsoft/signalr';
-
+import { Subject, firstValueFrom } from 'rxjs';
 @Component({
   selector: 'codx-step-task',
   templateUrl: './codx-step-task.component.html',
@@ -1043,7 +1039,20 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   async addTask(groupID) {
     let task = this.setDataTaskNew();
     if (this.taskType?.value == 'Q') {
-      this.addQuotation();
+      this.stepService.addQuotation('add','Thêm', null, this.currentStep?.recID, groupID, );
+      this.stepService.popupClosedSubject.subscribe(res => {
+        let task = res;  
+        // this.stepService.popupClosedSubject = null;
+        if(task){
+          this.api
+        .exec<any>('DP', 'InstancesStepsBusiness', 'AddTaskStepAsync', [task])
+        .subscribe((res) => {
+          if (res) {
+            this.changeTaskAdd(res[0],res[1],res[2],false);
+        }});  
+        }  
+         
+      })
     } else if (this.taskType?.value == 'CO') {
       let data = { action: "add", type: "task",}
       let taskContract = await this.stepService.openPopupTaskContract(data,'add',null, this.currentStep?.recID, groupID);
@@ -1910,7 +1919,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   //#region tao lich hop
   async createMeeting(data) {
     this.stepService
-      .getDefault('TMT0501', 'CO_Meetings')
+      .getDefault('CO','TMT0501', 'CO_Meetings')
       .subscribe(async (res) => {
         if (res && res?.data) {
           let meeting = res.data;
@@ -2633,7 +2642,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       data,
       category,
       'DP_Instances_Steps_Tasks',
-      this.funcID,
+      'DPT07',
       data?.taskName,
       this.releaseCallback.bind(this),
       null,
@@ -2736,7 +2745,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     let option = new DialogModel();
     option.FormModel = formModel;
     option.zIndex = 1000;
-    this.callfc.openForm(
+    let fieldPopup = this.callfc.openForm(
       PopupCustomFieldComponent,
       '',
       550,
@@ -2746,6 +2755,18 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       '',
       option
     );
+    fieldPopup.closed.subscribe(res => {
+      let filels = res?.event;
+      let listFilelStep = this.currentStep?.fields;
+      if(filels?.length > 0 && listFilelStep?.length > 0) {
+        filels?.forEach(element => {
+          let filel = listFilelStep?.find(x => x.recID == element?.recID);
+          if(filel){
+            filel.dataValue = element?.dataValue;
+          }
+        });
+      }
+    })
   }
 
   exportTemplet(e, data) {
