@@ -1159,10 +1159,10 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
 
   async editTask(task) {
     if (task) {
-      if (task?.taskType == 'Q') {
+      if (task?.taskType == 'Q' && ((task?.isTaskDefault && task?.objectLinked) || (!task?.isTaskDefault))) {
         //báo giá
         this.addQuotation();
-      } else if (task?.taskType == 'CO') {
+      } else if (task?.taskType == 'CO' && ((task?.isTaskDefault && task?.objectLinked) || (!task?.isTaskDefault))) {
         let data = { action: "edit", type: "task",recIDContract: task.objectLinked}
         let taskContract = await this.stepService.openPopupTaskContract(data,'edit',task, this.currentStep?.recID, null);
         this.api

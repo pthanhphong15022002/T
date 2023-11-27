@@ -9,11 +9,16 @@ import { firstValueFrom } from 'rxjs';
 export class ContractsService {
   listTypeContractTask = [
     { name: 'general', textDefault: 'Thông tin chung', icon: 'icon-info', isActive: true },
-    { name: 'quotations', textDefault: 'Chi tiết mặt hàng', icon: 'icon-link', isActive: false },
-    { name: 'pay', textDefault: 'Thanh toán', icon: 'icon-tune', isActive: false },
-    { name: 'ship', textDefault: 'Giao hàng', icon: 'icon-tune', isActive: false },
     { name: 'task', textDefault: 'Công việc', icon: 'icon-more', isActive: false },
+    { name: 'memo', textDefault: 'Ghi chú', icon: 'icon-sticky_note_2', isActive: false },
   ];
+  // listTypeContractTask = [
+  //   { name: 'general', textDefault: 'Thông tin chung', icon: 'icon-info', isActive: true },
+  //   { name: 'quotations', textDefault: 'Chi tiết mặt hàng', icon: 'icon-link', isActive: false },
+  //   { name: 'pay', textDefault: 'Thanh toán', icon: 'icon-tune', isActive: false },
+  //   { name: 'ship', textDefault: 'Giao hàng', icon: 'icon-tune', isActive: false },
+  //   { name: 'task', textDefault: 'Công việc', icon: 'icon-more', isActive: false },
+  // ];
   listTypeContractAdd = [
     { name: 'general', textDefault: 'Thông tin chung', icon: 'icon-info', isActive: true },
     { name: 'quotations', textDefault: 'Chi tiết mặt hàng', icon: 'icon-link', isActive: false },
