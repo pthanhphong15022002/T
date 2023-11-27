@@ -2,6 +2,7 @@ import { formatDate } from '@angular/common';
 import { Injectable } from '@angular/core';
 import {
   ApiHttpService,
+  AuthStore,
   CacheService,
   CallFuncService,
   CodxService,
@@ -15,11 +16,11 @@ import { TM_Tasks } from '../codx-tasks/model/task.model';
 import { AssignTaskModel } from '../../models/assign-task.model';
 import { AssignInfoComponent } from '../assign-info/assign-info.component';
 import { CodxTypeTaskComponent } from './codx-step-common/codx-type-task/codx-type-task.component';
-import { firstValueFrom } from 'rxjs';
+import { Subject, firstValueFrom } from 'rxjs';
 import {
   DP_Instances_Steps,
   DP_Instances_Steps_TaskGroups,
-  DP_Instances_Steps_Tasks,
+  DP_Instances_Steps_Tasks_Roles,
 } from 'projects/codx-dp/src/lib/models/models';
 import { CodxAddGroupTaskComponent } from './codx-popup-group/codx-add-group-task.component';
 import { CodxAddTaskComponent } from './codx-popup-task/codx-add-task.component';
@@ -33,21 +34,25 @@ import { CodxBookingService } from '../codx-booking/codx-booking.service';
   providedIn: 'root',
 })
 export class StepService {
+  public popupClosedSubject: Subject<any> = new Subject<any>();
   formModelAssignDefault: FormModel = {
     funcID: 'DPT04',
     entityName: 'DP_Instances',
     formName: 'DPInstances',
     gridViewName: 'grvDPInstances',
   };
-
+  user;
   constructor(
     private notiService: NotificationsService,
     private api: ApiHttpService,
     private callFunc: CallFuncService,
     private cache: CacheService,
     private bookingService: CodxBookingService,
-    private codxService: CodxService
-  ) {}
+    private codxService: CodxService,
+    private authStore: AuthStore,
+  ) {
+    this.user = this.authStore.get();
+  }
 
   formModelStep: FormModel = {
     entityName: 'DP_Instances_Steps_Tasks',
@@ -97,6 +102,27 @@ export class StepService {
       return -1;
     } else {
       return 1;
+    }
+  }
+
+  minusDate(dateBig: Date, dateSmall: Date, typeReturn:string) {
+    if (!(dateBig instanceof Date) || !(dateSmall instanceof Date)) {
+      return 0;
+    }
+    const millisecondsBig = dateBig.getTime();
+    const millisecondsSmall = dateSmall.getTime();
+    const milliseconds = millisecondsBig - millisecondsSmall;
+    switch (typeReturn) {
+      case 'seconds':
+        return milliseconds / 1000 || 0;
+      case 'minutes':
+        return milliseconds / (1000 * 60) || 0;
+      case 'hours':
+        return milliseconds / (1000 * 60 * 60) || 0;
+      case 'days':
+        return milliseconds / (1000 * 60 * 60 * 24) || 0;
+      default:
+        return milliseconds || 0;
     }
   }
 
@@ -178,6 +204,13 @@ export class StepService {
     return check;
   }
 
+  //#region popup
+
+
+
+ 
+  //#endregion
+
   checkUpdateProgress(
     dataUpdate,
     type,
@@ -224,9 +257,9 @@ export class StepService {
   //   return check;
   // }
   //setDeFault
-  getDefault(funcID, entityName, id = null) {
+  getDefault(service,funcID, entityName, id = null) {
     return this.api.execSv<any>(
-      'CO',
+      service,
       'Core',
       'DataBusiness',
       'GetDefaultAsync',
@@ -357,181 +390,6 @@ export class StepService {
     return groupOutput;
   }
 
-  async addTask(
-    type,
-    action,
-    titleName,
-    taskData,
-    taskType,
-    instanceStep,
-    listInsStep,
-    groupID,
-    isSave,
-    ownerParent,
-    location
-  ) {
-    let task = taskData || new DP_Instances_Steps_Tasks();
-    task['progress'] = 0;
-    task['recID'] = Util.uid();
-    task['refID'] = Util.uid();
-    task['dependRule'] = '0';
-    task['taskType'] = taskType?.value;
-    task['taskGroupID'] = groupID || null;
-    task['stepID'] = instanceStep ? instanceStep?.recID : task?.stepID;
-    task['isTaskDefault'] = action == 'add' ? false : task?.isTaskDefault;
-    let taskOutput = await this.openPopupTask(
-      type,
-      action,
-      titleName,
-      taskType,
-      instanceStep,
-      listInsStep,
-      task,
-      groupID,
-      isSave,
-      ownerParent,
-      location
-    );
-    return taskOutput;
-  }
-
-  async openPopupTask(
-    type,
-    action,
-    titleName,
-    taskType,
-    instanceStep,
-    listInsStep,
-    dataTask,
-    groupTaskID,
-    isSave,
-    ownerParent,
-    location
-  ) {
-    let dataInput = {
-      type,
-      action,
-      titleName: titleName,
-      taskType: taskType,
-      instanceStep: instanceStep,
-      listInsStep: listInsStep,
-      listGroup: null,
-      dataTask: dataTask || {},
-      listTask: null,
-      isEditTimeDefault: null,
-      groupTaskID, // trường hợp chọn thêm từ nhóm
-      isSave: isSave,
-      isStart: true,
-      owner: ownerParent,
-    };
-    let frmModel: FormModel = {
-      entityName: 'DP_Instances_Steps_Tasks',
-      formName: 'DPInstancesStepsTasks',
-      gridViewName: 'grvDPInstancesStepsTasks',
-    };
-    let dataPopupOutput;
-    let popupAddTask;
-    if (location == 'right') {
-      let option = new SidebarModel();
-      option.Width = '550px';
-      option.zIndex = 1011;
-      option.FormModel = frmModel;
-      popupAddTask = this.callFunc.openSide(
-        CodxAddTaskComponent,
-        dataInput,
-        option
-      );
-    } else {
-      let opt = new DialogModel();
-      opt.FormModel = frmModel;
-      popupAddTask = this.callFunc.openForm(
-        CodxAddTaskComponent,
-        '',
-        600,
-        800,
-        '',
-        dataInput,
-        '',
-        opt
-      );
-    }
-    dataPopupOutput = await firstValueFrom(popupAddTask.closed);
-    let taskOutput = dataPopupOutput?.event ? dataPopupOutput?.event : null;
-    return taskOutput;
-  }
-
-  // async openPopupTask(action,taskType,instanceStep,dataTask,groupTaskID = null
-  // ) {
-  //   let dataInput = {
-  //     action,
-  //     taskType: taskType,
-  //     step: instanceStep,
-  //     listGroup: instanceStep?.taskGroups,
-  //     dataTask: dataTask || {},
-  //     listTask: instanceStep?.tasks,
-  //     isEditTimeDefault: instanceStep?.leadtimeControl,
-  //     groupTaskID, // trường hợp chọn thêm từ nhóm
-  //   };
-  //   let frmModel: FormModel = {
-  //     entityName: 'DP_Instances_Steps_Tasks',
-  //     formName: 'DPInstancesStepsTasks',
-  //     gridViewName: 'grvDPInstancesStepsTasks',
-  //   };
-
-  //   let opt = new DialogModel();
-  //   opt.FormModel = frmModel;
-  //   let popupTask = this.callfc.openForm(
-  //     CodxAddTaskComponent,
-  //     '',
-  //     600,
-  //     800,
-  //     '',
-  //     dataInput,
-  //     '',
-  //     opt
-  //   );
-  //   let dataPopupOutput = await firstValueFrom(popupTask.closed);
-  //   let taskOutput = dataPopupOutput?.event ? dataPopupOutput?.event : null;
-  //   return taskOutput;
-  // }
-
-  async openPopupCodxTask(data,location){
-    let frmModel: FormModel = {
-      entityName: 'DP_Instances_Steps_Tasks',
-      formName: 'DPInstancesStepsTasks',
-      gridViewName: 'grvDPInstancesStepsTasks',
-    };
-    let dataPopupOutput;
-    let popupAddTask;
-    if (location == 'right') {
-      let option = new SidebarModel();
-      option.Width = '550px';
-      option.zIndex = 1001;
-      option.FormModel = frmModel;
-      popupAddTask = this.callFunc.openSide(
-        CodxAddTaskComponent,
-        data,
-        option
-      );
-    } else {
-      let opt = new DialogModel();
-      opt.FormModel = frmModel;
-      popupAddTask = this.callFunc.openForm(
-        CodxAddTaskComponent,
-        '',
-        600,
-        800,
-        '',
-        data,
-        '',
-        opt
-      );
-    }
-    dataPopupOutput = await firstValueFrom(popupAddTask.closed);
-    let taskOutput = dataPopupOutput?.event ? dataPopupOutput?.event : null;
-    return taskOutput;
-  }
-
   async addBookingCar(isOpenSide = false) {
     let addCarTitle = await firstValueFrom(this.cache.functionList('EPT21'));
     let title = addCarTitle ? addCarTitle?.customName?.toString() : '';
@@ -574,102 +432,8 @@ export class StepService {
     });
   }
 
-  addQuotation() {
-    let quotation;
-    this.getDefault('CM0202', 'CM_Quotations', 'quotationsID').subscribe(
-      (res) => {
-        if (res) {
-          let data = res.data;
-          data['_uuid'] = data['quotationsID'] ?? Util.uid();
-          data['idField'] = 'quotationsID';
-          quotation = data;
-          if (!quotation.quotationsID) {
-            this.api
-              .execSv<any>(
-                'SYS',
-                'AD',
-                'AutoNumbersBusiness',
-                'GenAutoNumberAsync',
-                ['CM0202', 'CM_Quotations', 'QuotationsID']
-              )
-              .subscribe((id) => {
-                quotation.quotationID = id;
-                this.openPopup(quotation, 'add');
-              });
-          } else this.openPopup(quotation, 'add');
-        }
-      }
-    );
-  }
-
-  openPopup(res, action, titleAction = '') {
-    res.versionNo = res.versionNo ?? 'V1';
-    res.revision = res.revision ?? 0;
-    res.versionName = res.versionNo + '.' + res.revision;
-    res.status = res.status ?? '0';
-    res.exchangeRate = res.exchangeRate ?? 1;
-    res.totalAmt = res.totalAmt ?? 0;
-    res.currencyID = res.currencyID ?? 'VND';
-
-    let formModel: FormModel = {
-      entityName: 'CM_Quotations',
-      formName: 'CMQuotations',
-      gridViewName: 'grvCMQuotations',
-      funcID: 'CM0202',
-    };
-    var obj = {
-      data: res,
-      disableRefID: false,
-      action: 'add',
-      headerText: titleAction,
-    };
-    let option = new DialogModel();
-    option.IsFull = true;
-    option.FormModel = formModel;
-    let dialog = this.callFunc.openForm(
-      PopupAddQuotationsComponent,
-      '',
-      null,
-      null,
-      '',
-      obj,
-      '',
-      option
-    );
-  }
-
-  async openPopupContract(action, type,recIDContract?, projectID?, contract?) {
-    let data = {
-      projectID,
-      action,
-      recIDContract,
-      contract: contract || null,
-      type,
-    };
-    let formModel: FormModel = {
-      entityName: 'CM_Contracts',
-      entityPer: 'CM_Contracts',
-      formName: 'CMContracts',
-      funcID: 'CM0204',
-      gridViewName: 'grvCMContracts',
-    };
-    let option = new SidebarModel();
-    option.Width = '800px';
-    option.zIndex = 1001;
-    // option.DataService = this.view.dataService;
-    option.FormModel = formModel;
-    await firstValueFrom(this.cache.gridViewSetup('CMContracts','grvCMContracts'));
-    let popupContract = this.callFunc.openSide(
-      AddContractsComponent,
-      data,
-      option
-    );
-    let dataPopupOutput = await firstValueFrom(popupContract.closed);
-    return dataPopupOutput;
-  }
-
   async createMeeting(data, titleAction) {
-    this.getDefault('TMT0501', 'CO_Meetings').subscribe(async (res) => {
+    this.getDefault('CO','TMT0501', 'CO_Meetings').subscribe(async (res) => {
       if (res && res?.data) {
         let meeting = res.data;
         meeting['_uuid'] = meeting['meetingID'] ?? Util.uid();
@@ -828,4 +592,313 @@ export class StepService {
       [id]
     );
   }
+  getOneQuotation(id) {
+    return this.api.execSv<any>(
+      'CM',
+      'ERM.Business.CM',
+      'QuotationsBusiness',
+      'GetOneAsync',
+      [id]
+    );
+  }
+  getOneContract(id) {
+    return this.api.execSv<any>(
+      'CM',
+      'ERM.Business.CM',
+      'ContractsBusiness',
+      'GetOneAsync',
+      [id]
+    );
+  }
+
+
+  async openPopupTaskContract(data,action,task,stepID,groupTaskID,) {
+    let contractOuput = await this.openPopupContract(data);
+    let contract = contractOuput?.event?.contract;
+    if(contract){
+      if(action == 'add'){
+        task = task ? task : {};
+        task.recID = Util.uid();
+        task.refID = Util.uid();
+        task.status = '1';
+        task.progress = 0;
+        task.taskType = "CO";
+        task.stepID = stepID;
+        task.taskGroupID = groupTaskID;
+        task.isTaskDefault = false;
+        task.dependRule = '0';
+        task.assigned = '0';
+        task.approveStatus = '1';
+        task.objectLinked = contract?.recID;
+      }else if(action == 'copy'){
+        task = JSON.parse(JSON.stringify(task));
+        task.recID = Util.uid();
+        task.refID = Util.uid();
+        task.status = '1';
+        task.progress = 0;
+        task.fieldID = null;
+        task.dependRule = '0';
+        task.parentID = null;
+        task.isTaskDefault = false;
+        task.requireCompleted = false;
+        task.approvedBy = null;
+        task.assigned = '0';
+        task.approveStatus = '1';
+        task.objectLinked = contract?.recID;
+      }else if(action == "edit"){
+        task = JSON.parse(JSON.stringify(task));
+      }     
+      task.taskName = contract?.contractName;
+      task.owner = contract?.owner;
+      task.startDate = Date.parse(contract?.effectiveFrom) ? contract?.effectiveFrom : new Date();
+      task.endDate = Date.parse(contract?.effectiveTo) ? contract?.effectiveTo : null;
+      let minus = this.minusDate(task.endDate, task.startDate, 'hours');
+      task.durationDay = minus ? minus % 24 : 0;
+      task.durationHour =  minus ? Math.floor(minus / 24) : 0;
+
+      if (contract?.permissions?.length > 0) {
+        let roles = contract?.permissions?.map((x) => {
+          let role = new DP_Instances_Steps_Tasks_Roles();
+          role['recID'] = Util.uid();
+          role['objectName'] = x?.objectName;
+          role['objectID'] = x?.objectID;
+          role['createdOn'] = x?.createdOn;
+          role['createdBy'] = x?.createdBy;
+          role['roleType'] = 'O';
+          role['objectType'] = x?.objectType;
+          role['taskID'] = task?.recID;
+          return role;
+        });
+        task.roles = roles;
+      }else{
+        task.roles = [];
+        let role = new DP_Instances_Steps_Tasks_Roles();
+        role['recID'] = Util.uid();
+        role['objectName'] = this.user?.userName;
+        role['objectID'] = this.user?.userID;
+        role['createdOn'] = new Date();
+        role['createdBy'] = this.user?.userID;
+        role['roleType'] = 'O';
+        role['objectType'] = this.user?.objectType;
+        role['taskID'] = task?.recID;
+        task.roles.push(role);
+      }
+      return task;
+    }else{
+      return null;
+    }
+  }
+
+  async openPopupContract(data) {
+    //data = {action, type,recIDContract?, projectID?, contract?}
+    let formModel: FormModel = {
+      entityName: 'CM_Contracts',
+      entityPer: 'CM_Contracts',
+      formName: 'CMContracts',
+      funcID: 'CM0204',
+      gridViewName: 'grvCMContracts',
+    };
+    let option = new SidebarModel();
+    option.Width = '800px';
+    option.zIndex = 1001;
+    option.FormModel = formModel;
+    await firstValueFrom(this.cache.gridViewSetup('CMContracts','grvCMContracts'));
+    let popupContract = this.callFunc.openSide(
+      AddContractsComponent,
+      data,
+      option
+    );
+    let dataPopupOutput = await firstValueFrom(popupContract.closed);
+    return dataPopupOutput;
+  }
+
+  async openPopupCodxTask(data,location){
+    let frmModel: FormModel = {
+      entityName: 'DP_Instances_Steps_Tasks',
+      formName: 'DPInstancesStepsTasks',
+      gridViewName: 'grvDPInstancesStepsTasks',
+    };
+    let dataPopupOutput;
+    let popupAddTask;
+    if (location == 'right') {
+      let option = new SidebarModel();
+      option.Width = '550px';
+      option.zIndex = 1001;
+      option.FormModel = frmModel;
+      popupAddTask = this.callFunc.openSide(
+        CodxAddTaskComponent,
+        data,
+        option
+      );
+    } else {
+      let opt = new DialogModel();
+      opt.FormModel = frmModel;
+      popupAddTask = this.callFunc.openForm(
+        CodxAddTaskComponent,
+        '',
+        600,
+        800,
+        '',
+        data,
+        '',
+        opt
+      );
+    }
+    dataPopupOutput = await firstValueFrom(popupAddTask.closed);
+    let taskOutput = dataPopupOutput?.event ? dataPopupOutput?.event : null;
+    return taskOutput;
+    // popupAddTask.closed.subscribe(res => {
+    //   this.popupClosedSubject.next(res);
+    // });
+    // return this.popupClosedSubject.asObservable();
+  }
+
+  async addQuotation(action, titleAction, task, stepID, groupTaskID) {
+    let quotationID = task?.objectLinked;
+    if((action == 'edit' || action == 'copy') && quotationID){
+      this.getOneQuotation(quotationID).subscribe(res => {
+        if(res){
+          let quotation = res;
+          if(action == 'edit'){
+            this.openPopupQuotation(quotation, action, titleAction, task, stepID, groupTaskID);
+          }else{
+            quotation['_uuid'] = quotation['quotationsID'] ?? Util.uid();
+            quotation['idField'] = 'quotationsID';
+            quotation.versionNo = quotation.versionNo ?? 'V1';
+            quotation.revision = quotation.revision ?? 0;
+            quotation.versionName = quotation.versionNo + '.' + quotation.revision;
+            quotation.status = quotation.status ?? '0';
+            quotation.exchangeRate = quotation.exchangeRate ?? 1;
+            quotation.totalAmt = quotation.totalAmt ?? 0;
+            quotation.currencyID = quotation.currencyID ?? 'VND';
+            this.openPopupQuotation(action,quotation, titleAction, task, stepID, groupTaskID);
+          }
+        }else{
+          this.notiService.notifyCode('Báo giá không tồn tại');
+        }
+      });
+    }else{
+      this.getDefault('CM','CM0202', 'CM_Quotations', 'quotationsID').subscribe((res) => {
+        if (res) {
+          let quotation = res.data;
+          quotation['_uuid'] = quotation['quotationsID'] ?? Util.uid();
+          quotation['idField'] = 'quotationsID';
+          quotation.versionNo = quotation.versionNo ?? 'V1';
+          quotation.revision = quotation.revision ?? 0;
+          quotation.versionName = quotation.versionNo + '.' + quotation.revision;
+          quotation.status = quotation.status ?? '0';
+          quotation.exchangeRate = quotation.exchangeRate ?? 1;
+          quotation.totalAmt = quotation.totalAmt ?? 0;
+          quotation.currencyID = quotation.currencyID ?? 'VND';
+          if (!quotation.quotationsID) {
+            this.api
+              .execSv<any>(
+                'SYS',
+                'AD',
+                'AutoNumbersBusiness',
+                'GenAutoNumberAsync',
+                ['CM0202', 'CM_Quotations', 'QuotationsID']
+              )
+              .subscribe((id) => {
+                quotation.quotationID = id;
+                this.openPopupQuotation(action, quotation, titleAction, task, stepID, groupTaskID);
+              });
+          } else{
+            this.openPopupQuotation(action,quotation, titleAction, task, stepID, groupTaskID);
+          }
+        }
+      });
+    }
+  }
+
+  openPopupQuotation(action, quotation, titleAction,task,stepID,groupTaskID) {
+    let formModel: FormModel = {
+      entityName: 'CM_Quotations',
+      formName: 'CMQuotations',
+      gridViewName: 'grvCMQuotations',
+      funcID: 'CM0202',
+    };
+    var obj = {
+      data: quotation,
+      disableRefID: false,
+      action,
+      headerText: titleAction,
+    };
+    let option = new DialogModel();
+    option.IsFull = true;
+    option.FormModel = formModel;
+    this.cache
+      .gridViewSetup('CMQuotations', 'grvCMQuotations')
+      .subscribe((res) => {
+        let dialog = this.callFunc.openForm(
+          PopupAddQuotationsComponent,
+          '',
+          null,
+          null,
+          '',
+          obj,
+          '',
+          option
+        );
+        dialog.closed.subscribe((e) => {
+          if (e?.event) {
+            let quotatision = e?.event;            
+            if(action == 'add'){
+              task = task ? task : {};
+              task.recID = Util.uid();
+              task.refID = Util.uid();
+              task.status = '1';
+              task.progress = 0;
+              task.taskType = "Q";
+              task.stepID = stepID;
+              task.taskGroupID = groupTaskID;
+              task.isTaskDefault = false;
+              task.dependRule = '0';
+              task.assigned = '0';
+              task.approveStatus = '1';
+              task.objectLinked = quotatision?.recID;
+            }else if(action == 'copy'){
+              task = JSON.parse(JSON.stringify(task));
+              task.recID = Util.uid();
+              task.refID = Util.uid();
+              task.status = '1';
+              task.progress = 0;
+              task.fieldID = null;
+              task.dependRule = '0';
+              task.parentID = null;
+              task.isTaskDefault = false;
+              task.requireCompleted = false;
+              task.approvedBy = null;
+              task.assigned = '0';
+              task.approveStatus = '1';
+              task.objectLinked = quotatision?.recID;
+            }else if(action == "edit"){
+              task = JSON.parse(JSON.stringify(task));
+            }     
+            task.taskName = quotatision?.quotationName;
+            task.owner =  this.user?.userID;
+            task.startDate = Date.parse(quotatision?.createdOn) ? quotatision?.createdOn : new Date();
+            task.endDate = Date.parse(quotatision?.deadline) ? quotatision?.deadline : null;
+            let minus = this.minusDate(task.endDate, task.startDate, 'hours');
+            task.durationDay = minus ? minus % 24 : 0;
+            task.durationHour =  minus ? Math.floor(minus / 24) : 0;      
+            task.roles = [];
+            let role = new DP_Instances_Steps_Tasks_Roles();
+            role['recID'] = Util.uid();
+            role['objectName'] = this.user?.userName;
+            role['objectID'] = this.user?.userID;
+            role['createdOn'] = new Date();
+            role['createdBy'] = this.user?.userID;
+            role['roleType'] = 'O';
+            role['objectType'] = this.user?.objectType;
+            role['taskID'] = task?.recID;
+            task.roles.push(role);
+            this.popupClosedSubject.next(task);
+            this.popupClosedSubject.asObservable();
+          }
+        });
+      });
+  }
+
+
 }

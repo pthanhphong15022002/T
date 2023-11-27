@@ -58,6 +58,7 @@ import { CodxViewReleaseSignFileComponent } from './components/codx-approval-pro
 import { T } from '@angular/cdk/keycodes';
 import { SignalRService } from 'projects/codx-common/src/lib/_layout/drawers/chat/services/signalr.service';
 import { CodxListReportsComponent } from './components/codx-list-reports/codx-list-reports.component';
+import { CodxCommonService } from 'projects/codx-common/src/lib/codx-common.service';
 
 @Injectable({
   providedIn: 'root',
@@ -88,6 +89,7 @@ export class CodxShareService {
     private dmSV: CodxDMService,
     private fileService: FileService,
     private signalRSV: SignalRService,
+    private codxCommonService: CodxCommonService,
     private httpClient: HttpClient
   ) {
     this.user = this.auth.get();
@@ -2099,6 +2101,7 @@ export class CodxShareService {
     );
   }
   //#endregion Codx Quy trình duyệt
+
 
   //Lấy icon Folder/File
   getIconFile(ex: string) {
