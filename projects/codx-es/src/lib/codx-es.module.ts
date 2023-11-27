@@ -62,6 +62,7 @@ import { ApprovalStepSignComponent } from './sign-file/approval-step/approval-st
 import { CodxReportViewsComponent } from 'projects/codx-report/src/lib/codx-report-views/codx-report-views.component';
 import { CodxReportViewDetailComponent } from 'projects/codx-report/src/lib/codx-report-view-detail/codx-report-view-detail.component';
 import { LayoutComponent } from 'projects/codx-share/src/lib/components/layout/layout.component';
+import { PopupAddTemplateSignFileComponent } from './template-sign-file/popup-add-template-sign-file.component';
 
 const routes: Routes = [
   {
@@ -176,6 +177,7 @@ const routes: Routes = [
     PopupCommentComponent,
     PopupAddSegmentComponent,
     ApprovalStepSignComponent,
+    PopupAddTemplateSignFileComponent,
   ],
   imports: [
     RouterModule.forChild(routes),

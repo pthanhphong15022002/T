@@ -4325,3 +4325,31 @@ codx-view-schedule .container-fluid.h-50px {
     }
   }
 }
+
+.h-29px{
+  height: 28px!important;
+}
+
+codx-view-list-detail .codx-detail-footer {
+  bottom: 0px;
+}
+
+/*
+codx-toolbar .pin-bar{ 
+  width: 100%;
+  width: calc(100vw - 320px)!important;
+  overflow: auto;
+  border: 1px aqua solid;
+  &+div{
+    width: 300px!important;
+    border: 1px red solid;
+  }
+}
+
+codx-toolbar .pin-bar-no-search{
+  width: 100%;
+  width: calc(100vw - 320px)!important;
+  overflow: auto;
+  border: 1px aqua solid;
+}
+*/
