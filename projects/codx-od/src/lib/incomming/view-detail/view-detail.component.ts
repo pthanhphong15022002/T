@@ -1319,7 +1319,7 @@ export class ViewDetailComponent
             //Xét quyền công văn
             if(e?.event[2] && e?.event[2].length > 0)
             {
-              if(!Array.isArray(datas?.permission)) datas.permission = [];
+              if(!Array.isArray(datas?.permissions)) datas.permissions = [];
 
               e?.event[2].forEach(elm => {
                 var per = 
@@ -1329,11 +1329,12 @@ export class ViewDetailComponent
                   objectID: elm.resourceID,
                   objectName: elm.resourceName,
                   objectType: "U",
+                  isActive: true,
                   read: true,
                   download: true,
                   share: true
                 }
-                datas.permission.push(per);
+                datas.permissions.push(per);
               });
             }
             //get tree task

@@ -4,6 +4,8 @@ import { DispatchService } from '../../services/dispatch.service';
 import { formatBytes } from '../../function/default.function';
 import { FormControl, FormGroup } from '@angular/forms';
 import { DialogData, DialogRef, NotificationsService } from 'codx-core';
+import { CodxOdService } from '../../codx-od.service';
+import { isObservable } from 'rxjs';
 @Component({
   selector: 'app-od-sharing',
   templateUrl: './sharing.component.html',
@@ -19,7 +21,7 @@ export class SharingComponent implements OnInit {
   userTo      : any;
   userCC      : any;
   gridViewSetup     : any;
-  referType = 'source'
+  referType = 'source';
   formatBytes = formatBytes
   shareForm = new FormGroup({
     to: new FormControl(),
@@ -30,9 +32,12 @@ export class SharingComponent implements OnInit {
     download : new FormControl(),
     formDate: new FormControl(),
     toDate : new FormControl(),
+    sendMail: new FormControl(true),
+    emailTemplates: new FormControl()
   });
   constructor(
-    private odService: DispatchService , 
+    private dispatchService: DispatchService, 
+    private odService: CodxOdService, 
     private cr: ChangeDetectorRef , 
     private notifySvr: NotificationsService,
     @Optional() dt?: DialogData,
@@ -48,8 +53,43 @@ export class SharingComponent implements OnInit {
     this.gridViewSetup = this.data["gridViewSetup"];
     this.formModel = this.data?.option?.FormModel;
     this.files = this.data?.files;
+    this.getAlert();
   }
 
+  getAlert()
+  {
+    var alertRule = this.odService.loadAlert("OD_0004") as any;
+
+    if(isObservable(alertRule))
+    {
+      alertRule.subscribe((item:any)=>{
+        if(item) this.shareForm.controls['sendMail'].setValue(item?.isMail);
+        if(item?.emailTemplate) this.getEmailTmp(item.emailTemplate);
+      })
+    }
+    else {
+      if(alertRule) this.shareForm.controls['sendMail'].setValue(alertRule?.isMail);
+      if(alertRule?.emailTemplate) this.getEmailTmp(alertRule.emailTemplate);
+    }
+  }
+
+  getEmailTmp(emailTmpID:any)
+  {
+
+    var emailTmp = this.odService.loadEmailTemp(emailTmpID) as any;
+
+    if(isObservable(emailTmp))
+    {
+      emailTmp.subscribe((item:any)=>{
+        this.shareForm.controls['desc'].setValue(item?.message);
+        this.shareForm.controls['emailTemplates'].setValue(item);
+      })
+    }
+    else {
+      this.shareForm.controls['desc'].setValue(emailTmp?.message);
+      this.shareForm.controls['emailTemplates'].setValue(emailTmp);
+    }
+  }
   changeValueTo(e:any)
   {
     this.shareForm.controls['to'].setValue(e.data.value);
@@ -75,7 +115,7 @@ export class SharingComponent implements OnInit {
     let shareForm: any =this.shareForm.value;
     shareForm.recID = this.dialog.dataService.dataSelected.recID;
     shareForm.funcID = this.formModel.funcID;
-    this.odService.shareDispatch(shareForm,this.referType,this.formModel.entityName).subscribe((item)=>{
+    this.dispatchService.shareDispatch(shareForm,this.referType,this.formModel.entityName).subscribe((item)=>{
       if(item.status==0) this.dialog.close(item.data);
       this.notifySvr.notify(item.message);
     })
@@ -93,4 +133,5 @@ export class SharingComponent implements OnInit {
     }
     return true
   }
+
 }
