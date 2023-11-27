@@ -96,6 +96,12 @@ export class ContractsViewDetailComponent
     gridViewName: 'grvCMQuotations',
   };
   isLoading: boolean = true;
+  contactPerson;
+    formModelContact: FormModel = {
+    formName: 'CMContacts',
+    gridViewName: 'grvCMContacts',
+    entityName: 'CM_Contacts',
+  };
   constructor(
     private inject: Injector,
     private contractService: ContractsService,
@@ -117,6 +123,11 @@ export class ContractsViewDetailComponent
     this.loadTabs();
     if (changes?.contract && this.contract) {
       this.setDataInput();
+      this.contractService.getContactByRecID(this.contract?.contactID).subscribe(res => {
+        if(res){
+          this.contactPerson = res;
+        }
+      })
     }
     if (changes?.listInsStepStart && changes?.listInsStepStart?.currentValue) {
       this.listInsStep = this.listInsStepStart;

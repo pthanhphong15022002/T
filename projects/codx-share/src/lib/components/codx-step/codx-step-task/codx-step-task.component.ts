@@ -2737,7 +2737,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     let listField = this.getFields(this.currentStep?.fields, task?.fieldID);
     let obj = {
       data: JSON.parse(JSON.stringify(listField)),
-      titleHeader: 'Chỉnh sửa trường tùy chỉnh',
+      titleHeader: task?.taskName,
       objectIdParent: 'task?.stepID',
       customerID: '',
     };
