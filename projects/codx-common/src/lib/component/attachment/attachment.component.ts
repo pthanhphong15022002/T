@@ -869,6 +869,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
       }
       if (total > 1) {
         let numFile = Math.ceil(this.fileUploadList.length / this.pageUpload);
+        let resultT = [];
         for (var i = 0; i < numFile; i++) {
           var l = this.fileUploadList.slice(
             this.pageUpload * i,
@@ -885,11 +886,13 @@ export class AttachmentComponent implements OnInit, OnChanges {
             return of(null);
           }
 
-          data.forEach((elm) => {
-            var check = result.filter((x) => x?.fileName == elm.fileName);
-            if (check && check[0]) elm = check[0];
-          });
+          resultT =  resultT.concat(result);
         }
+
+        data.forEach((elm) => {
+          var check = resultT.filter((x) => x?.fileName == elm.fileName);
+          if (check && check[0]) elm = check[0];
+        });
       }
       let countFile = this.fileUploadList.length;
 
@@ -1022,6 +1025,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
         if (total > 1) {
           let listData = data.filter((x) => !x.uploadId);
           let numFile = Math.ceil(listData.length / this.pageUpload);
+          let resultT = [];
           for (var i = 0; i < numFile; i++) {
             var l = listData.slice(
               this.pageUpload * i,
@@ -1033,7 +1037,6 @@ export class AttachmentComponent implements OnInit, OnChanges {
             var result = (await Promise.all(requests)) as any;
 
             let resultError = result.filter((x) => x.isError);
-            debugger;
             if (resultError.length > 0) {
               var namesError =
                 'Tải file ' + resultError.map((x) => x.fileName).join(' , ');
@@ -1042,20 +1045,21 @@ export class AttachmentComponent implements OnInit, OnChanges {
               return of(null);
             }
 
-            for (var i = 0; i < total; i++) {
-              var dt = result.filter((x) => x.fileName == data[i].fileName);
-              if (dt && dt[0]) data[i] = dt[0];
-              data[i].objectID = this.objectId;
-              data[i].description = this.description[i];
-              data[i].avatar = null;
-              data[i].data = '';
-              if (this.isTab) data[i].createdOn = this.date;
-              else data[i].createdOn = new Date();
-              toltalUsed += data[i].fileSize;
-            }
+            resultT = resultT.concat(result);
+          }
+
+          for (var i = 0; i < resultT.length; i++) {
+            var dt = resultT.filter((x) => x.fileName == data[i].fileName);
+            if (dt && dt[0]) data[i] = dt[0];
+            data[i].objectID = this.objectId;
+            data[i].description = this.description[i];
+            data[i].avatar = null;
+            data[i].data = '';
+            if (this.isTab) data[i].createdOn = this.date;
+            else data[i].createdOn = new Date();
+            toltalUsed += data[i].fileSize;
           }
         }
-
         this.addPermissionA();
         if (remainingStorage >= 0 && toltalUsed > remainingStorage) {
           this.closeBtnUp = false;

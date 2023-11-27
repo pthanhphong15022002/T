@@ -55,14 +55,14 @@ initData(){
         objButton.isButton = true;
         arrButtons.push(objButton);
         x.hasChild = true;
-        if(x.childs && x.childs.length){
-          x.childs.map((y:any)=>{
-            if(y.smallIcon && y.smallIcon.includes('api/')){
-              y.smallIcon = environment.urlUpload+'/'+y.smallIcon;
-            }
-            return y;
-          })
-        }
+        // if(x.childs && x.childs.length){
+        //   x.childs.map((y:any)=>{
+        //     if(y.smallIcon && y.smallIcon.includes('api/')){
+        //       y.smallIcon = environment.urlUpload+'/'+y.smallIcon;
+        //     }
+        //     return y;
+        //   })
+        // }
        }
       return x;
     })
@@ -540,6 +540,31 @@ initData(){
   }
 
   onSaveAdmin(){
+    let idField = 'recID';
+    if(this.datasource[0].oldID) idField='oldID'
+    if(this.tree && (this.tree as any).liList.length){
+      //let newDatasource:any=[];
+      for(let i =0;i< (this.tree as any).liList.length;i++){
+        let id = (this.tree as any).liList[i].getAttribute('data-uid');
+
+        if(id){
+          let dataId = this.data.find((x:any)=>x.recID==id);
+        if(dataId && !dataId.isButton){
+          let item = this.datasource.find((x:any)=> x[idField] == id);
+          if(item){
+            item.sorting = i+1;
+            //newDatasource.push(item);
+          }
+        }
+        else{
+          continue;
+        }
+
+        }
+      }
+      //debugger
+      //this.datasource = newDatasource;
+    }
     let arrFormSetting:any=[];
     for(let key in this.editedFunc){
       arrFormSetting.push(this.editedFunc[key])

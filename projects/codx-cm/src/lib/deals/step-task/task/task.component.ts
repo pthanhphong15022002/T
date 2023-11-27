@@ -760,7 +760,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
       data,
       category,
       'DP_Activities',
-      'DPT04',
+      'DPT07',
       data?.taskName,
       this.releaseCallback.bind(this),
       null,

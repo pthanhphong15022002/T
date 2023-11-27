@@ -1,6 +1,7 @@
 import { Component, Injector, TemplateRef, ViewChild } from '@angular/core';
 import { ButtonModel, CRUDService, CodxService, ResourceModel, UIComponent, ViewModel, ViewType } from 'codx-core';
 import { CodxHrService } from 'projects/codx-hr/src/lib/codx-hr.service';
+import { KowdsScheduleComponent } from './kowds-schedule/kowds-schedule.component';
 
 @Component({
   selector: 'lib-employee-kowds',
@@ -15,11 +16,14 @@ export class EmployeeKowdsComponent extends UIComponent{
   viewActive: string = '';
   orgUnitID: string = '';
   formModelEmployee;
+  filterOrgUnit: any;
+  isAfterViewSelect = false;
   itemSelected: any;
   @ViewChild('tempTree') tempTree: TemplateRef<any>;
   @ViewChild('tmpOrgChart') tmpOrgChart: TemplateRef<any>;
   @ViewChild('leftPanel') leftPanel: TemplateRef<any>;
   @ViewChild('tmpPanelRight') tmpPanelRight: TemplateRef<any>;
+  @ViewChild('KowdsScheduleComponent') kowdsSchedule: KowdsScheduleComponent;
   dtService: CRUDService;
   constructor(inject: Injector, private hrService: CodxHrService,
     public override codxService : CodxService
@@ -101,6 +105,7 @@ export class EmployeeKowdsComponent extends UIComponent{
         type: ViewType.content,
         sameData: false,
         model: {
+          panelRightRef: this.tmpPanelRight,
           panelLeftRef: this.leftPanel,
           collapsed: true,
           resizable: true,
@@ -115,18 +120,21 @@ export class EmployeeKowdsComponent extends UIComponent{
   }
 
   onSelectionChanged(evt){
-    if (this.view) {
-      this.itemSelected = evt.data;
-      //Fix load when click on mode list
-      let viewActive = this.view.views.find((e) => e.active == true);
-      if (viewActive?.id == '1') {
-        return;
-      } else {
-        var data = evt.data || evt;
-        this.orgUnitID = data.orgUnitID;
-      }
-      // this.detectorRef.detectChanges();
-    }
+    this.filterOrgUnit = evt.data.orgUnitID
+    this.isAfterViewSelect = true;
+
+    // if (this.view) {
+    //   this.itemSelected = evt.data;
+    //   //Fix load when click on mode list
+    //   let viewActive = this.view.views.find((e) => e.active == true);
+    //   if (viewActive?.id == '1') {
+    //     return;
+    //   } else {
+    //     var data = evt.data || evt;
+    //     this.orgUnitID = data.orgUnitID;
+    //   }
+    //   // this.detectorRef.detectChanges();
+    // }
   }
 
   btnClick(event){
