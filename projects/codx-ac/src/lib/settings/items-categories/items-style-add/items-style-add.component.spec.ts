@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PopupAddItemStyleComponent } from './popup-add-item-style.component';
+import { ItemsStyleAddComponent } from './items-style-add.component';
 
 describe('PopupAddItemStyleComponent', () => {
-  let component: PopupAddItemStyleComponent;
-  let fixture: ComponentFixture<PopupAddItemStyleComponent>;
+  let component: ItemsStyleAddComponent;
+  let fixture: ComponentFixture<ItemsStyleAddComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ PopupAddItemStyleComponent ]
+      declarations: [ ItemsStyleAddComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(PopupAddItemStyleComponent);
+    fixture = TestBed.createComponent(ItemsStyleAddComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

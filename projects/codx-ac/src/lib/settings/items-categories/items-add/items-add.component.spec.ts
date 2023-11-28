@@ -1,18 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ImageBoxListComponent } from './image-box-list.component';
+import { ItemsAddComponent } from './items-add.component';
 
-describe('ImageBoxListComponent', () => {
-  let component: ImageBoxListComponent;
-  let fixture: ComponentFixture<ImageBoxListComponent>;
+describe('PopupAddItemComponent', () => {
+  let component: ItemsAddComponent;
+  let fixture: ComponentFixture<ItemsAddComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ImageBoxListComponent ]
+      declarations: [ ItemsAddComponent ]
     })
     .compileComponents();
+  });
 
-    fixture = TestBed.createComponent(ImageBoxListComponent);
+  beforeEach(() => {
+    fixture = TestBed.createComponent(ItemsAddComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
