@@ -682,7 +682,7 @@
     <codx-label [formModel]="form.formModel" fiedName="address"> </codx-label>
     <codx-input
       [formModel]="form.formModel"
-      [Group]="form.formGroup"
+      [crrValue]="data?.address"
       (valueChange)="valueChangeAdress($event)"
       (focus)="focus($event)"
       field="address"
@@ -1044,7 +1044,7 @@
       <codx-label [formModel]="form.formModel" fiedName="address"> </codx-label>
       <codx-input
         [formModel]="form.formModel"
-        [Group]="form.formGroup"
+        [crrValue]="data?.address"
         (valueChange)="valueChangeAdress($event)"
         (focus)="focus($event)"
         field="address"
@@ -1243,7 +1243,7 @@
     <codx-label [formModel]="form.formModel" fiedName="address"> </codx-label>
     <codx-input
       [formModel]="form.formModel"
-      [Group]="form.formGroup"
+      [crrValue]="data?.address"
       (valueChange)="valueChangeAdress($event)"
       (focus)="focus($event)"
       field="address"

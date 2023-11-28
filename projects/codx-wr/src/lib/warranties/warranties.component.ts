@@ -616,7 +616,8 @@ export class WarrantiesComponent
                   JSON.stringify(this.dataSelected)
                 );
                 this.view.dataService.update(this.dataSelected).subscribe();
-                this.viewDetail.listOrderUpdate(this.lstOrderUpdate);
+                if (this.viewDetail)
+                  this.viewDetail.listOrderUpdate(this.lstOrderUpdate);
 
                 this.detectorRef.detectChanges();
               }
@@ -662,7 +663,8 @@ export class WarrantiesComponent
               this.dataSelected.engineerID;
           }
 
-          this.viewDetail.listOrderUpdate(this.lstOrderUpdate);
+          if (this.viewDetail)
+            this.viewDetail.listOrderUpdate(this.lstOrderUpdate);
           this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
           this.view.dataService.update(this.dataSelected).subscribe();
           this.detectorRef.detectChanges();

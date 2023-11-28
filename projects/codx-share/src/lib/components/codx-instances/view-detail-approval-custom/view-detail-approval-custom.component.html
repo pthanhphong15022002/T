@@ -82,7 +82,10 @@
         <div class="d-flex justify-content-between">
           <div class="d-flex flex-column">
             <div class="d-flex flex-wrap flex-column">
-              <div class="me-4 d-flex align-items-center mb-1">
+              <div
+                class="me-4 d-flex align-items-center mb-1"
+                *ngIf="detailModule?.parentName"
+              >
                 <span class="fw-bold text-dark text-nowrap">
                   <span
                     class="label-colon"

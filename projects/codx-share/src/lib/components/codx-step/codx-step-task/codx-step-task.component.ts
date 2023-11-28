@@ -843,8 +843,14 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       //báo giá
       this.addQuotation();
     } else if (task?.taskType == 'CO' && !task?.objectLinked) {
-      let data = { action: "add", type: "task",}
-      let taskContract = await this.stepService.openPopupTaskContract(data,'add',null, this.currentStep?.recID, groupTask);
+      let data = { action: 'add', type: 'task' };
+      let taskContract = await this.stepService.openPopupTaskContract(
+        data,
+        'add',
+        null,
+        this.currentStep?.recID,
+        groupTask
+      );
       objectLinked = taskContract?.objectLinked;
     }
     this.api
@@ -882,7 +888,6 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         }
       });
   }
-
 
   addQuotation() {
     let quotation;
@@ -1028,7 +1033,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     }, 0);
   }
   //#endregion
-  setDataTaskNew(){
+  setDataTaskNew() {
     let task = new DP_Instances_Steps_Tasks();
     task.taskType = this.taskType?.value;
     task.stepID = this.currentStep?.recID;
@@ -1043,53 +1048,80 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   async addTask(groupID) {
     let task = this.setDataTaskNew();
     if (this.taskType?.value == 'Q') {
-      this.stepService.addQuotation('add','Thêm', null, this.currentStep?.recID, groupID, );
-      this.stepService.popupClosedSubject.subscribe(res => {
-        let task = res;  
+      this.stepService.addQuotation(
+        'add',
+        'Thêm',
+        null,
+        this.currentStep?.recID,
+        groupID
+      );
+      this.stepService.popupClosedSubject.subscribe((res) => {
+        let task = res;
         // this.stepService.popupClosedSubject = null;
-        if(task){
+        if (task) {
           this.api
-        .exec<any>('DP', 'InstancesStepsBusiness', 'AddTaskStepAsync', [task])
+            .exec<any>('DP', 'InstancesStepsBusiness', 'AddTaskStepAsync', [
+              task,
+            ])
+            .subscribe((res) => {
+              if (res) {
+                this.changeTaskAdd(res[0], res[1], res[2], false);
+              }
+            });
+        }
+      });
+    } else if (this.taskType?.value == 'CO') {
+      let data = { action: 'add', type: 'task' };
+      let taskContract = await this.stepService.openPopupTaskContract(
+        data,
+        'add',
+        null,
+        this.currentStep?.recID,
+        groupID
+      );
+      this.api
+        .exec<any>('DP', 'InstancesStepsBusiness', 'AddTaskStepAsync', [
+          taskContract,
+        ])
         .subscribe((res) => {
           if (res) {
-            this.changeTaskAdd(res[0],res[1],res[2],false);
-        }});  
-        }  
-         
-      })
-    } else if (this.taskType?.value == 'CO') {
-      let data = { action: "add", type: "task",}
-      let taskContract = await this.stepService.openPopupTaskContract(data,'add',null, this.currentStep?.recID, groupID);
-      this.api
-      .exec<any>('DP', 'InstancesStepsBusiness', 'AddTaskStepAsync', [taskContract])
-      .subscribe((res) => {
-        if (res) {
-          this.changeTaskAdd(res[0],res[1],res[2],false);
-        }});
-    }else 
-    {
+            this.changeTaskAdd(res[0], res[1], res[2], false);
+          }
+        });
+    } else {
       let type = groupID ? 'group' : 'step';
       let taskOutput = await this.openPopupTask('add', type, task, groupID);
-      this.changeTaskAdd(taskOutput?.task,taskOutput?.progressGroup,taskOutput?.progressStep,taskOutput?.isCreateMeeting);
+      this.changeTaskAdd(
+        taskOutput?.task,
+        taskOutput?.progressGroup,
+        taskOutput?.progressStep,
+        taskOutput?.isCreateMeeting
+      );
     }
   }
 
-  changeTaskAdd(task, progressGroup, progressStep, isCreateMeeting){
+  changeTaskAdd(task, progressGroup, progressStep, isCreateMeeting) {
     if (task) {
       let groupData = this.currentStep?.taskGroups.find((group) =>
         this.comparison(group.refID, task?.taskGroupID)
       );
       if (this.listGroupTask && this.listGroupTask?.length <= 0) {
-        let taskGroup = {recID: null, refID: null};
+        let taskGroup = { recID: null, refID: null };
         this.listGroupTask.push(taskGroup);
       }
-      let group = this.listGroupTask.find((group) => this.comparison(group.refID, task?.taskGroupID));
+      let group = this.listGroupTask.find((group) =>
+        this.comparison(group.refID, task?.taskGroupID)
+      );
       if (group) {
-        if (!group?.task) {group['task'] = [];}
+        if (!group?.task) {
+          group['task'] = [];
+        }
         group?.task?.push(task);
         group['progress'] = progressGroup;
       }
-      if (groupData) {groupData['progress'] = progressGroup;}
+      if (groupData) {
+        groupData['progress'] = progressGroup;
+      }
       this.currentStep?.tasks?.push(task);
       this.currentStep.progress = progressStep;
       this.notiService.notifyCode('SYS006');
@@ -1097,7 +1129,6 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     }
     this.changeDetectorRef.markForCheck();
   }
-
 
   addMeetings(task) {
     let dataTask: DP_Instances_Steps_Tasks = task;
@@ -1159,21 +1190,42 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
 
   async editTask(task) {
     if (task) {
-      if (task?.taskType == 'Q' && ((task?.isTaskDefault && task?.objectLinked) || (!task?.isTaskDefault))) {
+      if (
+        task?.taskType == 'Q' &&
+        ((task?.isTaskDefault && task?.objectLinked) || !task?.isTaskDefault)
+      ) {
         //báo giá
         this.addQuotation();
-      } else if (task?.taskType == 'CO' && ((task?.isTaskDefault && task?.objectLinked) || (!task?.isTaskDefault))) {
-        let data = { action: "edit", type: "task",recIDContract: task.objectLinked}
-        let taskContract = await this.stepService.openPopupTaskContract(data,'edit',task, this.currentStep?.recID, null);
+      } else if (
+        task?.taskType == 'CO' &&
+        ((task?.isTaskDefault && task?.objectLinked) || !task?.isTaskDefault)
+      ) {
+        let data = {
+          action: 'edit',
+          type: 'task',
+          recIDContract: task.objectLinked,
+        };
+        let taskContract = await this.stepService.openPopupTaskContract(
+          data,
+          'edit',
+          task,
+          this.currentStep?.recID,
+          null
+        );
         this.api
-        .exec<any>('DP', 'InstancesStepsBusiness', 'UpdateTaskStepAsync', [taskContract])
-        .subscribe((res) => {
-          if (res) {
-            this.changeTaskEdit(res,res?.taskGroupID);
-          }});
+          .exec<any>('DP', 'InstancesStepsBusiness', 'UpdateTaskStepAsync', [
+            taskContract,
+          ])
+          .subscribe((res) => {
+            if (res) {
+              this.changeTaskEdit(res, res?.taskGroupID);
+            }
+          });
       } else {
         let groupIdOld = task?.taskGroupID;
-        this.taskType = this.listTaskType.find((type) => type.value == task?.taskType);
+        this.taskType = this.listTaskType.find(
+          (type) => type.value == task?.taskType
+        );
         let dataOutput = await this.openPopupTask('edit', 'step', task);
         if (dataOutput?.task) {
           this.changeTaskEdit(dataOutput?.task, groupIdOld);
@@ -1182,14 +1234,22 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     }
   }
 
-  changeTaskEdit(task,groupIdOld){
+  changeTaskEdit(task, groupIdOld) {
     if (task) {
-      let group = this.listGroupTask.find((group) =>this.comparison(group.refID, task?.taskGroupID));
-      let indexTask = this.currentStep?.tasks?.findIndex((taskFind) => taskFind.recID == task.recID);
+      let group = this.listGroupTask.find((group) =>
+        this.comparison(group.refID, task?.taskGroupID)
+      );
+      let indexTask = this.currentStep?.tasks?.findIndex(
+        (taskFind) => taskFind.recID == task.recID
+      );
       if (task?.taskGroupID != groupIdOld) {
-        let groupOld = this.listGroupTask.find((group) => group.refID == groupIdOld);
+        let groupOld = this.listGroupTask.find(
+          (group) => group.refID == groupIdOld
+        );
         if (groupOld) {
-          let index = groupOld?.task?.findIndex((taskFind) => taskFind.recID == task.recID);
+          let index = groupOld?.task?.findIndex(
+            (taskFind) => taskFind.recID == task.recID
+          );
           if (index >= 0) {
             groupOld?.task?.splice(index, 1);
           }
@@ -1199,7 +1259,9 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         }
       } else {
         if (group) {
-          let index = group?.task?.findIndex((taskFind) => taskFind.recID == task.recID);
+          let index = group?.task?.findIndex(
+            (taskFind) => taskFind.recID == task.recID
+          );
           if (index >= 0) {
             group?.task?.splice(index, 1, task);
           }
@@ -1219,20 +1281,33 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         //báo giá
         this.addQuotation();
       } else if (task?.taskType == 'CO') {
-        let data = { action: "copy", type: "task",recIDContract: task.objectLinked}
-        let taskContract = await this.stepService.openPopupTaskContract(data,'copy',task, this.currentStep?.recID, null);
+        let data = {
+          action: 'copy',
+          type: 'task',
+          recIDContract: task.objectLinked,
+        };
+        let taskContract = await this.stepService.openPopupTaskContract(
+          data,
+          'copy',
+          task,
+          this.currentStep?.recID,
+          null
+        );
         this.api
-        .exec<any>('DP', 'InstancesStepsBusiness', 'AddTaskStepAsync', [taskContract])
-        .subscribe((res) => {
-          if (res) {
-            this.changeTaskAdd(res[0],res[1],res[2],false);
-          }});
-      }else{
+          .exec<any>('DP', 'InstancesStepsBusiness', 'AddTaskStepAsync', [
+            taskContract,
+          ])
+          .subscribe((res) => {
+            if (res) {
+              this.changeTaskAdd(res[0], res[1], res[2], false);
+            }
+          });
+      } else {
         this.taskType = this.listTaskType.find(
           (type) => type.value == task?.taskType
         );
         let taskOutput = await this.openPopupTask('copy', 'step', task);
-  
+
         if (taskOutput?.task) {
           let data = taskOutput;
           this.currentStep?.tasks?.push(data.task);
@@ -1923,7 +1998,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   //#region tao lich hop
   async createMeeting(data) {
     this.stepService
-      .getDefault('CO','TMT0501', 'CO_Meetings')
+      .getDefault('CO', 'TMT0501', 'CO_Meetings')
       .subscribe(async (res) => {
         if (res && res?.data) {
           let meeting = res.data;
@@ -2524,7 +2599,11 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
 
   //#region common
   comparison(value1, value2) {
-    return value1 === value2 || (value1 === null && value2 === '') || (value1 === '' && value2 === null);
+    return (
+      value1 === value2 ||
+      (value1 === null && value2 === '') ||
+      (value1 === '' && value2 === null)
+    );
   }
   //#endregion
   setNameTypeTask(taskType) {
@@ -2759,7 +2838,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       '',
       option
     );
-    fieldPopup.closed.subscribe(res => {
+    fieldPopup.closed.subscribe((res) => {
       let filels = res?.event;
       let listFilelStep = this.currentStep?.fields;
       let countFieldChange = 0;
@@ -2786,7 +2865,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         this.changeProgress.emit(true);
         this.changeDetectorRef.markForCheck();
       }
-    })
+    });
   }
 
   updateProgressForm(task ,actualEnd, progress, stepID, taskID, type, isUpdate = true) {
@@ -2823,6 +2902,12 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       case 'Q':
         className = 'QuotationsBusiness';
         break;
+      case 'F':
+        service = 'DP';
+        className = 'InstancesBusiness';
+        mehthol = 'GetDatasByInstanceIDAsync';
+        request = [this.currentStep.instanceID];
+        break;
       default:
         var customData = {
           refID: data.recID,
@@ -2845,32 +2930,41 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     this.api
       .execSv<any>(service, service, className, mehthol, request)
       .subscribe((str) => {
-        if (str && str?.length > 0) {
-          let dataSource = str[1];
-          if (str[0]) {
-            let datas = str[1];
-            if (datas && datas.includes('[{')) datas = datas.substring(2);
-            let fix = str[0]; // data đối tượng cần export
-            fix = fix.substring(1, fix.length - 1);
-            dataSource = '[{ ' + fix + ',' + datas;
+        let dataSource = '';
+        if (str) {
+          if (this.taskAdd.taskType != 'F') {
+            if (str?.length > 0) {
+              dataSource = str[1];
+              if (str[0]) {
+                let datas = str[1];
+                if (datas && datas.includes('[{')) datas = datas.substring(2);
+                let fix = str[0]; // data đối tượng cần export
+                fix = fix.substring(1, fix.length - 1);
+                dataSource = '[{ ' + fix + ',' + datas;
+              }
+            }
+          } else {
+            dataSource = str;
           }
-
-          var customData = {
-            refID: data.recID,
-            refType: 'DP_Instances_Steps_Tasks',
-            dataSource: dataSource,
-          };
-          this.codxShareService.defaultMoreFunc(
-            e,
-            data,
-            this.afterSave,
-            this.frmModelInstancesTask,
-            null,
-            this,
-            customData
-          );
-          this.changeDetectorRef.detectChanges();
         }
+
+        var customData = {
+          refID: data.recID,
+          refType: 'DP_Instances_Steps_Tasks',
+          dataSource: dataSource,
+        };
+        this.codxShareService.defaultMoreFunc(
+          e,
+          data,
+          this.afterSave,
+          this.frmModelInstancesTask,
+          null,
+          this,
+          customData
+        );
+        this.changeDetectorRef.detectChanges();
       });
   }
+
+  //export Form Nhập liệu
 }
