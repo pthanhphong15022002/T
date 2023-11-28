@@ -129,7 +129,9 @@ export class ViewTabUpdateComponent implements OnInit {
     this.fetch().subscribe(async (item) => {
       this.loaded = true;
       this.lstUpdate = item;
-
+      if(this.grid){
+        this.grid.dataSource = this.lstUpdate;
+      }
       // this.grid.dataSource = JSON.parse(JSON.stringify(this.lstUpdate));
 
       // this.columnsGrid = [
