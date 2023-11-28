@@ -49,7 +49,7 @@ export class StepService {
     private cache: CacheService,
     private bookingService: CodxBookingService,
     private codxService: CodxService,
-    private authStore: AuthStore,
+    private authStore: AuthStore
   ) {
     this.user = this.authStore.get();
   }
@@ -105,7 +105,7 @@ export class StepService {
     }
   }
 
-  minusDate(dateBig: Date, dateSmall: Date, typeReturn:string) {
+  minusDate(dateBig: Date, dateSmall: Date, typeReturn: string) {
     if (!(dateBig instanceof Date) || !(dateSmall instanceof Date)) {
       return 0;
     }
@@ -206,9 +206,6 @@ export class StepService {
 
   //#region popup
 
-
-
- 
   //#endregion
 
   checkUpdateProgress(
@@ -257,7 +254,7 @@ export class StepService {
   //   return check;
   // }
   //setDeFault
-  getDefault(service,funcID, entityName, id = null) {
+  getDefault(service, funcID, entityName, id = null) {
     return this.api.execSv<any>(
       service,
       'Core',
@@ -433,7 +430,7 @@ export class StepService {
   }
 
   async createMeeting(data, titleAction) {
-    this.getDefault('CO','TMT0501', 'CO_Meetings').subscribe(async (res) => {
+    this.getDefault('CO', 'TMT0501', 'CO_Meetings').subscribe(async (res) => {
       if (res && res?.data) {
         let meeting = res.data;
         meeting['_uuid'] = meeting['meetingID'] ?? Util.uid();
@@ -611,18 +608,17 @@ export class StepService {
     );
   }
 
-
-  async openPopupTaskContract(data,action,task,stepID,groupTaskID,) {
+  async openPopupTaskContract(data, action, task, stepID, groupTaskID) {
     let contractOuput = await this.openPopupContract(data);
     let contract = contractOuput?.event?.contract;
-    if(contract){
-      if(action == 'add'){
+    if (contract) {
+      if (action == 'add') {
         task = task ? task : {};
         task.recID = Util.uid();
         task.refID = Util.uid();
         task.status = '1';
         task.progress = 0;
-        task.taskType = "CO";
+        task.taskType = 'CO';
         task.stepID = stepID;
         task.taskGroupID = groupTaskID;
         task.isTaskDefault = false;
@@ -630,7 +626,7 @@ export class StepService {
         task.assigned = '0';
         task.approveStatus = '1';
         task.objectLinked = contract?.recID;
-      }else if(action == 'copy'){
+      } else if (action == 'copy') {
         task = JSON.parse(JSON.stringify(task));
         task.recID = Util.uid();
         task.refID = Util.uid();
@@ -645,16 +641,20 @@ export class StepService {
         task.assigned = '0';
         task.approveStatus = '1';
         task.objectLinked = contract?.recID;
-      }else if(action == "edit"){
+      } else if (action == 'edit') {
         task = JSON.parse(JSON.stringify(task));
-      }     
+      }
       task.taskName = contract?.contractName;
       task.owner = contract?.owner;
-      task.startDate = Date.parse(contract?.effectiveFrom) ? contract?.effectiveFrom : new Date();
-      task.endDate = Date.parse(contract?.effectiveTo) ? contract?.effectiveTo : null;
+      task.startDate = Date.parse(contract?.effectiveFrom)
+        ? contract?.effectiveFrom
+        : new Date();
+      task.endDate = Date.parse(contract?.effectiveTo)
+        ? contract?.effectiveTo
+        : null;
       let minus = this.minusDate(task.endDate, task.startDate, 'hours');
       task.durationDay = minus ? minus % 24 : 0;
-      task.durationHour =  minus ? Math.floor(minus / 24) : 0;
+      task.durationHour = minus ? Math.floor(minus / 24) : 0;
 
       if (contract?.permissions?.length > 0) {
         let roles = contract?.permissions?.map((x) => {
@@ -670,7 +670,7 @@ export class StepService {
           return role;
         });
         task.roles = roles;
-      }else{
+      } else {
         task.roles = [];
         let role = new DP_Instances_Steps_Tasks_Roles();
         role['recID'] = Util.uid();
@@ -684,7 +684,7 @@ export class StepService {
         task.roles.push(role);
       }
       return task;
-    }else{
+    } else {
       return null;
     }
   }
@@ -702,7 +702,9 @@ export class StepService {
     option.Width = '800px';
     option.zIndex = 1001;
     option.FormModel = formModel;
-    await firstValueFrom(this.cache.gridViewSetup('CMContracts','grvCMContracts'));
+    await firstValueFrom(
+      this.cache.gridViewSetup('CMContracts', 'grvCMContracts')
+    );
     let popupContract = this.callFunc.openSide(
       AddContractsComponent,
       data,
@@ -712,7 +714,7 @@ export class StepService {
     return dataPopupOutput;
   }
 
-  async openPopupCodxTask(data,location){
+  async openPopupCodxTask(data, location) {
     let frmModel: FormModel = {
       entityName: 'DP_Instances_Steps_Tasks',
       formName: 'DPInstancesStepsTasks',
@@ -725,11 +727,7 @@ export class StepService {
       option.Width = '550px';
       option.zIndex = 1001;
       option.FormModel = frmModel;
-      popupAddTask = this.callFunc.openSide(
-        CodxAddTaskComponent,
-        data,
-        option
-      );
+      popupAddTask = this.callFunc.openSide(CodxAddTaskComponent, data, option);
     } else {
       let opt = new DialogModel();
       opt.FormModel = frmModel;
@@ -755,37 +753,58 @@ export class StepService {
 
   async addQuotation(action, titleAction, task, stepID, groupTaskID) {
     let quotationID = task?.objectLinked;
-    if((action == 'edit' || action == 'copy') && quotationID){
-      this.getOneQuotation(quotationID).subscribe(res => {
-        if(res){
+    if ((action == 'edit' || action == 'copy') && quotationID) {
+      this.getOneQuotation(quotationID).subscribe((res) => {
+        if (res) {
           let quotation = res;
-          if(action == 'edit'){
-            this.openPopupQuotation(quotation, action, titleAction, task, stepID, groupTaskID);
-          }else{
+          if (action == 'edit') {
+            this.openPopupQuotation(
+              quotation,
+              action,
+              titleAction,
+              task,
+              stepID,
+              groupTaskID
+            );
+          } else {
             quotation['_uuid'] = quotation['quotationsID'] ?? Util.uid();
             quotation['idField'] = 'quotationsID';
             quotation.versionNo = quotation.versionNo ?? 'V1';
             quotation.revision = quotation.revision ?? 0;
-            quotation.versionName = quotation.versionNo + '.' + quotation.revision;
+            quotation.versionName =
+              quotation.versionNo + '.' + quotation.revision;
             quotation.status = quotation.status ?? '0';
             quotation.exchangeRate = quotation.exchangeRate ?? 1;
             quotation.totalAmt = quotation.totalAmt ?? 0;
             quotation.currencyID = quotation.currencyID ?? 'VND';
-            this.openPopupQuotation(action,quotation, titleAction, task, stepID, groupTaskID);
+            this.openPopupQuotation(
+              action,
+              quotation,
+              titleAction,
+              task,
+              stepID,
+              groupTaskID
+            );
           }
-        }else{
+        } else {
           this.notiService.notifyCode('Báo giá không tồn tại');
         }
       });
-    }else{
-      this.getDefault('CM','CM0202', 'CM_Quotations', 'quotationsID').subscribe((res) => {
+    } else {
+      this.getDefault(
+        'CM',
+        'CM0202',
+        'CM_Quotations',
+        'quotationsID'
+      ).subscribe((res) => {
         if (res) {
           let quotation = res.data;
           quotation['_uuid'] = quotation['quotationsID'] ?? Util.uid();
           quotation['idField'] = 'quotationsID';
           quotation.versionNo = quotation.versionNo ?? 'V1';
           quotation.revision = quotation.revision ?? 0;
-          quotation.versionName = quotation.versionNo + '.' + quotation.revision;
+          quotation.versionName =
+            quotation.versionNo + '.' + quotation.revision;
           quotation.status = quotation.status ?? '0';
           quotation.exchangeRate = quotation.exchangeRate ?? 1;
           quotation.totalAmt = quotation.totalAmt ?? 0;
@@ -801,17 +820,38 @@ export class StepService {
               )
               .subscribe((id) => {
                 quotation.quotationID = id;
-                this.openPopupQuotation(action, quotation, titleAction, task, stepID, groupTaskID);
+                this.openPopupQuotation(
+                  action,
+                  quotation,
+                  titleAction,
+                  task,
+                  stepID,
+                  groupTaskID
+                );
               });
-          } else{
-            this.openPopupQuotation(action,quotation, titleAction, task, stepID, groupTaskID);
+          } else {
+            this.openPopupQuotation(
+              action,
+              quotation,
+              titleAction,
+              task,
+              stepID,
+              groupTaskID
+            );
           }
         }
       });
     }
   }
 
-  openPopupQuotation(action, quotation, titleAction,task,stepID,groupTaskID) {
+  openPopupQuotation(
+    action,
+    quotation,
+    titleAction,
+    task,
+    stepID,
+    groupTaskID
+  ) {
     let formModel: FormModel = {
       entityName: 'CM_Quotations',
       formName: 'CMQuotations',
@@ -842,14 +882,14 @@ export class StepService {
         );
         dialog.closed.subscribe((e) => {
           if (e?.event) {
-            let quotatision = e?.event;            
-            if(action == 'add'){
+            let quotatision = e?.event;
+            if (action == 'add') {
               task = task ? task : {};
               task.recID = Util.uid();
               task.refID = Util.uid();
               task.status = '1';
               task.progress = 0;
-              task.taskType = "Q";
+              task.taskType = 'Q';
               task.stepID = stepID;
               task.taskGroupID = groupTaskID;
               task.isTaskDefault = false;
@@ -857,7 +897,7 @@ export class StepService {
               task.assigned = '0';
               task.approveStatus = '1';
               task.objectLinked = quotatision?.recID;
-            }else if(action == 'copy'){
+            } else if (action == 'copy') {
               task = JSON.parse(JSON.stringify(task));
               task.recID = Util.uid();
               task.refID = Util.uid();
@@ -872,16 +912,20 @@ export class StepService {
               task.assigned = '0';
               task.approveStatus = '1';
               task.objectLinked = quotatision?.recID;
-            }else if(action == "edit"){
+            } else if (action == 'edit') {
               task = JSON.parse(JSON.stringify(task));
-            }     
+            }
             task.taskName = quotatision?.quotationName;
-            task.owner =  this.user?.userID;
-            task.startDate = Date.parse(quotatision?.createdOn) ? quotatision?.createdOn : new Date();
-            task.endDate = Date.parse(quotatision?.deadline) ? quotatision?.deadline : null;
+            task.owner = this.user?.userID;
+            task.startDate = Date.parse(quotatision?.createdOn)
+              ? quotatision?.createdOn
+              : new Date();
+            task.endDate = Date.parse(quotatision?.deadline)
+              ? quotatision?.deadline
+              : null;
             let minus = this.minusDate(task.endDate, task.startDate, 'hours');
             task.durationDay = minus ? minus % 24 : 0;
-            task.durationHour =  minus ? Math.floor(minus / 24) : 0;      
+            task.durationHour = minus ? Math.floor(minus / 24) : 0;
             task.roles = [];
             let role = new DP_Instances_Steps_Tasks_Roles();
             role['recID'] = Util.uid();
@@ -900,5 +944,52 @@ export class StepService {
       });
   }
 
-
+  //get dataSource
+  getDataSource(data, instanceID): Promise<string> {
+    return new Promise<string>((resolve, rejects) => {
+      let mehthol = 'GetDataSourceExportTaskAsync';
+      let className = 'ContractsBusiness';
+      let service = 'CM';
+      let request = [instanceID, data.objectLinked];
+      switch (data.taskType) {
+        case 'CO':
+          className = 'ContractsBusiness';
+          break;
+        case 'Q':
+          className = 'QuotationsBusiness';
+          break;
+        case 'F':
+          service = 'DP';
+          className = 'InstancesBusiness';
+          mehthol = 'GetDatasByInstanceIDAsync';
+          request = [instanceID];
+          break;
+        default:
+          return resolve('');
+          break;
+      }
+      this.api
+        .execSv<any>(service, service, className, mehthol, request)
+        .subscribe((str) => {
+          let dataSource = '';
+          if (str) {
+            if (data.taskType != 'F') {
+              if (str?.length > 0) {
+                dataSource = str[1];
+                if (str[0]) {
+                  let datas = str[1];
+                  if (datas && datas.includes('[{')) datas = datas.substring(2);
+                  let fix = str[0]; // data đối tượng cần export
+                  fix = fix.substring(1, fix.length - 1);
+                  dataSource = '[{ ' + fix + ',' + datas;
+                }
+              }
+            } else {
+              dataSource = str;
+            }
+          }
+          resolve(dataSource);
+        });
+    });
+  }
 }
