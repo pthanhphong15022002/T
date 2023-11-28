@@ -617,7 +617,7 @@ export class PopupJobComponent implements OnInit, OnDestroy {
           if (res && res?.data) {
             category = res.data;
             category.recID = res?.recID ?? Util.uid();
-            category.eSign = false;
+            category.eSign = true;
             category.Category = 'DP_Processes';
             category.categoryID = this.stepsTasks.recID;
             category.categoryName = this.stepsTasks.taskName;
@@ -667,6 +667,7 @@ export class PopupJobComponent implements OnInit, OnDestroy {
                   dataType: 'auto',
                   templateRefID: this.stepsTasks.recID,
                   templateRefType: 'DP_Processes',
+                  disableESign: true,
                 },
                 '',
                 opt

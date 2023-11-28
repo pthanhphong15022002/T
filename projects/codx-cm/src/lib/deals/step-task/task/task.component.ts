@@ -172,6 +172,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
   async changeDataMFTask(event, task) {
     if (event != null) {
       event.forEach((res) => {
+        res.isbookmark = false;
         switch (res.functionID) {
           case 'SYS02': //xóa
           case 'SYS03': //sửa
@@ -452,7 +453,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
       450,
       580,
       '',
-      { isShowGroup: false }
+      {typeDisableds: ["G","F"]}
     );
     let dataOutput = await firstValueFrom(popupTypeTask.closed);
     if (dataOutput?.event?.value) {

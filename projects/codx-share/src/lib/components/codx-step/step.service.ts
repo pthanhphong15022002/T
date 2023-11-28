@@ -330,13 +330,14 @@ export class StepService {
   }
 
   async chooseTypeTask(isAddGroup = true) {
+    let typeDisableds = isAddGroup ? ['G'] : [];
     let popupTypeTask = this.callFunc.openForm(
       CodxTypeTaskComponent,
       '',
       450,
       580,
       '',
-      { isShowGroup: isAddGroup }
+      {typeDisableds}
     );
     let dataOutput = await firstValueFrom(popupTypeTask.closed);
     let type = dataOutput?.event ? dataOutput?.event : null;
