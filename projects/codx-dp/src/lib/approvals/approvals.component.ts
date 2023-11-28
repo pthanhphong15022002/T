@@ -98,16 +98,18 @@ export class ApprovalsComponent
       }
     });
   }
-  ngOnChanges(changes: SimpleChanges): void {}
+  ngOnChanges(changes: SimpleChanges): void {
+    debugger;
+  }
 
   onInit(): void {
-    this.layoutDP.hidenNameProcess();
-    this.router.params.subscribe((params) => {
-      this.recIDAprrover = params['id'];
-      if (this.recIDAprrover) {
-        this.getData(this.recIDAprrover);
-      }
-    });
+    // this.layoutDP.hidenNameProcess();
+    // this.router.params.subscribe((params) => {
+    //   this.recIDAprrover = params['id'];
+    //   if (this.recIDAprrover) {
+    //     this.getData(this.recIDAprrover);
+    //   }
+    // });
   }
 
   ngAfterViewInit(): void {

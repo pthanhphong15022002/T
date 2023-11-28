@@ -1,0 +1,106 @@
+<codx-form #form [headerText]="headerText" [body]="body" [formModel]="dialog.formModel" [dialog]="dialog"
+  [footer]="footer" [data]="dataDefault">
+</codx-form>
+
+<ng-template #body>
+  <ng-container *ngIf="form?.formGroup">
+    <div class="row">
+      <div class="col-8 row">
+        <div class="col-6">
+            <div class="form-group">
+                <codx-label fiedName="FromUMID" [formModel]="dialog.formModel"></codx-label>
+                <codx-input field="fromUMID" [formModel]="dialog.formModel" [Group]="form?.formGroup"></codx-input>
+            </div>
+        </div>
+        <div class="col-6">
+            <div class="form-group">
+                <codx-label fiedName="ToUMID" [formModel]="dialog.formModel"></codx-label>
+                <codx-input field="toUMID" [formModel]="dialog.formModel" [Group]="form?.formGroup"></codx-input>
+            </div>
+        </div>
+        <div class="d-flex align-items-center form-group">
+            <codx-input class="me-3" field="useFormula" [formModel]="dialog.formModel" [Group]="form?.formGroup"></codx-input>
+            <codx-label fiedName="UseFormula" [formModel]="dialog.formModel"></codx-label>
+        </div>
+      </div>
+      <div class="col-4">
+        <codx-img #itemSizeImage class="col-4" [funcId]="dialog.formModel?.funcID"
+          [objectId]="form?.data.recID" [objectType]="dialog.formModel?.entityName" [width]="125"
+          [imgOn]="form?.data?.modifiedOn" [isAllowEdit]="true" [isDefaulImg]="true" imageType="square">
+        </codx-img>
+      </div>
+    </div>
+    <div [ngStyle]="form?.data?.useFormula ? '' :{display:'none'}" class="row">
+        <div class="form-group">
+            <codx-label fiedName="Formula" [formModel]="dialog.formModel"></codx-label>
+            <codx-input field="formula" [formModel]="dialog.formModel" [Group]="form?.formGroup"></codx-input>
+        </div>
+    </div>
+    <div [ngStyle]="!form?.data?.useFormula ? '' :{display:'none'}" class="row">
+        <div class="form-group">
+            <codx-label fiedName="Conversion" [formModel]="dialog.formModel"></codx-label>
+            <codx-input field="conversion" [formModel]="dialog.formModel" [Group]="form?.formGroup"></codx-input>
+        </div>
+    </div>
+    <div *ngIf="!form?.data?.useFormula" class="row">
+        <div class="form-group">
+            <span>{{'1 '+form?.data?.fromUMID+' = '+form?.data?.conversion+' '+form?.data?.toUMID}}</span>
+        </div>
+    </div>
+    <!-- <div class="row">
+      <div class="col-4">
+        <div class="form-group">
+          <codx-label fiedName="Length" [formModel]="dialog.formModel"></codx-label>
+          <codx-input field="length" [formModel]="dialog.formModel" [Group]="form?.formGroup"></codx-input>
+        </div>
+      </div>
+      <div class="col-4">
+        <div class="form-group">
+          <codx-label fiedName="Width" [formModel]="dialog.formModel"></codx-label>
+          <codx-input field="width" [formModel]="dialog.formModel" [Group]="form?.formGroup"></codx-input>
+        </div>
+      </div>
+      <div class="col-4">
+        <div class="form-group">
+          <codx-label fiedName="Height" [formModel]="dialog.formModel"></codx-label>
+          <codx-input field="height" [formModel]="dialog.formModel" [Group]="form?.formGroup"></codx-input>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-6">
+        <div class="form-group">
+          <codx-label fiedName="NWeight" [formModel]="dialog.formModel"></codx-label>
+          <codx-input field="nWeight" [formModel]="dialog.formModel" [Group]="form?.formGroup"></codx-input>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="form-group">
+          <codx-label fiedName="GWeight" [formModel]="dialog.formModel"></codx-label>
+          <codx-input field="gWeight" [formModel]="dialog.formModel" [Group]="form?.formGroup"></codx-input>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="form-group">
+        <codx-label fiedName="Conversion" [formModel]="dialog.formModel"></codx-label>
+        <codx-input field="conversion" [formModel]="dialog.formModel" [Group]="form?.formGroup"></codx-input>
+      </div>
+    </div> -->
+  </ng-container>
+</ng-template>
+
+<ng-template #footer>
+  <div class="d-flex align-items-center justify-content-end btn-ac-footer mt-1">
+    <!-- <button id="btnsaveas" [shortcut]="'alt+shift+s'" [autoClick]="true" tab-index=""
+      style="border: 1px solid var(--primary-dark) !important" type="button"
+      (keydown.enter)="onSave('saveadd'); $event.preventDefault()" (click)="onSave('saveadd')" class="btn btn-md btn-light-primary me-2">
+      <codx-label class="fw-normal" fiedName="lblSaveAndClear" default="Lưu & Thêm"></codx-label>
+    </button> -->
+    <button [shortcut]="'alt+s'" [autoClick]="true" id="btnsave" type="button" tab-index=""
+      class="btn btn-md btn-light-primary" style="border: 1px solid var(--primary-dark) !important"
+      (keydown.enter)="onSave(); $event.preventDefault()" (click)="onSave()">
+      <codx-label class="fw-normal" fiedName="lblSave" default="Lưu"></codx-label>
+    </button>
+  </div>
+</ng-template>

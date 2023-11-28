@@ -611,9 +611,13 @@
       <button type="button" class="btn btn-primary" *ngIf="!isAddFunc && !isAddGroup" (click)="onSaveForm()">
         <codx-label name="lblSave" default="Lưu Cá nhân"></codx-label>
       </button>
+      <button type="button" class="btn btn-success" *ngIf="isEditFunc || isEditGroup"(click)="onEdit()">
+        <codx-label name="lblEdit" default="Cập nhật" me-3></codx-label>
+      </button>
       <button type="button" class="btn btn-primary"*ngIf="isAddFunc || isAddGroup" (click)="onAddForm()">
         <codx-label name="lblSave" default="Thêm mới"></codx-label>
       </button>
+
     </div>
     <div class="form-group w-50 d-flex justify-content-end" *ngIf="user.administrator || user.systemAdmin">
       <button type="button" class="btn btn-danger me-3" (click)="onUndo()" *ngIf="isAddFunc || isAddGroup">
@@ -622,9 +626,13 @@
       <button type="button" class="btn btn-primary"*ngIf="isAddFunc || isAddGroup" (click)="onAddForm()">
         <codx-label name="lblSave" default="Thêm mới"></codx-label>
       </button>
+      <button type="button" class="btn btn-success me-3" *ngIf="isEditFunc || isEditGroup"(click)="onEdit()">
+        <codx-label name="lblEdit" default="Cập nhật"></codx-label>
+      </button>
       <button type="button" class="btn btn-primary" *ngIf="!isAddFunc && !isAddGroup"(click)="onSaveAdmin()">
         <codx-label name="lblSave" default="Lưu"></codx-label>
       </button>
+
     </div>
   </div>
 </ng-template>

@@ -94,8 +94,7 @@ export class CodxApprovalComponent
 
   ngOnChanges(changes: SimpleChanges): void {}
   onInit(): void {
-    
-    if(this.codxService.asideMode == "2") this.hideMF = true;
+    if (this.codxService.asideMode == '2') this.hideMF = true;
   }
   ngAfterViewInit(): void {
     this.tabControl = [
@@ -164,12 +163,7 @@ export class CodxApprovalComponent
       if (fuc) {
         if (fuc?.url) {
           var params = fuc?.url.split('/');
-          if (
-            r &&
-            params[1] &&
-            fuc?.functionID &&
-            this.dataItem?.transID
-          ) {
+          if (r && params[1] && fuc?.functionID && this.dataItem?.transID) {
             var url =
               r +
               params[1] +
@@ -192,6 +186,8 @@ export class CodxApprovalComponent
       //this.codxService.navigate("","",{})
     });
     this.selectedChange.emit([this.dataItem, this.view]);
+    //truyền lên share để lấy về -- VTHAO- Truyền để view lấy về không cần get data qua ES ở view approve
+    this.codxShareService.dataApproveTrans.next(dt);
   }
 
   vllApproval: any;
@@ -238,8 +234,7 @@ export class CodxApprovalComponent
       );
       for (var i = 0; i < list.length; i++) {
         list[i].isbookmark = true;
-        if (list[i].functionID != 'SYS206' && list[i].functionID != 'SYS205') 
-        {
+        if (list[i].functionID != 'SYS206' && list[i].functionID != 'SYS205') {
           list[i].disabled = true;
           if (value.status == '5' || value.status == '2' || value.status == '4')
             list[i].disabled = true;
@@ -258,26 +253,23 @@ export class CodxApprovalComponent
           ) {
             list[i].disabled = false;
           }
-        } 
-        else if (
+        } else if (
           value.status == '5' ||
           value.status == '2' ||
           value.status == '4'
-        )
-        {
+        ) {
           list[i].disabled = true;
-        }
-        else{
-          
+        } else {
           list[i].disabled = false;
         }
       }
       this.listApproveMF = list.filter(
-        (p) => (p.data.functionID == 'SYS208' || p.disabled == false) && p.data.functionID != 'SYS200'
+        (p) =>
+          (p.data.functionID == 'SYS208' || p.disabled == false) &&
+          p.data.functionID != 'SYS200'
       );
 
-      if(datas?.eSign)
-      {
+      if (datas?.eSign) {
         var listDis = data.filter(
           (x) =>
             x.functionID == 'SYS202' ||
@@ -286,13 +278,12 @@ export class CodxApprovalComponent
             x.functionID == 'SYS205' ||
             x.functionID == 'SYS206' ||
             x.functionID == 'SYS201'
-            
         );
         for (var i = 0; i < listDis.length; i++) {
           listDis[i].disabled = true;
         }
 
-        var sys200 = data.filter(x=>x.functionID == "SYS200");
+        var sys200 = data.filter((x) => x.functionID == 'SYS200');
         sys200[0].disabled = false;
       }
       //Ẩn thêm xóa sửa
@@ -331,7 +322,7 @@ export class CodxApprovalComponent
     this.detectorRef.detectChanges();
   }
   clickMF(e: any, data: any) {
-    this.changeMF( this.allMFunc, data);
+    this.changeMF(this.allMFunc, data);
     //Duyệt SYS201 , Ký SYS202 , Đồng thuận SYS203 , Hoàn tất SYS204 , Từ chối SYS205 , Làm lại SYS206 , Khôi phục SY207
     var funcID = e?.functionID;
     if (data.eSign == true) {
@@ -375,8 +366,8 @@ export class CodxApprovalComponent
           dialogModel
         );
         dialogApprove.closed.subscribe((x) => {
-          if (x.event?.rowCount>0 && x.event?.msgCodeError==null) {
-            //return ResponseModel            
+          if (x.event?.rowCount > 0 && x.event?.msgCodeError == null) {
+            //return ResponseModel
             data.status = x.event?.returnStatus;
             this.view.dataService.update(data).subscribe();
             this.esService.setupChange.next(true);
@@ -385,9 +376,12 @@ export class CodxApprovalComponent
                 // if (res.toString() == '2') {
                 //   this.view.dataService.remove(data).subscribe();
                 // } else {
-                  data.status = res;
-                  this.view.dataService.update(data).subscribe();
+                data.status = res;
+                this.view.dataService.update(data).subscribe();
                 //}
+
+                //truyền lên share để lấy về -- VTHAO- Truyền để view lấy về không cần get data qua ES ở view approve
+                this.codxShareService.dataApproveTrans.next(data);
               }
             });
           }
@@ -429,39 +423,34 @@ export class CodxApprovalComponent
       if (dialog) {
         dialog.closed.subscribe((res) => {
           let oComment = res?.event;
-          if(oComment)
-          {
+          if (oComment) {
             this.codxShareService
-            .codxApprove(
-              data?.recID,
-              status,
-              oComment?.comment,
-              oComment?.reasonID,
-              null,
-            )
-            .subscribe((res2: any) => {
-              if (!res2?.msgCodeError) {
-                if (status.toString() == '2') {
-                  this.view.dataService.remove(data).subscribe();
-                } else {
-                  data.status = status;
-                  this.view.dataService.update(data).subscribe();
-                  this.esService.setupChange.next(true);
-                }
-                this.notifySvr.notifyCode('SYS007');
-              } else this.notifySvr.notify(res2?.msgCodeError);
-            });
+              .codxApprove(
+                data?.recID,
+                status,
+                oComment?.comment,
+                oComment?.reasonID,
+                null
+              )
+              .subscribe((res2: any) => {
+                if (!res2?.msgCodeError) {
+                  if (status.toString() == '2') {
+                    this.view.dataService.remove(data).subscribe();
+                  } else {
+                    data.status = status;
+                    this.view.dataService.update(data).subscribe();
+                    this.esService.setupChange.next(true);
+                    //truyền lên share để lấy về -- VTHAO- Truyền để view lấy về không cần get data qua ES ở view approve
+                    this.codxShareService.dataApproveTrans.next(data);
+                  }
+                  this.notifySvr.notifyCode('SYS007');
+                } else this.notifySvr.notify(res2?.msgCodeError);
+              });
           }
         });
       } else {
         this.codxShareService
-          .codxApprove(
-            data?.recID,
-            status,
-            null,
-            null,
-            null,
-          )
+          .codxApprove(data?.recID, status, null, null, null)
           .subscribe((res2: any) => {
             if (!res2?.msgCodeError) {
               if (!res2?.msgCodeError) {
@@ -471,6 +460,8 @@ export class CodxApprovalComponent
                   data.status = status;
                   this.view.dataService.update(data).subscribe();
                   this.esService.setupChange.next(true);
+                  //truyền lên share để lấy về -- VTHAO- Truyền để view lấy về không cần get data qua ES ở view approve
+                  this.codxShareService.dataApproveTrans.next(data);
                 }
               }
               this.notifySvr.notifyCode('SYS007');
@@ -479,11 +470,13 @@ export class CodxApprovalComponent
       }
     }
     if (funcID == 'SYS207') {
-      this.codxShareService.codxUndo(data?.recID,null).subscribe((res) => {
+      this.codxShareService.codxUndo(data?.recID, null).subscribe((res) => {
         if (res != null) {
           data = res;
           this.view.dataService.update(data).subscribe();
           this.esService.setupChange.next(true);
+          //truyền lên share để lấy về -- VTHAO- Truyền để view lấy về không cần get data qua ES ở view approve
+          this.codxShareService.dataApproveTrans.next(data);
         }
       });
     }

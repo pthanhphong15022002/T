@@ -23,18 +23,11 @@ import { FixedAssetsComponent } from './fixed-assets/fixed-assets.component';
 import { PopupAddFixedAssetComponent } from './fixed-assets/popup-add-fixed-asset/popup-add-fixed-asset.component';
 import { InventoryComponent } from './inventory/inventory.component';
 import { PopAddInventoryComponent } from './inventory/pop-add-inventory/pop-add-inventory.component';
-import { ItemsComponent } from './items/items.component';
-import { PopupAddItemColorComponent } from './items/popup-add-item-color/popup-add-item-color.component';
-import { PopupAddItemConversionComponent } from './items/popup-add-item-conversion/popup-add-item-conversion.component';
-import { PopupAddItemSizeComponent } from './items/popup-add-item-size/popup-add-item-size.component';
-import { PopupAddItemStyleComponent } from './items/popup-add-item-style/popup-add-item-style.component';
-import { PopupAddItemComponent } from './items/popup-add-item/popup-add-item.component';
 import { PopAddConversionComponent } from './unitsofmearsure/pop-add-conversion/pop-add-conversion.component';
 import { PopAddMearsureComponent } from './unitsofmearsure/pop-add-mearsure/pop-add-mearsure.component';
 import { UnitsofmearsureComponent } from './unitsofmearsure/unitsofmearsure.component';
 import { PopAddWarehousesComponent } from './warehouses/pop-add-warehouses/pop-add-warehouses.component';
 import { WarehousesComponent } from './warehouses/warehouses.component';
-import { ImageBoxListComponent } from './items/components/image-box-list/image-box-list.component';
 import { FiscalPeriodsComponent } from './fiscal-periods/fiscal-periods.component';
 import { PopAddFiscalPeriodsComponent } from './fiscal-periods/pop-add-fiscal-periods/pop-add-fiscal-periods.component';
 import { ItemBatchsComponent } from './item-batchs/item-batchs.component';
@@ -61,6 +54,12 @@ import { ContactAddComponent } from './customers-categories/contact-add/contact-
 import { AddressAddComponent } from './customers-categories/address-add/address-add.component';
 import { VendorsComponent } from './vendors-categories/vendors.component';
 import { VendorsAddComponent } from './vendors-categories/vendors-add/vendors-add.component';
+import { ItemsComponent } from './items-categories/items.component';
+import { ItemsAddComponent } from './items-categories/items-add/items-add.component';
+import { ItemsSizeAddComponent } from './items-categories/items-size-add/items-size-add.component';
+import { ItemsStyleAddComponent } from './items-categories/items-style-add/items-style-add.component';
+import { ItemsColorAddComponent } from './items-categories/items-color-add/items-color-add.component';
+import { ItemsConversionAddComponent } from './items-categories/items-conversion-add/items-conversion-add.component';
 
 var routes: Routes = [
   {
@@ -160,10 +159,10 @@ var routes: Routes = [
     VendorsAddComponent,
     NosubAsideComponent,
     ItemsComponent,
-    PopupAddItemComponent,
-    PopupAddItemSizeComponent,
-    PopupAddItemStyleComponent,
-    PopupAddItemColorComponent,
+    ItemsAddComponent,
+    ItemsSizeAddComponent,
+    ItemsStyleAddComponent,
+    ItemsColorAddComponent,
     WarehousesComponent,
     PopAddWarehousesComponent,
     UnitsofmearsureComponent,
@@ -174,7 +173,7 @@ var routes: Routes = [
     ItempostingaccountsComponent,
     DimensionGroupsComponent,
     PopAddDimensionGroupsComponent,
-    PopupAddItemConversionComponent,
+    ItemsConversionAddComponent,
     PopAddDimensionSetupComponent,
     ArPostingAccountsComponent,
     PopAddArComponent,
@@ -185,7 +184,6 @@ var routes: Routes = [
     PopupAddFAPostingAccountComponent,
     FixedAssetsComponent,
     PopupAddFixedAssetComponent,
-    ImageBoxListComponent,
     FiscalPeriodsComponent,
     PopAddFiscalPeriodsComponent,
     ItemBatchsComponent,

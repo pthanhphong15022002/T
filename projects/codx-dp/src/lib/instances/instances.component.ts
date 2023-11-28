@@ -2782,4 +2782,7 @@ export class InstancesComponent
       }
     });
   }
+  autoStartInstance(){
+    this.startInstance(this.dataSelected);
+  }
 }
