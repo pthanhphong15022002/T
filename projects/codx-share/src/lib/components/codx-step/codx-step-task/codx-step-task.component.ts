@@ -39,7 +39,7 @@ import { AssignTaskModel } from '../../../models/assign-task.model';
 import { CodxEmailComponent } from '../../codx-email/codx-email.component';
 import { AssignInfoComponent } from '../../assign-info/assign-info.component';
 import { CodxTypeTaskComponent } from '../codx-step-common/codx-type-task/codx-type-task.component';
-import { UpdateProgressComponent } from '../codx-progress/codx-progress.component';
+import { Progress, UpdateProgressComponent } from '../codx-progress/codx-progress.component';
 import { CodxViewTaskComponent } from '../codx-view-task/codx-view-task.component';
 import { CodxAddGroupTaskComponent } from '../codx-popup-group/codx-add-group-task.component';
 import { PopupAddMeetingComponent } from '../../codx-tmmeetings/popup-add-meeting/popup-add-meeting.component';
@@ -2841,13 +2841,51 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     fieldPopup.closed.subscribe((res) => {
       let filels = res?.event;
       let listFilelStep = this.currentStep?.fields;
-      if (filels?.length > 0 && listFilelStep?.length > 0) {
-        filels?.forEach((element) => {
-          let filel = listFilelStep?.find((x) => x.recID == element?.recID);
-          if (filel) {
+      let countFieldChange = 0;
+      if(filels?.length > 0 && listFilelStep?.length > 0) {
+        filels?.forEach(element => {
+          let filel = listFilelStep?.find(x => x.recID == element?.recID);
+          if(filel){
             filel.dataValue = element?.dataValue;
+            if(element?.dataValue){
+              countFieldChange++;
+            }
           }
         });
+        if(countFieldChange == filels?.length){
+          task.status = '3';
+          let actualEnd = new Date();
+          this.updateProgressForm(task, actualEnd, 100,this.currentStep?.recID, task?.recID, "F",true );
+        }else{
+          let progress = Math.floor((countFieldChange/filels?.length)*100);
+          task.progress = progress >= 0 ? progress : 0;
+          task.status = '2';
+          this.updateProgressForm(task, null, progress,this.currentStep?.recID, task?.recID, "F",true );
+        }
+        this.changeProgress.emit(true);
+        this.changeDetectorRef.markForCheck();
+      }
+    });
+  }
+
+  updateProgressForm(task ,actualEnd, progress, stepID, taskID, type, isUpdate = true) {
+    let dataSave = new Progress();
+    dataSave.stepID = stepID;
+    dataSave.recID = taskID;
+    dataSave.progress = progress;
+    dataSave.actualEnd = actualEnd;
+    dataSave.type = type;
+    dataSave.isUpdate = isUpdate;
+    this.api
+    .exec<any>(
+      'DP',
+      'InstancesStepsBusiness',
+      'UpdateProgressAsync',
+      dataSave
+    )
+    .subscribe((res) => {
+      if(res){
+        this.handelProgress(task, res);
       }
     });
   }
