@@ -986,6 +986,7 @@ export class ContractsComponent extends UIComponent {
       headerTitle: fun.defaultName,
       formModel: formMD,
       isReason: isMoveSuccess,
+      processID: data?.processID,
       applyFor: '4',
       dataCM: dataCM,
       stepName: data.currentStepName,

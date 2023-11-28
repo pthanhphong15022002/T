@@ -220,7 +220,7 @@ export class PopupMoveReasonComponent implements OnInit {
   }
 
   async getListMoveReason(data) {
-    var datas = [data?.processID, this.isReason, this.applyFor];
+    var datas = [this.processID, this.isReason, this.applyFor];
     this.codxDpService
       .getInstanceStepsMoveReason(datas)
       .subscribe(async (res) => {
