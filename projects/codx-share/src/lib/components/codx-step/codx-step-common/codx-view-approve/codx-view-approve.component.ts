@@ -28,6 +28,7 @@ export class CodxViewApproveComponent implements OnInit, OnChanges {
   user;
   entityName = '';
   isActivitie = false;
+  idTask = '';
   private destroyFrom$: Subject<void> = new Subject<void>();
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
@@ -44,6 +45,7 @@ export class CodxViewApproveComponent implements OnInit, OnChanges {
     this.stepsTasks = dt?.data?.stepsTasks;
     this.isActivitie = dt?.data?.isActivitie || false;
     this.user = this.authStore.get();
+    this.idTask = this.stepsTasks?.isTaskDefault ? this.stepsTasks?.refID : this.stepsTasks?.recID;
   }
 
   ngOnInit(): void {
@@ -54,7 +56,7 @@ export class CodxViewApproveComponent implements OnInit, OnChanges {
   }
  
   loadListApproverStep() {
-    this.getListAproverStepByCategoryID(this.categoryID)
+    this.getListAproverStepByCategoryID(this.idTask)
       .pipe(takeUntil(this.destroyFrom$))
       .subscribe((res) => {
         if (res) {
@@ -88,7 +90,7 @@ export class CodxViewApproveComponent implements OnInit, OnChanges {
         'ES',
         'CategoriesBusiness',
         'GetByCategoryIDAsync',
-        this.categoryID
+        this.idTask
       ));
       
     if(category) {
@@ -108,7 +110,7 @@ export class CodxViewApproveComponent implements OnInit, OnChanges {
             category.recID = res?.recID ?? Util.uid();
             category.eSign = true;
             category.Category = this.isActivitie ? 'DP_Activities' : 'DP_Instances_Steps_Tasks';
-            category.categoryID = this.stepsTasks.recID;
+            category.categoryID = this.idTask;
             category.categoryName = this.stepsTasks.taskName;
             category.createdBy = this.user.userID;
             category.owner = this.user.userID;
@@ -153,7 +155,7 @@ export class CodxViewApproveComponent implements OnInit, OnChanges {
                   isAdd: isAdd,
                   headerText: this.titleAction,
                   dataType: 'auto',
-                  templateRefID: this.stepsTasks.recID,
+                  templateRefID: this.idTask,
                   templateRefType: this.isActivitie ? 'DP_Activities' : 'DP_Instances_Steps_Tasks',
                   disableESign: true,
                 },
