@@ -97,12 +97,12 @@ export class PopupMoveReasonComponent implements OnInit {
     this.isCallInstance = dt?.data?.isCallInstance;
     this.user = this.authStore.get();
     this.userId = this.user?.userID;
-    if (this.applyFor == '0') {
 
-      this.instances = JSON.parse(JSON.stringify(dt?.data?.instance));
+    if (this.applyFor == '0') {
       this.viewClick = this.viewKanban;
       this.reasonStep = dt?.data?.objReason;
       this.listReason = this.reasonStep?.reasons;
+      this.instances = JSON.parse(JSON.stringify(dt?.data?.instance));
   //    this.listCbxProccess = dt?.data?.listProccessCbx;
    //   this.listParticipantReason = dt?.data?.listParticipantReason;
       this.moveProccess =
@@ -113,7 +113,7 @@ export class PopupMoveReasonComponent implements OnInit {
       this.titleReasonClick = dt?.data?.headerTitle;
     }
     this.dataCM = dt?.data?.dataCM;
-    this.recID = this.dataCM ? this.dataCM?.refID : this.instances?.recID;
+    this.recID = this.dataCM ? this.dataCM?.refID : dt?.data?.instance?.recID;
     this.applyFor != '0' && this.executeApiCalls();
     this.getValueListReason();
    this.isMoveProcess && this.getValueListMoveProcess();
@@ -172,7 +172,7 @@ export class PopupMoveReasonComponent implements OnInit {
         this.instances = res[0];
         this.listStep = res[1];
 
-        if(this.applyFor == "0" && !this.isCallInstance) {
+        if(this.applyFor != "0" && !this.isCallInstance) {
           let datas = [null, oldStepId, oldStatus, this.reasonStep.memo,this.instances.recID,this.instances.status,this.instances.stepID];
           this.codxDpService.moveDealReason(datas).subscribe((res) => {
             if (res) {
@@ -180,26 +180,18 @@ export class PopupMoveReasonComponent implements OnInit {
           });
 
         }
+        let obj = {
+          listStep: this.listStep,
+          instance: this.instances,
+          nextStep: this.nextStep,
+          processMove: this.moveProccess != this.guidEmpty ? this.moveProccess: null,
+          applyForMove: this.applyFor,
+          ownerMove: this.ownerMove,
+          comment: this.reasonStep.memo,
+          title:this.instances.title,
+        };
+        this.dialog.close(obj);
 
-        if (this.applyFor != '0') {
-          let objApplyFor = {
-            listStep: this.listStep,
-            instance: this.instances,
-            instanceMove: res[2],
-            nextStep: this.nextStep,
-          };
-          this.dialog.close(objApplyFor);
-        } else {
-          let obj = {
-            listStep: this.listStep,
-            instance: this.instances,
-            // processMove: this.moveProcess,
-            // applyForMove: this.applyFor,
-            // ownerMove: this.ownerMove,
-            comment: this.reasonStep.memo,
-          };
-          this.dialog.close(obj);
-        }
         this.isLockStep  = false;
         this.notiService.notifyCode('SYS007');
         this.changeDetectorRef.detectChanges();

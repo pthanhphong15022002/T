@@ -1850,9 +1850,9 @@ export class InstancesComponent
       instance: data,
       objReason: JSON.parse(JSON.stringify(reason)),
       processID: this.processID,
-      applyFor: '0',
-      isMoveProcess: false,
-      isCallInstance: this.process.applyFor == '0',
+      applyFor: this.process?.applyFor,
+      isMoveProcess: true,
+      isCallInstance: this.process?.applyFor == '0',
     };
 
     var dialogRevision = this.callfc.openForm(
@@ -1870,7 +1870,7 @@ export class InstancesComponent
       }
       if (e && e.event != null) {
         //xu ly data đổ về
-        data = e.event.instance;
+        data = e.event?.instance;
         this.listStepInstances = e.event.listStep;
         if (data.refID !== this.guidEmpty) {
           this.valueListID.emit(data.refID);
@@ -1892,18 +1892,24 @@ export class InstancesComponent
           this.detailViewPopup.listSteps = this.listStepInstances;
         }
 
+        if(e?.event?.applyForMove && e?.event?.processMove) {
+          this.moreFuncStart = this.moreFuncInstance.filter(
+            (x) => x.functionID == 'SYS01'
+          )[0];
+          this.addMoveProcess(e.event?.processMove,e.event?.applyForMove,
+            e.event?.ownerMove,
+            e.event?.title,
+            'add'
+            );
+        }
         this.detectorRef.detectChanges();
-      } else {
+      }
+      else {
         if (this.kanban) {
           this.dataSelected.stepID = this.crrStepID;
           this.kanban.updateCard(this.dataSelected);
           this.detectorRef.detectChanges();
         }
-        // this.addMoveProcess(e.event?.processMove,e.event?.applyForMove,
-        //   e.event?.ownerMove,
-        //   e.event?.instance,
-        //   'testttt'
-        //   );
       }
     });
   }
@@ -2702,9 +2708,8 @@ export class InstancesComponent
     }
   }
 
-  addMoveProcess(processMove, applyForMove, ownerMove, instance, titleAction) {
-    this.view.dataService
-      .edit(this.view.dataService.dataSelected)
+  addMoveProcess(processMove, applyForMove, ownerMove, title, titleAction) {
+    this.view.dataService.addNew()
       .subscribe((res) => {
         const funcIDApplyFor = this.checkFunctionID(applyForMove);
         const applyFor = applyForMove;
@@ -2725,7 +2730,7 @@ export class InstancesComponent
             applyForMove: applyForMove,
             processMove: processMove,
             ownerMove: ownerMove,
-            instance: instance,
+            title: title,
           };
           this.cache
             .gridViewSetup(fun.formName, fun.gridViewName)
@@ -2735,10 +2740,7 @@ export class InstancesComponent
               formMD.entityName = fun.entityName;
               formMD.formName = fun.formName;
               formMD.gridViewName = fun.gridViewName;
-              option.Width =
-                this.addFieldsControl == '1' || applyFor != '0'
-                  ? '800px'
-                  : '550px';
+              option.Width ='800px';
               option.zIndex = 1001;
               if (applyFor != '0') {
                 this.openPopupMove(
@@ -2766,7 +2768,7 @@ export class InstancesComponent
       isAdminRoles: this.isAdminRoles,
       addFieldsControl: this.addFieldsControl,
       isLoad: applyFor != '0',
-      processID: this.processID,
+      processID: instanceReason?.processMove ? instanceReason?.processMove:this.processID,
       instanceNoSetting: this.process.instanceNoSetting,
       dataCM: this.dataCM,
       categoryCustomer: this.categoryCustomer,
@@ -2779,5 +2781,8 @@ export class InstancesComponent
         this.detectorRef.detectChanges();
       }
     });
+  }
+  autoStartInstance(){
+    this.startInstance(this.dataSelected);
   }
 }

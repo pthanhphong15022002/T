@@ -2560,6 +2560,17 @@
                           >
                           </codx-mfunc>
                         </div>
+                        <div *ngIf="task?.approveRule" class="d-flex align-items-center cursor-pointer ms-12"  (click)="openFormApprover(task)">
+                          <span
+                            class="icon-20 icon-text_snippet text-primary "
+                          ></span>
+                          <codx-label
+                            class="text-gray-500"
+                            name="progressDefault2"
+                            [formModel]="dialog.formModel"
+                            default="Các bước duyệt"
+                          ></codx-label>
+                        </div>
                         <div class="task-att">
                           <codx-attachment
                             #attachment

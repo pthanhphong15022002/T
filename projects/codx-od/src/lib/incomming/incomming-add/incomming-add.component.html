@@ -146,13 +146,13 @@
     <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="title" class="h-105px">
     </codx-input>
   </div>
-  <div class="form-group row" *ngIf="gridViewSetup && gridViewSetup['Urgency'].allowPopup == '1' && gridViewSetup['Security'].allowPopup == '1'">
-    <div class="col" *ngIf="gridViewSetup['Urgency'].allowPopup == '1'">
+  <div class="form-group row" *ngIf="gridViewSetup">
+    <div class="col" *ngIf="gridViewSetup['Urgency'].allowPopup">
       <codx-label [formModel]="form.formModel" fiedName="Urgency" class="fw-bold"></codx-label>
       <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="urgency">
       </codx-input>
     </div>
-    <div class="col" *ngIf="gridViewSetup['Security'].allowPopup == '1'">
+    <div class="col" *ngIf="gridViewSetup['Security'].allowPopup">
       <codx-label [formModel]="form.formModel" fiedName="Security" class="fw-bold"></codx-label>
       <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="security">
       </codx-input>
