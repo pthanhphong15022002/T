@@ -1,0 +1,41 @@
+<codx-form #form [headerText]="headerText" [body]="body" [formModel]="dialog.formModel" [dialog]="dialog"
+  [footer]="footer" [data]="dataDefault">
+</codx-form>
+
+<ng-template #body>
+  <ng-container *ngIf="form?.formGroup">
+    <div class="row">
+      <div class="col-8 row">
+        <div class="form-group">
+          <codx-label fiedName="StyleID" [formModel]="dialog.formModel"></codx-label>
+          <codx-input field="styleID" [formModel]="dialog.formModel" [Group]="form?.formGroup"></codx-input>
+        </div>
+        <div class="form-group">
+          <codx-label fiedName="StyleName" [formModel]="dialog.formModel"></codx-label>
+          <codx-input field="styleName" [formModel]="dialog.formModel" [Group]="form?.formGroup"></codx-input>
+        </div>
+      </div>
+      <div class="col-4">
+        <codx-img #itemStyleImage class="col-4" [funcId]="dialog.formModel?.funcID"
+          [objectId]="form?.data.recID" [objectType]="dialog.formModel?.entityName" [width]="125"
+          [imgOn]="form?.data?.modifiedOn" [isAllowEdit]="true" [isDefaulImg]="true" imageType="square">
+        </codx-img>
+      </div>
+    </div>
+  </ng-container>
+</ng-template>
+
+<ng-template #footer>
+  <div class="d-flex align-items-center justify-content-end btn-ac-footer mt-1">
+    <!-- <button id="btnsaveas" [shortcut]="'alt+shift+s'" [autoClick]="true" tab-index=""
+      style="border: 1px solid var(--primary-dark) !important" type="button"
+      (keydown.enter)="onSave('saveadd'); $event.preventDefault()" (click)="onSave('saveadd')" class="btn btn-md btn-light-primary me-2">
+      <codx-label class="fw-normal" fiedName="lblSaveAndClear" default="Lưu & Thêm"></codx-label>
+    </button> -->
+    <button [shortcut]="'alt+s'" [autoClick]="true" id="btnsave" type="button" tab-index=""
+      class="btn btn-md btn-light-primary" style="border: 1px solid var(--primary-dark) !important"
+      (keydown.enter)="onSave(); $event.preventDefault()" (click)="onSave()">
+      <codx-label class="fw-normal" fiedName="lblSave" default="Lưu"></codx-label>
+    </button>
+  </div>
+</ng-template>

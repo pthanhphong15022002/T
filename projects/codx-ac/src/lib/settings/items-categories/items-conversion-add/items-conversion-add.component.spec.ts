@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PopupAddItemConversionComponent } from './popup-add-item-conversion.component';
+import { ItemsConversionAddComponent } from './items-conversion-add.component';
 
 describe('PopupAddItemConversionComponent', () => {
-  let component: PopupAddItemConversionComponent;
-  let fixture: ComponentFixture<PopupAddItemConversionComponent>;
+  let component: ItemsConversionAddComponent;
+  let fixture: ComponentFixture<ItemsConversionAddComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ PopupAddItemConversionComponent ]
+      declarations: [ ItemsConversionAddComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(PopupAddItemConversionComponent);
+    fixture = TestBed.createComponent(ItemsConversionAddComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

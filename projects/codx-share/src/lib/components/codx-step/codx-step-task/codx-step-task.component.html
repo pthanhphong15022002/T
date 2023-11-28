@@ -397,7 +397,7 @@
       [isStep]="false"
       [size]="30"
     ></codx-icon-step>
-    <div class="steplist-hearder">
+    <div class="steplist-hearder ms-2">
       <div class="text-dark d-flex justify-content-start">
         <div class="task-name line-clamp line-clamp-1">
           {{ data?.task?.taskName }}
@@ -410,19 +410,6 @@
         </div>
       </div>
     </div>
-    <!-- <codx-mfunc
-      *ngIf="
-        (!isMoveStage && !isViewStep && !isClose) ||
-        (isClose && !data?.task?.isTaskDefault)
-      "
-      [formModel]="grvMoreFunction"
-      [isBookMark]="true"
-      [dataItem]="moreDefaut"
-      [type]="'hover'"
-      (clickMF)="clickMFTask($event, data?.group, data?.task)"
-      (changeDataMF)="changeDataMFTask($event, data?.task, data?.group)"
-    >
-    </codx-mfunc> -->
   </div>
 </ng-template>
 

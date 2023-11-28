@@ -230,12 +230,19 @@
                 <div class="d-flex align-items-center justify-content-end">
                   <span
                     class="text-gray-900"
+                    [ngbTooltip]="tempLastUpdateOn"
                     [innerHTML]="
                       dataSelected?.lastUpdatedOn
-                        | formatvalue : formModel : 'lastUpdatedOn'
+                        | formatvalue : formModel : 'LastUpdatedOn'
                         | async
                     "
                   ></span>
+                  <ng-template #tempLastUpdateOn>
+                    <codx-label
+                      [formModel]="formModel"
+                      fiedName="LastUpdatedOn"
+                    ></codx-label>
+                  </ng-template>
                 </div>
               </div>
             </div>
@@ -269,8 +276,9 @@
                 <div class="mb-1">
                   <codx-label
                     style="white-space: nowrap"
-                    class="text-dark me-1"
-                    default="Số seri:"
+                    class="text-dark label-colon me-1"
+                    name="lblSeri"
+                    default="Số seri"
                     [formModel]="formModel"
                   ></codx-label>
                   <span
@@ -284,6 +292,7 @@
                 </div>
                 <div class="mb-1">
                   <span
+                    *ngIf="dataSelected?.productType"
                     class="text-dark me-1"
                     [innerHTML]="
                       dataSelected.productType
@@ -292,6 +301,7 @@
                     "
                   ></span>
                   <span
+                    *ngIf="dataSelected?.productModel"
                     class="text-dark"
                     [innerHTML]="
                       dataSelected.productModel
@@ -800,6 +810,21 @@
                                     | async
                                 "
                               ></span>
+                              <span class="ms-1 me-1">-</span>
+                              <codx-label
+                                class="me-1"
+                                fiedName="Zone2"
+                                class="nowrap label-colon"
+                                [setRequire]="false"
+                                [formModel]="formModel"
+                              ></codx-label>
+                              <span
+                                [innerHTML]="
+                                  dataSelected?.zone2
+                                    | formatvalue : formModel : 'Zone2'
+                                    | async
+                                "
+                              ></span>
                               <span
                                 *ngIf="
                                   dataSelected?.status != '5' &&
@@ -964,9 +989,9 @@
                     ></span>
                     <codx-label
                       class="fw-bold text-hover-primary text-dark"
-                      default="Ghi chú"
+                      default="Comment"
                       [formModel]="formModel"
-                      name="lblNote"
+                      name="lblComment"
                     ></codx-label>
                   </div>
                 </ng-template>
