@@ -379,6 +379,9 @@ export class CodxApprovalComponent
                 data.status = res;
                 this.view.dataService.update(data).subscribe();
                 //}
+
+                //truyền lên share để lấy về -- VTHAO- Truyền để view lấy về không cần get data qua ES ở view approve
+                this.codxShareService.dataApproveTrans.next(data);
               }
             });
           }
@@ -437,6 +440,8 @@ export class CodxApprovalComponent
                     data.status = status;
                     this.view.dataService.update(data).subscribe();
                     this.esService.setupChange.next(true);
+                    //truyền lên share để lấy về -- VTHAO- Truyền để view lấy về không cần get data qua ES ở view approve
+                    this.codxShareService.dataApproveTrans.next(data);
                   }
                   this.notifySvr.notifyCode('SYS007');
                 } else this.notifySvr.notify(res2?.msgCodeError);
@@ -455,6 +460,8 @@ export class CodxApprovalComponent
                   data.status = status;
                   this.view.dataService.update(data).subscribe();
                   this.esService.setupChange.next(true);
+                  //truyền lên share để lấy về -- VTHAO- Truyền để view lấy về không cần get data qua ES ở view approve
+                  this.codxShareService.dataApproveTrans.next(data);
                 }
               }
               this.notifySvr.notifyCode('SYS007');
@@ -468,6 +475,8 @@ export class CodxApprovalComponent
           data = res;
           this.view.dataService.update(data).subscribe();
           this.esService.setupChange.next(true);
+          //truyền lên share để lấy về -- VTHAO- Truyền để view lấy về không cần get data qua ES ở view approve
+          this.codxShareService.dataApproveTrans.next(data);
         }
       });
     }
