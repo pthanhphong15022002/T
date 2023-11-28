@@ -1892,7 +1892,7 @@ export class InstancesComponent
           this.detailViewPopup.listSteps = this.listStepInstances;
         }
 
-        if(e?.event?.applyForMove && e?.event?.processMove) {
+        if(e?.event?.applyForMove && e?.event?.processMove && this.process.applyFor !== e?.event?.applyForMove) {
           this.moreFuncStart = this.moreFuncInstance.filter(
             (x) => x.functionID == 'SYS01'
           )[0];
