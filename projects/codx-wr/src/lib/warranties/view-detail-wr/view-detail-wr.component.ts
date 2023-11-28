@@ -23,7 +23,7 @@ import { ViewTabUpdateComponent } from './view-tab-update/view-tab-update.compon
 @Component({
   selector: 'codx-view-detail-wr',
   templateUrl: './view-detail-wr.component.html',
-  styleUrls: ['./view-detail-wr.component.css'],
+  styleUrls: ['./view-detail-wr.component.scss'],
 })
 export class ViewDetailWrComponent implements OnInit {
   @Input() formModel: any;
@@ -52,12 +52,6 @@ export class ViewDetailWrComponent implements OnInit {
       name: 'History',
       textDefault: 'Lịch sử',
       isActive: true,
-      template: null,
-    },
-    {
-      name: 'Comment',
-      textDefault: 'Thảo luận',
-      isActive: false,
       template: null,
     },
     {
@@ -101,6 +95,7 @@ export class ViewDetailWrComponent implements OnInit {
       ) {
         if (changes['dataSelected'].currentValue?.recID == this.id) return;
         this.id = changes['dataSelected'].currentValue?.recID;
+        this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
         this.expanding = false;
         this.overflowed = false;
       }

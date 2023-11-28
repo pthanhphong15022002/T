@@ -1,0 +1,14 @@
+codx-view-detail-wr{
+  .e-grid .e-headercell, .e-grid .e-detailheadercell,.e-columnheader {
+    height: 35px!important;
+  }
+  .e-grid .e-headercell{
+    padding: 0!important;
+  }
+  .e-grid .e-gridheader tr:first-child th {
+    background-color:var(--gray-100);
+  }
+  .cm-full .e-content{
+    padding: 0!important;
+  }
+}
