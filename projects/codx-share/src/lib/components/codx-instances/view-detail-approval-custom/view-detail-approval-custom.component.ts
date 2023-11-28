@@ -160,7 +160,7 @@ export class ViewDetailApprovalCustomComponent
         parentCategory = 'Tiềm năng';
         break;
     }
-    if (parentCategory) parentCategory + ': ';
+    if (parentCategory) parentCategory += ': ';
     return parentCategory;
   }
 }
