@@ -170,6 +170,7 @@ export class PopupAddLeadComponent
   isExist: boolean = false;
   applyProcess: boolean = true;
   isBlock: boolean = true;
+  isShowField: boolean = false;
 
   // number
   leverSetting: number;
@@ -865,6 +866,7 @@ export class PopupAddLeadComponent
         );
 
         this.lead.processID = obj?.processSetting?.processId;
+        this.isShowField = obj?.processSetting?.addFieldsControl == '1';
         this.setAutoNameTabFields(obj?.processSetting?.autoNameTabFields);
         this.itemTabsInput(this.ischeckFields(this.listInstanceSteps));
         // this.listParticipants = null;
@@ -965,12 +967,20 @@ export class PopupAddLeadComponent
     let tabInput = this.tabContent.findIndex(
       (item) => item === this.tabCustomFieldDetail
     );
-    if (check && menuInput == -1 && tabInput == -1) {
-      this.tabInfo.splice(2, 0, this.menuInputInfo);
-      this.tabContent.splice(2, 0, this.tabCustomFieldDetail);
-    } else if (!check && menuInput != -1 && tabInput != -1) {
-      this.tabInfo.splice(menuInput, 1);
-      this.tabContent.splice(tabInput, 1);
+    if(this.isShowField) {
+      if (check && menuInput == -1 && tabInput == -1) {
+        this.tabInfo.splice(2, 0, this.menuInputInfo);
+        this.tabContent.splice(2, 0, this.tabCustomFieldDetail);
+      } else if ( menuInput != -1 && tabInput != -1) {
+        this.tabInfo.splice(menuInput, 1);
+        this.tabContent.splice(tabInput, 1);
+      }
+    }
+    else {
+      if (menuInput != -1 && tabInput != -1) {
+        this.tabInfo.splice(menuInput, 1);
+        this.tabContent.splice(tabInput, 1);
+      }
     }
   }
   itemTabsInputContact(check: boolean): void {
