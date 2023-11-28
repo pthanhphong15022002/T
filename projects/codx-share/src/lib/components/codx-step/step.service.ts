@@ -945,51 +945,51 @@ export class StepService {
   }
 
   //get dataSource
-  getDataSource(data, instanceID): Promise<string> {
-    return new Promise<string>((resolve, rejects) => {
-      let mehthol = 'GetDataSourceExportTaskAsync';
-      let className = 'ContractsBusiness';
-      let service = 'CM';
-      let request = [instanceID, data.objectLinked];
-      switch (data.taskType) {
-        case 'CO':
-          className = 'ContractsBusiness';
-          break;
-        case 'Q':
-          className = 'QuotationsBusiness';
-          break;
-        case 'F':
-          service = 'DP';
-          className = 'InstancesBusiness';
-          mehthol = 'GetDatasByInstanceIDAsync';
-          request = [instanceID];
-          break;
-        default:
-          return '';
-          break;
-      }
-      this.api
-        .execSv<any>(service, service, className, mehthol, request)
-        .subscribe((str) => {
-          let dataSource = '';
-          if (str) {
-            if (data.taskType != 'F') {
-              if (str?.length > 0) {
-                dataSource = str[1];
-                if (str[0]) {
-                  let datas = str[1];
-                  if (datas && datas.includes('[{')) datas = datas.substring(2);
-                  let fix = str[0]; // data đối tượng cần export
-                  fix = fix.substring(1, fix.length - 1);
-                  dataSource = '[{ ' + fix + ',' + datas;
-                }
-              }
-            } else {
-              dataSource = str;
-            }
-          }
-          resolve(dataSource);
-        });
-    });
-  }
+  //getDataSource(data, instanceID): Promise<string> {
+  // return new Promise<string>((resolve, rejects) => {
+  //   let mehthol = 'GetDataSourceExportTaskAsync';
+  //   let className = 'ContractsBusiness';
+  //   let service = 'CM';
+  //   let request = [instanceID, data.objectLinked];
+  //   switch (data.taskType) {
+  //     case 'CO':
+  //       className = 'ContractsBusiness';
+  //       break;
+  //     case 'Q':
+  //       className = 'QuotationsBusiness';
+  //       break;
+  //     case 'F':
+  //       service = 'DP';
+  //       className = 'InstancesBusiness';
+  //       mehthol = 'GetDatasByInstanceIDAsync';
+  //       request = [instanceID];
+  //       break;
+  //     default:
+  //       return '';
+  //       break;
+  //   }
+  //   this.api
+  //     .execSv<any>(service, service, className, mehthol, request)
+  //     .subscribe((str) => {
+  //       let dataSource = '';
+  //       if (str) {
+  //         if (data.taskType != 'F') {
+  //           if (str?.length > 0) {
+  //             dataSource = str[1];
+  //             if (str[0]) {
+  //               let datas = str[1];
+  //               if (datas && datas.includes('[{')) datas = datas.substring(2);
+  //               let fix = str[0]; // data đối tượng cần export
+  //               fix = fix.substring(1, fix.length - 1);
+  //               dataSource = '[{ ' + fix + ',' + datas;
+  //             }
+  //           }
+  //         } else {
+  //           dataSource = str;
+  //         }
+  //       }
+  //       resolve(dataSource);
+  //     });
+  // });
+  // }
 }

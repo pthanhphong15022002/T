@@ -2715,6 +2715,16 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
               data: null,
             };
             this.release(task, res, exportData);
+            // this.stepService
+            //   .getDataSource(task, this.currentStep.instanceID)
+            //   .then((source) => {
+            //     let exportData: ExportData = {
+            //       funcID: 'DPT04', //this.funcID, 'DPT04'
+            //       recID: task?.recID,
+            //       data: source,
+            //     };
+            //     this.release(task, res, exportData);
+            //   });
           }
         });
     } else {
@@ -2918,79 +2928,96 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   }
 
   exportTemplet(e, data) {
-    let mehthol = 'GetDataSourceExportTaskAsync';
-    let className = 'ContractsBusiness';
-    let service = 'CM';
-    let request = [this.currentStep.instanceID, data.objectLinked];
-    switch (this.taskAdd.taskType) {
-      case 'CO':
-        className = 'ContractsBusiness';
-        break;
-      case 'Q':
-        className = 'QuotationsBusiness';
-        break;
-      case 'F':
-        service = 'DP';
-        className = 'InstancesBusiness';
-        mehthol = 'GetDatasByInstanceIDAsync';
-        request = [this.currentStep.instanceID];
-        break;
-      default:
-        var customData = {
-          refID: data.recID,
-          refType: 'DP_Instances_Steps_Tasks',
-        };
-        this.codxShareService.defaultMoreFunc(
-          e,
-          data,
-          this.afterSave,
-          this.frmModelInstancesTask,
-          null,
-          this,
-          customData
-        );
-        this.changeDetectorRef.detectChanges();
-        return;
-        break;
-    }
-
-    this.api
-      .execSv<any>(service, service, className, mehthol, request)
-      .subscribe((str) => {
-        let dataSource = '';
-        if (str) {
-          if (this.taskAdd.taskType != 'F') {
-            if (str?.length > 0) {
-              dataSource = str[1];
-              if (str[0]) {
-                let datas = str[1];
-                if (datas && datas.includes('[{')) datas = datas.substring(2);
-                let fix = str[0]; // data đối tượng cần export
-                fix = fix.substring(1, fix.length - 1);
-                dataSource = '[{ ' + fix + ',' + datas;
-              }
-            }
-          } else {
-            dataSource = str;
-          }
-        }
-
-        var customData = {
-          refID: data.recID,
-          refType: 'DP_Instances_Steps_Tasks',
-          dataSource: dataSource,
-        };
-        this.codxShareService.defaultMoreFunc(
-          e,
-          data,
-          this.afterSave,
-          this.frmModelInstancesTask,
-          null,
-          this,
-          customData
-        );
-        this.changeDetectorRef.detectChanges();
-      });
+    // this.stepService
+    //   .getDataSource(data, this.currentStep.instanceID)
+    //   .then((res) => {
+    //     var customData = {
+    //       refID: data.recID,
+    //       refType: 'DP_Instances_Steps_Tasks',
+    //       dataSource: res,
+    //     };
+    //     this.codxShareService.defaultMoreFunc(
+    //       e,
+    //       data,
+    //       this.afterSave,
+    //       this.frmModelInstancesTask,
+    //       null,
+    //       this,
+    //       customData
+    //     );
+    //     this.changeDetectorRef.detectChanges();
+    //   });
+    //   let mehthol = 'GetDataSourceExportTaskAsync';
+    //   let className = 'ContractsBusiness';
+    //   let service = 'CM';
+    //   let request = [this.currentStep.instanceID, data.objectLinked];
+    //   switch (this.taskAdd.taskType) {
+    //     case 'CO':
+    //       className = 'ContractsBusiness';
+    //       break;
+    //     case 'Q':
+    //       className = 'QuotationsBusiness';
+    //       break;
+    //     case 'F':
+    //       service = 'DP';
+    //       className = 'InstancesBusiness';
+    //       mehthol = 'GetDatasByInstanceIDAsync';
+    //       request = [this.currentStep.instanceID];
+    //       break;
+    //     default:
+    //       var customData = {
+    //         refID: data.recID,
+    //         refType: 'DP_Instances_Steps_Tasks',
+    //       };
+    //       this.codxShareService.defaultMoreFunc(
+    //         e,
+    //         data,
+    //         this.afterSave,
+    //         this.frmModelInstancesTask,
+    //         null,
+    //         this,
+    //         customData
+    //       );
+    //       this.changeDetectorRef.detectChanges();
+    //       return;
+    //       break;
+    //   }
+    //   this.api
+    //     .execSv<any>(service, service, className, mehthol, request)
+    //     .subscribe((str) => {
+    //       let dataSource = '';
+    //       if (str) {
+    //         if (this.taskAdd.taskType != 'F') {
+    //           if (str?.length > 0) {
+    //             dataSource = str[1];
+    //             if (str[0]) {
+    //               let datas = str[1];
+    //               if (datas && datas.includes('[{')) datas = datas.substring(2);
+    //               let fix = str[0]; // data đối tượng cần export
+    //               fix = fix.substring(1, fix.length - 1);
+    //               dataSource = '[{ ' + fix + ',' + datas;
+    //             }
+    //           }
+    //         } else {
+    //           dataSource = str;
+    //         }
+    //       }
+    //       var customData = {
+    //         refID: data.recID,
+    //         refType: 'DP_Instances_Steps_Tasks',
+    //         dataSource: dataSource,
+    //       };
+    //       this.codxShareService.defaultMoreFunc(
+    //         e,
+    //         data,
+    //         this.afterSave,
+    //         this.frmModelInstancesTask,
+    //         null,
+    //         this,
+    //         customData
+    //       );
+    //       this.changeDetectorRef.detectChanges();
+    //     });
   }
 
   //export Form Nhập liệu
