@@ -9,7 +9,11 @@
     class="h-100 dt-es-view"
   >
     <ng-template #header>
-      <div class="container_detail mt-15">
+      <div
+        class="container_detail {{
+          codxService.asideMode == '2' ? '' : 'mt-15'
+        }}"
+      >
         <div class="d-flex justify-content-between mb-2">
           <div class="d-flex flex-column w-100">
             <div class="d-flex align-items-start">
@@ -19,18 +23,25 @@
                     [typeTask]="detailModule.taskType"
                     [listTypeTask]="listTaskType"
                     [isStep]="false"
-                    [size]="30"
+                    [size]="35"
+                  ></codx-icon-step>
+                </ng-container>
+                <ng-container *ngIf="detailModule?.icon">
+                  <codx-icon-step
+                    [icon]="detailModule?.icon"
+                    [iconColor]="detailModule?.iconColor"
+                    [isStep]="true"
+                    [size]="35"
                   ></codx-icon-step>
                 </ng-container>
               </div>
-              <div class="d-flex flex-column">
-                <div class="fw-bold text-dark fs-5-sm mb-1">
-                  <span
-                    [ngbTooltip]="detailModule?.title"
-                    [innerHTML]="detailModule?.title"
-                  ></span>
-                </div>
-                <div class="d-flex align-items-center mb-1"></div>
+              <div
+                class="d-flex align-item-center h-100 fw-bold text-dark fs-5-sm"
+              >
+                <span
+                  [ngbTooltip]="detailModule?.title"
+                  [innerHTML]="detailModule?.title"
+                ></span>
               </div>
             </div>
           </div>
@@ -184,6 +195,7 @@
       <div class="mt-2">
         <ng-container *ngIf="files?.length > 0 && showFile">
           <codx-label
+            class="label-colon fs-5-sm"
             name="filesApproval"
             formName="ESSignFiles"
             gridViewName="grvSignFiles"
