@@ -2709,22 +2709,22 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
             this.notiService.notifyCode('ES028');
             return;
           } else {
-            let exportData: ExportData = {
-              funcID: 'DPT04', //this.funcID, 'DPT04'
-              recID: task?.recID,
-              data: null,
-            };
-            this.release(task, res, exportData);
-            // this.stepService
-            //   .getDataSource(task, this.currentStep.instanceID)
-            //   .then((source) => {
-            //     let exportData: ExportData = {
-            //       funcID: 'DPT04', //this.funcID, 'DPT04'
-            //       recID: task?.recID,
-            //       data: source,
-            //     };
-            //     this.release(task, res, exportData);
-            //   });
+            // let exportData: ExportData = {
+            //   funcID: 'DPT04', //this.funcID, 'DPT04'
+            //   recID: task?.recID,
+            //   data: null,
+            // };
+            //this.release(task, res, exportData);
+            this.stepService
+              .getDataSource(task, this.currentStep.instanceID)
+              .then((source) => {
+                let exportData: ExportData = {
+                  funcID: 'DPT04', //this.funcID, 'DPT04'
+                  recID: task?.recID,
+                  data: source,
+                };
+                this.release(task, res, exportData);
+              });
           }
         });
     } else {
@@ -2928,25 +2928,25 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   }
 
   exportTemplet(e, data) {
-    // this.stepService
-    //   .getDataSource(data, this.currentStep.instanceID)
-    //   .then((res) => {
-    //     var customData = {
-    //       refID: data.recID,
-    //       refType: 'DP_Instances_Steps_Tasks',
-    //       dataSource: res,
-    //     };
-    //     this.codxShareService.defaultMoreFunc(
-    //       e,
-    //       data,
-    //       this.afterSave,
-    //       this.frmModelInstancesTask,
-    //       null,
-    //       this,
-    //       customData
-    //     );
-    //     this.changeDetectorRef.detectChanges();
-    //   });
+    this.stepService
+      .getDataSource(data, this.currentStep.instanceID)
+      .then((res) => {
+        var customData = {
+          refID: data.recID,
+          refType: 'DP_Instances_Steps_Tasks',
+          dataSource: res,
+        };
+        this.codxShareService.defaultMoreFunc(
+          e,
+          data,
+          this.afterSave,
+          this.frmModelInstancesTask,
+          null,
+          this,
+          customData
+        );
+        this.changeDetectorRef.detectChanges();
+      });
     //   let mehthol = 'GetDataSourceExportTaskAsync';
     //   let className = 'ContractsBusiness';
     //   let service = 'CM';
