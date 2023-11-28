@@ -1189,11 +1189,8 @@ export class CodxAddTaskComponent implements OnInit {
         )
       );
     if (category) {
-      //this.actionOpenFormApprove(category.recID);
       this.actionOpenFormApprove2(category);
     } else {
-      //let transID = Util.uid();
-      // this.actionOpenFormApprove(transID);
       this.api
         .execSv<any>('ES', 'Core', 'DataBusiness', 'GetDefaultAsync', [
           'ESS22',
@@ -1204,12 +1201,12 @@ export class CodxAddTaskComponent implements OnInit {
             category = res.data;
             category.recID = res?.recID ?? Util.uid();
             category.eSign = true;
-            category.Category = 'DP_Processes';
+            category.Category = this.isActivitie ? 'DP_Activities' : 'DP_Instances_Steps_Tasks';
             category.categoryID = this.stepsTasks.recID;
             category.categoryName = this.stepsTasks.taskName;
             category.createdBy = this.user.userID;
             category.owner = this.user.userID;
-            category.FunctionApproval = 'DP0204';
+            category.FunctionApproval = this.isActivitie ? 'DPT07' : 'DPT04';
             this.actionOpenFormApprove2(category, true);
           }
         });
@@ -1252,7 +1249,7 @@ export class CodxAddTaskComponent implements OnInit {
                   headerText: this.titleAction,
                   dataType: 'auto',
                   templateRefID: this.stepsTasks.recID,
-                  templateRefType: 'DP_Processes',
+                  templateRefType: this.isActivitie ? 'DP_Activities' : 'DP_Instances_Steps_Tasks',
                   disableESign: true,
                 },
                 '',
@@ -1262,9 +1259,6 @@ export class CodxAddTaskComponent implements OnInit {
               popupEditES.closed.subscribe((res) => {
                 if (res?.event) {
                   this.loadListApproverStep();
-                  // this.loadEx();
-                  // this.loadWord();
-                  // this.recIDCategory = res?.event?.recID;
                 }
               });
             });
