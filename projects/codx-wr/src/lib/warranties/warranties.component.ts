@@ -387,7 +387,7 @@ export class WarrantiesComponent
       if (res) {
         this.gridViewSetup = res;
         this.vllStatus =
-          this.gridViewSetup['Status'].referedValue ?? this.vllStatus;
+          this.gridViewSetup?.Status?.referedValue ?? this.vllStatus;
         let arrField = Object.values(this.gridViewSetup).filter(
           (x: any) => x.isVisible
         );
