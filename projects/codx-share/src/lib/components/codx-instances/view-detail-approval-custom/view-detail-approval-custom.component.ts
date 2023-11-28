@@ -126,7 +126,7 @@ export class ViewDetailApprovalCustomComponent
       case 'DP_Instances':
         className = 'InstancesBusiness';
         break;
-      case 'DP_InstancesSteps':
+      case 'DP_Instances_Steps':
         className = 'InstancesStepsBusiness';
         break;
     }
