@@ -7,7 +7,12 @@ import {
   OnInit,
   SimpleChanges,
 } from '@angular/core';
-import { ApiHttpService, CacheService, FormModel } from 'codx-core';
+import {
+  ApiHttpService,
+  CacheService,
+  CodxService,
+  FormModel,
+} from 'codx-core';
 import { CodxShareService } from '../../../codx-share.service';
 
 @Component({
@@ -48,7 +53,8 @@ export class ViewDetailApprovalCustomComponent
     private changeDecRef: ChangeDetectorRef,
     private api: ApiHttpService,
     private shareService: CodxShareService,
-    private cache: CacheService
+    private cache: CacheService,
+    public codxService: CodxService
   ) {
     this.cache.valueList('DP004').subscribe((res) => {
       if (res.datas) {
@@ -160,6 +166,7 @@ export class ViewDetailApprovalCustomComponent
         parentCategory = 'Tiềm năng';
         break;
     }
+    if (parentCategory) parentCategory += ': ';
     return parentCategory;
   }
 }
@@ -177,4 +184,6 @@ export class ViewDetailsApproval {
   approveStatus: string; // tình trang duyet
   startDate: Date; // ngày bắt đầu
   endDate: Date; // ngày kết thúc
+  icon: string;
+  iconColor: string;
 }
