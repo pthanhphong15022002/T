@@ -34,7 +34,7 @@ export class CodxReportIframeComponent implements OnInit, AfterViewInit,OnChange
     this._preArray = this.predicates.split('&&').join(';');
     // this.src = `${environment.reportUrl}?reportID=${this.funcID}&predicates=${this._preArray}&dataValues=${this.dataValues}&locale=vi&lvtk=${this._user.token}`;
     this.src = `${environment.reportUrl}?service=${this.service}&reportID=${this.funcID}&_param=${this.param}&_labels=${this.labels}&_format=${this.format}&predicates=${this._preArray}&dataValues=${this.dataValues}&locale=vi&lvtk=${this._user.token}`;
-    
+
     if(this._user.administrator || this._user.functionAdmin) this.src +='&isAdmin=true';
     this.urlSafe= this.sanitizer.bypassSecurityTrustResourceUrl(this.src);
   }
@@ -43,6 +43,7 @@ export class CodxReportIframeComponent implements OnInit, AfterViewInit,OnChange
   }
   ngOnChanges(changes: SimpleChanges): void {
     this.src = `${environment.reportUrl}?service=${this.service}&reportID=${this.funcID}&_param=${this.param}&_labels=${this.labels}&_format=${this.format}&locale=vi&lvtk=${this._user.token}`;
+
     if(this._user.administrator || this._user.functionAdmin) this.src +='&isAdmin=true';
     this.urlSafe= this.sanitizer.bypassSecurityTrustResourceUrl(this.src);
     // if(changes["param"] && changes["param"].currentValue){
@@ -54,13 +55,13 @@ export class CodxReportIframeComponent implements OnInit, AfterViewInit,OnChange
     // {
     //   this._preArray = this.predicates.split('&&').join(';');
     //   this.src = `${environment.reportUrl}?service=${this.service}&reportID=${this.funcID}&predicates=${this._preArray}&dataValues=${this.dataValues}&locale=vi&lvtk=${this._user.token}`;
-      
+
     //   if(this._user.administrator || this._user.functionAdmin) this.src +='&isAdmin=true';
     //   this.urlSafe= this.sanitizer.bypassSecurityTrustResourceUrl(this.src);
     // }
     // if(changes["labels"] &&changes["labels"].currentValue){
     //   this.src = `${environment.reportUrl}?service=${this.service}&reportID=${this.funcID}&_param=${this.param}&_labels=${changes["labels"].currentValue}&_format=${this.format}&locale=vi&lvtk=${this._user.token}`;
-      
+
     //   if(this._user.administrator || this._user.functionAdmin) this.src +='&isAdmin=true';
     //   this.urlSafe= this.sanitizer.bypassSecurityTrustResourceUrl(this.src);
     // }
@@ -68,7 +69,7 @@ export class CodxReportIframeComponent implements OnInit, AfterViewInit,OnChange
     // {
     // this._preArray = this.predicates.split('&&').join(';');
     // this.src = `${environment.reportUrl}?service=${this.service}&reportID=${this.funcID}&predicates=${this._preArray}&dataValues=${this.dataValues}&_param=${changes["param"].currentValue}&_labels=${changes["labels"].currentValue}&_format=${changes["format"].currentValue}&locale=vi&lvtk=${this._user.token}`;
-    
+
     // if(this._user.administrator || this._user.functionAdmin) this.src +='&isAdmin=true';
     // this.urlSafe= this.sanitizer.bypassSecurityTrustResourceUrl(this.src);
     // }

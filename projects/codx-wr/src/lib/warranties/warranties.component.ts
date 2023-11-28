@@ -54,6 +54,7 @@ export class WarrantiesComponent
   @ViewChild('itemPriority') itemPriority: TemplateRef<any>;
   @ViewChild('itemComment') itemComment: TemplateRef<any>;
   @ViewChild('itemService') itemService: TemplateRef<any>;
+  @ViewChild('templateMore') templateMore: TemplateRef<any>;
 
   dialogStatus: DialogRef;
   // extension core
@@ -96,6 +97,7 @@ export class WarrantiesComponent
   comment = '';
   serviceLocator: any;
   zone: any;
+  zone2: any;
   partnerZone: any;
   popoverDetail: any;
   popupOld: any;
@@ -214,6 +216,14 @@ export class WarrantiesComponent
         model: {
           template: this.itemTemplate,
           panelRightRef: this.templateDetail,
+        },
+      },
+      {
+        type: ViewType.grid,
+        sameData: true,
+        active: false,
+        model: {
+          template2: this.templateMore,
         },
       },
     ];
@@ -700,6 +710,7 @@ export class WarrantiesComponent
       if (ele && ele?.event) {
         this.dataSelected.serviceLocator = this.serviceLocator;
         this.dataSelected.zone = this.zone;
+        this.dataSelected.zone2 = this.zone2;
         this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
         this.view.dataService.update(this.dataSelected).subscribe();
         this.notificationsService.notifyCode('SYS007');
@@ -805,6 +816,7 @@ export class WarrantiesComponent
     this[e?.field] = e?.data;
     if (e?.field == 'serviceLocator') {
       this.zone = e?.component?.itemsSelected[0]?.Zone;
+      this.zone2 = e?.component?.itemsSelected[0]?.Zone2;
     }
     this.detectorRef.detectChanges();
   }
@@ -826,7 +838,7 @@ export class WarrantiesComponent
         methodName = 'UpdatePriorityWarrantyAsync';
         break;
       case 'serviceLocator':
-        data = [this.dataSelected?.recID, this.serviceLocator, this.zone];
+        data = [this.dataSelected?.recID, this.serviceLocator, this.zone, this.zone2];
         methodName = 'UpdateServiceLocatorWarrantyAsync';
         break;
     }

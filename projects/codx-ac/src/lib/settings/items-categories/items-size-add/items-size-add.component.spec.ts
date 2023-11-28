@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PopupAddItemColorComponent } from './popup-add-item-color.component';
+import { ItemsSizeAddComponent } from './items-size-add.component';
 
-describe('PopupAddItemColorComponent', () => {
-  let component: PopupAddItemColorComponent;
-  let fixture: ComponentFixture<PopupAddItemColorComponent>;
+describe('PopupAddItemSizeComponent', () => {
+  let component: ItemsSizeAddComponent;
+  let fixture: ComponentFixture<ItemsSizeAddComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ PopupAddItemColorComponent ]
+      declarations: [ ItemsSizeAddComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(PopupAddItemColorComponent);
+    fixture = TestBed.createComponent(ItemsSizeAddComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
