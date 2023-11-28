@@ -26,6 +26,8 @@ export class CodxViewApproveComponent implements OnInit, OnChanges {
   dialog;
   stepsTasks;
   user;
+  entityName = '';
+  isActivitie = false;
   private destroyFrom$: Subject<void> = new Subject<void>();
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
@@ -40,6 +42,7 @@ export class CodxViewApproveComponent implements OnInit, OnChanges {
     this.categoryID = dt?.data?.categoryID;
     this.type = dt?.data?.type || "1";
     this.stepsTasks = dt?.data?.stepsTasks;
+    this.isActivitie = dt?.data?.isActivitie || false;
     this.user = this.authStore.get();
   }
 
@@ -48,11 +51,6 @@ export class CodxViewApproveComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    // if(changes?.listApprover || changes?.categoryID ||  changes?.change){
-    //   if(!this.listApprover && this.categoryID){
-    //     this.loadListApproverStep();
-    //   }
-    // }
   }
  
   loadListApproverStep() {
@@ -109,12 +107,12 @@ export class CodxViewApproveComponent implements OnInit, OnChanges {
             category = res.data;
             category.recID = res?.recID ?? Util.uid();
             category.eSign = true;
-            category.Category = 'DP_Processes';
+            category.Category = this.isActivitie ? 'DP_Activities' : 'DP_Instances_Steps_Tasks';
             category.categoryID = this.stepsTasks.recID;
             category.categoryName = this.stepsTasks.taskName;
             category.createdBy = this.user.userID;
             category.owner = this.user.userID;
-            category.FunctionApproval = 'DP0204';
+            category.FunctionApproval = this.isActivitie ? 'DPT07' : 'DPT04';
             this.actionOpenFormApprove2(category, true);
           }
         });
@@ -156,7 +154,7 @@ export class CodxViewApproveComponent implements OnInit, OnChanges {
                   headerText: this.titleAction,
                   dataType: 'auto',
                   templateRefID: this.stepsTasks.recID,
-                  templateRefType: 'DP_Processes',
+                  templateRefType: this.isActivitie ? 'DP_Activities' : 'DP_Instances_Steps_Tasks',
                   disableESign: true,
                 },
                 '',
@@ -166,9 +164,6 @@ export class CodxViewApproveComponent implements OnInit, OnChanges {
               popupEditES.closed.subscribe((res) => {
                 if (res?.event) {
                   this.loadListApproverStep();
-                  // this.loadEx();
-                  // this.loadWord();
-                  // this.recIDCategory = res?.event?.recID;
                 }
               });
             });
