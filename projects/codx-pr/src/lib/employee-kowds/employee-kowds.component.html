@@ -54,7 +54,12 @@
   </ng-template>
 
   <ng-template #tmpPanelRight>
-
+    <ng-container *ngIf="isAfterViewSelect == true && filterOrgUnit" >
+      <lib-kowds-schedule
+        [filterOrg] = "filterOrgUnit"
+      >
+      </lib-kowds-schedule>
+    </ng-container>
   </ng-template>
 
   <ng-template #tmpOrgChart>

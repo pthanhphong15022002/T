@@ -1,0 +1,240 @@
+<ng-container *ngIf="loaded">
+  <codx-detail-tmp
+    #itemDetailTemplate
+    [header]="header"
+    [dataItem]="itemDetail"
+    [body]="body"
+    [hideMF]="hideMF"
+    [formModel]="formModel"
+    class="h-100 dt-es-view"
+  >
+    <ng-template #header>
+      <div class="container_detail mt-15">
+        <div class="d-flex justify-content-between mb-2">
+          <div class="d-flex flex-column w-100">
+            <div class="d-flex align-items-start">
+              <div class="">
+                <ng-container *ngIf="detailModule?.taskType">
+                  <codx-icon-step
+                    [typeTask]="detailModule.taskType"
+                    [listTypeTask]="listTaskType"
+                    [isStep]="false"
+                    [size]="30"
+                  ></codx-icon-step>
+                </ng-container>
+              </div>
+              <div class="d-flex flex-column">
+                <div class="fw-bold text-dark fs-5-sm mb-1">
+                  <span
+                    [ngbTooltip]="detailModule?.title"
+                    [innerHTML]="detailModule?.title"
+                  ></span>
+                </div>
+                <div class="d-flex align-items-center mb-1"></div>
+              </div>
+            </div>
+          </div>
+          <div class="ms-5 d-flex justify-content-between">
+            <div class="d-flex flex-column">
+              <div
+                class="d-flex align-items-top justify-content-end mt-1"
+                *ngIf="detailModule?.startDate && detailModule?.endDate"
+              >
+                <span class="icon-16 icon-av_timer me-1"></span>
+                <span
+                  class="text-gray-700"
+                  #startDate
+                  [innerHTML]="
+                    detailModule?.startDate
+                      | formatvalue
+                        : formModel
+                        : 'startDate'
+                        : startDate
+                        : 'DPActivities'
+                        : 'grvDPActivities'
+                      | async
+                  "
+                ></span>
+                <span>-</span>
+                <span
+                  class="text-gray-700"
+                  #endDate
+                  [innerHTML]="
+                    detailModule?.endDate
+                      | formatvalue
+                        : formModel
+                        : 'endDate'
+                        : endDate
+                        : 'DPActivities'
+                        : 'grvDPActivities'
+                      | async
+                  "
+                ></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+
+    <ng-template #body>
+      <div class="container_detail mt-3">
+        <div class="d-flex justify-content-between">
+          <div class="d-flex flex-column">
+            <div class="d-flex flex-wrap flex-column">
+              <div
+                class="me-4 d-flex align-items-center mb-1"
+                *ngIf="detailModule?.parentName"
+              >
+                <span class="fw-bold text-dark text-nowrap">
+                  <span
+                    class="label-colon me-1"
+                    [innerHTML]="getName(detailModule?.applyFor)"
+                  >
+                  </span>
+                  <span
+                    class="text-gray-700"
+                    [innerHTML]="detailModule?.parentName"
+                  ></span
+                ></span>
+              </div>
+              <div class="me-4 d-flex mb-1">
+                <div
+                  class="text-dark fw-bold text-nowrap"
+                  *ngIf="detailModule?.instanceName"
+                >
+                  <codx-label
+                    class="label-colon"
+                    name="instanceName"
+                    formName="ESSignFiles"
+                    gridViewName="grvSignFiles"
+                    default="Tên quy trình"
+                  ></codx-label>
+                  <span
+                    class="text-gray-700"
+                    [innerHTML]="detailModule?.instanceName"
+                  ></span>
+                </div>
+              </div>
+              <div class="me-4 d-flex mb-1">
+                <div
+                  class="text-dark fw-bold text-nowrap"
+                  *ngIf="detailModule?.stepName"
+                >
+                  <codx-label
+                    class="label-colon"
+                    name="stepName"
+                    formName="ESSignFiles"
+                    gridViewName="grvSignFiles"
+                    default="Tên bước"
+                  ></codx-label>
+                  <span
+                    class="text-gray-700"
+                    [innerHTML]="detailModule?.stepName"
+                  ></span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="d-flex me-2 justify-content-end">
+            <div class="d-flex flex-column" style="float: right">
+              <div class="me-2">
+                <ng-container *ngIf="detailModule?.approveStatus">
+                  <codx-vll
+                    [name]="vllApprove"
+                    [field]="'ApproveStatus'"
+                    [value]="detailModule?.approveStatus"
+                    [showText]="true"
+                    [showBgColor]="true"
+                    class="badge badge-primary badge-sm"
+                  >
+                  </codx-vll>
+                </ng-container>
+              </div>
+              <div>
+                <div class="d-flex flex-column">
+                  <div>
+                    <codx-label
+                      class="label-colon"
+                      fiedName="owner"
+                      formName="DPActivities"
+                      gridViewName="grvDPActivities"
+                      default="Người phụ trách"
+                      [setRequire]="false"
+                    ></codx-label>
+                  </div>
+                  <div class="me-2">
+                    <codx-imgs
+                      [width]="30"
+                      [objectId]="detailModule?.owner"
+                      [objectName]="detailModule?.ownerName"
+                      ojectType="AD_Users"
+                      [numberImages]="1"
+                    >
+                    </codx-imgs>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-2">
+        <ng-container *ngIf="files?.length > 0 && showFile">
+          <codx-label
+            name="filesApproval"
+            formName="ESSignFiles"
+            gridViewName="grvSignFiles"
+            default="Danh sách file trình ký"
+          ></codx-label>
+          <codx-thumbnail
+            [files]="files"
+            displayThumb="simple"
+            [hideMoreF]="'0'"
+            [hideHover]="'1'"
+            [hideDelete]="'1'"
+            [isFristVer]="isFristVer"
+          >
+          </codx-thumbnail>
+        </ng-container>
+      </div>
+
+      <div class="tab-horizone h-od-tab">
+        <ul ngbNav #nav="ngbNav" [(activeId)]="itemDetailStt" class="nav-tabs">
+          <li [ngbNavItem]="1">
+            <a class="ps-0" ngbNavLink>
+              <div class="d-flex align-item-center">
+                <span
+                  class="icon-info icon-18 me-2"
+                  [ngClass]="{ 'text-primary': itemDetailStt === 1 }"
+                ></span
+                ><span>
+                  <codx-label
+                    name="lblApprovalTrans"
+                    formName="ESSignFiles"
+                    gridViewName="grvSignFiles"
+                    default="Quy trình duyệt"
+                    class="fw-bold"
+                  ></codx-label>
+                </span>
+              </div>
+            </a>
+            <ng-template ngbNavContent>
+              <ng-container *ngIf="itemDetailStt === 1">
+                <codx-view-approval-step
+                  [transID]="transID"
+                  [approveStatus]="itemDetail?.approveStatus"
+                  [eSign]="true"
+                >
+                </codx-view-approval-step>
+              </ng-container>
+            </ng-template>
+          </li>
+        </ul>
+        <div [ngbNavOutlet]="nav" class="pt-4"></div>
+      </div>
+    </ng-template>
+  </codx-detail-tmp>
+</ng-container>

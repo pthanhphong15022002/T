@@ -12,8 +12,13 @@ const routes: Routes = [
     children: [
       {
         path: 'instances/:FuncID/:id',
-        component: ESApprovelComponent,
-        // component: ApprovalsComponent,
+        //component: ESApprovelComponent,
+        component: ApprovalsComponent,
+      },
+      {
+        path: 'activities/:FuncID/:id',
+        //component: ESApprovelComponent,
+        component: ApprovalsComponent,
       },
     ],
   },

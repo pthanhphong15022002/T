@@ -1,4 +1,4 @@
-<ng-container *ngIf="data">
+<!-- <ng-container *ngIf="data">
   <codx-detail-tmp
     [header]="header"
     [dataItem]="data"
@@ -100,9 +100,9 @@
         </div>
       </div>
       <ng-container *ngIf="data">
-        <h5>File gửi trình ký chưa xử lý</h5>
-        <!-- <codx-attachment [displayThumb]="'simple'" [objectId]="data.recID" hideImageUpload="0" showMessage="0" hideBtnSave="1" hideFolder="1" hideUploadBtn="1" [hideDes]="'1'" [hideDelete]="'1'" [hideMoreF]="'0'" (viewFile)="handleViewFile($event)"></codx-attachment> -->
-        <codx-thumbnail
+        <h5>File gửi trình ký chưa xử lý</h5>-->
+<!-- <codx-attachment [displayThumb]="'simple'" [objectId]="data.recID" hideImageUpload="0" showMessage="0" hideBtnSave="1" hideFolder="1" hideUploadBtn="1" [hideDes]="'1'" [hideDelete]="'1'" [hideMoreF]="'0'" (viewFile)="handleViewFile($event)"></codx-attachment> -->
+<!-- <codx-thumbnail 
           [files]="data?.files"
           displayThumb="simple"
           [hideDelete]="'1'"
@@ -147,10 +147,10 @@
         <div [ngbNavOutlet]="nav" class="pt-5"></div>
       </div>
     </ng-template>
-  </codx-detail-tmp>
+  </codx-detail-tmp>-->
 
-  <!-- dang looix cho này nè Chung -->
-  <!-- <codx-instance-detail
+<!-- dang looix cho này nè Chung -->
+<!-- <codx-instance-detail
     [formModel]="formModel"
     [dataSelect]="data"
     [hideMF]="true"
@@ -159,4 +159,9 @@
     [tabInstances]="tabInstances"
     [listStepsProcess]="listStepsProcess"
   ></codx-instance-detail> -->
-</ng-container>
+<!-- </ng-container>  -->
+
+<codx-view-detail-approval-custom
+  [transID]="recIDAprrover"
+  [funcID]="funcID"
+></codx-view-detail-approval-custom>

@@ -19,7 +19,7 @@ export class CodxTypeTaskComponent implements OnInit {
   ) { 
    this.dialog = dialog;
    this.isShowGroup = dt?.data?.isShowGroup == undefined ? this.isShowGroup : dt?.data?.isShowGroup;
-   this.isShowF = dt?.data?.isShowF;
+   this.isShowF = dt?.data?.isShowF == undefined ? true : dt?.data?.isShowF;
   }
 
   ngOnInit(): void {

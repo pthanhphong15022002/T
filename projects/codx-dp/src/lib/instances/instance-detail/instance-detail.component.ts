@@ -79,6 +79,7 @@ export class InstanceDetailComponent implements OnInit {
   @Output() moreFunctionEvent = new EventEmitter<any>();
   @Output() outStepInstance = new EventEmitter<any>();
   @Output() changeMF = new EventEmitter<any>();
+  @Output() autoStartInstance = new EventEmitter<any>();
 
   @Output() changeProgress = new EventEmitter<any>();
 
@@ -157,6 +158,7 @@ export class InstanceDetailComponent implements OnInit {
   ];
   timelineSettings: any;
   tags = '';
+  stepIDFirst = '';
   timelineSettingsHour: any = {
     topTier: {
       unit: 'Day',
@@ -372,6 +374,7 @@ export class InstanceDetailComponent implements OnInit {
         this.tags = this.dataSelect?.tags;
         this.listStepInstance = JSON.parse(JSON.stringify(res));
         this.listSteps = res;
+        this.stepIDFirst = this.listSteps[0]?.recID;
         this.getViewApprove();
         this.loadTree(this.id);
         this.handleProgressInstance();
