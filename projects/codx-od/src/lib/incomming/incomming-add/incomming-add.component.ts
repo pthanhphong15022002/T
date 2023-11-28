@@ -24,9 +24,10 @@ import {
   getJSONString,
 } from '../../function/default.function';
 import { FileService } from '@shared/services/file.service';
-import { Observable } from 'rxjs';
+import { Observable, isObservable } from 'rxjs';
 import { Permission } from '@shared/models/file.model';
 import { permissionDis } from '../../models/dispatch.model';
+import { CodxOdService } from '../../codx-od.service';
 
 @Component({
   selector: 'app-imcomming-add',
@@ -83,7 +84,8 @@ export class IncommingAddComponent implements OnInit {
 
   constructor(
     private api: ApiHttpService,
-    private odService: DispatchService,
+    private dispatchService: DispatchService,
+    private odService: CodxOdService,
     private notifySvr: NotificationsService,
     private callfunc: CallFuncService,
     private ref: ChangeDetectorRef,
@@ -435,7 +437,7 @@ export class IncommingAddComponent implements OnInit {
         this.dispatch.recID = this.dialog.dataService.dataSelected.recID;
       this.addRelations();
       this.addPermission();
-      this.odService
+      this.dispatchService
         .saveDispatch(this.dataRq, this.dispatch, this.keyField)
         .subscribe(async (item) => {
           if (item.status == 0) {
@@ -457,7 +459,7 @@ export class IncommingAddComponent implements OnInit {
                 if (item2?.status == 0 || Array.isArray(item2)) {
                   if (this.data.owner != this.data.createdBy)
                     //Gửi mail
-                    this.odService
+                    this.dispatchService
                       .sendMail2(this.dataRq, this.data.recID)
                       .subscribe();
 
@@ -465,39 +467,28 @@ export class IncommingAddComponent implements OnInit {
                   if (
                     this.dispatch.relations &&
                     this.dispatch.relations.length > 0
-                  ) {
-                    var per = new permissionDis();
-                    per.to = [];
-                    for (var i = 0; i < this.dispatch.relations.length; i++) {
-                      per.to.push(this.dispatch.relations[i].userID);
+                  ) 
+                  {
+                    var emailTemplate = this.odService.loadEmailTempType("OD_Share") as any;
+                    if(isObservable(emailTemplate))
+                    {
+                      emailTemplate.subscribe((itemEmailTmp:any)=>{
+                        this.beforeSaveSendEmail(item,itemEmailTmp);
+                      })
                     }
-                    per.recID = item?.data?.recID;
-                    per.funcID = 'ODT81';
-                    per.download = true;
-                    per.share = true;
-                    this.odService
-                      .shareDispatch(
-                        per,
-                        this.referType,
-                        this.formModel?.entityName
-                      )
-                      .subscribe((item3) => {
-                        if (item3) {
-                          this.disableSave = false;
-                          item.data.relations = item3?.data[0].relations;
-                          this.notifySvr.notify(item.message);
-                          this.dialog.close(item.data);
-                        }
-                      });
-                  } else {
+                    else this.beforeSaveSendEmail(item,emailTemplate);
+                  } 
+                  else 
+                  {
                     this.disableSave = false;
                     this.notifySvr.notify(item.message);
                     this.dialog.close(item.data);
                   }
+                
                 } else {
                   this.disableSave = false;
                   this.notifySvr.notify(item2.message);
-                  this.odService
+                  this.dispatchService
                     .deleteDispatch(this.dispatch.recID)
                     .subscribe();
                   this.dialog.dataService.delete(this.dispatch).subscribe();
@@ -507,7 +498,7 @@ export class IncommingAddComponent implements OnInit {
           } else this.notifySvr.notify(item.message);
         });
     } else if (this.type == 'edit') {
-      this.odService
+      this.dispatchService
         .updateDispatch(
           this.dispatch,
           this.formModel?.funcID,
@@ -547,6 +538,36 @@ export class IncommingAddComponent implements OnInit {
           } else this.notifySvr.notify(item.message);
         });
     }
+  }
+
+  beforeSaveSendEmail(item:any,emailTemplate:any)
+  {
+    var per = new permissionDis();
+      per.to = [];
+      for (var i = 0; i < this.dispatch.relations.length; i++) {
+        per.to.push(this.dispatch.relations[i].userID);
+      }
+      per.recID = item?.data?.recID;
+      per.funcID = 'ODT81';
+      per.download = true;
+      per.share = true;
+      per.sendMail = true;
+      per.desc = emailTemplate?.message,
+      per.emailTemplates = emailTemplate
+      this.dispatchService
+        .shareDispatch(
+          per,
+          this.referType,
+          this.formModel?.entityName
+        )
+        .subscribe((item3) => {
+          if (item3) {
+            this.disableSave = false;
+            item.data.relations = item3?.data[0].relations;
+            this.notifySvr.notify(item.message);
+            this.dialog.close(item.data);
+          }
+        });
   }
   addRelations() {
     if (this.relations && this.relations.length > 0) {

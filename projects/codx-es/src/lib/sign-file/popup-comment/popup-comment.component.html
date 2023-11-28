@@ -9,15 +9,15 @@
   *ngIf="isAfterRender"
 >
   <ng-template #body>
-    <div class="reason form-group" *ngIf="false">
+    <!-- <div class="reason form-group" *ngIf="false">
       <codx-label fiedName="ReasonID" [formModel]="formModel"> </codx-label>
-      <!-- <codx-input
+       <codx-input
         type="valuelist"
         [refValue]="grvSetup[controlName]['referedValue']"
         [crrValue]="result.comment"
         (valueChange)="valueChange($event)"
       >
-      </codx-input> -->
+      </codx-input> 
       <codx-input
         type="text"
         field="reasonID"
@@ -25,14 +25,14 @@
         (valueChange)="valueChange($event)"
       >
       </codx-input>
-    </div>
+    </div> -->
 
     <div class="note form-group">
-      <codx-label fiedName="Comment" [formModel]="formModel"> </codx-label>
+      <codx-label fiedName="Comment" default="Bình luận" [formModel]="formModel"> </codx-label>
       <codx-input
         type="textarea"
         format="ed2"
-        [placeholder]="grvSetup?.Comment?.description"
+        [placeholder]="grvSetup?.Comment?.description ?? 'Nhập bình luận'"
         field="comment"
         [crrValue]="result?.comment"
         (valueChange)="valueChange($event)"

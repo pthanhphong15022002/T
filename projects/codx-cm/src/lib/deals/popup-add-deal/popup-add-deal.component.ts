@@ -155,11 +155,12 @@ export class PopupAddDealComponent
   isLoading: boolean = false;
   isBlock: boolean = true;
   isviewCustomer: boolean = false;
+
   currencyIDOld: string;
   autoNameTabFields: string;
-
   bussineLineNameTmp: string = '';
   customerNameTmp: string = '';
+  shortNameTmp: string = '';
   constructor(
     private inject: Injector,
     private changeDetectorRef: ChangeDetectorRef,
@@ -189,15 +190,16 @@ export class PopupAddDealComponent
       if (this.action != this.actionAdd) {
         this.deal = dt?.data?.dataCM;
         //       this.owner = this.deal.owner;
-        this.customerCategory = dt?.data?.customerCategory;
+        this.customerCategory = dt?.data?.dataCM?.customerCategory;
       }
       this.instanceReason = dt?.data?.instanceReason;
-      // if(this.instanceReason) {
-      //   this.deal.dealName = this.instanceReason?.instance?.title;
-      //   this.deal.owner = this.instanceReason?.ownerMove;
-      //   this.deal.salespersonID = this.instanceReason?.ownerMove;
-      //   this.deal.processID = this.instanceReason?.processMove;
-      // }
+      if(this.instanceReason) {
+        this.deal.dealName = this.instanceReason?.title;
+        this.deal.owner =this.instanceReason?.ownerMove;
+        this.deal.salespersonID = this.instanceReason?.ownerMove;
+        this.owner =  this.instanceReason?.ownerMove;
+      //  this.deal.processID = this.instanceReason?.processMove;
+      }
     } else {
       this.deal =
         this.action != this.actionAdd
@@ -210,7 +212,7 @@ export class PopupAddDealComponent
       }
     }
     this.isviewCustomer && this.copyDataCustomer(this.deal, this.customerView);
-    if (dt?.data.processID) {
+    if (dt?.data?.processID) {
       this.deal.processID = dt?.data?.processID;
       this.isViewAll = true;
     }
@@ -323,11 +325,15 @@ export class PopupAddDealComponent
           this.deal.customerID = this.customerID;
           this.customerName = $event.component?.itemsSelected[0]?.CustomerName;
           this.customerNameTmp = this.customerName?.trim();
+
           this.deal.industries = $event.component?.itemsSelected[0]?.Industries;
           this.deal.shortName = $event.component?.itemsSelected[0]?.ShortName;
+          this.deal.customerName = $event.component?.itemsSelected[0]?.CustomerName;
+          this.deal.customerCategory = $event.component?.itemsSelected[0]?.Category;
+          this.shortNameTmp =  this.deal?.shortName?.trim();
 
           if (this.bussineLineNameTmp?.trim()) {
-            this.deal.dealName = this.customerNameTmp + ' mua '+  this.bussineLineNameTmp?.trim();
+            this.deal.dealName = (this.shortNameTmp ? this.shortNameTmp: this.customerNameTmp ) + ' mua '+  this.bussineLineNameTmp?.trim();
           }
           else if(!this.deal.dealName?.trim()) {
             this.deal.dealName = this.customerNameTmp;
@@ -736,7 +742,7 @@ export class PopupAddDealComponent
       this.deal.businessLineID = $event?.data;
       this.bussineLineNameTmp = $event?.component?.itemsSelected[0]?.BusinessLineName;
       if(this.customerNameTmp?.trim()) {
-         this.deal.dealName = this.customerNameTmp.trim() + ' mua ' + this.bussineLineNameTmp;
+         this.deal.dealName = (this.shortNameTmp ? this.shortNameTmp?.trim(): this.customerNameTmp?.trim() ) + ' mua ' + this.bussineLineNameTmp;
       }
       if (this.deal.businessLineID && this.action !== this.actionEdit) {
         if (
@@ -770,7 +776,7 @@ export class PopupAddDealComponent
                   : this.deal.createdOn
               );
               this.getSettingFields(result?.processSetting,this.listInstanceSteps)
-              if (this.listParticipants && this.listParticipants?.length > 0) {
+              if (this.listParticipants && this.listParticipants?.length > 0 && !this.owner) {
                 let index = this.listParticipants.findIndex(
                   (x) => x.userID === this.user.userID
                 );
@@ -1003,7 +1009,7 @@ export class PopupAddDealComponent
         if (this.action === this.actionEdit) {
           this.owner = this.deal.owner;
         } else {
-          if (this.listParticipants.length > 0 && this.listParticipants) {
+          if (this.listParticipants.length > 0 && this.listParticipants && !this.owner) {
             let index = this.listParticipants.findIndex(
               (x) => x.userID === this.user.userID
             );

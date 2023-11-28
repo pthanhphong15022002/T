@@ -1,0 +1,109 @@
+<codx-views
+  #view
+  [views]="views"
+  [autoLoad]="false"
+  [toolbarDisplay]="false"
+  (onActions)="onAction($event)"
+  [viewActiveType]="8"
+  >
+  <!-- (onActions)="onAction($event)" -->
+</codx-views>
+
+<ng-template #cardTemplate let-data>
+    <div class="d-flex flex-row justify-content-start align-items-center w-100 ">
+      <!-- <codx-img [objectId]="data?.owner" objectType="AD_Users" [width]="30">
+      </codx-img> -->
+      Nhan vien nghi phep
+    </div>
+  </ng-template>
+
+  <ng-template #resourceHeader let-data>
+    <div class="w-40 p-3 ps-5">
+        <div class="d-flex align-items-center cursor-pointer hover-active">
+          <div class="d-flex flex-column me-4">
+            <codx-img [funcId]="funcID" [objectId]="data.employeeID" [objectName]="data.employeeName"
+              objectType="HR_Employees" [width]="40">
+            </codx-img>
+            <!-- <ng-container *ngIf="data.gender">
+              <div class="mt-1 mx-auto">
+                <codx-vll [name]="grvSetup['Gender']?.referedValue" [value]="data.gender" [showText]="true"
+                  [showBgColor]="true" [classList]="'badge badge-sm badge-inline flex-wrap me-0'"></codx-vll>
+              </div>
+            </ng-container> -->
+          </div>
+          <div class="d-flex flex-column">
+            <div #nameField [ngbTooltip]="nameField.scrollHeight > nameField.clientHeight? nameTooltip :null"
+              class="align-items-center line-clamp line-clamp-1 mb-1">
+              <span class="fw-bold fs-6 me-3 text-nowrap item-active">
+                {{data.employeeName}}</span>
+              <i class="icon-qr_code_scanner text-danger icon-14 me-1"></i>
+              <span class="text-danger">{{ data.employeeID }}</span>
+              <ng-template #nameTooltip>
+                <div class="inline-tooltip">
+                  <span class="fw-bold fs-6 me-3 text-nowrap">
+                    {{data.employeeName}}</span>
+                  <i class="icon-qr_code_scanner text-danger icon-14 me-1"></i>
+                  <span class="text-danger">{{ data.employeeID }}</span>
+                </div>
+              </ng-template>
+            </div>
+            <div #positionField *ngIf="data.positionID" class="text-gray-600 mb-1 fs-7 line-clamp line-clamp-1">
+              <span [ngbTooltip]="positionTooltip">{{data.positionName? data.positionName : data.positionID}}</span>
+              <ng-template #positionTooltip>
+                <div class="d-flex flex-column">
+                  <span class="label-text-color">{{grvSetupHrEmp['PositionID'].headerText}}</span>
+                  <span *ngIf="positionField.scrollHeight > positionField.clientHeight"
+                    class="text-gray-600">{{data.positionName? data.positionName : data.positionID}}</span>
+                </div>
+              </ng-template>
+            </div>
+            <!-- <div #orgUnitField *ngIf="data.orgUnitID" class="text-gray-700 mb-1 line-clamp line-clamp-1">
+              <span [ngbTooltip]="orgUnitTooltip">{{data.orgUnitName? data.orgUnitName : data.orgUnitID}}</span>
+              <ng-template #orgUnitTooltip>
+                <div class="d-flex flex-column">
+                  <span class="label-text-color">{{grvSetup['OrgUnitID'].headerText}}</span>
+                  <span *ngIf="orgUnitField.scrollHeight > orgUnitField.clientHeight"
+                    class="text-gray-600">{{data.orgUnitName? data.orgUnitName : data.orgUnitID}}</span>
+                </div>
+              </ng-template>
+            </div>
+            <div #departmentField [ngbTooltip]="departmentTooltip"
+              class="text-gray-600 align-items-center line-clamp line-clamp-1">
+              <span *ngIf="data.departmentID != data.orgUnitID">
+                {{data.departmentName? data.departmentName :data.departmentID}}</span>
+              <span *ngIf="data?.departmentID && data.divisionID" class="text-gray-400 mx-1">,</span>
+              <span *ngIf="data.divisionID">{{data.divisionName? data.divisionName: data.divisionID }}</span>
+              <ng-template #departmentTooltip>
+                <div class="d-flex flex-column">
+                  <span class="label-text-color">{{grvSetup['DepartmentID'].headerText}}</span>
+                  <span *ngIf="data.departmentID != data.orgUnitID 
+                    && departmentField.scrollHeight > departmentField.clientHeight">
+                    {{data.departmentName? data.departmentName :
+                    data.departmentID}}</span>
+                  <span *ngIf="data.divisionID && departmentField.scrollHeight > departmentField.clientHeight">
+                    {{data.divisionName? data.divisionName: data.divisionID }}</span>
+                </div>
+              </ng-template>
+            </div> -->
+          </div>
+        </div>
+      </div>
+  </ng-template>
+
+  <ng-template #mfButton let-data>
+    hahaha3
+    <!-- <div class="mt-1 me-1">
+      <codx-mfunc [dataItem]="data" [formModel]="formModel" (clickMF)="clickMF($event, data)" type="hover"
+        (changeDataMF)="changeDataMF($event, data)"></codx-mfunc>
+    </div> -->
+  </ng-template>
+
+  <ng-template #contentMF let-data>
+    hahahahahaha1
+    <!-- <div *ngIf="resourceType=='1'">
+      <codx-booking-room-schedule-content [recID]="data?.recID"></codx-booking-room-schedule-content>
+    </div>
+    <div *ngIf="resourceType=='2'">
+      <codx-booking-car-schedule-content [recID]="data?.recID"></codx-booking-car-schedule-content>
+    </div> -->
+  </ng-template>

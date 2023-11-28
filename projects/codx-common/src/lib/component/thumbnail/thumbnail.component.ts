@@ -222,7 +222,7 @@ export class ThumbnailComponent implements OnInit, OnChanges {
                           list.splice(index, 1); //remove element from array
                           this.files = list;
                           this.fileCount.emit(this.files);
-
+                          this.dataDelete=[];
                           this.changeDetectorRef.detectChanges();
                         }
                       }
@@ -247,6 +247,7 @@ export class ThumbnailComponent implements OnInit, OnChanges {
                     this.files = list;
                     this.fileCount.emit(this.files);
                     this.fileDelete.emit(this.dataDelete);
+                    this.dataDelete=[];
                     this.changeDetectorRef.detectChanges();
                   }
                 }

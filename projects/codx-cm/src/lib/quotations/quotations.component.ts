@@ -330,7 +330,7 @@ export class QuotationsComponent extends UIComponent implements OnInit {
             break;
           //huy duyet
           case 'CM0202_2':
-            if (data.status != '1' || this.applyApprover != '1') {
+            if (data.approveStatus != '3' || this.applyApprover != '1') {
               res.disabled = true;
             }
             break;
@@ -354,14 +354,13 @@ export class QuotationsComponent extends UIComponent implements OnInit {
               res.disabled = true;
             } else res.disabled = false;
             break;
-          //da duyet hoac huy thi ko cho edit
+          //da duyet hoac đang gửi thi ko cho edit
           case 'SYS03':
             if (
               data.status == '1' ||
               data.status == '2' ||
               data.status == '4' ||
               data.approveStatus == '3' ||
-              data.approveStatus == '0' ||
               data.approveStatus == '5'
             ) {
               res.disabled = true;
@@ -514,6 +513,10 @@ export class QuotationsComponent extends UIComponent implements OnInit {
       this.view.dataService.dataSelected = data;
     }
     this.view.dataService.copy().subscribe((res) => {
+      //do khanh chưa thiết lập nên để nó mặc định
+      res.status = '0';
+      res.approveStatus = '1';
+
       if (this.isNewVersion) {
         res.revision = data.revision;
         res.versionNo = data.versionNo;
@@ -665,40 +668,12 @@ export class QuotationsComponent extends UIComponent implements OnInit {
           return;
         }
 
-        if (res.eSign) {
-          //kys soos
-        } else {
-          this.release(dt, res);
-        }
+        //ko phân biệt eSign
+        this.release(dt, res);
       });
   }
   //Gửi duyệt
   release(data: any, category: any) {
-    // this.codxShareService
-    //   .codxRelease(
-    //     this.view.service,
-    //     data?.recID,
-    //     category.processID,
-    //     this.view.formModel.entityName,
-    //     this.view.formModel.funcID,
-    //     '',
-    //     data?.title,
-    //     ''
-    //   )
-    //   .subscribe((res2: any) => {
-    //     if (res2?.msgCodeError) this.notiService.notify(res2?.msgCodeError);
-    //     else {
-    //       this.codxCmService
-    //         .getOneObject(this.itemSelected.recID, 'QuotationsBusiness')
-    //         .subscribe((q) => {
-    //           if (q) {
-    //             this.itemSelected = q;
-    //             this.view.dataService.update(this.itemSelected).subscribe();
-    //           }
-    //           this.notiService.notifyCode('ES007');
-    //         });
-    //     }
-    //   });
     this.codxShareService.codxReleaseDynamic(
       this.view.service,
       data,
@@ -714,18 +689,23 @@ export class QuotationsComponent extends UIComponent implements OnInit {
     if (res?.msgCodeError) this.notiService.notify(res?.msgCodeError);
     else {
       this.itemSelected.approveStatus = res?.returnStatus;
-      this.itemSelected.status = res?.returnStatus;
+      //0; Huy; 1; Tao moi; 2; lam lai; 3;Cho duyet; 4; Tu choi; 5; da duyet; 9; Dang ky -- ApproveStatus
+      //0;Mới tạo;1;Chờ duyệt;2;Đã duyệt;3;Làm lại;4;Đã hết hạn == status
+
+      switch (this.itemSelected.approveStatus) {
+        case '5':
+          this.itemSelected.status = '2';
+          break;
+        case '4':
+        case '2':
+          this.itemSelected.status = '3';
+          break;
+        case '3':
+          this.itemSelected.status = '1';
+          break;
+      }
       this.view.dataService.update(this.itemSelected).subscribe();
       this.notiService.notifyCode('ES007');
-      // this.codxCmService
-      //   .getOneObject(this.itemSelected.recID, 'QuotationsBusiness')
-      //   .subscribe((q) => {
-      //     if (q) {
-      //       this.itemSelected = q;
-      //       this.view.dataService.update(this.itemSelected).subscribe();
-      //     }
-      //     this.notiService.notifyCode('ES007');
-      //   });
     }
   }
 

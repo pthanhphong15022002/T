@@ -1,0 +1,74 @@
+<codx-views
+  #view
+  service="PR"
+  assemblyName="ERM.Business.PR"
+  className="KowDsBusiness"
+  method="LoadDataAsync"
+  [views]="views"
+  [selectedFirst]="true"
+  idField="recID"
+  [button]="buttonAdd"
+  (selectedChange)="onSelectionChanged($event)"
+  (buttonClick)="btnClick($event)"
+  (viewChanged)="viewChanged($event)"
+  (clickMF)="clickMF($event, itemSelected)"
+>
+</codx-views>
+
+<!-- <ng-template #tempTree let-data>
+    <div class="d-flex align-items-top py-1">
+      <i class="icon-home me-2"></i>
+      <span>{{ data.orgUnitName }}</span>
+    </div>
+  </ng-template> -->
+
+  <ng-template #leftPanel let-data>
+    <codx-listview
+    id="chartOrg"
+    #chartOrg
+    [pageSize]="10"
+    [itemTemplate]="tempTree"
+    funcId=""
+    entityName="HR_OrganizationUnits"
+    service="HR"
+    type="treeView"
+    assemblyName="ERM.Business.HR"
+    className="OrganizationUnitsBusiness"
+    textField="orgUnitName"
+    gridViewName="grvOrganizationUnits"
+    formName="OrganizationUnits"
+    [enableCheck]="false"
+    [method]="'GetDataOrgAsync'"
+    idField="orgUnitID"
+    [dataService]="dtService"
+    (onSelectionChanged)="onSelectionChanged($event)"
+  >
+  </codx-listview>
+  </ng-template>
+
+  <ng-template #tempTree let-data>
+    <div class="d-flex align-items-top py-1">
+      <i class="icon-home me-2"></i>
+      <span>{{ data.orgUnitName }}</span>
+    </div>
+  </ng-template>
+
+  <ng-template #tmpPanelRight>
+    <ng-container *ngIf="isAfterViewSelect == true && filterOrgUnit" >
+      <lib-kowds-schedule
+        [filterOrg] = "filterOrgUnit"
+      >
+      </lib-kowds-schedule>
+    </ng-container>
+  </ng-template>
+
+  <ng-template #tmpOrgChart>
+    <hr-organization-orgchart
+      [activeMFC]="true"
+      [view]="view"
+      [dataService]="view.dataService"
+      [formModel]="view.formModel"
+      [orgUnitID]="orgUnitID"
+      [formModelEmployee]="formModelEmployee"
+    ></hr-organization-orgchart>
+  </ng-template>

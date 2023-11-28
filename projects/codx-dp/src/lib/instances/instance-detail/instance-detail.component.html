@@ -310,6 +310,8 @@
                     [lstStepProcess]="lstStepProcess"
                     [isOnlyView]="isOnlyView"
                     (isChangeProgress)="handleProgressInstance($event)"
+                    [stepIDFirst]="stepIDFirst"
+                    (autoStartInstance)="autoStartInstance.emit($event)"
                   ></codx-stages-detail>
                 </ng-container>
               </div>

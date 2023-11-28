@@ -409,6 +409,8 @@
         (saveAssign)="saveAssignStepTask($event)"
         (continueStep)="continueStep($event)"
         (isChangeProgress)="changeProgressStep($event)"
+        [isTaskFirst]="step?.recID == this.stepIDFirst"
+        (changeProgress)="autoStart($event)"
       ></codx-step-task>
     </div>
   </div>

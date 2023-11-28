@@ -54,6 +54,7 @@ export class WarrantiesComponent
   @ViewChild('itemPriority') itemPriority: TemplateRef<any>;
   @ViewChild('itemComment') itemComment: TemplateRef<any>;
   @ViewChild('itemService') itemService: TemplateRef<any>;
+  @ViewChild('templateMore') templateMore: TemplateRef<any>;
 
   dialogStatus: DialogRef;
   // extension core
@@ -96,6 +97,7 @@ export class WarrantiesComponent
   comment = '';
   serviceLocator: any;
   zone: any;
+  zone2: any;
   partnerZone: any;
   popoverDetail: any;
   popupOld: any;
@@ -111,8 +113,7 @@ export class WarrantiesComponent
     private changeDetectorRef: ChangeDetectorRef,
     private notificationsService: NotificationsService,
     private codxShareService: CodxShareService,
-    private authStore: AuthStore,
-
+    private authStore: AuthStore
   ) {
     super(inject);
     if (!this.funcID) {
@@ -124,9 +125,11 @@ export class WarrantiesComponent
   onInit(): void {
     this.asideMode = this.codxService?.asideMode;
 
-    this.button = [{
-      id: this.btnAdd,
-    }];
+    this.button = [
+      {
+        id: this.btnAdd,
+      },
+    ];
     this.wrSv.listOrderUpdateSubject.subscribe((res) => {
       if (res) {
         this.lstOrderUpdate = res?.e ?? [];
@@ -215,6 +218,14 @@ export class WarrantiesComponent
           panelRightRef: this.templateDetail,
         },
       },
+      {
+        type: ViewType.grid,
+        sameData: true,
+        active: false,
+        model: {
+          template2: this.templateMore,
+        },
+      },
     ];
   }
 
@@ -284,26 +295,38 @@ export class WarrantiesComponent
         break;
       case 'WR0101_1':
       case 'WR0103_1': //Cập nhật trạng thái
+      case 'WR0102_1':
+      case 'WR0104_1':
         this.updateReasonCode(data);
         break;
       case 'WR0101_2': //Cập nhật kĩ thuật viên
       case 'WR0103_2':
+      case 'WR0102_2':
+      case 'WR0104_2':
         this.updateAssignEngineer(data);
         break;
       case 'WR0101_3': //Hủy case - status = 5
       case 'WR0103_3':
+      case 'WR0102_3':
+      case 'WR0104_3':
         this.updateStatusWarranty('5', data);
         break;
       case 'WR0101_4': //Đóng case - status = 7
       case 'WR0103_4':
+      case 'WR0102_4':
+      case 'WR0104_4':
         this.updateStatusWarranty('7', data);
         break;
       case 'WR0101_5': //Mở case - status = 3
       case 'WR0103_5':
+      case 'WR0102_5':
+      case 'WR0104_5':
         this.updateStatusWarranty('3', data);
         break;
       case 'WR0101_6': //Cập nhật độ ưu tiên
       case 'WR0103_6':
+      case 'WR0102_6':
+      case 'WR0104_6':
         this.updatePriority(data);
         break;
       case 'WR0103_8': //Cập nhật trạng thái part
@@ -325,65 +348,38 @@ export class WarrantiesComponent
 
   changeDataMF($event, data, type = null) {
     if ($event != null && data != null) {
-      $event.forEach((res) => {
-        if (data.status == '5') {
-          switch (res.functionID) {
-            case 'SYS03':
-            case 'SYS02':
-            case 'WR0101_1':
-            case 'WR0101_2':
-            case 'WR0101_3':
-            case 'WR0101_4':
-            case 'WR0101_5':
-            case 'WR0101_6':
-            case 'WR0101_7':
-            case 'WR0103_1':
-            case 'WR0103_2':
-            case 'WR0103_3':
-            case 'WR0103_4':
-            case 'WR0103_5':
-            case 'WR0103_6':
-            case 'WR0103_7':
-            case 'WR0103_8':
-              res.disabled = true;
-              break;
-            default:
-              break;
-          }
-        } else {
-          if (data.status == '7') {
-            switch (res.functionID) {
-              case 'SYS03':
-              case 'SYS02':
-              case 'WR0101_1':
-              case 'WR0101_2':
-              case 'WR0101_4':
-              case 'WR0101_6':
-              case 'WR0101_7':
-              case 'WR0103_1':
-              case 'WR0103_2':
-              case 'WR0103_4':
-              case 'WR0103_6':
-              case 'WR0103_7':
-              case 'WR0103_8':
-                res.disabled = true;
-                break;
-              default:
-                break;
+      let lstFuncs = [];
+      for (let i = 1; i <= 4; i++) {
+        for (let j = 1; j <= 7; j++) {
+          let func = `WR010${i}_${j}`;
+          if (data.status === '7') {
+            if (j != 3 && j != 5) {
+              lstFuncs.push(func);
             }
+          } else if (data.status == '5') {
+            lstFuncs.push(func);
           } else {
-            switch (res.functionID) {
-              case 'WR0101_5':
-              case 'WR0101_7':
-              case 'WR0103_7':
-              case 'WR0103_5':
-                res.disabled = true;
-                break;
+            if (j == 5 || j == 7) {
+              lstFuncs.push(func);
             }
           }
         }
+      }
+      $event.forEach((res) => {
+        if (data.status == '7' || data.status == '5') {
+          if (['SYS02', 'SYS03', 'WR0103_8'].includes(res.functionID)) {
+            res.disabled = true;
+          }
+        }
+        if (this.isFunctionToDisable(res.functionID, lstFuncs)) {
+          res.disabled = true;
+        }
       });
     }
+  }
+
+  isFunctionToDisable(functionID, disabledFunctions) {
+    return disabledFunctions.includes(functionID);
   }
 
   async getGridViewSetup(formName, gridViewName) {
@@ -598,7 +594,7 @@ export class WarrantiesComponent
             engineerID: data?.engineerID,
             createdBy: data?.createdBy,
             gridViewSetup: res,
-            action: 'add'
+            action: 'add',
           };
           this.callFc
             .openForm(
@@ -630,7 +626,8 @@ export class WarrantiesComponent
                   JSON.stringify(this.dataSelected)
                 );
                 this.view.dataService.update(this.dataSelected).subscribe();
-                this.viewDetail.listOrderUpdate(this.lstOrderUpdate);
+                if (this.viewDetail)
+                  this.viewDetail.listOrderUpdate(this.lstOrderUpdate);
 
                 this.detectorRef.detectChanges();
               }
@@ -676,7 +673,8 @@ export class WarrantiesComponent
               this.dataSelected.engineerID;
           }
 
-          this.viewDetail.listOrderUpdate(this.lstOrderUpdate);
+          if (this.viewDetail)
+            this.viewDetail.listOrderUpdate(this.lstOrderUpdate);
           this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
           this.view.dataService.update(this.dataSelected).subscribe();
           this.detectorRef.detectChanges();
@@ -712,6 +710,7 @@ export class WarrantiesComponent
       if (ele && ele?.event) {
         this.dataSelected.serviceLocator = this.serviceLocator;
         this.dataSelected.zone = this.zone;
+        this.dataSelected.zone2 = this.zone2;
         this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
         this.view.dataService.update(this.dataSelected).subscribe();
         this.notificationsService.notifyCode('SYS007');
@@ -817,6 +816,7 @@ export class WarrantiesComponent
     this[e?.field] = e?.data;
     if (e?.field == 'serviceLocator') {
       this.zone = e?.component?.itemsSelected[0]?.Zone;
+      this.zone2 = e?.component?.itemsSelected[0]?.Zone2;
     }
     this.detectorRef.detectChanges();
   }
@@ -838,7 +838,7 @@ export class WarrantiesComponent
         methodName = 'UpdatePriorityWarrantyAsync';
         break;
       case 'serviceLocator':
-        data = [this.dataSelected?.recID, this.serviceLocator, this.zone];
+        data = [this.dataSelected?.recID, this.serviceLocator, this.zone, this.zone2];
         methodName = 'UpdateServiceLocatorWarrantyAsync';
         break;
     }

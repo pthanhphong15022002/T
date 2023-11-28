@@ -11,6 +11,7 @@ import {
   ApiHttpService,
   CacheService,
   CallFuncService,
+  CodxInputComponent,
   DataRequest,
   DialogData,
   DialogModel,
@@ -41,7 +42,7 @@ import { PopupQuickaddContactComponent } from '../../cmcustomer/cmcustomer-detai
 })
 export class PopupConvertLeadComponent implements OnInit {
   @ViewChild('imageUpload') imageUpload: ImageViewerComponent;
-
+  @ViewChild('codxInputCbx') codxInputCbx: CodxInputComponent;
   @ViewChild('codxListContact') codxListContact: CodxListContactsComponent;
   @ViewChild('codxConvert') codxConvert: CodxListContactsComponent;
   @ViewChild('codxListAddress') codxListAddress: CodxAddressCmComponent;
@@ -108,7 +109,6 @@ export class PopupConvertLeadComponent implements OnInit {
   countAddNew = 0;
   countAddSys = 0;
   countChange = 0;
-  customerOld: any;
   customerNewOld: any;
   instance: tmpInstances = new tmpInstances();
   countValidate = 0;
@@ -635,6 +635,8 @@ export class PopupConvertLeadComponent implements OnInit {
     this.deal.customerID = this.customer?.recID;
     this.deal.customerName = this.customer?.customerName;
     this.deal.customerCategory = this.customer?.category;
+    this.deal.shortName = this.customer?.shortName;
+    this.deal.industries = this.customer?.industries;
     // if (this.lstContactDeal != null) {
     //   this.lstContactDeal.forEach((res) => {
     //     res.recID = Util.uid();
@@ -742,7 +744,7 @@ export class PopupConvertLeadComponent implements OnInit {
     var endDate =
       action == 'add' || action == 'copy' ? new Date() : new Date(endDateValue);
     for (let i = 0; i < listSteps.length; i++) {
-      if(!listSteps[i].isSuccessStep && !listSteps[i].isFailStep) {
+      if (!listSteps[i].isSuccessStep && !listSteps[i].isFailStep) {
         endDate.setDate(endDate.getDate() + listSteps[i].durationDay);
         endDate.setHours(endDate.getHours() + listSteps[i].durationHour);
         endDate = this.setTimeHoliday(
@@ -888,10 +890,12 @@ export class PopupConvertLeadComponent implements OnInit {
 
   async changeRadio(e) {
     if (e.field === 'yes' && e.component.checked === true) {
+      this.customer = new CM_Customers();
       this.lstContactDeal = [];
-      if (this.countAddSys > 0) {
-        this.customerID = this.customerOld;
-        this.lead.customerID = this.customerID;
+      this.lead.customerID = null;
+
+      if (this.codxInputCbx && this.codxInputCbx?.ComponentCurrent) {
+        this.codxInputCbx.ComponentCurrent?.setValue(this.lead.customerID);
       }
       this.radioChecked = true;
       // this.getListContactByObjectID(this.customerID);
@@ -1040,29 +1044,29 @@ export class PopupConvertLeadComponent implements OnInit {
   }
 
   valueChange(e) {
-    if (e?.data != this.deal[e.field]) {
-      this.deal[e.field] = e?.data;
-      if (e.field == 'customerID') {
-        this.customerID = e?.data ? e.data : null;
-        if (this.customerID) {
-          this.customerOld = this.customerID;
-          this.lead.customerID = this.customerID;
-          this.getListContactByObjectID(this.customerID);
-        }
-        if (e?.data != null && e?.data?.trim() != '') {
-          this.customer.category = e.component?.itemsSelected[0]?.Category;
-          this.deal.customerCategory = this.customer.category;
-          this.isCheckTab();
-        }
+    this.deal[e.field] = e?.data;
+    if (e.field == 'customerID') {
+      this.customerID = e?.data ? e.data : null;
+      if (this.customerID) {
+        this.lead.customerID = this.customerID;
+        this.getListContactByObjectID(this.customerID);
       }
+      if (e?.data != null && e?.data?.trim() != '') {
+        this.customer.category = e.component?.itemsSelected[0]?.Category;
+        this.customer.customerName =
+          e.component?.itemsSelected[0]?.CustomerName;
+        this.customer.shortName = e.component?.itemsSelected[0]?.ShortName;
+        this.customer.industries = e.component?.itemsSelected[0]?.Industries;
+        this.isCheckTab();
+      }
+    }
 
-      if (e.field == 'consultantID') {
-        this.setPermissions(e?.component?.itemsSelected[0], 'C');
-      }
+    if (e.field == 'consultantID') {
+      this.setPermissions(e?.component?.itemsSelected[0], 'C');
+    }
 
-      if (e.field == 'currencyID') {
-        this.loadExchangeRate();
-      }
+    if (e.field == 'currencyID') {
+      this.loadExchangeRate();
     }
     this.changeDetectorRef.detectChanges();
   }
