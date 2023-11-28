@@ -67,6 +67,7 @@ import { CodxAdService } from 'projects/codx-ad/src/public-api';
 import { TN_OrderModule } from 'projects/codx-ad/src/lib/models/tmpModule.model';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { CodxViewApproveComponent } from 'projects/codx-share/src/lib/components/codx-step/codx-step-common/codx-view-approve/codx-view-approve.component';
 
 @Component({
   selector: 'lib-popup-add-dynamic-process',
@@ -4923,5 +4924,16 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
       strFieldID?.includes(field?.recID)
     );
     return fieldTile?.map((f) => f.title)?.join(', ') || '';
+  }
+
+  openFormApprover(task) {
+    let approverDialog = this.callfc.openForm(
+      CodxViewApproveComponent,
+      '',
+      500,
+      550,
+      '',
+      { categoryID: task?.recID, type: '2', stepsTasks: task }
+    );
   }
 }

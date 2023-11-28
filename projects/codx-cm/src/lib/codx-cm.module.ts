@@ -138,6 +138,7 @@ export const routes: Routes = [
       {
         path: 'marketings/:funcID',
         component: CampaignsComponent,
+        data: { noReuse: true },
       },
       {
         path: 'quotations/:funcID',

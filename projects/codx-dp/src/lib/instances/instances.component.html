@@ -225,6 +225,7 @@
     [runMode]="runMode"
     [autoNameTabFields]="process?.autoNameTabFields"
     [isChangeOwner]="isChangeOwner"
+    (autoStartInstance)="autoStartInstance()"
   >
   </codx-instance-detail>
 </ng-template>
@@ -437,6 +438,7 @@
     [progressControl]="process?.instanceProgressControl"
     [runMode]="runMode"
     [autoNameTabFields]="process?.autoNameTabFields"
+    (autoStartInstance)="autoStartInstance()"
   >
   </codx-instance-detail>
 </ng-template>

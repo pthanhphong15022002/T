@@ -327,12 +327,8 @@
                       </div>
                       <div *ngIf="task?.fieldID" class="d-flex align-items-center cursor-pointer" (click)="openFormField(task)" [ngClass]="task?.approveRule ? 'ms-2' : ''">
                         <span class="icon-check-correct icon-20 text-primary"></span>
-                        <codx-label
-                          class="text-gray-500"
-                          name="progressDefault1 "
-                          [formModel]="grvMoreFunction"
-                          default="Trường tùy chỉnh"
-                        ></codx-label>
+                        <span class="text-gray-500">{{task?.taskName}}<div class="taskName">
+                      </div></span>
                       </div>
                       <ng-container
                         [ngTemplateOutlet]="fileTemplate"
@@ -401,7 +397,7 @@
       [isStep]="false"
       [size]="30"
     ></codx-icon-step>
-    <div class="steplist-hearder">
+    <div class="steplist-hearder ms-2">
       <div class="text-dark d-flex justify-content-start">
         <div class="task-name line-clamp line-clamp-1">
           {{ data?.task?.taskName }}
@@ -414,19 +410,6 @@
         </div>
       </div>
     </div>
-    <!-- <codx-mfunc
-      *ngIf="
-        (!isMoveStage && !isViewStep && !isClose) ||
-        (isClose && !data?.task?.isTaskDefault)
-      "
-      [formModel]="grvMoreFunction"
-      [isBookMark]="true"
-      [dataItem]="moreDefaut"
-      [type]="'hover'"
-      (clickMF)="clickMFTask($event, data?.group, data?.task)"
-      (changeDataMF)="changeDataMFTask($event, data?.task, data?.group)"
-    >
-    </codx-mfunc> -->
   </div>
 </ng-template>
 

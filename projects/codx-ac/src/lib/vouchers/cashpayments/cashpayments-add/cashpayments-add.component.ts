@@ -373,7 +373,7 @@ export class CashPaymentAddComponent extends UIComponent implements OnInit {
           let objectType = event?.component?.itemsSelected[0]?.ObjectType || '';
           this.formCashPayment.setValue('objectType',objectType,{});
           this.formCashPayment.setValue('bankAcctID','',{});
-          this.eleCbxBankAcct.ComponentCurrent.dataService.data = [];
+          //this.eleCbxBankAcct.ComponentCurrent.dataService.data = [];
           this.objectIDChange();
           break;
 

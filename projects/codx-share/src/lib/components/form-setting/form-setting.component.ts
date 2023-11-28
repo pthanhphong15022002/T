@@ -727,4 +727,17 @@ initData(){
     this.isEnableEdit=true;
     this.addData.name = e.newText;
   }
+  onEdit(){
+    if(this.selectedData){
+      this.api.execAction('SYS_FormSettings',[this.selectedData],'UpdateAsync',true).subscribe((res:any)=>{
+
+        if(!res.error){
+
+          setTimeout(()=>{
+            this.initData();
+          }
+        )}
+      })
+    }
+  }
 }
