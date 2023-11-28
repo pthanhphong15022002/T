@@ -178,6 +178,15 @@ export class CodxDpService {
       applyFor
     );
   }
+  // move reason
+  getlistCbxProccessReason(applyFor: string) {
+    return this.api.exec<any>(
+      'DP',
+      'ProcessesBusiness',
+      'GetListCbxProcessesReasonAsync',
+      applyFor
+    );
+  }
 
   updatePermissionProcess(process) {
     return this.api.exec<any>(

@@ -2020,7 +2020,7 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
             }
             category = res.data;
             category.recID = res?.recID ?? Util.uid();
-            category.eSign = false;
+            category.eSign = true; // Khanh bảo vậy mặc định luôn là kí sô
             category.Category = 'DP_Processes';
             category.categoryID = this.process.processNo;
             category.categoryName = this.process.processName;
@@ -4720,6 +4720,7 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
                   dataType: 'auto',
                   templateRefID: this.process.recID,
                   templateRefType: 'DP_Processes',
+                  disableESign: true,
                 },
                 option
               );

@@ -12,6 +12,7 @@ import {
 import {
   ApiHttpService,
   CacheService,
+  CodxGridviewV2Component,
   DataRequest,
   FormModel,
   Util,
@@ -22,11 +23,13 @@ import { CodxWrService } from '../../../codx-wr.service';
 @Component({
   selector: 'wr-view-tab-parts',
   templateUrl: './view-tab-parts.component.html',
-  styleUrls: ['./view-tab-parts.component.css'],
+  styleUrls: ['./view-tab-parts.component.scss'],
 })
 export class ViewTabPartsComponent implements OnInit {
   @Input() transID: any;
+  @Input() isShow: boolean;
   @Output() listChange = new EventEmitter<any>();
+  @ViewChild('grid') grid: CodxGridviewV2Component;
 
   @ViewChild('headerPartInfo') headerPartInfo: TemplateRef<any>;
   @ViewChild('tempPartInfo') tempPartInfo: TemplateRef<any>;
@@ -111,6 +114,9 @@ export class ViewTabPartsComponent implements OnInit {
     this.fetch().subscribe(async (item) => {
       this.loaded = true;
       this.lstParts = item;
+      if(this.grid){
+        this.grid.dataSource = this.lstParts;
+      }
       // {
       //   headerTemplate: this.headerQuantity,
       //   template: this.tempQuantity,

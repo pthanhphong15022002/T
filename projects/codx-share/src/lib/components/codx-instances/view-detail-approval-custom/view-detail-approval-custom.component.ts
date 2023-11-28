@@ -48,6 +48,7 @@ export class ViewDetailApprovalCustomComponent
   curTransID: any;
   listTaskType = [];
   loaded: boolean = false;
+  approverStatus: any;
 
   constructor(
     private changeDecRef: ChangeDetectorRef,
@@ -63,11 +64,17 @@ export class ViewDetailApprovalCustomComponent
     });
   }
   ngOnChanges(changes: SimpleChanges): void {
-    this.getFiles();
     this.loaded = false;
+
     this.shareService.dataApproveTrans.subscribe((res) => {
-      if (res && this.curTransID != this.transID) {
+      if (
+        res &&
+        (this.curTransID != this.transID ||
+          this.approverStatus != res?.approveStatus)
+      ) {
+        this.getFiles();
         this.aprovelTrans = res;
+        this.approverStatus = this.aprovelTrans.approveStatus;
         this.curTransID = this.transID;
         this.processType = this.aprovelTrans.processType;
         this.getDataView();

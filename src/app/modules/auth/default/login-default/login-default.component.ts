@@ -124,7 +124,7 @@ export class LoginDefaultComponent extends UIComponent {
           if (z.event == 'AcceptLoginQR') {
             if (z.data?.hubConnection == this.hubConnectionID) {
               if (z.data.isLg2FA == '') {
-                this.authService.setLogin(z.data?.user);
+                this.authService.setLogin(JSON.parse(z.data.user));
                 this.realHub.stop();
                 setTimeout(() => {
                   window.location.href = z.data?.host + z.data?.tenant;

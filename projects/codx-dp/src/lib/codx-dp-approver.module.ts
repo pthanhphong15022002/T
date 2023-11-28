@@ -12,13 +12,13 @@ const routes: Routes = [
     children: [
       {
         path: 'instances/:FuncID/:id',
-        //component: ESApprovelComponent,
-        component: ApprovalsComponent,
+        component: ESApprovelComponent,
+        //component: ApprovalsComponent, //keu ẩn vì luôn dùng ký số
       },
       {
         path: 'activities/:FuncID/:id',
-        //component: ESApprovelComponent,
-        component: ApprovalsComponent,
+        component: ESApprovelComponent,
+        //component: ApprovalsComponent, // //keu ẩn vì luôn dùng ký số
       },
     ],
   },
