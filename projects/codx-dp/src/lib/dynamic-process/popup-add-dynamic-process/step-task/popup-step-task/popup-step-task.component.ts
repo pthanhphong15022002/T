@@ -6,6 +6,7 @@ import {
   ElementRef,
   ChangeDetectionStrategy,
   OnDestroy,
+  ChangeDetectorRef,
 } from '@angular/core';
 import {
   Util,
@@ -15,6 +16,10 @@ import {
   CacheService,
   CallFuncService,
   NotificationsService,
+  ApiHttpService,
+  FormModel,
+  SidebarModel,
+  DialogModel,
 } from 'codx-core';
 import {
   DP_Steps,
@@ -24,7 +29,8 @@ import {
 import { ComboBoxComponent } from '@syncfusion/ej2-angular-dropdowns';
 import { CodxEmailComponent } from 'projects/codx-share/src/lib/components/codx-email/codx-email.component';
 import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, firstValueFrom, takeUntil } from 'rxjs';
+import { PopupAddCategoryComponent } from 'projects/codx-es/src/lib/setting/category/popup-add-category/popup-add-category.component';
 
 @Component({
   selector: 'lib-popup-job',
@@ -71,7 +77,7 @@ export class PopupJobComponent implements OnInit, OnDestroy {
   isHaveFile = false;
   isBoughtTM = false;
   showLabelAttachment = false;
-
+  listApproverView;
   listCombobox = {
     U: 'Share_Users_Sgl',
     O: 'Share_OrgUnits_Sgl',
@@ -87,6 +93,9 @@ export class PopupJobComponent implements OnInit, OnDestroy {
     private authStore: AuthStore,
     private callfunc: CallFuncService,
     private notiService: NotificationsService,
+    private changeDetectorRef: ChangeDetectorRef,
+    private callfc: CallFuncService,
+    private api: ApiHttpService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -126,6 +135,7 @@ export class PopupJobComponent implements OnInit, OnDestroy {
     } else {
       this.stepsTasks = dt?.data?.taskInput || new DP_Steps_Tasks();
       this.showLabelAttachment = true;
+      this.loadListApproverStep();
     }
   }
   ngOnDestroy(): void {
@@ -580,4 +590,117 @@ export class PopupJobComponent implements OnInit, OnDestroy {
     });
   }
   //#endregion
+  async clickSettingApprove() {
+    let category;
+    if (this.action == 'edit')
+      category = await firstValueFrom(
+        this.api.execSv<any>(
+          'ES',
+          'ES',
+          'CategoriesBusiness',
+          'GetByCategoryIDAsync',
+          this.stepsTasks.recID
+        )
+      );
+    if (category) {
+      //this.actionOpenFormApprove(category.recID);
+      this.actionOpenFormApprove2(category);
+    } else {
+      //let transID = Util.uid();
+      // this.actionOpenFormApprove(transID);
+      this.api
+        .execSv<any>('ES', 'Core', 'DataBusiness', 'GetDefaultAsync', [
+          'ESS22',
+          'ES_Categories',
+        ])
+        .subscribe(async (res) => {
+          if (res && res?.data) {
+            category = res.data;
+            category.recID = res?.recID ?? Util.uid();
+            category.eSign = false;
+            category.Category = 'DP_Processes';
+            category.categoryID = this.stepsTasks.recID;
+            category.categoryName = this.stepsTasks.taskName;
+            category.createdBy = this.user.userID;
+            category.owner = this.user.userID;
+            category.FunctionApproval = 'DP0204';
+            this.actionOpenFormApprove2(category, true);
+          }
+        });
+    }
+  }
+  private destroyFrom$: Subject<void> = new Subject<void>();
+  titleAction: any;
+
+  actionOpenFormApprove2(item, isAdd = false) {
+    this.cache.functionList('ESS22').subscribe((f) => {
+      if (f) {
+        if (!f || !f.gridViewName || !f.formName) return;
+        this.cache.gridView(f.gridViewName).subscribe((gridview) => {
+          this.cache
+            .gridViewSetup(f.formName, f.gridViewName)
+            .pipe(takeUntil(this.destroyFrom$))
+            .subscribe((grvSetup) => {
+              let formES = new FormModel();
+              formES.funcID = f?.functionID;
+              formES.entityName = f?.entityName;
+              formES.formName = f?.formName;
+              formES.gridViewName = f?.gridViewName;
+              formES.currentData = item;
+              let option = new SidebarModel();
+              option.Width = '800px';
+              option.FormModel = formES;
+              let opt = new DialogModel();
+              opt.FormModel = formES;
+              option.zIndex = 1100;
+              let popupEditES = this.callfc.openForm(
+                PopupAddCategoryComponent,
+                '',
+                800,
+                800,
+                '',
+                {
+                  disableCategoryID: '1',
+                  data: item,
+                  isAdd: isAdd,
+                  headerText: this.titleAction,
+                  dataType: 'auto',
+                  templateRefID: this.stepsTasks.recID,
+                  templateRefType: 'DP_Processes',
+                },
+                '',
+                opt
+              );
+
+              popupEditES.closed.subscribe((res) => {
+                if (res?.event) {
+                  this.loadListApproverStep();
+                  // this.loadEx();
+                  // this.loadWord();
+                  // this.recIDCategory = res?.event?.recID;
+                }
+              });
+            });
+        });
+      }
+    });
+  }
+  loadListApproverStep() {
+    this.getListAproverStepByCategoryID(this.stepsTasks?.recID)
+      .pipe(takeUntil(this.destroyFrom$))
+      .subscribe((res) => {
+        if (res) {
+          this.listApproverView = res;
+          this.changeDetectorRef.markForCheck();
+        }
+      });
+  }
+  getListAproverStepByCategoryID(categoryID) {
+    return this.api.exec<any>(
+      'ES',
+      'ApprovalStepsBusiness',
+      'GetListStepByCategoryIDAsync',
+      categoryID
+    );
+  }
 }
