@@ -59,7 +59,7 @@ import { ActivatedRoute } from '@angular/router';
 import { ExportData } from '../../../models/ApproveProcess.model';
 import { CodxViewApproveComponent } from '../codx-step-common/codx-view-approve/codx-view-approve.component';
 import { PopupCustomFieldComponent } from '../../codx-fields-detail-temp/popup-custom-field/popup-custom-field.component';
-import { Subject, firstValueFrom } from 'rxjs';
+import { Subject, firstValueFrom, map, mergeMap, of } from 'rxjs';
 @Component({
   selector: 'codx-step-task',
   templateUrl: './codx-step-task.component.html',
@@ -179,6 +179,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   };
   taskApprover;
   approverDialog;
+  dataSource: string = '';
   //#endregion
   constructor(
     private cache: CacheService,
@@ -2917,12 +2918,12 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       });
   }
 
-  exportTemplet(e, data) {
+  exportTemplet(e, data, isDataSources = false) {
     let mehthol = 'GetDataSourceExportTaskAsync';
     let className = 'ContractsBusiness';
     let service = 'CM';
     let request = [this.currentStep.instanceID, data.objectLinked];
-    switch (this.taskAdd.taskType) {
+    switch (data.taskType) {
       case 'CO':
         className = 'ContractsBusiness';
         break;
@@ -2953,13 +2954,12 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         return;
         break;
     }
-
     this.api
       .execSv<any>(service, service, className, mehthol, request)
       .subscribe((str) => {
         let dataSource = '';
         if (str) {
-          if (this.taskAdd.taskType != 'F') {
+          if (data.taskType != 'F') {
             if (str?.length > 0) {
               dataSource = str[1];
               if (str[0]) {
@@ -2974,7 +2974,10 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
             dataSource = str;
           }
         }
-
+        if (isDataSources) {
+          this.dataSource = dataSource;
+          return;
+        }
         var customData = {
           refID: data.recID,
           refType: 'DP_Instances_Steps_Tasks',
@@ -2992,6 +2995,4 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         this.changeDetectorRef.detectChanges();
       });
   }
-
-  //export Form Nhập liệu
 }
