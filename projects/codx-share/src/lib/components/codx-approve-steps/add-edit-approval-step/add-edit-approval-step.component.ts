@@ -413,6 +413,14 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
 
           break;
         }
+        case 'approveMode': {
+          this.currentApproveMode =event?.data
+          this.data.approveMode = event?.data;
+          this.dialogApprovalStep?.patchValue({ approveMode: this.data.approveMode });
+          
+
+          break;
+        }
         default: {
           this.data[event?.field] = event?.data;
           this.dialogApprovalStep.patchValue({ [event?.field]: event?.data });

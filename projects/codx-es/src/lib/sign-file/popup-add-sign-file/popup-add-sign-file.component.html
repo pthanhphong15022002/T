@@ -264,9 +264,9 @@
                       <codx-label fiedName="CategoryID" [formModel]="formModelCustom">
                       </codx-label>
                       <codx-input field="categoryID" [crrValue]="data?.categoryID"
-                        [placeholder]="gvSetup['CategoryID']['description']" [refValue]="
+                        [placeholder]="gvSetup?.CategoryID?.description" [refValue]="
                         this.cbxCategory ??
-                        gvSetup['CategoryID']['referedValue']
+                        gvSetup?.CategoryID?.referedValue
                       " type="combobox" (valueChange)="valueChange($event)" [disabled]="disableCateID">
                       </codx-input>
                     </div>
