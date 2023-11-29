@@ -492,6 +492,26 @@
     >
     </codx-input>
   </div>
+
+  <div *ngIf="!isShowField">
+    <ng-container *ngIf="listFields &&listFields?.length > 0">
+      <ng-container *ngFor="let item of listFields">
+        <div class="form-group">
+          <codx-input-custom-field
+          [customField]="item"
+          [checkValid]="false"
+          [objectId]="item.recID"
+          [objectType]="'DP_Instances_Steps_Fields'"
+          [formModel]="dialog.formModel"
+          [objectIdParent]="lead?.recID"
+          (valueChangeCustom)="valueChangeCustom($event)"
+          (addFileCompleted)="addFileCompleted($event)"
+        >
+        </codx-input-custom-field>
+        </div>
+      </ng-container>
+    </ng-container>
+  </div>
 </ng-template>
 
 <ng-template #footer let-form>

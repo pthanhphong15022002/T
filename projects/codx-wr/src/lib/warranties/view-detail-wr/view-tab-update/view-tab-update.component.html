@@ -1,10 +1,14 @@
-<div class="h-100" *ngIf="columnsGrid?.length > 0" [ngClass]="isShow ? 'grid-full' : 'scroll-grid'">
+<div
+  class="h-100"
+  *ngIf="columnsGrid?.length > 0"
+  [ngClass]="isShow ? 'grid-full' : 'scroll-grid'"
+>
   <codx-gridview-v2
     #grid
     [sorts]="[sortField]"
     [dataSource]="lstUpdate"
     [templateMore]="tempMorefunction"
-    [rowHeight]="40"
+    rowHeight="40"
     [height]="'100%'"
     [hideMoreFunc]="false"
     [columnsGrid]="columnsGrid"

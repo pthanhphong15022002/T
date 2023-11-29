@@ -246,7 +246,7 @@ export class ViewTabUpdateComponent implements OnInit {
         colums = {
           field: field,
           headerText: grvSetup[key].headerText ?? key,
-          width: grvSetup[key].width,
+          width:grvSetup[key].width,
         };
       }
 

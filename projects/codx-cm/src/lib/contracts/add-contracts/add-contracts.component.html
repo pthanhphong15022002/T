@@ -179,6 +179,7 @@
       <codx-input
         [formModel]="dialog?.formModel"
         field="ContactID"
+        [Mode]="{ObjectID: contracts?.customerID }"
         (valueChange)="valueChangeCombobox($event)"
         [crrValue]="contracts?.contactID"
       >
@@ -669,6 +670,7 @@
               [formModel]="dialog.formModel"
               field="representative"
               type="text"
+              [mode]="{}"
               (valueChange)="valueChangeText($event)"
               [crrValue]="contracts?.representative"
               [disabled]="true"

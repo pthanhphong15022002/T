@@ -258,7 +258,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       }
     }
     if (changes?.isAddTask && this.isRoleAll && this.isAddTask) {
-      this.chooseTypeTask();
+      this.chooseTypeTask(['F']);
     }
 
     if (changes?.isMoveStage) {
@@ -580,7 +580,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
             if (task?.dependRule != '0' || task?.status != '1') {
               res.disabled = true;
             } else if (
-              !((this.isRoleAll || isGroup || isTask) && this.isOnlyView)
+              !((this.isRoleAll || isGroup || isTask) && (this.isOnlyView || this.isTaskFirst))
             ) {
               res.isblur = true;
             }
@@ -730,7 +730,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   clickMFStep(e: any, step: any) {
     switch (e.functionID) {
       case 'DP08': //them task
-        this.chooseTypeTask();
+        this.chooseTypeTask(['F']);
         break;
       case 'DP20': // tien do
         this.openPopupUpdateProgress(this.currentStep, 'P');
@@ -827,7 +827,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         this.copyGroupTask(group);
         break;
       case 'DP08': //them task
-        this.chooseTypeTask(false, group?.refID);
+        this.chooseTypeTask(['G','F'], group?.refID);
         break;
       case 'DP12':
         this.viewTask(group, 'G');
@@ -886,6 +886,9 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
             taskFind.status = '2';
             taskFind.modifiedBy = this.user?.userID;
             taskFind.modifiedOn = new Date();
+          }
+          if (this.isTaskFirst && !this.isStart && this.isRoleAll) {
+            this.changeProgress.emit(true);
           }
           this.notiService.notifyCode('SYS007');
         }
@@ -1013,7 +1016,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   //#endregion
 
   //#region chon loai task
-  async chooseTypeTask(showTask = true, groupID = null) {
+  async chooseTypeTask(typeDisableds = [], groupID = null) {
     this.isAddTask = false;
     setTimeout(async () => {
       let popupTypeTask = this.callfc.openForm(
@@ -1022,7 +1025,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         450,
         580,
         '',
-        { isShowGroup: showTask, isShowF: false }
+        {typeDisableds}
       );
       let dataOutput = await firstValueFrom(popupTypeTask.closed);
       if (dataOutput?.event?.value) {
@@ -2709,17 +2712,11 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
             this.notiService.notifyCode('ES028');
             return;
           } else {
-            // let exportData: ExportData = {
-            //   funcID: 'DPT04', //this.funcID, 'DPT04'
-            //   recID: task?.recID,
-            //   data: null,
-            // };
-            //this.release(task, res, exportData);
             this.stepService
               .getDataSource(task, this.currentStep.instanceID)
               .then((source) => {
                 let exportData: ExportData = {
-                  funcID: 'DPT04', //this.funcID, 'DPT04'
+                  funcID: 'DPT04',
                   recID: task?.recID,
                   data: source,
                 };
@@ -2756,22 +2753,6 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       this.taskApproval.approveStatus = res?.returnStatus || '0';
       this.moreDefaut = JSON.parse(JSON.stringify(this.moreDefaut));
       this.changeDetectorRef.markForCheck();
-      // this.api
-      //   .exec<any>(
-      //     'DP',
-      //     'InstancesStepsTasksBusiness',
-      //     'UpdateApproveStatusTaskAsync',
-      //     [this.taskApproval?.stepID,this.taskApproval?.recID, "3"]
-      //   )
-      //   .subscribe((res) => {
-      //     if (res) {
-      //       this.taskApproval.approvedBy = this.user?.userID;
-      //       this.taskApproval.approveStatus = "3";
-      //       this.taskApproval = null;
-      //       this.moreDefaut = JSON.parse(JSON.stringify(this.moreDefaut));
-      //       this.changeDetectorRef.markForCheck();
-      //     }
-      //   });
     }
   }
 

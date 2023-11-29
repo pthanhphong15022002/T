@@ -119,7 +119,7 @@ export class DealDetailComponent implements OnInit {
     private cache: CacheService,
     private notificationsService: NotificationsService,
     private dealComponent: DealsComponent,
-    private codxService: CodxService
+    codxService: CodxService
   ) {
     this.asideMode = codxService.asideMode;
     this.executeApiCalls();
