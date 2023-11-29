@@ -176,10 +176,16 @@
         fiedName="ContactID"
         default="Người đại diện"
       ></codx-label>
+      <!-- <codx-input
+        field="contactID"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
+      ></codx-input> -->
       <codx-input
+        #inputContact
         [formModel]="dialog?.formModel"
         field="ContactID"
-        [Mode]="{ObjectID: contracts?.customerID }"
+        [model]="{ObjectID: contracts?.customerID }"
         (valueChange)="valueChangeCombobox($event)"
         [crrValue]="contracts?.contactID"
       >
