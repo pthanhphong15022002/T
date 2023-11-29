@@ -2712,17 +2712,11 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
             this.notiService.notifyCode('ES028');
             return;
           } else {
-            // let exportData: ExportData = {
-            //   funcID: 'DPT04', //this.funcID, 'DPT04'
-            //   recID: task?.recID,
-            //   data: null,
-            // };
-            //this.release(task, res, exportData);
             this.stepService
               .getDataSource(task, this.currentStep.instanceID)
               .then((source) => {
                 let exportData: ExportData = {
-                  funcID: 'DPT04', //this.funcID, 'DPT04'
+                  funcID: 'DPT04',
                   recID: task?.recID,
                   data: source,
                 };
