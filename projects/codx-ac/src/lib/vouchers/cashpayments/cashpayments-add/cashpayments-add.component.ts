@@ -373,7 +373,7 @@ export class CashPaymentAddComponent extends UIComponent implements OnInit {
           let objectType = event?.component?.itemsSelected[0]?.ObjectType || '';
           this.formCashPayment.setValue('objectType',objectType,{});
           this.formCashPayment.setValue('bankAcctID','',{});
-          this.eleCbxBankAcct.ComponentCurrent.dataService.data = [];
+          //this.eleCbxBankAcct.ComponentCurrent.dataService.data = [];
           this.objectIDChange();
           break;
 
@@ -1507,8 +1507,10 @@ export class CashPaymentAddComponent extends UIComponent implements OnInit {
       case 'add':
       case 'update':
       case 'delete':
-        this.formCashPayment.setValue('validated',false,{});
-        this.dialog.dataService.update(this.formCashPayment.data).subscribe();
+        if(this.formCashPayment.data.validated){
+          this.formCashPayment.setValue('validated',false,{});
+          this.dialog.dataService.update(this.formCashPayment.data).subscribe();
+        }
         break;
       case 'closeEdit': //? khi thoát dòng
       if (this.eleGridCashPayment && this.eleGridCashPayment.rowDataSelected) {

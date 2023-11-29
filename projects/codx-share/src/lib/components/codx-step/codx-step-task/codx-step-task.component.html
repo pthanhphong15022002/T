@@ -50,15 +50,6 @@
             class="icon-i-info-circle icon-18 text-hover-primary cursor-pointer text-gray-500"
           ></span>
         </div>
-        <!-- <codx-mfunc
-          [formModel]="grvMoreFunction"
-          [isBookMark]="true"
-          [dataItem]="moreDefaut"
-          (changeDataMF)="changeDataMFStep($event, currentStep)"
-          (clickMF)="clickMFStep($event, currentStep)"
-          *ngIf="!isMoveStage"
-        >
-        </codx-mfunc> -->
       </div>
       <div class="d-flex align-items-center ms-3">
         <div
@@ -374,16 +365,6 @@
         {{ groupTask?.taskGroupName }}
       </div>
     </div>
-    <!-- <codx-mfunc
-      *ngIf="!isMoveStage && !isViewStep"
-      [formModel]="grvMoreFunction"
-      [isBookMark]="true"
-      [dataItem]="moreDefaut"
-      [type]="'hover'"
-      (clickMF)="clickMFTaskGroup($event, groupTask)"
-      (changeDataMF)="changeDataMFGroupTask($event, groupTask)"
-    >
-    </codx-mfunc> -->
   </div>
 </ng-template>
 
@@ -397,7 +378,7 @@
       [isStep]="false"
       [size]="30"
     ></codx-icon-step>
-    <div class="steplist-hearder">
+    <div class="steplist-hearder ms-2">
       <div class="text-dark d-flex justify-content-start">
         <div class="task-name line-clamp line-clamp-1">
           {{ data?.task?.taskName }}
@@ -410,19 +391,6 @@
         </div>
       </div>
     </div>
-    <!-- <codx-mfunc
-      *ngIf="
-        (!isMoveStage && !isViewStep && !isClose) ||
-        (isClose && !data?.task?.isTaskDefault)
-      "
-      [formModel]="grvMoreFunction"
-      [isBookMark]="true"
-      [dataItem]="moreDefaut"
-      [type]="'hover'"
-      (clickMF)="clickMFTask($event, data?.group, data?.task)"
-      (changeDataMF)="changeDataMFTask($event, data?.task, data?.group)"
-    >
-    </codx-mfunc> -->
   </div>
 </ng-template>
 
@@ -453,7 +421,7 @@
     <button
       type="button"
       class="btn btn-outline-primary ms-4"
-      (click)="chooseTypeTask()"
+      (click)="chooseTypeTask(['F'])"
       style="min-width: 170px"
     >
       <i class="icon-add_task icon-18 text-primary"></i>

@@ -328,6 +328,10 @@ export class CodxTasksService {
     className = null, // class chua ham
     methol = 'GetTempReferenceByRefIDAsync' //ten ham get
   ) {
+    if (!refType || !refID) {
+      getRef([]);
+      return;
+    }
     let dataReferences = [];
     switch (refType) {
       case 'OD_Dispatches':

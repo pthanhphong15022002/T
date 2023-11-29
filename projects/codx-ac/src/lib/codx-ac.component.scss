@@ -515,16 +515,23 @@
     height: calc(100vh - 440px) !important;
   }
 
-  .ac-allowcation-animate {
-    animation: opacity 500ms both;
+  .nav-link.disabled {
+    color: var(--gray-500) !important;
   }
 
-  @keyframes opacity {
-    0% {
-      opacity: 0;
-    }
-
-    100% {
-      opacity: 1;
-    }
+  .btn-icon-badge{
+    border-radius: 50px;
+    position: absolute;
+    left: 3rem;
+    top: -5px !important;
+    width: 20px !important;
+    font-size: 10px !important;
+    height: 20px !important;
+    min-width: unset !important;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border: none !important;
   }
+

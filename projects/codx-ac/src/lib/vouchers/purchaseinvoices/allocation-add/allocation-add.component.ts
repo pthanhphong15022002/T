@@ -23,6 +23,7 @@ export class AllocationAddComponent extends UIComponent {
   fmPurchaseInvoicesAllocation: any = fmPurchaseInvoicesAllocation;
   fmPurchaseInvoicesLinesAllocation:any = fmPurchaseInvoicesLinesAllocation;
   allocation:any = '1';
+  lineID:any;
   private destroy$ = new Subject<void>();
   constructor(
     inject: Injector,
@@ -34,7 +35,7 @@ export class AllocationAddComponent extends UIComponent {
     super(inject);
     this.dialog = dialog;
     this.oData = {...dialogData.data?.data};
-
+    this.lineID = dialogData?.data?.lineID || '';
   }
   //#endregion Constructor
 
@@ -92,11 +93,10 @@ export class AllocationAddComponent extends UIComponent {
   }
 
   onSubmit() {
-    this.api.exec('AC', 'PurchaseInvoicesBusiness', 'GetPurchaseInvoicesAsync', [this.fromDate, this.toDate, this.objectID, this.recID])
+    this.api.exec('AC', 'PurchaseInvoicesBusiness', 'GetPurchaseInvoicesAsync', [this.fromDate, this.toDate, this.objectID, this.recID,this.oData.recID])
     .pipe(takeUntil(this.destroy$))
     .subscribe((res: any) => {
       if (res && res.length > 0) {
-        if(JSON.stringify(this.oPurchase) == JSON.stringify(res)) return;
         this.oPurchase = [...res];
         this.gridPur.refresh();
       }else{
@@ -106,10 +106,12 @@ export class AllocationAddComponent extends UIComponent {
   }
 
   onAllocation() {
-    this.api.exec('AC', 'PurchaseInvoicesBusiness', 'AddAllocationAsync',[this.gridPur.arrSelectedRows,this.oData,this.allocation])
+    this.api.exec('AC', 'PurchaseInvoicesBusiness', 'AddAllocationAsync',[this.gridPur.arrSelectedRows,this.oData,this.lineID,this.allocation])
     .pipe(takeUntil(this.destroy$))
     .subscribe((res: any) => {
-
+      if (res?.update) {
+        this.dialog.close(res?.data);
+      }
     })
   }
   //#endregion Function

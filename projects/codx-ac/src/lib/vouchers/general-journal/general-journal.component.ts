@@ -38,6 +38,8 @@ export class GeneralJournalComponent extends UIComponent {
     icon: 'icon-i-file-earmark-plus',
   }];
   optionSidebar: SidebarModel = new SidebarModel();
+  viewActive:number = ViewType.listdetail;
+  ViewType = ViewType;
   private destroy$ = new Subject<void>(); //? list observable hủy các subscribe api
   constructor(
     private inject: Injector,
@@ -197,14 +199,22 @@ export class GeneralJournalComponent extends UIComponent {
    * @returns
    */
   onSelectedItem(event) {
-    if (typeof event.data !== 'undefined') {
-      if (event?.data.data || event?.data.error) {
-        return;
-      } else {
-        this.itemSelected = event?.data;
-        this.detectorRef.detectChanges();
-      }
-    }
+    this.itemSelected = event;
+    this.detectorRef.detectChanges();
+    // if (typeof event.data !== 'undefined') {
+    //   if (event?.data.data || event?.data.error) {
+    //     return;
+    //   } else {
+    //     this.itemSelected = event?.data;
+    //     this.detectorRef.detectChanges();
+    //   }
+    // }
+  }
+
+  viewChanged(view) {
+    if(view && view?.view?.type == this.viewActive) return;
+    this.viewActive = view?.view?.type;
+    this.detectorRef.detectChanges();
   }
   //#endregion Event
 
@@ -337,7 +347,9 @@ export class GeneralJournalComponent extends UIComponent {
             this.view.formModel.funcID,
             '',
             '',
-            ''
+            '',
+            null,
+            JSON.stringify({ParentID:data.journalNo})
           )
           .pipe(takeUntil(this.destroy$))
           .subscribe((result: any) => {
@@ -387,12 +399,11 @@ export class GeneralJournalComponent extends UIComponent {
    */
   validateVourcher(text: any, data: any) {
     this.api
-      .exec('AC', 'GeneralJournalsBusiness', 'ValidateVourcherAsync', [data.recID, text])
+      .exec('AC', 'GeneralJournalsBusiness', 'ValidateVourcherAsync', [data, text])
       .subscribe((res: any) => {
-        if (res?.update) {
-          this.itemSelected = res?.data;
+        if (res[1]) {
+          this.itemSelected = res[0];
           this.view.dataService.update(this.itemSelected).subscribe();
-          //this.getDatadetail(this.itemSelected);
           this.notification.notifyCode('AC0029', 0, text);
           this.detectorRef.detectChanges();
         }
@@ -405,10 +416,10 @@ export class GeneralJournalComponent extends UIComponent {
    */
   postVoucher(text: any, data: any) {
     this.api
-      .exec('AC', 'GeneralJournalsBusiness', 'PostVourcherAsync', [data.recID, text])
+      .exec('AC', 'GeneralJournalsBusiness', 'PostVourcherAsync', [data, text])
       .subscribe((res: any) => {
-        if (res?.update) {
-          this.itemSelected = res?.data;
+        if (res[1]) {
+          this.itemSelected = res[0];
           this.view.dataService.update(this.itemSelected).subscribe();
           this.notification.notifyCode('AC0029', 0, text);
           this.detectorRef.detectChanges();
@@ -422,12 +433,11 @@ export class GeneralJournalComponent extends UIComponent {
    */
   unPostVoucher(text: any, data: any) {
     this.api
-      .exec('AC', 'GeneralJournalsBusiness', 'UnPostVourcherAsync', [data.recID, text])
+      .exec('AC', 'GeneralJournalsBusiness', 'UnPostVourcherAsync', [data, text])
       .subscribe((res: any) => {
-        if (res?.update) {
-          this.itemSelected = res?.data;
+        if (res[1]) {
+          this.itemSelected = res[0];
           this.view.dataService.update(this.itemSelected).subscribe();
-          //this.getDatadetail(this.itemSelected);
           this.notification.notifyCode('AC0029', 0, text);
           this.detectorRef.detectChanges();
         }

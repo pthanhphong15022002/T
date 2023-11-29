@@ -163,7 +163,7 @@ export const routes: Routes = [
         data: { noReuse: true },
       },
       {
-        path: 'cashtranfers/:funcID',
+        path: 'cashtranfers/:funcID/:journalNo',
         component: CashtransfersComponent,
         data: { noReuse: true },
       },

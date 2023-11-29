@@ -88,7 +88,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
     private notiService: NotificationsService,
     private codxShareService: CodxShareService,
     private activedRouter: ActivatedRoute,
-    private changeDetectorRef: ChangeDetectorRef,
+    private changeDetectorRef: ChangeDetectorRef
   ) {
     this.user = this.authstore.get();
     this.funcID = this.activedRouter.snapshot.params['funcID'];
@@ -117,7 +117,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
     });
   }
 
-  ngAfterViewInit(): void { }
+  ngAfterViewInit(): void {}
 
   //#region get data
   getActivities(): void {
@@ -172,11 +172,12 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
   async changeDataMFTask(event, task) {
     if (event != null) {
       event.forEach((res) => {
+        res.isbookmark = false;
         switch (res.functionID) {
           case 'SYS02': //xóa
           case 'SYS03': //sửa
           case 'SYS04': //copy
-            res.disabled = task?.approveStatus == "3";
+            res.disabled = task?.approveStatus == '3';
             break;
           case 'DP25':
           case 'DP26':
@@ -187,7 +188,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
             res.disabled = true;
             break;
           case 'DP13': //giao việc
-            if(task?.approveStatus == "3"){
+            if (task?.approveStatus == '3') {
               res.disabled = true;
             }
             if (!task?.createTask) {
@@ -238,20 +239,22 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
             res.disabled = true;
             break;
           case 'DP31': //Bắt đầu
-            if (task?.status != '1' || task?.approveStatus == "3") {
+            if (task?.status != '1' || task?.approveStatus == '3') {
               res.disabled = true;
             }
             break;
           case 'DP20': // tiến độ
-            if (task?.status != '1' || task?.approveStatus == "3") {
+            if (task?.status != '1' || task?.approveStatus == '3') {
               res.disabled = true;
             }
             break;
-          case 'DP32': // gởi duyệt 
-            res.disabled = (!task?.approveRule || (task?.approveRule && ["3", "5"].includes(task?.approveStatus)));
+          case 'DP32': // gởi duyệt
+            res.disabled =
+              !task?.approveRule ||
+              (task?.approveRule && ['3', '5'].includes(task?.approveStatus));
             break;
           case 'DP33': // hủy duyệt
-            res.disabled = !(task?.approveRule && task?.approveStatus == "3");
+            res.disabled = !(task?.approveRule && task?.approveStatus == '3');
             break;
         }
       });
@@ -305,19 +308,33 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
 
   //#region CRUD
   async addTask() {
-    let task = new DP_Instances_Steps_Tasks();
-    task['progress'] = 0;
-    task['refID'] = Util.uid();
-    task['isTaskDefault'] = false;
-    task['taskType'] = this.taskType?.value;
-
-    let taskOutput = await this.openPopupTask('add', task);
-    if (taskOutput?.event) {
-      let data = taskOutput?.event?.task;
-      let isAddTask = taskOutput?.event?.isAddTask;
-      let isCreateMeeting = taskOutput?.event?.isCreateMeeting;
-      this.copyData(data, this.activitie);
-      let rolesTask = data?.roles;
+    if (this.taskType?.value == 'Q') {
+      this.stepService.addQuotation('add', 'Thêm', null, null, null);
+      this.stepService.popupClosedSubject.subscribe((res) => {
+        let task = res;
+        if (task) {
+          let dataSave = {task: task}
+          this.save(dataSave);
+        }
+      });
+    } else if (this.taskType?.value == 'CO') {
+      let data = { action: 'add', type: 'task' };
+      let taskContract = await this.stepService.openPopupTaskContract(data,'add',null,null,null);
+      let dataSave = {task: taskContract}
+      this.save(dataSave);
+    } else {
+      let data ={action:'add',taskType: this.taskType, isSave: false, type:'activitie'}
+      let task = await this.stepService.openPopupCodxTask(data,'right');
+      this.save(task);
+    }
+  }
+  save(data) {
+    if (data?.task) {
+      let isAddTask = data?.isAddTask;
+      let isCreateMeeting = data?.isCreateMeeting;
+      let task = data?.task;
+      this.copyData(task, this.activitie);
+      let rolesTask = task?.roles;
       let roles: DP_Activities_Roles[] = [];
       if (rolesTask?.length > 0) {
         rolesTask.forEach((element) => {
@@ -452,7 +469,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
       450,
       580,
       '',
-      { isShowGroup: false }
+      { typeDisableds: ['G', 'F'] }
     );
     let dataOutput = await firstValueFrom(popupTypeTask.closed);
     if (dataOutput?.event?.value) {
@@ -729,25 +746,27 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
 
   approvalTrans(task: DP_Activities) {
     if (task?.approveRule && task?.recID) {
-      this.api.execSv<any>(
-        'ES',
-        'ES',
-        'CategoriesBusiness',
-        'GetByCategoryIDAsync',
-        task?.recID
-      ).subscribe(res => {
-        if (!res) {
-          this.notiService.notifyCode('ES028');
-          return;
-        } else {
-          let exportData: ExportData = {
-            funcID: this.funcID,
-            recID: task?.recID,
-            data: null,
-          };
-          this.release(task, res, exportData);
-        }
-      })
+      this.api
+        .execSv<any>(
+          'ES',
+          'ES',
+          'CategoriesBusiness',
+          'GetByCategoryIDAsync',
+          task?.recID
+        )
+        .subscribe((res) => {
+          if (!res) {
+            this.notiService.notifyCode('ES028');
+            return;
+          } else {
+            let exportData: ExportData = {
+              funcID: this.funcID,
+              recID: task?.recID,
+              data: null,
+            };
+            this.release(task, res, exportData);
+          }
+        });
     } else {
       this.notiService.notifyCode('DP040');
     }
@@ -791,20 +810,18 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
           .subscribe((res: any) => {
             if (res) {
               this.codxShareService
-                .codxCancel(
-                  'DP',
-                  task?.recID,
-                  'DP_Activities',
-                  null,
-                  null
-                ).subscribe((res2: any) => {
-                  if (res2?.msgCodeError) this.notiService.notify(res?.msgCodeError);
+                .codxCancel('DP', task?.recID, 'DP_Activities', null, null)
+                .subscribe((res2: any) => {
+                  if (res2?.msgCodeError)
+                    this.notiService.notify(res?.msgCodeError);
                   else {
                     task.approveStatus = res2?.returnStatus || '0';
-                    this.moreDefaut = JSON.parse(JSON.stringify(this.moreDefaut));
+                    this.moreDefaut = JSON.parse(
+                      JSON.stringify(this.moreDefaut)
+                    );
                     this.changeDetectorRef.markForCheck();
                   }
-                })
+                });
             } else {
               this.notiService.notifyCode('SYS021');
             }

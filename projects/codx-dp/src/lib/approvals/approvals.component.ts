@@ -98,7 +98,9 @@ export class ApprovalsComponent
       }
     });
   }
-  ngOnChanges(changes: SimpleChanges): void {}
+  ngOnChanges(changes: SimpleChanges): void {
+    debugger;
+  }
 
   onInit(): void {
     // this.layoutDP.hidenNameProcess();

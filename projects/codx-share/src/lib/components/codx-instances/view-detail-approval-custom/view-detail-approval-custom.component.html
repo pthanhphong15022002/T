@@ -6,31 +6,42 @@
     [body]="body"
     [hideMF]="hideMF"
     [formModel]="formModel"
-    class="h-100"
+    class="h-100 dt-es-view"
   >
     <ng-template #header>
-      <div class="container_detail mt-15">
+      <div
+        class="container_detail {{
+          codxService.asideMode == '2' ? '' : 'mt-15'
+        }}"
+      >
         <div class="d-flex justify-content-between mb-2">
           <div class="d-flex flex-column w-100">
             <div class="d-flex align-items-start">
-              <div class="me-4">
+              <div class="">
                 <ng-container *ngIf="detailModule?.taskType">
                   <codx-icon-step
                     [typeTask]="detailModule.taskType"
                     [listTypeTask]="listTaskType"
                     [isStep]="false"
-                    [size]="30"
+                    [size]="35"
+                  ></codx-icon-step>
+                </ng-container>
+                <ng-container *ngIf="detailModule?.icon">
+                  <codx-icon-step
+                    [icon]="detailModule?.icon"
+                    [iconColor]="detailModule?.iconColor"
+                    [isStep]="true"
+                    [size]="35"
                   ></codx-icon-step>
                 </ng-container>
               </div>
-              <div class="d-flex flex-column">
-                <div class="fw-bold text-dark fs-5-sm mb-1">
-                  <span
-                    [ngbTooltip]="detailModule?.title"
-                    [innerHTML]="detailModule?.title"
-                  ></span>
-                </div>
-                <div class="d-flex align-items-center mb-1"></div>
+              <div
+                class="d-flex align-item-center h-100 fw-bold text-dark fs-5-sm"
+              >
+                <span
+                  [ngbTooltip]="detailModule?.title"
+                  [innerHTML]="detailModule?.title"
+                ></span>
               </div>
             </div>
           </div>
@@ -82,10 +93,13 @@
         <div class="d-flex justify-content-between">
           <div class="d-flex flex-column">
             <div class="d-flex flex-wrap flex-column">
-              <div class="me-4 d-flex align-items-center mb-1">
+              <div
+                class="me-4 d-flex align-items-center mb-1"
+                *ngIf="detailModule?.parentName"
+              >
                 <span class="fw-bold text-dark text-nowrap">
                   <span
-                    class="label-colon"
+                    class="me-1"
                     [innerHTML]="getName(detailModule?.applyFor)"
                   >
                   </span>
@@ -134,95 +148,54 @@
             </div>
           </div>
 
-          <div class="d-flex me-2 flex-column">
-            <div class="me-2">
-              <ng-container *ngIf="detailModule?.approveStatus">
-                <codx-vll
-                  [name]="vllApprove"
-                  [field]="'ApproveStatus'"
-                  [value]="detailModule?.approveStatus"
-                  [showText]="true"
-                  [showBgColor]="true"
-                  class="badge badge-primary badge-sm"
-                >
-                </codx-vll>
-              </ng-container>
-            </div>
-            <div>
-              <div class="d-flex flex-column">
-                <div>
-                  <codx-label
-                    class="label-colon"
-                    fiedName="owner"
-                    formName="DPActivities"
-                    gridViewName="grvDPActivities"
-                    default="Người phụ trách"
-                    [setRequire]="false"
-                  ></codx-label>
-                </div>
-                <div class="me-2">
-                  <codx-imgs
-                    [width]="30"
-                    [objectId]="detailModule?.owner"
-                    [objectName]="detailModule?.ownerName"
-                    ojectType="AD_Users"
-                    [numberImages]="1"
+          <div class="d-flex me-2 justify-content-end">
+            <div class="d-flex flex-column" style="float: right">
+              <div class="me-2">
+                <ng-container *ngIf="detailModule?.approveStatus">
+                  <codx-vll
+                    [name]="vllApprove"
+                    [field]="'ApproveStatus'"
+                    [value]="detailModule?.approveStatus"
+                    [showText]="true"
+                    [showBgColor]="true"
+                    class="badge badge-primary badge-sm"
                   >
-                  </codx-imgs>
+                  </codx-vll>
+                </ng-container>
+              </div>
+              <div>
+                <div class="d-flex flex-column">
+                  <div>
+                    <codx-label
+                      class="label-colon"
+                      fiedName="owner"
+                      formName="DPActivities"
+                      gridViewName="grvDPActivities"
+                      default="Người phụ trách"
+                      [setRequire]="false"
+                    ></codx-label>
+                  </div>
+                  <div class="me-2">
+                    <codx-imgs
+                      [width]="30"
+                      [objectId]="detailModule?.owner"
+                      [objectName]="detailModule?.ownerName"
+                      ojectType="AD_Users"
+                      [numberImages]="1"
+                    >
+                    </codx-imgs>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <!-- <div class="d-flex flex-column mt-3">
-          <div class="d-flex align-items-top justify-content-between mb-1">
-            <div class="d-flex align-items-center mb-1">
-              <span
-                class="fw-bold text-dark text-nowrap"
-                *ngIf="detailModule?.parentName"
-              >
-                <span
-                  class="label-colon"
-                  [innerHTML]="getName(detailModule?.applyFor)"
-                >
-                </span>
-                <span
-                  class="text-gray-700"
-                  [innerHTML]="detailModule?.parentName"
-                ></span
-              ></span>
-            </div>
-            <div class="justify-content-between">
-              <div class="d-flex flex-column">
-                <div>
-                  <codx-label
-                    class="label-colon"
-                    fiedName="owner"
-                    formName="DPActivities"
-                    gridViewName="grvDPActivities"
-                    default="Người phụ trách"
-                    [setRequire]="false"
-                  ></codx-label>
-                </div>
-                <div>
-                  <codx-imgs
-                    [width]="30"
-                    [objectId]="detailModule?.owner"
-                    [objectName]="detailModule?.ownerName"
-                    ojectType="AD_Users"
-                    [numberImages]="1"
-                  >
-                  </codx-imgs>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div> -->
       </div>
 
       <div class="mt-2">
         <ng-container *ngIf="files?.length > 0 && showFile">
           <codx-label
+            class="label-colon fs-5-sm"
             name="filesApproval"
             formName="ESSignFiles"
             gridViewName="grvSignFiles"

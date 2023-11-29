@@ -67,6 +67,7 @@ import { CodxAdService } from 'projects/codx-ad/src/public-api';
 import { TN_OrderModule } from 'projects/codx-ad/src/lib/models/tmpModule.model';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { CodxViewApproveComponent } from 'projects/codx-share/src/lib/components/codx-step/codx-step-common/codx-view-approve/codx-view-approve.component';
 
 @Component({
   selector: 'lib-popup-add-dynamic-process',
@@ -2019,7 +2020,7 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
             }
             category = res.data;
             category.recID = res?.recID ?? Util.uid();
-            category.eSign = false;
+            category.eSign = true; // Khanh bảo vậy mặc định luôn là kí sô
             category.Category = 'DP_Processes';
             category.categoryID = this.process.processNo;
             category.categoryName = this.process.processName;
@@ -3138,14 +3139,14 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
   }
   //#endregion
   //#region task
-  openPopupChooseTask(isShowGroup = true) {
+  openPopupChooseTask(typeDisableds = []) {
     this.popupJob = this.callfc.openForm(
       CodxTypeTaskComponent,
       '',
       450,
       580,
       null,
-      { isShowGroup }
+      {typeDisableds}
     );
     this.popupJob.closed.subscribe(async (value) => {
       if (value?.event && value?.event['value']) {
@@ -3413,7 +3414,7 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
         break;
       case 'DP08':
         this.groupTaskID = data?.recID;
-        this.openPopupChooseTask(false);
+        this.openPopupChooseTask(['G']);
         break;
       case 'DP12':
         this.viewTask(data, 'G');
@@ -3471,6 +3472,8 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
           case 'DP30':
           case 'DP29':
           case 'DP28':
+          case 'DP32':
+          case 'DP33':
             res.disabled = true;
             break;
         }
@@ -4717,6 +4720,7 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
                   dataType: 'auto',
                   templateRefID: this.process.recID,
                   templateRefType: 'DP_Processes',
+                  disableESign: true,
                 },
                 option
               );
@@ -4923,5 +4927,16 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
       strFieldID?.includes(field?.recID)
     );
     return fieldTile?.map((f) => f.title)?.join(', ') || '';
+  }
+
+  openFormApprover(task) {
+    let approverDialog = this.callfc.openForm(
+      CodxViewApproveComponent,
+      '',
+      500,
+      550,
+      '',
+      { categoryID: task?.recID, type: '2', stepsTasks: task }
+    );
   }
 }

@@ -1,5 +1,8 @@
 <ng-container *ngIf="loaded">
-  <div class="card-body bg-body p-0 scroll-y h-100 task-tree p-3 rounded-3">
+  <div
+    class="card-body bg-body p-0 scroll-y h-100 task-tree p-3 rounded-3"
+    (scroll)="onScroll($event)"
+  >
     <codx-treeview
       id="tree"
       #treeView

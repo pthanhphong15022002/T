@@ -1423,22 +1423,22 @@ export class LeadsComponent
   }
 
   openFormReason(data, fun, isMoveSuccess) {
-    var formMD = new FormModel();
+    let formMD = new FormModel();
     formMD.funcID = fun.functionID;
     formMD.entityName = fun.entityName;
     formMD.formName = fun.formName;
     formMD.gridViewName = fun.gridViewName;
-    var dataCM = {
+    let dataCM = {
       refID: data?.refID,
-      processID: data?.processID,
       stepID: data?.stepID,
       nextStep: data?.nextStep,
     };
-    var obj = {
+    let obj = {
       headerTitle: fun.defaultName,
       formModel: formMD,
       isReason: isMoveSuccess,
       applyFor: this.applyFor,
+      processID: data?.processID,
       dataCM: dataCM,
       stepName: data.currentStepName,
       isMoveProcess: false,
