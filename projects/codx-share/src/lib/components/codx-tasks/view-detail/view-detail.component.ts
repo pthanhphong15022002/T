@@ -175,7 +175,7 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
           this.listTaskResousceSearch = this.listTaskResousce;
           this.countResource = this.listTaskResousce.length;
           this.loadTreeView();
-          //để footer load
+          //để footer load khi click tab
           //this.loadDataReferences();
 
           this.changeDetectorRef.detectChanges();
