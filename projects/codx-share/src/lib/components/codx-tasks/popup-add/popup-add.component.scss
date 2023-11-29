@@ -102,9 +102,15 @@
 
 .listuser-box {
     max-height: 350px;
-      overflow: auto;
-      margin-top: 8px;
-      border-top: 1px var(--gray-100) solid;
-      padding-top: 5px;
-      clear: both;
-  }
+    overflow: auto;
+    margin-top: 8px;
+    border-top: 1px var(--gray-100) solid;
+    padding-top: 5px;
+    clear: both;
+}
+.checkbox-list{
+    padding-left: 15px;
+    ngb-popover-window{
+        margin-left: -50px!important;
+    }
+} 
