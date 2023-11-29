@@ -25,6 +25,7 @@
                 (nodeDragging)="nodeDragging($event)"
                 (nodeClicked)="nodeclicked($event)"
                 (nodeEdited)="nodeEdited($event)"
+                (nodeDragStart)="nodeDragStart($event)"
                 [expandOn]="'Click'"
               >
                 <ng-template #nodeTemplate="" let-data="">
@@ -608,10 +609,10 @@
       <button type="button" class="btn btn-danger me-3" (click)="onUndo()" *ngIf="isAddFunc || isAddGroup">
         <codx-label name="lblCancel" default="Hủy"></codx-label>
       </button>
-      <button type="button" class="btn btn-primary" *ngIf="!isAddFunc && !isAddGroup" (click)="onSaveForm()">
+      <button type="button" class="btn btn-primary me-3" *ngIf="!isAddFunc && !isAddGroup && !isEditing" (click)="onSaveForm()">
         <codx-label name="lblSave" default="Lưu Cá nhân"></codx-label>
       </button>
-      <button type="button" class="btn btn-success" *ngIf="isEditFunc || isEditGroup"(click)="onEdit()">
+      <button type="button" class="btn btn-success" *ngIf="isEditing"(click)="onEdit()">
         <codx-label name="lblEdit" default="Cập nhật" me-3></codx-label>
       </button>
       <button type="button" class="btn btn-primary"*ngIf="isAddFunc || isAddGroup" (click)="onAddForm()">
@@ -626,10 +627,10 @@
       <button type="button" class="btn btn-primary"*ngIf="isAddFunc || isAddGroup" (click)="onAddForm()">
         <codx-label name="lblSave" default="Thêm mới"></codx-label>
       </button>
-      <button type="button" class="btn btn-success me-3" *ngIf="isEditFunc || isEditGroup"(click)="onEdit()">
+      <button type="button" class="btn btn-success me-3" *ngIf="isEditing"(click)="onEdit()">
         <codx-label name="lblEdit" default="Cập nhật"></codx-label>
       </button>
-      <button type="button" class="btn btn-primary" *ngIf="!isAddFunc && !isAddGroup"(click)="onSaveAdmin()">
+      <button type="button" class="btn btn-primary" *ngIf="!isAddFunc && !isAddGroup && !isEditing"(click)="onSaveAdmin()">
         <codx-label name="lblSave" default="Lưu"></codx-label>
       </button>
 
