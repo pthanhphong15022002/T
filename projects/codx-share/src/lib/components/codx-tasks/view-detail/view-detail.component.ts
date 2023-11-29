@@ -14,11 +14,12 @@ import {
 } from '@angular/core';
 import { ApiHttpService, DialogData, DialogRef, FormModel } from 'codx-core';
 import { TM_Parameter, TM_TaskGroups } from '../model/task.model';
-import { CRUDService} from 'codx-core/public-api';
+import { CRUDService } from 'codx-core/public-api';
 import { DomSanitizer } from '@angular/platform-browser';
 import { tmpReferences } from '../../../models/assign-task.model';
 import { CodxTasksService } from '../codx-tasks.service';
-import { CodxService} from 'codx-core';
+import { CodxService } from 'codx-core';
+import { ViewHistoryUpdateProgressComponent } from '../view-history-update-progress/view-history-update-progress.component';
 @Component({
   selector: 'share-view-detail',
   templateUrl: './view-detail.component.html',
@@ -27,6 +28,9 @@ import { CodxService} from 'codx-core';
 export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
   @ViewChild('templetHistoryProgress')
   templetHistoryProgress!: TemplateRef<any>;
+  @ViewChild('tabHistoryProgess')
+  tabHistoryProgess!: ViewHistoryUpdateProgressComponent;
+
   dialog: any;
   @Input() formModel?: FormModel;
   @Input() taskExtends?: any;
@@ -105,16 +109,14 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
     private taskService: CodxTasksService,
     public sanitizer: DomSanitizer,
     private changeDetectorRef: ChangeDetectorRef,
-  
+
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {}
   //#endregion
   //#region Init
   ngOnInit(): void {
-
-    if(this.codxService.asideMode == '2') this.showMoreFunc = false;
-
+    if (this.codxService.asideMode == '2') this.showMoreFunc = false;
   }
 
   ngAfterViewInit(): void {
@@ -171,8 +173,7 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
           this.countResource = this.listTaskResousce.length;
           this.loadTreeView();
           this.loadDataReferences();
-          if (!this.loadedHisPro)
-            this.getDataHistoryProgress(this.itemSelected.recID);
+
           this.changeDetectorRef.detectChanges();
         }
       });
@@ -219,93 +220,6 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
     if (this.taskExtends)
       return this.changeMF.emit({ e: e, data: this.taskExtends });
     this.changeMF.emit({ e: e, data: data });
-    // if (e) {
-    //   // sua ngay 08/06/2023 - clearn code
-    //   e.forEach((x) => {
-    //     switch (x.functionID) {
-    //       //tắt duyệt confirm
-    //       case 'TMT02016':
-    //       case 'TMT02017':
-    //         if (data.confirmStatus != '1') x.disabled = true;
-    //         break;
-    //       //an gia hạn cong viec
-    //       case 'TMT02019':
-    //       case 'TMT02027':
-    //         if (
-    //           (data.verifyControl == '0' &&
-    //             (data.category == '1' ||
-    //               (data.owner == data.createdBy && data.category == '2'))) ||
-    //           data.status == '80' ||
-    //           data.status == '90' ||
-    //           data.status == '05' ||
-    //           data.extendControl == '0'
-    //         )
-    //           x.disabled = true;
-    //         break;
-    //       //tắt duyệt xác nhận:
-    //       case 'TMT04032':
-    //       case 'TMT04031':
-    //         if (data.verifyStatus != '1') x.disabled = true;
-    //         break;
-    //       //tắt duyệt đánh giá
-    //       case 'TMT04021':
-    //       case 'TMT04022':
-    //       case 'TMT04023':
-    //         if (data.approveStatus != '3') x.disabled = true;
-    //         break;
-    //       case 'SYS005':
-    //         x.disabled = true;
-    //         break;
-    //       //an giao viec
-    //       case 'TMT02015':
-    //       case 'TMT02025':
-    //       //an cap nhat tien do khi hoan tat
-    //       case 'TMT02018':
-    //       case 'TMT02026':
-    //       case 'TMT02035':
-    //         if (
-    //           data.status == '90' ||
-    //           data.status == '80' ||
-    //           data.status == '05' ||
-    //           data.status == '00'
-    //         )
-    //           x.disabled = true;
-    //         break;
-    //       //an voi ca TMT026
-    //       case 'SYS02':
-    //       case 'SYS03':
-    //         if (
-    //           this.taskExtends ||
-    //           this.formModel?.funcID == 'TMT0402' ||
-    //           this.formModel?.funcID == 'TMT0401' ||
-    //           this.formModel?.funcID == 'TMT0206' ||
-    //           this.formModel?.funcID == 'MWP0063' ||
-    //           ((this.formModel?.funcID == 'TMT03011' ||
-    //             this.formModel?.funcID == 'TMT05011') &&
-    //             data.category == '1' &&
-    //             data.createdBy != this.user?.userID &&
-    //             !this.user?.administrator)
-    //         )
-    //           x.disabled = true;
-    //         break;
-    //       case 'SYS04':
-    //         if (
-    //           this.formModel?.funcID == 'TMT0402' ||
-    //           this.formModel?.funcID == 'TMT0401' ||
-    //           this.formModel?.funcID == 'TMT0206' ||
-    //           this.formModel?.funcID == 'MWP0063' ||
-    //           this.taskExtends
-    //         )
-    //           x.disabled = true;
-    //         break;
-    //       //rieng extend
-    //       case 'TMT04011':
-    //       case 'TMT04012':
-    //         if (this.taskExtends.status != '3') x.disabled = true;
-    //         break;
-    //     }
-    //   });
-    // }
   }
 
   searchName(e) {
@@ -369,7 +283,6 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
   loadDataReferences() {
     this.dataReferences = [];
     if (this.itemSelected.refID)
-      //this.getReferencesByCategory3(this.itemSelected); //code cu
       this.taskService.getReference(
         this.itemSelected.refType,
         this.itemSelected.refID,
@@ -381,130 +294,6 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
     if (dataReferences && dataReferences?.length > 0)
       this.dataReferences = dataReferences;
   }
-
-    //code cu roi cmt xoa sau
-  // getReferencesByCategory3(task) {
-  //   var listUser = [];
-  //   switch (task.refType) {
-  //     case 'OD_Dispatches':
-  //       this.api
-  //         .exec<any>('OD', 'DispatchesBusiness', 'GetListByIDAsync', task.refID)
-  //         .subscribe((item) => {
-  //           if (item) {
-  //             item.forEach((x) => {
-  //               var ref = new tmpReferences();
-  //               ref.recIDReferences = x.recID;
-  //               ref.refType = 'OD_Dispatches';
-  //               ref.createdOn = x.createdOn;
-  //               ref.memo = x.title;
-  //               ref.createdBy = x.createdBy;
-  //               ref.attachments = x.attachments;
-  //               ref.comments = x.comments;
-  //               this.dataReferences.unshift(ref);
-  //               if (listUser.findIndex((p) => p == ref.createdBy) == -1)
-  //                 listUser.push(ref.createdBy);
-  //               this.getUserByListCreateBy(listUser);
-  //             });
-  //           }
-  //         });
-  //       break;
-  //     case 'ES_SignFiles':
-  //       this.api
-  //         .execSv<any>(
-  //           'ES',
-  //           'ERM.Business.ES',
-  //           'SignFilesBusiness',
-  //           'GetLstSignFileByIDAsync',
-  //           JSON.stringify(task.refID.split(';'))
-  //         )
-  //         .subscribe((result) => {
-  //           if (result) {
-  //             result.forEach((x) => {
-  //               var ref = new tmpReferences();
-  //               ref.recIDReferences = x.recID;
-  //               ref.refType = 'ES_SignFiles';
-  //               ref.createdOn = x.createdOn;
-  //               ref.memo = x.title;
-  //               ref.createdBy = x.createdBy;
-  //               ref.attachments = x.attachments;
-  //               ref.comments = x.comments;
-  //               this.dataReferences.unshift(ref);
-  //               if (listUser.findIndex((p) => p == ref.createdBy) == -1)
-  //                 listUser.push(ref.createdBy);
-  //               this.getUserByListCreateBy(listUser);
-  //             });
-  //           }
-  //         });
-  //       break;
-  //     case 'TM_Tasks':
-  //       this.api
-  //         .execSv<any>(
-  //           'TM',
-  //           'TM',
-  //           'TaskBusiness',
-  //           'GetTaskByRefIDAsync',
-  //           task.refID
-  //         )
-  //         .subscribe((result) => {
-  //           if (result) {
-  //             var ref = new tmpReferences();
-  //             ref.recIDReferences = result.recID;
-  //             ref.refType = 'TM_Tasks';
-  //             ref.createdOn = result.createdOn;
-  //             ref.memo = result.taskName;
-  //             ref.createdBy = result.createdBy;
-  //             ref.attachments = result.attachments;
-  //             ref.comments = result.comments;
-
-  //             this.api
-  //               .execSv<any>('SYS', 'AD', 'UsersBusiness', 'GetUserAsync', [
-  //                 ref.createdBy,
-  //               ])
-  //               .subscribe((user) => {
-  //                 if (user) {
-  //                   ref.createByName = user.userName;
-  //                   this.dataReferences.unshift(ref);
-  //                   this.changeDetectorRef.detectChanges();
-  //                 }
-  //               });
-  //           }
-  //         });
-  //       break;
-  //     case 'DP_Instances_Steps_Tasks':
-  //       this.api
-  //         .execSv<any>(
-  //           'DP',
-  //           'DP',
-  //           'InstancesBusiness',
-  //           'GetTempReferenceByRefIDAsync',
-  //           task.refID
-  //         )
-  //         .subscribe((result) => {
-  //           if (result && result?.length > 0) {
-  //             this.dataReferences = result;
-  //           }
-  //         });
-  //       break;
-  //     case 'OM_OKRs':
-  //       this.api
-  //         .exec<any>('OM', 'OKRBusiness', 'GetOKRByIDAsync', task.refID)
-  //         .subscribe((okr) => {
-  //           if (okr) {
-  //             var ref = new tmpReferences();
-  //             ref.recIDReferences = okr.recID;
-  //             ref.refType = 'OM_OKRs';
-  //             ref.createdOn = okr?.createdOn;
-  //             ref.memo = okr?.okrName;
-  //             ref.createdBy = okr?.createdBy;
-  //             this.dataReferences.unshift(ref);
-  //             if (listUser.findIndex((p) => p == okr.createdBy) == -1)
-  //               listUser.push(ref.createdBy);
-  //             this.getUserByListCreateBy(listUser);
-  //           }
-  //         });
-  //       break;
-  //   }
-  // }
 
   getUserByListCreateBy(listUser) {
     this.api
@@ -578,21 +367,11 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
   isNullOrEmpty(value: string): boolean {
     return value == null || value == undefined || !value.trim();
   }
+
   getDataHistoryProgress(objectID) {
-    this.api
-      .execSv(
-        'BG',
-        'ERM.Business.BG',
-        'TrackLogsBusiness',
-        'GetDataHistoryProgressAsync',
-        [objectID]
-      )
-      .subscribe((res: any[]) => {
-        if (res && res?.length > 0) {
-          this.listHistoryProgress = JSON.parse(JSON.stringify(res));
-        } else this.listHistoryProgress = [];
-        this.loadedHisPro = true;
-        this.changeDetectorRef.detectChanges();
-      });
+    if (this.tabHistoryProgess) {
+      this.tabHistoryProgess.objectID = objectID;
+      this.tabHistoryProgess.getDataHistoryProgress();
+    }
   }
 }
