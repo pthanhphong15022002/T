@@ -716,6 +716,7 @@ export class StepService {
   }
 
   async openPopupCodxTask(data, location) {
+    //default => data = {action,taskType,isSave,type: 'calendar'|'step'|'activitie'|'notStep'|'group'};
     let frmModel: FormModel = {
       entityName: 'DP_Instances_Steps_Tasks',
       formName: 'DPInstancesStepsTasks',
