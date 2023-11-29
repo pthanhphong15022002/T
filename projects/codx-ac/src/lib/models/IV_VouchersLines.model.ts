@@ -9,7 +9,7 @@ export class IV_VouchersLines {
 
     reasonID: string;
 
-    lineType: string;
+    lineType: string = '1';
 
     lineStatus: string;
 

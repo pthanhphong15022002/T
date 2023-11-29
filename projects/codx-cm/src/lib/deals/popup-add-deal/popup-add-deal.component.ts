@@ -1246,7 +1246,7 @@ export class PopupAddDealComponent
     if (check && menuContact == -1 && tabContact == -1) {
       this.tabInfo.splice(1, 0, this.menuGeneralContact);
       this.tabContent.splice(1, 0, this.tabGeneralContactDetail);
-    } else if (!check && menuContact && tabContact) {
+    } else if (!check && menuContact != -1 && tabContact != -1) {
       this.tabInfo.splice(menuContact, 1);
       this.tabContent.splice(tabContact, 1);
     }

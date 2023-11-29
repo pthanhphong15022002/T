@@ -106,10 +106,12 @@ export class AllocationAddComponent extends UIComponent {
   }
 
   onAllocation() {
-    this.api.exec('AC', 'PurchaseInvoicesBusiness', 'AddAllocationAsync',[this.gridPur.arrSelectedRows,this.oData.recID,this.lineID,this.allocation])
+    this.api.exec('AC', 'PurchaseInvoicesBusiness', 'AddAllocationAsync',[this.gridPur.arrSelectedRows,this.oData,this.lineID,this.allocation])
     .pipe(takeUntil(this.destroy$))
     .subscribe((res: any) => {
-
+      if (res?.update) {
+        this.dialog.close(res?.data);
+      }
     })
   }
   //#endregion Function

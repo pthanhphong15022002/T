@@ -22,7 +22,7 @@ import { CodxViewAssignComponent } from '../codx-view-assign/codx-view-assign.co
   templateUrl: './codx-tabs.component.html',
   styleUrls: ['./codx-tabs.component.css'],
 })
-export class CodxTabsComponent implements OnInit {
+export class CodxTabsComponent implements OnInit, OnChanges {
   @Input() active = 1;
   @Input() funcID!: string;
   @Input() entityName!: string;
@@ -33,12 +33,12 @@ export class CodxTabsComponent implements OnInit {
   @Input() listTab: string[] = [];
   //tree task
   @Input() dataTree: any[] = [];
-  @Input() refID = '';  //
-  @Input() refType = '';  // nghiep vụ giao việc
-  @Input() sessionID = ''; // 
+  @Input() refID = ''; //
+  @Input() refType = ''; // nghiep vụ giao việc
+  @Input() sessionID = ''; //
   @Input() isLoadedTree = true; //bang true neu da co dataTree truyền qua, bằng false để component se load tree
   @Input() vllStatus: any;
-  @ViewChild('viewTreeAssign') viewTreeAssign : CodxViewAssignComponent
+  @ViewChild('viewTreeAssign') viewTreeAssign: CodxViewAssignComponent;
   //references
   @Input() dataReferences: any[] = [];
   @Input() vllRefType: any = 'TM018';
@@ -56,7 +56,7 @@ export class CodxTabsComponent implements OnInit {
   @Input() displayThumb: string = 'full';
   @Input() addPermissions: Permission[] = [];
   @Input() dataSelected: any;
-  @Input() isFirstVer=false;
+  @Input() isFirstVer = false;
   opened = false;
   @Output() tabChange = new EventEmitter();
   //ApprovalProcess
@@ -133,8 +133,18 @@ export class CodxTabsComponent implements OnInit {
   }
 
   loadingCount: boolean = false;
-  ngOnChanges() {
+  ngOnChanges(changes: SimpleChanges) {
     if (this.objectID && !this.loadingCount) {
+      // for (const property in changes) {
+      //   if(property != "objectID") return;
+
+      // }
+      if (
+        changes['objectID']?.previousValue == changes['objectID']?.currentValue
+      )
+        return;
+      this.oCountFooter['attachment'] = 0;
+      this.oCountFooter['comment'] = 0;
       this.loadingCount = true;
       let methodCountFile = 'CountAttachmentAsync';
       let resquetCountFile = [this.objectID, this.referType, this.entityName];
@@ -262,7 +272,8 @@ export class CodxTabsComponent implements OnInit {
   }
 
   //giao việc nếu dataTree thay đổi mà nv hiện tại ko get lai data để truyền qua thì gọi hàm này đê componet tự get
-  changeTreeAssign(){
-   if(this.viewTreeAssign) this.viewTreeAssign.loadTree();else this.isLoadedTree= false
+  changeTreeAssign() {
+    if (this.viewTreeAssign) this.viewTreeAssign.loadTree();
+    else this.isLoadedTree = false;
   }
 }

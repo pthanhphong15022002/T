@@ -14,11 +14,12 @@ import {
 } from '@angular/core';
 import { ApiHttpService, DialogData, DialogRef, FormModel } from 'codx-core';
 import { TM_Parameter, TM_TaskGroups } from '../model/task.model';
-import { CRUDService} from 'codx-core/public-api';
+import { CRUDService } from 'codx-core/public-api';
 import { DomSanitizer } from '@angular/platform-browser';
 import { tmpReferences } from '../../../models/assign-task.model';
 import { CodxTasksService } from '../codx-tasks.service';
-import { CodxService} from 'codx-core';
+import { CodxService } from 'codx-core';
+import { ViewHistoryUpdateProgressComponent } from '../view-history-update-progress/view-history-update-progress.component';
 @Component({
   selector: 'share-view-detail',
   templateUrl: './view-detail.component.html',
@@ -27,6 +28,9 @@ import { CodxService} from 'codx-core';
 export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
   @ViewChild('templetHistoryProgress')
   templetHistoryProgress!: TemplateRef<any>;
+  @ViewChild('tabHistoryProgess')
+  tabHistoryProgess!: ViewHistoryUpdateProgressComponent;
+
   dialog: any;
   @Input() formModel?: FormModel;
   @Input() taskExtends?: any;
@@ -105,16 +109,14 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
     private taskService: CodxTasksService,
     public sanitizer: DomSanitizer,
     private changeDetectorRef: ChangeDetectorRef,
-  
+
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {}
   //#endregion
   //#region Init
   ngOnInit(): void {
-
-    if(this.codxService.asideMode == '2') this.showMoreFunc = false;
-
+    if (this.codxService.asideMode == '2') this.showMoreFunc = false;
   }
 
   ngAfterViewInit(): void {
@@ -171,8 +173,7 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
           this.countResource = this.listTaskResousce.length;
           this.loadTreeView();
           this.loadDataReferences();
-          if (!this.loadedHisPro)
-            this.getDataHistoryProgress(this.itemSelected.recID);
+
           this.changeDetectorRef.detectChanges();
         }
       });
@@ -382,7 +383,7 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
       this.dataReferences = dataReferences;
   }
 
-    //code cu roi cmt xoa sau
+  //code cu roi cmt xoa sau
   // getReferencesByCategory3(task) {
   //   var listUser = [];
   //   switch (task.refType) {
@@ -578,21 +579,11 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
   isNullOrEmpty(value: string): boolean {
     return value == null || value == undefined || !value.trim();
   }
+
   getDataHistoryProgress(objectID) {
-    this.api
-      .execSv(
-        'BG',
-        'ERM.Business.BG',
-        'TrackLogsBusiness',
-        'GetDataHistoryProgressAsync',
-        [objectID]
-      )
-      .subscribe((res: any[]) => {
-        if (res && res?.length > 0) {
-          this.listHistoryProgress = JSON.parse(JSON.stringify(res));
-        } else this.listHistoryProgress = [];
-        this.loadedHisPro = true;
-        this.changeDetectorRef.detectChanges();
-      });
+    if (this.tabHistoryProgess) {
+      this.tabHistoryProgess.objectID = objectID;
+      this.tabHistoryProgess.getDataHistoryProgress();
+    }
   }
 }
