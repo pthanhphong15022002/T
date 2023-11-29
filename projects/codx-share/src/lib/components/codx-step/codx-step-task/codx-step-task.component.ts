@@ -2755,7 +2755,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   releaseCallback(res: any, t: any = null) {
     if (res?.msgCodeError) this.notiService.notify(res?.msgCodeError);
     else {
-      this.taskApproval.approveStatus = res?.returnStatus || '0';
+      this.taskApproval.approveStatus = res?.returnStatus || '3';
       this.moreDefaut = JSON.parse(JSON.stringify(this.moreDefaut));
       this.changeDetectorRef.markForCheck();
     }

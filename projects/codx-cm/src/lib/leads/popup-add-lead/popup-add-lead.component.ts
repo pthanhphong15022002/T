@@ -852,6 +852,7 @@ export class PopupAddLeadComponent
         let obj = {
           id: res[3].processId,
           steps: res[0],
+          permissions: await this.getListPermission(res[1]),
           leadID: this.action !== this.actionEdit ? res[2] : this.lead.leadID,
           processSetting: res[3],
         };
@@ -869,8 +870,8 @@ export class PopupAddLeadComponent
         this.isShowField = obj?.processSetting?.addFieldsControl == '1';
         this.setAutoNameTabFields(obj?.processSetting?.autoNameTabFields);
         this.itemTabsInput(this.ischeckFields(this.listInstanceSteps));
-        // this.listParticipants = null;
-        // this.listParticipants = JSON.parse(JSON.stringify(obj.permissions));
+        this.listParticipants = null;
+        this.listParticipants = JSON.parse(JSON.stringify(obj.permissions));
         if (this.action === this.actionEdit) {
           this.owner = this.lead.owner;
         } else {
@@ -952,12 +953,12 @@ export class PopupAddLeadComponent
     return endDay;
   }
 
-  // async getListPermission(permissions) {
-  //   this.listParticipants = permissions;
-  //   return this.listParticipants != null && this.listParticipants?.length > 0
-  //     ? await this.codxCmService.getListUserByOrg(this.listParticipants)
-  //     : this.listParticipants;
-  // }
+  async getListPermission(permissions) {
+    this.listParticipants = permissions;
+    return this.listParticipants != null && this.listParticipants?.length > 0
+      ? await this.codxCmService.getListUserByOrg(this.listParticipants)
+      : this.listParticipants;
+  }
   // an tat theo truong tuy chinh
 
   itemTabsInput(check: boolean): void {

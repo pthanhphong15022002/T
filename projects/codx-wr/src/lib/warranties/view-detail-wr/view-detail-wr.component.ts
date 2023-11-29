@@ -15,10 +15,13 @@ import {
   CacheService,
   CallFuncService,
   CodxService,
+  DialogModel,
+  FormModel,
   NotificationsService,
 } from 'codx-core';
 import { CodxWrService } from '../../codx-wr.service';
 import { ViewTabUpdateComponent } from './view-tab-update/view-tab-update.component';
+import { PopupSerProductComponent } from './popup-ser-product/popup-ser-product.component';
 
 @Component({
   selector: 'codx-view-detail-wr',
@@ -41,6 +44,7 @@ export class ViewDetailWrComponent implements OnInit {
   @Output() clickMoreFunc = new EventEmitter<any>();
   @Output() updateComment = new EventEmitter<any>();
   @Output() updateAssignEngineerEmit = new EventEmitter<any>();
+  @Output() changeProducts = new EventEmitter<any>();
 
   user: any;
   treeTask = [];
@@ -74,15 +78,15 @@ export class ViewDetailWrComponent implements OnInit {
     },
   ];
   isShow = false;
-
+  contact2JSON: any;
   constructor(
     private authstore: AuthStore,
     private changeDetectorRef: ChangeDetectorRef,
-
+    private cache: CacheService,
+    private callFc: CallFuncService,
+    private api: ApiHttpService
   ) {
     this.user = this.authstore.get();
-
-
   }
 
   ngOnInit(): void {}
@@ -96,6 +100,10 @@ export class ViewDetailWrComponent implements OnInit {
         if (changes['dataSelected'].currentValue?.recID == this.id) return;
         this.id = changes['dataSelected'].currentValue?.recID;
         this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
+        if (this.dataSelected?.extendInfo && this.dataSelected?.extendInfo?.trim() != ''){
+          this.contact2JSON = JSON.parse(this.dataSelected?.extendInfo);
+          console.log(JSON.parse(this.dataSelected?.extendInfo));
+        }
         this.expanding = false;
         this.overflowed = false;
       }
@@ -128,14 +136,17 @@ export class ViewDetailWrComponent implements OnInit {
   }
 
   listOrderUpdate(lstUpdate) {
-    if(this.viewUpdate){
+    if (this.viewUpdate) {
       this.viewUpdate.lstUpdate = JSON.parse(JSON.stringify(lstUpdate));
       this.changeDetectorRef.detectChanges();
     }
-
   }
 
   getIcon($event) {
     return this.listRoles.find((x) => x.value == $event)?.icon ?? null;
+  }
+
+  editProduct(data) {
+    this.changeProducts.emit({ data: data });
   }
 }

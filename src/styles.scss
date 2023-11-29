@@ -2357,19 +2357,18 @@ codx-tasks {
       background: transparent;
     }
     .kanban-wrapper {
-      margin-top: -10px;
+    //  margin-top: -10px;
       margin-left: -10px;
     }
-    .e-kanban-content {
-      height: calc(100vh - 150px) !important;
-    }
+    // .e-kanban-content {
+      //height: calc(100vh - 150px) !important;
+    //}
     .e-kanban-content > div,
     .e-kanban-content > div > table,
     .e-kanban-content .e-card-wrapper {
       height: 100% !important;
     }
     .e-kanban .e-kanban-table {
-      border-spacing: 6px !important;
       width: 100%;
     }
     .e-kanban-header > div {
@@ -2387,10 +2386,6 @@ codx-tasks {
   }
 }
 
-//.pin-bar {
-  /* width: calc(100% - 400px); */
-  //width: 100%!important;
-//}
 
 .pin-bar .codx-text.e-input {
   border-radius: 20px !important;
@@ -3425,9 +3420,6 @@ codx-card-center .card.codx_cardcenter{
 codx-tasks-share{
   #Content-Fillter.filter-form {
     top: 0;
-    //left: -20px;
-   // left: auto!important;
-    //right: 0;
     height: 100%;
   }
 }
@@ -4120,7 +4112,7 @@ codx-report-view-detail{
 
 codx-view-kanban{
   .e-kanban .e-kanban-content {
-    margin-top: -12px!important;
+    //margin-top: -12px!important;
   }
   ::-webkit-scrollbar-thumb {
     background-color: rgb(182, 182, 190) !important;
@@ -4167,7 +4159,7 @@ codx-aside-v2.aside-v2-lighter{
     //padding-left: 5px!important; tbchung sửa á sai kiếm nó nha
   }
   .menu-state-primary .menu-item.here > .menu-link {
-    background-color: var(--primary-lighter);
+   // background-color: var(--primary-lighter);
   }
   .menu-state-title-primary .menu-item .menu-link.active .menu-title,
   .menu-state-title-primary .menu-item .menu-link:hover .menu-title {
@@ -4184,6 +4176,17 @@ codx-aside-v2.aside-v2-lighter{
       color: var(--primary) !important;
     }
     background-color: var(--primary-lighter);
+  }
+  .aside-menu .menu-sub .menu-item .menu-link{
+    padding-top: 0.45rem;
+    padding-bottom: 0.45rem;
+    .menu-title {
+      color: var(--gray-700);
+      font-weight: 400;
+      .fw-semibold {
+        font-weight: 400 !important;
+      }
+    }
   }
 
 }
@@ -4209,11 +4212,11 @@ codx-aside-v2.aside-v2-lighter{
     }
     .menu-item.here.show{
       .menu-link{
-        background-color: var(--border-light);
+        background-color: var(--primary-lightest);
       }
     }
     .menu-link:hover{
-      background-color: var(--border-light);
+      background-color: var(--primary-lighter);
     }
   }
 }
@@ -4262,7 +4265,7 @@ codx-header-v2, codx-ws-header{
 }
 @media (min-width: 992px){
 [data-kt-aside-minimize=on].aside-minimize-icon-title.header-fixed-2 .menu-link {
-    max-height: 45px!important;
+    max-height: 42px!important;
 }
 }
 codx-view-list-tree
@@ -4314,6 +4317,7 @@ codx-view-list-detail ejs-splitter .e-pane.e-static-pane .e-content{
 
 codx-view-schedule .container-fluid.h-50px {
   background-color: var(--bg-body);
+  margin-top: 5px;
   .w-300px{
     width: 200px!important;
   }
@@ -4327,7 +4331,11 @@ codx-view-schedule .container-fluid.h-50px {
     }
   }
 }
-
+.overview-scheduler{
+  ::-webkit-scrollbar {
+    height: 0.7rem !important;
+  }
+}
 .h-29px{
   height: 28px!important;
 }

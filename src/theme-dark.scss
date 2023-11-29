@@ -165,7 +165,7 @@ bg-input .e-listview .e-list-item {
 }
 
 .text-dark {
-    color: var(--text-title) !important;
+    color: var(--text-dark) !important;
 }
 
 .menu-title-gray-800 .menu-item .menu-link {
@@ -499,7 +499,7 @@ h1,
 
 .e-richtexteditor .e-rte-content,
 .e-richtexteditor .e-source-content {
-    background: var(--bg-input);
+   // background: var(--bg-input);
     border-color: var(--border-list);
     color: var(--text-body);
 
