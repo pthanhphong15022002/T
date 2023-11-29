@@ -35,6 +35,7 @@ import { CodxWrService } from '../codx-wr.service';
 import { ViewDetailWrComponent } from './view-detail-wr/view-detail-wr.component';
 import { firstValueFrom } from 'rxjs';
 import { WR_WorkOrderUpdates } from '../_models-wr/wr-model.model';
+import { PopupSerProductComponent } from './view-detail-wr/popup-ser-product/popup-ser-product.component';
 
 @Component({
   selector: 'lib-warranties',
@@ -142,7 +143,7 @@ export class WarrantiesComponent
           if (this.lstOrderUpdate == null || this.lstOrderUpdate.length == 0)
             this.dataSelected.status = '1';
           this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
-          this.view.dataService.update(this.dataSelected).subscribe();
+          this.view.dataService.update(this.dataSelected, true).subscribe();
         }
 
         this.wrSv.listOrderUpdateSubject.next(null);
@@ -461,7 +462,7 @@ export class WarrantiesComponent
           if (!e?.event) this.view.dataService.clear();
           if (e && e.event != null) {
             this.dataSelected = JSON.parse(JSON.stringify(e?.event));
-            this.view.dataService.update(e?.event).subscribe();
+            this.view.dataService.update(e?.event, true).subscribe();
             this.detectorRef.detectChanges();
           }
         });
@@ -499,7 +500,7 @@ export class WarrantiesComponent
           dialog.closed.subscribe((e) => {
             if (!e?.event) this.view.dataService.clear();
             if (e && e.event != null) {
-              this.view.dataService.update(e.event).subscribe();
+              this.view.dataService.update(e.event, true).subscribe();
               this.dataSelected = JSON.parse(JSON.stringify(e?.event));
               this.detectorRef.detectChanges();
             }
@@ -537,7 +538,7 @@ export class WarrantiesComponent
           if (!e?.event) this.view.dataService.clear();
           if (e && e.event != null) {
             this.dataSelected = JSON.parse(JSON.stringify(e?.event));
-            this.view.dataService.update(e.event).subscribe();
+            this.view.dataService.update(e.event, true).subscribe();
             this.detectorRef.detectChanges();
           }
         });
@@ -625,7 +626,7 @@ export class WarrantiesComponent
                 this.dataSelected = JSON.parse(
                   JSON.stringify(this.dataSelected)
                 );
-                this.view.dataService.update(this.dataSelected).subscribe();
+                this.view.dataService.update(this.dataSelected, true).subscribe();
                 if (this.viewDetail)
                   this.viewDetail.listOrderUpdate(this.lstOrderUpdate);
 
@@ -676,7 +677,7 @@ export class WarrantiesComponent
           if (this.viewDetail)
             this.viewDetail.listOrderUpdate(this.lstOrderUpdate);
           this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
-          this.view.dataService.update(this.dataSelected).subscribe();
+          this.view.dataService.update(this.dataSelected, true).subscribe();
           this.detectorRef.detectChanges();
         }
       });
@@ -712,7 +713,7 @@ export class WarrantiesComponent
         this.dataSelected.zone = this.zone;
         this.dataSelected.zone2 = this.zone2;
         this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
-        this.view.dataService.update(this.dataSelected).subscribe();
+        this.view.dataService.update(this.dataSelected, true).subscribe();
         this.notificationsService.notifyCode('SYS007');
         this.detectorRef.detectChanges();
       }
@@ -749,7 +750,7 @@ export class WarrantiesComponent
                 this.dataSelected = JSON.parse(
                   JSON.stringify(this.dataSelected)
                 );
-                this.view.dataService.update(this.dataSelected).subscribe();
+                this.view.dataService.update(this.dataSelected, true).subscribe();
                 this.notificationsService.notifyCode('SYS007');
                 this.detectorRef.detectChanges();
               }
@@ -769,7 +770,7 @@ export class WarrantiesComponent
                   this.dataSelected = JSON.parse(
                     JSON.stringify(this.dataSelected)
                   );
-                  this.view.dataService.update(this.dataSelected).subscribe();
+                  this.view.dataService.update(this.dataSelected, true).subscribe();
                   this.notificationsService.notifyCode('SYS007');
                   this.detectorRef.detectChanges();
                 }
@@ -787,7 +788,7 @@ export class WarrantiesComponent
       if (ele && ele?.event) {
         this.dataSelected.priority = ele?.event;
         this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
-        this.view.dataService.update(this.dataSelected).subscribe();
+        this.view.dataService.update(this.dataSelected, true).subscribe();
         this.notificationsService.notifyCode('SYS007');
         this.detectorRef.detectChanges();
       }
@@ -805,7 +806,7 @@ export class WarrantiesComponent
       if (ele && ele?.event) {
         this.dataSelected.comment = this.comment;
         this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
-        this.view.dataService.update(this.dataSelected).subscribe();
+        this.view.dataService.update(this.dataSelected, true).subscribe();
         this.notificationsService.notifyCode('SYS007');
         this.detectorRef.detectChanges();
       }
@@ -858,6 +859,38 @@ export class WarrantiesComponent
           this.detectorRef.detectChanges();
         }
       });
+  }
+  //#endregion
+
+  //#region
+  editProduct($event) {
+    if($event?.data){
+      const data = $event?.data;
+      let opt = new DialogModel();
+      opt.FormModel = this.view.formModel;
+      var obj = {
+        data: data,
+        title: 'Chỉnh sửa',
+      };
+      var dialog = this.callFc.openForm(
+        PopupSerProductComponent,
+        '',
+        500,
+        450,
+        '',
+        obj,
+        '',
+        opt
+      );
+      dialog.closed.subscribe((ele) => {
+        if (ele && ele?.event) {
+          this.dataSelected = JSON.parse(JSON.stringify(ele?.event));
+          this.view.dataService.update(this.dataSelected, true).subscribe();
+          this.detectorRef.detectChanges();
+        }
+      });
+    }
+
   }
   //#endregion
 

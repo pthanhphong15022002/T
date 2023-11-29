@@ -26,6 +26,7 @@ import { ViewTabUpdateComponent } from './warranties/view-detail-wr/view-tab-upd
 import { ViewTabPartsComponent } from './warranties/view-detail-wr/view-tab-parts/view-tab-parts.component';
 import { ImportpartsComponent } from './importparts/importparts.component';
 import { PopupDetailImportPartsComponent } from './importparts/popup-detail-import-parts/popup-detail-import-parts.component';
+import { PopupSerProductComponent } from './warranties/view-detail-wr/popup-ser-product/popup-ser-product.component';
 
 var routes: Routes = [
   {
@@ -61,6 +62,7 @@ var routes: Routes = [
     ViewTabPartsComponent,
     ImportpartsComponent,
     PopupDetailImportPartsComponent,
+    PopupSerProductComponent,
   ],
   imports: [
     CodxCoreModule.forRoot({ environment }),
