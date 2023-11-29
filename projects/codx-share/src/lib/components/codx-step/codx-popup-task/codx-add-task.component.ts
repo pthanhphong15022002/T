@@ -320,6 +320,7 @@ export class CodxAddTaskComponent implements OnInit {
         this.setInstanceStep();
         break;
       case 'activitie':
+        this.isStart = true;
         this.setDateTimeTask();
         break;
       case 'group':

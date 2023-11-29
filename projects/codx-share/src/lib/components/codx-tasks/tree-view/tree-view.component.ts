@@ -62,7 +62,7 @@ export class TreeViewComponent implements OnInit, AfterViewInit {
   className = 'TaskBusiness';
   methodLoadData = 'GetTasksAsync';
   loadedTree: boolean = true; // load clcik tree
-  canceLoad: any = true;
+  isAllDatas: any = false;
 
   constructor(
     private api: ApiHttpService,
@@ -86,8 +86,6 @@ export class TreeViewComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {}
 
   ngAfterViewInit(): void {
-    // if (this.codxService.asideMode == '2') this.showMoreFunc = false;
-    // this.loaded = false ;
     this.gridModelTree.formName = this.formModel.formName;
     this.gridModelTree.entityName = this.formModel.entityName;
     this.gridModelTree.funcID = this.formModel.funcID;
@@ -233,10 +231,17 @@ export class TreeViewComponent implements OnInit, AfterViewInit {
   //#endregion
 
   loadData() {
-    this.loaded = false;
+    this.loaded = this.gridModelTree.page > 1;
     this.fetch().subscribe((res) => {
       if (res) {
-        this.dataTree = res[0];
+        let dataTreeAll = res[0];
+        if (this.gridModelTree.page > 1) {
+          let idxLastRemove = this.gridModelTree.page * 20 - 1;
+          let dataTreeNew = dataTreeAll.splice(0, idxLastRemove);
+          if (dataTreeNew?.length > 0)
+            this.dataTree = this.dataTree.concat(dataTreeNew);
+        } else this.dataTree = dataTreeAll;
+
         let breadCrumbs = [
           {
             title: this.favorite + ' (' + res[1] + ')',
@@ -244,8 +249,11 @@ export class TreeViewComponent implements OnInit, AfterViewInit {
         ];
 
         this.loaded = true;
-
+        this.isAllDatas = this.dataTree?.length == res[1];
         this.pageTitle.setBreadcrumbs(breadCrumbs);
+      } else {
+        this.isAllDatas = true;
+        this.loaded = true;
       }
     });
   }
@@ -270,14 +278,14 @@ export class TreeViewComponent implements OnInit, AfterViewInit {
       );
   }
 
-  // @HostListener('scroll', ['$event'])
-  // onScroll(event: Event): void {
-  //   if (!this.canceLoad) {
-  //     const element = event.target as HTMLElement;
-  //     if (element.scrollHeight - element.scrollTop === element.clientHeight) {
-  //       this.page = this.page + 1;
-  //       this.getDatas(this.entityName, this.funcID, this.page);
-  //     }
-  //   }
-  // }
+  @HostListener('scroll', ['$event'])
+  onScroll(event: Event): void {
+    if (!this.isAllDatas) {
+      const element = event.target as HTMLElement;
+      if (element.scrollHeight - element.scrollTop === element.clientHeight) {
+        this.gridModelTree.page += 1;
+        this.loadData();
+      }
+    }
+  }
 }
