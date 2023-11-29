@@ -456,7 +456,7 @@ export class InstanceDetailComponent implements OnInit {
     var id = '';
     if (roles != null && roles.length > 0) {
       var lstRole = roles.filter(
-        (x) => x.roleType == 'R' && x.objectType == 'U'
+        (x) => x.roleType == 'R'
       );
       lstRole.forEach((element) => {
         if (!id.split(';').includes(element.objectID)) {

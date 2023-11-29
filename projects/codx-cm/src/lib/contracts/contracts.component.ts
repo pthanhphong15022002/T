@@ -408,9 +408,9 @@ export class ContractsComponent extends UIComponent {
         this.popupOwnerRoles(data);
         break;
       //export core làm
-      // case 'SYS002':
-      //   this.exportFiles(e, data);
-      //   break;
+      case 'SYS002':
+        this.exportTemplet(e, data);
+        break;
       case 'CM0204_7':
         this.viewDetailContract(data);
         break;
@@ -986,6 +986,7 @@ export class ContractsComponent extends UIComponent {
       headerTitle: fun.defaultName,
       formModel: formMD,
       isReason: isMoveSuccess,
+      processID: data?.processID,
       applyFor: '4',
       dataCM: dataCM,
       stepName: data.currentStepName,

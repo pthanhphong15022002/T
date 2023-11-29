@@ -50,15 +50,6 @@
             class="icon-i-info-circle icon-18 text-hover-primary cursor-pointer text-gray-500"
           ></span>
         </div>
-        <!-- <codx-mfunc
-          [formModel]="grvMoreFunction"
-          [isBookMark]="true"
-          [dataItem]="moreDefaut"
-          (changeDataMF)="changeDataMFStep($event, currentStep)"
-          (clickMF)="clickMFStep($event, currentStep)"
-          *ngIf="!isMoveStage"
-        >
-        </codx-mfunc> -->
       </div>
       <div class="d-flex align-items-center ms-3">
         <div
@@ -374,16 +365,6 @@
         {{ groupTask?.taskGroupName }}
       </div>
     </div>
-    <!-- <codx-mfunc
-      *ngIf="!isMoveStage && !isViewStep"
-      [formModel]="grvMoreFunction"
-      [isBookMark]="true"
-      [dataItem]="moreDefaut"
-      [type]="'hover'"
-      (clickMF)="clickMFTaskGroup($event, groupTask)"
-      (changeDataMF)="changeDataMFGroupTask($event, groupTask)"
-    >
-    </codx-mfunc> -->
   </div>
 </ng-template>
 
@@ -440,7 +421,7 @@
     <button
       type="button"
       class="btn btn-outline-primary ms-4"
-      (click)="chooseTypeTask()"
+      (click)="chooseTypeTask(['F'])"
       style="min-width: 170px"
     >
       <i class="icon-add_task icon-18 text-primary"></i>

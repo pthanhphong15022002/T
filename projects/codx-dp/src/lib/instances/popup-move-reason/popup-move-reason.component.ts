@@ -178,7 +178,6 @@ export class PopupMoveReasonComponent implements OnInit {
             if (res) {
             }
           });
-
         }
         let obj = {
           listStep: this.listStep,
@@ -221,7 +220,7 @@ export class PopupMoveReasonComponent implements OnInit {
   }
 
   async getListMoveReason(data) {
-    var datas = [data?.processID, this.isReason, this.applyFor];
+    var datas = [this.processID, this.isReason, this.applyFor];
     this.codxDpService
       .getInstanceStepsMoveReason(datas)
       .subscribe(async (res) => {
@@ -277,7 +276,7 @@ export class PopupMoveReasonComponent implements OnInit {
     }
   }
   getListProcesByApplyFor(applyFor) {
-    this.codxDpService.getlistCbxProccess(applyFor).subscribe((res) => {
+    this.codxDpService.getlistCbxProccessReason(applyFor).subscribe((res) => {
       if( res != null &&res.length > 0) {
         this.getListProceseEmpty(res[0]);
       }

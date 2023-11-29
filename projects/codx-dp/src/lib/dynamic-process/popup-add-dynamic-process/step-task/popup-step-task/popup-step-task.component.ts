@@ -603,11 +603,8 @@ export class PopupJobComponent implements OnInit, OnDestroy {
         )
       );
     if (category) {
-      //this.actionOpenFormApprove(category.recID);
       this.actionOpenFormApprove2(category);
     } else {
-      //let transID = Util.uid();
-      // this.actionOpenFormApprove(transID);
       this.api
         .execSv<any>('ES', 'Core', 'DataBusiness', 'GetDefaultAsync', [
           'ESS22',
@@ -617,13 +614,13 @@ export class PopupJobComponent implements OnInit, OnDestroy {
           if (res && res?.data) {
             category = res.data;
             category.recID = res?.recID ?? Util.uid();
-            category.eSign = false;
-            category.Category = 'DP_Processes';
+            category.eSign = true;
+            category.Category = 'DP_Instances_Steps_Tasks';
             category.categoryID = this.stepsTasks.recID;
             category.categoryName = this.stepsTasks.taskName;
             category.createdBy = this.user.userID;
             category.owner = this.user.userID;
-            category.FunctionApproval = 'DP0204';
+            category.FunctionApproval = 'DPT04';
             this.actionOpenFormApprove2(category, true);
           }
         });
@@ -666,7 +663,8 @@ export class PopupJobComponent implements OnInit, OnDestroy {
                   headerText: this.titleAction,
                   dataType: 'auto',
                   templateRefID: this.stepsTasks.recID,
-                  templateRefType: 'DP_Processes',
+                  templateRefType: 'DP_Instances_Steps_Tasks',
+                  disableESign: true,
                 },
                 '',
                 opt

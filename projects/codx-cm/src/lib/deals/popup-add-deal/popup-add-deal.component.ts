@@ -149,12 +149,12 @@ export class PopupAddDealComponent
   processIdDefault: string = '';
   defaultDeal: string = '';
   customerCategory: string = '';
-  isShowField: boolean = false;
 
   // load data form DP
   isLoading: boolean = false;
   isBlock: boolean = true;
   isviewCustomer: boolean = false;
+  isShowField: boolean = false;
 
   currencyIDOld: string;
   autoNameTabFields: string;
@@ -983,7 +983,7 @@ export class PopupAddDealComponent
       });
   }
   getSettingFields(processSetting,listInstanceSteps) {
-  // this.isShowField = processSetting?.adFieldsControl == '1';
+    this.isShowField = processSetting?.addFieldsControl == '1';
     this.setAutoNameTabFields( processSetting?.autoNameTabFields);
     this.itemTabsInput(this.ischeckFields(listInstanceSteps));
   }

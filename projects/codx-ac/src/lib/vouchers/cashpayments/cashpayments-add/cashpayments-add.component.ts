@@ -1507,8 +1507,10 @@ export class CashPaymentAddComponent extends UIComponent implements OnInit {
       case 'add':
       case 'update':
       case 'delete':
-        this.formCashPayment.setValue('validated',false,{});
-        this.dialog.dataService.update(this.formCashPayment.data).subscribe();
+        if(this.formCashPayment.data.validated){
+          this.formCashPayment.setValue('validated',false,{});
+          this.dialog.dataService.update(this.formCashPayment.data).subscribe();
+        }
         break;
       case 'closeEdit': //? khi thoát dòng
       if (this.eleGridCashPayment && this.eleGridCashPayment.rowDataSelected) {

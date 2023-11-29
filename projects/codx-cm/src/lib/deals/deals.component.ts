@@ -947,7 +947,6 @@ export class DealsComponent
     let oldStepId = data.stepID;
     let dataCM = {
       refID: data?.refID,
-      processID: data?.processID,
       stepID: data?.stepID,
       nextStep: data?.nextStep,
     };
@@ -957,6 +956,7 @@ export class DealsComponent
       isReason: isMoveSuccess,
       applyFor: '1',
       dataCM: dataCM,
+      processID: data?.processID,
       stepName: data.currentStepName,
       isMoveProcess: false,
     };
