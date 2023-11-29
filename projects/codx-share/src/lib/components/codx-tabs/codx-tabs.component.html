@@ -149,10 +149,14 @@
     </ng-container>
     <ng-container *ngSwitchCase="'references'">
       <codx-references
-        [funcID]="funcID"
+        #viewDataRef
+        [isLoadedDataRef]="isLoadedDataRef"
         [dataReferences]="dataReferences"
         [vllRefType]="vllRefType"
         [formModel]="formModel"
+        [objectID]="objectID"
+        [refType]="refTypeRef"
+        [refID]="refIDRef"
       ></codx-references>
     </ng-container>
     <ng-container *ngSwitchCase="'approve'">
