@@ -68,6 +68,8 @@ export class PurchaseinvoicesComponent extends UIComponent {
   //   },
   // ];
   optionSidebar: SidebarModel = new SidebarModel();
+  viewActive:number = ViewType.listdetail;
+  ViewType = ViewType;
   private destroy$ = new Subject<void>(); //? list observable hủy các subscribe api
   constructor(
     inject: Injector,
@@ -218,7 +220,7 @@ export class PurchaseinvoicesComponent extends UIComponent {
         this.printVoucher(data, e.functionID); //? in chứng từ
         break;
       case 'ACT060108':
-        this.allocationVoucher(data, data); //? phân bổ chi phí chứng từ
+        this.allocationVoucher(e.text, data); //? phân bổ chi phí chứng từ
         break;
       case 'ACT060109':
         this.xml.nativeElement.click(); //? doc xml chứng từ
@@ -387,12 +389,12 @@ export class PurchaseinvoicesComponent extends UIComponent {
   validateVourcher(text: any, data: any) {
     this.api
       .exec('AC', 'PurchaseInvoicesBusiness', 'ValidateVourcherAsync', [
-        data.recID,
+        data,
         text,
       ])
       .subscribe((res: any) => {
-        if (res?.update) {
-          this.itemSelected = res?.data;
+        if (res[1]) {
+          this.itemSelected = res[0];
           this.view.dataService.update(this.itemSelected).subscribe();
           this.notification.notifyCode('AC0029', 0, text);
           this.detectorRef.detectChanges();
@@ -407,12 +409,12 @@ export class PurchaseinvoicesComponent extends UIComponent {
   postVoucher(text: any, data: any) {
     this.api
       .exec('AC', 'PurchaseInvoicesBusiness', 'PostVourcherAsync', [
-        data.recID,
+        data,
         text,
       ])
       .subscribe((res: any) => {
-        if (res?.update) {
-          this.itemSelected = res?.data;
+        if (res[1]) {
+          this.itemSelected = res[0];
           this.view.dataService.update(this.itemSelected).subscribe();
           this.notification.notifyCode('AC0029', 0, text);
           this.detectorRef.detectChanges();
@@ -427,14 +429,13 @@ export class PurchaseinvoicesComponent extends UIComponent {
   unPostVoucher(text: any, data: any) {
     this.api
       .exec('AC', 'PurchaseInvoicesBusiness', 'UnPostVourcherAsync', [
-        data.recID,
+        data,
         text,
       ])
       .subscribe((res: any) => {
-        if (res?.update) {
-          this.itemSelected = res?.data;
+        if (res[1]) {
+          this.itemSelected = res[0];
           this.view.dataService.update(this.itemSelected).subscribe();
-          //this.getDatadetail(this.itemSelected);
           this.notification.notifyCode('AC0029', 0, text);
           this.detectorRef.detectChanges();
         }
@@ -460,7 +461,9 @@ export class PurchaseinvoicesComponent extends UIComponent {
             this.view.formModel.funcID,
             '',
             '',
-            ''
+            '',
+            null,
+            JSON.stringify({ParentID:data.journalNo})
           )
           .pipe(takeUntil(this.destroy$))
           .subscribe((result: any) => {
@@ -565,6 +568,14 @@ export class PurchaseinvoicesComponent extends UIComponent {
       '',
       opt
     );
+    dialog.closed.subscribe((res) => {
+      if (res.event != null) {
+        this.itemSelected = res?.event;
+        this.view.dataService.update(this.itemSelected).subscribe();
+        this.notification.notifyCode('AC0029', 0, text);
+        this.detectorRef.detectChanges();
+      }
+    });
   }
 
   /**
@@ -573,18 +584,26 @@ export class PurchaseinvoicesComponent extends UIComponent {
    * @returns
    */
   onSelectedItem(event) {
-    if (this.view?.views) {
-      let view = this.view?.views.find((x) => x.type == 1);
-      if (view && view.active == true) return;
-    }
-    if (typeof event.data !== 'undefined') {
-      if (event?.data.data || event?.data.error) {
-        return;
-      } else {
-        this.itemSelected = event?.data;
-        this.detectorRef.detectChanges();
-      }
-    }
+    this.itemSelected = event;
+    this.detectorRef.detectChanges();
+    // if (this.view?.views) {
+    //   let view = this.view?.views.find((x) => x.type == 1);
+    //   if (view && view.active == true) return;
+    // }
+    // if (typeof event.data !== 'undefined') {
+    //   if (event?.data.data || event?.data.error) {
+    //     return;
+    //   } else {
+    //     this.itemSelected = event?.data;
+    //     this.detectorRef.detectChanges();
+    //   }
+    // }
+  }
+
+  viewChanged(view) {
+    if(view && view?.view?.type == this.viewActive) return;
+    this.viewActive = view?.view?.type;
+    this.detectorRef.detectChanges();
   }
 
   /**

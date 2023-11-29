@@ -185,7 +185,7 @@ export class SalesinvoicesComponent extends UIComponent
       case 'ACT060503':
         this.validateVourcher(e.text, data); //? kiểm tra tính hợp lệ chứng từ
         break;
-      case 'ACT042905':
+      case 'ACT060506':
         this.postVoucher(e.text, data); //? ghi sổ chứng từ
         break;
       case 'ACT060507':

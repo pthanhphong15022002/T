@@ -477,7 +477,7 @@
   [formModel]="formModel"
   [applyFor]="applyFor"
   (saveAssignTask)="saveAssignTask($event)"
-  (changeProgress)="autoStart($event)"
+  (changeProgress)="autoStartInstance.emit($event)"
   [dealName]="dataSelect?.title"
   [ownerInstance]="dataSelect?.owner"
   [isChangeOwner]="isChangeOwner"

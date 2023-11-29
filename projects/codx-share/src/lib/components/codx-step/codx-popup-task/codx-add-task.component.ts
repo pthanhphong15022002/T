@@ -1178,6 +1178,7 @@ export class CodxAddTaskComponent implements OnInit {
 
   async clickSettingApprove() {
     let category;
+    let idTask = this.stepsTasks?.isTaskDefault ? this.stepsTasks?.refID : this.stepsTasks?.recID;
     if (this.action == 'edit')
       category = await firstValueFrom(
         this.api.execSv<any>(
@@ -1185,7 +1186,7 @@ export class CodxAddTaskComponent implements OnInit {
           'ES',
           'CategoriesBusiness',
           'GetByCategoryIDAsync',
-          this.stepsTasks.recID
+          idTask
         )
       );
     if (category) {
@@ -1202,7 +1203,7 @@ export class CodxAddTaskComponent implements OnInit {
             category.recID = res?.recID ?? Util.uid();
             category.eSign = true;
             category.Category = this.isActivitie ? 'DP_Activities' : 'DP_Instances_Steps_Tasks';
-            category.categoryID = this.stepsTasks.recID;
+            category.categoryID = idTask;
             category.categoryName = this.stepsTasks.taskName;
             category.createdBy = this.user.userID;
             category.owner = this.user.userID;
@@ -1248,7 +1249,7 @@ export class CodxAddTaskComponent implements OnInit {
                   isAdd: isAdd,
                   headerText: this.titleAction,
                   dataType: 'auto',
-                  templateRefID: this.stepsTasks.recID,
+                  templateRefID: this.stepsTasks?.isTaskDefault ? this.stepsTasks?.refID : this.stepsTasks?.recID,
                   templateRefType: this.isActivitie ? 'DP_Activities' : 'DP_Instances_Steps_Tasks',
                   disableESign: true,
                 },
@@ -1267,7 +1268,8 @@ export class CodxAddTaskComponent implements OnInit {
     });
   }
   loadListApproverStep() {
-    this.getListAproverStepByCategoryID(this.stepsTasks?.recID)
+    let idTask = this.stepsTasks?.isTaskDefault ? this.stepsTasks?.refID : this.stepsTasks?.recID;
+    this.getListAproverStepByCategoryID(idTask)
       .pipe(takeUntil(this.destroyFrom$))
       .subscribe((res) => {
         if (res) {
