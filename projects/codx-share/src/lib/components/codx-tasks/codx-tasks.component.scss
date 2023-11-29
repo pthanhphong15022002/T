@@ -82,7 +82,7 @@ codx-tasks {
 }
 .taskPopoverClass .popover-body {
   width: 320px !important;
-  background-color: white;
+  background-color: var(--primary-lighter);
   box-shadow: 0 0 35px rgba(0, 0, 0, 0.07);
 }
 
