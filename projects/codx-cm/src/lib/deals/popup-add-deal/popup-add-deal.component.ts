@@ -275,12 +275,15 @@ export class PopupAddDealComponent
   }
 
   copyDataCustomer(deal: any, data: any) {
-    deal.customerID = data.customerID;
-    deal.dealName = data.dealName;
-    deal.industries = data.industries;
-    deal.channelID = data.channelID;
-    deal.shortName = data.shortName;
-    this.customerCategory = data.category;
+    deal.customerID = data?.customerID;
+    deal.dealName = data?.shortName ? data?.shortName : data?.dealName;
+    deal.industries = data?.industries;
+    deal.channelID = data?.channelID;
+    deal.shortName = data?.shortName;
+    this.customerCategory = data?.category;
+    this.customerNameTmp = data?.dealName;
+    this.shortNameTmp = data?.shortName
+
 
     //this.itemTabContact(this.ischeckCategoryCustomer(this.categoryCustomer));
   }
@@ -1246,7 +1249,7 @@ export class PopupAddDealComponent
     if (check && menuContact == -1 && tabContact == -1) {
       this.tabInfo.splice(1, 0, this.menuGeneralContact);
       this.tabContent.splice(1, 0, this.tabGeneralContactDetail);
-    } else if (!check && menuContact && tabContact) {
+    } else if (!check && menuContact != -1 && tabContact != -1) {
       this.tabInfo.splice(menuContact, 1);
       this.tabContent.splice(tabContact, 1);
     }

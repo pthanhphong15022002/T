@@ -16,6 +16,7 @@ import { TabModel } from './model/tabControl.model';
 import { CodxShareService } from '../../codx-share.service';
 import { isObservable } from 'rxjs';
 import { CodxViewAssignComponent } from '../codx-view-assign/codx-view-assign.component';
+import { CodxReferencesComponent } from '../codx-references/codx-references.component';
 
 @Component({
   selector: 'codx-tabs',
@@ -42,6 +43,11 @@ export class CodxTabsComponent implements OnInit, OnChanges {
   //references
   @Input() dataReferences: any[] = [];
   @Input() vllRefType: any = 'TM018';
+  @Input() isLoadedDataRef = true; //mặc định gửi nguyên cục ref thì ko cần load data
+  @Input() refIDRef = '';
+  @Input() refTypeRef = '';
+  @ViewChild('viewDataRef') viewDataRef: CodxReferencesComponent;
+
   //update quyen cho file tai TM
   @Input() isUpPermission = false;
   @Input() isEdit = true; //mac dinh bằng true - Thao them sua ngay 23/2/2023
@@ -143,7 +149,8 @@ export class CodxTabsComponent implements OnInit, OnChanges {
         changes['objectID']?.previousValue == changes['objectID']?.currentValue
       )
         return;
-
+      this.oCountFooter['attachment'] = 0;
+      this.oCountFooter['comment'] = 0;
       this.loadingCount = true;
       let methodCountFile = 'CountAttachmentAsync';
       let resquetCountFile = [this.objectID, this.referType, this.entityName];
@@ -274,5 +281,13 @@ export class CodxTabsComponent implements OnInit, OnChanges {
   changeTreeAssign() {
     if (this.viewTreeAssign) this.viewTreeAssign.loadTree();
     else this.isLoadedTree = false;
+  }
+
+  changeDataRef() {
+    if (this.viewDataRef) {
+      this.viewDataRef.refID = this.refIDRef;
+      this.viewDataRef.refType = this.refTypeRef;
+      this.viewDataRef.loadDataRef();
+    }
   }
 }
