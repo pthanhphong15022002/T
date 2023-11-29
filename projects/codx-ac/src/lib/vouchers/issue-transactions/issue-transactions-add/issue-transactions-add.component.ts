@@ -137,6 +137,10 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
           this.formVouchers.data.memo = this.getMemoMaster();
           this.formVouchers.setValue('memo',this.formVouchers.data.memo,{onlySelf: true,emitEvent: false,});
           break;
+        case 'objectid':
+          let objectType = event?.component?.itemsSelected[0]?.ObjectType || '';
+          this.formVouchers.setValue('objectType',objectType,{});
+          break;
       }
     }
   }
@@ -292,7 +296,8 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
     let oLine = Util.camelizekeyObj(model);
     oLine.transID = this.formVouchers.data.recID;
     oLine.idiM4 = this.formVouchers.data.warehouseID;
-    oLine.note = this.formVouchers.data.note;
+    oLine.note = this.formVouchers.data.memo;
+    oLine.reasonID = this.formVouchers.data.reasonID;
     oLine = this.genFixedDims(oLine);
     return oLine;
   }

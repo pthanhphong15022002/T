@@ -55,6 +55,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit{
   @ViewChild('inputDeal') inputDeal: CodxInputComponent;
   @ViewChild('attachment') attachment: AttachmentComponent;
   @ViewChild('inputQuotation') inputQuotation: CodxInputComponent;
+  @ViewChild('inputContact') inputContact: CodxInputComponent;
   REQUIRE = [
     'contractID',
     'contractType',
@@ -728,6 +729,12 @@ export class AddContractsComponent implements OnInit, AfterViewInit{
       this.setValueComboboxDeal();
       this.getCustomerByrecID(event?.data);
       this.getCustomersDefaults(event?.data);
+      if(this.inputContact){
+        this.inputContact.crrValue = null;
+        this.inputContact.ComponentCurrent.dataService.data = [];
+      }
+      console.log(this.inputContact);
+      
     }
 
     if (event?.field == 'delStatus') {

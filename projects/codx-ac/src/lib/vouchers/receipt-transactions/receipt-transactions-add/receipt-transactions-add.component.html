@@ -203,7 +203,7 @@
                     [formModel]="dialog.formModel">
                   </codx-label>
                   <div class="ac-input" >
-                    <codx-input *ngIf="formVouchers?.data?.subType == '0302'" [Group]="formVouchers?.formGroup" field="objectID" [formModel]="dialog.formModel">
+                    <codx-input *ngIf="formVouchers?.data?.subType == '0302'" [Group]="formVouchers?.formGroup" field="objectID" [formModel]="dialog.formModel" (valueChange)="valueChangeMaster($event)">
                     </codx-input>
                   </div>
                 </div>
