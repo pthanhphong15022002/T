@@ -83,19 +83,8 @@ export class PopupAddCustomerWrComponent implements OnInit {
     } else {
       this.data.email = null;
     }
-    if (!this.radioChecked)
-      if (
-        !this.checkValidateSetting(
-          this.data?.address,
-          this.data,
-          this.leverSetting,
-          this.gridViewSetup,
-          this.gridViewSetup?.Address?.headerText
-        )
-      ) {
-        return;
-      }
-    if(this.data?.address != null && this.data?.address?.trim() != ''){
+
+    if (this.data?.address != null && this.data?.address?.trim() != '') {
       let json = await firstValueFrom(
         this.api.execSv<any>(
           'BS',
@@ -106,7 +95,7 @@ export class PopupAddCustomerWrComponent implements OnInit {
         )
       );
 
-      if (json != null && json.trim() != '' && json != "null") {
+      if (json != null && json.trim() != '' && json != 'null') {
         let lstDis = JSON.parse(json);
         this.data.province = lstDis?.ProvinceID;
         this.data.district = lstDis?.DistrictID;
@@ -114,6 +103,18 @@ export class PopupAddCustomerWrComponent implements OnInit {
         this.data.province = null;
         this.data.district = null;
       }
+      if (!this.radioChecked)
+        if (
+          !this.checkValidateSetting(
+            this.data?.address,
+            this.data,
+            this.leverSetting,
+            this.gridViewSetup,
+            this.gridViewSetup?.Address?.headerText
+          )
+        ) {
+          return;
+        }
     }
     this.dialog.close([this.data, this.radioChecked]);
     this.data = null;
