@@ -713,45 +713,57 @@ export class AddContractsComponent implements OnInit, AfterViewInit{
   }
 
   valueChangeCombobox(event) {
-    this.contracts[event?.field] = event?.data;
-    if (event?.field == 'dealID' && event?.data) {
-      if (!this.contracts.customerID) {
-        this.getCustomerByDealID(event?.data);
+    if(event?.data != this.contracts[event?.field] ){
+      this.contracts[event?.field] = event?.data;
+      if (event?.field == 'dealID' && event?.data) {
+        if (!this.contracts.customerID) {
+          this.getCustomerByDealID(event?.data);
+          this.setValueComboboxQuotation();
+        }
+      }
+      if (event?.field == 'quotationID' && event?.data) {
+        this.getDataByQuotationID(event?.data);
+        if (!this.contracts.customerID) {
+          this.setValueComboboxDeal();
+        }
+      }
+      if (event?.field == 'customerID' && event?.data) {
         this.setValueComboboxQuotation();
-      }
-    }
-    if (event?.field == 'quotationID' && event?.data) {
-      this.getDataByQuotationID(event?.data);
-      if (!this.contracts.customerID) {
         this.setValueComboboxDeal();
+        this.getCustomerByrecID(event?.data);
+        this.getCustomersDefaults(event?.data);
+        this.contractService.getOneContactByObjectID(event?.data).subscribe(res => {
+          if(res){
+            if(this.inputContact && this.inputContact?.ComponentCurrent){
+              this.contracts.contactID = res;
+              this.inputContact?.ComponentCurrent?.setValue(res);
+            }
+          }else{
+            this.contracts.contactID = null;
+            this.inputContact?.ComponentCurrent?.setValue(null);
+          }
+        })
       }
-    }
-    if (event?.field == 'customerID' && event?.data) {
-      this.setValueComboboxQuotation();
-      this.setValueComboboxDeal();
-      this.getCustomerByrecID(event?.data);
-      this.getCustomersDefaults(event?.data);
-      this.contracts.contactID = null;
-      if(this.inputContact && this.inputContact?.ComponentCurrent){
-        this.inputContact?.ComponentCurrent?.setValue(null);
-        this.inputContact.crrValue = null;
-        this.inputContact.ComponentCurrent.dataService.data;
-      }
-      console.log(this.inputContact);
-      
-    }
 
-    if (event?.field == 'delStatus') {
-      this.disabledDelActualDate =
-        event?.data == '0' || event?.data == '1' ? true : false;
-    }
-    if (event?.field == 'businessLineID' && event?.data) {
-      let processID = event?.component?.itemsSelected ? event?.component?.itemsSelected[0]?.ProcessID : null;
-      this.contracts.businessLineID = event?.data;
-      if(processID){
-        this.contracts.processID = processID;
+      if(event?.field == 'contactID'){
+          // if(this.inputContact && this.inputContact?.ComponentCurrent?.dataService?.data ){
+          //   this.inputContact.ComponentCurrent.dataService.data = [];
+          // }
+      }
+  
+      if (event?.field == 'delStatus') {
+        this.disabledDelActualDate =
+          event?.data == '0' || event?.data == '1' ? true : false;
+      }
+      if (event?.field == 'businessLineID' && event?.data) {
+        let processID = event?.component?.itemsSelected ? event?.component?.itemsSelected[0]?.ProcessID : null;
+        this.contracts.businessLineID = event?.data;
+        if(processID){
+          this.contracts.processID = processID;
+        }
       }
     }
+    
     //component itemsSelected
   }
 
