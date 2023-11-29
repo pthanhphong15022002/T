@@ -143,7 +143,8 @@ export class CodxTabsComponent implements OnInit, OnChanges {
         changes['objectID']?.previousValue == changes['objectID']?.currentValue
       )
         return;
-
+      this.oCountFooter['attachment'] = 0;
+      this.oCountFooter['comment'] = 0;
       this.loadingCount = true;
       let methodCountFile = 'CountAttachmentAsync';
       let resquetCountFile = [this.objectID, this.referType, this.entityName];
