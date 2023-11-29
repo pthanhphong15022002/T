@@ -81,7 +81,17 @@
     overflow: auto;
     
     .aside-menu{
-      width: 250px;    
+      //width: 250px;    //Van bo nha Chung
+      
+      .menu-title{
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        word-wrap: break-word;
+        display: block;
+        -webkit-line-clamp: 1;
+      }
     }
   }
   codx-aside-v1.aside.aside-transparent{
