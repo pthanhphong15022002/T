@@ -285,20 +285,20 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
   //#endregion
 
   loadDataReferences() {
-    //chưa load data
-    if (this.footerTabs) {
-      this.footerTabs.refIDRef = this.itemSelected.refID;
-      this.footerTabs.refType = this.itemSelected.refType;
-      this.footerTabs.changeDataRef();
-    }
+    // //chưa load data
+    // if (this.footerTabs) {
+    //   this.footerTabs.refIDRef = this.itemSelected.refID;
+    //   this.footerTabs.refType = this.itemSelected.refType;
+    //   this.footerTabs.changeDataRef();
+    // }
     // //đã load data
-    // this.dataReferences = [];
-    // if (this.itemSelected.refID)
-    //   this.taskService.getReference(
-    //     this.itemSelected.refType,
-    //     this.itemSelected.refID,
-    //     this.getRef.bind(this)
-    //   );
+    this.dataReferences = [];
+    if (this.itemSelected.refID)
+      this.taskService.getReference(
+        this.itemSelected.refType,
+        this.itemSelected.refID,
+        this.getRef.bind(this)
+      );
   }
 
   getRef(dataReferences) {

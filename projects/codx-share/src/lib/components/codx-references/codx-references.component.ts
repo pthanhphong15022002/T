@@ -17,15 +17,16 @@ import { CodxTasksService } from '../codx-tasks/codx-tasks.service';
   encapsulation: ViewEncapsulation.None,
 })
 export class CodxReferencesComponent implements OnInit, OnChanges {
+  @ViewChild('attachment') attachment: AttachmentComponent;
   @Input() funcID?: string; // khởi tạo để test,, sau có thể xóa
   @Input() dataReferences: any[];
-  @Input() isLoadedDataRef = true;
+  @Input() isLoadedDataRef = true; //bằng true : đã có data REf gửi vào , False nếu tự load
   @Input() vllRefType = 'TM018';
   @Input() formModel?: FormModel;
   @Input() zIndex: number = 0;
   @Input() openViewPopup = true; // truyền ko cho click
-  @ViewChild('attachment') attachment: AttachmentComponent;
-  //refType và RefID của object để temp tự load Data
+
+  //refType và RefID của object để temp tự load Data  với isLoadedDataRef = false
   @Input() objectID = '';
   @Input() refType = '';
   @Input() refID = '';
@@ -75,6 +76,7 @@ export class CodxReferencesComponent implements OnInit, OnChanges {
     return styles;
   }
 
+  //Load data Ref
   loadDataRef() {
     this.codxTaskService.getReference(
       this.refType,
