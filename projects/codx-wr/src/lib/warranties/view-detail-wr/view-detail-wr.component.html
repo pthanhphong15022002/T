@@ -85,8 +85,24 @@
             ></codx-label>
           </div>
         </div>
-        <div class="mb-1" *ngIf="dataSelected?.status">
+        <div class="mb-1 d-flex">
+          <span
+            class="text-gray-900"
+            [ngbTooltip]="tempLastStatusCode"
+            [innerHTML]="
+              dataSelected?.statusCode
+                | formatvalue : formModel : 'StatusCode'
+                | async
+            "
+          ></span>
+          <ng-template #tempLastStatusCode>
+            <codx-label
+              [formModel]="formModel"
+              fiedName="StatusCode"
+            ></codx-label>
+          </ng-template>
           <codx-vll
+            *ngIf="dataSelected?.status"
             [name]="gridViewSetup?.Status?.referedValue"
             [field]="'Status'"
             [value]="dataSelected?.status"
@@ -217,6 +233,21 @@
                   *ngIf="dataSelected?.category == '2'"
                   class="d-flex align-items-center justify-content-end mb-1"
                 >
+                  <span
+                    class="text-gray-900 me-2"
+                    [ngbTooltip]="tempLastStatusCode"
+                    [innerHTML]="
+                      dataSelected?.statusCode
+                        | formatvalue : formModel : 'StatusCode'
+                        | async
+                    "
+                  ></span>
+                  <ng-template #tempLastStatusCode>
+                    <codx-label
+                      [formModel]="formModel"
+                      fiedName="StatusCode"
+                    ></codx-label>
+                  </ng-template>
                   <codx-vll
                     [name]="gridViewSetup?.Status?.referedValue"
                     [field]="'Status'"
@@ -227,15 +258,22 @@
                   >
                   </codx-vll>
                 </div>
-                <div class="d-flex align-items-center justify-content-end">
+                <div class="d-flex align-items-center justify-content-end mb-1">
                   <span
                     class="text-gray-900"
+                    [ngbTooltip]="tempLastUpdateOn"
                     [innerHTML]="
                       dataSelected?.lastUpdatedOn
-                        | formatvalue : formModel : 'lastUpdatedOn'
+                        | formatvalue : formModel : 'LastUpdatedOn'
                         | async
                     "
                   ></span>
+                  <ng-template #tempLastUpdateOn>
+                    <codx-label
+                      [formModel]="formModel"
+                      fiedName="LastUpdatedOn"
+                    ></codx-label>
+                  </ng-template>
                 </div>
               </div>
             </div>
@@ -269,8 +307,9 @@
                 <div class="mb-1">
                   <codx-label
                     style="white-space: nowrap"
-                    class="text-dark me-1"
-                    default="Số seri:"
+                    class="text-dark label-colon me-1"
+                    name="lblSeri"
+                    default="Số seri"
                     [formModel]="formModel"
                   ></codx-label>
                   <span
@@ -284,6 +323,7 @@
                 </div>
                 <div class="mb-1">
                   <span
+                    *ngIf="dataSelected?.productType"
                     class="text-dark me-1"
                     [innerHTML]="
                       dataSelected.productType
@@ -292,6 +332,7 @@
                     "
                   ></span>
                   <span
+                    *ngIf="dataSelected?.productModel"
                     class="text-dark"
                     [innerHTML]="
                       dataSelected.productModel
@@ -800,6 +841,21 @@
                                     | async
                                 "
                               ></span>
+                              <span class="ms-1 me-1">-</span>
+                              <codx-label
+                                class="me-1"
+                                fiedName="Zone2"
+                                class="nowrap label-colon"
+                                [setRequire]="false"
+                                [formModel]="formModel"
+                              ></codx-label>
+                              <span
+                                [innerHTML]="
+                                  dataSelected?.zone2
+                                    | formatvalue : formModel : 'Zone2'
+                                    | async
+                                "
+                              ></span>
                               <span
                                 *ngIf="
                                   dataSelected?.status != '5' &&
@@ -924,13 +980,12 @@
                   </div>
                 </ng-template>
                 <ng-template #content>
-                  <div class="mt-5">
-                    <wr-view-tab-parts
-                      #viewParts
-                      [transID]="dataSelected?.recID"
-                      [dataWorkOrder]="dataSelected"
-                    ></wr-view-tab-parts>
-                  </div>
+                  <wr-view-tab-parts
+                    #viewParts
+                    [transID]="id"
+                    [isShow]="isShow"
+                    [dataWorkOrder]="dataSelected"
+                  ></wr-view-tab-parts>
                 </ng-template>
               </e-tabitem>
               <e-tabitem>
@@ -950,7 +1005,7 @@
                 <ng-template #content>
                   <wr-view-tab-update
                     #viewUpdate
-                    [transID]="dataSelected?.recID"
+                    [transID]="id"
                     [isShow]="isShow"
                     [dataWorkOrder]="dataSelected"
                   ></wr-view-tab-update>
@@ -964,17 +1019,45 @@
                     ></span>
                     <codx-label
                       class="fw-bold text-hover-primary text-dark"
-                      default="Ghi chú"
                       [formModel]="formModel"
-                      name="lblNote"
+                      fiedName="Comments"
                     ></codx-label>
                   </div>
                 </ng-template>
                 <ng-template #content>
                   <div class="mt-5">
                     <ng-container
-                      [ngTemplateOutlet]="templateNote"
+                      [ngTemplateOutlet]="templateComment"
                     ></ng-container>
+                  </div>
+                </ng-template>
+              </e-tabitem>
+              <e-tabitem>
+                <ng-template #headerText>
+                  <div class="d-flex align-items-top me-2">
+                    <span
+                      class="icon-i-chat-right text-hover-primary icon-16 me-2"
+                    ></span>
+                    <codx-label
+                      class="fw-bold text-hover-primary text-dark"
+                      default="Thảo luận"
+                      [formModel]="formModel"
+                      name="lblNote"
+                    ></codx-label>
+                  </div>
+                </ng-template>
+                <ng-template #content>
+                  <div class="tab-comt mt-5">
+                    <div class="tab_container">
+                      <codx-tree-comment
+                        [objectID]="dataSelected.recID"
+                        [objectType]="formModel.entityName"
+                        [actionType]="'C'"
+                        [addNew]="true"
+                        [funcID]="formModel.funcID"
+                      >
+                      </codx-tree-comment>
+                    </div>
                   </div>
                 </ng-template>
               </e-tabitem>
@@ -1016,6 +1099,49 @@
   </div>
 </ng-template>
 
+<ng-template #templateComment>
+  <div class="text-dark text-primary fw-bold fs-6 mb-2">
+    <codx-label
+      class="mb-2"
+      [setRequire]="false"
+      class="nowrap"
+      fiedName="Problem"
+      [formModel]="formModel"
+    ></codx-label>
+    <!-- <span
+        class="icon-edit text-hover-primary icon-16 me-2"
+        (click)="updateCommentWarranty($event, dataSelected)"
+      ></span> -->
+  </div>
+  <span class="text-gray-600">
+    <span
+      [innerHTML]="
+        dataSelected?.problem | formatvalue : formModel : 'Problem' | async
+      "
+    ></span>
+  </span>
+  <div class="mt-3">
+    <div class="text-dark text-primary fw-bold fs-6 mb-2">
+      <codx-label
+        [setRequire]="false"
+        class="nowrap"
+        fiedName="Comment"
+        [formModel]="formModel"
+      ></codx-label>
+      <span
+        class="icon-edit text-hover-primary icon-16 me-2 cursor-pointer"
+        (click)="updateCommentWarranty($event, dataSelected)"
+      ></span>
+    </div>
+    <span class="text-gray-600">
+      <span
+        [innerHTML]="
+          dataSelected?.comment | formatvalue : formModel : 'Comment' | async
+        "
+      ></span>
+    </span>
+  </div>
+</ng-template>
 <ng-template #templateNote>
   <div class="text-dark text-primary fw-bold fs-6 mb-2">
     <codx-label

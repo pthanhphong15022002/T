@@ -119,7 +119,7 @@ export class DealDetailComponent implements OnInit {
     private cache: CacheService,
     private notificationsService: NotificationsService,
     private dealComponent: DealsComponent,
-    private codxService: CodxService
+    codxService: CodxService
   ) {
     this.asideMode = codxService.asideMode;
     this.executeApiCalls();
@@ -633,7 +633,7 @@ export class DealDetailComponent implements OnInit {
               $event?.action == 'delete' ? json : ''
             )
             .subscribe((res) => {});
-          if (this.listSteps != null && this.listSteps.length > 0) {
+          if (this.listSteps != null && this.listSteps?.length > 0) {
             for (var step of this.listSteps) {
               if (step?.fields != null && step?.fields?.length > 0) {
                 let idx = step?.fields?.findIndex(

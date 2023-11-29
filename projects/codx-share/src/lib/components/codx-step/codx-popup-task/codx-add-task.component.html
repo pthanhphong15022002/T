@@ -419,7 +419,7 @@
       <button
         type="button"
         class="btn btn-icon btn-sm btn-light-primary ms-"
-        [disabled]="!stepsTasks?.approveRule"
+        [disabled]="!stepsTasks?.approveRule || stepsTasks?.isTaskDefault"
         (click)="clickSettingApprove()"
       >
         <i class="icon-settings icon-16"></i>

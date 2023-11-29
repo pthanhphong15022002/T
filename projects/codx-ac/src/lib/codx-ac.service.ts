@@ -129,6 +129,55 @@ export const fmPurchaseInvoicesLinesAllocation: FormModel = {
   entityPer: 'AC_PurchaseInvoicesLines',
 };
 
+export const fmItemsPurchase: FormModel = {
+  entityName: 'IV_ItemsPurchase',
+  formName: 'ItemsPurchase',
+  gridViewName: 'grvItemsPurchase',
+  entityPer: 'IV_ItemsPurchase',
+};
+
+export const fmItemsSales: FormModel = {
+  entityName: 'IV_ItemsSales',
+  formName: 'ItemsSales',
+  gridViewName: 'grvItemsSales',
+  entityPer: 'IV_ItemsSales',
+};
+
+export const fmItemsProduction: FormModel = {
+  entityName: 'IV_ItemsProduction',
+  formName: 'ItemsProduction',
+  gridViewName: 'grvItemsProduction',
+  entityPer: 'IV_ItemsProduction',
+};
+
+export const fmItemsSize: FormModel = {
+  entityName: 'IV_ItemsSizes',
+  formName: 'ItemsSizes',
+  gridViewName: 'grvItemsSizes',
+  entityPer: 'IV_ItemsSizes',
+};
+
+export const fmItemsStyle: FormModel = {
+  entityName: 'IV_ItemsStyles',
+  formName: 'ItemStyles',
+  gridViewName: 'grvItemStyles',
+  entityPer: 'IV_ItemsStyles',
+};
+
+export const fmItemsColor: FormModel = {
+  entityName: 'IV_ItemsColors',
+  formName: 'ItemColors',
+  gridViewName: 'grvItemColors',
+  entityPer: 'IV_ItemsColors',
+};
+
+export const fmUMConversion: FormModel = {
+  entityName: 'BS_UMConversion',
+  formName: 'UMConversion',
+  gridViewName: 'grvUMConversion',
+  entityPer: 'BS_UMConversion',
+};
+
 export enum MorfuncDefault {
   Sua = 'SYS03',
   Xoa = 'SYS02',

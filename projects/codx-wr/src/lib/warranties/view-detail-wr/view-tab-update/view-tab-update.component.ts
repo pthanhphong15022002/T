@@ -129,7 +129,9 @@ export class ViewTabUpdateComponent implements OnInit {
     this.fetch().subscribe(async (item) => {
       this.loaded = true;
       this.lstUpdate = item;
-
+      if(this.grid){
+        this.grid.dataSource = this.lstUpdate;
+      }
       // this.grid.dataSource = JSON.parse(JSON.stringify(this.lstUpdate));
 
       // this.columnsGrid = [
@@ -244,7 +246,7 @@ export class ViewTabUpdateComponent implements OnInit {
         colums = {
           field: field,
           headerText: grvSetup[key].headerText ?? key,
-          width: grvSetup[key].width,
+          width:grvSetup[key].width,
         };
       }
 

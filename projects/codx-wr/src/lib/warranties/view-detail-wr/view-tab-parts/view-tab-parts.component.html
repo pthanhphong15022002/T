@@ -1,7 +1,6 @@
-<div class="h-100" *ngIf="loaded">
+<div class="h-100" *ngIf="columnsGrid?.length > 0" [ngClass]="isShow ? 'grid-full' : 'scroll-grid'">
   <codx-gridview-v2
-    service="WR"
-    [formModel]="formModel"
+    #grid
     [dataSource]="lstParts"
     rowHeight="30"
     [height]="'100%'"

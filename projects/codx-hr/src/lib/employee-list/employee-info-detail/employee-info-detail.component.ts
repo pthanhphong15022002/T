@@ -1,5 +1,4 @@
 import { FuncID } from './../../../../../codx-ep/src/lib/models/enum/enum';
-import { EntityName } from './../../../../../codx-ac/src/lib/settings/items/utils/unknown.util';
 import { map } from 'rxjs';
 import { dialog } from '@syncfusion/ej2-angular-spreadsheet';
 import { PopupJobGeneralInfoComponent } from './../../employee-profile/popup-job-general-info/popup-job-general-info.component';
