@@ -36,6 +36,7 @@ initData(){
   this.isLoaded = false;
   this.selectedData=undefined;
   this.addData= undefined;
+  this.isEditing = false;
   let arrButtons:any=[];
   this.api.execSv('SYS','SYS','FormSettingsBusiness','GetFormSettingAsync','Comments').subscribe((res:any)=>{
     this.data = res;
@@ -267,13 +268,22 @@ initData(){
   nodeDragStop(e:any){
     let dragItem = e.draggedNodeData;
     let targetNode = e.droppedNodeData;
+    let targetItem = this.data.find((x:any)=>x[this.field.id]==targetNode?.id);
     if(dragItem.parentID && e.dropLevel == 1 && !targetNode){
       e.cancel = true;
       return;
     }
-    let targetItem = this.data.find((x:any)=>x[this.field.id]==targetNode?.id);
+    if(dragItem.parentID && e.dropLevel ==1 && (e.position == 'After' || e.position =='Before') ){
+      e.cancel = true;
+      return;
+    }
+
     if(targetItem){
       if(targetItem.functionType != 'G' && e.position == 'Inside'){
+        e.cancel=true;
+        return;
+      }
+      if(targetItem.isButton){
         e.cancel=true;
         return;
       }
@@ -281,11 +291,17 @@ initData(){
     else{
       e.cancel=true;
     }
+    console.log(e);
+
   }
 
   nodeDragging(e:any){
     let dragItem = e.draggedNodeData;
     let targetNode = e.droppedNodeData;
+    // if(dragItem?.recID == targetNode?.recID){
+    //   e.dropIndicator='e-no-drop';
+    //   return;
+    // }
     if(!dragItem.parentID){
       // if(e.dropLevel > 1){
       //   e.dropIndicator='e-no-drop'
@@ -305,6 +321,22 @@ initData(){
         e.dropIndicator='e-no-drop'
       }
     }
+    if(dragItem.parentID && e.dropLevel ==1){
+      e.dropIndicator='e-no-drop'
+    }
+    let dragData = this.data.find((x:any)=>x.recID == dragItem.id);
+    if(dragData){
+      if(dragData.isButton) e.cancel= true;
+    }
+
+  }
+
+  nodeDragStart(e:any){
+    let dragItem = e.draggedNodeData;
+    let dragData = this.data.find((x:any)=>x.recID == dragItem.id);
+    if(dragData){
+      if(dragData.isButton) e.cancel= true;
+    }
   }
 
   nodeclicked(args: any) {
@@ -316,6 +348,7 @@ initData(){
   valueChange(e:any){
     this.selectedData[e.field] = e.data;
     this.editedFunc[this.selectedData.recID] = this.selectedData;
+    this.isEditing = true;
   }
 
   valueAddChange(e:any){
@@ -340,6 +373,7 @@ initData(){
         this.lstShared[this.selectedData.recID].push(objShare);
       }
       this.lstShared = {...this.lstShared}
+      this.isEditing = true;
     }
 
   }
@@ -376,6 +410,7 @@ initData(){
 
     }
     this.editedFunc[this.selectedData.recID] = this.selectedData;
+    this.isEditing = true;
     this.changeDetect.detectChanges();
   }
 
@@ -446,7 +481,7 @@ initData(){
       this.tree.refresh()
       setTimeout(()=>{
         this.tree.selectedNodes= [this.addData.recID];
-        this.tree?.beginEdit(this.addData.recID);
+        //this.tree?.beginEdit(this.addData.recID);
         this.isEnableEdit=true;
         this.isEditFunc = false;
         this.isAddGroup = false;
@@ -480,16 +515,15 @@ initData(){
   imgChanged(e:any){
     if(this.selectedData && e.length){
       this.selectedData.image = e[0].pathDisk;
-      debugger
       this.selectedData.icon = null;
       this.selectedData.color = null;
       this.editedFunc[this.selectedData.recID] = this.selectedData;
     }
+    this.isEditing = true;
   }
 
   imgAddChanged(e:any){
     if(this.addData && e.length){
-      debugger
       this.addData.image = e[0].pathDisk
       this.addData.icon = null;
       this.addData.color = null;
@@ -727,17 +761,33 @@ initData(){
     this.isEnableEdit=true;
     this.addData.name = e.newText;
   }
+  isEditing:boolean=false;
   onEdit(){
     if(this.selectedData){
-      this.api.execAction('SYS_FormSettings',[this.selectedData],'UpdateAsync',true).subscribe((res:any)=>{
+      if(this.selectedData.oldID){
+        this.api.execAction('SYS_FormSettings',this.datasource,'SaveAsync',true).subscribe((res:any)=>{
 
-        if(!res.error){
+          if(!res.error){
+            setTimeout(()=>{
+              this.initData();
+            })
+           }
 
-          setTimeout(()=>{
-            this.initData();
+        })
+        return;
+      }
+      else{
+        this.api.execAction('SYS_FormSettings',[this.selectedData],'UpdateAsync',true).subscribe((res:any)=>{
+
+          if(!res.error){
+
+            setTimeout(()=>{
+              this.initData();
+            })
           }
-        )}
-      })
+        })
+      }
+
     }
   }
 }

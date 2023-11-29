@@ -2357,19 +2357,18 @@ codx-tasks {
       background: transparent;
     }
     .kanban-wrapper {
-      margin-top: -10px;
+    //  margin-top: -10px;
       margin-left: -10px;
     }
-    .e-kanban-content {
-      height: calc(100vh - 150px) !important;
-    }
+    // .e-kanban-content {
+      //height: calc(100vh - 150px) !important;
+    //}
     .e-kanban-content > div,
     .e-kanban-content > div > table,
     .e-kanban-content .e-card-wrapper {
       height: 100% !important;
     }
     .e-kanban .e-kanban-table {
-      border-spacing: 6px !important;
       width: 100%;
     }
     .e-kanban-header > div {
@@ -2387,10 +2386,6 @@ codx-tasks {
   }
 }
 
-//.pin-bar {
-  /* width: calc(100% - 400px); */
-  //width: 100%!important;
-//}
 
 .pin-bar .codx-text.e-input {
   border-radius: 20px !important;
@@ -3425,9 +3420,6 @@ codx-card-center .card.codx_cardcenter{
 codx-tasks-share{
   #Content-Fillter.filter-form {
     top: 0;
-    //left: -20px;
-   // left: auto!important;
-    //right: 0;
     height: 100%;
   }
 }
@@ -4120,7 +4112,7 @@ codx-report-view-detail{
 
 codx-view-kanban{
   .e-kanban .e-kanban-content {
-    margin-top: -12px!important;
+    //margin-top: -12px!important;
   }
   ::-webkit-scrollbar-thumb {
     background-color: rgb(182, 182, 190) !important;

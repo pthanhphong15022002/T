@@ -170,6 +170,7 @@ export class PopupAddLeadComponent
   isExist: boolean = false;
   applyProcess: boolean = true;
   isBlock: boolean = true;
+  isShowField: boolean = false;
 
   // number
   leverSetting: number;
@@ -851,6 +852,7 @@ export class PopupAddLeadComponent
         let obj = {
           id: res[3].processId,
           steps: res[0],
+          permissions: await this.getListPermission(res[1]),
           leadID: this.action !== this.actionEdit ? res[2] : this.lead.leadID,
           processSetting: res[3],
         };
@@ -865,10 +867,11 @@ export class PopupAddLeadComponent
         );
 
         this.lead.processID = obj?.processSetting?.processId;
+        this.isShowField = obj?.processSetting?.addFieldsControl == '1';
         this.setAutoNameTabFields(obj?.processSetting?.autoNameTabFields);
         this.itemTabsInput(this.ischeckFields(this.listInstanceSteps));
-        // this.listParticipants = null;
-        // this.listParticipants = JSON.parse(JSON.stringify(obj.permissions));
+        this.listParticipants = null;
+        this.listParticipants = JSON.parse(JSON.stringify(obj.permissions));
         if (this.action === this.actionEdit) {
           this.owner = this.lead.owner;
         } else {
@@ -950,12 +953,12 @@ export class PopupAddLeadComponent
     return endDay;
   }
 
-  // async getListPermission(permissions) {
-  //   this.listParticipants = permissions;
-  //   return this.listParticipants != null && this.listParticipants?.length > 0
-  //     ? await this.codxCmService.getListUserByOrg(this.listParticipants)
-  //     : this.listParticipants;
-  // }
+  async getListPermission(permissions) {
+    this.listParticipants = permissions;
+    return this.listParticipants != null && this.listParticipants?.length > 0
+      ? await this.codxCmService.getListUserByOrg(this.listParticipants)
+      : this.listParticipants;
+  }
   // an tat theo truong tuy chinh
 
   itemTabsInput(check: boolean): void {
@@ -965,12 +968,20 @@ export class PopupAddLeadComponent
     let tabInput = this.tabContent.findIndex(
       (item) => item === this.tabCustomFieldDetail
     );
-    if (check && menuInput == -1 && tabInput == -1) {
-      this.tabInfo.splice(2, 0, this.menuInputInfo);
-      this.tabContent.splice(2, 0, this.tabCustomFieldDetail);
-    } else if (!check && menuInput != -1 && tabInput != -1) {
-      this.tabInfo.splice(menuInput, 1);
-      this.tabContent.splice(tabInput, 1);
+    if(this.isShowField) {
+      if (check && menuInput == -1 && tabInput == -1) {
+        this.tabInfo.splice(2, 0, this.menuInputInfo);
+        this.tabContent.splice(2, 0, this.tabCustomFieldDetail);
+      } else if ( menuInput != -1 && tabInput != -1) {
+        this.tabInfo.splice(menuInput, 1);
+        this.tabContent.splice(tabInput, 1);
+      }
+    }
+    else {
+      if (menuInput != -1 && tabInput != -1) {
+        this.tabInfo.splice(menuInput, 1);
+        this.tabContent.splice(tabInput, 1);
+      }
     }
   }
   itemTabsInputContact(check: boolean): void {
