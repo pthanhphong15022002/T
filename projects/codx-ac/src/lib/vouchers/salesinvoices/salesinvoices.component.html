@@ -20,7 +20,7 @@
 </ng-template>
 
 <ng-template #templateDetailRight>
-  <ng-container *ngIf="itemSelected">
+  <ng-container *ngIf="itemSelected && viewActive == ViewType.listdetail">
     <salesinvoices-detail [formModel]="view.formModel" [dataService]="this.view.dataService" [dataItem]="itemSelected"
       [recID]="itemSelected?.recID" [baseCurr]="baseCurr" [journal]="journal" [headerText]="headerText"
       [gridViewSetup]="view?.gridViewSetup" [hideFields]="hideFields"
@@ -73,6 +73,12 @@
         <span *ngIf="data?.objectName" class="text-gray-600 line-clamp line-clamp-1">{{data?.objectName}}</span>
         <span *ngIf="(data?.objectName == '' || data?.objectName == null) && view.gridViewSetup"
           class="place-holder text-gray-600">{{view.gridViewSetup['ObjectID'].headerText}}</span>
+      </div>
+    </div>
+    <div class="d-flex justify-content-between">
+      <div class="d-flex">
+        <i class="icon-i-tags me-2 icon-16"></i>
+        <span class="text-gray-600 line-clamp line-clamp-1">{{data?.subType | vll : 'AC133' : 'text' | async}}</span>
       </div>
     </div>
     <div style="height: 35px !important" class="d-flex justify-content-between align-items-center">
