@@ -194,6 +194,15 @@ export class CodxApproveStepsComponent
                 }                 
                 this.lstStep = tempListStep?.sort((a,b)=> a?.stepNo - b?.stepNo);               
               }
+              else if(res[1]?.length>0){
+                this.lstStep = res[1];
+                this.cr.detectChanges();  
+              }
+              else{
+                this.lstStep=[];
+                this.cr.detectChanges();  
+              }
+
             }
             
             this.isAfterRender = true;

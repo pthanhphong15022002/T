@@ -30,6 +30,7 @@ import {
   CodxInputComponent,
   NotificationsService,
   AuthStore,
+  CodxFormComponent,
 } from 'codx-core';
 import { Observable, firstValueFrom, map, tap } from 'rxjs';
 import { CodxCmService } from '../../codx-cm.service';
@@ -55,6 +56,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit{
   @ViewChild('inputDeal') inputDeal: CodxInputComponent;
   @ViewChild('attachment') attachment: AttachmentComponent;
   @ViewChild('inputQuotation') inputQuotation: CodxInputComponent;
+  @ViewChild('inputContact') inputContact: CodxInputComponent;
   REQUIRE = [
     'contractID',
     'contractType',
@@ -66,6 +68,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit{
     'pmtMethodID',
     'effectiveFrom',
   ];
+  @ViewChild('form') form: CodxFormComponent;
   customer: CM_Customers;
   contracts: CM_Contracts;
   quotations: CM_Quotations;
@@ -728,6 +731,14 @@ export class AddContractsComponent implements OnInit, AfterViewInit{
       this.setValueComboboxDeal();
       this.getCustomerByrecID(event?.data);
       this.getCustomersDefaults(event?.data);
+      this.contracts.contactID = null;
+      if(this.inputContact && this.inputContact?.ComponentCurrent){
+        this.inputContact?.ComponentCurrent?.setValue(null);
+        this.inputContact.crrValue = null;
+        this.inputContact.ComponentCurrent.dataService.data;
+      }
+      console.log(this.inputContact);
+      
     }
 
     if (event?.field == 'delStatus') {
