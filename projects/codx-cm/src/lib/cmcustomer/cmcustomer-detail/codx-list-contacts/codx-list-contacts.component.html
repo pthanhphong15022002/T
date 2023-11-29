@@ -25,7 +25,10 @@
         </ng-container>
       </div>
       <div [class]="'mt-5'">
-        <div class="d-flex justify-content-center" *ngIf="!hidenMF && objectID && !hidenMFAdd">
+        <div
+          class="d-flex justify-content-center"
+          *ngIf="!hidenMF && objectID && !hidenMFAdd"
+        >
           <button
             type="button"
             class="btn btn-sm btn-primary"
@@ -137,7 +140,15 @@
           </div>
 
           <div class="mb-1" *ngIf="data?.jobTitle">
-            <span class="text-gray-600">{{ data.jobTitle }}</span>
+            <span
+              class="text-gray-600"
+              [innerHTML]="
+                data?.jobTitle
+                  | formatvalue : formModelContact : 'JobTitle'
+                  | async
+              "
+            >
+            </span>
           </div>
           <div *ngIf="objectType == '4'">
             <span class="">

@@ -626,7 +626,9 @@ export class WarrantiesComponent
                 this.dataSelected = JSON.parse(
                   JSON.stringify(this.dataSelected)
                 );
-                this.view.dataService.update(this.dataSelected, true).subscribe();
+                this.view.dataService
+                  .update(this.dataSelected, true)
+                  .subscribe();
                 if (this.viewDetail)
                   this.viewDetail.listOrderUpdate(this.lstOrderUpdate);
 
@@ -750,7 +752,9 @@ export class WarrantiesComponent
                 this.dataSelected = JSON.parse(
                   JSON.stringify(this.dataSelected)
                 );
-                this.view.dataService.update(this.dataSelected, true).subscribe();
+                this.view.dataService
+                  .update(this.dataSelected, true)
+                  .subscribe();
                 this.notificationsService.notifyCode('SYS007');
                 this.detectorRef.detectChanges();
               }
@@ -770,7 +774,9 @@ export class WarrantiesComponent
                   this.dataSelected = JSON.parse(
                     JSON.stringify(this.dataSelected)
                   );
-                  this.view.dataService.update(this.dataSelected, true).subscribe();
+                  this.view.dataService
+                    .update(this.dataSelected, true)
+                    .subscribe();
                   this.notificationsService.notifyCode('SYS007');
                   this.detectorRef.detectChanges();
                 }
@@ -839,7 +845,12 @@ export class WarrantiesComponent
         methodName = 'UpdatePriorityWarrantyAsync';
         break;
       case 'serviceLocator':
-        data = [this.dataSelected?.recID, this.serviceLocator, this.zone, this.zone2];
+        data = [
+          this.dataSelected?.recID,
+          this.serviceLocator,
+          this.zone,
+          this.zone2,
+        ];
         methodName = 'UpdateServiceLocatorWarrantyAsync';
         break;
     }
@@ -864,33 +875,38 @@ export class WarrantiesComponent
 
   //#region
   editProduct($event) {
-    if($event?.data){
+    if ($event?.data) {
       const data = $event?.data;
       let opt = new DialogModel();
       opt.FormModel = this.view.formModel;
-      var obj = {
-        data: data,
-        title: 'Chỉnh sửa',
-      };
-      var dialog = this.callFc.openForm(
-        PopupSerProductComponent,
-        '',
-        500,
-        450,
-        '',
-        obj,
-        '',
-        opt
-      );
-      dialog.closed.subscribe((ele) => {
-        if (ele && ele?.event) {
-          this.dataSelected = JSON.parse(JSON.stringify(ele?.event));
-          this.view.dataService.update(this.dataSelected, true).subscribe();
-          this.detectorRef.detectChanges();
+
+      this.cache.moreFunction('CoDXSystem', '').subscribe((res) => {
+        if (res && res.length) {
+          let m = res.find((x) => x.functionID == 'SYS03');
+          var obj = {
+            data: data,
+            title: m?.defaultName + ' ' + this.gridViewSetup?.ProductID?.headerText?.toLowerCase(),
+          };
+          var dialog = this.callFc.openForm(
+            PopupSerProductComponent,
+            '',
+            500,
+            450,
+            '',
+            obj,
+            '',
+            opt
+          );
+          dialog.closed.subscribe((ele) => {
+            if (ele && ele?.event) {
+              this.dataSelected = JSON.parse(JSON.stringify(ele?.event));
+              this.view.dataService.update(this.dataSelected, true).subscribe();
+              this.detectorRef.detectChanges();
+            }
+          });
         }
       });
     }
-
   }
   //#endregion
 
