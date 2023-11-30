@@ -977,7 +977,7 @@ export class StepService {
           if (str) {
             if (data.taskType != 'F') {
               if (str?.length > 0) {
-                let dataSource = '[' + str[0] + ']';
+                dataSource = '[' + str[0] + ']';
                 if (str[1]) {
                   let datas = str[1];
                   if (datas && datas.includes('[{')) datas = datas.substring(2);
