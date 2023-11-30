@@ -12,7 +12,7 @@
     <div class="d-flex justify-content-center w-100 pt-2">
       <ejs-tab id="element" [animation]="animation" heightAdjustMode='Auto'>
         <e-tabitems>
-          <e-tabitem>
+          <e-tabitem [disabled]="isViewUser">
             <ng-template #headerText>
               <div class="d-flex align-items-top">
                 <span class="fa-solid icon-account_circle me-2"></span>
@@ -88,7 +88,7 @@
               </div>
             </ng-template>
           </e-tabitem>
-          <e-tabitem  *ngIf="applyFor != '0'" [disabled]="true">
+          <e-tabitem  *ngIf="applyFor != '0'" [disabled]="isViewBuild">
             <ng-template #headerText>
               <div class="d-flex align-items-top">
                 <span class="icon-info icon-16 me-2"></span>
@@ -145,7 +145,7 @@
               </div>
             </ng-template>
           </e-tabitem>
-          <e-tabitem  *ngIf="applyFor != '0'" [disabled]="true">
+          <e-tabitem  *ngIf="applyFor != '0'" [disabled]="isViewGroup">
             <ng-template #headerText>
               <div class="d-flex align-items-top">
                 <span class="icon-info icon-16 me-2"></span>
