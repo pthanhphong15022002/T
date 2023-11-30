@@ -16,6 +16,8 @@ import {
 import {
   AlertConfirmInputConfig,
   ApiHttpService,
+  AuthService,
+  AuthStore,
   CacheService,
   CallFuncService,
   DataRequest,
@@ -103,6 +105,7 @@ export class CodxExportComponent implements OnInit, OnChanges {
     private formBuilder: FormBuilder,
     private notifySvr: NotificationsService,
     private cache: CacheService,
+    private auth: AuthService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {

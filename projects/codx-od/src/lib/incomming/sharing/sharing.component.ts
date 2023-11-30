@@ -125,7 +125,7 @@ export class SharingComponent implements OnInit {
   {
     var name = [];
     if(!this.shareForm.value.to || this.shareForm.value.to.length==0) name.push("Đến") ;
-    if(!this.shareForm.value.desc) name.push("Nội dung chia sẻ") ;
+    if(!this.shareForm.value.desc) name.push("Nội dung chia sẻ");
     if(name.length>0)
     {
       this.notifySvr.notifyCode("SYS009",0,name.join(' , '));

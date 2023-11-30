@@ -314,7 +314,6 @@ export class EditFileComponent implements OnInit {
   }
 
   onSaveEditingFile() {
-    debugger
     this.fileEditing.fileName =
       this.fileEditing.fileName + this.fileEditing.extension;
     //Check bản quyền
