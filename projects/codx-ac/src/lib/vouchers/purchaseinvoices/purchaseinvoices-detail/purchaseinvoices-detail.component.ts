@@ -34,6 +34,7 @@ import { PurchaseinvoicesAddComponent } from '../purchaseinvoices-add/purchasein
 import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
 import { CodxListReportsComponent } from 'projects/codx-share/src/lib/components/codx-list-reports/codx-list-reports.component';
 import { AllocationAddComponent } from '../allocation-add/allocation-add.component';
+import { E } from '@angular/cdk/keycodes';
 
 @Component({
   selector: 'purchaseinvoices-detail',
@@ -157,7 +158,6 @@ export class PurchaseinvoicesDetailComponent extends UIComponent {
   showHideTab(type: any, ele?: TabComponent) {
     ele = this.elementTabDetail;
     if (ele) {
-      ele.select(0);
       switch (type) {
         case '2':
           ele.hideTab(1, false);
@@ -167,6 +167,12 @@ export class PurchaseinvoicesDetailComponent extends UIComponent {
           ele.hideTab(1, true);
           break;
       }
+      if(this.itemSelected.allocation != '' && this.itemSelected.allocation != null){
+        ele.hideTab(2, false);
+      }else{
+        ele.hideTab(2, true);
+      }
+      ele.select(0);
     }
   }
 

@@ -20,8 +20,8 @@ import {
 } from 'codx-core';
 import { PopAddConversionComponent } from '../pop-add-conversion/pop-add-conversion.component';
 import { UnitsOfMearsure } from '../../../models/UnitsOfMearsure.model';
-import { UMConversion } from '../../items/interfaces/UMConversion.interface';
 import { CodxAcService } from '../../../codx-ac.service';
+import { UMConversion } from '../../../models/UMConversion.model';
 
 @Component({
   selector: 'lib-pop-add-mearsure',

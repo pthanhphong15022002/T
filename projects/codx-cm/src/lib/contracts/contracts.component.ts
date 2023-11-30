@@ -408,29 +408,29 @@ export class ContractsComponent extends UIComponent {
         this.popupOwnerRoles(data);
         break;
       //export core làm
-      // case 'SYS002':
-      //   this.exportFiles(e, data);
-      //   break;
+      case 'SYS002':
+        this.exportTemplet(e, data);
+        break;
       case 'CM0204_7':
         this.viewDetailContract(data);
         break;
       default: {
-        var customData = {
-          refID: data.recID,
-          refType: 'CM_Contracts',
-        };
-        if (data?.refID && data.applyProcess) {
-          customData.refID = data.processID;
-          customData.refType = 'DP_Processes';
-        }
+        // var customData = {
+        //   refID: data.recID,
+        //   refType: 'CM_Contracts',
+        // };
+        // if (data?.refID && data.applyProcess) {
+        //   customData.refID = data.processID;
+        //   customData.refType = 'DP_Processes';
+        // }
         this.codxShareService.defaultMoreFunc(
           e,
           data,
           this.afterSave.bind(this),
           this.view.formModel,
           this.view.dataService,
-          this,
-          customData
+          this
+          //customData
         );
         this.detectorRef.detectChanges();
         break;
@@ -986,6 +986,7 @@ export class ContractsComponent extends UIComponent {
       headerTitle: fun.defaultName,
       formModel: formMD,
       isReason: isMoveSuccess,
+      processID: data?.processID,
       applyFor: '4',
       dataCM: dataCM,
       stepName: data.currentStepName,

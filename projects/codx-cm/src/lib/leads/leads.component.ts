@@ -731,25 +731,25 @@ export class LeadsComponent
     if (executeFunction) {
       executeFunction();
     } else {
-      let customData = {
-        refID: data.recID,
-        refType: 'CM_Leads',
-      };
+      // let customData = {
+      //   refID: data.recID,
+      //   refType: 'CM_Leads',
+      // };
 
-      if (data?.refID && data.applyProcess) {
-        customData = {
-          refID: data.processID,
-          refType: 'DP_Processes',
-        };
-      }
+      // if (data?.refID && data.applyProcess) {
+      //   customData = {
+      //     refID: data.processID,
+      //     refType: 'DP_Processes',
+      //   };
+      // }
       this.codxShareService.defaultMoreFunc(
         e,
         data,
         this.afterSave.bind(this),
         this.view.formModel,
         this.view.dataService,
-        this,
-        customData
+        this
+        // customData
       );
     }
   }
@@ -1247,7 +1247,7 @@ export class LeadsComponent
       ])
       .subscribe((x) => {
         if (x.event && x.event.status == 'Y') {
-          let datas = [data.recID, data.status,'',isCheck];
+          let datas = [data.recID, data.status, '', isCheck];
           this.getApiUpdateProcess(datas);
         }
       });
@@ -1423,22 +1423,22 @@ export class LeadsComponent
   }
 
   openFormReason(data, fun, isMoveSuccess) {
-    var formMD = new FormModel();
+    let formMD = new FormModel();
     formMD.funcID = fun.functionID;
     formMD.entityName = fun.entityName;
     formMD.formName = fun.formName;
     formMD.gridViewName = fun.gridViewName;
-    var dataCM = {
+    let dataCM = {
       refID: data?.refID,
-      processID: data?.processID,
       stepID: data?.stepID,
       nextStep: data?.nextStep,
     };
-    var obj = {
+    let obj = {
       headerTitle: fun.defaultName,
       formModel: formMD,
       isReason: isMoveSuccess,
       applyFor: this.applyFor,
+      processID: data?.processID,
       dataCM: dataCM,
       stepName: data.currentStepName,
       isMoveProcess: false,

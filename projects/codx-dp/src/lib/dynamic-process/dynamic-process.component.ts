@@ -1120,6 +1120,7 @@ export class DynamicProcessComponent
       .subscribe((item: any) => {
         if (item) {
           //gọi ko ra
+          // Khanh bảo vậy mặc định luôn là kí sô
           this.cache.functionList('ESS22').subscribe((f) => {
             if (f) {
               if (!f || !f.gridViewName || !f.formName) return;
@@ -1148,6 +1149,7 @@ export class DynamicProcessComponent
                         dataType: 'auto',
                         templateRefID: this.itemSelected.recID,
                         templateRefType: 'DP_Processes',
+                        disableESign: true,
                       },
                       option
                     );

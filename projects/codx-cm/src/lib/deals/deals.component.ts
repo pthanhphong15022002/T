@@ -588,25 +588,25 @@ export class DealsComponent
     if (executeFunction) {
       executeFunction();
     } else {
-      let customData = {
-        refID: data.recID,
-        refType: 'CM_Deals',
-      };
+      // let customData = {
+      //   refID: data.recID,
+      //   refType: 'CM_Deals',
+      // };
 
-      if (data?.refID) {
-        customData = {
-          refID: data.processID,
-          refType: 'DP_Processes',
-        };
-      }
+      // if (data?.refID) {
+      //   customData = {
+      //     refID: data.processID,
+      //     refType: 'DP_Processes',
+      //   };
+      // }
       this.codxShareService.defaultMoreFunc(
         e,
         data,
         this.afterSave.bind(this),
         this.view.formModel,
         this.view.dataService,
-        this,
-        customData
+        this
+        //customData
       );
       this.detectorRef.detectChanges();
     }
@@ -947,7 +947,6 @@ export class DealsComponent
     let oldStepId = data.stepID;
     let dataCM = {
       refID: data?.refID,
-      processID: data?.processID,
       stepID: data?.stepID,
       nextStep: data?.nextStep,
     };
@@ -957,6 +956,7 @@ export class DealsComponent
       isReason: isMoveSuccess,
       applyFor: '1',
       dataCM: dataCM,
+      processID: data?.processID,
       stepName: data.currentStepName,
       isMoveProcess: false,
     };

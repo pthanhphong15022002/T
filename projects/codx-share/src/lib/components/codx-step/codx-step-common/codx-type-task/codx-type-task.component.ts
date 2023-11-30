@@ -10,18 +10,16 @@ export class CodxTypeTaskComponent implements OnInit {
   listJobType = [];
   dialog!: DialogRef;
   jobType: any;
-  isShowGroup = true;
-  isShowF = true;
+  typeDisableds = [];
   constructor(
     private cache: CacheService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) { 
    this.dialog = dialog;
-   this.isShowGroup = dt?.data?.isShowGroup == undefined ? this.isShowGroup : dt?.data?.isShowGroup;
-   this.isShowF = dt?.data?.isShowF;
+   this.typeDisableds = dt?.data?.typeDisableds == undefined ? [] : dt?.data?.typeDisableds;
   }
-
+  //Cuôc gọi:C,	Công việc: T, Email: E,	Cuộc họp: M, Khảo sát: S,	Báo giá: Q,	Hợp đồng CO,	Công tác: B, Nhap lieu: F
   ngOnInit(): void {
     this.cache.valueList('DP004').subscribe((res) => {
       if (res.datas) {
@@ -31,14 +29,10 @@ export class CodxTypeTaskComponent implements OnInit {
             checked: false,
           };
         });
-        if(!this.isShowGroup){
-          this.listJobType = this.listJobType.filter((item) => item?.value != 'G')
+        if(this.typeDisableds?.length > 0){
+          this.listJobType = this.listJobType.filter((item) => !this.typeDisableds.includes(item?.value));
         }
-        if(!this.isShowF){
-          this.listJobType = this.listJobType.filter((item) => item?.value != 'F')
-        }
-        this.listJobType
-        this.jobType = this.isShowGroup ? this.listJobType[1] : this.listJobType[0];
+        this.jobType = this.typeDisableds.includes('G') ? this.listJobType[0] : this.listJobType[1];
         this.jobType['checked'] = true;
       }
     });

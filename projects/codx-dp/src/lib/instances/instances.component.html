@@ -225,6 +225,7 @@
     [runMode]="runMode"
     [autoNameTabFields]="process?.autoNameTabFields"
     [isChangeOwner]="isChangeOwner"
+    (autoStartInstance)="autoStartInstance()"
   >
   </codx-instance-detail>
 </ng-template>
@@ -257,7 +258,7 @@
       <codx-label
         default="Nhiệm vụ đã đóng"
         name="lblIsClosed"
-        [formModel]="dialog.formModel"
+        [formModel]="view.formModel"
       ></codx-label>
     </ng-template>
   </span>
@@ -307,10 +308,9 @@
 <ng-template #footer let-data>
   <div class="d-flex justify-content-between align-items-center mt-1">
     <div class="d-flex align-items-end codx-badge">
-      <div>
-        <ng-container *ngIf="data.status != '1'">
+        <ng-container *ngIf="data?.status == '2'; else default">
           <div *ngFor="let item of listSteps">
-            <div
+            <!-- <div
               *ngIf="item.stepID === data.stepID"
               [ngStyle]="{
                 'background-color':
@@ -330,21 +330,43 @@
               <span [ngStyle]="{ color: item['textColor'] }">{{
                 item.stepName
               }}</span>
-            </div>
+            </div> -->
+
+            <div
+            *ngIf="item?.stepID === data?.stepID"
+          [ngStyle]="{
+            'background-color': item['backgroundColor']
+          }"
+          class="me-1 badge badge-sm d-flex align-items-center mw-125px"
+        >
+          <span
+            [ngClass]="item['icon']"
+            [ngStyle]="{ color: item['iconColor'] }"
+            class="me-1"
+          ></span>
+          <span
+            class="text-ellipsis line-clamp line-clamp-1"
+            [ngbTooltip]="item?.stepName"
+            [ngStyle]="{ color: item['textColor'] }"
+            >{{ item?.stepName }}</span
+          >
+        </div>
           </div>
         </ng-container>
-        <ng-container *ngIf="data.status == '1'">
-          <codx-vll
-            [name]="vllStatus"
-            [field]="'Status'"
-            [value]="data?.status"
-            [showText]="true"
-            [showBgColor]="true"
-            class="badge badge-light badge-sm"
-          >
-          </codx-vll>
-        </ng-container>
-      </div>
+    <ng-template #default>
+
+      <codx-vll
+      [name]="vllStatus"
+      [field]="'Status'"
+      [value]="data?.status"
+      [showText]="true"
+      [showBgColor]="true"
+      class="badge badge-light badge-sm"
+    >
+    </codx-vll>
+      </ng-template>
+
+
       <div
         class="d-flex align-items-center text-gray-600 ms-2"
         *ngIf="data.approveStatus > '1' && data?.approveStatus"
@@ -437,6 +459,7 @@
     [progressControl]="process?.instanceProgressControl"
     [runMode]="runMode"
     [autoNameTabFields]="process?.autoNameTabFields"
+    (autoStartInstance)="autoStartInstance()"
   >
   </codx-instance-detail>
 </ng-template>
