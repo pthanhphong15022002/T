@@ -843,6 +843,7 @@
     </ng-template>
     <ng-template #footer>
       <codx-tabs
+        #footerTabs
         [vllStatus]="vllStatus"
         [entityName]="formModel.entityName"
         [formModel]="formModel"
@@ -853,6 +854,9 @@
         [dataReferences]="dataReferences"
         [isUpPermission]="true"
         [isEdit]="true"
+        [isLoadedDataRef]="false"
+        [refIDRef]="itemSelected.refID"
+        [refTypeRef]="itemSelected.refType"
       ></codx-tabs>
     </ng-template>
   </codx-detail-tmp>
