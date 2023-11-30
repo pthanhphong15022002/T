@@ -7,7 +7,7 @@ export class IV_TransfersLines {
 
     transID: string;
 
-    lineType: string;
+    lineType: string = '1';
 
     barcode: string;
 

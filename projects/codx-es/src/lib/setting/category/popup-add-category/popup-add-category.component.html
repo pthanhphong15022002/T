@@ -3,7 +3,7 @@
   [title]="headerText"
   [subHeaderText]="subHeaderText"
   [subHeader]="subHeader"
-  [tabContent]="[tabGeneralInfo, tabApprovalStep, tabTemplate]"
+  [tabContent]="showTemplateTab? [tabGeneralInfo, tabApprovalStep, tabTemplate] : [tabGeneralInfo, tabApprovalStep]"
   [footer]="footer"
   [data]="data"
   [formModel]="dialog?.formModel"
