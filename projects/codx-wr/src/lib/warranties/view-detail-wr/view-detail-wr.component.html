@@ -278,6 +278,7 @@
                   </div>
 
                   <codx-vll
+                    [ngbTooltip]="gridViewSetup?.Status?.headerText"
                     [name]="gridViewSetup?.Status?.referedValue"
                     [field]="'Status'"
                     [value]="dataSelected?.status"
