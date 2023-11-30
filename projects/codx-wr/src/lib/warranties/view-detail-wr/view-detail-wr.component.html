@@ -127,29 +127,27 @@
                       : 'd-flex flex-column-reverse'
                   "
                 >
-                  <div>
-                    <div
-                      [ngClass]="
-                        dataSelected?.category == '1'
-                          ? 'd-flex align-items-center mb-1'
-                          : 'd-flex align-items-center mt-1'
+                  <div
+                    [ngClass]="
+                      dataSelected?.category == '1'
+                        ? 'd-flex align-items-center mb-1'
+                        : 'd-flex align-items-center mt-1'
+                    "
+                    *ngIf="
+                      dataSelected.address != null &&
+                      dataSelected.address.trim() != ''
+                    "
+                  >
+                    <span
+                      class="text-gray-900 line-clamp-1"
+                      [innerHTML]="
+                        dataSelected?.address
+                          | formatvalue : formModel : 'Address'
+                          | async
                       "
-                      *ngIf="
-                        dataSelected.address != null &&
-                        dataSelected.address.trim() != ''
-                      "
-                    >
-                      <span
-                        class="text-gray-900"
-                        [innerHTML]="
-                          dataSelected?.address
-                            | formatvalue : formModel : 'Address'
-                            | async
-                        "
-                      ></span>
-                    </div>
+                    ></span>
                   </div>
-                  <div class="d-flex flex-row">
+                  <div class="d-flex flex-row mb-1">
                     <div
                       class="d-flex align-items-center me-1"
                       *ngIf="
@@ -198,25 +196,87 @@
                       ></span>
                     </div>
                   </div>
+                  <div
+                    class="d-flex flex-row"
+                    *ngIf="
+                      contact2JSON?.Alternate?.Name &&
+                      dataSelected?.category == '1'
+                    "
+                  >
+                    <div class="d-flex align-items-center me-1">
+                      <span
+                        *ngIf="
+                          contact2JSON?.Alternate?.Name != null &&
+                          contact2JSON?.Alternate?.Name?.trim() != ''
+                        "
+                        class="fw-bold text-dark"
+                        [innerHTML]="
+                          contact2JSON?.Alternate?.Name
+                            | formatvalue : formModel : 'ContactName'
+                            | async
+                        "
+                      ></span>
+                    </div>
+                    <div
+                      class="d-flex align-items-center me-1"
+                      *ngIf="
+                        contact2JSON?.Alternate?.PrimaryPhoneNumber != null &&
+                        contact2JSON?.Alternate?.PrimaryPhoneNumber?.trim() !=
+                          ''
+                      "
+                    >
+                      <span
+                        class="text-gray-900"
+                        [innerHTML]="
+                          contact2JSON?.Alternate?.PrimaryPhoneNumber
+                            | formatvalue : formModel : 'Mobile'
+                            | async
+                        "
+                      ></span>
+                    </div>
+                    <div
+                      class="d-flex align-items-center"
+                      *ngIf="
+                        contact2JSON?.Alternate?.Email != null &&
+                        contact2JSON?.Alternate?.Email.trim() != ''
+                      "
+                    >
+                      <span
+                        class="text-gray-900"
+                        [innerHTML]="
+                          contact2JSON?.Alternate?.Email
+                            | formatvalue : formModel : 'Email'
+                            | async
+                        "
+                      ></span>
+                    </div>
+                  </div>
                 </div>
               </div>
               <div class="d-flex flex-column">
                 <div class="d-flex align-items-center justify-content-end mb-1">
-                  <span
-                    class="text-gray-900 me-2"
-                    [ngbTooltip]="tempLastStatusCode"
-                    [innerHTML]="
-                      dataSelected?.statusCode
-                        | formatvalue : formModel : 'StatusCode'
-                        | async
-                    "
-                  ></span>
-                  <ng-template #tempLastStatusCode>
-                    <codx-label
-                      [formModel]="formModel"
-                      fiedName="StatusCode"
-                    ></codx-label>
-                  </ng-template>
+                  <div
+                    *ngIf="dataSelected?.statusCode"
+                    class="me-2 badge badge-sm codx-badge d-flex align-items-center mw-125px background-color-status"
+                  >
+                    <span
+                      class="text-gray-900 text-ellipsis line-clamp line-clamp-1"
+                      style="color: #ffffff !important"
+                      [ngbTooltip]="tempLastStatusCode"
+                      [innerHTML]="
+                        dataSelected?.statusCode
+                          | formatvalue : formModel : 'StatusCode'
+                          | async
+                      "
+                    ></span>
+                    <ng-template #tempLastStatusCode>
+                      <codx-label
+                        [formModel]="formModel"
+                        fiedName="StatusCode"
+                      ></codx-label>
+                    </ng-template>
+                  </div>
+
                   <codx-vll
                     [name]="gridViewSetup?.Status?.referedValue"
                     [field]="'Status'"
@@ -290,10 +350,10 @@
                     "
                   ></span>
                   <div
-                    class="action-menu-od me-1"  *ngIf="
-                    dataSelected.status != '7' &&
-                    dataSelected.status != '5'
-                  "
+                    class="action-menu-od me-1"
+                    *ngIf="
+                      dataSelected.status != '7' && dataSelected.status != '5'
+                    "
                     (click)="editProduct(dataSelected)"
                   >
                     <i class="icon-edit text-danger icon-16"></i>

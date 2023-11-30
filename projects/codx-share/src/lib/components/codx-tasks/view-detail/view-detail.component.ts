@@ -20,6 +20,7 @@ import { tmpReferences } from '../../../models/assign-task.model';
 import { CodxTasksService } from '../codx-tasks.service';
 import { CodxService } from 'codx-core';
 import { ViewHistoryUpdateProgressComponent } from '../view-history-update-progress/view-history-update-progress.component';
+import { CodxTabsComponent } from '../../codx-tabs/codx-tabs.component';
 @Component({
   selector: 'share-view-detail',
   templateUrl: './view-detail.component.html',
@@ -30,8 +31,9 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
   templetHistoryProgress!: TemplateRef<any>;
   @ViewChild('tabHistoryProgess')
   tabHistoryProgess!: ViewHistoryUpdateProgressComponent;
+  @ViewChild('footerTabs')
+  footerTabs!: CodxTabsComponent;
 
-  dialog: any;
   @Input() formModel?: FormModel;
   @Input() taskExtends?: any;
   @Input() paramDefaut?: TM_Parameter = new TM_Parameter();
@@ -43,19 +45,20 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
   @Input() showMoreFunc?: any;
   @Input() dataService: CRUDService;
   @Input() user: any;
+  @Input() taskID: string;
+  @Output() changeMF = new EventEmitter<any>();
+  @Output() clickMoreFunction = new EventEmitter<any>();
+  @Output() hoverPopover = new EventEmitter<any>();
+
+  dialog: any;
   dataTree?: any[];
   dataReferences?: any[];
-  @Input() taskID: string;
   popoverDataSelected: any;
   listTaskResousceSearch = [];
   listTaskResousce = [];
   countResource = 0;
   id: string;
   itemSelected: any;
-
-  @Output() changeMF = new EventEmitter<any>();
-  @Output() clickMoreFunction = new EventEmitter<any>();
-  @Output() hoverPopover = new EventEmitter<any>();
   firstLoad = true;
   viewTags = '';
   vllPriority = 'TM005';
@@ -172,7 +175,8 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
           this.listTaskResousceSearch = this.listTaskResousce;
           this.countResource = this.listTaskResousce.length;
           this.loadTreeView();
-          this.loadDataReferences();
+          //để footer load khi click tab
+          //this.loadDataReferences();
 
           this.changeDetectorRef.detectChanges();
         }
@@ -281,6 +285,13 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
   //#endregion
 
   loadDataReferences() {
+    // //chưa load data
+    // if (this.footerTabs) {
+    //   this.footerTabs.refIDRef = this.itemSelected.refID;
+    //   this.footerTabs.refType = this.itemSelected.refType;
+    //   this.footerTabs.changeDataRef();
+    // }
+    // //đã load data
     this.dataReferences = [];
     if (this.itemSelected.refID)
       this.taskService.getReference(
