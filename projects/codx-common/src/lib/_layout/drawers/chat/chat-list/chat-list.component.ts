@@ -1,3 +1,4 @@
+import { group } from 'console';
 import {
   AfterViewInit,
   ApplicationRef,
@@ -10,11 +11,14 @@ import {
   ApiHttpService,
   AuthStore,
   CacheService,
+  CallFuncService,
   CodxListviewComponent,
   CRUDService,
   FormModel,
 } from 'codx-core';
 import { SignalRService } from '../services/signalr.service';
+import { CodxChatBoxComponent } from '../chat-box/chat-box.component';
+import { CHAT } from '../models/chat-const.model';
 
 @Component({
   selector: 'codx-chat-list',
@@ -39,6 +43,7 @@ export class CodxChatListComponent implements OnInit, AfterViewInit {
     private cache: CacheService,
     private dt: ChangeDetectorRef,
     private applicationRef: ApplicationRef,
+    private callfc: CallFuncService,
     private auth: AuthStore
   ) {
     this.user = this.auth.get();
@@ -77,52 +82,62 @@ export class CodxChatListComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit() {
     // add mesage
-    this.signalRSV.chat.subscribe((res: any) => {
-      if (res) {
-        let mssg = res.mssg;
-        let lstData = this.codxListView.dataService.data;
-        let idx = lstData.findIndex((x: any) => x.groupID === res.groupID);
-        if (idx != -1 && mssg?.message) {
-          let group = JSON.parse(JSON.stringify(lstData[idx]));
-          mssg.message =
-            mssg.messageType === '3' || mssg.messageType === '5'
-              ? ''
-              : mssg.message;
-          if(mssg.status)
-          {
-            mssg.isRead = mssg.status.some((x: any) => x.userID === this.user.userID);
+    this.signalRSV.chatboxChange.subscribe((res: any) => {
+      if (res?.event && res?.data) {
+        switch(res?.event){
+          case CHAT.UI_FUNC.DeletedMessage:
+            {
+              break;
+            }
+          default:{              
+            let mssg = res.data;
+            let lstData = this.codxListView.dataService.data;
+            let idx = lstData.findIndex((x: any) => x.groupID === res.groupID|| x?.groupID == res?.data?.groupID);
+            if (idx != -1 && mssg?.message) {
+              let group = JSON.parse(JSON.stringify(lstData[idx]));
+              mssg.message =
+                mssg.messageType === '3' || mssg.messageType === '5'
+                  ? ''
+                  : mssg.message;
+              if(mssg.status)
+              {
+                mssg.isRead = mssg.status.some((x: any) => x.userID === this.user.userID);
+              }
+              
+              group.message = JSON.parse(JSON.stringify(mssg));
+              lstData.splice(idx, 1);
+              (this.codxListView.dataService as CRUDService).add(group).subscribe();
+              this.dt.detectChanges();
+            }
+            break;
           }
-          
-          group.message = JSON.parse(JSON.stringify(mssg));
-          lstData.splice(idx, 1);
-          (this.codxListView.dataService as CRUDService).add(group).subscribe();
-          this.dt.detectChanges();
         }
+        
       }
     });
-    this.signalRSV.undoMssg.subscribe((res: any) => {
-      if (res) {
-        let lstData = this.codxListView.dataService.data;
-        let idx = lstData.findIndex((x: any) => x.groupID === res.groupID);
-        if (idx != -1) {
-          let group = JSON.parse(JSON.stringify(lstData[idx]));
-          let mssg = JSON.parse(JSON.stringify(group.message));
-          mssg.message = '';
-          group.message = JSON.parse(JSON.stringify(mssg));
-          lstData.splice(idx, 1);
-          (this.codxListView.dataService as CRUDService).add(group).subscribe();
-          this.dt.detectChanges();
-        }
-      }
-    });
-    //new group
-    this.signalRSV.activeNewGroup.subscribe((res: any) => {
-      if (res?.group) {
-        (this.codxListView.dataService as CRUDService)
-          .add(res.group)
-          .subscribe();
-      }
-    });
+    // this.signalRSV.deletedMessage.subscribe((res: any) => {
+    //   if (res) {
+    //     let lstData = this.codxListView.dataService.data;
+    //     let idx = lstData.findIndex((x: any) => x.groupID === res.groupID || x?.groupID == res?.mssg?.groupID);
+    //     if (idx != -1) {
+    //       let group = JSON.parse(JSON.stringify(lstData[idx]));
+    //       let mssg = JSON.parse(JSON.stringify(group.message));
+    //       mssg.message = '';
+    //       group.message = JSON.parse(JSON.stringify(mssg));
+    //       lstData.splice(idx, 1);
+    //       (this.codxListView.dataService as CRUDService).add(group).subscribe();
+    //       this.dt.detectChanges();
+    //     }
+    //   }
+    // });
+    // //new group
+    // this.signalRSV.activeNewGroup.subscribe((res: any) => {
+    //   if (res?.data) {
+    //     (this.codxListView.dataService as CRUDService)
+    //       .add(res.data)
+    //       .subscribe();
+    //   }
+    // });
   }
   // check read all
   readAllMessage() {
@@ -163,13 +178,14 @@ export class CodxChatListComponent implements OnInit, AfterViewInit {
 
   //select goup chat
   selectItem(group: any) {
-    this.signalRSV.sendData('OpenBoxChat', group);
+    this.signalRSV.sendData(CHAT.BE_FUNC.LoadGroup, group?.groupID);
+    
   }
   // select item search
   selectItemSeach(item: any) {
     if (item.type != 'H') {
       this.signalRSV.sendData(
-        'GetGroupSearch',
+        CHAT.BE_FUNC.SearchGroup,
         item.id,
         item.type == 'U' ? '1' : '2'
       );
@@ -181,6 +197,10 @@ export class CodxChatListComponent implements OnInit, AfterViewInit {
   {
     if(group) 
     {
+      let groups = (this.codxListView.dataService as CRUDService)?.data?.filter(x=>x?.groupID == group?.groupID);
+      if(groups?.length > 0){
+        return;
+      }      
       (this.codxListView.dataService as CRUDService).add(group).subscribe();
     }
   }
