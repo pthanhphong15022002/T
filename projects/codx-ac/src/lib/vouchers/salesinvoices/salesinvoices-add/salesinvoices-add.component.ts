@@ -452,32 +452,9 @@ export class SalesinvoicesAddComponent extends UIComponent{
     let oLine = Util.camelizekeyObj(model);
     oLine.transID = this.formSalesInvoice.data.recID;
     oLine.idiM4 = this.formSalesInvoice.data.warehouseID;
-    oLine.note = this.formSalesInvoice.data.note;
+    oLine.note = this.formSalesInvoice.data.memo;
     oLine = this.genFixedDims(oLine);
-    let dicSetting = JSON.parse(this.journal.extras);
-    if (dicSetting) {
-      if (
-        dicSetting?.diM1Control &&
-        dicSetting?.diM1Control != '2' &&
-        dicSetting?.diM1Control != '9'
-      ) {
-        oLine.diM1 = this.journal.diM1;
-      }
-      if (
-        dicSetting?.diM2Control &&
-        dicSetting?.diM2Control != '2' &&
-        dicSetting?.diM2Control != '9'
-      ) {
-        oLine.diM2 = this.journal.diM2;
-      }
-      if (
-        dicSetting?.diM3Control &&
-        dicSetting?.diM3Control != '2' &&
-        dicSetting?.diM3Control != '9'
-      ) {
-        oLine.diM3 = this.journal.diM3;
-      }
-    }
+    oLine = this.acService.getDataSettingFromJournal(oLine,this.journal);
     return oLine;
   }
   

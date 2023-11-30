@@ -68,6 +68,8 @@ import { TN_OrderModule } from 'projects/codx-ad/src/lib/models/tmpModule.model'
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { CodxViewApproveComponent } from 'projects/codx-share/src/lib/components/codx-step/codx-step-common/codx-view-approve/codx-view-approve.component';
+import { CodxShareService } from 'projects/codx-share/src/public-api';
+import { StepService } from 'projects/codx-share/src/lib/components/codx-step/step.service';
 
 @Component({
   selector: 'lib-popup-add-dynamic-process',
@@ -326,7 +328,12 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
   };
   isEditReason = false;
   isBoughtTM = false;
-
+  frmModelInstancesTask = {
+    funcID: 'DPT040102',
+    formName: 'DPInstancesStepsTasks',
+    entityName: 'DP_Instances_Steps_Tasks',
+    gridViewName: 'grvDPInstancesStepsTasks',
+  };
   private destroyFrom$: Subject<void> = new Subject<void>();
   // private onDestroyPopupStep$: Subject<void> = new Subject<void>();
   vllDefaultName = [];
@@ -343,6 +350,8 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
     private formBuilder: FormBuilder,
     private codxService: CodxService,
     private adService: CodxAdService,
+    private codxShareService: CodxShareService,
+    private stepService: StepService,
     @Optional() dialog: DialogRef,
     @Optional() dt: DialogData
   ) {
@@ -3398,8 +3407,25 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
         this.typeTask = task.taskType;
         this.viewTask(task);
         break;
+      case 'SYS002':
+        let customData = {
+          refID: task.recID,
+          refType: 'DP_Steps_Tasks',
+        };  
+        this.codxShareService.defaultMoreFunc(
+          e,
+          task,
+          this.afterSave.bind(this),
+          this.frmModelInstancesTask,
+          null,
+          this,
+          customData
+        );
+        break;
     }
   }
+
+  afterSave(e) {}
 
   clickMFTaskGroup(e: any, data?: any) {
     switch (e.functionID) {
@@ -3467,7 +3493,7 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
           case 'SYS003':
           case 'SYS004':
           case 'SYS001':
-          case 'SYS002':
+          // case 'SYS002':
           case 'DP31':
           case 'DP30':
           case 'DP29':

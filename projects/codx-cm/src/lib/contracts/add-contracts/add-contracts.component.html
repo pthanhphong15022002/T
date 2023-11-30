@@ -9,7 +9,6 @@
     [dialog]="dialog"
     [formModel]="dialog.formModel"
     [footer]="footer"
-    (setTitle)="setTitle($event)"
   ></codx-layout-add>
   <!-- [data]="contracts" -->
   <ng-template #information>
@@ -51,7 +50,7 @@
       type="button"
       button
       class="btn btn-primary ms-1"
-      (click)="handleSaveContract()"
+      (click)="save()"
     >
       <codx-label default="Lưu"></codx-label>
     </button>
@@ -75,10 +74,10 @@
         <codx-input
           [formModel]="dialog?.formModel"
           field="contractID"
-          type="text"
           [crrValue]="contracts?.contractID"
           [placeholder]="planceHolderAutoNumber ?? grvSetup['ContractID'].headerText"
           [disabled]="disabledShowInput || action === 'edit'"
+          (valueChange)="changeAutoNum($event)"
         ></codx-input>
       </div>
     </div>
@@ -475,7 +474,7 @@
 
 
 
-<div class="py-5" *ngIf="false">
+<!-- <div class="py-5" *ngIf="false">
   <header
     class="px-6 mb-6 w-100 d-flex align-items-center justify-content-between"
   >
@@ -547,7 +546,6 @@
   </main>
 </div>
 
-<!-- thông tin chung -->
 <ng-template #generalTemplate let-data="value">
   <div class="d-flex justify-content-between">
     <div class="w-40">
@@ -811,7 +809,6 @@
   ></ng-container>
 </ng-template>
 
-<!-- chi tiết mặt hàng -->
 <ng-template #quotationsTemplate let-data="value">
   <codx-quotations-lines
     #viewQuotationsLine
@@ -828,13 +825,12 @@
   ></codx-quotations-lines>
 </ng-template>
 
-<!-- phương thức thanh toán -->
 <ng-template #payTemplate let-data="value">
   <ng-container [ngTemplateOutlet]="methodPayTemplate"></ng-container>
   <ng-container [ngTemplateOutlet]="calendarPayTemplate"></ng-container>
 </ng-template>
 
-<!-- giao hàng -->
+
 <ng-template #shipTemplate let-data="value">
   <div>
     <codx-taskbar
@@ -860,7 +856,6 @@
               ></codx-label>
             </div>
             <div class>
-              <!-- TODO -->
               <codx-input
                 [formModel]="dialog.formModel"
                 field="delTermID"
@@ -879,7 +874,6 @@
               ></codx-label>
             </div>
             <div class>
-              <!-- TODO -->
               <codx-input
                 [formModel]="dialog.formModel"
                 field="delModeID"
@@ -970,7 +964,6 @@
               </codx-label>
             </div>
             <div class>
-              <!-- [formModel]="dialog.formModel" -->
               <codx-input
                 field="delDeadline"
                 type="datetime"
@@ -1012,7 +1005,6 @@
               </codx-label>
             </div>
             <div class>
-              <!-- [formModel]="dialog.formModel" -->
               <codx-input
                 field="delActualDate"
                 type="datetime"
@@ -1058,10 +1050,8 @@
   </div>
 </ng-template>
 
-<!-- Gia hạn -->
 <ng-template #extendTemplate let-data="value"> </ng-template>
 
-<!-- điều khoản hợp đồng -->
 <ng-template #termsAndRelatedTemplate let-data="value">
   <div class="d-flex justify-content-between mt-5">
     <div class="d-flex align-items-center nav-item w-100 mb-1">
@@ -1118,15 +1108,12 @@
   </div>
 </ng-template>
 
-<!-- Template phụ -->
-<!-- chủ thể hợp đồng -->
 <ng-template #representativeTemplate let-data="value">
   <div class="d-flex justify-content-between">
     <div class="w-50">
       <div class="row form-group">
         <div class="col-8">
           <div>
-            <!-- Tên cty  -->
             <codx-label
               [formModel]="dialog.formModel"
               fiedName="companyName"
@@ -1371,7 +1358,6 @@
       <div class="row form-group">
         <div class="col-12">
           <div>
-            <!-- TODO -->
             <codx-label
               [formModel]="dialog.formModel"
               fiedName="address"
@@ -1524,7 +1510,6 @@
   </div>
 </ng-template>
 
-<!-- thanh toán -->
 <ng-template #methodPayTemplate let-data="value">
   <div>
     <codx-taskbar
@@ -1712,7 +1697,6 @@
           </div>
           <div class="col-6">
             <div>
-              <!-- TODO -->
               <codx-label
                 [formModel]="dialog.formModel"
                 fiedName="pmtDeadline"
@@ -1720,7 +1704,6 @@
               ></codx-label>
             </div>
             <div class>
-              <!-- [formModel]="dialog.formModel" -->
               <codx-input
                 field="pmtDeadline"
                 type="datetime"
@@ -1736,7 +1719,6 @@
   </div>
 </ng-template>
 
-<!-- lịch thanh toán -->
 <ng-template #calendarPayTemplate let-data="value">
   <div>
     <codx-taskbar
@@ -1789,4 +1771,4 @@
       </div>
     </div>
   </div>
-</ng-template>
+</ng-template> -->

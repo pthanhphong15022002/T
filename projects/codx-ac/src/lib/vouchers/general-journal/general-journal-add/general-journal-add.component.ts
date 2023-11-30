@@ -105,51 +105,11 @@ export class GeneralJournalAddComponent extends UIComponent {
   }
 
   beforeInitGridGeneral(eleGrid:CodxGridviewV2Component){
-    //* Thiết lập format number theo đồng tiền hạch toán
-    this.settingFormatGridCashPayment(eleGrid)
-
-    //* Thiết lập datasource combobox theo sổ nhật ký
-    let preAccountID = '';
-    let dtvAccountID = '';
-    let preOffsetAcctID = '';
-    let dtvOffsetAcctID = '';
-    let preDIM1 = '';
-    let dtvDIM1 = '';
-    let preDIM2 = '';
-    let dtvDIM2 = '';
-    let preDIM3 = '';
-    let dtvDIM3 = '';
     let hideFields = [];
-
-    if (this.journal.drAcctControl == '1' || this.journal.drAcctControl == '2') { //? nếu tài khoản nợ là mặc định hoặc trong danh sách
-      preAccountID = '@0.Contains(AccountID)';
-      dtvAccountID = `[${this.journal?.drAcctID}]`;
-    }
-    eleGrid.setPredicates('accountID',preAccountID,dtvAccountID);
-
-    if ((this.journal.crAcctControl == '1' || this.journal.crAcctControl == '2') && this.journal.entryMode == '1') { //? nếu tài khoản có là mặc định hoặc trong danh sách
-      preOffsetAcctID = '@0.Contains(AccountID)';
-      dtvOffsetAcctID = `[${this.journal?.crAcctID}]`;
-    }
-    eleGrid.setPredicates('offsetAcctID',preOffsetAcctID,dtvOffsetAcctID);
-
-    if (this.journal.diM1Control == '1' || this.journal.diM1Control == '2') { //? nếu phòng ban là mặc định hoặc trong danh sách
-      preDIM1 = '@0.Contains(DepartmentID)';
-      dtvDIM1 = `[${this.journal?.diM1}]`;
-    }
-    eleGrid.setPredicates('diM1',preDIM1,dtvDIM1);
-
-    if (this.journal.diM2Control == '1' || this.journal.diM2Control == '2') { //? nếu TTCP là mặc định hoặc trong danh sách
-      preDIM2 = '@0.Contains(CostCenterID)';
-      dtvDIM2 = `[${this.journal?.diM2}]`;
-    }
-    eleGrid.setPredicates('diM2',preDIM2,dtvDIM2);
-
-    if (this.journal.diM3Control == '1' || this.journal.diM3Control == '2') { //? nếu mục phí là mặc định hoặc trong danh sách
-      preDIM3 = '@0.Contains(CostItemID)';
-      dtvDIM3 = `[${this.journal?.diM3}]`;
-    }
-    eleGrid.setPredicates('diM3',preDIM3,dtvDIM3);
+    let setting = this.acService.getSettingFromJournal(eleGrid,this.journal);
+    eleGrid = setting[0];
+    //* Thiết lập format number theo đồng tiền hạch toán
+    this.settingFormatGridGeneral(eleGrid)
 
     //* Thiết lập ẩn hiện các cột theo sổ nhật ký
     if (this.dialogData?.data.hideFields && this.dialogData?.data.hideFields.length > 0) {
@@ -612,68 +572,13 @@ export class GeneralJournalAddComponent extends UIComponent {
 
     let indexReason = this.eleCbxReasonID?.ComponentCurrent?.dataService?.data.findIndex((x) => x.ReasonID == this.eleCbxReasonID?.ComponentCurrent?.value);
     if (indexReason > -1) {
-      rAcctID = this.eleCbxReasonID?.ComponentCurrent?.dataService?.data[indexReason].OffsetAcctID;
+      oLine.accountID = this.eleCbxReasonID?.ComponentCurrent?.dataService?.data[indexReason].OffsetAcctID;
       oLine.note = this.eleCbxReasonID?.ComponentCurrent?.dataService?.data[indexReason].ReasonName;
     }
 
-    if (this.journal?.entryMode == '1') {
-      if (cAcctID) {
-        switch (this.journal?.crAcctControl) {
-          case '1':
-            if (cAcctID == this.journal?.crAcctID) {
-              oLine.offsetAcctID = cAcctID;
-            } else {
-              oLine.offsetAcctID = this.journal.crAcctID;
-            }
-            break;
-          default:
-            oLine.offsetAcctID = cAcctID;
-            break;
-        }
-      }
-    } else {
-      oLine.offsetAcctID = null;
-    }
+    oLine = this.acService.getDataSettingFromJournal(oLine,this.journal);
 
-    if (rAcctID) {
-      switch (this.journal?.drAcctControl) {
-        case '1':
-          if (rAcctID == this.journal?.drAcctID) {
-            oLine.accountID = rAcctID;
-          } else {
-            oLine.accountID = this.journal.drAcctID;
-          }
-          break;
-        default:
-          oLine.accountID = rAcctID;
-          break;
-      }
-    }
-
-    let dicSetting = JSON.parse(this.journal.extras);
-    if (dicSetting) {
-      if (
-        dicSetting?.diM1Control &&
-        dicSetting?.diM1Control != '2' &&
-        dicSetting?.diM1Control != '9'
-      ) {
-        oLine.diM1 = this.journal.diM1;
-      }
-      if (
-        dicSetting?.diM2Control &&
-        dicSetting?.diM2Control != '2' &&
-        dicSetting?.diM2Control != '9'
-      ) {
-        oLine.diM2 = this.journal.diM2;
-      }
-      if (
-        dicSetting?.diM3Control &&
-        dicSetting?.diM3Control != '2' &&
-        dicSetting?.diM3Control != '9'
-      ) {
-        oLine.diM3 = this.journal.diM3;
-      }
-    }
+    if(this.journal?.entryMode != '1') oLine.offsetAcctID = null;
 
     oAccount = this.acService.getCacheValue('account', oLine?.accountID);
     oOffsetAcct = this.acService.getCacheValue('account',oLine?.offsetAcctID);
@@ -962,7 +867,7 @@ export class GeneralJournalAddComponent extends UIComponent {
    * *Hàm setting format tiền theo đồng tiền hạch toán
    * @param eleGrid
    */
-  settingFormatGridCashPayment(eleGrid){
+  settingFormatGridGeneral(eleGrid){
     let setting = eleGrid.systemSetting;
     if (this.formGeneral.data.currencyID == this.baseCurr) { //? nếu chứng từ có tiền tệ = đồng tiền hạch toán
       eleGrid.setFormatField('dr','n'+(setting.dBaseCurr || 0));

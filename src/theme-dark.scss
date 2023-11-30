@@ -648,7 +648,9 @@ codx-user-inner a.menu-link {
 ejs-listview {
     background-color: var(--bg-card);
 }
-
+.news-group ejs-listview {
+    background-color: #3668ff10;
+}
 .popover {
     background-color: var(--bg-card);
     border-color: var(--border-list);
@@ -730,14 +732,14 @@ label,
 
 .e-schedule .e-timeline-view .e-work-cells,
 .e-schedule .e-timeline-month-view .e-work-cells {
-    background-color: rgba(255, 255, 255, 0.04) !important;
+    background-color: rgba(255, 255, 255, 0.02) !important;
     border-color: var(--border-light);
     color: inherit;
 }
 
 .e-schedule .e-timeline-view .e-work-cells,
 .e-schedule .e-timeline-year-view .e-work-cells {
-    background-color: rgba(255, 255, 255, 0.04) !important;
+    background-color: rgba(255, 255, 255, 0.02) !important;
     border-color: var(--border-light);
     color: inherit;
 }
@@ -927,7 +929,21 @@ ejs-tab#calendarTab .e-calendar {
 .div-btn-tab-attachment.active {
     background-color: #080f2478;
 }
-.nav-export .active
-{
+.nav-export .active{
   background-color: #f4f7ff18;
+}
+.e-calendar, .e-bigger.e-small .e-calendar {
+    background-color: var(--bg-card);
+}
+.e-checkbox-wrapper.e-checkbox-disabled .e-frame, .e-css.e-checkbox-wrapper.e-checkbox-disabled .e-frame {
+    background-color:transparent;
+}
+.badge-secondary {
+    color: var(--text-body);
+}
+::-webkit-scrollbar-thumb:hover {
+    background-color: #22223a !important;
+}
+::-webkit-scrollbar-thumb {
+    background-color: #2b2f42 !important;
 }
