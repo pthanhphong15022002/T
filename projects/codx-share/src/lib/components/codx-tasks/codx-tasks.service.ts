@@ -379,7 +379,10 @@ export class CodxTasksService {
     refType,
     getTree?: Function,
     sessionID = null,
-    taskID = null //dùng cho serviceTask gọi riêng- chưa đưa về
+    taskID = null, //dùng cho serviceTask gọi riêng- taskID của task
+    category = null, //dùng cho serviceTask gọi riêng- category của task
+    isAssign = null, //dùng cho serviceTask gọi riêng- isAssign của object gốc
+    isHaveParentID = null //dùng cho serviceTask gọi riêng- có parentID của task ko
   ) {
     let methol = 'GetListTaskTreeByRefIDAsync';
     if (!sessionID) {
@@ -387,18 +390,25 @@ export class CodxTasksService {
         switch (refType) {
           case 'OD_Dispatches':
           case 'ES_SignFiles':
-            //  case 'TM_Tasks':  //truong hop nay dacbiet hon tí chuyển sau tính sau
             methol = 'GetListTaskTreeByRefIDAsync';
             break;
+          // case 'TM_Tasks':
+          //   return this.loadTreeViewTM(
+          //     taskID,
+          //     category,
+          //     isAssign,
+          //     isHaveParentID,
+          //     refID,
+          //     getTree
+          //   );
+          //   break;
           default:
-            debugger;
             getTree([]);
             return;
         }
         this.api
           .execSv<any>('TM', 'ERM.Business.TM', 'TaskBusiness', methol, refID)
           .subscribe((res) => {
-            debugger;
             getTree(res);
           });
       } else getTree([]);
@@ -407,4 +417,36 @@ export class CodxTasksService {
       getTree([]);
     }
   }
+
+  //tree của TM
+  loadTreeViewTM(
+    taskID,
+    category,
+    isAssign,
+    isHaveParentID,
+    refID,
+    getTree?: Function
+  ) {
+    if (!taskID || (category == '1' && !isAssign)) {
+      getTree([]);
+      return;
+    }
+    let dataTree = [];
+    let method = '';
+    let request = '';
+    if (category == '2' && !isHaveParentID) {
+      method = 'GetListTaskTreeByRefIDAsync';
+      request = refID;
+    } else {
+      method = 'GetTreeAssignByTaskIDAsync';
+      request = taskID;
+    }
+    this.api
+      .execSv<any>('TM', 'ERM.Business.TM', 'TaskBusiness', method, request)
+      .subscribe((res) => {
+        if (res) dataTree = res || [];
+        getTree(dataTree);
+      });
+  }
+  //----------------END------------------//
 }
