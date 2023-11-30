@@ -32,13 +32,13 @@ override onInit(): void {
   this.initData();
 }
 
-initData(){
+initData(isSystem:boolean=false){
   this.isLoaded = false;
   this.selectedData=undefined;
   this.addData= undefined;
   this.isEditing = false;
   let arrButtons:any=[];
-  this.api.execSv('SYS','SYS','FormSettingsBusiness','GetFormSettingAsync','Comments').subscribe((res:any)=>{
+  this.api.execSv('SYS','SYS','FormSettingsBusiness','GetFormSettingAsync',['Comments',isSystem]).subscribe((res:any)=>{
     this.data = res;
     let lstRecID:any=[];
     this.data.map((x:any)=> {
@@ -75,7 +75,7 @@ initData(){
     if(lstRecID.length){
       this.api.execSv('SYS','SYS','FormSettingsBusiness','GetListFormsAsync',{RecID: lstRecID}).subscribe((res:any)=>{
         this.datasource = res;
-        if(!this.user.administrator && !this.user.systemAdmin){
+        if(!this.isSystemEdit){
 
           this.datasource.map((x:any)=>{
             if(x.userID) return x;
@@ -111,7 +111,6 @@ initData(){
   ) {
     super(injector);
     this.data = dialogData?.data[0];
-    this.headerText = dialogData?.data[2];
     this.funcID = dialogData?.data[1];
     this.dialogRef = dialogRef;
     this.dialogRef.formModel = this.formModel;
@@ -141,7 +140,7 @@ initData(){
           this.isEditFunc=false;
           return;
         }
-        if(!this.user.administrator && !this.user.systemAdmin){
+        if(!this.isSystemEdit){
           this.selectedData = this.datasource.find(x=>x.oldID==item.recID);
           if(this.selectedData){
             if(this.selectedData.refID){
@@ -181,6 +180,9 @@ initData(){
         // })
 
 
+        this.api.execSv('SYS','SYS','FormSettingsBusiness','GetListSharedAsync',item.recID).subscribe((res:any)=>{
+          this.lstShared[item.recID]=res;
+        })
         if(item.functionType == 'G'){
           this.isEditGroup = true;
           this.isAddFunc = false;
@@ -188,9 +190,7 @@ initData(){
           this.isEditFunc=false;
         }
         else{
-          this.api.execSv('SYS','SYS','FormSettingsBusiness','GetListSharedAsync',item.recID).subscribe((res:any)=>{
-            this.lstShared[item.recID]=res;
-          })
+
           this.isEditGroup = false;
           this.isAddFunc = false;
           this.isAddGroup = false;
@@ -378,6 +378,7 @@ initData(){
 
   }
 
+
   valueShareAddChange(e:any){
     if(e.data.length){
       this.lstShared[this.addData.recID]=[];
@@ -512,6 +513,7 @@ initData(){
     this.addData.userID = this.user.userID;
     this.addData.sorting = this.datasource.length
   }
+
   imgChanged(e:any){
     if(this.selectedData && e.length){
       this.selectedData.image = e[0].pathDisk;
@@ -532,45 +534,47 @@ initData(){
   }
 
   onSaveForm(){
+    if(this.isSystemEdit){
 
-    let idField = 'recID';
-    if(this.datasource[0].oldID) idField='oldID'
-    if(this.tree && (this.tree as any).liList.length){
-      //let newDatasource:any=[];
-      for(let i =0;i< (this.tree as any).liList.length;i++){
-        let id = (this.tree as any).liList[i].getAttribute('data-uid');
+    }
+    else{
+      let idField = 'recID';
+      if(this.datasource[0].oldID) idField='oldID'
+      if(this.tree && (this.tree as any).liList.length){
+        //let newDatasource:any=[];
+        for(let i =0;i< (this.tree as any).liList.length;i++){
+          let id = (this.tree as any).liList[i].getAttribute('data-uid');
 
-        if(id){
-          let dataId = this.data.find((x:any)=>x.recID==id);
-        if(dataId && !dataId.isButton){
-          let item = this.datasource.find((x:any)=> x[idField] == id);
-          if(item){
-            item.sorting = i+1;
-            //newDatasource.push(item);
+          if(id){
+            let dataId = this.data.find((x:any)=>x.recID==id);
+          if(dataId && !dataId.isButton){
+            let item = this.datasource.find((x:any)=> x[idField] == id);
+            if(item){
+              item.sorting = i+1;
+              //newDatasource.push(item);
+            }
+          }
+          else{
+            continue;
+          }
+
           }
         }
-        else{
-          continue;
-        }
-
-        }
+        //debugger
+        //this.datasource = newDatasource;
       }
-      //debugger
-      //this.datasource = newDatasource;
+      this.api.execAction('SYS_FormSettings',this.datasource,this.datasource[0].oldID ? 'SaveAsync' : 'UpdateAsync',true).subscribe((res:any)=>{
+
+        if(!res.error){
+          setTimeout(()=>{
+            this.notificationsService.notifyCode('SYS007');
+            this.dialogRef.close();
+            window.location.reload();
+          },1000)
+         }
+
+      })
     }
-    this.api.execAction('SYS_FormSettings',this.datasource,this.datasource[0].oldID ? 'SaveAsync' : 'UpdateAsync',true).subscribe((res:any)=>{
-
-      if(!res.error){
-        setTimeout(()=>{
-          this.notificationsService.notifyCode('SYS007');
-          this.dialogRef.close();
-          window.location.reload();
-        },1000)
-       }
-
-    })
-
-
   }
 
   onSaveAdmin(){
@@ -648,9 +652,9 @@ initData(){
     this.api.execAction('SYS_FormSettings',this.datasource,this.datasource[0].oldID ? 'SaveAsync' : 'UpdateAsync',true).subscribe((res:any)=>{
 
       if(!res.error){
-        if(this.user.administrator || this.user.systemAdmin) delete this.addData.userID;
+        if(this.isSystemEdit) delete this.addData.userID;
         this.api.execAction('SYS_FormSettings',[this.addData],'SaveAsync',true).subscribe((res:any)=>{
-         if(this.user.systemAdmin || this.user.administrator){
+         if(this.isSystemEdit){
           if(Object.keys(this.lstShared).length){
               for(let key in this.lstShared){
                 this.api.execSv('SYS','SYS','FormSettingsBusiness','UpdateFormSharedAsync',[key,this.lstShared[key]]).subscribe((res:any)=>{
@@ -662,7 +666,7 @@ initData(){
           if(!res.error){
             setTimeout(()=>{
               this.notificationsService.notifyCode('SYS007');
-              this.initData();
+              this.initData(this.isSystemEdit);
             }
           )}
         })
@@ -671,6 +675,19 @@ initData(){
     })
 
   }
+
+  onAddPerForm(){
+    if(this.user.administrator || this.user.systemAdmin){
+      this.datasource.map((x:any)=>{
+        if(x.userID) return x;
+        x.oldID = x.recID;
+        x.recID=Util.uid();
+        x.userID = this.user.userID;
+        return x;
+      })
+    }
+  }
+
   onRestore(){
     this.notificationsService.alertCode("SYS046").subscribe((res:any)=>{
       if(res && res.event.status=='Y'){
@@ -678,7 +695,7 @@ initData(){
         this.api.execSv('SYS','SYS','FormSettingsBusiness','RestoreUserSettingsAsync',null).subscribe((res:any)=>{
           if(res){
             this.notificationsService.notifyCode('SYS007');
-            this.initData();
+            this.initData(this.isSystemEdit);
           }
         })
       }
@@ -769,7 +786,7 @@ initData(){
 
           if(!res.error){
             setTimeout(()=>{
-              this.initData();
+              this.initData(this.isSystemEdit);
             })
            }
 
@@ -782,12 +799,25 @@ initData(){
           if(!res.error){
 
             setTimeout(()=>{
-              this.initData();
+              this.initData(this.isSystemEdit);
             })
           }
         })
       }
 
     }
+  }
+
+  isSystemEdit:boolean=false;
+  onSystemEdit(){
+    this.isSystemEdit=true;
+    this.initData(true);
+  }
+  onPersonalEdit(){
+    this.isSystemEdit=false;
+    this.initData();
+  }
+  onInputFocus(e:any){
+    this.isEditing = true;
   }
 }
