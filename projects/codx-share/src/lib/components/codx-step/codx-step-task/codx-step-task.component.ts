@@ -801,7 +801,11 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
           refID: task.recID,
           refType: 'DP_Instances_Steps_Tasks',
         };
-
+        // if(task?.isTaskDefault){
+        //   customData.refID =  task.refID ;
+        //   customData.refType ='DP_Steps_Tasks'
+        // }
+  
         this.codxShareService.defaultMoreFunc(
           e,
           task,
@@ -2703,6 +2707,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
 
   approvalTrans(task: DP_Instances_Steps_Tasks) {
     this.taskApproval = task;
+    let idTask = task?.isTaskDefault ? task?.refID : task?.recID;
     if (task?.approveRule && task?.recID) {
       this.api
         .execSv<any>(
@@ -2710,7 +2715,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
           'ES',
           'CategoriesBusiness',
           'GetByCategoryIDAsync',
-          task?.recID
+          idTask
         )
         .subscribe((res) => {
           if (!res) {
@@ -2762,6 +2767,8 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   }
 
   cancelApprover(task) {
+    let idTask = task?.isTaskDefault ? task?.refID : task?.recID;
+
     this.notiService.alertCode('ES016').subscribe((x) => {
       if (x.event.status == 'Y') {
         this.api
@@ -2770,7 +2777,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
             'ES',
             'CategoriesBusiness',
             'GetByCategoryIDAsync',
-            task?.recID
+            idTask
           )
           .subscribe((res: any) => {
             if (res) {
@@ -2922,6 +2929,11 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
           refType: 'DP_Instances_Steps_Tasks',
           dataSource: res,
         };
+        debugger
+        if(data?.isTaskDefault){
+          customData.refID =  data.refID ;
+          customData.refType ='DP_Steps_Tasks'
+        }
         this.codxShareService.defaultMoreFunc(
           e,
           data,

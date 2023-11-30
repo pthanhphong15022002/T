@@ -16,6 +16,8 @@ import {
 import {
   AlertConfirmInputConfig,
   ApiHttpService,
+  AuthService,
+  AuthStore,
   CacheService,
   CallFuncService,
   DataRequest,
@@ -103,6 +105,7 @@ export class CodxExportComponent implements OnInit, OnChanges {
     private formBuilder: FormBuilder,
     private notifySvr: NotificationsService,
     private cache: CacheService,
+    private auth: AuthService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -460,6 +463,7 @@ export class CodxExportComponent implements OnInit, OnChanges {
   navChanged(e: any) {
     this.show = false;
     var id;
+   
     switch (e?.nextId) {
       case '1':
         this.type = 'excel';
@@ -490,10 +494,13 @@ export class CodxExportComponent implements OnInit, OnChanges {
       case '6':
         this.type = 'word';
         this.show = true;
-        this.exportGroup.controls['dataExport'].setValue('selected');
         this.load();
         break;
     }
+
+    var dataExport = "all";
+    if(e?.nextId == "3" || e?.nextId == "6") dataExport = "selected";
+    this.exportGroup.controls['dataExport'].setValue(dataExport);
     this.exportGroup.controls['format'].setValue(id);
   }
 }
