@@ -145,7 +145,7 @@ export class IncommingAddComponent implements OnInit {
     } else if (this.type == 'edit') {
       if (this.user?.userID) this.dispatch.modifiedBy = this.user?.userID;
       if (this.dispatch.agencyName)
-        this.dispatch.agencyName = this.dispatch.agencyName.toString();
+        this.dispatch.agencyName = this.dispatch.agencyName?.toString();
       if (this.defaultValue == '2') {
         if (this.dispatch.agencies && this.dispatch.agencies.length > 0) {
           if ('agencyID' in this.dispatch.agencies[0])
@@ -355,7 +355,7 @@ export class IncommingAddComponent implements OnInit {
         this.agencyName = data.OrgUnitName;
       }
     }
-    this.dispatch.agencyName = this.dispatch.agencyName.toString();
+    this.dispatch.agencyName = this.dispatch.agencyName?.toString();
   }
 
   changeValueAgencies(e: any) {
@@ -467,24 +467,20 @@ export class IncommingAddComponent implements OnInit {
                   if (
                     this.dispatch.relations &&
                     this.dispatch.relations.length > 0
-                  ) 
-                  {
-                    var emailTemplate = this.odService.loadEmailTempType("OD_Share") as any;
-                    if(isObservable(emailTemplate))
-                    {
-                      emailTemplate.subscribe((itemEmailTmp:any)=>{
-                        this.beforeSaveSendEmail(item,itemEmailTmp);
-                      })
-                    }
-                    else this.beforeSaveSendEmail(item,emailTemplate);
-                  } 
-                  else 
-                  {
+                  ) {
+                    var emailTemplate = this.odService.loadEmailTempType(
+                      'OD_Share'
+                    ) as any;
+                    if (isObservable(emailTemplate)) {
+                      emailTemplate.subscribe((itemEmailTmp: any) => {
+                        this.beforeSaveSendEmail(item, itemEmailTmp);
+                      });
+                    } else this.beforeSaveSendEmail(item, emailTemplate);
+                  } else {
                     this.disableSave = false;
                     this.notifySvr.notify(item.message);
                     this.dialog.close(item.data);
                   }
-                
                 } else {
                   this.disableSave = false;
                   this.notifySvr.notify(item2.message);
@@ -540,34 +536,28 @@ export class IncommingAddComponent implements OnInit {
     }
   }
 
-  beforeSaveSendEmail(item:any,emailTemplate:any)
-  {
+  beforeSaveSendEmail(item: any, emailTemplate: any) {
     var per = new permissionDis();
-      per.to = [];
-      for (var i = 0; i < this.dispatch.relations.length; i++) {
-        per.to.push(this.dispatch.relations[i].userID);
-      }
-      per.recID = item?.data?.recID;
-      per.funcID = 'ODT81';
-      per.download = true;
-      per.share = true;
-      per.sendMail = true;
-      per.desc = emailTemplate?.message,
-      per.emailTemplates = emailTemplate
-      this.dispatchService
-        .shareDispatch(
-          per,
-          this.referType,
-          this.formModel?.entityName
-        )
-        .subscribe((item3) => {
-          if (item3) {
-            this.disableSave = false;
-            item.data.relations = item3?.data[0].relations;
-            this.notifySvr.notify(item.message);
-            this.dialog.close(item.data);
-          }
-        });
+    per.to = [];
+    for (var i = 0; i < this.dispatch.relations.length; i++) {
+      per.to.push(this.dispatch.relations[i].userID);
+    }
+    per.recID = item?.data?.recID;
+    per.funcID = 'ODT81';
+    per.download = true;
+    per.share = true;
+    per.sendMail = true;
+    (per.desc = emailTemplate?.message), (per.emailTemplates = emailTemplate);
+    this.dispatchService
+      .shareDispatch(per, this.referType, this.formModel?.entityName)
+      .subscribe((item3) => {
+        if (item3) {
+          this.disableSave = false;
+          item.data.relations = item3?.data[0].relations;
+          this.notifySvr.notify(item.message);
+          this.dialog.close(item.data);
+        }
+      });
   }
   addRelations() {
     if (this.relations && this.relations.length > 0) {
@@ -608,7 +598,10 @@ export class IncommingAddComponent implements OnInit {
       var data = this.dispatch[field];
       if (
         !data &&
-        (((this.defaultValue == '1' || this.defaultValue == '3' || this.defaultValue == '4') && field != 'agencies') ||
+        (((this.defaultValue == '1' ||
+          this.defaultValue == '3' ||
+          this.defaultValue == '4') &&
+          field != 'agencies') ||
           (this.defaultValue == '2' && field != 'agencyName'))
       )
         arr.push(this.gridViewSetup[this.objRequied[i]].headerText);

@@ -9,10 +9,9 @@
     [dialog]="dialog"
     [formModel]="dialog.formModel"
     [footer]="footer"
-    [data]="contracts"
     (setTitle)="setTitle($event)"
   ></codx-layout-add>
-
+  <!-- [data]="contracts" -->
   <ng-template #information>
     <ng-container
       [ngTemplateOutlet]="informationTemp"
@@ -184,7 +183,7 @@
       <codx-input
         #inputContact
         [formModel]="dialog?.formModel"
-        field="ContactID"
+        field="contactID"
         [model]="{ObjectID: contracts?.customerID }"
         (valueChange)="valueChangeCombobox($event)"
         [crrValue]="contracts?.contactID"

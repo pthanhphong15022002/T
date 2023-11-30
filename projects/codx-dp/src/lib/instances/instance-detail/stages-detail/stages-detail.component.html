@@ -27,7 +27,7 @@
       <div class="d-flex align-items-center justify-content-end">
         <div
           class="ms-2 cursor-pointer"
-          *ngIf="dataStep?.approveStatus && dataStep?.approveStatus != 1"
+          *ngIf="dataStep?.approveStatus > '1' && dataStep?.approveStatus"
           [ngbTooltip]="approveStatus"
           container="body"
         >

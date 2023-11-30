@@ -29,6 +29,7 @@ export class MenuListApprovalComponent implements OnInit{
   
   getFuncList()
   {
+    debugger
     var fucList = this.codxWsService.loadFuncList("WS") as any;
     if(isObservable(fucList))fucList.subscribe((item : any)=>{if(item)this.funcList = item.filter(x=>x.parentID == this.funcID)})
     else this.funcList = fucList.filter(x=>x.parentID == this.funcID);
