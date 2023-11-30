@@ -463,7 +463,7 @@ export class CodxExportComponent implements OnInit, OnChanges {
   navChanged(e: any) {
     this.show = false;
     var id;
-    this.exportGroup.controls['dataExport'].setValue('all');
+   
     switch (e?.nextId) {
       case '1':
         this.type = 'excel';
@@ -478,7 +478,6 @@ export class CodxExportComponent implements OnInit, OnChanges {
       case '3':
         this.type = 'word';
         id = 'word';
-        this.exportGroup.controls['dataExport'].setValue('selected');
         break;
 
       case '4':
@@ -495,10 +494,13 @@ export class CodxExportComponent implements OnInit, OnChanges {
       case '6':
         this.type = 'word';
         this.show = true;
-        this.exportGroup.controls['dataExport'].setValue('selected');
         this.load();
         break;
     }
+
+    var dataExport = "all";
+    if(e?.nextId == "3" || e?.nextId == "6") dataExport = "selected";
+    this.exportGroup.controls['dataExport'].setValue(dataExport);
     this.exportGroup.controls['format'].setValue(id);
   }
 }
