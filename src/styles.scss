@@ -4266,6 +4266,8 @@ codx-header-v2, codx-ws-header{
 @media (min-width: 992px){
 [data-kt-aside-minimize=on].aside-minimize-icon-title.header-fixed-2 .menu-link {
     max-height: 42px!important;
+    height: 42px!important;
+    padding-top: 8px!important;
 }
 }
 codx-view-list-tree

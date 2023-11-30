@@ -261,6 +261,7 @@
                   >
                     <span
                       class="text-gray-900 text-ellipsis line-clamp line-clamp-1"
+                      style="color: #ffffff !important"
                       [ngbTooltip]="tempLastStatusCode"
                       [innerHTML]="
                         dataSelected?.statusCode
@@ -277,6 +278,7 @@
                   </div>
 
                   <codx-vll
+                    [ngbTooltip]="gridViewSetup?.Status?.headerText"
                     [name]="gridViewSetup?.Status?.referedValue"
                     [field]="'Status'"
                     [value]="dataSelected?.status"

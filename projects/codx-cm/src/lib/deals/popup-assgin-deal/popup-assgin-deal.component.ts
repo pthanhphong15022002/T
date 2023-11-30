@@ -49,9 +49,9 @@ export class PopupAssginDealComponent
   applyProcess: boolean = false;
   isLockStep: boolean = false;
 
-  // isViewUser: boolean = false;
-  // isViewBuild: boolean = false;
-  // isViewGroup: boolean = false;
+  isViewUser: boolean = false;
+  isViewBuild: boolean = true;
+  isViewGroup: boolean = true;
 
   @ViewChild('cbxOwner') cbxOwner: CodxInputComponent;
   @ViewChild('form') form: CodxFormComponent;
@@ -110,7 +110,7 @@ export class PopupAssginDealComponent
     this.gridViewSetup = dialogData?.data.gridViewSetup;
     this.formModel = dialogData?.data.formModel;
     // this.startControl = dialogData?.data.startControl;
-    // this.disableViewTab(this.owner,'');
+    //this.disableViewTab(this.owner,'');
     this.promiseAll();
   }
 
@@ -453,16 +453,16 @@ export class PopupAssginDealComponent
     permission.createdBy = this.user.userID;
     return permission;
   }
-  // disableViewTab(owner: any, isViewTab: any) {
-  //   if(!owner) {
-  //     this.isViewBuild = false;
-  //     this.isViewGroup = false;
-  //     this.isViewUser = false;
-  //     return;
-  //   }
-  //   this.isViewBuild = isViewTab === this.viewBUID;
-  //   this.isViewGroup = isViewTab === this.viewGroupUser;
-  //   this.isViewUser = isViewTab === this.viewDefault;
+  disableViewTab(owner: any, isViewTab: any) {
+    if(!owner) {
+      this.isViewBuild = false;
+      this.isViewGroup = false;
+      this.isViewUser = false;
+      return;
+    }
+    this.isViewBuild = isViewTab === this.viewBUID;
+    this.isViewGroup = isViewTab === this.viewGroupUser;
+    this.isViewUser = isViewTab === this.viewDefault;
 
-  // }
+  }
 }
