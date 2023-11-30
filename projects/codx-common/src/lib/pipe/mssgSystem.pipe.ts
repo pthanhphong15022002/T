@@ -22,7 +22,6 @@ export class MessageSystemPipe implements PipeTransform {
         if (mssg.defaultName) {
           switch (data.jsMessage.mssgCode) {
             case 'WP038': // add member
-              debugger;
               let members = Array.from<any>(
                 JSON.parse(data.jsMessage.value[0].fieldValue)
               );
@@ -48,7 +47,6 @@ export class MessageSystemPipe implements PipeTransform {
 
   // dynamic template
   dynamicTemplate(template: TemplateRef<any>, ...arg: any[]) {
-    debugger;
     let viewRef = template.createEmbeddedView({
       $implicit: arg[0],
       value2: arg[1],

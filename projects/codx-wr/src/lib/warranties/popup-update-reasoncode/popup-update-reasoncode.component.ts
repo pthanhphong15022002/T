@@ -161,7 +161,6 @@ export class PopupUpdateReasonCodeComponent implements OnInit, AfterViewInit {
         return;
       }
     }
-
     this.data.attachments = this.edit
       ? this.data.attachments + this.countFile - this.countFileDelete
       : this.countFile;
@@ -394,6 +393,9 @@ export class PopupUpdateReasonCodeComponent implements OnInit, AfterViewInit {
 
   valueEndTimeChange(event: any) {
     this.endTime = event.data.toDate;
+    if(this.dateControl != '1'){
+      this.startTime = event.data.toDate;
+    }
     // this.fullDayChangeWithTime();
     // this.isFullDay = false;
     this.setDate();
