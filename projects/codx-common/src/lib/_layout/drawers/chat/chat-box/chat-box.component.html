@@ -49,16 +49,16 @@
     <div #chatBoxBody class="chat-box-body" (scroll)="scroll(chatBoxBody)">
         <ng-container *ngIf="arrMessages">
             <ng-container *ngFor="let item of arrMessages; let idx = index">
-                <ng-container *ngIf="item.messageType == '3';else tmpMessage">
-                    <div class="message-system" [id]="item.recID">
+                <ng-container *ngIf="item?.messageType == '3';else tmpMessage">
+                    <div class="message-system" [id]="item?.recID">
                         {{item | mssgSYS:mssgType5 | async}}
                     </div>
                 </ng-container>
                 <ng-template #tmpMessage>
-                    <div class="message"  [attr.scroll]="idx == arrMessages.length - 1 ? (chatBoxBody | srollPipe) : null">
-                        <ng-container *ngIf="user.userID == item.createdBy;else reciverMssg">
-                            <div class="d-flex align-items-end justify-content-end w-100">
-                                <ng-container *ngIf="item.messageType != '5'">
+                    <div class="message"  [attr.scroll]="idx == arrMessages?.length - 1 ? (chatBoxBody | srollPipe) : null">
+                        <ng-container *ngIf="user.userID == item?.createdBy;else reciverMssg">
+                            <div class="d-flex align-items-end justify-content-end w-100 position-relative">
+                                <ng-container *ngIf="item?.messageType != '5'">
                                     <div class="message-function">
                                        <div class="d-flex align-items-center cursor-pointer fw-bold me-2">
                                         <div ngbDropdown >
@@ -85,7 +85,7 @@
                                                 (click)="openTooltipEmoji(ngbPopover1,item)">
                                             </span>
                                         </div>
-                                        <ng-container *ngIf="item.refType != 'm'">
+                                        <ng-container *ngIf="item?.refType != 'm'">
                                             <div class="me-2">
                                                 <span class="icon-reply me-2" (click)="clickReplyMssg(item)"></span>
                                             </div>
@@ -94,67 +94,67 @@
                                     </div>
                                 </ng-container>
                                 <div class="max-w-250px">
-                                    <ng-container *ngIf="item.messageType == '5';else tmpSendContent">
+                                    <ng-container *ngIf="item?.messageType == '5';else tmpSendContent">
                                         <span>{{mssgDeleted}}</span>
                                     </ng-container>
                                     <ng-template #tmpSendContent>
                                         <!-- message reply -->
-                                        <ng-container *ngIf="item.refID">
+                                        <ng-container *ngIf="item?.refID">
                                             <div class="w-fit-content bg-mssg-reply text-break text-justify mb-1 p-2 rounded-1">
-                                                <span class="d-block">{{item.refContent.createdName}}</span>
-                                                <ng-container *ngIf="item.refContent.content">
-                                                    <span class="d-block">{{item.refContent.content}}</span>
+                                                <span class="d-block">{{item?.refContent.createdName}}</span>
+                                                <ng-container *ngIf="item?.refContent.content">
+                                                    <span class="d-block">{{item?.refContent.content}}</span>
                                                 </ng-container>
-                                                <ng-container *ngIf="item.refContent.type == '2'">
+                                                <ng-container *ngIf="item?.refContent.type == '2'">
                                                     <codx-temp-full 
                                                         [dataItem]="item"
-                                                        [imageId]="item.refID" 
+                                                        [imageId]="item?.refID" 
                                                         imageObjType="WP_Messages"
-                                                        [imageReferType]="item.fileType"
-                                                        [title]="item.fileName"
-                                                        [desc]="formatBytes(item.fileSize)">
+                                                        [imageReferType]="item?.fileType"
+                                                        [title]="item?.fileName"
+                                                        [desc]="formatBytes(item?.fileSize)">
                                                     </codx-temp-full>
                                                 </ng-container>
                                             </div>
                                         </ng-container>
-                                        <ng-container *ngIf="item.message">
+                                        <ng-container *ngIf="item?.message">
                                             <div class="w-fit-content bg-mssg-send text-break text-justify text-white p-2 rounded-1">
-                                                {{item.message}}
-                                                <ng-container *ngIf="idx == arrMessages.length - 1 || item.createdBy != arrMessages[idx+1]?.createdBy">
-                                                    <span class="d-block text-end fw-light">{{item.createdOn | date:'hh:mm'}}</span>
+                                                {{item?.message}}
+                                                <ng-container *ngIf="idx == arrMessages?.length - 1 || item?.createdBy != arrMessages[idx+1]?.createdBy">
+                                                    <span class="d-block text-end fw-light">{{item?.createdOn | date:'hh:mm'}}</span>
                                                 </ng-container>
                                             </div>
                                         </ng-container>     
                                     </ng-template>
                                 </div>
                                 <!-- files -->
-                                <ng-container *ngIf="item.messageType == '2'" >
+                                <ng-container *ngIf="item?.messageType == '2'" >
                                     <div class="max-w-250px">
                                         <codx-view-files 
-                                            [objectID]="item.recID" 
+                                            [objectID]="item?.recID" 
                                             [objectType]="'WP_Messages'" 
                                             [formModel]="formModel"
                                             [format]="'grid'"
                                             (selectFile)="clickViewFile($event)">
                                         </codx-view-files>
-                                        <ng-container *ngIf="idx == arrMessages.length - 1 || item.createdBy != arrMessages[idx+1]?.createdBy">
-                                            <div class="d-block text-end fw-light">{{item.createdOn | date:'hh:mm'}}</div>
+                                        <ng-container *ngIf="idx == arrMessages?.length - 1 || item?.createdBy != arrMessages[idx+1]?.createdBy">
+                                            <div class="d-block text-end fw-light">{{item?.createdOn | date:'hh:mm'}}</div>
                                         </ng-container>
                                     </div>
                                 </ng-container>
                                 <!-- votes -->
-                                <ng-container *ngIf="item.lstVote">
-                                    <div class="emoji-message message-emoji" (click)="clickShowVote(item)">
-                                        <ng-container *ngFor="let voteItem of item.lstVote">
-                                            <ng-container *ngIf="voteItem.count > 0">
+                                <ng-container *ngIf="item?.lstVote">
+                                    <div class="emoji-message message-emoji position-absolute end-0" (click)="clickShowVote(item)">
+                                        <ng-container *ngFor="let voteItem of item?.lstVote">
+                                            <ng-container *ngIf="voteItem?.count > 0">
                                                 <codx-vll 
                                                     [path]="'assets/themes/wp/default/img/'"
                                                     [name]="'L1480'" 
-                                                    [value]="voteItem.voteType" 
+                                                    [value]="voteItem?.voteType" 
                                                     [showIcon]="true" 
                                                     [icoCss]="'w-15px h-15px'">
                                                 </codx-vll>
-                                                <span *ngIf="voteItem.count > 1">{{voteItem.count}}</span>
+                                                <span *ngIf="voteItem?.count > 1">{{voteItem?.count}}</span>
                                             </ng-container>
                                         </ng-container>
                                     </div>
@@ -163,88 +163,89 @@
                         </ng-container>
                          <!-- reciver message -->
                         <ng-template #reciverMssg>
-                            <div class="d-flex align-items-end justify-content-start position-relative">
+                            <div class="d-flex align-items-end justify-content-start">
                                 <div class="me-2">
                                     <codx-img 
-                                        [objectId]="item.createdBy" 
+                                        [objectId]="item?.createdBy" 
                                         [objectType]="'AD_Users'"
                                         [width]="30">
                                     </codx-img>
                                 </div>
                                 <!-- text -->
-                                <div class="bg-mssg-recive max-w-250px p-2 rounded-1">
-                                    <ng-container *ngIf="item.messageType == '5';else tmpReciveContent">
+                                <div class="bg-mssg-recive max-w-250px p-2 rounded-1  position-relative">
+                                    <ng-container *ngIf="item?.messageType == '5';else tmpReciveContent">
                                         <span>{{mssgDeleted}}</span>
                                     </ng-container>
                                     <ng-template #tmpReciveContent>
                                         <!-- message reply -->
-                                        <!-- <ng-container *ngIf="item.refID">
+                                        <!-- <ng-container *ngIf="item?.refID">
                                             <div class="message-reft">
-                                                <span class="d-block">{{item.refContent.createdName}}</span>
-                                                <ng-container *ngIf="item.refContent.content">
-                                                    <span class="d-block text-gray-500">{{item.refContent.content}}</span>
+                                                <span class="d-block">{{item?.refContent.createdName}}</span>
+                                                <ng-container *ngIf="item?.refContent.content">
+                                                    <span class="d-block text-gray-500">{{item?.refContent.content}}</span>
                                                 </ng-container>
-                                                <ng-container *ngIf="item.refContent.type == '2'">
+                                                <ng-container *ngIf="item?.refContent.type == '2'">
                                                     <codx-temp-full 
                                                         [dataItem]="item"
-                                                        [imageId]="item.refID" 
+                                                        [imageId]="item?.refID" 
                                                         imageObjType="WP_Messages"
-                                                        [imageReferType]="item.fileType"
-                                                        [title]="item.fileName"
-                                                        [desc]="formatBytes(item.fileSize)">
+                                                        [imageReferType]="item?.fileType"
+                                                        [title]="item?.fileName"
+                                                        [desc]="formatBytes(item?.fileSize)">
                                                     </codx-temp-full>
                                                 </ng-container>
                                             </div>
                                         </ng-container> -->
-                                        <ng-container *ngIf="item.message">
+                                        <ng-container *ngIf="item?.message">
                                             <div class="text-break text-justify">
-                                                {{item.message}}
-                                                <ng-container *ngIf="idx == arrMessages.length - 1 || item.createdBy != arrMessages[idx+1]?.createdBy">
-                                                    <span class="d-block text-start fw-light">{{item.createdOn | date:'hh:mm'}}</span>
+                                                {{item?.message}}
+                                                <ng-container *ngIf="idx == arrMessages?.length - 1 || item?.createdBy != arrMessages[idx+1]?.createdBy">
+                                                    <span class="d-block text-start fw-light">{{item?.createdOn | date:'hh:mm'}}</span>
                                                 </ng-container>
                                             </div>
                                         </ng-container>      
                                     </ng-template>
+                                    <ng-container *ngIf="item?.lstVote">
+                                        <div class="emoji-message message-emoji position-absolute end-0" (click)="clickShowVote(item)">
+                                            <ng-container *ngFor="let voteItem of item?.lstVote">
+                                                <ng-container *ngIf="voteItem?.count > 0">
+                                                    <div class="d-flex">
+                                                        <codx-vll 
+                                                            [path]="'assets/themes/wp/default/img/'"
+                                                            [name]="'L1480'" 
+                                                            [value]="voteItem?.voteType" 
+                                                            [showIcon]="true" 
+                                                            [icoCss]="'w-15px h-15px'">
+                                                        </codx-vll>
+                                                        <span *ngIf="voteItem?.count > 1">{{voteItem?.count}}</span>
+                                                    </div>
+                                                </ng-container>
+                                            </ng-container>
+                                        </div>
+                                    </ng-container>
                                 </div>
                                 <!-- files -->
-                                <ng-container *ngIf="item.messageType == '2'">
+                                <ng-container *ngIf="item?.messageType == '2'">
                                     <div class="max-w-250px">
                                         <codx-view-files 
-                                            [objectID]="item.recID" 
+                                            [objectID]="item?.recID" 
                                             [objectType]="'WP_Messages'" 
                                             [formModel]="formModel"
                                             [format]="'grid'"
                                             (selectFile)="clickViewFile($event)">
                                         </codx-view-files>
                                         <!-- time -->
-                                        <ng-container *ngIf="idx == arrMessages.length - 1 || item.createdBy != arrMessages[idx+1]?.createdBy">
-                                            <div class="d-block text-start fw-light">{{item.createdOn | date:'hh:mm'}}</div>
+                                        <ng-container *ngIf="idx == arrMessages?.length - 1 || item?.createdBy != arrMessages[idx+1]?.createdBy">
+                                            <div class="d-block text-start fw-light">{{item?.createdOn | date:'hh:mm'}}</div>
                                         </ng-container>
                                     </div>
                                 </ng-container>
                                 <!-- votes -->
-                                <ng-container *ngIf="item.lstVote">
-                                    <div class="emoji-message message-emoji" (click)="clickShowVote(item)">
-                                        <ng-container *ngFor="let voteItem of item.lstVote">
-                                            <ng-container *ngIf="voteItem.count > 0">
-                                                <div class="d-flex">
-                                                    <codx-vll 
-                                                        [path]="'assets/themes/wp/default/img/'"
-                                                        [name]="'L1480'" 
-                                                        [value]="voteItem.voteType" 
-                                                        [showIcon]="true" 
-                                                        [icoCss]="'w-15px h-15px'">
-                                                    </codx-vll>
-                                                    <span *ngIf="voteItem.count > 1">{{voteItem.count}}</span>
-                                                </div>
-                                            </ng-container>
-                                        </ng-container>
-                                    </div>
-                                </ng-container>
-                                <ng-container *ngIf="item.messageType != '5'">
+                                
+                                <ng-container *ngIf="item?.messageType != '5'">
                                 <div class="message-function">
                                     <div class="d-flex aling-items-end ms-2">
-                                        <ng-container *ngIf="item.refType != 'm'">
+                                        <ng-container *ngIf="item?.refType != 'm'">
                                             <span class="icon-reply me-2 " (click)="clickReplyMssg(item)"></span>
                                         </ng-container>
                                         <span class="icon-tag_faces me-2"
@@ -265,7 +266,7 @@
                 </ng-template>  
                 <ng-container *ngIf="checkDate(idx)">
                     <div class="d-block text-center">
-                        <span>{{item.createdOn | fmDT: 'dmy' : true}}</span>
+                        <span>{{item?.createdOn | fmDT: 'dmy' : true}}</span>
                     </div>
                 </ng-container>
             </ng-container>
@@ -380,12 +381,12 @@
 <ng-template #tooltipEmojiMssg let-mssg="mssg">
     <div class="row me-2">
         <ng-container *ngFor="let item of vllL1480">
-            <div (click)="clickVoteMssg(mssg,item)" class="col cursor-pointer" *ngIf="item.value" >
-                <img class="h-15px w-15px" [src]="'assets/themes/wp/default/img/' + item.icon" [ngbTooltip]="item.text">
+            <div (click)="clickVoteMssg(mssg,item)" class="col cursor-pointer" *ngIf="item?.value" >
+                <img class="h-15px w-15px" [src]="'assets/themes/wp/default/img/' + item?.icon" [ngbTooltip]="item?.text">
                 <!-- <codx-vll 
                     [path]="'assets/themes/wp/default/img/'"
                     [name]="'L1480'" 
-                    [value]="item.value" 
+                    [value]="item?.value" 
                     [showIcon]="true" 
                     [icoCss]="'w-15px h-15px'">
                 </codx-vll> -->
@@ -421,24 +422,24 @@
                 <ng-container *ngFor="let item of lstVoted">
                     <li ngbNavItem>
                         <a ngbNavLink class="d-flex">
-                            <ng-container *ngIf="item.voteType == '0';else tmpVoteType">
+                            <ng-container *ngIf="item?.voteType == '0';else tmpVoteType">
                                 <codx-label classList="fw-bolder" [formModel]="formModel" name="lblPopupVote" default="Tất cả"></codx-label>
                             </ng-container>
                             <ng-template #tmpVoteType>
                                 <div>
                                     <codx-vll 
                                         name="L1480" 
-                                        [value]="item.voteType" 
+                                        [value]="item?.voteType" 
                                         [path]="'assets/themes/wp/default/img/'"
                                         [showIcon]="true" 
                                         [icoCss]="'w-15px h-15px'">
                                     </codx-vll>
                                 </div>
                             </ng-template>    
-                            <div>{{item.listVote.length}}</div>
+                            <div>{{item?.listVote?.length}}</div>
                         </a>
                         <ng-template ngbNavContent>
-                            <ng-container *ngFor="let member of item.listVote">
+                            <ng-container *ngFor="let member of item?.listVote">
                                 <div class="user-item">
                                     <div class="d-flex">
                                         <codx-img [objectId]="member.createdBy" objectType="AD_Users" [width]="30"></codx-img>
@@ -470,12 +471,12 @@
     <ng-container *ngFor="let item of data">
         <span class="mssg-item" (click)="clickViewMember(item)">
             <codx-img 
-                [objectId]="item.UserID" 
-                [objectName]="item.UserName" 
+                [objectId]="item?.UserID" 
+                [objectName]="item?.UserName" 
                 [objectType]="'AD_Users'" 
                 [width]="30">
             </codx-img>
-            {{item.UserName}}
+            {{item?.UserName}}
         </span>
     </ng-container>
 </ng-template>

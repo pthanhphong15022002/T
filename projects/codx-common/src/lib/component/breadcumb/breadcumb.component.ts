@@ -32,17 +32,18 @@ export class BreadcumbComponent implements OnInit {
 
   ngOnInit(): void {
     this.dmSV.isBreadcumTree.subscribe(res => {
-      if (res != null) {
+      if (res) {
         this.breadcumbTree = res;
         this.tree = true;
       }
     })
 
     this.dmSV.isBreadcum.subscribe(res => {
-      if (res != null) {
+      if (res) {
         this.breadcumb = res;
         this.breadcumbTree = res;
         this.linkList = this.dmSV.breadcumbLink;
+        this.changeDetectorRef.detectChanges();
       
       }
     })

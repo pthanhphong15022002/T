@@ -49,7 +49,7 @@ export class ReceiptTransactionsTableComponent extends UIComponent {
    */
   getDataDetail(dataItem) {
     this.api
-      .exec('AC', 'PurchaseInvoicesLinesBusiness', 'LoadDataAsync', [
+      .exec('IV', 'VouchersLinesBusiness', 'LoadDataAsync', [
         dataItem.recID,
       ])
       .pipe(takeUntil(this.destroy$))

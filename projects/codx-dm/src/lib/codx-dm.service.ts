@@ -1018,7 +1018,12 @@ export class CodxDMService {
             //   break;
             // case "DMT0234": // lay lay quyen
             //   break;
-
+            // Thư mục mới
+            case 'DMT0236':
+              {
+                if (!data.create) e[i].isblur = true; // duoc view
+                break;
+              }
             default: // duoc view
               e[i].isblur = false;
               break;
@@ -1664,7 +1669,60 @@ export class CodxDMService {
         data.id = data.recID;
         this.callfc.openSide(ShareComponent, [type, data, true], option);
         break;
+      //Tạo mới thư mục con
+      case 'DMT0236':
+      {
+        let curr = 
+        {
+          folderName : this.folderName,
+          parentFolderId: this.parentFolderId,
+          level: this.level,
+          folderID: this.folderID
+        };
 
+        this.folderName = data.folderName;
+        this.parentFolderId = data.parentId;
+        this.parentFolder.next(data);
+        this.level = data.level;
+        this.folderID = data.recID;
+        this.folderId.next(data.recID);
+        var breadcumb = [];
+        breadcumb = this.breadcumb.getValue();
+        breadcumb.push(data.folderName);
+        this.breadcumb.next(breadcumb);
+        if (!this.breadcumbLink) this.breadcumbLink = [];
+        this.breadcumbLink.push(data .recID);
+
+        let option = new SidebarModel();
+        option.DataService = this.dataService;
+        option.FormModel = this.formModel;
+        option.Width = '550px';
+        let data2 = {} as any;
+        data2.title = $event?.data?.customName;
+        data2.id = null;
+        data2.type = 'add';
+        data2.isAddFolder = true;
+        let result = this.callfc.openSide(CreateFolderComponent, data2, option);
+
+        result.closed.subscribe(x=>{
+          this.openItem(data)
+          // if(x.event) 
+          // else
+          // {
+          //   this.folderName = curr.folderName;
+          //   this.parentFolderId = curr.parentFolderId;
+          //   this.level = data.level;
+          //   this.folderID = curr.folderID;
+          //   this.folderId.next(curr.folderID);
+          //   var breadcumb = this.breadcumb.getValue();
+          //   breadcumb.pop();
+          //   this.breadcumb.next(breadcumb)
+          //   this.breadcumbLink.pop()
+          // }
+        })
+        break;
+      }
+        
       default:
         break;
     }
