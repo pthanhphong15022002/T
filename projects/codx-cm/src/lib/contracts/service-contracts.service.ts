@@ -187,6 +187,14 @@ export class ContractsService {
       data
     );
   }
+  GetProcessIdDefault(applyFor) {
+    return this.api.exec<any>(
+      'DP',
+      'ProcessesBusiness',
+      'GetProcessDefaultAsync',
+      applyFor
+    );
+  }
 
   // async loadSetting() {
   //   this.grvSetup = await firstValueFrom(
