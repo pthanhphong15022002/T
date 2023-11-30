@@ -36,6 +36,8 @@ export class WarehouseTransfersComponent extends UIComponent {
     icon: 'icon-i-file-earmark-plus',
   }];
   optionSidebar: SidebarModel = new SidebarModel();
+  viewActive:number = ViewType.listdetail;
+  ViewType = ViewType;
   private destroy$ = new Subject<void>(); //? list observable hủy các subscribe api
   constructor(
     private inject: Injector,
@@ -189,31 +191,23 @@ export class WarehouseTransfersComponent extends UIComponent {
       case 'SYS002':
         this.exportVoucher(data); //? xuất dữ liệu chứng từ
         break;
-      case 'ACT041002':
-      case 'ACT042903':
-        this.releaseVoucher(e.text, data); //? gửi duyệt chứng từ
+      case 'ACT072202':
+        //this.releaseVoucher(e.text, data); //? gửi duyệt chứng từ
         break;
-      case 'ACT041004':
-      case 'ACT042904':
-        this.cancelReleaseVoucher(e.text, data); //? hủy yêu cầu duyệt chứng từ
+      case 'ACT072203':
+        //this.cancelReleaseVoucher(e.text, data); //? hủy yêu cầu duyệt chứng từ
         break;
-      case 'ACT041009':
-      case 'ACT042902':
-        this.validateVourcher(e.text, data); //? kiểm tra tính hợp lệ chứng từ
+      case 'ACT072201':
+        //this.validateVourcher(e.text, data); //? kiểm tra tính hợp lệ chứng từ
         break;
-      case 'ACT041003':
-      case 'ACT042905':
-        this.postVoucher(e.text, data); //? ghi sổ chứng từ
+      case 'ACT072204':
+        //this.postVoucher(e.text, data); //? ghi sổ chứng từ
         break;
-      case 'ACT041008':
-      case 'ACT042906':
-        this.unPostVoucher(e.text, data); //? khôi phục chứng từ
+      case 'ACT072205':
+        //this.unPostVoucher(e.text, data); //? khôi phục chứng từ
         break;
-      case 'ACT042901':
-        break;
-      case 'ACT041010':
-      case 'ACT042907':
-        this.printVoucher(data, e.functionID); //? in chứng từ
+      case 'ACT072206':
+        //this.printVoucher(data, e.functionID); //? in chứng từ
         break;
     }
   }
@@ -224,18 +218,26 @@ export class WarehouseTransfersComponent extends UIComponent {
    * @returns
    */
   onSelectedItem(event) {
-    if(this.view?.views){
-      let view = this.view?.views.find(x => x.type == 1);
-      if (view && view.active == true) return;
-    }
-    if (typeof event.data !== 'undefined') {
-      if (event?.data.data || event?.data.error) {
-        return;
-      } else {
-        this.itemSelected = event?.data;
-        this.detectorRef.detectChanges();
-      }
-    }
+    this.itemSelected = event;
+    this.detectorRef.detectChanges();
+    // if(this.view?.views){
+    //   let view = this.view?.views.find(x => x.type == 1);
+    //   if (view && view.active == true) return;
+    // }
+    // if (typeof event.data !== 'undefined') {
+    //   if (event?.data.data || event?.data.error) {
+    //     return;
+    //   } else {
+    //     this.itemSelected = event?.data;
+    //     this.detectorRef.detectChanges();
+    //   }
+    // }
+  }
+
+  viewChanged(view) {
+    if(view && view?.view?.type == this.viewActive) return;
+    this.viewActive = view?.view?.type;
+    this.detectorRef.detectChanges();
   }
   //#endregion Event
 
@@ -301,41 +303,40 @@ export class WarehouseTransfersComponent extends UIComponent {
    * @param dataCopy : data chứng từ sao chép
    */
   copyVoucher(dataCopy) {
-    // this.view.dataService.dataSelected = dataCopy;
-    // this.view.dataService
-    //   .copy((o) => this.setDefault(dataCopy, 'copy'))
-    //   .pipe(takeUntil(this.destroy$))
-    //   .subscribe((res: any) => {
-    //     if (res != null) {
-    //       res.isCopy = true;
-    //       let datas = { ...res };
-    //       this.view.dataService
-    //         .saveAs(datas)
-    //         .pipe(takeUntil(this.destroy$))
-    //         .subscribe((res) => {
-    //           if (res) {
-    //             let data = {
-    //               headerText: this.headerText, //? tiêu đề voucher
-    //               journal: { ...this.journal }, //?  data journal
-    //               oData: { ...datas }, //?  data của cashpayment
-    //               hideFields: [...this.hideFields], //? array các field ẩn từ sổ nhật ký
-    //               baseCurr: this.baseCurr, //?  đồng tiền hạch toán
-    //               legalName: this.legalName, //? tên company
-    //             };
-    //             let dialog = this.callfc.openSide(
-    //               CashPaymentAddComponent,
-    //               data,
-    //               this.optionSidebar,
-    //               this.view.funcID
-    //             );
-    //             this.view.dataService
-    //               .add(datas)
-    //               .pipe(takeUntil(this.destroy$))
-    //               .subscribe();
-    //           }
-    //         });
-    //     }
-    //   });
+    this.view.dataService.dataSelected = dataCopy;
+    this.view.dataService
+      .copy((o) => this.setDefault(dataCopy, 'copy'))
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res: any) => {
+        if (res != null) {
+          res.isCopy = true;
+          let datas = { ...res };
+          this.view.dataService
+            .saveAs(datas)
+            .pipe(takeUntil(this.destroy$))
+            .subscribe((res) => {
+              if (res) {
+                let data = {
+                  headerText: this.headerText, //? tiêu đề voucher
+                  journal: { ...this.journal }, //?  data journal
+                  oData: { ...datas }, //?  data của cashpayment
+                  hideFields: [...this.hideFields], //? array các field ẩn từ sổ nhật ký
+                  baseCurr: this.baseCurr, //?  đồng tiền hạch toán
+                };
+                let dialog = this.callfc.openSide(
+                  WarehouseTransfersAddComponent,
+                  data,
+                  this.optionSidebar,
+                  this.view.funcID
+                );
+                this.view.dataService
+                  .add(datas)
+                  .pipe(takeUntil(this.destroy$))
+                  .subscribe();
+              }
+            });
+        }
+      });
   }
 
   /**
@@ -346,7 +347,14 @@ export class WarehouseTransfersComponent extends UIComponent {
     this.view?.currentView?.dataService
       .delete([dataDelete], true)
       .pipe(takeUntil(this.destroy$))
-      .subscribe((res: any) => {});
+      .subscribe((res: any) => {
+        if (res && !res?.error) {
+          if(this.view.dataService.data.length == 0){
+            this.itemSelected = undefined;
+            this.detectorRef.detectChanges();
+          } 
+        }
+      });
   }
 
   /**
@@ -385,7 +393,7 @@ export class WarehouseTransfersComponent extends UIComponent {
    * @returns
    */
   changeMFDetail(event: any, data: any, type: any = '') {
-    this.acService.changeMFCashPayment(event,data,type,this.journal,this.view.formModel);
+    this.acService.changeMFTranfers(event,data,type,this.journal,this.view.formModel);
   }
 
   /**
