@@ -78,7 +78,7 @@ export class ViewDetailWrComponent implements OnInit {
     },
   ];
   isShow = false;
-
+  contact2JSON: any;
   constructor(
     private authstore: AuthStore,
     private changeDetectorRef: ChangeDetectorRef,
@@ -100,6 +100,10 @@ export class ViewDetailWrComponent implements OnInit {
         if (changes['dataSelected'].currentValue?.recID == this.id) return;
         this.id = changes['dataSelected'].currentValue?.recID;
         this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
+        if (this.dataSelected?.extendInfo && this.dataSelected?.extendInfo?.trim() != ''){
+          this.contact2JSON = JSON.parse(this.dataSelected?.extendInfo);
+          console.log(JSON.parse(this.dataSelected?.extendInfo));
+        }
         this.expanding = false;
         this.overflowed = false;
       }
@@ -143,6 +147,6 @@ export class ViewDetailWrComponent implements OnInit {
   }
 
   editProduct(data) {
-   this.changeProducts.emit({data: data});
+    this.changeProducts.emit({ data: data });
   }
 }

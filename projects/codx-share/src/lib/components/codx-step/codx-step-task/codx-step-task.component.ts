@@ -580,7 +580,10 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
             if (task?.dependRule != '0' || task?.status != '1') {
               res.disabled = true;
             } else if (
-              !((this.isRoleAll || isGroup || isTask) && (this.isOnlyView || this.isTaskFirst))
+              !(
+                (this.isRoleAll || isGroup || isTask) &&
+                (this.isOnlyView || this.isTaskFirst)
+              )
             ) {
               res.isblur = true;
             }
@@ -752,7 +755,6 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         break;
       case 'SYS04': //copy
         this.copyTask(task);
-        // this.addTask(groupTask);
         break;
       case 'DP07': // view
         this.viewTask(task, task?.taskType || 'T');
@@ -799,7 +801,11 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
           refID: task.recID,
           refType: 'DP_Instances_Steps_Tasks',
         };
-
+        // if(task?.isTaskDefault){
+        //   customData.refID =  task.refID ;
+        //   customData.refType ='DP_Steps_Tasks'
+        // }
+  
         this.codxShareService.defaultMoreFunc(
           e,
           task,
@@ -827,7 +833,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         this.copyGroupTask(group);
         break;
       case 'DP08': //them task
-        this.chooseTypeTask(['G','F'], group?.refID);
+        this.chooseTypeTask(['G', 'F'], group?.refID);
         break;
       case 'DP12':
         this.viewTask(group, 'G');
@@ -855,6 +861,9 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         groupTask
       );
       objectLinked = taskContract?.objectLinked;
+      if(!taskContract){
+        return;
+      }
     }
     this.api
       .exec<any>('DP', 'InstancesStepsBusiness', 'StartTaskAsync', [
@@ -1025,7 +1034,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         450,
         580,
         '',
-        {typeDisableds}
+        { typeDisableds }
       );
       let dataOutput = await firstValueFrom(popupTypeTask.closed);
       if (dataOutput?.event?.value) {
@@ -2698,6 +2707,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
 
   approvalTrans(task: DP_Instances_Steps_Tasks) {
     this.taskApproval = task;
+    let idTask = task?.isTaskDefault ? task?.refID : task?.recID;
     if (task?.approveRule && task?.recID) {
       this.api
         .execSv<any>(
@@ -2705,7 +2715,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
           'ES',
           'CategoriesBusiness',
           'GetByCategoryIDAsync',
-          task?.recID
+          idTask
         )
         .subscribe((res) => {
           if (!res) {
@@ -2757,6 +2767,8 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   }
 
   cancelApprover(task) {
+    let idTask = task?.isTaskDefault ? task?.refID : task?.recID;
+
     this.notiService.alertCode('ES016').subscribe((x) => {
       if (x.event.status == 'Y') {
         this.api
@@ -2765,7 +2777,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
             'ES',
             'CategoriesBusiness',
             'GetByCategoryIDAsync',
-            task?.recID
+            idTask
           )
           .subscribe((res: any) => {
             if (res) {
@@ -2917,6 +2929,11 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
           refType: 'DP_Instances_Steps_Tasks',
           dataSource: res,
         };
+        debugger
+        if(data?.isTaskDefault){
+          customData.refID =  data.refID ;
+          customData.refType ='DP_Steps_Tasks'
+        }
         this.codxShareService.defaultMoreFunc(
           e,
           data,

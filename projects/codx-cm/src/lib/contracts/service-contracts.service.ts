@@ -169,6 +169,14 @@ export class ContractsService {
       data
     );
   }
+  getOneContactByObjectID(data) {
+    return this.api.exec<any>(
+      'CM',
+      'ContractsBusiness',
+      'GetListContactDefaultByObjectIDAsync',
+      data
+    );
+  }
 
   // async loadSetting() {
   //   this.grvSetup = await firstValueFrom(

@@ -8,9 +8,10 @@ import {
 } from '@angular/core';
 import * as signalR from '@microsoft/signalr';
 import { AuthStore } from 'codx-core';
-import { error } from 'console';
+import { error, group } from 'console';
 import { environment } from 'src/environments/environment';
 import { Post } from 'src/shared/models/post';
+import { CHAT } from '../models/chat-const.model';
 
 @Injectable({
   providedIn: 'root',
@@ -21,22 +22,15 @@ export class SignalRService {
   logOut: boolean = false;
   userConnect = new EventEmitter<any>();
   disConnected = new EventEmitter<any>();
-
-  activeNewGroup = new EventEmitter<any>();
   activeGroup = new EventEmitter<any>();
-  chat = new EventEmitter<any>();
-  undoMssg = new EventEmitter<any>();
-  voteChat = new EventEmitter<any>();
+  chatboxChange = new EventEmitter<any>();//Gửi tin
+  votedMessage = new EventEmitter<any>();
+  loadedGroup = new EventEmitter<any>();//Lấy thông tin Group
 
-  openBoxChat = new EventEmitter<any>();
-
-
-  constructor(private authStore: AuthStore) 
-  {
+  constructor(private authStore: AuthStore) {
     this.createConnection();
   }
 
-  
   public async createConnection() {
     this.hubConnection = new signalR.HubConnectionBuilder()
       .withUrl(environment.apiUrl + '/hubwp/chat', {
@@ -47,71 +41,86 @@ export class SignalRService {
         },
       })
       .build();
-      this.hubConnectionstart();
+    this.hubConnectionstart();
 
     this.hubConnection.on('ReceiveMessage', (res) => {
       if (res) {
-        switch (res.event) 
-        {
+        switch (res.event) {
           case 'onConnected':
             break;
-          case 'onDisconnected':
-            this.disConnected.emit(res.data);
-            break;
           
-          case 'activeGroup':
-            this.activeGroup.emit(res.data);
+          case 'onDisconnected':{
+            this.disConnected.emit(res);
             break;
-          case 'sendMessage':
-            this.chat.emit(res.data);
+          }
+
+          //load nhóm chat, thêm nhóm vào UI nếu chưa có (mở chatbox nếu cần)
+          case CHAT.UI_FUNC.LoadedGroup: {
+            this.loadedGroup.emit(res);
+            this.activeGroup.emit(res);
             break;
-          case 'deletedMessage':
-            this.chat.emit(res.data);
+          }
+          //Thêm người còn lại vào nhóm, sau load
+          case CHAT.BE_FUNC.JoinGroup: {
+            this.sendData(CHAT.BE_FUNC.JoinGroup, res?.groupID);
             break;
-          case 'voteMessage':
-            this.voteChat.emit(res.data);
+          }
+          //Sau khi thêm người vào nhóm, thêm nhóm vào UI nếu chưa có (mở chatbox nếu cần)
+          case CHAT.UI_FUNC.JoinedGroup: {
+            this.loadedGroup.emit(res);
             break;
-          case 'sendMessageSystem':
-            this.chat.emit(res.data);
-            this.activeGroup.emit(res.data);
+          }
+          //Gửi tin nhắn
+          case CHAT.UI_FUNC.SendedMessage:
+            this.chatboxChange.emit(res);
             break;
-          case 'openBoxChat':
-            this.openBoxChat.emit(res.data);
+          //Xóa tin nhắn
+          case CHAT.UI_FUNC.DeletedMessage:
+            this.chatboxChange.emit(res);
             break;
-          case 'addBoxChat':
-            this.hubConnection.send('OpenBoxChat', res.group);
+          //phản hồi tin nhắn
+          case CHAT.UI_FUNC.ReactedMessage:
+            this.chatboxChange.emit(res);
             break;
+          //Gửi chat của hệ thống và mở chat box
+          case CHAT.UI_FUNC.SendedMessageSystem:{
+            this.chatboxChange.emit(res);
+            this.activeGroup.emit(res);
+            break;
+          }
         }
       }
     });
-    
+
     this.hubConnection.onclose(() => {
       this.hubConnectionstart();
     });
   }
 
-
   hubConnectionstart() {
     var t = this;
     this.hubConnection.start().catch(function () {
-        setTimeout(function () {
-          t.hubConnectionstart();
-        }, 5000);
+      setTimeout(function () {
+        t.hubConnectionstart();
+      }, 5000);
     });
   }
   // send to server
   sendData(methodName: string, ...args: any[]) {
-    return this.hubConnection.send(methodName, ...args)
+    return this.hubConnection.send(methodName, ...args);
   }
 
   // disconnect
   disconnect(user: any) {
-    let codxChatContainer = document.getElementsByTagName('codx-chat-container');
-    if (Array.isArray(codxChatContainer)) 
-    {
-      Array.from(codxChatContainer).forEach(element => { element.remove() });
+    let codxChatContainer = document.getElementsByTagName(
+      'codx-chat-container'
+    );
+    if (Array.isArray(codxChatContainer)) {
+      Array.from(codxChatContainer).forEach((element) => {
+        element.remove();
+      });
     }
     this.logOut = true;
-    this.hubConnection.invoke('LogOutAsync', user.userID, user.tenant);
+    this.hubConnection.invoke(CHAT.BE_FUNC.LogOut, user.userID, user.tenant);
   }
 }

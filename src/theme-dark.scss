@@ -499,7 +499,7 @@ h1,
 
 .e-richtexteditor .e-rte-content,
 .e-richtexteditor .e-source-content {
-    background: var(--bg-input);
+   // background: var(--bg-input);
     border-color: var(--border-list);
     color: var(--text-body);
 
@@ -730,14 +730,14 @@ label,
 
 .e-schedule .e-timeline-view .e-work-cells,
 .e-schedule .e-timeline-month-view .e-work-cells {
-    background-color: rgba(255, 255, 255, 0.04) !important;
+    background-color: rgba(255, 255, 255, 0.02) !important;
     border-color: var(--border-light);
     color: inherit;
 }
 
 .e-schedule .e-timeline-view .e-work-cells,
 .e-schedule .e-timeline-year-view .e-work-cells {
-    background-color: rgba(255, 255, 255, 0.04) !important;
+    background-color: rgba(255, 255, 255, 0.02) !important;
     border-color: var(--border-light);
     color: inherit;
 }
@@ -927,7 +927,12 @@ ejs-tab#calendarTab .e-calendar {
 .div-btn-tab-attachment.active {
     background-color: #080f2478;
 }
-.nav-export .active
-{
+.nav-export .active{
   background-color: #f4f7ff18;
+}
+.e-calendar, .e-bigger.e-small .e-calendar {
+    background-color: var(--bg-card);
+}
+.e-checkbox-wrapper.e-checkbox-disabled .e-frame, .e-css.e-checkbox-wrapper.e-checkbox-disabled .e-frame {
+    background-color:transparent;
 }

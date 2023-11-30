@@ -8,6 +8,7 @@ import {
 } from '@angular/core';
 import { ApiHttpService, CacheService, FormModel } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
+import { CodxTasksService } from '../codx-tasks/codx-tasks.service';
 
 @Component({
   selector: 'codx-references',
@@ -16,15 +17,19 @@ import { AttachmentComponent } from 'projects/codx-common/src/lib/component/atta
   encapsulation: ViewEncapsulation.None,
 })
 export class CodxReferencesComponent implements OnInit, OnChanges {
+  @ViewChild('attachment') attachment: AttachmentComponent;
   @Input() funcID?: string; // khởi tạo để test,, sau có thể xóa
-  // @Input() entityName?: string// khởi tạo để test,, sau có thể xóa
   @Input() dataReferences: any[];
+  @Input() isLoadedDataRef = true; //bằng true : đã có data REf gửi vào , False nếu tự load
   @Input() vllRefType = 'TM018';
   @Input() formModel?: FormModel;
   @Input() zIndex: number = 0;
-  @Input() openViewPopup = true; // Thảo truyền ko cho click
-  @ViewChild('attachment') attachment: AttachmentComponent;
+  @Input() openViewPopup = true; // truyền ko cho click
 
+  //refType và RefID của object để temp tự load Data  với isLoadedDataRef = false
+  @Input() objectID = '';
+  @Input() refType = '';
+  @Input() refID = '';
   message: string = '';
   REFERTYPE = {
     IMAGE: 'image',
@@ -33,34 +38,28 @@ export class CodxReferencesComponent implements OnInit, OnChanges {
   };
   lstFile: any[] = [];
   loaded: boolean;
-  //dataAvtar: any;
-  //chinh sua load bang ref
-  // @Input() refID: any;
-  // @Input() refType: any;
-  // refIDCrr: any;
-  // loaded = false;
   dataCrrChange: any;
+  crrObjectID: any;
 
   constructor(
     private cache: CacheService,
     private changeDetectorRef: ChangeDetectorRef,
-    private api: ApiHttpService
+    private api: ApiHttpService,
+    private codxTaskService: CodxTasksService
   ) {}
   ngOnChanges(changes: SimpleChanges): void {
     this.loaded = false;
-    if (changes['dataReferences']) {
-      // if (changes['dataReferences'].currentValue === this.dataCrrChange) return;
-      // this.dataCrrChange = changes['dataReferences'].currentValue;
-      this.loaded = true;
-      this.changeDetectorRef.detectChanges();
+    if (this.isLoadedDataRef) {
+      if (changes['dataReferences']) {
+        this.loaded = true;
+        this.changeDetectorRef.detectChanges();
+      }
+    } else {
+      if (this.crrObjectID != this.objectID) {
+        this.crrObjectID = this.objectID;
+        this.loadDataRef();
+      }
     }
-
-    // if (changes['refID']) {
-    //   if (changes['refID'].currentValue === this.refIDCrr) return;
-    //   this.refIDCrr = changes['refID'].currentValue;
-    //   this.loadDataReferences();
-    //   return;
-    // }
   }
 
   ngOnInit(): void {
@@ -77,141 +76,18 @@ export class CodxReferencesComponent implements OnInit, OnChanges {
     return styles;
   }
 
-  //cai nay neu can thi sua theo cai nay
-  // loadDataReferences() {
-  //   this.loaded = false;
-  //   if (!this.refID) {
-  //     // this.loaded = true ;
-  //     this.dataReferences = [];
-  //     return;
-  //   }
+  //Load data Ref
+  loadDataRef() {
+    this.codxTaskService.getReference(
+      this.refType,
+      this.refID,
+      this.getRef.bind(this)
+    );
+  }
 
-  //   var listUser = [];
-  //   switch (this.refType) {
-  //     case 'OD_Dispatches':
-  //       this.api
-  //         .exec<any>('OD', 'DispatchesBusiness', 'GetListByIDAsync', this.refID)
-  //         .subscribe((item) => {
-  //           if (item) {
-  //             item.forEach((x) => {
-  //               var ref = new tmpReferences();
-  //               ref.recIDReferences = x.recID;
-  //               ref.refType = 'OD_Dispatches';
-  //               ref.createdOn = x.createdOn;
-  //               ref.memo = x.title;
-  //               ref.createdBy = x.createdBy;
-  //               ref.attachments = x.attachments;
-  //               ref.comments = x.comments;
-  //               this.dataReferences.unshift(ref);
-  //               if (listUser.findIndex((p) => p == ref.createdBy) == -1)
-  //                 listUser.push(ref.createdBy);
-  //               this.getUserByListCreateBy(listUser);
-  //             });
-  //           }
-  //         });
-  //       break;
-  //     case 'ES_SignFiles':
-  //       this.api
-  //         .execSv<any>(
-  //           'ES',
-  //           'ERM.Business.ES',
-  //           'SignFilesBusiness',
-  //           'GetLstSignFileByIDAsync',
-  //           JSON.stringify(this.refID.split(';'))
-  //         )
-  //         .subscribe((result) => {
-  //           if (result) {
-  //             result.forEach((x) => {
-  //               var ref = new tmpReferences();
-  //               ref.recIDReferences = x.recID;
-  //               ref.refType = 'ES_SignFiles';
-  //               ref.createdOn = x.createdOn;
-  //               ref.memo = x.title;
-  //               ref.createdBy = x.createdBy;
-  //               ref.attachments = x.attachments;
-  //               ref.comments = x.comments;
-  //               this.dataReferences.unshift(ref);
-  //               if (listUser.findIndex((p) => p == ref.createdBy) == -1)
-  //                 listUser.push(ref.createdBy);
-  //               this.getUserByListCreateBy(listUser);
-  //             });
-  //           }
-  //         });
-  //       break;
-  //     case 'TM_Tasks':
-  //       this.api
-  //         .execSv<any>(
-  //           'TM',
-  //           'TM',
-  //           'TaskBusiness',
-  //           'GetTaskByRefIDAsync',
-  //           this.refID
-  //         )
-  //         .subscribe((result) => {
-  //           if (result) {
-  //             var ref = new tmpReferences();
-  //             ref.recIDReferences = result.recID;
-  //             ref.refType = 'TM_Tasks';
-  //             ref.createdOn = result.createdOn;
-  //             ref.memo = result.taskName;
-  //             ref.createdBy = result.createdBy;
-  //             ref.attachments = result.attachments;
-  //             ref.comments = result.comments;
-
-  //             this.api
-  //               .execSv<any>('SYS', 'AD', 'UsersBusiness', 'GetUserAsync', [
-  //                 ref.createdBy,
-  //               ])
-  //               .subscribe((user) => {
-  //                 if (user) {
-  //                   ref.createByName = user.userName;
-  //                   this.dataReferences.unshift(ref);
-  //                   this.loaded = true;
-  //                   this.changeDetectorRef.detectChanges();
-  //                 }
-  //               });
-  //           }
-  //         });
-  //       break;
-  //     case 'DP_Instances_Steps_Tasks':
-  //       this.api
-  //         .execSv<any>(
-  //           'DP',
-  //           'DP',
-  //           'InstancesBusiness',
-  //           'GetTempReferenceByRefIDAsync',
-  //           this.refID
-  //         )
-  //         .subscribe((result) => {
-  //           if (result && result?.length > 0) {
-  //             this.dataReferences = result;
-  //             this.loaded = true;
-  //           }
-  //         });
-  //       break;
-  //   }
-  // }
-
-  // getUserByListCreateBy(listUser) {
-  //   this.api
-  //     .execSv<any>(
-  //       'SYS',
-  //       'AD',
-  //       'UsersBusiness',
-  //       'LoadUserListByIDAsync',
-  //       JSON.stringify(listUser)
-  //     )
-  //     .subscribe((users) => {
-  //       if (users) {
-  //         this.dataReferences.forEach((ref) => {
-  //           var index = users.findIndex((user) => user.userID == ref.createdBy);
-  //           if (index != -1) {
-  //             ref.createByName = users[index].userName;
-  //           }
-  //         });
-  //         this.loaded = true;
-  //         this.changeDetectorRef.detectChanges();
-  //       }
-  //     });
-  // }
+  getRef(dataRef) {
+    this.dataReferences = dataRef;
+    this.loaded = true;
+    this.changeDetectorRef.detectChanges();
+  }
 }
