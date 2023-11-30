@@ -337,7 +337,7 @@ export class StepService {
       450,
       580,
       '',
-      {typeDisableds}
+      { typeDisableds }
     );
     let dataOutput = await firstValueFrom(popupTypeTask.closed);
     let type = dataOutput?.event ? dataOutput?.event : null;
@@ -977,11 +977,11 @@ export class StepService {
           if (str) {
             if (data.taskType != 'F') {
               if (str?.length > 0) {
-                dataSource = str[1];
-                if (str[0]) {
+                let dataSource = '[' + str[0] + ']';
+                if (str[1]) {
                   let datas = str[1];
                   if (datas && datas.includes('[{')) datas = datas.substring(2);
-                  let fix = str[0]; // data đối tượng cần export
+                  let fix = str[0];
                   fix = fix.substring(1, fix.length - 1);
                   dataSource = '[{ ' + fix + ',' + datas;
                 }
