@@ -852,11 +852,11 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       //báo giá
       this.addQuotation();
     } else if (task?.taskType == 'CO' && !task?.objectLinked) {
-      let data = { action: 'add', type: 'task' };
+      let data = { action: 'add', type: 'task'};
       let taskContract = await this.stepService.openPopupTaskContract(
         data,
         'add',
-        null,
+        task,
         this.currentStep?.recID,
         groupTask
       );
@@ -1219,6 +1219,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
           action: 'edit',
           type: 'task',
           recIDContract: task.objectLinked,
+          stepsTasks:task,
         };
         let taskContract = await this.stepService.openPopupTaskContract(
           data,
