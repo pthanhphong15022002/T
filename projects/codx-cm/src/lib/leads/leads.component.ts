@@ -1376,7 +1376,7 @@ export class LeadsComponent
             if (e && e.event != null) {
               var instance = e.event.instance;
               var listSteps = e.event?.listStep;
-              this.detailViewLead.reloadListStep(listSteps);
+
               var index =
                 e.event.listStep.findIndex(
                   (x) =>
@@ -1404,6 +1404,7 @@ export class LeadsComponent
                   if (e.event.isReason != null) {
                     this.moveReason(data, e.event.isReason);
                   }
+                  this.detailViewLead.reloadListStep(listSteps);
                   this.detectorRef.detectChanges();
                 }
               });
