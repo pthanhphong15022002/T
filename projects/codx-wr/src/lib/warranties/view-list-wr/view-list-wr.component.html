@@ -104,7 +104,7 @@
         ></span>
       </div>
       <div class="mb-1 w-200px min-w-200px" (mouseenter)="closePopover()">
-        <span
+        <div
           class="text-gray-700 fs-7"
           [style.height]="'auto'"
           [ngClass]="
@@ -122,10 +122,13 @@
           (click)="isPopoverOpen = true"
           placement="right bottom  top"
           [popoverClass]="data.recID"
-          [innerHTML]="
-            data?.address | formatvalue : formModel : 'Address' | async
-          "
-        ></span>
+        >
+          <span
+            [innerHTML]="
+              data.address | formatvalue : formModel : 'Address' | async
+            "
+          ></span
+        ></div>
       </div>
     </div>
 

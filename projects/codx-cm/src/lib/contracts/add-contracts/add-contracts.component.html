@@ -30,6 +30,12 @@
       [ngTemplateOutletContext]="{ $implicit: formlayoutadd }"
     ></ng-container>
   </ng-template>
+  <ng-template #task>
+    <ng-container
+      [ngTemplateOutlet]="taskTemp"
+      [ngTemplateOutletContext]="{ $implicit: formlayoutadd }"
+    ></ng-container>
+  </ng-template>
 </ng-container>
 
 <ng-template #subHeader let-form>
@@ -41,6 +47,175 @@
     [value]="contracts?.tags"
     (valueChange)="valueTagChange($event)"
   ></codx-tag> -->
+</ng-template>
+
+<ng-template #taskTemp let-form>
+  <div class="form-group step-name w-100">
+    <div>
+      <codx-label
+        fiedName="taskName"
+        [formModel]="frmModelInstancesTask"
+        default="Tên công việc"
+      >
+      </codx-label>
+    </div>
+    <codx-input
+      field="taskName"
+      [formModel]="frmModelInstancesTask"
+      type="text"
+      [crrValue]="stepsTasks?.taskName"
+      [disabled]="stepsTasks?.isTaskDefault"
+      (valueChange)="changeValueTextTask($event)"
+      >
+    </codx-input>
+  </div>
+
+  <div class="form-group d-flex justify-content-between" *ngIf="stepsTasks?.endDate && stepsTasks?.endDate">
+    <div class="me-2">
+      <codx-label
+        fiedName="startDate"
+        [formModel]="frmModelInstancesTask"
+        default="Ngày bắt đầu"
+      >
+      </codx-label>
+      <codx-input
+        field="startDate"
+        [crrValue]="stepsTasks?.startDate"
+        type="datetime"
+        format="F"
+        [disabled]="stepsTasks?.isTaskDefault"
+        (valueChange)="changeValueDateTask($event)"
+        >
+      </codx-input>
+    </div>
+    <div class="ms-2">
+      <codx-label
+        fiedName="endDate"
+        [formModel]="frmModelInstancesTask"
+        default="Ngày kết thúc"
+      >
+      </codx-label>
+      <codx-input
+        field="endDate"
+        [crrValue]="stepsTasks?.endDate"
+        type="datetime"
+        format="F"
+        (valueChange)="changeValueDateTask($event)"
+        >
+      </codx-input>
+    </div>
+  </div>
+  <div class="form-group">
+    <div class="d-flex justify-content-between row">
+      <div class="col-6">
+        <codx-label
+          fiedName="durationDay"
+          [formModel]="frmModelInstancesTask"
+          default="Thời lượng công việc"
+        >
+        </codx-label>
+        <div class="d-flex justify-content-between row">
+          <div class="col-6 position-relative">
+            <codx-input
+              field="durationDay"
+              [crrValue]="stepsTasks?.durationDay"
+              (valueChange)="changeValueTextTask($event)"
+              [disabled]="stepsTasks?.isTaskDefault"
+              type="number"
+              min="0"
+            >
+            </codx-input>
+            <div
+              class="position-absolute text-gray-400"
+              style="top: 8px; right: 14px"
+            >
+              <codx-label
+                name="titleDate"
+                [formModel]="form?.formModel"
+                default="Ngày"
+              >
+              </codx-label>
+            </div>
+          </div>
+
+          <div class="col-6 position-relative">
+            <codx-input
+              field="durationHour"
+              [crrValue]="stepsTasks?.durationHour"
+              (valueChange)="changeValueTextTask($event)"
+              type="number"
+              min="0"
+              [disabled]="stepsTasks?.isTaskDefault"
+            >
+            </codx-input>
+            <div
+              class="position-absolute text-gray-400"
+              style="top: 8px; right: 14px"
+            >
+              <codx-label
+                name="titleHour"
+                [formModel]="frmModelInstancesTask"
+                default="Giờ"
+              >
+              </codx-label>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-6 ps-1">
+        <codx-label
+          fiedName="reminders"
+          [formModel]="frmModelInstancesTask"
+          default="Nhắc nhở trước khi bắt đầu"
+        >
+        </codx-label>
+        <div>
+          <codx-input
+            field="reminders"
+            [formModel]="frmModelInstancesTask"
+            [crrValue]="stepsTasks?.reminders"
+            refValue="DP030"
+            type="valuelist"
+            (valueChange)="changeValueTextTask($event)"
+            [disabled]="stepsTasks?.isTaskDefault"
+          >
+          </codx-input>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="form-group">
+    <div class="d-flex align-items-center">
+      <codx-label
+        fiedName="ApproveRule"
+        [formName]="'DPProcesses'"
+        [gridViewName]="'grvDPProcesses'"
+      >
+      </codx-label>
+      <div class="me-3 pt-1 ms-2">
+        <codx-input
+          type="switch"
+          class="test-check"
+          [checked]="stepsTasks?.approveRule"
+          field="approveRule"
+          (valueChange)="valueChangeAlertTask($event)"
+          >
+        </codx-input>
+      </div>
+      <button
+        type="button"
+        class="btn btn-icon btn-sm btn-light-primary ms-"
+        [disabled]="!stepsTasks?.approveRule "
+        (click)="clickSettingApprove()"
+        >
+        <i class="icon-settings icon-16"></i>
+      </button>
+      <!-- || stepsTasks?.isTaskDefault -->
+    </div>
+    <!-- <div class="ms-2 mt-1">
+      <codx-view-approve *ngIf="stepsTasks?.approveRule" [listApprover]="listApproverView" type="1"></codx-view-approve>
+    </div> -->
+  </div>
 </ng-template>
 
 <ng-template #footer let-form>
@@ -125,6 +300,7 @@
         field="businessLineID"
         [crrValue]="contracts?.businessLineID"
         (valueChange)="valueChangeCombobox($event)"
+        [disabled]="action == 'edit'"
       >
       </codx-input>
     </div>
@@ -204,6 +380,14 @@
         (valueChange)="valueChangeOwner($event)"
       >
       </codx-input>
+       <!-- <ejs-combobox
+      [dataSource]="listParticipants"
+      (valueChange)="valueChangeOwner($event)"
+      [fields]="fieldCbxParticipants"
+      [allowFiltering]="true"
+      [filterType]="'Contains'"
+      [value]="contracts?.owner"
+    ></ejs-combobox> -->
       <div [ngClass]="contracts?.applyProcess ? 'd-none' :''">
         <codx-input
           field="owner"

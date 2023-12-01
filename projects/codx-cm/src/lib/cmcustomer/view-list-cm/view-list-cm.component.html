@@ -71,9 +71,7 @@
       <ng-template #descTmp let-data>
         <div class="d-flex flex-column">
           <div class="d-flex align-items-top mb-1" *ngIf="addressNameCM">
-            <span
-              class="icon-16 me-1 text-gray-600"
-              [ngbTooltip]="popupAddress"
+            <span class="icon-16 me-1 text-gray-600" [ngbTooltip]="popupAddress"
               ><ng-template #popupAddress>
                 <codx-label
                   fiedName="Address"
@@ -392,17 +390,21 @@
 </ng-template>
 
 <ng-template #dbClickDetail>
-  <codx-cmcustomer-detail
-    #customerDetail
-    [formModel]="formModel"
-    [recID]="dataSelected.recID"
-    [dataSelected]="dataSelected"
-    [funcID]="funcID"
-    (clickMoreFunc)="clickMoreFuncDetail($event)"
-    [entityName]="entityName"
-    [asideMode]="asideMode"
-    (changeMoreMF)="changeDataDetailMF($event)"
-    [isDbClick]="true"
-  >
-  </codx-cmcustomer-detail>
+  <div style="height: 100% !important">
+    <codx-cmcustomer-detail
+      #customerDetail
+      [formModel]="formModel"
+      [recID]="dataSelected.recID"
+      [dataSelected]="dataSelected"
+      [gridViewSetup]="gridViewSetup"
+      [lstCustGroups]="lstCustGroups"
+      [funcID]="funcID"
+      (clickMoreFunc)="clickMoreFuncDetail($event)"
+      [entityName]="entityName"
+      [asideMode]="asideMode"
+      (changeMoreMF)="changeDataDetailMF($event)"
+      [isDbClick]="true"
+    >
+    </codx-cmcustomer-detail>
+  </div>
 </ng-template>
