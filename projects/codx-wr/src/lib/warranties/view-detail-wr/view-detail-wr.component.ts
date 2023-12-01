@@ -121,6 +121,7 @@ export class ViewDetailWrComponent implements OnInit {
 
   //#region set serviceTime
   setTimeEdit() {
+    this.serviceTime = null;
     if (this.dataSelected?.scheduleStart && this.dataSelected?.scheduleEnd) {
       var getStartTime = new Date(this.dataSelected?.scheduleStart);
       var current =
