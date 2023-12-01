@@ -278,6 +278,7 @@
         <span
           class="line-clamp line-clamp-1"
           [ngbTooltip]="data?.headerText"
+          container="body"
           [ngStyle]="{ color: getPropertiesHeader(data, 'textColor') }"
         >
           {{ data?.headerText }}
@@ -285,16 +286,15 @@
       </div>
     </div>
 
-    <!-- <view-total-deal-value
+    <view-total-deal-value
       [formModel]="view.formModel"
-      [style]="{ color: getPropertiesHeader(data, 'textColor') }"
       [stepID]="data.keyField"
-      [dataValue]="data.keyField"
-      [columns]="columns"
+      [columns]="kanban?.columns"
+      [loaded]="kanban?.dataService?.loaded"
       [filterView]="view.dataService.filter"
       (getTotalDealValue)="getTotalDealValue($event)"
-    ></view-total-deal-value> -->
-    <div class="d-flex align-items-center line-colums ms-3 mt-1">
+    ></view-total-deal-value>
+    <!-- <div class="d-flex align-items-center line-colums ms-3 mt-1">
       <ng-container
         [ngTemplateOutlet]="showToltal"
         [ngTemplateOutletContext]="{
@@ -319,7 +319,7 @@
           [innerHTML]="currencyIDDefault"
         ></span>
       </ng-template>
-    </div>
+    </div> -->
   </div>
 </ng-template>
 

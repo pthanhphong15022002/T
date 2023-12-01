@@ -176,6 +176,7 @@ export class DealsComponent
   runMode: any;
   filterView: any;
   columns: any;
+  loadedColumns: boolean = false;
 
   constructor(
     private inject: Injector,
@@ -661,8 +662,6 @@ export class DealsComponent
         break;
       //chang fiter
       case 'pined-filter':
-        // debugger;
-        // this.filterView = this.view.dataService.filter;
         this.seclectFilter(e.data);
     }
   }
@@ -821,7 +820,6 @@ export class DealsComponent
             if (e && e.event != null) {
               let instance = e.event.instance;
               let listSteps = e.event?.listStep;
-
 
               let index =
                 e.event.listStep.findIndex(
@@ -1594,7 +1592,7 @@ export class DealsComponent
         );
         kanban.refresh();
         this.kanban = kanban;
-        this.columns = resource.columns;
+
         // if (this.kanban) this.kanban.refresh();
         this.detectorRef.detectChanges();
       });
@@ -2057,5 +2055,8 @@ export class DealsComponent
         this.kanban.columns[idx].totalDealValue = total;
       }
     }
+  }
+  loadingColumns(e) {
+    this.loadedColumns = e;
   }
 }

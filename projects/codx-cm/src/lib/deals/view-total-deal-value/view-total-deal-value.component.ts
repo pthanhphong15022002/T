@@ -9,6 +9,7 @@ import {
   Output,
   SimpleChanges,
 } from '@angular/core';
+import { loaded } from '@syncfusion/ej2-angular-charts';
 import { ApiHttpService, DataRequest, FormModel } from 'codx-core';
 import { finalize, map, mergeMap, of } from 'rxjs';
 
@@ -20,11 +21,13 @@ import { finalize, map, mergeMap, of } from 'rxjs';
 export class ViewTotalDealValueComponent
   implements OnInit, AfterViewInit, OnChanges
 {
-  @Input() style = '';
+  @Input() style = ''; // style
   @Input() stepID = '';
-  @Input() predicate = 'StepID=@0';
-  @Input() dataValue = '';
-  @Input() changeMoney = 0;
+  @Input() isLoading = false;
+  @Input() stepIDAdd = ''; //clums cộng
+  @Input() stepIDMinus = ''; //colums trừ
+  @Input() changeMoney = 0; ///
+
   @Input() formModel!: FormModel;
   @Input() filterView!: any;
   @Input() currencyIDDefault = 'VND';
@@ -32,7 +35,9 @@ export class ViewTotalDealValueComponent
   @Input() totalDealValue = 0;
   @Input() columns = [];
   @Output() getTotalDealValue = new EventEmitter<any>();
-
+  @Input() loaded: any;
+  // @Input() predicate = 'StepID=@0';
+  // @Input() dataValue = '';
   loadFirst = true;
   total = 0;
   curentStepID = '';
@@ -42,19 +47,18 @@ export class ViewTotalDealValueComponent
   ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
-    // if (this.columns?.length > 0) {
-    this.loading();
-    // }
-    // if (this.loadFirst) {
-    //   if (this.curentStepID != this.stepID) {
-    //     this.curentStepID = this.stepID;
-    //     this.loading();
-    //   }
-    // }
-    // else {
-    //   this.total = this.totalDealValue;
-    //   this.changeDef.detectChanges();
-    // }
+    if (this.columns?.length > 0 && this.loaded) {
+      //if(this.stepIDMinus == this.stepID || this.stepIDAdd == this.stepID)
+      if (this.loadFirst) {
+        if (this.curentStepID != this.stepID) {
+          this.curentStepID = this.stepID;
+          this.loading();
+        }
+      } else {
+        this.total = this.totalDealValue;
+        this.changeDef.detectChanges();
+      }
+    }
   }
 
   ngAfterViewInit(): void {}
@@ -80,8 +84,8 @@ export class ViewTotalDealValueComponent
     gridModel.funcID = this.formModel.funcID;
     gridModel.gridViewName = this.formModel.gridViewName;
     gridModel.pageLoading = false;
-    gridModel.predicate = this.predicate;
-    gridModel.dataValue = this.dataValue;
+    gridModel.predicate = 'StepID=@0';
+    gridModel.dataValue = this.stepID;
     gridModel.onlySetPermit = false; //goi qua phan quyền pes
     gridModel.filter = this.filterView;
     return this.api
