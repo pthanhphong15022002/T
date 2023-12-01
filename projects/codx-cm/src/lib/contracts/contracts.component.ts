@@ -537,7 +537,7 @@ export class ContractsComponent extends UIComponent {
   }
 
   beforeDelete(option: RequestOption, data) {
-    option.methodName = 'DeleteContactAsync';
+    option.methodName = 'DeleteContractAsync';
     option.className = 'ContractsBusiness';
     option.assemblyName = 'CM';
     option.service = 'CM';
