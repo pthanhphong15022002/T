@@ -397,6 +397,7 @@ export class LeadsComponent
   }
 
   changeDataMF(event, data, type = null) {
+    if(!data) return;
     if (this.runMode == '1') {
       this.codxShareService.changeMFApproval(event, data?.unbounds);
     } else if (event != null && data != null) {

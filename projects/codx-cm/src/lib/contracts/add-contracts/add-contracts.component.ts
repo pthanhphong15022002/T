@@ -750,7 +750,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit{
           //   this.inputContact.ComponentCurrent.dataService.data = [];
           // }
       }
-  
+
       if (event?.field == 'delStatus') {
         this.disabledDelActualDate =
           event?.data == '0' || event?.data == '1' ? true : false;
@@ -763,7 +763,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit{
         }
       }
     }
-    
+
     //component itemsSelected
   }
 
@@ -1117,18 +1117,18 @@ export class AddContractsComponent implements OnInit, AfterViewInit{
   }
 
   getListInstanceSteps(processID, instanceID) {
-    var data = [processID, instanceID, this.action, '4'];
+    let data = [processID, instanceID, this.action, '4'];
     this.cmService.getInstanceSteps(data).subscribe(async (res) => {
       if (res && res.length > 0) {
-        var obj = {
+        let obj = {
           id: processID,
           steps: res[0],
-          permissions: await this.getListPermission(res[1]),
+          permissions: res[1],
           dealId: res[2],
         };
         this.contracts.contractID =
           this.action !== 'edit' ? obj.dealId : this.contracts.contractID;
-        var isExist = this.listMemorySteps.some((x) => x.id === processID);
+        let isExist = this.listMemorySteps.some((x) => x.id === processID);
         if (!isExist) {
           this.listMemorySteps.push(obj);
         }
@@ -1138,7 +1138,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit{
     });
   }
   checkProcessInList(processId) {
-    var result = this.listMemorySteps.filter((x) => x.id === processId)[0];
+    let result = this.listMemorySteps.filter((x) => x.id === processId)[0];
     if (result) {
       return result;
     }
@@ -1159,12 +1159,12 @@ export class AddContractsComponent implements OnInit, AfterViewInit{
       }
     }
   }
-  async getListPermission(permissions) {
-    this.listParticipants = permissions.filter((x) => x.roleType === 'P');
-    return this.listParticipants != null && this.listParticipants.length > 0
-      ? await this.cmService.getListUserByOrg(this.listParticipants)
-      : this.listParticipants;
-  }
+  // async getListPermission(permissions) {
+  //   this.listParticipants = permissions.filter((x) => x.roleType === 'P');
+  //   return this.listParticipants != null && this.listParticipants.length > 0
+  //     ? await this.cmService.getListUserByOrg(this.listParticipants)
+  //     : this.listParticipants;
+  // }
   valueChangeCustom(event) {
     if (event && event.e && event.data) {
       var result = event.e?.data;

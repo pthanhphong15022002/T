@@ -598,7 +598,7 @@ export class PopupAddCasesComponent
         var obj = {
           id: processId,
           steps: res[0],
-          permissions: await this.getListPermission(res[1]),
+          permissions: res[1],
           caseNO: this.action !== this.actionEdit ? this.cases.caseNo : res[2],
           autoNameTabFields: res[3]?.autoNameTabFields,
         };
@@ -870,12 +870,12 @@ export class PopupAddCasesComponent
     return endDay;
   }
 
-  async getListPermission(permissions) {
-    this.listParticipants = permissions;
-    return this.listParticipants != null && this.listParticipants.length > 0
-      ? await this.codxCmService.getListUserByOrg(this.listParticipants)
-      : this.listParticipants;
-  }
+  // async getListPermission(permissions) {
+  //   this.listParticipants = permissions;
+  //   return this.listParticipants != null && this.listParticipants.length > 0
+  //     ? await this.codxCmService.getListUserByOrg(this.listParticipants)
+  //     : this.listParticipants;
+  // }
 
   // //#region  check RequiredDeal
   checkEndDayInstance(endDate, endDateCondition) {
