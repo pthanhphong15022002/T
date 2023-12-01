@@ -648,7 +648,9 @@ codx-user-inner a.menu-link {
 ejs-listview {
     background-color: var(--bg-card);
 }
-
+.news-group ejs-listview {
+    background-color: #3668ff10;
+}
 .popover {
     background-color: var(--bg-card);
     border-color: var(--border-list);
@@ -935,4 +937,13 @@ ejs-tab#calendarTab .e-calendar {
 }
 .e-checkbox-wrapper.e-checkbox-disabled .e-frame, .e-css.e-checkbox-wrapper.e-checkbox-disabled .e-frame {
     background-color:transparent;
+}
+.badge-secondary {
+    color: var(--text-body);
+}
+::-webkit-scrollbar-thumb:hover {
+    background-color: #22223a !important;
+}
+::-webkit-scrollbar-thumb {
+    background-color: #2b2f42 !important;
 }
