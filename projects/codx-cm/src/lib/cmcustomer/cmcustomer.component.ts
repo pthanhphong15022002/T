@@ -385,6 +385,7 @@ export class CmCustomerComponent
   changeDataMF(e, data, type = 2) {
     if (e != null && data != null) {
       e.forEach((res) => {
+        if(type == 11) res.isbookmark = false;
         if (this.dataSelected != null) {
           if (data?.status != '99') {
             switch (res.functionID) {

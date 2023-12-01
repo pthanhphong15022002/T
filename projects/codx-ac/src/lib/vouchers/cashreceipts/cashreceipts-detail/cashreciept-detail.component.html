@@ -59,35 +59,24 @@
 <!-- Start: template listdetail Body-->
 <ng-template #TmpBodyDetail>
   <ng-container *ngIf="itemSelected">
-    <div class="d-flex justify-content-between flex-grow-1 mb-1">
-      <div class="d-flex align-items-center">
-        <!-- Người gửi tiền -->
-        <codx-label *ngIf="(formModel.funcID == 'ACT0401')" class="fw-bold label-colon text-nowrap" fiedName="Payor"
-          [formModel]="formModel">
-        </codx-label>
-        <span *ngIf="formModel.funcID == 'ACT0401' && itemSelected?.payor"
-          class="text-gray-600">{{itemSelected?.payor}}</span>
-        <span
-          *ngIf="formModel.funcID == 'ACT0401' && (itemSelected?.payor == '' || itemSelected?.payor == null) && gridViewSetup"
-          class="place-holder text-gray-600">{{gridViewSetup['Payor'].headerText}}</span>
-        <!-- Người gửi tiền -->
+    <div class="d-flex align-items-top mb-1">
+      <!-- Người gửi tiền -->
+      <codx-label *ngIf="(formModel.funcID == 'ACT0401')" class="fw-bold label-colon text-nowrap" fiedName="Payor"
+        [formModel]="formModel">
+      </codx-label>
+      <span *ngIf="formModel.funcID == 'ACT0401' && itemSelected?.payor"
+        class="text-gray-600">{{itemSelected?.payor}}</span>
+      <span
+        *ngIf="formModel.funcID == 'ACT0401' && (itemSelected?.payor == '' || itemSelected?.payor == null) && gridViewSetup"
+        class="place-holder text-gray-600">{{gridViewSetup['Payor'].headerText}}</span>
+      <!-- Người gửi tiền -->
 
-        <!-- Tài khoản chi (ủy nhiệm chi chi)   -->
-        <!-- <codx-label *ngIf="(formModel.funcID == 'ACT0429')" class="fw-bold label-colon text-nowrap" fiedName="lblBankAccountPay"
-                [formModel]="formModel" default="Tài khoản chi">
-            </codx-label>
-            <span *ngIf="(formModel.funcID == 'ACT0429')" class="text-gray-600">{{itemSelected?.bankPayname}}</span> -->
-        <!-- Người nhận tiền (phiếu chi)   -->
-      </div>
-      <!-- <div class="d-flex align-self-center">
-        <codx-vll *ngIf="itemSelected?.status == '1'" [formModel]="formModel" [field]="'Status'"
-          [value]="itemSelected?.validated ? '1' : '7'" [showText]="true" [showBgColor]="true"
-          class="badge badge-light badge-sm">
-        </codx-vll>
-        <codx-vll *ngIf="itemSelected?.status != '1'" [formModel]="formModel" [field]="'Status'"
-          [value]="itemSelected?.status" [showText]="true" [showBgColor]="true" class="badge badge-light badge-sm">
-        </codx-vll>
-      </div> -->
+      <!-- Tài khoản chi (ủy nhiệm chi chi)   -->
+      <!-- <codx-label *ngIf="(formModel.funcID == 'ACT0429')" class="fw-bold label-colon text-nowrap" fiedName="lblBankAccountPay"
+              [formModel]="formModel" default="Tài khoản chi">
+          </codx-label>
+          <span *ngIf="(formModel.funcID == 'ACT0429')" class="text-gray-600">{{itemSelected?.bankPayname}}</span> -->
+      <!-- Người nhận tiền (phiếu chi)   -->
     </div>
     <div class="d-flex align-items-top mb-1">
       <!-- Sổ quỹ-->

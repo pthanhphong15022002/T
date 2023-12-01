@@ -849,7 +849,10 @@ codx-view-list-detail .nav-tabs .nav-item.show .nav-link {
 
 .e-more-popup-wrapper .e-more-event-header {
   height: 32px;
-  margin: 7px 10px 5px 15px;
+  margin: 7px 10px 5px 8px;
+  .e-header-date.e-navigate{
+    padding: 4px 0;
+  }
 }
 
 .e-more-popup-wrapper .e-more-event-content {
@@ -4188,7 +4191,14 @@ codx-aside-v2.aside-v2-lighter{
       }
     }
   }
-
+  .menu-title, .brand-logo .fs-3 {
+    -webkit-box-orient: vertical;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    word-wrap: break-word;
+    display: block!important;
+    -webkit-line-clamp: 1;
+  }
 }
 [data-kt-aside-minimize="on"]{
   codx-aside-v2.aside-v2-lighter{
@@ -4266,6 +4276,8 @@ codx-header-v2, codx-ws-header{
 @media (min-width: 992px){
 [data-kt-aside-minimize=on].aside-minimize-icon-title.header-fixed-2 .menu-link {
     max-height: 42px!important;
+    height: 42px!important;
+    padding-top: 8px!important;
 }
 }
 codx-view-list-tree
@@ -4343,3 +4355,6 @@ codx-view-schedule .container-fluid.h-50px {
 codx-view-list-detail .codx-detail-footer {
   bottom: 0px;
 }
+
+
+

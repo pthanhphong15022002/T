@@ -415,22 +415,22 @@ export class ContractsComponent extends UIComponent {
         this.viewDetailContract(data);
         break;
       default: {
-        var customData = {
-          refID: data.recID,
-          refType: 'CM_Contracts',
-        };
-        if (data?.refID && data.applyProcess) {
-          customData.refID = data.processID;
-          customData.refType = 'DP_Processes';
-        }
+        // var customData = {
+        //   refID: data.recID,
+        //   refType: 'CM_Contracts',
+        // };
+        // if (data?.refID && data.applyProcess) {
+        //   customData.refID = data.processID;
+        //   customData.refType = 'DP_Processes';
+        // }
         this.codxShareService.defaultMoreFunc(
           e,
           data,
           this.afterSave.bind(this),
           this.view.formModel,
           this.view.dataService,
-          this,
-          customData
+          this
+          //customData
         );
         this.detectorRef.detectChanges();
         break;

@@ -7,7 +7,18 @@ import {
   Optional,
   SimpleChanges,
 } from '@angular/core';
-import { ApiHttpService, AuthStore, CacheService, CallFuncService, DialogData, DialogModel, DialogRef, FormModel, SidebarModel, Util } from 'codx-core';
+import {
+  ApiHttpService,
+  AuthStore,
+  CacheService,
+  CallFuncService,
+  DialogData,
+  DialogModel,
+  DialogRef,
+  FormModel,
+  SidebarModel,
+  Util,
+} from 'codx-core';
 import { PopupAddCategoryComponent } from 'projects/codx-es/src/lib/setting/category/popup-add-category/popup-add-category.component';
 import { Subject, takeUntil } from 'rxjs';
 import { firstValueFrom } from 'rxjs';
@@ -21,7 +32,7 @@ export class CodxViewApproveComponent implements OnInit, OnChanges {
   @Input() change;
   @Input() categoryID;
   @Input() type = 1;
-  
+
   viewApprover;
   dialog;
   stepsTasks;
@@ -41,20 +52,21 @@ export class CodxViewApproveComponent implements OnInit, OnChanges {
   ) {
     this.dialog = dialog;
     this.categoryID = dt?.data?.categoryID;
-    this.type = dt?.data?.type || "1";
+    this.type = dt?.data?.type || '1';
     this.stepsTasks = dt?.data?.stepsTasks;
     this.isActivitie = dt?.data?.isActivitie || false;
     this.user = this.authStore.get();
-    this.idTask = this.stepsTasks?.isTaskDefault ? this.stepsTasks?.refID : this.stepsTasks?.recID;
+    this.idTask = this.stepsTasks?.isTaskDefault
+      ? this.stepsTasks?.refID
+      : this.stepsTasks?.recID;
   }
 
   ngOnInit(): void {
     this.loadListApproverStep();
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
-  }
- 
+  ngOnChanges(changes: SimpleChanges): void {}
+
   loadListApproverStep() {
     this.getListAproverStepByCategoryID(this.idTask)
       .pipe(takeUntil(this.destroyFrom$))
@@ -91,9 +103,10 @@ export class CodxViewApproveComponent implements OnInit, OnChanges {
         'CategoriesBusiness',
         'GetByCategoryIDAsync',
         this.idTask
-      ));
-      
-    if(category) {
+      )
+    );
+
+    if (category) {
       //this.actionOpenFormApprove(category.recID);
       this.actionOpenFormApprove2(category);
     } else {
@@ -109,7 +122,9 @@ export class CodxViewApproveComponent implements OnInit, OnChanges {
             category = res.data;
             category.recID = res?.recID ?? Util.uid();
             category.eSign = true;
-            category.Category = this.isActivitie ? 'DP_Activities' : 'DP_Instances_Steps_Tasks';
+            category.Category = this.isActivitie
+              ? 'DP_Activities'
+              : 'DP_Instances_Steps_Tasks';
             category.categoryID = this.idTask;
             category.categoryName = this.stepsTasks.taskName;
             category.createdBy = this.user.userID;
@@ -156,7 +171,11 @@ export class CodxViewApproveComponent implements OnInit, OnChanges {
                   headerText: this.titleAction,
                   dataType: 'auto',
                   templateRefID: this.idTask,
-                  templateRefType: this.isActivitie ? 'DP_Activities' : 'DP_Instances_Steps_Tasks',
+                  templateRefType: this.isActivitie
+                    ? 'DP_Activities'
+                    : this.stepsTasks.isTaskDefault
+                    ? 'DP_Steps_Tasks'
+                    : 'DP_Instances_Steps_Tasks',
                   disableESign: true,
                 },
                 '',
@@ -173,5 +192,4 @@ export class CodxViewApproveComponent implements OnInit, OnChanges {
       }
     });
   }
-
 }

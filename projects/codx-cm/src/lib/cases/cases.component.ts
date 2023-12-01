@@ -499,25 +499,25 @@ export class CasesComponent
     if (executeFunction) {
       executeFunction();
     } else {
-      let customData = {
-        refID: data.recID,
-        refType: 'CM_Cases',
-      };
+      // let customData = {
+      //   refID: data.recID,
+      //   refType: 'CM_Cases',
+      // };
 
-      if (data?.refID && data.applyProcess) {
-        customData = {
-          refID: data.processID,
-          refType: 'DP_Processes',
-        };
-      }
+      // if (data?.refID && data.applyProcess) {
+      //   customData = {
+      //     refID: data.processID,
+      //     refType: 'DP_Processes',
+      //   };
+      // }
       this.codxShareService.defaultMoreFunc(
         e,
         data,
         this.afterSave.bind(this),
         this.view.formModel,
         this.view.dataService,
-        this,
-        customData
+        this
+        //customData
       );
     }
   }

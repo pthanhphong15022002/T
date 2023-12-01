@@ -101,14 +101,13 @@ export class EmployeeContractComponent extends UIComponent {
   }
 
   GetGvSetup() {
-    let funID = this.activatedRoute.snapshot.params['funcID'];
+    let funID = this.funcID || this.activatedRoute.snapshot.params['funcID'];
     this.cache.functionList(funID).subscribe((fuc) => {
       this.cache
         .gridViewSetup(fuc?.formName, fuc?.gridViewName)
         .subscribe((res) => {
           this.grvSetup = res;
         });
-
     });
   }
 
