@@ -103,10 +103,25 @@
           [innerHTML]="data?.email | formatvalue : formModel : 'Email' | async"
         ></span>
       </div>
-      <div class="mb-1 d-flex flex-row" (mouseenter)="closePopover()">
+      <div class="mb-1 w-200px min-w-200px" (mouseenter)="closePopover()">
         <span
-          class="text-gray-700 fs-7 line-clamp line-clamp-2"
-          [ngbTooltip]="data?.address"
+          class="text-gray-700 fs-7"
+          [style.height]="'auto'"
+          [ngClass]="
+            checkHover(data?.recID)
+              ? 'line-clamp line-clamp-2 text-popover'
+              : ''
+          "
+          [id]="data.recID"
+          [ngbPopover]="data?.address"
+          [style.height]="'auto'"
+          #addre="ngbPopover"
+          [openDelay]="500"
+          (mouseenter)="PopoverDetail($event, addre, data, 'address')"
+          (mouseleave)="popoverClosed(addre)"
+          (click)="isPopoverOpen = true"
+          placement="right bottom  top"
+          [popoverClass]="data.recID"
           [innerHTML]="
             data?.address | formatvalue : formModel : 'Address' | async
           "
@@ -193,7 +208,6 @@
         [openDelay]="500"
         (mouseenter)="PopoverDetail($event, state, data, 'currentState')"
         (mouseleave)="popoverClosed(state)"
-
         placement="bottom right top"
         [popoverClass]="data?.recID"
       >
@@ -418,7 +432,11 @@
       </div>
     </div>
 
-    <div class="w-50px min-w-50px" *ngIf="asideMode != '2'" (mouseenter)="closePopover()">
+    <div
+      class="w-50px min-w-50px"
+      *ngIf="asideMode != '2'"
+      (mouseenter)="closePopover()"
+    >
       <codx-mfunc
         [formModel]="formModel"
         (clickMF)="clickMF($event, data)"

@@ -299,6 +299,7 @@ export class IssueTransactionsAddComponent extends UIComponent implements OnInit
     oLine.note = this.formVouchers.data.memo;
     oLine.reasonID = this.formVouchers.data.reasonID;
     oLine = this.genFixedDims(oLine);
+    oLine = this.acService.getDataSettingFromJournal(oLine,this.journal);
     return oLine;
   }
 

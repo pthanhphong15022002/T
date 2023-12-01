@@ -155,7 +155,12 @@ export class PopupUpdateReasonCodeComponent implements OnInit, AfterViewInit {
     if (this.countValidate > 0) {
       return;
     }
-
+    if (this.data.startDate) {
+      if (new Date(this.data.startDate).getDate() < new Date().getDate()) {
+        this.notiService.notifyCode('WR003');
+        return;
+      }
+    }
     this.data.attachments = this.edit
       ? this.data.attachments + this.countFile - this.countFileDelete
       : this.countFile;

@@ -469,26 +469,28 @@ export class ItemsAddComponent extends UIComponent {
   }
 
   tabChange(event){
-    if(event?.nextId.toLowerCase() === 'settings'){
-      let data = this.eleCbxDimGroupID?.ComponentCurrent?.dataService?.data.find((x) =>x.DimGroupID == this.eleCbxDimGroupID?.ComponentCurrent?.value);
-      if(data) this.oDimGroup = data;
-    }
-    if(event?.nextId.toLowerCase() === 'purchase'){
-      this.fmItemsPurchase.currentData = this.itemPurchase;
-      this.fgItemsPurchase.patchValue(this.itemPurchase);
-      this.detectorRef.detectChanges();
-    }
-
-    if(event?.nextId.toLowerCase() === 'sales'){
-      this.fmItemsSales.currentData = this.itemSales;
-      this.fgItemsSales.patchValue(this.itemSales);
-      this.detectorRef.detectChanges();
-    }
-
-    if(event?.nextId.toLowerCase() === 'production'){
-      this.fmItemsProduction.currentData = this.itemProduction;
-      this.fgItemsProduction.patchValue(this.itemProduction);
-      this.detectorRef.detectChanges();
+    if (this.form?.form?.data?.isEdit) {
+      if(event?.nextId.toLowerCase() === 'settings'){
+        let data = this.eleCbxDimGroupID?.ComponentCurrent?.dataService?.data.find((x) =>x.DimGroupID == this.eleCbxDimGroupID?.ComponentCurrent?.value);
+        if(data) this.oDimGroup = data;
+      }
+      if(event?.nextId.toLowerCase() === 'purchase'){
+        this.fmItemsPurchase.currentData = this.itemPurchase;
+        this.fgItemsPurchase.patchValue(this.itemPurchase);
+        this.detectorRef.detectChanges();
+      }
+  
+      if(event?.nextId.toLowerCase() === 'sales'){
+        this.fmItemsSales.currentData = this.itemSales;
+        this.fgItemsSales.patchValue(this.itemSales);
+        this.detectorRef.detectChanges();
+      }
+  
+      if(event?.nextId.toLowerCase() === 'production'){
+        this.fmItemsProduction.currentData = this.itemProduction;
+        this.fgItemsProduction.patchValue(this.itemProduction);
+        this.detectorRef.detectChanges();
+      } 
     }
   }
   //#endregion Function
