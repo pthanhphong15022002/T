@@ -91,7 +91,6 @@ method="LoadDataAsync" -->
       [autoFitColumns]="false"
       [dataSource] = "gridDataSourceStatistic"
       [hideMoreFunc]="true"
-      [isNewEventTemplate]=true
       ></codx-gridview-v2>
       <!-- (onDoubleClick)="doubleClickGrid($event)" -->
     </ng-container>
@@ -115,7 +114,7 @@ method="LoadDataAsync" -->
         <div class="d-flex align-items-center">
           <div class="d-flex flex-column me-4">
             <codx-img [funcId]="'HRT03a1'" [objectId]="data.employeeID" [objectName]="data.employeeName"
-              objectType="HR_Employees" [width]="40" 
+              objectType="HR_Employees" [width]="40"
               [imageType]="'circle'"
               class="pic-emloyee"
               >
@@ -146,9 +145,9 @@ method="LoadDataAsync" -->
       </div>
   </ng-template>
 
-  
+
   <ng-template #tempDayData let-data>
     <span>
-      {{data}}
+      {{data[data.column.field]}}
     </span>
   </ng-template>
