@@ -174,6 +174,8 @@ export class DealsComponent
   queryParams: any;
   gridDetailView = '2';
   runMode: any;
+  filterView: any;
+  columns: any;
 
   constructor(
     private inject: Injector,
@@ -322,6 +324,7 @@ export class DealsComponent
 
     if (this.viewCrr == 6) {
       this.kanban = (this.view?.currentView as any)?.kanban;
+      this.columns = this.kanban.columns;
     }
 
     this.processID = this.activedRouter.snapshot?.queryParams['processID'];
@@ -658,6 +661,8 @@ export class DealsComponent
         break;
       //chang fiter
       case 'pined-filter':
+        // debugger;
+        // this.filterView = this.view.dataService.filter;
         this.seclectFilter(e.data);
     }
   }
@@ -1589,6 +1594,7 @@ export class DealsComponent
         );
         kanban.refresh();
         this.kanban = kanban;
+        this.columns = resource.columns;
         // if (this.kanban) this.kanban.refresh();
         this.detectorRef.detectChanges();
       });
@@ -2040,5 +2046,16 @@ export class DealsComponent
           this.detectorRef.detectChanges();
         }
       });
+  }
+
+  getTotalDealValue(e) {
+    let keyField = e.key;
+    let total = e.total;
+    if (this.kanban && this.kanban.columns?.length > 0) {
+      let idx = this.kanban.columns.findIndex((x) => x.keyField == keyField);
+      if (idx != -1 && this.kanban.columns[idx].totalDealValue != total) {
+        this.kanban.columns[idx].totalDealValue = total;
+      }
+    }
   }
 }

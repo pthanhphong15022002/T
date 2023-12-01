@@ -119,6 +119,7 @@ import { ViewLeadDetailComponent } from './leads/view-lead-detail/view-lead-deta
 import { CustomIconPipe } from './pipes/customIcon.pipe';
 import { FormatTargetPipe } from './pipes/format-target.pipe';
 import { FormatStatusPipe } from './pipes/format-status.pipe';
+import { ViewTotalDealValueComponent } from './deals/view-total-deal-value/view-total-deal-value.component';
 
 export const routes: Routes = [
   {
@@ -225,6 +226,7 @@ const T_Component: Type<any>[] = [
   QuotationsComponent,
   PopupAddQuotationsComponent,
   DealsComponent,
+  ViewTotalDealValueComponent,
   PopupAddDealComponent,
   DealDetailComponent,
   TabDetailCustomComponent,

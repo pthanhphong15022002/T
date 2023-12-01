@@ -16,13 +16,13 @@
   [moreFuncs]="moreFuncs"
   [autoLoad]="true"
   [selectedFirst]="true"
+  [viewActiveType]="'6'"
   (onActions)="onActions($event)"
   (viewChanged)="changeView($event)"
   (selectedChange)="selectedChange($event)"
   (onLoading)="onLoading($event)"
   (clickMF)="clickMF($event, dataSelected)"
   (changeDataMF)="changeDataMF($event, dataSelected)"
-
 ></codx-views>
 
 <!-- KANBAN -->
@@ -39,7 +39,6 @@
     [dataItem]="data"
     (clickMF)="clickMF($event, data)"
     (changeDataMF)="changeDataMF($event, data)"
-
   >
   </codx-card-img>
 </ng-template>
@@ -209,14 +208,14 @@
         </ng-template> -->
 
         <codx-vll
-        [name]="gridViewSetup?.Status?.referedValue"
-        [field]="'Status'"
-        [value]="data?.status"
-        [showText]="true"
-        [showBgColor]="true"
-        class="badge badge-light badge-sm"
-      >
-      </codx-vll>
+          [name]="gridViewSetup?.Status?.referedValue"
+          [field]="'Status'"
+          [value]="data?.status"
+          [showText]="true"
+          [showBgColor]="true"
+          class="badge badge-light badge-sm"
+        >
+        </codx-vll>
 
         <ng-container *ngIf="data.approveStatus > '1' && data?.approveStatus">
           <codx-vll
@@ -285,12 +284,17 @@
         </span>
       </div>
     </div>
+
+    <!-- <view-total-deal-value
+      [formModel]="view.formModel"
+      [style]="{ color: getPropertiesHeader(data, 'textColor') }"
+      [stepID]="data.keyField"
+      [dataValue]="data.keyField"
+      [columns]="columns"
+      [filterView]="view.dataService.filter"
+      (getTotalDealValue)="getTotalDealValue($event)"
+    ></view-total-deal-value> -->
     <div class="d-flex align-items-center line-colums ms-3 mt-1">
-      <!-- <span
-        class="icon-monetization_on icon-16 text-warning me-2"
-        [ngbTooltip]="'Tổng tiền dự kiến'"
-        container="body"
-      ></span> -->
       <ng-container
         [ngTemplateOutlet]="showToltal"
         [ngTemplateOutletContext]="{
@@ -500,14 +504,14 @@
           </codx-vll>
         </ng-template> -->
         <codx-vll
-        [name]="gridViewSetup?.Status?.referedValue"
-        [field]="'Status'"
-        [value]="data?.status"
-        [showText]="true"
-        [showBgColor]="true"
-        class="badge badge-light badge-sm"
-      >
-      </codx-vll>
+          [name]="gridViewSetup?.Status?.referedValue"
+          [field]="'Status'"
+          [value]="data?.status"
+          [showText]="true"
+          [showBgColor]="true"
+          class="badge badge-light badge-sm"
+        >
+        </codx-vll>
         <ng-container *ngIf="data.approveStatus > '1' && data?.approveStatus">
           <codx-vll
             [name]="vllApprove"
