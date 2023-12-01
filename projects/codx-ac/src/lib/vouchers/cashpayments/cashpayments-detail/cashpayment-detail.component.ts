@@ -92,7 +92,7 @@ export class CashpaymentDetailComponent extends UIDetailComponent {
   }
 
   ngOnChanges(value: SimpleChange) {
-    //this.getDataDetail(this.dataItem, this.recID);
+    this.getDataDetail(this.dataItem, this.recID);
   }
 
   ngOnDestroy() {
