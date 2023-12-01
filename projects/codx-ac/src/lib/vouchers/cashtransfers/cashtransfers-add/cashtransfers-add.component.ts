@@ -28,9 +28,6 @@ import {
   Vll075,
 } from '../../../journals/interfaces/IJournal.interface';
 import { JournalService } from '../../../journals/journals.service';
-import { fmVATInvoice } from '../cashtransfers.service';
-import { ICashTransfer } from '../interfaces/ICashTransfer.interface';
-import { IVATInvoice } from '../interfaces/IVATInvoice.interface';
 
 @Component({
   selector: 'lib-cashtransfers-add',
@@ -46,8 +43,8 @@ export class CashtransferAddComponent extends UIComponent {
   @ViewChild('diM2') diM2: CodxInputComponent;
   @ViewChild('diM3') diM3: CodxInputComponent;
 
-  cashTransfer: ICashTransfer = {} as ICashTransfer;
-  vatInvoice: IVATInvoice = {} as IVATInvoice;
+  cashTransfer: any = {};
+  vatInvoice: any = {} as any;
   masterService: CRUDService;
   invoiceService: CRUDService;
 
@@ -91,17 +88,17 @@ export class CashtransferAddComponent extends UIComponent {
       Number(this.cashTransfer.feeControl)
     );
 
-    this.fmVATInvoice = fmVATInvoice;
-    this.fgVatInvoice = codxService.buildFormGroup(
-      fmVATInvoice.formName,
-      fmVATInvoice.gridViewName,
-      fmVATInvoice.entityName
-    );
-    this.invoiceService = acService.createCRUDService(
-      injector,
-      this.fmVATInvoice,
-      'AC'
-    );
+    // this.fmVATInvoice = fmVATInvoice;
+    // this.fgVatInvoice = codxService.buildFormGroup(
+    //   fmVATInvoice.formName,
+    //   fmVATInvoice.gridViewName,
+    //   fmVATInvoice.entityName
+    // );
+    // this.invoiceService = acService.createCRUDService(
+    //   injector,
+    //   this.fmVATInvoice,
+    //   'AC'
+    // );
   }
   //#endregion
 
@@ -350,7 +347,7 @@ export class CashtransferAddComponent extends UIComponent {
           field,
           this.cashTransfer,
         ])
-        .subscribe((res: ICashTransfer) => {
+        .subscribe((res: any) => {
           this.form.formGroup.patchValue({
             currencyID: res.currencyID,
             exchangeRate: res.exchangeRate,
@@ -494,7 +491,7 @@ export class CashtransferAddComponent extends UIComponent {
           this.cashTransfer.journalNo,
         ])
       )
-      .subscribe((res: ICashTransfer) => {
+      .subscribe((res: any) => {
         this.cashBookName1 = '';
         this.cashBookName2 = '';
 
