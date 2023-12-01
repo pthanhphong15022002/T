@@ -48,14 +48,19 @@ export class ViewTotalDealValueComponent
 
   ngOnChanges(changes: SimpleChanges): void {
     if (this.columns?.length > 0 && this.loaded) {
-      //if(this.stepIDMinus == this.stepID || this.stepIDAdd == this.stepID)
       if (this.loadFirst) {
         if (this.curentStepID != this.stepID) {
           this.curentStepID = this.stepID;
           this.loading();
         }
       } else {
-        this.total = this.totalDealValue;
+        if (this.stepIDMinus != this.stepID && this.stepIDAdd != this.stepID)
+          return;
+        if (this.stepIDMinus == this.stepID)
+          this.total = this.totalDealValue - this.changeMoney;
+        if (this.stepIDAdd == this.stepID)
+          this.total = this.totalDealValue + this.changeMoney;
+
         this.changeDef.detectChanges();
       }
     }
