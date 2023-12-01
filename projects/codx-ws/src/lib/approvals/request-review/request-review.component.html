@@ -1,18 +1,20 @@
 <codx-views
   #view
   [views]="views"
+  [button]="button"
+  idField="recID"
+  service="ES"
+  method="GetAsync"
+  funcID="WS0051"
+  predicate="Approver=@0"
+  dataValue="[UserID]"
+  entityName="ES_ApprovalTrans"
+  className="ApprovalTransBusiness"
+  assemblyName="ES"
   (buttonClick)="click($event)"
   (selectedChange)="valueChange($event)"
-  [button]="button"
-  [entityName]="'ES_ApprovalTrans'"
-  [method]="'GetAsync'"
-  [assemblyName]="'ES'"
-  [service]="'ES'"
-  [className]="'ApprovalTransBusiness'"
-  [funcID]="'WS0051'"
-  [predicate]="'Approver=@0'"
-  [dataValue]="'[UserID]'"
-  idField="recID"
+  (changeDataMF)="changeMF($event, dataItem)"
+  (clickMF)="clickMF($event, dataItem)"
 >
 </codx-views>
 <ng-template #itemTemplate let-data>

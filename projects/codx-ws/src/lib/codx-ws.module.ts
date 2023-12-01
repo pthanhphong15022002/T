@@ -72,6 +72,8 @@ import { CodxEPModule } from 'projects/codx-ep/src/lib/codx-ep.module';
 import { CodxCommonModule } from "projects/codx-common/src/public-api";
 import { CodxViewWsComponent } from './codx-view-ws/codx-view-ws.component';
 import { CodxWpV2Module } from 'projects/codx-wp/src/lib/codx-wp-v2.module';
+import { AcModule } from 'projects/codx-ac/src/public-api';
+import { CodxHRModule } from 'projects/codx-hr/src/public-api';
 //import { CodxWpV2Module } from 'projects/codx-wp/src/lib/codx-wp-v2.module';
 const routes: Routes = [
   {
@@ -94,7 +96,7 @@ const routes: Routes = [
       },
       
       {
-        path: 'approvals/:funcID',
+        path: 'wsapprovals/:funcID',
         component: ApprovalsComponentWS,
       },
       {
@@ -298,6 +300,8 @@ const routes: Routes = [
         //CodxShareModule,
         CodxEPModule,
         CodxWpV2Module,
+        AcModule,
+        CodxHRModule,
         //CodxWpModule,
         //CodxWpV2Module,
         

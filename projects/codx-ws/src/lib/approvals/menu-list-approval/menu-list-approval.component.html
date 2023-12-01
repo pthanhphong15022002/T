@@ -18,7 +18,7 @@
         <ejs-accordion class="ws-accordion h-100">
             <e-accordionitems>
                 <ng-container *ngFor="let item of listParentGroup">
-                    <e-accordionitem expanded='true'>
+                    <e-accordionitem expanded='true' *ngIf="item?.child && item?.child.length>0">
                         <ng-template #header>
                             <div>{{item?.customName}}</div>
                           </ng-template>
