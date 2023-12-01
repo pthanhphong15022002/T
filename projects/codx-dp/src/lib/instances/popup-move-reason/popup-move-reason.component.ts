@@ -232,7 +232,7 @@ export class PopupMoveReasonComponent implements OnInit {
             };
             this.nextStep = res[4];
             this.listCbxProccess.push(obj);
-            this.listParticipantReason =  await this.codxDpService.getListUserByOrg(res[2]);
+            this.listParticipantReason =  res[2];
           }
           this.moveProccess = res[1];
           this.listReason = res[3];
@@ -368,12 +368,14 @@ export class PopupMoveReasonComponent implements OnInit {
   }
   async getListPermission(permissions) {
     if(permissions != null && permissions.length > 0) {
-      this.listParticipantReason = await this.codxDpService.getListUserByOrg(
-        permissions
-        );
-    }
-    else {
-      this.listParticipantReason = [];
+      this.codxDpService.getlistCbxProccessReason(permissions).subscribe((res) => {
+        if( res != null && res.length > 0) {
+          this.listParticipantReason = res;
+        }
+        else {
+          this.listParticipantReason = [];
+        }
+      });
     }
   }
   valueChangeOwner($event) {
