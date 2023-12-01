@@ -531,6 +531,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit{
         .save((opt: any) => this.beforeSave(opt))
         .subscribe((res) => {
           this.dialog.close({ contract: res, action: this.action });
+          this.changeDetectorRef.markForCheck();
         });
     } else {
       let data = [this.contracts];
