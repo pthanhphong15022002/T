@@ -89,8 +89,6 @@ export class AddContractsComponent implements OnInit, AfterViewInit{
   grvPayments: any;
   projectID: string;
   dialog!: DialogRef;
-  // instance: tmpInstances = new tmpInstances();
-
   view = [];
   isLoadDate = true;
   checkPhone = true;
@@ -490,7 +488,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit{
   }
 
   async addContracts() {
-    if (this.type == 'view') {
+    if (this.dialog?.dataService) {
       this.dialog.dataService
         .save((opt: any) => this.beforeSave(opt), 0)
         .subscribe((res) => {
@@ -526,11 +524,12 @@ export class AddContractsComponent implements OnInit, AfterViewInit{
   }
 
   editContract() {
-    if (this.type == 'view') {
+    if (this.dialog?.dataService) {
       this.dialog.dataService
         .save((opt: any) => this.beforeSave(opt))
         .subscribe((res) => {
           this.dialog.close({ contract: res, action: this.action });
+          this.changeDetectorRef.markForCheck();
         });
     } else {
       let data = [this.contracts];

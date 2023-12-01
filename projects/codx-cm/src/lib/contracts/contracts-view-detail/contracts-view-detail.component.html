@@ -1046,14 +1046,15 @@
 
 <ng-template #memo let-data="value">
   <div>
-    <span
-    class="text-gray-600"
-    [innerHTML]="
-      contract?.note
-        | formatvalue : formModel : 'Note'
-        | async
-    "
-  ></span>
+    <codx-tree-comment
+    [objectID]="contract.recID"
+    [objectType]="formModel.entityName"
+    [actionType]="'C'"
+    [addNew]="true"
+    [funcID]="formModel.funcID"
+    (totalCommentChange)="changeCountFooter($event, 'comment')"
+  >
+  </codx-tree-comment>
   </div>
 </ng-template>
 
