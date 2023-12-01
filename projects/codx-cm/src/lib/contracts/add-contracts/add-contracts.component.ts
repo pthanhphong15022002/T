@@ -166,6 +166,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit{
   autoNumber = '';
   isApplyProcess = false;
   countInputChangeAuto = 0;
+  processIdDefault = '';
 
   constructor(
     private cache: CacheService,
@@ -203,7 +204,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit{
   async ngAfterViewInit(){
     this.tabContent = [this.information,this.reference,this.extend];
   }
-  
+
   //#region setData
   async setDataContract(data) {
     switch (this.action) {
@@ -308,7 +309,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit{
     this.contracts.bankID = customer?.bankID;
   }
   //#endregion
-  
+
   //#region get data setting default
   async getSettingContract() {
     let res = await firstValueFrom(
@@ -339,8 +340,21 @@ export class AddContractsComponent implements OnInit, AfterViewInit{
     });
   }
   //#endregion
-  
+
   //#region auto number
+  GetProcesIDDefault(){
+    if(this.processIdDefault){
+      this.contracts.processID = this.processIdDefault;
+    }else{
+      this.contractService.GetProcessIdDefault("4").subscribe(res => {
+        if(res){
+          this.contracts.processID = res;
+          this.processIdDefault = res;
+        }
+      })
+    }
+
+  }
   GetProcessNoByProcessID(processID){
     let process = this.listProcessNo?.find(x => x?.processID === processID);
     if(process){
@@ -356,7 +370,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit{
         }
       });
     }
-    
+
     return null;
   }
   // kiểm tra có thiết lập tư động ko
@@ -399,10 +413,10 @@ export class AddContractsComponent implements OnInit, AfterViewInit{
 
   // check trùm mã khi nhạp tay
   changeAutoNum(e) {
-    if(this.countInputChangeAuto == 0){
+    if(this.countInputChangeAuto == 0 && !(this.autoNumber && this.isApplyProcess)){
       if (!this.disabledShowInput && this.action !== 'edit' && e) {
         this.contracts.contractID = e?.data;
-        if (this.contracts.contractID && this.contracts.contractID.includes(' ')) 
+        if (this.contracts.contractID && this.contracts.contractID.includes(' '))
         {
           this.notiService.notifyCode('CM026',0,'"' + this.grvSetup['ContractID'].headerText + '"');
           return;
@@ -458,7 +472,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit{
     }
     return true;
   }
-  
+
   async addContracts() {
     if (this.type == 'view') {
       // if (this.contracts?.applyProcess) {
@@ -571,7 +585,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit{
           }
         })
       }
-  
+
       if (event?.field == 'delStatus') {
         this.disabledDelActualDate =
           event?.data == '0' || event?.data == '1' ? true : false;
@@ -581,6 +595,8 @@ export class AddContractsComponent implements OnInit, AfterViewInit{
         this.contracts.businessLineID = event?.data;
         if(processID){
           this.contracts.processID = processID;
+        }else{
+          this.GetProcesIDDefault();
         }
         if(this.isApplyProcess && this.autoNumber){
           this.GetProcessNoByProcessID(processID);
@@ -590,29 +606,29 @@ export class AddContractsComponent implements OnInit, AfterViewInit{
   }
 
   valueChangeOwner(event) {
-    this.contracts[event?.field] = event?.data;
-    console.log(event?.component?.itemsSelected[0]);
-    let user = event?.component?.itemsSelected[0];
-    if (!this.contracts.applyProcess && user) {
-      let permissions = new CM_Permissions();
-      permissions.recID = Util.uid();
-      permissions.objectID = user?.UserID;
-      permissions.objectName = user?.UserName;
-      permissions.objectType = 'U';
-      permissions.roleType = 'O';
-      permissions.memberType = '0';
-      permissions.full = true;
-      permissions.read = true;
-      permissions.edit = false;
-      permissions.create = false;
-      permissions.update = true;
-      permissions.assign = true;
-      permissions.delete = true;
-      permissions.share = false;
-      permissions.upload = true;
-      permissions.download = true;
-      this.contracts.permissions = [permissions];
-    }
+    this.contracts.owner = event?.data;
+    // console.log(event?.component?.itemsSelected[0]);
+    // let user = event?.component?.itemsSelected[0];
+    // if (!this.contracts.applyProcess && user) {
+    //   let permissions = new CM_Permissions();
+    //   permissions.recID = Util.uid();
+    //   permissions.objectID = user?.UserID;
+    //   permissions.objectName = user?.UserName;
+    //   permissions.objectType = 'U';
+    //   permissions.roleType = 'O';
+    //   permissions.memberType = '0';
+    //   permissions.full = true;
+    //   permissions.read = true;
+    //   permissions.edit = false;
+    //   permissions.create = false;
+    //   permissions.update = true;
+    //   permissions.assign = true;
+    //   permissions.delete = true;
+    //   permissions.share = false;
+    //   permissions.upload = true;
+    //   permissions.download = true;
+    //   this.contracts.permissions = [permissions];
+    // }
   }
 
   setValueComboboxDeal() {
@@ -710,7 +726,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit{
     });
   }
   //#endregion
-   
+
   //#region get data
    getCustomerByDealID(dealID) {
     this.contractService.getCustomerBydealID(dealID).subscribe((res) => {
@@ -735,7 +751,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit{
       }
     });
   }
-  
+
   //#endregion
 
 
@@ -885,10 +901,10 @@ export class AddContractsComponent implements OnInit, AfterViewInit{
   //   return true;
   // }
 
-  
+
   //#endregion
   //#region Save
- 
+
 
   // setDataInstance(contract: CM_Contracts, instance: tmpInstances) {
   //   instance.title = contract?.contractName;
@@ -1246,7 +1262,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit{
   //   }
   // }
   //#endregion
- 
+
   // loadComboboxData(comboboxName: string, service: string): Observable<any> {
   //   const dataRequest = new DataRequest();
   //   dataRequest.comboboxName = comboboxName;
