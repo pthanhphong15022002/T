@@ -133,20 +133,19 @@
                         ? 'd-flex align-items-center mb-1'
                         : 'd-flex align-items-center mt-1'
                     "
+                    class="text-primary text-hover-primary line-clamp-address"
                     *ngIf="
                       dataSelected.address != null &&
                       dataSelected.address.trim() != ''
                     "
+                    [ngbTooltip]="dataSelected.address"
                   >
-                    <span
-                      class="text-gray-900 line-clamp-1"
-                      [ngbTooltip]="dataSelected?.address"
-                      [innerHTML]="
-                        dataSelected?.address
-                          | formatvalue : formModel : 'Address'
-                          | async
-                      "
-                    ></span>
+                    <span class="icon-place icon-16 cursor-pointer me-2"></span>
+                    <a
+                      href='https://maps.google.com/maps?q=" + {{dataSelected.address}} + "'
+                      target="_blank"
+                      >{{dataSelected.address}}</a
+                    >
                   </div>
                   <div class="d-flex flex-row mb-1">
                     <div
