@@ -72,7 +72,7 @@ export class ViewDetailWrComponent implements OnInit {
     },
     {
       name: 'References',
-      textDefault: 'Liên kết',
+      textDefault: 'XML File',
       isActive: false,
       template: null,
     },
