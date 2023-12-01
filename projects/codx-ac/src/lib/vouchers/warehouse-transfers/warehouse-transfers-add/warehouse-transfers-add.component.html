@@ -303,7 +303,7 @@
             [templateMore]="templateMore" [entityName]="fmIssueTransfersLines.entityName" predicates="TransID=@0"
             [dataValues]="formWareHouse?.data?.recID" service="IV" [editOnClick]="true" rowNoField="rowNo"
             (eventAction)="onActionGrid($event)" (actionCompleted)="onActionGrid($event)"
-            (gridInit)="beforeInitGridIssue($event)" (cellChanged)="valueChangeLine($event,'issue')"></codx-gridview-v2>
+            (gridInit)="beforeInitGrid($event)" (cellChanged)="valueChangeLine($event,'issue')"></codx-gridview-v2>
         <div class="btn-addline">
             <div class="d-flex align-items-center">
                 <div>
@@ -326,7 +326,7 @@
             [formName]="fmReceiptTransfersLines.formName" [gridViewName]="fmReceiptTransfersLines.gridViewName"
             [templateMore]="templateMore" [entityName]="fmReceiptTransfersLines.entityName" predicates="TransID=@0"
             [dataValues]="formWareHouse?.data?.recID" service="IV" [editOnClick]="true" rowNoField="rowNo"
-            (eventAction)="onActionGrid($event)" (gridInit)="beforeInitGridReceipt($event)"
+            (eventAction)="onActionGrid($event)" (gridInit)="beforeInitGrid($event)"
             (actionCompleted)="onActionGrid($event)"
             (cellChanged)="valueChangeLine($event,'receipt')"></codx-gridview-v2>
         <div class="btn-addline">

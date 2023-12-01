@@ -1,107 +1,11 @@
-<codx-views
-  #view
-  [views]="views"
-  [button]="btnAdd"
-  entityName="AC_CashTranfers"
-  predicates="JournalNo=@0"
-  assemblyName="AC"
-  className="CashTranfersBusiness"
-  method="GetAsync"
-  [dataValues]="journalNo"
-  (buttonClick)="onAddClick($event)"
-  (selectedChange)="onSelectChange($event)"
-  [isSubView]="true"
->
+<codx-views class="ac-views" #view idField="recID" [views]="views" [button]="button" [entityName]="view.entityName"
+  (buttonClick)="toolbarClick($event)" [predicates]="runmode == '1' ? '' : 'JournalNo=@0'" idField="recID" [hideMoreFuncs]="!itemSelected"
+  (changeDataMF)="changeMFDetail($event, itemSelected,'viewdetail')" (clickMF)="clickMoreFunction($event, itemSelected)"
+  [dataValues]="runmode == '1' ? '' : journalNo" (selectedChange)="onSelectedItem($event)" [isSubView]="true" (viewChanged)="viewChanged($event)">
 </codx-views>
-
-<ng-template #templateMore let-data>
-  <codx-mfunc
-    [dataItem]="data"
-    [formModel]="view.formModel"
-    (clickMF)="onClickMF($event, data)"
-    [isBookMark]="true"
-    type="view"
-  ></codx-mfunc>
+<!-- Start: templateGrid -->
+<ng-template #templateGrid let-data>
+  <codx-mfunc [dataItem]="data" (changeDataMF)="changeMFDetail($event, data, 'viewgrid')" [formModel]="view.formModel"
+    (clickMF)="clickMoreFunction($event, data)" type="view"></codx-mfunc>
 </ng-template>
-
-<ng-template #sider let-data>
-  <codx-temp-full
-    [titleTmp]="titleTmp"
-    [descTmp]="descTmp"
-    [desc2Tmp]="desc2Tmp"
-    cardCss="card-template border-bottom p-3 list-task"
-    [formModel]="view.formModel"
-    [modeImgs]="true"
-    [titleLine]="2"
-    [dataItem]="data"
-    [footer]="siderFooter"
-    [hideMF]="false"
-    typeMF="hover"
-    moreFuncCss="me-15"
-    (clickMF)="onClickMF($event, data)"
-  >
-  </codx-temp-full>
-</ng-template>
-
-<ng-template #titleTmp let-data>
-  <span class="fw-bold fs-6">{{ data.voucherNo }}</span>
-  <span class="fw-bold fs-6">{{
-    data.totalAmt | currency : data.currencyID : "code"
-  }}</span>
-</ng-template>
-
-<ng-template #descTmp let-data>
-  <div class="fw-bold mt-1">
-    {{ data.cashBookName }}
-  </div>
-</ng-template>
-
-<ng-template #desc2Tmp let-data>
-  <span class="text-gray-500 mt-1 line-clamp line-clamp-2">{{
-    data?.memo
-  }}</span>
-</ng-template>
-
-<ng-template #siderFooter let-data>
-  <div class="d-flex align-items-center justify-content-between mt-1">
-    <div class="d-flex align-items-center">
-      <codx-vll
-        [formModel]="view.formModel"
-        field="Status"
-        [value]="data?.status"
-        [showText]="true"
-        [showBgColor]="true"
-        class="badge badge-light badge-sm me-3"
-      >
-      </codx-vll>
-      <div class="d-flex align-items-center">
-        <span class="icon-customize icon-16 me-1 text-gray-600"></span>
-        <span
-          class="text-gray-600"
-          [innerHTML]="
-            data?.voucherDate
-              | formatvalue : view.formModel : 'voucherDate'
-              | async
-          "
-        ></span>
-      </div>
-    </div>
-
-    <codx-imgs
-      [objectId]="data?.createdBy"
-      objectType="AD_Users"
-      [width]="30"
-      [isToolTip]="true"
-      [numberImages]="1"
-    >
-    </codx-imgs>
-  </div>
-</ng-template>
-
-<ng-template #content>
-  <lib-cashtransfers-detail
-    [data]="master"
-    [formModel]="view.formModel"
-    [dataService]="view.dataService"
-  ></lib-cashtransfers-detail>
-</ng-template>
+<!-- End: templateGrid -->

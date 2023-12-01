@@ -20,3 +20,6 @@ codx-crmcustomer codx-crmcustomer-detail .codx-detail-main{
 // 	height: calc(100vh - 370px);
 // 	overflow: auto;
 // }
+:host ::ng-deep .codx-detail-main{
+  height: 100% !important;
+}

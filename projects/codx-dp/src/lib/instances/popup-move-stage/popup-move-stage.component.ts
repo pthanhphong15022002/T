@@ -245,16 +245,11 @@ export class PopupMoveStageComponent implements OnInit {
 
   async getListParticipants(permissions) {
     if (permissions != null && permissions.length > 0) {
-      this.lstParticipants = permissions.filter((x) => x.roleType === 'P');
-      if (this.lstParticipants != null && this.lstParticipants.length > 0) {
-        this.lstParticipants = await this.codxDpService.getListUserByOrg(
-          this.lstParticipants
-        );
-        this.lstParticipants = this.lstParticipants.map((x) => {
-          return { userID: x.userID, userName: x.userName };
-        });
-        this.isChanged = true;
-      }
+      this.lstParticipants = permissions ;
+      this.isChanged = true;
+    }
+    else {
+      this.lstParticipants = [];
     }
   }
 

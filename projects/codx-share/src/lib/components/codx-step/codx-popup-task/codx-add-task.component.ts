@@ -257,12 +257,12 @@ export class CodxAddTaskComponent implements OnInit {
   setData() {
     if (this.action == 'add') {
       this.stepsTasks = new DP_Instances_Steps_Tasks();
-      this.stepsTasks.refID = Util.uid();;
+      this.stepsTasks.refID = Util.uid();
       this.stepsTasks.status = '1';
       this.stepsTasks.taskName = this.typeTask?.text;
       this.stepsTasks.taskType = this.typeTask?.value;
-      this.stepsTasks.approveStatus = "1";
-      this.stepsTasks.dependRule = "0";
+      this.stepsTasks.approveStatus = '1';
+      this.stepsTasks.dependRule = '0';
       this.stepsTasks.isTaskDefault = false;
       this.stepsTasks.progress = 0;
       this.stepsTasks.assigned = '0';
@@ -1179,7 +1179,9 @@ export class CodxAddTaskComponent implements OnInit {
 
   async clickSettingApprove() {
     let category;
-    let idTask = this.stepsTasks?.isTaskDefault ? this.stepsTasks?.refID : this.stepsTasks?.recID;
+    let idTask = this.stepsTasks?.isTaskDefault
+      ? this.stepsTasks?.refID
+      : this.stepsTasks?.recID;
     if (this.action == 'edit')
       category = await firstValueFrom(
         this.api.execSv<any>(
@@ -1203,7 +1205,9 @@ export class CodxAddTaskComponent implements OnInit {
             category = res.data;
             category.recID = res?.recID ?? Util.uid();
             category.eSign = true;
-            category.Category = this.isActivitie ? 'DP_Activities' : 'DP_Instances_Steps_Tasks';
+            category.Category = this.isActivitie
+              ? 'DP_Activities'
+              : 'DP_Instances_Steps_Tasks';
             category.categoryID = idTask;
             category.categoryName = this.stepsTasks.taskName;
             category.createdBy = this.user.userID;
@@ -1250,8 +1254,14 @@ export class CodxAddTaskComponent implements OnInit {
                   isAdd: isAdd,
                   headerText: this.titleAction,
                   dataType: 'auto',
-                  templateRefID: this.stepsTasks?.isTaskDefault ? this.stepsTasks?.refID : this.stepsTasks?.recID,
-                  templateRefType: this.isActivitie ? 'DP_Activities' : 'DP_Instances_Steps_Tasks',
+                  templateRefID: this.stepsTasks?.isTaskDefault
+                    ? this.stepsTasks?.refID
+                    : this.stepsTasks?.recID,
+                  templateRefType: this.isActivitie
+                    ? 'DP_Activities'
+                    : this.stepsTasks?.isTaskDefault
+                    ? 'DP_Steps_Tasks'
+                    : 'DP_Instances_Steps_Tasks',
                   disableESign: true,
                 },
                 '',
@@ -1269,7 +1279,9 @@ export class CodxAddTaskComponent implements OnInit {
     });
   }
   loadListApproverStep() {
-    let idTask = this.stepsTasks?.isTaskDefault ? this.stepsTasks?.refID : this.stepsTasks?.recID;
+    let idTask = this.stepsTasks?.isTaskDefault
+      ? this.stepsTasks?.refID
+      : this.stepsTasks?.recID;
     this.getListAproverStepByCategoryID(idTask)
       .pipe(takeUntil(this.destroyFrom$))
       .subscribe((res) => {
