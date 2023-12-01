@@ -397,6 +397,7 @@ export class LeadsComponent
   }
 
   changeDataMF(event, data, type = null) {
+    if(!data) return;
     if (this.runMode == '1') {
       this.codxShareService.changeMFApproval(event, data?.unbounds);
     } else if (event != null && data != null) {
@@ -731,25 +732,25 @@ export class LeadsComponent
     if (executeFunction) {
       executeFunction();
     } else {
-      let customData = {
-        refID: data.recID,
-        refType: 'CM_Leads',
-      };
+      // let customData = {
+      //   refID: data.recID,
+      //   refType: 'CM_Leads',
+      // };
 
-      if (data?.refID && data.applyProcess) {
-        customData = {
-          refID: data.processID,
-          refType: 'DP_Processes',
-        };
-      }
+      // if (data?.refID && data.applyProcess) {
+      //   customData = {
+      //     refID: data.processID,
+      //     refType: 'DP_Processes',
+      //   };
+      // }
       this.codxShareService.defaultMoreFunc(
         e,
         data,
         this.afterSave.bind(this),
         this.view.formModel,
         this.view.dataService,
-        this,
-        customData
+        this
+        // customData
       );
     }
   }
@@ -1247,7 +1248,7 @@ export class LeadsComponent
       ])
       .subscribe((x) => {
         if (x.event && x.event.status == 'Y') {
-          let datas = [data.recID, data.status,'',isCheck];
+          let datas = [data.recID, data.status, '', isCheck];
           this.getApiUpdateProcess(datas);
         }
       });
@@ -1375,7 +1376,7 @@ export class LeadsComponent
             if (e && e.event != null) {
               var instance = e.event.instance;
               var listSteps = e.event?.listStep;
-              this.detailViewLead.reloadListStep(listSteps);
+
               var index =
                 e.event.listStep.findIndex(
                   (x) =>
@@ -1403,6 +1404,7 @@ export class LeadsComponent
                   if (e.event.isReason != null) {
                     this.moveReason(data, e.event.isReason);
                   }
+                  this.detailViewLead.reloadListStep(listSteps);
                   this.detectorRef.detectChanges();
                 }
               });

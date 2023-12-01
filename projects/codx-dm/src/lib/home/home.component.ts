@@ -1150,7 +1150,6 @@ export class HomeComponent extends UIComponent implements OnDestroy {
   //   .subscribe();
   // }
   onSelectionChanged($data, noTree = false) {
-    debugger
     if (this.funcID == 'DMT00' && $data.data.folderId == 'DM') return;
     ScrollComponent.reinitialization();
     this.scrollTop();

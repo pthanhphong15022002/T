@@ -43,7 +43,6 @@ export class CashreceiptsComponent extends UIComponent {
     icon: 'icon-i-file-earmark-plus',
   }];
   bhLogin: boolean = false;
-  optionSidebar: SidebarModel = new SidebarModel();
   bankPayID: any;
   bankNamePay: any;
   bankReceiveName: any;
@@ -94,7 +93,7 @@ export class CashreceiptsComponent extends UIComponent {
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         if (res) {
-          this.headerText = res?.defaultName; //? lấy tên chứng từ (Phiếu chi)
+          this.headerText = res?.defaultName || res?.customName;
           this.runmode = res?.runMode; //? lấy runmode
           this.detectorRef.detectChanges();
         }
@@ -130,10 +129,6 @@ export class CashreceiptsComponent extends UIComponent {
       },
     ];
     this.journalService.setChildLinks(this.journalNo);
-
-    //* thiết lập cấu hình sidebar
-    this.optionSidebar.DataService = this.view.dataService;
-    this.optionSidebar.FormModel = this.view.formModel;
   }
 
   ngOnDestroy() {
@@ -221,10 +216,13 @@ export class CashreceiptsComponent extends UIComponent {
             baseCurr: this.baseCurr, //?  đồng tiền hạch toán
             legalName: this.legalName, //? tên company
           };
+          let optionSidebar = new SidebarModel();
+          optionSidebar.DataService = this.view?.dataService;
+          optionSidebar.FormModel = this.view?.formModel;
           let dialog = this.callfc.openSide(
             CashreceiptsAddComponent,
             data,
-            this.optionSidebar,
+            optionSidebar,
             this.view.funcID
           );
         }
@@ -249,10 +247,13 @@ export class CashreceiptsComponent extends UIComponent {
           baseCurr: this.baseCurr, //?  đồng tiền hạch toán
           legalName: this.legalName, //? tên company
         };
+        let optionSidebar = new SidebarModel();
+        optionSidebar.DataService = this.view?.dataService;
+        optionSidebar.FormModel = this.view?.formModel;
         let dialog = this.callfc.openSide(
           CashreceiptsAddComponent,
           data,
-          this.optionSidebar,
+          optionSidebar,
           this.view.funcID
         );
       });
@@ -285,10 +286,13 @@ export class CashreceiptsComponent extends UIComponent {
                   baseCurr: this.baseCurr, //?  đồng tiền hạch toán
                   legalName: this.legalName, //? tên company
                 };
+                let optionSidebar = new SidebarModel();
+                optionSidebar.DataService = this.view?.dataService;
+                optionSidebar.FormModel = this.view?.formModel;
                 let dialog = this.callfc.openSide(
                   CashreceiptsAddComponent,
                   data,
-                  this.optionSidebar,
+                  optionSidebar,
                   this.view.funcID
                 );
                 this.view.dataService

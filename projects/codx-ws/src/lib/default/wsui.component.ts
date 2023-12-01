@@ -9,7 +9,7 @@ import {
     ComponentRef,
     ChangeDetectorRef,
   } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CodxWsService } from '../codx-ws.service';
 import { ApiHttpService, AuthStore, CallFuncService, CodxService, NotificationsService } from 'codx-core';
 
@@ -21,6 +21,7 @@ export abstract class WSUIComponent implements OnInit {
 
     abstract onInit(): void;
     protected route!: ActivatedRoute;
+    protected router!: Router;
     protected codxWsService!: CodxWsService;
     protected api: ApiHttpService;
     protected codxService: CodxService;
@@ -38,6 +39,7 @@ export abstract class WSUIComponent implements OnInit {
         this.changeDetectorRef = inject.get(ChangeDetectorRef);
         this.notifySvr = inject.get(NotificationsService);
         this.callFunc = inject.get(CallFuncService);
+        this.router = inject.get(Router);
     }
       
     ngOnInit(): void {

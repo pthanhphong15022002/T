@@ -353,6 +353,21 @@ export class ItempostingaccountsComponent extends UIComponent {
           textitem = (this.menuInventory.find(x => x.value == valueItem))?.text;
         }
         break;
+      case '2':
+        if (this.menuPurchase.find(x => x.value == valueItem)) {
+          textitem = (this.menuPurchase.find(x => x.value == valueItem))?.text;
+        }
+        break;
+      case '3':
+        if (this.menuSell.find(x => x.value == valueItem)) {
+          textitem = (this.menuSell.find(x => x.value == valueItem))?.text;
+        }
+        break;
+      case '4':
+        if (this.menuProduction.find(x => x.value == valueItem)) {
+          textitem = (this.menuProduction.find(x => x.value == valueItem))?.text;
+        }
+        break;
     }
     return textheader + ' > ' + textitem
   }

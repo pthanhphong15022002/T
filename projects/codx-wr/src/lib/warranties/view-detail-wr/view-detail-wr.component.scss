@@ -1,13 +1,13 @@
-lib-warranties codx-view-detail-wr .codx-detail-main{
-	padding-bottom: 0!important;
-	background-color: #FF9472;
+lib-warranties codx-view-detail-wr .codx-detail-main {
+  padding-bottom: 0 !important;
+  background-color: #ff9472;
   height: 100% !important;
 
-  .e-dlg-content .codx-detail-main{
+  .e-dlg-content .codx-detail-main {
     height: 100% !important;
   }
 }
-:host ::ng-deep .codx-detail-main{
+:host ::ng-deep .codx-detail-main {
   height: 100% !important;
 }
 .action-menu-od {
@@ -27,6 +27,6 @@ lib-warranties codx-view-detail-wr .codx-detail-main{
   opacity: 1;
 }
 
-.background-color-status{
+.background-color-status {
   background-color: var(--primary);
 }
