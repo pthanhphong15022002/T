@@ -82,17 +82,7 @@ export class WarehouseTransfersAddComponent extends UIComponent {
     this.detectorRef.detectChanges();
   }
 
-  beforeInitGridIssue(eleGrid:CodxGridviewV2Component){
-    let hideFields = [];
-    let setting = this.acService.getSettingFromJournal(eleGrid,this.journal);
-    eleGrid = setting[0];
-    if (this.dialogData?.data.hideFields && this.dialogData?.data.hideFields.length > 0) {
-      hideFields = [...this.dialogData?.data.hideFields]; //? get danh sách các field ẩn được truyền vào từ dialogdata
-    }
-    eleGrid.showHideColumns(hideFields);
-  }
-
-  beforeInitGridReceipt(eleGrid:CodxGridviewV2Component){
+  beforeInitGrid(eleGrid:CodxGridviewV2Component){
     let hideFields = [];
     let setting = this.acService.getSettingFromJournal(eleGrid,this.journal);
     eleGrid = setting[0];
