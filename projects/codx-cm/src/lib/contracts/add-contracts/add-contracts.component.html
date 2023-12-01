@@ -376,18 +376,10 @@
         type="combobox"
         [model]="{ ProcessID: contracts?.processID }"
         refValue="DPUserProcess"
-        [value]="contracts?.owner"
+        [crrValue]="contracts?.owner"
         (valueChange)="valueChangeOwner($event)"
       >
       </codx-input>
-       <!-- <ejs-combobox
-      [dataSource]="listParticipants"
-      (valueChange)="valueChangeOwner($event)"
-      [fields]="fieldCbxParticipants"
-      [allowFiltering]="true"
-      [filterType]="'Contains'"
-      [value]="contracts?.owner"
-    ></ejs-combobox> -->
       <div [ngClass]="contracts?.applyProcess ? 'd-none' :''">
         <codx-input
           field="owner"

@@ -40,7 +40,7 @@ export class ContractsViewDetailComponent
   @Output() changeProgress = new EventEmitter<any>();
   @Output() isSusscess = new EventEmitter<any>();
   dialog: DialogRef;
-  isView = false;
+  isView = true;
   vllStatus = '';
   grvSetup: any;
   tabClicked = '';
