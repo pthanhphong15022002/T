@@ -4199,6 +4199,9 @@ codx-aside-v2.aside-v2-lighter{
     display: block!important;
     -webkit-line-clamp: 1;
   }
+  .border-top {
+    border-top-color:#e9ebeb !important;
+  }
 }
 [data-kt-aside-minimize="on"]{
   codx-aside-v2.aside-v2-lighter{
@@ -4356,5 +4359,15 @@ codx-view-list-detail .codx-detail-footer {
   bottom: 0px;
 }
 
+.default.light codx-toolbar  #toolbar {
+  .border, .btn.btn-outline-default {
+    border-color: #d2d9db !important;
+  }
+  .e-inplaceeditor .e-editable-value-wrapper .e-editable-value {
+    color: #505c5c;
+  }
+}
 
-
+.codx-detail-header.mt-3{
+  padding-top: 1px!important;
+}

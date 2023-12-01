@@ -197,7 +197,8 @@ textarea.codx-textarea {
 .e-float-input.e-input-group,
 .e-float-input.e-control-wrapper,
 .e-float-input.e-input-group.e-control-wrapper {
-    background: var(--bg-input);
+    //background: var(--bg-input);
+    background: var(--bg-card);
     color: var(--text-body);
 }
 
@@ -337,7 +338,7 @@ codx-view-list-detail .codx-detail-footer {
 .e-float-input textarea,
 .e-float-input.e-control-wrapper input,
 .e-float-input.e-control-wrapper textarea {
-    border-color: var(--border-gray) !important;
+    border-color: var(--border-light) !important;
 }
 
 .e-input-group:not(.e-success):not(.e-warning):not(.e-error),
