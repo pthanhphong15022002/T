@@ -546,7 +546,7 @@
 
 <!-- Start: Grid CashPaymentLine -->
 <ng-template #TmpTabLine>
-  <ng-container *ngIf="formCashPayment?.data?.subType == '1' || formCashPayment?.data?.subType == '9'">
+  <ng-container *ngIf="formCashPayment?.data?.subType != '2'">
     <div id="gridcash" class="tabline-content header-table-ac position-relative">
       <codx-gridview-v2 #eleGridCashPayment class="tabLine" [showEmptyRecord]="false" gridLines="Both" [autoFitColumns]="false"
         [formName]="journal.entryMode == '1'? fmCashpaymentLine.formName : fmCashpaymentLineOne.formName" [childModel]="formCashPayment?.data?.subType == '9' ? childModelCashPayment : ''"
@@ -557,7 +557,7 @@
         (cellChanged)="valueChangeLine($event)"></codx-gridview-v2>
       <div #btnRef class="btn-addline">
         <div class="d-flex align-items-center">
-          <div *ngIf="formCashPayment.data?.subType == '1' || formCashPayment.data?.subType == '9'">
+          <div *ngIf="formCashPayment.data?.subType != '2'">
             <button style="border: 1px solid !important;" tabindex="-1" tab-index="11" id="btnAddCash"
               class="btn btn-sm btn-light-primary rounded-15 btnAddCash" (keydown.enter)="
               onAddLine('1'); $event.preventDefault()
@@ -566,7 +566,7 @@
               <codx-label fiedName="lblSaveAndClear" default="Thêm dòng"></codx-label>
             </button>
           </div>
-          <div *ngIf="formCashPayment.data?.subType == '3' || formCashPayment.data?.subType == '4'" class="ms-2">
+          <!-- <div *ngIf="formCashPayment.data?.subType == '3' || formCashPayment.data?.subType == '4'" class="ms-2">
             <button style="border: 1px solid !important" tab-index="12" class="btn btn-sm btn-light-primary rounded-15"
               (keydown.enter)="onAddLine('2'); $event.preventDefault()" (click)="onAddLine('2')">
               <i class="icon-library_add_check icon-16"></i>
@@ -575,7 +575,7 @@
               <codx-label *ngIf="formCashPayment.data.subType == '4'" [formModel]="dialog.formModel"
                 fiedName="lblAddVat" default="Thêm đề nghị thanh toán"></codx-label>
             </button>
-          </div>
+          </div> -->
         </div>
       </div>
     </div>

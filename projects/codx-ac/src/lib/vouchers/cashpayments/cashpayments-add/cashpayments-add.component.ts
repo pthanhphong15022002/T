@@ -1529,7 +1529,7 @@ export class CashPaymentAddComponent extends UIComponent implements OnInit {
   setValidateForm(){
     let rObjectID = false;
     let lstRequire :any = [];
-    if (this.formCashPayment.data.subType != '1' && this.formCashPayment) {
+    if (this.formCashPayment.data.subType == '2' || this.formCashPayment.data.subType == '9' && this.formCashPayment) {
       rObjectID = true;
     }
     lstRequire.push({field : 'ObjectID',isDisable : false,require:rObjectID});
