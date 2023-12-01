@@ -43,7 +43,7 @@
       <tbody>
         <ng-container *ngFor="let item of listSalesInvoicesLine;trackBy: trackByFn">
           <tr style="border-bottom: 1px solid var(--bs-border-color) !important;">
-            <td class="text-center">
+            <td>
               <div class="d-flex justify-content-start ps-3">
                 <div class="align-items-center w-100">
                   <div *ngIf="(item.itemName != null && item.itemName != '')" class="d-flex align-items-center justify-content-start">
@@ -132,7 +132,7 @@
                 </div>
               </div>
             </td>
-            <td class="text-center">
+            <td>
               <div class="d-flex justify-content-end ps-3">
                 <span class="fw-bold line-clamp line-clamp-1"[innerHTML]="item?.quantity
                       | tranformValueNumber : 'B' | async"></span>
@@ -141,19 +141,19 @@
                 <span class="fw-bold line-clamp line-clamp-1">{{item.umid}}</span>
               </div>
             </td>
-            <td class="text-center">
+            <td>
               <div class="d-flex justify-content-end ps-3">
                 <span class="fw-bold line-clamp line-clamp-1"[innerHTML]="item?.salesPrice
                       | tranformValueNumber : 'B' | async"></span>
               </div>
             </td>
-            <td class="text-center">
+            <td>
               <div class="d-flex justify-content-end ps-3">
                 <span class="fw-bold line-clamp line-clamp-1"[innerHTML]="item?.netAmt
                       | tranformValueNumber : 'B' | async"></span>
               </div>
             </td>
-            <td class="text-center">
+            <td>
               <div class="d-flex justify-content-end ps-3">
                 <span class="fw-bold line-clamp line-clamp-1"[innerHTML]="item?.vatAmt
                       | tranformValueNumber : 'B' | async"></span>
@@ -162,10 +162,10 @@
                 <span class="fw-bold line-clamp line-clamp-1">{{item.vatPct * 100 + "%"}}</span>
               </div>
             </td>
-            <td class="text-center">
-              <div *ngIf="item?.note" class="d-flex justify-content-start ps-3">
-                <span class="fw-bold line-clamp line-clamp-1">{{item?.note}}</span>
-              </div>
+            <td>
+              <div *ngIf="item?.note != null && item?.note != ''" class="d-flex align-items-center justify-content-start ps-3">
+                <span class="line-clamp line-clamp-2 text-gray-600 fs-7">{{ item?.note }}</span>
+            </div>
             </td>
           </tr>
         </ng-container>

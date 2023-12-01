@@ -860,6 +860,16 @@ export class CodxDpService {
     );
   }
 
+  //
+  getUserCbxByListPermission(data) {
+    return this.api.exec<any>(
+      'DP',
+      'InstancesBusiness',
+      'GetPermissionByProcessAsync',
+      data
+    );
+  }
+
   getOneDeal(data) {
     return this.api.exec<any>('CM', 'DealsBusiness', 'GetOneDealAsync', data);
   }

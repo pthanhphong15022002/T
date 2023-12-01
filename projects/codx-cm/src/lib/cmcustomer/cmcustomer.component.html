@@ -27,7 +27,7 @@
 
 <!--grid view-->
 <ng-template #templateMore let-data>
-  <div class="" style="height: 30px" *ngIf="asideMode != '2'">
+  <div class="" style="height: 30px">
     <codx-mfunc
       [dataItem]="data"
       [formModel]="view.formModel"
@@ -48,6 +48,8 @@
     [formModel]="view.formModel"
     [entityName]="entityName"
     [vllPriority]="vllPriority"
+    [gridViewSetup]="gridViewSetup"
+    [lstCustGroups]="lstCustGroups"
     [funcID]="funcID"
     [asideMode]="asideMode"
     (clickMoreFunc)="clickMoreFunc($event)"

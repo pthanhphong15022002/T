@@ -849,7 +849,10 @@ codx-view-list-detail .nav-tabs .nav-item.show .nav-link {
 
 .e-more-popup-wrapper .e-more-event-header {
   height: 32px;
-  margin: 7px 10px 5px 15px;
+  margin: 7px 10px 5px 8px;
+  .e-header-date.e-navigate{
+    padding: 4px 0;
+  }
 }
 
 .e-more-popup-wrapper .e-more-event-content {
@@ -3198,7 +3201,7 @@ codx-vll.vll-post{
 .ws-accordion {
   .e-acrdn-item
   {
-    padding-top: 10px !important;
+    padding-top: 8px !important;
     border: none !important;
   }
 }
@@ -4188,7 +4191,17 @@ codx-aside-v2.aside-v2-lighter{
       }
     }
   }
-
+  .menu-title, .brand-logo .fs-3 {
+    -webkit-box-orient: vertical;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    word-wrap: break-word;
+    display: block!important;
+    -webkit-line-clamp: 1;
+  }
+  .border-top {
+    border-top-color:#e9ebeb !important;
+  }
 }
 [data-kt-aside-minimize="on"]{
   codx-aside-v2.aside-v2-lighter{
@@ -4344,4 +4357,17 @@ codx-view-schedule .container-fluid.h-50px {
 
 codx-view-list-detail .codx-detail-footer {
   bottom: 0px;
+}
+
+.default.light codx-toolbar  #toolbar {
+  .border, .btn.btn-outline-default {
+    border-color: #d2d9db !important;
+  }
+  .e-inplaceeditor .e-editable-value-wrapper .e-editable-value {
+    color: #505c5c;
+  }
+}
+
+.codx-detail-header.mt-3{
+  padding-top: 1px!important;
 }

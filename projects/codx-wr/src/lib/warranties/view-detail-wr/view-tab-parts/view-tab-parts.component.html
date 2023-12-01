@@ -1,4 +1,8 @@
-<div class="h-100" *ngIf="columnsGrid?.length > 0" [ngClass]="isShow ? 'grid-full' : 'scroll-grid'">
+<div
+  class="h-100"
+  *ngIf="columnsGrid?.length > 0"
+  [ngClass]="isShow ? 'grid-full' : 'scroll-grid'"
+>
   <codx-gridview-v2
     #grid
     [dataSource]="lstParts"
@@ -15,6 +19,7 @@
     default="Part info"
     [formModel]="formModel"
     [setRequire]="false"
+    name="lblPartInfo"
   >
   </codx-label>
 </ng-template>
@@ -42,7 +47,7 @@
     <div class="mb-1">
       <codx-label
         class="text-dark codx-label label-colon"
-        default="Part no"
+        fiedName="PartNo"
         [formModel]="formModel"
         [setRequire]="false"
       >
@@ -53,7 +58,7 @@
       ></span>
       <codx-label
         class="text-dark codx-label label-colon"
-        default="PPID old"
+        fiedName="PPIDOld"
         [formModel]="formModel"
         [setRequire]="false"
       >
@@ -66,7 +71,7 @@
       ></span>
       <codx-label
         class="text-dark codx-label label-colon"
-        default="PPID new"
+        fiedName="PPIDNew"
         [formModel]="formModel"
         [setRequire]="false"
       >
@@ -84,7 +89,6 @@
 <ng-template #headerQuantity>
   <codx-label
     class="fw-bold line-clamp line-clamp-1 text-dark codx-label"
-    default="Quantity"
     [formModel]="formModel"
     [setRequire]="false"
     fiedName="Qty"
@@ -115,7 +119,6 @@
 <ng-template #headerStatus>
   <codx-label
     class="fw-bold line-clamp line-clamp-1 text-dark codx-label"
-    default="Status"
     [formModel]="formModel"
     [setRequire]="false"
     fiedName="Status"
@@ -124,31 +127,23 @@
 </ng-template>
 
 <ng-template #tempStatus let-item>
-  <div
-    *ngIf="item?.statusCode != null && item?.statusCode.trim() != ''"
-    class="mb-1"
-  >
-    <codx-label
-      class="text-dark codx-label label-colon"
-      default="Status"
-      [formModel]="formModel"
-      [setRequire]="false"
-    >
-    </codx-label>
-    <codx-vll
-      [name]="grvSetupWorkOrderParts?.StatusCode?.referedValue"
-      [field]="'StatusCode'"
-      [value]="item?.statusCode"
-      [showText]="true"
-      [showBgColor]="true"
-      class="badge badge-light badge-sm"
-    >
-    </codx-vll>
+  <div *ngIf="item?.statusCode" class="d-flex align-items-center mw-125px mb-1">
+    <span
+      class="text-gray-900 d-flex align-items-center text-ellipsis line-clamp line-clamp-1 badge badge-sm codx-badge background-color-status"
+      style="color: #ffffff !important"
+      [ngbTooltip]="tempLastStatusCode"
+      [innerHTML]="
+        item?.statusCode | formatvalue : formModel : 'StatusCode' | async
+      "
+    ></span>
+    <ng-template #tempLastStatusCode>
+      <codx-label [formModel]="formModel" fiedName="StatusCode"></codx-label>
+    </ng-template>
   </div>
   <div class="mb-1">
     <codx-label
       class="text-dark codx-label label-colon"
-      default="ETA"
+      fiedName="ETA"
       [formModel]="formModel"
       [setRequire]="false"
     >

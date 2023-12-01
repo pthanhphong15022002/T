@@ -9,6 +9,8 @@ import {
 } from '@angular/core';
 import {
   ApiHttpService,
+  AuthService,
+  AuthStore,
   CacheService,
   CallFuncService,
   CodxFormComponent,
@@ -64,6 +66,8 @@ export class PopupUpdateReasonCodeComponent implements OnInit, AfterViewInit {
   parentID: any;
   dataParentID: any;
   action = '';
+  user: any;
+  language = '';
   constructor(
     private detectorRef: ChangeDetectorRef,
     private callFc: CallFuncService,
@@ -72,6 +76,7 @@ export class PopupUpdateReasonCodeComponent implements OnInit, AfterViewInit {
     private wrSv: CodxWrService,
     private cache: CacheService,
     private format: FormatvaluePipe,
+    private auth: AuthStore,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -83,6 +88,8 @@ export class PopupUpdateReasonCodeComponent implements OnInit, AfterViewInit {
     this.createdBy = dt?.data?.createdBy;
     this.action = dt?.data?.action;
     this.gridViewSetup = JSON.parse(JSON.stringify(dt?.data?.gridViewSetup));
+    this.user = this.auth?.get();
+    this.language = this.user?.language?.toLowerCase();
   }
 
   ngOnInit(): void {
@@ -155,7 +162,12 @@ export class PopupUpdateReasonCodeComponent implements OnInit, AfterViewInit {
     if (this.countValidate > 0) {
       return;
     }
-
+    if (this.data.startDate) {
+      if (new Date(this.data.startDate).getDate() < new Date().getDate()) {
+        this.notiService.notifyCode('WR003');
+        return;
+      }
+    }
     this.data.attachments = this.edit
       ? this.data.attachments + this.countFile - this.countFileDelete
       : this.countFile;
@@ -235,14 +247,13 @@ export class PopupUpdateReasonCodeComponent implements OnInit, AfterViewInit {
           e?.component?.itemsSelected[0]?.Comment,
           e?.component?.itemsSelected[0]?.CommentControl
         );
-        if(this.inputParent && this.inputParent?.ComponentCurrent){
+        if (this.inputParent && this.inputParent?.ComponentCurrent) {
           this.inputParent.ComponentCurrent?.setValue(this.dataParentID);
         }
       }
     }
     this.detectorRef.detectChanges();
   }
-
 
   setSchedule() {
     let timeList = this.lstTimeVll ?? [];
@@ -315,15 +326,33 @@ export class PopupUpdateReasonCodeComponent implements OnInit, AfterViewInit {
           this.dateControl == '1'
             ? this.startTime + ' - ' + this.endTime
             : this.endTime;
-        commentRep = commentRep.replace('{1}', this.data.scheduleTime);
+        commentRep = commentRep.replace('{2}', this.data.scheduleTime);
       }
 
       if (this.data.startDate) {
-        let date = moment(new Date(this.data.startDate)).format('DD/MM/YYYY');
-        commentRep = commentRep.replace('{2}', date);
+        let date = this.formatDate(new Date(this.data.startDate));
+        commentRep = commentRep.replace('{1}', date);
       }
     }
     this.data.comment = commentRep;
+  }
+
+  formatDate(date){
+    let language = this.language == 'vn' ? 'vi' : 'en-US';
+    const currentDate = date;
+    const weekdayDate = new Intl.DateTimeFormat(language, {
+      weekday: 'long',
+    }).format(currentDate);
+    const dayDate = new Intl.DateTimeFormat(language, {
+      day: 'numeric',
+    }).format(currentDate);
+    const monthDate = new Intl.DateTimeFormat(language, {
+      month: 'long',
+    }).format(currentDate);
+    const yearDate = new Intl.DateTimeFormat(language, {
+      year: 'numeric',
+    }).format(currentDate);
+    return weekdayDate + ', ' + dayDate + ' ' + monthDate + ' ' + yearDate;
   }
 
   //#region date schedule
@@ -388,7 +417,7 @@ export class PopupUpdateReasonCodeComponent implements OnInit, AfterViewInit {
 
   valueEndTimeChange(event: any) {
     this.endTime = event.data.toDate;
-    if(this.dateControl != '1'){
+    if (this.dateControl != '1') {
       this.startTime = event.data.toDate;
     }
     // this.fullDayChangeWithTime();

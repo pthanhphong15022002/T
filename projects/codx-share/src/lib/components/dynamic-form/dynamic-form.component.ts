@@ -297,6 +297,7 @@ export class DynamicFormComponent extends UIComponent {
               data: item,
               isAdd: false,
               headerText: e?.data?.customName,
+              showTemplateTab:false,
             },
             option
           );

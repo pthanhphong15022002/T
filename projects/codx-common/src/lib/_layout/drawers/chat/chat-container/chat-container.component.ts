@@ -14,6 +14,7 @@ import { AuthService } from 'codx-core';
 import { ɵglobal as global } from '@angular/core';
 import { CodxChatBoxComponent } from '../chat-box/chat-box.component';
 import { SignalRService } from '../services/signalr.service';
+import { CHAT } from '../models/chat-const.model';
 declare var window: any;
 
 @Component({
@@ -50,32 +51,42 @@ export class CodxChatContainerComponent implements OnInit, OnDestroy {
   ngOnInit(): void {}
   ngAfterViewInit() {
     // add new box chat
-    this.signalRSV.activeNewGroup.subscribe((res: any) => {
-      if (res?.group) {
-        this.handleBoxChat(res.group);
-      }
-    });
+    // this.signalRSV.activeNewGroup.subscribe((res: any) => {
+    //   if (res?.data) {
+    //     this.handleBoxChat(res.data);
+    //   }
+    // });
     
     // open box chat
     this.signalRSV.activeGroup.subscribe((res: any) => {
-      if (res?.group) {
-        this.handleBoxChat(res.group);
-      }
-    });
-    // open box chat
-    this.signalRSV.openBoxChat.subscribe((res: any) => {
-      if(res)
-      {
-        this.handleBoxChat(res.group);
+      if (res?.event && res?.data) {
+        switch (res?.event){
+          case CHAT.UI_FUNC.DeletedMessage:
+            {
+              break;
+            }
+          default:{              
+            this.handleBoxChat(res?.data);
+            break;
+          }
+        }
       }
     });
 
-    // recive message
-    this.signalRSV.chat.subscribe((res: any) => {
-      if (res?.mssg) {
-        this.handleBoxChat(res.mssg);
-      }
-    });
+    // // loadedGroupChat
+    // this.signalRSV.loadedGroupChat.subscribe((res: any) => {
+    //   if(res)
+    //   {
+    //     this.handleBoxChat(res.data);
+    //   }
+    // });
+
+    // // recive message Popup khi có tin nhắn mới
+    // this.signalRSV.chatboxChange.subscribe((res: any) => {
+    //   if (res?.data) {
+    //     this.handleBoxChat(res.data);
+    //   }
+    // });
 
   }
   ngOnDestroy(): void {}
@@ -125,6 +136,6 @@ export class CodxChatContainerComponent implements OnInit, OnDestroy {
   }
   // expanse box chat
   expanseBoxChat(data: any) {
-    this.signalRSV.sendData('OpenGroupAsync', data);
+    this.signalRSV.sendData(CHAT.BE_FUNC.LoadGroup, data?.groupID);
   }
 }

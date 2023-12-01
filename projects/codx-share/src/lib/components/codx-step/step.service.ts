@@ -337,7 +337,7 @@ export class StepService {
       450,
       580,
       '',
-      {typeDisableds}
+      { typeDisableds }
     );
     let dataOutput = await firstValueFrom(popupTypeTask.closed);
     let type = dataOutput?.event ? dataOutput?.event : null;
@@ -610,9 +610,9 @@ export class StepService {
   }
 
   async openPopupTaskContract(data, action, task, stepID, groupTaskID) {
-    let contractOuput = await this.openPopupContract(data);
-    let contract = contractOuput?.event?.contract;
-    if (contract) {
+    if(task){
+      task = JSON.parse(JSON.stringify(task));
+    }else{
       if (action == 'add') {
         task = task ? task : {};
         task.recID = Util.uid();
@@ -626,7 +626,7 @@ export class StepService {
         task.dependRule = '0';
         task.assigned = '0';
         task.approveStatus = '1';
-        task.objectLinked = contract?.recID;
+        // task.objectLinked = contract?.recID;
       } else if (action == 'copy') {
         task = JSON.parse(JSON.stringify(task));
         task.recID = Util.uid();
@@ -641,18 +641,22 @@ export class StepService {
         task.approvedBy = null;
         task.assigned = '0';
         task.approveStatus = '1';
-        task.objectLinked = contract?.recID;
-      } else if (action == 'edit') {
-        task = JSON.parse(JSON.stringify(task));
+        // task.objectLinked = contract?.recID;
       }
-      task.taskName = contract?.contractName;
+    }
+    data = {...data,stepsTasks: task}
+    let contractOuput = await this.openPopupContract(data);
+    let contract = contractOuput?.event?.contract;
+    if (contract) {
+      task.objectLinked = contract?.recID;
+      // task.taskName = contract?.contractName;
       task.owner = contract?.owner;
-      task.startDate = Date.parse(contract?.effectiveFrom)
-        ? contract?.effectiveFrom
-        : new Date();
-      task.endDate = Date.parse(contract?.effectiveTo)
-        ? contract?.effectiveTo
-        : null;
+      // task.startDate = Date.parse(contract?.effectiveFrom)
+      //   ? contract?.effectiveFrom
+      //   : new Date();
+      // task.endDate = Date.parse(contract?.effectiveTo)
+      //   ? contract?.effectiveTo
+      //   : null;
       let minus = this.minusDate(task.endDate, task.startDate, 'hours');
       task.durationDay = minus ? minus % 24 : 0;
       task.durationHour = minus ? Math.floor(minus / 24) : 0;
@@ -977,11 +981,11 @@ export class StepService {
           if (str) {
             if (data.taskType != 'F') {
               if (str?.length > 0) {
-                dataSource = str[1];
-                if (str[0]) {
+                dataSource = '[' + str[0] + ']';
+                if (str[1]) {
                   let datas = str[1];
                   if (datas && datas.includes('[{')) datas = datas.substring(2);
-                  let fix = str[0]; // data đối tượng cần export
+                  let fix = str[0];
                   fix = fix.substring(1, fix.length - 1);
                   dataSource = '[{ ' + fix + ',' + datas;
                 }

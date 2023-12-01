@@ -395,10 +395,7 @@
       </span>
     </div>
   </div>
-  <div
-    class="form-group"
-    *ngIf="stepsTasks?.status != '3'"
-  >
+  <div class="form-group">
     <div class="d-flex align-items-center">
       <codx-label
         fiedName="ApproveRule"
@@ -419,11 +416,12 @@
       <button
         type="button"
         class="btn btn-icon btn-sm btn-light-primary ms-"
-        [disabled]="!stepsTasks?.approveRule || stepsTasks?.isTaskDefault"
+        [disabled]="!stepsTasks?.approveRule "
         (click)="clickSettingApprove()"
       >
         <i class="icon-settings icon-16"></i>
       </button>
+      <!-- || stepsTasks?.isTaskDefault -->
     </div>
     <div class="ms-2 mt-1">
       <codx-view-approve *ngIf="stepsTasks?.approveRule" [listApprover]="listApproverView" type="1"></codx-view-approve>

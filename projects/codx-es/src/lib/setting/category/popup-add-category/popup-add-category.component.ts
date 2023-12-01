@@ -2,26 +2,18 @@ import {
   AfterViewInit,
   ChangeDetectorRef,
   Component,
-  ElementRef,
-  EventEmitter,
   OnInit,
   Optional,
-  Output,
   TemplateRef,
   ViewChild,
 } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { DataItem } from '@shared/models/folder.model';
-import { Thickness } from '@syncfusion/ej2-angular-charts';
+import { FormControl } from '@angular/forms';
 import {
-  ApiHttpService,
   AuthService,
   AuthStore,
   CacheService,
   CallFuncService,
   CodxFormComponent,
-  CodxService,
   CRUDService,
   DialogData,
   DialogModel,
@@ -33,11 +25,10 @@ import {
 } from 'codx-core';
 import { CodxViewApprovalStepComponent } from 'projects/codx-share/src/lib/components/codx-view-approval-step/codx-view-approval-step.component';
 import { CodxApproveStepsComponent } from 'projects/codx-share/src/lib/components/codx-approve-steps/codx-approve-steps.component';
-import { CodxEsService, GridModels } from '../../../codx-es.service';
+import { CodxEsService } from '../../../codx-es.service';
 //import { ApprovalStepComponent } from '../../approval-step/approval-step.component';
 import { PopupAddAutoNumberComponent } from '../popup-add-auto-number/popup-add-auto-number.component';
 import { PopupAddSignFileComponent } from '../../../sign-file/popup-add-sign-file/popup-add-sign-file.component';
-import { PopupAddTemplateSignFileComponent } from '../../../template-sign-file/popup-add-template-sign-file.component';
 @Component({
   selector: 'popup-add-category',
   templateUrl: './popup-add-category.component.html',
@@ -46,6 +37,7 @@ import { PopupAddTemplateSignFileComponent } from '../../../template-sign-file/p
 export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
   @ViewChild('form') form: CodxFormComponent;
   @ViewChild('editApprovalStep') editApprovalStep: TemplateRef<any>;
+
   @ViewChild('approvalStep') approvalStep: CodxViewApprovalStepComponent;
 
   isAfterRender: boolean = false;
@@ -98,17 +90,14 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
       text: 'Quy trình xét duyệt',
       name: 'tabApprovalStep',
     },
-    {
-      icon: 'icon-layers',
-      text: 'Mẫu thiết lập',
-      name: 'tabTemplate',
-    },
+    
   ];
   sfModel: any;
   templateRefType: any;
   templateRefID: any;
   //CRM
   disableESign = false;
+  showTemplateTab=true;
 
   constructor(
     private esService: CodxEsService,
@@ -141,6 +130,14 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
     this.templateRefType = data?.data?.templateRefType;
     //NV CRM
     this.disableESign = data?.data?.disableESign ?? this.disableESign; //disable nút ký số
+    this.showTemplateTab = data?.data?.showTemplateTab ?? this.showTemplateTab;
+    if(this.showTemplateTab){
+      this.tabInfo.push({
+        icon: 'icon-layers',
+        text: 'Mẫu thiết lập',
+        name: 'tabTemplate',
+      });
+    }
   }
 
   ngAfterViewInit(): void {

@@ -9,7 +9,6 @@
     [dialog]="dialog"
     [formModel]="dialog.formModel"
     [footer]="footer"
-    (setTitle)="setTitle($event)"
   ></codx-layout-add>
   <!-- [data]="contracts" -->
   <ng-template #information>
@@ -31,6 +30,12 @@
       [ngTemplateOutletContext]="{ $implicit: formlayoutadd }"
     ></ng-container>
   </ng-template>
+  <ng-template #task>
+    <ng-container
+      [ngTemplateOutlet]="taskTemp"
+      [ngTemplateOutletContext]="{ $implicit: formlayoutadd }"
+    ></ng-container>
+  </ng-template>
 </ng-container>
 
 <ng-template #subHeader let-form>
@@ -44,6 +49,175 @@
   ></codx-tag> -->
 </ng-template>
 
+<ng-template #taskTemp let-form>
+  <div class="form-group step-name w-100">
+    <div>
+      <codx-label
+        fiedName="taskName"
+        [formModel]="frmModelInstancesTask"
+        default="Tên công việc"
+      >
+      </codx-label>
+    </div>
+    <codx-input
+      field="taskName"
+      [formModel]="frmModelInstancesTask"
+      type="text"
+      [crrValue]="stepsTasks?.taskName"
+      [disabled]="stepsTasks?.isTaskDefault"
+      (valueChange)="changeValueTextTask($event)"
+      >
+    </codx-input>
+  </div>
+
+  <div class="form-group d-flex justify-content-between" *ngIf="stepsTasks?.endDate && stepsTasks?.endDate">
+    <div class="me-2">
+      <codx-label
+        fiedName="startDate"
+        [formModel]="frmModelInstancesTask"
+        default="Ngày bắt đầu"
+      >
+      </codx-label>
+      <codx-input
+        field="startDate"
+        [crrValue]="stepsTasks?.startDate"
+        type="datetime"
+        format="F"
+        [disabled]="stepsTasks?.isTaskDefault"
+        (valueChange)="changeValueDateTask($event)"
+        >
+      </codx-input>
+    </div>
+    <div class="ms-2">
+      <codx-label
+        fiedName="endDate"
+        [formModel]="frmModelInstancesTask"
+        default="Ngày kết thúc"
+      >
+      </codx-label>
+      <codx-input
+        field="endDate"
+        [crrValue]="stepsTasks?.endDate"
+        type="datetime"
+        format="F"
+        (valueChange)="changeValueDateTask($event)"
+        >
+      </codx-input>
+    </div>
+  </div>
+  <div class="form-group">
+    <div class="d-flex justify-content-between row">
+      <div class="col-6">
+        <codx-label
+          fiedName="durationDay"
+          [formModel]="frmModelInstancesTask"
+          default="Thời lượng công việc"
+        >
+        </codx-label>
+        <div class="d-flex justify-content-between row">
+          <div class="col-6 position-relative">
+            <codx-input
+              field="durationDay"
+              [crrValue]="stepsTasks?.durationDay"
+              (valueChange)="changeValueTextTask($event)"
+              [disabled]="stepsTasks?.isTaskDefault"
+              type="number"
+              min="0"
+            >
+            </codx-input>
+            <div
+              class="position-absolute text-gray-400"
+              style="top: 8px; right: 14px"
+            >
+              <codx-label
+                name="titleDate"
+                [formModel]="form?.formModel"
+                default="Ngày"
+              >
+              </codx-label>
+            </div>
+          </div>
+
+          <div class="col-6 position-relative">
+            <codx-input
+              field="durationHour"
+              [crrValue]="stepsTasks?.durationHour"
+              (valueChange)="changeValueTextTask($event)"
+              type="number"
+              min="0"
+              [disabled]="stepsTasks?.isTaskDefault"
+            >
+            </codx-input>
+            <div
+              class="position-absolute text-gray-400"
+              style="top: 8px; right: 14px"
+            >
+              <codx-label
+                name="titleHour"
+                [formModel]="frmModelInstancesTask"
+                default="Giờ"
+              >
+              </codx-label>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-6 ps-1">
+        <codx-label
+          fiedName="reminders"
+          [formModel]="frmModelInstancesTask"
+          default="Nhắc nhở trước khi bắt đầu"
+        >
+        </codx-label>
+        <div>
+          <codx-input
+            field="reminders"
+            [formModel]="frmModelInstancesTask"
+            [crrValue]="stepsTasks?.reminders"
+            refValue="DP030"
+            type="valuelist"
+            (valueChange)="changeValueTextTask($event)"
+            [disabled]="stepsTasks?.isTaskDefault"
+          >
+          </codx-input>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="form-group">
+    <div class="d-flex align-items-center">
+      <codx-label
+        fiedName="ApproveRule"
+        [formName]="'DPProcesses'"
+        [gridViewName]="'grvDPProcesses'"
+      >
+      </codx-label>
+      <div class="me-3 pt-1 ms-2">
+        <codx-input
+          type="switch"
+          class="test-check"
+          [checked]="stepsTasks?.approveRule"
+          field="approveRule"
+          (valueChange)="valueChangeAlertTask($event)"
+          >
+        </codx-input>
+      </div>
+      <button
+        type="button"
+        class="btn btn-icon btn-sm btn-light-primary ms-"
+        [disabled]="!stepsTasks?.approveRule "
+        (click)="clickSettingApprove()"
+        >
+        <i class="icon-settings icon-16"></i>
+      </button>
+      <!-- || stepsTasks?.isTaskDefault -->
+    </div>
+    <!-- <div class="ms-2 mt-1">
+      <codx-view-approve *ngIf="stepsTasks?.approveRule" [listApprover]="listApproverView" type="1"></codx-view-approve>
+    </div> -->
+  </div>
+</ng-template>
+
 <ng-template #footer let-form>
   <div class="d-flex justify-content-between">
     <div></div>
@@ -51,7 +225,7 @@
       type="button"
       button
       class="btn btn-primary ms-1"
-      (click)="handleSaveContract()"
+      (click)="save()"
     >
       <codx-label default="Lưu"></codx-label>
     </button>
@@ -75,10 +249,10 @@
         <codx-input
           [formModel]="dialog?.formModel"
           field="contractID"
-          type="text"
           [crrValue]="contracts?.contractID"
           [placeholder]="planceHolderAutoNumber ?? grvSetup['ContractID'].headerText"
           [disabled]="disabledShowInput || action === 'edit'"
+          (valueChange)="changeAutoNum($event)"
         ></codx-input>
       </div>
     </div>
@@ -126,6 +300,7 @@
         field="businessLineID"
         [crrValue]="contracts?.businessLineID"
         (valueChange)="valueChangeCombobox($event)"
+        [disabled]="action == 'edit'"
       >
       </codx-input>
     </div>
@@ -205,6 +380,14 @@
         (valueChange)="valueChangeOwner($event)"
       >
       </codx-input>
+       <!-- <ejs-combobox
+      [dataSource]="listParticipants"
+      (valueChange)="valueChangeOwner($event)"
+      [fields]="fieldCbxParticipants"
+      [allowFiltering]="true"
+      [filterType]="'Contains'"
+      [value]="contracts?.owner"
+    ></ejs-combobox> -->
       <div [ngClass]="contracts?.applyProcess ? 'd-none' :''">
         <codx-input
           field="owner"
@@ -475,7 +658,7 @@
 
 
 
-<div class="py-5" *ngIf="false">
+<!-- <div class="py-5" *ngIf="false">
   <header
     class="px-6 mb-6 w-100 d-flex align-items-center justify-content-between"
   >
@@ -547,7 +730,6 @@
   </main>
 </div>
 
-<!-- thông tin chung -->
 <ng-template #generalTemplate let-data="value">
   <div class="d-flex justify-content-between">
     <div class="w-40">
@@ -811,7 +993,6 @@
   ></ng-container>
 </ng-template>
 
-<!-- chi tiết mặt hàng -->
 <ng-template #quotationsTemplate let-data="value">
   <codx-quotations-lines
     #viewQuotationsLine
@@ -828,13 +1009,12 @@
   ></codx-quotations-lines>
 </ng-template>
 
-<!-- phương thức thanh toán -->
 <ng-template #payTemplate let-data="value">
   <ng-container [ngTemplateOutlet]="methodPayTemplate"></ng-container>
   <ng-container [ngTemplateOutlet]="calendarPayTemplate"></ng-container>
 </ng-template>
 
-<!-- giao hàng -->
+
 <ng-template #shipTemplate let-data="value">
   <div>
     <codx-taskbar
@@ -860,7 +1040,6 @@
               ></codx-label>
             </div>
             <div class>
-              <!-- TODO -->
               <codx-input
                 [formModel]="dialog.formModel"
                 field="delTermID"
@@ -879,7 +1058,6 @@
               ></codx-label>
             </div>
             <div class>
-              <!-- TODO -->
               <codx-input
                 [formModel]="dialog.formModel"
                 field="delModeID"
@@ -970,7 +1148,6 @@
               </codx-label>
             </div>
             <div class>
-              <!-- [formModel]="dialog.formModel" -->
               <codx-input
                 field="delDeadline"
                 type="datetime"
@@ -1012,7 +1189,6 @@
               </codx-label>
             </div>
             <div class>
-              <!-- [formModel]="dialog.formModel" -->
               <codx-input
                 field="delActualDate"
                 type="datetime"
@@ -1058,10 +1234,8 @@
   </div>
 </ng-template>
 
-<!-- Gia hạn -->
 <ng-template #extendTemplate let-data="value"> </ng-template>
 
-<!-- điều khoản hợp đồng -->
 <ng-template #termsAndRelatedTemplate let-data="value">
   <div class="d-flex justify-content-between mt-5">
     <div class="d-flex align-items-center nav-item w-100 mb-1">
@@ -1118,15 +1292,12 @@
   </div>
 </ng-template>
 
-<!-- Template phụ -->
-<!-- chủ thể hợp đồng -->
 <ng-template #representativeTemplate let-data="value">
   <div class="d-flex justify-content-between">
     <div class="w-50">
       <div class="row form-group">
         <div class="col-8">
           <div>
-            <!-- Tên cty  -->
             <codx-label
               [formModel]="dialog.formModel"
               fiedName="companyName"
@@ -1371,7 +1542,6 @@
       <div class="row form-group">
         <div class="col-12">
           <div>
-            <!-- TODO -->
             <codx-label
               [formModel]="dialog.formModel"
               fiedName="address"
@@ -1524,7 +1694,6 @@
   </div>
 </ng-template>
 
-<!-- thanh toán -->
 <ng-template #methodPayTemplate let-data="value">
   <div>
     <codx-taskbar
@@ -1712,7 +1881,6 @@
           </div>
           <div class="col-6">
             <div>
-              <!-- TODO -->
               <codx-label
                 [formModel]="dialog.formModel"
                 fiedName="pmtDeadline"
@@ -1720,7 +1888,6 @@
               ></codx-label>
             </div>
             <div class>
-              <!-- [formModel]="dialog.formModel" -->
               <codx-input
                 field="pmtDeadline"
                 type="datetime"
@@ -1736,7 +1903,6 @@
   </div>
 </ng-template>
 
-<!-- lịch thanh toán -->
 <ng-template #calendarPayTemplate let-data="value">
   <div>
     <codx-taskbar
@@ -1789,4 +1955,4 @@
       </div>
     </div>
   </div>
-</ng-template>
+</ng-template> -->

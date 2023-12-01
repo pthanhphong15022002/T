@@ -18,6 +18,7 @@ import { CodxShareModule } from 'projects/codx-share/src/public-api';
 import { CoreModule } from '../../../../src/core/core.module';
 import { LayoutComponent } from './_layout/layout.component';
 import { ApprovalsComponent } from './approvals/approvals.component';
+import { ApprovalsComponent as ApprovalsComponentWS} from 'projects/codx-ws/src/lib/approvals/approvals.component';
 import { CodxAcComponent } from './codx-ac.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { DropdownDetailComponent } from './journals/components/dropdown-detail/dropdown-detail.component';
@@ -187,11 +188,11 @@ export const routes: Routes = [
         component: SalesinvoicesComponent,
         data: { noReuse: true },
       },
-      // {
-      //   path: 'approvals/:funcID',
-      //   component: ApprovalsComponent,
-      //   data: { noReuse: true },
-      // },
+      {
+        path: 'approvals/:funcID',
+        component: ApprovalsComponentWS,
+        data: { noReuse: true },
+      },
       {
         path: 'receipttransaction/:funcID/:journalNo',
         component: ReceiptTransactionsComponent,

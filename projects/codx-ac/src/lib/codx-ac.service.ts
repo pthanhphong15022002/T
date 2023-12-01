@@ -4,6 +4,7 @@ import {
   ApiHttpService,
   CRUDService,
   CacheService,
+  CodxGridviewV2Component,
   DataRequest,
   FormModel,
   NotificationsService,
@@ -200,6 +201,7 @@ export enum MorfuncCash {
   InUNC = 'ACT042907',
   KiemTraHopLePC = 'ACT041009',
   KiemTraHopLeUNC = 'ACT042902',
+  KiemTraTrangThai = 'ACT041013'
 }
 
 export enum MorfuncCashReceipt {
@@ -261,6 +263,15 @@ export enum MorfuncGeneralJournals {
   KhoiPhuc = 'ACT090105',
   In = 'ACT090106',
   KiemTraHopLe = 'ACT090101',
+}
+
+export enum MorfuncTranfers {
+  GhiSo = 'ACT072204',
+  GuiDuyet = 'ACT072202',
+  HuyDuyet = 'ACT072203',
+  KhoiPhuc = 'ACT072205',
+  In = 'ACT072206',
+  KiemTraHopLe = 'ACT072201',
 }
 
 @Injectable({
@@ -597,7 +608,7 @@ export class CodxAcService {
           break;
       case '8':
       case '11':
-        event.filter((x) => ![MorfuncCash.InUNC].includes(x.functionID))
+        event.filter((x) => ![MorfuncCash.InUNC,MorfuncCash.KiemTraTrangThai].includes(x.functionID))
             .reduce((pre, element) => { element.disabled = true }, {});
           break;
       default:
@@ -893,6 +904,54 @@ export class CodxAcService {
     }
   }
 
+  changeMFTranfers(event, data, type: any = '', journal, formModel) {
+    //* thiet lap bookmark cac morefunc tai cac mode view
+    event.filter((x) => !Object.values(MorfuncTranfers).includes(x.functionID) && !Object.values(MorfuncDefault).includes(x.functionID))
+      .reduce((pre, element) => { element.disabled = true }, {}); //? disable cac morfunc ko xai
+    if (type === 'viewgrid') event.reduce((pre,element) => {element.isbookmark = false},{}); //? view grid thi morfunc ko bookmark ra ngoai
+    if (type === 'viewdetail') event.filter((x) => ![MorfuncDefault.XuatDuLieu].includes(x.functionID)).reduce((pre,element) => {element.isbookmark = true},{});
+    
+    //* an hien morefunc theo nghiep vu
+    if(data?.status != '1' && data?.status != '2') event.filter((x) => [MorfuncDefault.Sua].includes(x.functionID)).reduce((pre,element) => {element.disabled = true},{});
+    event = event.filter((x) => Object.values(MorfuncTranfers).includes(x.functionID));
+    switch (data?.status) {
+      case '1':
+        if (!data?.validated) {
+          event.filter((x) => ![MorfuncTranfers.KiemTraHopLe,MorfuncTranfers.In].includes(x.functionID))
+            .reduce((pre, element) => { element.disabled = true }, {});
+        }else{
+          if (journal.approvalControl == '0') {
+            event.filter((x) => ![MorfuncTranfers.GhiSo,MorfuncTranfers.In].includes(x.functionID))
+            .reduce((pre, element) => { element.disabled = true }, {});
+          }else{
+            event.filter((x) => ![MorfuncTranfers.GuiDuyet,MorfuncTranfers.In].includes(x.functionID))
+            .reduce((pre, element) => { element.disabled = true }, {});
+          }
+        }
+        break;
+      case '2':
+        event.filter((x) => ![MorfuncTranfers.KiemTraHopLe,MorfuncTranfers.In].includes(x.functionID))
+            .reduce((pre, element) => { element.disabled = true }, {});
+          break;
+      case '3':
+        event.filter((x) => ![MorfuncTranfers.HuyDuyet,MorfuncTranfers.In].includes(x.functionID))
+            .reduce((pre, element) => { element.disabled = true }, {});
+          break;
+      case '5':
+      case '9':
+        event.filter((x) => ![MorfuncTranfers.GhiSo,MorfuncTranfers.In].includes(x.functionID))
+            .reduce((pre, element) => { element.disabled = true }, {});
+          break;
+      case '6':
+        event.filter((x) => ![MorfuncTranfers.KhoiPhuc,MorfuncTranfers.In].includes(x.functionID))
+            .reduce((pre, element) => { element.disabled = true }, {});
+          break;
+      default:
+        event.reduce((pre, element) => { element.disabled = true }, {});
+          break;
+    }
+  }
+
   changeMFJournal(event) {
     event.filter((x) => !Object.values(MorfuncDefault).includes(x.functionID)) 
       .reduce((pre, element) => { element.disabled = true }, {});
@@ -901,5 +960,125 @@ export class CodxAcService {
       if([MorfuncDefault.XuatDuLieu].includes(element.functionID)) element.disabled = true;
       element.isbookmark = true;
     });
+  }
+
+  getSettingFromJournal(eleGrid:CodxGridviewV2Component,journal:any,data:any = null,baseCurr:any = '',hideFields:any = []){
+    //* Thiết lập datasource combobox theo sổ nhật ký
+    let preAccountID = '';
+    let dtvAccountID = '';
+    let preOffsetAcctID = '';
+    let dtvOffsetAcctID = '';
+    let preDIM1 = '';
+    let dtvDIM1 = '';
+    let preDIM2 = '';
+    let dtvDIM2 = '';
+    let preDIM3 = '';
+    let dtvDIM3 = '';
+
+    if (journal.drAcctControl == '1' || journal.drAcctControl == '2') {
+      preAccountID = '@0.Contains(AccountID)';
+      dtvAccountID = `[${journal?.drAcctID}]`;
+    }
+    eleGrid.setPredicates('accountID',preAccountID,dtvAccountID);
+
+    if ((journal.crAcctControl == '1' || journal.crAcctControl == '2') && journal.entryMode == '1') {
+      preOffsetAcctID = '@0.Contains(AccountID)';
+      dtvOffsetAcctID = `[${journal?.crAcctID}]`;
+    }
+    eleGrid.setPredicates('offsetAcctID',preOffsetAcctID,dtvOffsetAcctID);
+
+    if (journal.diM1Control == '1' || journal.diM1Control == '2') {
+      preDIM1 = '@0.Contains(ProfitCenterID)';
+      dtvDIM1 = `[${journal?.diM1}]`;
+    }
+    eleGrid.setPredicates('diM1',preDIM1,dtvDIM1);
+
+    if (journal.diM2Control == '1' || journal.diM2Control == '2') {
+      preDIM2 = '@0.Contains(CostCenterID)';
+      dtvDIM2 = `[${journal?.diM2}]`;
+    }
+    eleGrid.setPredicates('diM2',preDIM2,dtvDIM2);
+
+    if (journal.diM3Control == '1' || journal.diM3Control == '2') {
+      preDIM3 = '@0.Contains(CostItemID)';
+      dtvDIM3 = `[${journal?.diM3}]`;
+    }
+    eleGrid.setPredicates('diM3',preDIM3,dtvDIM3);
+
+    let arrayType = ['PI','SI'];
+    if (arrayType.includes(journal.journalType)) {
+      if(!journal.useDutyTax){ //? không sử dụng thuế xuất nhập khẩu (ẩn)
+        hideFields.push('SalesTaxPct');
+        hideFields.push('SalesTaxAmt');
+        hideFields.push('SalesTaxAmt2');
+      }else{
+        if(data && data?.currencyID == baseCurr) hideFields.push('SalesTaxAmt2');
+      }
+  
+  
+      if(!journal.useExciseTax){ //? không sử dụng thuế TTĐB (ẩn)
+        hideFields.push('ExciseTaxPct');
+        hideFields.push('ExciseTaxAmt');
+        hideFields.push('ExciseTaxAmt2');
+      }else{
+        if(data && data?.currencyID == baseCurr) hideFields.push('ExciseTaxAmt2');
+      }  
+  
+      if(journal.vatControl == '0'){ //? không sử dụng thuế GTGT (ẩn)
+        hideFields.push('VATPct'); 
+        hideFields.push('VATAmt'); 
+        hideFields.push('VATBase'); 
+        hideFields.push('VATAmt2');
+        hideFields.push('VATBase2');
+        hideFields.push('VATID');
+      }else{
+        if(data && data?.currencyID == baseCurr){
+          hideFields.push('VATAmt2');
+          hideFields.push('VATBase2');
+        } 
+      } 
+    }
+
+    return [eleGrid,hideFields];
+  }
+
+  getDataSettingFromJournal(oLine:any,journal:any){
+    if (journal) {
+      let arrayType = ['CP','BP','CR','BR','GJ'];
+      if(arrayType.includes(journal.journalType)){
+        switch(journal?.drAcctControl){
+          case '1':
+            if(oLine.accountID && (oLine.accountID != journal?.drAcctID)) oLine.accountID = null;
+            break;
+          case '4':
+            if (oLine.accountID == null) {
+              oLine.accountID = journal?.drAcctID;
+            }
+            break;
+          case '2':
+            if(!(journal?.drAcctID.split(';')).includes(oLine.accountID)) oLine.accountID = null;
+            break;
+        }
+        
+        switch(journal?.crAcctControl){
+          case '1':
+            if(oLine.offsetAcctID && (oLine.offsetAcctID != journal?.crAcctID)) oLine.offsetAcctID = null;
+            break;
+          case '4':
+            if (oLine.offsetAcctID == null) {
+              oLine.offsetAcctID = journal?.crAcctID;
+            }
+            break;
+          case '2':
+            if(!(journal?.crAcctID.split(';')).includes(oLine.offsetAcctID)) oLine.offsetAcctID = null;
+            break;
+        }
+      }
+      if(journal?.diM1Control && journal?.diM1Control != '2' && journal?.diM1Control != '0') oLine.diM1 = journal.diM1;
+      if(journal?.diM2Control && journal?.diM2Control != '2' && journal?.diM2Control != '0') oLine.diM2 = journal.diM2;
+      if(journal?.diM3Control && journal?.diM3Control != '2' && journal?.diM3Control != '0') oLine.diM3 = journal.diM3;
+
+      return oLine;
+    }
   }
 }

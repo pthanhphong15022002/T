@@ -424,7 +424,7 @@ chartArea: Object = {
             if(this.reportItem.reportID == 'FDD002'){
               this.typeBallot='1';
             }
-            this.reloadAllChart();
+            //this.reloadAllChart();
           }
 
         }
@@ -529,6 +529,8 @@ chartArea: Object = {
   loadData() {
     this.coinsByTypeIn=[];
     this.coinsByTypeOut=[];
+    this.transferCoins=[];
+    this.giftTrans=[];
     this.isLoaded = false;
     this.options.pageLoading = false;
     this.options.entityName = 'FD_KudosTrans';
@@ -784,6 +786,7 @@ chartArea: Object = {
       .execSv<any>('FD', 'FD', 'CardsBusiness', 'GetStatisticBallot1Async', [
         this.options,
         this.typeBallot,
+        this.objParams
       ])
       .subscribe((res) => {
         if (res) {
@@ -1286,7 +1289,7 @@ chartArea: Object = {
                   if(this.reportItem.reportID == 'FDD002'){
                     this.typeBallot='1';
                   }
-                  this.reloadAllChart();
+                  //this.reloadAllChart();
                   //this.reloadAllChart();
                   //this.isLoaded = true
                 }
