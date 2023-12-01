@@ -61,7 +61,7 @@ export class ViewTabUpdateComponent implements OnInit {
     funcID: 'WR0101_1',
   };
 
-  sortField = new SortModel();
+  //sortField = new SortModel();
 
   editSettings: EditSettingsModel = {
     allowEditing: true,
@@ -113,9 +113,9 @@ export class ViewTabUpdateComponent implements OnInit {
 
   ngOnInit(): void {
     // this.getGridViewSetup();
-    this.sortField = new SortModel();
-    this.sortField.field = 'statusCode';
-    this.sortField.dir = 'asc';
+    //this.sortField = new SortModel();
+    // this.sortField.field = 'statusCode';
+    // this.sortField.dir = 'asc';
   }
 
   ngAfterViewInit(): void {
