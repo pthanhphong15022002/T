@@ -94,7 +94,7 @@ export class CashreceiptsComponent extends UIComponent {
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         if (res) {
-          this.headerText = res?.defaultName; //? lấy tên chứng từ (Phiếu chi)
+          this.headerText = res?.defaultName || res?.customName;
           this.runmode = res?.runMode; //? lấy runmode
           this.detectorRef.detectChanges();
         }
