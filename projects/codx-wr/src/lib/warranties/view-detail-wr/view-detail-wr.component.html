@@ -820,6 +820,26 @@
 
                       <div class="d-flex">
                         <div class="col-12">
+                          <div class="mb-5px d-flex align-items-top" *ngIf="serviceTime">
+                            <div
+                              class="w-150px min-w-150px text-gray-600 codx-textlabel"
+                            >
+                              <codx-label
+                                name="lblServiceTime"
+                                class="nowrap label-colon"
+                                [setRequire]="false"
+                                [formModel]="formModel"
+                                default="ServiceTime"
+                              ></codx-label>
+                            </div>
+                            <div class="text-dark codx-textcontent">
+                              {{serviceTime}}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="d-flex">
+                        <div class="col-12">
                           <div class="mb-5px d-flex align-items-top">
                             <div
                               class="w-150px min-w-150px text-gray-600 codx-textlabel"
@@ -974,32 +994,7 @@
                           </div>
                         </div>
                       </div>
-                      <!--
-                      <div class="d-flex">
-                        <div class="col-12">
-                          <div class="mb-5px d-flex align-items-top">
-                            <div
-                              class="w-150px min-w-150px text-gray-600 codx-textlabel"
-                            >
-                              <codx-label
-                                fiedName="ServiceTime"
-                                class="nowrap label-colon"
-                                [setRequire]="false"
-                                [formModel]="formModel"
-                              ></codx-label>
-                            </div>
-                            <div class="text-dark codx-textcontent">
-                              <span
-                                [innerHTML]="
-                                  dataSelected?.serviceTime
-                                    | formatvalue : formModel : 'ServiceTime'
-                                    | async
-                                "
-                              ></span>
-                            </div>
-                          </div>
-                        </div>
-                      </div> -->
+
                     </div>
                   </div>
                 </ng-template>
