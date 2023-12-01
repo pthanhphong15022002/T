@@ -24,11 +24,11 @@
 
 <!--grid-->
 <ng-template #templateMore let-data>
-  <div class="" style="height: 30px" *ngIf="asideMode != '2'">
+  <div class="" style="height: 30px">
     <codx-mfunc
       [dataItem]="data"
       [formModel]="view.formModel"
-      (changeDataMF)="changeDataMF($event, data)"
+      (changeDataMF)="changeDataMF($event, data, '11')"
       (clickMF)="clickMF($event, data)"
       [isBookMark]="false"
       type="view"

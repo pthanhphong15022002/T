@@ -17,12 +17,13 @@
                 </div>
                 <div class="input-circle input-sm" *ngIf="formWareHouse?.formGroup">
                     <span class="me-2">
-                        <codx-vll *ngIf="formWareHouse.data?.status == '1'" [formModel]="dialog.formModel" [field]="'Status'"
-                            [value]="formWareHouse.data?.validated ? '1' : '7'" [showText]="true" [showBgColor]="true"
-                            class="badge badge-light badge-sm">
+                        <codx-vll *ngIf="formWareHouse.data?.status == '1'" [formModel]="dialog.formModel"
+                            [field]="'Status'" [value]="formWareHouse.data?.validated ? '1' : '7'" [showText]="true"
+                            [showBgColor]="true" class="badge badge-light badge-sm">
                         </codx-vll>
-                        <codx-vll *ngIf="formWareHouse.data?.status != '1'" [formModel]="dialog.formModel" [field]="'Status'"
-                            [value]="formWareHouse.data?.status" [showText]="true" [showBgColor]="true" class="badge badge-light badge-sm">
+                        <codx-vll *ngIf="formWareHouse.data?.status != '1'" [formModel]="dialog.formModel"
+                            [field]="'Status'" [value]="formWareHouse.data?.status" [showText]="true"
+                            [showBgColor]="true" class="badge badge-light badge-sm">
                         </codx-vll>
                     </span>
                 </div>
@@ -36,20 +37,20 @@
             </div>
         </div>
         <ng-container>
-          <div style="margin-left: 25px" *ngIf="!formWareHouse.data?.validated"
-            class="input-circle h-20px input-border-0 w-400px mb-1">
-            <codx-dropdown-select #eleCbxSubType [showFooter]="false" [isToolbar]="false"
-              [cssClass]="'rounded-pill border-1'" cssPopup="h-250px w-550px" [isMulti]="false" type="valuelist"
-              field="subType" [refValue]="formWareHouse?.gridviewSetup['SubType'].referedValue"
-              [value]="formWareHouse.data.subType" emptyText="Loại phiếu"
-              (valueChange)="changeSubType($event)"></codx-dropdown-select>
-          </div>
-          <span style="margin-left: 30px" *ngIf="formWareHouse.data?.validated">
-            <codx-vll [name]="formWareHouse?.gridviewSetup['SubType'].referedValue" [formModel]="dialog.formModel"
-              [field]="'SubType'" [value]="formWareHouse.data?.subType" [showText]="true" [showBgColor]="true"
-              class="badge badge-light-primary badge-lg mt-1">
-            </codx-vll>
-          </span>
+            <div style="margin-left: 25px" *ngIf="!formWareHouse.data?.validated"
+                class="input-circle h-20px input-border-0 w-400px mb-1">
+                <codx-dropdown-select #eleCbxSubType [showFooter]="false" [isToolbar]="false"
+                    [cssClass]="'rounded-pill border-1'" cssPopup="h-250px w-550px" [isMulti]="false" type="valuelist"
+                    field="subType" [refValue]="formWareHouse?.gridviewSetup['SubType'].referedValue"
+                    [value]="formWareHouse.data.subType" emptyText="Loại phiếu"
+                    (valueChange)="changeSubType($event)"></codx-dropdown-select>
+            </div>
+            <span style="margin-left: 30px" *ngIf="formWareHouse.data?.validated">
+                <codx-vll [name]="formWareHouse?.gridviewSetup['SubType'].referedValue" [formModel]="dialog.formModel"
+                    [field]="'SubType'" [value]="formWareHouse.data?.subType" [showText]="true" [showBgColor]="true"
+                    class="badge badge-light-primary badge-lg mt-1">
+                </codx-vll>
+            </span>
         </ng-container>
     </div>
 </ng-template>
@@ -216,7 +217,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div [ngStyle]="formWareHouse?.data?.subType == '1' ? '' : {display:'none'}" class="form-group">
+                        <div class="form-group">
                             <codx-label style="white-space: nowrap !important" fiedName="Memo"
                                 [formModel]="dialog.formModel">
                             </codx-label>
@@ -226,7 +227,7 @@
                                 </codx-input>
                             </div>
                         </div>
-                        <div [ngStyle]="formWareHouse?.data?.subType == '2' ? '' : {display:'none'}" class="row">
+                        <!-- <div [ngStyle]="formWareHouse?.data?.subType == '2' ? '' : {display:'none'}" class="row">
                             <div class="col-6">
                                 <div class="form-group">
                                     <codx-label style="white-space: nowrap !important" fiedName="Memo"
@@ -251,7 +252,7 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
                 <div class="col-5 ac-right d-flex justify-content-end">
@@ -302,7 +303,7 @@
             [templateMore]="templateMore" [entityName]="fmIssueTransfersLines.entityName" predicates="TransID=@0"
             [dataValues]="formWareHouse?.data?.recID" service="IV" [editOnClick]="true" rowNoField="rowNo"
             (eventAction)="onActionGrid($event)" (actionCompleted)="onActionGrid($event)"
-            (cellChanged)="valueChangeLine($event,'issue')"></codx-gridview-v2>
+            (gridInit)="beforeInitGrid($event)" (cellChanged)="valueChangeLine($event,'issue')"></codx-gridview-v2>
         <div class="btn-addline">
             <div class="d-flex align-items-center">
                 <div>
@@ -325,7 +326,8 @@
             [formName]="fmReceiptTransfersLines.formName" [gridViewName]="fmReceiptTransfersLines.gridViewName"
             [templateMore]="templateMore" [entityName]="fmReceiptTransfersLines.entityName" predicates="TransID=@0"
             [dataValues]="formWareHouse?.data?.recID" service="IV" [editOnClick]="true" rowNoField="rowNo"
-            (eventAction)="onActionGrid($event)" (actionCompleted)="onActionGrid($event)"
+            (eventAction)="onActionGrid($event)" (gridInit)="beforeInitGrid($event)"
+            (actionCompleted)="onActionGrid($event)"
             (cellChanged)="valueChangeLine($event,'receipt')"></codx-gridview-v2>
         <div class="btn-addline">
             <div class="d-flex align-items-center">

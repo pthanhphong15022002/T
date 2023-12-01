@@ -25,6 +25,9 @@ export class WarehouseTransfersDetailComponent extends UIComponent {
   itemSelected: any;
   dataCategory: any; //? data của category
   optionSidebar: SidebarModel = new SidebarModel();
+  isShowLess: any = false;
+  isShowMore:any = true;
+  isReadMore:any = false;
   tabInfo: TabModel[] = [
     //? danh sách các tab footer
     { name: 'History', textDefault: 'Lịch sử', isActive: true },
@@ -59,6 +62,7 @@ export class WarehouseTransfersDetailComponent extends UIComponent {
   }
 
   ngDoCheck() {
+    this.onReadMore();
     this.detectorRef.detectChanges();
   }
 
@@ -73,52 +77,9 @@ export class WarehouseTransfersDetailComponent extends UIComponent {
   //#endregion Init
 
   //#region Event
-  /**
-   * *Hàm click các morefunction
-   * @param event
-   * @param data
-   */
-  clickMoreFunction(e, data) {
-    // switch (e.functionID) {
-    //   case 'SYS02':
-    //     this.deleteVoucher(data); //? xóa chứng từ
-    //     break;
-    //   case 'SYS03':
-    //     this.editVoucher(data); //? sửa chứng từ
-    //     break;
-    //   case 'SYS04':
-    //     this.copyVoucher(data); //? sao chép chứng từ
-    //     break;
-    //   case 'SYS002':
-    //     //this.exportVoucher(data); //? xuất dữ liệu chứng từ
-    //     break;
-    //   case 'ACT071404':
-    //     this.releaseVoucher(e.text, data); //? gửi duyệt chứng từ
-    //     break;
-    //   case 'ACT071405':
-    //     this.cancelReleaseVoucher(e.text, data); //? hủy yêu cầu duyệt chứng từ
-    //     break;
-    //   case 'ACT071403':
-    //     this.validateVourcher(e.text, data); //? kiểm tra tính hợp lệ chứng từ
-    //     break;
-    //   case 'ACT071406':
-    //     this.postVoucher(e.text, data); //? ghi sổ chứng từ
-    //     break;
-    //   case 'ACT071407':
-    //     this.unPostVoucher(e.text, data); //? khôi phục chứng từ
-    //     break;
-    //   case 'ACT071408':
-    //     //this.printVoucher(data, e.functionID); //? in chứng từ
-    //     break;
-    // }
-  }
   //#endregion Event
 
   //#region Function
-  changeMFDetail(event: any, data: any, type: any = '') {
-    
-  }
-
   /**
    * *Hàm get data chi tiết
    * @param data
@@ -126,6 +87,9 @@ export class WarehouseTransfersDetailComponent extends UIComponent {
   getDataDetail(dataItem, recID) {
     if (dataItem) {
       this.itemSelected = dataItem;
+      this.isReadMore = false;
+      this.isShowMore = true;
+      this.isShowLess = false;
       this.detectorRef.detectChanges();
     }else{
       this.api
@@ -138,6 +102,36 @@ export class WarehouseTransfersDetailComponent extends UIComponent {
         this.itemSelected = res;
         this.detectorRef.detectChanges();
       });
+    }
+  }
+
+  /**
+   * *Ham xem them & an bot dien giai
+   * @param type 
+   */
+  onShowMoreLess(type){
+    if(type === 'showmore'){
+      this.isShowMore = false;
+      this.isShowLess = true;
+    }else{
+      this.isShowMore = true;
+      this.isShowLess = false;
+    }
+    this.detectorRef.detectChanges();
+  }
+
+  /**
+   * *Ham kiem tra dien giai khi vuot qua 2 dong
+   */
+  onReadMore(){
+    let ele = document.getElementById('eleMemo');
+    if (ele) {
+      if (ele.offsetHeight < ele.scrollHeight || ele.offsetWidth < ele.scrollWidth){
+        this.isReadMore = true;
+      }else{
+        this.isReadMore = false;
+      }
+      this.detectorRef.detectChanges();
     }
   }
   //#endregion Function
