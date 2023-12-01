@@ -174,6 +174,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit{
   stepsTasks;
   isActivitie = false;
   listApproverView;
+  currencyIDDefault = '';
   frmModelInstancesTask = {
     funcID: 'DPT040102',
     formName: 'DPInstancesStepsTasks',
@@ -211,6 +212,9 @@ export class AddContractsComponent implements OnInit, AfterViewInit{
   }
 
   async ngOnInit() {
+    if(this.action !="edit"){
+      await this.getSettingContract();
+    }
     this.setDataContract(this.contractsInput);
   }
 
@@ -235,13 +239,13 @@ export class AddContractsComponent implements OnInit, AfterViewInit{
         this.contracts.delStatus = '1';
         this.contracts.recID = Util.uid();
         this.contracts.pmtMethodID = 'ATM';
-        this.contracts.projectID = this.projectID;
         this.contracts.contractDate = new Date();
         this.contracts.effectiveFrom = new Date();
-        // if (this.processID) {this.cbxProcessChange({ data: this.processID });}
+        this.contracts.projectID = this.projectID;
+        this.contracts.applyProcess = this.isApplyProcess;
+        this.contracts.currencyID = this.currencyIDDefault;
         this.contracts.pmtStatus = this.contracts.pmtStatus ? this.contracts.pmtStatus : '0';
         this.contracts.contractType = this.contracts.contractType ? this.contracts.contractType : '1';
-        await this.getSettingContract();
         this.loadExchangeRate(this.contracts.currencyID);
         this.setContractByDataOutput();
         this.getAutoNumber();
@@ -264,11 +268,6 @@ export class AddContractsComponent implements OnInit, AfterViewInit{
             this.contracts = dataEdit;
           }
         }
-        // this.getQuotationsLinesInContract(
-        //   this.contracts?.recID,
-        //   this.contracts?.quotationID
-        // );
-        // this.getPayMentByContractID(this.contracts?.recID);
         this.getCustomersDefaults(this.contracts?.customerID);
         break;
       case 'copy':
@@ -291,8 +290,11 @@ export class AddContractsComponent implements OnInit, AfterViewInit{
         }
         delete this.contracts['id'];
         this.contracts.recID = Util.uid();
-        await this.getSettingContract();
-        this.getAutoNumber();
+        if(!this.contracts?.applyProcess){
+          this.getAutoNumber();
+        }else{
+          this.disabledShowInput = true;
+        }
 
         break;
       default:
@@ -306,9 +308,6 @@ export class AddContractsComponent implements OnInit, AfterViewInit{
     if (this.contracts.customerID) {
       this.getCustomerByrecID(this.contracts.customerID);
     }
-    // if (this.contracts.quotationID) {
-    //   this.getDataByQuotationID(this.contracts.quotationID);
-    // }
   }
 
   setDataContractCombobox(customer) {
@@ -334,11 +333,11 @@ export class AddContractsComponent implements OnInit, AfterViewInit{
     );
     if (res?.dataValue) {
       let dataValue = JSON.parse(res?.dataValue);
-      this.contracts.currencyID = dataValue?.DefaultCurrency || 'VND';
-      this.contracts.applyProcess = this.type == 'DP' ? true : dataValue?.ProcessContract == '1';
-      this.isApplyProcess  = this.contracts.applyProcess;
+      this.currencyIDDefault = dataValue?.DefaultCurrency || 'VND';
+      this.isApplyProcess  =this.type == 'DP' ? true : dataValue?.ProcessContract == '1';
     }
   }
+
   loadExchangeRate(currencyID) {
     let day = this.contracts.createdOn ?? new Date();
     this.cmService.getExchangeRate(currencyID, day).subscribe((res) => {
@@ -492,10 +491,6 @@ export class AddContractsComponent implements OnInit, AfterViewInit{
 
   async addContracts() {
     if (this.type == 'view') {
-      // if (this.contracts?.applyProcess) {
-      //   this.setDataInstance(this.contracts, this.instance);
-      //   await this.addInstance();
-      // }
       this.dialog.dataService
         .save((opt: any) => this.beforeSave(opt), 0)
         .subscribe((res) => {

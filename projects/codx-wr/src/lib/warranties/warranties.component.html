@@ -137,16 +137,26 @@
     </div>
 
     <div
+      *ngIf="data?.address"
       class="d-flex justify-content-start mb-2 w-100"
       (mouseenter)="closePopover()"
     >
       <span
-        class="icon-location_on text-hover-primary icon-16 text-gray-600 me-1"
+        class="icon-location_on text-hover-primary text-primary icon-16 text-gray-600 me-1"
         [ngbTooltip]="gridViewSetup['Address']?.headerText"
       ></span>
-      <span class="text-gray-500 fs-7 line-clamp line-clamp-1">{{
-        data?.address
-      }}</span>
+      <span
+        [ngbTooltip]="data?.address"
+        class="text-hover-primary text-primary fs-7 line-clamp line-clamp-1"
+        [ngbPopover]="data?.address"
+        #addre="ngbPopover"
+        [openDelay]="500"
+        (mouseenter)="PopoverDetail($event, addre, data, 'address')"
+        (mouseleave)="addre.close()"
+        placement="bottom right top"
+        [popoverClass]="data.recID"
+        >{{ data?.address }}</span
+      >
     </div>
 
     <div class="d-flex justify-content-start mb-1 w-100">
