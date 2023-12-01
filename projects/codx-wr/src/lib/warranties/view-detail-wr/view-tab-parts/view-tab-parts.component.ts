@@ -2,6 +2,7 @@ import {
   ChangeDetectorRef,
   Component,
   EventEmitter,
+  Injector,
   Input,
   OnInit,
   Output,
@@ -11,21 +12,26 @@ import {
 } from '@angular/core';
 import {
   ApiHttpService,
+  CRUDService,
   CacheService,
+  CodxFormDynamicComponent,
   CodxGridviewV2Component,
   DataRequest,
   FormModel,
+  SidebarModel,
+  UIComponent,
   Util,
 } from 'codx-core';
 import { Observable, finalize, map } from 'rxjs';
 import { CodxWrService } from '../../../codx-wr.service';
+import { CodxShareService } from 'projects/codx-share/src/public-api';
 
 @Component({
   selector: 'wr-view-tab-parts',
   templateUrl: './view-tab-parts.component.html',
   styleUrls: ['./view-tab-parts.component.scss'],
 })
-export class ViewTabPartsComponent implements OnInit {
+export class ViewTabPartsComponent extends UIComponent {
   @Input() transID: any;
   @Input() isShow: boolean;
   @Output() listChange = new EventEmitter<any>();
@@ -44,6 +50,7 @@ export class ViewTabPartsComponent implements OnInit {
     formName: 'WRWorkOrderParts',
     gridViewName: 'grvWRWorkOrderParts',
     entityName: 'WR_WorkOrderParts',
+    funcID: 'WR0101_2',
   };
   lstParts = [];
   columnsGrid = [];
@@ -60,13 +67,15 @@ export class ViewTabPartsComponent implements OnInit {
   id: any;
   grvSetupWorkOrderParts: any;
   arrFieldIsVisible: any[];
-
+  dataSelected: any;
+  titleAction = '';
+  function: any = {};
   constructor(
-    private api: ApiHttpService,
-    private cache: CacheService,
     private wrSv: CodxWrService,
-    private detectorRef: ChangeDetectorRef
+    private codxShareService: CodxShareService,
+    private inject: Injector
   ) {
+    super(inject);
     this.cache
       .gridViewSetup(this.formModel.formName, this.formModel.gridViewName)
       .subscribe((res) => {
@@ -99,7 +108,8 @@ export class ViewTabPartsComponent implements OnInit {
     }
   }
 
-  ngOnInit(): void {}
+  onInit(): void {
+  }
 
   ngAfterViewInit(): void {
     this.detectorRef.detectChanges();
@@ -114,7 +124,7 @@ export class ViewTabPartsComponent implements OnInit {
     this.fetch().subscribe(async (item) => {
       this.loaded = true;
       this.lstParts = item;
-      if(this.grid){
+      if (this.grid) {
         this.grid.dataSource = this.lstParts;
       }
       // {
@@ -196,4 +206,90 @@ export class ViewTabPartsComponent implements OnInit {
     };
     this.columnsGrid.unshift(colums);
   }
+
+  //#region more
+  async clickMF(e, data) {
+    this.function = e;
+    this.dataSelected = data;
+    this.titleAction = e.text;
+    switch (e.functionID) {
+      case 'SYS03':
+        this.edit(data);
+        break;
+      default:
+        this.codxShareService.defaultMoreFunc(
+          e,
+          data,
+          null,
+          this.formModel,
+          null,
+          this,
+          null
+        );
+        break;
+    }
+    this.detectorRef.detectChanges();
+  }
+
+  changeDataMF(e, data) {
+    if (e != null && data != null) {
+      e.forEach((res) => {
+        res.isbookmark = false;
+        switch (res.functionID) {
+          case 'SYS02':
+          case 'SYS04':
+            res.disabled = true;
+            break;
+          default:
+            break;
+        }
+      });
+    }
+  }
+  //#endregion
+
+  //#region more
+
+  edit(data) {
+    let tempData = JSON.parse(JSON.stringify(data));
+    var dataService = new CRUDService(this.inject);
+    let request = new DataRequest(
+      this.formModel.formName,
+      this.formModel?.gridViewName,
+      this.formModel?.entityName
+    );
+    request.funcID = this.formModel?.funcID;
+    dataService.service = 'WR';
+    dataService.request = request;
+    dataService.dataSelected = tempData;
+    dataService.updateDatas.set(tempData.recID, tempData);
+    let option = new SidebarModel();
+    option.FormModel = this.formModel;
+    option.Width = '550px';
+    let dialogAdd = this.callfc.openSide(
+      CodxFormDynamicComponent,
+      {
+        formModel: option.FormModel,
+        data: tempData,
+        function: this.function,
+        dataService: dataService,
+        titleMore: this.titleAction,
+        isAddMode: false,
+      },
+      option
+    );
+    dialogAdd.closed.subscribe((e) => {
+      if(e && e?.event && e?.event?.update){
+        var data = e?.event?.update?.data;
+        let idx = this.lstParts.findIndex(
+          (x) => x.recID == data.recID
+        );
+        if (idx != -1) {
+          this.lstParts[idx] = data;
+        }
+        this.lstParts = JSON.parse(JSON.stringify(this.lstParts));
+      }
+    });
+  }
+  //#endregion
 }
