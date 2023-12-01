@@ -95,7 +95,7 @@
               [objectName]="dataSelected.customerName"
               [referType]="'avt'"
               [objectType]="'CM_Customers'"
-              [width]="35"
+              [width]="60"
             >
             </codx-img>
           </div>
@@ -157,7 +157,11 @@
                       "
                     >
                       <span
-                        class="fw-bold text-dark"
+                        class="icon-person icon-16 me-2 text-primary"
+                      ></span>
+
+                      <span
+                        class="text-dark"
                         [innerHTML]="
                           dataSelected?.contactName
                             | formatvalue : formModel : 'ContactName'
@@ -207,11 +211,14 @@
                   >
                     <div class="d-flex align-items-center me-1">
                       <span
+                        class="icon-person icon-16 me-2 text-primary"
+                      ></span>
+                      <span
                         *ngIf="
                           contact2JSON?.Alternate?.Name != null &&
                           contact2JSON?.Alternate?.Name?.trim() != ''
                         "
-                        class="fw-bold text-dark"
+                        class="text-dark"
                         [innerHTML]="
                           contact2JSON?.Alternate?.Name
                             | formatvalue : formModel : 'ContactName'
@@ -326,8 +333,8 @@
             <div class="d-flex flex-row">
               <div class="me-3">
                 <codx-img
-                  [objectId]="dataSelected.productID"
-                  [objectName]="dataSelected.productID"
+                  [objectId]="null"
+                  [objectName]="null"
                   [imageType]="'square'"
                   [objectType]="'WR_Products'"
                   [width]="50"
@@ -998,12 +1005,15 @@
                       </div>
                     </div>
                   </div>
-                  <div class="d-flex flex-column mt-5" *ngIf="dataSelected?.cancelled">
+                  <div
+                    class="d-flex flex-column mt-5"
+                    *ngIf="dataSelected?.cancelled"
+                  >
                     <codx-label
-                      default="Tình trạng hủy"
+                      default="Dell cancel"
                       class="text-dark fw-bold fs-6 mb-3"
                       [formModel]="formModel"
-                      name="lblCancelled"
+                      name="lblDellCancelled"
                     ></codx-label>
                     <div class="d-flex flex-row">
                       <div

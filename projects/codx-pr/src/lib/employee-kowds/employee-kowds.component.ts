@@ -28,13 +28,14 @@ export class EmployeeKowdsComponent extends UIComponent{
   scheduleHeader?: ResourceModel;
   itemSelected: any;
   lstEmp: any = [];
-  viewDetailData = true;
-  viewStatistic = false;
+  viewDetailData = false;
+  viewStatistic = true;
 
   calendarGridColumns: any = [];
   gridStatisticColumns: any = [];
   @ViewChild('tempEmployee', { static: true }) tempEmployee: TemplateRef<any>;
   @ViewChild('tempDayData', { static: true }) tempDayData: TemplateRef<any>;
+  @ViewChild('tempEmployeeTC', { static: true }) tempEmployeeTC: TemplateRef<any>;
   @ViewChild('calendarGrid') calendarGrid: CodxGridviewV2Component;
   @ViewChild('tempTree') tempTree: TemplateRef<any>;
   @ViewChild('tmpOrgChart') tmpOrgChart: TemplateRef<any>;
@@ -99,67 +100,6 @@ export class EmployeeKowdsComponent extends UIComponent{
     ];
     // }
 
-    this.calendarGridColumns.push({
-      headerTemplate: 'Nhân viên',
-      template: this.tempEmployee,
-      width: '350',
-    })
-
-    this.gridStatisticColumns = [
-      {
-        headerTemplate: 'Nhân viên',
-        template: this.tempEmployee,
-        width: '350',
-      },
-      {
-        headerTemplate: 'Tổng công',
-        field: `TC`,
-        // template: this.tempEmployee,
-        width: '150',
-      },
-      {
-        headerTemplate: 'OT15 (h)',
-        field: `OT15`,
-        // template: this.tempEmployee,
-        width: '150',
-      },
-      {
-        headerTemplate: 'OT20 (h)',
-        field: `OT20`,
-        // template: this.tempEmployee,
-        width: '150',
-      },
-      {
-        headerTemplate: 'L',
-        field: `L`,
-        // template: this.tempEmployee,
-        width: '150',
-      },
-      {
-        headerTemplate: 'P',
-        field: `P`,
-        // template: this.tempEmployee,
-        width: '150',
-      },
-      {
-        headerTemplate: 'H',
-        field: `H`,
-        // template: this.tempEmployee,
-        width: '150',
-      },
-      {
-        headerTemplate: 'Ro',
-        field: `Ro`,
-        // template: this.tempEmployee,
-        width: '150',
-      },
-      {
-        headerTemplate: 'CO',
-        field: `CO`,
-        // template: this.tempEmployee,
-        width: '150',
-      },
-    ]
     // this.loadDataInGrid();
   }
 
@@ -187,11 +127,20 @@ export class EmployeeKowdsComponent extends UIComponent{
     );
   }
 
+  getLstEmpKowStatistic(data){
+    return this.api.execSv<any>(
+      'HR',
+      'ERM.Business.PR',
+      'KowDsBusiness',
+      'GetListEmpKowStatisticAsync',
+      [data, this.filterMonth, this.filterYear]
+    );
+  }
+
   loadDataInGrid(){
     this.getEmpList().subscribe((res) =>{
     debugger
     console.log('nv tra ve', res);
-    
       this.lstEmp = res[0]
       for(let i = 0; i < this.lstEmp.length; i++){
         if(this.lstEmp[i].employeeID){
@@ -209,6 +158,13 @@ export class EmployeeKowdsComponent extends UIComponent{
             this.gridDataSource[i][strField] = [j+1, j+1, j+1,j+1, j+1];
           }
         }
+        this.gridDataSource = [...this.gridDataSource]
+        this.calendarGridColumns = []
+        this.calendarGridColumns.push({
+          headerTemplate: 'Nhân viên',
+          template: this.tempEmployee,
+          width: '350',
+        })
         for(let i = 0; i < this.daysInMonth[this.filterMonth]; i++){
           let date = new Date(this.filterYear, this.filterMonth, i+1);
           let dayOfWeek = date.getDay();
@@ -221,16 +177,92 @@ export class EmployeeKowdsComponent extends UIComponent{
             width: '150',
           })
         }
+      this.calendarGridColumns = [...this.calendarGridColumns]
       }
       else if(this.viewStatistic == true){
+        this.gridStatisticColumns = [
+          {
+            headerTemplate: 'Nhân viên',
+            template: this.tempEmployee,
+            width: '350',
+          },
+          {
+            headerTemplate: 'Tổng công',
+            field: `tc`,
+            template: this.tempEmployeeTC,
+            width: '150',
+          },
+          {
+            headerTemplate: 'OT15 (h)',
+            field: `oT15`,
+            // template: this.tempEmployee,
+            width: '150',
+          },
+          {
+            headerTemplate: 'OT20 (h)',
+            field: `oT20`,
+            // template: this.tempEmployee,
+            width: '150',
+          },
+          {
+            headerTemplate: 'L',
+            field: `l`,
+            // template: this.tempEmployee,
+            width: '150',
+          },
+          {
+            headerTemplate: 'P',
+            field: `p`,
+            // template: this.tempEmployee,
+            width: '150',
+          },
+          {
+            headerTemplate: 'H',
+            field: `h`,
+            // template: this.tempEmployee,
+            width: '150',
+          },
+          {
+            headerTemplate: 'Ro',
+            field: `ro`,
+            // template: this.tempEmployee,
+            width: '150',
+          },
+          {
+            headerTemplate: 'CO',
+            field: `co`,
+            // template: this.tempEmployee,
+            width: '150',
+          },
+        ]
 
+        let lstEmpID = this.lstEmp.map((obj) => {
+          return obj.employeeID;
+        })
+
+        console.log(lstEmpID);
+        this.getLstEmpKowStatistic(lstEmpID).subscribe((res) => {
+          // console.log('lst emp co data', res[`E-0019`]);
+          // console.log('lst emp ko data', this.lstEmp);
+          
+          let lstResult = [];
+          for(let i = 0; i < lstEmpID.length; i++){
+            lstResult.push({
+              ...this.lstEmp[i], ...res[this.lstEmp[i].employeeID]
+            })
+          }
+          // for(let i = 0; i < lstResult.length; i++){
+          //   if(lstResult[i].employeeID == 'E-0019'){
+          //     console.log('lst result', lstResult[i]);
+          //   }
+          // }
+          this.gridDataSourceStatistic = lstResult;
+        })
       }
-    
     }
     )
 
 
-    console.log('gridColGrid', this.calendarGridColumns);
   }
 
   onSelectionChanged(evt){
