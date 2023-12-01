@@ -59,12 +59,12 @@ export class CashPaymentsComponent extends UIComponent {
     icon: 'icon-i-file-earmark-plus',
   }];
   bhLogin: boolean = false;
-  optionSidebar: SidebarModel = new SidebarModel();
   bankPayID: any;
   bankNamePay: any;
   bankReceiveName: any;
   viewActive:number = ViewType.listdetail;
   ViewType = ViewType;
+  isLoad = false;
   private destroy$ = new Subject<void>(); //? list observable hủy các subscribe api
   constructor(
     private inject: Injector,
@@ -95,24 +95,35 @@ export class CashPaymentsComponent extends UIComponent {
 
   //#region Init
   onInit(): void {
+
+    if(!this.funcID) this.funcID = this.router.snapshot.params['funcID'];
+
     this.getJournal(); //? lấy data journal và các field ẩn từ sổ nhật kí
+    this.getFunction(this.funcID);
+
   }
 
   ngDoCheck() {
     this.detectorRef.detectChanges();
   }
 
+  getFunction(funcID:any)
+  {
+    this.cache
+    .functionList(funcID)
+    .pipe(takeUntil(this.destroy$))
+    .subscribe((res) => {
+      if (res) {
+        this.isLoad = true;
+        this.headerText = res?.defaultName; //? lấy tên chứng từ (Phiếu chi)
+        this.runmode = res?.runMode; //? lấy runmode
+      }
+    });
+  }
+
   ngAfterViewInit() {
     
-    this.cache
-      .functionList(this.view.funcID)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((res) => {
-        if (res) {
-          this.headerText = res?.defaultName; //? lấy tên chứng từ (Phiếu chi)
-          this.runmode = res?.runMode; //? lấy runmode
-        }
-      });
+   this.getFunction(this.funcID)
 
     this.views = [
       {
@@ -168,9 +179,6 @@ export class CashPaymentsComponent extends UIComponent {
       },
     ];
     this.journalService.setChildLinks(this.journalNo);
-
-    this.optionSidebar.DataService = this.view?.dataService;
-    this.optionSidebar.FormModel = this.view?.formModel;
   }
 
   ngOnDestroy() {
@@ -301,10 +309,13 @@ export class CashPaymentsComponent extends UIComponent {
             baseCurr: this.baseCurr, //?  đồng tiền hạch toán
             legalName: this.legalName, //? tên company
           };
+          let optionSidebar = new SidebarModel();
+          optionSidebar.DataService = this.view?.dataService;
+          optionSidebar.FormModel = this.view?.formModel;
           let dialog = this.callfc.openSide(
             CashPaymentAddComponent,
             data,
-            this.optionSidebar,
+            optionSidebar,
             this.view.funcID
           );
         }
@@ -330,10 +341,13 @@ export class CashPaymentsComponent extends UIComponent {
           baseCurr: this.baseCurr, //?  đồng tiền hạch toán
           legalName: this.legalName, //? tên company
         };
+        let optionSidebar = new SidebarModel();
+        optionSidebar.DataService = this.view?.dataService;
+        optionSidebar.FormModel = this.view?.formModel;
         let dialog = this.callfc.openSide(
           CashPaymentAddComponent,
           data,
-          this.optionSidebar,
+          optionSidebar,
           this.view.funcID
         );
       });
@@ -366,10 +380,13 @@ export class CashPaymentsComponent extends UIComponent {
                   baseCurr: this.baseCurr, //?  đồng tiền hạch toán
                   legalName: this.legalName, //? tên company
                 };
+                let optionSidebar = new SidebarModel();
+                optionSidebar.DataService = this.view?.dataService;
+                optionSidebar.FormModel = this.view?.formModel;
                 let dialog = this.callfc.openSide(
                   CashPaymentAddComponent,
                   data,
-                  this.optionSidebar,
+                  optionSidebar,
                   this.view.funcID
                 );
                 this.view.dataService

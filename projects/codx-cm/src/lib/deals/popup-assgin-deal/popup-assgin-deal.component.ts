@@ -138,7 +138,7 @@ export class PopupAssginDealComponent
     var data = [processId, applyFor, stepID];
     this.codxCmService.getListPermissionOwner(data).subscribe(async (res) => {
       if (res) {
-        this.listParticipants = await this.getListPermissionInGroup(res[0]);
+        this.listParticipants = res[0];
         if(this.data?.owner){
           let user = this.listParticipants.filter(x=>x.userID == this.data?.owner)[0];
           this.employeeName = user?.userName;
@@ -146,11 +146,11 @@ export class PopupAssginDealComponent
       }
     });
   }
-  async getListPermissionInGroup(permissions) {
-    return permissions != null && permissions.length > 0
-      ? await this.codxCmService.getListUserByOrg(permissions)
-      : permissions;
-  }
+  // async getListPermissionInGroup(permissions) {
+  //   return permissions != null && permissions.length > 0
+  //     ? await this.codxCmService.getListUserByOrg(permissions)
+  //     : permissions;
+  // }
   async getInformationUser(objectID) {
     this.codxCmService.getEmployeesByDomainID(objectID).subscribe((user) => {
       if (user) {

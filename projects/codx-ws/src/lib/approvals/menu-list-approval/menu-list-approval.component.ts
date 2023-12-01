@@ -9,6 +9,7 @@ import { isObservable } from 'rxjs';
 })
 export class MenuListApprovalComponent implements OnInit{
 
+  @Input() module: string = "";
   @Input() funcID: any;
   @Output() clickChange = new EventEmitter<any>();
   
@@ -29,19 +30,26 @@ export class MenuListApprovalComponent implements OnInit{
   
   getFuncList()
   {
-    debugger
     var fucList = this.codxWsService.loadFuncList("WS") as any;
-    if(isObservable(fucList))fucList.subscribe((item : any)=>{if(item)this.funcList = item.filter(x=>x.parentID == this.funcID)})
-    else this.funcList = fucList.filter(x=>x.parentID == this.funcID);
+    if(isObservable(fucList))fucList.subscribe((item : any)=>{ 
+      if(item) this.funcList = item.filter(x=>x.parentID == "WS005")
+    })
+    else this.funcList = fucList.filter(x=>x.parentID == "WS005");
   }
 
   getParentGroup()
   {
     var parentG = this.codxWsService.loadParentGroup(this.funcID);
-    if(isObservable(parentG)) parentG.subscribe(item=>{
-      if(item) this.listParentGroup = item
+    if(isObservable(parentG)) parentG.subscribe((item:any)=>{
+      if(item) {
+        this.listParentGroup = item;
+        if(this.module && this.module != "WS") this.listParentGroup = this.listParentGroup.filter(x=>x.functionID == this.module)
+      }
     })
-    else this.listParentGroup = parentG
+    else {
+      this.listParentGroup = parentG;
+      if(this.module && this.module != "WS") this.listParentGroup = this.listParentGroup.filter(x=>x.functionID == this.module)
+    }
   }
 
   selectedChange(data:any)

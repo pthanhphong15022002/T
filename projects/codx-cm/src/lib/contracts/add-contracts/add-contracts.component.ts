@@ -29,12 +29,15 @@ import {
   NotificationsService,
   CodxFormComponent,
   RequestOption,
+  SidebarModel,
+  DialogModel,
 } from 'codx-core';
-import { Observable, firstValueFrom } from 'rxjs';
+import { Observable, Subject, firstValueFrom, takeUntil } from 'rxjs';
 import { CodxCmService } from '../../codx-cm.service';
 import { ContractsService } from '../service-contracts.service';
 import { StepService } from 'projects/codx-share/src/lib/components/codx-step/step.service';
 import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
+import { PopupAddCategoryComponent } from 'projects/codx-es/src/lib/setting/category/popup-add-category/popup-add-category.component';
 
 @Component({
   selector: 'add-contracts',
@@ -45,6 +48,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit{
   @ViewChild('information') information: TemplateRef<any>;
   @ViewChild('reference') reference: TemplateRef<any>;
   @ViewChild('extend') extend: TemplateRef<any>;
+  @ViewChild('task') task: TemplateRef<any>;
 
   @ViewChild('more') more: TemplateRef<any>;
   @ViewChild('inputDeal') inputDeal: CodxInputComponent;
@@ -85,8 +89,6 @@ export class AddContractsComponent implements OnInit, AfterViewInit{
   grvPayments: any;
   projectID: string;
   dialog!: DialogRef;
-  // instance: tmpInstances = new tmpInstances();
-
   view = [];
   isLoadDate = true;
   checkPhone = true;
@@ -167,7 +169,16 @@ export class AddContractsComponent implements OnInit, AfterViewInit{
   isApplyProcess = false;
   countInputChangeAuto = 0;
   processIdDefault = '';
-
+  stepsTasks;
+  isActivitie = false;
+  listApproverView;
+  currencyIDDefault = '';
+  frmModelInstancesTask = {
+    funcID: 'DPT040102',
+    formName: 'DPInstancesStepsTasks',
+    entityName: 'DP_Instances_Steps_Tasks',
+    gridViewName: 'grvDPInstancesStepsTasks',
+  };
   constructor(
     private cache: CacheService,
     private api: ApiHttpService,
@@ -191,6 +202,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit{
     this.contractRefID = dt?.data?.contractRefID;
     this.recIDContract = dt?.data?.recIDContract;
     this.contractsInput = dt?.data?.contract || dt?.data?.dataCM || null;
+    this.stepsTasks = dt?.data?.stepsTasks || {};
     this.user = this.authStore.get();
     this.getTitle();
     this.getFormModel();
@@ -198,13 +210,20 @@ export class AddContractsComponent implements OnInit, AfterViewInit{
   }
 
   async ngOnInit() {
+    if(this.action !="edit"){
+      await this.getSettingContract();
+    }
     this.setDataContract(this.contractsInput);
   }
 
   async ngAfterViewInit(){
     this.tabContent = [this.information,this.reference,this.extend];
+    if(this.type == 'task'){
+      this.tabInfo.push({icon: 'icon-more', text: 'Công việc', name: 'General task', subName: 'General task', subText: 'General task'});
+      this.tabContent.push(this.task);
+    }
   }
-  
+
   //#region setData
   async setDataContract(data) {
     switch (this.action) {
@@ -218,13 +237,13 @@ export class AddContractsComponent implements OnInit, AfterViewInit{
         this.contracts.delStatus = '1';
         this.contracts.recID = Util.uid();
         this.contracts.pmtMethodID = 'ATM';
-        this.contracts.projectID = this.projectID;
         this.contracts.contractDate = new Date();
         this.contracts.effectiveFrom = new Date();
-        // if (this.processID) {this.cbxProcessChange({ data: this.processID });}
+        this.contracts.projectID = this.projectID;
+        this.contracts.applyProcess = this.isApplyProcess;
+        this.contracts.currencyID = this.currencyIDDefault;
         this.contracts.pmtStatus = this.contracts.pmtStatus ? this.contracts.pmtStatus : '0';
         this.contracts.contractType = this.contracts.contractType ? this.contracts.contractType : '1';
-        await this.getSettingContract();
         this.loadExchangeRate(this.contracts.currencyID);
         this.setContractByDataOutput();
         this.getAutoNumber();
@@ -247,11 +266,6 @@ export class AddContractsComponent implements OnInit, AfterViewInit{
             this.contracts = dataEdit;
           }
         }
-        // this.getQuotationsLinesInContract(
-        //   this.contracts?.recID,
-        //   this.contracts?.quotationID
-        // );
-        // this.getPayMentByContractID(this.contracts?.recID);
         this.getCustomersDefaults(this.contracts?.customerID);
         break;
       case 'copy':
@@ -274,8 +288,11 @@ export class AddContractsComponent implements OnInit, AfterViewInit{
         }
         delete this.contracts['id'];
         this.contracts.recID = Util.uid();
-        await this.getSettingContract();
-        this.getAutoNumber();
+        if(!this.contracts?.applyProcess){
+          this.getAutoNumber();
+        }else{
+          this.disabledShowInput = true;
+        }
 
         break;
       default:
@@ -289,9 +306,6 @@ export class AddContractsComponent implements OnInit, AfterViewInit{
     if (this.contracts.customerID) {
       this.getCustomerByrecID(this.contracts.customerID);
     }
-    // if (this.contracts.quotationID) {
-    //   this.getDataByQuotationID(this.contracts.quotationID);
-    // }
   }
 
   setDataContractCombobox(customer) {
@@ -309,7 +323,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit{
     this.contracts.bankID = customer?.bankID;
   }
   //#endregion
-  
+
   //#region get data setting default
   async getSettingContract() {
     let res = await firstValueFrom(
@@ -317,11 +331,11 @@ export class AddContractsComponent implements OnInit, AfterViewInit{
     );
     if (res?.dataValue) {
       let dataValue = JSON.parse(res?.dataValue);
-      this.contracts.currencyID = dataValue?.DefaultCurrency || 'VND';
-      this.contracts.applyProcess = this.type == 'DP' ? true : dataValue?.ProcessContract == '1';
-      this.isApplyProcess  = this.contracts.applyProcess;
+      this.currencyIDDefault = dataValue?.DefaultCurrency || 'VND';
+      this.isApplyProcess  =this.type == 'DP' ? true : dataValue?.ProcessContract == '1';
     }
   }
+
   loadExchangeRate(currencyID) {
     let day = this.contracts.createdOn ?? new Date();
     this.cmService.getExchangeRate(currencyID, day).subscribe((res) => {
@@ -340,7 +354,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit{
     });
   }
   //#endregion
-  
+
   //#region auto number
   GetProcesIDDefault(){
     if(this.processIdDefault){
@@ -353,7 +367,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit{
         }
       })
     }
-   
+
   }
   GetProcessNoByProcessID(processID){
     let process = this.listProcessNo?.find(x => x?.processID === processID);
@@ -370,7 +384,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit{
         }
       });
     }
-    
+
     return null;
   }
   // kiểm tra có thiết lập tư động ko
@@ -416,7 +430,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit{
     if(this.countInputChangeAuto == 0 && !(this.autoNumber && this.isApplyProcess)){
       if (!this.disabledShowInput && this.action !== 'edit' && e) {
         this.contracts.contractID = e?.data;
-        if (this.contracts.contractID && this.contracts.contractID.includes(' ')) 
+        if (this.contracts.contractID && this.contracts.contractID.includes(' '))
         {
           this.notiService.notifyCode('CM026',0,'"' + this.grvSetup['ContractID'].headerText + '"');
           return;
@@ -472,13 +486,9 @@ export class AddContractsComponent implements OnInit, AfterViewInit{
     }
     return true;
   }
-  
+
   async addContracts() {
-    if (this.type == 'view') {
-      // if (this.contracts?.applyProcess) {
-      //   this.setDataInstance(this.contracts, this.instance);
-      //   await this.addInstance();
-      // }
+    if (this.dialog?.dataService) {
       this.dialog.dataService
         .save((opt: any) => this.beforeSave(opt), 0)
         .subscribe((res) => {
@@ -514,19 +524,15 @@ export class AddContractsComponent implements OnInit, AfterViewInit{
   }
 
   editContract() {
-    if (this.type == 'view') {
+    if (this.dialog?.dataService) {
       this.dialog.dataService
         .save((opt: any) => this.beforeSave(opt))
         .subscribe((res) => {
           this.dialog.close({ contract: res, action: this.action });
+          this.changeDetectorRef.markForCheck();
         });
     } else {
-      let data = [
-        this.contracts,
-        this.listPaymentAdd,
-        this.listPaymentEdit,
-        this.listPaymentDelete,
-      ];
+      let data = [this.contracts];
       this.cmService.editContracts(data).subscribe((res) => {
         if (res) {
           this.dialog.close({ contract: res, action: this.action });
@@ -585,7 +591,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit{
           }
         })
       }
-  
+
       if (event?.field == 'delStatus') {
         this.disabledDelActualDate =
           event?.data == '0' || event?.data == '1' ? true : false;
@@ -726,7 +732,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit{
     });
   }
   //#endregion
-   
+
   //#region get data
    getCustomerByDealID(dealID) {
     this.contractService.getCustomerBydealID(dealID).subscribe((res) => {
@@ -751,15 +757,131 @@ export class AddContractsComponent implements OnInit, AfterViewInit{
       }
     });
   }
-  
+
   //#endregion
 
+  changeValueTextTask(event){
+    this.stepsTasks[event?.field] = event?.data;
+  }
 
+  changeValueDateTask(event){
+    this.stepsTasks[event?.field] = event?.data;
+  }
 
+  valueChangeAlertTask(event){
+    this.stepsTasks[event?.field] = event?.data;
+  }
 
+async clickSettingApprove() {
+    let category;
+    let idTask = this.stepsTasks?.isTaskDefault ? this.stepsTasks?.refID : this.stepsTasks?.recID;
+    if (this.action == 'edit')
+      category = await firstValueFrom(
+        this.api.execSv<any>(
+          'ES',
+          'ES',
+          'CategoriesBusiness',
+          'GetByCategoryIDAsync',
+          idTask
+        )
+      );
+    if (category) {
+      this.actionOpenFormApprove2(category);
+    } else {
+      this.api
+        .execSv<any>('ES', 'Core', 'DataBusiness', 'GetDefaultAsync', [
+          'ESS22',
+          'ES_Categories',
+        ])
+        .subscribe(async (res) => {
+          if (res && res?.data) {
+            category = res.data;
+            category.recID = res?.recID ?? Util.uid();
+            category.eSign = true;
+            category.Category = this.isActivitie ? 'DP_Activities' : 'DP_Instances_Steps_Tasks';
+            category.categoryID = idTask;
+            category.categoryName = this.stepsTasks.taskName;
+            category.createdBy = this.user.userID;
+            category.owner = this.user.userID;
+            category.FunctionApproval = this.isActivitie ? 'DPT07' : 'DPT04';
+            this.actionOpenFormApprove2(category, true);
+          }
+        });
+    }
+  }
+  private destroyFrom$: Subject<void> = new Subject<void>();
+  titleAction: any;
 
+  actionOpenFormApprove2(item, isAdd = false) {
+    this.cache.functionList('ESS22').subscribe((f) => {
+      if (f) {
+        if (!f || !f.gridViewName || !f.formName) return;
+        this.cache.gridView(f.gridViewName).subscribe((gridview) => {
+          this.cache
+            .gridViewSetup(f.formName, f.gridViewName)
+            .pipe(takeUntil(this.destroyFrom$))
+            .subscribe((grvSetup) => {
+              let formES = new FormModel();
+              formES.funcID = f?.functionID;
+              formES.entityName = f?.entityName;
+              formES.formName = f?.formName;
+              formES.gridViewName = f?.gridViewName;
+              formES.currentData = item;
+              let option = new SidebarModel();
+              option.Width = '800px';
+              option.FormModel = formES;
+              let opt = new DialogModel();
+              opt.FormModel = formES;
+              option.zIndex = 1100;
+              let popupEditES = this.callfunc.openForm(
+                PopupAddCategoryComponent,
+                '',
+                800,
+                800,
+                '',
+                {
+                  disableCategoryID: '1',
+                  data: item,
+                  isAdd: isAdd,
+                  headerText: this.titleAction,
+                  dataType: 'auto',
+                  templateRefID: this.stepsTasks?.isTaskDefault ? this.stepsTasks?.refID : this.stepsTasks?.recID,
+                  templateRefType: this.isActivitie ? 'DP_Activities' : 'DP_Instances_Steps_Tasks',
+                  disableESign: true,
+                },
+                '',
+                opt
+              );
 
-
+              popupEditES.closed.subscribe((res) => {
+                if (res?.event) {
+                  this.loadListApproverStep();
+                }
+              });
+            });
+        });
+      }
+    });
+  }
+  loadListApproverStep() {
+    let idTask = this.stepsTasks?.isTaskDefault ? this.stepsTasks?.refID : this.stepsTasks?.recID;
+    this.getListAproverStepByCategoryID(idTask)
+      .pipe(takeUntil(this.destroyFrom$))
+      .subscribe((res) => {
+        if (res) {
+          this.listApproverView = res;
+          this.changeDetectorRef.markForCheck();
+        }
+      });
+  }
+  getListAproverStepByCategoryID(categoryID) {
+    return this.api.exec<any>(
+      'ES',
+      'ApprovalStepsBusiness',
+      'GetListStepByCategoryIDAsync',
+      categoryID
+    );
+  }
 
   //#region Quotation
   // getQuotationsLinesInContract(contractID, quotationID) {
@@ -901,10 +1023,10 @@ export class AddContractsComponent implements OnInit, AfterViewInit{
   //   return true;
   // }
 
-  
+
   //#endregion
   //#region Save
- 
+
 
   // setDataInstance(contract: CM_Contracts, instance: tmpInstances) {
   //   instance.title = contract?.contractName;
@@ -1262,7 +1384,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit{
   //   }
   // }
   //#endregion
- 
+
   // loadComboboxData(comboboxName: string, service: string): Observable<any> {
   //   const dataRequest = new DataRequest();
   //   dataRequest.comboboxName = comboboxName;

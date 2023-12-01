@@ -822,7 +822,7 @@ export class DealsComponent
               let instance = e.event.instance;
               let listSteps = e.event?.listStep;
 
-              this.detailViewDeal?.reloadListStep(listSteps);
+
               let index =
                 e.event.listStep.findIndex(
                   (x) =>
@@ -860,7 +860,7 @@ export class DealsComponent
                   if (e.event.isReason != null) {
                     this.moveReason(res, e.event.isReason);
                   }
-
+                  this.detailViewDeal?.reloadListStep(listSteps);
                   this.detectorRef.detectChanges();
                 }
               });

@@ -29,7 +29,6 @@ import {
   AuthStore,
 } from 'codx-core';
 import { CodxCmService } from '../codx-cm.service';
-import { PopupAddDealComponent } from '../deals/popup-add-deal/popup-add-deal.component';
 import { CM_Customers, CM_Leads, CM_Permissions } from '../models/cm_model';
 import { PopupAddLeadComponent } from './popup-add-lead/popup-add-lead.component';
 import { PopupConvertLeadComponent } from './popup-convert-lead/popup-convert-lead.component';
@@ -37,8 +36,6 @@ import { PopupMergeLeadsComponent } from './popup-merge-leads/popup-merge-leads.
 import { PopupMoveStageComponent } from 'projects/codx-dp/src/lib/instances/popup-move-stage/popup-move-stage.component';
 import { LeadDetailComponent } from './lead-detail/lead-detail.component';
 import { PopupMoveReasonComponent } from 'projects/codx-dp/src/lib/instances/popup-move-reason/popup-move-reason.component';
-import { PopupEditOwnerstepComponent } from 'projects/codx-dp/src/lib/instances/popup-edit-ownerstep/popup-edit-ownerstep.component';
-import { PopupOwnerDealComponent } from '../deals/popup-owner-deal/popup-owner-deal.component';
 import { PopupAssginDealComponent } from '../deals/popup-assgin-deal/popup-assgin-deal.component';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { PopupPermissionsComponent } from '../popup-permissions/popup-permissions.component';
@@ -397,6 +394,7 @@ export class LeadsComponent
   }
 
   changeDataMF(event, data, type = null) {
+    if(!data) return;
     if (this.runMode == '1') {
       this.codxShareService.changeMFApproval(event, data?.unbounds);
     } else if (event != null && data != null) {
@@ -1375,7 +1373,7 @@ export class LeadsComponent
             if (e && e.event != null) {
               var instance = e.event.instance;
               var listSteps = e.event?.listStep;
-              this.detailViewLead.reloadListStep(listSteps);
+
               var index =
                 e.event.listStep.findIndex(
                   (x) =>
@@ -1403,6 +1401,7 @@ export class LeadsComponent
                   if (e.event.isReason != null) {
                     this.moveReason(data, e.event.isReason);
                   }
+                  this.detailViewLead.reloadListStep(listSteps);
                   this.detectorRef.detectChanges();
                 }
               });

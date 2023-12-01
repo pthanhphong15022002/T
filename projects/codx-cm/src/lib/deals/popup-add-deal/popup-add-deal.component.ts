@@ -997,7 +997,7 @@ export class PopupAddDealComponent
         let obj = {
           id: processId,
           steps: res[0],
-          permissions: await this.getListPermission(res[1]),
+          permissions: res[1],
           dealId: this.action !== this.actionEdit ? res[2] : this.deal.dealID,
           processSetting: res[3],
         };
@@ -1012,8 +1012,8 @@ export class PopupAddDealComponent
         if (this.action === this.actionEdit) {
           this.owner = this.deal.owner;
         } else {
-          if (this.listParticipants.length > 0 && this.listParticipants && !this.owner) {
-            let index = this.listParticipants.findIndex(
+          if (this.listParticipants?.length > 0 && this.listParticipants && !this.owner) {
+            let index = this.listParticipants?.findIndex(
               (x) => x.userID === this.user.userID
             );
             this.owner = index != -1 ? this.user.userID : null;
@@ -1190,12 +1190,12 @@ export class PopupAddDealComponent
     return endDay;
   }
 
-  async getListPermission(permissions) {
-    this.listParticipants = permissions;
-    return this.listParticipants != null && this.listParticipants?.length > 0
-      ? await this.codxCmService.getListUserByOrg(this.listParticipants)
-      : this.listParticipants;
-  }
+  // async getListPermission(permissions) {
+  //   this.listParticipants = permissions;
+  //   return this.listParticipants != null && this.listParticipants?.length > 0
+  //     ? await this.codxCmService.getListUserByOrg(this.listParticipants)
+  //     : this.listParticipants;
+  // }
 
   //#region  check RequiredDeal
   checkEndDayInstance(endDate, endDateCondition) {

@@ -189,11 +189,11 @@ export class ViewTabPartsComponent implements OnInit {
 
       this.columnsGrid.push(column);
     });
-
-    this.columnsGrid.unshift({
+    var colums = {
       headerTemplate: this.headerPartInfo,
       template: this.tempPartInfo,
       width: 400,
-    });
+    };
+    this.columnsGrid.unshift(colums);
   }
 }
