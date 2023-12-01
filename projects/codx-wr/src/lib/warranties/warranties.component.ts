@@ -367,6 +367,7 @@ export class WarrantiesComponent
         }
       }
       $event.forEach((res) => {
+        if (type == '11') res.isbookmark = false;
         if (data.status == '7' || data.status == '5') {
           if (['SYS02', 'SYS03', 'WR0103_8'].includes(res.functionID)) {
             res.disabled = true;
@@ -885,7 +886,10 @@ export class WarrantiesComponent
           let m = res.find((x) => x.functionID == 'SYS03');
           var obj = {
             data: data,
-            title: m?.defaultName + ' ' + this.gridViewSetup?.ProductID?.headerText?.toLowerCase(),
+            title:
+              m?.defaultName +
+              ' ' +
+              this.gridViewSetup?.ProductID?.headerText?.toLowerCase(),
           };
           var dialog = this.callFc.openForm(
             PopupSerProductComponent,

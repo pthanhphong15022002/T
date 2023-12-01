@@ -341,7 +341,7 @@ export class PopupConvertLeadComponent implements OnInit {
         var obj = {
           id: processId,
           steps: res[0],
-          permissions: await this.getListPermission(res[1]),
+          permissions: res[1],
           dealId: this.deal.dealID,
           autoNameTabFields: res[3]?.autoNameTabFields,
         };
@@ -1372,10 +1372,10 @@ export class PopupConvertLeadComponent implements OnInit {
       });
     }
   }
-  async getListPermission(permissions) {
-    this.listParticipants = permissions;
-    return this.listParticipants != null && this.listParticipants.length > 0
-      ? await this.cmSv.getListUserByOrg(this.listParticipants)
-      : this.listParticipants;
-  }
+  // async getListPermission(permissions) {
+  //   this.listParticipants = permissions;
+  //   return this.listParticipants != null && this.listParticipants.length > 0
+  //     ? await this.cmSv.getListUserByOrg(this.listParticipants)
+  //     : this.listParticipants;
+  // }
 }

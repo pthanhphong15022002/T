@@ -271,7 +271,7 @@ export class JournalService {
     options1.entityName = 'SYS_FunctionList';
     options1.pageLoading = false;
     options1.predicates = 'ParentID=@0 and Language=@1';
-    options1.dataValues = `ACT;${this.authStore.get().language}`;
+    options1.dataValues = `ACT;${this.authStore.get().language == '' ? 'VN' : this.authStore.get().language}`;
 
     const options2 = new DataRequest();
     options2.entityName = 'AC_Journals';
@@ -297,7 +297,7 @@ export class JournalService {
         links.push({
           title: func?.defaultName,
           desc: journal.journalDesc,
-          path: func?.url + `?journalNo=${journal.journalNo}`,
+          path: func?.url + '/' + journal?.journalNo,
         });
       }
 

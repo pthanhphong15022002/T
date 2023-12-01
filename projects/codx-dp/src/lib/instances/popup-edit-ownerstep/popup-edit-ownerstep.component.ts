@@ -68,7 +68,7 @@ export class PopupEditOwnerstepComponent {
   var data = [processId,applyFor,stepID]
     this.codxDpService.getListPermission(data).subscribe(async res =>{
       if(res){
-       this.lstParticipants =  await this.codxDpService.getListUserByOrg(res[0]);
+        this.lstParticipants =  await this.codxDpService.getListUserByOrg(res[0]);
        this.startControl = res[1];
       }
     })

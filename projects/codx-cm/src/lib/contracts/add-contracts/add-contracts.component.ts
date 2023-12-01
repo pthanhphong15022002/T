@@ -221,7 +221,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit{
       this.tabContent.push(this.task);
     }
   }
-  
+
   //#region setData
   async setDataContract(data) {
     switch (this.action) {
@@ -326,7 +326,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit{
     this.contracts.bankID = customer?.bankID;
   }
   //#endregion
-  
+
   //#region get data setting default
   async getSettingContract() {
     let res = await firstValueFrom(
@@ -357,7 +357,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit{
     });
   }
   //#endregion
-  
+
   //#region auto number
   GetProcesIDDefault(){
     if(this.processIdDefault){
@@ -370,7 +370,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit{
         }
       })
     }
-   
+
   }
   GetProcessNoByProcessID(processID){
     let process = this.listProcessNo?.find(x => x?.processID === processID);
@@ -387,7 +387,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit{
         }
       });
     }
-    
+
     return null;
   }
   // kiểm tra có thiết lập tư động ko
@@ -433,7 +433,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit{
     if(this.countInputChangeAuto == 0 && !(this.autoNumber && this.isApplyProcess)){
       if (!this.disabledShowInput && this.action !== 'edit' && e) {
         this.contracts.contractID = e?.data;
-        if (this.contracts.contractID && this.contracts.contractID.includes(' ')) 
+        if (this.contracts.contractID && this.contracts.contractID.includes(' '))
         {
           this.notiService.notifyCode('CM026',0,'"' + this.grvSetup['ContractID'].headerText + '"');
           return;
@@ -489,7 +489,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit{
     }
     return true;
   }
-  
+
   async addContracts() {
     if (this.type == 'view') {
       // if (this.contracts?.applyProcess) {
@@ -597,7 +597,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit{
           }
         })
       }
-  
+
       if (event?.field == 'delStatus') {
         this.disabledDelActualDate =
           event?.data == '0' || event?.data == '1' ? true : false;
@@ -738,7 +738,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit{
     });
   }
   //#endregion
-   
+
   //#region get data
    getCustomerByDealID(dealID) {
     this.contractService.getCustomerBydealID(dealID).subscribe((res) => {
@@ -763,7 +763,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit{
       }
     });
   }
-  
+
   //#endregion
 
   changeValueTextTask(event){
@@ -1029,10 +1029,10 @@ async clickSettingApprove() {
   //   return true;
   // }
 
-  
+
   //#endregion
   //#region Save
- 
+
 
   // setDataInstance(contract: CM_Contracts, instance: tmpInstances) {
   //   instance.title = contract?.contractName;
@@ -1390,7 +1390,7 @@ async clickSettingApprove() {
   //   }
   // }
   //#endregion
- 
+
   // loadComboboxData(comboboxName: string, service: string): Observable<any> {
   //   const dataRequest = new DataRequest();
   //   dataRequest.comboboxName = comboboxName;
