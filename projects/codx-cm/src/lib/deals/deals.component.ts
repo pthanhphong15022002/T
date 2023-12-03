@@ -176,7 +176,7 @@ export class DealsComponent
   runMode: any;
   filterView: any;
   columns: any;
-  loadedColumns: boolean = false;
+  loadFirst: boolean = true;
 
   constructor(
     private inject: Injector,
@@ -1156,8 +1156,8 @@ export class DealsComponent
     dialogCustomDeal.closed.subscribe((e) => {
       if (e && e.event != null) {
         this.view.dataService.update(e.event, true).subscribe();
-        //up kaban
-        if (this.kanban) {
+        //up kaban nee đúng process
+        if (this.kanban && this.processIDKanban == e.event?.processID) {
           let dt = e.event;
           let money = dt.dealValue * dt.exchangeRate;
           this.renderTotal(dt.stepID, 'add', money);
@@ -1375,7 +1375,7 @@ export class DealsComponent
       this.dataSelected.approveStatus = res?.returnStatus;
       this.dataSelected.status = res?.returnStatus;
       this.view.dataService.update(this.dataSelected).subscribe();
-      if (this.kanban) this.kanban.updateCard(this.dataSelected);
+      if (this.kanban ) this.kanban.updateCard(this.dataSelected);
       this.notificationsService.notifyCode('ES007');
 
       // this.codxCmService
@@ -2055,8 +2055,9 @@ export class DealsComponent
         this.kanban.columns[idx].totalDealValue = total;
       }
     }
+   
   }
-  loadingColumns(e) {
-    this.loadedColumns = e;
+  loadedColumns(e) {
+    this.loadFirst = e;
   }
 }

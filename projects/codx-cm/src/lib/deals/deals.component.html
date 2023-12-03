@@ -16,7 +16,6 @@
   [moreFuncs]="moreFuncs"
   [autoLoad]="true"
   [selectedFirst]="true"
-  [viewActiveType]="'6'"
   (onActions)="onActions($event)"
   (viewChanged)="changeView($event)"
   (selectedChange)="selectedChange($event)"
@@ -285,14 +284,17 @@
         </span>
       </div>
     </div>
-
+ <!-- [style]="{ color: getPropertiesHeader(data, 'textColor') }" -->
     <view-total-deal-value
       [formModel]="view.formModel"
       [stepID]="data.keyField"
       [columns]="kanban?.columns"
       [loaded]="kanban?.dataService?.loaded"
       [filterView]="view.dataService.filter"
+      [loadFirst]="loadFirst"
+      [exchangeRateDefault]="exchangeRateDefault"
       (getTotalDealValue)="getTotalDealValue($event)"
+      (loadedColumns)="loadedColumns($event)"
     ></view-total-deal-value>
     <!-- <div class="d-flex align-items-center line-colums ms-3 mt-1">
       <ng-container
