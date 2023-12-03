@@ -205,7 +205,7 @@
                   <div
                     class="d-flex flex-row"
                     *ngIf="
-                      contact2JSON?.Alternate?.Name &&
+                      contact2JSON?.Alternate?.Name != null && contact2JSON?.Alternate?.Name?.trim() != '' &&
                       dataSelected?.category == '1'
                     "
                   >
@@ -422,14 +422,14 @@
                 [ngbTooltip]="tooltipOwner"
                 *ngIf="dataSelected?.createdBy"
               >
-                <codx-imgs
+                <codx-img
                   [width]="30"
                   [objectId]="dataSelected?.createdBy"
                   ojectType="AD_Users"
                   [numberImages]="1"
                   [isToolTip]="false"
                 >
-                </codx-imgs>
+                </codx-img>
                 <div style="position: absolute; right: 0px; bottom: 0px">
                   <span
                     ><img
@@ -466,14 +466,14 @@
                 [ngbTooltip]="tooltipEngineerID"
                 *ngIf="dataSelected?.engineerID"
               >
-                <codx-imgs
+                <codx-img
                   [width]="30"
                   [objectId]="dataSelected?.engineerID"
                   ojectType="AD_Users"
                   [numberImages]="1"
                   [isToolTip]="false"
                 >
-                </codx-imgs>
+                </codx-img>
                 <div style="position: absolute; right: 0px; bottom: 0px">
                   <span
                     ><img

@@ -21,7 +21,6 @@ import {
 } from 'codx-core';
 import { CodxWrService } from '../../codx-wr.service';
 import { ViewTabUpdateComponent } from './view-tab-update/view-tab-update.component';
-import { PopupSerProductComponent } from './popup-ser-product/popup-ser-product.component';
 
 @Component({
   selector: 'codx-view-detail-wr',
@@ -101,6 +100,7 @@ export class ViewDetailWrComponent implements OnInit {
         if (changes['dataSelected'].currentValue?.recID == this.id) return;
         this.id = changes['dataSelected'].currentValue?.recID;
         this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
+        this.contact2JSON = null;
         if (
           this.dataSelected?.extendInfo &&
           this.dataSelected?.extendInfo?.trim() != ''
