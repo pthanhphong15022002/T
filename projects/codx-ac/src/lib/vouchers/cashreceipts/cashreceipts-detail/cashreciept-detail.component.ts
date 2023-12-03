@@ -9,6 +9,7 @@ import {
 import { TabComponent } from '@syncfusion/ej2-angular-navigations/src/tab/tab.component';
 import {
   AuthStore,
+  CodxService,
   DataRequest,
   DialogModel,
   FormModel,
@@ -17,6 +18,7 @@ import {
   SidebarModel,
   TenantStore,
   UIComponent,
+  UIDetailComponent,
   Util,
 } from 'codx-core';
 import { Subject, takeUntil } from 'rxjs';
@@ -33,9 +35,8 @@ declare var jsBh: any;
   styleUrls: ['./cashreciept-detail.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CashrecieptDetailComponent extends UIComponent {
+export class CashrecieptDetailComponent extends UIDetailComponent {
   //#region Constructor
-  @Input() recID: any;
   @Input() dataItem: any;
   @Input() dataService: any;
   @Input() formModel: any;
@@ -101,7 +102,8 @@ export class CashrecieptDetailComponent extends UIComponent {
     private authStore: AuthStore,
     private shareService: CodxShareService,
     private notification: NotificationsService,
-    private tenant: TenantStore
+    private tenant: TenantStore,
+    public codxService: CodxService
   ) {
     super(inject);
     this.authStore = inject.get(AuthStore);
@@ -110,7 +112,10 @@ export class CashrecieptDetailComponent extends UIComponent {
   //#endregion Constructor
 
   //#region Init
-  onInit(): void {}
+  onInit(): void {
+    if(this.recID) this.getDataDetail(this.dataItem,this.recID);
+    if(!this.formModel) this.getFormModel();
+  }
 
   ngAfterViewInit() {
     //* thiết lập cấu hình sidebar
@@ -300,6 +305,16 @@ export class CashrecieptDetailComponent extends UIComponent {
       }
       this.detectorRef.detectChanges();
     }
+  }
+
+  getFormModel()
+  {
+    this.cache.functionList(this.funcID).subscribe(item=>{
+      this.formModel = new FormModel();
+      this.formModel.entityName = item?.entityName;
+      this.formModel.formName = item?.formName;
+      this.formModel.gridViewName = item?.gridViewName;
+    })
   }
   //#endregion Function
 }

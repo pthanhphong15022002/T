@@ -131,7 +131,7 @@ export class ContractsComponent extends UIComponent {
   dataValues = '';
   columnGrids: any;
   arrFieldIsVisible = [];
-  itemSelected: any;
+  contractSelected: any;
   button?: ButtonModel[] = [{ id: 'btnAdd' }];
   tabControl = [];
   //param
@@ -206,11 +206,11 @@ export class ContractsComponent extends UIComponent {
 
   selectedChange(val: any) {
     if (!val?.data) return;
-    this.itemSelected = val?.data;
+    this.contractSelected = val?.data;
     this.getQuotationsAndQuotationsLinesByTransID(
-      this.itemSelected.quotationID
+      this.contractSelected.quotationID
     );
-    this.getPayMentByContractID(this.itemSelected?.recID);
+    this.getPayMentByContractID(this.contractSelected?.recID);
     this.detectorRef.detectChanges();
   }
 
@@ -443,11 +443,11 @@ export class ContractsComponent extends UIComponent {
       let appoverStatus = e.unbounds.statusApproval;
       if (
         appoverStatus != null &&
-        appoverStatus != this.itemSelected.approveStatus
+        appoverStatus != this.contractSelected.approveStatus
       ) {
-        this.itemSelected.approveStatus = appoverStatus;
+        this.contractSelected.approveStatus = appoverStatus;
       }
-      this.view.dataService.update(this.itemSelected).subscribe();
+      this.view.dataService.update(this.contractSelected).subscribe();
     }
   }
 
@@ -537,7 +537,7 @@ export class ContractsComponent extends UIComponent {
   }
 
   beforeDelete(option: RequestOption, data) {
-    option.methodName = 'DeleteContactAsync';
+    option.methodName = 'DeleteContractAsync';
     option.className = 'ContractsBusiness';
     option.assemblyName = 'CM';
     option.service = 'CM';
@@ -618,7 +618,7 @@ export class ContractsComponent extends UIComponent {
       action,
       data,
       type,
-      contract: this.itemSelected,
+      contract: this.contractSelected,
     };
     let option = new DialogModel();
     option.IsFull = false;
@@ -690,9 +690,9 @@ export class ContractsComponent extends UIComponent {
   releaseCallback(res: any, t: any = null) {
     if (res?.msgCodeError) this.notiService.notify(res?.msgCodeError);
     else {
-      this.itemSelected.approveStatus = res?.returnStatus;
-      this.itemSelected.status = res?.returnStatus;
-      this.view.dataService.update(this.itemSelected).subscribe();
+      this.contractSelected.approveStatus = res?.returnStatus;
+      this.contractSelected.status = res?.returnStatus;
+      this.view.dataService.update(this.contractSelected).subscribe();
       this.notiService.notifyCode('ES007');
       // this.cmService
       //   .getOneObject(this.itemSelected.recID, 'ContractsBusiness')
@@ -746,8 +746,8 @@ export class ContractsComponent extends UIComponent {
               )
               .subscribe((res3) => {
                 if (res3) {
-                  this.itemSelected.approveStatus = '0';
-                  this.view.dataService.update(this.itemSelected).subscribe();
+                  this.contractSelected.approveStatus = '0';
+                  this.view.dataService.update(this.contractSelected).subscribe();
                   this.notiService.notifyCode('SYS007');
                 } else this.notiService.notifyCode('SYS021');
               });
@@ -1032,7 +1032,7 @@ export class ContractsComponent extends UIComponent {
     if (event) {
       this.api
         .exec<any>('DP', 'InstancesBusiness', 'StartInstanceAsync', [
-          this.itemSelected?.refID,
+          this.contractSelected?.refID,
         ])
         .subscribe((res) => {
           console.log(res);
@@ -1102,7 +1102,7 @@ export class ContractsComponent extends UIComponent {
     }
   }
   autoOpenPopupSusscess(e) {
-    e && this.moveReason(this.itemSelected, true);
+    e && this.moveReason(this.contractSelected, true);
   }
 
   popupOwnerRoles(data) {

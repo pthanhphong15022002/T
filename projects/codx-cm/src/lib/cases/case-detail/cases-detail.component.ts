@@ -13,10 +13,8 @@ import {
   inject,
 } from '@angular/core';
 import { AlertConfirmInputConfig, CRUDService, CodxService, FormModel, NotificationsService, UIComponent } from 'codx-core';
-import { TabDetailCustomComponent } from '../../deals/deal-detail/tab-detail-custom/tab-detail-custom.component';
 import { CodxCmService } from '../../codx-cm.service';
 import { CM_Contacts } from '../../models/cm_model';
-import { TabCasesDetailComponent } from './tab-cases-detail/tab-cases-detail.component';
 import { CodxListContactsComponent } from '../../cmcustomer/cmcustomer-detail/codx-list-contacts/codx-list-contacts.component';
 import { CasesComponent } from '../cases.component';
 

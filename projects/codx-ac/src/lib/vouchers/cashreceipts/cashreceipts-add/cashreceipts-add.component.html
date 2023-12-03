@@ -35,17 +35,17 @@
       </div>
     </div>
     <ng-container>
-      <div style="margin-left: 28px" *ngIf="!formCashReceipt.data?.validated"
+      <div style="margin-left: 28px" *ngIf="formCashReceipt && !formCashReceipt?.data?.validated"
         class="input-circle h-20px input-border-0 w-400px mb-1">
         <codx-dropdown-select #eleCbxSubType [showFooter]="false" [isToolbar]="false"
           [cssClass]="'rounded-pill border-1'" cssPopup="h-350px w-550px" [isMulti]="false" type="valuelist"
-          field="subType" [refValue]="formCashReceipt?.gridviewSetup['SubType'].referedValue"
-          [value]="formCashReceipt.data.subType" emptyText="Loại phiếu"
+          field="subType" [refValue]="formCashReceipt?.gridviewSetup['SubType']?.referedValue"
+          [value]="formCashReceipt?.data?.subType" emptyText="Loại phiếu"
           (valueChange)="changeSubType($event)"></codx-dropdown-select>
       </div>
-      <span style="margin-left: 30px" *ngIf="formCashReceipt.data?.validated">
+      <span style="margin-left: 30px" *ngIf="formCashReceipt && formCashReceipt?.data?.validated">
         <codx-vll [name]="'AC063'" [formModel]="dialog.formModel" [field]="'SubType'"
-          [value]="formCashReceipt.data?.subType" [showText]="true" [showBgColor]="true"
+          [value]="formCashReceipt?.data?.subType" [showText]="true" [showBgColor]="true"
           class="badge badge-light-primary badge-lg mt-1">
         </codx-vll>
       </span>

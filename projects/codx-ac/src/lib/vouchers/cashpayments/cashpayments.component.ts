@@ -59,7 +59,6 @@ export class CashPaymentsComponent extends UIComponent {
     icon: 'icon-i-file-earmark-plus',
   }];
   bhLogin: boolean = false;
-  optionSidebar: SidebarModel = new SidebarModel();
   bankPayID: any;
   bankNamePay: any;
   bankReceiveName: any;
@@ -180,9 +179,6 @@ export class CashPaymentsComponent extends UIComponent {
       },
     ];
     this.journalService.setChildLinks(this.journalNo);
-
-    this.optionSidebar.DataService = this.view?.dataService;
-    this.optionSidebar.FormModel = this.view?.formModel;
   }
 
   ngOnDestroy() {
@@ -313,10 +309,13 @@ export class CashPaymentsComponent extends UIComponent {
             baseCurr: this.baseCurr, //?  đồng tiền hạch toán
             legalName: this.legalName, //? tên company
           };
+          let optionSidebar = new SidebarModel();
+          optionSidebar.DataService = this.view?.dataService;
+          optionSidebar.FormModel = this.view?.formModel;
           let dialog = this.callfc.openSide(
             CashPaymentAddComponent,
             data,
-            this.optionSidebar,
+            optionSidebar,
             this.view.funcID
           );
         }
@@ -342,10 +341,13 @@ export class CashPaymentsComponent extends UIComponent {
           baseCurr: this.baseCurr, //?  đồng tiền hạch toán
           legalName: this.legalName, //? tên company
         };
+        let optionSidebar = new SidebarModel();
+        optionSidebar.DataService = this.view?.dataService;
+        optionSidebar.FormModel = this.view?.formModel;
         let dialog = this.callfc.openSide(
           CashPaymentAddComponent,
           data,
-          this.optionSidebar,
+          optionSidebar,
           this.view.funcID
         );
       });
@@ -378,10 +380,13 @@ export class CashPaymentsComponent extends UIComponent {
                   baseCurr: this.baseCurr, //?  đồng tiền hạch toán
                   legalName: this.legalName, //? tên company
                 };
+                let optionSidebar = new SidebarModel();
+                optionSidebar.DataService = this.view?.dataService;
+                optionSidebar.FormModel = this.view?.formModel;
                 let dialog = this.callfc.openSide(
                   CashPaymentAddComponent,
                   data,
-                  this.optionSidebar,
+                  optionSidebar,
                   this.view.funcID
                 );
                 this.view.dataService

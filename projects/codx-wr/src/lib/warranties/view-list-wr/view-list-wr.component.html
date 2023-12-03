@@ -103,29 +103,33 @@
           [innerHTML]="data?.email | formatvalue : formModel : 'Email' | async"
         ></span>
       </div>
-      <div class="mb-1 w-200px min-w-200px" (mouseenter)="closePopover()">
-        <span
-          class="text-gray-700 fs-7"
+      <div class="w-200px min-w-200px pe-6" (mouseenter)="closePopover()">
+        <div
           [style.height]="'auto'"
-          [ngClass]="
-            checkHover(data?.recID)
-              ? 'line-clamp line-clamp-2 text-popover'
-              : ''
-          "
+          [ngClass]="'line-clamp line-clamp-2 text-popover text-primary'"
           [id]="data.recID"
           [ngbPopover]="data?.address"
           [style.height]="'auto'"
-          #addre="ngbPopover"
+          #addr="ngbPopover"
           [openDelay]="500"
-          (mouseenter)="PopoverDetail($event, addre, data, 'address')"
-          (mouseleave)="popoverClosed(addre)"
+          (mouseenter)="PopoverDetail($event, addr, data, 'address')"
+          (mouseleave)="popoverClosed(addr)"
           (click)="isPopoverOpen = true"
           placement="right bottom  top"
           [popoverClass]="data.recID"
-          [innerHTML]="
-            data?.address | formatvalue : formModel : 'Address' | async
-          "
-        ></span>
+        >
+          <span
+            class="icon-place text-hover-primary text-primary icon-16 text-gray-600 me-1"
+            [ngbTooltip]="gridViewSetup['Address']?.headerText"
+          ></span>
+          <a
+            href="https://maps.google.com/maps?q=&quot; + {{
+              data.address
+            }} + &quot;"
+            target="_blank"
+            ><span class="line-clamp-1">{{ data.address }}</span></a
+          >
+        </div>
       </div>
     </div>
 
@@ -146,22 +150,81 @@
         ></span>
       </div>
 
-      <div class="mb-1" (mouseenter)="closePopover()">
+      <div
+        (mouseenter)="closePopover()"
+        class="mb-1"
+        [style.height]="'auto'"
+        [ngClass]="
+          checkHover(data?.recID) ? 'line-clamp line-clamp-2 text-popover' : ''
+        "
+        [id]="data.recID"
+        [ngbPopover]="tempProID"
+        [style.height]="'auto'"
+        #proID="ngbPopover"
+        [openDelay]="500"
+        (mouseenter)="PopoverDetail($event, proID, data, 'productID')"
+        (mouseleave)="popoverClosed(proID)"
+        (click)="isPopoverOpen = true"
+        placement="right bottom  top"
+        [popoverClass]="data.recID"
+      >
+        <codx-label
+          style="white-space: nowrap"
+          class="d-inline-block me-1 fw-bold"
+          fiedName="ProductID"
+          [formModel]="formModel"
+        ></codx-label>
         <span
-          class="fw-bold text-dark"
+          class="text-gray-800"
           [innerHTML]="
             data.productID | formatvalue : formModel : 'ProductID' | async
           "
         ></span>
+        <ng-template #tempProID>
+          <span
+            [innerHTML]="
+              data.productID | formatvalue : formModel : 'ProductID' | async
+            "
+          ></span
+        ></ng-template>
       </div>
-
-      <div class="mb-1" (mouseenter)="closePopover()">
+      <div
+        (mouseenter)="closePopover()"
+        class="mb-1"
+        [style.height]="'auto'"
+        [ngClass]="
+          checkHover(data?.recID) ? 'line-clamp line-clamp-2 text-popover' : ''
+        "
+        [id]="data.recID"
+        [ngbPopover]="tempProdesc"
+        [style.height]="'auto'"
+        #proDesc="ngbPopover"
+        [openDelay]="500"
+        (mouseenter)="PopoverDetail($event, proDesc, data, 'productDesc')"
+        (mouseleave)="popoverClosed(proDesc)"
+        (click)="isPopoverOpen = true"
+        placement="right bottom  top"
+        [popoverClass]="data.recID"
+      >
+        <codx-label
+          style="white-space: nowrap"
+          class="d-inline-block me-1 fw-bold"
+          fiedName="ProductDesc"
+          [formModel]="formModel"
+        ></codx-label>
         <span
-          class="fw-bold text-dark"
+          class="text-gray-800"
           [innerHTML]="
             data.productDesc | formatvalue : formModel : 'ProductDesc' | async
           "
         ></span>
+        <ng-template #tempProdesc>
+          <span
+            [innerHTML]="
+              data.productDesc | formatvalue : formModel : 'ProductDesc' | async
+            "
+          ></span
+        ></ng-template>
       </div>
     </div>
 

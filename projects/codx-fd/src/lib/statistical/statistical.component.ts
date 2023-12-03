@@ -540,7 +540,7 @@ chartArea: Object = {
     this.options.funcID = 'FDW011';
     this.options.dataObj = 'Coins';
     this.api
-      .execSv<any>('FD', 'FD', 'KudosTransBusiness', 'LoadDataWalletAsync', [
+      .execSv<any>('rptfd', 'Codx.RptBusiness.FD', 'KudosTransBusiness', 'LoadDataWalletAsync', [
         this.options, this.objParams ? this.objParams : {},
       ])
       .subscribe((res) => {
@@ -617,7 +617,7 @@ chartArea: Object = {
       this.options.funcID = 'FDW011';
       this.options.dataObj = 'Coins';
       this.api
-        .execSv<any>('FD', 'FD', 'KudosTransBusiness', 'LoadDataKudoAsync', [
+        .execSv<any>('rptfd', 'Codx.RptBusiness.RP', 'KudosTransBusiness', 'LoadDataKudoAsync', [
           this.options,"4", this.objParams ? this.objParams : {},
         ])
         .subscribe((res:any)=>{

@@ -9,14 +9,14 @@
 >
   <ng-template #body>
     <ng-container *ngIf="form?.formGroup">
-      <div class="form-group row">
+      <div class="form-group row" *ngIf="!addProduct">
         <div class="col-6">
           <codx-label fiedName="ServiceTag" [formModel]="form.formModel">
           </codx-label>
           <codx-input
             field="serviceTag"
             [formModel]="form.formModel"
-            [crrValue]="data?.serviceTag"
+            [Group]="form.formGroup"
             (valueChange)="valueChange($event)"
           ></codx-input>
         </div>
@@ -26,7 +26,7 @@
           <codx-input
             field="warrantyExpired"
             [formModel]="form.formModel"
-            [crrValue]="data?.warrantyExpired"
+            [Group]="form.formGroup"
             (valueChange)="valueChangeDate($event)"
           ></codx-input>
         </div>
@@ -37,17 +37,27 @@
         <codx-input
           field="productID"
           [formModel]="form.formModel"
-          [crrValue]="data?.productID"
+          [Group]="form.formGroup"
           (valueChange)="valueChange($event)"
         ></codx-input>
       </div>
-      <div class="form-group">
+      <div class="form-group" *ngIf="addProduct">
+        <codx-label fiedName="ProductName" [formModel]="form.formModel">
+        </codx-label>
+        <codx-input
+          field="productName"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          (valueChange)="valueChange($event)"
+        ></codx-input>
+      </div>
+      <div class="form-group" *ngIf="!addProduct">
         <codx-label fiedName="ProductDesc" [formModel]="form.formModel">
         </codx-label>
         <codx-input
           field="productDesc"
           [formModel]="form.formModel"
-          [crrValue]="data?.productDesc"
+          [Group]="form.formGroup"
           (valueChange)="valueChange($event)"
         ></codx-input>
       </div>
@@ -57,7 +67,7 @@
           </codx-label>
           <codx-input
             #productType
-            [disabled]="true"
+            [disabled]="!addProduct ? true : false"
             field="productType"
             [formModel]="form.formModel"
             [Group]="form.formGroup"
@@ -70,7 +80,7 @@
           <codx-input
             #productBrand
             field="productBrand"
-            [disabled]="true"
+            [disabled]="!addProduct ? true : false"
             [formModel]="form.formModel"
             [Group]="form.formGroup"
             (valueChange)="valueChange($event)"
@@ -82,7 +92,7 @@
           <codx-input
             #productModel
             field="productModel"
-            [disabled]="true"
+            [disabled]="!addProduct ? true : false"
             [formModel]="form.formModel"
             [Group]="form.formGroup"
             (valueChange)="valueChange($event)"
@@ -94,8 +104,7 @@
         <codx-input
           field="note"
           [formModel]="form.formModel"
-          [crrValue]="data?.note"
-          (valueChange)="valueChange($event)"
+          [Group]="form.formGroup"
         ></codx-input>
       </div>
     </ng-container>
