@@ -3380,6 +3380,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
 
   public async handleFileInput(files: any[], drag = false) {
     var count = this.fileUploadList.length;
+    
     //this.getFolderPath();
     var addedList = [];
     for (var i = 0; i < files.length; i++) {
@@ -3404,8 +3405,8 @@ export class AttachmentComponent implements OnInit, OnChanges {
         if (drag) {
           data = await files[i].arrayBuffer();
           data = this.arrayBufferToBase64(data);
-        } else {
-          //data = await this.convertBlobToBase64(files[i].rawFile);
+        } else if(files[i].size <= 10485760 ) {
+          data = await this.convertBlobToBase64(files[i].rawFile);
         }
 
         var fileUpload = new FileUpload();
@@ -3414,7 +3415,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
 
         //Lấy avatar mặc định theo định dạng file
         //Image
-        if (type_image.includes(type)) fileUpload.avatar = data;
+        if (type_image.includes(type) && files[i].size <= 10485760 ) fileUpload.avatar = data;
         //Video
         else if (type_video.includes(type)) {
           var url = this.sanitizer.bypassSecurityTrustUrl(
