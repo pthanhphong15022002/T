@@ -21,7 +21,7 @@ import {
   NotificationsService,
   Util,
 } from 'codx-core';
-import { PopupAddServicetagComponent } from './popup-add-servicetag/popup-add-servicetag.component';
+import { PopupAddServicetagComponent } from '../popup-add-servicetag/popup-add-servicetag.component';
 import { WR_WorkOrders } from '../../_models-wr/wr-model.model';
 import { firstValueFrom } from 'rxjs';
 import { CodxWrService } from '../../codx-wr.service';
@@ -116,7 +116,7 @@ export class PopupAddWarrantyComponent implements OnInit {
       .save((option: any) => this.beforeSave(option), 0)
       .subscribe(async (res) => {
         if (res) {
-          this.dialog.close([res.save]);
+          this.dialog.close(res.save);
         }
       });
   }
