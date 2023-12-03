@@ -298,7 +298,12 @@ export class ViewTabUpdateComponent implements OnInit {
             break;
           case 'SYS02':
           case 'SYS03':
-            if (data?.exported) res.disabled = true;
+            if (
+              data?.exported ||
+              this.dataWorkOrder?.status == '5' ||
+              this.dataWorkOrder?.status == '7'
+            )
+              res.disabled = true;
 
             break;
           default:

@@ -15,7 +15,8 @@
   "loginHCS":"https://surehcs.lacviet.vn/UI2017",
   "layout": {
     "title": "",
-    "icon": ""
+    "icon": "",
+    "logo": ""
   },
   "asideMode": "developer;zlvcodxuniverseprogress;lacvietdemo",
   "externalLogin": {

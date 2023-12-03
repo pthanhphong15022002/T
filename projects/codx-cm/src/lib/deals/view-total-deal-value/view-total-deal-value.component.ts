@@ -35,10 +35,11 @@ export class ViewTotalDealValueComponent
   @Input() totalDealValue = 0;
   @Input() columns = [];
   @Output() getTotalDealValue = new EventEmitter<any>();
+  @Output() loadedColumns = new EventEmitter<any>();
   @Input() loaded: any;
   // @Input() predicate = 'StepID=@0';
   // @Input() dataValue = '';
-  loadFirst = true;
+  @Input() loadFirst = true;
   total = 0;
   curentStepID = '';
   constructor(
@@ -51,16 +52,13 @@ export class ViewTotalDealValueComponent
       if (this.loadFirst) {
         if (this.curentStepID != this.stepID) {
           this.curentStepID = this.stepID;
+          if(this.stepID== this.columns[this.columns?.length-1].keyField){
+            this.loadedColumns.emit(false)
+          }
           this.loading();
         }
       } else {
-        if (this.stepIDMinus != this.stepID && this.stepIDAdd != this.stepID)
-          return;
-        if (this.stepIDMinus == this.stepID)
-          this.total = this.totalDealValue - this.changeMoney;
-        if (this.stepIDAdd == this.stepID)
-          this.total = this.totalDealValue + this.changeMoney;
-
+        this.total = this.columns.filter(x=>x.keyField == this.stepID)[0].totalDealValue;
         this.changeDef.detectChanges();
       }
     }
@@ -71,12 +69,14 @@ export class ViewTotalDealValueComponent
   ngOnInit(): void {}
 
   loading() {
-    this.getTotal().subscribe((total) => {
+   this.getTotal().subscribe((total) => {
+     if(Number.parseFloat(total)){
       this.total = total / this.exchangeRateDefault;
-      this.getTotalDealValue.emit({ key: this.stepID, total: total });
-      this.loadFirst = false;
+      this.getTotalDealValue.emit({ key: this.stepID, total: total });    
       this.changeDef.detectChanges();
-    });
+     }
+     
+     });
   }
 
   getTotal() {
@@ -93,6 +93,7 @@ export class ViewTotalDealValueComponent
     gridModel.dataValue = this.stepID;
     gridModel.onlySetPermit = false; //goi qua phan quyền pes
     gridModel.filter = this.filterView;
+   
     return this.api
       .execSv<any>(service, service, className, method, gridModel)
       .pipe(

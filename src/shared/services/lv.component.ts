@@ -168,25 +168,25 @@ var lvFileClientAPI = {
                 headers: header,
                 onUploadProgress: (p) => {
                     //barWidth =  
-                    let percent = (p.loaded / p.total) * 100;
-                    let count = 0;
-                    //let id = setInterval(frame, 2000);
-                    let elem =  document.getElementById("circle"+fileName);
-                    if(elem)
-                    {
-                        // elem.style.setProperty("--percent",percent.toString());
-                        let id = setInterval(() => {
-                            if(!isPaused && percent <=100)
-                            {
-                                if(percent >= 100) clearInterval(id);
-                                else if(count >= percent) isPaused = true;
-                                else count += 1;
-                            }
+                    // let percent = (p.loaded / p.total) * 100;
+                    // let count = 0;
+                    // //let id = setInterval(frame, 2000);
+                    // let elem =  document.getElementById("circle"+fileName);
+                    // if(elem)
+                    // {
+                    //     // elem.style.setProperty("--percent",percent.toString());
+                    //     let id = setInterval(() => {
+                    //         if(!isPaused && percent <=100)
+                    //         {
+                    //             if(percent >= 100) clearInterval(id);
+                    //             else if(count >= percent) isPaused = true;
+                    //             else count += 1;
+                    //         }
                             
-                        }, 2000)
-                        console.log((503 - ( 503 * ( percent / 100 ))))
-                        elem.style.strokeDashoffset = (503 - ( 503 * ( percent / 100 ))).toString();
-                    }
+                    //     }, 2000)
+                    //     console.log((503 - ( 503 * ( percent / 100 ))))
+                    //     elem.style.strokeDashoffset = (503 - ( 503 * ( percent / 100 ))).toString();
+                    // }
                    
                     // function frame() {
                     //     if(percent == 100)  clearInterval(id);
