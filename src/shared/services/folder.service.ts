@@ -265,5 +265,14 @@ export class FolderService implements OnDestroy {
     );
   }
 
+  getBreadCumb(id: string,type="folder"): Observable<any> {
+    var method = type == "folder" ? "GetBreadCumbAsync" : "GetBreadCumbFileAsync";
+    return this.api.exec<FolderInfo>(
+      'DM',
+      'FolderBussiness',
+      method,
+      id
+    );
+  }
   ngOnDestroy() {}
 }

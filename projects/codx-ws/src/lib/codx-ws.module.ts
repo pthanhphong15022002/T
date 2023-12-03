@@ -207,7 +207,7 @@ const routes: Routes = [
       //-----------Khai báo routing nghiệp vu---------------
       //-----------Khai báo routing báo cáo---------------
       {
-        path: 'report/detail/:funcID',
+        path: 'wsreport/detail/:funcID',
         component: CodxReportViewDetailComponent,
       },
       //-----------Khai báo routing báo cáo---------------
