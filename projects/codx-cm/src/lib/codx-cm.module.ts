@@ -116,6 +116,7 @@ import { CustomIconPipe } from './pipes/customIcon.pipe';
 import { FormatTargetPipe } from './pipes/format-target.pipe';
 import { FormatStatusPipe } from './pipes/format-status.pipe';
 import { ViewTotalDealValueComponent } from './deals/view-total-deal-value/view-total-deal-value.component';
+import { ContractsDetailComponent } from './contracts/contracts-detail/contracts-detail.component';
 
 export const routes: Routes = [
   {
@@ -279,6 +280,7 @@ const T_Component: Type<any>[] = [
   ViewCalendarComponent,
   ProgressSliderComponent,
   ViewHistoryCustomerComponent,
+  ContractsDetailComponent,
 ];
 
 @NgModule({
