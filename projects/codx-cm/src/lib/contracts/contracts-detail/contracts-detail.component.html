@@ -53,7 +53,7 @@
                          class="nav-link"
                          [ngClass]="item.functionID == active[0] ? 'active' : ''"
                        >
-                         <div class="text-uppercase fw-bold">{{ item.customName }}</div>
+                         <div class="text-uppercase fw-bold">{{item?.name }}</div>
                        </a>
                      </li>
                    </ng-container>
