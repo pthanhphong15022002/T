@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Injector, Input, Output, SimpleChange, ViewChild } from '@angular/core';
 import { extend } from '@syncfusion/ej2-angular-grids';
-import { CallFuncService, DataRequest, DialogModel, FormModel, NotificationsService, RequestOption, SidebarModel, TenantStore, UIComponent } from 'codx-core';
+import { CallFuncService, CodxService, DataRequest, DialogModel, FormModel, NotificationsService, RequestOption, SidebarModel, TenantStore, UIComponent, UIDetailComponent } from 'codx-core';
 import { Subject, takeUntil } from 'rxjs';
 import { AnimationModel } from '@syncfusion/ej2-angular-progressbar';
 import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
@@ -16,10 +16,9 @@ import { TabModel } from 'projects/codx-share/src/lib/components/codx-approval/t
   styleUrls: ['./receipt-transactions-detail.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ReceiptTransactionsDetailComponent extends UIComponent {
+export class ReceiptTransactionsDetailComponent extends UIDetailComponent {
   
   //#region Constructor
-  @Input() recID: any;
   @Input() dataItem: any;
   @Input() dataService: any;
   @Input() formModel: any;
@@ -39,20 +38,27 @@ export class ReceiptTransactionsDetailComponent extends UIComponent {
     { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
     { name: 'References', textDefault: 'Liên kết', isActive: false },
   ];
+  isShowLess: any = false;
+  isShowMore:any = true;
+  isReadMore:any = false;
   private destroy$ = new Subject<void>(); //? list observable hủy các subscribe api
   constructor(
     private inject: Injector,
     private acService: CodxAcService,
     private shareService: CodxShareService,
     private notification: NotificationsService,
-    private tenant: TenantStore
+    private tenant: TenantStore,
+    public codxService: CodxService
   ) {
     super(inject);
   }
   //#endregion Constructor
 
   //#region Init
-  onInit(): void {}
+  onInit(): void {
+    if(this.recID) this.getDataDetail(this.dataItem,this.recID);
+    if(!this.formModel) this.getFormModel();
+  }
 
   ngAfterViewInit() {
     //* thiết lập cấu hình sidebar
@@ -62,6 +68,7 @@ export class ReceiptTransactionsDetailComponent extends UIComponent {
   }
 
   ngDoCheck() {
+    this.onReadMore();
     this.detectorRef.detectChanges();
   }
 
@@ -93,6 +100,9 @@ export class ReceiptTransactionsDetailComponent extends UIComponent {
   getDataDetail(dataItem, recID) {
     if (dataItem) {
       this.itemSelected = dataItem;
+      this.isReadMore = false;
+      this.isShowMore = true;
+      this.isShowLess = false;
       this.detectorRef.detectChanges();
     }else{
       this.api
@@ -108,6 +118,45 @@ export class ReceiptTransactionsDetailComponent extends UIComponent {
     }
   }
 
+  /**
+   * *Ham xem them & an bot dien giai
+   * @param type 
+   */
+  onShowMoreLess(type){
+    if(type === 'showmore'){
+      this.isShowMore = false;
+      this.isShowLess = true;
+    }else{
+      this.isShowMore = true;
+      this.isShowLess = false;
+    }
+    this.detectorRef.detectChanges();
+  }
+
+  /**
+   * *Ham kiem tra dien giai khi vuot qua 2 dong
+   */
+  onReadMore(){
+    let ele = document.getElementById('eleMemo');
+    if (ele) {
+      if (ele.offsetHeight < ele.scrollHeight || ele.offsetWidth < ele.scrollWidth){
+        this.isReadMore = true;
+      }else{
+        this.isReadMore = false;
+      }
+      this.detectorRef.detectChanges();
+    }
+  }
+
+  getFormModel()
+  {
+    this.cache.functionList(this.funcID).subscribe(item=>{
+      this.formModel = new FormModel();
+      this.formModel.entityName = item?.entityName;
+      this.formModel.formName = item?.formName;
+      this.formModel.gridViewName = item?.gridViewName;
+    })
+  }
   //#endregion
 
 

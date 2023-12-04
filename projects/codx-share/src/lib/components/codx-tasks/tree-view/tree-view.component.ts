@@ -4,6 +4,7 @@ import {
   ChangeDetectorRef,
   Component,
   EventEmitter,
+  HostListener,
   Input,
   OnInit,
   Optional,
@@ -60,6 +61,8 @@ export class TreeViewComponent implements OnInit, AfterViewInit {
   entityName = 'TM_Tasks';
   className = 'TaskBusiness';
   methodLoadData = 'GetTasksAsync';
+  loadedTree: boolean = true; // load clcik tree
+  isAllDatas: any = false;
 
   constructor(
     private api: ApiHttpService,
@@ -83,50 +86,46 @@ export class TreeViewComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {}
 
   ngAfterViewInit(): void {
-    // if (this.codxService.asideMode == '2') this.showMoreFunc = false;
-    // this.loaded = false ;
-    // this.gridModelTree.formName = this.formModel.formName;
-    // this.gridModelTree.entityName = this.formModel.entityName;
-    // this.gridModelTree.funcID = this.formModel.funcID;
-    // this.gridModelTree.gridViewName = this.formModel.gridViewName;
-    // this.gridModelTree.treeField = 'ParentID';
-    // this.gridModelTree.dataObj = JSON.stringify(this.dataObj);
-    // this.loadData()
-
+    this.gridModelTree.formName = this.formModel.formName;
+    this.gridModelTree.entityName = this.formModel.entityName;
+    this.gridModelTree.funcID = this.formModel.funcID;
+    this.gridModelTree.gridViewName = this.formModel.gridViewName;
+    this.gridModelTree.treeField = 'ParentID';
+    this.gridModelTree.dataObj = JSON.stringify(this.dataObj);
+    this.gridModelTree.pageSize = 20;
+    this.gridModelTree.page = 1;
+    this.loadData();
     //cu ne
-    var gridModel = new DataRequest();
-    gridModel.formName = this.formModel.formName;
-    gridModel.entityName = this.formModel.entityName;
-    gridModel.funcID = this.formModel.funcID;
-    gridModel.gridViewName = this.formModel.gridViewName;
-    gridModel.treeField = 'ParentID';
-    gridModel.dataObj = JSON.stringify(this.dataObj);
-    // gridModel.pageSize = 20;
-    // gridModel.page = 0;
-
-    this.loaded = false;
-    this.api
-      .execSv<any>(
-        'TM',
-        'ERM.Business.TM',
-        'TaskBusiness',
-        'GetTasksAsync',
-        gridModel
-      )
-      .subscribe((res) => {
-        if (res) {
-          this.dataTree = res[0];
-          let breadCrumbs = [
-            {
-              title: this.favorite + ' (' + res[1] + ')',
-            },
-          ];
-
-          this.loaded = true;
-
-          this.pageTitle.setBreadcrumbs(breadCrumbs);
-        }
-      });
+    // var gridModel = new DataRequest();
+    // gridModel.formName = this.formModel.formName;
+    // gridModel.entityName = this.formModel.entityName;
+    // gridModel.funcID = this.formModel.funcID;
+    // gridModel.gridViewName = this.formModel.gridViewName;
+    // gridModel.treeField = 'ParentID';
+    // gridModel.dataObj = JSON.stringify(this.dataObj);
+    // // gridModel.pageSize = 20;
+    // // gridModel.page = 0;
+    // this.loaded = false;
+    // this.api
+    //   .execSv<any>(
+    //     'TM',
+    //     'ERM.Business.TM',
+    //     'TaskBusiness',
+    //     'GetTasksAsync',
+    //     gridModel
+    //   )
+    //   .subscribe((res) => {
+    //     if (res) {
+    //       this.dataTree = res[0];
+    //       let breadCrumbs = [
+    //         {
+    //           title: this.favorite + ' (' + res[1] + ')',
+    //         },
+    //       ];
+    //       this.loaded = true;
+    //       this.pageTitle.setBreadcrumbs(breadCrumbs);
+    //     }
+    //   });
   }
   //#endregion
 
@@ -191,19 +190,22 @@ export class TreeViewComponent implements OnInit, AfterViewInit {
 
   //#region Function
   selectionChange(parent) {
-    // var id = parent?.data.taskID ;
+    // if (!this.loadedTree) return;
+    // var id = parent?.data.taskID;
     // var element = document.getElementById(id);
-    // if(element){
-    //   this.isClose =  element.classList.contains("icon-add_box");
-    //   this.isShow =  element.classList.contains("icon-indeterminate_check_box");
-    //   if(this.isClose){
-    //     element.classList.remove("icon-add_box");
-    //     element.classList.add("icon-indeterminate_check_box");
-    //   }else if(this.isShow){
-    //     element.classList.remove("icon-indeterminate_check_box");
-    //     element.classList.add("icon-add_box");
+    // if (element) {
+    //   this.isClose = element.classList.contains('icon-add_box');
+    //   this.isShow = element.classList.contains('icon-indeterminate_check_box');
+    //   if (this.isClose) {
+    //     element.classList.remove('icon-add_box');
+    //     element.classList.add('icon-indeterminate_check_box');
+    //   } else if (this.isShow) {
+    //     element.classList.remove('icon-indeterminate_check_box');
+    //     element.classList.add('icon-add_box');
     //   }
     // }
+
+    this.loadedTree = false;
     if (parent.isItem) {
       this.api
         .execSv<any>(
@@ -216,6 +218,7 @@ export class TreeViewComponent implements OnInit, AfterViewInit {
         .subscribe((res) => {
           if (res && res?.length > 0) {
             parent.data.items = res;
+            this.loadedTree = true;
           }
         });
     }
@@ -228,10 +231,17 @@ export class TreeViewComponent implements OnInit, AfterViewInit {
   //#endregion
 
   loadData() {
-    this.loaded = false;
+    this.loaded = this.gridModelTree.page > 1;
     this.fetch().subscribe((res) => {
       if (res) {
-        this.dataTree = res[0];
+        let dataTreeAll = res[0];
+        if (this.gridModelTree.page > 1) {
+          let idxLastRemove = this.gridModelTree.page * 20 - 1;
+          let dataTreeNew = dataTreeAll.splice(0, idxLastRemove);
+          if (dataTreeNew?.length > 0)
+            this.dataTree = this.dataTree.concat(dataTreeNew);
+        } else this.dataTree = dataTreeAll;
+
         let breadCrumbs = [
           {
             title: this.favorite + ' (' + res[1] + ')',
@@ -239,8 +249,11 @@ export class TreeViewComponent implements OnInit, AfterViewInit {
         ];
 
         this.loaded = true;
-
+        this.isAllDatas = this.dataTree?.length == res[1];
         this.pageTitle.setBreadcrumbs(breadCrumbs);
+      } else {
+        this.isAllDatas = true;
+        this.loaded = true;
       }
     });
   }
@@ -263,5 +276,16 @@ export class TreeViewComponent implements OnInit, AfterViewInit {
           return response;
         })
       );
+  }
+
+  @HostListener('scroll', ['$event'])
+  onScroll(event: Event): void {
+    if (!this.isAllDatas) {
+      const element = event.target as HTMLElement;
+      if (element.scrollHeight - element.scrollTop === element.clientHeight) {
+        this.gridModelTree.page += 1;
+        this.loadData();
+      }
+    }
   }
 }

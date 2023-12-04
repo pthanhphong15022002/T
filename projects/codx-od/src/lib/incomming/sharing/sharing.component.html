@@ -75,9 +75,10 @@
 
     </ng-template>
     <ng-template #footer>
-        <div class="d-flex justify-content-end">
+        <div class="d-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center"><codx-input type="switch" class="mt-1 me-2" [Group]="shareForm" ControlName="sendMail"></codx-input> <codx-label default="Gửi mail"></codx-label></div>
             <button class="btn btn-primary" type="submit" (click)="onSave()">
-                Gửi
+                <codx-label default="Gửi"></codx-label>
             </button>
         </div>
     </ng-template>

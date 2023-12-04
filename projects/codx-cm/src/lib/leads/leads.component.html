@@ -22,6 +22,8 @@
   (onActions)="onActions($event)"
   (onMoreMulti)="onMoreMulti($event)"
   [viewActiveType]="viewActiveType"
+  (clickMF)="clickMF($event, dataSelected)"
+  (changeDataMF)="changeDataMF($event, dataSelected)"
 ></codx-views>
 
 <ng-template #itemTemplate let-data>
@@ -34,7 +36,6 @@
     [imageObjName]="data?.leadName"
     [imageObjType]="'CM_Leads'"
     [imgOn]="data?.modifiedOn"
-    [iconCss]="data.closed ? 'icon-lock text-danger' : ''"
     cardCss="card-template border-bottom p-3 list-task"
     (clickMF)="clickMF($event, data)"
     [moreFuncCss]="'me-15'"
@@ -47,6 +48,7 @@
     [footer]="footer"
     [titleCss]="'fs-6 mb-1'"
     [dataItem]="data"
+    [baseHeaderRightTmp]="baseHeaderRightTmp"
   >
   </codx-temp-full>
 </ng-template>
@@ -81,7 +83,7 @@
     </div>
     <div class="d-flex justify-content-between align-items-center">
       <div class="d-flex align-items-end codx-badge">
-        <div
+        <!-- <div
           *ngIf="data.status == '2' && data.applyProcess; else statusDefault"
           [ngStyle]="{
             'background-color': data?.steps['backgroundColor']
@@ -130,7 +132,16 @@
             >
             </codx-vll>
           </div>
-        </ng-template>
+        </ng-template> -->
+        <codx-vll
+        [name]="gridViewSetup?.Status?.referedValue"
+        [field]="'Status'"
+        [value]="data?.status"
+        [showText]="true"
+        [showBgColor]="true"
+        class="badge badge-light badge-sm"
+      >
+      </codx-vll>
         <ng-container *ngIf="data.approveStatus > '1' && data?.approveStatus">
           <codx-vll
             [name]="vllApprove"
@@ -169,7 +180,7 @@
   </div>
 </ng-template>
 <ng-template #footer let-data> </ng-template>
-<ng-template #baseHeaderRightTmp let-data>
+<!-- <ng-template #baseHeaderRightTmp let-data>
   <div>
     <span
       class="icon-14 me-1"
@@ -178,7 +189,7 @@
     >
     </span>
   </div>
-</ng-template>
+</ng-template> -->
 
 <!--list details tempfull-->
 <!--Detail-->
@@ -239,7 +250,6 @@
 <ng-template #cardTitleTmp let-data>
   <codx-temp-full
     style="width: 100%"
-    [iconCss]="data.closed ? 'icon-lock text-danger' : ''"
     [imageId]="data?.recId"
     [imgOn]="data?.modifiedOn"
     [imageReferType]="'avt'"
@@ -249,6 +259,7 @@
     [titleCss]="'fs-6 mb-1'"
     [descTmp]="descTmpCard"
     [hideMF]="data?.status == '11'"
+    [iconCss]="data.closed ? 'icon-lock text-danger' : ''"
   >
   </codx-temp-full>
   <ng-template #descTmpCard>
@@ -315,7 +326,7 @@
   <div class="d-flex align-items-center justify-content-end">
     <div class="me-auto">
       <div class="d-flex align-items-end codx-badge">
-        <div
+        <!-- <div
           *ngIf="data.status == '2' && data.applyProcess; else statusDefault"
           [ngStyle]="{
             'background-color': data?.steps['backgroundColor']
@@ -375,7 +386,27 @@
             >
             </codx-vll>
           </ng-container>
-        </ng-template>
+        </ng-template> -->
+        <codx-vll
+        [name]="gridViewSetup?.Status?.referedValue"
+        [field]="'Status'"
+        [value]="data?.status"
+        [showText]="true"
+        [showBgColor]="true"
+        class="badge badge-light badge-sm"
+      >
+      </codx-vll>
+      <ng-container *ngIf="data.approveStatus > '1' && data?.approveStatus">
+        <codx-vll
+          [name]="vllApprove"
+          [field]="'ApproveStatus'"
+          [value]="data?.approveStatus"
+          [showText]="true"
+          [showBgColor]="true"
+          class="badge badge-primary badge-sm"
+        >
+        </codx-vll>
+      </ng-container>
       </div>
     </div>
     <div class="pe-1 d-flex align-items-center">
@@ -470,4 +501,30 @@
   <button type="button" class="btn btn-primary" (click)="saveStatus()">
     <codx-label fiedName="lblSave" default="Lưu"></codx-label>
   </button>
+</ng-template>
+<ng-template #baseHeaderRightTmp let-data>
+  <div
+    [class]="data?.closed ? 'icon-lock text-danger' : ''"
+    [ngbTooltip]="TooltipEdit"
+  >
+    <ng-template #TooltipEdit>
+      <codx-label
+        default="Nhiệm vụ đã đóng"
+        name="lblIsClosed"
+        [formModel]="view.formModel"
+      ></codx-label>
+    </ng-template>
+  </div>
+  <!-- <div
+  [class]="data?.closed ? 'icon-lock text-danger' : ''"
+  [ngbTooltip]="TooltipEdit"
+>
+  <ng-template #TooltipEdit>
+    <codx-label
+      default="Áp quy trịnh"
+      name="lblIsClosed"
+      [formModel]="view.formModel"
+    ></codx-label>
+  </ng-template>
+</div> -->
 </ng-template>

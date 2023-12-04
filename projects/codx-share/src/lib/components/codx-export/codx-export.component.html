@@ -10,27 +10,27 @@
 ></codx-form>
 <ng-template popup adde #body>
   <div class="d-flex align-items-center mt-2">
-    <div class="radio-list text-dark">
+    <div class="d-flex align-items-center radio-list text-dark"  *ngIf="type != 'word'">
       <codx-input
-        *ngIf="type != 'word'"
+       
         type="radio"
         name="radio-dtexport"
         class="me-4 mb-2"
-        label="Tất cả dữ liệu"
         [Group]="exportGroup"
         ControlName="dataExport"
         crrValue="all"
         [ngClass]="{ 'is-invalid': submitted && f.dataExport.errors }"
       >
       </codx-input>
+
+      <codx-label default="Tất cả dữ liệu" formName="fmexportTmpAll" fiedName="exportTmpAll" class="mt-4 ms-2 me-6"></codx-label>
+
     </div>
-    <div class="radio-list text-dark">
+    <div class="d-flex align-items-center radio-list text-dark"  *ngIf="type != 'word'">
       <codx-input
-        *ngIf="type != 'word'"
         type="radio"
         name="radio-dtexport"
         class="me-4 mb-2"
-        label="Trang hiện hành"
         labelPosition="After"
         [Group]="exportGroup"
         ControlName="dataExport"
@@ -38,13 +38,14 @@
         [ngClass]="{ 'is-invalid': submitted && f.dataExport.errors }"
       >
       </codx-input>
+
+      <codx-label default="Trang hiện hành" formName="fmexportTmpPage" fiedName="exportTmpPage" class="mt-4 ms-2 me-6"></codx-label>
     </div>
-    <div class="radio-list text-dark">
+    <div class="d-flex align-items-center radio-list text-dark">
       <codx-input
         type="radio"
         name="radio-dtexport"
         class="me-4 mb-2"
-        label="Dòng đang chọn"
         labelPosition="After"
         crrValue="selected"
         [Group]="exportGroup"
@@ -52,6 +53,8 @@
         [ngClass]="{ 'is-invalid': submitted && f.dataExport.errors }"
       >
       </codx-input>
+
+      <codx-label default="Dòng đang chọn" formName="fmexportTmpRowSelected" fiedName="exportTmpRowSelected" class="mt-4 ms-2 me-6"></codx-label>
     </div>
   </div>
   <hr />
@@ -146,6 +149,8 @@
             </div>
             <div class="fs-7 text-gray-500">
               <codx-label
+                formName="fmexportTmp" 
+                [fiedName]="'fmexportExcelTmp'"
                 [default]="
                   'Xuất dữ liệu được chọn thành file excel theo template đã định dạng trước'
                 "
@@ -231,6 +236,8 @@
             </div>
             <div class="fs-7 text-gray-500">
               <codx-label
+                formName="fmexportTmp" 
+                [fiedName]="'fmexportWordTmp'"
                 [default]="
                   'Xuất dữ liệu được chọn thành file word theo template đã định dạng trước'
                 "
@@ -279,7 +286,13 @@
                           class="d-flex align-items-center"
                         >
                           <span class="icon-edit text-primary icon-16"></span>
-                          <span class="ms-2">Chỉnh sửa</span>
+                          <codx-label
+                            formName="fmexportTmp" 
+                            fiedName="fmexportEdit"
+                            default="Chỉnh sửa"
+                            class="ms-2"
+                          >
+                          </codx-label>
                         </div>
                       </a>
                       <a ngbDropdownItem class="dropdown-item cursor-pointer" (click)="openForm('delete', item)">
@@ -287,7 +300,13 @@
                           class="d-flex align-items-center"
                         >
                           <span class="icon-delete text-danger icon-16"></span>
-                          <span class="ms-2">Xóa</span>
+                          <codx-label
+                            formName="fmexportTmp" 
+                            fiedName="fmexportDelete"
+                            default="Xóa"
+                            class="ms-2"
+                          >
+                          </codx-label>
                         </div>
                       </a>
                     </div>
@@ -331,10 +350,22 @@
       class="btn-ml btn btn-outline-primary"
       (click)="openForm('add', null)"
     >
-      Thêm template
+        <codx-label
+          formName="fmexportTmp" 
+          fiedName="fmexportAddTmp"
+          default="Thêm template"
+        >
+        </codx-label>
     </button>
     <div>
-      <button class="mx-1 btn btn-primary" (click)="onSave()"> <codx-label name="lblSave" default="Xuất file"></codx-label></button>
+      <button class="mx-1 btn btn-primary" (click)="onSave()">
+        <codx-label
+          formName="fmexportTmp" 
+          fiedName="fmexportExportFile"
+          default="Xuất File"
+        >
+        </codx-label>
+      </button>
       <button class="mx-1 btn btn-outline-primary" (click)="onClose()"><codx-label name="lblOK" default="OK"></codx-label></button>
     </div>
   </div>
@@ -346,7 +377,7 @@
         <codx-label [default]="data?.title"></codx-label>
       </div>
       <div class="fs-7 text-gray-500">
-        <codx-label [default]="data?.subTitle"></codx-label>
+        <codx-label [default]="data?.subTitle" formName="fmexportTmp" [fiedName]="'fmexportTmpContent'+data?.title"></codx-label>
       </div>
     </div>
     <div class="export-container">
@@ -357,8 +388,8 @@
         />
         <div class="fw-bold mt-1 text-center">
           <div class="mt-2 text-center">
-            Chọn <span class="fs-4 fw-bold">Xuất File</span> để tải tập tin về
-            máy
+            <!-- Chọn <span class="fs-4 fw-bold">Xuất File</span> để tải tập tin về máy -->
+            <codx-label default="Chọn Xuất File để tải tập tin về máy" formName="fmexportTmp" [fiedName]="'fmexportDetail'"></codx-label>
           </div>
         </div>
         <!-- <div class="mt-2 text-center">Chưa có dữ liệu phát sinh.</div> -->

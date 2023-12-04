@@ -30,7 +30,7 @@
             "
           ></span>
         </div>
-        <div class="toolbar-detail">
+        <div class="toolbar-detail"  *ngIf="asideMode != '2'">
           <codx-mfunc
           *ngIf="dataSelected?.status != '11'"
             [dataItem]="dataSelected"
@@ -53,7 +53,7 @@
       <div class="container_detail mt-1">
         <div class="d-flex justify-content-between mb-2">
           <div class="d-flex flex-column w-100">
-            <div class="d-flex align-items-start">
+            <div class="d-flex align-items-center">
               <div class="me-4">
                 <codx-img
                   [objectId]="dataSelected?.recID"
@@ -241,9 +241,9 @@
                 >
                   <span
                     class="text-ellipsis line-clamp line-clamp-2"
-                    [ngbTooltip]="getStatusCode(dataSelected?.statusCode)"
+                    [ngbTooltip]="statusCodeName"
                     >
-                   {{getStatusCode(dataSelected?.statusCode)}}
+                   {{statusCodeName}}
                     </span
                   >
                 </div>
@@ -256,20 +256,20 @@
                       "
                       [ngStyle]="{
                         'background-color':
-                          dataSelected?.steps['backgroundColor']
+                        stepCurrent?.backgroundColor
                       }"
                       class="badge badge-sm d-flex align-items-center mw-125px me-0"
                     >
                       <span
-                        [ngClass]="dataSelected?.steps['icon']"
-                        [ngStyle]="{ color: dataSelected?.steps['iconColor'] }"
+                        [ngClass]="stepCurrent?.icon"
+                        [ngStyle]="{ color: stepCurrent.iconColor }"
                         class="me-1"
                       ></span>
                       <span
                         class="text-ellipsis line-clamp line-clamp-1"
-                        [ngbTooltip]="dataSelected?.currentStepName"
-                        [ngStyle]="{ color: dataSelected?.steps['textColor'] }"
-                        >{{ dataSelected?.currentStepName }}</span
+                        [ngbTooltip]="stepCurrent?.currentStepName"
+                        [ngStyle]="{ color: stepCurrent?.textColor }"
+                        >{{ stepCurrent?.currentStepName }}</span
                       >
                     </div>
                     <ng-template #statusDefault>
@@ -936,7 +936,7 @@
                 <span class="icon-i-chat-right icon-16 me-2"></span>
                 <codx-label
                   class="fw-bold"
-                  default="Thảo luận"
+                  default="Ghi chú"
                   [formModel]="formModel"
                   name="lblComment"
                 ></codx-label>
@@ -1040,22 +1040,22 @@
       <div class="d-flex flex-column w-130px min-w-130px">
         <div class="d-flex align-items-center justify-content-end mb-1">
           <div
-            *ngIf="tmpDeal.status == '5'; else statusDefault"
+            *ngIf="dataSelected.status == '5'; else statusDefault"
             [ngStyle]="{
-              'background-color': tmpDeal?.steps['backgroundColor']
+              'background-color': stepCurrent?.backgroundColor
             }"
             class="me-0 badge badge-sm d-flex align-items-center mw-125px"
           >
             <span
-              [ngClass]="tmpDeal?.steps['icon']"
-              [ngStyle]="{ color: tmpDeal?.steps['iconColor'] }"
+              [ngClass]="stepCurrent?.icon"
+              [ngStyle]="{ color: stepCurrent?.iconColor }"
               class="me-1"
             ></span>
             <span
               class="text-ellipsis line-clamp line-clamp-1"
-              [ngbTooltip]="tmpDeal?.currentStepName"
-              [ngStyle]="{ color: tmpDeal?.steps['textColor'] }"
-              >{{ tmpDeal?.currentStepName }}</span
+              [ngbTooltip]="stepCurrent?.currentStepName"
+              [ngStyle]="{ color: stepCurrent?.textColor }"
+              >{{ stepCurrent?.currentStepName }}</span
             >
           </div>
           <ng-template #statusDefault>

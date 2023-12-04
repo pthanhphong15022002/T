@@ -1080,19 +1080,19 @@ export class InstancesComponent
         //Biến động tự custom
         //let dataSource = this.getDataSource(data);
         //let dataSource = data.datas;
-        var customData = {
-          refID: data.processID,
-          refType: 'DP_Processes',
-          // dataSource: dataSource,
-        };
+        // var customData = {
+        //   refID: data.processID,
+        //   refType: 'DP_Processes',
+        //   // dataSource: dataSource,
+        // };
         this.codxShareService.defaultMoreFunc(
           e,
           data,
           this.afterSave,
           this.view.formModel,
           this.view.dataService,
-          this,
-          customData
+          this
+          //customData
         );
         this.detectorRef.detectChanges();
         break;
@@ -1850,9 +1850,9 @@ export class InstancesComponent
       instance: data,
       objReason: JSON.parse(JSON.stringify(reason)),
       processID: this.processID,
-      applyFor: '0',
-      isMoveProcess: false,
-      isCallInstance: this.process.applyFor == '0',
+      applyFor: this.process?.applyFor,
+      isMoveProcess: true,
+      isCallInstance: this.process?.applyFor == '0',
     };
 
     var dialogRevision = this.callfc.openForm(
@@ -1870,7 +1870,7 @@ export class InstancesComponent
       }
       if (e && e.event != null) {
         //xu ly data đổ về
-        data = e.event.instance;
+        data = e.event?.instance;
         this.listStepInstances = e.event.listStep;
         if (data.refID !== this.guidEmpty) {
           this.valueListID.emit(data.refID);
@@ -1892,6 +1892,22 @@ export class InstancesComponent
           this.detailViewPopup.listSteps = this.listStepInstances;
         }
 
+        if (
+          e?.event?.applyForMove &&
+          e?.event?.processMove &&
+          this.process.applyFor !== e?.event?.applyForMove
+        ) {
+          this.moreFuncStart = this.moreFuncInstance.filter(
+            (x) => x.functionID == 'SYS01'
+          )[0];
+          this.addMoveProcess(
+            e.event?.processMove,
+            e.event?.applyForMove,
+            e.event?.ownerMove,
+            e.event?.title,
+            'add'
+          );
+        }
         this.detectorRef.detectChanges();
       } else {
         if (this.kanban) {
@@ -1899,11 +1915,6 @@ export class InstancesComponent
           this.kanban.updateCard(this.dataSelected);
           this.detectorRef.detectChanges();
         }
-        // this.addMoveProcess(e.event?.processMove,e.event?.applyForMove,
-        //   e.event?.ownerMove,
-        //   e.event?.instance,
-        //   'testttt'
-        //   );
       }
     });
   }
@@ -2702,56 +2713,51 @@ export class InstancesComponent
     }
   }
 
-  addMoveProcess(processMove, applyForMove, ownerMove, instance, titleAction) {
-    this.view.dataService
-      .edit(this.view.dataService.dataSelected)
-      .subscribe((res) => {
-        const funcIDApplyFor = this.checkFunctionID(applyForMove);
-        const applyFor = applyForMove;
-        let option = new SidebarModel();
-        option.DataService = this.view.dataService;
-        option.FormModel = this.view.formModel;
-        this.cache.functionList(funcIDApplyFor).subscribe((fun) => {
-          if (this.addFieldsControl == '2') {
-            let customName = fun.customName || fun.description;
-            if (this.autoName) customName = this.autoName;
-            titleAction =
-              titleAction +
-              ' ' +
-              customName.charAt(0).toLocaleLowerCase() +
-              customName.slice(1);
-          }
-          let instanceReason = {
-            applyForMove: applyForMove,
-            processMove: processMove,
-            ownerMove: ownerMove,
-            instance: instance,
-          };
-          this.cache
-            .gridViewSetup(fun.formName, fun.gridViewName)
-            .subscribe((grvSt) => {
-              var formMD = new FormModel();
-              formMD.funcID = funcIDApplyFor;
-              formMD.entityName = fun.entityName;
-              formMD.formName = fun.formName;
-              formMD.gridViewName = fun.gridViewName;
-              option.Width =
-                this.addFieldsControl == '1' || applyFor != '0'
-                  ? '800px'
-                  : '550px';
-              option.zIndex = 1001;
-              if (applyFor != '0') {
-                this.openPopupMove(
-                  applyFor,
-                  formMD,
-                  option,
-                  'add',
-                  instanceReason
-                );
-              }
-            });
-        });
+  addMoveProcess(processMove, applyForMove, ownerMove, title, titleAction) {
+    this.view.dataService.addNew().subscribe((res) => {
+      const funcIDApplyFor = this.checkFunctionID(applyForMove);
+      const applyFor = applyForMove;
+      let option = new SidebarModel();
+      option.DataService = this.view.dataService;
+      option.FormModel = this.view.formModel;
+      this.cache.functionList(funcIDApplyFor).subscribe((fun) => {
+        if (this.addFieldsControl == '2') {
+          let customName = fun.customName || fun.description;
+          if (this.autoName) customName = this.autoName;
+          titleAction =
+            titleAction +
+            ' ' +
+            customName.charAt(0).toLocaleLowerCase() +
+            customName.slice(1);
+        }
+        let instanceReason = {
+          applyForMove: applyForMove,
+          processMove: processMove,
+          ownerMove: ownerMove,
+          title: title,
+        };
+        this.cache
+          .gridViewSetup(fun.formName, fun.gridViewName)
+          .subscribe((grvSt) => {
+            var formMD = new FormModel();
+            formMD.funcID = funcIDApplyFor;
+            formMD.entityName = fun.entityName;
+            formMD.formName = fun.formName;
+            formMD.gridViewName = fun.gridViewName;
+            option.Width = '800px';
+            option.zIndex = 1001;
+            if (applyFor != '0') {
+              this.openPopupMove(
+                applyFor,
+                formMD,
+                option,
+                'add',
+                instanceReason
+              );
+            }
+          });
       });
+    });
   }
   openPopupMove(applyFor, formMD, option, action, instanceReason) {
     var obj = {
@@ -2766,7 +2772,9 @@ export class InstancesComponent
       isAdminRoles: this.isAdminRoles,
       addFieldsControl: this.addFieldsControl,
       isLoad: applyFor != '0',
-      processID: this.processID,
+      processID: instanceReason?.processMove
+        ? instanceReason?.processMove
+        : this.processID,
       instanceNoSetting: this.process.instanceNoSetting,
       dataCM: this.dataCM,
       categoryCustomer: this.categoryCustomer,
@@ -2779,5 +2787,8 @@ export class InstancesComponent
         this.detectorRef.detectChanges();
       }
     });
+  }
+  autoStartInstance() {
+    this.startInstance(this.dataSelected);
   }
 }

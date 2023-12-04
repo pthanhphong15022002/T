@@ -18,7 +18,6 @@ import {
   FormModel,
   NotificationsService,
 } from 'codx-core';
-import { TabDetailCustomComponent } from './tab-detail-custom/tab-detail-custom.component';
 import { CodxCmService } from '../../codx-cm.service';
 import { CM_Contracts } from '../../models/cm_model';
 import { firstValueFrom } from 'rxjs';
@@ -49,8 +48,6 @@ export class DealDetailComponent implements OnInit {
   @Output() changeProgress = new EventEmitter<any>();
   @ViewChild('tabDetailView', { static: true })
   tabDetailView: TemplateRef<any>;
-  @ViewChild('tabDetailViewDetail')
-  tabDetailViewDetail: TabDetailCustomComponent;
   @ViewChild('popDetail') popDetail: TemplateRef<any>;
   @ViewChild('referencesDeal') referencesDeal: TemplateRef<any>;
   @ViewChild('loadContactDeal')
@@ -119,7 +116,7 @@ export class DealDetailComponent implements OnInit {
     private cache: CacheService,
     private notificationsService: NotificationsService,
     private dealComponent: DealsComponent,
-    private codxService: CodxService
+    codxService: CodxService
   ) {
     this.asideMode = codxService.asideMode;
     this.executeApiCalls();
@@ -633,7 +630,7 @@ export class DealDetailComponent implements OnInit {
               $event?.action == 'delete' ? json : ''
             )
             .subscribe((res) => {});
-          if (this.listSteps != null && this.listSteps.length > 0) {
+          if (this.listSteps != null && this.listSteps?.length > 0) {
             for (var step of this.listSteps) {
               if (step?.fields != null && step?.fields?.length > 0) {
                 let idx = step?.fields?.findIndex(

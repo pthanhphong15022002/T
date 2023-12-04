@@ -25,6 +25,7 @@
                 (nodeDragging)="nodeDragging($event)"
                 (nodeClicked)="nodeclicked($event)"
                 (nodeEdited)="nodeEdited($event)"
+                (nodeDragStart)="nodeDragStart($event)"
                 [expandOn]="'Click'"
               >
                 <ng-template #nodeTemplate="" let-data="">
@@ -181,8 +182,65 @@
                       [crrValue]="selectedData?.name"
                       type="text"
                       (valueChange)="valueChange($event)"
+                      (focus)="onInputFocus($event)"
                     >
                     </codx-input>
+                  </div>
+                </div>
+                <div class="row px-5 pt-2" *ngIf="isSystemEdit">
+                  <div class="col form-group ps-0">
+                    <codx-label
+                      name="lblObject"
+                      formName="sys"
+                      default="Đối tượng được phân quyền"
+                    ></codx-label>
+                    <div class="container">
+                      <div class="row">
+                        <div class="col-11">
+                          <div class="container p-0 h-100 d-flex w-100 overflow-scroll" style="max-height:300px; flex-wrap: wrap" *ngIf="lstShared[selectedData?.recID]">
+                            <ng-container *ngFor="let item of lstShared[selectedData.recID]; index as i">
+                              <div class="d-flex user-mini-nav align-items-center mb-2" style="width:fit-content !important">
+                                <div class="mx-2 user-avatar">
+                                  <span
+                                  [inlineSVG]="'./assets/themes/sys/default/img/'+item.icon"
+                                  class="svg-icon"
+                                ></span>
+                                </div>
+                                <!-- <div class="me-2 user-avatar" *ngIf="item.shareToType == '9'">
+                                  <codx-img
+                                    [width]="25"
+                                    [objectId]="item.id"
+
+                                  >
+                                  </codx-img>
+                                </div> -->
+                                <div class="w-100 me-2">{{ item.text ? item.text : item.objectName }}</div>
+                                <!-- <a
+                                  class="text-hover-danger d-flex align-items-center"
+                                  (click)="removeItem(i)"
+                                >
+                                  <span class="icon-close icon-16"></span>
+                                </a> -->
+                              </div>
+                            </ng-container>
+                            <!-- <div class="border border-1 rounded-pill mx-2 p-3" style="width:fit-content" *ngFor="let item of lstShared[selectedData.recID]">{{item.text}}</div> -->
+                          </div>
+                        </div>
+                        <div class="col-1 d-flex justify-content-end">
+                          <codx-input
+                            type="Share"
+                            refValue="SYS064"
+                            field="resources"
+                            [disabled]="false"
+                            [dataShared]="[]"
+                            [multiple]="true"
+                            [showInput]="false"
+                            (valueChange)="valueShareChange($event)"
+                          >
+                          </codx-input>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
                 </div>
@@ -218,6 +276,7 @@
                             type="text"
                             (valueChange)="valueChange($event)"
                             [disabled]="!isEnableEdit"
+                            (focus)="onInputFocus($event)"
                           >
                           </codx-input>
                           </div>
@@ -242,6 +301,7 @@
                         [crrValue]="selectedData?.name"
                         type="text"
                         (valueChange)="valueChange($event)"
+                        (focus)="onInputFocus($event)"
                       >
                       </codx-input>
                     </div>
@@ -578,6 +638,62 @@
                     </codx-input>
                   </div>
                 </div>
+                <div class="row px-5 pt-2" *ngIf="isSystemEdit">
+                  <div class="col form-group ps-0">
+                    <codx-label
+                      name="lblObject"
+                      formName="sys"
+                      default="Đối tượng được phân quyền"
+                    ></codx-label>
+                    <div class="container">
+                      <div class="row">
+                        <div class="col-11">
+                          <div class="container p-0 h-100 d-flex w-100 overflow-scroll" style="max-height:300px; flex-wrap: wrap" *ngIf="lstShared[addData?.recID]">
+                            <ng-container *ngFor="let item of lstShared[addData.recID]; index as i">
+                              <div class="d-flex user-mini-nav align-items-center mb-2" style="width:fit-content !important">
+                                <div class="mx-2 user-avatar">
+                                  <span
+                                  [inlineSVG]="'./assets/themes/sys/default/img/'+item.icon"
+                                  class="svg-icon"
+                                ></span>
+                                </div>
+                                <!-- <div class="me-2 user-avatar" *ngIf="item.shareToType == '9'">
+                                  <codx-img
+                                    [width]="25"
+                                    [objectId]="item.id"
+
+                                  >
+                                  </codx-img>
+                                </div> -->
+                                <div class="w-100 me-2">{{ item.text ? item.text : item.objectName }}</div>
+                                <!-- <a
+                                  class="text-hover-danger d-flex align-items-center"
+                                  (click)="removeItem(i)"
+                                >
+                                  <span class="icon-close icon-16"></span>
+                                </a> -->
+                              </div>
+                            </ng-container>
+                            <!-- <div class="border border-1 rounded-pill mx-2 p-3" style="width:fit-content" *ngFor="let item of lstShared[selectedData.recID]">{{item.text}}</div> -->
+                          </div>
+                        </div>
+                        <div class="col-1 d-flex justify-content-end">
+                          <codx-input
+                            type="Share"
+                            refValue="SYS064"
+                            field="resources"
+                            [disabled]="false"
+                            [dataShared]="[]"
+                            [multiple]="true"
+                            [showInput]="false"
+                            (valueChange)="valueShareAddChange($event)"
+                          >
+                          </codx-input>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
                 </div>
 
               </div>
@@ -590,41 +706,71 @@
   </ng-template>
 </codx-form>
 <ng-template #footer>
-  <div class="d-flex">
-    <div class="form-group w-50 d-flex justify-content-start">
-      <button
-        type="button"
-        class="btn btn-sm text-hover-primary d-flex align-items-center"
-        (click)="onAddGroup()"
-      >
-        <i class="icon-add_circle_outline me-3 text-primary"></i>
-        <span class="text-muted fs-5">Thêm nhóm</span>
-      </button>
+  <div class="container">
+    <div class="row">
+      <div class=" col-4 form-group d-flex justify-content-start">
+        <button
+          type="button"
+          class="btn btn-sm text-hover-primary d-flex align-items-center"
+          (click)="onAddGroup()"
+        >
+          <i class="icon-add_circle_outline me-3 text-primary"></i>
+          <span class="text-muted fs-5">Thêm nhóm</span>
+        </button>
+      </div>
+      <div class="col-8 form-group d-flex justify-content-end p-0 ps-1" *ngIf="!user.administrator && !user.systemAdmin">
+        <button type="button" class="btn btn-danger btn-sm me-3" (click)="onRestore()" *ngIf="!isAddFunc && !isAddGroup">
+          <i class="icon-restore icon-16 me-2"></i><codx-label name="lblRestore" default="Khôi phục cài đặt"></codx-label>
+        </button>
+        <button type="button" class="btn btn-danger btn-sm me-3" (click)="onUndo()" *ngIf="isAddFunc || isAddGroup">
+          <i class="icon-cancel icon-16 me-2"></i> <codx-label name="lblCancel" default="Hủy"></codx-label>
+        </button>
+        <button type="button" class="btn btn-primary btn-sm me-3" *ngIf="!isAddFunc && !isAddGroup && !isEditing" (click)="onSaveForm()">
+          <i class="icon-save icon-16 me-2"></i><codx-label name="lblSave" default="Lưu Cá nhân"></codx-label>
+        </button>
+        <button type="button" class="btn btn-success btn-sm" *ngIf="isEditing"(click)="onEdit()">
+          <i class="icon-system_update_alt icon-16"></i><codx-label name="lblEdit" default="Cập nhật" me-3></codx-label>
+        </button>
+        <button type="button" class="btn btn-primary btn-sm"*ngIf="isAddFunc || isAddGroup" (click)="onAddForm()">
+          <i class=" icon-playlist_add icon-16 me-2"></i><codx-label name="lblSave" default="Thêm mới"></codx-label>
+        </button>
+
+      </div>
+      <div class="col-8 form-group d-flex justify-content-end p-0 ps-1" *ngIf="user.administrator || user.systemAdmin">
+        <div class="w-25 d-flex justify-content-start">
+          <button type="button" class="btn btn-warning btn-sm" *ngIf="!isSystemEdit" (click)="onSystemEdit()">
+           <i class="icon-repeat icon-16 me-2"></i> <codx-label name="lblEdit" default="Chỉnh sửa chung"></codx-label>
+          </button>
+          <button type="button" class="btn btn-warning btn-sm" *ngIf="isSystemEdit" (click)="onPersonalEdit()">
+            <i class="icon-repeat icon-16 me-2"></i>  <codx-label name="lblPersonalEdit" default="Chỉnh sửa cá nhân"></codx-label>
+          </button>
+        </div>
+        <div class="w-75 d-flex justify-content-end">
+          <button type="button" class="btn btn-danger btn-sm me-3" (click)="onRestore()" *ngIf="!isAddFunc && !isAddGroup && !isSystemEdit">
+            <i class="icon-restore icon-16 me-2"></i><codx-label name="lblRestore" default="Khôi phục cài đặt"></codx-label>
+          </button>
+          <button type="button" class="btn btn-danger me-3 btn-sm" (click)="onUndo()" *ngIf="isAddFunc || isAddGroup">
+            <i class="icon-cancel icon-16 me-2"></i> <codx-label name="lblCancel" default="Hủy"></codx-label>
+          </button>
+          <button type="button" class="btn btn-primary btn-sm"*ngIf="isAddFunc || isAddGroup" (click)="onAddForm()">
+             <i class=" icon-playlist_add icon-16 me-2"></i><codx-label name="lblSave" default="Thêm mới"></codx-label>
+          </button>
+
+          <button type="button" class="btn btn-success btn-sm" *ngIf="isEditing"(click)="onEdit()">
+            <i class="icon-system_update_alt icon-16 me-2"></i> <codx-label name="lblEdit" default="Cập nhật"></codx-label>
+          </button>
+          <button type="button" class="btn btn-primary me-3 btn-sm" *ngIf="!isAddFunc && !isAddGroup && !isEditing && !isSystemEdit" (click)="onSaveForm()">
+            <i class="icon-save icon-16 me-2"></i> <codx-label name="lblSave" default="Lưu Cá nhân"></codx-label>
+          </button>
+          <button type="button" class="btn btn-primary btn-sm" *ngIf="!isAddFunc && !isAddGroup && !isEditing && isSystemEdit"(click)="onSaveAdmin()">
+            <i class="icon-save icon-16 me-2"></i> <codx-label name="lblSave" default="Lưu"></codx-label>
+          </button>
+        </div>
+
+
+
+      </div>
     </div>
-    <div class="form-group w-50 d-flex justify-content-end" *ngIf="!user.administrator && !user.systemAdmin">
-      <button type="button" class="btn btn-danger me-3" (click)="onRestore()" *ngIf="!isAddFunc && !isAddGroup">
-        <codx-label name="lblRestore" default="Khôi phục cài đặt"></codx-label>
-      </button>
-      <button type="button" class="btn btn-danger me-3" (click)="onUndo()" *ngIf="isAddFunc || isAddGroup">
-        <codx-label name="lblCancel" default="Hủy"></codx-label>
-      </button>
-      <button type="button" class="btn btn-primary" *ngIf="!isAddFunc && !isAddGroup" (click)="onSaveForm()">
-        <codx-label name="lblSave" default="Lưu Cá nhân"></codx-label>
-      </button>
-      <button type="button" class="btn btn-primary"*ngIf="isAddFunc || isAddGroup" (click)="onAddForm()">
-        <codx-label name="lblSave" default="Thêm mới"></codx-label>
-      </button>
-    </div>
-    <div class="form-group w-50 d-flex justify-content-end" *ngIf="user.administrator || user.systemAdmin">
-      <button type="button" class="btn btn-danger me-3" (click)="onUndo()" *ngIf="isAddFunc || isAddGroup">
-        <codx-label name="lblCancel" default="Hủy"></codx-label>
-      </button>
-      <button type="button" class="btn btn-primary"*ngIf="isAddFunc || isAddGroup" (click)="onAddForm()">
-        <codx-label name="lblSave" default="Thêm mới"></codx-label>
-      </button>
-      <button type="button" class="btn btn-primary" *ngIf="!isAddFunc && !isAddGroup"(click)="onSaveAdmin()">
-        <codx-label name="lblSave" default="Lưu"></codx-label>
-      </button>
-    </div>
+
   </div>
 </ng-template>

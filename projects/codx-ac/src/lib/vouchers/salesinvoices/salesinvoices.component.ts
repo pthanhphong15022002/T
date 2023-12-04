@@ -45,7 +45,8 @@ export class SalesinvoicesComponent extends UIComponent
     id: 'btnAdd',
     icon: 'icon-i-file-earmark-plus',
   }];
-  optionSidebar: SidebarModel = new SidebarModel();
+  viewActive:number = ViewType.listdetail;
+  ViewType = ViewType;
   private destroy$ = new Subject<void>(); //? list observable hủy các subscribe api
 
   constructor(
@@ -120,9 +121,6 @@ export class SalesinvoicesComponent extends UIComponent
       },
     ];
     this.journalService.setChildLinks(this.journalNo);
-    //* thiết lập cấu hình sidebar
-    this.optionSidebar.DataService = this.view.dataService;
-    this.optionSidebar.FormModel = this.view.formModel;
   }
 
   ngDoCheck() {
@@ -185,7 +183,7 @@ export class SalesinvoicesComponent extends UIComponent
       case 'ACT060503':
         this.validateVourcher(e.text, data); //? kiểm tra tính hợp lệ chứng từ
         break;
-      case 'ACT042905':
+      case 'ACT060506':
         this.postVoucher(e.text, data); //? ghi sổ chứng từ
         break;
       case 'ACT060507':
@@ -375,18 +373,26 @@ export class SalesinvoicesComponent extends UIComponent
    * @returns
    */
   onSelectedItem(event) {
-    if(this.view?.views){
-      let view = this.view?.views.find(x => x.type == 1);
-      if (view && view.active == true) return;
-    }
-    if (typeof event.data !== 'undefined') {
-      if (event?.data.data || event?.data.error) {
-        return;
-      } else {
-        this.itemSelected = event?.data;
-        this.detectorRef.detectChanges();
-      }
-    }
+    this.itemSelected = event;
+    this.detectorRef.detectChanges();
+    // if(this.view?.views){
+    //   let view = this.view?.views.find(x => x.type == 1);
+    //   if (view && view.active == true) return;
+    // }
+    // if (typeof event.data !== 'undefined') {
+    //   if (event?.data.data || event?.data.error) {
+    //     return;
+    //   } else {
+    //     this.itemSelected = event?.data;
+    //     this.detectorRef.detectChanges();
+    //   }
+    // }
+  }
+
+  viewChanged(view) {
+    if(view && view?.view?.type == this.viewActive) return;
+    this.viewActive = view?.view?.type;
+    this.detectorRef.detectChanges();
   }
 
   //#endregion Event
@@ -411,10 +417,13 @@ export class SalesinvoicesComponent extends UIComponent
             hideFields: [...this.hideFields], //? array các field ẩn từ sổ nhật ký
             baseCurr: this.baseCurr, //?  đồng tiền hạch toán
           };
+          let optionSidebar = new SidebarModel();
+          optionSidebar.DataService = this.view?.dataService;
+          optionSidebar.FormModel = this.view?.formModel;
           let dialog = this.callfc.openSide(
             SalesinvoicesAddComponent,
             data,
-            this.optionSidebar,
+            optionSidebar,
             this.view.funcID
           );
         }
@@ -439,10 +448,13 @@ export class SalesinvoicesComponent extends UIComponent
           hideFields: [...this.hideFields], //? array các field ẩn từ sổ nhật ký
           baseCurr: this.baseCurr, //?  đồng tiền hạch toán
         };
+        let optionSidebar = new SidebarModel();
+        optionSidebar.DataService = this.view?.dataService;
+        optionSidebar.FormModel = this.view?.formModel;
         let dialog = this.callfc.openSide(
           SalesinvoicesAddComponent,
           data,
-          this.optionSidebar,
+          optionSidebar,
           this.view.funcID
         );
       });
@@ -474,10 +486,13 @@ export class SalesinvoicesComponent extends UIComponent
                   hideFields: [...this.hideFields], //? array các field ẩn từ sổ nhật ký
                   baseCurr: this.baseCurr, //?  đồng tiền hạch toán
                 };
+                let optionSidebar = new SidebarModel();
+                optionSidebar.DataService = this.view?.dataService;
+                optionSidebar.FormModel = this.view?.formModel;
                 let dialog = this.callfc.openSide(
                   SalesinvoicesAddComponent,
                   data,
-                  this.optionSidebar,
+                  optionSidebar,
                   this.view.funcID
                 );
                 this.view.dataService
@@ -507,10 +522,10 @@ export class SalesinvoicesComponent extends UIComponent
    */
   validateVourcher(text: any, data: any) {
     this.api
-      .exec('AC', 'SalesInvoicesBusiness', 'ValidateVourcherAsync', [data.recID,text])
+      .exec('AC', 'SalesInvoicesBusiness', 'ValidateVourcherAsync', [data,text])
       .subscribe((res: any) => {
-        if (res?.update) {
-          this.itemSelected = res?.data;
+        if (res[1]) {
+          this.itemSelected = res[0];
           this.view.dataService.update(this.itemSelected).subscribe();
           this.notification.notifyCode('AC0029', 0, text);
           this.detectorRef.detectChanges();
@@ -524,10 +539,10 @@ export class SalesinvoicesComponent extends UIComponent
    */
   postVoucher(text: any, data: any) {
     this.api
-      .exec('AC', 'SalesInvoicesBusiness', 'PostVourcherAsync', [data.recID,text])
+      .exec('AC', 'SalesInvoicesBusiness', 'PostVourcherAsync', [data,text])
       .subscribe((res: any) => {
-        if (res?.update) {
-          this.itemSelected = res?.data;
+        if (res[1]) {
+          this.itemSelected = res[0];
           this.view.dataService.update(this.itemSelected).subscribe();
           this.notification.notifyCode('AC0029', 0, text);
           this.detectorRef.detectChanges();
@@ -541,12 +556,11 @@ export class SalesinvoicesComponent extends UIComponent
    */
   unPostVoucher(text: any, data: any) {
     this.api
-      .exec('AC', 'SalesInvoicesBusiness', 'UnPostVourcherAsync', [data.recID,text])
+      .exec('AC', 'SalesInvoicesBusiness', 'UnPostVourcherAsync', [data,text])
       .subscribe((res: any) => {
-        if (res?.update) {
-          this.itemSelected = res?.data;
+        if (res[1]) {
+          this.itemSelected = res[0];
           this.view.dataService.update(this.itemSelected).subscribe();
-          //this.getDatadetail(this.itemSelected);
           this.notification.notifyCode('AC0029', 0, text);
           this.detectorRef.detectChanges();
         }

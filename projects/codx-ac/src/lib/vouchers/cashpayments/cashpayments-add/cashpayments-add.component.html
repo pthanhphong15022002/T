@@ -36,16 +36,16 @@
       </div>
     </div>
     <ng-container>
-      <div style="margin-left: 25px" *ngIf="!formCashPayment.data?.validated"
+      <div style="margin-left: 25px" *ngIf="formCashPayment && !formCashPayment?.data?.validated"
         class="input-circle h-20px input-border-0 w-400px mb-1">
         <codx-dropdown-select #eleCbxSubType [showFooter]="false" [isToolbar]="false"
           [cssClass]="'rounded-pill border-1'" cssPopup="h-350px w-550px" [isMulti]="false" type="valuelist"
-          field="subType" [refValue]="formCashPayment?.gridviewSetup['SubType'].referedValue"  [value]="formCashPayment.data.subType" emptyText="Loại phiếu"
+          field="subType" [refValue]="formCashPayment?.gridviewSetup['SubType']?.referedValue"  [value]="formCashPayment?.data?.subType" emptyText="Loại phiếu"
           (valueChange)="changeSubType($event)"></codx-dropdown-select>
       </div>
       <span style="margin-left: 30px" *ngIf="formCashPayment.data?.validated">
         <codx-vll [name]="'AC063'" [formModel]="dialog.formModel" [field]="'SubType'"
-          [value]="formCashPayment.data?.subType" [showText]="true" [showBgColor]="true"
+          [value]="formCashPayment?.data?.subType" [showText]="true" [showBgColor]="true"
           class="badge badge-light-primary badge-sm mt-1">
         </codx-vll>
       </span>
@@ -93,7 +93,7 @@
   <div style="height: calc(100vh - 436px) !important">
     <!-- Start: Tab Detail -->
     <ejs-tab #elementTabDetail (created)="createTabDetail($event,elementTabDetail)"
-      (selected)="onTabSelectedDetail($event)">
+      (selecting)="onTabSelectedDetail($event)">
       <e-tabitems>
         <e-tabitem>
           <ng-template #headerText>
@@ -546,10 +546,10 @@
 
 <!-- Start: Grid CashPaymentLine -->
 <ng-template #TmpTabLine>
-  <ng-container *ngIf="formCashPayment?.data?.subType == '1' || formCashPayment?.data?.subType == '9'">
+  <ng-container *ngIf="formCashPayment?.data?.subType != '2'">
     <div id="gridcash" class="tabline-content header-table-ac position-relative">
       <codx-gridview-v2 #eleGridCashPayment class="tabLine" [showEmptyRecord]="false" gridLines="Both" [autoFitColumns]="false"
-        [formName]="journal.entryMode == '1'? fmCashpaymentLine.formName : fmCashpaymentLineOne.formName" [childModel]="formCashPayment?.data?.subType == '9' ? childModelCashPayment : ''"
+        [formName]="journal.entryMode == '1'? fmCashpaymentLine.formName : fmCashpaymentLineOne.formName"
         [gridViewName]="journal.entryMode == '1' ? fmCashpaymentLine.gridViewName : fmCashpaymentLineOne.gridViewName" (beforeSaveRow)="beforeSaveRowCashPayment($event)"
         [entityName]="fmCashpaymentLine.entityName" predicates="TransID=@0" [dataValues]="formCashPayment?.data?.recID"
         [templateMore]="templateMore" service="AC" [editOnClick]="true" (gridInit)="beforeInitGridCashpayments($event)"
@@ -557,7 +557,7 @@
         (cellChanged)="valueChangeLine($event)"></codx-gridview-v2>
       <div #btnRef class="btn-addline">
         <div class="d-flex align-items-center">
-          <div *ngIf="formCashPayment.data?.subType == '1' || formCashPayment.data?.subType == '9'">
+          <div *ngIf="formCashPayment.data?.subType != '2'">
             <button style="border: 1px solid !important;" tabindex="-1" tab-index="11" id="btnAddCash"
               class="btn btn-sm btn-light-primary rounded-15 btnAddCash" (keydown.enter)="
               onAddLine('1'); $event.preventDefault()
@@ -566,7 +566,7 @@
               <codx-label fiedName="lblSaveAndClear" default="Thêm dòng"></codx-label>
             </button>
           </div>
-          <div *ngIf="formCashPayment.data?.subType == '3' || formCashPayment.data?.subType == '4'" class="ms-2">
+          <!-- <div *ngIf="formCashPayment.data?.subType == '3' || formCashPayment.data?.subType == '4'" class="ms-2">
             <button style="border: 1px solid !important" tab-index="12" class="btn btn-sm btn-light-primary rounded-15"
               (keydown.enter)="onAddLine('2'); $event.preventDefault()" (click)="onAddLine('2')">
               <i class="icon-library_add_check icon-16"></i>
@@ -575,7 +575,7 @@
               <codx-label *ngIf="formCashPayment.data.subType == '4'" [formModel]="dialog.formModel"
                 fiedName="lblAddVat" default="Thêm đề nghị thanh toán"></codx-label>
             </button>
-          </div>
+          </div> -->
         </div>
       </div>
     </div>

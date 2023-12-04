@@ -49,6 +49,10 @@ export class PopupAssginDealComponent
   applyProcess: boolean = false;
   isLockStep: boolean = false;
 
+  isViewUser: boolean = false;
+  isViewBuild: boolean = true;
+  isViewGroup: boolean = true;
+
   @ViewChild('cbxOwner') cbxOwner: CodxInputComponent;
   @ViewChild('form') form: CodxFormComponent;
 
@@ -63,7 +67,7 @@ export class PopupAssginDealComponent
   buid: any;
   user: any;
   groupUserID: any;
-  startControl: string = '';
+  // startControl: string = '';
   applyFor: string = '';
   orgUnitName: string = '';
   positionName: string = '';
@@ -105,7 +109,8 @@ export class PopupAssginDealComponent
     this.owner = JSON.parse(JSON.stringify(this.data?.owner));
     this.gridViewSetup = dialogData?.data.gridViewSetup;
     this.formModel = dialogData?.data.formModel;
-    this.startControl = dialogData?.data.startControl;
+    // this.startControl = dialogData?.data.startControl;
+    //this.disableViewTab(this.owner,'');
     this.promiseAll();
   }
 
@@ -133,7 +138,7 @@ export class PopupAssginDealComponent
     var data = [processId, applyFor, stepID];
     this.codxCmService.getListPermissionOwner(data).subscribe(async (res) => {
       if (res) {
-        this.listParticipants = await this.getListPermissionInGroup(res[0]);
+        this.listParticipants = res[0];
         if(this.data?.owner){
           let user = this.listParticipants.filter(x=>x.userID == this.data?.owner)[0];
           this.employeeName = user?.userName;
@@ -141,11 +146,11 @@ export class PopupAssginDealComponent
       }
     });
   }
-  async getListPermissionInGroup(permissions) {
-    return permissions != null && permissions.length > 0
-      ? await this.codxCmService.getListUserByOrg(permissions)
-      : permissions;
-  }
+  // async getListPermissionInGroup(permissions) {
+  //   return permissions != null && permissions.length > 0
+  //     ? await this.codxCmService.getListUserByOrg(permissions)
+  //     : permissions;
+  // }
   async getInformationUser(objectID) {
     this.codxCmService.getEmployeesByDomainID(objectID).subscribe((user) => {
       if (user) {
@@ -227,10 +232,8 @@ export class PopupAssginDealComponent
     } else if (evt?.data == null || evt?.data == '' || !evt?.data) {
       this.deleteOwner('1', 'O', '0','owner',this.data);
     }
-
-
+   // this.disableViewTab(evt?.data,view);
   }
-
   searchOwner(
     objectType: any,
     roleType: any,
@@ -306,10 +309,11 @@ export class PopupAssginDealComponent
         ownerName = this.listParticipants.filter(
           (x) => x.userID === this.owner
         )[0]?.userName;
-
         this.employeeName = ownerName;
+
+        this.employeeName && this.searchOwner('1', 'O', '0', this.owner, ownerName,this.data?.permissions);
       }
-      this.searchOwner('1', 'O', '0', this.owner, ownerName,this.data?.permissions);
+
     }
     else if ($event == null || $event == '') {
       this.deleteOwner('1', 'O', '0','owner',this.data);
@@ -340,21 +344,25 @@ export class PopupAssginDealComponent
     // this.data.owner = this.owner;
   }
   deleteOrg() {
-    this.employeeName = null;
+   // this.employeeName = null;
     // this.orgUnitName = null;
     // this.positionName = null;
 
     this.owner = null;
     this.data.owner = this.owner;
+    if(!this.applyProcess) {
+      (this.cbxOwner.ComponentCurrent as CodxComboboxComponent).dataService.data =[];
+      this.cbxOwner.crrValue = this.owner;
+    }
     // if (this.cbxOwner) {
     //   (
     //     this.cbxOwner.ComponentCurrent as CodxComboboxComponent
     //   ).dataService.data = [];
     //   this.cbxOwner.crrValue = this.owner;
     // }
-    (this.cbxOwner.ComponentCurrent as CodxComboboxComponent).dataService.data =[];
-    this.cbxOwner.crrValue = this.owner;
+
     this.form.formGroup.patchValue(this.data);
+  //  this.disableViewTab(this.owner,'');
     this.detectorRef.detectChanges();
   }
 
@@ -413,9 +421,7 @@ export class PopupAssginDealComponent
           }
         });
       }
-
     }
-
   }
   addPermission(permissionDP,data) {
     if (permissionDP && permissionDP?.length > 0 ) {
@@ -447,7 +453,16 @@ export class PopupAssginDealComponent
     permission.createdBy = this.user.userID;
     return permission;
   }
-  disableViewTab(actionType: any) {
-    return true;
+  disableViewTab(owner: any, isViewTab: any) {
+    if(!owner) {
+      this.isViewBuild = false;
+      this.isViewGroup = false;
+      this.isViewUser = false;
+      return;
+    }
+    this.isViewBuild = isViewTab === this.viewBUID;
+    this.isViewGroup = isViewTab === this.viewGroupUser;
+    this.isViewUser = isViewTab === this.viewDefault;
+
   }
 }

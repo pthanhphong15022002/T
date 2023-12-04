@@ -264,14 +264,14 @@ export const routes: Routes = [
       //   path: 'employeeinfomation/:funcID',
       //   component: EmployeeInfomationComponent,
       // },
-      {
-        path: 'approvals/:funcID',
-        loadChildren: () =>
-          import('projects/codx-hr/src/lib/codx-approvel.module').then(
-            (m) => m.CodxApprovelModule
-          ),
-        data: { noReuse: true },
-      },
+      // {
+      //   path: 'approvals/:funcID',
+      //   loadChildren: () =>
+      //     import('projects/codx-hr/src/lib/codx-approvel.module').then(
+      //       (m) => m.CodxApprovelModule
+      //     ),
+      //   data: { noReuse: true },
+      // },
 
       {
         path: 'setting',
@@ -448,7 +448,7 @@ const T_Component: Type<any>[] = [
   PopupEquitComponent,
   PopupEdocumentsComponent,
   EmployeeQuitComponent,
-  ViewDetailEquitComponent,
+  ViewDetailEquitComponent
 ];
 @NgModule({
   imports: [

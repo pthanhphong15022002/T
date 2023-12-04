@@ -10,6 +10,7 @@ import {
   EventEmitter,
   ViewChild,
   TemplateRef,
+  ChangeDetectorRef,
 } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { ContractsService } from '../service-contracts.service';
@@ -39,7 +40,7 @@ export class ContractsViewDetailComponent
   @Output() changeProgress = new EventEmitter<any>();
   @Output() isSusscess = new EventEmitter<any>();
   dialog: DialogRef;
-  isView = false;
+  isView = true;
   vllStatus = '';
   grvSetup: any;
   tabClicked = '';
@@ -56,6 +57,7 @@ export class ContractsViewDetailComponent
 
   account: any;
   listTypeContract = [];
+  oCountFooter: any = {};
   tabControl = [
     { name: 'History', textDefault: 'Lịch sử', isActive: true, template: null },
     {
@@ -96,10 +98,17 @@ export class ContractsViewDetailComponent
     gridViewName: 'grvCMQuotations',
   };
   isLoading: boolean = true;
+  contactPerson;
+    formModelContact: FormModel = {
+    formName: 'CMContacts',
+    gridViewName: 'grvCMContacts',
+    entityName: 'CM_Contacts',
+  };
   constructor(
     private inject: Injector,
     private contractService: ContractsService,
     private codxCmService: CodxCmService,
+    private changeDetectorRef: ChangeDetectorRef,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -117,6 +126,11 @@ export class ContractsViewDetailComponent
     this.loadTabs();
     if (changes?.contract && this.contract) {
       this.setDataInput();
+      this.contractService.getContactByRecID(this.contract?.contactID).subscribe(res => {
+        if(res){
+          this.contactPerson = res;
+        }
+      })
     }
     if (changes?.listInsStepStart && changes?.listInsStepStart?.currentValue) {
       this.listInsStep = this.listInsStepStart;
@@ -267,5 +281,11 @@ export class ContractsViewDetailComponent
   }
   clickShowTab(event) {
     this.isShowFull = event;
+  }
+  changeCountFooter(value: number, key: string) {
+    let oCountFooter = JSON.parse(JSON.stringify(this.oCountFooter));
+    oCountFooter[key] = value;
+    this.oCountFooter = JSON.parse(JSON.stringify(oCountFooter));
+    this.changeDetectorRef.markForCheck();
   }
 }

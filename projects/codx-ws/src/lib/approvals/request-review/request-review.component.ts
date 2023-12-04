@@ -91,6 +91,7 @@ export class RequestReviewComponent
 
   loadContent(cpn:any,transID:any,funcID:any)
   {
+    if(!this.content) return null;
     let componentRef = this.content.createComponent<RequestReviewComponent>(cpn);
     if(funcID) componentRef.instance.funcID = funcID;
     if(transID) componentRef.instance.recID = transID;
@@ -109,7 +110,7 @@ export class RequestReviewComponent
     {
       case "ES":
       {
-        funcID = "EST012";
+        funcID = "EST011";
         component = this.components.cpnDtESSignFile;
         break;
       }
@@ -119,9 +120,21 @@ export class RequestReviewComponent
         component = this.components.cpnDtDispatches;
         break;
       }
+      case "EP":
+      {
+        funcID = this.dataItem.functionID;
+        component = this.components.cpnDtEPBooking;
+        break;
+      }
+      case "AC":
+      {
+        funcID = this.dataItem.functionID;
+        if(funcID == "ACT0410") component = this.components.cpnCashPayment
+        break;
+      }
     }
   
-    this.content.clear();
+    if(this.content) this.content.clear();
     if(component) this.loadContent(component,dt?.data?.transID,funcID)
   }
 

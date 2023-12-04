@@ -70,10 +70,12 @@ export class StagesDetailComponent implements OnInit {
   @Input() isOnlyView: any;
   @Input() frmModelInstancesTask: FormModel;
   @Input() vllApprover = 'DP043';
+  @Input() stepIDFirst = '';
   @Output() saveAssign = new EventEmitter<any>();
   @Output() outDataStep = new EventEmitter<any>();
   @Output() progressEmit = new EventEmitter<any>();
   @Output() isChangeProgress = new EventEmitter<any>();
+  @Output() autoStartInstance = new EventEmitter<any>();
 
   stepID: any;
   isDelete: boolean = false;
@@ -1009,5 +1011,9 @@ export class StagesDetailComponent implements OnInit {
       result = type == 'id' ? data[index]?.objectID : data[index]?.objectName;
     }
     return result;
+  }
+
+  autoStart(event) {
+    this.autoStartInstance.emit(event);
   }
 }

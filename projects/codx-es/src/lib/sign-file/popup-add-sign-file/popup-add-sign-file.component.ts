@@ -1,3 +1,4 @@
+import { filter } from 'rxjs';
 import {
   ChangeDetectorRef,
   Component,
@@ -650,9 +651,24 @@ export class PopupAddSignFileComponent implements OnInit {
     this.cr.detectChanges();
   }
 
+  haveESignFileCheck(){
+    if(this.data?.files?.length>0){
+      let fileESign = this.data?.files?.filter(x=>x?.eSign ==true || x?.eSign =="1" );
+      if(fileESign?.length>0){
+        this.disableContinue =false;        
+      }
+      else{        
+        this.disableContinue = true;  
+      }
+    }
+    else{      
+      this.disableContinue =true;  
+    }    
+    this.cr.detectChanges();
+  }
+
   fileAdded(event) {
     this.isEdit = true;
-    // let files = [];
     let files = this.data.files ?? [];
     if (event) {
       if (event?.length > 0) {
@@ -664,11 +680,6 @@ export class PopupAddSignFileComponent implements OnInit {
           file.createdBy = element.data.createdBy;
           file.comment = element.data.extension;
           file.eSign = this.eSign;
-          // let index = lstESign.indexOf(file.comment);
-          // if (index >= 0) {
-          //   file.eSign = true;
-          // }
-
           files.push(file);
         });
       } else {
@@ -679,11 +690,6 @@ export class PopupAddSignFileComponent implements OnInit {
         file.createdBy = event.data.createdBy;
         file.comment = event.data.extension;
         file.eSign = this.eSign;
-        // let index = lstESign.indexOf(file.comment);
-        // if (index >= 0) {
-        //   file.eSign = true;
-        // }
-
         files.push(file);
       }
 
@@ -702,6 +708,7 @@ export class PopupAddSignFileComponent implements OnInit {
       }
       this.dialogSignFile.patchValue({ files: files });
     }
+    this.haveESignFileCheck();
   }
 
   valueChange(event) {
@@ -1368,7 +1375,13 @@ export class PopupAddSignFileComponent implements OnInit {
       ) {
         this.data.approveControl = '1';
         this.dialogSignFile.patchValue({ approveControl: '1' });
+      
+        this.reloadedStep=false;
+        this.cr.detectChanges();
         this.onSaveSignFile();
+        this.reloadedStep=true;
+        this.cr.detectChanges();
+
       }
     }
   }
@@ -1559,23 +1572,17 @@ export class PopupAddSignFileComponent implements OnInit {
   fileDelete(event) {
     if (event && event?.length > 0) {
       let file = event[0].data ?? event[0];
-      // let file = event[0];
       if (file) {
         let i = this.data?.files?.findIndex((p) => p.fileID == file.recID);
         if (i > -1) {
           this.data.files.splice(i, 1);
-          console.log(this.data.files);
-
           this.dialogSignFile.patchValue({ files: this.data.files });
-          this.esService
-            .deleteFileInSignFile(this.data.recID, file.recID)
-            .subscribe((res) => {
-              console.log('edit sf', res);
-            });
+          this.esService.deleteFileInSignFile(this.data.recID, file.recID).subscribe((res) => { });
           this.cr.detectChanges();
         }
       }
-    }
+    }    
+    this.haveESignFileCheck();
   }
   dowloadTemplate() {
     //console.log('download');
@@ -1616,6 +1623,8 @@ export class PopupAddSignFileComponent implements OnInit {
         );
       }
     }
+    
+    this.haveESignFileCheck();
   }
   fileCheckChange(evt: any, file: any) {
     if (evt && this.eSign && this.data?.files && this.data?.files?.length > 0) {
@@ -1626,6 +1635,8 @@ export class PopupAddSignFileComponent implements OnInit {
         }
       });
     }
+    
+    this.haveESignFileCheck();
   }
   checkFileESign(recID: string) {
     if (

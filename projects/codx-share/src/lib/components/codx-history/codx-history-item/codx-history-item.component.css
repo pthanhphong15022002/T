@@ -3,7 +3,7 @@
     padding: 2px 4px;
     color: rgb(63, 63, 63);
     text-align: left;
-    background-color: rgb(235 235 235);;
+    background-color: var(--gray-150);
     border-radius: 4px;
 }
 .icon-attachment-temp {

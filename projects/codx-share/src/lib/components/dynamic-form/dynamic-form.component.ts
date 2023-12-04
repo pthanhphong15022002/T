@@ -118,7 +118,8 @@ export class DynamicFormComponent extends UIComponent {
     this.pageTitle.setBreadcrumbs([]);
   }
 
-  changeDataMF(e: any, data) {
+  changeDataMF(e: any, data: any) {
+    if (!data) return;
     if (data.isSystem) {
       let delMF = e.filter(
         (x: { functionID: string }) => x.functionID == 'SYS02'
@@ -296,6 +297,7 @@ export class DynamicFormComponent extends UIComponent {
               data: item,
               isAdd: false,
               headerText: e?.data?.customName,
+              showTemplateTab:false,
             },
             option
           );

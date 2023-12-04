@@ -39,6 +39,7 @@ import { PopupPermissionsComponent } from '../popup-permissions/popup-permission
 import { PopupAssginDealComponent } from './popup-assgin-deal/popup-assgin-deal.component';
 import { PopupUpdateStatusComponent } from './popup-update-status/popup-update-status.component';
 import { StepService } from 'projects/codx-share/src/lib/components/codx-step/step.service';
+import { ExportData } from 'projects/codx-share/src/lib/models/ApproveProcess.model';
 
 @Component({
   selector: 'lib-deals',
@@ -173,6 +174,9 @@ export class DealsComponent
   queryParams: any;
   gridDetailView = '2';
   runMode: any;
+  filterView: any;
+  columns: any;
+  loadFirst: boolean = true;
 
   constructor(
     private inject: Injector,
@@ -321,6 +325,7 @@ export class DealsComponent
 
     if (this.viewCrr == 6) {
       this.kanban = (this.view?.currentView as any)?.kanban;
+      this.columns = this.kanban.columns;
     }
 
     this.processID = this.activedRouter.snapshot?.queryParams['processID'];
@@ -587,25 +592,25 @@ export class DealsComponent
     if (executeFunction) {
       executeFunction();
     } else {
-      let customData = {
-        refID: data.recID,
-        refType: 'CM_Deals',
-      };
+      // let customData = {
+      //   refID: data.recID,
+      //   refType: 'CM_Deals',
+      // };
 
-      if (data?.refID) {
-        customData = {
-          refID: data.processID,
-          refType: 'DP_Processes',
-        };
-      }
+      // if (data?.refID) {
+      //   customData = {
+      //     refID: data.processID,
+      //     refType: 'DP_Processes',
+      //   };
+      // }
       this.codxShareService.defaultMoreFunc(
         e,
         data,
         this.afterSave.bind(this),
         this.view.formModel,
         this.view.dataService,
-        this,
-        customData
+        this
+        //customData
       );
       this.detectorRef.detectChanges();
     }
@@ -657,7 +662,9 @@ export class DealsComponent
         break;
       //chang fiter
       case 'pined-filter':
-        this.seclectFilter(e.data);
+        if (this.kanban) {
+          this.seclectFilter(e.data);
+        }
     }
   }
 
@@ -796,7 +803,6 @@ export class DealsComponent
             // listStepCbx: this.lstStepInstances,
           };
           let obj = {
-            stepName: data?.currentStepName,
             formModel: formMD,
             deal: data,
             stepReason: stepReason,
@@ -817,7 +823,6 @@ export class DealsComponent
               let instance = e.event.instance;
               let listSteps = e.event?.listStep;
 
-              this.detailViewDeal?.reloadListStep(listSteps);
               let index =
                 e.event.listStep.findIndex(
                   (x) =>
@@ -855,7 +860,7 @@ export class DealsComponent
                   if (e.event.isReason != null) {
                     this.moveReason(res, e.event.isReason);
                   }
-
+                  this.detailViewDeal?.reloadListStep(listSteps);
                   this.detectorRef.detectChanges();
                 }
               });
@@ -894,22 +899,6 @@ export class DealsComponent
                 0,
                 "'" + data.dealName + "'"
               );
-              if (data.showInstanceControl === '1') {
-                this.view.dataService
-                  .update(this.dataSelected, true)
-                  .subscribe();
-              }
-              if (
-                data.showInstanceControl === '0' ||
-                data.showInstanceControl === '2'
-              ) {
-                this.view.dataService.remove(this.dataSelected).subscribe();
-                this.dataSelected = this.view.dataService.data[0];
-                this.view.dataService.onAction.next({
-                  type: 'delete',
-                  data: data,
-                });
-              }
               if (this.kanban) {
                 this.renderKanban(this.dataSelected);
               }
@@ -963,7 +952,6 @@ export class DealsComponent
     let oldStepId = data.stepID;
     let dataCM = {
       refID: data?.refID,
-      processID: data?.processID,
       stepID: data?.stepID,
       nextStep: data?.nextStep,
     };
@@ -973,6 +961,7 @@ export class DealsComponent
       isReason: isMoveSuccess,
       applyFor: '1',
       dataCM: dataCM,
+      processID: data?.processID,
       stepName: data.currentStepName,
       isMoveProcess: false,
     };
@@ -1077,7 +1066,7 @@ export class DealsComponent
       applyFor: '1',
       titleAction: this.titleAction,
       owner: data.owner,
-      startControl: data.steps.startControl,
+      //startControl: data.steps.startControl,
       applyProcess: true,
       buid: data.buid,
     };
@@ -1169,11 +1158,14 @@ export class DealsComponent
     dialogCustomDeal.closed.subscribe((e) => {
       if (e && e.event != null) {
         this.view.dataService.update(e.event, true).subscribe();
-        //up kaban
-        if (this.kanban) {
+        //up kaban nee đúng process
+        if (this.kanban && this.processIDKanban == e.event?.processID) {
           let dt = e.event;
           let money = dt.dealValue * dt.exchangeRate;
           this.renderTotal(dt.stepID, 'add', money);
+
+          // this.kanban?.updateCard(dt);
+          // this.kanban?.kanbanObj?.refreshHeader();
           this.kanban.refresh();
         }
         //   this.detailViewDeal.promiseAllAsync();
@@ -1225,6 +1217,10 @@ export class DealsComponent
               let money =
                 dt.dealValue * dt.exchangeRate - dealValueOld * exchangeRateOld;
               this.renderTotal(dt.stepID, 'add', money);
+
+              // this.kanban?.updateCard(dt);
+              // this.kanban?.kanbanObj?.refreshHeader();
+              // this.kanban.refreshUI();
               this.kanban.refresh();
             }
             if (this.detailViewDeal) {
@@ -1291,7 +1287,11 @@ export class DealsComponent
               if (this.kanban) {
                 let money = data.dealValue * data.exchangeRate;
                 this.renderTotal(data.stepID, 'minus', money);
-                this.kanban.refresh();
+                this.kanban?.refresh();
+
+                // //looix
+                // this.kanban?.kanbanObj?.refreshHeader();
+                // this.kanban?.kanbanObj.refreshUI();
               }
             }
           });
@@ -1344,11 +1344,13 @@ export class DealsComponent
                 this.notificationsService.notifyCode('ES028');
                 return;
               }
-              if (res.eSign) {
-                //kys soos
-              } else {
-                this.release(dt, res);
-              }
+              //ko phân biệt eSign - nếu cần thì phải get
+              // let exportData: ExportData = {
+              //   funcID: this.view.formModel.funcID,
+              //   recID: this.dataSelected.recID,
+              //   data: dt?.datas,
+              // };
+              this.release(dt, res);
             });
         } else {
           this.notificationsService.notifyCode(
@@ -1361,7 +1363,7 @@ export class DealsComponent
     });
   }
 
-  release(data: any, category: any) {
+  release(data: any, category: any, exportData = null) {
     // new function release
     this.codxShareService.codxReleaseDynamic(
       this.view.service,
@@ -1370,7 +1372,13 @@ export class DealsComponent
       this.view.formModel.entityName,
       this.view.formModel.funcID,
       data?.title,
-      this.releaseCallback.bind(this)
+      this.releaseCallback.bind(this),
+      null,
+      null,
+      null,
+      null,
+      null,
+      exportData
     );
   }
   //call Back
@@ -1461,7 +1469,8 @@ export class DealsComponent
     let money = data.dealValue * data.exchangeRate;
     this.renderTotal(data.stepID, 'add', money);
     this.renderTotal(this.crrStepID, 'minus', money);
-    this.kanban.updateCard(data);
+    // this.kanban.updateCard(data);
+    // this.kanban?.kanbanObj?.refreshHeader();
     this.kanban.refresh();
   }
 
@@ -1570,7 +1579,7 @@ export class DealsComponent
         }
       });
       this.loadKanban();
-    }
+    } else this.refeshDealValue();
   }
 
   loadKanban() {
@@ -1595,9 +1604,9 @@ export class DealsComponent
           kanban.kanbanSetting?.swimlaneSettings,
           false
         );
+        this.loadFirst = true;
         kanban.refresh();
         this.kanban = kanban;
-        // if (this.kanban) this.kanban.refresh();
         this.detectorRef.detectChanges();
       });
   }
@@ -2048,5 +2057,27 @@ export class DealsComponent
           this.detectorRef.detectChanges();
         }
       });
+  }
+
+  getTotalDealValue(e) {
+    let keyField = e.key;
+    let total = e.total;
+    if (this.kanban && this.kanban.columns?.length > 0) {
+      let idx = this.kanban.columns.findIndex((x) => x.keyField == keyField);
+      if (idx != -1 && this.kanban.columns[idx].totalDealValue != total) {
+        this.kanban.columns[idx].totalDealValue = total;
+      }
+      if (idx == this.kanban.columns?.length - 1) {
+        this.loadFirst = false;
+      }
+    }
+  }
+  loadedColumns(e) {
+    // this.loadFirst = e;
+  }
+
+  refeshDealValue() {
+    this.kanban.columns.forEach((x) => (x.totalDealValue = 0));
+    this.loadFirst = true;
   }
 }

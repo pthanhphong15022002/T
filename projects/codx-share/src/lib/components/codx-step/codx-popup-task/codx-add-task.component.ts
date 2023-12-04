@@ -257,10 +257,16 @@ export class CodxAddTaskComponent implements OnInit {
   setData() {
     if (this.action == 'add') {
       this.stepsTasks = new DP_Instances_Steps_Tasks();
+      this.stepsTasks.refID = Util.uid();
       this.stepsTasks.status = '1';
       this.stepsTasks.taskName = this.typeTask?.text;
       this.stepsTasks.taskType = this.typeTask?.value;
-      this.stepsTasks.approveStatus = "1";
+      this.stepsTasks.approveStatus = '1';
+      this.stepsTasks.dependRule = '0';
+      this.stepsTasks.isTaskDefault = false;
+      this.stepsTasks.progress = 0;
+      this.stepsTasks.assigned = '0';
+      this.stepsTasks.approveStatus = '1';
       this.setRole();
     } else if (this.action == 'copy') {
       this.stepsTasks = JSON.parse(JSON.stringify(this.taskInput));
@@ -314,6 +320,7 @@ export class CodxAddTaskComponent implements OnInit {
         this.setInstanceStep();
         break;
       case 'activitie':
+        this.isStart = true;
         this.setDateTimeTask();
         break;
       case 'group':
@@ -1172,6 +1179,9 @@ export class CodxAddTaskComponent implements OnInit {
 
   async clickSettingApprove() {
     let category;
+    let idTask = this.stepsTasks?.isTaskDefault
+      ? this.stepsTasks?.refID
+      : this.stepsTasks?.recID;
     if (this.action == 'edit')
       category = await firstValueFrom(
         this.api.execSv<any>(
@@ -1179,15 +1189,12 @@ export class CodxAddTaskComponent implements OnInit {
           'ES',
           'CategoriesBusiness',
           'GetByCategoryIDAsync',
-          this.stepsTasks.recID
+          idTask
         )
       );
     if (category) {
-      //this.actionOpenFormApprove(category.recID);
       this.actionOpenFormApprove2(category);
     } else {
-      //let transID = Util.uid();
-      // this.actionOpenFormApprove(transID);
       this.api
         .execSv<any>('ES', 'Core', 'DataBusiness', 'GetDefaultAsync', [
           'ESS22',
@@ -1197,13 +1204,15 @@ export class CodxAddTaskComponent implements OnInit {
           if (res && res?.data) {
             category = res.data;
             category.recID = res?.recID ?? Util.uid();
-            category.eSign = false;
-            category.Category = 'DP_Processes';
-            category.categoryID = this.stepsTasks.recID;
+            category.eSign = true;
+            category.Category = this.isActivitie
+              ? 'DP_Activities'
+              : 'DP_Instances_Steps_Tasks';
+            category.categoryID = idTask;
             category.categoryName = this.stepsTasks.taskName;
             category.createdBy = this.user.userID;
             category.owner = this.user.userID;
-            category.FunctionApproval = 'DP0204';
+            category.FunctionApproval = this.isActivitie ? 'DPT07' : 'DPT04';
             this.actionOpenFormApprove2(category, true);
           }
         });
@@ -1245,8 +1254,15 @@ export class CodxAddTaskComponent implements OnInit {
                   isAdd: isAdd,
                   headerText: this.titleAction,
                   dataType: 'auto',
-                  templateRefID: this.stepsTasks.recID,
-                  templateRefType: 'DP_Processes',
+                  templateRefID: this.stepsTasks?.isTaskDefault
+                    ? this.stepsTasks?.refID
+                    : this.stepsTasks?.recID,
+                  templateRefType: this.isActivitie
+                    ? 'DP_Activities'
+                    : this.stepsTasks?.isTaskDefault
+                    ? 'DP_Steps_Tasks'
+                    : 'DP_Instances_Steps_Tasks',
+                  disableESign: true,
                 },
                 '',
                 opt
@@ -1255,9 +1271,6 @@ export class CodxAddTaskComponent implements OnInit {
               popupEditES.closed.subscribe((res) => {
                 if (res?.event) {
                   this.loadListApproverStep();
-                  // this.loadEx();
-                  // this.loadWord();
-                  // this.recIDCategory = res?.event?.recID;
                 }
               });
             });
@@ -1266,7 +1279,10 @@ export class CodxAddTaskComponent implements OnInit {
     });
   }
   loadListApproverStep() {
-    this.getListAproverStepByCategoryID(this.stepsTasks?.recID)
+    let idTask = this.stepsTasks?.isTaskDefault
+      ? this.stepsTasks?.refID
+      : this.stepsTasks?.recID;
+    this.getListAproverStepByCategoryID(idTask)
       .pipe(takeUntil(this.destroyFrom$))
       .subscribe((res) => {
         if (res) {

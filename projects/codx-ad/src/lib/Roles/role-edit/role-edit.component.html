@@ -1,4 +1,5 @@
 <codx-form
+  #form
   [headerText]="header"
   subHeaderText=""
   [body]="body"
@@ -25,6 +26,7 @@
               refType="P"
               [showInput]="true"
               [crrValue]="data?.modules"
+              [formModel]="form.formModel"
               (valueChange)="valueChange($event)"
             >
             </codx-input>
@@ -53,6 +55,7 @@
               field="roleName"
               [placeholder]="gridViewSetup?.RoleName?.description"
               [crrValue]="data?.roleName"
+              [formModel]="form.formModel"
               (valueChange)="valueChange($event)"
             >
             </codx-input>
@@ -72,6 +75,7 @@
               field="description"
               rows="5"
               [crrValue]="data?.description"
+              [formModel]="form.formModel"
               format="ed2"
               [placeholder]="gridViewSetup?.Description?.description"
               (valueChange)="valueChange($event)"

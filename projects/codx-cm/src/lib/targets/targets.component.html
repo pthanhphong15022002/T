@@ -179,7 +179,7 @@
         </div>
       </div>
     </div>
-    <div class="h-100 scroll-grid">
+    <div class="scroll-grid-target">
       <codx-gridview-v2
         #gridBusiness
         [columnsGrid]="columnGrids"
@@ -344,7 +344,7 @@
         </div>
         <div class="w-75px ms-2 input-32px">
           <codx-input
-            #codxInput
+            #codxInputCurrentID
             [formModel]="formModel"
             [crrValue]="currencyID"
             (valueChange)="valueChange($event)"
@@ -377,7 +377,7 @@
         </div>
       </ng-container>
     </div>
-    <div class="h-100 scroll-grid" *ngIf="viewMode === 9">
+    <div class="scroll-grid-target" *ngIf="viewMode === 9">
       <codx-gridview-v2
         #gridBusiness
         [formName]="formModel?.formName"

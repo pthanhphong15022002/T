@@ -181,16 +181,16 @@ input[type="radio"] {
 .c-detail {
   position: absolute;
   background: rgb(255, 255, 255);
-  border: 1px ridge gray;
+  border: 1px var(--gray-200) solid;
   right: -235px;
   z-index: 10;
   top: -45px;
   width: 220px;
   height: 220px;
-  border-radius: 10px;
+  border-radius: 6px;
 }
 
 .p-info {
-  border-top: 1px solid gray;
+  border-top: 1px solid var(--gray-200);
   padding-top: 10px;
 }

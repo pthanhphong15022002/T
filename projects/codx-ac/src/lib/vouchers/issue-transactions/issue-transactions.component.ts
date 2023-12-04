@@ -66,6 +66,8 @@ export class IssueTransactionsComponent extends UIComponent {
     icon: 'icon-i-file-earmark-plus',
   }];
   optionSidebar: SidebarModel = new SidebarModel();
+  viewActive:number = ViewType.listdetail;
+  ViewType = ViewType;
   private destroy$ = new Subject<void>(); //? list observable hủy các subscribe api
   constructor(
     private inject: Injector,
@@ -96,7 +98,7 @@ export class IssueTransactionsComponent extends UIComponent {
   //#region Init
 
   onInit(): void {
-    //this.getJournal(); //? lấy data journal và các field ẩn từ sổ nhật kí
+    this.getJournal(); //? lấy data journal và các field ẩn từ sổ nhật kí
   }
 
   ngAfterViewInit() {
@@ -202,13 +204,13 @@ export class IssueTransactionsComponent extends UIComponent {
         this.cancelReleaseVoucher(e.text, data); //? hủy yêu cầu duyệt chứng từ
         break;
       case 'ACT071403':
-        this.validateVourcher(e.text, data); //? kiểm tra tính hợp lệ chứng từ
+        //this.validateVourcher(e.text, data); //? kiểm tra tính hợp lệ chứng từ
         break;
       case 'ACT071406':
-        this.postVoucher(e.text, data); //? ghi sổ chứng từ
+        //this.postVoucher(e.text, data); //? ghi sổ chứng từ
         break;
       case 'ACT071407':
-        this.unPostVoucher(e.text, data); //? khôi phục chứng từ
+        //this.unPostVoucher(e.text, data); //? khôi phục chứng từ
         break;
       case 'ACT071408':
         //this.printVoucher(data, e.functionID); //? in chứng từ
@@ -222,18 +224,26 @@ export class IssueTransactionsComponent extends UIComponent {
    * @returns
    */
   onSelectedItem(event) {
-    if(this.view?.views){
-      let view = this.view?.views.find(x => x.type == 1);
-      if (view && view.active == true) return;
-    }
-    if (typeof event.data !== 'undefined') {
-      if (event?.data.data || event?.data.error) {
-        return;
-      } else {
-        this.itemSelected = event?.data;
-        this.detectorRef.detectChanges();
-      }
-    }
+    this.itemSelected = event;
+    this.detectorRef.detectChanges();
+    // if(this.view?.views){
+    //   let view = this.view?.views.find(x => x.type == 1);
+    //   if (view && view.active == true) return;
+    // }
+    // if (typeof event.data !== 'undefined') {
+    //   if (event?.data.data || event?.data.error) {
+    //     return;
+    //   } else {
+    //     this.itemSelected = event?.data;
+    //     this.detectorRef.detectChanges();
+    //   }
+    // }
+  }
+
+  viewChanged(view) {
+    if(view && view?.view?.type == this.viewActive) return;
+    this.viewActive = view?.view?.type;
+    this.detectorRef.detectChanges();
   }
 
   //#endregion Event

@@ -24,6 +24,7 @@ import { NgbDropdown } from '@ng-bootstrap/ng-bootstrap';
 import { CodxChatListComponent } from '../chat-list/chat-list.component';
 import { AddGroupChatComponent } from '../popup/popup-add-group/popup-add-group.component';
 import { SignalRService } from '../services/signalr.service';
+import { CHAT } from '../models/chat-const.model';
 declare var window: any;
 
 @Component({
@@ -47,7 +48,7 @@ export class CodxChatComponent implements OnInit, AfterViewInit {
   moreFC: any = null;
   autoClose: boolean = true;
   lstBoxChat: any[] = [];
-  hideChat: boolean = true;
+  hideChat: boolean = false;
   @ViewChild('codxChatContainer', { static: true })
   codxChatContainer: TemplateRef<any>;
   @ViewChild('listChat') listChat: CodxChatListComponent;
@@ -102,8 +103,9 @@ export class CodxChatComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.signalRSV.openBoxChat.subscribe((res: any) => {
+    this.signalRSV.loadedGroup.subscribe((res: any) => {
       this.getTotalMessage();
+      this.listChat?.addGroup(res?.data);
     });
   }
   // get count message
@@ -177,19 +179,19 @@ export class CodxChatComponent implements OnInit, AfterViewInit {
     }
   }
   //select goup chat
-  selectItem(group: any) {
-    group.isRead = true;
-    if (group.messageMissed > 0) {
-      group.messageMissed = 0;
-      this.count -= group.messageMissed;
-    }
-    this.signalRSV.sendData('OpenGroupAsync', group);
-  }
+  // selectItem(group: any) {
+  //   group.isRead = true;
+  //   if (group.messageMissed > 0) {
+  //     group.messageMissed = 0;
+  //     this.count -= group.messageMissed;
+  //   }
+  //   this.signalRSV.sendData('OpenGroupAsync', group);
+  // }
   // select item search
   selectItemSeach(item: any) {
     if (item.type != 'H') {
       this.signalRSV.sendData(
-        'GetGroupSearch',
+        CHAT.BE_FUNC.SearchGroup,
         item.id,
         item.type == 'U' ? '1' : '2'
       );

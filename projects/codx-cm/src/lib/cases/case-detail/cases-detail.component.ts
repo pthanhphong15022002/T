@@ -12,11 +12,9 @@ import {
   ViewChild,
   inject,
 } from '@angular/core';
-import { AlertConfirmInputConfig, CRUDService, FormModel, NotificationsService, UIComponent } from 'codx-core';
-import { TabDetailCustomComponent } from '../../deals/deal-detail/tab-detail-custom/tab-detail-custom.component';
+import { AlertConfirmInputConfig, CRUDService, CodxService, FormModel, NotificationsService, UIComponent } from 'codx-core';
 import { CodxCmService } from '../../codx-cm.service';
 import { CM_Contacts } from '../../models/cm_model';
-import { TabCasesDetailComponent } from './tab-cases-detail/tab-cases-detail.component';
 import { CodxListContactsComponent } from '../../cmcustomer/cmcustomer-detail/codx-list-contacts/codx-list-contacts.component';
 import { CasesComponent } from '../cases.component';
 
@@ -90,18 +88,21 @@ export class CasesDetailComponent
   vllPriority = 'TM005';
   casesType: string = '';
   oldRecId: string = '';
+  asideMode: string = '';
 
   contactPerson = new CM_Contacts();
   isDataLoading: boolean = true;
 
   constructor(
-    private inject: Injector,
+    inject: Injector,
     private changeDetectorRef: ChangeDetectorRef,
     private codxCmService: CodxCmService,
     private caseComponent: CasesComponent,
     private notificationsService: NotificationsService,
+    codxService: CodxService
   ) {
     super(inject);
+    this.asideMode = codxService.asideMode;
     this.executeApiCalls();
   }
 

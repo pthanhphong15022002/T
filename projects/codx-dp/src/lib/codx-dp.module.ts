@@ -86,7 +86,8 @@ export const routes: Routes = [
         component: ViewInstancesComponent,
         data: { noReuse: true },
       },
-      //dp/instances/DPT0502/approvals
+      // view 1 : dp/instances/DPT0502/approvals
+      //view 2 : dp/approvals/DPT0501
       {
         path: 'approvals/:funcID',
         loadChildren: () =>

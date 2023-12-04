@@ -7,7 +7,18 @@ import {
   Optional,
   SimpleChanges,
 } from '@angular/core';
-import { ApiHttpService, AuthStore, CacheService, CallFuncService, DialogData, DialogModel, DialogRef, FormModel, SidebarModel, Util } from 'codx-core';
+import {
+  ApiHttpService,
+  AuthStore,
+  CacheService,
+  CallFuncService,
+  DialogData,
+  DialogModel,
+  DialogRef,
+  FormModel,
+  SidebarModel,
+  Util,
+} from 'codx-core';
 import { PopupAddCategoryComponent } from 'projects/codx-es/src/lib/setting/category/popup-add-category/popup-add-category.component';
 import { Subject, takeUntil } from 'rxjs';
 import { firstValueFrom } from 'rxjs';
@@ -21,11 +32,14 @@ export class CodxViewApproveComponent implements OnInit, OnChanges {
   @Input() change;
   @Input() categoryID;
   @Input() type = 1;
-  
+
   viewApprover;
   dialog;
   stepsTasks;
   user;
+  entityName = '';
+  isActivitie = false;
+  idTask = '';
   private destroyFrom$: Subject<void> = new Subject<void>();
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
@@ -38,25 +52,23 @@ export class CodxViewApproveComponent implements OnInit, OnChanges {
   ) {
     this.dialog = dialog;
     this.categoryID = dt?.data?.categoryID;
-    this.type = dt?.data?.type || "1";
+    this.type = dt?.data?.type || '1';
     this.stepsTasks = dt?.data?.stepsTasks;
+    this.isActivitie = dt?.data?.isActivitie || false;
     this.user = this.authStore.get();
+    this.idTask = this.stepsTasks?.isTaskDefault
+      ? this.stepsTasks?.refID
+      : this.stepsTasks?.recID;
   }
 
   ngOnInit(): void {
     this.loadListApproverStep();
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
-    // if(changes?.listApprover || changes?.categoryID ||  changes?.change){
-    //   if(!this.listApprover && this.categoryID){
-    //     this.loadListApproverStep();
-    //   }
-    // }
-  }
- 
+  ngOnChanges(changes: SimpleChanges): void {}
+
   loadListApproverStep() {
-    this.getListAproverStepByCategoryID(this.categoryID)
+    this.getListAproverStepByCategoryID(this.idTask)
       .pipe(takeUntil(this.destroyFrom$))
       .subscribe((res) => {
         if (res) {
@@ -90,10 +102,11 @@ export class CodxViewApproveComponent implements OnInit, OnChanges {
         'ES',
         'CategoriesBusiness',
         'GetByCategoryIDAsync',
-        this.categoryID
-      ));
-      
-    if(category) {
+        this.idTask
+      )
+    );
+
+    if (category) {
       //this.actionOpenFormApprove(category.recID);
       this.actionOpenFormApprove2(category);
     } else {
@@ -108,13 +121,15 @@ export class CodxViewApproveComponent implements OnInit, OnChanges {
           if (res && res?.data) {
             category = res.data;
             category.recID = res?.recID ?? Util.uid();
-            category.eSign = false;
-            category.Category = 'DP_Processes';
-            category.categoryID = this.stepsTasks.recID;
+            category.eSign = true;
+            category.Category = this.isActivitie
+              ? 'DP_Activities'
+              : 'DP_Instances_Steps_Tasks';
+            category.categoryID = this.idTask;
             category.categoryName = this.stepsTasks.taskName;
             category.createdBy = this.user.userID;
             category.owner = this.user.userID;
-            category.FunctionApproval = 'DP0204';
+            category.FunctionApproval = this.isActivitie ? 'DPT07' : 'DPT04';
             this.actionOpenFormApprove2(category, true);
           }
         });
@@ -155,8 +170,13 @@ export class CodxViewApproveComponent implements OnInit, OnChanges {
                   isAdd: isAdd,
                   headerText: this.titleAction,
                   dataType: 'auto',
-                  templateRefID: this.stepsTasks.recID,
-                  templateRefType: 'DP_Processes',
+                  templateRefID: this.idTask,
+                  templateRefType: this.isActivitie
+                    ? 'DP_Activities'
+                    : this.stepsTasks.isTaskDefault
+                    ? 'DP_Steps_Tasks'
+                    : 'DP_Instances_Steps_Tasks',
+                  disableESign: true,
                 },
                 '',
                 opt
@@ -165,9 +185,6 @@ export class CodxViewApproveComponent implements OnInit, OnChanges {
               popupEditES.closed.subscribe((res) => {
                 if (res?.event) {
                   this.loadListApproverStep();
-                  // this.loadEx();
-                  // this.loadWord();
-                  // this.recIDCategory = res?.event?.recID;
                 }
               });
             });
@@ -175,5 +192,4 @@ export class CodxViewApproveComponent implements OnInit, OnChanges {
       }
     });
   }
-
 }

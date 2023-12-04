@@ -30,9 +30,6 @@ import {
   Vll075,
 } from '../../../journals/interfaces/IJournal.interface';
 import { JournalService } from '../../../journals/journals.service';
-import {
-  PurchaseInvoiceService,
-} from '../purchaseinvoices.service';
 import { Subject, map, takeUntil } from 'rxjs';
 import { AC_PurchaseInvoicesLines } from '../../../models/AC_PurchaseInvoicesLines.model';
 import { AC_VATInvoices } from '../../../models/AC_VATInvoices.model';
@@ -127,68 +124,15 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
    * *Hàm thiết lập lưới trước khi init
    * @param eleGrid 
    */
-  beforeInitGridPurchaseInvoices(eleGrid:CodxGridviewV2Component){
-    let preDIM1 = '';
-    let dtvDIM1 = '';
-    let preDIM2 = '';
-    let dtvDIM2 = '';
-    let preDIM3 = '';
-    let dtvDIM3 = '';
+  beforeInitGridPurchaseInvoices(eleGrid:CodxGridviewV2Component) {
     let hideFields = [];
-
-    if (this.journal.diM1Control == '1' || this.journal.diM1Control == '2') { //? nếu phòng ban là mặc định hoặc trong danh sách
-      preDIM1 = '@0.Contains(ProfitCenterID)';
-      dtvDIM1 = `[${this.journal?.diM1}]`;
-    }
-    eleGrid.setPredicates('diM1',preDIM1,dtvDIM1);
-
-    if (this.journal.diM2Control == '1' || this.journal.diM2Control == '2') { //? nếu TTCP là mặc định hoặc trong danh sách
-      preDIM2 = '@0.Contains(CostCenterID)';
-      dtvDIM2 = `[${this.journal?.diM2}]`;
-    }
-    eleGrid.setPredicates('diM2',preDIM2,dtvDIM2);
-
-    if (this.journal.diM3Control == '1' || this.journal.diM3Control == '2') { //? nếu mục phí là mặc định hoặc trong danh sách
-      preDIM3 = '@0.Contains(CostItemID)';
-      dtvDIM3 = `[${this.journal?.diM3}]`;
-    }
-    eleGrid.setPredicates('diM3',preDIM3,dtvDIM3);
-
     //* Thiết lập ẩn hiện các cột theo sổ nhật ký
     if (this.dialogData?.data.hideFields && this.dialogData?.data.hideFields.length > 0) {
       hideFields = [...this.dialogData?.data.hideFields]; //? get danh sách các field ẩn được truyền vào từ dialogdata
     }
-
-    if(!this.journal.useDutyTax){ //? không sử dụng thuế xuất nhập khẩu (ẩn)
-      hideFields.push('SalesTaxPct');
-      hideFields.push('SalesTaxAmt');
-      hideFields.push('SalesTaxAmt2');
-    }else{
-      if(this.formPurchaseInvoices?.data?.currencyID == this.baseCurr) hideFields.push('SalesTaxAmt2');
-    }
-
-
-    if(!this.journal.useExciseTax){ //? không sử dụng thuế TTĐB (ẩn)
-      hideFields.push('ExciseTaxPct');
-      hideFields.push('ExciseTaxAmt');
-      hideFields.push('ExciseTaxAmt2');
-    }else{
-      if(this.formPurchaseInvoices?.data?.currencyID == this.baseCurr) hideFields.push('ExciseTaxAmt2');
-    }  
-
-    if(this.journal.vatControl == '0'){ //? không sử dụng thuế GTGT (ẩn)
-      hideFields.push('VATPct'); 
-      hideFields.push('VATAmt'); 
-      hideFields.push('VATBase'); 
-      hideFields.push('VATAmt2');
-      hideFields.push('VATBase2');
-      hideFields.push('VATID');
-    }else{
-      if(this.formPurchaseInvoices?.data?.currencyID == this.baseCurr){
-        hideFields.push('VATAmt2');
-        hideFields.push('VATBase2');
-      } 
-    } 
+    let setting = this.acService.getSettingFromJournal(eleGrid,this.journal,this.formPurchaseInvoices?.data,this.baseCurr,hideFields);
+    eleGrid = setting[0];
+    hideFields = setting[1];
 
     if(this.formPurchaseInvoices?.data?.currencyID == this.baseCurr){ //? nếu không sử dụng ngoại tệ
       hideFields.push('PurcAmt2');
@@ -196,7 +140,6 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
       hideFields.push('NetAmt2');
       hideFields.push('MiscAmt2');
     }
-
     eleGrid.showHideColumns(hideFields);
   }
 
@@ -505,32 +448,9 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
     let oLine = Util.camelizekeyObj(model);
     oLine.transID = this.formPurchaseInvoices.data.recID;
     oLine.idiM4 = this.formPurchaseInvoices.data.warehouseID;
-    oLine.note = this.formPurchaseInvoices.data.note;
+    oLine.note = this.formPurchaseInvoices.data.memo;
     oLine = this.genFixedDims(oLine);
-    let dicSetting = JSON.parse(this.journal.extras);
-    if (dicSetting) {
-      if (
-        dicSetting?.diM1Control &&
-        dicSetting?.diM1Control != '2' &&
-        dicSetting?.diM1Control != '9'
-      ) {
-        oLine.diM1 = this.journal.diM1;
-      }
-      if (
-        dicSetting?.diM2Control &&
-        dicSetting?.diM2Control != '2' &&
-        dicSetting?.diM2Control != '9'
-      ) {
-        oLine.diM2 = this.journal.diM2;
-      }
-      if (
-        dicSetting?.diM3Control &&
-        dicSetting?.diM3Control != '2' &&
-        dicSetting?.diM3Control != '9'
-      ) {
-        oLine.diM3 = this.journal.diM3;
-      }
-    }
+    oLine = this.acService.getDataSettingFromJournal(oLine,this.journal);
     return oLine;
   }
 
