@@ -1,0 +1,21 @@
+.container{
+   height: 100vh;
+   .left{
+      background-color: white;
+      padding-right: 10px;
+      border-radius: 5px;
+      border: 1px solid rgb(223, 223, 223);
+   }
+   .right{
+     .top{
+      background-color: white;
+      height: 50px;
+      margin-bottom: 10px;
+      }
+      .main{
+         background-color: white;
+         height: calc(100vh - 60px);
+      }
+   }
+}
+
