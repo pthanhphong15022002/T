@@ -124,6 +124,11 @@ export const routes: Routes = [
     component: LayoutComponent,
     children: [
       {
+        path: 'view',
+        component: ContractsDetailComponent,
+        data: { noReuse: true },
+      },
+      {
         path: 'customers/:funcID',
         component: CmCustomerComponent,
         data: { noReuse: true },
