@@ -1322,7 +1322,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
         );
         percent = (i+1) / numOfChunks
       
-        if(elem) elem.style.strokeDashoffset = (503 - (43 * percent)).toString();
+        if(elem) elem.style.strokeDashoffset = (503 - (53 * percent)).toString();
         
         // if(uploadChunk?.status == 200)
         // {
