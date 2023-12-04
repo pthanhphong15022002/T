@@ -268,8 +268,13 @@
     >
       <div class="line-colums d-flex">
         <span
-          [ngClass]="getPropertiesHeader(data, 'icon')"
-          [ngStyle]="{ color: getPropertiesHeader(data, 'iconColor') }"
+          [ngClass]="
+            data.keyField | styleHeaderColumns : kanban?.columns : 'icon'
+          "
+          [ngStyle]="{
+            color:
+              data.keyField | styleHeaderColumns : kanban?.columns : 'iconColor'
+          }"
           style="font-size: 18px"
           class="me-1"
         >
@@ -278,13 +283,18 @@
           class="line-clamp line-clamp-1"
           [ngbTooltip]="data?.headerText"
           container="body"
-          [ngStyle]="{ color: getPropertiesHeader(data, 'textColor') }"
+          [ngStyle]="{
+            color:
+              data.keyField | styleHeaderColumns : kanban?.columns : 'textColor'
+          }"
         >
           {{ data?.headerText }}
         </span>
       </div>
     </div>
- <!-- [style]="{ color: getPropertiesHeader(data, 'textColor') }" -->
+    <!--  [ngClass]="getPropertiesHeader(data, 'icon')"  
+          [ngStyle]="{ color: getPropertiesHeader(data, 'iconColor') }"
+           [ngStyle]="{ color: getPropertiesHeader(data, 'textColor') }" -->
     <view-total-deal-value
       [formModel]="view.formModel"
       [stepID]="data.keyField"

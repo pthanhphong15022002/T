@@ -117,6 +117,7 @@ import { FormatTargetPipe } from './pipes/format-target.pipe';
 import { FormatStatusPipe } from './pipes/format-status.pipe';
 import { ViewTotalDealValueComponent } from './deals/view-total-deal-value/view-total-deal-value.component';
 import { ContractsDetailComponent } from './contracts/contracts-detail/contracts-detail.component';
+import { StyleHeaderColumnsPipe } from './pipes/style-header-columns.pipe';
 
 export const routes: Routes = [
   {
@@ -297,6 +298,7 @@ const T_Component: Type<any>[] = [
     CustomIconPipe,
     FormatTargetPipe,
     FormatStatusPipe,
+    StyleHeaderColumnsPipe,
   ],
   imports: [
     CodxCoreModule.forRoot({ environment }),

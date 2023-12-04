@@ -52,13 +52,15 @@ export class ViewTotalDealValueComponent
       if (this.loadFirst) {
         if (this.curentStepID != this.stepID) {
           this.curentStepID = this.stepID;
-          if(this.stepID== this.columns[this.columns?.length-1].keyField){
-            this.loadedColumns.emit(false)
-          }
+          // if(this.stepID== this.columns[this.columns?.length-1].keyField){
+          //   this.loadedColumns.emit(false)
+          // }
           this.loading();
         }
       } else {
-        this.total = this.columns.filter(x=>x.keyField == this.stepID)[0].totalDealValue;
+        this.total = this.columns.filter(
+          (x) => x.keyField == this.stepID
+        )[0].totalDealValue;
         this.changeDef.detectChanges();
       }
     }
@@ -69,14 +71,13 @@ export class ViewTotalDealValueComponent
   ngOnInit(): void {}
 
   loading() {
-   this.getTotal().subscribe((total) => {
-     if(Number.parseFloat(total)){
-      this.total = total / this.exchangeRateDefault;
-      this.getTotalDealValue.emit({ key: this.stepID, total: total });    
-      this.changeDef.detectChanges();
-     }
-     
-     });
+    this.getTotal().subscribe((total) => {
+      if (Number.parseFloat(total)) {
+        this.total = total / this.exchangeRateDefault;
+        this.getTotalDealValue.emit({ key: this.stepID, total: total });
+        this.changeDef.detectChanges();
+      }
+    });
   }
 
   getTotal() {
@@ -93,7 +94,7 @@ export class ViewTotalDealValueComponent
     gridModel.dataValue = this.stepID;
     gridModel.onlySetPermit = false; //goi qua phan quyền pes
     gridModel.filter = this.filterView;
-   
+
     return this.api
       .execSv<any>(service, service, className, method, gridModel)
       .pipe(
