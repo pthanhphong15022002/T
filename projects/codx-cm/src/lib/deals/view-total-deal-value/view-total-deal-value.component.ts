@@ -72,8 +72,8 @@ export class ViewTotalDealValueComponent
 
   loading() {
     this.getTotal().subscribe((total) => {
-      if (Number.parseFloat(total))
-        this.total = total / this.exchangeRateDefault;
+      if (Number.parseFloat(total)) this.total = total;
+      //this.total = total / this.exchangeRateDefault; //đã tính ở trong rồi
       else this.total = 0;
       this.getTotalDealValue.emit({ key: this.stepID, total: this.total });
       this.changeDef.detectChanges();
@@ -83,7 +83,7 @@ export class ViewTotalDealValueComponent
   getTotal() {
     let service = 'CM';
     let className = 'DealsBusiness'; //gan tam
-    let method = 'GetTotalDealValueColumnsAsync'; //gan tam
+    let method = 'GetTotalDealValueAsync'; //gan tam
     let gridModel = new DataRequest();
     gridModel.formName = this.formModel.formName;
     gridModel.entityName = this.formModel.entityName;
@@ -96,7 +96,10 @@ export class ViewTotalDealValueComponent
     gridModel.filter = this.filterView;
 
     return this.api
-      .execSv<any>(service, service, className, method, gridModel)
+      .execSv<any>(service, service, className, method, [
+        gridModel,
+        this.exchangeRateDefault,
+      ])
       .pipe(
         finalize(() => {
           /*  this.onScrolling = this.loading = false;

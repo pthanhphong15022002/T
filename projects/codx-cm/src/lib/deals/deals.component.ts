@@ -25,6 +25,7 @@ import {
   AlertConfirmInputConfig,
   DialogRef,
   AuthStore,
+  DataRequest,
 } from 'codx-core';
 import { CodxCmService } from '../codx-cm.service';
 import { PopupAddDealComponent } from './popup-add-deal/popup-add-deal.component';
@@ -33,13 +34,14 @@ import { PopupMoveStageComponent } from 'projects/codx-dp/src/lib/instances/popu
 import { DealDetailComponent } from './deal-detail/deal-detail.component';
 import { PopupMoveReasonComponent } from 'projects/codx-dp/src/lib/instances/popup-move-reason/popup-move-reason.component';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
-import { firstValueFrom } from 'rxjs';
+import { finalize, firstValueFrom, map } from 'rxjs';
 import { PopupBantDealComponent } from './popup-bant-deal/popup-bant-deal.component';
 import { PopupPermissionsComponent } from '../popup-permissions/popup-permissions.component';
 import { PopupAssginDealComponent } from './popup-assgin-deal/popup-assgin-deal.component';
 import { PopupUpdateStatusComponent } from './popup-update-status/popup-update-status.component';
 import { StepService } from 'projects/codx-share/src/lib/components/codx-step/step.service';
 import { ExportData } from 'projects/codx-share/src/lib/models/ApproveProcess.model';
+import { Internationalization } from '@syncfusion/ej2-base';
 
 @Component({
   selector: 'lib-deals',
@@ -100,6 +102,7 @@ export class DealsComponent
   @Input() dataObj?: any;
   @Input() showButtonAdd = false;
   kanban: any;
+  viewGird: any;
 
   // config api get data
   service = 'CM';
@@ -177,6 +180,7 @@ export class DealsComponent
   filterView: any;
   columns: any;
   loadFirst: boolean = true;
+  totalView: string;
 
   constructor(
     private inject: Injector,
@@ -665,6 +669,11 @@ export class DealsComponent
         if (this.kanban) {
           this.seclectFilter(e.data);
         }
+        break;
+      //data load xong
+      case 'databound':
+        this.totalGirdView();
+        break;
     }
   }
 
@@ -2083,12 +2092,58 @@ export class DealsComponent
 
   //---------Tính tổng grid view-------------//
   requestEnded(e) {
-    debugger;
-    this.totalGirdView();
+    if (e.type == 'read') {
+      // this.totalGirdView();
+    }
   }
   totalGirdView() {
-    let elemnt = document.querySelector('.sum-content');
-    debugger;
+    this.getTotal().subscribe((total) => {
+      let intl = new Internationalization();
+      let nFormatter = intl.getNumberFormat({
+        skeleton: 'n6',
+      });
+      this.totalView = nFormatter(total) + ' ' + this.currencyIDDefault;
+
+      if (!Number.parseFloat(total)) total = 0;
+      let objectDealValue = {
+        dealValue: total,
+      };
+      this.view.currentView.sumData = objectDealValue;
+
+      // let elemnt = document.querySelector('.sum-content');
+      // if (elemnt) {
+      //   elemnt.innerHTML = this.totalView;
+      // }
+    });
+  }
+
+  getTotal() {
+    let service = 'CM';
+    let className = 'DealsBusiness'; //gan tam
+    let method = 'GetTotalDealValueAsync'; //gan tam
+    let gridModel = new DataRequest();
+    gridModel.formName = this.view.formModel.formName;
+    gridModel.entityName = this.view.formModel.entityName;
+    gridModel.funcID = this.view.formModel.funcID;
+    gridModel.gridViewName = this.view.formModel.gridViewName;
+    gridModel.pageLoading = false;
+    gridModel.onlySetPermit = false; //goi qua phan quyền pes
+    gridModel.filter = this.view.dataService.filter;
+
+    return this.api
+      .execSv<any>(service, service, className, method, [
+        gridModel,
+        this.exchangeRateDefault,
+      ])
+      .pipe(
+        finalize(() => {
+          /*  this.onScrolling = this.loading = false;
+          this.loaded = true; */
+        }),
+        map((response: any) => {
+          return response;
+        })
+      );
   }
   //---------------End----------------------//
 }
