@@ -281,6 +281,7 @@ export class PopupAddDealComponent
     deal.channelID = data?.channelID;
     deal.shortName = data?.shortName;
     this.customerCategory = data?.category;
+    deal.customerCategory =this.customerCategory ;
     this.customerNameTmp = data?.dealName;
     this.shortNameTmp = data?.shortName
 
