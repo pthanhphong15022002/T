@@ -1579,7 +1579,7 @@ export class DealsComponent
         }
       });
       this.loadKanban();
-    } else this.loadFirst = true;
+    } else this.refeshDealValue();
   }
 
   loadKanban() {
@@ -2074,5 +2074,10 @@ export class DealsComponent
   }
   loadedColumns(e) {
     // this.loadFirst = e;
+  }
+
+  refeshDealValue() {
+    this.kanban.columns.forEach((x) => (x.totalDealValue = 0));
+    this.loadFirst = true;
   }
 }
