@@ -12,6 +12,7 @@ import {
 } from '@angular/core';
 import {
   CRUDService,
+  CodxService,
   DataRequest,
   DialogModel,
   FormModel,
@@ -19,6 +20,7 @@ import {
   SidebarModel,
   TenantStore,
   UIComponent,
+  UIDetailComponent,
 } from 'codx-core';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
 import {
@@ -26,7 +28,6 @@ import {
   fmPurchaseInvoicesLines,
 } from '../../../codx-ac.service';
 import { groupBy } from '../../../utils';
-import { PurchaseInvoiceService } from '../purchaseinvoices.service';
 import { Subject, reduce, takeUntil } from 'rxjs';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { TabComponent } from '@syncfusion/ej2-angular-navigations';
@@ -42,9 +43,8 @@ import { E } from '@angular/cdk/keycodes';
   styleUrls: ['./purchaseinvoices-detail.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PurchaseinvoicesDetailComponent extends UIComponent {
+export class PurchaseinvoicesDetailComponent extends UIDetailComponent {
   //#region Constructor
-  @Input() recID: any;
   @Input() dataItem: any;
   @Input() dataService: any;
   @Input() formModel: any;
@@ -75,14 +75,18 @@ export class PurchaseinvoicesDetailComponent extends UIComponent {
     private acService: CodxAcService,
     private shareService: CodxShareService,
     private notification: NotificationsService,
-    private tenant: TenantStore
+    private tenant: TenantStore,
+    public codxService: CodxService
   ) {
     super(inject);
   }
   //#endregion Constructor
 
   //#region Init
-  onInit(): void {}
+  onInit(): void {
+    if(this.recID) this.getDataDetail(this.dataItem,this.recID);
+    if(!this.formModel) this.getFormModel();
+  }
 
   ngAfterViewInit() {
     //* thiết lập cấu hình sidebar
@@ -213,5 +217,14 @@ export class PurchaseinvoicesDetailComponent extends UIComponent {
     }
   }
 
+  getFormModel()
+  {
+    this.cache.functionList(this.funcID).subscribe(item=>{
+      this.formModel = new FormModel();
+      this.formModel.entityName = item?.entityName;
+      this.formModel.formName = item?.formName;
+      this.formModel.gridViewName = item?.gridViewName;
+    })
+  }
   //#endregion
 }

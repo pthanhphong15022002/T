@@ -93,7 +93,7 @@
   <div style="height: calc(100vh - 436px) !important">
     <!-- Start: Tab Detail -->
     <ejs-tab #elementTabDetail (created)="createTabDetail($event,elementTabDetail)"
-      (selected)="onTabSelectedDetail($event)">
+      (selecting)="onTabSelectedDetail($event)">
       <e-tabitems>
         <e-tabitem>
           <ng-template #headerText>
@@ -549,7 +549,7 @@
   <ng-container *ngIf="formCashPayment?.data?.subType != '2'">
     <div id="gridcash" class="tabline-content header-table-ac position-relative">
       <codx-gridview-v2 #eleGridCashPayment class="tabLine" [showEmptyRecord]="false" gridLines="Both" [autoFitColumns]="false"
-        [formName]="journal.entryMode == '1'? fmCashpaymentLine.formName : fmCashpaymentLineOne.formName" [childModel]="formCashPayment?.data?.subType == '9' ? childModelCashPayment : ''"
+        [formName]="journal.entryMode == '1'? fmCashpaymentLine.formName : fmCashpaymentLineOne.formName"
         [gridViewName]="journal.entryMode == '1' ? fmCashpaymentLine.gridViewName : fmCashpaymentLineOne.gridViewName" (beforeSaveRow)="beforeSaveRowCashPayment($event)"
         [entityName]="fmCashpaymentLine.entityName" predicates="TransID=@0" [dataValues]="formCashPayment?.data?.recID"
         [templateMore]="templateMore" service="AC" [editOnClick]="true" (gridInit)="beforeInitGridCashpayments($event)"

@@ -30,9 +30,6 @@ import {
   Vll075,
 } from '../../../journals/interfaces/IJournal.interface';
 import { JournalService } from '../../../journals/journals.service';
-import {
-  PurchaseInvoiceService,
-} from '../purchaseinvoices.service';
 import { Subject, map, takeUntil } from 'rxjs';
 import { AC_PurchaseInvoicesLines } from '../../../models/AC_PurchaseInvoicesLines.model';
 import { AC_VATInvoices } from '../../../models/AC_VATInvoices.model';
@@ -127,7 +124,7 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
    * *Hàm thiết lập lưới trước khi init
    * @param eleGrid 
    */
-  beforeInitGridPurchaseInvoices(eleGrid:CodxGridviewV2Component){
+  beforeInitGridPurchaseInvoices(eleGrid:CodxGridviewV2Component) {
     let hideFields = [];
     //* Thiết lập ẩn hiện các cột theo sổ nhật ký
     if (this.dialogData?.data.hideFields && this.dialogData?.data.hideFields.length > 0) {
