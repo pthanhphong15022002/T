@@ -1,4 +1,4 @@
-import { Route, Router } from '@angular/router';
+import { ActivatedRoute, Route, Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import {
   ApiHttpService,
@@ -21,6 +21,7 @@ import { LoginService } from '../login/login.service';
 export class TenantsComponent implements OnInit {
   constructor(
     private router: Router,
+    private activedRouter: ActivatedRoute,
     private api: ApiHttpService,
     private authStore: AuthStore,
     private authService: AuthService,
@@ -40,13 +41,17 @@ export class TenantsComponent implements OnInit {
       tenantID: '',
       times: '1',
     };
+    this.activedRouter.queryParams.subscribe((res: any) => {
+      this.loginDevice.loginType = res?.lt;
+      this.trust = res?.trust;
+    });
   }
 
   lstTenant = [];
   private user;
   //login2FA;
   loginDevice: Device;
-
+  trust = false;
   ngOnInit(): void {
     this.loginService
       .getTenants(this.user.email)
@@ -62,6 +67,7 @@ export class TenantsComponent implements OnInit {
         '', //userID
         '', //pw
         JSON.stringify(this.loginDevice),
+        this.trust,
       ])
       .subscribe((res: any) => {
         if (res) {
