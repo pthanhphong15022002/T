@@ -201,6 +201,7 @@ export enum MorfuncCash {
   InUNC = 'ACT042907',
   KiemTraHopLePC = 'ACT041009',
   KiemTraHopLeUNC = 'ACT042902',
+  KiemTraTrangThai = 'ACT041013'
 }
 
 export enum MorfuncCashReceipt {
@@ -607,7 +608,7 @@ export class CodxAcService {
           break;
       case '8':
       case '11':
-        event.filter((x) => ![MorfuncCash.InUNC].includes(x.functionID))
+        event.filter((x) => ![MorfuncCash.InUNC,MorfuncCash.KiemTraTrangThai].includes(x.functionID))
             .reduce((pre, element) => { element.disabled = true }, {});
           break;
       default:

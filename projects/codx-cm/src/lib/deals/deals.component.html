@@ -22,7 +22,6 @@
   (onLoading)="onLoading($event)"
   (clickMF)="clickMF($event, dataSelected)"
   (changeDataMF)="changeDataMF($event, dataSelected)"
-
 ></codx-views>
 
 <!-- KANBAN -->
@@ -39,7 +38,6 @@
     [dataItem]="data"
     (clickMF)="clickMF($event, data)"
     (changeDataMF)="changeDataMF($event, data)"
-
   >
   </codx-card-img>
 </ng-template>
@@ -209,14 +207,14 @@
         </ng-template> -->
 
         <codx-vll
-        [name]="gridViewSetup?.Status?.referedValue"
-        [field]="'Status'"
-        [value]="data?.status"
-        [showText]="true"
-        [showBgColor]="true"
-        class="badge badge-light badge-sm"
-      >
-      </codx-vll>
+          [name]="gridViewSetup?.Status?.referedValue"
+          [field]="'Status'"
+          [value]="data?.status"
+          [showText]="true"
+          [showBgColor]="true"
+          class="badge badge-light badge-sm"
+        >
+        </codx-vll>
 
         <ng-container *ngIf="data.approveStatus > '1' && data?.approveStatus">
           <codx-vll
@@ -279,18 +277,26 @@
         <span
           class="line-clamp line-clamp-1"
           [ngbTooltip]="data?.headerText"
+          container="body"
           [ngStyle]="{ color: getPropertiesHeader(data, 'textColor') }"
         >
           {{ data?.headerText }}
         </span>
       </div>
     </div>
-    <div class="d-flex align-items-center line-colums ms-3 mt-1">
-      <!-- <span
-        class="icon-monetization_on icon-16 text-warning me-2"
-        [ngbTooltip]="'Tổng tiền dự kiến'"
-        container="body"
-      ></span> -->
+ <!-- [style]="{ color: getPropertiesHeader(data, 'textColor') }" -->
+    <view-total-deal-value
+      [formModel]="view.formModel"
+      [stepID]="data.keyField"
+      [columns]="kanban?.columns"
+      [loaded]="kanban?.dataService?.loaded"
+      [filterView]="view.dataService.filter"
+      [loadFirst]="loadFirst"
+      [exchangeRateDefault]="exchangeRateDefault"
+      (getTotalDealValue)="getTotalDealValue($event)"
+      (loadedColumns)="loadedColumns($event)"
+    ></view-total-deal-value>
+    <!-- <div class="d-flex align-items-center line-colums ms-3 mt-1">
       <ng-container
         [ngTemplateOutlet]="showToltal"
         [ngTemplateOutletContext]="{
@@ -315,7 +321,7 @@
           [innerHTML]="currencyIDDefault"
         ></span>
       </ng-template>
-    </div>
+    </div> -->
   </div>
 </ng-template>
 
@@ -500,14 +506,14 @@
           </codx-vll>
         </ng-template> -->
         <codx-vll
-        [name]="gridViewSetup?.Status?.referedValue"
-        [field]="'Status'"
-        [value]="data?.status"
-        [showText]="true"
-        [showBgColor]="true"
-        class="badge badge-light badge-sm"
-      >
-      </codx-vll>
+          [name]="gridViewSetup?.Status?.referedValue"
+          [field]="'Status'"
+          [value]="data?.status"
+          [showText]="true"
+          [showBgColor]="true"
+          class="badge badge-light badge-sm"
+        >
+        </codx-vll>
         <ng-container *ngIf="data.approveStatus > '1' && data?.approveStatus">
           <codx-vll
             [name]="vllApprove"

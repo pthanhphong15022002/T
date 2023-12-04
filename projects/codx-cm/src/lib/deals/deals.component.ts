@@ -174,6 +174,9 @@ export class DealsComponent
   queryParams: any;
   gridDetailView = '2';
   runMode: any;
+  filterView: any;
+  columns: any;
+  loadFirst: boolean = true;
 
   constructor(
     private inject: Injector,
@@ -322,6 +325,7 @@ export class DealsComponent
 
     if (this.viewCrr == 6) {
       this.kanban = (this.view?.currentView as any)?.kanban;
+      this.columns = this.kanban.columns;
     }
 
     this.processID = this.activedRouter.snapshot?.queryParams['processID'];
@@ -817,7 +821,6 @@ export class DealsComponent
               let instance = e.event.instance;
               let listSteps = e.event?.listStep;
 
-              this.detailViewDeal?.reloadListStep(listSteps);
               let index =
                 e.event.listStep.findIndex(
                   (x) =>
@@ -855,7 +858,7 @@ export class DealsComponent
                   if (e.event.isReason != null) {
                     this.moveReason(res, e.event.isReason);
                   }
-
+                  this.detailViewDeal?.reloadListStep(listSteps);
                   this.detectorRef.detectChanges();
                 }
               });
@@ -1153,8 +1156,8 @@ export class DealsComponent
     dialogCustomDeal.closed.subscribe((e) => {
       if (e && e.event != null) {
         this.view.dataService.update(e.event, true).subscribe();
-        //up kaban
-        if (this.kanban) {
+        //up kaban nee đúng process
+        if (this.kanban && this.processIDKanban == e.event?.processID) {
           let dt = e.event;
           let money = dt.dealValue * dt.exchangeRate;
           this.renderTotal(dt.stepID, 'add', money);
@@ -1372,7 +1375,7 @@ export class DealsComponent
       this.dataSelected.approveStatus = res?.returnStatus;
       this.dataSelected.status = res?.returnStatus;
       this.view.dataService.update(this.dataSelected).subscribe();
-      if (this.kanban) this.kanban.updateCard(this.dataSelected);
+      if (this.kanban ) this.kanban.updateCard(this.dataSelected);
       this.notificationsService.notifyCode('ES007');
 
       // this.codxCmService
@@ -1589,6 +1592,7 @@ export class DealsComponent
         );
         kanban.refresh();
         this.kanban = kanban;
+
         // if (this.kanban) this.kanban.refresh();
         this.detectorRef.detectChanges();
       });
@@ -2040,5 +2044,20 @@ export class DealsComponent
           this.detectorRef.detectChanges();
         }
       });
+  }
+
+  getTotalDealValue(e) {
+    let keyField = e.key;
+    let total = e.total;
+    if (this.kanban && this.kanban.columns?.length > 0) {
+      let idx = this.kanban.columns.findIndex((x) => x.keyField == keyField);
+      if (idx != -1 && this.kanban.columns[idx].totalDealValue != total) {
+        this.kanban.columns[idx].totalDealValue = total;
+      }
+    }
+   
+  }
+  loadedColumns(e) {
+    this.loadFirst = e;
   }
 }

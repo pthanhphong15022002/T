@@ -99,16 +99,6 @@ export class CashpaymentDetailComponent extends UIDetailComponent {
     this.onDestroy();
   }
 
-  getFormModel()
-  {
-    this.cache.functionList(this.funcID).subscribe(item=>{
-      this.formModel = new FormModel();
-      this.formModel.entityName = item?.entityName;
-      this.formModel.formName = item?.formName;
-      this.formModel.gridViewName = item?.gridViewName;
-    })
-  }
-
   onDestroy() {
     this.destroy$.next();
     this.destroy$.complete();
@@ -223,6 +213,16 @@ export class CashpaymentDetailComponent extends UIDetailComponent {
       }
       this.detectorRef.detectChanges();
     }
+  }
+
+  getFormModel()
+  {
+    this.cache.functionList(this.funcID).subscribe(item=>{
+      this.formModel = new FormModel();
+      this.formModel.entityName = item?.entityName;
+      this.formModel.formName = item?.formName;
+      this.formModel.gridViewName = item?.gridViewName;
+    })
   }
   //#endregion Function
 }

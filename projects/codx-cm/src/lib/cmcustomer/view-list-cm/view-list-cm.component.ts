@@ -24,6 +24,8 @@ export class ViewListCmComponent implements OnInit {
   @Input() funcID = 'CM0101';
   @Input() entityName: any;
   @Input() asideMode: string;
+  @Input() gridViewSetup: any;
+  @Input() lstCustGroups = [];
   @Output() clickMoreFunc = new EventEmitter<any>();
   @Output() changeMoreMF = new EventEmitter<any>();
   @ViewChild('popDetail') popDetail: TemplateRef<any>;

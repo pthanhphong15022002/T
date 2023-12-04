@@ -402,6 +402,8 @@ export class CodxDMService {
       this.disableInput.next(true);
       return;
     }
+
+    if(!folder) return;
     this.parentCreate = folder.create;
     this.parentRead = folder.read;
     this.parentUpdate = folder.write;
@@ -1705,20 +1707,19 @@ export class CodxDMService {
         let result = this.callfc.openSide(CreateFolderComponent, data2, option);
 
         result.closed.subscribe(x=>{
-          this.openItem(data)
-          // if(x.event) 
-          // else
-          // {
-          //   this.folderName = curr.folderName;
-          //   this.parentFolderId = curr.parentFolderId;
-          //   this.level = data.level;
-          //   this.folderID = curr.folderID;
-          //   this.folderId.next(curr.folderID);
-          //   var breadcumb = this.breadcumb.getValue();
-          //   breadcumb.pop();
-          //   this.breadcumb.next(breadcumb)
-          //   this.breadcumbLink.pop()
-          // }
+          if(x.event)  this.openItem(data)
+          else
+          {
+            this.folderName = curr.folderName;
+            this.parentFolderId = curr.parentFolderId;
+            this.level = data.level;
+            this.folderID = curr.folderID;
+            this.folderId.next(curr.folderID);
+            var breadcumb = this.breadcumb.getValue();
+            breadcumb.pop();
+            this.breadcumb.next(breadcumb)
+            this.breadcumbLink.pop()
+          }
         })
         break;
       }

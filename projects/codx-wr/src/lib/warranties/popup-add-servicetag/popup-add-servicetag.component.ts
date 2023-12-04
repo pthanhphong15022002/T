@@ -1,3 +1,4 @@
+import { count } from 'console';
 import { firstValueFrom } from 'rxjs';
 import {
   Component,
@@ -15,7 +16,8 @@ import {
   DialogRef,
   NotificationsService,
 } from 'codx-core';
-import { WR_WorkOrders } from '../../../_models-wr/wr-model.model';
+import { WR_Products, WR_WorkOrders } from '../../_models-wr/wr-model.model';
+import { CodxWrService } from '../../codx-wr.service';
 
 @Component({
   selector: 'lib-popup-add-servicetag',
@@ -28,15 +30,19 @@ export class PopupAddServicetagComponent implements OnInit {
   @ViewChild('productModel') productModel: CodxInputComponent;
 
   @ViewChild('form') form: CodxFormComponent;
-  data: WR_WorkOrders;
+  data: any;
   dialog: DialogRef;
   title = '';
   gridViewSetup: any;
-
+  addProduct: boolean = false; // true - form product, false - form add serviceTag
+  radioAddEdit: boolean = true; //true - edit, false - add
+  recID: any;
+  countValidate = 0;
   constructor(
     private notiService: NotificationsService,
     private api: ApiHttpService,
     private changeDetector: ChangeDetectorRef,
+    private wrSv: CodxWrService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -44,22 +50,56 @@ export class PopupAddServicetagComponent implements OnInit {
     this.title = dt?.data?.title;
     this.data = JSON.parse(JSON.stringify(dt?.data?.data));
     this.gridViewSetup = dt?.data?.gridViewSetup;
+    this.addProduct = dt?.data?.addProduct ?? false;
+    this.recID = dt?.data?.recID; //recID để lấy data workOrder
   }
   ngOnInit(): void {
-    this.data.seriNo = '';
-    this.data.serviceTag = '';
-    this.data.lob = '';
-    this.data.productID = '';
-    this.data.productType = '';
-    this.data.productModel = '';
-    this.data.productBrand = '';
-    this.data.productDesc = '';
-    this.data.note = '';
-    this.data.warrantyExpired = null;
+    if (!this.addProduct) {
+      this.data.seriNo = '';
+      this.data.serviceTag = '';
+      this.data.lob = '';
+      this.data.productID = '';
+      this.data.productType = '';
+      this.data.productModel = '';
+      this.data.productBrand = '';
+      this.data.productDesc = '';
+      this.data.note = '';
+      this.data.warrantyExpired = null;
+    } else {
+      this.api
+        .execSv<any>('WR', 'WR', 'ProductsBusiness', 'GetOneAsync', [
+          this.data.productID,
+        ])
+        .subscribe(async (res) => {
+          if (res) {
+            this.data = res;
+          }else{
+            const defaultData = await firstValueFrom(this.wrSv.getDefault('WR','WRS0103','WR_Products'));
+            if(defaultData?.data){
+              let product = defaultData?.data;
+              product.productID = this.data?.productID ?? product.productID;
+              product.productName = this.data?.productName;
+              product.productType = this.data?.productType;
+              product.productBrand = this.data?.productBrand;
+              product.productModel = this.data?.productModel;
+              this.data = product;
+            }
+          }
+          this.form?.formGroup?.patchValue(this.data);
+        });
+    }
   }
 
   //#region onSave
   async onSave() {
+    if (!this.addProduct) {
+      this.addServiceTags();
+    } else {
+      this.addEditProduct();
+    }
+  }
+
+  async addServiceTags() {
     if (this.data?.serviceTag == null || this.data?.serviceTag?.trim() == '') {
       this.notiService.notifyCode(
         'SYS009',
@@ -89,13 +129,36 @@ export class PopupAddServicetagComponent implements OnInit {
 
     this.data.seriNo = this.data.serviceTag;
     this.dialog.close(this.data);
-    this.data = new WR_WorkOrders();
+    this.data = null;
+  }
+
+  addEditProduct() {
+    this.countValidate = this.wrSv.checkValidate(this.gridViewSetup, this.data);
+    if (this.countValidate > 0) {
+      return;
+    }
+    this.api
+      .execSv<any>(
+        'WR',
+        'WR',
+        'WorkOrdersBusiness',
+        'UpdateProductWorkOrderAsync',
+        [this.recID, this.data]
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.dialog.close(res);
+          this.notiService.notifyCode('SYS007');
+        } else {
+          this.notiService.notifyCode('SYS021');
+          this.dialog.close();
+        }
+      });
   }
   //#endregion
 
   valueChange(e) {
-    this.data[e?.field] = e?.data;
-    if (e?.field == 'productID') {
+    if (e?.field == 'productID' && !this.addProduct) {
       this.data.productType = e?.component?.itemsSelected[0]?.ProductType;
       if (
         this.data?.productType == null ||
@@ -134,13 +197,14 @@ export class PopupAddServicetagComponent implements OnInit {
 
   valueChangeDate(e) {
     if (e?.data) {
-      this.data.warrantyExpired = e?.data?.fromDate;
+      this.data.warrantyExpired = new Date(e?.data);
       if (this.data.warrantyExpired > new Date()) {
         this.data.oow = true;
       } else {
         this.data.oow = false;
       }
     }
+
     this.changeDetector.detectChanges();
   }
 }

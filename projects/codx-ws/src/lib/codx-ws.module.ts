@@ -119,11 +119,11 @@ const routes: Routes = [
         component: IncommingComponent,
       },
       {
-        path: 'dashboard/:funcID',
+        path: 'wsdashboard/:funcID',
         component: DashboardComponent,
       },
       {
-        path: 'report/:funcID',
+        path: 'wsreport/:funcID',
         component: ReportComponent,
       },
       // HR - QTNS - Đăng ký nghỉ phép
@@ -207,7 +207,7 @@ const routes: Routes = [
       //-----------Khai báo routing nghiệp vu---------------
       //-----------Khai báo routing báo cáo---------------
       {
-        path: 'report/detail/:funcID',
+        path: 'wsreport/detail/:funcID',
         component: CodxReportViewDetailComponent,
       },
       //-----------Khai báo routing báo cáo---------------

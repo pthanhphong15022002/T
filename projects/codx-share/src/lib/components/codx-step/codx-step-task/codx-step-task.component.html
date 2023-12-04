@@ -1,6 +1,6 @@
 <div id="id" class="main-step" [ngClass]="'show-main'">
   <!--View Step -->
-  <div class="d-flex align-items-center me-5" *ngIf="isShowStep && currentStep">
+  <div class="d-flex align-items-center me-3" *ngIf="isShowStep && currentStep">
     <div
       (click)="toggleElemen()"
       class="d-flex align-items-center show-step ms-2 me-3"
@@ -79,7 +79,7 @@
           </span>
         </div>
         <codx-imgs
-          class="me-2 d-flex align-items-center"
+          class="me-4 d-flex align-items-center"
           [width]="25"
           ojectType="AD_Users"
           [numberImages]="1"
@@ -457,7 +457,7 @@
 </ng-template>
 
 <ng-template #timeAndProgress let-data="value">
-  <div class="d-flex align-items-center justify-content-end me-3 time-progress">
+  <div class="d-flex align-items-center justify-content-end me-2 time-progress">
     <div
       #popoverTooltip="ngbPopover"
       [ngbPopover]="tooltipDate"
@@ -488,7 +488,7 @@
         {{ data?.value?.actualEnd | date : dateFomat }}
       </span>
     </div>
-    <span class="d-flex align-items-center">
+    <span class="d-flex align-items-center me-1">
       <codx-imgs
         class="me-2 d-flex align-items-center"
         [width]="25"
