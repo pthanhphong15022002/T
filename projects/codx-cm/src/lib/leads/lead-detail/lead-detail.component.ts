@@ -19,10 +19,8 @@ import {
   ImageViewerComponent,
   ResourceModel,
 } from 'codx-core';
-import { TabDetailCustomComponent } from '../../deals/deal-detail/tab-detail-custom/tab-detail-custom.component';
 import { CodxCmService } from '../../codx-cm.service';
 import { firstValueFrom } from 'rxjs';
-import { CM_Deals } from '../../models/cm_model';
 import { TabComponent } from '@syncfusion/ej2-angular-navigations';
 
 @Component({

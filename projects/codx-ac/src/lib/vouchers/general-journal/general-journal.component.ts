@@ -37,7 +37,6 @@ export class GeneralJournalComponent extends UIComponent {
     id: 'btnAdd',
     icon: 'icon-i-file-earmark-plus',
   }];
-  optionSidebar: SidebarModel = new SidebarModel();
   viewActive:number = ViewType.listdetail;
   ViewType = ViewType;
   private destroy$ = new Subject<void>(); //? list observable hủy các subscribe api
@@ -120,10 +119,6 @@ export class GeneralJournalComponent extends UIComponent {
       },
     ];
     this.journalService.setChildLinks(this.journalNo);
-
-    //* thiết lập cấu hình sidebar
-    this.optionSidebar.DataService = this.view.dataService;
-    this.optionSidebar.FormModel = this.view.formModel;
   }
 
   ngOnDestroy() {
@@ -238,10 +233,13 @@ export class GeneralJournalComponent extends UIComponent {
             hideFields: [...this.hideFields], //? array các field ẩn từ sổ nhật ký
             baseCurr: this.baseCurr, //?  đồng tiền hạch toán
           };
+          let optionSidebar = new SidebarModel();
+          optionSidebar.DataService = this.view?.dataService;
+          optionSidebar.FormModel = this.view?.formModel;
           let dialog = this.callfc.openSide(
             GeneralJournalAddComponent,
             data,
-            this.optionSidebar,
+            optionSidebar,
             this.view.funcID
           );
         }
@@ -266,10 +264,13 @@ export class GeneralJournalComponent extends UIComponent {
           hideFields: [...this.hideFields], //? array các field ẩn từ sổ nhật ký
           baseCurr: this.baseCurr, //?  đồng tiền hạch toán
         };
+        let optionSidebar = new SidebarModel();
+        optionSidebar.DataService = this.view?.dataService;
+        optionSidebar.FormModel = this.view?.formModel;
         let dialog = this.callfc.openSide(
           GeneralJournalAddComponent,
           data,
-          this.optionSidebar,
+          optionSidebar,
           this.view.funcID
         );
       });
@@ -301,10 +302,13 @@ export class GeneralJournalComponent extends UIComponent {
                   hideFields: [...this.hideFields], //? array các field ẩn từ sổ nhật ký
                   baseCurr: this.baseCurr, //?  đồng tiền hạch toán
                 };
+                let optionSidebar = new SidebarModel();
+                optionSidebar.DataService = this.view?.dataService;
+                optionSidebar.FormModel = this.view?.formModel;
                 let dialog = this.callfc.openSide(
                   GeneralJournalAddComponent,
                   data,
-                  this.optionSidebar,
+                  optionSidebar,
                   this.view.funcID
                 );
                 this.view.dataService

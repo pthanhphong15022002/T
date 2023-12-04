@@ -17,9 +17,9 @@
   overflow: auto;
 }
 
-.scroll-grid {
+.scroll-grid-target {
   //height: calc(100vh - 212px);
-  height: calc(100vh - 175px);
+  height: calc(100vh - 212px) !important;
   overflow: auto;
 
 }

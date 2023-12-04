@@ -8,10 +8,27 @@
     [dataSource]="lstParts"
     rowHeight="30"
     [height]="'100%'"
-    [hideMoreFunc]="true"
+    [hideMoreFunc]="false"
     [columnsGrid]="columnsGrid"
+    [templateMore]="tempMorefunction"
   ></codx-gridview-v2>
 </div>
+
+<ng-template #tempMorefunction let-data>
+  <div
+    class=""
+    style="height: 30px"
+  >
+    <codx-mfunc
+      [dataItem]="data"
+      [formModel]="formModel"
+      type="view"
+      [isBookMark]="false"
+      (clickMF)="clickMF($event, data)"
+      (changeDataMF)="changeDataMF($event, data)"
+    ></codx-mfunc>
+  </div>
+</ng-template>
 
 <ng-template #headerPartInfo>
   <codx-label
@@ -110,6 +127,7 @@
       [value]="item?.status"
       [showText]="true"
       [showBgColor]="true"
+      [showIcon]="true"
       class="badge badge-light badge-sm"
     >
     </codx-vll>

@@ -1012,8 +1012,8 @@ export class PopupAddDealComponent
         if (this.action === this.actionEdit) {
           this.owner = this.deal.owner;
         } else {
-          if (this.listParticipants.length > 0 && this.listParticipants && !this.owner) {
-            let index = this.listParticipants.findIndex(
+          if (this.listParticipants?.length > 0 && this.listParticipants && !this.owner) {
+            let index = this.listParticipants?.findIndex(
               (x) => x.userID === this.user.userID
             );
             this.owner = index != -1 ? this.user.userID : null;

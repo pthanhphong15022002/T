@@ -674,8 +674,8 @@ export class CreateFolderComponent implements OnInit {
     this.fileEditing.isAlert = this.alert;
     this.fileEditing.isEmail = this.email;
     var that = this;
-    debugger
-    if (!this.edit) {
+    if (!this.edit) 
+    {
       this.fileEditing.folderType = this.dmSV.idMenuActive;
       this.folderService.addFolder(this.fileEditing).subscribe(async (res) => {
         if (res.status == 0) {
@@ -688,7 +688,7 @@ export class CreateFolderComponent implements OnInit {
           that.dmSV.ChangeDataView.next(true);
           if(!this.isAddFolder) that.dmSV.addFolder.next(res.data);
           that.changeDetectorRef.detectChanges();
-          this.dialog.close();
+          this.dialog.close(res.data);
           this.dmSV.fileEditing.next(null);
         } else {
           this.message = res.message;
