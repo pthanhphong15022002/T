@@ -2108,7 +2108,7 @@ export class DealsComponent
       let objectDealValue = {
         dealValue: total,
       };
-      this.view.currentView.sumData = objectDealValue;
+      // this.view.currentView.sumData = objectDealValue;
 
       // let elemnt = document.querySelector('.sum-content');
       // if (elemnt) {

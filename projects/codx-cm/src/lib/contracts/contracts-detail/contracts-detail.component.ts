@@ -23,7 +23,7 @@ export class ContractsDetailComponent implements OnInit,OnChanges{
     null,
     null,
   ];
-  isClick;
+  tabClick;
   listTab = [];
   listTabInformation = [
     {id:'customer', name:"Khách hàng"},
@@ -60,6 +60,7 @@ export class ContractsDetailComponent implements OnInit,OnChanges{
   ngOnInit() {
     this.listTypeContract = this.contractService.listTypeContractTask;
     this.listTab = this.listTabInformation;
+    this.tabClick = this.listTab[0]?.id;
   }
   ngOnChanges(changes: SimpleChanges) {
     
@@ -73,15 +74,16 @@ export class ContractsDetailComponent implements OnInit,OnChanges{
   }
 
   onSectionChange(data: any, index: number = -1) {
-    if (index > -1 && this.isClick == false) {
-      // let element = document.getElementById(this.active[index]);
-      // element.blur();
-      this.active[index] = data;
-      this.changeDetectorRef.detectChanges();
-    }
+    // if (index > -1 && this.isClick == false) {
+    //   // let element = document.getElementById(this.active[index]);
+    //   // element.blur();
+    //   this.active[index] = data;
+    //   this.changeDetectorRef.detectChanges();
+    // }
   }
 
   navChange(evt: any, index: number = -1, btnClick) {
+    this.tabClick = evt;
     let containerList = document.querySelectorAll('.pw-content')
     let lastDivList = document.querySelectorAll('.div_final')
     let lastDiv = lastDivList[index]
@@ -93,10 +95,8 @@ export class ContractsDetailComponent implements OnInit,OnChanges{
     }
     let element = document.getElementById(evt);
     let distanceToBottom = contentHeight - element.offsetTop;
-    console.log('khoang cach toi bot', distanceToBottom);
     
     if(distanceToBottom < containerHeight){
-      console.log('can phai chinh lai');
       (lastDiv as any).style.width = '200px';
       (lastDiv as any).style.height = `${containerHeight - distanceToBottom + 250}px`;
     }
@@ -105,12 +105,7 @@ export class ContractsDetailComponent implements OnInit,OnChanges{
       block: 'start',
       inline: 'nearest',
     });
-    this.isClick = true;
     this.changeDetectorRef.detectChanges();
-    setTimeout(() => {
-      this.isClick = false;
-      return;
-    }, 500);
   }
 
 }
