@@ -72,11 +72,11 @@ export class ViewTotalDealValueComponent
 
   loading() {
     this.getTotal().subscribe((total) => {
-      if (Number.parseFloat(total)) {
+      if (Number.parseFloat(total))
         this.total = total / this.exchangeRateDefault;
-        this.getTotalDealValue.emit({ key: this.stepID, total: total });
-        this.changeDef.detectChanges();
-      }
+      else this.total = 0;
+      this.getTotalDealValue.emit({ key: this.stepID, total: this.total });
+      this.changeDef.detectChanges();
     });
   }
 

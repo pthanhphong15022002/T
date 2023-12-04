@@ -662,8 +662,9 @@ export class DealsComponent
         break;
       //chang fiter
       case 'pined-filter':
-        this.loadFirst = true;
-        this.seclectFilter(e.data);
+        if (this.kanban) {
+          this.seclectFilter(e.data);
+        }
     }
   }
 
@@ -1578,7 +1579,7 @@ export class DealsComponent
         }
       });
       this.loadKanban();
-    }
+    } else this.loadFirst = true;
   }
 
   loadKanban() {
