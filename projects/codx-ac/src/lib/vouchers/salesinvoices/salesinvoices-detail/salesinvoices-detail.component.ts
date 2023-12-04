@@ -10,7 +10,7 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import { CRUDService, DataRequest, DialogModel, FormModel, NotificationsService, SidebarModel, TenantStore, UIComponent } from 'codx-core';
+import { CRUDService, CodxService, DataRequest, DialogModel, FormModel, NotificationsService, SidebarModel, TenantStore, UIComponent, UIDetailComponent } from 'codx-core';
 import { TabModel } from 'projects/codx-ep/src/lib/models/tabControl.model';
 import { CodxAcService } from '../../../codx-ac.service';
 import { groupBy } from '../../../utils';
@@ -30,10 +30,9 @@ import { CodxListReportsComponent } from 'projects/codx-share/src/lib/components
   styleUrls: ['./salesinvoices-detail.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SalesinvoicesDetailComponent extends UIComponent {
+export class SalesinvoicesDetailComponent extends UIDetailComponent {
 
   //#region Constructor
-  @Input() recID: any;
   @Input() dataItem: any;
   @Input() dataService: any;
   @Input() formModel: any;
@@ -63,14 +62,18 @@ export class SalesinvoicesDetailComponent extends UIComponent {
     private acService: CodxAcService,
     private shareService: CodxShareService,
     private notification: NotificationsService,
-    private tenant: TenantStore
+    private tenant: TenantStore,
+    public codxService: CodxService
   ) {
     super(inject);
   }
   //#endregion Constructor
 
   //#region Init
-  onInit(): void {}
+  onInit(): void {
+    if(this.recID) this.getDataDetail(this.dataItem,this.recID);
+    if(!this.formModel) this.getFormModel();
+  }
 
   ngAfterViewInit() {
     //* thiết lập cấu hình sidebar
@@ -157,6 +160,16 @@ export class SalesinvoicesDetailComponent extends UIComponent {
       }
       this.detectorRef.detectChanges();
     }
+  }
+
+  getFormModel()
+  {
+    this.cache.functionList(this.funcID).subscribe(item=>{
+      this.formModel = new FormModel();
+      this.formModel.entityName = item?.entityName;
+      this.formModel.formName = item?.formName;
+      this.formModel.gridViewName = item?.gridViewName;
+    })
   }
   //#endregion Function
 }

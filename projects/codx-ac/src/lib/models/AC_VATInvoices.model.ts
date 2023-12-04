@@ -20,9 +20,9 @@ export class AC_VATInvoices {
 
   invoiceNo: string;
 
-  invoiceDate: Date | string | null;
+  invoiceDate: Date = new Date();
 
-  dueDate: Date | string | null;
+  dueDate: Date = new Date();
 
   objectType: string;
 
@@ -50,23 +50,23 @@ export class AC_VATInvoices {
 
   unitPrice: number = 0;
 
-  vATBase: number = 0;
+  VATBase: number = 0;
 
   VATID: string;
 
-  vATPct: number = 0;
+  VATPct: number = 0;
 
-  vATAmt: number = 0;
+  VATAmt: number = 0;
 
-  vATBase2: number = 0;
+  VATBase2: number = 0;
 
-  vATAmt2: number = 0;
+  VATAmt2: number = 0;
 
-  vATBase3: number = 0;
+  VATBase3: number = 0;
 
-  vATAmt3: number = 0;
+  VATAmt3: number = 0;
 
-  vATAcctID: string;
+  VATAcctID: string;
 
   accountID: string;
 
@@ -101,4 +101,6 @@ export class AC_VATInvoices {
   modifiedBy: string;
 
   journalNo : string;
+
+  itemID : string;
 }
