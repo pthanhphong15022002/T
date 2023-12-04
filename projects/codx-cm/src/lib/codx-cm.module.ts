@@ -116,12 +116,19 @@ import { CustomIconPipe } from './pipes/customIcon.pipe';
 import { FormatTargetPipe } from './pipes/format-target.pipe';
 import { FormatStatusPipe } from './pipes/format-status.pipe';
 import { ViewTotalDealValueComponent } from './deals/view-total-deal-value/view-total-deal-value.component';
+import { ContractsDetailComponent } from './contracts/contracts-detail/contracts-detail.component';
+import { StyleHeaderColumnsPipe } from './pipes/style-header-columns.pipe';
 
 export const routes: Routes = [
   {
     path: '',
     component: LayoutComponent,
     children: [
+      {
+        path: 'view',
+        component: ContractsDetailComponent,
+        data: { noReuse: true },
+      },
       {
         path: 'customers/:funcID',
         component: CmCustomerComponent,
@@ -279,6 +286,7 @@ const T_Component: Type<any>[] = [
   ViewCalendarComponent,
   ProgressSliderComponent,
   ViewHistoryCustomerComponent,
+  ContractsDetailComponent,
 ];
 
 @NgModule({
@@ -295,6 +303,7 @@ const T_Component: Type<any>[] = [
     CustomIconPipe,
     FormatTargetPipe,
     FormatStatusPipe,
+    StyleHeaderColumnsPipe,
   ],
   imports: [
     CodxCoreModule.forRoot({ environment }),

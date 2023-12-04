@@ -96,14 +96,14 @@ export class CashPaymentAddComponent extends UIComponent implements OnInit {
     { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
     { name: 'References', textDefault: 'Liên kết', isActive: false },
   ];
-  childModelCashPayment: SubModel = {
-    gridviewName:'grvVATInvoices',
-    formName:'VATInvoices',
-    entityName:'AC_VATInvoices',
-    service:'AC',
-    predicates:'LineID=@0',
-    rowNoField:'rowNo',
-  }
+  // childModelCashPayment: SubModel = {
+  //   gridviewName:'grvVATInvoices',
+  //   formName:'VATInvoices',
+  //   entityName:'AC_VATInvoices',
+  //   service:'AC',
+  //   predicates:'LineID=@0',
+  //   rowNoField:'rowNo',
+  // }
   baseCurr: any; //? đồng tiền hạch toán
   legalName: any; //? tên company
   voucherNoAdv: any; //? số chứng từ liên kết(xử lí lấy số chứng từ cho loại chi tạm ứng & chi thanh toán)
@@ -112,6 +112,7 @@ export class CashPaymentAddComponent extends UIComponent implements OnInit {
   vatAccount: any; //? tài khoản thuế của hóa đơn GTGT (xử lí cho chi khác)?
   isPreventChange:any = false;
   postDateControl:any;
+  nextTabIndex:number;
   private destroy$ = new Subject<void>(); //? list observable hủy các subscribe api
   constructor(
     inject: Injector,
@@ -659,8 +660,28 @@ export class CashPaymentAddComponent extends UIComponent implements OnInit {
    * @param event
    */
   onTabSelectedDetail(event) {
-    if (event.selectedIndex == 0 && this.formCashPayment.data.subType == '9') {
-      this.eleGridCashPayment.refresh();
+    switch(event?.selectedIndex){
+      case 0:
+        if (this.eleGridCashPayment && this.eleGridCashPayment.isEdit) {
+          event.cancel = true;
+          this.nextTabIndex = parseInt(event?.selectingIndex) ;
+          return;
+        }
+        break;
+      case 1:
+        if (this.eleGridSettledInvoices && this.eleGridSettledInvoices.isEdit) {
+          event.cancel = true;
+          this.nextTabIndex = parseInt(event?.selectingIndex) ;
+          return;
+        }
+        break;
+      case 2:
+        if (this.eleGridVatInvoices && this.eleGridVatInvoices.isEdit) {
+          event.cancel = true;
+          this.nextTabIndex = parseInt(event?.selectingIndex) ;
+          return;
+        }
+        break;
     }
   }
 
@@ -1236,6 +1257,10 @@ export class CashPaymentAddComponent extends UIComponent implements OnInit {
     let oLine = Util.camelizekeyObj(model);
     oLine.transID = this.formCashPayment.data.recID;
     oLine.objectID = this.formCashPayment.data.objectID;
+    let indexObject = this.eleCbxObjectID?.ComponentCurrent?.dataService?.data.findIndex((x) => x.ObjectID == this.eleCbxObjectID?.ComponentCurrent?.value);
+    if (indexObject > -1) {
+      oLine.objectName = this.eleCbxObjectID?.ComponentCurrent?.dataService?.data[indexObject].ObjectName + ' - ';
+    }
     oLine.lineID = this.eleGridCashPayment?.rowDataSelected?.recID || Util.uid();
     oLine.journalNo = this.formCashPayment.data.journalNo;
     this.eleGridVatInvoices.addRow(oLine,this.eleGridVatInvoices.dataSource.length);
@@ -1586,6 +1611,7 @@ export class CashPaymentAddComponent extends UIComponent implements OnInit {
         this.eleGridCashPayment.saveRow((res:any)=>{ //? save lưới trước
           if(res){
             this.eleGridCashPayment.isSaveOnClick = false;
+            if(this.nextTabIndex) this.elementTabDetail.select(this.nextTabIndex);
             setTimeout(() => {
               if ((e.target as HTMLElement).tagName.toLowerCase() === 'input') {
                 e.target.focus();

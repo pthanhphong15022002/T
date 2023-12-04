@@ -45,7 +45,7 @@ export class LoginService {
   returnUrl: string;
   iParams: string;
   loginDevice: Device;
-
+  session: string;
   onInit() {}
   login(objData) {
     if (objData.login2FA != '') {
@@ -71,9 +71,10 @@ export class LoginService {
     }
   }
 
-  loginAfter(data: any) {
+  loginAfter(data: any, trust = false) {
     if (!data.error) {
       const user = data.data;
+      this.loginDevice.loginType = data.data.extends.LoginType ?? '';
       if (this.signalRService.logOut) {
         this.signalRService.createConnection();
       }
@@ -93,13 +94,17 @@ export class LoginService {
       } else {
         if (this.returnUrl.indexOf(user.tenant) > 0)
           window.location.href = this.returnUrl;
-        //return this.navRouter.navigate([`${this.returnUrl}`]);
         else if (environment.saas == 1) {
           if (!user.tenant) {
             return this.getTenants(user.email).subscribe((res: any) => {
               if (res && res.length) {
                 if (res.length > 1)
-                  return this.navRouter.navigate(['/tenants']);
+                  return this.navRouter.navigate(['/tenants'], {
+                    queryParams: {
+                      lt: this.loginDevice.loginType,
+                      trust: trust,
+                    },
+                  });
                 else this.navigate(res[0].tenantID);
               } else {
                 return (window.location.href = this.returnUrl

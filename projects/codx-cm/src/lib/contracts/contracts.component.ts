@@ -42,6 +42,7 @@ import { PopupMoveReasonComponent } from 'projects/codx-dp/src/lib/instances/pop
 import { ContractsViewDetailComponent } from './contracts-view-detail/contracts-view-detail.component';
 import { PopupAssginDealComponent } from '../deals/popup-assgin-deal/popup-assgin-deal.component';
 import { StepService } from 'projects/codx-share/src/lib/components/codx-step/step.service';
+import { ContractsDetailComponent } from './contracts-detail/contracts-detail.component';
 
 @Component({
   selector: 'contracts-detail',
@@ -146,6 +147,7 @@ export class ContractsComponent extends UIComponent {
     private contractService: ContractsService,
     private notiService: NotificationsService,
     private codxShareService: CodxShareService,
+    private changeDetectorRef: ChangeDetectorRef,
     private stepService: StepService,
     @Optional() dialog?: DialogRef
   ) {
@@ -158,7 +160,7 @@ export class ContractsComponent extends UIComponent {
     });
   }
 
-  async onInit(): Promise<void> {
+  async onInit(){
     this.loadParam();
     this.grvSetup = await firstValueFrom(
       this.cache.gridViewSetup('CMContracts', 'grvCMContracts')
@@ -214,6 +216,199 @@ export class ContractsComponent extends UIComponent {
     this.detectorRef.detectChanges();
   }
 
+    // moreFunc
+    changeMF(e) {
+      this.changeDataMF(e.e, e.data);
+    }
+  
+    changeDataMF(event, data, isDetail = false) {
+      if (this.runMode == '1') {
+        this.codxShareService.changeMFApproval(event, data?.unbounds);
+      } else if (event != null) {
+        event.forEach((res) => {
+          res.isblur = data?.approveStatus == '3';
+          switch (res.functionID) {
+            //Gửi duyệt
+            case 'CM0204_1':
+              if (
+                data.status == '0' ||
+                (data.closed && data.status != '1') ||
+                (this.approveRule != '1' && !data.applyApprover) ||
+                (data.applyApprover && data?.approveRule != '1') ||
+                data?.approveStatus >= '3'
+              ) {
+                res.disabled = true;
+              }
+              break;
+            //Hủy yêu cầu duyệt
+            case 'CM0204_2':
+              if (
+                (data.closed && data.status != '1') ||
+                data.status == '0' ||
+                data.approveStatus != '3'
+              ) {
+                res.disabled = true;
+              }
+              res.isblur = false;
+              break;
+  
+            case 'CM0204_4':
+              res.disabled = true;
+              break;
+  
+            case 'CM0204_3': //tạo hợp đồng gia hạn
+              if (data?.status == '1') {
+                res.disabled = true;
+              }
+              break;
+  
+            case 'CM0204_5': //Đã giao hàng
+              if (data?.status == '1') {
+                res.disabled = true;
+              }
+              break;
+  
+            case 'CM0204_6': //hoàn tất hợp đồng
+              if (data?.status == '1') {
+                res.disabled = true;
+              }
+              break;
+  
+            // case 'CM0204_7': // Xem chi tiết
+            //   if (!isDetail) {
+            //     res.disabled = true;
+            //   }
+            //   break;
+  
+            case 'CM0204_8': // chuyển giai đoạn
+              res.disabled = !data?.applyProcess || data?.status == '1';
+              break;
+  
+            case 'CM0204_9': // bắt đầu
+              res.disabled = !data?.applyProcess || data?.status !== '1';
+              break;
+  
+            case 'CM0204_10': // thành công
+              res.disabled = !data?.applyProcess || data?.status !== '2';
+              break;
+            case 'CM0204_11': // thất bại
+              res.disabled = !data?.applyProcess || data?.status !== '2';
+              break;
+  
+            case 'CM0204_13': // thêm công việc
+              if (data?.applyProcess) {
+              } else {
+                res.disabled = true;
+              }
+              break;
+  
+            case 'CM0204_14': // phân công người phụ trách
+              break;
+  
+            case 'CM0204_15': // Đóng hợp đồng
+              if (data?.closed) {
+                res.disabled = true;
+              }
+              break;
+  
+            case 'CM0204_16': // mở lại hợp đồng
+              if (!data?.closed) {
+                res.disabled = true;
+              }
+              break;
+          }
+        });
+      }
+    }
+  
+    clickMoreFunc(e) {
+      this.clickMF(e.e, e.data);
+    }
+  
+    clickMF(e, data) {
+      this.actionName = e.text;
+      switch (e.functionID) {
+        case 'SYS02':
+          this.deleteContract(data);
+          break;
+        case 'SYS03':
+          this.editContract(data);
+          break;
+        case 'SYS04':
+          this.copyContract(data);
+          break;
+        case 'CM0204_3':
+          //tạo hợp đồng gia hạn
+          this.addContractAdjourn(data);
+          break;
+        case 'CM0204_5':
+          //Đã giao hàng
+          this.updateDelStatus(data);
+          break;
+        case 'CM0204_6':
+          //hoàn tất hợp đồng
+          this.completedContract(data);
+          break;
+        case 'CM0204_1':
+          //Gửi duyệt
+          this.approvalTrans(data);
+          break;
+        case 'CM0204_2':
+          //Hủy yêu cầu duyệt
+          this.cancelApprover(data);
+          break;
+        case 'CM0204_9':
+          //Bắt đầu
+          this.startInstance(data);
+          break;
+        case 'CM0204_8':
+          //Chuyển giai đoạn
+          this.moveStage(data);
+          break;
+        case 'CM0204_10':
+          //thành công
+          this.moveReason(data, true);
+          break;
+        case 'CM0204_11':
+          //thất bại
+          this.moveReason(data, false);
+          break;
+        case 'CM0204_14':
+          //thất bại
+          this.popupOwnerRoles(data);
+          break;
+        //export core làm
+        case 'SYS002':
+          this.exportTemplet(e, data);
+          break;
+        case 'CM0204_7':
+          this.viewDetailContract(data);
+          break;
+        default: {
+          // var customData = {
+          //   refID: data.recID,
+          //   refType: 'CM_Contracts',
+          // };
+          // if (data?.refID && data.applyProcess) {
+          //   customData.refID = data.processID;
+          //   customData.refType = 'DP_Processes';
+          // }
+          this.codxShareService.defaultMoreFunc(
+            e,
+            data,
+            this.afterSave.bind(this),
+            this.view.formModel,
+            this.view.dataService,
+            this
+            //customData
+          );
+          this.detectorRef.detectChanges();
+          break;
+        }
+      }
+    }
+
+
   getQuotationsAndQuotationsLinesByTransID(recID) {
     this.contractService.getQuotationsLinesByTransID(recID).subscribe((res) => {
       if (res) {
@@ -243,201 +438,6 @@ export class ContractsComponent extends UIComponent {
       });
   }
 
-  // moreFunc
-  changeMF(e) {
-    this.changeDataMF(e.e, e.data);
-  }
-
-  changeDataMF(event, data, isDetail = false) {
-    if (this.runMode == '1') {
-      this.codxShareService.changeMFApproval(event, data?.unbounds);
-    } else if (event != null) {
-      event.forEach((res) => {
-        res.isblur = data.approveStatus == '3';
-        switch (res.functionID) {
-          //Gửi duyệt
-          case 'CM0204_1':
-            if (
-              data.status == '0' ||
-              (data.closed && data.status != '1') ||
-              (this.approveRule != '1' && !data.applyApprover) ||
-              (data.applyApprover && data?.approveRule != '1') ||
-              data?.approveStatus >= '3'
-            ) {
-              res.disabled = true;
-            }
-            break;
-          //Hủy yêu cầu duyệt
-          case 'CM0204_2':
-            if (
-              (data.closed && data.status != '1') ||
-              data.status == '0' ||
-              data.approveStatus != '3'
-            ) {
-              res.disabled = true;
-            }
-            res.isblur = false;
-            break;
-
-          case 'CM0204_4':
-            res.disabled = true;
-            break;
-
-          case 'CM0204_3': //tạo hợp đồng gia hạn
-            if (data?.status == '1') {
-              res.disabled = true;
-            }
-            break;
-
-          case 'CM0204_5': //Đã giao hàng
-            if (data?.status == '1') {
-              res.disabled = true;
-            }
-            break;
-
-          case 'CM0204_6': //hoàn tất hợp đồng
-            if (data?.status == '1') {
-              res.disabled = true;
-            }
-            break;
-
-          case 'CM0204_7': // Xem chi tiết
-            if (!isDetail) {
-              res.disabled = true;
-            }
-            break;
-
-          case 'CM0204_8': // chuyển giai đoạn
-            if (data?.applyProcess) {
-            } else {
-              res.disabled = true;
-            }
-            break;
-
-          case 'CM0204_9': // bắt đầu
-            res.disabled = !data?.applyProcess || data?.status !== '1';
-            break;
-
-          case 'CM0204_10': // thành công
-            res.disabled = !data?.applyProcess || data?.status !== '2';
-            break;
-          case 'CM0204_11': // thất bại
-            res.disabled = !data?.applyProcess || data?.status !== '2';
-            break;
-
-          case 'CM0204_13': // thêm công việc
-            if (data?.applyProcess) {
-            } else {
-              res.disabled = true;
-            }
-            break;
-
-          case 'CM0204_14': // phân công người phụ trách
-            break;
-
-          case 'CM0204_15': // Đóng hợp đồng
-            if (data?.closed) {
-              res.disabled = true;
-            }
-            break;
-
-          case 'CM0204_16': // mở lại hợp đồng
-            if (!data?.closed) {
-              res.disabled = true;
-            }
-            break;
-        }
-      });
-    }
-  }
-
-  clickMoreFunc(e) {
-    this.clickMF(e.e, e.data);
-  }
-
-  clickMF(e, data) {
-    this.actionName = e.text;
-    switch (e.functionID) {
-      case 'SYS02':
-        this.deleteContract(data);
-        break;
-      case 'SYS03':
-        this.editContract(data);
-        break;
-      case 'SYS04':
-        this.copyContract(data);
-        break;
-      case 'CM0204_3':
-        //tạo hợp đồng gia hạn
-        this.addContractAdjourn(data);
-        break;
-      case 'CM0204_5':
-        //Đã giao hàng
-        this.updateDelStatus(data);
-        break;
-      case 'CM0204_6':
-        //hoàn tất hợp đồng
-        this.completedContract(data);
-        break;
-      case 'CM0204_1':
-        //Gửi duyệt
-        this.approvalTrans(data);
-        break;
-      case 'CM0204_2':
-        //Hủy yêu cầu duyệt
-        this.cancelApprover(data);
-        break;
-      case 'CM0204_9':
-        //Bắt đầu
-        this.startInstance(data);
-        break;
-      case 'CM0204_8':
-        //Chuyển giai đoạn
-        this.moveStage(data);
-        break;
-      case 'CM0204_10':
-        //thành công
-        this.moveReason(data, true);
-        break;
-      case 'CM0204_11':
-        //thất bại
-        this.moveReason(data, false);
-        break;
-      case 'CM0204_14':
-        //thất bại
-        this.popupOwnerRoles(data);
-        break;
-      //export core làm
-      case 'SYS002':
-        this.exportTemplet(e, data);
-        break;
-      case 'CM0204_7':
-        this.viewDetailContract(data);
-        break;
-      default: {
-        // var customData = {
-        //   refID: data.recID,
-        //   refType: 'CM_Contracts',
-        // };
-        // if (data?.refID && data.applyProcess) {
-        //   customData.refID = data.processID;
-        //   customData.refType = 'DP_Processes';
-        // }
-        this.codxShareService.defaultMoreFunc(
-          e,
-          data,
-          this.afterSave.bind(this),
-          this.view.formModel,
-          this.view.dataService,
-          this
-          //customData
-        );
-        this.detectorRef.detectChanges();
-        break;
-      }
-    }
-  }
-
   afterSave(e?: any, that: any = null) {
     if (e) {
       let appoverStatus = e.unbounds.statusApproval;
@@ -463,7 +463,7 @@ export class ContractsComponent extends UIComponent {
     option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;
     let popupContract = this.callFunc.openForm(
-      ContractsViewDetailComponent,
+      ContractsDetailComponent,
       '',
       null,
       null,
@@ -487,7 +487,7 @@ export class ContractsComponent extends UIComponent {
       contracts.quotationID = null;
       contracts.refID = contracts.recID;
       delete contracts['id'];
-      let contractOutput = await this.openPopupContract(null, 'add', contracts);
+      this.openPopupContract(null, 'add', contracts);
     });
   }
 
@@ -497,14 +497,14 @@ export class ContractsComponent extends UIComponent {
     }
     let dataEdit = this.view.dataService.dataSelected;
     this.view.dataService.edit(dataEdit).subscribe(async (res) => {
-      await this.openPopupContract(null, 'edit', dataEdit);
+      this.openPopupContract(null, 'edit', dataEdit);
     });
   }
 
   async copyContract(contract) {
     this.view.dataService.addNew().subscribe(async (res) => {
       let dataCopy = JSON.parse(JSON.stringify(contract));
-      let contractOutput = await this.openPopupContract(null, 'copy', dataCopy);
+      this.openPopupContract(null, 'copy', dataCopy);
     });
   }
 
@@ -559,7 +559,6 @@ export class ContractsComponent extends UIComponent {
   }
 
   async openPopupContract(projectID, action, contract?) {
-    // this.stepService.openPopupContract('add');
     let data = {
       projectID,
       action,
@@ -579,9 +578,6 @@ export class ContractsComponent extends UIComponent {
       data,
       option
     );
-    let dataPopupOutput = await firstValueFrom(popupContract.closed);
-    this.isAddContract = true;
-    return dataPopupOutput;
   }
 
   getAccount() {
@@ -747,7 +743,9 @@ export class ContractsComponent extends UIComponent {
               .subscribe((res3) => {
                 if (res3) {
                   this.contractSelected.approveStatus = '0';
-                  this.view.dataService.update(this.contractSelected).subscribe();
+                  this.view.dataService
+                    .update(this.contractSelected)
+                    .subscribe();
                   this.notiService.notifyCode('SYS007');
                 } else this.notiService.notifyCode('SYS021');
               });
@@ -848,7 +846,6 @@ export class ContractsComponent extends UIComponent {
               data?.refID,
             ])
             .subscribe((res) => {
-              console.log(res);
               if (res) {
                 this.listInsStep = res;
               }
@@ -858,6 +855,8 @@ export class ContractsComponent extends UIComponent {
             .subscribe((res) => {
               if (res) {
                 data.status = '2';
+                this.moreDefaut = Object.assign(this.moreDefaut);
+                this.changeDetectorRef.markForCheck();
               }
             });
         }
