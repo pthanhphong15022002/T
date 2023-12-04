@@ -1294,8 +1294,8 @@ export class DealsComponent
                 // this.kanban?.kanbanObj.refreshUI();
               }
             }
+            this.changeDetectorRef.detectChanges();
           });
-        this.changeDetectorRef.detectChanges();
       }
     });
   }
