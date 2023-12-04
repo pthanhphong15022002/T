@@ -255,12 +255,12 @@ export class ShareComponent implements OnInit {
   }
 
   getPath() {
-    const queryParams = {
-      id: this.id,
-    };
-    var l = this.router.url.split('/');
+    const queryParams:any = {};
+    if(this.type == "folder") queryParams._fo = this.id;
+    else queryParams._f = this.id;
+    var l = this.router.url.split('?')[0];
     const url = this.router.serializeUrl(
-      this.router.createUrlTree([`/` + l[1] + `/viewfile`], {
+      this.router.createUrlTree([`/` + l], {
         queryParams: queryParams,
       })
     );

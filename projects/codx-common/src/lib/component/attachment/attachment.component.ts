@@ -1301,7 +1301,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
       numOfChunks++;
     }
     let percent = 0;
-    let p = 100 / numOfChunks;
+    let elem =  document.getElementById("circle"+ uploadFile.name);
     for (var i = 0; i < numOfChunks; i++) {
       var start = i * chunSizeInfBytes; //Vị trí bắt đầu băm file
       var end = start + chunSizeInfBytes; //Vị trí cuối
@@ -1320,7 +1320,10 @@ export class AttachmentComponent implements OnInit, OnChanges {
           },
           uploadFile.name
         );
-
+        percent = (i+1) / numOfChunks
+      
+        if(elem) elem.style.strokeDashoffset = (503 - (43 * percent)).toString();
+        
         // if(uploadChunk?.status == 200)
         // {
         //   percent += p;
@@ -1328,11 +1331,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
         // }
       } catch (ex) {}
     }
-    // if(percent >= 100)
-    // {
-    //   let elem =  document.getElementById("circle"+ uploadFile.name);
-    //   if(elem) elem.style.strokeDashoffset = (503 - ( 503 * ( percent / 100 ))).toString();
-    // }
+    
     return retUpload;
   }
 
@@ -1572,20 +1571,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
       fileItem.uploadId = '0';
       // this.notificationsService.notify(ex);
     }
-    if (!fileItem.urlPath) {
-      let elem = document.getElementById('circle' + uploadFile.name);
-      if (elem) {
-        elem.style.strokeDashoffset = '0';
-        elem.style.stroke = 'red';
-      }
-      return {
-        fileName: fileItem.fileName,
-        isError: true,
-      };
-    } else {
-      let elem = document.getElementById('circle' + uploadFile.name);
-      if (elem) elem.style.strokeDashoffset = (0).toString();
-    }
+    
     //this.closeBtnUp = false;
     return fileItem;
   }
@@ -3394,6 +3380,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
 
   public async handleFileInput(files: any[], drag = false) {
     var count = this.fileUploadList.length;
+    
     //this.getFolderPath();
     var addedList = [];
     for (var i = 0; i < files.length; i++) {
@@ -3418,7 +3405,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
         if (drag) {
           data = await files[i].arrayBuffer();
           data = this.arrayBufferToBase64(data);
-        } else {
+        } else if(files[i].size <= 10485760 ) {
           data = await this.convertBlobToBase64(files[i].rawFile);
         }
 
@@ -3428,7 +3415,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
 
         //Lấy avatar mặc định theo định dạng file
         //Image
-        if (type_image.includes(type)) fileUpload.avatar = data;
+        if (type_image.includes(type) && files[i].size <= 10485760 ) fileUpload.avatar = data;
         //Video
         else if (type_video.includes(type)) {
           var url = this.sanitizer.bypassSecurityTrustUrl(

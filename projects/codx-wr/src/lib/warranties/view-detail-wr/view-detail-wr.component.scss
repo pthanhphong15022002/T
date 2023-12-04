@@ -30,3 +30,10 @@ lib-warranties codx-view-detail-wr .codx-detail-main {
 .background-color-status {
   background-color: var(--primary);
 }
+
+.line-clamp-address {
+  display: -webkit-box !important;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
