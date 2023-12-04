@@ -2080,4 +2080,15 @@ export class DealsComponent
     this.kanban.columns.forEach((x) => (x.totalDealValue = 0));
     this.loadFirst = true;
   }
+
+  //---------Tính tổng grid view-------------//
+  requestEnded(e) {
+    debugger;
+    this.totalGirdView();
+  }
+  totalGirdView() {
+    let elemnt = document.querySelector('.sum-content');
+    debugger;
+  }
+  //---------------End----------------------//
 }
