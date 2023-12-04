@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Injector, Input, Output, SimpleChange, ViewChild } from '@angular/core';
 import { extend } from '@syncfusion/ej2-angular-grids';
-import { CallFuncService, DataRequest, DialogModel, FormModel, NotificationsService, RequestOption, SidebarModel, TenantStore, UIComponent } from 'codx-core';
+import { CallFuncService, CodxService, DataRequest, DialogModel, FormModel, NotificationsService, RequestOption, SidebarModel, TenantStore, UIComponent, UIDetailComponent } from 'codx-core';
 import { Subject, takeUntil } from 'rxjs';
 import { AnimationModel } from '@syncfusion/ej2-angular-progressbar';
 import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
@@ -16,10 +16,9 @@ import { TabModel } from 'projects/codx-share/src/lib/components/codx-approval/t
   styleUrls: ['./receipt-transactions-detail.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ReceiptTransactionsDetailComponent extends UIComponent {
+export class ReceiptTransactionsDetailComponent extends UIDetailComponent {
   
   //#region Constructor
-  @Input() recID: any;
   @Input() dataItem: any;
   @Input() dataService: any;
   @Input() formModel: any;
@@ -48,14 +47,18 @@ export class ReceiptTransactionsDetailComponent extends UIComponent {
     private acService: CodxAcService,
     private shareService: CodxShareService,
     private notification: NotificationsService,
-    private tenant: TenantStore
+    private tenant: TenantStore,
+    public codxService: CodxService
   ) {
     super(inject);
   }
   //#endregion Constructor
 
   //#region Init
-  onInit(): void {}
+  onInit(): void {
+    if(this.recID) this.getDataDetail(this.dataItem,this.recID);
+    if(!this.formModel) this.getFormModel();
+  }
 
   ngAfterViewInit() {
     //* thiết lập cấu hình sidebar
@@ -145,7 +148,15 @@ export class ReceiptTransactionsDetailComponent extends UIComponent {
     }
   }
 
-
+  getFormModel()
+  {
+    this.cache.functionList(this.funcID).subscribe(item=>{
+      this.formModel = new FormModel();
+      this.formModel.entityName = item?.entityName;
+      this.formModel.formName = item?.formName;
+      this.formModel.gridViewName = item?.gridViewName;
+    })
+  }
   //#endregion
 
 

@@ -1,5 +1,5 @@
 import { Component, Injector, Input, SimpleChange } from '@angular/core';
-import { NotificationsService, SidebarModel, TenantStore, UIComponent } from 'codx-core';
+import { CodxService, FormModel, NotificationsService, SidebarModel, TenantStore, UIComponent, UIDetailComponent } from 'codx-core';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-approval/tab/model/tabControl.model';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { Subject, takeUntil } from 'rxjs';
@@ -10,9 +10,8 @@ import { CodxAcService } from '../../../codx-ac.service';
   templateUrl: './warehouse-transfers-detail.component.html',
   styleUrls: ['./warehouse-transfers-detail.component.css']
 })
-export class WarehouseTransfersDetailComponent extends UIComponent {
+export class WarehouseTransfersDetailComponent extends UIDetailComponent {
   //#region Constructor
-  @Input() recID: any;
   @Input() dataItem: any;
   @Input() dataService: any;
   @Input() formModel: any;
@@ -41,14 +40,18 @@ export class WarehouseTransfersDetailComponent extends UIComponent {
     private acService: CodxAcService,
     private shareService: CodxShareService,
     private notification: NotificationsService,
-    private tenant: TenantStore
+    private tenant: TenantStore,
+    public codxService: CodxService
   ) {
     super(inject);
   }
   //#endregion Constructor
 
   //#region Init
-  onInit(): void {}
+  onInit(): void {
+    if(this.recID) this.getDataDetail(this.dataItem,this.recID);
+    if(!this.formModel) this.getFormModel();
+  }
 
   ngAfterViewInit() {
     //* thiết lập cấu hình sidebar
@@ -133,6 +136,16 @@ export class WarehouseTransfersDetailComponent extends UIComponent {
       }
       this.detectorRef.detectChanges();
     }
+  }
+
+  getFormModel()
+  {
+    this.cache.functionList(this.funcID).subscribe(item=>{
+      this.formModel = new FormModel();
+      this.formModel.entityName = item?.entityName;
+      this.formModel.formName = item?.formName;
+      this.formModel.gridViewName = item?.gridViewName;
+    })
   }
   //#endregion Function
 }
