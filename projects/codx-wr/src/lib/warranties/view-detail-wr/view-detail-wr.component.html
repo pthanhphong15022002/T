@@ -369,9 +369,6 @@
                     ></span>
                     <div
                       class="action-menu-od me-1"
-                      *ngIf="
-                        dataSelected.status != '7' && dataSelected.status != '5'
-                      "
                       (click)="editProduct(dataSelected)"
                     >
                       <i class="icon-edit text-danger icon-16"></i>
@@ -938,10 +935,6 @@
                                     "
                                   ></span>
                                   <span
-                                    *ngIf="
-                                      dataSelected?.status != '5' &&
-                                      dataSelected?.status != '7'
-                                    "
                                     class="icon-edit text-hover-primary text-primary icon-16 ms-2 cursor-pointer"
                                     (click)="updateServiceLocator(dataSelected)"
                                   ></span>
@@ -999,10 +992,6 @@
                                   ></span>
                                   <span
                                     class="ms-1"
-                                    *ngIf="
-                                      dataSelected.status != '7' &&
-                                      dataSelected.status != '5'
-                                    "
                                   >
                                     <button
                                       type="button"
