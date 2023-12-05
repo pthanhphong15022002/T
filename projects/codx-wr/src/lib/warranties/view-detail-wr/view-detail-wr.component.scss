@@ -37,3 +37,8 @@ lib-warranties codx-view-detail-wr .codx-detail-main {
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
+
+.scroll-info {
+  height: calc(100vh - 485px) !important;
+  overflow: auto;
+}

@@ -368,7 +368,7 @@ export class PopupMoveReasonComponent implements OnInit {
   }
   async getListPermission(permissions) {
     if(permissions != null && permissions.length > 0) {
-      this.codxDpService.getlistCbxProccessReason(permissions).subscribe((res) => {
+      this.codxDpService.getUserCbxByListPermission([permissions]).subscribe((res) => {
         if( res != null && res.length > 0) {
           this.listParticipantReason = res;
         }

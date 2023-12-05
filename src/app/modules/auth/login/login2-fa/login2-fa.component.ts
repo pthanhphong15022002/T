@@ -85,6 +85,7 @@ export class Login2FAComponent extends UIComponent implements AfterViewInit {
   curLgType: string = '';
   email;
   unsubscribe: Subscription[] = [];
+  session: string;
   @ViewChildren('ipotp') ipOTP: TemplateRef<any>;
   // #endregion
 
@@ -114,6 +115,7 @@ export class Login2FAComponent extends UIComponent implements AfterViewInit {
       });
     }
     this.generateQR();
+    console.log(this.loginDevice);
   }
 
   ngAfterViewInit() {
@@ -244,7 +246,7 @@ export class Login2FAComponent extends UIComponent implements AfterViewInit {
   }
   generateOTP() {
     this.api
-      .execSv<boolean>(
+      .execSv<any>(
         'SYS',
         'ERM.Business.AD',
         'UsersBusiness',
@@ -254,7 +256,7 @@ export class Login2FAComponent extends UIComponent implements AfterViewInit {
       .subscribe((success) => {
         if (success) {
           this.otpTimeout = 180;
-
+          this.session = success;
           let id = setInterval(
             () => {
               this.otpTimeout -= 1;
@@ -313,7 +315,7 @@ export class Login2FAComponent extends UIComponent implements AfterViewInit {
     userName = this.aesCrypto.encrypt(userName.trim());
     password = this.aesCrypto.encrypt(password);
     this.loginDevice.loginType = this.curLgType;
-
+    this.loginDevice.session = this.session;
     const login2FASubscr = this.api
       .callSv('SYS', 'AD', 'UsersBusiness', 'CreateUserLoginAsync', [
         this.user.tenant,
@@ -321,15 +323,6 @@ export class Login2FAComponent extends UIComponent implements AfterViewInit {
         password,
         JSON.stringify(this.loginDevice),
       ])
-      // const login2FASubscr = this.authService
-      //   .login(
-      //     this.loginFG.controls['email'].value,
-      //     this.loginFG.controls['password'].value,
-      //     this.curLgType,
-      //     true,
-      //     JSON.stringify(this.loginDevice)
-      //   )
-      //.pipe()
       .subscribe((data) => {
         if (!data.error) {
           const user = data?.read<UserModel>();
