@@ -231,10 +231,10 @@
                 </div>
 
                 <div class="text-center sign-attachment">
-                  <div>
+                  <!-- <div>
                     <codx-thumbnail *ngIf="oSignFile" [files]="lstFile" displayThumb="simple" [hideDelete]="'1'"
                       [hideMoreF]="'0'" [tmpRight]="tmpRightAttach"></codx-thumbnail>
-                  </div>
+                  </div>                   -->
                   <div class="text-center sign-attachment" *ngIf="showAttachment">
                     <codx-attachment #attachment
                       [objectType]="data?.refType!=null && !isTemplate ? data?.refType : 'ES_SignFiles'" [hideDes]="'1'"
