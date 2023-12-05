@@ -57,6 +57,7 @@ export class ContractsDetailComponent implements OnInit,OnChanges{
   funcID = 'CM0101';
   grvSetup;
   vllStatus;
+  oCountFooter: any = {};
   constructor(
     private contractService: ContractsService,
     private codxCmService: CodxCmService,
@@ -96,6 +97,20 @@ export class ContractsDetailComponent implements OnInit,OnChanges{
     this.tabSelect = this.listTabRight.find(x => x.id == e);
     this.listTab = this[e];
     this.tabClick = this.listTab[0]?.id;
+    if(this.tabSelect?.id == 'listTabTask' && this.contract?.applyProcess && this.listInsStep){
+      this.getListInstanceStep(this.contract);
+    }
+  }
+
+  getListInstanceStep(contract) {
+    if (contract?.processID) {
+      var data = [contract?.refID, contract?.processID, contract?.status, '4'];
+      this.codxCmService.getStepInstance(data).subscribe((res) => {
+        if (res) {
+          this.listInsStep = res;
+        }
+      });
+    }
   }
 
   close(){
@@ -133,5 +148,11 @@ export class ContractsDetailComponent implements OnInit,OnChanges{
         this.contact = res;
       }
     })
+  }
+  changeCountFooter(value: number, key: string) {
+    let oCountFooter = JSON.parse(JSON.stringify(this.oCountFooter));
+    oCountFooter[key] = value;
+    this.oCountFooter = JSON.parse(JSON.stringify(oCountFooter));
+    this.changeDetectorRef.markForCheck();
   }
 }
