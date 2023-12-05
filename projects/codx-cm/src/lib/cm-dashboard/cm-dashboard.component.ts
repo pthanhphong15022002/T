@@ -452,13 +452,13 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     );
 
     this.panelsDeals2 = JSON.parse(
-      '[{"id":"12.1636284528927885_layout","row":0,"col":0,"sizeX":15,"sizeY":4,"minSizeX":15,"minSizeY":4,"maxSizeX":null,"maxSizeY":null},{"id":"22.5801149283702021_layout","row":0,"col":15,"sizeX":15,"sizeY":4,"minSizeX":15,"minSizeY":4,"maxSizeX":null,"maxSizeY":null},{"id":"32.6937258303982936_layout","row":0,"col":30,"sizeX":15,"sizeY":4,"minSizeX":15,"minSizeY":4,"maxSizeX":null,"maxSizeY":null},{"id":"42.5667390469747078_layout","row":0,"col":45,"sizeX":15,"sizeY":4,"minSizeX":15,"minSizeY":4,"maxSizeX":null,"maxSizeY":null},{"id":"52.4199281088325755_layout","row":4,"col":0,"sizeX":20,"sizeY":20,"minSizeX":20,"minSizeY":20,"maxSizeX":null,"maxSizeY":null},{"id":"62.4592017601751599_layout","row":4,"col":20,"sizeX":40,"sizeY":20,"minSizeX":40,"minSizeY":20,"maxSizeX":null,"maxSizeY":null},{"id":"72.14683256767762543_layout","row":24,"col":0,"sizeX":20,"sizeY":14,"minSizeX":20,"minSizeY":14,"maxSizeX":null,"maxSizeY":null},{"id":"82.36639064171709834_layout","row":24,"col":20,"sizeX":20,"sizeY":14,"minSizeX":20,"minSizeY":14,"maxSizeX":null,"maxSizeY":null},{"id":"92.06496875406606994_layout","row":24,"col":40,"sizeX":20,"sizeY":14,"minSizeX":20,"minSizeY":14,"maxSizeX":null,"maxSizeY":null,"header":null},{"id":"102.21519762020962552_layout","row":38,"col":0,"sizeX":40,"sizeY":18,"minSizeX":40,"minSizeY":18,"maxSizeX":null,"maxSizeY":null},{"id":"112.21519762020964252_layout","row":38,"col":40,"sizeX":20,"sizeY":18,"minSizeX":20,"minSizeY":18,"maxSizeX":null,"maxSizeY":null}]'
+      '[{"id":"12.1636284528927885_layout","row":0,"col":0,"sizeX":15,"sizeY":4,"minSizeX":15,"minSizeY":4,"maxSizeX":null,"maxSizeY":null},{"id":"22.5801149283702021_layout","row":0,"col":15,"sizeX":15,"sizeY":4,"minSizeX":15,"minSizeY":4,"maxSizeX":null,"maxSizeY":null},{"id":"32.6937258303982936_layout","row":0,"col":30,"sizeX":15,"sizeY":4,"minSizeX":15,"minSizeY":4,"maxSizeX":null,"maxSizeY":null},{"id":"42.5667390469747078_layout","row":0,"col":45,"sizeX":15,"sizeY":4,"minSizeX":15,"minSizeY":4,"maxSizeX":null,"maxSizeY":null},{"id":"52.4199281088325755_layout","row":4,"col":0,"sizeX":20,"sizeY":15,"minSizeX":20,"minSizeY":15,"maxSizeX":null,"maxSizeY":null},{"id":"62.4592017601751599_layout","row":4,"col":20,"sizeX":40,"sizeY":15,"minSizeX":40,"minSizeY":15,"maxSizeX":null,"maxSizeY":null},{"id":"72.14683256767762543_layout","row":19,"col":0,"sizeX":20,"sizeY":14,"minSizeX":20,"minSizeY":14,"maxSizeX":null,"maxSizeY":null},{"id":"82.36639064171709834_layout","row":19,"col":20,"sizeX":20,"sizeY":14,"minSizeX":20,"minSizeY":14,"maxSizeX":null,"maxSizeY":null},{"id":"92.06496875406606994_layout","row":19,"col":40,"sizeX":20,"sizeY":14,"minSizeX":20,"minSizeY":14,"maxSizeX":null,"maxSizeY":null,"header":null},{"id":"102.21519762020962552_layout","row":33,"col":0,"sizeX":40,"sizeY":15,"minSizeX":40,"minSizeY":15,"maxSizeX":null,"maxSizeY":null},{"id":"112.21519762020964252_layout","row":33,"col":40,"sizeX":20,"sizeY":15,"minSizeX":20,"minSizeY":15,"maxSizeX":null,"maxSizeY":null}]'
     );
     this.datasDeals2 = JSON.parse(
       '[{"panelId":"12.1636284528927885_layout","data":"1"},{"panelId":"22.5801149283702021_layout","data":"2"},{"panelId":"32.6937258303982936_layout","data":"3"},{"panelId":"42.5667390469747078_layout","data":"4"},{"panelId":"52.4199281088325755_layout","data":"5"},{"panelId":"62.4592017601751599_layout","data":"6"},{"panelId":"72.14683256767762543_layout","data":"7"},{"panelId":"82.36639064171709834_layout","data":"8"},{"panelId":"92.06496875406606994_layout","data":"9"},{"panelId":"102.21519762020962552_layout","data":"10"},{"panelId":"112.21519762020964252_layout","data":"11"}]'
     );
     this.primaryXAxisY = {
-      title: this.language == 'VN' ? 'Tháng' : 'Mothn',
+      title: this.language == 'VN' ? 'Tháng' : 'Month',
     };
     // this.primaryXAxisY = {
     //   title: null,
@@ -594,102 +594,103 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     return this.arrVllStatus.filter((x) => x.value == status)[0]?.text;
   }
 
-  getDataDashboard(predicates?: string, dataValues?: string, params?: any) {
-    this.isLoaded = false;
-    let model = new GridModels();
-    model.funcID = this.funcID;
-    model.entityName = 'CM_Deals';
-    model.predicates = predicates;
-    model.dataValues = dataValues;
-    this.api
-      .exec('CM', 'DealsBusiness', 'GetDataDashBoardAsync', [model, params])
-      .subscribe((res) => {
-        this.dataDashBoard = res;
-        if (res) {
-          this.countNew = this.dataDashBoard?.counts?.countNew;
-          this.countProcessing = this.dataDashBoard?.counts?.countProcessing;
-          this.countSuccess = this.dataDashBoard?.counts?.countSuccess;
-          this.countFail = this.dataDashBoard?.counts?.countFail;
+  //
+  // getDataDashboard(predicates?: string, dataValues?: string, params?: any) {
+  //   this.isLoaded = false;
+  //   let model = new GridModels();
+  //   model.funcID = this.funcID;
+  //   model.entityName = 'CM_Deals';
+  //   model.predicates = predicates;
+  //   model.dataValues = dataValues;
+  //   this.api
+  //     .exec('CM', 'DealsBusiness', 'GetDataDashBoardAsync', [model, params])
+  //     .subscribe((res) => {
+  //       this.dataDashBoard = res;
+  //       if (res) {
+  //         this.countNew = this.dataDashBoard?.counts?.countNew;
+  //         this.countProcessing = this.dataDashBoard?.counts?.countProcessing;
+  //         this.countSuccess = this.dataDashBoard?.counts?.countSuccess;
+  //         this.countFail = this.dataDashBoard?.counts?.countFail;
 
-          if (this.dataDashBoard.countsBussinessLines) {
-            this.palette = this.dataDashBoard.countsBussinessLines?.map(
-              (x) => x.color
-            );
-            this.dataSourceBussnessLine =
-              this.dataDashBoard.countsBussinessLines?.map((x) => {
-                let data = {
-                  color: x.color,
-                  businessLineName: x.businessLineName,
-                  quantity: x.quantity,
-                  percentage: x.percentage,
-                };
-                return data;
-              });
-            //chart
-            this.chartBussnessLine = this.dataDashBoard.countsBussinessLines;
-          }
-          this.dataStatisticTarget =
-            this.dataDashBoard.countsStatisticTargetBussinessLine ?? [];
-          if (this.dataStatisticTarget.length > 0) {
-            let maxTarget = Math.max(
-              ...this.dataStatisticTarget.map((o) => o.totalTarget)
-            );
-            this.primaryXAxisRatio.maximum =
-              maxTarget + 2 * Math.floor(maxTarget / 10);
-            this.primaryXAxisRatio.interval = Math.floor(
-              this.primaryXAxisRatio.maximum / 10
-            );
+  //         if (this.dataDashBoard.countsBussinessLines) {
+  //           this.palette = this.dataDashBoard.countsBussinessLines?.map(
+  //             (x) => x.color
+  //           );
+  //           this.dataSourceBussnessLine =
+  //             this.dataDashBoard.countsBussinessLines?.map((x) => {
+  //               let data = {
+  //                 color: x.color,
+  //                 businessLineName: x.businessLineName,
+  //                 quantity: x.quantity,
+  //                 percentage: x.percentage,
+  //               };
+  //               return data;
+  //             });
+  //           //chart
+  //           this.chartBussnessLine = this.dataDashBoard.countsBussinessLines;
+  //         }
+  //         this.dataStatisticTarget =
+  //           this.dataDashBoard.countsStatisticTargetBussinessLine ?? [];
+  //         if (this.dataStatisticTarget.length > 0) {
+  //           let maxTarget = Math.max(
+  //             ...this.dataStatisticTarget.map((o) => o.totalTarget)
+  //           );
+  //           this.primaryXAxisRatio.maximum =
+  //             maxTarget + 2 * Math.floor(maxTarget / 10);
+  //           this.primaryXAxisRatio.interval = Math.floor(
+  //             this.primaryXAxisRatio.maximum / 10
+  //           );
 
-            let maxDealValue = Math.max(
-              ...this.dataStatisticTarget.map((o) => o.totalDealValue)
-            );
+  //           let maxDealValue = Math.max(
+  //             ...this.dataStatisticTarget.map((o) => o.totalDealValue)
+  //           );
 
-            this.primaryYAxisRatio.maximum =
-              maxDealValue + 2 * Math.floor(maxDealValue / 10);
-            this.primaryYAxisRatio.interval = Math.floor(
-              this.primaryYAxisRatio.maximum / 10
-            );
-          }
-          this.maxOwners = this.dataDashBoard?.countsOwnersTopHightToLow ?? [];
-          this.minOwners = this.dataDashBoard?.countsOwnersTopLowToHight ?? [];
-          this.productivityOwner =
-            this.dataDashBoard.countsProductivityOwner ?? [];
-          this.dataSourcePyStatus =
-            this.dataDashBoard?.countsConversionRate?.filter(
-              (x) => !x.type || x.type == 'Status'
-            ) ?? [];
-          this.dataSourcePyStage =
-            this.dataDashBoard?.countsConversionRate?.filter(
-              (x) => !x.type || x.type == 'Stage'
-            ) ?? [];
+  //           this.primaryYAxisRatio.maximum =
+  //             maxDealValue + 2 * Math.floor(maxDealValue / 10);
+  //           this.primaryYAxisRatio.interval = Math.floor(
+  //             this.primaryYAxisRatio.maximum / 10
+  //           );
+  //         }
+  //         this.maxOwners = this.dataDashBoard?.countsOwnersTopHightToLow ?? [];
+  //         this.minOwners = this.dataDashBoard?.countsOwnersTopLowToHight ?? [];
+  //         this.productivityOwner =
+  //           this.dataDashBoard.countsProductivityOwner ?? [];
+  //         this.dataSourcePyStatus =
+  //           this.dataDashBoard?.countsConversionRate?.filter(
+  //             (x) => !x.type || x.type == 'Status'
+  //           ) ?? [];
+  //         this.dataSourcePyStage =
+  //           this.dataDashBoard?.countsConversionRate?.filter(
+  //             (x) => !x.type || x.type == 'Stage'
+  //           ) ?? [];
 
-          this.dataSourceIndustry = this.dataDashBoard?.countsIndustries ?? [];
-          this.paletteIndustry = this.dataDashBoard.countsIndustries?.map(
-            (x) => x.color
-          );
-          const dashBoardTarget = this.dataDashBoard?.dashBoardTargets;
-          if (dashBoardTarget?.quarterDashBoard) {
-            this.piedata = dashBoardTarget?.quarterDashBoard?.map((x) => {
-              let data = {
-                x: x?.nameQuarter,
-                y: x?.probability,
-                text: x?.target,
-                quarter: x?.target,
-                year: x?.year,
-              };
-              return data;
-            });
-          }
-        } else {
-          this.resetData();
-        }
-        setTimeout(() => {
-          this.isLoaded = true;
-        }, 500);
-      });
+  //         this.dataSourceIndustry = this.dataDashBoard?.countsIndustries ?? [];
+  //         this.paletteIndustry = this.dataDashBoard.countsIndustries?.map(
+  //           (x) => x.color
+  //         );
+  //         const dashBoardTarget = this.dataDashBoard?.dashBoardTargets;
+  //         if (dashBoardTarget?.quarterDashBoard) {
+  //           this.piedata = dashBoardTarget?.quarterDashBoard?.map((x) => {
+  //             let data = {
+  //               x: x?.nameQuarter,
+  //               y: x?.probability,
+  //               text: x?.target,
+  //               quarter: x?.target,
+  //               year: x?.year,
+  //             };
+  //             return data;
+  //           });
+  //         }
+  //       } else {
+  //         this.resetData();
+  //       }
+  //       setTimeout(() => {
+  //         this.isLoaded = true;
+  //       }, 500);
+  //     });
 
-    this.detectorRef.detectChanges();
-  }
+  //   this.detectorRef.detectChanges();
+  // }
 
   getDashBoardTargets() {
     this.isLoaded = false;
@@ -1073,8 +1074,8 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
 
                 break;
               case 'CMD002':
-                this.changeMySales(res);
-                break;
+              // this.changeMySales(res);
+              // break;
               case 'CMD003':
                 this.changeMySales(res);
                 break;
@@ -1146,14 +1147,15 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   // --------------------------------------------//
   //DASHBOAD CÁ NHÂN + NHÓM
   // --------------------------------------------//
-  changeMySales(datas) {
-    //datas[0] : Cơ hôi //data[1] : Leads //data[2] : Ly do thanh cong that bai //data[3] : target bus year //data[4] :tmpProcessDefault
-    let dataSetDeals = datas[0];
-    let dataSetLead = datas[1];
-    let dataReason = datas[2];
-    let dataTargetYear = datas[3];
-    let tmpProcessDefault = datas[4];
-    if (dataSetDeals?.lenght == 0) return;
+  changeMySales(dataDashboard) {
+    let dataSetDeals = dataDashboard.listDeals;
+    let dataSetLead = dataDashboard.listLeads;
+    let dataReason = dataDashboard.listReason;
+    let dataTargetYear = dataDashboard.listTarget;
+    let tmpProcessDefault = dataDashboard.processDefault;
+    let dataTargetLine = dataDashboard.listTargetsLines;
+
+    if (!dataSetDeals || dataSetDeals?.lenght == 0) return;
     this.countNew = dataSetDeals.filter(
       (x) => x.status == '1' || x.status == '0'
     )?.length;
@@ -1167,6 +1169,8 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     this.getIndustries(dataSetDeals);
     this.getOwnerTop(dataSuccess);
     this.getReasonChart(dataReason);
+    if (dataTargetLine?.length > 0)
+      this.getChartProductivityOwner(dataSetDeals, dataSuccess, dataTargetLine);
   }
 
   getBusinessLine(dataSet, dataTargetYear) {
@@ -1311,9 +1315,6 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
       }
     }
   }
-  getProductivityOwner(dataSet) {
-    this.productivityOwner = [];
-  }
 
   getOwnerTop(dataSet) {
     this.minOwners = [];
@@ -1340,6 +1341,59 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
       this.minOwners = JSON.parse(JSON.stringify(owner)).sort(
         (a, b) => a.quantity - b.quantity
       );
+    }
+  }
+
+  getChartProductivityOwner(dataDeals, dataSuccess, dataTargetLine) {
+    // public string ObjectID { get; set; }
+    //     public string ObjectName { get; set; }
+    //     public decimal SumTarget { get; set; }
+    //     public decimal SumDealValueSuccess { get; set; }
+    //     public decimal Percentage { get; set; }
+    //     public string CurrencyID { get; set; }
+    this.productivityOwner = [];
+    if (!dataDeals || dataDeals?.length == 0) return;
+    let listOwner = this.groupBy(dataDeals, 'owner');
+    if (listOwner) {
+      let year = dataTargetLine[0].year;
+      for (let key in listOwner) {
+        let color = this.random_bg_color();
+        let sumDealValueSuccess = 0;
+        //chua tisnh nam => hoi lai khanh sau
+        let dataSucOwner = dataSuccess.filter((x) => x.owner == key);
+        if (dataSucOwner?.length > 0) {
+          dataSucOwner.forEach((x) => {
+            let money = x.dealValue * x.exchangeRate;
+            if (money) sumDealValueSuccess += money;
+          });
+          sumDealValueSuccess = sumDealValueSuccess / this.exchangeRate;
+        }
+
+        let sumTarget = 0;
+        let sumTargetOwner = dataTargetLine.filter(
+          (tl) => tl.salespersonID == key
+        );
+        if (sumTargetOwner?.length > 0) {
+          sumTargetOwner.forEach((x) => {
+            let moneyTarget = x.target * x.exchangeRate;
+            if (moneyTarget) sumTarget += moneyTarget;
+          });
+          sumTarget = sumTarget / this.exchangeRate;
+        }
+
+        if (sumTarget > 0) {
+          let obj = {
+            objectID: key,
+            objectName: listOwner[key][0].ownerName ?? key,
+            sumDealValueSuccess: sumDealValueSuccess,
+            sumTarget: sumTarget,
+            percentage: ((sumDealValueSuccess * 100) / sumTarget).toFixed(2), //chua tinh
+            currencyID: this.currencyID,
+            color: color,
+          };
+          this.productivityOwner.push(obj);
+        }
+      }
     }
   }
 
@@ -1485,6 +1539,8 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     };
     this.dataSourcePyStage.unshift(dealsSucDf);
   }
+
+  ///--format--///
   getNamePy(value) {
     return this.vllPy.find((x) => x.value == value)?.text;
   }
@@ -2470,8 +2526,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
               count,
               countOlds
             ).toLocaleString();
-            tmpPerform['isAsc'] =
-              count - countOlds >= 0 ? '1' : '2'; // 0 - hòa, 1 - tăng, 2 - giảm
+            tmpPerform['isAsc'] = count - countOlds >= 0 ? '1' : '2'; // 0 - hòa, 1 - tăng, 2 - giảm
             performances.push(tmpPerform);
           }
         }
