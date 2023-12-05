@@ -674,11 +674,12 @@ export class WarrantiesComponent
 
   updateAssignEngineerEmit(e) {
     if (e && e?.data) {
+      let title = this.funcID + '_2'
       const more = this.moreFuncInstance.find(
-        (el) => el.functionID == 'WR0101_2'
+        (el) => el.functionID == title
       );
       if (e?.type == 'engineerID') {
-        this.titleAction = more?.description;
+        this.titleAction = more?.description ?? 'Update engineer';
         this.updateAssignEngineer(e?.data);
       } else {
         this.updateServiceLocator(e?.data);
@@ -794,8 +795,9 @@ export class WarrantiesComponent
   updateCommentWarranty(data) {
     this.dataSelected = data;
     this.comment = this.dataSelected.comment;
-    const event = this.moreFuncInstance.find((e) => e.functionID == 'WR0101_7');
-    this.titleAction = event.description;
+    let title = this.funcID + '_7'
+    const event = this.moreFuncInstance.find((e) => e.functionID == title);
+    this.titleAction = event?.description ?? 'Edit note';
     this.dialogStatus = this.callfc.openForm(this.itemComment, '', 600, 400);
     this.dialogStatus.closed.subscribe((ele) => {
       if (ele && ele?.event) {
