@@ -456,6 +456,7 @@ export class ContractsComponent extends UIComponent {
       formModel: this.view.formModel,
       contract: contract,
       isView: true,
+      listInsStepStart: this.listInsStep,
     };
     let option = new DialogModel();
     option.IsFull = true;

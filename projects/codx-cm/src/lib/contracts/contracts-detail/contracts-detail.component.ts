@@ -1,8 +1,9 @@
+import { Customers } from './../../../../../codx-sm/src/lib/models/Customers.model';
 import { ChangeDetectorRef, Component, OnChanges, OnInit, Optional, SimpleChanges } from '@angular/core';
-import { DialogData, DialogRef } from 'codx-core';
+import { CacheService, DialogData, DialogRef, FormModel } from 'codx-core';
 import { CodxCmService } from '../../codx-cm.service';
 import { ContractsService } from '../service-contracts.service';
-import { CM_Contracts } from '../../models/cm_model';
+import { CM_Contracts, CM_Customers } from '../../models/cm_model';
 
 @Component({
   selector: 'contracts-detail',
@@ -12,19 +13,20 @@ import { CM_Contracts } from '../../models/cm_model';
 export class ContractsDetailComponent implements OnInit,OnChanges{
   dialog: DialogRef;
   contract: CM_Contracts;
+  Customers: CM_Customers;
   listTypeContract;
   tabClicked;
-  active = [
-    null,
-    null,
-    null,
-    null,
-    null,
-    null,
-    null,
-  ];
   tabClick;
   listTab = [];
+  tabSelect;
+  listInsStep;
+  listInsStepStart;
+  listTabRight = [
+    {id:'listTabInformation', name:"Thông tin chung", icon:"icon-info"},
+    {id:'listTabTask', name:"Công việc", icon:"icon-more"},
+    {id:'listTabComment', name:"Ghi chú", icon:"icon-sticky_note_2"},
+  ]
+
   listTabInformation = [
     {id:'customer', name:"Khách hàng"},
     {id:'information', name:"Thông tin hợp đồng"},
@@ -32,35 +34,55 @@ export class ContractsDetailComponent implements OnInit,OnChanges{
     {id:'note', name:"Ghi chú"},
   ]
   listTabTask = [
-    {id:'', name:""},
-    {id:'', name:""},
-    {id:'', name:""},
-    {id:'', name:""},
-    {id:'', name:""},
-    {id:'', name:""},
+    {id:'task', name:"Công việc"},
   ]
   listTabComment = [
-    {id:'', name:""},
-    {id:'', name:""},
-    {id:'', name:""},
-    {id:'', name:""},
-    {id:'', name:""},
-    {id:'', name:""},
+    {id:'comment', name:"Ghi chú"},
   ]
+  formModelCustomer = {
+    funcID: "CM0101",
+    entityName: "CM_Customers",
+    entityPer: "CM_Customers",
+    formName: "CMCustomers",
+    gridViewName: "grvCMCustomers",
+  }
+  contactPerson;
+  formModelContact: FormModel = {
+  formName: 'CMContacts',
+  gridViewName: 'grvCMContacts',
+  entityName: 'CM_Contacts',
+};
+  customers;
+  contact;
+  funcID = 'CM0101';
+  grvSetup;
+  vllStatus;
   constructor(
     private contractService: ContractsService,
     private codxCmService: CodxCmService,
     private changeDetectorRef: ChangeDetectorRef,
+    private cache: CacheService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
     this.dialog = dialog;
     this.contract = dt?.data?.contract;
+    this.listInsStepStart = dt?.data?.listInsStepStart;
   }
   ngOnInit() {
     this.listTypeContract = this.contractService.listTypeContractTask;
     this.listTab = this.listTabInformation;
     this.tabClick = this.listTab[0]?.id;
+    this.tabSelect = this.listTabRight[0];
+    this.listInsStep = this.listInsStepStart;
+    this.getCutomer();
+    this.getContact();
+    this.cache.gridViewSetup('CMContracts', 'grvCMContracts').subscribe(res => {
+      if(res){
+        this.grvSetup = res;
+        this.vllStatus = this.grvSetup['Status'].referedValue;
+      }
+    })
   }
   ngOnChanges(changes: SimpleChanges) {
     
@@ -69,43 +91,47 @@ export class ContractsDetailComponent implements OnInit,OnChanges{
   changeTab(e) {
     this.tabClicked = e;
   }
+
+  changeTabRight(e) {
+    this.tabSelect = this.listTabRight.find(x => x.id == e);
+    this.listTab = this[e];
+    this.tabClick = this.listTab[0]?.id;
+  }
+
   close(){
     this.dialog.close();
   }
 
   onSectionChange(data: any, index: number = -1) {
-    // if (index > -1 && this.isClick == false) {
-    //   // let element = document.getElementById(this.active[index]);
-    //   // element.blur();
-    //   this.active[index] = data;
-    //   this.changeDetectorRef.detectChanges();
-    // }
+    if (index > -1 ) {
+      this.tabClick = this.listTabInformation?.find(x => x.id == data)?.id;
+      this.changeDetectorRef.markForCheck();
+    }
   }
 
   navChange(evt: any, index: number = -1, btnClick) {
     this.tabClick = evt;
-    let containerList = document.querySelectorAll('.pw-content')
-    let lastDivList = document.querySelectorAll('.div_final')
-    let lastDiv = lastDivList[index]
-    let container = containerList[index]
-    let containerHeight = (container as any).offsetHeight
-    let contentHeight = 0;
-    for(let i = 0; i< container.children.length; i++){
-      contentHeight += (container.children[i] as any).offsetHeight
-    }
     let element = document.getElementById(evt);
-    let distanceToBottom = contentHeight - element.offsetTop;
-    
-    if(distanceToBottom < containerHeight){
-      (lastDiv as any).style.width = '200px';
-      (lastDiv as any).style.height = `${containerHeight - distanceToBottom + 250}px`;
-    }
     element.scrollIntoView({
       behavior: 'smooth',
       block: 'start',
       inline: 'nearest',
     });
-    this.changeDetectorRef.detectChanges();
+    this.changeDetectorRef.markForCheck();
   }
 
+  getCutomer(){
+    this.contractService.getCustomerByRecID(this.contract?.customerID).subscribe(res =>{
+      if(res){
+        this.customers = res;
+      }
+    })
+  }
+  getContact(){
+    this.contractService.getContactByRecID(this.contract?.contactID).subscribe(res =>{
+      if(res){
+        this.contact = res;
+      }
+    })
+  }
 }

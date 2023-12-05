@@ -119,17 +119,13 @@ import { ViewTotalDealValueComponent } from './deals/view-total-deal-value/view-
 import { ContractsDetailComponent } from './contracts/contracts-detail/contracts-detail.component';
 import { StyleHeaderColumnsPipe } from './pipes/style-header-columns.pipe';
 import { FormatStatusCodePipe } from './pipes/format-status-code.pipe';
+import { ScrollSpyDirective } from './contracts/contracts-detail/scroll-spy.directive';
 
 export const routes: Routes = [
   {
     path: '',
     component: LayoutComponent,
     children: [
-      {
-        path: 'view',
-        component: ContractsDetailComponent,
-        data: { noReuse: true },
-      },
       {
         path: 'customers/:funcID',
         component: CmCustomerComponent,
@@ -296,6 +292,7 @@ const T_Component: Type<any>[] = [
   CodxShowMoreLessComponent,
   ViewDealDetailComponent,
   ViewLeadDetailComponent,
+  ScrollSpyDirective,
 ];
 
 @NgModule({
