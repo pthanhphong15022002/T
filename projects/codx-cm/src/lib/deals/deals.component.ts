@@ -403,7 +403,7 @@ export class DealsComponent
     };
     let isCopy = (eventItem, data) => {
       eventItem.disabled = data.write
-        ? data.closed || this.checkMoreReason(data) || data.status == '0'
+        ? data.closed || this.checkMoreReason(data,false) || data.status == '0'
         : true;
     };
     let isEdit = (eventItem, data) => {
@@ -471,6 +471,13 @@ export class DealsComponent
     let isChangeStatus = (eventItem, data) => {
       eventItem.disabled = data?.alloweStatus == '1' ? false : true;
     };
+    let isMoveStage = (eventItem, data) => {
+      eventItem.disabled  =        data?.alloweStatus == '1'
+      ? (data.closed && data?.status != '1') ||
+        ['1', '0', '15'].includes(data?.status) ||
+        this.checkMoreReason(data)
+      : true;
+    };
     functionMappings = {
       ...['CM0201_1', 'CM0201_3', 'CM0201_4', 'CM0201_5'].reduce(
         (acc, code) => ({ ...acc, [code]: isDisabled }),
@@ -484,7 +491,7 @@ export class DealsComponent
         (acc, code) => ({ ...acc, [code]: isDisCRd }),
         {}
       ),
-
+      CM0201_1: isMoveStage,
       CM0201_2: isStartDay, // bắt đầu
       CM0201_6: isApprovalTrans, //xet duyet
       CM0201_7: isOwner,
@@ -558,7 +565,8 @@ export class DealsComponent
     });
   }
 
-  checkMoreReason(data) {
+  checkMoreReason(data,isShow:boolean = true) {
+    if (data?.isAdminAll && isShow) return false;
     return data?.status != '1' && data?.status != '2' && data?.status != '15';
   }
   clickMF(e, data) {
@@ -2055,7 +2063,7 @@ export class DealsComponent
         this.kanban.columns[idx].totalDealValue = total;
       }
     }
-   
+
   }
   loadedColumns(e) {
     this.loadFirst = e;
