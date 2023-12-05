@@ -134,7 +134,7 @@ export class ReportComponent extends WSUIComponent{
 
   selectedChange(data:any)
   {
-    this.codxService.navigate("","/ws/report/detail/"+data.recID);
+    this.codxService.navigate("","/ws/wsreport/detail/"+data.recID);
     this.codxWsService.functionID = data.reportID;
     data.functionID = data.reportID;
     this.codxWsService.listBreadCumb.push(data);

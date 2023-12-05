@@ -288,8 +288,12 @@ export class AddContractsComponent implements OnInit, AfterViewInit{
         }
         delete this.contracts['id'];
         this.contracts.recID = Util.uid();
+        this.contracts.status = "1";
+        this.contracts.applyProcess = this.isApplyProcess;
+        this.contracts.currencyID = this.currencyIDDefault;
         if(!this.contracts?.applyProcess){
-          this.getAutoNumber();
+          this.contracts.contractID = null;
+          this.getAutoNumberSetting();
         }else{
           this.disabledShowInput = true;
         }
@@ -500,7 +504,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit{
           } else {
             this.dialog.close();
           }
-          // this.changeDetector.detectChanges();
+          this.changeDetectorRef.markForCheck();
         });
     } else if (this.type == 'DP') {
       // this.setDataInstance(this.contracts, this.instance);
@@ -528,9 +532,16 @@ export class AddContractsComponent implements OnInit, AfterViewInit{
       this.dialog.dataService
         .save((opt: any) => this.beforeSave(opt))
         .subscribe((res) => {
-          this.dialog.close({ contract: res, action: this.action });
-          this.changeDetectorRef.markForCheck();
-        });
+          if (res.update) {
+            (this.dialog.dataService as CRUDService)
+              .update(res.update)
+              .subscribe();
+              this.dialog.close({ contract: res.update, action: this.action });
+              this.changeDetectorRef.markForCheck();
+          } else {
+            this.dialog.close();
+          }
+        })
     } else {
       let data = [this.contracts];
       this.cmService.editContracts(data).subscribe((res) => {
