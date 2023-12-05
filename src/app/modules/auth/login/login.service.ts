@@ -28,7 +28,8 @@ export class LoginService {
     private navRouter: Router,
     private shareService: CodxShareService,
     private api: ApiHttpService,
-    private deviceInfo: AngularDeviceInformationService
+    private deviceInfo: AngularDeviceInformationService,
+    private notificationsService: NotificationsService
   ) {
     let dInfo = this.deviceInfo.getDeviceInfo();
     this.loginDevice = {
@@ -135,12 +136,13 @@ export class LoginService {
       ])
       .subscribe((res: any) => {
         if (!res.error) {
+          const user = res.msgBodyData[0];
           this.loginDevice.tenantID = tn;
-          let trust2FA = res?.extends?.Trust2FA;
-          let hideTrustDevice = res?.extends?.HideTrustDevice;
+          let trust2FA = user?.extends?.Trust2FA;
+          let hideTrustDevice = user?.extends?.HideTrustDevice;
           let objData = {
-            data: res,
-            login2FA: res?.extends?.TwoFA,
+            data: user,
+            login2FA: user?.extends?.TwoFA,
             hubConnectionID: '',
             loginDevice: this.loginDevice,
             hideTrustDevice,
@@ -160,11 +162,12 @@ export class LoginService {
               this.loginAfter(lg2FAEvt.event.data);
             });
           } else {
-            this.authService.setLogin(res);
-            this.loginAfter({ data: res });
+            this.authService.setLogin(user);
+            this.loginAfter({ data: user });
           }
         }
-        return res;
+        this.notificationsService.notifyCode(res.error?.errorCode);
+        return false;
       });
   }
 

@@ -1,0 +1,45 @@
+.wsp-bg-primary
+{
+    background-color: var(--primary-darker);
+}
+.wsp-rounder-1
+{
+    border-radius: 3px;
+}
+.ws-dashboard-img
+{
+    background-position: center;
+    background-size: 100%;
+}
+.ws-dashboard-toolbar-list>div:hover , .ws-dashboard-toolbar-lists:hover
+{
+    color: var(--text-primary);
+}
+.ws-dashboard-toolbar-list>div.active , .ws-dashboard-toolbar-lists.active
+{
+    color: var(--text-primary);
+}
+.w-90
+{
+    width: 90%;
+}
+.min-height-70px
+{
+    min-height: 70px;
+}
+.h-310px
+{
+    height: 310px;
+}
+.ws-report-card 
+{
+    .ws-report-bookmark:hover
+    {
+        opacity: .75 !important;
+    }
+}
+.ws-btn-more
+{
+    margin-right: 9px;
+    margin-bottom: 17px;
+}
