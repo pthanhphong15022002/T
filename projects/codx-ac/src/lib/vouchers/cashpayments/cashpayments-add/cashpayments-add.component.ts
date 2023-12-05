@@ -478,9 +478,7 @@ export class CashPaymentAddComponent extends UIComponent implements OnInit {
   valueChangeLineVATInvoices(event: any) {
     let oLine = event.data;
     if (event.field.toLowerCase() === 'goods') {
-      this.formCashPayment.data.unbounds = {
-        itemID: event?.itemData?.ItemID,
-      };
+      oLine.itemID = event?.itemData?.ItemID;
     }
     this.eleGridVatInvoices.startProcess();
     this.api.exec('AC', 'VATInvoicesBusiness', 'ValueChangeAsync', [
@@ -492,6 +490,8 @@ export class CashPaymentAddComponent extends UIComponent implements OnInit {
       if (res) {
         Object.assign(oLine, res);
         this.vatAccount = res?.vatAccount;
+        oLine.entryMode = this.journal.entryMode;
+        oLine.updateColumns = '';
         this.detectorRef.detectChanges();
         this.eleGridVatInvoices.endProcess();
       }
@@ -583,6 +583,7 @@ export class CashPaymentAddComponent extends UIComponent implements OnInit {
     if (this.eleGridVatInvoices && this.elementTabDetail?.selectingID == '2') {
       this.eleGridVatInvoices.saveRow((res:any)=>{ //? save lưới trước
         if(res){
+          data.entryMode = this.journal.entryMode;
           this.eleGridVatInvoices.deleteRow(data);
         }
       })
@@ -608,6 +609,7 @@ export class CashPaymentAddComponent extends UIComponent implements OnInit {
       this.eleGridVatInvoices.saveRow((res:any)=>{ //? save lưới trước
         if(res){
           data.recID = Util.uid();
+          data.entryMode = this.journal.entryMode;
           data.index = this.eleGridVatInvoices.dataSource.length;
           delete data?._oldData;
           this.eleGridVatInvoices.addRow(data, this.eleGridVatInvoices.dataSource.length);
@@ -664,23 +666,27 @@ export class CashPaymentAddComponent extends UIComponent implements OnInit {
       case 0:
         if (this.eleGridCashPayment && this.eleGridCashPayment.isEdit) {
           event.cancel = true;
-          this.nextTabIndex = parseInt(event?.selectingIndex) ;
+          this.nextTabIndex = event?.selectingIndex;
           return;
         }
         break;
       case 1:
         if (this.eleGridSettledInvoices && this.eleGridSettledInvoices.isEdit) {
           event.cancel = true;
-          this.nextTabIndex = parseInt(event?.selectingIndex) ;
+          this.nextTabIndex = event?.selectingIndex;
           return;
         }
         break;
       case 2:
         if (this.eleGridVatInvoices && this.eleGridVatInvoices.isEdit) {
           event.cancel = true;
-          this.nextTabIndex = parseInt(event?.selectingIndex) ;
+          this.nextTabIndex = event?.selectingIndex;
           return;
         }
+
+        if(event?.selectingIndex == 0 && this.formCashPayment?.data?.subType == '9'){
+          if(this.eleGridCashPayment) this.eleGridCashPayment.refresh();
+        } 
         break;
     }
   }
@@ -1170,9 +1176,9 @@ export class CashPaymentAddComponent extends UIComponent implements OnInit {
     };
     let opt = new DialogModel();
     let dataModel = new FormModel();
-    dataModel.formName = 'AC_SubInvoices';
-    dataModel.gridViewName = 'grvAC_SubInvoices';
-    dataModel.entityName = 'AC_SubInvoices';
+    // dataModel.formName = 'AC_SubInvoices';
+    // dataModel.gridViewName = 'grvAC_SubInvoices';
+    // dataModel.entityName = 'AC_SubInvoices';
     opt.FormModel = dataModel;
     let dialog = this.callfc.openForm(
       SettledInvoicesAdd,
@@ -1478,6 +1484,9 @@ export class CashPaymentAddComponent extends UIComponent implements OnInit {
         let element = document.getElementById('btnAddVAT');
         element.focus();
       }, 100);
+        break;
+      case 'beginEdit': //? trước khi thêm dòng
+      event.data.entryMode = this.journal.entryMode;
         break;
     }
   }
