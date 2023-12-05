@@ -948,3 +948,13 @@ ejs-tab#calendarTab .e-calendar {
 ::-webkit-scrollbar-thumb {
     background-color: #2b2f42 !important;
 }
+
+.personal-menu .e-tab-header {
+    background-color: var(--bg-card);
+}
+.calendar-left {
+    background-color: var(--bg-card);
+}
+.e-grid .e-gridheader {
+    border-bottom-color: var(--border-gray);
+}
