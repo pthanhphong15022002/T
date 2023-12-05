@@ -557,12 +557,12 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
         //dashboard moi
         // this.getDashBoardTargets();
         method = 'GetDashBoardTargetAsync';
-        this.getDataset(method, param, null, null);
+        this.getDataset(method, param);
         break;
       // nhom chua co tam
       case 'CMD002':
         //this.getDataDashboard(predicates, dataValues, param);
-        this.getDataset('GetReportSourceAsync', param, null, null);
+        this.getDataset('GetReportSourceAsync', param);
         break;
       //ca nha chua co ne de vay
       case 'CMD003':
@@ -575,12 +575,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
         // predicates += predicate;
         // dataValues += dataValue;
         // this.getDataDashboard(predicates, dataValues, param);
-        this.getDataset(
-          'GetReportSourceAsync',
-          param,
-          '@0.Contains(Owner)',
-          this.user.userID
-        );
+        this.getDataset('GetReportSourceAsync', param);
         break;
       // target
       case 'CMD004':
@@ -983,18 +978,13 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
                   case 'CMD001':
                     //dashboard moi
                     // this.getDashBoardTargets();
-                    this.getDataset(
-                      'GetDashBoardTargetAsync',
-                      null,
-                      null,
-                      null
-                    );
+                    this.getDataset('GetDashBoardTargetAsync');
                     break;
                   // nhom chua co tam
                   case 'CMD002':
                     // cu
                     // this.getDataDashboard();
-                    this.getDataset('GetReportSourceAsync', null, null, null);
+                    this.getDataset('GetReportSourceAsync');
                     break;
                   //ca nhan chua co ne de vay
                   case 'CMD003':
@@ -1002,12 +992,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
                     // let dataValues = this.user.userID;
                     // this.getDataDashboard(predicates, dataValues);
                     //test DataSet
-                    this.getDataset(
-                      'GetReportSourceAsync',
-                      null,
-                      '@0.Contains(Owner)',
-                      this.user.userID
-                    );
+                    this.getDataset('GetReportSourceAsync');
                     break;
                   // target
                   case 'CMD004':
@@ -1056,13 +1041,18 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     if (this.isLoaded) return;
     this.resetData();
     if (method) {
+      let requets = [parameters, predicate, dataValue];
+
+      if (this.funcID == 'CMD002' || this.funcID == 'CMD003')
+        requets = [parameters, predicate, dataValue, this.funcID];
+
       this.subscription = this.api
         .execSv<any[]>(
           'rptcm',
           'Codx.RptBusiness.CM',
           'SalesDataSetBusiness',
           method,
-          [parameters, predicate, dataValue]
+          requets
         )
         .subscribe((res) => {
           if (res) {

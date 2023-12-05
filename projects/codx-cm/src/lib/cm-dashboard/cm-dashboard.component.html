@@ -405,8 +405,8 @@
       </div>
     </div>
 
-    <div class="mt-3 d-block me-2" style="overflow-y: auto; max-height: 70%">
-      <div #maxView class="">
+    <div class="mt-3 me-2" style="overflow-y: auto">
+      <div #maxView class="d-block">
         <div
           *ngFor="let ownerCount of maxOwners; let i = index"
           class="d-flex align-items-center justify-content-end cursor-pointer"
@@ -426,7 +426,7 @@
         </div>
       </div>
 
-      <div #minView class="d-none">
+      <div #minView class="d-none d-block">
         <div
           *ngFor="let ownerCount of minOwners; let i = index"
           class="d-flex align-items-center justify-content-end cursor-pointer"
@@ -510,7 +510,7 @@
         </div>
       </div>
     </div>
-    <div class="d-block">
+    <div class="d-block overflow-x-hidden">
       <div #reasonSucsess style="overflow-y: auto; max-height: 75%">
         <div *ngFor="let data of dataReasonsSuscess" class="mt-4">
           <div class="mx-2 my-5">
@@ -526,7 +526,7 @@
                 ><span>% </span>
               </div>
             </div>
-            <div class="d-flex align-items-center min-w-200px">
+            <div class="d-flex align-items-center min-w-200px me-3">
               <div class="h-5px w-100 bg-gray-200 rounded-4">
                 <div
                   class="rounded-4 h-5px"
