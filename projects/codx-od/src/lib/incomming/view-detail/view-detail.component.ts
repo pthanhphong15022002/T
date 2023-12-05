@@ -768,6 +768,7 @@ export class ViewDetailComponent
         break;
       }
       //Chuyển
+      case 'ODT5201':
       case 'ODT101':
       case 'ODT5213': {
         /* if(this.checkOpenForm(funcID))

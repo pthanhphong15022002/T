@@ -192,6 +192,8 @@ import { FormSettingComponent } from './components/form-setting/form-setting.com
 import { ChangeMemoryCellsPipe } from './components/codx-fields-detail-temp/pipes-fields/change-memory-cells.pipe';
 import { ViewDetailApprovalCustomComponent } from './components/codx-instances/view-detail-approval-custom/view-detail-approval-custom.component';
 import { ViewHistoryUpdateProgressComponent } from './components/codx-tasks/view-history-update-progress/view-history-update-progress.component';
+import { CodxShareReportComponent } from './components/codx-share-report/codx-share-report.component';
+import { CodxShareDashboardComponent } from './components/codx-share-dashboard/codx-share-dashboard.component';
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
   // AttachmentComponent,
@@ -369,6 +371,9 @@ const T_Component: Type<any>[] = [
   //View
   CodxView2Component,
   FormSettingComponent,
+
+  CodxShareReportComponent,
+  CodxShareDashboardComponent
 ];
 
 const T_Pipe: Type<any>[] = [FormatDataValuePipe];

@@ -42,6 +42,7 @@ import { PopupMoveReasonComponent } from 'projects/codx-dp/src/lib/instances/pop
 import { ContractsViewDetailComponent } from './contracts-view-detail/contracts-view-detail.component';
 import { PopupAssginDealComponent } from '../deals/popup-assgin-deal/popup-assgin-deal.component';
 import { StepService } from 'projects/codx-share/src/lib/components/codx-step/step.service';
+import { ContractsDetailComponent } from './contracts-detail/contracts-detail.component';
 
 @Component({
   selector: 'contracts-detail',
@@ -273,11 +274,11 @@ export class ContractsComponent extends UIComponent {
               }
               break;
   
-            case 'CM0204_7': // Xem chi tiết
-              if (!isDetail) {
-                res.disabled = true;
-              }
-              break;
+            // case 'CM0204_7': // Xem chi tiết
+            //   if (!isDetail) {
+            //     res.disabled = true;
+            //   }
+            //   break;
   
             case 'CM0204_8': // chuyển giai đoạn
               res.disabled = !data?.applyProcess || data?.status == '1';
@@ -462,7 +463,7 @@ export class ContractsComponent extends UIComponent {
     option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;
     let popupContract = this.callFunc.openForm(
-      ContractsViewDetailComponent,
+      ContractsDetailComponent,
       '',
       null,
       null,

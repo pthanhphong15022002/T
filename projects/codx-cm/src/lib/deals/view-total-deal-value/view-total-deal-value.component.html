@@ -1,6 +1,8 @@
 <div class="d-flex align-items-center line-colums ms-3 mt-1">
   <span
-    [ngStyle]="style"
+    [ngStyle]="{
+      color: stepID | styleHeaderColumns : columns : 'textColor'
+    }"
     class="line-clamp line-clamp-1 cursor-pointer"
     container="body"
     [ngbTooltip]="toolTip"
@@ -8,7 +10,13 @@
       total != 0 ? (total | formatvalue : formModel : 'dealValue' | async) : 0
     "
   ></span>
-  <span [ngStyle]="style" class="me-1" [innerHTML]="currencyIDDefault"></span>
+  <span
+    [ngStyle]="{
+      color: stepID | styleHeaderColumns : columns : 'textColor'
+    }"
+    class="me-1"
+    [innerHTML]="currencyIDDefault"
+  ></span>
   <ng-template #toolTip>
     <span
       [innerHTML]="

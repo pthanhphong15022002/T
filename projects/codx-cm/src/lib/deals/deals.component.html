@@ -22,6 +22,7 @@
   (onLoading)="onLoading($event)"
   (clickMF)="clickMF($event, dataSelected)"
   (changeDataMF)="changeDataMF($event, dataSelected)"
+  (requestEnded)="requestEnded($event)"
 ></codx-views>
 
 <!-- KANBAN -->
@@ -165,12 +166,22 @@
         *ngIf="data?.statusCodeID"
         class="badge badge-sm d-flex align-items-center me-0 color-theme me-1"
       >
-        <span
+        <!-- <span
           class="text-ellipsis line-clamp line-clamp-2"
           [ngbTooltip]="getStatusCode(data?.statusCodeID)"
         >
           {{ getStatusCode(data?.statusCodeID) }}</span
+        > -->
+        <span
+          class="text-ellipsis line-clamp line-clamp-2"
+          [ngbTooltip]="
+            data?.statusCodeID | formatStatusCode : valueListStatusCode
+          "
+          [innerHTML]="
+            data?.statusCodeID | formatStatusCode : valueListStatusCode
+          "
         >
+        </span>
       </div>
     </div>
     <div class="d-flex justify-content-between align-items-center mt-1">
@@ -268,8 +279,13 @@
     >
       <div class="line-colums d-flex">
         <span
-          [ngClass]="getPropertiesHeader(data, 'icon')"
-          [ngStyle]="{ color: getPropertiesHeader(data, 'iconColor') }"
+          [ngClass]="
+            data.keyField | styleHeaderColumns : kanban?.columns : 'icon'
+          "
+          [ngStyle]="{
+            color:
+              data.keyField | styleHeaderColumns : kanban?.columns : 'iconColor'
+          }"
           style="font-size: 18px"
           class="me-1"
         >
@@ -278,13 +294,16 @@
           class="line-clamp line-clamp-1"
           [ngbTooltip]="data?.headerText"
           container="body"
-          [ngStyle]="{ color: getPropertiesHeader(data, 'textColor') }"
+          [ngStyle]="{
+            color:
+              data.keyField | styleHeaderColumns : kanban?.columns : 'textColor'
+          }"
         >
           {{ data?.headerText }}
         </span>
       </div>
     </div>
- <!-- [style]="{ color: getPropertiesHeader(data, 'textColor') }" -->
+
     <view-total-deal-value
       [formModel]="view.formModel"
       [stepID]="data.keyField"
@@ -296,32 +315,6 @@
       (getTotalDealValue)="getTotalDealValue($event)"
       (loadedColumns)="loadedColumns($event)"
     ></view-total-deal-value>
-    <!-- <div class="d-flex align-items-center line-colums ms-3 mt-1">
-      <ng-container
-        [ngTemplateOutlet]="showToltal"
-        [ngTemplateOutletContext]="{
-          $implicit: genTotal(data.keyField)
-        }"
-      ></ng-container>
-      <ng-template #showToltal let-total>
-        <span
-          [ngStyle]="{ color: getPropertiesHeader(data, 'textColor') }"
-          class="line-clamp line-clamp-1 cursor-pointer"
-          container="body"
-          [ngbTooltip]="total + ' ' + currencyIDDefault"
-          [innerHTML]="
-            total != 0
-              ? (total | formatvalue : view.formModel : 'dealValue' | async)
-              : 0
-          "
-        ></span>
-        <span
-          [ngStyle]="{ color: getPropertiesHeader(data, 'textColor') }"
-          class="me-1"
-          [innerHTML]="currencyIDDefault"
-        ></span>
-      </ng-template>
-    </div> -->
   </div>
 </ng-template>
 

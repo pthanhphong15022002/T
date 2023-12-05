@@ -1,20 +1,23 @@
-import { Component, Input, ViewChild } from '@angular/core';
-import { WSUIComponent } from '../default/wsui.component';
-import { isObservable } from 'rxjs';
+import { AfterViewInit, Component, Input, ViewChild } from '@angular/core';
+import { WSUIComponent } from 'projects/codx-ws/src/lib/default/wsui.component';
+import { CodxView2Component } from '../codx-view2/codx-view2.component';
 import { FormModel } from 'codx-core';
-import { CodxView2Component } from 'projects/codx-share/src/lib/components/codx-view2/codx-view2.component';
-import { BookmarkComponent } from '../bookmark/bookmark.component';
+import { isObservable } from 'rxjs';
+import { BookmarkComponent } from 'projects/codx-ws/src/lib/bookmark/bookmark.component';
 
 @Component({
-  selector: 'lib-ws-report',
-  templateUrl: './report.component.html',
-  styleUrls: ['./report.component.scss']
+  selector: 'codx-share-report',
+  templateUrl: './codx-share-report.component.html',
+  styleUrls: ['./codx-share-report.component.scss']
 })
-export class ReportComponent extends WSUIComponent{
+
+export class CodxShareReportComponent extends WSUIComponent implements AfterViewInit{
+
   @ViewChild('codxView2') codxView2: CodxView2Component;
 
   @Input() listModule:any;
-  
+  @Input() isToolBar:any = true;
+
   listReport:any;
   listReports: any;
   listBookMarks = [];
@@ -30,10 +33,24 @@ export class ReportComponent extends WSUIComponent{
     this.getCountBookMark();
     if(this.listModule) this.getDashboardOrReport("R", this.listModule);
   }
+
+  ngAfterViewInit(): void {
+    this.setCSS();
+  }
+
   getCountBookMark()
   {
     let widthBody = document.body.offsetWidth - 40;
     this.countBookMarks = Math.ceil(widthBody / 260);
+  }
+
+  setCSS()
+  {
+    var elems = document.querySelectorAll(".header-fixed");
+
+    [].forEach.call(elems, function(el) {
+        el.classList.remove("toolbar-fixed");
+    });
   }
 
   formatListGroupReport()
@@ -68,7 +85,7 @@ export class ReportComponent extends WSUIComponent{
 
   getDashboardOrReport(type:any,listModule:any)
   {
-    var result = this.codxWsService.loadDashboardOrReport(type,listModule) as any;
+    var result = this.codxWsService.loadDashboardOrReport(type,listModule.toUpperCase()) as any;
     if(isObservable(result))
     {
       result.subscribe((item:any)=>{
@@ -137,7 +154,7 @@ export class ReportComponent extends WSUIComponent{
 
   selectedChange(data:any)
   {
-    this.codxService.navigate("","/ws/wsreport/detail/"+data.recID);
+    this.codxService.navigate('', "/" + data.moduleID.toLowerCase() + '/report/detail/' + data.recID);
     this.codxWsService.functionID = data.reportID;
     data.functionID = data.reportID;
     this.codxWsService.listBreadCumb.push(data);
