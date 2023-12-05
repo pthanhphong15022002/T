@@ -635,74 +635,77 @@
           </div>
         </div>
       </div>
-      <div class="d-block">
-        <div #viewStatus>
-          <ejs-accumulationchart
-            id="pyramidcontainer"
-            #pyramidStatus
-            style="height: 90%"
-            [legendSettings]="legendSettingsPy"
-            [tooltip]="{
-              header: '',
-              enable: true,
-              format: '${point.tooltip}'
-            }"
-            (pointRender)="formatCrrView($event)"
-          >
-            <e-accumulation-series-collection>
-              <e-accumulation-series
-                name="ConversionRate"
-                [dataSource]="dataSourcePyStatus"
-                xName="name"
-                yName="quantity"
-                [neckWidth]="neckWidth"
-                [neckHeight]="neckHeight"
-                [gapRatio]="gapRatio"
-                [emptyPointSettings]="emptyPointSettings"
-                width="60%"
-                height="50%"
-                [explode]="explode"
-                [dataLabel]="dataLabel"
-                type="Funnel"
-              >
-              </e-accumulation-series>
-            </e-accumulation-series-collection>
-          </ejs-accumulationchart>
-        </div>
+    </div>
 
-        <div #viewStages class="d-none">
-          <ejs-accumulationchart
-            id="pyramidcontainer"
-            #pyramidStages
-            style="height: 90%"
-            [legendSettings]="legendSettingsPy"
-            [tooltip]="{
-              header: '',
-              enable: true,
-              format: '${point.tooltip}'
-            }"
-            (pointRender)="formatCrrView($event)"
-          >
-            <e-accumulation-series-collection>
-              <e-accumulation-series
-                name="ConversionRate"
-                [dataSource]="dataSourcePyStage"
-                xName="name"
-                yName="quantity"
-                [neckWidth]="neckWidth"
-                [neckHeight]="neckHeight"
-                [gapRatio]="gapRatio"
-                [emptyPointSettings]="emptyPointSettings"
-                width="60%"
-                height="50%"
-                [explode]="explode"
-                [dataLabel]="dataLabel"
-                type="Funnel"
-              >
-              </e-accumulation-series>
-            </e-accumulation-series-collection>
-          </ejs-accumulationchart>
-        </div>
+    <div class="d-block">
+      <div #viewStatus class="d-block">
+        <ejs-accumulationchart
+          class="d-block"
+          id="pyramidcontainer"
+          #pyramidStatus
+          style="height: 90%"
+          [legendSettings]="legendSettingsPy"
+          [tooltip]="{
+            header: '',
+            enable: true,
+            format: '${point.tooltip}'
+          }"
+          (pointRender)="formatCrrView($event)"
+        >
+          <e-accumulation-series-collection>
+            <e-accumulation-series
+              name="ConversionRate"
+              [dataSource]="dataSourcePyStatus"
+              xName="name"
+              yName="quantity"
+              [neckWidth]="neckWidth"
+              [neckHeight]="neckHeight"
+              [gapRatio]="gapRatio"
+              [emptyPointSettings]="emptyPointSettings"
+              width="60%"
+              height="80%"
+              [explode]="explode"
+              [dataLabel]="dataLabel"
+              type="Funnel"
+            >
+            </e-accumulation-series>
+          </e-accumulation-series-collection>
+        </ejs-accumulationchart>
+      </div>
+
+      <div #viewStages class="d-none d-block">
+        <ejs-accumulationchart
+          class="d-block"
+          id="pyramidcontainer"
+          #pyramidStages
+          style="height: 90%"
+          [legendSettings]="legendSettingsPy"
+          [tooltip]="{
+            header: '',
+            enable: true,
+            format: '${point.tooltip}'
+          }"
+          (pointRender)="formatCrrView($event)"
+        >
+          <e-accumulation-series-collection>
+            <e-accumulation-series
+              name="ConversionRate"
+              [dataSource]="dataSourcePyStage"
+              xName="name"
+              yName="quantity"
+              [neckWidth]="neckWidth"
+              [neckHeight]="neckHeight"
+              [gapRatio]="gapRatio"
+              [emptyPointSettings]="emptyPointSettings"
+              width="60%"
+              height="80%"
+              [explode]="explode"
+              [dataLabel]="dataLabel"
+              type="Funnel"
+            >
+            </e-accumulation-series>
+          </e-accumulation-series-collection>
+        </ejs-accumulationchart>
       </div>
     </div>
   </div>
