@@ -1,7 +1,7 @@
 <div style="background-color: #f5f8fa; overflow: hidden;" >
-  <div (click)="close()" class="cursor-pointer">
-    <span class="icon-18 icon-arrow_back"></span>
-    <span>Chi tiết hợp đồng</span>
+  <div (click)="close()" class="cursor-pointer d-flex align-items-center my-5 mx-5">
+    <span class="icon-20 icon-arrow_back text-primary me-2"></span>
+    <span class="fs-5 fw-bold">Chi tiết hợp đồng</span>
   </div>
   <div class="d-flex justify-content-center w-100">
     <div class="container row">
@@ -32,9 +32,36 @@
           </div>
           <hr />
           <div>
-            <div>Thông tin chung</div>
-            <div>Công việc</div>
-            <div>Ghi chú</div>
+            <div class="d-flex align-items-center p-2">
+              <span class="icon-18 icon-info me-2"></span>
+              <codx-label
+                class="fs-6 fw-bold me-2"
+                name="lblInformation"
+                [formModel]="dialog?.formModel"
+                default="Thông tin chung"
+              ></codx-label>
+            </div> 
+            
+            <div class="d-flex align-items-center p-2">
+              <span class="icon-18 icon-more me-2"></span>
+              <codx-label
+                class="fs-6 fw-bold"
+                name="lblTask"
+                [formModel]="dialog?.formModel"
+                default="Công việc"
+              ></codx-label>
+            </div>
+
+            <div class="d-flex align-items-center p-2">
+              <span class="icon-18 icon-sticky_note_2 me-2"></span>
+              <codx-label
+                class="fs-6 fw-bold"
+                name="lblInformation"
+                [formModel]="dialog?.formModel"
+                default="Ghi chú"
+              >
+              </codx-label>
+            </div>
           </div>
         </div>
       </div>
@@ -51,7 +78,7 @@
                      <li class="nav-item" (click)="navChange(item.id, 0, $event.target)">
                        <a
                          class="nav-link"
-                         [ngClass]="item.functionID == active[0] ? 'active' : ''"
+                         [ngClass]="item.id == tabClick ? 'active' : ''"
                        >
                          <div class="text-uppercase fw-bold">{{item?.name }}</div>
                        </a>
@@ -63,7 +90,7 @@
          </div>
          
         </div>
-        <div class="main" style="overflow-y: auto;">
+        <div class="main" style="height: calc(100vh - 100px); overflow-y: auto;">
          <ng-container [ngTemplateOutlet]="information"></ng-container>
         </div>
       </div>
