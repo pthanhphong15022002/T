@@ -36,64 +36,65 @@
     </codx-input>
   </div>
 
-  <div class="form-group" *ngIf="isMoveProcess">
-    <div class="mb-2">
-      <codx-label
-          fiedName="ApplyFor"
-          [formModel]="formModelProcess"
-          default="Đối tượng áp dụng quy trình"
-        >
+  <div *ngIf="applyFor && isMoveProcess">
+    <div class="form-group" >
+      <div class="mb-2">
+        <codx-label
+            fiedName="ApplyFor"
+            [formModel]="formModelProcess"
+            default="Đối tượng áp dụng quy trình"
+          >
+          </codx-label>
+
+        <div class="mb-1">
+        <codx-input type="valuelist" [disabled]="true"
+        [crrValue]="applyForMove" refValue="DP002_1"
+        field="applyFor">
+    </codx-input>
+
+
+      </div>
+      </div>
+    </div>
+
+    <div class="form-group" *ngIf="isMoveProcess">
+      <div class="mb-2">
+        <codx-label
+            fiedName="ProcessID"
+            [formModel]="form.formModel"
+            default="Quy trình được chuyển đến"
+          >
+          </codx-label>
+
+        <div class="mb-1">
+            <ejs-combobox
+            id="recID"
+            [dataSource]="listCbxProccess"
+            [fields]="fieldCbxProccess"
+            (valueChange)="cbxChange($event)"
+            [value]="moveProccess"
+            [enabled]="false"
+          ></ejs-combobox>
+      </div>
+      </div>
+    </div>
+
+    <div class="form-group" *ngIf="listParticipantReason !== null && listParticipantReason?.length > 0 " >
+      <div>
+        <codx-label fiedName="owner" [formModel]="form.formModel" [setRequire]="true" default="Người phụ trách ở quy trình chuyển đến">
         </codx-label>
-
-      <div class="mb-1">
-      <codx-input type="valuelist"
-      [crrValue]="applyFor" refValue="DP002_1" (valueChange)="valueChangeAppylyFor($event)"
-      field="applyFor">
-  </codx-input>
-
-
-    </div>
-    </div>
-  </div>
-
-  <div class="form-group" *ngIf="isMoveProcess">
-    <div class="mb-2">
-      <codx-label
-          fiedName="ProcessID"
-          [formModel]="form.formModel"
-          default="Quy trình được chuyển đến"
-        >
-        </codx-label>
-
-      <div class="mb-1">
-          <ejs-combobox
-          id="recID"
-          [dataSource]="listCbxProccess"
-          [fields]="fieldCbxProccess"
-          (valueChange)="cbxChange($event)"
-          [value]="moveProccess"
-          [enabled]="true"
-        ></ejs-combobox>
-    </div>
+      </div>
+      <div >
+      <ejs-combobox
+      [dataSource]="listParticipantReason"
+      (valueChange)="valueChangeOwner($event)"
+      [fields]="fieldCbxParticipants"
+      [allowFiltering]="true"
+      [value]="ownerMove"
+    ></ejs-combobox>
+      </div>
     </div>
   </div>
-
-  <div class="form-group" *ngIf="listParticipantReason !== null && listParticipantReason?.length > 0 " >
-    <div>
-      <codx-label fiedName="owner" [formModel]="form.formModel" [setRequire]="true" default="Người phụ trách ở quy trình chuyển đến">
-      </codx-label>
-    </div>
-    <div >
-    <ejs-combobox
-    [dataSource]="listParticipantReason"
-    (valueChange)="valueChangeOwner($event)"
-    [fields]="fieldCbxParticipants"
-    [allowFiltering]="true"
-    [value]="ownerMove"
-  ></ejs-combobox>
-    </div>
-  </div>
-
 
   <div *ngIf="listReason?.length > 0 && listReason !== null">
     <div class="fw-bold text-dark mb-3">

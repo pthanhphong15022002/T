@@ -798,10 +798,20 @@
       <div class="task-name fw-bold fs-6 text-dark mt-2 mb-2">
         {{ itemSelected?.taskName }}
       </div>
-      <div
+      <!-- <div
         class="text-gray-700"
         *ngIf="itemSelected?.memo"
         [innerHTML]="sanitizer.bypassSecurityTrustHtml(itemSelected?.memo)"
+      ></div> -->
+      <div
+        class="text-gray-700"
+        *ngIf="itemSelected?.memo"
+        #memo
+        [innerHTML]="
+          itemSelected?.memo
+            | formatvalue : formModel : 'memo' : memo : 'Tasks' : 'grvTasks'
+            | async
+        "
       ></div>
       <div *ngIf="itemSelected?.memo2">
         <span class="text-gray-700">
@@ -814,7 +824,15 @@
           >
           </codx-label>
         </span>
-        <div class="text-gray-700" [innerHTML]="itemSelected.memo2"></div>
+        <div
+          class="text-gray-700"
+          #memo2
+          [innerHTML]="
+            itemSelected.memo2
+              | formatvalue : formModel : 'memo2' : memo2 : 'Tasks' : 'grvTasks'
+              | async
+          "
+        ></div>
       </div>
 
       <div class="mt-6 mb-3" *ngIf="itemSelected?.listTaskGoals?.length > 0">
