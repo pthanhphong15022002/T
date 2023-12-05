@@ -306,11 +306,11 @@ export class WarrantiesComponent
       case 'WR0104_2':
         this.updateAssignEngineer(data);
         break;
-      case 'WR0101_3': //Hủy case - status = 5
+      case 'WR0101_3': //Hủy case - status = 9
       case 'WR0103_3':
       case 'WR0102_3':
       case 'WR0104_3':
-        this.updateStatusWarranty('5', data);
+        this.updateStatusWarranty('9', data);
         break;
       case 'WR0101_4': //Đóng case - status = 7
       case 'WR0103_4':
@@ -349,33 +349,26 @@ export class WarrantiesComponent
 
   changeDataMF($event, data, type = null) {
     if ($event != null && data != null) {
-      let lstFuncs = [];
-      for (let i = 1; i <= 4; i++) {
-        for (let j = 1; j <= 7; j++) {
-          let func = `WR010${i}_${j}`;
-          if (data.status === '7') {
-            if (j != 3 && j != 5) {
-              lstFuncs.push(func);
-            }
-          } else if (data.status == '5') {
-            lstFuncs.push(func);
-          } else {
-            if (j == 5 || j == 7) {
-              lstFuncs.push(func);
-            }
-          }
-        }
-      }
       $event.forEach((res) => {
         if (type == '11') res.isbookmark = false;
-        if (data.status == '7' || data.status == '5') {
-          if (['SYS02', 'SYS03', 'WR0103_8'].includes(res.functionID)) {
-            res.disabled = true;
-          }
-        }
-        if (this.isFunctionToDisable(res.functionID, lstFuncs)) {
+        if (
+          (data.status != '7' &&
+            ['WR0101_5', 'WR0102_5', 'WR0103_5', 'WR0104_5'].includes(
+              res.functionID
+            )) ||
+          (data.status == '7' &&
+            ['WR0101_4', 'WR0102_4', 'WR0103_4', 'WR0104_4'].includes(
+              res.functionID
+            )) ||
+          (data.status == '9' &&
+            ['WR0101_3', 'WR0102_3', 'WR0103_3', 'WR0104_3'].includes(
+              res.functionID
+            )) ||
+          ['WR0101_7', 'WR0102_7', 'WR0103_7', 'WR0104_7', 'WR0103_8'].includes(
+            res.functionID
+          )
+        )
           res.disabled = true;
-        }
       });
     }
   }
@@ -688,11 +681,10 @@ export class WarrantiesComponent
 
   updateAssignEngineerEmit(e) {
     if (e && e?.data) {
-      const more = this.moreFuncInstance.find(
-        (el) => el.functionID == 'WR0101_2'
-      );
+      let title = this.funcID + '_2';
+      const more = this.moreFuncInstance.find((el) => el.functionID == title);
       if (e?.type == 'engineerID') {
-        this.titleAction = more?.description;
+        this.titleAction = more?.description ?? 'Update engineer';
         this.updateAssignEngineer(e?.data);
       } else {
         this.updateServiceLocator(e?.data);
@@ -738,7 +730,7 @@ export class WarrantiesComponent
       )
       .subscribe(async (x) => {
         if (x?.event?.status == 'Y') {
-          if (status == '5') {
+          if (status == '9') {
             this.status = status;
             this.dialogStatus = this.callfc.openForm(
               this.updateStatus,
@@ -750,6 +742,8 @@ export class WarrantiesComponent
               if (ele && ele?.event) {
                 this.dataSelected.status = this.status;
                 this.dataSelected.cancelledNote = this.cancelledNote;
+                this.dataSelected.cancelled = true;
+                this.dataSelected.cancelledOn = new Date();
                 this.dataSelected = JSON.parse(
                   JSON.stringify(this.dataSelected)
                 );
@@ -806,8 +800,9 @@ export class WarrantiesComponent
   updateCommentWarranty(data) {
     this.dataSelected = data;
     this.comment = this.dataSelected.comment;
-    const event = this.moreFuncInstance.find((e) => e.functionID == 'WR0101_7');
-    this.titleAction = event.description;
+    let title = this.funcID + '_7';
+    const event = this.moreFuncInstance.find((e) => e.functionID == title);
+    this.titleAction = event?.description ?? 'Edit note';
     this.dialogStatus = this.callfc.openForm(this.itemComment, '', 600, 400);
     this.dialogStatus.closed.subscribe((ele) => {
       if (ele && ele?.event) {
@@ -902,7 +897,7 @@ export class WarrantiesComponent
                     this.gridViewSetup?.ProductID?.headerText?.toLowerCase(),
                   addProduct: true,
                   gridViewSetup: grid,
-                  recID: data.recID
+                  recID: data.recID,
                 };
                 var dialog = this.callFc.openForm(
                   PopupAddServicetagComponent,

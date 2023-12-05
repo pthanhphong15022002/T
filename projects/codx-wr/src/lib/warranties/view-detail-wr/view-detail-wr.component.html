@@ -1,837 +1,1053 @@
-<ng-container *ngIf="dataSelected?.recID; else noData">
-  <codx-detail-tmp
-    [header]="header"
-    [formModel]="formModel"
-    [body]="body"
-    [dataItem]="dataSelected"
-    [hideMF]="true"
-    [footer]="tabs"
-    (changeDataMF)="changeDataMF($event, dataSelected)"
-    (clickMF)="clickMF($event, dataSelected)"
-  >
-    <ng-template #header let-data>
-      <div class="d-flex align-items-center justify-content-between">
-        <div class="mb-2">
-          <div class="d-flex align-items-center">
+<ng-container *ngIf="loaded">
+  <ng-container *ngIf="dataSelected?.recID; else noData">
+    <codx-detail-tmp
+      [header]="header"
+      [formModel]="formModel"
+      [body]="body"
+      [dataItem]="dataSelected"
+      [hideMF]="true"
+      [footer]="tabs"
+      (changeDataMF)="changeDataMF($event, dataSelected)"
+      (clickMF)="clickMF($event, dataSelected)"
+    >
+      <ng-template #header let-data>
+        <div class="d-flex align-items-center justify-content-between">
+          <div class="mb-2">
+            <div class="d-flex align-items-center">
+              <span
+                class="icon-corporate_fare icon-16 me-2"
+                [ngbTooltip]="OrderNo"
+                ><ng-template #OrderNo>
+                  <codx-label
+                    [setRequire]="false"
+                    fiedName="OrderNo"
+                    [formModel]="formModel"
+                  ></codx-label> </ng-template
+              ></span>
+              <span
+                class="text-dark fs-6 fw-bold"
+                [innerHTML]="
+                  dataSelected?.orderNo
+                    | formatvalue : formModel : 'OrderNo'
+                    | async
+                "
+              ></span>
+            </div>
+          </div>
+          <div class="d-flex justify-content-end mb-2" *ngIf="asideMode != '2'">
+            <codx-mfunc
+              [dataItem]="dataSelected"
+              [formModel]="formModel"
+              (changeDataMF)="changeDataMF($event, dataSelected)"
+              (clickMF)="clickMF($event, dataSelected)"
+              [isBookMark]="true"
+              type="view"
+            ></codx-mfunc>
+          </div>
+        </div>
+
+        <div class="d-flex flex-row justify-content-between">
+          <div
+            class="mb-1 me-1"
+            *ngIf="dataSelected?.recID && dataSelected?.problem?.trim() != ''"
+            [ngClass]="!expanding ? 'd-flex flex-column' : ''"
+          >
             <span
-              class="icon-corporate_fare icon-16 me-2"
-              [ngbTooltip]="OrderNo"
-              ><ng-template #OrderNo>
-                <codx-label
-                  [setRequire]="false"
-                  fiedName="OrderNo"
-                  [formModel]="formModel"
-                ></codx-label> </ng-template
-            ></span>
-            <span
-              class="text-dark fs-6 fw-bold"
+              #problem
+              class="fw-bold text-dark me-1 mb-1"
+              [ngClass]="!expanding ? 'line-clamp line-clamp-2' : ''"
               [innerHTML]="
-                dataSelected?.orderNo
-                  | formatvalue : formModel : 'OrderNo'
+                dataSelected?.problem
+                  | formatvalue : formModel : 'Problem'
                   | async
               "
             ></span>
+            <div>
+              <codx-label
+                *ngIf="!expanding"
+                default="Xem thêm"
+                style="white-space: nowrap"
+                class="text-primary text-decoration-underline me-1 mb-1"
+                [ngClass]="!overflowed ? 'd-none' : ''"
+                role="button"
+                (click)="expanding = !expanding"
+                name="lblMore"
+                [formModel]="formModel"
+              ></codx-label>
+              <codx-label
+                *ngIf="expanding"
+                default="Thu lại"
+                style="white-space: nowrap"
+                class="text-primary text-decoration-underline me-1 mb-1"
+                role="button"
+                name="lblCollapse"
+                [formModel]="formModel"
+                (click)="expanding = !expanding"
+              ></codx-label>
+            </div>
           </div>
         </div>
-        <div class="d-flex justify-content-end mb-2" *ngIf="asideMode != '2'">
-          <codx-mfunc
-            [dataItem]="dataSelected"
-            [formModel]="formModel"
-            (changeDataMF)="changeDataMF($event, dataSelected)"
-            (clickMF)="clickMF($event, dataSelected)"
-            [isBookMark]="true"
-            type="view"
-          ></codx-mfunc>
-        </div>
-      </div>
 
-      <div class="d-flex flex-row justify-content-between">
-        <div
-          class="mb-1 me-1"
-          *ngIf="dataSelected?.recID && dataSelected?.problem?.trim() != ''"
-          [ngClass]="!expanding ? 'd-flex flex-column' : ''"
-        >
-          <span
-            #problem
-            class="fw-bold text-dark me-1 mb-1"
-            [ngClass]="!expanding ? 'line-clamp line-clamp-2' : ''"
-            [innerHTML]="
-              dataSelected?.problem
-                | formatvalue : formModel : 'Problem'
-                | async
-            "
-          ></span>
-          <div>
-            <codx-label
-              *ngIf="!expanding"
-              default="Xem thêm"
-              style="white-space: nowrap"
-              class="text-primary text-decoration-underline me-1 mb-1"
-              [ngClass]="!overflowed ? 'd-none' : ''"
-              role="button"
-              (click)="expanding = !expanding"
-              name="lblMore"
-              [formModel]="formModel"
-            ></codx-label>
-            <codx-label
-              *ngIf="expanding"
-              default="Thu lại"
-              style="white-space: nowrap"
-              class="text-primary text-decoration-underline me-1 mb-1"
-              role="button"
-              name="lblCollapse"
-              [formModel]="formModel"
-              (click)="expanding = !expanding"
-            ></codx-label>
-          </div>
-        </div>
-      </div>
-
-      <div class="container_detail">
-        <div class="d-flex w-100 cm-scroll-top mb-2">
-          <div class="me-3">
-            <codx-img
-              [objectId]="dataSelected.customerID"
-              [objectName]="dataSelected.customerName"
-              [referType]="'avt'"
-              [objectType]="'CM_Customers'"
-              [width]="60"
-            >
-            </codx-img>
-          </div>
-          <div class="w-100">
-            <div class="d-flex flex-row justify-content-between">
-              <div>
-                <div class="fw-bold fs-6 text-dark line-clamp line-clamp-1 mb-1">
-                  <div
-                    class="d-flex align-items-center mb-1"
-                    *ngIf="
-                      dataSelected.customerName != null &&
-                      dataSelected.customerName.trim() != ''
-                    "
-                  >
-                    <span
-                      class="text-gray-900"
-                      [innerHTML]="
-                        dataSelected?.customerName
-                          | formatvalue : formModel : 'CustomerName'
-                          | async
+        <div class="container_detail">
+          <div class="d-flex w-100 cm-scroll-top mb-2">
+            <div class="me-3">
+              <codx-img
+                [objectId]="dataSelected.customerID"
+                [objectName]="dataSelected.customerName"
+                [referType]="'avt'"
+                [objectType]="'CM_Customers'"
+                [width]="60"
+              >
+              </codx-img>
+            </div>
+            <div class="w-100">
+              <div class="d-flex flex-row justify-content-between">
+                <div>
+                  <div class="fw-bold fs-6 text-dark line-clamp line-clamp-1">
+                    <div
+                      class="d-flex align-items-center mb-1"
+                      *ngIf="
+                        dataSelected.customerName != null &&
+                        dataSelected.customerName.trim() != ''
                       "
-                    ></span>
+                    >
+                      <span
+                        class="text-gray-900"
+                        [innerHTML]="
+                          dataSelected?.customerName
+                            | formatvalue : formModel : 'CustomerName'
+                            | async
+                        "
+                      ></span>
+                    </div>
                   </div>
-                </div>
-                <div
-                  [ngClass]="
-                    dataSelected?.category == '1'
-                      ? 'd-flex flex-column'
-                      : 'd-flex flex-column-reverse'
-                  "
-                >
                   <div
                     [ngClass]="
                       dataSelected?.category == '1'
-                        ? 'd-flex align-items-center mb-1'
-                        : 'd-flex align-items-center mt-1'
-                    "
-                    class="text-primary text-hover-primary line-clamp-address"
-                    *ngIf="
-                      dataSelected.address != null &&
-                      dataSelected.address.trim() != ''
-                    "
-                    [ngbTooltip]="dataSelected.address"
-                  >
-                    <span class="icon-place icon-16 cursor-pointer me-2"></span>
-                    <a
-                      href="https://maps.google.com/maps?q=&quot; + {{
-                        dataSelected.address
-                      }} + &quot;"
-                      target="_blank"
-                      >{{ dataSelected.address }}</a
-                    >
-                  </div>
-                  <div class="d-flex flex-row mb-1">
-                    <div
-                      class="d-flex align-items-center me-1"
-                      *ngIf="
-                        dataSelected?.recID && dataSelected?.category == '1'
-                      "
-                    >
-                      <span
-                        class="icon-person icon-16 me-2 text-primary"
-                      ></span>
-
-                      <span
-                        class="text-dark"
-                        [innerHTML]="
-                          dataSelected?.contactName
-                            | formatvalue : formModel : 'ContactName'
-                            | async
-                        "
-                      ></span>
-                    </div>
-                    <div
-                      class="d-flex align-items-center me-1"
-                      *ngIf="
-                        dataSelected.mobile != null &&
-                        dataSelected.mobile.trim() != ''
-                      "
-                    >
-                      <span
-                        class="text-gray-900"
-                        [innerHTML]="
-                          dataSelected?.mobile
-                            | formatvalue : formModel : 'Mobile'
-                            | async
-                        "
-                      ></span>
-                    </div>
-                    <div
-                      class="d-flex align-items-center"
-                      *ngIf="
-                        dataSelected.email != null &&
-                        dataSelected.email.trim() != ''
-                      "
-                    >
-                      <span
-                        class="text-gray-900"
-                        [innerHTML]="
-                          dataSelected?.email
-                            | formatvalue : formModel : 'Email'
-                            | async
-                        "
-                      ></span>
-                    </div>
-                  </div>
-                  <div
-                    class="d-flex flex-row"
-                    *ngIf="
-                      contact2JSON?.Alternate?.Name != null && contact2JSON?.Alternate?.Name?.trim() != '' &&
-                      dataSelected?.category == '1'
+                        ? 'd-flex flex-column'
+                        : 'd-flex flex-column-reverse'
                     "
                   >
-                    <div class="d-flex align-items-center me-1">
+                    <div
+                      [ngClass]="
+                        dataSelected?.category == '1'
+                          ? 'd-flex align-items-center mb-1'
+                          : 'd-flex align-items-center mt-1'
+                      "
+                      class="text-primary text-hover-primary line-clamp-address"
+                      *ngIf="
+                        dataSelected.address != null &&
+                        dataSelected.address.trim() != ''
+                      "
+                      [ngbTooltip]="dataSelected.address"
+                    >
                       <span
-                        class="icon-person icon-16 me-2 text-primary"
+                        class="icon-place icon-16 cursor-pointer me-2"
                       ></span>
-                      <span
+                      <a
+                        href="https://maps.google.com/maps?q=&quot; + {{
+                          dataSelected.address
+                        }} + &quot;"
+                        target="_blank"
+                        >{{ dataSelected.address }}</a
+                      >
+                    </div>
+                    <div class="d-flex flex-row mb-1">
+                      <div
+                        class="d-flex align-items-center me-1"
                         *ngIf="
-                          contact2JSON?.Alternate?.Name != null &&
-                          contact2JSON?.Alternate?.Name?.trim() != ''
+                          dataSelected?.recID && dataSelected?.category == '1'
                         "
-                        class="text-dark"
-                        [innerHTML]="
-                          contact2JSON?.Alternate?.Name
-                            | formatvalue : formModel : 'ContactName'
-                            | async
+                      >
+                        <span
+                          class="icon-person icon-16 me-2 text-primary"
+                        ></span>
+
+                        <span
+                          class="text-dark"
+                          [innerHTML]="
+                            dataSelected?.contactName
+                              | formatvalue : formModel : 'ContactName'
+                              | async
+                          "
+                        ></span>
+                      </div>
+                      <div
+                        class="d-flex align-items-center me-1"
+                        *ngIf="
+                          dataSelected.mobile != null &&
+                          dataSelected.mobile.trim() != ''
                         "
-                      ></span>
+                      >
+                        <span
+                          class="text-gray-900"
+                          [innerHTML]="
+                            dataSelected?.mobile
+                              | formatvalue : formModel : 'Mobile'
+                              | async
+                          "
+                        ></span>
+                      </div>
+                      <div
+                        class="d-flex align-items-center"
+                        *ngIf="
+                          dataSelected.email != null &&
+                          dataSelected.email.trim() != ''
+                        "
+                      >
+                        <span
+                          class="text-gray-900"
+                          [innerHTML]="
+                            dataSelected?.email
+                              | formatvalue : formModel : 'Email'
+                              | async
+                          "
+                        ></span>
+                      </div>
                     </div>
                     <div
-                      class="d-flex align-items-center me-1"
+                      class="d-flex flex-row"
                       *ngIf="
-                        contact2JSON?.Alternate?.PrimaryPhoneNumber != null &&
-                        contact2JSON?.Alternate?.PrimaryPhoneNumber?.trim() !=
-                          ''
+                        contact2JSON?.Alternate?.Name != null &&
+                        contact2JSON?.Alternate?.Name?.trim() != '' &&
+                        dataSelected?.category == '1'
                       "
                     >
-                      <span
-                        class="text-gray-900"
-                        [innerHTML]="
-                          contact2JSON?.Alternate?.PrimaryPhoneNumber
-                            | formatvalue : formModel : 'Mobile'
-                            | async
+                      <div class="d-flex align-items-center me-1">
+                        <span
+                          class="icon-person icon-16 me-2 text-primary"
+                        ></span>
+                        <span
+                          *ngIf="
+                            contact2JSON?.Alternate?.Name != null &&
+                            contact2JSON?.Alternate?.Name?.trim() != ''
+                          "
+                          class="text-dark"
+                          [innerHTML]="
+                            contact2JSON?.Alternate?.Name
+                              | formatvalue : formModel : 'ContactName'
+                              | async
+                          "
+                        ></span>
+                      </div>
+                      <div
+                        class="d-flex align-items-center me-1"
+                        *ngIf="
+                          contact2JSON?.Alternate?.PrimaryPhoneNumber != null &&
+                          contact2JSON?.Alternate?.PrimaryPhoneNumber?.trim() !=
+                            ''
                         "
-                      ></span>
-                    </div>
-                    <div
-                      class="d-flex align-items-center"
-                      *ngIf="
-                        contact2JSON?.Alternate?.Email != null &&
-                        contact2JSON?.Alternate?.Email.trim() != ''
-                      "
-                    >
-                      <span
-                        class="text-gray-900"
-                        [innerHTML]="
-                          contact2JSON?.Alternate?.Email
-                            | formatvalue : formModel : 'Email'
-                            | async
+                      >
+                        <span
+                          class="text-gray-900"
+                          [innerHTML]="
+                            contact2JSON?.Alternate?.PrimaryPhoneNumber
+                              | formatvalue : formModel : 'Mobile'
+                              | async
+                          "
+                        ></span>
+                      </div>
+                      <div
+                        class="d-flex align-items-center"
+                        *ngIf="
+                          contact2JSON?.Alternate?.Email != null &&
+                          contact2JSON?.Alternate?.Email.trim() != ''
                         "
-                      ></span>
+                      >
+                        <span
+                          class="text-gray-900"
+                          [innerHTML]="
+                            contact2JSON?.Alternate?.Email
+                              | formatvalue : formModel : 'Email'
+                              | async
+                          "
+                        ></span>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-              <div class="d-flex flex-column">
-                <div class="d-flex align-items-center justify-content-end mb-1">
+                <div class="d-flex flex-column">
                   <div
-                    *ngIf="dataSelected?.statusCode"
-                    class="me-2 badge badge-sm codx-badge d-flex align-items-center mw-125px background-color-status"
+                    class="d-flex align-items-center justify-content-end mb-1"
+                  >
+                    <div
+                      *ngIf="dataSelected?.statusCode"
+                      class="me-2 badge badge-sm codx-badge d-flex align-items-center mw-125px background-color-status"
+                    >
+                      <span
+                        class="text-gray-900 text-ellipsis line-clamp line-clamp-1"
+                        style="color: #ffffff !important"
+                        [ngbTooltip]="tempLastStatusCode"
+                        [innerHTML]="
+                          dataSelected?.statusCode
+                            | formatvalue : formModel : 'StatusCode'
+                            | async
+                        "
+                      ></span>
+                      <ng-template #tempLastStatusCode>
+                        <codx-label
+                          [formModel]="formModel"
+                          fiedName="StatusCode"
+                        ></codx-label>
+                      </ng-template>
+                    </div>
+
+                    <codx-vll
+                      [ngbTooltip]="gridViewSetup?.Status?.headerText"
+                      [name]="gridViewSetup?.Status?.referedValue"
+                      [field]="'Status'"
+                      [value]="dataSelected?.status"
+                      [showText]="true"
+                      [showBgColor]="true"
+                      class="badge badge-light badge-sm"
+                    >
+                    </codx-vll>
+                  </div>
+                  <div
+                    class="d-flex align-items-center justify-content-end mb-1"
                   >
                     <span
-                      class="text-gray-900 text-ellipsis line-clamp line-clamp-1"
-                      style="color: #ffffff !important"
-                      [ngbTooltip]="tempLastStatusCode"
+                      class="text-gray-900"
+                      [ngbTooltip]="tempLastUpdateOn"
                       [innerHTML]="
-                        dataSelected?.statusCode
-                          | formatvalue : formModel : 'StatusCode'
+                        dataSelected?.lastUpdatedOn
+                          | formatvalue : formModel : 'LastUpdatedOn'
                           | async
                       "
                     ></span>
-                    <ng-template #tempLastStatusCode>
+                    <ng-template #tempLastUpdateOn>
                       <codx-label
                         [formModel]="formModel"
-                        fiedName="StatusCode"
+                        fiedName="LastUpdatedOn"
                       ></codx-label>
                     </ng-template>
                   </div>
-
-                  <codx-vll
-                    [ngbTooltip]="gridViewSetup?.Status?.headerText"
-                    [name]="gridViewSetup?.Status?.referedValue"
-                    [field]="'Status'"
-                    [value]="dataSelected?.status"
-                    [showText]="true"
-                    [showBgColor]="true"
-                    class="badge badge-light badge-sm"
-                  >
-                  </codx-vll>
-                </div>
-                <div class="d-flex align-items-center justify-content-end mb-1">
-                  <span
-                    class="text-gray-900"
-                    [ngbTooltip]="tempLastUpdateOn"
-                    [innerHTML]="
-                      dataSelected?.lastUpdatedOn
-                        | formatvalue : formModel : 'LastUpdatedOn'
-                        | async
-                    "
-                  ></span>
-                  <ng-template #tempLastUpdateOn>
-                    <codx-label
-                      [formModel]="formModel"
-                      fiedName="LastUpdatedOn"
-                    ></codx-label>
-                  </ng-template>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-        <div
-          class="d-flex flex-row justify-content-between w-100 cm-scroll-top mb-2"
-        >
-          <div class="w-100 mt-1">
-            <div class="mb-1">
-              <codx-label
-                name="lblProductInfo"
-                [formModel]="formModel"
-                class="fw-bold text-dark"
-                default="Thông tin sản phẩm"
-              ></codx-label>
-            </div>
-            <div class="d-flex flex-row">
-              <div class="me-3">
-                <codx-img
-                  [objectId]="null"
-                  [objectName]="null"
-                  [imageType]="'square'"
-                  [objectType]="'WR_Products'"
-                  [width]="50"
-                  [referType]="'avt'"
-                >
-                </codx-img>
+          <div
+            class="d-flex flex-row justify-content-between w-100 cm-scroll-top mb-2"
+          >
+            <div class="w-100 mt-1">
+              <div class="mb-1">
+                <codx-label
+                  name="lblProductInfo"
+                  [formModel]="formModel"
+                  class="fw-bold text-dark"
+                  default="Thông tin sản phẩm"
+                ></codx-label>
               </div>
-              <div class="d-flex flex-column">
-                <div class="d-flex cursor-pointer has-action-menu-od">
-                  <codx-label
-                    style="white-space: nowrap"
-                    class="text-dark label-colon me-1"
-                    name="lblSeri"
-                    default="Số seri"
-                    [formModel]="formModel"
-                  ></codx-label>
-                  <span
-                    class="text-dark fw-bold me-1"
-                    [innerHTML]="
-                      dataSelected.serviceTag
-                        | formatvalue : formModel : 'ServiceTag'
-                        | async
-                    "
-                  ></span>
-                  <div
-                    class="action-menu-od me-1"
-                    *ngIf="
-                      dataSelected.status != '7' && dataSelected.status != '5'
-                    "
-                    (click)="editProduct(dataSelected)"
+              <div class="d-flex flex-row">
+                <div class="me-3">
+                  <codx-img
+                    [objectId]="null"
+                    [objectName]="null"
+                    [imageType]="'square'"
+                    [objectType]="'WR_Products'"
+                    [width]="50"
+                    [referType]="'avt'"
                   >
-                    <i class="icon-edit text-danger icon-16"></i>
+                  </codx-img>
+                </div>
+                <div class="d-flex flex-column">
+                  <div class="d-flex cursor-pointer has-action-menu-od">
+                    <codx-label
+                      style="white-space: nowrap"
+                      class="text-dark label-colon me-1"
+                      name="lblSeri"
+                      default="Số seri"
+                      [formModel]="formModel"
+                    ></codx-label>
+                    <span
+                      class="text-dark fw-bold me-1"
+                      [innerHTML]="
+                        dataSelected.serviceTag
+                          | formatvalue : formModel : 'ServiceTag'
+                          | async
+                      "
+                    ></span>
+                    <div
+                      class="action-menu-od me-1"
+                      (click)="editProduct(dataSelected)"
+                    >
+                      <i class="icon-edit text-danger icon-16"></i>
+                    </div>
+                  </div>
+                  <div class="mb-1">
+                    <span
+                      *ngIf="dataSelected?.productType"
+                      class="text-dark me-1"
+                      [innerHTML]="
+                        dataSelected.productType
+                          | formatvalue : formModel : 'ProductType'
+                          | async
+                      "
+                    ></span>
+                    <span
+                      *ngIf="dataSelected?.productModel"
+                      class="text-dark"
+                      [innerHTML]="
+                        dataSelected.productModel
+                          | formatvalue : formModel : 'ProductModel'
+                          | async
+                      "
+                    ></span>
+                  </div>
+                  <div
+                    *ngIf="
+                      dataSelected.productDesc != null &&
+                      dataSelected.productDesc.trim() != ''
+                    "
+                  >
+                    <span
+                      class="text-gray-700"
+                      [innerHTML]="
+                        dataSelected?.productDesc
+                          | formatvalue : formModel : 'ProductDesc'
+                          | async
+                      "
+                    ></span>
                   </div>
                 </div>
-                <div class="mb-1">
-                  <span
-                    *ngIf="dataSelected?.productType"
-                    class="text-dark me-1"
-                    [innerHTML]="
-                      dataSelected.productType
-                        | formatvalue : formModel : 'ProductType'
-                        | async
-                    "
-                  ></span>
-                  <span
-                    *ngIf="dataSelected?.productModel"
-                    class="text-dark"
-                    [innerHTML]="
-                      dataSelected.productModel
-                        | formatvalue : formModel : 'ProductModel'
-                        | async
-                    "
-                  ></span>
-                </div>
+              </div>
+            </div>
+            <div class="text-center w-100 mt-1">
+              <div class="d-flex justify-content-end">
+                <codx-label
+                  name="lblEmployees"
+                  [formModel]="formModel"
+                  default="Nhân viên phụ trách"
+                  class="text-dark fw-bold mb-1"
+                ></codx-label>
+              </div>
+              <div class="d-flex justify-content-end">
                 <div
-                  *ngIf="
-                    dataSelected.productDesc != null &&
-                    dataSelected.productDesc.trim() != ''
-                  "
+                  style="position: relative"
+                  [ngbTooltip]="tooltipOwner"
+                  *ngIf="dataSelected?.createdBy"
                 >
-                  <span
-                    class="text-gray-700"
-                    [innerHTML]="
-                      dataSelected?.productDesc
-                        | formatvalue : formModel : 'ProductDesc'
-                        | async
-                    "
-                  ></span>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="text-center w-100 mt-1">
-            <div class="d-flex justify-content-end">
-              <codx-label
-                name="lblEmployees"
-                [formModel]="formModel"
-                default="Nhân viên phụ trách"
-                class="text-dark fw-bold mb-1"
-              ></codx-label>
-            </div>
-            <div class="d-flex justify-content-end">
-              <div
-                style="position: relative"
-                [ngbTooltip]="tooltipOwner"
-                *ngIf="dataSelected?.createdBy"
-              >
-                <codx-img
-                  [width]="30"
-                  [objectId]="dataSelected?.createdBy"
-                  ojectType="AD_Users"
-                  [numberImages]="1"
-                  [isToolTip]="false"
-                >
-                </codx-img>
-                <div style="position: absolute; right: 0px; bottom: 0px">
-                  <span
-                    ><img
-                      src="/assets/themes/wr/default/img/{{ getIcon('C') }}"
-                      alt=""
-                  /></span>
-                </div>
-              </div>
-
-              <div
-                style="position: relative"
-                [ngbTooltip]="tooltipTeamLeader"
-                *ngIf="dataSelected?.teamLeader"
-              >
-                <codx-img
-                  [width]="30"
-                  [objectId]="dataSelected.teamLeader"
-                  objectType="AD_Users"
-                  [numberImages]="1"
-                  [isToolTip]="false"
-                >
-                </codx-img>
-                <div style="position: absolute; right: 0px; bottom: 0px">
-                  <span
-                    ><img
-                      src="/assets/themes/wr/default/img/{{ getIcon('TL') }}"
-                      alt=""
-                  /></span>
-                </div>
-              </div>
-
-              <div
-                style="position: relative"
-                [ngbTooltip]="tooltipEngineerID"
-                *ngIf="dataSelected?.engineerID"
-              >
-                <codx-img
-                  [width]="30"
-                  [objectId]="dataSelected?.engineerID"
-                  ojectType="AD_Users"
-                  [numberImages]="1"
-                  [isToolTip]="false"
-                >
-                </codx-img>
-                <div style="position: absolute; right: 0px; bottom: 0px">
-                  <span
-                    ><img
-                      src="/assets/themes/wr/default/img/{{ getIcon('E') }}"
-                      alt=""
-                  /></span>
-                </div>
-              </div>
-
-              <ng-template #tooltipOwner>
-                <div class="d-flex justify-content-center fw-bold fs-6">
-                  <span
-                    [innerHTML]="
-                      dataSelected?.createdBy
-                        | formatvalue : formModel : 'createdBy'
-                        | async
-                    "
-                  ></span>
-                </div>
-                <div class="d-flex justify-content-center">
-                  {{ gridViewSetup?.CreatedBy?.headerText }}
-                </div>
-              </ng-template>
-
-              <ng-template #tooltipTeamLeader>
-                <div class="d-flex justify-content-center fw-bold fs-6">
-                  <span
-                    [innerHTML]="
-                      dataSelected?.teamLeader
-                        | formatvalue : formModel : 'teamLeader'
-                        | async
-                    "
-                  ></span>
-                </div>
-                <div class="d-flex justify-content-center">
-                  {{ gridViewSetup?.TeamLeader?.headerText }}
-                </div>
-              </ng-template>
-
-              <ng-template #tooltipEngineerID>
-                <div class="d-flex justify-content-center fw-bold fs-6">
-                  <span
-                    [innerHTML]="
-                      dataSelected?.engineerID
-                        | formatvalue : formModel : 'engineerID'
-                        | async
-                    "
-                  ></span>
-                </div>
-                <div class="d-flex justify-content-center">
-                  {{ gridViewSetup?.EngineerID?.headerText }}
-                </div>
-              </ng-template>
-            </div>
-          </div>
-        </div>
-      </div>
-    </ng-template>
-    <ng-template #body let-data>
-      <div class="cm-scroll" [ngClass]="isShow ? 'cm-full' : ''">
-        <div
-          class="btn btn-white btn-icon tab-action"
-          (click)="isShow = !isShow"
-        >
-          <span class="icon-unfold_more icon-20"></span>
-        </div>
-        <div class="instance-select">
-          <ejs-tab
-            id="tab_adaptive"
-            #adaptiveTab
-            heightAdjustMode="None"
-            height="250px"
-          >
-            <e-tabitems>
-              <e-tabitem>
-                <ng-template #headerText>
-                  <div class="d-flex align-items-top me-2">
+                  <codx-img
+                    [width]="30"
+                    [objectId]="dataSelected?.createdBy"
+                    ojectType="AD_Users"
+                    [numberImages]="1"
+                    [isToolTip]="false"
+                  >
+                  </codx-img>
+                  <div style="position: absolute; right: 0px; bottom: 0px">
                     <span
-                      class="icon-info text-hover-primary icon-16 me-2"
+                      ><img
+                        src="/assets/themes/wr/default/img/{{ getIcon('C') }}"
+                        alt=""
+                    /></span>
+                  </div>
+                </div>
+
+                <div
+                  style="position: relative"
+                  [ngbTooltip]="tooltipTeamLeader"
+                  *ngIf="dataSelected?.teamLeader"
+                >
+                  <codx-img
+                    [width]="30"
+                    [objectId]="dataSelected.teamLeader"
+                    objectType="AD_Users"
+                    [numberImages]="1"
+                    [isToolTip]="false"
+                  >
+                  </codx-img>
+                  <div style="position: absolute; right: 0px; bottom: 0px">
+                    <span
+                      ><img
+                        src="/assets/themes/wr/default/img/{{ getIcon('TL') }}"
+                        alt=""
+                    /></span>
+                  </div>
+                </div>
+
+                <div
+                  style="position: relative"
+                  [ngbTooltip]="tooltipEngineerID"
+                  *ngIf="dataSelected?.engineerID"
+                >
+                  <codx-img
+                    [width]="30"
+                    [objectId]="dataSelected?.engineerID"
+                    ojectType="AD_Users"
+                    [numberImages]="1"
+                    [isToolTip]="false"
+                  >
+                  </codx-img>
+                  <div style="position: absolute; right: 0px; bottom: 0px">
+                    <span
+                      ><img
+                        src="/assets/themes/wr/default/img/{{ getIcon('E') }}"
+                        alt=""
+                    /></span>
+                  </div>
+                </div>
+
+                <ng-template #tooltipOwner>
+                  <div class="d-flex justify-content-center fw-bold fs-6">
+                    <span
+                      [innerHTML]="
+                        dataSelected?.createdBy
+                          | formatvalue : formModel : 'createdBy'
+                          | async
+                      "
                     ></span>
-                    <codx-label
-                      class="fw-bold text-hover-primary text-dark"
-                      default="Thông tin chung"
-                      [formModel]="formModel"
-                      name="lblInformation"
-                    ></codx-label>
+                  </div>
+                  <div class="d-flex justify-content-center">
+                    {{ gridViewSetup?.CreatedBy?.headerText }}
                   </div>
                 </ng-template>
-                <ng-template #content>
-                  <div class="d-flex flex-column mt-5">
-                    <div class="d-flex flex-row">
-                      <div class="col-6 text-dark fw-bold fs-6 mb-3">
-                        <codx-label
-                          default="Thông tin phiếu"
-                          [formModel]="formModel"
-                          name="lblCaseInfo"
-                        ></codx-label>
-                      </div>
-                      <div class="col-6 text-dark fw-bold fs-6 mb-3">
-                        <codx-label
-                          default="Thiết bị"
-                          [formModel]="formModel"
-                          name="lblPart"
-                        ></codx-label>
-                      </div>
+
+                <ng-template #tooltipTeamLeader>
+                  <div class="d-flex justify-content-center fw-bold fs-6">
+                    <span
+                      [innerHTML]="
+                        dataSelected?.teamLeader
+                          | formatvalue : formModel : 'teamLeader'
+                          | async
+                      "
+                    ></span>
+                  </div>
+                  <div class="d-flex justify-content-center">
+                    {{ gridViewSetup?.TeamLeader?.headerText }}
+                  </div>
+                </ng-template>
+
+                <ng-template #tooltipEngineerID>
+                  <div class="d-flex justify-content-center fw-bold fs-6">
+                    <span
+                      [innerHTML]="
+                        dataSelected?.engineerID
+                          | formatvalue : formModel : 'engineerID'
+                          | async
+                      "
+                    ></span>
+                  </div>
+                  <div class="d-flex justify-content-center">
+                    {{ gridViewSetup?.EngineerID?.headerText }}
+                  </div>
+                </ng-template>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-template>
+      <ng-template #body let-data>
+        <div class="cm-scroll" [ngClass]="isShow ? 'cm-full' : ''">
+          <div
+            class="btn btn-white btn-icon tab-action"
+            (click)="isShow = !isShow"
+          >
+            <span class="icon-unfold_more icon-20"></span>
+          </div>
+          <div class="instance-select">
+            <ejs-tab
+              id="tab_adaptive"
+              #adaptiveTab
+              heightAdjustMode="None"
+              height="250px"
+            >
+              <e-tabitems>
+                <e-tabitem>
+                  <ng-template #headerText>
+                    <div class="d-flex align-items-top me-2">
+                      <span
+                        class="icon-info text-hover-primary icon-16 me-2"
+                      ></span>
+                      <codx-label
+                        class="fw-bold text-hover-primary text-dark"
+                        default="Thông tin chung"
+                        [formModel]="formModel"
+                        name="lblInformation"
+                      ></codx-label>
                     </div>
+                  </ng-template>
+                  <ng-template #content>
+                    <div [ngClass]="isShow ? '' : 'scroll-info'" class="mt-5">
+                      <div class="d-flex flex-column">
+                        <div class="d-flex flex-row">
+                          <div class="col-6 text-dark fw-bold fs-6 mb-3">
+                            <codx-label
+                              default="Thông tin phiếu"
+                              [formModel]="formModel"
+                              name="lblCaseInfo"
+                            ></codx-label>
+                          </div>
+                          <div class="col-6 text-dark fw-bold fs-6 mb-3">
+                            <codx-label
+                              default="Thiết bị"
+                              [formModel]="formModel"
+                              name="lblPart"
+                            ></codx-label>
+                          </div>
+                        </div>
 
-                    <div class="mb-3">
-                      <div class="d-flex">
-                        <div class="col-6">
-                          <div class="mb-5px d-flex align-items-top">
-                            <div
-                              class="w-150px min-w-150px text-gray-600 codx-textlabel"
-                            >
-                              <codx-label
-                                fiedName="OrderNo"
-                                class="nowrap label-colon"
-                                [setRequire]="false"
-                                [formModel]="formModel"
-                              ></codx-label>
+                        <div class="mb-3">
+                          <div class="d-flex">
+                            <div class="col-6">
+                              <div class="mb-5px d-flex align-items-top">
+                                <div
+                                  class="w-150px min-w-150px text-gray-600 codx-textlabel"
+                                >
+                                  <codx-label
+                                    fiedName="OrderNo"
+                                    class="nowrap label-colon"
+                                    [setRequire]="false"
+                                    [formModel]="formModel"
+                                  ></codx-label>
+                                </div>
+                                <div class="text-dark codx-textcontent">
+                                  <span
+                                    [innerHTML]="
+                                      dataSelected?.orderNo
+                                        | formatvalue : formModel : 'OrderNo'
+                                        | async
+                                    "
+                                  ></span>
+                                </div>
+                              </div>
                             </div>
-                            <div class="text-dark codx-textcontent">
-                              <span
-                                [innerHTML]="
-                                  dataSelected?.orderNo
-                                    | formatvalue : formModel : 'OrderNo'
-                                    | async
-                                "
-                              ></span>
+                            <div class="col-6">
+                              <div class="mb-5px d-flex align-items-top">
+                                <div
+                                  class="w-150px min-w-150px text-gray-600 codx-textlabel"
+                                >
+                                  <codx-label
+                                    fiedName="PartStatus"
+                                    class="nowrap label-colon"
+                                    [setRequire]="false"
+                                    [formModel]="formModel"
+                                  ></codx-label>
+                                </div>
+                                <div class="text-dark codx-textcontent">
+                                  <span
+                                    [innerHTML]="
+                                      dataSelected?.partStatus
+                                        | formatvalue : formModel : 'PartStatus'
+                                        | async
+                                    "
+                                  ></span>
+                                </div>
+                              </div>
                             </div>
                           </div>
-                        </div>
-                        <div class="col-6">
-                          <div class="mb-5px d-flex align-items-top">
-                            <div
-                              class="w-150px min-w-150px text-gray-600 codx-textlabel"
-                            >
-                              <codx-label
-                                fiedName="PartStatus"
-                                class="nowrap label-colon"
-                                [setRequire]="false"
-                                [formModel]="formModel"
-                              ></codx-label>
-                            </div>
-                            <div class="text-dark codx-textcontent">
-                              <span
-                                [innerHTML]="
-                                  dataSelected?.partStatus
-                                    | formatvalue : formModel : 'PartStatus'
-                                    | async
-                                "
-                              ></span>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
 
-                      <div class="d-flex">
-                        <div class="col-6">
-                          <div class="mb-5px d-flex align-items-top">
-                            <div
-                              class="w-150px min-w-150px text-gray-600 codx-textlabel"
-                            >
-                              <codx-label
-                                fiedName="OrderDate"
-                                class="nowrap label-colon"
-                                [setRequire]="false"
-                                [formModel]="formModel"
-                              ></codx-label>
+                          <div class="d-flex">
+                            <div class="col-6">
+                              <div class="mb-5px d-flex align-items-top">
+                                <div
+                                  class="w-150px min-w-150px text-gray-600 codx-textlabel"
+                                >
+                                  <codx-label
+                                    fiedName="OrderDate"
+                                    class="nowrap label-colon"
+                                    [setRequire]="false"
+                                    [formModel]="formModel"
+                                  ></codx-label>
+                                </div>
+                                <div class="text-dark codx-textcontent">
+                                  <span
+                                    [innerHTML]="
+                                      dataSelected?.orderDate
+                                        | formatvalue : formModel : 'OrderDate'
+                                        | async
+                                    "
+                                  ></span>
+                                </div>
+                              </div>
                             </div>
-                            <div class="text-dark codx-textcontent">
-                              <span
-                                [innerHTML]="
-                                  dataSelected?.orderDate
-                                    | formatvalue : formModel : 'OrderDate'
-                                    | async
-                                "
-                              ></span>
-                            </div>
-                          </div>
-                        </div>
-                        <div class="col-6">
-                          <div class="mb-5px d-flex align-items-top">
-                            <div
-                              class="w-150px min-w-150px text-gray-600 codx-textlabel"
-                            >
-                              <codx-label
-                                fiedName="PartUpdatedOn"
-                                class="nowrap label-colon"
-                                [setRequire]="false"
-                                [formModel]="formModel"
-                              ></codx-label>
-                            </div>
-                            <div class="text-dark codx-textcontent">
-                              <span
-                                [innerHTML]="
-                                  dataSelected?.partUpdatedOn
-                                    | formatvalue : formModel : 'PartUpdatedOn'
-                                    | async
-                                "
-                              ></span>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="d-flex">
-                        <div class="col-6">
-                          <div class="mb-5px d-flex align-items-top">
-                            <div
-                              class="w-150px min-w-150px text-gray-600 codx-textlabel"
-                            >
-                              <codx-label
-                                fiedName="Deadline"
-                                class="nowrap label-colon"
-                                [setRequire]="false"
-                                [formModel]="formModel"
-                              ></codx-label>
-                            </div>
-                            <div class="text-dark codx-textcontent">
-                              <span
-                                [innerHTML]="
-                                  dataSelected?.deadline
-                                    | formatvalue : formModel : 'Deadline'
-                                    | async
-                                "
-                              ></span>
+                            <div class="col-6">
+                              <div class="mb-5px d-flex align-items-top">
+                                <div
+                                  class="w-150px min-w-150px text-gray-600 codx-textlabel"
+                                >
+                                  <codx-label
+                                    fiedName="PartUpdatedOn"
+                                    class="nowrap label-colon"
+                                    [setRequire]="false"
+                                    [formModel]="formModel"
+                                  ></codx-label>
+                                </div>
+                                <div class="text-dark codx-textcontent">
+                                  <span
+                                    [innerHTML]="
+                                      dataSelected?.partUpdatedOn
+                                        | formatvalue
+                                          : formModel
+                                          : 'PartUpdatedOn'
+                                        | async
+                                    "
+                                  ></span>
+                                </div>
+                              </div>
                             </div>
                           </div>
-                        </div>
-                        <div class="col-6">
-                          <div class="mb-5px d-flex align-items-top">
-                            <div
-                              class="w-150px min-w-150px text-gray-600 codx-textlabel"
-                            >
-                              <codx-label
-                                fiedName="POH"
-                                class="nowrap label-colon"
-                                [setRequire]="false"
-                                [formModel]="formModel"
-                              ></codx-label>
+                          <div class="d-flex">
+                            <div class="col-6">
+                              <div class="mb-5px d-flex align-items-top">
+                                <div
+                                  class="w-150px min-w-150px text-gray-600 codx-textlabel"
+                                >
+                                  <codx-label
+                                    fiedName="Deadline"
+                                    class="nowrap label-colon"
+                                    [setRequire]="false"
+                                    [formModel]="formModel"
+                                  ></codx-label>
+                                </div>
+                                <div class="text-dark codx-textcontent">
+                                  <span
+                                    [innerHTML]="
+                                      dataSelected?.deadline
+                                        | formatvalue : formModel : 'Deadline'
+                                        | async
+                                    "
+                                  ></span>
+                                </div>
+                              </div>
                             </div>
-                            <div class="text-dark codx-textcontent">
-                              <span
-                                [innerHTML]="
-                                  dataSelected?.poh
-                                    | formatvalue : formModel : 'POH'
-                                    | async
-                                "
-                              ></span>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="d-flex">
-                        <div class="col-6">
-                          <div class="mb-5px d-flex align-items-top">
-                            <div
-                              class="w-150px min-w-150px text-gray-600 codx-textlabel"
-                            >
-                              <codx-label
-                                fiedName="Category"
-                                class="nowrap label-colon"
-                                [setRequire]="false"
-                                [formModel]="formModel"
-                              ></codx-label>
-                            </div>
-                            <div class="text-dark codx-textcontent">
-                              <span
-                                [innerHTML]="
-                                  dataSelected?.category
-                                    | formatvalue : formModel : 'Category'
-                                    | async
-                                "
-                              ></span>
-                            </div>
-                          </div>
-                        </div>
-                        <div class="col-6">
-                          <div class="mb-5px d-flex align-items-top">
-                            <div
-                              class="w-150px min-w-150px text-gray-600 codx-textlabel"
-                            >
-                              <codx-label
-                                fiedName="PartETA"
-                                class="nowrap label-colon"
-                                [setRequire]="false"
-                                [formModel]="formModel"
-                              ></codx-label>
-                            </div>
-                            <div class="text-dark codx-textcontent">
-                              <span
-                                [innerHTML]="
-                                  dataSelected?.partETA
-                                    | formatvalue : formModel : 'PartETA'
-                                    | async
-                                "
-                              ></span>
+                            <div class="col-6">
+                              <div class="mb-5px d-flex align-items-top">
+                                <div
+                                  class="w-150px min-w-150px text-gray-600 codx-textlabel"
+                                >
+                                  <codx-label
+                                    fiedName="POH"
+                                    class="nowrap label-colon"
+                                    [setRequire]="false"
+                                    [formModel]="formModel"
+                                  ></codx-label>
+                                </div>
+                                <div class="text-dark codx-textcontent">
+                                  <span
+                                    [innerHTML]="
+                                      dataSelected?.poh
+                                        | formatvalue : formModel : 'POH'
+                                        | async
+                                    "
+                                  ></span>
+                                </div>
+                              </div>
                             </div>
                           </div>
-                        </div>
-                      </div>
+                          <div class="d-flex">
+                            <div class="col-6">
+                              <div class="mb-5px d-flex align-items-top">
+                                <div
+                                  class="w-150px min-w-150px text-gray-600 codx-textlabel"
+                                >
+                                  <codx-label
+                                    fiedName="Category"
+                                    class="nowrap label-colon"
+                                    [setRequire]="false"
+                                    [formModel]="formModel"
+                                  ></codx-label>
+                                </div>
+                                <div class="text-dark codx-textcontent">
+                                  <span
+                                    [innerHTML]="
+                                      dataSelected?.category
+                                        | formatvalue : formModel : 'Category'
+                                        | async
+                                    "
+                                  ></span>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="col-6">
+                              <div class="mb-5px d-flex align-items-top">
+                                <div
+                                  class="w-150px min-w-150px text-gray-600 codx-textlabel"
+                                >
+                                  <codx-label
+                                    fiedName="PartETA"
+                                    class="nowrap label-colon"
+                                    [setRequire]="false"
+                                    [formModel]="formModel"
+                                  ></codx-label>
+                                </div>
+                                <div class="text-dark codx-textcontent">
+                                  <span
+                                    [innerHTML]="
+                                      dataSelected?.partETA
+                                        | formatvalue : formModel : 'PartETA'
+                                        | async
+                                    "
+                                  ></span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
 
-                      <div class="d-flex">
-                        <div class="col-6">
-                          <div class="mb-5px d-flex align-items-top">
-                            <div
-                              class="w-150px min-w-150px text-gray-600 codx-textlabel"
-                            >
-                              <codx-label
-                                fiedName="SubType"
-                                class="nowrap label-colon"
-                                [setRequire]="false"
-                                [formModel]="formModel"
-                              ></codx-label>
+                          <div class="d-flex">
+                            <div class="col-6">
+                              <div class="mb-5px d-flex align-items-top">
+                                <div
+                                  class="w-150px min-w-150px text-gray-600 codx-textlabel"
+                                >
+                                  <codx-label
+                                    fiedName="SubType"
+                                    class="nowrap label-colon"
+                                    [setRequire]="false"
+                                    [formModel]="formModel"
+                                  ></codx-label>
+                                </div>
+                                <div class="text-dark codx-textcontent">
+                                  <span
+                                    [innerHTML]="
+                                      dataSelected?.subType
+                                        | formatvalue : formModel : 'SubType'
+                                        | async
+                                    "
+                                  ></span>
+                                </div>
+                              </div>
                             </div>
-                            <div class="text-dark codx-textcontent">
-                              <span
-                                [innerHTML]="
-                                  dataSelected?.subType
-                                    | formatvalue : formModel : 'SubType'
-                                    | async
-                                "
-                              ></span>
+                            <div class="col-6">
+                              <div class="mb-5px d-flex align-items-top">
+                                <div
+                                  class="w-150px min-w-150px text-gray-600 codx-textlabel"
+                                >
+                                  <codx-label
+                                    fiedName="ATA"
+                                    class="nowrap label-colon"
+                                    [setRequire]="false"
+                                    [formModel]="formModel"
+                                  ></codx-label>
+                                </div>
+                                <div class="text-dark codx-textcontent">
+                                  <span
+                                    [innerHTML]="
+                                      dataSelected?.ata
+                                        | formatvalue : formModel : 'ATA'
+                                        | async
+                                    "
+                                  ></span>
+                                </div>
+                              </div>
                             </div>
                           </div>
-                        </div>
-                        <div class="col-6">
-                          <div class="mb-5px d-flex align-items-top">
-                            <div
-                              class="w-150px min-w-150px text-gray-600 codx-textlabel"
-                            >
-                              <codx-label
-                                fiedName="ATA"
-                                class="nowrap label-colon"
-                                [setRequire]="false"
-                                [formModel]="formModel"
-                              ></codx-label>
+
+                          <div class="d-flex">
+                            <div class="mb-5px d-flex align-items-top">
+                              <div
+                                class="w-150px min-w-150px text-gray-600 codx-textlabel"
+                              >
+                                <codx-label
+                                  fiedName="SLA"
+                                  class="nowrap label-colon"
+                                  [setRequire]="false"
+                                  [formModel]="formModel"
+                                ></codx-label>
+                              </div>
+                              <div class="text-dark codx-textcontent">
+                                <span
+                                  [innerHTML]="
+                                    dataSelected?.sla
+                                      | formatvalue : formModel : 'SLA'
+                                      | async
+                                  "
+                                ></span>
+                              </div>
                             </div>
-                            <div class="text-dark codx-textcontent">
-                              <span
-                                [innerHTML]="
-                                  dataSelected?.ata
-                                    | formatvalue : formModel : 'ATA'
-                                    | async
-                                "
-                              ></span>
+                          </div>
+
+                          <div class="d-flex">
+                            <div class="col-12">
+                              <div
+                                class="mb-5px d-flex align-items-top"
+                                *ngIf="serviceTime"
+                              >
+                                <div
+                                  class="w-150px min-w-150px text-gray-600 codx-textlabel"
+                                >
+                                  <codx-label
+                                    name="lblServiceTime"
+                                    class="nowrap label-colon"
+                                    [setRequire]="false"
+                                    [formModel]="formModel"
+                                    default="ServiceTime"
+                                  ></codx-label>
+                                </div>
+                                <div class="text-dark codx-textcontent">
+                                  {{ serviceTime }}
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div class="d-flex">
+                            <div class="col-12">
+                              <div class="mb-5px d-flex align-items-top">
+                                <div
+                                  class="w-150px min-w-150px text-gray-600 codx-textlabel"
+                                >
+                                  <codx-label
+                                    fiedName="ServiceLocator"
+                                    class="nowrap label-colon"
+                                    [setRequire]="false"
+                                    [formModel]="formModel"
+                                  ></codx-label>
+                                </div>
+                                <div class="d-flex text-dark codx-textcontent">
+                                  <span
+                                    [innerHTML]="
+                                      dataSelected?.serviceLocator
+                                        | formatvalue
+                                          : formModel
+                                          : 'ServiceLocator'
+                                        | async
+                                    "
+                                  ></span>
+                                  <span class="ms-1 me-1">-</span>
+                                  <codx-label
+                                    class="me-1"
+                                    fiedName="Zone"
+                                    class="nowrap label-colon"
+                                    [setRequire]="false"
+                                    [formModel]="formModel"
+                                  ></codx-label>
+                                  <span
+                                    [innerHTML]="
+                                      dataSelected?.zone
+                                        | formatvalue : formModel : 'Zone'
+                                        | async
+                                    "
+                                  ></span>
+                                  <span class="ms-1 me-1">-</span>
+                                  <codx-label
+                                    class="me-1"
+                                    fiedName="Zone2"
+                                    class="nowrap label-colon"
+                                    [setRequire]="false"
+                                    [formModel]="formModel"
+                                  ></codx-label>
+                                  <span
+                                    [innerHTML]="
+                                      dataSelected?.zone2
+                                        | formatvalue : formModel : 'Zone2'
+                                        | async
+                                    "
+                                  ></span>
+                                  <span
+                                    class="icon-edit text-hover-primary text-primary icon-16 ms-2 cursor-pointer"
+                                    (click)="updateServiceLocator(dataSelected)"
+                                  ></span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div class="d-flex">
+                            <div class="col-12">
+                              <div class="mb-5px d-flex align-items-top">
+                                <div
+                                  class="w-150px min-w-150px text-gray-600 codx-textlabel"
+                                >
+                                  <codx-label
+                                    fiedName="TeamLeader"
+                                    class="nowrap label-colon"
+                                    [setRequire]="false"
+                                    [formModel]="formModel"
+                                  ></codx-label>
+                                </div>
+                                <div class="text-dark codx-textcontent">
+                                  <span
+                                    [innerHTML]="
+                                      dataSelected?.teamLeader
+                                        | formatvalue : formModel : 'TeamLeader'
+                                        | async
+                                    "
+                                  ></span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div class="d-flex">
+                            <div class="col-12">
+                              <div class="mb-5px d-flex align-items-top">
+                                <div
+                                  class="w-150px min-w-150px text-gray-600 codx-textlabel"
+                                >
+                                  <codx-label
+                                    fiedName="EngineerID"
+                                    class="nowrap label-colon"
+                                    [setRequire]="false"
+                                    [formModel]="formModel"
+                                  ></codx-label>
+                                </div>
+                                <div class="text-dark codx-textcontent">
+                                  <span
+                                    [innerHTML]="
+                                      dataSelected?.engineerID
+                                        | formatvalue : formModel : 'EngineerID'
+                                        | async
+                                    "
+                                  ></span>
+                                  <span
+                                    class="ms-1"
+                                  >
+                                    <button
+                                      type="button"
+                                      class="btn btn-sm btn-icon btn-light-primary"
+                                      (click)="
+                                        updateAssignEngineer(dataSelected)
+                                      "
+                                    >
+                                      <span class="icon-edit icon-16"></span>
+                                    </button>
+                                  </span>
+                                </div>
+                              </div>
                             </div>
                           </div>
                         </div>
                       </div>
-
-                      <div class="d-flex">
-                        <div class="mb-5px d-flex align-items-top">
+                      <div
+                        class="d-flex flex-column mt-5"
+                        *ngIf="dataSelected?.cancelled"
+                      >
+                        <codx-label
+                          default="Dell cancel"
+                          class="text-dark fw-bold fs-6 mb-3"
+                          [formModel]="formModel"
+                          name="lblDellCancelled"
+                        ></codx-label>
+                        <div class="d-flex flex-row">
                           <div
                             class="w-150px min-w-150px text-gray-600 codx-textlabel"
                           >
                             <codx-label
-                              fiedName="SLA"
+                              fiedName="Cancelled"
+                              class="nowrap label-colon"
+                              [setRequire]="false"
+                              [formModel]="formModel"
+                            ></codx-label>
+                          </div>
+                          <div class="text-dark codx-textcontent">
+                            <codx-input
+                              class="test-check"
+                              type="switch"
+                              style="width: 100%"
+                              [checked]="dataSelected?.cancelled"
+                              field="cancelled"
+                              [disabled]="true"
+                            >
+                            </codx-input>
+                          </div>
+                        </div>
+                        <div class="d-flex flex-row">
+                          <div
+                            class="w-150px min-w-150px text-gray-600 codx-textlabel"
+                          >
+                            <codx-label
+                              fiedName="CancelledNote"
                               class="nowrap label-colon"
                               [setRequire]="false"
                               [formModel]="formModel"
@@ -840,364 +1056,155 @@
                           <div class="text-dark codx-textcontent">
                             <span
                               [innerHTML]="
-                                dataSelected?.sla
-                                  | formatvalue : formModel : 'SLA'
+                                dataSelected?.cancelledNote
+                                  | formatvalue : formModel : 'CancelledNote'
+                                  | async
+                              "
+                            ></span>
+                          </div>
+                        </div>
+                        <div class="d-flex flex-row">
+                          <div
+                            class="w-150px min-w-150px text-gray-600 codx-textlabel"
+                          >
+                            <codx-label
+                              fiedName="CancelledOn"
+                              class="nowrap label-colon"
+                              [setRequire]="false"
+                              [formModel]="formModel"
+                            ></codx-label>
+                          </div>
+                          <div class="text-dark codx-textcontent">
+                            <span
+                              [innerHTML]="
+                                dataSelected?.cancelledOn
+                                  | formatvalue : formModel : 'CancelledOn'
                                   | async
                               "
                             ></span>
                           </div>
                         </div>
                       </div>
-
-                      <div class="d-flex">
-                        <div class="col-12">
-                          <div
-                            class="mb-5px d-flex align-items-top"
-                            *ngIf="serviceTime"
-                          >
-                            <div
-                              class="w-150px min-w-150px text-gray-600 codx-textlabel"
-                            >
-                              <codx-label
-                                name="lblServiceTime"
-                                class="nowrap label-colon"
-                                [setRequire]="false"
-                                [formModel]="formModel"
-                                default="ServiceTime"
-                              ></codx-label>
-                            </div>
-                            <div class="text-dark codx-textcontent">
-                              {{ serviceTime }}
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div class="d-flex">
-                        <div class="col-12">
-                          <div class="mb-5px d-flex align-items-top">
-                            <div
-                              class="w-150px min-w-150px text-gray-600 codx-textlabel"
-                            >
-                              <codx-label
-                                fiedName="ServiceLocator"
-                                class="nowrap label-colon"
-                                [setRequire]="false"
-                                [formModel]="formModel"
-                              ></codx-label>
-                            </div>
-                            <div class="d-flex text-dark codx-textcontent">
-                              <span
-                                [innerHTML]="
-                                  dataSelected?.serviceLocator
-                                    | formatvalue : formModel : 'ServiceLocator'
-                                    | async
-                                "
-                              ></span>
-                              <span class="ms-1 me-1">-</span>
-                              <codx-label
-                                class="me-1"
-                                fiedName="Zone"
-                                class="nowrap label-colon"
-                                [setRequire]="false"
-                                [formModel]="formModel"
-                              ></codx-label>
-                              <span
-                                [innerHTML]="
-                                  dataSelected?.zone
-                                    | formatvalue : formModel : 'Zone'
-                                    | async
-                                "
-                              ></span>
-                              <span class="ms-1 me-1">-</span>
-                              <codx-label
-                                class="me-1"
-                                fiedName="Zone2"
-                                class="nowrap label-colon"
-                                [setRequire]="false"
-                                [formModel]="formModel"
-                              ></codx-label>
-                              <span
-                                [innerHTML]="
-                                  dataSelected?.zone2
-                                    | formatvalue : formModel : 'Zone2'
-                                    | async
-                                "
-                              ></span>
-                              <span
-                                *ngIf="
-                                  dataSelected?.status != '5' &&
-                                  dataSelected?.status != '7'
-                                "
-                                class="icon-edit text-hover-primary text-primary icon-16 ms-2 cursor-pointer"
-                                (click)="updateServiceLocator(dataSelected)"
-                              ></span>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div class="d-flex">
-                        <div class="col-12">
-                          <div class="mb-5px d-flex align-items-top">
-                            <div
-                              class="w-150px min-w-150px text-gray-600 codx-textlabel"
-                            >
-                              <codx-label
-                                fiedName="TeamLeader"
-                                class="nowrap label-colon"
-                                [setRequire]="false"
-                                [formModel]="formModel"
-                              ></codx-label>
-                            </div>
-                            <div class="text-dark codx-textcontent">
-                              <span
-                                [innerHTML]="
-                                  dataSelected?.teamLeader
-                                    | formatvalue : formModel : 'TeamLeader'
-                                    | async
-                                "
-                              ></span>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div class="d-flex">
-                        <div class="col-12">
-                          <div class="mb-5px d-flex align-items-top">
-                            <div
-                              class="w-150px min-w-150px text-gray-600 codx-textlabel"
-                            >
-                              <codx-label
-                                fiedName="EngineerID"
-                                class="nowrap label-colon"
-                                [setRequire]="false"
-                                [formModel]="formModel"
-                              ></codx-label>
-                            </div>
-                            <div class="text-dark codx-textcontent">
-                              <span
-                                [innerHTML]="
-                                  dataSelected?.engineerID
-                                    | formatvalue : formModel : 'EngineerID'
-                                    | async
-                                "
-                              ></span>
-                              <span
-                                class="ms-1"
-                                *ngIf="
-                                  dataSelected.status != '7' &&
-                                  dataSelected.status != '5'
-                                "
-                              >
-                                <button
-                                  type="button"
-                                  class="btn btn-sm btn-icon btn-light-primary"
-                                  (click)="updateAssignEngineer(dataSelected)"
-                                >
-                                  <span class="icon-edit icon-16"></span>
-                                </button>
-                              </span>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
                     </div>
-                  </div>
-                  <div
-                    class="d-flex flex-column mt-5"
-                    *ngIf="dataSelected?.cancelled"
-                  >
-                    <codx-label
-                      default="Dell cancel"
-                      class="text-dark fw-bold fs-6 mb-3"
-                      [formModel]="formModel"
-                      name="lblDellCancelled"
-                    ></codx-label>
-                    <div class="d-flex flex-row">
-                      <div
-                        class="w-150px min-w-150px text-gray-600 codx-textlabel"
-                      >
-                        <codx-label
-                          fiedName="Cancelled"
-                          class="nowrap label-colon"
-                          [setRequire]="false"
-                          [formModel]="formModel"
-                        ></codx-label>
-                      </div>
-                      <div class="text-dark codx-textcontent">
-                        <codx-input
-                          class="test-check"
-                          type="switch"
-                          style="width: 100%"
-                          [checked]="dataSelected?.cancelled"
-                          field="cancelled"
-                          [disabled]="true"
+                  </ng-template>
+                </e-tabitem>
+                <e-tabitem>
+                  <ng-template #headerText>
+                    <div class="d-flex align-items-top me-2">
+                      <span
+                        class="icon-handyman text-hover-primary icon-16 me-2"
+                      ></span>
+                      <codx-label
+                        class="fw-bold text-hover-primary text-dark"
+                        default="Thiết bị"
+                        [formModel]="formModel"
+                        name="lblParts"
+                      ></codx-label>
+                    </div>
+                  </ng-template>
+                  <ng-template #content>
+                    <wr-view-tab-parts
+                      #viewParts
+                      [transID]="id"
+                      [isShow]="isShow"
+                      [dataWorkOrder]="dataSelected"
+                    ></wr-view-tab-parts>
+                  </ng-template>
+                </e-tabitem>
+                <e-tabitem>
+                  <ng-template #headerText>
+                    <div class="d-flex align-items-top me-2">
+                      <span
+                        class="icon-update text-hover-primary icon-16 me-2"
+                      ></span>
+                      <codx-label
+                        class="fw-bold text-hover-primary text-dark"
+                        default="Cập nhật"
+                        [formModel]="formModel"
+                        name="lblWorkOrderUpdate"
+                      ></codx-label>
+                    </div>
+                  </ng-template>
+                  <ng-template #content>
+                    <wr-view-tab-update
+                      #viewUpdate
+                      [transID]="id"
+                      [isShow]="isShow"
+                      [dataWorkOrder]="dataSelected"
+                    ></wr-view-tab-update>
+                  </ng-template>
+                </e-tabitem>
+                <e-tabitem>
+                  <ng-template #headerText>
+                    <div class="d-flex align-items-top me-2">
+                      <span
+                        class="icon-handyman text-hover-primary icon-16 me-2"
+                      ></span>
+                      <codx-label
+                        class="fw-bold text-hover-primary text-dark"
+                        [formModel]="formModel"
+                        fiedName="Comments"
+                      ></codx-label>
+                    </div>
+                  </ng-template>
+                  <ng-template #content>
+                    <div class="mt-5">
+                      <ng-container
+                        [ngTemplateOutlet]="templateComment"
+                      ></ng-container>
+                    </div>
+                  </ng-template>
+                </e-tabitem>
+                <e-tabitem>
+                  <ng-template #headerText>
+                    <div class="d-flex align-items-top me-2">
+                      <span
+                        class="icon-i-chat-right text-hover-primary icon-16 me-2"
+                      ></span>
+                      <codx-label
+                        class="fw-bold text-hover-primary text-dark"
+                        default="Thảo luận"
+                        [formModel]="formModel"
+                        name="lblNote"
+                      ></codx-label>
+                    </div>
+                  </ng-template>
+                  <ng-template #content>
+                    <div class="tab-comt mt-5">
+                      <div class="tab_container">
+                        <codx-tree-comment
+                          [objectID]="dataSelected.recID"
+                          [objectType]="formModel.entityName"
+                          [actionType]="'C'"
+                          [addNew]="true"
+                          [funcID]="formModel.funcID"
                         >
-                        </codx-input>
+                        </codx-tree-comment>
                       </div>
                     </div>
-                    <div class="d-flex flex-row">
-                      <div
-                        class="w-150px min-w-150px text-gray-600 codx-textlabel"
-                      >
-                        <codx-label
-                          fiedName="CancelledNote"
-                          class="nowrap label-colon"
-                          [setRequire]="false"
-                          [formModel]="formModel"
-                        ></codx-label>
-                      </div>
-                      <div class="text-dark codx-textcontent">
-                        <span
-                          [innerHTML]="
-                            dataSelected?.cancelledNote
-                              | formatvalue : formModel : 'CancelledNote'
-                              | async
-                          "
-                        ></span>
-                      </div>
-                    </div>
-                    <div class="d-flex flex-row">
-                      <div
-                        class="w-150px min-w-150px text-gray-600 codx-textlabel"
-                      >
-                        <codx-label
-                          fiedName="CancelledOn"
-                          class="nowrap label-colon"
-                          [setRequire]="false"
-                          [formModel]="formModel"
-                        ></codx-label>
-                      </div>
-                      <div class="text-dark codx-textcontent">
-                        <span
-                          [innerHTML]="
-                            dataSelected?.cancelledOn
-                              | formatvalue : formModel : 'CancelledOn'
-                              | async
-                          "
-                        ></span>
-                      </div>
-                    </div>
-                  </div>
-                </ng-template>
-              </e-tabitem>
-              <e-tabitem>
-                <ng-template #headerText>
-                  <div class="d-flex align-items-top me-2">
-                    <span
-                      class="icon-handyman text-hover-primary icon-16 me-2"
-                    ></span>
-                    <codx-label
-                      class="fw-bold text-hover-primary text-dark"
-                      default="Thiết bị"
-                      [formModel]="formModel"
-                      name="lblParts"
-                    ></codx-label>
-                  </div>
-                </ng-template>
-                <ng-template #content>
-                  <wr-view-tab-parts
-                    #viewParts
-                    [transID]="id"
-                    [isShow]="isShow"
-                    [dataWorkOrder]="dataSelected"
-                  ></wr-view-tab-parts>
-                </ng-template>
-              </e-tabitem>
-              <e-tabitem>
-                <ng-template #headerText>
-                  <div class="d-flex align-items-top me-2">
-                    <span
-                      class="icon-update text-hover-primary icon-16 me-2"
-                    ></span>
-                    <codx-label
-                      class="fw-bold text-hover-primary text-dark"
-                      default="Cập nhật"
-                      [formModel]="formModel"
-                      name="lblWorkOrderUpdate"
-                    ></codx-label>
-                  </div>
-                </ng-template>
-                <ng-template #content>
-                  <wr-view-tab-update
-                    #viewUpdate
-                    [transID]="id"
-                    [isShow]="isShow"
-                    [dataWorkOrder]="dataSelected"
-                  ></wr-view-tab-update>
-                </ng-template>
-              </e-tabitem>
-              <e-tabitem>
-                <ng-template #headerText>
-                  <div class="d-flex align-items-top me-2">
-                    <span
-                      class="icon-handyman text-hover-primary icon-16 me-2"
-                    ></span>
-                    <codx-label
-                      class="fw-bold text-hover-primary text-dark"
-                      [formModel]="formModel"
-                      fiedName="Comments"
-                    ></codx-label>
-                  </div>
-                </ng-template>
-                <ng-template #content>
-                  <div class="mt-5">
-                    <ng-container
-                      [ngTemplateOutlet]="templateComment"
-                    ></ng-container>
-                  </div>
-                </ng-template>
-              </e-tabitem>
-              <e-tabitem>
-                <ng-template #headerText>
-                  <div class="d-flex align-items-top me-2">
-                    <span
-                      class="icon-i-chat-right text-hover-primary icon-16 me-2"
-                    ></span>
-                    <codx-label
-                      class="fw-bold text-hover-primary text-dark"
-                      default="Thảo luận"
-                      [formModel]="formModel"
-                      name="lblNote"
-                    ></codx-label>
-                  </div>
-                </ng-template>
-                <ng-template #content>
-                  <div class="tab-comt mt-5">
-                    <div class="tab_container">
-                      <codx-tree-comment
-                        [objectID]="dataSelected.recID"
-                        [objectType]="formModel.entityName"
-                        [actionType]="'C'"
-                        [addNew]="true"
-                        [funcID]="formModel.funcID"
-                      >
-                      </codx-tree-comment>
-                    </div>
-                  </div>
-                </ng-template>
-              </e-tabitem>
-            </e-tabitems>
-          </ejs-tab>
+                  </ng-template>
+                </e-tabitem>
+              </e-tabitems>
+            </ejs-tab>
+          </div>
         </div>
-      </div>
-    </ng-template>
-    <ng-template #tabs let-data>
-      <codx-tabs
-        [entityName]="entityName"
-        [formModel]="formModel"
-        [TabControl]="tabControl"
-        [objectID]="dataSelected.recID"
-        [funcID]="funcID"
-        [dataTree]="treeTask"
-        [funcIDQuotations]="'WR0101'"
-        [customerID]="dataSelected.recID"
-      ></codx-tabs>
-    </ng-template>
-  </codx-detail-tmp>
+      </ng-template>
+      <ng-template #tabs let-data>
+        <codx-tabs
+          [entityName]="entityName"
+          [formModel]="formModel"
+          [TabControl]="tabControl"
+          [objectID]="dataSelected.recID"
+          [funcID]="funcID"
+          [dataTree]="treeTask"
+          [funcIDQuotations]="'WR0101'"
+          [customerID]="dataSelected.recID"
+        ></codx-tabs>
+      </ng-template>
+    </codx-detail-tmp>
+  </ng-container>
 </ng-container>
+
 <ng-template #noData>
   <div class="empty-data">
     <div class="container h-100">

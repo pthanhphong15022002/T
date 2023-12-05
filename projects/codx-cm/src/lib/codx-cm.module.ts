@@ -118,6 +118,7 @@ import { FormatStatusPipe } from './pipes/format-status.pipe';
 import { ViewTotalDealValueComponent } from './deals/view-total-deal-value/view-total-deal-value.component';
 import { ContractsDetailComponent } from './contracts/contracts-detail/contracts-detail.component';
 import { StyleHeaderColumnsPipe } from './pipes/style-header-columns.pipe';
+import { FormatStatusCodePipe } from './pipes/format-status-code.pipe';
 
 export const routes: Routes = [
   {
@@ -287,23 +288,24 @@ const T_Component: Type<any>[] = [
   ProgressSliderComponent,
   ViewHistoryCustomerComponent,
   ContractsDetailComponent,
+  CampaignContactsComponent,
+  PopupAddCampaignContactComponent,
+  CampaignDealsComponent,
+  PopupAddTaskCalendarComponent,
+  PopupUpdateStatusComponent,
+  CodxShowMoreLessComponent,
+  ViewDealDetailComponent,
+  ViewLeadDetailComponent,
 ];
 
 @NgModule({
   declarations: [
     T_Component,
-    CampaignContactsComponent,
-    PopupAddCampaignContactComponent,
-    CampaignDealsComponent,
-    PopupAddTaskCalendarComponent,
-    PopupUpdateStatusComponent,
-    CodxShowMoreLessComponent,
-    ViewDealDetailComponent,
-    ViewLeadDetailComponent,
     CustomIconPipe,
     FormatTargetPipe,
     FormatStatusPipe,
     StyleHeaderColumnsPipe,
+    FormatStatusCodePipe,
   ],
   imports: [
     CodxCoreModule.forRoot({ environment }),

@@ -110,7 +110,7 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
     private codxService: CodxService,
     private api: ApiHttpService,
     private taskService: CodxTasksService,
-    public sanitizer: DomSanitizer,
+    // public sanitizer: DomSanitizer, //core format rồi không cần nữa
     private changeDetectorRef: ChangeDetectorRef,
 
     @Optional() dt?: DialogData,
