@@ -73,6 +73,7 @@ export class WarrantiesComponent
   dataSelected: any;
   viewCrr: any;
   request: ResourceModel;
+  showMoreAdd: boolean;
   button?: ButtonModel[] = [{ id: 'btnAdd' }];
   readonly btnAdd: string = 'btnAdd';
   funcIDCrr: any;
@@ -124,6 +125,7 @@ export class WarrantiesComponent
   }
 
   onInit(): void {
+    this.showMoreAdd = false; //Hiện tại theo bên digipro tắt.
     this.asideMode = this.codxService?.asideMode;
 
     this.button = [
@@ -359,7 +361,14 @@ export class WarrantiesComponent
           (data.status == '7' &&
             ['WR0101_4', 'WR0102_4', 'WR0103_4', 'WR0104_4'].includes(
               res.functionID
-            ))
+            )) ||
+          (data.status == '9' &&
+            ['WR0101_3', 'WR0102_3', 'WR0103_3', 'WR0104_3'].includes(
+              res.functionID
+            )) ||
+          (['WR0101_7', 'WR0102_7', 'WR0103_7', 'WR0104_7', 'WR0103_8'].includes(
+            res.functionID
+          )) || ['SYS02', 'SYS04'].includes(res.functionID)
         )
           res.disabled = true;
       });
@@ -608,7 +617,7 @@ export class WarrantiesComponent
                 if (index != -1) {
                   this.lstOrderUpdate[index] = e?.event;
                 } else {
-                  this.lstOrderUpdate.push(e?.event);
+                  this.lstOrderUpdate.unshift(e?.event);
                 }
                 this.dataSelected = JSON.parse(
                   JSON.stringify(this.dataSelected)
@@ -674,11 +683,10 @@ export class WarrantiesComponent
 
   updateAssignEngineerEmit(e) {
     if (e && e?.data) {
-      const more = this.moreFuncInstance.find(
-        (el) => el.functionID == 'WR0101_2'
-      );
+      let title = this.funcID + '_2';
+      const more = this.moreFuncInstance.find((el) => el.functionID == title);
       if (e?.type == 'engineerID') {
-        this.titleAction = more?.description;
+        this.titleAction = more?.description ?? 'Update engineer';
         this.updateAssignEngineer(e?.data);
       } else {
         this.updateServiceLocator(e?.data);
@@ -794,8 +802,9 @@ export class WarrantiesComponent
   updateCommentWarranty(data) {
     this.dataSelected = data;
     this.comment = this.dataSelected.comment;
-    const event = this.moreFuncInstance.find((e) => e.functionID == 'WR0101_7');
-    this.titleAction = event.description;
+    let title = this.funcID + '_7';
+    const event = this.moreFuncInstance.find((e) => e.functionID == title);
+    this.titleAction = event?.description ?? 'Edit note';
     this.dialogStatus = this.callfc.openForm(this.itemComment, '', 600, 400);
     this.dialogStatus.closed.subscribe((ele) => {
       if (ele && ele?.event) {
@@ -872,6 +881,7 @@ export class WarrantiesComponent
       formModel.gridViewName = 'grvWRProducts';
       formModel.entityName = 'WR_Products';
       formModel.funcID = 'WRS0103';
+      formModel.userPermission = this.view?.formModel?.userPermission;
       opt.FormModel = formModel;
 
       this.cache.moreFunction('CoDXSystem', '').subscribe((res) => {

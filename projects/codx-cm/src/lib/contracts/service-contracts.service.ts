@@ -97,8 +97,8 @@ export class ContractsService {
   getCustomerByRecID(data) {
     return this.api.exec<any>(
       'CM',
-      'ContractsBusiness',
-      'GetCustomerByRecIDAsync',
+      'CustomersBusiness',
+      'GetOneAsync',
       data
     );
   }

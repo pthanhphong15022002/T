@@ -134,7 +134,6 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
   popupAddReason: DialogRef;
   reasonList: DP_Steps_Reasons[] = [];
   reason: DP_Steps_Reasons = new DP_Steps_Reasons();
-  listCbxProccess: any;
 
   titleCheckBoxSat: string = '';
   titleCheckBoxSun: string = '';
@@ -337,6 +336,18 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
   private destroyFrom$: Subject<void> = new Subject<void>();
   // private onDestroyPopupStep$: Subject<void> = new Subject<void>();
   vllDefaultName = [];
+
+  moveProccess:any;
+  listCbxProccess: any;
+
+  applyForSucess:any;
+  applyForFail:any;
+  processNameEmpty:any;
+  moveProccessSuccess:any;
+  moveProccessFail:any;
+  listCbxProccessSuccess: any[]=[];
+  listCbxProccessFail: any[]=[];
+
 
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
@@ -3411,7 +3422,7 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
         let customData = {
           refID: task.recID,
           refType: 'DP_Steps_Tasks',
-        };  
+        };
         this.codxShareService.defaultMoreFunc(
           e,
           task,
@@ -4093,12 +4104,12 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
 
         // Show swtich reason change
         this.isSwitchReason = true;
-
         this.step =
           view === this.viewStepReasonSuccess
             ? this.stepSuccess
             : this.stepFail;
         this.dataValueview = view;
+        this.checkViewReasonClick(this.step,view === this.viewStepReasonSuccess);
       } else {
         this.viewStepCrr = this.viewStepCustom;
         if (data) {
@@ -4468,24 +4479,10 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
 
   loadCbxProccess() {
     this.cache.valueList('DP031').subscribe((data) => {
-      this.dpService
-        .getlistCbxProccess(this.process?.applyFor)
-        .subscribe((res) => {
-          if (res) {
-            this.listCbxProccess = res[0];
-            let obj = {
-              recID: this.guidEmpty,
-              processName: data.datas[0].default,
-              // 'Không chuyển đến quy trình khác'
-            };
-            this.listCbxProccess.unshift(obj);
-            if (this.action === 'edit') {
-              this.listCbxProccess = this.listCbxProccess.filter(
-                (x) => x.recID !== this.process?.recID
-              );
-            }
-          }
-        });
+      if(data) {
+      this.processNameEmpty = data.datas[0].default;
+      this.moveProccess = this.guidEmpty;
+      }
     });
   }
 
@@ -4693,8 +4690,8 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
     }
     return true;
   }
-  moveProccessIsNull(newProccessID) {
-    let index = this.listCbxProccess.findIndex((x) => x.recID == newProccessID);
+  moveProccessIsNull(newProccessID,listCbxProccess) {
+    let index = listCbxProccess.findIndex((x) => x.recID == newProccessID);
     if (index > -1) {
       return newProccessID;
     }
@@ -4964,5 +4961,92 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
       '',
       { categoryID: task?.recID, type: '2', stepsTasks: task }
     );
+  }
+  valueChangeApplyFor($event,view){
+    if($event?.data) {
+      let isViewReason = view === this.viewStepReasonSuccess;
+      this.step.newProcessID = this.guidEmpty;
+      this.getListProcesByApplyFor(isViewReason,this.step,$event?.data,'');
+    }
+  }
+  checkViewReasonClick(step,isViewReason) {
+    let applyFor ='';
+    let processID = '';
+    if(step?.newProcessID === this.guidEmpty || !step?.newProcessID)
+    {
+      applyFor = this.process.applyFor;
+      if(isViewReason) {
+        this.applyForSucess = applyFor;
+      }
+      else {
+        this.applyForFail = applyFor;
+      }
+
+    }
+    else {
+      processID = step?.newProcessID;
+      if(isViewReason) {
+        applyFor =  this.applyForSucess ?  this.applyForSucess: '';
+        this.applyForSucess = applyFor;
+      }
+      else {
+        applyFor =  this.applyForFail ?  this.applyForFail: '';
+        this.applyForFail = applyFor;
+      }
+    }
+
+
+    // let applyFor = applyReason? applyReason: this.process.applyFor;
+    this.getListProcesByApplyFor(isViewReason,step,applyFor,processID);
+  }
+  getListProcesByApplyFor(isViewReason,stepReason,applyFor,processID) {
+    let data=[applyFor,processID,''];
+    this.dpService.getlistCbxProccessMove(data).subscribe((res) => {
+      if( res != null &&res.length > 0) {
+        this.getListProceseEmpty(res[0],isViewReason,applyFor,stepReason);
+      }
+      else {
+        this.getListProceseEmpty([],isViewReason,applyFor,stepReason);
+      }
+      this.changeDetectorRef.markForCheck();
+    });
+  }
+  getListProceseEmpty(listProcess,isViewReason,applyFor,stepReason) {
+    let listProcessCbx = [];
+    let moveProcess;
+    // this.moveProccess = null;
+    moveProcess = stepReason?.newProcessID === this.guidEmpty ||!stepReason?.newProcessID ? this.guidEmpty:stepReason.newProcessID ;
+
+    if(listProcess != null && listProcess.length > 0) {
+      listProcessCbx = listProcess;
+       listProcessCbx = listProcessCbx.filter(
+        (x) => x.recID !== this.process.recID
+      );
+      applyFor = listProcess[0].applyFor;
+    }
+    else {
+      applyFor = this.process.applyFor;
+    }
+    let obj = {
+      recID: this.guidEmpty,
+      processName: this.processNameEmpty,
+      permissions: [],
+    };
+    listProcessCbx.unshift(obj);
+    this.processNameEmpty = this.processNameEmpty,
+    this.moveProccess = this.guidEmpty;
+
+    if(isViewReason) {
+      this.listCbxProccessSuccess = listProcessCbx;
+      this.moveProccessSuccess = moveProcess;
+      this.stepSuccess.newProcessID = this.moveProccessSuccess;
+      this.applyForSucess = applyFor;
+    } else {
+      this.listCbxProccessFail = listProcessCbx;
+      this.moveProccessFail = moveProcess;
+      this.stepFail.newProcessID = this.moveProccessFail;
+      this.applyForFail = applyFor;
+    }
+    this.changeDetectorRef.markForCheck();
   }
 }

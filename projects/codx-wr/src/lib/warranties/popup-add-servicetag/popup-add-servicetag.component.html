@@ -35,9 +35,18 @@
         <codx-label fiedName="ProductID" [formModel]="form.formModel">
         </codx-label>
         <codx-input
+          *ngIf="!addProduct"
           field="productID"
           [formModel]="form.formModel"
           [Group]="form.formGroup"
+        ></codx-input>
+        <codx-input
+          *ngIf="addProduct"
+          field="productID2"
+          [refValue]="'WRProducts'"
+          [formModel]="form.formModel"
+          type="combobox"
+          [crrValue]="data.productID"
           (valueChange)="valueChange($event)"
         ></codx-input>
       </div>
