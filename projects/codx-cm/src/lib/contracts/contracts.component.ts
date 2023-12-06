@@ -909,26 +909,25 @@ export class ContractsComponent extends UIComponent {
       this.cache
         .gridViewSetup(fun.formName, fun.gridViewName)
         .subscribe((grvSt) => {
-          var formMD = new FormModel();
+          let formMD = new FormModel();
           formMD.funcID = fun.functionID;
           formMD.entityName = fun.entityName;
           formMD.formName = fun.formName;
           formMD.gridViewName = fun.gridViewName;
           let oldStatus = data.status;
           let oldStepId = data.stepID;
-          var stepReason = {
+          let stepReason = {
             isUseFail: false,
             isUseSuccess: false,
           };
-          var dataCM = {
+          let dataCM = {
             refID: data?.refID,
             processID: data?.processID,
             stepID: data?.stepID,
-            // nextStep: this.stepIdClick ? this.stepIdClick : data?.nextStep,
-            // listStepCbx: this.listInsStep,
+            nextStep: '',
+            isCallInstance: true,
           };
-          var obj = {
-            stepName: data?.currentStepName,
+          let obj = {
             formModel: formMD,
             deal: data,
             stepReason: stepReason,
@@ -936,7 +935,7 @@ export class ContractsComponent extends UIComponent {
             applyFor: '4',
             dataCM: dataCM,
           };
-          var dialogMoveStage = this.callfc.openForm(
+          let dialogMoveStage = this.callfc.openForm(
             PopupMoveStageComponent,
             '',
             850,
@@ -946,44 +945,46 @@ export class ContractsComponent extends UIComponent {
           );
           dialogMoveStage.closed.subscribe((e) => {
             if (e && e.event != null) {
-              this.listInsStep = e?.event?.listStep;
-              var instance = e.event.instance;
-              var listSteps = e.event?.listStep;
-              var index =
+              let instance = e.event.instance;
+              let listSteps = e.event?.listStep;
+              let index =
                 e.event.listStep.findIndex(
                   (x) =>
                     x.stepID === instance.stepID &&
                     !x.isSuccessStep &&
                     !x.isFailStep
                 ) + 1;
-              var nextStep = '';
-              if (
-                index != -1 &&
-                !listSteps[index]?.isSuccessStep &&
-                !listSteps[index]?.isFailStep
-              ) {
-                if (index != e.event.listStep.length) {
-                  nextStep = listSteps[index]?.stepID;
-                }
-              }
-              var dataUpdate = [
+              // let nextStep = '';
+              // if (
+              //   index != -1 &&
+              //   !listSteps[index]?.isSuccessStep &&
+              //   !listSteps[index]?.isFailStep
+              // ) {
+              //   if (index != e.event.listStep.length) {
+              //     nextStep = listSteps[index]?.stepID;
+              //   }
+              // }
+              let dataUpdate = [
                 data.recID,
                 instance.stepID,
-                nextStep,
                 oldStepId,
                 oldStatus,
                 e.event?.comment,
                 e.event?.expectedClosed,
-                e.event?.probability,
+                e.event?.permissionCM,
               ];
               // this.codxCmService.moveStageDeal(dataUpdate).subscribe((res) => {
               //   if (res) {
-              //     data = res[0];
-              //     this.view.dataService.update(data).subscribe();
-              //     this.detailViewDeal.dataSelected = data;
-              //     if (e.event.isReason != null) {
-              //       this.moveReason(data, e.event.isReason);
+              //     this.view.dataService.update(res, true).subscribe();
+              //     if (this.kanban) {
+              //       this.renderKanban(res);
               //     }
+              //     if (this.detailViewDeal)
+              //       this.detailViewDeal.dataSelected = res;
+              //     if (e.event.isReason != null) {
+              //       this.moveReason(res, e.event.isReason);
+              //     }
+              //     this.detailViewDeal?.reloadListStep(listSteps);
               //     this.detectorRef.detectChanges();
               //   }
               // });

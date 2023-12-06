@@ -91,7 +91,7 @@
         </div>
       </div>
       <div class="chat-list-body">
-        <codx-chat-list #listChat></codx-chat-list>
+        <codx-chat-list #listChat (countTotalMessage)="getTotalMessage()" ></codx-chat-list>
       </div>
     </div>
   </div>

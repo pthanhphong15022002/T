@@ -114,12 +114,12 @@ method="LoadDataAsync" -->
     >
         <div class="d-flex align-items-center">
           <div class="d-flex flex-column me-4">
-            <codx-img [funcId]="'HRT03a1'" [objectId]="data?.employeeID" [objectName]="data?.employeeName"
+            <!-- <codx-img [funcId]="'HRT03a1'" [objectId]="data?.employeeID" [objectName]="data?.employeeName"
               objectType="HR_Employees" [width]="40"
               [imageType]="'circle'"
               class="pic-emloyee"
               >
-            </codx-img>
+            </codx-img> -->
           </div>
           <div class="d-flex flex-column">
               <div
@@ -149,7 +149,7 @@ method="LoadDataAsync" -->
 
   <ng-template #tempDayData let-data>
     <span>
-      {{data? data[data.column.field] : "" }}
+      {{data? data[data.column.field][0].kowCode : "" }}
     </span>
   </ng-template>
 
