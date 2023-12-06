@@ -46,7 +46,7 @@ var routes: Routes = [
         component: ImportpartsComponent,
         data: { noReuse: true },
       },
-      //----phát hành quy trình DP----//
+      //----phát hành quy trình DP-CRM----//
       {
         path: 'deals/:funcID',
         component: DealsComponent,
