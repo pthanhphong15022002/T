@@ -108,6 +108,7 @@ export const routes: Routes = [
       {
         path: 'tasks/:funcID',
         component: TasksComponent,
+        data: { noReuse: true },
       },
 
       {
