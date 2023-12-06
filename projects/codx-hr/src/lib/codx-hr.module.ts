@@ -332,30 +332,30 @@ export const routes: Routes = [
             path: 'ethnicgroups/:funcID',
             component: EthnicGroupsComponent,
           },
-          //----phát hành quy trình DP-CRM----//
-          {
-            path: 'deals/:funcID',
-            component: DealsComponent,
-            data: { noReuse: true },
-          },
-          {
-            path: 'cases/:funcID',
-            component: CasesComponent,
-            data: { noReuse: true },
-          },
-          {
-            path: 'leads/:funcID',
-            component: LeadsComponent,
-            data: { noReuse: true },
-          },
-          {
-            path: 'instances/:funcID/:processID',
-            component: ViewInstancesComponent,
-            data: { noReuse: true },
-          },
-          //-----------end--------------//
         ],
       },
+      // //----phát hành quy trình DP-CRM----//
+      // {
+      //   path: 'deals/:funcID',
+      //   component: DealsComponent,
+      //   data: { noReuse: true },
+      // },
+      // {
+      //   path: 'cases/:funcID',
+      //   component: CasesComponent,
+      //   data: { noReuse: true },
+      // },
+      // {
+      //   path: 'leads/:funcID',
+      //   component: LeadsComponent,
+      //   data: { noReuse: true },
+      // },
+      // {
+      //   path: 'instances/:funcID/:processID',
+      //   component: ViewInstancesComponent,
+      //   data: { noReuse: true },
+      // },
+      // //-----------end--------------//
     ],
   },
 ];
