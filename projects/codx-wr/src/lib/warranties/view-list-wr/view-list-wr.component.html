@@ -120,7 +120,7 @@
         >
           <span
             class="icon-place text-hover-primary text-primary icon-16 text-gray-600 me-1"
-            [ngbTooltip]="gridViewSetup['Address']?.headerText"
+            [ngbTooltip]="gridViewSetup?.Address?.headerText"
           ></span>
           <a
             href="https://maps.google.com/maps?q=&quot; + {{
@@ -363,13 +363,13 @@
           [showText]="true"
           [showBgColor]="true"
           class="badge badge-light badge-sm"
-          [ngbTooltip]="gridViewSetup['Status']?.headerText"
+          [ngbTooltip]="gridViewSetup?.Status?.headerText"
         >
         </codx-vll>
       </div>
       <div class="mb-1" (mouseenter)="closePopover()">
         <span
-          [ngbTooltip]="gridViewSetup['LastUpdatedOn']?.headerText"
+          [ngbTooltip]="gridViewSetup?.LastUpdatedOn?.headerText"
           [innerHTML]="
             data.lastUpdatedOn
               | formatvalue : formModel : 'LastUpdatedOn'
