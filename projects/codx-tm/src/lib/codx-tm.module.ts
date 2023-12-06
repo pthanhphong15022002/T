@@ -79,6 +79,7 @@ import { SearchingComponent } from './searching/searching.component';
 import { CodxReportViewsComponent } from 'projects/codx-report/src/lib/codx-report-views/codx-report-views.component';
 import { LayoutNoAsideToolbarFluidComponent } from 'projects/codx-common/src/lib/_layout/_noAsideToolbarFluid/_noAsideToolbarFluid.component';
 import { LayoutComponent } from './_layout/layout.component';
+import { CodxDashboardViewsComponent } from 'projects/codx-share/src/lib/components/codx-dashboard/dashboard-view/dashboard-view.component';
 
 export const routes: Routes = [
   {
@@ -96,6 +97,10 @@ export const routes: Routes = [
       {
         path: 'dashboard/:funcID',
         component: TMDashboardComponent,
+      },
+      {
+        path: 'dashboard-view/:funcID',
+        component: CodxDashboardViewsComponent,
       },
       {
         path: 'share/dynamic/:funcID',

@@ -36,6 +36,7 @@ import { CodxViewContentComponent } from 'projects/codx-share/src/lib/components
 import { EPDashboardComponent } from './dashboard/dashboard.component';
 import { TreeMapModule } from '@syncfusion/ej2-angular-treemap';
 import { LayoutComponent } from 'projects/codx-share/src/lib/components/layout/layout.component';
+import { CodxDashboardViewsComponent } from 'projects/codx-share/src/lib/components/codx-dashboard/dashboard-view/dashboard-view.component';
 
 export const routes: Routes = [
   {
@@ -102,11 +103,16 @@ export const routes: Routes = [
       {
         path: 'dialog/:funcID',
         component: CodxViewContentComponent,
-      },      
+      },
       {
         path: 'dashboard/:funcID',
         component: EPDashboardComponent,
       },
+      {
+        path: 'dashboard-view/:funcID',
+        component: CodxDashboardViewsComponent,
+      },
+
     ],
   },
   {
