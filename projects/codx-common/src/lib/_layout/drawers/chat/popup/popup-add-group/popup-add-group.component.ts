@@ -146,7 +146,6 @@ export class AddGroupChatComponent implements OnInit, AfterViewInit {
   isLoading: boolean = false;
   // insert group
   insertGroup() {
-    debugger;
     if (!this.group.members || this.group.members.length == 0)
     {
       this.notifiSV.notify('Vui lòng chọn thành viên');

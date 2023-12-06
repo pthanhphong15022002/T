@@ -142,6 +142,9 @@ import { PopupEdocumentsComponent } from './employee-profile/popup-edocuments/po
 import { EmployeeQuitComponent } from './employee-quit/employee-quit.component';
 import { PopupEquitComponent } from './employee-profile/popup-equit/popup-equit.component';
 import { ViewDetailEquitComponent } from './employee-quit/view-detail-equit/view-detail-equit.component';
+import { HolidayComponent } from './holiday/holiday.component';
+import { PopupAddHolidayTypeComponent } from './holiday/popup-add-holiday-type/popup-add-holiday-type.component';
+import { SpeedDialModule } from '@syncfusion/ej2-angular-buttons';
 export const routes: Routes = [
   {
     path: '',
@@ -272,7 +275,10 @@ export const routes: Routes = [
           ),
         data: { noReuse: true },
       },
-
+      {
+        path: 'sysholidaytype/:funcID',
+        component: HolidayComponent,
+      },
       {
         path: 'setting',
         component: HRParametersComponent,
@@ -321,6 +327,7 @@ export const routes: Routes = [
             path: 'ethnicgroups/:funcID',
             component: EthnicGroupsComponent,
           },
+          
         ],
       },
     ],
@@ -449,6 +456,8 @@ const T_Component: Type<any>[] = [
   PopupEdocumentsComponent,
   EmployeeQuitComponent,
   ViewDetailEquitComponent,
+  HolidayComponent,
+  PopupAddHolidayTypeComponent
 ];
 @NgModule({
   imports: [
@@ -465,7 +474,7 @@ const T_Component: Type<any>[] = [
     DiagramAllModule,
     NgbModule,
     BasicPrimitivesModule,
-    HttpClientModule
+    SpeedDialModule,
   ],
   exports: [RouterModule],
   declarations: T_Component,
