@@ -84,6 +84,7 @@ export class ViewTabUpdateComponent implements OnInit {
   columnsGrid = [];
   dataSelected: any;
   titleAction = '';
+  adjustWorkOrderUpdate = '0';
   constructor(
     private api: ApiHttpService,
     private cache: CacheService,
@@ -111,11 +112,21 @@ export class ViewTabUpdateComponent implements OnInit {
     }
   }
 
-  ngOnInit(): void {
+  async ngOnInit() {
     // this.getGridViewSetup();
     //this.sortField = new SortModel();
     // this.sortField.field = 'statusCode';
     // this.sortField.dir = 'asc';
+    var param = await firstValueFrom(
+      this.cache.viewSettingValues('WRParameters')
+    );
+    if (param?.length > 0) {
+      let dataParam = param.filter((x) => x.category == '1' && !x.transType)[0];
+      if (dataParam) {
+        let paramDefault = JSON.parse(dataParam.dataValue);
+        this.adjustWorkOrderUpdate = paramDefault['AdjustWorkOrderUpdate'] ?? '0';
+      }
+    }
   }
 
   ngAfterViewInit(): void {
@@ -298,7 +309,7 @@ export class ViewTabUpdateComponent implements OnInit {
             break;
           case 'SYS02':
           case 'SYS03':
-            if (data?.exported) res.disabled = true;
+            if (data?.exported || this.adjustWorkOrderUpdate == '0') res.disabled = true;
 
             break;
           default:
@@ -352,7 +363,7 @@ export class ViewTabUpdateComponent implements OnInit {
                 if (idx != -1) {
                   this.lstUpdate[idx] = data;
                 } else {
-                  this.lstUpdate.push(Object.assign({}, data));
+                  this.lstUpdate.unshift(data);
                 }
                 this.lstUpdate = JSON.parse(JSON.stringify(this.lstUpdate));
                 this.wrSv.listOrderUpdateSubject.next({
