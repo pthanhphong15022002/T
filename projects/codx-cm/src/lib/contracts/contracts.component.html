@@ -169,21 +169,30 @@
     (changeProgress)="autoStart($event)"
     (isSusscess)="autoOpenPopupSusscess($event)"
     ></contracts-view-detail>
-    <!-- (changeMF)="changeMF($event)" -->
 </ng-template>
 
 <!--more function -->
 <ng-template #templateMore let-data>
-  <div class=""> 
-    <!-- <codx-mfunc
-      [type]="'hover'"
+  <div class="" style="height: 30px">
+    <codx-mfunc
+      [dataItem]="data"
+      [formModel]="view.formModel"
+      (clickMF)="clickMF($event, data)"
+      (changeDataMF)="changeDataMF($event, data, true)"
+      [isBookMark]="true"
+      type="view"
+    ></codx-mfunc>
+  </div>
+  <!-- <div class=""> 
+    <codx-mfunc
+      type="view"
       [dataItem]="moreDefaut"
       [formModel]="view.formModel"
       (changeDataMF)="changeDataMF($event, data, true)"
       (clickMF)="clickMF($event, data)"
     >
-    </codx-mfunc> -->
-  </div>
+    </codx-mfunc>
+  </div> -->
 </ng-template>
 <!--Tên hợp đồng -->
 <ng-template #contractName let-data>

@@ -227,6 +227,9 @@ export class ContractsComponent extends UIComponent {
       } else if (event != null) {
         event.forEach((res) => {
           res.isblur = data?.approveStatus == '3';
+          if(isDetail){
+            res.isbookmark = false;
+          }
           switch (res.functionID) {
             //Gửi duyệt
             case 'CM0204_1':
@@ -763,37 +766,37 @@ export class ContractsComponent extends UIComponent {
       let field = Util.camelize(key);
       let template: any;
       let colums: any;
-      switch (key) {
-        case 'ContractName':
-          template = this.tempContractName;
-          break;
-        case 'CustomerID':
-          template = this.tempCustomerID;
-          break;
-        case 'ContractAmt':
-          template = this.tempContractAmt;
-          break;
-        case 'PaidAmt':
-          template = this.tempPaidAmt;
-          break;
-        case 'CurrencyID':
-          template = this.tempCurrencyID;
-          break;
+      // switch (key) {
+        // case 'ContractName':
+        //   template = this.tempContractName;
+        //   break;
+        // case 'CustomerID':
+        //   template = this.tempCustomerID;
+        //   break;
+        // case 'ContractAmt':
+        //   template = this.tempContractAmt;
+        //   break;
+        // case 'PaidAmt':
+        //   template = this.tempPaidAmt;
+        //   break;
+        // case 'CurrencyID':
+        //   template = this.tempCurrencyID;
+        //   break;
         // case 'ApplyProcess':
         //   template = this.tempApplyProcess;
         //   break;
-        case 'StepID':
-          template = this.tempStepID;
-          break;
-        case 'Status':
-          template = this.tempStatus;
-          break;
-        case 'Owner':
-          template = this.tempOwner;
-          break;
-        default:
-          break;
-      }
+        // case 'StepID':
+        //   template = this.tempStepID;
+        //   break;
+        // case 'Status':
+        //   template = this.tempStatus;
+        //   break;
+        // case 'Owner':
+        //   template = this.tempOwner;
+        //   break;
+        // default:
+        //   break;
+      // }
       if (template) {
         colums = {
           field: field,
@@ -828,12 +831,11 @@ export class ContractsComponent extends UIComponent {
         active: false,
         sameData: true,
         model: {
-          resources: this.columnGrids,
+          // resources: this.columnGrids,
           template2: this.templateMore,
         },
       },
     ];
-
     this.detectorRef.detectChanges();
   }
 
