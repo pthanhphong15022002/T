@@ -45,6 +45,10 @@ import { ApprovalStepComponent } from './incomming/approval-step/approval-step.c
 import { ODDashboardComponent } from './oddashboard/oddashboard.component';
 import { TreeMapModule } from '@syncfusion/ej2-angular-treemap';
 import { LayoutComponent } from 'projects/codx-share/src/lib/components/layout/layout.component';
+import { DealsComponent } from 'projects/codx-cm/src/lib/deals/deals.component';
+import { CasesComponent } from 'projects/codx-cm/src/lib/cases/cases.component';
+import { LeadsComponent } from 'projects/codx-cm/src/lib/leads/leads.component';
+import { ViewInstancesComponent } from 'projects/codx-dp/src/lib/view-instances/view-instances.component';
 const routes: Routes = [
   {
     path: '',
@@ -96,6 +100,28 @@ const routes: Routes = [
         path: '**',
         redirectTo: 'error/404',
       },
+      //----phát hành quy trình DP----//
+      {
+        path: 'deals/:funcID',
+        component: DealsComponent,
+        data: { noReuse: true },
+      },
+      {
+        path: 'cases/:funcID',
+        component: CasesComponent,
+        data: { noReuse: true },
+      },
+      {
+        path: 'leads/:funcID',
+        component: LeadsComponent,
+        data: { noReuse: true },
+      },
+      {
+        path: 'instances/:funcID/:processID',
+        component: ViewInstancesComponent,
+        data: { noReuse: true },
+      },
+      //-----------end--------------//
     ],
   },
 ];

@@ -269,16 +269,6 @@ var childAuthRoutes: Routes = [
       },
     ],
   },
-  //tesst chuyen instaces qua share
-  // {
-  //   path: 'instances',
-  //   // canActivate: [AuthGuard],
-  //   loadChildren: () =>
-  //     import(
-  //       'projects/codx-share/src/lib/components/codx-instances/codx-instances.module'
-  //     ).then((m) => m.CodxInstancesModule),
-  // },
-  //end tesst
   {
     path: 'sos',
     component: SosComponent,
