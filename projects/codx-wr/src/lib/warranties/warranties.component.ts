@@ -73,6 +73,7 @@ export class WarrantiesComponent
   dataSelected: any;
   viewCrr: any;
   request: ResourceModel;
+  showMoreAdd: boolean;
   button?: ButtonModel[] = [{ id: 'btnAdd' }];
   readonly btnAdd: string = 'btnAdd';
   funcIDCrr: any;
@@ -124,6 +125,7 @@ export class WarrantiesComponent
   }
 
   onInit(): void {
+    this.showMoreAdd = false; //Hiện tại theo bên digipro tắt.
     this.asideMode = this.codxService?.asideMode;
 
     this.button = [
@@ -364,9 +366,9 @@ export class WarrantiesComponent
             ['WR0101_3', 'WR0102_3', 'WR0103_3', 'WR0104_3'].includes(
               res.functionID
             )) ||
-          ['WR0101_7', 'WR0102_7', 'WR0103_7', 'WR0104_7', 'WR0103_8'].includes(
+          (['WR0101_7', 'WR0102_7', 'WR0103_7', 'WR0104_7', 'WR0103_8'].includes(
             res.functionID
-          )
+          )) || ['SYS02', 'SYS04'].includes(res.functionID)
         )
           res.disabled = true;
       });
@@ -615,7 +617,7 @@ export class WarrantiesComponent
                 if (index != -1) {
                   this.lstOrderUpdate[index] = e?.event;
                 } else {
-                  this.lstOrderUpdate.push(e?.event);
+                  this.lstOrderUpdate.unshift(e?.event);
                 }
                 this.dataSelected = JSON.parse(
                   JSON.stringify(this.dataSelected)
@@ -879,6 +881,7 @@ export class WarrantiesComponent
       formModel.gridViewName = 'grvWRProducts';
       formModel.entityName = 'WR_Products';
       formModel.funcID = 'WRS0103';
+      formModel.userPermission = this.view?.formModel?.userPermission;
       opt.FormModel = formModel;
 
       this.cache.moreFunction('CoDXSystem', '').subscribe((res) => {

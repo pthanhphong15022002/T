@@ -38,6 +38,7 @@ export class PopupAddServicetagComponent implements OnInit {
   radioAddEdit: boolean = true; //true - edit, false - add
   recID: any;
   countValidate = 0;
+  dataOld: any;
   constructor(
     private notiService: NotificationsService,
     private api: ApiHttpService,
@@ -73,12 +74,14 @@ export class PopupAddServicetagComponent implements OnInit {
         .subscribe(async (res) => {
           if (res) {
             this.data = res;
-          }else{
-            const defaultData = await firstValueFrom(this.wrSv.getDefault('WR','WRS0103','WR_Products'));
-            if(defaultData?.data){
+          } else {
+            const defaultData = await firstValueFrom(
+              this.wrSv.getDefault('WR', 'WRS0103', 'WR_Products')
+            );
+            if (defaultData?.data) {
               let product = defaultData?.data;
               product.productID = this.data?.productID ?? product.productID;
-              product.productName = this.data?.productName;
+              product.productName = this.data?.productID;
               product.productType = this.data?.productType;
               product.productBrand = this.data?.productBrand;
               product.productModel = this.data?.productModel;
@@ -149,16 +152,21 @@ export class PopupAddServicetagComponent implements OnInit {
         if (res) {
           this.dialog.close(res);
           this.notiService.notifyCode('SYS007');
-        } else {
-          this.notiService.notifyCode('SYS021');
-          this.dialog.close();
         }
       });
   }
   //#endregion
 
   valueChange(e) {
-    if (e?.field == 'productID' && !this.addProduct) {
+    if (e?.field == 'productID' || e?.field == 'productID2') {
+      this.data.productID = e?.data ?? e?.component?.value;
+      if (this.addProduct) {
+        this.data.productName =
+          e?.component?.itemsSelected[0]?.ProductName != null &&
+          e?.component?.itemsSelected[0]?.ProductName?.trim() != ''
+            ? e?.component?.itemsSelected[0]?.ProductName
+            : this.data.productID;
+      }
       this.data.productType = e?.component?.itemsSelected[0]?.ProductType;
       if (
         this.data?.productType == null ||
