@@ -22,7 +22,8 @@ import { PopupOverTimeComponent } from './over-time/popup-over-time/popup-over-t
 import { ViewDetailOtComponent } from './over-time/view-detail-over-time/view-detail-ot.component';
 import { EmployeeKowdsComponent } from './employee-kowds/employee-kowds.component';
 import { KowdsScheduleComponent } from './employee-kowds/kowds-schedule/kowds-schedule.component';
-
+import { PopupEkowdsComponent } from './employee-kowds/popup-ekowds/popup-ekowds.component';
+import { DateRangePickerModule } from '@syncfusion/ej2-angular-calendars';
 export const routes: Routes = [
   {
     path: '',
@@ -46,7 +47,8 @@ const T_Component: Type<any>[] = [
   PopupOverTimeComponent,
   ViewDetailOtComponent,
   EmployeeKowdsComponent,
-  KowdsScheduleComponent
+  KowdsScheduleComponent,
+  PopupEkowdsComponent
 ];
 
 @NgModule({
@@ -63,9 +65,10 @@ const T_Component: Type<any>[] = [
     ChartAllModule,
     DiagramAllModule,
     NgbModule,
+    DateRangePickerModule 
   ],
   exports: [RouterModule],
-  declarations: [T_Component, EmployeeKowdsComponent, KowdsScheduleComponent],
+  declarations: [T_Component, EmployeeKowdsComponent, KowdsScheduleComponent, PopupEkowdsComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class CodxPrModule {

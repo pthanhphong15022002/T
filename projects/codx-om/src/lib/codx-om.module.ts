@@ -1,4 +1,3 @@
-
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { CodxOmComponent } from './codx-om.component';
@@ -34,7 +33,10 @@ import {
   ProgressBarModule,
 } from '@syncfusion/ej2-angular-progressbar';
 import { PopupAddRoleComponent } from './popup/popup-add-role/popup-add-role.component';
-import { AccumulationChartModule, AccumulationTooltipService } from '@syncfusion/ej2-angular-charts';
+import {
+  AccumulationChartModule,
+  AccumulationTooltipService,
+} from '@syncfusion/ej2-angular-charts';
 import { PopupViewVersionComponent } from './popup/popup-view-version/popup-view-version.component';
 import { PopupAddVersionComponent } from './popup/popup-add-version/popup-add-version.component';
 import { PopupViewOKRLinkComponent } from './popup/popup-view-okr-link/popup-view-okr-link.component';
@@ -43,6 +45,10 @@ import { CodxReportViewsComponent } from 'projects/codx-report/src/lib/codx-repo
 import { CodxReportViewDetailComponent } from 'projects/codx-report/src/lib/codx-report-view-detail/codx-report-view-detail.component';
 import { PopupViewPlanVersionComponent } from './popup/popup-view-plan-version/popup-view-plan-version.component';
 import { PopupChangeTargetComponent } from './popup/popup-change-target/popup-change-target.component';
+import { DealsComponent } from 'projects/codx-cm/src/lib/deals/deals.component';
+import { LeadsComponent } from 'projects/codx-cm/src/lib/leads/leads.component';
+import { CasesComponent } from 'projects/codx-cm/src/lib/cases/cases.component';
+import { ViewInstancesComponent } from 'projects/codx-dp/src/lib/view-instances/view-instances.component';
 
 const routes: Routes = [
   {
@@ -82,6 +88,28 @@ const routes: Routes = [
         path: '**',
         redirectTo: 'error/404',
       },
+      // //----phát hành quy trình DP-CRM----//
+      // {
+      //   path: 'deals/:funcID',
+      //   component: DealsComponent,
+      //   data: { noReuse: true },
+      // },
+      // {
+      //   path: 'cases/:funcID',
+      //   component: CasesComponent,
+      //   data: { noReuse: true },
+      // },
+      // {
+      //   path: 'leads/:funcID',
+      //   component: LeadsComponent,
+      //   data: { noReuse: true },
+      // },
+      // {
+      //   path: 'instances/:funcID/:processID',
+      //   component: ViewInstancesComponent,
+      //   data: { noReuse: true },
+      // },
+      // //-----------end--------------//
     ],
   },
 ];

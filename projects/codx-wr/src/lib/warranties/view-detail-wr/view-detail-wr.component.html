@@ -122,19 +122,11 @@
                     </div>
                   </div>
                   <div
-                    [ngClass]="
-                      dataSelected?.category == '1'
-                        ? 'd-flex flex-column'
-                        : 'd-flex flex-column-reverse'
-                    "
+                    class="d-flex flex-column-reverse"
+
                   >
                     <div
-                      [ngClass]="
-                        dataSelected?.category == '1'
-                          ? 'd-flex align-items-center mb-1'
-                          : 'd-flex align-items-center mt-1'
-                      "
-                      class="text-primary text-hover-primary line-clamp-address"
+                      class="d-flex align-items-center mb-1 text-primary text-hover-primary line-clamp-address"
                       *ngIf="
                         dataSelected.address != null &&
                         dataSelected.address.trim() != ''
@@ -155,9 +147,7 @@
                     <div class="d-flex flex-row mb-1">
                       <div
                         class="d-flex align-items-center me-1"
-                        *ngIf="
-                          dataSelected?.recID && dataSelected?.category == '1'
-                        "
+
                       >
                         <span
                           class="icon-person icon-16 me-2 text-primary"
@@ -209,8 +199,7 @@
                       class="d-flex flex-row"
                       *ngIf="
                         contact2JSON?.Alternate?.Name != null &&
-                        contact2JSON?.Alternate?.Name?.trim() != '' &&
-                        dataSelected?.category == '1'
+                        contact2JSON?.Alternate?.Name?.trim() != ''
                       "
                     >
                       <div class="d-flex align-items-center me-1">
@@ -1003,6 +992,32 @@
                                       <span class="icon-edit icon-16"></span>
                                     </button>
                                   </span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="d-flex">
+                            <div class="col-12">
+                              <div class="mb-5px d-flex align-items-top">
+                                <div
+                                  class="w-150px min-w-150px text-gray-600 codx-textlabel"
+                                >
+                                  <codx-label
+                                    fiedName="BUID"
+                                    class="nowrap label-colon"
+                                    [setRequire]="false"
+                                    [formModel]="formModel"
+                                  ></codx-label>
+                                </div>
+                                <div class="text-dark codx-textcontent">
+                                  <span
+                                    [innerHTML]="
+                                      dataSelected?.buid
+                                        | formatvalue : formModel : 'BUID'
+                                        | async
+                                    "
+                                  ></span>
+
                                 </div>
                               </div>
                             </div>

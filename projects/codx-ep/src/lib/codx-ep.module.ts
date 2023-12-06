@@ -36,6 +36,11 @@ import { CodxViewContentComponent } from 'projects/codx-share/src/lib/components
 import { EPDashboardComponent } from './dashboard/dashboard.component';
 import { TreeMapModule } from '@syncfusion/ej2-angular-treemap';
 import { LayoutComponent } from 'projects/codx-share/src/lib/components/layout/layout.component';
+import { CodxDashboardViewsComponent } from 'projects/codx-share/src/lib/components/codx-dashboard/dashboard-view/dashboard-view.component';
+import { DealsComponent } from 'projects/codx-cm/src/lib/deals/deals.component';
+import { CasesComponent } from 'projects/codx-cm/src/lib/cases/cases.component';
+import { ViewInstancesComponent } from 'projects/codx-dp/src/lib/view-instances/view-instances.component';
+import { LeadsComponent } from 'projects/codx-cm/src/lib/leads/leads.component';
 
 export const routes: Routes = [
   {
@@ -102,11 +107,37 @@ export const routes: Routes = [
       {
         path: 'dialog/:funcID',
         component: CodxViewContentComponent,
-      },      
+      },
       {
         path: 'dashboard/:funcID',
         component: EPDashboardComponent,
       },
+      {
+        path: 'dashboard-view/:funcID',
+        component: CodxDashboardViewsComponent,
+      },
+      //----phát hành quy trình DP-CRM----//
+      {
+        path: 'deals/:funcID',
+        component: DealsComponent,
+        data: { noReuse: true },
+      },
+      {
+        path: 'cases/:funcID',
+        component: CasesComponent,
+        data: { noReuse: true },
+      },
+      {
+        path: 'leads/:funcID',
+        component: LeadsComponent,
+        data: { noReuse: true },
+      },
+      {
+        path: 'instances/:funcID/:processID',
+        component: ViewInstancesComponent,
+        data: { noReuse: true },
+      },
+      //-----------end--------------//
     ],
   },
   {
@@ -172,7 +203,7 @@ export const routes: Routes = [
     PopupAddCardTransComponent,
     CardTransComponent,
     PopupDriverAssignComponent,
-    EPDashboardComponent
+    EPDashboardComponent,
   ],
   providers: [],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],

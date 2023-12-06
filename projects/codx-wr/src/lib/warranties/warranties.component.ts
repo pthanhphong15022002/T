@@ -368,7 +368,7 @@ export class WarrantiesComponent
             )) ||
           (['WR0101_7', 'WR0102_7', 'WR0103_7', 'WR0104_7', 'WR0103_8'].includes(
             res.functionID
-          )) || ['SYS02', 'SYS04'].includes(res.functionID)
+          )) || (data?.createdBy?.toLocaleLowerCase() == 'dgp' && ['SYS02'].includes(res.functionID)) || res.functionID == 'SYS04'
         )
           res.disabled = true;
       });
