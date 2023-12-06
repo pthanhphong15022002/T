@@ -141,6 +141,7 @@ export class PopupSignatureComponent extends UIComponent {
 
   addEditSignature(i) {
     if (this.isAddNew && i <= 0 && this.type == 'signFile') {
+      if(this.isPublic) this.data.userID=null;
       this.esService.addNewSignature(this.data).subscribe((res) => {
         if (res) this.notify.notifyCode('SYS006');
       });

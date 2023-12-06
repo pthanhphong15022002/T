@@ -187,7 +187,7 @@ export class PopupAddWarrantyComponent implements OnInit {
     tmpCus['phone'] = this.data?.phone;
     tmpCus['address'] = this.data?.address;
     tmpCus['owner'] = this.userID;
-    tmpCus['category'] = this.data?.category;
+    tmpCus['category'] = '1';
     this.api
       .execSv<any>(
         'CM',
@@ -275,9 +275,7 @@ export class PopupAddWarrantyComponent implements OnInit {
           var customer = await firstValueFrom(
             this.wrSv.getOneCustomer(this.data.customerID)
           );
-          if (customer != null) {
-            this.data.category = customer?.category;
-          }
+
           this.isCheckCbx = true;
         }
       }
@@ -392,7 +390,6 @@ export class PopupAddWarrantyComponent implements OnInit {
     this.data.customerName = '';
     this.data.custGroupID = '';
     this.data.contactName = '';
-    this.data.category = '';
     this.data.phone = '';
     this.data.mobile = '';
     this.data.email = '';

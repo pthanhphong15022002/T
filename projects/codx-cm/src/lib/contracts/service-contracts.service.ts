@@ -195,6 +195,14 @@ export class ContractsService {
       applyFor
     );
   }
+  closeContract(data) {
+    return this.api.exec<any>(
+      'CM',
+      'ContractsBusiness',
+      'ClosedContractAsync',
+      data
+    );
+  }
 
   // async loadSetting() {
   //   this.grvSetup = await firstValueFrom(

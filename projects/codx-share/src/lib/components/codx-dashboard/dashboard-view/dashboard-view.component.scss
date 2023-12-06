@@ -1,0 +1,27 @@
+::ng-deep {
+  .card-report {
+    .codx-image {
+      display: unset !important;
+      max-height: 120px !important;
+    }
+    .card-body {
+      min-height: 60px;
+    }
+  }
+}
+
+.circle-button {
+  padding: 5px 7px;
+  cursor: pointer;
+  border: 1px solid #f0f0f0;
+  background-color: transparent;
+  transition: all 0.3s ease-in-out;
+}
+
+.icon-bookmark {
+  color: rgb(108, 117, 125);
+}
+
+.active {
+  color: #ffc107 !important;
+}

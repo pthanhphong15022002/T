@@ -361,12 +361,12 @@ export class PopupUpdateReasonCodeComponent implements OnInit, AfterViewInit {
     dateNow.setMinutes(minutes + minutesToAdd);
 
     this.data.startDate = dateNow;
-    let dateEnd = JSON.parse(JSON.stringify(this.data.startDate));
+    let dateEnd = dateNow;
     this.data.endDate = new Date(dateEnd);
     if (dateControl == '1') {
       const parseLeadTime =
         parseFloat(leadTime) > 0 ? parseFloat(leadTime) : 30;
-      this.data.endDate.setMinutes(parseLeadTime);
+      this.data.endDate.setMinutes(dateEnd.getMinutes() + parseLeadTime);
     }
     this.setTimeEdit();
   }

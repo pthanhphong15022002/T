@@ -323,7 +323,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
       let dataSave = {task: taskContract}
       this.save(dataSave);
     } else {
-      let data ={action:'add',taskType: this.taskType, isSave: false, type:'activitie'}
+      let data ={action:'add',taskType: this.taskType, isSave: false, type:'activitie', ownerInstance: this.ownerInstance}
       let task = await this.stepService.openPopupCodxTask(data,'right');
       this.save(task);
     }
