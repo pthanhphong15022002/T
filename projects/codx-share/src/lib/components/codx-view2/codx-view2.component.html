@@ -9,7 +9,7 @@
 </div>
 
 <ng-template #toolbar>
-    <div class="d-flex align-items-center justify-content-between w-100 pb-2 border-bottom">
+    <div *ngIf="isToolBar" class="d-flex align-items-center justify-content-between w-100 pb-2 border-bottom">
         <ng-container *ngIf="tmpRightToolBar">
             <div class="d-flex align-items-center justify-content-start w-100">
                 <ng-container *ngTemplateOutlet="tmpRightToolBar"></ng-container>

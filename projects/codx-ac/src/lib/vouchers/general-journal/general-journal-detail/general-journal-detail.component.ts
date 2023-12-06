@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Injector, Input, SimpleChange } from '@angular/core';
-import { AuthStore, NotificationsService, SidebarModel, TenantStore, UIComponent } from 'codx-core';
+import { AuthStore, CodxService, FormModel, NotificationsService, SidebarModel, TenantStore, UIComponent, UIDetailComponent } from 'codx-core';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-approval/tab/model/tabControl.model';
 import { CodxAcService } from '../../../codx-ac.service';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
@@ -12,10 +12,9 @@ import { GeneralJournalAddComponent } from '../general-journal-add/general-journ
   styleUrls: ['./general-journal-detail.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class GeneralJournalDetailComponent extends UIComponent {
+export class GeneralJournalDetailComponent extends UIDetailComponent {
 
   //#region Constructor
-  @Input() recID: any;
   @Input() dataItem: any;
   @Input() dataService: any;
   @Input() formModel: any;
@@ -45,7 +44,8 @@ export class GeneralJournalDetailComponent extends UIComponent {
     private authStore: AuthStore,
     private shareService: CodxShareService,
     private notification: NotificationsService,
-    private tenant: TenantStore
+    private tenant: TenantStore,
+    public codxService: CodxService
   ) {
     super(inject);
     this.authStore = inject.get(AuthStore);
@@ -54,7 +54,10 @@ export class GeneralJournalDetailComponent extends UIComponent {
   //#endregion Constructor
 
   //#region Init
-  onInit(): void {}
+  onInit(): void {
+    if(this.recID) this.getDataDetail(this.dataItem,this.recID);
+    if(!this.formModel) this.getFormModel();
+  }
 
   ngAfterViewInit() {
     //* thiết lập cấu hình sidebar
@@ -152,6 +155,16 @@ export class GeneralJournalDetailComponent extends UIComponent {
       }
       this.detectorRef.detectChanges();
     }
+  }
+
+  getFormModel()
+  {
+    this.cache.functionList(this.funcID).subscribe(item=>{
+      this.formModel = new FormModel();
+      this.formModel.entityName = item?.entityName;
+      this.formModel.formName = item?.formName;
+      this.formModel.gridViewName = item?.gridViewName;
+    })
   }
   //#endregion Function
 

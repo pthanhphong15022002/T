@@ -114,6 +114,7 @@ export class PopupUpdateReasonCodeComponent implements OnInit, AfterViewInit {
           if (res) {
             this.dateControl = res?.dateControl;
             this.dataParentID = res?.comment;
+            this.commentControl = res?.commentControl;
             this.parentID = res?.parentID;
             this.setTimeEdit();
           }
@@ -222,10 +223,8 @@ export class PopupUpdateReasonCodeComponent implements OnInit, AfterViewInit {
   valueChangeParent(e) {
     if (e?.data != null && e?.data?.trim() != '') {
       this.dataParentID = e?.data;
-      this.setComment(
-        e?.component?.itemsSelected[0]?.Comment,
-        e?.component?.itemsSelected[0]?.CommentControl
-      );
+      this.commentControl = e?.component?.itemsSelected[0]?.CommentControl;
+      this.setComment(this.dataParentID, this.commentControl);
       this.detectorRef.detectChanges();
     }
   }
@@ -237,16 +236,14 @@ export class PopupUpdateReasonCodeComponent implements OnInit, AfterViewInit {
         this.parentID = e?.component?.itemsSelected[0]?.ParentID;
         this.data.comment = null;
         this.dateControl = e?.component?.itemsSelected[0]?.DateControl;
+        this.commentControl = e?.component?.itemsSelected[0]?.CommentControl;
         if (this.dateControl) {
           this.defaultTime(
             e?.component?.itemsSelected[0]?.Leadtime,
             this.dateControl
           );
         }
-        this.setComment(
-          e?.component?.itemsSelected[0]?.Comment,
-          e?.component?.itemsSelected[0]?.CommentControl
-        );
+        this.setComment(this.dataParentID, this.commentControl);
         if (this.inputParent && this.inputParent?.ComponentCurrent) {
           this.inputParent.ComponentCurrent?.setValue(this.dataParentID);
         }
@@ -337,7 +334,7 @@ export class PopupUpdateReasonCodeComponent implements OnInit, AfterViewInit {
     this.data.comment = commentRep;
   }
 
-  formatDate(date){
+  formatDate(date) {
     let language = this.language == 'vn' ? 'vi' : 'en-US';
     const currentDate = date;
     const weekdayDate = new Intl.DateTimeFormat(language, {
@@ -364,12 +361,12 @@ export class PopupUpdateReasonCodeComponent implements OnInit, AfterViewInit {
     dateNow.setMinutes(minutes + minutesToAdd);
 
     this.data.startDate = dateNow;
-    let dateEnd = JSON.parse(JSON.stringify(this.data.startDate));
+    let dateEnd = dateNow;
     this.data.endDate = new Date(dateEnd);
     if (dateControl == '1') {
       const parseLeadTime =
         parseFloat(leadTime) > 0 ? parseFloat(leadTime) : 30;
-      this.data.endDate.setMinutes(minutes + minutesToAdd + parseLeadTime);
+      this.data.endDate.setMinutes(dateEnd.getMinutes() + parseLeadTime);
     }
     this.setTimeEdit();
   }
@@ -456,8 +453,9 @@ export class PopupUpdateReasonCodeComponent implements OnInit, AfterViewInit {
           }
         }
       }
-      this.detectorRef.detectChanges();
     }
+    this.setComment(this.dataParentID, this.commentControl);
+    this.detectorRef.detectChanges();
   }
   //#endregion
 

@@ -71,15 +71,21 @@
 <!-- End: Body -->
 <!-- Start: Footer -->
 <ng-template #footer>
-  <div *ngIf="grid" class="ms-2 me-2">
-    <button [disabled]="grid.arrSelectedRows.length > 0 ? false : true" type="button" class="btn btn-md btn-light-primary rounded-15" style="border: 1px solid var(--primary-dark) !important;" (click)="apply()">
-      <div class="d-flex align-items-center">
-        <i class="icon-i-check2 icon-16 me-1"></i>
-        <codx-label class="fw-normal" fiedName="lblSave" [formName]="fmSettledInvoices?.formName"
-          [gridViewName]="fmSettledInvoices?.gridViewName" default="Chọn"></codx-label>
-      </div>
-    </button>
+  <div class="d-flex justify-content-between">
+    <div *ngIf="grid" class="ms-2 me-2 d-flex justify-content-start">
+      <span class="fw-bold fs-5">{{'Đã chọn: '+grid.arrSelectedRows.length+'/'+grid.dataSource.length+' bản ghi'}}</span>
+    </div>
+    <div *ngIf="grid" class="ms-2 d-flex justify-content-end">
+      <button [disabled]="grid.arrSelectedRows.length > 0 ? false : true" type="button" class="btn btn-md btn-light-primary rounded-15" style="border: 1px solid var(--primary-dark) !important;" (click)="apply()">
+        <div class="d-flex align-items-center">
+          <i class="icon-i-check2 icon-16 me-1"></i>
+          <codx-label class="fw-normal" fiedName="lblSave" [formName]="fmSettledInvoices?.formName"
+            [gridViewName]="fmSettledInvoices?.gridViewName" default="Chọn"></codx-label>
+        </div>
+      </button>
+    </div>
   </div>
+  
 </ng-template>
 <!-- End: Footer -->
 
@@ -137,7 +143,7 @@
       </div>
       <div class="col-2 d-flex align-items-center">
         <button type="button" class="btn btn-md btn-light-primary rounded-15 mt-1" style="border: 1px solid var(--primary-dark) !important;"
-            (click)="submit(0)">
+            (click)="getDataSubInvoice(0)">
             <codx-label style="white-space: nowrap;" class="fs-6 fw-normal" fiedName="lblSave" default="Lấy dữ liệu"></codx-label>
           </button>
       </div>
@@ -148,8 +154,7 @@
           <codx-label style="white-space: nowrap !important;" fiedName="lblCurencies" [formModel]="dialog.formModel" default="Số tiền chi trả">
           </codx-label>
           <div class="ac-input">
-            <codx-input type="number" [crrValue]="cashpayment.totalAmt" field="payAmt" (valueChange)="payAmtChange($event)"
-            (keyUpEnter)="payAmtEnter($event)">
+            <codx-input type="number" [crrValue]="cashpayment.totalAmt" field="payAmt" (valueChange)="valueChange($event)">
           </codx-input>
           </div>
         </div>
@@ -159,7 +164,7 @@
           <codx-label style="white-space: nowrap !important;" fiedName="currencyID" [formModel]="dialog.formModel" default="Tiền tệ">
           </codx-label>
           <div class="ac-input">
-            <codx-input field="currencyID" (valueChange)="valueChange($event)" type="text" [crrValue]="cashpayment.currencyID"></codx-input>
+            <codx-input field="currencyID" [disabled]="true" type="text" [crrValue]="cashpayment.currencyID"></codx-input>
           </div>
         </div>
       </div>
@@ -175,7 +180,7 @@
       </div>
       <div class="col-2 d-flex align-items-center">
         <button type="button" class="btn btn-md btn-light-primary rounded-15 mt-1" style="border: 1px solid var(--primary-dark) !important;"
-            (click)="submit(1)">
+            (click)="getDataSubInvoice(1)">
             <codx-label style="white-space: nowrap;" class="fs-6 fw-normal" fiedName="lblSave" default="Cấn trừ"></codx-label>
           </button>
       </div>
@@ -186,52 +191,13 @@
 <!-- Start: Grid voucher -->
 <ng-template #tabVoucher>
   <div class="tabset-content position-relative">
-    <codx-gridview-v2 #grid [checkboxSelect]="true" [formName]="fmSettledInvoices.formName" [gridViewName]="fmSettledInvoices.gridViewName"
-      [entityName]="fmSettledInvoices.entityName" [dataSource]="subInvoices" (onDeselected)="onDeselected($event)" service="AC"
-      (onSelected)="onSelected($event)" (onDoubleClick)="onDoubleClick($event)" hideMoreFunc="true" [autoFitColumns]="false"
-      (eventAction)="actions($event)"></codx-gridview-v2>
+    <codx-gridview-v2 #grid [checkboxSelect]="true" idField="recID" [showEmptyRecord]="false" [editOnClick]="true"
+      [selectionOptions]="selectionOptions" [formName]="fmSettledInvoices.formName"
+      [gridViewName]="fmSettledInvoices.gridViewName" (onCheckBoxChange)="onCheckAll($event)"
+      [entityName]="fmSettledInvoices.entityName" [dataSource]="subInvoices" (onDeselected)="onDeselected($event)"
+      service="AC" (onSelected)="onSelected($event)" hideMoreFunc="true" [autoFitColumns]="false"
+      (cellChanged)="valueChangeLine($event)" (eventAction)="onAction($event)"
+      (actionCompleted)="onAction($event)"></codx-gridview-v2>
   </div>
 </ng-template>
 <!-- End: Grid voucher -->
-
-<!-- Start: Template input -->
-<ng-template #tempAutpay>
-  <div class="col-2">
-    <div class="form-group">
-      <codx-label style="white-space: nowrap !important;" fiedName="lblCurencies" [formModel]="dialog.formModel" default="Số tiền chi trả">
-      </codx-label>
-      <codx-input type="number" [crrValue]="cashpayment.totalAmt" field="payAmt" (valueChange)="payAmtChange($event)"
-        (keyUpEnter)="payAmtEnter($event)">
-      </codx-input>
-    </div>
-  </div>
-  <div class="col-1">
-    <div class="form-group">
-      <codx-label style="white-space: nowrap !important;" fiedName="currencyID" [formModel]="dialog.formModel" default="Tiền tệ">
-      </codx-label>
-      <codx-input field="currencyID" (valueChange)="valueChange($event)" type="text" [crrValue]="cashpayment.currencyID"></codx-input>
-    </div>
-  </div>
-  <div class="col-2">
-    <div class="form-group">
-      <codx-label style="white-space: nowrap !important;" fiedName="lblType" [formModel]="dialog.formModel" default="Cấn trừ hóa đơn">
-      </codx-label>
-      <codx-input type="valuelist" [crrValue]="'2'" refValue="AC083" field="payType"
-        (valueChange)="valueChange($event)"></codx-input>
-    </div>
-  </div>
-  <!-- <div class="col-2 align-items-center align-self-center">
-    <div class="d-flex align-items-center">
-      <div class="d-flex mt-1 me-2">
-        <codx-input #checkbox type="switch" field="mixedPayment" [checked]="false" labelPosition="Before"
-          (valueChange)="valueChange($event)">
-        </codx-input>
-      </div>
-      <div class="d-flex align-item-center text-gray-800 me-2 text-nowrap">
-        <codx-label class="fw-bold" fiedName="lblCheckbox" [formModel]="form.formModel" default="Thanh toán hỗn hợp">
-        </codx-label>
-      </div>
-    </div>
-  </div> -->
-</ng-template>
-<!-- End:  Template input  -->

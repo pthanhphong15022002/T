@@ -379,8 +379,8 @@ export class IncommingAddComponent implements OnInit {
         var arr = [];
         e?.component?.itemsSelected.forEach((elm) => {
           var obj = {
-            agencyID: elm?.AgencyID,
-            agencyName: elm?.AgencyName,
+            agencyID: elm?.AgencyID || elm?.agencyID,
+            agencyName: elm?.AgencyName || elm?.agencyName,
           };
           arr.push(obj);
         });

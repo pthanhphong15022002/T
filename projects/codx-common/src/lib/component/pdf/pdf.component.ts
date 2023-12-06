@@ -282,7 +282,7 @@ export class PdfComponent
         this.signerInfo.email,
         this.signerInfo?.signType,
         null,
-        this.signerInfo?.approver
+        null,
       )
       .subscribe((signature) => {
         if (signature) {

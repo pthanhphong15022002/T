@@ -63,6 +63,10 @@ import { CodxReportViewsComponent } from 'projects/codx-report/src/lib/codx-repo
 import { CodxReportViewDetailComponent } from 'projects/codx-report/src/lib/codx-report-view-detail/codx-report-view-detail.component';
 import { LayoutComponent } from 'projects/codx-share/src/lib/components/layout/layout.component';
 import { PopupAddTemplateSignFileComponent } from './template-sign-file/popup-add-template-sign-file.component';
+import { DealsComponent } from 'projects/codx-cm/src/lib/deals/deals.component';
+import { CasesComponent } from 'projects/codx-cm/src/lib/cases/cases.component';
+import { LeadsComponent } from 'projects/codx-cm/src/lib/leads/leads.component';
+import { ViewInstancesComponent } from 'projects/codx-dp/src/lib/view-instances/view-instances.component';
 
 const routes: Routes = [
   {
@@ -119,6 +123,28 @@ const routes: Routes = [
             (m) => m.SettingRoutingModule
           ),
       },
+      //----phát hành quy trình DP-CRM----//
+      {
+        path: 'deals/:funcID',
+        component: DealsComponent,
+        data: { noReuse: true },
+      },
+      {
+        path: 'cases/:funcID',
+        component: CasesComponent,
+        data: { noReuse: true },
+      },
+      {
+        path: 'leads/:funcID',
+        component: LeadsComponent,
+        data: { noReuse: true },
+      },
+      {
+        path: 'instances/:funcID/:processID',
+        component: ViewInstancesComponent,
+        data: { noReuse: true },
+      },
+      //-----------end--------------//
 
       {
         path: '',

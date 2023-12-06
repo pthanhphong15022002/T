@@ -117,6 +117,10 @@ import { FormatTargetPipe } from './pipes/format-target.pipe';
 import { FormatStatusPipe } from './pipes/format-status.pipe';
 import { ViewTotalDealValueComponent } from './deals/view-total-deal-value/view-total-deal-value.component';
 import { ContractsDetailComponent } from './contracts/contracts-detail/contracts-detail.component';
+import { StyleHeaderColumnsPipe } from './pipes/style-header-columns.pipe';
+import { FormatStatusCodePipe } from './pipes/format-status-code.pipe';
+import { ScrollSpyDirective } from './contracts/contracts-detail/scroll-spy.directive';
+import { ViewInstancesComponent } from 'projects/codx-dp/src/lib/view-instances/view-instances.component';
 
 export const routes: Routes = [
   {
@@ -131,7 +135,7 @@ export const routes: Routes = [
       {
         path: 'deals/:funcID',
         component: DealsComponent,
-        // data: { noReuse: true },
+        data: { noReuse: true },
       },
       {
         path: 'marketings/:funcID',
@@ -146,17 +150,17 @@ export const routes: Routes = [
       {
         path: 'contracts/:funcID',
         component: ContractsComponent,
-        // data: { noReuse: true },
+        data: { noReuse: true },
       },
       {
         path: 'cases/:funcID',
         component: CasesComponent,
-        // data: { noReuse: true },
+        data: { noReuse: true },
       },
       {
         path: 'leads/:funcID',
         component: LeadsComponent,
-        // data: { noReuse: true },
+        data: { noReuse: true },
       },
       {
         path: 'calendars/:funcID',
@@ -191,6 +195,12 @@ export const routes: Routes = [
       {
         path: '**',
         redirectTo: 'error/404',
+      },
+      //phat hành quy trình
+      {
+        path: 'instances/:funcID/:processID',
+        component: ViewInstancesComponent,
+        data: { noReuse: true },
       },
     ],
   },
@@ -281,22 +291,25 @@ const T_Component: Type<any>[] = [
   ProgressSliderComponent,
   ViewHistoryCustomerComponent,
   ContractsDetailComponent,
+  CampaignContactsComponent,
+  PopupAddCampaignContactComponent,
+  CampaignDealsComponent,
+  PopupAddTaskCalendarComponent,
+  PopupUpdateStatusComponent,
+  CodxShowMoreLessComponent,
+  ViewDealDetailComponent,
+  ViewLeadDetailComponent,
+  ScrollSpyDirective,
 ];
 
 @NgModule({
   declarations: [
     T_Component,
-    CampaignContactsComponent,
-    PopupAddCampaignContactComponent,
-    CampaignDealsComponent,
-    PopupAddTaskCalendarComponent,
-    PopupUpdateStatusComponent,
-    CodxShowMoreLessComponent,
-    ViewDealDetailComponent,
-    ViewLeadDetailComponent,
     CustomIconPipe,
     FormatTargetPipe,
     FormatStatusPipe,
+    StyleHeaderColumnsPipe,
+    FormatStatusCodePipe,
   ],
   imports: [
     CodxCoreModule.forRoot({ environment }),

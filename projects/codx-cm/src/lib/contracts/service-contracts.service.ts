@@ -97,8 +97,8 @@ export class ContractsService {
   getCustomerByRecID(data) {
     return this.api.exec<any>(
       'CM',
-      'ContractsBusiness',
-      'GetCustomerByRecIDAsync',
+      'CustomersBusiness',
+      'GetOneAsync',
       data
     );
   }
@@ -193,6 +193,14 @@ export class ContractsService {
       'ProcessesBusiness',
       'GetProcessDefaultAsync',
       applyFor
+    );
+  }
+  closeContract(data) {
+    return this.api.exec<any>(
+      'CM',
+      'ContractsBusiness',
+      'ClosedContractAsync',
+      data
     );
   }
 

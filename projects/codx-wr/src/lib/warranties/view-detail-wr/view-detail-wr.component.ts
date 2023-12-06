@@ -79,6 +79,7 @@ export class ViewDetailWrComponent implements OnInit {
   isShow = false;
   contact2JSON: any;
   serviceTime: any;
+  loaded: boolean;
   constructor(
     private authstore: AuthStore,
     private changeDetectorRef: ChangeDetectorRef,
@@ -98,6 +99,7 @@ export class ViewDetailWrComponent implements OnInit {
         changes['dataSelected'].currentValue?.recID
       ) {
         if (changes['dataSelected'].currentValue?.recID == this.id) return;
+        this.loaded = false;
         this.id = changes['dataSelected'].currentValue?.recID;
         this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
         this.contact2JSON = null;
@@ -110,6 +112,7 @@ export class ViewDetailWrComponent implements OnInit {
         this.setTimeEdit();
         this.expanding = false;
         this.overflowed = false;
+        this.loaded = true;
       }
     }
   }

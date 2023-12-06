@@ -244,7 +244,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
             }
             break;
           case 'DP20': // tiến độ
-            if (task?.status != '1' || task?.approveStatus == '3') {
+            if (task?.approveStatus == '3') {
               res.disabled = true;
             }
             break;
@@ -323,7 +323,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
       let dataSave = {task: taskContract}
       this.save(dataSave);
     } else {
-      let data ={action:'add',taskType: this.taskType, isSave: false, type:'activitie'}
+      let data ={action:'add',taskType: this.taskType, isSave: false, type:'activitie', ownerInstance: this.ownerInstance}
       let task = await this.stepService.openPopupCodxTask(data,'right');
       this.save(task);
     }
