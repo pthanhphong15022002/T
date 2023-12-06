@@ -43,6 +43,7 @@ import { firstValueFrom, Subject } from 'rxjs';
 import { LayoutComponent } from '../_layout/layout.component';
 import { PopupAddCategoryComponent } from 'projects/codx-es/src/lib/setting/category/popup-add-category/popup-add-category.component';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
+import { PopupReleaseProcessComponent } from './popup-release-process/popup-release-process.component';
 
 @Component({
   selector: 'lib-dynamic-process',
@@ -949,15 +950,58 @@ export class DynamicProcessComponent
     this.processRelease.releasedName = this.processRelease.releasedName
       ? this.processRelease.releasedName
       : this.processRelease?.processName;
-    this.processRelease.module = 'CM';
-    this.processRelease.function = 'CM02';
+    // this.processRelease.module = 'CM';
+    // this.processRelease.function = 'CM02';
 
-    this.popupRelease = this.callfc.openForm(
-      this.releaseProcessTemp,
+    debugger;
+    let dialogModel = new DialogModel();
+    dialogModel.FormModel = this.view.formModel;
+
+    //cu
+    // this.popupRelease = this.callfc.openForm(
+    //   this.releaseProcessTemp,
+    //   '',
+    //   500,
+    //   600,
+    //   '',
+    //   '',
+    //   '',
+    //   dialogModel
+    // );
+
+    let obj = {
+      processRelease: this.processRelease,
+      grvSetup: this.grvSetup,
+      processName: process.processName,
+      applyFor: process.applyFor,
+      headerText: this.titleAction,
+    };
+    let popupRelease = this.callfc.openForm(
+      PopupReleaseProcessComponent,
       '',
       500,
-      600
+      600,
+      '',
+      obj,
+      '',
+      dialogModel
     );
+    popupRelease.closed.subscribe((e) => {
+      if (e && e.event) {
+        let data = e.event;
+        this.processReleaseClone.icon = data.icon;
+        this.processReleaseClone.released = true;
+        this.processReleaseClone.releasedName = data.releasedName;
+        this.processReleaseClone.module = data.module;
+        this.processReleaseClone.function = this.processRelease.function;
+        this.processReleaseClone.status = '7';
+        this.processReleaseClone.modifiedOn = data.modifiedOn;
+        this.processReleaseClone.modifiedBy = this.user?.userID;
+        this.view.dataService.update(this.processReleaseClone).subscribe();
+
+        this.notificationsService.notifyCode('SYS007');
+      }
+    });
   }
 
   cancelReleaseProcess(process) {
@@ -1009,34 +1053,45 @@ export class DynamicProcessComponent
   }
 
   changeValueCbx(e) {
-    if (!e?.data || !e?.field) return;
-    let module = e?.component?.itemsSelected[0]?.Module;
+    if (!e?.data || !e?.field) {
+      if (e.field == 'module') {
+        this.processRelease['function'] = null;
+        this.functionCbx.model = null;
 
-    if (this.crrModule != module) {
-      switch (e?.field) {
-        case 'module':
-          this.functionCbx.model = { Module: module };
-          (
-            this.functionCbx.ComponentCurrent as CodxComboboxComponent
-          ).dataService.data = [];
-          this.functionCbx.crrValue = null;
-          this.processRelease.module = null;
-
-          break;
-        case 'function':
-          this.moduleCbx.model = { Module: module };
-
-          (
-            this.moduleCbx.ComponentCurrent as CodxComboboxComponent
-          ).dataService.data = [];
-          this.moduleCbx.crrValue = null;
-          this.processRelease.function = null;
-          break;
+        (
+          this.functionCbx.ComponentCurrent as CodxComboboxComponent
+        ).dataService.data = [];
+        this.functionCbx.crrValue = null;
       }
-      this.crrModule = module;
+      this.formRelease.formGroup.patchValue(this.processRelease);
+      return;
+    }
+    this.processRelease[e.field] = e.data;
+    // let module = e?.component?.itemsSelected[0]?.Module ?? e?.data; //tesst
+
+    switch (e?.field) {
+      case 'module':
+        this.crrModule = e?.data;
+
+        this.functionCbx.model = { Module: this.crrModule };
+        (
+          this.functionCbx.ComponentCurrent as CodxComboboxComponent
+        ).dataService.data = [];
+        this.functionCbx.crrValue = null;
+        this.processRelease.function = null;
+
+        break;
+      case 'function':
+        this.crrModule = e?.component?.itemsSelected[0]?.Module; //tesst
+        // this.moduleCbx.model = { Module: this.crrModule };
+        (
+          this.moduleCbx.ComponentCurrent as CodxComboboxComponent
+        ).dataService.data = [];
+        this.moduleCbx.crrValue = this.crrModule;
+        this.processRelease.module = this.crrModule;
+        break;
     }
 
-    this.processRelease[e.field] = e.data;
     this.formRelease.formGroup.patchValue(this.processRelease);
   }
 

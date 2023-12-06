@@ -519,10 +519,10 @@
 <ng-template #releaseProcess>
   <codx-form
     #formRelease
+    [dialog]="popupRelease"
     [customToolbar]="releaseProcessHeader"
     [body]="releaseProcessBody"
     [footer]="releaseProcessFooter"
-    [dialog]="popupRelease"
     [formModel]="view.formModel"
     [data]="processRelease"
   ></codx-form>
@@ -620,7 +620,7 @@
         #moduleCbx
         [formModel]="view.formModel"
         field="module"
-        [Group]="formRelease.formGroup"
+        [Group]="formRelease"
         (valueChange)="changeValueCbx($event)"
       >
       </codx-input>
@@ -638,7 +638,6 @@
         #functionCbx
         field="function"
         [formModel]="view.formModel"
-        [Group]="formRelease.formGroup"
         (valueChange)="changeValueCbx($event)"
       >
       </codx-input>
