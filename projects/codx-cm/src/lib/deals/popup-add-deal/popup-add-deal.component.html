@@ -106,6 +106,7 @@
           [Group]="form.formGroup"
           field="customerID"
           [refValue]="'CMCustomers'"
+          [disabled]="isviewCustomer"
           (valueChange)="valueChange($event)"
         >
         </codx-input>
