@@ -25,6 +25,7 @@ import {
   AlertConfirmInputConfig,
   DialogRef,
   AuthStore,
+  DataRequest,
 } from 'codx-core';
 import { CodxCmService } from '../codx-cm.service';
 import { PopupAddDealComponent } from './popup-add-deal/popup-add-deal.component';
@@ -33,13 +34,14 @@ import { PopupMoveStageComponent } from 'projects/codx-dp/src/lib/instances/popu
 import { DealDetailComponent } from './deal-detail/deal-detail.component';
 import { PopupMoveReasonComponent } from 'projects/codx-dp/src/lib/instances/popup-move-reason/popup-move-reason.component';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
-import { firstValueFrom } from 'rxjs';
+import { finalize, firstValueFrom, map } from 'rxjs';
 import { PopupBantDealComponent } from './popup-bant-deal/popup-bant-deal.component';
 import { PopupPermissionsComponent } from '../popup-permissions/popup-permissions.component';
 import { PopupAssginDealComponent } from './popup-assgin-deal/popup-assgin-deal.component';
 import { PopupUpdateStatusComponent } from './popup-update-status/popup-update-status.component';
 import { StepService } from 'projects/codx-share/src/lib/components/codx-step/step.service';
 import { ExportData } from 'projects/codx-share/src/lib/models/ApproveProcess.model';
+import { Internationalization } from '@syncfusion/ej2-base';
 
 @Component({
   selector: 'lib-deals',
@@ -100,6 +102,7 @@ export class DealsComponent
   @Input() dataObj?: any;
   @Input() showButtonAdd = false;
   kanban: any;
+  viewGird: any;
 
   // config api get data
   service = 'CM';
@@ -177,6 +180,7 @@ export class DealsComponent
   filterView: any;
   columns: any;
   loadFirst: boolean = true;
+  totalView: string;
 
   constructor(
     private inject: Injector,
@@ -465,14 +469,22 @@ export class DealsComponent
       eventItem.disabled = !data.assign && !data.allowPermit ? true : false;
     };
 
-    let isDisCRd = (eventItem, data) => {
+    let isDisable = (eventItem, data) => {
       eventItem.disabled = true;
     };
     let isChangeStatus = (eventItem, data) => {
       eventItem.disabled = data?.alloweStatus == '1' ? false : true;
     };
+    let isMoveReason = (eventItem, data) => {
+      eventItem.disabled =
+      data?.alloweStatus == '1'
+        ? (data.closed && data?.status != '1') ||
+          ['1', '0', '15'].includes(data?.status) ||
+          this.checkMoreReason(data,false)
+        : true;
+    };
     functionMappings = {
-      ...['CM0201_1', 'CM0201_3', 'CM0201_4', 'CM0201_5'].reduce(
+      ...['CM0201_1','CM0201_3', 'CM0201_4', 'CM0201_5'].reduce(
         (acc, code) => ({ ...acc, [code]: isDisabled }),
         {}
       ),
@@ -481,10 +493,11 @@ export class DealsComponent
         {}
       ),
       ...['SYS101', 'SYS103', 'SYS104', 'SYS102'].reduce(
-        (acc, code) => ({ ...acc, [code]: isDisCRd }),
+        (acc, code) => ({ ...acc, [code]: isDisable }),
         {}
       ),
-
+      CM0201_3:isMoveReason,
+      CM0201_4:isMoveReason,
       CM0201_2: isStartDay, // bắt đầu
       CM0201_6: isApprovalTrans, //xet duyet
       CM0201_7: isOwner,
@@ -558,7 +571,8 @@ export class DealsComponent
     });
   }
 
-  checkMoreReason(data) {
+  checkMoreReason(data,isShow:boolean = true) {
+    // if (data?.isAdminAll && isShow) return false;
     return data?.status != '1' && data?.status != '2' && data?.status != '15';
   }
   clickMF(e, data) {
@@ -662,7 +676,14 @@ export class DealsComponent
         break;
       //chang fiter
       case 'pined-filter':
-        this.seclectFilter(e.data);
+        if (this.kanban) {
+          this.seclectFilter(e.data);
+        }
+        break;
+      //data load xong
+      case 'databound':
+        this.totalGirdView();
+        break;
     }
   }
 
@@ -1161,6 +1182,9 @@ export class DealsComponent
           let dt = e.event;
           let money = dt.dealValue * dt.exchangeRate;
           this.renderTotal(dt.stepID, 'add', money);
+
+          // this.kanban?.updateCard(dt);
+          // this.kanban?.kanbanObj?.refreshHeader();
           this.kanban.refresh();
         }
         //   this.detailViewDeal.promiseAllAsync();
@@ -1212,6 +1236,10 @@ export class DealsComponent
               let money =
                 dt.dealValue * dt.exchangeRate - dealValueOld * exchangeRateOld;
               this.renderTotal(dt.stepID, 'add', money);
+
+              // this.kanban?.updateCard(dt);
+              // this.kanban?.kanbanObj?.refreshHeader();
+              // this.kanban.refreshUI();
               this.kanban.refresh();
             }
             if (this.detailViewDeal) {
@@ -1278,11 +1306,15 @@ export class DealsComponent
               if (this.kanban) {
                 let money = data.dealValue * data.exchangeRate;
                 this.renderTotal(data.stepID, 'minus', money);
-                this.kanban.refresh();
+                this.kanban?.refresh();
+
+                // //looix
+                // this.kanban?.kanbanObj?.refreshHeader();
+                // this.kanban?.kanbanObj.refreshUI();
               }
             }
+            this.changeDetectorRef.detectChanges();
           });
-        this.changeDetectorRef.detectChanges();
       }
     });
   }
@@ -1375,7 +1407,7 @@ export class DealsComponent
       this.dataSelected.approveStatus = res?.returnStatus;
       this.dataSelected.status = res?.returnStatus;
       this.view.dataService.update(this.dataSelected).subscribe();
-      if (this.kanban ) this.kanban.updateCard(this.dataSelected);
+      if (this.kanban) this.kanban.updateCard(this.dataSelected);
       this.notificationsService.notifyCode('ES007');
 
       // this.codxCmService
@@ -1456,7 +1488,8 @@ export class DealsComponent
     let money = data.dealValue * data.exchangeRate;
     this.renderTotal(data.stepID, 'add', money);
     this.renderTotal(this.crrStepID, 'minus', money);
-    this.kanban.updateCard(data);
+    // this.kanban.updateCard(data);
+    // this.kanban?.kanbanObj?.refreshHeader();
     this.kanban.refresh();
   }
 
@@ -1565,7 +1598,7 @@ export class DealsComponent
         }
       });
       this.loadKanban();
-    }
+    } else this.refeshDealValue();
   }
 
   loadKanban() {
@@ -1590,10 +1623,9 @@ export class DealsComponent
           kanban.kanbanSetting?.swimlaneSettings,
           false
         );
+        this.loadFirst = true;
         kanban.refresh();
         this.kanban = kanban;
-
-        // if (this.kanban) this.kanban.refresh();
         this.detectorRef.detectChanges();
       });
   }
@@ -2054,10 +2086,74 @@ export class DealsComponent
       if (idx != -1 && this.kanban.columns[idx].totalDealValue != total) {
         this.kanban.columns[idx].totalDealValue = total;
       }
+      if (idx == this.kanban.columns?.length - 1) {
+        this.loadFirst = false;
+      }
     }
-   
   }
   loadedColumns(e) {
-    this.loadFirst = e;
+    // this.loadFirst = e;
   }
+
+  refeshDealValue() {
+    this.kanban.columns.forEach((x) => (x.totalDealValue = 0));
+    this.loadFirst = true;
+  }
+
+  //---------Tính tổng grid view-------------//
+  requestEnded(e) {
+    if (e.type == 'read') {
+      // this.totalGirdView();
+    }
+  }
+  totalGirdView() {
+    this.getTotal().subscribe((total) => {
+      let intl = new Internationalization();
+      let nFormatter = intl.getNumberFormat({
+        skeleton: 'n6',
+      });
+      this.totalView = nFormatter(total) + ' ' + this.currencyIDDefault;
+
+      if (!Number.parseFloat(total)) total = 0;
+      let objectDealValue = {
+        dealValue: total,
+      };
+      // this.view.currentView.sumData = objectDealValue;
+
+      // let elemnt = document.querySelector('.sum-content');
+      // if (elemnt) {
+      //   elemnt.innerHTML = this.totalView;
+      // }
+    });
+  }
+
+  getTotal() {
+    let service = 'CM';
+    let className = 'DealsBusiness'; //gan tam
+    let method = 'GetTotalDealValueAsync'; //gan tam
+    let gridModel = new DataRequest();
+    gridModel.formName = this.view.formModel.formName;
+    gridModel.entityName = this.view.formModel.entityName;
+    gridModel.funcID = this.view.formModel.funcID;
+    gridModel.gridViewName = this.view.formModel.gridViewName;
+    gridModel.pageLoading = false;
+    gridModel.onlySetPermit = false; //goi qua phan quyền pes
+    gridModel.filter = this.view.dataService.filter;
+
+    return this.api
+      .execSv<any>(service, service, className, method, [
+        gridModel,
+        this.exchangeRateDefault,
+      ])
+      .pipe(
+        finalize(() => {
+          /*  this.onScrolling = this.loading = false;
+          this.loaded = true; */
+        }),
+        map((response: any) => {
+          return response;
+        })
+      );
+  }
+  //---------------End----------------------//
 }

@@ -28,7 +28,8 @@ export class LoginService {
     private navRouter: Router,
     private shareService: CodxShareService,
     private api: ApiHttpService,
-    private deviceInfo: AngularDeviceInformationService
+    private deviceInfo: AngularDeviceInformationService,
+    private notificationsService: NotificationsService
   ) {
     let dInfo = this.deviceInfo.getDeviceInfo();
     this.loginDevice = {
@@ -45,7 +46,7 @@ export class LoginService {
   returnUrl: string;
   iParams: string;
   loginDevice: Device;
-
+  session: string;
   onInit() {}
   login(objData) {
     if (objData.login2FA != '') {
@@ -71,9 +72,10 @@ export class LoginService {
     }
   }
 
-  loginAfter(data: any) {
+  loginAfter(data: any, trust = false) {
     if (!data.error) {
       const user = data.data;
+      this.loginDevice.loginType = data.data.extends.LoginType ?? '';
       if (this.signalRService.logOut) {
         this.signalRService.createConnection();
       }
@@ -93,13 +95,17 @@ export class LoginService {
       } else {
         if (this.returnUrl.indexOf(user.tenant) > 0)
           window.location.href = this.returnUrl;
-        //return this.navRouter.navigate([`${this.returnUrl}`]);
         else if (environment.saas == 1) {
           if (!user.tenant) {
             return this.getTenants(user.email).subscribe((res: any) => {
               if (res && res.length) {
                 if (res.length > 1)
-                  return this.navRouter.navigate(['/tenants']);
+                  return this.navRouter.navigate(['/tenants'], {
+                    queryParams: {
+                      lt: this.loginDevice.loginType,
+                      trust: trust,
+                    },
+                  });
                 else this.navigate(res[0].tenantID);
               } else {
                 return (window.location.href = this.returnUrl
@@ -130,12 +136,13 @@ export class LoginService {
       ])
       .subscribe((res: any) => {
         if (!res.error) {
+          const user = res.msgBodyData[0];
           this.loginDevice.tenantID = tn;
-          let trust2FA = res?.extends?.Trust2FA;
-          let hideTrustDevice = res?.extends?.HideTrustDevice;
+          let trust2FA = user?.extends?.Trust2FA;
+          let hideTrustDevice = user?.extends?.HideTrustDevice;
           let objData = {
-            data: res,
-            login2FA: res?.extends?.TwoFA,
+            data: user,
+            login2FA: user?.extends?.TwoFA,
             hubConnectionID: '',
             loginDevice: this.loginDevice,
             hideTrustDevice,
@@ -155,11 +162,12 @@ export class LoginService {
               this.loginAfter(lg2FAEvt.event.data);
             });
           } else {
-            this.authService.setLogin(res);
-            this.loginAfter({ data: res });
+            this.authService.setLogin(user);
+            this.loginAfter({ data: user });
           }
         }
-        return res;
+        this.notificationsService.notifyCode(res.error?.errorCode);
+        return false;
       });
   }
 

@@ -410,12 +410,13 @@ export class LoginComponent extends UIComponent implements OnInit, OnDestroy {
 
   //#region Login
   private login(type: string) {
+    this.loginDevice.session = this.loginService.session;
     const loginSubscr = this.authService
       .login(
         this.f.email.value,
         this.f.password.value,
         type,
-        true,
+        false,
         JSON.stringify(this.loginDevice)
       )
       .pipe()
@@ -424,6 +425,7 @@ export class LoginComponent extends UIComponent implements OnInit, OnDestroy {
           console.log(this.auth.get());
           let trust2FA = data?.data?.extends?.Trust2FA ?? '';
           let hideTrustDevice = data?.data?.extends?.HideTrustDevice;
+          this.loginDevice.loginType = data.data.extends.LoginType ?? '';
           let objData = {
             data: data.data,
             login2FA: data?.data?.extends?.TwoFA,
@@ -442,10 +444,9 @@ export class LoginComponent extends UIComponent implements OnInit, OnDestroy {
               objData
             );
             lg2FADialog.closed.subscribe((lg2FAEvt) => {
-              console.log('close popup ', lg2FAEvt);
               if (!lg2FAEvt.event || lg2FAEvt.event?.data?.error) return;
               this.authService.setLogin(data.data);
-              this.loginService.loginAfter(lg2FAEvt.event.data);
+              this.loginService.loginAfter(lg2FAEvt.event.data, true);
             });
           } else {
             this.authService.setLogin(data.data);
@@ -461,46 +462,6 @@ export class LoginComponent extends UIComponent implements OnInit, OnDestroy {
   private extendLogin(type: string) {
     var id = '';
   }
-
-  // private loginAfter(data: any) {
-  //   if (!data.error) {
-  //     const user = data.data;
-  //     if (this.signalRService.logOut) {
-  //       this.signalRService.createConnection();
-  //     }
-  //     this.returnUrl = UrlUtil.getUrl('returnUrl') || '';
-  //     if (this.returnUrl) {
-  //       this.returnUrl = decodeURIComponent(this.returnUrl);
-  //     }
-
-  //     if (
-  //       this.returnUrl.indexOf('http://') == 0 ||
-  //       this.returnUrl.indexOf('https://') == 0
-  //     ) {
-  //       this.iParams = UrlUtil.getUrl('i') || '';
-
-  //       if (this.iParams.toLocaleLowerCase() == 'hcs') {
-  //         this.shareService.redirect(this.iParams, this.returnUrl);
-  //       } else window.location.href = this.returnUrl;
-  //     } else {
-  //       if (this.returnUrl.indexOf(user.tenant) > 0)
-  //         return this.navRouter.navigate([`${this.returnUrl}`]);
-  //       else if (environment.saas == 1) {
-  //         if (!user.tenant) return this.navRouter.navigate(['/tenants']);
-  //         else
-  //           return this.navRouter.navigate([
-  //             `${this.returnUrl ? this.returnUrl : user.tenant}`,
-  //           ]);
-  //       }
-  //       window.location.href = this.returnUrl ? this.returnUrl : user.tenant;
-  //     }
-  //   } else {
-  //     if (data.error.errorCode === 'AD027')
-  //       return this.navRouter.navigate(['/']);
-  //     // this.notificationsService.notify(data.error.errorMessage);
-  //   }
-  //   return false;
-  // }
   //#endregion
 
   ngOnDestroy() {

@@ -768,6 +768,7 @@ export class ViewDetailComponent
         break;
       }
       //Chuyển
+      case 'ODT5201':
       case 'ODT101':
       case 'ODT5213': {
         /* if(this.checkOpenForm(funcID))
@@ -1924,7 +1925,7 @@ export class ViewDetailComponent
           //xét duyệt
           this.release(datas, processID);
         // else
-        //   this.shareService
+        //   this.shareServicex
         //     .codxReleaseDynamic(
         //       this.view.service,
         //       datas,

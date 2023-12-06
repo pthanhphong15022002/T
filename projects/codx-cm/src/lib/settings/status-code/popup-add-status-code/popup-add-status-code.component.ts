@@ -117,7 +117,10 @@ export class PopupAddStatusCodeComponent implements OnInit, AfterViewInit {
 
   //#region save
   onSave() {
-    if ( (!this.data?.statusID || this.data?.statusID?.trim() == '') && !this.disabledShowInput) {
+    if (
+      (!this.data?.statusID || this.data?.statusID?.trim() == '') &&
+      !this.disabledShowInput
+    ) {
       this.notiService.notifyCode(
         'SYS009',
         0,
@@ -146,7 +149,7 @@ export class PopupAddStatusCodeComponent implements OnInit, AfterViewInit {
       this.data.objectStatus,
       this.data.statusID,
       this.data.statusName,
-      this.action
+      this.action,
     ];
     this.codxCmService.checkStatusCode(data).subscribe((res) => {
       if (res) {
@@ -209,27 +212,49 @@ export class PopupAddStatusCodeComponent implements OnInit, AfterViewInit {
 
   // hard code
   getValueTypeCategory(value) {
-    if (value == '1') {
-      return 'CRM039';
-    } else if (value == '3') {
-      return 'CRM041';
-    } else if (value == '5') {
-      return 'CRM042';
-    } else if (value == '7') {
-      return 'CRM015';
-    } else if (value == '9') {
-        return 'CRM015';
-    } else if (value == '11') {
-      return 'CRM015';
+    // if (value == '1') {
+    //   return 'CRM039'; //lead
+    // } else if (value == '3') {
+    //   return 'CRM041';
+    // } else if (value == '5') {
+    //   //lead
+    //   return 'CRM042';
+    // } else if (value == '7') {
+    //   return 'CRM015';
+    // } else if (value == '9') {
+    //   return 'CRM015';
+    // } else if (value == '11') {
+    //   return 'CRM015';
+    // }
+
+    //CRM062
+    let vll = '';
+    switch (value) {
+      case '1': //custormer
+        vll = 'CRM039';
+        break;
+      case '3': //lead
+        vll = 'CRM041';
+        break;
+      case '5': //deal
+        vll = 'CRM042';
+        break;
+      case '7': //contract
+      //test của bảo
+      case '9': //case
+      case '11': //request
+        vll = 'CRM015';
+        break;
     }
-    return '';
+
+    return vll;
   }
 
   getMessageError(value, gridViewSetup) {
     let headerName = '';
     if (value != '0') {
       // existing name
-      if (value == '1' ) {
+      if (value == '1') {
         headerName = gridViewSetup?.StatusID?.headerText;
       }
       // existing name
@@ -242,8 +267,7 @@ export class PopupAddStatusCodeComponent implements OnInit, AfterViewInit {
       }
       this.notiService.notifyCode('CM003', 0, '"' + headerName + '"');
       return;
-    }
-    else {
+    } else {
       if (this.action == 'edit') {
         this.onEdit();
       } else {

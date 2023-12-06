@@ -1,4 +1,4 @@
-<div class="card-ep-report" *ngIf="module">
+<!-- <div class="card-ep-report" *ngIf="module">
   <codx-views
     #view
     service="rptrp"
@@ -82,4 +82,11 @@
       </div>
     </div>
   </div>
-</ng-template>
+</ng-template> -->
+<ng-container *ngIf="module">
+  <codx-share-report
+    [listModule]="module"
+    [isToolBar]="false"
+  >
+  </codx-share-report>
+</ng-container>

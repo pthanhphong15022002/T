@@ -45,7 +45,7 @@
 }
 
 .personal-menu .e-tab-header {
-  height: 48px;
+  height: 48px!important;
   line-height: 48px;
   border-radius: 6px !important;
   background-color: var(--bs-body-bg);
@@ -224,4 +224,7 @@ codx-card-img .card-icon-nowrap {
 
 .pw-content.pw-feed .card-body {
   height: 100% !important;
+}
+.e-toolbar .e-toolbar-items {
+  display: inline-flex!important;
 }

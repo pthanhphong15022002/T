@@ -2924,7 +2924,30 @@
             </div>
           </div>
         </div>
-        <div class="row">
+        <div class="row mb-5">
+          <div class="col-6">
+            <div class="text-dark fw-bold mb-1">
+              <codx-label
+                fiedName="ApplyFor"
+                [default]="gridViewSetup['ApplyFor']?.headerText"
+              >
+              </codx-label>
+            </div>
+          </div>
+          <div class="col-6">
+            <codx-input
+            field="applyFor"
+            type="valuelist"
+            [crrValue]="applyForSucess"
+            [disabled]="stepSuccess?.isUsed ? false : true"
+            [refValue]=" applyForSucess != '5' ? gridViewSetup?.ApplyFor?.referedValue:'DP002'"
+            (valueChange)="valueChangeApplyFor($event,viewStepReasonSuccess)"
+            [placeholder]="gridViewSetup['ApplyFor']?.description"
+          >
+          </codx-input>
+          </div>
+        </div>
+        <div class="row" *ngIf="listCbxProccessSuccess && listCbxProccessSuccess?.length > 0">
           <div class="col-6">
             <div class="text-dark fw-bold mb-1">
               <codx-label
@@ -2944,10 +2967,10 @@
             <!-- <codx-input field="" type="valuelist" refValue="CRM009"> </codx-input> -->
             <ejs-combobox
               id="recID"
-              [dataSource]="listCbxProccess"
+              [dataSource]="listCbxProccessSuccess"
               [fields]="fieldCbxProccess"
               (valueChange)="cbxChange($event, viewStepReasonSuccess)"
-              [value]="moveProccessIsNull(stepSuccess?.newProcessID)"
+              [value]="moveProccessIsNull(stepSuccess?.newProcessID,listCbxProccessSuccess)"
               [enabled]="process.applyFor != '1'"
               [readonly]="stepSuccess.isUsed ? false : true"
             >
@@ -3141,7 +3164,30 @@
             </div>
           </div>
         </div>
-        <div class="row">
+        <div class="row mb-5">
+          <div class="col-6">
+            <div class="text-dark fw-bold mb-1">
+              <codx-label
+                fiedName="ApplyFor"
+                [default]="gridViewSetup['ApplyFor']?.headerText"
+              >
+              </codx-label>
+            </div>
+          </div>
+          <div class="col-6">
+            <codx-input
+            field="applyFor"
+            type="valuelist"
+            [crrValue]="applyForFail"
+            [disabled]="stepFail?.isUsed ? false : true"
+            [refValue]=" applyForFail != '5' ? gridViewSetup?.ApplyFor?.referedValue:'DP002'"
+            (valueChange)="valueChangeApplyFor($event,viewStepReasonFail)"
+            [placeholder]="gridViewSetup['ApplyFor']?.description"
+          >
+          </codx-input>
+          </div>
+        </div>
+        <div class="row" *ngIf="listCbxProccessFail && listCbxProccessFail?.length > 0">
           <div class="col-6">
             <div class="text-dark fw-bold mb-1">
               <codx-label
@@ -3159,13 +3205,13 @@
             <!-- Gán tạm chờ refvalue -->
             <ejs-combobox
               id="recID"
-              [dataSource]="listCbxProccess"
+              [dataSource]="listCbxProccessFail"
               [fields]="fieldCbxProccess"
-              [placeholder]="'Chọn quy trình kìa'"
+              [placeholder]=" gridViewSetupStep['NewProcessID']?.placeholder"
               (valueChange)="cbxChange($event, viewStepReasonFail)"
               [readonly]="stepFail?.isUsed ? false : true"
               [enabled]="process.applyFor != '1'"
-              [value]="moveProccessIsNull(stepFail?.newProcessID)"
+              [value]="moveProccessIsNull(stepFail?.newProcessID,listCbxProccessFail)"
             ></ejs-combobox>
             <codx-label
               class="text-danger fst-italic fs-7"
