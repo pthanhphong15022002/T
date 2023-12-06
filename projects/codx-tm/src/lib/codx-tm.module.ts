@@ -108,6 +108,7 @@ export const routes: Routes = [
       {
         path: 'tasks/:funcID',
         component: TasksComponent,
+        data: { noReuse: true },
       },
 
       {
@@ -243,7 +244,7 @@ const T_Component: Type<any>[] = [
     NgbModule,
     SplitterModule,
     CodxReportModule,
-    AccumulationChartModule
+    AccumulationChartModule,
   ],
   exports: [RouterModule],
   declarations: T_Component,
@@ -256,7 +257,7 @@ const T_Component: Type<any>[] = [
     GaugeTooltipService,
     LegendService,
     LegendCircularGaugeService,
-    AccumulationDataLabelService
+    AccumulationDataLabelService,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
