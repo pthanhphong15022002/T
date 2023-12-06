@@ -194,6 +194,7 @@ import { ViewDetailApprovalCustomComponent } from './components/codx-instances/v
 import { ViewHistoryUpdateProgressComponent } from './components/codx-tasks/view-history-update-progress/view-history-update-progress.component';
 import { CodxShareReportComponent } from './components/codx-share-report/codx-share-report.component';
 import { CodxShareDashboardComponent } from './components/codx-share-dashboard/codx-share-dashboard.component';
+import { CodxDashboardViewsComponent } from './components/codx-dashboard/dashboard-view/dashboard-view.component';
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
   // AttachmentComponent,
@@ -360,6 +361,7 @@ const T_Component: Type<any>[] = [
 
   //report
   CodxReportAddComponent,
+  CodxDashboardViewsComponent,
 
   //Approval Process
   CodxAddApproversComponent,

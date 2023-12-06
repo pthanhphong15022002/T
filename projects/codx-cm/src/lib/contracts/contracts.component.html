@@ -37,6 +37,7 @@
     [imageReferType]="'avt'"
     [imageWidth]="35"
     imgCss="me-3"
+    [baseHeaderRightTmp]="baseHeaderRightTmp"
   >
   </codx-temp-full>
 </ng-template>
@@ -92,35 +93,15 @@
     </div>
     <div class="d-flex justify-content-between align-items-center">
       <div class="d-flex align-items-end codx-badge">
-        <div
-          *ngIf="data.status == '2'; else statusDefault"
-          [ngStyle]="{'background-color': data?.steps?.backgroundColor}"
-          class="me-1 badge badge-sm d-flex align-items-center mw-125px"
-        >
-          <span
-            [ngClass]="data?.steps?.icon"
-            [ngStyle]="{ color: data?.steps?.iconColor}"
-            class="me-1"
-          ></span>
-          <span
-            class="text-ellipsis line-clamp line-clamp-1"
-            [ngbTooltip]="data?.currentStepName"
-            [ngStyle]="{ color: data?.steps?.textColor}"
-            >{{ data?.currentStepName }}</span
-          >
-        </div>
-        <ng-template #statusDefault>
-          <codx-vll
-            [name]="vllStatus"
-            [field]="'Status'"
-            [value]="data?.status"
-            [showText]="true"
-            [showBgColor]="true"
-            class="badge badge-primary badge-sm"
-          >
-          </codx-vll>
-        </ng-template>
-
+        <codx-vll
+        [name]="vllStatus"
+        [field]="'Status'"
+        [value]="data?.status"
+        [showText]="true"
+        [showBgColor]="true"
+        class="badge badge-primary badge-sm"
+      >
+      </codx-vll>
         <ng-container *ngIf="data?.approveStatus && data?.approveStatus != '1'">
           <codx-vll
             [name]="vllApprove"
@@ -176,7 +157,7 @@
 <ng-template #templateMore let-data>
   <div class="" style="height: 30px">
     <codx-mfunc
-      [dataItem]="data"
+      [dataItem]="moreDefaut"
       [formModel]="view.formModel"
       (clickMF)="clickMF($event, data)"
       (changeDataMF)="changeDataMF($event, data, true)"
@@ -307,3 +288,17 @@
 </ng-template>
 <!-- Số tiền còn lại -->
 <!-- Trạng thái -->
+<ng-template #baseHeaderRightTmp let-data>
+  <span
+    [class]="data?.closed ? 'icon-lock text-danger' : ''"
+    [ngbTooltip]="TooltipEdit"
+  >
+    <ng-template #TooltipEdit>
+      <codx-label
+        default="Hợp đồng đã đóng"
+        name="lblIsClosed"
+        [formModel]="view.formModel"
+      ></codx-label>
+    </ng-template>
+  </span>
+</ng-template>

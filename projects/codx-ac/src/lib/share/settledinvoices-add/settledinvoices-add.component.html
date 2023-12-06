@@ -71,15 +71,21 @@
 <!-- End: Body -->
 <!-- Start: Footer -->
 <ng-template #footer>
-  <div *ngIf="grid" class="ms-2 me-2">
-    <button [disabled]="grid.arrSelectedRows.length > 0 ? false : true" type="button" class="btn btn-md btn-light-primary rounded-15" style="border: 1px solid var(--primary-dark) !important;" (click)="apply()">
-      <div class="d-flex align-items-center">
-        <i class="icon-i-check2 icon-16 me-1"></i>
-        <codx-label class="fw-normal" fiedName="lblSave" [formName]="fmSettledInvoices?.formName"
-          [gridViewName]="fmSettledInvoices?.gridViewName" default="Chọn"></codx-label>
-      </div>
-    </button>
+  <div class="d-flex justify-content-between">
+    <div *ngIf="grid" class="ms-2 me-2 d-flex justify-content-start">
+      <span class="fw-bold fs-5">{{'Đã chọn: '+grid.arrSelectedRows.length+'/'+grid.dataSource.length+' bản ghi'}}</span>
+    </div>
+    <div *ngIf="grid" class="ms-2 d-flex justify-content-end">
+      <button [disabled]="grid.arrSelectedRows.length > 0 ? false : true" type="button" class="btn btn-md btn-light-primary rounded-15" style="border: 1px solid var(--primary-dark) !important;" (click)="apply()">
+        <div class="d-flex align-items-center">
+          <i class="icon-i-check2 icon-16 me-1"></i>
+          <codx-label class="fw-normal" fiedName="lblSave" [formName]="fmSettledInvoices?.formName"
+            [gridViewName]="fmSettledInvoices?.gridViewName" default="Chọn"></codx-label>
+        </div>
+      </button>
+    </div>
   </div>
+  
 </ng-template>
 <!-- End: Footer -->
 
@@ -185,10 +191,13 @@
 <!-- Start: Grid voucher -->
 <ng-template #tabVoucher>
   <div class="tabset-content position-relative">
-    <codx-gridview-v2 #grid [checkboxSelect]="true" [showEmptyRecord]="false" [editOnClick]="true" [formName]="fmSettledInvoices.formName" [gridViewName]="fmSettledInvoices.gridViewName"
-      [entityName]="fmSettledInvoices.entityName" [dataSource]="subInvoices" (onDeselected)="onDeselected($event)" service="AC"
-      (onSelected)="onSelected($event)" (onDoubleClick)="onDoubleClick($event)" hideMoreFunc="true" [autoFitColumns]="false"
-      (eventAction)="onAction($event)" (actionCompleted)="onAction($event)"></codx-gridview-v2>
+    <codx-gridview-v2 #grid [checkboxSelect]="true" idField="recID" [showEmptyRecord]="false" [editOnClick]="true"
+      [selectionOptions]="selectionOptions" [formName]="fmSettledInvoices.formName"
+      [gridViewName]="fmSettledInvoices.gridViewName" (onCheckBoxChange)="onCheckAll($event)"
+      [entityName]="fmSettledInvoices.entityName" [dataSource]="subInvoices" (onDeselected)="onDeselected($event)"
+      service="AC" (onSelected)="onSelected($event)" hideMoreFunc="true" [autoFitColumns]="false"
+      (cellChanged)="valueChangeLine($event)" (eventAction)="onAction($event)"
+      (actionCompleted)="onAction($event)"></codx-gridview-v2>
   </div>
 </ng-template>
 <!-- End: Grid voucher -->

@@ -635,6 +635,13 @@ export class TMDashboardComponent extends UIComponent implements AfterViewInit {
     if (e.type == 'reportLoaded') {
       this.arrReport = e.data;
       if (this.arrReport.length) {
+        let pattern =
+      /^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$/gi;
+
+        if(this.arrReport.length > 1 && !this.reportID.match(pattern)){
+          this.codxService.navigate('',`${this.view.function?.module ? this.view.function?.module.toLocaleLowerCase() : 'tm'}/dashboard-view/${this.reportID}`);
+          return;
+        }
         this.cache
               .functionList(e.data[0].moduleID+e.data[0].reportType)
               .subscribe((res: any) => {
