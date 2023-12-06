@@ -84,6 +84,7 @@ import { CasesComponent } from 'projects/codx-cm/src/lib/cases/cases.component';
 import { LeadsComponent } from 'projects/codx-cm/src/lib/leads/leads.component';
 import { ViewInstancesComponent } from 'projects/codx-dp/src/lib/view-instances/view-instances.component';
 import { CodxDashboardViewsComponent } from 'projects/codx-share/src/lib/components/codx-dashboard/dashboard-view/dashboard-view.component';
+import { InstancesComponent } from 'projects/codx-dp/src/lib/instances/instances.component';
 
 export const routes: Routes = [
   {
@@ -144,7 +145,7 @@ export const routes: Routes = [
         path: '**',
         redirectTo: 'error/404',
       },
-      //test phát hành quy trình
+      //----phát hành quy trình DP-CRM----//
       {
         path: 'deals/:funcID',
         component: DealsComponent,
@@ -165,6 +166,7 @@ export const routes: Routes = [
         component: ViewInstancesComponent,
         data: { noReuse: true },
       },
+      //-----------end--------------//
     ],
   },
   {

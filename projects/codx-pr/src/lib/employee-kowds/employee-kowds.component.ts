@@ -1,7 +1,9 @@
 import { Component, Injector, TemplateRef, ViewChild } from '@angular/core';
-import { ButtonModel, CRUDService, CodxGridviewV2Component, CodxService, ResourceModel, UIComponent, ViewModel, ViewType } from 'codx-core';
+import { ButtonModel, CRUDService, CallFuncService, CodxGridviewV2Component, CodxService, ResourceModel, SidebarModel, UIComponent, ViewModel, ViewType } from 'codx-core';
 import { CodxHrService } from 'projects/codx-hr/src/lib/codx-hr.service';
 import { KowdsScheduleComponent } from './kowds-schedule/kowds-schedule.component';
+import { PopupEkowdsComponent } from './popup-ekowds/popup-ekowds.component';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'lib-employee-kowds',
@@ -28,11 +30,16 @@ export class EmployeeKowdsComponent extends UIComponent{
   scheduleHeader?: ResourceModel;
   itemSelected: any;
   lstEmp: any = [];
-  viewDetailData = false;
-  viewStatistic = true;
+  viewDetailData = true;
+  viewStatistic = false;
 
   calendarGridColumns: any = [];
   gridStatisticColumns: any = [];
+
+  addHeaderText;
+  editHeaderText;
+  formHeaderText;
+
   @ViewChild('tempEmployee', { static: true }) tempEmployee: TemplateRef<any>;
   @ViewChild('tempDayData', { static: true }) tempDayData: TemplateRef<any>;
   @ViewChild('tempEmployeeTC', { static: true }) tempEmployeeTC: TemplateRef<any>;
@@ -44,14 +51,37 @@ export class EmployeeKowdsComponent extends UIComponent{
   @ViewChild('KowdsScheduleComponent') kowdsSchedule: KowdsScheduleComponent;
   dtService: CRUDService;
   constructor(inject: Injector, private hrService: CodxHrService,
-    public override codxService : CodxService
+    public override codxService : CodxService,
+    private callfunc: CallFuncService,
+    private routeActive: ActivatedRoute,
     ) {
     super(inject);
+    this.funcID = this.routeActive.snapshot.params['funcID'];
     this.dtService = new CRUDService(inject);
     this.dtService.idField = "orgUnitID";
   }
+
+  initHeaderText() {
+    this.cache.moreFunction('CoDXSystem', '').subscribe((res) => {
+      if(res){
+        if(res[0]){
+          this.addHeaderText = res[0].customName;
+        }
+        if(res[2]){
+          this.editHeaderText = res[2].customName;
+        }
+      }
+    });
+  }
   
   onInit(): void {
+    this.initHeaderText();
+
+    this.cache.functionList(this.funcID).subscribe((res) => {
+      console.log('load tt func', res);
+      this.formHeaderText = res.description;
+    })
+
     for (let i = 1; i <= 31; i++) {
       this.days.push(i);
     }
@@ -65,6 +95,7 @@ export class EmployeeKowdsComponent extends UIComponent{
         this.formModelEmployee = res;
       }
     });
+
 
     this.buttonAdd = [{
       id: 'btnAdd',
@@ -100,7 +131,6 @@ export class EmployeeKowdsComponent extends UIComponent{
     ];
     // }
 
-    // this.loadDataInGrid();
   }
 
   clickMF(event, data){
@@ -110,10 +140,40 @@ export class EmployeeKowdsComponent extends UIComponent{
   doubleClickGrid(event){
     console.log('event double click', event);
     debugger
-    // document.querySelector('[data-colindex="2"]').textContent
 
+    // document.querySelector('[data-colindex="2"]').textContent
     let date = event.column.index;
+    let data = event.rowData[`day${date}`]
     let employeeId = event.rowData.employeeID;
+    this.handleEmpKows(this.editHeaderText, 'edit', data, employeeId, date)
+  }
+
+  handleEmpKows(actionHeaderText, actionType: string, data: any, employeeId, date){
+    let option = new SidebarModel();
+    option.FormModel = this.view.formModel;
+    option.Width = '550px';
+    let funcHeader
+    let dialog = this.callfunc.openSide(
+      PopupEkowdsComponent,
+      {
+        funcID: this.funcID,
+        headerText: actionHeaderText + ' ' + this.formHeaderText,
+        dataObj: data,
+        employeeId: employeeId,
+        selectedDate : date,
+        crrYear: this.filterYear,
+        crrMonth: this.filterMonth
+      },
+      option
+    )
+
+    dialog.closed.subscribe((res) => {
+      if(res?.event){
+        if(this.viewDetailData == true) {
+          this.calendarGrid.refresh();
+        }
+      }
+    })
   }
 
   getEmpList() {
@@ -155,7 +215,13 @@ export class EmployeeKowdsComponent extends UIComponent{
         for(let i = 0; i < this.gridDataSource.length; i++){
           for(let j = 0; j < this.daysInMonth[this.filterMonth]; j++){
             let strField = `day${j+1}`
-            this.gridDataSource[i][strField] = [j+1, j+1, j+1,j+1, j+1];
+            this.gridDataSource[i][strField] = [{kowCode: j+1,
+              dayNum: j+2}, {kowCode: j+1,
+                dayNum: j+2},
+                {kowCode: j+1,
+                  dayNum: j+2},
+                  {kowCode: j+1,
+                    dayNum: j+2}];
           }
         }
         this.gridDataSource = [...this.gridDataSource]

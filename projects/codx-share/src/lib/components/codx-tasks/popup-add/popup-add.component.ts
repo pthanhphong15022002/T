@@ -1166,7 +1166,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   loadDataReferences() {
     this.dataReferences = [];
     if (this.task.refID)
-     // this.getReferencesByCategory3(this.task);  //code cu
+      // this.getReferencesByCategory3(this.task);  //code cu
       this.tmSv.getReference(
         this.task.refType,
         this.task.refID,
