@@ -664,20 +664,20 @@ export class CalendarNotesComponent
     let setting = this.settingCalendar.find(x => x.transType == "CO_Meetings");
     if(setting)
     {
-      let json = JSON.parse(setting.dataValue);  
+      let json = JSON.parse(setting.dataValue);
       let date = new Date();
       let funcID = "COT03"; // lịch cá nhân
       let predicates = json.Predicate;
       let startDate = new Date(date.getFullYear(),date.getMonth(),1);
       let endDate = moment(date).add(1, 'M').add(-1,'s').toDate();
       this.codxShareSV.getDataCO_Meetings(funcID,predicates,"","",startDate,endDate).subscribe((res) => {
-        if (res) 
+        if (res)
         {
           this.getModelShare(res[0], param.Template, 'CO_Meetings');
         }
       });
     }
-    
+
   }
 
   getRequestEP_BookingRoom(predicate, dataValue, param, showEvent) {
@@ -776,6 +776,9 @@ export class CalendarNotesComponent
             this.TM_Tasks.push(paramValue);
             break;
           case 'WP_Notes':
+            if(paramValue.data && paramValue.data.createdOn){
+              paramValue.calendarDate = paramValue.data.createdOn;
+            }
             this.WP_Notes.push(paramValue);
             break;
           case 'CO_Meetings':

@@ -9,17 +9,22 @@ import { firstValueFrom } from 'rxjs';
 export class ContractsService {
   listTypeContractTask = [
     { name: 'general', textDefault: 'Thông tin chung', icon: 'icon-info', isActive: true },
-    { name: 'quotations', textDefault: 'Chi tiết mặt hàng', icon: 'icon-link', isActive: false },
-    { name: 'pay', textDefault: 'Thanh toán', icon: 'icon-tune', isActive: false },
-    { name: 'ship', textDefault: 'Giao hàng', icon: 'icon-tune', isActive: false },
     { name: 'task', textDefault: 'Công việc', icon: 'icon-more', isActive: false },
+    { name: 'memo', textDefault: 'Ghi chú', icon: 'icon-sticky_note_2', isActive: false },
   ];
-  listTypeContractAdd = [
-    { name: 'general', textDefault: 'Thông tin chung', icon: 'icon-info', isActive: true },
-    { name: 'quotations', textDefault: 'Chi tiết mặt hàng', icon: 'icon-link', isActive: false },
-    { name: 'pay', textDefault: 'Thanh toán', icon: 'icon-tune', isActive: false },
-    { name: 'ship', textDefault: 'Giao hàng', icon: 'icon-tune', isActive: false },
-  ];
+  // listTypeContractTask = [
+  //   { name: 'general', textDefault: 'Thông tin chung', icon: 'icon-info', isActive: true },
+  //   { name: 'quotations', textDefault: 'Chi tiết mặt hàng', icon: 'icon-link', isActive: false },
+  //   { name: 'pay', textDefault: 'Thanh toán', icon: 'icon-tune', isActive: false },
+  //   { name: 'ship', textDefault: 'Giao hàng', icon: 'icon-tune', isActive: false },
+  //   { name: 'task', textDefault: 'Công việc', icon: 'icon-more', isActive: false },
+  // ];
+  // listTypeContractAdd = [
+  //   { name: 'general', textDefault: 'Thông tin chung', icon: 'icon-info', isActive: true },
+  //   { name: 'quotations', textDefault: 'Chi tiết mặt hàng', icon: 'icon-link', isActive: false },
+  //   { name: 'pay', textDefault: 'Thanh toán', icon: 'icon-tune', isActive: false },
+  //   { name: 'ship', textDefault: 'Giao hàng', icon: 'icon-tune', isActive: false },
+  // ];
   footerTab = [
     { name: 'History', textDefault: 'Lịch sử', isActive: true, template: null },
     { template: null, isActive: false, name: 'Comment', textDefault: 'Thảo luận'},
@@ -30,6 +35,7 @@ export class ContractsService {
     { template: null, isActive: false, name: 'Quotations', textDefault: 'Báo giá'},
     { template: null, isActive: false, name: 'Order', textDefault: 'Đơn hàng'},
   ];
+
   constructor(
     private cache: CacheService,
     private callFunc: CallFuncService,
@@ -91,8 +97,8 @@ export class ContractsService {
   getCustomerByRecID(data) {
     return this.api.exec<any>(
       'CM',
-      'ContractsBusiness',
-      'GetCustomerByRecIDAsync',
+      'CustomersBusiness',
+      'GetOneAsync',
       data
     );
   }
@@ -146,6 +152,47 @@ export class ContractsService {
       'ContractsBusiness',
       'GetContractByRefIDAsync',
       data
+    );
+  }
+  getContractByRecID(data) {
+    return this.api.exec<any>(
+      'CM',
+      'ContractsBusiness',
+      'GetContractByRecIDAsync',
+      data
+    );
+  }
+  getContactByRecID(data) {
+    return this.api.exec<any>(
+      'CM',
+      'ContractsBusiness',
+      'GetOneContactAsync',
+      data
+    );
+  }
+  getOneContactByObjectID(data) {
+    return this.api.exec<any>(
+      'CM',
+      'ContractsBusiness',
+      'GetListContactDefaultByObjectIDAsync',
+      data
+    );
+  }
+
+  GetProcessNoByProcessID(data) {
+    return this.api.exec<any>(
+      'DP',
+      'ProcessesBusiness',
+      'GetProcessNoByProcessIDAsync',
+      data
+    );
+  }
+  GetProcessIdDefault(applyFor) {
+    return this.api.exec<any>(
+      'DP',
+      'ProcessesBusiness',
+      'GetProcessDefaultAsync',
+      applyFor
     );
   }
 

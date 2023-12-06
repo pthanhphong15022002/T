@@ -267,18 +267,15 @@ export const routes: Routes = [
       //   path: 'employeeinfomation/:funcID',
       //   component: EmployeeInfomationComponent,
       // },
-      {
-        path: 'approvals/:funcID',
-        loadChildren: () =>
-          import('projects/codx-hr/src/lib/codx-approvel.module').then(
-            (m) => m.CodxApprovelModule
-          ),
-        data: { noReuse: true },
-      },
-      {
-        path: 'sysholidaytype/:funcID',
-        component: HolidayComponent,
-      },
+      // {
+      //   path: 'approvals/:funcID',
+      //   loadChildren: () =>
+      //     import('projects/codx-hr/src/lib/codx-approvel.module').then(
+      //       (m) => m.CodxApprovelModule
+      //     ),
+      //   data: { noReuse: true },
+      // },
+
       {
         path: 'setting',
         component: HRParametersComponent,

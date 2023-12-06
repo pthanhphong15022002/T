@@ -67,6 +67,9 @@ import { CodxAdService } from 'projects/codx-ad/src/public-api';
 import { TN_OrderModule } from 'projects/codx-ad/src/lib/models/tmpModule.model';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { CodxViewApproveComponent } from 'projects/codx-share/src/lib/components/codx-step/codx-step-common/codx-view-approve/codx-view-approve.component';
+import { CodxShareService } from 'projects/codx-share/src/public-api';
+import { StepService } from 'projects/codx-share/src/lib/components/codx-step/step.service';
 
 @Component({
   selector: 'lib-popup-add-dynamic-process',
@@ -131,7 +134,6 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
   popupAddReason: DialogRef;
   reasonList: DP_Steps_Reasons[] = [];
   reason: DP_Steps_Reasons = new DP_Steps_Reasons();
-  listCbxProccess: any;
 
   titleCheckBoxSat: string = '';
   titleCheckBoxSun: string = '';
@@ -325,10 +327,27 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
   };
   isEditReason = false;
   isBoughtTM = false;
-
+  frmModelInstancesTask = {
+    funcID: 'DPT040102',
+    formName: 'DPInstancesStepsTasks',
+    entityName: 'DP_Instances_Steps_Tasks',
+    gridViewName: 'grvDPInstancesStepsTasks',
+  };
   private destroyFrom$: Subject<void> = new Subject<void>();
   // private onDestroyPopupStep$: Subject<void> = new Subject<void>();
   vllDefaultName = [];
+
+  moveProccess:any;
+  listCbxProccess: any;
+
+  applyForSucess:any;
+  applyForFail:any;
+  processNameEmpty:any;
+  moveProccessSuccess:any;
+  moveProccessFail:any;
+  listCbxProccessSuccess: any[]=[];
+  listCbxProccessFail: any[]=[];
+
 
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
@@ -342,6 +361,8 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
     private formBuilder: FormBuilder,
     private codxService: CodxService,
     private adService: CodxAdService,
+    private codxShareService: CodxShareService,
+    private stepService: StepService,
     @Optional() dialog: DialogRef,
     @Optional() dt: DialogData
   ) {
@@ -2019,7 +2040,7 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
             }
             category = res.data;
             category.recID = res?.recID ?? Util.uid();
-            category.eSign = false;
+            category.eSign = true; // Khanh bảo vậy mặc định luôn là kí sô
             category.Category = 'DP_Processes';
             category.categoryID = this.process.processNo;
             category.categoryName = this.process.processName;
@@ -3138,14 +3159,14 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
   }
   //#endregion
   //#region task
-  openPopupChooseTask(isShowGroup = true) {
+  openPopupChooseTask(typeDisableds = []) {
     this.popupJob = this.callfc.openForm(
       CodxTypeTaskComponent,
       '',
       450,
       580,
       null,
-      { isShowGroup }
+      {typeDisableds}
     );
     this.popupJob.closed.subscribe(async (value) => {
       if (value?.event && value?.event['value']) {
@@ -3397,8 +3418,25 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
         this.typeTask = task.taskType;
         this.viewTask(task);
         break;
+      case 'SYS002':
+        let customData = {
+          refID: task.recID,
+          refType: 'DP_Steps_Tasks',
+        };
+        this.codxShareService.defaultMoreFunc(
+          e,
+          task,
+          this.afterSave.bind(this),
+          this.frmModelInstancesTask,
+          null,
+          this,
+          customData
+        );
+        break;
     }
   }
+
+  afterSave(e) {}
 
   clickMFTaskGroup(e: any, data?: any) {
     switch (e.functionID) {
@@ -3413,7 +3451,7 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
         break;
       case 'DP08':
         this.groupTaskID = data?.recID;
-        this.openPopupChooseTask(false);
+        this.openPopupChooseTask(['G']);
         break;
       case 'DP12':
         this.viewTask(data, 'G');
@@ -3466,11 +3504,13 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
           case 'SYS003':
           case 'SYS004':
           case 'SYS001':
-          case 'SYS002':
+          // case 'SYS002':
           case 'DP31':
           case 'DP30':
           case 'DP29':
           case 'DP28':
+          case 'DP32':
+          case 'DP33':
             res.disabled = true;
             break;
         }
@@ -4064,12 +4104,12 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
 
         // Show swtich reason change
         this.isSwitchReason = true;
-
         this.step =
           view === this.viewStepReasonSuccess
             ? this.stepSuccess
             : this.stepFail;
         this.dataValueview = view;
+        this.checkViewReasonClick(this.step,view === this.viewStepReasonSuccess);
       } else {
         this.viewStepCrr = this.viewStepCustom;
         if (data) {
@@ -4439,24 +4479,10 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
 
   loadCbxProccess() {
     this.cache.valueList('DP031').subscribe((data) => {
-      this.dpService
-        .getlistCbxProccess(this.process?.applyFor)
-        .subscribe((res) => {
-          if (res) {
-            this.listCbxProccess = res[0];
-            let obj = {
-              recID: this.guidEmpty,
-              processName: data.datas[0].default,
-              // 'Không chuyển đến quy trình khác'
-            };
-            this.listCbxProccess.unshift(obj);
-            if (this.action === 'edit') {
-              this.listCbxProccess = this.listCbxProccess.filter(
-                (x) => x.recID !== this.process?.recID
-              );
-            }
-          }
-        });
+      if(data) {
+      this.processNameEmpty = data.datas[0].default;
+      this.moveProccess = this.guidEmpty;
+      }
     });
   }
 
@@ -4664,8 +4690,8 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
     }
     return true;
   }
-  moveProccessIsNull(newProccessID) {
-    let index = this.listCbxProccess.findIndex((x) => x.recID == newProccessID);
+  moveProccessIsNull(newProccessID,listCbxProccess) {
+    let index = listCbxProccess.findIndex((x) => x.recID == newProccessID);
     if (index > -1) {
       return newProccessID;
     }
@@ -4717,6 +4743,7 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
                   dataType: 'auto',
                   templateRefID: this.process.recID,
                   templateRefType: 'DP_Processes',
+                  disableESign: true,
                 },
                 option
               );
@@ -4923,5 +4950,103 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
       strFieldID?.includes(field?.recID)
     );
     return fieldTile?.map((f) => f.title)?.join(', ') || '';
+  }
+
+  openFormApprover(task) {
+    let approverDialog = this.callfc.openForm(
+      CodxViewApproveComponent,
+      '',
+      500,
+      550,
+      '',
+      { categoryID: task?.recID, type: '2', stepsTasks: task }
+    );
+  }
+  valueChangeApplyFor($event,view){
+    if($event?.data) {
+      let isViewReason = view === this.viewStepReasonSuccess;
+      this.step.newProcessID = this.guidEmpty;
+      this.getListProcesByApplyFor(isViewReason,this.step,$event?.data,'');
+    }
+  }
+  checkViewReasonClick(step,isViewReason) {
+    let applyFor ='';
+    let processID = '';
+    if(step?.newProcessID === this.guidEmpty || !step?.newProcessID)
+    {
+      applyFor = this.process.applyFor;
+      if(isViewReason) {
+        this.applyForSucess = applyFor;
+      }
+      else {
+        this.applyForFail = applyFor;
+      }
+
+    }
+    else {
+      processID = step?.newProcessID;
+      if(isViewReason) {
+        applyFor =  this.applyForSucess ?  this.applyForSucess: '';
+        this.applyForSucess = applyFor;
+      }
+      else {
+        applyFor =  this.applyForFail ?  this.applyForFail: '';
+        this.applyForFail = applyFor;
+      }
+    }
+
+
+    // let applyFor = applyReason? applyReason: this.process.applyFor;
+    this.getListProcesByApplyFor(isViewReason,step,applyFor,processID);
+  }
+  getListProcesByApplyFor(isViewReason,stepReason,applyFor,processID) {
+    let data=[applyFor,processID,''];
+    this.dpService.getlistCbxProccessMove(data).subscribe((res) => {
+      if( res != null &&res.length > 0) {
+        this.getListProceseEmpty(res[0],isViewReason,applyFor,stepReason);
+      }
+      else {
+        this.getListProceseEmpty([],isViewReason,applyFor,stepReason);
+      }
+      this.changeDetectorRef.markForCheck();
+    });
+  }
+  getListProceseEmpty(listProcess,isViewReason,applyFor,stepReason) {
+    let listProcessCbx = [];
+    let moveProcess;
+    // this.moveProccess = null;
+    moveProcess = stepReason?.newProcessID === this.guidEmpty ||!stepReason?.newProcessID ? this.guidEmpty:stepReason.newProcessID ;
+
+    if(listProcess != null && listProcess.length > 0) {
+      listProcessCbx = listProcess;
+       listProcessCbx = listProcessCbx.filter(
+        (x) => x.recID !== this.process.recID
+      );
+      applyFor = listProcess[0].applyFor;
+    }
+    else {
+      applyFor = this.process.applyFor;
+    }
+    let obj = {
+      recID: this.guidEmpty,
+      processName: this.processNameEmpty,
+      permissions: [],
+    };
+    listProcessCbx.unshift(obj);
+    this.processNameEmpty = this.processNameEmpty,
+    this.moveProccess = this.guidEmpty;
+
+    if(isViewReason) {
+      this.listCbxProccessSuccess = listProcessCbx;
+      this.moveProccessSuccess = moveProcess;
+      this.stepSuccess.newProcessID = this.moveProccessSuccess;
+      this.applyForSucess = applyFor;
+    } else {
+      this.listCbxProccessFail = listProcessCbx;
+      this.moveProccessFail = moveProcess;
+      this.stepFail.newProcessID = this.moveProccessFail;
+      this.applyForFail = applyFor;
+    }
+    this.changeDetectorRef.markForCheck();
   }
 }

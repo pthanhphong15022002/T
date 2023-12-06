@@ -29,7 +29,6 @@ import {
   AuthStore,
 } from 'codx-core';
 import { CodxCmService } from '../codx-cm.service';
-import { PopupAddDealComponent } from '../deals/popup-add-deal/popup-add-deal.component';
 import { CM_Customers, CM_Leads, CM_Permissions } from '../models/cm_model';
 import { PopupAddLeadComponent } from './popup-add-lead/popup-add-lead.component';
 import { PopupConvertLeadComponent } from './popup-convert-lead/popup-convert-lead.component';
@@ -37,8 +36,6 @@ import { PopupMergeLeadsComponent } from './popup-merge-leads/popup-merge-leads.
 import { PopupMoveStageComponent } from 'projects/codx-dp/src/lib/instances/popup-move-stage/popup-move-stage.component';
 import { LeadDetailComponent } from './lead-detail/lead-detail.component';
 import { PopupMoveReasonComponent } from 'projects/codx-dp/src/lib/instances/popup-move-reason/popup-move-reason.component';
-import { PopupEditOwnerstepComponent } from 'projects/codx-dp/src/lib/instances/popup-edit-ownerstep/popup-edit-ownerstep.component';
-import { PopupOwnerDealComponent } from '../deals/popup-owner-deal/popup-owner-deal.component';
 import { PopupAssginDealComponent } from '../deals/popup-assgin-deal/popup-assgin-deal.component';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { PopupPermissionsComponent } from '../popup-permissions/popup-permissions.component';
@@ -83,6 +80,8 @@ export class LeadsComponent
   moreFuncs: Array<ButtonModel> = [];
   formModel: FormModel;
 
+  @Input() showButtonAdd = false;
+
   // type any for view detail
   dataObj?: any;
   kanban: any;
@@ -96,14 +95,18 @@ export class LeadsComponent
   idField = 'recID';
   predicate = '';
   dataValue = '';
+
   // data structure
   listCustomer: CM_Customers[] = [];
   listCategory: any[] = [];
   valueListStatusCode: any[] = [];
   // type of string
   oldIdDeal: string = '';
-
-  @Input() showButtonAdd = false;
+  oldIdContact: string = '';
+  oldIdLead: string = '';
+  viewActiveType = '';
+  applyApprover = '0';
+  gridDetailView = '2';
 
   columnGrids = [];
   // showButtonAdd = false;
@@ -118,14 +121,10 @@ export class LeadsComponent
   vllPriority = 'TM005';
   crrFuncID = '';
   viewMode = 2;
-  // const set value
-  readonly btnAdd: string = 'btnAdd';
   request: ResourceModel;
   resourceKanban?: ResourceModel;
 
   listHeader: any;
-  oldIdContact: string = '';
-  oldIdLead: string = '';
   funcIDCrr: any;
   gridViewSetup: any;
   colorReasonSuccess: any;
@@ -143,21 +142,19 @@ export class LeadsComponent
   statusDefault: any;
   user: any;
   valueListStatus: any;
+  queryParams: any;
+  runMode: any;
 
+  leverSetting = 0;
   isLoading = false;
   hideMoreFC = false;
   applyProcess: boolean = true;
-  gridDetailView = '2';
 
+  // const set value
+  readonly btnAdd: string = 'btnAdd';
   readonly applyFor: any = '5';
   readonly fieldCbxStatus = { text: 'text', value: 'value' };
   readonly fieldCbxStatusCode = { text: 'text', value: 'value' };
-
-  applyApprover = '0';
-  queryParams: any;
-  leverSetting = 0;
-  viewActiveType = '';
-  runMode: any;
 
   constructor(
     private inject: Injector,
@@ -270,7 +267,7 @@ export class LeadsComponent
       .subscribe((res) => {
         if (res) {
           this.processId = res.recID;
-          this.dataObj = { processID: res.recID };
+          //this.dataObj = { processID: res.recID };
         }
       });
   }
@@ -397,6 +394,7 @@ export class LeadsComponent
   }
 
   changeDataMF(event, data, type = null) {
+    if(!data) return;
     if (this.runMode == '1') {
       this.codxShareService.changeMFApproval(event, data?.unbounds);
     } else if (event != null && data != null) {
@@ -536,7 +534,6 @@ export class LeadsComponent
         (data.closed && data.status != '1') ||
         data.status == '15' ||
         (this.applyApprover != '1' && !data.applyProcess) ||
-        (data.applyProcess && data?.approveRule != '1') ||
         data?.approveStatus >= '3';
       // || this.checkMoreReason(data);
     };
@@ -586,12 +583,8 @@ export class LeadsComponent
     return functionMappings[type];
   }
 
-  checkMoreReason(tmpPermission) {
-    return (
-      !tmpPermission.roleMore.isReasonSuccess &&
-      !tmpPermission.roleMore.isReasonFail &&
-      !tmpPermission.roleMore.isMoveStage
-    );
+  checkMoreReason(data) {
+    return data?.status != '1' && data?.status != '2' && data?.status != '15';
   }
 
   onActions(e) {
@@ -728,7 +721,7 @@ export class LeadsComponent
       CM0205_14: () => this.updateProcess(data, true),
       CM0205_15: () => this.updateProcess(data, false),
       CM0205_16: () => this.popupPermissions(data),
-      //SYS002: () => this.exportFiles(e, data),
+      SYS002: () => this.exportTemplet(e, data),
       CM0205_17: () => this.cancelApprover(data),
       CM0205_18: () => this.updateAutoAddress(lst),
     };
@@ -736,25 +729,25 @@ export class LeadsComponent
     if (executeFunction) {
       executeFunction();
     } else {
-      let customData = {
-        refID: data.recID,
-        refType: 'CM_Leads',
-      };
+      // let customData = {
+      //   refID: data.recID,
+      //   refType: 'CM_Leads',
+      // };
 
-      if (data?.refID && data.applyProcess) {
-        customData = {
-          refID: data.processID,
-          refType: 'DP_Processes',
-        };
-      }
+      // if (data?.refID && data.applyProcess) {
+      //   customData = {
+      //     refID: data.processID,
+      //     refType: 'DP_Processes',
+      //   };
+      // }
       this.codxShareService.defaultMoreFunc(
         e,
         data,
         this.afterSave.bind(this),
         this.view.formModel,
         this.view.dataService,
-        this,
-        customData
+        this
+        // customData
       );
     }
   }
@@ -821,7 +814,7 @@ export class LeadsComponent
       leadIdOld: this.oldIdLead,
       contactIdOld: this.oldIdContact,
       applyFor: this.applyFor,
-      processId: this.processId,
+      // processId: this.processId,
       gridViewSetup: this.gridViewSetup,
       applyProcess: this.dataSelected?.applyProcess,
       listCategory: this.listCategory,
@@ -860,7 +853,7 @@ export class LeadsComponent
           formMD: formMD,
           titleAction: this.formatTitleMore(this.titleAction),
           applyFor: this.applyFor,
-          processId: this.processId,
+          // processId: this.processId,
           gridViewSetup: this.gridViewSetup,
           listCategory: this.listCategory,
         };
@@ -1252,7 +1245,7 @@ export class LeadsComponent
       ])
       .subscribe((x) => {
         if (x.event && x.event.status == 'Y') {
-          let datas = [data.recID, data.status, this.processId, isCheck];
+          let datas = [data.recID, data.status, '', isCheck];
           this.getApiUpdateProcess(datas);
         }
       });
@@ -1319,11 +1312,6 @@ export class LeadsComponent
                 0,
                 "'" + data.leadName + "'"
               );
-              if (data.showInstanceControl === '1') {
-                this.view.dataService
-                  .update(this.dataSelected, true)
-                  .subscribe();
-              }
               // if (
               //   data.showInstanceControl === '0' ||
               //   data.showInstanceControl === '2'
@@ -1366,7 +1354,6 @@ export class LeadsComponent
             isCallInstance: true,
           };
           var obj = {
-            stepName: data?.currentStepName,
             formModel: formMD,
             deal: data,
             stepReason: stepReason,
@@ -1386,7 +1373,7 @@ export class LeadsComponent
             if (e && e.event != null) {
               var instance = e.event.instance;
               var listSteps = e.event?.listStep;
-              this.detailViewLead.reloadListStep(listSteps);
+
               var index =
                 e.event.listStep.findIndex(
                   (x) =>
@@ -1414,6 +1401,7 @@ export class LeadsComponent
                   if (e.event.isReason != null) {
                     this.moveReason(data, e.event.isReason);
                   }
+                  this.detailViewLead.reloadListStep(listSteps);
                   this.detectorRef.detectChanges();
                 }
               });
@@ -1434,22 +1422,22 @@ export class LeadsComponent
   }
 
   openFormReason(data, fun, isMoveSuccess) {
-    var formMD = new FormModel();
+    let formMD = new FormModel();
     formMD.funcID = fun.functionID;
     formMD.entityName = fun.entityName;
     formMD.formName = fun.formName;
     formMD.gridViewName = fun.gridViewName;
-    var dataCM = {
+    let dataCM = {
       refID: data?.refID,
-      processID: data?.processID,
       stepID: data?.stepID,
       nextStep: data?.nextStep,
     };
-    var obj = {
+    let obj = {
       headerTitle: fun.defaultName,
       formModel: formMD,
       isReason: isMoveSuccess,
       applyFor: this.applyFor,
+      processID: data?.processID,
       dataCM: dataCM,
       stepName: data.currentStepName,
       isMoveProcess: false,
@@ -1498,7 +1486,7 @@ export class LeadsComponent
     formMD.gridViewName = this.funcIDCrr.gridViewName;
     dialogModel.zIndex = 999;
     dialogModel.FormModel = formMD;
-    var obj = {
+    let obj = {
       recID: data?.recID,
       refID: data?.refID,
       processID: data?.processID,
@@ -1508,7 +1496,7 @@ export class LeadsComponent
       applyFor: this.applyFor,
       titleAction: this.titleAction,
       owner: data.owner,
-      startControl: data.steps.startControl,
+      // startControl: data.steps.startControl,
       applyProcess: data.applyProcess,
       buid: data.buid,
       data: data,
@@ -1630,7 +1618,7 @@ export class LeadsComponent
       );
       dialog.closed.subscribe((e) => {
         if (e && e?.event != null) {
-          this.dataSelected.statusCodeID = e?.event?.statusDefault;
+          this.dataSelected.statusCode = e?.event?.statusDefault;
           this.dataSelected.statusCodeCmt = e?.event?.statusCodecmt;
           this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
           this.view.dataService.dataSelected = this.dataSelected;
@@ -1723,7 +1711,7 @@ export class LeadsComponent
               ...JSON.parse(dts),
             ]);
           } else formatDatas = dts;
-          debugger;
+
           customData = {
             refID: data.processID,
             refType: 'DP_Processes',
@@ -1777,14 +1765,11 @@ export class LeadsComponent
           this.notificationsService.notifyCode('ES028');
           return;
         }
-        if (category.eSign) {
-          //kys soos
-        } else {
-          this.release(data, category);
-        }
+        //ko phân biệt eSign
+        this.release(data, category);
       });
   }
-  release(data: any, category: any) {
+  release(data: any, category: any, exportData = null) {
     //duyet moi
     this.codxShareService.codxReleaseDynamic(
       this.view.service,
@@ -1793,7 +1778,13 @@ export class LeadsComponent
       this.view.formModel.entityName,
       this.view.formModel.funcID,
       data?.title,
-      this.releaseCallback.bind(this)
+      this.releaseCallback.bind(this),
+      null,
+      null,
+      null,
+      null,
+      null,
+      exportData
     );
   }
   //call Back
@@ -1895,5 +1886,49 @@ export class LeadsComponent
       this.funcIDCrr.customName.charAt(0).toLocaleLowerCase() +
       this.funcIDCrr.customName.slice(1)
     );
+  }
+
+  //Export----------------------------------------------------//
+  exportTemplet(e, data) {
+    this.api
+      .execSv<any>(
+        'CM',
+        'CM',
+        'LeadsBusiness',
+        'GetDataSourceExportAsync',
+        data.recID
+      )
+      .subscribe((str) => {
+        if (str && str?.length > 0) {
+          let dataSource = '[' + str[0] + ']';
+          if (str[1]) {
+            let datas = str[1];
+            if (datas && datas.includes('[{')) datas = datas.substring(2);
+            let fix = str[0];
+            fix = fix.substring(1, fix.length - 1);
+            dataSource = '[{ ' + fix + ',' + datas;
+          }
+
+          let customData = {
+            refID: data.recID,
+            refType: this.view.entityName,
+            dataSource: dataSource,
+          };
+          if (data?.refID && data.applyProcess) {
+            customData.refID = data.processID;
+            customData.refType = 'DP_Processes';
+          }
+          this.codxShareService.defaultMoreFunc(
+            e,
+            data,
+            this.afterSave,
+            this.view.formModel,
+            this.view.dataService,
+            this,
+            customData
+          );
+          this.detectorRef.detectChanges();
+        }
+      });
   }
 }

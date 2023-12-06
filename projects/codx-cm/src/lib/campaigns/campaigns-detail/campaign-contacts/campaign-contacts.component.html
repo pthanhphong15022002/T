@@ -29,7 +29,7 @@
       (onDoubleClick)="clickNavigate($event)"
     ></codx-gridview-v2>
   </div>
-  <div [class]="'d-flex justify-content-center mt-1'">
+  <div class="d-flex justify-content-center mt-1">
     <button
       type="button"
       class="btn btn-sm btn-icon btn-primary d-flex"
@@ -197,24 +197,24 @@
   <div class="d-flex align-items-end codx-badge" *ngIf="objectType == '3'">
     <div
       *ngIf="
-        data.leadStatus == '2' && getStepToStatus(data.objectID)?.applyProcess;
+        data.leadStatus == '2' && data.objectID | formatStatus : lstLeads : lstProcesss : 'applyProcess';
         else statusDefault
       "
       [ngStyle]="{
-        'background-color': getStepToStatus(data.objectID)?.backgroundColor
+        'background-color': data.objectID | formatStatus : lstLeads : lstProcesss : 'backgroundColor'
       }"
       class="me-1 badge badge-sm d-flex align-items-center mw-125px"
     >
       <span
-        [ngClass]="getStepToStatus(data.objectID)?.icon"
-        [ngStyle]="{ color: getStepToStatus(data.objectID)?.iconColor }"
+        [ngClass]="data.objectID | formatStatus : lstLeads : lstProcesss : 'icon'"
+        [ngStyle]="{ color: data.objectID | formatStatus : lstLeads : lstProcesss : 'iconColor' }"
         class="me-1"
       ></span>
       <span
         class="text-ellipsis line-clamp line-clamp-1"
-        [ngbTooltip]="getStepToStatus(data.objectID)?.currentStepName"
-        [ngStyle]="{ color: getStepToStatus(data.objectID)?.textColor }"
-        [innerHTML]="getStepToStatus(data.objectID)?.currentStepName"
+        [ngbTooltip]="data.objectID | formatStatus : lstLeads : lstProcesss : 'currentStepName'"
+        [ngStyle]="{ color: data.objectID | formatStatus : lstLeads : lstProcesss : 'textColor' }"
+        [innerHTML]="data.objectID | formatStatus : lstLeads : lstProcesss : 'currentStepName'"
       ></span>
     </div>
     <ng-template #statusDefault>

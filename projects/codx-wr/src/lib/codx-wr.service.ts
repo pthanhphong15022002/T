@@ -78,4 +78,14 @@ export class CodxWrService {
         })
       );
   }
+
+  getDefault(service, funcID, entityName) {
+    return this.api.execSv<any>(
+      service,
+      'Core',
+      'DataBusiness',
+      'GetDefaultAsync',
+      [funcID, entityName]
+    );
+  }
 }

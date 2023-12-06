@@ -90,8 +90,8 @@ export class CodxDashboardComponent implements OnInit, AfterViewInit {
             const chartObj = elePanel.querySelector('ejs-accumulationchart')
               .ej2_instances[0];
             if (event.target.innerWidth < window.screen.width) {
-              chartObj.height = '60%';
-              chartObj.width = '80%';
+              chartObj.height = '80%';
+              chartObj.width = '100%';
             } else {
               chartObj.height = '80%';
               chartObj.width = '100%';
@@ -289,6 +289,27 @@ export class CodxDashboardComponent implements OnInit, AfterViewInit {
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
+
+    if(document.querySelector('.btn-minimize')){
+      let libLayout = document.querySelector('.codx-layout-form.codx-theme');
+      if(libLayout){
+        libLayout.setAttribute('data-kt-aside-minimize','on');
+        let aside = document.querySelector('#kt_aside_menu');
+        if(aside){
+          let timeout:any;
+          new ResizeObserver(() => {
+              timeout && clearTimeout(timeout);
+             timeout = setTimeout(()=>{
+              if(this.objDashboard) this.objDashboard.refresh();
+            },200)
+          }).observe(aside);
+        }
+        if(!document.querySelector('.btn-minimize').classList.contains('active'))
+        document.querySelector('.btn-minimize').classList.add('active')
+      }
+
+
+    }
     this.dialog = dialog;
     if (dt?.data) {
       this.dataItem = dt?.data[0];
@@ -683,10 +704,9 @@ export class CodxDashboardComponent implements OnInit, AfterViewInit {
   }
 
   onCreate($event: any) {
-    console.log(document.getElementsByClassName('icon-close icon-18'));
+    //console.log(document.getElementsByClassName('icon-close icon-18'));
 
     // document.getElementsByClassName('icon-close icon-18')[document.getElementsByClassName('icon-close icon-18').length -1]?.remove();
-
 
     if (this.panels && this.panels.length > 0) {
       if (!this.objDashboard) {

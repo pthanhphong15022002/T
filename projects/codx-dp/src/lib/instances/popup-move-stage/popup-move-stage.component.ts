@@ -144,6 +144,7 @@ export class PopupMoveStageComponent implements OnInit {
       this.instanceCM = this.datas?.deal;
       this.isLoad = true;
       this.isCallInstance = this.dataCM?.isCallInstance ?? false;
+      // this.isMoveBackStage = !['1', '2', '15'].includes(this.instanceCM?.status);
     }
     this.stepID = this.dataCM
       ? this.dataCM?.stepID
@@ -245,16 +246,11 @@ export class PopupMoveStageComponent implements OnInit {
 
   async getListParticipants(permissions) {
     if (permissions != null && permissions.length > 0) {
-      this.lstParticipants = permissions.filter((x) => x.roleType === 'P');
-      if (this.lstParticipants != null && this.lstParticipants.length > 0) {
-        this.lstParticipants = await this.codxDpService.getListUserByOrg(
-          this.lstParticipants
-        );
-        this.lstParticipants = this.lstParticipants.map((x) => {
-          return { userID: x.userID, userName: x.userName };
-        });
-        this.isChanged = true;
-      }
+      this.lstParticipants = permissions ;
+      this.isChanged = true;
+    }
+    else {
+      this.lstParticipants = [];
     }
   }
 
@@ -484,7 +480,6 @@ export class PopupMoveStageComponent implements OnInit {
       this.actionBack,
       this.listStepsCbx,
     ];
-    this.isLockStep = true;
     this.codxDpService.moveStageBackInstance(data).subscribe((res) => {
       if (res) {
         this.instance = res[0];

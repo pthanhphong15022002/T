@@ -1,6 +1,6 @@
 <codx-views class="ac-views" #view idField="recID" [views]="views" [button]="button" [entityName]="view.entityName"
   (buttonClick)="toolbarClick($event)" [predicates]="runmode == '1' ? '' : 'JournalNo=@0'" assemblyName="AC"
-  className="CashReceiptsBusiness" service="AC" method="GetDataAsync" idField="recID"
+  className="CashReceiptsBusiness" service="AC" method="GetDataAsync" idField="recID" [hideMoreFuncs]="!itemSelected"
   (changeDataMF)="changeMFDetail($event, itemSelected,'viewdetail')" (clickMF)="clickMoreFunction($event, itemSelected)"
   [dataValues]="runmode == '1' ? '' : journalNo" (selectedChange)="onSelectedItem($event)" [isSubView]="true">
 </codx-views>
@@ -19,7 +19,7 @@
   </codx-temp-full>
 </ng-template>
 <ng-template #templateDetailRight>
-  <ng-container *ngIf="itemSelected">
+  <ng-container *ngIf="itemSelected && viewActive == ViewType.listdetail">
     <cashreciept-detail [formModel]="view.formModel" [dataService]="this.view.dataService" [dataItem]="itemSelected"
       [recID]="itemSelected?.recID" [baseCurr]="baseCurr" [journal]="journal" [headerText]="headerText"
       [gridViewSetup]="view?.gridViewSetup" [legalName]="legalName" [hideFields]="hideFields"
@@ -42,7 +42,7 @@
       </div>
       <div>
         <span class="fw-bold line-clamp line-clamp-1 fs-6 text-uppercase"
-          [innerHTML]="(data?.totalDR | tranformValueNumber : (data?.currencyID !=  baseCurr ? 'S' : 'B') | async)+' '+data?.currencyID"></span>
+          [innerHTML]="(data?.totalAmt | tranformValueNumber : (data?.currencyID !=  baseCurr ? 'S' : 'B') | async)+' '+data?.currencyID"></span>
       </div>
     </div>
     <div class="d-flex justify-content-between">
@@ -63,7 +63,13 @@
           view?.gridViewSetup["ObjectID"].headerText}}</span>
       </div>
     </div>
-    <div style="height: 35px !important" class="d-flex justify-content-between align-items-center">
+    <div class="d-flex justify-content-between">
+      <div class="d-flex">
+        <i class="icon-i-tags me-2 icon-16"></i>
+        <span class="text-gray-600 line-clamp line-clamp-1">{{data?.subType | vll : 'AC065' : 'text' | async}}</span>
+      </div>
+    </div>
+    <div class="d-flex justify-content-between align-items-center">
       <div class="d-flex align-items-end codx-badge">
         <codx-vll *ngIf="data?.status == '1'" [formModel]="view.formModel" [field]="'Status'"
           [value]="data?.validated ? '1' : '7'" [showText]="true" [showBgColor]="true"
@@ -96,7 +102,8 @@
 <ng-template #listTemplate let-data>
   <codx-temp-full [titleTmp]="listtitleTmp" cardCss="card-template border-bottom p-3" [formModel]="view.formModel"
     [modeImgs]="true" [titleLine]="2" [dataItem]="data" [hideMF]="false" [typeMF]="'hover'" moreFuncCss="mt-5"
-    (changeDataMF)="changeMFDetail($event, data,'viewgrid')" (clickMF)="clickMoreFunction($event, data)">
+    [hideMF]="codxService.asideMode == '2'" (changeDataMF)="changeMFDetail($event, data,'viewgrid')"
+    (clickMF)="clickMoreFunction($event, data)">
   </codx-temp-full>
 </ng-template>
 <ng-template #listtitleTmp let-data>

@@ -25,6 +25,7 @@ import {
   AlertConfirmInputConfig,
   DialogRef,
   AuthStore,
+  DataRequest,
 } from 'codx-core';
 import { CodxCmService } from '../codx-cm.service';
 import { PopupAddDealComponent } from './popup-add-deal/popup-add-deal.component';
@@ -33,12 +34,14 @@ import { PopupMoveStageComponent } from 'projects/codx-dp/src/lib/instances/popu
 import { DealDetailComponent } from './deal-detail/deal-detail.component';
 import { PopupMoveReasonComponent } from 'projects/codx-dp/src/lib/instances/popup-move-reason/popup-move-reason.component';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
-import { firstValueFrom } from 'rxjs';
+import { finalize, firstValueFrom, map } from 'rxjs';
 import { PopupBantDealComponent } from './popup-bant-deal/popup-bant-deal.component';
 import { PopupPermissionsComponent } from '../popup-permissions/popup-permissions.component';
 import { PopupAssginDealComponent } from './popup-assgin-deal/popup-assgin-deal.component';
 import { PopupUpdateStatusComponent } from './popup-update-status/popup-update-status.component';
 import { StepService } from 'projects/codx-share/src/lib/components/codx-step/step.service';
+import { ExportData } from 'projects/codx-share/src/lib/models/ApproveProcess.model';
+import { Internationalization } from '@syncfusion/ej2-base';
 
 @Component({
   selector: 'lib-deals',
@@ -99,6 +102,7 @@ export class DealsComponent
   @Input() dataObj?: any;
   @Input() showButtonAdd = false;
   kanban: any;
+  viewGird: any;
 
   // config api get data
   service = 'CM';
@@ -173,6 +177,10 @@ export class DealsComponent
   queryParams: any;
   gridDetailView = '2';
   runMode: any;
+  filterView: any;
+  columns: any;
+  loadFirst: boolean = true;
+  totalView: string;
 
   constructor(
     private inject: Injector,
@@ -321,6 +329,7 @@ export class DealsComponent
 
     if (this.viewCrr == 6) {
       this.kanban = (this.view?.currentView as any)?.kanban;
+      this.columns = this.kanban.columns;
     }
 
     this.processID = this.activedRouter.snapshot?.queryParams['processID'];
@@ -427,9 +436,7 @@ export class DealsComponent
     let isOwner = (eventItem, data) => {
       eventItem.disabled =
         data?.alloweStatus == '1'
-          ? !['1', '2', '15'].includes(data.status) ||
-            data.closed ||
-            ['1', '0'].includes(data.status)
+          ? !['1', '2', '15'].includes(data.status) || data.closed
           : true;
     };
     let isConfirmOrRefuse = (eventItem, data) => {
@@ -462,14 +469,22 @@ export class DealsComponent
       eventItem.disabled = !data.assign && !data.allowPermit ? true : false;
     };
 
-    let isDisCRd = (eventItem, data) => {
+    let isDisable = (eventItem, data) => {
       eventItem.disabled = true;
     };
     let isChangeStatus = (eventItem, data) => {
       eventItem.disabled = data?.alloweStatus == '1' ? false : true;
     };
+    let isMoveReason = (eventItem, data) => {
+      eventItem.disabled =
+      data?.alloweStatus == '1'
+        ? (data.closed && data?.status != '1') ||
+          ['1', '0', '15'].includes(data?.status) ||
+          this.checkMoreReason(data,false)
+        : true;
+    };
     functionMappings = {
-      ...['CM0201_1', 'CM0201_3', 'CM0201_4', 'CM0201_5'].reduce(
+      ...['CM0201_1','CM0201_3', 'CM0201_4', 'CM0201_5'].reduce(
         (acc, code) => ({ ...acc, [code]: isDisabled }),
         {}
       ),
@@ -478,10 +493,11 @@ export class DealsComponent
         {}
       ),
       ...['SYS101', 'SYS103', 'SYS104', 'SYS102'].reduce(
-        (acc, code) => ({ ...acc, [code]: isDisCRd }),
+        (acc, code) => ({ ...acc, [code]: isDisable }),
         {}
       ),
-
+      CM0201_3:isMoveReason,
+      CM0201_4:isMoveReason,
       CM0201_2: isStartDay, // bắt đầu
       CM0201_6: isApprovalTrans, //xet duyet
       CM0201_7: isOwner,
@@ -555,7 +571,8 @@ export class DealsComponent
     });
   }
 
-  checkMoreReason(data) {
+  checkMoreReason(data,isShow:boolean = true) {
+    // if (data?.isAdminAll && isShow) return false;
     return data?.status != '1' && data?.status != '2' && data?.status != '15';
   }
   clickMF(e, data) {
@@ -579,7 +596,7 @@ export class DealsComponent
       CM0201_13: () => this.confirmOrRefuse(false, data),
       CM0201_14: () => this.openFormBANT(data),
       CM0201_16: () => this.cancelApprover(data),
-      // SYS002: () => this.exportFiles(e, data),
+      SYS002: () => this.exportTemplet(e, data),
       CM0201_15: () => this.popupPermissions(data),
       CM0201_17: () => this.openFormChangeStatus(data),
       CM0201_18: () => this.addTask(data),
@@ -589,25 +606,25 @@ export class DealsComponent
     if (executeFunction) {
       executeFunction();
     } else {
-      let customData = {
-        refID: data.recID,
-        refType: 'CM_Deals',
-      };
+      // let customData = {
+      //   refID: data.recID,
+      //   refType: 'CM_Deals',
+      // };
 
-      if (data?.refID) {
-        customData = {
-          refID: data.processID,
-          refType: 'DP_Processes',
-        };
-      }
+      // if (data?.refID) {
+      //   customData = {
+      //     refID: data.processID,
+      //     refType: 'DP_Processes',
+      //   };
+      // }
       this.codxShareService.defaultMoreFunc(
         e,
         data,
         this.afterSave.bind(this),
         this.view.formModel,
         this.view.dataService,
-        this,
-        customData
+        this
+        //customData
       );
       this.detectorRef.detectChanges();
     }
@@ -659,7 +676,14 @@ export class DealsComponent
         break;
       //chang fiter
       case 'pined-filter':
-        this.seclectFilter(e.data);
+        if (this.kanban) {
+          this.seclectFilter(e.data);
+        }
+        break;
+      //data load xong
+      case 'databound':
+        this.totalGirdView();
+        break;
     }
   }
 
@@ -798,7 +822,6 @@ export class DealsComponent
             // listStepCbx: this.lstStepInstances,
           };
           let obj = {
-            stepName: data?.currentStepName,
             formModel: formMD,
             deal: data,
             stepReason: stepReason,
@@ -819,7 +842,6 @@ export class DealsComponent
               let instance = e.event.instance;
               let listSteps = e.event?.listStep;
 
-              this.detailViewDeal?.reloadListStep(listSteps);
               let index =
                 e.event.listStep.findIndex(
                   (x) =>
@@ -857,7 +879,7 @@ export class DealsComponent
                   if (e.event.isReason != null) {
                     this.moveReason(res, e.event.isReason);
                   }
-
+                  this.detailViewDeal?.reloadListStep(listSteps);
                   this.detectorRef.detectChanges();
                 }
               });
@@ -896,22 +918,6 @@ export class DealsComponent
                 0,
                 "'" + data.dealName + "'"
               );
-              if (data.showInstanceControl === '1') {
-                this.view.dataService
-                  .update(this.dataSelected, true)
-                  .subscribe();
-              }
-              if (
-                data.showInstanceControl === '0' ||
-                data.showInstanceControl === '2'
-              ) {
-                this.view.dataService.remove(this.dataSelected).subscribe();
-                this.dataSelected = this.view.dataService.data[0];
-                this.view.dataService.onAction.next({
-                  type: 'delete',
-                  data: data,
-                });
-              }
               if (this.kanban) {
                 this.renderKanban(this.dataSelected);
               }
@@ -965,7 +971,6 @@ export class DealsComponent
     let oldStepId = data.stepID;
     let dataCM = {
       refID: data?.refID,
-      processID: data?.processID,
       stepID: data?.stepID,
       nextStep: data?.nextStep,
     };
@@ -975,6 +980,7 @@ export class DealsComponent
       isReason: isMoveSuccess,
       applyFor: '1',
       dataCM: dataCM,
+      processID: data?.processID,
       stepName: data.currentStepName,
       isMoveProcess: false,
     };
@@ -1079,7 +1085,7 @@ export class DealsComponent
       applyFor: '1',
       titleAction: this.titleAction,
       owner: data.owner,
-      startControl: data.steps.startControl,
+      //startControl: data.steps.startControl,
       applyProcess: true,
       buid: data.buid,
     };
@@ -1160,8 +1166,8 @@ export class DealsComponent
       functionModule: this.functionModule,
       currencyIDDefault: this.currencyIDDefault,
       exchangeRateDefault: this.exchangeRateDefault,
-      categoryCustomer:
-        action === 'add' ? '' : this.dataSelected?.categoryCustomer,
+      customerCategory:
+        action === 'add' ? '' : this.dataSelected?.customerCategory,
     };
     let dialogCustomDeal = this.callfc.openSide(
       PopupAddDealComponent,
@@ -1171,11 +1177,14 @@ export class DealsComponent
     dialogCustomDeal.closed.subscribe((e) => {
       if (e && e.event != null) {
         this.view.dataService.update(e.event, true).subscribe();
-        //up kaban
-        if (this.kanban) {
+        //up kaban nee đúng process
+        if (this.kanban && this.processIDKanban == e.event?.processID) {
           let dt = e.event;
           let money = dt.dealValue * dt.exchangeRate;
           this.renderTotal(dt.stepID, 'add', money);
+
+          // this.kanban?.updateCard(dt);
+          // this.kanban?.kanbanObj?.refreshHeader();
           this.kanban.refresh();
         }
         //   this.detailViewDeal.promiseAllAsync();
@@ -1207,7 +1216,7 @@ export class DealsComponent
           formMD: formMD,
           titleAction: this.formatTitleMore(this.titleAction),
           gridViewSetup: this.gridViewSetup,
-          categoryCustomer: this.dataSelected?.categoryCustomer,
+          customerCategory: this.dataSelected?.customerCategory,
         };
         let dialogCustomDeal = this.callfc.openSide(
           PopupAddDealComponent,
@@ -1227,6 +1236,10 @@ export class DealsComponent
               let money =
                 dt.dealValue * dt.exchangeRate - dealValueOld * exchangeRateOld;
               this.renderTotal(dt.stepID, 'add', money);
+
+              // this.kanban?.updateCard(dt);
+              // this.kanban?.kanbanObj?.refreshHeader();
+              // this.kanban.refreshUI();
               this.kanban.refresh();
             }
             if (this.detailViewDeal) {
@@ -1293,11 +1306,15 @@ export class DealsComponent
               if (this.kanban) {
                 let money = data.dealValue * data.exchangeRate;
                 this.renderTotal(data.stepID, 'minus', money);
-                this.kanban.refresh();
+                this.kanban?.refresh();
+
+                // //looix
+                // this.kanban?.kanbanObj?.refreshHeader();
+                // this.kanban?.kanbanObj.refreshUI();
               }
             }
+            this.changeDetectorRef.detectChanges();
           });
-        this.changeDetectorRef.detectChanges();
       }
     });
   }
@@ -1346,11 +1363,13 @@ export class DealsComponent
                 this.notificationsService.notifyCode('ES028');
                 return;
               }
-              if (res.eSign) {
-                //kys soos
-              } else {
-                this.release(dt, res);
-              }
+              //ko phân biệt eSign - nếu cần thì phải get
+              // let exportData: ExportData = {
+              //   funcID: this.view.formModel.funcID,
+              //   recID: this.dataSelected.recID,
+              //   data: dt?.datas,
+              // };
+              this.release(dt, res);
             });
         } else {
           this.notificationsService.notifyCode(
@@ -1363,7 +1382,7 @@ export class DealsComponent
     });
   }
 
-  release(data: any, category: any) {
+  release(data: any, category: any, exportData = null) {
     // new function release
     this.codxShareService.codxReleaseDynamic(
       this.view.service,
@@ -1372,7 +1391,13 @@ export class DealsComponent
       this.view.formModel.entityName,
       this.view.formModel.funcID,
       data?.title,
-      this.releaseCallback.bind(this)
+      this.releaseCallback.bind(this),
+      null,
+      null,
+      null,
+      null,
+      null,
+      exportData
     );
   }
   //call Back
@@ -1463,7 +1488,8 @@ export class DealsComponent
     let money = data.dealValue * data.exchangeRate;
     this.renderTotal(data.stepID, 'add', money);
     this.renderTotal(this.crrStepID, 'minus', money);
-    this.kanban.updateCard(data);
+    // this.kanban.updateCard(data);
+    // this.kanban?.kanbanObj?.refreshHeader();
     this.kanban.refresh();
   }
 
@@ -1572,7 +1598,7 @@ export class DealsComponent
         }
       });
       this.loadKanban();
-    }
+    } else this.refeshDealValue();
   }
 
   loadKanban() {
@@ -1597,9 +1623,9 @@ export class DealsComponent
           kanban.kanbanSetting?.swimlaneSettings,
           false
         );
+        this.loadFirst = true;
         kanban.refresh();
         this.kanban = kanban;
-        // if (this.kanban) this.kanban.refresh();
         this.detectorRef.detectChanges();
       });
   }
@@ -2013,4 +2039,121 @@ export class DealsComponent
       let task = await this.stepService.openPopupCodxTask(dataAddTask, 'right');
     }
   }
+
+  exportTemplet(e, data) {
+    this.api
+      .execSv<any>(
+        'CM',
+        'CM',
+        'DealsBusiness',
+        'GetDataSourceExportAsync',
+        data.recID
+      )
+      .subscribe((str) => {
+        if (str && str?.length > 0) {
+          let dataSource = '[' + str[0] + ']';
+          if (str[1]) {
+            let datas = str[1];
+            if (datas && datas.includes('[{')) datas = datas.substring(2);
+            let fix = str[0];
+            fix = fix.substring(1, fix.length - 1);
+            dataSource = '[{ ' + fix + ',' + datas;
+          }
+          var customData = {
+            refID: data.processID,
+            refType: 'DP_Processes',
+            dataSource: dataSource,
+          };
+          this.codxShareService.defaultMoreFunc(
+            e,
+            data,
+            this.afterSave,
+            this.view.formModel,
+            this.view.dataService,
+            this,
+            customData
+          );
+          this.detectorRef.detectChanges();
+        }
+      });
+  }
+
+  getTotalDealValue(e) {
+    let keyField = e.key;
+    let total = e.total;
+    if (this.kanban && this.kanban.columns?.length > 0) {
+      let idx = this.kanban.columns.findIndex((x) => x.keyField == keyField);
+      if (idx != -1 && this.kanban.columns[idx].totalDealValue != total) {
+        this.kanban.columns[idx].totalDealValue = total;
+      }
+      if (idx == this.kanban.columns?.length - 1) {
+        this.loadFirst = false;
+      }
+    }
+  }
+  loadedColumns(e) {
+    // this.loadFirst = e;
+  }
+
+  refeshDealValue() {
+    this.kanban.columns.forEach((x) => (x.totalDealValue = 0));
+    this.loadFirst = true;
+  }
+
+  //---------Tính tổng grid view-------------//
+  requestEnded(e) {
+    if (e.type == 'read') {
+      // this.totalGirdView();
+    }
+  }
+  totalGirdView() {
+    this.getTotal().subscribe((total) => {
+      let intl = new Internationalization();
+      let nFormatter = intl.getNumberFormat({
+        skeleton: 'n6',
+      });
+      this.totalView = nFormatter(total) + ' ' + this.currencyIDDefault;
+
+      if (!Number.parseFloat(total)) total = 0;
+      let objectDealValue = {
+        dealValue: total,
+      };
+      // this.view.currentView.sumData = objectDealValue;
+
+      // let elemnt = document.querySelector('.sum-content');
+      // if (elemnt) {
+      //   elemnt.innerHTML = this.totalView;
+      // }
+    });
+  }
+
+  getTotal() {
+    let service = 'CM';
+    let className = 'DealsBusiness'; //gan tam
+    let method = 'GetTotalDealValueAsync'; //gan tam
+    let gridModel = new DataRequest();
+    gridModel.formName = this.view.formModel.formName;
+    gridModel.entityName = this.view.formModel.entityName;
+    gridModel.funcID = this.view.formModel.funcID;
+    gridModel.gridViewName = this.view.formModel.gridViewName;
+    gridModel.pageLoading = false;
+    gridModel.onlySetPermit = false; //goi qua phan quyền pes
+    gridModel.filter = this.view.dataService.filter;
+
+    return this.api
+      .execSv<any>(service, service, className, method, [
+        gridModel,
+        this.exchangeRateDefault,
+      ])
+      .pipe(
+        finalize(() => {
+          /*  this.onScrolling = this.loading = false;
+          this.loaded = true; */
+        }),
+        map((response: any) => {
+          return response;
+        })
+      );
+  }
+  //---------------End----------------------//
 }

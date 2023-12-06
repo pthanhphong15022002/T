@@ -203,7 +203,7 @@
                     [formModel]="dialog.formModel">
                   </codx-label>
                   <div class="ac-input" >
-                    <codx-input *ngIf="formVouchers?.data?.subType == '0312'" [Group]="formVouchers?.formGroup" field="objectID" [formModel]="dialog.formModel">
+                    <codx-input *ngIf="formVouchers?.data?.subType == '0312'" [Group]="formVouchers?.formGroup" field="objectID" [formModel]="dialog.formModel" (valueChange)="valueChangeMaster($event)">
                     </codx-input>
                   </div>
                 </div>
@@ -286,7 +286,7 @@
 
 <!-- Start: Grid Vouchers -->
 <ng-template #TmpTabLine>
-  <div class="tablinevoucher-content scroll-ac header-table-ac position-relative">
+  <div class="tablinevoucher-content  header-table-ac position-relative">
     <codx-gridview-v2 #eleGridVouchers [showEmptyRecord]="false" gridLines="Both" [autoFitColumns]="false"
       [formName]="fmIssueVouchersLines.formName" [gridViewName]="fmIssueVouchersLines.gridViewName" [templateMore]="templateMore"
       [entityName]="fmIssueVouchersLines.entityName" predicates="TransID=@0" [dataValues]="formVouchers?.data?.recID"

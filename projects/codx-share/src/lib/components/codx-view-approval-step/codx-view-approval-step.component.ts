@@ -102,7 +102,7 @@ export class CodxViewApprovalStepComponent
                         }
                         if (curAp?.length > 0) {
                           ap.userIDs = curAp[0]?.userIDs;
-                          if(ap?.userIDs?.length ==0){
+                          if(ap?.userIDs == null ||ap?.userIDs?.length ==0){
                             ap.userID = curAp[0]?.userID;
                             ap.userName = curAp[0]?.userName;
                             ap.employeeID = curAp[0]?.employeeID;
@@ -115,6 +115,10 @@ export class CodxViewApprovalStepComponent
                   }                 
                   this.process = tempListStep?.sort((a,b)=> a?.stepNo - b?.stepNo);;  
                   this.cr.detectChanges();              
+                }                
+                else if(res[1]?.length>0){
+                  this.process = res[1];
+                  this.cr.detectChanges();  
                 }
                 else{
                   this.process=[];

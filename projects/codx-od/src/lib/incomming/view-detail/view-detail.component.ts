@@ -143,6 +143,13 @@ export class ViewDetailComponent
     //this.getGridViewSetup(this.funcID);
     this.userID = this.authStore.get().userID;
     if(this.codxService.asideMode == "2") this.hideMF = true;
+
+    if(this.recID)
+    {
+      this.getGridViewSetup(this.funcID);
+      this.getDtDis(this.recID)
+      this.getPermission(this.recID);
+    }
   }
 
   ngAfterViewInit(): void {
@@ -174,7 +181,8 @@ export class ViewDetailComponent
     if (
       changes?.dataItem &&
       !changes?.dataItem?.firstChange &&
-      changes?.dataItem?.currentValue != changes?.dataItem?.previousValue
+      changes?.dataItem?.currentValue != changes?.dataItem?.previousValue && 
+      !this.recID
     )
     {
       this.dataItem = changes?.dataItem?.currentValue;
@@ -760,6 +768,7 @@ export class ViewDetailComponent
         break;
       }
       //Chuyển
+      case 'ODT5201':
       case 'ODT101':
       case 'ODT5213': {
         /* if(this.checkOpenForm(funcID))
@@ -1311,7 +1320,7 @@ export class ViewDetailComponent
             //Xét quyền công văn
             if(e?.event[2] && e?.event[2].length > 0)
             {
-              if(!Array.isArray(datas?.permission)) datas.permission = [];
+              if(!Array.isArray(datas?.permissions)) datas.permissions = [];
 
               e?.event[2].forEach(elm => {
                 var per = 
@@ -1321,11 +1330,12 @@ export class ViewDetailComponent
                   objectID: elm.resourceID,
                   objectName: elm.resourceName,
                   objectType: "U",
+                  isActive: true,
                   read: true,
                   download: true,
                   share: true
                 }
-                datas.permission.push(per);
+                datas.permissions.push(per);
               });
             }
             //get tree task
@@ -1915,7 +1925,7 @@ export class ViewDetailComponent
           //xét duyệt
           this.release(datas, processID);
         // else
-        //   this.shareService
+        //   this.shareServicex
         //     .codxReleaseDynamic(
         //       this.view.service,
         //       datas,

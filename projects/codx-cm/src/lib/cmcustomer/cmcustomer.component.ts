@@ -385,8 +385,8 @@ export class CmCustomerComponent
   changeDataMF(e, data, type = 2) {
     if (e != null && data != null) {
       e.forEach((res) => {
+        if(type == 11) res.isbookmark = false;
         if (this.dataSelected != null) {
-          if (type == 11) res.isbookmark = false;
           if (data?.status != '99') {
             switch (res.functionID) {
               case 'SYS03':
@@ -511,7 +511,7 @@ export class CmCustomerComponent
             let lstContacts = e?.event[1];
             data.modifiedOn = new Date();
             this.dataSelected = JSON.parse(JSON.stringify(data));
-            this.view.dataService.update(data).subscribe();
+            this.view.dataService.update(data, true).subscribe();
             // this.customerDetail.loadTag(this.dataSelected);
             this.detectorRef.detectChanges();
             // this.customerDetail.listTab(this.funcID);
@@ -563,7 +563,7 @@ export class CmCustomerComponent
                 this.customerDetail.onChangeContact(lstContact);
                 this.customerDetail.onChangeAddress(lstAddress);
               }
-              this.view.dataService.update(data).subscribe();
+              this.view.dataService.update(this.dataSelected, true).subscribe();
               this.detectorRef.detectChanges();
             }
           });
@@ -620,7 +620,7 @@ export class CmCustomerComponent
                 let lstContacts = e?.event[1];
                 data.modifiedOn = new Date();
                 this.dataSelected = JSON.parse(JSON.stringify(data));
-                this.view.dataService.update(data).subscribe();
+                this.view.dataService.update(data, true).subscribe();
                 // this.customerDetail.loadTag(this.dataSelected);
                 this.detectorRef.detectChanges();
 
@@ -923,7 +923,7 @@ export class CmCustomerComponent
       )
       .closed.subscribe((e) => {
         if (e?.event && e?.event != null) {
-          this.view.dataService.update(e?.event).subscribe();
+          this.view.dataService.update(e?.event, true).subscribe();
           this.detectorRef.detectChanges();
         }
       });
@@ -956,7 +956,7 @@ export class CmCustomerComponent
                 this.dataSelected.contactType = null;
                 this.dataSelected.objectType = null;
                 this.dataSelected.objectName = null;
-                this.view.dataService.update(this.dataSelected).subscribe();
+                this.view.dataService.update(this.dataSelected, true).subscribe();
                 this.notiService.notifyCode('SYS008');
                 this.detectorRef.detectChanges();
               }
@@ -1000,7 +1000,7 @@ export class CmCustomerComponent
     this.dataSelected.provinceID = e ? e?.provinceID : null;
     this.dataSelected.districtID = e ? e?.districtID : null;
     this.dataSelected.wardID = e ? e?.wardID : null;
-    this.view.dataService.update(this.dataSelected).subscribe();
+    this.view.dataService.update(this.dataSelected, true).subscribe();
     this.detectorRef.detectChanges();
   }
 

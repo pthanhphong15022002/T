@@ -1,3 +1,4 @@
+import { CodxShareService } from 'projects/codx-share/src/public-api';
 import {
   ChangeDetectorRef,
   Component,
@@ -19,6 +20,7 @@ import {
   DialogModel,
   FormModel,
   NotificationsService,
+  SortModel,
   Util,
 } from 'codx-core';
 import { Observable, finalize, firstValueFrom, map } from 'rxjs';
@@ -34,7 +36,7 @@ import { PopupUpdateReasonCodeComponent } from '../../popup-update-reasoncode/po
 export class ViewTabUpdateComponent implements OnInit {
   @Input() transID: any;
   @Input() dataWorkOrder: any;
-  @Input() isShow: boolean
+  @Input() isShow: boolean;
   @Output() listChange = new EventEmitter<any>();
   @ViewChild('headerStatusCode') headerStatusCode: TemplateRef<any>;
   @ViewChild('tempStatusCode') tempStatusCode: TemplateRef<any>;
@@ -56,8 +58,11 @@ export class ViewTabUpdateComponent implements OnInit {
     formName: 'WRWorkOrderUpdates',
     gridViewName: 'grvWRWorkOrderUpdates',
     entityName: 'WR_WorkOrderUpdates',
-    funcID: 'WR0101',
+    funcID: 'WR0101_1',
   };
+
+  //sortField = new SortModel();
+
   editSettings: EditSettingsModel = {
     allowEditing: true,
     allowDeleting: true,
@@ -79,13 +84,15 @@ export class ViewTabUpdateComponent implements OnInit {
   columnsGrid = [];
   dataSelected: any;
   titleAction = '';
+  adjustWorkOrderUpdate = '0';
   constructor(
     private api: ApiHttpService,
     private cache: CacheService,
     private wrSv: CodxWrService,
     private detectorRef: ChangeDetectorRef,
     private callFc: CallFuncService,
-    private notiSv: NotificationsService
+    private notiSv: NotificationsService,
+    private codxShareService: CodxShareService
   ) {
     this.getGridViewSetup();
   }
@@ -105,8 +112,21 @@ export class ViewTabUpdateComponent implements OnInit {
     }
   }
 
-  ngOnInit(): void {
+  async ngOnInit() {
     // this.getGridViewSetup();
+    //this.sortField = new SortModel();
+    // this.sortField.field = 'statusCode';
+    // this.sortField.dir = 'asc';
+    var param = await firstValueFrom(
+      this.cache.viewSettingValues('WRParameters')
+    );
+    if (param?.length > 0) {
+      let dataParam = param.filter((x) => x.category == '1' && !x.transType)[0];
+      if (dataParam) {
+        let paramDefault = JSON.parse(dataParam.dataValue);
+        this.adjustWorkOrderUpdate = paramDefault['AdjustWorkOrderUpdate'] ?? '0';
+      }
+    }
   }
 
   ngAfterViewInit(): void {
@@ -122,7 +142,9 @@ export class ViewTabUpdateComponent implements OnInit {
     this.fetch().subscribe(async (item) => {
       this.loaded = true;
       this.lstUpdate = item;
-
+      if (this.grid) {
+        this.grid.dataSource = this.lstUpdate;
+      }
       // this.grid.dataSource = JSON.parse(JSON.stringify(this.lstUpdate));
 
       // this.columnsGrid = [
@@ -253,27 +275,6 @@ export class ViewTabUpdateComponent implements OnInit {
 
   //#region more
   async clickMF(e, data) {
-    var param = await firstValueFrom(
-      this.cache.viewSettingValues('WRParameters')
-    );
-    if (param?.length > 0) {
-      let dataParam = param.filter((x) => x.category == '1' && !x.transType)[0];
-      if (dataParam) {
-        let paramDefault = JSON.parse(dataParam.dataValue);
-        let time = paramDefault['AdjustWorkOrderUpdate'] ?? '1';
-        let createdOn = Number(new Date(data?.createdOn));
-        let currentDate = Number(new Date());
-        let timeDifferenceInHours =
-          (currentDate - createdOn) / (1000 * 60 * 60);
-
-        if (parseFloat(time) < timeDifferenceInHours) {
-          this.notiSv.notifyCode('Đã quá hạn nên không chỉnh sửa được');
-          return;
-        }
-        console.log(time);
-      }
-    }
-
     this.dataSelected = data;
     this.titleAction = e.text;
     switch (e.functionID) {
@@ -284,6 +285,15 @@ export class ViewTabUpdateComponent implements OnInit {
         this.delete(data);
         break;
       default:
+        this.codxShareService.defaultMoreFunc(
+          e,
+          data,
+          null,
+          this.formModel,
+          null,
+          this,
+          null
+        );
         break;
     }
     this.detectorRef.detectChanges();
@@ -296,6 +306,11 @@ export class ViewTabUpdateComponent implements OnInit {
         switch (res.functionID) {
           case 'SYS04':
             res.disabled = true;
+            break;
+          case 'SYS02':
+          case 'SYS03':
+            if (data?.exported || this.adjustWorkOrderUpdate == '0') res.disabled = true;
+
             break;
           default:
             break;
@@ -326,7 +341,7 @@ export class ViewTabUpdateComponent implements OnInit {
             engineerID: data?.engineerID,
             createdBy: this.dataWorkOrder?.createdBy,
             gridViewSetup: res,
-            action: 'edit'
+            action: 'edit',
           };
           this.callFc
             .openForm(
@@ -348,7 +363,7 @@ export class ViewTabUpdateComponent implements OnInit {
                 if (idx != -1) {
                   this.lstUpdate[idx] = data;
                 } else {
-                  this.lstUpdate.push(Object.assign({}, data));
+                  this.lstUpdate.unshift(data);
                 }
                 this.lstUpdate = JSON.parse(JSON.stringify(this.lstUpdate));
                 this.wrSv.listOrderUpdateSubject.next({

@@ -5,7 +5,7 @@ import { LayoutComponent } from './_layout/layout.component';
 import { WorkspaceComponent } from './workspace/workspace.component';
 import { CodxCoreModule } from 'codx-core';
 import { environment } from 'src/environments/environment';
-import { CodxShareModule } from 'projects/codx-share/src/public-api';
+//import { CodxShareModule } from 'projects/codx-share/src/public-api';
 import { ProgressAnnotationService } from '@syncfusion/ej2-angular-progressbar';
 import { CodxWsHeaderComponent } from './_layout/codx-ws-header/codx-ws-header.component';
 import { CalendarComponent } from './calendar/calendar.component';
@@ -68,6 +68,13 @@ import { PopupDetailComponent } from 'projects/codx-wp/src/lib/dashboard/home/li
 import { CvInformationComponent } from './workspace/AITool/cv-information/cv-information.component';
 import { CvEvaluateComponent } from './workspace/AITool/cv-evaluate/cv-evaluate.component';
 import { PersonalUsageHistoryComponent } from 'projects/codx-fd/src/lib/personal-usage-history/personal-usage-history.component';
+import { CodxEPModule } from 'projects/codx-ep/src/lib/codx-ep.module';
+import { CodxCommonModule } from "projects/codx-common/src/public-api";
+import { CodxViewWsComponent } from './codx-view-ws/codx-view-ws.component';
+import { CodxWpV2Module } from 'projects/codx-wp/src/lib/codx-wp-v2.module';
+import { AcModule } from 'projects/codx-ac/src/public-api';
+import { CodxHRModule } from 'projects/codx-hr/src/public-api';
+//import { CodxWpV2Module } from 'projects/codx-wp/src/lib/codx-wp-v2.module';
 const routes: Routes = [
   {
     path: '',
@@ -89,7 +96,7 @@ const routes: Routes = [
       },
       
       {
-        path: 'approvals/:funcID',
+        path: 'wsapprovals/:funcID',
         component: ApprovalsComponentWS,
       },
       {
@@ -112,11 +119,11 @@ const routes: Routes = [
         component: IncommingComponent,
       },
       {
-        path: 'dashboard/:funcID',
+        path: 'wsdashboard/:funcID',
         component: DashboardComponent,
       },
       {
-        path: 'report/:funcID',
+        path: 'wsreport/:funcID',
         component: ReportComponent,
       },
       // HR - QTNS - Đăng ký nghỉ phép
@@ -200,7 +207,7 @@ const routes: Routes = [
       //-----------Khai báo routing nghiệp vu---------------
       //-----------Khai báo routing báo cáo---------------
       {
-        path: 'report/detail/:funcID',
+        path: 'wsreport/detail/:funcID',
         component: CodxReportViewDetailComponent,
       },
       //-----------Khai báo routing báo cáo---------------
@@ -253,48 +260,57 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  declarations: [
-    CodxWsComponent,
-    LayoutComponent,
-    CodxWsHeaderComponent,
-    WpBreadcumComponent,
-    WorkspaceComponent,
-    HeaderComponent,
-    PersonalComponent,
-    MenuListComponent,
-    MasterDetailComponent,
-    ApprovalsComponent,
-    ApprovalsComponentWS,
-    MenuListApprovalComponent,
-    DashboardComponent,
-    ReportComponent,
-    RequestReviewComponent,
-    BookmarkComponent,
-    InformationComponent,
-    LoginSercurityComponent,
-    SercurityTOTPComponent,
-    AddUpdateNoteBookComponent,
-    AddUpdateStorageComponent,
-    DetailStorageComponent,
-    ExtendStorageComponent,
-    ExtendNoteBookComponent,
-    MyPageComponent,
-    ImgComponent,
-    VideoComponent,
-    CvInformationComponent,
-    CvEvaluateComponent,
-  ],
-  imports: [
-    CommonModule,
-    RouterModule.forChild(routes),
-    CodxCoreModule.forRoot({ environment }),
-    CodxShareModule,
-    AccordionModule,
-    NgbDropdownModule,
-    SpeedDialModule,
-    TooltipModule,
-    TabAllModule,
-  ],
-  exports: [RouterModule],
+    declarations: [
+        CodxWsComponent,
+        LayoutComponent,
+        CodxWsHeaderComponent,
+        WpBreadcumComponent,
+        WorkspaceComponent,
+        HeaderComponent,
+        PersonalComponent,
+        MenuListComponent,
+        MasterDetailComponent,
+        ApprovalsComponent,
+        ApprovalsComponentWS,
+        MenuListApprovalComponent,
+        DashboardComponent,
+        ReportComponent,
+        RequestReviewComponent,
+        BookmarkComponent,
+        InformationComponent,
+        LoginSercurityComponent,
+        SercurityTOTPComponent,
+        AddUpdateNoteBookComponent,
+        AddUpdateStorageComponent,
+        DetailStorageComponent,
+        ExtendStorageComponent,
+        ExtendNoteBookComponent,
+        MyPageComponent,
+        ImgComponent,
+        VideoComponent,
+        CvInformationComponent,
+        CvEvaluateComponent,
+        CodxViewWsComponent,
+    ],
+    exports: [RouterModule],
+    imports: [
+        CommonModule,
+        RouterModule.forChild(routes),
+        CodxCoreModule.forRoot({ environment }),
+        //CodxShareModule,
+        CodxEPModule,
+        CodxWpV2Module,
+        AcModule,
+        CodxHRModule,
+        //CodxWpModule,
+        //CodxWpV2Module,
+        
+        AccordionModule,
+        NgbDropdownModule,
+        SpeedDialModule,
+        TooltipModule,
+        TabAllModule,
+        CodxCommonModule
+    ]
 })
 export class CodxWsModule {}

@@ -1,7 +1,7 @@
 .wp-home {
   //max-width: 980px;
   margin: 0 auto;
-  padding-right: 30px;
+  padding-right: 20px; //van dang chinh
 
   [data-kt-aside-minimize="on"] .aside:not(.aside-hoverable) .aside-menu .menu-title,
   [data-kt-aside-minimize="on"] .aside:not(:hover) .aside-menu .menu-title {
@@ -81,7 +81,17 @@
     overflow: auto;
     
     .aside-menu{
-      width: 250px;    
+      //width: 250px;    //Van bo nha Chung
+      
+      .menu-title{
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        word-wrap: break-word;
+        display: block;
+        -webkit-line-clamp: 1;
+      }
     }
   }
   codx-aside-v1.aside.aside-transparent{

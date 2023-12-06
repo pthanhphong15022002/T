@@ -14,10 +14,10 @@ import {
   ApiHttpService,
   CRUDService,
   CacheService,
+  CodxService,
   FormModel,
   NotificationsService,
 } from 'codx-core';
-import { TabDetailCustomComponent } from './tab-detail-custom/tab-detail-custom.component';
 import { CodxCmService } from '../../codx-cm.service';
 import { CM_Contracts } from '../../models/cm_model';
 import { firstValueFrom } from 'rxjs';
@@ -48,8 +48,6 @@ export class DealDetailComponent implements OnInit {
   @Output() changeProgress = new EventEmitter<any>();
   @ViewChild('tabDetailView', { static: true })
   tabDetailView: TemplateRef<any>;
-  @ViewChild('tabDetailViewDetail')
-  tabDetailViewDetail: TabDetailCustomComponent;
   @ViewChild('popDetail') popDetail: TemplateRef<any>;
   @ViewChild('referencesDeal') referencesDeal: TemplateRef<any>;
   @ViewChild('loadContactDeal')
@@ -84,6 +82,7 @@ export class DealDetailComponent implements OnInit {
 
   viewTag: string = '';
   oldRecId: string = '';
+  asideMode: string = '';
   treeTask = [];
   grvSetupQuotation: any[] = [];
   grvSetupLead: any[] = [];
@@ -116,8 +115,10 @@ export class DealDetailComponent implements OnInit {
     private codxCmService: CodxCmService,
     private cache: CacheService,
     private notificationsService: NotificationsService,
-    private dealComponent: DealsComponent
+    private dealComponent: DealsComponent,
+    codxService: CodxService
   ) {
+    this.asideMode = codxService.asideMode;
     this.executeApiCalls();
   }
 
@@ -188,7 +189,7 @@ export class DealDetailComponent implements OnInit {
         if (this.oldRecId !== changes['dataSelected'].currentValue?.recID) {
           this.promiseAllAsync();
           this.hasRunOnce = true;
-          this.resetTab(this.dataSelected.categoryCustomer);
+          this.resetTab(this.dataSelected.customerCategory);
         }
         this.oldRecId = changes['dataSelected'].currentValue.recID;
         this.dataSelected = this.dataSelected;
@@ -215,12 +216,13 @@ export class DealDetailComponent implements OnInit {
   reloadListStep(listSteps: any) {
     this.isDataLoading = true;
     this.listSteps = listSteps;
+    this.getStepCurrent(this.dataSelected);
     this.isDataLoading = false;
     this.changeDetectorRef.detectChanges();
   }
   ngAfterViewChecked() {
     if (!this.hasRunOnce) {
-      this.resetTab(this.dataSelected?.categoryCustomer);
+      this.resetTab(this.dataSelected?.customerCategory);
     }
   }
 
@@ -284,7 +286,7 @@ export class DealDetailComponent implements OnInit {
         this.grvSetupQuotation = res[0];
         this.grvSetupContract = res[1];
         this.grvSetupLead = res[2];
-        this.listRoles = res[3].datas;
+        this.listRoles = res[3]?.datas;
       }
     });
   }
@@ -363,13 +365,14 @@ export class DealDetailComponent implements OnInit {
   // }
   async getViewDetailDeal() {
     if (this.dataSelected?.recID) {
-      let data = [this.dataSelected?.recID,this.dataSelected?.categoryCustomer];
+      let data = [this.dataSelected?.recID,this.dataSelected?.customerCategory];
       this.codxCmService.getViewDetailDealAsync(data).subscribe((res) => {
         if (res) {
           if(res[0] && res[0].length > 0 ) {
-              let contactMain = res.filter((res) => res.isDefault)[0];
+              let listContact = res[0];
+              let contactMain = listContact.filter(x=>x.isDefault)[0];
               this.contactPerson = contactMain ? contactMain : null;
-              this.loadContactDeal && this.loadContactDeal?.loadListContact(res);
+              this.loadContactDeal && this.loadContactDeal?.loadListContact(listContact);
           }
           else {
             this.contactPerson = null;
@@ -627,7 +630,7 @@ export class DealDetailComponent implements OnInit {
               $event?.action == 'delete' ? json : ''
             )
             .subscribe((res) => {});
-          if (this.listSteps != null && this.listSteps.length > 0) {
+          if (this.listSteps != null && this.listSteps?.length > 0) {
             for (var step of this.listSteps) {
               if (step?.fields != null && step?.fields?.length > 0) {
                 let idx = step?.fields?.findIndex(

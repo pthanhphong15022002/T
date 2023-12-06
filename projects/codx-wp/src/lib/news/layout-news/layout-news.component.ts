@@ -1,6 +1,11 @@
 import { Component, Injector, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ApiHttpService, CacheService, LayoutBaseComponent, PageTitleService } from 'codx-core';
+import {
+  ApiHttpService,
+  CacheService,
+  LayoutBaseComponent,
+  PageTitleService,
+} from 'codx-core';
 @Component({
   selector: 'lib-layout-news',
   templateUrl: './layout-news.component.html',
@@ -11,7 +16,7 @@ export class LayoutNewsComponent extends LayoutBaseComponent {
   category: string = 'home';
   funcID: string | null = '';
   userPermission: any = null;
-  title$ :any;
+  title$: any;
   constructor(
     private route: ActivatedRoute,
     private cache: CacheService,
@@ -19,8 +24,7 @@ export class LayoutNewsComponent extends LayoutBaseComponent {
     private api: ApiHttpService,
     private pageTitle: PageTitleService,
     inject: Injector
-  ) 
-  {
+  ) {
     super(inject);
     this.module = 'WP2';
     this.layoutModel.asideDisplay = false;
@@ -30,12 +34,11 @@ export class LayoutNewsComponent extends LayoutBaseComponent {
   onInit(): void {
     this.title$ = this.pageTitle.title.asObservable();
     this.getUserPermission('WPT022');
-    this.cache.valueList('WP002').subscribe((vll:any) => {
-      if(vll)
-      this.valueList = vll.datas;
+    this.cache.valueList('WP002').subscribe((vll: any) => {
+      if (vll) this.valueList = vll.datas;
     });
     let params = window.location.href.split('/');
-    if(params?.length > 0){
+    if (params?.length > 0) {
       this.category = params.pop();
     }
   }
@@ -50,8 +53,9 @@ export class LayoutNewsComponent extends LayoutBaseComponent {
           'ERM.Business.SYS',
           'CommonBusiness',
           'GetUserPermissionsAsync',
-          [funcID])
-          .subscribe((res: any) => {
+          [funcID]
+        )
+        .subscribe((res: any) => {
           if (res) {
             this.userPermission = res;
             this.dt.detectChanges();
@@ -69,10 +73,7 @@ export class LayoutNewsComponent extends LayoutBaseComponent {
         this.codxService.navigate('', 'wp2/news/settings/' + funcID);
         break;
       default:
-        this.codxService.navigate(
-          '',
-          `wp2/news/${funcID}/${this.category}`
-        );
+        this.codxService.navigate('', `wp2/news/${funcID}/${this.category}`);
         break;
     }
     this.dt.detectChanges();

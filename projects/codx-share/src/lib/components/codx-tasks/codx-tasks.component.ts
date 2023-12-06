@@ -1199,7 +1199,8 @@ export class CodxTasksComponent
     if (
       this.funcID == 'TMT0206' ||
       this.funcID == 'MWP0063' ||
-      this.moreFunction?.length == 0
+      this.moreFunction?.length == 0 ||
+      !this.validateDropKaban(data, this.crrStatus, data.status) // chan keo kanban
     ) {
       data.status = this.crrStatus;
       return;
@@ -1858,6 +1859,7 @@ export class CodxTasksComponent
               data.status == '90' ||
               this.funcID == 'TMT0402' ||
               this.funcID == 'TMT0401' ||
+              this.funcID == 'TMT0403' ||
               this.funcID == 'TMT0206' ||
               this.funcID == 'MWP0063' ||
               ((this.funcID == 'TMT03011' || this.funcID == 'TMT05011') &&
@@ -1874,6 +1876,7 @@ export class CodxTasksComponent
               data.status == '90' ||
               this.funcID == 'TMT0402' ||
               this.funcID == 'TMT0401' ||
+              this.funcID == 'TMT0403' ||
               this.funcID == 'TMT0206' ||
               this.funcID == 'MWP0063' ||
               ((this.funcID == 'TMT03011' || this.funcID == 'TMT05011') &&
@@ -1889,10 +1892,12 @@ export class CodxTasksComponent
               this.funcID == 'TMT0206' ||
               this.funcID == 'MWP0063' ||
               this.funcID == 'TMT0402' ||
-              this.funcID == 'TMT0401'
+              this.funcID == 'TMT0401' ||
+              this.funcID == 'TMT0403'
             )
               x.disabled = true;
             break;
+
           //ẩn more theo yêu cầu
           //Hoàn tất
           case 'TMT02011':

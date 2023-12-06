@@ -260,6 +260,7 @@ export class CreateFolderComponent implements OnInit {
   fieldUpdate = '';
   showPopup = false;
   edit = false;
+  isAddFolder = false;
   constructor(
     private folderService: FolderService,
     private api: ApiHttpService,
@@ -276,7 +277,8 @@ export class CreateFolderComponent implements OnInit {
   ) {
     this.user = this.auth.get();
     this.dialog = dialog;
-    this.titleDialog = data.data.title;
+    this.titleDialog = data?.data?.title;
+    this.isAddFolder =  data?.data?.isAddFolder;
     this.id = data.data.id ?? this.dmSV.folderID;
     this.propertiesFolder = data?.data?.readonly;
     if (data.data.id) this.edit = true;
@@ -663,8 +665,7 @@ export class CreateFolderComponent implements OnInit {
     this.fileEditing.recID = this.id;
     this.fileEditing.location = this.location;
     this.fileEditing.hasSubFolder = this.createSubFolder;
-    this.fileEditing.checkSecurity =
-      this.security == null ? false : this.security;
+    this.fileEditing.checkSecurity = this.security == null ? false : this.security;
     this.fileEditing.approvers = this.approvers;
     this.fileEditing.revisionNote = this.revisionNote;
     this.fileEditing.icon = this.icon;
@@ -673,7 +674,8 @@ export class CreateFolderComponent implements OnInit {
     this.fileEditing.isAlert = this.alert;
     this.fileEditing.isEmail = this.email;
     var that = this;
-    if (!this.edit) {
+    if (!this.edit) 
+    {
       this.fileEditing.folderType = this.dmSV.idMenuActive;
       this.folderService.addFolder(this.fileEditing).subscribe(async (res) => {
         if (res.status == 0) {
@@ -684,9 +686,9 @@ export class CreateFolderComponent implements OnInit {
           this.setFolderAS(this.fileEditing);
           that.dmSV.listFolder = folders;
           that.dmSV.ChangeDataView.next(true);
-          that.dmSV.addFolder.next(res.data);
+          if(!this.isAddFolder) that.dmSV.addFolder.next(res.data);
           that.changeDetectorRef.detectChanges();
-          this.dialog.close();
+          this.dialog.close(res.data);
           this.dmSV.fileEditing.next(null);
         } else {
           this.message = res.message;

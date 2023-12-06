@@ -23,6 +23,7 @@ export const environment = {
   layout: {
     title: '',
     icon: '',
+    logo: '',
   },
   asideMode: '1',
   externalLogin: {

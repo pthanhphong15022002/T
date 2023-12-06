@@ -1,4 +1,656 @@
-<div class="py-5">
+<ng-container>
+  <codx-layout-add
+    #formlayoutadd
+    [title]="headerTest"
+    [subHeader]="subHeader"
+    [tabInfo]="tabInfo"
+    [tabContent]="tabContent"
+    [openMore]="true"
+    [dialog]="dialog"
+    [formModel]="dialog.formModel"
+    [footer]="footer"
+  ></codx-layout-add>
+  <!-- [data]="contracts" -->
+  <ng-template #information>
+    <ng-container
+      [ngTemplateOutlet]="informationTemp"
+      [ngTemplateOutletContext]="{ $implicit: formlayoutadd }"
+    ></ng-container>
+  </ng-template>
+  <ng-template #reference>
+    <ng-container
+      [ngTemplateOutlet]="referenceTemp"
+      [ngTemplateOutletContext]="{ $implicit: formlayoutadd }"
+    ></ng-container>
+  </ng-template>
+
+  <ng-template #extend>
+    <ng-container
+      [ngTemplateOutlet]="extendTemp"
+      [ngTemplateOutletContext]="{ $implicit: formlayoutadd }"
+    ></ng-container>
+  </ng-template>
+  <ng-template #task>
+    <ng-container
+      [ngTemplateOutlet]="taskTemp"
+      [ngTemplateOutletContext]="{ $implicit: formlayoutadd }"
+    ></ng-container>
+  </ng-template>
+</ng-container>
+
+<ng-template #subHeader let-form>
+  <!-- <codx-tag
+    field="tags"
+    [entityName]="dialog.formModel.entityName"
+    [isEdit]="true"
+    [disabled]="false"
+    [value]="contracts?.tags"
+    (valueChange)="valueTagChange($event)"
+  ></codx-tag> -->
+</ng-template>
+
+<ng-template #taskTemp let-form>
+  <div class="form-group step-name w-100">
+    <div>
+      <codx-label
+        fiedName="taskName"
+        [formModel]="frmModelInstancesTask"
+        default="Tên công việc"
+      >
+      </codx-label>
+    </div>
+    <codx-input
+      field="taskName"
+      [formModel]="frmModelInstancesTask"
+      type="text"
+      [crrValue]="stepsTasks?.taskName"
+      [disabled]="stepsTasks?.isTaskDefault"
+      (valueChange)="changeValueTextTask($event)"
+      >
+    </codx-input>
+  </div>
+
+  <div class="form-group d-flex justify-content-between" *ngIf="stepsTasks?.endDate && stepsTasks?.endDate">
+    <div class="me-2">
+      <codx-label
+        fiedName="startDate"
+        [formModel]="frmModelInstancesTask"
+        default="Ngày bắt đầu"
+      >
+      </codx-label>
+      <codx-input
+        field="startDate"
+        [crrValue]="stepsTasks?.startDate"
+        type="datetime"
+        format="F"
+        [disabled]="stepsTasks?.isTaskDefault"
+        (valueChange)="changeValueDateTask($event)"
+        >
+      </codx-input>
+    </div>
+    <div class="ms-2">
+      <codx-label
+        fiedName="endDate"
+        [formModel]="frmModelInstancesTask"
+        default="Ngày kết thúc"
+      >
+      </codx-label>
+      <codx-input
+        field="endDate"
+        [crrValue]="stepsTasks?.endDate"
+        type="datetime"
+        format="F"
+        (valueChange)="changeValueDateTask($event)"
+        >
+      </codx-input>
+    </div>
+  </div>
+  <div class="form-group">
+    <div class="d-flex justify-content-between row">
+      <div class="col-6">
+        <codx-label
+          fiedName="durationDay"
+          [formModel]="frmModelInstancesTask"
+          default="Thời lượng công việc"
+        >
+        </codx-label>
+        <div class="d-flex justify-content-between row">
+          <div class="col-6 position-relative">
+            <codx-input
+              field="durationDay"
+              [crrValue]="stepsTasks?.durationDay"
+              (valueChange)="changeValueTextTask($event)"
+              [disabled]="stepsTasks?.isTaskDefault"
+              type="number"
+              min="0"
+            >
+            </codx-input>
+            <div
+              class="position-absolute text-gray-400"
+              style="top: 8px; right: 14px"
+            >
+              <codx-label
+                name="titleDate"
+                [formModel]="form?.formModel"
+                default="Ngày"
+              >
+              </codx-label>
+            </div>
+          </div>
+
+          <div class="col-6 position-relative">
+            <codx-input
+              field="durationHour"
+              [crrValue]="stepsTasks?.durationHour"
+              (valueChange)="changeValueTextTask($event)"
+              type="number"
+              min="0"
+              [disabled]="stepsTasks?.isTaskDefault"
+            >
+            </codx-input>
+            <div
+              class="position-absolute text-gray-400"
+              style="top: 8px; right: 14px"
+            >
+              <codx-label
+                name="titleHour"
+                [formModel]="frmModelInstancesTask"
+                default="Giờ"
+              >
+              </codx-label>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-6 ps-1">
+        <codx-label
+          fiedName="reminders"
+          [formModel]="frmModelInstancesTask"
+          default="Nhắc nhở trước khi bắt đầu"
+        >
+        </codx-label>
+        <div>
+          <codx-input
+            field="reminders"
+            [formModel]="frmModelInstancesTask"
+            [crrValue]="stepsTasks?.reminders"
+            refValue="DP030"
+            type="valuelist"
+            (valueChange)="changeValueTextTask($event)"
+            [disabled]="stepsTasks?.isTaskDefault"
+          >
+          </codx-input>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="form-group">
+    <div class="d-flex align-items-center">
+      <codx-label
+        fiedName="ApproveRule"
+        [formName]="'DPProcesses'"
+        [gridViewName]="'grvDPProcesses'"
+      >
+      </codx-label>
+      <div class="me-3 pt-1 ms-2">
+        <codx-input
+          type="switch"
+          class="test-check"
+          [checked]="stepsTasks?.approveRule"
+          field="approveRule"
+          (valueChange)="valueChangeAlertTask($event)"
+          >
+        </codx-input>
+      </div>
+      <button
+        type="button"
+        class="btn btn-icon btn-sm btn-light-primary ms-"
+        [disabled]="!stepsTasks?.approveRule "
+        (click)="clickSettingApprove()"
+        >
+        <i class="icon-settings icon-16"></i>
+      </button>
+      <!-- || stepsTasks?.isTaskDefault -->
+    </div>
+    <!-- <div class="ms-2 mt-1">
+      <codx-view-approve *ngIf="stepsTasks?.approveRule" [listApprover]="listApproverView" type="1"></codx-view-approve>
+    </div> -->
+  </div>
+</ng-template>
+
+<ng-template #footer let-form>
+  <div class="d-flex justify-content-between">
+    <div></div>
+    <button
+      type="button"
+      button
+      class="btn btn-primary ms-1"
+      (click)="save()"
+    >
+      <codx-label default="Lưu"></codx-label>
+    </button>
+  </div>
+</ng-template>
+
+<ng-template #dataIsEmpty>
+  <codx-no-data> </codx-no-data>
+</ng-template>
+
+<ng-template #informationTemp let-form>
+  <div class="row">
+    <div class="col-6">
+      <div class="form-group">
+        <codx-label
+          [formModel]="dialog?.formModel"
+          fiedName="contractID"
+          default="Mã hợp đồng"
+        >
+        </codx-label>
+        <codx-input
+          [formModel]="dialog?.formModel"
+          field="contractID"
+          [crrValue]="contracts?.contractID"
+          [placeholder]="planceHolderAutoNumber ?? grvSetup['ContractID'].headerText"
+          [disabled]="disabledShowInput || action === 'edit'"
+          (valueChange)="changeAutoNum($event)"
+        ></codx-input>
+      </div>
+    </div>
+
+    <div class="col-6">
+      <div class="form-group">
+        <codx-label
+          [formModel]="dialog?.formModel"
+          fiedName="contractDate"
+          default="Ngày tạo hợp đồng"
+        ></codx-label>
+        <codx-input
+          field="contractDate"
+          type="datetime"
+          [crrValue]="contracts?.contractDate"
+          (valueChange)="changeValueDate($event)"
+        ></codx-input>
+      </div>
+    </div>
+  </div>
+
+  <div class="row form-group">
+    <div class="col-6">
+      <codx-label
+        [formModel]="dialog?.formModel"
+        fiedName="contractType"
+        default="Loại hợp đồng"
+      ></codx-label>
+      <codx-input
+        [formModel]="dialog?.formModel"
+        field="contractType"
+        [crrValue]="contracts?.contractType"
+        (valueChange)="valueChangeCombobox($event)"
+      >
+      </codx-input>
+    </div>
+    <div class="col-6">
+      <codx-label
+        [formModel]="dialog?.formModel"
+        fiedName="businessLineID"
+        default="Dòng sản phẩm"
+      ></codx-label>
+      <codx-input
+        [formModel]="dialog?.formModel"
+        field="businessLineID"
+        [crrValue]="contracts?.businessLineID"
+        (valueChange)="valueChangeCombobox($event)"
+        [disabled]="action == 'edit'"
+      >
+      </codx-input>
+    </div>
+  </div>
+
+  <div class="row form-group">
+    <codx-label
+      [formModel]="dialog?.formModel"
+      fiedName="contractName"
+      default="Tên hợp đồng"
+    ></codx-label>
+    <codx-input
+      [formModel]="dialog?.formModel"
+      field="contractName"
+      type="text"
+      [crrValue]="contracts?.contractName"
+      (valueChange)="valueChangeText($event)"
+    >
+    </codx-input>
+  </div>
+
+  <div class="row form-group">
+    <div>
+      <codx-label
+        [formModel]="dialog?.formModel"
+        fiedName="customerID"
+        default="Khách hàng"
+      ></codx-label>
+    </div>
+    <div class>
+      <codx-input
+        [formModel]="dialog?.formModel"
+        field="customerID"
+        type="combobox"
+        (valueChange)="valueChangeCombobox($event)"
+        [crrValue]="contracts?.customerID"
+        [disabled]="type == 'deal' || type == 'quotation' || type == 'customer'"
+      >
+      </codx-input>
+    </div>
+  </div>
+
+  <div class="row form-group">
+    <div class="col-6">
+      <codx-label
+        [formModel]="dialog?.formModel"
+        fiedName="ContactID"
+        default="Người đại diện"
+      ></codx-label>
+      <!-- <codx-input
+        field="contactID"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
+      ></codx-input> -->
+      <codx-input
+        #inputContact
+        [formModel]="dialog?.formModel"
+        field="contactID"
+        [model]="{ObjectID: contracts?.customerID }"
+        (valueChange)="valueChangeCombobox($event)"
+        [crrValue]="contracts?.contactID"
+      >
+      </codx-input>
+    </div>
+    <div class="col-6">
+      <codx-label
+        [formModel]="dialog?.formModel"
+        fiedName="owner"
+        default="Người phụ trách"
+      ></codx-label>
+      <codx-input
+        [ngClass]="!contracts?.applyProcess ? 'd-none' :''"
+        type="combobox"
+        [model]="{ ProcessID: contracts?.processID }"
+        refValue="DPUserProcess"
+        [crrValue]="contracts?.owner"
+        (valueChange)="valueChangeOwner($event)"
+      >
+      </codx-input>
+      <div [ngClass]="contracts?.applyProcess ? 'd-none' :''">
+        <codx-input
+          field="owner"
+          [formModel]="dialog?.formModel"
+          (valueChange)="valueChangeOwner($event)"
+          [crrValue]="contracts?.owner"
+        >
+        </codx-input>
+      </div>
+    </div>
+  </div>
+
+  <div class="row form-group">
+    <div class="col-6">
+      <codx-label
+        [formModel]="dialog?.formModel"
+        fiedName="area"
+        default="Diện tích thuê"
+      ></codx-label>
+      <codx-input
+        [formModel]="dialog?.formModel"
+        field="area"
+        [crrValue]="contracts?.area"
+        (valueChange)="valueChangeText($event)"
+      >
+      </codx-input>
+    </div>
+    <div class="col-6">
+      <codx-label
+        [formModel]="dialog?.formModel"
+        fiedName="assetID"
+        default="Ví trí thuê"
+      ></codx-label>
+      <codx-input
+        [formModel]="dialog?.formModel"
+        field="assetID"
+        [crrValue]="contracts?.assetID"
+        (valueChange)="valueChangeText($event)"
+      >
+      </codx-input>
+    </div>
+  </div>
+
+  <div class="row form-group">
+    <codx-label
+      [formModel]="dialog?.formModel"
+      fiedName="purpose"
+      default="Mục đích thuê"
+    ></codx-label>
+    <codx-input
+      [formModel]="dialog?.formModel"
+      field="purpose"
+      [crrValue]="contracts?.purpose"
+      (valueChange)="valueChangeText($event)"
+    >
+    </codx-input>
+  </div>
+
+  <div class="row form-group">
+    <div class="col-6">
+      <codx-label
+        [formModel]="dialog?.formModel"
+        fiedName="contractAmt"
+        default="Giá trị hợp đồng"
+      ></codx-label>
+      <codx-input
+        [formModel]="dialog?.formModel"
+        field="contractAmt"
+        [crrValue]="contracts?.contractAmt"
+        (valueChange)="valueChangeText($event)"
+      >
+      </codx-input>
+    </div>
+    <div class="col-6">
+      <codx-label
+        [formModel]="dialog?.formModel"
+        fiedName="pmtMethodID"
+        default="Phương thức thanh toán"
+      ></codx-label>
+      <codx-input
+        [formModel]="dialog?.formModel"
+        field="pmtMethodID"
+        [crrValue]="contracts?.pmtMethodID"
+        (valueChange)="valueChangeCombobox($event)"
+      >
+      </codx-input>
+    </div>
+  </div>
+
+  <div class="row form-group">
+    <div class="col-6">
+      <codx-label
+        [formModel]="dialog?.formModel"
+        fiedName="interval"
+        default="Thời hạn hợp đồng"
+      ></codx-label>
+      <codx-input
+        [formModel]="dialog?.formModel"
+        field="interval"
+        [crrValue]="contracts?.interval"
+        (valueChange)="valueChangeCombobox($event)"
+      >
+      </codx-input>
+    </div>
+    <div class="col-6">
+      <codx-label
+        [formModel]="dialog?.formModel"
+        fiedName="disposalBefore"
+        default="Gởi đề nghị thanh toàn hợp đồng"
+      ></codx-label>
+      <codx-input
+        [formModel]="dialog?.formModel"
+        field="disposalBefore"
+        [crrValue]="contracts?.disposalBefore"
+        (valueChange)="valueChangeText($event)"
+      >
+      </codx-input>
+    </div>
+  </div>
+
+  <div class="row form-group">
+    <div class="col-6">
+      <div>
+        <codx-label
+          [formModel]="dialog?.formModel"
+          fiedName="effectiveFrom"
+          default="Ngày hiệu lực"
+        ></codx-label>
+      </div>
+      <div class="">
+        <codx-input
+          field="effectiveFrom"
+          type="datetime"
+          [crrValue]="contracts?.effectiveFrom"
+          (valueChange)="changeValueDate($event)"
+        >
+        </codx-input>
+      </div>
+    </div>
+    <div class="col-6">
+      <div>
+        <codx-label
+          [formModel]="dialog?.formModel"
+          fiedName="effectiveTo"
+          default="Ngày hết hiệu lực"
+        >
+        </codx-label>
+      </div>
+      <div class="">
+        <codx-input
+          field="effectiveTo"
+          type="datetime"
+          [crrValue]="contracts?.effectiveTo"
+          (valueChange)="changeValueDate($event)"
+        >
+        </codx-input>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #referenceTemp>
+  <div class="row form-group">
+    <codx-label
+      [formModel]="dialog?.formModel"
+      fiedName="dealID"
+      default="Cơ hội"
+    ></codx-label>
+    <codx-input
+      #inputDeal
+      [formModel]="dialog?.formModel"
+      field="dealID"
+      [crrValue]="contracts?.dealID"
+      (valueChange)="valueChangeCombobox($event)"
+      [model]="customerID"
+      [disabled]="type == 'deal'"
+    >
+    </codx-input>
+  </div>
+
+  <div class="row form-group">
+    <codx-label
+      [formModel]="dialog?.formModel"
+      fiedName="quotationID"
+      default="Báo giá"
+    ></codx-label>
+    <codx-input
+      #inputQuotation
+      [formModel]="dialog?.formModel"
+      field="quotationID"
+      [crrValue]="contracts?.quotationID"
+      (valueChange)="valueChangeCombobox($event)"
+      [model]="customerID"
+      [disabled]="type == 'quotation'"
+    ></codx-input>
+  </div>
+</ng-template>
+
+<ng-template #extendTemp>
+  <div class="row form-group">
+    <div class="col-6">
+      <div>
+        <codx-label
+          [formModel]="dialog?.formModel"
+          fiedName="adjustYear"
+          default="Số năm điều chỉnh tiền thuế"
+        ></codx-label>
+      </div>
+      <div class>
+        <codx-input
+          [formModel]="dialog?.formModel"
+          field="adjustYear"
+          [crrValue]="contracts?.adjustYear"
+          (valueChange)="valueChangeText($event)"
+        >
+        </codx-input>
+      </div>
+    </div>
+    <div class="col-6">
+      <div>
+        <codx-label
+          [formModel]="dialog?.formModel"
+          fiedName="adjustPercent"
+          default="% điều chỉnh"
+        ></codx-label>
+      </div>
+      <div class>
+        <codx-input
+          [formModel]="dialog?.formModel"
+          field="adjustPercent"
+          [crrValue]="contracts?.adjustPercent"
+          (valueChange)="valueChangeText($event)"
+        >
+        </codx-input>
+      </div>
+    </div>
+  </div>
+  <div class="row form-group">
+    <div>
+      <codx-label
+        [formModel]="dialog?.formModel"
+        fiedName="note"
+        default="Ghi chú"
+      ></codx-label>
+    </div>
+    <div class>
+      <codx-input
+        #inputQuotation
+        [formModel]="dialog?.formModel"
+        field="note"
+        [crrValue]="contracts?.note"
+        (valueChange)="valueChangeText($event)"
+      >
+      </codx-input>
+    </div>
+  </div>
+</ng-template>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- <div class="py-5" *ngIf="false">
   <header
     class="px-6 mb-6 w-100 d-flex align-items-center justify-content-between"
   >
@@ -10,7 +662,7 @@
       </button>
       <codx-label
         class="fs-3 fw-bold"
-        [formModel]="dialog.formModel"
+        [formModel]="formModel"
         fiedName
         [default]="headerTest"
       ></codx-label>
@@ -22,7 +674,7 @@
         (click)="handleSaveContract()"
       >
         <codx-label
-          [formModel]="dialog.formModel"
+          [formModel]="formModel"
           fiedName
           default="Lưu"
         ></codx-label>
@@ -70,21 +722,20 @@
   </main>
 </div>
 
-<!-- thông tin chung -->
 <ng-template #generalTemplate let-data="value">
   <div class="d-flex justify-content-between">
     <div class="w-40">
       <div class="row form-group">
         <div>
           <codx-label
-            [formModel]="dialog.formModel"
+            [formModel]="formModel"
             fiedName="customerID"
             default="Bên B"
           ></codx-label>
         </div>
         <div class>
           <codx-input
-            [formModel]="dialog.formModel"
+            [formModel]="formModel"
             field="customerID"
             type="combobox"
             (valueChange)="valueChangeCombobox($event)"
@@ -99,14 +750,14 @@
       <div class="row form-group">
         <div>
           <codx-label
-            [formModel]="dialog.formModel"
+            [formModel]="formModel"
             fiedName="contractName"
             default="Tên hợp đồng"
           ></codx-label>
         </div>
         <div class>
           <codx-input
-            [formModel]="dialog.formModel"
+            [formModel]="formModel"
             field="contractName"
             type="text"
             [crrValue]="contracts?.contractName"
@@ -119,7 +770,7 @@
         <div class="col-6">
           <div>
             <codx-label
-              [formModel]="dialog.formModel"
+              [formModel]="formModel"
               fiedName="dealID"
               default="Cơ hội"
             ></codx-label>
@@ -198,6 +849,7 @@
               [formModel]="dialog.formModel"
               field="representative"
               type="text"
+              [mode]="{}"
               (valueChange)="valueChangeText($event)"
               [crrValue]="contracts?.representative"
               [disabled]="true"
@@ -333,7 +985,6 @@
   ></ng-container>
 </ng-template>
 
-<!-- chi tiết mặt hàng -->
 <ng-template #quotationsTemplate let-data="value">
   <codx-quotations-lines
     #viewQuotationsLine
@@ -350,13 +1001,12 @@
   ></codx-quotations-lines>
 </ng-template>
 
-<!-- phương thức thanh toán -->
 <ng-template #payTemplate let-data="value">
   <ng-container [ngTemplateOutlet]="methodPayTemplate"></ng-container>
   <ng-container [ngTemplateOutlet]="calendarPayTemplate"></ng-container>
 </ng-template>
 
-<!-- giao hàng -->
+
 <ng-template #shipTemplate let-data="value">
   <div>
     <codx-taskbar
@@ -382,7 +1032,6 @@
               ></codx-label>
             </div>
             <div class>
-              <!-- TODO -->
               <codx-input
                 [formModel]="dialog.formModel"
                 field="delTermID"
@@ -401,7 +1050,6 @@
               ></codx-label>
             </div>
             <div class>
-              <!-- TODO -->
               <codx-input
                 [formModel]="dialog.formModel"
                 field="delModeID"
@@ -492,7 +1140,6 @@
               </codx-label>
             </div>
             <div class>
-              <!-- [formModel]="dialog.formModel" -->
               <codx-input
                 field="delDeadline"
                 type="datetime"
@@ -534,7 +1181,6 @@
               </codx-label>
             </div>
             <div class>
-              <!-- [formModel]="dialog.formModel" -->
               <codx-input
                 field="delActualDate"
                 type="datetime"
@@ -580,10 +1226,8 @@
   </div>
 </ng-template>
 
-<!-- Gia hạn -->
 <ng-template #extendTemplate let-data="value"> </ng-template>
 
-<!-- điều khoản hợp đồng -->
 <ng-template #termsAndRelatedTemplate let-data="value">
   <div class="d-flex justify-content-between mt-5">
     <div class="d-flex align-items-center nav-item w-100 mb-1">
@@ -640,15 +1284,12 @@
   </div>
 </ng-template>
 
-<!-- Template phụ -->
-<!-- chủ thể hợp đồng -->
 <ng-template #representativeTemplate let-data="value">
   <div class="d-flex justify-content-between">
     <div class="w-50">
       <div class="row form-group">
         <div class="col-8">
           <div>
-            <!-- Tên cty  -->
             <codx-label
               [formModel]="dialog.formModel"
               fiedName="companyName"
@@ -893,7 +1534,6 @@
       <div class="row form-group">
         <div class="col-12">
           <div>
-            <!-- TODO -->
             <codx-label
               [formModel]="dialog.formModel"
               fiedName="address"
@@ -1046,7 +1686,6 @@
   </div>
 </ng-template>
 
-<!-- thanh toán -->
 <ng-template #methodPayTemplate let-data="value">
   <div>
     <codx-taskbar
@@ -1234,7 +1873,6 @@
           </div>
           <div class="col-6">
             <div>
-              <!-- TODO -->
               <codx-label
                 [formModel]="dialog.formModel"
                 fiedName="pmtDeadline"
@@ -1242,7 +1880,6 @@
               ></codx-label>
             </div>
             <div class>
-              <!-- [formModel]="dialog.formModel" -->
               <codx-input
                 field="pmtDeadline"
                 type="datetime"
@@ -1258,7 +1895,6 @@
   </div>
 </ng-template>
 
-<!-- lịch thanh toán -->
 <ng-template #calendarPayTemplate let-data="value">
   <div>
     <codx-taskbar
@@ -1311,4 +1947,4 @@
       </div>
     </div>
   </div>
-</ng-template>
+</ng-template> -->

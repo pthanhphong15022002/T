@@ -26,6 +26,7 @@ import {
 import { AnimationModel, ProgressBar } from '@syncfusion/ej2-angular-progressbar';
 import { Subject, takeUntil } from 'rxjs';
 import { CodxAcService, fmSettledInvoices } from 'projects/codx-ac/src/lib/codx-ac.service';
+import { SelectionSettingsModel } from '@syncfusion/ej2-angular-grids';
 
 @Component({
   selector: 'lib-settledinvoices-add',
@@ -50,10 +51,9 @@ export class SettledInvoicesAdd extends UIComponent implements OnInit {
   predicates: string;
   dataValues: string;
   objectName:any;
-  payAmt: number = 0;
-  sort:any = Array<SortModel> ;
   isDblCLick: boolean = false;
   oldSelected: any = [];
+  dataFilter:any = {};
   private destroy$ = new Subject<void>();
   constructor(
     inject: Injector,
@@ -67,15 +67,16 @@ export class SettledInvoicesAdd extends UIComponent implements OnInit {
     this.cashpayment = dialogData.data.cashpayment;
     this.objectName = dialogData.data.objectName;
     this.title = dialogData.data.title;
-    this.gridModel.pageSize = 20;
     this.gridModel.page = 1;
   }
   //#endregion Constructor
 
   //#region Init
   onInit(): void {
-    this.acService.setPopupSize(this.dialog, '80%', '90%');
+    this.acService.setPopupSize(this.dialog, '80%', '90%'); 
     this.setDefault();
+    let type = this.cashpayment.totalAmt == 0 ? 0 : 1; 
+    this.getDataSubInvoice(type);
   }
 
   ngAfterViewInit() {}
@@ -97,77 +98,74 @@ export class SettledInvoicesAdd extends UIComponent implements OnInit {
     this.mapDataValues.set('currencyID', this.cashpayment.currencyID);
     this.mapPredicates.set('objectID', 'ObjectID = @0');
     this.mapDataValues.set('objectID', this.cashpayment.objectID);
-    this.payAmt = this.cashpayment.totalAmt;
-    this.sort = [{ field: 'InvoiceDueDate', dir: 'asc' }];
+    this.dataFilter.currencyID = this.cashpayment.currencyID;
+    this.dataFilter.payAmt = this.cashpayment.totalAmt;
+    this.gridModel.sort = [{ field: 'InvoiceDueDate', dir: 'asc' }];
   }
   //#endregion Init
 
   //#region Event
-  payAmtEnter(e: any) {
-    // let data = e.component?.value;
-    // if (this.payAmt == data) return;
-    // this.payAmt = data;
-    // if (this.payAmt && this.payAmt > 0) this.paymentAmt();
-  }
-
-  payAmtChange(e) {
-    this.payAmt = e.data;
-  }
-
   /**
    * *Hàm chọn dòng
    * @param e 
    * @returns 
    */
-  onSelected(e) {
-    let data = e.data;
-    if (data.settledAmt != 0) return;
-    let cashDiscDate;
-    let accID = this.form.formGroup.controls.accountID.value;
-    if (data.unbounds) cashDiscDate = data.unbounds.cashDiscDate;
-    this.acService.execApi('AC', 'SettledInvoicesBusiness', 'SettlementOneLineAsync', [
-      data,
-      accID,
-      this.cashpayment.objectID,
-      this.cashpayment.journalType,
-      this.cashpayment.voucherDate,
-      cashDiscDate,
-      this.cashpayment.currencyID,
-      this.cashpayment.exchangeRate,
-      this.payAmt,
-    ]).pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
-      if (res) {
-        this.grid.updateRow(e.rowIndex,res,false);
-        if (e.rowIndexes && Array.isArray(e.rowIndexes)) {
-          this.oldSelected = e.rowIndexes;
-        }
-        setTimeout(() => {
-          if (this.isDblCLick) {
-            this.isDblCLick = false;
-            this.grid.gridRef.startEdit();
-            this.detectorRef.detectChanges();
-          } else {
+  onSelected(event) {
+    if (event) {
+      let index = this.grid.editIndex;
+      if(index == 0) this.grid.editSelectedItem = false;
+      let data = event;
+      if (data?.settledAmt != 0) return;
+      if(!this.oldSelected.includes(data._rowIndex)) this.oldSelected.push(data._rowIndex);
+      this.acService.execApi('AC', 'SettledInvoicesBusiness', 'SettlementOneLineAsync', [
+        data,
+        this.dataFilter?.accountID ? this.dataFilter.accountID : '',
+        this.cashpayment.objectID,
+        this.cashpayment.journalType,
+        this.cashpayment.voucherDate,
+        data?.cashDiscDate,
+        this.cashpayment.currencyID,
+        this.cashpayment.exchangeRate,
+        this.dataFilter.payAmt,
+      ]).pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
+        if (res) {
+          this.grid.updateRow(data._rowIndex,res,false);
+          if (data._rowIndex && Array.isArray(data._rowIndex)) {
+            this.oldSelected = data._rowIndex;
+          }
+          setTimeout(() => {
             this.grid.gridRef?.selectRows(this.oldSelected);
-          }     
-        },20);
-      }
-    })
+            if(index != 0) this.grid.gridRef.startEdit();
+            //if(this.grid.editIndex != 0) this.grid.gridRef.startEdit();
+            
+            // if (this.isDblCLick) {
+            //   this.isDblCLick = false;
+            //   this.grid.gridRef.startEdit();
+            //   this.detectorRef.detectChanges();
+            // } else {
+            //   this.grid.gridRef?.selectRows(this.grid.selectedIndexes);
+            // }     
+          },20);
+        }
+      }) 
+    }
   }
 
   /**
    * *Hàm bỏ chọn dòng || bỏ chọn tất cả
    * @param e 
    */
-  onDeselected(e:any){
-    e.data.forEach(data => {
+  onDeselected(event:any){
+    let arrdata = [];
+    if(event && !event?.data.length) return;
+    arrdata = event?.data;
+    arrdata.forEach(data => {
       let index = this.grid.arrSelectedRows.findIndex(
         (x) => x.recID == data.recID
       );
-      this.grid.arrSelectedRows.splice(index,1);
-    }); 
-    setTimeout(() => {
-      this.detectorRef.detectChanges();
-    }, 100);
+      if(index > -1) this.grid.arrSelectedRows.splice(index,1);
+    });
+    this.detectorRef.detectChanges();
   }
 
   /**
@@ -179,79 +177,44 @@ export class SettledInvoicesAdd extends UIComponent implements OnInit {
     if (!e.data || typeof e.data === 'undefined') {
       this.mapPredicates.delete(field);
       this.mapDataValues.delete(field);
+      return;
     }
-    if (field === 'voucherType' && e.data) {
-      switch (e.data) {
-        case '1':
+    switch(e.field.toLowerCase()){
+      case 'vouchertype':
+        this.dataFilter.voucherType = e.data; 
+        if (e.data == '1') {
           this.mapPredicates.set('voucherType', 'InvoiceDueDate <=@0');
-          this.setDate();
-          break;
-        case '2':
-          this.mapPredicates.set('voucherType', 'InvoiceDueDate <=@0');
-          this.setDate();
-          break;
-      }
-    }
-
-    if (field === 'mixedPayment' && e.data) {
-      if (e.data) {
-        this.mapPredicates.set('currencyID', 'CurrencyID = @0');
-        this.mapDataValues.set('currencyID', this.cashpayment.currencyID);
-      } else {
-        this.mapPredicates.delete(field);
-        this.mapDataValues.delete(field);
-      }
-    }
-
-    if (field === 'date' && this.mapPredicates.has('voucherType') && e.data)
-      this.setDate(e.data);
-
-    if (field === 'accountID' && e.data) {
-      this.mapPredicates.set('accountID', 'AccountID = @0');
-      this.mapDataValues.set('accountID', e.data);
-    }
-
-    if (field === 'currencyID' && e.data) {
-      this.mapPredicates.set('currencyID', 'CurrencyID = @0');
-      this.mapDataValues.set('currencyID', e.data);
-    }
-
-    if (field === 'invoiceDueDate' && typeof e.data !== 'undefined' && e.data) {
-      this.mapPredicates.set('invoiceDueDate', 'InvoiceDueDate = @0');
-      this.mapDataValues.set(
-        'invoiceDueDate',
-        new Date(e.data.toDate).toISOString()
-      );
-    }
-
-    if (field === 'payType') {
-      this.sort = [];
-      switch (e.data) {
-        case '1':
-          break;
-        case '2':
-          this.sort = [{ field: 'InvoiceDueDate', dir: 'asc' }];
-          break;
-        case '3':
-          this.sort = [{ field: 'InvoiceDueDate', dir: 'desc' }];
-          break;
-        case '4':
-          this.sort = [
-            { field: 'BalAmt', dir: 'asc' },
-            { field: 'InvoiceDueDate', dir: 'asc' },
-          ];
-          break;
-        case '5':
-          this.sort = [
-            { field: 'BalAmt', dir: 'desc' },
-            { field: 'InvoiceDueDate', dir: 'asc' },
-          ];
-          break;
-        default:
-          this.sort = [];
-          break;
-      }
-      this.gridModel.sort = this.sort;
+        }else{
+          this.mapPredicates.set('voucherType', 'InvoiceDueDate >=@0');
+        }
+        this.setDate();
+        break;
+      case 'date':
+        if (this.mapPredicates.has('voucherType') && e.data) {
+          this.dataFilter.date = e.data;
+          this.setDate(e.data);
+        }
+        break;
+      case 'accountid':
+        this.dataFilter.accountid = e.data;
+        this.mapPredicates.set('accountID', 'AccountID = @0');
+        this.mapDataValues.set('accountID', e.data);
+        break;
+      case 'invoiceduedate':
+        this.dataFilter.invoiceDueDate = e.data.toDate;
+        this.mapPredicates.set('invoiceDueDate', 'InvoiceDueDate = @0');
+        this.mapDataValues.set('invoiceDueDate',new Date(e.data.toDate).toISOString());
+        break;
+      case 'paytype':
+        this.gridModel.sort = [];
+        if(e.data == '2') this.gridModel.sort = [{ field: 'InvoiceDueDate', dir: 'asc' }];
+        if(e.data == '3') this.gridModel.sort = [{ field: 'InvoiceDueDate', dir: 'desc' }];
+        if(e.data == '4') this.gridModel.sort = [{ field: 'BalAmt', dir: 'asc' },{ field: 'InvoiceDueDate', dir: 'asc' }];
+        if(e.data == '5') this.gridModel.sort = [{ field: 'BalAmt', dir: 'desc' },{ field: 'InvoiceDueDate', dir: 'asc'}];
+        break;
+      case 'payAmt':
+        this.dataFilter.payAmt = e.data;
+        break;
     }
   }
 
@@ -259,7 +222,7 @@ export class SettledInvoicesAdd extends UIComponent implements OnInit {
    * *Hàm set predicate
    * @param type 
    */
-  submit(type:number) {
+  getDataSubInvoice(type:number) {
     let predicates = Array.from(
       this.mapPredicates,
       ([name, value]) => value
@@ -328,7 +291,12 @@ export class SettledInvoicesAdd extends UIComponent implements OnInit {
    * @param day 
    */
   setDate(day?: any) {
-    let date = new Date(this.form.formGroup.value['invoiceDueDate']);
+    let date;
+    if(this.dataFilter?.invoiceDueDate){
+      date = new Date(this.dataFilter?.invoiceDueDate);
+    }else{
+      date = new Date();
+    }
     let aDate = (date as any).addDays(day || 0);
     this.mapDataValues.set('date', aDate.toISOString());
   }
@@ -339,7 +307,7 @@ export class SettledInvoicesAdd extends UIComponent implements OnInit {
    * @param terms 
    */
   handSettledAmt(data = [], terms = []) {
-    let pay = this.payAmt;
+    let pay = this.dataFilter.payAmt;
     let len = data.length;
     let indexes = this.grid.selectedIndexes;
     data.forEach((e: any, i: number) => {
@@ -388,20 +356,16 @@ export class SettledInvoicesAdd extends UIComponent implements OnInit {
    * @param type 
    */
   loadData(type) {
-    // this.gridModel.predicate = this.morefunction.predicate;
-    // this.gridModel.dataValue = this.morefunction.dataValue;
     this.gridModel.entityName = 'AC_SubInvoices';
-    let accID = this.form.formGroup.controls.accountID.value;
-
     this.acService.execApi('AC', 'SettledInvoicesBusiness', 'LoadSettledAsync', [
       this.gridModel,
-      accID,
+      this.dataFilter?.accountID ? this.dataFilter.accountID : '',
       this.cashpayment.objectID,
       this.cashpayment.journalType,
       this.cashpayment.voucherDate,
       this.cashpayment.currencyID,
       this.cashpayment.exchangeRate,
-      this.payAmt,
+      this.dataFilter.payAmt,
       type,
     ]).pipe(takeUntil(this.destroy$)).subscribe((res:any) =>{
       if (res && res.length) {
@@ -433,7 +397,7 @@ export class SettledInvoicesAdd extends UIComponent implements OnInit {
       data,
       this.cashpayment,
       accID,
-      this.payAmt,
+      this.dataFilter.payAmt,
     ]).pipe(takeUntil(this.destroy$)).subscribe((res)=>{
       if (res) {
         this.subInvoices = res[0];
@@ -450,7 +414,7 @@ export class SettledInvoicesAdd extends UIComponent implements OnInit {
     }
   }
 
-  actions(e: any) {
+  onAction(e: any) {
     if (e.type == 'endEdit') {
       if (this.oldSelected && this.oldSelected.length && this.grid.gridRef) {
         setTimeout(() => {

@@ -29,7 +29,7 @@ export class StepTaskInstanceComponent implements OnInit, AfterViewInit, OnChang
   @Input() contractName: string;
   @Input() leadName: string;
   @Input() isHeightAuto = false;
-
+  @Input() isChangeOwner: string;
   @Output() continueStep = new EventEmitter<any>();
   @Output() saveAssignTask = new EventEmitter<any>();
   @Output() changeProgress = new EventEmitter<any>();
@@ -75,7 +75,7 @@ export class StepTaskInstanceComponent implements OnInit, AfterViewInit, OnChang
   };
   elementRef: any;
   renderer: any;
-  taskHeight = '479px';
+  taskHeight = '555px';
   user;
 
   constructor(
@@ -384,13 +384,13 @@ export class StepTaskInstanceComponent implements OnInit, AfterViewInit, OnChang
 
   setHeight() {
     setTimeout(() => {
-      const main = document.querySelector('.codx-detail-main') as HTMLElement;
-      const mainHeight = main.offsetHeight;
-      let taskHeight = mainHeight - 330;
-      if (taskHeight) {
-        this.taskHeight = taskHeight.toString() + 'px';
-        // this.renderer.setStyle(listTask, 'height', taskHeight.toString() + 'px');
-      }
+      // const main = document.querySelector('.codx-detail-main') as HTMLElement;
+      // const mainHeight = main.offsetHeight;
+      // let taskHeight = mainHeight - 330;
+      // if (taskHeight) {
+      //   this.taskHeight = taskHeight.toString() + 'px';
+      //   // this.renderer.setStyle(listTask, 'height', taskHeight.toString() + 'px');
+      // }
     }, 500);
   }
 

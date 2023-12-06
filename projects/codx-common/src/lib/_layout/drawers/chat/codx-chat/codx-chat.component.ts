@@ -24,6 +24,7 @@ import { NgbDropdown } from '@ng-bootstrap/ng-bootstrap';
 import { CodxChatListComponent } from '../chat-list/chat-list.component';
 import { AddGroupChatComponent } from '../popup/popup-add-group/popup-add-group.component';
 import { SignalRService } from '../services/signalr.service';
+import { CHAT } from '../models/chat-const.model';
 declare var window: any;
 
 @Component({
@@ -38,15 +39,16 @@ export class CodxChatComponent implements OnInit, AfterViewInit {
     );
   }
   loaded = false;
-  count:number = 0;
-  formModel:FormModel = null;
-  user:any = null;
+  count: number = 0;
+  formModel: FormModel = null;
+  user: any = null;
   funcID: string = 'WPT11';
   function: any = null;
   grdViewSetUp: any = null;
   moreFC: any = null;
   autoClose: boolean = true;
   lstBoxChat: any[] = [];
+  hideChat: boolean = false;
   @ViewChild('codxChatContainer', { static: true })
   codxChatContainer: TemplateRef<any>;
   @ViewChild('listChat') listChat: CodxChatListComponent;
@@ -70,10 +72,8 @@ export class CodxChatComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     // get function - gridViewsetup
     if (this.funcID) {
-      this.cache.functionList(this.funcID)
-      .subscribe((func: any) => {
-        if (func) 
-        {
+      this.cache.functionList(this.funcID).subscribe((func: any) => {
+        if (func) {
           this.function = JSON.parse(JSON.stringify(func));
           this.formModel.funcID = func.functionID;
           this.formModel.entityName = func.entityName;
@@ -103,18 +103,16 @@ export class CodxChatComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.signalRSV.openBoxChat.subscribe((res:any) => {
+    this.signalRSV.loadedGroup.subscribe((res: any) => {
       this.getTotalMessage();
+      this.listChat?.addGroup(res?.data);
     });
   }
   // get count message
-  getTotalMessage(){
-    this.api.execSv(
-      "WP",
-      "ERM.Business.WP",
-      "ChatBusiness",
-      "GetTotalMessageAsync")
-      .subscribe((res:any) => {
+  getTotalMessage() {
+    this.api
+      .execSv('WP', 'ERM.Business.WP', 'ChatBusiness', 'GetTotalMessageAsync')
+      .subscribe((res: any) => {
         this.count = res;
       });
   }
@@ -156,8 +154,7 @@ export class CodxChatComponent implements OnInit, AfterViewInit {
       option
     );
     popup.closed.subscribe((res: any) => {
-      if (res.event) 
-      {
+      if (res.event) {
         this.listChat.addGroup(res.event);
       }
       this.autoClose = true;
@@ -177,26 +174,24 @@ export class CodxChatComponent implements OnInit, AfterViewInit {
   }
   // searrch
   search(event: any) {
-    if (this.listChat) 
-    {
+    if (this.listChat) {
       this.listChat.search(event);
     }
   }
   //select goup chat
-  selectItem(group: any) {
-    group.isRead = true;
-    if (group.messageMissed > 0) 
-    {
-      group.messageMissed = 0;
-      this.count -= group.messageMissed;
-    }
-    this.signalRSV.sendData('OpenGroupAsync', group);
-  }
+  // selectItem(group: any) {
+  //   group.isRead = true;
+  //   if (group.messageMissed > 0) {
+  //     group.messageMissed = 0;
+  //     this.count -= group.messageMissed;
+  //   }
+  //   this.signalRSV.sendData('OpenGroupAsync', group);
+  // }
   // select item search
   selectItemSeach(item: any) {
     if (item.type != 'H') {
       this.signalRSV.sendData(
-        'GetGroupSearch',
+        CHAT.BE_FUNC.SearchGroup,
         item.id,
         item.type == 'U' ? '1' : '2'
       );
@@ -204,6 +199,5 @@ export class CodxChatComponent implements OnInit, AfterViewInit {
   }
 
   // close ngbDropdown
-  clickBtnDropdown(){
-  }
+  clickBtnDropdown() {}
 }

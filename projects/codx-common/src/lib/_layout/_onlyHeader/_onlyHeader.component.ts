@@ -13,6 +13,7 @@ export class LayoutOnlyHeaderComponent extends LayoutBaseComponent {
     this.module = '';
     this.layoutModel.asideDisplay = false;
     this.layoutModel.toolbarDisplay = false;
+    this.layoutModel.toolbarFixed = false;
   }
 
   onInit(): void {}

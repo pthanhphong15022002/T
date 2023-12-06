@@ -9,9 +9,12 @@ import {
 } from '@angular/core';
 import {
   ApiHttpService,
+  AuthService,
+  AuthStore,
   CacheService,
   CallFuncService,
   CodxFormComponent,
+  CodxInputComponent,
   DialogData,
   DialogRef,
   FormatvaluePipe,
@@ -31,6 +34,8 @@ import moment from 'moment';
 export class PopupUpdateReasonCodeComponent implements OnInit, AfterViewInit {
   @ViewChild('attachment') attachment: AttachmentComponent;
   @ViewChild('form') form: CodxFormComponent;
+  @ViewChild('inputParent') inputParent: CodxInputComponent;
+
   data = new WR_WorkOrderUpdates();
   dialog: DialogRef;
   dataWorkOrder: any;
@@ -61,6 +66,8 @@ export class PopupUpdateReasonCodeComponent implements OnInit, AfterViewInit {
   parentID: any;
   dataParentID: any;
   action = '';
+  user: any;
+  language = '';
   constructor(
     private detectorRef: ChangeDetectorRef,
     private callFc: CallFuncService,
@@ -69,6 +76,7 @@ export class PopupUpdateReasonCodeComponent implements OnInit, AfterViewInit {
     private wrSv: CodxWrService,
     private cache: CacheService,
     private format: FormatvaluePipe,
+    private auth: AuthStore,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -80,13 +88,14 @@ export class PopupUpdateReasonCodeComponent implements OnInit, AfterViewInit {
     this.createdBy = dt?.data?.createdBy;
     this.action = dt?.data?.action;
     this.gridViewSetup = JSON.parse(JSON.stringify(dt?.data?.gridViewSetup));
+    this.user = this.auth?.get();
+    this.language = this.user?.language?.toLowerCase();
   }
 
   ngOnInit(): void {
     this.parentID = null;
-    if (this.data?.startDate && this.data?.endDate) {
-      this.data.startDate = new Date(this.data?.startDate);
-      this.data.endDate = new Date(this.data?.endDate);
+    if (this.action != 'edit') {
+      this.defaultTime(0, '0');
     }
     if (
       this.data != null &&
@@ -104,7 +113,9 @@ export class PopupUpdateReasonCodeComponent implements OnInit, AfterViewInit {
         .subscribe((res) => {
           if (res) {
             this.dateControl = res?.dateControl;
-            this.setDataCommentAndDate(res?.parentID);
+            this.dataParentID = res?.comment;
+            this.commentControl = res?.commentControl;
+            this.parentID = res?.parentID;
             this.setTimeEdit();
           }
         });
@@ -158,7 +169,6 @@ export class PopupUpdateReasonCodeComponent implements OnInit, AfterViewInit {
         return;
       }
     }
-
     this.data.attachments = this.edit
       ? this.data.attachments + this.countFile - this.countFileDelete
       : this.countFile;
@@ -194,9 +204,9 @@ export class PopupUpdateReasonCodeComponent implements OnInit, AfterViewInit {
   async setStartAndEndTime() {
     if (this.data?.startDate && this.data?.endDate) {
       this.data.scheduleTime =
-      this.dateControl == '1'
-        ? this.startTime + ' - ' + this.endTime
-        : this.endTime;
+        this.dateControl == '1'
+          ? this.startTime + ' - ' + this.endTime
+          : this.endTime;
 
       const startDate = new Date(this.data.startDate);
       const endDate = new Date(this.data.endDate);
@@ -211,44 +221,35 @@ export class PopupUpdateReasonCodeComponent implements OnInit, AfterViewInit {
 
   //#endregion
   valueChangeParent(e) {
-    this.dataParentID = e?.data;
-    this.setComment(
-      e?.component?.itemsSelected[0]?.Comment,
-      e?.component?.itemsSelected[0]?.CommentControl
-    );
-    this.detectorRef.detectChanges();
+    if (e?.data != null && e?.data?.trim() != '') {
+      this.dataParentID = e?.data;
+      this.commentControl = e?.component?.itemsSelected[0]?.CommentControl;
+      this.setComment(this.dataParentID, this.commentControl);
+      this.detectorRef.detectChanges();
+    }
   }
   async valueChange(e) {
     this.data[e?.field] = e?.data;
     if (e?.field == 'statusCode') {
-      this.parentID = null;
-      this.dataParentID = null;
-      this.data.comment = null;
-      this.dateControl = e?.component?.itemsSelected[0]?.DateControl;
-
-      this.setDataCommentAndDate(e?.component?.itemsSelected[0]?.ParentID);
-      if (this.dateControl) {
-        this.defaultTime(
-          e?.component?.itemsSelected[0]?.Leadtime,
-          this.dateControl
-        );
+      if (e?.data != null && e?.data?.trim() != '') {
+        this.dataParentID = e?.component?.itemsSelected[0]?.Comment;
+        this.parentID = e?.component?.itemsSelected[0]?.ParentID;
+        this.data.comment = null;
+        this.dateControl = e?.component?.itemsSelected[0]?.DateControl;
+        this.commentControl = e?.component?.itemsSelected[0]?.CommentControl;
+        if (this.dateControl) {
+          this.defaultTime(
+            e?.component?.itemsSelected[0]?.Leadtime,
+            this.dateControl
+          );
+        }
+        this.setComment(this.dataParentID, this.commentControl);
+        if (this.inputParent && this.inputParent?.ComponentCurrent) {
+          this.inputParent.ComponentCurrent?.setValue(this.dataParentID);
+        }
       }
-      this.setComment(
-        e?.component?.itemsSelected[0]?.Comment,
-        e?.component?.itemsSelected[0]?.CommentControl
-      );
-
-
     }
     this.detectorRef.detectChanges();
-  }
-
-  setDataCommentAndDate(parentID) {
-    this.parentID = parentID;
-    if (this.parentID == null) {
-      this.dataParentID = null;
-    }
-    // this.setComment(comment, this.commentControl);
   }
 
   setSchedule() {
@@ -322,15 +323,33 @@ export class PopupUpdateReasonCodeComponent implements OnInit, AfterViewInit {
           this.dateControl == '1'
             ? this.startTime + ' - ' + this.endTime
             : this.endTime;
-        commentRep = commentRep.replace('{1}', this.data.scheduleTime);
+        commentRep = commentRep.replace('{2}', this.data.scheduleTime);
       }
 
       if (this.data.startDate) {
-        let date = moment(new Date(this.data.startDate)).format('DD/MM/YYYY');
-        commentRep = commentRep.replace('{2}', date);
+        let date = this.formatDate(new Date(this.data.startDate));
+        commentRep = commentRep.replace('{1}', date);
       }
     }
     this.data.comment = commentRep;
+  }
+
+  formatDate(date) {
+    let language = this.language == 'vn' ? 'vi' : 'en-US';
+    const currentDate = date;
+    const weekdayDate = new Intl.DateTimeFormat(language, {
+      weekday: 'long',
+    }).format(currentDate);
+    const dayDate = new Intl.DateTimeFormat(language, {
+      day: 'numeric',
+    }).format(currentDate);
+    const monthDate = new Intl.DateTimeFormat(language, {
+      month: 'long',
+    }).format(currentDate);
+    const yearDate = new Intl.DateTimeFormat(language, {
+      year: 'numeric',
+    }).format(currentDate);
+    return weekdayDate + ', ' + dayDate + ' ' + monthDate + ' ' + yearDate;
   }
 
   //#region date schedule
@@ -347,7 +366,7 @@ export class PopupUpdateReasonCodeComponent implements OnInit, AfterViewInit {
     if (dateControl == '1') {
       const parseLeadTime =
         parseFloat(leadTime) > 0 ? parseFloat(leadTime) : 30;
-      this.data.endDate.setMinutes(minutes + minutesToAdd + parseLeadTime);
+      this.data.endDate.setMinutes(parseLeadTime);
     }
     this.setTimeEdit();
   }
@@ -395,6 +414,9 @@ export class PopupUpdateReasonCodeComponent implements OnInit, AfterViewInit {
 
   valueEndTimeChange(event: any) {
     this.endTime = event.data.toDate;
+    if (this.dateControl != '1') {
+      this.startTime = event.data.toDate;
+    }
     // this.fullDayChangeWithTime();
     // this.isFullDay = false;
     this.setDate();
@@ -431,8 +453,9 @@ export class PopupUpdateReasonCodeComponent implements OnInit, AfterViewInit {
           }
         }
       }
-      this.detectorRef.detectChanges();
     }
+    this.setComment(this.dataParentID, this.commentControl);
+    this.detectorRef.detectChanges();
   }
   //#endregion
 

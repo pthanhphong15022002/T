@@ -449,6 +449,26 @@
             [filterType]="'Contains'"
             [value]="owner"
           ></ejs-combobox>
+
+          <!-- <codx-input
+          [formModel]="form.formModel"
+          field="owner"
+
+          [crrValue]="lead?.owner"
+          [model]="{ ProcessID: lead?.processID }"
+        >
+        </codx-input> -->
+
+        <!-- <codx-input
+      type="combobox"
+      [model]="{ ProcessID: lead?.processID }"
+      refValue="DPUserProcess"
+      [placeholder]="gridViewSetup?.SalespersonID?.description"
+      [crrValue]="owner"
+      (valueChange)="valueChangeOwner($event, viewOwnerProcess)"
+     >
+       </codx-input> -->
+
         </ng-template>
       </div>
     </div>
@@ -471,6 +491,26 @@
       field="memo"
     >
     </codx-input>
+  </div>
+
+  <div *ngIf="!isShowField">
+    <ng-container *ngIf="listFields &&listFields?.length > 0">
+      <ng-container *ngFor="let item of listFields">
+        <div class="form-group">
+          <codx-input-custom-field
+          [customField]="item"
+          [checkValid]="false"
+          [objectId]="item.recID"
+          [objectType]="'DP_Instances_Steps_Fields'"
+          [formModel]="dialog.formModel"
+          [objectIdParent]="lead?.recID"
+          (valueChangeCustom)="valueChangeCustom($event)"
+          (addFileCompleted)="addFileCompleted($event)"
+        >
+        </codx-input-custom-field>
+        </div>
+      </ng-container>
+    </ng-container>
   </div>
 </ng-template>
 
@@ -582,7 +622,7 @@
           >
           </codx-label>
           <codx-input
-            field="ContactName"
+            field="contactName"
             [Group]="form.formGroup"
             [formModel]="form.formModel"
             (valueChange)="valueChange($event)"

@@ -134,7 +134,7 @@
           <div class="ms-5 d-flex justify-content-between">
             <div class="d-flex justify-content-end me-3 mt-2">
               <div class="d-flex align-items-center w-100 h-30px">
-                <div class="ms-2" *ngIf="dataSelect.approveStatus != 1">
+                <div class="ms-2" *ngIf="dataSelect?.approveStatus > '1' && dataSelect?.approveStatus">
                   <codx-vll
                     [name]="vllApprover"
                     [field]="'ApproveStatus'"
@@ -146,7 +146,7 @@
                   </codx-vll>
                 </div>
                 <div class="d-flex flex-column">
-                  <div
+                  <!-- <div
                     class="badge badge-sm d-flex align-items-center"
                     [ngStyle]="{
                       'background-color':
@@ -165,7 +165,31 @@
                     <span [ngStyle]="{ color: stepValue['textColor'] }">{{
                       stepName
                     }}</span>
-                  </div>
+                  </div> -->
+
+                  <div
+                  class="badge badge-sm d-flex align-items-center"
+                  [ngStyle]="{
+                    'background-color':
+                      dataSelect.status == '3' || dataSelect.status == '4'
+                        ? colorSuccesss
+                        : dataSelect.status == '5' || dataSelect.status == '6'
+                        ? colorFail
+                        : stepValue['backgroundColor']
+                  }"
+              >
+                <span
+                  [ngClass]="stepValue['icon']"
+                  [ngStyle]="{ color: stepValue['iconColor'] }"
+                  class="me-1"
+                ></span>
+                <span
+                  class="text-ellipsis line-clamp line-clamp-1"
+                  [ngbTooltip]="stepName"
+                  [ngStyle]="{ color: stepValue['textColor'] }"
+                  >{{    stepName }}</span
+                >
+              </div>
                 </div>
                 <div
                   class="d-flex align-items-center mx-2"
@@ -310,12 +334,14 @@
                     [lstStepProcess]="lstStepProcess"
                     [isOnlyView]="isOnlyView"
                     (isChangeProgress)="handleProgressInstance($event)"
+                    [stepIDFirst]="stepIDFirst"
+                    (autoStartInstance)="autoStartInstance.emit($event)"
                   ></codx-stages-detail>
                 </ng-container>
               </div>
               <ng-container *ngIf="viewModelDetail == 'F'">
                 <div class="px-3">
-                  <ng-container *ngFor="let item of listSteps">
+                  <!-- <ng-container *ngFor="let item of listSteps">
                     <codx-fields-detail-temp
                       *ngIf="item?.fields?.length > 0"
                       [dataStep]="item"
@@ -337,7 +363,34 @@
                       (saveDataStep)="saveDataStep($event)"
                     >
                     </codx-fields-detail-temp>
-                  </ng-container>
+                  </ng-container> -->
+
+                  <div class="d-flex flex-column mt-5">
+                    <ng-container *ngFor="let item of listSteps">
+                      <codx-fields-detail-temp
+                        *ngIf="item?.fields?.length > 0"
+                        [dataStep]="item"
+                        [showColumnControl]="showColumnControl(item.stepID)"
+                        [isUpdate]="
+                        dataSelect.write &&
+                        !dataSelect.closed &&
+                        (dataSelect.status == '1' ||
+                          dataSelect.status == '2') &&
+                        dataSelect?.approveStatus != '3'
+                      "
+                        [objectIdParent]="dataSelect.recID"
+                        (saveDataStep)="saveDataStep($event)"
+                        [currentElmID]="currentElmID"
+                        (inputElmIDCF)="inputElmIDCustomField($event)"
+                        [isSaving]="isSaving"
+                        (actionSaveCF)="actionSaveCustomField($event)"
+                        [titleHeaderFormCF]="titleDefault"
+                        [viewsCurrent]="viewsCurrent"
+                      >
+                      </codx-fields-detail-temp>
+                    </ng-container>
+                  </div>
+
                 </div>
               </ng-container>
             </div>
@@ -446,11 +499,12 @@
   [instance]="dataSelect"
   [listInstanceStep]="listSteps"
   [formModel]="formModel"
-  [applyFor]="'0'"
+  [applyFor]="applyFor"
   (saveAssignTask)="saveAssignTask($event)"
-  (changeProgress)="autoStart($event)"
+  (changeProgress)="autoStartInstance.emit($event)"
   [dealName]="dataSelect?.title"
   [ownerInstance]="dataSelect?.owner"
+  [isChangeOwner]="isChangeOwner"
   >
   </step-task-instance>
 </div>

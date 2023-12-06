@@ -50,6 +50,7 @@ export class PopupAddCardsComponent implements OnInit {
   behavior: any[] = [];
   lstShare: any[] = [];
   gifts: any[] = [];
+  slides: any[] = [];
 
   patternSelected: any;
   user: UserModel;
@@ -155,6 +156,7 @@ export class PopupAddCardsComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    
     this.initForm();
     this.loadDataAsync(this.funcID);
     this.getMessageNoti('SYS009');
@@ -345,9 +347,19 @@ export class PopupAddCardsComponent implements OnInit {
               this.patternSelected = temp;
             }
           }
+          this.createSlides();
           this.dt.detectChanges();
         }
       });
+  }
+
+  createSlides() {
+    let slideIndex = this.slides.length;
+    for (let index = 0; index < this.lstPattern.length; index += 4) {
+      this.slides[slideIndex] = [];
+      this.slides[slideIndex] = this.lstPattern.slice(index, index + 4);
+      slideIndex++;
+    }
   }
 
   getMyWallet(userID: string) {
@@ -518,8 +530,9 @@ export class PopupAddCardsComponent implements OnInit {
         if (data) {
           if (this.parameter.MaxPointPerOnceControl === '1') {
             if (data > this.parameter.MaxPointPerOnce) {
-              this.notifySV.notify('Vượt quá số xu cho phép tặng trong 1 lần');
+              this.notifySV.notify('Vượt quá số xu cho phép tặng trong 1 lần', '2');
               data = this.givePoint;
+              this.form.patchValue({ coins: this.givePoint });
             }
           }
           if(data && this.parameter.MaxPointControl === '1'){

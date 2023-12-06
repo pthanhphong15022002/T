@@ -2,14 +2,13 @@
     <codx-form [headerText]="title" subHeaderText="" [body]="body" [footer]="footer" [dialog]="dialog">
         <ng-template popup adde #body>
             <div class="mb-4">
-                <div class="d-flex align-items-center flex-grow-1 mb-2">
+                <div class="d-flex align-items-center flex-grow-1 mb-2 pb-2 border-bottom">
                     <div class="w-50px">From:</div>
                     <div class="d-flex align-items-center me-2 mail-user">
-                        <codx-temp-full [imageId]="user?.userID" [imageWidth]="25" [content]="user?.userName"
-                            [imgCss]="'me-2'"></codx-temp-full>
+                        <codx-temp-full [imageId]="user?.userID" [imageWidth]="25" [content]="user?.userName" imgCss="me-1"></codx-temp-full>
                     </div>
                 </div>
-                <div class="d-flex align-items-center w-100">
+                <div class="d-flex align-items-center w-100 border-bottom">
                     <div class="w-50px">To:</div>
                     <codx-input type="Combobox" name="combobox" [refValue]="gridViewSetup['Owner']['referedValue']"
                         [showInput]="true" refType="P" field="popup" [ngClass]="'w-100'"
@@ -24,12 +23,13 @@
             </div>
             <div class="form-group">
                 <codx-label default="Mô tả chi tiết" class="text-primary"></codx-label>
-                <codx-input type="textarea" class="w-100" [height]="" [Group]="forwardForm" ControlName="comment">
+                <codx-input type="textarea" class="w-100" [height]="300" [Group]="forwardForm" ControlName="comment">
                 </codx-input>
             </div>
         </ng-template>
         <ng-template #footer>
-            <div class="d-flex justify-content-end">
+            <div class="d-flex align-items-center justify-content-between">
+                <div class="d-flex align-items-center"><codx-input type="switch" class="mt-1 me-2" [Group]="forwardForm" ControlName="sendMail"></codx-input> <codx-label default="Gửi mail"></codx-label></div>
                 <button class="btn btn-primary" type="submit">
                     <codx-label default="Gửi"></codx-label>
                 </button>

@@ -39,11 +39,10 @@ import { PopupAddQuotationsComponent } from './quotations/popup-add-quotations/p
 import { DealsComponent } from './deals/deals.component';
 import { PopupAddDealComponent } from './deals/popup-add-deal/popup-add-deal.component';
 import { DealDetailComponent } from './deals/deal-detail/deal-detail.component';
-import { TabDetailCustomComponent } from './deals/deal-detail/tab-detail-custom/tab-detail-custom.component';
 import { AddContractsComponent } from './contracts/add-contracts/add-contracts.component';
 import { ListContractsComponent } from './contracts/list-contracts/list-contracts.component';
-import { QuotationsLinesComponent } from './quotations-lines/quotations-lines.component';
-import { PopupAddQuotationsLinesComponent } from './quotations-lines/popup-add-quotations-lines/popup-add-quotations-lines.component';
+import { QuotationsLinesComponent } from './quotations/quotations-lines/quotations-lines.component';
+import { PopupAddQuotationsLinesComponent } from './quotations/quotations-lines/popup-add-quotations-lines/popup-add-quotations-lines.component';
 import { CodxListContactsComponent } from './cmcustomer/cmcustomer-detail/codx-list-contacts/codx-list-contacts.component';
 import { CodxListDealsComponent } from './cmcustomer/cmcustomer-detail/codx-list-deals/codx-list-deals.component';
 import { CodxTabDealcompetitorsComponent } from './deals/deal-detail/codx-tab-dealcompetitors/codx-tab-dealcompetitors.component';
@@ -54,7 +53,6 @@ import { CasesComponent } from './cases/cases.component';
 import { CodxAddressCmComponent } from './cmcustomer/cmcustomer-detail/codx-address-cm/codx-address-cm.component';
 import { LeadsComponent } from './leads/leads.component';
 import { PopupAddLeadComponent } from './leads/popup-add-lead/popup-add-lead.component';
-import { TabLeadDetailComponent } from './leads/lead-detail/tab-lead-detail/tab-lead-detail.component';
 import { LeadDetailComponent } from './leads/lead-detail/lead-detail.component';
 import { CampaignsComponent } from './campaigns/campaigns.component';
 import { PopupAddCampaignComponent } from './campaigns/popup-add-campaign/popup-add-campaign.component';
@@ -71,7 +69,6 @@ import { PopupRemoveAddContactComponent } from './leads/popup-merge-leads/popup-
 import { ViewPaymentComponent } from './contracts/payment/view-payment/view-payment.component';
 import { CasesDetailComponent } from './cases/case-detail/cases-detail.component';
 import { GanttChartComponent } from './deals/gantt-chart/gantt-chart.component';
-import { TabCasesDetailComponent } from './cases/case-detail/tab-cases-detail/tab-cases-detail.component';
 import { PopupAddCasesComponent } from './cases/popup-add-cases/popup-add-cases.component';
 import { StepTaskComponent } from './deals/step-task/step-task.component';
 import { LayoutNoAsideComponent } from 'projects/codx-common/src/lib/_layout/_noAside/_noAside.component';
@@ -79,7 +76,6 @@ import { QuotationsTabViewComponent } from './quotations/quotations-tab-view/quo
 import { ContractsComponent } from './contracts/contracts.component';
 import { ContractsViewDetailComponent } from './contracts/contracts-view-detail/contracts-view-detail.component';
 import { TaskComponent } from './deals/step-task/task/task.component';
-import { PopupOwnerDealComponent } from './deals/popup-owner-deal/popup-owner-deal.component';
 import { ViewIconGroupComponent } from './quotations/view-icon-group/view-icon-group.component';
 import { CmDashboardComponent } from './cm-dashboard/cm-dashboard.component';
 import { TargetsComponent } from './targets/targets.component';
@@ -118,7 +114,12 @@ import { ViewDealDetailComponent } from './deals/view-deal-detail/view-deal-deta
 import { ViewLeadDetailComponent } from './leads/view-lead-detail/view-lead-detail.component';
 import { CustomIconPipe } from './pipes/customIcon.pipe';
 import { FormatTargetPipe } from './pipes/format-target.pipe';
-import { PopupAddContractsComponent } from './contracts/popup-add-contracts/popup-add-contracts.component';
+import { FormatStatusPipe } from './pipes/format-status.pipe';
+import { ViewTotalDealValueComponent } from './deals/view-total-deal-value/view-total-deal-value.component';
+import { ContractsDetailComponent } from './contracts/contracts-detail/contracts-detail.component';
+import { StyleHeaderColumnsPipe } from './pipes/style-header-columns.pipe';
+import { FormatStatusCodePipe } from './pipes/format-status-code.pipe';
+import { ScrollSpyDirective } from './contracts/contracts-detail/scroll-spy.directive';
 
 export const routes: Routes = [
   {
@@ -133,11 +134,12 @@ export const routes: Routes = [
       {
         path: 'deals/:funcID',
         component: DealsComponent,
-        // data: { noReuse: true },
+        data: { noReuse: true },
       },
       {
         path: 'marketings/:funcID',
         component: CampaignsComponent,
+        data: { noReuse: true },
       },
       {
         path: 'quotations/:funcID',
@@ -147,17 +149,17 @@ export const routes: Routes = [
       {
         path: 'contracts/:funcID',
         component: ContractsComponent,
-        // data: { noReuse: true },
+        data: { noReuse: true },
       },
       {
         path: 'cases/:funcID',
         component: CasesComponent,
-        // data: { noReuse: true },
+        data: { noReuse: true },
       },
       {
         path: 'leads/:funcID',
         component: LeadsComponent,
-        // data: { noReuse: true },
+        data: { noReuse: true },
       },
       {
         path: 'calendars/:funcID',
@@ -224,9 +226,9 @@ const T_Component: Type<any>[] = [
   QuotationsComponent,
   PopupAddQuotationsComponent,
   DealsComponent,
+  ViewTotalDealValueComponent,
   PopupAddDealComponent,
   DealDetailComponent,
-  TabDetailCustomComponent,
   AddContractsComponent,
   ListContractsComponent,
   QuotationsLinesComponent,
@@ -240,11 +242,9 @@ const T_Component: Type<any>[] = [
   CasesComponent,
   CasesDetailComponent,
   PopupAddCasesComponent,
-  TabCasesDetailComponent,
   CodxAddressCmComponent,
   LeadsComponent,
   PopupAddLeadComponent,
-  TabLeadDetailComponent,
   LeadDetailComponent,
   CampaignsComponent,
   PopupAddCampaignComponent,
@@ -268,7 +268,6 @@ const T_Component: Type<any>[] = [
   QuotationsTabViewComponent,
   ContractsViewDetailComponent,
   TaskComponent,
-  PopupOwnerDealComponent,
   ViewIconGroupComponent,
   CmDashboardComponent,
   TargetsComponent,
@@ -284,22 +283,26 @@ const T_Component: Type<any>[] = [
   ViewCalendarComponent,
   ProgressSliderComponent,
   ViewHistoryCustomerComponent,
-  PopupAddContractsComponent,
+  ContractsDetailComponent,
+  CampaignContactsComponent,
+  PopupAddCampaignContactComponent,
+  CampaignDealsComponent,
+  PopupAddTaskCalendarComponent,
+  PopupUpdateStatusComponent,
+  CodxShowMoreLessComponent,
+  ViewDealDetailComponent,
+  ViewLeadDetailComponent,
+  ScrollSpyDirective,
 ];
 
 @NgModule({
   declarations: [
     T_Component,
-    CampaignContactsComponent,
-    PopupAddCampaignContactComponent,
-    CampaignDealsComponent,
-    PopupAddTaskCalendarComponent,
-    PopupUpdateStatusComponent,
-    CodxShowMoreLessComponent,
-    ViewDealDetailComponent,
-    ViewLeadDetailComponent,
     CustomIconPipe,
     FormatTargetPipe,
+    FormatStatusPipe,
+    StyleHeaderColumnsPipe,
+    FormatStatusCodePipe,
   ],
   imports: [
     CodxCoreModule.forRoot({ environment }),

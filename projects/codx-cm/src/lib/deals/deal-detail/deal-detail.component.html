@@ -49,7 +49,7 @@
             "
           ></span>
         </div>
-        <div class="toolbar-detail">
+        <div class="toolbar-detail" *ngIf="asideMode != '2'">
           <codx-mfunc
             [hideMF]="false"
             [dataItem]="dataSelected"
@@ -65,7 +65,7 @@
       <div class="container_detail mt-1">
         <div class="d-flex justify-content-between mb-2">
           <div class="d-flex flex-column w-100">
-            <div class="d-flex align-items-start">
+            <div class="d-flex align-items-center">
               <div class="me-4">
                 <codx-img
                   [objectId]="dataSelected?.customerID"
@@ -78,9 +78,9 @@
                 </codx-img>
               </div>
               <div class="d-flex flex-column">
-                <div class="text-gray-600">
+                <!-- <div class="text-gray-600">
                   {{ dataSelected.customerName }}
-                </div>
+                </div> -->
                 <div
                   class="fw-bold text-dark fs-5-sm"
                   [ngbTooltip]="tooltipDealName"
@@ -116,9 +116,7 @@
                   ></span>
                   <span
                     *ngIf="dataSelected?.currencyID"
-                    [ngClass]="
-                      dataSelected?.currencyID ? '' : 'fs-6'
-                    "
+                    [ngClass]="dataSelected?.currencyID ? '' : 'fs-6'"
                     class="text-gray-500"
                     [ngbTooltip]="gridViewSetup['CurrencyID']?.headerText"
                     #currencyID
@@ -190,21 +188,18 @@
                     #industries
                     [innerHTML]="
                       dataSelected?.industries
-                        | formatvalue
-                          : formModel
-                          : 'industries'
-                          : industries
+                        | formatvalue : formModel : 'industries' : industries
                         | async
                     "
                   ></span>
                 </div>
                 <div class="d-flex align-items-top justify-content-start">
                   <codx-label
-                  fiedName="Note"
-                  class="text-dark fw-bold me-2"
-                  [setRequire]="false"
-                  [formModel]="formModel"
-                  class="text-dark fw-bold me-2 text-nowrap"
+                    fiedName="Note"
+                    class="text-dark fw-bold me-2"
+                    [setRequire]="false"
+                    [formModel]="formModel"
+                    class="text-dark fw-bold me-2 text-nowrap"
                   ></codx-label>
 
                   <!-- <span
@@ -221,8 +216,11 @@
                         | async
                     "
                   ></span> -->
-                  <codx-show-more-less [formModel]="formModel" [value]="dataSelected?.note" [text]="'note'">
-
+                  <codx-show-more-less
+                    [formModel]="formModel"
+                    [value]="dataSelected?.note"
+                    [text]="'note'"
+                  >
                   </codx-show-more-less>
                 </div>
                 <div class="" *ngIf="viewTag && viewTag != ''">
@@ -235,11 +233,13 @@
                   </codx-tag>
                 </div>
                 <div class="d-flex flex-wrap align-items-top mb-1 mt-2">
-                  <div class="d-flex flex-column" *ngIf="contactPerson">
+                  <div class="d-flex flex-column">
                     <div class="mb-1">
                       <codx-label
-                        class="text-dark fw-bold"
-                        default="Liên hệ chính:"
+                        name="lblContact"
+                        [formModel]="formModel"
+                        class="text-dark fw-bold label-colon"
+                        default="Liên hệ chính"
                       ></codx-label>
                     </div>
                     <div class="d-flex align-items-start">
@@ -325,46 +325,55 @@
                     class="mb-1 d-flex align-items-center justify-content-end"
                     *ngIf="!isDataLoading"
                   >
-
-                  <div
-                  *ngIf="dataSelected?.statusCodeID"
-                  class="badge badge-sm d-flex align-items-center me-0 color-theme me-1"
-                >
-                  <span
+                    <div
+                      *ngIf="dataSelected?.statusCodeID"
+                      class="badge badge-sm d-flex align-items-center me-0 color-theme me-1"
+                    >
+                      <!-- <span
                     class="text-ellipsis-1"
                     [ngbTooltip]="getStatusCode(dataSelected?.statusCodeID)"
                     > {{getStatusCode(dataSelected?.statusCodeID)}}</span
-                  >
-                </div>
+                  > -->
+                      <span
+                        class="text-ellipsis-1"
+                        [ngbTooltip]="
+                          dataSelected?.statusCodeID
+                            | formatStatusCode : valueListStatusCode
+                        "
+                        [innerHTML]="
+                          dataSelected?.statusCodeID
+                            | formatStatusCode : valueListStatusCode
+                        "
+                      ></span>
+                    </div>
 
-                  <div
-                  *ngIf="
-                  dataSelected.status == '2' && stepCurrent ;
-                  else statusDefault
-                "
-                    [ngStyle]="{
-                      'background-color':
-                      stepCurrent?.backgroundColor
-                    }"
-                    class="badge badge-sm d-flex align-items-center me-0"
-                  >
-                    <span
-                      [ngClass]="stepCurrent?.icon"
+                    <div
+                      *ngIf="
+                        dataSelected.status == '2' && stepCurrent;
+                        else statusDefault
+                      "
                       [ngStyle]="{
-                        color: stepCurrent?.iconColor
+                        'background-color': stepCurrent?.backgroundColor
                       }"
-                      class="me-1"
-                    ></span>
-                    <span
-                      class="text-ellipsis line-clamp line-clamp-2"
-                      [ngbTooltip]="stepCurrent?.stepName"
-                      [ngStyle]="{
-                        color: stepCurrent.textColor
-                      }"
-                      >{{ stepCurrent?.stepName }}</span
+                      class="badge badge-sm d-flex align-items-center me-0"
                     >
-                  </div>
-                <ng-template #statusDefault>
+                      <span
+                        [ngClass]="stepCurrent?.icon"
+                        [ngStyle]="{
+                          color: stepCurrent?.iconColor
+                        }"
+                        class="me-1"
+                      ></span>
+                      <span
+                        class="text-ellipsis line-clamp line-clamp-2"
+                        [ngbTooltip]="stepCurrent?.stepName"
+                        [ngStyle]="{
+                          color: stepCurrent.textColor
+                        }"
+                        >{{ stepCurrent?.stepName }}</span
+                      >
+                    </div>
+                    <ng-template #statusDefault>
                       <codx-vll
                         [name]="gridViewSetup?.Status?.referedValue"
                         [field]="'Status'"
@@ -374,7 +383,7 @@
                         class="badge badge-light badge-sm me-0"
                       >
                       </codx-vll>
-                </ng-template>
+                    </ng-template>
                     <ng-container
                       *ngIf="
                         dataSelected?.approveStatus &&
@@ -802,7 +811,6 @@
                   </div>
 
                   <div class="row">
-
                     <!-- <div class="col-6">
                       <div class="mb-1 d-flex align-items-top">
                         <div
@@ -850,10 +858,12 @@
                         | async
                     "
                   ></span> -->
-                  <codx-show-more-less [formModel]="formModel" [value]="dataSelected?.memo" [text]="'memo'">
-
+                  <codx-show-more-less
+                    [formModel]="formModel"
+                    [value]="dataSelected?.memo"
+                    [text]="'memo'"
+                  >
                   </codx-show-more-less>
-
                 </div>
                 <div *ngIf="isHaveField">
                   <div class="d-flex flex-column mt-5">
@@ -863,7 +873,8 @@
                         [dataStep]="item"
                         [showColumnControl]="showColumnControl(item.stepID)"
                         [isUpdate]="
-                          ['1', '2','15'].includes(dataSelected.status) &&  !dataSelected.closed
+                          ['1', '2', '15'].includes(dataSelected.status) &&
+                          !dataSelected.closed
                         "
                         [objectIdParent]="dataSelected.recID"
                         [customerID]="dataSelected.customerID"
@@ -888,7 +899,7 @@
               ></codx-label>
             </div>
           </ng-template>
-          <ng-template #content>
+          <ng-template #content>y
             <div class="d-flex flex-column mt-4">
               <ng-container *ngFor="let item of listSteps">
                 <codx-fields-detail-temp
@@ -903,7 +914,7 @@
             </div>
           </ng-template>
           </e-tabitem> -->
-          <e-tabitem *ngIf="dataSelected.categoryCustomer == '1'">
+          <e-tabitem *ngIf="dataSelected.customerCategory == '1'">
             <ng-template #headerText>
               <div class="d-flex align-items-top">
                 <span class="icon-add_to_photos icon-16 me-1"></span>
@@ -926,10 +937,7 @@
                   [customerID]="dataSelected?.customerID"
                   [objectType]="'4'"
                   [type]="'formDetail'"
-                  [hidenMF]="
-                    !dataSelected?.write ||
-                    dataSelected?.closed
-                  "
+                  [hidenMF]="!dataSelected?.write || dataSelected?.closed"
                   (contactEvent)="contactChange($event)"
                   (lstContactEmit)="lstContactEmit($event)"
                 ></codx-list-contacts>
@@ -952,10 +960,7 @@
               <div class="mt-4">
                 <codx-tab-dealcompetitors
                   [dealID]="dataSelected.recID"
-                  [hidenMF]="
-                    !dataSelected?.write ||
-                    dataSelected.closed
-                  "
+                  [hidenMF]="!dataSelected?.write || dataSelected.closed"
                 ></codx-tab-dealcompetitors>
               </div>
             </ng-template>

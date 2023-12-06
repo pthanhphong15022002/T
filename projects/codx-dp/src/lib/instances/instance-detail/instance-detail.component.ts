@@ -73,11 +73,13 @@ export class InstanceDetailComponent implements OnInit {
   @Input() hideMF = false;
   @Input() autoNameTabFields: string;
   @Input() applyFor: any;
+  @Input() isChangeOwner: any;
   @Input() progressControl: any;
   @Output() progressEvent = new EventEmitter<object>();
   @Output() moreFunctionEvent = new EventEmitter<any>();
   @Output() outStepInstance = new EventEmitter<any>();
   @Output() changeMF = new EventEmitter<any>();
+  @Output() autoStartInstance = new EventEmitter<any>();
 
   @Output() changeProgress = new EventEmitter<any>();
 
@@ -156,6 +158,7 @@ export class InstanceDetailComponent implements OnInit {
   ];
   timelineSettings: any;
   tags = '';
+  stepIDFirst = '';
   timelineSettingsHour: any = {
     topTier: {
       unit: 'Day',
@@ -371,6 +374,7 @@ export class InstanceDetailComponent implements OnInit {
         this.tags = this.dataSelect?.tags;
         this.listStepInstance = JSON.parse(JSON.stringify(res));
         this.listSteps = res;
+        this.stepIDFirst = this.listSteps[0]?.recID;
         this.getViewApprove();
         this.loadTree(this.id);
         this.handleProgressInstance();
@@ -432,7 +436,8 @@ export class InstanceDetailComponent implements OnInit {
         this.stepName = data.stepName;
         this.currentStep = stepNo;
         this.currentNameStep = this.currentStep;
-        this.tmpDataSteps = JSON.parse(JSON.stringify(data));
+       // this.tmpDataSteps = JSON.parse(JSON.stringify(data));
+       this.tmpDataSteps = data;
         this.outStepInstance.emit({ data: this.tmpDataSteps });
         this.stepValue = {
           textColor: data.textColor,
@@ -451,7 +456,7 @@ export class InstanceDetailComponent implements OnInit {
     var id = '';
     if (roles != null && roles.length > 0) {
       var lstRole = roles.filter(
-        (x) => x.roleType == 'R' && x.objectType == 'U'
+        (x) => x.roleType == 'R'
       );
       lstRole.forEach((element) => {
         if (!id.split(';').includes(element.objectID)) {

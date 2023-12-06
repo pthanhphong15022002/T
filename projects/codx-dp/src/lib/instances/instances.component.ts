@@ -242,6 +242,9 @@ export class InstancesComponent
   crrFunc: any;
   runMode: any; //view detail
   tabControl = '';
+  asideMode: string;
+  isChangeOwner: boolean = false;
+
   constructor(
     inject: Injector,
     private callFunc: CallFuncService,
@@ -378,6 +381,8 @@ export class InstancesComponent
   //   this.setColorKanban();
   // }
   onInit() {
+    this.asideMode = this.codxService.asideMode;
+
     this.button = [
       {
         id: 'btnAdd',
@@ -676,6 +681,7 @@ export class InstancesComponent
   }
 
   async openPopupEdit(applyFor, formMD, option, titleAction) {
+    let ownerIdOld = this.dataSelected?.owner;
     var obj = {
       action: 'edit',
       applyFor: applyFor,
@@ -715,7 +721,7 @@ export class InstancesComponent
           this.detailViewPopup.dataSelect = this.dataSelected;
           this.detailViewPopup.loadChangeData();
         }
-
+        this.isChangeOwner = ownerIdOld != e?.event?.owner;
         this.detectorRef.detectChanges();
       }
     });
@@ -1074,19 +1080,19 @@ export class InstancesComponent
         //Biến động tự custom
         //let dataSource = this.getDataSource(data);
         //let dataSource = data.datas;
-        var customData = {
-          refID: data.processID,
-          refType: 'DP_Processes',
-          // dataSource: dataSource,
-        };
+        // var customData = {
+        //   refID: data.processID,
+        //   refType: 'DP_Processes',
+        //   // dataSource: dataSource,
+        // };
         this.codxShareService.defaultMoreFunc(
           e,
           data,
           this.afterSave,
           this.view.formModel,
           this.view.dataService,
-          this,
-          customData
+          this
+          //customData
         );
         this.detectorRef.detectChanges();
         break;
@@ -1112,12 +1118,15 @@ export class InstancesComponent
       )
       .subscribe((str) => {
         if (str && str?.length > 0) {
-          let datas = str[1];
-          if (datas && datas.includes('[{')) datas = datas.substring(2);
-          let fix = str[0];
-          fix = fix.substring(1, fix.length - 1);
-          let dataSource = '[{ ' + fix + ',' + datas;
-          // let dataSource = '[' + str + ']';
+          let dataSource = '[' + str[0] + ']';
+          if (str[1]) {
+            let datas = str[1];
+            if (datas && datas.includes('[{')) datas = datas.substring(2);
+            let fix = str[0];
+            fix = fix.substring(1, fix.length - 1);
+            dataSource = '[{ ' + fix + ',' + datas;
+          }
+
           var customData = {
             refID: data.processID,
             refType: 'DP_Processes',
@@ -1195,6 +1204,7 @@ export class InstancesComponent
 
   popupOwnerRoles(data) {
     this.dataSelected = data;
+    let ownerIdOld = data?.owner;
     this.cache.functionList('DPT0402').subscribe((fun) => {
       // var formMD = new FormModel();
       // let dialogModel = new DialogModel();
@@ -1267,6 +1277,7 @@ export class InstancesComponent
           this.dataSelected.owner = e.event;
           this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
           // this.detailViewInstance.loadOwnerStep(e.event.owner);
+          this.isChangeOwner = ownerIdOld != e?.event?.owner;
           this.view.dataService.update(this.dataSelected).subscribe();
           this.detectorRef.detectChanges();
         }
@@ -1839,9 +1850,9 @@ export class InstancesComponent
       instance: data,
       objReason: JSON.parse(JSON.stringify(reason)),
       processID: this.processID,
-      applyFor: '0',
-      isMoveProcess: false,
-      isCallInstance: this.process.applyFor == '0',
+      applyFor: this.process?.applyFor,
+      isMoveProcess: true,
+      isCallInstance: this.process?.applyFor == '0',
     };
 
     var dialogRevision = this.callfc.openForm(
@@ -1859,7 +1870,7 @@ export class InstancesComponent
       }
       if (e && e.event != null) {
         //xu ly data đổ về
-        data = e.event.instance;
+        data = e.event?.instance;
         this.listStepInstances = e.event.listStep;
         if (data.refID !== this.guidEmpty) {
           this.valueListID.emit(data.refID);
@@ -1881,6 +1892,22 @@ export class InstancesComponent
           this.detailViewPopup.listSteps = this.listStepInstances;
         }
 
+        if (
+          e?.event?.applyForMove &&
+          e?.event?.processMove &&
+          this.process.applyFor !== e?.event?.applyForMove
+        ) {
+          this.moreFuncStart = this.moreFuncInstance.filter(
+            (x) => x.functionID == 'SYS01'
+          )[0];
+          this.addMoveProcess(
+            e.event?.processMove,
+            e.event?.applyForMove,
+            e.event?.ownerMove,
+            e.event?.title,
+            'add'
+          );
+        }
         this.detectorRef.detectChanges();
       } else {
         if (this.kanban) {
@@ -1888,11 +1915,6 @@ export class InstancesComponent
           this.kanban.updateCard(this.dataSelected);
           this.detectorRef.detectChanges();
         }
-        // this.addMoveProcess(e.event?.processMove,e.event?.applyForMove,
-        //   e.event?.ownerMove,
-        //   e.event?.instance,
-        //   'testttt'
-        //   );
       }
     });
   }
@@ -2122,44 +2144,9 @@ export class InstancesComponent
     this.tabControl =
       this.process?.tabControl != null && this.process?.tabControl?.trim() != ''
         ? this.process?.tabControl
-        : '31'; //31 la tat ca.
+        : '1;3;5'; //31 la tat ca.
 
     this.viewModeDetail = this.process?.viewModeDetail ?? 'S';
-    if (this.tabControl && this.tabControl.trim() != '') {
-      const dataTabs = this.tabControl.split(';');
-      this.tabControl =
-        dataTabs.length == 3
-          ? '31'
-          : dataTabs.length == 1
-          ? dataTabs[0]
-          : dataTabs.some((q) => q == '1') && dataTabs.some((x) => x == '3')
-          ? '11'
-          : dataTabs.some((q) => q == '1') && dataTabs.some((x) => x == '5')
-          ? '12'
-          : '13';
-      //tab control = 31 - tat ca, 1 - giai doan, 3 - nhap lieu, 5 - cong viec, 11 - (giai doan + nhap lieu), 12 - (giai doan + cong viec), 13 - (giai doan + cong viec)
-      this.viewModeDetail =
-        this.tabControl == '1'
-          ? 'S'
-          : this.tabControl == '3'
-          ? 'F'
-          : this.tabControl == '5'
-          ? 'G'
-          : this.tabControl == '11'
-          ? this.process?.viewModeDetail == 'F'
-            ? this.process?.viewModeDetail
-            : 'S'
-          : this.tabControl == '12'
-          ? this.process?.viewModeDetail == 'G'
-            ? this.process?.viewModeDetail
-            : 'S'
-          : this.tabControl == '13'
-          ? this.process?.viewModeDetail == 'F'
-            ? this.process?.viewModeDetail
-            : 'G'
-          : this.process?.viewModeDetail ?? 'S';
-    }
-
     this.loadTabControl();
     this.loadEx();
     this.loadWord();
@@ -2244,101 +2231,34 @@ export class InstancesComponent
     this.cache.valueList('DP034').subscribe((res) => {
       if (res && res.datas) {
         var tabIns = [];
-        res.datas.forEach((element) => {
-          switch (this.tabControl) {
-            case '1': // xem view giai đoạn
-              if (element?.value == 'S') {
-                var tab = {};
-                tab['viewModelDetail'] = element?.value;
-                tab['textDefault'] = element?.text;
-                tab['icon'] = element?.icon;
-                tabIns.push(tab);
-              }
-              break;
-            case '3': // xem view nhap lieu
-              if (element?.value == 'F') {
-                var tab = {};
-                tab['viewModelDetail'] = element?.value;
-                tab['textDefault'] = element?.text;
-                tab['icon'] = element?.icon;
-                if (tab['viewModelDetail'] == 'F') {
-                  tab['textDefault'] =
-                    this.process?.autoNameTabFields != null &&
-                    this.process?.autoNameTabFields?.trim() != ''
-                      ? this.process?.autoNameTabFields
-                      : element?.text;
-                }
-                tabIns.push(tab);
-              }
-              break;
-            case '5': // xem view cong viec
-              if (element?.value == 'G') {
-                var tab = {};
-                tab['viewModelDetail'] = element?.value;
-                tab['textDefault'] = element?.text;
-                tab['icon'] = element?.icon;
-                tabIns.push(tab);
-              }
-              break;
-            case '11': // hiển thị 2tab: gai đoạn, nhap lieu
-              if (element?.value == 'S' || element?.value == 'F') {
-                var tab = {};
-                tab['viewModelDetail'] = element?.value;
-                tab['textDefault'] = element?.text;
-                tab['icon'] = element?.icon;
-                if (tab['viewModelDetail'] == 'F') {
-                  tab['textDefault'] =
-                    this.process?.autoNameTabFields != null &&
-                    this.process?.autoNameTabFields?.trim() != ''
-                      ? this.process?.autoNameTabFields
-                      : element?.text;
-                }
-                tabIns.push(tab);
-              }
-              break;
-            case '12': // 2 tab: giai đoạn, cong viec;
-              if (element?.value == 'S' || element?.value == 'G') {
-                var tab = {};
-                tab['viewModelDetail'] = element?.value;
-                tab['textDefault'] = element?.text;
-                tab['icon'] = element?.icon;
-
-                tabIns.push(tab);
-              }
-              break;
-            case '13': // 2 tab: nhap lieu, cong viec;
-              if (element?.value == 'F' || element?.value == 'G') {
-                var tab = {};
-                tab['viewModelDetail'] = element?.value;
-                tab['textDefault'] = element?.text;
-                tab['icon'] = element?.icon;
-                if (tab['viewModelDetail'] == 'F') {
-                  tab['textDefault'] =
-                    this.process?.autoNameTabFields != null &&
-                    this.process?.autoNameTabFields?.trim() != ''
-                      ? this.process?.autoNameTabFields
-                      : element?.text;
-                }
-                tabIns.push(tab);
-              }
-              break;
-            case '31': // xem tất cả tab
-              var tab = {};
-              tab['viewModelDetail'] = element?.value;
-              tab['textDefault'] = element?.text;
-              tab['icon'] = element?.icon;
-              if (tab['viewModelDetail'] == 'F') {
-                tab['textDefault'] =
-                  this.process?.autoNameTabFields != null &&
-                  this.process?.autoNameTabFields?.trim() != ''
-                    ? this.process?.autoNameTabFields
-                    : element?.text;
-              }
-              tabIns.push(tab);
-              break;
+        const tabs = this.tabControl.split(';');
+        for (let item of tabs) {
+          let value = item == '1' ? 'S' : item == '3' ? 'F' : 'G';
+          let findDatas = res.datas.find((x) => x.value == value);
+          if (findDatas) {
+            var tab = {};
+            tab['viewModelDetail'] = findDatas?.value;
+            tab['textDefault'] = findDatas?.text;
+            tab['icon'] = findDatas?.icon;
+            if (tab['viewModelDetail'] == 'F') {
+              tab['textDefault'] =
+                this.process?.autoNameTabFields != null &&
+                this.process?.autoNameTabFields?.trim() != ''
+                  ? this.process?.autoNameTabFields
+                  : findDatas?.text;
+            }
+            tabIns.push(tab);
           }
-        });
+        }
         this.tabInstances = tabIns;
+        if (tabIns?.length > 0) {
+          const checkTab = tabIns.some(
+            (x) => x.viewModelDetail == this.viewModeDetail
+          );
+          this.viewModeDetail = checkTab
+            ? this.viewModeDetail
+            : tabIns[0]['viewModelDetail'];
+        }
       }
     });
   }
@@ -2793,56 +2713,51 @@ export class InstancesComponent
     }
   }
 
-  addMoveProcess(processMove, applyForMove, ownerMove, instance, titleAction) {
-    this.view.dataService
-      .edit(this.view.dataService.dataSelected)
-      .subscribe((res) => {
-        const funcIDApplyFor = this.checkFunctionID(applyForMove);
-        const applyFor = applyForMove;
-        let option = new SidebarModel();
-        option.DataService = this.view.dataService;
-        option.FormModel = this.view.formModel;
-        this.cache.functionList(funcIDApplyFor).subscribe((fun) => {
-          if (this.addFieldsControl == '2') {
-            let customName = fun.customName || fun.description;
-            if (this.autoName) customName = this.autoName;
-            titleAction =
-              titleAction +
-              ' ' +
-              customName.charAt(0).toLocaleLowerCase() +
-              customName.slice(1);
-          }
-          let instanceReason = {
-            applyForMove: applyForMove,
-            processMove: processMove,
-            ownerMove: ownerMove,
-            instance: instance,
-          };
-          this.cache
-            .gridViewSetup(fun.formName, fun.gridViewName)
-            .subscribe((grvSt) => {
-              var formMD = new FormModel();
-              formMD.funcID = funcIDApplyFor;
-              formMD.entityName = fun.entityName;
-              formMD.formName = fun.formName;
-              formMD.gridViewName = fun.gridViewName;
-              option.Width =
-                this.addFieldsControl == '1' || applyFor != '0'
-                  ? '800px'
-                  : '550px';
-              option.zIndex = 1001;
-              if (applyFor != '0') {
-                this.openPopupMove(
-                  applyFor,
-                  formMD,
-                  option,
-                  'add',
-                  instanceReason
-                );
-              }
-            });
-        });
+  addMoveProcess(processMove, applyForMove, ownerMove, title, titleAction) {
+    this.view.dataService.addNew().subscribe((res) => {
+      const funcIDApplyFor = this.checkFunctionID(applyForMove);
+      const applyFor = applyForMove;
+      let option = new SidebarModel();
+      option.DataService = this.view.dataService;
+      option.FormModel = this.view.formModel;
+      this.cache.functionList(funcIDApplyFor).subscribe((fun) => {
+        if (this.addFieldsControl == '2') {
+          let customName = fun.customName || fun.description;
+          if (this.autoName) customName = this.autoName;
+          titleAction =
+            titleAction +
+            ' ' +
+            customName.charAt(0).toLocaleLowerCase() +
+            customName.slice(1);
+        }
+        let instanceReason = {
+          applyForMove: applyForMove,
+          processMove: processMove,
+          ownerMove: ownerMove,
+          title: title,
+        };
+        this.cache
+          .gridViewSetup(fun.formName, fun.gridViewName)
+          .subscribe((grvSt) => {
+            var formMD = new FormModel();
+            formMD.funcID = funcIDApplyFor;
+            formMD.entityName = fun.entityName;
+            formMD.formName = fun.formName;
+            formMD.gridViewName = fun.gridViewName;
+            option.Width = '800px';
+            option.zIndex = 1001;
+            if (applyFor != '0') {
+              this.openPopupMove(
+                applyFor,
+                formMD,
+                option,
+                'add',
+                instanceReason
+              );
+            }
+          });
       });
+    });
   }
   openPopupMove(applyFor, formMD, option, action, instanceReason) {
     var obj = {
@@ -2857,7 +2772,9 @@ export class InstancesComponent
       isAdminRoles: this.isAdminRoles,
       addFieldsControl: this.addFieldsControl,
       isLoad: applyFor != '0',
-      processID: this.processID,
+      processID: instanceReason?.processMove
+        ? instanceReason?.processMove
+        : this.processID,
       instanceNoSetting: this.process.instanceNoSetting,
       dataCM: this.dataCM,
       categoryCustomer: this.categoryCustomer,
@@ -2870,5 +2787,8 @@ export class InstancesComponent
         this.detectorRef.detectChanges();
       }
     });
+  }
+  autoStartInstance() {
+    this.startInstance(this.dataSelected);
   }
 }

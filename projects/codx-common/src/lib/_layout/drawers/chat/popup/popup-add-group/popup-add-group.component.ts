@@ -1,3 +1,4 @@
+import { group } from 'console';
 import {
   AfterViewInit,
   ChangeDetectorRef,
@@ -20,6 +21,7 @@ import {
 } from 'codx-core';
 import { SignalRService } from '../../services/signalr.service';
 import { GroupItem, WP_Groups } from '../../models/WP_Groups.model';
+import { CHAT } from '../../models/chat-const.model';
 
 @Component({
   selector: 'chat-popup-add',
@@ -153,6 +155,8 @@ export class AddGroupChatComponent implements OnInit, AfterViewInit {
     }
     this.isLoading = true;
     this.group.createdBy = this.user.userID;
+    //this.signalRSV.sendData('CreateGroupChat', this.group);
+
     this.api
     .execSv(
       'WP',
@@ -160,16 +164,16 @@ export class AddGroupChatComponent implements OnInit, AfterViewInit {
       'GroupBusiness',
       'InsertGroupAsync',
       this.group)
-      .subscribe((res: boolean) => {
-      if (res) 
+      .subscribe((result: any) => {
+      if (result) 
       {
         this.codxImg
-        .updateFileDirectReload(this.group.groupID)
+        .updateFileDirectReload(result?.groupID)
         .subscribe((res: any) => 
         {
-          this.signalRSV.sendData('OpenBoxChat', this.group.groupID);
+          this.signalRSV.sendData(CHAT.BE_FUNC.LoadGroup, result?.groupID);
           this.notifiSV.notifyCode('CHAT004');
-          this.dialogRef.close(res);
+          this.dialogRef.close(result);
         });
       } 
       else this.notifiSV.notifyCode('CHAT005');

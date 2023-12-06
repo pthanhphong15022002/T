@@ -1,4 +1,165 @@
-<div class="d-flex align-items-center">
+<codx-form
+  *ngIf="type == 2"
+  #form
+  [headerText]="'Các bước xét duyệt'"
+  [body]="popupApprover"
+  [dialog]="dialog"
+></codx-form>
+
+<ng-template #popupApprover>
+  <div class="">
+    <div class="me-2 d-flex align-items-center justify-content-between">
+      <codx-label
+        class="fw-normal text-gray-400 label-colon"
+        name="lblDescriptionApproveRule"
+        [formName]="'DPProcesses'"
+        [gridViewName]="'grvDPProcesses'"
+        default="Các bước duyệt"
+      >
+      </codx-label>
+      <button type="button" class="btn btn-icon btn-sm btn-light-primary" (click)="clickSettingApprove()">
+        <i class="icon-settings icon-16"></i>
+      </button>
+    </div>
+
+    <div class="progress-approval" *ngIf="listApprover?.length > 0">
+      <ng-container *ngFor="let item of listApprover; let i = index">
+        <div class="process-step1 d-flex" [ngClass]="i < listApprover?.length - 1 ? 'boder_left' : ''" placement="top">
+          <div
+            class="step-node cursor-pointer d-flex flex-center m-1"
+            [style.color]="''"
+            [ngStyle]="{ border: '2px solid ' + '' }"
+          >
+            {{ i + 1 }}
+          </div>
+          <div class="ms-2">
+            <div class="text-gray-600 fw-bold mt-2">
+              {{
+                item?.stepName ??
+                  (item?.stepType | vll : "ES002" : "text" | async)
+              }}
+            </div>
+            <div class="d-flex flex-wrap">
+              <ng-container *ngFor="let approver of item.approvers">
+                <div class="">
+                  <codx-temp-full
+                    class="p-1"
+                    [imageId]="
+                      approver?.roleType == 'U'
+                        ? approver?.approver
+                        : approver?.userID
+                    "
+                    [imageObjType]="'AD_Users'"
+                    [imageWidth]="30"
+                    [title]="
+                      approver?.userName
+                        ? approver?.userName
+                        : approver?.name
+                        ? approver?.name
+                        : approver?.approver
+                        ? (approver?.approver | vll : 'ES014' : 'text' | async)
+                        : (approver?.roleType | vll : 'ES014' : 'text' | async)
+                    "
+                    [subTitle]="
+                      approver?.position
+                        ? approver?.position
+                        : (approver?.roleType | vll : 'ES014' : 'text' | async)
+                    "
+                    [imageSrc]="
+                      (approver?.roleType != 'U' && !approver?.userID) ||
+                      approver?.roleType == 'PA'
+                        ? './assets/themes/sys/default/img/' +
+                          (approver?.icon
+                            ? approver?.icon
+                            : 'share_default.svg')
+                        : null
+                    "
+                    [imgCss]="
+                      (approver?.roleType != 'U' && !approver?.userID) ||
+                      approver?.roleType == 'PA'
+                        ? 'w-30px p-2 me-3 user-mini-icon'
+                        : 'w-35px me-3'
+                    "
+                  >
+                  </codx-temp-full>
+                </div>
+              </ng-container>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+    <div *ngIf="!listApprover || listApprover?.length == 0">
+      <codx-label
+        name="lblNotSetup"
+        default="Chưa thiết lập"
+        [formName]="'DPProcesses'"
+        [gridViewName]="'grvDPProcesses'"
+      >
+      </codx-label>
+    </div>
+  </div>
+
+  <ng-template #popupViewApproverStep>
+    <div class>
+      <div class="text-gray-600 fw-bold">
+        <!-- {{ viewApprover.stepName }} -->
+        {{
+          viewApprover?.stepName ??
+            (viewApprover?.stepType | vll : "ES002" : "text" | async)
+        }}
+      </div>
+      <div class="d-flex flex-wrap">
+        <ng-container *ngFor="let approver of viewApprover.approvers">
+          <div
+            class="border border-1 border-gray-300 rounded min-w-250px mw-250px me-4 mb-2"
+          >
+            <codx-temp-full
+              class="p-1"
+              [imageId]="
+                approver?.roleType == 'U'
+                  ? approver?.approver
+                  : approver?.userID
+              "
+              [imageObjType]="'AD_Users'"
+              [imageWidth]="30"
+              [title]="
+                approver?.userName
+                  ? approver?.userName
+                  : approver?.name
+                  ? approver?.name
+                  : approver?.approver
+                  ? (approver?.approver | vll : 'ES014' : 'text' | async)
+                  : (approver?.roleType | vll : 'ES014' : 'text' | async)
+              "
+              [subTitle]="
+                approver?.position
+                  ? approver?.position
+                  : (approver?.roleType | vll : 'ES014' : 'text' | async)
+              "
+              [imageSrc]="
+                (approver?.roleType != 'U' && !approver?.userID) ||
+                approver?.roleType == 'PA'
+                  ? './assets/themes/sys/default/img/' +
+                    (approver?.icon ? approver?.icon : 'share_default.svg')
+                  : null
+              "
+              [imgCss]="
+                (approver?.roleType != 'U' && !approver?.userID) ||
+                approver?.roleType == 'PA'
+                  ? 'w-30px p-2 me-3 user-mini-icon'
+                  : 'w-35px me-3'
+              "
+            >
+            </codx-temp-full>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+  </ng-template>
+</ng-template>
+
+<div class="d-flex align-items-center" *ngIf="type == 1">
   <div class="me-2">
     <codx-label
       class="fw-normal text-gray-400 label-colon"
@@ -30,65 +191,66 @@
     </ng-container>
   </div>
   <div *ngIf="!listApprover || listApprover?.length == 0">
-   <codx-label
+    <codx-label
       name="lblNotSetup"
       default="Chưa thiết lập"
       [formName]="'DPProcesses'"
       [gridViewName]="'grvDPProcesses'"
-   >
-   </codx-label>
+    >
+    </codx-label>
+  </div>
 </div>
-</div>
-
-
 
 <ng-template #popupViewApproverStep>
   <div class>
     <div class="text-gray-600 fw-bold">
       <!-- {{ viewApprover.stepName }} -->
-      {{ viewApprover?.stepName ?? (viewApprover?.stepType | vll : "ES002" : "text" | async ) }}
+      {{
+        viewApprover?.stepName ??
+          (viewApprover?.stepType | vll : "ES002" : "text" | async)
+      }}
     </div>
     <div class="d-flex flex-wrap">
       <ng-container *ngFor="let approver of viewApprover.approvers">
         <div
           class="border border-1 border-gray-300 rounded min-w-250px mw-250px me-4 mb-2"
         >
-          <!-- <codx-temp-full
-            cardCss="card-template p-3"
-            *ngIf="approver.roleType?.length == 1 || approver.roleType == 'PA'"
-            [imageId]="approver.approver"
-            [title]="approver.name"
-            [subTitle]="approver.position"
-            [imageObjType]="'AD_Users'"
-            [modeImgs]="true"
-            [titleLine]="3"
-          >
-          </codx-temp-full>
-
           <codx-temp-full
-            cardCss="card-template p-3"
-            *ngIf="approver.roleType.length > 1 && approver.roleType != 'PA'"
-            [imageSrc]="
-              './assets/themes/sys/default/img/' +
-              (listApprover.icon ? listApprover.icon : 'share_default.svg')
+            class="p-1"
+            [imageId]="
+              approver?.roleType == 'U' ? approver?.approver : approver?.userID
             "
-            imgCss="me-3 p-3 user-mini-icon w-40px h-40px"
-            [title]="approver.approver | vll : 'ES014' : 'text' | async"
-            [subTitle]="approver.approver | vll : 'ES014' : 'text' | async"
-            [modeImgs]="true"
-            [titleLine]="3"
-          >
-          </codx-temp-full> -->
-          <codx-temp-full
-          class="p-1"
-          [imageId]=" approver?.roleType =='U' ? approver?.approver : approver?.userID" [imageObjType]="'AD_Users'" [imageWidth]="30" 
-          [title]="approver?.userName ? approver?.userName : approver?.name ? approver?.name : approver?.approver ? (approver?.approver | vll : 'ES014' : 'text' | async) : (approver?.roleType | vll : 'ES014' : 'text' | async)"
-          [subTitle]="approver?.position ? approver?.position: approver?.roleType | vll : 'ES014' : 'text' | async"            
-          [imageSrc]="(approver?.roleType !='U' && !approver?.userID) || approver?.roleType =='PA' ? './assets/themes/sys/default/img/' + (approver?.icon ? approver?.icon : 'share_default.svg') : null"
-          [imgCss]="(approver?.roleType !='U' && !approver?.userID) || approver?.roleType =='PA' ? 'w-30px p-2 me-3 user-mini-icon' :'w-35px me-3'"                          
+            [imageObjType]="'AD_Users'"
+            [imageWidth]="30"
+            [title]="
+              approver?.userName
+                ? approver?.userName
+                : approver?.name
+                ? approver?.name
+                : approver?.approver
+                ? (approver?.approver | vll : 'ES014' : 'text' | async)
+                : (approver?.roleType | vll : 'ES014' : 'text' | async)
+            "
+            [subTitle]="
+              approver?.position
+                ? approver?.position
+                : (approver?.roleType | vll : 'ES014' : 'text' | async)
+            "
+            [imageSrc]="
+              (approver?.roleType != 'U' && !approver?.userID) ||
+              approver?.roleType == 'PA'
+                ? './assets/themes/sys/default/img/' +
+                  (approver?.icon ? approver?.icon : 'share_default.svg')
+                : null
+            "
+            [imgCss]="
+              (approver?.roleType != 'U' && !approver?.userID) ||
+              approver?.roleType == 'PA'
+                ? 'w-30px p-2 me-3 user-mini-icon'
+                : 'w-35px me-3'
+            "
           >
           </codx-temp-full>
-
         </div>
       </ng-container>
     </div>

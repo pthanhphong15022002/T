@@ -35,17 +35,17 @@
       </div>
     </div>
     <ng-container>
-      <div style="margin-left: 28px" *ngIf="!formCashReceipt.data?.validated"
+      <div style="margin-left: 28px" *ngIf="formCashReceipt && !formCashReceipt?.data?.validated"
         class="input-circle h-20px input-border-0 w-400px mb-1">
         <codx-dropdown-select #eleCbxSubType [showFooter]="false" [isToolbar]="false"
           [cssClass]="'rounded-pill border-1'" cssPopup="h-350px w-550px" [isMulti]="false" type="valuelist"
-          field="subType" [refValue]="formCashReceipt?.gridviewSetup['SubType'].referedValue"
-          [value]="formCashReceipt.data.subType" emptyText="Loại phiếu"
+          field="subType" [refValue]="formCashReceipt?.gridviewSetup['SubType']?.referedValue"
+          [value]="formCashReceipt?.data?.subType" emptyText="Loại phiếu"
           (valueChange)="changeSubType($event)"></codx-dropdown-select>
       </div>
-      <span style="margin-left: 30px" *ngIf="formCashReceipt.data?.validated">
+      <span style="margin-left: 30px" *ngIf="formCashReceipt && formCashReceipt?.data?.validated">
         <codx-vll [name]="'AC063'" [formModel]="dialog.formModel" [field]="'SubType'"
-          [value]="formCashReceipt.data?.subType" [showText]="true" [showBgColor]="true"
+          [value]="formCashReceipt?.data?.subType" [showText]="true" [showBgColor]="true"
           class="badge badge-light-primary badge-lg mt-1">
         </codx-vll>
       </span>
@@ -399,8 +399,8 @@
 
 <!-- Start: Grid CashPaymentLine -->
 <ng-template #TmpTabLine>
-  <ng-container *ngIf="formCashReceipt.data?.subType == '11'">
-    <div id="gridcash" class="tabline-content scroll-ac header-table-ac position-relative">
+  <ng-container *ngIf="formCashReceipt.data?.subType != '12'">
+    <div id="gridcash" class="tabline-content header-table-ac position-relative">
       <codx-gridview-v2 #eleGridCashReceipt class="tabLine" [showEmptyRecord]="false" gridLines="Both"
         [autoFitColumns]="false" [formName]="journal.entryMode == '1'? 'CashReceiptsLines' : 'CashReceiptsLinesOneAccount'"
         [gridViewName]="journal.entryMode == '1' ? 'grvCashReceiptsLines' : 'grvCashReceiptsLinesOneAccount'"
@@ -439,8 +439,8 @@
 
 <!-- Start: Grid SettledInvoices -->
 <ng-template #TmpTabSettledInvoices>
-  <ng-container *ngIf="formCashReceipt.data?.subType == '12'">
-    <div id="gridset" class="tabline-content scroll-ac header-table-ac position-relative">
+  <ng-container *ngIf="formCashReceipt.data?.subType == '12' || formCashReceipt.data?.subType == '19'">
+    <div id="gridset" class="tabline-content header-table-ac position-relative">
       <codx-gridview-v2 #eleGridSettledInvoices formName="SettledInvoices" gridViewName="grvSettledInvoices"
         [showEmptyRecord]="false" entityName="AC_SettledInvoices" rowHeight="35" [showEmptyRecord]="false"
         gridLines="Both" [hideMoreFunc]="true" service="AC" predicates="TransID=@0"

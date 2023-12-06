@@ -178,6 +178,23 @@ export class CodxDpService {
       applyFor
     );
   }
+  // move reason
+  getlistCbxProccessReason(applyFor: string) {
+    return this.api.exec<any>(
+      'DP',
+      'ProcessesBusiness',
+      'GetListCbxProcessesReasonAsync',
+      applyFor
+    );
+  }
+  getlistCbxProccessMove(data) {
+    return this.api.exec<any>(
+      'DP',
+      'ProcessesBusiness',
+      'GetListCbxProcessesMoveAsync',
+      data
+    );
+  }
 
   updatePermissionProcess(process) {
     return this.api.exec<any>(
@@ -838,7 +855,7 @@ export class CodxDpService {
     return this.api.exec<any>(
       'DP',
       'InstancesBusiness',
-      'MoveReasonInDealAsync',
+      'GetListReasonInDealAsync',
       data
     );
   }
@@ -847,6 +864,16 @@ export class CodxDpService {
       'DP',
       'InstancesBusiness',
       'GetListPermissionInCMAsync',
+      data
+    );
+  }
+
+  //
+  getUserCbxByListPermission(data) {
+    return this.api.exec<any>(
+      'DP',
+      'InstancesBusiness',
+      'GetPermissionByProcessAsync',
       data
     );
   }

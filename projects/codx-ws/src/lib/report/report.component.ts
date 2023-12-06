@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, Input, ViewChild } from '@angular/core';
 import { WSUIComponent } from '../default/wsui.component';
 import { isObservable } from 'rxjs';
 import { FormModel } from 'codx-core';
@@ -6,14 +6,15 @@ import { CodxView2Component } from 'projects/codx-share/src/lib/components/codx-
 import { BookmarkComponent } from '../bookmark/bookmark.component';
 
 @Component({
-  selector: 'lib-report',
+  selector: 'lib-ws-report',
   templateUrl: './report.component.html',
   styleUrls: ['./report.component.scss']
 })
 export class ReportComponent extends WSUIComponent{
   @ViewChild('codxView2') codxView2: CodxView2Component;
 
-  listModule:any;
+  @Input() listModule:any;
+  
   listReport:any;
   listReports: any;
   listBookMarks = [];
@@ -27,6 +28,7 @@ export class ReportComponent extends WSUIComponent{
     this.formatListGroupReport();
     this.getModuleByUserID();
     this.getCountBookMark();
+    if(this.listModule) this.getDashboardOrReport("R", this.listModule);
   }
   getCountBookMark()
   {
@@ -46,6 +48,7 @@ export class ReportComponent extends WSUIComponent{
 
   getModuleByUserID()
   {
+    if(this.listModule) return;
     var module = this.codxWsService.loadModuleByUserID(this.userInfo?.userID) as any;
     if(isObservable(module))
     {
@@ -134,7 +137,7 @@ export class ReportComponent extends WSUIComponent{
 
   selectedChange(data:any)
   {
-    this.codxService.navigate("","/ws/report/detail/"+data.recID);
+    this.codxService.navigate("","/ws/wsreport/detail/"+data.recID);
     this.codxWsService.functionID = data.reportID;
     data.functionID = data.reportID;
     this.codxWsService.listBreadCumb.push(data);

@@ -461,24 +461,8 @@ export class CasesComponent
     this.changeDataMF(e.e, e.data);
   }
 
-  checkMoreReason(tmpPermission) {
-    if (
-      tmpPermission.isReasonSuccess &&
-      tmpPermission.isReasonFail &&
-      tmpPermission.isMoveStage
-    ) {
-      return true;
-    }
-    if (tmpPermission.isReasonSuccess) {
-      return true;
-    }
-    if (tmpPermission.IsReasonFail) {
-      return true;
-    }
-    if (tmpPermission.isMoveStage) {
-      return true;
-    }
-    return false;
+  checkMoreReason(data) {
+    return data?.status != '1' && data?.status != '2' && data?.status != '15';
   }
 
   clickMoreFunc(e) {
@@ -508,31 +492,32 @@ export class CasesComponent
       CM0402_11: () => this.cancelApprover(data),
       CM0401_10: () => this.popupPermissions(data),
       CM0401_12: () => this.openFormChangeStatus(data),
+      SYS002: () => this.exportTemplet(e, data),
     };
 
     const executeFunction = functionMappings[e.functionID];
     if (executeFunction) {
       executeFunction();
     } else {
-      let customData = {
-        refID: data.recID,
-        refType: 'CM_Cases',
-      };
+      // let customData = {
+      //   refID: data.recID,
+      //   refType: 'CM_Cases',
+      // };
 
-      if (data?.refID && data.applyProcess) {
-        customData = {
-          refID: data.processID,
-          refType: 'DP_Processes',
-        };
-      }
+      // if (data?.refID && data.applyProcess) {
+      //   customData = {
+      //     refID: data.processID,
+      //     refType: 'DP_Processes',
+      //   };
+      // }
       this.codxShareService.defaultMoreFunc(
         e,
         data,
         this.afterSave.bind(this),
         this.view.formModel,
         this.view.dataService,
-        this,
-        customData
+        this
+        //customData
       );
     }
   }
@@ -1187,14 +1172,11 @@ export class CasesComponent
           this.notificationsService.notifyCode('ES028');
           return;
         }
-        if (category.eSign) {
-          //kys soos
-        } else {
-          this.release(data, category);
-        }
+        //ko phân biệt eSign
+        this.release(data, category);
       });
   }
-  release(data: any, category: any) {
+  release(data: any, category: any, exportData = null) {
     //duyet moi
     this.codxShareService.codxReleaseDynamic(
       this.view.service,
@@ -1203,7 +1185,13 @@ export class CasesComponent
       this.view.formModel.entityName,
       this.view.formModel.funcID,
       data?.title,
-      this.releaseCallback.bind(this)
+      this.releaseCallback.bind(this),
+      null,
+      null,
+      null,
+      null,
+      null,
+      exportData
     );
   }
   //call Back
@@ -1602,4 +1590,48 @@ export class CasesComponent
       });
   }
   //#endregion
+
+  //Export----------------------------------------------------//
+  exportTemplet(e, data) {
+    this.api
+      .execSv<any>(
+        'CM',
+        'CM',
+        'CasesBusiness',
+        'GetDataSourceExportAsync',
+        data.recID
+      )
+      .subscribe((str) => {
+        if (str && str?.length > 0) {
+          let dataSource = '[' + str[0] + ']';
+          if (str[1]) {
+            let datas = str[1];
+            if (datas && datas.includes('[{')) datas = datas.substring(2);
+            let fix = str[0];
+            fix = fix.substring(1, fix.length - 1);
+            dataSource = '[{ ' + fix + ',' + datas;
+          }
+
+          let customData = {
+            refID: data.recID,
+            refType: this.view.entityName,
+            dataSource: dataSource,
+          };
+          if (data?.refID && data.applyProcess) {
+            customData.refID = data.processID;
+            customData.refType = 'DP_Processes';
+          }
+          this.codxShareService.defaultMoreFunc(
+            e,
+            data,
+            this.afterSave,
+            this.view.formModel,
+            this.view.dataService,
+            this,
+            customData
+          );
+          this.detectorRef.detectChanges();
+        }
+      });
+  }
 }

@@ -69,9 +69,11 @@ export class UserComponent extends UIComponent {
   }
 
   onInit(): void {
-    this.button = [{
-      id: 'btnAdd',
-    }];
+    this.button = [
+      {
+        id: 'btnAdd',
+      },
+    ];
   }
 
   ngAfterViewInit(): void {
@@ -249,11 +251,6 @@ export class UserComponent extends UIComponent {
           if (!x?.event) this.view.dataService.clear();
           if (x.event) {
             x.event.modifiedOn = new Date();
-            this.view.dataService.data;
-            this.view.dataService.idField = 'userID';
-            this.view.dataService.update(x.event).subscribe((res) => {
-              console.log('edit xong', res);
-            });
             this.changeDetectorRef.detectChanges();
           }
         });
@@ -272,7 +269,7 @@ export class UserComponent extends UIComponent {
     option.DataService = this.view?.currentView?.dataService;
     option.FormModel = this.view?.currentView?.formModel;
     option.Width = 'Auto';
-    let dialog = this.callfunc.openSide(AddUserComponent, obj, option);
+    this.callfunc.openSide(AddUserComponent, obj, option);
   }
 
   copy(data?) {
@@ -338,7 +335,8 @@ export class UserComponent extends UIComponent {
   }
   //#endregion
 
-  changeDataMF(e: any, data) {
+  changeDataMF(e: any, data: any) {
+    if (!data) return;
     let dl = e.filter((x: { functionID: string }) => x.functionID == 'SYS02');
     dl[0].disabled = true;
     let copyMF = e.filter((x) => x.functionID == 'SYS04');

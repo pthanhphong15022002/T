@@ -49,7 +49,7 @@
         <tbody>
             <ng-container *ngFor="let item of listAcctrants;trackBy: trackByFn">
                 <tr [style]="item | tranformClassBorder : listAcctrants">
-                    <td class="text-center">
+                    <td class="">
                         <div class="d-flex justify-content-start ps-3">
                             <div class="w-100px min-w-100px">
                                 <div class="d-flex align-items-center justify-content-start">
@@ -69,14 +69,14 @@
                                     <span style="text-align: left !important;" #accountID
                                         class="fw-bold line-clamp line-clamp-1">{{item.accountName}}</span>
                                 </ng-container>
-                                <div *ngIf="(item.objectName!= null && item.objectName != '')" class="d-flex align-items-center justify-content-start">
+                                <div *ngIf="(item.objectName!= null && item.objectName != '')" class="d-flex justify-content-start">
                                     <ng-container>
                                         <codx-label style="white-space: nowrap" class="fs-7 fw-bold label-colon" default="Đối tượng">
                                         </codx-label>
                                         &nbsp;
                                         <div class="w-100" style="text-align: left;display: inline-block;">
                                             <div style="display: inline;text-overflow: ellipsis;">
-                                                <span style="word-wrap: break-word;" class="fs-7 text-gray-700">
+                                                <span style="word-wrap: break-word;" class="fs-7 text-gray-700 line-clamp line-clamp-1">
                                                     {{item.objectName}}
                                                 </span>
                                             </div>
@@ -91,7 +91,7 @@
                                         </codx-label>
                                         <div class="w-100" style="text-align: left;display: inline-block;">
                                             <div style="display: inline;text-overflow: ellipsis;">
-                                                <span style="word-wrap: break-word;" class="fs-7 text-gray-700">{{item.diM3 + ' - ' + item.costItemName}}</span>
+                                                <span style="word-wrap: break-word;" class="fs-7 text-gray-700 line-clamp line-clamp-1">{{item.diM3 + ' - ' + item.costItemName}}</span>
                                             </div>
                                         </div>
                                     </ng-container>
@@ -104,7 +104,7 @@
                                         </codx-label>
                                         <div class="w-100" style="text-align: left;display: inline-block;">
                                             <div style="display: inline;text-overflow: ellipsis;">
-                                                <span style="word-wrap: break-word;" class="fs-7 text-gray-700">{{item.diM2 + ' - ' + item.costCenterName}}</span>
+                                                <span style="word-wrap: break-word;" class="fs-7 text-gray-700 line-clamp line-clamp-1">{{item.diM2 + ' - ' + item.costCenterName}}</span>
                                             </div>
                                         </div>
                                     </ng-container>
@@ -117,7 +117,7 @@
                                         </codx-label>
                                         <div class="w-100" style="text-align: left;display: inline-block;">
                                             <div style="display: inline;text-overflow: ellipsis;">
-                                                <span style="word-wrap: break-word;" class="fs-7 text-gray-700">{{item.diM1 + ' - ' + item.profitCenterName}}</span>
+                                                <span style="word-wrap: break-word;" class="fs-7 text-gray-700 line-clamp line-clamp-1">{{item.diM1 + ' - ' + item.profitCenterName}}</span>
                                             </div>
                                         </div>
                                     </ng-container>
@@ -137,7 +137,7 @@
                             </div>
                         </div>
                     </td>
-                    <td class="text-center">
+                    <td class="">
                         <div *ngIf="!item.crediting" class="d-flex align-items-center justify-content-end ps-3">
                             <!-- <ng-container *ngIf="baseCurr && itemSelected?.currencyID == baseCurr">
                   <span class="fw-bold line-clamp line-clamp-1"[innerHTML]="item?.transAmt
@@ -151,19 +151,19 @@
                     | tranformValueNumber : 'B' | async"></span>
                         </div>
                     </td>
-                    <td class="text-center">
+                    <td class="">
                         <div *ngIf="item.crediting" class="d-flex align-items-center justify-content-end ps-3">
                             <span class="fw-bold line-clamp line-clamp-1" [innerHTML]="item?.transAmt2
                   | tranformValueNumber : 'B' | async"></span>
                         </div>
                     </td>
-                    <td *ngIf="baseCurr && itemSelected?.currencyID != baseCurr" class="text-center">
+                    <td *ngIf="baseCurr && itemSelected?.currencyID != baseCurr" class="">
                         <div class="d-flex align-items-center justify-content-end ps-3">
                             <span class="fw-bold line-clamp line-clamp-1" [innerHTML]="item?.transAmt
                 | tranformValueNumber : 'S' | async"></span>
                         </div>
                     </td>
-                    <td class="text-center">
+                    <td class="">
                         <div *ngIf="item.memo != null && item.memo != ''" class="d-flex align-items-center justify-content-start ps-3">
                             <span class="line-clamp line-clamp-2 text-gray-600 fs-7">{{ item.memo }}</span>
                         </div>

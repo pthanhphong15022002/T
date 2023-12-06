@@ -56,8 +56,6 @@ export class PopupAddCustomerWrComponent implements OnInit {
 
   //#region
   async onSave() {
-    if (this.data.category == '2') this.data.mobile = null;
-
     if (this.data.customerName == null || this.data.customerName.trim() == '') {
       this.notification.notifyCode(
         'SYS009',
@@ -83,19 +81,8 @@ export class PopupAddCustomerWrComponent implements OnInit {
     } else {
       this.data.email = null;
     }
-    if (!this.radioChecked)
-      if (
-        !this.checkValidateSetting(
-          this.data?.address,
-          this.data,
-          this.leverSetting,
-          this.gridViewSetup,
-          this.gridViewSetup?.Address?.headerText
-        )
-      ) {
-        return;
-      }
-    if(this.data?.address != null && this.data?.address?.trim() != ''){
+
+    if (this.data?.address != null && this.data?.address?.trim() != '') {
       let json = await firstValueFrom(
         this.api.execSv<any>(
           'BS',
@@ -106,7 +93,7 @@ export class PopupAddCustomerWrComponent implements OnInit {
         )
       );
 
-      if (json != null && json.trim() != '' && json != "null") {
+      if (json != null && json.trim() != '' && json != 'null') {
         let lstDis = JSON.parse(json);
         this.data.province = lstDis?.ProvinceID;
         this.data.district = lstDis?.DistrictID;
@@ -114,6 +101,18 @@ export class PopupAddCustomerWrComponent implements OnInit {
         this.data.province = null;
         this.data.district = null;
       }
+      if (!this.radioChecked)
+        if (
+          !this.checkValidateSetting(
+            this.data?.address,
+            this.data,
+            this.leverSetting,
+            this.gridViewSetup,
+            this.gridViewSetup?.Address?.headerText
+          )
+        ) {
+          return;
+        }
     }
     this.dialog.close([this.data, this.radioChecked]);
     this.data = null;
@@ -165,7 +164,6 @@ export class PopupAddCustomerWrComponent implements OnInit {
       this.radioChecked = true;
     } else if (e.field === 'no' && e.component.checked === true) {
       this.radioChecked = false;
-      this.data.category = '2';
       this.data.customerID = Util.uid();
     }
     this.changeDetectoref.detectChanges();
@@ -175,7 +173,6 @@ export class PopupAddCustomerWrComponent implements OnInit {
     this.data.customerID = '';
     this.data.customerName = '';
     this.data.custGroupID = '';
-    this.data.category = '';
     this.data.contactName = '';
     this.data.phone = '';
     this.data.mobile = '';
@@ -202,14 +199,13 @@ export class PopupAddCustomerWrComponent implements OnInit {
             this.data.customerID = res?.recID;
             this.data.customerName = res?.customerName;
             this.data.custGroupID = res?.custGroupID;
-            this.data.category = res?.category;
             this.data.phone = res?.phone;
             this.data.email = res?.category == '2' ? res?.email : '';
             this.data.address = res?.address;
             this.data.country = res?.countryID;
             this.data.province = res?.provinceID;
             this.data.district = res?.districtID;
-            if (this.data.category == '1') {
+            if (res.category == '1') {
               this.wrSv.getOneContact(res?.recID).subscribe((ele) => {
                 if (ele) {
                   this.data.contactName = ele?.contactName;
@@ -230,9 +226,6 @@ export class PopupAddCustomerWrComponent implements OnInit {
   async valueChange(e) {
     if (e?.data != this.data[e?.field]) {
       this.data[e?.field] = e?.data;
-      if (this.data.category == '2') {
-        this.data.contactName = '';
-      }
     }
     this.changeDetectoref.detectChanges();
   }

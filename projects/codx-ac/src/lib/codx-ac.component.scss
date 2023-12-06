@@ -44,7 +44,7 @@
 
 .ac-empty {
     width: 100%;
-    height: calc(100vh - 500px) !important;
+    height: calc(100vh - 500px);
     justify-content: center !important;
     display: flex;
     align-items: center;
@@ -85,6 +85,10 @@
 
 .taballow-content .e-content {
     height: calc(90vh - 355px) !important
+}
+
+.tabposting-content .e-content {
+    height: calc(100vh - 235px) !important
 }
 
 .e-gridfooter {
@@ -191,20 +195,6 @@
     border: none;
 
     white-space: nowrap;
-}
-
-.scroll-ac .e-content::-webkit-scrollbar {
-    width: 4px !important;
-    height: 4px !important;
-}
-
-.scroll-act .e-content::-webkit-scrollbar-thumb {
-    background: #dee2e6 !important;
-    border-radius: 10px;
-}
-
-.scroll-ac .e-content::-webkit-scrollbar-thumb:hover {
-    background: grey !important;
 }
 
 .input-circle .icon-keyboard_arrow_down {
@@ -367,7 +357,7 @@
         height: 100% !important;
     }
     .e-pane.e-pane-horizontal.e-scrollable.e-static-pane.e-collapsible{
-        max-width: 450px !important;
+        max-width: 365px !important;
     }
 }
 
@@ -478,28 +468,79 @@
     background-image: var(--url);
   }
 
-  .card-general .table-ac{
-    height: calc(100vh - 420px) !important;
-  }
-
-  .card-pur .table-ac{
-    height: calc(100vh - 445px) !important;
-  }
-
-  .card-transfer .table-ac{
-    height: calc(100vh - 440px) !important;
-  }
-
-  .ac-allowcation-animate {
-    animation: opacity 500ms both;
-  }
-
-  @keyframes opacity {
-    0% {
-      opacity: 0;
+  .card-general-more {
+    .table-ac{
+        height: calc(100vh - 450px) !important;
     }
 
-    100% {
-      opacity: 1;
+    .ac-empty {
+        height: calc(100vh - 490px) !important;
+    }
+  } 
+
+  .card-general-less{
+    .table-ac{
+        height: calc(100vh - 415px) !important;
+    }
+    .ac-empty {
+        height: calc(100vh - 455px) !important;
+    }
+  } 
+
+  .card-cash {
+    .table-ac{
+        height: calc(100vh - 495px) !important;
+    }
+    .ac-empty {
+        height: calc(100vh - 540px) !important;
     }
   }
+
+  .card-pur-more{
+    .table-ac{
+        height: calc(100vh - 495px) !important;
+    }
+
+    .ac-empty {
+        height: calc(100vh - 545px) !important;
+    }
+  } 
+
+  .card-pur-less{
+    .table-ac{
+        height: calc(100vh - 460px) !important;
+    }
+    .ac-empty {
+        height: calc(100vh - 500px) !important;
+    }
+  } 
+
+  .card-transfer {
+    .table-ac{
+        height: calc(100vh - 455px) !important;
+    }
+    .ac-empty {
+        height: calc(100vh - 495px) !important;
+    }
+  } 
+
+  .nav-link.disabled {
+    color: var(--gray-500) !important;
+  }
+
+  .btn-icon-badge{
+    border-radius: 50px;
+    position: absolute;
+    left: 3rem;
+    top: -5px !important;
+    width: 20px !important;
+    font-size: 10px !important;
+    height: 20px !important;
+    min-width: unset !important;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border: none !important;
+  }
+

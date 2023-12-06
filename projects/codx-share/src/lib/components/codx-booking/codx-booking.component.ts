@@ -211,9 +211,7 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
               panelRightRef: this.panelRight,
             },
           },
-
         ];
-
         this.navigateSchedule();
         this.cache
           .gridViewSetup(this.formModel?.formName, this.formModel?.gridViewName)
@@ -548,6 +546,10 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
 
   clickMF(event, item) {
     if(!item) item = this.view?.dataService?.dataSelected;
+    if(!item && this.view?.dataService?.data?.length>0) {
+      item = this.view?.dataService?.data[0];
+      this.view.dataService.dataSelected = item;
+    }  
     this.codxBookingService.getBookingByID(item?.recID).subscribe((data) => {
       if (data) {
         this.popupTitle = event?.text + ' ' + this.funcIDName;
@@ -597,9 +599,11 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
             break;
           default:
             //Biến động , tự custom
+            let fm = {...this.formModel}
+            fm.entityName = "EP_Bookings";
             var customData = {
               refID: '',
-              refType: this.formModel?.entityName,
+              refType: fm.entityName,//this.formModel?.entityName,
               dataSource: data,
             };
 
@@ -607,7 +611,7 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
               event,
               data,
               null,
-              this.formModel,
+              fm,
               this.view?.dataService,
               this,
               customData

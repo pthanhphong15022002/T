@@ -21,6 +21,7 @@ import { Modal } from 'bootstrap';
 import { Login2FAComponent } from '@modules/auth/login/login2-fa/login2-fa.component';
 import { Device } from 'projects/codx-ad/src/lib/models/userLoginExtend.model';
 import { SelectEventArgs } from '@syncfusion/ej2-angular-navigations';
+import { LoginService } from '@modules/auth/login/login.service';
 
 @Component({
   selector: 'codx-login',
@@ -97,7 +98,8 @@ export class LoginDefaultComponent extends UIComponent {
     private injector: Injector,
     private df: ChangeDetectorRef,
     private realHub: RealHubService,
-    private authService: AuthService
+    private authService: AuthService,
+    private loginService: LoginService
   ) {
     super(injector);
 
@@ -124,7 +126,7 @@ export class LoginDefaultComponent extends UIComponent {
           if (z.event == 'AcceptLoginQR') {
             if (z.data?.hubConnection == this.hubConnectionID) {
               if (z.data.isLg2FA == '') {
-                this.authService.setLogin(z.data?.user);
+                this.authService.setLogin(JSON.parse(z.data.user));
                 this.realHub.stop();
                 setTimeout(() => {
                   window.location.href = z.data?.host + z.data?.tenant;
@@ -233,7 +235,7 @@ export class LoginDefaultComponent extends UIComponent {
 
   generateOTP() {
     this.api
-      .execSv<boolean>(
+      .execSv<any>(
         'SYS',
         'ERM.Business.AD',
         'UsersBusiness',
@@ -242,6 +244,7 @@ export class LoginDefaultComponent extends UIComponent {
       )
       .subscribe((success) => {
         if (success) {
+          this.loginService.session = success;
           this.otpTimeout = 180;
           let id = setInterval(
             () => {

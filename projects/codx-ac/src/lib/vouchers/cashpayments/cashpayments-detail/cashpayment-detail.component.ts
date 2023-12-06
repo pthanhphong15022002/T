@@ -1,6 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  ElementRef,
   Injector,
   Input,
   SimpleChange,
@@ -8,6 +9,7 @@ import {
 } from '@angular/core';
 import {
   AuthStore,
+  CodxService,
   DataRequest,
   DialogModel,
   FormModel,
@@ -16,6 +18,7 @@ import {
   SidebarModel,
   TenantStore,
   UIComponent,
+  UIDetailComponent,
   Util,
 } from 'codx-core';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
@@ -33,9 +36,8 @@ declare var jsBh: any;
   styleUrls: ['./cashpayment-detail.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CashpaymentDetailComponent extends UIComponent {
+export class CashpaymentDetailComponent extends UIDetailComponent {
   //#region Constructor
-  @Input() recID: any;
   @Input() dataItem: any;
   @Input() dataService: any;
   @Input() formModel: any;
@@ -59,13 +61,17 @@ export class CashpaymentDetailComponent extends UIComponent {
     { name: 'References', textDefault: 'Liên kết', isActive: false },
   ];
   private destroy$ = new Subject<void>(); //? list observable hủy các subscribe api
+  isShowLess: any = false;
+  isShowMore:any = true;
+  isReadMore:any = false;
   constructor(
     private inject: Injector,
     private acService: CodxAcService,
     private authStore: AuthStore,
     private shareService: CodxShareService,
     private notification: NotificationsService,
-    private tenant: TenantStore
+    private tenant: TenantStore,
+    public codxService: CodxService
   ) {
     super(inject);
     this.authStore = inject.get(AuthStore);
@@ -73,7 +79,10 @@ export class CashpaymentDetailComponent extends UIComponent {
   //#endregion Constructor
 
   //#region Init
-  onInit(): void {}
+  onInit(): void {
+    if(this.recID) this.getDataDetail(this.dataItem,this.recID);
+    if(!this.formModel) this.getFormModel();
+  }
 
   ngAfterViewInit() {
     //* thiết lập cấu hình sidebar
@@ -96,6 +105,7 @@ export class CashpaymentDetailComponent extends UIComponent {
   }
 
   ngDoCheck() {
+    this.onReadMore();
     this.detectorRef.detectChanges();
   }
 
@@ -122,6 +132,9 @@ export class CashpaymentDetailComponent extends UIComponent {
   getDataDetail(dataItem, recID) {
     if (dataItem) {
       this.itemSelected = dataItem;
+      this.isReadMore = false;
+      this.isShowMore = true;
+      this.isShowLess = false;
       this.showHideTab(this.itemSelected?.subType); // ẩn hiện các tab detail
       this.detectorRef.detectChanges();
     } else {
@@ -170,6 +183,46 @@ export class CashpaymentDetailComponent extends UIComponent {
    */
   trackByFn(index, item) {
     return item.recID;
+  }
+
+  /**
+   * *Ham xem them & an bot dien giai
+   * @param type 
+   */
+  onShowMoreLess(type){
+    if(type === 'showmore'){
+      this.isShowMore = false;
+      this.isShowLess = true;
+    }else{
+      this.isShowMore = true;
+      this.isShowLess = false;
+    }
+    this.detectorRef.detectChanges();
+  }
+
+  /**
+   * *Ham kiem tra dien giai khi vuot qua 2 dong
+   */
+  onReadMore(){
+    let ele = document.getElementById('eleMemo');
+    if (ele) {
+      if (ele.offsetHeight < ele.scrollHeight || ele.offsetWidth < ele.scrollWidth){
+        this.isReadMore = true;
+      }else{
+        this.isReadMore = false;
+      }
+      this.detectorRef.detectChanges();
+    }
+  }
+
+  getFormModel()
+  {
+    this.cache.functionList(this.funcID).subscribe(item=>{
+      this.formModel = new FormModel();
+      this.formModel.entityName = item?.entityName;
+      this.formModel.formName = item?.formName;
+      this.formModel.gridViewName = item?.gridViewName;
+    })
   }
   //#endregion Function
 }

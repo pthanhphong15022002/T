@@ -71,9 +71,11 @@ export class ResourcesComponent extends UIComponent {
   viewType = ViewType;
   columnGrids: any;
   dialog!: DialogRef;
-  buttons: ButtonModel[] = [{
-    id: 'btnAdd',
-  }];
+  buttons: ButtonModel[] = [
+    {
+      id: 'btnAdd',
+    },
+  ];
   //---------------------------------------------------------//
   vllDevices = [];
   resourceEquipments = [];
@@ -82,12 +84,12 @@ export class ResourcesComponent extends UIComponent {
   popupTitle = '';
   resourceGridView: any;
   isPriceVisible = false;
-  popupComponent:any;
+  popupComponent: any;
   //---------------------------------------------------------//
   fmGetCard: FormModel;
   fmReturnCard: FormModel;
   dataSelected: any;
-  hideMF: boolean =false;
+  hideMF: boolean = false;
   constructor(
     private injector: Injector,
     private codxEpService: CodxEpService,
@@ -101,18 +103,16 @@ export class ResourcesComponent extends UIComponent {
   //-----------------------------------Base Func-------------------------------------//
   //---------------------------------------------------------------------------------//
   onInit(): void {
-    this.getCacheData();    
-    if(this.codxService.asideMode == "2") this.hideMF = true;
-    if(this.funcID==EPCONST.FUNCID.S_Category){
-      this.popupComponent= PopupAddStationeryComponent;
-    }
-    else{
-      this.popupComponent= PopupAddResourcesComponent;
+    this.getCacheData();
+    if (this.codxService.asideMode == '2') this.hideMF = true;
+    if (this.funcID == EPCONST.FUNCID.S_Category) {
+      this.popupComponent = PopupAddStationeryComponent;
+    } else {
+      this.popupComponent = PopupAddResourcesComponent;
     }
   }
 
-  ngAfterViewInit(): void {  
-
+  ngAfterViewInit(): void {
     this.view.dataService.methodDelete = 'DeleteResourceAsync';
     this.detectorRef.detectChanges();
   }
@@ -186,8 +186,11 @@ export class ResourcesComponent extends UIComponent {
   //-----------------------------------Base Event------------------------------------//
   //---------------------------------------------------------------------------------//
   clickMF(event, data) {
-    if(!data) data = this.view?.dataService?.dataSelected;
-    if(!data) return;
+    if (!data) data = this.view?.dataService?.dataSelected;
+    if (!data && this.view?.dataService?.data?.length > 0) {
+      data = this.view?.dataService?.data[0];
+      this.view.dataService.dataSelected = data;
+    }
     this.popupTitle = event?.text + ' ' + this.funcIDName;
     switch (event?.functionID) {
       case EPCONST.MFUNCID.Delete:
@@ -214,24 +217,24 @@ export class ResourcesComponent extends UIComponent {
       case EPCONST.MFUNCID.S_Quota:
         this.addQuota(data);
         break;
-        default:
-          //Biến động , tự custom
-          var customData = {
-            refID: '',
-            refType: this.formModel?.entityName,
-            dataSource: data,
-          };
+      default:
+        //Biến động , tự custom
+        var customData = {
+          refID: '',
+          refType: this.formModel?.entityName,
+          dataSource: data,
+        };
 
-          this.codxShareService.defaultMoreFunc(
-            event,
-            data,
-            null,
-            this.formModel,
-            this.view?.dataService,
-            this,
-            customData
-          );
-          break;
+        this.codxShareService.defaultMoreFunc(
+          event,
+          data,
+          null,
+          this.formModel,
+          this.view?.dataService,
+          this,
+          customData
+        );
+        break;
     }
   }
   click(evt: ButtonModel) {
@@ -240,7 +243,7 @@ export class ResourcesComponent extends UIComponent {
       case 'btnAdd':
         this.addNew();
         break;
-        default:
+      default:
         let event = evt?.data;
         let data = evt?.model;
         if (!data) data = this.view?.dataService?.dataSelected;
@@ -303,8 +306,9 @@ export class ResourcesComponent extends UIComponent {
       },
       {
         field: 'resourceName',
-        headerText: this.resourceGridView?.resourceName?.headerText || 'ResourceName',
-        //width: '25%',
+        headerText:
+          this.resourceGridView?.resourceName?.headerText || 'ResourceName',
+        width: '25%',
         template: this.roomNameCol,
       },
       {
@@ -314,7 +318,8 @@ export class ResourcesComponent extends UIComponent {
         template: this.locationCol,
       },
       {
-        headerText: this.resourceGridView?.equipments?.headerText || 'Equipments',
+        headerText:
+          this.resourceGridView?.equipments?.headerText || 'Equipments',
         //width: '10%', //gv['Equipments'].width,
         field: 'equipments',
         template: this.equipmentsCol,
@@ -331,7 +336,8 @@ export class ResourcesComponent extends UIComponent {
         template: this.ownerCol,
       },
       {
-        headerText: this.resourceGridView?.preparator?.headerText || 'Preparator',
+        headerText:
+          this.resourceGridView?.preparator?.headerText || 'Preparator',
         //width: '15%',
         template: this.preparatorCol,
       },
@@ -360,18 +366,20 @@ export class ResourcesComponent extends UIComponent {
       },
       {
         field: 'resourceName',
-        headerText: this.resourceGridView?.resourceName?.headerText  || 'ResourceName',
+        headerText:
+          this.resourceGridView?.resourceName?.headerText || 'ResourceName',
         template: this.carNameCol,
         //width: '25%',
       },
       {
-        headerText: this.resourceGridView?.companyID?.headerText  || 'CompanyID',
-       // width: '15%',
+        headerText: this.resourceGridView?.companyID?.headerText || 'CompanyID',
+        // width: '15%',
         field: 'companyID',
         template: this.companyCol,
       },
       {
-        headerText: this.resourceGridView?.equipments?.headerText || 'Equipments',
+        headerText:
+          this.resourceGridView?.equipments?.headerText || 'Equipments',
         //width: '10%', //gv['Equipments'].width,
         field: 'equipments',
         template: this.equipmentsCol,
@@ -420,7 +428,8 @@ export class ResourcesComponent extends UIComponent {
       },
       {
         field: 'resourceName',
-        headerText: this.resourceGridView?.resourceName?.headerText || 'ResourceName',
+        headerText:
+          this.resourceGridView?.resourceName?.headerText || 'ResourceName',
         template: this.driverNameCol,
         //width: '20%',
       },
@@ -472,12 +481,14 @@ export class ResourcesComponent extends UIComponent {
       {
         field: 'resourceID',
         template: this.cardIDCol,
-        headerText: this.resourceGridView?.resourceID?.headerText || 'ResourceID',
+        headerText:
+          this.resourceGridView?.resourceID?.headerText || 'ResourceID',
       },
       {
         field: 'resourceName',
         template: this.cardNameCol,
-        headerText: this.resourceGridView?.resourceName?.headerText  || 'ResourceName',
+        headerText:
+          this.resourceGridView?.resourceName?.headerText || 'ResourceName',
         //width: '20%',
       },
       {
@@ -560,10 +571,11 @@ export class ResourcesComponent extends UIComponent {
   addNew() {
     this.view.dataService.addNew().subscribe((res) => {
       let option = new SidebarModel();
-      option.Width = this.funcID == EPCONST.FUNCID.S_Category? '800px' : '550px';
+      option.Width =
+        this.funcID == EPCONST.FUNCID.S_Category ? '800px' : '550px';
       option.DataService = this.view?.dataService;
       option.FormModel = this.formModel;
-      this.view.dataService.dataSelected=res;
+      this.view.dataService.dataSelected = res;
       let dialog = this.callfc.openSide(
         this.popupComponent,
         [
@@ -591,7 +603,8 @@ export class ResourcesComponent extends UIComponent {
         .edit(this.view.dataService.dataSelected)
         .subscribe((res) => {
           let option = new SidebarModel();
-          option.Width = this.funcID == EPCONST.FUNCID.S_Category? '800px' : '550px';
+          option.Width =
+            this.funcID == EPCONST.FUNCID.S_Category ? '800px' : '550px';
           option.DataService = this.view?.dataService;
           option.FormModel = this.formModel;
           this.dialog = this.callfc.openSide(
@@ -618,31 +631,30 @@ export class ResourcesComponent extends UIComponent {
   copy(obj?) {
     if (obj) {
       this.view.dataService.dataSelected = obj;
-      this.view.dataService
-        .copy()
-        .subscribe((res) => {
-          let option = new SidebarModel();
-          option.Width = this.funcID == EPCONST.FUNCID.S_Category? '800px' : '550px';
-          option.DataService = this.view?.dataService;
-          option.FormModel = this.formModel;
-          this.dialog = this.callfc.openSide(
-            this.popupComponent,
-            [
-              this.view?.dataService?.dataSelected,
-              true,
-              this.popupTitle,
-              this.funcID,
-            ],
-            option
-          );
-          this.dialog.closed.subscribe((x) => {
-            if (!x.event) this.view.dataService.clear();
-            if (x?.event) {
-              x.event.modifiedOn = new Date();
-              this.view.dataService.update(x.event).subscribe();
-            }
-          });
+      this.view.dataService.copy().subscribe((res) => {
+        let option = new SidebarModel();
+        option.Width =
+          this.funcID == EPCONST.FUNCID.S_Category ? '800px' : '550px';
+        option.DataService = this.view?.dataService;
+        option.FormModel = this.formModel;
+        this.dialog = this.callfc.openSide(
+          this.popupComponent,
+          [
+            this.view?.dataService?.dataSelected,
+            true,
+            this.popupTitle,
+            this.funcID,
+          ],
+          option
+        );
+        this.dialog.closed.subscribe((x) => {
+          if (!x.event) this.view.dataService.clear();
+          if (x?.event) {
+            x.event.modifiedOn = new Date();
+            this.view.dataService.update(x.event).subscribe();
+          }
         });
+      });
     }
   }
 

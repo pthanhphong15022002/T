@@ -190,6 +190,10 @@ import { CodxViewApproveComponent } from './components/codx-step/codx-step-commo
 import { LayoutComponent } from './components/layout/layout.component';
 import { FormSettingComponent } from './components/form-setting/form-setting.component';
 import { ChangeMemoryCellsPipe } from './components/codx-fields-detail-temp/pipes-fields/change-memory-cells.pipe';
+import { ViewDetailApprovalCustomComponent } from './components/codx-instances/view-detail-approval-custom/view-detail-approval-custom.component';
+import { ViewHistoryUpdateProgressComponent } from './components/codx-tasks/view-history-update-progress/view-history-update-progress.component';
+import { CodxShareReportComponent } from './components/codx-share-report/codx-share-report.component';
+import { CodxShareDashboardComponent } from './components/codx-share-dashboard/codx-share-dashboard.component';
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
   // AttachmentComponent,
@@ -254,6 +258,7 @@ const T_Component: Type<any>[] = [
   PopupAddComponent,
   CodxTasksComponent,
   TreeViewComponent,
+  ViewHistoryUpdateProgressComponent,
   CodxViewAssignComponent,
   CodxCommentHistoryComponent,
   SettingCalendarComponent,
@@ -335,6 +340,7 @@ const T_Component: Type<any>[] = [
   CodxTaskbarComponent,
   CodxNoDataComponent,
   CodxInstancesComponent,
+  ViewDetailApprovalCustomComponent,
 
   CodxInputCustomFieldComponent,
   CodxFieldsDetailTempComponent,
@@ -364,7 +370,10 @@ const T_Component: Type<any>[] = [
 
   //View
   CodxView2Component,
-  FormSettingComponent
+  FormSettingComponent,
+
+  CodxShareReportComponent,
+  CodxShareDashboardComponent
 ];
 
 const T_Pipe: Type<any>[] = [FormatDataValuePipe];
@@ -425,7 +434,7 @@ const T_Pipe: Type<any>[] = [FormatDataValuePipe];
     ProgressBarAllModule,
     NgxCaptureModule,
     TooltipModule,
-    TreeViewModule
+    TreeViewModule,
   ],
 })
 export class CodxShareModule {

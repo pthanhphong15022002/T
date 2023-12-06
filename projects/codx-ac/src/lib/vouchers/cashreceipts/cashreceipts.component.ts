@@ -43,10 +43,11 @@ export class CashreceiptsComponent extends UIComponent {
     icon: 'icon-i-file-earmark-plus',
   }];
   bhLogin: boolean = false;
-  optionSidebar: SidebarModel = new SidebarModel();
   bankPayID: any;
   bankNamePay: any;
   bankReceiveName: any;
+  viewActive:number = ViewType.listdetail;
+  ViewType = ViewType;
   private destroy$ = new Subject<void>(); //? list observable hủy các subscribe api
   constructor(
     private inject: Injector,
@@ -92,7 +93,7 @@ export class CashreceiptsComponent extends UIComponent {
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         if (res) {
-          this.headerText = res?.defaultName; //? lấy tên chứng từ (Phiếu chi)
+          this.headerText = res?.defaultName || res?.customName;
           this.runmode = res?.runMode; //? lấy runmode
           this.detectorRef.detectChanges();
         }
@@ -128,10 +129,6 @@ export class CashreceiptsComponent extends UIComponent {
       },
     ];
     this.journalService.setChildLinks(this.journalNo);
-
-    //* thiết lập cấu hình sidebar
-    this.optionSidebar.DataService = this.view.dataService;
-    this.optionSidebar.FormModel = this.view.formModel;
   }
 
   ngOnDestroy() {
@@ -219,10 +216,13 @@ export class CashreceiptsComponent extends UIComponent {
             baseCurr: this.baseCurr, //?  đồng tiền hạch toán
             legalName: this.legalName, //? tên company
           };
+          let optionSidebar = new SidebarModel();
+          optionSidebar.DataService = this.view?.dataService;
+          optionSidebar.FormModel = this.view?.formModel;
           let dialog = this.callfc.openSide(
             CashreceiptsAddComponent,
             data,
-            this.optionSidebar,
+            optionSidebar,
             this.view.funcID
           );
         }
@@ -247,10 +247,13 @@ export class CashreceiptsComponent extends UIComponent {
           baseCurr: this.baseCurr, //?  đồng tiền hạch toán
           legalName: this.legalName, //? tên company
         };
+        let optionSidebar = new SidebarModel();
+        optionSidebar.DataService = this.view?.dataService;
+        optionSidebar.FormModel = this.view?.formModel;
         let dialog = this.callfc.openSide(
           CashreceiptsAddComponent,
           data,
-          this.optionSidebar,
+          optionSidebar,
           this.view.funcID
         );
       });
@@ -283,10 +286,13 @@ export class CashreceiptsComponent extends UIComponent {
                   baseCurr: this.baseCurr, //?  đồng tiền hạch toán
                   legalName: this.legalName, //? tên company
                 };
+                let optionSidebar = new SidebarModel();
+                optionSidebar.DataService = this.view?.dataService;
+                optionSidebar.FormModel = this.view?.formModel;
                 let dialog = this.callfc.openSide(
                   CashreceiptsAddComponent,
                   data,
-                  this.optionSidebar,
+                  optionSidebar,
                   this.view.funcID
                 );
                 this.view.dataService
@@ -353,18 +359,26 @@ export class CashreceiptsComponent extends UIComponent {
    * @returns 
    */
   onSelectedItem(event) {
-    if(this.view?.views){
-      let view = this.view?.views.find(x => x.type == 1);
-      if (view && view.active == true) return;
-    }
-    if (typeof event.data !== 'undefined') {
-      if (event?.data.data || event?.data.error) {
-        return;
-      } else {
-        this.itemSelected = event?.data;
-        this.detectorRef.detectChanges();
-      }
-    }
+    this.itemSelected = event;
+    this.detectorRef.detectChanges();
+    // if(this.view?.views){
+    //   let view = this.view?.views.find(x => x.type == 1);
+    //   if (view && view.active == true) return;
+    // }
+    // if (typeof event.data !== 'undefined') {
+    //   if (event?.data.data || event?.data.error) {
+    //     return;
+    //   } else {
+    //     this.itemSelected = event?.data;
+    //     this.detectorRef.detectChanges();
+    //   }
+    // }
+  }
+
+  viewChanged(view) {
+    if(view && view?.view?.type == this.viewActive) return;
+    this.viewActive = view?.view?.type;
+    this.detectorRef.detectChanges();
   }
 
   /**
@@ -386,7 +400,9 @@ export class CashreceiptsComponent extends UIComponent {
             this.view.formModel.funcID,
             '',
             '',
-            ''
+            '',
+            null,
+            JSON.stringify({ParentID:data.journalNo})
           )
           .pipe(takeUntil(this.destroy$))
           .subscribe((result: any) => {
@@ -440,17 +456,12 @@ export class CashreceiptsComponent extends UIComponent {
    */
   validateVourcher(text: any, data: any) {
     this.api
-      .exec('AC', 'CashReceiptsBusiness', 'ValidateVourcherAsync', [data.recID,text])
+      .exec('AC', 'CashReceiptsBusiness', 'ValidateVourcherAsync', [data,text])
       .subscribe((res: any) => {
-        if (res?.update) {
-          this.itemSelected = res?.data;
+        if (res[1]) {
+          this.itemSelected = res[0];
           this.view.dataService.update(this.itemSelected).subscribe();
-          //this.getDatadetail(this.itemSelected);
-          this.notification.notifyCode(
-            'AC0029',
-            0,
-            text
-          );
+          this.notification.notifyCode('AC0029', 0, text);
           this.detectorRef.detectChanges();
         }
       });
@@ -462,10 +473,10 @@ export class CashreceiptsComponent extends UIComponent {
    */
   postVoucher(text: any, data: any) {
     this.api
-      .exec('AC', 'CashReceiptsBusiness', 'PostVourcherAsync', [data.recID,text])
+      .exec('AC', 'CashReceiptsBusiness', 'PostVourcherAsync', [data,text])
       .subscribe((res: any) => {
-        if (res?.update) {
-          this.itemSelected = res?.data;
+        if (res[1]) {
+          this.itemSelected = res[0];
           this.view.dataService.update(this.itemSelected).subscribe();
           this.notification.notifyCode('AC0029', 0, text);
           this.detectorRef.detectChanges();
@@ -479,12 +490,11 @@ export class CashreceiptsComponent extends UIComponent {
    */
   unPostVoucher(text: any, data: any) {
     this.api
-      .exec('AC', 'CashReceiptsBusiness', 'UnPostVourcherAsync', [data.recID,text])
+      .exec('AC', 'CashReceiptsBusiness', 'UnPostVourcherAsync', [data,text])
       .subscribe((res: any) => {
-        if (res?.update) {
-          this.itemSelected = res?.data;
+        if (res[1]) {
+          this.itemSelected = res[0];
           this.view.dataService.update(this.itemSelected).subscribe();
-          //this.getDatadetail(this.itemSelected);
           this.notification.notifyCode('AC0029', 0, text);
           this.detectorRef.detectChanges();
         }

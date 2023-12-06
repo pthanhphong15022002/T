@@ -25,7 +25,6 @@ import { firstValueFrom } from 'rxjs';
 import { DealsComponent } from '../deals.component';
 import { CodxListContactsComponent } from '../../cmcustomer/cmcustomer-detail/codx-list-contacts/codx-list-contacts.component';
 import { TabComponent } from '@syncfusion/ej2-angular-navigations';
-import { TabDetailCustomComponent } from '../deal-detail/tab-detail-custom/tab-detail-custom.component';
 import { CodxTabDealcompetitorsComponent } from '../deal-detail/codx-tab-dealcompetitors/codx-tab-dealcompetitors.component';
 
 @Component({
@@ -52,8 +51,6 @@ export class ViewDealDetailComponent implements OnInit {
   @Output() changeProgress = new EventEmitter<any>();
   @ViewChild('tabDetailView', { static: true })
   tabDetailView: TemplateRef<any>;
-  @ViewChild('tabDetailViewDetail')
-  tabDetailViewDetail: TabDetailCustomComponent;
   @ViewChild('popDetail') popDetail: TemplateRef<any>;
   @ViewChild('referencesDeal') referencesDeal: TemplateRef<any>;
   @ViewChild('loadContactDeal')loadContactDeal: CodxListContactsComponent;

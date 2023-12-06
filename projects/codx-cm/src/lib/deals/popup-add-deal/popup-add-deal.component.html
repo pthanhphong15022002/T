@@ -12,6 +12,37 @@
   <div class="row">
     <div class="col-6">
       <div class="form-group">
+              <codx-label
+                [formModel]="form.formModel"
+                [Group]="form.formGroup"
+                fiedName="BusinessLineID"
+              >
+              </codx-label>
+              <div *ngIf="deal?.businessLineID && isViewAll; else viewAll">
+                <codx-input
+                  [formModel]="form.formModel"
+                  field="businessLineID"
+                  [crrValue]="deal?.businessLineID"
+                  [disabled]="deal?.processID || action === actionEdit"
+                  [model]="{ ProcessID: deal?.processID }"
+                  (valueChange)="valueChangeBusinessLine($event)"
+                >
+                </codx-input>
+              </div>
+              <ng-template #viewAll>
+                <codx-input
+                  [formModel]="form.formModel"
+                  field="businessLineID"
+                  [disabled]="action === actionEdit"
+                  [crrValue]="deal?.businessLineID"
+                  (valueChange)="valueChangeBusinessLine($event)"
+                >
+                </codx-input>
+              </ng-template>
+            </div>
+          </div>
+    <div class="col-6">
+      <div class="form-group">
         <codx-label
           fiedName="DealID"
           [formModel]="form.formModel"
@@ -29,7 +60,7 @@
       </div>
     </div>
 
-    <div class="col-6">
+    <!-- <div class="col-6">
       <div class="form-group">
         <codx-label
           [formModel]="form.formModel"
@@ -59,10 +90,10 @@
           </codx-input>
         </ng-template>
       </div>
-    </div>
+    </div> -->
   </div>
   <div class="row">
-    <div class="col-6">
+    <div class="col-12">
       <div class="form-group">
         <codx-label
           fiedName="CustomerID"
@@ -75,29 +106,14 @@
           [Group]="form.formGroup"
           field="customerID"
           [refValue]="'CMCustomers'"
+          [disabled]="isviewCustomer"
           (valueChange)="valueChange($event)"
         >
         </codx-input>
       </div>
     </div>
 
-    <div class="col-6">
-      <div class="form-group">
-        <codx-label
-          [formModel]="form.formModel"
-          fiedName="ChannelID"
-          [Group]="form.formGroup"
-        >
-        </codx-label>
-        <codx-input
-          [formModel]="form.formModel"
-          [Group]="form.formGroup"
-          field="channelID"
-          (valueChange)="valueChange($event)"
-        >
-        </codx-input>
-      </div>
-    </div>
+
   </div>
   <div class="row">
     <div class="col-12">
@@ -228,8 +244,10 @@
   <!-- <codx-input
       type="combobox"
       [model]="{ ProcessID: deal.processID }"
-      refValue="UserProcess"
-      (valueChange)="valueChange($event)"
+      refValue="DPUserProcess"
+      [placeholder]="gridViewSetup?.SalespersonID?.description"
+      [value]="owner"
+      (valueChange)="valueChangeOwner($event)"
      >
   </codx-input> -->
 
@@ -274,6 +292,23 @@
       </div>
     </div>
 
+    <div class="col-6">
+      <div class="form-group">
+        <codx-label
+          [formModel]="form.formModel"
+          fiedName="ChannelID"
+          [Group]="form.formGroup"
+        >
+        </codx-label>
+        <codx-input
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          field="channelID"
+          (valueChange)="valueChange($event)"
+        >
+        </codx-input>
+      </div>
+    </div>
 
     <!-- <div class="col-6">
       <div class="form-group">
@@ -334,7 +369,7 @@
       </div>
     </div>
   </div>
-  <div class="row">
+  <!-- <div class="row">
     <div class="col-12">
       <div class="form-group">
         <codx-label
@@ -353,6 +388,26 @@
         </codx-input>
       </div>
     </div>
+  </div> -->
+  <div *ngIf="!isShowField">
+    <ng-container *ngIf="listFields && listFields?.length > 0">
+      <ng-container *ngFor="let item of listFields">
+        <div class="form-group">
+          <codx-input-custom-field
+            [customField]="item"
+            [checkValid]="false"
+            [objectId]="item.recID"
+            [objectType]="'DP_Instances_Steps_Fields'"
+            [objectIdParent]="deal?.recID"
+            [customerID]="deal?.customerID"
+            [formModel]="dialog.formModel"
+            (valueChangeCustom)="valueChangeCustom($event)"
+            (addFileCompleted)="addFileCompleted($event)"
+          >
+          </codx-input-custom-field>
+        </div>
+      </ng-container>
+    </ng-container>
   </div>
 </ng-template>
 
@@ -414,7 +469,7 @@
 </ng-template>
 
 
-<ng-container *ngIf="addFieldsControl == '1'">
+<ng-container>
   <codx-layout-add
     #formlayoutadd
     [title]="title"
