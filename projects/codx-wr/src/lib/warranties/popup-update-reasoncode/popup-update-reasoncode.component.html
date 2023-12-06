@@ -102,6 +102,7 @@
           field="parentID"
           type="combobox"
           refValue="WRCommentTemplates"
+          [formModel]="form.formModel"
           [crrValue]="dataParentID"
           [model]="{ ParentID: parentID }"
           (valueChange)="valueChangeParent($event)"

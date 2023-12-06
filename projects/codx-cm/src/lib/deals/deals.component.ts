@@ -469,14 +469,22 @@ export class DealsComponent
       eventItem.disabled = !data.assign && !data.allowPermit ? true : false;
     };
 
-    let isDisCRd = (eventItem, data) => {
+    let isDisable = (eventItem, data) => {
       eventItem.disabled = true;
     };
     let isChangeStatus = (eventItem, data) => {
       eventItem.disabled = data?.alloweStatus == '1' ? false : true;
     };
+    let isMoveReason = (eventItem, data) => {
+      eventItem.disabled =
+      data?.alloweStatus == '1'
+        ? (data.closed && data?.status != '1') ||
+          ['1', '0', '15'].includes(data?.status) ||
+          this.checkMoreReason(data,false)
+        : true;
+    };
     functionMappings = {
-      ...['CM0201_1', 'CM0201_3', 'CM0201_4', 'CM0201_5'].reduce(
+      ...['CM0201_1','CM0201_3', 'CM0201_4', 'CM0201_5'].reduce(
         (acc, code) => ({ ...acc, [code]: isDisabled }),
         {}
       ),
@@ -485,10 +493,11 @@ export class DealsComponent
         {}
       ),
       ...['SYS101', 'SYS103', 'SYS104', 'SYS102'].reduce(
-        (acc, code) => ({ ...acc, [code]: isDisCRd }),
+        (acc, code) => ({ ...acc, [code]: isDisable }),
         {}
       ),
-
+      CM0201_3:isMoveReason,
+      CM0201_4:isMoveReason,
       CM0201_2: isStartDay, // bắt đầu
       CM0201_6: isApprovalTrans, //xet duyet
       CM0201_7: isOwner,
@@ -562,7 +571,8 @@ export class DealsComponent
     });
   }
 
-  checkMoreReason(data) {
+  checkMoreReason(data,isShow:boolean = true) {
+    // if (data?.isAdminAll && isShow) return false;
     return data?.status != '1' && data?.status != '2' && data?.status != '15';
   }
   clickMF(e, data) {

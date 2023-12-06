@@ -401,57 +401,60 @@
 </ng-template>
 <ng-template #tabEmail>
   <ng-container *ngFor="let item of data.emailTemplates">
-    <div class="d-flex justify-content-between align-items-center" *ngIf="item?.emailType == '11'">
-      <div class="fw-bolder d-block mb-4">
-        <codx-label class="text-primary" default="Thiết lập mẫu email duyệt" [formModel]="formModel"
-          name="lblEmailSubmit">
-        </codx-label>
-      </div>
-    </div>
-    <div class="d-flex justify-content-between align-items-center" *ngIf="item?.emailType == '21'">
-      <div class="fw-bolder d-block mb-4 mt-5">
-        <codx-label class="text-primary" default="Email yêu cầu hủy kết quả duyệt/yêu cầu" [formModel]="formModel"
-          name="lblEmailReject">
-        </codx-label>
-      </div>
-    </div>
-    <div class="d-flex justify-content-between align-items-center" *ngIf="item?.emailType == '31'">
-      <div class="fw-bolder d-block mb-4 mt-5">
-        <codx-label class="text-primary" default="Thiết email cảnh báo quá hạn duyệt" [formModel]="formModel"
-          name="lblEmailAlert">
-        </codx-label>
-      </div>
-    </div>
-    <div class="d-flex flex-column mb-4">
-      <div class="row">
-        <div class="col-6">
-          <div class="fw-bold">
-            {{ item?.emailType | vll : "ES012" : "text" | async }}
-          </div>
-        </div>
-        <div class="col-6">
-          <div class="row">
-            <div class="col-6">
-              <codx-input type="checkbox" label="Thông báo" labelPosition="after" field="isAlert" class="test-check"
-                (valueChange)="valueEmailChange($event, item)" [crrValue]="item?.isAlert == '1'">
-              </codx-input>
-            </div>
-            <div class="col-4">
-              <codx-input type="checkbox" label="Email" labelPosition="after" field="isEmail" class="test-check"
-                (valueChange)="valueEmailChange($event, item)" [crrValue]="item?.isEmail == '1'">
-              </codx-input>
-            </div>
-            <div class="col-2">
-              <button class="btn btn-sm btn-icon" [ngClass]="
-                  item?.isEmail == '1' ? 'btn-light-primary' : 'btn-light'
-                " (click)="openSetupEmail(item)">
-                <i class="icon-email icon-16"></i>
-              </button>
-            </div>
-          </div>
+    <div *ngIf="item?.emailType != '21' && item?.emailType != '22' && item?.emailType != '23'" >
+      <div class="d-flex justify-content-between align-items-center" *ngIf="item?.emailType == '11'">
+        <div class="fw-bolder d-block mb-4">
+          <codx-label class="text-primary" default="Thiết lập mẫu email duyệt" [formModel]="formModel"
+            name="lblEmailSubmit">
+          </codx-label>
         </div>
       </div>
+      <div class="d-flex justify-content-between align-items-center" *ngIf="item?.emailType == '21'">
+        <div class="fw-bolder d-block mb-4 mt-5">
+          <codx-label class="text-primary" default="Email yêu cầu hủy kết quả duyệt/yêu cầu" [formModel]="formModel"
+            name="lblEmailReject">
+          </codx-label>
+        </div>
+      </div>
+      <div class="d-flex justify-content-between align-items-center" *ngIf="item?.emailType == '31'">
+        <div class="fw-bolder d-block mb-4 mt-5">
+          <codx-label class="text-primary" default="Thiết email cảnh báo quá hạn duyệt" [formModel]="formModel"
+            name="lblEmailAlert">
+          </codx-label>
+        </div>
+      </div>
+      <div class="d-flex flex-column mb-4">
+        <div class="row">
+          <div class="col-6">
+            <div class="fw-bold">
+              {{ item?.emailType | vll : "ES012" : "text" | async }}
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="row">
+              <div class="col-6">
+                <codx-input type="checkbox" label="Thông báo" labelPosition="after" field="isAlert" class="test-check"
+                  (valueChange)="valueEmailChange($event, item)" [crrValue]="item?.isAlert == '1'">
+                </codx-input>
+              </div>
+              <div class="col-4">
+                <codx-input type="checkbox" label="Email" labelPosition="after" field="isEmail" class="test-check"
+                  (valueChange)="valueEmailChange($event, item)" [crrValue]="item?.isEmail == '1'">
+                </codx-input>
+              </div>
+              <div class="col-2">
+                <button class="btn btn-sm btn-icon" [ngClass]="
+                    item?.isEmail == '1' ? 'btn-light-primary' : 'btn-light'
+                  " (click)="openSetupEmail(item)">
+                  <i class="icon-email icon-16"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
+    
   </ng-container>
 </ng-template>
 <ng-template #tabAnother>

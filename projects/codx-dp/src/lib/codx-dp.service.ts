@@ -187,6 +187,14 @@ export class CodxDpService {
       applyFor
     );
   }
+  getlistCbxProccessMove(data) {
+    return this.api.exec<any>(
+      'DP',
+      'ProcessesBusiness',
+      'GetListCbxProcessesMoveAsync',
+      data
+    );
+  }
 
   updatePermissionProcess(process) {
     return this.api.exec<any>(
@@ -847,7 +855,7 @@ export class CodxDpService {
     return this.api.exec<any>(
       'DP',
       'InstancesBusiness',
-      'MoveReasonInDealAsync',
+      'GetListReasonInDealAsync',
       data
     );
   }

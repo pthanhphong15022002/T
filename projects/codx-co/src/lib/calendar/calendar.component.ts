@@ -298,7 +298,6 @@ export class COCalendarComponent extends UIComponent implements AfterViewInit {
           this.speedDialItems.push({id:key,text:res[key]});
         } 
       }
-      //this.speedDialItems.push({id:"Test",text:"Test thêm lịch họp"});
     })
   }
   

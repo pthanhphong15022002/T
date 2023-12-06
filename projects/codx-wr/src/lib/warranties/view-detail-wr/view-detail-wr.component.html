@@ -122,19 +122,11 @@
                     </div>
                   </div>
                   <div
-                    [ngClass]="
-                      dataSelected?.category == '1'
-                        ? 'd-flex flex-column'
-                        : 'd-flex flex-column-reverse'
-                    "
+                    class="d-flex flex-column-reverse"
+
                   >
                     <div
-                      [ngClass]="
-                        dataSelected?.category == '1'
-                          ? 'd-flex align-items-center mb-1'
-                          : 'd-flex align-items-center mt-1'
-                      "
-                      class="text-primary text-hover-primary line-clamp-address"
+                      class="d-flex align-items-center mb-1 text-primary text-hover-primary line-clamp-address"
                       *ngIf="
                         dataSelected.address != null &&
                         dataSelected.address.trim() != ''
@@ -155,9 +147,7 @@
                     <div class="d-flex flex-row mb-1">
                       <div
                         class="d-flex align-items-center me-1"
-                        *ngIf="
-                          dataSelected?.recID && dataSelected?.category == '1'
-                        "
+
                       >
                         <span
                           class="icon-person icon-16 me-2 text-primary"
@@ -209,8 +199,7 @@
                       class="d-flex flex-row"
                       *ngIf="
                         contact2JSON?.Alternate?.Name != null &&
-                        contact2JSON?.Alternate?.Name?.trim() != '' &&
-                        dataSelected?.category == '1'
+                        contact2JSON?.Alternate?.Name?.trim() != ''
                       "
                     >
                       <div class="d-flex align-items-center me-1">
@@ -369,9 +358,6 @@
                     ></span>
                     <div
                       class="action-menu-od me-1"
-                      *ngIf="
-                        dataSelected.status != '7' && dataSelected.status != '5'
-                      "
                       (click)="editProduct(dataSelected)"
                     >
                       <i class="icon-edit text-danger icon-16"></i>
@@ -938,10 +924,6 @@
                                     "
                                   ></span>
                                   <span
-                                    *ngIf="
-                                      dataSelected?.status != '5' &&
-                                      dataSelected?.status != '7'
-                                    "
                                     class="icon-edit text-hover-primary text-primary icon-16 ms-2 cursor-pointer"
                                     (click)="updateServiceLocator(dataSelected)"
                                   ></span>
@@ -999,10 +981,6 @@
                                   ></span>
                                   <span
                                     class="ms-1"
-                                    *ngIf="
-                                      dataSelected.status != '7' &&
-                                      dataSelected.status != '5'
-                                    "
                                   >
                                     <button
                                       type="button"

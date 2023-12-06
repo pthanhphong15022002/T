@@ -28,6 +28,7 @@ export class CodxView2Component implements OnInit , AfterViewInit{
   @Input() bodyCss:any;
   
   @Input() isAdd: boolean = true;
+  @Input() isToolBar: boolean = true;
   @Output() btnClick = new EventEmitter();
   request:DataRequest;
   viewList: Array<ViewModel> = [];

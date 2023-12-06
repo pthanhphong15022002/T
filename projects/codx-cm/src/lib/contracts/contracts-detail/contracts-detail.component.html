@@ -1,66 +1,125 @@
-<div style="background-color: #f5f8fa; overflow: hidden;" >
-  <div (click)="close()" class="cursor-pointer d-flex align-items-center my-5 mx-5">
-    <span class="icon-20 icon-arrow_back text-primary me-2"></span>
-    <span class="fs-5 fw-bold">Chi tiết hợp đồng</span>
+<div style="background-color: #f5f8fa; overflow: hidden; height: 100vh">
+  <div
+    (click)="close()"
+    class="cursor-pointer d-flex align-items-center my-5 mx-5 top1"
+  >
+    <span class="icon-20 icon-arrow_back text-primary me-2 fw-bold"></span>
+    <codx-label
+      class="fs-5 fw-bold me-2"
+      name="lblTitleViewContract"
+      [formModel]="dialog?.formModel"
+      [default]="'Chi tiết hợp đồng'"
+    ></codx-label>
   </div>
-  <div class="d-flex justify-content-center w-100">
+  <div class="d-flex justify-content-center w-100 top2">
     <div class="container row">
       <div class="left col-3 h-100">
         <div class="">
           <div class="d-flex flex-column align-items-center">
             <div class="me-4" style="margin-top: 50px">
               <codx-img
-                [objectId]="contract?.customerID"
-                [imgOn]="contract?.modifiedOn"
-                [objectType]="'CM_Customers'"
-                [referType]="'avt'"
-                [width]="100"
-              >
-              </codx-img>
+              [objectId]="customers?.recID"
+              [objectName]="customers?.customerName"
+              [referType]="'avt'"
+              [imgOn]="customers?.modifiedOn"
+              [objectType]="'CM_Customers'"
+              [width]="100"
+            >
+            </codx-img>
             </div>
             <div
-              class="text-dark codx-textcontent fw-bold"
+              class="text-dark codx-textcontent fw-bold cursor-pointer mt-3 fs-5-sm"
               [innerHTML]="
                 contract?.customerID
                   | formatvalue : dialog?.formModel : 'CustomerID'
                   | async
               "
+              ngbTooltip="Khách hàng"
             ></div>
-            <div class="text-gray-700 fs-5-sm">
-              {{ contract?.contractName }}
-            </div>
           </div>
           <hr />
           <div>
-            <div class="d-flex align-items-center p-2">
-              <span class="icon-18 icon-info me-2"></span>
+            <div
+              class="d-flex align-items-center text-gray-600 cursor-pointer my-2"
+              ngbTooltip="Tên hợp đồng"
+            >
+              <span class="icon-i-clipboard icon-18 me-2 fw-bold"></span>
+              <span class="fs-5-sm"> {{ contract?.contractName }}</span>
+            </div>
+
+            <div class="d-flex align-items-center text-gray-600 mb-2">
+              <span class="icon-add_shopping_cart icon-18 me-2 fw-bold"></span>
+              <span
+                class="fs-5-sm"
+                [innerHTML]="
+                  contract?.businessLineID
+                    | formatvalue : dialog?.formModel : 'BusinessLineID'
+                    | async
+                "
+              ></span>
+            </div>
+
+            <div class="d-flex align-items-center text-gray-600 my-2">
+              <span
+                class="icon-monetization_on icon-18 me-2 text-warning"
+              ></span>
+              <span
+                class="fs-5-sm"
+                [innerHTML]="
+                  contract?.contractAmt
+                    | formatvalue : dialog?.formModel : 'ContractAmt'
+                    | async
+                "
+              ></span>
+              <span
+                class="ms-1 fs-5-sm"
+                [innerHTML]="
+                  contract?.currencyID
+                    | formatvalue : dialog?.formModel : 'CurrencyID'
+                    | async
+                "
+              ></span>
+            </div>
+
+            <div class="d-flex align-items-center justify-content-between my-2">
+              <div class="d-flex align-items-center text-gray-600">
+                <span class="icon-av_timer icon-18 me-2"></span>
+                <span
+                  class="fs-5-sm"
+                  [innerHTML]="
+                    contract?.createdOn
+                      | formatvalue : dialog?.formModel : 'CreatedOn'
+                      | async
+                  "
+                ></span>
+              </div>
+              <codx-vll
+                [name]="vllStatus"
+                [field]="'Status'"
+                [value]="contract?.status"
+                [showText]="true"
+                [showBgColor]="true"
+                class="badge badge-primary badge-sm"
+              >
+              </codx-vll>
+            </div>
+        </div>
+
+          <hr />
+          <div>
+            <div
+              class="d-flex align-items-center p-2 m-2 cursor-pointer"
+              *ngFor="let tab of listTabRight"
+              [ngClass]="tab?.id == tabSelect?.id ? 'active1' : 'active11'"
+              (click)="changeTabRight(tab?.id)"
+            >
+              <span class="icon-18 icon-info me-2" [ngClass]="tab?.icon"></span>
               <codx-label
                 class="fs-6 fw-bold me-2"
                 name="lblInformation"
                 [formModel]="dialog?.formModel"
-                default="Thông tin chung"
+                [default]="tab?.name"
               ></codx-label>
-            </div> 
-            
-            <div class="d-flex align-items-center p-2">
-              <span class="icon-18 icon-more me-2"></span>
-              <codx-label
-                class="fs-6 fw-bold"
-                name="lblTask"
-                [formModel]="dialog?.formModel"
-                default="Công việc"
-              ></codx-label>
-            </div>
-
-            <div class="d-flex align-items-center p-2">
-              <span class="icon-18 icon-sticky_note_2 me-2"></span>
-              <codx-label
-                class="fs-6 fw-bold"
-                name="lblInformation"
-                [formModel]="dialog?.formModel"
-                default="Ghi chú"
-              >
-              </codx-label>
             </div>
           </div>
         </div>
@@ -68,139 +127,479 @@
 
       <div class="right col-9 h-100">
         <div class="top">
-         <div class="d-flex">
+          <div class="d-flex">
             <div class="tab-scroll mb-4">
-               <div class="tab-horizone bg-white h-od-tab">
-                 <ul class="nav nav-tabs px-4">
-                   <ng-container
-                     *ngFor="let item of listTab; let i = index"
-                   >
-                     <li class="nav-item" (click)="navChange(item.id, 0, $event.target)">
-                       <a
-                         class="nav-link"
-                         [ngClass]="item.id == tabClick ? 'active' : ''"
-                       >
-                         <div class="text-uppercase fw-bold">{{item?.name }}</div>
-                       </a>
-                     </li>
-                   </ng-container>
-                 </ul>
-               </div>
-             </div>
-         </div>
-         
+              <div class="tab-horizone bg-white h-od-tab">
+                <ul class="nav nav-tabs px-4">
+                  <li
+                    *ngFor="let item of listTab; let i = index"
+                    class="nav-item"
+                    (click)="navChange(item.id, 0, $event.target)"
+                  >
+                    <a
+                      class="nav-link"
+                      [ngClass]="item.id == tabClick ? 'active' : ''"
+                    >
+                      <div class="text-uppercase fw-bold">
+                        {{ item?.name }}
+                      </div>
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="main" style="height: calc(100vh - 100px); overflow-y: auto;">
-         <ng-container [ngTemplateOutlet]="information"></ng-container>
+        <div
+          class="main pw-content"
+          data-kt-scroll-activate="{default: true}"
+          data-kt-scroll-max-height="auto"
+          data-kt-scroll-dependencies=".pw-profile,.pw-menu"
+          data-kt-scroll-wrappers=".employee-container"
+          data-kt-scroll-offset="0px"
+          scrollSpy
+          [spiedTags]="['DIV']"
+          (sectionChange)="onSectionChange($event, 1)"
+        >
+          <ng-container
+            *ngIf="tabSelect?.id == 'listTabInformation'"
+            [ngTemplateOutlet]="information"
+          ></ng-container>
+          <ng-container
+            *ngIf="tabSelect?.id == 'listTabTask'"
+            [ngTemplateOutlet]="task"
+          ></ng-container>
+          <ng-container
+            *ngIf="tabSelect?.id == 'listTabComment'"
+            [ngTemplateOutlet]="comment"
+          ></ng-container>
         </div>
       </div>
     </div>
   </div>
 </div>
 
+<ng-template #task>
+  <div class="task" style="min-height: calc(100vh - 115px); background-color:  white!important; padding: 10px;">
+    <div id="customer">
+      <step-task
+        [entityName]="'CM_Contracts'"
+        [listInstanceStep]="listInsStep"
+        [dataCM]="contract"
+        [applyFor]="'4'"
+      ></step-task>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #comment>
+  <div class="task" style="min-height: calc(100vh - 115px); background-color:  white!important;  padding: 10px;">
+    <codx-tree-comment
+    [objectID]="contract.recID"
+    [objectType]="dialog?.formModel?.entityName"
+    [actionType]="'C'"
+    [addNew]="true"
+    [funcID]="dialog?.formModel?.funcID"
+    (totalCommentChange)="changeCountFooter($event, 'comment')"
+  >
+  </codx-tree-comment>
+  </div>
+</ng-template>
+
 <ng-template #information>
-   <div
-      class="pw-content w-100 scroll-y"
-      data-kt-scroll-activate="{default: true}"
-      data-kt-scroll-max-height="auto"
-      data-kt-scroll-dependencies=".pw-profile,.pw-menu"
-      data-kt-scroll-wrappers=".employee-container"
-      data-kt-scroll-offset="0px"
-      scrollSpy
-   >
-      <div id="customer" style="height: 900px;">
-         <ng-container [ngTemplateOutlet]="customerTemplate"></ng-container>
-      </div>
-      <div id="information" style="height: 900px;">
-         <ng-container [ngTemplateOutlet]="informationTemplate"></ng-container>
-      </div>
-      <div id="purpose" style="height: 900px;">
-         <ng-container [ngTemplateOutlet]="purposeTemplate"></ng-container>
-      </div>
-      <div id="note" style="height: 900px;">
-         <ng-container [ngTemplateOutlet]="noteTemplate"></ng-container>
-      </div>
-      <div class="div_final"></div>
-   </div>
+  <div id="customer" class="item-main mt-0">
+    <div class="d-flex align-items-center text-primary my-2">
+      <span class="icon-person_outline icon-20 me-1"></span>
+      <codx-label
+        class="text-gray-600 ms-2 fs-5-sm fw-bold text-primary"
+        name="lblTitleCustomer"
+        [formModel]="formModelCustomer"
+        [default]="'Khách hàng'"
+      ></codx-label>
+    </div>
+    <ng-container [ngTemplateOutlet]="customerTemplate"></ng-container>
+  </div>
+
+  <div id="information" class="item-main">
+    <div class="d-flex align-items-center text-primary my-2">
+      <span class="icon-i-clipboard icon-20 me-1 fw-bold"></span>
+      <codx-label
+        class="text-gray-600 ms-2 fs-5-sm fw-bold text-primary"
+        name="lblTitleContract"
+        [formModel]="formModelCustomer"
+        [default]="'Thông tin hợp đồng'"
+      ></codx-label>
+    </div>
+    <ng-container [ngTemplateOutlet]="informationTemplate"></ng-container>
+  </div>
+
+  <div id="purpose" class="item-main">
+    <div class="d-flex align-items-center text-primary my-2">
+      <span class="icon-i-box-arrow-in-right icon-20 me-1 fw-bold"></span>
+      <codx-label
+        class="text-gray-600 ms-2 fs-5-sm fw-bold text-primary"
+        name="lblTitlePurpose"
+        [formModel]="formModelCustomer"
+        [default]="'Mục đích thuê'"
+      ></codx-label>
+    </div>
+    <ng-container [ngTemplateOutlet]="purposeTemplate"></ng-container>
+  </div>
+
+  <div id="note" class="item-main">
+    <div class="d-flex align-items-center text-primary my-2">
+      <span class="icon-event_notes icon-20 me-1 fw-bold"></span>
+      <codx-label
+        class="text-gray-600 ms-2 fs-5-sm fw-bold text-primary"
+        name="lblTitlePurpose"
+        [formModel]="formModelCustomer"
+        [default]="'Ghi chú'"
+      ></codx-label>
+    </div>
+    <ng-container [ngTemplateOutlet]="noteTemplate"></ng-container>
+  </div>
 </ng-template>
 
 <!-- Khách hàng -->
 <ng-template #customerTemplate>
-  <div class="row">
-    <div class="col-6">
-      <div class="d-flex">
-        <div class="me-4">
-          <codx-img
-            [objectId]="contract?.customerID"
-            [imgOn]="contract?.modifiedOn"
-            [objectType]="'CM_Customers'"
-            [referType]="'avt'"
-            [width]="40"
-          >
-          </codx-img>
-          <!-- [objectName]="contract?.customerName" -->
+  <div class="">
+    <div class="d-flex align-items-center p-2">
+      <codx-img
+        [objectId]="customers?.recID"
+        [objectName]="customers?.customerName"
+        [referType]="'avt'"
+        [imgOn]="customers?.modifiedOn"
+        [objectType]="'CM_Customers'"
+        [width]="40"
+      >
+      </codx-img>
+      <div class="ms-3">
+        <div>
+          <span>{{ customers?.customerName }}</span>
         </div>
-        <div class="d-flex flex-column">
-          <div
-            class="text-dark codx-textcontent fw-bold"
+
+        <div
+          class="d-flex align-items-center"
+          *ngIf="customers?.address != null && customers?.address.trim() != ''"
+        >
+          <span class="icon-16 text-gray-600 fs-7"> </span>
+          <span
+            class="text-gray-600"
             [innerHTML]="
-              contract?.customerID
-                | formatvalue : dialog?.formModel : 'CustomerID'
+              customers?.address
+                | formatvalue : formModelCustomer : 'Address'
                 | async
             "
-          ></div>
-          <div class="text-gray-700 fs-5-sm">
-            {{ contract?.contractName }}
-          </div>
+          ></span>
         </div>
       </div>
     </div>
-    <div class="col-6">
-      <div class="d-flex justify-content-end align-items-center mb-2">
-        <span class="icon-monetization_on icon-18 me-1 text-warning"></span>
-        <span
-          class="fs-5 fw-bold"
-          [innerHTML]="
-            contract?.contractAmt
-              | formatvalue : dialog?.formModel : 'ContractAmt'
-              | async
-          "
-        ></span>
-        <span
-          class="fs-5 fw-bold ms-1"
-          [innerHTML]="
-            contract?.currencyID
-              | formatvalue : dialog?.formModel : 'CurrencyID'
-              | async
-          "
-        ></span>
+
+    <div
+      class="d-flex align-items-center p-1"
+      *ngIf="customers?.category == '1' && customers?.industries"
+    >
+      <codx-label
+        class="text-gray-600"
+        fiedName="Industries"
+        [formModel]="formModelCustomer"
+      ></codx-label>
+      <div class="ms-2 text-gray-600">
+        <div
+          *ngFor="let item of customers?.industries?.split(';'); index as i"
+          class="d-inline"
+        >
+          <span
+            class="text-dark fw-bold codx-textcontent"
+            [innerHTML]="
+              item | formatvalue : formModelCustomer : 'Industries' | async
+            "
+          ></span
+          ><span
+            class="me-1"
+            *ngIf="i < customers?.industries?.split(';').length - 1"
+            >,</span
+          >
+        </div>
       </div>
-      <div class="d-flex justify-content-end align-items-center mb-2">
-        <span class="icon-av_timer icon-16 text-gray-600 me-1"></span>
+    </div>
+
+    <div class="d-flex align-items-center p-1">
+      <codx-label
+        class="text-gray-600"
+        fiedName="ChannelID"
+        [formModel]="formModelCustomer"
+      ></codx-label>
+      <div class="ms-1">
+        <div
+          class="text-gray-600 fw-bold codx-textcontent"
+          [innerHTML]="
+            customers?.channelID
+              | formatvalue : formModelCustomer : 'ChannelID'
+              | async
+          "
+        ></div>
+      </div>
+    </div>
+
+    <div class="d-flex align-items-center p-1">
+      <codx-label
+        class="text-gray-600 me-2"
+        fiedName="Owner"
+        [formModel]="formModelCustomer"
+      ></codx-label>
+      <codx-imgs
+        class="h-25px"
+        [isToolTip]="true"
+        [width]="25"
+        [objectId]="customers?.owner"
+        [objectType]="'AD_Users'"
+        [numberImages]="1"
+      >
+      </codx-imgs>
+    </div>
+
+    <div class="p-1" *ngIf="customers?.category == '2'">
+      <codx-label
+        class="label-colon text-gray-600"
+        fiedName="Occupation"
+        [formModel]="formModelCustomer"
+      ></codx-label>
+      <div class="mt-1">
         <span
           class="text-gray-600"
           [innerHTML]="
-            contract?.createdOn
-              | formatvalue : dialog?.formModel : 'CreatedOn'
+            customers?.occupation
+              | formatvalue : formModelCustomer : 'Occupation'
               | async
           "
         ></span>
       </div>
     </div>
+
+    <div class="p-1">
+      <codx-label
+        class="label-colon text-gray-600"
+        fiedName="TaxCode"
+        [formModel]="formModelCustomer"
+        [setRequire]="false"
+      ></codx-label>
+      <span
+        class="text-gray-600"
+        [innerHTML]="
+          customers?.taxCode
+            | formatvalue : formModelCustomer : 'TaxCode'
+            | async
+        "
+      ></span>
+    </div>
+
+    <div class="p-1">
+      <codx-label
+        class="label-colon text-gray-600"
+        fiedName="Phone"
+        [formModel]="formModelCustomer"
+      ></codx-label>
+      <span
+        class="text-gray-600"
+        [innerHTML]="
+          customers?.phone | formatvalue : formModelCustomer : 'Phone' | async
+        "
+      ></span>
+    </div>
+
+    <div class="p-1">
+      <codx-label
+        class="label-colon text-gray-600"
+        fiedName="FaxNo"
+        [formModel]="formModelCustomer"
+      ></codx-label>
+      <span
+        class="text-gray-600"
+        [innerHTML]="
+          customers?.faxNo | formatvalue : formModelCustomer : 'FaxNo' | async
+        "
+      ></span>
+    </div>
+
+    <div class="p-1">
+      <codx-label
+        class="label-colon text-gray-600"
+        fiedName="WebPage"
+        [formModel]="formModelCustomer"
+      ></codx-label>
+      <span
+        class="text-gray-600"
+        [innerHTML]="
+          customers?.webPage
+            | formatvalue : formModelCustomer : 'WebPage'
+            | async
+        "
+      ></span>
+    </div>
   </div>
 </ng-template>
+
 <!-- Thông tin chung -->
 <ng-template #informationTemplate>
   <div>
-    <codx-label
-      class="fs-5 fw-bold"
-      name="lblGeneral"
-      [formModel]="dialog?.formModel"
-      [setRequire]="false"
-      default="Thông tin chung"
-    >
-    </codx-label>
-    <div class="row my-1">
+    <div class="row my-2">
+      <div class="col-6">
+        <div class="mb-1">
+          <codx-label
+            class="label-colon fs-6 fw-bold"
+            fiedName="contactID"
+            [formModel]="dialog?.formModel"
+            [setRequire]="false"
+          >
+          </codx-label>
+        </div>
+        <div class="d-flex align-items-center">
+          <div class="me-3">
+            <codx-img
+              [objectId]="contact?.recID"
+              [objectName]="contact?.contactName"
+              [imgOn]="contact?.modifiedOn"
+              [objectType]="'CM_Contacts'"
+              [width]="40"
+            >
+            </codx-img>
+          </div>
+          <div class="d-flex flex-column">
+            <div
+              *ngIf="contact?.contactName"
+              class="fw-bold text-dark fs-6"
+              #contactName
+              [innerHTML]="
+                contact?.contactName
+                  | formatvalue : formModelContact : 'contactName' : contactName
+                  | async
+              "
+            ></div>
+            <div class="fs-7 text-gray-600">
+              <div
+                #role
+                *ngIf="contact?.jobTitle"
+                [innerHTML]="
+                  contact?.jobTitle
+                    | formatvalue : formModelContact : 'JobTitle' : role
+                    | async
+                "
+              ></div>
+            </div>
+
+            <div class="d-flex align-items-start">
+              <div
+                class="d-flex align-items-center me-3"
+                *ngIf="contact?.mobile"
+              >
+                <div
+                  class="text-gray-600 fs-7"
+                  #mobile
+                  [innerHTML]="
+                    contact?.mobile
+                      | formatvalue : formModelContact : 'mobile' : mobile
+                      | async
+                  "
+                ></div>
+              </div>
+              <div
+                class="d-flex align-items-center"
+                *ngIf="contact?.personalEmail"
+              >
+                <div
+                  class="text-gray-600 fs-7"
+                  #personalEmail
+                  [innerHTML]="
+                    contact?.personalEmail
+                      | formatvalue
+                        : formModelContact
+                        : 'personalEmail'
+                        : personalEmail
+                      | async
+                  "
+                ></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-6 d-flex flex-column align-items-start">
+        <div>
+          <codx-label
+            class="label-colon fs-6 fw-bold"
+            fiedName="owner"
+            [formModel]="dialog?.formModel"
+            [setRequire]="false"
+          >
+          </codx-label>
+        </div>
+        <div class="d-flex align-items-center mt-1">
+          <codx-imgs
+            class="me-3 d-flex align-items-center"
+            [width]="40"
+            ojectType="AD_Users"
+            [numberImages]="1"
+            [isToolTip]="true"
+            [objectId]="contract?.owner"
+          >
+          </codx-imgs>
+          <span
+            class="text-dark fw-bold codx-textcontent"
+            [innerHTML]="
+              contract?.owner
+                | formatvalue : dialog?.formModel : 'Owner'
+                | async
+            "
+          ></span>
+        </div>
+      </div>
+    </div>
+    <div class="row my-2">
+      <div class="col-6">
+        <codx-label
+          class="label-colon text-gray-600 codx-textlabel"
+          fiedName="businessLineID"
+          [formModel]="dialog?.formModel"
+          [setRequire]="false"
+        >
+        </codx-label>
+        <span
+          [innerHTML]="
+            contract?.businessLineID
+              | formatvalue : dialog?.formModel : 'BusinessLineID'
+              | async
+          "
+        ></span>
+      </div>
+      <div class="col-6 d-flex align-items-center">
+        <codx-label
+          class="label-colon text-gray-600 codx-textlabel"
+          fiedName="contractAmt"
+          [formModel]="dialog?.formModel"
+          [setRequire]="false"
+        >
+        </codx-label>
+        <div class="d-flex align-items-center fw-bold">
+          <span
+            [innerHTML]="
+              contract?.contractAmt
+                | formatvalue : dialog?.formModel : 'ContractAmt'
+                | async
+            "
+          ></span>
+          <span
+            [innerHTML]="
+              contract?.currencyID
+                | formatvalue : dialog?.formModel : 'CurrencyID'
+                | async
+            "
+          ></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="row my-2">
       <div class="col-6">
         <codx-label
           class="label-colon text-gray-600 codx-textlabel"
@@ -238,7 +637,7 @@
       </div>
     </div>
 
-    <div class="row my-1">
+    <div class="row my-2">
       <div class="col-6">
         <codx-label
           class="label-colon text-gray-600 codx-textlabel"
@@ -274,7 +673,7 @@
       </div>
     </div>
 
-    <div class="row my-1">
+    <div class="row my-2">
       <div class="col-6">
         <codx-label
           class="label-colon text-gray-600 codx-textlabel"
@@ -336,7 +735,7 @@
       </div>
     </div>
 
-    <div class="row my-1">
+    <div class="row my-2">
       <div class="col-6">
         <codx-label
           class="label-colon text-gray-600 codx-textlabel"
@@ -398,49 +797,63 @@
       </div>
     </div>
   </div>
-</ng-template>
-<!-- Mục đích thuê -->
-<ng-template #purposeTemplate>
-  <div>
-    <codx-label
-      class="fs-5 fw-bold"
-      name="lblPurpose"
-      [formModel]="dialog?.formModel"
-      [setRequire]="false"
-      default="Mục đích thuê"
-    >
-    </codx-label>
-    <div class="row my-1">
+  <div class="row my-2">
+    <div class="col-6">
+      <codx-label
+        class="label-colon text-gray-600 codx-textlabel"
+        fiedName="dealID"
+        [formModel]="dialog?.formModel"
+        [setRequire]="false"
+      >
+      </codx-label>
       <span
-        class="text-gray-600"
+        class="text-dark fw-bold codx-textcontent"
         [innerHTML]="
-          contract?.purpose
-            | formatvalue : dialog?.formModel : 'Purpose'
+          contract?.dealID
+            | formatvalue : dialog?.formModel : 'DealID'
+            | async
+        "
+      ></span>
+    </div>
+    <div class="col-6">
+      <codx-label
+        class="label-colon text-gray-600 codx-textlabel"
+        fiedName="quotationID"
+        [formModel]="dialog?.formModel"
+        [setRequire]="false"
+      >
+      </codx-label>
+      <span
+        class="text-dark fw-bold codx-textcontent"
+        [innerHTML]="
+          contract?.quotationID
+            | formatvalue : dialog?.formModel : 'QuotationID'
             | async
         "
       ></span>
     </div>
   </div>
 </ng-template>
+<!-- Mục đích thuê -->
+<ng-template #purposeTemplate>
+  <div class="row my-2">
+    <span
+      class="text-gray-600"
+      [innerHTML]="
+        contract?.purpose | formatvalue : dialog?.formModel : 'Purpose' | async
+      "
+    ></span>
+  </div>
+</ng-template>
 <!-- Ghi chú -->
 <ng-template #noteTemplate>
-  <div>
-    <codx-label
-      class="fs-5 fw-bold"
-      name="lblNote"
-      [formModel]="dialog?.formModel"
-      [setRequire]="false"
-      default="Ghi chú"
-    >
-    </codx-label>
-    <div class="row my-1">
-      <span
-        class="text-gray-600"
-        [innerHTML]="
-          contract?.note | formatvalue : dialog?.formModel : 'Note' | async
-        "
-      ></span>
-    </div>
+  <div class="row my-2">
+    <span
+      class="text-gray-600"
+      [innerHTML]="
+        contract?.note | formatvalue : dialog?.formModel : 'Note' | async
+      "
+    ></span>
   </div>
 </ng-template>
 
@@ -454,7 +867,7 @@
       default="Thông tin chung"
     >
     </codx-label>
-    <div class="row my-1">
+    <div class="row my-2">
       <div class="col-6">
         <codx-label
           class="label-colon text-gray-600 codx-textlabel"
@@ -492,7 +905,7 @@
       </div>
     </div>
 
-    <div class="row my-1">
+    <div class="row my-2">
       <div class="col-6">
         <codx-label
           class="label-colon text-gray-600 codx-textlabel"
@@ -528,7 +941,7 @@
       </div>
     </div>
 
-    <div class="row my-1">
+    <div class="row my-2">
       <div class="col-6">
         <codx-label
           class="label-colon text-gray-600 codx-textlabel"
@@ -590,7 +1003,7 @@
       </div>
     </div>
 
-    <div class="row my-1">
+    <div class="row my-2">
       <div class="col-6">
         <codx-label
           class="label-colon text-gray-600 codx-textlabel"
@@ -661,7 +1074,7 @@
       default="Mục đích thuê"
     >
     </codx-label>
-    <div class="row my-1">
+    <div class="row my-2">
       <span
         class="text-gray-600"
         [innerHTML]="
@@ -681,7 +1094,7 @@
       default="Ghi chú"
     >
     </codx-label>
-    <div class="row my-1">
+    <div class="row my-2">
       <span
         class="text-gray-600"
         [innerHTML]="
@@ -692,70 +1105,3 @@
   </div>
 </ng-template>
 
-<ng-template #curriculumVitae>
-   <!-- <div class="tab-scroll mb-4">
-     <div class="tab-horizone bg-white h-od-tab">
-       <ul class="nav nav-tabs px-4">
-         <ng-container
-           *ngFor="let item of lstFuncCurriculumVitae; let i = index"
-         >
-           <li class="nav-item" (click)="navChange(item, 0, $event.target)">
-             <a
-               class="nav-link"
-               [ngClass]="item.functionID == active[0] ? 'active' : ''"
-             >
-               <div class="text-uppercase fw-bold">{{ item.customName }}</div>
-             </a>
-           </li>
-         </ng-container>
-       </ul>
-     </div>
-   </div> -->
- 
-   <div
-     class="pw-content w-100 scroll-y"
-     data-kt-scroll-activate="{default: true}"
-     data-kt-scroll-max-height="auto"
-     data-kt-scroll-dependencies=".pw-profile,.pw-menu"
-     data-kt-scroll-wrappers=".employee-container"
-     data-kt-scroll-offset="0px"
-     scrollSpy
-   >
-
-     <ng-container>
-       <!-- Thông tin bản thân -->
-       <div class="user-profile overview d-block" [id]="'eInfoFuncID'" style="height: 500px;">
-         111111111111111111
-       </div>
- 
-       <!--Thông tin pháp lý -->
-       <div class="user-profile overview d-block" [id]="'legalInfoFuncID'" style="height: 500px;">
-         2222222222222222222
-           </div>
- 
-       <!-- Lao động nước ngoài -->
- 
-       <div class="user-profile overview d-block" [id]="'foreignWorkerFuncID'" style="height: 500px;">
-         333333333333333333
-       </div>
- 
-       <!-- Thông tin Đảng - Đoàn -->
-       <div class="user-profile overview d-block" [id]="'ePartyFuncID'" style="height: 500px;">
-         444444444444444
-       </div>
-       <!-- Quan hệ gia đình -->
-       <div class="user-profile overview d-block" [id]="'eFamiliesFuncID'" style="height: 500px;">
-        55555555555555555
-       </div>
-       <!-- Kinh nghiệm trước đây -->
-       <div class="user-profile overview d-block" [id]="'eExperienceFuncID'" style="height: 500px;">
-         6666666666666666
-       </div>
- 
-       <div class="div_final" >
-         77777777777777
-       </div>
-     </ng-container>
-     <!-- </div> -->
-   </div>
- </ng-template>
