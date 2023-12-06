@@ -205,7 +205,13 @@ export class ContractsComponent extends UIComponent {
         break;
     }
   }
-
+  onActions(e) {
+    switch (e.type) {
+      case 'dbClick':
+        this.viewDetailContract(e?.data?.rowData);
+      break;
+    }
+  }
   selectedChange(val: any) {
     if (!val?.data) return;
     this.contractSelected = val?.data;
