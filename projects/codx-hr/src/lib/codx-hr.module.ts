@@ -155,6 +155,7 @@ export const routes: Routes = [
         component: EmpContactsComponent,
       },
     ],
+    
   },
   {
     path: '',
@@ -262,6 +263,10 @@ export const routes: Routes = [
       {
         path: 'equit/:funcID',
         component: EmployeeQuitComponent,
+      },
+      {
+        path: 'sysholidaytype/:funcID',
+        component: HolidayComponent,
       },
       // {
       //   path: 'employeeinfomation/:funcID',
