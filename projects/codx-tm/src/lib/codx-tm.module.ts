@@ -83,6 +83,7 @@ import { DealsComponent } from 'projects/codx-cm/src/lib/deals/deals.component';
 import { CasesComponent } from 'projects/codx-cm/src/lib/cases/cases.component';
 import { LeadsComponent } from 'projects/codx-cm/src/lib/leads/leads.component';
 import { ViewInstancesComponent } from 'projects/codx-dp/src/lib/view-instances/view-instances.component';
+import { CodxDashboardViewsComponent } from 'projects/codx-share/src/lib/components/codx-dashboard/dashboard-view/dashboard-view.component';
 import { InstancesComponent } from 'projects/codx-dp/src/lib/instances/instances.component';
 
 export const routes: Routes = [
@@ -101,6 +102,10 @@ export const routes: Routes = [
       {
         path: 'dashboard/:funcID',
         component: TMDashboardComponent,
+      },
+      {
+        path: 'dashboard-view/:funcID',
+        component: CodxDashboardViewsComponent,
       },
       {
         path: 'share/dynamic/:funcID',
