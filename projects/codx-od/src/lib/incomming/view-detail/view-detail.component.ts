@@ -1925,7 +1925,7 @@ export class ViewDetailComponent
           //xét duyệt
           this.release(datas, processID);
         // else
-        //   this.shareService
+        //   this.shareServicex
         //     .codxReleaseDynamic(
         //       this.view.service,
         //       datas,
