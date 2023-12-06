@@ -1500,39 +1500,6 @@ export class CodxEsService {
     );
   }
 
-  SignAsync(
-    stepNo,
-    isAwait,
-    userID,
-    sfID,
-    signType,
-    supplier,
-    hasCA,
-    mode,
-    comment,
-    transRecID
-  ) {
-    let data = [
-      stepNo,
-      isAwait,
-      userID,
-      sfID,
-      signType,
-      supplier,
-      hasCA,
-      mode,
-      comment,
-      transRecID,
-    ];
-    return this.api.execSv(
-      'es',
-      'ERM.Business.ES',
-      'ApprovalTransBusiness',
-      'SignAsync',
-      data
-    );
-  }
-
   //#endregion
 
   //#region CA

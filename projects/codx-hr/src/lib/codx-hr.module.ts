@@ -142,6 +142,13 @@ import { PopupEdocumentsComponent } from './employee-profile/popup-edocuments/po
 import { EmployeeQuitComponent } from './employee-quit/employee-quit.component';
 import { PopupEquitComponent } from './employee-profile/popup-equit/popup-equit.component';
 import { ViewDetailEquitComponent } from './employee-quit/view-detail-equit/view-detail-equit.component';
+import { HolidayComponent } from './holiday/holiday.component';
+import { PopupAddHolidayTypeComponent } from './holiday/popup-add-holiday-type/popup-add-holiday-type.component';
+import { SpeedDialModule } from '@syncfusion/ej2-angular-buttons';
+import { DealsComponent } from 'projects/codx-cm/src/lib/deals/deals.component';
+import { LeadsComponent } from 'projects/codx-cm/src/lib/leads/leads.component';
+import { CasesComponent } from 'projects/codx-cm/src/lib/cases/cases.component';
+import { ViewInstancesComponent } from 'projects/codx-dp/src/lib/view-instances/view-instances.component';
 export const routes: Routes = [
   {
     path: '',
@@ -260,6 +267,10 @@ export const routes: Routes = [
         path: 'equit/:funcID',
         component: EmployeeQuitComponent,
       },
+      {
+        path: 'sysholidaytype/:funcID',
+        component: HolidayComponent,
+      },
       // {
       //   path: 'employeeinfomation/:funcID',
       //   component: EmployeeInfomationComponent,
@@ -323,6 +334,28 @@ export const routes: Routes = [
           },
         ],
       },
+      //----phát hành quy trình DP-CRM----//
+      {
+        path: 'deals/:funcID',
+        component: DealsComponent,
+        data: { noReuse: true },
+      },
+      {
+        path: 'cases/:funcID',
+        component: CasesComponent,
+        data: { noReuse: true },
+      },
+      {
+        path: 'leads/:funcID',
+        component: LeadsComponent,
+        data: { noReuse: true },
+      },
+      {
+        path: 'instances/:funcID/:processID',
+        component: ViewInstancesComponent,
+        data: { noReuse: true },
+      },
+      //-----------end--------------//
     ],
   },
 ];
@@ -448,7 +481,9 @@ const T_Component: Type<any>[] = [
   PopupEquitComponent,
   PopupEdocumentsComponent,
   EmployeeQuitComponent,
-  ViewDetailEquitComponent
+  ViewDetailEquitComponent,
+  HolidayComponent,
+  PopupAddHolidayTypeComponent,
 ];
 @NgModule({
   imports: [
@@ -465,7 +500,7 @@ const T_Component: Type<any>[] = [
     DiagramAllModule,
     NgbModule,
     BasicPrimitivesModule,
-    HttpClientModule
+    SpeedDialModule,
   ],
   exports: [RouterModule],
   declarations: T_Component,

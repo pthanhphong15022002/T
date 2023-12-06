@@ -1,0 +1,78 @@
+<div class="d-flex flex-row justify-content-between">
+  <div [innerHTML]="data?.customName"></div>
+  <button type="button" class="btn btn-sm btn-icon btn-light-primary" aria-label="Close" (click)="dialogRef?.close()">
+    <span class="icon-close icon-20 text-dark text-hover-primary"></span>
+  </button>
+</div>
+  <ng-container *ngIf="data">
+    <ng-container *ngIf="isRunMode; else tmpElse">
+      <div class="d-flex align-items-center justify-content-center w-100 h-100">
+        <div class="report_panel">
+          <img
+            src="/assets/themes/sys/default/img/PrintReport.svg"
+            alt="reportviewer.png"
+          />
+          <p [innerHTML]="mssgSYS044"></p>
+          <button
+            type="btn"
+            class="btn btn-primary"
+            (click)="clickViewReport()"
+          >
+            <codx-label
+              
+              [name]="'lblApply'"
+              [default]="'Áp dụng'"
+            ></codx-label>
+          </button>
+        </div>
+      </div>
+    </ng-container>
+    <ng-template #tmpElse>
+      <ng-container
+        *ngIf="
+          data?.displayMode == '3' || data?.displayMode == '4';
+          else reportBolder
+        "
+      >
+        <lib-pdf *ngIf="url" [inputUrl]="url" [hideActions]="true" [hideThumbnail]="true"></lib-pdf>
+      </ng-container>
+      <ng-template #reportBolder>
+        <codx-report-iframe
+          [service]="data?.service"
+          [funcID]="data?.recID"
+          [predicates]="predicate"
+          [dataValues]="dataValue"
+          [print]="print"
+          [param]="_paramString"
+          [labels]="_labelString"
+          [format]="_formatString"
+        ></codx-report-iframe>
+      </ng-template>
+    </ng-template>
+    <input
+      #upload
+      class="d-none"
+      type="file"
+      accept="image/*"
+      (change)="handleInputChange($event)"
+    />
+  </ng-container>
+  <!-- <codx-report-iframe [funcID]="funcID" [predicates]="predicate" [dataValues]="dataValue" [print]="print" [param]="_paramString" [labels]="_labelString" ></codx-report-iframe> -->
+
+
+<!-- <ng-template #breadCrumb>
+
+</ng-template> -->
+
+<!-- <div class="w-100 h-100 pt-5 invisible" id="breadCrumb" #breadCrumb>
+  <div ngbDropdown class="d-inline-block flex-column" *ngIf="reportList.length" #drop="ngbDropdown" >
+    <span class="me-3 fw-bolder fs-3 text-dark" *ngIf="rootFunction" (click)="homeClick()">{{rootFunction.customName}}</span>
+    <a type="button"  id="dropdownReport" style="font-size: 1rem !important" ngbDropdownToggle >
+      <span class="text-muted text-hover-primary pt-1"> > {{this.data.customName}}</span>
+    </a>
+    <div ngbDropdownMenu aria-labelledby="dropdownReport">
+      <a ngbDropdownItem *ngFor="let item of reportList" (click)="itemSelect(item)">{{item.customName}}</a>
+
+    </div>
+  </div>
+</div> -->

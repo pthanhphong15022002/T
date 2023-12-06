@@ -29,6 +29,9 @@ import {
   CodxLabelComponent,
   UrlUtil,
   LayoutService,
+  CodxFormComponent,
+  CodxInputComponent,
+  CodxComboboxComponent,
 } from 'codx-core';
 import { CodxDpService } from '../codx-dp.service';
 import { DP_Processes, DP_Processes_Permission } from '../models/models';
@@ -67,6 +70,11 @@ export class DynamicProcessComponent
   @ViewChild('popUpQuestionCopy') popUpQuestionCopy: TemplateRef<any>;
   @ViewChild('bodyFormCopyName') bodyFormCopyName: TemplateRef<any>;
   @ViewChild('footerFormCopyName') footerFormCopyName: TemplateRef<any>;
+  //Form phát hành
+  @ViewChild('formRelease') formRelease: CodxFormComponent;
+  @ViewChild('moduleCbx') moduleCbx: CodxInputComponent;
+  @ViewChild('functionCbx') functionCbx: CodxInputComponent;
+
   // Input
   @Input() dataObj?: any;
   @Input() showButtonAdd = true;
@@ -135,6 +143,7 @@ export class DynamicProcessComponent
   isSaveName: boolean = true;
   lstVllRoles = [];
   asideMode: string;
+  crrModule: string;
   constructor(
     private inject: Injector,
     private activedRouter: ActivatedRoute,
@@ -933,6 +942,7 @@ export class DynamicProcessComponent
     );
   }
 
+  //--------------Phát hành quy trình------------------//
   releaseProcess(process) {
     this.processReleaseClone = process;
     this.processRelease = JSON.parse(JSON.stringify(process)) as DP_Processes;
@@ -997,6 +1007,40 @@ export class DynamicProcessComponent
         }
       });
   }
+
+  changeValueCbx(e) {
+    if (!e?.data || !e?.field) return;
+    let module = e?.component?.itemsSelected[0]?.Module;
+
+    if (this.crrModule != module) {
+      switch (e?.field) {
+        case 'module':
+          this.functionCbx.model = { Module: module };
+          (
+            this.functionCbx.ComponentCurrent as CodxComboboxComponent
+          ).dataService.data = [];
+          this.functionCbx.crrValue = null;
+          this.processRelease.module = null;
+
+          break;
+        case 'function':
+          this.moduleCbx.model = { Module: module };
+
+          (
+            this.moduleCbx.ComponentCurrent as CodxComboboxComponent
+          ).dataService.data = [];
+          this.moduleCbx.crrValue = null;
+          this.processRelease.function = null;
+          break;
+      }
+      this.crrModule = module;
+    }
+
+    this.processRelease[e.field] = e.data;
+    this.formRelease.formGroup.patchValue(this.processRelease);
+  }
+
+  //--------------End - Phát hành quy trình------------------//
 
   changeValueName(event, data) {
     let value = event?.data;
