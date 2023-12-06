@@ -120,6 +120,7 @@ import { ContractsDetailComponent } from './contracts/contracts-detail/contracts
 import { StyleHeaderColumnsPipe } from './pipes/style-header-columns.pipe';
 import { FormatStatusCodePipe } from './pipes/format-status-code.pipe';
 import { ScrollSpyDirective } from './contracts/contracts-detail/scroll-spy.directive';
+import { ViewInstancesComponent } from 'projects/codx-dp/src/lib/view-instances/view-instances.component';
 
 export const routes: Routes = [
   {
@@ -194,6 +195,12 @@ export const routes: Routes = [
       {
         path: '**',
         redirectTo: 'error/404',
+      },
+      //phat hành quy trình
+      {
+        path: 'instances/:funcID/:processID',
+        component: ViewInstancesComponent,
+        data: { noReuse: true },
       },
     ],
   },

@@ -283,7 +283,7 @@ export class InstancesComponent
           }
         });
       } else {
-        this.layoutDP.viewNameProcess(null);
+        // this.layoutDP.viewNameProcess(null);
         // if (this.crrFunc && this.crrFunc != this.funcID) this.changeView(null);
       }
     });
@@ -2152,7 +2152,8 @@ export class InstancesComponent
     this.loadWord();
     this.addFieldsControl = ps?.addFieldsControl;
     // this.layoutInstance.viewNameProcess(ps);
-    this.layoutDP.viewNameProcess(ps);
+    //tăt
+    //this.layoutDP.viewNameProcess(ps);
     this.stepsResource = this.process?.steps?.map((x) => {
       let obj = {
         icon: x?.icon,
