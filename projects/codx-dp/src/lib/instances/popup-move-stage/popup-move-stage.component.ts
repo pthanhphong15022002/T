@@ -144,6 +144,7 @@ export class PopupMoveStageComponent implements OnInit {
       this.instanceCM = this.datas?.deal;
       this.isLoad = true;
       this.isCallInstance = this.dataCM?.isCallInstance ?? false;
+      // this.isMoveBackStage = !['1', '2', '15'].includes(this.instanceCM?.status);
     }
     this.stepID = this.dataCM
       ? this.dataCM?.stepID
