@@ -11,8 +11,9 @@
 
 <ng-template #body let-form>
   <!--Phúc bổ sung thêm điều kiện này vì dùng formGroup nên kiểm tra trước cho đỡ lỗi-->
-  <div class="contaner" *ngIf="!convertCustomerToLead">
-    <div class="row">
+
+  <div class="contaner" >
+    <div class="row" *ngIf="!convertCustomerToLead">
       <div class="col-6">
         <div class="form-group">
           <codx-input

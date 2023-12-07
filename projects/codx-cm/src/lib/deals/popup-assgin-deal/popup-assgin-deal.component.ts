@@ -289,6 +289,7 @@ export class PopupAssginDealComponent
     permission.assign = roleType === 'O';
     permission.delete = roleType === 'O';
     permission.allowPermit = roleType === 'O';
+    permission.isActive = true;
     dataPermission = !dataPermission ? [] : dataPermission;
     dataPermission.push(permission);
   }
@@ -472,6 +473,7 @@ export class PopupAssginDealComponent
     permission.allowUpdateStatus = permissionDP.allowUpdateStatus;
     permission.createdOn = new Date();
     permission.createdBy = this.user.userID;
+    permission.isActive = true;
     return permission;
   }
   disableViewTab(owner: any, isViewTab: any) {
