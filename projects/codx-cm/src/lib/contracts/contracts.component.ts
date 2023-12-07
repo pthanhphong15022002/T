@@ -244,10 +244,10 @@ export class ContractsComponent extends UIComponent {
             //Gửi duyệt
             case 'CM0204_1':
               if (
-                data.status == '0' ||
-                (data.closed && data.status != '1') ||
-                (this.approveRule != '1' && !data.applyApprover) ||
-                (data.applyApprover && data?.approveRule != '1') ||
+                data?.status == '0' ||
+                (data?.closed && data?.status != '1') ||
+                (this.approveRule != '1' && !data?.applyApprover) ||
+                (data?.applyApprover && data?.approveRule != '1') ||
                 data?.approveStatus >= '3'
               ) {
                 res.disabled = true;
@@ -256,9 +256,9 @@ export class ContractsComponent extends UIComponent {
             //Hủy yêu cầu duyệt
             case 'CM0204_2':
               if (
-                (data.closed && data.status != '1') ||
-                data.status == '0' ||
-                data.approveStatus != '3'
+                (data?.closed && data?.status != '1') ||
+                data?.status == '0' ||
+                data?.approveStatus != '3'
               ) {
                 res.disabled = true;
               }

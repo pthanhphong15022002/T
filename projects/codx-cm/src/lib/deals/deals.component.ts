@@ -777,8 +777,8 @@ export class DealsComponent
     let option = new DialogModel();
     option.IsFull = true;
     option.zIndex = 999;
-    let temView =
-      this.gridDetailView == '2' ? this.templateViewDetail : this.popDetail;
+    let temView = this.popDetail;
+      // this.gridDetailView == '2' ? this.templateViewDetail : this.popDetail;
     this.popupViewDeal = this.callfc.openForm(
       temView,
       '',
