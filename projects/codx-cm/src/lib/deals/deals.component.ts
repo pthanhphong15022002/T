@@ -477,14 +477,14 @@ export class DealsComponent
     };
     let isMoveReason = (eventItem, data) => {
       eventItem.disabled =
-      data?.alloweStatus == '1'
-        ? (data.closed && data?.status != '1') ||
-          ['1', '0', '15'].includes(data?.status) ||
-          this.checkMoreReason(data,false)
-        : true;
+        data?.alloweStatus == '1'
+          ? (data.closed && data?.status != '1') ||
+            ['1', '0', '15'].includes(data?.status) ||
+            this.checkMoreReason(data, false)
+          : true;
     };
     functionMappings = {
-      ...['CM0201_1','CM0201_3', 'CM0201_4', 'CM0201_5'].reduce(
+      ...['CM0201_1', 'CM0201_3', 'CM0201_4', 'CM0201_5'].reduce(
         (acc, code) => ({ ...acc, [code]: isDisabled }),
         {}
       ),
@@ -496,8 +496,8 @@ export class DealsComponent
         (acc, code) => ({ ...acc, [code]: isDisable }),
         {}
       ),
-      CM0201_3:isMoveReason,
-      CM0201_4:isMoveReason,
+      CM0201_3: isMoveReason,
+      CM0201_4: isMoveReason,
       CM0201_2: isStartDay, // bắt đầu
       CM0201_6: isApprovalTrans, //xet duyet
       CM0201_7: isOwner,
@@ -571,7 +571,7 @@ export class DealsComponent
     });
   }
 
-  checkMoreReason(data,isShow:boolean = true) {
+  checkMoreReason(data, isShow: boolean = true) {
     // if (data?.isAdminAll && isShow) return false;
     return data?.status != '1' && data?.status != '2' && data?.status != '15';
   }
@@ -1363,13 +1363,17 @@ export class DealsComponent
                 this.notificationsService.notifyCode('ES028');
                 return;
               }
-              //ko phân biệt eSign - nếu cần thì phải get
-              // let exportData: ExportData = {
-              //   funcID: this.view.formModel.funcID,
-              //   recID: this.dataSelected.recID,
-              //   data: dt?.datas,
-              // };
-              this.release(dt, res);
+
+              this.codxCmService
+                .getDataSource(dt.recID, 'DealsBusiness')
+                .then((dataSource) => {
+                  let exportData: ExportData = {
+                    funcID: this.view.formModel.funcID,
+                    recID: dt.recID,
+                    data: dataSource,
+                  };
+                  this.release(dt, res, exportData);
+                });
             });
         } else {
           this.notificationsService.notifyCode(
@@ -2041,24 +2045,10 @@ export class DealsComponent
   }
 
   exportTemplet(e, data) {
-    this.api
-      .execSv<any>(
-        'CM',
-        'CM',
-        'DealsBusiness',
-        'GetDataSourceExportAsync',
-        data.recID
-      )
-      .subscribe((str) => {
-        if (str && str?.length > 0) {
-          let dataSource = '[' + str[0] + ']';
-          if (str[1]) {
-            let datas = str[1];
-            if (datas && datas.includes('[{')) datas = datas.substring(2);
-            let fix = str[0];
-            fix = fix.substring(1, fix.length - 1);
-            dataSource = '[{ ' + fix + ',' + datas;
-          }
+    this.codxCmService
+      .getDataSource(data.recID, 'DealsBusiness')
+      .then((dataSource) => {
+        if (dataSource) {
           var customData = {
             refID: data.processID,
             refType: 'DP_Processes',

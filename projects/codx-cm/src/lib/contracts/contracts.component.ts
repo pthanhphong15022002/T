@@ -44,6 +44,7 @@ import { ContractsViewDetailComponent } from './contracts-view-detail/contracts-
 import { PopupAssginDealComponent } from '../deals/popup-assgin-deal/popup-assgin-deal.component';
 import { StepService } from 'projects/codx-share/src/lib/components/codx-step/step.service';
 import { ContractsDetailComponent } from './contracts-detail/contracts-detail.component';
+import { ExportData } from 'projects/codx-share/src/lib/models/ApproveProcess.model';
 
 @Component({
   selector: 'contracts-detail',
@@ -164,7 +165,7 @@ export class ContractsComponent extends UIComponent {
     this.user = this.authStore.get();
   }
 
-  async onInit(){
+  async onInit() {
     this.loadParam();
     this.grvSetup = await firstValueFrom(
       this.cache.gridViewSetup('CMContracts', 'grvCMContracts')
@@ -213,7 +214,7 @@ export class ContractsComponent extends UIComponent {
     switch (e.type) {
       case 'dbClick':
         this.viewDetailContract(e?.data?.rowData);
-      break;
+        break;
     }
   }
   selectedChange(val: any) {
@@ -226,225 +227,231 @@ export class ContractsComponent extends UIComponent {
     this.detectorRef.detectChanges();
   }
 
-    // moreFunc
-    changeMF(e) {
-      this.changeDataMF(e.e, e.data);
-    }
-  
-    changeDataMF(event, data, isDetail = false) {
-      if (this.runMode == '1') {
-        this.codxShareService.changeMFApproval(event, data?.unbounds);
-      } else if (event != null) {
-        event.forEach((res) => {
-          res.isblur = data?.approveStatus == '3';
-          if(isDetail){
-            res.isbookmark = false;
-          }
-          switch (res.functionID) {
-            //Gửi duyệt
-            case 'CM0204_1':
-              if (
-                data.status == '0' ||
-                (data.closed && data.status != '1') ||
-                (this.approveRule != '1' && !data.applyApprover) ||
-                (data.applyApprover && data?.approveRule != '1') ||
-                data?.approveStatus >= '3'
-              ) {
-                res.disabled = true;
-              }
-              break;
-            //Hủy yêu cầu duyệt
-            case 'CM0204_2':
-              if (
-                (data.closed && data.status != '1') ||
-                data.status == '0' ||
-                data.approveStatus != '3'
-              ) {
-                res.disabled = true;
-              }
-              res.isblur = false;
-              break;
-  
-            case 'CM0204_4':
-              res.disabled = true;
-              break;
-  
-            case 'CM0204_3': //tạo hợp đồng gia hạn
-              if (data?.status == '1') {
-                res.disabled = true;
-              }
-              break;
-  
-            case 'CM0204_17': //chia sẻ
-            case 'CM0204_5': //Đã giao hàng
-              // if (data?.status == '1') {
-                // }
-              res.disabled = true;
-              break;
-            case 'CM0204_6': //hoàn tất hợp đồng
-              if (data?.status == '1') {
-                res.disabled = true;
-              }
-              break;
-  
-            // case 'CM0204_7': // Xem chi tiết
-            //   if (!isDetail) {
-            //     res.disabled = true;
-            //   }
-            //   break;
-  
-            case 'CM0204_8': // chuyển giai đoạn
-              res.disabled = !data?.applyProcess || data?.status == '1';
-              break;
-  
-            case 'CM0204_9': // bắt đầu
-              res.disabled = !data?.applyProcess || data?.status !== '1';
-              break;
-  
-            case 'CM0204_10': // thành công
-              res.disabled = !data?.applyProcess || data?.status !== '2';
-              break;
-            case 'CM0204_11': // thất bại
-              res.disabled = !data?.applyProcess || data?.status !== '2';
-              break;
-  
-            case 'CM0204_13': // thêm công việc
-              if (data?.applyProcess) {
-              } else {
-                res.disabled = true;
-              }
-              break;
-  
-            case 'CM0204_14': // phân công người phụ trách
-              break;
-  
-            case 'CM0204_15': // Đóng hợp đồng
-              if (data?.closed) {
-                res.disabled = true;
-              }
-              break;
-  
-            case 'CM0204_16': // mở lại hợp đồng
-              if (!data?.closed) {
-                res.disabled = true;
-              }
-              break;
-          }
-        });
-      }
-    }
-  
-    clickMoreFunc(e) {
-      this.clickMF(e.e, e.data);
-    }
-  
-    clickMF(e, data) {
-      this.actionName = e.text;
-      switch (e.functionID) {
-        case 'SYS02':
-          this.deleteContract(data);
-          break;
-        case 'SYS03':
-          this.editContract(data);
-          break;
-        case 'SYS04':
-          this.copyContract(data);
-          break;
-        case 'CM0204_3':
-          //tạo hợp đồng gia hạn
-          this.addContractAdjourn(data);
-          break;
-        case 'CM0204_5':
-          //Đã giao hàng
-          this.updateDelStatus(data);
-          break;
-        case 'CM0204_6':
-          //hoàn tất hợp đồng
-          this.completedContract(data);
-          break;
-        case 'CM0204_1':
-          //Gửi duyệt
-          this.approvalTrans(data);
-          break;
-        case 'CM0204_2':
-          //Hủy yêu cầu duyệt
-          this.cancelApprover(data);
-          break;
-        case 'CM0204_9':
-          //Bắt đầu
-          this.startInstance(data);
-          break;
-        case 'CM0204_8':
-          //Chuyển giai đoạn
-          this.moveStage(data);
-          break;
-        case 'CM0204_10':
-          //thành công
-          this.moveReason(data, true);
-          break;
-        case 'CM0204_11':
-          //thất bại
-          this.moveReason(data, false);
-          break;
-        case 'CM0204_14':
-          //thất bại
-          this.popupOwnerRoles(data);
-          break;
-        //export core làm
-        case 'SYS002':
-          this.exportTemplet(e, data);
-          break;
-        case 'CM0204_7':
-          this.viewDetailContract(data);
-          break;
-        case 'CM0204_15':
-          this.closedContract(data,true);
-          break;
-        case 'CM0204_16':
-          this.closedContract(data, false);
-          break;
-        default: {
-          // var customData = {
-          //   refID: data.recID,
-          //   refType: 'CM_Contracts',
-          // };
-          // if (data?.refID && data.applyProcess) {
-          //   customData.refID = data.processID;
-          //   customData.refType = 'DP_Processes';
-          // }
-          this.codxShareService.defaultMoreFunc(
-            e,
-            data,
-            this.afterSave.bind(this),
-            this.view.formModel,
-            this.view.dataService,
-            this
-            //customData
-          );
-          this.detectorRef.detectChanges();
-          break;
-        }
-      }
-    }
+  // moreFunc
+  changeMF(e) {
+    this.changeDataMF(e.e, e.data);
+  }
 
-    closedContract(data: CM_Contracts, type) {
-      this.notiService
-        .alertCode('DP018', null, this.actionName, "'" + data?.contractName + "'")
-        .subscribe((info) => {
-          if (info.event.status == 'Y') {
-            this.contractService.closeContract([data?.recID, type]).subscribe(res => {
-              if(res){
+  changeDataMF(event, data, isDetail = false) {
+    if (this.runMode == '1') {
+      this.codxShareService.changeMFApproval(event, data?.unbounds);
+    } else if (event != null) {
+      event.forEach((res) => {
+        res.isblur = data?.approveStatus == '3';
+        if (isDetail) {
+          res.isbookmark = false;
+        }
+        switch (res.functionID) {
+          //Gửi duyệt
+          case 'CM0204_1':
+            if (
+              data.status == '0' ||
+              (data.closed && data.status != '1') ||
+              (this.approveRule != '1' && !data.applyApprover) ||
+              (data.applyApprover && data?.approveRule != '1') ||
+              data?.approveStatus >= '3'
+            ) {
+              res.disabled = true;
+            }
+            break;
+          //Hủy yêu cầu duyệt
+          case 'CM0204_2':
+            if (
+              (data.closed && data.status != '1') ||
+              data.status == '0' ||
+              data.approveStatus != '3'
+            ) {
+              res.disabled = true;
+            }
+            res.isblur = false;
+            break;
+
+          case 'CM0204_4':
+            res.disabled = true;
+            break;
+
+          case 'CM0204_3': //tạo hợp đồng gia hạn
+            if (data?.status == '1') {
+              res.disabled = true;
+            }
+            break;
+
+          case 'CM0204_17': //chia sẻ
+          case 'CM0204_5': //Đã giao hàng
+            // if (data?.status == '1') {
+            // }
+            res.disabled = true;
+            break;
+          case 'CM0204_6': //hoàn tất hợp đồng
+            if (data?.status == '1') {
+              res.disabled = true;
+            }
+            break;
+
+          // case 'CM0204_7': // Xem chi tiết
+          //   if (!isDetail) {
+          //     res.disabled = true;
+          //   }
+          //   break;
+
+          case 'CM0204_8': // chuyển giai đoạn
+            res.disabled = !data?.applyProcess || data?.status == '1';
+            break;
+
+          case 'CM0204_9': // bắt đầu
+            res.disabled = !data?.applyProcess || data?.status !== '1';
+            break;
+
+          case 'CM0204_10': // thành công
+            res.disabled = !data?.applyProcess || data?.status !== '2';
+            break;
+          case 'CM0204_11': // thất bại
+            res.disabled = !data?.applyProcess || data?.status !== '2';
+            break;
+
+          case 'CM0204_13': // thêm công việc
+            if (data?.applyProcess) {
+            } else {
+              res.disabled = true;
+            }
+            break;
+
+          case 'CM0204_14': // phân công người phụ trách
+            break;
+
+          case 'CM0204_15': // Đóng hợp đồng
+            if (data?.closed) {
+              res.disabled = true;
+            }
+            break;
+
+          case 'CM0204_16': // mở lại hợp đồng
+            if (!data?.closed) {
+              res.disabled = true;
+            }
+            break;
+        }
+      });
+    }
+  }
+
+  clickMoreFunc(e) {
+    this.clickMF(e.e, e.data);
+  }
+
+  clickMF(e, data) {
+    this.actionName = e.text;
+    switch (e.functionID) {
+      case 'SYS02':
+        this.deleteContract(data);
+        break;
+      case 'SYS03':
+        this.editContract(data);
+        break;
+      case 'SYS04':
+        this.copyContract(data);
+        break;
+      case 'CM0204_3':
+        //tạo hợp đồng gia hạn
+        this.addContractAdjourn(data);
+        break;
+      case 'CM0204_5':
+        //Đã giao hàng
+        this.updateDelStatus(data);
+        break;
+      case 'CM0204_6':
+        //hoàn tất hợp đồng
+        this.completedContract(data);
+        break;
+      case 'CM0204_1':
+        //Gửi duyệt
+        this.approvalTrans(data);
+        break;
+      case 'CM0204_2':
+        //Hủy yêu cầu duyệt
+        this.cancelApprover(data);
+        break;
+      case 'CM0204_9':
+        //Bắt đầu
+        this.startInstance(data);
+        break;
+      case 'CM0204_8':
+        //Chuyển giai đoạn
+        this.moveStage(data);
+        break;
+      case 'CM0204_10':
+        //thành công
+        this.moveReason(data, true);
+        break;
+      case 'CM0204_11':
+        //thất bại
+        this.moveReason(data, false);
+        break;
+      case 'CM0204_14':
+        //thất bại
+        this.popupOwnerRoles(data);
+        break;
+      //export core làm
+      case 'SYS002':
+        this.exportTemplet(e, data);
+        break;
+      case 'CM0204_7':
+        this.viewDetailContract(data);
+        break;
+      case 'CM0204_15':
+        this.closedContract(data, true);
+        break;
+      case 'CM0204_16':
+        this.closedContract(data, false);
+        break;
+      default: {
+        // var customData = {
+        //   refID: data.recID,
+        //   refType: 'CM_Contracts',
+        // };
+        // if (data?.refID && data.applyProcess) {
+        //   customData.refID = data.processID;
+        //   customData.refType = 'DP_Processes';
+        // }
+        this.codxShareService.defaultMoreFunc(
+          e,
+          data,
+          this.afterSave.bind(this),
+          this.view.formModel,
+          this.view.dataService,
+          this
+          //customData
+        );
+        this.detectorRef.detectChanges();
+        break;
+      }
+    }
+  }
+
+  closedContract(data: CM_Contracts, type) {
+    this.notiService
+      .alertCode('DP018', null, this.actionName, "'" + data?.contractName + "'")
+      .subscribe((info) => {
+        if (info.event.status == 'Y') {
+          this.contractService
+            .closeContract([data?.recID, type])
+            .subscribe((res) => {
+              if (res) {
                 data.closed = type;
                 data.modifiedOn = new Date();
                 data.modifiedBy = this.user?.userID;
                 this.view.dataService.update(data, true).subscribe();
-                this.notiService.notifyCode(type ? 'DP016' : 'DP017',0,"'" + data?.contractName + "'");
+                this.notiService.notifyCode(
+                  type ? 'DP016' : 'DP017',
+                  0,
+                  "'" + data?.contractName + "'"
+                );
                 this.changeDetectorRef.markForCheck();
               }
-            })
-          }
-        });
-    }
+            });
+        }
+      });
+  }
 
   getQuotationsAndQuotationsLinesByTransID(recID) {
     this.contractService.getQuotationsLinesByTransID(recID).subscribe((res) => {
@@ -696,9 +703,16 @@ export class ContractsComponent extends UIComponent {
           this.notiService.notifyCode('ES028');
           return;
         }
-
-        //ko phân biệt eSign
-        this.release(data, category);
+        this.cmService
+          .getDataSource(data.recID, 'ContractsBusiness')
+          .then((dataSource) => {
+            let exportData: ExportData = {
+              funcID: this.view.formModel.funcID,
+              recID: data.recID,
+              data: dataSource,
+            };
+            this.release(data, category, exportData);
+          });
       });
   }
   //Gửi duyệt
@@ -801,35 +815,35 @@ export class ContractsComponent extends UIComponent {
       let template: any;
       let colums: any;
       // switch (key) {
-        // case 'ContractName':
-        //   template = this.tempContractName;
-        //   break;
-        // case 'CustomerID':
-        //   template = this.tempCustomerID;
-        //   break;
-        // case 'ContractAmt':
-        //   template = this.tempContractAmt;
-        //   break;
-        // case 'PaidAmt':
-        //   template = this.tempPaidAmt;
-        //   break;
-        // case 'CurrencyID':
-        //   template = this.tempCurrencyID;
-        //   break;
-        // case 'ApplyProcess':
-        //   template = this.tempApplyProcess;
-        //   break;
-        // case 'StepID':
-        //   template = this.tempStepID;
-        //   break;
-        // case 'Status':
-        //   template = this.tempStatus;
-        //   break;
-        // case 'Owner':
-        //   template = this.tempOwner;
-        //   break;
-        // default:
-        //   break;
+      // case 'ContractName':
+      //   template = this.tempContractName;
+      //   break;
+      // case 'CustomerID':
+      //   template = this.tempCustomerID;
+      //   break;
+      // case 'ContractAmt':
+      //   template = this.tempContractAmt;
+      //   break;
+      // case 'PaidAmt':
+      //   template = this.tempPaidAmt;
+      //   break;
+      // case 'CurrencyID':
+      //   template = this.tempCurrencyID;
+      //   break;
+      // case 'ApplyProcess':
+      //   template = this.tempApplyProcess;
+      //   break;
+      // case 'StepID':
+      //   template = this.tempStepID;
+      //   break;
+      // case 'Status':
+      //   template = this.tempStatus;
+      //   break;
+      // case 'Owner':
+      //   template = this.tempOwner;
+      //   break;
+      // default:
+      //   break;
       // }
       if (template) {
         colums = {
@@ -1189,25 +1203,10 @@ export class ContractsComponent extends UIComponent {
 
   //Export----------------------------------------------------//
   exportTemplet(e, data) {
-    this.api
-      .execSv<any>(
-        'CM',
-        'CM',
-        'ContractsBusiness',
-        'GetDataSourceExportAsync',
-        data.recID
-      )
-      .subscribe((str) => {
-        if (str && str?.length > 0) {
-          let dataSource = '[' + str[0] + ']';
-          if (str[1]) {
-            let datas = str[1];
-            if (datas && datas.includes('[{')) datas = datas.substring(2);
-            let fix = str[0];
-            fix = fix.substring(1, fix.length - 1);
-            dataSource = '[{ ' + fix + ',' + datas;
-          }
-
+    this.cmService
+      .getDataSource(data.recID, 'ContractsBusiness')
+      .then((dataSource) => {
+        if (dataSource) {
           let customData = {
             refID: data.recID,
             refType: this.view.entityName,
