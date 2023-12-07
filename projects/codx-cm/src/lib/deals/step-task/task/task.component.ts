@@ -244,7 +244,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
             }
             break;
           case 'DP20': // tiến độ
-            if (task?.approveStatus == '3') {
+            if (task?.approveStatus == '3' || (task?.status == '3' && !task?.startDate && !task?.endDate)) {
               res.disabled = true;
             }
             break;

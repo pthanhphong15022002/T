@@ -75,7 +75,7 @@ export class CodxViewTaskComponent implements OnInit {
   //truyen cho giao viec
   sessionID = ''; // session giao việc
   formModelAssign: FormModel; // formModel của giao việc
-
+  isTaskFirst;
   constructor(
     private cache: CacheService,
     private api: ApiHttpService,
@@ -105,6 +105,7 @@ export class CodxViewTaskComponent implements OnInit {
     this.leadName = dt?.data?.leadName;
     this.instanceName = dt?.data?.instanceName;
     this.listField = dt?.data?.listField;
+    this.isTaskFirst = dt?.data?.isTaskFirst;
 
     this.listIdRoleInstance = dt?.data?.listIdRoleInstance;
     this.isUpdateProgressGroup = dt?.data?.isUpdateProgressGroup;
@@ -305,60 +306,74 @@ export class CodxViewTaskComponent implements OnInit {
 
   //#region progress
   async openPopupUpdateProgress(data, type) {
-    let checkUpdate = this.checkUpdateProgress(data, type);
-    if (!checkUpdate) return;
-    if (type != 'P' && type != 'G') {
-      let checkTaskLink = this.stepService.checkTaskLink(
-        data,
-        this.instanceStep
-      );
-      if (!checkTaskLink) return;
-    }
-    let dataInput = {
-      data,
-      type,
-      step: this.instanceStep,
-      isActivitie: this.isActivitie,
-    };
-    let option = new DialogModel();
-    option.zIndex = 1020;
-    let popupTask = this.callfc.openForm(
-      UpdateProgressComponent,
-      '',
-      550,
-      400,
-      '',
-      dataInput,
-      '',
-      option
-    );
-
-    let dataPopupOutput = await firstValueFrom(popupTask.closed);
-    if (dataPopupOutput?.event) {
-      if (this.type == 'P') {
-        this.dataView.progress = dataPopupOutput?.event?.progressStep;
-      } else if (this.type == 'G') {
-        this.dataView.progress = dataPopupOutput?.event?.progressGroupTask;
-      } else {
-        this.dataView.progress = dataPopupOutput?.event?.progressTask;
+    if(this.isActivitie){
+      if (!(data?.startDate && data?.endDate)) {
+        return;
       }
+    }else{
+      let checkUpdate = this.checkUpdateProgress(data, type);
+      if (!checkUpdate) return;
+      if (type != 'P' && type != 'G') {
+        let checkTaskLink = this.stepService.checkTaskLink(
+          data,
+          this.instanceStep
+        );
+        if (!checkTaskLink) return;
+      }
+      let dataInput = {
+        data,
+        type,
+        step: this.instanceStep,
+        isActivitie: this.isActivitie,
+      };
+      let option = new DialogModel();
+      option.zIndex = 1020;
+      let popupTask = this.callfc.openForm(
+        UpdateProgressComponent,
+        '',
+        550,
+        400,
+        '',
+        dataInput,
+        '',
+        option
+      );
+  
+      let dataPopupOutput = await firstValueFrom(popupTask.closed);
+      if (dataPopupOutput?.event) {
+        if (this.type == 'P') {
+          this.dataView.progress = dataPopupOutput?.event?.progressStep;
+        } else if (this.type == 'G') {
+          this.dataView.progress = dataPopupOutput?.event?.progressGroupTask;
+        } else {
+          this.dataView.progress = dataPopupOutput?.event?.progressTask;
+        }
+      }
+      this.dataProgress = dataPopupOutput?.event;
+      this.changeDetectorRef.detectChanges();
     }
-    this.dataProgress = dataPopupOutput?.event;
-    this.changeDetectorRef.detectChanges();
   }
 
   checkUpdateProgress(data, type) {
-    let check = this.stepService.checkUpdateProgress(
-      data,
-      type,
-      this.instanceStep,
-      this.isRoleAll,
-      this.isOnlyView,
-      this.isUpdateProgressGroup,
-      this.isUpdateProgressStep,
-      this.user
-    );
-    return check;
+    if(this.isActivitie){
+      if (!(data?.startDate && data?.endDate)) {
+        return false;
+      }
+      return true;
+    }else{
+      let check = this.stepService.checkUpdateProgress(
+        data,
+        type,
+        this.instanceStep,
+        this.isRoleAll,
+        this.isOnlyView,
+        this.isUpdateProgressGroup,
+        this.isUpdateProgressStep,
+        this.user
+      );
+      return check;
+    }
+   
   }
   //#endregion
 
@@ -437,21 +452,8 @@ export class CodxViewTaskComponent implements OnInit {
             }
             break;
           case 'DP31': // bắt đầu ngay
-            // if (this.type != 'P' && this.type != 'G') {
-            //   if (
-            //     this.dataView?.dependRule != '0' ||
-            //     this.dataView?.status != '1'
-            //   ) {
-            //     res.disabled = true;
-            //   } else if (
-            //     !((this.isRoleAll || isGroup || isTask) && this.isOnlyView)
-            //   ) {
-            //     res.isblur = true;
-            //   }
-            // } else {
-            //   res.disabled = true;
-            // }
-            res.disabled = true;
+            res.isbookmark =  true;
+            this.setChangeMFSStart(res, isGroup, isTask);
             break;
           case 'DP28': // Cập nhật
             if (['B', 'M'].includes(this.dataView?.taskType)) {
@@ -462,7 +464,7 @@ export class CodxViewTaskComponent implements OnInit {
             }
             break;
           case 'DP29': // Hủy
-            if (['B', 'M'].includes(this.dataView.taskType)) {
+            if (['B', 'M'].includes(this.dataView?.taskType)) {
               // this.convertMoreFunctions(event, res, task.taskType);
               if (this.dataView?.actionStatus != '2') res.disabled = true;
             } else {
@@ -474,6 +476,27 @@ export class CodxViewTaskComponent implements OnInit {
             break;
         }
       });
+    }
+  }
+
+  setChangeMFSStart(res, isGroup, isTask){
+    if (this.type != 'P' && this.type != 'G') {
+      if(this.isActivitie){
+        res.disabled = !(this.dataView?.status == '1' && (this.user.userID == this.dataView?.owner || this.isRoleAll));
+      }else{
+        if (this.dataView?.dependRule != '0' || this.dataView?.status != '1') {
+          res.disabled = true;
+        } else if (
+          !(
+            (this.isRoleAll || isGroup || isTask) &&
+            (this.isOnlyView || this.isTaskFirst)
+          )
+        ) {
+          res.isblur = true;
+        }
+      }
+    }else{
+      res.disabled = true;
     }
   }
 
@@ -506,7 +529,23 @@ export class CodxViewTaskComponent implements OnInit {
 
   //#region start task
   startTask(task: DP_Instances_Steps_Tasks) {
-    // if (task?.taskType == 'Q') {
+    if(this.isActivitie){
+      this.api
+      .exec<any>('DP', 'InstancesStepsBusiness', 'StartActivitiesAsync', [
+        task?.recID,,
+      ])
+      .subscribe((res) => {
+        if (res) {
+          task.status = res?.status;
+          task.actualStart = res?.actualStart;
+          task.modifiedBy = res?.modifiedBy;
+          task.modifiedOn = res?.modifiedOn;
+          this.moreDefaut = { ...this.moreDefaut };
+        } else {
+        }
+      });
+    }else{
+      // if (task?.taskType == 'Q') {
     //   //báo giá
     //   this.addQuotation();
     // } else if (task?.taskType == 'CO') {
@@ -514,23 +553,24 @@ export class CodxViewTaskComponent implements OnInit {
     //   this.openPopupContract('add');
     // }
     this.api
-      .exec<any>('DP', 'InstancesStepsBusiness', 'StartTaskAsync', [
-        task?.stepID,
-        task?.recID,
-      ])
-      .subscribe((res) => {
-        if (res) {
-          let taskFind = this.instanceStep?.tasks?.find(
-            (t) => t.recID == task?.recID
-          );
-          taskFind.status = '2';
-          taskFind.actualStart = res;
-          taskFind.modifiedBy = this.user.userID;
-          taskFind.modifiedOn = new Date();
-          this.moreDefaut = { ...this.moreDefaut };
-          this.notiService.notifyCode('SYS007');
-        }
-      });
+    .exec<any>('DP', 'InstancesStepsBusiness', 'StartTaskAsync', [
+      task?.stepID,
+      task?.recID,
+    ])
+    .subscribe((res) => {
+      if (res) {
+        let taskFind = this.instanceStep?.tasks?.find(
+          (t) => t.recID == task?.recID
+        );
+        taskFind.status = '2';
+        taskFind.actualStart = res;
+        taskFind.modifiedBy = this.user.userID;
+        taskFind.modifiedOn = new Date();
+        this.moreDefaut = { ...this.moreDefaut };
+        this.notiService.notifyCode('SYS007');
+      }
+    });
+    }
   }
   //#region CRUD
   async chooseTypeTask(type) {
