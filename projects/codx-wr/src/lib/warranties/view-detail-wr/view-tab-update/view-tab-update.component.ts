@@ -393,6 +393,8 @@ export class ViewTabUpdateComponent implements OnInit {
                 let idx = this.lstUpdate.findIndex(
                   (x) => x.recID == data.recID
                 );
+                data.scheduleTime = this.setTimeEdit(data.startDate, data.scheduleTime);
+
                 if (idx != -1) {
                   this.lstUpdate[idx] = data;
                 } else {
