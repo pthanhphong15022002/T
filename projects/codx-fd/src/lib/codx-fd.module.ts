@@ -134,6 +134,10 @@ export const routes: Routes = [
         path: 'payments/:funcID',
         component: EvoucherStatisticalComponent,
       },
+      {
+        path: 'dashboard-view/:funcID',
+        component: CodxDashboardViewsComponent,
+      },
     ],
   },
   {
