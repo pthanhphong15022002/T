@@ -30,6 +30,7 @@ import { DealsComponent } from 'projects/codx-cm/src/lib/deals/deals.component';
 import { CasesComponent } from 'projects/codx-cm/src/lib/cases/cases.component';
 import { LeadsComponent } from 'projects/codx-cm/src/lib/leads/leads.component';
 import { ViewInstancesComponent } from 'projects/codx-dp/src/lib/view-instances/view-instances.component';
+import { FormatDatePipe } from './pipes/format-date.pipe';
 
 var routes: Routes = [
   {
@@ -87,6 +88,7 @@ var routes: Routes = [
     ViewTabPartsComponent,
     ImportpartsComponent,
     PopupDetailImportPartsComponent,
+    FormatDatePipe
   ],
   imports: [
     CodxCoreModule.forRoot({ environment }),
