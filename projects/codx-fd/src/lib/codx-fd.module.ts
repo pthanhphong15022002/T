@@ -82,6 +82,7 @@ import { AchievementsComponent } from './achievements/achievements.component';
 import { PositionName } from './pipes/positionName.pipe';
 import { PersonalAchievementComponent } from './personal-achievement/personal-achievement.component';
 import { PersonalUsageHistoryComponent } from './personal-usage-history/personal-usage-history.component';
+import { CodxDashboardViewsComponent } from 'projects/codx-share/src/lib/components/codx-dashboard/dashboard-view/dashboard-view.component';
 
 export const routes: Routes = [
   {
@@ -128,6 +129,10 @@ export const routes: Routes = [
       {
         path: 'payments/:funcID',
         component: EvoucherStatisticalComponent,
+      },
+      {
+        path: 'dashboard-view/:funcID',
+        component: CodxDashboardViewsComponent,
       },
     ],
   },
@@ -198,7 +203,7 @@ export const routes: Routes = [
         path: 'setting/evouchers/:funcID',
         component: EVouchersComponent,
       },
-     
+
     ],
   },
 ];
