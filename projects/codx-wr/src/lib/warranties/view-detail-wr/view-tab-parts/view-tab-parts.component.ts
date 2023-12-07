@@ -102,8 +102,6 @@ export class ViewTabPartsComponent extends UIComponent {
         if (changes['transID']?.currentValue == this.id) return;
         this.id = changes['transID']?.currentValue;
         this.getListOrderParts();
-      } else {
-        if (!this.loaded) this.loaded = true;
       }
     }
   }
@@ -116,13 +114,11 @@ export class ViewTabPartsComponent extends UIComponent {
   }
 
   getListOrderParts() {
-    this.loaded = false;
     this.request.predicates = this.predicates;
     this.request.dataValues = this.transID;
     this.request.entityName = 'WR_WorkOrderParts';
     this.request.pageLoading = false;
     this.fetch().subscribe(async (item) => {
-      this.loaded = true;
       this.lstParts = item;
       if (this.grid) {
         this.grid.dataSource = this.lstParts;
