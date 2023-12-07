@@ -121,10 +121,6 @@ export class WarrantiesComponent
     if (!this.funcID) {
       this.funcID = this.activedRouter.snapshot.params['funcID'];
     }
-    // this.router.params.subscribe((param: any) => {
-    //   if (param.funcID) {
-    //   }
-    // });
     this.executeApiCalls();
   }
 

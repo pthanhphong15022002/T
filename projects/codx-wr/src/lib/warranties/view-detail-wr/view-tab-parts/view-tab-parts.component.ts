@@ -76,24 +76,6 @@ export class ViewTabPartsComponent extends UIComponent {
     private inject: Injector
   ) {
     super(inject);
-    this.loaded = false;
-    this.cache
-      .gridViewSetup(this.formModel.formName, this.formModel.gridViewName)
-      .subscribe((res) => {
-        this.grvSetupWorkOrderParts = res;
-        this.vllStatus =
-          this.grvSetupWorkOrderParts['Status'].referedValue ?? this.vllStatus;
-        //lay grid view
-        let arrField = Object.values(res).filter((x: any) => x.isVisible);
-        if (Array.isArray(arrField)) {
-          this.arrFieldIsVisible = arrField
-            .sort((x: any, y: any) => x.columnOrder - y.columnOrder)
-            .map((x: any) => x.fieldName);
-          this.getColumsGrid(res);
-        }
-        this.loaded = true;
-
-      });
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -109,11 +91,25 @@ export class ViewTabPartsComponent extends UIComponent {
     }
   }
 
-  onInit(): void {
-  }
+  onInit(): void {}
 
   ngAfterViewInit(): void {
-    this.detectorRef.detectChanges();
+    this.cache
+      .gridViewSetup(this.formModel.formName, this.formModel.gridViewName)
+      .subscribe((res) => {
+        this.grvSetupWorkOrderParts = res;
+        this.vllStatus =
+          this.grvSetupWorkOrderParts['Status'].referedValue ?? this.vllStatus;
+        //lay grid view
+        let arrField = Object.values(res).filter((x: any) => x.isVisible);
+        if (Array.isArray(arrField)) {
+          this.arrFieldIsVisible = arrField
+            .sort((x: any, y: any) => x.columnOrder - y.columnOrder)
+            .map((x: any) => x.fieldName);
+          this.getColumsGrid(res);
+        }
+        this.detectorRef.detectChanges();
+      });
   }
 
   getListOrderParts() {
@@ -279,11 +275,9 @@ export class ViewTabPartsComponent extends UIComponent {
       option
     );
     dialogAdd.closed.subscribe((e) => {
-      if(e && e?.event && e?.event?.update){
+      if (e && e?.event && e?.event?.update) {
         var data = e?.event?.update?.data;
-        let idx = this.lstParts.findIndex(
-          (x) => x.recID == data.recID
-        );
+        let idx = this.lstParts.findIndex((x) => x.recID == data.recID);
         if (idx != -1) {
           this.lstParts[idx] = data;
         }
