@@ -2169,12 +2169,7 @@ export class DealsComponent
   async editCustomer(event) {
     if (event && event?.data) {
       this.dataSelected = event?.data;
-      let ele = await firstValueFrom(
-        this.codxCmService.getOneObject(
-          event?.data?.customerID,
-          'CustomersBusiness'
-        )
-      );
+      let ele = event?.dataCus;
       if (ele) {
         let tempData = JSON.parse(JSON.stringify(ele));
         var dataService = new CRUDService(this.inject);

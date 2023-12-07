@@ -76,6 +76,7 @@ export class ViewTabPartsComponent extends UIComponent {
     private inject: Injector
   ) {
     super(inject);
+    this.loaded = false;
     this.cache
       .gridViewSetup(this.formModel.formName, this.formModel.gridViewName)
       .subscribe((res) => {
@@ -90,6 +91,8 @@ export class ViewTabPartsComponent extends UIComponent {
             .map((x: any) => x.fieldName);
           this.getColumsGrid(res);
         }
+        this.loaded = true;
+
       });
   }
 

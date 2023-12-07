@@ -844,7 +844,17 @@ export class DealDetailComponent implements OnInit {
 
   //#region edit customer
   editCustomer(data){
-    this.changeDataCustomers.emit({data: data});
+    if(data){
+      this.codxCmService.getOneObject(
+        data?.customerID,
+        'CustomersBusiness'
+      ).subscribe((ele) => {
+        if(ele){
+          this.changeDataCustomers.emit({data: data, dataCus: ele});
+          this.changeDetectorRef.detectChanges();
+        }
+      });
+    }
   }
   //#endregion
 }
