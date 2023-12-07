@@ -1,11 +1,11 @@
+codx-crmcustomer codx-crmcustomer-detail .codx-detail-main {
+  padding-bottom: 0 !important;
+  background-color: #ff9472;
 
-codx-crmcustomer codx-crmcustomer-detail .codx-detail-main{
-	padding-bottom: 0!important;
-	background-color: #FF9472;
 }
 
 .view-step-box {
-	clear: both;
+  clear: both;
 }
 .action-menu-od {
   opacity: 0;
@@ -15,11 +15,15 @@ codx-crmcustomer codx-crmcustomer-detail .codx-detail-main{
   opacity: 1;
 }
 
-
 // .cmdetail-scroll{
 // 	height: calc(100vh - 370px);
 // 	overflow: auto;
 // }
-:host ::ng-deep .codx-detail-main{
+:host ::ng-deep .codx-detail-main {
   height: 100% !important;
+}
+
+.croll-m-5 {
+  height: calc(100vh - 430px) !important;
+  overflow: auto !important;
 }
