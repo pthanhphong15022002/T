@@ -474,6 +474,14 @@ export class CodxViewTaskComponent implements OnInit {
           case 'DP30': //Khôi phục
             res.disabled = true;
             break;
+          case 'DP32': // gởi duyệt
+            res.disabled =
+              !this.dataView?.approveRule ||
+              (this.dataView?.approveRule && ['3', '5'].includes(this.dataView?.approveStatus));
+            break;
+          case 'DP33': // hủy duyệt
+            res.disabled = !(this.dataView?.approveRule && this.dataView?.approveStatus == '3');
+            break;
         }
       });
     }
