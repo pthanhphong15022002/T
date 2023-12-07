@@ -155,7 +155,7 @@ export class PopupAddDealComponent
   isBlock: boolean = true;
   isviewCustomer: boolean = false;
   isShowField: boolean = false;
-
+  isShowReasonDP: boolean = false;
   currencyIDOld: string;
   autoNameTabFields: string;
   bussineLineNameTmp: string = '';
@@ -198,6 +198,7 @@ export class PopupAddDealComponent
         this.deal.owner =this.instanceReason?.ownerMove;
         this.deal.salespersonID = this.instanceReason?.ownerMove;
         this.owner =  this.instanceReason?.ownerMove;
+        this.isShowReasonDP = true;
       //  this.deal.processID = this.instanceReason?.processMove;
       }
     } else {
@@ -824,22 +825,42 @@ export class PopupAddDealComponent
     }
   }
   onAddInstance() {
-    this.dialog.dataService
-      .save((option: any) => this.beforeSaveInstance(option))
-      .subscribe((res) => {
-        if (res && res.save) {
-          this.deal.status = res?.save?.status;
-          this.deal.datas = res?.save?.datas;
-          this.addPermission(res?.save?.permissions);
+    if(this.isShowReasonDP) {
+      let data = [this.instance, this.listInstanceSteps, this.oldIdInstance];
+      this.codxCmService.addInstance(data).subscribe((instance) => {
+        if (instance) {
+          this.instanceRes = instance;
+          this.deal.status = instance.status;
+          this.deal.datas = instance.datas;
+          this.addPermission(instance?.permissions);
           let datas = [this.deal, this.lstContactDeal];
           this.codxCmService.addDeal(datas).subscribe((deal) => {
             if (deal) {
+
             }
           });
-          this.dialog.close(res.save);
-          this.changeDetectorRef.detectChanges();
+          this.dialog.close();
         }
       });
+    }
+    else {
+      this.dialog.dataService
+      .save((option: any) => this.beforeSaveInstance(option))
+    .subscribe((res) => {
+      if (res && res.save) {
+        this.deal.status = res?.save?.status;
+        this.deal.datas = res?.save?.datas;
+        this.addPermission(res?.save?.permissions);
+        let datas = [this.deal, this.lstContactDeal];
+        this.codxCmService.addDeal(datas).subscribe((deal) => {
+          if (deal) {
+          }
+        });
+        this.dialog.close(res?.save);
+        this.changeDetectorRef.detectChanges();
+      }
+    });
+    }
   }
   onUpdateInstance() {
     this.dialog.dataService
@@ -863,7 +884,7 @@ export class PopupAddDealComponent
             if (deal) {
             }
           });
-          this.dialog.close(res.update);
+          this.dialog.close(res?.update);
         }
       });
   }
