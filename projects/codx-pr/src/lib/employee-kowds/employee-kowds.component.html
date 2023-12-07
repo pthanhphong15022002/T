@@ -8,6 +8,7 @@
   (buttonClick)="btnClick($event)"
   (onActions)="onAction($event)"
   (clickMF)="clickMF($event, itemSelected)"
+  [titleToolBarTmp]="breadCumbs" 
   >
   <!-- (viewChanged)="viewChanged($event)" -->
 <!-- service="PR"
@@ -149,7 +150,7 @@ method="LoadDataAsync" -->
 
   <ng-template #tempDayData let-data>
     <span>
-      {{data? data[data.column.field] : "" }}
+      {{data? data[data.column.field][0].kowCode : "" }}
     </span>
   </ng-template>
 
@@ -157,4 +158,31 @@ method="LoadDataAsync" -->
     <span class="fw-bold">
       {{data? data[data.column.field] : "" }}
     </span>
+  </ng-template>
+
+  <ng-template #breadCumbs>
+    <codx-label
+    [formModel]="view.formModel"
+    [name]="'lblbreadCumbs'"
+    [default]="formHeaderText + ' > '"
+    class="fw-bold fs-4 text-primary"
+  >
+  </codx-label>
+  <codx-label
+  [formModel]="view.formModel"
+  [name]="'lblbreadCumbs2'"
+  [default]="'Chi tiết theo ngày '"
+ (click)="switchModeView(1)"
+  class="ms-2 fw-bold fs-4 text-primary"
+>
+</codx-label>
+<span class="ms-2 fw-bold fs-4 text-primary"> | </span>
+<codx-label
+[formModel]="view.formModel"
+[name]="'lblbreadCumbs3'"
+[default]="'Bảng công tổng hợp'"
+(click)="switchModeView(2)"
+class="ms-2 fw-bold fs-4 text-primary"
+>
+</codx-label>
   </ng-template>

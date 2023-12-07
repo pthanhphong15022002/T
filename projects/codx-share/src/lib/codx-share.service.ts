@@ -2212,17 +2212,17 @@ export class CodxShareService {
           }
         }
         //let paramURL = this.shareService.genURLParamObject(params);
-        let paramURL = encodeURIComponent(JSON.stringify(params));
-        let rpOpenReportUI = function (recID, module) {
-          let url = `/${tenantName}/${module}/report/detail/${recID}?params=${paramURL}`;
-          window.open(url);
+        // let paramURL = encodeURIComponent(JSON.stringify(params));
+        // let rpOpenReportUI = function (recID, module) {
+        //   let url = `/${tenantName}/${module}/report/detail/${recID}?params=${paramURL}`;
+        //   window.open(url);
               
-        };
+        // };
         if (rpList?.length > 1) {
-          this.rpViewReportList(rpList, formModel, params, rpOpenReportUI);
+          this.rpViewReportList(rpList, formModel, params);
         } else if (rpList?.length == 1) {
-          rpOpenReportUI(rpList[0]?.recID, rpList[0]?.moduleID?.toLowerCase());
-          //this.popupPrintRP(rpList[0],params);
+          //rpOpenReportUI(rpList[0]?.recID, rpList[0]?.moduleID?.toLowerCase());
+          this.popupPrintRP(rpList[0],params);
         }
       }
     });
@@ -2235,7 +2235,7 @@ export class CodxShareService {
     reportList: any,
     formModel: any,
     params: any,
-    rpOpenReportUI: (recID: string, moduleID: string) => void
+    //rpOpenReportUI: (recID: string, moduleID: string) => void
   ) {
     let moduleID = reportList[0]?.moduleID?.toLowerCase();
     var obj = {
@@ -2260,8 +2260,8 @@ export class CodxShareService {
     dialogViewRP.closed.subscribe((res) => {
       if (res?.event) {
         let tenantName = this.tenant.getName();
-        rpOpenReportUI(res?.event?.recID, moduleID);        
-        //this.popupPrintRP(res?.event,params);
+        //rpOpenReportUI(res?.event?.recID, moduleID);        
+        this.popupPrintRP(res?.event,params);
       }
     });
   }

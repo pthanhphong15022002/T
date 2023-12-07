@@ -1,3 +1,7 @@
+//@import "assets/styles/ej/bootstrap-dark.css";
+//@import "bootstrap-dark.css";
+@import "src/bootstrap-dark.scss";
+
 .text-gray-900 {
     color: var(--gray-900) !important;
 }
@@ -957,4 +961,15 @@ ejs-tab#calendarTab .e-calendar {
 }
 .e-grid .e-gridheader {
     border-bottom-color: var(--border-gray);
+}
+.e-richtexteditor .e-rte-content, .e-richtexteditor .e-source-content {
+    background: #0000000d;
+}
+.form-control {
+    color: var(--text-title);
+    background-color: var(--bg-card);
+    border-color: var(--gray-400);
+}
+.input-group-text{
+    border-color: var(--gray-400);
 }

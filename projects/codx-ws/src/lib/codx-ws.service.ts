@@ -144,5 +144,10 @@ export class CodxWsService {
     return this.loadData(paras,keyRoot,"SYS","SYS","FunctionListBusiness","GetListFunctionListByModuleIDAsync")
   }
 
- 
+  loadListFucByParentID(funcID:any)
+  {
+    let paras = [funcID];
+    let keyRoot = "WSFCByParent" + funcID;
+    return this.loadData(paras,keyRoot,"SYS","SYS","FunctionListBusiness","GetFunctListByParentIDAsync")
+  }
 }

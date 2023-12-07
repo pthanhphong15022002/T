@@ -199,7 +199,7 @@ export class CodxAddTaskComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.titleName = (this.titleName + ' ' + this.typeTask?.text).toUpperCase();
+    this.setTitle();
     this.setStatusForm();
     this.setData();
     this.setDataParent();
@@ -209,6 +209,26 @@ export class CodxAddTaskComponent implements OnInit {
     (this.action == 'add' || this.action == 'copy') && this.getBoughtTM();
   }
 
+  setTitle(){
+    if(this.titleName){
+      this.titleName = (this.titleName + ' ' + this.typeTask?.text).toUpperCase();
+    }else{
+      this.cache.moreFunction('CoDXSystem', '').subscribe((res:any) => {
+        if(res){
+          if(this.action == 'add'){
+            let title = res?.find(x => x.functionID == "SYS01")?.description || '';
+            this.titleName = (title + ' ' + this.typeTask?.text).toUpperCase();
+          }else if(this.action == 'edit'){
+            let title = res?.find(x => x.functionID == "SYS03")?.description || '';
+            this.titleName = (title + ' ' + this.typeTask?.text).toUpperCase();
+          }else if(this.action == 'copy'){
+            let title = res?.find(x => x.functionID == "SYS04")?.description || '';
+            this.titleName = (title + ' ' + this.typeTask?.text).toUpperCase();
+          }
+        }
+      });
+    }
+  }
   //#region set data before open form
   setStatusForm() {
     switch (this.type) {

@@ -249,7 +249,10 @@
     --gray-800: #cdcdde;
     --gray-900: #ffffff;
 
-    @import "src/theme-dark.scss";
+   
+    @import "theme-dark.scss";
+  
+
 
     color: var(--text-body);
     --title-color: var(--primary);
