@@ -3,9 +3,11 @@ import {
   ApplicationRef,
   ChangeDetectorRef,
   Component,
+  EventEmitter,
   HostBinding,
   Injector,
   OnInit,
+  Output,
   TemplateRef,
   ViewChild,
 } from '@angular/core';
@@ -38,6 +40,8 @@ export class CodxChatComponent implements OnInit, AfterViewInit {
       'd-flex align-items-center ' + this.codxService.toolbarButtonMarginClass
     );
   }
+  
+  @Output('countTotalMessage') countTotalMessage: EventEmitter<any> = new EventEmitter();
   loaded = false;
   count: number = 0;
   formModel: FormModel = null;
@@ -106,6 +110,9 @@ export class CodxChatComponent implements OnInit, AfterViewInit {
     this.signalRSV.loadedGroup.subscribe((res: any) => {
       this.getTotalMessage();
       this.listChat?.addGroup(res?.data);
+    });
+    this.signalRSV.chatboxChange.subscribe((res: any) => {
+      this.getTotalMessage();
     });
   }
   // get count message

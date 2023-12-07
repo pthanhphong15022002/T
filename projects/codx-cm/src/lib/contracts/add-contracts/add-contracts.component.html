@@ -2,15 +2,16 @@
   <codx-layout-add
     #formlayoutadd
     [title]="headerTest"
-    [subHeader]="subHeader"
     [tabInfo]="tabInfo"
     [tabContent]="tabContent"
     [openMore]="true"
     [dialog]="dialog"
     [formModel]="dialog.formModel"
     [footer]="footer"
-  ></codx-layout-add>
-  <!-- [data]="contracts" -->
+    (setTitle)="getTitle()"
+    ></codx-layout-add>
+    <!-- [data]="contracts" -->
+    <!-- [subHeader]="subHeader" -->
   <ng-template #information>
     <ng-container
       [ngTemplateOutlet]="informationTemp"
@@ -101,6 +102,7 @@
         type="datetime"
         format="F"
         (valueChange)="changeValueDateTask($event)"
+        [disabled]="stepsTasks?.isTaskDefault"
         >
       </codx-input>
     </div>
@@ -630,7 +632,7 @@
         #inputQuotation
         [formModel]="dialog?.formModel"
         field="note"
-        [crrValue]="contracts?.note"
+        [crrValue]="contracts?.note || ''"
         (valueChange)="valueChangeText($event)"
       >
       </codx-input>

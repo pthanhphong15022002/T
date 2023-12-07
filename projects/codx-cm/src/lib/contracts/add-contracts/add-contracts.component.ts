@@ -204,7 +204,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit{
     this.contractsInput = dt?.data?.contract || dt?.data?.dataCM || null;
     this.stepsTasks = dt?.data?.stepsTasks || {};
     this.user = this.authStore.get();
-    this.getTitle();
+    // this.getTitle();
     this.getFormModel();
     this.getGrvSetup();
   }
@@ -716,7 +716,20 @@ export class AddContractsComponent implements OnInit, AfterViewInit{
           this.headerTest =
             this.headerTest + ' ' + f?.defaultName.toString().toLowerCase();
         } else {
-          this.headerTest = f?.defaultName.toString().toLowerCase();
+          this.cache.moreFunction('CoDXSystem', '').subscribe((res:any) => {
+            if(res){
+              if(this.action == 'add'){
+                let title = res?.find(x => x.functionID == "SYS01")?.description || '';
+                this.headerTest = (title + ' ' + f?.defaultName.toString()).toUpperCase();
+              }else if(this.action == 'edit'){
+                let title = res?.find(x => x.functionID == "SYS03")?.description || '';
+                this.headerTest = (title + ' ' + f?.defaultName.toString()).toUpperCase();
+              }else if(this.action == 'copy'){
+                let title = res?.find(x => x.functionID == "SYS04")?.description || '';
+                this.headerTest = (title + ' ' + f?.defaultName.toString()).toUpperCase();
+              }
+            }
+          });
         }
       }
     });
@@ -776,7 +789,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit{
   }
 
   changeValueDateTask(event){
-    this.stepsTasks[event?.field] = event?.data;
+    this.stepsTasks[event?.field] = event?.data?.fromDate;
   }
 
   valueChangeAlertTask(event){

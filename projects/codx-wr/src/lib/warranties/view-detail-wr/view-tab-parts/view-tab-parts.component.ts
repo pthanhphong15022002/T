@@ -200,6 +200,7 @@ export class ViewTabPartsComponent extends UIComponent {
       this.columnsGrid.push(column);
     });
     var colums = {
+      field: 'PartInfo',
       headerTemplate: this.headerPartInfo,
       template: this.tempPartInfo,
       width: 400,

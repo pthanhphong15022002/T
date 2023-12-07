@@ -82,6 +82,10 @@ import { AchievementsComponent } from './achievements/achievements.component';
 import { PositionName } from './pipes/positionName.pipe';
 import { PersonalAchievementComponent } from './personal-achievement/personal-achievement.component';
 import { PersonalUsageHistoryComponent } from './personal-usage-history/personal-usage-history.component';
+import { DealsComponent } from 'projects/codx-cm/src/lib/deals/deals.component';
+import { ViewInstancesComponent } from 'projects/codx-dp/src/lib/view-instances/view-instances.component';
+import { LeadsComponent } from 'projects/codx-cm/src/lib/leads/leads.component';
+import { CasesComponent } from 'projects/codx-cm/src/lib/cases/cases.component';
 import { CodxDashboardViewsComponent } from 'projects/codx-share/src/lib/components/codx-dashboard/dashboard-view/dashboard-view.component';
 
 export const routes: Routes = [
@@ -129,10 +133,6 @@ export const routes: Routes = [
       {
         path: 'payments/:funcID',
         component: EvoucherStatisticalComponent,
-      },
-      {
-        path: 'dashboard-view/:funcID',
-        component: CodxDashboardViewsComponent,
       },
     ],
   },
@@ -262,7 +262,7 @@ const Component: Type<any>[] = [
   PopupWalletHistoryComponent,
   AchievementsComponent,
   PersonalAchievementComponent,
-  PersonalUsageHistoryComponent
+  PersonalUsageHistoryComponent,
 ];
 const T_Pipe: Type<any>[] = [];
 @NgModule({

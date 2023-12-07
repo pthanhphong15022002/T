@@ -50,41 +50,22 @@
           <div
             class="mb-1 me-1"
             *ngIf="dataSelected?.recID && dataSelected?.problem?.trim() != ''"
-            [ngClass]="!expanding ? 'd-flex flex-column' : ''"
           >
             <span
               #problem
               class="fw-bold text-dark me-1 mb-1"
-              [ngClass]="!expanding ? 'line-clamp line-clamp-2' : ''"
+              [ngClass]="'line-clamp line-clamp-2'"
+              [ngbPopover]="dataSelected?.problem"
+              #p1="ngbPopover"
+              (mouseenter)="p1.open()"
+              (mouseleave)="p1.close()"
+              placement="bottom"
               [innerHTML]="
                 dataSelected?.problem
                   | formatvalue : formModel : 'Problem'
                   | async
               "
             ></span>
-            <div>
-              <codx-label
-                *ngIf="!expanding"
-                default="Xem thêm"
-                style="white-space: nowrap"
-                class="text-primary text-decoration-underline me-1 mb-1"
-                [ngClass]="!overflowed ? 'd-none' : ''"
-                role="button"
-                (click)="expanding = !expanding"
-                name="lblMore"
-                [formModel]="formModel"
-              ></codx-label>
-              <codx-label
-                *ngIf="expanding"
-                default="Thu lại"
-                style="white-space: nowrap"
-                class="text-primary text-decoration-underline me-1 mb-1"
-                role="button"
-                name="lblCollapse"
-                [formModel]="formModel"
-                (click)="expanding = !expanding"
-              ></codx-label>
-            </div>
           </div>
         </div>
 
@@ -121,10 +102,7 @@
                       ></span>
                     </div>
                   </div>
-                  <div
-                    class="d-flex flex-column-reverse"
-
-                  >
+                  <div class="d-flex flex-column-reverse">
                     <div
                       class="d-flex align-items-center mb-1 text-primary text-hover-primary line-clamp-address"
                       *ngIf="
@@ -144,113 +122,129 @@
                         >{{ dataSelected.address }}</a
                       >
                     </div>
-                    <div class="d-flex flex-row mb-1">
-                      <div
-                        class="d-flex align-items-center me-1"
-
-                      >
-                        <span
-                          class="icon-person icon-16 me-2 text-primary"
-                        ></span>
-
-                        <span
-                          class="text-dark"
-                          [innerHTML]="
-                            dataSelected?.contactName
-                              | formatvalue : formModel : 'ContactName'
-                              | async
-                          "
-                        ></span>
-                      </div>
-                      <div
-                        class="d-flex align-items-center me-1"
+                    <div class="d-flex">
+                      <span
                         *ngIf="
-                          dataSelected.mobile != null &&
-                          dataSelected.mobile.trim() != ''
+                          contact2JSON?.Alternate?.Name != null &&
+                          contact2JSON?.Alternate?.Name?.trim() != ''
                         "
-                      >
-                        <span
-                          class="text-gray-900"
-                          [innerHTML]="
-                            dataSelected?.mobile
-                              | formatvalue : formModel : 'Mobile'
-                              | async
-                          "
-                        ></span>
-                      </div>
-                      <div
-                        class="d-flex align-items-center"
-                        *ngIf="
-                          dataSelected.email != null &&
-                          dataSelected.email.trim() != ''
-                        "
-                      >
-                        <span
-                          class="text-gray-900"
-                          [innerHTML]="
-                            dataSelected?.email
-                              | formatvalue : formModel : 'Email'
-                              | async
-                          "
-                        ></span>
-                      </div>
-                    </div>
-                    <div
-                      class="d-flex flex-row"
-                      *ngIf="
-                        contact2JSON?.Alternate?.Name != null &&
-                        contact2JSON?.Alternate?.Name?.trim() != ''
-                      "
-                    >
-                      <div class="d-flex align-items-center me-1">
-                        <span
-                          class="icon-person icon-16 me-2 text-primary"
-                        ></span>
-                        <span
+                        class="me-2 icon-sync_alt icon-16 cursor-pointer text-hover-primary"
+                        [ngbTooltip]="tooltipSwitch"
+                        (click)="switchContact(isSwitch)"
+                        ><ng-template #tooltipSwitch>
+                          <codx-label
+                            [name]="
+                              !isSwitch ? 'lblMainContact' : 'lblAlterContact'
+                            "
+                            [formModel]="formModel"
+                            [default]="
+                              isSwitch
+                                ? 'Switch Main Contact'
+                                : 'Switch Alter Contact'
+                            "
+                          ></codx-label>
+                        </ng-template>
+                      </span>
+                      <div class="d-flex flex-row mb-1" *ngIf="!isSwitch">
+                        <div class="d-flex align-items-center me-1">
+                          <span
+                            class="icon-person icon-16 me-2 text-primary"
+                          ></span>
+
+                          <span
+                            class="text-dark"
+                            [innerHTML]="
+                              dataSelected?.contactName
+                                | formatvalue : formModel : 'ContactName'
+                                | async
+                            "
+                          ></span>
+                        </div>
+                        <div
+                          class="d-flex align-items-center me-1"
                           *ngIf="
-                            contact2JSON?.Alternate?.Name != null &&
-                            contact2JSON?.Alternate?.Name?.trim() != ''
+                            dataSelected.mobile != null &&
+                            dataSelected.mobile.trim() != ''
                           "
-                          class="text-dark"
-                          [innerHTML]="
-                            contact2JSON?.Alternate?.Name
-                              | formatvalue : formModel : 'ContactName'
-                              | async
+                        >
+                          <span
+                            class="text-gray-900"
+                            [innerHTML]="
+                              dataSelected?.mobile
+                                | formatvalue : formModel : 'Mobile'
+                                | async
+                            "
+                          ></span>
+                        </div>
+                        <div
+                          class="d-flex align-items-center"
+                          *ngIf="
+                            dataSelected.email != null &&
+                            dataSelected.email.trim() != ''
                           "
-                        ></span>
+                        >
+                          <span
+                            class="text-gray-900"
+                            [innerHTML]="
+                              dataSelected?.email
+                                | formatvalue : formModel : 'Email'
+                                | async
+                            "
+                          ></span>
+                        </div>
                       </div>
-                      <div
-                        class="d-flex align-items-center me-1"
-                        *ngIf="
-                          contact2JSON?.Alternate?.PrimaryPhoneNumber != null &&
-                          contact2JSON?.Alternate?.PrimaryPhoneNumber?.trim() !=
-                            ''
-                        "
-                      >
-                        <span
-                          class="text-gray-900"
-                          [innerHTML]="
-                            contact2JSON?.Alternate?.PrimaryPhoneNumber
-                              | formatvalue : formModel : 'Mobile'
-                              | async
+                      <div class="d-flex flex-row mb-1" *ngIf="isSwitch">
+                        <div class="d-flex align-items-center me-1">
+                          <span
+                            class="icon-person icon-16 me-2 text-primary"
+                          ></span>
+                          <span
+                            *ngIf="
+                              contact2JSON?.Alternate?.Name != null &&
+                              contact2JSON?.Alternate?.Name?.trim() != ''
+                            "
+                            class="text-dark"
+                            [innerHTML]="
+                              contact2JSON?.Alternate?.Name
+                                | formatvalue : formModel : 'ContactName'
+                                | async
+                            "
+                          ></span>
+                        </div>
+                        <div
+                          class="d-flex align-items-center me-1"
+                          *ngIf="
+                            contact2JSON?.Alternate?.PrimaryPhoneNumber !=
+                              null &&
+                            contact2JSON?.Alternate?.PrimaryPhoneNumber?.trim() !=
+                              ''
                           "
-                        ></span>
-                      </div>
-                      <div
-                        class="d-flex align-items-center"
-                        *ngIf="
-                          contact2JSON?.Alternate?.Email != null &&
-                          contact2JSON?.Alternate?.Email.trim() != ''
-                        "
-                      >
-                        <span
-                          class="text-gray-900"
-                          [innerHTML]="
-                            contact2JSON?.Alternate?.Email
-                              | formatvalue : formModel : 'Email'
-                              | async
+                        >
+                          <span
+                            class="text-gray-900"
+                            [innerHTML]="
+                              contact2JSON?.Alternate?.PrimaryPhoneNumber
+                                | formatvalue : formModel : 'Mobile'
+                                | async
+                            "
+                          ></span>
+                        </div>
+                        <div
+                          class="d-flex align-items-center"
+                          *ngIf="
+                            contact2JSON?.Alternate?.Email != null &&
+                            contact2JSON?.Alternate?.Email.trim() != ''
                           "
-                        ></span>
+                        >
+                          <span
+                            class="text-gray-900"
+                            [innerHTML]="
+                              contact2JSON?.Alternate?.Email
+                                | formatvalue : formModel : 'Email'
+                                | async
+                            "
+                          ></span>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -259,9 +253,24 @@
                   <div
                     class="d-flex align-items-center justify-content-end mb-1"
                   >
+                    <codx-vll
+                      style="margin-right: 0px !important"
+                      [ngbTooltip]="gridViewSetup?.Status?.headerText"
+                      [name]="gridViewSetup?.Status?.referedValue"
+                      [field]="'Status'"
+                      [value]="dataSelected?.status"
+                      [showText]="true"
+                      [showBgColor]="true"
+                      class="badge badge-light badge-sm"
+                    >
+                    </codx-vll>
+                  </div>
+                  <div
+                    class="mb-1 d-flex align-items-center justify-content-end"
+                    *ngIf="dataSelected?.statusCode"
+                  >
                     <div
-                      *ngIf="dataSelected?.statusCode"
-                      class="me-2 badge badge-sm codx-badge d-flex align-items-center mw-125px background-color-status"
+                      class="badge badge-sm codx-badge d-flex align-items-center background-color-status"
                     >
                       <span
                         class="text-gray-900 text-ellipsis line-clamp line-clamp-1"
@@ -280,18 +289,8 @@
                         ></codx-label>
                       </ng-template>
                     </div>
-
-                    <codx-vll
-                      [ngbTooltip]="gridViewSetup?.Status?.headerText"
-                      [name]="gridViewSetup?.Status?.referedValue"
-                      [field]="'Status'"
-                      [value]="dataSelected?.status"
-                      [showText]="true"
-                      [showBgColor]="true"
-                      class="badge badge-light badge-sm"
-                    >
-                    </codx-vll>
                   </div>
+
                   <div
                     class="d-flex align-items-center justify-content-end mb-1"
                   >
@@ -584,7 +583,7 @@
                                   class="w-150px min-w-150px text-gray-600 codx-textlabel"
                                 >
                                   <codx-label
-                                    fiedName="OrderNo"
+                                    fiedName="OrderDate"
                                     class="nowrap label-colon"
                                     [setRequire]="false"
                                     [formModel]="formModel"
@@ -593,8 +592,8 @@
                                 <div class="text-dark codx-textcontent">
                                   <span
                                     [innerHTML]="
-                                      dataSelected?.orderNo
-                                        | formatvalue : formModel : 'OrderNo'
+                                      dataSelected?.orderDate
+                                        | formatvalue : formModel : 'OrderDate'
                                         | async
                                     "
                                   ></span>
@@ -633,7 +632,7 @@
                                   class="w-150px min-w-150px text-gray-600 codx-textlabel"
                                 >
                                   <codx-label
-                                    fiedName="OrderDate"
+                                    fiedName="SubType"
                                     class="nowrap label-colon"
                                     [setRequire]="false"
                                     [formModel]="formModel"
@@ -642,8 +641,8 @@
                                 <div class="text-dark codx-textcontent">
                                   <span
                                     [innerHTML]="
-                                      dataSelected?.orderDate
-                                        | formatvalue : formModel : 'OrderDate'
+                                      dataSelected?.subType
+                                        | formatvalue : formModel : 'SubType'
                                         | async
                                     "
                                   ></span>
@@ -669,6 +668,100 @@
                                         | formatvalue
                                           : formModel
                                           : 'PartUpdatedOn'
+                                        | async
+                                    "
+                                  ></span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="d-flex">
+                            <div class="col-6">
+                              <div class="mb-5px d-flex align-items-top">
+                                <div
+                                  class="w-150px min-w-150px text-gray-600 codx-textlabel"
+                                >
+                                  <codx-label
+                                    fiedName="SLA"
+                                    class="nowrap label-colon"
+                                    [setRequire]="false"
+                                    [formModel]="formModel"
+                                  ></codx-label>
+                                </div>
+                                <div class="text-dark codx-textcontent">
+                                  <span
+                                    [innerHTML]="
+                                      dataSelected?.sla
+                                        | formatvalue : formModel : 'SLA'
+                                        | async
+                                    "
+                                  ></span>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="col-6">
+                              <div class="mb-5px d-flex align-items-top">
+                                <div
+                                  class="w-150px min-w-150px text-gray-600 codx-textlabel"
+                                >
+                                  <codx-label
+                                    fiedName="PartETA"
+                                    class="nowrap label-colon"
+                                    [setRequire]="false"
+                                    [formModel]="formModel"
+                                  ></codx-label>
+                                </div>
+                                <div class="text-dark codx-textcontent">
+                                  <span
+                                    [innerHTML]="
+                                      dataSelected?.partETA
+                                        | formatvalue : formModel : 'PartETA'
+                                        | async
+                                    "
+                                  ></span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="d-flex">
+                            <div class="col-6">
+                              <div
+                                class="mb-5px d-flex align-items-top"
+                                *ngIf="serviceTime"
+                              >
+                                <div
+                                  class="w-150px min-w-150px text-gray-600 codx-textlabel"
+                                >
+                                  <codx-label
+                                    name="lblServiceTime"
+                                    class="nowrap label-colon"
+                                    [setRequire]="false"
+                                    [formModel]="formModel"
+                                    default="ServiceTime"
+                                  ></codx-label>
+                                </div>
+                                <div class="text-dark codx-textcontent">
+                                  {{ serviceTime }}
+                                </div>
+                              </div>
+                            </div>
+                            <div class="col-6">
+                              <div class="mb-5px d-flex align-items-top">
+                                <div
+                                  class="w-150px min-w-150px text-gray-600 codx-textlabel"
+                                >
+                                  <codx-label
+                                    fiedName="PartATA"
+                                    class="nowrap label-colon"
+                                    [setRequire]="false"
+                                    [formModel]="formModel"
+                                  ></codx-label>
+                                </div>
+                                <div class="text-dark codx-textcontent">
+                                  <span
+                                    [innerHTML]="
+                                      dataSelected?.partATA
+                                        | formatvalue : formModel : 'PartATA'
                                         | async
                                     "
                                   ></span>
@@ -725,151 +818,30 @@
                             </div>
                           </div>
                           <div class="d-flex">
-                            <div class="col-6">
-                              <div class="mb-5px d-flex align-items-top">
-                                <div
-                                  class="w-150px min-w-150px text-gray-600 codx-textlabel"
-                                >
-                                  <codx-label
-                                    fiedName="Category"
-                                    class="nowrap label-colon"
-                                    [setRequire]="false"
-                                    [formModel]="formModel"
-                                  ></codx-label>
-                                </div>
-                                <div class="text-dark codx-textcontent">
-                                  <span
-                                    [innerHTML]="
-                                      dataSelected?.category
-                                        | formatvalue : formModel : 'Category'
-                                        | async
-                                    "
-                                  ></span>
-                                </div>
-                              </div>
-                            </div>
-                            <div class="col-6">
-                              <div class="mb-5px d-flex align-items-top">
-                                <div
-                                  class="w-150px min-w-150px text-gray-600 codx-textlabel"
-                                >
-                                  <codx-label
-                                    fiedName="PartETA"
-                                    class="nowrap label-colon"
-                                    [setRequire]="false"
-                                    [formModel]="formModel"
-                                  ></codx-label>
-                                </div>
-                                <div class="text-dark codx-textcontent">
-                                  <span
-                                    [innerHTML]="
-                                      dataSelected?.partETA
-                                        | formatvalue : formModel : 'PartETA'
-                                        | async
-                                    "
-                                  ></span>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-
-                          <div class="d-flex">
-                            <div class="col-6">
-                              <div class="mb-5px d-flex align-items-top">
-                                <div
-                                  class="w-150px min-w-150px text-gray-600 codx-textlabel"
-                                >
-                                  <codx-label
-                                    fiedName="SubType"
-                                    class="nowrap label-colon"
-                                    [setRequire]="false"
-                                    [formModel]="formModel"
-                                  ></codx-label>
-                                </div>
-                                <div class="text-dark codx-textcontent">
-                                  <span
-                                    [innerHTML]="
-                                      dataSelected?.subType
-                                        | formatvalue : formModel : 'SubType'
-                                        | async
-                                    "
-                                  ></span>
-                                </div>
-                              </div>
-                            </div>
-                            <div class="col-6">
-                              <div class="mb-5px d-flex align-items-top">
-                                <div
-                                  class="w-150px min-w-150px text-gray-600 codx-textlabel"
-                                >
-                                  <codx-label
-                                    fiedName="ATA"
-                                    class="nowrap label-colon"
-                                    [setRequire]="false"
-                                    [formModel]="formModel"
-                                  ></codx-label>
-                                </div>
-                                <div class="text-dark codx-textcontent">
-                                  <span
-                                    [innerHTML]="
-                                      dataSelected?.ata
-                                        | formatvalue : formModel : 'ATA'
-                                        | async
-                                    "
-                                  ></span>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-
-                          <div class="d-flex">
-                            <div class="mb-5px d-flex align-items-top">
-                              <div
-                                class="w-150px min-w-150px text-gray-600 codx-textlabel"
-                              >
-                                <codx-label
-                                  fiedName="SLA"
-                                  class="nowrap label-colon"
-                                  [setRequire]="false"
-                                  [formModel]="formModel"
-                                ></codx-label>
-                              </div>
-                              <div class="text-dark codx-textcontent">
-                                <span
-                                  [innerHTML]="
-                                    dataSelected?.sla
-                                      | formatvalue : formModel : 'SLA'
-                                      | async
-                                  "
-                                ></span>
-                              </div>
-                            </div>
-                          </div>
-
-                          <div class="d-flex">
                             <div class="col-12">
-                              <div
-                                class="mb-5px d-flex align-items-top"
-                                *ngIf="serviceTime"
-                              >
+                              <div class="mb-5px d-flex align-items-top">
                                 <div
                                   class="w-150px min-w-150px text-gray-600 codx-textlabel"
                                 >
                                   <codx-label
-                                    name="lblServiceTime"
+                                    fiedName="BUID"
                                     class="nowrap label-colon"
                                     [setRequire]="false"
                                     [formModel]="formModel"
-                                    default="ServiceTime"
                                   ></codx-label>
                                 </div>
                                 <div class="text-dark codx-textcontent">
-                                  {{ serviceTime }}
+                                  <span
+                                    [innerHTML]="
+                                      dataSelected?.buid
+                                        | formatvalue : formModel : 'BUID'
+                                        | async
+                                    "
+                                  ></span>
                                 </div>
                               </div>
                             </div>
                           </div>
-
                           <div class="d-flex">
                             <div class="col-12">
                               <div class="mb-5px d-flex align-items-top">
@@ -979,9 +951,7 @@
                                         | async
                                     "
                                   ></span>
-                                  <span
-                                    class="ms-1"
-                                  >
+                                  <span class="ms-1">
                                     <button
                                       type="button"
                                       class="btn btn-sm btn-icon btn-light-primary"
@@ -996,6 +966,32 @@
                               </div>
                             </div>
                           </div>
+
+                          <!-- <div class="d-flex">
+                            <div class="col-12">
+                              <div class="mb-5px d-flex align-items-top">
+                                <div
+                                  class="w-150px min-w-150px text-gray-600 codx-textlabel"
+                                >
+                                  <codx-label
+                                    fiedName="Suggested engineers"
+                                    class="nowrap label-colon"
+                                    [setRequire]="false"
+                                    [formModel]="formModel"
+                                  ></codx-label>
+                                </div>
+                                <div class="text-dark codx-textcontent">
+                                  <span
+                                    [innerHTML]="
+                                      dataSelected?.teamLeader
+                                        | formatvalue : formModel : 'TeamLeader'
+                                        | async
+                                    "
+                                  ></span>
+                                </div>
+                              </div>
+                            </div>
+                          </div> -->
                         </div>
                       </div>
                       <div

@@ -626,7 +626,7 @@ export class WarrantiesComponent
                   .update(this.dataSelected, true)
                   .subscribe();
                 if (this.viewDetail)
-                  this.viewDetail.listOrderUpdate(this.lstOrderUpdate);
+                  this.viewDetail.listOrderUpdate();
 
                 this.detectorRef.detectChanges();
               }
@@ -662,18 +662,8 @@ export class WarrantiesComponent
           this.dataSelected.owner = e?.event[0];
           this.dataSelected.feedbackComment = e?.event[1];
           this.dataSelected.lastUpdatedOn = new Date();
-          let index = this.lstOrderUpdate.findIndex(
-            (x) =>
-              x.statusCode == this.dataSelected?.statusCode &&
-              x.transID == this.dataSelected?.recID
-          );
-          if (index != -1) {
-            this.lstOrderUpdate[index].engineerID =
-              this.dataSelected.engineerID;
-          }
-
           if (this.viewDetail)
-            this.viewDetail.listOrderUpdate(this.lstOrderUpdate);
+            this.viewDetail.listOrderUpdate();
           this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
           this.view.dataService.update(this.dataSelected, true).subscribe();
           this.detectorRef.detectChanges();

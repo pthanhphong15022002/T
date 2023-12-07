@@ -98,7 +98,8 @@ export class AddImportDetailsComponent implements OnInit, AfterViewInit{
 
     if (this.type == 'new') {
       this.getGridViewSetup();
-    } else if (this.type == 'edit') {
+    } 
+    else if (this.type == 'edit') {
       this.getDataEdit();
     }
     this.formatSourceField();
@@ -173,10 +174,8 @@ export class AddImportDetailsComponent implements OnInit, AfterViewInit{
             if (grdViews) {
               var key = Object.keys(grdViews);
               for (var i = 0; i < key.length; i++) {
-                var fs = key[i].slice(0,1).toLowerCase();
-                var s = key[i].slice(1);
-                let keys = fs + s;
-                var check = this.dataImport2.findIndex(x=>x.destinationField == keys);
+                let keys = key[i].slice(0,1).toLowerCase() + key[i].slice(1);
+                var check = this.dataImport2.findIndex(x=>x.destinationField == keys || x.destinationField == key[i]);
                 if (grdViews[key[i]]?.isImport && check<0) {
                   var obj = {
                     destinationField: key[i],

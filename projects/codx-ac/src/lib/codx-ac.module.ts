@@ -18,7 +18,7 @@ import { CodxShareModule } from 'projects/codx-share/src/public-api';
 import { CoreModule } from '../../../../src/core/core.module';
 import { LayoutComponent } from './_layout/layout.component';
 import { ApprovalsComponent } from './approvals/approvals.component';
-import { ApprovalsComponent as ApprovalsComponentWS} from 'projects/codx-ws/src/lib/approvals/approvals.component';
+import { ApprovalsComponent as ApprovalsComponentWS } from 'projects/codx-ws/src/lib/approvals/approvals.component';
 import { CodxAcComponent } from './codx-ac.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { DropdownDetailComponent } from './journals/components/dropdown-detail/dropdown-detail.component';
@@ -115,6 +115,10 @@ import { TransfersTableComponent } from './share/ac-tableview/transfers-table/tr
 import { AllocationAddComponent } from './vouchers/purchaseinvoices/allocation-add/allocation-add.component';
 import { LayoutNoToolbarComponent } from './_layout-no-toolbar/layout-no-toolbar.component';
 import { AllocationTableComponent } from './share/ac-tableview/allocation-table/allocation-table.component';
+import { DealsComponent } from 'projects/codx-cm/src/lib/deals/deals.component';
+import { CasesComponent } from 'projects/codx-cm/src/lib/cases/cases.component';
+import { LeadsComponent } from 'projects/codx-cm/src/lib/leads/leads.component';
+import { ViewInstancesComponent } from 'projects/codx-dp/src/lib/view-instances/view-instances.component';
 export const routes: Routes = [
   {
     path: '',
@@ -126,7 +130,7 @@ export const routes: Routes = [
         data: { noReuse: true },
       },
       {
-        path: 'report/:funcID',                
+        path: 'report/:funcID',
         component: CodxReportViewsComponent,
       },
       {
@@ -264,6 +268,28 @@ export const routes: Routes = [
         data: { noReuse: true },
       },
       { path: '', redirectTo: 'journalnames/ACT', pathMatch: 'full' },
+      //----phát hành quy trình DP-CRM----//
+      {
+        path: 'deals/:funcID',
+        component: DealsComponent,
+        data: { noReuse: true },
+      },
+      {
+        path: 'cases/:funcID',
+        component: CasesComponent,
+        data: { noReuse: true },
+      },
+      {
+        path: 'leads/:funcID',
+        component: LeadsComponent,
+        data: { noReuse: true },
+      },
+      {
+        path: 'instances/:funcID/:processID',
+        component: ViewInstancesComponent,
+        data: { noReuse: true },
+      },
+      //-----------end--------------//
     ],
   },
 
