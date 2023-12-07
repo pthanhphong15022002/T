@@ -1,24 +1,23 @@
-<div
-  class="h-100"
-  *ngIf="columnsGrid?.length > 0"
-  [ngClass]="isShow ? 'grid-full' : 'scroll-grid'"
->
-  <codx-gridview-v2
-    #grid
-    [dataSource]="lstParts"
-    rowHeight="30"
-    [height]="'100%'"
-    [hideMoreFunc]="false"
-    [columnsGrid]="columnsGrid"
-    [templateMore]="tempMorefunction"
-  ></codx-gridview-v2>
-</div>
+<ng-container *ngIf="loaded">
+  <div
+    class="h-100"
+    *ngIf="columnsGrid?.length > 0"
+    [ngClass]="isShow ? 'grid-full' : 'scroll-grid'"
+  >
+    <codx-gridview-v2
+      #grid
+      [dataSource]="lstParts"
+      rowHeight="30"
+      [height]="'100%'"
+      [hideMoreFunc]="false"
+      [columnsGrid]="columnsGrid"
+      [templateMore]="tempMorefunction"
+    ></codx-gridview-v2>
+  </div>
+</ng-container>
 
 <ng-template #tempMorefunction let-data>
-  <div
-    class=""
-    style="height: 30px"
-  >
+  <div class="" style="height: 30px">
     <codx-mfunc
       [dataItem]="data"
       [formModel]="formModel"

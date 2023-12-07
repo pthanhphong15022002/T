@@ -121,6 +121,10 @@ export class WarrantiesComponent
     if (!this.funcID) {
       this.funcID = this.activedRouter.snapshot.params['funcID'];
     }
+    // this.router.params.subscribe((param: any) => {
+    //   if (param.funcID) {
+    //   }
+    // });
     this.executeApiCalls();
   }
 
@@ -366,9 +370,10 @@ export class WarrantiesComponent
             ['WR0101_3', 'WR0102_3', 'WR0103_3', 'WR0104_3'].includes(
               res.functionID
             )) ||
-          (['WR0101_7', 'WR0102_7', 'WR0103_7', 'WR0104_7', 'WR0103_8'].includes(
+          ['WR0101_7', 'WR0102_7', 'WR0103_7', 'WR0104_7', 'WR0103_8'].includes(
             res.functionID
-          )) || (data?.createdBy?.toLocaleLowerCase() == 'dgp' && ['SYS02'].includes(res.functionID)) || res.functionID == 'SYS04'
+          ) ||
+          ['SYS02', 'SYS04'].includes(res.functionID)
         )
           res.disabled = true;
       });
@@ -625,8 +630,7 @@ export class WarrantiesComponent
                 this.view.dataService
                   .update(this.dataSelected, true)
                   .subscribe();
-                if (this.viewDetail)
-                  this.viewDetail.listOrderUpdate();
+                if (this.viewDetail) this.viewDetail.listOrderUpdate();
 
                 this.detectorRef.detectChanges();
               }
@@ -662,8 +666,7 @@ export class WarrantiesComponent
           this.dataSelected.owner = e?.event[0];
           this.dataSelected.feedbackComment = e?.event[1];
           this.dataSelected.lastUpdatedOn = new Date();
-          if (this.viewDetail)
-            this.viewDetail.listOrderUpdate();
+          if (this.viewDetail) this.viewDetail.listOrderUpdate();
           this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
           this.view.dataService.update(this.dataSelected, true).subscribe();
           this.detectorRef.detectChanges();

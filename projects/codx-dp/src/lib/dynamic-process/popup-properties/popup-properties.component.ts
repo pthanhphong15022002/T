@@ -7,6 +7,7 @@ import {
   CacheService,
   DialogData,
   DialogRef,
+  FormModel,
   NotificationsService,
 } from 'codx-core';
 import { environment } from 'src/environments/environment';
@@ -53,6 +54,7 @@ export class PopupPropertiesComponent implements OnInit {
   lstF = [];
 
   userIdLogin: any;
+  formModel:FormModel;
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private notificationsService: NotificationsService,
@@ -64,6 +66,7 @@ export class PopupPropertiesComponent implements OnInit {
     @Optional() dialog?: DialogRef
   ) {
     this.dialog = dialog;
+    this.formModel = data?.data?.formModel;
     this.data = JSON.parse(JSON.stringify(data.data));
     this.process = this.data;
     if (this.process.ratings != null && this.process.ratings.length > 0)
