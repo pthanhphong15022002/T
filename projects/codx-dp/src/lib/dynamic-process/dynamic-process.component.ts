@@ -953,23 +953,8 @@ export class DynamicProcessComponent
       : this.processRelease?.processName;
     // this.processRelease.module = 'CM';
     // this.processRelease.function = 'CM02';
-
-    debugger;
     let dialogModel = new DialogModel();
-    dialogModel.FormModel = this.view.formModel;
-
-    //cu
-    // this.popupRelease = this.callfc.openForm(
-    //   this.releaseProcessTemp,
-    //   '',
-    //   500,
-    //   600,
-    //   '',
-    //   '',
-    //   '',
-    //   dialogModel
-    // );
-
+    dialogModel.FormModel =JSON.parse(JSON.stringify(this.view.formModel));  
     let obj = {
       processRelease: this.processRelease,
       grvSetup: this.grvSetup,

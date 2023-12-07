@@ -18,14 +18,14 @@
           <div class="d-flex flex-column align-items-center">
             <div class="me-4" style="margin-top: 50px">
               <codx-img
-              [objectId]="customers?.recID"
-              [objectName]="customers?.customerName"
-              [referType]="'avt'"
-              [imgOn]="customers?.modifiedOn"
-              [objectType]="'CM_Customers'"
-              [width]="100"
-            >
-            </codx-img>
+                [objectId]="customers?.recID"
+                [objectName]="customers?.customerName"
+                [referType]="'avt'"
+                [imgOn]="customers?.modifiedOn"
+                [objectType]="'CM_Customers'"
+                [width]="100"
+              >
+              </codx-img>
             </div>
             <div
               class="text-dark codx-textcontent fw-bold cursor-pointer mt-3 fs-5-sm"
@@ -103,7 +103,7 @@
               >
               </codx-vll>
             </div>
-        </div>
+          </div>
 
           <hr />
           <div>
@@ -180,7 +180,14 @@
 </div>
 
 <ng-template #task>
-  <div class="task" style="min-height: calc(100vh - 115px); background-color:  white!important; padding: 10px;">
+  <div
+    class="task"
+    style="
+      min-height: calc(100vh - 115px);
+      background-color: white !important;
+      padding: 10px;
+    "
+  >
     <div id="customer">
       <step-task
         [entityName]="'CM_Contracts'"
@@ -193,16 +200,23 @@
 </ng-template>
 
 <ng-template #comment>
-  <div class="task" style="min-height: calc(100vh - 115px); background-color:  white!important;  padding: 10px;">
-    <codx-tree-comment
-    [objectID]="contract.recID"
-    [objectType]="dialog?.formModel?.entityName"
-    [actionType]="'C'"
-    [addNew]="true"
-    [funcID]="dialog?.formModel?.funcID"
-    (totalCommentChange)="changeCountFooter($event, 'comment')"
+  <div
+    class="task"
+    style="
+      min-height: calc(100vh - 115px);
+      background-color: white !important;
+      padding: 10px;
+    "
   >
-  </codx-tree-comment>
+    <codx-tree-comment
+      [objectID]="contract.recID"
+      [objectType]="dialog?.formModel?.entityName"
+      [actionType]="'C'"
+      [addNew]="true"
+      [funcID]="dialog?.formModel?.funcID"
+      (totalCommentChange)="changeCountFooter($event, 'comment')"
+    >
+    </codx-tree-comment>
   </div>
 </ng-template>
 
@@ -439,7 +453,6 @@
     </div>
   </div>
 </ng-template>
-
 <!-- Thông tin chung -->
 <ng-template #informationTemplate>
   <div>
@@ -809,9 +822,7 @@
       <span
         class="text-dark fw-bold codx-textcontent"
         [innerHTML]="
-          contract?.dealID
-            | formatvalue : dialog?.formModel : 'DealID'
-            | async
+          contract?.dealID | formatvalue : dialog?.formModel : 'DealID' | async
         "
       ></span>
     </div>
@@ -857,251 +868,4 @@
   </div>
 </ng-template>
 
-<ng-template #generalTemplate>
-  <div>
-    <codx-label
-      class="fs-5 fw-bold"
-      name="lblGeneral"
-      [formModel]="dialog?.formModel"
-      [setRequire]="false"
-      default="Thông tin chung"
-    >
-    </codx-label>
-    <div class="row my-2">
-      <div class="col-6">
-        <codx-label
-          class="label-colon text-gray-600 codx-textlabel"
-          fiedName="contractID"
-          [formModel]="dialog?.formModel"
-          [setRequire]="false"
-        >
-        </codx-label>
-        <span
-          class="text-dark fw-bold codx-textcontent"
-          [innerHTML]="
-            contract?.contractID
-              | formatvalue : dialog?.formModel : 'ContractID'
-              | async
-          "
-        ></span>
-      </div>
-
-      <div class="col-6">
-        <codx-label
-          class="label-colon text-gray-600 codx-textlabel"
-          fiedName="contractType"
-          [formModel]="dialog?.formModel"
-          [setRequire]="false"
-        >
-        </codx-label>
-        <span
-          class="text-dark fw-bold codx-textcontent"
-          [innerHTML]="
-            contract?.contractType
-              | formatvalue : dialog?.formModel : 'ContractType'
-              | async
-          "
-        ></span>
-      </div>
-    </div>
-
-    <div class="row my-2">
-      <div class="col-6">
-        <codx-label
-          class="label-colon text-gray-600 codx-textlabel"
-          fiedName="area"
-          [formModel]="dialog?.formModel"
-          [setRequire]="false"
-        >
-        </codx-label>
-        <span
-          class="text-dark fw-bold codx-textcontent"
-          [innerHTML]="
-            contract?.area | formatvalue : dialog?.formModel : 'Area' | async
-          "
-        ></span>
-      </div>
-
-      <div class="col-6">
-        <codx-label
-          class="label-colon text-gray-600 codx-textlabel"
-          fiedName="assetID"
-          [formModel]="dialog?.formModel"
-          [setRequire]="false"
-        >
-        </codx-label>
-        <span
-          class="text-dark fw-bold codx-textcontent"
-          [innerHTML]="
-            contract?.assetID
-              | formatvalue : dialog?.formModel : 'AssetID'
-              | async
-          "
-        ></span>
-      </div>
-    </div>
-
-    <div class="row my-2">
-      <div class="col-6">
-        <codx-label
-          class="label-colon text-gray-600 codx-textlabel"
-          fiedName="interval"
-          [formModel]="dialog?.formModel"
-          [setRequire]="false"
-        >
-        </codx-label>
-        <span
-          class="text-dark fw-bold codx-textcontent"
-          [innerHTML]="
-            contract?.interval || 0
-              | formatvalue : dialog?.formModel : 'Interval'
-              | async
-          "
-        ></span>
-        <codx-label
-          class="mx-1"
-          name="lblMonth"
-          [formModel]="dialog?.formModel"
-          default="tháng"
-        >
-        </codx-label>
-        <span
-          class="text-dark fw-bold codx-textcontent"
-          [innerHTML]="
-            contract?.effectiveFrom
-              | formatvalue : dialog?.formModel : 'EffectiveFrom'
-              | async
-          "
-        ></span>
-        <span class="px-1">-</span>
-        <span
-          class="text-dark fw-bold codx-textcontent"
-          [innerHTML]="
-            contract?.effectiveTo
-              | formatvalue : dialog?.formModel : 'EffectiveTo'
-              | async
-          "
-        ></span>
-      </div>
-
-      <div class="col-6">
-        <codx-label
-          class="label-colon text-gray-600 codx-textlabel"
-          fiedName="pmtMethodID"
-          [formModel]="dialog?.formModel"
-          [setRequire]="false"
-        >
-        </codx-label>
-        <span
-          class="text-dark fw-bold codx-textcontent"
-          [innerHTML]="
-            contract?.pmtMethodID
-              | formatvalue : dialog?.formModel : 'PmtMethodID'
-              | async
-          "
-        ></span>
-      </div>
-    </div>
-
-    <div class="row my-2">
-      <div class="col-6">
-        <codx-label
-          class="label-colon text-gray-600 codx-textlabel"
-          fiedName="adjustYear"
-          [formModel]="dialog?.formModel"
-          [setRequire]="false"
-        >
-        </codx-label>
-        <span
-          class="text-dark fw-bold codx-textcontent"
-          [innerHTML]="
-            contract?.adjustYear
-              | formatvalue : dialog?.formModel : 'AdjustYear'
-              | async
-          "
-        ></span>
-        <codx-label
-          class="mx-1"
-          name="lblYear"
-          [formModel]="dialog?.formModel"
-          default="năm"
-        >
-        </codx-label>
-        <span>(</span>
-        <span
-          class="text-dark fw-bold codx-textcontent"
-          [innerHTML]="
-            contract?.adjustPercent
-              | formatvalue : dialog?.formModel : 'AdjustPercent'
-              | async
-          "
-        ></span>
-        <span>%)</span>
-      </div>
-
-      <div class="col-6">
-        <codx-label
-          class="label-colon text-gray-600 codx-textlabel"
-          fiedName="disposalBefore"
-          [formModel]="dialog?.formModel"
-          [setRequire]="false"
-        >
-        </codx-label>
-        <span
-          class="text-dark fw-bold codx-textcontent"
-          [innerHTML]="
-            contract?.disposalBefore
-              | formatvalue : dialog?.formModel : 'DisposalBefore'
-              | async
-          "
-        ></span>
-        <codx-label
-          class="mx-1"
-          name="lblMonth"
-          [formModel]="dialog?.formModel"
-          default="tháng"
-        >
-        </codx-label>
-      </div>
-    </div>
-  </div>
-  <div>
-    <codx-label
-      class="fs-5 fw-bold"
-      name="lblPurpose"
-      [formModel]="dialog?.formModel"
-      [setRequire]="false"
-      default="Mục đích thuê"
-    >
-    </codx-label>
-    <div class="row my-2">
-      <span
-        class="text-gray-600"
-        [innerHTML]="
-          contract?.purpose
-            | formatvalue : dialog?.formModel : 'Purpose'
-            | async
-        "
-      ></span>
-    </div>
-  </div>
-  <div>
-    <codx-label
-      class="fs-5 fw-bold"
-      name="lblNote"
-      [formModel]="dialog?.formModel"
-      [setRequire]="false"
-      default="Ghi chú"
-    >
-    </codx-label>
-    <div class="row my-2">
-      <span
-        class="text-gray-600"
-        [innerHTML]="
-          contract?.note | formatvalue : dialog?.formModel : 'Note' | async
-        "
-      ></span>
-    </div>
-  </div>
-</ng-template>
 
