@@ -18,7 +18,7 @@
         </div>
         <div class="group-infor w-100">
             <div class="group-infor_name w-100">
-                <div class="fw-bold fs-6">{{group?.groupName}}</div>
+                <div class="fw-bold fs-6">{{group?.groupType =="1"? this.chatboxTitle : group?.groupName}}</div>
                 <div class="mt-1">
                     <codx-tag 
                         [isEdit]="false" 

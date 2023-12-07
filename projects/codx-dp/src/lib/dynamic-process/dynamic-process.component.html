@@ -148,14 +148,34 @@
               <span
                 class="icon-new_releases text-primary cursor-pointer icon-16"
                 [ngbTooltip]="popupRelease"
-                placement="right"
+                container="body"
+                placement="right left bottom top"
                 ><ng-template #popupRelease>
                   <codx-label
+                    class="label-colon"
                     name="lblRelease"
                     [formModel]="view.formModel"
-                    [default]="'Đã phát hành quy trình'"
-                  ></codx-label> </ng-template
-              ></span>
+                    [default]="'Đã phát hành quy trình đến'"
+                  ></codx-label>
+                  <div>
+                    <span
+                      [innerHTML]="
+                        data?.module
+                          | formatvalue : view.formModel : 'Module'
+                          | async
+                      "
+                    ></span
+                    >-
+                    <span
+                      [innerHTML]="
+                        data?.function
+                          | formatvalue : view.formModel : 'function'
+                          | async
+                      "
+                    ></span>
+                  </div>
+                </ng-template>
+              </span>
             </div>
             <div class="ms-auto">
               <div class="d-flex">
@@ -515,14 +535,14 @@
   </span>
 </ng-template>
 
-<!---------Release Process ------------->
-<ng-template #releaseProcess>
+<!---------Release Process - đã chuyển lên popup ------------->
+<!-- <ng-template #releaseProcess>
   <codx-form
     #formRelease
+    [dialog]="popupRelease"
     [customToolbar]="releaseProcessHeader"
     [body]="releaseProcessBody"
     [footer]="releaseProcessFooter"
-    [dialog]="popupRelease"
     [formModel]="view.formModel"
     [data]="processRelease"
   ></codx-form>
@@ -620,36 +640,35 @@
         #moduleCbx
         [formModel]="view.formModel"
         field="module"
-        [Group]="formRelease.formGroup"
+        [Group]="formRelease"
         (valueChange)="changeValueCbx($event)"
       >
-      </codx-input>
-      <!-- <codx-input
+      </codx-input> -->
+<!-- <codx-input
         [formModel]="view.formModel"
         field="module"
         [crrValue]="processRelease?.module"
         (valueChange)="changeValue($event, processRelease)"
       >
       </codx-input> -->
-    </div>
+<!-- </div>
     <div class="form-group">
       <codx-label fiedName="function" [formModel]="view.formModel"></codx-label>
       <codx-input
         #functionCbx
         field="function"
         [formModel]="view.formModel"
-        [Group]="formRelease.formGroup"
         (valueChange)="changeValueCbx($event)"
       >
-      </codx-input>
-      <!-- <codx-input
+      </codx-input> -->
+<!-- <codx-input
         [formModel]="view.formModel"
         field="function"
         [crrValue]="processRelease?.function"
         (valueChange)="changeValue($event, processRelease)"
       >
       </codx-input> -->
-    </div>
+<!-- </div>
   </div>
 </ng-template>
 <ng-template #releaseProcessFooter>
@@ -677,5 +696,5 @@
       ></codx-label>
     </button>
   </div>
-</ng-template>
+</ng-template> -->
 <!---- End Release Process ------------->

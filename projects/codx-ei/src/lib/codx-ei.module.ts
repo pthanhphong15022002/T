@@ -14,6 +14,10 @@ import { InvoicesComponent } from './invoices/invoices.component';
 import { AddEditComponent } from './invoices/popups/add-edit/add-edit.component';
 import { TabModule } from '@syncfusion/ej2-angular-navigations';
 import { GridModule } from '@syncfusion/ej2-angular-grids';
+import { DealsComponent } from 'projects/codx-cm/src/lib/deals/deals.component';
+import { CasesComponent } from 'projects/codx-cm/src/lib/cases/cases.component';
+import { LeadsComponent } from 'projects/codx-cm/src/lib/leads/leads.component';
+import { ViewInstancesComponent } from 'projects/codx-dp/src/lib/view-instances/view-instances.component';
 
 const routes: Routes = [
   {
@@ -33,6 +37,28 @@ const routes: Routes = [
         path: '**',
         redirectTo: 'error/404',
       },
+      //----phát hành quy trình DP-CRM----//
+      {
+        path: 'deals/:funcID',
+        component: DealsComponent,
+        data: { noReuse: true },
+      },
+      {
+        path: 'cases/:funcID',
+        component: CasesComponent,
+        data: { noReuse: true },
+      },
+      {
+        path: 'leads/:funcID',
+        component: LeadsComponent,
+        data: { noReuse: true },
+      },
+      {
+        path: 'instances/:funcID/:processID',
+        component: ViewInstancesComponent,
+        data: { noReuse: true },
+      },
+      //-----------end--------------//
     ],
   },
 ];

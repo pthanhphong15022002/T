@@ -24,6 +24,10 @@ import { EmployeeKowdsComponent } from './employee-kowds/employee-kowds.componen
 import { KowdsScheduleComponent } from './employee-kowds/kowds-schedule/kowds-schedule.component';
 import { PopupEkowdsComponent } from './employee-kowds/popup-ekowds/popup-ekowds.component';
 import { DateRangePickerModule } from '@syncfusion/ej2-angular-calendars';
+import { DealsComponent } from 'projects/codx-cm/src/lib/deals/deals.component';
+import { CasesComponent } from 'projects/codx-cm/src/lib/cases/cases.component';
+import { LeadsComponent } from 'projects/codx-cm/src/lib/leads/leads.component';
+import { ViewInstancesComponent } from 'projects/codx-dp/src/lib/view-instances/view-instances.component';
 export const routes: Routes = [
   {
     path: '',
@@ -37,6 +41,28 @@ export const routes: Routes = [
         path: 'KowDs/:funcID',
         component: EmployeeKowdsComponent,
       },
+      //----phát hành quy trình DP-CRM----//
+      {
+        path: 'deals/:funcID',
+        component: DealsComponent,
+        data: { noReuse: true },
+      },
+      {
+        path: 'cases/:funcID',
+        component: CasesComponent,
+        data: { noReuse: true },
+      },
+      {
+        path: 'leads/:funcID',
+        component: LeadsComponent,
+        data: { noReuse: true },
+      },
+      {
+        path: 'instances/:funcID/:processID',
+        component: ViewInstancesComponent,
+        data: { noReuse: true },
+      },
+      //-----------end--------------//
     ],
   },
 ];
@@ -48,7 +74,7 @@ const T_Component: Type<any>[] = [
   ViewDetailOtComponent,
   EmployeeKowdsComponent,
   KowdsScheduleComponent,
-  PopupEkowdsComponent
+  PopupEkowdsComponent,
 ];
 
 @NgModule({
@@ -65,10 +91,15 @@ const T_Component: Type<any>[] = [
     ChartAllModule,
     DiagramAllModule,
     NgbModule,
-    DateRangePickerModule 
+    DateRangePickerModule,
   ],
   exports: [RouterModule],
-  declarations: [T_Component, EmployeeKowdsComponent, KowdsScheduleComponent, PopupEkowdsComponent],
+  declarations: [
+    T_Component,
+    EmployeeKowdsComponent,
+    KowdsScheduleComponent,
+    PopupEkowdsComponent,
+  ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class CodxPrModule {
