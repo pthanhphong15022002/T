@@ -444,6 +444,9 @@ export class PopupAssginDealComponent
         }
       });
     }
+    else if (this.applyFor == '4') {
+      this.isCloseCM && this.dialogRef.close(this.owner);
+    }
   }
   addPermission(permissionDP,data) {
     if (permissionDP && permissionDP?.length > 0 ) {
