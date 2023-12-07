@@ -2209,7 +2209,7 @@ export class DealsComponent
               );
               dialogAdd.closed.subscribe((e) => {
                 if (e && e?.event && e?.event?.update) {
-                  const dataCus = e?.event?.update;
+                  const dataCus = e?.event?.update?.data;
                   this.dataSelected.customerName = dataCus?.customerName;
                   this.dataSelected.industries = dataCus?.industries;
                   this.dataSelected.shortName = dataCus?.shortName;
