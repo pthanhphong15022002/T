@@ -13,6 +13,7 @@ import {
 import {
   AlertConfirmInputConfig,
   ApiHttpService,
+  AuthStore,
   CacheService,
   CallFuncService,
   CodxGridviewV2Component,
@@ -23,10 +24,11 @@ import {
   SortModel,
   Util,
 } from 'codx-core';
-import { Observable, finalize, firstValueFrom, map } from 'rxjs';
+import { Observable, Subject, finalize, firstValueFrom, map } from 'rxjs';
 import { CodxWrService } from '../../../codx-wr.service';
 import { EditSettingsModel } from '@syncfusion/ej2-angular-grids';
 import { PopupUpdateReasonCodeComponent } from '../../popup-update-reasoncode/popup-update-reasoncode.component';
+import moment from 'moment';
 
 @Component({
   selector: 'wr-view-tab-update',
@@ -85,6 +87,9 @@ export class ViewTabUpdateComponent implements OnInit {
   dataSelected: any;
   titleAction = '';
   adjustWorkOrderUpdate = '0';
+  private destroy$ = new Subject<void>(); //? list observable hủy các subscribe api
+  language = '';
+
   constructor(
     private api: ApiHttpService,
     private cache: CacheService,
@@ -92,9 +97,12 @@ export class ViewTabUpdateComponent implements OnInit {
     private detectorRef: ChangeDetectorRef,
     private callFc: CallFuncService,
     private notiSv: NotificationsService,
-    private codxShareService: CodxShareService
+    private codxShareService: CodxShareService,
+    private auth: AuthStore,
+
   ) {
     this.getGridViewSetup();
+    this.language = this.auth?.get()?.language?.toLowerCase();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -105,7 +113,6 @@ export class ViewTabUpdateComponent implements OnInit {
       ) {
         if (changes['transID']?.currentValue == this.id) return;
         this.id = changes['transID']?.currentValue;
-        this.formModel = JSON.parse(JSON.stringify(this.formModel));
         this.getListOrderUpdate();
       } else {
         if (!this.loaded) this.loaded = true;
@@ -131,9 +138,13 @@ export class ViewTabUpdateComponent implements OnInit {
   }
 
   ngAfterViewInit(): void {
-    this.detectorRef.detectChanges();
+
   }
 
+  onDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
   getListOrderUpdate() {
     this.loaded = false;
     this.request.predicates = this.predicates;
@@ -318,6 +329,22 @@ export class ViewTabUpdateComponent implements OnInit {
         }
       });
     }
+  }
+  //#endregion
+
+  //#region  set time scheduleTime
+  setTimeEdit(startDate, scheduleTime) {
+    let serviceTime = null;
+    if (startDate && scheduleTime) {
+      let date = new Date(startDate);
+
+      serviceTime = moment(date).format('dd/mm/yyyy')  + ' ' + scheduleTime;
+    }
+    return serviceTime
+  }
+
+  padTo2Digits(num) {
+    return String(num).padStart(2, '0');
   }
   //#endregion
 

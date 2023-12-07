@@ -39,6 +39,10 @@ import { CarouselAllModule } from '@syncfusion/ej2-angular-navigations';
 import { PopupViewFileFullComponent } from './add-survey/questions/view-file/popup-view-file/popup-view-file-full/popup-view-file-full.component';
 import { CodxReportViewsComponent } from 'projects/codx-report/src/lib/codx-report-views/codx-report-views.component';
 import { CodxReportViewDetailComponent } from 'projects/codx-report/src/lib/codx-report-view-detail/codx-report-view-detail.component';
+import { DealsComponent } from 'projects/codx-cm/src/lib/deals/deals.component';
+import { CasesComponent } from 'projects/codx-cm/src/lib/cases/cases.component';
+import { LeadsComponent } from 'projects/codx-cm/src/lib/leads/leads.component';
+import { ViewInstancesComponent } from 'projects/codx-dp/src/lib/view-instances/view-instances.component';
 export const routes: Routes = [
   {
     path: '',
@@ -60,6 +64,28 @@ export const routes: Routes = [
         path: 'report/detail/:funcID',
         component: CodxReportViewDetailComponent,
       },
+      //----phát hành quy trình DP-CRM----//
+      {
+        path: 'deals/:funcID',
+        component: DealsComponent,
+        data: { noReuse: true },
+      },
+      {
+        path: 'cases/:funcID',
+        component: CasesComponent,
+        data: { noReuse: true },
+      },
+      {
+        path: 'leads/:funcID',
+        component: LeadsComponent,
+        data: { noReuse: true },
+      },
+      {
+        path: 'instances/:funcID/:processID',
+        component: ViewInstancesComponent,
+        data: { noReuse: true },
+      },
+      //-----------end--------------//
     ],
   },
   {
@@ -92,7 +118,7 @@ const Component: Type<any>[] = [
   SharelinkComponent,
   ViewFileComponent,
   PopupViewFileComponent,
-  PopupViewFileFullComponent
+  PopupViewFileFullComponent,
 ];
 
 @NgModule({

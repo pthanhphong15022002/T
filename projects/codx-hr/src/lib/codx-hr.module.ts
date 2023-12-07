@@ -143,7 +143,6 @@ import { EmployeeQuitComponent } from './employee-quit/employee-quit.component';
 import { PopupEquitComponent } from './employee-profile/popup-equit/popup-equit.component';
 import { ViewDetailEquitComponent } from './employee-quit/view-detail-equit/view-detail-equit.component';
 import { HolidayComponent } from './holiday/holiday.component';
-import { PopupAddHolidayTypeComponent } from './holiday/popup-add-holiday-type/popup-add-holiday-type.component';
 import { SpeedDialModule } from '@syncfusion/ej2-angular-buttons';
 import { DealsComponent } from 'projects/codx-cm/src/lib/deals/deals.component';
 import { LeadsComponent } from 'projects/codx-cm/src/lib/leads/leads.component';
@@ -483,7 +482,6 @@ const T_Component: Type<any>[] = [
   EmployeeQuitComponent,
   ViewDetailEquitComponent,
   HolidayComponent,
-  PopupAddHolidayTypeComponent,
 ];
 @NgModule({
   imports: [
