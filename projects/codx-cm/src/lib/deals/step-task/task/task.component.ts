@@ -18,6 +18,7 @@ import {
   ApiHttpService,
   CallFuncService,
   NotificationsService,
+  DialogModel,
 } from 'codx-core';
 import {
   DP_Activities,
@@ -37,6 +38,7 @@ import { CodxCmService } from '../../../codx-cm.service';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { ActivatedRoute } from '@angular/router';
 import { ExportData } from 'projects/codx-share/src/lib/models/ApproveProcess.model';
+import { ContractsDetailComponent } from '../../../contracts/contracts-detail/contracts-detail.component';
 @Component({
   selector: 'task',
   templateUrl: './task.component.html',
@@ -631,6 +633,34 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
         //   await this.getStepById();
         // }
       });
+    }
+  }
+  viewDetailContract(task) {
+    if( task?.objectLinked){
+      this.stepService.getOneContract(task?.objectLinked).subscribe(res => {
+        if(res){
+          let data = {
+            contract: res,
+          };
+          let option = new DialogModel();
+          option.IsFull = true;
+          option.zIndex = 1001;
+          this.callFunc.openForm(
+            ContractsDetailComponent,
+            '',
+            null,
+            null,
+            '',
+            data,
+            '',
+            option
+          );
+        }else{
+          this.notiService.notify('Không tìm thấy hợp đồng', '3');
+        }
+      })
+    }else{
+      this.notiService.notify('Không tìm thấy hợp đồng', '3');
     }
   }
   //#endregion
