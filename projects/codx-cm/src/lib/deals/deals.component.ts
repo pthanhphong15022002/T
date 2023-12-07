@@ -26,6 +26,8 @@ import {
   DialogRef,
   AuthStore,
   DataRequest,
+  CodxFormDynamicComponent,
+  CRUDService,
 } from 'codx-core';
 import { CodxCmService } from '../codx-cm.service';
 import { PopupAddDealComponent } from './popup-add-deal/popup-add-deal.component';
@@ -181,7 +183,7 @@ export class DealsComponent
   columns: any;
   loadFirst: boolean = true;
   totalView: string;
-
+  moreEdit = '';
   constructor(
     private inject: Injector,
     private cacheSv: CacheService,
@@ -536,6 +538,12 @@ export class DealsComponent
     this.cache.moreFunction(formName, gridViewName).subscribe((res) => {
       if (res && res.length > 0) {
         this.moreFuncInstance = res;
+      }
+    });
+    this.cache.moreFunction('CoDXSystem', '').subscribe((res) => {
+      if (res && res?.length > 0) {
+        let m = res?.find((x) => x.functionID == 'SYS03');
+        this.moreEdit = m?.customName ?? m?.defaultName;
       }
     });
   }
@@ -2146,4 +2154,74 @@ export class DealsComponent
       );
   }
   //---------------End----------------------//
+
+  //#region editCus
+  editCustomer(event) {
+    if (event && event?.data) {
+      this.dataSelected = event?.data;
+      this.codxCmService
+        .getOneObject(event?.data?.customerID, 'CustomersBusiness')
+        .subscribe((ele) => {
+          if (ele) {
+            let tempData = JSON.parse(JSON.stringify(ele));
+            var dataService = new CRUDService(this.inject);
+            let formModel = new FormModel();
+            formModel.formName =
+              tempData?.category == '1' ? 'CMCustomers' : 'CMPersonalCustomers';
+            formModel.gridViewName =
+              tempData?.category == '1'
+                ? 'grvCMCustomers'
+                : 'grvCMPersonalCustomers';
+            formModel.entityName = 'CM_Customers';
+            formModel.funcID = tempData?.category == '1' ? 'CM0101' : 'CM0105';
+            formModel.userPermission = this.view?.formModel?.userPermission;
+            let request = new DataRequest(
+              formModel.formName,
+              formModel?.gridViewName,
+              formModel?.entityName
+            );
+            request.funcID = formModel?.funcID;
+            dataService.service = 'CM';
+            dataService.request = request;
+            dataService.dataSelected = tempData;
+            dataService.updateDatas.set(tempData.recID, tempData);
+            let option = new SidebarModel();
+            option.FormModel = formModel;
+            option.Width = '800px';
+            this.cache
+              .gridViewSetup(formModel.formName, formModel.gridViewName)
+              .subscribe((grid) => {
+                let dialogAdd = this.callfc.openSide(
+                  CodxFormDynamicComponent,
+                  {
+                    formModel: option.FormModel,
+                    data: tempData,
+                    dataService: dataService,
+                    titleMore: this.moreEdit,
+                    isAddMode: false,
+                  },
+                  option
+                );
+                dialogAdd.closed.subscribe((e) => {
+                  if (e && e?.event && e?.event?.update) {
+                    const dataCus = e?.event?.update?.data;
+                    this.dataSelected.customerName = dataCus?.customerName;
+                    this.dataSelected.industries = dataCus?.industries;
+                    this.dataSelected.shortName = dataCus?.shortName;
+                    if (this.detailViewDeal) {
+                      this.detailViewDeal.dataSelected = JSON.parse(
+                        JSON.stringify(this.dataSelected)
+                      );
+                    }
+
+                    this.view.dataService.update(this.dataSelected, true);
+                    this.detectorRef.detectChanges();
+                  }
+                });
+              });
+          }
+        });
+    }
+  }
+  //#endregion
 }

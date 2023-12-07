@@ -1149,7 +1149,7 @@ export class InstancesComponent
   //End
   checkMoreReason(data, isUseReason) {
     if (data.closed) return true;
-    if (data.isAdminAll) return false;
+    // if (data.isAdminAll) return false;
     if (data.status != '2' || isUseReason) return true;
     if (!data.permissionMoveInstances) return true;
     return false;
