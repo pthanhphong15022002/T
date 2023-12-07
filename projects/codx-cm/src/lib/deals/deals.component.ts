@@ -407,7 +407,7 @@ export class DealsComponent
     };
     let isCopy = (eventItem, data) => {
       eventItem.disabled = data.write
-        ? data.closed || this.checkMoreReason(data) || data.status == '0'
+        ? data.closed || this.checkMoreReason(data,false) || data.status == '0'
         : true;
     };
     let isEdit = (eventItem, data) => {
