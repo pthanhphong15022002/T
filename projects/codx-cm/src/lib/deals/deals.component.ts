@@ -1371,13 +1371,17 @@ export class DealsComponent
                 this.notificationsService.notifyCode('ES028');
                 return;
               }
-              //ko phân biệt eSign - nếu cần thì phải get
-              // let exportData: ExportData = {
-              //   funcID: this.view.formModel.funcID,
-              //   recID: this.dataSelected.recID,
-              //   data: dt?.datas,
-              // };
-              this.release(dt, res);
+
+              this.codxCmService
+                .getDataSource(dt.recID, 'DealsBusiness')
+                .then((dataSource) => {
+                  let exportData: ExportData = {
+                    funcID: this.view.formModel.funcID,
+                    recID: dt.recID,
+                    data: dataSource,
+                  };
+                  this.release(dt, res, exportData);
+                });
             });
         } else {
           this.notificationsService.notifyCode(
@@ -2049,24 +2053,10 @@ export class DealsComponent
   }
 
   exportTemplet(e, data) {
-    this.api
-      .execSv<any>(
-        'CM',
-        'CM',
-        'DealsBusiness',
-        'GetDataSourceExportAsync',
-        data.recID
-      )
-      .subscribe((str) => {
-        if (str && str?.length > 0) {
-          let dataSource = '[' + str[0] + ']';
-          if (str[1]) {
-            let datas = str[1];
-            if (datas && datas.includes('[{')) datas = datas.substring(2);
-            let fix = str[0];
-            fix = fix.substring(1, fix.length - 1);
-            dataSource = '[{ ' + fix + ',' + datas;
-          }
+    this.codxCmService
+      .getDataSource(data.recID, 'DealsBusiness')
+      .then((dataSource) => {
+        if (dataSource) {
           var customData = {
             refID: data.processID,
             refType: 'DP_Processes',
