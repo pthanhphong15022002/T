@@ -154,6 +154,11 @@ export class ViewTabUpdateComponent implements OnInit {
     this.fetch().subscribe(async (item) => {
       this.loaded = true;
       this.lstUpdate = item;
+      if(this.lstUpdate?.length > 0){
+        this.lstUpdate.forEach((res) => {
+          res.scheduleTime = this.setTimeEdit(res.startDate, res.scheduleTime);
+        })
+      }
       if (this.grid) {
         this.grid.dataSource = this.lstUpdate;
       }
@@ -338,7 +343,7 @@ export class ViewTabUpdateComponent implements OnInit {
     if (startDate && scheduleTime) {
       let date = new Date(startDate);
 
-      serviceTime = moment(date).format('dd/mm/yyyy')  + ' ' + scheduleTime;
+      serviceTime = moment(date).format("DD/MM/YYYY")  + ' ' + scheduleTime;
     }
     return serviceTime
   }
