@@ -540,7 +540,12 @@ export class DealsComponent
         this.moreFuncInstance = res;
       }
     });
-
+    this.cache.moreFunction('CoDXSystem', '').subscribe((res) => {
+      if (res && res?.length > 0) {
+        let m = res?.find((x) => x.functionID == 'SYS03');
+        this.moreEdit = m?.customName ?? m?.defaultName;
+      }
+    });
   }
   async getGridViewSetup(formName, gridViewName) {
     this.gridViewSetup = await firstValueFrom(
@@ -2193,39 +2198,37 @@ export class DealsComponent
             let option = new SidebarModel();
             option.FormModel = formModel;
             option.Width = '800px';
-            this.cache.moreFunction('CoDXSystem', '').subscribe((res) => {
-              let m = res?.find((x) => x.functionID == 'SYS03');
-              let moreEdit = m?.customName ?? m?.defaultName;
-              let dialogAdd = this.callfc.openSide(
-                CodxFormDynamicComponent,
-                {
-                  formModel: option.FormModel,
-                  data: tempData,
-                  dataService: dataService,
-                  titleMore: moreEdit,
-                  isAddMode: false,
-                },
-                option
-              );
-              dialogAdd.closed.subscribe((e) => {
-                if (e && e?.event && e?.event?.update) {
-                  const dataCus = e?.event?.update?.data;
-                  this.dataSelected.customerName = dataCus?.customerName;
-                  this.dataSelected.industries = dataCus?.industries;
-                  this.dataSelected.shortName = dataCus?.shortName;
-                  if (this.detailViewDeal) {
-                    this.detailViewDeal.dataSelected = JSON.parse(
-                      JSON.stringify(this.dataSelected)
-                    );
+            this.cache
+              .gridViewSetup(formModel.formName, formModel.gridViewName)
+              .subscribe((grid) => {
+                let dialogAdd = this.callfc.openSide(
+                  CodxFormDynamicComponent,
+                  {
+                    formModel: option.FormModel,
+                    data: tempData,
+                    dataService: dataService,
+                    titleMore: this.moreEdit,
+                    isAddMode: false,
+                  },
+                  option
+                );
+                dialogAdd.closed.subscribe((e) => {
+                  if (e && e?.event && e?.event?.update) {
+                    const dataCus = e?.event?.update?.data;
+                    this.dataSelected.customerName = dataCus?.customerName;
+                    this.dataSelected.industries = dataCus?.industries;
+                    this.dataSelected.shortName = dataCus?.shortName;
+                    if (this.detailViewDeal) {
+                      this.detailViewDeal.dataSelected = JSON.parse(
+                        JSON.stringify(this.dataSelected)
+                      );
+                    }
+
+                    this.view.dataService.update(this.dataSelected, true);
+                    this.detectorRef.detectChanges();
                   }
-
-                  this.view.dataService.update(this.dataSelected, true);
-                  this.detectorRef.detectChanges();
-                }
+                });
               });
-
-            });
-
           }
         });
     }
