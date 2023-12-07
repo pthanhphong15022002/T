@@ -72,9 +72,9 @@ export class DynamicProcessComponent
   @ViewChild('bodyFormCopyName') bodyFormCopyName: TemplateRef<any>;
   @ViewChild('footerFormCopyName') footerFormCopyName: TemplateRef<any>;
   //Form phát hành
-  @ViewChild('formRelease') formRelease: CodxFormComponent;
-  @ViewChild('moduleCbx') moduleCbx: CodxInputComponent;
-  @ViewChild('functionCbx') functionCbx: CodxInputComponent;
+  // @ViewChild('formRelease') formRelease: CodxFormComponent;
+  // @ViewChild('moduleCbx') moduleCbx: CodxInputComponent;
+  // @ViewChild('functionCbx') functionCbx: CodxInputComponent;
 
   // Input
   @Input() dataObj?: any;
@@ -1052,48 +1052,48 @@ export class DynamicProcessComponent
       });
   }
 
-  changeValueCbx(e) {
-    if (!e?.data || !e?.field) {
-      if (e.field == 'module') {
-        this.processRelease['function'] = null;
-        this.functionCbx.model = null;
+  // changeValueCbx(e) {
+  //   if (!e?.data || !e?.field) {
+  //     if (e.field == 'module') {
+  //       this.processRelease['function'] = null;
+  //       this.functionCbx.model = null;
 
-        (
-          this.functionCbx.ComponentCurrent as CodxComboboxComponent
-        ).dataService.data = [];
-        this.functionCbx.crrValue = null;
-      }
-      this.formRelease.formGroup.patchValue(this.processRelease);
-      return;
-    }
-    this.processRelease[e.field] = e.data;
-    // let module = e?.component?.itemsSelected[0]?.Module ?? e?.data; //tesst
+  //       (
+  //         this.functionCbx.ComponentCurrent as CodxComboboxComponent
+  //       ).dataService.data = [];
+  //       this.functionCbx.crrValue = null;
+  //     }
+  //     this.formRelease.formGroup.patchValue(this.processRelease);
+  //     return;
+  //   }
+  //   this.processRelease[e.field] = e.data;
+  //   // let module = e?.component?.itemsSelected[0]?.Module ?? e?.data; //tesst
 
-    switch (e?.field) {
-      case 'module':
-        this.crrModule = e?.data;
+  //   switch (e?.field) {
+  //     case 'module':
+  //       this.crrModule = e?.data;
 
-        this.functionCbx.model = { Module: this.crrModule };
-        (
-          this.functionCbx.ComponentCurrent as CodxComboboxComponent
-        ).dataService.data = [];
-        this.functionCbx.crrValue = null;
-        this.processRelease.function = null;
+  //       this.functionCbx.model = { Module: this.crrModule };
+  //       (
+  //         this.functionCbx.ComponentCurrent as CodxComboboxComponent
+  //       ).dataService.data = [];
+  //       this.functionCbx.crrValue = null;
+  //       this.processRelease.function = null;
 
-        break;
-      case 'function':
-        this.crrModule = e?.component?.itemsSelected[0]?.Module; //tesst
-        // this.moduleCbx.model = { Module: this.crrModule };
-        (
-          this.moduleCbx.ComponentCurrent as CodxComboboxComponent
-        ).dataService.data = [];
-        this.moduleCbx.crrValue = this.crrModule;
-        this.processRelease.module = this.crrModule;
-        break;
-    }
+  //       break;
+  //     case 'function':
+  //       this.crrModule = e?.component?.itemsSelected[0]?.Module; //tesst
+  //       // this.moduleCbx.model = { Module: this.crrModule };
+  //       (
+  //         this.moduleCbx.ComponentCurrent as CodxComboboxComponent
+  //       ).dataService.data = [];
+  //       this.moduleCbx.crrValue = this.crrModule;
+  //       this.processRelease.module = this.crrModule;
+  //       break;
+  //   }
 
-    this.formRelease.formGroup.patchValue(this.processRelease);
-  }
+  //   this.formRelease.formGroup.patchValue(this.processRelease);
+  // }
 
   //--------------End - Phát hành quy trình------------------//
 
