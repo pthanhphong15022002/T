@@ -876,48 +876,41 @@ export class WarrantiesComponent
       formModel.funcID = 'WRS0103';
       formModel.userPermission = this.view?.formModel?.userPermission;
       opt.FormModel = formModel;
-
-      this.cache.moreFunction('CoDXSystem', '').subscribe((res) => {
-        if (res && res.length) {
-          let m = res.find((x) => x.functionID == 'SYS03');
-
-          this.cache
-            .gridViewSetup(formModel.formName, formModel.gridViewName)
-            .subscribe((grid) => {
-              if (grid) {
-                var obj = {
-                  data: data,
-                  title:
-                    m?.defaultName +
-                    ' ' +
-                    this.gridViewSetup?.ProductID?.headerText?.toLowerCase(),
-                  addProduct: true,
-                  gridViewSetup: grid,
-                  recID: data.recID,
-                };
-                var dialog = this.callFc.openForm(
-                  PopupAddServicetagComponent,
-                  '',
-                  500,
-                  450,
-                  '',
-                  obj,
-                  '',
-                  opt
-                );
-                dialog.closed.subscribe((ele) => {
-                  if (ele && ele?.event) {
-                    this.dataSelected = JSON.parse(JSON.stringify(ele?.event));
-                    this.view.dataService
-                      .update(this.dataSelected, true)
-                      .subscribe();
-                    this.detectorRef.detectChanges();
-                  }
-                });
+      this.cache.functionList('WRS0103').subscribe((func)=> {
+        this.cache
+        .gridViewSetup(formModel.formName, formModel.gridViewName)
+        .subscribe((grid) => {
+          if (grid) {
+            var obj = {
+              data: data,
+              title: this.moreFuncEdit + ' ' + (func?.defaultName ? func?.defaultName?.toLowerCase() : 'product'),
+              addProduct: true,
+              gridViewSetup: grid,
+              recID: data.recID,
+            };
+            var dialog = this.callFc.openForm(
+              PopupAddServicetagComponent,
+              '',
+              500,
+              450,
+              '',
+              obj,
+              '',
+              opt
+            );
+            dialog.closed.subscribe((ele) => {
+              if (ele && ele?.event) {
+                this.dataSelected = JSON.parse(JSON.stringify(ele?.event));
+                this.view.dataService
+                  .update(this.dataSelected, true)
+                  .subscribe();
+                this.detectorRef.detectChanges();
               }
             });
-        }
-      });
+          }
+        });
+      })
+
     }
   }
   //#endregion
