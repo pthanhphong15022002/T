@@ -46,6 +46,8 @@ export class DealDetailComponent implements OnInit {
   @Output() changeMF = new EventEmitter<any>();
   // @Output() saveAssign = new EventEmitter<any>(); ko can tra ve
   @Output() changeProgress = new EventEmitter<any>();
+  @Output() changeDataCustomers = new EventEmitter<any>();
+
   @ViewChild('tabDetailView', { static: true })
   tabDetailView: TemplateRef<any>;
   @ViewChild('popDetail') popDetail: TemplateRef<any>;
@@ -839,4 +841,10 @@ export class DealDetailComponent implements OnInit {
     }
     return '';
   }
+
+  //#region edit customer
+  editCustomer(data){
+    this.changeDataCustomers.emit({data: data});
+  }
+  //#endregion
 }

@@ -1,3 +1,4 @@
+import { dialog } from '@syncfusion/ej2-angular-spreadsheet';
 import { CodxReportIframeComponent } from './../../../codx-report/src/lib/report-iframe/report-iframe.component';
 import {
   BehaviorSubject,
@@ -2229,7 +2230,10 @@ export class CodxShareService {
   }
   popupPrintRP(rpList :any, params :any){    
     let paramURL = encodeURIComponent(JSON.stringify(params));
-    let printDialog = this.callfunc.openForm(CodxReportPopupViewDetailComponent, '',1080, 720,null,{isPopup:true,reportList: rpList, params:paramURL} );
+    let dialogModel = new DialogModel;
+    dialogModel.IsFull=false;
+    dialogModel.DataService=null;
+    let printDialog = this.callfunc.openForm(CodxReportPopupViewDetailComponent,rpList.customName,1080, 720,rpList?.recID,{isPopup:true,reportList: rpList, params:paramURL},"",dialogModel );
   }
   rpViewReportList(
     reportList: any,

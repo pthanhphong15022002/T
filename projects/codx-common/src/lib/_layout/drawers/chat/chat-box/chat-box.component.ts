@@ -80,7 +80,7 @@ export class CodxChatBoxComponent implements OnInit, AfterViewInit {
   FILE_REFERTYPE = {
     IMAGE: 'image',
     VIDEO: 'video',
-    APPLICATION: 'document',
+    APPLICATION: 'application',
   };
   mssgDeleted: string = '';
   sysMoreFunc: any = null;
@@ -135,7 +135,6 @@ export class CodxChatBoxComponent implements OnInit, AfterViewInit {
             break;
           }
           case CHAT.UI_FUNC.ReactedMessage:{
-            debugger
             let mssgReact = this.arrMessages?.filter(x=>x?.recID == res?.data?.mssgID);
             if(mssgReact?.length>0){
               let vote =

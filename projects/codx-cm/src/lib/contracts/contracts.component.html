@@ -27,9 +27,9 @@
     [typeMF]="'hover'"
     (clickMF)="clickMF($event, data)"
     (changeDataMF)="changeDataMF($event, data)"
-    [title]="data.contractName"
+    [title]="data?.contractName || ''"
     [descTmp]="descTmp"
-    [formModel]="view.formModel"
+    [formModel]="view?.formModel"
     [dataItem]="data"
     [imageId]="data?.customerID"
     [imageObjType]="'CM_Customers'"
@@ -62,7 +62,7 @@
           class="text-dark me-1"
           [innerHTML]="
             data?.assetID
-              | formatvalue : view.formModel : 'AssetID'
+              | formatvalue : view?.formModel : 'AssetID'
               | async
           "
         ></span>
@@ -77,7 +77,7 @@
           class="text-dark me-1"
           [innerHTML]="
             data?.contractAmt
-              | formatvalue : view.formModel : 'ContractAmt'
+              | formatvalue : view?.formModel : 'ContractAmt'
               | async
           "
         ></span>
@@ -85,7 +85,7 @@
           class="text-dark"
           [innerHTML]="
             data?.currencyID
-              | formatvalue : view.formModel : 'CurrencyID'
+              | formatvalue : view?.formModel : 'CurrencyID'
               | async
           "
         ></span>
@@ -121,7 +121,7 @@
             class="text-gray-700 line-clamp line-clamp-1"
             [innerHTML]="
               data?.createdOn
-                | formatvalue : view.formModel : 'CreatedOn'
+                | formatvalue : view?.formModel : 'CreatedOn'
                 | async
             "
           ></span>
@@ -129,7 +129,7 @@
         <div class="h-25px">
           <codx-imgs
             [width]="25"
-            [objectId]="data.createdBy"
+            [objectId]="data?.createdBy"
             ojectType="AD_Users"
             [numberImages]="1"
           >
@@ -146,7 +146,7 @@
   <contracts-view-detail
     [listInsStepStart]="listInsStep"
     [contract]="contractSelected"
-    [formModel]="view.formModel"
+    [formModel]="view?.formModel"
     (clickMoreFunc)="clickMoreFunc($event)"
     (changeProgress)="autoStart($event)"
     (isSusscess)="autoOpenPopupSusscess($event)"
@@ -158,7 +158,7 @@
   <div class="" style="height: 30px">
     <codx-mfunc
       [dataItem]="moreDefaut"
-      [formModel]="view.formModel"
+      [formModel]="view?.formModel"
       (clickMF)="clickMF($event, data)"
       (changeDataMF)="changeDataMF($event, data, true)"
       [isBookMark]="true"
@@ -181,7 +181,7 @@
   <div class=""> 
     <span
       [innerHTML]="
-        data?.contractName | formatvalue : view.formModel : 'ContractName' | async
+        data?.contractName | formatvalue : view?.formModel : 'ContractName' | async
       "
     ></span>
   </div>
@@ -191,7 +191,7 @@
   <div class=""> 
     <span
       [innerHTML]="
-        data?.contractAmt | formatvalue : view.formModel : 'ContractAmt' | async
+        data?.contractAmt | formatvalue : view?.formModel : 'ContractAmt' | async
       "
     ></span>
   </div>
@@ -202,7 +202,7 @@
     <span
       *ngIf="data?.paidAmt > 0"
       [innerHTML]="
-        data?.paidAmt | formatvalue : view.formModel : 'PaidAmt' | async
+        data?.paidAmt | formatvalue : view?.formModel : 'PaidAmt' | async
       "
     ></span>
     <span *ngIf="data?.paidAmt <= 0"> 
@@ -215,7 +215,7 @@
   <div class=""> 
     <span
       [innerHTML]="
-        data?.currencyID | formatvalue : view.formModel : 'CurrencyID' | async
+        data?.currencyID | formatvalue : view?.formModel : 'CurrencyID' | async
       "
     ></span>
   </div>
@@ -239,7 +239,7 @@
     <cm-view-icon-group [customerID]="data?.customerID"></cm-view-icon-group>
     <span
       [innerHTML]="
-        data?.customerID | formatvalue : view.formModel : 'CustomerID' | async
+        data?.customerID | formatvalue : view?.formModel : 'CustomerID' | async
       "
     ></span>
   </div>
@@ -249,7 +249,7 @@
   <div class="">
     <span
       [innerHTML]="
-        data?.applyProcess | formatvalue : view.formModel : 'ApplyProcess' | async
+        data?.applyProcess | formatvalue : view?.formModel : 'ApplyProcess' | async
       "
     ></span>
   </div>
@@ -280,7 +280,7 @@
   <div class="d-flex justify-content-center">
     <codx-imgs
       [width]="25"
-      [objectId]="data.owner"
+      [objectId]="data?.owner"
       ojectType="AD_Users"
       [numberImages]="1"
     ></codx-imgs>
@@ -297,7 +297,7 @@
       <codx-label
         default="Hợp đồng đã đóng"
         name="lblIsClosed"
-        [formModel]="view.formModel"
+        [formModel]="view?.formModel"
       ></codx-label>
     </ng-template>
   </span>
