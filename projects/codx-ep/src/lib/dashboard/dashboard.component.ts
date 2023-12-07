@@ -175,7 +175,7 @@ chartArea: Object = {
     this.subscription  && this.subscription.unsubscribe();
     this.subscription = this.api.execSv('rptep','Codx.RptBusiness.EP','BookingRoomsBusiness','GetDatasetAsync', params ? [params] : [{}])
                         .subscribe((res:any)=>{
-                          if(res && res.length){
+                          if(res ){
                             this.dataset = res;
                             let objRes = this.groupBy(this.dataset.filter((x:any)=>x.resourceID),"resourceID");
                             for(let key in objRes){
@@ -365,6 +365,13 @@ chartArea: Object = {
     if (e.type == 'reportLoaded') {
       this.arrReport = e.data;
       if (this.arrReport.length) {
+        let pattern =
+        /^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$/gi;
+
+          if(this.arrReport.length > 1 && !this.reportID.match(pattern)){
+            this.codxService.navigate('',`${this.view.function?.module ? this.view.function?.module.toLocaleLowerCase() : 'ep'}/dashboard-view/${this.reportID}`);
+            return;
+          }
         this.cache
               .functionList(e.data[0].moduleID+e.data[0].reportType)
               .subscribe((res: any) => {

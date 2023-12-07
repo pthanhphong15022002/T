@@ -1,0 +1,50 @@
+
+.mh-50{
+    min-height: 50%;
+}
+
+
+:host ::ng-deep {
+    .e-schedule .e-agenda-view .e-content-wrap table td:first-child, .e-schedule .e-agenda-view .e-date-column {
+        vertical-align: middle !important;
+        width: 120px !important;
+    }
+    
+    .e-day-date-header div{
+        font-size: 18px !important;
+    }
+    .e-schedule .e-agenda-view .e-appointment.e-template {
+        display: block !important;
+    }
+}
+
+#speeddial{
+    position: absolute;
+    bottom: 0;
+    right: 15px;
+}
+.itemlist .text {
+    padding: 0 5px;
+  }
+  
+  .e-speeddial-li .itemlist {
+    display: inherit;
+    width: 100%;
+    border: 1px solid transparent;
+    align-items: center;
+    padding: 5px 12px;
+    border-radius: 500px;
+    background-color: var(--primary);
+    color: var(--white);
+  }
+  
+  .e-speeddial-li .itemlist:hover {
+    background-color: var(--primary-dark);
+  }
+
+  .e-speeddial-popup.e-speeddial-right.e-speeddial-center, .e-speeddial-popup.e-speeddial-right.e-speeddial-linear {
+    right: 10px !important;
+  }
+    .e-speeddial-popup.e-speeddial-bottom.e-speeddial-middle, .e-speeddial-popup.e-speeddial-bottom.e-speeddial-linear {
+        bottom: 75px !important;
+    }

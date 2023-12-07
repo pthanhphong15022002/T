@@ -1193,7 +1193,7 @@ codx-layout-add .card-header {
 }
 
 .header-fixed.toolbar-enabled .wrapper .fillter-card-header + .fillter-card-body {
-  max-height: calc(100vh - 282px);
+  max-height: calc(100vh - 290px);
 }
 
 .card .card-header.fillter-card-header {
@@ -4376,4 +4376,9 @@ codx-toolbar-report .btn{
 }
 .codx-form > .card-header, .e-dialog .e-dlg-header .card-header {
   border-radius: 3px;
+}
+@media (min-width: 992px){
+.toolbar-enabled:not(.toolbar-fixed) .toolbar {
+    margin-bottom: 5px;
+}
 }

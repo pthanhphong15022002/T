@@ -48,6 +48,7 @@ export class LayoutComponent extends LayoutBaseComponent {
   onInit(): void {}
 
   onAfterViewInit(): void {}
+
   childMenuClick(e) {
     this.processView = null;
     this.stepViews = [];

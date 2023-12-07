@@ -1,3 +1,4 @@
+import { CodxReportIframeComponent } from './../../../codx-report/src/lib/report-iframe/report-iframe.component';
 import {
   BehaviorSubject,
   finalize,
@@ -59,6 +60,8 @@ import { T } from '@angular/cdk/keycodes';
 import { SignalRService } from 'projects/codx-common/src/lib/_layout/drawers/chat/services/signalr.service';
 import { CodxListReportsComponent } from './components/codx-list-reports/codx-list-reports.component';
 import { CodxCommonService } from 'projects/codx-common/src/lib/codx-common.service';
+import { CodxReportViewDetailComponent } from 'projects/codx-report/src/lib/codx-report-view-detail/codx-report-view-detail.component';
+import { CodxReportPopupViewDetailComponent } from 'projects/codx-report/src/lib/codx-report-popup-view-detail/codx-report-popup-view-detail.component';
 
 @Injectable({
   providedIn: 'root',
@@ -2209,25 +2212,30 @@ export class CodxShareService {
           }
         }
         //let paramURL = this.shareService.genURLParamObject(params);
-        let paramURL = encodeURIComponent(JSON.stringify(params));
-        let rpOpenReportUI = function (recID, module) {
-          let url = `/${tenantName}/${module}/report/detail/${recID}?params=${paramURL}`;
-          window.open(url);
-        };
+        // let paramURL = encodeURIComponent(JSON.stringify(params));
+        // let rpOpenReportUI = function (recID, module) {
+        //   let url = `/${tenantName}/${module}/report/detail/${recID}?params=${paramURL}`;
+        //   window.open(url);
+              
+        // };
         if (rpList?.length > 1) {
-          this.rpViewReportList(rpList, formModel, params, rpOpenReportUI);
+          this.rpViewReportList(rpList, formModel, params);
         } else if (rpList?.length == 1) {
-          rpOpenReportUI(rpList[0]?.recID, rpList[0]?.moduleID?.toLowerCase());
+          //rpOpenReportUI(rpList[0]?.recID, rpList[0]?.moduleID?.toLowerCase());
+          this.popupPrintRP(rpList[0],params);
         }
       }
     });
   }
-
+  popupPrintRP(rpList :any, params :any){    
+    let paramURL = encodeURIComponent(JSON.stringify(params));
+    let printDialog = this.callfunc.openForm(CodxReportPopupViewDetailComponent, '',1080, 720,null,{isPopup:true,reportList: rpList, params:paramURL} );
+  }
   rpViewReportList(
     reportList: any,
     formModel: any,
     params: any,
-    rpOpenReportUI: (recID: string, moduleID: string) => void
+    //rpOpenReportUI: (recID: string, moduleID: string) => void
   ) {
     let moduleID = reportList[0]?.moduleID?.toLowerCase();
     var obj = {
@@ -2252,7 +2260,8 @@ export class CodxShareService {
     dialogViewRP.closed.subscribe((res) => {
       if (res?.event) {
         let tenantName = this.tenant.getName();
-        rpOpenReportUI(res?.event?.recID, moduleID);
+        //rpOpenReportUI(res?.event?.recID, moduleID);        
+        this.popupPrintRP(res?.event,params);
       }
     });
   }

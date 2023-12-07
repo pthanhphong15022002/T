@@ -1,13 +1,29 @@
 <!-- <span (click)="test()">Test nha</span> -->
-<codx-views id="dm" #view [autoLoad]="true" [entityName]="'DM_FolderInfo'" [method]="'GetFoldersAsync'"
-  [className]="'FolderBussiness'" [assemblyName]="'DM'" idField="recID" [views]="views" [autoFilter]="false" 
-  [autoSort]="false" [autoSearch]="false" [selectedFirst]="selectedFirst" [button]="button" (buttonClick)="addFile($event)"
-  (selectedChange)="onSelectionChanged($event)"  (sortChanged)="sortChanged($event)" (viewChanged)="changeView($event)"
-  (searchChanged)="searchChange($event)" (filterChange)="filterChange($event)"
-  [hideMoreFuncs]="true" 
-  [titleToolBarTmp]="breadCumbs"
-  >
-</codx-views>
+<ng-container *ngIf="isRead">
+  <codx-views id="dm" #view [autoLoad]="true" [entityName]="'DM_FolderInfo'" [method]="'GetFoldersAsync'"
+    [className]="'FolderBussiness'" [assemblyName]="'DM'" idField="recID" [views]="views" [autoFilter]="false" 
+    [autoSort]="false" [autoSearch]="false" [selectedFirst]="selectedFirst" [button]="button" (buttonClick)="addFile($event)"
+    (selectedChange)="onSelectionChanged($event)"  (sortChanged)="sortChanged($event)" (viewChanged)="changeView($event)"
+    (searchChanged)="searchChange($event)" (filterChange)="filterChange($event)"
+    [hideMoreFuncs]="true" 
+    [titleToolBarTmp]="breadCumbs"
+    >
+  </codx-views>
+  <codx-attachment #attachment hideFolder="1" hideUploadBtn="1" hideDes="0" type="inline" hideImageUpload="1"
+    hideImageThumb="1" allowMultiFile="1" idBrowse="btn2" [formModel]="view?.formModel" displayThumb="simple">
+  </codx-attachment>
+</ng-container>
+<ng-container *ngIf="!isRead">
+  <div class="d-flex w-100 h-100 bg-white align-items-center justify-content-center p-d-f">
+    <div class="d-flex flex-column align-items-center justify-content-center w-100 h-100 border-no-permiss">
+      {{ "DM069" | mssg | async }}
+      <button class="btn btn-primary d-flex align-items-center mt-2" (click)="codxService.navigate(funcID)">
+        <i class="icon-folder me-2"></i>
+        <codx-label default="Quay về thư mục" formName="fmBtnBackFolder" fiedName="lblBtnBackFolder"></codx-label>
+      </button>
+    </div>
+  </div>
+</ng-container>
 <ng-template #templateMain let-data>
   <div *ngIf="dmSV.checkUserForder(data); then noContext; else context"></div>
   <ng-template #noContext>
@@ -22,7 +38,7 @@
       <div [attr.id]="data.recID" class="leaf d-flex align-items-center" [innerHTML]="dmSV.setFullHtmlNode(data, '')">
       </div>
       <codx-temp-full class="float-start" imgCss="me-3 cursor-pointer" (clickMF)="dmSV.clickMF($event, data , codxview)"
-        (changeDataMF)="dmSV.filterMoreFunction($event, data)" [title]="data.folderName" [formModel]="view.formModel"
+        (changeDataMF)="dmSV.filterMoreFunction($event, data)" [title]="data.folderName" [formModel]="view?.formModel"
         [typeMF]="'hover'">
       </codx-temp-full>
     </div>
@@ -115,7 +131,7 @@
     <div class="d-flex flex-wrap dms-card p-5">
       <ng-container *ngFor="let item of data ; trackBy: trackItem">
         <card appDragDropFileFolder [dataDrapDrop]="item" (fileFolderDropped)="fileFolderDropped($event)"
-          [class]="classFile(item, 'pe-6 pb-6')" (viewFile)="viewFile($event)" [data]="item" [formModel]="view.formModel"
+          [class]="classFile(item, 'pe-6 pb-6')" (viewFile)="viewFile($event)" [data]="item" [formModel]="view?.formModel"
           [view]="codxview" >
         </card>
       </ng-container>
@@ -314,9 +330,7 @@
     </div>
   </ng-container>
 </ng-template>
-<codx-attachment #attachment hideFolder="1" hideUploadBtn="1" hideDes="0" type="inline" hideImageUpload="1"
-  hideImageThumb="1" allowMultiFile="1" idBrowse="btn2" [formModel]="view.formModel" displayThumb="simple">
-</codx-attachment>
+
 <ng-container *ngIf="visible">
   <lib-dialogthumb [dataFile]="dataFile" (dialogClosed)="dialogClosed()"></lib-dialogthumb>
 </ng-container>

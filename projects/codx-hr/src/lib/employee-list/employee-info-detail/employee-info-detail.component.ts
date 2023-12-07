@@ -7486,7 +7486,6 @@ dataService.clear();
 
       //Gọi refresh luôn để dữ liệu hiển thị đúng theo sort
       gridView.refresh();
-
       returnVal = 1;
     } else if (actionType == 'edit') {
       // (gridView?.dataService as CRUDService)?.update(newData).subscribe();

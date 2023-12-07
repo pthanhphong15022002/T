@@ -109,6 +109,7 @@ export class HomeComponent extends UIComponent implements OnDestroy {
   maxHeightScroll = 500;
   pageSearch = 1;
   hideMF = false;
+  isRead = true;
   //loadedFile: boolean;
   //loadedFolder: boolean;
   //page = 1;
@@ -189,6 +190,7 @@ export class HomeComponent extends UIComponent implements OnDestroy {
     super(inject);
   }
   onInit(): void {
+    this.isRead = true;
     //View mặc định
     var check = document.getElementById('dm-home-mark-id');
 
@@ -678,6 +680,7 @@ export class HomeComponent extends UIComponent implements OnDestroy {
 
     this.route.params.subscribe((params) => {
       if (params?.funcID) {
+       
         this.refeshData();
         this.loaded = false;
         this.hideMF = false;
@@ -787,9 +790,16 @@ export class HomeComponent extends UIComponent implements OnDestroy {
     this.refeshData();
     this.folderService.options.funcID = this.funcID;
     this.router.queryParams.subscribe((queryParams) => {
+      this.isRead = true;
+      var elems = document.querySelectorAll(".header-fixed");
+      [].forEach.call(elems, function(el) {
+          el.classList.add("toolbar-fixed");
+      });
+
       let funcIDs = this.router?.snapshot?.params?.funcID;
       if(funcIDs == "DMT00" && (queryParams?._fo || queryParams?._f))
       {
+       
         var type = queryParams?._fo ? "folder" : "file";
         this.folderService.getBreadCumb(queryParams?._fo || queryParams?._f,type).subscribe(item=>{
           if(item)
@@ -807,6 +817,14 @@ export class HomeComponent extends UIComponent implements OnDestroy {
                   this.getDataFolder(item.recID);
                 }
               })
+          }
+          else {
+            this.isRead = false;
+            var elems = document.querySelectorAll(".header-fixed");
+
+            [].forEach.call(elems, function(el) {
+                el.classList.remove("toolbar-fixed");
+            });
           }
         });
       }

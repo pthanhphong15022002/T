@@ -539,7 +539,8 @@ chartArea: Object = {
     this.options.formName = 'KudosTrans';
     this.options.funcID = 'FDW011';
     this.options.dataObj = 'Coins';
-    this.api
+    this.subscription && this.subscription.unsubscribe();
+      this.subscription = this.api
       .execSv<any>('FD', 'FD', 'KudosTransBusiness', 'LoadDataWalletAsync', [
         this.options, this.objParams ? this.objParams : {},
       ])
@@ -603,6 +604,7 @@ chartArea: Object = {
   statByRule:any=[];
   statByBehavior:any=[];
   statByMinusKudos:any=[];
+  subscription:Subscription;
   loadKudos(){
       this.statByRule = [];
       this.statByBehavior = [];
@@ -616,7 +618,8 @@ chartArea: Object = {
       this.options.formName = 'KudosTrans';
       this.options.funcID = 'FDW011';
       this.options.dataObj = 'Coins';
-      this.api
+      this.subscription && this.subscription.unsubscribe();
+      this.subscription = this.api
         .execSv<any>('FD', 'FD', 'KudosTransBusiness', 'LoadDataKudoAsync', [
           this.options,"4", this.objParams ? this.objParams : {},
         ])
@@ -715,10 +718,7 @@ chartArea: Object = {
     }
     return null;
   }
-  avaLoaded(ele:any , e:any){
-    console.log(e);
-    debugger
-  }
+
   ratingStats:any=[];
   cardsByRatingType:any={};
   cardByDepts:any={};
@@ -729,7 +729,6 @@ chartArea: Object = {
   statByBevs:any=[];
   listCardsPerEmp:any=[];
   statByEmps:any=[]
-  subscription: Subscription;
   getDataChartB() {
     this.options.pageLoading = false;
     this.options.entityName = 'FD_Receivers';
@@ -1238,6 +1237,13 @@ chartArea: Object = {
     if (e.type == 'reportLoaded') {
       this.arrReport = e.data;
       if (this.arrReport.length) {
+        let pattern =
+        /^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$/gi;
+
+          if(this.arrReport.length > 1 && !this.reportID.match(pattern)){
+            this.codxService.navigate('',`${this.view.function?.module ? this.view.function?.module.toLocaleLowerCase() : 'fd'}/dashboard-view/${this.reportID}`);
+            return;
+          }
         this.cache
               .functionList(e.data[0].moduleID+e.data[0].reportType)
               .subscribe((res: any) => {
@@ -1254,6 +1260,7 @@ chartArea: Object = {
                       path: 'fd/dashboard/' + this.arrReport[i].recID,
                     });
                   }
+
                   if(!this.reportItem){
                     if(this.reportID){
                       let idx = this.arrReport.findIndex((x:any)=>x.recID==this.reportID);
@@ -1289,7 +1296,7 @@ chartArea: Object = {
                   if(this.reportItem.reportID == 'FDD002'){
                     this.typeBallot='1';
                   }
-                  //this.reloadAllChart();
+                  this.reloadAllChart();
                   //this.reloadAllChart();
                   //this.isLoaded = true
                 }
@@ -1306,6 +1313,7 @@ chartArea: Object = {
   filterChange(e:any){
     this.isLoaded = false;
     this.objParams=e[1];
+    debugger
     this.reportItem &&  this.reloadAllChart();
   }
 
