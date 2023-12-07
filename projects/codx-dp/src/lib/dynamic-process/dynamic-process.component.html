@@ -148,14 +148,34 @@
               <span
                 class="icon-new_releases text-primary cursor-pointer icon-16"
                 [ngbTooltip]="popupRelease"
-                placement="right"
+                container="body"
+                placement="right left bottom top"
                 ><ng-template #popupRelease>
                   <codx-label
+                    class="label-colon"
                     name="lblRelease"
                     [formModel]="view.formModel"
-                    [default]="'Đã phát hành quy trình'"
-                  ></codx-label> </ng-template
-              ></span>
+                    [default]="'Đã phát hành quy trình đến'"
+                  ></codx-label>
+                  <div>
+                    <span
+                      [innerHTML]="
+                        data?.module
+                          | formatvalue : view.formModel : 'Module'
+                          | async
+                      "
+                    ></span
+                    >-
+                    <span
+                      [innerHTML]="
+                        data?.function
+                          | formatvalue : view.formModel : 'function'
+                          | async
+                      "
+                    ></span>
+                  </div>
+                </ng-template>
+              </span>
             </div>
             <div class="ms-auto">
               <div class="d-flex">
