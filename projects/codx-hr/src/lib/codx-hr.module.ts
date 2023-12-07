@@ -144,6 +144,10 @@ import { PopupEquitComponent } from './employee-profile/popup-equit/popup-equit.
 import { ViewDetailEquitComponent } from './employee-quit/view-detail-equit/view-detail-equit.component';
 import { HolidayComponent } from './holiday/holiday.component';
 import { SpeedDialModule } from '@syncfusion/ej2-angular-buttons';
+import { DealsComponent } from 'projects/codx-cm/src/lib/deals/deals.component';
+import { LeadsComponent } from 'projects/codx-cm/src/lib/leads/leads.component';
+import { CasesComponent } from 'projects/codx-cm/src/lib/cases/cases.component';
+import { ViewInstancesComponent } from 'projects/codx-dp/src/lib/view-instances/view-instances.component';
 export const routes: Routes = [
   {
     path: '',
@@ -154,7 +158,6 @@ export const routes: Routes = [
         component: EmpContactsComponent,
       },
     ],
-    
   },
   {
     path: '',
@@ -328,9 +331,30 @@ export const routes: Routes = [
             path: 'ethnicgroups/:funcID',
             component: EthnicGroupsComponent,
           },
-          
         ],
       },
+      //----phát hành quy trình DP-CRM----//
+      {
+        path: 'deals/:funcID',
+        component: DealsComponent,
+        data: { noReuse: true },
+      },
+      {
+        path: 'cases/:funcID',
+        component: CasesComponent,
+        data: { noReuse: true },
+      },
+      {
+        path: 'leads/:funcID',
+        component: LeadsComponent,
+        data: { noReuse: true },
+      },
+      {
+        path: 'instances/:funcID/:processID',
+        component: ViewInstancesComponent,
+        data: { noReuse: true },
+      },
+      //-----------end--------------//
     ],
   },
 ];

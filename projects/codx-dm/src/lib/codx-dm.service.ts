@@ -48,6 +48,8 @@ import { VersionComponent } from './version/version.component';
 import { ShareComponent } from './share/share.component';
 import { lvFileClientAPI } from '@shared/services/lv.component';
 import { environment } from 'src/environments/environment';
+import { AnyARecord } from 'dns';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
@@ -325,6 +327,7 @@ export class CodxDMService {
     private fileService: FileService,
     private callfc: CallFuncService,
     private api: ApiHttpService,
+    private router: Router,
     //  private confirmationDialogService: ConfirmationDialogService,
     private notificationsService: NotificationsService
   ) {
@@ -765,7 +768,7 @@ export class CodxDMService {
             else e[i].disabled = true;
           }
         } else {
-          if (e[i].data != null && e[i].data.entityName == type)
+          if ((e[i].data != null && e[i].data.entityName == type) || e[i].data.functionID == "DMT0236")
             e[i].disabled = false;
           else e[i].disabled = true;
         }
@@ -887,6 +890,7 @@ export class CodxDMService {
             e[i].disabled = true;
           }
         } else {
+          debugger
           if (modeView) {
             list = 'DMT0212;DMT0217;DMT0225;DMT0222';
             if (e[i].data != null && list.indexOf(e[i].data.functionID) == -1) {
@@ -1021,7 +1025,7 @@ export class CodxDMService {
             // case "DMT0234": // lay lay quyen
             //   break;
             // Thư mục mới
-            case 'DMT0236':
+            case 'DMT0237':
               {
                 if (!data.create) e[i].isblur = true; // duoc view
                 break;
@@ -1471,28 +1475,10 @@ export class CodxDMService {
 
       case 'DMT0202': // chinh sua thu muc
       case 'DMT0209': {
-        // properties folder
-        //debugger
-        // var breadcumb = [];
-        // var breadcumbLink = [];
-        // var treeView = view?.currentView?.currentComponent?.treeView;
-        // if (treeView) {
-        //   treeView.textField = 'folderName';
-        //   var list = treeView.getBreadCumb(data.recID);
-        //   breadcumb.push(this.menuActive.getValue());
-        //   breadcumbLink.push(this.idMenuActive);
-        //   for (var i = list.length - 1; i >= 0; i--) {
-        //     breadcumb.push(list[i].text);
-        //     breadcumbLink.push(list[i].id);
-        //   }
-        //   this.breadcumbLink = breadcumbLink;
-        //   this.breakCumArr = breadcumb;
-        //   this.breadcumb.next(breadcumb);
-        // }
+      
         option.DataService = this.dataService;
         option.FormModel = this.formModel;
         option.Width = '550px';
-        // let data = {} as any;
         data.title = this.titleUpdateFolder;
         data.id = data.recID;
         data.readonly = $event.functionID == 'DMT0209' ? true : false;
@@ -1671,8 +1657,19 @@ export class CodxDMService {
         data.id = data.recID;
         this.callfc.openSide(ShareComponent, [type, data, true], option);
         break;
-      //Tạo mới thư mục con
+
+      //Sao chép đường dẫn thư mục
       case 'DMT0236':
+      {
+        this.copyToClipboard(this.getPath(data.recID,type))
+            .then(() => console.log('text copied !'))
+            .catch(() => console.log('error'));
+          // navigator.clipboard.writeText(this.getPath());
+          this.notificationsService.notifyCode("SYS041");
+        break;
+      }
+      //Tạo mới thư mục con
+      case 'DMT0237':
       {
         let curr = 
         {
@@ -1726,6 +1723,59 @@ export class CodxDMService {
         
       default:
         break;
+    }
+  }
+
+  getPath(id:any,type) {
+    const queryParams:any = {};
+    let url = null;
+    let l = null;
+    if(type == "folder")
+    {
+      queryParams._fo = id
+      l = this.router.url.split('?')[0];
+      url = this.router.serializeUrl(
+        this.router.createUrlTree([`/` + l], {
+          queryParams: queryParams,
+        })
+      );
+    }
+    else
+    {
+      queryParams.id= id;
+      queryParams._fv = false;
+      l = this.router.url.split('/');
+      url = this.router.serializeUrl(
+        this.router.createUrlTree([`/` + l[1] + `/viewfile`], {
+          queryParams: queryParams,
+        })
+      );
+    }
+   
+    return window.location.host + url;
+  }
+
+  copyToClipboard(textToCopy) {
+    // navigator clipboard api needs a secure context (https)
+    if (navigator.clipboard && window.isSecureContext) {
+      // navigator clipboard api method'
+      return navigator.clipboard.writeText(textToCopy);
+    } else {
+      // text area method
+      let textArea = document.createElement('textarea');
+      textArea.value = textToCopy;
+      // make the textarea out of viewport
+      textArea.style.position = 'fixed';
+      textArea.style.left = '-999999px';
+      textArea.style.top = '-999999px';
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+      return new Promise((res, rej) => {
+        // here the magic happens
+        document.execCommand('copy');
+        textArea.remove();
+      });
     }
   }
 

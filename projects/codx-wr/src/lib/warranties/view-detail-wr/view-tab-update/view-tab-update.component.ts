@@ -105,6 +105,7 @@ export class ViewTabUpdateComponent implements OnInit {
       ) {
         if (changes['transID']?.currentValue == this.id) return;
         this.id = changes['transID']?.currentValue;
+        this.formModel = JSON.parse(JSON.stringify(this.formModel));
         this.getListOrderUpdate();
       } else {
         if (!this.loaded) this.loaded = true;

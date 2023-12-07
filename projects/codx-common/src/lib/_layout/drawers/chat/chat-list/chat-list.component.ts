@@ -4,7 +4,9 @@ import {
   ApplicationRef,
   ChangeDetectorRef,
   Component,
+  EventEmitter,
   OnInit,
+  Output,
   ViewChild,
 } from '@angular/core';
 import {
@@ -36,6 +38,8 @@ export class CodxChatListComponent implements OnInit, AfterViewInit {
   idField: object = {
     id: 'groupID',
   };
+  
+  @Output('getTotalMessage') getTotalMessage: EventEmitter<any> = new EventEmitter();
   @ViewChild('codxListView') codxListView: CodxListviewComponent;
   constructor(
     private api: ApiHttpService,
@@ -179,7 +183,21 @@ export class CodxChatListComponent implements OnInit, AfterViewInit {
   //select goup chat
   selectItem(group: any) {
     this.signalRSV.sendData(CHAT.BE_FUNC.LoadGroup, group?.groupID);
-    
+    group.message.isRead=true;
+    this.dt.detectChanges();
+    this.api
+    .execSv(
+      'WP',
+      'ERM.Business.WP',
+      'ChatBusiness',
+      'UpdateMessageByGroupAsync',
+      group?.groupID
+    ).subscribe(res=>{
+      if(res){
+        this.getTotalMessage.emit();
+      }
+    })
+
   }
   // select item search
   selectItemSeach(item: any) {

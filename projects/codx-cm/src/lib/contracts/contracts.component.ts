@@ -23,6 +23,7 @@ import {
   NotificationsService,
   Util,
   SidebarModel,
+  AuthStore,
 } from 'codx-core';
 import {
   CM_Contracts,
@@ -139,6 +140,7 @@ export class ContractsComponent extends UIComponent {
   approveRule = '0';
   paramDefault: any;
   runMode: any;
+  user;
 
   constructor(
     private inject: Injector,
@@ -149,6 +151,7 @@ export class ContractsComponent extends UIComponent {
     private codxShareService: CodxShareService,
     private changeDetectorRef: ChangeDetectorRef,
     private stepService: StepService,
+    private authStore: AuthStore,
     @Optional() dialog?: DialogRef
   ) {
     super(inject);
@@ -158,6 +161,7 @@ export class ContractsComponent extends UIComponent {
         this.runMode = f?.runMode;
       }
     });
+    this.user = this.authStore.get();
   }
 
   async onInit(){
@@ -271,12 +275,12 @@ export class ContractsComponent extends UIComponent {
               }
               break;
   
+            case 'CM0204_17': //chia sẻ
             case 'CM0204_5': //Đã giao hàng
-              if (data?.status == '1') {
-                res.disabled = true;
-              }
+              // if (data?.status == '1') {
+                // }
+              res.disabled = true;
               break;
-  
             case 'CM0204_6': //hoàn tất hợp đồng
               if (data?.status == '1') {
                 res.disabled = true;
@@ -393,6 +397,12 @@ export class ContractsComponent extends UIComponent {
         case 'CM0204_7':
           this.viewDetailContract(data);
           break;
+        case 'CM0204_15':
+          this.closedContract(data,true);
+          break;
+        case 'CM0204_16':
+          this.closedContract(data, false);
+          break;
         default: {
           // var customData = {
           //   refID: data.recID,
@@ -417,6 +427,24 @@ export class ContractsComponent extends UIComponent {
       }
     }
 
+    closedContract(data: CM_Contracts, type) {
+      this.notiService
+        .alertCode('DP018', null, this.actionName, "'" + data?.contractName + "'")
+        .subscribe((info) => {
+          if (info.event.status == 'Y') {
+            this.contractService.closeContract([data?.recID, type]).subscribe(res => {
+              if(res){
+                data.closed = type;
+                data.modifiedOn = new Date();
+                data.modifiedBy = this.user?.userID;
+                this.view.dataService.update(data, true).subscribe();
+                this.notiService.notifyCode(type ? 'DP016' : 'DP017',0,"'" + data?.contractName + "'");
+                this.changeDetectorRef.markForCheck();
+              }
+            })
+          }
+        });
+    }
 
   getQuotationsAndQuotationsLinesByTransID(recID) {
     this.contractService.getQuotationsLinesByTransID(recID).subscribe((res) => {
@@ -864,6 +892,7 @@ export class ContractsComponent extends UIComponent {
             .subscribe((res) => {
               if (res) {
                 data.status = '2';
+                this.view.dataService.update(data, true).subscribe();
                 this.moreDefaut = Object.assign(this.moreDefaut);
                 this.changeDetectorRef.markForCheck();
               }
@@ -880,26 +909,25 @@ export class ContractsComponent extends UIComponent {
       this.cache
         .gridViewSetup(fun.formName, fun.gridViewName)
         .subscribe((grvSt) => {
-          var formMD = new FormModel();
+          let formMD = new FormModel();
           formMD.funcID = fun.functionID;
           formMD.entityName = fun.entityName;
           formMD.formName = fun.formName;
           formMD.gridViewName = fun.gridViewName;
           let oldStatus = data.status;
           let oldStepId = data.stepID;
-          var stepReason = {
+          let stepReason = {
             isUseFail: false,
             isUseSuccess: false,
           };
-          var dataCM = {
+          let dataCM = {
             refID: data?.refID,
             processID: data?.processID,
             stepID: data?.stepID,
-            // nextStep: this.stepIdClick ? this.stepIdClick : data?.nextStep,
-            // listStepCbx: this.listInsStep,
+            nextStep: '',
+            isCallInstance: true,
           };
-          var obj = {
-            stepName: data?.currentStepName,
+          let obj = {
             formModel: formMD,
             deal: data,
             stepReason: stepReason,
@@ -907,7 +935,7 @@ export class ContractsComponent extends UIComponent {
             applyFor: '4',
             dataCM: dataCM,
           };
-          var dialogMoveStage = this.callfc.openForm(
+          let dialogMoveStage = this.callfc.openForm(
             PopupMoveStageComponent,
             '',
             850,
@@ -917,44 +945,46 @@ export class ContractsComponent extends UIComponent {
           );
           dialogMoveStage.closed.subscribe((e) => {
             if (e && e.event != null) {
-              this.listInsStep = e?.event?.listStep;
-              var instance = e.event.instance;
-              var listSteps = e.event?.listStep;
-              var index =
+              let instance = e.event.instance;
+              let listSteps = e.event?.listStep;
+              let index =
                 e.event.listStep.findIndex(
                   (x) =>
                     x.stepID === instance.stepID &&
                     !x.isSuccessStep &&
                     !x.isFailStep
                 ) + 1;
-              var nextStep = '';
-              if (
-                index != -1 &&
-                !listSteps[index]?.isSuccessStep &&
-                !listSteps[index]?.isFailStep
-              ) {
-                if (index != e.event.listStep.length) {
-                  nextStep = listSteps[index]?.stepID;
-                }
-              }
-              var dataUpdate = [
+              // let nextStep = '';
+              // if (
+              //   index != -1 &&
+              //   !listSteps[index]?.isSuccessStep &&
+              //   !listSteps[index]?.isFailStep
+              // ) {
+              //   if (index != e.event.listStep.length) {
+              //     nextStep = listSteps[index]?.stepID;
+              //   }
+              // }
+              let dataUpdate = [
                 data.recID,
                 instance.stepID,
-                nextStep,
                 oldStepId,
                 oldStatus,
                 e.event?.comment,
                 e.event?.expectedClosed,
-                e.event?.probability,
+                e.event?.permissionCM,
               ];
               // this.codxCmService.moveStageDeal(dataUpdate).subscribe((res) => {
               //   if (res) {
-              //     data = res[0];
-              //     this.view.dataService.update(data).subscribe();
-              //     this.detailViewDeal.dataSelected = data;
-              //     if (e.event.isReason != null) {
-              //       this.moveReason(data, e.event.isReason);
+              //     this.view.dataService.update(res, true).subscribe();
+              //     if (this.kanban) {
+              //       this.renderKanban(res);
               //     }
+              //     if (this.detailViewDeal)
+              //       this.detailViewDeal.dataSelected = res;
+              //     if (e.event.isReason != null) {
+              //       this.moveReason(res, e.event.isReason);
+              //     }
+              //     this.detailViewDeal?.reloadListStep(listSteps);
               //     this.detectorRef.detectChanges();
               //   }
               // });

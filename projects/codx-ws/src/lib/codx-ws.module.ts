@@ -74,6 +74,7 @@ import { CodxViewWsComponent } from './codx-view-ws/codx-view-ws.component';
 import { CodxWpV2Module } from 'projects/codx-wp/src/lib/codx-wp-v2.module';
 import { AcModule } from 'projects/codx-ac/src/public-api';
 import { CodxHRModule } from 'projects/codx-hr/src/public-api';
+import { Layout2Component } from './_layout/layout2/layout2.component';
 //import { CodxWpV2Module } from 'projects/codx-wp/src/lib/codx-wp-v2.module';
 const routes: Routes = [
   {
@@ -81,10 +82,10 @@ const routes: Routes = [
     component: LayoutComponent,
     children: [
       //-----------Khai báo routing nghiệp vu---------------
-      {
-        path: 'workspace/:funcID',
-        component: WorkspaceComponent,
-      },
+      // {
+      //   path: 'workspace/:funcID',
+      //   component: WorkspaceComponent,
+      // },
       {
         path: 'calendar/:funcID',
         component: COCalendarComponent,
@@ -250,6 +251,17 @@ const routes: Routes = [
     
   },
   {
+    path:'',
+    component: Layout2Component,
+    children: [
+      //-----------Khai báo routing nghiệp vu---------------
+      {
+        path: 'workspace/:funcID',
+        component: WorkspaceComponent,
+      },
+    ]
+  },
+  {
     path: 'storage',
     component: ExtendStorageComponent,
   },
@@ -263,6 +275,7 @@ const routes: Routes = [
     declarations: [
         CodxWsComponent,
         LayoutComponent,
+        Layout2Component,
         CodxWsHeaderComponent,
         WpBreadcumComponent,
         WorkspaceComponent,
