@@ -154,7 +154,8 @@ export class DynamicProcessComponent
     private layoutDP: LayoutComponent,
     private layoutService: LayoutService,
     private dpService: CodxDpService,
-    private codxShareService: CodxShareService
+    private codxShareService: CodxShareService,
+    private changeDetectorRef: ChangeDetectorRef,
   ) {
     super(inject);
     this.heightWin = Util.getViewPort().height - 100;
@@ -1149,6 +1150,8 @@ export class DynamicProcessComponent
             this.processRename['modifiedBy'] = this.user?.userID;
             this.processName = '';
             this.popupEditName.close();
+            this.view.dataService.update(this.processRename, true).subscribe();
+            // this.changeDetectorRef.markForCheck();
             this.notificationsService.notifyCode('SYS007');
           } else {
             this.notificationsService.notifyCode('DP030');

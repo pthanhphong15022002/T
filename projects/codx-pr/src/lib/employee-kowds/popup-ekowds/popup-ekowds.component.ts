@@ -82,6 +82,7 @@ export class PopupEkowdsComponent extends UIComponent implements OnInit{
     this.actionType = data?.data?.actionType;
     this.dataObj = JSON.parse(JSON.stringify(data?.data?.dataObj));
     this.employeeId = JSON.parse(JSON.stringify(data?.data?.employeeId));
+    this.dataObj.employeeId = this.employeeId;
     this.currentYear = JSON.parse(JSON.stringify(data?.data?.crrYear));
     this.currentMonth = JSON.parse(JSON.stringify(data?.data?.crrMonth));
     let day = JSON.parse(JSON.stringify(data?.data?.selectedDate));

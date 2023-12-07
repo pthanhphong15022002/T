@@ -24,7 +24,8 @@
   <div class="offcanvas-header w-100">
     <div class="d-flex justify-content-end">
       <div>
-        <codx-mfunc
+        <codx-mfunc 
+          *ngIf="this.dataView"
           [formModel]="formModelStep"
           [isBookMark]="false"
           [dataItem]="moreDefaut"
