@@ -603,7 +603,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       });
     }
   }
-
+  
   async changeDataMFGroupTask(event, group) {
     if (event != null) {
       let isGroup = false;

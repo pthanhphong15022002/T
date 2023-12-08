@@ -244,91 +244,62 @@ export class ContractsComponent extends UIComponent {
         switch (res.functionID) {
           //Gửi duyệt
           case 'CM0204_1':
-            if (
+            res.disabled =
+              data?.closed ||
               data?.status == '0' ||
               (data?.closed && data?.status != '1') ||
               (this.approveRule != '1' && !data?.applyApprover) ||
               (data?.applyApprover && data?.approveRule != '1') ||
-              data?.approveStatus >= '3'
-            ) {
-              res.disabled = true;
-            }
+              data?.approveStatus >= '3';
             break;
           //Hủy yêu cầu duyệt
           case 'CM0204_2':
-            if (
+            res.disabled =
+              data?.closed ||
               (data?.closed && data?.status != '1') ||
               data?.status == '0' ||
-              data?.approveStatus != '3'
-            ) {
-              res.disabled = true;
-            }
-            res.isblur = false;
+              data?.approveStatus != '3';
             break;
-
           case 'CM0204_4':
             res.disabled = true;
             break;
-
           case 'CM0204_3': //tạo hợp đồng gia hạn
-            if (data?.status == '1') {
-              res.disabled = true;
-            }
+            res.disabled = data?.status == '1' || data?.closed;
             break;
-
-          case 'CM0204_17': //chia sẻ
+          // case 'CM0204_17': //chia sẻ
           case 'CM0204_5': //Đã giao hàng
-            // if (data?.status == '1') {
-            // }
             res.disabled = true;
             break;
           case 'CM0204_6': //hoàn tất hợp đồng
-            if (data?.status == '1') {
-              res.disabled = true;
-            }
+            res.disabled = data?.status == '1' || data?.closed;
             break;
-
-          // case 'CM0204_7': // Xem chi tiết
-          //   if (!isDetail) {
-          //     res.disabled = true;
-          //   }
-          //   break;
-
           case 'CM0204_8': // chuyển giai đoạn
-            res.disabled = !data?.applyProcess || data?.status == '1';
+            res.disabled =
+              !data?.applyProcess || data?.status == '1' || data?.closed;
             break;
-
           case 'CM0204_9': // bắt đầu
-            res.disabled = !data?.applyProcess || data?.status !== '1';
+            res.disabled =
+              !data?.applyProcess || data?.status !== '1' || data?.closed;
             break;
-
           case 'CM0204_10': // thành công
-            res.disabled = !data?.applyProcess || data?.status !== '2';
+            res.disabled =
+              !data?.applyProcess || data?.status !== '2' || data?.closed;
             break;
           case 'CM0204_11': // thất bại
-            res.disabled = !data?.applyProcess || data?.status !== '2';
+            res.disabled =
+              !data?.applyProcess || data?.status !== '2' || data?.closed;
             break;
-
           case 'CM0204_13': // thêm công việc
-            if (data?.applyProcess) {
-            } else {
-              res.disabled = true;
-            }
+            res.disabled = !data?.applyProcess || data?.closed;
             break;
-
           case 'CM0204_14': // phân công người phụ trách
+            res.disabled = data?.closed;
             break;
-
           case 'CM0204_15': // Đóng hợp đồng
-            if (data?.closed) {
-              res.disabled = true;
-            }
+            res.disabled = data?.closed;
             break;
-
           case 'CM0204_16': // mở lại hợp đồng
-            if (!data?.closed) {
-              res.disabled = true;
-            }
+            res.disabled = !data?.closed;
             break;
         }
       });
@@ -809,61 +780,6 @@ export class ContractsComponent extends UIComponent {
   //--------------------------------------------------------------------//
   // "Permissions", "Closed", "ClosedOn", "ClosedBy"
   getColumsGrid(grvSetup) {
-    this.columnGrids = [];
-    this.arrFieldIsVisible.forEach((key) => {
-      let field = Util.camelize(key);
-      let template: any;
-      let colums: any;
-      // switch (key) {
-      // case 'ContractName':
-      //   template = this.tempContractName;
-      //   break;
-      // case 'CustomerID':
-      //   template = this.tempCustomerID;
-      //   break;
-      // case 'ContractAmt':
-      //   template = this.tempContractAmt;
-      //   break;
-      // case 'PaidAmt':
-      //   template = this.tempPaidAmt;
-      //   break;
-      // case 'CurrencyID':
-      //   template = this.tempCurrencyID;
-      //   break;
-      // case 'ApplyProcess':
-      //   template = this.tempApplyProcess;
-      //   break;
-      // case 'StepID':
-      //   template = this.tempStepID;
-      //   break;
-      // case 'Status':
-      //   template = this.tempStatus;
-      //   break;
-      // case 'Owner':
-      //   template = this.tempOwner;
-      //   break;
-      // default:
-      //   break;
-      // }
-      if (template) {
-        colums = {
-          field: field,
-          headerText: grvSetup[key].headerText,
-          width: grvSetup[key].width,
-          template: template,
-          // textAlign: 'center',
-        };
-      } else {
-        colums = {
-          field: field,
-          headerText: grvSetup[key].headerText,
-          width: grvSetup[key].width,
-        };
-      }
-
-      this.columnGrids.push(colums);
-    });
-
     this.views = [
       {
         type: ViewType.listdetail,
@@ -1230,3 +1146,58 @@ export class ContractsComponent extends UIComponent {
       });
   }
 }
+
+// this.columnGrids = [];
+// this.arrFieldIsVisible.forEach((key) => {
+//   let field = Util.camelize(key);
+//   let template: any;
+//   let colums: any;
+// switch (key) {
+// case 'ContractName':
+//   template = this.tempContractName;
+//   break;
+// case 'CustomerID':
+//   template = this.tempCustomerID;
+//   break;
+// case 'ContractAmt':
+//   template = this.tempContractAmt;
+//   break;
+// case 'PaidAmt':
+//   template = this.tempPaidAmt;
+//   break;
+// case 'CurrencyID':
+//   template = this.tempCurrencyID;
+//   break;
+// case 'ApplyProcess':
+//   template = this.tempApplyProcess;
+//   break;
+// case 'StepID':
+//   template = this.tempStepID;
+//   break;
+// case 'Status':
+//   template = this.tempStatus;
+//   break;
+// case 'Owner':
+//   template = this.tempOwner;
+//   break;
+// default:
+//   break;
+// }
+//   if (template) {
+//     colums = {
+//       field: field,
+//       headerText: grvSetup[key].headerText,
+//       width: grvSetup[key].width,
+//       template: template,
+//       // textAlign: 'center',
+//     };
+//   } else {
+//     colums = {
+//       field: field,
+//       headerText: grvSetup[key].headerText,
+//       width: grvSetup[key].width,
+//     };
+//   }
+
+//   this.columnGrids.push(colums);
+// });
