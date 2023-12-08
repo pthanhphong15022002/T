@@ -654,6 +654,33 @@ export class CodxTMService {
   //   param.CompletedControl = taskGroup.completedControl;
   //   return param
   // }
+
+  countFavoriteSystem(funcID: any, favsID: any) {
+    return this.api.execSv(
+      'TM',
+      'Core',
+      'DataBusiness',
+      'GetCountFavoriteAsync',
+      [funcID, favsID]
+    );
+  }
+  //đếm count theo dõi= chua viet
+  countFavoriteMonitorTasks(funcID, favsID) {
+    return this.api.execSv(
+      'TM',
+      'TM',
+      'TasksBusiness',
+      'CountFavoriteModuleAsync',
+      [funcID, favsID]
+    );
+  }
+  //count động
+  countFavorite(funcID: any, favsID: any, assemblyName, className, methol) {
+    return this.api.execSv('TM', assemblyName, className, methol, [
+      funcID,
+      favsID,
+    ]);
+  }
 }
 
 export class LayoutModel {
