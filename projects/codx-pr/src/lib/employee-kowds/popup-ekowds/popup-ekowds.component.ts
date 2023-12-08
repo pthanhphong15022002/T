@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, HostListener, Injector, OnInit, Optional, TemplateRef, ViewChild } from '@angular/core';
-import { CacheService, CallFuncService, CodxFormComponent, CodxGridviewV2Component, DialogData, DialogRef, FormModel, NotificationsService, UIComponent, Util } from 'codx-core';
+import { CRUDService, CacheService, CallFuncService, CodxFormComponent, CodxGridviewV2Component, DialogData, DialogRef, FormModel, NotificationsService, UIComponent, Util } from 'codx-core';
 import { CodxHrService } from 'projects/codx-hr/src/public-api';
 import { EditSettingsModel } from '@syncfusion/ej2-angular-grids';
 import {Kowds} from '../kowds.model';
@@ -152,7 +152,7 @@ export class PopupEkowdsComponent extends UIComponent implements OnInit{
           controlType: 'text',
           dataType: 'float',
           headerTemplate: this.headTmpGrid1Col2,
-          // template: this.tmpGrid1Col2,
+          template: this.tmpGrid1Col2,
           width: '150',
         },
       ];
@@ -178,18 +178,55 @@ export class PopupEkowdsComponent extends UIComponent implements OnInit{
     for(let i = 0; i < this.dataObj.employeeID.split(';').length; i++){
       for(let j = 0; j < lstDataInGrid.length; j++){
         let temp = {...lstDataInGrid[j]};
-        temp.employeeID = this.dataObj.employeeID[i]
+        temp.employeeID = this.dataObj.employeeID.split(';')[i]
         lstDataHandle.push({...temp})
       }
     }
 
-    console.log('list data cbi luu', lstDataHandle);
+    let startDate = this.fromDateVal.getDate();
+    let endDate = this.toDateVal.getDate();
+    let lstDate = []
+    console.log('start', startDate);
+    console.log('end', endDate);
+    
+    lstDate.push(startDate);
+
+    for(let i = startDate; i< endDate; i++){
+      lstDate.push(i+1)
+    }
+
+    console.log('lst date ne', lstDate);
+
+    let lstDataSave = []
+    for(let i = 0; i < lstDate.length; i++){
+      for(let j = 0; j < lstDataHandle.length; j++){
+        let temp = {...lstDataHandle[j]}
+        temp.workDate = new Date(this.fromDateVal.getFullYear(), this.fromDateVal.getMonth(), lstDate[i]);
+        console.log('them mot ngay', temp.workDate);
+        temp.recID = Util.uid();
+        temp.updateColumns = ''
+        temp.rootKowCode = ''
+        lstDataSave.push(temp);
+      }
+    }
     debugger
+
+    console.log('list data cbi luu', lstDataSave);
+    this.addEmpKow(lstDataSave).subscribe((res) => {
+      debugger
+      if(res == true){
+        this.notify.notifyCode('SYS006');
+        this.dialog && this.dialog.close(lstDataSave);
+      }
+      else{
+        this.notify.notifyCode('SYS023');
+      }
+    })
   }
 
   onChangeCalFromTo(evt){
     this.fromDateVal = evt[0]
-    this.toDateVal = evt[0]
+    this.toDateVal = evt[1]
   }
 
   onSelectVllVal(evt, data){
@@ -284,20 +321,19 @@ export class PopupEkowdsComponent extends UIComponent implements OnInit{
   }
 
   clickMF(event, data) {
-    // this.notify.alertCode('SYS030').subscribe((x) => {
-    //   if (x.event?.status == 'Y') {
-    //     this.DeletePolicyDetail(data.recID).subscribe((res) => {
-    //       if (res == true) {
-    //         this.notify.notifyCode('SYS008');
-    //           (this.gridView1?.dataService as CRUDService)
-    //             ?.remove(data)
-    //             .subscribe();
-    //           this.gridView1.deleteRow(data, true);
-            
-    //       }
-    //     });
-    //   }
-    // });
+    this.notify.alertCode('SYS030').subscribe((x) => {
+      if (x.event?.status == 'Y') {
+        this.deleteEmpKow(data.recID).subscribe((res) => {
+          if (res == true) {
+            this.notify.notifyCode('SYS008');
+              (this.gridView1?.dataService as CRUDService)
+                ?.remove(data)
+                .subscribe();
+              this.gridView1.deleteRow(data, true);
+          }
+        });
+      }
+    });
   }
 
   changeDataMF(evt) {
@@ -331,15 +367,15 @@ export class PopupEkowdsComponent extends UIComponent implements OnInit{
     );
   }
 
-  // deleteEmpKow(data){
-  //   return this.api.execSv<any>(
-  //     'HR',
-  //     'ERM.Business.PR',
-  //     'KowDsBusiness',
-  //     'DeleteEmpKowAsync',
-  //     [data, this.filterMonth, this.filterYear]
-  //   );
-  // }
+  deleteEmpKow(data){
+    return this.api.execSv<any>(
+      'HR',
+      'ERM.Business.PR',
+      'KowDsBusiness',
+      'DeleteEmpKowAsync',
+      []
+    );
+  }
 }
 
 

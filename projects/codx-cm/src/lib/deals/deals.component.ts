@@ -2032,7 +2032,7 @@ export class DealsComponent
   }
 
   async addTask(data) {
-    let taskType = await this.stepService.chooseTypeTask();
+    let taskType = await this.stepService.chooseTypeTask(['F']);
     if (taskType) {
       let dataDeal = {
         typeCM: '5',

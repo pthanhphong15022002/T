@@ -44,7 +44,7 @@ export class CodxAddTaskComponent implements OnInit {
   vllShare = 'BP021';
   linkQuesiton = 'http://';
   REQUIRE = ['taskName', 'endDate', 'startDate'];
-  type: 'calendar' | 'step' | 'activitie' | 'notStep' | 'group';
+  type: 'calendar' | 'step' | 'activitie' | 'instance' | 'group'; // type == instance => instanceID, group => groupTaskID
 
   typeTask;
   listGroup = [];
@@ -188,7 +188,7 @@ export class CodxAddTaskComponent implements OnInit {
     this.dataParentTask = dt?.data?.dataParentTask;
     this.isRoleFull = dt?.data?.isRoleFull;
 
-    if (this.type == 'notStep') {
+    if (this.type == 'instance') {
       this.dataParentTask = dt?.data?.dataParentTask;
       this.typeCM = this.dataParentTask?.typeCM;
     }
@@ -256,7 +256,7 @@ export class CodxAddTaskComponent implements OnInit {
         break;
       case 'activitie':
         break;
-      case 'notStep':
+      case 'instance':
         this.statusInput.type.show = true;
         this.statusInput.type.disabled = true;
         this.statusInput.dataType.show = true;
@@ -333,7 +333,7 @@ export class CodxAddTaskComponent implements OnInit {
           this.getParentTask(this.stepsTasks);
         }
         break;
-      case 'notStep':
+      case 'instance':
         this.getListStepByInstanceID(this.instanceID);
         break;
       case 'step':
@@ -341,6 +341,7 @@ export class CodxAddTaskComponent implements OnInit {
         break;
       case 'activitie':
         this.isStart = true;
+        this.isActivitie = true;
         this.setDateTimeTask();
         break;
       case 'group':
@@ -417,7 +418,7 @@ export class CodxAddTaskComponent implements OnInit {
     const hasStartDate = !!this.stepsTasks?.startDate;
 
     if (isAddOrCopy) {
-      this.isShowDate = this.isStart && !isStatus3;
+      this.isShowDate = (this.isStart || this.isActivitie) && !isStatus3;
       this.isShowTime = true;
     } else {
       if (this.isStart) {
@@ -939,6 +940,7 @@ export class CodxAddTaskComponent implements OnInit {
     this.dataTypeCM = event?.component?.itemsSelected[0];
     if (this.dataTypeCM) {
       if (this.typeCM == '1') {
+        this.isStart = true;
         this.isActivitie = true;
         this.statusInput.step.show = false;
         this.statusInput.group.show = false;
@@ -965,6 +967,7 @@ export class CodxAddTaskComponent implements OnInit {
           this.statusInput.step.disabled = true;
         }
       }
+      this.setStatusFormDate();
     }
     this.dataCM = event?.data;
   }
@@ -1125,30 +1128,56 @@ export class CodxAddTaskComponent implements OnInit {
     }
   }
   addTask(task, isCreateMeeting = false, isAddTask = false) {
-    if (this.isSave) {
-      this.api
-        .exec<any>('DP', 'InstancesStepsBusiness', 'AddTaskStepAsync', [
+    if(this.isActivitie){
+      if (this.isSave) {
+        this.api
+          .exec<any>('DP', 'ActivitiesBusiness', 'AddActivitiesAsync', [
+            task,
+            isCreateMeeting,
+            isAddTask,
+          ])
+          .subscribe((res) => {
+            if (res) {
+              this.dialog.close({
+                task: res,
+                isCreateMeeting,
+              });
+            }
+          });
+      } else {
+        this.dialog.close({
           task,
+          isActivitie: this.isActivitie,
           isCreateMeeting,
           isAddTask,
-        ])
-        .subscribe((res) => {
-          if (res) {
-            this.dialog.close({
-              task: res[0],
-              progressGroup: res[1],
-              progressStep: res[2],
-              isCreateMeeting,
-            });
-          }
         });
-    } else {
-      this.dialog.close({
-        task,
-        isActivitie: this.isActivitie,
-        isCreateMeeting,
-        isAddTask,
-      });
+      }   
+    }else{
+      if (this.isSave) {
+        this.api
+          .exec<any>('DP', 'InstancesStepsBusiness', 'AddTaskStepAsync', [
+            task,
+            isCreateMeeting,
+            isAddTask,
+          ])
+          .subscribe((res) => {
+            if (res) {
+              this.dialog.close({
+                task: res[0],
+                progressGroup: res[1],
+                progressStep: res[2],
+                isCreateMeeting,
+              });
+            }
+          });
+      } else {
+        this.dialog.close({
+          task,
+          isActivitie: this.isActivitie,
+          isCreateMeeting,
+          isAddTask,
+        });
+      }
     }
   }
   editTask(task) {

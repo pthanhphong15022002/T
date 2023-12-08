@@ -226,7 +226,6 @@ export class ContractsViewDetailComponent
     this.api
       .execSv<any>('SYS', 'AD', 'CompanySettingsBusiness', 'GetAsync')
       .subscribe((res) => {
-        console.log(res);
         if (res) {
           this.account = res;
         }
