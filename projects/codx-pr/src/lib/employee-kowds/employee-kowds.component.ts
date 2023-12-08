@@ -23,6 +23,7 @@ export class EmployeeKowdsComponent extends UIComponent{
   viewActive: string = '';
   orgUnitID: string = '';
   formModelEmployee;
+  filterDowCode : any;
   filterOrgUnit: any;
   filterMonth: any;
   filterYear: any;
@@ -32,7 +33,7 @@ export class EmployeeKowdsComponent extends UIComponent{
   lstEmp: any = [];
   viewDetailData = true;
   viewStatistic = false;
-
+  timeKeepingMode : any;
   calendarGridColumns: any = [];
   gridStatisticColumns: any = [];
 
@@ -44,6 +45,7 @@ export class EmployeeKowdsComponent extends UIComponent{
   @ViewChild('tempDayData', { static: true }) tempDayData: TemplateRef<any>;
   @ViewChild('tempEmployeeTC', { static: true }) tempEmployeeTC: TemplateRef<any>;
   @ViewChild('calendarGrid') calendarGrid: CodxGridviewV2Component;
+  @ViewChild('calendarGrid2') calendarGrid2: CodxGridviewV2Component;
   @ViewChild('tempTree') tempTree: TemplateRef<any>;
   @ViewChild('tmpOrgChart') tmpOrgChart: TemplateRef<any>;
   @ViewChild('leftPanel') leftPanel: TemplateRef<any>;
@@ -78,7 +80,11 @@ export class EmployeeKowdsComponent extends UIComponent{
     this.initHeaderText();
     this.getTimeKeepingMode().subscribe((res) => {
       console.log('get time keeping', res);
-      
+      this.timeKeepingMode = res.timeKeepingMode;
+      if(this.timeKeepingMode == '2'){
+        this.viewStatistic = true;
+        this.viewDetailData = false;
+      }
     })
 
     this.cache.functionList(this.funcID).subscribe((res) => {
@@ -166,7 +172,8 @@ export class EmployeeKowdsComponent extends UIComponent{
         employeeId: employeeId,
         selectedDate : date,
         crrYear: this.filterYear,
-        crrMonth: this.filterMonth
+        crrMonth: this.filterMonth,
+        dowCode: this.filterDowCode
       },
       option
     )
@@ -256,6 +263,12 @@ export class EmployeeKowdsComponent extends UIComponent{
         }
       }
       this.gridDataSource = [...this.gridDataSource]
+      console.log('griddd dts', this.gridDataSource);
+      
+      if(this.calendarGrid){
+        this.calendarGrid.dataSource = this.gridDataSource;
+      }
+      
       this.calendarGridColumns = []
       this.calendarGridColumns.push({
         headerTemplate: 'Nhân viên',
@@ -275,7 +288,11 @@ export class EmployeeKowdsComponent extends UIComponent{
         })
       }
     this.calendarGridColumns = [...this.calendarGridColumns]
+    if(this.calendarGrid){
+      console.log('data moi', this.gridDataSource);
+      this.calendarGrid.refresh(true);
     }
+  }
     else if(this.viewStatistic == true){
       this.gridStatisticColumns = [
         {
@@ -353,8 +370,16 @@ export class EmployeeKowdsComponent extends UIComponent{
         //     console.log('lst result', lstResult[i]);
         //   }
         // }
-        this.gridDataSourceStatistic = lstResult;
+        this.gridDataSourceStatistic = [...lstResult];
+        if(this.calendarGrid2){
+          this.calendarGrid2.dataSource = this.gridDataSourceStatistic;
+        }
       })
+      if(this.calendarGrid2){
+        console.log('data moi', this.gridDataSourceStatistic);
+        
+        this.calendarGrid2.refresh(true);
+      }
     }
   }
 
@@ -403,8 +428,16 @@ export class EmployeeKowdsComponent extends UIComponent{
     // thay doi gia tri filter
     if(event.type == 'pined-filter'){
       console.log('filter thay doi', event)
-    }
-  }
+      this.filterDowCode =  event?.data[0].value;
+      let temp = event?.data[0].value.split('/');
+      this.filterMonth = temp[1];
+      this.filterYear = temp[0];
+
+      let groupSalCode = event?.data[1];
+      console.log('filter month', this.filterMonth);
+      console.log('filter year', this.filterYear);
+      console.log('filter groupSalCode', groupSalCode);
+  }}
 
   // callFunc(event){
   //   debugger
