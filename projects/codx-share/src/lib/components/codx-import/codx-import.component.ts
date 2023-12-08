@@ -21,6 +21,9 @@ import {
   DialogData,
   DialogRef,
   NotificationsService,
+  RealHub,
+  RealHubService,
+  Util,
 } from 'codx-core';
 import { Observable, finalize, map } from 'rxjs';
 import { CodxImportAddTemplateComponent } from './codx-import-add-template/codx-import-add-template.component';
@@ -74,6 +77,7 @@ export class CodxImportComponent implements OnInit, OnChanges, AfterViewInit {
     private api: ApiHttpService,
     private formBuilder: FormBuilder,
     private notifySvr: NotificationsService,
+    private realHub: RealHubService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -111,6 +115,13 @@ export class CodxImportComponent implements OnInit, OnChanges, AfterViewInit {
     this.request.gridViewName = this.formModel.gridViewName;
     this.request.funcID = this.formModel?.funcID;
     this.getData();
+    this.realHub.start(this.service).then((x: RealHub) => {
+      if (x) {
+        x.$subjectReal.asObservable().subscribe((z) => {
+          console.log('realHub import: ', z);
+        });
+      }
+    });
   }
   get f(): { [key: string]: AbstractControl } {
     return this.importGroup.controls;
@@ -125,10 +136,11 @@ export class CodxImportComponent implements OnInit, OnChanges, AfterViewInit {
     this.fileCount = e.data.length;
   }
   onSave() {
-    debugger
+    debugger;
     if (this.fileCount <= 0) return this.notifySvr.notifyCode('OD022');
     this.submitted = true;
     if (this.importGroup.invalid) return;
+    let session = Util.uid();
     this.api
       .execSv(this.service, 'Core', 'CMBusiness', 'ImportAsync', [
         this.binaryString,
@@ -136,8 +148,9 @@ export class CodxImportComponent implements OnInit, OnChanges, AfterViewInit {
         this.importGroup.value.dataImport,
         this.formModel?.entityName,
         this.formModel?.funcID,
+        session,
         '',
-        ''
+        '',
       ])
       .subscribe((item) => {
         if (item && this.dialog) {
@@ -187,10 +200,10 @@ export class CodxImportComponent implements OnInit, OnChanges, AfterViewInit {
       null
     );
     popup.closed.subscribe((res) => {
-      if(res?.event) this.dt_AD_IEConnections.push(res?.event);
+      if (res?.event) this.dt_AD_IEConnections.push(res?.event);
     });
   }
-  openForm(val: any, data: any, type: any , index:any = null) {
+  openForm(val: any, data: any, type: any, index: any = null) {
     switch (val) {
       case 'edit': {
         this.callfunc.openForm(
@@ -207,24 +220,27 @@ export class CodxImportComponent implements OnInit, OnChanges, AfterViewInit {
       case 'delete': {
         var config = new AlertConfirmInputConfig();
         config.type = 'YesNo';
-        this.notifySvr
-          .alertCode("SYS003", config)
-          .subscribe((x) => {
-            if (x.event.status == 'Y') {
-              if(data?.recID)
-              {
-                this.api
-                .execSv<any>("SYS",'AD', 'IEConnectionsBusiness', 'DeleteItemAsync', data?.recID)
+        this.notifySvr.alertCode('SYS003', config).subscribe((x) => {
+          if (x.event.status == 'Y') {
+            if (data?.recID) {
+              this.api
+                .execSv<any>(
+                  'SYS',
+                  'AD',
+                  'IEConnectionsBusiness',
+                  'DeleteItemAsync',
+                  data?.recID
+                )
                 .subscribe((item) => {
-                  if(item)
-                  {
-                    this.dt_AD_IEConnections = this.dt_AD_IEConnections.filter(x=>x.recID != data?.recID);
-                    this.notifySvr.notifyCode("SYS008")
-                  }
-                  else this.notifySvr.notifyCode("SYS022")
-                })
-              }
+                  if (item) {
+                    this.dt_AD_IEConnections = this.dt_AD_IEConnections.filter(
+                      (x) => x.recID != data?.recID
+                    );
+                    this.notifySvr.notifyCode('SYS008');
+                  } else this.notifySvr.notifyCode('SYS022');
+                });
             }
+          }
         });
         break;
       }

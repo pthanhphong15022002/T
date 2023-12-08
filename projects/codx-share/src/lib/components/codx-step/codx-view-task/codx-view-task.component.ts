@@ -474,29 +474,38 @@ export class CodxViewTaskComponent implements OnInit {
           case 'DP30': //Khôi phục
             res.disabled = true;
             break;
+          case 'DP32': // gởi duyệt
+            res.disabled =
+              !this.dataView?.approveRule ||
+              (this.dataView?.approveRule && ['3', '5'].includes(this.dataView?.approveStatus));
+            break;
+          case 'DP33': // hủy duyệt
+            res.disabled = !(this.dataView?.approveRule && this.dataView?.approveStatus == '3');
+            break;
         }
       });
     }
   }
 
-  setChangeMFSStart(res, isGroup, isTask){
-    if (this.type != 'P' && this.type != 'G') {
-      if(this.isActivitie){
-        res.disabled = !(this.dataView?.status == '1' && (this.user.userID == this.dataView?.owner || this.isRoleAll));
-      }else{
-        if (this.dataView?.dependRule != '0' || this.dataView?.status != '1') {
-          res.disabled = true;
-        } else if (
-          !(
-            (this.isRoleAll || isGroup || isTask) &&
-            (this.isOnlyView || this.isTaskFirst)
-          )
-        ) {
-          res.isblur = true;
-        }
-      }
-    }else{
+  setChangeMFSStart(res, isGroup, isTask) {
+    if (this.type === 'P' || this.type === 'G') {
       res.disabled = true;
+      return;
+    }
+    if (this.type === 'Q' || this.type === 'CO') {
+      res.disabled = true;
+      return;
+    }
+    if (this.isActivitie) {
+      res.disabled = !(this.dataView?.status === '1' && (this.user.userID === this.dataView?.owner || this.isRoleAll));
+      return;
+    }
+    if (this.dataView?.dependRule !== '0' || this.dataView?.status !== '1') {
+      res.disabled = true;
+      return;
+    }
+    if (!(this.isRoleAll || isGroup || isTask) || !(this.isOnlyView || this.isTaskFirst)) {
+      res.isblur = true;
     }
   }
 

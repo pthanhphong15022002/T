@@ -101,7 +101,6 @@ export class ViewTabUpdateComponent implements OnInit {
     private auth: AuthStore,
 
   ) {
-    this.getGridViewSetup();
     this.language = this.auth?.get()?.language?.toLowerCase();
   }
 
@@ -138,6 +137,7 @@ export class ViewTabUpdateComponent implements OnInit {
   }
 
   ngAfterViewInit(): void {
+    this.getGridViewSetup();
 
   }
 
@@ -154,11 +154,6 @@ export class ViewTabUpdateComponent implements OnInit {
     this.fetch().subscribe(async (item) => {
       this.loaded = true;
       this.lstUpdate = item;
-      if(this.lstUpdate?.length > 0){
-        this.lstUpdate.forEach((res) => {
-          res.scheduleTime = this.setTimeEdit(res.startDate, res.scheduleTime);
-        })
-      }
       if (this.grid) {
         this.grid.dataSource = this.lstUpdate;
       }
@@ -244,6 +239,7 @@ export class ViewTabUpdateComponent implements OnInit {
             .map((x: any) => x.fieldName);
           this.getColumsGrid(res);
         }
+        this.detectorRef.detectChanges();
       });
   }
 

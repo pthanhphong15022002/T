@@ -134,7 +134,7 @@
                                             [objectID]="item?.recID" 
                                             [objectType]="'WP_Messages'" 
                                             [formModel]="formModel"
-                                            [format]="'grid'"
+                                            [format]="item?.fileType == 'image'||item?.fileType == 'video'?'grid':''"
                                             (selectFile)="clickViewFile($event)">
                                         </codx-view-files>
                                         <ng-container *ngIf="idx == arrMessages?.length - 1 || item?.createdBy != arrMessages[idx+1]?.createdBy">
@@ -203,7 +203,23 @@
                                                     <span class="d-block text-start fw-light">{{item?.createdOn | date:'hh:mm'}}</span>
                                                 </ng-container>
                                             </div>
-                                        </ng-container>      
+                                        </ng-container>    
+                                        <!-- files -->
+                                        <ng-container *ngIf="item?.messageType == '2'">
+                                            <div class="max-w-250px">
+                                                <codx-view-files 
+                                                    [objectID]="item?.recID" 
+                                                    [objectType]="'WP_Messages'" 
+                                                    [formModel]="formModel"
+                                                    [format]="item?.fileType == 'image'||item?.fileType == 'video'?'grid':''"
+                                                    (selectFile)="clickViewFile($event)">
+                                                </codx-view-files>
+                                                <!-- time -->
+                                                <ng-container *ngIf="idx == arrMessages?.length - 1 || item?.createdBy != arrMessages[idx+1]?.createdBy">
+                                                    <div class="d-block text-start fw-light">{{item?.createdOn | date:'hh:mm'}}</div>
+                                                </ng-container>
+                                            </div>
+                                        </ng-container>  
                                     </ng-template>
                                     <ng-container *ngIf="item?.lstVote">
                                         <div class="emoji-message message-emoji position-absolute end-0" (click)="clickShowVote(item)">
@@ -224,22 +240,7 @@
                                         </div>
                                     </ng-container>
                                 </div>
-                                <!-- files -->
-                                <ng-container *ngIf="item?.messageType == '2'">
-                                    <div class="max-w-250px">
-                                        <codx-view-files 
-                                            [objectID]="item?.recID" 
-                                            [objectType]="'WP_Messages'" 
-                                            [formModel]="formModel"
-                                            [format]="'grid'"
-                                            (selectFile)="clickViewFile($event)">
-                                        </codx-view-files>
-                                        <!-- time -->
-                                        <ng-container *ngIf="idx == arrMessages?.length - 1 || item?.createdBy != arrMessages[idx+1]?.createdBy">
-                                            <div class="d-block text-start fw-light">{{item?.createdOn | date:'hh:mm'}}</div>
-                                        </ng-container>
-                                    </div>
-                                </ng-container>
+                                
                                 <!-- votes -->
                                 
                                 <ng-container *ngIf="item?.messageType != '5'">

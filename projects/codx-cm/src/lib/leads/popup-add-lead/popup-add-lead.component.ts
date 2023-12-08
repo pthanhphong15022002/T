@@ -544,6 +544,7 @@ export class PopupAddLeadComponent
     permission.update = true;
     permission.upload = true;
     permission.download = true;
+    permission.isActive = true;
     permission.allowUpdateStatus = roleType === 'O' || roleType === 'S' ? '1' : '0';
     permission.full = roleType === 'O';
     permission.assign = roleType === 'O';
@@ -580,7 +581,7 @@ export class PopupAddLeadComponent
     permission.delete = permissionDP.delete;
     permission.upload = permissionDP.upload;
     permission.download = permissionDP.download;
-    permission.isActive = permissionDP.isActive;
+    permission.isActive = true;
     permission.create = permissionDP.create;
     permission.memberType = '2'; // Data from DP
     permission.allowPermit = permissionDP.allowPermit;
