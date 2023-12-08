@@ -9,87 +9,103 @@
     bodyCss="h-100"
 ></codx-form>
 <ng-template popup adde #body>
+  <div class="d-flex flex-column w-100 h-100">
     <div class="d-flex justify-content-start h-100">
-        <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-import h-100" orientation="vertical">
-          <li ngbNavItem="1">
-            <a ngbNavLink><div class="d-flex align-items-center py-1"><i class="fa-solid fa-file-excel fs-1 me-2 " style="color:#347442"></i><codx-label [default]="'Excel'" class="fw-bold"></codx-label></div></a>
-            <ng-template ngbNavContent>
-                <div class="d-flex align-items-center justify-content-between">
-                    <codx-temp-full
-                        [title]="'Excel'"
-                        [subTitle]="'Import dữ liệu từ file Excel'"
-                        [titleCss]="''"
-                    >
-                    </codx-temp-full>
-                    <a class="d-flex align-items-center">
-                        <span class="icon-download"></span>
-                        <codx-label  default="Tải template mẫu"></codx-label>
-                    </a>
+      <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-import h-100" orientation="vertical">
+        <li ngbNavItem="1">
+          <a ngbNavLink><div class="d-flex align-items-center py-1"><i class="fa-solid fa-file-excel fs-1 me-2 " style="color:#347442"></i><codx-label [default]="'Excel'" class="fw-bold"></codx-label></div></a>
+          <ng-template ngbNavContent>
+              <div class="d-flex align-items-center justify-content-between">
+                  <codx-temp-full
+                      [title]="'Excel'"
+                      [subTitle]="'Import dữ liệu từ file Excel'"
+                      [titleCss]="''"
+                  >
+                  </codx-temp-full>
+                  <a class="d-flex align-items-center">
+                      <span class="icon-download"></span>
+                      <codx-label  default="Tải template mẫu"></codx-label>
+                  </a>
+              </div>
+              <div class="d-flex align-items-center justify-content-between py-1 pt-5">
+                <div class="hideAttachment w-100 me-2">
+                  <codx-attachment #attachment [objectType]="formModel?.entityName" hideImageUpload="0" showMessage="0" hideBtnSave="1" hideFolder="1" hideUploadBtn="1"
+                    hideDes="1" [functionID]="formModel?.funcID" (fileAdded)="fileAdded($event)" (fileCount)="getfileCount($event)" (filePrimitive)="getfilePrimitive($event)"
+                    [objectId]="null" [allowMultiFile]="0" [idBrowse]="'addImport'">
+                  </codx-attachment>
                 </div>
-                <div class="d-flex align-items-center justify-content-between py-1 pt-5">
-                  <div class="hideAttachment w-100 me-2">
-                    <codx-attachment #attachment [objectType]="formModel?.entityName" hideImageUpload="0" showMessage="0" hideBtnSave="1" hideFolder="1" hideUploadBtn="1"
-                      hideDes="1" [functionID]="formModel?.funcID" (fileAdded)="fileAdded($event)" (fileCount)="getfileCount($event)" (filePrimitive)="getfilePrimitive($event)"
-                      [objectId]="null" [allowMultiFile]="0" [idBrowse]="'addImport'">
-                    </codx-attachment>
-                  </div>
-                  <button type="button" class="btn btn-outline-primary" style="width: 100px;" (click)="openFormUploadFile()">
-                    <codx-label [formModel]="formModel" [fiedName]="'selectedFile'" [default]="'Chọn File'"></codx-label>
-                  </button>
-                </div>
-                <div class="py-2" [style.height]="hScroll">
-                  <ng-container *ngIf="dt_AD_IEConnections">
-                    <div class="d-flex align-items-center justify-content-between mb-3" *ngFor="let item of dt_AD_IEConnections , let i = index">
-                      <div class="d-flex align-items-center justify-content-start">
-                        <codx-input
-                          type="radio"
-                          name="dataImport"
-                          [Group]="importGroup"
-                          ControlName="dataImport"
-                          [crrValue]="item.recID"
-                          [ngClass]="{ 'is-invalid': submitted && f.dataImport.errors }"
-                          style="margin-top:-15px;width:30px"
-                        >
-                        </codx-input>
-                        <div class="d-flex flex-column">
-                          <span>{{item?.mappingName}}</span>
-                          <span class="text-gray-500">{{item?.description}}</span>
-                        </div>
-                      </div>
-                      <div>
-                        <button
-                          type="button"
-                          class="btn btn-outline-secondary"
-                          triggers="click"
-                          [autoClose]="true"
-                          [ngbTooltip]="tool"
-                          ngClass="border-0"
-                        >
-                          <span class="icon-more_vert icon-18"></span>
-                        </button>
-                        <ng-template #tool >
-                          <ng-container *ngFor="let x of moreFunction" >
-                            <div class="d-flex p-2 cursor-pointer" (click)="openForm(x?.id, item, 'excel',i)">
-                              <span class="icon-16 me-2" [ngClass]="x?.icon" [style.color]="x?.textColor"></span>
-                              <codx-label [formModel]="formModel" [fiedName]="x?.text"></codx-label>
-                            </div>
-                          </ng-container>
-                        </ng-template>
+                <button type="button" class="btn btn-outline-primary" style="width: 100px;" (click)="openFormUploadFile()">
+                  <codx-label [formModel]="formModel" [fiedName]="'selectedFile'" [default]="'Chọn File'"></codx-label>
+                </button>
+              </div>
+              <div class="py-2" [style.height]="hScroll">
+                <ng-container *ngIf="dt_AD_IEConnections">
+                  <div class="d-flex align-items-center justify-content-between mb-3" *ngFor="let item of dt_AD_IEConnections , let i = index">
+                    <div class="d-flex align-items-center justify-content-start">
+                      <codx-input
+                        type="radio"
+                        name="dataImport"
+                        [Group]="importGroup"
+                        ControlName="dataImport"
+                        [crrValue]="item.recID"
+                        [ngClass]="{ 'is-invalid': submitted && f.dataImport.errors }"
+                        style="margin-top:-15px;width:30px"
+                      >
+                      </codx-input>
+                      <div class="d-flex flex-column">
+                        <span>{{item?.mappingName}}</span>
+                        <span class="text-gray-500">{{item?.description}}</span>
                       </div>
                     </div>
-                  </ng-container>
-                </div>
-            </ng-template>
-          </li>
-          <li ngbNavItem="2">
-            <a ngbNavLink><div class="d-flex align-items-center py-2"><i class="fa-solid fa-file-csv fs-1 me-2" style="color:#FFAC33"></i><codx-label [default]="'CSV'" class="fw-bold"></codx-label></div></a>
-            <ng-template ngbNavContent>
-            
-            </ng-template>
-          </li>
-        </ul>
+                    <div>
+                      <button
+                        type="button"
+                        class="btn btn-outline-secondary"
+                        triggers="click"
+                        [autoClose]="true"
+                        [ngbTooltip]="tool"
+                        ngClass="border-0"
+                      >
+                        <span class="icon-more_vert icon-18"></span>
+                      </button>
+                      <ng-template #tool >
+                        <ng-container *ngFor="let x of moreFunction" >
+                          <div class="d-flex p-2 cursor-pointer" (click)="openForm(x?.id, item, 'excel',i)">
+                            <span class="icon-16 me-2" [ngClass]="x?.icon" [style.color]="x?.textColor"></span>
+                            <codx-label [formModel]="formModel" [fiedName]="x?.text"></codx-label>
+                          </div>
+                        </ng-container>
+                      </ng-template>
+                    </div>
+                  </div>
+                </ng-container>
+              </div>
+          </ng-template>
+        </li>
+        <li ngbNavItem="2">
+          <a ngbNavLink><div class="d-flex align-items-center py-2"><i class="fa-solid fa-file-csv fs-1 me-2" style="color:#FFAC33"></i><codx-label [default]="'CSV'" class="fw-bold"></codx-label></div></a>
+          <ng-template ngbNavContent>
+          
+          </ng-template>
+        </li>
+      </ul>
+      <div class="d-flex flex-column justify-content-between w-100 pe-4">
         <div [ngbNavOutlet]="nav" class="ms-4 w-100"></div>
+        <ejs-progressbar 
+          #linear 
+          id='linear' 
+          [type]="'Linear'"
+          [value]="valueProgress" 
+          [width]="'100%'" 
+          [height]="'60'"
+          [animation]='animation'
+          (load)="load($event)"
+          >
+        </ejs-progressbar>
       </div>
+    </div>
+  </div>
+    
 </ng-template>
 <ng-template #footer>
     <div class="d-flex justify-content-between">

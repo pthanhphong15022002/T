@@ -5508,20 +5508,20 @@
             </codx-gridview> -->
 
             <codx-gridview-v2
-            #eDiseasesGridView
-            [formModel]="eDiseasesFormModel"
-            [columnsGrid]="eDiseasesColumnsGrid"
-            [sorts]="[diseasesFromDateSortModel]"
-            [service]="'HR'"
-            [autoFitColumns]="false"
-            [assemblyName]="'Core'"
-            [className]="'DataBusiness'"
-            [hideMoreFunc]="true"
-            [method]="'LoadDataAsync'"
-            [predicates]="'EmployeeID=@0'"
-            [dataValues]="employeeID"
-            [emptyTemplate]="emptyDataTemplate"
-          ></codx-gridview-v2>
+              #eDiseasesGridView
+              [formModel]="eDiseasesFormModel"
+              [columnsGrid]="eDiseasesColumnsGrid"
+              [sorts]="[diseasesFromDateSortModel]"
+              [service]="'HR'"
+              [autoFitColumns]="false"
+              [assemblyName]="'Core'"
+              [className]="'DataBusiness'"
+              [hideMoreFunc]="true"
+              [method]="'LoadDataAsync'"
+              [predicates]="'EmployeeID=@0'"
+              [dataValues]="employeeID"
+              [emptyTemplate]="emptyDataTemplate"
+            ></codx-gridview-v2>
           </div>
           <!-- <div
                       class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"

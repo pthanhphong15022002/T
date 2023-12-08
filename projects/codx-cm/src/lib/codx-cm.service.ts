@@ -803,6 +803,9 @@ export class CodxCmService {
     );
   }
   // API for More in deal
+  getOneDataCM(data) {
+    return this.api.exec<any>('CM', 'DealsBusiness', 'GetOneDealAsync', data);
+  }
   getEmployeesByDomainID(data) {
     return this.api.execSv(
       'HR',

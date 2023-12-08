@@ -245,10 +245,10 @@ export class ContractsComponent extends UIComponent {
           //Gửi duyệt
           case 'CM0204_1':
             if (
-              data.status == '0' ||
-              (data.closed && data.status != '1') ||
-              (this.approveRule != '1' && !data.applyApprover) ||
-              (data.applyApprover && data?.approveRule != '1') ||
+              data?.status == '0' ||
+              (data?.closed && data?.status != '1') ||
+              (this.approveRule != '1' && !data?.applyApprover) ||
+              (data?.applyApprover && data?.approveRule != '1') ||
               data?.approveStatus >= '3'
             ) {
               res.disabled = true;
@@ -257,9 +257,9 @@ export class ContractsComponent extends UIComponent {
           //Hủy yêu cầu duyệt
           case 'CM0204_2':
             if (
-              (data.closed && data.status != '1') ||
-              data.status == '0' ||
-              data.approveStatus != '3'
+              (data?.closed && data?.status != '1') ||
+              data?.status == '0' ||
+              data?.approveStatus != '3'
             ) {
               res.disabled = true;
             }
@@ -388,7 +388,7 @@ export class ContractsComponent extends UIComponent {
         this.moveReason(data, false);
         break;
       case 'CM0204_14':
-        //thất bại
+        //phan cong nguoi phu trach
         this.popupOwnerRoles(data);
         break;
       //export core làm
@@ -1158,13 +1158,14 @@ export class ContractsComponent extends UIComponent {
   }
 
   popupOwnerRoles(data) {
+    let owner = data?.owner;
     var formMD = new FormModel();
     let dialogModel = new DialogModel();
-    formMD.funcID = 'CM0205';
-    formMD.entityName = 'CM_Deals';
-    formMD.formName = 'CMDeals';
-    formMD.gridViewName = 'grvCMDeals';
-    dialogModel.zIndex = 999;
+    formMD.funcID = this.view?.formModel?.funcID;
+    formMD.entityName = this.view?.formModel?.entityName;
+    formMD.formName = this.view?.formModel?.formName;
+    formMD.gridViewName = this.view?.formModel?.gridViewName;
+    dialogModel.zIndex = 1011;
     dialogModel.FormModel = formMD;
     var obj = {
       recID: data?.recID,
@@ -1174,11 +1175,11 @@ export class ContractsComponent extends UIComponent {
       data: data,
       gridViewSetup: null,
       formModel: this.view.formModel,
-      applyFor: '1',
+      applyFor: '4',
       titleAction: this.actionName,
       owner: data.owner,
-      startControl: data.steps.startControl,
-      applyProcess: true,
+      // startControl: data.steps.startControl,
+      applyProcess: data?.applyProcess,
       buid: data.buid,
     };
     var dialog = this.callfc.openForm(
@@ -1193,10 +1194,9 @@ export class ContractsComponent extends UIComponent {
     );
     dialog.closed.subscribe((e) => {
       if (e && e?.event != null) {
-        // this.detailViewDeal.promiseAllAsync();
-        // this.view.dataService.update(e?.event).subscribe();
-        // this.notificationsService.notifyCode('SYS007');
-        // this.detectorRef.detectChanges();
+        this.view.dataService.update(e?.event, true).subscribe();
+        this.notiService.notifyCode('SYS007');
+        this.detectorRef.markForCheck();
       }
     });
   }

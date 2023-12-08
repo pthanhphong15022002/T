@@ -86,7 +86,7 @@ method="LoadDataAsync" -->
 
       <codx-gridview-v2
       *ngIf="viewStatistic == true && gridDataSourceStatistic.length > 0 && gridStatisticColumns.length > 0"
-      #calendarGrid
+      #calendarGrid2
       [formModel]="view.formModel"
       [columnsGrid]="gridStatisticColumns"
       [autoFitColumns]="false"
@@ -150,7 +150,7 @@ method="LoadDataAsync" -->
 
   <ng-template #tempDayData let-data>
     <span>
-      {{data? data[data.column.field][0].kowCode : "" }}
+      {{data? data[data.column.field][0]?.kowCode : "" }}
     </span>
   </ng-template>
 
@@ -164,25 +164,27 @@ method="LoadDataAsync" -->
     <codx-label
     [formModel]="view.formModel"
     [name]="'lblbreadCumbs'"
-    [default]="formHeaderText + ' > '"
-    class="fw-bold fs-4 text-primary"
+    [default]="formHeaderText"
+    class="fw-bold fs-4"
   >
   </codx-label>
-  <codx-label
-  [formModel]="view.formModel"
-  [name]="'lblbreadCumbs2'"
-  [default]="'Chi tiết theo ngày '"
- (click)="switchModeView(1)"
-  class="ms-2 fw-bold fs-4 text-primary"
->
-</codx-label>
-<span class="ms-2 fw-bold fs-4 text-primary"> | </span>
-<codx-label
-[formModel]="view.formModel"
-[name]="'lblbreadCumbs3'"
-[default]="'Bảng công tổng hợp'"
-(click)="switchModeView(2)"
-class="ms-2 fw-bold fs-4 text-primary"
->
-</codx-label>
+  <span *ngIf="timeKeepingMode == '2'">
+    <codx-label
+    [formModel]="view.formModel"
+    [name]="'lblbreadCumbs2'"
+    [default]="' > Chi tiết theo ngày '"
+   (click)="switchModeView(1)"
+    class="ms-2 fw-bold fs-4 text-primary"
+  >
+  </codx-label>
+    <span class="ms-2 fw-bold fs-4 text-primary"> | </span>
+    <codx-label
+    [formModel]="view.formModel"
+    [name]="'lblbreadCumbs3'"
+    [default]="'Bảng công tổng hợp'"
+    (click)="switchModeView(2)"
+    class="ms-2 fw-bold fs-4 text-primary"
+    >
+    </codx-label>
+  </span>
   </ng-template>

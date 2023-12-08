@@ -654,6 +654,9 @@ export class InstancesComponent
     this.detailViewInstance;
     let dialogCustomField = this.checkPopupInCM(applyFor, obj, option);
     dialogCustomField.closed.subscribe((e) => {
+      if (!e?.event) {
+        this.view.dataService.clear();
+      }
       if (e && e.event != null) {
         this.dataSelected = JSON.parse(JSON.stringify(e.event));
         this.view?.dataService.update(this.dataSelected);
@@ -1258,6 +1261,7 @@ export class InstancesComponent
         startControl: startControl,
         applyProcess: true,
         buid: data.buid,
+        isCallInstance: this.process?.applyFor != '0',
       };
       var dialog = this.callfc.openForm(
         PopupAssginDealComponent,
@@ -2781,9 +2785,11 @@ export class InstancesComponent
     this.detailViewInstance;
     let dialogCustomField = this.checkPopupInCM(applyFor, obj, option);
     dialogCustomField.closed.subscribe((e) => {
-      if (e && e.event != null) {
-        this.detectorRef.detectChanges();
+      if (!e?.event) {
+        this.view.dataService.clear();
       }
+      if (this.kanban && !e?.event) this.kanban.refresh();
+      this.detectorRef.detectChanges();
     });
   }
   autoStartInstance() {

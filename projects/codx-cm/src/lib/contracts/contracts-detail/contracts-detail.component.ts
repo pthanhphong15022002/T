@@ -7,9 +7,9 @@ import {
   ChangeDetectorRef,
 } from '@angular/core';
 import { CodxCmService } from '../../codx-cm.service';
-import { CacheService, DialogData, DialogRef, NotificationsService} from 'codx-core';
 import { ContractsService } from '../service-contracts.service';
 import { CM_Contracts, CM_Customers } from '../../models/cm_model';
+import { CacheService, DialogData, DialogRef, NotificationsService} from 'codx-core';
 
 @Component({
   selector: 'contracts-detail',

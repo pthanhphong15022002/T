@@ -98,10 +98,9 @@ export class PopupMoveReasonComponent implements OnInit {
     this.isCallInstance = dt?.data?.isCallInstance;
     this.user = this.authStore.get();
     this.userId = this.user?.userID;
-
+    this.reasonStep = dt?.data?.objReason;
     if (this.applyFor == '0') {
       this.viewClick = this.viewKanban;
-      this.reasonStep = dt?.data?.objReason;
       this.listReason = this.reasonStep?.reasons;
       this.instances = JSON.parse(JSON.stringify(dt?.data?.instance));
   //    this.listCbxProccess = dt?.data?.listProccessCbx;
@@ -117,9 +116,9 @@ export class PopupMoveReasonComponent implements OnInit {
     this.recID = this.dataCM ? this.dataCM?.refID : dt?.data?.instance?.recID;
     this.applyFor != '0' && this.executeApiCalls();
     this.getValueListReason();
-   if( this.isMoveProcess) {
-    this.reasonStep?.newProcessID === this.guidEmpty &&  this.getValueListMoveProcess();
-    this.reasonStep?.newProcessID !== this.guidEmpty && this.getListProcesByMoveProcess();
+   if( this.isMoveProcess && this.reasonStep) {
+    (this.reasonStep?.newProcessID === this.guidEmpty || !this.reasonStep.newProcessID) &&  this.getValueListMoveProcess();
+    (this.reasonStep?.newProcessID !== this.guidEmpty && this.reasonStep.newProcessID ) && this.getListProcesByMoveProcess();
    }
    else {
       this.getListMoveReason();
