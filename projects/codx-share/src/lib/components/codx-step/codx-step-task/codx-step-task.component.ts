@@ -60,6 +60,7 @@ import { ExportData } from '../../../models/ApproveProcess.model';
 import { CodxViewApproveComponent } from '../codx-step-common/codx-view-approve/codx-view-approve.component';
 import { PopupCustomFieldComponent } from '../../codx-fields-detail-temp/popup-custom-field/popup-custom-field.component';
 import { Subject, firstValueFrom } from 'rxjs';
+import { ContractsDetailComponent } from 'projects/codx-cm/src/lib/contracts/contracts-detail/contracts-detail.component';
 @Component({
   selector: 'codx-step-task',
   templateUrl: './codx-step-task.component.html',
@@ -179,6 +180,9 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   };
   taskApprover;
   approverDialog;
+  titleLanguageAdd = '';
+  titleLanguageEdit = '';
+
   //#endregion
   constructor(
     private cache: CacheService,
@@ -486,6 +490,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
             }
             break;
           case 'SYS03': //sửa
+            this.titleLanguageEdit
             if (!(this.isRoleAll || isGroup || isTask)) {
               res.disabled = true;
             } else {
@@ -505,13 +510,11 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
             }
             break;
           case 'DP20': // tiến độ
-            res.isblur = this.isOnlyView
-              ? !(
-                  (this.isRoleAll || isGroup || isTask) &&
-                  task?.startDate &&
-                  task?.endDate
-                )
-              : !(this.isTaskFirst && this.isRoleAll);
+            if((task?.taskType == 'Q' || task?.taskType == 'CO') && !task?.objectLinked){
+              res.isblur = true;
+              break;
+            }
+            res.isblur = this.isOnlyView ? !((this.isRoleAll || isGroup || isTask) && task?.startDate && task?.endDate) : !(this.isTaskFirst && this.isRoleAll);
             break;
           case 'DP13': //giao việc
             if (task?.assigned == '1') {
@@ -1243,6 +1246,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
           (type) => type.value == task?.taskType
         );
         let dataOutput = await this.openPopupTask('edit', 'step', task);
+        this.titleAction = '';
         if (dataOutput?.task) {
           this.changeTaskEdit(dataOutput?.task, groupIdOld);
         }
@@ -1323,7 +1327,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
           (type) => type.value == task?.taskType
         );
         let taskOutput = await this.openPopupTask('copy', 'step', task);
-
+        this.titleAction = '';
         if (taskOutput?.task) {
           let data = taskOutput;
           this.currentStep?.tasks?.push(data.task);
@@ -1681,6 +1685,9 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         );
       }
     }
+    if((data?.taskType == 'Q' || data?.taskType == 'CO') && !data?.objectLinked && this.isTaskFirst && this.isRoleAll){
+      return false;
+    }
     return this.isTaskFirst && this.isRoleAll;
   }
 
@@ -1694,6 +1701,9 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       (id) => id == data?.taskGroupID
     );
     if (type != 'P' && type != 'G') {
+      if((data?.taskType == 'Q' || data?.taskType == 'CO') && !data?.objectLinked){
+        return;
+      }
       let checkTaskLink = this.stepService.checkTaskLink(
         data,
         this.currentStep
@@ -1784,7 +1794,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
 
   startTaskAuto(task) {
     const taskFinds = this.currentStep?.tasks?.filter((taskF) =>
-      taskF.parentID.includes(task?.refID)
+      taskF?.parentID?.includes(task?.refID)
     );
     if (taskFinds && taskFinds.length > 0) {
       taskFinds.forEach((element) => {
@@ -1902,17 +1912,13 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
 
   //#region view
   viewTask(data, type) {
-    if (data?.taskType == 'CO') {
-      this.cache.functionList('CM0204').subscribe((res) => {
-        if (res) {
-          this.url = res?.url;
-          this.codxService.navigate('', this.url, {
-            recID: data?.CallType,
-          });
-        }
-      });
-    } else {
       if (data && !this.isViewStep && !this.isMoveStage) {
+        if( data?.objectLinked && data?.taskType == 'CO'){
+          this.viewDetailContract(data);
+          return;
+        }else{
+          this.notiService.notify('Bắt đầu ngay để thiết lập hợp đồng', '3');
+        }
         let frmModel: FormModel = {
           entityName: 'DP_Instances_Steps_Tasks',
           formName: 'DPInstancesStepsTasks',
@@ -1980,6 +1986,34 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
           this.moreDefaut = { ...this.moreDefaut };
         });
       }
+  }
+
+  viewDetailContract(task) {
+    if( task?.objectLinked){
+      this.stepService.getOneContract(task?.objectLinked).subscribe(res => {
+        if(res){
+          let data = {
+            contract: res,
+          };
+          let option = new DialogModel();
+          option.IsFull = true;
+          option.zIndex = 1001;
+          this.callfc.openForm(
+            ContractsDetailComponent,
+            '',
+            null,
+            null,
+            '',
+            data,
+            '',
+            option
+          );
+        }else{
+          this.notiService.notify('Không tìm thấy hợp đồng', '3');
+        }
+      })
+    }else{
+      this.notiService.notify('Không tìm thấy hợp đồng', '3');
     }
   }
   //#endregion
@@ -2808,6 +2842,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       }
     });
   }
+
   openFormApprover(task) {
     this.taskApproval = task;
     this.approverDialog = this.callfc.openForm(
@@ -2819,6 +2854,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       { categoryID: task?.recID, type: '2', stepsTasks: task }
     );
   }
+
   openFormField(task) {
     let listField = this.getFields(this.currentStep?.fields, task?.fieldID);
     let obj = {
@@ -2885,7 +2921,9 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
             true
           );
         }
-        this.changeProgress.emit(true);
+        if (this.isTaskFirst && !this.isStart && this.isRoleAll) {
+          this.changeProgress.emit(true);
+        }
         this.changeDetectorRef.markForCheck();
       }
     });

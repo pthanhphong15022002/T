@@ -118,7 +118,6 @@ export const routes: Routes = [
       {
         path: 'tasks/:funcID',
         component: TasksComponent,
-        data: { noReuse: true },
       },
 
       {
@@ -145,7 +144,7 @@ export const routes: Routes = [
         path: '**',
         redirectTo: 'error/404',
       },
-      //----phát hành quy trình DP----//
+      //----phát hành quy trình DP-CRM----//
       {
         path: 'deals/:funcID',
         component: DealsComponent,

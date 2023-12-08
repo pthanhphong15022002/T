@@ -21,12 +21,17 @@ import {
   DialogData,
   DialogRef,
   NotificationsService,
+  RealHub,
+  RealHubService,
+  Util,
 } from 'codx-core';
 import { Observable, finalize, map } from 'rxjs';
 import { CodxImportAddTemplateComponent } from './codx-import-add-template/codx-import-add-template.component';
 import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
 import { AddTemplateComponent } from './add-template/add-template.component';
 import { AddImportDetailsComponent } from './add-template/add-import-details/add-import-details.component';
+import { AnimationModel } from '@syncfusion/ej2-progressbar';
+import { ILoadedEventArgs, ProgressBar, ProgressTheme } from '@syncfusion/ej2-angular-progressbar';
 
 @Component({
   selector: 'codx-import',
@@ -54,6 +59,9 @@ export class CodxImportComponent implements OnInit, OnChanges, AfterViewInit {
   importGroup: FormGroup;
   binaryString: any;
   fileName: any;
+  valueProgress = 0;
+  valueProgressp = 0;
+  session:any;
   moreFunction = [
     {
       id: 'edit',
@@ -69,11 +77,15 @@ export class CodxImportComponent implements OnInit, OnChanges, AfterViewInit {
     },
   ];
   @ViewChild('attachment') attachment: AttachmentComponent;
+  @ViewChild('linear') public linear: ProgressBar;
+  public animation: AnimationModel = { enable: true, duration: 2000, delay: 0 };
+  
   constructor(
     private callfunc: CallFuncService,
     private api: ApiHttpService,
     private formBuilder: FormBuilder,
     private notifySvr: NotificationsService,
+    private realHub: RealHubService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -100,6 +112,14 @@ export class CodxImportComponent implements OnInit, OnChanges, AfterViewInit {
   ngAfterViewInit(): void {
     this.getHeight();
   }
+
+  load(args: ILoadedEventArgs): void {
+    let selectedTheme: string = location.hash.split('/')[1];
+    selectedTheme = selectedTheme ? selectedTheme : 'Material';
+    args.progressBar.theme = <ProgressTheme>(selectedTheme.charAt(0).toUpperCase() +
+    selectedTheme.slice(1)).replace(/-dark/i, 'Dark').replace(/contrast/i, 'Contrast');
+}
+
   ngOnInit(): void {
     //Tạo formGroup
     this.importGroup = this.formBuilder.group({
@@ -111,6 +131,31 @@ export class CodxImportComponent implements OnInit, OnChanges, AfterViewInit {
     this.request.gridViewName = this.formModel.gridViewName;
     this.request.funcID = this.formModel?.funcID;
     this.getData();
+    let total = 0;
+    this.realHub.start(this.service).then((x: RealHub) => {
+      if (x) {
+        x.$subjectReal.asObservable().subscribe((z) => {
+       
+          if((z.event == 'StartImport' || z.event == 'ImportSingle') && z?.data?.session == this.session){
+            if(z.event == 'StartImport') total = z?.data?.total
+            else
+            {
+            console.log("total: ", total);
+            console.log("total 2 nè: ",  z?.data?.total);
+            console.log("Index nè: ", z?.data?.index);
+              if(z?.data?.index == total) 
+              {
+                this.notifySvr.notifyCode('SYS006');
+                (this.dialog as DialogRef).close();
+              }
+              this.linear.value = this.valueProgress = (z?.data?.index / total) * 100;
+              this.valueProgressp = this.linear.value + 5;
+            }
+          }
+         
+        });
+      }
+    });
   }
   get f(): { [key: string]: AbstractControl } {
     return this.importGroup.controls;
@@ -125,10 +170,10 @@ export class CodxImportComponent implements OnInit, OnChanges, AfterViewInit {
     this.fileCount = e.data.length;
   }
   onSave() {
-    debugger
     if (this.fileCount <= 0) return this.notifySvr.notifyCode('OD022');
     this.submitted = true;
     if (this.importGroup.invalid) return;
+    this.session = Util.uid();
     this.api
       .execSv(this.service, 'Core', 'CMBusiness', 'ImportAsync', [
         this.binaryString,
@@ -136,13 +181,13 @@ export class CodxImportComponent implements OnInit, OnChanges, AfterViewInit {
         this.importGroup.value.dataImport,
         this.formModel?.entityName,
         this.formModel?.funcID,
+        this.session,
         '',
-        ''
+        '',
       ])
       .subscribe((item) => {
         if (item && this.dialog) {
-          this.notifySvr.notifyCode('SYS006');
-          (this.dialog as DialogRef).close();
+          
         }
       });
   }
@@ -187,10 +232,10 @@ export class CodxImportComponent implements OnInit, OnChanges, AfterViewInit {
       null
     );
     popup.closed.subscribe((res) => {
-      if(res?.event) this.dt_AD_IEConnections.push(res?.event);
+      if (res?.event) this.dt_AD_IEConnections.push(res?.event);
     });
   }
-  openForm(val: any, data: any, type: any , index:any = null) {
+  openForm(val: any, data: any, type: any, index: any = null) {
     switch (val) {
       case 'edit': {
         this.callfunc.openForm(
@@ -207,24 +252,27 @@ export class CodxImportComponent implements OnInit, OnChanges, AfterViewInit {
       case 'delete': {
         var config = new AlertConfirmInputConfig();
         config.type = 'YesNo';
-        this.notifySvr
-          .alertCode("SYS003", config)
-          .subscribe((x) => {
-            if (x.event.status == 'Y') {
-              if(data?.recID)
-              {
-                this.api
-                .execSv<any>("SYS",'AD', 'IEConnectionsBusiness', 'DeleteItemAsync', data?.recID)
+        this.notifySvr.alertCode('SYS003', config).subscribe((x) => {
+          if (x.event.status == 'Y') {
+            if (data?.recID) {
+              this.api
+                .execSv<any>(
+                  'SYS',
+                  'AD',
+                  'IEConnectionsBusiness',
+                  'DeleteItemAsync',
+                  data?.recID
+                )
                 .subscribe((item) => {
-                  if(item)
-                  {
-                    this.dt_AD_IEConnections = this.dt_AD_IEConnections.filter(x=>x.recID != data?.recID);
-                    this.notifySvr.notifyCode("SYS008")
-                  }
-                  else this.notifySvr.notifyCode("SYS022")
-                })
-              }
+                  if (item) {
+                    this.dt_AD_IEConnections = this.dt_AD_IEConnections.filter(
+                      (x) => x.recID != data?.recID
+                    );
+                    this.notifySvr.notifyCode('SYS008');
+                  } else this.notifySvr.notifyCode('SYS022');
+                });
             }
+          }
         });
         break;
       }

@@ -1,164 +1,176 @@
-<div *ngIf="!isPdf ; else elsePdf" class="viewfile">
-  <div
-    class="viewfile-toolbar h-100 d-flex align-items-center justify-content-between"
-  >
-    <div class="d-flex align-items-center">
-      <span class="icon-24 text-white"></span>
-      <span class="ms-3 text-white font-size-h3"></span>
-    </div>
+<ng-container *ngIf="dataFile?.read">
+  <div *ngIf="!isPdf ; else elsePdf" class="viewfile">
     <div
-      *ngIf="data != null && !data.isDelete"
-      class="d-flex align-items-center"
+      class="viewfile-toolbar h-100 d-flex align-items-center justify-content-between"
     >
+      <div class="d-flex align-items-center">
+        <span class="icon-24 text-white"></span>
+        <span class="ms-3 text-white font-size-h3"></span>
+      </div>
       <div
-        *ngIf="data.download"
-        class="d-flex align-items-center cursor-pointer"
-        (click)="download()"
+        *ngIf="data != null && !data.isDelete"
+        class="d-flex align-items-center"
       >
-        <span class="fa-solid fa-lg fa-arrow-down mx-2"></span
-        ><codx-label
-          default="Tải về"
-          [fiedName]="'Download'"
-          class="me-2"
-        ></codx-label>
+        <div
+          *ngIf="data.download"
+          class="d-flex align-items-center cursor-pointer"
+          (click)="download()"
+        >
+          <span class="fa-solid fa-lg fa-arrow-down mx-2"></span
+          ><codx-label
+            default="Tải về"
+            [fiedName]="'Download'"
+            class="me-2"
+          ></codx-label>
+        </div>
+        <div class="d-flex align-items-center cursor-pointer" (click)="print()">
+          <span class="fa-solid fa-lg fa-print mx-2"></span
+          ><codx-label
+            default="In"
+            [fiedName]="'Print'"
+            class="me-2"
+          ></codx-label>
+          <div class="view-more ms-2"></div>
+        </div>
+        <div
+        *ngIf="isClose"
+        class="d-flex align-items-center cursor-pointer me-2"
+        (click)="close()"
+      >
+        <span class="icon-close"></span>
       </div>
-      <div class="d-flex align-items-center cursor-pointer" (click)="print()">
-        <span class="fa-solid fa-lg fa-print mx-2"></span
-        ><codx-label
-          default="In"
-          [fiedName]="'Print'"
-          class="me-2"
-        ></codx-label>
-        <div class="view-more ms-2"></div>
       </div>
+    </div>
+  </div>
+  <ng-template #elsePdf>
+    <div class="d-flex justify-content-between align-items-center" *ngIf="isClose">
+      <span class="fs-5 fw-bold p-2">{{dataFile?.fileName}}</span>
       <div
-      *ngIf="isClose"
-      class="d-flex align-items-center cursor-pointer me-2"
+      class="d-flex justify-content-between  cursor-pointer me-2"
       (click)="close()"
-    >
+      >
+    
       <span class="icon-close"></span>
     </div>
     </div>
-  </div>
-</div>
-<ng-template #elsePdf>
-  <div class="d-flex justify-content-between align-items-center" *ngIf="isClose">
-    <span class="fs-5 fw-bold p-2">{{dataFile?.fileName}}</span>
-    <div
-    class="d-flex justify-content-between  cursor-pointer me-2"
-    (click)="close()"
-    >
-   
-    <span class="icon-close"></span>
-  </div>
-  </div>
- 
-</ng-template>
+  
+  </ng-template>
 
-<div id="dm_viewFile">
-  <div (click)="activeDialog()" class="viewfile-content" id="viewfiledalog">
-    <ng-container *ngIf="urlSafe; else elseOffice">
-      <iframe [src]="urlSafe" class="h-100 w-100"></iframe>
-    </ng-container>
-    <ng-template #elseOffice>
-      <ng-container *ngIf="!isVideo && !isImg && !isAudio && !isPdf">
-        <ng-container [ngSwitch]="data?.extension">
-          <ng-container *ngSwitchCase="'.doc'">
-            <ng-container *ngTemplateOutlet="formword"></ng-container
-          ></ng-container>
-          <ng-container *ngSwitchCase="'.docx'">
-            <ng-container *ngTemplateOutlet="formword"></ng-container
-          ></ng-container>
-          <ng-container *ngSwitchCase="'.txt'">
-            <ng-container *ngTemplateOutlet="formtxt"></ng-container
-          ></ng-container>
-          <ng-container *ngSwitchCase="'.xlsx'">
-            <ng-container *ngTemplateOutlet="forexcel"></ng-container
-          ></ng-container>
-          <ng-container *ngSwitchCase="'.xls'">
-            <ng-container *ngTemplateOutlet="forexcel"></ng-container
-          ></ng-container>
-          <ng-container *ngSwitchDefault>
-            <ng-container *ngTemplateOutlet="default"></ng-container
-          ></ng-container>
-        </ng-container>
+  <div id="dm_viewFile">
+    <div (click)="activeDialog()" class="viewfile-content" id="viewfiledalog">
+      <ng-container *ngIf="urlSafe; else elseOffice">
+        <iframe [src]="urlSafe" class="h-100 w-100"></iframe>
       </ng-container>
-      <ng-template #formword
-        ><ejs-documenteditorcontainer
-          id="containerword"
-          [serviceUrl]="serviceUrl"
-          #documenteditor_default
-          [enableToolbar]="false"
-          [restrictEditing]="true"
-          [height]="'100%'"
-          style="display: block"
-        >
-        </ejs-documenteditorcontainer
-      ></ng-template>
-      <ng-template #forexcel
-        ><ejs-spreadsheet
-          #spreadsheet
-          [openUrl]="openUrl"
-          [allowOpen]="true"
-          [showRibbon]="false"
-          [allowEditing]="false"
-        >
-        </ejs-spreadsheet
-      ></ng-template>
-      <ng-template #formtxt
-        ><iframe
-          [src]="urlTxt"
-          width="100%"
-          height="100%"
-          frameborder="0"
-          id="frame"
-        ></iframe
-      ></ng-template>
-      <ng-template #default>
-        <img [src]="'../../../assets/themes/dm/default/img/'+dmSV.getAvatar(this.data?.extension)"/>
+      <ng-template #elseOffice>
+        <ng-container *ngIf="!isVideo && !isImg && !isAudio && !isPdf">
+          <ng-container [ngSwitch]="data?.extension">
+            <ng-container *ngSwitchCase="'.doc'">
+              <ng-container *ngTemplateOutlet="formword"></ng-container
+            ></ng-container>
+            <ng-container *ngSwitchCase="'.docx'">
+              <ng-container *ngTemplateOutlet="formword"></ng-container
+            ></ng-container>
+            <ng-container *ngSwitchCase="'.txt'">
+              <ng-container *ngTemplateOutlet="formtxt"></ng-container
+            ></ng-container>
+            <ng-container *ngSwitchCase="'.xlsx'">
+              <ng-container *ngTemplateOutlet="forexcel"></ng-container
+            ></ng-container>
+            <ng-container *ngSwitchCase="'.xls'">
+              <ng-container *ngTemplateOutlet="forexcel"></ng-container
+            ></ng-container>
+            <ng-container *ngSwitchDefault>
+              <ng-container *ngTemplateOutlet="default"></ng-container
+            ></ng-container>
+          </ng-container>
+        </ng-container>
+        <ng-template #formword
+          ><ejs-documenteditorcontainer
+            id="containerword"
+            [serviceUrl]="serviceUrl"
+            #documenteditor_default
+            [enableToolbar]="false"
+            [restrictEditing]="true"
+            [height]="'100%'"
+            style="display: block"
+          >
+          </ejs-documenteditorcontainer
+        ></ng-template>
+        <ng-template #forexcel
+          ><ejs-spreadsheet
+            #spreadsheet
+            [openUrl]="openUrl"
+            [allowOpen]="true"
+            [showRibbon]="false"
+            [allowEditing]="false"
+          >
+          </ejs-spreadsheet
+        ></ng-template>
+        <ng-template #formtxt
+          ><iframe
+            [src]="urlTxt"
+            width="100%"
+            height="100%"
+            frameborder="0"
+            id="frame"
+          ></iframe
+        ></ng-template>
+        <ng-template #default>
+          <img [src]="'../../../assets/themes/dm/default/img/'+dmSV.getAvatar(this.data?.extension)"/>
+        </ng-template>
       </ng-template>
-    </ng-template>
-    
-    <img *ngIf="isImg" [src]="linkFile" class="w-100 h-100" />
-    <video
-      *ngIf="isVideo"
-      preload="auto"
-      controls
-      class="viewfileiframe"
-      autoplay
-      width="100%"
-      height="100%"
-    >
-      <source src="{{ linkFile }}" type="video/mp4" />
-    </video>
-    <ng-container *ngIf="isAudio">
-      <div class="d-flex flex-column s-w-mt-200px">
-        <div class="div-view-mp3">
-        </div>
-        <audio controls class="w-500px">
-          <source src="{{linkFile}}" type="audio/mpeg">
-        </audio>
-      </div>
       
-    </ng-container>
-   
-    <ng-container *ngIf="isPdf"
-      ><lib-pdf
-        [isEditable]="false"
-        [isApprover]="false"
-        [inputUrl]="linkFile"
-        [hideActions]="true"
-        [hasPermission]="dataFile?.download"
-        [curFileName]="dataFile?.fileName"
-        class="h-100 w-100"
-      ></lib-pdf
-    ></ng-container>
+      <img *ngIf="isImg" [src]="linkFile" class="w-100 h-100" />
+      <video
+        *ngIf="isVideo"
+        preload="auto"
+        controls
+        class="viewfileiframe"
+        autoplay
+        width="100%"
+        height="100%"
+      >
+        <source src="{{ linkFile }}" type="video/mp4" />
+      </video>
+      <ng-container *ngIf="isAudio">
+        <div class="d-flex flex-column s-w-mt-200px">
+          <div class="div-view-mp3">
+          </div>
+          <audio controls class="w-500px">
+            <source src="{{linkFile}}" type="audio/mpeg">
+          </audio>
+        </div>
+        
+      </ng-container>
+    
+      <ng-container *ngIf="isPdf"
+        ><lib-pdf
+          [isEditable]="false"
+          [isApprover]="false"
+          [inputUrl]="linkFile"
+          [hideActions]="true"
+          [hasPermission]="dataFile?.download"
+          [curFileName]="dataFile?.fileName"
+          class="h-100 w-100"
+        ></lib-pdf
+      ></ng-container>
+    </div>
+    <div id="output"></div>
   </div>
-  <div id="output"></div>
+
+  <div
+    class="w-100 h-100 d-flex align-items-center text-center divLoading"
+    *ngIf="isShow"
+  >
+    <div class="loaderFileDialog"></div>
 </div>
-<div
-  class="w-100 h-100 d-flex align-items-center text-center divLoading"
-  *ngIf="isShow"
->
-  <div class="loaderFileDialog"></div>
-</div>
+</ng-container>
+<ng-container *ngIf="!dataFile?.read">
+  <div class="d-flex w-100 h-100 bg-white align-items-center justify-content-center">
+    <div class="d-flex flex-column align-items-center justify-content-center w-500px h-300px border-dashed">
+      {{ "DM069" | mssg | async }}
+    </div>
+  </div>
+</ng-container>
+
+

@@ -1,3 +1,4 @@
+import { filter } from 'rxjs';
 import {
   ChangeDetectorRef,
   Component,
@@ -36,6 +37,7 @@ import { CHAT } from '../models/chat-const.model';
   styleUrls: ['./chat-box.component.scss'],
 })
 export class CodxChatBoxComponent implements OnInit, AfterViewInit {
+  chatboxTitle="";
   @HostListener('click', ['$event'])
   onClick(event: any) {
     this.isChatBox(event.target);
@@ -78,7 +80,7 @@ export class CodxChatBoxComponent implements OnInit, AfterViewInit {
   FILE_REFERTYPE = {
     IMAGE: 'image',
     VIDEO: 'video',
-    APPLICATION: 'document',
+    APPLICATION: 'application',
   };
   mssgDeleted: string = '';
   sysMoreFunc: any = null;
@@ -133,7 +135,6 @@ export class CodxChatBoxComponent implements OnInit, AfterViewInit {
             break;
           }
           case CHAT.UI_FUNC.ReactedMessage:{
-            debugger
             let mssgReact = this.arrMessages?.filter(x=>x?.recID == res?.data?.mssgID);
             if(mssgReact?.length>0){
               let vote =
@@ -225,8 +226,15 @@ export class CodxChatBoxComponent implements OnInit, AfterViewInit {
         if (res) 
         {
           this.group = res;
+          
           if(res.members)
           {
+            if(this.group?.groupType == "1") {
+              let tempUser = res.members.filter(x=>x.userID != this.user?.userID);
+              if(tempUser?.length>0){
+                this.chatboxTitle = tempUser[0].userName;
+              }
+            }
             this.crrMembers = Array.from<any>(res.members).map((x) => x.userID).join(';');
           }
         }
@@ -435,8 +443,8 @@ export class CodxChatBoxComponent implements OnInit, AfterViewInit {
       let mssg = new MessageItem(this.groupID);
       mssg.message = this.message;
       mssg.messageType = "1";
-      mssg.userID = this.user.userID;
-      mssg.createdBy = this.user.userID;
+      mssg.userID = this.user?.userID;
+      mssg.createdBy = this.user?.userID;
       mssg.createdOn = new Date();
       if(this.mssgReply)
       {

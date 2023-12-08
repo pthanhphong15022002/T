@@ -82,6 +82,7 @@ export class HolidayComponent extends UIComponent {
     // LS_SysHolidayConfig & LS_SysHoliday ko có functionID -> ko có functionName
     this.speedDialItems.push({id:"LS_SysHoliday",text:"Ngày cụ thể theo năm"});
     this.speedDialItems.push({id:"LS_SysHolidayConfig",text:"Ngày lễ quy định hàng năm"});
+    // this.testGenTable();
   }
 
   ngAfterViewInit(): void {
@@ -107,12 +108,12 @@ export class HolidayComponent extends UIComponent {
       if(res)
       {
         this.dataSource = res;
-        this.eventSettings.dataSource = this.dataSource;
-        if(this.scheduleObj)
-        {
-          this.scheduleObj.eventSettings.dataSource  = this.dataSource;
-          this.scheduleObj.refreshEvents();
-        }
+        this.eventSettings = {...{ dataSource : this.dataSource, fields: this.fields}}
+        // if(this.scheduleObj)
+        // {
+        //   this.scheduleObj.eventSettings.dataSource  = this.dataSource;
+        //   this.scheduleObj.refreshEvents();
+        // }
       }
     });
   }
@@ -250,6 +251,8 @@ export class HolidayComponent extends UIComponent {
     .subscribe((res) => {
       if(res){
         res.sysHolidayCode = this.sysHolidayTypeSelected.sysHolidayCode;
+        res.isExtraHoliday = true;
+        res.dateID = new Date();
         let option = new SidebarModel();
         option.Width = '550px';
         option.FormModel = this.FMSysHoliday;
@@ -401,5 +404,16 @@ export class HolidayComponent extends UIComponent {
     {
       this.openPopupAddSysHolidayConfig();
     }
+  }
+
+
+  // test gen tabl db cho SP tính phép
+  testGenTable(){
+    // this.api.execSv("HR","LS","SysHolidayBusiness","TestGenTable")
+    // .subscribe();
+    // this.api.execSv("HR","ERM.Business.TS","ScanCodeBusiness","TestGenTable")
+    // .subscribe();
+    // this.api.execSv("HR","HR","HRBusiness","TestGenTable")
+    // .subscribe();
   }
 }

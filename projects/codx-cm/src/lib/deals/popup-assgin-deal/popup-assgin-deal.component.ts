@@ -80,6 +80,8 @@ export class PopupAssginDealComponent
   };
   instance:tmpInstances;
   listUser: any[] = [];
+  isCallInstance:boolean = false;
+  isCloseCM:boolean = true;
   readonly fieldCbxParticipants = { text: 'userName', value: 'userID' };
   readonly viewBUID: string = 'ViewBUID';
   readonly viewDefault: string = 'ViewDefault';
@@ -98,6 +100,7 @@ export class PopupAssginDealComponent
     this.user = this.authStore.get();
     this.title = dialogData?.data.titleAction;
     this.applyProcess = dialogData?.data.applyProcess;
+    this.isCallInstance = dialogData?.data?.isCallInstance;
     this.data = JSON.parse(JSON.stringify(dialogData?.data?.data));
     if (this.applyProcess) {
       this.refID = dialogData?.data?.refID;
@@ -106,6 +109,7 @@ export class PopupAssginDealComponent
     }
     this.recID = dialogData?.data?.recID;
     this.applyFor = dialogData?.data.applyFor;
+    this.isCallInstance && this.getDataCM();
     this.owner = JSON.parse(JSON.stringify(this.data?.owner));
     this.gridViewSetup = dialogData?.data.gridViewSetup;
     this.formModel = dialogData?.data.formModel;
@@ -129,6 +133,13 @@ export class PopupAssginDealComponent
   }
   cancel() {
     this.dialogRef.close();
+  }
+  async getDataCM(){
+    let datas = [this.recID, this.applyFor];
+    let dataCM = await firstValueFrom(
+      this.codxCmService.getOneDataCM(datas)
+    );
+    this.data = dataCM[0];
   }
   async promiseAll() {
     this.applyProcess && await this.getListPermission(this.processID, this.applyFor, this.stepID);
@@ -278,6 +289,7 @@ export class PopupAssginDealComponent
     permission.assign = roleType === 'O';
     permission.delete = roleType === 'O';
     permission.allowPermit = roleType === 'O';
+    permission.isActive = true;
     dataPermission = !dataPermission ? [] : dataPermission;
     dataPermission.push(permission);
   }
@@ -382,11 +394,16 @@ export class PopupAssginDealComponent
 
   async saveOwner() {
     this.isLockStep = true;
-    if(this.applyFor == '0') {
+    if(this.applyFor == '0' || this.isCallInstance) {
       let datas = [this.recID, this.owner];
       this.codxCmService.updateOwnerInstance(datas).subscribe((res) => {
         if (res) {
-          this.dialogRef.close(res);
+          let instance = res;
+          if(this.isCallInstance) {
+            this.isCloseCM = false;
+            this.updatePermssion(instance);
+          }
+          this.dialogRef.close(instance);
         }
       });
     }
@@ -398,29 +415,37 @@ export class PopupAssginDealComponent
         let instance = await firstValueFrom(
           this.codxCmService.editInstance([obj])
         );
-        this.data.owner = instance.owner;
-        this.data.status = instance.status;
-        this.data.permissions = this.data.permissions.filter(x=>x.memberType != '2');
-        this.addPermission(instance?.permissions,this.data);
+        this.updatePermssion(instance);
       }
       else {
         this.data.owner = this.owner;
       }
-
-      if (this.applyFor == '1') {
-        this.codxCmService.editDeal([this.data]).subscribe((res) => {
-          if (res) {
-            this.dialogRef.close(res);
-          }
-        });
-      }
-      else if (this.applyFor == '5') {
-        this.codxCmService.editLead([this.data]).subscribe((res) => {
-          if (res) {
-            this.dialogRef.close(res);
-          }
-        });
-      }
+    }
+  }
+  updatePermssion(instance) {
+    this.data.owner = instance?.owner;
+    this.data.status = instance?.status;
+    this.data.permissions = this.data.permissions.filter(x=>x.memberType != '2');
+    this.addPermission(instance?.permissions,this.data);
+    this.saveDataCM();
+  }
+  saveDataCM() {
+    if (this.applyFor == '1') {
+      this.codxCmService.editDeal([this.data]).subscribe((res) => {
+        if (res) {
+          this.isCloseCM && this.dialogRef.close(res);
+        }
+      });
+    }
+    else if (this.applyFor == '5') {
+      this.codxCmService.editLead([this.data]).subscribe((res) => {
+        if (res) {
+          this.isCloseCM &&this.dialogRef.close(res);
+        }
+      });
+    }
+    else if (this.applyFor == '4') {
+      this.isCloseCM && this.dialogRef.close(this.owner);
     }
   }
   addPermission(permissionDP,data) {
@@ -451,6 +476,7 @@ export class PopupAssginDealComponent
     permission.allowUpdateStatus = permissionDP.allowUpdateStatus;
     permission.createdOn = new Date();
     permission.createdBy = this.user.userID;
+    permission.isActive = true;
     return permission;
   }
   disableViewTab(owner: any, isViewTab: any) {

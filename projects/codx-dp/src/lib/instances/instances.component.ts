@@ -48,12 +48,9 @@ import { InstanceDetailComponent } from './instance-detail/instance-detail.compo
 import { PopupAddInstanceComponent } from './popup-add-instance/popup-add-instance.component';
 import { PopupMoveReasonComponent } from './popup-move-reason/popup-move-reason.component';
 import { PopupMoveStageComponent } from './popup-move-stage/popup-move-stage.component';
-import { LayoutInstancesComponent } from '../layout-instances/layout-instances.component';
 import { LayoutComponent } from '../_layout/layout.component';
 import { Observable, finalize, map, filter, firstValueFrom } from 'rxjs';
-import { PopupEditOwnerstepComponent } from './popup-edit-ownerstep/popup-edit-ownerstep.component';
 import { PopupSelectTempletComponent } from './popup-select-templet/popup-select-templet.component';
-import { X } from '@angular/cdk/keycodes';
 import { PopupAddDealComponent } from 'projects/codx-cm/src/lib/deals/popup-add-deal/popup-add-deal.component';
 import { PopupAddCasesComponent } from 'projects/codx-cm/src/lib/cases/popup-add-cases/popup-add-cases.component';
 import { GridModels } from './instance-dashboard/instance-dashboard.component';
@@ -253,17 +250,15 @@ export class InstancesComponent
     private changeDetectorRef: ChangeDetectorRef,
     private notificationsService: NotificationsService,
     private authStore: AuthStore,
-    private pageTitle: PageTitleService,
-    private layout: LayoutService,
     private auth: AuthService,
+    // private pageTitle: PageTitleService,
+    // private layout: LayoutService,
     // private layoutInstance: LayoutInstancesComponent,
-    private layoutDP: LayoutComponent,
+    // private layoutDP: LayoutComponent,
     @Optional() dialog: DialogRef,
     @Optional() dt: DialogData
   ) {
     super(inject);
-    // this.funcID = 'DPT04';
-    // this.dialog = dialog;
 
     this.user = this.authStore.get();
     this.router.params.subscribe((param) => {
@@ -275,16 +270,31 @@ export class InstancesComponent
       if (this.funcID != 'DPT0502') {
         this.processID = param['processID'];
         //data từ service ném qua
-        this.codxDpService.dataProcess.subscribe((res) => {
-          if (res) this.haveDataService = true;
-          else this.haveDataService = false;
-          if (res && res.read) {
-            this.loadData(res);
-          }
+        if (this.funcID == 'DPT04') {
+          this.codxDpService.dataProcess.subscribe((res) => {
+            if (res) {
+              this.haveDataService = true;
+              if (res.read) this.loadData(res);
+            } else this.haveDataService = false;
+          });
+        } else {
+          this.haveDataService = false;
+        }
+
+        this.cache.functionList(this.funcID).subscribe((f) => {
+          this.cache
+            .moreFunction(f.formName, f.gridViewName)
+            .subscribe((res) => {
+              if (res && res.length > 0) {
+                this.moreFuncInstance = res;
+                this.moreFuncStart = this.moreFuncInstance.filter(
+                  (x) => x.functionID == 'DP21'
+                )[0];
+              }
+            });
         });
       } else {
         // this.layoutDP.viewNameProcess(null);
-        // if (this.crrFunc && this.crrFunc != this.funcID) this.changeView(null);
       }
     });
 
@@ -305,18 +315,6 @@ export class InstancesComponent
         }
       });
 
-    if (this.funcID != 'DPT0502')
-      this.cache.functionList(this.funcID).subscribe((f) => {
-        // if (f) this.pageTitle.setSubTitle(f?.customName);
-        this.cache.moreFunction(f.formName, f.gridViewName).subscribe((res) => {
-          if (res && res.length > 0) {
-            this.moreFuncInstance = res;
-            this.moreFuncStart = this.moreFuncInstance.filter(
-              (x) => x.functionID == 'DP21'
-            )[0];
-          }
-        });
-      });
     let theme = this.auth.userValue.theme.split('|')[0];
     this.colorDefault = this.themeDatas[theme] || this.themeDatas.default;
   }
@@ -377,9 +375,6 @@ export class InstancesComponent
     this.view.dataService.methodDelete = 'DeletedInstanceAsync';
   }
 
-  // ngAfterViewChecked(){
-  //   this.setColorKanban();
-  // }
   onInit() {
     this.asideMode = this.codxService.asideMode;
 
@@ -388,7 +383,9 @@ export class InstancesComponent
         id: 'btnAdd',
       },
     ];
-    if (this.funcID == 'DPT04') {
+
+    //khac "DPT0502" - func Duyệt
+    if (this.funcID != 'DPT0502') {
       this.dataObj = {
         processID: this.processID,
         haveDataService: this.haveDataService ? '1' : '0',
@@ -657,6 +654,9 @@ export class InstancesComponent
     this.detailViewInstance;
     let dialogCustomField = this.checkPopupInCM(applyFor, obj, option);
     dialogCustomField.closed.subscribe((e) => {
+      if (!e?.event) {
+        this.view.dataService.clear();
+      }
       if (e && e.event != null) {
         this.dataSelected = JSON.parse(JSON.stringify(e.event));
         this.view?.dataService.update(this.dataSelected);
@@ -1152,7 +1152,7 @@ export class InstancesComponent
   //End
   checkMoreReason(data, isUseReason) {
     if (data.closed) return true;
-    if (data.isAdminAll) return false;
+    // if (data.isAdminAll) return false;
     if (data.status != '2' || isUseReason) return true;
     if (!data.permissionMoveInstances) return true;
     return false;
@@ -1261,6 +1261,7 @@ export class InstancesComponent
         startControl: startControl,
         applyProcess: true,
         buid: data.buid,
+        isCallInstance: this.process?.applyFor != '0',
       };
       var dialog = this.callfc.openForm(
         PopupAssginDealComponent,
@@ -1449,7 +1450,7 @@ export class InstancesComponent
         });
         this.crrFunc = this.funcID;
         if (this.funcID == 'DPT0502') {
-          this.layoutDP.viewNameProcess(null);
+          // this.layoutDP.viewNameProcess(null);
 
           if (viewModel) {
             this.view.viewActiveType = viewModel.type;
@@ -2151,7 +2152,7 @@ export class InstancesComponent
     this.loadEx();
     this.loadWord();
     this.addFieldsControl = ps?.addFieldsControl;
-    // this.layoutInstance.viewNameProcess(ps);
+
     //tăt
     //this.layoutDP.viewNameProcess(ps);
     this.stepsResource = this.process?.steps?.map((x) => {
@@ -2784,9 +2785,11 @@ export class InstancesComponent
     this.detailViewInstance;
     let dialogCustomField = this.checkPopupInCM(applyFor, obj, option);
     dialogCustomField.closed.subscribe((e) => {
-      if (e && e.event != null) {
-        this.detectorRef.detectChanges();
+      if (!e?.event) {
+        this.view.dataService.clear();
       }
+      if (this.kanban && !e?.event) this.kanban.refresh();
+      this.detectorRef.detectChanges();
     });
   }
   autoStartInstance() {
