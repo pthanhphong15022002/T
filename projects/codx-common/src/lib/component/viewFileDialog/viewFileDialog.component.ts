@@ -69,12 +69,13 @@ export class ViewFileDialogComponent implements OnInit, OnChanges {
   linkFile: any;
   isShow = false;
   isOffice = false;
-  isClose = false;
   isAudio = false;
   public urlSafe: any;
+  env = environment;
   @Input() id: string;
   @Input() ext: string;
   @Input() dataFile: any;
+  @Input() isClose = false;
   @Input('viewBase') viewBase: ViewsComponent;
   dialog: any;
   public service: string = environment.pdfUrl; //'https://ej2services.syncfusion.com/production/web-services/api/pdfviewer';
@@ -100,14 +101,7 @@ export class ViewFileDialogComponent implements OnInit, OnChanges {
       this.dataFile = data.data;
       this.isClose = true;
     }
-    // this.fileService.getFile(this.id).subscribe(item => {
-    //   if (item != null) {
-    //     this.data = item;
-    //   }
-    // });
     this.dialog = dialog;
-    //  var data: any = this.auth.user$;
-    // this.user = data.source.value;
   }
   @HostBinding('class') someField = 'h-100 bg-white';
 

@@ -4,8 +4,18 @@ import { Pipe, PipeTransform } from '@angular/core';
   name: 'checkRoleStep'
 })
 export class CheckRoleStepPipe implements PipeTransform {
+  constructor(
+  ) {}
 
-  transform(value: unknown, ...args: unknown[]): unknown {
+  transform(isAdmin,insStep,group,task,isUpdateStep,isUpdateGroup,isOnlyView): boolean {
+    // checkOwner() => () {}
+    if(task){
+
+    }else if(group){
+
+    }else if(insStep) {
+
+    }
     return null;
   }
 
