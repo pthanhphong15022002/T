@@ -36,6 +36,7 @@ import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { firstValueFrom } from 'rxjs';
 import { PopupPermissionsComponent } from '../popup-permissions/popup-permissions.component';
 import { PopupUpdateStatusComponent } from '../deals/popup-update-status/popup-update-status.component';
+import { ExportData } from 'projects/codx-share/src/lib/models/ApproveProcess.model';
 
 @Component({
   selector: 'lib-cases',
@@ -1172,8 +1173,16 @@ export class CasesComponent
           this.notificationsService.notifyCode('ES028');
           return;
         }
-        //ko phân biệt eSign
-        this.release(data, category);
+        this.codxCmService
+          .getDataSource(data.recID, 'CasesBusiness')
+          .then((dataSource) => {
+            let exportData: ExportData = {
+              funcID: this.view.formModel.funcID,
+              recID: data.recID,
+              data: dataSource,
+            };
+            this.release(data, category, exportData);
+          });
       });
   }
   release(data: any, category: any, exportData = null) {
@@ -1202,17 +1211,7 @@ export class CasesComponent
       this.dataSelected.status = res?.returnStatus;
       this.view.dataService.update(this.dataSelected).subscribe();
       if (this.kanban) this.kanban.updateCard(this.dataSelected);
-      this.notificationsService.notifyCode('ES007');
-      // this.codxCmService
-      //   .getOneObject(this.dataSelected.recID, 'CasesBusiness')
-      //   .subscribe((c) => {
-      //     if (c) {
-      //       this.dataSelected = c;
-      //       this.view.dataService.update(this.dataSelected).subscribe();
-      //       if (this.kanban) this.kanban.updateCard(this.dataSelected);
-      //     }
-      //     this.notificationsService.notifyCode('ES007');
-      //   });
+      // this.notificationsService.notifyCode('ES007'); - bên kia gọi rồi
     }
   }
 
@@ -1593,25 +1592,10 @@ export class CasesComponent
 
   //Export----------------------------------------------------//
   exportTemplet(e, data) {
-    this.api
-      .execSv<any>(
-        'CM',
-        'CM',
-        'CasesBusiness',
-        'GetDataSourceExportAsync',
-        data.recID
-      )
-      .subscribe((str) => {
-        if (str && str?.length > 0) {
-          let dataSource = '[' + str[0] + ']';
-          if (str[1]) {
-            let datas = str[1];
-            if (datas && datas.includes('[{')) datas = datas.substring(2);
-            let fix = str[0];
-            fix = fix.substring(1, fix.length - 1);
-            dataSource = '[{ ' + fix + ',' + datas;
-          }
-
+    this.codxCmService
+      .getDataSource(data.recID, 'CasesBusiness')
+      .then((dataSource) => {
+        if (dataSource) {
           let customData = {
             refID: data.recID,
             refType: this.view.entityName,

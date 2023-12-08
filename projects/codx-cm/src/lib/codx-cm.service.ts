@@ -803,6 +803,9 @@ export class CodxCmService {
     );
   }
   // API for More in deal
+  getOneDataCM(data) {
+    return this.api.exec<any>('CM', 'DealsBusiness', 'GetOneDealAsync', data);
+  }
   getEmployeesByDomainID(data) {
     return this.api.execSv(
       'HR',
@@ -1600,7 +1603,27 @@ export class CodxCmService {
       recID
     );
   }
+
+  //get dataSource
+  getDataSource(recID, className): Promise<string> {
+    return new Promise<string>((resolve, rejects) => {
+      this.api
+        .execSv<any>('CM', 'CM', className, 'GetDataSourceExportAsync', recID)
+        .subscribe((str) => {
+          let dataSource = '';
+          if (str && str?.length > 0) {
+            dataSource = '[' + str[0] + ']';
+            if (str[1]) {
+              let datas = str[1];
+              if (datas && datas.includes('[{')) datas = datas.substring(2);
+              let fix = str[0];
+              fix = fix.substring(1, fix.length - 1);
+              dataSource = '[{ ' + fix + ',' + datas;
+            }
+          }
+          resolve(dataSource);
+        });
+    });
+  }
   //end
-
-
 }

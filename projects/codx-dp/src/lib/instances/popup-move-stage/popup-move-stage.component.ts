@@ -144,7 +144,7 @@ export class PopupMoveStageComponent implements OnInit {
       this.instanceCM = this.datas?.deal;
       this.isLoad = true;
       this.isCallInstance = this.dataCM?.isCallInstance ?? false;
-      // this.isMoveBackStage = !['1', '2', '15'].includes(this.instanceCM?.status);
+    // this.isMoveBackStage = !['1', '2', '15'].includes(this.instanceCM?.status);
     }
     this.stepID = this.dataCM
       ? this.dataCM?.stepID
@@ -163,7 +163,6 @@ export class PopupMoveStageComponent implements OnInit {
       this.lstParticipants = dt?.data.lstParticipants;
     }
     this.stepIdOld = this.stepID;
-
     this.executeApiCalls();
   }
 
@@ -389,6 +388,10 @@ export class PopupMoveStageComponent implements OnInit {
 
   onSave() {
     if (this.isLockStep) return;
+    // if(!this.actionBack && this.isMoveBackStage) {
+    //   this.notiService.notifyCode('Quy trình chưa cho phép thiết lập trạng thái thành công tiếp quay trở lại giai đoạn đã đánh dấu');
+    //   return;
+    // }
     if(this.applyFor == '0' &&  this.instance.stepID == this.stepIdClick) {
       this.dialog.close();
       return;

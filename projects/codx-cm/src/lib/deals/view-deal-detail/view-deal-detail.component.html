@@ -57,7 +57,7 @@
         </div>
         <div class="d-flex justify-content-center">
           <span class="fw-bold fs-4">
-            {{ dataSelected.customerName }}
+            {{ dataSelected?.customerName }}
           </span>
         </div>
         <div class="d-flex justify-content-center">
@@ -88,7 +88,7 @@
               *ngIf="dataSelected?.currencyID"
               [ngClass]="dataSelected?.currencyID ? '' : 'fs-6'"
               class="text-gray-500"
-              [ngbTooltip]="gridViewSetup['CurrencyID']?.headerText"
+              [ngbTooltip]="gridViewSetup?.CurrencyID?.headerText"
               #currencyID
               [innerHTML]="
                 dataSelected?.currencyID
@@ -125,14 +125,14 @@
             <div
               *ngIf="dataSelected.status == '2'; else statusDefault"
               [ngStyle]="{
-                'background-color': dataSelected?.steps['backgroundColor']
+                'background-color': dataSelected?.steps?.backgroundColor
               }"
               class="badge badge-sm d-flex align-items-center me-0"
             >
               <span
-                [ngClass]="dataSelected?.steps['icon']"
+                [ngClass]="dataSelected?.steps?.icon"
                 [ngStyle]="{
-                  color: dataSelected?.steps['iconColor']
+                  color: dataSelected?.steps?.iconColor
                 }"
                 class="me-1"
               ></span>

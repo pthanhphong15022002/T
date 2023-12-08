@@ -18,6 +18,7 @@ import {
   ApiHttpService,
   CallFuncService,
   NotificationsService,
+  DialogModel,
 } from 'codx-core';
 import {
   DP_Activities,
@@ -37,6 +38,7 @@ import { CodxCmService } from '../../../codx-cm.service';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { ActivatedRoute } from '@angular/router';
 import { ExportData } from 'projects/codx-share/src/lib/models/ApproveProcess.model';
+import { ContractsDetailComponent } from '../../../contracts/contracts-detail/contracts-detail.component';
 @Component({
   selector: 'task',
   templateUrl: './task.component.html',
@@ -565,72 +567,105 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
 
   //#region view
   viewTask(data, type) {
-    if (data) {
-      let frmModel: FormModel = {
-        entityName: 'DP_Instances_Steps_Tasks',
-        formName: 'DPInstancesStepsTasks',
-        gridViewName: 'grvDPInstancesStepsTasks',
-      };
-      //a thao laasy refID
-      let listRefIDAssign = '';
-      switch (type) {
-        case 'G':
-          if (data.task?.length > 0) {
-            let arrRecIDTask = data.task.map((x) => x.recID);
-            listRefIDAssign = arrRecIDTask.join(';');
-          }
-          break;
-        case 'P':
-          if (data.taskGroup?.length > 0) {
-            if (data.taskGroup?.task?.length > 0) {
-              let arrRecIDTask = data.taskGroup.task.map((x) => x.recID);
-              if (listRefIDAssign && listRefIDAssign.trim() != '')
-                listRefIDAssign += ';' + arrRecIDTask.join(';');
-              else listRefIDAssign = arrRecIDTask.split(';');
+    if( data?.objectLinked && data?.taskType == 'CO'){
+      this.viewDetailContract(data);
+      return;
+    }else{
+      if (data) {
+        let frmModel: FormModel = {
+          entityName: 'DP_Instances_Steps_Tasks',
+          formName: 'DPInstancesStepsTasks',
+          gridViewName: 'grvDPInstancesStepsTasks',
+        };
+        //a thao laasy refID
+        let listRefIDAssign = '';
+        switch (type) {
+          case 'G':
+            if (data.task?.length > 0) {
+              let arrRecIDTask = data.task.map((x) => x.recID);
+              listRefIDAssign = arrRecIDTask.join(';');
             }
-            //thieu cong task ngooai mai hoir thuan de xets
-          }
-          break;
-        default:
-          listRefIDAssign = data.recID;
-          break;
+            break;
+          case 'P':
+            if (data.taskGroup?.length > 0) {
+              if (data.taskGroup?.task?.length > 0) {
+                let arrRecIDTask = data.taskGroup.task.map((x) => x.recID);
+                if (listRefIDAssign && listRefIDAssign.trim() != '')
+                  listRefIDAssign += ';' + arrRecIDTask.join(';');
+                else listRefIDAssign = arrRecIDTask.split(';');
+              }
+              //thieu cong task ngooai mai hoir thuan de xets
+            }
+            break;
+          default:
+            listRefIDAssign = data.recID;
+            break;
+        }
+  
+        let listData = {
+          type,
+          value: data,
+          step: null,
+          isRoleAll: true,
+          isUpdate: true,
+          isOnlyView: true,
+          isUpdateProgressGroup: false,
+          listRefIDAssign: listRefIDAssign,
+          instanceStep: null,
+          isActivitie: true,
+          sessionID: this.sessionID, // session giao việc
+          formModelAssign: this.formModelAssign, // formModel của giao việc
+          customerName: this.customerName,
+          dealName: this.dealName,
+          contractName: this.contractName,
+          leadName: this.leadName,
+        };
+        let option = new SidebarModel();
+        option.Width = '550px';
+        option.zIndex = 1011;
+        option.FormModel = frmModel;
+        let dialog = this.callFunc.openSide(
+          CodxViewTaskComponent,
+          listData,
+          option
+        );
+        dialog.closed.subscribe(async (dataOuput) => {
+          // if (dataOuput?.event?.dataProgress) {
+          //   this.handelProgress(data, dataOuput?.event?.dataProgress);
+          // }
+          // if(dataOuput?.event?.task || dataOuput?.event?.group){
+          //   await this.getStepById();
+          // }
+        });
       }
-
-      let listData = {
-        type,
-        value: data,
-        step: null,
-        isRoleAll: true,
-        isUpdate: true,
-        isOnlyView: true,
-        isUpdateProgressGroup: false,
-        listRefIDAssign: listRefIDAssign,
-        instanceStep: null,
-        isActivitie: true,
-        sessionID: this.sessionID, // session giao việc
-        formModelAssign: this.formModelAssign, // formModel của giao việc
-        customerName: this.customerName,
-        dealName: this.dealName,
-        contractName: this.contractName,
-        leadName: this.leadName,
-      };
-      let option = new SidebarModel();
-      option.Width = '550px';
-      option.zIndex = 1011;
-      option.FormModel = frmModel;
-      let dialog = this.callFunc.openSide(
-        CodxViewTaskComponent,
-        listData,
-        option
-      );
-      dialog.closed.subscribe(async (dataOuput) => {
-        // if (dataOuput?.event?.dataProgress) {
-        //   this.handelProgress(data, dataOuput?.event?.dataProgress);
-        // }
-        // if(dataOuput?.event?.task || dataOuput?.event?.group){
-        //   await this.getStepById();
-        // }
-      });
+    }
+  }
+  viewDetailContract(task) {
+    if( task?.objectLinked){
+      this.stepService.getOneContract(task?.objectLinked).subscribe(res => {
+        if(res){
+          let data = {
+            contract: res,
+          };
+          let option = new DialogModel();
+          option.IsFull = true;
+          option.zIndex = 1001;
+          this.callFunc.openForm(
+            ContractsDetailComponent,
+            '',
+            null,
+            null,
+            '',
+            data,
+            '',
+            option
+          );
+        }else{
+          this.notiService.notify('Không tìm thấy hợp đồng', '3');
+        }
+      })
+    }else{
+      this.notiService.notify('Không tìm thấy hợp đồng', '3');
     }
   }
   //#endregion
