@@ -71,7 +71,6 @@ import { PurchaseinvoicesAddComponent } from './vouchers/purchaseinvoices/purcha
 import { SalesinvoicesAddComponent } from './vouchers/salesinvoices/salesinvoices-add/salesinvoices-add.component';
 import { SalesinvoiceslinesAddComponent } from './vouchers/salesinvoices/salesinvoiceslines-add/salesinvoiceslines-add.component';
 import { CashtransferAddComponent as CashtransfersAddComponent } from './vouchers/cashtransfers/cashtransfers-add/cashtransfers-add.component';
-import { AdvancePayment } from './vouchers/cashpayments/cashpayments-add-advancepayment/advancepayment.component';
 import { IssueTransactionsComponent } from './vouchers/issue-transactions/issue-transactions.component';
 import { IssueTransactionsAddComponent } from './vouchers/issue-transactions/issue-transactions-add/issue-transactions-add.component';
 import { IsObjectEmptyPipe } from './pipes/is-object-empty.pipe';
@@ -115,6 +114,7 @@ import { TransfersTableComponent } from './share/ac-tableview/transfers-table/tr
 import { AllocationAddComponent } from './vouchers/purchaseinvoices/allocation-add/allocation-add.component';
 import { LayoutNoToolbarComponent } from './_layout-no-toolbar/layout-no-toolbar.component';
 import { AllocationTableComponent } from './share/ac-tableview/allocation-table/allocation-table.component';
+import { SuggestionAdd  } from './share/suggestion-add/suggestion-add.component';
 import { DealsComponent } from 'projects/codx-cm/src/lib/deals/deals.component';
 import { CasesComponent } from 'projects/codx-cm/src/lib/cases/cases.component';
 import { LeadsComponent } from 'projects/codx-cm/src/lib/leads/leads.component';
@@ -389,7 +389,7 @@ export const routes: Routes = [
     GroupShareComponent,
     RunPeriodicComponent,
     PopAddRunPeriodicComponent,
-    AdvancePayment,
+    SuggestionAdd ,
     ReplacePipe,
     UpdateTheLedgerComponent,
     PopAddUpdateTheLedgerComponent,

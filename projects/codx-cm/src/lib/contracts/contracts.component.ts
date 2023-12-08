@@ -1158,6 +1158,7 @@ export class ContractsComponent extends UIComponent {
   }
 
   popupOwnerRoles(data) {
+    let owner = data?.owner;
     var formMD = new FormModel();
     let dialogModel = new DialogModel();
     formMD.funcID = this.view?.formModel?.funcID;
@@ -1193,11 +1194,9 @@ export class ContractsComponent extends UIComponent {
     );
     dialog.closed.subscribe((e) => {
       if (e && e?.event != null) {
-        
-        // this.detailViewDeal.promiseAllAsync();
-        // this.view.dataService.update(e?.event).subscribe();
-        // this.notificationsService.notifyCode('SYS007');
-        // this.detectorRef.detectChanges();
+        this.view.dataService.update(e?.event, true).subscribe();
+        this.notiService.notifyCode('SYS007');
+        this.detectorRef.markForCheck();
       }
     });
   }

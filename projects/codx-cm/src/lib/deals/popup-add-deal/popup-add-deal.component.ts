@@ -457,6 +457,7 @@ export class PopupAddDealComponent
     permission.assign = roleType === 'O';
     permission.delete = roleType === 'O';
     permission.allowPermit = roleType === 'O';
+    permission.isActive = true;
     this.deal.permissions = this.deal?.permissions ? this.deal?.permissions: [];
     this.deal.permissions.push(permission);
   }
@@ -734,13 +735,13 @@ export class PopupAddDealComponent
     permission.delete = permissionDP.delete;
     permission.upload = permissionDP.upload;
     permission.download = permissionDP.download;
-    permission.isActive = permissionDP.isActive;
     permission.create = permissionDP.create;
     permission.memberType = '2'; // Data from DP
     permission.allowPermit = permissionDP.allowPermit;
     permission.allowUpdateStatus = permissionDP.allowUpdateStatus;
     permission.createdOn = new Date();
     permission.createdBy = this.user.userID;
+    permission.isActive = true;
     return permission;
   }
   valueChangeBusinessLine($event) {

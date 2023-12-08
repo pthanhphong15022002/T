@@ -289,6 +289,7 @@ export class PopupAssginDealComponent
     permission.assign = roleType === 'O';
     permission.delete = roleType === 'O';
     permission.allowPermit = roleType === 'O';
+    permission.isActive = true;
     dataPermission = !dataPermission ? [] : dataPermission;
     dataPermission.push(permission);
   }
@@ -444,7 +445,11 @@ export class PopupAssginDealComponent
       });
     }
     else if (this.applyFor == '4') {
-      this.isCloseCM && this.dialogRef.close(this.owner);
+      this.codxCmService.editContracts([this.data]).subscribe((res) => {
+        if (res) {
+          this.isCloseCM && this.dialogRef.close(res);
+        }
+      });
     }
   }
   addPermission(permissionDP,data) {
@@ -475,6 +480,7 @@ export class PopupAssginDealComponent
     permission.allowUpdateStatus = permissionDP.allowUpdateStatus;
     permission.createdOn = new Date();
     permission.createdBy = this.user.userID;
+    permission.isActive = true;
     return permission;
   }
   disableViewTab(owner: any, isViewTab: any) {
