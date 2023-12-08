@@ -62,6 +62,7 @@ export class CodxImportComponent implements OnInit, OnChanges, AfterViewInit {
   valueProgress = 0;
   valueProgressp = 0;
   session:any;
+  isSave = false;
   moreFunction = [
     {
       id: 'edit',
@@ -170,10 +171,15 @@ export class CodxImportComponent implements OnInit, OnChanges, AfterViewInit {
     this.fileCount = e.data.length;
   }
   onSave() {
-    if (this.fileCount <= 0) return this.notifySvr.notifyCode('OD022');
+    if(this.isSave) return;
+    this.isSave = true;
+
+    if(this.fileCount <= 0) return this.notifySvr.notifyCode('OD022');
     this.submitted = true;
+    
     if (this.importGroup.invalid) return;
     this.session = Util.uid();
+    
     this.api
       .execSv(this.service, 'Core', 'CMBusiness', 'ImportAsync', [
         this.binaryString,
