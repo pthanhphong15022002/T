@@ -670,7 +670,7 @@ export class CodxTMService {
       'TM',
       'TM',
       'TasksBusiness',
-      'CountFavoriteMonitorTasksAsync',
+      'CountFavoriteModuleAsync',
       [funcID, favsID]
     );
   }
