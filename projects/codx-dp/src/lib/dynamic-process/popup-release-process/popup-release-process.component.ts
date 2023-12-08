@@ -101,7 +101,7 @@ export class PopupReleaseProcessComponent implements OnInit {
   }
 
   saveReleaseProcess() {
-    if (!this.data.releasedName.trim()) {
+    if (!this.data.releasedName || !this.data.releasedName.trim()) {
       this.notificationsService.notifyCode(
         'SYS009',
         0,
