@@ -385,7 +385,12 @@ export class ViewTabUpdateComponent implements OnInit {
             )
             .closed.subscribe((e) => {
               if (e && e?.event != null) {
-                var data = e?.event;
+                let data = e?.event;
+                if(data?.statusCode == 'C01' || data?.statusCode == 'C03'){
+                  if(!this.lstUpdate.some(x => x.statusCode == 'E01') && this.lstUpdate.some(x => x.statusCode == 'P01')){
+                    this.getListOrderUpdate();
+                  }
+                }
                 let idx = this.lstUpdate.findIndex(
                   (x) => x.recID == data.recID
                 );
