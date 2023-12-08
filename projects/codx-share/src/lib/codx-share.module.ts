@@ -196,6 +196,7 @@ import { CodxShareReportComponent } from './components/codx-share-report/codx-sh
 import { CodxShareDashboardComponent } from './components/codx-share-dashboard/codx-share-dashboard.component';
 import { CodxDashboardViewsComponent } from './components/codx-dashboard/dashboard-view/dashboard-view.component';
 import { CheckRoleStepPipe } from './components/codx-step/pipes/check-role-step.pipe';
+import { SetColorTaskPipe } from './components/codx-step/pipes/set-color-task.pipe';
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
   // AttachmentComponent,
@@ -353,6 +354,7 @@ const T_Component: Type<any>[] = [
   CodxIconStepComponent,
   CodxViewApproveComponent,
   CheckRoleStepPipe,
+  SetColorTaskPipe,
   //CO
   AddNoteComponent,
   PopupTitleComponent,
