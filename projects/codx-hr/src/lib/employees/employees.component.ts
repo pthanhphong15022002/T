@@ -66,20 +66,19 @@ export class EmployeesComponent extends UIComponent {
   @ViewChild('grid', { static: true }) grid: TemplateRef<any>;
   @ViewChild('panelLeftRef') panelLeftRef: TemplateRef<any>;
   @ViewChild('templateTree') templateTree: TemplateRef<any>;
-  hideMF: boolean =false;
-
+  hideMF: boolean = false;
+  formlabel: any = null;
   constructor(
     private injector: Injector,
     private notifiSV: NotificationsService,
     private df: ChangeDetectorRef,
-    private shareService: CodxShareService,
+    private shareService: CodxShareService
   ) {
     super(injector);
   }
 
   onInit(): void {
-    
-    if(this.codxService.asideMode == "2") this.hideMF = true;
+    if (this.codxService.asideMode == '2') this.hideMF = true;
     this.router.params.subscribe((param: any) => {
       if (param) {
         let funcID = param['funcID'];
@@ -92,27 +91,35 @@ export class EmployeesComponent extends UIComponent {
   }
 
   ngAfterViewInit(): void {
-    this.button = [{
-      id: 'btnAdd',
-    }];
+    this.button = [
+      {
+        id: 'btnAdd',
+      },
+    ];
     this.columnsGrid = [
       {
         field: 'employeeID',
+        controlName: 'EmployeeInfor',
         headerText: 'Nhân viên',
         width: 300,
         template: this.itemEmployee,
+        formName: 'Employees',
       },
       {
         field: 'email',
+        controlName: 'EmployeeContact',
         headerText: 'Liên hệ',
         width: 250,
         template: this.itemContact,
+        formName: 'Employees',
       },
       {
         field: 'birthday',
+        controlName: 'EmployeePersional',
         headerText: 'Thông tin cá nhân',
         width: 200,
         template: this.itemInfoPersonal,
+        formName: 'Employees',
       },
       // {
       //   field: '',
@@ -158,6 +165,7 @@ export class EmployeesComponent extends UIComponent {
     if (functionID) {
       this.cache.functionList(functionID).subscribe((func: any) => {
         if (func) {
+          this.cache.formLabel(func.formName).subscribe((res) => {});
           this.cache
             .moreFunction(func.formName, func.gridViewName)
             .subscribe((res) => {
@@ -207,10 +215,14 @@ export class EmployeesComponent extends UIComponent {
       });
     }
   }
-  
+
   clickMF(event: any, data: any) {
-    if(!data) data = this.view?.dataService?.dataSelected ;
-    if(!data) data = this.view?.dataService?.data?.length>0 ? this.view?.dataService?.data[0] : null;
+    if (!data) data = this.view?.dataService?.dataSelected;
+    if (!data)
+      data =
+        this.view?.dataService?.data?.length > 0
+          ? this.view?.dataService?.data[0]
+          : null;
     if (event && data) {
       this.view.dataService.dataSelected = data;
       switch (event.functionID) {
@@ -273,8 +285,7 @@ export class EmployeesComponent extends UIComponent {
       popup.closed.subscribe((result) => {
         if (result?.event) {
           this.view.dataService.data = [];
-          this.view.dataService.load().subscribe((temp) => {
-          });
+          this.view.dataService.load().subscribe((temp) => {});
           // let dataUpdate = result.event;
           // this.view.dataService.update(dataUpdate).subscribe();
         }
@@ -321,7 +332,6 @@ export class EmployeesComponent extends UIComponent {
   }
 
   async onSelectionChanged($event) {
-    
     await this.setEmployeePredicate($event.dataItem.orgUnitID);
     // this.employList.onChangeSearch();
   }
