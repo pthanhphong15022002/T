@@ -445,7 +445,11 @@ export class PopupAssginDealComponent
       });
     }
     else if (this.applyFor == '4') {
-      this.isCloseCM && this.dialogRef.close(this.owner);
+      this.codxCmService.editContracts([this.data]).subscribe((res) => {
+        if (res) {
+          this.isCloseCM && this.dialogRef.close(res);
+        }
+      });
     }
   }
   addPermission(permissionDP,data) {

@@ -115,7 +115,7 @@ export class AddImportDetailsComponent implements OnInit, AfterViewInit{
         //Thay ký tự rỗng thành _
         textStr = textStr.replaceAll(" ","_");
         var obj = {
-          text: textStr,
+          text: this.sourceField[i],
           value: textStr,
         };
         cbb.push(obj);
@@ -427,8 +427,11 @@ export class AddImportDetailsComponent implements OnInit, AfterViewInit{
   mapField()
   {
     this.dataCbb['SourceField'].forEach(elm => {
-      var index = this.dataImport2.findIndex(x=>x.destinationField == elm.value);
-      if(index >= 0) this.dataImport2[index].sourceField = elm.value
+      var index = this.dataImport2.findIndex(x=>x.destinationField == elm.value || x.destinationField == elm.text);
+      if(index >= 0) {
+        this.dataImport2[index].sourceField = elm.value;
+        this.dataImport2[index].sourceType = "0";
+      }
     });
     this.gridView2.refresh();
   }
@@ -437,6 +440,7 @@ export class AddImportDetailsComponent implements OnInit, AfterViewInit{
   {
     this.dataImport2.forEach(elm=>{
       elm.sourceField = "";
+      elm.sourceType = "";
     })
     this.gridView2.refresh();
   }
