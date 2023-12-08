@@ -30,6 +30,7 @@ import { CodxShareService } from 'projects/codx-share/src/lib/codx-share.service
 import { CM_Contracts, CM_Quotations } from '../models/cm_model';
 import { AddContractsComponent } from '../contracts/add-contracts/add-contracts.component';
 import { debug } from 'util';
+import { ExportData } from 'projects/codx-common/src/lib/models/ApproveProcess.model';
 
 @Component({
   selector: 'lib-quotations',
@@ -402,6 +403,9 @@ export class QuotationsComponent extends UIComponent implements OnInit {
       case 'CM0202_5':
         this.viewDetail(data);
         break;
+      case 'CM0202_5':
+        this.exportTemplet(e, data);
+        break;
       default: {
         this.codxShareService.defaultMoreFunc(
           e,
@@ -668,12 +672,20 @@ export class QuotationsComponent extends UIComponent implements OnInit {
           return;
         }
 
-        //ko phân biệt eSign
-        this.release(dt, res);
+        this.codxCmService
+          .getDataSource(dt.recID, 'QuotationsBusiness')
+          .then((dataSource) => {
+            let exportData: ExportData = {
+              funcID: this.view.formModel.funcID,
+              recID: dt.recID,
+              data: dataSource,
+            };
+            this.release(dt, res, exportData);
+          });
       });
   }
   //Gửi duyệt
-  release(data: any, category: any) {
+  release(data: any, category: any, exportData = null) {
     this.codxShareService.codxReleaseDynamic(
       this.view.service,
       data,
@@ -681,7 +693,13 @@ export class QuotationsComponent extends UIComponent implements OnInit {
       this.view.formModel.entityName,
       this.view.formModel.funcID,
       data?.title,
-      this.releaseCallback.bind(this)
+      this.releaseCallback.bind(this),
+      null,
+      null,
+      null,
+      null,
+      null,
+      exportData
     );
   }
   //call Back
@@ -747,4 +765,29 @@ export class QuotationsComponent extends UIComponent implements OnInit {
   }
   //end duyet
   //--------------------------------------------------------------------//
+  //Export----------------------------------------------------//
+  exportTemplet(e, data) {
+    this.codxCmService
+      .getDataSource(data.recID, 'QuotationsBusiness')
+      .then((dataSource) => {
+        if (dataSource) {
+          let customData = {
+            refID: data.recID,
+            refType: this.view.entityName,
+            dataSource: dataSource,
+          };
+
+          this.codxShareService.defaultMoreFunc(
+            e,
+            data,
+            this.afterSave,
+            this.view.formModel,
+            this.view.dataService,
+            this,
+            customData
+          );
+          this.detectorRef.detectChanges();
+        }
+      });
+  }
 }

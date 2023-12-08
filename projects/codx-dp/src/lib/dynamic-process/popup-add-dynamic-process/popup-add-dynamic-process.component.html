@@ -2971,7 +2971,6 @@
               [fields]="fieldCbxProccess"
               (valueChange)="cbxChange($event, viewStepReasonSuccess)"
               [value]="moveProccessIsNull(stepSuccess?.newProcessID,listCbxProccessSuccess)"
-              [enabled]="process.applyFor != '1'"
               [readonly]="stepSuccess.isUsed ? false : true"
             >
             </ejs-combobox>
@@ -3210,7 +3209,6 @@
               [placeholder]=" gridViewSetupStep['NewProcessID']?.placeholder"
               (valueChange)="cbxChange($event, viewStepReasonFail)"
               [readonly]="stepFail?.isUsed ? false : true"
-              [enabled]="process.applyFor != '1'"
               [value]="moveProccessIsNull(stepFail?.newProcessID,listCbxProccessFail)"
             ></ejs-combobox>
             <codx-label

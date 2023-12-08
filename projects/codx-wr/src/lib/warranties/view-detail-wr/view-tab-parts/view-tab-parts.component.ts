@@ -76,6 +76,24 @@ export class ViewTabPartsComponent extends UIComponent {
     private inject: Injector
   ) {
     super(inject);
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['transID']) {
+      if (
+        changes['transID'].currentValue != null &&
+        changes['transID']?.currentValue?.trim() != ''
+      ) {
+        if (changes['transID']?.currentValue == this.id) return;
+        this.id = changes['transID']?.currentValue;
+        this.getListOrderParts();
+      }
+    }
+  }
+
+  onInit(): void {}
+
+  ngAfterViewInit(): void {
     this.cache
       .gridViewSetup(this.formModel.formName, this.formModel.gridViewName)
       .subscribe((res) => {
@@ -90,39 +108,16 @@ export class ViewTabPartsComponent extends UIComponent {
             .map((x: any) => x.fieldName);
           this.getColumsGrid(res);
         }
+        this.detectorRef.detectChanges();
       });
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['transID']) {
-      if (
-        changes['transID'].currentValue != null &&
-        changes['transID']?.currentValue?.trim() != ''
-      ) {
-        if (changes['transID']?.currentValue == this.id) return;
-        this.id = changes['transID']?.currentValue;
-        this.getListOrderParts();
-      } else {
-        if (!this.loaded) this.loaded = true;
-      }
-    }
-  }
-
-  onInit(): void {
-  }
-
-  ngAfterViewInit(): void {
-    this.detectorRef.detectChanges();
-  }
-
   getListOrderParts() {
-    this.loaded = false;
     this.request.predicates = this.predicates;
     this.request.dataValues = this.transID;
     this.request.entityName = 'WR_WorkOrderParts';
     this.request.pageLoading = false;
     this.fetch().subscribe(async (item) => {
-      this.loaded = true;
       this.lstParts = item;
       if (this.grid) {
         this.grid.dataSource = this.lstParts;
@@ -200,7 +195,7 @@ export class ViewTabPartsComponent extends UIComponent {
       this.columnsGrid.push(column);
     });
     var colums = {
-      field: 'partInfo',
+      field: 'PartInfo',
       headerTemplate: this.headerPartInfo,
       template: this.tempPartInfo,
       width: 400,
@@ -280,11 +275,9 @@ export class ViewTabPartsComponent extends UIComponent {
       option
     );
     dialogAdd.closed.subscribe((e) => {
-      if(e && e?.event && e?.event?.update){
+      if (e && e?.event && e?.event?.update) {
         var data = e?.event?.update?.data;
-        let idx = this.lstParts.findIndex(
-          (x) => x.recID == data.recID
-        );
+        let idx = this.lstParts.findIndex((x) => x.recID == data.recID);
         if (idx != -1) {
           this.lstParts[idx] = data;
         }

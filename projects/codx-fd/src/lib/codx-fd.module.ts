@@ -86,6 +86,7 @@ import { DealsComponent } from 'projects/codx-cm/src/lib/deals/deals.component';
 import { ViewInstancesComponent } from 'projects/codx-dp/src/lib/view-instances/view-instances.component';
 import { LeadsComponent } from 'projects/codx-cm/src/lib/leads/leads.component';
 import { CasesComponent } from 'projects/codx-cm/src/lib/cases/cases.component';
+import { CodxDashboardViewsComponent } from 'projects/codx-share/src/lib/components/codx-dashboard/dashboard-view/dashboard-view.component';
 
 export const routes: Routes = [
   {
@@ -133,8 +134,12 @@ export const routes: Routes = [
         path: 'payments/:funcID',
         component: EvoucherStatisticalComponent,
       },
-      //----phát hành quy trình DP-CRM----//
       {
+        path: 'dashboard-view/:funcID',
+        component: CodxDashboardViewsComponent,
+      },
+       //----phát hành quy trình DP-CRM----//
+       {
         path: 'deals/:funcID',
         component: DealsComponent,
         data: { noReuse: true },
@@ -224,6 +229,7 @@ export const routes: Routes = [
         path: 'setting/evouchers/:funcID',
         component: EVouchersComponent,
       },
+
     ],
   },
 ];

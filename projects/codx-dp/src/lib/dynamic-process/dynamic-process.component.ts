@@ -154,7 +154,8 @@ export class DynamicProcessComponent
     private layoutDP: LayoutComponent,
     private layoutService: LayoutService,
     private dpService: CodxDpService,
-    private codxShareService: CodxShareService
+    private codxShareService: CodxShareService,
+    private changeDetectorRef: ChangeDetectorRef,
   ) {
     super(inject);
     this.heightWin = Util.getViewPort().height - 100;
@@ -952,23 +953,8 @@ export class DynamicProcessComponent
       : this.processRelease?.processName;
     // this.processRelease.module = 'CM';
     // this.processRelease.function = 'CM02';
-
-    debugger;
     let dialogModel = new DialogModel();
-    dialogModel.FormModel = this.view.formModel;
-
-    //cu
-    // this.popupRelease = this.callfc.openForm(
-    //   this.releaseProcessTemp,
-    //   '',
-    //   500,
-    //   600,
-    //   '',
-    //   '',
-    //   '',
-    //   dialogModel
-    // );
-
+    dialogModel.FormModel =JSON.parse(JSON.stringify(this.view.formModel));  
     let obj = {
       processRelease: this.processRelease,
       grvSetup: this.grvSetup,
@@ -1149,6 +1135,8 @@ export class DynamicProcessComponent
             this.processRename['modifiedBy'] = this.user?.userID;
             this.processName = '';
             this.popupEditName.close();
+            this.view.dataService.update(this.processRename, true).subscribe();
+            // this.changeDetectorRef.markForCheck();
             this.notificationsService.notifyCode('SYS007');
           } else {
             this.notificationsService.notifyCode('DP030');

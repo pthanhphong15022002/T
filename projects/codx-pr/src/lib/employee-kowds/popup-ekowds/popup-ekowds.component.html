@@ -137,8 +137,8 @@
     
     
     <ng-template #footer>
-        <div class="d-flex justify-content-end" *ngIf="actionType != 'view'">
-            <button class="btn btn-primary" (click)="onSaveForm()" [disabled]="!formModel.currentData.updateColumn">
+        <div class="d-flex justify-content-end">
+            <button class="btn btn-primary" (click)="onSaveForm()">
                 <i class="icon-save"></i>
             <codx-label default="Lưu" name="lblSave" [formModel]="form.formModel"></codx-label>
             </button>
