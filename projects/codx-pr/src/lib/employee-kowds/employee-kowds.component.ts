@@ -75,7 +75,7 @@ export class EmployeeKowdsComponent extends UIComponent{
       }
     });
   }
-  
+
   onInit(): void {
     this.initHeaderText();
     this.getTimeKeepingMode().subscribe((res) => {
@@ -264,91 +264,95 @@ export class EmployeeKowdsComponent extends UIComponent{
       }
       this.gridDataSource = [...this.gridDataSource]
       console.log('griddd dts', this.gridDataSource);
-      
-      if(this.calendarGrid){
-        this.calendarGrid.dataSource = this.gridDataSource;
-      }
-      
-      this.calendarGridColumns = []
-      this.calendarGridColumns.push({
-        headerTemplate: 'Nhân viên',
-        template: this.tempEmployee,
-        width: '350',
-      })
-      for(let i = 0; i < this.daysInMonth[this.filterMonth]; i++){
-        let date = new Date(this.filterYear, this.filterMonth, i+1);
-        let dayOfWeek = date.getDay();
+
+      // if(this.calendarGrid){
+      //   this.calendarGrid.dataSource = this.gridDataSource;
+      // }
+
+      if(!this.calendarGridColumns && !this.calendarGridColumns.length){
+        this.calendarGridColumns = []
         this.calendarGridColumns.push({
-          field: `day${i+1}`,
-          headerTemplate: 
-          ` ${this.daysOfWeek[dayOfWeek]} 
-          <div> ${i + 1} </div> `,
-          template: this.tempDayData,
-          width: '150',
+          headerTemplate: 'Nhân viên',
+          template: this.tempEmployee,
+          width: '350',
         })
+        for(let i = 0; i < this.daysInMonth[this.filterMonth]; i++){
+          let date = new Date(this.filterYear, this.filterMonth, i+1);
+          let dayOfWeek = date.getDay();
+          this.calendarGridColumns.push({
+            field: `day${i+1}`,
+            headerTemplate:
+            ` ${this.daysOfWeek[dayOfWeek]}
+            <div> ${i + 1} </div> `,
+            template: this.tempDayData,
+            width: '150',
+          })
+        }
+      this.calendarGridColumns = [...this.calendarGridColumns]
       }
-    this.calendarGridColumns = [...this.calendarGridColumns]
+
     if(this.calendarGrid){
       console.log('data moi', this.gridDataSource);
       this.calendarGrid.refresh(true);
     }
   }
     else if(this.viewStatistic == true){
-      this.gridStatisticColumns = [
-        {
-          headerTemplate: 'Nhân viên',
-          template: this.tempEmployee,
-          width: '350',
-        },
-        {
-          headerTemplate: 'Tổng công',
-          field: `tc`,
-          template: this.tempEmployeeTC,
-          width: '150',
-        },
-        {
-          headerTemplate: 'OT15 (h)',
-          field: `oT15`,
-          // template: this.tempEmployee,
-          width: '150',
-        },
-        {
-          headerTemplate: 'OT20 (h)',
-          field: `oT20`,
-          // template: this.tempEmployee,
-          width: '150',
-        },
-        {
-          headerTemplate: 'L',
-          field: `l`,
-          // template: this.tempEmployee,
-          width: '150',
-        },
-        {
-          headerTemplate: 'P',
-          field: `p`,
-          // template: this.tempEmployee,
-          width: '150',
-        },
-        {
-          headerTemplate: 'H',
-          field: `h`,
-          // template: this.tempEmployee,
-          width: '150',
-        },
-        {
-          headerTemplate: 'Ro',
-          field: `ro`,
-          // template: this.tempEmployee,
-          width: '150',
-        },
-        {
-          headerTemplate: 'CO',
-          field: `co`,
-          // template: this.tempEmployee,
-          width: '150',
-        },
-      ]
+      if( !this.gridStatisticColumns.length)
+        this.gridStatisticColumns = [
+          {
+            headerTemplate: 'Nhân viên',
+            template: this.tempEmployee,
+            width: '350',
+          },
+          {
+            headerTemplate: 'Tổng công',
+            field: `tc`,
+            template: this.tempEmployeeTC,
+            width: '150',
+          },
+          {
+            headerTemplate: 'OT15 (h)',
+            field: `oT15`,
+            // template: this.tempEmployee,
+            width: '150',
+          },
+          {
+            headerTemplate: 'OT20 (h)',
+            field: `oT20`,
+            // template: this.tempEmployee,
+            width: '150',
+          },
+          {
+            headerTemplate: 'L',
+            field: `l`,
+            // template: this.tempEmployee,
+            width: '150',
+          },
+          {
+            headerTemplate: 'P',
+            field: `p`,
+            // template: this.tempEmployee,
+            width: '150',
+          },
+          {
+            headerTemplate: 'H',
+            field: `h`,
+            // template: this.tempEmployee,
+            width: '150',
+          },
+          {
+            headerTemplate: 'Ro',
+            field: `ro`,
+            // template: this.tempEmployee,
+            width: '150',
+          },
+          {
+            headerTemplate: 'CO',
+            field: `co`,
+            // template: this.tempEmployee,
+            width: '150',
+          },
+        ]
 
       let lstEmpID = this.lstEmp.map((obj) => {
         return obj.employeeID;
@@ -358,7 +362,7 @@ export class EmployeeKowdsComponent extends UIComponent{
       this.getLstEmpKowStatistic(lstEmpID).subscribe((res) => {
         // console.log('lst emp co data', res[`E-0019`]);
         // console.log('lst emp ko data', this.lstEmp);
-        
+
         let lstResult = [];
         for(let i = 0; i < lstEmpID.length; i++){
           lstResult.push({
@@ -371,15 +375,16 @@ export class EmployeeKowdsComponent extends UIComponent{
         //   }
         // }
         this.gridDataSourceStatistic = [...lstResult];
+        // if(this.calendarGrid2){
+        //   this.calendarGrid2.dataSource = this.gridDataSourceStatistic;
+        // }
         if(this.calendarGrid2){
-          this.calendarGrid2.dataSource = this.gridDataSourceStatistic;
+          console.log('data moi', this.gridDataSourceStatistic);
+
+          this.calendarGrid2.refresh(true);
         }
       })
-      if(this.calendarGrid2){
-        console.log('data moi', this.gridDataSourceStatistic);
-        
-        this.calendarGrid2.refresh(true);
-      }
+
     }
   }
 
