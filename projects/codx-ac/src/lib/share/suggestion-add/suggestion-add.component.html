@@ -1,0 +1,128 @@
+<codx-form #form [formModel]="dialog.formModel" [dialog]="dialog" [openMore]="false" [body]="body" [footer]="footer"
+    [customToolbar]="subToolbar">
+</codx-form>
+<ng-template #subToolbar>
+    <div class="w-100">
+        <div class="d-flex align-items-center justify-content-between pt-3 ac-popupfull">
+            <div class="d-flex align-items-center me-2">
+                <div class="btn btn-icon btn-sm btn-primary btn-circle me-2">
+                    <i class="icon-i-check2-square icon-16"></i>
+                </div>
+                <div class="line-clamp line-clamp-1 me-3 fs-4 fw-bold text-uppercase mt-1">
+                    {{headerText}}
+                </div>
+            </div>
+            <div class="d-flex align-items-center me-3">
+                <div class="ms-2">
+                    <div class="btn btn-icon btn-light-danger btn-circle bg" (click)="close()">
+                        <i class="icon-close icon-18"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-template>
+<ng-template #body>
+    <ejs-tab width="100%">
+        <e-tabitems>
+            <e-tabitem>
+                <ng-template #headerText>
+                    <div class="d-flex align-items-top me-2 mt-2">
+                        <i class="icon-filter_list icon-18 me-2"></i>
+                        <codx-label class="fw-bold" style="font-size: 14px !important;" fiedName="lblGeneral"
+                            [formModel]="form.formModel" default="Điều kiện lọc"></codx-label>
+                    </div>
+                </ng-template>
+                <ng-template #content>
+                    <ng-container *ngTemplateOutlet="tabBasic"></ng-container>
+                </ng-template>
+            </e-tabitem>
+        </e-tabitems>
+    </ejs-tab>
+    <div class="w-100" style="height: calc(90vh - 238px) !important;">
+        <ejs-tab>
+            <e-tabitems>
+                <e-tabitem>
+                    <ng-template #headerText>
+                        <div class="d-flex align-items-top me-2 mt-2">
+                            <i class="icon-i-list-check icon-18 me-2"></i>
+                            <codx-label class="fw-bold" style="font-size: 14px !important;" fiedName="lblDetail"
+                                [formModel]="form.formModel" default="Chi tiết"></codx-label>
+                        </div>
+                    </ng-template>
+                    <ng-template #content>
+                        <ng-container *ngTemplateOutlet="tabDetail"></ng-container>
+                    </ng-template>
+                </e-tabitem>
+            </e-tabitems>
+        </ejs-tab>
+    </div>
+</ng-template>
+<ng-template #tabBasic>
+    <div class="mt-3">
+        <div class="row">
+            <div style="min-width: 250px;max-width: 300px;" class="col-4">
+                <div class="form-group">
+                    <codx-label fiedName="objectID" default="Đối tượng">
+                    </codx-label>
+                    <codx-input type="text" [disabled]="true" [crrValue]="objectName"></codx-input>
+                </div>
+            </div>
+            <div style="min-width: 160px;max-width: 160px;" class="col-2">
+                <div class="form-group">
+                    <codx-label fiedName="lblDate" default="Ngày đề nghị từ">
+                    </codx-label>
+                    <codx-input field="dateSuggestion" type="datetime" placeholder=" " format="d" 
+                        (valueChange)="valueChange($event)"></codx-input>
+                </div>
+            </div>
+            <div style="min-width: 160px;max-width: 160px;" class="col-2">
+                <div class="form-group">
+                    <codx-label [formModel]="form.formModel" default="Ngày đề nghị đến">
+                    </codx-label>
+                    <codx-input field="voucherDate" type="datetime" [disabled]="true" format="d" 
+                        [crrValue]="oData.voucherDate"></codx-input>
+                </div>
+            </div>
+            <div style="min-width: 150px;max-width: 150px;" class="col-2">
+                <div class="form-group">
+                    <codx-label [formModel]="form.formModel" default="Số chứng từ đến">
+                    </codx-label>
+                    <codx-input field="voucherNo" type="text" (valueChange)="valueChange($event)"></codx-input>
+                </div>
+            </div>
+            <div style="min-width: 150px;max-width: 150px;" class="col-2 d-flex align-items-center">
+                <div class="form-group">
+                    <button type="button" class="btn btn-md btn-light-primary rounded-15"
+                    style="border: 1px solid var(--primary-dark) !important;" (click)="loadData()">
+                    <codx-label class="fs-6 fw-normal" fiedName="lblSave" default="Lấy dữ liệu"></codx-label>
+                </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-template>
+<ng-template #tabDetail>
+    <div class="tabcash-content position-relative hidden-checkbox-mutilple">
+        <codx-gridview-v2 #grid [formName]="dialog.formModel.formName" [checkboxSelect]="true" idField="recID" [showEmptyRecord]="false"
+            (onSelected)="onSelected($event)" [gridViewName]="dialog.formModel.gridViewName" [selectionOptions]="selectionOptions"
+            [entityName]="dialog.formModel.entityName" [dataSource]="dataAdvance" hideMoreFunc="true" service="AC" [rowHeight]="40"
+            [autoFitColumns]="false" [editSettings]="noEditSetting"></codx-gridview-v2>
+    </div>
+</ng-template>
+<ng-template #footer>
+    <div class="d-flex justify-content-between">
+        <div *ngIf="grid" class="ms-2 me-2 d-flex justify-content-start">
+          <span class="fw-bold fs-5">{{'Đã chọn: '+grid.arrSelectedRows.length+'/'+grid.dataSource.length+' bản ghi'}}</span>
+        </div>
+        <div *ngIf="grid" class="ms-2 d-flex justify-content-end">
+          <button [disabled]="grid.arrSelectedRows.length > 0 ? false : true" type="button" class="btn btn-md btn-light-primary rounded-15" style="border: 1px solid var(--primary-dark) !important;" (click)="onApply()">
+            <div class="d-flex align-items-center">
+              <i class="icon-i-check2 icon-16 me-1"></i>
+              <codx-label class="fw-normal" fiedName="lblSave"
+                default="Chọn"></codx-label>
+            </div>
+          </button>
+        </div>
+      </div>
+</ng-template>

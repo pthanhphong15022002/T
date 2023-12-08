@@ -245,15 +245,6 @@ export class StepService {
     return false;
   }
 
-  // checOwnerTask(data, type, user) {
-  //   let check =
-  //     data?.roles?.some(
-  //       (element) =>
-  //         element?.objectID == user.userID && element.roleType == type
-  //     ) || false;
-  //   return check;
-  // }
-  //setDeFault
   getDefault(service, funcID, entityName, id = null) {
     return this.api.execSv<any>(
       service,
@@ -329,8 +320,7 @@ export class StepService {
     });
   }
 
-  async chooseTypeTask(isAddGroup = true) {
-    let typeDisableds = isAddGroup ? ['G'] : [];
+  async chooseTypeTask(typeDisableds : string[]){
     let popupTypeTask = this.callFunc.openForm(
       CodxTypeTaskComponent,
       '',
@@ -720,7 +710,7 @@ export class StepService {
   }
 
   async openPopupCodxTask(data, location) {
-    //default => data = {action,taskType,isSave,type: 'calendar'|'step'|'activitie'|'notStep'|'group'};
+    //default => data = {action,taskType,isSave,type: 'calendar'|'step'|'activitie'|'instance'|'group'};
     let frmModel: FormModel = {
       entityName: 'DP_Instances_Steps_Tasks',
       formName: 'DPInstancesStepsTasks',
