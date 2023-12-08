@@ -133,9 +133,8 @@ export class EmployeeKowdsComponent extends UIComponent{
         model: {
           panelRightRef: this.tmpPanelRight,
           panelLeftRef: this.leftPanel,
-          collapsed: false,
-          resizable: false,
-          widthLeft: 350
+          collapsed: true,
+          resizable: true,
         },
       },
     ];
@@ -268,8 +267,8 @@ export class EmployeeKowdsComponent extends UIComponent{
       // if(this.calendarGrid){
       //   this.calendarGrid.dataSource = this.gridDataSource;
       // }
-
-      if(!this.calendarGridColumns && !this.calendarGridColumns.length){
+      debugger
+      if(!this.calendarGridColumns.length){
         this.calendarGridColumns = []
         this.calendarGridColumns.push({
           headerTemplate: 'Nhân viên',
@@ -292,7 +291,6 @@ export class EmployeeKowdsComponent extends UIComponent{
       }
 
     if(this.calendarGrid){
-      console.log('data moi', this.gridDataSource);
       this.calendarGrid.refresh(true);
     }
   }
