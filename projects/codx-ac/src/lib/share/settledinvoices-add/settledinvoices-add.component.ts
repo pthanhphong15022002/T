@@ -248,7 +248,7 @@ export class SettledInvoicesAdd extends UIComponent implements OnInit {
     this.grid.startProcess();
     switch (event.field.toLowerCase()) {
       case 'settledamt':
-        this.acService.execApi('AC', 'SettledInvoicesBusiness', 'ValueChangedAsync', [
+        this.api.exec('AC', 'SettledInvoicesBusiness', 'ValueChangedAsync', [
           event.field,
           oLine,
           this.cashpayment.voucherDate,
@@ -271,16 +271,15 @@ export class SettledInvoicesAdd extends UIComponent implements OnInit {
    * *Hàm xử lí click chọn hóa đơn
    */
   apply() {
-    let data = this.grid.arrSelectedRows;
     this.api
-      .exec('AC', 'SettledInvoicesBusiness', 'SaveListSettledInvoicesAsync', [
+      .exec('AC', 'SettledInvoicesBusiness', 'SaveListAsync', [
         this.cashpayment,
-        data,
+        this.grid.arrSelectedRows,
       ])
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
         if (res) {
-          this.dialog.close(data);
+          this.dialog.close(true);
         }
       });
   }

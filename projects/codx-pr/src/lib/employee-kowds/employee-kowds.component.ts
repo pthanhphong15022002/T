@@ -23,6 +23,7 @@ export class EmployeeKowdsComponent extends UIComponent{
   viewActive: string = '';
   orgUnitID: string = '';
   formModelEmployee;
+  filterDowCode : any;
   filterOrgUnit: any;
   filterMonth: any;
   filterYear: any;
@@ -32,7 +33,7 @@ export class EmployeeKowdsComponent extends UIComponent{
   lstEmp: any = [];
   viewDetailData = true;
   viewStatistic = false;
-
+  timeKeepingMode : any;
   calendarGridColumns: any = [];
   gridStatisticColumns: any = [];
 
@@ -44,6 +45,7 @@ export class EmployeeKowdsComponent extends UIComponent{
   @ViewChild('tempDayData', { static: true }) tempDayData: TemplateRef<any>;
   @ViewChild('tempEmployeeTC', { static: true }) tempEmployeeTC: TemplateRef<any>;
   @ViewChild('calendarGrid') calendarGrid: CodxGridviewV2Component;
+  @ViewChild('calendarGrid2') calendarGrid2: CodxGridviewV2Component;
   @ViewChild('tempTree') tempTree: TemplateRef<any>;
   @ViewChild('tmpOrgChart') tmpOrgChart: TemplateRef<any>;
   @ViewChild('leftPanel') leftPanel: TemplateRef<any>;
@@ -73,12 +75,16 @@ export class EmployeeKowdsComponent extends UIComponent{
       }
     });
   }
-  
+
   onInit(): void {
     this.initHeaderText();
     this.getTimeKeepingMode().subscribe((res) => {
       console.log('get time keeping', res);
-      
+      this.timeKeepingMode = res.timeKeepingMode;
+      if(this.timeKeepingMode == '2'){
+        this.viewStatistic = true;
+        this.viewDetailData = false;
+      }
     })
 
     this.cache.functionList(this.funcID).subscribe((res) => {
@@ -127,9 +133,8 @@ export class EmployeeKowdsComponent extends UIComponent{
         model: {
           panelRightRef: this.tmpPanelRight,
           panelLeftRef: this.leftPanel,
-          collapsed: false,
-          resizable: false,
-          widthLeft: 350
+          collapsed: true,
+          resizable: true,
         },
       },
     ];
@@ -166,7 +171,8 @@ export class EmployeeKowdsComponent extends UIComponent{
         employeeId: employeeId,
         selectedDate : date,
         crrYear: this.filterYear,
-        crrMonth: this.filterMonth
+        crrMonth: this.filterMonth,
+        dowCode: this.filterDowCode
       },
       option
     )
@@ -256,82 +262,95 @@ export class EmployeeKowdsComponent extends UIComponent{
         }
       }
       this.gridDataSource = [...this.gridDataSource]
-      this.calendarGridColumns = []
-      this.calendarGridColumns.push({
-        headerTemplate: 'Nhân viên',
-        template: this.tempEmployee,
-        width: '350',
-      })
-      for(let i = 0; i < this.daysInMonth[this.filterMonth]; i++){
-        let date = new Date(this.filterYear, this.filterMonth, i+1);
-        let dayOfWeek = date.getDay();
+      console.log('griddd dts', this.gridDataSource);
+
+      // if(this.calendarGrid){
+      //   this.calendarGrid.dataSource = this.gridDataSource;
+      // }
+      debugger
+      if(!this.calendarGridColumns.length){
+        this.calendarGridColumns = []
         this.calendarGridColumns.push({
-          field: `day${i+1}`,
-          headerTemplate: 
-          ` ${this.daysOfWeek[dayOfWeek]} 
-          <div> ${i + 1} </div> `,
-          template: this.tempDayData,
-          width: '150',
-        })
-      }
-    this.calendarGridColumns = [...this.calendarGridColumns]
-    }
-    else if(this.viewStatistic == true){
-      this.gridStatisticColumns = [
-        {
           headerTemplate: 'Nhân viên',
           template: this.tempEmployee,
           width: '350',
-        },
-        {
-          headerTemplate: 'Tổng công',
-          field: `tc`,
-          template: this.tempEmployeeTC,
-          width: '150',
-        },
-        {
-          headerTemplate: 'OT15 (h)',
-          field: `oT15`,
-          // template: this.tempEmployee,
-          width: '150',
-        },
-        {
-          headerTemplate: 'OT20 (h)',
-          field: `oT20`,
-          // template: this.tempEmployee,
-          width: '150',
-        },
-        {
-          headerTemplate: 'L',
-          field: `l`,
-          // template: this.tempEmployee,
-          width: '150',
-        },
-        {
-          headerTemplate: 'P',
-          field: `p`,
-          // template: this.tempEmployee,
-          width: '150',
-        },
-        {
-          headerTemplate: 'H',
-          field: `h`,
-          // template: this.tempEmployee,
-          width: '150',
-        },
-        {
-          headerTemplate: 'Ro',
-          field: `ro`,
-          // template: this.tempEmployee,
-          width: '150',
-        },
-        {
-          headerTemplate: 'CO',
-          field: `co`,
-          // template: this.tempEmployee,
-          width: '150',
-        },
-      ]
+        })
+        for(let i = 0; i < this.daysInMonth[this.filterMonth]; i++){
+          let date = new Date(this.filterYear, this.filterMonth, i+1);
+          let dayOfWeek = date.getDay();
+          this.calendarGridColumns.push({
+            field: `day${i+1}`,
+            headerTemplate:
+            ` ${this.daysOfWeek[dayOfWeek]}
+            <div> ${i + 1} </div> `,
+            template: this.tempDayData,
+            width: '150',
+          })
+        }
+      this.calendarGridColumns = [...this.calendarGridColumns]
+      }
+
+    if(this.calendarGrid){
+      this.calendarGrid.refresh(true);
+    }
+  }
+    else if(this.viewStatistic == true){
+      if( !this.gridStatisticColumns.length)
+        this.gridStatisticColumns = [
+          {
+            headerTemplate: 'Nhân viên',
+            template: this.tempEmployee,
+            width: '350',
+          },
+          {
+            headerTemplate: 'Tổng công',
+            field: `tc`,
+            template: this.tempEmployeeTC,
+            width: '150',
+          },
+          {
+            headerTemplate: 'OT15 (h)',
+            field: `oT15`,
+            // template: this.tempEmployee,
+            width: '150',
+          },
+          {
+            headerTemplate: 'OT20 (h)',
+            field: `oT20`,
+            // template: this.tempEmployee,
+            width: '150',
+          },
+          {
+            headerTemplate: 'L',
+            field: `l`,
+            // template: this.tempEmployee,
+            width: '150',
+          },
+          {
+            headerTemplate: 'P',
+            field: `p`,
+            // template: this.tempEmployee,
+            width: '150',
+          },
+          {
+            headerTemplate: 'H',
+            field: `h`,
+            // template: this.tempEmployee,
+            width: '150',
+          },
+          {
+            headerTemplate: 'Ro',
+            field: `ro`,
+            // template: this.tempEmployee,
+            width: '150',
+          },
+          {
+            headerTemplate: 'CO',
+            field: `co`,
+            // template: this.tempEmployee,
+            width: '150',
+          },
+        ]
 
       let lstEmpID = this.lstEmp.map((obj) => {
         return obj.employeeID;
@@ -341,7 +360,7 @@ export class EmployeeKowdsComponent extends UIComponent{
       this.getLstEmpKowStatistic(lstEmpID).subscribe((res) => {
         // console.log('lst emp co data', res[`E-0019`]);
         // console.log('lst emp ko data', this.lstEmp);
-        
+
         let lstResult = [];
         for(let i = 0; i < lstEmpID.length; i++){
           lstResult.push({
@@ -353,8 +372,17 @@ export class EmployeeKowdsComponent extends UIComponent{
         //     console.log('lst result', lstResult[i]);
         //   }
         // }
-        this.gridDataSourceStatistic = lstResult;
+        this.gridDataSourceStatistic = [...lstResult];
+        // if(this.calendarGrid2){
+        //   this.calendarGrid2.dataSource = this.gridDataSourceStatistic;
+        // }
+        if(this.calendarGrid2){
+          console.log('data moi', this.gridDataSourceStatistic);
+
+          this.calendarGrid2.refresh(true);
+        }
       })
+
     }
   }
 
@@ -403,8 +431,16 @@ export class EmployeeKowdsComponent extends UIComponent{
     // thay doi gia tri filter
     if(event.type == 'pined-filter'){
       console.log('filter thay doi', event)
-    }
-  }
+      this.filterDowCode =  event?.data[0].value;
+      let temp = event?.data[0].value.split('/');
+      this.filterMonth = temp[1];
+      this.filterYear = temp[0];
+
+      let groupSalCode = event?.data[1];
+      console.log('filter month', this.filterMonth);
+      console.log('filter year', this.filterYear);
+      console.log('filter groupSalCode', groupSalCode);
+  }}
 
   // callFunc(event){
   //   debugger

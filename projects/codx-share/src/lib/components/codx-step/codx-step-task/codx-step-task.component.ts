@@ -60,6 +60,7 @@ import { ExportData } from '../../../models/ApproveProcess.model';
 import { CodxViewApproveComponent } from '../codx-step-common/codx-view-approve/codx-view-approve.component';
 import { PopupCustomFieldComponent } from '../../codx-fields-detail-temp/popup-custom-field/popup-custom-field.component';
 import { Subject, firstValueFrom } from 'rxjs';
+import { ContractsDetailComponent } from 'projects/codx-cm/src/lib/contracts/contracts-detail/contracts-detail.component';
 @Component({
   selector: 'codx-step-task',
   templateUrl: './codx-step-task.component.html',
@@ -1911,17 +1912,13 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
 
   //#region view
   viewTask(data, type) {
-    if (data?.taskType == 'CO') {
-      this.cache.functionList('CM0204').subscribe((res) => {
-        if (res) {
-          this.url = res?.url;
-          this.codxService.navigate('', this.url, {
-            recID: data?.CallType,
-          });
-        }
-      });
-    } else {
       if (data && !this.isViewStep && !this.isMoveStage) {
+        if( data?.objectLinked && data?.taskType == 'CO'){
+          this.viewDetailContract(data);
+          return;
+        }else{
+          this.notiService.notify('Bắt đầu ngay để thiết lập hợp đồng', '3');
+        }
         let frmModel: FormModel = {
           entityName: 'DP_Instances_Steps_Tasks',
           formName: 'DPInstancesStepsTasks',
@@ -1989,6 +1986,34 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
           this.moreDefaut = { ...this.moreDefaut };
         });
       }
+  }
+
+  viewDetailContract(task) {
+    if( task?.objectLinked){
+      this.stepService.getOneContract(task?.objectLinked).subscribe(res => {
+        if(res){
+          let data = {
+            contract: res,
+          };
+          let option = new DialogModel();
+          option.IsFull = true;
+          option.zIndex = 1001;
+          this.callfc.openForm(
+            ContractsDetailComponent,
+            '',
+            null,
+            null,
+            '',
+            data,
+            '',
+            option
+          );
+        }else{
+          this.notiService.notify('Không tìm thấy hợp đồng', '3');
+        }
+      })
+    }else{
+      this.notiService.notify('Không tìm thấy hợp đồng', '3');
     }
   }
   //#endregion

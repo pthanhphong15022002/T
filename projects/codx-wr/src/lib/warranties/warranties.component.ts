@@ -366,9 +366,10 @@ export class WarrantiesComponent
             ['WR0101_3', 'WR0102_3', 'WR0103_3', 'WR0104_3'].includes(
               res.functionID
             )) ||
-          (['WR0101_7', 'WR0102_7', 'WR0103_7', 'WR0104_7', 'WR0103_8'].includes(
+          ['WR0101_7', 'WR0102_7', 'WR0103_7', 'WR0104_7', 'WR0103_8'].includes(
             res.functionID
-          )) || (data?.createdBy?.toLocaleLowerCase() == 'dgp' && ['SYS02'].includes(res.functionID)) || res.functionID == 'SYS04'
+          ) ||
+          ['SYS02', 'SYS04'].includes(res.functionID)
         )
           res.disabled = true;
       });
@@ -625,8 +626,7 @@ export class WarrantiesComponent
                 this.view.dataService
                   .update(this.dataSelected, true)
                   .subscribe();
-                if (this.viewDetail)
-                  this.viewDetail.listOrderUpdate();
+                if (this.viewDetail) this.viewDetail.listOrderUpdate();
 
                 this.detectorRef.detectChanges();
               }
@@ -662,8 +662,7 @@ export class WarrantiesComponent
           this.dataSelected.owner = e?.event[0];
           this.dataSelected.feedbackComment = e?.event[1];
           this.dataSelected.lastUpdatedOn = new Date();
-          if (this.viewDetail)
-            this.viewDetail.listOrderUpdate();
+          if (this.viewDetail) this.viewDetail.listOrderUpdate();
           this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
           this.view.dataService.update(this.dataSelected, true).subscribe();
           this.detectorRef.detectChanges();
@@ -873,48 +872,41 @@ export class WarrantiesComponent
       formModel.funcID = 'WRS0103';
       formModel.userPermission = this.view?.formModel?.userPermission;
       opt.FormModel = formModel;
-
-      this.cache.moreFunction('CoDXSystem', '').subscribe((res) => {
-        if (res && res.length) {
-          let m = res.find((x) => x.functionID == 'SYS03');
-
-          this.cache
-            .gridViewSetup(formModel.formName, formModel.gridViewName)
-            .subscribe((grid) => {
-              if (grid) {
-                var obj = {
-                  data: data,
-                  title:
-                    m?.defaultName +
-                    ' ' +
-                    this.gridViewSetup?.ProductID?.headerText?.toLowerCase(),
-                  addProduct: true,
-                  gridViewSetup: grid,
-                  recID: data.recID,
-                };
-                var dialog = this.callFc.openForm(
-                  PopupAddServicetagComponent,
-                  '',
-                  500,
-                  450,
-                  '',
-                  obj,
-                  '',
-                  opt
-                );
-                dialog.closed.subscribe((ele) => {
-                  if (ele && ele?.event) {
-                    this.dataSelected = JSON.parse(JSON.stringify(ele?.event));
-                    this.view.dataService
-                      .update(this.dataSelected, true)
-                      .subscribe();
-                    this.detectorRef.detectChanges();
-                  }
-                });
+      this.cache.functionList('WRS0103').subscribe((func)=> {
+        this.cache
+        .gridViewSetup(formModel.formName, formModel.gridViewName)
+        .subscribe((grid) => {
+          if (grid) {
+            var obj = {
+              data: data,
+              title: this.moreFuncEdit + ' ' + (func?.defaultName ? func?.defaultName?.toLowerCase() : 'product'),
+              addProduct: true,
+              gridViewSetup: grid,
+              recID: data.recID,
+            };
+            var dialog = this.callFc.openForm(
+              PopupAddServicetagComponent,
+              '',
+              500,
+              450,
+              '',
+              obj,
+              '',
+              opt
+            );
+            dialog.closed.subscribe((ele) => {
+              if (ele && ele?.event) {
+                this.dataSelected = JSON.parse(JSON.stringify(ele?.event));
+                this.view.dataService
+                  .update(this.dataSelected, true)
+                  .subscribe();
+                this.detectorRef.detectChanges();
               }
             });
-        }
-      });
+          }
+        });
+      })
+
     }
   }
   //#endregion

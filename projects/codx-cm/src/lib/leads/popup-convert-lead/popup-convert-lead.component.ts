@@ -1108,6 +1108,7 @@ export class PopupConvertLeadComponent implements OnInit {
       perm.roleType = roleType;
       perm.allowUpdateStatus = '1';
       perm.memberType = '0';
+      perm.isActive = true;
       this.lstPermissions.push(perm);
     } else {
       this.lstPermissions[index].objectID =
