@@ -88,8 +88,7 @@ export class PopupReleaseProcessComponent implements OnInit {
 
         break;
       case 'function':
-        this.crrModule = e?.component?.itemsSelected[0]?.Module; //tesst
-        // this.moduleCbx.model = { Module: this.crrModule };
+        this.crrModule = e?.component?.itemsSelected[0]?.Module;
         (
           this.moduleCbx.ComponentCurrent as CodxComboboxComponent
         ).dataService.data = [];
@@ -102,7 +101,7 @@ export class PopupReleaseProcessComponent implements OnInit {
   }
 
   saveReleaseProcess() {
-    if (!this.data.releasedName.trim()) {
+    if (!this.data.releasedName || !this.data.releasedName.trim()) {
       this.notificationsService.notifyCode(
         'SYS009',
         0,
@@ -110,6 +109,23 @@ export class PopupReleaseProcessComponent implements OnInit {
       );
       return;
     }
+    if (!this.data.module) {
+      this.notificationsService.notifyCode(
+        'SYS009',
+        0,
+        '"' + this.grvSetup['Module'].headerText + '"'
+      );
+      return;
+    }
+    if (!this.data.function) {
+      this.notificationsService.notifyCode(
+        'SYS009',
+        0,
+        '"' + this.grvSetup['Function'].headerText + '"'
+      );
+      return;
+    }
+
     this.dpService.releaseProcess([this.data, true]).subscribe((res) => {
       if (res) {
         this.data.modifiedOn = res;

@@ -10,18 +10,18 @@ import { DateRangePickerModule } from '@syncfusion/ej2-angular-calendars';
   styleUrls: ['./popup-ekowds.component.css']
 })
 export class PopupEkowdsComponent extends UIComponent implements OnInit{
-  @HostListener('click', ['$event.target']) onClick(e) {
-    console.log('target click vao', e);
+  // @HostListener('click', ['$event.target']) onClick(e) {
+  //   console.log('target click vao', e);
     
-    if (this.gridView1) {
-      if (this.gridView1.gridRef.isEdit == true) {
-        //this.gridView2.isEdit = false;
-        //this.gridView2.isAdd = false;
-        this.gridView1.endEdit();
-      } else {
-        //
-      }
-    }}
+  //   if (this.gridView1) {
+  //     if (this.gridView1.gridRef.isEdit == true) {
+  //       //this.gridView2.isEdit = false;
+  //       //this.gridView2.isAdd = false;
+  //       this.gridView1.endEdit();
+  //     } else {
+  //       //
+  //     }
+  //   }}
   
   dialog: DialogRef;
   actionType: string;
@@ -33,7 +33,7 @@ export class PopupEkowdsComponent extends UIComponent implements OnInit{
   dataSourceGridView1: any = [];
   loadGridview1 = true;
   vllMode = '1';
-  dowCode: any;
+  dowCode: any = '2023/12';
   employeeId: string;
   currentYear: any;
   currentMonth: any;
@@ -86,7 +86,9 @@ export class PopupEkowdsComponent extends UIComponent implements OnInit{
     this.dataObj.employeeID = this.employeeId;
     this.currentYear = JSON.parse(JSON.stringify(data?.data?.crrYear));
     this.currentMonth = JSON.parse(JSON.stringify(data?.data?.crrMonth));
-    this.dowCode = JSON.parse(JSON.stringify(data?.data?.dowCode));
+    if(data?.data?.dowCode){
+      this.dowCode = JSON.parse(JSON.stringify(data?.data?.dowCode));
+    }
     let day = JSON.parse(JSON.stringify(data?.data?.selectedDate));
     this.selectedDate = new Date(this.currentYear, this.currentMonth, day);
     this.minDate = new Date(this.currentYear, this.currentMonth, 1);
@@ -165,6 +167,23 @@ export class PopupEkowdsComponent extends UIComponent implements OnInit{
   }
 
   onSaveForm(){
+    let lstDataInGrid = []
+    let lstDataHandle = []
+    for(let i = 0; i < this.gridView1.dataSource.length; i++){
+      if(this.gridView1.dataSource[i].kowCode != null){
+        lstDataInGrid.push(this.gridView1.dataSource[i])
+      }
+    }
+
+    for(let i = 0; i < this.dataObj.employeeID.split(';').length; i++){
+      for(let j = 0; j < lstDataInGrid.length; j++){
+        let temp = {...lstDataInGrid[j]};
+        temp.employeeID = this.dataObj.employeeID[i]
+        lstDataHandle.push({...temp})
+      }
+    }
+
+    console.log('list data cbi luu', lstDataHandle);
     debugger
   }
 
@@ -292,13 +311,23 @@ export class PopupEkowdsComponent extends UIComponent implements OnInit{
     }
   }
 
-  addEmpKow(){
+  // addEmpKow(){
+  //   return this.api.execSv<any>(
+  //     'HR',
+  //     'ERM.Business.PR',
+  //     'KowDsBusiness',
+  //     'AddEmpKowAsync',
+  //     [this.fromDateVal, this.toDateVal, this.dataObj.employeeID, this.dataObj, this.vllMode]
+  //   );
+  // }
+
+  addEmpKow(data){
     return this.api.execSv<any>(
       'HR',
       'ERM.Business.PR',
       'KowDsBusiness',
       'AddEmpKowAsync',
-      [this.fromDateVal, this.toDateVal, this.dataObj.employeeID, this.dataObj, this.vllMode]
+      [data, this.vllMode]
     );
   }
 

@@ -31,7 +31,11 @@ import { AttachmentComponent } from 'projects/codx-common/src/lib/component/atta
 import { AddTemplateComponent } from './add-template/add-template.component';
 import { AddImportDetailsComponent } from './add-template/add-import-details/add-import-details.component';
 import { AnimationModel } from '@syncfusion/ej2-progressbar';
-import { ILoadedEventArgs, ProgressBar, ProgressTheme } from '@syncfusion/ej2-angular-progressbar';
+import {
+  ILoadedEventArgs,
+  ProgressBar,
+  ProgressTheme,
+} from '@syncfusion/ej2-angular-progressbar';
 
 @Component({
   selector: 'codx-import',
@@ -80,7 +84,7 @@ export class CodxImportComponent implements OnInit, OnChanges, AfterViewInit {
   @ViewChild('attachment') attachment: AttachmentComponent;
   @ViewChild('linear') public linear: ProgressBar;
   public animation: AnimationModel = { enable: true, duration: 2000, delay: 0 };
-  
+
   constructor(
     private callfunc: CallFuncService,
     private api: ApiHttpService,
@@ -117,10 +121,13 @@ export class CodxImportComponent implements OnInit, OnChanges, AfterViewInit {
   load(args: ILoadedEventArgs): void {
     let selectedTheme: string = location.hash.split('/')[1];
     selectedTheme = selectedTheme ? selectedTheme : 'Material';
-    args.progressBar.theme = <ProgressTheme>(selectedTheme.charAt(0).toUpperCase() +
-    selectedTheme.slice(1)).replace(/-dark/i, 'Dark').replace(/contrast/i, 'Contrast');
-}
-
+    args.progressBar.theme = <ProgressTheme>(
+      (selectedTheme.charAt(0).toUpperCase() + selectedTheme.slice(1))
+        .replace(/-dark/i, 'Dark')
+        .replace(/contrast/i, 'Contrast')
+    );
+  }
+  text = '';
   ngOnInit(): void {
     //Tạo formGroup
     this.importGroup = this.formBuilder.group({
@@ -133,27 +140,32 @@ export class CodxImportComponent implements OnInit, OnChanges, AfterViewInit {
     this.request.funcID = this.formModel?.funcID;
     this.getData();
     let total = 0;
+    let index = 0;
+
     this.realHub.start(this.service).then((x: RealHub) => {
       if (x) {
         x.$subjectReal.asObservable().subscribe((z) => {
-       
-          if((z.event == 'StartImport' || z.event == 'ImportSingle') && z?.data?.session == this.session){
-            if(z.event == 'StartImport') total = z?.data?.total
-            else
-            {
-            console.log("total: ", total);
-            console.log("total 2 nè: ",  z?.data?.total);
-            console.log("Index nè: ", z?.data?.index);
-              if(z?.data?.index == total) 
-              {
-                this.notifySvr.notifyCode('SYS006');
-                (this.dialog as DialogRef).close();
-              }
-              this.linear.value = this.valueProgress = (z?.data?.index / total) * 100;
-              this.valueProgressp = this.linear.value + 5;
+          if (
+            (z.event == 'ImportStart' ||
+              z.event == 'ImportSingle' ||
+              z.event == 'ImportSucess') &&
+            z?.data?.session == this.session
+          ) {
+            this.text = z?.data?.text;
+            if (z.event == 'ImportStart') {
+              if (z?.data?.total) total = z?.data?.total * 2;
+              else index = z?.data?.index;
+            } else if (z.event == 'ImportSingle') index += z?.data?.index;
+            else {
+              index = total;
             }
+            if (index == total) {
+              this.notifySvr.notifyCode('SYS006');
+              (this.dialog as DialogRef).close();
+            }
+            this.linear.value = this.valueProgress = (index / total) * 100;
+            this.valueProgressp = this.linear.value + 5;
           }
-         
         });
       }
     });
@@ -193,7 +205,8 @@ export class CodxImportComponent implements OnInit, OnChanges, AfterViewInit {
       ])
       .subscribe((item) => {
         if (item && this.dialog) {
-          
+          // this.notifySvr.notifyCode('SYS006');
+          // (this.dialog as DialogRef).close();
         }
       });
   }
