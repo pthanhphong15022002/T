@@ -858,6 +858,7 @@ export class CmCustomerComponent
           formModel.formName = 'CMLeads';
           formModel.entityName = 'CM_Leads';
           formModel.gridViewName = 'grvCMLeads';
+          formModel.userPermission = this?.view?.formModel?.userPermission;
           option.FormModel = formModel;
           option.Width = '800px';
           option.zIndex = 1001;

@@ -1,5 +1,3 @@
-//@import "assets/styles/ej/bootstrap-dark.css";
-//@import "bootstrap-dark.css";
 @import "src/bootstrap-dark.scss";
 
 .text-gray-900 {
@@ -973,3 +971,16 @@ ejs-tab#calendarTab .e-calendar {
 .input-group-text{
     border-color: var(--gray-400);
 }
+
+/*** khi khong nhan bootrap-dark  ***/
+.list-group-item {
+    background-color: var(--bg-card);
+    color: var(--text-body);
+}
+codx-listview.card .card-header {
+    background-color:transparent;
+}
+.e-listview .e-list-item {
+    border-bottom-color: transparent;
+}
+
