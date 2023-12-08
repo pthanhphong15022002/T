@@ -920,6 +920,7 @@ ejs-tab#calendarTab .e-calendar {
     //color: #6f7475;
     //border-color: #f5f9fa;
     background-color: var(--bg-card);
+    border-color: var(--border-list);
 }
 .data-text-color {
     color: var(--gray-400);
@@ -996,4 +997,8 @@ codx-listview.card .card-header {
 }
 .e-listview {
     border-color:transparent;
+}
+.e-splitter .e-split-bar.e-split-bar-horizontal {
+    background: transparent;
+    margin: 0!important;
 }
