@@ -195,6 +195,7 @@ import { ViewHistoryUpdateProgressComponent } from './components/codx-tasks/view
 import { CodxShareReportComponent } from './components/codx-share-report/codx-share-report.component';
 import { CodxShareDashboardComponent } from './components/codx-share-dashboard/codx-share-dashboard.component';
 import { CodxDashboardViewsComponent } from './components/codx-dashboard/dashboard-view/dashboard-view.component';
+import { CheckRoleStepPipe } from './components/codx-step/pipes/check-role-step.pipe';
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
   // AttachmentComponent,
@@ -351,6 +352,7 @@ const T_Component: Type<any>[] = [
   CodxStepChartComponent,
   CodxIconStepComponent,
   CodxViewApproveComponent,
+  CheckRoleStepPipe,
   //CO
   AddNoteComponent,
   PopupTitleComponent,
