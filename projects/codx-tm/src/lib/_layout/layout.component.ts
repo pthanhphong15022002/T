@@ -52,10 +52,10 @@ export class LayoutComponent extends LayoutBaseComponent {
     let className = 'DataBusiness';
     let methol = 'GetCountFavoriteAsync';
     let assemblyName = 'Core';
-    if (funcID == 'TMT0206') {
+    if (funcID == 'TMT0206' || funcID == 'TMT0301' || funcID == 'TMT0302') {
       assemblyName = 'TM';
       className = 'TaskBusiness';
-      methol = 'CountFavoriteMonitorTasksAsync';
+      methol = 'CountFavoriteModuleAsync';
     }
     this.tmService
       .countFavorite(funcID, favIDs, assemblyName, className, methol)
