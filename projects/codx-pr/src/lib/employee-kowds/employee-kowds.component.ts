@@ -75,7 +75,7 @@ export class EmployeeKowdsComponent extends UIComponent{
       }
     });
   }
-  
+
   onInit(): void {
     this.initHeaderText();
     this.getTimeKeepingMode().subscribe((res) => {
@@ -264,11 +264,11 @@ export class EmployeeKowdsComponent extends UIComponent{
       }
       this.gridDataSource = [...this.gridDataSource]
       console.log('griddd dts', this.gridDataSource);
-      
-      if(this.calendarGrid){
-        this.calendarGrid.dataSource = this.gridDataSource;
-      }
-      
+
+      // if(this.calendarGrid){
+      //   this.calendarGrid.dataSource = this.gridDataSource;
+      // }
+
       this.calendarGridColumns = []
       this.calendarGridColumns.push({
         headerTemplate: 'Nhân viên',
@@ -280,8 +280,8 @@ export class EmployeeKowdsComponent extends UIComponent{
         let dayOfWeek = date.getDay();
         this.calendarGridColumns.push({
           field: `day${i+1}`,
-          headerTemplate: 
-          ` ${this.daysOfWeek[dayOfWeek]} 
+          headerTemplate:
+          ` ${this.daysOfWeek[dayOfWeek]}
           <div> ${i + 1} </div> `,
           template: this.tempDayData,
           width: '150',
@@ -358,7 +358,7 @@ export class EmployeeKowdsComponent extends UIComponent{
       this.getLstEmpKowStatistic(lstEmpID).subscribe((res) => {
         // console.log('lst emp co data', res[`E-0019`]);
         // console.log('lst emp ko data', this.lstEmp);
-        
+
         let lstResult = [];
         for(let i = 0; i < lstEmpID.length; i++){
           lstResult.push({
@@ -371,15 +371,16 @@ export class EmployeeKowdsComponent extends UIComponent{
         //   }
         // }
         this.gridDataSourceStatistic = [...lstResult];
+        // if(this.calendarGrid2){
+        //   this.calendarGrid2.dataSource = this.gridDataSourceStatistic;
+        // }
         if(this.calendarGrid2){
-          this.calendarGrid2.dataSource = this.gridDataSourceStatistic;
+          console.log('data moi', this.gridDataSourceStatistic);
+
+          this.calendarGrid2.refresh(true);
         }
       })
-      if(this.calendarGrid2){
-        console.log('data moi', this.gridDataSourceStatistic);
-        
-        this.calendarGrid2.refresh(true);
-      }
+
     }
   }
 
