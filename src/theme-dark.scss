@@ -972,7 +972,7 @@ ejs-tab#calendarTab .e-calendar {
     border-color: var(--gray-400);
 }
 
-/*** khi khong nhan bootrap-dark  ***/
+/*** when have bootrap-dark  ***/
 .list-group-item {
     background-color: var(--bg-card);
     color: var(--text-body);
@@ -983,4 +983,17 @@ codx-listview.card .card-header {
 .e-listview .e-list-item {
     border-bottom-color: transparent;
 }
-
+.e-calendar, .e-bigger.e-small .e-calendar {
+    border-color: transparent!important;
+}
+.e-splitter.e-splitter-horizontal, .e-splitter.e-splitter-vertical {
+    border-color: transparent!important;
+}
+.e-listview:not(.e-list-template) .e-list-item {
+    height: auto;
+    line-height: normal;
+    padding: 2px 6px;
+}
+.e-listview {
+    border-color:transparent;
+}
