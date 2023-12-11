@@ -23,7 +23,7 @@
             <codx-temp-full
             [imageId]=" approver?.roleType =='U' ? approver?.approver : approver?.userID" [imageObjType]="'AD_Users'" [imageWidth]="30" 
             [title]="approver?.userName ? approver?.userName : approver?.name ? approver?.name : approver?.approver ? (approver?.approver | vll : 'ES014' : 'text' | async) : (approver?.roleType | vll : 'ES014' : 'text' | async)"
-            [subTitle]="approver?.orgUnitName"            
+            [subTitle]=""            
             [desc]="approver?.position ? approver?.position: approver?.roleType | vll : 'ES014' : 'text' | async"
             [imageSrc]="(approver?.roleType !='U' && !approver?.userID) || approver?.roleType =='PA' ? './assets/themes/sys/default/img/' + (approver?.icon ? approver?.icon : 'share_default.svg') : null"
             [imgCss]="(approver?.roleType !='U' && !approver?.userID) || approver?.roleType =='PA' ? 'w-30px p-2 me-3 user-mini-icon' :'w-35px me-3'"                          
@@ -117,7 +117,8 @@
                 approver?.name ??
                 approver?.approverName ??
                 (approver?.approver | vll : 'ES014' : 'text' | async)
-              " [desc]="approver ?.position"
+              " [desc]="approver?.position ??
+                  approver?.approverPosition"
               >
             </codx-temp-full>
             
@@ -233,7 +234,8 @@
                   approver?.name ??
                   approver?.approverName ??
                   (approver?.approver | vll : 'ES014' : 'text' | async)
-                " [desc]="approver?.position"
+                " [desc]="approver?.position ??
+                  approver?.approverPosition "
                 >
                 </codx-temp-full>
                 
