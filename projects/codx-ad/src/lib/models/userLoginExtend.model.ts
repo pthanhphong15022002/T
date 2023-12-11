@@ -4,6 +4,7 @@ export class UserLoginExtend {
 }
 
 export class Device {
+  public id: string;
   public name: string;
   public os: string;
   public imei?: string;
