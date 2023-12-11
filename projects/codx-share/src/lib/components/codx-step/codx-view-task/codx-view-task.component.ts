@@ -238,7 +238,7 @@ export class CodxViewTaskComponent implements OnInit {
     }
   }
   settingData() {
-    if (this.type == 'T' && this.dataView?.parentID) {
+    if (!["G","P"].includes(this.type) && this.dataView?.parentID) {
       this.instanceStep?.tasks?.forEach((task) => {
         if (this.dataView?.parentID?.includes(task.refID)) {
           this.listDataLink?.push(task);
@@ -584,7 +584,7 @@ export class CodxViewTaskComponent implements OnInit {
   //#region CRUD
   async chooseTypeTask(type) {
     let isAddGroup = this.type == 'P' ? true : false;
-    let dataType = await this.stepService.chooseTypeTask(isAddGroup);
+    let dataType = await this.stepService.chooseTypeTask(isAddGroup? ['F'] : ['G','F']);
     if (dataType) {
       if (dataType?.value == 'G') {
         await this.addGroup();

@@ -93,14 +93,14 @@
 <ng-template #tabBasic>
   <div class="mt-3">
     <div class="row mb-5">
-      <div style="min-width: 350px;max-width: 350px" class="col-3">
+      <div style="width: 350px;" class="col-3">
         <div style="margin-bottom: unset !important;" class="form-group">
           <codx-label style="white-space: nowrap !important;" fiedName="objectID" default="Đối tượng">
           </codx-label>
           <codx-input type="text" [disabled]="true" [crrValue]="objectName"></codx-input>
         </div>
       </div>
-      <div style="min-width: 100px;max-width: 100px" class="col-2">
+      <div style="width: 100px;" class="col-2">
         <div style="margin-bottom: unset !important;" class="form-group">
           <codx-label style="white-space: nowrap !important;" fiedName="AccountID" default="Tài khoản">
           </codx-label>
@@ -110,7 +110,7 @@
           </div>
         </div>
       </div>
-      <div style="min-width: 150px;max-width: 150px" class="col-2">
+      <div style="width: 150px" class="col-2">
         <div style="margin-bottom: unset !important;" class="form-group">
           <codx-label style="white-space: nowrap !important;" fiedName="lblVoucherType" default="Loại hóa đơn">
           </codx-label>
@@ -121,7 +121,7 @@
           </div>
         </div>
       </div>
-      <div style="min-width: 160px;max-width: 160px" class="col-2">
+      <div style="width: 160px;" class="col-2">
         <div style="margin-bottom: unset !important;" class="form-group">
           <codx-label style="white-space: nowrap !important;" fiedName="InvoiceDueDate" default="Lọc từ ngày">
           </codx-label>
@@ -131,7 +131,7 @@
           </div>
         </div>
       </div>
-      <div style="min-width: 150px;max-width: 150px" class="col-2">
+      <div style="width: 150px;" class="col-2">
         <div style="margin-bottom: unset !important;" class="form-group">
           <codx-label style="white-space: nowrap !important;" fiedName="lblDate" default="Xét trong khoảng">
           </codx-label>
@@ -141,7 +141,7 @@
           </div>
         </div>
       </div>
-      <div style="min-width: 150px;max-width: 150px;" class="col-2 d-flex align-items-center mt-5">
+      <div style="width: 150px;" class="col-2 d-flex align-items-center mt-5">
         <button type="button" class="btn btn-md btn-light-primary rounded-15" style="border: 1px solid var(--primary-dark) !important;"
           (click)="getDataSubInvoice(0)">
           <codx-label style="white-space: nowrap;" class="fs-6 fw-normal" fiedName="lblSave" default="Lấy dữ liệu"></codx-label>
@@ -149,7 +149,7 @@
       </div>
     </div>
     <div class="row mb-5"> 
-      <div style="min-width: 150px;max-width: 150px" class="col-2">
+      <div style="width: 150px;" class="col-2">
         <div style="margin-bottom: unset !important;" class="form-group">
           <codx-label style="white-space: nowrap !important;" fiedName="lblCurencies" [formModel]="dialog.formModel" default="Số tiền chi trả">
           </codx-label>
@@ -159,7 +159,7 @@
           </div>
         </div>
       </div>
-      <div style="min-width: 90px;max-width: 90px" class="col-1">
+      <div style="width: 90px;" class="col-1">
         <div style="margin-bottom: unset !important;" class="form-group">
           <codx-label style="white-space: nowrap !important;" fiedName="currencyID" [formModel]="dialog.formModel" default="Tiền tệ">
           </codx-label>
@@ -168,7 +168,7 @@
           </div>
         </div>
       </div>
-      <div style="min-width: 180px;max-width: 180px" class="col-2">
+      <div style="width: 180px;" class="col-2">
         <div style="margin-bottom: unset !important;" class="form-group">
           <codx-label style="white-space: nowrap !important;" fiedName="lblType" [formModel]="dialog.formModel" default="Cấn trừ hóa đơn">
           </codx-label>
@@ -178,7 +178,7 @@
           </div>
         </div>
       </div>
-      <div style="min-width: 150px;max-width: 150px" class="col-2 d-flex align-items-center mt-5">
+      <div style="width: 150px" class="col-2 d-flex align-items-center mt-5">
         <button type="button" class="btn btn-md btn-light-primary rounded-15" style="border: 1px solid var(--primary-dark) !important;"
           (click)="getDataSubInvoice(1)">
           <codx-label style="white-space: nowrap;" class="fs-6 fw-normal" fiedName="lblSave" default="Cấn trừ"></codx-label>
