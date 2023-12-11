@@ -152,9 +152,6 @@ export class LoginComponent extends UIComponent implements OnInit, OnDestroy {
     this.loginDevice = {
       name: dInfo.browser,
       os: dInfo.os + ' ' + dInfo.osVersion,
-      ip: '',
-      imei: null,
-      id: null,
       trust: false,
       tenantID: this.tenant,
       times: '1',
@@ -330,7 +327,7 @@ export class LoginComponent extends UIComponent implements OnInit, OnDestroy {
     if (!type) {
       type = '';
     }
-    let loginType = ['', 'otp', 'qr'];
+    let loginType = ['', 'otp'];
     if (loginType.includes(type)) {
       this.login(type);
     } else {
