@@ -44,7 +44,7 @@ export class CodxAddTaskComponent implements OnInit {
   vllShare = 'BP021';
   linkQuesiton = 'http://';
   REQUIRE = ['taskName', 'endDate', 'startDate'];
-  type: 'calendar' | 'step' | 'activitie' | 'instance' | 'group'; // type == instance => instanceID, group => groupTaskID
+  type: 'calendar' | 'step' | 'activitie' | 'cm' | 'group'; // type == instance => instanceID, group => groupTaskID
 
   typeTask;
   listGroup = [];
@@ -67,7 +67,6 @@ export class CodxAddTaskComponent implements OnInit {
   isRoleFull = false; // admin, admin CM, admin DP, owner instance
   isRoleFullStep = false;
   isRoleFullGroup = false;
-  instanceID = '';
 
   fieldsStep = { text: 'stepName', value: 'recID' };
   fieldsTask = { text: 'taskName', value: 'refID' };
@@ -83,18 +82,18 @@ export class CodxAddTaskComponent implements OnInit {
   isShowDate = false;
   isShowTime = false;
   isActivitie = false;
-  // enabledStep = false;
-  // isShowCbxStep = true;
-  // isShowCbxGroup = true;
   isTaskDefault = false;
   isSaveTimeTask = true;
   isSaveTimeGroup = true;
   isEditTimeDefault = false;
   viewApprover: any;
 
-  folderID = '';
   titleName = '';
-  valueInput = '';
+  objectID = '';
+  objectType = '';
+  instanceID = '';
+  instanceStepID = '';
+
 
   user;
   endDayOld;
@@ -147,7 +146,7 @@ export class CodxAddTaskComponent implements OnInit {
     step: { show: false, disabled: false },
     group: { show: false, disabled: false },
   };
-  instanceStepID = '';
+  
   constructor(
     private api: ApiHttpService,
     private cache: CacheService,
@@ -184,14 +183,13 @@ export class CodxAddTaskComponent implements OnInit {
     this.isEditTimeDefault = dt?.data?.isEditTimeDefault;
 
     this.typeCM = dt?.data?.typeCM;
+    this.objectID = dt?.data?.objectID;
+    this.objectType = dt?.data?.objectType;
+    this.isActivitie = dt?.data?.isActivitie || false;
 
     this.dataParentTask = dt?.data?.dataParentTask;
     this.isRoleFull = dt?.data?.isRoleFull;
 
-    if (this.type == 'instance') {
-      this.dataParentTask = dt?.data?.dataParentTask;
-      this.typeCM = this.dataParentTask?.typeCM;
-    }
     this.isSave =
       dt?.data?.isSave == undefined ? this.isSave : dt?.data?.isSave;
     this.getValueList();
@@ -256,14 +254,14 @@ export class CodxAddTaskComponent implements OnInit {
         break;
       case 'activitie':
         break;
-      case 'instance':
+      case 'cm':
         this.statusInput.type.show = true;
         this.statusInput.type.disabled = true;
         this.statusInput.dataType.show = true;
         this.statusInput.dataType.disabled = true;
-        this.statusInput.step.show = true;
+        this.statusInput.step.show = !this.isActivitie;
         this.statusInput.step.disabled = false;
-        this.statusInput.group.show = true;
+        this.statusInput.group.show = !this.isActivitie;
         this.statusInput.group.disabled = false;
         break;
       case 'group':
@@ -333,8 +331,8 @@ export class CodxAddTaskComponent implements OnInit {
           this.getParentTask(this.stepsTasks);
         }
         break;
-      case 'instance':
-        this.getListStepByInstanceID(this.instanceID);
+      case 'cm':
+        this.getParentTypeCm();
         break;
       case 'step':
         this.setInstanceStep();
@@ -477,7 +475,12 @@ export class CodxAddTaskComponent implements OnInit {
         : listGroup.filter((group) => group.owner == this.user?.userID);
   }
   //#endregion
-
+  getParentTypeCm(){
+    if(this.isActivitie){
+    }else{
+      this.getListStepByInstanceID(this.instanceID);
+    }
+  }
   //#region get Data
   getParentTask(task) {
     if (task) {
@@ -1134,6 +1137,8 @@ export class CodxAddTaskComponent implements OnInit {
   addTask(task, isCreateMeeting = false, isAddTask = false) {
     if(this.isActivitie){
       if (this.isSave) {
+        task['objectType'] = this.objectType;
+        task['objectID'] = this.objectID;
         this.api
           .exec<any>('DP', 'ActivitiesBusiness', 'AddActivitiesAsync', [
             task,
