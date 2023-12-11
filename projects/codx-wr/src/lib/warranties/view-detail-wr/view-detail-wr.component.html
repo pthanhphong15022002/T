@@ -343,15 +343,14 @@
                     <codx-label
                       style="white-space: nowrap"
                       class="text-dark label-colon me-1"
-                      name="lblSeri"
-                      default="Số seri"
+                      fiedName="SeriNo"
                       [formModel]="formModel"
                     ></codx-label>
                     <span
                       class="text-dark fw-bold me-1"
                       [innerHTML]="
-                        dataSelected.serviceTag
-                          | formatvalue : formModel : 'ServiceTag'
+                        dataSelected.seriNo
+                          | formatvalue : formModel : 'SeriNo'
                           | async
                       "
                     ></span>

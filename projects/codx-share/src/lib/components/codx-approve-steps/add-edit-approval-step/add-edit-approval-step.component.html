@@ -1,6 +1,6 @@
-<codx-layout-add *ngIf="isAfterRender" [title]="header1" [tabInfo]="tabInfo" [formModel]="dialog.formModel"
+<codx-layout-add *ngIf="isAfterRender" [title]="header1" [tabInfo]="listTab" [formModel]="dialog.formModel"
   [subHeader]="subHeader" [dialog]="dialog" [openMore]="true"
-  [tabContent]="this.hideTabQuery? [tabInfo00, tabEmail, tabAnother] : [tabInfo00, tabQuery, tabEmail, tabAnother]"
+  [tabContent]="[tabInfo, tabEmail, tabAnother]"
   (setTitle)="setTitle($event)" (buttonClick)="buttonClick($event)" [footer]="footer" [openMore]="false" [data]="data"
   (tabChange)="buttonClick($event)">
 </codx-layout-add>
@@ -21,7 +21,7 @@
     </div>
   </div>
 </ng-template>
-<ng-template #tabInfo00>
+<ng-template #tabInfo>
   <div class="d-flex flex-column h-100" role="button">
     <div class="d-flex flex-column">
       <div class="form-group">

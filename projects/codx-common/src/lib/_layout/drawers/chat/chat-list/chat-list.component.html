@@ -21,7 +21,7 @@
                 [objectType]="item?.groupType == '1'? 'AD_Users' : 'WP_Groups'" 
                 [width]="30">
             </codx-img>
-            <div class="group-status">
+            <div *ngIf="item?.isOnline" class="group-status">
                 <span class="group-status-icon"></span>
             </div>
         </div>

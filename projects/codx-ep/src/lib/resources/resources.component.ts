@@ -308,7 +308,7 @@ export class ResourcesComponent extends UIComponent {
         field: 'resourceName',
         headerText:
           this.resourceGridView?.resourceName?.headerText || 'ResourceName',
-        width: '25%',
+        
         template: this.roomNameCol,
       },
       {
