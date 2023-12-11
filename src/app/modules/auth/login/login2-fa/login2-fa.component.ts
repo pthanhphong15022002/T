@@ -58,7 +58,6 @@ export class Login2FAComponent extends UIComponent implements AfterViewInit {
       this.loginDevice = {
         name: dInfo.browser,
         os: dInfo.os + ' ' + dInfo.osVersion,
-        ip: '',
         imei: null,
         id: null,
         trust: false,
