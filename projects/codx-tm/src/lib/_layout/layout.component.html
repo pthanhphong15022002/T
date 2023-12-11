@@ -8,10 +8,10 @@
           *ngIf="codxService.asideDisplay"
           (menuClick)="menuClick($event)"
           (childMenuClick)="childMenuClick($event)"
+          [hasCountFavorite]="true"
+          (countFavorite)="countFavorite($event)"
         ></codx-aside>
-        <!-- [hasNotFavAll]="true"
-        [hasCountFavorite]="true"
-        (countFavorite)="countFavorite($event)" -->
+        <!-- [hasNotFavAll]="true"  -->
         <div class="wrapper d-flex flex-column flex-row-fluid">
           <codx-header
             [class]="codxService.headerCSSClasses"
@@ -57,7 +57,7 @@
       <codx-activies-approval-list></codx-activies-approval-list>
 
       <!-- Home -->
-        <lib-back-home></lib-back-home>
+      <lib-back-home></lib-back-home>
       <!--end Home -->
       <!-- Quick links -->
       <erm-quick-links-inner

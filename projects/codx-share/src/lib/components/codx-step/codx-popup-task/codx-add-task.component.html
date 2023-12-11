@@ -34,7 +34,7 @@
 <ng-template #body>
   <ng-container [ngTemplateOutlet]="tempStatus"></ng-container>
   <ng-container
-    *ngIf="type == 'calendar' || type == 'notStep'"
+    *ngIf="type == 'calendar' || type == 'cm'"
     [ngTemplateOutlet]="addTaskInCM"
   ></ng-container>
 
@@ -106,7 +106,6 @@
       <codx-input
         field="taskName"
         [formModel]="dialog?.formModel"
-        type="text"
         [crrValue]="stepsTasks?.taskName"
         (valueChange)="changeValueText($event)"
         [disabled]="stepsTasks?.isTaskDefault"

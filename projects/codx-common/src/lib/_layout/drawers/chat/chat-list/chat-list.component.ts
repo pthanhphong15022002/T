@@ -134,12 +134,11 @@ export class CodxChatListComponent implements OnInit, AfterViewInit {
     //     }
     //   }
     // });
-    // //new group
-    // this.signalRSV.activeNewGroup.subscribe((res: any) => {
-    //   if (res?.data) {
-    //     (this.codxListView.dataService as CRUDService)
-    //       .add(res.data)
-    //       .subscribe();
+    //Online Status
+    // this.signalRSV.updateOnlineStatus.subscribe((res: any) => {      
+    //   if (res?.data?.length>0 && this.codxListView?.dataService?.data?.length>0) {
+    //     debugger;
+    //     let gr = this.codxListView?.dataService?.data.filter(x=>res?.data?.some( g=> g ==x.group));
     //   }
     // });
   }

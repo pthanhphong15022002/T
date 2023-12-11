@@ -61,7 +61,7 @@ export class PopupAddSegmentComponent implements OnInit, AfterViewInit {
   ngAfterViewInit(): void {}
   ngOnInit(): void {
     if (this.functionID) {
-      this.cache.functionList(this.function).subscribe((res) => {
+      this.cache.functionList(this.functionID).subscribe((res) => {
         if (res) this.function = res;
       });
     }

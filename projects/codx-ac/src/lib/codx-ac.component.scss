@@ -55,7 +55,8 @@
 }
 
 .tabline-content .e-content {
-    height: calc(100vh - 505px) !important;
+    height: calc(100vh - 490px) !important;
+    min-height: 280px;
 }
 
 .tablinevoucher-content .e-content {
@@ -63,7 +64,7 @@
 }
 
 .tablinegeneral-content .e-content {
-    height: calc(100vh - 445px) !important;
+    height: calc(100vh - 430px) !important;
 }
 
 .tablinetranfer-content .e-content {
@@ -80,7 +81,7 @@
 }
 
 .tabcash-content .e-content {
-    height: calc(90vh - 350px) !important
+    height: calc(90vh - 305px) !important
 }
 
 .taballow-content .e-content {
@@ -163,10 +164,6 @@
     background-color: white;
     width: 35px;
     border: none !important;
-}
-
-.ac-tab-basic {
-    background-color: var(--primary-lighter) !important;
 }
 
 .icon-insert_link:hover {
@@ -543,4 +540,6 @@
     padding: 0;
     border: none !important;
   }
+
+
 

@@ -40,7 +40,7 @@ import { ShareType } from '../../../models/ApproveProcess.model';
   styleUrls: ['./add-edit-approval-step.component.scss'],
 })
 export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
-  @ViewChild('tabInfo0', { static: true }) tabInfo0: TemplateRef<any>;
+  @ViewChild('tabInfo', { static: true }) tabInfo: TemplateRef<any>;
   @ViewChild('tabQuery', { static: true }) tabQuery: TemplateRef<any>;
   @ViewChild('tabEmail', { static: true }) tabEmail: TemplateRef<any>;
   @ViewChild('tabAnother', { static: true }) tabAnother: TemplateRef<any>;
@@ -52,7 +52,7 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
   @Input() transId = '';
   @Input() stepNo = 1;
   @Input() vllShare = null;
-  @Input() hideTabQuery = false;
+  @Input() hideTabQuery = true;
   @Input() isSettingMode = true;
   dataEdit: any;
 
@@ -74,7 +74,7 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
   lstStep;
   isSaved = false;
   header1 = 'Thiết lập quy trình duyệt';
-  subHeaderText = 'Qui trình duyệt';
+  subHeaderText = 'Quy trình duyệt';
   defaultSignType = '';
   eSign: boolean = false;
 
@@ -86,9 +86,9 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
   user; //Thông tin người đang nhập
 
   title = '';
-  tabInfo: any[] = [
+  listTab: any[] = [
     { icon: 'icon-info', text: 'Thông tin chung', name: 'tabInfo' },
-    { icon: 'icon-rule', text: 'Điều kiện', name: 'tabQuery' },
+    // { icon: 'icon-rule', text: 'Điều kiện', name: 'tabQuery' },
     {
       icon: 'icon-email',
       text: 'Email/thông báo',
@@ -100,7 +100,6 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
       name: 'tabAnother',
     },
   ];
-  tabContent: any[];
   qbFilter: any;
   vllStepType = [];
   userOrg: any;
@@ -142,11 +141,11 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
   ) {
     this.user = this.auth.get();
     this.dialog = dialog;
-    this.transId = data?.data.transID;
-    this.stepNo = data?.data.stepNo;
-    this.lstStep = data?.data.lstStep;
-    this.isAdd = data?.data.isAdd;
-    this.dataEdit = data?.data.dataEdit;
+    this.transId = data?.data?.transID;
+    this.stepNo = data?.data?.stepNo;
+    this.lstStep = data?.data?.lstStep;
+    this.isAdd = data?.data?.isAdd;
+    this.dataEdit = data?.data?.dataEdit;
     this.defaultSignType = data?.data?.signatureType;
 
     this.allowEditAreas = data?.data?.allowEditAreas;
@@ -165,7 +164,7 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
         data?.data?.vllShare != null ? data?.data?.vllShare : 'ES014';
     }
 
-    this.hideTabQuery = data?.data.hideTabQuery ?? false;
+    //this.hideTabQuery = data?.data?.hideTabQuery ?? true;
     if (this.isAdd) {
       this.qbFilter = new Filters();
       this.qbFilter.logic = 'or';
@@ -176,32 +175,6 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
       } else {
         this.qbFilter = new Filters();
       }
-    }
-    this.tabContent = [
-      this.tabInfo0,
-      this.tabQuery,
-      this.tabEmail,
-      this.tabAnother,
-    ];
-
-    //test tabQuery
-    //this.hideTabQuery = !this.hideTabQuery;
-
-    if (this.hideTabQuery) {
-      this.tabInfo = [
-        { icon: 'icon-info', text: 'Thông tin chung', name: 'tabInfo' },
-        {
-          icon: 'icon-email',
-          text: 'Email/thông báo',
-          name: 'tabEmail',
-        },
-        {
-          icon: 'icon-tune',
-          text: 'Thông tin khác',
-          name: 'tabAnother',
-        },
-      ];
-      this.tabContent = [this.tabInfo0, this.tabEmail, this.tabAnother];
     }
   }
 

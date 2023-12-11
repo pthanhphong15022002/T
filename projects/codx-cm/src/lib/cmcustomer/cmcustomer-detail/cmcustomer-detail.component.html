@@ -725,7 +725,7 @@
 <ng-template #taskTemplate let-data>
   <step-task
     [entityName]="entityName"
-    [isAdmin]="isAdmin || user.userID == dataSelected.owner ? true : false"
+    [isAdmin]="isAdmin || user?.userID == dataSelected?.owner ? true : false"
     [isPause]="dataSelected?.status == '99'"
     [dataCM]="dataSelected"
     [customerName]="dataSelected?.customerName"
