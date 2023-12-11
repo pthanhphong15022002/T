@@ -28,4 +28,12 @@ export class LayoutComponent extends LayoutBaseComponent {
   onInit(): void {}
 
   onAfterViewInit(): void {}
+
+  menuClick(e){
+    console.log('menu: ', e);
+  }
+
+  childMenuClick(e){
+    console.log('childMenu: ', e);
+  }
 }
