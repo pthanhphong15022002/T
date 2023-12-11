@@ -34,7 +34,6 @@ export class TenantsComponent implements OnInit {
     this.loginDevice = {
       name: dInfo.browser,
       os: dInfo.os + ' ' + dInfo.osVersion,
-      ip: '',
       id: null,
       imei: null,
       trust: false,
