@@ -64,17 +64,27 @@ method="LoadDataAsync" -->
     </ng-container> -->
 
     <ng-container class="h-100" >
+      <!-- *ngIf="viewDetailData == true && gridDataSource.length > 0 && calendarGridColumns.length > 0" -->
       <codx-gridview-v2
-      *ngIf="viewDetailData == true && gridDataSource.length > 0 && calendarGridColumns.length > 0"
+      *ngIf="viewDetailData == true && calendarGridColumns.length > 0"
       #calendarGrid
       [formModel]="view.formModel"
       [columnsGrid]="calendarGridColumns"
+      [service]="'HR'"
+      [assemblyName]="'PR'"
+      [className]="'KowDsBusiness'"
+      [predicates]=""
+      [dataValues]="dataValues"
       [autoFitColumns]="false"
-      [dataSource] = "gridDataSource"
       [hideMoreFunc]="true"
       (onDoubleClick)="doubleClickGrid($event)"
       [height]="'100%'"
+      [method]="'LoadDataForGridAsync'"
       ></codx-gridview-v2>
+
+      <!-- [dataSource] = "gridDataSource" -->
+
+
       <!-- [predicates]="'EmployeeID=@0'" -->
       <!-- [method]="'LoadDataAsync'" -->
       <!-- [className]="'DataBusiness'" -->
@@ -110,6 +120,7 @@ method="LoadDataAsync" -->
   </ng-template>
 
   <ng-template #tempEmployee let-data>
+    <!-- {{logData(data)}} -->
   <div class="d-flex align-items-center border-bottom">
     <div class="p-3 ps-5"
     >
@@ -149,9 +160,9 @@ method="LoadDataAsync" -->
 
 
   <ng-template #tempDayData let-data>
-    <span>
+    <!-- <span>
       {{data? data[data.column.field][0]?.kowCode : "" }}
-    </span>
+    </span> -->
   </ng-template>
 
   <ng-template #tempEmployeeTC let-data>
