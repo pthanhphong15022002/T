@@ -100,22 +100,24 @@
 <ng-template #descTmp let-data>
   <div class="d-flex flex-column w-100">
     <div
-      class="mb-1 d-flex align-items-center"
+      class="mb-1 d-flex justify-content-start align-items-center"
       *ngIf="funcID == 'CM0102' && data?.mobile"
       [ngbTooltip]="popupAllowCall"
     >
       <ng-template #popupAllowCall>
-        <codx-label fiedName="Mobile" [formModel]="view.formModel"></codx-label>
+        <codx-label fiedName="Mobile" [formModel]="view.formModel"           [setRequire]="false"
+        ></codx-label>
       </ng-template>
       <span
-        class="text-gray-700 text-primary text-hover-primary"
-        [innerHTML]="
-          data.mobile | formatvalue : view.formModel : 'mobile' | async
-        "
+        class="text-gray-700 text-primary text-hover-primary me-2 icon-16 icon-phone_android"
       ></span>
+
+      <span class="text-gray-700 text-primary text-hover-primary">{{
+        data.mobile
+      }}</span>
     </div>
     <div
-      class="mb-1 d-flex align-items-center"
+      class="mb-1 d-flex justify-content-start align-items-center"
       *ngIf="funcID == 'CM0102' && data?.personalEmail"
       [ngbTooltip]="popupAllowEmail"
     >
@@ -123,16 +125,15 @@
         <codx-label
           fiedName="PersonalEmail"
           [formModel]="view.formModel"
+          [setRequire]="false"
         ></codx-label>
       </ng-template>
       <span
-        class="text-gray-700 text-primary text-hover-primary"
-        [innerHTML]="
-          data.personalEmail
-            | formatvalue : view.formModel : 'personalEmail'
-            | async
-        "
+        class="text-gray-700 text-primary text-hover-primary me-2 icon-16 icon-email"
       ></span>
+      <span class="text-gray-700 text-primary text-hover-primary">{{
+        data.personalEmail
+      }}</span>
     </div>
     <div
       class="mb-1 d-flex align-items-top text-hover-primary"
