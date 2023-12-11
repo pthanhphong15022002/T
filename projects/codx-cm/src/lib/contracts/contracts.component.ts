@@ -404,17 +404,22 @@ export class ContractsComponent extends UIComponent {
   async addTask(contract: CM_Contracts){
     let typeTask = await this.stepService.chooseTypeTask(['G','F']);
     if(typeTask){
-      let dataDeal = {
-        typeCM: '7',
-        parentTaskID: contract?.recID,
-      };
       let data = {
+        type: 'cm',
+        typeCM: "7",
+        isSave: true,
         action: 'add',
         taskType: typeTask,
-        isSave: true,
-        type: contract?.applyProcess ? 'instance':'activitie' ,
+        objectID: contract?.recID,
+        objectType: 'CM_Contracts',
         instanceID: contract?.refID,
-        dataParentTask: dataDeal,
+        ownerInstance: contract?.owner,
+        isActivitie: !contract?.applyProcess,
+        isStart: contract?.applyProcess? contract?.status != "1" : true,
+        dataParentTask: {
+          applyFor: "4",
+          parentTaskID: contract?.recID,
+        }
       }
       let dataOutput = await this.stepService.openPopupCodxTask(data, 'right');
       console.log(dataOutput);

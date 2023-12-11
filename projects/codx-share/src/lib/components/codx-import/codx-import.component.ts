@@ -1,5 +1,6 @@
 import {
   AfterViewInit,
+  ChangeDetectorRef,
   Component,
   OnChanges,
   OnInit,
@@ -91,6 +92,7 @@ export class CodxImportComponent implements OnInit, OnChanges, AfterViewInit {
     private formBuilder: FormBuilder,
     private notifySvr: NotificationsService,
     private realHub: RealHubService,
+    private ref: ChangeDetectorRef,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -140,7 +142,7 @@ export class CodxImportComponent implements OnInit, OnChanges, AfterViewInit {
     this.request.funcID = this.formModel?.funcID;
     this.getData();
     let total = 0;
-    let index = 0;
+    let index = -1;
 
     this.realHub.start(this.service).then((x: RealHub) => {
       if (x) {
@@ -163,8 +165,13 @@ export class CodxImportComponent implements OnInit, OnChanges, AfterViewInit {
               this.notifySvr.notifyCode('SYS006');
               (this.dialog as DialogRef).close();
             }
-            this.linear.value = this.valueProgress = (index / total) * 100;
-            this.valueProgressp = this.linear.value + 5;
+            if(index >= 0 && total > 0)
+            {
+              this.valueProgress = (index / total) * 100;
+              document.getElementById("pb-import").style.width = this.valueProgress+"%";
+              this.ref.detectChanges();
+              //this.valueProgressp = this.linear.value + 5;
+            }
           }
         });
       }
