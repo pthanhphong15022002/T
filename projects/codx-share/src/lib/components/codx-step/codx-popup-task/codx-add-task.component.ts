@@ -503,6 +503,7 @@ export class CodxAddTaskComponent implements OnInit {
             this.dataParentTask = res;
             if (res?.instancesStep) {
               this.instanceStep = res?.instancesStep;
+              this.isStart = !!(this.instanceStep?.startDate && this.instanceStep?.endDate);
               if (this.action == 'edit') {
                 this.listInsStepInUser = [res?.instancesStep];
                 this.statusInput.step.show = true;
@@ -538,12 +539,14 @@ export class CodxAddTaskComponent implements OnInit {
                 break;
               case '6': //Customers
                 this.typeCM = '1';
+                this.isStart = true;
                 break;
             }
             this.typeCMName = this.listTypeCM?.find(
               (x) => x.value == this.typeCM
             )?.text;
             this.dataTypeCM = this.dataParentTask?.parentTaskID;
+            this.setStatusFormDate();
           }
         });
     }
@@ -952,6 +955,7 @@ export class CodxAddTaskComponent implements OnInit {
         this.stepsTasks.objectType = null;
         this.stepsTasks.stepID = null;
         this.stepsTasks.taskGroupID = null;
+        this.isStart = this.dataTypeCM?.Status == "2";
         this.getListInstanceStep(this.dataTypeCM.RefID, true);
       } else {
         this.isActivitie = !!!this.dataTypeCM.RefID;

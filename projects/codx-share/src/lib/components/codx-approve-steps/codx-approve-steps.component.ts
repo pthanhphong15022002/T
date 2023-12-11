@@ -185,7 +185,7 @@ export class CodxApproveStepsComponent
                           ap.userID = curAp[0]?.userID;
                           ap.userName = curAp[0]?.userName;
                           ap.employeeID = curAp[0]?.employeeID;
-                          ap.position = ap?.position ?? curAp[0]?.positionName;
+                          ap.position = curAp[0]?.positionName ?? ap.position;
                           ap.orgUnitName = curAp[0]?.orgUnitName;
                         }
                       }

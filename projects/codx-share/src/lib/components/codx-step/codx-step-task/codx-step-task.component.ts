@@ -1913,11 +1913,13 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   //#region view
   viewTask(data, type) {
       if (data && !this.isViewStep && !this.isMoveStage) {
-        if( data?.objectLinked && data?.taskType == 'CO'){
-          this.viewDetailContract(data);
-          return;
-        }else{
-          this.notiService.notify('Bắt đầu ngay để thiết lập hợp đồng', '3');
+        if(data?.taskType == 'CO'){
+          if(data?.objectLinked){
+            this.viewDetailContract(data);
+            return;
+          }else{
+            this.notiService.notify('Bắt đầu ngay để thiết lập hợp đồng', '3');
+          } 
         }
         let frmModel: FormModel = {
           entityName: 'DP_Instances_Steps_Tasks',
