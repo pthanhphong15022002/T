@@ -65,7 +65,8 @@ export class CodxImportComponent implements OnInit, OnChanges, AfterViewInit {
   fileName: any;
   valueProgress = 0;
   valueProgressp = 0;
-  session: any;
+  session:any;
+  isSave = false;
   moreFunction = [
     {
       id: 'edit',
@@ -126,7 +127,7 @@ export class CodxImportComponent implements OnInit, OnChanges, AfterViewInit {
         .replace(/contrast/i, 'Contrast')
     );
   }
-
+  text = '';
   ngOnInit(): void {
     //Tạo formGroup
     this.importGroup = this.formBuilder.group({
@@ -139,26 +140,31 @@ export class CodxImportComponent implements OnInit, OnChanges, AfterViewInit {
     this.request.funcID = this.formModel?.funcID;
     this.getData();
     let total = 0;
+    let index = 0;
+
     this.realHub.start(this.service).then((x: RealHub) => {
       if (x) {
         x.$subjectReal.asObservable().subscribe((z) => {
           if (
-            (z.event == 'StartImport' || z.event == 'ImportSingle') &&
+            (z.event == 'ImportStart' ||
+              z.event == 'ImportSingle' ||
+              z.event == 'ImportSucess') &&
             z?.data?.session == this.session
           ) {
-            if (z.event == 'StartImport') total = z?.data?.total;
+            this.text = z?.data?.text;
+            if (z.event == 'ImportStart') {
+              if (z?.data?.total) total = z?.data?.total * 2;
+              else index = z?.data?.index;
+            } else if (z.event == 'ImportSingle') index += z?.data?.index;
             else {
-              console.log('total: ', total);
-              console.log('total 2 nè: ', z?.data?.total);
-              console.log('Index nè: ', z?.data?.index);
-              if (z?.data?.index == total) {
-                this.notifySvr.notifyCode('SYS006');
-                (this.dialog as DialogRef).close();
-              }
-              this.linear.value = this.valueProgress =
-                (z?.data?.index / total) * 100;
-              this.valueProgressp = this.linear.value + 5;
+              index = total;
             }
+            if (index == total) {
+              this.notifySvr.notifyCode('SYS006');
+              (this.dialog as DialogRef).close();
+            }
+            this.linear.value = this.valueProgress = (index / total) * 100;
+            this.valueProgressp = this.linear.value + 5;
           }
         });
       }
@@ -177,10 +183,15 @@ export class CodxImportComponent implements OnInit, OnChanges, AfterViewInit {
     this.fileCount = e.data.length;
   }
   onSave() {
-    if (this.fileCount <= 0) return this.notifySvr.notifyCode('OD022');
+    if(this.isSave) return;
+    this.isSave = true;
+
+    if(this.fileCount <= 0) return this.notifySvr.notifyCode('OD022');
     this.submitted = true;
+    
     if (this.importGroup.invalid) return;
     this.session = Util.uid();
+    
     this.api
       .execSv(this.service, 'Core', 'CMBusiness', 'ImportAsync', [
         this.binaryString,
@@ -194,8 +205,8 @@ export class CodxImportComponent implements OnInit, OnChanges, AfterViewInit {
       ])
       .subscribe((item) => {
         if (item && this.dialog) {
-          this.notifySvr.notifyCode('SYS006');
-          (this.dialog as DialogRef).close();
+          // this.notifySvr.notifyCode('SYS006');
+          // (this.dialog as DialogRef).close();
         }
       });
   }

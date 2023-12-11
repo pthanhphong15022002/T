@@ -472,7 +472,7 @@ export class ViewCalendarComponent
   }
 
   async chooseTask() {
-    let typeTask = await this.stepService.chooseTypeTask(false);
+    let typeTask = await this.stepService.chooseTypeTask(['G','F']);
     console.log(typeTask);
     if (typeTask) {
       this.beforeAddTask(typeTask);

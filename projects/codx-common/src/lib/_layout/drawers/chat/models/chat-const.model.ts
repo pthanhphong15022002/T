@@ -15,9 +15,9 @@ export const CHAT = {
     },
 
     UI_FUNC :{
-        OnConnected:"OnConnectedAsync",
-        OnDisconnected:'OnDisconnectedAsync',
-        LogOuted:"LogOutedAsync",
+        OnConnected:"OnConnected",
+        OnDisconnected:'OnDisconnected',
+        LogOuted:"LogOuted",
 
         LoadedGroup:'LoadedGroup',
         JoinedGroup:"JoinedGroup",
