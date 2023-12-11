@@ -22,10 +22,11 @@ export class SignalRService {
   logOut: boolean = false;
   userConnect = new EventEmitter<any>();
   disConnected = new EventEmitter<any>();
-  activeGroup = new EventEmitter<any>();
+  activeGroup = new EventEmitter<any>();//Bật chat box
   chatboxChange = new EventEmitter<any>();//Gửi tin
-  votedMessage = new EventEmitter<any>();
+  votedMessage = new EventEmitter<any>();//Thả emoji
   loadedGroup = new EventEmitter<any>();//Lấy thông tin Group
+  updateOnlineStatus = new EventEmitter<any>();//Lấy thông tin Group
 
   constructor(private authStore: AuthStore) {
     this.createConnection();
@@ -46,11 +47,13 @@ export class SignalRService {
     this.hubConnection.on('ReceiveMessage', (res) => {
       if (res) {
         switch (res.event) {
-          case 'onConnected':
+          case CHAT.UI_FUNC.OnConnected:
+            this.updateOnlineStatus.emit(res);
             break;
           
-          case 'onDisconnected':{
+          case CHAT.UI_FUNC.OnDisconnected:{
             this.disConnected.emit(res);
+            this.updateOnlineStatus.emit(res);
             break;
           }
 
