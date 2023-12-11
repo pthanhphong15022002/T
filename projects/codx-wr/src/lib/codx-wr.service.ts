@@ -9,7 +9,7 @@ export class CodxWrService {
   // listOrderPartsSubject = new BehaviorSubject<any>(null);
   listOrderUpdateSubject = new BehaviorSubject<any>(null);
   language = '';
-
+  childMenuClick = new BehaviorSubject<any>(null);
   constructor(
     private api: ApiHttpService,
     private notification: NotificationsService,
