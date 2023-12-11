@@ -290,7 +290,7 @@ export class ContractsComponent extends UIComponent {
               !data?.applyProcess || data?.status !== '2' || data?.closed;
             break;
           case 'CM0204_13': // thêm công việc
-            res.disabled = !data?.applyProcess || data?.closed;
+            res.disabled = data?.closed;
             break;
           case 'CM0204_14': // phân công người phụ trách
             res.disabled = data?.closed;
@@ -375,6 +375,9 @@ export class ContractsComponent extends UIComponent {
       case 'CM0204_16':
         this.closedContract(data, false);
         break;
+      case 'CM0204_13':
+        this.addTask(data);
+        break;
       default: {
         // var customData = {
         //   refID: data.recID,
@@ -396,6 +399,26 @@ export class ContractsComponent extends UIComponent {
         this.detectorRef.detectChanges();
         break;
       }
+    }
+  }
+  async addTask(contract: CM_Contracts){
+    let typeTask = await this.stepService.chooseTypeTask(['G','F']);
+    if(typeTask){
+      let dataDeal = {
+        typeCM: '7',
+        parentTaskID: contract?.recID,
+      };
+      let data = {
+        action: 'add',
+        taskType: typeTask,
+        isSave: true,
+        type: contract?.applyProcess ? 'instance':'activitie' ,
+        instanceID: contract?.refID,
+        dataParentTask: dataDeal,
+      }
+      let dataOutput = await this.stepService.openPopupCodxTask(data, 'right');
+      console.log(dataOutput);
+      
     }
   }
 
@@ -600,7 +623,6 @@ export class ContractsComponent extends UIComponent {
     this.api
       .execSv<any>('SYS', 'AD', 'CompanySettingsBusiness', 'GetAsync')
       .subscribe((res) => {
-        console.log(res);
         if (res) {
           this.account = res;
         }
