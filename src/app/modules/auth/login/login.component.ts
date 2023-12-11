@@ -155,6 +155,7 @@ export class LoginComponent extends UIComponent implements OnInit, OnDestroy {
       trust: false,
       tenantID: this.tenant,
       times: '1',
+      id: null,
     };
     console.log('login device info', this.loginDevice);
   }
