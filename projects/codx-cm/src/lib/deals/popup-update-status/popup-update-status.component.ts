@@ -36,12 +36,14 @@ export class PopupUpdateStatusComponent
 
   @ViewChild('form') form: CodxFormComponent;
   statusDefault:string = '';
+  status:string = '';
   statusCodecmt: string = '';
   applyFor: string = '';
   recID: string = '';
+  statusOld: string;
   data:any;
+  messageChangeStatus:string = '';
   valueListStatusCode:any[] =[];
-
   readonly fieldCbxStatusCode = { text: 'text', value: 'value' };
   constructor(
     private injector: Injector,
@@ -53,15 +55,17 @@ export class PopupUpdateStatusComponent
   ) {
     super(injector);
     this.dialogRef = dialogRef;
-    this.applyProcess = dialogData?.data.applyProcess;
-    this.statusDefault = dialogData?.data.statusDefault;
-    this.statusCodecmt = dialogData?.data.statusCodecmt;
+    this.applyProcess = dialogData?.data?.applyProcess;
+    this.statusDefault = dialogData?.data?.statusDefault;
+    this.statusCodecmt = dialogData?.data?.statusCodecmt;
     this.recID = dialogData?.data.recID;
     this.data = dialogData?.data;
     this.title =  dialogData?.data?.title;
     this.valueListStatusCode = dialogData?.data.valueListStatusCode;
     this.gridViewSetup = dialogData?.data?.gridViewSetup;
     this.applyFor = dialogData?.data?.category;
+    this.formModel = dialogData?.data?.formModel;
+    this.statusOld = dialogData?.data?.statusOld;
   }
 
   ngAfterViewInit(): void {}
@@ -72,24 +76,32 @@ export class PopupUpdateStatusComponent
     this.dialogRef.close();
   }
   saveForm() {
+    if(this.applyFor == '1') {
+      this.status =  this.checkStatus(this.statusOld, this.status);
+    }
+
     if(this.isLockStep) return;
     this.isLockStep = true;
-    let datas = [this.recID, this.statusDefault, this.statusCodecmt];
+    let datas = [this.recID, this.statusDefault, this.statusCodecmt, this.status];
     let functionCM = this.getMethod(this.applyFor);
     this.codxCmService.changeStatusCM(datas,functionCM.business,functionCM.method).subscribe((res) => {
       if (res) {
         let obj = {
           statusDefault: this.statusDefault,
           statusCodecmt: this.statusCodecmt,
+          status:this.status,
+          message: this.messageChangeStatus
         }
         this.dialogRef.close(obj);
       }
     });
 
+
   }
   valueChangeStatusCode($event) {
     if ($event) {
-      this.statusDefault = $event;
+      this.status = $event.component?.itemsSelected[0]?.ObjectStatus;
+      this.statusDefault = $event?.data;
     } else {
       this.statusDefault = null;
     }
@@ -121,5 +133,60 @@ export class PopupUpdateStatusComponent
       business: business,
       method:method
     };
+  }
+  checkStatus(statusOld, statusNew): string {
+    if(statusNew == statusOld && statusNew  ) return '';
+    if(statusOld == '0') {
+      if(statusNew != '0') {
+        this.messageChangeStatus = 'Phải xác nhận cơ hội để thực hiện hành động';
+        return '';
+      }
+    }
+    else if(statusOld == '1') {
+      if(statusNew == '15' && this.data?.owner)  {
+        this.messageChangeStatus = 'Người phụ trách đã được phân cônng';
+        return '';
+      }
+      if(statusNew == '3' || statusNew == '5'  )  {
+        this.messageChangeStatus = 'Cơ hội phải được bắt đầu ngay';
+        return '';
+      }
+      if(statusNew == '0' )  {
+        this.messageChangeStatus = 'Cơ hội đã xác nhận';
+        return '';
+      }
+    }
+    else if(statusOld == '2') {
+      if(statusNew == '1' )  {
+        this.messageChangeStatus = 'Cơ hội đã bắt đầu ngay';
+        return '';
+      }
+      if(statusNew == '0' )  {
+        this.messageChangeStatus = 'Cơ hội đã xác nhận';
+        return '';
+      }
+      if(statusNew == '15' && this.data?.owner)  {
+        this.messageChangeStatus = 'Người phụ trách đã được phân cônng';
+        return '';
+      }
+    }
+    else if(statusOld == '3' || statusOld == '5' ) {
+      if(statusNew == '1' )  {
+        this.messageChangeStatus = 'Cơ hội đã bắt đầu ngay';
+        return '';
+      }
+      if(statusNew == '0' )  {
+        this.messageChangeStatus = 'Cơ hội đã xác nhận';
+        return '';
+      }
+      if(statusNew == '15' && this.data?.owner)  {
+        this.messageChangeStatus = 'Người phụ trách đã được phân cônng';
+        return '';
+      }
+      if(statusNew == '3' || statusNew == '5'  )  {
+        return '';
+      }
+    }
+    return statusNew;
   }
 }

@@ -37,7 +37,7 @@ export class DealDetailComponent implements OnInit {
   @Input() listSteps: any;
   @Input() colorReasonSuccess: any;
   @Input() colorReasonFail: any;
-  @Input() valueListStatusCode: any;
+  // @Input() valueListStatusCode: any;
   @Input() funcID = 'CM0201'; //
   @Input() checkMoreReason = true;
   @Input() isChangeOwner = false;
@@ -832,15 +832,15 @@ export class DealDetailComponent implements OnInit {
     this.oCountFooter = JSON.parse(JSON.stringify(oCountFooter));
     this.changeDetectorRef.detectChanges();
   }
-  getStatusCode(status) {
-    if(status) {
-      let result = this.valueListStatusCode.filter(x=>x.value === status)[0];
-      if(result) {
-        return result?.text;
-      }
-    }
-    return '';
-  }
+  // getStatusCode(status) {
+  //   if(status) {
+  //     let result = this.valueListStatusCode.filter(x=>x.value === status)[0];
+  //     if(result) {
+  //       return result?.text;
+  //     }
+  //   }
+  //   return '';
+  // }
 
   //#region edit customer
   editCustomer(data){

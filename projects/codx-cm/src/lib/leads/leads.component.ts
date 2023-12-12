@@ -1606,6 +1606,7 @@ export class LeadsComponent
         valueListStatusCode: this.valueListStatusCode,
         gridViewSetup: this.gridViewSetup,
         category: this.applyFor,
+        statusOld: this.dataSelected?.status
       };
       let dialog = this.callfc.openForm(
         PopupUpdateStatusComponent,
