@@ -5,6 +5,7 @@ import { JournalService } from '../../journals/journals.service';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { CodxAcService } from '../../codx-ac.service';
 import { AdvancePaymentRequestAddComponent } from './advance-payment-request-add/advance-payment-request-add.component';
+import { CodxCommonService } from 'projects/codx-common/src/lib/codx-common.service';
 
 @Component({
   selector: 'lib-advance-payment-request',
@@ -38,6 +39,7 @@ export class AdvancePaymentRequestComponent extends UIComponent {
     private authStore: AuthStore,
     private shareService: CodxShareService,
     private notification: NotificationsService,
+    private codxCommonService: CodxCommonService,
     private journalService: JournalService
   ) {
     super(inject);
@@ -311,7 +313,7 @@ export class AdvancePaymentRequestComponent extends UIComponent {
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         this.dataCategory = res;
-        this.shareService
+        this.codxCommonService
           .codxRelease(
             'AC',
             data.recID,
@@ -345,7 +347,7 @@ export class AdvancePaymentRequestComponent extends UIComponent {
    * @param data
    */
   cancelReleaseVoucher(text: any, data: any) {
-    this.shareService
+    this.codxCommonService
       .codxCancel('AC', data?.recID, this.view.formModel.entityName, null, null)
       .pipe(takeUntil(this.destroy$))
       .subscribe((result: any) => {

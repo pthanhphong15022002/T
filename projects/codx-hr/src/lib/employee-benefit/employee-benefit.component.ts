@@ -24,6 +24,7 @@ import { CodxShareService } from 'projects/codx-share/src/lib/codx-share.service
 import { CodxOdService } from 'projects/codx-od/src/public-api';
 import moment from 'moment';
 import { PopupEbenefitComponent } from '../employee-profile/popup-ebenefit/popup-ebenefit.component';
+import { CodxCommonService } from 'projects/codx-common/src/lib/codx-common.service';
 
 @Component({
   selector: 'lib-employee-benefit',
@@ -84,6 +85,7 @@ export class EmployeeBenefitComponent extends UIComponent {
     private codxShareService: CodxShareService,
     private df: ChangeDetectorRef,
     private notify: NotificationsService,
+    private codxCommonService: CodxCommonService,
     private codxODService: CodxOdService
   ) {
     super(inject);
@@ -219,7 +221,7 @@ export class EmployeeBenefitComponent extends UIComponent {
           funcID === this.actionUpdateCanceled ||
           funcID === this.actionCancelSubmit
         ) {
-          this.codxShareService
+          this.codxCommonService
             .codxCancel(
               'HR',
               this.itemDetail.recID,
@@ -242,7 +244,7 @@ export class EmployeeBenefitComponent extends UIComponent {
       .subscribe((res) => {
         if (res) {
           this.dataCategory = res;
-          this.codxShareService.codxReleaseDynamic(
+          this.codxCommonService.codxReleaseDynamic(
             'HR',
             this.itemDetail,
             this.dataCategory,
@@ -566,7 +568,7 @@ export class EmployeeBenefitComponent extends UIComponent {
           funcID === this.actionUpdateCanceled ||
           funcID === this.actionCancelSubmit
         ) {
-          this.codxShareService
+          this.codxCommonService
             .codxCancel(
               'HR',
               res[0].recID,

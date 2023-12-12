@@ -11,6 +11,7 @@ import {
 import { Observable, finalize, map } from 'rxjs';
 import { CodxDpService } from '../../codx-dp.service';
 import { CodxShareService } from 'projects/codx-share/src/lib/codx-share.service';
+import { CodxCommonService } from 'projects/codx-common/src/lib/codx-common.service';
 
 @Component({
   selector: 'lib-popup-select-templet',
@@ -47,6 +48,7 @@ export class PopupSelectTempletComponent implements OnInit {
   constructor(
     private codxDpService: CodxDpService,
     private notificationsService: NotificationsService,
+    private codxCommonService: CodxCommonService,
     private codxShareService: CodxShareService,
     private api: ApiHttpService,
     @Optional() dt?: DialogData,
@@ -213,7 +215,7 @@ export class PopupSelectTempletComponent implements OnInit {
     //       this.notificationsService.notifyCode('ES007');
     //     }
     //   });
-    this.codxShareService.codxReleaseDynamic(
+    this.codxCommonService.codxReleaseDynamic(
       'DP',
       data,
       category,
@@ -232,7 +234,7 @@ export class PopupSelectTempletComponent implements OnInit {
         .updateApproverStatusInstance([this.data?.recID, '3'])
         .subscribe();
       this.dialog.close(this.data);
-      this.notificationsService.notifyCode('ES007');
+      // this.notificationsService.notifyCode('ES007');
     }
   }
 }

@@ -174,7 +174,7 @@ export class CodxAddBookingRoomComponent extends UIComponent {
     private notificationsService: NotificationsService,
     private codxBookingService: CodxBookingService,
     private codxShareService: CodxShareService,
-    private codxComonService: CodxCommonService,
+    private codxCommonService: CodxCommonService,
     private authService: AuthService,
     private cacheService: CacheService,
     private changeDetectorRef: ChangeDetectorRef,
@@ -1479,7 +1479,7 @@ export class CodxAddBookingRoomComponent extends UIComponent {
               this.codxBookingService
                 .getProcessByCategoryID(this.categoryID)
                 .subscribe((res: any) => {
-                  this.codxShareService
+                  this.codxCommonService
                     .codxRelease(
                       'EP',
                       this.returnData?.recID,
@@ -1539,7 +1539,7 @@ export class CodxAddBookingRoomComponent extends UIComponent {
       this.codxBookingService
         .getProcessByCategoryID(this.categoryID)
         .subscribe((category: any) => {
-          this.codxShareService.codxReleaseDynamic(
+          this.codxCommonService.codxReleaseDynamic(
             'EP',
             this.returnData,
             category,

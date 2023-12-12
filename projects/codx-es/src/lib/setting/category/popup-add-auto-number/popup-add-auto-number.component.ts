@@ -375,6 +375,7 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
           if (res) {
             this.autoDefaultData = res;
             if (this.autoDefaultData.autoNoType == '2') {
+              debugger
               this.api
                 .execAction(
                   'AD_AutoNumberSettings',
@@ -389,10 +390,17 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
                         this.addedSegments,
                         'SaveAsync'
                       )
-                      .subscribe((res: any) => {
-                        if (res) {
-                        }
-                      });
+                      .subscribe();
+                  }
+                  let addedIDs = this.addedSegments.map((x:any)=> {return x.recID});
+                  if(this.autoNoSegments.filter((x:any)=>addedIDs.indexOf(x.recID)==-1).length){
+                    this.api
+                      .execAction(
+                        'AD_AutoNumberSegments',
+                        this.autoNoSegments.filter((x:any)=>addedIDs.indexOf(x.recID)==-1),
+                        'UpdateAsync'
+                      )
+                      .subscribe();
                   }
                 });
             }
@@ -662,6 +670,7 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
     }
   }
 
+
   clickMF(e){
     if(e.type=='edit' && e.data){
       let option = new DialogModel();
@@ -693,11 +702,28 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
       });
     }
     if(e.type=='delete' && e.data){
-      let idx = this.autoNoSegments.findIndex((x:any)=>x.recID==e.data.recID);
+      let idx = this.addedSegments.findIndex((x:any)=>x.recID==e.data.recID);
       if(idx > -1){
-        this.autoNoSegments.splice(idx,1);
-        this.autoNoSegments = this.autoNoSegments.slice();
-        this.setAutoSetingPreview();
+        let idex = this.autoNoSegments.findIndex((x:any)=>x.recID==e.data.recID);
+        if(idex >-1){
+          this.autoNoSegments.splice(idx,1);
+          this.autoNoSegments = this.autoNoSegments.slice();
+          this.setAutoSetingPreview();
+        }
+
+      }
+      else{
+        this.api.execAction('AD_AutoNumberSegments', [e.data],'DeleteAsync').subscribe((res:any)=>{
+          if(!res.error){
+            let idex = this.autoNoSegments.findIndex((x:any)=>x.recID==e.data.recID);
+            if(idex >-1){
+              this.autoNoSegments.splice(idx,1);
+              this.autoNoSegments = this.autoNoSegments.slice();
+              this.setAutoSetingPreview();
+            }
+
+          }
+        })
       }
     }
   }

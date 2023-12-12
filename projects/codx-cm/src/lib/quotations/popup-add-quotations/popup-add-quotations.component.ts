@@ -347,6 +347,9 @@ export class PopupAddQuotationsComponent implements OnInit {
 
           this.contactCbx.ComponentCurrent.dataService.data = [];
           this.contactCbx.crrValue = null;
+          this.contactCbx.model = {
+            objectID: this.quotations.customerID,
+          };
           this.crrCustomerID = this.quotations.customerID;
         }
         break;
@@ -360,6 +363,9 @@ export class PopupAddQuotationsComponent implements OnInit {
           this.contactCbx.ComponentCurrent.dataService.data = [];
           this.contactCbx.crrValue = null;
           this.quotations.contactID = null;
+          this.contactCbx.model = {
+            objectID: this.quotations.customerID,
+          };
         }
 
         break;
