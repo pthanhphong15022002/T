@@ -39,6 +39,8 @@ import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { ActivatedRoute } from '@angular/router';
 import { ExportData } from 'projects/codx-share/src/lib/models/ApproveProcess.model';
 import { ContractsDetailComponent } from '../../../contracts/contracts-detail/contracts-detail.component';
+import { CodxViewApproveComponent } from 'projects/codx-share/src/lib/components/codx-step/codx-step-common/codx-view-approve/codx-view-approve.component';
+import { CodxCommonService } from 'projects/codx-common/src/lib/codx-common.service';
 @Component({
   selector: 'task',
   templateUrl: './task.component.html',
@@ -55,6 +57,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
   @Input() dealName: string;
   @Input() contractName: string;
   @Input() leadName: string;
+  @Input() activitiAdd;
 
   @Input() sessionID = ''; // session giao việc
   @Input() formModelAssign: FormModel; // formModel của giao việc
@@ -85,6 +88,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
     private cache: CacheService,
     private authstore: AuthStore,
     private stepService: StepService,
+    private codxCommonService: CodxCommonService,
     private callFunc: CallFuncService,
     private codxCmService: CodxCmService,
     private notiService: NotificationsService,
@@ -102,6 +106,13 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
       this.isNoData = false;
       this.listActivitie = [];
       this.getActivities();
+    }
+    if (changes?.activitiAdd && changes?.activitiAdd?.currentValue) {
+      let task = changes?.activitiAdd?.currentValue?.task
+      this.listActivitie.push(task);
+      this.isNoData = false;
+      this.notiService.notifyCode('SYS006');
+      this.changeDetectorRef.markForCheck();
     }
   }
 
@@ -330,6 +341,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
       this.save(task);
     }
   }
+
   save(data) {
     if (data?.task) {
       let isAddTask = data?.isAddTask;
@@ -809,7 +821,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
 
   release(data: any, category: any, exportData = null) {
     this.taskApproval = data;
-    this.codxShareService.codxReleaseDynamic(
+    this.codxCommonService.codxReleaseDynamic(
       'DP',
       data,
       category,
@@ -844,7 +856,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
           .getESCategoryByCategoryID(task?.recID)
           .subscribe((res: any) => {
             if (res) {
-              this.codxShareService
+              this.codxCommonService
                 .codxCancel('DP', task?.recID, 'DP_Activities', null, null)
                 .subscribe((res2: any) => {
                   if (res2?.msgCodeError)
@@ -865,5 +877,16 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
     });
   }
 
+  openFormApprover(task) {
+    this.taskApproval = task;
+    this.callFunc.openForm(
+      CodxViewApproveComponent,
+      '',
+      500,
+      550,
+      '',
+      { categoryID: task?.recID, type: '2', stepsTasks: task }
+    );
+  }
   //#endregion
 }

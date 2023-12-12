@@ -37,10 +37,11 @@ export class DealDetailComponent implements OnInit {
   @Input() listSteps: any;
   @Input() colorReasonSuccess: any;
   @Input() colorReasonFail: any;
-  @Input() valueListStatusCode: any;
+  // @Input() valueListStatusCode: any;
   @Input() funcID = 'CM0201'; //
   @Input() checkMoreReason = true;
   @Input() isChangeOwner = false;
+  @Input() taskAdd;
 
   @Output() clickMoreFunc = new EventEmitter<any>();
   @Output() changeMF = new EventEmitter<any>();
@@ -199,6 +200,10 @@ export class DealDetailComponent implements OnInit {
           this.customerName = res;
         });
       }
+    }
+    if(changes?.taskAdd){
+      console.log(changes?.taskAdd);
+      
     }
   }
 
@@ -832,15 +837,15 @@ export class DealDetailComponent implements OnInit {
     this.oCountFooter = JSON.parse(JSON.stringify(oCountFooter));
     this.changeDetectorRef.detectChanges();
   }
-  getStatusCode(status) {
-    if(status) {
-      let result = this.valueListStatusCode.filter(x=>x.value === status)[0];
-      if(result) {
-        return result?.text;
-      }
-    }
-    return '';
-  }
+  // getStatusCode(status) {
+  //   if(status) {
+  //     let result = this.valueListStatusCode.filter(x=>x.value === status)[0];
+  //     if(result) {
+  //       return result?.text;
+  //     }
+  //   }
+  //   return '';
+  // }
 
   //#region edit customer
   editCustomer(data){

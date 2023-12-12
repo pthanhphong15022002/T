@@ -26,9 +26,9 @@ import {
 } from '../codx-booking.model';
 import { CodxBookingService } from '../codx-booking.service';
 import { EPCONST } from 'projects/codx-ep/src/lib/codx-ep.constant';
-import { OMCONST } from 'projects/codx-om/src/lib/codx-om.constant';
 import { CodxShareService } from '../../../codx-share.service';
 import { Approver, ResponseModel } from '../../../models/ApproveProcess.model';
+import { CodxCommonService } from 'projects/codx-common/src/lib/codx-common.service';
 const _addMF = EPCONST.MFUNCID.Add;
 const _copyMF = EPCONST.MFUNCID.Copy;
 const _editMF = EPCONST.MFUNCID.Edit;
@@ -145,7 +145,7 @@ export class CodxAddBookingCarComponent
     private authService: AuthService,
     private authStore: AuthStore,
     private codxBookingService: CodxBookingService,
-    private codxShareService: CodxShareService,
+    private codxCommonService: CodxCommonService,
     private notificationsService: NotificationsService,
     @Optional() dialogData?: DialogData,
     @Optional() dialogRef?: DialogRef
@@ -1159,7 +1159,7 @@ export class CodxAddBookingCarComponent
                 this.codxBookingService
                   .getProcessByCategoryID(this.categoryID)
                   .subscribe((category: any) => {
-                    this.codxShareService.codxReleaseDynamic(
+                    this.codxCommonService.codxReleaseDynamic(
                       'EP',
                       this.returnData,
                       category,
@@ -1231,7 +1231,7 @@ export class CodxAddBookingCarComponent
               this.codxBookingService
                 .getProcessByCategoryID(this.categoryID)
                 .subscribe((res: any) => {
-                  this.codxShareService
+                  this.codxCommonService
                     .codxRelease(
                       'EP',
                       this.returnData?.recID,

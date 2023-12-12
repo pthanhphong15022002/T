@@ -38,7 +38,6 @@ export class TenantsComponent implements OnInit {
       imei: null,
       trust: false,
       tenantID: '',
-      times: '1',
     };
     this.activedRouter.queryParams.subscribe((res: any) => {
       this.loginDevice.loginType = res?.lt;

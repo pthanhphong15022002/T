@@ -24,6 +24,7 @@ import { CodxShareService } from 'projects/codx-share/src/lib/codx-share.service
 import { CodxOdService } from 'projects/codx-od/src/public-api';
 import { isObservable } from 'rxjs';
 import { ViewDayOffDetailComponent } from './view-day-off-detail/view-day-off-detail.component';
+import { CodxCommonService } from 'projects/codx-common/src/lib/codx-common.service';
 
 @Component({
   selector: 'lib-employee-day-off',
@@ -53,6 +54,7 @@ export class EmployeeDayOffComponent extends UIComponent {
     private activatedRoute: ActivatedRoute,
     private df: ChangeDetectorRef,
     private notify: NotificationsService,
+    private codxCommonService: CodxCommonService,
     private shareService: CodxShareService,
     private codxODService: CodxOdService
   ) {
@@ -388,7 +390,7 @@ export class EmployeeDayOffComponent extends UIComponent {
           funcID === this.actionUpdateCanceled ||
           funcID === this.actionCancelSubmit
         ) {
-          this.shareService
+          this.codxCommonService
             .codxCancel(
               'HR',
               this.itemDetail.recID,
@@ -482,7 +484,7 @@ export class EmployeeDayOffComponent extends UIComponent {
       .subscribe((res) => {
         if (res) {
           this.dataCategory = res;
-          this.shareService.codxReleaseDynamic(
+          this.codxCommonService.codxReleaseDynamic(
             'HR',
             this.itemDetail,
             this.dataCategory,
@@ -572,7 +574,7 @@ export class EmployeeDayOffComponent extends UIComponent {
           funcID === this.actionUpdateCanceled ||
           funcID === this.actionCancelSubmit
         ) {
-          this.shareService
+          this.codxCommonService
             .codxCancel(
               'HR',
               res[0].recID,
