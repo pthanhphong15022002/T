@@ -1521,26 +1521,41 @@ export class CodxShareService {
       this.apBaseRelease(approveProcess, releaseCallback);
     } else {
       //Kiểm tra tham số editApprovers
-      if (category?.editApprovers == true) {
-        let dialogApprove = this.callfunc.openForm(
-          CodxAddApproversComponent,
-          '',
-          400,
-          250,
-          '',
-          {},
-          ''
-        );
-        dialogApprove.closed.subscribe((res) => {
-          if (res?.event) {
-            approveProcess.approvers = res?.event;
-            //Gửi duyệt
-            this.apCheckReleaseESign(approveProcess, releaseCallback);
-          } else {
-            //Tắt form chọn người duyệt
-            return null;
+      if (category?.editApprovers == true && category?.eSign == true) {
+        this.getFileByObjectID(approveProcess.recID).subscribe(
+          (lstFile: any) => {
+            let signFile = this.apCreateSignFile(
+              approveProcess,
+              lstFile
+            );
+              this.apOpenPopupSignFile(
+                approveProcess,
+                releaseCallback,
+                signFile,
+                lstFile              
+              )
           }
-        });
+        );
+
+        // let dialogApprove = this.callfunc.openForm(
+        //   CodxAddApproversComponent,
+        //   '',
+        //   400,
+        //   250,
+        //   '',
+        //   {},
+        //   ''
+        // );
+        // dialogApprove.closed.subscribe((res) => {
+        //   if (res?.event) {
+        //     approveProcess.approvers = res?.event;
+        //     //Gửi duyệt
+        //     this.apCheckReleaseESign(approveProcess, releaseCallback);
+        //   } else {
+        //     //Tắt form chọn người duyệt
+        //     return null;
+        //   }
+        // });
       } else {
         //Gửi duyệt
         this.apCheckReleaseESign(approveProcess, releaseCallback);
