@@ -42,6 +42,7 @@ export class SalesinvoicesAddComponent extends UIComponent{
   @ViewChild('formSalesInvoice') public formSalesInvoice: CodxFormComponent;
   @ViewChild('elementTabDetail') elementTabDetail: any; //? element object các tab detail(chi tiết,hóa đơn GTGT)
   @ViewChild('eleCbxObjectID') eleCbxObjectID: any;
+  @ViewChild('eleCbxCurrencyID') eleCbxCurrencyID: any;
 
   headerText: string; //? tên tiêu đề
   dialog: DialogRef; //? dialog truyền vào
@@ -60,6 +61,7 @@ export class SalesinvoicesAddComponent extends UIComponent{
   ];
   isPreventChange:any = false;
   postDateControl:any;
+  preData:any;
   private destroy$ = new Subject<void>(); //? list observable hủy các subscribe api
 
   constructor(
@@ -71,12 +73,13 @@ export class SalesinvoicesAddComponent extends UIComponent{
     @Optional() dialogData?: DialogData
   ) {
     super(inject);
-    this.dialog = dialog; //? dialog truyền vào
-    this.dialogData = dialogData; //? data dialog truyền vào
-    this.headerText = dialogData.data?.headerText; //? get tên tiêu đề
-    this.dataDefault = { ...dialogData.data?.oData }; //? get data của Cashpayments
-    this.journal = { ...dialogData.data?.journal }; //? get data sổ nhật kí
-    this.baseCurr = dialogData.data?.baseCurr; //? get đồng tiền hạch toán
+    this.dialog = dialog;
+    this.dialogData = dialogData;
+    this.headerText = dialogData.data?.headerText;
+    this.dataDefault = { ...dialogData.data?.oData };
+    this.preData = { ...dialogData.data?.oData };
+    this.journal = { ...dialogData.data?.journal };
+    this.baseCurr = dialogData.data?.baseCurr;
   }
   //#endregion Constructor
 
@@ -111,7 +114,7 @@ export class SalesinvoicesAddComponent extends UIComponent{
    * @param eleTab
    */
   createTabDetail(event: any, eleTab: TabComponent) {
-    //this.showHideTabDetail(this.formPurchaseInvoices?.data?.subType, this.elementTabDetail);
+    //this.showHideTabDetail(this.formSalesInvoice?.data?.subType, this.elementTabDetail);
   }
 
   /**
@@ -233,10 +236,10 @@ export class SalesinvoicesAddComponent extends UIComponent{
   changeSubType(event?: any) {
     this.formSalesInvoice.setValue('subType',event.data[0],{onlySelf: true,emitEvent: false,});
     this.detectorRef.detectChanges();
-    // this.formPurchaseInvoices.setValue('subType',event.data[0],{onlySelf: true,emitEvent: false,});
+    // this.formSalesInvoice.setValue('subType',event.data[0],{onlySelf: true,emitEvent: false,});
     // this.detectorRef.detectChanges();
     // if (this.elementTabDetail) {
-    //   this.showHideTabDetail(this.formPurchaseInvoices?.data?.subType, this.elementTabDetail);
+    //   this.showHideTabDetail(this.formSalesInvoice?.data?.subType, this.elementTabDetail);
     // }
   }
 
@@ -250,27 +253,85 @@ export class SalesinvoicesAddComponent extends UIComponent{
     }
     let field = event?.field || event?.ControlName;
     let value = event?.data || event?.crrValue;
-    if(event && value && this.formSalesInvoice.hasChange(this.formSalesInvoice.preData,this.formSalesInvoice.data)){
-      this.formSalesInvoice.data.updateColumns = '';
-      switch (field.toLowerCase()) {
-        case 'objectid':
-          let indexObject = event?.component?.dataService?.data.find((x) =>x.ObjectID == value);
-          if (indexObject != null) {
-            let memo = this.getMemoMaster();
-            this.formSalesInvoice.setValue('memo',memo,{});
-            this.objectIDChange(field);
+    this.formSalesInvoice.setValue('updateColumns','',{});
+    switch (field.toLowerCase()) {
+      case 'objectid':
+        let indexob = this.eleCbxObjectID?.ComponentCurrent?.dataService?.data.findIndex((x) => x.ObjectID == this.eleCbxObjectID?.ComponentCurrent?.value);
+        if(value == '' || value == null || indexob == -1){
+          this.isPreventChange = true;
+          let memo = this.getMemoMaster();
+          this.formSalesInvoice.setValue(field,null,{});
+          this.formSalesInvoice.setValue('objectName', null, {});
+          this.formSalesInvoice.setValue('objectType', null, {});
+          this.formSalesInvoice.setValue('address', null, {});
+          this.formSalesInvoice.setValue('taxCode', null, {});
+          this.formSalesInvoice.setValue('warehouseID',null, {});
+          this.formSalesInvoice.setValue('pmtMethodID', null, {});
+          this.formSalesInvoice.setValue('pmtTermID', null, {});
+          this.formSalesInvoice.setValue('delModeID', null, {});
+          this.formSalesInvoice.setValue('memo', memo, {});
+          this.detectorRef.detectChanges();
+          this.isPreventChange = false;
+          return;
+        } 
+        let objectType = event?.component?.itemsSelected[0]?.ObjectType || '';
+        this.formSalesInvoice.setValue('objectType',objectType,{});
+        let memo = this.getMemoMaster();
+        this.formSalesInvoice.setValue('memo',memo,{});
+        this.objectIDChange(field);
+        break;
+
+      case 'currencyid':
+        let indexcr = this.eleCbxCurrencyID?.ComponentCurrent?.dataService?.data.findIndex((x) => x.CurrencyID == this.eleCbxCurrencyID?.ComponentCurrent?.value);
+        if(value == '' || value == null || indexcr == -1){
+          this.isPreventChange = true;
+          this.formSalesInvoice.setValue(field, this.preData?.currencyID, {});
+          if (this.preData?.currencyID != null) {
+            var key = Util.camelize(field);
+            var $error = (this.formSalesInvoice as any).elRef.nativeElement?.querySelector('div[data-field="' + key + '"].errorMessage');
+            if ($error) $error.classList.add('d-none');
           }
-          break;
-        case 'currencyid':
-          this.currencyIDChange(field);
-          break;
-        case 'exchangerate':
-          this.exchangeRateChange(field);
-          break;
-        case 'voucherdate':
-          this.voucherDateChange(field);
-          break;
-      }
+          this.isPreventChange = false;
+          this.detectorRef.detectChanges();
+        }
+        let valueCurrency = {
+          PreCurrency:  event?.component?.dataService?.currentComponent?.previousItemData?.CurrencyID || ''
+        };
+        this.currencyIDChange(field,valueCurrency);
+        break;
+
+      case 'exchangerate':
+        if(value == null){
+          this.isPreventChange = true;
+          setTimeout(() => {
+            this.formSalesInvoice.setValue(field,this.preData?.exchangeRate,{});
+            this.isPreventChange = false;
+            this.detectorRef.detectChanges();
+          }, 50);
+          if (this.preData?.exchangeRate != null) {
+            var key = Util.camelize(field);
+            var $error = (this.formSalesInvoice as any).elRef.nativeElement?.querySelector('div[data-field="' + key + '"].errorMessage');
+            if ($error) $error.classList.add('d-none');
+          }
+          return;
+        }
+        if(this.preData?.exchangeRate == this.formSalesInvoice?.data?.exchangeRate) return;
+        this.exchangeRateChange(field);
+        break;
+
+      case 'voucherdate':
+        if (value == null) return;
+        this.voucherDateChange(field);
+        break;
+      // case 'currencyid':
+      //   this.currencyIDChange(field);
+      //   break;
+      // case 'exchangerate':
+      //   this.exchangeRateChange(field);
+      //   break;
+      // case 'voucherdate':
+      //   this.voucherDateChange(field);
+      //   break;
     }
   }
 
@@ -497,35 +558,30 @@ export class SalesinvoicesAddComponent extends UIComponent{
     .subscribe((res: any) => {
       if (res) {
         this.isPreventChange = true;
-        if(this.formSalesInvoice.data.currencyID != res?.CurrencyID){
-          this.formSalesInvoice.setValue('currencyID',(res?.CurrencyID || ''),{});
-          this.showHideColumn();
-        } 
-        if (this.formSalesInvoice.data.exchangeRate != res?.ExchangeRate) {
-          this.formSalesInvoice.setValue('exchangeRate',(res?.ExchangeRate || 0),{});
-          this.formSalesInvoice.setValue('taxExchRate',(res?.TaxExchRate || 0),{});
-          setTimeout(() => {
-            if(this.eleGridSalesInvoice.dataSource.length){ //? nếu có dữ liệu chi tiết => refresh grid
-              this.formSalesInvoice.preData = {...this.formSalesInvoice.data};
-              this.dialog.dataService.update(this.formSalesInvoice.data).subscribe();
-              this.refreshGrid();
-            }
-          }, 100);
-          
-        }
-        this.formSalesInvoice.setValue('objectName',(res?.ObjectName || ''),{});
-        this.formSalesInvoice.setValue('objectType',(res?.ObjectType || ''),{});
-        this.formSalesInvoice.setValue('address',(res?.Address || ''),{});
-        this.formSalesInvoice.setValue('taxCode',(res?.TaxCode || ''),{});
-        this.formSalesInvoice.setValue('warehouseID',(res?.WarehouseID || ''),{});
-        this.formSalesInvoice.setValue('pmtMethodID',(res?.PmtMethodID || ''),{});
-        this.formSalesInvoice.setValue('pmtTermID',(res?.PmtTermID || ''),{});
-        this.formSalesInvoice.setValue('delModeID',(res?.DelModeID || ''),{});
+        this.formSalesInvoice.setValue('objectName',(res?.data?.objectName),{});
+        this.formSalesInvoice.setValue('objectType',(res?.data?.objectType),{});
+        this.formSalesInvoice.setValue('address',(res?.data?.address),{});
+        this.formSalesInvoice.setValue('taxCode',(res?.data?.taxCode),{});
+        this.formSalesInvoice.setValue('warehouseID',(res?.data?.warehouseID),{});
+        this.formSalesInvoice.setValue('pmtMethodID',(res?.data?.pmtMethodID),{});
+        this.formSalesInvoice.setValue('pmtTermID',(res?.data?.pmtTermID),{});
+        this.formSalesInvoice.setValue('delModeID',(res?.data?.delModeID),{});
+        this.formSalesInvoice.setValue('currencyID',(res?.data?.currencyID),{});
+        this.formSalesInvoice.setValue('exchangeRate',(res?.data?.exchangeRate),{});
+        this.formSalesInvoice.setValue('taxExchRate',(res?.data?.taxExchRate),{});
         this.formSalesInvoice.setValue('consultantID',(res?.ConsultantID || ''),{});
         this.formSalesInvoice.setValue('salespersonID',(res?.salespersonID || ''),{});
-
-        this.detectorRef.detectChanges();
+        this.formSalesInvoice.setValue('multi',(res?.multi),{});
+        if (this.eleGridSalesInvoice.dataSource.length) {
+          this.formSalesInvoice.preData = {...this.formSalesInvoice.data};
+          this.dialog.dataService.update(this.formSalesInvoice.data).subscribe();
+        }
+        if (res?.isRefreshGrid) {
+          this.showHideColumn();
+          this.eleGridSalesInvoice.refresh();
+        }
         this.isPreventChange = false;
+        this.detectorRef.detectChanges();
       }
     })
   }
@@ -534,27 +590,29 @@ export class SalesinvoicesAddComponent extends UIComponent{
    * *Hàm change tiền tệ
    * @param field 
    */
-  currencyIDChange(field:any){
+  currencyIDChange(field:any,obj:any){
     this.api.exec('AC', 'SalesInvoicesBusiness', 'ValueChangedAsync', [
       field,
       this.formSalesInvoice.data,
+      JSON.stringify(obj)
     ])
     .pipe(takeUntil(this.destroy$))
     .subscribe((res: any) => {
       if (res) {      
-        if (this.formSalesInvoice.data.exchangeRate != res?.ExchangeRate) {
-          this.formSalesInvoice.setValue('exchangeRate',(res?.ExchangeRate || 0),{});
-          this.formSalesInvoice.setValue('taxExchRate',(res?.TaxExchRate || 0),{});
+        this.isPreventChange = true;
+        this.formSalesInvoice.setValue('exchangeRate',res?.data?.exchangeRate,{});
+        this.preData = {...this.formSalesInvoice?.data};
+        if (this.eleGridSalesInvoice.dataSource.length) {
+          this.formSalesInvoice.preData = {...this.formSalesInvoice.data};
+          this.dialog.dataService.update(this.formSalesInvoice.data).subscribe();
         }
-        this.showHideColumn();
-        setTimeout(() => {
-          if(this.eleGridSalesInvoice.dataSource.length){ //? nếu có dữ liệu chi tiết => refresh grid
-            this.formSalesInvoice.preData = {...this.formSalesInvoice.data};
-            this.dialog.dataService.update(this.formSalesInvoice.data).subscribe();
-            this.refreshGrid();
-          }
-        }, 100);
-        this.detectorRef.detectChanges();
+        if (res?.isRefreshGrid) {
+          this.showHideColumn();
+          setTimeout(() => {
+            this.eleGridSalesInvoice.refresh();
+          }, 100);
+        }
+        this.isPreventChange = false;
       }
     })
   }
@@ -564,23 +622,23 @@ export class SalesinvoicesAddComponent extends UIComponent{
    * @param field 
    */
   exchangeRateChange(field:any){
-    this.formSalesInvoice.setValue('taxExchRate',this.formSalesInvoice.data.exchangeRate,{onlySelf: true,emitEvent: false});
-    if (this.eleGridSalesInvoice && this.eleGridSalesInvoice.dataSource.length) {
-      this.api.exec('AC', 'SalesInvoicesBusiness', 'UpdateLineAsync', [
-        this.formSalesInvoice.data,
+    this.api
+      .exec('AC', 'SalesInvoicesBusiness', 'ValueChangedAsync', [
         field,
+        this.formSalesInvoice.data,
+        ''
       ])
-      .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
-        if (res) {      
-          this.formSalesInvoice.preData = {...this.formSalesInvoice.data};
-          this.dialog.dataService.update(this.formSalesInvoice.data).subscribe();
-          this.refreshGrid();
+        if (res) {
+          this.preData = { ...this.formSalesInvoice?.data };
+          if (res?.isRefreshGrid) {
+            this.eleGridSalesInvoice.refresh();
+            this.formSalesInvoice.preData = { ...this.formSalesInvoice.data };
+            this.dialog.dataService.update(this.formSalesInvoice.data).subscribe();
+            this.detectorRef.detectChanges();
+          }
         }
-      })
-    }
-    // xử lí khi có line
-    
+      });
   }
 
   /**
@@ -588,26 +646,24 @@ export class SalesinvoicesAddComponent extends UIComponent{
    * @param field 
    */
   voucherDateChange(field){
-    this.formSalesInvoice.setValue('postedDate',this.formSalesInvoice.data.voucherDate,{});
-    this.formSalesInvoice.setValue('invoiceDate',this.formSalesInvoice.data.voucherDate,{});
     this.api.exec('AC', 'SalesInvoicesBusiness', 'ValueChangedAsync', [
       field,
       this.formSalesInvoice.data,
+      ''
     ])
     .pipe(takeUntil(this.destroy$))
     .subscribe((res: any) => {
-      if (res) {      
-        if (this.formSalesInvoice.data.exchangeRate != res?.ExchangeRate) {
-          this.formSalesInvoice.setValue('exchangeRate',(res?.ExchangeRate || 0),{});
-          this.formSalesInvoice.setValue('taxExchRate',(res?.TaxExchRate || 0),{});
-          if(this.eleGridSalesInvoice.dataSource.length){ //? nếu có dữ liệu chi tiết => refresh grid
-            this.formSalesInvoice.preData = {...this.formSalesInvoice.data};
-            this.dialog.dataService.update(this.formSalesInvoice.data).subscribe();
-            this.refreshGrid();
-          }
+      if (res) {
+        this.formSalesInvoice.setValue('exchangeRate',res?.data?.exchangeRate,{});
+        this.preData = {...this.formSalesInvoice?.data};
+        if (res?.isRefreshGrid) {
+          this.eleGridSalesInvoice.refresh();
+          this.formSalesInvoice.preData = { ...this.formSalesInvoice.data };
+          this.dialog.dataService.update(this.formSalesInvoice.data).subscribe();
+          this.detectorRef.detectChanges();
         }
       }
-    })
+    });
   }
 
   /**
