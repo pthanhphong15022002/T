@@ -47,12 +47,15 @@ export class PopupAddSegmentComponent implements OnInit, AfterViewInit {
     if (dt?.data && Object.keys(dt.data).length) {
       if (dt.data.segment){
         this.data = dt.data.segment;
-        if(this.data.charsNum){
-          this.data.dateFormat = this.data.dataFormat.substring(this.data.charsNum.toString().length)
+        this.headerText = 'Cập nhật'
+        if(this.data.dataType !='0') this.disableDataFormatSelect = false;
+        if(this.data.dataType =='2') this.vllDataFormat = 'AD010';
+        else this.vllDataFormat = 'AD012'
+        if(this.data.dataFormat){
+          this.data.charsNum = parseInt(this.data.dataFormat.match(/\d+/g).join(""));
+          this.data.dateFormat= this.data.dataFormat.match(/[a-z]+/gi).join("");
         }
-        else{
-          this.data.dateFormat = this.data.dataFormat
-        }
+
 
       }
       if (dt.data.columns) this.colums = dt.data.columns;
@@ -84,7 +87,7 @@ export class PopupAddSegmentComponent implements OnInit, AfterViewInit {
     this.diasbleAtt = false;
 
     this.data[e.field] = e.data;
-    if (e.field == 'attributeName') {
+    if (e.field == 'atttributeName') {
       if (this.colums.length) {
         let col = this.colums.find((x: any) => x.fieldName == e.data);
         if (col) {
@@ -102,16 +105,19 @@ export class PopupAddSegmentComponent implements OnInit, AfterViewInit {
         break;
       case '1':
         this.disableDataFormat = true;
+        this.disableDataFormatSelect = false;
         this.disableCharNum = true;
         this.vllDataFormat = 'AD012';
         break;
       case '2':
         this.disableDataFormat = true;
+        this.disableDataFormatSelect = false;
         this.vllDataFormat = 'AD010';
         this.disableCharNum = true;
         break;
       case '4':
         this.disableDataFormat = true;
+        this.disableDataFormatSelect = false;
         if (this.attributeType?.toLowerCase() == 'datetime') {
           this.disableCharNum = true;
           this.vllDataFormat = 'AD010';
@@ -144,7 +150,7 @@ export class PopupAddSegmentComponent implements OnInit, AfterViewInit {
     if (this.data.dataType && this.data.dataType != '0') {
       if (this.data.dateFormat) this.data.dataFormat = this.data.dateFormat;
       if (this.data.charsNum)
-        this.data.dataFormat = this.data.charsNum + this.data.dataFormat;
+        this.data.dataFormat = this.data.charsNum + this.data.dateFormat;
     }
 
     this.dialog.close(this.data);
