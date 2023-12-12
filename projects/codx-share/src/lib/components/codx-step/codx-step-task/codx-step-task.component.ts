@@ -75,8 +75,8 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   @Input() formModel: FormModel;
   @Input() instanceStep: DP_Instances_Steps;
   @Input() listInstanceStep: DP_Instances_Steps[];
-  @Input() taskAdd: DP_Instances_Steps_Tasks;
   @Input() groupTaskAdd: DP_Instances_Steps_TaskGroups;
+  @Input() taskAdd;
 
   @Input() isTaskFirst = false; // giai đoạn đầu tiên
   @Input() isStart = true; // bắt đầu ngay
@@ -251,15 +251,8 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       this.listGroupTask?.splice(index, 0, this.groupTaskAdd);
     }
     if (changes?.taskAdd && this.taskAdd) {
-      let group = this.listGroupTask?.find(
-        (group) => group.refID == this.taskAdd?.taskGroupID
-      );
-      if (group) {
-        if (!group?.task) {
-          group['task'] = [];
-        }
-        group?.task?.push(this.taskAdd);
-      }
+      this.changeTaskAdd(this.taskAdd?.task, this.taskAdd?.progressGroup,this.taskAdd?.progressStep, this.taskAdd?.isCreateMeeting);
+      this.taskAdd = null;
     }
     if (changes?.isAddTask && this.isRoleAll && this.isAddTask) {
       this.chooseTypeTask(['F']);
@@ -1913,11 +1906,13 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   //#region view
   viewTask(data, type) {
       if (data && !this.isViewStep && !this.isMoveStage) {
-        if( data?.objectLinked && data?.taskType == 'CO'){
-          this.viewDetailContract(data);
-          return;
-        }else{
-          this.notiService.notify('Bắt đầu ngay để thiết lập hợp đồng', '3');
+        if(data?.taskType == 'CO'){
+          if(data?.objectLinked){
+            this.viewDetailContract(data);
+            return;
+          }else{
+            this.notiService.notify('Bắt đầu ngay để thiết lập hợp đồng', '3');
+          } 
         }
         let frmModel: FormModel = {
           entityName: 'DP_Instances_Steps_Tasks',

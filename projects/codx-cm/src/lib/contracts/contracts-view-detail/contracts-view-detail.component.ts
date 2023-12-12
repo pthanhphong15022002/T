@@ -33,6 +33,7 @@ export class ContractsViewDetailComponent
   @Input() contract: CM_Contracts;
   @Input() formModel: FormModel;
   @Input() listInsStepStart = [];
+  @Input() dataTaskAdd;
   @ViewChild('quotationsTab') quotationsTab: TemplateRef<any>;
 
   @Output() clickMoreFunc = new EventEmitter<any>();
@@ -124,6 +125,9 @@ export class ContractsViewDetailComponent
   }
   ngOnChanges(changes: SimpleChanges): void {
     this.loadTabs();
+    if (changes?.dataTaskAdd) {
+      console.log(changes?.dataTaskAdd);
+    }
     if (changes?.contract && this.contract) {
       this.setDataInput();
       this.contractService.getContactByRecID(this.contract?.contactID).subscribe(res => {
