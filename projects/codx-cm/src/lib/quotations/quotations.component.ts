@@ -31,6 +31,7 @@ import { CM_Contracts, CM_Quotations } from '../models/cm_model';
 import { AddContractsComponent } from '../contracts/add-contracts/add-contracts.component';
 import { debug } from 'util';
 import { ExportData } from 'projects/codx-common/src/lib/models/ApproveProcess.model';
+import { CodxCommonService } from 'projects/codx-common/src/lib/codx-common.service';
 
 @Component({
   selector: 'lib-quotations',
@@ -104,6 +105,7 @@ export class QuotationsComponent extends UIComponent implements OnInit {
     private codxShareService: CodxShareService,
     private callfunc: CallFuncService,
     private notiService: NotificationsService,
+    private codxCommonService: CodxCommonService,
     private routerActive: ActivatedRoute,
     private codxCmService: CodxCmService,
     @Optional() dialog?: DialogRef
@@ -686,7 +688,7 @@ export class QuotationsComponent extends UIComponent implements OnInit {
   }
   //Gửi duyệt
   release(data: any, category: any, exportData = null) {
-    this.codxShareService.codxReleaseDynamic(
+    this.codxCommonService.codxReleaseDynamic(
       this.view.service,
       data,
       category,
@@ -739,7 +741,7 @@ export class QuotationsComponent extends UIComponent implements OnInit {
                 //trình ký
               } else if (res2?.eSign == false) {
                 //kí duyet
-                this.codxShareService
+                this.codxCommonService
                   .codxCancel(
                     'CM',
                     dt?.recID,

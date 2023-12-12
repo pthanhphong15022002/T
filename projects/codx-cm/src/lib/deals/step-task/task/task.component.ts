@@ -39,6 +39,7 @@ import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { ActivatedRoute } from '@angular/router';
 import { ExportData } from 'projects/codx-share/src/lib/models/ApproveProcess.model';
 import { ContractsDetailComponent } from '../../../contracts/contracts-detail/contracts-detail.component';
+import { CodxCommonService } from 'projects/codx-common/src/lib/codx-common.service';
 @Component({
   selector: 'task',
   templateUrl: './task.component.html',
@@ -85,6 +86,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
     private cache: CacheService,
     private authstore: AuthStore,
     private stepService: StepService,
+    private codxCommonService: CodxCommonService,
     private callFunc: CallFuncService,
     private codxCmService: CodxCmService,
     private notiService: NotificationsService,
@@ -809,7 +811,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
 
   release(data: any, category: any, exportData = null) {
     this.taskApproval = data;
-    this.codxShareService.codxReleaseDynamic(
+    this.codxCommonService.codxReleaseDynamic(
       'DP',
       data,
       category,
@@ -844,7 +846,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
           .getESCategoryByCategoryID(task?.recID)
           .subscribe((res: any) => {
             if (res) {
-              this.codxShareService
+              this.codxCommonService
                 .codxCancel('DP', task?.recID, 'DP_Activities', null, null)
                 .subscribe((res2: any) => {
                   if (res2?.msgCodeError)

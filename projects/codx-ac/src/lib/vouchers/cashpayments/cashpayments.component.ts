@@ -28,6 +28,7 @@ import { ProgressBar } from '@syncfusion/ej2-angular-progressbar';
 import { CodxListReportsComponent } from 'projects/codx-share/src/lib/components/codx-list-reports/codx-list-reports.component';
 import { Subject, takeUntil } from 'rxjs';
 import { JournalService } from '../../journals/journals.service';
+import { CodxCommonService } from 'projects/codx-common/src/lib/codx-common.service';
 declare var jsBh: any;
 @Component({
   selector: 'lib-cashpayments',
@@ -70,6 +71,7 @@ export class CashPaymentsComponent extends UIComponent {
     private inject: Injector,
     private acService: CodxAcService,
     private authStore: AuthStore,
+    private codxCommonService: CodxCommonService,
     private shareService: CodxShareService,
     private notification: NotificationsService,
     private tenant: TenantStore,
@@ -467,7 +469,7 @@ export class CashPaymentsComponent extends UIComponent {
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         this.dataCategory = res;
-        this.shareService
+        this.codxCommonService
           .codxRelease(
             'AC',
             data.recID,
@@ -503,7 +505,7 @@ export class CashPaymentsComponent extends UIComponent {
    * @param data
    */
   cancelReleaseVoucher(text: any, data: any) {
-    this.shareService
+    this.codxCommonService
       .codxCancel('AC', data?.recID, this.view.formModel.entityName, null, null)
       .pipe(takeUntil(this.destroy$))
       .subscribe((result: any) => {

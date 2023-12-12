@@ -29,6 +29,7 @@ import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { CodxHrService } from 'projects/codx-hr/src/public-api';
 import { CodxPrService } from '../codx-pr.service';
 import { FormGroup } from '@angular/forms';
+import { CodxCommonService } from 'projects/codx-common/src/lib/codx-common.service';
 
 @Component({
   selector: 'lib-over-time',
@@ -112,6 +113,7 @@ export class OverTimeComponent extends UIComponent {
     private cacheService: CacheService,
     private codxODService: CodxOdService,
     private codxShareService: CodxShareService,
+    private codxCommonService: CodxCommonService,
     private hrService: CodxHrService,
     private prService: CodxPrService,
     private notify: NotificationsService,
@@ -343,7 +345,7 @@ export class OverTimeComponent extends UIComponent {
       .getCategoryByEntityName(this.view.formModel.entityName)
       .subscribe((res) => {
         if (res) {
-          this.codxShareService.codxReleaseDynamic(
+          this.codxCommonService.codxReleaseDynamic(
             'PR',
             this.itemDetail,
             res,
@@ -572,7 +574,7 @@ export class OverTimeComponent extends UIComponent {
           functionID === this.actionUpdateCanceled ||
           functionID === this.actionCancelSubmit
         ) {
-          this.codxShareService
+          this.codxCommonService
             .codxCancel(
               'PR',
               this.itemDetail.recID,
