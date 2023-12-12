@@ -23,7 +23,7 @@ import { BookingItems, GridModels } from '../codx-booking.model';
 import { EPCONST } from 'projects/codx-ep/src/lib/codx-ep.constant';
 import { CodxShareService } from '../../../codx-share.service';
 import { Approver, ResponseModel } from '../../../models/ApproveProcess.model';
-
+import { CodxCommonService } from 'projects/codx-common/src/lib/codx-common.service';
 @Component({
   selector: 'codx-add-booking-stationery',
   templateUrl: './codx-add-booking-stationery.component.html',
@@ -83,7 +83,7 @@ export class CodxAddBookingStationeryComponent extends UIComponent {
     private injector: Injector,
     private auth: AuthStore,
     private codxBookingService: CodxBookingService,
-    private codxShareService: CodxShareService,
+    private codxCommonService: CodxCommonService,
     private notificationsService: NotificationsService,
     private authService: AuthService,
     @Optional() dialogRef: DialogRef,
@@ -505,7 +505,7 @@ export class CodxAddBookingStationeryComponent extends UIComponent {
                         curRO.roleID= curWarehourse[0]?.owner;
                       }
                     }
-                    this.codxShareService
+                    this.codxCommonService
                       .codxReleaseDynamic(
                         'EP',
                         item,

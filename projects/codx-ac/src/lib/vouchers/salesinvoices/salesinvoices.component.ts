@@ -13,6 +13,7 @@ import { SalesinvoicesAddComponent } from './salesinvoices-add/salesinvoices-add
 import { SalesInvoiceService } from './salesinvoices.service';
 import { CodxAcService } from '../../codx-ac.service';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
+import { CodxCommonService } from 'projects/codx-common/src/lib/codx-common.service';
 import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
 import { CodxListReportsComponent } from 'projects/codx-share/src/lib/components/codx-list-reports/codx-list-reports.component';
 
@@ -54,6 +55,7 @@ export class SalesinvoicesComponent extends UIComponent
     private acService: CodxAcService,
     private authStore: AuthStore,
     private shareService: CodxShareService,
+    private codxCommonService: CodxCommonService,
     private notification: NotificationsService,
     private tenant: TenantStore,
     private journalService: JournalService
@@ -577,7 +579,7 @@ export class SalesinvoicesComponent extends UIComponent
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         this.dataCategory = res;
-        this.shareService
+        this.codxCommonService
           .codxRelease(
             'AC',
             data.recID,
@@ -611,7 +613,7 @@ export class SalesinvoicesComponent extends UIComponent
    * @param data
    */
   cancelReleaseVoucher(text: any, data: any) {
-    this.shareService
+    this.codxCommonService
       .codxCancel('AC', data?.recID, this.view.formModel.entityName, null, null)
       .pipe(takeUntil(this.destroy$))
       .subscribe((result: any) => {

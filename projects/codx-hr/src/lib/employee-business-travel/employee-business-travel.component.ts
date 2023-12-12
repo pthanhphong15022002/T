@@ -23,6 +23,7 @@ import { CodxShareService } from 'projects/codx-share/src/lib/codx-share.service
 import { CodxOdService } from 'projects/codx-od/src/public-api';
 import { isObservable } from 'rxjs';
 import { PopupEmpBusinessTravelsComponent } from '../employee-profile/popup-emp-business-travels/popup-emp-business-travels.component';
+import { CodxCommonService } from 'projects/codx-common/src/lib/codx-common.service';
 
 @Component({
   selector: 'lib-employee-business-travel',
@@ -77,6 +78,7 @@ export class EmployeeBusinessTravelComponent extends UIComponent {
     private activatedRoute: ActivatedRoute,
     private codxShareService: CodxShareService,
     private df: ChangeDetectorRef,
+    private codxCommonService: CodxCommonService,
     private notify: NotificationsService,
     private codxODService: CodxOdService
   ) {
@@ -252,7 +254,7 @@ export class EmployeeBusinessTravelComponent extends UIComponent {
           funcID === this.actionUpdateCanceled ||
           funcID === this.actionCancelSubmit
         ) {
-          this.codxShareService
+          this.codxCommonService
             .codxCancel(
               'HR',
               this.itemDetail.recID,
@@ -275,7 +277,7 @@ export class EmployeeBusinessTravelComponent extends UIComponent {
       .subscribe((res) => {
         if (res) {
           this.processID = res;
-          this.codxShareService.codxReleaseDynamic(
+          this.codxCommonService.codxReleaseDynamic(
             'HR',
             this.itemDetail,
             this.processID,
@@ -549,7 +551,7 @@ export class EmployeeBusinessTravelComponent extends UIComponent {
           funcID === this.actionUpdateCanceled ||
           funcID === this.actionCancelSubmit
         ) {
-          this.codxShareService
+          this.codxCommonService
             .codxCancel(
               'HR',
               res[0].recID,

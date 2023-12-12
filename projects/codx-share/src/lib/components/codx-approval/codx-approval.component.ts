@@ -41,6 +41,7 @@ import { PopupSignForApprovalComponent } from 'projects/codx-es/src/lib/sign-fil
 import { environment } from 'src/environments/environment';
 import { DispatchService } from '../../../../../codx-od/src/lib/services/dispatch.service';
 import { CodxShareService } from '../../codx-share.service';
+import { CodxCommonService } from 'projects/codx-common/src/lib/codx-common.service';
 import { log } from 'console';
 
 @Component({
@@ -77,6 +78,7 @@ export class CodxApprovalComponent
   odService: DispatchService;
   codxShareService: CodxShareService;
   notifySvr: NotificationsService;
+  codxCommonService: CodxCommonService;
   callfunc: CallFuncService;
   esService: CodxEsService;
   routers: Router;
@@ -424,7 +426,7 @@ export class CodxApprovalComponent
         dialog.closed.subscribe((res) => {
           let oComment = res?.event;
           if (oComment) {
-            this.codxShareService
+            this.codxCommonService
               .codxApprove(
                 data?.recID,
                 status,
@@ -449,7 +451,7 @@ export class CodxApprovalComponent
           }
         });
       } else {
-        this.codxShareService
+        this.codxCommonService
           .codxApprove(data?.recID, status, null, null, null)
           .subscribe((res2: any) => {
             if (!res2?.msgCodeError) {
@@ -470,7 +472,7 @@ export class CodxApprovalComponent
       }
     }
     if (funcID == 'SYS207') {
-      this.codxShareService.codxUndo(data?.recID, null).subscribe((res) => {
+      this.codxCommonService.codxUndo(data?.recID, null).subscribe((res) => {
         if (res != null) {
           data = res;
           this.view.dataService.update(data).subscribe();

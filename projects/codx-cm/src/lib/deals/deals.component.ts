@@ -46,6 +46,7 @@ import { StepService } from 'projects/codx-share/src/lib/components/codx-step/st
 import { ExportData } from 'projects/codx-share/src/lib/models/ApproveProcess.model';
 import { Internationalization } from '@syncfusion/ej2-base';
 import { ViewDealDetailComponent } from './view-deal-detail/view-deal-detail.component';
+import { CodxCommonService } from 'projects/codx-common/src/lib/codx-common.service';
 
 @Component({
   selector: 'lib-deals',
@@ -186,6 +187,7 @@ export class DealsComponent
   loadFirst: boolean = true;
   totalView: string;
   moreEdit = '';
+  taskAdd;
   constructor(
     private inject: Injector,
     private cacheSv: CacheService,
@@ -194,6 +196,7 @@ export class DealsComponent
     private codxCmService: CodxCmService,
     private notificationsService: NotificationsService,
     private codxShareService: CodxShareService,
+    private codxCommonService: CodxCommonService,
     private authStore: AuthStore,
     private stepService: StepService,
     private callFunc: CallFuncService
@@ -1437,7 +1440,7 @@ export class DealsComponent
 
   release(data: any, category: any, exportData = null) {
     // new function release
-    this.codxShareService.codxReleaseDynamic(
+    this.codxCommonService.codxReleaseDynamic(
       this.view.service,
       data,
       category,
@@ -1490,7 +1493,7 @@ export class DealsComponent
                     //trình ký
                   } else if (res2?.eSign == false) {
                     //kí duyet
-                    this.codxShareService
+                    this.codxCommonService
                       .codxCancel(
                         'CM',
                         dt?.recID,
@@ -2079,27 +2082,6 @@ export class DealsComponent
     });
   }
 
-  async addTask(data) {
-    let taskType = await this.stepService.chooseTypeTask(['F']);
-    if (taskType) {
-      let dataDeal = {
-        typeCM: '5',
-        parentTaskID: data.recID,
-      };
-      let dataAddTask = {
-        type: 'notStep',
-        action: 'add',
-        taskType: taskType,
-        titleName: this.titleAction,
-        ownerInstance: data?.owner, // owner of Parent
-        dataParentTask: dataDeal,
-        instanceID: data.refID,
-        isStart: data.status == '2',
-      };
-      let task = await this.stepService.openPopupCodxTask(dataAddTask, 'right');
-    }
-  }
-
   exportTemplet(e, data) {
     this.codxCmService
       .getDataSource(data.recID, 'DealsBusiness')
@@ -2272,4 +2254,8 @@ export class DealsComponent
     }
   }
   //#endregion
+  async addTask(data){
+    let taskOutput = await this.stepService.addTaskCM(data, "CM_Deals");
+    this.taskAdd = taskOutput;
+  }
 }

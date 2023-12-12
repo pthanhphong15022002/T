@@ -59,6 +59,7 @@ import { UpdateVersionComponent } from '../updateversion/updateversion.component
 import { ApproveProcess } from 'projects/codx-share/src/lib/models/ApproveProcess.model';
 import { CodxTasksService } from 'projects/codx-share/src/lib/components/codx-tasks/codx-tasks.service';
 import { CodxTabsComponent } from 'projects/codx-share/src/lib/components/codx-tabs/codx-tabs.component';
+import { CodxCommonService } from 'projects/codx-common/src/lib/codx-common.service';
 
 @Component({
   selector: 'app-view-detail',
@@ -124,6 +125,7 @@ export class ViewDetailComponent
     private taskService: CodxTasksService,
     private authStore: AuthStore,
     private notifySvr: NotificationsService,
+    private codxCommonService: CodxCommonService,
     private codxODService: CodxOdService,
     private shareService: CodxShareService,
     private codxService: CodxService
@@ -1093,7 +1095,7 @@ export class ViewDetailComponent
                                 this.cancelAproval(item);
                                 //this.callfc.openForm();
                               } else if (res2?.eSign == false) {
-                                this.shareService
+                                this.codxCommonService
                                   .codxCancel(
                                     'OD',
                                     item?.recID,
@@ -1783,7 +1785,7 @@ export class ViewDetailComponent
   }
   //Gửi duyệt
   release(data: any, cate: any) {
-    this.shareService
+    this.codxCommonService
       .codxReleaseDynamic(
         this.view.service,
         data,
