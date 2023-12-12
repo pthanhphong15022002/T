@@ -76,9 +76,9 @@ codx-wrapper {
     background-color: #25253e;
 }
 
-.card.codx_cardimg:hover {
-    background-color: #2f2f53 !important;
-}
+// .card.codx_cardimg:hover {
+//     background-color: #2f2f53 !important;
+// }
 
 codx-setting-paramater .bg-body {
     background-color: var(--bg-card) !important;
@@ -1001,4 +1001,21 @@ codx-listview.card .card-header {
 .e-splitter .e-split-bar.e-split-bar-horizontal {
     background: transparent;
     margin: 0!important;
+}
+
+/** kanban **/
+.e-kanban .e-kanban-table.e-content-table .e-content-row:not(.e-swimlane-row) td {
+    background: transparent;
+}
+.e-kanban .e-kanban-content .e-content-row .e-content-cells .e-card-wrapper, .e-kanban .e-kanban-content .e-content-row .e-content-cells .e-card-container {
+    padding: 0;
+}
+.e-kanban .e-kanban-content .e-content-row .e-content-cells .e-card-wrapper .e-card,.e-kanban .e-kanban-content .e-content-row .e-content-cells .e-card-container .e-card {
+    border: 1px transparent solid!important;
+}
+.e-kanban .e-kanban-content .e-content-row .e-content-cells .e-card-wrapper .e-card.e-selection, .e-kanban .e-kanban-content .e-content-row .e-content-cells .e-card-container .e-card.e-selection {
+    border-color: #dde1f10c!important;
+}
+.e-kanban .e-kanban-content .e-content-row .e-content-cells .e-card-wrapper .e-card:hover, .e-kanban .e-kanban-content .e-content-row .e-content-cells .e-card-container .e-card:hover {
+    border-color: #bbc5d118!important;
 }

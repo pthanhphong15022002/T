@@ -9,7 +9,7 @@ import { CvInformationComponent } from './AITool/cv-information/cv-information.c
 @Component({
   selector: 'lib-workspace',
   templateUrl: './workspace.component.html',
-  styleUrls: ['./workspace.component.css']
+  styleUrls: ['./workspace.component.scss']
 })
 export class WorkspaceComponent extends WSUIComponent{
   modules:any;
