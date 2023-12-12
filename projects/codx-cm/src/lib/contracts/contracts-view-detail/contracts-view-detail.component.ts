@@ -33,7 +33,7 @@ export class ContractsViewDetailComponent
   @Input() contract: CM_Contracts;
   @Input() formModel: FormModel;
   @Input() listInsStepStart = [];
-  @Input() dataTaskAdd;
+  @Input() taskAdd;
   @ViewChild('quotationsTab') quotationsTab: TemplateRef<any>;
 
   @Output() clickMoreFunc = new EventEmitter<any>();

@@ -988,4 +988,73 @@ export class StepService {
         });
     });
   }
+
+  async addTaskCM(dataParent, entityName){
+    let typeCM;
+    let instanceID;
+    let isStart;
+    let isActivitie;
+    let applyFor;
+    switch (entityName) {
+      case 'CM_Deals':
+        instanceID = dataParent?.refID;
+        isStart = dataParent?.status != "1";
+        isActivitie = false;
+        applyFor = '1';
+        typeCM = "5";
+        break;
+      case 'CM_Leads':
+        instanceID = dataParent?.applyProcess ? dataParent?.refID : null;
+        isStart = dataParent?.status != "1";
+        isActivitie = !dataParent?.applyProcess;
+        applyFor = '5';
+        typeCM = "3";
+        break;
+      case 'CM_Cases':
+        instanceID = dataParent?.refID;
+        isStart = dataParent?.status != "1";
+        isActivitie = false;
+        applyFor = dataParent?.caseType == "1" ? "2" : " 3";
+        typeCM = "9";
+        break;
+      case 'CM_Customers':
+        instanceID = null;
+        isStart = true;
+        isActivitie = true;
+        applyFor = '5';
+        typeCM = "1";
+        break;
+      case 'CM_Contracts':
+        instanceID = dataParent?.applyProcess ? dataParent?.refID : null;
+        isStart = dataParent?.status != "1";
+        isActivitie = !dataParent?.applyProcess;
+        applyFor = '4';
+        typeCM = "7";
+        break;
+    }
+
+    let typeTask = await this.chooseTypeTask(['G','F']);
+    if(typeTask){
+      let data = {
+        typeCM,
+        isStart,
+        instanceID,
+        type: 'cm',
+        isActivitie,
+        isSave: true,
+        action: 'add',
+        taskType: typeTask,
+        objectID: dataParent?.recID,
+        objectType: 'CM_Contracts',
+        ownerInstance: dataParent?.owner,
+        dataParentTask: {
+          applyFor: "4",
+          parentTaskID: dataParent?.recID,
+        }
+      }
+      
+      return await this.openPopupCodxTask(data, 'right');
+    }
+  }
+
 }

@@ -56,6 +56,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
   @Input() dealName: string;
   @Input() contractName: string;
   @Input() leadName: string;
+  @Input() activitiAdd;
 
   @Input() sessionID = ''; // session giao việc
   @Input() formModelAssign: FormModel; // formModel của giao việc
@@ -103,6 +104,13 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
       this.isNoData = false;
       this.listActivitie = [];
       this.getActivities();
+    }
+    if (changes?.activitiAdd && changes?.activitiAdd?.currentValue) {
+      let task = changes?.activitiAdd?.currentValue?.task
+      this.listActivitie.push(task);
+      this.isNoData = false;
+      this.notiService.notifyCode('SYS006');
+      this.changeDetectorRef.markForCheck();
     }
   }
 
@@ -331,6 +339,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
       this.save(task);
     }
   }
+
   save(data) {
     if (data?.task) {
       let isAddTask = data?.isAddTask;
