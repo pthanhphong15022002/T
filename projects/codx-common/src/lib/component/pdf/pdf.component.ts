@@ -2362,6 +2362,7 @@ export class PdfComponent
       .subscribe((res) => {
         if (res) {
           this.lstAreas = res;
+          this.detectorRef.detectChanges();
         }
         this.curFileUrl = this.fileInfo.fileUrl;
         this.curFileName = this.fileInfo.fileName;
