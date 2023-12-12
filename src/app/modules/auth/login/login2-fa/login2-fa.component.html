@@ -144,7 +144,7 @@
           </div>
         </div>
       </div>
-      <div *ngIf="curLgType == 'otp'" class="otp-btn w-100">
+      <div *ngIf="curLgType == '3'" class="otp-btn w-100">
         <button [disabled]="otpTimeout > 0 || email == '' || email == null" type="button" (click)="generateOTP()"
           tabindex="-1" class="btn btn-full btn-outline-primary">
           <codx-label formModel="" class="text-primary" default="Gửi mã OTP"></codx-label>
