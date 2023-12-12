@@ -661,10 +661,9 @@ export class InstancesComponent
         this.dataSelected = JSON.parse(JSON.stringify(e.event));
         this.view?.dataService.update(this.dataSelected);
         if (this.kanban) {
-          // this.kanban.updateCard(data);  //core mới lỗi chô này
           if (this.kanban?.dataSource?.length == 1) {
             this.kanban.refresh();
-          }
+          } else this.kanban.updateCard(this.dataSelected);
         }
         if (this.detailViewInstance) {
           this.detailViewInstance.dataSelect = this.dataSelected;
@@ -1152,7 +1151,7 @@ export class InstancesComponent
   //End
   checkMoreReason(data, isUseReason) {
     if (data.closed) return true;
-    // if (data.isAdminAll) return false;
+    if (data.isAdminAll) return false;
     if (data.status != '2' || isUseReason) return true;
     if (!data.permissionMoveInstances) return true;
     return false;

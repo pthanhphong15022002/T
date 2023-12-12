@@ -1521,7 +1521,7 @@ export class CodxShareService {
       this.apBaseRelease(approveProcess, releaseCallback);
     } else {
       //Kiểm tra tham số editApprovers
-      if (category?.editApprovers == true && category?.eSign == true) {
+      if (category?.editApprovers == true && category?.eSign == false) {
         this.getFileByObjectID(approveProcess.recID).subscribe(
           (lstFile: any) => {
             let signFile = this.apCreateSignFile(
