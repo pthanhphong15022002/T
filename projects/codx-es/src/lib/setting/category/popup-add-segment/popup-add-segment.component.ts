@@ -45,7 +45,16 @@ export class PopupAddSegmentComponent implements OnInit, AfterViewInit {
   ) {
     this.dialog = dialog;
     if (dt?.data && Object.keys(dt.data).length) {
-      if (dt.data.segment) this.data = dt.data.segment;
+      if (dt.data.segment){
+        this.data = dt.data.segment;
+        if(this.data.charsNum){
+          this.data.dateFormat = this.data.dataFormat.substring(this.data.charsNum.toString().length)
+        }
+        else{
+          this.data.dateFormat = this.data.dataFormat
+        }
+
+      }
       if (dt.data.columns) this.colums = dt.data.columns;
       if (dt.data.autoNoSetting) this.autoNoSetting = dt.data.autoNoSetting;
       if (dt.data.functionID) this.functionID = dt.data.functionID;
@@ -63,6 +72,7 @@ export class PopupAddSegmentComponent implements OnInit, AfterViewInit {
     if (this.functionID) {
       this.cache.functionList(this.functionID).subscribe((res) => {
         if (res) this.function = res;
+
       });
     }
   }
@@ -87,11 +97,13 @@ export class PopupAddSegmentComponent implements OnInit, AfterViewInit {
         this.disableDataFormatSelect = true;
         this.disableCharNum = true;
         this.disableDataFormat = false;
+        this.vllDataFormat = 'AD012';
         this.diasbleAtt = true;
         break;
       case '1':
         this.disableDataFormat = true;
         this.disableCharNum = true;
+        this.vllDataFormat = 'AD012';
         break;
       case '2':
         this.disableDataFormat = true;
@@ -102,6 +114,7 @@ export class PopupAddSegmentComponent implements OnInit, AfterViewInit {
         this.disableDataFormat = true;
         if (this.attributeType?.toLowerCase() == 'datetime') {
           this.disableCharNum = true;
+          this.vllDataFormat = 'AD010';
         }
         if (this.attributeType?.toLowerCase() == 'string') {
           this.vllDataFormat = 'AD012';

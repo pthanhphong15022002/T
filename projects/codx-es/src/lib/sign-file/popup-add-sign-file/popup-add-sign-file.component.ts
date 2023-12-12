@@ -182,7 +182,7 @@ export class PopupAddSignFileComponent implements OnInit {
     this.refID = data?.data?.refID; // Bắt buộc truyền nếu từ module != ES: Lưu RefID của SignFile
     this.typeCategory =
       this.refType == 'ES_Categories' ? 'ES_SignFiles' : this.refType; //Dùng để lấy Category của Module
-    this.editApprovers = data?.data?.editApprovers ?? false;
+    this.editApprovers = false ;//data?.data?.editApprovers ?? false;
     this.approvers = data?.data?.approvers ?? null;
     this.approverProcess = data?.data?.approverProcess ?? null;
     if (this.approverProcess) {
@@ -653,12 +653,17 @@ export class PopupAddSignFileComponent implements OnInit {
 
   haveESignFileCheck(){
     if(this.data?.files?.length>0){
-      let fileESign = this.data?.files?.filter(x=>x?.eSign ==true || x?.eSign =="1" );
-      if(fileESign?.length>0){
-        this.disableContinue =false;        
+      if(this.eSign){
+        let fileESign = this.data?.files?.filter(x=>x?.eSign ==true || x?.eSign =="1" );
+        if(fileESign?.length>0){
+          this.disableContinue =false;        
+        }
+        else{        
+          this.disableContinue = true;  
+        }
       }
       else{        
-        this.disableContinue = true;  
+        this.disableContinue = false;  
       }
     }
     else{      

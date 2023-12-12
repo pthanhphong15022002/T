@@ -21,7 +21,7 @@
   (onLoading)="onLoading($event)"
   (searchChanged)="searchChanged($event)"
   (onMoreMulti)="onMoreMulti($event)"
-  (changeDataMF)="changeDataMF($event, dataSelected, 11)"
+  (changeDataMF)="changeDataMF($event, dataSelected)"
   (clickMF)="clickMF($event, dataSelected)"
 ></codx-views>
 
@@ -105,7 +105,10 @@
       [ngbTooltip]="popupAllowCall"
     >
       <ng-template #popupAllowCall>
-        <codx-label fiedName="Mobile" [formModel]="view.formModel"           [setRequire]="false"
+        <codx-label
+          fiedName="Mobile"
+          [formModel]="view.formModel"
+          [setRequire]="false"
         ></codx-label>
       </ng-template>
       <span
