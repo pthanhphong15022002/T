@@ -39,6 +39,7 @@ import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { ActivatedRoute } from '@angular/router';
 import { ExportData } from 'projects/codx-share/src/lib/models/ApproveProcess.model';
 import { ContractsDetailComponent } from '../../../contracts/contracts-detail/contracts-detail.component';
+import { CodxViewApproveComponent } from 'projects/codx-share/src/lib/components/codx-step/codx-step-common/codx-view-approve/codx-view-approve.component';
 @Component({
   selector: 'task',
   templateUrl: './task.component.html',
@@ -865,5 +866,16 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
     });
   }
 
+  openFormApprover(task) {
+    this.taskApproval = task;
+    this.callFunc.openForm(
+      CodxViewApproveComponent,
+      '',
+      500,
+      550,
+      '',
+      { categoryID: task?.recID, type: '2', stepsTasks: task }
+    );
+  }
   //#endregion
 }

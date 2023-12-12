@@ -18,7 +18,7 @@
           type="valuelist"
           refValue="AD009"
           field="dataType"
-          [crrValue]="data.dataType"
+          [crrValue]="data.dataType || '0'"
           (valueChange)="valueChange($event)"
         >
         </codx-input>
@@ -51,6 +51,7 @@
           [model]="function"
           [showButtons]="false"
           [disabled]="diasbleAtt"
+          [crrValue]="data?.attributeName"
           (valueChange)="valueChange($event)"
         >
         </codx-input>

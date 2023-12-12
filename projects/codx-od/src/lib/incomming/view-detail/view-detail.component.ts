@@ -1782,48 +1782,46 @@ export class ViewDetailComponent
     }
   }
   //Gửi duyệt
-  release(data: any, processID: any) {
+  release(data: any, cate: any) {
     this.shareService
-      .codxRelease(
+      .codxReleaseDynamic(
         this.view.service,
-        data?.recID,
-        processID,
+        data,
+        cate,
         this.view.formModel.entityName,
         this.formModel.funcID,
-        '',
-        '<div>' + data?.title + '</div>',
-        ''
-      )
-      .subscribe((res2: any) => {
-        if (res2?.msgCodeError) this.notifySvr.notify(res2?.msgCodeError);
-        else {
-          data.status = '3';
-          data.approveStatus = '3';
-          this.notifySvr.notifyCode('ES007');
-
-          this.odService
-            .updateDispatch(
-              data,
-              '',
-              false,
-              this.referType,
-              this.formModel?.entityName
-            )
-            .subscribe((item) => {
-              if (item.status == 0) {
-                this.view.dataService.update(item?.data).subscribe();
-                this.data.status = item?.data?.status;
-                this.data.approveStatus = '3';
-                this.data = [...this.data];
-              } else this.notifySvr.notify(item.message);
-            });
-          //add công văn nội bộ đến khi duyệt thành công công văn nội bộ đi
-          if (data.dispatchType == '3') {
-            this.addInternalIncoming(data);
+        data?.title,
+        (res2: any) => {
+          if (res2?.msgCodeError) this.notifySvr.notify(res2?.msgCodeError);
+          else {
+            data.status = '3';
+            data.approveStatus = '3';
+            this.notifySvr.notifyCode('ES007');
+  
+            this.odService
+              .updateDispatch(
+                data,
+                '',
+                false,
+                this.referType,
+                this.formModel?.entityName
+              )
+              .subscribe((item) => {
+                if (item.status == 0) {
+                  this.view.dataService.update(item?.data).subscribe();
+                  this.data.status = item?.data?.status;
+                  this.data.approveStatus = '3';
+                  this.data = [...this.data];
+                } else this.notifySvr.notify(item.message);
+              });
+            //add công văn nội bộ đến khi duyệt thành công công văn nội bộ đi
+            if (data.dispatchType == '3') {
+              this.addInternalIncoming(data);
+            }
           }
-        }
-        //this.notifySvr.notify(res2?.msgCodeError)
-      });
+          //this.notifySvr.notify(res2?.msgCodeError)
+        })
+      
   }
 
   //new công văn nội bộ đến
@@ -1923,7 +1921,7 @@ export class ViewDetailComponent
         }
         if (res2?.eSign == false)
           //xét duyệt
-          this.release(datas, processID);
+          this.release(datas, category);
         // else
         //   this.shareServicex
         //     .codxReleaseDynamic(

@@ -353,7 +353,7 @@
               <codx-label name="lblBack" [formModel]="formModelCustom" default="Quay lại">
               </codx-label>
             </button>
-            <button type="button" class="btn btn-light-primary me-3" *ngIf="currentTab != 0 && !isTemplate"
+            <button type="button" class="btn btn-light-primary me-3" *ngIf="currentTab != 0 && !isTemplate && eSign"
               [disabled]="modeView == '2' ? true : false" (click)="openPopup(processTemplate)">
               <codx-label name="lblBtnTemplate" [formModel]="formModelCustom" default="Dùng quy trình mẫu">
               </codx-label>
@@ -387,7 +387,7 @@
                 (valueChange)="applyTemplate($event)"
               ></ejs-combobox>
               </div> -->
-              <div ngbDropdown class="dropdown">
+              <!-- <div ngbDropdown class="dropdown">
                 <button
                   class="btn btn-sm btn-bg-primary text-inverse-primary me-2 mb-2 min-w-60px rounded-4 d-flex align-items-center"
                   type="button" aria-expanded="false">
@@ -418,7 +418,7 @@
                     </a>
                   </li>
                 </ul>
-              </div>
+              </div> -->
               <!-- <a class="btn btn-sm btn-bg-success text-inverse-primary me-2 mb-2 min-w-60px rounded-4"
                 *ngIf="isTemplate " (click)="openTemplateName(addTemplateName)">
                 <codx-label Name="lblAprrove" [formModel]="dialog.formModel"

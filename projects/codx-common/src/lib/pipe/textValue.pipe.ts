@@ -15,7 +15,7 @@ export class TextValuePipe implements PipeTransform {
   {}
   transform(value: string,mssgCode:string) : Observable<any>{
     return this.cache.message(mssgCode).pipe(map(res => {
-      let _strMssg = res.defaultName ;
+      let _strMssg = res?.customName ;
       if(value){
         let _param = JSON.parse(value);
         let _obj:any = {};

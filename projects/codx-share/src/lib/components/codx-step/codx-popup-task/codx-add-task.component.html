@@ -38,7 +38,7 @@
     [ngTemplateOutlet]="addTaskInCM"
   ></ng-container>
 
-  <div class="form-group" *ngIf="statusInput.step.show">
+  <div class="form-group" *ngIf="statusInput?.step?.show">
     <div class="mb-1 line-clamp line-clamp-1">
       <codx-label
         class="text-primary"
@@ -48,7 +48,7 @@
       >
       </codx-label>
     </div>
-    <div>
+    <div *ngIf="listInsStepInUser?.length > 0">
       <ejs-combobox
         #comboboxStep
         [dataSource]="listInsStepInUser"
