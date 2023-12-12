@@ -599,7 +599,7 @@ export class StepService {
     );
   }
 
-  async openPopupTaskContract(data, action, task, stepID, groupTaskID) {
+  async openPopupTaskContract(data, action, task, stepID, groupTaskID, isStartIns) {
     if(task){
       task = JSON.parse(JSON.stringify(task));
     }else{
@@ -634,7 +634,7 @@ export class StepService {
         // task.objectLinked = contract?.recID;
       }
     }
-    data = {...data,stepsTasks: task}
+    data = {...data,stepsTasks: task, isStartIns}
     let contractOuput = await this.openPopupContract(data);
     let contract = contractOuput?.event?.contract;
     if (contract) {

@@ -856,7 +856,8 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         'add',
         task,
         this.currentStep?.recID,
-        groupTask
+        groupTask,
+        this.isStart
       );
       objectLinked = taskContract?.objectLinked;
       if(!taskContract){
@@ -1090,7 +1091,8 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         'add',
         null,
         this.currentStep?.recID,
-        groupID
+        groupID,
+        this.isStart
       );
       this.api
         .exec<any>('DP', 'InstancesStepsBusiness', 'AddTaskStepAsync', [
@@ -1224,7 +1226,8 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
           'edit',
           task,
           this.currentStep?.recID,
-          null
+          null,
+          this.isStart
         );
         this.api
           .exec<any>('DP', 'InstancesStepsBusiness', 'UpdateTaskStepAsync', [
@@ -1306,7 +1309,8 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
           'copy',
           task,
           this.currentStep?.recID,
-          null
+          null,
+          this.isStart
         );
         this.api
           .exec<any>('DP', 'InstancesStepsBusiness', 'AddTaskStepAsync', [
