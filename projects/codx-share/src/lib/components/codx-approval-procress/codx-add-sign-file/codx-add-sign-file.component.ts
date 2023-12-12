@@ -35,6 +35,7 @@ import { ApprovalStepComponent } from 'projects/codx-es/src/lib/setting/approval
 import { ES_SignFile } from 'projects/codx-es/src/lib/codx-es.model';
 import { CodxEsService } from 'projects/codx-es/src/lib/codx-es.service';
 import { ES_File } from '../model/codx-approval-process.model';
+import { CodxCommonService } from 'projects/codx-common/src/lib/codx-common.service';
 
 @Component({
   selector: 'codx-add-sign-file',
@@ -120,6 +121,7 @@ export class CodxAddSignFileComponent implements OnInit {
     private esService: CodxEsService,
     private codxService: CodxService,
     private codxShareService: CodxShareService,
+    private codxCommonService: CodxCommonService,
     private cr: ChangeDetectorRef,
     private callfuncService: CallFuncService,
     public dmSV: CodxDMService,
@@ -1337,7 +1339,7 @@ export class CodxAddSignFileComponent implements OnInit {
         this.isReleasing = false;
         return;
       }
-      this.codxShareService
+      this.codxCommonService
         .codxRelease(
           'ES',
           this.data?.recID,

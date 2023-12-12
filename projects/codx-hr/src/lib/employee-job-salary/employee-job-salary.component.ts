@@ -24,6 +24,7 @@ import { CodxHrService } from '../codx-hr.service';
 import { PopupEmployeeJobsalaryComponent } from './popup-employee-jobsalary/popup-employee-jobsalary.component';
 import { CodxEpService } from 'projects/codx-ep/src/public-api';
 import { CodxShareService } from 'projects/codx-share/src/lib/codx-share.service';
+import { CodxCommonService } from 'projects/codx-common/src/lib/codx-common.service';
 
 @Component({
   selector: 'lib-employee-job-salary',
@@ -79,6 +80,7 @@ export class EmployeeJobSalaryComponent extends UIComponent {
     inject: Injector,
     private hrService: CodxHrService,
     private codxShareService: CodxShareService,
+    private codxCommonService: CodxCommonService,
     private activatedRoute: ActivatedRoute,
     private df: ChangeDetectorRef,
     private notify: NotificationsService,
@@ -310,7 +312,7 @@ this.cache
       .subscribe((res) => {
         if (res) {
           this.processID = res;
-          this.codxShareService
+          this.codxCommonService
             .codxRelease(
               'HR',
               this.itemDetail?.recID,

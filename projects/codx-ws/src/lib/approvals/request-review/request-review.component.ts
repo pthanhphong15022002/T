@@ -7,6 +7,7 @@ import { CodxEsService } from 'projects/codx-es/src/public-api';
 import { DispatchService } from 'projects/codx-od/src/lib/services/dispatch.service';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { componentsDetail } from './routing';
+import { CodxCommonService } from 'projects/codx-common/src/lib/codx-common.service';
 
 @Component({
   selector: 'lib-request-review',
@@ -48,7 +49,8 @@ export class RequestReviewComponent
   allMFunc: any;
   vllApproval: any;
   dataUnbounds:any;
-  constructor(inject: Injector) {
+  constructor(inject: Injector,
+    private codxCommonService: CodxCommonService,) {
     super(inject);
     this.routers = inject.get(Router);
     this.odService = inject.get(DispatchService);
@@ -370,7 +372,7 @@ export class RequestReviewComponent
           let oComment = res?.event;
           if(oComment)
           {
-            this.codxShareService
+            this.codxCommonService
             .codxApprove(
               data?.recID,
               status,
@@ -394,7 +396,7 @@ export class RequestReviewComponent
           }
         });
       } else {
-        this.codxShareService
+        this.codxCommonService
           .codxApprove(
             data?.recID,
             status,
@@ -420,7 +422,7 @@ export class RequestReviewComponent
       }
     }
     if (funcID == 'SYS207') {
-      this.codxShareService.codxUndo(data?.recID,null).subscribe((res:any) => {
+      this.codxCommonService.codxUndo(data?.recID,null).subscribe((res:any) => {
         if (res != null) {
           res.unbounds = data.unbounds;
           res.unbounds.statusApproval = res.status;

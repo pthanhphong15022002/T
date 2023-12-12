@@ -13,7 +13,7 @@ import {
   AuthStore,
 } from 'codx-core';
 import { PdfComponent } from 'projects/codx-common/src/lib/component/pdf/pdf.component';
-import { CodxShareService } from 'projects/codx-share/src/lib/codx-share.service';
+import { CodxCommonService } from 'projects/codx-common/src/lib/codx-common.service';
 import { ApproveProcess } from 'projects/codx-share/src/lib/models/ApproveProcess.model';
 
 @Component({
@@ -35,7 +35,7 @@ export class CodxViewReleaseSignFileComponent extends UIComponent {
     private inject: Injector,
     private notify: NotificationsService,
     private authStore: AuthStore,
-    private codxShareService: CodxShareService,
+    private codxCommonService: CodxCommonService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -72,7 +72,7 @@ export class CodxViewReleaseSignFileComponent extends UIComponent {
   }
   ngAfterViewInit() {}
   release() {
-    this.codxShareService
+    this.codxCommonService
       .codxRelease(
         this.approveProcess?.module,
         this.approveProcess?.recID,

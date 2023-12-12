@@ -46,6 +46,7 @@ import moment from 'moment';
 import { PopupUpdateStatusComponent } from '../deals/popup-update-status/popup-update-status.component';
 import { ExportData } from 'projects/codx-share/src/lib/models/ApproveProcess.model';
 import { ViewDealDetailComponent } from '../deals/view-deal-detail/view-deal-detail.component';
+import { CodxCommonService } from 'projects/codx-common/src/lib/codx-common.service';
 @Component({
   selector: 'lib-leads',
   templateUrl: './leads.component.html',
@@ -165,6 +166,7 @@ export class LeadsComponent
     private activedRouter: ActivatedRoute,
     private changeDetectorRef: ChangeDetectorRef,
     private codxCmService: CodxCmService,
+    private codxCommonService: CodxCommonService,
     private notificationsService: NotificationsService,
     private codxShareService: CodxShareService,
     private authStore: AuthStore,
@@ -1805,7 +1807,7 @@ export class LeadsComponent
   }
   release(data: any, category: any, exportData = null) {
     //duyet moi
-    this.codxShareService.codxReleaseDynamic(
+    this.codxCommonService.codxReleaseDynamic(
       this.view.service,
       data,
       category,
@@ -1871,7 +1873,7 @@ export class LeadsComponent
             //trình ký
           } else if (res2?.eSign == false) {
             //kí duyet
-            this.codxShareService
+            this.codxCommonService
               .codxCancel(
                 'CM',
                 dt?.recID,

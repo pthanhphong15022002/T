@@ -57,6 +57,7 @@ import { GridModels } from './instance-dashboard/instance-dashboard.component';
 import { AddContractsComponent } from 'projects/codx-cm/src/lib/contracts/add-contracts/add-contracts.component';
 import { PopupAssginDealComponent } from 'projects/codx-cm/src/lib/deals/popup-assgin-deal/popup-assgin-deal.component';
 import { ExportData } from 'projects/codx-share/src/lib/models/ApproveProcess.model';
+import { CodxCommonService } from 'projects/codx-common/src/lib/codx-common.service';
 
 @Component({
   selector: 'codx-instances',
@@ -247,6 +248,7 @@ export class InstancesComponent
     private callFunc: CallFuncService,
     private codxDpService: CodxDpService,
     private codxShareService: CodxShareService,
+    private codxCommonService: CodxCommonService,
     private changeDetectorRef: ChangeDetectorRef,
     private notificationsService: NotificationsService,
     private authStore: AuthStore,
@@ -2479,7 +2481,7 @@ export class InstancesComponent
 
   // // data?.stepName, => tên theo quy trình
   release(data: any, category: any, exportData: any, viewHtml) {
-    this.codxShareService.codxReleaseDynamic(
+    this.codxCommonService.codxReleaseDynamic(
       'DP',
       data,
       category,
@@ -2508,7 +2510,7 @@ export class InstancesComponent
   }
 
   releaseInstances(data: any, category: any) {
-    this.codxShareService.codxReleaseDynamic(
+    this.codxCommonService.codxReleaseDynamic(
       'DP',
       data,
       category,
@@ -2559,7 +2561,7 @@ export class InstancesComponent
   }
 
   cancelRelease(transID, entityName) {
-    this.codxShareService
+    this.codxCommonService
       .codxCancel('DP', transID, entityName, null, null)
       .subscribe((res3) => {
         if (res3) {
