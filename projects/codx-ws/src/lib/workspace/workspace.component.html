@@ -1,4 +1,4 @@
-<div class="f-flex flex-column w-100 h-100">
+<div class="f-flex flex-column w-100 workspace-main">
     <div class="spinner_panel" *ngIf="loading">
       <div class="loader"></div>
     </div>
@@ -35,7 +35,7 @@
         <!-- end content -->
     </div>
     <!-- Speed dial -->
-    <!-- <div class="speedial">
+    <div class="speedial">
       <ejs-tooltip id="details" target=".tooltip-speeddial .e-speeddial-li" position="LeftCenter">
         <div id="target" class="speeddial-appearence-target custom-index">
             <button ejs-speeddial id="speeddial1" [disabled]="disabledSpeedDial"
@@ -53,7 +53,7 @@
           </button>
         </div>
       </ejs-tooltip>
-    </div> -->
+    </div>
 </div>
 
 
@@ -238,7 +238,7 @@
 
 <!-- OKR -->
 <ng-template #popupOKR let-dialog>
-  <codx-form [dialog]="dialog" [formModel]="dialog.formModel" headerText="Tạo Key Result" [body]="OKRBody" [footer]="OKRFooter" >
+  <codx-form [dialog]="dialog" [formModel]="dialog.formModel" headerText="Tạo mục tiêu" [body]="OKRBody" [footer]="OKRFooter" >
   </codx-form>
   <ng-template #OKRBody>
     <div class="py-3 h-100">
@@ -251,13 +251,13 @@
         </select>
       </div> -->
       <div class="mb-3">
-        <label for="exampleFormControlInput3" class="form-label">Object:</label>
+        <label for="exampleFormControlInput3" class="form-label">Mục tiêu cần đạt</label>
         <codx-input type="text" className="form-control" field="target" [crrValue]="okrModel.target" (valueChange)="valueChange($event,'okr')">
         </codx-input>
       </div>
       <div class="mb-3">
-        <label for="exampleFormControlInput3" class="form-label">Số key:</label>
-        <codx-input type="text" className="form-control" field="num_KPI" [crrValue]="okrModel.num_KPI" (valueChange)="valueChange($event,'okr')">
+        <label for="exampleFormControlInput3" class="form-label">Số lượng kết quả chính</label>
+        <codx-input type="number" className="form-control" field="num_KPI" [crrValue]="okrModel.num_KPI" (valueChange)="valueChange($event,'okr')">
         </codx-input>
       </div>
       <div class="mb-3 textarea-keyresult">
@@ -265,7 +265,9 @@
           field="result" 
           format="ed" 
           type="textarea" 
-          [crrValue]="okrModel.result">
+          [crrValue]="okrModel.result"
+          height="400"
+        >
         </codx-input>
       </div>
     </div>

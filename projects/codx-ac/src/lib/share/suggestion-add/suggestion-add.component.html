@@ -61,14 +61,14 @@
 <ng-template #tabBasic>
     <div class="mt-3">
         <div class="row">
-            <div style="min-width: 250px;max-width: 300px;" class="col-4">
+            <div class="col-xl-4">
                 <div class="form-group">
                     <codx-label fiedName="objectID" default="Đối tượng">
                     </codx-label>
                     <codx-input type="text" [disabled]="true" [crrValue]="objectName"></codx-input>
                 </div>
             </div>
-            <div style="min-width: 160px;max-width: 160px;" class="col-2">
+            <div style="min-width: 160px;" class="col-xl-2">
                 <div class="form-group">
                     <codx-label fiedName="lblDate" default="Ngày đề nghị từ">
                     </codx-label>
@@ -76,7 +76,7 @@
                         (valueChange)="valueChange($event)"></codx-input>
                 </div>
             </div>
-            <div style="min-width: 160px;max-width: 160px;" class="col-2">
+            <div style="min-width: 160px;" class="col-xl-2">
                 <div class="form-group">
                     <codx-label [formModel]="form.formModel" default="Ngày đề nghị đến">
                     </codx-label>
@@ -84,14 +84,14 @@
                         [crrValue]="oData.voucherDate"></codx-input>
                 </div>
             </div>
-            <div style="min-width: 150px;max-width: 150px;" class="col-2">
+            <div class="col-xl-2">
                 <div class="form-group">
                     <codx-label [formModel]="form.formModel" default="Số chứng từ đến">
                     </codx-label>
                     <codx-input field="voucherNo" type="text" (valueChange)="valueChange($event)"></codx-input>
                 </div>
             </div>
-            <div style="min-width: 150px;max-width: 150px;" class="col-2 d-flex align-items-center">
+            <div class="col-xl-2 d-flex align-items-center mt-5">
                 <div class="form-group">
                     <button type="button" class="btn btn-md btn-light-primary rounded-15"
                     style="border: 1px solid var(--primary-dark) !important;" (click)="loadData()">
