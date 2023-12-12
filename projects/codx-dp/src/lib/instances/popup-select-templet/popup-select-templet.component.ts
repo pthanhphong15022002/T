@@ -234,7 +234,7 @@ export class PopupSelectTempletComponent implements OnInit {
         .updateApproverStatusInstance([this.data?.recID, '3'])
         .subscribe();
       this.dialog.close(this.data);
-      this.notificationsService.notifyCode('ES007');
+      // this.notificationsService.notifyCode('ES007');
     }
   }
 }

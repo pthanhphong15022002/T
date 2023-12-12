@@ -9,7 +9,6 @@ export class Device {
   public os: string;
   public imei?: string;
   public trust: boolean;
-  public times: string;
   public tenantID: string;
   public loginType?: string;
   public session?: string;

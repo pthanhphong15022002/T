@@ -39,6 +39,7 @@ import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { ActivatedRoute } from '@angular/router';
 import { ExportData } from 'projects/codx-share/src/lib/models/ApproveProcess.model';
 import { ContractsDetailComponent } from '../../../contracts/contracts-detail/contracts-detail.component';
+import { CodxViewApproveComponent } from 'projects/codx-share/src/lib/components/codx-step/codx-step-common/codx-view-approve/codx-view-approve.component';
 import { CodxCommonService } from 'projects/codx-common/src/lib/codx-common.service';
 @Component({
   selector: 'task',
@@ -56,6 +57,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
   @Input() dealName: string;
   @Input() contractName: string;
   @Input() leadName: string;
+  @Input() activitiAdd;
 
   @Input() sessionID = ''; // session giao việc
   @Input() formModelAssign: FormModel; // formModel của giao việc
@@ -104,6 +106,13 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
       this.isNoData = false;
       this.listActivitie = [];
       this.getActivities();
+    }
+    if (changes?.activitiAdd && changes?.activitiAdd?.currentValue) {
+      let task = changes?.activitiAdd?.currentValue?.task
+      this.listActivitie.push(task);
+      this.isNoData = false;
+      this.notiService.notifyCode('SYS006');
+      this.changeDetectorRef.markForCheck();
     }
   }
 
@@ -332,6 +341,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
       this.save(task);
     }
   }
+
   save(data) {
     if (data?.task) {
       let isAddTask = data?.isAddTask;
@@ -867,5 +877,16 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
     });
   }
 
+  openFormApprover(task) {
+    this.taskApproval = task;
+    this.callFunc.openForm(
+      CodxViewApproveComponent,
+      '',
+      500,
+      550,
+      '',
+      { categoryID: task?.recID, type: '2', stepsTasks: task }
+    );
+  }
   //#endregion
 }

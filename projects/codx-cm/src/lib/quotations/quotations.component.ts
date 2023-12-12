@@ -725,7 +725,7 @@ export class QuotationsComponent extends UIComponent implements OnInit {
           break;
       }
       this.view.dataService.update(this.itemSelected).subscribe();
-      this.notiService.notifyCode('ES007');
+      // this.notiService.notifyCode('ES007');
     }
   }
 

@@ -663,10 +663,9 @@ export class InstancesComponent
         this.dataSelected = JSON.parse(JSON.stringify(e.event));
         this.view?.dataService.update(this.dataSelected);
         if (this.kanban) {
-          // this.kanban.updateCard(data);  //core mới lỗi chô này
           if (this.kanban?.dataSource?.length == 1) {
             this.kanban.refresh();
-          }
+          } else this.kanban.updateCard(this.dataSelected);
         }
         if (this.detailViewInstance) {
           this.detailViewInstance.dataSelect = this.dataSelected;
@@ -2463,7 +2462,8 @@ export class InstancesComponent
                   recID: this.dataSelected.recID,
                   data: dt[1]?.datas,
                 };
-                this.release(dt[0], this.esCategory, exportData);
+                let viewHtml = this.dataSelected.title + ' - ' + dt[0].stepName; //`<div class="d-flex flex-column"><div class="line-clamp line-clamp-2 text-dark">${this.dataSelected.title}</div><div class="text-gray-700 line-clamp">${dt[0].stepName}</div></div>`; // ES ko cho truyền chuỗi html
+                this.release(dt[0], this.esCategory, exportData, viewHtml);
               }
             });
 
@@ -2480,14 +2480,14 @@ export class InstancesComponent
   }
 
   // // data?.stepName, => tên theo quy trình
-  release(data: any, category: any, exportData: any) {
+  release(data: any, category: any, exportData: any, viewHtml) {
     this.codxCommonService.codxReleaseDynamic(
       'DP',
       data,
       category,
       'DP_Instances_Steps',
       this.view.formModel.funcID,
-      this.dataSelected.title, //html truyen qua
+      viewHtml, // this.dataSelected.title, //html truyen qua
       this.releaseCallback.bind(this),
       null,
       null,
@@ -2505,7 +2505,7 @@ export class InstancesComponent
       this.dataSelected.approveStatus = res?.returnStatus ?? '3';
       this.view.dataService.update(this.dataSelected).subscribe();
       if (this.kanban) this.kanban.updateCard(this.dataSelected);
-      this.notificationsService.notifyCode('ES007');
+      // this.notificationsService.notifyCode('ES007'); // ES trả về rồi
     }
   }
 
@@ -2527,7 +2527,7 @@ export class InstancesComponent
       this.dataSelected.approveStatus = res?.returnStatus ?? '3';
       this.view.dataService.update(this.dataSelected).subscribe();
       if (this.kanban) this.kanban.updateCard(this.dataSelected);
-      this.notificationsService.notifyCode('ES007');
+      // this.notificationsService.notifyCode('ES007');
     }
   }
 

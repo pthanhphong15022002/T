@@ -170,7 +170,7 @@ export class LeadsComponent
     private notificationsService: NotificationsService,
     private codxShareService: CodxShareService,
     private authStore: AuthStore,
-    private callFunc: CallFuncService,
+    private callFunc: CallFuncService
   ) {
     super(inject);
     if (!this.funcID) {
@@ -1632,6 +1632,7 @@ export class LeadsComponent
         valueListStatusCode: this.valueListStatusCode,
         gridViewSetup: this.gridViewSetup,
         category: this.applyFor,
+        statusOld: this.dataSelected?.status,
       };
       let dialog = this.callfc.openForm(
         PopupUpdateStatusComponent,
@@ -1829,7 +1830,7 @@ export class LeadsComponent
       this.dataSelected.approveStatus = res?.returnStatus;
       this.dataSelected.status = res?.returnStatus;
       this.view.dataService.update(this.dataSelected).subscribe();
-      this.notificationsService.notifyCode('ES007');
+      // this.notificationsService.notifyCode('ES007');
       // this.codxCmService
       //   .getOneObject(this.dataSelected.recID, 'LeadsBusiness')
       //   .subscribe((c) => {

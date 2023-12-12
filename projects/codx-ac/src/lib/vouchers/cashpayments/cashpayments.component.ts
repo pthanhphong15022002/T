@@ -43,7 +43,7 @@ export class CashPaymentsComponent extends UIComponent {
   @ViewChild('templateDetailRight') templateDetailRight: TemplateRef<any>; //? template view danh sách chi tiết (phải)
   @ViewChild('listTemplate') listTemplate?: TemplateRef<any>; //? template view danh sách
   @ViewChild('templateGrid') templateGrid?: TemplateRef<any>; //? template view lưới
-  headerText: any; //? tên tiêu đề truyền cho form thêm mới
+  headerText: any;
   runmode: any;
   journalNo: string; //? số của sổ nhật kí
   itemSelected: any; //? data của view danh sách chi tiết khi được chọn
@@ -65,7 +65,6 @@ export class CashPaymentsComponent extends UIComponent {
   bankReceiveName: any;
   viewActive:number = ViewType.listdetail;
   ViewType = ViewType;
-  isLoad = false;
   private destroy$ = new Subject<void>(); //? list observable hủy các subscribe api
   constructor(
     private inject: Injector,
@@ -116,8 +115,7 @@ export class CashPaymentsComponent extends UIComponent {
     .pipe(takeUntil(this.destroy$))
     .subscribe((res) => {
       if (res) {
-        this.isLoad = true;
-        this.headerText = res?.defaultName; //? lấy tên chứng từ (Phiếu chi)
+        this.headerText = res?.defaultName || res?.customName; //? lấy tên chứng từ (Phiếu chi)
         this.runmode = res?.runMode; //? lấy runmode
       }
     });

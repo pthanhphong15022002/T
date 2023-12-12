@@ -30,9 +30,9 @@
             "
           ></span>
         </div>
-        <div class="toolbar-detail"  *ngIf="asideMode != '2'">
+        <div class="toolbar-detail" *ngIf="asideMode != '2'">
           <codx-mfunc
-          *ngIf="dataSelected?.status != '11'"
+            *ngIf="dataSelected?.status != '11'"
             [dataItem]="dataSelected"
             [formModel]="formModel"
             (changeDataMF)="changeDataMF($event, dataSelected)"
@@ -234,20 +234,19 @@
                   <div
                     class="mb-1 d-flex align-items-center justify-content-end"
                   >
-
-                  <div
-                  *ngIf="dataSelected?.statusCode && dataSelected.applyProcess"
-                  class="badge badge-sm d-flex align-items-center me-0 color-theme me-1"
-                >
-                  <span
-                    class="text-ellipsis line-clamp line-clamp-2"
-                    [ngbTooltip]="statusCodeName"
+                    <div
+                      *ngIf="
+                        dataSelected?.statusCode && dataSelected.applyProcess
+                      "
+                      class="badge badge-sm d-flex align-items-center me-0 color-theme me-1"
                     >
-                   {{statusCodeName}}
-                    </span
-                  >
-                </div>
-
+                      <span
+                        class="text-ellipsis line-clamp line-clamp-2"
+                        [ngbTooltip]="statusCodeName"
+                      >
+                        {{ statusCodeName }}
+                      </span>
+                    </div>
 
                     <div
                       *ngIf="
@@ -255,21 +254,24 @@
                         else statusDefault
                       "
                       [ngStyle]="{
-                        'background-color':
-                        stepCurrent?.backgroundColor
+                        'background-color': stepCurrent?.backgroundColor
                       }"
-                      class="badge badge-sm d-flex align-items-center mw-125px me-0"
+                      class="badge badge-sm d-flex align-items-center me-0"
                     >
                       <span
                         [ngClass]="stepCurrent?.icon"
-                        [ngStyle]="{ color: stepCurrent.iconColor }"
+                        [ngStyle]="{
+                          color: stepCurrent?.iconColor
+                        }"
                         class="me-1"
                       ></span>
                       <span
-                        class="text-ellipsis line-clamp line-clamp-1"
-                        [ngbTooltip]="stepCurrent?.currentStepName"
-                        [ngStyle]="{ color: stepCurrent?.textColor }"
-                        >{{ stepCurrent?.currentStepName }}</span
+                        class="text-ellipsis line-clamp line-clamp-2"
+                        [ngbTooltip]="stepCurrent?.stepName"
+                        [ngStyle]="{
+                          color: stepCurrent?.textColor
+                        }"
+                        >{{ stepCurrent?.stepName }}</span
                       >
                     </div>
                     <ng-template #statusDefault>
@@ -384,7 +386,10 @@
               class="d-flex align-items-top justify-content-between mt-2 mb-2"
             >
               <div class="d-flex flex-wrap align-items-top w-100">
-                <div class="d-flex flex-column"    *ngIf="dataSelected?.category == '1'">
+                <div
+                  class="d-flex flex-column"
+                  *ngIf="dataSelected?.category == '1'"
+                >
                   <div class="mb-2">
                     <codx-label
                       class="text-dark fw-bold"
@@ -705,7 +710,7 @@
                           </ng-template>
                         </div>
                         <div class="text-dark fw-bold codx-textcontent">
-                          {{dataSelected?.companyPhone}}
+                          {{ dataSelected?.companyPhone }}
                         </div>
                       </div>
                     </div>
