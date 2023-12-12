@@ -120,8 +120,9 @@ method="LoadDataAsync" -->
   </ng-template>
 
   <ng-template #tempEmployee let-data>
-    <!-- {{logData(data)}} -->
-  <div class="d-flex align-items-center border-bottom">
+    {{logData(data)}}
+    {{data? data[data.column.field] : "" }}
+  <!-- <div class="d-flex align-items-center border-bottom">
     <div class="p-3 ps-5"
     >
         <div class="d-flex align-items-center">
@@ -155,7 +156,7 @@ method="LoadDataAsync" -->
           </div>
         </div>
       </div>
-      </div>
+      </div> -->
   </ng-template>
 
 

@@ -2631,8 +2631,6 @@ export class InstancesComponent
     } else if (applyFor == '2' || applyFor == '3') {
       return this.callfc.openSide(PopupAddCasesComponent, obj, option);
     } else if (applyFor == '4') {
-      option.isFull = true;
-      option.FormModel = obj?.formMD;
       obj = { ...obj, type: 'DP', contractRefID: this.oldIdInstance };
       return this.callfc.openSide(AddContractsComponent, obj, option);
     }

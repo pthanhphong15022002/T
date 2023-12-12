@@ -4,6 +4,7 @@ import {
   Component,
   OnInit,
   Optional,
+  TemplateRef,
   ViewChild,
 } from '@angular/core';
 import { FormGroup } from '@angular/forms';
@@ -32,6 +33,7 @@ import moment from 'moment';
 })
 export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
   @ViewChild('grid') grid!: CodxGridviewV2Component;
+  @ViewChild('mfCol') mfCol!: TemplateRef<any>;
   dialogAutoNum: FormGroup;
   dialog: DialogRef;
   isAfterRender = false;
@@ -130,7 +132,7 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
     this.setViewAutoNumber();
     return this.viewAutoNumber;
   }
-
+  columsGrid:any=[];
   initForm() {
     this.formModel = new FormModel();
     this.formModel.entityName = 'AD_AutoNumbers';
@@ -142,13 +144,17 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
       .gridViewSetup(this.formNameSegments, this.grvSegments)
       .subscribe((res: any) => {
         this.columns = Object.values(res) as any[];
-        console.log(this.columns);
       });
     if (this.functionID) {
       this.cache.functionList(this.functionID).subscribe((res: any) => {
         if (res) {
           this.funcItem = res;
           this.autoNoSetting.entityName = this.funcItem.entityName;
+          this.cache.gridViewSetup(this.funcItem.formName, this.funcItem.gridViewName).subscribe((res:any)=>{
+            for(let key in res){
+              this.columsGrid.push(JSON.parse(JSON.stringify(res[key])));
+            }
+          })
         }
       });
       this.api
@@ -603,15 +609,18 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
       if (!this.basicOnly) {
         this.basicCollapsed = !this.basicCollapsed;
         this.advanceCollapsed = !this.basicCollapsed;
+
       } else {
         this.basicCollapsed = false;
         this.advanceCollapsed = true;
       }
+      if(!this.basicCollapsed)  this.autoDefaultData.autoNoType = '1'
     }
     if (name == 'advance') {
       if (!this.basicOnly) {
         this.advanceCollapsed = !this.advanceCollapsed;
         this.basicCollapsed = !this.advanceCollapsed;
+        if(this.basicCollapsed) this.autoDefaultData.autoNoType = '2';
       }
     }
   }
@@ -626,7 +635,7 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
       '',
       {
         autoNoSetting: this.autoNoSetting,
-        columns: this.columns,
+        columns: this.columsGrid,
         segment: null,
         functionID: this.functionID,
       },
@@ -647,6 +656,51 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
     });
   }
 
+  editSegment(e:any){
+    if(e.rowData){
+
+    }
+  }
+
+  clickMF(e){
+    if(e.type=='edit' && e.data){
+      let option = new DialogModel();
+      let dialog = this.callfunc.openForm(
+        PopupAddSegmentComponent,
+        '',
+        400,
+        600,
+        '',
+        {
+          autoNoSetting: this.autoNoSetting,
+          columns: this.columsGrid,
+          segment: e.data,
+          functionID: this.functionID,
+        },
+        '',
+        option
+      );
+      dialog.closed.subscribe((res: any) => {
+        if (res.event) {
+          let idx = this.autoNoSegments.findIndex((x:any)=> x.recID == res.event?.recID);
+          if(idx >-1){
+            this.autoNoSegments[idx] = res.event;
+            this.autoNoSegments = this.autoNoSegments.slice();
+            this.setAutoSetingPreview();
+          }
+
+        }
+      });
+    }
+    if(e.type=='delete' && e.data){
+      let idx = this.autoNoSegments.findIndex((x:any)=>x.recID==e.data.recID);
+      if(idx > -1){
+        this.autoNoSegments.splice(idx,1);
+        this.autoNoSegments = this.autoNoSegments.slice();
+        this.setAutoSetingPreview();
+      }
+    }
+  }
   setAutoSetingPreview() {
     if (this.autoNoSegments.length) {
       let strFormat = '';
