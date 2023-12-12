@@ -353,7 +353,7 @@
               <codx-label name="lblBack" [formModel]="formModelCustom" default="Quay lại">
               </codx-label>
             </button>
-            <button type="button" class="btn btn-light-primary me-3" *ngIf="currentTab != 0 && !isTemplate"
+            <button type="button" class="btn btn-light-primary me-3" *ngIf="currentTab != 0 && !isTemplate && eSign"
               [disabled]="modeView == '2' ? true : false" (click)="openPopup(processTemplate)">
               <codx-label name="lblBtnTemplate" [formModel]="formModelCustom" default="Dùng quy trình mẫu">
               </codx-label>
