@@ -23,3 +23,11 @@
   background-color: #F5F8FA;
   min-height: 35px;
 }
+.codx-import
+{
+  .progress
+  {
+    background-color: var(--primary-light) !important;
+    height: 5px;
+  }
+}

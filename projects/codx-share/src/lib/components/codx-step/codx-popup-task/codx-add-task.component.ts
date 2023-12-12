@@ -467,6 +467,7 @@ export class CodxAddTaskComponent implements OnInit {
         );
       }
     });
+    this.changeDetectorRef.detectChanges();
   }
   setGroupByRole(listGroup) {
     this.listGroupInUser =
@@ -566,7 +567,11 @@ export class CodxAddTaskComponent implements OnInit {
         .subscribe((res) => {
           if (res) {
             this.listInsStep = res;
+            console.log("---------ok",this.listInsStep);
             this.setStepByRole();
+          }else{
+            console.log("---------chịu____");
+            
           }
         });
     } else if (this.listInsStep?.length > 0) {
@@ -1136,7 +1141,7 @@ export class CodxAddTaskComponent implements OnInit {
   }
   addTask(task, isCreateMeeting = false, isAddTask = false) {
     if(this.isActivitie){
-      if (this.isSave) {
+      if (this.isSave && this.objectID) {
         task['objectType'] = this.objectType;
         task['objectID'] = this.objectID;
         this.api
