@@ -239,8 +239,8 @@ getTemplateSF(cateID, category) {
     title: string, //Tiêu đề (truyền kiểu chuỗi thường)
     processType: string, //EntityName tùy chỉnh (lưu processType cho ES_ApprovalTrans)
     approvers: Array<Approver> = null, //Danh sách userID của RO
-    customParam:string=null,
-    ): Observable<any> {
+    customParam: string = null
+  ): Observable<any> {
     let approveProcess = new ApproveProcess();
     approveProcess.recID = recID;
     approveProcess.processID = processID;
@@ -266,7 +266,7 @@ getTemplateSF(cateID, category) {
   codxReleaseDynamic(
     //Tham số bắt buộc
     module: string, //Tên service
-    data: any, //data nghiệp vụ gốc 
+    data: any, //data nghiệp vụ gốc
     category: any, //Phân loại tài liệu hiện hành (ES_Categories) phục vụ cho việc kiểm tra loại quy trình gửi duyệt và tích hợp với form trình kí số.
     entityName: string, //EntityName nghiệp vụ gốc
     funcID: string, //FunctionID nghiệp vụ gốc
@@ -279,8 +279,8 @@ getTemplateSF(cateID, category) {
     releaseOnly: boolean = false, //tham số xử lí tại module ES - chỉ gửi duyệt mà ko kiểm tra thiết lập
     curComponent: any = null, //biến this: tại component gọi hàm
     exportData: ExportData = null, //biến lấy data export (funcID: Để lấy bộ EntityName, FormName, GridViewName; recID : Để lấy ra dữ liệu cần export ,data: data export lấy sẵn nếu có sẽ ưu tiên dùng thay cho việc dùng recID để đi lấy dữ liệu)
-    customParam:string = null,//Json string chứa tham số tùy chỉnh
-    ) {
+    customParam: string = null //Json string chứa tham số tùy chỉnh
+  ) {
     let approveProcess = new ApproveProcess();
     approveProcess.recID = data?.recID;
     approveProcess.processID = category?.processID;
@@ -295,8 +295,8 @@ getTemplateSF(cateID, category) {
     approveProcess.category = category;
     approveProcess.data = data;
     approveProcess.exportData = exportData;
-    approveProcess.customParam = customParam; 
-    if(approveProcess.approvers== null){
+    approveProcess.customParam = customParam;
+    if (approveProcess.approvers == null) {
       approveProcess.approvers = [];
     }
     this.callBackComponent = curComponent;
@@ -306,26 +306,41 @@ getTemplateSF(cateID, category) {
       this.apBaseRelease(approveProcess, releaseCallback);
     } else {
       //Kiểm tra tham số editApprovers
-      if (category?.editApprovers == true) {
-        let dialogApprove = this.callfunc.openForm(
-          CoDxAddApproversComponent,
-          '',
-          400,
-          250,
-          '',
-          {},
-          ''
-        );
-        dialogApprove.closed.subscribe((res) => {
-          if (res?.event) {
-            approveProcess.approvers = res?.event;
-            //Gửi duyệt
-            this.apCheckReleaseESign(approveProcess, releaseCallback);
-          } else {
-            //Tắt form chọn người duyệt
-            return null;
+      if (category?.editApprovers == true && category?.eSign == false) {
+        this.getFileByObjectID(approveProcess.recID).subscribe(
+          (lstFile: any) => {
+            let signFile = this.apCreateSignFile(
+              approveProcess,
+              lstFile
+            );
+              this.apOpenPopupSignFile(
+                approveProcess,
+                releaseCallback,
+                signFile,
+                lstFile              
+              )
           }
-        });
+        );
+
+        // let dialogApprove = this.callfunc.openForm(
+        //   CodxAddApproversComponent,
+        //   '',
+        //   400,
+        //   250,
+        //   '',
+        //   {},
+        //   ''
+        // );
+        // dialogApprove.closed.subscribe((res) => {
+        //   if (res?.event) {
+        //     approveProcess.approvers = res?.event;
+        //     //Gửi duyệt
+        //     this.apCheckReleaseESign(approveProcess, releaseCallback);
+        //   } else {
+        //     //Tắt form chọn người duyệt
+        //     return null;
+        //   }
+        // });
       } else {
         //Gửi duyệt
         this.apCheckReleaseESign(approveProcess, releaseCallback);
@@ -454,21 +469,26 @@ getTemplateSF(cateID, category) {
     //   signFile.templateID = template[0].templateID;
     // }
     if (approveProcess?.template?.length > 0) {
-      if(signFile.files?.length ==1 && approveProcess?.template?.length==1 && approveProcess?.template[0]?.files?.length==1){
+      if (
+        signFile.files?.length == 1 &&
+        approveProcess?.template?.length == 1 &&
+        approveProcess?.template[0]?.files?.length == 1
+      ) {
         signFile.files[0].areas = approveProcess?.template[0]?.files[0]?.areas;
-      }
-      else{
-        Array.from(approveProcess?.template).forEach((tp:any)=>{
-          if(tp?.files?.length>0){
-            tp?.files?.forEach(file => {
-              if(file?.areas?.length>0){
+      } else {
+        Array.from(approveProcess?.template).forEach((tp: any) => {
+          if (tp?.files?.length > 0) {
+            tp?.files?.forEach((file) => {
+              if (file?.areas?.length > 0) {
                 let fName = file?.fileName?.split('.')[0];
-                if(fName!=null && fName !=""){
-                  let sfNewFile=signFile.files.filter(x=>x.fileName?.startsWith(fName));
-                  if(sfNewFile?.length>0){
-                    sfNewFile?.forEach((sfn:any)=>{
-                      sfn.areas = file?.areas;                    
-                    })
+                if (fName != null && fName != '') {
+                  let sfNewFile = signFile.files.filter((x) =>
+                    x.fileName?.startsWith(fName)
+                  );
+                  if (sfNewFile?.length > 0) {
+                    sfNewFile?.forEach((sfn: any) => {
+                      sfn.areas = file?.areas;
+                    });
                   }
                 }
               }
@@ -476,7 +496,6 @@ getTemplateSF(cateID, category) {
           }
         });
       }
-      
     }
     return signFile;
   }
@@ -749,20 +768,18 @@ getTemplateSF(cateID, category) {
       case '3': //Export và view trc khi gửi duyệt (ko tạo ES_SignFiles)
         this.getFileByObjectID(approveProcess.recID).subscribe(
           (lstFile: any) => {
-            
             if (lstFile?.length > 0) {
               let signFile = this.apCreateSignFile(approveProcess, lstFile);
               this.createNewESSF(signFile).subscribe((res) => {
-                if (res) {                 
+                if (res) {
                   this.apOpenViewSignFile(
                     approveProcess,
                     releaseCallback,
                     res,
                     lstFile
-                  );                  
+                  );
                 }
               });
-              
             } else {
               this.notiService.notify('Không tìm thấy tài liệu!', '2');
             }
@@ -784,8 +801,7 @@ getTemplateSF(cateID, category) {
                   null,
                   approveProcess.approvers,
                   false,
-                ])
-                .subscribe((res: any) => {
+                ]).subscribe((res: any) => {
                   this.apBaseRelease(approveProcess, releaseCallback);
                 });
               }

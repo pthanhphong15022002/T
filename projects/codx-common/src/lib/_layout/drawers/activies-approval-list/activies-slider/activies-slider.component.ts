@@ -2,6 +2,7 @@ import { ChangeDetectorRef, Component, OnInit, Optional } from '@angular/core';
 import { ApiHttpService, AuthService, AuthStore, CacheService, CodxService, DataRequest, DialogData, DialogModel, DialogRef, NotificationsService, ScrollComponent, SidebarModel, CallFuncService } from 'codx-core';
 import { PopupSignForApprovalComponent } from 'projects/codx-es/src/lib/sign-file/popup-sign-for-approval/popup-sign-for-approval.component';
 import { CodxShareService } from 'projects/codx-share/src/lib/codx-share.service';
+import { CodxCommonService } from 'projects/codx-common/src/lib/codx-common.service';
 
 @Component({
   selector: 'lib-activies-slider',
@@ -38,6 +39,7 @@ export class ActiviesSliderComponent implements OnInit {
     private dt:ChangeDetectorRef,
     private notiSV:NotificationsService,
     private codxShareService: CodxShareService,
+    private codxCommonService: CodxCommonService,
     private auth:AuthStore,
     private codxService:CodxService,
     private cache:CacheService,
@@ -134,7 +136,7 @@ export class ActiviesSliderComponent implements OnInit {
     if(item.recID && item.transID && status)
     {
       item["blocked"] = true;
-      this.codxShareService
+      this.codxCommonService
         .codxApprove(
             item.transID,
             status,

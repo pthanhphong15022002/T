@@ -25,6 +25,7 @@ import { Observable, finalize, map } from 'rxjs';
 import { PopupAddQuotationsComponent } from '../popup-add-quotations/popup-add-quotations.component';
 import { CodxCmService } from '../../codx-cm.service';
 import { CodxShareService } from 'projects/codx-share/src/lib/codx-share.service';
+import { CodxCommonService } from 'projects/codx-common/src/lib/codx-common.service';
 
 @Component({
   selector: 'codx-quotations-tab-view',
@@ -102,6 +103,7 @@ export class QuotationsTabViewComponent
     private notiServer: NotificationsService,
     private codxShareService: CodxShareService,
     private routerActive: ActivatedRoute,
+    private codxCommonService: CodxCommonService,
     private notiService: NotificationsService,
     private codxCmService: CodxCmService,
     @Optional() dialog?: DialogRef
@@ -608,7 +610,7 @@ export class QuotationsTabViewComponent
     //         });
     //     }
     //   });
-    this.codxShareService.codxReleaseDynamic(
+    this.codxCommonService.codxReleaseDynamic(
       'CM',
       data,
       category,
@@ -648,7 +650,7 @@ export class QuotationsTabViewComponent
                 //trình ký
               } else if (res2?.eSign == false) {
                 //kí duyet
-                this.codxShareService
+                this.codxCommonService
                   .codxCancel(
                     'CM',
                     dt?.recID,

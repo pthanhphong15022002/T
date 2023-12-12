@@ -551,7 +551,7 @@
                           [title]="
                             (area.labelType | vll : 'ES015' : 'text' | async) +
                             ' - ' +
-                            getAreaOwnerName(area.signer)
+                            getAreaOwnerName(area?.signer,area?.objectID)
                           "
                           [resourceObjType]="'AD_Users'"
                           [icoCss]="
