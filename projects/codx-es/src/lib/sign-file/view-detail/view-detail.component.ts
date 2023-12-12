@@ -34,6 +34,7 @@ import { TM_Tasks } from 'projects/codx-share/src/lib/components/codx-tasks/mode
 import { CodxEsService, GridModels } from '../../codx-es.service';
 import { PopupAddSignFileComponent } from '../popup-add-sign-file/popup-add-sign-file.component';
 import { CodxShareService } from 'projects/codx-share/src/lib/codx-share.service';
+import { CodxCommonService } from 'projects/codx-common/src/lib/codx-common.service';
 
 @Component({
   selector: 'lib-view-detail',
@@ -50,6 +51,7 @@ export class ViewDetailComponent extends UIDetailComponent implements OnInit {
     private df: ChangeDetectorRef,
     private callfunc: CallFuncService,
     private notify: NotificationsService,
+    private codxCommonService: CodxCommonService,
     private router: ActivatedRoute,
     private authStore: AuthStore,
     private codxService : CodxService,
@@ -783,7 +785,7 @@ export class ViewDetailComponent extends UIDetailComponent implements OnInit {
     //   return;
     // }
 
-    this.codxShareService
+    this.codxCommonService
       .codxRelease(
         'ES',
         this.itemDetail?.recID,
