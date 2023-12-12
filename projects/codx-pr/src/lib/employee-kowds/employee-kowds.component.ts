@@ -23,7 +23,8 @@ export class EmployeeKowdsComponent extends UIComponent{
   viewActive: string = '';
   orgUnitID: string = '';
   formModelEmployee;
-  filterDowCode : any;
+  filterDowCode : any = '2023/12';
+  filterGroupSalCode : any = '';
   filterOrgUnit: any;
   filterMonth: any;
   filterYear: any;
@@ -36,6 +37,8 @@ export class EmployeeKowdsComponent extends UIComponent{
   timeKeepingMode : any;
   calendarGridColumns: any = [];
   gridStatisticColumns: any = [];
+
+  dataValues: any;
 
   addHeaderText;
   editHeaderText;
@@ -82,10 +85,17 @@ export class EmployeeKowdsComponent extends UIComponent{
       console.log('get time keeping', res);
       this.timeKeepingMode = res.timeKeepingMode;
       if(this.timeKeepingMode == '2'){
-        this.viewStatistic = true;
-        this.viewDetailData = false;
+        this.viewStatistic = false;
+        this.viewDetailData = true;
+
+        //nho chinh lai true false
       }
     })
+
+    // this.testAPILoadDetailData().subscribe((res) => {
+    //   console.log('load data mau', res);
+    //   debugger
+    // })
 
     this.cache.functionList(this.funcID).subscribe((res) => {
       console.log('load tt func', res);
@@ -228,50 +238,62 @@ export class EmployeeKowdsComponent extends UIComponent{
     );
   }
 
+  testAPILoadDetailData() {
+    console.log('chay ham get emp',this.filterOrgUnit, this.filterMonth, this.filterYear);
+    return this.api.execSv<any>(
+      'HR',
+      'ERM.Business.PR',
+      'KowDsBusiness',
+      'LoadDataForGridAsync',
+      []
+    );
+  }
+
   loadDataEmp(){
-    this.getEmpList().subscribe((res) =>{
-    debugger
-    console.log('nv tra ve', res);
-      this.lstEmp = res[0]
-      for(let i = 0; i < this.lstEmp.length; i++){
-        if(this.lstEmp[i].employeeID){
-          this.lstEmp[i].positionName = res[1][i];
-        }
-        else{
-          console.log('nv k co id', this.lstEmp[i]);
-        }
-      }
-      this.loadDataInGrid()
-    }
-    )
+    // this.getEmpList().subscribe((res) =>{
+    // debugger
+    // console.log('nv tra ve', res);
+    //   this.lstEmp = res[0]
+    //   for(let i = 0; i < this.lstEmp.length; i++){
+    //     if(this.lstEmp[i].employeeID){
+    //       this.lstEmp[i].positionName = res[1][i];
+    //     }
+    //     else{
+    //       console.log('nv k co id', this.lstEmp[i]);
+    //     }
+    //   }
+    //   this.loadDataInGrid()
+    // }
+    // )
+
+    this.loadDataInGrid()
+
   }
 
   loadDataInGrid(){
     if(this.viewDetailData == true){
-      this.gridDataSource = this.lstEmp;
-      for(let i = 0; i < this.gridDataSource.length; i++){
-        for(let j = 0; j < this.daysInMonth[this.filterMonth]; j++){
-          let strField = `day${j+1}`
-          this.gridDataSource[i][strField] = [{kowCode: j+1,
-            dayNum: j+2}, {kowCode: j+1,
-              dayNum: j+2},
-              {kowCode: j+1,
-                dayNum: j+2},
-                {kowCode: j+1,
-                  dayNum: j+2}];
-        }
-      }
-      this.gridDataSource = [...this.gridDataSource]
-      console.log('griddd dts', this.gridDataSource);
-
-      // if(this.calendarGrid){
-      //   this.calendarGrid.dataSource = this.gridDataSource;
+      // this.gridDataSource = this.lstEmp;
+      // for(let i = 0; i < this.gridDataSource.length; i++){
+      //   for(let j = 0; j < this.daysInMonth[this.filterMonth]; j++){
+      //     let strField = `day${j+1}`
+      //     this.gridDataSource[i][strField] = [{kowCode: j+1,
+      //       dayNum: j+2}, {kowCode: j+1,
+      //         dayNum: j+2},
+      //         {kowCode: j+1,
+      //           dayNum: j+2},
+      //           {kowCode: j+1,
+      //             dayNum: j+2}];
+      //   }
       // }
+      // this.gridDataSource = [...this.gridDataSource]
+      // console.log('griddd dts', this.gridDataSource);
+
       debugger
       if(!this.calendarGridColumns.length){
         this.calendarGridColumns = []
         this.calendarGridColumns.push({
           headerTemplate: 'Nhân viên',
+          field: 'emp',
           template: this.tempEmployee,
           width: '350',
         })
@@ -390,8 +412,13 @@ export class EmployeeKowdsComponent extends UIComponent{
 
   }
 
+  logData(data){
+    console.log('Data tra ve template employee', data.emp)
+  }
+
   onSelectionChangedTreeOrg(evt){
     this.filterOrgUnit = evt.data.orgUnitID
+    this.dataValues = [this.filterOrgUnit, this.filterMonth, this.filterYear, this.filterGroupSalCode, this.filterDowCode].join(';');
     this.loadDataEmp();
   }
 

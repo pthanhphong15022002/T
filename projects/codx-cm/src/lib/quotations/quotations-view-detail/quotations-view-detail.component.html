@@ -385,8 +385,12 @@
 <!-- lien ket -->
 <ng-template #connectiveTab let-data>
   <ng-container *ngIf="loadedRef">
-    <div *ngIf="dataRef; else noData" class="p-3">
-      <div class="d-flex justify-content-start mb-1">
+    <div
+      *ngIf="dataRef; else noData"
+      class="p-3 cursor-pointer"
+      (click)="openRef()"
+    >
+      <div class="d-flex justify-content-start justify-content-between mb-1">
         <div>
           <i></i>
         </div>
@@ -408,7 +412,7 @@
             "
           ></span>
         </div>
-        <div class="ms-auto">
+        <div class="ms-auto d-flex justify-content-end">
           <span
             class="icon-monetization_on pe-1 text-warning icon-16 mt-1"
           ></span>
@@ -449,7 +453,7 @@
       </div>
       <div class="d-flex justify-content-between">
         <div class="first-div d-flex align-items-start">
-          <ng-container *ngIf="!data.approveStatus">
+          <ng-container *ngIf="!data.approveStatus && data?.status">
             <codx-vll
               [name]="vllStatus"
               [field]="'Status'"
@@ -471,7 +475,7 @@
             >
             </codx-vll>
           </ng-container>
-          <div>
+          <div class="d-flex">
             <span class="icon-16 icon-av_timer me-1"></span>
             <span
               class="text-gray-700 line-clamp line-clamp-1"

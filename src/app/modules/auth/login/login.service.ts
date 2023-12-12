@@ -7,8 +7,9 @@ import {
   AuthStore,
   TenantStore,
   AuthService,
-  UrlUtil,
+  Util,
   ApiHttpService,
+  UrlUtil,
 } from 'codx-core';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { environment } from 'src/environments/environment';
@@ -32,14 +33,14 @@ export class LoginService {
     private notificationsService: NotificationsService
   ) {
     let dInfo = this.deviceInfo.getDeviceInfo();
+    
     this.loginDevice = {
       name: dInfo.browser,
       os: dInfo.os + ' ' + dInfo.osVersion,
-      id: null,
+      id: this.getCodxId(),
       imei: null,
       trust: false,
       tenantID: '',
-      times: '1',
     };
   }
   returnUrl: string;
@@ -198,5 +199,17 @@ export class LoginService {
       'GetListDatabaseByEmailAsync',
       email
     );
+  }
+
+  getCodxId(){
+    var k='_mc_codx_id';
+    var id = localStorage.getItem(k);
+    if(!id)
+    {
+      id= Util.uid();
+      localStorage.setItem(k, id);
+    }
+
+    return id;
   }
 }

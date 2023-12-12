@@ -52,7 +52,7 @@ export class Login2FAComponent extends UIComponent implements AfterViewInit {
     this.changeLogin2FAType(dt?.data?.login2FA);
     if (dt?.data?.loginDevice) {
       this.loginDevice = dt?.data?.loginDevice;
-      this.loginDevice.times = '2';
+      //this.loginDevice.times = '2';
     } else {
       let dInfo = this.deviceInfo.getDeviceInfo();
       this.loginDevice = {
@@ -61,7 +61,7 @@ export class Login2FAComponent extends UIComponent implements AfterViewInit {
         imei: null,
         id: null,
         trust: false,
-        times: '2',
+        //times: '2',
         tenantID: '',
       };
     }

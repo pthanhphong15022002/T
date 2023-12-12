@@ -729,7 +729,7 @@ export class CodxAcService {
             .reduce((pre, element) => { element.disabled = true }, {});
         }else{
           if (journal.approvalControl == '0') {
-            event.filter((x) => ![MorfuncPur.GhiSo,MorfuncPur.In].includes(x.functionID))
+            event.filter((x) => ![MorfuncPur.GhiSo,MorfuncPur.In,MorfuncPur.PhanBoChiPhi].includes(x.functionID))
             .reduce((pre, element) => { element.disabled = true }, {});
           }else{
             event.filter((x) => ![MorfuncPur.GuiDuyet,MorfuncPur.In].includes(x.functionID))
@@ -747,11 +747,11 @@ export class CodxAcService {
           break;
       case '5':
       case '9':
-        event.filter((x) => ![MorfuncPur.GhiSo,MorfuncPur.In].includes(x.functionID))
+        event.filter((x) => ![MorfuncPur.GhiSo,MorfuncPur.In,MorfuncPur.PhanBoChiPhi].includes(x.functionID))
             .reduce((pre, element) => { element.disabled = true }, {});
           break;
       case '6':
-        event.filter((x) => ![MorfuncPur.KhoiPhuc,MorfuncPur.In,MorfuncPur.PhanBoChiPhi].includes(x.functionID))
+        event.filter((x) => ![MorfuncPur.KhoiPhuc,MorfuncPur.In].includes(x.functionID))
             .reduce((pre, element) => { element.disabled = true }, {});
           break;
       default:

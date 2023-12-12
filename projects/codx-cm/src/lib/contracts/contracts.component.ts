@@ -142,7 +142,7 @@ export class ContractsComponent extends UIComponent {
   paramDefault: any;
   runMode: any;
   user;
-
+  dataAddTask;
   constructor(
     private inject: Injector,
     private cmService: CodxCmService,
@@ -422,7 +422,7 @@ export class ContractsComponent extends UIComponent {
         }
       }
       let dataOutput = await this.stepService.openPopupCodxTask(data, 'right');
-      console.log(dataOutput);
+      this.dataAddTask = dataOutput;
       
     }
   }

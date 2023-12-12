@@ -7099,6 +7099,11 @@ dataService.clear();
     }
   }
 
+
+  logDataDegree(data){
+    console.log('data degree load len', data);
+  }
+
   valueChangeYearFilterBenefit(evt) {
     if (evt.formatDate == undefined && evt.toDate == undefined) {
       this.startDateEBenefitFilterValue = null;

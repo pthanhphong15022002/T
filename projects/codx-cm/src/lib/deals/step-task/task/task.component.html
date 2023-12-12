@@ -53,7 +53,22 @@
         </div>
 
         <div style="margin-left: 45px">
-          <codx-view-approve *ngIf="task?.approveRule" [categoryID]="task?.recID" [change]="task"></codx-view-approve>
+          <div
+            *ngIf="task?.approveRule"
+            class="d-flex align-items-center cursor-pointer me-4"
+            (click)="openFormApprover(task)"
+          >
+            <span
+              class="icon-check-correct text-primary icon-18 me-1"
+            ></span>
+            <codx-label
+              class="text-gray-500 popup-hover "
+              name="progressDefault2"
+              [formModel]="grvMoreFunction"
+              default="Các bước duyệt"
+            ></codx-label>
+          </div>
+          <!-- <codx-view-approve *ngIf="task?.approveRule" [categoryID]="task?.recID" [change]="task"></codx-view-approve> -->
           <ng-container
             [ngTemplateOutlet]="fileTemplate"
             [ngTemplateOutletContext]="{ value: task }"
