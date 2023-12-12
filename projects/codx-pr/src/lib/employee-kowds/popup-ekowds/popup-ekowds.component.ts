@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, HostListener, Injector, OnInit, Optional, TemplateRef, ViewChild } from '@angular/core';
-import { CacheService, CallFuncService, CodxFormComponent, CodxGridviewV2Component, DialogData, DialogRef, FormModel, NotificationsService, UIComponent, Util } from 'codx-core';
+import { CRUDService, CacheService, CallFuncService, CodxFormComponent, CodxGridviewV2Component, DialogData, DialogRef, FormModel, NotificationsService, UIComponent, Util } from 'codx-core';
 import { CodxHrService } from 'projects/codx-hr/src/public-api';
 import { EditSettingsModel } from '@syncfusion/ej2-angular-grids';
 import {Kowds} from '../kowds.model';
@@ -10,18 +10,18 @@ import { DateRangePickerModule } from '@syncfusion/ej2-angular-calendars';
   styleUrls: ['./popup-ekowds.component.css']
 })
 export class PopupEkowdsComponent extends UIComponent implements OnInit{
-  @HostListener('click', ['$event.target']) onClick(e) {
-    console.log('target click vao', e);
+  // @HostListener('click', ['$event.target']) onClick(e) {
+  //   console.log('target click vao', e);
     
-    if (this.gridView1) {
-      if (this.gridView1.gridRef.isEdit == true) {
-        //this.gridView2.isEdit = false;
-        //this.gridView2.isAdd = false;
-        this.gridView1.endEdit();
-      } else {
-        //
-      }
-    }}
+  //   if (this.gridView1) {
+  //     if (this.gridView1.gridRef.isEdit == true) {
+  //       //this.gridView2.isEdit = false;
+  //       //this.gridView2.isAdd = false;
+  //       this.gridView1.endEdit();
+  //     } else {
+  //       //
+  //     }
+  //   }}
   
   dialog: DialogRef;
   actionType: string;
@@ -33,6 +33,7 @@ export class PopupEkowdsComponent extends UIComponent implements OnInit{
   dataSourceGridView1: any = [];
   loadGridview1 = true;
   vllMode = '1';
+  dowCode: any = '2023/12';
   employeeId: string;
   currentYear: any;
   currentMonth: any;
@@ -82,9 +83,12 @@ export class PopupEkowdsComponent extends UIComponent implements OnInit{
     this.actionType = data?.data?.actionType;
     this.dataObj = JSON.parse(JSON.stringify(data?.data?.dataObj));
     this.employeeId = JSON.parse(JSON.stringify(data?.data?.employeeId));
-    this.dataObj.employeeId = this.employeeId;
+    this.dataObj.employeeID = this.employeeId;
     this.currentYear = JSON.parse(JSON.stringify(data?.data?.crrYear));
     this.currentMonth = JSON.parse(JSON.stringify(data?.data?.crrMonth));
+    if(data?.data?.dowCode){
+      this.dowCode = JSON.parse(JSON.stringify(data?.data?.dowCode));
+    }
     let day = JSON.parse(JSON.stringify(data?.data?.selectedDate));
     this.selectedDate = new Date(this.currentYear, this.currentMonth, day);
     this.minDate = new Date(this.currentYear, this.currentMonth, 1);
@@ -100,7 +104,7 @@ export class PopupEkowdsComponent extends UIComponent implements OnInit{
 
   addRowGrid1() {
     let idx = this.gridView1?.dataSource?.length > 0 ? this.gridView1.dataSource.length : 0;
-    let temp = new Kowds(Util.uid(), '', '','');
+    let temp = new Kowds(Util.uid(), '', '','', this.dowCode);
     this.gridView1.addRow(temp, idx, false, true);
 
     // if (this.alpolicyObj.policyID) {
@@ -148,7 +152,7 @@ export class PopupEkowdsComponent extends UIComponent implements OnInit{
           controlType: 'text',
           dataType: 'float',
           headerTemplate: this.headTmpGrid1Col2,
-          // template: this.tmpGrid1Col2,
+          template: this.tmpGrid1Col2,
           width: '150',
         },
       ];
@@ -163,12 +167,66 @@ export class PopupEkowdsComponent extends UIComponent implements OnInit{
   }
 
   onSaveForm(){
+    let lstDataInGrid = []
+    let lstDataHandle = []
+    for(let i = 0; i < this.gridView1.dataSource.length; i++){
+      if(this.gridView1.dataSource[i].kowCode != null){
+        lstDataInGrid.push(this.gridView1.dataSource[i])
+      }
+    }
 
+    for(let i = 0; i < this.dataObj.employeeID.split(';').length; i++){
+      for(let j = 0; j < lstDataInGrid.length; j++){
+        let temp = {...lstDataInGrid[j]};
+        temp.employeeID = this.dataObj.employeeID.split(';')[i]
+        lstDataHandle.push({...temp})
+      }
+    }
+
+    let startDate = this.fromDateVal.getDate();
+    let endDate = this.toDateVal.getDate();
+    let lstDate = []
+    console.log('start', startDate);
+    console.log('end', endDate);
+    
+    lstDate.push(startDate);
+
+    for(let i = startDate; i< endDate; i++){
+      lstDate.push(i+1)
+    }
+
+    console.log('lst date ne', lstDate);
+
+    let lstDataSave = []
+    for(let i = 0; i < lstDate.length; i++){
+      for(let j = 0; j < lstDataHandle.length; j++){
+        let temp = {...lstDataHandle[j]}
+        temp.workDate = new Date(this.fromDateVal.getFullYear(), this.fromDateVal.getMonth(), lstDate[i]);
+        console.log('them mot ngay', temp.workDate);
+        temp.recID = Util.uid();
+        temp.updateColumns = ''
+        temp.rootKowCode = ''
+        lstDataSave.push(temp);
+      }
+    }
+    debugger
+
+    console.log('list data cbi luu', lstDataSave);
+    this.addEmpKow(lstDataSave).subscribe((res) => {
+      debugger
+      if(res == true){
+        this.notify.notifyCode('SYS006');
+        this.dialog && this.dialog.close(lstDataSave);
+      }
+      else{
+        this.notify.notifyCode('SYS023');
+      }
+    })
   }
 
   onChangeCalFromTo(evt){
     this.fromDateVal = evt[0]
-    this.toDateVal = evt[0]
+    this.toDateVal = evt[1]
   }
 
   onSelectVllVal(evt, data){
@@ -180,6 +238,7 @@ export class PopupEkowdsComponent extends UIComponent implements OnInit{
   }
 
   onEditGrid1(evt) {
+    debugger
     // if (!evt.fromValue) {
     //   this.notify.notifyCode('HR023');
     //   setTimeout(() => {
@@ -262,20 +321,19 @@ export class PopupEkowdsComponent extends UIComponent implements OnInit{
   }
 
   clickMF(event, data) {
-    // this.notify.alertCode('SYS030').subscribe((x) => {
-    //   if (x.event?.status == 'Y') {
-    //     this.DeletePolicyDetail(data.recID).subscribe((res) => {
-    //       if (res == true) {
-    //         this.notify.notifyCode('SYS008');
-    //           (this.gridView1?.dataService as CRUDService)
-    //             ?.remove(data)
-    //             .subscribe();
-    //           this.gridView1.deleteRow(data, true);
-            
-    //       }
-    //     });
-    //   }
-    // });
+    this.notify.alertCode('SYS030').subscribe((x) => {
+      if (x.event?.status == 'Y') {
+        this.deleteEmpKow(data.recID).subscribe((res) => {
+          if (res == true) {
+            this.notify.notifyCode('SYS008');
+              (this.gridView1?.dataService as CRUDService)
+                ?.remove(data)
+                .subscribe();
+              this.gridView1.deleteRow(data, true);
+          }
+        });
+      }
+    });
   }
 
   changeDataMF(evt) {
@@ -287,6 +345,36 @@ export class PopupEkowdsComponent extends UIComponent implements OnInit{
         evt[i].disabled = false;
       }
     }
+  }
+
+  // addEmpKow(){
+  //   return this.api.execSv<any>(
+  //     'HR',
+  //     'ERM.Business.PR',
+  //     'KowDsBusiness',
+  //     'AddEmpKowAsync',
+  //     [this.fromDateVal, this.toDateVal, this.dataObj.employeeID, this.dataObj, this.vllMode]
+  //   );
+  // }
+
+  addEmpKow(data){
+    return this.api.execSv<any>(
+      'HR',
+      'ERM.Business.PR',
+      'KowDsBusiness',
+      'AddEmpKowAsync',
+      [data, this.vllMode]
+    );
+  }
+
+  deleteEmpKow(data){
+    return this.api.execSv<any>(
+      'HR',
+      'ERM.Business.PR',
+      'KowDsBusiness',
+      'DeleteEmpKowAsync',
+      []
+    );
   }
 }
 

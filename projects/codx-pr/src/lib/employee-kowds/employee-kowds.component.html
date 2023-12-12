@@ -64,17 +64,27 @@ method="LoadDataAsync" -->
     </ng-container> -->
 
     <ng-container class="h-100" >
+      <!-- *ngIf="viewDetailData == true && gridDataSource.length > 0 && calendarGridColumns.length > 0" -->
       <codx-gridview-v2
-      *ngIf="viewDetailData == true && gridDataSource.length > 0 && calendarGridColumns.length > 0"
+      *ngIf="viewDetailData == true && calendarGridColumns.length > 0"
       #calendarGrid
       [formModel]="view.formModel"
       [columnsGrid]="calendarGridColumns"
+      [service]="'HR'"
+      [assemblyName]="'PR'"
+      [className]="'KowDsBusiness'"
+      [predicates]=""
+      [dataValues]="dataValues"
       [autoFitColumns]="false"
-      [dataSource] = "gridDataSource"
       [hideMoreFunc]="true"
       (onDoubleClick)="doubleClickGrid($event)"
       [height]="'100%'"
+      [method]="'LoadDataForGridAsync'"
       ></codx-gridview-v2>
+
+      <!-- [dataSource] = "gridDataSource" -->
+
+
       <!-- [predicates]="'EmployeeID=@0'" -->
       <!-- [method]="'LoadDataAsync'" -->
       <!-- [className]="'DataBusiness'" -->
@@ -86,7 +96,7 @@ method="LoadDataAsync" -->
 
       <codx-gridview-v2
       *ngIf="viewStatistic == true && gridDataSourceStatistic.length > 0 && gridStatisticColumns.length > 0"
-      #calendarGrid
+      #calendarGrid2
       [formModel]="view.formModel"
       [columnsGrid]="gridStatisticColumns"
       [autoFitColumns]="false"
@@ -110,7 +120,9 @@ method="LoadDataAsync" -->
   </ng-template>
 
   <ng-template #tempEmployee let-data>
-  <div class="d-flex align-items-center border-bottom">
+    {{logData(data)}}
+    {{data? data[data.column.field] : "" }}
+  <!-- <div class="d-flex align-items-center border-bottom">
     <div class="p-3 ps-5"
     >
         <div class="d-flex align-items-center">
@@ -144,14 +156,14 @@ method="LoadDataAsync" -->
           </div>
         </div>
       </div>
-      </div>
+      </div> -->
   </ng-template>
 
 
   <ng-template #tempDayData let-data>
-    <span>
-      {{data? data[data.column.field][0].kowCode : "" }}
-    </span>
+    <!-- <span>
+      {{data? data[data.column.field][0]?.kowCode : "" }}
+    </span> -->
   </ng-template>
 
   <ng-template #tempEmployeeTC let-data>
@@ -164,25 +176,27 @@ method="LoadDataAsync" -->
     <codx-label
     [formModel]="view.formModel"
     [name]="'lblbreadCumbs'"
-    [default]="formHeaderText + ' > '"
-    class="fw-bold fs-4 text-primary"
+    [default]="formHeaderText"
+    class="fw-bold fs-4"
   >
   </codx-label>
-  <codx-label
-  [formModel]="view.formModel"
-  [name]="'lblbreadCumbs2'"
-  [default]="'Chi tiết theo ngày '"
- (click)="switchModeView(1)"
-  class="ms-2 fw-bold fs-4 text-primary"
->
-</codx-label>
-<span class="ms-2 fw-bold fs-4 text-primary"> | </span>
-<codx-label
-[formModel]="view.formModel"
-[name]="'lblbreadCumbs3'"
-[default]="'Bảng công tổng hợp'"
-(click)="switchModeView(2)"
-class="ms-2 fw-bold fs-4 text-primary"
->
-</codx-label>
+  <span *ngIf="timeKeepingMode == '2'">
+    <codx-label
+    [formModel]="view.formModel"
+    [name]="'lblbreadCumbs2'"
+    [default]="' > Chi tiết theo ngày '"
+   (click)="switchModeView(1)"
+    class="ms-2 fw-bold fs-4 text-primary"
+  >
+  </codx-label>
+    <span class="ms-2 fw-bold fs-4 text-primary"> | </span>
+    <codx-label
+    [formModel]="view.formModel"
+    [name]="'lblbreadCumbs3'"
+    [default]="'Bảng công tổng hợp'"
+    (click)="switchModeView(2)"
+    class="ms-2 fw-bold fs-4 text-primary"
+    >
+    </codx-label>
+  </span>
   </ng-template>

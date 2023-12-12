@@ -27,6 +27,7 @@ import {
   DataRequest,
   DialogRef,
   AuthStore,
+  CallFuncService,
 } from 'codx-core';
 import { CodxCmService } from '../codx-cm.service';
 import { CM_Customers, CM_Leads, CM_Permissions } from '../models/cm_model';
@@ -44,6 +45,7 @@ import { firstValueFrom } from 'rxjs';
 import moment from 'moment';
 import { PopupUpdateStatusComponent } from '../deals/popup-update-status/popup-update-status.component';
 import { ExportData } from 'projects/codx-share/src/lib/models/ApproveProcess.model';
+import { ViewDealDetailComponent } from '../deals/view-deal-detail/view-deal-detail.component';
 @Component({
   selector: 'lib-leads',
   templateUrl: './leads.component.html',
@@ -165,7 +167,8 @@ export class LeadsComponent
     private codxCmService: CodxCmService,
     private notificationsService: NotificationsService,
     private codxShareService: CodxShareService,
-    private authStore: AuthStore
+    private authStore: AuthStore,
+    private callFunc: CallFuncService,
   ) {
     super(inject);
     if (!this.funcID) {
@@ -1535,25 +1538,46 @@ export class LeadsComponent
   }
   //#endregion
 
-  viewDetail(data) {
-    this.dataSelected = data;
-    let temView =
-      this.gridDetailView == '2' ? this.tempViewLeadDetail : this.popDetail;
+  viewDetail(lead) {
+    let data = {
+      formModel: this.view.formModel,
+      contract: lead,
+      isView: true,
+      // listInsStepStart: this.listInsStep,
+    };
     let option = new DialogModel();
     option.IsFull = true;
-    option.zIndex = 999;
-
-    this.dialogViewLead = this.callfc.openForm(
-      temView,
-      '',
-      0,
-      0,
+    option.zIndex = 1001;
+    option.DataService = this.view.dataService;
+    option.FormModel = this.view.formModel;
+    let popupContract = this.callFunc.openForm(
+      ViewDealDetailComponent,
       '',
       null,
+      null,
+      '',
+      data,
       '',
       option
     );
-    this.dialogViewLead.closed.subscribe((e) => {});
+    // this.dataSelected = data;
+    // let temView =
+    //   this.gridDetailView == '2' ? this.tempViewLeadDetail : this.popDetail;
+    // let option = new DialogModel();
+    // option.IsFull = true;
+    // option.zIndex = 999;
+
+    // this.dialogViewLead = this.callfc.openForm(
+    //   temView,
+    //   '',
+    //   0,
+    //   0,
+    //   '',
+    //   null,
+    //   '',
+    //   option
+    // );
+    // this.dialogViewLead.closed.subscribe((e) => {});
   }
 
   checkApplyProcess(data) {

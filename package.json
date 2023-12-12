@@ -6,11 +6,12 @@
     "start": "ng serve",
     "build": "ng build",
     "build:max": "cross-env NODE_OPTIONS='--max-old-space-size=8192' ng build --configuration=production",
+    "build:prod": "ng build -c=production --subresource-integrity",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "ngserve": "set NODE_OPTIONS=--max_old_space_size=8192 & ng serve --open",
     "ngserveno": "set NODE_OPTIONS=--max_old_space_size=8192 & ng serve",
-    "ngbuild": "set NODE_OPTIONS='--max-old-space-size=8192' ng build"
+    "ngbuild": "set NODE_OPTIONS=--max_old_space_size=16384 & ng build"
   },
   "private": true,
   "dependencies": {

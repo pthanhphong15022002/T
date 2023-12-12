@@ -34,11 +34,11 @@
 <ng-template #body>
   <ng-container [ngTemplateOutlet]="tempStatus"></ng-container>
   <ng-container
-    *ngIf="type == 'calendar' || type == 'notStep'"
+    *ngIf="type == 'calendar' || type == 'cm'"
     [ngTemplateOutlet]="addTaskInCM"
   ></ng-container>
 
-  <div class="form-group" *ngIf="statusInput.step.show">
+  <div class="form-group" *ngIf="statusInput?.step?.show">
     <div class="mb-1 line-clamp line-clamp-1">
       <codx-label
         class="text-primary"
@@ -48,7 +48,7 @@
       >
       </codx-label>
     </div>
-    <div>
+    <div *ngIf="listInsStepInUser?.length > 0">
       <ejs-combobox
         #comboboxStep
         [dataSource]="listInsStepInUser"
@@ -106,7 +106,6 @@
       <codx-input
         field="taskName"
         [formModel]="dialog?.formModel"
-        type="text"
         [crrValue]="stepsTasks?.taskName"
         (valueChange)="changeValueText($event)"
         [disabled]="stepsTasks?.isTaskDefault"

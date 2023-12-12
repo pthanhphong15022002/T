@@ -661,10 +661,9 @@ export class InstancesComponent
         this.dataSelected = JSON.parse(JSON.stringify(e.event));
         this.view?.dataService.update(this.dataSelected);
         if (this.kanban) {
-          // this.kanban.updateCard(data);  //core mới lỗi chô này
           if (this.kanban?.dataSource?.length == 1) {
             this.kanban.refresh();
-          }
+          } else this.kanban.updateCard(this.dataSelected);
         }
         if (this.detailViewInstance) {
           this.detailViewInstance.dataSelect = this.dataSelected;
@@ -1404,10 +1403,6 @@ export class InstancesComponent
           }
         }
       }
-      // else {
-      //  // data.stepID = this.crrStepID;
-      //   this.changeDetectorRef.detectChanges();
-      // }
     }
   }
 
@@ -1497,7 +1492,7 @@ export class InstancesComponent
       listStepCbx = this.listSteps;
     }
     this.isClick = false;
-    this.crrStepID = data.stepID;
+    // this.crrStepID = data.stepID;
     let option = new SidebarModel();
     option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;
@@ -1587,10 +1582,10 @@ export class InstancesComponent
     dialogMoveStage.closed.subscribe((e) => {
       this.isClick = true;
       this.stepIdClick = '';
-      if (!e || !e.event) {
-        data.stepID = this.crrStepID;
-        this.changeDetectorRef.detectChanges();
-      }
+      // if (!e || !e.event) {
+      //   data.stepID = this.crrStepID;
+      //   this.changeDetectorRef.detectChanges();
+      // }
       if (e && e.event != null) {
         //xu ly data đổ về
         data = e.event.instance;
@@ -1619,7 +1614,7 @@ export class InstancesComponent
   }
 
   moveReason(dataMore, data: any, isMoveSuccess: Boolean) {
-    this.crrStepID = data.stepID;
+    // this.crrStepID = data.stepID;
     let option = new SidebarModel();
     option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;
@@ -1865,10 +1860,6 @@ export class InstancesComponent
       obj
     );
     dialogRevision.closed.subscribe((e) => {
-      if (!e || !e.event) {
-        data.stepID = this.crrStepID;
-        this.changeDetectorRef.detectChanges();
-      }
       if (e && e.event != null) {
         //xu ly data đổ về
         data = e.event?.instance;
@@ -1910,12 +1901,6 @@ export class InstancesComponent
           );
         }
         this.detectorRef.detectChanges();
-      } else {
-        if (this.kanban) {
-          this.dataSelected.stepID = this.crrStepID;
-          this.kanban.updateCard(this.dataSelected);
-          this.detectorRef.detectChanges();
-        }
       }
     });
   }
@@ -2645,8 +2630,6 @@ export class InstancesComponent
     } else if (applyFor == '2' || applyFor == '3') {
       return this.callfc.openSide(PopupAddCasesComponent, obj, option);
     } else if (applyFor == '4') {
-      option.isFull = true;
-      option.FormModel = obj?.formMD;
       obj = { ...obj, type: 'DP', contractRefID: this.oldIdInstance };
       return this.callfc.openSide(AddContractsComponent, obj, option);
     }

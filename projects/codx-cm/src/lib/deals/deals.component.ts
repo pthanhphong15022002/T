@@ -28,6 +28,7 @@ import {
   DataRequest,
   CodxFormDynamicComponent,
   CRUDService,
+  CallFuncService,
 } from 'codx-core';
 import { CodxCmService } from '../codx-cm.service';
 import { PopupAddDealComponent } from './popup-add-deal/popup-add-deal.component';
@@ -44,6 +45,7 @@ import { PopupUpdateStatusComponent } from './popup-update-status/popup-update-s
 import { StepService } from 'projects/codx-share/src/lib/components/codx-step/step.service';
 import { ExportData } from 'projects/codx-share/src/lib/models/ApproveProcess.model';
 import { Internationalization } from '@syncfusion/ej2-base';
+import { ViewDealDetailComponent } from './view-deal-detail/view-deal-detail.component';
 
 @Component({
   selector: 'lib-deals',
@@ -193,7 +195,8 @@ export class DealsComponent
     private notificationsService: NotificationsService,
     private codxShareService: CodxShareService,
     private authStore: AuthStore,
-    private stepService: StepService
+    private stepService: StepService,
+    private callFunc: CallFuncService,
   ) {
     super(inject);
     this.user = this.authStore.get();
@@ -785,26 +788,46 @@ export class DealsComponent
     }
   }
 
-  viewDetail(data) {
-    this.dataSelected = data;
+  viewDetail(deal) {
+    let data = {
+      formModel: this.view.formModel,
+      contract: deal,
+      isView: true,
+      // listInsStepStart: this.listInsStep,
+    };
     let option = new DialogModel();
     option.IsFull = true;
-    option.zIndex = 999;
-    let temView =
-      this.gridDetailView == '2' ? this.templateViewDetail : this.popDetail;
-    this.popupViewDeal = this.callfc.openForm(
-      temView,
-      '',
-      Util.getViewPort().width,
-      Util.getViewPort().height,
+    option.zIndex = 1001;
+    option.DataService = this.view.dataService;
+    option.FormModel = this.view.formModel;
+    let popupContract = this.callFunc.openForm(
+      ViewDealDetailComponent,
       '',
       null,
+      null,
+      '',
+      data,
       '',
       option
     );
-    this.popupViewDeal.closed.subscribe((e) => {});
+    // this.dataSelected = data;
+    // let option = new DialogModel();
+    // option.IsFull = true;
+    // option.zIndex = 999;
+    // let temView =
+    //   this.gridDetailView == '2' ? this.templateViewDetail : this.popDetail;
+    // this.popupViewDeal = this.callfc.openForm(
+    //   temView,
+    //   '',
+    //   Util.getViewPort().width,
+    //   Util.getViewPort().height,
+    //   '',
+    //   null,
+    //   '',
+    //   option
+    // );
+    // this.popupViewDeal.closed.subscribe((e) => {});
   }
-
   //end Kanaban
 
   moveStage(data: any) {
@@ -2059,7 +2082,7 @@ export class DealsComponent
   }
 
   async addTask(data) {
-    let taskType = await this.stepService.chooseTypeTask();
+    let taskType = await this.stepService.chooseTypeTask(['F']);
     if (taskType) {
       let dataDeal = {
         typeCM: '5',

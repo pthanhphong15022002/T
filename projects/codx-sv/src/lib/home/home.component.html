@@ -119,10 +119,10 @@
 <ng-template #templateListCard let-item>
   <div (click)="update(item)">
     <codx-card-img
-      cardCss="border rounded-2 card-img-mwp img-storage w-200px h-200px"
+      cardCss="border rounded-2 card-img-mwp img-storage w-225px h-225px"
       (clickMF)="clickMF($event, item)"
       [imageSrc]="getImgSrc(item , 'card')"
-      imgCss="h-150px w-110px"
+      imgCss="h-150px w-100"
       [titleTmp]="titleTmp"
       cssDes2="line-clamp line-clamp-1"
       imageWidth="223"
@@ -134,9 +134,9 @@
     </codx-card-img>
   </div>
   <ng-template #titleTmp>
-    <div class="d-flex flex-column">
-      <div class="d-flex align-item-center w-170px mt-1">
-        <span class="line-clamp line-clamp-1 fw-bold">{{item.title}}</span>
+    <div class="d-flex flex-column w-100">
+      <div class="d-flex align-item-center w-100">
+        <span class="line-clamp line-clamp-2 my-1 h-35px text-dark">{{item.title}}</span>
       </div>
       <div class="d-flex align-item-center justify-content-end">
         <!-- <i class="icon-i-file-earmark-text-fill icon-15 text-primary"></i>
@@ -158,9 +158,9 @@
 <ng-template #templateListCardRepondent let-item>
   <div (click)="updateRepond(item)">
     <codx-card-img
-      cardCss="border rounded-2 card-img-mwp img-storage w-200px h-200px"
+      cardCss="border rounded-2 card-img-mwp img-storage w-225px h-225px"
       (clickMF)="clickMF($event, item)"
-      imgCss="h-150px w-110px"
+      imgCss="h-150px w-100"
       [imageSrc]="getImgSrc(item , 'repondent')"
       [titleTmp]="titleTmpRepondent"
       cssDes2="line-clamp line-clamp-1"
@@ -172,9 +172,9 @@
     </codx-card-img>
   </div>
   <ng-template #titleTmpRepondent>
-    <div class="d-flex flex-column">
-      <div class="d-flex align-item-center w-170px mt-1">
-        <span class="line-clamp line-clamp-1 fw-bold">{{item?.unbounds?.title}}</span>
+    <div class="d-flex flex-column w-100">
+      <div class="d-flex align-item-center w-100">
+        <span class="line-clamp line-clamp-2 my-1 h-35px text-dark">{{item?.unbounds?.title}}</span>
       </div>
       <div class="d-flex align-item-center">
         <i class="icon-i-clock icon-14 text-primary"></i>

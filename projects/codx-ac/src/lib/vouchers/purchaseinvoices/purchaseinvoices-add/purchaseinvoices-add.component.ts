@@ -43,31 +43,34 @@ import { AC_VATInvoices } from '../../../models/AC_VATInvoices.model';
 })
 export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit {
   //#region Constructor
-  @ViewChild('eleGridPurchaseInvoice') eleGridPurchaseInvoice: CodxGridviewV2Component; //? element codx-grv2 lưới PurchaseInvoice
-  @ViewChild('eleGridVatInvoices') eleGridVatInvoices: CodxGridviewV2Component; //? element codx-grv2 lưới VatInvoices
+  @ViewChild('eleGridPurchaseInvoice') eleGridPurchaseInvoice: CodxGridviewV2Component;
+  @ViewChild('eleGridVatInvoices') eleGridVatInvoices: CodxGridviewV2Component;
   @ViewChild('formPurchaseInvoices') public formPurchaseInvoices: CodxFormComponent;
-  @ViewChild('elementTabDetail') elementTabDetail: any; //? element object các tab detail(chi tiết,hóa đơn GTGT)
+  @ViewChild('elementTabDetail') elementTabDetail: any;
   @ViewChild('eleCbxObjectID') eleCbxObjectID: any;
+  @ViewChild('eleCbxCurrencyID') eleCbxCurrencyID: any;
 
-  headerText: string; //? tên tiêu đề
-  dialog: DialogRef; //? dialog truyền vào
-  dialogData?: any; //? dialog hứng data truyền vào
-  dataDefault: any; //? data của cashpayment
-  journal: any; //? data sổ nhật kí
-  baseCurr: any; //? đồng tiền hạch toán
-  taxCurr:any; //? tiền thuế
+
+  headerText: string;
+  dialog: DialogRef; 
+  dialogData?: any;
+  dataDefault: any;
+  journal: any;
+  baseCurr: any;
+  taxCurr:any;
   fmPurchaseInvoicesLines:any = fmPurchaseInvoicesLines
   fmVATInvoices:any = fmVATInvoices
   tabInfo: TabModel[] = [ //? thiết lập footer
-    { name: 'History', textDefault: 'Lịch sử', isActive: true },
+    { name: 'History', textDefault: 'Lịch sử', isActive: false },
     { name: 'Comment', textDefault: 'Thảo luận', isActive: false },
     { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
     { name: 'References', textDefault: 'Liên kết', isActive: false },
   ];
   isPreventChange:any = false;
   postDateControl:any;
-  private destroy$ = new Subject<void>(); //? list observable hủy các subscribe api
-
+  preData:any;
+  nextTabIndex:number;
+  private destroy$ = new Subject<void>();
   constructor(
     inject: Injector,
     private acService: CodxAcService,
@@ -78,12 +81,13 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
     @Optional() dialogData?: DialogData
   ) {
     super(inject);
-    this.dialog = dialog; //? dialog truyền vào
-    this.dialogData = dialogData; //? data dialog truyền vào
-    this.headerText = dialogData.data?.headerText; //? get tên tiêu đề
-    this.dataDefault = { ...dialogData.data?.oData }; //? get data của Cashpayments
-    this.journal = { ...dialogData.data?.journal }; //? get data sổ nhật kí
-    this.baseCurr = dialogData.data?.baseCurr; //? get đồng tiền hạch toán
+    this.dialog = dialog;
+    this.dialogData = dialogData;
+    this.headerText = dialogData.data?.headerText;
+    this.dataDefault = { ...dialogData.data?.oData };
+    this.preData = { ...dialogData.data?.oData };
+    this.journal = { ...dialogData.data?.journal };
+    this.baseCurr = dialogData.data?.baseCurr;
   }
   //#endregion Constructor
 
@@ -193,35 +197,105 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
     }
     let field = event?.field || event?.ControlName;
     let value = event?.data || event?.crrValue;
-    if(event && value && this.formPurchaseInvoices.hasChange(this.formPurchaseInvoices.preData,this.formPurchaseInvoices.data)){
-      this.formPurchaseInvoices.data.updateColumns = '';
-      switch (field.toLowerCase()) {
-        case 'objectid':
-          let indexObject = event?.component?.dataService?.data.find((x) =>x.ObjectID == value);
-          if (indexObject != null) {
-            let memo = this.getMemoMaster();
-            this.formPurchaseInvoices.setValue('memo',memo,{});
-            this.objectIDChange(field);
+    this.formPurchaseInvoices.setValue('updateColumns','',{});
+    switch (field.toLowerCase()) {
+      case 'objectid':
+        let indexob = this.eleCbxObjectID?.ComponentCurrent?.dataService?.data.findIndex((x) => x.ObjectID == this.eleCbxObjectID?.ComponentCurrent?.value);
+        if(value == '' || value == null || indexob == -1){
+          this.isPreventChange = true;
+          let memo = this.getMemoMaster();
+          this.formPurchaseInvoices.setValue(field,null,{});
+          this.formPurchaseInvoices.setValue('objectName', null, {});
+          this.formPurchaseInvoices.setValue('objectType', null, {});
+          this.formPurchaseInvoices.setValue('address', null, {});
+          this.formPurchaseInvoices.setValue('taxCode', null, {});
+          this.formPurchaseInvoices.setValue('warehouseID',null, {});
+          this.formPurchaseInvoices.setValue('pmtMethodID', null, {});
+          this.formPurchaseInvoices.setValue('pmtTermID', null, {});
+          this.formPurchaseInvoices.setValue('delModeID', null, {});
+          this.formPurchaseInvoices.setValue('memo', memo, {});
+          this.detectorRef.detectChanges();
+          this.isPreventChange = false;
+          return;
+        } 
+        let objectType = event?.component?.itemsSelected[0]?.ObjectType || '';
+        this.formPurchaseInvoices.setValue('objectType',objectType,{});
+        this.objectIDChange(field);
+        break;
+
+      case 'currencyid':
+        let indexcr = this.eleCbxCurrencyID?.ComponentCurrent?.dataService?.data.findIndex((x) => x.CurrencyID == this.eleCbxCurrencyID?.ComponentCurrent?.value);
+        if(value == '' || value == null || indexcr == -1){
+          this.isPreventChange = true;
+          this.formPurchaseInvoices.setValue(field, this.preData?.currencyID, {});
+          if (this.preData?.currencyID != null) {
+            var key = Util.camelize(field);
+            var $error = (this.formPurchaseInvoices as any).elRef.nativeElement?.querySelector('div[data-field="' + key + '"].errorMessage');
+            if ($error) $error.classList.add('d-none');
           }
-          break;
-        case 'currencyid':
-          this.currencyIDChange(field);
-          break;
-        case 'exchangerate':
-          this.exchangeRateChange(field);
-          break;
-        case 'taxexchrate':
-          this.taxExchRateChange(field);
-          break;
+          this.isPreventChange = false;
+          this.detectorRef.detectChanges();
+        }
+        let valueCurrency = {
+          PreCurrency:  event?.component?.dataService?.currentComponent?.previousItemData?.CurrencyID || ''
+        };
+        this.currencyIDChange(field,valueCurrency);
+        break;
+
+      case 'exchangerate':
+        if(value == null){
+          this.isPreventChange = true;
+          setTimeout(() => {
+            this.formPurchaseInvoices.setValue(field,this.preData?.exchangeRate,{});
+            this.isPreventChange = false;
+            this.detectorRef.detectChanges();
+          }, 50);
+          if (this.preData?.exchangeRate != null) {
+            var key = Util.camelize(field);
+            var $error = (this.formPurchaseInvoices as any).elRef.nativeElement?.querySelector('div[data-field="' + key + '"].errorMessage');
+            if ($error) $error.classList.add('d-none');
+          }
+          return;
+        }
+        if(this.preData?.exchangeRate == this.formPurchaseInvoices?.data?.exchangeRate) return;
+        this.exchangeRateChange(field);
+        break;
+
         case 'voucherdate':
+          if(value == null) return;
           this.voucherDateChange(field);
           break;
-        case 'invoiceno':
-        case 'invoicedate':
-          let memo = this.getMemoMaster(event?.component?.format);
-          this.formPurchaseInvoices.setValue('memo',memo,{});
+
+        case 'taxexchrate':
+          if(value == null){
+            this.isPreventChange = true;
+            setTimeout(() => {
+              this.formPurchaseInvoices.setValue(field,this.preData?.taxExchrate,{});
+              this.isPreventChange = false;
+              this.detectorRef.detectChanges();
+            }, 50);
+            return;
+          }
+          if(this.preData?.taxExchrate == this.formPurchaseInvoices?.data?.taxExchrate) return;
+          this.taxExchRateChange(field);
           break;
-      }
+      // case 'currencyid':
+      //   this.currencyIDChange(field);
+      //   break;
+      // case 'exchangerate':
+      //   this.exchangeRateChange(field);
+      //   break;
+      // case 'taxexchrate':
+      //   this.taxExchRateChange(field);
+      //   break;
+      // case 'voucherdate':
+      //   this.voucherDateChange(field);
+      //   break;
+      case 'invoiceno':
+      case 'invoicedate':
+        let memo = this.getMemoMaster(event?.component?.format);
+        this.formPurchaseInvoices.setValue('memo',memo,{});
+        break;
     }
   }
 
@@ -308,6 +382,29 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
           }
         }
       })
+  }
+
+  /**
+   * *Hàm xử lí các tab detail
+   * @param event
+   */
+  onTabSelectedDetail(event) {
+    switch(event?.selectedIndex){
+      case 0:
+        if (this.eleGridPurchaseInvoice && this.eleGridPurchaseInvoice.isEdit) {
+          event.cancel = true;
+          this.nextTabIndex = event?.selectingIndex;
+          return;
+        }
+        break;
+      case 1:
+        if (this.eleGridVatInvoices && this.eleGridVatInvoices.isEdit) {
+          event.cancel = true;
+          this.nextTabIndex = event?.selectingIndex;
+          return;
+        }
+        break;
+    }
   }
   //#endregion Event
 
@@ -479,33 +576,28 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
     .subscribe((res: any) => {
       if (res) {
         this.isPreventChange = true;
-        if(this.formPurchaseInvoices.data.currencyID != res?.CurrencyID){
-          this.formPurchaseInvoices.setValue('currencyID',(res?.CurrencyID || ''),{});
-          this.showHideColumn();
-        } 
-        if (this.formPurchaseInvoices.data.exchangeRate != res?.ExchangeRate) {
-          this.formPurchaseInvoices.setValue('exchangeRate',(res?.ExchangeRate || 0),{});
-          this.formPurchaseInvoices.setValue('taxExchRate',(res?.TaxExchRate || 0),{});
-          setTimeout(() => {
-            if(this.eleGridPurchaseInvoice.dataSource.length){ //? nếu có dữ liệu chi tiết => refresh grid
-              this.formPurchaseInvoices.preData = {...this.formPurchaseInvoices.data};
-              this.dialog.dataService.update(this.formPurchaseInvoices.data).subscribe();
-              this.refreshGrid();
-            }
-          }, 100);
-          
+        this.formPurchaseInvoices.setValue('objectName',(res?.data?.objectName),{});
+        this.formPurchaseInvoices.setValue('objectType',(res?.data?.objectType),{});
+        this.formPurchaseInvoices.setValue('address',(res?.data?.address),{});
+        this.formPurchaseInvoices.setValue('taxCode',(res?.data?.taxCode),{});
+        this.formPurchaseInvoices.setValue('warehouseID',(res?.data?.warehouseID),{});
+        this.formPurchaseInvoices.setValue('pmtMethodID',(res?.data?.pmtMethodID),{});
+        this.formPurchaseInvoices.setValue('pmtTermID',(res?.data?.pmtTermID),{});
+        this.formPurchaseInvoices.setValue('delModeID',(res?.data?.delModeID),{});
+        this.formPurchaseInvoices.setValue('currencyID',(res?.data?.currencyID),{});
+        this.formPurchaseInvoices.setValue('exchangeRate',(res?.data?.exchangeRate),{});
+        this.formPurchaseInvoices.setValue('taxExchRate',(res?.data?.taxExchRate),{});
+        this.formPurchaseInvoices.setValue('multi',(res?.multi),{});
+        if (this.eleGridPurchaseInvoice.dataSource.length) {
+          this.formPurchaseInvoices.preData = {...this.formPurchaseInvoices.data};
+          this.dialog.dataService.update(this.formPurchaseInvoices.data).subscribe();
         }
-        this.formPurchaseInvoices.setValue('objectName',(res?.ObjectName || ''),{});
-        this.formPurchaseInvoices.setValue('objectType',(res?.ObjectType || ''),{});
-        this.formPurchaseInvoices.setValue('address',(res?.Address || ''),{});
-        this.formPurchaseInvoices.setValue('taxCode',(res?.TaxCode || ''),{});
-        this.formPurchaseInvoices.setValue('warehouseID',(res?.WarehouseID || ''),{});
-        this.formPurchaseInvoices.setValue('pmtMethodID',(res?.PmtMethodID || ''),{});
-        this.formPurchaseInvoices.setValue('pmtTermID',(res?.PmtTermID || ''),{});
-        this.formPurchaseInvoices.setValue('delModeID',(res?.DelModeID || ''),{});
-
-        this.detectorRef.detectChanges();
+        if (res?.isRefreshGrid) {
+          this.showHideColumn();
+          this.eleGridPurchaseInvoice.refresh();
+        }
         this.isPreventChange = false;
+        this.detectorRef.detectChanges();
       }
     })
   }
@@ -514,27 +606,29 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
    * *Hàm change tiền tệ
    * @param field 
    */
-  currencyIDChange(field:any){
+  currencyIDChange(field:any,obj:any){
     this.api.exec('AC', 'PurchaseInvoicesBusiness', 'ValueChangedAsync', [
       field,
       this.formPurchaseInvoices.data,
+      JSON.stringify(obj)
     ])
     .pipe(takeUntil(this.destroy$))
     .subscribe((res: any) => {
       if (res) {      
-        if (this.formPurchaseInvoices.data.exchangeRate != res?.ExchangeRate) {
-          this.formPurchaseInvoices.setValue('exchangeRate',(res?.ExchangeRate || 0),{});
-          this.formPurchaseInvoices.setValue('taxExchRate',(res?.TaxExchRate || 0),{});
+        this.isPreventChange = true;
+        this.formPurchaseInvoices.setValue('exchangeRate',res?.data?.exchangeRate,{});
+        this.preData = {...this.formPurchaseInvoices?.data};
+        if (this.eleGridPurchaseInvoice.dataSource.length) {
+          this.formPurchaseInvoices.preData = {...this.formPurchaseInvoices.data};
+          this.dialog.dataService.update(this.formPurchaseInvoices.data).subscribe();
         }
-        this.showHideColumn();
-        setTimeout(() => {
-          if(this.eleGridPurchaseInvoice.dataSource.length){ //? nếu có dữ liệu chi tiết => refresh grid
-            this.formPurchaseInvoices.preData = {...this.formPurchaseInvoices.data};
-            this.dialog.dataService.update(this.formPurchaseInvoices.data).subscribe();
-            this.refreshGrid();
-          }
-        }, 100);
-        this.detectorRef.detectChanges();
+        if (res?.isRefreshGrid) {
+          this.showHideColumn();
+          setTimeout(() => {
+            this.eleGridPurchaseInvoice.refresh();
+          }, 100);
+        }
+        this.isPreventChange = false;
       }
     })
   }
@@ -544,23 +638,23 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
    * @param field 
    */
   exchangeRateChange(field:any){
-    this.formPurchaseInvoices.setValue('taxExchRate',this.formPurchaseInvoices.data.exchangeRate,{});
-    if (this.eleGridPurchaseInvoice && this.eleGridPurchaseInvoice.dataSource.length) {
-      this.api.exec('AC', 'PurchaseInvoicesBusiness', 'UpdateLineAsync', [
-        this.formPurchaseInvoices.data,
+    this.api
+      .exec('AC', 'PurchaseInvoicesBusiness', 'ValueChangedAsync', [
         field,
+        this.formPurchaseInvoices.data,
+        ''
       ])
-      .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
-        if (res) {      
-          this.formPurchaseInvoices.preData = {...this.formPurchaseInvoices.data};
-          this.dialog.dataService.update(this.formPurchaseInvoices.data).subscribe();
-          this.refreshGrid();
+        if (res) {
+          this.preData = { ...this.formPurchaseInvoices?.data };
+          if (res?.isRefreshGrid) {
+            this.eleGridPurchaseInvoice.refresh();
+            this.formPurchaseInvoices.preData = { ...this.formPurchaseInvoices.data };
+            this.dialog.dataService.update(this.formPurchaseInvoices.data).subscribe();
+            this.detectorRef.detectChanges();
+          }
         }
-      })
-    }
-    // xử lí khi có line
-    
+      });
   }
 
   /**
@@ -568,21 +662,23 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
    * @param field 
    */
   taxExchRateChange(field:any){
-    if (this.eleGridPurchaseInvoice && this.eleGridPurchaseInvoice.dataSource.length) {
-      this.api.exec('AC', 'PurchaseInvoicesBusiness', 'UpdateLineAsync', [
-        this.formPurchaseInvoices.data,
+    this.api
+      .exec('AC', 'PurchaseInvoicesBusiness', 'ValueChangedAsync', [
         field,
+        this.formPurchaseInvoices.data,
+        ''
       ])
-      .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
-        if (res) {      
-          this.formPurchaseInvoices.preData = {...this.formPurchaseInvoices.data};
-          this.dialog.dataService.update(this.formPurchaseInvoices.data).subscribe();
-          this.refreshGrid();
+        if (res) {
+          this.preData = { ...this.formPurchaseInvoices?.data };
+          if (res?.isRefreshGrid) {
+            this.eleGridPurchaseInvoice.refresh();
+            this.formPurchaseInvoices.preData = { ...this.formPurchaseInvoices.data };
+            this.dialog.dataService.update(this.formPurchaseInvoices.data).subscribe();
+            this.detectorRef.detectChanges();
+          }
         }
-      })
-    }
-    // xử lí khi có line
+      });
   }
 
   /**
@@ -590,26 +686,24 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
    * @param field 
    */
   voucherDateChange(field){
-    this.formPurchaseInvoices.setValue('postedDate',this.formPurchaseInvoices.data.voucherDate,{});
-    this.formPurchaseInvoices.setValue('invoiceDate',this.formPurchaseInvoices.data.voucherDate,{});
     this.api.exec('AC', 'PurchaseInvoicesBusiness', 'ValueChangedAsync', [
       field,
       this.formPurchaseInvoices.data,
+      ''
     ])
     .pipe(takeUntil(this.destroy$))
     .subscribe((res: any) => {
-      if (res) {      
-        if (this.formPurchaseInvoices.data.exchangeRate != res?.ExchangeRate) {
-          this.formPurchaseInvoices.setValue('exchangeRate',(res?.ExchangeRate || 0),{});
-          this.formPurchaseInvoices.setValue('taxExchRate',(res?.TaxExchRate || 0),{});
-          if(this.eleGridPurchaseInvoice.dataSource.length){ //? nếu có dữ liệu chi tiết => refresh grid
-            this.formPurchaseInvoices.preData = {...this.formPurchaseInvoices.data};
-            this.dialog.dataService.update(this.formPurchaseInvoices.data).subscribe();
-            this.refreshGrid();
-          }
+      if (res) {
+        this.formPurchaseInvoices.setValue('exchangeRate',res?.data?.exchangeRate,{});
+        this.preData = {...this.formPurchaseInvoices?.data};
+        if (res?.isRefreshGrid) {
+          this.eleGridPurchaseInvoice.refresh();
+          this.formPurchaseInvoices.preData = { ...this.formPurchaseInvoices.data };
+          this.dialog.dataService.update(this.formPurchaseInvoices.data).subscribe();
+          this.detectorRef.detectChanges();
         }
       }
-    })
+    });
   }
 
   /**

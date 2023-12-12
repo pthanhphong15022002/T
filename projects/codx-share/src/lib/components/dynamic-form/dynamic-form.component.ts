@@ -297,7 +297,7 @@ export class DynamicFormComponent extends UIComponent {
               data: item,
               isAdd: false,
               headerText: e?.data?.customName,
-              showTemplateTab:false,
+              showTemplateTab: false,
             },
             option
           );
@@ -313,7 +313,23 @@ export class DynamicFormComponent extends UIComponent {
       });
   }
 
+  gridviewSetup: any = {};
+  width: any = '550px';
   click(evt: ButtonModel) {
+    if (this.view && this.view.formModel) {
+      let formName = this.view.formModel.formName;
+      let gridViewName = this.view.formModel.gridViewName;
+      this.cache.gridViewSetup(formName, gridViewName).subscribe((gv) => {
+        if (gv) {
+          let arrgv = Object.values(gv) as any[];
+          let grvsetup = arrgv?.filter((x) => x.allowPopup == true);
+          let lstTabs = grvsetup?.filter(
+            (x: any) => x.controlType == 'TabControl'
+          );
+          if (lstTabs && lstTabs.length > 0) this.width = '800px';
+        }
+      });
+    }
     this.function = evt;
     switch (evt.id) {
       case 'btnAdd':
@@ -339,7 +355,7 @@ export class DynamicFormComponent extends UIComponent {
     this.viewBase.dataService.addNew().subscribe((res) => {
       this.dataSelected = this.viewBase.dataService.dataSelected;
       let option = new SidebarModel();
-      option.Width = '550px';
+      option.Width = this.width;
       option.DataService = this.viewBase?.dataService;
       option.FormModel = this.viewBase?.currentView?.formModel;
       debugger;
@@ -377,7 +393,7 @@ export class DynamicFormComponent extends UIComponent {
     if (evt) this.viewBase.dataService.dataSelected = this.dataSelected = evt;
     this.viewBase.dataService.edit(this.dataSelected).subscribe(() => {
       let option = new SidebarModel();
-      option.Width = '550px';
+      option.Width = this.width;
       option.DataService = this.viewBase?.dataService;
       option.FormModel = this.viewBase?.currentView?.formModel;
       this.dialog = this.callfc.openSide(
@@ -417,7 +433,7 @@ export class DynamicFormComponent extends UIComponent {
     }
     (this.viewBase.dataService as CRUDService).copy().subscribe((res) => {
       let option = new SidebarModel();
-      option.Width = '550px';
+      option.Width = this.width;
       option.DataService = this.viewBase.dataService;
       option.FormModel = this.viewBase?.currentView?.formModel;
       //this.dialog =

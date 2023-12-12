@@ -347,6 +347,10 @@ li {
 }
 .model-func{
   margin-top: 3px;
+  width: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .model-func:hover{
   border-radius: 5px;

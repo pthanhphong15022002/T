@@ -55,6 +55,7 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
   @Input() contractName: string;
   @Input() leadName: string;
   @Input() isHeightAuto = false;
+  @Input() taskAdd;
 
   @Output() continueStep = new EventEmitter<any>();
   @Output() saveAssignTask = new EventEmitter<any>();
@@ -503,5 +504,9 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
   }
   toggleReason() {
     this.isShowSuccess = !this.isShowSuccess;
+  }
+  setTask(stepID){
+    let data = stepID == this.taskAdd?.task?.stepID ? this.taskAdd : null;
+    return data;
   }
 }
