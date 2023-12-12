@@ -639,14 +639,7 @@ export class StepService {
     let contract = contractOuput?.event?.contract;
     if (contract) {
       task.objectLinked = contract?.recID;
-      // task.taskName = contract?.contractName;
       task.owner = contract?.owner;
-      // task.startDate = Date.parse(contract?.effectiveFrom)
-      //   ? contract?.effectiveFrom
-      //   : new Date();
-      // task.endDate = Date.parse(contract?.effectiveTo)
-      //   ? contract?.effectiveTo
-      //   : null;
       let minus = this.minusDate(task.endDate, task.startDate, 'hours');
       task.durationDay = minus ? minus % 24 : 0;
       task.durationHour = minus ? Math.floor(minus / 24) : 0;

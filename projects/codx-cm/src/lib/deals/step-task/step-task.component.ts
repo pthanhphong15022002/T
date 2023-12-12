@@ -106,6 +106,7 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
   taskHeight = '415px';
   user;
   isAddTask = false;
+  dataTaskAdd;
 
   constructor(
     private cache: CacheService,
@@ -183,7 +184,9 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
   
     }
 
-    if(changes?.taskAdd && changes?.taskAdd?.currentValue){
+    if(changes?.taskAdd && changes?.taskAdd?.currentValue?.task){
+      this.dataTaskAdd = JSON.parse(JSON.stringify(this.taskAdd));
+      this.taskAdd.task = null;
       this.isAddTask = true;
     }else{
       this.isAddTask = false;
@@ -516,10 +519,10 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
     this.isShowSuccess = !this.isShowSuccess;
   }
   setTask(stepID){
-    if(!this.isAddTask || !this.taskAdd?.task){
+    if(!this.dataTaskAdd || !this.dataTaskAdd?.task){
       return null;
     }else{
-      let data = stepID == this.taskAdd?.task?.stepID ? this.taskAdd : null;
+      let data = stepID == this.dataTaskAdd?.task?.stepID ? this.dataTaskAdd : null;
       if(data){
         this.isAddTask = false;
       }

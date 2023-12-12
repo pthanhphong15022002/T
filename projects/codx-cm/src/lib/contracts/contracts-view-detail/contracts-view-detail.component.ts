@@ -125,9 +125,6 @@ export class ContractsViewDetailComponent
   }
   ngOnChanges(changes: SimpleChanges): void {
     this.loadTabs();
-    if (changes?.dataTaskAdd) {
-      console.log(changes?.dataTaskAdd);
-    }
     if (changes?.contract && this.contract) {
       this.setDataInput();
       this.contractService.getContactByRecID(this.contract?.contactID).subscribe(res => {
@@ -138,6 +135,10 @@ export class ContractsViewDetailComponent
     }
     if (changes?.listInsStepStart && changes?.listInsStepStart?.currentValue) {
       this.listInsStep = this.listInsStepStart;
+    }
+    if(changes?.taskAdd){
+      console.log(changes?.taskAdd);
+      
     }
     this.listTypeContract = this.contractService.listTypeContractTask;
   }
