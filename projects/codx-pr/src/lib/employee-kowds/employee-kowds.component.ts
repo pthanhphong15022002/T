@@ -413,7 +413,7 @@ export class EmployeeKowdsComponent extends UIComponent{
   }
 
   logData(data){
-    console.log('Data tra ve', data.emp)
+    console.log('Data tra ve template employee', data.emp)
   }
 
   onSelectionChangedTreeOrg(evt){
