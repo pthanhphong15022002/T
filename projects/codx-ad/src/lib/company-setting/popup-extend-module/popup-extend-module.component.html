@@ -42,9 +42,9 @@
 
 <ng-template #body>
   <div *ngIf="lstModule" class="container w-100 h-100 p-2">
-    <div class="grvModule">
+    <div class="grvModule h-100">
       <div class="title d-flex justify-content-center mb-4">
-        <div class="d-flex align-items-center">
+        <div class="d-flex align-items-center h-100">
           <div class="title-name me-3">
             <h3>
               <codx-label name="lblBill" default="Đơn hàng"></codx-label>
@@ -61,16 +61,20 @@
             >
             </codx-input>
           </div>
-          <codx-vll
-            [name]="grvTNOrders['Interval']?.referedValue"
-            [value]="'1'"
-            [showText]="true"
-            [showBgColor]="false"
-          >
-          </codx-vll>
+          <div class="h-100">
+            <codx-vll
+              [name]="grvTNOrders['Interval']?.referedValue"
+              [value]="'1'"
+              [showText]="true"
+              [showBgColor]="false"
+            >
+            </codx-vll>
+          </div>
         </div>
       </div>
-      <ng-container [ngTemplateOutlet]="gridModules"> </ng-container>
+      <div style="height: calc(100% - 50px);">
+        <ng-container [ngTemplateOutlet]="gridModules"> </ng-container>
+      </div>
     </div>
   </div>
 </ng-template>
@@ -131,7 +135,7 @@
 
 <!-- Gridview -->
 <ng-template #gridModules>
-  <div class="row d-flex" *ngIf="clmnGrid?.length">
+  <div class="row d-flex h-100" *ngIf="clmnGrid?.length">
     <codx-gridview-v2
       #grid
       [dataSource]="lstModule"
