@@ -42,7 +42,7 @@ export class CashPaymentsComponent extends UIComponent {
   @ViewChild('templateDetailRight') templateDetailRight: TemplateRef<any>; //? template view danh sách chi tiết (phải)
   @ViewChild('listTemplate') listTemplate?: TemplateRef<any>; //? template view danh sách
   @ViewChild('templateGrid') templateGrid?: TemplateRef<any>; //? template view lưới
-  headerText: any; //? tên tiêu đề truyền cho form thêm mới
+  headerText: any;
   runmode: any;
   journalNo: string; //? số của sổ nhật kí
   itemSelected: any; //? data của view danh sách chi tiết khi được chọn
