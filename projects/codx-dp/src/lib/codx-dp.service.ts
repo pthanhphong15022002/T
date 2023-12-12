@@ -939,6 +939,15 @@ export class CodxDpService {
       data
     );
   }
+  moveStageBackDataCM(data) {
+    return this.api.execSv<any>(
+      'CM',
+      'ERM.Business.CM',
+      'DealsBusiness',
+      'MoveStageBackByRefIDAsync',
+      data
+    );
+  }
 
   //#endregion
 }

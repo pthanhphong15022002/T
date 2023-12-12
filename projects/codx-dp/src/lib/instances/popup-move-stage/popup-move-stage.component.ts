@@ -144,7 +144,7 @@ export class PopupMoveStageComponent implements OnInit {
       this.instanceCM = this.datas?.deal;
       this.isLoad = true;
       this.isCallInstance = this.dataCM?.isCallInstance ?? false;
-    // this.isMoveBackStage = !['1', '2', '15'].includes(this.instanceCM?.status);
+      this.isMoveBackStage = !['1', '2', '15'].includes(this.instanceCM?.status);
     }
     this.stepID = this.dataCM
       ? this.dataCM?.stepID
@@ -482,15 +482,37 @@ export class PopupMoveStageComponent implements OnInit {
       this.stepIdClick,
       this.actionBack,
       this.listStepsCbx,
+      this.isCallInstance
     ];
     this.codxDpService.moveStageBackInstance(data).subscribe((res) => {
       if (res) {
         this.instance = res[0];
         this.listStep = res[1];
+        let tmpInstaceDTO = res[2];
         let obj = {
           listStep: this.listStep,
           instance: this.instance,
+          isReason: false,
+          comment: this.instancesStepOld?.note,
+          expectedClosed: this.expectedClosed,
+          isMoveBackStage: this.isMoveBackStage,
+          tmpInstaceDTO: tmpInstaceDTO,
         };
+
+        if (this.applyFor == '1' && !this.isCallInstance) {
+          let dataUpdate = [
+            this.stepIdOld,
+            this.oldStatus,
+            this.instancesStepOld?.note,
+            this.expectedClosed,
+            tmpInstaceDTO,
+          ];
+          this.codxDpService.moveStageBackDataCM(dataUpdate).subscribe((res) => {
+            if (res) {
+            }
+          });
+        }
+
         this.dialog.close(obj);
         this.changeDetectorRef.detectChanges();
       }

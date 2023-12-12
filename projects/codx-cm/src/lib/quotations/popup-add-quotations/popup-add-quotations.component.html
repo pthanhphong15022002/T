@@ -183,12 +183,19 @@
                   #contactCbx
                   field="contactID"
                   [formModel]="form.formModel"
+                  [Group]="form.formGroup"
+                  (valueChange)="changeCombox($event)"
+                ></codx-input>
+                <!-- <codx-input
+                  #contactCbx
+                  field="contactID"
+                  [formModel]="form.formModel"
                   [crrValue]="quotations.contactID"
                   [model]="{
                     objectID: this.quotations.customerID
                   }"
                   (valueChange)="changeCombox($event)"
-                ></codx-input>
+                ></codx-input> -->
               </div>
               <!-- xoa  [Group]="form.formGroup" de cbx nhan model de -->
             </div>
