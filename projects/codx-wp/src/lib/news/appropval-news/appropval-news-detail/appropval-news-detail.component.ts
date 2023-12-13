@@ -225,7 +225,8 @@ export class AppropvalNewsDetailComponent implements OnInit {
     evt.map(x => {
       if(x.functionID == "SYS02" || x.functionID == "SYS03")
         x.disabled = false;
-      else if(x.functionID == "WPT02131" || x.functionID == "WPT02132" || x.functionID == "WPT02133")
+      // else if(x.functionID == "WPT02131" || x.functionID == "WPT02132" || x.functionID == "WPT02133")
+      else if(x.functionID == "WPT02131" || x.functionID == "WPT02133")
         x.disabled = data.approveControl == "0" || (data.approveControl == "1" && data.approveStatus == "5");
       else
         x.disabled = true;

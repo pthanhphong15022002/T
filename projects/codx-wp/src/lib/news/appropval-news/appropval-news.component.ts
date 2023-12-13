@@ -168,7 +168,8 @@ export class AppropvalNewsComponent extends UIComponent {
       case 'SYS03': //edit
         this.editPost(event,data);
         break;
-      case "WPT02121": // duyệt
+      case "WPT02121":
+      case "WPT02131": // duyệt
           this.notifySvr.alertCode("WP004")
           .subscribe((option:any) =>{
             if(option?.event?.status == "Y")
@@ -239,7 +240,8 @@ export class AppropvalNewsComponent extends UIComponent {
     evt.map(x => {
       if(x.functionID == "SYS02" || x.functionID == "SYS03")
         x.disabled = false;
-      else if(x.functionID == "WPT02131" || x.functionID == "WPT02132" || x.functionID == "WPT02133")
+      // else if(x.functionID == "WPT02131" || x.functionID == "WPT02132" || x.functionID == "WPT02133")
+      else if(x.functionID == "WPT02131" || x.functionID == "WPT02133")
         x.disabled = item.approveControl == "0" || (item.approveControl == "1" && item.approveStatus == "5");
       else
         x.disabled = true;
