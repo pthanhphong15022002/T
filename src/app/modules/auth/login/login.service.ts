@@ -48,29 +48,29 @@ export class LoginService {
   loginDevice: Device;
   session: string;
   onInit() {}
-  login(objData) {
-    if (objData.login2FA != '') {
-      let lg2FADialog = this.callfc.openForm(
-        Login2FAComponent,
-        '',
-        400,
-        600,
-        '',
-        objData
-      );
-      lg2FADialog.closed.subscribe((lg2FAEvt) => {
-        console.log('close popup ', lg2FAEvt);
-        if (lg2FAEvt.event.data.error) return;
-        this.authService.setLogin(objData.data.data);
-        this.loginAfter(lg2FAEvt.event.data);
+  // login(objData) {
+  //   if (objData.login2FA != '') {
+  //     let lg2FADialog = this.callfc.openForm(
+  //       Login2FAComponent,
+  //       '',
+  //       400,
+  //       600,
+  //       '',
+  //       objData
+  //     );
+  //     lg2FADialog.closed.subscribe((lg2FAEvt) => {
+  //       console.log('close popup ', lg2FAEvt);
+  //       if (lg2FAEvt.event.data.error) return;
+  //       this.authService.setLogin(objData.data.data);
+  //       this.loginAfter(lg2FAEvt.event.data);
 
-        // this.loginAfter(lg2FAEvt.event.data);
-      });
-    } else {
-      this.authService.setLogin(objData.data.data);
-      this.loginAfter(objData.data);
-    }
-  }
+  //       // this.loginAfter(lg2FAEvt.event.data);
+  //     });
+  //   } else {
+  //     this.authService.setLogin(objData.data.data);
+  //     this.loginAfter(objData.data);
+  //   }
+  // }
 
   loginAfter(data: any, trust = false) {
     if (!data.error) {
