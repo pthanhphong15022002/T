@@ -302,7 +302,7 @@
         field="businessLineID"
         [crrValue]="contracts?.businessLineID"
         (valueChange)="valueChangeCombobox($event)"
-        [disabled]="action == 'edit'"
+        [disabled]="action == 'edit' || type == 'DP'"
       >
       </codx-input>
     </div>
