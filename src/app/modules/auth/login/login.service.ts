@@ -75,7 +75,7 @@ export class LoginService {
   loginAfter(data: any, trust = false) {
     if (!data.error) {
       const user = data.data;
-      this.loginDevice.loginType = data.data.extends.LoginType ?? '';
+      this.loginDevice.loginType = data.data.extends.LoginType ?? this.loginDevice.loginType;
       if (this.signalRService.logOut) {
         this.signalRService.createConnection();
       }
@@ -132,7 +132,7 @@ export class LoginService {
         tn,
         '', //userID
         '', //pw
-        JSON.stringify(this.loginDevice),
+        JSON.stringify(this.loginDevice)
       ])
       .subscribe((res: any) => {
         if (!res.error) {

@@ -223,12 +223,23 @@ export class AppropvalNewsDetailComponent implements OnInit {
   //change data moreFC
   changeDataMF(evt:any[],data:any){
     evt.map(x => {
-      if(x.functionID == "SYS02" || x.functionID == "SYS03")
-        x.disabled = false;
-      else if(x.functionID == "WPT02131" || x.functionID == "WPT02132" || x.functionID == "WPT02133")
-        x.disabled = data.approveControl == "0" || (data.approveControl == "1" && data.approveStatus == "5");
-      else
-        x.disabled = true;
+      // if(x.functionID == "SYS02" || x.functionID == "SYS03")
+      //   x.disabled = false;
+      // else if(x.functionID == "WPT02131" || x.functionID == "WPT02132" || x.functionID == "WPT02133")
+      //   x.disabled = data.approveControl == "0" || (data.approveControl == "1" && data.approveStatus == "5");
+      // else
+      //   x.disabled = true;
+
+      if (
+        x.functionID == 'WPT02131' ||
+        x.functionID == 'WPT02133' ||
+        x.functionID == 'WPT02121' ||
+        x.functionID == 'WPT02123'
+      )
+        x.disabled =
+          data.approveControl == '0' ||
+          (data.approveControl == '1' && data.approveStatus == '5');
+      else x.disabled = true;
     });
   }
 }
