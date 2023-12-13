@@ -103,7 +103,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
   customerID = {};
   headerTest = '';
   listTypeContract = [];
-  type: 'view' | 'DP' | 'deal' | 'quotation' | 'customer' | 'task';
+  type: 'contract' | 'DP' | 'deal' | 'quotation' | 'customer' | 'task';
   listMemorySteps: any[] = [];
   listInstanceSteps: any[] = [];
   listCustomFile: any[] = [];
@@ -294,6 +294,10 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
         this.loadExchangeRate(this.contracts.currencyID);
         this.setContractByDataOutput();
         this.getAutoNumber();
+        if(this.type == "DP", this.processID){
+          this.contracts.processID = this.processID;
+          this.getBusinessLineByProcessID(this.processID);
+        }
         break;
       case 'edit':
         if (data) {
@@ -612,7 +616,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
   }
 
   async addContracts() {
-    if (this.dialog?.dataService) {
+    if (this.type == 'contract') {
       this.dialog.dataService
         .save((opt: any) => this.beforeSave(opt), 0)
         .subscribe((res) => {
@@ -627,15 +631,13 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
           this.changeDetectorRef.markForCheck();
         });
     } else if (this.type == 'DP') {
-      // this.setDataInstance(this.contracts, this.instance);
-      // let instance = await this.addInstance();
-      // this.cmService
-      //   .addContracts([this.contracts, this.listPaymentAdd])
-      //   .subscribe((res) => {
-      //     if (res) {
-      //       this.dialog.close({ instance: instance });
-      //     }
-      //   });
+      this.cmService
+        .addContracts([this.contracts])
+        .subscribe((res) => {
+          if (res) {
+            this.dialog.close({ contract: res, action: this.action });
+          }
+        });
     } else {
       this.cmService
         .addContracts([this.contracts, this.listPaymentAdd])
@@ -921,6 +923,15 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
     });
   }
 
+  getBusinessLineByProcessID(processID) {
+    this.cmService
+      .getIdBusinessLineByProcessContractID([processID])
+      .subscribe((res) => {
+        if (res) {
+          this.contracts.businessLineID = res;
+        }
+      });
+    }
   //#endregion
 
   changeValueTextTask(event) {

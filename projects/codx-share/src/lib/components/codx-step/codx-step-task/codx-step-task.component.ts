@@ -1886,8 +1886,16 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         }
         //làm như vậy để cập nhật file
         let dataCopy = JSON.parse(JSON.stringify(data));
-        let groupFind = this.listGroupTask.find(
-          (group) => group.refID == dataCopy?.taskGroupID
+        // let groupFind = this.listGroupTask.find(
+        //   (group) => group.refID == dataCopy?.taskGroupID
+        // );
+        let groupFind = this.listGroupTask.find((group) => {
+          if(dataCopy?.taskGroupID){
+            return group.refID == dataCopy?.taskGroupID;
+          }else{
+            return !!group.refID == !!dataCopy?.taskGroupID;
+          }
+        }
         );
         if (groupFind) {
           let index = groupFind?.task?.findIndex(
