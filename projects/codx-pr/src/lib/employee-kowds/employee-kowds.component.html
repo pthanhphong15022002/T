@@ -7,8 +7,9 @@
   (selectedChange)="onSelectionChanged($event)"
   (buttonClick)="btnClick($event)"
   (onActions)="onAction($event)"
-  (clickMF)="clickMF($event, itemSelected)"
+  (clickMF)="clickMF($event)"
   [titleToolBarTmp]="breadCumbs" 
+  (changeDataMF)="handleShowHideMF($event)"
   >
   <!-- (viewChanged)="viewChanged($event)" -->
 <!-- service="PR"
@@ -80,6 +81,7 @@ method="LoadDataAsync" -->
       (onDoubleClick)="doubleClickGrid($event)"
       [height]="'100%'"
       [method]="'LoadDataForGridAsync'"
+      [idField]="'emp'"
       ></codx-gridview-v2>
 
       <!-- [dataSource] = "gridDataSource" -->
@@ -95,14 +97,20 @@ method="LoadDataAsync" -->
       <!-- [sorts]='[eAwardsSortModel1, eAwardsSortModel2]' -->
 
       <codx-gridview-v2
-      *ngIf="viewStatistic == true && gridDataSourceStatistic.length > 0 && gridStatisticColumns.length > 0"
+      *ngIf="viewStatistic == true && gridStatisticColumns.length > 0"
       #calendarGrid2
       [formModel]="view.formModel"
       [columnsGrid]="gridStatisticColumns"
       [autoFitColumns]="false"
-      [dataSource] = "gridDataSourceStatistic"
       [hideMoreFunc]="true"
       [height]="'100%'"
+      [service]="'HR'"
+      [assemblyName]="'PR'"
+      [className]="'KowDsBusiness'"
+      [predicates]=""
+      [method]="'LoadDataForGridStatisticAsync'"
+      [dataValues]="dataValues"
+      [idField]="'emp'"
       ></codx-gridview-v2>
       <!-- (onDoubleClick)="doubleClickGrid($event)" -->
     </ng-container>
@@ -120,14 +128,14 @@ method="LoadDataAsync" -->
   </ng-template>
 
   <ng-template #tempEmployee let-data>
-    {{logData(data)}}
-    {{data? data[data.column.field] : "" }}
-  <!-- <div class="d-flex align-items-center border-bottom">
+    <!-- {{logData(data)}} -->
+    <!-- {{data? data[data.column.field] : "" }} -->
+  <div class="d-flex align-items-center border-bottom">
     <div class="p-3 ps-5"
     >
         <div class="d-flex align-items-center">
           <div class="d-flex flex-column me-4">
-            <codx-img [funcId]="'HRT03a1'" [objectId]="data?.employeeID" [objectName]="data?.employeeName"
+            <codx-img [funcId]="'HRT03a1'" [objectId]="data?.emp?.employeeID" [objectName]="data?.emp?.employeeName"
               objectType="HR_Employees" [width]="40"
               [imageType]="'circle'"
               class="pic-emloyee"
@@ -138,15 +146,15 @@ method="LoadDataAsync" -->
               <div
               class="align-items-center line-clamp line-clamp-1 mb-1">
               <span class="fw-bold fs-6 me-3 text-nowrap">
-                {{data?.employeeName}}</span>
+                {{data?.emp?.employeeName}}</span>
               <i class="icon-qr_code_scanner text-danger icon-14 me-1"></i>
-              <span class="text-danger">{{ data?.employeeID }}</span>
+              <span class="text-danger">{{ data?.emp?.employeeID }}</span>
               <ng-template #nameTooltip>
                 <div class="inline-tooltip">
                   <span class="fw-bold fs-6 me-3 text-nowrap">
-                    {{data?.employeeName}}</span>
+                    {{data?.emp?.employeeName}}</span>
                   <i class="icon-qr_code_scanner text-danger icon-14 me-1"></i>
-                  <span class="text-danger">{{ data?.employeeID }}</span>
+                  <span class="text-danger">{{ data?.emp?.employeeID }}</span>
                 </div>
               </ng-template>
             </div>
@@ -156,19 +164,31 @@ method="LoadDataAsync" -->
           </div>
         </div>
       </div>
-      </div> -->
+      </div>
   </ng-template>
 
 
   <ng-template #tempDayData let-data>
+    <!-- {{logData(data[data.column.field])}} //null
+    {{logData(data)}} //object -->
+    <!-- {{logData(data)}} -->
+    <!-- {{logData(data[data.column.field])}} -->
+
+    <div *ngIf="data && data[data.column.field]">
+      <div *ngFor="let kow of data[data.column.field]">
+        <span>{{kow.dayNum}} {{kow.kowCode}}</span>
+      </div>
+    </div>
+
     <!-- <span>
       {{data? data[data.column.field][0]?.kowCode : "" }}
     </span> -->
   </ng-template>
 
   <ng-template #tempEmployeeTC let-data>
+    <!-- {{logData(data)}} //object -->
     <span class="fw-bold">
-      {{data? data[data.column.field] : "" }}
+      {{data? data[data.column.field] : "0" }}
     </span>
   </ng-template>
 
