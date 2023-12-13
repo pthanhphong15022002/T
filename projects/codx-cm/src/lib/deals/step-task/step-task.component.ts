@@ -57,6 +57,7 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
   @Input() leadName: string;
   @Input() isHeightAuto = false;
   @Input() taskAdd;
+  @Input() isViewStep = false;
 
   @Output() continueStep = new EventEmitter<any>();
   @Output() saveAssignTask = new EventEmitter<any>();

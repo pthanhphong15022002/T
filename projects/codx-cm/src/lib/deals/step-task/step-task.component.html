@@ -29,7 +29,8 @@
       </div>
     </div>
     <div class="right d-flex align-items-center">
-      <div
+      <div  
+        *ngIf="!isViewStep"
         (click)="addTask()"
         class="d-flex align-items-center me-3 cursor-pointer"
         ngbTooltip="Thêm công việc tại giai đoạn hiện tại"
@@ -159,6 +160,7 @@
         [ownerInstance]="owner"
         [entity]="'CM'"
         [taskAdd]="setTask(instanceStep?.recID)"
+        [isViewStep]="isViewStep"
       ></codx-step-task>
       <div
         *ngIf="

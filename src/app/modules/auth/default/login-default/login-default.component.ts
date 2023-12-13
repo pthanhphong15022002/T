@@ -52,7 +52,6 @@ export class LoginDefaultComponent extends UIComponent {
   @Input() fl: any;
   @Input() isNotADMode: boolean;
   @Input() hubConnectionID: string;
-  @Input() loginDevice: Device;
   @Input() sysSetting;
 
   @Output() submitEvent = new EventEmitter<string>();
@@ -110,7 +109,6 @@ export class LoginDefaultComponent extends UIComponent {
   }
 
   onInit(): void {
-    console.log('logindefault device info', this.loginDevice);
     if (this.enableCaptcha == 0) {
       this.captChaValid = true;
     } else {
@@ -272,8 +270,8 @@ export class LoginDefaultComponent extends UIComponent {
         'GenQRCodeAsync',
         [
           this.hubConnectionID,
-          this.loginDevice.name,
-          this.loginDevice.os,
+          this.loginService.loginDevice.name,
+          this.loginService.loginDevice.os,
           ';;',
           // position.coords.accuracy +
           //   ';' +

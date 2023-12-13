@@ -332,7 +332,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
       });
     } else if (this.taskType?.value == 'CO') {
       let data = { action: 'add', type: 'task' };
-      let taskContract = await this.stepService.openPopupTaskContract(data,'add',null,null,null);
+      let taskContract = await this.stepService.openPopupTaskContract(data,'add',null,null,null, true);
       let dataSave = {task: taskContract}
       this.save(dataSave);
     } else {
