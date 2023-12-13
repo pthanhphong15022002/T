@@ -55,6 +55,7 @@ import {
 } from '../../codx-tmmeetings/models/CO_Meetings.model';
 import { CodxBookingService } from '../../codx-booking/codx-booking.service';
 import { CodxShareService } from '../../../codx-share.service';
+import { CodxCommonService } from 'projects/codx-common/src/lib/codx-common.service';
 import { ActivatedRoute } from '@angular/router';
 import { ExportData } from '../../../models/ApproveProcess.model';
 import { CodxViewApproveComponent } from '../codx-step-common/codx-view-approve/codx-view-approve.component';
@@ -77,6 +78,8 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   @Input() listInstanceStep: DP_Instances_Steps[];
   @Input() groupTaskAdd: DP_Instances_Steps_TaskGroups;
   @Input() taskAdd;
+  @Input() entityName;
+  @Input() recIDParent;
 
   @Input() isTaskFirst = false; // giai đoạn đầu tiên
   @Input() isStart = true; // bắt đầu ngay
@@ -195,6 +198,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     private changeDetectorRef: ChangeDetectorRef,
     private bookingService: CodxBookingService,
     private codxShareService: CodxShareService,
+    private codxCommonService: CodxCommonService,
     private activedRouter: ActivatedRoute
   ) {
     this.user = this.authStore.get();
@@ -854,7 +858,8 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         'add',
         task,
         this.currentStep?.recID,
-        groupTask
+        groupTask,
+        this.isStart
       );
       objectLinked = taskContract?.objectLinked;
       if(!taskContract){
@@ -1088,7 +1093,8 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         'add',
         null,
         this.currentStep?.recID,
-        groupID
+        groupID,
+        this.isStart
       );
       this.api
         .exec<any>('DP', 'InstancesStepsBusiness', 'AddTaskStepAsync', [
@@ -1222,7 +1228,8 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
           'edit',
           task,
           this.currentStep?.recID,
-          null
+          null,
+          this.isStart
         );
         this.api
           .exec<any>('DP', 'InstancesStepsBusiness', 'UpdateTaskStepAsync', [
@@ -1304,7 +1311,8 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
           'copy',
           task,
           this.currentStep?.recID,
-          null
+          null,
+          this.isStart
         );
         this.api
           .exec<any>('DP', 'InstancesStepsBusiness', 'AddTaskStepAsync', [
@@ -1880,8 +1888,16 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         }
         //làm như vậy để cập nhật file
         let dataCopy = JSON.parse(JSON.stringify(data));
-        let groupFind = this.listGroupTask.find(
-          (group) => group.refID == dataCopy?.taskGroupID
+        // let groupFind = this.listGroupTask.find(
+        //   (group) => group.refID == dataCopy?.taskGroupID
+        // );
+        let groupFind = this.listGroupTask.find((group) => {
+          if(dataCopy?.taskGroupID){
+            return group.refID == dataCopy?.taskGroupID;
+          }else{
+            return !!group.refID == !!dataCopy?.taskGroupID;
+          }
+        }
         );
         if (groupFind) {
           let index = groupFind?.task?.findIndex(
@@ -2770,7 +2786,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   }
 
   release(data: any, category: any, exportData = null) {
-    this.codxShareService.codxReleaseDynamic(
+    this.codxCommonService.codxReleaseDynamic(
       'DP',
       data,
       category,
@@ -2811,7 +2827,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
           )
           .subscribe((res: any) => {
             if (res) {
-              this.codxShareService
+              this.codxCommonService
                 .codxCancel(
                   'DP',
                   task?.recID,

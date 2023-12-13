@@ -436,7 +436,7 @@
       </div>
     </div>
     <div>
-<!--
+      <!--
       <codx-attachment
       #attachment
       [objectId]="cases?.recID"
@@ -458,13 +458,26 @@
     >
     </codx-attachment> -->
 
-    <codx-attachment #attachment [objectType]="dialog.formModel.entityName" [objectId]="cases?.recID"
-    hideFolder="1" hideImageUpload="0" hideImageThumb="0" hideUploadBtn="1" [showMessage]="0" hideDes="1"
-    type="inline" allowMultiFile="1" referType="source" [formModel]="dialog.formModel"
-    (fileAdded)="fileAdded($event)" (fileCount)="getfileCount($event)" displayThumb="full">
-  </codx-attachment>
-
-
+      <codx-attachment
+        #attachment
+        [objectType]="dialog.formModel.entityName"
+        [objectId]="cases?.recID"
+        hideFolder="1"
+        hideImageUpload="0"
+        hideImageThumb="0"
+        hideUploadBtn="1"
+        [showMessage]="0"
+        hideDes="1"
+        type="inline"
+        allowMultiFile="1"
+        referType="source"
+        [functionID]="dialog.formModel?.funcID"
+        [formModel]="dialog.formModel"
+        (fileAdded)="fileAdded($event)"
+        (fileCount)="getfileCount($event)"
+        displayThumb="full"
+      >
+      </codx-attachment>
     </div>
   </ng-container>
 </ng-template>
@@ -511,7 +524,7 @@
       </ng-container>
     </ng-container>
   </ng-container> -->
-  <ng-container *ngIf="listFields &&listFields?.length > 0">
+  <ng-container *ngIf="listFields && listFields?.length > 0">
     <ng-container *ngFor="let item of listFields">
       <div class="form-group">
         <codx-input-custom-field
@@ -521,6 +534,7 @@
           [objectType]="'DP_Instances_Steps_Fields'"
           [objectIdParent]="cases?.recID"
           [formModel]="dialog.formModel"
+          [isAdd]="action == actionAdd"
           (valueChangeCustom)="valueChangeCustom($event)"
           (addFileCompleted)="addFileCompleted($event)"
         >

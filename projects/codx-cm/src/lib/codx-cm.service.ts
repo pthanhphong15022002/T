@@ -897,6 +897,15 @@ export class CodxCmService {
       data
     );
   }
+  moveStageBackDataCM(data) {
+    return this.api.execSv<any>(
+      'CM',
+      'ERM.Business.CM',
+      'DealsBusiness',
+      'MoveStageBackByRefIDAsync',
+      data
+    );
+  }
 
   moveStageDeal(data) {
     return this.api.execSv<any>(
@@ -1008,6 +1017,14 @@ export class CodxCmService {
       'CM',
       'BusinessLinesBusiness',
       'GetOneBusinessLineByProcessIDAsync',
+      data
+    );
+  }
+  getIdBusinessLineByProcessContractID(data) {
+    return this.api.exec<any>(
+      'CM',
+      'BusinessLinesBusiness',
+      'GetOneBusinessLineByProcessContractIDAsync',
       data
     );
   }

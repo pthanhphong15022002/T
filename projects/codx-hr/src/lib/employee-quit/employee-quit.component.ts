@@ -18,6 +18,7 @@ import { CodxOdService } from 'projects/codx-od/src/public-api';
 import { FormGroup } from '@angular/forms';
 import { isObservable } from 'rxjs';
 import { PopupEquitComponent } from '../employee-profile/popup-equit/popup-equit.component';
+import { CodxCommonService } from 'projects/codx-common/src/lib/codx-common.service';
 
 @Component({
   selector: 'lib-employee-quit',
@@ -32,6 +33,7 @@ export class EmployeeQuitComponent extends UIComponent {
     private hrService: CodxHrService,
     private notify: NotificationsService,
     private activatedRoute: ActivatedRoute,
+    private codxCommonService: CodxCommonService,
     private codxShareService: CodxShareService,
     private codxODService: CodxOdService
   ) {
@@ -149,7 +151,7 @@ export class EmployeeQuitComponent extends UIComponent {
       .getCategoryByEntityName(this.view.formModel.entityName)
       .subscribe((res) => {
         if (res) {
-          this.codxShareService.codxReleaseDynamic(
+          this.codxCommonService.codxReleaseDynamic(
             'HR',
             this.itemDetail,
             res,
@@ -235,7 +237,7 @@ export class EmployeeQuitComponent extends UIComponent {
           funcID === this.actionUpdateCanceled ||
           funcID === this.actionCancelSubmit
         ) {
-          this.codxShareService
+          this.codxCommonService
             .codxCancel(
               'HR',
               this.itemDetail.recID,
@@ -444,7 +446,7 @@ export class EmployeeQuitComponent extends UIComponent {
           funcID === this.actionUpdateCanceled ||
           funcID === this.actionCancelSubmit
         ) {
-          this.codxShareService
+          this.codxCommonService
             .codxCancel('HR', res.recID, this.view.formModel.entityName, '', '')
             .subscribe();
         }

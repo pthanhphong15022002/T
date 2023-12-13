@@ -45,7 +45,32 @@ export class PopupAddSegmentComponent implements OnInit, AfterViewInit {
   ) {
     this.dialog = dialog;
     if (dt?.data && Object.keys(dt.data).length) {
-      if (dt.data.segment) this.data = dt.data.segment;
+      if (dt.data.segment){
+        this.data = dt.data.segment;
+        this.headerText = 'Cập nhật'
+        if(this.data.dataType !='0') this.disableDataFormatSelect = false;
+        if(this.data.dataType =='2') this.vllDataFormat = 'AD010';
+        else this.vllDataFormat = 'AD012'
+        if(this.data.dataFormat){
+          this.data.charsNum = parseInt(this.data.dataFormat.match(/\d+/g)?.join(""));
+          this.data.dateFormat= this.data.dataFormat.match(/[a-z]+/gi).join("");
+        }
+        if (this.colums.length && this.data.atttributeName) {
+          let col = this.colums.find((x: any) => x.fieldName == this.data.atttributeName);
+          if (col) {
+            this.attributeType = col.dataType;
+            if (this.attributeType?.toLowerCase() == 'datetime') {
+              this.disableCharNum = true;
+              this.vllDataFormat = 'AD010';
+            }
+            if (this.attributeType?.toLowerCase() == 'string') {
+              this.vllDataFormat = 'AD012';
+              this.disableCharNum = false;
+            }
+          }
+        }
+
+      }
       if (dt.data.columns) this.colums = dt.data.columns;
       if (dt.data.autoNoSetting) this.autoNoSetting = dt.data.autoNoSetting;
       if (dt.data.functionID) this.functionID = dt.data.functionID;
@@ -63,6 +88,7 @@ export class PopupAddSegmentComponent implements OnInit, AfterViewInit {
     if (this.functionID) {
       this.cache.functionList(this.functionID).subscribe((res) => {
         if (res) this.function = res;
+
       });
     }
   }
@@ -74,7 +100,7 @@ export class PopupAddSegmentComponent implements OnInit, AfterViewInit {
     this.diasbleAtt = false;
 
     this.data[e.field] = e.data;
-    if (e.field == 'attributeName') {
+    if (e.field == 'atttributeName') {
       if (this.colums.length) {
         let col = this.colums.find((x: any) => x.fieldName == e.data);
         if (col) {
@@ -82,32 +108,51 @@ export class PopupAddSegmentComponent implements OnInit, AfterViewInit {
         }
       }
     }
+    if(e.field == 'dataType'){
+      if(e.data=='1'){
+        this.data.autoNumber=true;
+      }
+      else  this.data.autoNumber=false;
+    }
     switch (this.data.dataType) {
       case '0':
         this.disableDataFormatSelect = true;
         this.disableCharNum = true;
         this.disableDataFormat = false;
+        this.vllDataFormat = 'AD012';
         this.diasbleAtt = true;
         break;
       case '1':
         this.disableDataFormat = true;
+        this.disableDataFormatSelect = false;
         this.disableCharNum = true;
+
+        this.vllDataFormat = 'AD012';
         break;
       case '2':
         this.disableDataFormat = true;
+        this.disableDataFormatSelect = false;
         this.vllDataFormat = 'AD010';
         this.disableCharNum = true;
         break;
       case '4':
         this.disableDataFormat = true;
+        this.disableDataFormatSelect = false;
         if (this.attributeType?.toLowerCase() == 'datetime') {
           this.disableCharNum = true;
+          this.vllDataFormat = 'AD010';
         }
         if (this.attributeType?.toLowerCase() == 'string') {
           this.vllDataFormat = 'AD012';
           this.disableCharNum = false;
         }
         break;
+    }
+    if(e.field=='charsNum'){
+      if(this.data.dateFormat) this.data.dataFormat = e.data + this.data.dateFormat;
+    }
+    if(e.field=='dateFormat'){
+      if(this.data.charsNum) this.data.dataFormat =this.data.charsNum+ e.data;
     }
     // if(this.data.dataType != '0'){
     //   this.disableDataFormat = true;
@@ -131,7 +176,7 @@ export class PopupAddSegmentComponent implements OnInit, AfterViewInit {
     if (this.data.dataType && this.data.dataType != '0') {
       if (this.data.dateFormat) this.data.dataFormat = this.data.dateFormat;
       if (this.data.charsNum)
-        this.data.dataFormat = this.data.charsNum + this.data.dataFormat;
+         this.data.dataFormat = this.data.charsNum + this.data.dataFormat;
     }
 
     this.dialog.close(this.data);

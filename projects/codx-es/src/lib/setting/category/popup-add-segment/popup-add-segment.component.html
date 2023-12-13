@@ -18,7 +18,7 @@
           type="valuelist"
           refValue="AD009"
           field="dataType"
-          [crrValue]="data.dataType"
+          [crrValue]="data.dataType || '0'"
           (valueChange)="valueChange($event)"
         >
         </codx-input>
@@ -47,10 +47,11 @@
         <codx-input
           type="combobox"
           refValue="FieldByAutoNumber"
-          field="attributeName"
+          field="atttributeName"
           [model]="function"
           [showButtons]="false"
           [disabled]="diasbleAtt"
+          [crrValue]="data?.atttributeName"
           (valueChange)="valueChange($event)"
         >
         </codx-input>
@@ -64,7 +65,7 @@
         <codx-input
           type="valuelist"
           [refValue]="'AD012'"
-          field="dataFormat"
+          field="dateFormat"
           [crrValue]="data.dateFormat"
           [disabled]="disableDataFormatSelect"
           (valueChange)="valueChange($event)"
@@ -74,7 +75,7 @@
         <codx-input
           type="valuelist"
           [refValue]="'AD010'"
-          field="dataFormat"
+          field="dateFormat"
           [crrValue]="data.dateFormat"
           [disabled]="disableDataFormatSelect"
           (valueChange)="valueChange($event)"
