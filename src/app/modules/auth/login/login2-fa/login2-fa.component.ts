@@ -43,10 +43,9 @@ export class Login2FAComponent extends UIComponent implements AfterViewInit {
     @Optional() dialog?: DialogRef
   ) {
     super(inject);
-    this.user = dt?.data?.data;
+    this.email = dt?.data?.data;
     this.hideTrustDevice = dt.data.hideTrustDevice;
     this.hubConnectionID = dt?.data?.hubConnectionID;
-    this.email = this.user?.email;
     //this.clickQueue.push(dt?.data?.login2FA);
     this.dialog = dialog;
     this.changeLogin2FAType(dt?.data?.login2FA);
@@ -66,7 +65,6 @@ export class Login2FAComponent extends UIComponent implements AfterViewInit {
     //   };
     // }
   }
-  user;
   dialog;
   // loginDevice: Device;
   // #region QR
@@ -101,7 +99,7 @@ export class Login2FAComponent extends UIComponent implements AfterViewInit {
   onInit() {
     //console.log(this.authStore.get());
     this.loginFG = new FormGroup({
-      email: new FormControl(this.user?.email),
+      email: new FormControl(this.email),
       password: new FormControl(),
     });
     this.cache.valueList('SYS060').subscribe((vll) => {
@@ -318,7 +316,7 @@ export class Login2FAComponent extends UIComponent implements AfterViewInit {
     this.loginService.loginDevice.session = this.session;
     const login2FASubscr = this.api
       .callSv('SYS', 'AD', 'UsersBusiness', 'CreateUserLoginAsync', [
-        this.user.tenant,
+        this.loginService.loginDevice.tenantID,
         userName,
         password,
         JSON.stringify(this.loginService.loginDevice),
