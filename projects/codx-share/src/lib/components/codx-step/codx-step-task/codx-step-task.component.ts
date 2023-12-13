@@ -866,7 +866,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       //báo giá
       this.addQuotation();
     } else if (task?.taskType == 'CO' && !task?.objectLinked) {
-      let data = { action: 'add', type: 'task' };
+      let data = { action: 'add', type: 'task', entityName: this.entityName, parentID: this.recIDParent};
       let taskContract = await this.stepService.openPopupTaskContract(
         data,
         'add',
@@ -1101,7 +1101,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         }
       });
     } else if (this.taskType?.value == 'CO') {
-      let data = { action: 'add', type: 'task' };
+      let data = { action: 'add', type: 'task',entityName: this.entityName, parentID: this.recIDParent };
       let taskContract = await this.stepService.openPopupTaskContract(
         data,
         'add',

@@ -109,6 +109,8 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
   listCustomFile: any[] = [];
   listField = [];
   processID = '';
+  entityName = '';
+  parentID = '';
 
   listParticipants;
   objPermissions = {};
@@ -230,6 +232,8 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
     this.contractsInput = dt?.data?.contract || dt?.data?.dataCM || null;
     this.stepsTasks = dt?.data?.stepsTasks || {};
     this.isStartIns = !!dt?.data?.isStartIns;
+    this.entityName = dt?.data?.entityName;
+    this.parentID = dt?.data?.parentID;
     this.user = this.authStore.get();
     // this.getTitle();
     this.getFormModel();
@@ -241,6 +245,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
       await this.getSettingContract();
     }
     this.setDataContract(this.contractsInput);
+
     if (this.type == 'task') {
       this.cache
         .gridViewSetup('DPInstancesStepsTasks', 'grvDPInstancesStepsTasks')
@@ -268,7 +273,18 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
       this.tabContent.push(this.task);
     }
   }
-
+  setDataParent(){
+    if(this.entityName && this.parentID){
+      switch(this.entityName){
+        case "CM_Customers":
+          this.contracts.customerID = this.parentID;
+          break;
+        case "CM_Deals":
+          this.contracts.dealID = this.parentID;
+          break;
+      }
+    }
+  }
   //#region setData
   async setDataContract(data) {
     switch (this.action) {
@@ -296,6 +312,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
         this.loadExchangeRate(this.contracts.currencyID);
         this.setContractByDataOutput();
         this.getAutoNumber();
+        this.setDataParent();
         if(this.type == "DP", this.processID){
           this.contracts.processID = this.processID;
           this.getBusinessLineByProcessID(this.processID);
@@ -732,8 +749,11 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
             } else {
               this.contracts.contactID = null;
               this.inputContact?.ComponentCurrent?.setValue(null);
+              this.inputContact.value = null;
+              this.inputContact.crrValue = null;
             }
           });
+          this.contracts = JSON.parse(JSON.stringify(this.contracts));
       }
 
       if (event?.field == 'delStatus') {
@@ -789,6 +809,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
       if (this.customerIdOld != this.contracts.customerID) {
         this.contracts.dealID = null;
         this.inputDeal.ComponentCurrent.dataService.data = [];
+        this.inputDeal?.ComponentCurrent?.setValue(null);
       }
     }
   }
