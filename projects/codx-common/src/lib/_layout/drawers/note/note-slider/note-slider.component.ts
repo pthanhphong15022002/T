@@ -40,7 +40,7 @@ export class NoteSliderComponent extends UIComponent implements OnInit {
   maxPinNotes: any;
   checkUpdateNotePin = false;
   typeList = 'note-drawer';
-  header = 'Ghi chú';
+  headerText = "";
   dialog: DialogRef;
   predicate = 'CreatedBy=@0';
   dataValue = '';
@@ -73,6 +73,11 @@ export class NoteSliderComponent extends UIComponent implements OnInit {
     dataSv.request.pageSize = 10;
     dataSv.idField = 'recID';
     this.dtService = dataSv;
+    this.cache.functionList('WPT08').subscribe(func=>{
+      if(func?.customName){
+        this.headerText = func?.customName;
+      }
+    })
   }
 
   onInit(): void {

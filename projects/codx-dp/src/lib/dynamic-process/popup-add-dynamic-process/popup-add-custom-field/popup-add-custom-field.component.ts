@@ -250,7 +250,6 @@ export class PopupAddCustomFieldComponent implements OnInit {
         this.field.refValue) ||
       (this.field.dataType == 'L' && this.field.dataFormat == 'B')
     ) {
-      debugger;
       this.fieldCus = JSON.parse(
         JSON.stringify(
           Object.assign(this.field, {

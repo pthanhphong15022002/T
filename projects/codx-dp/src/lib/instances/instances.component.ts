@@ -2633,7 +2633,8 @@ export class InstancesComponent
     } else if (applyFor == '2' || applyFor == '3') {
       return this.callfc.openSide(PopupAddCasesComponent, obj, option);
     } else if (applyFor == '4') {
-      obj = { ...obj, type: 'DP', contractRefID: this.oldIdInstance };
+      obj = { ...obj, type: 'DP', contractRefID: this.oldIdInstance, processID: this.processID };
+      option.FormModel = obj?.formMD;
       return this.callfc.openSide(AddContractsComponent, obj, option);
     }
     return null;
