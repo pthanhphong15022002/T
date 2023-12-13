@@ -202,6 +202,8 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
   listApproverView;
   isLoadDateTask = false;
   viewTask;
+  instance;
+  oldIdInstance;
   REQUIRE_TASK = ['taskName', 'endDate', 'startDate'];
   constructor(
     private cache: CacheService,
@@ -635,7 +637,14 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
         .addContracts([this.contracts])
         .subscribe((res) => {
           if (res) {
-            this.dialog.close({ contract: res, action: this.action });
+            this.cmService?.getDataInstance(res?.refID).subscribe(instance => {
+              if(instance){
+                // (this.dialog.dataService as CRUDService)
+                // .update(instance,true)
+                // .subscribe();
+                this.dialog?.close(instance);
+              }
+            })
           }
         });
     } else {
@@ -1296,6 +1305,65 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
   // }
   //#endregion
 
+
+  beforeSaveInstance(option: RequestOption) {
+    option.service = 'DP';
+    option.className = 'InstancesBusiness';
+    option.assemblyName = 'ERM.Business.DP';
+    if (this.action === 'add' || this.action === 'copy') {
+      option.methodName = 'AddInstanceAsync';
+      option.data = [this.instance, this.listInstanceSteps, this.oldIdInstance];
+    } else if (this.action === 'edit') {
+      option.methodName = 'EditInstanceAsync';
+      option.data = [this.instance, this.listCustomFile];
+    }
+    return true;
+  }
+
+  onAddInstance() {
+    this.dialog.dataService
+      .save((option: any) => this.beforeSaveInstance(option))
+    .subscribe((res) => {
+      if (res && res.save) {
+        // this.deal.status = res?.save?.status;
+        // this.deal.datas = res?.save?.datas;
+        // this.addPermission(res?.save?.permissions);
+        // let datas = [this.deal, this.lstContactDeal];
+        // this.codxCmService.addDeal(datas).subscribe((deal) => {
+        //   if (deal) {
+        //   }
+        // });
+        this.dialog.close(res?.save);
+        this.changeDetectorRef.detectChanges();
+      }
+    });
+  }
+  onUpdateInstance() {
+    this.dialog.dataService
+      .save((option: any) => this.beforeSaveInstance(option))
+      .subscribe((res) => {
+        if (res.update) {
+          // this.deal.status = res?.update?.status;
+          // this.deal.datas = res?.update?.datas;
+          // this.deal.permissions = this.deal?.permissions.filter(
+          //   (x) => x.memberType != '2'
+          // );
+          // this.addPermission(res?.update?.permissions);
+          // let datas = [
+          //   this.deal,
+          //   this.customerIDOld,
+          //   this.lstContactDeal,
+          //   this.lstContactAdd,
+          //   this.lstContactDelete,
+          // ];
+          // this.codxCmService.editDeal(datas).subscribe((deal) => {
+          //   if (deal) {
+          //   }
+          // });
+          this.dialog.close(res?.update);
+        }
+      });
+  }
   // getPayMentByContractID(contractID) {
   //   this.contractService
   //     .getPaymentsByContractID(contractID)
