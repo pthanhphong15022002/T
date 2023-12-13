@@ -28,6 +28,7 @@ import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
 import { CodxListReportsComponent } from 'projects/codx-share/src/lib/components/codx-list-reports/codx-list-reports.component';
 import { AllocationAddComponent } from './allocation-add/allocation-add.component';
+import { CodxCommonService } from 'projects/codx-common/src/lib/codx-common.service';
 
 @Component({
   selector: 'lib-purchaseinvoices',
@@ -74,6 +75,7 @@ export class PurchaseinvoicesComponent extends UIComponent {
     inject: Injector,
     private acService: CodxAcService,
     private authStore: AuthStore,
+    private codxCommonService: CodxCommonService,
     private shareService: CodxShareService,
     private notification: NotificationsService,
     private tenant: TenantStore,
@@ -459,7 +461,7 @@ export class PurchaseinvoicesComponent extends UIComponent {
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         this.dataCategory = res;
-        this.shareService
+        this.codxCommonService
           .codxRelease(
             'AC',
             data.recID,
@@ -495,7 +497,7 @@ export class PurchaseinvoicesComponent extends UIComponent {
    * @param data
    */
   cancelReleaseVoucher(text: any, data: any) {
-    this.shareService
+    this.codxCommonService
       .codxCancel('AC', data?.recID, this.view.formModel.entityName, null, null)
       .pipe(takeUntil(this.destroy$))
       .subscribe((result: any) => {

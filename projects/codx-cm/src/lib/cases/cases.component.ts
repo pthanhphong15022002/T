@@ -37,6 +37,7 @@ import { firstValueFrom } from 'rxjs';
 import { PopupPermissionsComponent } from '../popup-permissions/popup-permissions.component';
 import { PopupUpdateStatusComponent } from '../deals/popup-update-status/popup-update-status.component';
 import { ExportData } from 'projects/codx-share/src/lib/models/ApproveProcess.model';
+import { CodxCommonService } from 'projects/codx-common/src/lib/codx-common.service';
 
 @Component({
   selector: 'lib-cases',
@@ -144,6 +145,7 @@ export class CasesComponent
     private cacheSv: CacheService,
     private activedRouter: ActivatedRoute,
     private changeDetectorRef: ChangeDetectorRef,
+    private codxCommonService: CodxCommonService,
     private codxCmService: CodxCmService,
     private notificationsService: NotificationsService,
     private codxShareService: CodxShareService
@@ -1187,7 +1189,7 @@ export class CasesComponent
   }
   release(data: any, category: any, exportData = null) {
     //duyet moi
-    this.codxShareService.codxReleaseDynamic(
+    this.codxCommonService.codxReleaseDynamic(
       this.view.service,
       data,
       category,
@@ -1241,7 +1243,7 @@ export class CasesComponent
             //trình ký
           } else if (res2?.eSign == false) {
             //kí duyet
-            this.codxShareService
+            this.codxCommonService
               .codxCancel(
                 'CM',
                 dt?.recID,

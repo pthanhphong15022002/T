@@ -45,6 +45,7 @@ import { PopupAssginDealComponent } from '../deals/popup-assgin-deal/popup-assgi
 import { StepService } from 'projects/codx-share/src/lib/components/codx-step/step.service';
 import { ContractsDetailComponent } from './contracts-detail/contracts-detail.component';
 import { ExportData } from 'projects/codx-share/src/lib/models/ApproveProcess.model';
+import { CodxCommonService } from 'projects/codx-common/src/lib/codx-common.service';
 
 @Component({
   selector: 'contracts-detail',
@@ -142,7 +143,7 @@ export class ContractsComponent extends UIComponent {
   paramDefault: any;
   runMode: any;
   user;
-  dataAddTask;
+  taskAdd;
   constructor(
     private inject: Injector,
     private cmService: CodxCmService,
@@ -150,6 +151,7 @@ export class ContractsComponent extends UIComponent {
     private contractService: ContractsService,
     private notiService: NotificationsService,
     private codxShareService: CodxShareService,
+    private codxCommonService: CodxCommonService,
     private changeDetectorRef: ChangeDetectorRef,
     private stepService: StepService,
     private authStore: AuthStore,
@@ -401,30 +403,10 @@ export class ContractsComponent extends UIComponent {
       }
     }
   }
+  
   async addTask(contract: CM_Contracts){
-    let typeTask = await this.stepService.chooseTypeTask(['G','F']);
-    if(typeTask){
-      let data = {
-        type: 'cm',
-        typeCM: "7",
-        isSave: true,
-        action: 'add',
-        taskType: typeTask,
-        objectID: contract?.recID,
-        objectType: 'CM_Contracts',
-        instanceID: contract?.refID,
-        ownerInstance: contract?.owner,
-        isActivitie: !contract?.applyProcess,
-        isStart: contract?.applyProcess? contract?.status != "1" : true,
-        dataParentTask: {
-          applyFor: "4",
-          parentTaskID: contract?.recID,
-        }
-      }
-      let dataOutput = await this.stepService.openPopupCodxTask(data, 'right');
-      this.dataAddTask = dataOutput;
-      
-    }
+    let taskOutput = await this.stepService.addTaskCM(contract, "CM_Contracts");
+    this.taskAdd = taskOutput;
   }
 
   closedContract(data: CM_Contracts, type) {
@@ -716,7 +698,7 @@ export class ContractsComponent extends UIComponent {
   //Gửi duyệt
   release(data: any, category: any, exportData = null) {
     //duyet moi
-    this.codxShareService.codxReleaseDynamic(
+    this.codxCommonService.codxReleaseDynamic(
       this.view.service,
       data,
       category,
@@ -782,7 +764,7 @@ export class ContractsComponent extends UIComponent {
             //trình ký
           } else if (res2?.eSign == false) {
             //kí duyet
-            this.codxShareService
+            this.codxCommonService
               .codxCancel(
                 'CM',
                 dt?.recID,

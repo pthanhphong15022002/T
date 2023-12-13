@@ -31,6 +31,7 @@ import { CodxShareService } from 'projects/codx-share/src/lib/codx-share.service
 import { CodxEsService } from 'projects/codx-es/src/lib/codx-es.service';
 import { AssignTaskModel, tmpReferences } from '../../../models/assign-task.model';
 import { PopupAddSignFileComponent } from 'projects/codx-es/src/lib/sign-file/popup-add-sign-file/popup-add-sign-file.component';
+import { CodxCommonService } from 'projects/codx-common/src/lib/codx-common.service';
 
 @Component({
   selector: 'codx-view-detail-signfile',
@@ -44,6 +45,7 @@ export class CodxViewDetailSignFileComponent extends UIDetailComponent implement
     inject: Injector,
     private esService: CodxEsService,
     private codxShareService: CodxShareService,
+    private codxCommonService: CodxCommonService,
     private df: ChangeDetectorRef,
     private callfunc: CallFuncService,
     private notify: NotificationsService,
@@ -778,7 +780,7 @@ export class CodxViewDetailSignFileComponent extends UIDetailComponent implement
     //   return;
     // }
 
-    this.codxShareService
+    this.codxCommonService
       .codxRelease(
         'ES',
         this.itemDetail?.recID,

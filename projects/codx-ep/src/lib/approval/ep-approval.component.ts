@@ -24,6 +24,7 @@ import { DriverModel } from '../models/bookingAttendees.model';
 import { ResourceTrans } from '../models/resource.model';
 import { PopupAddCardTransComponent } from '../booking/cardTran/popup-add-cardTrans/popup-add-cardTrans.component';
 import { CodxShareService } from 'projects/codx-share/src/lib/codx-share.service';
+import { CodxCommonService } from 'projects/codx-common/src/lib/codx-common.service';
 
 @Component({
   selector: 'ep-approval',
@@ -96,6 +97,7 @@ export class EPApprovalComponent extends UIComponent {
     private codxEpService: CodxEpService,
     private codxShareService: CodxShareService,
     private activatedRoute: ActivatedRoute,
+    private codxCommonService: CodxCommonService,
     private notificationsService: NotificationsService
   ) {
     super(injector);
@@ -497,7 +499,7 @@ export class EPApprovalComponent extends UIComponent {
   //-----------------------------------Logic Func-------------------------------------//
   //---------------------------------------------------------------------------------//
   undo(data: any) {
-    this.codxShareService.codxUndo(data?.approvalTransRecID,null).subscribe((res: any) => {
+    this.codxCommonService.codxUndo(data?.approvalTransRecID,null).subscribe((res: any) => {
       if (res != null) {
         this.notificationsService.notifyCode('SYS034'); //đã thu hồi
         data.approveStatus = '3';
@@ -509,7 +511,7 @@ export class EPApprovalComponent extends UIComponent {
   }
 
   approve(data: any) {
-    this.codxShareService
+    this.codxCommonService
       .codxApprove(
         data?.approvalTransRecID, //ApprovelTrans.RecID
         '5',
@@ -536,7 +538,7 @@ export class EPApprovalComponent extends UIComponent {
   }
 
   reject(data: any) {
-    this.codxShareService
+    this.codxCommonService
       .codxApprove(
         data?.approvalTransRecID, //ApprovelTrans.RecID
         '4',

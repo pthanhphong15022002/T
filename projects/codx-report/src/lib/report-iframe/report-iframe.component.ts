@@ -13,6 +13,7 @@ export class CodxReportIframeComponent implements OnInit, AfterViewInit,OnChange
   @Input() predicates: any = "";
   @Input() dataValues: any = "";
   @Input() print: boolean = false;
+  @Input() printMode: boolean = false;
   @Input() param: string = "";
   @Input() labels: string = "";
   @Input() format: string = "";
@@ -33,7 +34,7 @@ export class CodxReportIframeComponent implements OnInit, AfterViewInit,OnChange
   }
   ngOnInit(): void {
     this._preArray = this.predicates.split('&&').join(';');
-    this.src = `${environment.reportUrl}?service=${this.service}&reportID=${this.funcID}&_param=${this.param}&_labels=${this.labels}&_format=${this.format}&predicates=${this._preArray}&dataValues=${this.dataValues}&locale=vi&lvtk=${this._user.token}`;
+    this.src = `${environment.reportUrl}?service=${this.service}&reportID=${this.funcID}&_param=${this.param}&_labels=${this.labels}&_format=${this.format}&predicates=${this._preArray}&dataValues=${this.dataValues}&printMode=${this.printMode}&locale=vi&lvtk=${this._user.token}`;
 
     //this.src = `${environment.reportUrl}?service=${this.service}&reportID=${this.funcID}&_param=${this.AESCryptoService.encode(this.param)}&_labels=${this.AESCryptoService.encode(this.labels)}&_format=${this.format}&predicates=${this._preArray}&dataValues=${this.dataValues}&locale=vi&lvtk=${this._user.token}`;
 
@@ -45,7 +46,7 @@ export class CodxReportIframeComponent implements OnInit, AfterViewInit,OnChange
 
   }
   ngOnChanges(changes: SimpleChanges): void {
-    this.src = `${environment.reportUrl}?service=${this.service}&reportID=${this.funcID}&_param=${this.param}&_labels=${this.labels}&_format=${this.format}&predicates=${this._preArray}&dataValues=${this.dataValues}&locale=vi&lvtk=${this._user.token}`;
+    this.src = `${environment.reportUrl}?service=${this.service}&reportID=${this.funcID}&_param=${this.param}&_labels=${this.labels}&_format=${this.format}&predicates=${this._preArray}&dataValues=${this.dataValues}&printMode=${this.printMode}&locale=vi&lvtk=${this._user.token}`;
 
     //this.src = `${environment.reportUrl}?service=${this.service}&reportID=${this.funcID}&_param=${this.AESCryptoService.encode(this.param)}&_labels=${this.AESCryptoService.encode(this.labels)}&_format=${this.format}&predicates=${this._preArray}&dataValues=${this.dataValues}&locale=vi&lvtk=${this._user.token}`;
 
