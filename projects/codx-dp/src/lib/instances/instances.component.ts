@@ -661,11 +661,11 @@ export class InstancesComponent
       }
       if (e && e.event != null) {
         this.dataSelected = JSON.parse(JSON.stringify(e.event));
-        this.view?.dataService.update(this.dataSelected);
+        this.view?.dataService.update(this.dataSelected, true);
         if (this.kanban) {
           if (this.kanban?.dataSource?.length == 1) {
             this.kanban.refresh();
-          } else this.kanban.updateCard(this.dataSelected);
+          }else this.kanban?.updateCard(this.dataSelected);
         }
         if (this.detailViewInstance) {
           this.detailViewInstance.dataSelect = this.dataSelected;
@@ -706,7 +706,7 @@ export class InstancesComponent
     dialogEditInstance.closed.subscribe((e) => {
       if (e && e.event != null) {
         this.dataSelected = JSON.parse(JSON.stringify(e.event));
-        this.view.dataService.update(e.event).subscribe();
+        this.view.dataService.update(e.event, true).subscribe();
         if (this.kanban) {
           if (this.kanban?.dataSource?.length == 1) {
             this.kanban.refresh();

@@ -78,6 +78,8 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   @Input() listInstanceStep: DP_Instances_Steps[];
   @Input() groupTaskAdd: DP_Instances_Steps_TaskGroups;
   @Input() taskAdd;
+  @Input() entityName;
+  @Input() recIDParent;
 
   @Input() isTaskFirst = false; // giai đoạn đầu tiên
   @Input() isStart = true; // bắt đầu ngay
