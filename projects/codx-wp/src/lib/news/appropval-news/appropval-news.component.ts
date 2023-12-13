@@ -238,13 +238,23 @@ export class AppropvalNewsComponent extends UIComponent {
   //change data moreFC
   changeDataMF(evt:any[],item:any){
     evt.map(x => {
-      if(x.functionID == "SYS02" || x.functionID == "SYS03")
-        x.disabled = false;
+      // if(x.functionID == "SYS02" || x.functionID == "SYS03")
+      //   x.disabled = false;
       // else if(x.functionID == "WPT02131" || x.functionID == "WPT02132" || x.functionID == "WPT02133")
-      else if(x.functionID == "WPT02131" || x.functionID == "WPT02133")
-        x.disabled = item.approveControl == "0" || (item.approveControl == "1" && item.approveStatus == "5");
-      else
-        x.disabled = true;
+      //   x.disabled = item.approveControl == "0" || (item.approveControl == "1" && item.approveStatus == "5");
+      // else
+      //   x.disabled = true;
+
+      if (
+        x.functionID == 'WPT02131' ||
+        x.functionID == 'WPT02133' ||
+        x.functionID == 'WPT02121' ||
+        x.functionID == 'WPT02123'
+      )
+        x.disabled =
+          item.approveControl == '0' ||
+          (item.approveControl == '1' && item.approveStatus == '5');
+      else x.disabled = true;
     });
   }
 
