@@ -703,4 +703,35 @@ export class PopupAddQuotationsComponent implements OnInit {
         });
     }
   }
+
+  //addLine NEW- save tung dong- được cái này thì mất cái khác...
+  beforeSaveNew(op: RequestOption) {
+    let data = [];
+    if (this.action == 'add' || this.action == 'copy') {
+      op.methodName = 'AddQuotationsAsync';
+      data = [this.quotations, this.listQuotationLines, this.isNewVersion];
+    }
+    if (this.action == 'edit') {
+      op.methodName = 'EditQuotationsAsync';
+      data = [
+        this.quotations,
+        this.quotationLinesAddNew,
+        this.quotationLinesEdit,
+        this.quotationLinesDeleted,
+      ];
+    }
+    op.data = data;
+    return true;
+  }
+  eventButtonAddLine(e) {
+    if (e) {
+      this.form.save(null, 0, '', '', false).subscribe((res) => {
+        if (res) {
+          console.log(res);
+          if (this.viewQuotationsLine) this.viewQuotationsLine.addLines();
+        }
+      });
+    }
+  }
+  //END
 }
