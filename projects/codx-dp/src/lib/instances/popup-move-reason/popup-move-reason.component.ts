@@ -66,6 +66,7 @@ export class PopupMoveReasonComponent implements OnInit {
   dataCM: any;
   recID: string = '';
   nextStep: string = '';
+  memo:string = '';
 
   readonly fieldCbxProccess = { text: 'processName', value: 'recID' };
   readonly fieldCbxParticipants = { text: 'userName', value: 'userID' };
@@ -156,10 +157,11 @@ export class PopupMoveReasonComponent implements OnInit {
     let data = [
       this.recID,
       this.moveProccess,
-      this.reasonStep,
+      this.reasonStep.reasons,
       this.isReason,
       this.ownerMove,
       this.applyForMove,
+      this.memo
     ];
     // let obj = {
     //           listStep: this.listStep,
@@ -229,7 +231,9 @@ export class PopupMoveReasonComponent implements OnInit {
       .getInstanceStepsMoveReason(datas)
       .subscribe(async (res) => {
         if (res && res.length > 0) {
-          this.listReason = res[0];
+          // this.listReason = res[0];
+          this.reasonStep = res[0];
+          this.listReason = this.reasonStep.reasons
           this.stepName = res[1];
           this.changeDetectorRef.detectChanges();
         }
@@ -261,7 +265,7 @@ export class PopupMoveReasonComponent implements OnInit {
   }
   valueChange($event) {
     if ($event) {
-      this.reasonStep[$event.field] = $event.data;
+      this.memo = $event.data;
     }
   }
     getListProcesByMoveProcess() {
