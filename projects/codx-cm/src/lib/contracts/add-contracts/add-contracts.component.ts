@@ -195,7 +195,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
     gridViewName: 'grvDPInstancesStepsTasks',
   };
   // task
-  isSaveTimeTask;
+  isSaveTimeTask = true;
   stepsTasks;
   isStartIns = false;
   isActivitie = false;
