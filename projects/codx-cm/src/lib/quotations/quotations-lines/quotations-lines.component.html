@@ -1,50 +1,50 @@
 <ng-container *ngIf="!isViewTemp">
-  <div class="h-100 p-3">
-    <div class="tabline-content position-relative">
-      <codx-gridview-v2
-        #gridQuationsLines
-        class="tabLine"
-        service="CM"
-        [formName]="fmQuotationLines.formName"
-        [gridViewName]="fmQuotationLines.gridViewName"
-        [entityName]="fmQuotationLines.entityName"
-        [templateMore]="morefunction"
-        [allowFiltering]="true"
-        [allowSorting]="true"
-        [dataSource]="listQuotationLines"
-        [autoLoad]="false"
-        rowHeight="40"
-        predicates="TransID==@0"
-        [dataValues]="transID"
-        [height]="200"
-        (cellChanged)="quotationsLineChanged($event)"
-        [autoAddRow]="true"
-        [editSettings]="typeAdd == '1' ? editSettingsPopup : editSettings"
-        (onAddNew)="onAddNew($event)"
-        (onEdit)="onEdit($event)"
-      ></codx-gridview-v2>
-      <!-- //        (created)="gridCreated($event, gridQuationsLines)"
+  <ng-container>
+    <div class="h-100 p-3" *ngIf="typeAdd == '1'; else tmpQuotationLines">
+      <div class="tabline-content position-relative">
+        <codx-gridview-v2
+          #gridQuationsLines
+          class="tabLine"
+          service="CM"
+          gridLines="Both"
+          [formName]="fmQuotationLines.formName"
+          [gridViewName]="fmQuotationLines.gridViewName"
+          [entityName]="fmQuotationLines.entityName"
+          [templateMore]="morefunction"
+          [allowFiltering]="true"
+          [allowSorting]="true"
+          [dataSource]="listQuotationLines"
+          [autoLoad]="false"
+          rowHeight="40"
+          predicates="TransID==@0"
+          [dataValues]="transID"
+          [height]="200"
+          (cellChanged)="quotationsLineChanged($event)"
+          [autoAddRow]="true"
+          [editSettings]="typeAdd == '1' ? editSettingsPopup : editSettings"
+          (onAddNew)="onAddNew($event)"
+          (onEdit)="onEdit($event)"
+        ></codx-gridview-v2>
+        <!-- //        (created)="gridCreated($event, gridQuationsLines)"
     [editSettings]="editSettings"  [columnsGrid]="columnsGrid" không dung de cho nó ok roi dung line-->
-      <div
-        class="row"
-        *ngIf="listQuotationLines?.length == 0"
-        style="height: 30px; background-color: whitesmoke"
-      ></div>
-    </div>
-  </div>
-
-  <div class="d-flex" *ngIf="showButtonAdd">
-    <div class="btn-addline me-3" *ngIf="typeAdd == '1'">
-      <button
-        type="button"
-        class="btn btn-sm btn-light-primary"
-        (click)="addPopup()"
-      >
-        <i class="icon-add_box icon-16"></i>
-        <codx-label name="blbAddPopup" default="Thêm"></codx-label>
-      </button>
-    </div>
-    <div #btnRef class="btn-addline" *ngIf="typeAdd == '2'">
+        <div
+          class="row"
+          *ngIf="listQuotationLines?.length == 0"
+          style="height: 30px; background-color: whitesmoke"
+        ></div>
+      </div>
+      <div class="d-flex" *ngIf="showButtonAdd">
+        <div class="btn-addline me-3" *ngIf="typeAdd == '1'">
+          <button
+            type="button"
+            class="btn btn-sm btn-light-primary"
+            (click)="addPopup()"
+          >
+            <i class="icon-add_box icon-16"></i>
+            <codx-label name="blbAddPopup" default="Thêm"></codx-label>
+          </button>
+        </div>
+        <!-- <div #btnRef class="btn-addline" *ngIf="typeAdd == '2'">
       <button
         type="button"
         class="btn btn-sm btn-light-primary"
@@ -53,8 +53,61 @@
         <i class="icon-playlist_add icon-16"></i>
         <codx-label name="blbAddLines" default="Thêm dòng"></codx-label>
       </button>
+    </div> -->
+      </div>
     </div>
-  </div>
+
+    <!-- test theem dong -->
+    <!-- Start: Grid QuotatonLines2 -->
+    <ng-template #tmpQuotationLines>
+      <div class="tabline-content header-table-ac position-relative">
+        <codx-gridview-v2
+          #gridQuationsLines
+          class="tabLine"
+          [showEmptyRecord]="false"
+          gridLines="Both"
+          [autoFitColumns]="true"
+          [formName]="fmQuotationLines.formName"
+          [gridViewName]="fmQuotationLines.gridViewName"
+          [templateMore]="morefunction"
+          [entityName]="fmQuotationLines.entityName"
+          predicates="TransID=@0"
+          (beforeSaveRow)="beforeSaveRowLine($event)"
+          (gridInit)="beforeInitGridLine($event)"
+          [dataValues]="transID"
+          service="CM"
+          [editOnClick]="true"
+          (eventAction)="onActionGridLine($event)"
+          (cellChanged)="valueChangeLine($event)"
+          (actionCompleted)="onActionGridLine($event)"
+          rowNoField="rowNo"
+          [editSettings]="editSettings"
+        ></codx-gridview-v2>
+        <div class="btn-addline">
+          <div class="d-flex align-items-center">
+            <div>
+              <button
+                style="border: 1px solid !important"
+                tabindex="-1"
+                tab-index="11"
+                id="btnAddPur"
+                (keydown.enter)="onAddLine(); $event.preventDefault()"
+                (click)="onAddLine()"
+                class="btn btn-sm btn-light-primary rounded-15 btnAddCash"
+              >
+                <i class="icon-playlist_add icon-16"></i>
+                <codx-label
+                  fiedName="lblSaveAndClear"
+                  default="Thêm dòng"
+                ></codx-label>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+    <!-- End: Grid QuotatonLines2 -->
+  </ng-container>
 
   <ng-template #morefunction let-data>
     <div class="" style="height: 30px">

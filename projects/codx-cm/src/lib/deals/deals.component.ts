@@ -898,11 +898,7 @@ export class DealsComponent
                       if (this.kanban) {
                         this.renderKanban(res);
                       }
-                      if (this.detailViewDeal)
-                        this.detailViewDeal.dataSelected = res;
-                      if (e.event.isReason != null) {
-                        this.moveReason(res, e.event.isReason);
-                      }
+                      if (this.detailViewDeal) this.detailViewDeal.dataSelected = res;
                       this.detailViewDeal?.reloadListStep(listSteps);
                       this.detectorRef.detectChanges();
                     }

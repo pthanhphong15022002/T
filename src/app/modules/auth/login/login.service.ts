@@ -48,34 +48,34 @@ export class LoginService {
   loginDevice: Device;
   session: string;
   onInit() {}
-  login(objData) {
-    if (objData.login2FA != '') {
-      let lg2FADialog = this.callfc.openForm(
-        Login2FAComponent,
-        '',
-        400,
-        600,
-        '',
-        objData
-      );
-      lg2FADialog.closed.subscribe((lg2FAEvt) => {
-        console.log('close popup ', lg2FAEvt);
-        if (lg2FAEvt.event.data.error) return;
-        this.authService.setLogin(objData.data.data);
-        this.loginAfter(lg2FAEvt.event.data);
+  // login(objData) {
+  //   if (objData.login2FA != '') {
+  //     let lg2FADialog = this.callfc.openForm(
+  //       Login2FAComponent,
+  //       '',
+  //       400,
+  //       600,
+  //       '',
+  //       objData
+  //     );
+  //     lg2FADialog.closed.subscribe((lg2FAEvt) => {
+  //       console.log('close popup ', lg2FAEvt);
+  //       if (lg2FAEvt.event.data.error) return;
+  //       this.authService.setLogin(objData.data.data);
+  //       this.loginAfter(lg2FAEvt.event.data);
 
-        // this.loginAfter(lg2FAEvt.event.data);
-      });
-    } else {
-      this.authService.setLogin(objData.data.data);
-      this.loginAfter(objData.data);
-    }
-  }
+  //       // this.loginAfter(lg2FAEvt.event.data);
+  //     });
+  //   } else {
+  //     this.authService.setLogin(objData.data.data);
+  //     this.loginAfter(objData.data);
+  //   }
+  // }
 
   loginAfter(data: any, trust = false) {
     if (!data.error) {
       const user = data.data;
-      this.loginDevice.loginType = data.data.extends.LoginType ?? '';
+      this.loginDevice.loginType = data.data.extends.LoginType ?? this.loginDevice.loginType;
       if (this.signalRService.logOut) {
         this.signalRService.createConnection();
       }
@@ -132,7 +132,7 @@ export class LoginService {
         tn,
         '', //userID
         '', //pw
-        JSON.stringify(this.loginDevice),
+        JSON.stringify(this.loginDevice)
       ])
       .subscribe((res: any) => {
         if (!res.error) {
@@ -140,14 +140,16 @@ export class LoginService {
           this.loginDevice.tenantID = tn;
           let trust2FA = user?.extends?.Trust2FA;
           let hideTrustDevice = user?.extends?.HideTrustDevice;
-          let objData = {
-            data: user,
-            login2FA: user?.extends?.TwoFA,
-            hubConnectionID: '',
-            loginDevice: this.loginDevice,
-            hideTrustDevice,
-          };
+          
           if (!trust2FA) {
+            let objData = {
+              data: user.email,
+              login2FA: user?.extends?.TwoFA,
+              hubConnectionID: '',
+              //loginDevice: this.loginDevice,
+              hideTrustDevice,
+            };
+
             let lg2FADialog = this.callfc.openForm(
               Login2FAComponent,
               '',

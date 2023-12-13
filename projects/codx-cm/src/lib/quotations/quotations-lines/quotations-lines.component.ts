@@ -6,6 +6,7 @@ import {
   Input,
   OnInit,
   Output,
+  TemplateRef,
   ViewChild,
 } from '@angular/core';
 import { EditSettingsModel } from '@syncfusion/ej2-angular-grids';
@@ -30,6 +31,7 @@ import { CM_QuotationsLines } from '../../models/cm_model';
 })
 export class QuotationsLinesComponent implements OnInit, AfterViewInit {
   @ViewChild('gridQuationsLines') gridQuationsLines: CodxGridviewV2Component;
+  @ViewChild('tmpQuotationLines') tmpQuotationLines: TemplateRef<any>;
   // @Input() dataValues: any;
   // @Input() predicates: any;
   @Input() actionParent = 'add';
@@ -49,6 +51,7 @@ export class QuotationsLinesComponent implements OnInit, AfterViewInit {
   @Input() showButtonAdd = true; //
   @Input() hideMoreFunc = '0'; //chua dung
   @Output() eventQuotationLines = new EventEmitter<any>();
+  @Output() eventButtonAddLine = new EventEmitter<any>();
 
   @Input() isSetMoreFunc = false; //thuan them de set quotation của contract
 
@@ -713,4 +716,157 @@ export class QuotationsLinesComponent implements OnInit, AfterViewInit {
       idim4.dataValue = dataValue;
     }
   }
+
+  //add Line new
+  beforeSaveRowLine(event) {
+    if (event.rowData) {
+      if (event.rowData.quantity == 0 || event.rowData.quantity < 0) {
+        this.gridQuationsLines.showErrorField('quantity', 'E0341');
+        event.cancel = true;
+        return;
+      }
+    }
+  }
+
+  beforeInitGridLine(event) {
+    let hideFields = [];
+    //* Thiết lập ẩn hiện các cột
+    // if (this.dialogData?.data.hideFields && this.dialogData?.data.hideFields.length > 0) {
+    //   hideFields = [...this.dialogData?.data.hideFields]; //? get danh sách các field ẩn được truyền vào từ dialogdata
+    // }
+    // let setting = this.acService.getSettingFromJournal(eleGrid,this.journal,this.formPurchaseInvoices?.data,this.baseCurr,hideFields);
+    // eleGrid = setting[0];
+    // hideFields = setting[1];
+
+    // if(this.formPurchaseInvoices?.data?.currencyID == this.baseCurr){ //? nếu không sử dụng ngoại tệ
+    //   hideFields.push('PurcAmt2');
+    //   hideFields.push('DiscAmt2');
+    //   hideFields.push('NetAmt2');
+    //   hideFields.push('MiscAmt2');
+    // }
+    // eleGrid.showHideColumns(hideFields);
+  }
+  onActionGridLine(event) {
+    switch (event.type) {
+      case 'autoAdd': //? tự động thêm dòng
+        this.onAddLine();
+        break;
+      case 'add':
+      case 'update':
+        //  update up quotation
+        break;
+      case 'closeEdit': //? khi thoát dòng
+        if (this.gridQuationsLines && this.gridQuationsLines.rowDataSelected) {
+          this.gridQuationsLines.rowDataSelected = null;
+        }
+        if (this.gridQuationsLines.isSaveOnClick)
+          this.gridQuationsLines.isSaveOnClick = false; //? trường save row nhưng chưa tới actioncomplete
+        setTimeout(() => {
+          let element = document.getElementById('btnAddPur'); //? focus lại nút thêm dòng
+          element.focus();
+        }, 100);
+        break;
+    }
+  }
+  valueChangeLine(event) {
+    let oLine = event.data;
+    if (event.field.toLowerCase() === 'itemid') {
+      oLine.itemName = event?.itemData?.ItemName;
+      this.changeDetector.detectChanges();
+    }
+    this.gridQuationsLines.startProcess();
+    //luu tung dong
+    // this.api.exec('AC', 'PurchaseInvoicesLinesBusiness', 'ValueChangeAsync', [
+    //   event.field,
+    //   this.formPurchaseInvoices.data,
+    //   oLine,
+    // ]).pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
+    //   if (res) {
+    //     Object.assign(oLine, res);
+    //     oLine = this.genFixedDims(oLine);
+    //     oLine.updateColumns = '';
+    //     this.detectorRef.detectChanges();
+    //     this.eleGridPurchaseInvoice.endProcess();
+
+    //   }
+    // })
+  }
+
+  onAddLine() {
+    let check =
+      this.gridQuationsLines.dataSource.length > 0 &&
+      this.actionParent == 'add';
+    if (check) this.eventButtonAddLine.emit(check);
+    else this.addLines();
+
+    // this.addLines();
+    //save cua form
+    // this.formPurchaseInvoices.save(null, 0, '', '', false)
+    // .pipe(takeUntil(this.destroy$))
+    // .subscribe((res: any) => {
+    // if (!res) return;
+    // if (res || res.save || res.update) {
+    //   if (res || !res.save.error || !res.update.error) {
+    //   if (this.gridQuationsLines) {
+    //     //? nếu lưới cashpayment có active hoặc đang edit
+    //     this.gridQuationsLines.saveRow((res: any) => {
+    //       //? save lưới trước
+    //       if (res) {
+    //         this.addLines();
+    //       }
+    //     });
+    //     return;
+    //   }
+    // }
+    // }
+    //})
+  }
+  addLines() {
+    this.setDefaultLine().then((res) => {
+      if (res) {
+        this.gridQuationsLines.addRow(
+          res,
+          this.gridQuationsLines.dataSource.length
+        );
+      }
+    });
+  }
+  setDefaultLine(): Promise<any> {
+    return new Promise<any>((resolve, rejects) => {
+      let idx = this.listQuotationLines?.length ?? 0;
+      this.codxCM
+        .getDefault(
+          'CM',
+          this.fmQuotationLines.funcID,
+          this.fmQuotationLines.entityName
+        )
+        .subscribe((dt) => {
+          if (dt && dt.data) {
+            //this.gridQuationsLines.formGroup.value = dt.data
+            let data = dt.data; //ddooi tuong
+
+            data.recID = Util.uid();
+            data.transID = this.transID;
+            data.write = true;
+            data.delete = true;
+            data.read = true;
+            data.rowNo = idx + 1;
+
+            //add tam do loi
+            data.salesAmt = data.salesAmt ?? 0;
+            data.quantity = data.quantity ?? 0;
+            data.discPct = data.discPct ?? 0;
+            data.discAmt = data.discAmt ?? 0;
+            data.vatBase = data.vatBase ?? 0;
+            data.vatAmt = data.vatAmt ?? 0;
+            data.vatRate = data.vatRate ?? 0;
+            data.exchangeRate = this.exchangeRate;
+            data.currencyID = this.currencyID;
+            data.transID = this.transID;
+            resolve(data);
+          }
+        });
+    });
+  }
+  //end
 }
