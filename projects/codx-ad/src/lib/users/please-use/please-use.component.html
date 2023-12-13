@@ -1,5 +1,6 @@
 <codx-form
   [headerText]="'Mời sử dụng'"
+  [lblHeader]="'lblTitleInviteUser'"
   [body]="body"
   [dialog]="dialog"
   [footer]="footer"
@@ -25,7 +26,7 @@
   <ng-template #footer>
     <div class="d-flex justify-content-end" #footer>
       <button type="button" class="btn btn-primary" (click)="checkValidEmail()">
-        <codx-label fiedName="Continue" default="Tiếp tục"></codx-label>
+        <codx-label name="lblContinue" default="Tiếp tục" [formModel]="form?.formModel" [gridViewName]="form?.formModel?.gridViewName" [formName]="form?.formModel?.formName"></codx-label>
       </button>
     </div>
   </ng-template>
