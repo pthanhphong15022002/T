@@ -22,6 +22,7 @@ import { CodxHrService } from '../codx-hr.service';
 import { PopupEAwardsComponent } from '../employee-profile/popup-eawards/popup-eawards.component';
 import { CodxShareService } from 'projects/codx-share/src/lib/codx-share.service';
 import { CodxOdService } from 'projects/codx-od/src/public-api';
+import { CodxCommonService } from 'projects/codx-common/src/lib/codx-common.service';
 
 @Component({
   selector: 'lib-employee-awards',
@@ -50,6 +51,7 @@ export class EmployeeAwardsComponent extends UIComponent {
     private codxShareService: CodxShareService,
     private activatedRoute: ActivatedRoute,
     private df: ChangeDetectorRef,
+    private codxCommonService: CodxCommonService,
     private notify: NotificationsService,
     private codxODService: CodxOdService
   ) {
@@ -356,7 +358,7 @@ export class EmployeeAwardsComponent extends UIComponent {
           funcID === this.actionUpdateCanceled ||
           funcID === this.actionCancelSubmit
         ) {
-          this.codxShareService
+          this.codxCommonService
             .codxCancel(
               'HR',
               this.itemDetail.recID,
@@ -454,7 +456,7 @@ export class EmployeeAwardsComponent extends UIComponent {
       .subscribe((res) => {
         if (res) {
           this.dataCategory = res;
-          this.codxShareService.codxReleaseDynamic(
+          this.codxCommonService.codxReleaseDynamic(
             'HR',
             this.itemDetail,
             this.dataCategory,
@@ -544,7 +546,7 @@ export class EmployeeAwardsComponent extends UIComponent {
           funcID === this.actionUpdateCanceled ||
           funcID === this.actionCancelSubmit
         ) {
-          this.codxShareService
+          this.codxCommonService
             .codxCancel(
               'HR',
               res[0].recID,

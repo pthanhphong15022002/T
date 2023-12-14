@@ -36,6 +36,7 @@ import { CodxListReportsComponent } from 'projects/codx-share/src/lib/components
 import { AnimationModel } from '@syncfusion/ej2-angular-progressbar';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { JournalService } from '../../journals/journals.service';
+import { CodxCommonService } from 'projects/codx-common/src/lib/codx-common.service';
 
 @Component({
   selector: 'lib-receipt-transactions',
@@ -75,6 +76,7 @@ export class ReceiptTransactionsComponent extends UIComponent {
     private authStore: AuthStore,
     private shareService: CodxShareService,
     private notification: NotificationsService,
+    private codxCommonService: CodxCommonService,
     private tenant: TenantStore,
     private journalService: JournalService
   ) {
@@ -198,22 +200,28 @@ export class ReceiptTransactionsComponent extends UIComponent {
         this.exportVoucher(data); //? xuất dữ liệu chứng từ
         break;
       case 'ACT070804':
+      case 'ACT071404':
         this.releaseVoucher(e.text, data); //? gửi duyệt chứng từ
         break;
       case 'ACT070805':
+      case 'ACT071405':
         this.cancelReleaseVoucher(e.text, data); //? hủy yêu cầu duyệt chứng từ
         break;
       case 'ACT070803':
-        //this.validateVourcher(e.text, data); //? kiểm tra tính hợp lệ chứng từ
+      case 'ACT071403':
+        this.validateVourcher(e.text, data); //? kiểm tra tính hợp lệ chứng từ
         break;
       case 'ACT070806':
-        //this.postVoucher(e.text, data); //? ghi sổ chứng từ
+      case 'ACT071406':
+        this.postVoucher(e.text, data); //? ghi sổ chứng từ
         break;
       case 'ACT070807':
-        //this.unPostVoucher(e.text, data); //? khôi phục chứng từ
+      case 'ACT071407':
+        this.unPostVoucher(e.text, data); //? khôi phục chứng từ
         break;
       case 'ACT070808':
-        //this.printVoucher(data, e.functionID); //? in chứng từ
+      case 'ACT071408':
+        this.printVoucher(data, e.functionID); //? in chứng từ
         break;
     }
   }
@@ -274,6 +282,16 @@ export class ReceiptTransactionsComponent extends UIComponent {
             this.optionSidebar,
             this.view.funcID
           );
+          dialog.closed.subscribe((res) => {
+            if (res && res?.event) {
+              if (res?.event?.type === 'discard') {
+                if(this.view.dataService.data.length == 0){
+                  this.itemSelected = undefined;
+                  this.detectorRef.detectChanges();
+                } 
+              }
+            }
+          })
         }
       });
   }
@@ -302,6 +320,16 @@ export class ReceiptTransactionsComponent extends UIComponent {
           this.optionSidebar,
           this.view.funcID
         );
+        dialog.closed.subscribe((res) => {
+          if (res && res?.event) {
+            if (res?.event?.type === 'discard') {
+              if(this.view.dataService.data.length == 0){
+                this.itemSelected = undefined;
+                this.detectorRef.detectChanges();
+              } 
+            }
+          }
+        })
       });
   }
 
@@ -337,6 +365,16 @@ export class ReceiptTransactionsComponent extends UIComponent {
                   this.optionSidebar,
                   this.view.funcID
                 );
+                dialog.closed.subscribe((res) => {
+                  if (res && res?.event) {
+                    if (res?.event?.type === 'discard') {
+                      if(this.view.dataService.data.length == 0){
+                        this.itemSelected = undefined;
+                        this.detectorRef.detectChanges();
+                      } 
+                    }
+                  }
+                })
                 this.view.dataService
                   .add(datas)
                   .pipe(takeUntil(this.destroy$))
@@ -375,7 +413,7 @@ export class ReceiptTransactionsComponent extends UIComponent {
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         this.dataCategory = res;
-        this.shareService
+        this.codxCommonService
           .codxRelease(
             'IV',
             data.recID,
@@ -411,7 +449,7 @@ export class ReceiptTransactionsComponent extends UIComponent {
    * @param data
    */
   cancelReleaseVoucher(text: any, data: any) {
-    this.shareService
+    this.codxCommonService
       .codxCancel('IV', data?.recID, this.view.formModel.entityName, null, null)
       .pipe(takeUntil(this.destroy$))
       .subscribe((result: any) => {
@@ -482,6 +520,24 @@ export class ReceiptTransactionsComponent extends UIComponent {
   }
 
   /**
+   * *Hàm in chứng từ (xử lí cho MF In)
+   * @param data
+   * @param reportID
+   * @param reportType
+   */
+  printVoucher(data: any, reportID: any, reportType: string = 'V') {
+    let params = {
+      Recs: data?.recID,
+    };
+    this.shareService.printReport(
+      reportID,
+      reportType,
+      params,
+      this.view?.formModel
+    );
+  }
+
+  /**
    * *Xuất file theo template(Excel,PDF,...)
    * @param data
    */
@@ -516,8 +572,11 @@ export class ReceiptTransactionsComponent extends UIComponent {
    * @param data
    * @returns
    */
-  changeMFDetail(event: any, data: any, type: any = '') {
-    this.acService.changeMFVoucher(event,data,type,this.journal,this.view.formModel);
+  changeMFDetail(event: any,type: any = '') {
+    let data = this.view.dataService.dataSelected;
+    if (data) {
+      this.acService.changeMFVoucher(event,data,type,this.journal,this.view.formModel);
+    }
   }
 
   /**

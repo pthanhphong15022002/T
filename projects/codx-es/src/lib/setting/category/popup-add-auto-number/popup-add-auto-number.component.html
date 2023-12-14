@@ -379,10 +379,14 @@
                   [allowSorting]="false"
                   [dataSource]="autoNoSegments"
                   service="EI"
-                  [height]="200"
+                  [height]="300"
                   [autoLoad]="false"
                   rowHeight="40"
                   [templateMore]="mfCol"
+                  [selectionOptions]="{type:'Single'}"
+                  [allowRowDragAndDrop]="true"
+                  (eventAction)="eventAction($event)"
+
                 ></codx-gridview-v2>
               </div>
             </div>

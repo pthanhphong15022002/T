@@ -28,6 +28,7 @@ import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
 import { CodxListReportsComponent } from 'projects/codx-share/src/lib/components/codx-list-reports/codx-list-reports.component';
 import { AllocationAddComponent } from './allocation-add/allocation-add.component';
+import { CodxCommonService } from 'projects/codx-common/src/lib/codx-common.service';
 
 @Component({
   selector: 'lib-purchaseinvoices',
@@ -58,6 +59,12 @@ export class PurchaseinvoicesComponent extends UIComponent {
     //? nút thêm phiếu
     id: 'btnAdd',
     icon: 'icon-i-file-earmark-plus',
+    items : [{
+      id : 'btnXml',
+      text:'Đọc XML',
+      icon:'icon-article',
+      cssClass:'dropdown-toggle dropdown-toggle-split'
+    }]
   }];
 
   // moreFuncs: Array<ButtonModel> = [
@@ -74,6 +81,7 @@ export class PurchaseinvoicesComponent extends UIComponent {
     inject: Injector,
     private acService: CodxAcService,
     private authStore: AuthStore,
+    private codxCommonService: CodxCommonService,
     private shareService: CodxShareService,
     private notification: NotificationsService,
     private tenant: TenantStore,
@@ -253,6 +261,16 @@ export class PurchaseinvoicesComponent extends UIComponent {
             optionSidebar,
             this.view.funcID
           );
+          dialog.closed.subscribe((res) => {
+            if (res && res?.event) {
+              if (res?.event?.type === 'discard') {
+                if(this.view.dataService.data.length == 0){
+                  this.itemSelected = undefined;
+                  this.detectorRef.detectChanges();
+                } 
+              }
+            }
+          })
         }
       });
   }
@@ -330,6 +348,16 @@ export class PurchaseinvoicesComponent extends UIComponent {
           optionSidebar,
           this.view.funcID
         );
+        dialog.closed.subscribe((res) => {
+          if (res && res?.event) {
+            if (res?.event?.type === 'discard') {
+              if(this.view.dataService.data.length == 0){
+                this.itemSelected = undefined;
+                this.detectorRef.detectChanges();
+              } 
+            }
+          }
+        })
       });
   }
 
@@ -368,6 +396,16 @@ export class PurchaseinvoicesComponent extends UIComponent {
                   optionSidebar,
                   this.view.funcID
                 );
+                dialog.closed.subscribe((res) => {
+                  if (res && res?.event) {
+                    if (res?.event?.type === 'discard') {
+                      if(this.view.dataService.data.length == 0){
+                        this.itemSelected = undefined;
+                        this.detectorRef.detectChanges();
+                      } 
+                    }
+                  }
+                })
                 this.view.dataService
                   .add(datas)
                   .pipe(takeUntil(this.destroy$))
@@ -386,7 +424,14 @@ export class PurchaseinvoicesComponent extends UIComponent {
     this.view.dataService
       .delete([dataDelete], true)
       .pipe(takeUntil(this.destroy$))
-      .subscribe((res: any) => {});
+      .subscribe((res: any) => {
+        if (res && !res?.error) {
+          if(this.view.dataService.data.length == 0){
+            this.itemSelected = undefined;
+            this.detectorRef.detectChanges();
+          } 
+        }
+      });
   }
 
   /**
@@ -459,7 +504,7 @@ export class PurchaseinvoicesComponent extends UIComponent {
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         this.dataCategory = res;
-        this.shareService
+        this.codxCommonService
           .codxRelease(
             'AC',
             data.recID,
@@ -495,7 +540,7 @@ export class PurchaseinvoicesComponent extends UIComponent {
    * @param data
    */
   cancelReleaseVoucher(text: any, data: any) {
-    this.shareService
+    this.codxCommonService
       .codxCancel('AC', data?.recID, this.view.formModel.entityName, null, null)
       .pipe(takeUntil(this.destroy$))
       .subscribe((result: any) => {
@@ -619,15 +664,10 @@ export class PurchaseinvoicesComponent extends UIComponent {
    * @param data
    * @returns
    */
-  changeMFDetail(event: any, data: any, type: any = '') {
+  changeMFDetail(event: any, type: any = '') {
+    let data = this.view.dataService.dataSelected;
     if (data) {
-      this.acService.changeMFPur(
-        event,
-        data,
-        type,
-        this.journal,
-        this.view.formModel
-      ); 
+      this.acService.changeMFPur(event,data,type,this.journal,this.view.formModel); 
     }
   }
 

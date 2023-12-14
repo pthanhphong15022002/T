@@ -33,7 +33,7 @@
 }
 
 .header-fixed .header {
-    background-color: var(--bg-card);
+    background-color: var(--bg-body);
 }
 
 .header .svg-icon svg [fill]:not(.permanent):not(g) {
@@ -188,7 +188,8 @@ codx-view-list-detail .nav-link {
 }
 
 textarea.codx-textarea {
-    background-color: var(--bg-input);
+   // background-color: var(--bg-input);
+   background-color: inherit;
     color: var(--text-title);
     border-color: var(--border-gray);
 }
@@ -229,7 +230,12 @@ textarea.codx-textarea {
 
 .header-fixed.toolbar-fixed .toolbar {
     border-top-color: var(--border-light);
+    border-top-color: transparent;
 }
+codx-header-v2{
+    border-bottom: 1px var(--border-light) solid;
+}
+
 
 // .e-grid .e-table,
 // .e-grid .e-gridcontent,
@@ -546,7 +552,8 @@ codx-view-kanban .e-kanban .e-kanban-content .e-content-row .e-content-cells .e-
 .e-input-group.e-float-icon-left:not(.e-success):not(.e-warning):not(.e-error).e-disabled .e-input-in-wrap,
 .e-input-group.e-control-wrapper:not(.e-success):not(.e-warning):not(.e-error):not(.e-float-icon-left).e-disabled,
 .e-input-group.e-control-wrapper.e-float-icon-left:not(.e-success):not(.e-warning):not(.e-error).e-disabled .e-input-in-wrap {
-    background: var(--bg-input);
+    //background: var(--bg-input);
+    background-color: #252532;
     color: var(--text-des);
 }
 
@@ -679,7 +686,9 @@ ejs-listview {
     color: var(--text-des);
     background-color: var(--primary-light) !important;
 }
-
+.btn.btn-light-primary:hover {
+    color: var(--white);
+}
 .e-work-cells.e-work-hours {
     background-color: inherit !important;
 }
@@ -871,9 +880,7 @@ codx-view-list-detail .e-listview .e-list-parent {
     background-color: rgba(255, 255, 255, 0.085) !important;
 }
 
-.e-listview .e-list-item.e-active {
-    background-color: rgba(255, 255, 255, 0.05) !important;
-}
+
 
 .e-schedule .e-timeline-year-view .e-resource-column-wrap .e-resource-cells {
     border-color: var(--gray-200) !important;
@@ -1019,3 +1026,52 @@ codx-listview.card .card-header {
 .e-kanban .e-kanban-content .e-content-row .e-content-cells .e-card-wrapper .e-card:hover, .e-kanban .e-kanban-content .e-content-row .e-content-cells .e-card-container .e-card:hover {
     border-color: #bbc5d118!important;
 }
+.e-card {
+    line-height: 1.4!important;
+    color: var(--text-body);
+}
+.e-input-group .e-input-group-icon, .e-input-group.e-control-wrapper .e-input-group-icon {
+    border-color: #24323e;
+}
+.e-richtexteditor.e-rte-tb-expand {
+    border-color:  #24323e;
+}
+.e-richtexteditor.e-rte-tb-expand .e-rte-content, .e-richtexteditor.e-rte-tb-expand .e-source-content {
+    border-bottom: 0;
+}
+
+.e-dialog .e-dlg-header-content {
+    border-bottom: 0;
+    padding: 0;
+}
+.e-dialog .e-dlg-header{
+    width: 100%;
+}
+.e-dialog .e-footer-content {
+    border-top:0;
+}
+.e-dialog .e-dlg-content {
+    padding: 0!important;
+}
+
+.feed-box .e-float-input input {
+    border-color: transparent !important;
+}
+.e-toolbar .e-toolbar-items {
+    background: #222232;
+    .e-toolbar-item .e-tbar-btn {
+        background: #222232;
+    }
+}
+.e-listview .e-list-item.e-active {
+    background-color: #ffffff15 !important;
+}
+.e-listview .e-list-item.e-hover{
+    border-color:transparent!important;
+    background-color: #212132!important;
+}
+.aside.aside-v2-lighter {
+    background-color: var(--bg-body);
+    border-right: 1px #1f212a solid;
+  }
+  

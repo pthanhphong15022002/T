@@ -18,6 +18,7 @@ export class NotifyDrawerSliderComponent implements OnInit {
   moreFC:any[] = [];
   formModel:FormModel = null;
   @ViewChild("notiBody") notiBody:NotifyBodyComponent; 
+  headerText="";
   constructor(
     private cache:CacheService,
     private callFC:CallFuncService,
@@ -26,6 +27,11 @@ export class NotifyDrawerSliderComponent implements OnInit {
   ) 
   {    
     this.dialogRef = dialogRef;
+    this.cache.functionList('BGT001').subscribe(func=>{
+      if(func?.customName){
+        this.headerText = func?.customName;
+      }
+    })
   }
 
   ngOnInit(): void {

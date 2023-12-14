@@ -10,6 +10,7 @@ import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx
 import { CodxListReportsComponent } from 'projects/codx-share/src/lib/components/codx-list-reports/codx-list-reports.component';
 import { CashreceiptsAddComponent } from './cashreceipts-add/cashreceipts-add.component';
 import { JournalService } from '../../journals/journals.service';
+import { CodxCommonService } from 'projects/codx-common/src/lib/codx-common.service';
 
 @Component({
   selector: 'lib-cashreceipts',
@@ -55,6 +56,7 @@ export class CashreceiptsComponent extends UIComponent {
     private authStore: AuthStore,
     private shareService: CodxShareService,
     private notification: NotificationsService,
+    private codxCommonService: CodxCommonService,
     private tenant: TenantStore,
     private journalService: JournalService,
   ) {
@@ -225,6 +227,16 @@ export class CashreceiptsComponent extends UIComponent {
             optionSidebar,
             this.view.funcID
           );
+          dialog.closed.subscribe((res) => {
+            if (res && res?.event) {
+              if (res?.event?.type === 'discard') {
+                if(this.view.dataService.data.length == 0){
+                  this.itemSelected = undefined;
+                  this.detectorRef.detectChanges();
+                } 
+              }
+            }
+          })
         }
       });
   }
@@ -256,6 +268,16 @@ export class CashreceiptsComponent extends UIComponent {
           optionSidebar,
           this.view.funcID
         );
+        dialog.closed.subscribe((res) => {
+          if (res && res?.event) {
+            if (res?.event?.type === 'discard') {
+              if(this.view.dataService.data.length == 0){
+                this.itemSelected = undefined;
+                this.detectorRef.detectChanges();
+              } 
+            }
+          }
+        })
       });
   }
 
@@ -295,6 +317,16 @@ export class CashreceiptsComponent extends UIComponent {
                   optionSidebar,
                   this.view.funcID
                 );
+                dialog.closed.subscribe((res) => {
+                  if (res && res?.event) {
+                    if (res?.event?.type === 'discard') {
+                      if(this.view.dataService.data.length == 0){
+                        this.itemSelected = undefined;
+                        this.detectorRef.detectChanges();
+                      } 
+                    }
+                  }
+                })
                 this.view.dataService
                   .add(datas)
                   .pipe(takeUntil(this.destroy$))
@@ -310,7 +342,14 @@ export class CashreceiptsComponent extends UIComponent {
    * @param dataDelete : data xóa
    */
   deleteVoucher(dataDelete) {
-    this.view.dataService.delete([dataDelete], true).pipe(takeUntil(this.destroy$)).subscribe((res: any) => {});
+    this.view.dataService.delete([dataDelete], true).pipe(takeUntil(this.destroy$)).subscribe((res: any) => {
+      if (res && !res?.error) {
+        if(this.view.dataService.data.length == 0){
+          this.itemSelected = undefined;
+          this.detectorRef.detectChanges();
+        } 
+      }
+    });
   }
 
   /**
@@ -347,7 +386,8 @@ export class CashreceiptsComponent extends UIComponent {
    * @param data
    * @returns 
    */
-  changeMFDetail(event: any, data: any,type:any = '') {
+  changeMFDetail(event: any,type:any = '') {
+    let data = this.view.dataService.dataSelected;
     if (data) {
       this.acService.changeMFCashReceipt(event,data,type,this.journal,this.view.formModel);
     }
@@ -391,7 +431,7 @@ export class CashreceiptsComponent extends UIComponent {
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         this.dataCategory = res;
-        this.shareService
+        this.codxCommonService
           .codxRelease(
             'AC',
             data.recID,
@@ -429,7 +469,7 @@ export class CashreceiptsComponent extends UIComponent {
    * @param data 
    */
   cancelReleaseVoucher(text: any, data: any) {
-    this.shareService
+    this.codxCommonService
       .codxCancel('AC', data?.recID, this.view.formModel.entityName, null, null)
       .pipe(takeUntil(this.destroy$))
       .subscribe((result: any) => {

@@ -1,4 +1,4 @@
-<ng-container *ngIf="loaded">
+<ng-container *ngIf="columnsGrid?.length > 0">
   <div
     class="d-flex justify-content-between my-2"
     style="max-height: 30px !important"
@@ -45,7 +45,6 @@
     </button>
   </div>
 </ng-container>
-
 <ng-template #tempMorefunction let-data>
   <div class="" style="height: 30px">
     <codx-mfunc
@@ -188,7 +187,7 @@
 <ng-template #headerStatusCusLead>
   <codx-label
     [formModel]="formModel"
-    [fiedName]="objectType == '1' ? 'customerStatus' : 'leadStatus'"
+    [fiedName]="objectType == '1' ? 'CustomerStatus' : 'LeadStatus'"
   >
   </codx-label>
 </ng-template>
@@ -197,24 +196,41 @@
   <div class="d-flex align-items-end codx-badge" *ngIf="objectType == '3'">
     <div
       *ngIf="
-        data.leadStatus == '2' && data.objectID | formatStatus : lstLeads : lstProcesss : 'applyProcess';
+        data.leadStatus == '2' && data.objectID
+          | formatStatus : lstLeads : lstProcesss : 'applyProcess';
         else statusDefault
       "
       [ngStyle]="{
-        'background-color': data.objectID | formatStatus : lstLeads : lstProcesss : 'backgroundColor'
+        'background-color':
+          data.objectID
+          | formatStatus : lstLeads : lstProcesss : 'backgroundColor'
       }"
       class="me-1 badge badge-sm d-flex align-items-center mw-125px"
     >
       <span
-        [ngClass]="data.objectID | formatStatus : lstLeads : lstProcesss : 'icon'"
-        [ngStyle]="{ color: data.objectID | formatStatus : lstLeads : lstProcesss : 'iconColor' }"
+        [ngClass]="
+          data.objectID | formatStatus : lstLeads : lstProcesss : 'icon'
+        "
+        [ngStyle]="{
+          color:
+            data.objectID | formatStatus : lstLeads : lstProcesss : 'iconColor'
+        }"
         class="me-1"
       ></span>
       <span
         class="text-ellipsis line-clamp line-clamp-1"
-        [ngbTooltip]="data.objectID | formatStatus : lstLeads : lstProcesss : 'currentStepName'"
-        [ngStyle]="{ color: data.objectID | formatStatus : lstLeads : lstProcesss : 'textColor' }"
-        [innerHTML]="data.objectID | formatStatus : lstLeads : lstProcesss : 'currentStepName'"
+        [ngbTooltip]="
+          data.objectID
+            | formatStatus : lstLeads : lstProcesss : 'currentStepName'
+        "
+        [ngStyle]="{
+          color:
+            data.objectID | formatStatus : lstLeads : lstProcesss : 'textColor'
+        }"
+        [innerHTML]="
+          data.objectID
+            | formatStatus : lstLeads : lstProcesss : 'currentStepName'
+        "
       ></span>
     </div>
     <ng-template #statusDefault>

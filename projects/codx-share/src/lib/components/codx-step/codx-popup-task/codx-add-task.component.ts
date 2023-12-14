@@ -94,7 +94,6 @@ export class CodxAddTaskComponent implements OnInit {
   instanceID = '';
   instanceStepID = '';
 
-
   user;
   endDayOld;
   groupTask;
@@ -567,11 +566,8 @@ export class CodxAddTaskComponent implements OnInit {
         .subscribe((res) => {
           if (res) {
             this.listInsStep = res;
-            console.log("---------ok",this.listInsStep);
             this.setStepByRole();
           }else{
-            console.log("---------chịu____");
-            
           }
         });
     } else if (this.listInsStep?.length > 0) {

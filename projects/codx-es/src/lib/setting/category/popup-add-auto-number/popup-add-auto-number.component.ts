@@ -60,6 +60,7 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
   autoDefaultData: any = {};
   autoNoSetting: any = {
     lastNumber: 1,
+    _isNew:true
   };
   isAdd: boolean = true;
 
@@ -78,7 +79,7 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
     allowDeleting: true,
     mode: 'Dialog',
   };
-
+  sorts: any = [{ field: 'CreatedOn', dir: 'desc' }];
   autoAssignRule: string = '2';
   autoNoSegments: any = [];
   addedSegments: any = [];
@@ -132,7 +133,8 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
     this.setViewAutoNumber();
     return this.viewAutoNumber;
   }
-  columsGrid:any=[];
+  columsGrid: any = [];
+
   initForm() {
     this.formModel = new FormModel();
     this.formModel.entityName = 'AD_AutoNumbers';
@@ -150,11 +152,13 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
         if (res) {
           this.funcItem = res;
           this.autoNoSetting.entityName = this.funcItem.entityName;
-          this.cache.gridViewSetup(this.funcItem.formName, this.funcItem.gridViewName).subscribe((res:any)=>{
-            for(let key in res){
-              this.columsGrid.push(JSON.parse(JSON.stringify(res[key])));
-            }
-          })
+          this.cache
+            .gridViewSetup(this.funcItem.formName, this.funcItem.gridViewName)
+            .subscribe((res: any) => {
+              for (let key in res) {
+                this.columsGrid.push(JSON.parse(JSON.stringify(res[key])));
+              }
+            });
         }
       });
       this.api
@@ -325,14 +329,16 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
     this.setAutoSetingPreview();
   }
   onSaveForm() {
-    if (this.dialogAutoNum.invalid == true) {
-      this.esService.notifyInvalid(this.dialogAutoNum, this.formModel);
-      return;
-    }
+    if (this.autoDefaultData.autoNoType == '1') {
+      if (this.dialogAutoNum.invalid == true) {
+        this.esService.notifyInvalid(this.dialogAutoNum, this.formModel);
+        return;
+      }
 
-    if (this.invalidValue) {
-      this.notify.notifyCode('AD018');
-      return;
+      if (this.invalidValue) {
+        this.notify.notifyCode('AD018');
+        return;
+      }
     }
 
     if (this.isSaveNew == '1') {
@@ -369,6 +375,7 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
     }
 
     if (this.functionID) {
+      this.autoDefaultData.autoNumber = null;
       this.esService
         .updateAutoNumberDefaults(this.autoDefaultData)
         .subscribe((res) => {
@@ -379,20 +386,43 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
                 .execAction(
                   'AD_AutoNumberSettings',
                   [this.autoNoSetting],
-                  this.autoNoSetting.recID ? 'UpdateAsync' : 'SaveAsync'
+                  this.autoNoSetting._isNew ? 'SaveAsync' : 'UpdateAsync'
                 )
                 .subscribe((rs: any) => {
                   if (this.addedSegments.length) {
+                    this.addedSegments.forEach((seg: any) => {
+                      let item = this.autoNoSegments.find(
+                        (x: any) => x.recID == seg.recID
+                      );
+                      if (item) {
+                        seg.lineID == item.lineID;
+                      }
+                    });
                     this.api
                       .execAction(
                         'AD_AutoNumberSegments',
                         this.addedSegments,
                         'SaveAsync'
                       )
-                      .subscribe((res: any) => {
-                        if (res) {
-                        }
-                      });
+                      .subscribe();
+                  }
+                  let addedIDs = this.addedSegments.map((x: any) => {
+                    return x.recID;
+                  });
+                  if (
+                    this.autoNoSegments.filter(
+                      (x: any) => addedIDs.indexOf(x.recID) == -1
+                    ).length
+                  ) {
+                    this.api
+                      .execAction(
+                        'AD_AutoNumberSegments',
+                        this.autoNoSegments.filter(
+                          (x: any) => addedIDs.indexOf(x.recID) == -1
+                        ),
+                        'UpdateAsync'
+                      )
+                      .subscribe();
                   }
                 });
             }
@@ -609,18 +639,20 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
       if (!this.basicOnly) {
         this.basicCollapsed = !this.basicCollapsed;
         this.advanceCollapsed = !this.basicCollapsed;
-
       } else {
         this.basicCollapsed = false;
         this.advanceCollapsed = true;
       }
-      if(!this.basicCollapsed)  this.autoDefaultData.autoNoType = '1'
+      if (!this.basicCollapsed) this.autoDefaultData.autoNoType = '1';
     }
     if (name == 'advance') {
       if (!this.basicOnly) {
         this.advanceCollapsed = !this.advanceCollapsed;
         this.basicCollapsed = !this.advanceCollapsed;
-        if(this.basicCollapsed) this.autoDefaultData.autoNoType = '2';
+        if (this.basicCollapsed) {
+          this.autoDefaultData.autoNoType = '2';
+          this.autoDefaultData.autoNumber = this.functionID;
+        }
       }
     }
   }
@@ -650,20 +682,17 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
         if (!newSegment.recID) newSegment.recID = Util.uid();
         this.addedSegments.push(newSegment);
         this.autoNoSegments.push(newSegment);
+        this.autoNoSegments.forEach((item: any, index: number) => {
+          item.lineID = index + 1;
+        });
         this.autoNoSegments = this.autoNoSegments.slice();
         this.setAutoSetingPreview();
       }
     });
   }
 
-  editSegment(e:any){
-    if(e.rowData){
-
-    }
-  }
-
-  clickMF(e){
-    if(e.type=='edit' && e.data){
+  clickMF(e) {
+    if (e.type == 'edit' && e.data) {
       let option = new DialogModel();
       let dialog = this.callfunc.openForm(
         PopupAddSegmentComponent,
@@ -682,22 +711,52 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
       );
       dialog.closed.subscribe((res: any) => {
         if (res.event) {
-          let idx = this.autoNoSegments.findIndex((x:any)=> x.recID == res.event?.recID);
-          if(idx >-1){
+          let idx = this.autoNoSegments.findIndex(
+            (x: any) => x.recID == res.event?.recID
+          );
+          if (idx > -1) {
             this.autoNoSegments[idx] = res.event;
             this.autoNoSegments = this.autoNoSegments.slice();
             this.setAutoSetingPreview();
           }
-
         }
       });
     }
-    if(e.type=='delete' && e.data){
-      let idx = this.autoNoSegments.findIndex((x:any)=>x.recID==e.data.recID);
-      if(idx > -1){
-        this.autoNoSegments.splice(idx,1);
-        this.autoNoSegments = this.autoNoSegments.slice();
-        this.setAutoSetingPreview();
+    if (e.type == 'delete' && e.data) {
+      let idx = this.addedSegments.findIndex(
+        (x: any) => x.recID == e.data.recID
+      );
+      if (idx > -1) {
+        let idex = this.autoNoSegments.findIndex(
+          (x: any) => x.recID == e.data.recID
+        );
+        if (idex > -1) {
+          this.addedSegments.splice(idx, 1);
+          this.autoNoSegments.splice(idex, 1);
+          this.autoNoSegments.forEach((item: any, index: number) => {
+            item.lineID = index + 1;
+          });
+          this.autoNoSegments = this.autoNoSegments.slice();
+          this.setAutoSetingPreview();
+        }
+      } else {
+        this.api
+          .execAction('AD_AutoNumberSegments', [e.data], 'DeleteAsync')
+          .subscribe((res: any) => {
+            if (!res.error) {
+              let idex = this.autoNoSegments.findIndex(
+                (x: any) => x.recID == e.data.recID
+              );
+              if (idex > -1) {
+                this.autoNoSegments.splice(idx, 1);
+                this.autoNoSegments.forEach((item: any, index: number) => {
+                  item.lineID = index + 1;
+                });
+                this.autoNoSegments = this.autoNoSegments.slice();
+                this.setAutoSetingPreview();
+              }
+            }
+          });
       }
     }
   }
@@ -748,7 +807,20 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
       this.autoNumberSettingPreview = strFormat;
     }
   }
-
+  eventAction(e:any){
+    if(e.type == 'rowDrop'){
+      if(e.data.fromIndex == e.data.dropIndex) return;
+      if(isNaN(e.data.dropIndex)) return;
+      const temp = this.autoNoSegments[e.data.dropIndex];
+      const dragItem = this.autoNoSegments[e.data.fromIndex];
+      this.autoNoSegments[e.data.dropIndex] = dragItem;
+      this.autoNoSegments[e.data.fromIndex]=temp;
+      this.autoNoSegments.forEach((item: any, index: number) => {
+        item.lineID = index + 1;
+      });
+      //this.autoNoSegments = this.autoNoSegments.slice()
+    }
+  }
   private truncateString(str: string, num: number, format: string = '') {
     if (str.length <= num) {
       return str;
