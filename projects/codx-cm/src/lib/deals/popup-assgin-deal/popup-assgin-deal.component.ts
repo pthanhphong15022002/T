@@ -419,6 +419,7 @@ export class PopupAssginDealComponent
       }
       else {
         this.data.owner = this.owner;
+        this.saveDataCM();
       }
     }
   }
