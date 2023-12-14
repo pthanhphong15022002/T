@@ -231,7 +231,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
     this.stepsTasks = dt?.data?.stepsTasks || {};
     this.contractsInput = dt?.data?.contract || dt?.data?.dataCM || null;
     this.user = this.authStore.get();
-    this.getTitle();
+    // this.getTitle();
     this.getFormModel();
     this.getGrvSetup();
   }
