@@ -23,8 +23,8 @@ import {
 import { CodxCmService } from '../../codx-cm.service';
 @Component({
   selector: 'contracts-view-detail',
-  templateUrl: './contracts-view-detail.component.html',
-  styleUrls: ['./contracts-view-detail.component.scss'],
+  templateUrl: './contracts-view-right.component.html',
+  styleUrls: ['./contracts-view-right.component.scss'],
 })
 export class ContractsViewDetailComponent
   extends UIComponent
