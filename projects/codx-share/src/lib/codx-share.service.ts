@@ -1625,6 +1625,8 @@ export class Approvers {
   userID: string;
   userName: string;
   orgUnitName: string;
+  idCardType:string;
+  idCardNo:string;
 }
 
 //#endregion
