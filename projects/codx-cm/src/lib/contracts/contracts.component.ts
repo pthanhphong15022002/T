@@ -590,7 +590,7 @@ export class ContractsComponent extends UIComponent {
       action,
       contract: contract || null,
       account: this.account,
-      type: 'view',
+      type: 'contract',
       actionName: this.actionName || '',
     };
     let option = new SidebarModel();

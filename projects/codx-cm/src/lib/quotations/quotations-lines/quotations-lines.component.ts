@@ -51,6 +51,7 @@ export class QuotationsLinesComponent implements OnInit, AfterViewInit {
   @Input() showButtonAdd = true; //
   @Input() hideMoreFunc = '0'; //chua dung
   @Output() eventQuotationLines = new EventEmitter<any>();
+  @Output() eventButtonAddLine = new EventEmitter<any>();
 
   @Input() isSetMoreFunc = false; //thuan them de set quotation của contract
 
@@ -792,7 +793,13 @@ export class QuotationsLinesComponent implements OnInit, AfterViewInit {
   }
 
   onAddLine() {
-    this.addLines();
+    let check =
+      this.gridQuationsLines.dataSource.length > 0 &&
+      this.actionParent == 'add';
+    if (check) this.eventButtonAddLine.emit(check);
+    else this.addLines();
+
+    // this.addLines();
     //save cua form
     // this.formPurchaseInvoices.save(null, 0, '', '', false)
     // .pipe(takeUntil(this.destroy$))

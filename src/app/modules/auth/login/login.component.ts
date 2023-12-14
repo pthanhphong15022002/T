@@ -407,9 +407,10 @@ export class LoginComponent extends UIComponent implements OnInit, OnDestroy {
     this.loginService.loginDevice.session = this.loginService.session;
     this.loginService.loginDevice.tenantID = this.tenant;
     this.loginService.loginDevice.loginType = type;
+    var email = this.f.email.value;
     const loginSubscr = this.authService
       .login(
-        this.f.email.value,
+        email,
         this.f.password.value,
         type,
         false,
@@ -423,7 +424,7 @@ export class LoginComponent extends UIComponent implements OnInit, OnDestroy {
           let hideTrustDevice = data?.data?.extends?.HideTrustDevice;
           //this.loginDevice.loginType = data.data.extends.LoginType ?? '';
           let objData = {
-            data: data.data,
+            data: email,
             login2FA: data?.data?.extends?.TwoFA,
             hubConnectionID: this.hubConnectionID,
             //loginDevice: this.loginDevice,
@@ -446,7 +447,7 @@ export class LoginComponent extends UIComponent implements OnInit, OnDestroy {
             });
           } else {
             this.authService.setLogin(data.data);
-            this.loginService.loginAfter(data);
+            this.loginService.loginAfter(data, type=='otp');
           }
         } else {
           this.loginService.loginAfter(data);
