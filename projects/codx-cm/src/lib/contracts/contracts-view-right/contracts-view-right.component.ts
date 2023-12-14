@@ -1,26 +1,26 @@
-import { DialogData, DialogRef, FormModel, UIComponent } from 'codx-core';
 import {
   Input,
+  Output,
+  Optional,
   Injector,
   OnChanges,
   Component,
-  SimpleChanges,
-  Optional,
-  Output,
-  EventEmitter,
   ViewChild,
   TemplateRef,
+  EventEmitter,
+  SimpleChanges,
   ChangeDetectorRef,
 } from '@angular/core';
-import { firstValueFrom } from 'rxjs';
-import { ContractsService } from '../service-contracts.service';
 import {
   CM_Contracts,
-  CM_ContractsPayments,
   CM_Quotations,
   CM_QuotationsLines,
+  CM_ContractsPayments,
 } from '../../models/cm_model';
+import { firstValueFrom } from 'rxjs';
 import { CodxCmService } from '../../codx-cm.service';
+import { ContractsService } from '../service-contracts.service';
+import { DialogData, DialogRef, FormModel, UIComponent } from 'codx-core';
 @Component({
   selector: 'contracts-view-detail',
   templateUrl: './contracts-view-right.component.html',
@@ -30,35 +30,36 @@ export class ContractsViewDetailComponent
   extends UIComponent
   implements OnChanges
 {
-  @Input() contract: CM_Contracts;
+  @ViewChild('quotationsTab') quotationsTab: TemplateRef<any>;
+  @Input() taskAdd;
   @Input() formModel: FormModel;
   @Input() listInsStepStart = [];
-  @Input() taskAdd;
-  @ViewChild('quotationsTab') quotationsTab: TemplateRef<any>;
+  @Input() contract: CM_Contracts;
 
-  @Output() clickMoreFunc = new EventEmitter<any>();
   @Output() changeMF = new EventEmitter<any>();
-  @Output() changeProgress = new EventEmitter<any>();
   @Output() isSusscess = new EventEmitter<any>();
-  dialog: DialogRef;
-  isView = true;
-  vllStatus = '';
-  grvSetup: any;
-  tabClicked = '';
-  treeTask = [];
-  sessionID = '';
-  isShowFull = false;
+  @Output() clickMoreFunc = new EventEmitter<any>();
+  @Output() changeProgress = new EventEmitter<any>();
 
-  listPaymentHistory: CM_ContractsPayments[] = [];
-  listPayment: CM_ContractsPayments[] = [];
-
-  listQuotationsLine: CM_QuotationsLines[];
   quotations: CM_Quotations;
-  listInsStep = [];
-
+  listPayment: CM_ContractsPayments[] = [];
+  listQuotationsLine: CM_QuotationsLines[];
+  listPaymentHistory: CM_ContractsPayments[] = [];
+  dialog: DialogRef;
   account: any;
+  isView = true;
+  grvSetup: any;
+  contactPerson;
+  treeTask = [];
+  vllStatus = '';
+  sessionID = '';
+  tabClicked = '';
+  listInsStep = [];
+  isShowFull = false;  
   listTypeContract = [];
   oCountFooter: any = {};
+  isLoading: boolean = true;
+
   tabControl = [
     { name: 'History', textDefault: 'Lịch sử', isActive: true, template: null },
     {
@@ -98,13 +99,12 @@ export class ContractsViewDetailComponent
     entityName: 'CM_Quotations',
     gridViewName: 'grvCMQuotations',
   };
-  isLoading: boolean = true;
-  contactPerson;
-    formModelContact: FormModel = {
+  formModelContact: FormModel = {
     formName: 'CMContacts',
-    gridViewName: 'grvCMContacts',
     entityName: 'CM_Contacts',
+    gridViewName: 'grvCMContacts',
   };
+  
   constructor(
     private inject: Injector,
     private contractService: ContractsService,
@@ -123,25 +123,28 @@ export class ContractsViewDetailComponent
     }
     this.isView = dt?.data?.isView;
   }
+
   ngOnChanges(changes: SimpleChanges): void {
     this.loadTabs();
     if (changes?.contract && this.contract) {
       this.setDataInput();
-      this.contractService.getContactByRecID(this.contract?.contactID).subscribe(res => {
-        if(res){
-          this.contactPerson = res;
-        }
-      })
+      this.contractService
+        .getContactByRecID(this.contract?.contactID)
+        .subscribe((res) => {
+          if (res) {
+            this.contactPerson = res;
+          }
+        });
     }
     if (changes?.listInsStepStart && changes?.listInsStepStart?.currentValue) {
       this.listInsStep = this.listInsStepStart;
     }
-    if(changes?.taskAdd){
+    if (changes?.taskAdd) {
       console.log(changes?.taskAdd);
-      
     }
     this.listTypeContract = this.contractService.listTypeContractTask;
   }
+
   async onInit() {
     this.grvSetup = await firstValueFrom(
       this.cache.gridViewSetup('CMContracts', 'grvCMContracts')
@@ -159,7 +162,7 @@ export class ContractsViewDetailComponent
     this.getPayMentByContractID(this.contract?.recID);
     if (this.contract?.applyProcess) {
       this.getListInstanceStep(this.contract);
-    } 
+    }
     this.sessionID = this.contract?.recID;
     this.loadTree(this.sessionID);
   }
@@ -182,6 +185,7 @@ export class ContractsViewDetailComponent
   changeDataMF(event, data: CM_Contracts) {
     this.changeMF.emit({ e: event, data: data });
   }
+
   clickMF(event, data) {
     this.clickMoreFunc.emit({ e: event, data: data });
   }
@@ -283,9 +287,11 @@ export class ContractsViewDetailComponent
         this.treeTask = res ? res : [];
       });
   }
+
   clickShowTab(event) {
     this.isShowFull = event;
   }
+
   changeCountFooter(value: number, key: string) {
     let oCountFooter = JSON.parse(JSON.stringify(this.oCountFooter));
     oCountFooter[key] = value;
