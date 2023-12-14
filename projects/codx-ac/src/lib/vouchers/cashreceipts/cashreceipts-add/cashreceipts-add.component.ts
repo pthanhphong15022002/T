@@ -675,7 +675,7 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
             .subscribe((res) => {
               if (res.data != null) {
                 this.notification.notifyCode('E0860');
-                this.dialog.close();
+                this.dialog.close({type:'discard'});
                 this.onDestroy();
               }
             });
