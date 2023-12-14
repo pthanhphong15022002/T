@@ -84,9 +84,11 @@ export class AttachmentService {
       if (this.cachedObservables.has(key)) {
         this.cachedObservables.get(key)
       }
-      let datas = {
+      let datas = 
+      {
         "AppName": name
       }
+      //let observable = from(lvFileClientAPI.postAsync(`api/admin/apps/get/${name}`,""))
       let observable = from(lvFileClientAPI.postAsync(`api/admin/apps/get`,datas))
       .pipe(
         map((res) => {
