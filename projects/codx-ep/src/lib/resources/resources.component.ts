@@ -308,7 +308,7 @@ export class ResourcesComponent extends UIComponent {
         field: 'resourceName',
         headerText:
           this.resourceGridView?.resourceName?.headerText || 'ResourceName',
-        
+
         template: this.roomNameCol,
       },
       {
@@ -336,6 +336,7 @@ export class ResourcesComponent extends UIComponent {
         template: this.ownerCol,
       },
       {
+        field:'preparator',
         headerText:
           this.resourceGridView?.preparator?.headerText || 'Preparator',
         //width: '15%',
@@ -394,11 +395,13 @@ export class ResourcesComponent extends UIComponent {
         field: 'note',
       },
       {
+        field:'linkID',
         headerText: this.resourceGridView?.linkID?.headerText || 'LinkID',
         //width: '15%', //width:gv['Owner'].width,
         template: this.linkCol,
       },
       {
+        field:'owner',
         headerText: this.resourceGridView?.owner?.headerText || 'Owner',
         //width: '15%', //width:gv['Owner'].width,
         template: this.ownerCol,
@@ -511,6 +514,7 @@ export class ResourcesComponent extends UIComponent {
         headerText: this.resourceGridView?.note?.headerText || 'Note',
       },
       {
+        field:'owner',
         headerText: this.resourceGridView?.owner?.headerText || 'Owner',
         template: this.ownerCol,
       },
