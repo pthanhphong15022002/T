@@ -164,7 +164,7 @@ var childAuthRoutes: Routes = [
       ),
   },
   {
-    path: 'pr',
+    path: 'tr',
     canActivate: [AuthGuard],
     loadChildren: () =>
       import('projects/codx-pr/src/lib/codx-pr.module').then(

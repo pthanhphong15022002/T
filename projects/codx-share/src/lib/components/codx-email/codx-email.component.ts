@@ -58,6 +58,7 @@ export class CodxEmailComponent implements OnInit {
   formModel: FormModel;
   date: any;
   templateID: string = '';
+  templateType:string = "";
 
   saveIsTemplate: boolean = false;
   // email: any;
@@ -243,7 +244,12 @@ export class CodxEmailComponent implements OnInit {
                 }
                 //this.cr.detectChanges();
               });
-          } else {
+          } 
+          else if(this.templateType)
+          {
+
+          }
+          else {
             this.codxService
               .getDataDefault(this.functionID)
               .subscribe((res) => {
