@@ -743,13 +743,13 @@ export class PdfComponent
   }
 
   //get
-  getAreaOwnerName(authorID) {
-    return this.lstSigners.find((signer) => {
-      return (
-        signer.authorID == authorID
-        // || signer?.roleType == this.curSignerType
-      );
-    })?.fullName;
+  getAreaOwnerName(authorID,objectID) {
+    if(objectID !=null){
+      return this.lstSigners.find((signer) =>signer?.authorID == authorID && signer?.userID ==objectID)?.fullName ?? "";
+    }
+    else{      
+      return this.lstSigners.find((signer) =>signer?.authorID == authorID)?.fullName ?? "";
+    }    
   }
 
   getListCA() {
@@ -1067,10 +1067,14 @@ export class PdfComponent
               ? false
               : !area.isLock;
           if (isRender) {
-            let curSignerInfo = this.lstSigners.find(
-              (signer) => signer.authorID == area.signer
-              // ||                this.curSignerType == area.signer
-            );
+            
+            let curSignerInfo =null;
+            if(area?.objectID !=null){
+              curSignerInfo= this.lstSigners.find((signer) =>signer?.authorID == area?.signer && signer?.userID ==area?.objectID);
+            }
+            else{      
+              curSignerInfo = this.lstSigners.find((signer) =>signer?.authorID == area?.signer);
+            } 
             let url = '';
             let isChangeUrl = false;
             switch (area.labelType) {

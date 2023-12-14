@@ -22,6 +22,7 @@ import { PopupEappointionsComponent } from '../employee-profile/popup-eappointio
 import { CodxShareService } from 'projects/codx-share/src/lib/codx-share.service';
 import { CodxOdService } from 'projects/codx-od/src/public-api';
 import { isObservable } from 'rxjs';
+import { CodxCommonService } from 'projects/codx-common/src/lib/codx-common.service';
 
 @Component({
   selector: 'lib-employee-appointions',
@@ -76,6 +77,7 @@ export class EmployeeAppointionsComponent extends UIComponent {
     private df: ChangeDetectorRef,
     private notify: NotificationsService,
     private activatedRoute: ActivatedRoute,
+    private codxCommonService: CodxCommonService,
     private codxShareService: CodxShareService,
     private codxODService: CodxOdService
   ) {
@@ -271,7 +273,7 @@ export class EmployeeAppointionsComponent extends UIComponent {
           funcID === this.actionUpdateCanceled ||
           funcID === this.actionCancelSubmit
         ) {
-          this.codxShareService
+          this.codxCommonService
             .codxCancel(
               'HR',
               this.itemDetail.recID,
@@ -294,7 +296,7 @@ export class EmployeeAppointionsComponent extends UIComponent {
       .getCategoryByEntityName(this.view.formModel.entityName)
       .subscribe((res) => {
         if (res) {
-          this.codxShareService.codxReleaseDynamic(
+          this.codxCommonService.codxReleaseDynamic(
             'HR',
             this.itemDetail,
             res,
@@ -546,7 +548,7 @@ export class EmployeeAppointionsComponent extends UIComponent {
           funcID === this.actionUpdateCanceled ||
           funcID === this.actionCancelSubmit
         ) {
-          this.codxShareService
+          this.codxCommonService
             .codxCancel(
               'HR',
               res[0].recID,

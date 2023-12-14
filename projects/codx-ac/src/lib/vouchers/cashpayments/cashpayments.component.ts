@@ -28,6 +28,7 @@ import { ProgressBar } from '@syncfusion/ej2-angular-progressbar';
 import { CodxListReportsComponent } from 'projects/codx-share/src/lib/components/codx-list-reports/codx-list-reports.component';
 import { Subject, takeUntil } from 'rxjs';
 import { JournalService } from '../../journals/journals.service';
+import { CodxCommonService } from 'projects/codx-common/src/lib/codx-common.service';
 declare var jsBh: any;
 @Component({
   selector: 'lib-cashpayments',
@@ -42,7 +43,7 @@ export class CashPaymentsComponent extends UIComponent {
   @ViewChild('templateDetailRight') templateDetailRight: TemplateRef<any>; //? template view danh sách chi tiết (phải)
   @ViewChild('listTemplate') listTemplate?: TemplateRef<any>; //? template view danh sách
   @ViewChild('templateGrid') templateGrid?: TemplateRef<any>; //? template view lưới
-  headerText: any; //? tên tiêu đề truyền cho form thêm mới
+  headerText: any;
   runmode: any;
   journalNo: string; //? số của sổ nhật kí
   itemSelected: any; //? data của view danh sách chi tiết khi được chọn
@@ -64,12 +65,12 @@ export class CashPaymentsComponent extends UIComponent {
   bankReceiveName: any;
   viewActive:number = ViewType.listdetail;
   ViewType = ViewType;
-  isLoad = false;
   private destroy$ = new Subject<void>(); //? list observable hủy các subscribe api
   constructor(
     private inject: Injector,
     private acService: CodxAcService,
     private authStore: AuthStore,
+    private codxCommonService: CodxCommonService,
     private shareService: CodxShareService,
     private notification: NotificationsService,
     private tenant: TenantStore,
@@ -114,8 +115,7 @@ export class CashPaymentsComponent extends UIComponent {
     .pipe(takeUntil(this.destroy$))
     .subscribe((res) => {
       if (res) {
-        this.isLoad = true;
-        this.headerText = res?.defaultName; //? lấy tên chứng từ (Phiếu chi)
+        this.headerText = res?.defaultName || res?.customName; //? lấy tên chứng từ (Phiếu chi)
         this.runmode = res?.runMode; //? lấy runmode
       }
     });
@@ -467,7 +467,7 @@ export class CashPaymentsComponent extends UIComponent {
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         this.dataCategory = res;
-        this.shareService
+        this.codxCommonService
           .codxRelease(
             'AC',
             data.recID,
@@ -503,7 +503,7 @@ export class CashPaymentsComponent extends UIComponent {
    * @param data
    */
   cancelReleaseVoucher(text: any, data: any) {
-    this.shareService
+    this.codxCommonService
       .codxCancel('AC', data?.recID, this.view.formModel.entityName, null, null)
       .pipe(takeUntil(this.destroy$))
       .subscribe((result: any) => {

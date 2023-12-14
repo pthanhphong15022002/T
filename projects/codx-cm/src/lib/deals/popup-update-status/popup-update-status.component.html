@@ -13,14 +13,24 @@
       class="fw-bold"
       default="Trạng thái"
     ></codx-label>
-      <ejs-combobox
+      <!-- <ejs-combobox
       [dataSource]="valueListStatusCode "
       (valueChange)="valueChangeStatusCode($event)"
       [fields]="fieldCbxStatusCode"
       [placeholder]="gridViewSetup?.ObjectStatus?.description"
       [allowFiltering]="true"
       [value]="statusDefault"
-    ></ejs-combobox>
+    ></ejs-combobox> -->
+
+
+    <codx-input
+    [formModel]="formModel"
+    field="statusCodeID"
+    [crrValue]="statusDefault"
+    (valueChange)="valueChangeStatusCode($event)"
+  >
+  </codx-input>
+
     </div>
 
     <div class="form-group">

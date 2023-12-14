@@ -19,10 +19,21 @@
 
 
 /* speed dial */
+.workspace-main{
+    height: calc(100vh - 52px)!important;
+    //border: 1px aqua solid;
+    position: relative;
+}
 .speedial{
     position: absolute;
-    bottom: 10px;
-    width: 100%;
+    right: 12px;
+    bottom: 12px;
+    .e-speeddial-popup{
+        bottom: 60px;
+        .text{
+            white-space: nowrap;
+        }
+    }
 }
 .speeddial-template-target {
     width: 100%;

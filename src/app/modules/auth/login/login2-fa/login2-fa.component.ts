@@ -6,7 +6,7 @@ import {
   TemplateRef,
   ViewChildren,
 } from '@angular/core';
-import { AngularDeviceInformationService } from 'angular-device-information';
+// import { AngularDeviceInformationService } from 'angular-device-information';
 import {
   AESCryptoService,
   AuthService,
@@ -19,10 +19,10 @@ import {
   UIComponent,
   UserModel,
 } from 'codx-core';
-import { CodxAdService } from 'projects/codx-ad/src/public-api';
+// import { CodxAdService } from 'projects/codx-ad/src/public-api';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import { Device } from 'projects/codx-ad/src/lib/models/userLoginExtend.model';
+// import { Device } from 'projects/codx-ad/src/lib/models/userLoginExtend.model';
 import { LoginService } from '../login.service';
 
 @Component({
@@ -33,7 +33,7 @@ import { LoginService } from '../login.service';
 export class Login2FAComponent extends UIComponent implements AfterViewInit {
   constructor(
     inject: Injector,
-    private deviceInfo: AngularDeviceInformationService,
+    // private deviceInfo: AngularDeviceInformationService,
     private realHub: RealHubService,
     private aesCrypto: AESCryptoService,
     private notiService: NotificationsService,
@@ -43,32 +43,30 @@ export class Login2FAComponent extends UIComponent implements AfterViewInit {
     @Optional() dialog?: DialogRef
   ) {
     super(inject);
-    this.user = dt?.data?.data;
+    this.email = dt?.data?.data;
     this.hideTrustDevice = dt.data.hideTrustDevice;
     this.hubConnectionID = dt?.data?.hubConnectionID;
-    this.email = this.user?.email;
-    this.clickQueue.push(dt?.data?.login2FA);
+    //this.clickQueue.push(dt?.data?.login2FA);
     this.dialog = dialog;
     this.changeLogin2FAType(dt?.data?.login2FA);
-    if (dt?.data?.loginDevice) {
-      this.loginDevice = dt?.data?.loginDevice;
-      this.loginDevice.times = '2';
-    } else {
-      let dInfo = this.deviceInfo.getDeviceInfo();
-      this.loginDevice = {
-        name: dInfo.browser,
-        os: dInfo.os + ' ' + dInfo.osVersion,
-        imei: null,
-        id: null,
-        trust: false,
-        times: '2',
-        tenantID: '',
-      };
-    }
+    // if (dt?.data?.loginDevice) {
+    //   this.loginDevice = dt?.data?.loginDevice;
+    //   //this.loginDevice.times = '2';
+    // } else {
+    //   let dInfo = this.deviceInfo.getDeviceInfo();
+    //   this.loginDevice = {
+    //     name: dInfo.browser,
+    //     os: dInfo.os + ' ' + dInfo.osVersion,
+    //     imei: null,
+    //     id: null,
+    //     trust: false,
+    //     //times: '2',
+    //     tenantID: '',
+    //   };
+    // }
   }
-  user;
   dialog;
-  loginDevice: Device;
+  // loginDevice: Device;
   // #region QR
   // testQRContent = '';
   hideTrustDevice = false;
@@ -99,9 +97,9 @@ export class Login2FAComponent extends UIComponent implements AfterViewInit {
   loginFG: FormGroup;
   //#endregion
   onInit() {
-    console.log(this.authStore.get());
+    //console.log(this.authStore.get());
     this.loginFG = new FormGroup({
-      email: new FormControl(this.user?.email),
+      email: new FormControl(this.email),
       password: new FormControl(),
     });
     this.cache.valueList('SYS060').subscribe((vll) => {
@@ -114,7 +112,7 @@ export class Login2FAComponent extends UIComponent implements AfterViewInit {
       });
     }
     this.generateQR();
-    console.log(this.loginDevice);
+    //console.log(this.loginDevice);
   }
 
   ngAfterViewInit() {
@@ -164,24 +162,25 @@ export class Login2FAComponent extends UIComponent implements AfterViewInit {
   }
 
   changeLogin2FAType(option) {
-    switch (option) {
-      case '2': {
-        this.curLgType = 'qr';
-        break;
-      }
-      case '3': {
-        this.curLgType = 'otp';
-        break;
-      }
-      case '4': {
-        this.curLgType = 'totp';
-        break;
-      }
-      default: {
-        this.curLgType = '';
-        break;
-      }
-    }
+    this.curLgType = option;
+    // switch (option) {
+    //   case '2': {
+    //     this.curLgType = 'qr';
+    //     break;
+    //   }
+    //   case '3': {
+    //     this.curLgType = 'otp';
+    //     break;
+    //   }
+    //   case '4': {
+    //     this.curLgType = 'totp';
+    //     break;
+    //   }
+    //   default: {
+    //     this.curLgType = '';
+    //     break;
+    //   }
+    // }
 
     this.clickQueue.push(option);
     //this.detectorRef.detectChanges();
@@ -198,8 +197,8 @@ export class Login2FAComponent extends UIComponent implements AfterViewInit {
         'GenQRCodeAsync',
         [
           this.hubConnectionID,
-          this.loginDevice.name,
-          this.loginDevice.os,
+          this.loginService.loginDevice.name,
+          this.loginService.loginDevice.os,
           // position.coords.accuracy +
           //   ';' +
           //   position.coords.latitude +
@@ -224,7 +223,7 @@ export class Login2FAComponent extends UIComponent implements AfterViewInit {
               this.detectorRef.detectChanges();
               if (this.qrTimeout === 0) {
                 clearInterval(id);
-                console.log('het gio');
+                //console.log('het gio');
               }
             },
             1000,
@@ -263,7 +262,7 @@ export class Login2FAComponent extends UIComponent implements AfterViewInit {
               this.detectorRef.detectChanges();
               if (this.otpTimeout === 0) {
                 clearInterval(id);
-                console.log('het gio');
+                //console.log('het gio');
               }
             },
             1000,
@@ -294,7 +293,7 @@ export class Login2FAComponent extends UIComponent implements AfterViewInit {
     if (evt.target.value) {
       this.otpValues[idx] = evt.target.value;
     }
-    console.log('changeOTP', this.otpValues);
+    //console.log('changeOTP', this.otpValues);
 
     // this.loginFG.controls['password'].setValue(evt.data);
   }
@@ -303,24 +302,24 @@ export class Login2FAComponent extends UIComponent implements AfterViewInit {
     if (evt.target.value) {
       this.TOTPValues[idx] = evt.target.value;
     }
-    console.log('change totp', this.TOTPValues);
+    //console.log('change totp', this.TOTPValues);
   }
 
   login2FAOTP() {
     this.loginFG.controls['password'].setValue(this.otpValues.join(''));
-    this.loginDevice.trust = this.askState;
+    this.loginService.loginDevice.trust = this.askState;
     let userName = this.loginFG.controls['email'].value;
     let password = this.loginFG.controls['password'].value;
     userName = this.aesCrypto.encrypt(userName.trim());
     password = this.aesCrypto.encrypt(password);
-    this.loginDevice.loginType = this.curLgType;
-    this.loginDevice.session = this.session;
+    this.loginService.loginDevice.loginType = this.curLgType;
+    this.loginService.loginDevice.session = this.session;
     const login2FASubscr = this.api
       .callSv('SYS', 'AD', 'UsersBusiness', 'CreateUserLoginAsync', [
-        this.user.tenant,
+        this.loginService.loginDevice.tenantID,
         userName,
         password,
-        JSON.stringify(this.loginDevice),
+        JSON.stringify(this.loginService.loginDevice),
       ])
       .subscribe((data) => {
         if (!data.error) {

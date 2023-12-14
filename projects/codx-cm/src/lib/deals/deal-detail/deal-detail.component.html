@@ -342,7 +342,7 @@
                     [ngbTooltip]="getStatusCode(dataSelected?.statusCodeID)"
                     > {{getStatusCode(dataSelected?.statusCodeID)}}</span
                   > -->
-                      <span
+                      <!-- <span
                         class="text-ellipsis-1"
                         [ngbTooltip]="
                           dataSelected?.statusCodeID
@@ -352,7 +352,13 @@
                           dataSelected?.statusCodeID
                             | formatStatusCode : valueListStatusCode
                         "
-                      ></span>
+                      ></span> -->
+                      <span
+                      class="text-ellipsis-1"
+                      #statusCodeID
+                      [innerHTML]="dataSelected?.statusCodeID| formatvalue : formModel : 'statusCodeID'  | async "
+                    >
+                    </span>
                     </div>
 
                     <div
@@ -1001,6 +1007,7 @@
                   [dealName]="dataSelected?.dealName"
                   [customerName]="customerName"
                   [ownerInstance]="dataSelected?.owner"
+                  [taskAdd]="taskAdd"
                 ></step-task>
               </div>
             </ng-template>

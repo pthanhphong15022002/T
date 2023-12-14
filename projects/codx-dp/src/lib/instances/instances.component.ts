@@ -57,6 +57,7 @@ import { GridModels } from './instance-dashboard/instance-dashboard.component';
 import { AddContractsComponent } from 'projects/codx-cm/src/lib/contracts/add-contracts/add-contracts.component';
 import { PopupAssginDealComponent } from 'projects/codx-cm/src/lib/deals/popup-assgin-deal/popup-assgin-deal.component';
 import { ExportData } from 'projects/codx-share/src/lib/models/ApproveProcess.model';
+import { CodxCommonService } from 'projects/codx-common/src/lib/codx-common.service';
 
 @Component({
   selector: 'codx-instances',
@@ -247,6 +248,7 @@ export class InstancesComponent
     private callFunc: CallFuncService,
     private codxDpService: CodxDpService,
     private codxShareService: CodxShareService,
+    private codxCommonService: CodxCommonService,
     private changeDetectorRef: ChangeDetectorRef,
     private notificationsService: NotificationsService,
     private authStore: AuthStore,
@@ -659,12 +661,11 @@ export class InstancesComponent
       }
       if (e && e.event != null) {
         this.dataSelected = JSON.parse(JSON.stringify(e.event));
-        this.view?.dataService.update(this.dataSelected);
+        this.view?.dataService.update(this.dataSelected, true);
         if (this.kanban) {
-          // this.kanban.updateCard(data);  //core mới lỗi chô này
           if (this.kanban?.dataSource?.length == 1) {
             this.kanban.refresh();
-          }
+          }else this.kanban?.updateCard(this.dataSelected);
         }
         if (this.detailViewInstance) {
           this.detailViewInstance.dataSelect = this.dataSelected;
@@ -705,7 +706,7 @@ export class InstancesComponent
     dialogEditInstance.closed.subscribe((e) => {
       if (e && e.event != null) {
         this.dataSelected = JSON.parse(JSON.stringify(e.event));
-        this.view.dataService.update(e.event).subscribe();
+        this.view.dataService.update(e.event, true).subscribe();
         if (this.kanban) {
           if (this.kanban?.dataSource?.length == 1) {
             this.kanban.refresh();
@@ -2461,7 +2462,8 @@ export class InstancesComponent
                   recID: this.dataSelected.recID,
                   data: dt[1]?.datas,
                 };
-                this.release(dt[0], this.esCategory, exportData);
+                let viewHtml = this.dataSelected.title + ' - ' + dt[0].stepName; //`<div class="d-flex flex-column"><div class="line-clamp line-clamp-2 text-dark">${this.dataSelected.title}</div><div class="text-gray-700 line-clamp">${dt[0].stepName}</div></div>`; // ES ko cho truyền chuỗi html
+                this.release(dt[0], this.esCategory, exportData, viewHtml);
               }
             });
 
@@ -2478,14 +2480,14 @@ export class InstancesComponent
   }
 
   // // data?.stepName, => tên theo quy trình
-  release(data: any, category: any, exportData: any) {
-    this.codxShareService.codxReleaseDynamic(
+  release(data: any, category: any, exportData: any, viewHtml) {
+    this.codxCommonService.codxReleaseDynamic(
       'DP',
       data,
       category,
       'DP_Instances_Steps',
       this.view.formModel.funcID,
-      this.dataSelected.title, //html truyen qua
+      viewHtml, // this.dataSelected.title, //html truyen qua
       this.releaseCallback.bind(this),
       null,
       null,
@@ -2503,12 +2505,12 @@ export class InstancesComponent
       this.dataSelected.approveStatus = res?.returnStatus ?? '3';
       this.view.dataService.update(this.dataSelected).subscribe();
       if (this.kanban) this.kanban.updateCard(this.dataSelected);
-      this.notificationsService.notifyCode('ES007');
+      // this.notificationsService.notifyCode('ES007'); // ES trả về rồi
     }
   }
 
   releaseInstances(data: any, category: any) {
-    this.codxShareService.codxReleaseDynamic(
+    this.codxCommonService.codxReleaseDynamic(
       'DP',
       data,
       category,
@@ -2525,7 +2527,7 @@ export class InstancesComponent
       this.dataSelected.approveStatus = res?.returnStatus ?? '3';
       this.view.dataService.update(this.dataSelected).subscribe();
       if (this.kanban) this.kanban.updateCard(this.dataSelected);
-      this.notificationsService.notifyCode('ES007');
+      // this.notificationsService.notifyCode('ES007');
     }
   }
 
@@ -2559,7 +2561,7 @@ export class InstancesComponent
   }
 
   cancelRelease(transID, entityName) {
-    this.codxShareService
+    this.codxCommonService
       .codxCancel('DP', transID, entityName, null, null)
       .subscribe((res3) => {
         if (res3) {
@@ -2631,9 +2633,8 @@ export class InstancesComponent
     } else if (applyFor == '2' || applyFor == '3') {
       return this.callfc.openSide(PopupAddCasesComponent, obj, option);
     } else if (applyFor == '4') {
-      option.isFull = true;
+      obj = { ...obj, type: 'DP', contractRefID: this.oldIdInstance, processID: this.processID };
       option.FormModel = obj?.formMD;
-      obj = { ...obj, type: 'DP', contractRefID: this.oldIdInstance };
       return this.callfc.openSide(AddContractsComponent, obj, option);
     }
     return null;

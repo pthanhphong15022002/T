@@ -113,13 +113,13 @@
         </div>
         <div class="model-func">
           <codx-mfunc
+            *ngIf="!isMoveStage && !isViewStep"
             [formModel]="grvMoreFunction"
             [isBookMark]="true"
             [dataItem]="moreDefaut"
             (changeDataMF)="changeDataMFStep($event, currentStep)"
             (clickMF)="clickMFStep($event, currentStep)"
             [type]="'view'"
-            *ngIf="!isMoveStage"
           >
           </codx-mfunc>
         </div>

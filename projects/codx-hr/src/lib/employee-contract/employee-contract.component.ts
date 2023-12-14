@@ -31,6 +31,7 @@ import { CodxHrService } from './../codx-hr.service';
 import { PopupEProcessContractComponent } from './popup-eprocess-contract/popup-eprocess-contract.component';
 import { ViewDetailContractsComponent } from './popup-eprocess-contract/view-detail-contracts/view-detail-contracts/view-detail-contracts.component';
 import { PopupSubEContractComponent } from '../employee-profile/popup-sub-econtract/popup-sub-econtract.component';
+import { CodxCommonService } from 'projects/codx-common/src/lib/codx-common.service';
 
 @Component({
   selector: 'lib-employee-contract',
@@ -93,6 +94,7 @@ export class EmployeeContractComponent extends UIComponent {
     private activatedRoute: ActivatedRoute,
     private df: ChangeDetectorRef,
     private callfunc: CallFuncService,
+    private codxCommonService: CodxCommonService,
     private codxODService: CodxOdService,
     private notify: NotificationsService,
     public override codxService : CodxService
@@ -201,7 +203,7 @@ export class EmployeeContractComponent extends UIComponent {
           funcID === this.actionUpdateCanceled ||
           funcID === this.actionCancelSubmit
         ) {
-          this.codxShareService
+          this.codxCommonService
             .codxCancel(
               'HR',
               this.itemDetail.recID,
@@ -551,7 +553,7 @@ export class EmployeeContractComponent extends UIComponent {
       .subscribe((res) => {
         if (res) {
           this.dataCategory = res;
-          this.codxShareService.codxReleaseDynamic(
+          this.codxCommonService.codxReleaseDynamic(
             'HR',
             this.itemDetail,
             this.dataCategory,
@@ -662,7 +664,7 @@ export class EmployeeContractComponent extends UIComponent {
             )
             .subscribe((res) => console.log(res));
 
-          this.codxShareService
+          this.codxCommonService
             .codxCancel(
               'HR',
               res[0].recID,

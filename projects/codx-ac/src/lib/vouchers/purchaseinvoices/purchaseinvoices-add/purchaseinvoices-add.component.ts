@@ -198,106 +198,104 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
     let field = event?.field || event?.ControlName;
     let value = event?.data || event?.crrValue;
     this.formPurchaseInvoices.setValue('updateColumns','',{});
-    if(event && value && this.formPurchaseInvoices.hasChange(this.formPurchaseInvoices.preData,this.formPurchaseInvoices.data)){
-      switch (field.toLowerCase()) {
-        case 'objectid':
-          let indexob = this.eleCbxObjectID?.ComponentCurrent?.dataService?.data.findIndex((x) => x.ObjectID == this.eleCbxObjectID?.ComponentCurrent?.value);
-          if(value == '' || value == null || indexob == -1){
-            this.isPreventChange = true;
-            let memo = this.getMemoMaster();
-            this.formPurchaseInvoices.setValue(field,null,{});
-            this.formPurchaseInvoices.setValue('objectName', null, {});
-            this.formPurchaseInvoices.setValue('objectType', null, {});
-            this.formPurchaseInvoices.setValue('address', null, {});
-            this.formPurchaseInvoices.setValue('taxCode', null, {});
-            this.formPurchaseInvoices.setValue('warehouseID',null, {});
-            this.formPurchaseInvoices.setValue('pmtMethodID', null, {});
-            this.formPurchaseInvoices.setValue('pmtTermID', null, {});
-            this.formPurchaseInvoices.setValue('delModeID', null, {});
-            this.formPurchaseInvoices.setValue('memo', memo, {});
-            this.detectorRef.detectChanges();
-            this.isPreventChange = false;
-            return;
-          } 
-          let objectType = event?.component?.itemsSelected[0]?.ObjectType || '';
-          this.formPurchaseInvoices.setValue('objectType',objectType,{});
-          this.objectIDChange(field);
-          break;
+    switch (field.toLowerCase()) {
+      case 'objectid':
+        let indexob = this.eleCbxObjectID?.ComponentCurrent?.dataService?.data.findIndex((x) => x.ObjectID == this.eleCbxObjectID?.ComponentCurrent?.value);
+        if(value == '' || value == null || indexob == -1){
+          this.isPreventChange = true;
+          let memo = this.getMemoMaster();
+          this.formPurchaseInvoices.setValue(field,null,{});
+          this.formPurchaseInvoices.setValue('objectName', null, {});
+          this.formPurchaseInvoices.setValue('objectType', null, {});
+          this.formPurchaseInvoices.setValue('address', null, {});
+          this.formPurchaseInvoices.setValue('taxCode', null, {});
+          this.formPurchaseInvoices.setValue('warehouseID',null, {});
+          this.formPurchaseInvoices.setValue('pmtMethodID', null, {});
+          this.formPurchaseInvoices.setValue('pmtTermID', null, {});
+          this.formPurchaseInvoices.setValue('delModeID', null, {});
+          this.formPurchaseInvoices.setValue('memo', memo, {});
+          this.detectorRef.detectChanges();
+          this.isPreventChange = false;
+          return;
+        } 
+        let objectType = event?.component?.itemsSelected[0]?.ObjectType || '';
+        this.formPurchaseInvoices.setValue('objectType',objectType,{});
+        this.objectIDChange(field);
+        break;
 
-        case 'currencyid':
-          let indexcr = this.eleCbxCurrencyID?.ComponentCurrent?.dataService?.data.findIndex((x) => x.CurrencyID == this.eleCbxCurrencyID?.ComponentCurrent?.value);
-          if(value == '' || value == null || indexcr == -1){
-            this.isPreventChange = true;
-            this.formPurchaseInvoices.setValue(field, this.preData?.currencyID, {});
-            if (this.preData?.currencyID != null) {
-              var key = Util.camelize(field);
-              var $error = (this.formPurchaseInvoices as any).elRef.nativeElement?.querySelector('div[data-field="' + key + '"].errorMessage');
-              if ($error) $error.classList.add('d-none');
-            }
-            this.isPreventChange = false;
-            this.detectorRef.detectChanges();
+      case 'currencyid':
+        let indexcr = this.eleCbxCurrencyID?.ComponentCurrent?.dataService?.data.findIndex((x) => x.CurrencyID == this.eleCbxCurrencyID?.ComponentCurrent?.value);
+        if(value == '' || value == null || indexcr == -1){
+          this.isPreventChange = true;
+          this.formPurchaseInvoices.setValue(field, this.preData?.currencyID, {});
+          if (this.preData?.currencyID != null) {
+            var key = Util.camelize(field);
+            var $error = (this.formPurchaseInvoices as any).elRef.nativeElement?.querySelector('div[data-field="' + key + '"].errorMessage');
+            if ($error) $error.classList.add('d-none');
           }
-          let valueCurrency = {
-            PreCurrency:  event?.component?.dataService?.currentComponent?.previousItemData?.CurrencyID || ''
-          };
-          this.currencyIDChange(field,valueCurrency);
+          this.isPreventChange = false;
+          this.detectorRef.detectChanges();
+        }
+        let valueCurrency = {
+          PreCurrency:  event?.component?.dataService?.currentComponent?.previousItemData?.CurrencyID || ''
+        };
+        this.currencyIDChange(field,valueCurrency);
+        break;
+
+      case 'exchangerate':
+        if(value == null){
+          this.isPreventChange = true;
+          setTimeout(() => {
+            this.formPurchaseInvoices.setValue(field,this.preData?.exchangeRate,{});
+            this.isPreventChange = false;
+            this.detectorRef.detectChanges();
+          }, 50);
+          if (this.preData?.exchangeRate != null) {
+            var key = Util.camelize(field);
+            var $error = (this.formPurchaseInvoices as any).elRef.nativeElement?.querySelector('div[data-field="' + key + '"].errorMessage');
+            if ($error) $error.classList.add('d-none');
+          }
+          return;
+        }
+        if(this.preData?.exchangeRate == this.formPurchaseInvoices?.data?.exchangeRate) return;
+        this.exchangeRateChange(field);
+        break;
+
+        case 'voucherdate':
+          if(value == null) return;
+          this.voucherDateChange(field);
           break;
 
-        case 'exchangerate':
+        case 'taxexchrate':
           if(value == null){
             this.isPreventChange = true;
             setTimeout(() => {
-              this.formPurchaseInvoices.setValue(field,this.preData?.exchangeRate,{});
+              this.formPurchaseInvoices.setValue(field,this.preData?.taxExchrate,{});
               this.isPreventChange = false;
               this.detectorRef.detectChanges();
             }, 50);
-            if (this.preData?.exchangeRate != null) {
-              var key = Util.camelize(field);
-              var $error = (this.formPurchaseInvoices as any).elRef.nativeElement?.querySelector('div[data-field="' + key + '"].errorMessage');
-              if ($error) $error.classList.add('d-none');
-            }
             return;
           }
-          if(this.preData?.exchangeRate == this.formPurchaseInvoices?.data?.exchangeRate) return;
-          this.exchangeRateChange(field);
+          if(this.preData?.taxExchrate == this.formPurchaseInvoices?.data?.taxExchrate) return;
+          this.taxExchRateChange(field);
           break;
-
-          case 'voucherdate':
-            if(value == null) return;
-            this.voucherDateChange(field);
-            break;
-
-          case 'taxexchrate':
-            if(value == null){
-              this.isPreventChange = true;
-              setTimeout(() => {
-                this.formPurchaseInvoices.setValue(field,this.preData?.taxExchrate,{});
-                this.isPreventChange = false;
-                this.detectorRef.detectChanges();
-              }, 50);
-              return;
-            }
-            if(this.preData?.taxExchrate == this.formPurchaseInvoices?.data?.taxExchrate) return;
-            this.taxExchRateChange(field);
-            break;
-        // case 'currencyid':
-        //   this.currencyIDChange(field);
-        //   break;
-        // case 'exchangerate':
-        //   this.exchangeRateChange(field);
-        //   break;
-        // case 'taxexchrate':
-        //   this.taxExchRateChange(field);
-        //   break;
-        // case 'voucherdate':
-        //   this.voucherDateChange(field);
-        //   break;
-        case 'invoiceno':
-        case 'invoicedate':
-          let memo = this.getMemoMaster(event?.component?.format);
-          this.formPurchaseInvoices.setValue('memo',memo,{});
-          break;
-      }
+      // case 'currencyid':
+      //   this.currencyIDChange(field);
+      //   break;
+      // case 'exchangerate':
+      //   this.exchangeRateChange(field);
+      //   break;
+      // case 'taxexchrate':
+      //   this.taxExchRateChange(field);
+      //   break;
+      // case 'voucherdate':
+      //   this.voucherDateChange(field);
+      //   break;
+      case 'invoiceno':
+      case 'invoicedate':
+        let memo = this.getMemoMaster(event?.component?.format);
+        this.formPurchaseInvoices.setValue('memo',memo,{});
+        break;
     }
   }
 
@@ -631,19 +629,6 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
           }, 100);
         }
         this.isPreventChange = false;
-        // if (this.formPurchaseInvoices.data.exchangeRate != res?.ExchangeRate) {
-        //   this.formPurchaseInvoices.setValue('exchangeRate',(res?.ExchangeRate || 0),{});
-        //   this.formPurchaseInvoices.setValue('taxExchRate',(res?.TaxExchRate || 0),{});
-        // }
-        // this.showHideColumn();
-        // setTimeout(() => {
-        //   if(this.eleGridPurchaseInvoice.dataSource.length){ //? nếu có dữ liệu chi tiết => refresh grid
-        //     this.formPurchaseInvoices.preData = {...this.formPurchaseInvoices.data};
-        //     this.dialog.dataService.update(this.formPurchaseInvoices.data).subscribe();
-        //     this.refreshGrid();
-        //   }
-        // }, 100);
-        // this.detectorRef.detectChanges();
       }
     })
   }

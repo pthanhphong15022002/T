@@ -64,6 +64,7 @@ export class LayoutNewsComponent extends LayoutBaseComponent {
     }
   }
   navigate(category, funcID) {
+    this.funcID = funcID;
     this.category = category;
     switch (category) {
       case 'approvals':
