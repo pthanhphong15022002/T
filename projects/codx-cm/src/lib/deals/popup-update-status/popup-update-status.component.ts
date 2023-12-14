@@ -76,7 +76,7 @@ export class PopupUpdateStatusComponent
     this.dialogRef.close();
   }
   saveForm() {
-    if(this.applyFor == '1') {
+    if(this.applyFor == '1' && this.applyProcess) {
       this.status =  this.checkStatus(this.statusOld, this.status);
     }
 
@@ -138,21 +138,21 @@ export class PopupUpdateStatusComponent
     if(statusNew == statusOld && statusNew  ) return '';
     if(statusOld == '0') {
       if(statusNew != '0') {
-        this.messageChangeStatus = 'Phải xác nhận cơ hội để thực hiện hành động';
+        this.messageChangeStatus = 'CM058';
         return '';
       }
     }
     else if(statusOld == '1') {
       if(statusNew == '15' && this.data?.owner)  {
-        this.messageChangeStatus = 'Người phụ trách đã được phân cônng';
+        this.messageChangeStatus = 'CM059';
         return '';
       }
       if(statusNew == '3' || statusNew == '5'  )  {
-        this.messageChangeStatus = 'Cơ hội phải được bắt đầu ngay';
+        this.messageChangeStatus = 'CM060';
         return '';
       }
       if(statusNew == '0' )  {
-        this.messageChangeStatus = 'Cơ hội đã xác nhận';
+        this.messageChangeStatus = 'CM061';
         return '';
       }
     }
@@ -162,11 +162,11 @@ export class PopupUpdateStatusComponent
         return '';
       }
       if(statusNew == '0' )  {
-        this.messageChangeStatus = 'Cơ hội đã xác nhận';
+        this.messageChangeStatus = 'CM061';
         return '';
       }
       if(statusNew == '15' && this.data?.owner)  {
-        this.messageChangeStatus = 'Người phụ trách đã được phân cônng';
+        this.messageChangeStatus = 'CM059';
         return '';
       }
     }
@@ -176,11 +176,11 @@ export class PopupUpdateStatusComponent
         return '';
       }
       if(statusNew == '0' )  {
-        this.messageChangeStatus = 'Cơ hội đã xác nhận';
+        this.messageChangeStatus = 'CM061';
         return '';
       }
       if(statusNew == '15' && this.data?.owner)  {
-        this.messageChangeStatus = 'Người phụ trách đã được phân cônng';
+        this.messageChangeStatus = 'CM059';
         return '';
       }
       if(statusNew == '3' || statusNew == '5'  )  {

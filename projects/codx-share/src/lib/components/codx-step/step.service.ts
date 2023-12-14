@@ -320,7 +320,7 @@ export class StepService {
     });
   }
 
-  async chooseTypeTask(typeDisableds : string[]){
+  async chooseTypeTask(typeDisableds: string[]) {
     let popupTypeTask = this.callFunc.openForm(
       CodxTypeTaskComponent,
       '',
@@ -599,10 +599,17 @@ export class StepService {
     );
   }
 
-  async openPopupTaskContract(data, action, task, stepID, groupTaskID, isStartIns) {
-    if(task){
+  async openPopupTaskContract(
+    data,
+    action,
+    task,
+    stepID,
+    groupTaskID,
+    isStartIns
+  ) {
+    if (task) {
       task = JSON.parse(JSON.stringify(task));
-    }else{
+    } else {
       if (action == 'add') {
         task = task ? task : {};
         task.recID = Util.uid();
@@ -634,7 +641,7 @@ export class StepService {
         // task.objectLinked = contract?.recID;
       }
     }
-    data = {...data,stepsTasks: task, isStartIns}
+    data = { ...data, stepsTasks: task, isStartIns };
     let contractOuput = await this.openPopupContract(data);
     let contract = contractOuput?.event?.contract;
     if (contract) {
@@ -934,9 +941,14 @@ export class StepService {
   }
 
   //get dataSource
-  getDataSource(data, instanceID): Promise<string> {
+  getDataSource(
+    data,
+    instanceID,
+    entityName = null,
+    recIDParent = null
+  ): Promise<string> {
     return new Promise<string>((resolve, rejects) => {
-      let mehthol = 'GetDataSourceExportTaskAsync';
+      let methol = 'GetDataSourceExportTaskAsync';
       let className = 'ContractsBusiness';
       let service = 'CM';
       let request = [instanceID, data.objectLinked];
@@ -948,21 +960,33 @@ export class StepService {
           className = 'QuotationsBusiness';
           break;
         case 'F':
-          service = 'DP';
-          className = 'InstancesBusiness';
-          mehthol = 'GetDatasByInstanceIDAsync';
-          request = [instanceID];
+          if (entityName != null && recIDParent != null) {
+            className = this.getClassName(entityName);
+            methol = 'GetDataSourceExportAsync';
+            request = recIDParent;
+          } else {
+            service = 'DP';
+            className = 'InstancesBusiness';
+            methol = 'GetDatasByInstanceIDAsync';
+            request = [instanceID];
+          }
           break;
         default:
           return resolve('');
           break;
       }
       this.api
-        .execSv<any>(service, service, className, mehthol, request)
+        .execSv<any>(service, service, className, methol, request)
         .subscribe((str) => {
           let dataSource = '';
           if (str) {
-            if (data.taskType != 'F') {
+            if (
+              data.taskType == 'F' &&
+              entityName == null &&
+              recIDParent == null
+            ) {
+              dataSource = str;
+            } else {
               if (str?.length > 0) {
                 dataSource = '[' + str[0] + ']';
                 if (str[1]) {
@@ -973,8 +997,6 @@ export class StepService {
                   dataSource = '[{ ' + fix + ',' + datas;
                 }
               }
-            } else {
-              dataSource = str;
             }
           }
           resolve(dataSource);
@@ -982,7 +1004,30 @@ export class StepService {
     });
   }
 
-  async addTaskCM(dataParent, entityName){
+  getClassName(entityName) {
+    let className = '';
+    switch (entityName) {
+      case 'CM_Deals':
+        className = 'DealsBusiness';
+        break;
+      case 'CM_Cases':
+        className = 'CasesBusiness';
+        break;
+      case 'CM_Leads':
+        className = 'LeadsBusiness';
+        break;
+      case 'CM_Contracts':
+        className = 'ContractsBusiness';
+        break;
+      case 'CM_Campaigns':
+        className = 'CampaignsBusiness';
+        break;
+    }
+    return className;
+  }
+  //end
+
+  async addTaskCM(dataParent, entityName) {
     let typeCM;
     let instanceID;
     let isStart;
@@ -991,43 +1036,43 @@ export class StepService {
     switch (entityName) {
       case 'CM_Deals':
         instanceID = dataParent?.refID;
-        isStart = dataParent?.status != "1";
+        isStart = dataParent?.status != '1';
         isActivitie = false;
         applyFor = '1';
-        typeCM = "5";
+        typeCM = '5';
         break;
       case 'CM_Leads':
         instanceID = dataParent?.applyProcess ? dataParent?.refID : null;
-        isStart = dataParent?.status != "1";
+        isStart = dataParent?.status != '1';
         isActivitie = !dataParent?.applyProcess;
         applyFor = '5';
-        typeCM = "3";
+        typeCM = '3';
         break;
       case 'CM_Cases':
         instanceID = dataParent?.refID;
-        isStart = dataParent?.status != "1";
+        isStart = dataParent?.status != '1';
         isActivitie = false;
-        applyFor = dataParent?.caseType == "1" ? "2" : " 3";
-        typeCM = "9";
+        applyFor = dataParent?.caseType == '1' ? '2' : ' 3';
+        typeCM = '9';
         break;
       case 'CM_Customers':
         instanceID = null;
         isStart = true;
         isActivitie = true;
         applyFor = '5';
-        typeCM = "1";
+        typeCM = '1';
         break;
       case 'CM_Contracts':
         instanceID = dataParent?.applyProcess ? dataParent?.refID : null;
-        isStart = dataParent?.status != "1";
+        isStart = dataParent?.status != '1';
         isActivitie = !dataParent?.applyProcess;
         applyFor = '4';
-        typeCM = "7";
+        typeCM = '7';
         break;
     }
 
-    let typeTask = await this.chooseTypeTask(['G','F']);
-    if(typeTask){
+    let typeTask = await this.chooseTypeTask(['G', 'F']);
+    if (typeTask) {
       let data = {
         typeCM,
         isStart,
@@ -1041,13 +1086,12 @@ export class StepService {
         objectType: 'CM_Contracts',
         ownerInstance: dataParent?.owner,
         dataParentTask: {
-          applyFor: "4",
+          applyFor: '4',
           parentTaskID: dataParent?.recID,
-        }
-      }
-      
+        },
+      };
+
       return await this.openPopupCodxTask(data, 'right');
     }
   }
-
 }

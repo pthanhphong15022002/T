@@ -91,7 +91,7 @@
                   <codx-label [formModel]="formModel" name="lblDelete" default="Xóa"></codx-label>
                 </a>
               </li>
-              <li *ngIf="item.share">
+              <li *ngIf="item.share && item.approveStatus != '3'">
                 <a (click)="sharePost(item)" ngbDropdownItem href="javascript:void(0)">
                   <span class="icon-share icon-16 me-2"></span>
                   <codx-label [formModel]="formModel" name="lblShare" default="Chia sẻ"></codx-label>

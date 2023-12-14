@@ -176,7 +176,7 @@ export class DealDetailComponent implements OnInit {
         changes['dataSelected'].currentValue != null &&
         changes['dataSelected'].currentValue?.recID
       ) {
-        var index = this.tabControl.findIndex((x) => x.name === 'Deal');
+        let index = this.tabControl.findIndex((x) => x.name === 'Deal');
         if (index != -1) {
           this.tabControl.splice(index, 1);
         }
@@ -201,16 +201,12 @@ export class DealDetailComponent implements OnInit {
         });
       }
     }
-    if(changes?.taskAdd){
-      console.log(changes?.taskAdd);
-      
-    }
   }
 
   async promiseAllAsync() {
     this.isDataLoading = true;
     try {
-      await this.getListInstanceStep();
+      this.dataSelected.applyProcess && await this.getListInstanceStep();
       await this.getTree(); //ve cay giao viec
       // await this.getListContactByDealID(
       //   this.dataSelected.recID,

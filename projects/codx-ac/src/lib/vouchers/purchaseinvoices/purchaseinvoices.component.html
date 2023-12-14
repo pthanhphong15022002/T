@@ -1,6 +1,6 @@
 <codx-views class="ac-views" #view idField="recID" [views]="views" [button]="button"
   [entityName]="view.entityName" (buttonClick)="toolbarClick($event)" [hideMoreFuncs]="!itemSelected"
-  (changeDataMF)="changeMFDetail($event, itemSelected,'viewdetail')" (clickMF)="clickMoreFunction($event, itemSelected)"
+  (changeDataMF)="changeMFDetail($event,'viewdetail')" (clickMF)="clickMoreFunction($event, itemSelected)"
   [predicates]="runmode == '1' ? '' : 'JournalNo=@0'" assemblyName="AC" className="PurchaseInvoicesBusiness"
   service="AC" method="GetDataAsync" idField="recID" [dataValues]="runmode == '1' ? '' : journalNo"
   (selectedChange)="onSelectedItem($event)" [isSubView]="true">
@@ -8,7 +8,7 @@
 
 <!-- Start: templateGrid -->
 <ng-template #templateGrid let-data>
-  <codx-mfunc [dataItem]="data" (changeDataMF)="changeMFDetail($event, data, 'viewgrid')" [formModel]="view.formModel"
+  <codx-mfunc [dataItem]="data" (changeDataMF)="changeMFDetail($event, 'viewgrid')" [formModel]="view.formModel"
     (clickMF)="clickMoreFunction($event, data)" type="view"></codx-mfunc>
 </ng-template>
 <!-- End: templateGrid -->
@@ -116,7 +116,7 @@
 <ng-template #listTemplate let-data>
   <codx-temp-full [titleTmp]="listtitleTmp" cardCss="card-template border-bottom p-3" [formModel]="view.formModel"
     [modeImgs]="true" [titleLine]="2" [dataItem]="data" [hideMF]="false" [typeMF]="'hover'" moreFuncCss="mt-5"
-    (changeDataMF)="changeMFDetail($event, data,'viewgrid')" (clickMF)="clickMoreFunction($event, data)">
+    (changeDataMF)="changeMFDetail($event,'viewgrid')" (clickMF)="clickMoreFunction($event, data)">
   </codx-temp-full>
 </ng-template>
 

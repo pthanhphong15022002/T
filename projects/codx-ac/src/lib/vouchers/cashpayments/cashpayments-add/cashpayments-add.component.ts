@@ -86,7 +86,6 @@ export class CashPaymentAddComponent extends UIComponent {
   bankReceiveName: any;
   ownerReceive: any;
   textTotal:any;
-  isload:any = true;
   fmCashpaymentLine: any = fmCashPaymentsLines;
   fmCashpaymentLineOne: any = fmCashPaymentsLinesOneAccount;
   fmSettledInvoices:any = fmSettledInvoices;
@@ -114,6 +113,7 @@ export class CashPaymentAddComponent extends UIComponent {
   refNo:any;
   refTotalAmt:any = 0;
   preData:any;
+  isload:any = false;
   private destroy$ = new Subject<void>(); //? list observable hủy các subscribe api
   constructor(
     inject: Injector,
@@ -472,6 +472,7 @@ export class CashPaymentAddComponent extends UIComponent {
         break;
       case 'dr':
         this.eleGridCashPayment.startProcess();
+        if(oLine.dr == null) oLine.dr = 0; 
         if (oLine.dr != 0 && oLine.cR2 != 0) {
           oLine.cr = 0;
           oLine.cR2 = 0;
@@ -487,6 +488,7 @@ export class CashPaymentAddComponent extends UIComponent {
         break;
       case 'cr':
         this.eleGridCashPayment.startProcess();
+        if(oLine.cr == null) oLine.cr = 0;
         if ((oLine.cr! = 0 && oLine.dR2 != 0)) {
           oLine.dr = 0;
           oLine.dR2 = 0;
@@ -502,6 +504,7 @@ export class CashPaymentAddComponent extends UIComponent {
         break;
       case 'dr2':
         this.eleGridCashPayment.startProcess();
+        if(oLine.dr2 == null) oLine.dr2 = 0; 
         if (oLine.dR2 != 0 && oLine.cR2 != 0) {
           oLine.cr = 0;
           oLine.cR2 = 0;
@@ -523,6 +526,7 @@ export class CashPaymentAddComponent extends UIComponent {
         break;
       case 'cr2':
         this.eleGridCashPayment.startProcess();
+        if(oLine.cr2 == null) oLine.cr2 = 0; 
         if (oLine.cR2 != 0 && oLine.dR2 != 0) {
           oLine.dr = 0;
           oLine.dR2 = 0;
@@ -819,6 +823,7 @@ export class CashPaymentAddComponent extends UIComponent {
    * lưu chứng từ
    */
   saveVoucher(type){
+    this.isload = true;
     this.api
       .exec('AC', 'CashPaymentsBusiness', 'UpdateVoucherAsync', [
         this.formCashPayment.data,
@@ -827,6 +832,7 @@ export class CashPaymentAddComponent extends UIComponent {
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
         if (res?.update) {
+          this.isload = false;
           this.dialog.dataService.update(res.data).subscribe();
           if (type == 'save') {
             this.onDestroy();
@@ -874,7 +880,7 @@ export class CashPaymentAddComponent extends UIComponent {
             .subscribe((res) => {
               if (res.data != null) {
                 this.notification.notifyCode('E0860');
-                this.dialog.close();
+                this.dialog.close({type:'discard'});
                 this.onDestroy();
               }
             });
@@ -1513,7 +1519,7 @@ export class CashPaymentAddComponent extends UIComponent {
    */
   onActionGridCashpayment(event: any) {
     switch (event.type) {
-      case 'autoAdd': //? tự động thêm dòng
+      case 'autoAdd':
         this.onAddLine();
         break;
       case 'add':
@@ -1524,20 +1530,17 @@ export class CashPaymentAddComponent extends UIComponent {
           this.dialog.dataService.update(this.formCashPayment.data).subscribe();
         }
         break;
-      case 'closeEdit': //? khi thoát dòng
+      case 'closeEdit':
       if (this.eleGridCashPayment && this.eleGridCashPayment.rowDataSelected) {
         this.eleGridCashPayment.rowDataSelected = null;
       }
       if(this.eleGridCashPayment.isSaveOnClick) this.eleGridCashPayment.isSaveOnClick = false;
       setTimeout(() => {
-        let element = document.getElementById('btnAddCash'); //? focus lại nút thêm dòng
+        let element = document.getElementById('btnAddCash');
         element.focus();
       }, 100);
         break;
-      case 'beginEdit': //? trước khi thêm dòng
-        // if (event?.data.dr == 0) { //? khi số tiền < 0
-        //   this.eleGridCashPayment.startProcess(); //? ko cho lưu dòng
-        // }
+      case 'beginEdit':
         let oAccount = this.acService.getCacheValue('account', event?.data.accountID);
         let oOffsetAccount = this.acService.getCacheValue('account',event?.data.offsetAcctID);
         this.setLockAndRequireFields(event?.data,oAccount,oOffsetAccount);
