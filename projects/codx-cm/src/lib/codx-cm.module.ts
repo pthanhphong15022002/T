@@ -74,7 +74,7 @@ import { StepTaskComponent } from './deals/step-task/step-task.component';
 import { LayoutNoAsideComponent } from 'projects/codx-common/src/lib/_layout/_noAside/_noAside.component';
 import { QuotationsTabViewComponent } from './quotations/quotations-tab-view/quotations-tab-view.component';
 import { ContractsComponent } from './contracts/contracts.component';
-import { ContractsViewDetailComponent } from './contracts/contracts-view-detail/contracts-view-detail.component';
+import { ContractsViewDetailComponent } from './contracts/contracts-view-right/contracts-view-right.component';
 import { TaskComponent } from './deals/step-task/task/task.component';
 import { ViewIconGroupComponent } from './quotations/view-icon-group/view-icon-group.component';
 import { CmDashboardComponent } from './cm-dashboard/cm-dashboard.component';

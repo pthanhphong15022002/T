@@ -214,6 +214,7 @@ export class PopupAddLeadComponent
         this.lead.leadID = '';
         this.lead.contactID = Util.uid();
         this.lead.recID = Util.uid();
+        this.lead.permissions = this.lead?.permissions.filter(x=> x.memberType != '2');
       } else {
         this.planceHolderAutoNumber = this.lead?.leadID;
       }

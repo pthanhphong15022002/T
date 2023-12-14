@@ -1321,6 +1321,17 @@ export class CodxCmService {
     );
   }
 
+  //trinh ký
+  getESCategoryByCategoryIDByType(categoryID, category, refID = null) {
+    return this.api.execSv<any>(
+      'ES',
+      'ES',
+      'CategoriesBusiness',
+      'GetByCategoryIDTypeAsync',
+      [categoryID, category, refID]
+    );
+  }
+
   //load data chua xong
   loadDataApproverByID(id, classMame) {
     return this.api.exec<any>('CM', classMame, 'LoadDataApproverByIDAsync', id);

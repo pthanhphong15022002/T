@@ -145,7 +145,7 @@ export class CodxAddTaskComponent implements OnInit {
     step: { show: false, disabled: false },
     group: { show: false, disabled: false },
   };
-  
+
   constructor(
     private api: ApiHttpService,
     private cache: CacheService,
@@ -206,20 +206,27 @@ export class CodxAddTaskComponent implements OnInit {
     (this.action == 'add' || this.action == 'copy') && this.getBoughtTM();
   }
 
-  setTitle(){
-    if(this.titleName){
-      this.titleName = (this.titleName + ' ' + this.typeTask?.text).toUpperCase();
-    }else{
-      this.cache.moreFunction('CoDXSystem', '').subscribe((res:any) => {
-        if(res){
-          if(this.action == 'add'){
-            let title = res?.find(x => x.functionID == "SYS01")?.description || '';
+  setTitle() {
+    if (this.titleName) {
+      this.titleName = (
+        this.titleName +
+        ' ' +
+        this.typeTask?.text
+      ).toUpperCase();
+    } else {
+      this.cache.moreFunction('CoDXSystem', '').subscribe((res: any) => {
+        if (res) {
+          if (this.action == 'add') {
+            let title =
+              res?.find((x) => x.functionID == 'SYS01')?.description || '';
             this.titleName = (title + ' ' + this.typeTask?.text).toUpperCase();
-          }else if(this.action == 'edit'){
-            let title = res?.find(x => x.functionID == "SYS03")?.description || '';
+          } else if (this.action == 'edit') {
+            let title =
+              res?.find((x) => x.functionID == 'SYS03')?.description || '';
             this.titleName = (title + ' ' + this.typeTask?.text).toUpperCase();
-          }else if(this.action == 'copy'){
-            let title = res?.find(x => x.functionID == "SYS04")?.description || '';
+          } else if (this.action == 'copy') {
+            let title =
+              res?.find((x) => x.functionID == 'SYS04')?.description || '';
             this.titleName = (title + ' ' + this.typeTask?.text).toUpperCase();
           }
         }
@@ -475,9 +482,9 @@ export class CodxAddTaskComponent implements OnInit {
         : listGroup.filter((group) => group.owner == this.user?.userID);
   }
   //#endregion
-  getParentTypeCm(){
-    if(this.isActivitie){
-    }else{
+  getParentTypeCm() {
+    if (this.isActivitie) {
+    } else {
       this.getListStepByInstanceID(this.instanceID);
     }
   }
@@ -506,7 +513,9 @@ export class CodxAddTaskComponent implements OnInit {
             this.dataParentTask = res;
             if (res?.instancesStep) {
               this.instanceStep = res?.instancesStep;
-              this.isStart = !!(this.instanceStep?.startDate && this.instanceStep?.endDate);
+              this.isStart = !!(
+                this.instanceStep?.startDate && this.instanceStep?.endDate
+              );
               if (this.action == 'edit') {
                 this.listInsStepInUser = [res?.instancesStep];
                 this.statusInput.step.show = true;
@@ -567,7 +576,7 @@ export class CodxAddTaskComponent implements OnInit {
           if (res) {
             this.listInsStep = res;
             this.setStepByRole();
-          }else{
+          } else {
           }
         });
     } else if (this.listInsStep?.length > 0) {
@@ -959,7 +968,7 @@ export class CodxAddTaskComponent implements OnInit {
         this.stepsTasks.objectType = null;
         this.stepsTasks.stepID = null;
         this.stepsTasks.taskGroupID = null;
-        this.isStart = this.dataTypeCM?.Status == "2";
+        this.isStart = this.dataTypeCM?.Status == '2';
         this.getListInstanceStep(this.dataTypeCM.RefID, true);
       } else {
         this.isActivitie = !!!this.dataTypeCM.RefID;
@@ -1136,7 +1145,7 @@ export class CodxAddTaskComponent implements OnInit {
     }
   }
   addTask(task, isCreateMeeting = false, isAddTask = false) {
-    if(this.isActivitie){
+    if (this.isActivitie) {
       if (this.isSave && this.objectID) {
         task['objectType'] = this.objectType;
         task['objectID'] = this.objectID;
@@ -1161,8 +1170,8 @@ export class CodxAddTaskComponent implements OnInit {
           isCreateMeeting,
           isAddTask,
         });
-      }   
-    }else{
+      }
+    } else {
       if (this.isSave) {
         this.api
           .exec<any>('DP', 'InstancesStepsBusiness', 'AddTaskStepAsync', [
@@ -1272,6 +1281,7 @@ export class CodxAddTaskComponent implements OnInit {
             category.createdBy = this.user.userID;
             category.owner = this.user.userID;
             category.FunctionApproval = this.isActivitie ? 'DPT07' : 'DPT04';
+            category['refID'] = idTask;
             this.actionOpenFormApprove2(category, true);
           }
         });

@@ -635,6 +635,16 @@ export class CodxInstancesService {
     );
   }
 
+  getESCategoryByCategoryIDType(categoryID, category, refID = null) {
+    return this.api.execSv<any>(
+      'ES',
+      'ES',
+      'CategoriesBusiness',
+      'GetByCategoryIDTypeAsync',
+      [categoryID, category, refID]
+    );
+  }
+
   getListAproverStepByCategoryID(categoryID) {
     return this.api.exec<any>(
       'ES',

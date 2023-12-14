@@ -45,19 +45,26 @@ export class ContractsDetailComponent implements OnInit, OnChanges {
     entityName: 'CM_Contacts',
     gridViewName: 'grvCMContacts',
   };
+  
+  listTabLeft = [
+    { id: 'listTabInformation', name: 'Thông tin hợp đồng', icon: 'icon-info' },
+    { id: 'listHistory', name: 'Lịch sử', icon: 'icon-i-clock-history' },
+    { id: 'listFile', name: 'Đính kèm', icon: 'icon-i-paperclip' },
+    { id: 'listAddTask', name: 'Giao việc', icon: 'icon-i-clipboard-check' },
+    { id: 'listApprove', name: 'Ký, duyệt', icon: 'icon-edit-one' },
+    { id: 'listLink', name: 'Liên kết', icon: 'icon-i-link' },
+  ];
   listTabInformation = [
     { id: 'customer', name: 'Khách hàng' },
     { id: 'information', name: 'Thông tin hợp đồng' },
     { id: 'purpose', name: 'Mục đích thuê' },
     { id: 'note', name: 'Ghi chú' },
   ];
-  listTabLeft = [
-    { id: 'listTabInformation', name: 'Thông tin chung', icon: 'icon-info' },
-    { id: 'listTabTask', name: 'Công việc', icon: 'icon-more' },
-    { id: 'listTabComment', name: 'Ghi chú', icon: 'icon-sticky_note_2' },
-  ];
-  listTabTask = [{ id: 'task', name:'Công việc'}];
-  listTabComment = [{ id: 'task', name:'Thảo luận'}];
+  listHistory = [{ id: 'history', name:'Lịch sử'}];
+  listFile = [{ id: 'file', name:'Đính kèm'}];
+  listAddTask = [{ id: 'addTask', name:'Giao việc'}];
+  listApprove = [{ id: 'approve', name:'Ký, duyệt'}];
+  listLink = [{ id: 'link', name:'Liên kết'}];
   constructor(
     private cache: CacheService,
     private codxCmService: CodxCmService,

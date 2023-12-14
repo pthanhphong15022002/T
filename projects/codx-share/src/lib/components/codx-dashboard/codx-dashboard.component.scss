@@ -38,8 +38,8 @@
     color: #212529;
     font-size: 14px !important;
     text-align: center !important;
-    background-color: #fff !important;
-    border-bottom: #fff !important;
+    background-color: var(--white) !important;
+    border-bottom: var(--bg-body) !important;
   }
 
   #defaultLayoutDashBoard.e-dashboardlayout .e-panel-header {
@@ -68,7 +68,7 @@
   #defaultLayoutDashBoard.e-dashboardlayout.e-control {
     display: block;
     position: relative;
-    background-color: #f5f8fa;
+    background-color: var(--bg-body);
   }
 
   .topchart-user {

@@ -248,7 +248,7 @@ export class CampaignContactsComponent implements OnInit {
 
       this.columnsGrid.push(colums);
     });
-    const field = this.objectType == '1' ? 'CustomerStatus' : 'LeadStatus';
+    const field = this.objectType == '1' ? 'customerStatus' : 'leadStatus';
     let columTemp = [
       {
         field: field,
@@ -257,7 +257,7 @@ export class CampaignContactsComponent implements OnInit {
         width: grid?.field?.width > 0? grid?.field?.width : 150,
       },
       {
-        field: 'Called',
+        field: 'called',
         headerTemplate: this.headerHistory,
         template: this.tempHistory,
         width: !this.isDoubleClick ? 150 : 250,
