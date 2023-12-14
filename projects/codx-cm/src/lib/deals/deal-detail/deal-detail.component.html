@@ -331,7 +331,6 @@
                 <div class="d-flex flex-column">
                   <div
                     class="mb-1 d-flex align-items-center justify-content-end"
-                    *ngIf="!isDataLoading"
                   >
                     <div
                       *ngIf="dataSelected?.statusCodeID"
@@ -992,7 +991,6 @@
               </div>
             </ng-template>
             <ng-template #content let-data="value">
-              <div *ngIf="listSteps?.length > 0 && listSteps">
                 <step-task
                   [entityName]="'CM_Deals'"
                   [isDataLoading]="isDataLoading"
@@ -1009,7 +1007,6 @@
                   [ownerInstance]="dataSelected?.owner"
                   [taskAdd]="taskAdd"
                 ></step-task>
-              </div>
             </ng-template>
           </e-tabitem>
           <e-tabitem>

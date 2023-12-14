@@ -298,34 +298,126 @@
         </div>
     </ng-template>
     <ng-template #footer>
-        <div class="d-flex align-items-center justify-content-between">
-            <div class="checkbox-inline d-flex align-items-center">
-                <ng-container *ngIf="isShare">
-                    <!-- <codx-input class="test-check" type="checkbox" [checked]="sentEmail" field="sentEmail"
-                        (valueChange)="txtValue($event, 'sentemail')"></codx-input>
-                    <codx-label name="lblSendEmail" [formModel]="formModel" default="Gửi mail" class="ms-2 fw-bold">
-                    </codx-label> -->
-                    <!-- <codx-input class="test-check" type="checkbox" [checked]="postblog" field="postblog"
-                        (valueChange)="txtValue($event, 'postblog')"></codx-input>
-                    <span></span>
-                    <codx-label name="lblCreatePost" [formModel]="formModel" default="Tạo bài viết"
-                        class="ms-2 fw-bold"></codx-label> -->
-                    <codx-input type="checkbox" (valueChange)="txtValue($event, 'postblog')" label="Tạo bài viết" ></codx-input>
-                </ng-container>
+        <ng-container>
+            <div class="d-flex align-items-center justify-content-between">
+                <div class="checkbox-inline d-flex align-items-center">
+                    <ng-container *ngIf="isShare">
+                        <!-- <codx-input class="test-check" type="checkbox" [checked]="sentEmail" field="sentEmail"
+                            (valueChange)="txtValue($event, 'sentemail')"></codx-input>
+                        <codx-label name="lblSendEmail" [formModel]="formModel" default="Gửi mail" class="ms-2 fw-bold">
+                        </codx-label> -->
+                        <!-- <codx-input class="test-check" type="checkbox" [checked]="postblog" field="postblog"
+                            (valueChange)="txtValue($event, 'postblog')"></codx-input>
+                        <span></span>
+                        <codx-label name="lblCreatePost" [formModel]="formModel" default="Tạo bài viết"
+                            class="ms-2 fw-bold"></codx-label> -->
+                        <codx-input type="checkbox" (valueChange)="txtValue($event, 'postblog')" label="Tạo bài viết" ></codx-input>
+                    </ng-container>
+                </div>
+                <button type="button" id="btnShare" class="btn btn-primary" (click)="onShare()">
+                    <codx-label [fiedName]="'lblSend'" [formName]="formModel?.formName" default="Gửi" class="ms-1 fw-bold"></codx-label>
+                </button>
             </div>
-            <button type="button" id="btnShare" class="btn btn-primary" (click)="onShare()">
-                <codx-label [fiedName]="'lblSend'" [formName]="formModel?.formName" default="Gửi" class="ms-1 fw-bold"></codx-label>
-            </button>
-        </div>
+        </ng-container>
+       
+        <ng-container *ngIf="type == 'file' && shareType == '2'">
+            <div class="d-flex align-items-center justify-content-end">
+                <button type="button" id="btnShare" class="btn btn-primary" (click)="onShare()">
+                    <codx-label [fiedName]="'lblSend'" [formName]="formModel?.formName" default="Chia sẻ" class="ms-1 fw-bold"></codx-label>
+                </button>
+            </div>
+        </ng-container>
     </ng-template>
 </codx-form>
 
 <ng-template #file>
     <div class="d-flex flex-column w-100 h-100">
-        <div class="d-flex flex-column">
+        <div class="d-flex flex-column border-bottom py-4">
             <div class="d-flex align-items-center justify-content-between">
-                <codx-label fiedName="shareControl" [formModel]="formModel" [default]="'Phạm vi chia sẻ liên kết'"></codx-label>
-                
+                <codx-label fiedName="shareControl" [formName]="formModel?.formName" [default]="shareTitle?.sharingRange" class="fw-bold"></codx-label>
+                <codx-input type="valuelist" [refValue]="'BG003'" [Group]="shareGroup2" ControlName="shareType"></codx-input>
+            </div>
+            <div class="d-flex flex-column py-2" *ngIf="shareType == '1'">                
+                <codx-label fiedName="shareObject" [formName]="formModel?.formName" [default]="shareTitle?.shareObject" class="py-2"></codx-label>
+                <codx-input type="textarea" format="ed2" [crrValue]="''" [height]="'110px'"></codx-input>
+            </div>
+            <div class="d-flex flex-column py-2" *ngIf="shareType == '2'">     
+                <div class="d-flex align-items-center justify-content-between py-2">
+                    <codx-label fiedName="shareObject" [formName]="formModel?.formName" [default]="shareTitle?.shareObject"></codx-label>
+                    <codx-input type="share" field="addUser" refValue="DM001" [showInput]="false" (valueChange)="onSaveRole($event, 'to')"></codx-input>
+                </div>
+                <div class="d-flex flex-wrap border rounded h-150px p-2 overflow-auto">
+                    <ng-container *ngFor="let perm of toPermission; index as i;">
+                        <div class="user-mini-item mb-1 bg-light">
+                            <div class="d-flex align-items-center">
+                                <div class="me-2">
+                                    <div
+                                        *ngIf="perm.objectID == null || perm.objectID == ''; then thenAvatar1 else elsethenAvatar1">
+                                    </div>
+                                    <ng-template #thenAvatar1>
+                                        <codx-temp-full imageSrc="../../../assets/codx/user/user-admin.svg"
+                                            [imageWidth]="20"
+                                            imgCss="w-20px me-2 cursor-pointer symbol symbol-20 symbol-circle"
+                                            [title]="perm.objectName" [descLine]="1">
+                                        </codx-temp-full>
+                                    </ng-template>
+                                    <ng-template #elsethenAvatar1>
+                                        <codx-temp-full [imageId]="perm.objectID" imageObjType="AD_Users" 
+                                            imgCss="w-20px me-2 cursor-pointer symbol symbol-20 symbol-circle"
+                                            [imageWidth]="20" [title]="perm.objectName">
+                                        </codx-temp-full>
+                                    </ng-template>
+                                </div>
+                                <span (click)="removeUserRight(i, toPermission)"
+                                    class="icon-close icon-16 ms-2 text-danger">
+                                </span>
+                            </div>
+                        </div>
+                    </ng-container>
+                </div>           
+              
+            </div>
+        </div>
+        <div class="d-flex flex-column border-bottom py-4" *ngIf="shareType != '2'">
+            <codx-label fiedName="lblDmAuth" [formName]="formModel?.formName" [default]="shareTitle?.auth" class="fw-bold"></codx-label>
+            <div class="d-flex align-items-center py-4">
+                <codx-input type="radio" name="ipOTP" [Group]="shareGroup2" ControlName="pwType" crrValue="1" class="h-30px"></codx-input>
+                <div class="d-flex flex-column ms-8">
+                    <codx-label fiedName="lblDmShareOTP" [formName]="formModel?.formName" [default]="shareTitle?.shareOTP"></codx-label>
+                    <codx-label fiedName="lblDmShareOTPSub" [formName]="formModel?.formName" [default]="shareTitle?.shareOTPSub" class="text-gray-500 fs-7"></codx-label>
+                </div>
+            </div>
+            <div class="d-flex align-items-center justify-content-between py-4">
+                <div class="d-flex align-items-center">
+                    <codx-input type="radio" name="ipOTP" [Group]="shareGroup2" ControlName="pwType" crrValue="2" class="h-30px"></codx-input>
+                    <div class="d-flex flex-column ms-8">
+                        <codx-label fiedName="lblDmPwOTP" [formName]="formModel?.formName" [default]="shareTitle?.pwOTP"></codx-label>
+                        <codx-label fiedName="lblDmPwOTPSub" [formName]="formModel?.formName" [default]="shareTitle?.pwOTPSub" class="text-gray-500 fs-7"></codx-label>
+                    </div>
+                </div>
+                <div class="d-flex align-items-center justify-content-between border rounded p-2 w-130px">
+                    <span class="mx-3">{{pwOTP}}</span>
+                    <i class="icon-refresh cursor-pointer" (click)="randomPW()"></i>
+                </div>
+            </div>
+            <div class="d-flex align-items-center py-4">
+                <codx-input type="radio" name="ipOTP" [Group]="shareGroup2" ControlName="pwType" crrValue="0" class="h-30px"></codx-input>
+                <div class="d-flex flex-column ms-8">
+                    <codx-label fiedName="lblDmNoPw" [formName]="formModel?.formName" [default]="shareTitle?.noPw"></codx-label>
+                    <codx-label fiedName="lblDmNoPwSub" [formName]="formModel?.formName" [default]="shareTitle?.noPwSub" class="text-gray-500 fs-7"></codx-label>
+                </div>
+            </div>
+        </div>
+        <div class="d-flex align-items-center py-4">
+            <div class="d-flex align-items-center rounded-pill bg-light p-3 cursor-pointer me-2" (click)="saveShare('link')">
+                <i class="icon-i-link-45deg me-1"></i>
+                <codx-label fiedName="lblDmNoPw" [formName]="formModel?.formName" [default]="shareTitle?.copyLink"></codx-label>
+            </div>
+            <div class="d-flex align-items-center rounded-circle bg-light p-3 cursor-pointer me-2" ngbTooltip="QR">
+                <i class="icon-qr_code"></i>
+            </div>
+            <div class="d-flex align-items-center rounded-circle bg-light p-3 cursor-pointer" ngbTooltip="Email" (click)="sendMail()">
+                <i class="icon-mail"></i>
             </div>
         </div>
     </div>

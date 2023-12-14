@@ -596,6 +596,16 @@ export class CodxShareService {
       [templateID]
     );
   }
+  
+  getEmailTemplateType(templateType: string) {
+    return this.api.execSv<any>(
+      'SYS',
+      'ERM.Business.AD',
+      'EmailTemplatesBusiness',
+      'GetEmailTemplateByTemplateTypeAsync',
+      [templateType]
+    );
+  }
 
   sendEmailTemplate(emailRecID) {
     return this.api.execSv<any>(

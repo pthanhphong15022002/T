@@ -866,7 +866,12 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       //báo giá
       this.addQuotation();
     } else if (task?.taskType == 'CO' && !task?.objectLinked) {
-      let data = { action: 'add', type: 'task', entityName: this.entityName, parentID: this.recIDParent};
+      let data = {
+        action: 'add',
+        type: 'task',
+        entityName: this.entityName,
+        parentID: this.recIDParent,
+      };
       let taskContract = await this.stepService.openPopupTaskContract(
         data,
         'add',
@@ -1101,7 +1106,12 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         }
       });
     } else if (this.taskType?.value == 'CO') {
-      let data = { action: 'add', type: 'task',entityName: this.entityName, parentID: this.recIDParent };
+      let data = {
+        action: 'add',
+        type: 'task',
+        entityName: this.entityName,
+        parentID: this.recIDParent,
+      };
       let taskContract = await this.stepService.openPopupTaskContract(
         data,
         'add',
@@ -2775,14 +2785,17 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   approvalTrans(task: DP_Instances_Steps_Tasks) {
     this.taskApproval = task;
     let idTask = task?.isTaskDefault ? task?.refID : task?.recID;
+    let category = task?.isTaskDefault
+      ? 'DP_Steps_Tasks'
+      : 'DP_Instances_Steps_Tasks';
     if (task?.approveRule && task?.recID) {
       this.api
         .execSv<any>(
           'ES',
           'ES',
           'CategoriesBusiness',
-          'GetByCategoryIDAsync',
-          idTask
+          'GetByCategoryIDTypeAsync',
+          [idTask, category]
         )
         .subscribe((res) => {
           if (!res) {
@@ -2816,7 +2829,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       'DP',
       data,
       category,
-      'DP_Instances_Steps_Tasks',
+      'DP_Instances_Steps_Tasks', // entyname của đối tượng gửi duyệt ???????????
       'DPT04',
       data?.taskName,
       this.releaseCallback.bind(this),
@@ -2840,7 +2853,9 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
 
   cancelApprover(task) {
     let idTask = task?.isTaskDefault ? task?.refID : task?.recID;
-
+    let category = task?.isTaskDefault
+      ? 'DP_Steps_Tasks'
+      : 'DP_Instances_Steps_Tasks';
     this.notiService.alertCode('ES016').subscribe((x) => {
       if (x.event.status == 'Y') {
         this.api
@@ -2848,8 +2863,8 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
             'ES',
             'ES',
             'CategoriesBusiness',
-            'GetByCategoryIDAsync',
-            idTask
+            'GetByCategoryIDTypeAsync',
+            [idTask, category]
           )
           .subscribe((res: any) => {
             if (res) {

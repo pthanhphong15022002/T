@@ -30,7 +30,7 @@ export class PopupAddSegmentComponent implements OnInit, AfterViewInit {
   disableCharNum: boolean = true;
   disableDataFormat: boolean = false;
   disableDataFormatSelect: boolean = true;
-  diasbleAtt: boolean = false;
+  diasbleAtt: boolean = true;
   vllDataFormat: string = 'AD010';
   autoNoSetting: any = {};
   functionID: string = '';
@@ -124,14 +124,15 @@ export class PopupAddSegmentComponent implements OnInit, AfterViewInit {
         break;
       case '1':
         this.disableDataFormat = true;
-        this.disableDataFormatSelect = false;
+        this.disableDataFormatSelect = true;
         this.disableCharNum = true;
-
+        this.diasbleAtt = true;
         this.vllDataFormat = 'AD012';
         break;
       case '2':
         this.disableDataFormat = true;
         this.disableDataFormatSelect = false;
+        this.diasbleAtt = true;
         this.vllDataFormat = 'AD010';
         this.disableCharNum = true;
         break;

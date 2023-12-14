@@ -60,15 +60,18 @@
 }
 
 .tablinevoucher-content .e-content {
-    height: calc(100vh - 470px) !important;
+    height: calc(100vh - 450px) !important;
+    min-height: 280px;
 }
 
 .tablinegeneral-content .e-content {
     height: calc(100vh - 430px) !important;
+    min-height: 280px;
 }
 
 .tablinetranfer-content .e-content {
-    height: calc(100vh - 470px) !important;
+    height: calc(100vh - 450px) !important;
+    min-height: 280px;
 }
 
 .tabadvance-content .e-content {

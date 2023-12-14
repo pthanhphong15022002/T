@@ -507,12 +507,12 @@ export class GeneralJournalAddComponent extends UIComponent {
           this.nextTabIndex = event?.selectingIndex;
           return;
         }
-
         if(event?.selectingIndex == 0){
           if(this.eleGridGeneral) this.eleGridGeneral.refresh();
         } 
         break;
     }
+    this.setValidateForm();
   }
 
   //#endregion Event
@@ -532,7 +532,7 @@ export class GeneralJournalAddComponent extends UIComponent {
             .subscribe((res) => {
               if (res.data != null) {
                 this.notification.notifyCode('E0860');
-                this.dialog.close();
+                this.dialog.close({type:'discard'});
                 this.onDestroy();
               }
             });
@@ -1194,7 +1194,12 @@ export class GeneralJournalAddComponent extends UIComponent {
    * *Hàm set validate cho form
    */
   setValidateForm(){
+    let rObjectID = false;
     let lstRequire :any = [];
+    if (this.elementTabDetail && this.elementTabDetail?.selectingID == '1') {
+      rObjectID = true;
+    }
+    lstRequire.push({field : 'ObjectID',isDisable : false,require:rObjectID});
     if (this.journal.assignRule == '2') {
       lstRequire.push({field : 'VoucherNo',isDisable : false,require:false});
     }

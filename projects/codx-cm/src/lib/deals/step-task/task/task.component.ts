@@ -108,7 +108,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
       this.getActivities();
     }
     if (changes?.activitiAdd && changes?.activitiAdd?.currentValue) {
-      let task = changes?.activitiAdd?.currentValue?.task
+      let task = changes?.activitiAdd?.currentValue?.task;
       this.listActivitie.push(task);
       this.isNoData = false;
       this.notiService.notifyCode('SYS006');
@@ -257,7 +257,10 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
             }
             break;
           case 'DP20': // tiến độ
-            if (task?.approveStatus == '3' || (task?.status == '3' && !task?.startDate && !task?.endDate)) {
+            if (
+              task?.approveStatus == '3' ||
+              (task?.status == '3' && !task?.startDate && !task?.endDate)
+            ) {
               res.disabled = true;
             }
             break;
@@ -326,18 +329,31 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
       this.stepService.popupClosedSubject.subscribe((res) => {
         let task = res;
         if (task) {
-          let dataSave = {task: task}
+          let dataSave = { task: task };
           this.save(dataSave);
         }
       });
     } else if (this.taskType?.value == 'CO') {
       let data = { action: 'add', type: 'task' };
-      let taskContract = await this.stepService.openPopupTaskContract(data,'add',null,null,null, true);
-      let dataSave = {task: taskContract}
+      let taskContract = await this.stepService.openPopupTaskContract(
+        data,
+        'add',
+        null,
+        null,
+        null,
+        true
+      );
+      let dataSave = { task: taskContract };
       this.save(dataSave);
     } else {
-      let data ={action:'add',taskType: this.taskType, isSave: false, type:'activitie', ownerInstance: this.ownerInstance}
-      let task = await this.stepService.openPopupCodxTask(data,'right');
+      let data = {
+        action: 'add',
+        taskType: this.taskType,
+        isSave: false,
+        type: 'activitie',
+        ownerInstance: this.ownerInstance,
+      };
+      let task = await this.stepService.openPopupCodxTask(data, 'right');
       this.save(task);
     }
   }
@@ -579,10 +595,10 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
 
   //#region view
   viewTask(data, type) {
-    if( data?.objectLinked && data?.taskType == 'CO'){
+    if (data?.objectLinked && data?.taskType == 'CO') {
       this.viewDetailContract(data);
       return;
-    }else{
+    } else {
       if (data) {
         let frmModel: FormModel = {
           entityName: 'DP_Instances_Steps_Tasks',
@@ -613,7 +629,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
             listRefIDAssign = data.recID;
             break;
         }
-  
+
         let listData = {
           type,
           value: data,
@@ -653,9 +669,9 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
     }
   }
   viewDetailContract(task) {
-    if( task?.objectLinked){
-      this.stepService.getOneContract(task?.objectLinked).subscribe(res => {
-        if(res){
+    if (task?.objectLinked) {
+      this.stepService.getOneContract(task?.objectLinked).subscribe((res) => {
+        if (res) {
           let data = {
             contract: res,
           };
@@ -672,11 +688,11 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
             '',
             option
           );
-        }else{
+        } else {
           this.notiService.notify('Không tìm thấy hợp đồng', '3');
         }
-      })
-    }else{
+      });
+    } else {
       this.notiService.notify('Không tìm thấy hợp đồng', '3');
     }
   }
@@ -798,8 +814,8 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
           'ES',
           'ES',
           'CategoriesBusiness',
-          'GetByCategoryIDAsync',
-          task?.recID
+          'GetByCategoryIDTypeAsync',
+          [task?.recID, 'DP_Activities']
         )
         .subscribe((res) => {
           if (!res) {
@@ -879,14 +895,11 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
 
   openFormApprover(task) {
     this.taskApproval = task;
-    this.callFunc.openForm(
-      CodxViewApproveComponent,
-      '',
-      500,
-      550,
-      '',
-      { categoryID: task?.recID, type: '2', stepsTasks: task }
-    );
+    this.callFunc.openForm(CodxViewApproveComponent, '', 500, 550, '', {
+      categoryID: task?.recID,
+      type: '2',
+      stepsTasks: task,
+    });
   }
   //#endregion
 }
