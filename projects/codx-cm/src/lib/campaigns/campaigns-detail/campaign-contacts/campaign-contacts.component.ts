@@ -224,6 +224,12 @@ export class CampaignContactsComponent implements OnInit {
         case 'Status':
           template = this.tempStatus;
           break;
+        case 'CustomerStatus':
+          if (this.objectType == '1') template = this.tempStatusCusLead;
+          break;
+        case 'LeadStatus':
+          if (this.objectType == '3') template = this.tempStatusCusLead;
+          break;
       }
       if (template) {
         colums = {
@@ -246,12 +252,12 @@ export class CampaignContactsComponent implements OnInit {
     let columTemp = [
       {
         field: field,
-        headerText: grid?.field?.headerText,
+        headerTemplate: this.headerStatusCusLead,
         template: this.tempStatusCusLead,
-        width: grid?.field?.width,
+        width: grid?.field?.width > 0? grid?.field?.width : 150,
       },
       {
-        field: 'lblHistory',
+        field: 'Called',
         headerTemplate: this.headerHistory,
         template: this.tempHistory,
         width: !this.isDoubleClick ? 150 : 250,
