@@ -33,7 +33,7 @@
 }
 
 .header-fixed .header {
-    background-color: var(--bg-card);
+    background-color: var(--bg-body);
 }
 
 .header .svg-icon svg [fill]:not(.permanent):not(g) {
@@ -230,7 +230,12 @@ textarea.codx-textarea {
 
 .header-fixed.toolbar-fixed .toolbar {
     border-top-color: var(--border-light);
+    border-top-color: transparent;
 }
+codx-header-v2{
+    border-bottom: 1px var(--border-light) solid;
+}
+
 
 // .e-grid .e-table,
 // .e-grid .e-gridcontent,
@@ -547,7 +552,8 @@ codx-view-kanban .e-kanban .e-kanban-content .e-content-row .e-content-cells .e-
 .e-input-group.e-float-icon-left:not(.e-success):not(.e-warning):not(.e-error).e-disabled .e-input-in-wrap,
 .e-input-group.e-control-wrapper:not(.e-success):not(.e-warning):not(.e-error):not(.e-float-icon-left).e-disabled,
 .e-input-group.e-control-wrapper.e-float-icon-left:not(.e-success):not(.e-warning):not(.e-error).e-disabled .e-input-in-wrap {
-    background: var(--bg-input);
+    //background: var(--bg-input);
+    background-color: #252532;
     color: var(--text-des);
 }
 
@@ -680,7 +686,9 @@ ejs-listview {
     color: var(--text-des);
     background-color: var(--primary-light) !important;
 }
-
+.btn.btn-light-primary:hover {
+    color: var(--white);
+}
 .e-work-cells.e-work-hours {
     background-color: inherit !important;
 }
@@ -872,9 +880,7 @@ codx-view-list-detail .e-listview .e-list-parent {
     background-color: rgba(255, 255, 255, 0.085) !important;
 }
 
-.e-listview .e-list-item.e-active {
-    background-color: rgba(255, 255, 255, 0.05) !important;
-}
+
 
 .e-schedule .e-timeline-year-view .e-resource-column-wrap .e-resource-cells {
     border-color: var(--gray-200) !important;
@@ -1057,6 +1063,15 @@ codx-listview.card .card-header {
         background: #222232;
     }
 }
+.e-listview .e-list-item.e-active {
+    background-color: #ffffff15 !important;
+}
 .e-listview .e-list-item.e-hover{
     border-color:transparent!important;
+    background-color: #212132!important;
 }
+.aside.aside-v2-lighter {
+    background-color: var(--bg-body);
+    border-right: 1px #1f212a solid;
+  }
+  
