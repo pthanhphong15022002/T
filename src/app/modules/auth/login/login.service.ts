@@ -75,7 +75,7 @@ export class LoginService {
   loginAfter(data: any, trust = false) {
     if (!data.error) {
       const user = data.data;
-      this.loginDevice.loginType = data.data.extends.LoginType ?? '';
+      this.loginDevice.loginType = data.data.extends.LoginType ?? this.loginDevice.loginType;
       if (this.signalRService.logOut) {
         this.signalRService.createConnection();
       }
@@ -132,7 +132,7 @@ export class LoginService {
         tn,
         '', //userID
         '', //pw
-        JSON.stringify(this.loginDevice),
+        JSON.stringify(this.loginDevice)
       ])
       .subscribe((res: any) => {
         if (!res.error) {
@@ -140,14 +140,16 @@ export class LoginService {
           this.loginDevice.tenantID = tn;
           let trust2FA = user?.extends?.Trust2FA;
           let hideTrustDevice = user?.extends?.HideTrustDevice;
-          let objData = {
-            data: user,
-            login2FA: user?.extends?.TwoFA,
-            hubConnectionID: '',
-            loginDevice: this.loginDevice,
-            hideTrustDevice,
-          };
+          
           if (!trust2FA) {
+            let objData = {
+              data: user.email,
+              login2FA: user?.extends?.TwoFA,
+              hubConnectionID: '',
+              //loginDevice: this.loginDevice,
+              hideTrustDevice,
+            };
+
             let lg2FADialog = this.callfc.openForm(
               Login2FAComponent,
               '',

@@ -94,7 +94,6 @@ export class CodxAddTaskComponent implements OnInit {
   instanceID = '';
   instanceStepID = '';
 
-
   user;
   endDayOld;
   groupTask;

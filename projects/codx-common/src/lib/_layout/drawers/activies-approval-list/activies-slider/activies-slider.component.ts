@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, OnInit, Optional } from '@angular/core';
-import { ApiHttpService, AuthService, AuthStore, CacheService, CodxService, DataRequest, DialogData, DialogModel, DialogRef, NotificationsService, ScrollComponent, SidebarModel, CallFuncService } from 'codx-core';
+import { ApiHttpService, AuthService, AuthStore, CacheService, CodxService, DataRequest, DialogData, DialogModel, DialogRef, NotificationsService, ScrollComponent, SidebarModel, CallFuncService, FormModel } from 'codx-core';
 import { PopupSignForApprovalComponent } from 'projects/codx-es/src/lib/sign-file/popup-sign-for-approval/popup-sign-for-approval.component';
 import { CodxShareService } from 'projects/codx-share/src/lib/codx-share.service';
 import { CodxCommonService } from 'projects/codx-common/src/lib/codx-common.service';
@@ -15,6 +15,8 @@ export class ActiviesSliderComponent implements OnInit {
   dialog: DialogRef;
   user:any = null;
   lstApproval:any[] = [];
+  formModel = new FormModel();
+  
   model:DataRequest = {
     entityName:"BG_Notification",
     predicate: "(ActionType = @0 or ActionType = @1) && x.Deleted = false",
@@ -33,6 +35,7 @@ export class ActiviesSliderComponent implements OnInit {
   pageIndex:number = 0;
   valueSelected:any = null;
   datas:any[] = [];
+  headerText="";
   constructor
   (
     private api:ApiHttpService,
@@ -50,6 +53,15 @@ export class ActiviesSliderComponent implements OnInit {
   {
     this.dialog = dialog;
     this.user = this.auth.get();
+    this.formModel.funcID= 'BGT002';
+    this.formModel.entityName="BG_Notification";
+    this.formModel.formName="Notification";
+    this.formModel.gridViewName="grvNotification";
+    this.cache.functionList('BGT002').subscribe(func=>{
+      if(func?.customName){
+        this.headerText = func?.customName;
+      }
+    })
   }
 
   ngOnInit(): void {

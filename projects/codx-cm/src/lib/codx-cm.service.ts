@@ -1020,6 +1020,14 @@ export class CodxCmService {
       data
     );
   }
+  getIdBusinessLineByProcessContractID(data) {
+    return this.api.exec<any>(
+      'CM',
+      'BusinessLinesBusiness',
+      'GetOneBusinessLineByProcessContractIDAsync',
+      data
+    );
+  }
 
   isCheckDealInUse(data) {
     return this.api.exec<any>(

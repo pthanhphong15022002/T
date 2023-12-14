@@ -302,7 +302,7 @@
         field="businessLineID"
         [crrValue]="contracts?.businessLineID"
         (valueChange)="valueChangeCombobox($event)"
-        [disabled]="action == 'edit'"
+        [disabled]="action == 'edit' || type == 'DP'"
       >
       </codx-input>
     </div>
@@ -552,11 +552,11 @@
     ></codx-label>
     <codx-input
       #inputDeal
-      [formModel]="dialog?.formModel"
       field="dealID"
+      [formModel]="dialog?.formModel"
       [crrValue]="contracts?.dealID"
       (valueChange)="valueChangeCombobox($event)"
-      [model]="customerID"
+      [model]="{CustomerID: contracts?.currencyID}"
       [disabled]="type == 'deal'"
     >
     </codx-input>
@@ -574,7 +574,7 @@
       field="quotationID"
       [crrValue]="contracts?.quotationID"
       (valueChange)="valueChangeCombobox($event)"
-      [model]="customerID"
+      [model]="{CustomerID: contracts?.currencyID}"
       [disabled]="type == 'quotation'"
     ></codx-input>
   </div>

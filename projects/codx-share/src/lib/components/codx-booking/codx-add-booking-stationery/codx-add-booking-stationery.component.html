@@ -127,7 +127,7 @@
       </div>
       <div class="d-flex justify-content-end">
         <div class="position-relative">
-          <span type="button" class="icon-shopping_cart icon-18 text-gray-500 cart"
+          <span type="button" class="icon-shopping_cart icon-18 cart"
             (click)="addCart($event, data)"></span>
           <span *ngIf="getItemQty(data?.resourceID) != 0"
             class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-danger">{{
@@ -252,8 +252,8 @@
                 </div>
               </div>
             </div>
-            <div class="d-flex justify-content-end">
-              <codx-input class="bg-white" [cusButton]="true" [min]="0" [max]="50" type="number" field="quantity"
+            <div class="d-flex justify-content-end w-150px">
+              <codx-input class="bg-white w-100px" [cusButton]="true" [min]="0" [max]="100" type="number" field="quantity"
                 [crrValue]="item?.quantity" (valueChange)="valueChangeQtyStationery($event, item?.itemID)">
               </codx-input>
               <div class="ms-5 d-flex flex-column justify-content-center align-items-center me-5">
