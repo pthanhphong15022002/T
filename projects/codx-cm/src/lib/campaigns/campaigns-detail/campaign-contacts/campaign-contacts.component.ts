@@ -92,24 +92,7 @@ export class CampaignContactsComponent implements OnInit {
     private cmSv: CodxCmService,
     private notiSv: NotificationsService,
     private codxShareService: CodxShareService
-  ) {
-    this.cache
-      .gridViewSetup(this.formModel?.formName, this.formModel?.gridViewName)
-      .subscribe((res) => {
-        if (res) {
-          this.gridViewSetup = res;
-          // let arrField = Object.values(this.gridViewSetup).filter(
-          //   (x: any) => x.isVisible
-          // );
-          // if (Array.isArray(arrField)) {
-          //   let arrFieldIsVisible = arrField
-          //     .sort((x: any, y: any) => x.columnOrder - y.columnOrder)
-          //     .map((x: any) => x.fieldName);
-          //   this.getColumnGrid(this.gridViewSetup, arrFieldIsVisible);
-          // }
-        }
-      });
-  }
+  ) {}
   async ngOnInit() {
     this.cache.moreFunction('CoDXSystem', '').subscribe((res) => {
       if (res && res.length) {
@@ -122,44 +105,7 @@ export class CampaignContactsComponent implements OnInit {
   ngAfterViewInit(): void {
     //Called after ngAfterContentInit when the component's view has been initialized. Applies to components only.
     //Add 'implements AfterViewInit' to the class.
-    this.columnsGrid = [
-      {
-        headerTemplate: this.headerCustomerName,
-        template: this.tempCustomerName,
-        width: !this.isDoubleClick ? 200 : 300,
-      },
-      {
-        headerTemplate: this.headerIndustries,
-        template: this.tempIndustries,
-        width: !this.isDoubleClick ? 200 : 300,
-      },
-      {
-        headerTemplate: this.headerContact,
-        template: this.tempContact,
-        width: !this.isDoubleClick ? 175 : 275,
-      },
-      {
-        headerTemplate: this.headerOwner,
-        template: this.tempOwner,
-        width: !this.isDoubleClick ? 150 : 250,
-      },
-      {
-        headerTemplate: this.headerStatus,
-        template: this.tempStatus,
-        width: !this.isDoubleClick ? 100 : 175,
-      },
-      {
-        headerTemplate: this.headerStatusCusLead,
-        template: this.tempStatusCusLead,
-        width: !this.isDoubleClick ? 150 : 300,
-      },
-      {
-        headerTemplate: this.headerHistory,
-        template: this.tempHistory,
-        width: !this.isDoubleClick ? 150 : 250,
-      },
-    ];
-    this.detector.detectChanges();
+    this.getGridViewSetuup();
   }
 
   async ngOnChanges(changes: SimpleChanges) {
@@ -208,6 +154,9 @@ export class CampaignContactsComponent implements OnInit {
           }
         }
       }
+      if (this.grid) {
+        this.grid.dataSource = this.lstCampContacts;
+      }
       // this.grid.showRowNumber = false;
     });
   }
@@ -230,6 +179,26 @@ export class CampaignContactsComponent implements OnInit {
           return response ? response[0] : [];
         })
       );
+  }
+
+  getGridViewSetuup() {
+    this.cache
+      .gridViewSetup(this.formModel?.formName, this.formModel?.gridViewName)
+      .subscribe((res) => {
+        if (res) {
+          this.gridViewSetup = res;
+          let arrField = Object.values(this.gridViewSetup).filter(
+            (x: any) => x.isVisible
+          );
+          if (Array.isArray(arrField)) {
+            let arrFieldIsVisible = arrField
+              .sort((x: any, y: any) => x.columnOrder - y.columnOrder)
+              .map((x: any) => x.fieldName);
+            this.getColumnGrid(this.gridViewSetup, arrFieldIsVisible);
+          }
+          this.detector.detectChanges();
+        }
+      });
   }
 
   getColumnGrid(grid, arrFieldIsVisible) {
@@ -261,23 +230,28 @@ export class CampaignContactsComponent implements OnInit {
           field: field,
           headerText: grid[key].headerText,
           template: template,
+          width: grid[key].width,
         };
       } else {
         colums = {
           field: field,
           headerText: grid[key].headerText,
+          width: grid[key].width,
         };
       }
 
       this.columnsGrid.push(colums);
     });
+    const field = this.objectType == '1' ? 'CustomerStatus' : 'LeadStatus';
     let columTemp = [
       {
-        headerTemplate: this.headerStatusCusLead,
+        field: field,
+        headerText: grid?.field?.headerText,
         template: this.tempStatusCusLead,
-        width: !this.isDoubleClick ? 150 : 300,
+        width: grid?.field?.width,
       },
       {
+        field: 'lblHistory',
         headerTemplate: this.headerHistory,
         template: this.tempHistory,
         width: !this.isDoubleClick ? 150 : 250,
@@ -295,7 +269,6 @@ export class CampaignContactsComponent implements OnInit {
       [lstIDs]
     );
   }
-
 
   getFunctionList(funcID) {
     this.cache.functionList(funcID).subscribe((res) => {
@@ -615,8 +588,8 @@ export class CampaignContactsComponent implements OnInit {
 
   //#region scroll heigt
   rollHeight() {
-    let classViewDetail = document.getElementsByClassName('codx-detail-main')[0];
-
+    let classViewDetail =
+      document.getElementsByClassName('codx-detail-main')[0];
   }
   //#region
 }
