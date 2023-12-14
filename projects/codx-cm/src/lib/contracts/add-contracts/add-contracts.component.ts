@@ -273,13 +273,13 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
       this.tabContent.push(this.task);
     }
   }
-  setDataParent(){
-    if(this.entityName && this.parentID){
-      switch(this.entityName){
-        case "CM_Customers":
+  setDataParent() {
+    if (this.entityName && this.parentID) {
+      switch (this.entityName) {
+        case 'CM_Customers':
           this.contracts.customerID = this.parentID;
           break;
-        case "CM_Deals":
+        case 'CM_Deals':
           this.contracts.dealID = this.parentID;
           break;
       }
@@ -313,7 +313,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
         this.setContractByDataOutput();
         this.getAutoNumber();
         this.setDataParent();
-        if(this.type == "DP", this.processID){
+        if ((this.type == 'DP', this.processID)) {
           this.contracts.processID = this.processID;
           this.getBusinessLineByProcessID(this.processID);
         }
@@ -546,7 +546,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
   //#endregion
 
   //#region CRUD
-  checkRequiredTask(){
+  checkRequiredTask() {
     if (this.type == 'task') {
       let message = [];
       if (!this.isSaveTimeTask) {
@@ -650,20 +650,18 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
           this.changeDetectorRef.markForCheck();
         });
     } else if (this.type == 'DP') {
-      this.cmService
-        .addContracts([this.contracts])
-        .subscribe((res) => {
-          if (res) {
-            this.cmService?.getDataInstance(res?.refID).subscribe(instance => {
-              if(instance){
-                // (this.dialog.dataService as CRUDService)
-                // .update(instance,true)
-                // .subscribe();
-                this.dialog?.close(instance);
-              }
-            })
-          }
-        });
+      this.cmService.addContracts([this.contracts]).subscribe((res) => {
+        if (res) {
+          this.cmService?.getDataInstance(res?.refID).subscribe((instance) => {
+            if (instance) {
+              // (this.dialog.dataService as CRUDService)
+              // .update(instance,true)
+              // .subscribe();
+              this.dialog?.close(instance);
+            }
+          });
+        }
+      });
     } else {
       this.cmService
         .addContracts([this.contracts, this.listPaymentAdd])
@@ -753,7 +751,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
               this.inputContact.crrValue = null;
             }
           });
-          this.contracts = JSON.parse(JSON.stringify(this.contracts));
+        this.contracts = JSON.parse(JSON.stringify(this.contracts));
       }
 
       if (event?.field == 'delStatus') {
@@ -961,7 +959,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
           this.contracts.businessLineID = res;
         }
       });
-    }
+  }
   //#endregion
 
   changeValueTextTask(event) {
@@ -1015,6 +1013,9 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
 
   async clickSettingApprove() {
     let category;
+    let categoryName = this.stepsTasks?.isTaskDefault
+      ? 'DP_Steps_Tasks'
+      : 'DP_Instances_Steps_Tasks';
     let idTask = this.stepsTasks?.isTaskDefault
       ? this.stepsTasks?.refID
       : this.stepsTasks?.recID;
@@ -1024,8 +1025,8 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
           'ES',
           'ES',
           'CategoriesBusiness',
-          'GetByCategoryIDAsync',
-          idTask
+          'GetByCategoryIDTypeAsync',
+          [idTask, categoryName, null]
         )
       );
     if (category) {
@@ -1049,6 +1050,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
             category.createdBy = this.user.userID;
             category.owner = this.user.userID;
             category.FunctionApproval = this.isActivitie ? 'DPT07' : 'DPT04';
+            category['refID'] = idTask;
             this.actionOpenFormApprove2(category, true);
           }
         });
@@ -1326,7 +1328,6 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
   // }
   //#endregion
 
-
   beforeSaveInstance(option: RequestOption) {
     option.service = 'DP';
     option.className = 'InstancesBusiness';
@@ -1344,20 +1345,20 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
   onAddInstance() {
     this.dialog.dataService
       .save((option: any) => this.beforeSaveInstance(option))
-    .subscribe((res) => {
-      if (res && res.save) {
-        // this.deal.status = res?.save?.status;
-        // this.deal.datas = res?.save?.datas;
-        // this.addPermission(res?.save?.permissions);
-        // let datas = [this.deal, this.lstContactDeal];
-        // this.codxCmService.addDeal(datas).subscribe((deal) => {
-        //   if (deal) {
-        //   }
-        // });
-        this.dialog.close(res?.save);
-        this.changeDetectorRef.detectChanges();
-      }
-    });
+      .subscribe((res) => {
+        if (res && res.save) {
+          // this.deal.status = res?.save?.status;
+          // this.deal.datas = res?.save?.datas;
+          // this.addPermission(res?.save?.permissions);
+          // let datas = [this.deal, this.lstContactDeal];
+          // this.codxCmService.addDeal(datas).subscribe((deal) => {
+          //   if (deal) {
+          //   }
+          // });
+          this.dialog.close(res?.save);
+          this.changeDetectorRef.detectChanges();
+        }
+      });
   }
   onUpdateInstance() {
     this.dialog.dataService
