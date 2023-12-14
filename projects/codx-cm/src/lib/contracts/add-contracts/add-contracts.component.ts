@@ -1060,6 +1060,9 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
 
   async clickSettingApprove() {
     let category;
+    let categoryName = this.stepsTasks?.isTaskDefault
+      ? 'DP_Steps_Tasks'
+      : 'DP_Instances_Steps_Tasks';
     let idTask = this.stepsTasks?.isTaskDefault
       ? this.stepsTasks?.refID
       : this.stepsTasks?.recID;
@@ -1069,8 +1072,8 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
           'ES',
           'ES',
           'CategoriesBusiness',
-          'GetByCategoryIDAsync',
-          idTask
+          'GetByCategoryIDTypeAsync',
+          [idTask, categoryName, null]
         )
       );
     if (category) {
@@ -1094,6 +1097,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
             category.createdBy = this.user.userID;
             category.owner = this.user.userID;
             category.FunctionApproval = this.isActivitie ? 'DPT07' : 'DPT04';
+            category['refID'] = idTask;
             this.actionOpenFormApprove2(category, true);
           }
         });

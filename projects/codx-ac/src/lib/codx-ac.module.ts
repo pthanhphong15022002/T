@@ -204,7 +204,7 @@ export const routes: Routes = [
       },
       {
         path: 'issuetransaction/:funcID/:journalNo',
-        component: IssueTransactionsComponent,
+        component: ReceiptTransactionsComponent,
         data: { noReuse: true },
       },
       {

@@ -318,6 +318,16 @@ export class CashPaymentsComponent extends UIComponent {
             optionSidebar,
             this.view.funcID
           );
+          dialog.closed.subscribe((res) => {
+            if (res && res?.event) {
+              if (res?.event?.type === 'discard') {
+                if(this.view.dataService.data.length == 0){
+                  this.itemSelected = undefined;
+                  this.detectorRef.detectChanges();
+                } 
+              }
+            }
+          })
         }
       });
   }
@@ -350,6 +360,16 @@ export class CashPaymentsComponent extends UIComponent {
           optionSidebar,
           this.view.funcID
         );
+        dialog.closed.subscribe((res) => {
+          if (res && res?.event) {
+            if (res?.event?.type === 'discard') {
+              if(this.view.dataService.data.length == 0){
+                this.itemSelected = undefined;
+                this.detectorRef.detectChanges();
+              } 
+            }
+          }
+        })
       });
   }
 
@@ -389,6 +409,16 @@ export class CashPaymentsComponent extends UIComponent {
                   optionSidebar,
                   this.view.funcID
                 );
+                dialog.closed.subscribe((res) => {
+                  if (res && res?.event) {
+                    if (res?.event?.type === 'discard') {
+                      if(this.view.dataService.data.length == 0){
+                        this.itemSelected = undefined;
+                        this.detectorRef.detectChanges();
+                      } 
+                    }
+                  }
+                })
                 this.view.dataService
                   .add(datas)
                   .pipe(takeUntil(this.destroy$))
@@ -451,7 +481,8 @@ export class CashPaymentsComponent extends UIComponent {
    * @param data
    * @returns
    */
-  changeMFDetail(event: any, data: any, type: any = '') {
+  changeMFDetail(event: any,type: any = '') {
+    let data = this.view.dataService.dataSelected;
     if (data) {
       this.acService.changeMFCashPayment(event,data,type,this.journal,this.view.formModel);
     }

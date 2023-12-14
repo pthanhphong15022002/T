@@ -555,12 +555,12 @@ export class CodxDpService {
     return this.api.exec<any>('DP', 'ProcessGroupsBusiness', 'GetAsync');
   }
 
-  openOrClosedInstance(recID, check,applyFor) {
+  openOrClosedInstance(recID, check, applyFor) {
     return this.api.exec<any>(
       'DP',
       'InstancesBusiness',
       'OpenOrClosedInstanceAsync',
-      [recID, check,applyFor]
+      [recID, check, applyFor]
     );
   }
 
@@ -764,6 +764,7 @@ export class CodxDpService {
       tranID
     );
   }
+
   getESCategoryByCategoryID(categoryID) {
     return this.api.execSv<any>(
       'ES',
@@ -771,6 +772,16 @@ export class CodxDpService {
       'CategoriesBusiness',
       'GetByCategoryIDAsync',
       categoryID
+    );
+  }
+
+  getESCategoryByCategoryIDType(categoryID, category, refID = null) {
+    return this.api.execSv<any>(
+      'ES',
+      'ES',
+      'CategoriesBusiness',
+      'GetByCategoryIDTypeAsync',
+      [categoryID, category, refID]
     );
   }
 

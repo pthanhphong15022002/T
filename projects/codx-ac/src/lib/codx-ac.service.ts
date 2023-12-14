@@ -239,22 +239,28 @@ export enum MorfuncSale {
 }
 
 export enum MorfuncVoucher {
-  GhiSo = 'ACT070806',
-  GuiDuyet = 'ACT070804',
-  HuyDuyet = 'ACT070805',
-  KhoiPhuc = 'ACT070807',
-  In = 'ACT070808',
-  KiemTraHopLe = 'ACT070803',
+  GhiSoNK = 'ACT070806',
+  GhiSoXK = 'ACT071406',
+  GuiDuyetNK = 'ACT070804',
+  GuiDuyetXK = 'ACT071404',
+  HuyDuyetNK = 'ACT070805',
+  HuyDuyetXK = 'ACT071405',
+  KhoiPhucNK = 'ACT070807',
+  KhoiPhucXK = 'ACT071407',
+  InNK = 'ACT070808',
+  InXK = 'ACT071408',
+  KiemTraHopLeNK = 'ACT070803',
+  KiemTraHopLeXK = 'ACT071403',
 }
 
-export enum MorfuncIssueVoucher {
-  GhiSo = 'ACT071406',
-  GuiDuyet = 'ACT071404',
-  HuyDuyet = 'ACT071405',
-  KhoiPhuc = 'ACT071407',
-  In = 'ACT071408',
-  KiemTraHopLe = 'ACT071403',
-}
+// export enum MorfuncIssueVoucher {
+//   GhiSo = 'ACT071406',
+//   GuiDuyet = 'ACT071404',
+//   HuyDuyet = 'ACT071405',
+//   KhoiPhuc = 'ACT071407',
+//   In = 'ACT071408',
+//   KiemTraHopLe = 'ACT071403',
+// }
 
 export enum MorfuncGeneralJournals {
   GhiSo = 'ACT090104',
@@ -821,33 +827,33 @@ export class CodxAcService {
     switch (data?.status) {
       case '1':
         if (!data?.validated) {
-          event.filter((x) => ![MorfuncVoucher.KiemTraHopLe,MorfuncVoucher.In].includes(x.functionID))
+          event.filter((x) => ![MorfuncVoucher.KiemTraHopLeNK,MorfuncVoucher.KiemTraHopLeXK,MorfuncVoucher.InNK,MorfuncVoucher.InXK].includes(x.functionID))
             .reduce((pre, element) => { element.disabled = true }, {});
         }else{
           if (journal.approvalControl == '0') {
-            event.filter((x) => ![MorfuncVoucher.GhiSo,MorfuncVoucher.In].includes(x.functionID))
+            event.filter((x) => ![MorfuncVoucher.GhiSoNK,MorfuncVoucher.GhiSoXK,MorfuncVoucher.InNK,MorfuncVoucher.InXK].includes(x.functionID))
             .reduce((pre, element) => { element.disabled = true }, {});
           }else{
-            event.filter((x) => ![MorfuncVoucher.GuiDuyet,MorfuncVoucher.In].includes(x.functionID))
+            event.filter((x) => ![MorfuncVoucher.GuiDuyetNK,MorfuncVoucher.GuiDuyetXK,MorfuncVoucher.InNK,MorfuncVoucher.InXK].includes(x.functionID))
             .reduce((pre, element) => { element.disabled = true }, {});
           }
         }
         break;
       case '2':
-        event.filter((x) => ![MorfuncVoucher.KiemTraHopLe,MorfuncVoucher.In].includes(x.functionID))
+        event.filter((x) => ![MorfuncVoucher.KiemTraHopLeNK,MorfuncVoucher.KiemTraHopLeXK,MorfuncVoucher.InNK,MorfuncVoucher.InXK].includes(x.functionID))
             .reduce((pre, element) => { element.disabled = true }, {});
           break;
       case '3':
-        event.filter((x) => ![MorfuncVoucher.HuyDuyet,MorfuncVoucher.In].includes(x.functionID))
+        event.filter((x) => ![MorfuncVoucher.HuyDuyetNK,MorfuncVoucher.HuyDuyetXK,MorfuncVoucher.InNK,MorfuncVoucher.InXK].includes(x.functionID))
             .reduce((pre, element) => { element.disabled = true }, {});
           break;
       case '5':
       case '9':
-        event.filter((x) => ![MorfuncVoucher.GhiSo,MorfuncVoucher.In].includes(x.functionID))
+        event.filter((x) => ![MorfuncVoucher.GhiSoNK,MorfuncVoucher.GhiSoXK,MorfuncVoucher.InNK,MorfuncVoucher.InXK].includes(x.functionID))
             .reduce((pre, element) => { element.disabled = true }, {});
           break;
       case '6':
-        event.filter((x) => ![MorfuncVoucher.KhoiPhuc,MorfuncVoucher.In].includes(x.functionID))
+        event.filter((x) => ![MorfuncVoucher.KhoiPhucNK,MorfuncVoucher.KhoiPhucXK,MorfuncVoucher.InNK,MorfuncVoucher.InXK].includes(x.functionID))
             .reduce((pre, element) => { element.disabled = true }, {});
           break;
       default:
@@ -858,50 +864,50 @@ export class CodxAcService {
 
   changeMFIssueVoucher(event, data, type: any = '', journal, formModel) {
     //* thiet lap bookmark cac morefunc tai cac mode view
-    event.filter((x) => !Object.values(MorfuncVoucher).includes(x.functionID) && !Object.values(MorfuncDefault).includes(x.functionID))
-      .reduce((pre, element) => { element.disabled = true }, {}); //? disable cac morfunc ko xai
-    if (type === 'viewgrid') event.reduce((pre,element) => {element.isbookmark = false},{}); //? view grid thi morfunc ko bookmark ra ngoai
-    if (type === 'viewdetail') event.filter((x) => ![MorfuncDefault.XuatDuLieu].includes(x.functionID)).reduce((pre,element) => {element.isbookmark = true},{});
+    // event.filter((x) => !Object.values(MorfuncVoucher).includes(x.functionID) && !Object.values(MorfuncDefault).includes(x.functionID))
+    //   .reduce((pre, element) => { element.disabled = true }, {}); //? disable cac morfunc ko xai
+    // if (type === 'viewgrid') event.reduce((pre,element) => {element.isbookmark = false},{}); //? view grid thi morfunc ko bookmark ra ngoai
+    // if (type === 'viewdetail') event.filter((x) => ![MorfuncDefault.XuatDuLieu].includes(x.functionID)).reduce((pre,element) => {element.isbookmark = true},{});
     
-    //* an hien morefunc theo nghiep vu
-    if(data?.status != '1' && data?.status != '2') event.filter((x) => [MorfuncDefault.Sua].includes(x.functionID)).reduce((pre,element) => {element.disabled = true},{});
-    event = event.filter((x) => Object.values(MorfuncIssueVoucher).includes(x.functionID));
-    switch (data?.status) {
-      case '1':
-        if (!data?.validated) {
-          event.filter((x) => ![MorfuncIssueVoucher.KiemTraHopLe,MorfuncIssueVoucher.In].includes(x.functionID))
-            .reduce((pre, element) => { element.disabled = true }, {});
-        }else{
-          if (journal.approvalControl == '0') {
-            event.filter((x) => ![MorfuncIssueVoucher.GhiSo,MorfuncIssueVoucher.In].includes(x.functionID))
-            .reduce((pre, element) => { element.disabled = true }, {});
-          }else{
-            event.filter((x) => ![MorfuncIssueVoucher.GuiDuyet,MorfuncIssueVoucher.In].includes(x.functionID))
-            .reduce((pre, element) => { element.disabled = true }, {});
-          }
-        }
-        break;
-      case '2':
-        event.filter((x) => ![MorfuncIssueVoucher.KiemTraHopLe,MorfuncIssueVoucher.In].includes(x.functionID))
-            .reduce((pre, element) => { element.disabled = true }, {});
-          break;
-      case '3':
-        event.filter((x) => ![MorfuncIssueVoucher.HuyDuyet,MorfuncIssueVoucher.In].includes(x.functionID))
-            .reduce((pre, element) => { element.disabled = true }, {});
-          break;
-      case '5':
-      case '9':
-        event.filter((x) => ![MorfuncIssueVoucher.GhiSo,MorfuncIssueVoucher.In].includes(x.functionID))
-            .reduce((pre, element) => { element.disabled = true }, {});
-          break;
-      case '6':
-        event.filter((x) => ![MorfuncIssueVoucher.KhoiPhuc,MorfuncIssueVoucher.In].includes(x.functionID))
-            .reduce((pre, element) => { element.disabled = true }, {});
-          break;
-      default:
-        event.reduce((pre, element) => { element.disabled = true }, {});
-          break;
-    }
+    // //* an hien morefunc theo nghiep vu
+    // if(data?.status != '1' && data?.status != '2') event.filter((x) => [MorfuncDefault.Sua].includes(x.functionID)).reduce((pre,element) => {element.disabled = true},{});
+    // event = event.filter((x) => Object.values(MorfuncIssueVoucher).includes(x.functionID));
+    // switch (data?.status) {
+    //   case '1':
+    //     if (!data?.validated) {
+    //       event.filter((x) => ![MorfuncIssueVoucher.KiemTraHopLe,MorfuncIssueVoucher.In].includes(x.functionID))
+    //         .reduce((pre, element) => { element.disabled = true }, {});
+    //     }else{
+    //       if (journal.approvalControl == '0') {
+    //         event.filter((x) => ![MorfuncIssueVoucher.GhiSo,MorfuncIssueVoucher.In].includes(x.functionID))
+    //         .reduce((pre, element) => { element.disabled = true }, {});
+    //       }else{
+    //         event.filter((x) => ![MorfuncIssueVoucher.GuiDuyet,MorfuncIssueVoucher.In].includes(x.functionID))
+    //         .reduce((pre, element) => { element.disabled = true }, {});
+    //       }
+    //     }
+    //     break;
+    //   case '2':
+    //     event.filter((x) => ![MorfuncIssueVoucher.KiemTraHopLe,MorfuncIssueVoucher.In].includes(x.functionID))
+    //         .reduce((pre, element) => { element.disabled = true }, {});
+    //       break;
+    //   case '3':
+    //     event.filter((x) => ![MorfuncIssueVoucher.HuyDuyet,MorfuncIssueVoucher.In].includes(x.functionID))
+    //         .reduce((pre, element) => { element.disabled = true }, {});
+    //       break;
+    //   case '5':
+    //   case '9':
+    //     event.filter((x) => ![MorfuncIssueVoucher.GhiSo,MorfuncIssueVoucher.In].includes(x.functionID))
+    //         .reduce((pre, element) => { element.disabled = true }, {});
+    //       break;
+    //   case '6':
+    //     event.filter((x) => ![MorfuncIssueVoucher.KhoiPhuc,MorfuncIssueVoucher.In].includes(x.functionID))
+    //         .reduce((pre, element) => { element.disabled = true }, {});
+    //       break;
+    //   default:
+    //     event.reduce((pre, element) => { element.disabled = true }, {});
+    //       break;
+    // }
   }
 
   changeMFTranfers(event, data, type: any = '', journal, formModel) {
