@@ -225,6 +225,16 @@ export class CashreceiptsComponent extends UIComponent {
             optionSidebar,
             this.view.funcID
           );
+          dialog.closed.subscribe((res) => {
+            if (res && res?.event) {
+              if (res?.event?.type === 'discard') {
+                if(this.view.dataService.data.length == 0){
+                  this.itemSelected = undefined;
+                  this.detectorRef.detectChanges();
+                } 
+              }
+            }
+          })
         }
       });
   }
@@ -256,6 +266,16 @@ export class CashreceiptsComponent extends UIComponent {
           optionSidebar,
           this.view.funcID
         );
+        dialog.closed.subscribe((res) => {
+          if (res && res?.event) {
+            if (res?.event?.type === 'discard') {
+              if(this.view.dataService.data.length == 0){
+                this.itemSelected = undefined;
+                this.detectorRef.detectChanges();
+              } 
+            }
+          }
+        })
       });
   }
 
@@ -295,6 +315,16 @@ export class CashreceiptsComponent extends UIComponent {
                   optionSidebar,
                   this.view.funcID
                 );
+                dialog.closed.subscribe((res) => {
+                  if (res && res?.event) {
+                    if (res?.event?.type === 'discard') {
+                      if(this.view.dataService.data.length == 0){
+                        this.itemSelected = undefined;
+                        this.detectorRef.detectChanges();
+                      } 
+                    }
+                  }
+                })
                 this.view.dataService
                   .add(datas)
                   .pipe(takeUntil(this.destroy$))
@@ -310,7 +340,14 @@ export class CashreceiptsComponent extends UIComponent {
    * @param dataDelete : data xóa
    */
   deleteVoucher(dataDelete) {
-    this.view.dataService.delete([dataDelete], true).pipe(takeUntil(this.destroy$)).subscribe((res: any) => {});
+    this.view.dataService.delete([dataDelete], true).pipe(takeUntil(this.destroy$)).subscribe((res: any) => {
+      if (res && !res?.error) {
+        if(this.view.dataService.data.length == 0){
+          this.itemSelected = undefined;
+          this.detectorRef.detectChanges();
+        } 
+      }
+    });
   }
 
   /**
@@ -347,7 +384,8 @@ export class CashreceiptsComponent extends UIComponent {
    * @param data
    * @returns 
    */
-  changeMFDetail(event: any, data: any,type:any = '') {
+  changeMFDetail(event: any,type:any = '') {
+    let data = this.view.dataService.dataSelected;
     if (data) {
       this.acService.changeMFCashReceipt(event,data,type,this.journal,this.view.formModel);
     }
