@@ -399,7 +399,7 @@ export class DealsComponent
           mappingFunction && mappingFunction(eventItem, data);
         } else {
           eventItem.disabled =
-            eventItem?.functionID !== 'CM0201_17' ? true : false;
+            eventItem?.functionID !== 'CM0201_17' ? true : data?.alloweStatus == '1' ? false : true;
         }
       }
     }
@@ -411,7 +411,7 @@ export class DealsComponent
         data?.alloweStatus == '1'
           ? (data.closed && data?.status != '1') ||
             ['1', '0', '15'].includes(data?.status) ||
-            this.checkMoreReason(data)
+            this.checkMoreReason(data) || !data.applyProcess
           : true;
     };
     let isDelete = (eventItem, data) => {
@@ -444,7 +444,7 @@ export class DealsComponent
     let isStartDay = (eventItem, data) => {
       eventItem.disabled =
         data?.alloweStatus == '1'
-          ? !['1'].includes(data.status) || data.closed
+          ? !['1'].includes(data.status) || data.closed || !data.applyProcess
           : true;
     };
     let isOwner = (eventItem, data) => {
@@ -492,7 +492,7 @@ export class DealsComponent
     let isMoveReason = (eventItem, data) => {
       eventItem.disabled =
         data?.alloweStatus == '1'
-          ? (data.closed && data?.status != '1') ||
+          ? (data.closed && data?.status != '1') || !data.applyProcess ||
             ['1', '0', '15'].includes(data?.status) ||
             this.checkMoreReason(data, false)
           : true;
@@ -1135,7 +1135,7 @@ export class DealsComponent
       titleAction: this.titleAction,
       owner: data.owner,
       //startControl: data.steps.startControl,
-      applyProcess: true,
+      applyProcess: data.applyProcess,
       buid: data.buid,
     };
     var dialog = this.callfc.openForm(
@@ -1210,7 +1210,7 @@ export class DealsComponent
       action: action === 'add' ? 'add' : 'copy',
       formMD: formMD,
       titleAction: this.formatTitleMore(this.titleAction),
-      processID: this.processID,
+      // processID: this.processID,
       gridViewSetup: this.gridViewSetup,
       functionModule: this.functionModule,
       currencyIDDefault: this.currencyIDDefault,
@@ -2056,25 +2056,39 @@ export class DealsComponent
         this.dataSelected.statusCodeCmt = e?.event?.statusCodecmt;
         let status = e?.event?.status;
         let message = e?.event?.message;
+        if(status && !this.dataSelected.applyProcess ) {
+          this.dataSelected.status = status;
+        }
 
         this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
         this.view.dataService.dataSelected = this.dataSelected;
         this.view.dataService.update(this.dataSelected, true).subscribe();
         this.detectorRef.detectChanges();
         this.notificationsService.notifyCode('SYS007');
-        if (status) {
-          if (status == '2') {
-            this.moveStage(this.dataSelected);
-          } else if (status == '1') {
-            this.handelStartDay(this.dataSelected);
-          } else if (status == '3') {
-            this.moveReason(this.dataSelected, true);
-          } else if (status == '5') {
-            this.moveReason(this.dataSelected, false);
+        if (this.dataSelected.applyProcess) {
+          if (status) {
+            switch (status) {
+              case '2':
+                this.moveStage(this.dataSelected);
+                break;
+              case '1':
+                this.handelStartDay(this.dataSelected);
+                break;
+              case '3':
+              case '5':
+                this.moveReason(this.dataSelected, status === '3');
+                break;
+            }
+          } else if (message) {
+
+            this.notificationsService.notifyCode(
+              message,
+              0,
+              "'" + this.dataSelected?.dealName + "'"
+            );
           }
-        } else if (message) {
-          this.notificationsService.notify(message);
         }
+
       }
     });
   }

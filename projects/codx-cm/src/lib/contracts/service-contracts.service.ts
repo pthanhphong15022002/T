@@ -94,6 +94,22 @@ export class ContractsService {
       data
     );
   }
+  getCustomerByQuotationID(data) {
+    return this.api.exec<any>(
+      'CM',
+      'ContractsBusiness',
+      'GetCustomerByQuotationIDAsync',
+      data
+    );
+  }
+  getQuotationByQuotationID(data) {
+    return this.api.exec<any>(
+      'CM',
+      'QuotationsBusiness',
+      'GetOneAsync',
+      data
+    );
+  }
   getCustomerByRecID(data) {
     return this.api.exec<any>(
       'CM',

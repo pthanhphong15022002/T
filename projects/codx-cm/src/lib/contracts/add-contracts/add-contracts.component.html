@@ -1,6 +1,6 @@
 <ng-container>
   <codx-layout-add
-    #formlayoutadd
+    #form
     [title]="headerTest"
     [tabInfo]="tabInfo"
     [tabContent]="tabContent"
@@ -9,46 +9,35 @@
     [formModel]="dialog.formModel"
     [footer]="footer"
     (setTitle)="getTitle()"
+    [data]="contracts"
     ></codx-layout-add>
-    <!-- [data]="contracts" -->
     <!-- [subHeader]="subHeader" -->
   <ng-template #information>
     <ng-container
       [ngTemplateOutlet]="informationTemp"
-      [ngTemplateOutletContext]="{ $implicit: formlayoutadd }"
+      [ngTemplateOutletContext]="{ $implicit: form}"
     ></ng-container>
   </ng-template>
   <ng-template #reference>
     <ng-container
       [ngTemplateOutlet]="referenceTemp"
-      [ngTemplateOutletContext]="{ $implicit: formlayoutadd }"
+      [ngTemplateOutletContext]="{ $implicit: form }"
     ></ng-container>
   </ng-template>
 
   <ng-template #extend>
     <ng-container
       [ngTemplateOutlet]="extendTemp"
-      [ngTemplateOutletContext]="{ $implicit: formlayoutadd }"
+      [ngTemplateOutletContext]="{ $implicit: form }"
     ></ng-container>
   </ng-template>
   <ng-template #task>
     <ng-container
       [ngTemplateOutlet]="taskTemp"
-      [ngTemplateOutletContext]="{ $implicit: formlayoutadd }"
+      [ngTemplateOutletContext]="{ $implicit: form}"
     ></ng-container>
   </ng-template>
 </ng-container>
-
-<ng-template #subHeader let-form>
-  <!-- <codx-tag
-    field="tags"
-    [entityName]="dialog.formModel.entityName"
-    [isEdit]="true"
-    [disabled]="false"
-    [value]="contracts?.tags"
-    (valueChange)="valueTagChange($event)"
-  ></codx-tag> -->
-</ng-template>
 
 <ng-template #taskTemp let-form>
   <div class="form-group step-name w-100">
@@ -243,14 +232,14 @@
     <div class="col-6">
       <div class="form-group">
         <codx-label
-          [formModel]="dialog?.formModel"
+          [formModel]="form?.formModel"
           fiedName="contractID"
           default="Mã hợp đồng"
         >
         </codx-label>
         <codx-input
-          [formModel]="dialog?.formModel"
           field="contractID"
+          [formModel]="form?.formModel"
           [crrValue]="contracts?.contractID"
           [placeholder]="planceHolderAutoNumber ?? grvSetup['ContractID'].headerText"
           [disabled]="disabledShowInput || action === 'edit'"
@@ -262,13 +251,13 @@
     <div class="col-6">
       <div class="form-group">
         <codx-label
-          [formModel]="dialog?.formModel"
+          [formModel]="form?.formModel"
           fiedName="contractDate"
           default="Ngày tạo hợp đồng"
         ></codx-label>
         <codx-input
           field="contractDate"
-          type="datetime"
+          [formModel]="form.formModel"
           [crrValue]="contracts?.contractDate"
           (valueChange)="changeValueDate($event)"
         ></codx-input>
@@ -279,28 +268,27 @@
   <div class="row form-group">
     <div class="col-6">
       <codx-label
-        [formModel]="dialog?.formModel"
+        [formModel]="form?.formModel"
         fiedName="contractType"
         default="Loại hợp đồng"
       ></codx-label>
       <codx-input
-        [formModel]="dialog?.formModel"
         field="contractType"
-        [crrValue]="contracts?.contractType"
-        (valueChange)="valueChangeCombobox($event)"
+        [formModel]="form?.formModel"
+        [Group]="form.formGroup"
       >
       </codx-input>
     </div>
     <div class="col-6">
       <codx-label
-        [formModel]="dialog?.formModel"
+        [formModel]="form?.formModel"
         fiedName="businessLineID"
         default="Dòng sản phẩm"
       ></codx-label>
       <codx-input
-        [formModel]="dialog?.formModel"
         field="businessLineID"
-        [crrValue]="contracts?.businessLineID"
+        [formModel]="form?.formModel"
+        [Group]="form.formGroup"
         (valueChange)="valueChangeCombobox($event)"
         [disabled]="action == 'edit' || type == 'DP'"
       >
@@ -315,10 +303,9 @@
       default="Tên hợp đồng"
     ></codx-label>
     <codx-input
-      [formModel]="dialog?.formModel"
       field="contractName"
-      type="text"
-      [crrValue]="contracts?.contractName"
+      [formModel]="dialog?.formModel"
+      [Group]="form.formGroup"
       (valueChange)="valueChangeText($event)"
     >
     </codx-input>
@@ -334,11 +321,10 @@
     </div>
     <div class>
       <codx-input
-        [formModel]="dialog?.formModel"
         field="customerID"
-        type="combobox"
-        (valueChange)="valueChangeCombobox($event)"
+        [formModel]="form?.formModel"
         [crrValue]="contracts?.customerID"
+        (valueChange)="valueChangeCombobox($event)"
         [disabled]="type == 'deal' || type == 'quotation' || type == 'customer'"
       >
       </codx-input>
@@ -352,18 +338,12 @@
         fiedName="ContactID"
         default="Người đại diện"
       ></codx-label>
-      <!-- <codx-input
-        field="contactID"
-        [formModel]="form.formModel"
-        [Group]="form.formGroup"
-      ></codx-input> -->
       <codx-input
         #inputContact
-        [formModel]="dialog?.formModel"
         field="contactID"
-        [model]="{ObjectID: contracts?.customerID }"
+        [formModel]="form?.formModel"
+        [Group]="form.formGroup"
         (valueChange)="valueChangeCombobox($event)"
-        [crrValue]="contracts?.contactID"
       >
       </codx-input>
     </div>
@@ -553,10 +533,9 @@
     <codx-input
       #inputDeal
       field="dealID"
-      [formModel]="dialog?.formModel"
-      [crrValue]="contracts?.dealID"
+      [formModel]="form.formModel"
+      [Group]="form.formGroup"
       (valueChange)="valueChangeCombobox($event)"
-      [model]="{CustomerID: contracts?.currencyID}"
       [disabled]="type == 'deal'"
     >
     </codx-input>
@@ -570,11 +549,10 @@
     ></codx-label>
     <codx-input
       #inputQuotation
-      [formModel]="dialog?.formModel"
       field="quotationID"
-      [crrValue]="contracts?.quotationID"
+      [formModel]="form?.formModel"
+      [Group]="form.formGroup"
       (valueChange)="valueChangeCombobox($event)"
-      [model]="{CustomerID: contracts?.currencyID}"
       [disabled]="type == 'quotation'"
     ></codx-input>
   </div>
