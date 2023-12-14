@@ -139,7 +139,10 @@
     </div>
     <!--end Cuoc goi -->
   </div>
-  <div class="form-group d-flex justify-content-between" *ngIf="isShowDate && typeTask?.value != 'F'">
+  <div
+    class="form-group d-flex justify-content-between"
+    *ngIf="isShowDate && typeTask?.value != 'F'"
+  >
     <div class="me-2">
       <codx-label
         fiedName="startDate"
@@ -176,7 +179,10 @@
       </codx-input>
     </div>
   </div>
-  <div class="form-group" *ngIf="!isShowDate && isStart && typeTask?.value != 'F'">
+  <div
+    class="form-group"
+    *ngIf="!isShowDate && isStart && typeTask?.value != 'F'"
+  >
     <codx-label
       fiedName="actualEnd"
       [formModel]="dialog?.formModel"
@@ -330,6 +336,7 @@
         [objectId]="item.recID"
         [objectType]="'DP_Instances_Steps_Fields'"
         [formModel]="dialog.formModel"
+        [isAdd]="action == 'add'"
         (valueChangeCustom)="changeValueField($event)"
         (addFileCompleted)="addFileCompleted($event)"
       ></codx-input-custom-field>
@@ -415,7 +422,7 @@
       <button
         type="button"
         class="btn btn-icon btn-sm btn-light-primary ms-"
-        [disabled]="!stepsTasks?.approveRule "
+        [disabled]="!stepsTasks?.approveRule"
         (click)="clickSettingApprove()"
       >
         <i class="icon-settings icon-16"></i>
@@ -423,7 +430,11 @@
       <!-- || stepsTasks?.isTaskDefault -->
     </div>
     <div class="ms-2 mt-1">
-      <codx-view-approve *ngIf="stepsTasks?.approveRule" [listApprover]="listApproverView" type="1"></codx-view-approve>
+      <codx-view-approve
+        *ngIf="stepsTasks?.approveRule"
+        [listApprover]="listApproverView"
+        type="1"
+      ></codx-view-approve>
     </div>
   </div>
 
@@ -624,7 +635,6 @@
     </div>
   </ng-container>
 </ng-template>
-
 
 <!-- <codx-input
   [name]="'status'"

@@ -13,6 +13,7 @@ import { lastValueFrom } from 'rxjs';
 import { CodxAcService } from '../../codx-ac.service';
 import { IJournal } from '../../journals/interfaces/IJournal.interface';
 import { JournalService } from '../../journals/journals.service';
+import { CodxCommonService } from 'projects/codx-common/src/lib/codx-common.service';
 import { SalesinvoicesAddComponent } from './salesinvoices-add/salesinvoices-add.component';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 
@@ -45,6 +46,7 @@ export class SalesInvoiceService {
     private acService: CodxAcService,
     private journalService: JournalService,
     private callFuncService: CallFuncService,
+    private codxCommonService: CodxCommonService,
     private notiService: NotificationsService,
     private shareService: CodxShareService,
   ) {
@@ -253,7 +255,7 @@ export class SalesInvoiceService {
       .getCategoryByEntityName(formModel.entityName)
       .subscribe((res1: any) => {
         console.log(res1);
-        this.shareService
+        this.codxCommonService
           .codxRelease(
             'AC',
             data.recID,
@@ -290,7 +292,7 @@ export class SalesInvoiceService {
     formModel: FormModel,
     dataService: CRUDService
   ): void {
-    this.shareService
+    this.codxCommonService
       .codxCancel('AC', data.recID, formModel.entityName, null, null)
       .subscribe((res2: any) => {
         if (res2?.msgCodeError) {

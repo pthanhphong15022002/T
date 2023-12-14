@@ -42,6 +42,7 @@ import {
 } from 'projects/codx-share/src/lib/models/ApproveProcess.model';
 import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
 import { PdfComponent } from 'projects/codx-common/src/lib/component/pdf/pdf.component';
+import { CodxCommonService } from 'projects/codx-common/src/lib/codx-common.service';
 
 @Component({
   selector: 'popup-add-sign-file',
@@ -148,6 +149,7 @@ export class PopupAddSignFileComponent implements OnInit {
     private codxShareService: CodxShareService,
     private cr: ChangeDetectorRef,
     private callfuncService: CallFuncService,
+    private codxCommonService: CodxCommonService,
     public dmSV: CodxDMService,
     private notify: NotificationsService,
     private fileService: FileService,
@@ -1503,7 +1505,7 @@ export class PopupAddSignFileComponent implements OnInit {
         this.isReleasing = false;
         return;
       }
-      this.codxShareService
+      this.codxCommonService
         .codxRelease(
           this.approverProcess?.module != null ? this.approverProcess?.module: 'ES',
           this.data?.recID,

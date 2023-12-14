@@ -36,6 +36,7 @@ import { CodxListReportsComponent } from 'projects/codx-share/src/lib/components
 import { AnimationModel } from '@syncfusion/ej2-angular-progressbar';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { JournalService } from '../../journals/journals.service';
+import { CodxCommonService } from 'projects/codx-common/src/lib/codx-common.service';
 
 @Component({
   selector: 'lib-receipt-transactions',
@@ -75,6 +76,7 @@ export class ReceiptTransactionsComponent extends UIComponent {
     private authStore: AuthStore,
     private shareService: CodxShareService,
     private notification: NotificationsService,
+    private codxCommonService: CodxCommonService,
     private tenant: TenantStore,
     private journalService: JournalService
   ) {
@@ -411,7 +413,7 @@ export class ReceiptTransactionsComponent extends UIComponent {
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         this.dataCategory = res;
-        this.shareService
+        this.codxCommonService
           .codxRelease(
             'IV',
             data.recID,
@@ -447,7 +449,7 @@ export class ReceiptTransactionsComponent extends UIComponent {
    * @param data
    */
   cancelReleaseVoucher(text: any, data: any) {
-    this.shareService
+    this.codxCommonService
       .codxCancel('IV', data?.recID, this.view.formModel.entityName, null, null)
       .pipe(takeUntil(this.destroy$))
       .subscribe((result: any) => {

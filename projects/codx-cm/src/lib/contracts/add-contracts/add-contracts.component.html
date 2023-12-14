@@ -71,7 +71,7 @@
     </codx-input>
   </div>
 
-  <div class="form-group d-flex justify-content-between" *ngIf="stepsTasks?.endDate && stepsTasks?.endDate">
+  <div class="form-group d-flex justify-content-between" *ngIf="isStartIns">
     <div class="me-2">
       <codx-label
         fiedName="startDate"
@@ -122,7 +122,7 @@
               field="durationDay"
               [crrValue]="stepsTasks?.durationDay"
               (valueChange)="changeValueTextTask($event)"
-              [disabled]="stepsTasks?.isTaskDefault"
+              [disabled]="stepsTasks?.isTaskDefault || isStartIns"
               type="number"
               min="0"
             >
@@ -147,7 +147,7 @@
               (valueChange)="changeValueTextTask($event)"
               type="number"
               min="0"
-              [disabled]="stepsTasks?.isTaskDefault"
+              [disabled]="stepsTasks?.isTaskDefault || isStartIns"
             >
             </codx-input>
             <div
@@ -302,7 +302,7 @@
         field="businessLineID"
         [crrValue]="contracts?.businessLineID"
         (valueChange)="valueChangeCombobox($event)"
-        [disabled]="action == 'edit'"
+        [disabled]="action == 'edit' || type == 'DP'"
       >
       </codx-input>
     </div>
@@ -552,11 +552,11 @@
     ></codx-label>
     <codx-input
       #inputDeal
-      [formModel]="dialog?.formModel"
       field="dealID"
+      [formModel]="dialog?.formModel"
       [crrValue]="contracts?.dealID"
       (valueChange)="valueChangeCombobox($event)"
-      [model]="customerID"
+      [model]="{CustomerID: contracts?.currencyID}"
       [disabled]="type == 'deal'"
     >
     </codx-input>
@@ -574,7 +574,7 @@
       field="quotationID"
       [crrValue]="contracts?.quotationID"
       (valueChange)="valueChangeCombobox($event)"
-      [model]="customerID"
+      [model]="{CustomerID: contracts?.currencyID}"
       [disabled]="type == 'quotation'"
     ></codx-input>
   </div>

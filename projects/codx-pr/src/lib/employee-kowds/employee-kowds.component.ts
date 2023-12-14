@@ -80,21 +80,27 @@ export class EmployeeKowdsComponent extends UIComponent{
   }
 
   onInit(): void {
+    let date = new Date();
+    this.filterDowCode = `${date.getFullYear()}/${date.getMonth()+1}`
+    console.log('gtri dowcode', this.filterDowCode);
+     
     this.initHeaderText();
     this.getTimeKeepingMode().subscribe((res) => {
       console.log('get time keeping', res);
       this.timeKeepingMode = res.timeKeepingMode;
       if(this.timeKeepingMode == '2'){
-        this.viewStatistic = false;
-        this.viewDetailData = true;
-
-        //nho chinh lai true false
+        this.viewStatistic = true;
+        this.viewDetailData = false;
       }
     })
 
     // this.testAPILoadDetailData().subscribe((res) => {
     //   console.log('load data mau', res);
     //   debugger
+    // })
+
+    // this.testAPILoadStatisticData().subscribe((res) => {
+    //   console.log('load data statistic mau', res);
     // })
 
     this.cache.functionList(this.funcID).subscribe((res) => {
@@ -152,8 +158,13 @@ export class EmployeeKowdsComponent extends UIComponent{
 
   }
 
-  clickMF(event, data){
-
+  clickMF(event){
+    switch (event.functionID){
+      case 'SYS04': //copy
+      break;
+      case 'SYS02': //delete
+      break;
+    }
   }
 
   doubleClickGrid(event){
@@ -163,7 +174,7 @@ export class EmployeeKowdsComponent extends UIComponent{
     // document.querySelector('[data-colindex="2"]').textContent
     let date = event.column.index;
     let data = event.rowData[`day${date}`]
-    let employeeId = event.rowData.employeeID;
+    let employeeId = event.rowData.emp.employeeID;
     this.handleEmpKows(this.editHeaderText, 'edit', data, employeeId, date)
   }
 
@@ -192,8 +203,20 @@ export class EmployeeKowdsComponent extends UIComponent{
         if(this.viewDetailData == true) {
           this.calendarGrid.refresh();
         }
+        else if(this.viewStatistic == true){
+          this.calendarGrid2.refresh();
+        }
       }
     })
+  }
+
+  handleShowHideMF(event){
+    console.log('more func', event);
+    for(let i = 0; i < event.length; i++){
+      if(event[i].functionID == 'SYS04' || event[i].functionID == 'SYS02'){
+        event[i].disabled = false;
+      }
+    }
   }
 
   switchModeView(mode){
@@ -249,6 +272,17 @@ export class EmployeeKowdsComponent extends UIComponent{
     );
   }
 
+  testAPILoadStatisticData() {
+    console.log('chay ham get emp',this.filterOrgUnit, this.filterMonth, this.filterYear);
+    return this.api.execSv<any>(
+      'HR',
+      'ERM.Business.PR',
+      'KowDsBusiness',
+      'LoadDataForGridStatisticAsync',
+      []
+    );
+  }
+
   loadDataEmp(){
     // this.getEmpList().subscribe((res) =>{
     // debugger
@@ -293,7 +327,6 @@ export class EmployeeKowdsComponent extends UIComponent{
         this.calendarGridColumns = []
         this.calendarGridColumns.push({
           headerTemplate: 'Nhân viên',
-          field: 'emp',
           template: this.tempEmployee,
           width: '350',
         })
@@ -413,7 +446,9 @@ export class EmployeeKowdsComponent extends UIComponent{
   }
 
   logData(data){
-    console.log('Data tra ve template employee', data.emp)
+    if(data != null){
+      console.log('Data tra ve template detail', data)
+    }
   }
 
   onSelectionChangedTreeOrg(evt){

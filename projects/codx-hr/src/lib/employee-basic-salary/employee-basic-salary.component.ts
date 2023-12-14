@@ -23,6 +23,7 @@ import { PopupEBasicSalariesComponent } from '../employee-profile/popup-ebasic-s
 import { ViewBasicSalaryDetailComponent } from './view-basic-salary-detail/view-basic-salary-detail.component';
 import { CodxShareService } from 'projects/codx-share/src/lib/codx-share.service';
 import { CodxOdService } from 'projects/codx-od/src/public-api';
+import { CodxCommonService } from 'projects/codx-common/src/lib/codx-common.service';
 import moment from 'moment';
 
 @Component({
@@ -52,6 +53,7 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
     private activatedRoute: ActivatedRoute,
     private df: ChangeDetectorRef,
     private notify: NotificationsService,
+    private codxCommonService: CodxCommonService,
     private codxODService: CodxOdService
   ) {
     super(injector);
@@ -281,7 +283,7 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
           funcID === this.actionUpdateCanceled ||
           funcID === this.actionCancelSubmit
         ) {
-          this.codxShareService
+          this.codxCommonService
             .codxCancel(
               'HR',
               this.itemDetail.recID,
@@ -462,7 +464,7 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
       .subscribe((res) => {
         if (res) {
           this.dataCategory = res;
-          this.codxShareService.codxReleaseDynamic(
+          this.codxCommonService.codxReleaseDynamic(
             'HR',
             this.itemDetail,
             this.dataCategory,
@@ -559,7 +561,7 @@ export class EmployeeBasicSalaryComponent extends UIComponent {
           funcID === this.actionUpdateCanceled ||
           funcID === this.actionCancelSubmit
         ) {
-          this.codxShareService
+          this.codxCommonService
             .codxCancel(
               'HR',
               res[0].recID,

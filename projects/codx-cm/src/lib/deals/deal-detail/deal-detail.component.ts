@@ -41,6 +41,7 @@ export class DealDetailComponent implements OnInit {
   @Input() funcID = 'CM0201'; //
   @Input() checkMoreReason = true;
   @Input() isChangeOwner = false;
+  @Input() taskAdd;
 
   @Output() clickMoreFunc = new EventEmitter<any>();
   @Output() changeMF = new EventEmitter<any>();
@@ -199,6 +200,10 @@ export class DealDetailComponent implements OnInit {
           this.customerName = res;
         });
       }
+    }
+    if(changes?.taskAdd){
+      console.log(changes?.taskAdd);
+      
     }
   }
 

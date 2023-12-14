@@ -44,12 +44,12 @@ export class PopupAddPositionsComponent implements OnInit {
     {
       icon: 'icon-info',
       text: 'Thông tin chung',
-      mane: 'positionInfo',
+      name: 'tabPositionInfo',
     },
     {
       icon: 'icon-info',
       text: 'Mô tả',
-      mane: 'description',
+      name: 'tabDescription',
     },
   ];
 

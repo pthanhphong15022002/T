@@ -46,14 +46,15 @@
       </ng-container>
       <ng-template #reportBolder>
         <codx-report-iframe
-          [service]="data.service"
-          [funcID]="data.recID"
+          [service]="data?.service"
+          [funcID]="data?.recID"
           [predicates]="predicate"
           [dataValues]="dataValue"
           [print]="print"
           [param]="_paramString"
           [labels]="_labelString"
           [format]="_formatString"
+          [printMode]="!data?.displayMode || data?.displayMode=='0'? false:true"
         ></codx-report-iframe>
       </ng-template>
     </ng-template>
