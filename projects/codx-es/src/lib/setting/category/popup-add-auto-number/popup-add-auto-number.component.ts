@@ -60,7 +60,7 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
   autoDefaultData: any = {};
   autoNoSetting: any = {
     lastNumber: 1,
-    _isNew:true
+    _isNew: true,
   };
   isAdd: boolean = true;
 
@@ -375,7 +375,9 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
     }
 
     if (this.functionID) {
-      this.autoDefaultData.autoNumber = null;
+      if (this.autoDefaultData.autoNoType == '2')
+        this.autoDefaultData.autoNoFormat = this.functionID;
+      //this.autoDefaultData.autoNumber = null;
       this.esService
         .updateAutoNumberDefaults(this.autoDefaultData)
         .subscribe((res) => {
@@ -807,14 +809,14 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
       this.autoNumberSettingPreview = strFormat;
     }
   }
-  eventAction(e:any){
-    if(e.type == 'rowDrop'){
-      if(e.data.fromIndex == e.data.dropIndex) return;
-      if(isNaN(e.data.dropIndex)) return;
+  eventAction(e: any) {
+    if (e.type == 'rowDrop') {
+      if (e.data.fromIndex == e.data.dropIndex) return;
+      if (isNaN(e.data.dropIndex)) return;
       const temp = this.autoNoSegments[e.data.dropIndex];
       const dragItem = this.autoNoSegments[e.data.fromIndex];
       this.autoNoSegments[e.data.dropIndex] = dragItem;
-      this.autoNoSegments[e.data.fromIndex]=temp;
+      this.autoNoSegments[e.data.fromIndex] = temp;
       this.autoNoSegments.forEach((item: any, index: number) => {
         item.lineID = index + 1;
       });

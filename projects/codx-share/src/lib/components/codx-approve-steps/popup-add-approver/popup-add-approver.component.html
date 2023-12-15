@@ -59,7 +59,7 @@
         type="radio"
         [checked]="data?.idCardType =='1'"
         [label]="'CCCD'"
-        (valueChange)="valueChange($event)"
+        (valueChange)="cardTypeChange($event,'1')"
       >
       </codx-input>
       <codx-input  class="me-4"
@@ -68,7 +68,7 @@
         type="radio"
         [checked]="data?.idCardType =='2'"
         [label]="'CMND'"
-        (valueChange)="valueChange($event)"
+        (valueChange)="cardTypeChange($event,'2')"
       >
       </codx-input>
       <codx-input class="me-4"
@@ -77,7 +77,7 @@
         type="radio"
         [checked]="data?.idCardType =='3'"
         [label]="'Hộ chiếu'"
-        (valueChange)="valueChange($event)"
+        (valueChange)="cardTypeChange($event,'3')"
       >
       </codx-input>
     </div>
