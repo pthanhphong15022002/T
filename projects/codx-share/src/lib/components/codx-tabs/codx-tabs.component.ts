@@ -280,8 +280,10 @@ export class CodxTabsComponent implements OnInit, OnChanges {
 
   //giao việc nếu dataTree thay đổi mà nv hiện tại ko get lai data để truyền qua thì gọi hàm này đê componet tự get
   changeTreeAssign() {
-    if (this.viewTreeAssign) this.viewTreeAssign.loadTree();
-    else this.isLoadedTree = false;
+    if (this.viewTreeAssign) {
+      this.viewTreeAssign.listRefID = this.listRefID;
+      this.viewTreeAssign.loadTree();
+    } else this.isLoadedTree = false;
   }
 
   changeDataRef() {
