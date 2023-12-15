@@ -117,6 +117,9 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
     if (this.dataType != 'auto') {
       this.data = JSON.parse(JSON.stringify(dialog?.dataService?.dataSelected));
     } else this.data = JSON.parse(JSON.stringify(data?.data?.data));
+    if(this.data?.eSign){
+      this.data.editApprovers = true ;
+    }
     this.signatureType = dialog?.dataService?.dataSelected?.signatureType;
     this.isAdd = data?.data?.isAdd;
     this.isES = data?.data?.isES;
@@ -399,9 +402,14 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
           }
           break;
         }
+        
         default: {
+          
           this.data[event['field']] = event.data;
           this.form?.formGroup?.patchValue({ [event['field']]: event.data });
+          if(this.data?.eSign){
+            this.data.editApprovers = true ;
+          }
         }
       }
     }
@@ -583,6 +591,7 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
         if (res) {
           //update data
           this.data = res;
+
           if (this.form.formGroup.value.categoryID == null) {
             this.form.formGroup.patchValue({
               categoryID: this.data.categoryID,

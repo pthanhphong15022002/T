@@ -41,7 +41,6 @@ import { NameByIdPipe } from './pipes/name-by-id.pipe';
 import { ReplacePipe } from './pipes/replace.pipe';
 import { ReportsComponent } from './reports/reports.component';
 import { SearchingComponent } from './searching/searching.component';
-import { CashtransfersComponent } from './vouchers/cashtransfers/cashtransfers.component';
 import { ReceiptTransactionsAddComponent } from './vouchers/receipt-transactions/receipt-transactions-add/receipt-transactions-add.component';
 import { ReceiptTransactionsComponent } from './vouchers/receipt-transactions/receipt-transactions.component';
 import { SalesinvoicesComponent } from './vouchers/salesinvoices/salesinvoices.component';
@@ -70,7 +69,6 @@ import { PurchaseinvoicesComponent } from './vouchers/purchaseinvoices/purchasei
 import { PurchaseinvoicesAddComponent } from './vouchers/purchaseinvoices/purchaseinvoices-add/purchaseinvoices-add.component';
 import { SalesinvoicesAddComponent } from './vouchers/salesinvoices/salesinvoices-add/salesinvoices-add.component';
 import { SalesinvoiceslinesAddComponent } from './vouchers/salesinvoices/salesinvoiceslines-add/salesinvoiceslines-add.component';
-import { CashtransferAddComponent as CashtransfersAddComponent } from './vouchers/cashtransfers/cashtransfers-add/cashtransfers-add.component';
 import { IssueTransactionsComponent } from './vouchers/issue-transactions/issue-transactions.component';
 import { IssueTransactionsAddComponent } from './vouchers/issue-transactions/issue-transactions-add/issue-transactions-add.component';
 import { IsObjectEmptyPipe } from './pipes/is-object-empty.pipe';
@@ -80,7 +78,6 @@ import { PurchaseinvoicesDetailComponent } from './vouchers/purchaseinvoices/pur
 import { IssueTransactionsDetailComponent } from './vouchers/issue-transactions/issue-transactions-detail/issue-transactions-detail.component';
 import { ReceiptTransactionsDetailComponent } from './vouchers/receipt-transactions/receipt-transactions-detail/receipt-transactions-detail.component';
 import { SalesinvoicesDetailComponent } from './vouchers/salesinvoices/salesinvoices-detail/salesinvoices-detail.component';
-import { CashtransfersDetailComponent } from './vouchers/cashtransfers/cashtransfers-detail/cashtransfers-detail.component';
 import { TranformValueNumberPipe } from './pipes/tranform-value-number.pipe';
 import { AcctrantsTableComponent } from './share/ac-tableview/acctrants-table/acctrants-table.component';
 import { SettledinvoicesTableComponent } from './share/ac-tableview/settledinvoices-table/settledinvoices-table.component';
@@ -119,6 +116,8 @@ import { DealsComponent } from 'projects/codx-cm/src/lib/deals/deals.component';
 import { CasesComponent } from 'projects/codx-cm/src/lib/cases/cases.component';
 import { LeadsComponent } from 'projects/codx-cm/src/lib/leads/leads.component';
 import { ViewInstancesComponent } from 'projects/codx-dp/src/lib/view-instances/view-instances.component';
+import { CashtransfersComponent } from './vouchers/cashtransfers/cashtransfers.component';
+import { CashtransfersAddComponent } from './vouchers/cashtransfers/cashtransfers-add/cashtransfers-add.component';
 export const routes: Routes = [
   {
     path: '',
@@ -366,11 +365,10 @@ export const routes: Routes = [
   declarations: [
     CodxAcComponent,
     LayoutComponent,
+    CashtransfersComponent,
     LayoutNoToolbarComponent,
     CashPaymentsComponent,
     CashPaymentAddComponent,
-    CashtransfersComponent,
-    CashtransfersAddComponent,
     PurchaseinvoicesComponent,
     PurchaseinvoicesAddComponent,
     JournalsAddComponent,
@@ -427,7 +425,6 @@ export const routes: Routes = [
     IssueTransactionsDetailComponent,
     ReceiptTransactionsDetailComponent,
     SalesinvoicesDetailComponent,
-    CashtransfersDetailComponent,
     AcctrantsTableComponent,
     SettledinvoicesTableComponent,
     VatinvoicesTableComponent,
@@ -455,6 +452,7 @@ export const routes: Routes = [
     TransfersTableComponent,
     AllocationAddComponent,
     AllocationTableComponent,
+    CashtransfersAddComponent,
   ],
   exports: [RouterModule],
   providers: [AccumulationTooltipService],
