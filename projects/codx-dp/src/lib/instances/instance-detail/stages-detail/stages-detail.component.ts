@@ -71,6 +71,7 @@ export class StagesDetailComponent implements OnInit {
   @Input() frmModelInstancesTask: FormModel;
   @Input() vllApprover = 'DP043';
   @Input() stepIDFirst = '';
+  @Input() applyFor = '';
   @Output() saveAssign = new EventEmitter<any>();
   @Output() outDataStep = new EventEmitter<any>();
   @Output() progressEmit = new EventEmitter<any>();
