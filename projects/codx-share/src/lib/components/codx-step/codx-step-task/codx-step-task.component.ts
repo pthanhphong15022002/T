@@ -101,6 +101,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   @Input() isMoveStage = false; // chuyển giai đoạn
   @Input() isLockSuccess = false; // lọc cái task 100%
 
+  @Input() applyFor; //tìm sesion giao việc
   @Input() sessionID = ''; // sesion giao việc
   @Input() formModelAssign: FormModel; // formModel của giao việc
   @Input() isChangeOwner = false;
@@ -118,6 +119,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   @Output() valueChangeProgress = new EventEmitter<any>(); // type A = all, D=default, R = required
   @Output() changeProgress = new EventEmitter<any>();
   @Output() isSuccessStep = new EventEmitter<any>();
+  @Output() recIDTaskAdd = new EventEmitter<any>();
   //#endregion
 
   //#region variable
@@ -1167,6 +1169,9 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       this.currentStep.progress = progressStep;
       this.notiService.notifyCode('SYS006');
       isCreateMeeting && this.addMeetings(task);
+      if(task?.assigned == '1'){
+        this.recIDTaskAdd.emit(task?.recID);
+      }
     }
     this.changeDetectorRef.markForCheck();
   }
