@@ -197,6 +197,7 @@ import { CodxShareDashboardComponent } from './components/codx-share-dashboard/c
 import { CodxDashboardViewsComponent } from './components/codx-dashboard/dashboard-view/dashboard-view.component';
 import { CheckRoleStepPipe } from './components/codx-step/pipes/check-role-step.pipe';
 import { SetColorTaskPipe } from './components/codx-step/pipes/set-color-task.pipe';
+import { CodxAuthFileComponent } from './components/codx-auth-file/codx-auth-file.component';
 
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
@@ -378,7 +379,7 @@ const T_Component: Type<any>[] = [
   //View
   CodxView2Component,
   FormSettingComponent,
-
+  CodxAuthFileComponent,
   CodxShareReportComponent,
   CodxShareDashboardComponent
 ];

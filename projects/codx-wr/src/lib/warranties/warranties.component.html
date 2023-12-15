@@ -55,7 +55,6 @@
 <ng-template #itemTemplate let-data>
   <codx-temp-full
     [typeMF]="'hover'"
-    [iconCss]="data.closed ? 'icon-lock text-danger' : ''"
     [imageObjType]="'WR_WorkOrders'"
     cardCss="card-template border-bottom p-3 list-task"
     (clickMF)="clickMF($event, data)"
@@ -66,7 +65,6 @@
     [formModel]="view.formModel"
     [descTmp]="descTmp"
     [footer]="footer"
-    [titleCss]="'text-primary-dark'"
     [dataItem]="data"
     (mouseenter)="closePopover()"
   >
@@ -142,12 +140,12 @@
       (mouseenter)="closePopover()"
     >
       <span
-        class="icon-location_on text-hover-primary text-primary icon-16 text-gray-600 me-1"
+        class="icon-location_on icon-16 text-gray-600 me-1"
         [ngbTooltip]="gridViewSetup?.Address?.headerText"
       ></span>
       <span
         [ngbTooltip]="data?.address"
-        class="text-hover-primary text-primary fs-7 line-clamp line-clamp-1"
+        class="fs-7 line-clamp line-clamp-1"
         [ngbPopover]="data?.address"
         #addre="ngbPopover"
         [openDelay]="500"

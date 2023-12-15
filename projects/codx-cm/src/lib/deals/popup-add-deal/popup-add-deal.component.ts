@@ -54,6 +54,7 @@ export class PopupAddDealComponent
   @ViewChild('loadContactDeal') loadContactDeal: CodxListContactsComponent;
   CodxListContactsComponent;
   @ViewChild('form') form: CodxFormComponent;
+  @ViewChild('cbxOwner') cbxOwner: CodxInputComponent;
   // setting values in system
   dialog: DialogRef;
   //type any
@@ -94,6 +95,8 @@ export class PopupAddDealComponent
   readonly typeForDeal: string = '1';
   readonly fieldCbxParticipants = { text: 'userName', value: 'userID' };
   readonly guidEmpty: string = '00000000-0000-0000-0000-000000000000'; // for save BE
+  readonly viewOwnerProcess: string = 'viewOwnerProcess';
+  readonly viewOwnerDefault: string = 'viewOwnerDefault';
 
   // Tab control
   menuGeneralInfo = {
@@ -146,7 +149,7 @@ export class PopupAddDealComponent
   isViewAll: boolean = false;
   isViewContact: boolean = false;
 
-  processIdDefault: string = '';
+  // processIdDefault: string = '';
   defaultDeal: string = '';
   customerCategory: string = '';
 
@@ -161,6 +164,7 @@ export class PopupAddDealComponent
   bussineLineNameTmp: string = '';
   customerNameTmp: string = '';
   shortNameTmp: string = '';
+  planceHolderAutoNumber:string ='';
   constructor(
     private inject: Injector,
     private changeDetectorRef: ChangeDetectorRef,
@@ -207,6 +211,7 @@ export class PopupAddDealComponent
           ? JSON.parse(JSON.stringify(dialog.dataService.dataSelected))
           : this.deal;
       this.customerCategory = dt?.data?.customerCategory;
+
       if (this.action === this.actionAdd) {
         this.deal.exchangeRate = dt?.data?.exchangeRateDefault;
         this.deal.currencyID = dt?.data?.currencyIDDefault;
@@ -217,16 +222,18 @@ export class PopupAddDealComponent
       this.deal.processID = dt?.data?.processID;
       this.isViewAll = true;
     }
-    this.executeApiCalls();
     if (this.action != this.actionAdd) {
       this.customerIDOld = this.deal?.customerID;
       this.customerID = this.deal?.customerID;
     }
     if (this.action === this.actionCopy) {
-      this.deal.owner = null;
+      this.deal.applyProcess =this.deal.processID && this.deal.processID !== this.guidEmpty;
+      this.deal.owner =  this.deal.applyProcess ? null : this.deal.owner;
       this.deal.salespersonID = null;
       this.oldIdInstance = this.deal.refID;
+      this.deal.permissions = this.deal?.permissions.filter(x=> x.memberType != '2');
     }
+    this.executeApiCalls();
   }
 
   onInit(): void {}
@@ -242,6 +249,9 @@ export class PopupAddDealComponent
       this.itemTabContact(this.ischeckCategoryCustomer(this.customerCategory));
       this.getListContactByObjectID(this.customerID);
       this.isviewCustomer && (await this.getContactDefault(this.customerID));
+    }
+    if(!this.deal.applyProcess) {
+      this.owner = this.deal.owner;
     }
   }
 
@@ -286,7 +296,6 @@ export class PopupAddDealComponent
     deal.customerCategory =this.customerCategory ;
     this.customerNameTmp = data?.dealName;
     this.shortNameTmp = data?.shortName
-
 
     //this.itemTabContact(this.ischeckCategoryCustomer(this.categoryCustomer));
   }
@@ -371,20 +380,55 @@ export class PopupAddDealComponent
     }
   }
 
-  valueChangeOwner($event) {
-    if ($event ) {
-      this.owner = $event;
-      let ownerName = '';
-      if (this.listParticipants.length > 0 && this.listParticipants) {
-        ownerName = this.listParticipants.filter(
-          (x) => x.userID === this.owner
-        )[0]?.userName;
+  // valueChangeOwner($event) {
+  //   if ($event ) {
+  //     this.owner = $event;
+  //     let ownerName = '';
+  //     if (this.listParticipants.length > 0 && this.listParticipants) {
+  //       ownerName = this.listParticipants.filter(
+  //         (x) => x.userID === this.owner
+  //       )[0]?.userName;
+  //     }
+  //     this.searchOwner('1', 'O', '0', this.owner, ownerName);
+  //   } else if ($event === null || $event === '') {
+  //     this.deleteOwner('1', 'O', '0', this.deal.owner, 'owner');
+  //   }
+  // }
+  async valueChangeOwner($event, view) {
+    if (!this.deal?.businessLineID) {
+      this.notificationsService.notifyCode(
+        'SYS009',
+        0,
+        '"' + this.gridViewSetup['BusinessLineID']?.headerText + '"'
+      );
+      this.owner = null;
+      return;
+    }
+    if (view === this.viewOwnerDefault) {
+      if ($event?.data && $event?.data !== '') {
+        let ownerName = '';
+        this.owner = $event?.data;
+        ownerName = $event?.component?.itemsSelected[0]?.UserName;
+        this.searchOwner('1', 'O', '0', this.owner, ownerName);
+      } else if ($event === null || $event === '' || $event === '') {
+        this.deleteOwner('1', 'O', '0', this.deal.owner, 'owner');
       }
-      this.searchOwner('1', 'O', '0', this.owner, ownerName);
-    } else if ($event === null || $event === '') {
-      this.deleteOwner('1', 'O', '0', this.deal.owner, 'owner');
+    } else if (view === this.viewOwnerProcess) {
+      if ($event) {
+        this.owner = $event;
+        let ownerName = '';
+        if (this.listParticipants.length > 0 && this.listParticipants) {
+          ownerName = this.listParticipants.filter(
+            (x) => x.userID === this.owner
+          )[0].userName;
+        }
+        this.searchOwner('1', 'O', '0', this.owner, ownerName);
+      } else if ($event === null || $event === '') {
+        this.deleteOwner('1', 'O', '0', this.deal.owner, 'owner');
+      }
     }
   }
+
   deleteOwner(
     objectType: any,
     roleType: any,
@@ -509,8 +553,8 @@ export class PopupAddDealComponent
     }
   }
 
-  saveOpportunity() {
-    if (!this.isBlock) return;
+  saveDeal() {
+    // if (!this.isBlock) return; - xíu mở ra
     if (!this.deal?.businessLineID) {
       this.notificationsService.notifyCode(
         'SYS009',
@@ -519,12 +563,8 @@ export class PopupAddDealComponent
       );
       return;
     }
-    if (!this.deal?.processID) {
-      this.notificationsService.notifyCode(
-        'SYS009',
-        0,
-        '"' + this.gridViewSetup['ProcessID']?.headerText + '"'
-      );
+    if (this.deal?.processID && !this.deal.businessLineID && this.deal.applyProcess) {
+      this.notificationsService.notifyCode('Quy trình chưa được thiết lập sản phẩm');
       return;
     }
     if (!this.deal?.dealName?.trim()) {
@@ -560,46 +600,58 @@ export class PopupAddDealComponent
     //   );
     //   return;
     // }
-    let ischeck = true;
-    let ischeckFormat = true;
-    let title = '';
-    let messageCheckFormat = '';
+    if(this.deal.applyProcess) {
+      let ischeck = true;
+      let ischeckFormat = true;
+      let title = '';
+      let messageCheckFormat = '';
 
-    for (let items of this.listInstanceSteps) {
-      for (let item of items.fields) {
-        if (item) {
-          messageCheckFormat = this.checkFormat(item);
-          if (messageCheckFormat) {
-            ischeckFormat = false;
-            break;
+      for (let items of this.listInstanceSteps) {
+        for (let item of items.fields) {
+          if (item) {
+            messageCheckFormat = this.checkFormat(item);
+            if (messageCheckFormat) {
+              ischeckFormat = false;
+              break;
+            }
           }
         }
+        if (!ischeck || !ischeckFormat) {
+          break;
+        }
       }
-      if (!ischeck || !ischeckFormat) {
-        break;
+      if (!ischeck) {
+        this.notificationsService.notifyCode('SYS009', 0, '"' + title + '"');
+        return;
       }
-    }
-    if (!ischeck) {
-      this.notificationsService.notifyCode('SYS009', 0, '"' + title + '"');
-      return;
-    }
-    if (!ischeckFormat) {
-      this.notificationsService.notifyCode(messageCheckFormat);
-      return;
+      if (!ischeckFormat) {
+        this.notificationsService.notifyCode(messageCheckFormat);
+        return;
+      }
     }
     this.deal.owner = this.owner;
     this.deal.salespersonID = this.owner;
-    this.convertDataInstance(this.deal, this.instance);
-    this.updateDateDeal(this.instance, this.deal);
+    this.deal.applyProcess && this.convertDataInstance(this.deal, this.instance);
+    this.deal.applyProcess && this.updateDateDeal(this.instance, this.deal);
     this.executeSaveData();
   }
 
   async executeSaveData() {
-    if (this.action !== this.actionEdit) {
-      await this.insertInstance();
-    } else {
-      await this.editInstance();
+    if(this.deal.applyProcess) {
+      if (this.action !== this.actionEdit) {
+        await this.insertInstance();
+      } else {
+        await this.editInstance();
+      }
     }
+    else {
+      if (this.action !== this.actionEdit) {
+        await this.onAdd();
+      } else {
+        await this.onEdit();
+      }
+    }
+
   }
 
   cbxChange($event, field) {
@@ -752,60 +804,112 @@ export class PopupAddDealComponent
          this.deal.dealName = (this.shortNameTmp ? this.shortNameTmp?.trim(): this.customerNameTmp?.trim() ) + ' mua ' + this.bussineLineNameTmp;
       }
       if (this.deal.businessLineID && this.action !== this.actionEdit) {
-        if (
-          !$event.component?.itemsSelected[0]?.ProcessID &&
-          !this.processIdDefault
-        ) {
-          this.getParamatersProcessDefault();
-        } else {
-          let processId =
-            !$event.component.itemsSelected[0].ProcessID &&
-            this.processIdDefault
-              ? this.processIdDefault
-              : $event.component.itemsSelected[0].ProcessID;
-          if (processId) {
-            this.deal.processID = processId;
-            let result = this.checkProcessInList(processId);
-            if (result) {
-              this.listParticipants = [];
-              this.listInstanceSteps = result?.steps;
-              this.listParticipants = JSON.parse(
-                JSON.stringify(result?.permissions)
-              );
-              this.deal.dealID = result?.dealId;
-              this.deal.endDate = this.HandleEndDate(
-                this.listInstanceSteps,
-                this.action,
-                this.action !== this.actionEdit ||
-                  (this.action === this.actionEdit &&
-                    (this.deal.status == '1' || this.deal.status == '15'))
-                  ? null
-                  : this.deal.createdOn
-              );
-              this.getSettingFields(result?.processSetting,this.listInstanceSteps)
-              if (this.listParticipants && this.listParticipants?.length > 0 && !this.owner) {
-                let index = this.listParticipants.findIndex(
-                  (x) => x.userID === this.user.userID
-                );
-                if (index != -1) {
-                  this.owner = this.user.userID;
-                } else {
-                  this.owner = null;
-                }
-              }
+        // if (
+        //   !$event.component?.itemsSelected[0]?.ProcessID &&
+        //   !this.processIdDefault
+        // ) {
+        //   this.getParamatersProcessDefault();
+        // } else {
+        //   let processId =
+        //     !$event.component.itemsSelected[0].ProcessID &&
+        //     this.processIdDefault
+        //       ? this.processIdDefault
+        //       : $event.component.itemsSelected[0].ProcessID;
+        //   if (processId) {
+        //     this.deal.processID = processId;
+        //     let result = this.checkProcessInList(processId);
+        //     if (result) {
+        //       this.listParticipants = [];
+        //       this.listInstanceSteps = result?.steps;
+        //       this.listParticipants = JSON.parse(
+        //         JSON.stringify(result?.permissions)
+        //       );
+        //       this.deal.dealID = result?.dealId;
+        //       this.deal.endDate = this.HandleEndDate(
+        //         this.listInstanceSteps,
+        //         this.action,
+        //         this.action !== this.actionEdit ||
+        //           (this.action === this.actionEdit &&
+        //             (this.deal.status == '1' || this.deal.status == '15'))
+        //           ? null
+        //           : this.deal.createdOn
+        //       );
+        //       this.getSettingFields(result?.processSetting,this.listInstanceSteps)
+        //       if (this.listParticipants && this.listParticipants?.length > 0 && !this.owner) {
+        //         let index = this.listParticipants.findIndex(
+        //           (x) => x.userID === this.user.userID
+        //         );
+        //         if (index != -1) {
+        //           this.owner = this.user.userID;
+        //         } else {
+        //           this.owner = null;
+        //         }
+        //       }
+        //     } else {
+        //       this.getListInstanceSteps(processId);
+        //     }
+        //   }
+        // }
+      let processId = $event?.component?.itemsSelected[0]?.ProcessID;
+      this.listInstanceSteps = [];
+      this.listParticipants = [];
+      this.owner = null;
+      this.deal.permissions = this.deal?.permissions && this.deal?.permissions?.length > 0 ?
+      this.deal?.permissions.filter(x=>x.roleType != 'O' && x.objectType != '1')
+      : this.deal?.permissions;
+      if (processId) {
+        this.deal.applyProcess = true;
+        this.deal.processID = processId;
+        let result = this.checkProcessInList(processId);
+        if (result) {
+          this.listParticipants = [];
+          this.listInstanceSteps = result?.steps;
+          this.listParticipants = JSON.parse(
+            JSON.stringify(result?.permissions)
+          );
+          this.deal.dealID = result?.dealId;
+          this.deal.endDate = this.HandleEndDate(
+            this.listInstanceSteps,
+            this.action,
+            this.action !== this.actionEdit ||
+              (this.action === this.actionEdit &&
+                (this.deal.status == '1' || this.deal.status == '15'))
+              ? null
+              : this.deal.createdOn
+          );
+          this.getSettingFields(result?.processSetting,this.listInstanceSteps)
+          if (this.listParticipants && this.listParticipants?.length > 0 && !this.owner) {
+            let index = this.listParticipants.findIndex(
+              (x) => x.userID === this.user.userID
+            );
+            if (index != -1) {
+              this.owner = this.user.userID;
             } else {
-              this.getListInstanceSteps(processId);
+              this.owner = null;
             }
           }
+        } else {
+          this.getListInstanceSteps(processId);
         }
+
+        }
+        else {
+          // gán tạm để test
+          this.deal.applyProcess = false;
+          this.owner = this.user.userID;
+          !this.planceHolderAutoNumber && this.getAutoNumber();
+          this.itemTabsInput(this.ischeckFields(this.listInstanceSteps));
+           this.searchOwner('1', 'O', '0', this.owner, this.user.userName);
+        }
+
         this.changeDetectorRef.detectChanges();
       }
     }
   }
 
-  async executeGetDataParamter() {
-    await this.getParamatersProcessDefault();
-  }
+  // async executeGetDataParamter() {
+  //   await this.getParamatersProcessDefault();
+  // }
 
   onAdd() {
     if (this.isviewCustomer) {
@@ -945,7 +1049,8 @@ export class PopupAddDealComponent
         this.loadExchangeRate();
       }
       if (this.action !== this.actionAdd) {
-        await this.getListInstanceSteps(this.deal.processID);
+        this.deal.applyProcess && await this.getListInstanceSteps(this.deal.processID);
+        !this.deal.applyProcess && await this.getAutoNumber();
       }
       if (this.action === this.actionEdit) {
         await this.getListContactByDealID(this.deal.recID);
@@ -959,15 +1064,15 @@ export class PopupAddDealComponent
       }
     } catch (error) {}
   }
-  async getParamatersProcessDefault() {
-    this.codxCmService.getListProcessDefault(['1']).subscribe((res) => {
-      if (res) {
-        this.processIdDefault = res.recID;
-        this.deal.processID = this.processIdDefault;
-        this.getListInstanceSteps(this.processIdDefault);
-      }
-    });
-  }
+  // async getParamatersProcessDefault() {
+  //   this.codxCmService.getListProcessDefault(['1']).subscribe((res) => {
+  //     if (res) {
+  //       this.processIdDefault = res.recID;
+  //       this.deal.processID = this.processIdDefault;
+  //       this.getListInstanceSteps(this.processIdDefault);
+  //     }
+  //   });
+  // }
 
   async getGridViewSetup(formName, gridViewName) {
     this.cache.gridViewSetup(formName, gridViewName).subscribe((res) => {
@@ -982,10 +1087,15 @@ export class PopupAddDealComponent
       .getIdBusinessLineByProcessID([processID])
       .subscribe((res) => {
         if (res) {
+          this.deal.applyProcess = true;
           this.deal.businessLineID = res;
+          if (!this.deal.businessLineID) {
+            this.notificationsService.notifyCode('Quy trình chưa được thiết lập sản phẩm');
+            return;
+          }
           if (this.deal.businessLineID && this.action !== this.actionEdit) {
             if (this.deal.processID) {
-              var result = this.checkProcessInList(this.deal.processID);
+              let result = this.checkProcessInList(this.deal?.processID);
               if (result) {
                 this.listInstanceSteps = result?.steps;
                 this.listParticipants = result?.permissions;
@@ -995,7 +1105,7 @@ export class PopupAddDealComponent
                   this.action,
                   this.action !== this.actionEdit ||
                     (this.action === this.actionEdit &&
-                      (this.deal.status == '1' || this.deal.status == '15'))
+                      (this.deal?.status == '1' || this.deal?.status == '15'))
                     ? null
                     : this.deal.createdOn
                 );
@@ -1391,5 +1501,15 @@ export class PopupAddDealComponent
   }
   addFileCompleted(e) {
     this.isBlock = e;
+  }
+  async getAutoNumber() {
+    this.cache.message('AD019').subscribe((mes) => {
+      if (mes) {
+        this.planceHolderAutoNumber = mes?.customName || mes?.description;
+      }
+    });
+  }
+  changeAutoNum(e) {
+
   }
 }

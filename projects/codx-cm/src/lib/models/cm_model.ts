@@ -205,6 +205,7 @@ export class CM_Deals {
   companyID: string;
   customerName: string;
   customerCategory: string;
+  applyProcess : boolean;
 }
 
 export class CM_Permissions {

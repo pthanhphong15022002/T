@@ -41,7 +41,7 @@
     "@syncfusion/ej2-angular-documenteditor": "^21.1.38",
     "@syncfusion/ej2-angular-dropdowns": "^21.1.38",
     "@syncfusion/ej2-angular-gantt": "^21.1.38",
-    "@syncfusion/ej2-angular-grids": "^21.1.38",
+    "@syncfusion/ej2-angular-grids": "^23.2.7",
     "@syncfusion/ej2-angular-inplace-editor": "^21.1.37",
     "@syncfusion/ej2-angular-inputs": "^21.1.38",
     "@syncfusion/ej2-angular-kanban": "^21.1.37",

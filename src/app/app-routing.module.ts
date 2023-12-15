@@ -11,6 +11,7 @@ import { ExternalSigningComponent } from 'projects/codx-es/src/lib/external-sign
 import { ViewFileDialogComponent } from 'projects/codx-common/src/lib/component/viewFileDialog/viewFileDialog.component';
 import { LayoutOnlyHeaderComponent } from 'projects/codx-common/src/lib/_layout/_onlyHeader/_onlyHeader.component';
 import { LayoutNoAsideComponent } from 'projects/codx-common/src/lib/_layout/_noAside/_noAside.component';
+import { ViewfileComponent } from 'projects/codx-dm/src/lib/share/viewfile/viewfile.component';
 
 var childAuthRoutes: Routes = [
   {
@@ -164,7 +165,7 @@ var childAuthRoutes: Routes = [
       ),
   },
   {
-    path: 'pr',
+    path: 'tr',
     canActivate: [AuthGuard],
     loadChildren: () =>
       import('projects/codx-pr/src/lib/codx-pr.module').then(
@@ -292,6 +293,10 @@ var childPublicRoutes: Routes = [
   {
     path: 'viewfile',
     component: ViewFileDialogComponent,
+  },
+  {
+    path: 'file',
+    component: ViewfileComponent,
   },
   {
     path: 'forms',

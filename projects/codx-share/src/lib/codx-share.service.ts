@@ -596,6 +596,16 @@ export class CodxShareService {
       [templateID]
     );
   }
+  
+  getEmailTemplateType(templateType: string) {
+    return this.api.execSv<any>(
+      'SYS',
+      'ERM.Business.AD',
+      'EmailTemplatesBusiness',
+      'GetEmailTemplateByTemplateTypeAsync',
+      [templateType]
+    );
+  }
 
   sendEmailTemplate(emailRecID) {
     return this.api.execSv<any>(
@@ -1625,6 +1635,8 @@ export class Approvers {
   userID: string;
   userName: string;
   orgUnitName: string;
+  idCardType:string;
+  idCardNo:string;
 }
 
 //#endregion

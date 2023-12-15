@@ -25,8 +25,9 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
   //#region Constructor
   @ViewChild('eleGridVouchers') eleGridVouchers: CodxGridviewV2Component;
   @ViewChild('formVouchers') public formVouchers: CodxFormComponent;
-  @ViewChild('eleCbxReasonID') eleCbxReasonID: any; //? element codx-input cbx của lý do chi
-
+  @ViewChild('eleCbxReasonID') eleCbxReasonID: any;
+  @ViewChild('eleCbxObjectID') eleCbxObjectID: any;
+  @ViewChild('eleCbxRequester') eleCbxRequester: any;
   headerText: string;
   dialog: DialogRef;
   dialogData?: any;
@@ -41,6 +42,7 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
     { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
     { name: 'References', textDefault: 'Liên kết', isActive: false },
   ];
+  isPreventChange:any=false;
   private destroy$ = new Subject<void>(); //? list observable hủy các subscribe api
 
   constructor(
@@ -86,12 +88,14 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
     this.destroy$.complete();
   }
 
-  beforeInitGrid(event){
+  beforeInitGrid(eleGrid:CodxGridviewV2Component){
     let hideFields = [];
+    let setting = this.acService.getSettingFromJournal(eleGrid,this.journal);
+    eleGrid = setting[0];
     if (this.dialogData?.data.hideFields && this.dialogData?.data.hideFields.length > 0) {
       hideFields = [...this.dialogData?.data.hideFields]; //? get danh sách các field ẩn được truyền vào từ dialogdata
     }
-    this.eleGridVouchers.showHideColumns(hideFields);
+    eleGrid.showHideColumns(hideFields);
   }
 
   //#endregion Init
@@ -130,19 +134,55 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
   }
 
   valueChangeMaster(event: any) {
+    if(this.isPreventChange){
+      return;
+    }
     let field = event?.field || event?.ControlName;
     let value = event?.data || event?.crrValue;
-    if (event && value && this.formVouchers.hasChange(this.formVouchers.preData,this.formVouchers.data)) {
-      switch (field.toLowerCase()) {
-        case 'reasonid':
-          this.formVouchers.data.memo = this.getMemoMaster();
-          this.formVouchers.setValue('memo',this.formVouchers.data.memo,{onlySelf: true,emitEvent: false,});
-          break;
-        case 'objectid':
-          let objectType = event?.component?.itemsSelected[0]?.ObjectType || '';
-          this.formVouchers.setValue('objectType',objectType,{});
-          break;
-      }
+    switch (field.toLowerCase()) {
+      case 'reasonid':
+        let indexrs = this.eleCbxReasonID?.ComponentCurrent?.dataService?.data.findIndex((x) => x.ReasonID == this.eleCbxReasonID?.ComponentCurrent?.value);
+        if(value == '' || value == null || indexrs == -1){
+          this.isPreventChange = true;
+          let memo = this.getMemoMaster();
+          this.formVouchers.setValue(field,null,{});
+          this.formVouchers.setValue('memo',memo,{});
+          this.isPreventChange = false;
+          return;
+        } 
+        let memo = this.getMemoMaster();
+        this.formVouchers.setValue('memo',memo,{});
+        break;
+      case 'objectid':
+        let indexob = this.eleCbxObjectID?.ComponentCurrent?.dataService?.data.findIndex((x) => x.ObjectID == this.eleCbxObjectID?.ComponentCurrent?.value);
+        if(value == '' || value == null || indexob == -1){
+          this.isPreventChange = true;
+          let memo = this.getMemoMaster();
+          this.formVouchers.setValue(field,null,{});
+          this.formVouchers.setValue('objectType',null,{});
+          this.formVouchers.setValue('memo',memo,{});
+          this.isPreventChange = false;
+          return;
+        } 
+        let objectType = event?.component?.itemsSelected[0]?.ObjectType || '';
+        this.formVouchers.setValue('objectType',objectType,{});
+        let memo2 = this.getMemoMaster();
+        this.formVouchers.setValue('memo',memo2,{});
+        break;
+      
+      case 'requester':
+        let indexrq = this.eleCbxRequester?.ComponentCurrent?.dataService?.data.findIndex((x) => x.ObjectID == this.eleCbxRequester?.ComponentCurrent?.value);
+        if(value == '' || value == null || indexrq == -1){
+          this.isPreventChange = true;
+          let memo = this.getMemoMaster();
+          this.formVouchers.setValue(field,null,{});
+          this.formVouchers.setValue('memo',memo,{});
+          this.isPreventChange = false;
+          return;
+        } 
+        let memo3 = this.getMemoMaster();
+        this.formVouchers.setValue('memo',memo3,{});
+        break;
     }
   }
 
@@ -201,7 +241,7 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
             .subscribe((res) => {
               if (res.data != null) {
                 this.notification.notifyCode('E0860');
-                this.dialog.close();
+                this.dialog.close({type:'discard'});
                 this.onDestroy();
               }
             });
@@ -340,18 +380,29 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
   getMemoMaster() {
     let newMemo = ''; 
     let reasonName = '';
+    let objectName = '';
+    let requesterName = '';
 
     let indexReason =
       this.eleCbxReasonID?.ComponentCurrent?.dataService?.data.findIndex(
         (x) => x.ReasonID == this.eleCbxReasonID?.ComponentCurrent?.value
       );
     if (indexReason > -1) {
-      reasonName = this.eleCbxReasonID?.ComponentCurrent?.dataService?.data[indexReason].ReasonName;
+      reasonName = this.eleCbxReasonID?.ComponentCurrent?.dataService?.data[indexReason].ReasonName + ' - ';;
     }
 
-    newMemo = reasonName;
-    newMemo = newMemo.toString().trim();
-    return newMemo;
+    let indexObject = this.eleCbxObjectID?.ComponentCurrent?.dataService?.data.findIndex((x) => x.ObjectID == this.eleCbxObjectID?.ComponentCurrent?.value);
+    if (indexObject > -1) {
+      objectName = this.eleCbxObjectID?.ComponentCurrent?.dataService?.data[indexObject].ObjectName + ' - ';
+    }
+
+    let indexRequest = this.eleCbxRequester?.ComponentCurrent?.dataService?.data.findIndex((x) => x.ObjectID == this.eleCbxRequester?.ComponentCurrent?.value);
+    if (indexRequest > -1) {
+      requesterName = this.eleCbxRequester?.ComponentCurrent?.dataService?.data[indexRequest].ObjectName + ' - ';
+    }
+
+    newMemo = reasonName + objectName + requesterName;
+    return newMemo.substring(0, newMemo.lastIndexOf(' - ') + 1);
   }
 
   /**
@@ -386,9 +437,14 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
    */
   copyRow(data) {
     if (this.eleGridVouchers) {
-      data.recID = Util.uid();
-      data.index = this.eleGridVouchers.dataSource.length;
-      this.eleGridVouchers.addRow(data, this.eleGridVouchers.dataSource.length);
+      this.eleGridVouchers.saveRow((res:any)=>{
+        if(res){
+          data.recID = Util.uid();
+          data.index = this.eleGridVouchers.dataSource.length;
+          delete data?._oldData;
+          this.eleGridVouchers.addRow(data, this.eleGridVouchers.dataSource.length);
+        }
+      })
     }
   }
 
@@ -398,7 +454,11 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
    */
   deleteRow(data) {
     if (this.eleGridVouchers) {
-      this.eleGridVouchers.deleteRow(data);
+      this.eleGridVouchers.saveRow((res:any)=>{ //? save lưới trước
+        if(res){
+          this.eleGridVouchers.deleteRow(data);
+        }
+      })
     }
   }
 
