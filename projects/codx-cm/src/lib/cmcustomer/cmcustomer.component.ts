@@ -385,7 +385,7 @@ export class CmCustomerComponent
   changeDataMF(e, data, type = 2) {
     if (e != null && data != null) {
       e.forEach((res) => {
-        if(type == 11) res.isbookmark = false;
+        if (type == 11) res.isbookmark = false;
         if (this.dataSelected != null) {
           if (data?.status != '99') {
             switch (res.functionID) {
@@ -634,62 +634,16 @@ export class CmCustomerComponent
 
   async delete(data: any) {
     this.view.dataService.dataSelected = data;
-    var check = false;
-    if (this.funcID == 'CM0101' || this.funcID == 'CM0105') {
-      check = await firstValueFrom(
-        this.cmSv.checkCustomerIDByDealsAsync(data?.recID)
-      );
-      if (check) {
-        this.notiService.notifyCode('CM009');
-        return;
-      }
-      check = await firstValueFrom(
-        this.api.execSv<any>(
-          'CM',
-          'ERM.Business.CM',
-          'ContractsBusiness',
-          'IsExitsByContractAsync',
-          [data.recID]
-        )
-      );
-      if (check) {
-        this.notiService.notifyCode('CM011');
-        return;
-      }
-      check = await firstValueFrom(
-        this.api.execSv<any>(
-          'CM',
-          'ERM.Business.CM',
-          'CustomersBusiness',
-          'IsExitsByQuotationAsync',
-          [data.recID]
-        )
-      );
-      if (check) {
-        this.notiService.notifyCode('CM024');
-        return;
-      }
-    }
-
-    if (this.funcID == 'CM0102') {
-      check = await firstValueFrom(
-        this.api.execSv<any>(
-          'CM',
-          'ERM.Business.CM',
-          'ContactsBusiness',
-          'CheckContactDealAsync',
-          [data.recID]
-        )
-      );
-      if (check) {
-        this.notiService.notifyCode('CM012');
-        return;
-      }
-    }
-
     this.view.dataService
-      .delete([this.view.dataService.dataSelected], true, (opt) =>
-        this.beforeDel(opt)
+      .delete(
+        [this.view.dataService.dataSelected],
+        true,
+        (opt) => this.beforeDel(opt),
+        null,
+        null,
+        null,
+        null,
+        false
       )
       .subscribe((res) => {
         if (res) {
@@ -697,6 +651,7 @@ export class CmCustomerComponent
             type: 'delete',
             data: data,
           });
+          this.notiService.notifyCode('SYS008');
         }
       });
 
@@ -957,7 +912,9 @@ export class CmCustomerComponent
                 this.dataSelected.contactType = null;
                 this.dataSelected.objectType = null;
                 this.dataSelected.objectName = null;
-                this.view.dataService.update(this.dataSelected, true).subscribe();
+                this.view.dataService
+                  .update(this.dataSelected, true)
+                  .subscribe();
                 this.notiService.notifyCode('SYS008');
                 this.detectorRef.detectChanges();
               }
