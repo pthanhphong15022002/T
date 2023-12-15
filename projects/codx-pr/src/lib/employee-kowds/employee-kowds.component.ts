@@ -89,8 +89,8 @@ export class EmployeeKowdsComponent extends UIComponent{
       console.log('get time keeping', res);
       this.timeKeepingMode = res.timeKeepingMode;
       if(this.timeKeepingMode == '2'){
-        this.viewStatistic = true;
-        this.viewDetailData = false;
+        this.viewStatistic = false;
+        this.viewDetailData = true;
       }
     })
 
