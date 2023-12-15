@@ -169,18 +169,11 @@ export class CmCustomerDetailComponent implements OnInit {
           icon: 'icon-i-paperclip',
         },
         {
-          name: 'Task',
-          textDefault: 'Công việc',
+          name: 'AssignTo',
+          textDefault: 'Giao việc',
           isActive: false,
           template: null,
           icon: 'icon-i-clipboard-check',
-        },
-        {
-          name: 'References',
-          textDefault: 'Liên kết',
-          isActive: false,
-          template: null,
-          icon: 'icon-i-link',
         },
       ];
     } else {

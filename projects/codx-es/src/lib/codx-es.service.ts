@@ -645,13 +645,13 @@ export class CodxEsService {
     );
   }
 
-  getCategoryByCateIDType(categoryID: string, category: string) {
+  getCategoryByCateIDType(categoryID: string, category: string,refID:string=null) {
     return this.api.execSv<any>(
       'ES',
       'ES',
       'CategoriesBusiness',
       'GetByCategoryIDTypeAsync',
-      [categoryID, category]
+      [categoryID, category,refID]
     );
   }
 
