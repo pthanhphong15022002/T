@@ -2152,11 +2152,12 @@ export class DealsComponent
   }
   totalGirdView() {
     this.getTotal().subscribe((total) => {
-      let intl = new Internationalization();
-      let nFormatter = intl.getNumberFormat({
-        skeleton: 'n6',
-      });
-      this.totalView = nFormatter(total) + ' ' + this.currencyIDDefault;
+      //không the format truyền qua
+      // let intl = new Internationalization();
+      // let nFormatter = intl.getNumberFormat({
+      //   skeleton: 'n6',
+      // });
+      // this.totalView = nFormatter(total) + ' ' + this.currencyIDDefault;
 
       if (!Number.parseFloat(total)) total = 0;
       let objectDealValue = {
