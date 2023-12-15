@@ -713,6 +713,13 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
       }
       this.checkPhone = !this.checkPhone;
     }
+    if (event?.field == 'interval') {
+      const startDate = new Date(this.contracts?.effectiveFrom) || new Date();
+      let interval = parseInt(event?.data || 0);
+      this.contracts.effectiveTo = new Date(
+        startDate.setMonth(startDate.getMonth() + interval)
+      );
+    }
   }
 
   valueChangeCombobox(event) {
@@ -838,9 +845,13 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
 
   changeValueDate(event) {
     this.contracts[event?.field] = new Date(event?.data?.fromDate);
+    const startDate = this.contracts?.effectiveFrom
+      ? new Date(this.contracts?.effectiveFrom)
+      : null;
+    const endDate = this.contracts?.effectiveTo
+      ? new Date(this.contracts?.effectiveTo)
+      : null;
     if (event?.field == 'effectiveTo' && this.isLoadDate) {
-      const startDate = new Date(this.contracts['effectiveFrom']);
-      const endDate = new Date(this.contracts['effectiveTo']);
       if (endDate && startDate > endDate) {
         // this.isSaveTimeTask = false;
         this.isLoadDate = !this.isLoadDate;
@@ -856,6 +867,20 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
       }
     } else {
       this.isLoadDate = !this.isLoadDate;
+    }
+
+    if (
+      (event?.field == 'effectiveTo' || event?.field == 'effectiveFrom') &&
+      startDate &&
+      endDate
+    ) {
+      let startYear = startDate.getFullYear();
+      let endYear = endDate.getFullYear();
+      let startMonth = startDate.getMonth();
+      let endMonth = endDate.getMonth();
+
+      let interval = (endYear - startYear) * 12 + (endMonth - startMonth);
+      this.contracts.interval = interval.toFixed(1);
     }
   }
 
@@ -1089,14 +1114,14 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
             category = res.data;
             category.recID = res?.recID ?? Util.uid();
             category.eSign = true;
-            category.Category = this.isActivitie
+            category.category = this.isActivitie
               ? 'DP_Activities'
               : 'DP_Instances_Steps_Tasks';
             category.categoryID = idTask;
             category.categoryName = this.stepsTasks.taskName;
             category.createdBy = this.user.userID;
             category.owner = this.user.userID;
-            category.FunctionApproval = this.isActivitie ? 'DPT07' : 'DPT04';
+            category.functionApproval = this.isActivitie ? 'DPT07' : 'DPT04';
             category['refID'] = idTask;
             this.actionOpenFormApprove2(category, true);
           }

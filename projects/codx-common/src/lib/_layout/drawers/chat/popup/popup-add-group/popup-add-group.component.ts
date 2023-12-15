@@ -61,8 +61,8 @@ export class AddGroupChatComponent implements OnInit, AfterViewInit {
     this.setData();
   }
   ngAfterViewInit(): void {
-    this.codxListView1.onResize();
-    this.codxListView2.onResize();
+    // this.codxListView1.onResize();
+    // this.codxListView2.onResize();
   }
   // set data
   setData() {

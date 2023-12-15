@@ -871,7 +871,7 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
         this.addSettledInvoices();
         break;
       case '13':
-        this.addSuggestion('1');
+        this.addSuggestion('2');
         break;
       // case '14':
       //   this.addSuggestion('2');
