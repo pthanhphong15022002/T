@@ -2040,12 +2040,12 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
             category = res.data;
             category.recID = res?.recID ?? Util.uid();
             category.eSign = true; // Khanh bảo vậy mặc định luôn là kí sô
-            category.Category = 'DP_Processes';
+            category.category = 'DP_Processes';
             category.categoryID = this.process.processNo;
             category.categoryName = this.process.processName;
             category.createdBy = this.user.userID;
             category.owner = this.user.userID;
-            category.FunctionApproval = 'DP0204'; //'DP01'; Khanh đã đỏi fun
+            category.functionApproval = 'DP0204'; //'DP01'; Khanh đã đỏi fun
             category['refID'] = this.process.recID;
             this.actionOpenFormApprove2(category, true);
           }

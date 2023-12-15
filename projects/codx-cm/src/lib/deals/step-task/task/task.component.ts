@@ -815,7 +815,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
           'ES',
           'CategoriesBusiness',
           'GetByCategoryIDTypeAsync',
-          [task?.recID, 'DP_Activities']
+          [task?.recID, 'DP_Activities', null]
         )
         .subscribe((res) => {
           if (!res) {

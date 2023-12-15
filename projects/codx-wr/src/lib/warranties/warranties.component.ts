@@ -875,6 +875,7 @@ export class WarrantiesComponent
 
   //#region update status
   updateStatusWarranty(status, data) {
+    this.cancelledNote = data?.cancelledNote;
     var config = new AlertConfirmInputConfig();
     config.type = 'YesNo';
     this.notificationsService
