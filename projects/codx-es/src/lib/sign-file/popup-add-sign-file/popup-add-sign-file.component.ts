@@ -253,11 +253,16 @@ export class PopupAddSignFileComponent implements OnInit {
     });
     if (this.data?.categoryID == null) this.data.categoryID = this.categoryID;
     this.esService
-      .getCategoryByCateIDType(this.data?.categoryID, this.typeCategory)
+      .getCategoryByCateIDType(this.data?.categoryID, this.typeCategory,this.approverProcess?.category?.refID)
       .subscribe((cate) => {
         if (cate) {
-          this.eSign = cate?.eSign;
+          this.eSign = cate?.eSign ;
           this.signatureType = cate?.signatureType;
+        }
+        else{
+          
+          this.eSign = this.approverProcess?.category?.eSign ;
+          this.signatureType = this.approverProcess?.category?.signatureType;
         }
       });
     //Lấy quy trình mẫu cũ
@@ -313,7 +318,7 @@ export class PopupAddSignFileComponent implements OnInit {
                 this.esService
                   .getCategoryByCateIDType(
                     this.data?.categoryID,
-                    this.typeCategory
+                    this.typeCategory,this.approverProcess?.category?.refID
                   )
                   .subscribe((cate) => {
                     if (cate) {
@@ -354,7 +359,7 @@ export class PopupAddSignFileComponent implements OnInit {
                       this.esService
                         .getCategoryByCateIDType(
                           this.data?.categoryID,
-                          this.typeCategory
+                          this.typeCategory,this.approverProcess?.category?.refID
                         )
                         .subscribe((cate) => {
                           if (cate) {
@@ -453,7 +458,7 @@ export class PopupAddSignFileComponent implements OnInit {
                     this.esService
                       .getCategoryByCateIDType(
                         this.data?.categoryID,
-                        this.typeCategory
+                        this.typeCategory,this.approverProcess?.category?.refID
                       )
                       .subscribe((res) => {
                         if (res) {
@@ -941,7 +946,7 @@ export class PopupAddSignFileComponent implements OnInit {
         this.curCategory = cate[0];
       } else {
         this.esService
-          .getCategoryByCateIDType(this.data?.categoryID, this.typeCategory)
+          .getCategoryByCateIDType(this.data?.categoryID, this.typeCategory,this.approverProcess?.category?.refID)
           .subscribe((cate) => {
             if (cate) {
               this.curCategory = cate?.signatureType;
