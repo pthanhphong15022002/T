@@ -513,6 +513,7 @@
           [dealName]="dataSelect?.title"
           [ownerInstance]="dataSelect?.owner"
           [isChangeOwner]="isChangeOwner"
+          (addTaskHaveAssign)="addTaskHaveAssign($event)"
         >
         </step-task-instance>
       </div>

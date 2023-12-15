@@ -280,6 +280,7 @@ export class InstanceDetailComponent implements OnInit {
   aproveTranID = ''; //instance CRR
   listIDTransApprove = [];
   asideMode: string;
+  listRecIDAddNew: any;
 
   constructor(
     private callfc: CallFuncService,
@@ -347,7 +348,7 @@ export class InstanceDetailComponent implements OnInit {
       this.loaded = false; /// bien này không cần cũng được tại luôn có dataSelect -- bỏ loader vào  loadChangeData thì bị giật
       this.id = changes['dataSelect'].currentValue.recID;
       this.loadChangeData();
-
+      this.listRecIDAddNew = [];
       this.isChangeData = false;
     }
   }
@@ -832,7 +833,7 @@ export class InstanceDetailComponent implements OnInit {
     if (e && this.tabFooter) {
       //this.loadTree(this.id);//cũ
       if (this.applyFor != '0') {
-        this.getListTaskRef();
+        // this.getListTaskRef();
         this.tabFooter.listRefID = this.listRefTask;
         this.tabFooter.sessionID = null;
       } else this.tabFooter.sessionID = this.id;
@@ -1012,5 +1013,15 @@ export class InstanceDetailComponent implements OnInit {
   }
   autoStart(event) {
     this.changeProgress.emit(event);
+  }
+
+  addTaskHaveAssign(e) {
+    if (e) {
+      this.listRefTask.push(e);
+    }
+    if (this.tabFooter && this.applyFor != '0') {
+      this.tabFooter.listRefID = this.listRefTask;
+      this.tabFooter.changeTreeAssign();
+    }
   }
 }

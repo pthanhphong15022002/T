@@ -56,7 +56,11 @@
       </div>
     </div>
   </header>
-  <main class="main-step" [ngStyle]="{ height: taskHeight }" [ngClass]="isHeightAuto ? 'overflow-hidden': ''">
+  <main
+    class="main-step"
+    [ngStyle]="{ height: taskHeight }"
+    [ngClass]="isHeightAuto ? 'overflow-hidden' : ''"
+  >
     <ng-container
       *ngIf="type == 'S'"
       [ngTemplateOutlet]="taskTem"
@@ -109,7 +113,7 @@
       <hr class="m-0 p-0" />
     </div>
   </div>
-  <div >
+  <div>
     <div
       *ngFor="let instanceStep of listInstanceStepShow; let i = index"
       class="list-step mt-3"
@@ -124,7 +128,12 @@
         [isShowStep]="true"
         [isStart]="instance?.status == '2'"
         [isClose]="instance?.closed"
-        [isRoleAll]="instance?.full || instance?.permissionCloseInstances || instance?.permissionMoveInstances || instance?.edit "
+        [isRoleAll]="
+          instance?.full ||
+          instance?.permissionCloseInstances ||
+          instance?.permissionMoveInstances ||
+          instance?.edit
+        "
         [isShowElement]="isShowElement"
         [isAddTask]="i == indexAddTask"
         [isTaskFirst]="i == 0 ? true : false"
@@ -138,13 +147,12 @@
         [ownerInstance]="owner"
         [entity]="'DP'"
         [applyFor]="applyFor"
-        ></codx-step-task>
-        <!-- (recIDTaskAdd)="" -->
-
+        (recIDTaskAdd)="eventAddTaskAssign($event)"
+      ></codx-step-task>
       <div
         *ngIf="
           (instanceStep?.isFailStep || instanceStep?.isSuccessStep) &&
-          !['0', '1', '2','15'].includes(instance?.status)
+          !['0', '1', '2', '15'].includes(instance?.status)
         "
       >
         <div>
@@ -179,7 +187,7 @@
                 <button class="button-custom" (click)="openPopupReason()">
                   <span
                     [ngClass]="
-                    instance?.closed
+                      instance?.closed
                         ? ''
                         : 'icon-edit icon-20 text-primary-600 py-2'
                     "
@@ -228,7 +236,9 @@
                 <span
                   class="text-dark fw-bold codx-textcontent"
                   [innerHTML]="
-                  instanceStep?.memo | formatvalue : formModel : 'Memo' | async
+                    instanceStep?.memo
+                      | formatvalue : formModel : 'Memo'
+                      | async
                   "
                 ></span>
               </div>
@@ -251,7 +261,12 @@
       [typeTime]="typeTime"
       [instance]="instance"
       [listSteps]="listInstanceStepShow"
-      [isRoleAll]="instance?.permissionCloseInstances || instance?.permissionMoveInstances || instance?.full || instance?.edit"
+      [isRoleAll]="
+        instance?.permissionCloseInstances ||
+        instance?.permissionMoveInstances ||
+        instance?.full ||
+        instance?.edit
+      "
       [type]="'DP'"
     ></codx-step-chart>
   </div>
@@ -410,7 +425,7 @@
     </div>
   </div>
 </ng-template>
- <!-- <div class="ms-4">
+<!-- <div class="ms-4">
         <codx-dropdown-select
           cssPopup="h-250px w-300px"
           [isMulti]="false"

@@ -1169,7 +1169,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       this.currentStep.progress = progressStep;
       this.notiService.notifyCode('SYS006');
       isCreateMeeting && this.addMeetings(task);
-      if(task?.assigned == '1'){
+      if (task?.assigned == '1') {
         this.recIDTaskAdd.emit(task?.recID);
       }
     }
@@ -1467,74 +1467,85 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       this.notiService.notify('tesst kiem tra da giao task');
       return;
     }
-    var task = new TM_Tasks();
-    task.taskName = data.taskName;
-    task.refID = data?.recID;
-    task.refType = 'DP_Instances_Steps_Tasks';
-    task.dueDate = data?.endDate;
-    task.sessionID = this.sessionID ?? this.currentStep?.instanceID;
-    let dataReferences = [
-      {
-        recIDReferences: data.recID,
-        refType: 'DP_Instances_Steps_Tasks',
-        createdOn: data.createdOn,
-        memo: data.taskName,
-        createdBy: data.createdBy,
-      },
-    ];
-    let assignModel: AssignTaskModel = {
-      vllRole: 'TM001',
-      title: moreFunc.customName,
-      vllShare: 'TM003',
-      task: task,
-    };
-    let option = new SidebarModel();
+    this.getSession().then((session) => {
+      if (session) {
+        var task = new TM_Tasks();
+        task.taskName = data.taskName;
+        task.refID = data?.recID;
+        task.refType = 'DP_Instances_Steps_Tasks';
+        task.dueDate = data?.endDate;
+        task.sessionID = this.sessionID ?? this.currentStep?.instanceID;
+        let dataReferences = [
+          {
+            recIDReferences: data.recID,
+            refType: 'DP_Instances_Steps_Tasks',
+            createdOn: data.createdOn,
+            memo: data.taskName,
+            createdBy: data.createdBy,
+          },
+        ];
+        let assignModel: AssignTaskModel = {
+          vllRole: 'TM001',
+          title: moreFunc.customName,
+          vllShare: 'TM003',
+          task: task,
+        };
+        let option = new SidebarModel();
 
-    option.FormModel = this.formModelAssign
-      ? this.formModelAssign
-      : this.frmModelInstances;
+        option.FormModel = this.formModelAssign
+          ? this.formModelAssign
+          : this.frmModelInstances;
 
-    option.Width = '550px';
-    var dialogAssign = this.callfc.openSide(
-      AssignInfoComponent,
-      assignModel,
-      option
-    );
-    dialogAssign.closed.subscribe((e) => {
-      var doneSave = false;
-      if (e && e.event != null) {
-        doneSave = true;
-        this.api
-          .execSv<any>(
-            'DP',
-            'DP',
-            'InstancesStepsBusiness',
-            'UpdatedAssignedStepTasksAsync',
-            [data.stepID, data.recID]
-          )
-          .subscribe((res) => {
-            if (res) {
-              data.assigned = '1';
-              this.changeDetectorRef.markForCheck();
-            }
-          });
+        option.Width = '550px';
+        var dialogAssign = this.callfc.openSide(
+          AssignInfoComponent,
+          assignModel,
+          option
+        );
+        dialogAssign.closed.subscribe((e) => {
+          var doneSave = false;
+          if (e && e.event != null) {
+            doneSave = true;
+            this.api
+              .execSv<any>(
+                'DP',
+                'DP',
+                'InstancesStepsBusiness',
+                'UpdatedAssignedStepTasksAsync',
+                [data.stepID, data.recID]
+              )
+              .subscribe((res) => {
+                if (res) {
+                  data.assigned = '1';
+                  this.changeDetectorRef.markForCheck();
+                }
+              });
+          }
+          this.saveAssign.emit(doneSave);
+        });
       }
-      this.saveAssign.emit(doneSave);
     });
   }
 
   //getSessionTask - session khi giao việc
   getSession(): Promise<string> {
     return new Promise<string>((resolve, rejects) => {
-      this.api
-        .execSv<any>(
-          'CM',
-          'CM',
-          'DealsBusiness',
-          'GetRecIDCRMByRecIDInstancesAsync',
-          [this.currentStep?.instanceID]
-        )
-        .subscribe((sessionID) => {});
+      if (this.sessionID) {
+        resolve(this.sessionID);
+      } else if (this.applyFor == 0) resolve(this.currentStep?.instanceID);
+      else {
+        this.api
+          .execSv<any>(
+            'CM',
+            'CM',
+            'DealsBusiness',
+            'GetRecIDCRMByRecIDInstancesAsync',
+            [this.currentStep?.instanceID, this.applyFor]
+          )
+          .subscribe((sessionID) => {
+            resolve(sessionID);
+          });
+      }
     });
   }
   //#endregion
