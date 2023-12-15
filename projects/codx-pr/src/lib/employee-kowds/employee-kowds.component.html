@@ -65,12 +65,11 @@ method="LoadDataAsync" -->
     </ng-container> -->
 
     <ng-container class="h-100" >
-      <!-- *ngIf="viewDetailData == true && gridDataSource.length > 0 && calendarGridColumns.length > 0" -->
+      <!-- Lưới đọc gridviewsetup a trầm -->
       <codx-gridview-v2
       *ngIf="viewDetailData == true && calendarGridColumns.length > 0"
       #calendarGrid
-      [checkboxSelect]="true"
-      [formModel]="view.formModel"
+      [gridViewName]="'grvKowDsUIByDay'"
       [columnsGrid]="calendarGridColumns"
       [service]="'HR'"
       [assemblyName]="'PR'"
@@ -82,27 +81,17 @@ method="LoadDataAsync" -->
       (onDoubleClick)="doubleClickGrid($event)"
       [height]="'100%'"
       [method]="'LoadDataForGridAsync'"
-      [idField]="'emp'"
+      [idField]="'employeeID'"
       ></codx-gridview-v2>
 
-      <!-- [dataSource] = "gridDataSource" -->
-
-
-      <!-- [predicates]="'EmployeeID=@0'" -->
-      <!-- [method]="'LoadDataAsync'" -->
-      <!-- [className]="'DataBusiness'" -->
-      <!-- [assemblyName]="'Core'" -->
-      <!-- [service]="'HR'" -->
-      <!-- [dataValues]="employeeID"
-      [emptyTemplate]="emptyDataTemplate" -->
-      <!-- [sorts]='[eAwardsSortModel1, eAwardsSortModel2]' -->
-
+      <!-- Lưới cũ chưa sửa theo setting mới -->
       <codx-gridview-v2
       *ngIf="viewStatistic == true && gridStatisticColumns.length > 0"
       #calendarGrid2
       [formModel]="view.formModel"
       [columnsGrid]="gridStatisticColumns"
       [autoFitColumns]="false"
+      [gridViewName]="'grvKowDsUIByKow'"
       [hideMoreFunc]="true"
       [height]="'100%'"
       [service]="'HR'"
@@ -129,7 +118,7 @@ method="LoadDataAsync" -->
   </ng-template>
 
   <ng-template #tempEmployee let-data>
-    <!-- {{logData(data)}} -->
+    {{logData(data)}}
     <!-- {{data? data[data.column.field] : "" }} -->
   <div class="d-flex align-items-center border-bottom">
     <div class="p-3 ps-5"
