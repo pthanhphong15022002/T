@@ -355,7 +355,7 @@
         (cellChanged)="valueChangeLine($event)"></codx-gridview-v2>
       <div #btnRef class="btn-addline">
         <div class="d-flex align-items-center">
-          <div *ngIf="formCashReceipt.data?.subType == '11'">
+          <div *ngIf="formCashReceipt.data?.subType != '13' || formCashReceipt.data?.subType != '14'">
             <button style="border: 1px solid !important;" tabindex="-1" tab-index="11" id="btnAddCash"
               class="btn btn-sm btn-light-primary rounded-15 btnAddCash" (keydown.enter)="
               onAddLine(); $event.preventDefault()
