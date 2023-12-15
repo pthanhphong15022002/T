@@ -1522,6 +1522,21 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       this.saveAssign.emit(doneSave);
     });
   }
+
+  //getSessionTask - session khi giao việc
+  getSession(): Promise<string> {
+    return new Promise<string>((resolve, rejects) => {
+      this.api
+        .execSv<any>(
+          'CM',
+          'CM',
+          'DealsBusiness',
+          'GetRecIDCRMByRecIDInstancesAsync',
+          [this.currentStep?.instanceID]
+        )
+        .subscribe((sessionID) => {});
+    });
+  }
   //#endregion
 
   //#region group tasks

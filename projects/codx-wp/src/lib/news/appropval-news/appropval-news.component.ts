@@ -187,12 +187,13 @@ export class AppropvalNewsComponent extends UIComponent {
           }
         });
         break;
-      case "WPT02123": // từ chối
+      case "WPT02123": 
+      case "WPT02133": // từ chối
         this.notifySvr.alertCode("WP006")
           .subscribe((option:any) =>{
             if(option?.event?.status == "Y")
             {
-              this.approvalPost(this.function.entityName,data, "2","WP007");
+              this.approvalPost(this.function.entityName,data, "4","WP007");
             }
         });
         break;
@@ -253,7 +254,7 @@ export class AppropvalNewsComponent extends UIComponent {
       )
         x.disabled =
           item.approveControl == '0' ||
-          (item.approveControl == '1' && item.approveStatus == '5');
+          (item.approveControl == '1' && item.approveStatus != '3');
       else x.disabled = true;
     });
   }
