@@ -436,8 +436,8 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
     } else {
       this.contractService.GetProcessIdDefault('4').subscribe((res) => {
         if (res) {
-          this.contracts.processID = res;
-          this.processIdDefault = res;
+          this.contracts.processID = res?.recID;
+          this.processIdDefault = res?.recID;
         } else {
           this.notiService.notify(
             'Chưa có quy trình hợp đồng được thiết lập, vui lòng thiết lập quy trình hợp đồng mặc định',

@@ -261,6 +261,26 @@ export class EmployeeKowdsComponent extends UIComponent{
     );
   }
 
+  copyEmpKow(empIDResources, empIDsCopy, dowCode){
+    return this.api.execSv<any>(
+      'HR',
+      'ERM.Business.PR',
+      'KowDsBusiness',
+      'CopyEmpKowAsync',
+      [empIDResources, empIDsCopy, dowCode]
+    );
+  }
+
+  deleteEmpKowByDowCode(empIDS, dowCode){
+    return this.api.execSv<any>(
+      'HR',
+      'ERM.Business.PR',
+      'KowDsBusiness',
+      'CopyEmpKowAsync',
+      [empIDS, dowCode]
+    );
+  }
+
   testAPILoadDetailData() {
     console.log('chay ham get emp',this.filterOrgUnit, this.filterMonth, this.filterYear);
     return this.api.execSv<any>(
