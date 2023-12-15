@@ -619,12 +619,12 @@ export class PopupJobComponent implements OnInit, OnDestroy {
             category = res.data;
             category.recID = res?.recID ?? Util.uid();
             category.eSign = true;
-            category.Category = 'DP_Steps_Tasks'; //DP_Instances_Steps_Tasks
+            category.category = 'DP_Steps_Tasks'; //DP_Instances_Steps_Tasks
             category.categoryID = this.stepsTasks.recID;
             category.categoryName = this.stepsTasks.taskName;
             category.createdBy = this.user.userID;
             category.owner = this.user.userID;
-            category.FunctionApproval = 'DPT04';
+            category.functionApproval = 'DPT04';
             category['refID'] = this.stepsTasks.recID;
             this.actionOpenFormApprove2(category, true);
           }
