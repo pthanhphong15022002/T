@@ -12,6 +12,7 @@ import {
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { DomSanitizer } from '@angular/platform-browser';
 import {
+  AESCryptoService,
   ApiHttpService,
   AuthStore,
   CallFuncService,
@@ -117,6 +118,7 @@ export class ShareComponent implements OnInit {
     private router: Router,
     private changeDetectorRef: ChangeDetectorRef,
     private callfunc: CallFuncService,
+    private aesCrypto: AESCryptoService,
     @Optional() data?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -493,15 +495,36 @@ export class ShareComponent implements OnInit {
 
   saveShare(type:any)
   {
-    if(type=="link")
-    {
-      var link = "";
-      this.copyToClipboard(link);
-    }
     let data = this.shareGroup2.value;
     data.module = this.formModel.entityName.split("_")[0];
     data.functionID = this.formModel.funcID;
     data.url = this.fileEditing?.pathDisk;
-    this.api.execSv("BG","BG","SharingsBusiness","SaveItemAsync",data).subscribe();
+    this.api.execSv("BG","BG","SharingsBusiness","SaveItemAsync",data).subscribe((item:any)=>{
+      if(item)
+      {
+        if(type=="link")
+        {
+          this.copyToClipboard(this.getLink(item.recID));
+          this.notificationsService.notify(this.titleCopyUrl);
+        }
+      }
+    });
+  }
+
+  getLink(recID:any)
+  {
+    const queryParams = 
+    {
+      _k : this.aesCrypto.encode(recID)
+    };
+
+    var l = this.router.url.split('/');
+    const url = this.router.serializeUrl(
+      this.router.createUrlTree([`/` + l[1] + `/file`], {
+        queryParams: queryParams,
+      })
+    );
+
+    return window.location.host + url;
   }
 }

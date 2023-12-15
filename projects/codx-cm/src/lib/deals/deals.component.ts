@@ -272,6 +272,7 @@ export class DealsComponent
         sameData: true,
         model: {
           template2: this.templateMore,
+          //groupSettings: {showDropArea: false,columns:['businessLineID']}
           //resources: this.columnGrids,
           // frozenColumns: 1,
         },

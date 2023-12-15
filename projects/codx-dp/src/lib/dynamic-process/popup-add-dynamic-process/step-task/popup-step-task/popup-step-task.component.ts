@@ -283,10 +283,14 @@ export class PopupJobComponent implements OnInit, OnDestroy {
     this.stepsTasks['fieldID'] = this.listFieldID.join(';');
     let message = [];
     for (let key of this.REQUIRE) {
-      if(this.typeTask?.value == "F" && key == "dependRule"){
+      if (this.typeTask?.value == 'F' && key == 'dependRule') {
         continue;
       }
-      if ((typeof this.stepsTasks[key] === 'string' && !this.stepsTasks[key].trim()) ||!this.stepsTasks[key] ||this.stepsTasks[key]?.length === 0
+      if (
+        (typeof this.stepsTasks[key] === 'string' &&
+          !this.stepsTasks[key].trim()) ||
+        !this.stepsTasks[key] ||
+        this.stepsTasks[key]?.length === 0
       ) {
         message.push(this.view[key]);
       }
@@ -294,7 +298,7 @@ export class PopupJobComponent implements OnInit, OnDestroy {
     if (!this.stepsTasks['durationDay'] && !this.stepsTasks['durationHour']) {
       message.push(this.view['durationDay']);
     }
-    if(this.typeTask?.value === 'F' && !this.stepsTasks?.fieldID){
+    if (this.typeTask?.value === 'F' && !this.stepsTasks?.fieldID) {
       message.push(this.view['fieldID']);
     }
 
@@ -598,8 +602,8 @@ export class PopupJobComponent implements OnInit, OnDestroy {
           'ES',
           'ES',
           'CategoriesBusiness',
-          'GetByCategoryIDAsync',
-          this.stepsTasks.recID
+          'GetByCategoryIDTypeAsync',
+          [this.stepsTasks.recID, 'DP_Steps_Tasks']
         )
       );
     if (category) {
@@ -615,12 +619,13 @@ export class PopupJobComponent implements OnInit, OnDestroy {
             category = res.data;
             category.recID = res?.recID ?? Util.uid();
             category.eSign = true;
-            category.Category = 'DP_Steps_Tasks';//DP_Instances_Steps_Tasks
+            category.Category = 'DP_Steps_Tasks'; //DP_Instances_Steps_Tasks
             category.categoryID = this.stepsTasks.recID;
             category.categoryName = this.stepsTasks.taskName;
             category.createdBy = this.user.userID;
             category.owner = this.user.userID;
             category.FunctionApproval = 'DPT04';
+            category['refID'] = this.stepsTasks.recID;
             this.actionOpenFormApprove2(category, true);
           }
         });
@@ -663,7 +668,7 @@ export class PopupJobComponent implements OnInit, OnDestroy {
                   headerText: this.titleAction,
                   dataType: 'auto',
                   templateRefID: this.stepsTasks.recID,
-                  templateRefType: 'DP_Steps_Tasks',//DP_Instances_Steps_Tasks
+                  templateRefType: 'DP_Steps_Tasks', //DP_Instances_Steps_Tasks
                   disableESign: true,
                 },
                 '',

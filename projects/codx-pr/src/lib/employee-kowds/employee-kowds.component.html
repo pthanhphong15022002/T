@@ -69,6 +69,7 @@ method="LoadDataAsync" -->
       <codx-gridview-v2
       *ngIf="viewDetailData == true && calendarGridColumns.length > 0"
       #calendarGrid
+      [checkboxSelect]="true"
       [formModel]="view.formModel"
       [columnsGrid]="calendarGridColumns"
       [service]="'HR'"
