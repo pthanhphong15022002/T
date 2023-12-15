@@ -416,6 +416,7 @@
         [isTaskFirst]="step?.recID == this.stepIDFirst"
         (changeProgress)="autoStart($event)"
         [applyFor]="applyFor"
+        (recIDTaskAdd)="eventAddTaskAssign($event)"
       ></codx-step-task>
     </div>
   </div>
