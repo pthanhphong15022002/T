@@ -347,7 +347,7 @@ export class InstanceDetailComponent implements OnInit {
       this.loaded = false; /// bien này không cần cũng được tại luôn có dataSelect -- bỏ loader vào  loadChangeData thì bị giật
       this.id = changes['dataSelect'].currentValue.recID;
       this.loadChangeData();
-      this.getListTaskRef();
+
       this.isChangeData = false;
     }
   }
@@ -378,7 +378,10 @@ export class InstanceDetailComponent implements OnInit {
         this.listSteps = res;
         this.stepIDFirst = this.listSteps[0]?.recID;
         this.getViewApprove();
+
+        if (this.applyFor != '0') this.getListTaskRef();
         //this.loadTree(this.id); // load khi change tabs
+
         this.handleProgressInstance();
         if (this.runMode != '1') {
           this.getStageByStep();
