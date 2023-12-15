@@ -183,7 +183,7 @@ export class PopupAddSignFileComponent implements OnInit {
     this.refType = data?.data?.refType ?? 'ES_SignFiles'; // Bắt buộc truyền nếu từ module != ES: Lưu RefType của SignFile và lấy Category của Module
     this.refID = data?.data?.refID; // Bắt buộc truyền nếu từ module != ES: Lưu RefID của SignFile
     this.typeCategory =
-      this.refType == 'ES_Categories' ? 'ES_SignFiles' : this.refType; //Dùng để lấy Category của Module
+      this.refType == 'ES_Categories' ? 'ES_SignFiles' :this.approverProcess?.category?.category !=null ?this.approverProcess?.category?.category : this.refType; //Dùng để lấy Category của Module
     this.editApprovers = false ;//data?.data?.editApprovers ?? false;
     this.approvers = data?.data?.approvers ?? null;
     this.approverProcess = data?.data?.approverProcess ?? null;
@@ -258,11 +258,12 @@ export class PopupAddSignFileComponent implements OnInit {
         if (cate) {
           this.eSign = cate?.eSign ;
           this.signatureType = cate?.signatureType;
+          this.data.category = cate?.category;
         }
-        else{
-          
+        else{          
           this.eSign = this.approverProcess?.category?.eSign ;
           this.signatureType = this.approverProcess?.category?.signatureType;
+          this.data.category = this.approverProcess?.category?.category;
         }
       });
     //Lấy quy trình mẫu cũ
@@ -323,6 +324,7 @@ export class PopupAddSignFileComponent implements OnInit {
                   .subscribe((cate) => {
                     if (cate) {
                       this.data.processID = cate.processID;
+                      this.data.category = cate?.category;
                       this.processTab = 3;
                       this.initForm();
                     }
@@ -364,6 +366,7 @@ export class PopupAddSignFileComponent implements OnInit {
                         .subscribe((cate) => {
                           if (cate) {
                             this.data.processID = cate.processID;
+                            this.data.category = cate?.category;
                             this.initForm();
                           }
                         });
@@ -463,6 +466,7 @@ export class PopupAddSignFileComponent implements OnInit {
                       .subscribe((res) => {
                         if (res) {
                           this.eSign = res.eSign;
+                          this.data.category = res?.category;
                           this.esService
                             .getAutoNumberByCategory(res.autoNumber)
                             .subscribe((numberRes) => {
@@ -949,7 +953,8 @@ export class PopupAddSignFileComponent implements OnInit {
           .getCategoryByCateIDType(this.data?.categoryID, this.typeCategory,this.approverProcess?.category?.refID)
           .subscribe((cate) => {
             if (cate) {
-              this.curCategory = cate?.signatureType;
+              this.curCategory = cate;
+              this.data.category = cate?.category;
             }
           });
       }
