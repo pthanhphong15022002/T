@@ -647,49 +647,53 @@ export class StepService {
       let contractData = await firstValueFrom(this.getOneContract(quotationID));    
       if(contractData){
         data = { ...data, contract: contractData, stepsTasks: task, isStartIns };
-        let contractOuput = await this.openPopupContract(data);
-        let contract = contractOuput?.event?.contract;
-        if (contract) {
-          task.objectLinked = contract?.recID;
-          task.owner = contract?.owner;
-          let minus = this.minusDate(task.endDate, task.startDate, 'hours');
-          task.durationDay = minus ? minus % 24 : 0;
-          task.durationHour = minus ? Math.floor(minus / 24) : 0;
-    
-          if (contract?.permissions?.length > 0) {
-            let roles = contract?.permissions?.map((x) => {
-              let role = new DP_Instances_Steps_Tasks_Roles();
-              role['recID'] = Util.uid();
-              role['objectName'] = x?.objectName;
-              role['objectID'] = x?.objectID;
-              role['createdOn'] = x?.createdOn;
-              role['createdBy'] = x?.createdBy;
-              role['roleType'] = 'O';
-              role['objectType'] = x?.objectType;
-              role['taskID'] = task?.recID;
-              return role;
-            });
-            task.roles = roles;
-          } else {
-            task.roles = [];
-            let role = new DP_Instances_Steps_Tasks_Roles();
-            role['recID'] = Util.uid();
-            role['objectName'] = this.user?.userName;
-            role['objectID'] = this.user?.userID;
-            role['createdOn'] = new Date();
-            role['createdBy'] = this.user?.userID;
-            role['roleType'] = 'O';
-            role['objectType'] = this.user?.objectType;
-            role['taskID'] = task?.recID;
-            task.roles.push(role);
-          }
-          return task;
-        } else {
-          return null;
-        }
       }else{
         this.notiService.notify('Báo giá không tồn tại','3');
+        return;
       }
+    }else{
+      data = { ...data, stepsTasks: task, isStartIns };
+    }
+
+    let contractOuput = await this.openPopupContract(data);
+    let contract = contractOuput?.event?.contract;
+    if (contract) {
+      task.objectLinked = contract?.recID;
+      task.owner = contract?.owner;
+      let minus = this.minusDate(task.endDate, task.startDate, 'hours');
+      task.durationDay = minus ? minus % 24 : 0;
+      task.durationHour = minus ? Math.floor(minus / 24) : 0;
+
+      if (contract?.permissions?.length > 0) {
+        let roles = contract?.permissions?.map((x) => {
+          let role = new DP_Instances_Steps_Tasks_Roles();
+          role['recID'] = Util.uid();
+          role['objectName'] = x?.objectName;
+          role['objectID'] = x?.objectID;
+          role['createdOn'] = x?.createdOn;
+          role['createdBy'] = x?.createdBy;
+          role['roleType'] = 'O';
+          role['objectType'] = x?.objectType;
+          role['taskID'] = task?.recID;
+          return role;
+        });
+        task.roles = roles;
+      } else {
+        task.roles = [];
+        let role = new DP_Instances_Steps_Tasks_Roles();
+        role['recID'] = Util.uid();
+        role['objectName'] = this.user?.userName;
+        role['objectID'] = this.user?.userID;
+        role['createdOn'] = new Date();
+        role['createdBy'] = this.user?.userID;
+        role['roleType'] = 'O';
+        role['objectType'] = this.user?.objectType;
+        role['taskID'] = task?.recID;
+        task.roles.push(role);
+      }
+      return task;
+    } else {
+      return null;
     }
   }
 
