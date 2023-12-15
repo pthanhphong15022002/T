@@ -55,9 +55,9 @@ export class ContractsDetailComponent implements OnInit, OnChanges {
     { id: 'listLink', name: 'Liên kết', icon: 'icon-i-link' },
   ];
   listTabInformation = [
-    { id: 'customer', name: 'Khách hàng' },
-    { id: 'information', name: 'Thông tin hợp đồng' },
-    { id: 'purpose', name: 'Mục đích thuê' },
+    { id: 'customer', name: 'Thông tin chung' },
+    { id: 'information', name: 'Thông tin mở rộng' },
+    { id: 'purpose', name: 'Công việc' },
     { id: 'note', name: 'Ghi chú' },
   ];
   listHistory = [{ id: 'history', name:'Lịch sử'}];

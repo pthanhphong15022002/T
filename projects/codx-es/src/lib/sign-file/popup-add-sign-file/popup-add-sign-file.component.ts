@@ -1534,15 +1534,15 @@ export class PopupAddSignFileComponent implements OnInit {
         .subscribe((res) => {
           if (res?.msgCodeError == null && res?.rowCount > 0) {
             let releaseRes = res;
-            this.esService.getSFByID(this.data?.recID).subscribe((res) => {
-              if (res?.signFile) {
-                this.data.files = res?.signFile?.files;
-                this.dialogSignFile.patchValue({ files: res?.signFile?.files });
+            this.esService.getByRecID(this.data?.recID).subscribe((res:any) => {
+              if (res) {
+                this.data.files = res?.files;
+                this.dialogSignFile.patchValue({ files: res?.files });
 
                 this.dialogSignFile.patchValue({
-                  approveStatus: res?.signFile?.approveStatus,
+                  approveStatus: res?.approveStatus,
                 });
-                this.data.approveStatus = res?.signFile?.approveStatus;
+                this.data.approveStatus = res?.approveStatus;
 
                 this.esService.editSignFile(this.data).subscribe((result) => {
                   if (result) {
@@ -1551,21 +1551,33 @@ export class PopupAddSignFileComponent implements OnInit {
                       .addQRBeforeRelease(this.data.recID)
                       .subscribe((res) => {});
 
-                    // Notify
-                    this.notify.notifyCode('ES007');
+                    
+                  }
+                });
+                // Notify
+                this.notify.notifyCode('ES007');
+                this.dialog &&
+                  this.dialog.close({
+                    data: this.data,
+                    approved: true,
+                    responseModel: releaseRes,
+                  });
+              }
+              else{
+                //Vẫn gửi duyệt thành công
+                this.notify.notifyCode('ES007');
                     this.dialog &&
                       this.dialog.close({
                         data: this.data,
                         approved: true,
                         responseModel: releaseRes,
                       });
-                  }
-                });
               }
             });
           } else {
             this.notify.notifyCode(res?.msgCodeError);
             this.isReleasing = false;
+            this.cr.detectChanges();
           }
         });
     }
