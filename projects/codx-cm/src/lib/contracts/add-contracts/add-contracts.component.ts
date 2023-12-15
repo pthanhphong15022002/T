@@ -713,10 +713,12 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
       }
       this.checkPhone = !this.checkPhone;
     }
-    if(event?.field == 'interval'){
+    if (event?.field == 'interval') {
       const startDate = new Date(this.contracts?.effectiveFrom) || new Date();
       let interval = parseInt(event?.data || 0);
-      this.contracts.effectiveTo = new Date(startDate.setMonth(startDate.getMonth() + interval));
+      this.contracts.effectiveTo = new Date(
+        startDate.setMonth(startDate.getMonth() + interval)
+      );
     }
   }
 
@@ -843,8 +845,12 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
 
   changeValueDate(event) {
     this.contracts[event?.field] = new Date(event?.data?.fromDate);
-    const startDate = this.contracts?.effectiveFrom ? new Date(this.contracts?.effectiveFrom) : null;
-    const endDate = this.contracts?.effectiveTo ? new Date(this.contracts?.effectiveTo) : null;
+    const startDate = this.contracts?.effectiveFrom
+      ? new Date(this.contracts?.effectiveFrom)
+      : null;
+    const endDate = this.contracts?.effectiveTo
+      ? new Date(this.contracts?.effectiveTo)
+      : null;
     if (event?.field == 'effectiveTo' && this.isLoadDate) {
       if (endDate && startDate > endDate) {
         // this.isSaveTimeTask = false;
@@ -863,7 +869,11 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
       this.isLoadDate = !this.isLoadDate;
     }
 
-    if((event?.field == 'effectiveTo' || event?.field == 'effectiveFrom') && startDate &&  endDate){
+    if (
+      (event?.field == 'effectiveTo' || event?.field == 'effectiveFrom') &&
+      startDate &&
+      endDate
+    ) {
       let startYear = startDate.getFullYear();
       let endYear = endDate.getFullYear();
       let startMonth = startDate.getMonth();

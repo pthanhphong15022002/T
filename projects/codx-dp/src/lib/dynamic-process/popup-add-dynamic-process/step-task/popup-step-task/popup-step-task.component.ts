@@ -603,7 +603,7 @@ export class PopupJobComponent implements OnInit, OnDestroy {
           'ES',
           'CategoriesBusiness',
           'GetByCategoryIDTypeAsync',
-          [this.stepsTasks.recID, 'DP_Steps_Tasks']
+          [this.stepsTasks.recID, 'DP_Steps_Tasks', null]
         )
       );
     if (category) {
