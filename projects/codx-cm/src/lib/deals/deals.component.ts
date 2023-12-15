@@ -399,7 +399,11 @@ export class DealsComponent
           mappingFunction && mappingFunction(eventItem, data);
         } else {
           eventItem.disabled =
-            eventItem?.functionID !== 'CM0201_17' ? true : data?.alloweStatus == '1' ? false : true;
+            eventItem?.functionID !== 'CM0201_17'
+              ? true
+              : data?.alloweStatus == '1'
+              ? false
+              : true;
         }
       }
     }
@@ -411,7 +415,8 @@ export class DealsComponent
         data?.alloweStatus == '1'
           ? (data.closed && data?.status != '1') ||
             ['1', '0', '15'].includes(data?.status) ||
-            this.checkMoreReason(data) || !data.applyProcess
+            this.checkMoreReason(data) ||
+            !data.applyProcess
           : true;
     };
     let isDelete = (eventItem, data) => {
@@ -492,7 +497,8 @@ export class DealsComponent
     let isMoveReason = (eventItem, data) => {
       eventItem.disabled =
         data?.alloweStatus == '1'
-          ? (data.closed && data?.status != '1') || !data.applyProcess ||
+          ? (data.closed && data?.status != '1') ||
+            !data.applyProcess ||
             ['1', '0', '15'].includes(data?.status) ||
             this.checkMoreReason(data, false)
           : true;
@@ -899,7 +905,8 @@ export class DealsComponent
                       if (this.kanban) {
                         this.renderKanban(res);
                       }
-                      if (this.detailViewDeal) this.detailViewDeal.dataSelected = res;
+                      if (this.detailViewDeal)
+                        this.detailViewDeal.dataSelected = res;
                       this.detailViewDeal?.reloadListStep(listSteps);
                       this.detectorRef.detectChanges();
                     }
@@ -2056,7 +2063,7 @@ export class DealsComponent
         this.dataSelected.statusCodeCmt = e?.event?.statusCodecmt;
         let status = e?.event?.status;
         let message = e?.event?.message;
-        if(status && !this.dataSelected.applyProcess ) {
+        if (status && !this.dataSelected.applyProcess) {
           this.dataSelected.status = status;
         }
 
@@ -2080,7 +2087,6 @@ export class DealsComponent
                 break;
             }
           } else if (message) {
-
             this.notificationsService.notifyCode(
               message,
               0,
@@ -2088,7 +2094,6 @@ export class DealsComponent
             );
           }
         }
-
       }
     });
   }
@@ -2157,7 +2162,8 @@ export class DealsComponent
       let objectDealValue = {
         dealValue: total,
       };
-      // this.view.currentView.sumData = objectDealValue;
+
+      this.view.currentView.sumData = objectDealValue;
 
       // let elemnt = document.querySelector('.sum-content');
       // if (elemnt) {
@@ -2265,8 +2271,8 @@ export class DealsComponent
     }
   }
   //#endregion
-  async addTask(data){
-    let taskOutput = await this.stepService.addTaskCM(data, "CM_Deals");
+  async addTask(data) {
+    let taskOutput = await this.stepService.addTaskCM(data, 'CM_Deals');
     this.taskAdd = taskOutput;
   }
 }
