@@ -162,6 +162,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
     this.enabled = dt?.data?.enabled;
     this.refValueDataType = dt?.data?.refValueDataType ?? this.refValueDataType;
     this.processNo = dt?.data?.processNo; //de sinh vll
+
     this.creatFieldCustom();
     this.widthDefault = this.dialog.dialog.width
       ? this.dialog.dialog.width.toString()
@@ -235,9 +236,8 @@ export class PopupAddCustomFieldComponent implements OnInit {
       this.servicePA = e?.component?.itemsSelected[0]?.Service;
       this.entityNamePA = e?.component?.itemsSelected[0]?.TableName;
     }
-    this.creatFieldCustom();
-
-    // this.changdef.detectChanges(); thua
+    if (e.field == 'dataFormat' || e.field == 'refValue')
+      this.creatFieldCustom();
   }
 
   creatFieldCustom() {
@@ -257,6 +257,8 @@ export class PopupAddCustomFieldComponent implements OnInit {
           })
         )
       );
+    } else {
+      this.fieldCus = null;
     }
   }
 

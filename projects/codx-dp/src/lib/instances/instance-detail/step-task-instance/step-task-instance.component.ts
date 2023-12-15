@@ -1,17 +1,39 @@
-import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, HostListener, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
-import { ApiHttpService, AuthStore, CacheService, CallFuncService, DialogModel, DialogRef, NotificationsService } from 'codx-core';
+import {
+  AfterViewInit,
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  HostListener,
+  Input,
+  OnChanges,
+  OnInit,
+  Output,
+  SimpleChanges,
+  ViewChild,
+} from '@angular/core';
+import {
+  ApiHttpService,
+  AuthStore,
+  CacheService,
+  CallFuncService,
+  DialogModel,
+  DialogRef,
+  NotificationsService,
+} from 'codx-core';
 import { CodxStepTaskComponent } from 'projects/codx-share/src/lib/components/codx-step/codx-step-task/codx-step-task.component';
 
 @Component({
   selector: 'step-task-instance',
   templateUrl: './step-task-instance.component.html',
-  styleUrls: ['./step-task-instance.component.scss']
+  styleUrls: ['./step-task-instance.component.scss'],
 })
-export class StepTaskInstanceComponent implements OnInit, AfterViewInit, OnChanges {
+export class StepTaskInstanceComponent
+  implements OnInit, AfterViewInit, OnChanges
+{
   @ViewChild('task') task: CodxStepTaskComponent;
   @ViewChild('popupGuide') popupGuide;
 
-  @Input() test:any;;
+  @Input() test: any;
   applyProcess = false; // 2 = hợp đồng
   @Input() instance; // CM_Customers, CM_Deal, CM_Lead, CM_Case, CM_Contracts
   @Input() isAdmin = false;
@@ -34,6 +56,7 @@ export class StepTaskInstanceComponent implements OnInit, AfterViewInit, OnChang
   @Output() saveAssignTask = new EventEmitter<any>();
   @Output() changeProgress = new EventEmitter<any>();
   @Output() isSusscess = new EventEmitter<any>();
+  @Output() addTaskHaveAssign = new EventEmitter<any>();
   @ViewChild('viewReason', { static: true }) viewReason;
   dialogPopupReason: DialogRef;
   status = [];
@@ -113,12 +136,12 @@ export class StepTaskInstanceComponent implements OnInit, AfterViewInit, OnChang
   ngOnChanges(changes: SimpleChanges): void {
     if (changes?.listInstanceStep) {
       this.listInstanceStepShow = this.listInstanceStep;
-      if (!['0', '1', '2','15'].includes(this.instance?.status)) {
+      if (!['0', '1', '2', '15'].includes(this.instance?.status)) {
         this.stepIdReason =
           this.listInstanceStep[this.listInstanceStep.length - 1].stepID;
         this.listStepReasonValue =
           this.listInstanceStep[this.listInstanceStep.length - 1].reasons;
-          this.isShowSuccess =  true;
+        this.isShowSuccess = true;
       }
       if (this.listInstanceStep?.length > 0) {
         this.stepViews = [];
@@ -138,18 +161,16 @@ export class StepTaskInstanceComponent implements OnInit, AfterViewInit, OnChang
       this.type = this.instance.viewModeDetail || 'S';
       if (!this.isAdmin) {
         this.isAdmin =
-          this.instance?.full ||
-          this.instance?.owner == this.user?.userID;
+          this.instance?.full || this.instance?.owner == this.user?.userID;
       }
-      if(this.entityName == 'CM_Customers'){
+      if (this.entityName == 'CM_Customers') {
         this.applyProcess = false;
-      }else if(this.entityName == 'CM_Deals'){
+      } else if (this.entityName == 'CM_Deals') {
         this.applyProcess = true;
-      }else{
+      } else {
         this.applyProcess = this.instance?.applyProcess;
       }
       this.owner = this.instance?.owner;
-
     }
   }
 
@@ -197,8 +218,10 @@ export class StepTaskInstanceComponent implements OnInit, AfterViewInit, OnChang
   }
 
   addTask() {
-    let index = this.listInstanceStep.findIndex((step) => step.stepStatus == '1');
-    this.indexAddTask = index >-1 ? index : 0;
+    let index = this.listInstanceStep.findIndex(
+      (step) => step.stepStatus == '1'
+    );
+    this.indexAddTask = index > -1 ? index : 0;
     setTimeout(() => {
       this.indexAddTask = -1;
     }, 1000);
@@ -250,7 +273,7 @@ export class StepTaskInstanceComponent implements OnInit, AfterViewInit, OnChang
     //   reasonInstance.createdBy = item.createdBy;
     //   listReasonInstance.push(reasonInstance);
     // }
- //   return listReasonInstance;
+    //   return listReasonInstance;
   }
 
   getNameReason(isReason) {
@@ -356,11 +379,7 @@ export class StepTaskInstanceComponent implements OnInit, AfterViewInit, OnChang
     });
   }
   onDeleteReason(dataReason) {
-    var data = [
-      this.instance.refID,
-      this.instance.stepID,
-      dataReason.recID,
-    ];
+    var data = [this.instance.refID, this.instance.stepID, dataReason.recID];
     // this.codxCmService.deleteListReason(data).subscribe((res) => {
     //   if (res) {
     //     let idx = this.listStepReasonValue.findIndex(
@@ -476,5 +495,11 @@ export class StepTaskInstanceComponent implements OnInit, AfterViewInit, OnChang
   }
   toggleReason() {
     this.isShowSuccess = !this.isShowSuccess;
+  }
+
+  eventAddTaskAssign(e) {
+    if (e) {
+      this.addTaskHaveAssign.emit(e);
+    }
   }
 }

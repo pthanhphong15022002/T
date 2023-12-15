@@ -1,584 +1,401 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  HostListener,
-  Injector,
-  Optional,
-  ViewChild,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, Injector, Optional, ViewChild } from '@angular/core';
+import { CRUDService, CodxFormComponent, CodxInputComponent, DataRequest, DialogData, DialogRef, FormModel, NotificationsService, UIComponent, Util } from 'codx-core';
+import { TabModel } from 'projects/codx-share/src/lib/components/codx-approval/tab/model/tabControl.model';
+import { Subject, map, takeUntil } from 'rxjs';
+import { CodxAcService} from '../../../codx-ac.service';
+import { RoundService } from '../../../round.service';
 import { FormGroup } from '@angular/forms';
-import { SwitchComponent } from '@syncfusion/ej2-angular-buttons';
-import {
-  CRUDService,
-  CodxComboboxComponent,
-  CodxFormComponent,
-  CodxInputComponent,
-  CodxService,
-  DataRequest,
-  DialogData,
-  DialogRef,
-  FormModel,
-  UIComponent,
-} from 'codx-core';
-import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
-import { BehaviorSubject } from 'rxjs';
-import { CodxAcService } from '../../../codx-ac.service';
-import {
-  IJournal,
-  Vll075,
-} from '../../../journals/interfaces/IJournal.interface';
-import { JournalService } from '../../../journals/journals.service';
 
 @Component({
   selector: 'lib-cashtransfers-add',
   templateUrl: './cashtransfers-add.component.html',
-  styleUrls: ['./cashtransfers-add.component.scss'],
+  styleUrls: ['./cashtransfers-add.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CashtransferAddComponent extends UIComponent {
+export class CashtransfersAddComponent extends UIComponent {
   //#region Constructor
-  @ViewChild('form') form: CodxFormComponent;
-  @ViewChild('switchHasInvoice') switchHasInvoice: SwitchComponent;
-  @ViewChild('diM1') diM1: CodxInputComponent;
-  @ViewChild('diM2') diM2: CodxInputComponent;
-  @ViewChild('diM3') diM3: CodxInputComponent;
-
-  cashTransfer: any = {};
-  vatInvoice: any = {} as any;
-  masterService: CRUDService;
-  invoiceService: CRUDService;
-
-  fmVATInvoice: FormModel;
-  fgVatInvoice: FormGroup;
-  gvsVATInvoices: any;
-
-  hasInvoice: boolean = false;
-  isEdit: boolean = false;
-
-  cashBookName1: string = '';
-  cashBookName2: string = '';
-  reasonName: string;
-  baseCurr: string;
-  tabs: TabModel[] = [
-    { name: 'history', textDefault: 'Lịch sử', isActive: false },
-    { name: 'comment', textDefault: 'Thảo luận', isActive: false },
-    { name: 'attachment', textDefault: 'Đính kèm', isActive: false },
-    { name: 'link', textDefault: 'Liên kết', isActive: false },
+  @ViewChild('formCashTranfer') public formCashTranfer: CodxFormComponent;
+  @ViewChild('eleCbxCashBook') eleCbxCashBook: CodxInputComponent;
+  @ViewChild('eleCbxCashBook2') eleCbxCashBook2: CodxInputComponent;
+  headerText: string;
+  dialog!: DialogRef;
+  dialogData?: any;
+  dataDefault: any;
+  journal: any;
+  fgVATInvoice:any;
+  fmVATInvoices:FormModel;
+  tabInfo: TabModel[] = [ //? thiết lập footer
+    { name: 'History', textDefault: 'Lịch sử', isActive: false },
+    { name: 'Comment', textDefault: 'Thảo luận', isActive: false },
+    { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
+    { name: 'References', textDefault: 'Liên kết', isActive: false },
   ];
-  journal: IJournal;
-  hiddenFields: string[] = [];
-
-  journalSubject = new BehaviorSubject<boolean>(false);
-  vatInvoiceSubject = new BehaviorSubject<boolean>(false);
-
+  baseCurr: any;
+  preData:any;
+  postDateControl:any;
+  isload:any = false;
+  isPreventChange:any = false;
+  VATInvoiceSV:any;
+  private destroy$ = new Subject<void>(); //? list observable hủy các subscribe api
   constructor(
-    injector: Injector,
+    inject: Injector,
     private acService: CodxAcService,
-    private journalService: JournalService,
-    codxService: CodxService,
-    @Optional() public dialogRef: DialogRef,
-    @Optional() public dialogData: DialogData
+    private notification: NotificationsService,
+    private roundService: RoundService,
+    @Optional() dialog?: DialogRef,
+    @Optional() dialogData?: DialogData
   ) {
-    super(injector);
-
-    this.isEdit = dialogData.data.formType === 'edit';
-    this.masterService = this.dialogRef.dataService;
-    this.cashTransfer = this.masterService?.dataSelected;
-    this.cashTransfer.feeControl = Boolean(
-      Number(this.cashTransfer.feeControl)
-    );
-
-    // this.fmVATInvoice = fmVATInvoice;
-    // this.fgVatInvoice = codxService.buildFormGroup(
-    //   fmVATInvoice.formName,
-    //   fmVATInvoice.gridViewName,
-    //   fmVATInvoice.entityName
-    // );
-    // this.invoiceService = acService.createCRUDService(
-    //   injector,
-    //   this.fmVATInvoice,
-    //   'AC'
-    // );
+    super(inject);
+    this.dialog = dialog;
+    this.dialogData = dialogData;
+    this.headerText = dialogData.data?.headerText;
+    this.dataDefault = { ...dialogData.data?.oData };
+    this.preData = { ...dialogData.data?.oData };
+    this.journal = { ...dialogData.data?.journal };
+    this.baseCurr = dialogData.data?.baseCurr;
+    this.fgVATInvoice = dialogData.data?.fgVATInvoice;
+    this.fmVATInvoices = dialogData.data?.fmVATInvoices;
+    this.VATInvoiceSV = dialogData.data?.VATInvoiceSV;
   }
-  //#endregion
+  //#endregion Constructor
 
   //#region Init
   onInit(): void {
+    this.acService.setPopupSize(this.dialog, '100%', '100%');
     this.cache
-      .gridViewSetup(this.fmVATInvoice.formName, this.fmVATInvoice.gridViewName)
-      .subscribe((res) => {
-        this.gvsVATInvoices = res;
-      });
-
-    this.cache.companySetting().subscribe((res) => {
-      this.baseCurr = res[0]?.baseCurr;
-    });
-
-    this.journalService
-      .getJournal$(this.cashTransfer.journalNo)
-      .subscribe((res) => {
-        this.journal = res;
-        this.journalSubject.next(true);
-
-        this.hiddenFields = this.journalService.getHiddenFields(this.journal);
-
-        if (this.isEdit) {
-          // load vatInvoice
-          const options = new DataRequest();
-          options.entityName = 'AC_VATInvoices';
-          options.pageLoading = false;
-          options.predicates = 'TransID=@0';
-          options.dataValues = this.cashTransfer.recID;
-          this.acService.loadData$('AC', options).subscribe((res: any) => {
-            if (res[0]) {
-              this.hasInvoice = true;
-              this.detectorRef.markForCheck();
-
-              this.invoiceService.dataSelected = res[0];
-              this.invoiceService.edit(res[0]).subscribe();
-              this.vatInvoice = this.fmVATInvoice.currentData = res[0];
-              this.fgVatInvoice.patchValue(res[0]);
-
-              this.vatInvoiceSubject.next(true);
-            } else {
-              this.invoiceService.addNew().subscribe((res) => {
-                this.vatInvoice = this.fmVATInvoice.currentData = res;
-                this.fgVatInvoice.patchValue(res);
-
-                this.vatInvoiceSubject.next(true);
-              });
-            }
-          });
-        } else {
-          this.invoiceService.addNew().subscribe((res) => {
-            this.vatInvoice = this.fmVATInvoice.currentData = res;
-            this.fgVatInvoice.patchValue(res);
-
-            this.vatInvoiceSubject.next(true);
-          });
+      .viewSettingValues('ACParameters')
+      .pipe(
+        takeUntil(this.destroy$),
+        map((arr: any[]) => arr.find((a) => a.category === '1')),
+        map((data) => JSON.parse(data.dataValue))
+      ).subscribe((res:any)=>{
+        if (res) {
+          this.postDateControl = res?.PostedDateControl;
         }
-      });
+      })
   }
 
-  ngAfterViewInit(): void {
-    this.detectorRef.markForCheck();
+  ngAfterViewInit() {
+    if(this.formCashTranfer?.data?.coppyForm) this.formCashTranfer.data._isEdit = true; //? test copy để tạm
+    if (this.formCashTranfer?.data?.feeControl == "0") {
+      this.formCashTranfer.setValue('feeControl',false,{});
+    }else{
+      this.formCashTranfer.setValue('feeControl',true,{});
+    }
+    if (this.formCashTranfer?.data?.isEdit) {
+      let option = new DataRequest();
+      option.entityName = 'AC_VATInvoices';
+      option.predicate = 'TransID=@0';
+      option.pageLoading = false;
+      option.dataValue = this.formCashTranfer?.data?.recID;
+      this.api
+        .execSv(
+          'AC',
+          'ERM.Business.Core',
+          'DataBusiness',
+          'LoadDataAsync',
+          option
+        ).subscribe((res:any)=>{
+          let data = res[0][0];
+          this.fmVATInvoices.currentData = data;
+          this.fgVATInvoice.patchValue(data);
+          this.detectorRef.detectChanges();
+        })
+    }
   }
-  //#endregion
+
+  ngDoCheck() {
+    this.detectorRef.detectChanges();
+  }
+
+  /**
+   * *Hàm hủy các observable api
+   */
+  onDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+  
+
+  /**
+   * *Hàm init sau khi form được vẽ xong
+   * @param event
+   */
+  onAfterInitForm(event){
+    this.detectorRef.detectChanges();
+  }
+  //#endregion Init
 
   //#region Event
-  onAfterFormInit(): void {
-    this.journalSubject.subscribe((loaded) => {
-      if (loaded && this.journal.assignRule === Vll075.TuDongKhiLuu) {
-        this.form.setRequire([
-          {
-            field: 'voucherNo',
-            require: false,
-          },
-        ]);
-      }
-    });
+  /**
+   * *Hàm click nút đóng form
+   */
+  closeForm() {
+    this.onDestroy();
+    this.dialog.close();
+  }
 
-    let predicates: string = '';
-    let dataValues: string[] = [];
-    if (this.cashTransfer.cashBookID) {
-      dataValues.push(this.cashTransfer.cashBookID);
-    }
-    if (this.cashTransfer.cashBookID2) {
-      dataValues.push(this.cashTransfer.cashBookID2);
-    }
-
-    if (dataValues.length === 0) {
+  /**
+   * *Hàm xử lí khi change value trên master
+   * @param event
+   */
+  valueChangeMaster(event: any) {
+    if(this.isPreventChange){
       return;
     }
-
-    for (let i = 0; i < dataValues.length; i++) {
-      predicates +=
-        `CashBookID=@${i}` + (i !== dataValues.length - 1 ? ' or ' : '');
-    }
-
-    this.acService
-      .loadComboboxData$(
-        this.form.gridviewSetup.CashBookID.referedValue,
-        'AC',
-        predicates,
-        dataValues.join(';')
-      )
-      .subscribe((cashBooks) => {
-        if (cashBooks) {
-          this.cashBookName1 = this.getCashBookNameById(
-            cashBooks,
-            this.cashTransfer?.cashBookID
-          );
-          this.cashBookName2 = this.getCashBookNameById(
-            cashBooks,
-            this.cashTransfer?.cashBookID2
-          );
-          this.detectorRef.markForCheck();
-        }
-      });
-  }
-
-  onAfterRendering(cbx: CodxComboboxComponent, field: string): void {
-    if (field === 'cashAcctID') {
-      this.journalSubject.subscribe((loaded) => {
-        if (!loaded) {
+    let field = event?.field || event?.ControlName;
+    let value = event?.data || event?.crrValue;
+    this.formCashTranfer.setValue('updateColumns','',{});
+    switch (field.toLowerCase()) {
+      case 'cashbookid':
+        let indexcb = this.eleCbxCashBook?.ComponentCurrent?.dataService?.data.findIndex((x) => x.CashBookID == this.eleCbxCashBook?.ComponentCurrent?.value);
+        if(value == '' || value == null || indexcb == -1){
+          this.isPreventChange = true;
+          this.formCashTranfer.setValue(field,null,{});
+          this.eleCbxCashBook.ComponentCurrent.itemsSelected[0].CashBookName = "";
+          let memo = this.getMemoMaster();
+          this.formCashTranfer.setValue('memo',memo,{});
+          this.isPreventChange = false;
+          this.detectorRef.detectChanges();
           return;
-        }
+        } 
+        this.cashBookIDChange(field)
+        break;
 
-        this.journalService.loadComboboxBy067(
-          this.journal,
-          'drAcctControl',
-          'drAcctID',
-          'AccountID',
-          cbx,
-          this.form.formGroup,
-          'cashAcctID',
-          this.isEdit
-        );
-      });
-    } else if (field === 'offsetAcctID') {
-      this.journalSubject.subscribe((loaded) => {
-        if (!loaded) {
+      case 'cashbookid2':
+        let indexcb2 = this.eleCbxCashBook2?.ComponentCurrent?.dataService?.data.findIndex((x) => x.CashBookID == this.eleCbxCashBook2?.ComponentCurrent?.value);
+        if(value == '' || value == null || indexcb2 == -1){
+          this.isPreventChange = true;
+          this.formCashTranfer.setValue(field,null,{});
+          this.eleCbxCashBook2.ComponentCurrent.itemsSelected[0].CashBookName = "";
+          let memo = this.getMemoMaster();
+          this.formCashTranfer.setValue('memo',memo,{});
+          this.isPreventChange = false;
+          this.detectorRef.detectChanges();
           return;
-        }
+        } 
+        this.cashBookID2Change(field)
+        break;
 
-        this.journalService.loadComboboxBy067(
-          this.journal,
-          'crAcctControl',
-          'crAcctID',
-          'AccountID',
-          cbx,
-          this.form.formGroup,
-          'offsetAcctID',
-          this.isEdit
-        );
-      });
-    } else if (field === 'diM1') {
-      this.vatInvoiceSubject.subscribe((loaded) => {
-        if (!loaded) {
-          return;
-        }
-
-        this.journalService.loadComboboxBy067(
-          this.journal,
-          'diM1Control',
-          'diM1',
-          'DepartmentID',
-          cbx,
-          this.fgVatInvoice,
-          'diM1',
-          this.isEdit
-        );
-      });
-    } else if (field === 'diM2') {
-      this.vatInvoiceSubject.subscribe((loaded) => {
-        if (!loaded) {
-          return;
-        }
-
-        this.journalService.loadComboboxBy067(
-          this.journal,
-          'diM2Control',
-          'diM2',
-          'CostCenterID',
-          cbx,
-          this.fgVatInvoice,
-          'diM2',
-          this.isEdit
-        );
-      });
-    } else if (field === 'diM3') {
-      this.vatInvoiceSubject.subscribe((loaded) => {
-        if (!loaded) {
-          return;
-        }
-
-        this.journalService.loadComboboxBy067(
-          this.journal,
-          'diM3Control',
-          'diM3',
-          'CostItemID',
-          cbx,
-          this.fgVatInvoice,
-          'diM3',
-          this.isEdit
-        );
-      });
-    }
-  }
-
-  onInputChange(e): void {
-    console.log('onInputChange', e);
-
-    // e.data for valueChange and e.crrValue for controlBlur
-    if (!e.data && !e.crrValue) {
-      return;
-    }
-
-    const field: string = e.field.toLowerCase();
-
-    if (field === 'cashbookid2') {
-      this.cashBookName2 = e.component.itemsSelected[0]?.CashBookName;
-      this.form.formGroup.patchValue({
-        memo: this.generateMemo(),
-      });
-      return;
-    }
-
-    if (field === 'reasonid') {
-      this.reasonName = e.component.itemsSelected[0]?.ReasonName;
-      this.form.formGroup.patchValue({
-        memo: this.generateMemo(),
-      });
-      return;
-    }
-
-    if (field === 'cashbookid') {
-      this.cashBookName1 = e.component.itemsSelected[0]?.CashBookName;
-      this.form.formGroup.patchValue({
-        memo: this.generateMemo(),
-      });
-    }
-
-    const postFields: string[] = ['currencyid', 'cashbookid'];
-    if (postFields.includes(field)) {
-      this.api
-        .exec('AC', 'CashTranfersBusiness', 'ValueChangedAsync', [
-          field,
-          this.cashTransfer,
-        ])
-        .subscribe((res: any) => {
-          this.form.formGroup.patchValue({
-            currencyID: res.currencyID,
-            exchangeRate: res.exchangeRate,
-            multi: res.multi,
-            cashAcctID: res.cashAcctID,
-          });
-        });
-    }
-  }
-
-  // for switch only
-  onKeyUpEnter(): void {
-    this.form.formGroup.patchValue({
-      feeControl: !this.cashTransfer.feeControl,
-    });
-  }
-
-  // for switch only
-  onKeyUpEnter2(): void {
-    this.switchHasInvoice.toggle();
-  }
-
-  /** Switch is checked if master data was saved successfully.*/
-  onSwitchChange(e): void {
-    console.log('onSwitchChange', e);
-
-    // on off on => loi
-    if (e.checked) {
-      this.form.save(null, null, null, null, false).subscribe((res: any) => {
-        if (res === false || res.save?.error || res.update?.error) {
-          this.switchHasInvoice.toggle();
-          return;
-        }
-
-        this.detectorRef.markForCheck();
-
-        const tempCashTransfer = res.save?.data || res.update?.data || res;
-        if (tempCashTransfer) {
-          this.vatInvoice.transID = tempCashTransfer.recID;
-          this.vatInvoice.lineID = tempCashTransfer.recID;
-        }
-      });
-    }
-  }
-
-  onCloseClick() {
-    this.dialogRef.close();
-  }
-
-  onDiscardClick() {
-    this.masterService
-      .delete(
-        [this.cashTransfer],
-        true,
-        null,
-        null,
-        'AC0010',
-        null,
-        null,
-        false
-      )
-      .subscribe((res: any) => {
-        if (res?.data) {
-          this.dialogRef.close();
-        }
-      });
-  }
-
-  onAfterValidation(): void {
-    this.cashTransfer.feeControl = +this.cashTransfer.feeControl;
-    this.cashTransfer.totalAmt =
-      (this.cashTransfer.exchangeAmt || 0) +
-      (this.cashTransfer.fees || 0) +
-      (this.hasInvoice ? this.vatInvoice?.taxAmt || 0 : 0);
-  }
-
-  onSaveClick(closeAfterSave: boolean): void {
-    console.log(this.cashTransfer);
-    console.log(this.vatInvoice);
-
-    if (
-      this.hasInvoice &&
-      !this.acService.isFormDataValid(this.fgVatInvoice, this.gvsVATInvoices)
-    ) {
-      return;
-    }
-
-    this.form.save(null, null, null, null, false).subscribe((res: any) => {
-      if (res === false || res.save?.error || res.update?.error) {
-        return;
-      }
-
-      // handle invoice
-      if (this.hasInvoice) {
-        // add or update
-        this.invoiceService
-          .save(null, null, null, null, false)
-          .subscribe((res) => console.log(res));
-      } else {
-        // delete
-        this.invoiceService
-          .delete([this.vatInvoice], false, null, null, null, null, null, false)
-          .subscribe();
-      }
-
-      this.api
-        .exec('AC', 'CashTranfersBusiness', 'UpdateAsync', [
-          this.cashTransfer,
-          this.journal,
-        ])
-        .subscribe((master) => {
-          if (!master) {
-            return;
+      case 'currencyid':
+        if(value == '' || value == null){
+          this.isPreventChange = true;
+          this.formCashTranfer.setValue(field, this.preData?.currencyID, {});
+          if (this.preData?.currencyID != null) {
+            var key = Util.camelize(field);
+            var $error = (this.formCashTranfer as any).elRef.nativeElement?.querySelector('div[data-field="' + key + '"].errorMessage');
+            if ($error) $error.classList.add('d-none');
           }
-
-          if (closeAfterSave) {
-            this.masterService.update(master).subscribe();
-            this.dialogRef.close();
-          } else {
-            this.resetForm();
-          }
-        });
-    });
-  }
-
-  @HostListener('click', ['$event.target'])
-  onClick(e: HTMLElement): void {
-    if (!e.closest('.card-footer')) {
-      const el = document.querySelector('#footer');
-      el.classList.remove('expand');
-      el.classList.add('collape');
+          this.isPreventChange = false;
+          this.detectorRef.detectChanges();
+          return;
+        }
+        this.currencyIDChange(field);
+        break;
     }
   }
-  //#endregion
+
+  valueChangeVATInvoice(event: any) {
+    if(this.isPreventChange){
+      return;
+    }
+    let field = event?.field || event?.ControlName;
+    let value = event?.data || event?.crrValue;
+    let data = this.fmVATInvoices.currentData;
+    data.updateColumns = '';
+    if (field.toLowerCase() === 'goods') {
+      data.itemID = event?.component?.itemsSelected[0]?.ItemID;
+    }
+    this.api.exec('AC', 'VATInvoicesBusiness', 'ValueChangeAsync', [
+      'AC_CashTranfers',
+      this.formCashTranfer.data,
+      data,
+      event.field
+    ]).pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
+      if (res) {
+        this.isPreventChange = true;
+        this.fmVATInvoices.currentData = res;
+        this.fgVATInvoice.patchValue({...res});
+        this.detectorRef.detectChanges();
+        this.isPreventChange = false;
+      }
+    })
+  }
+
+  //#endregion Event
 
   //#region Method
-  resetForm(): void {
-    this.masterService
-      .addNew(() =>
-        this.api.exec('AC', 'CashTranfersBusiness', 'GetDefaultAsync', [
-          this.cashTransfer.journalNo,
-        ])
-      )
-      .subscribe((res: any) => {
-        this.cashBookName1 = '';
-        this.cashBookName2 = '';
 
-        // reset master
-        this.form.data =
-          this.form.formModel.currentData =
-          this.cashTransfer =
-            res;
-        this.form.formGroup.patchValue(res);
-
-        // reset detail
-        if (this.hasInvoice) {
-          this.switchHasInvoice.toggle();
+  /**
+   * *Hàm hủy bỏ chứng từ
+   */
+  onDiscardVoucher() {
+    if (this.formCashTranfer && this.formCashTranfer.data._isEdit) {
+      this.notification.alertCode('AC0010', null).subscribe((res) => {
+        if (res.event.status === 'Y') {
+          this.detectorRef.detectChanges();
+          this.dialog.dataService
+            .delete([this.formCashTranfer.data], false, null, '', '', null, null, false)
+            .pipe(takeUntil(this.destroy$))
+            .subscribe((res) => {
+              if (res.data != null) {
+                this.notification.notifyCode('E0860');
+                this.dialog.close({type:'discard'});
+                this.onDestroy();
+              }
+            });
         }
-        this.invoiceService.addNew().subscribe((res) => {
-          this.vatInvoice = this.fmVATInvoice.currentData = res;
-          this.fgVatInvoice.patchValue(res);
-
-          setTimeout(() => {
-            this.loadDims(); // bùa
-          });
-        });
       });
+    }else{
+      this.dialog.close();
+      this.onDestroy();
+    }
   }
-  //#endregion
+
+  /**
+   * *Hàm lưu chứng từ
+   * @returns
+   */
+  onSaveVoucher(type) {
+    if (this.formCashTranfer?.data?.feeControl) {
+      this.formCashTranfer.setValue('feeControl','1',{});
+    }else{
+      this.formCashTranfer.setValue('feeControl','0',{});
+    }
+    this.formCashTranfer.save(null, 0, '', '', false)
+    .pipe(takeUntil(this.destroy$))
+    .subscribe((res: any) => {
+      if(!res) return;
+      if (res || res.save || res.update) {
+        if (res || !res.save.error || !res.update.error) {
+          this.fmVATInvoices.currentData.transID = this.formCashTranfer?.data?.recID;
+          this.api
+            .execAction(
+              'AC_VATInvoices',
+              [this.fmVATInvoices.currentData],
+              (this.formCashTranfer?.data?.isAdd || this.formCashTranfer?.data?.isCopy) ? 'SaveAsync' : 'UpdateAsync'
+            )
+            .subscribe((res:any)=>{
+              if (res) {
+                if (type == 'save') {
+                  this.onDestroy();
+                  this.dialog.close();
+                }else{
+                  this.api
+                    .exec('AC', 'CashTranfersBusiness', 'SetDefaultAsync', [
+                      null,
+                      this.journal,
+                    ])
+                    .subscribe((res: any) => {
+                      if (res) {
+                        res.data.isAdd = true;
+                        this.formCashTranfer.refreshData({ ...res.data });
+                        this.detectorRef.detectChanges();
+                      }
+                    });
+                  
+                    this.VATInvoiceSV.addNew().subscribe((res: any) => {
+                      if (res) {
+                        this.fgVATInvoice.patchValue(res);
+                        this.fmVATInvoices.currentData = res;
+                        this.detectorRef.detectChanges();
+                      }
+                    })
+                }
+              }
+              if (this.formCashTranfer.data.isAdd || this.formCashTranfer.data.isCopy)
+                this.notification.notifyCode('SYS006');
+              else
+                this.notification.notifyCode('SYS007');
+            });
+        }
+      }
+    });
+  }
+  //#endregion Method
 
   //#region Function
-  getCashBookNameById(cashBooks: any[], id: string): string {
-    return cashBooks?.find((c) => c.CashBookID === id)?.CashBookName;
+  cashBookIDChange(field:any){
+    let memo = this.getMemoMaster();
+    this.formCashTranfer.setValue('memo',memo,{});
+    this.api.exec('AC', 'CashTranfersBusiness', 'ValueChangedAsync', [
+      field,
+      this.formCashTranfer.data,
+    ])
+    .pipe(takeUntil(this.destroy$))
+    .subscribe((res: any) => {
+      if (res) {
+        this.isPreventChange = true;
+        this.formCashTranfer.setValue('currencyID',res?.data?.currencyID,{});
+        this.formCashTranfer.setValue('exchangeRate',(res?.data?.exchangeRate),{});
+        this.formCashTranfer.setValue('cashAcctID',(res?.data?.cashAcctID),{});
+        this.isPreventChange = false;
+        this.preData = {...this.formCashTranfer?.data};
+        this.detectorRef.detectChanges();
+      }
+    });
   }
 
-  loadDims(): void {
-    if (!this.hiddenFields.includes('DIM1')) {
-      this.journalService.loadComboboxBy067(
-        this.journal,
-        'diM1Control',
-        'diM1',
-        'DepartmentID',
-        this.diM1.ComponentCurrent as CodxComboboxComponent,
-        this.fgVatInvoice,
-        'diM1',
-        this.isEdit
-      );
+  cashBookID2Change(field:any){
+    let memo = this.getMemoMaster();
+    this.formCashTranfer.setValue('memo',memo,{});
+    this.api.exec('AC', 'CashTranfersBusiness', 'ValueChangedAsync', [
+      field,
+      this.formCashTranfer.data,
+    ])
+    .pipe(takeUntil(this.destroy$))
+    .subscribe((res: any) => {
+      if (res) {
+        this.isPreventChange = true;
+        this.formCashTranfer.setValue('offsetAcctID',(res?.data?.offsetAcctID),{});
+        this.isPreventChange = false;
+        this.preData = {...this.formCashTranfer?.data};
+        this.detectorRef.detectChanges();
+      }
+    });
+  }
+
+  /**
+   * *Hàm thay đổi tiền tệ
+   * @param field 
+   */
+  currencyIDChange(field:any){
+    this.api.exec('AC', 'CashTranfersBusiness', 'ValueChangedAsync', [
+      field,
+      this.formCashTranfer.data,
+    ])
+    .pipe(takeUntil(this.destroy$))
+    .subscribe((res: any) => {
+      if (res) {
+        this.isPreventChange = true;
+        this.formCashTranfer.setValue('exchangeRate',res?.data?.exchangeRate,{});
+        this.preData = {...this.formCashTranfer?.data};
+        this.isPreventChange = false;
+      }
+    });
+  }
+  /**
+   * *Hàm get ghi chú 
+   * @returns
+   */
+  getMemoMaster() {
+    let newMemo = '';
+    let cashbookName = '';
+    let cashbookName2 = '';
+
+    let indexcb = this.eleCbxCashBook?.ComponentCurrent?.dataService?.data.findIndex((x) => x.CashBookID == this.eleCbxCashBook?.ComponentCurrent?.value);
+    if (indexcb > -1) {
+      cashbookName = 'Chuyển từ '+this.eleCbxCashBook?.ComponentCurrent?.dataService?.data[indexcb].CashBookName;
+    }
+
+    let indexcb2 = this.eleCbxCashBook2?.ComponentCurrent?.dataService?.data.findIndex((x) => x.CashBookID == this.eleCbxCashBook2?.ComponentCurrent?.value);
+    if (indexcb2 > -1) {
+      cashbookName2 = ' chuyển đến '+this.eleCbxCashBook2?.ComponentCurrent?.dataService?.data[indexcb2].CashBookName;
     }
     
-    if (!this.hiddenFields.includes("DIM2")) {
-      this.journalService.loadComboboxBy067(
-        this.journal,
-        'diM2Control',
-        'diM2',
-        'CostCenterID',
-        this.diM2.ComponentCurrent as CodxComboboxComponent,
-        this.fgVatInvoice,
-        'diM2',
-        this.isEdit
-      );
-    }
-    
-    if (!this.hiddenFields.includes("DIM3")) {
-      this.journalService.loadComboboxBy067(
-        this.journal,
-        'diM3Control',
-        'diM3',
-        'CostItemID',
-        this.diM3.ComponentCurrent as CodxComboboxComponent,
-        this.fgVatInvoice,
-        'diM3',
-        this.isEdit
-      );
-    }
+    newMemo = cashbookName + cashbookName2;
+    return newMemo;
   }
+  //#endregion Function
 
-  generateMemo(): string {
-    const memo: string[] = [];
-    if (this.cashBookName1) {
-      memo.push(this.cashBookName1);
-    }
-
-    if (this.reasonName) {
-      memo.push(this.reasonName);
-    }
-
-    if (this.cashBookName2) {
-      memo.push(this.cashBookName2);
-    }
-
-    return memo.join(' - ');
-  }
-  //#endregion
 }
