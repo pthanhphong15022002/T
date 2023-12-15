@@ -324,24 +324,34 @@ export class EmployeeKowdsComponent extends UIComponent{
 
       debugger
       if(!this.calendarGridColumns.length){
+        
         this.calendarGridColumns = []
+
         this.calendarGridColumns.push({
           headerTemplate: 'Nhân viên',
           template: this.tempEmployee,
-          width: '350',
+          field: 'employeeID'
         })
-        for(let i = 0; i < this.daysInMonth[this.filterMonth]; i++){
-          let date = new Date(this.filterYear, this.filterMonth, i+1);
-          let dayOfWeek = date.getDay();
-          this.calendarGridColumns.push({
-            field: `day${i+1}`,
-            headerTemplate:
-            ` ${this.daysOfWeek[dayOfWeek]}
-            <div> ${i + 1} </div> `,
-            template: this.tempDayData,
-            width: '150',
-          })
-        }
+
+        this.calendarGridColumns.push({
+          refField: 'workDate',
+          // loopTimes: this.daysInMonth[this.filterMonth],
+          loopTimes: 30,
+          template: this.tempDayData,
+        })
+
+        // for(let i = 0; i < this.daysInMonth[this.filterMonth]; i++){
+        //   let date = new Date(this.filterYear, this.filterMonth, i+1);
+        //   let dayOfWeek = date.getDay();
+        //   this.calendarGridColumns.push({
+        //     field: `day${i+1}`,
+        //     headerTemplate:
+        //     ` ${this.daysOfWeek[dayOfWeek]}
+        //     <div> ${i + 1} </div> `,
+        //     template: this.tempDayData,
+        //     width: '150',
+        //   })
+        // }
       this.calendarGridColumns = [...this.calendarGridColumns]
       }
 
@@ -446,6 +456,8 @@ export class EmployeeKowdsComponent extends UIComponent{
   }
 
   logData(data){
+    console.log('Data tra ve template detail', data)
+
     if(data != null){
       console.log('Data tra ve template detail', data)
     }
