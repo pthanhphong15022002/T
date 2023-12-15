@@ -60,6 +60,7 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
   autoDefaultData: any = {};
   autoNoSetting: any = {
     lastNumber: 1,
+    _isNew: true,
   };
   isAdd: boolean = true;
 
@@ -133,6 +134,7 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
     return this.viewAutoNumber;
   }
   columsGrid: any = [];
+
   initForm() {
     this.formModel = new FormModel();
     this.formModel.entityName = 'AD_AutoNumbers';
@@ -373,7 +375,9 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
     }
 
     if (this.functionID) {
-      this.autoDefaultData.autoNumber = null;
+      if (this.autoDefaultData.autoNoType == '2')
+        this.autoDefaultData.autoNoFormat = this.functionID;
+      //this.autoDefaultData.autoNumber = null;
       this.esService
         .updateAutoNumberDefaults(this.autoDefaultData)
         .subscribe((res) => {
@@ -384,7 +388,7 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
                 .execAction(
                   'AD_AutoNumberSettings',
                   [this.autoNoSetting],
-                  this.autoNoSetting.recID ? 'UpdateAsync' : 'SaveAsync'
+                  this.autoNoSetting._isNew ? 'SaveAsync' : 'UpdateAsync'
                 )
                 .subscribe((rs: any) => {
                   if (this.addedSegments.length) {
@@ -805,7 +809,20 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
       this.autoNumberSettingPreview = strFormat;
     }
   }
-
+  eventAction(e: any) {
+    if (e.type == 'rowDrop') {
+      if (e.data.fromIndex == e.data.dropIndex) return;
+      if (isNaN(e.data.dropIndex)) return;
+      const temp = this.autoNoSegments[e.data.dropIndex];
+      const dragItem = this.autoNoSegments[e.data.fromIndex];
+      this.autoNoSegments[e.data.dropIndex] = dragItem;
+      this.autoNoSegments[e.data.fromIndex] = temp;
+      this.autoNoSegments.forEach((item: any, index: number) => {
+        item.lineID = index + 1;
+      });
+      //this.autoNoSegments = this.autoNoSegments.slice()
+    }
+  }
   private truncateString(str: string, num: number, format: string = '') {
     if (str.length <= num) {
       return str;

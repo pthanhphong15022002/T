@@ -272,6 +272,7 @@ export class DealsComponent
         sameData: true,
         model: {
           template2: this.templateMore,
+          //groupSettings: {showDropArea: false,columns:['businessLineID']}
           //resources: this.columnGrids,
           // frozenColumns: 1,
         },
@@ -398,7 +399,11 @@ export class DealsComponent
           mappingFunction && mappingFunction(eventItem, data);
         } else {
           eventItem.disabled =
-            eventItem?.functionID !== 'CM0201_17' ? true : false;
+            eventItem?.functionID !== 'CM0201_17'
+              ? true
+              : data?.alloweStatus == '1'
+              ? false
+              : true;
         }
       }
     }
@@ -410,7 +415,8 @@ export class DealsComponent
         data?.alloweStatus == '1'
           ? (data.closed && data?.status != '1') ||
             ['1', '0', '15'].includes(data?.status) ||
-            this.checkMoreReason(data)
+            this.checkMoreReason(data) ||
+            !data.applyProcess
           : true;
     };
     let isDelete = (eventItem, data) => {
@@ -443,7 +449,7 @@ export class DealsComponent
     let isStartDay = (eventItem, data) => {
       eventItem.disabled =
         data?.alloweStatus == '1'
-          ? !['1'].includes(data.status) || data.closed
+          ? !['1'].includes(data.status) || data.closed || !data.applyProcess
           : true;
     };
     let isOwner = (eventItem, data) => {
@@ -492,6 +498,7 @@ export class DealsComponent
       eventItem.disabled =
         data?.alloweStatus == '1'
           ? (data.closed && data?.status != '1') ||
+            !data.applyProcess ||
             ['1', '0', '15'].includes(data?.status) ||
             this.checkMoreReason(data, false)
           : true;
@@ -898,7 +905,8 @@ export class DealsComponent
                       if (this.kanban) {
                         this.renderKanban(res);
                       }
-                      if (this.detailViewDeal) this.detailViewDeal.dataSelected = res;
+                      if (this.detailViewDeal)
+                        this.detailViewDeal.dataSelected = res;
                       this.detailViewDeal?.reloadListStep(listSteps);
                       this.detectorRef.detectChanges();
                     }
@@ -1134,7 +1142,7 @@ export class DealsComponent
       titleAction: this.titleAction,
       owner: data.owner,
       //startControl: data.steps.startControl,
-      applyProcess: true,
+      applyProcess: data.applyProcess,
       buid: data.buid,
     };
     var dialog = this.callfc.openForm(
@@ -1209,7 +1217,7 @@ export class DealsComponent
       action: action === 'add' ? 'add' : 'copy',
       formMD: formMD,
       titleAction: this.formatTitleMore(this.titleAction),
-      processID: this.processID,
+      // processID: this.processID,
       gridViewSetup: this.gridViewSetup,
       functionModule: this.functionModule,
       currencyIDDefault: this.currencyIDDefault,
@@ -2055,24 +2063,36 @@ export class DealsComponent
         this.dataSelected.statusCodeCmt = e?.event?.statusCodecmt;
         let status = e?.event?.status;
         let message = e?.event?.message;
+        if (status && !this.dataSelected.applyProcess) {
+          this.dataSelected.status = status;
+        }
 
         this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
         this.view.dataService.dataSelected = this.dataSelected;
         this.view.dataService.update(this.dataSelected, true).subscribe();
         this.detectorRef.detectChanges();
         this.notificationsService.notifyCode('SYS007');
-        if (status) {
-          if (status == '2') {
-            this.moveStage(this.dataSelected);
-          } else if (status == '1') {
-            this.handelStartDay(this.dataSelected);
-          } else if (status == '3') {
-            this.moveReason(this.dataSelected, true);
-          } else if (status == '5') {
-            this.moveReason(this.dataSelected, false);
+        if (this.dataSelected.applyProcess) {
+          if (status) {
+            switch (status) {
+              case '2':
+                this.moveStage(this.dataSelected);
+                break;
+              case '1':
+                this.handelStartDay(this.dataSelected);
+                break;
+              case '3':
+              case '5':
+                this.moveReason(this.dataSelected, status === '3');
+                break;
+            }
+          } else if (message) {
+            this.notificationsService.notifyCode(
+              message,
+              0,
+              "'" + this.dataSelected?.dealName + "'"
+            );
           }
-        } else if (message) {
-          this.notificationsService.notify(message);
         }
       }
     });
@@ -2132,17 +2152,19 @@ export class DealsComponent
   }
   totalGirdView() {
     this.getTotal().subscribe((total) => {
-      let intl = new Internationalization();
-      let nFormatter = intl.getNumberFormat({
-        skeleton: 'n6',
-      });
-      this.totalView = nFormatter(total) + ' ' + this.currencyIDDefault;
+      //không the format truyền qua
+      // let intl = new Internationalization();
+      // let nFormatter = intl.getNumberFormat({
+      //   skeleton: 'n6',
+      // });
+      // this.totalView = nFormatter(total) + ' ' + this.currencyIDDefault;
 
       if (!Number.parseFloat(total)) total = 0;
       let objectDealValue = {
         dealValue: total,
       };
-      // this.view.currentView.sumData = objectDealValue;
+
+      this.view.currentView.sumData = objectDealValue;
 
       // let elemnt = document.querySelector('.sum-content');
       // if (elemnt) {
@@ -2250,8 +2272,8 @@ export class DealsComponent
     }
   }
   //#endregion
-  async addTask(data){
-    let taskOutput = await this.stepService.addTaskCM(data, "CM_Deals");
+  async addTask(data) {
+    let taskOutput = await this.stepService.addTaskCM(data, 'CM_Deals');
     this.taskAdd = taskOutput;
   }
 }

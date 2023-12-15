@@ -20,7 +20,7 @@ import { AddContractsComponent } from '../add-contracts/add-contracts.component'
 import { Observable, finalize, firstValueFrom, map } from 'rxjs';
 import { CM_Contracts } from '../../models/cm_model';
 import { StepService } from 'projects/codx-share/src/lib/components/codx-step/step.service';
-import { ContractsViewDetailComponent } from '../contracts-view-detail/contracts-view-detail.component';
+import { ContractsViewDetailComponent } from '../contracts-view-right/contracts-view-right.component';
 
 @Component({
   selector: 'list-contracts',

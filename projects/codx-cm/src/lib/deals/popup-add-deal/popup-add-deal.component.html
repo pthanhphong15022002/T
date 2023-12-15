@@ -23,7 +23,7 @@
             [formModel]="form.formModel"
             field="businessLineID"
             [crrValue]="deal?.businessLineID"
-            [disabled]="deal?.processID || action === actionEdit"
+            [disabled]="deal?.processID || action === actionEdit "
             [model]="{ ProcessID: deal?.processID }"
             (valueChange)="valueChangeBusinessLine($event)"
           >
@@ -49,14 +49,24 @@
           [Group]="form.formGroup"
         >
         </codx-label>
-        <codx-input
+        <!-- <codx-input
           type="text"
           field="dealID"
           [crrValue]="deal?.dealID"
           [disabled]="true"
           (valueChange)="valueChange($event)"
         >
-        </codx-input>
+        </codx-input> -->
+            <!-- {deal?.dealID}
+{planceHolderAutoNumber} -->
+        <codx-input
+        field="dealID"
+        type="text"
+        [crrValue]="deal?.applyProcess ?deal?.dealID :planceHolderAutoNumber"
+        [disabled]="true"
+        (controlBlur)="changeAutoNum($event)"
+      ></codx-input>
+
       </div>
     </div>
 
@@ -228,25 +238,28 @@
           [Group]="form.formGroup"
         >
         </codx-label>
-        <ejs-combobox
+
+        <div *ngIf="!deal.applyProcess; else ownerProcess">
+          <codx-input
+            field="owner"
+            [formModel]="form.formModel"
+            [placeholder]="gridViewSetup?.SalespersonID?.description"
+            [crrValue]="owner"
+            (valueChange)="valueChangeOwner($event, viewOwnerDefault)"
+          >
+          </codx-input>
+        </div>
+        <ng-template #ownerProcess>
+          <ejs-combobox
           [dataSource]="listParticipants"
-          (valueChange)="valueChangeOwner($event)"
+          (valueChange)="valueChangeOwner($event,viewOwnerProcess)"
           [fields]="fieldCbxParticipants"
           [placeholder]="gridViewSetup?.SalespersonID?.description"
           [allowFiltering]="true"
           [filterType]="'Contains'"
           [value]="owner"
         ></ejs-combobox>
-
-        <!-- <codx-input
-      type="combobox"
-      [model]="{ ProcessID: deal.processID }"
-      refValue="DPUserProcess"
-      [placeholder]="gridViewSetup?.SalespersonID?.description"
-      [value]="owner"
-      (valueChange)="valueChangeOwner($event)"
-     >
-  </codx-input> -->
+        </ng-template>
       </div>
     </div>
     <div class="col-6">
@@ -411,7 +424,7 @@
       type="button"
       button
       class="btn btn-primary ms-1"
-      (click)="saveOpportunity()"
+      (click)="saveDeal()"
     >
       <codx-label default="Lưu"></codx-label>
     </button>

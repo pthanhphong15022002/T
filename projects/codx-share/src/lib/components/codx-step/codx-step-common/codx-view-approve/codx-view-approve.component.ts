@@ -130,6 +130,7 @@ export class CodxViewApproveComponent implements OnInit, OnChanges {
             category.createdBy = this.user.userID;
             category.owner = this.user.userID;
             category.FunctionApproval = this.isActivitie ? 'DPT07' : 'DPT04';
+            category['refID'] = this.idTask;
             this.actionOpenFormApprove2(category, true);
           }
         });

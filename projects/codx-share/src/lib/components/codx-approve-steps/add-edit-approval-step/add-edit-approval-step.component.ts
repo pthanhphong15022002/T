@@ -1,4 +1,3 @@
-import { dialog } from '@syncfusion/ej2-angular-spreadsheet';
 import {
   AfterViewInit,
   ChangeDetectorRef,
@@ -11,15 +10,13 @@ import {
   TemplateRef,
   ViewChild,
 } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
 import {
-  AlertConfirmInputConfig,
   ApiHttpService,
   AuthStore,
   CacheService,
   CallFuncService,
   DialogData,
-  DialogModel,
   DialogRef,
   Filters,
   FormModel,
@@ -419,6 +416,7 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
     this.newAppr = new Approvers();
     this.newAppr.signatureType = '2';
     this.newAppr.stepType = 'A2';
+    this.newAppr.idCardType = '1';
     this.newAppr.confirmControl = this.confirmControl ?? '0';
     this.newAppr.allowEditAreas = this.allowEditAreas ?? true;
     this.newAppr.createdBy= this.user?.userID;
@@ -433,6 +431,7 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
           this.newAppr = new Approvers();
           this.newAppr.signatureType = '2';
           this.newAppr.stepType = 'A2';
+          this.newAppr.idCardType = '1';
           this.newAppr.confirmControl = this.confirmControl ?? '0';
           this.newAppr.allowEditAreas = this.allowEditAreas ?? true;
           this.newAppr.createdBy= this.user?.userID;
@@ -519,6 +518,9 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
               if (res.event) {
                 this.newAppr = res?.event;
                 //this.lstApprover.push(res.event);
+              }
+              else{
+                this.newAppr.roleType=null;
               }
             });
             break;
@@ -716,8 +718,6 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
     }
   }
 
-  checkedOnlineChange(event) {}
-
   openSetupEmail(email) {
     if (email?.isEmail == '1') {
       let data = {
@@ -783,126 +783,6 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
     }
   }
 
-  testdata(share) {
-    this.callfc.openForm(share, '', 420, window.innerHeight);
-  }
-
-  applyShare(event) {
-    if (event) {
-      event.forEach((element) => {
-        let appr = new Approvers();
-        appr.name = element?.text;
-        appr.roleType = element?.objectType;
-        appr.icon = element?.icon;
-        switch (element?.objectType) {
-          //----------------------------------------------------------------------------------//
-          case ShareType.ResourceOwner: //	Chủ sở hữu nguồn lực
-          case ShareType.Owner: //	Người sở hữu
-          case ShareType.Employee: //	Nhân viên
-          case ShareType.Created: //	Người tạo
-          case ShareType.TeamLead: //	Trưởng nhóm
-          case ShareType.AM: //	Thư ký phòng
-          case ShareType.DM: //	Phó phòng
-          case ShareType.MA: //	Trưởng phòng
-          case ShareType.AD: //	Thư ký Giám đốc khối
-          case ShareType.DD: //	Phó Giám đốc khối
-          case ShareType.DI: //	Giám đốc khối
-          case ShareType.DR: //	Báo cáo trực tiếp
-          case ShareType.IR: //	Báo cáo gián tiếp
-            //appr.approver = element?.objectType;
-            appr.position = element?.objectName;
-            this.lstApprover.push(appr);
-            break;
-          //----------------------------------------------------------------------------------//
-          case ShareType.Partner: //	Đối tác
-            appr.write = true;
-            appr.roleType = element.objectType;
-            let popupApprover = this.callfc.openForm(
-              PopupAddApproverComponent,
-              '',
-              550,
-              screen.height,
-              '',
-              {
-                approverData: appr,
-                lstApprover: this.lstApprover,
-                isAddNew: true,
-              }
-            );
-            popupApprover.closed.subscribe((res) => {
-              if (res.event) {
-                this.lstApprover.push(res.event);
-              }
-            });
-            break;
-
-          //----------------------------------------------------------------------------------//
-          case ShareType.AC: //	Thư ký Giám đốc công ty
-          case ShareType.DC: //	Phó Giám đốc công ty
-          case ShareType.CEO: //	Giám đốc công ty
-            this.codxService
-              .getCompanyApprover(this.userOrg?.companyID, element?.objectType)
-              .subscribe((companyAppr) => {
-                if (companyAppr) {
-                  appr.position = companyAppr?.position ?? element?.objectName;
-                  appr.userID = companyAppr?.userID;
-                  appr.userName = companyAppr?.userName;
-                  appr.orgUnitName = companyAppr?.orgUnitName;
-                }
-                this.lstApprover.push(appr);
-              });
-            break;
-          //----------------------------------------------------------------------------------//
-          case ShareType.User: //	Người dùng
-            appr.approver = element?.id;
-            appr.position = element?.dataSelected?.PositionName;
-            appr.userID = element?.dataSelected?.UserID;
-            appr.userName = element?.dataSelected?.UserName;
-            appr.orgUnitName = element?.dataSelected?.OrgUnitName;
-            this.lstApprover.push(appr);
-            break;
-          //----------------------------------------------------------------------------------//
-          case ShareType.Position: //	Chức danh công việc
-            if (element?.id != null) {
-              this.codxService
-                .getUserIDByPositionsID(element?.id)
-                .subscribe((lstUserInfo) => {
-                  if (lstUserInfo) {
-                    if (lstUserInfo != null && lstUserInfo.length >= 2) {
-                      this.notifySvr.alertCode('ES033').subscribe((x) => {
-                        if (x.event?.status == 'Y') {
-                          appr.approver = element?.id;
-                          appr.roleType = element?.objectType;
-                          appr.name = element?.text;
-                          appr.position = element?.dataSelected?.PositionName;
-                          appr.userID = lstUserInfo[0]?.userID;
-                          appr.userName = lstUserInfo[0]?.userName;
-                          appr.orgUnitName = lstUserInfo[0]?.orgUnitName;
-                          this.lstApprover.push(appr);
-                        } else {
-                          return;
-                        }
-                      });
-                    } else {
-                      appr.approver = element?.id;
-                      appr.roleType = element?.objectType;
-                      appr.name = element?.text;
-                      appr.position = element?.dataSelected?.PositionName;
-                      appr.userID = lstUserInfo[0]?.userID;
-                      appr.userName = lstUserInfo[0]?.userName;
-                      appr.orgUnitName = lstUserInfo[0]?.orgUnitName;
-                      this.lstApprover.push(appr);
-                    }
-                  }
-                });
-            }
-            break;
-
-          //----------------------------------------------------------------------------------//
-        }
-      });
-    }
-  }
 
   drop(event: CdkDragDrop<string[]>) {
     moveItemInArray(this.lstApprover, event.previousIndex, event.currentIndex);
