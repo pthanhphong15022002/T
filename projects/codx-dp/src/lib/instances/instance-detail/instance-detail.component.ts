@@ -347,6 +347,7 @@ export class InstanceDetailComponent implements OnInit {
       this.loaded = false; /// bien này không cần cũng được tại luôn có dataSelect -- bỏ loader vào  loadChangeData thì bị giật
       this.id = changes['dataSelect'].currentValue.recID;
       this.loadChangeData();
+      this.getListTaskRef();
       this.isChangeData = false;
     }
   }
@@ -828,22 +829,25 @@ export class InstanceDetailComponent implements OnInit {
     if (e && this.tabFooter) {
       //this.loadTree(this.id);//cũ
       if (this.applyFor != '0') {
-        this.listRefTask = [];
-
-        this.listStepInstance.forEach((x) => {
-          let refTask = (x.tasks as Array<any>).map((x) => {
-            return x.recID;
-          });
-          if (refTask?.length > 0) {
-            this.listRefTask = this.listRefTask.concat(refTask);
-          }
-        });
+        this.getListTaskRef();
         this.tabFooter.listRefID = this.listRefTask;
         this.tabFooter.sessionID = null;
       } else this.tabFooter.sessionID = this.id;
       this.tabFooter.changeTreeAssign();
     }
   }
+  getListTaskRef() {
+    this.listRefTask = [];
+    this.listStepInstance.forEach((x) => {
+      let refTask = (x.tasks as Array<any>).map((x) => {
+        return x.recID;
+      });
+      if (refTask?.length > 0) {
+        this.listRefTask = this.listRefTask.concat(refTask);
+      }
+    });
+  }
+
   showColumnControl(stepID) {
     if (this.listStepsProcess?.length > 0) {
       var idx = this.listStepsProcess.findIndex((x) => x.recID == stepID);
