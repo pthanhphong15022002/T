@@ -33,7 +33,7 @@
           <codx-input
             [formModel]="form.formModel"
             field="businessLineID"
-            [disabled]="action === actionEdit || (!deal?.applyProcess && action === actionCopy)"
+            [disabled]="action === actionEdit"
             [crrValue]="deal?.businessLineID"
             (valueChange)="valueChangeBusinessLine($event)"
           >
