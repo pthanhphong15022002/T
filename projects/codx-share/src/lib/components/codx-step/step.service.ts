@@ -1103,4 +1103,14 @@ export class StepService {
       return await this.openPopupCodxTask(data, 'right');
     }
   }
+
+  getESCategoryByCategoryIDType(categoryID, category, refID = null) {
+    return this.api.execSv<any>(
+      'ES',
+      'ES',
+      'CategoriesBusiness',
+      'GetByCategoryIDTypeAsync',
+      [categoryID, category, refID]
+    );
+  }
 }

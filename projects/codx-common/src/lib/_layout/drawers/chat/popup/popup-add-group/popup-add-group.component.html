@@ -32,7 +32,7 @@
   </div>
 </ng-template>
 <ng-template #body>
-  <div class="row">
+  <!-- <div class="row">
     <div class="col-6">
       <codx-label
         class="fw-bold"
@@ -57,14 +57,15 @@
         </codx-label>
       <span class="fw-bold">{{'('+arrUsers.length+')'}}</span>
     </div>
-  </div>
+  </div> -->
   <div class="row mt-2">
-    <div class="col-6">
+    <div class="col-6" style="height: 500px">
       <codx-listview
         #codxListView1
         (onSelectionChanged)="selectedChange($event)"
         [comboboxName]="'users'"
         [itemTemplate]="itemtemplate"
+        [headerTemplate]="headerTemplate"
         [funcId]="dialogRef.formModel.funcID"
         [entityName]="'AD_Users'"
         [service]="'SYS'"
@@ -74,11 +75,29 @@
         [selectFirst]="false"
       >
       </codx-listview>
+      <ng-template #headerTemplate>
+        <div class="w-100 pb-2">
+          <codx-label
+            class="fw-bold"
+            [className]="'fs-6'"
+            [formModel]="dialogRef.formModel"
+            name="lblListUser"
+            default="Danh sách người dùng"
+          ></codx-label>
+          <codx-searchbar
+              class="w-100"
+              #codxSearch
+              [iconPos]="'left'"
+              (searchEvent)="searchEvent($event)"
+          ></codx-searchbar>
+        </div>
+      </ng-template>
     </div>
     <div class="col-6">
       <codx-listview
         #codxListView2
         [itemTemplate]="selectedtemplate"
+        [headerTemplate]="headerTemplate2"
         [funcId]="dialogRef.formModel.funcID"
         [entityName]="'AD_Users'"
         [comboboxName]="'users'"
@@ -90,6 +109,18 @@
         [selectFirst]="false"
       >
       </codx-listview>
+      <ng-template #headerTemplate2>
+        <div class="">
+          <codx-label
+              class="fw-bold"
+              [className]="'fs-6'"
+              [formModel]="dialogRef.formModel"
+              name="lblListUser"
+              [default]="'Đã chọn'">
+            </codx-label>
+          <span class="fw-bold">{{'('+arrUsers.length+')'}}</span>
+        </div>
+      </ng-template>
     </div>
   </div>
   <ng-template #itemtemplate let-item>

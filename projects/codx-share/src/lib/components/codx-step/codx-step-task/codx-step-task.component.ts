@@ -2795,7 +2795,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
           'ES',
           'CategoriesBusiness',
           'GetByCategoryIDTypeAsync',
-          [idTask, category]
+          [idTask, category, null]
         )
         .subscribe((res) => {
           if (!res) {
@@ -2864,7 +2864,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
             'ES',
             'CategoriesBusiness',
             'GetByCategoryIDTypeAsync',
-            [idTask, category]
+            [idTask, category, null]
           )
           .subscribe((res: any) => {
             if (res) {
