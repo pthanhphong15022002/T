@@ -34,6 +34,7 @@ export class CodxViewAssignComponent implements OnInit, OnChanges {
   @Input() refID = '';
   @Input() refType = '';
   @Input() sessionID = '';
+  @Input() listRefID = [];
   @Input() isLoadedTree = true; //bang true neu da co dataTree , con khong se load tree
   @Input() referType = 'source';
   @Input() showMore = false; //show moreFunc
@@ -312,7 +313,13 @@ export class CodxViewAssignComponent implements OnInit, OnChanges {
 
   //load Tree
   loadTree() {
-    this.tmSv.getTreeAssign(this.refID, this.refType, this.getTree.bind(this));
+    this.tmSv.getTreeAssign(
+      this.refID,
+      this.refType,
+      this.getTree.bind(this),
+      this.sessionID,
+      this.listRefID
+    );
   }
 
   getTree(dataTree) {
