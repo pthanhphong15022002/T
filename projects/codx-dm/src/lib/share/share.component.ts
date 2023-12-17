@@ -32,6 +32,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { SystemDialogService } from 'projects/codx-common/src/lib/component/viewFileDialog/systemDialog.service';
 import { shareTitle } from './share-title';
 import { CodxEmailComponent } from 'projects/codx-share/src/lib/components/codx-email/codx-email.component';
+import { E } from '@angular/cdk/keycodes';
 
 @Component({
   selector: 'share',
@@ -145,7 +146,8 @@ export class ShareComponent implements OnInit {
     
     this.shareGroup2 = this.formBuilder.group({
       shareType: '0',
-      pwType: '1'
+      pwType: '1',
+      permissions: ''
     });
 
     this.user = this.auth.get();
@@ -496,19 +498,47 @@ export class ShareComponent implements OnInit {
   saveShare(type:any)
   {
     let data = this.shareGroup2.value;
-    data.module = this.formModel.entityName.split("_")[0];
-    data.functionID = this.formModel.funcID;
-    data.url = this.fileEditing?.pathDisk;
-    this.api.execSv("BG","BG","SharingsBusiness","SaveItemAsync",data).subscribe((item:any)=>{
-      if(item)
+
+    //Bất kỳ ai || Đối tượng cụ thể
+    if(data.shareType == "0" || data.shareType == "1")
+    {
+      data.module = this.formModel.entityName.split("_")[0];
+      data.functionID = this.formModel.funcID;
+      data.url = this.fileEditing?.recID;
+
+      if(data.pwType == "2") data.pw = this.pwOTP
+      if(data.shareType == "1")
       {
-        if(type=="link")
+        let listPer = data.permissions.split(";");
+        data.permissions = [];
+        if(listPer.length >0)
         {
-          this.copyToClipboard(this.getLink(item.recID));
-          this.notificationsService.notify(this.titleCopyUrl);
+          listPer.forEach(element => {
+            var per = new Permission();
+            per.objectID = element;
+            per.objectType = "Email";
+            per.read = true;
+            data.permissions.push(per);
+          });
         }
       }
-    });
+
+      this.api.execSv("BG","BG","SharingsBusiness","SaveItemAsync",data).subscribe((item:any)=>{
+        if(item)
+        {
+          if(type=="link")
+          {
+            this.copyToClipboard(this.getLink(item.recID));
+            this.notificationsService.notify(this.titleCopyUrl);
+          }
+        }
+      });
+    }
+    //Nội bộ
+    else
+    {
+
+    }
   }
 
   getLink(recID:any)
