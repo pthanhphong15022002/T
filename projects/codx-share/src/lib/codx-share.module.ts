@@ -198,6 +198,7 @@ import { CodxDashboardViewsComponent } from './components/codx-dashboard/dashboa
 import { CheckRoleStepPipe } from './components/codx-step/pipes/check-role-step.pipe';
 import { SetColorTaskPipe } from './components/codx-step/pipes/set-color-task.pipe';
 import { CodxAuthFileComponent } from './components/codx-auth-file/codx-auth-file.component';
+import { CodxViewFileComponent } from './components/codx-view-file/codx-view-file.component';
 
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
@@ -379,10 +380,13 @@ const T_Component: Type<any>[] = [
   //View
   CodxView2Component,
   FormSettingComponent,
-  CodxAuthFileComponent,
   CodxShareReportComponent,
   CodxShareDashboardComponent,
   CodxFilesAttachmentComponent,
+
+  //View File
+  CodxViewFileComponent,
+  CodxAuthFileComponent,
 ];
 
 const T_Pipe: Type<any>[] = [FormatDataValuePipe];

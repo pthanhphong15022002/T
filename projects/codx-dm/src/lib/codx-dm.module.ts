@@ -48,7 +48,6 @@ import { CodxReportViewsComponent } from 'projects/codx-report/src/lib/codx-repo
 import { DMDashboardComponent } from './dmdashboard/dmdashboard.component';
 import { DashboardLayoutModule } from '@syncfusion/ej2-angular-layouts';
 import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
-import { ViewfileComponent } from './share/viewfile/viewfile.component';
 //import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 //import { TooltipModule } from '@syncfusion/ej2-angular-popups';
 
@@ -140,7 +139,6 @@ const T_Component: Type<any>[] = [
   DMDashboardComponent,
   DragDropFileUploadDirective,
   DragDropFileFolderDirective,
-  ViewfileComponent
 ];
 @NgModule({
   imports: [
