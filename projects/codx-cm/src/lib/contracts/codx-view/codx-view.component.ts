@@ -5,18 +5,24 @@ import {
   OnChanges,
   SimpleChanges,
   ChangeDetectorRef,
+  Input,
 } from '@angular/core';
 import { CodxCmService } from '../../codx-cm.service';
 import { ContractsService } from '../service-contracts.service';
 import { CM_Contracts, CM_Customers } from '../../models/cm_model';
-import { ApiHttpService, CacheService, DialogData, DialogRef, NotificationsService} from 'codx-core';
+import { ApiHttpService, CacheService, DialogData, DialogRef, FormModel, NotificationsService} from 'codx-core';
 
 @Component({
-  selector: 'contracts-detail',
-  templateUrl: './contracts-detail.component.html',
-  styleUrls: ['./contracts-detail.component.scss'],
+  selector: 'codx-view-cm',
+  templateUrl: './codx-view.component.html',
+  styleUrls: ['./codx-view.component.scss']
 })
-export class ContractsDetailComponent implements OnInit, OnChanges {
+export class CodxViewComponent implements OnInit, OnChanges {
+  @Input() taskAdd;
+  @Input() formModel: FormModel;
+  @Input() dataSelect: FormModel;
+  @Input() title = 'Thông tin chung';
+  @Input() tempInformation = 'Thông tin chung';
   dialog: DialogRef;
   contract: CM_Contracts;
   Customers: CM_Customers;

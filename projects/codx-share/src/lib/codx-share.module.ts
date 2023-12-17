@@ -381,7 +381,8 @@ const T_Component: Type<any>[] = [
   FormSettingComponent,
   CodxAuthFileComponent,
   CodxShareReportComponent,
-  CodxShareDashboardComponent
+  CodxShareDashboardComponent,
+  CodxFilesAttachmentComponent,
 ];
 
 const T_Pipe: Type<any>[] = [FormatDataValuePipe];
