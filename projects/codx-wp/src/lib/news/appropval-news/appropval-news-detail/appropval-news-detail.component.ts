@@ -96,7 +96,8 @@ export class AppropvalNewsDetailComponent implements OnInit {
             }
           });
           break;
-        case "WPT02123": // từ chối
+        case "WPT02123":
+        case "WPT02133": // từ chối
           this.notifySvr.alertCode("WP006")
           .subscribe((option:any) =>{
             if(option?.event?.status == "Y")
@@ -238,7 +239,7 @@ export class AppropvalNewsDetailComponent implements OnInit {
       )
         x.disabled =
           data.approveControl == '0' ||
-          (data.approveControl == '1' && data.approveStatus == '5');
+          (data.approveControl == '1' && data.approveStatus != '3');
       else x.disabled = true;
     });
   }

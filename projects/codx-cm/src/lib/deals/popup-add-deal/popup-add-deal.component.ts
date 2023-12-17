@@ -850,6 +850,7 @@ export class PopupAddDealComponent
         //     }
         //   }
         // }
+      this.action = this.action === this.actionCopy ? this.actionAdd: this.action;
       let processId = $event?.component?.itemsSelected[0]?.ProcessID;
       this.listInstanceSteps = [];
       this.listParticipants = [];

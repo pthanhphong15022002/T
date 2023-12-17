@@ -16,22 +16,28 @@
 }
 
 .fd-parttern-item {
-    width: 90px;
+    width: 92px;
     height: 135px;
+    .symbol.symbol-100px > img {
+        width: 92px!important;
+        height: 135px!important;
+    }
+    codx-img .w-100px.h-100px, codx-img div{
+        width: 92px!important;
+        height: 135px!important;
+        border: 1px solid rgb(233, 232, 232);
+        background-color: rgb(241, 241, 250);
+        overflow: hidden;
+        border-radius: 4px;
+        box-sizing: border-box;
+        img {
+            width: 90px !important;
+            height: 135px !important;
+
+        }
+    }
 }
 
-.fd-parttern-item>codx-img>div {
-    width: 90px;
-    height: 135px;
-    border: 1px solid rgb(233, 232, 232);
-    border-radius: 5px;
-    box-sizing: border-box;
-}
-
-.fd-parttern-item>codx-img>div>img {
-    width: 100% !important;
-    height: 100% !important;
-}
 
 .fd-preview-card {
     width: 350px;

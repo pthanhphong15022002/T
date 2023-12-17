@@ -663,15 +663,24 @@ export class ViewDetailComponent extends UIDetailComponent implements OnInit {
   }
 
   cancel(datas: any) {
-    this.esService
-      .cancelSignfile(datas?.recID, this.comment)
-      .subscribe((res) => {
-        if (res) {
-          datas.approveStatus = '0';
-          this.view.dataService.update(datas).subscribe();
-          this.notify.notifyCode('SYS034');
-        }
-      });
+    // this.esService
+    //   .cancelSignfile(datas?.recID, this.comment)
+    //   .subscribe((res) => {
+    //     if (res) {
+    //       datas.approveStatus = '0';
+    //       this.view.dataService.update(datas).subscribe();
+    //       this.notify.notifyCode('SYS034');
+    //     }
+    //   });
+    this.codxCommonService
+    .codxCancel("ES",datas?.recID, 'ES_SignFiles', this.comment,this.user?.userID)
+    .subscribe((res:any) => {
+      if (!res?.msgCodeError && res?.rowCount >0) {
+        datas.approveStatus = res?.returnStatus ?? "0";
+        this.view.dataService.update(datas).subscribe();
+        this.notify.notifyCode('SYS034');
+      }
+    });
   }
 
   viewSFile(datas: any, mF: any) {

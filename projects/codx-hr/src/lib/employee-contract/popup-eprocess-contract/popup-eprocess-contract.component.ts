@@ -43,7 +43,7 @@ export class PopupEProcessContractComponent
   actionType: string;
   employeeId: string;
   idField = 'RecID';
-  isAfterRender = false;
+  // isAfterRender = false;
   autoNumField: string;
   // autoNumField2: string;
   lstSubContract: any;
@@ -373,7 +373,7 @@ export class PopupEProcessContractComponent
       // });
     }
 
-    this.isAfterRender = true;
+    // this.isAfterRender = true;
     this.cr.detectChanges();
   }
 
@@ -444,7 +444,7 @@ export class PopupEProcessContractComponent
             //       });
             //     }
 
-                this.isAfterRender = true;
+                // this.isAfterRender = true;
             //     this.cr.detectChanges();
             //   });
             // }
@@ -498,7 +498,7 @@ export class PopupEProcessContractComponent
       }
       // this.formModel.currentData = this.data;
       // this.form.formGroup.patchValue(this.data);
-      this.isAfterRender = true;
+      // this.isAfterRender = true;
       this.cr.detectChanges();
     }
   }
