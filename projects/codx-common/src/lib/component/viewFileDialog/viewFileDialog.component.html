@@ -1,4 +1,4 @@
-<ng-container *ngIf="dataFile?.read">
+<ng-container *ngIf="dataFile && dataFile?.read">
   <div *ngIf="!isPdf ; else elsePdf" class="viewfile">
     <div
       class="viewfile-toolbar h-100 d-flex align-items-center justify-content-between"
@@ -165,7 +165,7 @@
     <div class="loaderFileDialog"></div>
 </div>
 </ng-container>
-<ng-container *ngIf="!dataFile?.read">
+<ng-container *ngIf="dataFile && !dataFile?.read">
   <div class="d-flex w-100 h-100 bg-white align-items-center justify-content-center">
     <div class="d-flex flex-column align-items-center justify-content-center w-500px h-300px border-dashed">
       {{ "DM069" | mssg | async }}

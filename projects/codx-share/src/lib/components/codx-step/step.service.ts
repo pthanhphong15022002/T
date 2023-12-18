@@ -641,7 +641,20 @@ export class StepService {
         // task.objectLinked = contract?.recID;
       }
     }
-    data = { ...data, stepsTasks: task, isStartIns };
+   
+    let quotationID = task?.objectLinked;
+    if ((action == 'edit' || action == 'copy') && quotationID) {
+      let contractData = await firstValueFrom(this.getOneContract(quotationID));    
+      if(contractData){
+        data = { ...data, contract: contractData, stepsTasks: task, isStartIns };
+      }else{
+        this.notiService.notify('Báo giá không tồn tại','3');
+        return;
+      }
+    }else{
+      data = { ...data, stepsTasks: task, isStartIns };
+    }
+
     let contractOuput = await this.openPopupContract(data);
     let contract = contractOuput?.event?.contract;
     if (contract) {

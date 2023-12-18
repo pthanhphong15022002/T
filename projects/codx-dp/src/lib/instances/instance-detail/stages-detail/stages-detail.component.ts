@@ -52,7 +52,7 @@ export class StagesDetailComponent implements OnInit {
   @ViewChild('updateProgress') updateProgress: TemplateRef<any>;
   @ViewChild('attachment') attachment: AttachmentComponent;
   @ViewChild('viewReason', { static: true }) viewReason;
-  @Input() dataStep: any;  //step instance
+  @Input() dataStep: any; //step instance
   @Input() formModel: any;
   @Input() currentStep: any;
   @Input() titleDefault = '';
@@ -71,11 +71,13 @@ export class StagesDetailComponent implements OnInit {
   @Input() frmModelInstancesTask: FormModel;
   @Input() vllApprover = 'DP043';
   @Input() stepIDFirst = '';
+  @Input() applyFor = '';
   @Output() saveAssign = new EventEmitter<any>();
   @Output() outDataStep = new EventEmitter<any>();
   @Output() progressEmit = new EventEmitter<any>();
   @Output() isChangeProgress = new EventEmitter<any>();
   @Output() autoStartInstance = new EventEmitter<any>();
+  @Output() addTaskHaveAssign = new EventEmitter<any>();
 
   stepID: any;
   isDelete: boolean = false;
@@ -1015,5 +1017,11 @@ export class StagesDetailComponent implements OnInit {
 
   autoStart(event) {
     this.autoStartInstance.emit(event);
+  }
+
+  eventAddTaskAssign(e) {
+    if (e) {
+      this.addTaskHaveAssign.emit(e);
+    }
   }
 }

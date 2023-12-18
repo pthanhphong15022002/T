@@ -3,7 +3,6 @@ import { AuthStore, CodxComboboxComponent, CodxFormComponent, CodxInputComponent
 import { CodxAcService } from '../../../codx-ac.service';
 import { ActivatedRoute } from '@angular/router';
 import { JournalService } from '../../../journals/journals.service';
-import { Paras } from '../../../models/Paras.model';
 import { ClosingData } from '../../../models/ClosingData.model';
 
 @Component({
@@ -23,7 +22,7 @@ export class PopAddClosingDataComponent extends UIComponent implements OnInit{
   dialog!: DialogRef;
   authStore: AuthStore;
   closingData: ClosingData;
-  Paras: Paras;
+  Paras: any;
   gridViewSetup: any;
   validate: any = 0;
   
@@ -40,7 +39,7 @@ export class PopAddClosingDataComponent extends UIComponent implements OnInit{
     super(inject);
     this.authStore = inject.get(AuthStore);
     this.dialog = dialog;
-    this.Paras = new Paras();
+    //this.Paras = new Paras();
     this.headerText = dialogData.data?.headerText;
     this.closingData = dialog.dataService!.dataSelected;
     if(this.closingData.paras != null)
@@ -165,7 +164,7 @@ export class PopAddClosingDataComponent extends UIComponent implements OnInit{
   }
 
   onClearParas(){
-    this.Paras = new Paras();
+    //this.Paras = new Paras();
     this.closingData.accountType = null;
     this.closingData.journalNo = null;
   }
