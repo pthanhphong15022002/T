@@ -1,6 +1,6 @@
 import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { AESCryptoService, ApiHttpService, NotificationsService } from 'codx-core';
+import { AESCryptoService, ApiHttpService, AuthStore, CodxService, NotificationsService } from 'codx-core';
 import { CodxShareService } from '../../codx-share.service';
 import { isObservable } from 'rxjs';
 import { FormControl, FormGroup } from '@angular/forms';
@@ -28,7 +28,9 @@ export class CodxAuthFileComponent implements OnInit{
     private aesCrypto: AESCryptoService,
     private shareService: CodxShareService,
     private notifySvr: NotificationsService,
-    private ref: ChangeDetectorRef
+    private ref: ChangeDetectorRef,
+    private auth: AuthStore,
+    private codxService: CodxService
   )
   {
     this.authGroup = new FormGroup({
@@ -210,6 +212,16 @@ export class CodxAuthFileComponent implements OnInit{
       /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
     );
   };
+  
+  validURL(str) {
+    var pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
+      '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
+      '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
+      '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // port and path
+      '(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
+      '(\\#[-a-z\\d_]*)?$','i'); // fragment locator
+    return !!pattern.test(str);
+  }
 
   confirm()
   {
@@ -241,10 +253,21 @@ export class CodxAuthFileComponent implements OnInit{
       )
       .subscribe((res) => {
         if(!res) this.notifySvr.notifyCode("ES014");
-        else this.resultEvent.emit(this.data);
+        else this.loginGuest();
       })
   }
 
+  loginGuest()
+  {
+    this.api.execSv("SYS","AD","UsersBusiness","CreateUserNoLoginAsync","").subscribe((item:any)=>{
+      if(item) {
+        this.auth.set(item);
+        if(this.validURL(this.data.url)) window.location = this.data.url;
+        else this.resultEvent.emit(this.data);
+        //this.codxService.navigate('', this.data.url);
+      }
+    });
+  }
   confirmNoPW()
   {
     if(!this.authGroup.value?.email) return this.notifySvr.notifyCode('SYS009', 0, "Email");
@@ -253,7 +276,7 @@ export class CodxAuthFileComponent implements OnInit{
     if(isObservable(validateSO))
     {
       validateSO.subscribe(item=>{
-        if(item) this.resultEvent.emit(this.data);
+        if(item) this.loginGuest();
         else this.notifySvr.notifyCode("BG001");
       })
     }
@@ -288,7 +311,7 @@ export class CodxAuthFileComponent implements OnInit{
     )
     .subscribe((res) => {
       if(!res) this.notifySvr.notifyCode("ES014");
-      else this.resultEvent.emit(this.data);
+      else this.loginGuest();
     })
   }
 }
