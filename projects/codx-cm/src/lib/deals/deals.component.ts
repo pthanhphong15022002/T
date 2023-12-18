@@ -2262,7 +2262,7 @@ export class DealsComponent
                       );
                     }
 
-                    this.view.dataService.update(this.dataSelected, true);
+                    this.view.dataService.update(this.dataSelected, true).subscribe();
                     this.detectorRef.detectChanges();
                   }
                 });
