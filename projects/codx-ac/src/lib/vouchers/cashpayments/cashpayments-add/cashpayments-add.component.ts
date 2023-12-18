@@ -44,7 +44,6 @@ import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model
 import { Subject, Subscription, firstValueFrom, map, mergeMap, pairwise, startWith, switchMap, take, takeUntil } from 'rxjs';
 import { IJournal } from '../../../journals/interfaces/IJournal.interface';
 import { CodxAcService, fmCashPaymentsLines, fmCashPaymentsLinesOneAccount, fmSettledInvoices, fmVATInvoices } from '../../../codx-ac.service';
-import { JournalService } from '../../../journals/journals.service';
 import {
   AnimationModel,
   ProgressBar,

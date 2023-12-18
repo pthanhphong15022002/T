@@ -21,7 +21,6 @@ import { JournalsAddComponent } from '../journals/journals-add/journals-add.comp
 import { NameByIdPipe } from '../pipes/name-by-id.pipe';
 import { BehaviorSubject, Subject, combineLatest, map, takeUntil, tap } from 'rxjs';
 import { Router } from '@angular/router';
-import { JournalService } from '../journals/journals.service';
 import { CodxAcService } from '../codx-ac.service';
 import { IJournalPermission } from '../journals/interfaces/IJournalPermission.interface';
 import { IJournal } from '../journals/interfaces/IJournal.interface';
@@ -67,7 +66,6 @@ export class JournalV2Component extends UIComponent implements OnInit {
     inject: Injector,
     private route: Router,
     private notiService: NotificationsService,
-    private journalService: JournalService,
     private acService: CodxAcService
   ) {
     super(inject);
@@ -175,7 +173,7 @@ export class JournalV2Component extends UIComponent implements OnInit {
   }
 
   ngAfterViewInit() {
-    this.acService.changeToolBar.next(this.view.funcID);
+    //this.acService.changeToolBar.next(this.view.funcID);
 
     this.cache.functionList(this.view.funcID).subscribe((res) => {
       if (res) {
@@ -215,7 +213,6 @@ export class JournalV2Component extends UIComponent implements OnInit {
   }
 
   ngOnDestroy() {
-    this.acService.changeToolBar.next(null);
     this.onDestroy();
   }
 
@@ -478,21 +475,21 @@ export class JournalV2Component extends UIComponent implements OnInit {
   }
 
   delete(data): void {
-    this.journalService.hasVouchers$(data).subscribe((hasVouchers) => {
-      if (hasVouchers) {
-        this.notiService.notifyCode('AC0002', 0, `"${data.journalDesc}"`);
-        return;
-      }
+    // this.journalService.hasVouchers$(data).subscribe((hasVouchers) => {
+    //   if (hasVouchers) {
+    //     this.notiService.notifyCode('AC0002', 0, `"${data.journalDesc}"`);
+    //     return;
+    //   }
 
-      this.view.dataService.delete([data]).subscribe((res: any) => {
-        console.log(res);
+    //   this.view.dataService.delete([data]).subscribe((res: any) => {
+    //     console.log(res);
 
-        if (res) {
-          this.journalService.deleteAutoNumber(data.autoNumber);
-          this.acService.deleteFile(data.recID, this.view.formModel.entityName);
-        }
-      });
-    });
+    //     if (res) {
+    //       this.journalService.deleteAutoNumber(data.autoNumber);
+    //       this.acService.deleteFile(data.recID, this.view.formModel.entityName);
+    //     }
+    //   });
+    // });
   }
   //#region Method
 

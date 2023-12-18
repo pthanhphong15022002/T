@@ -1,7 +1,7 @@
 <codx-views class="ac-views" #view idField="recID" [views]="views" [button]="button" [entityName]="view.entityName"
   (buttonClick)="toolbarClick($event)" [predicates]="runmode == '1' ? '' : 'JournalNo=@0'" assemblyName="AC"
   className="CashPaymentsBusiness" service="AC" method="GetDataAsync" [hideMoreFuncs]="!itemSelected"
-  (changeDataMF)="changeMFDetail($event,'views')" (clickMF)="clickMoreFunction($event, itemSelected)"
+  (changeDataMF)="changeMFDetail($event,'viewdetail')" (clickMF)="clickMoreFunction($event, itemSelected)"
   [dataValues]="runmode == '1' ? '' : journalNo" (selectedChange)="onSelectedItem($event)" [isSubView]="true"
   (viewChanged)="viewChanged($event)" [funcID]="funcID">
 </codx-views>

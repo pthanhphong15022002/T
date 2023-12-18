@@ -3,7 +3,6 @@ import { AuthStore, ButtonModel, DialogModel, NotificationsService, UIComponent,
 import { Subject, takeUntil } from 'rxjs';
 import { CodxAcService } from '../../codx-ac.service';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
-import { JournalService } from '../../journals/journals.service';
 import { PaymentOrderAddComponent } from './payment-order-add/payment-order-add.component';
 import { CodxCommonService } from 'projects/codx-common/src/lib/codx-common.service';
 
@@ -40,7 +39,6 @@ export class PaymentOrderComponent extends UIComponent {
     private codxCommonService: CodxCommonService,
     private shareService: CodxShareService,
     private notification: NotificationsService,
-    private journalService: JournalService
   ) {
     super(inject);
   }

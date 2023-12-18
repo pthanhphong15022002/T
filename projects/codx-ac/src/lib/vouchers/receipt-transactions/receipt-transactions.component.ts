@@ -35,7 +35,6 @@ import { Subject, combineLatest, map, takeUntil } from 'rxjs';
 import { CodxListReportsComponent } from 'projects/codx-share/src/lib/components/codx-list-reports/codx-list-reports.component';
 import { AnimationModel } from '@syncfusion/ej2-angular-progressbar';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
-import { JournalService } from '../../journals/journals.service';
 import { CodxCommonService } from 'projects/codx-common/src/lib/codx-common.service';
 
 @Component({
@@ -78,7 +77,6 @@ export class ReceiptTransactionsComponent extends UIComponent {
     private notification: NotificationsService,
     private codxCommonService: CodxCommonService,
     private tenant: TenantStore,
-    private journalService: JournalService
   ) {
     super(inject);
     this.cache
@@ -144,7 +142,7 @@ export class ReceiptTransactionsComponent extends UIComponent {
         },
       },
     ];
-    this.journalService.setChildLinks(this.journalNo);
+    this.acService.setChildLinks();
 
     //* thiết lập cấu hình sidebar
     this.optionSidebar.DataService = this.view.dataService;
