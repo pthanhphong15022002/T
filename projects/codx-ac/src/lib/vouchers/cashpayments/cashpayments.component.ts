@@ -459,7 +459,7 @@ export class CashPaymentsComponent extends UIComponent {
    * @returns
    */
   changeMFDetail(event: any,type: any = '') {
-    let data = this.view.dataService.dataSelected;
+    let data = this.view?.dataService?.dataSelected;
     if (data) {
       this.acService.changeMFCashPayment(event,data,type,this.journal,this.view.formModel);
     }
@@ -601,7 +601,7 @@ export class CashPaymentsComponent extends UIComponent {
    * @returns
    */
   setDefault(data: any, action: any = '') {
-    return this.api.exec('AC', 'CashTranfersBusiness', 'SetDefaultAsync', [
+    return this.api.exec('AC', 'CashPaymentsBusiness', 'SetDefaultAsync', [
       data,
       this.journal,
       action,
