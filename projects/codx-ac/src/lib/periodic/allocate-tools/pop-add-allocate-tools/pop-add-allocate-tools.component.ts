@@ -3,8 +3,6 @@ import { AuthStore, CodxComboboxComponent, CodxFormComponent, CodxInputComponent
 import { CodxAcService } from '../../../codx-ac.service';
 import { ActivatedRoute } from '@angular/router';
 import { JournalService } from '../../../journals/journals.service';
-import { RunPeriodic } from '../../../models/RunPeriodic.model';
-import { Paras } from '../../../models/Paras.model';
 import { UpdateTheLedger } from '../../../models/UpdateTheLedger.model';
 import { AllocateTools } from '../../../models/AllocateTools.model';
 
@@ -25,7 +23,7 @@ export class PopAddAllocateToolsComponent extends UIComponent implements OnInit{
   dialog!: DialogRef;
   authStore: AuthStore;
   allocateTools: AllocateTools;
-  Paras: Paras;
+  Paras: any;
   gridViewSetup: any;
   validate: any = 0;
   
@@ -42,7 +40,7 @@ export class PopAddAllocateToolsComponent extends UIComponent implements OnInit{
     super(inject);
     this.authStore = inject.get(AuthStore);
     this.dialog = dialog;
-    this.Paras = new Paras();
+    //this.Paras = new Paras();
     this.headerText = dialogData.data?.headerText;
     this.allocateTools = dialog.dataService!.dataSelected;
     if(this.allocateTools.paras != null)
@@ -167,7 +165,7 @@ export class PopAddAllocateToolsComponent extends UIComponent implements OnInit{
   }
 
   onClearParas(){
-    this.Paras = new Paras();
+    //this.Paras = new Paras();
     this.allocateTools.calcGroupID = null;
     this.allocateTools.buid = null;
   }

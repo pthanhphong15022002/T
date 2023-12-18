@@ -3,7 +3,6 @@ import { AuthStore, CodxComboboxComponent, CodxFormComponent, CodxInputComponent
 import { CodxAcService } from '../../../codx-ac.service';
 import { ActivatedRoute } from '@angular/router';
 import { JournalService } from '../../../journals/journals.service';
-import { Paras } from '../../../models/Paras.model';
 import { InvoiceSetlement } from '../../../models/InvoiceSetlement.model';
 
 @Component({
@@ -23,7 +22,7 @@ export class PopAddInvoiceSetlementComponent extends UIComponent implements OnIn
   dialog!: DialogRef;
   authStore: AuthStore;
   invoiceSetlement: InvoiceSetlement;
-  Paras: Paras;
+  Paras: any;
   gridViewSetup: any;
   validate: any = 0;
   
@@ -40,7 +39,7 @@ export class PopAddInvoiceSetlementComponent extends UIComponent implements OnIn
     super(inject);
     this.authStore = inject.get(AuthStore);
     this.dialog = dialog;
-    this.Paras = new Paras();
+    //this.Paras = new Paras();
     this.headerText = dialogData.data?.headerText;
     this.invoiceSetlement = dialog.dataService!.dataSelected;
     if(this.invoiceSetlement.paras != null)
@@ -169,7 +168,7 @@ export class PopAddInvoiceSetlementComponent extends UIComponent implements OnIn
   }
 
   onClearParas(){
-    this.Paras = new Paras();
+    //this.Paras = new Paras();
     this.invoiceSetlement.accountID = null;
     this.invoiceSetlement.voucherNo = null;
     this.invoiceSetlement.objectID = null;
