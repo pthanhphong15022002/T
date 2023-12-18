@@ -174,7 +174,8 @@
   <!--View Group Task-->
   <div
     class="main-body ms-12 mt-1"
-    *ngIf="listGroupTask?.length > 0 && isShowElement"
+    *ngIf="listGroupTask?.length > 0"
+    [ngClass]="isShowElement ? '' : 'd-none'"
   >
     <div
       cdkDropList

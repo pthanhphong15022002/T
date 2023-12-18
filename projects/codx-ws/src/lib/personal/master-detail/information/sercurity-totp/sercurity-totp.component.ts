@@ -39,7 +39,7 @@ export class SercurityTOTPComponent implements OnInit , AfterViewInit {
       if (e.target.type === "text") {
        var data = e.clipboardData.getData('Text');
        data = data.split('');
-       [].forEach.call(document.querySelectorAll(".otp"), (node, index) => {
+       [].forEach.call(document.querySelectorAll(".ws-input"), (node, index) => {
           node.value = data[index];
         });
       }
