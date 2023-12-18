@@ -1088,8 +1088,8 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
               case 'CMD003':
                 this.changeMySales(res);
                 break;
-              case 'CMD001':
-                break;
+              //case 'CMD001':
+              //  break;
             }
           }
           setTimeout(() => {
