@@ -8,7 +8,8 @@
   (buttonClick)="btnClick($event)"
   (onActions)="onAction($event)"
   (clickMF)="clickMF($event)"
-  [titleToolBarTmp]="breadCumbs" 
+  [titleToolBarTmp]="breadCumbs"
+  [service]="'HR'"
   (changeDataMF)="handleShowHideMF($event)"
   >
   <!-- (viewChanged)="viewChanged($event)" -->
@@ -69,6 +70,8 @@ method="LoadDataAsync" -->
       <codx-gridview-v2
       *ngIf="viewDetailData == true && calendarGridColumns.length > 0"
       #calendarGrid
+      [formName]="view.formModel?.formName"
+      [entityName]="view.formModel?.entityName"
       [gridViewName]="'grvKowDsUIByDay'"
       [columnsGrid]="calendarGridColumns"
       [service]="'HR'"
