@@ -2462,8 +2462,8 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
       // if (this.employeeProductivity) {
       //   employeeProductivity = this.employeeProductivity;
       // }
-      if (this.lstUsers?.length > this.employeeProductivity)
-        lstUsers = lstUsers.slice(0, this.employeeProductivity - 1); // lấy tối đa bao nhiêu đối tượng chưa lafm - get param ra để lấy
+      if (lstUsers?.length > this.employeeProductivity)
+        lstUsers = lstUsers.slice(0, this.employeeProductivity); // lấy tối đa bao nhiêu đối tượng chưa lafm - get param ra để lấy
 
       lstUsers.forEach((item) => {
         var tmp = {};
