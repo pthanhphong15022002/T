@@ -2046,6 +2046,7 @@ export class DealsComponent
       category: '1',
       formModel: this.view?.formModel,
       statusOld: this.dataSelected?.status,
+      owner: this.dataSelected.owner,
     };
     var dialog = this.callfc.openForm(
       PopupUpdateStatusComponent,
