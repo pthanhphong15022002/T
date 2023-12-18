@@ -41,7 +41,8 @@ export class PopupUpdateStatusComponent
   applyFor: string = '';
   recID: string = '';
   statusOld: string;
-  data:any;
+  owner: string = '';
+  // data:any;
   messageChangeStatus:string = '';
   valueListStatusCode:any[] =[];
   readonly fieldCbxStatusCode = { text: 'text', value: 'value' };
@@ -59,7 +60,8 @@ export class PopupUpdateStatusComponent
     this.statusDefault = dialogData?.data?.statusDefault;
     this.statusCodecmt = dialogData?.data?.statusCodecmt;
     this.recID = dialogData?.data.recID;
-    this.data = dialogData?.data;
+    // this.data = dialogData?.data;
+    this.owner = dialogData?.data?.owner;
     this.title =  dialogData?.data?.title;
     this.valueListStatusCode = dialogData?.data.valueListStatusCode;
     this.gridViewSetup = dialogData?.data?.gridViewSetup;
@@ -143,7 +145,7 @@ export class PopupUpdateStatusComponent
       }
     }
     else if(statusOld == '1') {
-      if(statusNew == '15' && this.data?.owner)  {
+      if(statusNew == '15' && this.owner)  {
         this.messageChangeStatus = 'CM059';
         return '';
       }
@@ -165,7 +167,7 @@ export class PopupUpdateStatusComponent
         this.messageChangeStatus = 'CM061';
         return '';
       }
-      if(statusNew == '15' && this.data?.owner)  {
+      if(statusNew == '15' && this.owner)  {
         this.messageChangeStatus = 'CM059';
         return '';
       }
@@ -179,7 +181,7 @@ export class PopupUpdateStatusComponent
         this.messageChangeStatus = 'CM061';
         return '';
       }
-      if(statusNew == '15' && this.data?.owner)  {
+      if(statusNew == '15' && this.owner)  {
         this.messageChangeStatus = 'CM059';
         return '';
       }

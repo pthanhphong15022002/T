@@ -425,6 +425,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   dataReasonsFails = [];
   tabActiveReson = 'btReasonSucess';
   textTitle = '';
+  employeeProductivity: any;
   //end
   constructor(
     inject: Injector,
@@ -859,6 +860,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
         if (dataParam) {
           let paramDefault = JSON.parse(dataParam.dataValue);
           this.currencyID = paramDefault['DefaultCurrency'] ?? 'VND';
+          this.employeeProductivity = paramDefault['EmployeeProductivity'];
           this.cmSv
             .getExchangeRate(this.currencyID, new Date())
             .subscribe((res) => {
@@ -2409,7 +2411,11 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
       });
 
       // Giới hạn danh sách tối đa 5 đối tượng
-      lstUsers = lstUsers.slice(0, 10); // lấy tối đa bao nhiêu đối tượng chưa lafm - get param ra để lấy
+      let employeeProductivity = 10
+      if(this.employeeProductivity){
+        employeeProductivity = parseInt(this.employeeProductivity);
+      }
+      lstUsers = lstUsers.slice(0, employeeProductivity); // lấy tối đa bao nhiêu đối tượng chưa lafm - get param ra để lấy
 
       lstUsers.forEach((item) => {
         var tmp = {};

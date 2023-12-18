@@ -34,6 +34,7 @@ export class ContractsDetailComponent implements OnInit, OnChanges {
   grvSetup;
   vllStatus;
   oCountFooter: any = {};
+  dataTree = [];
 
   formModelCustomer = {
     formName: 'CMCustomers',
@@ -135,6 +136,9 @@ export class ContractsDetailComponent implements OnInit, OnChanges {
     this.tabLeftSelect = this.listTabLeft.find((x) => x.id == e);
     this.listTabRight = this[e];
     this.tabRightSelect = this.listTabRight[0]?.id;
+    if(e == 'listAddTask'){
+      this.loadTree(this.contract?.recID);
+    }
   }
 
   getListInstanceStep(contract) {
@@ -219,5 +223,16 @@ export class ContractsDetailComponent implements OnInit, OnChanges {
         ])
         .subscribe();
     }
+  }
+  loadTree(recID) {
+    if (!recID) {
+      this.dataTree = [];
+      return;
+    }
+    this.api
+      .exec<any>('TM', 'TaskBusiness', 'GetListTaskTreeBySessionIDAsync', recID)
+      .subscribe((res) => {
+        this.dataTree = res ? res : [];
+      });
   }
 }
