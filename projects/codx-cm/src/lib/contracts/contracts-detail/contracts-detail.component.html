@@ -174,7 +174,7 @@
           ></ng-container>
           <ng-container
             *ngIf="tabLeftSelect?.id == 'listApprove'"
-            [ngTemplateOutlet]="comment"
+            [ngTemplateOutlet]="approveTemplate"
           ></ng-container>
           <ng-container
             *ngIf="tabLeftSelect?.id == 'listLink'"
@@ -671,12 +671,13 @@
   </div>
 </ng-template>
 <!-- Ký duyệt -->
-<ng-template #historyTemplate>
+<ng-template #approveTemplate>
   <div class="item-right">
-    <!-- <codx-view-approval-step
-      [transID]="transID"
-      [approveStatus]="approveStatus"
-    ></codx-view-approval-step> -->
+    <codx-view-approval-step
+      [transID]="contract?.recID"
+      [approveStatus]="contract?.approveStatus"
+    >
+    </codx-view-approval-step>
   </div>
 </ng-template>
 <!-- Liên kết -->

@@ -152,6 +152,8 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
 
   frmModelInstancesGroup: FormModel;
   frmModelInstancesTask: FormModel;
+  frmModelContracts: FormModel;
+  frmModelQuotation: FormModel;
   dialogGuide: DialogRef;
   vllDataTask;
   vllDataStep;
@@ -234,6 +236,19 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       formName: 'DPInstancesStepsTasks',
       entityName: 'DP_Instances_Steps_Tasks',
       gridViewName: 'grvDPInstancesStepsTasks',
+    };
+    this.frmModelContracts = {
+      funcID: 'CM0204',
+      formName: 'CMContracts',
+      entityName: 'CM_Contracts',
+      entityPer: 'CM_Contracts',
+      gridViewName: 'grvCMContracts',
+    };
+    this.frmModelQuotation = {
+      formName: 'CMQuotationsLines',
+      gridViewName: 'grvCMQuotationsLines',
+      entityName: 'CM_QuotationsLines',
+      funcID: 'CM02021',
     };
   }
 
@@ -821,12 +836,22 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         //   customData.refID =  task.refID ;
         //   customData.refType ='DP_Steps_Tasks'
         // }
-
+        let frmModel: FormModel;
+        switch(task?.taskType){
+          case "CO":
+            frmModel = this.frmModelContracts;
+            break;
+          case "Q":
+            frmModel = this.frmModelQuotation;
+            break;
+          default:
+            frmModel =  this.frmModelInstancesTask;
+        }
         this.codxShareService.defaultMoreFunc(
           e,
           task,
           this.afterSave.bind(this),
-          this.frmModelInstancesTask,
+          frmModel,
           null,
           this,
           customData
