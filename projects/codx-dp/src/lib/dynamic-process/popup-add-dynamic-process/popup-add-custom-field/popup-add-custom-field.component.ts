@@ -148,6 +148,8 @@ export class PopupAddCustomFieldComponent implements OnInit {
   titleConfirm: string =
     'Trường tùy chỉnh đã thiết lập tại bước {0} bạn có muốn tái sử dụng !';
 
+  isDuplicateField = false;
+
   constructor(
     private cache: CacheService,
     private notiService: NotificationsService,
@@ -403,6 +405,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
     }
 
     this.dialog.close([this.field, this.processNo]);
+    this.isDuplicateField = false;
     this.field = new DP_Steps_Fields(); //tắt bùa
   }
 
@@ -429,6 +432,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
           x.stepID != this.field.stepID;
       });
       if (checkArrDup?.length > 0) {
+        this.isDuplicateField = true;
         //thông báo test chưa có mes code
         let nameSteps = checkArrDup.map((x) => x.stepName);
         let config = new AlertConfirmInputConfig();
@@ -437,7 +441,6 @@ export class PopupAddCustomFieldComponent implements OnInit {
           '{0}',
           nameSteps.join(';')
         );
-
         this.notiService
           .alert(this.title, titleConfirmDup, config)
           .closed.subscribe((res) => {
