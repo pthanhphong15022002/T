@@ -9,6 +9,7 @@ import {
 } from 'codx-core';
 import { PopupAddComponent } from './popup-add/popup-add.component';
 import { tmpReferences } from '../../models/assign-task.model';
+import { request } from 'http';
 
 @Injectable({
   providedIn: 'root',
@@ -379,12 +380,15 @@ export class CodxTasksService {
     refType,
     getTree?: Function,
     sessionID = null,
+    listRef = [], //list reff tuong ung
     taskID = null, //dùng cho serviceTask gọi riêng- taskID của task
     category = null, //dùng cho serviceTask gọi riêng- category của task
     isAssign = null, //dùng cho serviceTask gọi riêng- isAssign của object gốc
     isHaveParentID = null //dùng cho serviceTask gọi riêng- có parentID của task ko
   ) {
     let methol = 'GetListTaskTreeByRefIDAsync';
+    let request = refID;
+
     if (!sessionID) {
       if (refID && refType) {
         switch (refType) {
@@ -406,16 +410,23 @@ export class CodxTasksService {
             getTree([]);
             return;
         }
-        this.api
-          .execSv<any>('TM', 'ERM.Business.TM', 'TaskBusiness', methol, refID)
-          .subscribe((res) => {
-            getTree(res);
-          });
-      } else getTree([]);
+      } else if (listRef?.length > 0) {
+        methol = 'GetListTaskTreeByListRefIDAsync';
+        request = [JSON.stringify(listRef)];
+      } else {
+        getTree([]);
+        return;
+      }
     } else {
       //chua chuyen code xong
-      getTree([]);
+      methol = 'GetListTaskTreeBySessionIDAsync';
+      request = [sessionID];
     }
+    this.api
+      .execSv<any>('TM', 'ERM.Business.TM', 'TaskBusiness', methol, request)
+      .subscribe((res) => {
+        getTree(res);
+      });
   }
 
   //tree của TM
