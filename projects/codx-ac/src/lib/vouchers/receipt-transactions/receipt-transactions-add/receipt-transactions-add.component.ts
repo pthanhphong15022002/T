@@ -7,7 +7,6 @@ import { EditSettingsModel, row } from '@syncfusion/ej2-angular-grids';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
 import { CodxAcService, fmVouchersLines } from '../../../codx-ac.service';
 import { ActivatedRoute } from '@angular/router';
-import { JournalService } from '../../../journals/journals.service';
 import { Observable, Subject, takeUntil } from 'rxjs';
 import { itemMove } from '@syncfusion/ej2-angular-treemap';
 import { Validators } from '@angular/forms';
@@ -49,7 +48,6 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
     inject: Injector,
     private acService: CodxAcService,
     private notification: NotificationsService,
-    private journalService: JournalService,
     @Optional() dialog?: DialogRef,
     @Optional() dialogData?: DialogData
   ) {

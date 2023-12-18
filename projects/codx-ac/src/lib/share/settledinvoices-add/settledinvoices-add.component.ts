@@ -341,7 +341,7 @@ export class SettledInvoicesAdd extends UIComponent implements OnInit {
     this.gridModel.predicates = predicates;
     this.gridModel.dataValues = dataValues;
     this.gridModel.entityName = 'AC_SubInvoices';
-    this.acService.execApi('AC', 'SettledInvoicesBusiness', 'LoadSettledAsync', [
+    this.api.exec('AC', 'SettledInvoicesBusiness', 'LoadSettledAsync', [
       this.gridModel,
       this.dataFilter?.accountID ? this.dataFilter.accountID : '',
       this.cashpayment.objectID,

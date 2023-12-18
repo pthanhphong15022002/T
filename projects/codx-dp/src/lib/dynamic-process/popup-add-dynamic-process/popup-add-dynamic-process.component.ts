@@ -1649,8 +1649,8 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
   }
 
   removeUser(index) {
-    let config = new AlertConfirmInputConfig();
-    config.type = 'YesNo';
+    // let config = new AlertConfirmInputConfig();
+    // config.type = 'YesNo';
     this.notiService.alertCode('SYS030').subscribe((x) => {
       if (x.event.status == 'Y') {
         let i = -1;
@@ -1720,8 +1720,8 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
   }
 
   removeRole(objectID: any) {
-    let config = new AlertConfirmInputConfig();
-    config.type = 'YesNo';
+    // let config = new AlertConfirmInputConfig();
+    // config.type = 'YesNo';
     this.notiService.alertCode('SYS030').subscribe((x) => {
       if (x.event.status == 'Y') {
         let i = 0;
@@ -2243,8 +2243,8 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
         break;
       }
       case 'delete': {
-        let config = new AlertConfirmInputConfig();
-        config.type = 'YesNo';
+        // let config = new AlertConfirmInputConfig();
+        // config.type = 'YesNo';
         //SYS003
         this.notiService.alertCode('SYS003').subscribe((x) => {
           if (x.event.status == 'Y') {

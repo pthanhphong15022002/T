@@ -3,7 +3,6 @@ import { AuthStore, ButtonModel, DataRequest, NotificationsService, SidebarModel
 import { Subject, takeUntil } from 'rxjs';
 import { CodxAcService } from '../../codx-ac.service';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
-import { JournalService } from '../../journals/journals.service';
 import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
 import { WarehouseTransfersAddComponent } from './warehouse-transfers-add/warehouse-transfers-add.component';
 import { CodxCommonService } from 'projects/codx-common/src/lib/codx-common.service';
@@ -47,7 +46,6 @@ export class WarehouseTransfersComponent extends UIComponent {
     private notification: NotificationsService,
     private codxCommonService: CodxCommonService,
     private tenant: TenantStore,
-    private journalService: JournalService
   ) {
     super(inject);
     this.cache
@@ -140,7 +138,7 @@ export class WarehouseTransfersComponent extends UIComponent {
       //   }
       // },
     ];
-    this.journalService.setChildLinks(this.journalNo);
+    this.acService.setChildLinks();
   }
 
   ngOnDestroy() {

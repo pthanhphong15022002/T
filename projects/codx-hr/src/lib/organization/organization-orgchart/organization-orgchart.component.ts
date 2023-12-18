@@ -667,10 +667,10 @@ export class OrganizationOrgchartComponent {
         break;
       case 'labelAuto':
         this.labelOrientation = this.LabelOrientation.Auto;
-        break;
+      //  break;
 
       //Vị trí tiêu đề
-      case 'labelAuto':
+      //case 'labelAuto':
         this.labelPlacement = this.LabelPlacement.Auto;
         break;
       case 'placeLeft':
@@ -703,9 +703,9 @@ export class OrganizationOrgchartComponent {
       case 'placeLeftBottom':
         this.labelPlacement = this.LabelPlacement.LeftBottom;
         break;
-      case 'placeLeft':
-        this.labelPlacement = this.LabelPlacement.Left;
-        break;
+      //case 'placeLeft':
+      //  this.labelPlacement = this.LabelPlacement.Left;
+      //  break;
       case 'placeLeftTop':
         this.labelPlacement = this.LabelPlacement.LeftTop;
         break;

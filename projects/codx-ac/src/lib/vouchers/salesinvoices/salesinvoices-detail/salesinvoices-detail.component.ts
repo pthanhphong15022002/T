@@ -14,10 +14,6 @@ import { CRUDService, CodxService, DataRequest, DialogModel, FormModel, Notifica
 import { TabModel } from 'projects/codx-ep/src/lib/models/tabControl.model';
 import { CodxAcService } from '../../../codx-ac.service';
 import { groupBy } from '../../../utils';
-import {
-  SalesInvoiceService,
-  fmSalesInvoicesLines,
-} from '../salesinvoices.service';
 import { Subject, takeUntil } from 'rxjs';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { SalesinvoicesAddComponent } from '../salesinvoices-add/salesinvoices-add.component';

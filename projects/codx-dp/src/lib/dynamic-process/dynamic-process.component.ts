@@ -148,14 +148,12 @@ export class DynamicProcessComponent
   constructor(
     private inject: Injector,
     private activedRouter: ActivatedRoute,
-    private route: Router,
     private notificationsService: NotificationsService,
     private authStore: AuthStore,
     private layoutDP: LayoutComponent,
     private layoutService: LayoutService,
     private dpService: CodxDpService,
-    private codxShareService: CodxShareService,
-    private changeDetectorRef: ChangeDetectorRef,
+    private codxShareService: CodxShareService
   ) {
     super(inject);
     this.heightWin = Util.getViewPort().height - 100;
@@ -483,7 +481,7 @@ export class DynamicProcessComponent
   }
   getValueFormCopy() {
     this.cache.valueList('DP037').subscribe((res) => {
-      if (res.datas) {
+      if (res?.datas) {
         this.listSelectCoppy = res.datas.map((x) => {
           return { id: x.value, text: x.text };
         });
@@ -954,7 +952,7 @@ export class DynamicProcessComponent
     // this.processRelease.module = 'CM';
     // this.processRelease.function = 'CM02';
     let dialogModel = new DialogModel();
-    dialogModel.FormModel =JSON.parse(JSON.stringify(this.view.formModel));  
+    dialogModel.FormModel = JSON.parse(JSON.stringify(this.view.formModel));
     let obj = {
       processRelease: this.processRelease,
       grvSetup: this.grvSetup,

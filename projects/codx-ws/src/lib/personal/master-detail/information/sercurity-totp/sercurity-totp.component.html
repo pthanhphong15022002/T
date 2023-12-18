@@ -20,8 +20,8 @@
         </div>
         
         <div class="d-flex flex-column justify-content-center align-items-center ">
-            <codx-label class="fw-bold py-2" fiedName="lblLogin" default="Bạn không thể quét mã này ?" class="fw-bold text-primary"></codx-label>
-            <div class="border rounded p-2">
+            <codx-label class="fw-bold py-2" fiedName="lblLogin" default="Bạn không thể quét mã này ?" class="fw-bold text-primary cursor-pointer" (click)="showLogin()"></codx-label>
+            <div class="border rounded p-2" *ngIf="show">
                 <span>{{this.secret}}</span>
             </div>
         </div>
