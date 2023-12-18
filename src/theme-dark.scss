@@ -1110,3 +1110,6 @@ codx-views .e-grid {
 .e-grid .e-rowcell, .e-grid .e-groupcaption, .e-grid .e-indentcell, .e-grid .e-recordplusexpand, .e-grid .e-recordpluscollapse, .e-grid .e-rowdragdropcell, .e-grid .e-detailrowcollapse, .e-grid .e-detailrowexpand, .e-grid .e-detailindentcell, .e-grid .e-detailcell {
     border-color: var(--border-list);
 }
+.e-sidebar-overlay {
+    background-color: rgb(0 0 0 / 75%);
+}

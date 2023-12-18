@@ -456,7 +456,7 @@ export class CodxCmService {
       )
       .pipe(
         //tap((p) => console.log(p)),
-        map((p) => JSON.parse(p[0]))
+        map((p) => p && p[0] ? JSON.parse(p[0]) : null)
         //tap((p) => console.log(p))
       );
   }

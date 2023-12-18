@@ -27,7 +27,6 @@ import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { ProgressBar } from '@syncfusion/ej2-angular-progressbar';
 import { CodxListReportsComponent } from 'projects/codx-share/src/lib/components/codx-list-reports/codx-list-reports.component';
 import { Subject, takeUntil } from 'rxjs';
-import { JournalService } from '../../journals/journals.service';
 import { CodxCommonService } from 'projects/codx-common/src/lib/codx-common.service';
 declare var jsBh: any;
 @Component({
@@ -74,7 +73,6 @@ export class CashPaymentsComponent extends UIComponent {
     private shareService: CodxShareService,
     private notification: NotificationsService,
     private tenant: TenantStore,
-    private journalService: JournalService
   ) {
     super(inject);
     this.cache
@@ -167,7 +165,7 @@ export class CashPaymentsComponent extends UIComponent {
         }
       },
     ];
-    this.journalService.setChildLinks(this.journalNo);
+    this.acService.setChildLinks();
   }
 
   ngOnDestroy() {

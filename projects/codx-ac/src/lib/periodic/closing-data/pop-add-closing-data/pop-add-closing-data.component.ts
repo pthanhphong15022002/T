@@ -2,7 +2,6 @@ import { ChangeDetectorRef, Component, Injector, OnInit, Optional, ViewChild } f
 import { AuthStore, CodxComboboxComponent, CodxFormComponent, CodxInputComponent, DialogData, DialogRef, NotificationsService, RequestOption, UIComponent } from 'codx-core';
 import { CodxAcService } from '../../../codx-ac.service';
 import { ActivatedRoute } from '@angular/router';
-import { JournalService } from '../../../journals/journals.service';
 import { ClosingData } from '../../../models/ClosingData.model';
 
 @Component({
@@ -32,7 +31,6 @@ export class PopAddClosingDataComponent extends UIComponent implements OnInit{
     private dt: ChangeDetectorRef,
     private notification: NotificationsService,
     private routerActive: ActivatedRoute,
-    private journalService: JournalService,
     @Optional() dialog?: DialogRef,
     @Optional() dialogData?: DialogData
   ) {

@@ -27,7 +27,6 @@ import { map, takeUntil, tap } from 'rxjs/operators';
 import { CodxAcService } from '../../codx-ac.service';
 import { IJournal, Vll067, Vll075 } from '../interfaces/IJournal.interface';
 import { IJournalPermission } from '../interfaces/IJournalPermission.interface';
-import { JournalService } from '../journals.service';
 import { JournalsAddIdimcontrolComponent } from './journals-add-idimcontrol/journals-add-idimcontrol.component';
 
 @Component({
@@ -72,7 +71,6 @@ export class JournalsAddComponent extends UIComponent {
     private inject: Injector,
     private acService: CodxAcService,
     private notification: NotificationsService,
-    private journalService: JournalService,
     @Optional() dialog?: DialogRef,
     @Optional() dialogData?: DialogData
   ) {
