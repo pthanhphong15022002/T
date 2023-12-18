@@ -877,7 +877,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
             this.employeeProductivity;
 
           this.currencyID = paramDefault['DefaultCurrency'] ?? 'VND';
-          this.employeeProductivity = paramDefault['EmployeeProductivity'];
+          //this.employeeProductivity = paramDefault['EmployeeProductivity'];
           this.cmSv
             .getExchangeRate(this.currencyID, new Date())
             .subscribe((res) => {
@@ -2458,11 +2458,12 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
       });
 
       // Giới hạn danh sách tối đa 5 đối tượng
-      let employeeProductivity = 10;
-      if (this.employeeProductivity) {
-        employeeProductivity = this.employeeProductivity;
-      }
-      lstUsers = lstUsers.slice(0, employeeProductivity); // lấy tối đa bao nhiêu đối tượng chưa lafm - get param ra để lấy
+      // let employeeProductivity = 10;
+      // if (this.employeeProductivity) {
+      //   employeeProductivity = this.employeeProductivity;
+      // }
+      if (this.lstUsers?.length > this.employeeProductivity)
+        lstUsers = lstUsers.slice(0, this.employeeProductivity - 1); // lấy tối đa bao nhiêu đối tượng chưa lafm - get param ra để lấy
 
       lstUsers.forEach((item) => {
         var tmp = {};
