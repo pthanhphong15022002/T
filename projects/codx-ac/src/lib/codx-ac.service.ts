@@ -568,59 +568,62 @@ export class CodxAcService {
   }
 
   changeMFCashPayment(event, data, type: any = '', journal, formModel) {
-    //* thiet lap bookmark cac morefunc tai cac mode view
-    event.filter((x) => !Object.values(MorfuncCash).includes(x.functionID) && !Object.values(MorfuncDefault).includes(x.functionID)).reduce((pre,element) => {element.disabled = true},{}); //? disable cac morfunc ko xai
-    if (type === 'viewgrid') event.reduce((pre,element) => {element.isbookmark = false},{}); //? view grid thi morfunc ko bookmark ra ngoai
-    if (type === 'viewdetail') event.filter((x) => ![MorfuncDefault.XuatDuLieu].includes(x.functionID)).reduce((pre,element) => {element.isbookmark = true},{});
-    
-    //* an hien morefunc theo nghiep vu
-    if(data?.status != '1' && data?.status != '2') event.filter((x) => [MorfuncDefault.Sua].includes(x.functionID)).reduce((pre,element) => {element.disabled = true},{});
-    event = event.filter((x) => Object.values(MorfuncCash).includes(x.functionID));
-    switch (data?.status) {
-      case '1':
-        if (!data?.validated) {
-          event.filter((x) => ![MorfuncCash.KiemTraHopLePC, MorfuncCash.KiemTraHopLeUNC, MorfuncCash.InPC, MorfuncCash.InUNC].includes(x.functionID))
-            .reduce((pre, element) => { element.disabled = true }, {});
-        }else{
-          if (journal.approvalControl == '0') {
-            event.filter((x) => ![MorfuncCash.GhiSoPC,MorfuncCash.GhiSoUNC,MorfuncCash.InPC,MorfuncCash.InUNC,MorfuncCash.ChuyenTienDienTu].includes(x.functionID))
-            .reduce((pre, element) => { element.disabled = true }, {});
-          }else{
-            event.filter((x) => ![MorfuncCash.GuiDuyetPC,MorfuncCash.GuiDuyetUNC,MorfuncCash.InPC,MorfuncCash.InUNC].includes(x.functionID))
-            .reduce((pre, element) => { element.disabled = true }, {});
-          }
+    event.reduce((pre,element) => {
+      if(!Object.values(MorfuncCash).includes(element.functionID) && !Object.values(MorfuncDefault).includes(element.functionID)) element.disabled = true;
+      if (type === 'viewgrid') element.isbookmark = false;
+      if (type === 'views'){
+        if (![MorfuncDefault.XuatDuLieu].includes(element.functionID)) {
+          element.isbookmark = true;
         }
-        break;
-      case '2':
-        event.filter((x) => ![MorfuncCash.KiemTraHopLePC,MorfuncCash.KiemTraHopLeUNC,MorfuncCash.InPC,MorfuncCash.InUNC].includes(x.functionID))
-            .reduce((pre, element) => { element.disabled = true }, {});
-          break;
-      case '3':
-        event.filter((x) => ![MorfuncCash.HuyDuyetPC,MorfuncCash.HuyDuyetUNC,MorfuncCash.InPC,MorfuncCash.InUNC].includes(x.functionID))
-            .reduce((pre, element) => { element.disabled = true }, {});
-          break;
-      case '5':
-      case '9':
-        event.filter((x) => ![MorfuncCash.GhiSoPC,MorfuncCash.GhiSoUNC,MorfuncCash.InPC,MorfuncCash.InUNC].includes(x.functionID))
-            .reduce((pre, element) => { element.disabled = true }, {});
-          break;
-      case '6':
-        event.filter((x) => ![MorfuncCash.KhoiPhucPC,MorfuncCash.KhoiPhucUNC,MorfuncCash.InPC,MorfuncCash.InUNC].includes(x.functionID))
-            .reduce((pre, element) => { element.disabled = true }, {});
-          break;
-      case '10':
-        event.filter((x) => ![MorfuncCash.GhiSoUNC,MorfuncCash.InUNC].includes(x.functionID))
-            .reduce((pre, element) => { element.disabled = true }, {});
-          break;
-      case '8':
-      case '11':
-        event.filter((x) => ![MorfuncCash.InUNC,MorfuncCash.KiemTraTrangThai].includes(x.functionID))
-            .reduce((pre, element) => { element.disabled = true }, {});
-          break;
-      default:
-        event.reduce((pre, element) => { element.disabled = true }, {});
-          break;
-    }
+      }
+      if([MorfuncDefault.Sua,MorfuncDefault.Xoa].includes(element.functionID) && (data?.status != '1' && data?.status != '2')) element.disabled = true;
+      if (Object.values(MorfuncCash).includes(element.functionID)) {
+        switch (data?.status) {
+          case '1':
+            if (!data?.validated) {
+              if(![MorfuncCash.KiemTraHopLePC, MorfuncCash.KiemTraHopLeUNC, MorfuncCash.InPC, MorfuncCash.InUNC].includes(element.functionID)) element.disabled = true;
+            }else{
+              if (journal.approvalControl == '0') {
+                if(![MorfuncCash.GhiSoPC,MorfuncCash.GhiSoUNC,MorfuncCash.InPC,MorfuncCash.InUNC,MorfuncCash.ChuyenTienDienTu].includes(element.functionID)) element.disabled = true;
+              }else{
+                if(![MorfuncCash.GuiDuyetPC,MorfuncCash.GuiDuyetUNC,MorfuncCash.InPC,MorfuncCash.InUNC].includes(element.functionID)) element.disabled = true;
+              }
+            }
+            break;
+
+          case '2':
+            if(![MorfuncCash.KiemTraHopLePC,MorfuncCash.KiemTraHopLeUNC,MorfuncCash.InPC,MorfuncCash.InUNC].includes(element.functionID)) element.disabled = true;
+            break;
+
+          case '3':
+            if(![MorfuncCash.HuyDuyetPC,MorfuncCash.HuyDuyetUNC,MorfuncCash.InPC,MorfuncCash.InUNC].includes(element.functionID)) element.disabled = true;
+            break;
+
+          case '5':
+          case '9':
+            if(![MorfuncCash.GhiSoPC,MorfuncCash.GhiSoUNC,MorfuncCash.InPC,MorfuncCash.InUNC].includes(element.functionID)) element.disabled = true;
+            break;
+
+          case '6':
+            if(![MorfuncCash.KhoiPhucPC,MorfuncCash.KhoiPhucUNC,MorfuncCash.InPC,MorfuncCash.InUNC].includes(element.functionID)) element.disabled = true;
+            break;
+
+          case '10':
+            if(![MorfuncCash.GhiSoUNC,MorfuncCash.InUNC].includes(element.functionID)) element.disabled = true;
+            break;
+
+          case '8':
+          case '11':
+            if(![MorfuncCash.InUNC,MorfuncCash.KiemTraTrangThai].includes(element.functionID)) element.disabled = true;
+            break;
+
+          default:
+            element.disabled = true;
+            break;
+        }
+      }
+      event = event.sort((a, b) => b.functionID.localeCompare(a.functionID));
+    },{});
   }
 
   changeMFCashReceipt(event, data, type: any = '', journal, formModel) {
