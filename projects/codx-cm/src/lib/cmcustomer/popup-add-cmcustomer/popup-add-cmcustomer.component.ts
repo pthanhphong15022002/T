@@ -657,10 +657,10 @@ export class PopupAddCmCustomerComponent implements OnInit {
       .save((option: any) => this.beforeSave(option))
       .subscribe(async (res) => {
         if (res && res.update) {
-          var recID = res.update?.recID;
-          (this.dialog.dataService as CRUDService)
-            .update(res.update)
-            .subscribe();
+          // var recID = res.update?.recID;
+          // (this.dialog.dataService as CRUDService)
+          //   .update(res.update)
+          //   .subscribe();
 
           this.dialog.close([res.update, this.lstContact, this.listAddress]);
         }
