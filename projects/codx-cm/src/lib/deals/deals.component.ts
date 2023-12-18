@@ -2046,6 +2046,7 @@ export class DealsComponent
       category: '1',
       formModel: this.view?.formModel,
       statusOld: this.dataSelected?.status,
+      owner: this.dataSelected.owner,
     };
     var dialog = this.callfc.openForm(
       PopupUpdateStatusComponent,
@@ -2262,7 +2263,7 @@ export class DealsComponent
                       );
                     }
 
-                    this.view.dataService.update(this.dataSelected, true);
+                    this.view.dataService.update(this.dataSelected, true).subscribe();
                     this.detectorRef.detectChanges();
                   }
                 });

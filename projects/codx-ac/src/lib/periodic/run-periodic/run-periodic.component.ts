@@ -1,28 +1,23 @@
-import { ChangeDetectorRef, Component, Injector, Optional, TemplateRef, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Injector, Optional, TemplateRef, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ButtonModel, CallFuncService, DataRequest, DialogRef, FormModel, NotificationsService, RequestOption, SidebarModel, UIComponent, ViewModel, ViewType } from 'codx-core';
-import { PopAddRunPeriodicComponent } from './pop-add-run-periodic/pop-add-run-periodic.component';
-import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
+import { Subject, takeUntil } from 'rxjs';
+import { RunPeriodicAddComponent } from './run-periodic-add/run-periodic-add.component';
 
 @Component({
   selector: 'lib-run-periodic',
   templateUrl: './run-periodic.component.html',
-  styleUrls: ['./run-periodic.component.css']
+  styleUrls: ['./run-periodic.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RunPeriodicComponent extends UIComponent{
-  
+  //#region Constructor
   views: Array<ViewModel> = [];
-  @ViewChild('templateMore') templateMore?: TemplateRef<any>;
-  @ViewChild('itemTemplate') itemTemplate?: TemplateRef<any>;
-
-  button?: ButtonModel[] = [{ id: 'btnAdd' }];
-  dialog!: DialogRef;
-  entityName: any;
-  mfFormName: any = 'RunPeriodic';
-  mfGrvName: any = 'grvCalculatingTheCostPrice';
-  funcName: any;
-  headerText: any;
-  
+  @ViewChild('templateCard') templateCard?: TemplateRef<any>;
+  @ViewChild('templateGrid') templateGrid?: TemplateRef<any>;
+  headerText:any;
+  itemSelected:any;
+  private destroy$ = new Subject<void>();
   constructor(
     private inject: Injector,
     private notification: NotificationsService,
@@ -32,200 +27,130 @@ export class RunPeriodicComponent extends UIComponent{
     @Optional() dialog?: DialogRef
   ) {
     super(inject);
-    this.dialog = dialog;
-    this.cache.moreFunction(this.mfFormName, this.mfGrvName).subscribe((res: any) =>{
-      if (res && res.length) {
-        let m = res.find((x) => x.functionID == 'ACP10201');
-        if (m) this.entityName = m.defaultName;
-      }
-    });
   }
 
-  //region Init
+  //#endregion Constructor
+
+  //#region Init
   onInit(): void {
   }
 
   ngAfterViewInit() {
-    this.cache.moreFunction(this.mfFormName, this.mfGrvName).subscribe((res: any) =>{
-      if (res && res.length) {
-        let m = res.find((x) => x.functionID == 'ACP10200');
-        if (m) this.funcName = m.defaultName;
-      }
-    });
     this.views = [
       {
         type: ViewType.grid,
         active: true,
         sameData: true,
         model: {
-          template2: this.templateMore,
+          template2: this.templateGrid,
           frozenColumns: 1,
         },
       },
-      {
-        type: ViewType.smallcard,
-        active: false,
-        sameData: true,
-        model: {
-          template: this.itemTemplate,
-        },
-      },
+      // {
+      //   type: ViewType.smallcard,
+      //   active: false,
+      //   sameData: true,
+      //   model: {
+      //     template: this.templateCard,
+      //   },
+      // },
     ];
   }
-  //endRegion Init
+
+  ngDoCheck() {
+    this.detectorRef.detectChanges();
+  }
+  //#endregion Init
 
   //#region Event
-
-  toolBarClick(e) {
-    switch (e.id) {
-      case 'btnAdd':
-        this.add(e);
-        break;
-    }
-  }
-
-  clickMF(e, data) {
+  clickMF(e,data:any) {
     switch (e.functionID) {
-      case 'SYS02':
-        this.delete(data);
+      case 'ACP10200':
+        this.calcPrice(e.text);
         break;
-      case 'SYS03':
-        this.edit(e, data);
+      case 'ACP10202':
+        this.runSimulation(e.text);
         break;
-      case 'SYS04':
-        this.copy(e, data);
-        break;
-      case 'SYS002':
-        this.export(data);
+      case 'ACP10203':
+        this.cancel(e.text,data);
         break;
     }
   }
-  //#endRegion Event
+
+  changeMF(event:any,type:any =''){
+    event.reduce((pre, element) => {
+      element.isblur = false;
+      if (element.functionID == 'ACP10203' && type === 'views') {
+        if (this.view.dataService.dataSelected) {
+          element.disabled = false;
+        }else{
+          element.disabled = true;
+        }
+      }
+      if(type === 'viewgrid'){
+        element.isbookmark = false;
+        if (element.functionID == 'ACP10200' || element.functionID == 'ACP10202') {
+          element.disabled = true;
+        }
+      }
+      if (!['ACP10200','ACP10202','ACP10203'].includes(element.functionID)) element.disabled = true;
+      }, {});
+  }
+  //#endregion Event
 
   //region Function
+  
+  /**
+   * * Hàm get data và get dữ liệu chi tiết của chứng từ khi được chọn
+   * @param event
+   * @returns
+   */
+  onSelectedItem(event) {
+    this.itemSelected = event;
+    this.detectorRef.detectChanges();
+  }
 
-  add(e) {
-    this.headerText = e.text + ' ' + this.funcName;
+
+  calcPrice(text) {
+    this.api.exec('AC','RunPeriodicBusiness','CalcPriceAsync',text).subscribe((res:any)=>{
+      if (res) {
+        this.view.dataService.add(res).subscribe();
+        this.notification.notifyCode('AC0029', 0, text);
+      }
+    })
+  }
+
+  runSimulation(text){
     this.view.dataService
-      .addNew()
-      .subscribe((res: any) => {
-        var obj = {
-          formType: 'add',
-          headerText: this.headerText,
-        };
-        let option = new SidebarModel();
-        option.DataService = this.view.dataService;
-        option.FormModel = this.view.formModel;
-        option.Width =  '550px';
-        this.dialog = this.callfunc.openSide(
-          PopAddRunPeriodicComponent,
-          obj,
-          option,
-          this.view.funcID
-        );
-      });
+    .addNew()
+    .pipe(takeUntil(this.destroy$))
+    .subscribe((res) => {
+      let data = {
+        headerText: text.toUpperCase(),
+        dataDefault : res,
+        morName : text
+      }
+      let optionSidebar = new SidebarModel();
+      optionSidebar.DataService = this.view?.dataService;
+      optionSidebar.FormModel = this.view?.formModel;
+      let dialog = this.callfc.openSide(
+        RunPeriodicAddComponent,
+        data,
+        optionSidebar,
+        this.view.funcID
+      );
+    })
   }
 
-  edit(e, data) {
-    if (data) {
-      this.view.dataService.dataSelected = data;
-    }
-    this.view.dataService
-      .edit(this.view.dataService.dataSelected)
-      .subscribe((res: any) => {
-        var obj = {
-          formType: 'edit',
-          headerText: e.text + ' ' + this.funcName,
-        };
-        let option = new SidebarModel();
-        option.DataService = this.view?.currentView?.dataService;
-        option.FormModel = this.view?.currentView?.formModel;
-        option.Width = '550px';
-        this.dialog = this.callfunc.openSide(
-          PopAddRunPeriodicComponent,
-          obj,
-          option
-        );
-      });
+  cancel(text,data){
+    this.api.exec('AC','RunPeriodicBusiness','CancelAsync',[data,text]).subscribe((res:any)=>{
+      if (res) {
+        this.notification.notifyCode('AC0029', 0, text);
+      }else{
+        this.notification.notifyCode('AC0030', 0, text);
+      }
+    })
   }
-
-  copy(e, data) {
-    if (data) {
-      this.view.dataService.dataSelected = data;
-    }
-    this.view.dataService
-      .copy()
-      .subscribe((res: any) => {
-        var obj = {
-          formType: 'copy',
-          headerText: e.text + ' ' + this.funcName,
-        };
-        let option = new SidebarModel();
-        option.DataService = this.view?.currentView?.dataService;
-        option.FormModel = this.view?.currentView?.formModel;
-        option.Width = '550px';
-        this.dialog = this.callfunc.openSide(
-          PopAddRunPeriodicComponent,
-          obj,
-          option
-        );
-      });
-  }
-
-  delete(data) {
-    if (data) {
-      this.view.dataService.dataSelected = data;
-    }
-    this.view.dataService.delete([data], true).subscribe((res: any) => {
-    });
-  }
-
-  export(data) {
-    var gridModel = new DataRequest();
-    gridModel.formName = this.view.formModel.formName;
-    gridModel.entityName = this.view.formModel.entityName;
-    gridModel.funcID = this.view.formModel.funcID;
-    gridModel.gridViewName = this.view.formModel.gridViewName;
-    gridModel.page = this.view.dataService.request.page;
-    gridModel.pageSize = this.view.dataService.request.pageSize;
-    gridModel.predicate = this.view.dataService.request.predicates;
-    gridModel.dataValue = this.view.dataService.request.dataValues;
-    gridModel.entityPermission = this.view.formModel.entityPer;
-    //Chưa có group
-    gridModel.groupFields = 'createdBy';
-    this.callfunc.openForm(
-      CodxExportComponent,
-      null,
-      900,
-      700,
-      '',
-      [gridModel, data.recID],
-      null
-    );
-  }
-
-  setEntityName()
-  {
-    this.view.entityName = this.entityName;
-  }
-
-  getDate(date: any){
-    var newDate = new Date(date);
-    var day, month, year;
-
-    year = newDate.getFullYear();
-    month = newDate.getMonth() + 1;
-    day = newDate.getDate();
-    
-    if (month < 10) {
-      month = '0' + month;
-    }
-
-    if (day < 10) {
-      day = '0' + day;
-    }
-    
-    return day + '/' + month + '/' + year;
-  }
+  
   //endRegion Function
 }

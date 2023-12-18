@@ -3,7 +3,6 @@ import { AuthStore, CodxComboboxComponent, CodxFormComponent, CodxInputComponent
 import { CodxAcService } from '../../../codx-ac.service';
 import { ActivatedRoute } from '@angular/router';
 import { JournalService } from '../../../journals/journals.service';
-import { Paras } from '../../../models/Paras.model';
 import { DeductPrepaidExpenses } from '../../../models/DeductPrepaidExpenses.model';
 
 @Component({
@@ -23,7 +22,7 @@ export class PopAddDeductPrepaidExpensesComponent extends UIComponent implements
   dialog!: DialogRef;
   authStore: AuthStore;
   deductPrepaidExpenses: DeductPrepaidExpenses;
-  Paras: Paras;
+  Paras: any;
   gridViewSetup: any;
   validate: any = 0;
   
@@ -40,7 +39,7 @@ export class PopAddDeductPrepaidExpensesComponent extends UIComponent implements
     super(inject);
     this.authStore = inject.get(AuthStore);
     this.dialog = dialog;
-    this.Paras = new Paras();
+    //this.Paras = new Paras();
     this.headerText = dialogData.data?.headerText;
     this.deductPrepaidExpenses = dialog.dataService!.dataSelected;
     if(this.deductPrepaidExpenses.paras != null)
@@ -165,7 +164,7 @@ export class PopAddDeductPrepaidExpensesComponent extends UIComponent implements
   }
 
   onClearParas(){
-    this.Paras = new Paras();
+    //this.Paras = new Paras();
     this.deductPrepaidExpenses.calcGroupID = null;
     this.deductPrepaidExpenses.buid = null;
   }
