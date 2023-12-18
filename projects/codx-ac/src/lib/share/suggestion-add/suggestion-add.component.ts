@@ -123,8 +123,8 @@ export class SuggestionAdd  extends UIComponent implements OnInit {
   }
   loadData(showArlert:any=true) {
     let method = this.type === '1' ? 'LoadDataAdvancePaymentAsync' : 'LoadDataOrderPaymentAsync'
-    this.acService
-      .execApi('AC', 'ACBusiness', method, [
+    this.api
+      .exec('AC', 'ACBusiness', method, [
         this.oData.voucherDate,
         this.dateSuggestion,
         this.voucherNo,

@@ -35,7 +35,6 @@ import { CodxListReportsComponent } from 'projects/codx-share/src/lib/components
 import { AnimationModel } from '@syncfusion/ej2-angular-progressbar';
 import { IssueTransactionsAddComponent } from './issue-transactions-add/issue-transactions-add.component';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
-import { JournalService } from '../../journals/journals.service';
 import { CodxCommonService } from 'projects/codx-common/src/lib/codx-common.service';
 
 @Component({
@@ -78,7 +77,6 @@ export class IssueTransactionsComponent extends UIComponent {
     private codxCommonService: CodxCommonService,
     private notification: NotificationsService,
     private tenant: TenantStore,
-    private journalService: JournalService
   ) {
     super(inject);
     this.cache
@@ -144,7 +142,7 @@ export class IssueTransactionsComponent extends UIComponent {
         },
       },
     ];
-    this.journalService.setChildLinks(this.journalNo);
+    this.acService.setChildLinks();
 
     //* thiết lập cấu hình sidebar
     this.optionSidebar.DataService = this.view.dataService;
