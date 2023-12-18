@@ -73,8 +73,8 @@ export class PopAddMearsureComponent extends UIComponent implements OnInit {
     this.keyField = dialog.dataService!.keyField;
     if (this.formType == 'edit') {
       if (this.unitsofmearsure.umid != null) {
-        this.acService
-          .loadData(
+        this.api
+          .exec(
             'ERM.Business.BS',
             'UMConversionBusiness',
             'LoadDataAsync',
@@ -281,8 +281,8 @@ export class PopAddMearsureComponent extends UIComponent implements OnInit {
           })
           .subscribe((res) => {
             if (res.save) {
-              this.acService
-                .addData(
+              this.api
+                .exec(
                   'ERM.Business.BS',
                   'UMConversionBusiness',
                   'AddAsync',
@@ -313,8 +313,8 @@ export class PopAddMearsureComponent extends UIComponent implements OnInit {
           })
           .subscribe((res) => {
             if (res.save || res.update) {
-              this.acService
-                .addData(
+              this.api
+                .exec(
                   'ERM.Business.BS',
                   'UMConversionBusiness',
                   'UpdateAsync',
@@ -345,8 +345,8 @@ export class PopAddMearsureComponent extends UIComponent implements OnInit {
         })
         .subscribe((res) => {
           if (res.save) {
-            this.acService
-              .addData('ERM.Business.BS', 'UMConversionBusiness', 'AddAsync', [
+            this.api
+              .exec('ERM.Business.BS', 'UMConversionBusiness', 'AddAsync', [
                 this.objectUmconversion,
               ])
               .subscribe((res) => {

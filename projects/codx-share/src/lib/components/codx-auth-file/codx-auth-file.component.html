@@ -1,28 +1,30 @@
-<div class="d-flex align-items-center h-100vh" *ngIf="data">
-    <div class="d-flex flex-column justify-content-between w-55 h-100 px-7 py-10">
-        <div class="d-flex flex-column align-items-start">
-            <img class="h-30px mb-5" src="/assets/logos/logo-1.svg"/>
-            <codx-label class="fw-bold fs-5-sm" default="Chào mừng bạn đến với Codx" formName="fmCodxAuth" fiedName="lblCodxAuthWelcome"></codx-label>
-            <codx-label class="fw-bold fs-5-sm" default="Nền tảng quản trị toàn diện cho doanh nghiệp" formName="fmCodxAuth" fiedName="lblCodxAuthWelcomeSub"></codx-label>
+<div class="d-flex align-items-center h-100vh codx-auth-content" *ngIf="data">
+    <div class="row w-100 h-100">
+        <div class="d-flex flex-column justify-content-between d-none d-lg-flex col-lg-6 h-100 px-15 py-10">
+            <div class="d-flex flex-column align-items-start">
+                <img class="h-30px mb-5" src="/assets/logos/logo-1.svg"/>
+                <codx-label class="fw-bold fs-5-sm" default="Chào mừng bạn đến với Codx" formName="fmCodxAuth" fiedName="lblCodxAuthWelcome"></codx-label>
+                <codx-label class="fw-bold fs-5-sm" default="Nền tảng quản trị toàn diện cho doanh nghiệp" formName="fmCodxAuth" fiedName="lblCodxAuthWelcomeSub"></codx-label>
+            </div>
+            <img class="h-250px" src="/assets/codx/bg/login-right.svg"/>
+            <div class="d-flex align-items-center">
+                <span>App store</span>
+                <span class="mx-2">CH play</span>
+            </div>
         </div>
-        <img class="h-250px" src="/assets/codx/bg/login-right.svg"/>
-        <div class="d-flex align-items-center">
-            <span>App store</span>
-            <span class="mx-2">CH play</span>
+        <div class="d-flex flex-column align-items-center col-md-12 col-lg-6 h-100 bg-white py-20">
+            <codx-label formName="fmCodxAuth" fiedName="lblCodxAuthTitle" default="Xác thực bảo mật" class="fw-bold fs-30px mb-10"></codx-label>
+            <ng-container *ngIf="data?.pwType == '1'">
+                <ng-container *ngTemplateOutlet="otp"></ng-container>
+            </ng-container>
+            <ng-container *ngIf="data?.pwType == '2'">
+                <ng-container *ngTemplateOutlet="pw"></ng-container>
+            </ng-container>
+            <ng-container *ngIf="data.shareType == '1' && data?.pwType == '0'">
+                <ng-container *ngTemplateOutlet="noPW"></ng-container>
+            </ng-container>
+            <ng-container *ngTemplateOutlet="footer"></ng-container>
         </div>
-    </div>
-    <div class="d-flex flex-column align-items-center w-45 h-100 bg-white py-20">
-        <codx-label formName="fmCodxAuth" fiedName="lblCodxAuthTitle" default="Xác thực bảo mật" class="fw-bold fs-30px mb-10"></codx-label>
-        <ng-container *ngIf="data?.pwType == '1'">
-            <ng-container *ngTemplateOutlet="otp"></ng-container>
-        </ng-container>
-        <ng-container *ngIf="data?.pwType == '2'">
-            <ng-container *ngTemplateOutlet="pw"></ng-container>
-        </ng-container>
-        <ng-container *ngIf="data.shareType == '1' && data?.pwType == '0'">
-            <ng-container *ngTemplateOutlet="noPW"></ng-container>
-        </ng-container>
-        <ng-container *ngTemplateOutlet="footer"></ng-container>
     </div>
 </div>
 
@@ -32,7 +34,7 @@
             <codx-label formName="fmCodxAuth" fiedName="lblCodxAuthEmail" default="Email" class="fw-bold"></codx-label>
             <codx-input type="text" [Group]="authGroup" ControlName="email" class="mt-2"></codx-input>
         </div>
-        <div class="d-flex justify-content-end align-items-center h-30px">
+        <div class="d-flex justify-content-end align-items-center h-30px my-2 pe-1">
             <codx-label *ngIf="!isSend" formName="fmCodxAuth" fiedName="lblCodxAuthSendOTP" default="Gửi OTP" ngClass="color-3699ff cursor-pointer fw-bold" (click)="sendOTP()"></codx-label>
         </div>
         <div id="ws-inputs" class="inputs d-flex justify-content-center">

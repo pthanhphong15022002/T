@@ -2,8 +2,6 @@ import { ChangeDetectorRef, Component, Injector, OnInit, Optional, ViewChild } f
 import { AuthStore, CodxComboboxComponent, CodxFormComponent, CodxInputComponent, DialogData, DialogRef, NotificationsService, RequestOption, UIComponent } from 'codx-core';
 import { CodxAcService } from '../../../codx-ac.service';
 import { ActivatedRoute } from '@angular/router';
-import { JournalService } from '../../../journals/journals.service';
-import { Paras } from '../../../models/Paras.model';
 import { CalculatingCostOfProduct } from '../../../models/CalculatingCostOfProduct.model';
 
 @Component({
@@ -23,7 +21,7 @@ export class PopAddCalculatingCostOfProductComponent extends UIComponent impleme
   dialog!: DialogRef;
   authStore: AuthStore;
   calculatingCostOfProduct: CalculatingCostOfProduct;
-  Paras: Paras;
+  Paras: any;
   gridViewSetup: any;
   validate: any = 0;
   
@@ -33,14 +31,13 @@ export class PopAddCalculatingCostOfProductComponent extends UIComponent impleme
     private dt: ChangeDetectorRef,
     private notification: NotificationsService,
     private routerActive: ActivatedRoute,
-    private journalService: JournalService,
     @Optional() dialog?: DialogRef,
     @Optional() dialogData?: DialogData
   ) {
     super(inject);
     this.authStore = inject.get(AuthStore);
     this.dialog = dialog;
-    this.Paras = new Paras();
+    //this.Paras = new Paras();
     this.headerText = dialogData.data?.headerText;
     this.calculatingCostOfProduct = dialog.dataService!.dataSelected;
     if(this.calculatingCostOfProduct.paras != null)
@@ -165,7 +162,7 @@ export class PopAddCalculatingCostOfProductComponent extends UIComponent impleme
   }
 
   onClearParas(){
-    this.Paras = new Paras();
+    //this.Paras = new Paras();
     this.calculatingCostOfProduct.postLG = false;
     this.calculatingCostOfProduct.costingGroupID = null;
   }

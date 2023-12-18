@@ -268,9 +268,9 @@ export class CalendarDateComponent implements OnInit, OnChanges {
       case 3:
         this.mode = 'year';
         break;
-      case 3:
-        this.mode = 'range';
-        break;
+      //case 3:
+      //  this.mode = 'range';
+      //  break;
     }
 
     // week

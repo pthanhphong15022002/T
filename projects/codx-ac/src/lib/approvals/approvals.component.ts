@@ -1,7 +1,6 @@
 import { Component, Injector, TemplateRef, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthStore, ButtonModel, NotificationsService, UIComponent, ViewModel, ViewType } from 'codx-core';
-import { JournalService } from '../journals/journals.service';
 
 @Component({
   selector: 'lib-approvals',
@@ -27,7 +26,6 @@ constructor(
   inject: Injector,
   private route: Router,
   private notiService: NotificationsService,
-  private journalService: JournalService,
   private authstore: AuthStore
 ) {
   super(inject);

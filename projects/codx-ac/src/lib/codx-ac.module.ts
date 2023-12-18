@@ -33,9 +33,7 @@ import { PopAddDeductPrepaidExpensesComponent } from './periodic/deduct-prepaid-
 import { DepreciatingFixedAssetsComponent } from './periodic/depreciating-fixed-assets/depreciating-fixed-assets.component';
 import { PopAddDepreciatingFixedAssetsComponent } from './periodic/depreciating-fixed-assets/pop-add-depreciating-fixed-assets/pop-add-depreciating-fixed-assets.component';
 import { PeriodicComponent } from './periodic/periodic.component';
-import { PopAddRunPeriodicComponent } from './periodic/run-periodic/pop-add-run-periodic/pop-add-run-periodic.component';
 import { RunPeriodicComponent } from './periodic/run-periodic/run-periodic.component';
-import { PopAddUpdateTheLedgerComponent } from './periodic/update-the-ledger/pop-add-update-the-ledger/pop-add-update-the-ledger.component';
 import { UpdateTheLedgerComponent } from './periodic/update-the-ledger/update-the-ledger.component';
 import { NameByIdPipe } from './pipes/name-by-id.pipe';
 import { ReplacePipe } from './pipes/replace.pipe';
@@ -68,7 +66,6 @@ import { TranformClassBorderPipe } from './pipes/tranform-class-border.pipe';
 import { PurchaseinvoicesComponent } from './vouchers/purchaseinvoices/purchaseinvoices.component';
 import { PurchaseinvoicesAddComponent } from './vouchers/purchaseinvoices/purchaseinvoices-add/purchaseinvoices-add.component';
 import { SalesinvoicesAddComponent } from './vouchers/salesinvoices/salesinvoices-add/salesinvoices-add.component';
-import { SalesinvoiceslinesAddComponent } from './vouchers/salesinvoices/salesinvoiceslines-add/salesinvoiceslines-add.component';
 import { IssueTransactionsComponent } from './vouchers/issue-transactions/issue-transactions.component';
 import { IssueTransactionsAddComponent } from './vouchers/issue-transactions/issue-transactions-add/issue-transactions-add.component';
 import { IsObjectEmptyPipe } from './pipes/is-object-empty.pipe';
@@ -118,6 +115,7 @@ import { LeadsComponent } from 'projects/codx-cm/src/lib/leads/leads.component';
 import { ViewInstancesComponent } from 'projects/codx-dp/src/lib/view-instances/view-instances.component';
 import { CashtransfersComponent } from './vouchers/cashtransfers/cashtransfers.component';
 import { CashtransfersAddComponent } from './vouchers/cashtransfers/cashtransfers-add/cashtransfers-add.component';
+import { RunPeriodicAddComponent } from './periodic/run-periodic/run-periodic-add/run-periodic-add.component';
 export const routes: Routes = [
   {
     path: '',
@@ -212,7 +210,7 @@ export const routes: Routes = [
         data: { noReuse: true },
       },
       {
-        path: 'updatetheledger/:funcID',
+        path: 'updatingtheledger/:funcID',
         component: UpdateTheLedgerComponent,
         data: { noReuse: true },
       },
@@ -378,7 +376,6 @@ export const routes: Routes = [
     PeriodicComponent,
     SalesinvoicesComponent,
     SalesinvoicesAddComponent,
-    SalesinvoiceslinesAddComponent,
     SearchingComponent,
     ReceiptTransactionsComponent,
     ReceiptTransactionsAddComponent,
@@ -386,11 +383,10 @@ export const routes: Routes = [
     Group067Component,
     GroupShareComponent,
     RunPeriodicComponent,
-    PopAddRunPeriodicComponent,
+    RunPeriodicAddComponent,
     SuggestionAdd ,
     ReplacePipe,
     UpdateTheLedgerComponent,
-    PopAddUpdateTheLedgerComponent,
     JournalspermissionEditComponent,
     DepreciatingFixedAssetsComponent,
     PopAddDepreciatingFixedAssetsComponent,

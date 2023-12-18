@@ -10,16 +10,12 @@ import { PopAddCalculatingCostOfProductComponent } from './pop-add-calculating-c
   styleUrls: ['./calculating-cost-of-product.component.css']
 })
 export class CalculatingCostOfProductComponent extends UIComponent{
-  
+  //#region Constructor
   views: Array<ViewModel> = [];
-  @ViewChild('templateMore') templateMore?: TemplateRef<any>;
-  @ViewChild('itemTemplate') itemTemplate?: TemplateRef<any>;
+  @ViewChild('templateCard') templateCard?: TemplateRef<any>;
+  @ViewChild('templateGrid') templateGrid?: TemplateRef<any>;
 
   button?: ButtonModel[] = [{ id: 'btnAdd' }];
-  dialog!: DialogRef;
-  entityName: any;
-  mfFormName: any = 'CalculatingCostOfProduct';
-  mfGrvName: any = 'grvCalculatingCostOfProduct';
   funcName: any;
   headerText: any;
   
@@ -29,36 +25,23 @@ export class CalculatingCostOfProductComponent extends UIComponent{
     private callfunc: CallFuncService,
     private routerActive: ActivatedRoute,
     private dt: ChangeDetectorRef,
-    @Optional() dialog?: DialogRef
   ) {
     super(inject);
-    this.dialog = dialog;
-    this.cache.moreFunction(this.mfFormName, this.mfGrvName).subscribe((res: any) =>{
-      if (res && res.length) {
-        let m = res.find((x) => x.functionID == 'ACP10801');
-        if (m) this.entityName = m.defaultName;
-      }
-    });
   }
+  //#endregion Constructor
 
-  //region Init
+  //#region Init
   onInit(): void {
   }
 
   ngAfterViewInit() {
-    this.cache.moreFunction(this.mfFormName, this.mfGrvName).subscribe((res: any) =>{
-      if (res && res.length) {
-        let m = res.find((x) => x.functionID == 'ACP10800');
-        if (m) this.funcName = m.defaultName;
-      }
-    });
     this.views = [
       {
         type: ViewType.grid,
         active: true,
         sameData: true,
         model: {
-          template2: this.templateMore,
+          template2: this.templateGrid,
           frozenColumns: 1,
         },
       },
@@ -67,166 +50,36 @@ export class CalculatingCostOfProductComponent extends UIComponent{
         active: false,
         sameData: true,
         model: {
-          template: this.itemTemplate,
+          template: this.templateCard,
         },
       },
     ];
   }
-  //endRegion Init
+  //#endregion Init
 
   //#region Event
 
-  toolBarClick(e) {
-    switch (e.id) {
-      case 'btnAdd':
-        this.add(e);
-        break;
-    }
-  }
-
-  clickMF(e, data) {
+  clickMF(e) {
     switch (e.functionID) {
-      case 'SYS02':
-        this.delete(data);
-        break;
-      case 'SYS03':
-        this.edit(e, data);
-        break;
-      case 'SYS04':
-        this.copy(e, data);
-        break;
-      case 'SYS002':
-        this.export(data);
-        break;
+      // case 'SYS02':
+      //   this.delete(data);
+      //   break;
+      // case 'SYS03':
+      //   this.edit(e, data);
+      //   break;
+      // case 'SYS04':
+      //   this.copy(e, data);
+      //   break;
+      // case 'SYS002':
+      //   this.export(data);
+      //   break;
     }
   }
-  //#endRegion Event
+  //#endregion Event
 
-  //region Function
-
-  add(e) {
-    this.headerText = e.text + ' ' + this.funcName;
-    this.view.dataService
-      .addNew()
-      .subscribe((res: any) => {
-        var obj = {
-          formType: 'add',
-          headerText: this.headerText,
-        };
-        let option = new SidebarModel();
-        option.DataService = this.view.dataService;
-        option.FormModel = this.view.formModel;
-        option.Width =  '550px';
-        this.dialog = this.callfunc.openSide(
-          PopAddCalculatingCostOfProductComponent,
-          obj,
-          option,
-          this.view.funcID
-        );
-      });
+  //#region Function
+  changeMF(event:any){
+    console.log(event);
   }
-
-  edit(e, data) {
-    if (data) {
-      this.view.dataService.dataSelected = data;
-    }
-    this.view.dataService
-      .edit(this.view.dataService.dataSelected)
-      .subscribe((res: any) => {
-        var obj = {
-          formType: 'edit',
-          headerText: e.text + ' ' + this.funcName,
-        };
-        let option = new SidebarModel();
-        option.DataService = this.view?.currentView?.dataService;
-        option.FormModel = this.view?.currentView?.formModel;
-        option.Width = '550px';
-        this.dialog = this.callfunc.openSide(
-          PopAddCalculatingCostOfProductComponent,
-          obj,
-          option
-        );
-      });
-  }
-
-  copy(e, data) {
-    if (data) {
-      this.view.dataService.dataSelected = data;
-    }
-    this.view.dataService
-      .copy()
-      .subscribe((res: any) => {
-        var obj = {
-          formType: 'copy',
-          headerText: e.text + ' ' + this.funcName,
-        };
-        let option = new SidebarModel();
-        option.DataService = this.view?.currentView?.dataService;
-        option.FormModel = this.view?.currentView?.formModel;
-        option.Width = '550px';
-        this.dialog = this.callfunc.openSide(
-          PopAddCalculatingCostOfProductComponent,
-          obj,
-          option
-        );
-      });
-  }
-
-  delete(data) {
-    if (data) {
-      this.view.dataService.dataSelected = data;
-    }
-    this.view.dataService.delete([data], true).subscribe((res: any) => {
-    });
-  }
-
-  export(data) {
-    var gridModel = new DataRequest();
-    gridModel.formName = this.view.formModel.formName;
-    gridModel.entityName = this.view.formModel.entityName;
-    gridModel.funcID = this.view.formModel.funcID;
-    gridModel.gridViewName = this.view.formModel.gridViewName;
-    gridModel.page = this.view.dataService.request.page;
-    gridModel.pageSize = this.view.dataService.request.pageSize;
-    gridModel.predicate = this.view.dataService.request.predicates;
-    gridModel.dataValue = this.view.dataService.request.dataValues;
-    gridModel.entityPermission = this.view.formModel.entityPer;
-    //Chưa có group
-    gridModel.groupFields = 'createdBy';
-    this.callfunc.openForm(
-      CodxExportComponent,
-      null,
-      900,
-      700,
-      '',
-      [gridModel, data.recID],
-      null
-    );
-  }
-
-  setEntityName()
-  {
-    this.view.entityName = this.entityName;
-  }
-
-  getDate(date: any){
-    var newDate = new Date(date);
-    var day, month, year;
-
-    year = newDate.getFullYear();
-    month = newDate.getMonth() + 1;
-    day = newDate.getDate();
-    
-    if (month < 10) {
-      month = '0' + month;
-    }
-
-    if (day < 10) {
-      day = '0' + day;
-    }
-    
-    return day + '/' + month + '/' + year;
-  }
-  //endRegion Function
-
+  //#endRegion Function
 }

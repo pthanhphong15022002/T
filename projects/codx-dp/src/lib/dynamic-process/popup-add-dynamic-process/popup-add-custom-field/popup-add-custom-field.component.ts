@@ -12,6 +12,7 @@ import {
   SliderTickRenderedEventArgs,
 } from '@syncfusion/ej2-angular-inputs';
 import {
+  AlertConfirmInputConfig,
   ApiHttpService,
   AuthStore,
   CacheService,
@@ -143,6 +144,11 @@ export class PopupAddCustomFieldComponent implements OnInit {
   entityNamePA = '';
   servicePA: string;
   fieldCus: any;
+  title = 'Thông báo ';
+  titleConfirm: string =
+    'Trường tùy chỉnh đã thiết lập tại bước {0} bạn có muốn tái sử dụng !';
+
+  isDuplicateField = false;
 
   constructor(
     private cache: CacheService,
@@ -174,10 +180,15 @@ export class PopupAddCustomFieldComponent implements OnInit {
     this.stepList = dt?.data?.stepList;
     this.grvSetup = dt.data?.grvSetup;
     if (this.stepList?.length > 0) {
-      this.stepList.forEach((obj) => {
-        if (obj?.fields?.length > 0) {
-          let arrFn = obj?.fields.map((x) => {
-            let obj = { fieldName: x.fieldName, recID: x.recID };
+      this.stepList.forEach((objStep) => {
+        if (objStep?.fields?.length > 0) {
+          let arrFn = objStep?.fields.map((x) => {
+            let obj = {
+              fieldName: x.fieldName,
+              recID: x.recID,
+              stepID: objStep.recID,
+              stepName: objStep.stepName,
+            };
             return obj;
           });
           this.fileNameArr = this.fileNameArr.concat(arrFn);
@@ -394,6 +405,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
     }
 
     this.dialog.close([this.field, this.processNo]);
+    this.isDuplicateField = false;
     this.field = new DP_Steps_Fields(); //tắt bùa
   }
 
@@ -410,6 +422,63 @@ export class PopupAddCustomFieldComponent implements OnInit {
       format = format.replaceAll('__', '_');
     }
     this.field.fieldName = format;
+  }
+
+  //---------Trùng Field------------//
+  duplicateField() {
+    if (this.fileNameArr?.length > 0) {
+      let checkArrDup = this.fileNameArr.filter((x) => {
+        x.fieldName.toLowerCase() == this.field.fieldName.toLowerCase() &&
+          x.stepID != this.field.stepID;
+      });
+      if (checkArrDup?.length > 0) {
+        this.isDuplicateField = true;
+        //thông báo test chưa có mes code
+        let nameSteps = checkArrDup.map((x) => x.stepName);
+        let config = new AlertConfirmInputConfig();
+        config.type = 'YesNo';
+        let titleConfirmDup = this.titleConfirm.replace(
+          '{0}',
+          nameSteps.join(';')
+        );
+        this.notiService
+          .alert(this.title, titleConfirmDup, config)
+          .closed.subscribe((res) => {
+            if (res?.event && res?.event?.status == 'Y') {
+              let fieldDup = checkArrDup[0];
+              let idx = this.stepList.findIndex(
+                (x) => x.recID == fieldDup.stepDup
+              );
+              if (idx != -1) {
+                let idxField = this.stepList[idx].findIndex(
+                  (x) => x.recID == fieldDup.recID
+                );
+                if (idxField != -1) {
+                  let crrF = this.stepList[idx][idxField];
+                  this.field.dataFormat = crrF.dataFormat;
+                  this.field.dataType = crrF.dataType;
+                  this.field.multiselect = crrF.multiselect;
+                  this.field.rank = crrF.rank;
+                  this.field.rankIcon = crrF.rankIcon;
+                  this.field.refValue = crrF.refValue;
+                  this.field.refType = crrF.refType;
+                  this.field.note = crrF.note;
+                  this.field.defaultValue = crrF.defaultValue;
+                }
+              }
+            }
+          });
+      }
+    }
+    // this.stepList.forEach((obj) => {
+    //   if (obj?.fields?.length > 0) {
+    //     let arrFn = obj?.fields.map((x) => {
+    //       let obj = { fieldName: x.fieldName, recID: x.recID };
+    //       return obj;
+    //     });
+    //     this.fileNameArr = this.fileNameArr.concat(arrFn);
+    //   }
+    // });
   }
 
   //----------------Value List -----------------------//

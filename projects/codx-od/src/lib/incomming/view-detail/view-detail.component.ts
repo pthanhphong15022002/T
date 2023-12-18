@@ -1290,7 +1290,7 @@ export class ViewDetailComponent
       }
       //Giao việc
       case 'ODT1013':
-      case 'ODT52013':
+      //case 'ODT52013':
       case 'ODT3013':
       case 'ODT52013': {
         var task = new TM_Tasks();
