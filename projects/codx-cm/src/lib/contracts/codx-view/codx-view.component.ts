@@ -5,18 +5,24 @@ import {
   OnChanges,
   SimpleChanges,
   ChangeDetectorRef,
+  Input,
 } from '@angular/core';
 import { CodxCmService } from '../../codx-cm.service';
 import { ContractsService } from '../service-contracts.service';
 import { CM_Contracts, CM_Customers } from '../../models/cm_model';
-import { ApiHttpService, CacheService, DialogData, DialogRef, NotificationsService} from 'codx-core';
+import { ApiHttpService, CacheService, DialogData, DialogRef, FormModel, NotificationsService} from 'codx-core';
 
 @Component({
-  selector: 'contracts-detail',
-  templateUrl: './contracts-detail.component.html',
-  styleUrls: ['./contracts-detail.component.scss'],
+  selector: 'codx-view-cm',
+  templateUrl: './codx-view.component.html',
+  styleUrls: ['./codx-view.component.scss']
 })
-export class ContractsDetailComponent implements OnInit, OnChanges {
+export class CodxViewComponent implements OnInit, OnChanges {
+  @Input() taskAdd;
+  @Input() formModel: FormModel;
+  @Input() dataSelect: FormModel;
+  @Input() title = 'Thông tin chung';
+  @Input() tempInformation = 'Thông tin chung';
   dialog: DialogRef;
   contract: CM_Contracts;
   Customers: CM_Customers;
@@ -34,7 +40,6 @@ export class ContractsDetailComponent implements OnInit, OnChanges {
   grvSetup;
   vllStatus;
   oCountFooter: any = {};
-  dataTree = [];
 
   formModelCustomer = {
     formName: 'CMCustomers',
@@ -136,9 +141,6 @@ export class ContractsDetailComponent implements OnInit, OnChanges {
     this.tabLeftSelect = this.listTabLeft.find((x) => x.id == e);
     this.listTabRight = this[e];
     this.tabRightSelect = this.listTabRight[0]?.id;
-    if(e == 'listAddTask'){
-      this.loadTree(this.contract?.recID);
-    }
   }
 
   getListInstanceStep(contract) {
@@ -223,16 +225,5 @@ export class ContractsDetailComponent implements OnInit, OnChanges {
         ])
         .subscribe();
     }
-  }
-  loadTree(recID) {
-    if (!recID) {
-      this.dataTree = [];
-      return;
-    }
-    this.api
-      .exec<any>('TM', 'TaskBusiness', 'GetListTaskTreeBySessionIDAsync', recID)
-      .subscribe((res) => {
-        this.dataTree = res ? res : [];
-      });
   }
 }

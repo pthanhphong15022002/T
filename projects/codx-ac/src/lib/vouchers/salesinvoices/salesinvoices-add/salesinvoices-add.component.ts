@@ -25,7 +25,6 @@ import {
   Vll067,
   Vll075,
 } from '../../../journals/interfaces/IJournal.interface';
-import { JournalService } from '../../../journals/journals.service';
 import { Subject, map, takeUntil } from 'rxjs';
 import { TabComponent } from '@syncfusion/ej2-angular-navigations';
 import { AC_SalesInvoicesLines } from '../../../models/AC_SalesInvoicesLines.model';
@@ -68,7 +67,6 @@ export class SalesinvoicesAddComponent extends UIComponent{
     inject: Injector,
     private acService: CodxAcService,
     private notification: NotificationsService,
-    private journalService: JournalService,
     @Optional() dialog?: DialogRef,
     @Optional() dialogData?: DialogData
   ) {
@@ -571,7 +569,7 @@ export class SalesinvoicesAddComponent extends UIComponent{
         this.formSalesInvoice.setValue('taxExchRate',(res?.data?.taxExchRate),{});
         this.formSalesInvoice.setValue('consultantID',(res?.ConsultantID || ''),{});
         this.formSalesInvoice.setValue('salespersonID',(res?.salespersonID || ''),{});
-        this.formSalesInvoice.setValue('multi',(res?.multi),{});
+        this.formSalesInvoice.setValue('multi',(res?.data?.multi),{});
         if (this.eleGridSalesInvoice.dataSource.length) {
           this.formSalesInvoice.preData = {...this.formSalesInvoice.data};
           this.dialog.dataService.update(this.formSalesInvoice.data).subscribe();

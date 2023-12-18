@@ -2,8 +2,6 @@ import { ChangeDetectorRef, Component, Injector, OnInit, Optional, ViewChild } f
 import { AuthStore, CodxComboboxComponent, CodxFormComponent, CodxInputComponent, DialogData, DialogRef, NotificationsService, RequestOption, UIComponent } from 'codx-core';
 import { CodxAcService } from '../../../codx-ac.service';
 import { ActivatedRoute } from '@angular/router';
-import { JournalService } from '../../../journals/journals.service';
-import { Paras } from '../../../models/Paras.model';
 import { ExchangeRateTransaction } from '../../../models/ExchangeRateTransaction.model';
 
 @Component({
@@ -23,7 +21,7 @@ export class PopAddExchangeRateTransactionComponent extends UIComponent implemen
   dialog!: DialogRef;
   authStore: AuthStore;
   exchangeRateTransaction: ExchangeRateTransaction;
-  Paras: Paras;
+  Paras: any;
   gridViewSetup: any;
   validate: any = 0;
   
@@ -33,14 +31,13 @@ export class PopAddExchangeRateTransactionComponent extends UIComponent implemen
     private dt: ChangeDetectorRef,
     private notification: NotificationsService,
     private routerActive: ActivatedRoute,
-    private journalService: JournalService,
     @Optional() dialog?: DialogRef,
     @Optional() dialogData?: DialogData
   ) {
     super(inject);
     this.authStore = inject.get(AuthStore);
     this.dialog = dialog;
-    this.Paras = new Paras();
+    //this.Paras = new Paras();
     this.headerText = dialogData.data?.headerText;
     this.exchangeRateTransaction = dialog.dataService!.dataSelected;
     if(this.exchangeRateTransaction.paras != null)
@@ -165,7 +162,7 @@ export class PopAddExchangeRateTransactionComponent extends UIComponent implemen
   }
 
   onClearParas(){
-    this.Paras = new Paras();
+    //this.Paras = new Paras();
     this.exchangeRateTransaction.accountID = null;
     this.exchangeRateTransaction.currencyID = null;
   }

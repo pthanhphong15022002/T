@@ -2,8 +2,6 @@ import { ChangeDetectorRef, Component, Injector, OnInit, Optional, ViewChild } f
 import { AuthStore, CodxComboboxComponent, CodxFormComponent, CodxInputComponent, DialogData, DialogRef, NotificationsService, RequestOption, UIComponent } from 'codx-core';
 import { CodxAcService } from '../../../codx-ac.service';
 import { ActivatedRoute } from '@angular/router';
-import { JournalService } from '../../../journals/journals.service';
-import { Paras } from '../../../models/Paras.model';
 import { ClosingTransaction } from '../../../models/ClosingTransaction.model';
 
 @Component({
@@ -23,7 +21,7 @@ export class PopAddClosingTransactionComponent extends UIComponent implements On
   dialog!: DialogRef;
   authStore: AuthStore;
   closingTransaction: ClosingTransaction;
-  Paras: Paras;
+  Paras: any;
   gridViewSetup: any;
   validate: any = 0;
   
@@ -33,14 +31,13 @@ export class PopAddClosingTransactionComponent extends UIComponent implements On
     private dt: ChangeDetectorRef,
     private notification: NotificationsService,
     private routerActive: ActivatedRoute,
-    private journalService: JournalService,
     @Optional() dialog?: DialogRef,
     @Optional() dialogData?: DialogData
   ) {
     super(inject);
     this.authStore = inject.get(AuthStore);
     this.dialog = dialog;
-    this.Paras = new Paras();
+    //this.Paras = new Paras();
     this.headerText = dialogData.data?.headerText;
     this.closingTransaction = dialog.dataService!.dataSelected;
     if(this.closingTransaction.paras != null)
@@ -169,7 +166,7 @@ export class PopAddClosingTransactionComponent extends UIComponent implements On
   }
 
   onClearParas(){
-    this.Paras = new Paras();
+    //this.Paras = new Paras();
     this.closingTransaction.alloMethod = null;
     this.closingTransaction.alloGroupID = null;
     this.closingTransaction.alloEntryID = null;

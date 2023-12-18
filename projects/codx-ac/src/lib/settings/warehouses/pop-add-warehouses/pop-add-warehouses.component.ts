@@ -94,8 +94,8 @@ export class PopAddWarehousesComponent extends UIComponent implements OnInit {
     this.keyField = dialog.dataService!.keyField;
     if (this.formType == 'edit') {
       if (this.warehouses.warehouseID != null) {
-        this.acService
-          .loadData('ERM.Business.BS', 'ContactBookBusiness', 'LoadDataAsync', [
+        this.api
+          .exec('ERM.Business.BS', 'ContactBookBusiness', 'LoadDataAsync', [
             this.objecttype,
             this.warehouses.warehouseID,
           ])
@@ -352,8 +352,8 @@ export class PopAddWarehousesComponent extends UIComponent implements OnInit {
           .subscribe((res) => {
             if (res.save || res.update) {
               this.addObjects();
-              this.acService
-                .addData(
+              this.api
+                .exec(
                   'ERM.Business.BS',
                   'ContactBookBusiness',
                   'UpdateAsync',
@@ -365,8 +365,8 @@ export class PopAddWarehousesComponent extends UIComponent implements OnInit {
                   ]
                 )
                 .subscribe(() => {});
-              this.acService
-                .addData('ERM.Business.AC', 'ObjectsBusiness', 'UpdateAsync', [
+              this.api
+                .exec('ERM.Business.AC', 'ObjectsBusiness', 'UpdateAsync', [
                   this.objects,
                 ])
                 .subscribe(() => {});
@@ -416,16 +416,16 @@ export class PopAddWarehousesComponent extends UIComponent implements OnInit {
     .subscribe((res) => {
       if (res.save) {
         this.addObjects();
-        this.acService
-          .addData('ERM.Business.BS', 'ContactBookBusiness', 'AddAsync', [
+        this.api
+          .exec('ERM.Business.BS', 'ContactBookBusiness', 'AddAsync', [
             this.objecttype,
             this.warehouses.warehouseID,
             this.objectContact,
           ])
           .subscribe(() => {});
         this.objects.objectID = res.save.warehouseID;
-        this.acService
-          .addData('ERM.Business.AC', 'ObjectsBusiness', 'AddAsync', [
+        this.api
+          .exec('ERM.Business.AC', 'ObjectsBusiness', 'AddAsync', [
             this.objects,
           ])
           .subscribe(() => {});

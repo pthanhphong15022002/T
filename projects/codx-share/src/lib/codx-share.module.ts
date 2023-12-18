@@ -382,6 +382,7 @@ const T_Component: Type<any>[] = [
   FormSettingComponent,
   CodxShareReportComponent,
   CodxShareDashboardComponent,
+  CodxFilesAttachmentComponent,
 
   //View File
   CodxViewFileComponent,

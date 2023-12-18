@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component, Injector, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { AuthStore, ButtonModel, DialogModel, NotificationsService, SidebarModel, UIComponent, Util, ViewModel, ViewType } from 'codx-core';
 import { Subject, takeUntil } from 'rxjs';
-import { JournalService } from '../../journals/journals.service';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { CodxAcService } from '../../codx-ac.service';
 import { AdvancePaymentRequestAddComponent } from './advance-payment-request-add/advance-payment-request-add.component';
@@ -40,7 +39,6 @@ export class AdvancePaymentRequestComponent extends UIComponent {
     private shareService: CodxShareService,
     private notification: NotificationsService,
     private codxCommonService: CodxCommonService,
-    private journalService: JournalService
   ) {
     super(inject);
   }

@@ -55,7 +55,7 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
   @Input() dealName: string;
   @Input() contractName: string;
   @Input() leadName: string;
-  @Input() isHeightAuto = false;
+  @Input() isHeightAuto = true;
   @Input() taskAdd;
   @Input() isViewStep = false;
 
