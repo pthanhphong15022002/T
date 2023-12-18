@@ -3,7 +3,6 @@ import { AuthStore, ButtonModel, DataRequest, NotificationsService, SidebarModel
 import { Subject, takeUntil } from 'rxjs';
 import { CodxAcService } from '../../codx-ac.service';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
-import { JournalService } from '../../journals/journals.service';
 import { GeneralJournalAddComponent } from './general-journal-add/general-journal-add.component';
 import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
 import { CodxCommonService } from 'projects/codx-common/src/lib/codx-common.service';
@@ -49,7 +48,6 @@ export class GeneralJournalComponent extends UIComponent {
     private codxCommonService: CodxCommonService,
     private notification: NotificationsService,
     private tenant: TenantStore,
-    private journalService: JournalService
   ) {
     super(inject);
     this.cache
@@ -120,7 +118,7 @@ export class GeneralJournalComponent extends UIComponent {
         },
       },
     ];
-    this.journalService.setChildLinks(this.journalNo);
+    this.acService.setChildLinks();
   }
 
   ngOnDestroy() {

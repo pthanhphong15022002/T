@@ -10,7 +10,6 @@ import {
 import { FormModel, UIComponent } from 'codx-core';
 import { IJournalPermission } from '../../interfaces/IJournalPermission.interface';
 import { JournalPermission } from '../../models/JournalPermission.model';
-import { JournalService } from '../../journals.service';
 
 @Component({
   selector: 'lib-group-share',
@@ -28,7 +27,7 @@ export class GroupShareComponent extends UIComponent implements OnChanges {
 
   objectType: string;
 
-  constructor(injector: Injector, private journalService: JournalService) {
+  constructor(injector: Injector) {
     super(injector);
   }
   //#endregion

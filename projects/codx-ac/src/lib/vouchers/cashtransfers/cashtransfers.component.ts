@@ -4,7 +4,6 @@ import { Subject, takeUntil } from 'rxjs';
 import { CodxAcService, fmVATInvoices } from '../../codx-ac.service';
 import { CodxCommonService } from 'projects/codx-common/src/lib/codx-common.service';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
-import { JournalService } from '../../journals/journals.service';
 import { CashtransfersAddComponent } from './cashtransfers-add/cashtransfers-add.component';
 import { FormGroup } from '@angular/forms';
 
@@ -49,7 +48,6 @@ export class CashtransfersComponent extends UIComponent {
     private shareService: CodxShareService,
     private notification: NotificationsService,
     private tenant: TenantStore,
-    private journalService: JournalService
   ) {
     super(inject);
     this.cache
@@ -151,7 +149,7 @@ export class CashtransfersComponent extends UIComponent {
       //   }
       // },
     ];
-    this.journalService.setChildLinks(this.journalNo);
+    this.acService.setChildLinks();
   }
 
   ngOnDestroy() {
