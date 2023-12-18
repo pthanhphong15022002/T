@@ -38,7 +38,8 @@
           <codx-input
             field="title"
             [formModel]="form.formModel"
-            [Group]="form.formGroup"
+            [crrValue]="field.title"
+            (controlBlur)="valueChangeText($event)"
             (valueChange)="valueChange($event)"
           >
           </codx-input>
@@ -57,6 +58,7 @@
             [crrValue]="field.fieldName"
             [formName]="'DPStepsFields'"
             [gridViewName]="'grvDPStepsField'"
+            (controlBlur)="valueChangeText($event)"
             (valueChange)="valueChange($event)"
           >
           </codx-input>
@@ -91,7 +93,7 @@
           [refValue]="refValueDataType"
           [placeholder]="grvSetup['DataType']['headerText']"
           (valueChange)="valueChange($event)"
-          [disabled]="action == 'edit'"
+          [disabled]="action == 'edit' || this.isDuplicateField"
         >
         </codx-input>
       </div>
@@ -172,7 +174,7 @@
           refValue="DP0272"
           [placeholder]="grvSetup['DataFormat']['headerText']"
           (valueChange)="valueChange($event)"
-          [disabled]="action == 'edit'"
+          [disabled]="action == 'edit' || this.isDuplicateField"
         >
         </codx-input>
         <codx-input
@@ -271,7 +273,7 @@
             [crrValue]="field.refValue"
             [refValue]="'DPComboboxList'"
             (valueChange)="valueChange($event)"
-            [disabled]="action == 'edit'"
+            [disabled]="action == 'edit' || this.isDuplicateField"
           ></codx-input>
 
           <ng-container *ngIf="field.dataFormat == 'V'">
@@ -420,7 +422,7 @@
             <codx-input
               [field]="'note'"
               [formModel]="form.formModel"
-              [Group]="form.formGroup"
+              [crrValue]="field?.note"
               (valueChange)="valueChange($event)"
             >
             </codx-input>

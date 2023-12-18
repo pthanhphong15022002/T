@@ -2415,11 +2415,11 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
               if (e && e.event != null) {
                 //xu ly data đổ về
                 this.fieldCrr = e.event[0];
+                let isEditFieldDuplicate = e.event[2]; // check duplicate co edit
                 if (e.event[1] && !this.process.processNo) {
                   this.process.processNo = e.event[1];
                 }
                 this.fieldCrr.sorting = (this.step?.fields?.length ?? 0) + 1;
-
                 this.stepList.forEach((x) => {
                   if (x.recID == this.fieldCrr.stepID) {
                     x.fields.push(this.fieldCrr);
@@ -2430,6 +2430,19 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
                       if (!check) {
                         this.listStepEdit.push(x?.recID);
                       }
+                    }
+                  }
+                  //edit field truosc do neu edit
+                  if (isEditFieldDuplicate && x.fields?.length > 0) {
+                    let idx = x.fields.findIndex(
+                      (f) => f.fieldName == this.fieldCrr.fieldName
+                    );
+                    if (idx != -1) {
+                      let recIDOld = x.fields[idx].recID;
+                      let fieldEdit = JSON.parse(JSON.stringify(this.fieldCrr));
+                      fieldEdit.recID = recIDOld;
+                      fieldEdit.stepID = x.recID;
+                      x.fields[idx] = fieldEdit;
                     }
                   }
                 });
