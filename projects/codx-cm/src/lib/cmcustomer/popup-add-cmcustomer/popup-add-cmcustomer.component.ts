@@ -21,6 +21,7 @@ import {
   ImageViewerComponent,
   Util,
   CodxFormComponent,
+  AuthStore,
 } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
 import { environment } from 'src/environments/environment';
@@ -106,6 +107,7 @@ export class PopupAddCmCustomerComponent implements OnInit {
   checkContact: boolean = false;
   leverSetting: number;
   isSaved = false;
+  user: any;
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private api: ApiHttpService,
@@ -113,6 +115,7 @@ export class PopupAddCmCustomerComponent implements OnInit {
     private notiService: NotificationsService,
     private cache: CacheService,
     private cmSv: CodxCmService,
+    private authStore: AuthStore,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -122,6 +125,7 @@ export class PopupAddCmCustomerComponent implements OnInit {
     this.action = dt?.data?.action;
     this.titleAction = dt?.data?.title;
     this.autoNumber = dt?.data?.autoNumber;
+    this.user = this.authStore.get();
     if (this.action == 'copy') {
       this.recID = dt?.data[2];
     }
@@ -397,7 +401,7 @@ export class PopupAddCmCustomerComponent implements OnInit {
 
   valueChangeAdress(e) {
     this.isSaved = true;
-    if(e){
+    if (e) {
       this.data.address = e?.data;
       this.setAddress(e?.data);
     }
@@ -423,7 +427,7 @@ export class PopupAddCmCustomerComponent implements OnInit {
           [name, this.leverSetting]
         )
       );
-      if (json != null && json.trim() != '' && json != "null") {
+      if (json != null && json.trim() != '' && json != 'null') {
         let lstDis = JSON.parse(json);
         if (this.data.provinceID != lstDis?.ProvinceID)
           this.data.provinceID = lstDis?.ProvinceID;
@@ -473,7 +477,7 @@ export class PopupAddCmCustomerComponent implements OnInit {
             (x) => this.tmpAddress?.recID && x.isDefault == true
           );
           if (index != -1) {
-            this.listAddress[index].address = name
+            this.listAddress[index].address = name;
             this.listAddress[index].provinceID = this.data.provinceID;
             this.listAddress[index].districtID = this.data.districtID;
             this.listAddress[index].wardID = this.data.wardID;

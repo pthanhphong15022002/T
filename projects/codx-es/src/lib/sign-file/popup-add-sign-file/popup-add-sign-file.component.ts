@@ -72,7 +72,7 @@ export class PopupAddSignFileComponent implements OnInit {
   fileIndex = 0;
   currentTab = 0; // buoc hiện tại: 0, 1, 2, 3
   processTab = 0; // tổng bước đã đi qua
-  formModelCustom: FormModel;
+  formModelCustom: any;
   isAfterRender = false;
   dialogSignFile: FormGroup;
   lstDataFile = [];
@@ -279,7 +279,15 @@ export class PopupAddSignFileComponent implements OnInit {
     if (this.oSignFile) {
       this.data.permissions;
       this.esService.getFormModel('EST011').then((formModel) => {
-        this.formModelCustom = formModel;
+        if(formModel){
+          this.formModelCustom = formModel;
+        }
+        else{
+          this.formModelCustom= new FormModel();
+          this.formModelCustom.entityName="ES_SignFiles"
+          this.formModelCustom.formName="SignFiles"
+          this.formModelCustom.gridViewName="grvSignFiles"
+        }
         this.cache
           .gridViewSetup(
             this.formModelCustom.formName,

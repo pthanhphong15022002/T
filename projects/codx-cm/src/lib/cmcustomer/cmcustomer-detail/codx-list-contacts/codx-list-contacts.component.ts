@@ -59,7 +59,7 @@ export class CodxListContactsComponent implements OnInit {
   service = 'CM';
   assemblyName = 'ERM.Business.CM';
   className = 'ContactsBusiness';
-  method = 'GetListByTabAsync';
+  method = 'GetListContactAsync';
   isButton = true;
   currentRecID = '';
   lstConvertContact = [];
@@ -162,7 +162,6 @@ export class CodxListContactsComponent implements OnInit {
       this.request.dataValues = dataValue;
       this.request.pageLoading = false;
       this.request.entityName = 'CM_Contacts';
-      this.request.funcID = 'CM0102';
       this.className = 'ContactsBusiness';
       this.fetch().subscribe((item) => {
         if(this.listContacts != null && this.listContacts.length > 0){

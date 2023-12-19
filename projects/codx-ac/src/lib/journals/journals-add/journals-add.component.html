@@ -16,15 +16,16 @@
           </ng-container>
           <ng-container *ngIf="!formJournal?.form?.data.isTemplate">
             <codx-label fiedName="JournalName" [formModel]="dialog.formModel"></codx-label>
-            <codx-input field="journalName" [formModel]="dialog.formModel" (valueChange)="valueChange($event)"
+            <codx-input #eleCbxJournalName field="journalName" [formModel]="dialog.formModel" (valueChange)="valueChange($event)"
               [Group]="formJournal?.form?.formGroup"></codx-input>
           </ng-container>
         </div>
         <div class="col-6 form-group">
           <codx-label fiedName="FiscalYear" [formModel]="dialog.formModel"></codx-label>
-          <!-- <codx-input field="FiscalYear" [formModel]="dialog.formModel"
+          <!-- <codx-input field="fiscalYear" [formModel]="dialog.formModel"
             [Group]="formJournal?.form?.formGroup"></codx-input> -->
             <!-- bùa fiscalyear -->
+            <!-- <codx-input #periodID field="periodID" (valueChange)="valueChange($event)" type="combobox"></codx-input> -->
             <ejs-combobox [dataSource]="fiscalYears" [value]="formJournal?.form?.data?.fiscalYear" (change)="valueChange($event,'fiscalYear')">
             </ejs-combobox>
         </div>
@@ -100,7 +101,7 @@
 
 <!-- Start: TabEstablish -->
 <ng-template #tabestablish>
-  <ng-container *ngIf="formJournal?.form?.formGroup && formJournal?.form?.data?.journalType != null">
+  <ng-container *ngIf="formJournal?.form?.formGroup">
     <div class="line-around-flex pb-3">
       <codx-label style="font-size: 15px !important;" default="Thiết lập chung" class="fw-bold text-primary"></codx-label>
     </div>
@@ -117,9 +118,11 @@
           <div class="d-flex align-items-center">
             <div class="w-100 me-2">
               <codx-input [ngStyle]="formJournal?.form?.data?.assignRule === '0' ? '' :{display:'none'}" type="text" [disabled]="true"></codx-input>
-              <codx-input [ngStyle]="formJournal?.form?.data?.assignRule != '0' ? '' :{display:'none'}" field="voucherFormat" [formModel]="dialog.formModel" [Group]="formJournal?.form?.formGroup"></codx-input>
+              <!-- <codx-input [ngStyle]="formJournal?.form?.data?.assignRule != '0' ? '' :{display:'none'}" field="voucherFormat" [formModel]="dialog.formModel" [Group]="formJournal?.form?.formGroup"></codx-input> -->
+              <ejs-combobox [ngStyle]="formJournal?.form?.data?.assignRule != '0' ? '' :{display:'none'}" [dataSource]="oAutoNumber" (beforeOpen)="beforeOpenCbxAutoNumber($event)">
+              </ejs-combobox>
             </div>
-            <button [disabled]="formJournal?.form?.data?.assignRule === '0'" type="button" class="btn btn-icon btn-light-primary" role="button">
+            <button (click)="openAutoNumberForm()" [disabled]="formJournal?.form?.data?.assignRule === '0'" type="button" class="btn btn-icon btn-light-primary" role="button">
               <span class="icon-edit-one icon-18"></span>
             </button>
           </div>
@@ -171,7 +174,7 @@
           <div class="w-100 me-2">
             <codx-input field="drAcctControl" [formModel]="dialog.formModel" [Group]="formJournal?.form?.formGroup" (valueChange)="valueChange($event)"></codx-input>
           </div>
-          <button [disabled]="formJournal?.form?.data?.drAcctControl === '0' || formJournal?.form?.data?.drAcctControl === '3'" type="button" class="btn btn-icon btn-light-primary" role="button"
+          <button [disabled]="formJournal?.form?.data?.drAcctControl === null || formJournal?.form?.data?.drAcctControl === '0' || formJournal?.form?.data?.drAcctControl === '3'" type="button" class="btn btn-icon btn-light-primary" role="button"
           (click)="onclickOpenCbx(formJournal?.form?.gridviewSetup['DRAcctID'].referedValue,formJournal?.form?.data?.drAcctID,formJournal?.form?.data?.drAcctControl,'drAcctID')">
             <span class="icon-edit-one icon-18"></span>
           </button>
@@ -199,7 +202,7 @@
           <div class="w-100 me-2">
             <codx-input field="crAcctControl" [formModel]="dialog.formModel" [Group]="formJournal?.form?.formGroup" (valueChange)="valueChange($event)"></codx-input>
           </div>
-          <button [disabled]="formJournal?.form?.data?.crAcctControl === '0' || formJournal?.form?.data?.crAcctControl === '3'" type="button" class="btn btn-icon btn-light-primary" role="button"
+          <button [disabled]="formJournal?.form?.data?.crAcctControl === null || formJournal?.form?.data?.crAcctControl === '0' || formJournal?.form?.data?.crAcctControl === '3'" type="button" class="btn btn-icon btn-light-primary" role="button"
           (click)="onclickOpenCbx(formJournal?.form?.gridviewSetup['CRAcctID'].referedValue,formJournal?.form?.data?.crAcctID,formJournal?.form?.data?.crAcctControl,'crAcctID')">
             <span class="icon-edit-one icon-18"></span>
           </button>
@@ -227,7 +230,7 @@
           <div class="w-100 me-2">
             <codx-input field="diM1Control" [formModel]="dialog.formModel" [Group]="formJournal?.form?.formGroup" (valueChange)="valueChange($event)"></codx-input>
           </div>
-          <button [disabled]="formJournal?.form?.data?.diM1Control === '0' || formJournal?.form?.data?.diM1Control === '3'" type="button" class="btn btn-icon btn-light-primary" role="button"
+          <button [disabled]="formJournal?.form?.data?.diM1Control === null || formJournal?.form?.data?.diM1Control === '0' || formJournal?.form?.data?.diM1Control === '3'" type="button" class="btn btn-icon btn-light-primary" role="button"
           (click)="onclickOpenCbx(formJournal?.form?.gridviewSetup['DIM1'].referedValue,formJournal?.form?.data?.diM1,formJournal?.form?.data?.diM1Control,'diM1')">
             <span class="icon-edit-one icon-18"></span>
           </button>
@@ -255,7 +258,7 @@
           <div class="w-100 me-2">
             <codx-input field="diM2Control" [formModel]="dialog.formModel" [Group]="formJournal?.form?.formGroup" (valueChange)="valueChange($event)"></codx-input>
           </div>
-          <button [disabled]="formJournal?.form?.data?.diM2Control === '0' || formJournal?.form?.data?.diM2Control === '3'" type="button" class="btn btn-icon btn-light-primary" role="button"
+          <button [disabled]="formJournal?.form?.data?.diM2Control === null || formJournal?.form?.data?.diM2Control === '0' || formJournal?.form?.data?.diM2Control === '3'" type="button" class="btn btn-icon btn-light-primary" role="button"
           (click)="onclickOpenCbx(formJournal?.form?.gridviewSetup['DIM2'].referedValue,formJournal?.form?.data?.diM2,formJournal?.form?.data?.diM2Control,'diM2')">
             <span class="icon-edit-one icon-18"></span>
           </button>
@@ -283,7 +286,7 @@
           <div class="w-100 me-2">
             <codx-input field="diM3Control" [formModel]="dialog.formModel" [Group]="formJournal?.form?.formGroup" (valueChange)="valueChange($event)"></codx-input>
           </div>
-          <button [disabled]="formJournal?.form?.data?.diM3Control === '0' || formJournal?.form?.data?.diM3Control === '3'" type="button" class="btn btn-icon btn-light-primary" role="button"
+          <button [disabled]="formJournal?.form?.data?.diM3Control === null || formJournal?.form?.data?.diM3Control === '0' || formJournal?.form?.data?.diM3Control === '3'" type="button" class="btn btn-icon btn-light-primary" role="button"
           (click)="onclickOpenCbx(formJournal?.form?.gridviewSetup['DIM3'].referedValue,formJournal?.form?.data?.diM3,formJournal?.form?.data?.diM3Control,'diM3')">
             <span class="icon-edit-one icon-18"></span>
           </button>
@@ -468,7 +471,7 @@
 
 <!-- Start: TabRole -->
 <ng-template #tabRole>
-  <ng-container *ngIf="formJournal?.form?.formGroup && formJournal?.form?.data?.journalType != null">
+  <ng-container *ngIf="formJournal?.form?.formGroup">
     <div class="row">
       <div class="col-8">
         <div class="form-group">
