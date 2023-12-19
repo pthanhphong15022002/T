@@ -61,7 +61,11 @@ export class WalletsListByOrgComponent {
   method = 'GetWalletsTreeMasterAsync';
   idField = 'employeeID';
   predicates = '@0.Contains(OrgUnitID)';
-
+  formModelGrid: FormModel = {
+    entityName: 'FD_Wallets',
+    gridViewName: 'grvWallets',
+    formName: 'Wallets',
+  };
   columnsGrid: any[];
   itemSelected: any;
   policyID: string;
