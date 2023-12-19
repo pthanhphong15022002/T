@@ -9,11 +9,11 @@
                     <div *ngIf="link; then jump1 else nojump1"></div>
                     <ng-template #jump1>
                         <a class="cursor-pointer" (click)="onJump(i)">
-                            <span class="text-gray-600 text-nowrap t456">{{item.toString()}}</span>
+                            <span class="text-gray-600 text-nowrap text-fix-100px t456">{{item.toString()}}</span>
                         </a>
                     </ng-template>
                     <ng-template #nojump1>
-                        <span class="text-gray-600 text-nowrap t123">{{item.toString()}}</span>
+                        <span class="text-gray-600 text-nowrap text-fix-100px t123">{{item.toString()}}</span>
                     </ng-template>
                 </ng-container>
             </ng-container>
@@ -29,11 +29,11 @@
                     <div *ngIf="link; then jump2 else nojump2"></div>
                     <ng-template #jump2>
                         <a class="cursor-pointer" (click)="onJump(i)">
-                            <span class="text-gray-600 text-nowrap">{{item.toString()}}</span>
+                            <span class="text-gray-600 text-nowrap text-fix-100px">{{item.toString()}}</span>
                         </a>
                     </ng-template>
                     <ng-template #nojump2>
-                        <span class="text-gray-600 text-nowrap">{{item.toString()}}</span>
+                        <span class="text-gray-600 text-nowrap text-fix-100px">{{item.toString()}}</span>
                     </ng-template>
                 </ng-container>
             </ng-container>
@@ -66,11 +66,11 @@
                             <div *ngIf="link; then jump4 else nojump4"></div>
                             <ng-template #jump4>
                                 <a class="cursor-pointer text-dark" (click)="onJump(i)">
-                                    <span class="ms-3">{{item.toString()}}</span>
+                                    <span class="ms-3 text-fix-100px">{{item.toString()}}</span>
                                 </a>
                             </ng-template>
                             <ng-template #nojump4>
-                                <span class="ms-3">{{item.toString()}}</span>
+                                <span class="ms-3 text-fix-100px">{{item.toString()}}</span>
                             </ng-template>
                         </div>
                     </a>
@@ -85,11 +85,11 @@
                     <div *ngIf="link; then jump3 else nojump3"></div>
                     <ng-template #jump3>
                         <a class="cursor-pointer text-dark" (click)="onJump(i)">
-                            <span class="text-gray-600 text-nowrap text-max text2">{{item.toString()}}</span>
+                            <span class="text-gray-600 text-nowrap text-max text-fix-100px text2">{{item.toString()}}</span>
                         </a>
                     </ng-template>
                     <ng-template #nojump3>
-                        <span class="text-gray-600 text-nowrap text-max">{{item.toString()}}</span>
+                        <span class="text-gray-600 text-nowrap text-max text-fix-100px">{{item.toString()}}</span>
                     </ng-template>
                 </ng-container>
             </ng-container>
