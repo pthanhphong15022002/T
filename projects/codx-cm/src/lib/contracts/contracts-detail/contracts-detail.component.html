@@ -170,11 +170,11 @@
           ></ng-container>
           <ng-container
             *ngIf="tabLeftSelect?.id == 'listAddTask'"
-            [ngTemplateOutlet]="comment"
+            [ngTemplateOutlet]="assignTemplate"
           ></ng-container>
           <ng-container
             *ngIf="tabLeftSelect?.id == 'listApprove'"
-            [ngTemplateOutlet]="comment"
+            [ngTemplateOutlet]="approveTemplate"
           ></ng-container>
           <ng-container
             *ngIf="tabLeftSelect?.id == 'listLink'"
@@ -660,28 +660,24 @@
   (fileCount)="getfileCount($event)" -->
 </ng-template>
 <!-- Giao việc -->
-<ng-template #historyTemplate>
+<ng-template #assignTemplate>
   <div class="item-right">
-    <!-- <codx-view-assign
+    <codx-view-assign
     #viewTreeAssign
     [dataTree]="dataTree"
-    [refID]="refID"
-    [refType]="refType"
-    [listRefID]="listRefID"
-    [isLoadedTree]="isLoadedTree"
-    [sessionID]="sessionID"
     [formModel]="dialog?.formModel"
     referType="source"
-  ></codx-view-assign> -->
+  ></codx-view-assign>
   </div>
 </ng-template>
 <!-- Ký duyệt -->
-<ng-template #historyTemplate>
+<ng-template #approveTemplate>
   <div class="item-right">
-    <!-- <codx-view-approval-step
-      [transID]="transID"
-      [approveStatus]="approveStatus"
-    ></codx-view-approval-step> -->
+    <codx-view-approval-step
+      [transID]="contract?.recID"
+      [approveStatus]="contract?.approveStatus"
+    >
+    </codx-view-approval-step>
   </div>
 </ng-template>
 <!-- Liên kết -->

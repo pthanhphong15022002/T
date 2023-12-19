@@ -12,6 +12,7 @@ import {
   SliderTickRenderedEventArgs,
 } from '@syncfusion/ej2-angular-inputs';
 import {
+  AlertConfirmInputConfig,
   ApiHttpService,
   AuthStore,
   CacheService,
@@ -143,6 +144,12 @@ export class PopupAddCustomFieldComponent implements OnInit {
   entityNamePA = '';
   servicePA: string;
   fieldCus: any;
+  title = 'Thông báo ';
+  titleConfirm: string =
+    'Trường tùy chỉnh đã thiết lập tại bước {0} bạn có muốn tái sử dụng !';
+
+  isDuplicateField = false;
+  isEditFieldDuplicate = false;
 
   constructor(
     private cache: CacheService,
@@ -174,10 +181,15 @@ export class PopupAddCustomFieldComponent implements OnInit {
     this.stepList = dt?.data?.stepList;
     this.grvSetup = dt.data?.grvSetup;
     if (this.stepList?.length > 0) {
-      this.stepList.forEach((obj) => {
-        if (obj?.fields?.length > 0) {
-          let arrFn = obj?.fields.map((x) => {
-            let obj = { fieldName: x.fieldName, recID: x.recID };
+      this.stepList.forEach((objStep) => {
+        if (objStep?.fields?.length > 0) {
+          let arrFn = objStep?.fields.map((x) => {
+            let obj = {
+              fieldName: x.fieldName,
+              recID: x.recID,
+              stepID: objStep.recID,
+              stepName: objStep.stepName,
+            };
             return obj;
           });
           this.fileNameArr = this.fileNameArr.concat(arrFn);
@@ -238,6 +250,14 @@ export class PopupAddCustomFieldComponent implements OnInit {
     }
     if (e.field == 'dataFormat' || e.field == 'refValue')
       this.creatFieldCustom();
+  }
+  //chang title va change field name
+  valueChangeText(e) {
+    // if (e && e.field) this.field[e.field] = e?.data;
+
+    // if (e.field == 'title' || e.field == 'fieldName')
+    //   this.removeAccents(e.data);
+    this.duplicateField();
   }
 
   creatFieldCustom() {
@@ -318,7 +338,8 @@ export class PopupAddCustomFieldComponent implements OnInit {
       let check = this.fileNameArr.some(
         (x) =>
           x.fieldName.toLowerCase() == this.field.fieldName.toLowerCase() &&
-          x.recID != this.field.recID
+          x.recID != this.field.recID &&
+          x.stepID == this.field.stepID
       );
       if (check) {
         this.notiService.notifyCode(
@@ -393,8 +414,11 @@ export class PopupAddCustomFieldComponent implements OnInit {
       return;
     }
 
-    this.dialog.close([this.field, this.processNo]);
-    this.field = new DP_Steps_Fields(); //tắt bùa
+    this.dialog.close([this.field, this.processNo, this.isEditFieldDuplicate]);
+
+    this.field = new DP_Steps_Fields();
+    this.isDuplicateField = false;
+    this.isEditFieldDuplicate = false;
   }
 
   removeAccents(str) {
@@ -411,6 +435,70 @@ export class PopupAddCustomFieldComponent implements OnInit {
     }
     this.field.fieldName = format;
   }
+
+  //---------Trùng Field------------//
+  duplicateField() {
+    if (this.fileNameArr?.length > 0) {
+      let checkArrDup = this.fileNameArr.filter(
+        (x) =>
+          x.fieldName.toLowerCase() == this.field.fieldName.toLowerCase() &&
+          x.stepID != this.field.stepID
+      );
+      if (checkArrDup?.length > 0) {
+        this.isDuplicateField = true;
+        //thông báo test chưa có mes code
+        let nameSteps = checkArrDup.map((x) => x.stepName);
+        let config = new AlertConfirmInputConfig();
+        config.type = 'YesNo';
+        let titleConfirmDup = this.titleConfirm.replace(
+          '{0}',
+          '"' + nameSteps.join(';') + '"'
+        );
+        this.notiService
+          .alert(this.title, titleConfirmDup, config)
+          .closed.subscribe((res) => {
+            if (res?.event && res?.event?.status == 'Y') {
+              let fieldDup = checkArrDup[0];
+              let idx = this.stepList.findIndex(
+                (x) => x.recID == fieldDup.stepID
+              );
+              if (idx != -1) {
+                let idxField = this.stepList[idx].fields.findIndex(
+                  (x) => x.recID == fieldDup.recID
+                );
+                if (idxField != -1) {
+                  let crrF = JSON.parse(
+                    JSON.stringify(this.stepList[idx].fields[idxField])
+                  );
+                  let recID = this.field.recID;
+                  let stepID = this.field.stepID;
+                  this.field = crrF;
+                  this.field.recID = recID;
+                  this.field.stepID = stepID;
+                  // this.field.title = crrF.title;
+                  // this.field.fieldName = crrF.fieldName;
+                  // this.field.dataFormat = crrF.dataFormat;
+                  // this.field.dataType = crrF.dataType;
+                  // this.field.multiselect = crrF.multiselect;
+                  // this.field.rank = crrF.rank;
+                  // this.field.rankIcon = crrF.rankIcon;
+                  // this.field.refValue = crrF.refValue;
+                  // this.field.refType = crrF.refType;
+                  // this.field.note = crrF.note;
+                  // this.field.defaultValue = crrF.defaultValue;
+                  // this.field.isRequired = crrF.isRequire;
+                }
+              }
+            }
+          });
+      } else {
+        this.isDuplicateField = false;
+        this.isEditFieldDuplicate = false;
+      }
+    }
+  }
+
+  //---------------End - DuplicateField ------------------//
 
   //----------------Value List -----------------------//
   async clickAddVll() {
@@ -549,7 +637,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
       this.crrDatasVll.defaultValues
     ) {
       this.crrVll = this.crrDatasVll;
-      // this.changeFormVll();
+
       var arr = this.crrDatasVll.defaultValues.split(';');
 
       if (Array.isArray(arr) && arr?.length > 0) {
@@ -560,7 +648,6 @@ export class PopupAddCustomFieldComponent implements OnInit {
           };
           return obj;
         });
-        // this.crrValueFirst = this.datasVllCrr[0].textValue;
       }
     }
   }

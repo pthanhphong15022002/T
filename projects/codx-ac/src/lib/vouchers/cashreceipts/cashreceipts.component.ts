@@ -9,7 +9,6 @@ import { CodxAcService } from '../../codx-ac.service';
 import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
 import { CodxListReportsComponent } from 'projects/codx-share/src/lib/components/codx-list-reports/codx-list-reports.component';
 import { CashreceiptsAddComponent } from './cashreceipts-add/cashreceipts-add.component';
-import { JournalService } from '../../journals/journals.service';
 import { CodxCommonService } from 'projects/codx-common/src/lib/codx-common.service';
 
 @Component({
@@ -58,7 +57,6 @@ export class CashreceiptsComponent extends UIComponent {
     private notification: NotificationsService,
     private codxCommonService: CodxCommonService,
     private tenant: TenantStore,
-    private journalService: JournalService,
   ) {
     super(inject);
     this.authStore = inject.get(AuthStore);
@@ -130,7 +128,7 @@ export class CashreceiptsComponent extends UIComponent {
         },
       },
     ];
-    this.journalService.setChildLinks(this.journalNo);
+    this.acService.setChildLinks();
   }
 
   ngOnDestroy() {

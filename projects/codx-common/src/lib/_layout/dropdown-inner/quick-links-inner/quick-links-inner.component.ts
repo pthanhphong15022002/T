@@ -18,7 +18,6 @@ export class QuickLinksInnerComponent {
   constructor(public codxService: CodxService) {}
   ngOnInit() {
     this.codxService.modulesOb$.subscribe((res) => {
-      debugger
       this.lstModule = this.lstFull = res || [];
       var arrGroupID = [];
       this.lstFull.filter((x) => {

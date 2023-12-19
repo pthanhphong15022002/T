@@ -104,9 +104,11 @@ export class ShareComponent implements OnInit {
   shareType:string = "0";
   shareGroup2: FormGroup;
   pwOTP:string = "";
+  qrBase64:any;
   //   @ViewChild(ContextMenuComponent) public basicMenu: ContextMenuComponent;
   @ViewChild('view') view!: ViewsComponent;
-
+  @ViewChild('qrtmp') qrtmp:any;
+  
   @Output() eventShow = new EventEmitter<boolean>();
   constructor(
     private folderService: FolderService,
@@ -531,6 +533,32 @@ export class ShareComponent implements OnInit {
             this.copyToClipboard(this.getLink(item.recID));
             this.notificationsService.notify(this.titleCopyUrl);
           }
+          else if(type == "qr")
+          {
+            this.callfunc.openForm(
+              this.qrtmp,
+              null,
+              520,
+              520,
+              '',
+              null,
+              null
+            );
+            this.api
+            .execSv<string>(
+              'SYS',
+              'ERM.Business.AD',
+              'UsersBusiness',
+              'GenQRCodeByContentAsync',
+              this.getLink(item.recID)
+            )
+            .subscribe((qrImg) => {
+              if (qrImg) {
+                this.qrBase64 = 'data:image/png;base64,' + qrImg;
+              }
+            });
+            
+          }
         }
       });
     }
@@ -556,5 +584,13 @@ export class ShareComponent implements OnInit {
     );
 
     return window.location.host + url;
+  }
+
+  downloadQR(img:any)
+  {
+    var a = document.createElement("a"); //Create <a>
+    a.href = img; //Image Base64 Goes here
+    a.download = this.data.fileName + "-qr.png"; //File name Here
+    a.click()
   }
 }

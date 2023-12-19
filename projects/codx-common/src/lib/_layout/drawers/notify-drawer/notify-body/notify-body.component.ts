@@ -30,6 +30,8 @@ export class NotifyBodyComponent implements OnInit {
     type:[],
     status:""
   }
+  isAfterRender=false;
+  funcList: any;
   constructor(
     private api:ApiHttpService,
     private dt:ChangeDetectorRef,
@@ -42,6 +44,10 @@ export class NotifyBodyComponent implements OnInit {
   {
     this.model = new DataRequest("Notification","grvNotification","BG_Notification","","",1,20);
     this.user = auth.get();
+    this.cache.functionList('BGT001').subscribe(func=>{
+      this.funcList = func;
+      this.isAfterRender = true;
+    });
   }
 
   ngOnInit(): void {
