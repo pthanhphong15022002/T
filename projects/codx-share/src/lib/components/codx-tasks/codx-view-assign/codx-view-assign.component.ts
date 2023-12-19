@@ -16,11 +16,9 @@ import {
   NotificationsService,
   SidebarModel,
 } from 'codx-core';
-import { CodxShareService } from '../../codx-share.service';
-import { CodxTasksService } from '../codx-tasks/codx-tasks.service';
-import { AssignTaskModel } from '../../models/assign-task.model';
-import { AssignInfoComponent } from '../assign-info/assign-info.component';
-import { PopupAddComponent } from '../codx-tasks/popup-add/popup-add.component';
+import { CodxShareService } from '../../../codx-share.service';
+import { CodxTasksService } from '../codx-tasks.service';
+import { PopupAddComponent } from '../popup-add/popup-add.component';
 
 @Component({
   selector: 'codx-view-assign',

@@ -146,7 +146,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
   fieldCus: any;
   title = 'Thông báo ';
   titleConfirm: string =
-    'Trường tùy chỉnh đã thiết lập tại bước {0} bạn có muốn tái sử dụng !';
+    'Trường tùy chỉnh đã được thiết lập tại bước {0} bạn có muốn tái sử dụng !';
 
   isDuplicateField = false;
   isEditFieldDuplicate = false;
@@ -448,15 +448,17 @@ export class PopupAddCustomFieldComponent implements OnInit {
         this.isDuplicateField = true;
         //thông báo test chưa có mes code
         let nameSteps = checkArrDup.map((x) => x.stepName);
-        let config = new AlertConfirmInputConfig();
-        config.type = 'YesNo';
-        let titleConfirmDup = this.titleConfirm.replace(
-          '{0}',
-          '"' + nameSteps.join(';') + '"'
-        );
+        // let config = new AlertConfirmInputConfig();
+        // config.type = 'YesNo';
+        // let titleConfirmDup = this.titleConfirm.replace(
+        //   '{0}',
+        //   '"' + nameSteps.join(';') + '"'
+        // );
         this.notiService
-          .alert(this.title, titleConfirmDup, config)
-          .closed.subscribe((res) => {
+          // .alert(this.title, titleConfirmDup, config)
+          // .closed.subscribe((res) => {
+          .alertCode('DP042', null, ['"' + nameSteps.join(';') + '"' || ''])
+          .subscribe((res) => {
             if (res?.event && res?.event?.status == 'Y') {
               let fieldDup = checkArrDup[0];
               let idx = this.stepList.findIndex(
@@ -487,6 +489,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
                   // this.field.note = crrF.note;
                   // this.field.defaultValue = crrF.defaultValue;
                   // this.field.isRequired = crrF.isRequire;
+                  this.form.formGroup.patchValue(this.field);
                 }
               }
             }
