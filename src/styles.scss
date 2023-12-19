@@ -4388,3 +4388,8 @@ codx-toolbar-report .btn{
   width: 30px!important;
 }
 
+lib-cm-dashboard{
+  codx-views .container-toolbar + div.container-fluid.p-0{
+    overflow: auto;
+  }
+}
