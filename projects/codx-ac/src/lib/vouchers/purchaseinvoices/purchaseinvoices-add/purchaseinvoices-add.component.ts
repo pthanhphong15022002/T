@@ -218,6 +218,8 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
         } 
         let objectType = event?.component?.itemsSelected[0]?.ObjectType || '';
         this.formPurchaseInvoices.setValue('objectType',objectType,{});
+        let memo2 = this.getMemoMaster();
+        this.formPurchaseInvoices.setValue('memo', memo2, {});
         this.objectIDChange(field);
         break;
 
