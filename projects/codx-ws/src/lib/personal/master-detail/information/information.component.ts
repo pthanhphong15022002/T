@@ -171,11 +171,7 @@ export class InformationComponent implements OnInit{
   {
     let popup = this.callFunc.openForm(LoginSercurityComponent,"",500,400);
     popup.closed.subscribe(res=>{
-      if(res?.cancel)
-      {
-        this.user.extends.TwoFA = this.user.extends.TwoFA;
-      }
-      else if(res?.event)
+      if(res?.event)
       {
         if(id == "1" || id == "4")
         {

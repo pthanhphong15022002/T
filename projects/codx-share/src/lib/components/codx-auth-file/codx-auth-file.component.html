@@ -1,35 +1,38 @@
 <div class="d-flex align-items-center h-100vh codx-auth-content" *ngIf="data">
-    <div class="row w-100 h-100">
-        <div class="d-flex flex-column justify-content-between d-none d-lg-flex col-lg-6 h-100 px-10 py-10">
+    <div class="row m-0 w-100 h-100">
+        <div class="d-flex flex-column justify-content-between d-none d-lg-flex col-lg-6 h-100 px-15 py-10">
             <div class="d-flex flex-column align-items-start">
                 <img class="h-30px mb-5" src="/assets/logos/logo-1.svg"/>
                 <codx-label class="fw-bold fs-5-sm" default="Chào mừng bạn đến với Codx" formName="fmCodxAuth" fiedName="lblCodxAuthWelcome"></codx-label>
                 <codx-label class="fw-bold fs-5-sm" default="Nền tảng quản trị toàn diện cho doanh nghiệp" formName="fmCodxAuth" fiedName="lblCodxAuthWelcomeSub"></codx-label>
             </div>
             <img class="h-250px" src="/assets/codx/bg/login-right.svg"/>
+            
             <div class="d-flex align-items-center">
-                <span>App store</span>
-                <span class="mx-2">CH play</span>
+                <a href="https://apps.apple.com/us/app/codx/id6459408551"><img class="mx-2 h-60px cursor-pointer" src="./assets/themes/sys/default/img/appstore.png" /></a>
+                <a href="https://play.google.com/store/apps/details?id=com.lacviet.codxaws"><img class="mx-2 h-55px cursor-pointer" src="./assets/themes/sys/default/img/chplay.png"/></a>
             </div>
         </div>
-        <div class="d-flex flex-column align-items-center col-md-12 col-lg-6 h-100 bg-white py-20">
-            <codx-label formName="fmCodxAuth" fiedName="lblCodxAuthTitle" default="Xác thực bảo mật" class="fw-bold fs-30px mb-10"></codx-label>
-            <ng-container *ngIf="data?.pwType == '1'">
-                <ng-container *ngTemplateOutlet="otp"></ng-container>
-            </ng-container>
-            <ng-container *ngIf="data?.pwType == '2'">
-                <ng-container *ngTemplateOutlet="pw"></ng-container>
-            </ng-container>
-            <ng-container *ngIf="data.shareType == '1' && data?.pwType == '0'">
-                <ng-container *ngTemplateOutlet="noPW"></ng-container>
-            </ng-container>
-            <ng-container *ngTemplateOutlet="footer"></ng-container>
+        <div class="d-flex justify-content-between align-items-center col-md-12 col-lg-6 h-100 bg-white py-10">
+            <div class="d-flex flex-column align-items-center h-auto w-100 px-5 mx-auto mw-400px">
+                <codx-label formName="fmCodxAuth" fiedName="lblCodxAuthTitle" default="Xác thực bảo mật" class="fw-bold fs-30px mb-10"></codx-label>
+                <ng-container *ngIf="data?.pwType == '1'">
+                    <ng-container *ngTemplateOutlet="otp"></ng-container>
+                </ng-container>
+                <ng-container *ngIf="data?.pwType == '2'">
+                    <ng-container *ngTemplateOutlet="pw"></ng-container>
+                </ng-container>
+                <ng-container *ngIf="data.shareType == '1' && data?.pwType == '0'">
+                    <ng-container *ngTemplateOutlet="noPW"></ng-container>
+                </ng-container>
+                <ng-container *ngTemplateOutlet="footer"></ng-container>
+            </div>
         </div>
     </div>
 </div>
 
 <ng-template #otp>
-    <div class="d-flex flex-column w-350px mt-10">
+    <div class="d-flex flex-column w-100 mt-10">
         <div>
             <codx-label formName="fmCodxAuth" fiedName="lblCodxAuthEmail" default="Email" class="fw-bold"></codx-label>
             <codx-input type="text" [Group]="authGroup" ControlName="email" class="mt-2"></codx-input>
@@ -53,7 +56,7 @@
     </div>
 </ng-template>
 <ng-template #pw>
-    <div class="d-flex flex-column w-350px mt-10">
+    <div class="d-flex flex-column w-100 mt-10">
         <div class="py-2" *ngIf="data?.shareType == '1'">
             <codx-label formName="fmCodxAuth" fiedName="lblCodxAuthEmail" default="Email" class="fw-bold"></codx-label>
             <codx-input type="text" [Group]="authGroup" ControlName="email" class="mt-2"></codx-input>
@@ -67,7 +70,7 @@
     </div>
 </ng-template>
 <ng-template #noPW>
-    <div class="d-flex flex-column w-350px mt-10">
+    <div class="d-flex flex-column w-100 mt-10">
         <div>
             <codx-label formName="fmCodxAuth" fiedName="lblCodxAuthEmail" default="Email" class="fw-bold"></codx-label>
             <codx-input type="text" [Group]="authGroup" ControlName="email" class="mt-2"></codx-input>

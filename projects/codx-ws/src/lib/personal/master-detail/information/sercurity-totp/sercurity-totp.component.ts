@@ -15,6 +15,7 @@ export class SercurityTOTPComponent implements OnInit , AfterViewInit {
   authSteps = authSteps;
   secret:any;
   twoFA:any;
+  show:any = false;
   constructor(
     private api: ApiHttpService,
     @Optional() dialog?: DialogRef,
@@ -119,4 +120,8 @@ export class SercurityTOTPComponent implements OnInit , AfterViewInit {
       });
   }
 
+  showLogin()
+  {
+    this.show = !this.show;
+  }
 }

@@ -66,6 +66,7 @@ export class TenantsComponent implements OnInit {
         '', //userID
         '', //pw
         JSON.stringify(this.loginService.loginDevice),
+        this.trust
       ])
       .subscribe((res: any) => {
         if (res) {
