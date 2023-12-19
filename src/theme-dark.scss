@@ -1113,3 +1113,9 @@ codx-views .e-grid {
 .e-sidebar-overlay {
     background-color: rgb(0 0 0 / 75%);
 }
+.popup-process-detail{
+    .step{
+      background: var(--gray-150);
+      border: 1px solid var(--border-gray);
+    }
+}
