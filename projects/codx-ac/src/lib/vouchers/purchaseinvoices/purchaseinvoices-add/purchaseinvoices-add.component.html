@@ -36,12 +36,15 @@
       </div>
     </div>
     <ng-container>
-      <div style="margin-left: 25px" *ngIf="formPurchaseInvoices && !formPurchaseInvoices.data?.validated"
-        class="input-circle h-20px input-border-0 w-400px mb-1">
-        <codx-dropdown-select #eleCbxSubType [showFooter]="false" [isToolbar]="false"
-          [cssClass]="'rounded-pill border-1'" cssPopup="h-250px w-550px" [isMulti]="false" type="valuelist"
-          field="subType" [refValue]="formPurchaseInvoices?.gridviewSetup['SubType']?.referedValue"  [value]="formPurchaseInvoices?.data?.subType" emptyText="Loại phiếu"
-          (valueChange)="changeSubType($event)"></codx-dropdown-select>
+      <div style="margin-left: 35px" class="d-flex align-items-center">
+        <i class="icon-keyboard_arrow_down icon-16"></i>
+        <div *ngIf="formPurchaseInvoices && !formPurchaseInvoices?.data?.validated"
+          class="input-circle h-20px input-border-0 w-400px mb-1">
+          <codx-dropdown-select #eleCbxSubType [showFooter]="false" [isToolbar]="false" [cssClass]="'rounded-pill border-1'"
+            cssPopup="h-350px w-550px" [isMulti]="false" type="valuelist" field="subType"
+            [refValue]="formPurchaseInvoices?.gridviewSetup['SubType']?.referedValue" [value]="formPurchaseInvoices?.data?.subType"
+            emptyText="Loại phiếu" (valueChange)="changeSubType($event)"></codx-dropdown-select>
+        </div>
       </div>
       <span style="margin-left: 30px" *ngIf="formPurchaseInvoices && formPurchaseInvoices.data?.validated">
         <codx-vll [name]="'AC063'" [formModel]="dialog.formModel" [field]="'SubType'"

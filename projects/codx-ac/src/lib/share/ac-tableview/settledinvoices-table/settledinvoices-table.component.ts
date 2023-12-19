@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Injector, Input, SimpleChange } from '@angular/core';
-import { UIComponent } from 'codx-core';
-import { Subject, takeUntil } from 'rxjs';
+import { DataRequest, UIComponent } from 'codx-core';
+import { Subject, map, takeUntil } from 'rxjs';
 import { fmSettledInvoices } from '../../../codx-ac.service';
 
 @Component({
@@ -52,14 +52,16 @@ export class SettledinvoicesTableComponent extends UIComponent {
    * @param data
    */
   getDataDetail(dataItem) {
+    let options = new DataRequest();
+    options.entityName = 'AC_SettledInvoices';
+    options.pageLoading = false;
+    options.predicates = 'TransID=@0';
+    options.dataValues = dataItem.recID;
     this.api
-      .exec('AC', 'SettledInvoicesBusiness', 'LoadDataAsync', [
-        dataItem.recID,
-      ])
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((res: any) => {
+      .execSv('AC', 'Core', 'DataBusiness', 'LoadDataAsync', options)
+      .pipe(takeUntil(this.destroy$)).subscribe((res: any) => {
         if (res) {
-          this.listSettledInvoices = res;
+          this.listSettledInvoices = res[0];
           this.setTotalRecord();
           this.detectorRef.detectChanges();
         }
