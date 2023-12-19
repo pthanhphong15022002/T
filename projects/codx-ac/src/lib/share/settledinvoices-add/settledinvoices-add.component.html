@@ -185,7 +185,7 @@
   <div class="tabset-content position-relative">
     <codx-gridview-v2 #grid [checkboxSelect]="true" idField="recID" [showEmptyRecord]="false" [editOnClick]="true"
       [selectionOptions]="selectionOptions" [formName]="fmSettledInvoices.formName"
-      [gridViewName]="fmSettledInvoices.gridViewName" (onCheckBoxChange)="onCheckAll($event)"
+      [gridViewName]="fmSettledInvoices.gridViewName" (onCheckBoxChange)="onCheckAll($event)" (gridInit)="beforeInitGrid($event)"
       [entityName]="fmSettledInvoices.entityName" [dataSource]="subInvoices" (onDeselected)="onDeselected($event)"
       service="AC" (onSelected)="onSelected($event)" hideMoreFunc="true" [autoFitColumns]="false"
       (cellChanged)="valueChangeLine($event)" (eventAction)="onAction($event)"
