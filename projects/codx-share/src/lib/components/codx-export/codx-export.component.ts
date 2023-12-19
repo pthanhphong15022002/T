@@ -265,25 +265,33 @@ export class CodxExportComponent implements OnInit, OnChanges {
           .alert('Thông báo', 'Bạn có chắc chắn muốn xóa ?', config)
           .closed.subscribe((x) => {
             if (x.event.status == 'Y') {
-              var className = this.type == 'excel' ? 'ExcelTemplatesBusiness' : 'WordTemplatesBusiness';
-              this.api.execSv(this.service,"AD",className,"DeleteIDAsync",data.recID).subscribe(item=>{
-                if(item)
-                {
-                  this.notifySvr.notifyCode('RS002');
-                  if (this.type == 'excel')
-                    this.dataEx = this.dataEx.filter(
-                      (x) => x.recID != data.recID
-                    );
-                  else if (this.type == 'word')
-                    this.dataWord = this.dataWord.filter(
-                      (x) => x.recID != data.recID
-                    );
-                }
-                else
-                {
-                  this.notifySvr.notifyCode('SYS022');
-                }
-              });
+              var className =
+                this.type == 'excel'
+                  ? 'ExcelTemplatesBusiness'
+                  : 'WordTemplatesBusiness';
+              this.api
+                .execSv(
+                  this.service,
+                  'AD',
+                  className,
+                  'DeleteIDAsync',
+                  data.recID
+                )
+                .subscribe((item) => {
+                  if (item) {
+                    this.notifySvr.notifyCode('RS002');
+                    if (this.type == 'excel')
+                      this.dataEx = this.dataEx.filter(
+                        (x) => x.recID != data.recID
+                      );
+                    else if (this.type == 'word')
+                      this.dataWord = this.dataWord.filter(
+                        (x) => x.recID != data.recID
+                      );
+                  } else {
+                    this.notifySvr.notifyCode('SYS022');
+                  }
+                });
             }
           });
         break;
@@ -360,7 +368,14 @@ export class CodxExportComponent implements OnInit, OnChanges {
               'Core',
               'ExportWordBusiness',
               'ExportWordTemplateAsync',
-              [this.gridModel, idTemp]
+              [
+                this.gridModel,
+                idTemp,
+                null,
+                this.formModel?.entityName,
+                this.formModel?.formName,
+                this.formModel?.gridViewName,
+              ]
             )
             .subscribe((item) => {
               if (item) {
@@ -374,7 +389,14 @@ export class CodxExportComponent implements OnInit, OnChanges {
               'Core',
               'ExportWordBusiness',
               'ExportWordTemplateAsync',
-              [null, idTemp, this.dataSource]
+              [
+                null,
+                idTemp,
+                this.dataSource,
+                this.formModel?.entityName,
+                this.formModel?.formName,
+                this.formModel?.gridViewName,
+              ]
             )
             .subscribe((item) => {
               if (item) {
@@ -463,7 +485,7 @@ export class CodxExportComponent implements OnInit, OnChanges {
   navChanged(e: any) {
     this.show = false;
     var id;
-   
+
     switch (e?.nextId) {
       case '1':
         this.type = 'excel';
@@ -498,8 +520,8 @@ export class CodxExportComponent implements OnInit, OnChanges {
         break;
     }
 
-    var dataExport = "all";
-    if(e?.nextId == "3" || e?.nextId == "6") dataExport = "selected";
+    var dataExport = 'all';
+    if (e?.nextId == '3' || e?.nextId == '6') dataExport = 'selected';
     this.exportGroup.controls['dataExport'].setValue(dataExport);
     this.exportGroup.controls['format'].setValue(id);
   }
