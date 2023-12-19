@@ -72,7 +72,7 @@ export class PopupAddApproverComponent implements OnInit {
     }
   }
   cardTypeChange(evt:any,data){
-    if(data != null && evt?.field){
+    if(data != null && evt?.field){      
       this.data.idCardType = data;
     }
   }

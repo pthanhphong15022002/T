@@ -157,7 +157,7 @@
                 ? 'visible'
                 : 'hidden'
             ">
-            <codx-label Name="lblAprrove" class="text-white" [formModel]="dialog.formModel"
+            <codx-label Name="lblAprrove" class="text-white" [formModel]="dialog.formModel" [formName]="formModelCustom?.formName" [gridViewName]="formModelCustom?.gridViewName"
               default="Gửi duyệt"></codx-label>
           </button>
         </ng-container>
@@ -350,12 +350,12 @@
               <codx-label fiedName="lblDownloadFile" default="Tải tài liệu mẫu" [formModel]="formModelCustom"  ></codx-label>
             </button> -->
             <button type="button" class="btn btn-primary me-3" *ngIf="currentTab != 0" (click)="previous(currentTab)">
-              <codx-label name="lblBack" [formModel]="formModelCustom" default="Quay lại">
+              <codx-label name="lblBack" [formModel]="formModelCustom"  [formName]="formModelCustom?.formName" [gridViewName]="formModelCustom?.gridViewName" default="Quay lại">
               </codx-label>
             </button>
             <button type="button" class="btn btn-light-primary me-3" *ngIf="currentTab != 0 && !isTemplate && eSign"
               [disabled]="modeView == '2' ? true : false" (click)="openPopup(processTemplate)">
-              <codx-label name="lblBtnTemplate" [formModel]="formModelCustom" default="Dùng quy trình mẫu">
+              <codx-label name="lblBtnTemplate" [formModel]="formModelCustom"  [formName]="formModelCustom?.formName" [gridViewName]="formModelCustom?.gridViewName" default="Dùng quy trình mẫu">
               </codx-label>
             </button>
             <span *ngIf="sampleProcessName && data?.approveControl=='2'"
@@ -372,7 +372,7 @@
                 ? 'disabled'
                 : ''
             ">
-            <codx-label name="lblContinue" [formModel]="formModelCustom" default="Tiếp tục"></codx-label>
+            <codx-label name="lblContinue" [formModel]="formModelCustom"  [formName]="formModelCustom?.formName" [gridViewName]="formModelCustom?.gridViewName" default="Tiếp tục"></codx-label>
           </button>
 
           <div class="d-flex"
