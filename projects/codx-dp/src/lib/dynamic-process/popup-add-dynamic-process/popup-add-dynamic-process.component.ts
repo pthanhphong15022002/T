@@ -2704,30 +2704,22 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
     this.changeDetectorRef.markForCheck();
   }
 
-  async selectDrop(event, stepID) {
-    //let stepIDContain = event.container.id;
-    let stepIDPrevious = event.previousContainer.id;
-    // if (stepIDContain[0] == 'v' && stepIDContain[1] == '-') {
-    //   stepIDContain = stepIDContain.substring(2);
-    // }
-    if (stepIDPrevious[0] == 'v' && stepIDPrevious[1] == '-') {
-      stepIDPrevious = stepIDPrevious.substring(2);
-    }
-    let idx = this.stepList.findIndex((x) => x.recID == stepIDPrevious);
-    if (idx == -1) return;
+  selectDrop(event, stepID) {
     let checkExit = -1;
-    let fieldName = event.previousContainer;
-    debugger;
-    if (this.stepList[idx].fields?.length > 0)
-      checkExit = this.stepList[idx].fields?.findIndex(
+    let fieldName =
+      event.previousContainer?.data[event.previousIndex]?.fieldName;
+
+    if (event.container?.data?.length > 0 && fieldName)
+      checkExit = event.container?.data?.findIndex(
         (x) => x.fieldName == fieldName
       );
-
+    if (checkExit != -1)
+      return this.notiService.notify('Trường tùy chỉnh đã tồn tại !');
     //Chon nhân đôi hay drop
     this.eventDrop = event;
     this.stepIDDrop = stepID;
     this.alertMessger =
-      "Bạn muốn sử dụng lại hay muốn di chuyển trường nhập liệu ?'"; //tesst
+      'Bạn muốn sử dụng lại hay muốn di chuyển trường nhập liệu ?'; //tesst
 
     this.dialogAccess = this.callfc.openForm(this.tempAccess, '', 500, 280);
   }
@@ -2740,6 +2732,32 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
   reuseField() {
     this.dialogAccess.close();
     //taoj field moi
+    let stepIDContain = this.eventDrop.container.id;
+    if (stepIDContain[0] == 'v' && stepIDContain[1] == '-') {
+      stepIDContain = stepIDContain.substring(2);
+    }
+    let fieldNew = JSON.parse(
+      JSON.stringify(
+        this.eventDrop.previousContainer?.data[this.eventDrop.previousIndex]
+      )
+    );
+    if (!fieldNew) return;
+    fieldNew.recID = Util.uid();
+    fieldNew.stepID = stepIDContain;
+
+    this.stepList.forEach((x) => {
+      if (x.recID == stepIDContain) {
+        x.fields.push(fieldNew);
+        // if (this.action == 'edit') {
+        //   let check = this.listStepEdit.some(
+        //     (id) => id == x?.recID
+        //   );
+        //   if (!check) {
+        //     this.listStepEdit.push(x?.recID);
+        //   }
+        // }
+      }
+    });
   }
 
   //drop  step to other step
@@ -4814,7 +4832,6 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
   }
 
   // color step
-
   setColorTestStep(step) {
     if (this.process?.stepsColorMode) {
       if (step?.isFailStep) {
