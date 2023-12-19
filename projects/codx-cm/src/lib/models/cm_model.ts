@@ -54,6 +54,8 @@ export class CM_Quotations {
   category: string;
   orderPoolID: string;
   customerID: string;
+  customerName: string;
+  shortName: string;
   salespersonID: string;
   contactID: string;
   consultantID: string;
@@ -63,6 +65,7 @@ export class CM_Quotations {
   pmtMethodID: string;
   currencyID: string;
   status: string = '1';
+  approveStatus: string;
   exchangeRate: number;
   deadline: Date;
   memo: string;
@@ -205,7 +208,7 @@ export class CM_Deals {
   companyID: string;
   customerName: string;
   customerCategory: string;
-  applyProcess : boolean;
+  applyProcess: boolean;
 }
 
 export class CM_Permissions {

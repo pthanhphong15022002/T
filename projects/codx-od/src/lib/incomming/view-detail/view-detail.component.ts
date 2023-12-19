@@ -1290,7 +1290,7 @@ export class ViewDetailComponent
       }
       //Giao việc
       case 'ODT1013':
-      case 'ODT52013':
+      //case 'ODT52013':
       case 'ODT3013':
       case 'ODT52013': {
         var task = new TM_Tasks();
@@ -1798,7 +1798,7 @@ export class ViewDetailComponent
           else {
             data.status = '3';
             data.approveStatus = '3';
-            this.notifySvr.notifyCode('ES007');
+            //this.notifySvr.notifyCode('ES007');
   
             this.odService
               .updateDispatch(

@@ -36,7 +36,8 @@ export class CodxTabsComponent implements OnInit, OnChanges {
   @Input() dataTree: any[] = [];
   @Input() refID = ''; //
   @Input() refType = ''; // nghiep vụ giao việc
-  @Input() sessionID = ''; //
+  @Input() sessionID = ''; // session cua tree
+  @Input() listRefID = []; //danh sách task ref để vẽ tree
   @Input() isLoadedTree = true; //bang true neu da co dataTree truyền qua, bằng false để component se load tree
   @Input() vllStatus: any;
   @ViewChild('viewTreeAssign') viewTreeAssign: CodxViewAssignComponent;
@@ -277,10 +278,12 @@ export class CodxTabsComponent implements OnInit, OnChanges {
     this.changeDetectorRef.detectChanges();
   }
 
-  //giao việc nếu dataTree thay đổi mà nv hiện tại ko get lai data để truyền qua thì gọi hàm này đê componet tự get
+  //giao việc nếu dataTree thay đổi mà nghiệp vụ hiện tại ko get lại data để truyền qua thì gọi hàm này đê component tự get
   changeTreeAssign() {
-    if (this.viewTreeAssign) this.viewTreeAssign.loadTree();
-    else this.isLoadedTree = false;
+    if (this.viewTreeAssign) {
+      this.viewTreeAssign.listRefID = this.listRefID;
+      this.viewTreeAssign.loadTree();
+    } else this.isLoadedTree = false;
   }
 
   changeDataRef() {

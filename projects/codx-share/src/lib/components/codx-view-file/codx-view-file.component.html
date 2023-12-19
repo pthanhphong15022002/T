@@ -1,0 +1,4 @@
+<div class="w-100 h-100vh">
+    <codx-auth-file *ngIf="!data" (resultEvent)="resultEvent($event)"></codx-auth-file>
+    <codx-viewfiledialog *ngIf="data" [recID]="data?.url"></codx-viewfiledialog>
+</div>

@@ -36,6 +36,7 @@ export class ViewDetailWrComponent implements OnInit {
   @Input() listRoles = [];
   @Input() isDbClick: boolean = false;
   @Input() asideMode: string;
+  @Input() dataFavorite: any;
   @ViewChild('viewUpdate') viewUpdate: ViewTabUpdateComponent;
   @ViewChild('problem', { read: ElementRef }) memo: ElementRef<HTMLElement>;
 
@@ -81,6 +82,7 @@ export class ViewDetailWrComponent implements OnInit {
   serviceTime: any;
   loaded: boolean;
   isSwitch: boolean = false;
+  paraValues: any;
   constructor(
     private authstore: AuthStore,
     private changeDetectorRef: ChangeDetectorRef,
@@ -111,6 +113,7 @@ export class ViewDetailWrComponent implements OnInit {
           this.dataSelected?.extendInfo?.trim() != ''
         ) {
           this.contact2JSON = JSON.parse(this.dataSelected?.extendInfo);
+          console.log('ExtendInfo: ', this.contact2JSON)
         }
 
         this.setTimeEdit();
@@ -122,8 +125,10 @@ export class ViewDetailWrComponent implements OnInit {
   }
 
   ngAfterViewChecked(): void {
+    this.paraValues = this.dataFavorite?.paraValues;
     const element: HTMLElement = this.memo?.nativeElement;
     this.overflowed = element?.scrollHeight > element?.clientHeight;
+    this.changeDetectorRef.detectChanges()
   }
 
   //#region set serviceTime

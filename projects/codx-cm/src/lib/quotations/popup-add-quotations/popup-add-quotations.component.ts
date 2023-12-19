@@ -367,6 +367,9 @@ export class PopupAddQuotationsComponent implements OnInit {
             objectID: this.quotations.customerID,
           };
         }
+        this.quotations.customerName =
+          e?.component?.itemsSelected[0]?.CustomerName;
+        this.quotations.shortName = e?.component?.itemsSelected[0]?.ShortName;
 
         break;
       case 'contactID':

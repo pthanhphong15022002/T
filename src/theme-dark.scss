@@ -689,7 +689,7 @@ ejs-listview {
 }
 
 .btn.btn-light-primary {
-    color: var(--text-des);
+    color: var(--text-title)!important;
     background-color: var(--primary-light) !important;
 }
 .btn.btn-light-primary:hover {
@@ -785,7 +785,7 @@ codx-attachment .card {
 }
 
 .e-listview .e-list-item .note-option {
-    color: var(--black);
+    color: var(--text-dark);
 }
 
 .checkbox-list input {
@@ -1093,6 +1093,23 @@ ejs-dashboardlayout .card {
     background-color: var(--white);
     border-radius: 4px!important;
 }
-ejs-dashboardlayout .layout-panel .border{
+ejs-dashboardlayout layout-panel .border{
     border-color: transparent!important;
+}
+
+codx-views .e-grid {
+    border-color: var(--border-list);
+    .e-table {
+        background-color: var(--bg-card);
+    }
+}
+#gridViewV2.e-grid td.e-active{
+    color: var(--text-body);
+    background-color: #0000001c;
+}
+.e-grid .e-rowcell, .e-grid .e-groupcaption, .e-grid .e-indentcell, .e-grid .e-recordplusexpand, .e-grid .e-recordpluscollapse, .e-grid .e-rowdragdropcell, .e-grid .e-detailrowcollapse, .e-grid .e-detailrowexpand, .e-grid .e-detailindentcell, .e-grid .e-detailcell {
+    border-color: var(--border-list);
+}
+.e-sidebar-overlay {
+    background-color: rgb(0 0 0 / 75%);
 }

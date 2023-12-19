@@ -82,6 +82,7 @@
     [customerName]="customerName"
     [ownerInstance]="owner"
     [activitiAdd]="isAddTask ? taskAdd : null"
+    [applyFor]="applyFor"
   ></task>
 </div>
 
@@ -163,6 +164,7 @@
         [isViewStep]="isViewStep"
         [entityName]="entityName"
         [recIDParent]="dataCM?.recID"
+        [applyFor]="applyFor"
       ></codx-step-task>
       <div
         *ngIf="

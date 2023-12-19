@@ -9,7 +9,7 @@ import {
 import { CodxCmService } from '../../codx-cm.service';
 import { ContractsService } from '../service-contracts.service';
 import { CM_Contracts, CM_Customers } from '../../models/cm_model';
-import { CacheService, DialogData, DialogRef, NotificationsService} from 'codx-core';
+import { ApiHttpService, CacheService, DialogData, DialogRef, NotificationsService} from 'codx-core';
 
 @Component({
   selector: 'contracts-detail',
@@ -34,6 +34,7 @@ export class ContractsDetailComponent implements OnInit, OnChanges {
   grvSetup;
   vllStatus;
   oCountFooter: any = {};
+  dataTree = [];
 
   formModelCustomer = {
     formName: 'CMCustomers',
@@ -55,9 +56,9 @@ export class ContractsDetailComponent implements OnInit, OnChanges {
     { id: 'listLink', name: 'Liên kết', icon: 'icon-i-link' },
   ];
   listTabInformation = [
-    { id: 'customer', name: 'Khách hàng' },
-    { id: 'information', name: 'Thông tin hợp đồng' },
-    { id: 'purpose', name: 'Mục đích thuê' },
+    { id: 'information', name: 'Thông tin chung' },
+    { id: 'fields', name: 'Thông tin mở rộng' },
+    { id: 'tasks', name: 'Công việc' },
     { id: 'note', name: 'Ghi chú' },
   ];
   listHistory = [{ id: 'history', name:'Lịch sử'}];
@@ -71,6 +72,7 @@ export class ContractsDetailComponent implements OnInit, OnChanges {
     private contractService: ContractsService,
     private notiService: NotificationsService,
     private changeDetectorRef: ChangeDetectorRef,
+    private api: ApiHttpService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -109,6 +111,7 @@ export class ContractsDetailComponent implements OnInit, OnChanges {
     if (this.contract) {
       this.getCutomer();
       this.getContact();
+      this.getListInstanceStep(this.contract);
       return;
     }
     if (!this.contractRecId) {
@@ -133,12 +136,8 @@ export class ContractsDetailComponent implements OnInit, OnChanges {
     this.tabLeftSelect = this.listTabLeft.find((x) => x.id == e);
     this.listTabRight = this[e];
     this.tabRightSelect = this.listTabRight[0]?.id;
-    if (
-      this.tabLeftSelect?.id == 'listTabTask' &&
-      this.contract?.applyProcess &&
-      this.listInsStep
-    ) {
-      this.getListInstanceStep(this.contract);
+    if(e == 'listAddTask'){
+      this.loadTree(this.contract?.recID);
     }
   }
 
@@ -190,6 +189,7 @@ export class ContractsDetailComponent implements OnInit, OnChanges {
       .subscribe((res) => {
         if (res) {
           this.contact = res;
+          this.getListInstanceStep(this.contact);
         }
       });
   }
@@ -200,5 +200,39 @@ export class ContractsDetailComponent implements OnInit, OnChanges {
     oCountFooter[key] = value;
     this.oCountFooter = JSON.parse(JSON.stringify(oCountFooter));
     this.changeDetectorRef.markForCheck();
+  }
+
+  showColumnControl(stepID) {
+    // if (this.listStepsProcess?.length > 0) {
+    //   var idx = this.listStepsProcess.findIndex((x) => x.recID == stepID);
+    //   if (idx == -1) return 1;
+    //   return this.listStepsProcess[idx]?.showColumnControl;
+    // }
+    return 1;
+  }
+  saveDataStep(e) {
+
+  }
+  fileSave(e) {
+    if (e && typeof e === 'object') {
+      var createdBy = Array.isArray(e) ? e[0].data.createdBy : e.createdBy;
+      this.api
+        .execSv<any>('TM', 'TM', 'TaskBusiness', 'AddPermissionFileAsync', [
+          this.contract?.recID,
+          createdBy,
+        ])
+        .subscribe();
+    }
+  }
+  loadTree(recID) {
+    if (!recID) {
+      this.dataTree = [];
+      return;
+    }
+    this.api
+      .exec<any>('TM', 'TaskBusiness', 'GetListTaskTreeBySessionIDAsync', recID)
+      .subscribe((res) => {
+        this.dataTree = res ? res : [];
+      });
   }
 }
