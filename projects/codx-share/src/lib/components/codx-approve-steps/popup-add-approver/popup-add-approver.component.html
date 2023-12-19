@@ -55,27 +55,27 @@
       <codx-label class="me-4" name="lblIDCardType" default="Giấy tờ cá nhân" [formModel]="formModel"> </codx-label>
       <codx-input
       name="idCardRadio" class="me-4"
-        field="idCardType"
+        field="idCardType1"
         type="radio"
-        [checked]="data?.idCardType =='1'"
+        [checked]="true"
         [label]="'CCCD'"
         (valueChange)="cardTypeChange($event,'1')"
       >
       </codx-input>
       <codx-input  class="me-4"
       name="idCardRadio"
-        field="idCardType"
+        field="idCardType2"
         type="radio"
-        [checked]="data?.idCardType =='2'"
+        [checked]="false"
         [label]="'CMND'"
         (valueChange)="cardTypeChange($event,'2')"
       >
       </codx-input>
       <codx-input class="me-4"
         name="idCardRadio"
-        field="idCardType"
+        field="idCardType3"
         type="radio"
-        [checked]="data?.idCardType =='3'"
+        [checked]="false"
         [label]="'Hộ chiếu'"
         (valueChange)="cardTypeChange($event,'3')"
       >

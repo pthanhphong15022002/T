@@ -17,7 +17,16 @@ import { lvFileClientAPI } from '@shared/services/lv.component';
 import { SignalRService } from './_layout/drawers/chat/services/signalr.service';
 import { CodxDMService } from 'projects/codx-dm/src/lib/codx-dm.service';
 import { FileService } from '@shared/services/file.service';
-import { ApproveProcess, Approver, ES_File, ES_SignFile, ExportData, ExportUpload, ResponseModel, TemplateInfo } from './models/ApproveProcess.model';
+import {
+  ApproveProcess,
+  Approver,
+  ES_File,
+  ES_SignFile,
+  ExportData,
+  ExportUpload,
+  ResponseModel,
+  TemplateInfo,
+} from './models/ApproveProcess.model';
 import { PopupAddSignFileComponent } from 'projects/codx-es/src/lib/sign-file/popup-add-sign-file/popup-add-sign-file.component';
 import { CoDxGetTemplateSignFileComponent } from './component/codx-approval-procress/codx-get-template-sign-file/codx-get-template-sign-file.component';
 import { CoDxViewReleaseSignFileComponent } from './component/codx-approval-procress/codx-view-release-sign-file/codx-view-release-sign-file.component';
@@ -27,10 +36,9 @@ import { CoDxAddApproversComponent } from './component/codx-approval-procress/co
   providedIn: 'root',
 })
 export class CodxCommonService {
- 
   public setThemes = new BehaviorSubject<any>(null);
   isSetThemes = this.setThemes.asObservable();
- 
+
   public setChangeThemes = new BehaviorSubject<any>(null);
   isSetChangeThemes = this.setChangeThemes.asObservable();
 
@@ -51,10 +59,8 @@ export class CodxCommonService {
     private dmSV: CodxDMService,
     private fileService: FileService,
     private callfunc: CallFuncService,
-    private notiService: NotificationsService,
-
+    private notiService: NotificationsService
   ) {
-    
     this.user = this.auth.get();
   }
 
@@ -123,7 +129,7 @@ export class CodxCommonService {
       });
     });
   }
-  
+
   deleteByObjectsWithAutoCreate(
     objectIDs: string,
     module: string,
@@ -174,7 +180,7 @@ export class CodxCommonService {
       recID
     );
   }
-getTemplateSF(cateID, category) {
+  getTemplateSF(cateID, category) {
     return this.api.execSv(
       'ES',
       'ERM.Business.ES',
@@ -192,7 +198,7 @@ getTemplateSF(cateID, category) {
       [recIDs]
     );
   }
-  
+
   exportTemplateData(module: string, exportUpload: ExportUpload) {
     return this.api.execSv(
       module,
@@ -307,20 +313,19 @@ getTemplateSF(cateID, category) {
     } else {
       //Kiểm tra tham số editApprovers
       if (category?.editApprovers == true && category?.eSign == false) {
-        this.getFileByObjectID(approveProcess.recID).subscribe(
-          (lstFile: any) => {
-            let signFile = this.apCreateSignFile(
-              approveProcess,
-              lstFile
-            );
+        this.deleteExportReleaseSF(approveProcess.recID).subscribe((res) => {
+          this.getFileByObjectID(approveProcess.recID).subscribe(
+            (lstFile: any) => {
+              let signFile = this.apCreateSignFile(approveProcess, lstFile);
               this.apOpenPopupSignFile(
                 approveProcess,
                 releaseCallback,
                 signFile,
-                lstFile              
-              )
-          }
-        );
+                lstFile
+              );
+            }
+          );
+        });
 
         // let dialogApprove = this.callfunc.openForm(
         //   CodxAddApproversComponent,
@@ -353,35 +358,35 @@ getTemplateSF(cateID, category) {
     releaseCallback: (response: ResponseModel, component: any) => void
   ) {
     if (approveProcess?.category?.eSign) {
-      switch (approveProcess?.category?.releaseControl) {
-        //Gửi duyệt kèm SignFile
-        case null:
-        case '1':
-          this.getFileByObjectID(approveProcess.recID).subscribe(
-            (listFiles: any) => {
-              if (listFiles) {
-                //Gửi kí số kèm file cũ
-                this.apReleaseWithOldFile(
-                  approveProcess,
-                  releaseCallback,
-                  listFiles
-                );
-              } else {
-                //Thêm trình kí ko có file
-                this.apReleaseWithEmptySignFile(
-                  approveProcess,
-                  releaseCallback
-                );
+      this.deleteExportReleaseSF(approveProcess.recID).subscribe((deleteSF) => {
+        switch (approveProcess?.category?.releaseControl) {
+          //Gửi duyệt kèm SignFile
+          case null:
+          case '1':
+            this.getFileByObjectID(approveProcess.recID).subscribe(
+              (listFiles: any) => {
+                if (listFiles) {
+                  //Gửi kí số kèm file cũ
+                  this.apReleaseWithOldFile(
+                    approveProcess,
+                    releaseCallback,
+                    listFiles
+                  );
+                } else {
+                  //Thêm trình kí ko có file
+                  this.apReleaseWithEmptySignFile(
+                    approveProcess,
+                    releaseCallback
+                  );
+                }
               }
-            }
-          );
-          break;
+            );
+            break;
 
-        case '2': //Export và tạo ES_SignFiles để gửi duyệt
-        case '3': //Export và view trc khi gửi duyệt (ko tạo ES_SignFiles)
-        case '4': //Export và gửi duyệt ngầm (ko tạo ES_SignFiles)
-          //Xóa file export cũ và trình kí số cũ nếu có
-          this.deleteExportReleaseSF(approveProcess.recID).subscribe((res) => {
+          case '2': //Export và tạo ES_SignFiles để gửi duyệt
+          case '3': //Export và view trc khi gửi duyệt (ko tạo ES_SignFiles)
+          case '4': //Export và gửi duyệt ngầm (ko tạo ES_SignFiles)
+            //Xóa file export cũ và trình kí số cũ nếu có
             this.getTemplateSF(
               approveProcess?.category?.categoryID,
               approveProcess?.category?.category
@@ -402,9 +407,9 @@ getTemplateSF(cateID, category) {
                 return;
               }
             });
-          });
-          break;
-      }
+            break;
+        }
+      });
     } else {
       //Gửi duyệt thường
       this.apBaseRelease(approveProcess, releaseCallback);
@@ -587,10 +592,7 @@ getTemplateSF(cateID, category) {
             (x) => x?.templateID == null || x?.templateType == null
           );
           if (missingTemplate?.length > 0) {
-            this.notiService.notify(
-              'Không tìm thấy mẫu xuất dữ liệu',
-              '2'
-            );
+            this.notiService.notify('Không tìm thấy mẫu xuất dữ liệu', '2');
             return null;
           } else {
             this.apExportFileWithMultiTemplate(
@@ -611,10 +613,7 @@ getTemplateSF(cateID, category) {
         (x) => x?.templateID == null || x?.templateType == null
       );
       if (missingTemplate?.length > 0) {
-        this.notiService.notify(
-          'Không tìm thấy mẫu xuất dữ liệu',
-          '2'
-        );
+        this.notiService.notify('Không tìm thấy mẫu xuất dữ liệu', '2');
         return null;
       } else {
         this.apExportFileWithMultiTemplate(
@@ -908,7 +907,6 @@ getTemplateSF(cateID, category) {
   }
   //#endregion Codx Quy trình duyệt
 
-
   //#region File
   getThumbByUrl(url: any, width = 30) {
     if (url) {
@@ -1049,7 +1047,6 @@ getTemplateSF(cateID, category) {
     }
   }
   //#endregion
-  
 }
 export class tmpCopyFileInfo {
   objectID: string;

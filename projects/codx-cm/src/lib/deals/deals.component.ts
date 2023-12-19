@@ -807,7 +807,7 @@ export class DealsComponent
     };
     let option = new DialogModel();
     option.IsFull = true;
-    option.zIndex = 1001;
+    option.zIndex = 100;
     option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;
     let popupContract = this.callFunc.openForm(

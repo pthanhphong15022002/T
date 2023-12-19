@@ -830,8 +830,8 @@ export class CashPaymentAddComponent extends UIComponent {
       ])
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
+        this.isload = false;
         if (res?.update) {
-          this.isload = false;
           this.dialog.dataService.update(res.data).subscribe();
           if (type == 'save') {
             this.onDestroy();
