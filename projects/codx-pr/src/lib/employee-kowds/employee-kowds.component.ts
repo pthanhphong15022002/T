@@ -1,9 +1,11 @@
+import { map } from 'rxjs';
 import { Component, Injector, TemplateRef, ViewChild } from '@angular/core';
-import { ButtonModel, CRUDService, CallFuncService, CodxGridviewV2Component, CodxService, ResourceModel, SidebarModel, UIComponent, ViewModel, ViewType } from 'codx-core';
+import { ButtonModel, CRUDService, CallFuncService, CodxGridviewV2Component, CodxService, NotificationsService, ResourceModel, SidebarModel, UIComponent, ViewModel, ViewType } from 'codx-core';
 import { CodxHrService } from 'projects/codx-hr/src/lib/codx-hr.service';
 import { KowdsScheduleComponent } from './kowds-schedule/kowds-schedule.component';
 import { PopupEkowdsComponent } from './popup-ekowds/popup-ekowds.component';
 import { ActivatedRoute } from '@angular/router';
+import { PopupCopyEkowdsComponent } from './popup-copy-ekowds/popup-copy-ekowds.component';
 
 @Component({
   selector: 'lib-employee-kowds',
@@ -20,6 +22,7 @@ export class EmployeeKowdsComponent extends UIComponent{
   request: any = null;
   requestTitle: any = null;
   buttonAdd: ButtonModel[];
+  lstHrKow: any = []
   viewActive: string = '';
   orgUnitID: string = '';
   formModelEmployee;
@@ -58,6 +61,7 @@ export class EmployeeKowdsComponent extends UIComponent{
   constructor(inject: Injector, private hrService: CodxHrService,
     public override codxService : CodxService,
     private callfunc: CallFuncService,
+    private notify: NotificationsService,
     private routeActive: ActivatedRoute,
     ) {
     super(inject);
@@ -92,6 +96,10 @@ export class EmployeeKowdsComponent extends UIComponent{
         this.viewStatistic = false;
         this.viewDetailData = true;
       }
+    })
+
+    this.getHrKows().subscribe((res) => {
+      this.lstHrKow = res;
     })
 
     // this.testAPILoadDetailData().subscribe((res) => {
@@ -160,20 +168,53 @@ export class EmployeeKowdsComponent extends UIComponent{
 
   clickMF(event){
     switch (event.functionID){
-      case 'SYS04': //copy
+      // case 'SYS04': //copy
+      // break;
+      // case 'SYS02': //delete
+      // let lstEmpID2 = this.calendarGrid.arrSelectedRows.map((data) => {
+      //   return data.employeeID;
+      // })
+
+      // console.log('lst emp map dc', lstEmpID2);
+      // break;
+      case 'SYS104':
+        if(this.calendarGrid.arrSelectedRows.length > 1){
+          this.notify.notifyCode('HR038');
+          return;
+        }
+        else if(this.calendarGrid.arrSelectedRows.length < 0)
+        {
+
+        }
+        else{
+          this.handleCopyEmpKows('Sao chép', 'copy', this.calendarGrid.arrSelectedRows[0])
+        }
       break;
-      case 'SYS02': //delete
+      case 'SYS102':
+        let lstEmpID = this.calendarGrid.arrSelectedRows.map((data) => {
+          return data.employeeID;
+        })
+
+        this.notify.alertCode('SYS030').subscribe((x) => {
+          if(x.event?.status == 'Y'){
+            console.log('lst emp map dc', lstEmpID);
+            this.deleteEmpKowByDowCode(lstEmpID.join(';'), this.filterDowCode).subscribe((res) =>{
+              if(res == true){
+                this.notify.notifyCode('SYS008');
+                this.calendarGrid.refresh();
+              }
+            });
+          }
+        })
       break;
     }
   }
 
   doubleClickGrid(event){
     console.log('event double click', event);
-    debugger
-
     // document.querySelector('[data-colindex="2"]').textContent
     let date = event.column.index;
-    let data = event.rowData[`day${date}`]
+    let data = event.rowData[`workDate${date}`]
     let employeeId = event.rowData.emp.employeeID;
     this.handleEmpKows(this.editHeaderText, 'edit', data, employeeId, date)
   }
@@ -182,7 +223,6 @@ export class EmployeeKowdsComponent extends UIComponent{
     let option = new SidebarModel();
     option.FormModel = this.view.formModel;
     option.Width = '550px';
-    let funcHeader
     let dialog = this.callfunc.openSide(
       PopupEkowdsComponent,
       {
@@ -210,10 +250,42 @@ export class EmployeeKowdsComponent extends UIComponent{
     })
   }
 
+  handleCopyEmpKows(actionHeaderText, actionType: string, data: any){
+    debugger
+    let option = new SidebarModel();
+    option.FormModel = this.view.formModel;
+    option.Width = '550px';
+    let dialog = this.callfunc.openSide(
+      PopupCopyEkowdsComponent,
+      {
+        funcID: this.funcID,
+        employeeId: data.employeeID,
+        dowCode: this.filterDowCode,
+        // headerText: actionHeaderText + ' ' + this.formHeaderText,
+        headerText: 'Sao chép dữ liệu công',
+        dataObj: data
+      },
+      option
+    )
+
+    dialog.closed.subscribe((res) => {
+      if(res?.event){
+        if(this.viewDetailData == true) {
+          this.calendarGrid.refresh();
+        }
+        else if(this.viewStatistic == true){
+          this.calendarGrid2.refresh();
+        }
+      }
+    })
+  }
+
   handleShowHideMF(event){
-    console.log('more func', event);
     for(let i = 0; i < event.length; i++){
-      if(event[i].functionID == 'SYS04' || event[i].functionID == 'SYS02'){
+      if(event[i].functionID == 'SYS04'){
+        event[i].disabled = true;
+      }
+      else if(event[i].functionID == 'SYS104' || event[i].functionID == 'SYS102'){
         event[i].disabled = false;
       }
     }
@@ -276,8 +348,18 @@ export class EmployeeKowdsComponent extends UIComponent{
       'HR',
       'ERM.Business.PR',
       'KowDsBusiness',
-      'CopyEmpKowAsync',
+      'DeleteEmpKowAsyncByDowCodeAsync',
       [empIDS, dowCode]
+    );
+  }
+
+  getHrKows() {
+    return this.api.execSv<any>(
+      'HR',
+      'ERM.Business.PR',
+      'KowDsBusiness',
+      'GetHrKows',
+      []
     );
   }
 
@@ -355,8 +437,8 @@ export class EmployeeKowdsComponent extends UIComponent{
 
         this.calendarGridColumns.push({
           refField: 'workDate',
-          // loopTimes: this.daysInMonth[this.filterMonth],
-          loopTimes: 30,
+          loopTimes: this.daysInMonth[this.filterMonth],
+          // loopTimes: 30,
           template: this.tempDayData,
         })
 
@@ -490,7 +572,7 @@ export class EmployeeKowdsComponent extends UIComponent{
   }
 
   btnClick(event){
-
+    this.handleEmpKows(this.addHeaderText, 'add', null, null, new Date());
   }
 
   viewChanged(event: any) {

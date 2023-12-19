@@ -95,12 +95,12 @@
           </div> -->
   
           <div class="form-group row" *ngIf="loadGridview1 == true">
+            <!-- [formModel]="formModel"
+            [formName]="formModel.formName"
+            [entityName]="formModel.entityName"
+            [gridViewName]="formModel.gridViewName" -->
               <codx-gridview-v2
               #gridView1
-              [formModel]="formModel"
-              [formName]="formModel.formName"
-              [entityName]="formModel.entityName"
-              [gridViewName]="formModel.gridViewName"
               [columnsGrid]="columnGrid1"
               [hideMoreFunc]="true"
               [editSettings]="editSettings"

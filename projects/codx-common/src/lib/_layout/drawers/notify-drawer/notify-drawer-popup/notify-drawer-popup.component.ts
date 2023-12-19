@@ -17,7 +17,9 @@ export class NotifyDrawerPopupComponent implements OnInit, AfterViewInit {
   vllStatus: any[] = [];
   status: any = null;
   mode = "0";
+  isAfterRender=false;
   @ViewChild("notiBody") notiBody: NotifyBodyComponent;
+  funcList: any;
   constructor
     (
       private cache: CacheService,
@@ -25,6 +27,11 @@ export class NotifyDrawerPopupComponent implements OnInit, AfterViewInit {
       @Optional() dialogRef?: DialogRef
     ) {
     this.dialogRef = dialogRef;
+    this.cache.functionList('BGT001').subscribe(func=>{
+      this.funcList = func;
+      this.isAfterRender = true;
+      
+    });
   }
 
 
