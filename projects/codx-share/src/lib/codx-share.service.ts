@@ -280,30 +280,33 @@ export class CodxShareService {
           );
           if (dialog) {
             dialog.closed.subscribe((res) => {
-              let oComment = res?.event;
-              this.codxCommonService.codxApprove(
-                data?.unbounds?.approvalRecID,
-                status,
-                oComment?.comment,
-                oComment?.reasonID,
-                null
-              ).subscribe((res2: any) => {
-                if (!res2?.msgCodeError) {
-                  data.unbounds.statusApproval = status ?? res2?.returnStatus;
-                  //Cập nhật lại status duyệt
-                  var index = dataService.data.findIndex(
-                    (x) => x.transID == data.recID
-                  );
-                  if (index >= 0)
-                    dataService.data[index].unbounds.statusApproval =
-                      status ?? res2?.returnStatus;
-
-                  dataService.update(data).subscribe();
-                  this.notificationsService.notifyCode('SYS007');
-                  //afterSave(data.statusApproval);// Chung CMT trước đo rồi
-                  afterSave(data);
-                } else this.notificationsService.notify(res2?.msgCodeError);
-              });
+              if(res?.event){
+                let oComment = res?.event;
+                this.codxCommonService.codxApprove(
+                  data?.unbounds?.approvalRecID,
+                  status,
+                  oComment?.comment,
+                  oComment?.reasonID,
+                  null
+                ).subscribe((res2: any) => {
+                  if (!res2?.msgCodeError) {
+                    data.unbounds.statusApproval = status ?? res2?.returnStatus;
+                    //Cập nhật lại status duyệt
+                    var index = dataService.data.findIndex(
+                      (x) => x.transID == data.recID
+                    );
+                    if (index >= 0)
+                      dataService.data[index].unbounds.statusApproval =
+                        status ?? res2?.returnStatus;
+  
+                    dataService.update(data).subscribe();
+                    this.notificationsService.notifyCode('SYS007');
+                    //afterSave(data.statusApproval);// Chung CMT trước đo rồi
+                    afterSave(data);
+                  } else this.notificationsService.notify(res2?.msgCodeError);
+                });
+              }
+              
             });
           } else {
             this.codxCommonService.codxApprove(
@@ -336,7 +339,7 @@ export class CodxShareService {
       case 'SYS207': {
         this.codxCommonService.codxUndo(data?.unbounds?.approvalRecID, null).subscribe(
           (res: any) => {
-            if (res) {
+            if (!res?.msgCodeError) {
               data.unbounds.statusApproval = res?.status;
               //Cập nhật lại status duyệt
               var index = dataService.data.findIndex(

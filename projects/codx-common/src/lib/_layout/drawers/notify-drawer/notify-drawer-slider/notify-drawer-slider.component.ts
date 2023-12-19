@@ -19,6 +19,8 @@ export class NotifyDrawerSliderComponent implements OnInit {
   formModel:FormModel = null;
   @ViewChild("notiBody") notiBody:NotifyBodyComponent; 
   headerText="";
+  funcList :any;
+  isAfterRender=false;
   constructor(
     private cache:CacheService,
     private callFC:CallFuncService,
@@ -28,10 +30,12 @@ export class NotifyDrawerSliderComponent implements OnInit {
   {    
     this.dialogRef = dialogRef;
     this.cache.functionList('BGT001').subscribe(func=>{
+      this.funcList = func;
+      this.isAfterRender = true;
       if(func?.customName){
         this.headerText = func?.customName;
       }
-    })
+    });
   }
 
   ngOnInit(): void {

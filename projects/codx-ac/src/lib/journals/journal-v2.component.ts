@@ -59,7 +59,6 @@ export class JournalV2Component extends UIComponent implements OnInit {
     icon:'icon-i-journal-plus',
     id: 'btnAdd',
   }];
-  optionSidebar: SidebarModel = new SidebarModel();
   itemSelected: any;
   private destroy$ = new Subject<void>(); //? list observable hủy các subscribe api
   constructor(
@@ -205,11 +204,6 @@ export class JournalV2Component extends UIComponent implements OnInit {
         active: this.viewActive === ViewType.grid,
       },
     ];
-
-    //* thiết lập cấu hình sidebar
-    this.optionSidebar.DataService = this.view.dataService;
-    this.optionSidebar.FormModel = this.view.formModel;
-    this.optionSidebar.Width = '800px';
   }
 
   ngOnDestroy() {
@@ -339,10 +333,14 @@ export class JournalV2Component extends UIComponent implements OnInit {
             headerText: this.headerText,
             oData:{...res}
           };
+          let option = new SidebarModel();
+          option.FormModel = this.view?.formModel;
+          option.DataService = this.view?.dataService;
+          option.Width = '800px';
           let dialog = this.callfc.openSide(
             JournalsAddComponent,
             data,
-            this.optionSidebar,
+            option,
             this.view.funcID
           );
         }
@@ -392,10 +390,14 @@ export class JournalV2Component extends UIComponent implements OnInit {
           headerText: this.headerText,
           oData:{...res}
         };
+        let option = new SidebarModel();
+        option.FormModel = this.view?.formModel;
+        option.DataService = this.view?.dataService;
+        option.Width = '800px';
         let dialog = this.callfc.openSide(
           JournalsAddComponent,
           data,
-          this.optionSidebar,
+          option,
           this.view.funcID
         );
       });
@@ -441,10 +443,15 @@ export class JournalV2Component extends UIComponent implements OnInit {
             headerText: this.headerText,
             oData:{...res}
           };
+          let option = new SidebarModel();
+          option.FormModel = this.view?.formModel;
+          option.DataService = this.view?.dataService;
+          option.Width = '800px';
           let dialog = this.callfc.openSide(
             JournalsAddComponent,
             data,
-            this.optionSidebar
+            option,
+            this.view.funcID
           );
         }
       });

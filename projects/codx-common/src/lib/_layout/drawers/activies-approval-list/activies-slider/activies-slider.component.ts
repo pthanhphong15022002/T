@@ -36,6 +36,8 @@ export class ActiviesSliderComponent implements OnInit {
   valueSelected:any = null;
   datas:any[] = [];
   headerText="";
+  funcList: any;
+  isAfterRender = false;
   constructor
   (
     private api:ApiHttpService,
@@ -58,8 +60,10 @@ export class ActiviesSliderComponent implements OnInit {
     this.formModel.formName="Notification";
     this.formModel.gridViewName="grvNotification";
     this.cache.functionList('BGT002').subscribe(func=>{
+      this.funcList = func;
+      this.isAfterRender = true;
       if(func?.customName){
-        this.headerText = func?.customName;
+        this.headerText = func?.customName;        
       }
     })
   }
