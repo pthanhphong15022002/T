@@ -503,6 +503,9 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
           case 'SYS001':
           case 'SYS002':
             break;
+          case 'SYS004':
+            res.disabled = task?.taskType != "E";
+            break;
           case 'SYS02': //xóa
             if (!(!task?.isTaskDefault && (this.isRoleAll || isGroup))) {
               res.disabled = true;
@@ -572,7 +575,6 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
             break;
           case 'DP25':
           case 'DP26':
-          case 'SYS004':
             res.disabled = true;
             break;
           case 'DP27': // đặt xe
@@ -810,7 +812,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         this.deleteMeeting(task);
         break;
       case 'SYS004':
-        this.sendMail();
+        this.sendMailTask(task);
         break;
       case 'DP27':
         this.addBookingCar(task);
@@ -885,6 +887,16 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     }
   }
   //#endregion
+
+  sendMailTask(data){
+    this.api
+    .exec<any>('DP', 'InstancesStepsBusiness', 'SendMailTaskAsync', [
+      data,null
+    ])
+    .subscribe((res) => {
+
+    });
+  }
 
   //#region start task
   async startTask(task: DP_Instances_Steps_Tasks, groupTask) {

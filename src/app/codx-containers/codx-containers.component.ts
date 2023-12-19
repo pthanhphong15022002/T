@@ -22,7 +22,7 @@ export class CodxContainersComponent implements OnInit {
       x?.$subjectReal.asObservable().subscribe(d=>{
         if(d.event == "RemoveSession"){
           var us = t.authStore.get();
-          if(us.securityKey == d.data){
+          if(us && us.securityKey == d.data){
             let tenant = t.tenantStore.getName();
             t.authStore.remove();
             t.tenantStore.removeKey();

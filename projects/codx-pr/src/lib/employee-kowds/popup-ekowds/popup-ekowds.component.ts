@@ -81,7 +81,9 @@ export class PopupEkowdsComponent extends UIComponent implements OnInit{
     this.headerText = data?.data?.headerText;
     this.funcID = data?.data?.funcID;
     this.actionType = data?.data?.actionType;
-    this.dataObj = JSON.parse(JSON.stringify(data?.data?.dataObj));
+    if(data?.data?.dataObj){
+      this.dataObj = JSON.parse(JSON.stringify(data?.data?.dataObj));
+    }
     this.employeeId = JSON.parse(JSON.stringify(data?.data?.employeeId));
     if(this.dataObj){
       this.dataSourceGridView1 = this.dataObj;
