@@ -801,7 +801,7 @@ export class DealsComponent
   viewDetail(deal) {
     let data = {
       formModel: this.view.formModel,
-      contract: deal,
+      dataView: deal,
       isView: true,
       // listInsStepStart: this.listInsStep,
     };

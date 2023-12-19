@@ -509,11 +509,7 @@ export class ContractsComponent extends UIComponent {
   async addContractAdjourn(data: CM_Contracts) {
     this.view.dataService.addNew().subscribe(async (res) => {
       let contracts = JSON.parse(JSON.stringify(data)) as CM_Contracts;
-      contracts.contractType = '2';
-      contracts.quotationID = null;
-      contracts.refID = contracts.recID;
-      delete contracts['id'];
-      this.openPopupContract(null, 'add', contracts);
+      this.openPopupContract(null, 'extend', contracts);
     });
   }
 
