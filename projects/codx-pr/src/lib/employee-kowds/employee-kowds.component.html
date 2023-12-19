@@ -48,6 +48,10 @@ method="LoadDataAsync" -->
     (onSelectionChanged)="onSelectionChangedTreeOrg($event)"
   >
   </codx-listview>
+
+  <span>
+    'Chú thích loại công'
+  </span>
   </ng-template>
 
   <ng-template #tempTree let-data>
@@ -76,6 +80,7 @@ method="LoadDataAsync" -->
       [columnsGrid]="calendarGridColumns"
       [service]="'HR'"
       [assemblyName]="'PR'"
+      [checkboxSelect] = "true"
       [className]="'KowDsBusiness'"
       [predicates]=""
       [dataValues]="dataValues"
@@ -121,9 +126,9 @@ method="LoadDataAsync" -->
   </ng-template>
 
   <ng-template #tempEmployee let-data>
-    {{logData(data)}}
+    <!-- {{logData(data)}} -->
     <!-- {{data? data[data.column.field] : "" }} -->
-  <div class="d-flex align-items-center border-bottom">
+  <div class="d-flex align-items-center border-bottom w-100" >
     <div class="p-3 ps-5"
     >
         <div class="d-flex align-items-center">
