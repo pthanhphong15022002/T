@@ -1246,7 +1246,7 @@ export class ContractsComponent extends UIComponent {
   }
 
   liquidationContract(data){
-    this.contractSelected == data;
+    this.contractSelected = data;
     let opt = new DialogModel();
       opt.FormModel = this.view.formModel;
       this.popupLiquidation = this.callFunc.openForm(
