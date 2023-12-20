@@ -1340,6 +1340,7 @@ export class DealsComponent
                 JSON.stringify(this.dataSelected)
               );
               this.detailViewDeal?.promiseAllAsync();
+              this.detailViewDeal.loadContactEdit();
             }
             this.isChangeOwner = ownerIdOld != e.event.owner;
             this.changeDetectorRef.detectChanges();

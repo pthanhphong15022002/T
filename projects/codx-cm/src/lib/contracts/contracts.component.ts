@@ -45,6 +45,7 @@ import { PopupAssginDealComponent } from '../deals/popup-assgin-deal/popup-assgi
 import { StepService } from 'projects/codx-share/src/lib/components/codx-step/step.service';
 import { ContractsDetailComponent } from './contracts-detail/contracts-detail.component';
 import { CodxCommonService } from 'projects/codx-common/src/lib/codx-common.service';
+import { DP_Instances_Steps_Tasks, DP_Instances_Steps_Tasks_Roles } from 'projects/codx-dp/src/lib/models/models';
 import { ExportData } from 'projects/codx-common/src/lib/models/ApproveProcess.model';
 
 @Component({
@@ -395,6 +396,7 @@ export class ContractsComponent extends UIComponent {
         //   customData.refID = data.processID;
         //   customData.refType = 'DP_Processes';
         // }
+        this.contractSelected == data;
         this.codxShareService.defaultMoreFunc(
           e,
           data,
@@ -471,14 +473,87 @@ export class ContractsComponent extends UIComponent {
 
   afterSave(e?: any, that: any = null) {
     if (e) {
+      if(e?.funcID == "SYS004"){
+        if(e?.result?.isSendMail){
+          this.addTaskMail(e);
+          this.notiService.notifyCode('SYS006');
+        }else{
+          this.notiService.notify('Gửi mail thất bại','3');
+        }
+      }
       let appoverStatus = e?.unbounds?.statusApproval;
       if (
         appoverStatus != null &&
-        appoverStatus != this.contractSelected.approveStatus
+        appoverStatus != this.contractSelected?.approveStatus
       ) {
         this.contractSelected.approveStatus = appoverStatus;
       }
       this.view.dataService.update(this.contractSelected).subscribe();
+    }
+  }
+
+  addTaskMail(e){
+    let task = new DP_Instances_Steps_Tasks();
+    let mail = e?.result?.data;
+    task.taskName = mail?.subject || 'Email';
+    task.owner = this.user?.UserID;
+    task.actualEnd = new Date();
+    task.status = "3";
+    task.progress = 100;
+    task.recID =  Util.uid();
+    task.refID =  Util.uid();
+    task.taskType = "E";
+    task.approveStatus = '1';
+    task.dependRule = '0';
+    task.isTaskDefault = false;
+    task.assigned = '0'; 
+    let role = new DP_Instances_Steps_Tasks_Roles();
+    role.recID = Util.uid();
+    role.taskID = task.recID;
+    role.objectName = this.user?.userName;
+    role.objectID = this.user?.userID;
+    role.createdOn = new Date();
+    role.createdBy = this.user?.userID;
+    role.roleType = 'O';
+    role.objectType = this.user?.objectType;
+    task.owner = role.objectID;
+    task.roles = [role];
+    if(this.contractSelected?.applyProcess){
+      task.stepID = this.contractSelected?.stepID;
+      task.instanceID = this.contractSelected?.refID;
+      this.api
+      .exec<any>('DP', 'InstancesStepsBusiness', 'AddTaskStepAsync', [
+        task,
+        false,
+        false,
+      ])
+      .subscribe((res) => {
+        if (res) {
+          this.taskAdd = {
+            task: res[0],
+            progressGroup: res[1],
+            progressStep: res[2],
+            isCreateMeeting: false,
+          };
+        }
+      });
+    }else{
+      task.objectID = this.contractSelected?.recID;
+      task.objectType = "CM_Contracts"
+      this.api
+          .exec<any>('DP', 'ActivitiesBusiness', 'AddActivitiesAsync', [
+            task,
+            false,
+            false,
+          ])
+          .subscribe((res) => {
+            if (res) {
+              this.taskAdd = {
+                task: res,
+                isCreateMeeting: false,
+              };
+            }
+          });
     }
   }
 
