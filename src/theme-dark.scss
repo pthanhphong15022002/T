@@ -494,7 +494,7 @@ h1,
 .nav-tabs .nav-link.active,
 .nav-tabs .nav-item.show .nav-link {
     color: var(--primary);
-    background-color: var(--bg-card);
+    //background-color: var(--bg-card);
     border-color: var(--border-list);
 }
 
@@ -1115,7 +1115,22 @@ codx-views .e-grid {
 }
 .popup-process-detail{
     .step{
-      background: var(--gray-150);
+      background: #202229;
       border: 1px solid var(--border-gray);
     }
 }
+codx-view-kanban .e-kanban .e-kanban-header .e-header-cells {
+    height: 38px!important;
+}
+.place-holder {
+    opacity: 0.5;
+}
+
+.dropzone.dropzone-default {
+    background: #1d1f20;
+}
+lib-view-instances .e-kanban-header{
+    .e-header-row{
+      background-color: white;
+    }
+  }

@@ -860,6 +860,15 @@ export class CodxCmService {
       data
     );
   }
+  startNewInstance(data) {
+    return this.api.execSv<any>(
+      'DP',
+      'ERM.Business.DP',
+      'InstancesStepsBusiness',
+      'MoveStageStartInstanceAsync',
+      data
+    );
+  }
 
   startLead(data) {
     return this.api.execSv<any>(
