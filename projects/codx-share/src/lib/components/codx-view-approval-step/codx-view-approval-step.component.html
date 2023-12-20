@@ -25,8 +25,8 @@
             [title]="approver?.userName ? approver?.userName : approver?.name ? approver?.name : approver?.approver ? (approver?.approver | vll : 'ES014' : 'text' | async) : (approver?.roleType | vll : 'ES014' : 'text' | async)"
             [subTitle]=""            
             [desc]="approver?.position ? approver?.position: approver?.roleType | vll : 'ES014' : 'text' | async"
-            [imageSrc]="(approver?.roleType !='U' && !approver?.userID) || approver?.roleType =='PA' ? './assets/themes/sys/default/img/' + (approver?.icon ? approver?.icon : 'share_default.svg') : null"
-            [imgCss]="(approver?.roleType !='U' && !approver?.userID) || approver?.roleType =='PA' ? 'w-30px p-2 me-3 user-mini-icon' :'w-35px me-3'"                          
+            [imageSrc]="(approver?.roleType !='U' && !approver?.userID) || approver?.roleType =='PA' || approver?.roleType == 'PE' ? './assets/themes/sys/default/img/' + (approver?.icon ? approver?.icon : 'share_default.svg') : null"
+            [imgCss]="(approver?.roleType !='U' && !approver?.userID) || approver?.roleType =='PA' || approver?.roleType == 'PE'|| approver?.roleType == 'PE'? 'w-30px p-2 me-3 user-mini-icon' :'w-35px me-3'"                          
             
             >
             </codx-temp-full>
@@ -109,9 +109,9 @@
       <div class="codx-approval-content ms-17">
         <ng-container *ngFor="let approver of item?.approvers">
           <div class="d-flex justify-content-between align-items-start mb-3">
-            <codx-temp-full [imageId]="approver?.approverType !='PA' ? approver?.approver :null" [imageObjType]="'AD_Users'" [imageWidth]="35" 
-            [imageSrc]="approver?.approverType =='PA' ? './assets/themes/sys/default/img/' + (approver?.icon ? approver?.icon : 'share_default.svg') : null"
-            [imgCss]="approver?.approverType =='PA' ? 'w-30px p-2 me-3 user-mini-icon' :'w-35px me-3'"                          
+            <codx-temp-full [imageId]="approver?.approverType !='PA' || approver?.roleType == 'PE' ? approver?.approver :null" [imageObjType]="'AD_Users'" [imageWidth]="35" 
+            [imageSrc]="approver?.approverType =='PA'|| approver?.roleType == 'PE' ? './assets/themes/sys/default/img/' + (approver?.icon ? approver?.icon : 'share_default.svg') : null"
+            [imgCss]="approver?.approverType =='PA'|| approver?.roleType == 'PE' ? 'w-30px p-2 me-3 user-mini-icon' :'w-35px me-3'"                          
             
             [title]="
                 approver?.name ??
@@ -227,9 +227,9 @@
           <div class="codx-approval-content ms-17">
             <ng-container *ngFor="let approver of item?.approvers">
               <div class="d-flex justify-content-between align-items-start mb-3">
-                <codx-temp-full [imageId]="approver?.approverType !='PA' ? approver?.approver :null" [imageObjType]="'AD_Users'" [imageWidth]="35" 
-                [imageSrc]="approver?.approverType =='PA' ? './assets/themes/sys/default/img/' + (approver?.icon ? approver?.icon : 'share_default.svg') : null"
-            [imgCss]="approver?.approverType =='PA' ? 'w-30px p-2 me-3 user-mini-icon' :'w-35px me-3'"                          
+                <codx-temp-full [imageId]="approver?.approverType !='PA'|| approver?.roleType == 'PE' ? approver?.approver :null" [imageObjType]="'AD_Users'" [imageWidth]="35" 
+                [imageSrc]="approver?.approverType =='PA'|| approver?.roleType == 'PE' ? './assets/themes/sys/default/img/' + (approver?.icon ? approver?.icon : 'share_default.svg') : null"
+            [imgCss]="approver?.approverType =='PA'|| approver?.roleType == 'PE' ? 'w-30px p-2 me-3 user-mini-icon' :'w-35px me-3'"                          
             [title]="
                   approver?.name ??
                   approver?.approverName ??

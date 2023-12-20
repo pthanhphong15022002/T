@@ -181,14 +181,14 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
           ];
 
           this.views = [
-            {
-              sameData: true,
-              type: ViewType.list,
-              active: false,
-              model: {
-                template: this.listItem,
-              },
-            },
+            // {
+            //   sameData: true,
+            //   type: ViewType.list,
+            //   active: false,
+            //   model: {
+            //     template: this.listItem,
+            //   },
+            // },
             {
               sameData: true,
               type: ViewType.grid,

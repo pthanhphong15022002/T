@@ -41,7 +41,7 @@ export class ExternalSigningComponent implements OnInit {
       });
   }
   loadSF() {
-    this.esService.getOneApprovalTrans(this.transRecID).subscribe((res) => {
+    this.esService.getOneApprovalTrans(this.transRecID).subscribe((res:any) => {
       if (res) {
         this.oApprovalTrans = res;
         if (res?.status == '3') {
