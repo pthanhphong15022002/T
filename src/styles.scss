@@ -4423,4 +4423,14 @@ process-views-tabs-details{
     }
   }
 } 
-
+codx-page-title ul.breadcrumb{
+  .dropdown-item{
+    cursor: pointer;
+  }
+  a{
+    cursor: pointer;
+  }
+  &+.icon-keyboard_arrow_down{
+    cursor: pointer;
+  }
+}

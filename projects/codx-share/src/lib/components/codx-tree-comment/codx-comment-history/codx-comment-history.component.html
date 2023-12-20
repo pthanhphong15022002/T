@@ -27,25 +27,27 @@
       [hideBtnSave]="'1'" [hideImageThumb]="'1'" [showMessage]="'0'" (fileCount)="selectedFiles($event)">
     </codx-attachment>
     <ng-container *ngIf="files">
-      <div class="d-flex position-relative ms-10">
-        <div class="my-3">
-          <ng-container *ngIf="files.referType == REFERTYPE.IMAGE">
-            <img [src]="files.source" class="w-100px h-100px" />
-          </ng-container>
-          <ng-container *ngIf="files.referType == REFERTYPE.VIDEO">
-            <video [src]="files.source" class="w-100px h-100px"></video>
-          </ng-container>
-          <ng-container *ngIf="files.referType == REFERTYPE.APPLICATION">
-            <codx-temp-full [imageSrc]="files.extension | avtFile" imgCss="w-20px me-3 cursor-pointer"
-              [title]="files.fileName" [descLine]="1">
-            </codx-temp-full>
-          </ng-container>
-        </div>
-        <div class="remove-file">
-          <button type="button" href="javascript:void(0)" class="btn btn-icon btn-sm btn-light-danger"
-            (click)="removeFile()">
-            <i class="icon-close icon-18"></i>
-          </button>
+      <div class="d-flex position-relative ms-13">
+        <div class="d-flex w-auto justify-content-between align-items-center pt-3">
+          <div class="w-100 pe-9">
+            <ng-container *ngIf="files.referType == REFERTYPE.IMAGE">
+              <img [src]="files.source" class="w-100px h-100px" />
+            </ng-container>
+            <ng-container *ngIf="files.referType == REFERTYPE.VIDEO">
+              <video [src]="files.source" class="w-100px h-100px"></video>
+            </ng-container>
+            <ng-container *ngIf="files.referType == REFERTYPE.APPLICATION">
+              <codx-temp-full [imageSrc]="files.extension | avtFile" imgCss="w-20px me-3 cursor-pointer"
+                [title]="files.fileName" [descLine]="1">
+              </codx-temp-full>
+            </ng-container>
+          </div>
+          <div class="remove-file-1">
+            <button type="button" href="javascript:void(0)" class="btn btn-icon btn-sm btn-light-danger"
+              (click)="removeFile()">
+              <i class="icon-close icon-16"></i>
+            </button>
+          </div>
         </div>
       </div>
     </ng-container>
@@ -112,7 +114,7 @@
           </div>
         </ng-container>
         <ng-container *ngIf="files">
-          <div class="d-flex position-relative ms-10 mt-4">
+          <div class="d-flex position-relative ms-13 mt-4">
             <div class="" (click)="clickViewFile(files)">
               <ng-container *ngIf="
                   files.referType == REFERTYPE.IMAGE ||
@@ -129,7 +131,7 @@
               </ng-container>
             </div>
             <ng-container *ngIf="allowEdit">
-              <div class="remove-file">
+              <div class="remove-file-1">
                 <button type="button" href="javascript:void(0)" class="btn btn-icon btn-sm btn-light-danger"
                   (click)="removeFile()">
                   <i class="icon-close icon-18"></i>
