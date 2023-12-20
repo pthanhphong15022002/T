@@ -325,6 +325,7 @@
         <codx-input
           field="disposalOn"
           [formModel]="view?.formModel"
+          [crrValue]="disposalOn"
           (valueChange)="changeData($event)"
         ></codx-input>
       </div>
@@ -349,7 +350,7 @@
           fiedName="disposalCmt"
         ></codx-label>
         <codx-input
-          field="disposalCmt "
+          field="disposalCmt"
           [formModel]="view?.formModel"
           (valueChange)="changeData($event)"
         ></codx-input>
