@@ -670,6 +670,16 @@ export class CodxShareService {
     );
   }
 
+  getOrCreateSignature(email: string, signatureType: string,supplier: string, userID: string) {
+    return this.api.execSv<any>(
+      'ES',
+      'ERM.Business.ES',
+      'SignaturesBusiness',
+      'GetApproverSignatureAsync',
+      [email, signatureType,supplier,userID]
+    );
+  }
+
   getNewDefaultEmail() {
     return this.api.execSv(
       'SYS',

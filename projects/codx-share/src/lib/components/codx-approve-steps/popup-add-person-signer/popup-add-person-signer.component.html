@@ -1,0 +1,81 @@
+<codx-form [headerText]="headerText" [lblHeader]="'lblPersonSigner'" [subHeaderText]="" [body]="body" [footer]="footer"
+  [data]="data" [formModel]="formModel" [dialog]="dialog" *ngIf="isAfterRender">
+  <ng-template #body>
+    <div class="row">
+      <div class="form-group col-6">
+        <codx-label fiedName="Name" [formModel]="formModel"> </codx-label>
+        <codx-input field="name" [formModel]="formModel" [Group]="fgroupApprover">
+        </codx-input>
+      </div>
+      <div class="form-group col-6">
+        <codx-label name="lblIDCardNo" default="Số giấy tờ" [formModel]="formModel"> </codx-label>
+        <codx-input field="idCardNo" type="text" [crrValue]="data?.idCardNo" (valueChange)="valueChange($event)">
+        </codx-input>
+      </div>
+    </div>
+
+    <div class=" row">
+      <div class="form-group  col-6">
+        <codx-label fiedName="Email" [formModel]="formModel"> </codx-label>
+        <codx-input field="email" type="text" [crrValue]="data?.email"
+          (valueChange)="valueChange($event)">
+        </codx-input>
+      </div>
+      <div class="form-group col-6">
+        <codx-label fiedName="Phone" [formModel]="formModel"> </codx-label>
+        <codx-input field="phone" [Group]="fgroupApprover" [formModel]="formModel">
+        </codx-input>
+      </div>
+    </div>
+
+    <div class="row">
+      <codx-label class="me-4 col-5" name="lblIDCardType" default="Ảnh chụp 2 mặt giấy tờ" [formModel]="formModel">
+      </codx-label>
+      <div class="col-6">
+        <codx-input name="idCardRadio" class="me-4" field="idCardType1" type="radio" [checked]="true" [label]="'CCCD'"
+          (valueChange)="cardTypeChange($event,'1')">
+        </codx-input>
+        <codx-input class="me-4" name="idCardRadio" field="idCardType2" type="radio" [checked]="false" [label]="'CMND'"
+          (valueChange)="cardTypeChange($event,'2')">
+        </codx-input>
+        <codx-input class="me-4" name="idCardRadio" field="idCardType3" type="radio" [checked]="false"
+          [label]="'Hộ chiếu'" (valueChange)="cardTypeChange($event,'3')">
+        </codx-input>
+      </div>
+
+    </div>
+    <div class="row pt-5">
+      <div class="col-6 d-flex flex-column align-items-center justify-content-center ">
+        <codx-img #imgSignature1  [imageType]="'square'"
+        [width]="180" referType="IDFront" [objectId]="currSignature?.recID" [objectType]="'ES_Signatures'"
+        data-kt-menu-trigger="click" data-kt-menu-attach="parent" data-kt-menu-placement="bottom-end"
+        data-kt-menu-flip="bottom" [isAllowEdit]="true" [updateDirect]="true" [funcId]="'ESS21'">
+      </codx-img>
+      <codx-label class="pt-3" name="lblIDFront" default="Mặt trước" formName="Signatures" gridViewName="grvSignatures"></codx-label>
+      </div>
+      <div  class="col-6 d-flex flex-column align-items-center justify-content-center">
+        <codx-img #imgSignature2 referType="IDBack" [imageType]="'square'"[width]="180"
+        [objectId]="currSignature?.recID" [objectType]="'ES_Signatures'" data-kt-menu-trigger="click"
+        data-kt-menu-attach="parent" data-kt-menu-placement="bottom-end" data-kt-menu-flip="bottom" [isAllowEdit]="true"
+        [updateDirect]="true" [funcId]="'ESS21'">
+      </codx-img>
+      <codx-label  class="pt-3"  name="lblIDBack" default="Mặt sau" formName="Signatures" gridViewName="grvSignatures"></codx-label>
+      
+      </div>
+      
+
+      
+
+    </div>
+  </ng-template>
+
+
+
+  <ng-template #footer>
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-primary" (click)="onSaveForm()">
+        <codx-label name="lblSave" default="Lưu" [formModel]="formModel"></codx-label>
+      </button>
+    </div>
+  </ng-template>
+</codx-form>

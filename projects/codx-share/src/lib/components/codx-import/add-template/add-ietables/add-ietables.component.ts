@@ -51,6 +51,7 @@ export class AddIetablesComponent implements OnInit {
 
   openFormAddImportDetail(data:any , type = 'new')
   {
+    debugger
     if(type == 'edit' && !data?.mappingTemplate) return;
     this.callfunc.openForm(
       AddImportDetailsComponent,

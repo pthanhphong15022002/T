@@ -195,7 +195,7 @@
       button
       class="btn btn-primary ms-1"
       (click)="save()">
-      <codx-label default="Lưu"></codx-label>
+      <codx-label name="lblSave" [formModel]="form?.formModel" default="Lưu"></codx-label>
     </button>
   </div>
 </ng-template>

@@ -383,7 +383,7 @@ export class CodxEmailComponent implements OnInit {
     
     this.codxService.sendEmail(this.data, lstSento , this.option).subscribe((res) => {
       if (res) {
-        this.dialog && this.dialog.close();
+        this.dialog && this.dialog.close({isSendMail: res, data: this.data});
       }
     });
   }
