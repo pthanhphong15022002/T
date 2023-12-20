@@ -1280,6 +1280,7 @@ export class ContractsComponent extends UIComponent {
             this.contractSelected.disposalOn = this.disposalOn;
             this.contractSelected.disposalAll = this.disposalAll;
             this.contractSelected.disposalCmt = this.disposalCmt;
+            this.view.dataService.update(this.contractSelected, true).subscribe();
             this.changeDetectorRef.markForCheck();
             this.popupLiquidation.close()
             this.notiService.notifyCode('SYS007');
