@@ -72,6 +72,8 @@ export class ContractsComponent extends UIComponent {
   @ViewChild('tempStatus') tempStatus: TemplateRef<any>;
   @ViewChild('tempOwner') tempOwner: TemplateRef<any>;
 
+  @ViewChild('liquidationTmp') liquidationTmp: TemplateRef<any>;
+
   listClicked = [];
   views: Array<ViewModel> = [];
   listPayment: CM_ContractsPayments[] = [];
@@ -151,6 +153,8 @@ export class ContractsComponent extends UIComponent {
   runMode: any;
   user;
   taskAdd;
+  popupLiquidation;
+
   constructor(
     private inject: Injector,
     private cmService: CodxCmService,
@@ -386,6 +390,9 @@ export class ContractsComponent extends UIComponent {
         break;
       case 'CM0204_13':
         this.addTask(data);
+        break;
+      case 'CM0204_18': // thanh lý hợp đồng
+        this.liquidationContract(data);
         break;
       default: {
         // var customData = {
@@ -1233,6 +1240,25 @@ export class ContractsComponent extends UIComponent {
           this.detectorRef.detectChanges();
         }
       });
+  }
+
+  liquidationContract(data){
+    let opt = new DialogModel();
+      opt.FormModel = this.view.formModel;
+      this.popupLiquidation = this.callFunc.openForm(
+        this.liquidationTmp,
+        '',
+        500,
+        600,
+        '',
+        data,
+        '',
+        opt
+      );
+  }
+
+  saveLiquidation(){
+
   }
 }
 

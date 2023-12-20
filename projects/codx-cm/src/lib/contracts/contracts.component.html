@@ -22,23 +22,23 @@
 <!-- temp left -->
 <ng-template #itemTemplate let-data>
   <codx-temp-full
-  imgCss="me-1"
-  [dataItem]="data"
-  [imageWidth]="35"
-  [typeMF]="'hover'"
-  [descTmp]="descTmp"
-  [imageReferType]="'avt'"
-  [imgOn]="data?.modifiedOn"
-  [imageId]="data?.customerID"
-  [formModel]="view?.formModel"
-  [imageObjType]="'CM_Customers'"
-  [titleCss]="'fw-bold fs-6 mb-1'"
-  (clickMF)="clickMF($event, data)"
-  [title]="data?.contractName || ''"
-  [baseHeaderRightTmp]="baseHeaderRightTmp"
-  [moreFuncCss]="data?.closed ? 'me-6' : ''"
-  (changeDataMF)="changeDataMF($event, data)"
-  cardCss="card-template border-bottom p-3 list-task"
+    imgCss="me-1"
+    [dataItem]="data"
+    [imageWidth]="35"
+    [typeMF]="'hover'"
+    [descTmp]="descTmp"
+    [imageReferType]="'avt'"
+    [imgOn]="data?.modifiedOn"
+    [imageId]="data?.customerID"
+    [formModel]="view?.formModel"
+    [imageObjType]="'CM_Customers'"
+    [titleCss]="'fw-bold fs-6 mb-1'"
+    (clickMF)="clickMF($event, data)"
+    [title]="data?.contractName || ''"
+    [baseHeaderRightTmp]="baseHeaderRightTmp"
+    [moreFuncCss]="data?.closed ? 'me-6' : ''"
+    (changeDataMF)="changeDataMF($event, data)"
+    cardCss="card-template border-bottom p-3 list-task"
   >
   </codx-temp-full>
 </ng-template>
@@ -56,24 +56,18 @@
     </div>
     <div class="d-flex justify-content-between align-items-center mb-1">
       <div class="d-flex justify-content-end align-items-center">
-        <span
-          class="icon-i-globe icon-16 me-1 text-primary"
-        ></span>
+        <span class="icon-i-globe icon-16 me-1 text-primary"></span>
         <span
           class="text-dark me-1"
           [innerHTML]="
-            data?.assetID
-              | formatvalue : view?.formModel : 'AssetID'
-              | async
+            data?.assetID | formatvalue : view?.formModel : 'AssetID' | async
           "
         ></span>
       </div>
     </div>
     <div class="d-flex justify-content-between align-items-center mb-1">
       <div class="d-flex justify-content-end align-items-center">
-        <span
-          class="icon-monetization_on icon-16 me-1 text-warning"
-        ></span>
+        <span class="icon-monetization_on icon-16 me-1 text-warning"></span>
         <span
           class="text-dark me-1"
           [innerHTML]="
@@ -95,14 +89,14 @@
     <div class="d-flex justify-content-between align-items-center">
       <div class="d-flex align-items-end codx-badge">
         <codx-vll
-        [name]="vllStatus"
-        [field]="'Status'"
-        [value]="data?.status"
-        [showText]="true"
-        [showBgColor]="true"
-        class="badge badge-primary badge-sm"
-      >
-      </codx-vll>
+          [name]="vllStatus"
+          [field]="'Status'"
+          [value]="data?.status"
+          [showText]="true"
+          [showBgColor]="true"
+          class="badge badge-primary badge-sm"
+        >
+        </codx-vll>
         <ng-container *ngIf="data?.approveStatus && data?.approveStatus != '1'">
           <codx-vll
             [name]="vllApprove"
@@ -141,7 +135,6 @@
   </div>
 </ng-template>
 
-
 <!-- temp right -->
 <ng-template #templateDetail>
   <contracts-view-detail
@@ -152,7 +145,7 @@
     (clickMoreFunc)="clickMoreFunc($event)"
     (changeProgress)="autoStart($event)"
     (isSusscess)="autoOpenPopupSusscess($event)"
-    ></contracts-view-detail>
+  ></contracts-view-detail>
 </ng-template>
 
 <!--more function -->
@@ -180,41 +173,43 @@
 </ng-template>
 <!--Tên hợp đồng -->
 <ng-template #contractName let-data>
-  <div class=""> 
+  <div class="">
     <span
       [innerHTML]="
-        data?.contractName | formatvalue : view?.formModel : 'ContractName' | async
+        data?.contractName
+          | formatvalue : view?.formModel : 'ContractName'
+          | async
       "
     ></span>
   </div>
 </ng-template>
 <!--Giá trị hợp đồng -->
 <ng-template #tempContractAmt let-data>
-  <div class=""> 
+  <div class="">
     <span
       [innerHTML]="
-        data?.contractAmt | formatvalue : view?.formModel : 'ContractAmt' | async
+        data?.contractAmt
+          | formatvalue : view?.formModel : 'ContractAmt'
+          | async
       "
     ></span>
   </div>
 </ng-template>
 <!--Số tiền đã thanh toán -->
 <ng-template #tempPaidAmt let-data>
-  <div class=""> 
+  <div class="">
     <span
       *ngIf="data?.paidAmt > 0"
       [innerHTML]="
         data?.paidAmt | formatvalue : view?.formModel : 'PaidAmt' | async
       "
     ></span>
-    <span *ngIf="data?.paidAmt <= 0"> 
-      0
-    </span>
+    <span *ngIf="data?.paidAmt <= 0"> 0 </span>
   </div>
 </ng-template>
 <!--Tiền tệ -->
 <ng-template #tempCurrencyID let-data>
-  <div class=""> 
+  <div class="">
     <span
       [innerHTML]="
         data?.currencyID | formatvalue : view?.formModel : 'CurrencyID' | async
@@ -251,7 +246,9 @@
   <div class="">
     <span
       [innerHTML]="
-        data?.applyProcess | formatvalue : view?.formModel : 'ApplyProcess' | async
+        data?.applyProcess
+          | formatvalue : view?.formModel : 'ApplyProcess'
+          | async
       "
     ></span>
   </div>
@@ -303,4 +300,70 @@
       ></codx-label>
     </ng-template>
   </span>
+</ng-template>
+
+<ng-template #liquidationTmp let-data>
+  <div class="liquidation p-5">
+    <div class="header-liquidation w-100">
+      <div class="d-flex justify-content-between w-100">
+        <span class="fs-5 fw-bold">{{actionName}}</span>
+        <button
+          class="button-close d-flex"
+          style="border: none; outline: none; background: none"
+          (click)="popupLiquidation.close()"
+        >
+          <i class="icon-close icon-18 text-hover-danger p-1"></i>
+        </button>
+      </div>
+    </div>
+    <div class="main-liquidation pt-3">
+      <div class="form-group">
+        <codx-label
+          [formModel]="view?.formModel"
+          fiedName="disposalOn"
+        ></codx-label>
+        <codx-input
+          field="disposalOn"
+          [formModel]="view?.formModel"
+        ></codx-input>
+      </div>
+
+      <div class="form-group">
+        <codx-input
+          class="me-3"
+          field="disposalAll"
+          [formModel]="view?.formModel"
+        ></codx-input>
+        <codx-label
+          [formModel]="view?.formModel"
+          fiedName="disposalAll"
+        ></codx-label>
+       
+      </div>
+
+      <div class="form-group">
+        <codx-label
+          [formModel]="view?.formModel"
+          fiedName="disposalCmt"
+        ></codx-label>
+        <codx-input
+          field="disposalCmt "
+          [formModel]="view?.formModel"
+        ></codx-input>
+      </div>
+    </div>
+    <div class="footer-liquidation w-100 d-flex justify-content-end">
+      <button
+        type="button"
+        class="btn btn-primary ms-1"
+        (click)="saveLiquidation()"
+      >
+        <codx-label
+          name="lblSave"
+          [formModel]="view?.formModel"
+          default="Lưu"
+        ></codx-label>
+      </button>
+    </div>
+  </div>
 </ng-template>
