@@ -185,6 +185,12 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     entityName: 'DP_Instances',
     gridViewName: 'grvDPInstances',
   };
+
+  frmModelExport: FormModel = {
+    formName: 'CMTempDataSources',
+    gridViewName: 'grvCMTempDataSources',
+    entityName: 'CM_TempDataSources',
+  };
   taskApprover;
   approverDialog;
   titleLanguageAdd = '';
@@ -504,7 +510,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
           case 'SYS002':
             break;
           case 'SYS004':
-            res.disabled = task?.taskType != "E";
+            res.disabled = task?.taskType != 'E';
             break;
           case 'SYS02': //xóa
             if (!(!task?.isTaskDefault && (this.isRoleAll || isGroup))) {
@@ -838,22 +844,22 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         //   customData.refID =  task.refID ;
         //   customData.refType ='DP_Steps_Tasks'
         // }
-        let frmModel: FormModel;
-        switch(task?.taskType){
-          case "CO":
-            frmModel = this.frmModelContracts;
-            break;
-          case "Q":
-            frmModel = this.frmModelQuotation;
-            break;
-          default:
-            frmModel =  this.frmModelInstancesTask;
-        }
+        // let frmModel: FormModel;
+        // switch (task?.taskType) {
+        //   case 'CO':
+        //     frmModel = this.frmModelContracts;
+        //     break;
+        //   case 'Q':
+        //     frmModel = this.frmModelQuotation;
+        //     break;
+        //   default:
+        //     frmModel = this.frmModelInstancesTask;
+        // }
         this.codxShareService.defaultMoreFunc(
           e,
           task,
           this.afterSave.bind(this),
-          frmModel,
+          this.frmModelInstancesTask,
           null,
           this,
           customData
@@ -888,14 +894,13 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   }
   //#endregion
 
-  sendMailTask(data){
+  sendMailTask(data) {
     this.api
-    .exec<any>('DP', 'InstancesStepsBusiness', 'SendMailTaskAsync', [
-      data,null
-    ])
-    .subscribe((res) => {
-
-    });
+      .exec<any>('DP', 'InstancesStepsBusiness', 'SendMailTaskAsync', [
+        data,
+        null,
+      ])
+      .subscribe((res) => {});
   }
 
   //#region start task
@@ -3091,18 +3096,19 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         var customData = {
           refID: data.recID,
           refType: 'DP_Instances_Steps_Tasks',
-          dataSource: res,
+          dataSource: res ?? '',
         };
         debugger;
         if (data?.isTaskDefault) {
           customData.refID = data.refID;
           customData.refType = 'DP_Steps_Tasks';
         }
+
         this.codxShareService.defaultMoreFunc(
           e,
           data,
           this.afterSave,
-          this.frmModelInstancesTask,
+          this.frmModelExport,
           null,
           this,
           customData
