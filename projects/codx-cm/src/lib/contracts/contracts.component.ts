@@ -403,9 +403,9 @@ export class ContractsComponent extends UIComponent {
       }
     }
   }
-  
-  async addTask(contract: CM_Contracts){
-    let taskOutput = await this.stepService.addTaskCM(contract, "CM_Contracts");
+
+  async addTask(contract: CM_Contracts) {
+    let taskOutput = await this.stepService.addTaskCM(contract, 'CM_Contracts');
     this.taskAdd = taskOutput;
   }
 
@@ -465,7 +465,7 @@ export class ContractsComponent extends UIComponent {
 
   afterSave(e?: any, that: any = null) {
     if (e) {
-      let appoverStatus = e.unbounds.statusApproval;
+      let appoverStatus = e?.unbounds?.statusApproval;
       if (
         appoverStatus != null &&
         appoverStatus != this.contractSelected.approveStatus
