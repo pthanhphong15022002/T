@@ -1,9 +1,11 @@
+import { map } from 'rxjs';
 import { Component, Injector, TemplateRef, ViewChild } from '@angular/core';
-import { ButtonModel, CRUDService, CallFuncService, CodxGridviewV2Component, CodxService, ResourceModel, SidebarModel, UIComponent, ViewModel, ViewType } from 'codx-core';
+import { ButtonModel, CRUDService, CallFuncService, CodxGridviewV2Component, CodxService, NotificationsService, ResourceModel, SidebarModel, UIComponent, ViewModel, ViewType } from 'codx-core';
 import { CodxHrService } from 'projects/codx-hr/src/lib/codx-hr.service';
 import { KowdsScheduleComponent } from './kowds-schedule/kowds-schedule.component';
 import { PopupEkowdsComponent } from './popup-ekowds/popup-ekowds.component';
 import { ActivatedRoute } from '@angular/router';
+import { PopupCopyEkowdsComponent } from './popup-copy-ekowds/popup-copy-ekowds.component';
 
 @Component({
   selector: 'lib-employee-kowds',
@@ -20,6 +22,7 @@ export class EmployeeKowdsComponent extends UIComponent{
   request: any = null;
   requestTitle: any = null;
   buttonAdd: ButtonModel[];
+  lstHrKow: any = []
   viewActive: string = '';
   orgUnitID: string = '';
   formModelEmployee;
@@ -46,6 +49,7 @@ export class EmployeeKowdsComponent extends UIComponent{
 
   @ViewChild('tempEmployee', { static: true }) tempEmployee: TemplateRef<any>;
   @ViewChild('tempDayData', { static: true }) tempDayData: TemplateRef<any>;
+  @ViewChild('tempDayHeader', { static: true }) tempDayHeader: TemplateRef<any>;
   @ViewChild('tempEmployeeTC', { static: true }) tempEmployeeTC: TemplateRef<any>;
   @ViewChild('calendarGrid') calendarGrid: CodxGridviewV2Component;
   @ViewChild('calendarGrid2') calendarGrid2: CodxGridviewV2Component;
@@ -58,6 +62,7 @@ export class EmployeeKowdsComponent extends UIComponent{
   constructor(inject: Injector, private hrService: CodxHrService,
     public override codxService : CodxService,
     private callfunc: CallFuncService,
+    private notify: NotificationsService,
     private routeActive: ActivatedRoute,
     ) {
     super(inject);
@@ -86,12 +91,15 @@ export class EmployeeKowdsComponent extends UIComponent{
      
     this.initHeaderText();
     this.getTimeKeepingMode().subscribe((res) => {
-      console.log('get time keeping', res);
       this.timeKeepingMode = res.timeKeepingMode;
       if(this.timeKeepingMode == '2'){
         this.viewStatistic = false;
         this.viewDetailData = true;
       }
+    })
+
+    this.getHrKows().subscribe((res) => {
+      this.lstHrKow = res;
     })
 
     // this.testAPILoadDetailData().subscribe((res) => {
@@ -160,29 +168,64 @@ export class EmployeeKowdsComponent extends UIComponent{
 
   clickMF(event){
     switch (event.functionID){
-      case 'SYS04': //copy
+      // case 'SYS04': //copy
+      // break;
+      // case 'SYS02': //delete
+      // let lstEmpID2 = this.calendarGrid.arrSelectedRows.map((data) => {
+      //   return data.employeeID;
+      // })
+
+      // console.log('lst emp map dc', lstEmpID2);
+      // break;
+      case 'SYS104':
+        if(this.calendarGrid.arrSelectedRows.length > 1){
+          this.notify.notifyCode('HR038');
+          return;
+        }
+        else if(this.calendarGrid.arrSelectedRows.length < 0)
+        {
+
+        }
+        else{
+          this.handleCopyEmpKows('Sao chép', 'copy', this.calendarGrid.arrSelectedRows[0])
+        }
       break;
-      case 'SYS02': //delete
+      case 'SYS102':
+        let lstEmpID = this.calendarGrid.arrSelectedRows.map((data) => {
+          return data.employeeID;
+        })
+
+        this.notify.alertCode('SYS030').subscribe((x) => {
+          if(x.event?.status == 'Y'){
+            console.log('lst emp map dc', lstEmpID);
+            this.deleteEmpKowByDowCode(lstEmpID.join(';'), this.filterDowCode).subscribe((res) =>{
+              if(res == true){
+                this.notify.notifyCode('SYS008');
+                this.calendarGrid.refresh();
+              }
+            });
+          }
+        })
       break;
     }
   }
 
   doubleClickGrid(event){
     console.log('event double click', event);
-    debugger
-
     // document.querySelector('[data-colindex="2"]').textContent
-    let date = event.column.index;
-    let data = event.rowData[`day${date}`]
+    // let date = event.column.field.substr(8);
+    let searchStr = 'workDate'
+    let date = parseInt(event.column.field.replace(searchStr,''))
+    let data = event.rowData[`workDate${date}`]
     let employeeId = event.rowData.emp.employeeID;
     this.handleEmpKows(this.editHeaderText, 'edit', data, employeeId, date)
   }
 
   handleEmpKows(actionHeaderText, actionType: string, data: any, employeeId, date){
+    debugger
     let option = new SidebarModel();
     option.FormModel = this.view.formModel;
     option.Width = '550px';
-    let funcHeader
     let dialog = this.callfunc.openSide(
       PopupEkowdsComponent,
       {
@@ -210,13 +253,50 @@ export class EmployeeKowdsComponent extends UIComponent{
     })
   }
 
+  handleCopyEmpKows(actionHeaderText, actionType: string, data: any){
+    debugger
+    let option = new SidebarModel();
+    option.FormModel = this.view.formModel;
+    option.Width = '550px';
+    let dialog = this.callfunc.openSide(
+      PopupCopyEkowdsComponent,
+      {
+        funcID: this.funcID,
+        employeeId: data.employeeID,
+        dowCode: this.filterDowCode,
+        // headerText: actionHeaderText + ' ' + this.formHeaderText,
+        headerText: 'Sao chép dữ liệu công',
+        dataObj: data
+      },
+      option
+    )
+
+    dialog.closed.subscribe((res) => {
+      if(res?.event){
+        if(this.viewDetailData == true) {
+          this.calendarGrid.refresh();
+        }
+        else if(this.viewStatistic == true){
+          this.calendarGrid2.refresh();
+        }
+      }
+    })
+  }
+
   handleShowHideMF(event){
-    console.log('more func', event);
     for(let i = 0; i < event.length; i++){
-      if(event[i].functionID == 'SYS04' || event[i].functionID == 'SYS02'){
+      if(event[i].functionID == 'SYS04'){
+        event[i].disabled = true;
+      }
+      else if(event[i].functionID == 'SYS104' || event[i].functionID == 'SYS102'){
         event[i].disabled = false;
       }
     }
+  }
+
+  onLoadedData(event){
+    debugger
+    console.log('load data xong', event);
   }
 
   switchModeView(mode){
@@ -258,6 +338,36 @@ export class EmployeeKowdsComponent extends UIComponent{
       'ERM.Business.PR',
       'KowDsBusiness',
       'GetTimeKeepingModeAsync'
+    );
+  }
+
+  copyEmpKow(empIDResources, empIDsCopy, dowCode){
+    return this.api.execSv<any>(
+      'HR',
+      'ERM.Business.PR',
+      'KowDsBusiness',
+      'CopyEmpKowAsync',
+      [empIDResources, empIDsCopy, dowCode]
+    );
+  }
+
+  deleteEmpKowByDowCode(empIDS, dowCode){
+    return this.api.execSv<any>(
+      'HR',
+      'ERM.Business.PR',
+      'KowDsBusiness',
+      'DeleteEmpKowAsyncByDowCodeAsync',
+      [empIDS, dowCode]
+    );
+  }
+
+  getHrKows() {
+    return this.api.execSv<any>(
+      'HR',
+      'ERM.Business.PR',
+      'KowDsBusiness',
+      'GetHrKows',
+      []
     );
   }
 
@@ -324,24 +434,35 @@ export class EmployeeKowdsComponent extends UIComponent{
 
       debugger
       if(!this.calendarGridColumns.length){
+        
         this.calendarGridColumns = []
+
         this.calendarGridColumns.push({
-          headerTemplate: 'Nhân viên',
+          //1headerTemplate: 'Nhân viên',
           template: this.tempEmployee,
-          width: '350',
+          field: 'employeeID'
         })
-        for(let i = 0; i < this.daysInMonth[this.filterMonth]; i++){
-          let date = new Date(this.filterYear, this.filterMonth, i+1);
-          let dayOfWeek = date.getDay();
-          this.calendarGridColumns.push({
-            field: `day${i+1}`,
-            headerTemplate:
-            ` ${this.daysOfWeek[dayOfWeek]}
-            <div> ${i + 1} </div> `,
-            template: this.tempDayData,
-            width: '150',
-          })
-        }
+
+        this.calendarGridColumns.push({
+          refField: 'workDate',
+          loopTimes: this.daysInMonth[this.filterMonth],
+          // loopTimes: 30,
+          headerTemplate: this.tempDayHeader,
+          template: this.tempDayData,
+        })
+
+        // for(let i = 0; i < this.daysInMonth[this.filterMonth]; i++){
+        //   let date = new Date(this.filterYear, this.filterMonth, i+1);
+        //   let dayOfWeek = date.getDay();
+        //   this.calendarGridColumns.push({
+        //     field: `day${i+1}`,
+        //     headerTemplate:
+        //     ` ${this.daysOfWeek[dayOfWeek]}
+        //     <div> ${i + 1} </div> `,
+        //     template: this.tempDayData,
+        //     width: '150',
+        //   })
+        // }
       this.calendarGridColumns = [...this.calendarGridColumns]
       }
 
@@ -445,7 +566,17 @@ export class EmployeeKowdsComponent extends UIComponent{
 
   }
 
+  handleColHeader(data){
+    let searchStr = 'workDate'
+    let date = parseInt(data.field.replace(searchStr,''))
+    let day = new Date(this.filterYear, this.filterMonth, date)
+    let dayOfWeek = day.getDay()
+    return this.daysOfWeek[dayOfWeek];
+  }
+
   logData(data){
+    console.log('Data tra ve template detail', data)
+
     if(data != null){
       console.log('Data tra ve template detail', data)
     }
@@ -458,7 +589,7 @@ export class EmployeeKowdsComponent extends UIComponent{
   }
 
   btnClick(event){
-
+    this.handleEmpKows(this.addHeaderText, 'add', null, null, new Date());
   }
 
   viewChanged(event: any) {

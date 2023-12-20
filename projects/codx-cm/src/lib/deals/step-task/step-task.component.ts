@@ -55,7 +55,7 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
   @Input() dealName: string;
   @Input() contractName: string;
   @Input() leadName: string;
-  @Input() isHeightAuto = false;
+  @Input() isHeightAuto = true;
   @Input() taskAdd;
   @Input() isViewStep = false;
 
@@ -144,11 +144,11 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes?.listInstanceStep) {
+    if (changes?.listInstanceStep && changes?.listInstanceStep?.currentValue?.length > 0) {
       this.listInstanceStepShow = this.listInstanceStep;
       if (!['0', '1', '2','15'].includes(this.dataCM?.status)) {
         this.stepIdReason =
-          this.listInstanceStep[this.listInstanceStep.length - 1].stepID;
+          this.listInstanceStep[this.listInstanceStep?.length - 1].stepID;
         this.listStepReasonValue =
           this.listInstanceStep[this.listInstanceStep.length - 1].reasons;
           this.isShowSuccess =  true;

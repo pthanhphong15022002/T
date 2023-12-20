@@ -121,6 +121,7 @@ import { StyleHeaderColumnsPipe } from './pipes/style-header-columns.pipe';
 import { FormatStatusCodePipe } from './pipes/format-status-code.pipe';
 import { ScrollSpyDirective } from './contracts/contracts-detail/scroll-spy.directive';
 import { ViewInstancesComponent } from 'projects/codx-dp/src/lib/view-instances/view-instances.component';
+import { CodxViewComponent } from './contracts/codx-view/codx-view.component';
 
 export const routes: Routes = [
   {
@@ -300,6 +301,7 @@ const T_Component: Type<any>[] = [
   ViewDealDetailComponent,
   ViewLeadDetailComponent,
   ScrollSpyDirective,
+  CodxViewComponent,
 ];
 
 @NgModule({

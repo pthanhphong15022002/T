@@ -1,7 +1,6 @@
 import { Component, Injector, Optional } from '@angular/core';
 import { DialogData, DialogRef, UIComponent } from 'codx-core';
 import { IJournalPermission } from '../interfaces/IJournalPermission.interface';
-import { JournalService } from '../journals.service';
 import { JournalPermission } from '../models/JournalPermission.model';
 
 @Component({
@@ -16,7 +15,6 @@ export class JournalspermissionEditComponent extends UIComponent {
 
   constructor(
     injector: Injector,
-    private journalService: JournalService,
     @Optional() public dialogRef: DialogRef,
     @Optional() public dialogData: DialogData
   ) {

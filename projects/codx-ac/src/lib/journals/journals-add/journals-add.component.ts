@@ -27,7 +27,6 @@ import { map, takeUntil, tap } from 'rxjs/operators';
 import { CodxAcService } from '../../codx-ac.service';
 import { IJournal, Vll067, Vll075 } from '../interfaces/IJournal.interface';
 import { IJournalPermission } from '../interfaces/IJournalPermission.interface';
-import { JournalService } from '../journals.service';
 import { JournalsAddIdimcontrolComponent } from './journals-add-idimcontrol/journals-add-idimcontrol.component';
 
 @Component({
@@ -44,21 +43,22 @@ export class JournalsAddComponent extends UIComponent {
   dialog!: DialogRef; 
   dialogData?: any;
   dataDefault: any;
-  vllAC122:any = ['0801', 'CR', 'CP', 'BR', 'BP', 'CT', 'GJ'];
-  vllAC107:any = ['II', 'IR', 'IT', 'IA'];
-  vllAC104:any = ['PI'];
-  vllAC105:any = ['SI', '0103', 'II', 'IT'];
-  vllAC125:any = ['CP', 'BP', 'GJ', 'SI', '0103', 'PI'];
-  vllAC126:any = ['SI', '0103', 'PI'];
-  vllAC108:any = ['CR', 'CP', 'BR', 'BP', 'GJ'];
-  vllAC109:any = ['SI', '0103', 'PI', 'II', 'IR', 'IT', '0305', 'IA'];
-  vllAC110:any = ['SI', '0103', 'II', 'IT', 'IA'];
-  vllAC111:any = ['PI', 'IR', 'IT', 'IA'];
+  vllAC122:any = [];
+  vllAC107:any = [];
+  vllAC104:any = [];
+  vllAC105:any = [];
+  vllAC125:any = [];
+  vllAC126:any = [];
+  vllAC108:any = [];
+  vllAC109:any = [];
+  vllAC110:any = [];
+  vllAC111:any = [];
   isOpenCbb:any = false;
   isMultiple:any = false;
   comboboxName:any;
   comboboxValue:any;
   fieldSelected:any;
+  oAutoNumber:any = [];
   tabInfo: any[] = [ //? thiết lập tab hiển thị trên form
     { icon: 'icon-info', text: 'Thông tin chung', name: 'Description'},
     { icon: 'icon-settings', text: 'Thiết lập', name: 'Setting' },
@@ -67,19 +67,20 @@ export class JournalsAddComponent extends UIComponent {
   fiscalYears:any;
   isPreventChange:any = false;
   showInfo:any = false;
+  preData:any;
   private destroy$ = new Subject<void>(); //? list observable hủy các subscribe api
   constructor(
     private inject: Injector,
     private acService: CodxAcService,
     private notification: NotificationsService,
-    private journalService: JournalService,
     @Optional() dialog?: DialogRef,
     @Optional() dialogData?: DialogData
   ) {
     super(inject);
-    this.dialog = dialog; //? dialog truyền vào
-    this.dialogData = dialogData; //? data dialog truyền vào
-    this.dataDefault = { ...dialogData.data?.oData }; //? get data của Cashpayments
+    this.dialog = dialog;
+    this.dialogData = dialogData;
+    this.dataDefault = { ...dialogData.data?.oData };
+    this.preData = { ...dialogData.data?.oData };
     
   }
   //#endregion Constructor
@@ -92,8 +93,17 @@ export class JournalsAddComponent extends UIComponent {
         this.fiscalYears = [
           ...new Set(periods.map((p) => Number(p.FiscalYear))),
         ];
-        console.log(this.fiscalYears);
       });
+    this.getVll('AC122','vllAC122');
+    this.getVll('AC107','vllAC107');
+    this.getVll('AC104','vllAC104');
+    this.getVll('AC105','vllAC105');
+    this.getVll('AC125','vllAC125');
+    this.getVll('AC126','vllAC126');
+    this.getVll('AC108','vllAC108');
+    this.getVll('AC109','vllAC109');
+    this.getVll('AC110','vllAC110');
+    this.getVll('AC111','vllAC111');
   }
 
   ngAfterViewInit() {
@@ -108,6 +118,7 @@ export class JournalsAddComponent extends UIComponent {
         this.formJournal.form.setValue('idimControl',res,{});
       });
     }
+    this.onDisableTab();
   }
   //#endregion Init
 
@@ -140,10 +151,20 @@ export class JournalsAddComponent extends UIComponent {
     }
     let field = event.field || event.ControlName || fields;
     let value = event.data;
-    if (event && this.formJournal.form.hasChange(this.formJournal.form.preData,this.formJournal.form.data)) { 
-      this.formJournal.form.data.updateColumns = '';
+    this.formJournal.form.data.updateColumns = '';
       switch (field.toLowerCase()) {
         case 'journalname':
+          let index = event?.component?.dataService?.data.findIndex((x) => x.JournalNo == event?.component?.value);
+          if (value == '' || value == null || index == -1 ) {
+            setTimeout(() => {
+              this.isPreventChange = true;
+              this.formJournal.form.formGroup.patchValue({ ...this.preData });
+              this.formJournal.form.data = {...this.preData};
+              this.isPreventChange = false;
+              this.onDisableTab();
+              this.detectorRef.detectChanges();
+            }, 100);
+          }
           this.api
               .exec('AC', 'JournalsBusiness', 'LoadOneDataAsync', [
                 this.formJournal.form.data.journalName
@@ -155,8 +176,11 @@ export class JournalsAddComponent extends UIComponent {
                   delete res?.journalName;
                   delete res?.recID;
                   delete res?.isTemplate;
+                  this.isPreventChange = true;
                   this.formJournal.form.formGroup.patchValue(res);
                   Object.assign(this.formJournal.form.data,res);
+                  this.onDisableTab();
+                  this.isPreventChange = false;
                   this.detectorRef.detectChanges();
                 }
               });
@@ -165,17 +189,37 @@ export class JournalsAddComponent extends UIComponent {
           this.cache
             .valueList('AC064')
             .pipe(
-              map((d) => d.datas.filter((d) => d.value === this.formJournal.form.data.journalType)[0]),
-              map((x:any) => x.text)
+              map((d) => d.datas.filter((d) => d.value === this.formJournal.form.data.journalType)),
             )
             .subscribe((res) => {
-              if (res) {
-                this.formJournal.form.setValue('journalDesc',res,{});
+              if (res && res.length > 0) {
+                let data = res[0];
+                this.formJournal.form.setValue('journalDesc',data?.text,{});
+              }else{
+                this.isPreventChange = true;
+                this.formJournal.form.formGroup.patchValue({ ...this.preData });
+                this.formJournal.form.data = { ...this.preData };
+                this.isPreventChange = false;
+                this.onDisableTab();
+                this.detectorRef.detectChanges();
               }
             });
           break;
-        case 'periodid':
+        case 'reasonid':
           value = event.data;
+          this.formJournal.form.setValue(field,value,{});
+          break;
+        case 'periodid':
+          let indexpr = event?.component?.dataService?.data.findIndex((x) => x.PeriodID == event?.component?.value);
+          if (value == '' || value == null || indexpr == -1 ) {
+            setTimeout(() => {
+              this.isPreventChange = true;
+              this.formJournal.form.setValue(field,null,{});
+              this.formJournal.form.setValue('fiscalYear',null,{});
+              this.isPreventChange = false;
+              this.detectorRef.detectChanges();
+            }, 100);
+          }
           let fiscalYear = parseInt(value.substring(0, 4));
           this.formJournal.form.setValue('fiscalYear',fiscalYear,{});
           break;
@@ -218,7 +262,6 @@ export class JournalsAddComponent extends UIComponent {
           this.detectorRef.detectChanges();
           break;
       }
-    }
   }
   //#endregion Event
 
@@ -324,6 +367,79 @@ export class JournalsAddComponent extends UIComponent {
   setTitle(event) {
     this.headerText = this.dialogData?.data?.headerText;
     this.detectorRef.detectChanges();
+  }
+
+  getVll(vllCode: string, propName: string) {
+    this.cache
+      .valueList(vllCode)
+      .pipe(
+        map((d) => d.datas.map((v) => v.value))
+      )
+      .subscribe((res) => {
+        this[propName] = res;
+      });
+  }
+
+  onDisableTab(){
+    let strdisable = '';
+    if(this.formJournal.form?.data?.journalName == '' || this.formJournal.form?.data?.journalName == null
+    || this.formJournal.form?.data?.journalType == '' || this.formJournal.form?.data?.journalType == null) strdisable +='1;2';
+    this.formJournal.setDisabled(strdisable);
+  }
+
+  openAutoNumberForm(){
+    this.cache
+      .valueList('AC159')
+      .pipe(
+        map((d) => d.datas.filter((d) => d.value === this.formJournal.form.data.journalType)),
+      )
+      .subscribe((res) => {
+        if (res && res.length > 0) {
+          let data = {
+            autoNoCode: this.formJournal?.form?.data?.voucherFormat,
+            description: res[0]?.text,
+            disableAssignRule: true,
+            autoAssignRule: this.formJournal?.form?.data?.assignRule,
+          }
+          let option = new DialogModel();
+          option.IsFull = true;
+          let dialog = this.callfc.openForm(
+            PopupAddAutoNumberComponent,
+            '',
+            0,
+            0,
+            '',
+            data,
+            '',
+            option
+          );
+        }
+      })
+    
+    // dialog.closed.subscribe((res) => {
+    //   console.log(res);
+
+    //   // if (res.event) {
+    //   //   this.form.formGroup.patchValue({
+    //   //     voucherFormat: res.event.autoNoCode,
+    //   //   });
+    //   // }
+    // });
+  }
+
+  beforeOpenCbxAutoNumber(event){
+    this.cache
+      .valueList('AC159')
+      .pipe(
+        map((d) => d.datas.filter((d) => d.value === this.formJournal.form.data.journalType)),
+      )
+      .subscribe((res) => {
+        if (res && res.length > 0) {
+          this.api.exec('AC','ACBusiness','LoadDataOrderPaymentLogicAsync',res[0].text).pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
+            console.log(res);
+          })
+        }
+      })
   }
   //#endregion Function
 }

@@ -62,7 +62,8 @@ export class PopupUpdateStatusComponent
     this.statusDefault = dialogData?.data?.statusDefault;
     this.statusCodecmt = dialogData?.data?.statusCodecmt;
     this.recID = dialogData?.data.recID;
-    // this.data = JSON.parse(JSON.stringify(dialogData?.data));
+    // // this.data = JSON.parse(JSON.stringify(dialogData?.data));
+    this.owner = dialogData?.data?.owner;
     this.title = dialogData?.data?.title;
     this.valueListStatusCode = dialogData?.data.valueListStatusCode;
     this.gridViewSetup = dialogData?.data?.gridViewSetup;

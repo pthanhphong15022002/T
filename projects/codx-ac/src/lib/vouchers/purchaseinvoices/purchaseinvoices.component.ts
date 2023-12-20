@@ -21,7 +21,6 @@ import {
   ViewType,
 } from 'codx-core';
 import { Subject, takeUntil } from 'rxjs';
-import { JournalService } from '../../journals/journals.service';
 import { PurchaseinvoicesAddComponent } from './purchaseinvoices-add/purchaseinvoices-add.component';
 import { CodxAcService } from '../../codx-ac.service';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
@@ -85,7 +84,6 @@ export class PurchaseinvoicesComponent extends UIComponent {
     private shareService: CodxShareService,
     private notification: NotificationsService,
     private tenant: TenantStore,
-    private journalService: JournalService
   ) {
     super(inject);
     this.cache
@@ -155,7 +153,7 @@ export class PurchaseinvoicesComponent extends UIComponent {
       },
     ];
 
-    this.journalService.setChildLinks(this.journalNo);
+    this.acService.setChildLinks();
   }
 
   ngOnDestroy() {
@@ -180,7 +178,10 @@ export class PurchaseinvoicesComponent extends UIComponent {
   toolbarClick(event) {
     switch (event.id) {
       case 'btnAdd':
-        this.addNewVoucher(); //? thêm mới chứng từ
+        this.addNewVoucher();
+        break;
+      case 'btnXml':
+        this.xml.nativeElement.click();
         break;
     }
   }
@@ -226,7 +227,7 @@ export class PurchaseinvoicesComponent extends UIComponent {
         this.allocationVoucher(e.text, data); //? phân bổ chi phí chứng từ
         break;
       case 'ACT060109':
-        this.xml.nativeElement.click(); //? doc xml chứng từ
+        //this.xml.nativeElement.click(); //? doc xml chứng từ
         break;
     }
   }

@@ -2,9 +2,6 @@ import { ChangeDetectorRef, Component, Injector, OnInit, Optional, ViewChild } f
 import { AuthStore, CodxComboboxComponent, CodxFormComponent, CodxInputComponent, DialogData, DialogRef, NotificationsService, RequestOption, UIComponent } from 'codx-core';
 import { CodxAcService } from '../../../codx-ac.service';
 import { ActivatedRoute } from '@angular/router';
-import { JournalService } from '../../../journals/journals.service';
-import { RunPeriodic } from '../../../models/RunPeriodic.model';
-import { Paras } from '../../../models/Paras.model';
 import { DepreciatingFixedAssets } from '../../../models/DepreciatingFixedAssets.model';
 
 @Component({
@@ -24,7 +21,7 @@ export class PopAddDepreciatingFixedAssetsComponent extends UIComponent implemen
   dialog!: DialogRef;
   authStore: AuthStore;
   depreciatingFixedAsset: DepreciatingFixedAssets;
-  Paras: Paras;
+  Paras: any;
   gridViewSetup: any;
   validate: any = 0;
   
@@ -34,14 +31,13 @@ export class PopAddDepreciatingFixedAssetsComponent extends UIComponent implemen
     private dt: ChangeDetectorRef,
     private notification: NotificationsService,
     private routerActive: ActivatedRoute,
-    private journalService: JournalService,
     @Optional() dialog?: DialogRef,
     @Optional() dialogData?: DialogData
   ) {
     super(inject);
     this.authStore = inject.get(AuthStore);
     this.dialog = dialog;
-    this.Paras = new Paras();
+    //this.Paras = new Paras();
     this.headerText = dialogData.data?.headerText;
     this.depreciatingFixedAsset = dialog.dataService!.dataSelected;
     if(this.depreciatingFixedAsset.paras != null)
@@ -178,7 +174,7 @@ export class PopAddDepreciatingFixedAssetsComponent extends UIComponent implemen
   }
 
   onClearParas(){
-    this.Paras = new Paras();
+    //this.Paras = new Paras();
     this.depreciatingFixedAsset.deprModelID = null;
     this.depreciatingFixedAsset.assetGroupID = null;
     this.depreciatingFixedAsset.assetID = null;

@@ -58,6 +58,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
   @Input() contractName: string;
   @Input() leadName: string;
   @Input() activitiAdd;
+  @Input() applyFor;
 
   @Input() sessionID = ''; // session giao việc
   @Input() formModelAssign: FormModel; // formModel của giao việc
@@ -815,7 +816,7 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
           'ES',
           'CategoriesBusiness',
           'GetByCategoryIDTypeAsync',
-          [task?.recID, 'DP_Activities']
+          [task?.recID, 'DP_Activities', null]
         )
         .subscribe((res) => {
           if (!res) {

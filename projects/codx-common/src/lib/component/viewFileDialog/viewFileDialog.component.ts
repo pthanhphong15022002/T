@@ -76,6 +76,7 @@ export class ViewFileDialogComponent implements OnInit, OnChanges {
   @Input() ext: string;
   @Input() dataFile: any;
   @Input() isClose = false;
+  @Input() recID:any;
   @Input('viewBase') viewBase: ViewsComponent;
   dialog: any;
   public service: string = environment.pdfUrl; //'https://ej2services.syncfusion.com/production/web-services/api/pdfviewer';
@@ -121,9 +122,11 @@ export class ViewFileDialogComponent implements OnInit, OnChanges {
     }
   }
   ngOnInit(): void {
-    this.route.queryParams.subscribe((params) => {
-      if (params && params.id) {
-        this.api
+    if(!this.recID)
+    {
+      this.route.queryParams.subscribe((params) => {
+        if (params && params.id) {
+          this.api
           .execSv('DM', 'DM', 'FileBussiness', 'GetFilesByIDAsync', params.id)
           .subscribe((item) => {
             if (item) {
@@ -134,14 +137,29 @@ export class ViewFileDialogComponent implements OnInit, OnChanges {
               this.changeDetectorRef.detectChanges();
             }
           });
-      } else if (params) {
-        this.data = this.dataFile;
-        this.getData();
-      }
-    });
+        } else if (params) {
+          this.data = this.dataFile;
+          this.getData();
+        }
+      });
+    }
+    else this.getDataFile(this.recID)
     //if(this.data)this.getData();
   }
 
+  getDataFile(recID:any)
+  {
+    this.api
+    .execSv('DM', 'DM', 'FileBussiness', 'GetFilesByIDAsync', recID)
+    .subscribe((item) => {
+      if (item) {
+        this.dataFile = item;
+        this.data = item;
+        this.getData();
+        this.changeDetectorRef.detectChanges();
+      }
+    });
+  }
   //Lấy version đầu tiên
   formatFristVersion(data) {
     if (data.history && data.history.length > 0) {

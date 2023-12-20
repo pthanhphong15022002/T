@@ -29,7 +29,6 @@ import {
   Vll067,
   Vll075,
 } from '../../../journals/interfaces/IJournal.interface';
-import { JournalService } from '../../../journals/journals.service';
 import { Subject, map, takeUntil } from 'rxjs';
 import { AC_PurchaseInvoicesLines } from '../../../models/AC_PurchaseInvoicesLines.model';
 import { AC_VATInvoices } from '../../../models/AC_VATInvoices.model';
@@ -75,7 +74,6 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
     inject: Injector,
     private acService: CodxAcService,
     private notification: NotificationsService,
-    private journalService: JournalService,
     private tranform : DatePipe,
     @Optional() dialog?: DialogRef,
     @Optional() dialogData?: DialogData
@@ -220,6 +218,8 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
         } 
         let objectType = event?.component?.itemsSelected[0]?.ObjectType || '';
         this.formPurchaseInvoices.setValue('objectType',objectType,{});
+        let memo2 = this.getMemoMaster();
+        this.formPurchaseInvoices.setValue('memo', memo2, {});
         this.objectIDChange(field);
         break;
 
@@ -587,7 +587,7 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
         this.formPurchaseInvoices.setValue('currencyID',(res?.data?.currencyID),{});
         this.formPurchaseInvoices.setValue('exchangeRate',(res?.data?.exchangeRate),{});
         this.formPurchaseInvoices.setValue('taxExchRate',(res?.data?.taxExchRate),{});
-        this.formPurchaseInvoices.setValue('multi',(res?.multi),{});
+        this.formPurchaseInvoices.setValue('multi',(res?.data?.multi),{});
         if (this.eleGridPurchaseInvoice.dataSource.length) {
           this.formPurchaseInvoices.preData = {...this.formPurchaseInvoices.data};
           this.dialog.dataService.update(this.formPurchaseInvoices.data).subscribe();

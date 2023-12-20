@@ -44,7 +44,6 @@ import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model
 import { Subject, Subscription, firstValueFrom, map, mergeMap, pairwise, startWith, switchMap, take, takeUntil } from 'rxjs';
 import { IJournal } from '../../../journals/interfaces/IJournal.interface';
 import { CodxAcService, fmCashPaymentsLines, fmCashPaymentsLinesOneAccount, fmSettledInvoices, fmVATInvoices } from '../../../codx-ac.service';
-import { JournalService } from '../../../journals/journals.service';
 import {
   AnimationModel,
   ProgressBar,
@@ -221,12 +220,13 @@ export class CashPaymentAddComponent extends UIComponent {
    * @param columnsGrid danh sách cột của lưới
    */
   beforeInitGridSettledInvoices(eleGrid) {
+    this.settingFormatGridSettledInvoices(eleGrid);
     //* Thiết lập các field ẩn theo đồng tiền hạch toán
     let hideFields = [];
-    if (this.formCashPayment?.data?.currencyID == this.baseCurr) { //? nếu chứng từ có tiền tệ = đồng tiền hạch toán
-      hideFields.push('BalAmt2'); //? ẩn cột tiền Số dư, HT của SettledInvoices
-      hideFields.push('SettledAmt2'); //? ẩn cột tiền thanh toán,HT của SettledInvoices
-      hideFields.push('SettledDisc2'); //? ẩn cột chiết khấu thanh toán, HT của SettledInvoices
+    if (this.formCashPayment?.data?.currencyID == this.baseCurr) {
+      hideFields.push('BalAmt2');
+      hideFields.push('SettledAmt2');
+      hideFields.push('CashDisc2');
     }
     eleGrid.showHideColumns(hideFields);
   }
@@ -285,6 +285,9 @@ export class CashPaymentAddComponent extends UIComponent {
           .subscribe((res: any) => {
             this.formCashPayment.setValue('subType',event.data[0],{});
             this.dialog.dataService.update(this.formCashPayment.data).subscribe();
+            if(this.eleGridCashPayment) this.eleGridCashPayment.dataSource = [];
+            if(this.eleGridSettledInvoices) this.eleGridSettledInvoices.dataSource = [];
+            if(this.eleGridVatInvoices) this.eleGridVatInvoices.dataSource = [];
             this.showHideTabDetail(
               this.formCashPayment?.data?.subType,
               this.elementTabDetail
@@ -831,8 +834,8 @@ export class CashPaymentAddComponent extends UIComponent {
       ])
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
+        this.isload = false;
         if (res?.update) {
-          this.isload = false;
           this.dialog.dataService.update(res.data).subscribe();
           if (type == 'save') {
             this.onDestroy();
@@ -1636,6 +1639,21 @@ export class CashPaymentAddComponent extends UIComponent {
       eleGrid.setFormatField('cr','n'+(setting.dSourceCurr || 0));
       eleGrid.setFormatField('dR2','n'+(setting.dBaseCurr || 0));
       eleGrid.setFormatField('cR2','n'+(setting.dBaseCurr || 0));
+    }
+  }
+
+  settingFormatGridSettledInvoices(eleGrid){
+    let setting = eleGrid.systemSetting;
+    if (this.formCashPayment.data.currencyID == this.baseCurr) { //? nếu chứng từ có tiền tệ = đồng tiền hạch toán
+      eleGrid.setFormatField('balAmt','n'+(setting.dBaseCurr || 0));
+      eleGrid.setFormatField('balAmt2','n'+(setting.dBaseCurr || 0));
+      eleGrid.setFormatField('settledAmt','n'+(setting.dBaseCurr || 0));
+      eleGrid.setFormatField('settledAmt2','n'+(setting.dBaseCurr || 0));
+    } else { //? nếu chứng từ có tiền tệ != đồng tiền hạch toán
+      eleGrid.setFormatField('balAmt','n'+(setting.dSourceCurr || 0));
+      eleGrid.setFormatField('balAmt2','n'+(setting.dSourceCurr || 0));
+      eleGrid.setFormatField('settledAmt','n'+(setting.dBaseCurr || 0));
+      eleGrid.setFormatField('settledAmt2','n'+(setting.dBaseCurr || 0));
     }
   }
 

@@ -35,13 +35,15 @@
       </div>
     </div>
     <ng-container>
-      <div style="margin-left: 28px" *ngIf="formCashReceipt && !formCashReceipt?.data?.validated"
-        class="input-circle h-20px input-border-0 w-400px mb-1">
-        <codx-dropdown-select #eleCbxSubType [showFooter]="false" [isToolbar]="false"
-          [cssClass]="'rounded-pill border-1'" cssPopup="h-350px w-550px" [isMulti]="false" type="valuelist"
-          field="subType" [refValue]="formCashReceipt?.gridviewSetup['SubType']?.referedValue"
-          [value]="formCashReceipt?.data?.subType" emptyText="Loại phiếu"
-          (valueChange)="changeSubType($event)"></codx-dropdown-select>
+      <div style="margin-left: 35px" class="d-flex align-items-center">
+        <i class="icon-keyboard_arrow_down icon-16"></i>
+        <div *ngIf="formCashReceipt && !formCashReceipt?.data?.validated"
+          class="input-circle h-20px input-border-0 w-400px mb-1">
+          <codx-dropdown-select #eleCbxSubType [showFooter]="false" [isToolbar]="false" [cssClass]="'rounded-pill border-1'"
+            cssPopup="h-350px w-550px" [isMulti]="false" type="valuelist" field="subType"
+            [refValue]="formCashReceipt?.gridviewSetup['SubType']?.referedValue" [value]="formCashReceipt?.data?.subType"
+            emptyText="Loại phiếu" (valueChange)="changeSubType($event)"></codx-dropdown-select>
+        </div>
       </div>
       <span style="margin-left: 30px" *ngIf="formCashReceipt && formCashReceipt?.data?.validated">
         <codx-vll [name]="'AC063'" [formModel]="dialog.formModel" [field]="'SubType'"
@@ -76,7 +78,7 @@
   <!-- End: Tab General -->
 
   <!-- Start: Tab Detail -->
-  <div style="height: calc(100vh - 420px) !important;min-height: 350px;">
+  <div style="height: calc(100vh - 420px) !important;min-height: 300px;">
     <!-- Start: Tab Detail -->
     <ejs-tab #elementTabDetail (created)="createTabDetail($event,elementTabDetail)"
       (selecting)="onTabSelectedDetail($event)">
@@ -355,7 +357,7 @@
         (cellChanged)="valueChangeLine($event)"></codx-gridview-v2>
       <div #btnRef class="btn-addline">
         <div class="d-flex align-items-center">
-          <div *ngIf="formCashReceipt.data?.subType == '11'">
+          <div *ngIf="formCashReceipt.data?.subType != '13' && formCashReceipt.data?.subType != '14'">
             <button style="border: 1px solid !important;" tabindex="-1" tab-index="11" id="btnAddCash"
               class="btn btn-sm btn-light-primary rounded-15 btnAddCash" (keydown.enter)="
               onAddLine(); $event.preventDefault()

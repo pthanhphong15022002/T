@@ -5,6 +5,7 @@
 .mw-850 {
     max-width: 850px !important;
 }
+
 .mw-800 {
     max-width: 800px !important;
 }
@@ -30,18 +31,6 @@
     border-bottom-width: 1px !important;
 }
 
-.ac-load {
-    width: 100%;
-    height: 100%;
-    justify-content: center !important;
-    background-color: white;
-    display: flex;
-    position: absolute;
-    top: 0;
-    left: 0;
-    align-items: center;
-}
-
 .ac-empty {
     width: 100%;
     height: calc(100vh - 500px);
@@ -49,29 +38,30 @@
     display: flex;
     align-items: center;
     flex-direction: column !important;
-    img{
+
+    img {
         width: 12% !important;
     }
 }
 
 .tabline-content .e-content {
     height: calc(100vh - 490px) !important;
-    min-height: 280px;
+    min-height: 230px;
 }
 
 .tablinevoucher-content .e-content {
     height: calc(100vh - 450px) !important;
-    min-height: 280px;
+    min-height: 230px;
 }
 
 .tablinegeneral-content .e-content {
     height: calc(100vh - 430px) !important;
-    min-height: 280px;
+    min-height: 230px;
 }
 
 .tablinetranfer-content .e-content {
     height: calc(100vh - 450px) !important;
-    min-height: 280px;
+    min-height: 230px;
 }
 
 .tabadvance-content .e-content {
@@ -111,51 +101,6 @@
     position: absolute;
     right: 0;
     top: -35px;
-}
-
-.add-cash #gridViewV2.e-grid .e-summarycell {
-    border-width: 0;
-}
-
-.ac-load-save {
-    width: 100%;
-    height: 100%;
-    background-color: rgba(233, 233, 233, 0.5);
-    justify-content: center !important;
-    display: flex;
-    position: absolute;
-    top: 0;
-    left: 0;
-    align-items: center;
-    z-index: 1000;
-}
-
-.ac-load-grid {
-    margin-top: 3rem;
-    width: 100%;
-    height: calc(100vh - 475px) !important;
-    justify-content: center !important;
-    display: flex;
-    position: absolute;
-    top: 0;
-    left: 0;
-    align-items: center;
-    z-index: 1000;
-    background-color: white;
-
-}
-
-.load-grid {
-    width: 100%;
-    height: 90%;
-    background-color: white !important;
-    position: absolute;
-    display: flex;
-    justify-content: center !important;
-    z-index: 1000;
-    top: 0;
-    left: 0;
-    align-items: center;
 }
 
 .ac-btn-ref {
@@ -201,7 +146,7 @@
     display: none;
 }
 
-.ac-badge-light-primary{
+.ac-badge-light-primary {
     color: var(--primary) !important;
     background: none !important;
     border: 1px solid var(--primary) !important;
@@ -216,11 +161,11 @@
     height: 34px !important;
 }
 
-.ac-input codx-dropdown-calendar button{
+.ac-input codx-dropdown-calendar button {
     border: none !important;
 }
 
-.ac-input codx-dropdown-calendar .dropdown{
+.ac-input codx-dropdown-calendar .dropdown {
     justify-content: center !important;
     padding-left: 8px !important;
     display: flex !important;
@@ -262,22 +207,6 @@
     border-bottom: none !important;
 }
 
-/* css vẽ khung input trước khi init */
-
-.ac-input-disable .codx-text {
-    border: none !important;
-}
-
-.ac-input-disable codx-input {
-    position: relative;
-}
-
-/* css footer */
-/* css aniamtion slide form */
-.codx-dialog-container {
-    background-color: rgba(0, 0, 0, 0) !important;
-}
-
 .ac-form {
     animation-name: slideRight;
     animation-duration: 0.3s !important;
@@ -313,7 +242,7 @@
     height: 30px !important;
 }
 
-#gridViewV2.e-grid.e-default tr td:first-child{
+#gridViewV2.e-grid.e-default tr td:first-child {
     border-left-width: 0px !important;
     border-top-width: 0px !important;
 }
@@ -356,12 +285,19 @@
     codx-listview {
         height: 100% !important;
     }
-    .e-pane.e-pane-horizontal.e-scrollable.e-static-pane.e-collapsible{
+
+    .e-pane.e-pane-horizontal.e-scrollable.e-static-pane.e-collapsible {
         max-width: 365px !important;
     }
 }
 
-.ac-views codx-view-list {
+.ac-views codx-view-list codx-view-list-card {
+    codx-listview {
+        height: 100% !important;
+    }
+}
+
+.ac-views codx-view-list-card {
     codx-listview {
         height: 100% !important;
     }
@@ -427,9 +363,7 @@
     border-color: var(--primary) !important;
 }
 
-/* css custom animation gridviewv2 */
-
-.ac-hide-toolbar{
+.ac-hide-toolbar {
     margin-top: -6.2rem;
     height: calc(100vh - 90px);
     background-color: white;
@@ -437,7 +371,8 @@
     width: -webkit-fill-available;
     padding-right: 1rem;
     position: fixed;
-    codx-toolbar{
+
+    codx-toolbar {
         display: none !important;
     }
 }
@@ -446,89 +381,93 @@
     display: flex;
     justify-content: center;
     align-items: center;
-  }
-  
-  .line-around-flex::before,
-  .line-around-flex::after {
+}
+
+.line-around-flex::before,
+.line-around-flex::after {
     content: "";
     flex-grow: 1;
     height: 1px;
     background-color: var(--primary);
-  }
-  
-  .line-around-flex::before {
-    margin-right: 10px;
-  }
-  
-  .line-around-flex::after {
-    margin-left: 10px;
-  }
-  
-  .accordion-button::after {
-    background-image: var(--url);
-  }
+}
 
-  .card-general-more {
-    .table-ac{
+.line-around-flex::before {
+    margin-right: 10px;
+}
+
+.line-around-flex::after {
+    margin-left: 10px;
+}
+
+.accordion-button::after {
+    background-image: var(--url);
+}
+
+.card-general-more {
+    .table-ac {
         height: calc(100vh - 450px) !important;
     }
 
     .ac-empty {
         height: calc(100vh - 490px) !important;
     }
-  } 
+}
 
-  .card-general-less{
-    .table-ac{
+.card-general-less {
+    .table-ac {
         height: calc(100vh - 415px) !important;
     }
+
     .ac-empty {
         height: calc(100vh - 455px) !important;
     }
-  } 
+}
 
-  .card-cash {
-    .table-ac{
+.card-cash {
+    .table-ac {
         height: calc(100vh - 495px) !important;
     }
+
     .ac-empty {
         height: calc(100vh - 540px) !important;
     }
-  }
+}
 
-  .card-pur-more{
-    .table-ac{
+.card-pur-more {
+    .table-ac {
         height: calc(100vh - 495px) !important;
     }
 
     .ac-empty {
         height: calc(100vh - 545px) !important;
     }
-  } 
+}
 
-  .card-pur-less{
-    .table-ac{
-        height: calc(100vh - 460px) !important;
+.card-pur-less {
+    .table-ac {
+        height: calc(100vh - 450px) !important;
     }
+
     .ac-empty {
-        height: calc(100vh - 500px) !important;
+        height: calc(100vh - 490px) !important;
     }
-  } 
+}
 
-  .card-transfer {
-    .table-ac{
+.card-transfer {
+    .table-ac {
         height: calc(100vh - 455px) !important;
     }
+
     .ac-empty {
         height: calc(100vh - 495px) !important;
     }
-  } 
+}
 
-  .nav-link.disabled {
+.nav-link.disabled {
     color: var(--gray-500) !important;
-  }
+}
 
-  .btn-icon-badge{
+.btn-icon-badge {
     border-radius: 50px;
     position: absolute;
     left: 3rem;
@@ -542,7 +481,8 @@
     justify-content: center;
     padding: 0;
     border: none !important;
-  }
+}
 
-
-
+.codx-dialog-container {
+    background-color: rgba(0, 0, 0, 0) !important;
+}

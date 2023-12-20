@@ -28,6 +28,7 @@ import { DealsComponent } from 'projects/codx-cm/src/lib/deals/deals.component';
 import { CasesComponent } from 'projects/codx-cm/src/lib/cases/cases.component';
 import { LeadsComponent } from 'projects/codx-cm/src/lib/leads/leads.component';
 import { ViewInstancesComponent } from 'projects/codx-dp/src/lib/view-instances/view-instances.component';
+import { PopupCopyEkowdsComponent } from './employee-kowds/popup-copy-ekowds/popup-copy-ekowds.component';
 export const routes: Routes = [
   {
     path: '',
@@ -75,6 +76,7 @@ const T_Component: Type<any>[] = [
   EmployeeKowdsComponent,
   KowdsScheduleComponent,
   PopupEkowdsComponent,
+  PopupCopyEkowdsComponent
 ];
 
 @NgModule({
@@ -99,6 +101,7 @@ const T_Component: Type<any>[] = [
     EmployeeKowdsComponent,
     KowdsScheduleComponent,
     PopupEkowdsComponent,
+    PopupCopyEkowdsComponent,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

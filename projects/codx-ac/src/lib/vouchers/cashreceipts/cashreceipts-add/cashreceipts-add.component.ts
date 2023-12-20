@@ -149,12 +149,13 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
    * @param columnsGrid danh sách cột của lưới
    */
   beforeInitGridSettledInvoices(eleGrid) {
+    this.settingFormatGridSettledInvoices(eleGrid);
     //* Thiết lập các field ẩn theo đồng tiền hạch toán
     let hideFields = [];
-    if (this.formCashReceipt?.data?.currencyID == this.baseCurr) { //? nếu chứng từ có tiền tệ = đồng tiền hạch toán
-      hideFields.push('BalAmt2'); //? ẩn cột tiền Số dư, HT của SettledInvoices
-      hideFields.push('SettledAmt2'); //? ẩn cột tiền thanh toán,HT của SettledInvoices
-      hideFields.push('SettledDisc2'); //? ẩn cột chiết khấu thanh toán, HT của SettledInvoices
+    if (this.formCashReceipt?.data?.currencyID == this.baseCurr) {
+      hideFields.push('BalAmt2');
+      hideFields.push('SettledAmt2');
+      hideFields.push('CashDisc2');
     }
     eleGrid.showHideColumns(hideFields);
   }
@@ -202,7 +203,7 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
           let obj = {
             SubType : event.data[0]
           }
-          this.api.exec('AC', 'CashPaymentsBusiness', 'ValueChangedAsync', [
+          this.api.exec('AC', 'CashReceiptsBusiness', 'ValueChangedAsync', [
             'subType',
             this.formCashReceipt.data,
             JSON.stringify(obj)
@@ -211,6 +212,8 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
           .subscribe((res: any) => {
             this.formCashReceipt.setValue('subType',event.data[0],{onlySelf: true,emitEvent: false,});
             this.dialog.dataService.update(this.formCashReceipt.data).subscribe();
+            if(this.eleGridCashReceipt) this.eleGridCashReceipt.dataSource = [];
+            if(this.eleGridSettledInvoices) this.eleGridSettledInvoices.dataSource = [];
             this.showHideTabDetail(
               this.formCashReceipt?.data?.subType,
               this.elementTabDetail
@@ -871,7 +874,7 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
         this.addSettledInvoices();
         break;
       case '13':
-        this.addSuggestion('1');
+        this.addSuggestion('2');
         break;
       // case '14':
       //   this.addSuggestion('2');
@@ -1342,6 +1345,21 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
       eleGrid.setFormatField('cr','n'+(setting.dSourceCurr || 0));
       eleGrid.setFormatField('dR2','n'+(setting.dBaseCurr || 0));
       eleGrid.setFormatField('cR2','n'+(setting.dBaseCurr || 0));
+    }
+  }
+
+  settingFormatGridSettledInvoices(eleGrid){
+    let setting = eleGrid.systemSetting;
+    if (this.formCashReceipt.data.currencyID == this.baseCurr) { //? nếu chứng từ có tiền tệ = đồng tiền hạch toán
+      eleGrid.setFormatField('balAmt','n'+(setting.dBaseCurr || 0));
+      eleGrid.setFormatField('balAmt2','n'+(setting.dBaseCurr || 0));
+      eleGrid.setFormatField('settledAmt','n'+(setting.dBaseCurr || 0));
+      eleGrid.setFormatField('settledAmt2','n'+(setting.dBaseCurr || 0));
+    } else { //? nếu chứng từ có tiền tệ != đồng tiền hạch toán
+      eleGrid.setFormatField('balAmt','n'+(setting.dSourceCurr || 0));
+      eleGrid.setFormatField('balAmt2','n'+(setting.dSourceCurr || 0));
+      eleGrid.setFormatField('settledAmt','n'+(setting.dBaseCurr || 0));
+      eleGrid.setFormatField('settledAmt2','n'+(setting.dBaseCurr || 0));
     }
   }
 

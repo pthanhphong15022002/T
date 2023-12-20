@@ -399,7 +399,11 @@ export class DealsComponent
           mappingFunction && mappingFunction(eventItem, data);
         } else {
           eventItem.disabled =
-            eventItem?.functionID !== 'CM0201_17' ? true : data?.alloweStatus == '1' ? false : true;
+            eventItem?.functionID !== 'CM0201_17'
+              ? true
+              : data?.alloweStatus == '1'
+              ? false
+              : true;
         }
       }
     }
@@ -411,7 +415,8 @@ export class DealsComponent
         data?.alloweStatus == '1'
           ? (data.closed && data?.status != '1') ||
             ['1', '0', '15'].includes(data?.status) ||
-            this.checkMoreReason(data) || !data.applyProcess
+            this.checkMoreReason(data) ||
+            !data.applyProcess
           : true;
     };
     let isDelete = (eventItem, data) => {
@@ -492,7 +497,8 @@ export class DealsComponent
     let isMoveReason = (eventItem, data) => {
       eventItem.disabled =
         data?.alloweStatus == '1'
-          ? (data.closed && data?.status != '1') || !data.applyProcess ||
+          ? (data.closed && data?.status != '1') ||
+            !data.applyProcess ||
             ['1', '0', '15'].includes(data?.status) ||
             this.checkMoreReason(data, false)
           : true;
@@ -834,13 +840,13 @@ export class DealsComponent
   viewDetail(deal) {
     let data = {
       formModel: this.view.formModel,
-      contract: deal,
+      dataView: deal,
       isView: true,
       // listInsStepStart: this.listInsStep,
     };
     let option = new DialogModel();
     option.IsFull = true;
-    option.zIndex = 1001;
+    option.zIndex = 100;
     option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;
     let popupContract = this.callFunc.openForm(
@@ -938,7 +944,8 @@ export class DealsComponent
                       if (this.kanban) {
                         this.renderKanban(res);
                       }
-                      if (this.detailViewDeal) this.detailViewDeal.dataSelected = res;
+                      if (this.detailViewDeal)
+                        this.detailViewDeal.dataSelected = res;
                       this.detailViewDeal?.reloadListStep(listSteps);
                       this.detectorRef.detectChanges();
                     }
@@ -2065,7 +2072,7 @@ export class DealsComponent
       category: '1',
       formModel: this.view?.formModel,
       statusOld: this.dataSelected?.status,
-      owner: this.dataSelected?.owner,
+      owner: this.dataSelected.owner,
     };
     let dialogStatus= this.callfc.openForm(
       PopupUpdateStatusComponent,
@@ -2083,7 +2090,7 @@ export class DealsComponent
         this.statusCodeCmt = e?.event?.statusCodecmt;
         let status = e?.event?.status;
         let message = e?.event?.message;
-        if(status && !this.dataSelected.applyProcess ) {
+        if (status && !this.dataSelected.applyProcess) {
           this.dataSelected.status = status;
         }
         if (message) {
@@ -2182,17 +2189,19 @@ export class DealsComponent
   }
   totalGirdView() {
     this.getTotal().subscribe((total) => {
-      let intl = new Internationalization();
-      let nFormatter = intl.getNumberFormat({
-        skeleton: 'n6',
-      });
-      this.totalView = nFormatter(total) + ' ' + this.currencyIDDefault;
+      //không the format truyền qua
+      // let intl = new Internationalization();
+      // let nFormatter = intl.getNumberFormat({
+      //   skeleton: 'n6',
+      // });
+      // this.totalView = nFormatter(total) + ' ' + this.currencyIDDefault;
 
       if (!Number.parseFloat(total)) total = 0;
       let objectDealValue = {
         dealValue: total,
       };
-      // this.view.currentView.sumData = objectDealValue;
+
+      this.view.currentView.sumData = objectDealValue;
 
       // let elemnt = document.querySelector('.sum-content');
       // if (elemnt) {
@@ -2290,7 +2299,7 @@ export class DealsComponent
                       );
                     }
 
-                    this.view.dataService.update(this.dataSelected, true);
+                    this.view.dataService.update(this.dataSelected, true).subscribe();
                     this.detectorRef.detectChanges();
                   }
                 });
@@ -2300,8 +2309,8 @@ export class DealsComponent
     }
   }
   //#endregion
-  async addTask(data){
-    let taskOutput = await this.stepService.addTaskCM(data, "CM_Deals");
+  async addTask(data) {
+    let taskOutput = await this.stepService.addTaskCM(data, 'CM_Deals');
     this.taskAdd = taskOutput;
   }
   searchChanged(e) {

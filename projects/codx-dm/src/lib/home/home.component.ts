@@ -215,6 +215,7 @@ export class HomeComponent extends UIComponent implements OnDestroy {
         id: 'btnCreatFolder',
         icon: 'icon-i-plus',
         text: 'Tạo thư mục',
+        formName: 'System',
         hasSet: true,
       });
     //Mặc định filter

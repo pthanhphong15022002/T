@@ -27,7 +27,6 @@ import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { ProgressBar } from '@syncfusion/ej2-angular-progressbar';
 import { CodxListReportsComponent } from 'projects/codx-share/src/lib/components/codx-list-reports/codx-list-reports.component';
 import { Subject, takeUntil } from 'rxjs';
-import { JournalService } from '../../journals/journals.service';
 import { CodxCommonService } from 'projects/codx-common/src/lib/codx-common.service';
 declare var jsBh: any;
 @Component({
@@ -74,7 +73,6 @@ export class CashPaymentsComponent extends UIComponent {
     private shareService: CodxShareService,
     private notification: NotificationsService,
     private tenant: TenantStore,
-    private journalService: JournalService
   ) {
     super(inject);
     this.cache
@@ -96,35 +94,24 @@ export class CashPaymentsComponent extends UIComponent {
 
   //#region Init
   onInit(): void {
-
     if(!this.funcID) this.funcID = this.router.snapshot.params['funcID'];
-
-    this.getJournal(); //? lấy data journal và các field ẩn từ sổ nhật kí
-    this.getFunction(this.funcID);
-
+    this.cache
+    .functionList(this.funcID)
+    .pipe(takeUntil(this.destroy$))
+    .subscribe((res) => {
+      if (res) {
+        this.headerText = res?.defaultName || res?.customName;
+        this.runmode = res?.runMode;
+      }
+    });
+    this.getJournal();
   }
 
   ngDoCheck() {
     this.detectorRef.detectChanges();
   }
 
-  getFunction(funcID:any)
-  {
-    this.cache
-    .functionList(funcID)
-    .pipe(takeUntil(this.destroy$))
-    .subscribe((res) => {
-      if (res) {
-        this.headerText = res?.defaultName || res?.customName; //? lấy tên chứng từ (Phiếu chi)
-        this.runmode = res?.runMode; //? lấy runmode
-      }
-    });
-  }
-
   ngAfterViewInit() {
-    
-   this.getFunction(this.funcID)
-
     this.views = [
       {
         type: ViewType.listdetail, //? thiết lập view danh sách chi tiết
@@ -178,7 +165,7 @@ export class CashPaymentsComponent extends UIComponent {
         }
       },
     ];
-    this.journalService.setChildLinks(this.journalNo);
+    this.acService.setChildLinks();
   }
 
   ngOnDestroy() {
@@ -266,18 +253,6 @@ export class CashPaymentsComponent extends UIComponent {
   onSelectedItem(event) {
     this.itemSelected = event;
     this.detectorRef.detectChanges();
-    // if (this.view?.views) {
-    //   let view = this.view?.views.find((x) => x.type == 1);
-    //   if (view && view.active == true) return;
-    // }
-    // if (typeof event.data !== 'undefined') {
-    //   if (event?.data.data || event?.data.error) {
-    //     return;
-    //   } else {
-    //     this.itemSelected = event?.data;
-    //     this.detectorRef.detectChanges();
-    //   }
-    // }
   }
 
   viewChanged(view) {
@@ -434,7 +409,7 @@ export class CashPaymentsComponent extends UIComponent {
    * @param dataDelete : data xóa
    */
   deleteVoucher(dataDelete) {
-    this.view?.currentView?.dataService
+    this.view.dataService
       .delete([dataDelete], true)
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
@@ -482,7 +457,7 @@ export class CashPaymentsComponent extends UIComponent {
    * @returns
    */
   changeMFDetail(event: any,type: any = '') {
-    let data = this.view.dataService.dataSelected;
+    let data = this.view?.dataService?.dataSelected;
     if (data) {
       this.acService.changeMFCashPayment(event,data,type,this.journal,this.view.formModel);
     }

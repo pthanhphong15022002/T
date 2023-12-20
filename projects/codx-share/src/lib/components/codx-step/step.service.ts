@@ -641,7 +641,20 @@ export class StepService {
         // task.objectLinked = contract?.recID;
       }
     }
-    data = { ...data, stepsTasks: task, isStartIns };
+   
+    let quotationID = task?.objectLinked;
+    if ((action == 'edit' || action == 'copy') && quotationID) {
+      let contractData = await firstValueFrom(this.getOneContract(quotationID));    
+      if(contractData){
+        data = { ...data, contract: contractData, stepsTasks: task, isStartIns };
+      }else{
+        this.notiService.notify('Báo giá không tồn tại','3');
+        return;
+      }
+    }else{
+      data = { ...data, stepsTasks: task, isStartIns };
+    }
+
     let contractOuput = await this.openPopupContract(data);
     let contract = contractOuput?.event?.contract;
     if (contract) {
@@ -721,7 +734,7 @@ export class StepService {
     if (location == 'right') {
       let option = new SidebarModel();
       option.Width = '550px';
-      option.zIndex = 1001;
+      option.zIndex = 1100;
       option.FormModel = frmModel;
       popupAddTask = this.callFunc.openSide(CodxAddTaskComponent, data, option);
     } else {
@@ -1093,5 +1106,15 @@ export class StepService {
 
       return await this.openPopupCodxTask(data, 'right');
     }
+  }
+
+  getESCategoryByCategoryIDType(categoryID, category, refID = null) {
+    return this.api.execSv<any>(
+      'ES',
+      'ES',
+      'CategoriesBusiness',
+      'GetByCategoryIDTypeAsync',
+      [categoryID, category, refID]
+    );
   }
 }
