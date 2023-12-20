@@ -1259,10 +1259,10 @@ export class ContractsComponent extends UIComponent {
   }
 
   changeData(event){
-    if(event?.filter == "disposalOn"){
-      this[event?.filter]= event?.data?.disposalOn;
+    if(event?.field== "disposalOn"){
+      this[event?.field]= event?.data?.disposalOn;
     }else{
-      this[event?.filter]= event?.data;
+      this[event?.field]= event?.data;
     }
   }
   saveLiquidation(){
