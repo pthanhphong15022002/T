@@ -118,7 +118,10 @@ export class PopupMoveReasonComponent implements OnInit {
     this.applyFor != '0' && this.executeApiCalls();
     this.getValueListReason();
    if( this.isMoveProcess && this.reasonStep) {
-    (this.reasonStep?.newProcessID === this.guidEmpty || !this.reasonStep.newProcessID) &&  this.getValueListMoveProcess();
+    if (this.reasonStep?.newProcessID === this.guidEmpty || !this.reasonStep.newProcessID) {
+              this.getValueListMoveProcess();
+              this.moveProccess = this.reasonStep.newProcessID;
+    };
     (this.reasonStep?.newProcessID !== this.guidEmpty && this.reasonStep.newProcessID ) && this.getListProcesByMoveProcess();
    }
    else {
