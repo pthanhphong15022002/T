@@ -658,7 +658,7 @@ export class DealsComponent
   }
   afterSave(e?: any, that: any = null) {
     if (e) {
-      let appoverStatus = e.unbounds.statusApproval;
+      let appoverStatus = e?.unbounds?.statusApproval;
       if (
         appoverStatus != null &&
         appoverStatus != this.dataSelected.approveStatus
@@ -686,8 +686,8 @@ export class DealsComponent
       .subscribe((x) => {
         if (x.event && x.event.status == 'Y') {
           // this.startDeal(data);
-          this.codxCmService.startNewInstance([data.refID]).subscribe((res)=> {
-            if(res) {
+          this.codxCmService.startNewInstance([data.refID]).subscribe((res) => {
+            if (res) {
               let dataUpdate = [
                 res[1],
                 null,
@@ -700,18 +700,21 @@ export class DealsComponent
                 .subscribe((deal) => {
                   if (deal) {
                     this.dataSelected = deal;
-                    this.view.dataService.update(this.dataSelected, true).subscribe();
+                    this.view.dataService
+                      .update(this.dataSelected, true)
+                      .subscribe();
                     if (this.kanban) {
                       this.renderKanban(this.dataSelected);
                     }
-                    if (this.detailViewDeal) this.detailViewDeal.dataSelected = this.dataSelected;
+                    if (this.detailViewDeal)
+                      this.detailViewDeal.dataSelected = this.dataSelected;
                     this.detailViewDeal?.reloadListStep(res[0]);
                     this.detectorRef.detectChanges();
                     this.resetStatusCode();
                   }
                 });
             }
-          })
+          });
         }
       });
   }
@@ -935,7 +938,7 @@ export class DealsComponent
                   e.event?.comment,
                   e.event?.expectedClosed,
                   this.statusCodeID,
-                  this.statusCodeCmt
+                  this.statusCodeCmt,
                 ];
                 this.codxCmService
                   .moveStageBackDataCM(dataUpdate)
@@ -1338,6 +1341,7 @@ export class DealsComponent
                 JSON.stringify(this.dataSelected)
               );
               this.detailViewDeal?.promiseAllAsync();
+              this.detailViewDeal.loadContactEdit();
             }
             this.isChangeOwner = ownerIdOld != e.event.owner;
             this.changeDetectorRef.detectChanges();
@@ -2073,7 +2077,7 @@ export class DealsComponent
       statusOld: this.dataSelected?.status,
       owner: this.dataSelected.owner,
     };
-    let dialogStatus= this.callfc.openForm(
+    let dialogStatus = this.callfc.openForm(
       PopupUpdateStatusComponent,
       '',
       500,
@@ -2104,10 +2108,9 @@ export class DealsComponent
           if (status) {
             switch (status) {
               case '2':
-                if(oldStatus == '1') {
+                if (oldStatus == '1') {
                   this.startNow(this.dataSelected);
-                }
-                else {
+                } else {
                   this.moveStage(this.dataSelected);
                 }
                 break;
@@ -2120,8 +2123,7 @@ export class DealsComponent
                 break;
             }
           }
-        }
-        else {
+        } else {
           this.dataSelected.statusCodeID = this.statusCodeID;
           this.dataSelected.statusCodeCmt = this.statusCodeCmt;
           this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
@@ -2298,7 +2300,9 @@ export class DealsComponent
                       );
                     }
 
-                    this.view.dataService.update(this.dataSelected, true).subscribe();
+                    this.view.dataService
+                      .update(this.dataSelected, true)
+                      .subscribe();
                     this.detectorRef.detectChanges();
                   }
                 });

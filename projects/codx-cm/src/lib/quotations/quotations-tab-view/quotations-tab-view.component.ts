@@ -153,7 +153,7 @@ export class QuotationsTabViewComponent
   }
 
   onInit(): void {
-    this.funcID = "CM0202";
+    this.funcID = 'CM0202';
   }
 
   ngAfterViewInit() {}
@@ -266,7 +266,7 @@ export class QuotationsTabViewComponent
 
   afterSave(e?: any, that: any = null) {
     if (e) {
-      let appoverStatus = e.unbounds.statusApproval;
+      let appoverStatus = e?.unbounds?.statusApproval;
       if (
         appoverStatus != null &&
         appoverStatus != this.itemSelected.approveStatus
