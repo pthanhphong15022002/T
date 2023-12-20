@@ -45,6 +45,8 @@ import { PopupAssginDealComponent } from '../deals/popup-assgin-deal/popup-assgi
 import { StepService } from 'projects/codx-share/src/lib/components/codx-step/step.service';
 import { ContractsDetailComponent } from './contracts-detail/contracts-detail.component';
 import { CodxCommonService } from 'projects/codx-common/src/lib/codx-common.service';
+import { DP_Instances_Steps_Tasks, DP_Instances_Steps_Tasks_Roles } from 'projects/codx-dp/src/lib/models/models';
+import { ExportData } from 'projects/codx-common/src/lib/models/ApproveProcess.model';
 
 @Component({
   selector: 'contracts-detail',
@@ -471,7 +473,15 @@ export class ContractsComponent extends UIComponent {
 
   afterSave(e?: any, that: any = null) {
     if (e) {
-      let appoverStatus = e.unbounds.statusApproval;
+      if(e?.funcID == "SYS004"){
+        if(e?.result?.isSendMail){
+          this.addTaskMail(e);
+          this.notiService.notifyCode('SYS006');
+        }else{
+          this.notiService.notify('Gửi mail thất bại','3');
+        }
+      }
+      let appoverStatus = e?.unbounds?.statusApproval;
       if (
         appoverStatus != null &&
         appoverStatus != this.contractSelected?.approveStatus
