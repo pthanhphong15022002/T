@@ -144,6 +144,7 @@ export class DealsComponent
   viewMode = 2;
   // const set value
   readonly btnAdd: string = 'btnAdd';
+  readonly applyFor: string = '1';
 
   request: ResourceModel;
   resourceKanban?: ResourceModel;
@@ -222,7 +223,7 @@ export class DealsComponent
     // if (this.processID) this.dataObj = { processID: this.processID };
 
     // this.getListStatusCode();
-    this.codxCmService.getRecIDProcessDefault('1').subscribe((res) => {
+    this.codxCmService.getRecIDProcessDefault(this.applyFor).subscribe((res) => {
       if (res) {
         this.processIDDefault = res;
         this.processIDKanban = res;
@@ -914,7 +915,7 @@ export class DealsComponent
             deal: data,
             stepReason: stepReason,
             headerTitle: this.titleAction,
-            applyFor: '1',
+            applyFor: this.applyFor,
             dataCM: dataCM,
           };
           let dialogMoveStage = this.callfc.openForm(
@@ -1076,7 +1077,7 @@ export class DealsComponent
       headerTitle: fun.defaultName,
       formModel: formMD,
       isReason: isMoveSuccess,
-      applyFor: '1',
+      applyFor: this.applyFor,
       dataCM: dataCM,
       processID: data?.processID,
       stepName: data.currentStepName,
@@ -1180,7 +1181,7 @@ export class DealsComponent
       data: data,
       gridViewSetup: this.gridViewSetup,
       formModel: this.view.formModel,
-      applyFor: '1',
+      applyFor: this.applyFor,
       titleAction: this.titleAction,
       owner: data.owner,
       //startControl: data.steps.startControl,
@@ -2062,10 +2063,8 @@ export class DealsComponent
     let oldStatus = data?.status;
     this.dataSelected = data;
     let dialogModel = new DialogModel();
-    dialogModel.zIndex = 1001;
+    dialogModel.zIndex = 999;
     dialogModel.FormModel = this.view.formModel;
-    // this.statusCodeID = data?.statusCodeID;
-    // this.statusCodeCmt = data?.statusCodeCmt;
     let obj = {
       statusDefault: this.dataSelected?.statusCodeID,
       statusCodecmt: this.dataSelected?.statusCodeCmt,
@@ -2073,7 +2072,7 @@ export class DealsComponent
       title: this.titleAction,
       recID: this.dataSelected.recID,
       gridViewSetup: this.gridViewSetup,
-      category: '1',
+      category: this.applyFor,
       formModel: this.view?.formModel,
       statusOld: this.dataSelected?.status,
       owner: this.dataSelected.owner,

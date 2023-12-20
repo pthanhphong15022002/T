@@ -43,6 +43,7 @@ export class PopupUpdateStatusComponent
   applyFor: string = '';
   recID: string = '';
   statusOld: string;
+  fieldName: string = '';
   // data:any;
   messageChangeStatus: string = '';
   valueListStatusCode: any[] = [];
@@ -70,6 +71,7 @@ export class PopupUpdateStatusComponent
     this.applyFor = dialogData?.data?.category;
     this.formModel = dialogData?.data?.formModel;
     this.statusOld = dialogData?.data?.statusOld;
+    this.fieldName = this.getFieldName(this.applyFor);
   }
   onInit(): void {}
   ngAfterViewInit(): void {}
@@ -200,5 +202,10 @@ export class PopupUpdateStatusComponent
       }
     }
     return statusNew;
+  }
+
+  getFieldName(applyFor){
+    if(applyFor == '1') return 'statusCodeID';
+    return 'StatusCode';
   }
 }

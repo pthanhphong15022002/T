@@ -915,6 +915,15 @@ export class CodxCmService {
       data
     );
   }
+  moveStageBackLead(data) {
+    return this.api.execSv<any>(
+      'CM',
+      'ERM.Business.CM',
+      'LeadsBusiness',
+      'MoveStageBackByLeadAsync',
+      data
+    );
+  }
 
   moveStageDeal(data) {
     return this.api.execSv<any>(

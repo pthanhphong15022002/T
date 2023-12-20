@@ -77,7 +77,6 @@ import { environment } from 'src/environments/environment';
 import { log } from 'console';
 import { PopupEdocumentsComponent } from '../../employee-profile/popup-edocuments/popup-edocuments.component';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
-import { Data } from '@syncfusion/ej2-angular-grids';
 
 @Component({
   selector: 'lib-employee-info-detail',

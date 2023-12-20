@@ -72,6 +72,8 @@ export class ContractsComponent extends UIComponent {
   @ViewChild('tempStatus') tempStatus: TemplateRef<any>;
   @ViewChild('tempOwner') tempOwner: TemplateRef<any>;
 
+  @ViewChild('liquidationTmp') liquidationTmp: TemplateRef<any>;
+
   listClicked = [];
   views: Array<ViewModel> = [];
   listPayment: CM_ContractsPayments[] = [];
@@ -151,6 +153,8 @@ export class ContractsComponent extends UIComponent {
   runMode: any;
   user;
   taskAdd;
+  popupLiquidation;
+  disposalOn;disposalAll;disposalCmt;
   constructor(
     private inject: Injector,
     private cmService: CodxCmService,
@@ -310,6 +314,9 @@ export class ContractsComponent extends UIComponent {
           case 'CM0204_16': // mở lại hợp đồng
             res.disabled = !data?.closed;
             break;
+          case 'CM0204_18': // mở lại hợp đồng
+            res.disabled = data?.status == "17";
+            break;
         }
       });
     }
@@ -386,6 +393,9 @@ export class ContractsComponent extends UIComponent {
         break;
       case 'CM0204_13':
         this.addTask(data);
+        break;
+      case 'CM0204_18': // thanh lý hợp đồng
+        this.liquidationContract(data);
         break;
       default: {
         // var customData = {
@@ -1233,6 +1243,49 @@ export class ContractsComponent extends UIComponent {
           this.detectorRef.detectChanges();
         }
       });
+  }
+
+  liquidationContract(data){
+    this.contractSelected == data;
+    let opt = new DialogModel();
+      opt.FormModel = this.view.formModel;
+      this.popupLiquidation = this.callFunc.openForm(
+        this.liquidationTmp,
+        '',
+        500,
+        600,
+        '',
+        data,
+        '',
+        opt
+      );
+  }
+
+  changeData(event){
+    if(event?.field== "disposalOn"){
+      this[event?.field]= event?.data?.fromDate;
+    }else{
+      this[event?.field]= event?.data;
+    }
+  }
+  saveLiquidation(){
+    this.api
+        .exec<any>('CM', 'ContractsBusiness', 'LiquidationContractAsync', [
+          this.contractSelected?.recID, this.disposalOn, this.disposalAll, this.disposalCmt
+        ])
+        .subscribe((res) => {
+          console.log(res);
+          if (res) {
+            this.contractSelected.status = "17";
+            this.contractSelected.disposalOn = this.disposalOn;
+            this.contractSelected.disposalAll = this.disposalAll;
+            this.contractSelected.disposalCmt = this.disposalCmt;
+            this.view.dataService.update(this.contractSelected, true).subscribe();
+            this.changeDetectorRef.markForCheck();
+            this.popupLiquidation.close()
+            this.notiService.notifyCode('SYS007');
+          }
+        });
   }
 }
 
