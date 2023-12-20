@@ -171,7 +171,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
     this.refValueDataType = dt?.data?.refValueDataType ?? this.refValueDataType;
     this.processNo = dt?.data?.processNo; //de sinh vll
     this.fieldNameArr = dt?.data?.fieldNameArr ?? [];
-    this.isDuplicateField = dt?.data?.isDuplicateField ?? [];
+    this.isDuplicateField = dt?.data?.isDuplicateField;
 
     this.creatFieldCustom();
     this.widthDefault = this.dialog.dialog.width
