@@ -77,7 +77,7 @@ export class ViewDealDetailComponent implements OnInit, OnChanges {
     @Optional() dialog?: DialogRef
   ) {
     this.dialog = dialog;
-    this.deal = dt?.data?.contract;
+    this.deal = dt?.data?.dataView;
     this.contractRecId = dt?.data?.contactRecId;
     this.listInsStepStart = dt?.data?.listInsStepStart;
     if(!this.dialog?.formModel){

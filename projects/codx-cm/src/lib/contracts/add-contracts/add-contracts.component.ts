@@ -317,14 +317,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
       case 'edit':
         if (data) {
           this.contracts = data;
-        } else if (this.contractRefID) {
-          let dataEdit = await firstValueFrom(
-            this.contractService.getContractByRefID(this.contractRefID)
-          );
-          if (dataEdit) {
-            this.contracts = dataEdit;
-          }
-        } else if (this.recIDContract) {
+        }else if (this.recIDContract) {
           let dataEdit = await firstValueFrom(
             this.contractService.getContractByRecID(this.recIDContract)
           );
@@ -337,14 +330,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
       case 'copy':
         if (data) {
           this.contracts = data;
-        } else if (this.contractRefID) {
-          let dataCopy = await firstValueFrom(
-            this.contractService.getContractByRefID(this.contractRefID)
-          );
-          if (dataCopy) {
-            this.contracts = dataCopy;
-          }
-        } else if (this.recIDContract) {
+        }else if (this.recIDContract) {
           let dataCopy = await firstValueFrom(
             this.contractService.getContractByRecID(this.recIDContract)
           );
@@ -363,7 +349,15 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
         } else {
           this.disabledShowInput = true;
         }
-
+        this.getCustomersDefaults(this.contracts?.customerID);
+        break;
+      case 'extend':
+        if (data) {
+          this.contracts = JSON.parse(JSON.stringify(data));
+          delete this.contracts['id'];
+          this.contracts.recID = Util.uid();
+        }
+        this.getCustomersDefaults(this.contracts?.customerID);
         break;
       default:
     }
@@ -512,7 +506,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
       this.countInputChangeAuto == 0 &&
       !(this.autoNumber && this.isApplyProcess)
     ) {
-      if (!this.disabledShowInput && this.action !== 'edit' && e) {
+      if (!this.disabledShowInput && (this.action !== 'edit' && this.action !== 'extend' ) && e) {
         this.contracts.contractID = e?.data;
         if (
           this.contracts.contractID &&
@@ -613,6 +607,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
     switch (this.action) {
       case 'add':
       case 'copy':
+      case 'extend':
         this.addContracts();
         break;
       case 'edit':
@@ -622,7 +617,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
   }
 
   beforeSave(op: RequestOption) {
-    if (this.action == 'add' || this.action == 'copy') {
+    if (this.action == 'add' || this.action == 'copy' || this.action == 'extend') {
       op.methodName = 'AddContractsAsync';
       op.data = [this.contracts];
     }

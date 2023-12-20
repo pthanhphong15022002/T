@@ -38,13 +38,13 @@
           <codx-input
             field="title"
             [formModel]="form.formModel"
-            [crrValue]="field.title"
+            [Group]="form.formGroup"
             (controlBlur)="valueChangeText($event)"
             (valueChange)="valueChange($event)"
           >
           </codx-input>
         </div>
-        <!-- cai nay chua có -->
+
         <div class="col-6">
           <codx-label
             fiedName="FieldName"
@@ -422,7 +422,7 @@
             <codx-input
               [field]="'note'"
               [formModel]="form.formModel"
-              [crrValue]="field?.note"
+              [Group]="form.formGroup"
               (valueChange)="valueChange($event)"
             >
             </codx-input>

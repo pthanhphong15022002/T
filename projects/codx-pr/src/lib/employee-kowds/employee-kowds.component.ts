@@ -49,6 +49,7 @@ export class EmployeeKowdsComponent extends UIComponent{
 
   @ViewChild('tempEmployee', { static: true }) tempEmployee: TemplateRef<any>;
   @ViewChild('tempDayData', { static: true }) tempDayData: TemplateRef<any>;
+  @ViewChild('tempDayHeader', { static: true }) tempDayHeader: TemplateRef<any>;
   @ViewChild('tempEmployeeTC', { static: true }) tempEmployeeTC: TemplateRef<any>;
   @ViewChild('calendarGrid') calendarGrid: CodxGridviewV2Component;
   @ViewChild('calendarGrid2') calendarGrid2: CodxGridviewV2Component;
@@ -90,7 +91,6 @@ export class EmployeeKowdsComponent extends UIComponent{
      
     this.initHeaderText();
     this.getTimeKeepingMode().subscribe((res) => {
-      console.log('get time keeping', res);
       this.timeKeepingMode = res.timeKeepingMode;
       if(this.timeKeepingMode == '2'){
         this.viewStatistic = false;
@@ -213,13 +213,16 @@ export class EmployeeKowdsComponent extends UIComponent{
   doubleClickGrid(event){
     console.log('event double click', event);
     // document.querySelector('[data-colindex="2"]').textContent
-    let date = event.column.index;
+    // let date = event.column.field.substr(8);
+    let searchStr = 'workDate'
+    let date = parseInt(event.column.field.replace(searchStr,''))
     let data = event.rowData[`workDate${date}`]
     let employeeId = event.rowData.emp.employeeID;
     this.handleEmpKows(this.editHeaderText, 'edit', data, employeeId, date)
   }
 
   handleEmpKows(actionHeaderText, actionType: string, data: any, employeeId, date){
+    debugger
     let option = new SidebarModel();
     option.FormModel = this.view.formModel;
     option.Width = '550px';
@@ -289,6 +292,11 @@ export class EmployeeKowdsComponent extends UIComponent{
         event[i].disabled = false;
       }
     }
+  }
+
+  onLoadedData(event){
+    debugger
+    console.log('load data xong', event);
   }
 
   switchModeView(mode){
@@ -430,7 +438,7 @@ export class EmployeeKowdsComponent extends UIComponent{
         this.calendarGridColumns = []
 
         this.calendarGridColumns.push({
-          headerTemplate: 'Nhân viên',
+          //1headerTemplate: 'Nhân viên',
           template: this.tempEmployee,
           field: 'employeeID'
         })
@@ -439,6 +447,7 @@ export class EmployeeKowdsComponent extends UIComponent{
           refField: 'workDate',
           loopTimes: this.daysInMonth[this.filterMonth],
           // loopTimes: 30,
+          headerTemplate: this.tempDayHeader,
           template: this.tempDayData,
         })
 
@@ -555,6 +564,14 @@ export class EmployeeKowdsComponent extends UIComponent{
 
   onSelectionChanged(evt){
 
+  }
+
+  handleColHeader(data){
+    let searchStr = 'workDate'
+    let date = parseInt(data.field.replace(searchStr,''))
+    let day = new Date(this.filterYear, this.filterMonth, date)
+    let dayOfWeek = day.getDay()
+    return this.daysOfWeek[dayOfWeek];
   }
 
   logData(data){
