@@ -410,9 +410,9 @@ export class QuotationsComponent extends UIComponent implements OnInit {
       case 'CM0202_5':
         this.viewDetail(data);
         break;
-      //case 'CM0202_5':
-      //  this.exportTemplet(e, data);
-      //  break;
+      case 'SYS002':
+        this.exportTemplet(e, data);
+        break;
       default: {
         this.codxShareService.defaultMoreFunc(
           e,

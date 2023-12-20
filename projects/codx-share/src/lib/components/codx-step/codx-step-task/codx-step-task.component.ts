@@ -58,13 +58,13 @@ import { CodxBookingService } from '../../codx-booking/codx-booking.service';
 import { CodxShareService } from '../../../codx-share.service';
 import { CodxCommonService } from 'projects/codx-common/src/lib/codx-common.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ExportData } from '../../../models/ApproveProcess.model';
 import { CodxViewApproveComponent } from '../codx-step-common/codx-view-approve/codx-view-approve.component';
 import { PopupCustomFieldComponent } from '../../codx-fields-detail-temp/popup-custom-field/popup-custom-field.component';
 import { Subject, firstValueFrom } from 'rxjs';
 import { ContractsDetailComponent } from 'projects/codx-cm/src/lib/contracts/contracts-detail/contracts-detail.component';
 import { environment } from 'src/environments/environment';
 import { Location } from '@angular/common';
+import { ExportData } from 'projects/codx-common/src/lib/models/ApproveProcess.model';
 @Component({
   selector: 'codx-step-task',
   templateUrl: './codx-step-task.component.html',
@@ -2901,6 +2901,9 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
                   funcID: 'DPT04',
                   recID: task?.recID,
                   data: source,
+                  entityName: this.frmModelExport.entityName,
+                  formName: this.frmModelExport.formName,
+                  gridViewName: this.frmModelExport.gridViewName,
                 };
                 this.release(task, res, exportData);
               });
@@ -3129,77 +3132,6 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         );
         this.changeDetectorRef.detectChanges();
       });
-    //   let mehthol = 'GetDataSourceExportTaskAsync';
-    //   let className = 'ContractsBusiness';
-    //   let service = 'CM';
-    //   let request = [this.currentStep.instanceID, data.objectLinked];
-    //   switch (this.taskAdd.taskType) {
-    //     case 'CO':
-    //       className = 'ContractsBusiness';
-    //       break;
-    //     case 'Q':
-    //       className = 'QuotationsBusiness';
-    //       break;
-    //     case 'F':
-    //       service = 'DP';
-    //       className = 'InstancesBusiness';
-    //       mehthol = 'GetDatasByInstanceIDAsync';
-    //       request = [this.currentStep.instanceID];
-    //       break;
-    //     default:
-    //       var customData = {
-    //         refID: data.recID,
-    //         refType: 'DP_Instances_Steps_Tasks',
-    //       };
-    //       this.codxShareService.defaultMoreFunc(
-    //         e,
-    //         data,
-    //         this.afterSave,
-    //         this.frmModelInstancesTask,
-    //         null,
-    //         this,
-    //         customData
-    //       );
-    //       this.changeDetectorRef.detectChanges();
-    //       return;
-    //       break;
-    //   }
-    //   this.api
-    //     .execSv<any>(service, service, className, mehthol, request)
-    //     .subscribe((str) => {
-    //       let dataSource = '';
-    //       if (str) {
-    //         if (this.taskAdd.taskType != 'F') {
-    //           if (str?.length > 0) {
-    //             dataSource = str[1];
-    //             if (str[0]) {
-    //               let datas = str[1];
-    //               if (datas && datas.includes('[{')) datas = datas.substring(2);
-    //               let fix = str[0]; // data đối tượng cần export
-    //               fix = fix.substring(1, fix.length - 1);
-    //               dataSource = '[{ ' + fix + ',' + datas;
-    //             }
-    //           }
-    //         } else {
-    //           dataSource = str;
-    //         }
-    //       }
-    //       var customData = {
-    //         refID: data.recID,
-    //         refType: 'DP_Instances_Steps_Tasks',
-    //         dataSource: dataSource,
-    //       };
-    //       this.codxShareService.defaultMoreFunc(
-    //         e,
-    //         data,
-    //         this.afterSave,
-    //         this.frmModelInstancesTask,
-    //         null,
-    //         this,
-    //         customData
-    //       );
-    //       this.changeDetectorRef.detectChanges();
-    //     });
   }
 
   //export Form Nhập liệu
