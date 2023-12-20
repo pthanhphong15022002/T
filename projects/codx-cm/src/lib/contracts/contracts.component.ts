@@ -1260,7 +1260,7 @@ export class ContractsComponent extends UIComponent {
 
   changeData(event){
     if(event?.field== "disposalOn"){
-      this[event?.field]= event?.data?.disposalOn;
+      this[event?.field]= event?.data?.fromDate;
     }else{
       this[event?.field]= event?.data;
     }
@@ -1268,7 +1268,7 @@ export class ContractsComponent extends UIComponent {
   saveLiquidation(){
     this.api
         .exec<any>('CM', 'ContractsBusiness', 'LiquidationContractAsync', [
-          this.contractSelected?.refID, this.disposalOn, this.disposalAll, this.disposalCmt
+          this.contractSelected?.recID, this.disposalOn, this.disposalAll, this.disposalCmt
         ])
         .subscribe((res) => {
           console.log(res);
@@ -1277,7 +1277,9 @@ export class ContractsComponent extends UIComponent {
             this.contractSelected.disposalOn = this.disposalOn;
             this.contractSelected.disposalAll = this.disposalAll;
             this.contractSelected.disposalCmt = this.disposalCmt;
-
+            this.changeDetectorRef.markForCheck();
+            this.popupLiquidation.close()
+            this.notiService.notifyCode('SYS007');
           }
         });
   }
