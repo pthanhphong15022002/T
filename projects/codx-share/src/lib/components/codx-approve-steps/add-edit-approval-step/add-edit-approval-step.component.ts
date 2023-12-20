@@ -30,6 +30,7 @@ import { PopupAddApproverComponent } from '../popup-add-approver/popup-add-appro
 import { CodxEmailComponent } from 'projects/codx-share/src/lib/components/codx-email/codx-email.component';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { ShareType } from '../../../models/ApproveProcess.model';
+import { PopupAddPersonSignerComponent } from '../popup-add-person-signer/popup-add-person-signer.component';
 
 @Component({
   selector: 'lib-add-edit-approval-step',
@@ -316,7 +317,7 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
               this.confirmControl = element?.confirmControl ?? '0';
               this.allowEditAreas = element?.allowEditAreas ?? false;
 
-              if (element.roleType == 'PA') element.write = true;
+              if (element.roleType == 'PA' || element.roleType == 'PE') element.write = true;
               else element.write = false;
 
               element.delete = true;
@@ -515,6 +516,33 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
               }
             );
             popupApprover.closed.subscribe((res) => {
+              if (res.event) {
+                this.newAppr = res?.event;
+                //this.lstApprover.push(res.event);
+              }
+              else{
+                this.newAppr.roleType=null;
+              }
+            });
+            break;
+
+          //----------------------------------------------------------------------------------//
+          case ShareType.Personal: //	Đối tác
+          this.newAppr.write = true;
+          this.newAppr.roleType = element.objectType;
+            let popupApproverPE = this.callfc.openForm(              
+              PopupAddPersonSignerComponent,
+              '',
+              550,
+              screen.height,
+              '',
+              {
+                approverData: this.newAppr,
+                lstApprover: this.lstApprover,
+                isAddNew: true,
+              }
+            );
+            popupApproverPE.closed.subscribe((res) => {
               if (res.event) {
                 this.newAppr = res?.event;
                 //this.lstApprover.push(res.event);
