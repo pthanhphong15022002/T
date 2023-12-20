@@ -314,6 +314,9 @@ export class ContractsComponent extends UIComponent {
           case 'CM0204_16': // mở lại hợp đồng
             res.disabled = !data?.closed;
             break;
+          case 'CM0204_18': // mở lại hợp đồng
+            res.disabled = data?.status == "17";
+            break;
         }
       });
     }
