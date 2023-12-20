@@ -57,7 +57,10 @@ export class TemplateInfo {
 export class ExportData {
   funcID: string;
   recID: string;
-  data:string;
+  data:string; 
+  entityName: string; 
+  formName: string;
+  gridViewName: string;
 }
 
 export const ShareType = {
