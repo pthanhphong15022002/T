@@ -1823,8 +1823,22 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
     } else if (view === 'AllowEstimatedEndView') {
       if ($event.field === 'yes' && $event.component.checked === true) {
         this.process.allowEstimatedEnd = true;
-      } else if ($event.field == 'no' && $event.component.checked === true) {
+      } else if ($event.field === 'no' && $event.component.checked === true) {
         this.process.allowEstimatedEnd = false;
+      }
+    }
+    else if (view === 'EditInstanceView') {
+      if ($event.field === 'yes' && $event.component.checked === true) {
+        this.process.allowEditInstanceControl = true;
+      } else if ($event.field == 'no' && $event.component.checked === true) {
+        this.process.allowEditInstanceControl = false;
+      }
+    }
+    else if (view === 'ReturnInstanceView') {
+      if ($event.field === 'yes' && $event.component.checked === true) {
+        this.process.allowReturnInstanceControl = true;
+      } else if ($event.field === 'no' && $event.component.checked === true) {
+        this.process.allowReturnInstanceControl = false;
       }
     }
 

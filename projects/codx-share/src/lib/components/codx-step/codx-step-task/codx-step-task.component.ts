@@ -3160,11 +3160,12 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         formModelEx.gridViewName = 'grvCMLeads';
         formModelEx.formName = 'CMLeads';
         break;
-      case 'CM_Contracts':
-        formModelEx.entityName = 'CM_Contracts';
-        formModelEx.gridViewName = 'grvCMContracts';
-        formModelEx.formName = 'CMContracts';
-        break;
+      //contrack và quations thì dùng măc định
+      // case 'CM_Contracts':
+      //   formModelEx.entityName = 'CM_Contracts';
+      //   formModelEx.gridViewName = 'grvCMContracts';
+      //   formModelEx.formName = 'CMContracts';
+      //   break;
       case 'CM_Campaigns':
         formModelEx.entityName = 'CM_Campaigns';
         formModelEx.gridViewName = 'grvCMCampaigns';
