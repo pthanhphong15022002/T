@@ -66,7 +66,7 @@ export class CodxImportComponent implements OnInit, OnChanges, AfterViewInit {
   fileName: any;
   valueProgress = 0;
   valueProgressp = 0;
-  session:any;
+  session: any;
   isSave = false;
   moreFunction = [
     {
@@ -163,12 +163,13 @@ export class CodxImportComponent implements OnInit, OnChanges, AfterViewInit {
             }
             if (index == total) {
               this.notifySvr.notifyCode('SYS006');
+              this.realHub.stop();
               (this.dialog as DialogRef).close();
             }
-            if(index >= 0 && total > 0)
-            {
+            if (index >= 0 && total > 0) {
               this.valueProgress = (index / total) * 100;
-              document.getElementById("pb-import").style.width = this.valueProgress+"%";
+              document.getElementById('pb-import').style.width =
+                this.valueProgress + '%';
               this.ref.detectChanges();
               //this.valueProgressp = this.linear.value + 5;
             }
@@ -190,15 +191,15 @@ export class CodxImportComponent implements OnInit, OnChanges, AfterViewInit {
     this.fileCount = e.data.length;
   }
   onSave() {
-    if(this.isSave) return;
+    if (this.isSave) return;
     this.isSave = true;
 
-    if(this.fileCount <= 0) return this.notifySvr.notifyCode('OD022');
+    if (this.fileCount <= 0) return this.notifySvr.notifyCode('OD022');
     this.submitted = true;
-    
+
     if (this.importGroup.invalid) return;
     this.session = Util.uid();
-    
+
     this.api
       .execSv(this.service, 'Core', 'CMBusiness', 'ImportAsync', [
         this.binaryString,

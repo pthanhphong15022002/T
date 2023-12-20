@@ -49,6 +49,21 @@ method="LoadDataAsync" -->
   >
   </codx-listview>
 
+  <div *ngIf="viewDetailData == true && calendarGrid">
+    <codx-input
+    type="switch"
+    [checked]="isOnlyReadSavedData"
+    (valueChange)="onChangeIsReadSavedData($event)"
+  ></codx-input>
+  <codx-label
+    [formModel]="view.formModel"
+    [name]="'lblOnlyReadSavedData'"
+    [default]="'Chỉ đọc số liệu đã lưu'"
+    class="ms-2 text-primary"
+  >
+  </codx-label>
+  </div>
+
   <div
     class="btn-group"
     ngbDropdown
@@ -226,11 +241,23 @@ method="LoadDataAsync" -->
     <!-- {{logData(data[data.column.field])}} //null
     {{logData(data)}} //object -->
     <!-- {{logData(data)}} -->
-    <!-- {{logData(data[data.column.field])}} -->
-
     <div *ngIf="data && data[data.column.field]">
-      <div *ngFor="let kow of data[data.column.field]">
-        <span>{{kow.dayNum}} {{kow.kowCode}}</span>
+      {{handleKowColor(data[data.column.field])}}
+      <div *ngIf="data && data[data.column.field]">
+        <div *ngFor="let kow of data[data.column.field]">
+          <span class="me-2">
+            {{kow.dayNum}}
+          </span>
+
+          <span
+          class="w-25px fw-bold"
+          [style.background-color]="kow.background"
+          [style.color]="kow.fontColor"
+          >
+            {{kow.kowCode}}
+          </span>
+          <!-- <span>{{kow.dayNum}} {{kow.kowCode}}</span> -->
+        </div>
       </div>
     </div>
 
