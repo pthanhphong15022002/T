@@ -81,6 +81,11 @@ export class QuotationsComponent extends UIComponent implements OnInit {
     gridViewName: 'grvCMQuotations',
     funcID: 'CM0202',
   };
+  frmModelExport: FormModel = {
+    formName: 'CMTempDataSources',
+    gridViewName: 'grvCMTempDataSources',
+    entityName: 'CM_TempDataSources',
+  };
   customerIDCrr = '';
   requestData = new DataRequest();
   listQuotations = [];
@@ -681,6 +686,9 @@ export class QuotationsComponent extends UIComponent implements OnInit {
               funcID: this.view.formModel.funcID,
               recID: dt.recID,
               data: dataSource,
+              entityName: this.frmModelExport.entityName,
+              formName: this.frmModelExport.formName,
+              gridViewName: this.frmModelExport.gridViewName,
             };
             this.release(dt, res, exportData);
           });
@@ -783,7 +791,7 @@ export class QuotationsComponent extends UIComponent implements OnInit {
             e,
             data,
             this.afterSave,
-            this.view.formModel,
+            this.frmModelExport, //this.view.formModel,
             this.view.dataService,
             this,
             customData

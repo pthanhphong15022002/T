@@ -215,7 +215,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     private activedRouter: ActivatedRoute,
     private tenantStore: TenantStore,
     private router: Router,
-    private location: Location,
+    private location: Location
   ) {
     this.user = this.authStore.get();
     this.id = Util.uid();
@@ -515,7 +515,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
           case 'SYS001':
           case 'SYS002':
             break;
-          case 'SYS004'://mail
+          case 'SYS004': //mail
             // res.disabled = task?.taskType != "E";
             break;
           case 'SYS02': //xóa
@@ -2034,21 +2034,19 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     if (data && !this.isViewStep && !this.isMoveStage) {
       if (data?.taskType == 'CO') {
         if (data?.objectLinked) {
-
           const url1 = this.location.prepareExternalUrl(this.location.path());
           const parser = document.createElement('a');
           parser.href = url1;
           const domain = parser.origin;
 
           let tenant = this.tenantStore.get().tenant;
-          let url = `${domain}/${tenant}/cm/contracts/CM0204?predicate=RecID=@0&dataValue=${data?.objectLinked}`
+          let url = `${domain}/${tenant}/cm/contracts/CM0204?predicate=RecID=@0&dataValue=${data?.objectLinked}`;
           window.open(url, '_blank');
           return;
         } else {
           this.notiService.notify('Bắt đầu ngay để thiết lập hợp đồng', '3');
         }
-      }else{
-
+      } else {
       }
       let frmModel: FormModel = {
         entityName: 'DP_Instances_Steps_Tasks',
