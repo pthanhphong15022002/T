@@ -154,7 +154,7 @@ export class ContractsComponent extends UIComponent {
   user;
   taskAdd;
   popupLiquidation;
-
+  disposalOn;disposalAll;disposalCmt;
   constructor(
     private inject: Injector,
     private cmService: CodxCmService,
@@ -1243,6 +1243,7 @@ export class ContractsComponent extends UIComponent {
   }
 
   liquidationContract(data){
+    this.contractSelected == data;
     let opt = new DialogModel();
       opt.FormModel = this.view.formModel;
       this.popupLiquidation = this.callFunc.openForm(
@@ -1257,8 +1258,28 @@ export class ContractsComponent extends UIComponent {
       );
   }
 
+  changeData(event){
+    if(event?.filter == "disposalOn"){
+      this[event?.filter]= event?.data?.disposalOn;
+    }else{
+      this[event?.filter]= event?.data;
+    }
+  }
   saveLiquidation(){
+    this.api
+        .exec<any>('CM', 'ContractsBusiness', 'LiquidationContractAsync', [
+          this.contractSelected?.refID, this.disposalOn, this.disposalAll, this.disposalCmt
+        ])
+        .subscribe((res) => {
+          console.log(res);
+          if (res) {
+            this.contractSelected.status = "17";
+            this.contractSelected.disposalOn = this.disposalOn;
+            this.contractSelected.disposalAll = this.disposalAll;
+            this.contractSelected.disposalCmt = this.disposalCmt;
 
+          }
+        });
   }
 }
 
