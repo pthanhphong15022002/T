@@ -424,7 +424,7 @@ export class QuotationsComponent extends UIComponent implements OnInit {
   }
   afterSave(e?: any, that: any = null) {
     if (e) {
-      let appoverStatus = e.unbounds.statusApproval;
+      let appoverStatus = e?.unbounds?.statusApproval;
       if (
         appoverStatus != null &&
         appoverStatus != this.itemSelected.approveStatus
@@ -677,11 +677,10 @@ export class QuotationsComponent extends UIComponent implements OnInit {
         this.codxCmService
           .getDataSource(dt.recID, 'QuotationsBusiness')
           .then((dataSource) => {
-            let exportData: ExportData = {
-              funcID: this.view.formModel.funcID,
-              recID: dt.recID,
-              data: dataSource,
-            };
+            let exportData= new ExportData(); 
+            exportData.funcID= this.view.formModel.funcID,
+            exportData.recID= dt.recID,
+            exportData.data= dataSource,
             this.release(dt, res, exportData);
           });
       });

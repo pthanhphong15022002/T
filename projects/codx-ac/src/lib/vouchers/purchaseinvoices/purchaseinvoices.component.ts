@@ -178,7 +178,10 @@ export class PurchaseinvoicesComponent extends UIComponent {
   toolbarClick(event) {
     switch (event.id) {
       case 'btnAdd':
-        this.addNewVoucher(); //? thêm mới chứng từ
+        this.addNewVoucher();
+        break;
+      case 'btnXml':
+        this.xml.nativeElement.click();
         break;
     }
   }
@@ -224,7 +227,7 @@ export class PurchaseinvoicesComponent extends UIComponent {
         this.allocationVoucher(e.text, data); //? phân bổ chi phí chứng từ
         break;
       case 'ACT060109':
-        this.xml.nativeElement.click(); //? doc xml chứng từ
+        //this.xml.nativeElement.click(); //? doc xml chứng từ
         break;
     }
   }

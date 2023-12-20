@@ -218,7 +218,7 @@
           [formModel]="form?.formModel"
           [crrValue]="contracts?.contractID"
           [placeholder]="planceHolderAutoNumber ?? grvSetup['ContractID'].headerText"
-          [disabled]="disabledShowInput || action === 'edit'"
+          [disabled]="disabledShowInput || action === 'edit' || action === 'extend'"
           (valueChange)="changeAutoNum($event)"></codx-input>
       </div>
     </div>
@@ -261,7 +261,7 @@
         [Group]="form.formGroup"
         [crrValue]="contracts?.businessLineID"
         (valueChange)="valueChangeCombobox($event)"
-        [disabled]="action == 'edit' || type == 'DP'">
+        [disabled]="action == 'edit' || type == 'DP' || action == 'extend'">
       </codx-input>
     </div>
   </div>
@@ -274,7 +274,7 @@
     <codx-input
       field="contractName"
       [formModel]="form?.formModel"
-      [Group]="form.formGroup"
+      [crrValue]="contracts?.contractName"
       (valueChange)="valueChangeText($event)"
     ></codx-input>
   </div>
@@ -301,13 +301,13 @@
     <div class="col-6">
       <codx-label
         [formModel]="dialog?.formModel"
-        fiedName="ContactID"
+        fiedName="contactID"
         default="Người đại diện"></codx-label>
       <codx-input
         #inputContact
         field="contactID"
         [formModel]="form?.formModel"
-        [Group]="form.formGroup"
+        [crrValue]="contracts?.contactID"
         (valueChange)="valueChangeCombobox($event)">
       </codx-input>
     </div>

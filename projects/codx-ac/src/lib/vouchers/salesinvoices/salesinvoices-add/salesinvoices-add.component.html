@@ -36,12 +36,15 @@
       </div>
     </div>
     <ng-container>
-      <div style="margin-left: 25px" *ngIf="!formSalesInvoice.data?.validated"
-        class="input-circle h-20px input-border-0 w-400px mb-1">
-        <codx-dropdown-select #eleCbxSubType [showFooter]="false" [isToolbar]="false"
-          [cssClass]="'rounded-pill border-1'" cssPopup="h-300px w-550px" [isMulti]="false" type="valuelist"
-          field="subType" [refValue]="formSalesInvoice?.gridviewSetup['SubType'].referedValue"  [value]="formSalesInvoice.data.subType" emptyText="Loại phiếu"
-          (valueChange)="changeSubType($event)"></codx-dropdown-select>
+      <div style="margin-left: 35px" class="d-flex align-items-center">
+        <i class="icon-arrow_drop_down_circle icon-16 mt-1"></i>
+        <div *ngIf="formSalesInvoice && !formSalesInvoice?.data?.validated" style="margin-left: -5px;"
+          class="input-circle h-20px input-border-0 w-400px mb-1">
+          <codx-dropdown-select #eleCbxSubType [showFooter]="false" [isToolbar]="false" [cssClass]="'rounded-pill border-1'"
+            cssPopup="h-350px w-550px" [isMulti]="false" type="valuelist" field="subType"
+            [refValue]="formSalesInvoice?.gridviewSetup['SubType']?.referedValue" [value]="formSalesInvoice?.data?.subType"
+            emptyText="Loại phiếu" (valueChange)="changeSubType($event)"></codx-dropdown-select>
+        </div>
       </div>
       <span style="margin-left: 30px" *ngIf="formSalesInvoice.data?.validated">
         <codx-vll [name]="'AC063'" [formModel]="formSalesInvoice.formModel" [field]="'SubType'"
@@ -76,7 +79,7 @@
 <!-- End: Tab General -->
 
  <!-- Start: Tab Detail -->
- <div style="height: calc(100vh - 420px) !important">
+ <div style="height: calc(100vh - 420px) !important;min-height: 300px;">
   <ejs-tab #elementTabDetail (created)="createTabDetail($event,elementTabDetail)">
     <e-tabitems>
       <e-tabitem>

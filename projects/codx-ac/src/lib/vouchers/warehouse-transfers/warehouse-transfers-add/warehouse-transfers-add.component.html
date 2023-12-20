@@ -37,14 +37,16 @@
             </div>
         </div>
         <ng-container>
-            <div style="margin-left: 25px" *ngIf="!formWareHouse.data?.validated"
-                class="input-circle h-20px input-border-0 w-400px mb-1">
-                <codx-dropdown-select #eleCbxSubType [showFooter]="false" [isToolbar]="false"
-                    [cssClass]="'rounded-pill border-1'" cssPopup="h-250px w-550px" [isMulti]="false" type="valuelist"
-                    field="subType" [refValue]="formWareHouse?.gridviewSetup['SubType'].referedValue"
-                    [value]="formWareHouse.data.subType" emptyText="Loại phiếu"
-                    (valueChange)="changeSubType($event)"></codx-dropdown-select>
-            </div>
+            <div style="margin-left: 35px" class="d-flex align-items-center">
+                <i class="icon-arrow_drop_down_circle icon-16 mt-1"></i>
+                <div *ngIf="formWareHouse && !formWareHouse?.data?.validated" style="margin-left: -5px;"
+                  class="input-circle h-20px input-border-0 w-400px mb-1">
+                  <codx-dropdown-select #eleCbxSubType [showFooter]="false" [isToolbar]="false" [cssClass]="'rounded-pill border-1'"
+                    cssPopup="h-350px w-550px" [isMulti]="false" type="valuelist" field="subType"
+                    [refValue]="formWareHouse?.gridviewSetup['SubType']?.referedValue" [value]="formWareHouse?.data?.subType"
+                    emptyText="Loại phiếu" (valueChange)="changeSubType($event)"></codx-dropdown-select>
+                </div>
+              </div>
             <span style="margin-left: 30px" *ngIf="formWareHouse.data?.validated">
                 <codx-vll [name]="formWareHouse?.gridviewSetup['SubType'].referedValue" [formModel]="dialog.formModel"
                     [field]="'SubType'" [value]="formWareHouse.data?.subType" [showText]="true" [showBgColor]="true"
@@ -73,7 +75,7 @@
         </e-tabitems>
     </ejs-tab>
     <!-- Start: Tab Detail -->
-    <div style="height: calc(100vh - 380px) !important;min-height: 350px;">
+    <div style="height: calc(100vh - 380px) !important;min-height: 300px;">
         <ejs-tab #elementTabDetail (selecting)="onTabSelectedDetail($event)">
             <e-tabitems>
                 <e-tabitem>

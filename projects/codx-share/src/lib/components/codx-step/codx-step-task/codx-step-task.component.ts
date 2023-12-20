@@ -24,6 +24,7 @@ import {
   AlertConfirmInputConfig,
   Util,
   DialogRef,
+  TenantStore,
 } from 'codx-core';
 import {
   DP_Instances_Steps,
@@ -56,12 +57,14 @@ import {
 import { CodxBookingService } from '../../codx-booking/codx-booking.service';
 import { CodxShareService } from '../../../codx-share.service';
 import { CodxCommonService } from 'projects/codx-common/src/lib/codx-common.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ExportData } from '../../../models/ApproveProcess.model';
 import { CodxViewApproveComponent } from '../codx-step-common/codx-view-approve/codx-view-approve.component';
 import { PopupCustomFieldComponent } from '../../codx-fields-detail-temp/popup-custom-field/popup-custom-field.component';
 import { Subject, firstValueFrom } from 'rxjs';
 import { ContractsDetailComponent } from 'projects/codx-cm/src/lib/contracts/contracts-detail/contracts-detail.component';
+import { environment } from 'src/environments/environment';
+import { Location } from '@angular/common';
 @Component({
   selector: 'codx-step-task',
   templateUrl: './codx-step-task.component.html',
@@ -152,6 +155,8 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
 
   frmModelInstancesGroup: FormModel;
   frmModelInstancesTask: FormModel;
+  frmModelContracts: FormModel;
+  frmModelQuotation: FormModel;
   dialogGuide: DialogRef;
   vllDataTask;
   vllDataStep;
@@ -183,6 +188,12 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     entityName: 'DP_Instances',
     gridViewName: 'grvDPInstances',
   };
+
+  frmModelExport: FormModel = {
+    formName: 'CMTempDataSources',
+    gridViewName: 'grvCMTempDataSources',
+    entityName: 'CM_TempDataSources',
+  };
   taskApprover;
   approverDialog;
   titleLanguageAdd = '';
@@ -201,7 +212,10 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     private bookingService: CodxBookingService,
     private codxShareService: CodxShareService,
     private codxCommonService: CodxCommonService,
-    private activedRouter: ActivatedRoute
+    private activedRouter: ActivatedRoute,
+    private tenantStore: TenantStore,
+    private router: Router,
+    private location: Location,
   ) {
     this.user = this.authStore.get();
     this.id = Util.uid();
@@ -234,6 +248,19 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       formName: 'DPInstancesStepsTasks',
       entityName: 'DP_Instances_Steps_Tasks',
       gridViewName: 'grvDPInstancesStepsTasks',
+    };
+    this.frmModelContracts = {
+      funcID: 'CM0204',
+      formName: 'CMContracts',
+      entityName: 'CM_Contracts',
+      entityPer: 'CM_Contracts',
+      gridViewName: 'grvCMContracts',
+    };
+    this.frmModelQuotation = {
+      formName: 'CMQuotationsLines',
+      gridViewName: 'grvCMQuotationsLines',
+      entityName: 'CM_QuotationsLines',
+      funcID: 'CM02021',
     };
   }
 
@@ -488,6 +515,9 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
           case 'SYS001':
           case 'SYS002':
             break;
+          case 'SYS004'://mail
+            // res.disabled = task?.taskType != "E";
+            break;
           case 'SYS02': //xóa
             if (!(!task?.isTaskDefault && (this.isRoleAll || isGroup))) {
               res.disabled = true;
@@ -557,7 +587,6 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
             break;
           case 'DP25':
           case 'DP26':
-          case 'SYS004':
             res.disabled = true;
             break;
           case 'DP27': // đặt xe
@@ -794,9 +823,9 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       case 'DP29':
         this.deleteMeeting(task);
         break;
-      case 'SYS004':
-        this.sendMail();
-        break;
+      // case 'SYS004':
+      //   this.sendMailTask(task);
+      //   break;
       case 'DP27':
         this.addBookingCar(task);
         break;
@@ -821,7 +850,17 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         //   customData.refID =  task.refID ;
         //   customData.refType ='DP_Steps_Tasks'
         // }
-
+        // let frmModel: FormModel;
+        // switch (task?.taskType) {
+        //   case 'CO':
+        //     frmModel = this.frmModelContracts;
+        //     break;
+        //   case 'Q':
+        //     frmModel = this.frmModelQuotation;
+        //     break;
+        //   default:
+        //     frmModel = this.frmModelInstancesTask;
+        // }
         this.codxShareService.defaultMoreFunc(
           e,
           task,
@@ -860,6 +899,15 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     }
   }
   //#endregion
+
+  sendMailTask(data) {
+    this.api
+      .exec<any>('DP', 'InstancesStepsBusiness', 'SendMailTaskAsync', [
+        data,
+        null,
+      ])
+      .subscribe((res) => {});
+  }
 
   //#region start task
   async startTask(task: DP_Instances_Steps_Tasks, groupTask) {
@@ -1986,11 +2034,21 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     if (data && !this.isViewStep && !this.isMoveStage) {
       if (data?.taskType == 'CO') {
         if (data?.objectLinked) {
-          this.viewDetailContract(data);
+
+          const url1 = this.location.prepareExternalUrl(this.location.path());
+          const parser = document.createElement('a');
+          parser.href = url1;
+          const domain = parser.origin;
+
+          let tenant = this.tenantStore.get().tenant;
+          let url = `${domain}/${tenant}/cm/contracts/CM0204?predicate=RecID=@0&dataValue=${data?.objectLinked}`
+          window.open(url, '_blank');
           return;
         } else {
           this.notiService.notify('Bắt đầu ngay để thiết lập hợp đồng', '3');
         }
+      }else{
+
       }
       let frmModel: FormModel = {
         entityName: 'DP_Instances_Steps_Tasks',
@@ -3054,18 +3112,19 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         var customData = {
           refID: data.recID,
           refType: 'DP_Instances_Steps_Tasks',
-          dataSource: res,
+          dataSource: res ?? '',
         };
         debugger;
         if (data?.isTaskDefault) {
           customData.refID = data.refID;
           customData.refType = 'DP_Steps_Tasks';
         }
+
         this.codxShareService.defaultMoreFunc(
           e,
           data,
           this.afterSave,
-          this.frmModelInstancesTask,
+          this.frmModelExport,
           null,
           this,
           customData

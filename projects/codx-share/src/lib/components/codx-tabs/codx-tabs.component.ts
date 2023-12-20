@@ -15,8 +15,8 @@ import { ApiHttpService } from 'codx-core';
 import { TabModel } from './model/tabControl.model';
 import { CodxShareService } from '../../codx-share.service';
 import { isObservable } from 'rxjs';
-import { CodxViewAssignComponent } from '../codx-view-assign/codx-view-assign.component';
-import { CodxReferencesComponent } from '../codx-references/codx-references.component';
+import { CodxReferencesComponent } from '../codx-tasks/codx-references/codx-references.component';
+import { CodxViewAssignComponent } from '../codx-tasks/codx-view-assign/codx-view-assign.component';
 
 @Component({
   selector: 'codx-tabs',

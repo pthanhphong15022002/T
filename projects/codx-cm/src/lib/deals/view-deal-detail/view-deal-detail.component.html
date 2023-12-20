@@ -6,13 +6,14 @@
     <span class="icon-20 icon-arrow_back text-primary me-2 fw-bold"></span>
     <codx-label
       class="fs-5 fw-bold me-2"
-      name="lblTitleViewdeal"
+      name="lblTitleViewDeal"
       [formModel]="dialog?.formModel"
       [default]="'Chi tiết cơ hội'"
     ></codx-label>
   </div>
   <div class="d-flex justify-content-center w-100 top2">
     <div class="container row">
+      <!-- LEFT -->
       <div class="left col-3 h-100">
         <div class="">
           <div class="d-flex flex-column align-items-center">
@@ -35,72 +36,67 @@
                 {{ customers?.customerName }}
               </span>
             </div>
+            <div *ngIf="customers?.industries">
+              <span
+                class="text-dark fw-bold codx-textcontent"
+                [innerHTML]="
+                  customers?.industries | formatvalue : formModelCustomer : 'Industries' | async
+                "
+              ></span>
+            </div>
           </div>
+
           <hr />
           <div>
-            <div
-              class="d-flex align-items-center text-gray-600 cursor-pointer my-2"
-              ngbTooltip="Tên hợp đồng"
-            >
-              <span class="icon-i-clipboard icon-18 me-2 fw-bold"></span>
-              <span class="fs-5-sm"> {{ deal?.dealName }}</span>
+            <div class="mb-1">
+              <codx-label
+                class="label-colon fs-6 fw-bold"
+                fiedName="contactID"
+                [formModel]="dialog?.formModel"
+                [setRequire]="false"
+              >
+              </codx-label>
             </div>
+            <div class="d-flex">
+              <div class="me-3">
+                <codx-img
+                  [objectId]="contact?.recID"
+                  [objectName]="contact?.contactName"
+                  [imgOn]="contact?.modifiedOn"
+                  [objectType]="'CM_Contacts'"
+                  [width]="40"
+                >
+                </codx-img>
+              </div>
 
-            <div class="d-flex align-items-center text-gray-600 mb-2">
-              <span class="icon-add_shopping_cart icon-18 me-2 fw-bold"></span>
-              <span
-                class="fs-5-sm"
-                [innerHTML]="
-                  deal?.businessLineID
-                    | formatvalue : dialog?.formModel : 'BusinessLineID'
-                    | async
-                "
-              ></span>
-            </div>
-
-            <div class="d-flex align-items-center text-gray-600 my-2">
-              <span
-                class="icon-monetization_on icon-18 me-2 text-warning"
-              ></span>
-              <span
-                class="fs-5-sm"
-                [innerHTML]="
-                  deal?.dealValue
-                    | formatvalue : dialog?.formModel : 'DealValue'
-                    | async
-                "
-              ></span>
-              <span
-                class="ms-1 fs-5-sm"
-                [innerHTML]="
-                  deal?.currencyID
-                    | formatvalue : dialog?.formModel : 'CurrencyID'
-                    | async
-                "
-              ></span>
-            </div>
-
-            <div class="d-flex align-items-center justify-content-between my-2">
-              <div class="d-flex align-items-center text-gray-600">
-                <span class="icon-av_timer icon-18 me-2"></span>
+              <div class="d-flex flex-column">
+                <span class="fw-bold text-dark fs-6">{{contact?.contactName}}</span>
                 <span
-                  class="fs-5-sm"
+                  *ngIf="contact?.jobTitle"
                   [innerHTML]="
-                    deal?.createdOn
-                      | formatvalue : dialog?.formModel : 'CreatedOn'
+                    contact?.jobTitle
+                      | formatvalue : formModelContact : 'JobTitle'
+                      | async
+                  "
+                ></span>
+                <span
+                  *ngIf="contact?.mobile"
+                  class="text-gray-600 fs-7"
+                  [innerHTML]="
+                    contact?.mobile
+                      | formatvalue : formModelContact : 'Mobile'
+                      | async
+                  "
+                ></span>
+                <span
+                  class="text-gray-600 fs-7"
+                  [innerHTML]="
+                    contact?.personalEmail
+                      | formatvalue : formModelContact: 'PersonalEmail'
                       | async
                   "
                 ></span>
               </div>
-              <codx-vll
-                [name]="vllStatus"
-                [field]="'Status'"
-                [value]="deal?.status"
-                [showText]="true"
-                [showBgColor]="true"
-                class="badge badge-primary badge-sm"
-              >
-              </codx-vll>
             </div>
           </div>
 
@@ -112,7 +108,7 @@
               [ngClass]="tab?.id == tabLeftSelect?.id ? 'active1' : 'active11'"
               (click)="changeTabLeft(tab?.id)"
             >
-              <span class="icon-18 icon-info me-2" [ngClass]="tab?.icon"></span>
+              <span class="icon-18 me-2" [ngClass]="tab?.icon"></span>
               <codx-label
                 class="fs-6 fw-bold me-2"
                 name="lblInformation"
@@ -123,7 +119,7 @@
           </div>
         </div>
       </div>
-
+      <!-- RIGHT -->
       <div class="right col-9 h-100">
         <div class="top">
           <div class="d-flex">
@@ -165,85 +161,32 @@
             [ngTemplateOutlet]="information"
           ></ng-container>
           <ng-container
-            *ngIf="tabLeftSelect?.id == 'listTabTask'"
-            [ngTemplateOutlet]="task"
+            *ngIf="tabLeftSelect?.id == 'listHistory'"
+            [ngTemplateOutlet]="historyTemplate"
           ></ng-container>
           <ng-container
-            *ngIf="tabLeftSelect?.id == 'listTabComment'"
+            *ngIf="tabLeftSelect?.id == 'listFile'"
+            [ngTemplateOutlet]="fileTemplate"
+          ></ng-container>
+          <ng-container
+            *ngIf="tabLeftSelect?.id == 'listAddTask'"
+            [ngTemplateOutlet]="assignTemplate"
+          ></ng-container>
+          <ng-container
+            *ngIf="tabLeftSelect?.id == 'listApprove'"
+            [ngTemplateOutlet]="approveTemplate"
+          ></ng-container>
+          <ng-container
+            *ngIf="tabLeftSelect?.id == 'listLink'"
             [ngTemplateOutlet]="comment"
-          ></ng-container>
-          <ng-container
-            *ngIf="tabLeftSelect?.id == 'listContanct'"
-            [ngTemplateOutlet]="contactTemp"
-          ></ng-container>
-          <ng-container
-            *ngIf="tabLeftSelect?.id == 'listOpponent'"
-            [ngTemplateOutlet]="opponentTemp"
           ></ng-container>
         </div>
       </div>
+
     </div>
   </div>
 </div>
 
-<ng-template #task>
-  <div
-    class="task"
-    style="
-      min-height: calc(100vh - 115px);
-      background-color: white !important;
-      padding: 10px;
-    "
-  >
-    <div id="customer">
-      <step-task
-        [entityName]="'CM_Deals'"
-        [listInstanceStep]="listInsStep"
-        [dataCM]="deal"
-        [applyFor]="'4'"
-      ></step-task>
-    </div>
-  </div>
-</ng-template>
-<!-- Liên hệ -->
-<ng-template #contactTemp>
-  <div
-    class="task"
-    style="
-      min-height: calc(100vh - 115px);
-      background-color: white !important;
-      padding: 10px;
-    "
-  >
-    <codx-list-contacts
-      #loadContactDeal
-      [selectAll]="false"
-      [funcID]="'CM0205'"
-      [objectID]="deal?.recID"
-      [objectName]="deal.dealName"
-      [customerID]="deal?.customerID"
-      [objectType]="'4'"
-      [type]="'formDetail'"
-      [hidenMF]="deal?.closed"
-    ></codx-list-contacts>
-  </div>
-</ng-template>
-<!-- Đối thủ -->
-<ng-template #opponentTemp>
-  <div
-    class="task"
-    style="
-      min-height: calc(100vh - 115px);
-      background-color: white !important;
-      padding: 10px;
-    "
-  >
-    <codx-tab-dealcompetitors
-      [dealID]="deal.recID"
-      [hidenMF]="deal.closed"
-    ></codx-tab-dealcompetitors>
-  </div>
-</ng-template>
 <ng-template #comment>
   <div
     class="task"
@@ -266,43 +209,64 @@
 </ng-template>
 
 <ng-template #information>
-  <div id="customer" class="item-main mt-0">
-    <div class="d-flex align-items-center text-primary my-2">
-      <span class="icon-person_outline icon-20 me-1"></span>
-      <codx-label
-        class="text-gray-600 ms-2 fs-5-sm fw-bold text-primary"
-        name="lblTitleCustomer"
-        [formModel]="formModelCustomer"
-        [default]="'Khách hàng'"
-      ></codx-label>
-    </div>
-    <ng-container [ngTemplateOutlet]="customerTemplate"></ng-container>
-  </div>
-
-  <div id="information" class="item-main">
+  <div id="information" class="item-main mt-0">
     <div class="d-flex align-items-center text-primary my-2">
       <span class="icon-i-clipboard icon-20 me-1 fw-bold"></span>
       <codx-label
         class="text-gray-600 ms-2 fs-5-sm fw-bold text-primary"
-        name="lblTitledeal"
-        [formModel]="formModelCustomer"
-        [default]="'Thông tin cơ hội'"
+        name="lblTitleInformation"
+        [formModel]="dialog?.formModel"
+        [default]="'Thông tin chung'"
       ></codx-label>
     </div>
     <ng-container [ngTemplateOutlet]="informationTemplate"></ng-container>
   </div>
 
-  <div id="purpose" class="item-main">
+  <div id="fields" class="item-main">
+    <div class="d-flex align-items-center text-primary my-2">
+      <span class="icon-i-clipboard icon-20 me-1 fw-bold"></span>
+      <codx-label
+        class="text-gray-600 ms-2 fs-5-sm fw-bold text-primary"
+        name="lblTitleField"
+        [formModel]="dialog?.formModel"
+        [default]="'Thông tin mở rộng'"
+      ></codx-label>
+    </div>
+    <ng-container *ngFor="let item of listInsStep">
+      <codx-fields-detail-temp
+        *ngIf="item?.fields?.length > 0"
+        [dataStep]="item"
+        [showColumnControl]="showColumnControl(item.stepID)"
+        [isUpdate]="
+          ['1', '2', '15'].includes(deal.status) &&
+          !deal.closed
+        "
+        [objectIdParent]="deal.recID"
+        [customerID]="deal.customerID"
+        >
+        (saveDataStep)="saveDataStep($event)"
+      </codx-fields-detail-temp>
+    </ng-container>
+  </div>
+
+  <div id="tasks" class="item-main">
     <div class="d-flex align-items-center text-primary my-2">
       <span class="icon-i-box-arrow-in-right icon-20 me-1 fw-bold"></span>
       <codx-label
         class="text-gray-600 ms-2 fs-5-sm fw-bold text-primary"
-        name="lblTitlePurpose"
-        [formModel]="formModelCustomer"
-        [default]="'Trường nhập liệu'"
+        name="lblTitleTask"
+        [formModel]="dialog?.formModel"
+        [default]="'Công việc'"
       ></codx-label>
     </div>
-    <ng-container [ngTemplateOutlet]="purposeTemplate"></ng-container>
+    <div>
+      <step-task
+        [entityName]="'CM_Deals'"
+        [listInstanceStep]="listInsStep"
+        [dataCM]="deal"
+        [applyFor]="'1'"
+      ></step-task>
+    </div>
   </div>
 
   <div id="note" class="item-main">
@@ -310,194 +274,22 @@
       <span class="icon-event_notes icon-20 me-1 fw-bold"></span>
       <codx-label
         class="text-gray-600 ms-2 fs-5-sm fw-bold text-primary"
-        name="lblTitlePurpose"
-        [formModel]="formModelCustomer"
+        fiedName="note"
+        [formModel]="dialog?.formModel"
         [default]="'Ghi chú'"
       ></codx-label>
     </div>
-    <ng-container [ngTemplateOutlet]="noteTemplate"></ng-container>
-  </div>
-</ng-template>
-
-<!-- Khách hàng -->
-<ng-template #customerTemplate>
-  <div class="">
-    <div class="d-flex align-items-center p-2">
-      <codx-img
-        [objectId]="customers?.recID"
-        [objectName]="customers?.customerName"
-        [referType]="'avt'"
-        [imgOn]="customers?.modifiedOn"
-        [objectType]="'CM_Customers'"
-        [width]="40"
-      >
-      </codx-img>
-      <div class="ms-3">
-        <div>
-          <span>{{ customers?.customerName }}</span>
-        </div>
-
-        <div
-          class="d-flex align-items-center"
-          *ngIf="customers?.address != null && customers?.address.trim() != ''"
-        >
-          <span class="icon-16 text-gray-600 fs-7"> </span>
-          <span
-            class="text-gray-600"
-            [innerHTML]="
-              customers?.address
-                | formatvalue : formModelCustomer : 'Address'
-                | async
-            "
-          ></span>
-        </div>
-      </div>
-    </div>
-
-    <div
-      class="d-flex align-items-center p-1"
-      *ngIf="customers?.category == '1' && customers?.industries"
-    >
-      <codx-label
-        class="text-gray-600"
-        fiedName="Industries"
-        [formModel]="formModelCustomer"
-      ></codx-label>
-      <div class="ms-2 text-gray-600">
-        <div
-          *ngFor="let item of customers?.industries?.split(';'); index as i"
-          class="d-inline"
-        >
-          <span
-            class="text-dark fw-bold codx-textcontent"
-            [innerHTML]="
-              item | formatvalue : formModelCustomer : 'Industries' | async
-            "
-          ></span
-          ><span
-            class="me-1"
-            *ngIf="i < customers?.industries?.split(';').length - 1"
-            >,</span
-          >
-        </div>
-      </div>
-    </div>
-
-    <div class="d-flex align-items-center p-1">
-      <codx-label
-        class="text-gray-600"
-        fiedName="ChannelID"
-        [formModel]="formModelCustomer"
-      ></codx-label>
-      <div class="ms-1">
-        <div
-          class="text-gray-600 fw-bold codx-textcontent"
-          [innerHTML]="
-            customers?.channelID
-              | formatvalue : formModelCustomer : 'ChannelID'
-              | async
-          "
-        ></div>
-      </div>
-    </div>
-
-    <div class="d-flex align-items-center p-1">
-      <codx-label
-        class="text-gray-600 me-2"
-        fiedName="Owner"
-        [formModel]="formModelCustomer"
-      ></codx-label>
-      <codx-imgs
-        class="h-25px"
-        [isToolTip]="true"
-        [width]="25"
-        [objectId]="customers?.owner"
-        [objectType]="'AD_Users'"
-        [numberImages]="1"
-      >
-      </codx-imgs>
-    </div>
-
-    <div class="p-1" *ngIf="customers?.category == '2'">
-      <codx-label
-        class="label-colon text-gray-600"
-        fiedName="Occupation"
-        [formModel]="formModelCustomer"
-      ></codx-label>
-      <div class="mt-1">
-        <span
-          class="text-gray-600"
-          [innerHTML]="
-            customers?.occupation
-              | formatvalue : formModelCustomer : 'Occupation'
-              | async
-          "
-        ></span>
-      </div>
-    </div>
-
-    <div class="p-1">
-      <codx-label
-        class="label-colon text-gray-600"
-        fiedName="TaxCode"
-        [formModel]="formModelCustomer"
-        [setRequire]="false"
-      ></codx-label>
+    <div class="row my-2">
       <span
         class="text-gray-600"
         [innerHTML]="
-          customers?.taxCode
-            | formatvalue : formModelCustomer : 'TaxCode'
-            | async
-        "
-      ></span>
-    </div>
-
-    <div class="p-1">
-      <codx-label
-        class="label-colon text-gray-600"
-        fiedName="Phone"
-        [formModel]="formModelCustomer"
-      ></codx-label>
-      <span
-        class="text-gray-600"
-        [innerHTML]="
-          customers?.phone | formatvalue : formModelCustomer : 'Phone' | async
-        "
-      ></span>
-    </div>
-
-    <div class="p-1">
-      <codx-label
-        class="label-colon text-gray-600"
-        fiedName="FaxNo"
-        [formModel]="formModelCustomer"
-      ></codx-label>
-      <span
-        class="text-gray-600"
-        [innerHTML]="
-          customers?.faxNo | formatvalue : formModelCustomer : 'FaxNo' | async
-        "
-      ></span>
-    </div>
-
-    <div class="p-1">
-      <codx-label
-        class="label-colon text-gray-600"
-        fiedName="WebPage"
-        [formModel]="formModelCustomer"
-      ></codx-label>
-      <span
-        class="text-gray-600"
-        [innerHTML]="
-          customers?.webPage
-            | formatvalue : formModelCustomer : 'WebPage'
-            | async
+          deal?.note | formatvalue : dialog?.formModel : 'Note' | async
         "
       ></span>
     </div>
   </div>
 </ng-template>
+
 <!-- Thông tin chung -->
 <ng-template #informationTemplate>
   <div>
@@ -593,9 +385,9 @@
             ></codx-label>
           </div>
           <div class="d-flex justify-content-end">
+            <!-- [ngbTooltip]="tooltipSalesperson" -->
             <div
               style="position: relative"
-              [ngbTooltip]="tooltipSalesperson"
               *ngIf="deal?.salespersonID"
             >
               <codx-img
@@ -796,30 +588,254 @@
     </div>
   </div>
 </ng-template>
-<!-- trường nhập liệu -->
-<ng-template #purposeTemplate>
-  <div class="d-flex flex-column mt-5">
-    <ng-container *ngFor="let item of listInsStep">
-      <codx-fields-detail-temp
-        *ngIf="item?.fields?.length > 0"
-        [dataStep]="item"
-        [isUpdate]="['1', '2', '15'].includes(deal.status) && !deal.closed"
-        [objectIdParent]="deal.recID"
-        [customerID]="deal.customerID"
-      >
-      </codx-fields-detail-temp>
-    </ng-container>
+<!-- Lịch sử -->
+<ng-template #historyTemplate>
+  <div class="item-right">
+    <div class="tab_body">
+      <codx-history
+        [objectID]="deal?.recID"
+        [formModel]="dialog?.formModel"
+        [funcID]="dialog?.formModel?.funcID"
+      ></codx-history>
+    </div>
   </div>
 </ng-template>
-<!-- Ghi chú -->
-<ng-template #noteTemplate>
-  <div class="row my-2">
-    <span
-      class="text-gray-600"
-      [innerHTML]="
-        deal?.note | formatvalue : dialog?.formModel : 'Note' | async
-      "
-    ></span>
+<!-- Đính kèm -->
+<ng-template #fileTemplate>
+  <div class="item-right">
+    <codx-files-attachment
+    *ngIf="deal?.recID"
+    [entityName]="dialog?.formModel?.entityName"
+    [objectID]="deal?.recID"
+    [hideFolder]="1"
+    [isEdit]="true"
+    [hideFolder]="'1'"
+    [type]="'inline'"
+    [allowMultiFile]="'1'"
+    [formModel]="dialog?.formModel"
+    [funcID]="dialog?.formModel?.funcID"
+    [dataSelected]="null"
+    (fileSave)="fileSave($event)"
+    [displayThumb]="'full'"
+    [referType]="'attach'"
+    [isFristVer]="false"
+    [addPermissions]="[]"
+  ></codx-files-attachment>
+  </div>
+  <!-- (fileAdded)="fileAdded($event)"
+  (fileCount)="getfileCount($event)" -->
+</ng-template>
+<!-- Giao việc -->
+<ng-template #assignTemplate>
+  <div class="item-right">
+    <codx-view-assign
+    #viewTreeAssign
+    [dataTree]="dataTree"
+    [formModel]="dialog?.formModel"
+    referType="source"
+  ></codx-view-assign>
+  </div>
+</ng-template>
+<!-- Ký duyệt -->
+<ng-template #approveTemplate>
+  <div class="item-right">
+    <!-- <codx-view-approval-step
+      [transID]="deal?.recID"
+      [approveStatus]="deal?.approveStatus"
+    >
+    </codx-view-approval-step> -->
+  </div>
+</ng-template>
+<!-- Liên kết -->
+<ng-template #historyTemplate>
+  <div class="item-right">
+    <div class="tab_body">
+      <codx-history
+        [objectID]="deal?.recID"
+        [formModel]="dialog?.formModel"
+        [funcID]="dialog?.formModel?.funcID"
+      ></codx-history>
+    </div>
+  </div>
+</ng-template>
+<!-- Khách hàng -->
+<ng-template #customerTemplate>
+<ng-template #customerTemplate>
+  <div class="">
+    <div class="d-flex align-items-center p-2">
+      <codx-img
+        [objectId]="customers?.recID"
+        [objectName]="customers?.customerName"
+        [referType]="'avt'"
+        [imgOn]="customers?.modifiedOn"
+        [objectType]="'CM_Customers'"
+        [width]="40"
+      >
+      </codx-img>
+      <div class="ms-3">
+        <div>
+          <span>{{ customers?.customerName }}</span>
+        </div>
+
+        <div
+          class="d-flex align-items-center"
+          *ngIf="customers?.address != null && customers?.address.trim() != ''"
+        >
+          <span class="icon-16 text-gray-600 fs-7"> </span>
+          <span
+            class="text-gray-600"
+            [innerHTML]="
+              customers?.address
+                | formatvalue : formModelCustomer : 'Address'
+                | async
+            "
+          ></span>
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="d-flex align-items-center p-1"
+      *ngIf="customers?.category == '1' && customers?.industries"
+    >
+      <codx-label
+        class="text-gray-600"
+        fiedName="Industries"
+        [formModel]="formModelCustomer"
+      ></codx-label>
+      <div class="ms-2 text-gray-600">
+        <div
+          *ngFor="let item of customers?.industries?.split(';'); index as i"
+          class="d-inline"
+        >
+          <span
+            class="text-dark fw-bold codx-textcontent"
+            [innerHTML]="
+              item | formatvalue : formModelCustomer : 'Industries' | async
+            "
+          ></span>
+          <span
+            class="me-1"
+            *ngIf="i < customers?.industries?.split(';').length - 1"
+            >,</span
+          >
+        </div>
+      </div>
+    </div>
+
+    <div class="d-flex align-items-center p-1">
+      <codx-label
+        class="text-gray-600"
+        fiedName="ChannelID"
+        [formModel]="formModelCustomer"
+      ></codx-label>
+      <div class="ms-1">
+        <div
+          class="text-gray-600 fw-bold codx-textcontent"
+          [innerHTML]="
+            customers?.channelID
+              | formatvalue : formModelCustomer : 'ChannelID'
+              | async
+          "
+        ></div>
+      </div>
+    </div>
+
+    <div class="d-flex align-items-center p-1">
+      <codx-label
+        class="text-gray-600 me-2"
+        fiedName="Owner"
+        [formModel]="formModelCustomer"
+      ></codx-label>
+      <codx-imgs
+        class="h-25px"
+        [isToolTip]="true"
+        [width]="25"
+        [objectId]="customers?.owner"
+        [objectType]="'AD_Users'"
+        [numberImages]="1"
+      >
+      </codx-imgs>
+    </div>
+
+    <div class="p-1" *ngIf="customers?.category == '2'">
+      <codx-label
+        class="label-colon text-gray-600"
+        fiedName="Occupation"
+        [formModel]="formModelCustomer"
+      ></codx-label>
+      <div class="mt-1">
+        <span
+          class="text-gray-600"
+          [innerHTML]="
+            customers?.occupation
+              | formatvalue : formModelCustomer : 'Occupation'
+              | async
+          "
+        ></span>
+      </div>
+    </div>
+
+    <div class="p-1">
+      <codx-label
+        class="label-colon text-gray-600"
+        fiedName="TaxCode"
+        [formModel]="formModelCustomer"
+        [setRequire]="false"
+      ></codx-label>
+      <span
+        class="text-gray-600"
+        [innerHTML]="
+          customers?.taxCode
+            | formatvalue : formModelCustomer : 'TaxCode'
+            | async
+        "
+      ></span>
+    </div>
+
+    <div class="p-1">
+      <codx-label
+        class="label-colon text-gray-600"
+        fiedName="Phone"
+        [formModel]="formModelCustomer"
+      ></codx-label>
+      <span
+        class="text-gray-600"
+        [innerHTML]="
+          customers?.phone | formatvalue : formModelCustomer : 'Phone' | async
+        "
+      ></span>
+    </div>
+
+    <div class="p-1">
+      <codx-label
+        class="label-colon text-gray-600"
+        fiedName="FaxNo"
+        [formModel]="formModelCustomer"
+      ></codx-label>
+      <span
+        class="text-gray-600"
+        [innerHTML]="
+          customers?.faxNo | formatvalue : formModelCustomer : 'FaxNo' | async
+        "
+      ></span>
+    </div>
+
+    <div class="p-1">
+      <codx-label
+        class="label-colon text-gray-600"
+        fiedName="WebPage"
+        [formModel]="formModelCustomer"
+      ></codx-label>
+      <span
+        class="text-gray-600"
+        [innerHTML]="
+          customers?.webPage
+            | formatvalue : formModelCustomer : 'WebPage'
+            | async
+        "
+      ></span>
+    </div>
   </div>
 </ng-template>
 
@@ -838,3 +854,5 @@
     <!-- {{ gridViewSetup["SalespersonID"]?.headerText }} -->
   </div>
 </ng-template>
+
+

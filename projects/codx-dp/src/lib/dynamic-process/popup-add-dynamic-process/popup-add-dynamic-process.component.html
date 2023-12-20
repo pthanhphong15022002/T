@@ -2560,9 +2560,13 @@
                           >
                           </codx-mfunc>
                         </div>
-                        <div *ngIf="task?.approveRule" class="d-flex align-items-center cursor-pointer ms-12"  (click)="openFormApprover(task)">
+                        <div
+                          *ngIf="task?.approveRule"
+                          class="d-flex align-items-center cursor-pointer ms-12"
+                          (click)="openFormApprover(task)"
+                        >
                           <span
-                            class="icon-20 icon-text_snippet text-primary "
+                            class="icon-20 icon-text_snippet text-primary"
                           ></span>
                           <codx-label
                             class="text-gray-500"
@@ -2936,18 +2940,25 @@
           </div>
           <div class="col-6">
             <codx-input
-            field="applyFor"
-            type="valuelist"
-            [crrValue]="applyForSucess"
-            [disabled]="stepSuccess?.isUsed ? false : true"
-            [refValue]=" applyForSucess != '5' ? gridViewSetup?.ApplyFor?.referedValue:'DP002'"
-            (valueChange)="valueChangeApplyFor($event,viewStepReasonSuccess)"
-            [placeholder]="gridViewSetup['ApplyFor']?.description"
-          >
-          </codx-input>
+              field="applyFor"
+              type="valuelist"
+              [crrValue]="applyForSucess"
+              [disabled]="stepSuccess?.isUsed ? false : true"
+              [refValue]="
+                applyForSucess != '5'
+                  ? gridViewSetup?.ApplyFor?.referedValue
+                  : 'DP002'
+              "
+              (valueChange)="valueChangeApplyFor($event, viewStepReasonSuccess)"
+              [placeholder]="gridViewSetup['ApplyFor']?.description"
+            >
+            </codx-input>
           </div>
         </div>
-        <div class="row" *ngIf="listCbxProccessSuccess && listCbxProccessSuccess?.length > 0">
+        <div
+          class="row"
+          *ngIf="listCbxProccessSuccess && listCbxProccessSuccess?.length > 0"
+        >
           <div class="col-6">
             <div class="text-dark fw-bold mb-1">
               <codx-label
@@ -2970,7 +2981,12 @@
               [dataSource]="listCbxProccessSuccess"
               [fields]="fieldCbxProccess"
               (valueChange)="cbxChange($event, viewStepReasonSuccess)"
-              [value]="moveProccessIsNull(stepSuccess?.newProcessID,listCbxProccessSuccess)"
+              [value]="
+                moveProccessIsNull(
+                  stepSuccess?.newProcessID,
+                  listCbxProccessSuccess
+                )
+              "
               [readonly]="stepSuccess.isUsed ? false : true"
             >
             </ejs-combobox>
@@ -3175,18 +3191,25 @@
           </div>
           <div class="col-6">
             <codx-input
-            field="applyFor"
-            type="valuelist"
-            [crrValue]="applyForFail"
-            [disabled]="stepFail?.isUsed ? false : true"
-            [refValue]=" applyForFail != '5' ? gridViewSetup?.ApplyFor?.referedValue:'DP002'"
-            (valueChange)="valueChangeApplyFor($event,viewStepReasonFail)"
-            [placeholder]="gridViewSetup['ApplyFor']?.description"
-          >
-          </codx-input>
+              field="applyFor"
+              type="valuelist"
+              [crrValue]="applyForFail"
+              [disabled]="stepFail?.isUsed ? false : true"
+              [refValue]="
+                applyForFail != '5'
+                  ? gridViewSetup?.ApplyFor?.referedValue
+                  : 'DP002'
+              "
+              (valueChange)="valueChangeApplyFor($event, viewStepReasonFail)"
+              [placeholder]="gridViewSetup['ApplyFor']?.description"
+            >
+            </codx-input>
           </div>
         </div>
-        <div class="row" *ngIf="listCbxProccessFail && listCbxProccessFail?.length > 0">
+        <div
+          class="row"
+          *ngIf="listCbxProccessFail && listCbxProccessFail?.length > 0"
+        >
           <div class="col-6">
             <div class="text-dark fw-bold mb-1">
               <codx-label
@@ -3206,10 +3229,12 @@
               id="recID"
               [dataSource]="listCbxProccessFail"
               [fields]="fieldCbxProccess"
-              [placeholder]=" gridViewSetupStep['NewProcessID']?.placeholder"
+              [placeholder]="gridViewSetupStep['NewProcessID']?.placeholder"
               (valueChange)="cbxChange($event, viewStepReasonFail)"
               [readonly]="stepFail?.isUsed ? false : true"
-              [value]="moveProccessIsNull(stepFail?.newProcessID,listCbxProccessFail)"
+              [value]="
+                moveProccessIsNull(stepFail?.newProcessID, listCbxProccessFail)
+              "
             ></ejs-combobox>
             <codx-label
               class="text-danger fst-italic fs-7"
@@ -4112,4 +4137,55 @@
       >O</span
     >
   </div>
+</ng-template>
+
+<!-- Templet xác nhận duplicate -->
+<ng-template #tempAccess>
+  <codx-form
+    #formAccess
+    [body]="accessBody"
+    [footer]="accessFooter"
+    [dialog]="dialogAccess"
+  >
+    <ng-template #accessBody>
+      {{ alertMessger }}
+    </ng-template>
+    <ng-template #accessFooter>
+      <div class="d-flex justify-content-end">
+        <button
+          type="button"
+          class="btn btn-outline-primary me-2"
+          (click)="dialogAccess.close()"
+        >
+          <codx-label
+            fiedName="lblBtnCancel"
+            [formName]="'DP_Processes'"
+            [gridViewName]="'grvDPProcesses'"
+            default="Hủy"
+          ></codx-label>
+        </button>
+
+        <button
+          type="button"
+          class="btn btn btn-primary me-2"
+          (click)="moveField()"
+        >
+          <codx-label
+            fiedName="lblBtnDrap"
+            [formName]="'DP_Processes'"
+            [gridViewName]="'grvDPProcesses'"
+            default="Di chuyển"
+          ></codx-label>
+        </button>
+        <button type="button" class="btn btn-primary" (click)="reuseField()">
+          <codx-label
+            name=" lblBtnReuse "
+            [formName]="'DP_Processes'"
+            [gridViewName]="'grvDPProcesses'"
+            default="Sử dụng lại"
+          ></codx-label>
+        </button>
+      </div>
+    </ng-template>
+  </codx-form>
 </ng-template>

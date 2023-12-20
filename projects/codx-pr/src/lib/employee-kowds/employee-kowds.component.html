@@ -48,6 +48,56 @@ method="LoadDataAsync" -->
     (onSelectionChanged)="onSelectionChangedTreeOrg($event)"
   >
   </codx-listview>
+
+  <div
+    class="btn-group"
+    ngbDropdown
+    role="group"
+    aria-label="Button group with nested dropdown "
+    container="body"
+  >
+    <button
+      id="show_menu"
+      style="border-radius: 0 0px 0px 0 !important"
+      type=""
+      class="dropdown-toggle-split dropdown-toggle-click"
+      ngbDropdownToggle
+    >
+    <div>
+      <span class="icon-sticky_note_2">
+
+      </span>
+      <codx-label default="Chú thích loại công" name="lblNote" [formModel]="view.formModel">
+      </codx-label>
+    </div>
+    </button>
+    <div class="dropdown-menu" ngbDropdownMenu>
+      <div *ngFor="let item of lstHrKow">
+        <span
+        class="w-25px fw-bold"
+        [style.background-color]="item.background"
+        [style.color]="item.fontColor"
+        >
+          {{item.kowID}}
+        </span>
+        <span class="ms-4">
+          {{item.kowName}}
+        </span>
+      </div>
+      <!-- <button
+        ngbDropdownItem
+        style="align-items: center"
+        *ngFor="let item of childFunc"
+        (click)="clickButton(item)"
+        [disabled]="!isEdit"
+      >
+        <div class="text-hover-primary d-flex">
+          <i class="{{ item.icon }}"></i>
+          <span class="ms-2">{{ item.text }}</span>
+        </div>
+      </button> -->
+    </div>
+  </div>
   </ng-template>
 
   <ng-template #tempTree let-data>
@@ -76,6 +126,7 @@ method="LoadDataAsync" -->
       [columnsGrid]="calendarGridColumns"
       [service]="'HR'"
       [assemblyName]="'PR'"
+      [checkboxSelect] = "true"
       [className]="'KowDsBusiness'"
       [predicates]=""
       [dataValues]="dataValues"
@@ -85,6 +136,7 @@ method="LoadDataAsync" -->
       [height]="'100%'"
       [method]="'LoadDataForGridAsync'"
       [idField]="'employeeID'"
+      (onDatabound)="onLoadedData($event)"
       ></codx-gridview-v2>
 
       <!-- Lưới cũ chưa sửa theo setting mới -->
@@ -120,10 +172,19 @@ method="LoadDataAsync" -->
     ></hr-organization-orgchart>
   </ng-template>
 
+  <ng-template #tempDayHeader let-data>
+    <div *ngIf="data != null && data.field != null">
+      {{handleColHeader(data)}}
+    </div>
+    <span>
+      {{data.headerText}}
+    </span>
+  </ng-template>
+
   <ng-template #tempEmployee let-data>
-    {{logData(data)}}
+    <!-- {{logData(data)}} -->
     <!-- {{data? data[data.column.field] : "" }} -->
-  <div class="d-flex align-items-center border-bottom">
+  <div class="d-flex align-items-center w-100" >
     <div class="p-3 ps-5"
     >
         <div class="d-flex align-items-center">
@@ -142,14 +203,14 @@ method="LoadDataAsync" -->
                 {{data?.emp?.employeeName}}</span>
               <i class="icon-qr_code_scanner text-danger icon-14 me-1"></i>
               <span class="text-danger">{{ data?.emp?.employeeID }}</span>
-              <ng-template #nameTooltip>
+              <!-- <ng-template #nameTooltip>
                 <div class="inline-tooltip">
                   <span class="fw-bold fs-6 me-3 text-nowrap">
                     {{data?.emp?.employeeName}}</span>
                   <i class="icon-qr_code_scanner text-danger icon-14 me-1"></i>
                   <span class="text-danger">{{ data?.emp?.employeeID }}</span>
                 </div>
-              </ng-template>
+              </ng-template> -->
             </div>
             <div>
               {{data?.positionName}}

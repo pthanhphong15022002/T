@@ -23,8 +23,9 @@
   (clickMF)="clickMF($event, dataSelected)"
   (changeDataMF)="changeDataMF($event, dataSelected)"
   (requestEnded)="requestEnded($event)"
+  [autoSearch]="true"
+  (searchChanged)="searchChanged($event)"
 ></codx-views>
-
 <!-- KANBAN -->
 <ng-template #cardKanban let-data let-setting="setting">
   <codx-card-img

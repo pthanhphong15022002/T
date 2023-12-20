@@ -266,7 +266,7 @@ export class ContractsComponent extends UIComponent {
             res.disabled = true;
             break;
           case 'CM0204_3': //tạo hợp đồng gia hạn
-            res.disabled = data?.status == '1' || data?.closed;
+            // res.disabled = data?.status == '1' || data?.closed;
             break;
           // case 'CM0204_17': //chia sẻ
           case 'CM0204_5': //Đã giao hàng
@@ -403,9 +403,9 @@ export class ContractsComponent extends UIComponent {
       }
     }
   }
-  
-  async addTask(contract: CM_Contracts){
-    let taskOutput = await this.stepService.addTaskCM(contract, "CM_Contracts");
+
+  async addTask(contract: CM_Contracts) {
+    let taskOutput = await this.stepService.addTaskCM(contract, 'CM_Contracts');
     this.taskAdd = taskOutput;
   }
 
@@ -465,7 +465,7 @@ export class ContractsComponent extends UIComponent {
 
   afterSave(e?: any, that: any = null) {
     if (e) {
-      let appoverStatus = e.unbounds.statusApproval;
+      let appoverStatus = e?.unbounds?.statusApproval;
       if (
         appoverStatus != null &&
         appoverStatus != this.contractSelected.approveStatus
@@ -485,7 +485,7 @@ export class ContractsComponent extends UIComponent {
     };
     let option = new DialogModel();
     option.IsFull = true;
-    option.zIndex = 1001;
+    option.zIndex = 100;
     option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;
     let popupContract = this.callFunc.openForm(
@@ -509,11 +509,7 @@ export class ContractsComponent extends UIComponent {
   async addContractAdjourn(data: CM_Contracts) {
     this.view.dataService.addNew().subscribe(async (res) => {
       let contracts = JSON.parse(JSON.stringify(data)) as CM_Contracts;
-      contracts.contractType = '2';
-      contracts.quotationID = null;
-      contracts.refID = contracts.recID;
-      delete contracts['id'];
-      this.openPopupContract(null, 'add', contracts);
+      this.openPopupContract(null, 'extend', contracts);
     });
   }
 

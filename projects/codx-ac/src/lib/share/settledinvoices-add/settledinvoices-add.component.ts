@@ -56,6 +56,7 @@ export class SettledInvoicesAdd extends UIComponent implements OnInit {
   dataSourceBefore:any;
   selectRow:any=[];
   typePay:any;
+  baseCurr:any;
   isPreventLoad:any = false;
   selectionOptions:SelectionSettingsModel = {checkboxOnly:true, type: 'Single' };
   private destroy$ = new Subject<void>();
@@ -83,7 +84,16 @@ export class SettledInvoicesAdd extends UIComponent implements OnInit {
     this.loadData(this.typePay);
   }
 
-  ngAfterViewInit() {}
+  ngAfterViewInit() {
+    this.cache
+      .companySetting()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res: any) => {
+        if (res.length > 0) {
+          this.baseCurr = res[0].baseCurr;
+        }
+      });
+  }
 
   ngDoCheck() {
     this.detectorRef.detectChanges();
@@ -92,6 +102,17 @@ export class SettledInvoicesAdd extends UIComponent implements OnInit {
   onDestroy() {
     this.destroy$.next();
     this.destroy$.complete();
+  }
+
+  beforeInitGrid(eleGrid:CodxGridviewV2Component){
+    this.settingFormatGridSettledInvoices(eleGrid);
+    let hideFields = [];
+    if (this.cashpayment.currencyID == this.baseCurr) {
+      hideFields.push('BalAmt2');
+      hideFields.push('SettledAmt2');
+      hideFields.push('CashDisc2');
+    }
+    eleGrid.showHideColumns(hideFields);
   }
 
   /**
@@ -381,6 +402,21 @@ export class SettledInvoicesAdd extends UIComponent implements OnInit {
           this.subInvoices = JSON.parse(this.dataSourceBefore);
         }
         break;
+    }
+  }
+
+  settingFormatGridSettledInvoices(eleGrid){
+    let setting = eleGrid.systemSetting;
+    if (this.cashpayment.currencyID == this.baseCurr) { //? nếu chứng từ có tiền tệ = đồng tiền hạch toán
+      eleGrid.setFormatField('balAmt','n'+(setting.dBaseCurr || 0));
+      eleGrid.setFormatField('balAmt2','n'+(setting.dBaseCurr || 0));
+      eleGrid.setFormatField('settledAmt','n'+(setting.dBaseCurr || 0));
+      eleGrid.setFormatField('settledAmt2','n'+(setting.dBaseCurr || 0));
+    } else { //? nếu chứng từ có tiền tệ != đồng tiền hạch toán
+      eleGrid.setFormatField('balAmt','n'+(setting.dSourceCurr || 0));
+      eleGrid.setFormatField('balAmt2','n'+(setting.dSourceCurr || 0));
+      eleGrid.setFormatField('settledAmt','n'+(setting.dBaseCurr || 0));
+      eleGrid.setFormatField('settledAmt2','n'+(setting.dBaseCurr || 0));
     }
   }
   //#endregion Function

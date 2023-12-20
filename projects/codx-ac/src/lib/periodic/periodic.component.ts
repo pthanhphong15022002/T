@@ -41,25 +41,10 @@ export class PeriodicComponent extends UIComponent {
         },
       },
     ];
-    console.log(this.view);
   }
   //#region Init
 
   //#region Events
-  clickMF(e, data) {
-    switch (e.functionID) {
-      case 'SYS02':
-        this.delete(data);
-        break;
-      case 'SYS03':
-        this.edit(e, data);
-        break;
-      case 'SYS04':
-        this.copy(e, data);
-        break;
-    }
-  }
-
   click(e, data) {
     this.cache.functionList(data?.functionID).subscribe((func) => {
       if (func) {
@@ -73,12 +58,5 @@ export class PeriodicComponent extends UIComponent {
   //#region Events
 
   //#region Method
-  add(e): void {}
-
-  edit(e, data): void {}
-
-  copy(e, data): void {}
-
-  delete(data): void {}
   //#region Method
 }

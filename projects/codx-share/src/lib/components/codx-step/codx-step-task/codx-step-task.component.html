@@ -286,6 +286,20 @@
                           >
                           </codx-vll>
                         </ng-container>
+                        <span
+                          *ngIf="task?.approveRule"
+                          (click)="openFormApprover(task)"
+                          class="icon-18 icon-i-pen cursor-pointer fw-bold me-2"
+                          ngbTooltip="Kí, duyệt"
+                        ></span>
+                        <codx-attachment-temp
+                          [viewType]="'5'"
+                          [hideMoreF]="0"
+                          [objectID]="task?.refID"
+                          [formModel]="grvMoreFunction"
+                          [tooltip]="'Tài liệu mẫu'"
+                        >
+                        </codx-attachment-temp>
                         <ng-container
                           [ngTemplateOutlet]="timeAndProgress"
                           [ngTemplateOutletContext]="{
@@ -313,7 +327,7 @@
                     </div>
 
                     <div class="ms-12 d-flex align-items-center">
-                      <div
+                      <!-- <div
                         *ngIf="task?.approveRule"
                         class="d-flex align-items-center cursor-pointer me-4"
                         (click)="openFormApprover(task)"
@@ -327,7 +341,7 @@
                           [formModel]="grvMoreFunction"
                           default="Các bước duyệt"
                         ></codx-label>
-                      </div>
+                      </div> -->
                       <div
                         *ngIf="task?.fieldID"
                         class="d-flex align-items-center cursor-pointer"
