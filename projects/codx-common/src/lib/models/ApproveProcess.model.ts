@@ -58,9 +58,9 @@ export class ExportData {
   funcID: string;
   recID: string;
   data:string; 
-  entityName: string; 
-  formName: string;
-  gridViewName: string;
+  entityName: string=null; 
+  formName: string=null;
+  gridViewName: string=null;
 }
 
 export const ShareType = {
