@@ -24,6 +24,7 @@ import {
   AlertConfirmInputConfig,
   Util,
   DialogRef,
+  TenantStore,
 } from 'codx-core';
 import {
   DP_Instances_Steps,
@@ -56,12 +57,14 @@ import {
 import { CodxBookingService } from '../../codx-booking/codx-booking.service';
 import { CodxShareService } from '../../../codx-share.service';
 import { CodxCommonService } from 'projects/codx-common/src/lib/codx-common.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ExportData } from '../../../models/ApproveProcess.model';
 import { CodxViewApproveComponent } from '../codx-step-common/codx-view-approve/codx-view-approve.component';
 import { PopupCustomFieldComponent } from '../../codx-fields-detail-temp/popup-custom-field/popup-custom-field.component';
 import { Subject, firstValueFrom } from 'rxjs';
 import { ContractsDetailComponent } from 'projects/codx-cm/src/lib/contracts/contracts-detail/contracts-detail.component';
+import { environment } from 'src/environments/environment';
+import { Location } from '@angular/common';
 @Component({
   selector: 'codx-step-task',
   templateUrl: './codx-step-task.component.html',
@@ -209,7 +212,10 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     private bookingService: CodxBookingService,
     private codxShareService: CodxShareService,
     private codxCommonService: CodxCommonService,
-    private activedRouter: ActivatedRoute
+    private activedRouter: ActivatedRoute,
+    private tenantStore: TenantStore,
+    private router: Router,
+    private location: Location,
   ) {
     this.user = this.authStore.get();
     this.id = Util.uid();
@@ -509,8 +515,8 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
           case 'SYS001':
           case 'SYS002':
             break;
-          case 'SYS004':
-            res.disabled = task?.taskType != 'E';
+          case 'SYS004'://mail
+            // res.disabled = task?.taskType != "E";
             break;
           case 'SYS02': //xóa
             if (!(!task?.isTaskDefault && (this.isRoleAll || isGroup))) {
@@ -817,9 +823,9 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       case 'DP29':
         this.deleteMeeting(task);
         break;
-      case 'SYS004':
-        this.sendMailTask(task);
-        break;
+      // case 'SYS004':
+      //   this.sendMailTask(task);
+      //   break;
       case 'DP27':
         this.addBookingCar(task);
         break;
@@ -2028,11 +2034,21 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     if (data && !this.isViewStep && !this.isMoveStage) {
       if (data?.taskType == 'CO') {
         if (data?.objectLinked) {
-          this.viewDetailContract(data);
+
+          const url1 = this.location.prepareExternalUrl(this.location.path());
+          const parser = document.createElement('a');
+          parser.href = url1;
+          const domain = parser.origin;
+
+          let tenant = this.tenantStore.get().tenant;
+          let url = `${domain}/${tenant}/cm/contracts/CM0204?predicate=RecID=@0&dataValue=${data?.objectLinked}`
+          window.open(url, '_blank');
           return;
         } else {
           this.notiService.notify('Bắt đầu ngay để thiết lập hợp đồng', '3');
         }
+      }else{
+
       }
       let frmModel: FormModel = {
         entityName: 'DP_Instances_Steps_Tasks',
