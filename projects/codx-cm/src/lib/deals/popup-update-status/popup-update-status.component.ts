@@ -2,6 +2,7 @@ import {
   AfterViewInit,
   Component,
   Injector,
+  OnInit,
   Optional,
   ViewChild,
 } from '@angular/core';
@@ -16,6 +17,7 @@ import {
   UIComponent,
 } from 'codx-core';
 import { CodxCmService } from '../../codx-cm.service';
+import { stringify } from 'querystring';
 
 @Component({
   selector: 'lib-popup-update-status',
@@ -35,15 +37,16 @@ export class PopupUpdateStatusComponent
   isLockStep: boolean = false;
 
   @ViewChild('form') form: CodxFormComponent;
-  statusDefault:string = '';
-  status:string = '';
+  statusDefault: string = '';
+  status: string = '';
   statusCodecmt: string = '';
   applyFor: string = '';
   recID: string = '';
   statusOld: string;
-  data:any;
-  messageChangeStatus:string = '';
-  valueListStatusCode:any[] =[];
+  // data:any;
+  messageChangeStatus: string = '';
+  valueListStatusCode: any[] = [];
+  owner: any;
   readonly fieldCbxStatusCode = { text: 'text', value: 'value' };
   constructor(
     private injector: Injector,
@@ -59,44 +62,57 @@ export class PopupUpdateStatusComponent
     this.statusDefault = dialogData?.data?.statusDefault;
     this.statusCodecmt = dialogData?.data?.statusCodecmt;
     this.recID = dialogData?.data.recID;
-    this.data = dialogData?.data;
-    this.title =  dialogData?.data?.title;
+    // this.data = JSON.parse(JSON.stringify(dialogData?.data));
+    this.title = dialogData?.data?.title;
     this.valueListStatusCode = dialogData?.data.valueListStatusCode;
     this.gridViewSetup = dialogData?.data?.gridViewSetup;
     this.applyFor = dialogData?.data?.category;
     this.formModel = dialogData?.data?.formModel;
     this.statusOld = dialogData?.data?.statusOld;
   }
-
-  ngAfterViewInit(): void {}
-
   onInit(): void {}
+  ngAfterViewInit(): void {}
 
   cancel() {
     this.dialogRef.close();
   }
   saveForm() {
-    if(this.applyFor == '1' && this.applyProcess) {
-      this.status =  this.checkStatus(this.statusOld, this.status);
-    }
-
-    if(this.isLockStep) return;
+    if (this.isLockStep) return;
+    this.status = this.checkStatus(this.statusOld, this.status);
     this.isLockStep = true;
-    let datas = [this.recID, this.statusDefault, this.statusCodecmt, this.status];
-    let functionCM = this.getMethod(this.applyFor);
-    this.codxCmService.changeStatusCM(datas,functionCM.business,functionCM.method).subscribe((res) => {
-      if (res) {
-        let obj = {
-          statusDefault: this.statusDefault,
-          statusCodecmt: this.statusCodecmt,
-          status:this.status,
-          message: this.messageChangeStatus
-        }
-        this.dialogRef.close(obj);
-      }
-    });
-
-
+    if( (this.status || this.messageChangeStatus ) && this.applyProcess ) {
+      let obj = {
+        statusDefault: this.statusDefault,
+        statusCodecmt: this.statusCodecmt,
+        status: this.status,
+        message: this.messageChangeStatus,
+        isOpenForm: true,
+      };
+      this.dialogRef.close(obj);
+    }
+    else {
+      let datas = [
+        this.recID,
+        this.statusDefault,
+        this.statusCodecmt,
+        this.status,
+      ];
+      let functionCM = this.getMethod(this.applyFor);
+      this.codxCmService
+        .changeStatusCM(datas, functionCM?.business, functionCM?.method)
+        .subscribe((res) => {
+          if (res) {
+            let obj = {
+              statusDefault: this.statusDefault,
+              statusCodecmt: this.statusCodecmt,
+              status: this.status,
+              message: this.messageChangeStatus,
+              isOpenForm: false,
+            };
+            this.dialogRef.close(obj);
+          }
+        });
+    }
   }
   valueChangeStatusCode($event) {
     if ($event) {
@@ -113,77 +129,72 @@ export class PopupUpdateStatusComponent
       this.statusCodecmt = null;
     }
   }
-  getMethod(applyFor){
+  getMethod(applyFor) {
     let obj;
     let business;
     let method;
-    if(applyFor == '1') {
+    if (applyFor == '1') {
       business = 'DealsBusiness';
-      method ='ChangeStatusDealAsync';
-    }
-    else if(applyFor == '2' ||applyFor == '3'  ) {
+      method = 'ChangeStatusDealAsync';
+    } else if (applyFor == '2' || applyFor == '3') {
       business = 'CasesBusiness';
-      method ='ChangeStatusCasesAsync';
-    }
-    else if(applyFor == '5'  ) {
+      method = 'ChangeStatusCasesAsync';
+    } else if (applyFor == '5') {
       business = 'LeadsBusiness';
-      method ='ChangeStatusLeadAsync';
+      method = 'ChangeStatusLeadAsync';
     }
-    return obj = {
+    return (obj = {
       business: business,
-      method:method
-    };
+      method: method,
+    });
   }
   checkStatus(statusOld, statusNew): string {
-    if(statusNew == statusOld && statusNew  ) return '';
-    if(statusOld == '0') {
-      if(statusNew != '0') {
+    if (statusNew == statusOld && statusNew) return '';
+    if (statusOld == '0') {
+      if (statusNew != '0') {
         this.messageChangeStatus = 'CM058';
         return '';
       }
-    }
-    else if(statusOld == '1') {
-      if(statusNew == '15' && this.data?.owner)  {
+    } else if (statusOld == '1') {
+      if (statusNew == '15' && this.owner) {
         this.messageChangeStatus = 'CM059';
         return '';
       }
-      if(statusNew == '3' || statusNew == '5'  )  {
+      if (statusNew == '3' || statusNew == '5') {
         this.messageChangeStatus = 'CM060';
         return '';
       }
-      if(statusNew == '0' )  {
+      if (statusNew == '0') {
         this.messageChangeStatus = 'CM061';
         return '';
       }
-    }
-    else if(statusOld == '2') {
+    } else if (statusOld == '2') {
       if(statusNew == '1' )  {
-        this.messageChangeStatus = 'Cơ hội đã bắt đầu ngay';
-        return '';
+       // this.messageChangeStatus = 'Cơ hội đã bắt đầu ngay';
+        return '1';
       }
-      if(statusNew == '0' )  {
+      if (statusNew == '0') {
         this.messageChangeStatus = 'CM061';
         return '';
       }
-      if(statusNew == '15' && this.data?.owner)  {
+      if (statusNew == '15' && this.owner) {
         this.messageChangeStatus = 'CM059';
         return '';
       }
-    }
-    else if(statusOld == '3' || statusOld == '5' ) {
+    } else if (statusOld == '3' || statusOld == '5') {
       if(statusNew == '1' )  {
-        this.messageChangeStatus = 'Cơ hội đã bắt đầu ngay';
-        return '';
+        //this.messageChangeStatus = 'Cơ hội đã bắt đầu ngay';
+        return '1';
       }
-      if(statusNew == '0' )  {
+      if (statusNew == '0') {
         this.messageChangeStatus = 'CM061';
         return '';
       }
-      if(statusNew == '15' && this.data?.owner)  {
+      if (statusNew == '15' && this.owner) {
         this.messageChangeStatus = 'CM059';
         return '';
       }
-      if(statusNew == '3' || statusNew == '5'  )  {
+      if (statusNew == '3' || statusNew == '5') {
         return '';
       }
     }
