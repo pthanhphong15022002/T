@@ -47,6 +47,7 @@ import { PopupUpdateStatusComponent } from '../deals/popup-update-status/popup-u
 import { ExportData } from 'projects/codx-share/src/lib/models/ApproveProcess.model';
 import { ViewDealDetailComponent } from '../deals/view-deal-detail/view-deal-detail.component';
 import { CodxCommonService } from 'projects/codx-common/src/lib/codx-common.service';
+import { ViewLeadDetailComponent } from './view-lead-detail/view-lead-detail.component';
 @Component({
   selector: 'lib-leads',
   templateUrl: './leads.component.html',
@@ -1543,17 +1544,17 @@ export class LeadsComponent
   viewDetail(lead) {
     let data = {
       formModel: this.view.formModel,
-      contract: lead,
+      dataView: lead,
       isView: true,
       // listInsStepStart: this.listInsStep,
     };
     let option = new DialogModel();
     option.IsFull = true;
-    option.zIndex = 1001;
+    option.zIndex = 100;
     option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;
     let popupContract = this.callFunc.openForm(
-      ViewDealDetailComponent,
+      ViewLeadDetailComponent,
       '',
       null,
       null,

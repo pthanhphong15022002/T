@@ -8,7 +8,7 @@ import {
 } from '@angular/core';
 import { CodxCmService } from '../../codx-cm.service';
 import { CM_Contracts, CM_Customers, CM_Deals } from '../../models/cm_model';
-import { CacheService, DialogData, DialogRef, NotificationsService} from 'codx-core';
+import { ApiHttpService, CacheService, DialogData, DialogRef, NotificationsService} from 'codx-core';
 import { ContractsService } from '../../contracts/service-contracts.service';
 
 @Component({
@@ -34,6 +34,7 @@ export class ViewDealDetailComponent implements OnInit, OnChanges {
   grvSetup;
   vllStatus;
   oCountFooter: any = {};
+  dataTree = [];
 
   formModelCustomer = {
     formName: 'CMCustomers',
@@ -45,34 +46,38 @@ export class ViewDealDetailComponent implements OnInit, OnChanges {
     entityName: 'CM_Contacts',
     gridViewName: 'grvCMContacts',
   };
+  
   listTabLeft = [
-    { id: 'listTabInformation', name: 'Thông tin chung', icon: 'icon-info' },
-    { id: 'listContanct', name: 'Liên hệ', icon: 'icon-add_to_photos' },
-    { id: 'listOpponent', name: 'Đối thủ', icon: 'icon-add_to_photos' },
-    { id: 'listTabTask', name: 'Công việc', icon: 'icon-more' },
-    { id: 'listTabComment', name: 'Ghi chú', icon: 'icon-sticky_note_2' },
+    { id: 'listTabInformation', name: 'Thông tin hợp đồng', icon: 'icon-info' },
+    { id: 'listHistory', name: 'Lịch sử', icon: 'icon-i-clock-history' },
+    { id: 'listFile', name: 'Đính kèm', icon: 'icon-i-paperclip' },
+    { id: 'listAddTask', name: 'Giao việc', icon: 'icon-i-clipboard-check' },
+    { id: 'listApprove', name: 'Ký, duyệt', icon: 'icon-edit-one' },
+    { id: 'listLink', name: 'Liên kết', icon: 'icon-i-link' },
   ];
   listTabInformation = [
-    { id: 'customer', name: 'Khách hàng' },
-    { id: 'information', name: 'Thông tin cơ hội' },
-    { id: 'purpose', name: 'Trường nhập liệu' },
-    { id: 'note', name: 'Nhu cầu' },
+    { id: 'information', name: 'Thông tin chung' },
+    { id: 'fields', name: 'Thông tin mở rộng' },
+    { id: 'tasks', name: 'Công việc' },
+    { id: 'note', name: 'Ghi chú' },
   ];
-  listTabTask = [{ id: 'task', name:'Công việc'}];
-  listTabComment = [{ id: 'task', name:'Thảo luận'}];
-  listContanct = [{ id: 'task', name:'Liên hệ'}];
-  listOpponent = [{ id: 'task', name:'Đối thủ'}];
+  listHistory = [{ id: 'history', name:'Lịch sử'}];
+  listFile = [{ id: 'file', name:'Đính kèm'}];
+  listAddTask = [{ id: 'addTask', name:'Giao việc'}];
+  listApprove = [{ id: 'approve', name:'Ký, duyệt'}];
+  listLink = [{ id: 'link', name:'Liên kết'}];
   constructor(
     private cache: CacheService,
     private codxCmService: CodxCmService,
     private contractService: ContractsService,
     private notiService: NotificationsService,
     private changeDetectorRef: ChangeDetectorRef,
+    private api: ApiHttpService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
     this.dialog = dialog;
-    this.deal = dt?.data?.contract;
+    this.deal = dt?.data?.dataView;
     this.contractRecId = dt?.data?.contactRecId;
     this.listInsStepStart = dt?.data?.listInsStepStart;
     if(!this.dialog?.formModel){
@@ -106,7 +111,7 @@ export class ViewDealDetailComponent implements OnInit, OnChanges {
     if (this.deal) {
       this.getCutomer();
       this.getContact();
-      this.getListInstanceStep(this.deal)
+      this.getListInstanceStep(this.deal);
       return;
     }
     if (!this.contractRecId) {
@@ -131,11 +136,14 @@ export class ViewDealDetailComponent implements OnInit, OnChanges {
     this.tabLeftSelect = this.listTabLeft.find((x) => x.id == e);
     this.listTabRight = this[e];
     this.tabRightSelect = this.listTabRight[0]?.id;
+    if(e == 'listAddTask'){
+      this.loadTree(this.deal?.recID);
+    }
   }
 
-  getListInstanceStep(deal) {
-    if (deal?.processID) {
-      var data = [deal?.refID, deal?.processID, deal?.status, '1'];
+  getListInstanceStep(contract) {
+    if (contract?.processID) {
+      var data = [contract?.refID, contract?.processID, contract?.status, '1'];
       this.codxCmService.getStepInstance(data).subscribe((res) => {
         if (res) {
           this.listInsStep = res;
@@ -166,7 +174,7 @@ export class ViewDealDetailComponent implements OnInit, OnChanges {
     this.changeDetectorRef.markForCheck();
   }
 
-  getCutomer() {
+    getCutomer() {
     this.contractService
       .getCustomerByRecID(this.deal?.customerID)
       .subscribe((res) => {
@@ -175,7 +183,7 @@ export class ViewDealDetailComponent implements OnInit, OnChanges {
         }
       });
   }
-  getContact() {
+    getContact() {
     if (this.deal?.recID) {
       let data = [this.deal?.recID,this.deal?.customerCategory];
       this.codxCmService.getViewDetailDealAsync(data).subscribe((res) => {
@@ -201,7 +209,41 @@ export class ViewDealDetailComponent implements OnInit, OnChanges {
     this.changeDetectorRef.markForCheck();
   }
 
+  showColumnControl(stepID) {
+    // if (this.listStepsProcess?.length > 0) {
+    //   var idx = this.listStepsProcess.findIndex((x) => x.recID == stepID);
+    //   if (idx == -1) return 1;
+    //   return this.listStepsProcess[idx]?.showColumnControl;
+    // }
+    return 1;
+  }
+  saveDataStep(e) {
+
+  }
+  fileSave(e) {
+    if (e && typeof e === 'object') {
+      var createdBy = Array.isArray(e) ? e[0].data.createdBy : e.createdBy;
+      this.api
+        .execSv<any>('TM', 'TM', 'TaskBusiness', 'AddPermissionFileAsync', [
+          this.deal?.recID,
+          createdBy,
+        ])
+        .subscribe();
+    }
+  }
+  loadTree(recID) {
+    if (!recID) {
+      this.dataTree = [];
+      return;
+    }
+    this.api
+      .exec<any>('TM', 'TaskBusiness', 'GetListTaskTreeBySessionIDAsync', recID)
+      .subscribe((res) => {
+        this.dataTree = res ? res : [];
+      });
+  }
 }
+
 
 
 

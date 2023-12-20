@@ -142,12 +142,13 @@ export class GeneralJournalAddComponent extends UIComponent {
    * @param columnsGrid danh sách cột của lưới
    */
   beforeInitGridSettledInvoices(eleGrid) {
+    this.settingFormatGridSettledInvoices(eleGrid);
     //* Thiết lập các field ẩn theo đồng tiền hạch toán
     let hideFields = [];
-    if (this.formGeneral?.data?.currencyID == this.baseCurr) { //? nếu chứng từ có tiền tệ = đồng tiền hạch toán
-      hideFields.push('BalAmt2'); //? ẩn cột tiền Số dư, HT của SettledInvoices
-      hideFields.push('SettledAmt2'); //? ẩn cột tiền thanh toán,HT của SettledInvoices
-      hideFields.push('SettledDisc2'); //? ẩn cột chiết khấu thanh toán, HT của SettledInvoices
+    if (this.formGeneral?.data?.currencyID == this.baseCurr) {
+      hideFields.push('BalAmt2');
+      hideFields.push('SettledAmt2');
+      hideFields.push('CashDisc2');
     }
     eleGrid.showHideColumns(hideFields);
   }
@@ -1106,6 +1107,21 @@ export class GeneralJournalAddComponent extends UIComponent {
       eleGrid.setFormatField('cr','n'+(setting.dSourceCurr || 0));
       eleGrid.setFormatField('dR2','n'+(setting.dBaseCurr || 0));
       eleGrid.setFormatField('cR2','n'+(setting.dBaseCurr || 0));
+    }
+  }
+
+  settingFormatGridSettledInvoices(eleGrid){
+    let setting = eleGrid.systemSetting;
+    if (this.formGeneral.data.currencyID == this.baseCurr) { //? nếu chứng từ có tiền tệ = đồng tiền hạch toán
+      eleGrid.setFormatField('balAmt','n'+(setting.dBaseCurr || 0));
+      eleGrid.setFormatField('balAmt2','n'+(setting.dBaseCurr || 0));
+      eleGrid.setFormatField('settledAmt','n'+(setting.dBaseCurr || 0));
+      eleGrid.setFormatField('settledAmt2','n'+(setting.dBaseCurr || 0));
+    } else { //? nếu chứng từ có tiền tệ != đồng tiền hạch toán
+      eleGrid.setFormatField('balAmt','n'+(setting.dSourceCurr || 0));
+      eleGrid.setFormatField('balAmt2','n'+(setting.dSourceCurr || 0));
+      eleGrid.setFormatField('settledAmt','n'+(setting.dBaseCurr || 0));
+      eleGrid.setFormatField('settledAmt2','n'+(setting.dBaseCurr || 0));
     }
   }
 

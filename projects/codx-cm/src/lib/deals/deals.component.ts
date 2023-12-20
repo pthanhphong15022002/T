@@ -801,13 +801,13 @@ export class DealsComponent
   viewDetail(deal) {
     let data = {
       formModel: this.view.formModel,
-      contract: deal,
+      dataView: deal,
       isView: true,
       // listInsStepStart: this.listInsStep,
     };
     let option = new DialogModel();
     option.IsFull = true;
-    option.zIndex = 1001;
+    option.zIndex = 100;
     option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;
     let popupContract = this.callFunc.openForm(

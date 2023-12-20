@@ -5,7 +5,7 @@
 <ng-template #itemTemplate let-data>
   <codx-card-img cardCss="dp-card-process border rounded-2 h-100 w-225px" [imageSrc]="data.smallIcon" resourceObjType="SYS_FunctionList" imgCss="w-100 h-150px"
     [imageWidth]="1000" [rootData]="data" [dataItem]="data" [formModel]="view.formModel" [hideMF]="true"
-    [titleTmp]="titleTmp" (clickMF)="clickMF($event, data)" (click)="click($event, data)">
+    [titleTmp]="titleTmp" (click)="click($event, data)">
   </codx-card-img>
 </ng-template>
 <!-- 

@@ -8,7 +8,7 @@ import {
 } from '@angular/core';
 import { ApiHttpService, CacheService, FormModel } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
-import { CodxTasksService } from '../codx-tasks/codx-tasks.service';
+import { CodxTasksService } from '../codx-tasks.service';
 
 @Component({
   selector: 'codx-references',

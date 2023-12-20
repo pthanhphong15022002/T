@@ -4388,3 +4388,18 @@ codx-toolbar-report .btn{
   width: 30px!important;
 }
 
+lib-cm-dashboard{
+  codx-views .container-toolbar + div.container-fluid.p-0 ejs-dashboardlayout{
+    margin-bottom: 10px;
+  }
+  text{
+    font-family: 'Roboto'!important;
+  }
+}
+
+.modal-subheader .text-fix-100px, .offcanvas-content .text-fix-100px{
+  max-width: 100px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+}

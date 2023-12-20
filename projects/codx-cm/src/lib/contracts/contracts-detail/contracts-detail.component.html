@@ -214,8 +214,8 @@
       <span class="icon-i-clipboard icon-20 me-1 fw-bold"></span>
       <codx-label
         class="text-gray-600 ms-2 fs-5-sm fw-bold text-primary"
-        name="lblTitleContract"
-        [formModel]="formModelCustomer"
+        name="lblTitleInformation"
+        [formModel]="dialog?.formModel"
         [default]="'Thông tin chung'"
       ></codx-label>
     </div>
@@ -227,8 +227,8 @@
       <span class="icon-i-clipboard icon-20 me-1 fw-bold"></span>
       <codx-label
         class="text-gray-600 ms-2 fs-5-sm fw-bold text-primary"
-        name="lblTitleContract"
-        [formModel]="formModelCustomer"
+        name="lblTitleField"
+        [formModel]="dialog?.formModel"
         [default]="'Thông tin mở rộng'"
       ></codx-label>
     </div>
@@ -254,8 +254,8 @@
       <span class="icon-i-box-arrow-in-right icon-20 me-1 fw-bold"></span>
       <codx-label
         class="text-gray-600 ms-2 fs-5-sm fw-bold text-primary"
-        name="lblTitlePurpose"
-        [formModel]="formModelCustomer"
+        name="lblTitleTask"
+        [formModel]="dialog?.formModel"
         [default]="'Công việc'"
       ></codx-label>
     </div>
@@ -274,8 +274,8 @@
       <span class="icon-event_notes icon-20 me-1 fw-bold"></span>
       <codx-label
         class="text-gray-600 ms-2 fs-5-sm fw-bold text-primary"
-        name="lblTitlePurpose"
-        [formModel]="formModelCustomer"
+        fiedName="note"
+        [formModel]="dialog?.formModel"
         [default]="'Ghi chú'"
       ></codx-label>
     </div>
