@@ -85,7 +85,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
   stepList = [];
   itemView = '';
   vllDynamic = 'DP0271';
-  fileNameArr = [];
+  fieldNameArr = [];
   refValueDataType = 'DP022';
 
   //vll dang DPF..
@@ -150,6 +150,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
 
   isDuplicateField = false;
   isEditFieldDuplicate = false;
+  fieldNameOld = '';
 
   constructor(
     private cache: CacheService,
@@ -169,33 +170,38 @@ export class PopupAddCustomFieldComponent implements OnInit {
     this.enabled = dt?.data?.enabled;
     this.refValueDataType = dt?.data?.refValueDataType ?? this.refValueDataType;
     this.processNo = dt?.data?.processNo; //de sinh vll
+    this.fieldNameArr = dt?.data?.fieldNameArr ?? [];
+    this.isDuplicateField = dt?.data?.isDuplicateField ?? [];
 
     this.creatFieldCustom();
     this.widthDefault = this.dialog.dialog.width
       ? this.dialog.dialog.width.toString()
       : '550';
-    if (this.action == 'add' || this.action == 'copy')
+    if (this.action == 'add' || this.action == 'copy') {
       this.field.recID = Util.uid();
+      if (this.stepList?.length > 0) {
+        this.stepList.forEach((objStep) => {
+          if (objStep?.fields?.length > 0) {
+            let arrFn = objStep?.fields.map((x) => {
+              let obj = {
+                fieldName: x.fieldName,
+                recID: x.recID,
+                stepID: objStep.recID,
+                stepName: objStep.stepName,
+              };
+              return obj;
+            });
+            this.fieldNameArr = this.fieldNameArr.concat(arrFn);
+          }
+        });
+      }
+    } else {
+      this.fieldNameOld = this.field.fieldName;
+    }
 
     this.titleAction = dt?.data?.titleAction;
     this.stepList = dt?.data?.stepList;
     this.grvSetup = dt.data?.grvSetup;
-    if (this.stepList?.length > 0) {
-      this.stepList.forEach((objStep) => {
-        if (objStep?.fields?.length > 0) {
-          let arrFn = objStep?.fields.map((x) => {
-            let obj = {
-              fieldName: x.fieldName,
-              recID: x.recID,
-              stepID: objStep.recID,
-              stepName: objStep.stepName,
-            };
-            return obj;
-          });
-          this.fileNameArr = this.fileNameArr.concat(arrFn);
-        }
-      });
-    }
   }
 
   ngOnInit(): void {
@@ -334,8 +340,8 @@ export class PopupAddCustomFieldComponent implements OnInit {
       );
       return;
     }
-    if (this.fileNameArr.length > 0) {
-      let check = this.fileNameArr.some(
+    if (this.fieldNameArr.length > 0) {
+      let check = this.fieldNameArr.some(
         (x) =>
           x.fieldName.toLowerCase() == this.field.fieldName.toLowerCase() &&
           x.recID != this.field.recID &&
@@ -438,8 +444,14 @@ export class PopupAddCustomFieldComponent implements OnInit {
 
   //---------Trùng Field------------//
   duplicateField() {
-    if (this.fileNameArr?.length > 0) {
-      let checkArrDup = this.fileNameArr.filter(
+    if (
+      this.action == 'edit' &&
+      this.isDuplicateField &&
+      this.field.fieldName == this.fieldNameOld
+    )
+      return;
+    if (this.fieldNameArr?.length > 0) {
+      let checkArrDup = this.fieldNameArr.filter(
         (x) =>
           x.fieldName.toLowerCase() == this.field.fieldName.toLowerCase() &&
           x.stepID != this.field.stepID
