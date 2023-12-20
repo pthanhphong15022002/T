@@ -58,13 +58,13 @@ import { CodxBookingService } from '../../codx-booking/codx-booking.service';
 import { CodxShareService } from '../../../codx-share.service';
 import { CodxCommonService } from 'projects/codx-common/src/lib/codx-common.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ExportData } from '../../../models/ApproveProcess.model';
 import { CodxViewApproveComponent } from '../codx-step-common/codx-view-approve/codx-view-approve.component';
 import { PopupCustomFieldComponent } from '../../codx-fields-detail-temp/popup-custom-field/popup-custom-field.component';
 import { Subject, firstValueFrom } from 'rxjs';
 import { ContractsDetailComponent } from 'projects/codx-cm/src/lib/contracts/contracts-detail/contracts-detail.component';
 import { environment } from 'src/environments/environment';
 import { Location } from '@angular/common';
+import { ExportData } from 'projects/codx-common/src/lib/models/ApproveProcess.model';
 @Component({
   selector: 'codx-step-task',
   templateUrl: './codx-step-task.component.html',
@@ -215,7 +215,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     private activedRouter: ActivatedRoute,
     private tenantStore: TenantStore,
     private router: Router,
-    private location: Location,
+    private location: Location
   ) {
     this.user = this.authStore.get();
     this.id = Util.uid();
@@ -515,7 +515,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
           case 'SYS001':
           case 'SYS002':
             break;
-          case 'SYS004'://mail
+          case 'SYS004': //mail
             // res.disabled = task?.taskType != "E";
             break;
           case 'SYS02': //xóa
@@ -2034,21 +2034,19 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     if (data && !this.isViewStep && !this.isMoveStage) {
       if (data?.taskType == 'CO') {
         if (data?.objectLinked) {
-
           const url1 = this.location.prepareExternalUrl(this.location.path());
           const parser = document.createElement('a');
           parser.href = url1;
           const domain = parser.origin;
 
           let tenant = this.tenantStore.get().tenant;
-          let url = `${domain}/${tenant}/cm/contracts/CM0204?predicate=RecID=@0&dataValue=${data?.objectLinked}`
+          let url = `${domain}/${tenant}/cm/contracts/CM0204?predicate=RecID=@0&dataValue=${data?.objectLinked}`;
           window.open(url, '_blank');
           return;
         } else {
           this.notiService.notify('Bắt đầu ngay để thiết lập hợp đồng', '3');
         }
-      }else{
-
+      } else {
       }
       let frmModel: FormModel = {
         entityName: 'DP_Instances_Steps_Tasks',
@@ -2899,10 +2897,17 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
                 this.recIDParent
               )
               .then((source) => {
+                let formModelEx = this.frmModelExport;
+                if (task.taskType != 'CO' && task.taskType != 'Q') {
+                  formModelEx = this.getFormModelEx(formModelEx);
+                }
                 let exportData: ExportData = {
                   funcID: 'DPT04',
                   recID: task?.recID,
                   data: source,
+                  entityName: formModelEx.entityName,
+                  formName: formModelEx.formName,
+                  gridViewName: formModelEx.gridViewName,
                 };
                 this.release(task, res, exportData);
               });
@@ -3120,88 +3125,54 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
           customData.refType = 'DP_Steps_Tasks';
         }
 
+        let formModelEx = this.frmModelExport;
+        if (data.taskType != 'CO' && data.taskType != 'Q') {
+          formModelEx = this.getFormModelEx(formModelEx);
+        }
+
         this.codxShareService.defaultMoreFunc(
           e,
           data,
           this.afterSave,
-          this.frmModelExport,
+          formModelEx,
           null,
           this,
           customData
         );
         this.changeDetectorRef.detectChanges();
       });
-    //   let mehthol = 'GetDataSourceExportTaskAsync';
-    //   let className = 'ContractsBusiness';
-    //   let service = 'CM';
-    //   let request = [this.currentStep.instanceID, data.objectLinked];
-    //   switch (this.taskAdd.taskType) {
-    //     case 'CO':
-    //       className = 'ContractsBusiness';
-    //       break;
-    //     case 'Q':
-    //       className = 'QuotationsBusiness';
-    //       break;
-    //     case 'F':
-    //       service = 'DP';
-    //       className = 'InstancesBusiness';
-    //       mehthol = 'GetDatasByInstanceIDAsync';
-    //       request = [this.currentStep.instanceID];
-    //       break;
-    //     default:
-    //       var customData = {
-    //         refID: data.recID,
-    //         refType: 'DP_Instances_Steps_Tasks',
-    //       };
-    //       this.codxShareService.defaultMoreFunc(
-    //         e,
-    //         data,
-    //         this.afterSave,
-    //         this.frmModelInstancesTask,
-    //         null,
-    //         this,
-    //         customData
-    //       );
-    //       this.changeDetectorRef.detectChanges();
-    //       return;
-    //       break;
-    //   }
-    //   this.api
-    //     .execSv<any>(service, service, className, mehthol, request)
-    //     .subscribe((str) => {
-    //       let dataSource = '';
-    //       if (str) {
-    //         if (this.taskAdd.taskType != 'F') {
-    //           if (str?.length > 0) {
-    //             dataSource = str[1];
-    //             if (str[0]) {
-    //               let datas = str[1];
-    //               if (datas && datas.includes('[{')) datas = datas.substring(2);
-    //               let fix = str[0]; // data đối tượng cần export
-    //               fix = fix.substring(1, fix.length - 1);
-    //               dataSource = '[{ ' + fix + ',' + datas;
-    //             }
-    //           }
-    //         } else {
-    //           dataSource = str;
-    //         }
-    //       }
-    //       var customData = {
-    //         refID: data.recID,
-    //         refType: 'DP_Instances_Steps_Tasks',
-    //         dataSource: dataSource,
-    //       };
-    //       this.codxShareService.defaultMoreFunc(
-    //         e,
-    //         data,
-    //         this.afterSave,
-    //         this.frmModelInstancesTask,
-    //         null,
-    //         this,
-    //         customData
-    //       );
-    //       this.changeDetectorRef.detectChanges();
-    //     });
+  }
+
+  getFormModelEx(formModelEx: FormModel) {
+    switch (this.entityName) {
+      case 'CM_Deals':
+        formModelEx.entityName = 'CM_Deals';
+        formModelEx.gridViewName = 'grvCMDeals';
+        formModelEx.formName = 'CMDeals';
+        break;
+      case 'CM_Cases':
+        formModelEx.entityName = 'CM_Cases';
+        formModelEx.gridViewName = 'grvCMCases';
+        formModelEx.formName = 'CMDeals';
+        break;
+      case 'CM_Leads':
+        formModelEx.entityName = 'CM_Leads';
+        formModelEx.gridViewName = 'grvCMLeads';
+        formModelEx.formName = 'CMLeads';
+        break;
+      //contrack và quations thì dùng măc định
+      // case 'CM_Contracts':
+      //   formModelEx.entityName = 'CM_Contracts';
+      //   formModelEx.gridViewName = 'grvCMContracts';
+      //   formModelEx.formName = 'CMContracts';
+      //   break;
+      case 'CM_Campaigns':
+        formModelEx.entityName = 'CM_Campaigns';
+        formModelEx.gridViewName = 'grvCMCampaigns';
+        formModelEx.formName = 'CMCampaigns';
+        break;
+    }
+    return formModelEx;
   }
 
   //export Form Nhập liệu

@@ -81,6 +81,11 @@ export class QuotationsComponent extends UIComponent implements OnInit {
     gridViewName: 'grvCMQuotations',
     funcID: 'CM0202',
   };
+  frmModelExport: FormModel = {
+    formName: 'CMTempDataSources',
+    gridViewName: 'grvCMTempDataSources',
+    entityName: 'CM_TempDataSources',
+  };
   customerIDCrr = '';
   requestData = new DataRequest();
   listQuotations = [];
@@ -405,9 +410,9 @@ export class QuotationsComponent extends UIComponent implements OnInit {
       case 'CM0202_5':
         this.viewDetail(data);
         break;
-      //case 'CM0202_5':
-      //  this.exportTemplet(e, data);
-      //  break;
+      case 'SYS002':
+        this.exportTemplet(e, data);
+        break;
       default: {
         this.codxShareService.defaultMoreFunc(
           e,
@@ -677,10 +682,14 @@ export class QuotationsComponent extends UIComponent implements OnInit {
         this.codxCmService
           .getDataSource(dt.recID, 'QuotationsBusiness')
           .then((dataSource) => {
-            let exportData= new ExportData(); 
-            exportData.funcID= this.view.formModel.funcID,
-            exportData.recID= dt.recID,
-            exportData.data= dataSource,
+            let exportData: ExportData = {
+              funcID: this.view.formModel.funcID,
+              recID: dt.recID,
+              data: dataSource,
+              entityName: this.frmModelExport.entityName,
+              formName: this.frmModelExport.formName,
+              gridViewName: this.frmModelExport.gridViewName,
+            };
             this.release(dt, res, exportData);
           });
       });
@@ -782,7 +791,7 @@ export class QuotationsComponent extends UIComponent implements OnInit {
             e,
             data,
             this.afterSave,
-            this.view.formModel,
+            this.frmModelExport, //this.view.formModel,
             this.view.dataService,
             this,
             customData
