@@ -44,9 +44,7 @@ import { ContractsViewDetailComponent } from './contracts-view-right/contracts-v
 import { PopupAssginDealComponent } from '../deals/popup-assgin-deal/popup-assgin-deal.component';
 import { StepService } from 'projects/codx-share/src/lib/components/codx-step/step.service';
 import { ContractsDetailComponent } from './contracts-detail/contracts-detail.component';
-import { ExportData } from 'projects/codx-share/src/lib/models/ApproveProcess.model';
 import { CodxCommonService } from 'projects/codx-common/src/lib/codx-common.service';
-import { DP_Instances_Steps_Tasks, DP_Instances_Steps_Tasks_Roles } from 'projects/codx-dp/src/lib/models/models';
 
 @Component({
   selector: 'contracts-detail',
@@ -115,6 +113,12 @@ export class ContractsComponent extends UIComponent {
     entityName: 'CM_ContractsPayments',
     formName: 'CMContractsPaymentsHistory',
     gridViewName: 'grvCMContractsPaymentsHistory',
+  };
+
+  frmModelExport: FormModel = {
+    formName: 'CMTempDataSources',
+    gridViewName: 'grvCMTempDataSources',
+    entityName: 'CM_TempDataSources',
   };
   functionMappings;
   //test
@@ -405,9 +409,9 @@ export class ContractsComponent extends UIComponent {
       }
     }
   }
-  
-  async addTask(contract: CM_Contracts){
-    let taskOutput = await this.stepService.addTaskCM(contract, "CM_Contracts");
+
+  async addTask(contract: CM_Contracts) {
+    let taskOutput = await this.stepService.addTaskCM(contract, 'CM_Contracts');
     this.taskAdd = taskOutput;
   }
 
@@ -467,15 +471,7 @@ export class ContractsComponent extends UIComponent {
 
   afterSave(e?: any, that: any = null) {
     if (e) {
-      if(e?.funcID == "SYS004"){
-        if(e?.result?.isSendMail){
-          this.addTaskMail(e);
-          this.notiService.notifyCode('SYS006');
-        }else{
-          this.notiService.notify('Gửi mail thất bại','3');
-        }
-      }
-      let appoverStatus = e?.unbounds?.statusApproval;
+      let appoverStatus = e.unbounds.statusApproval;
       if (
         appoverStatus != null &&
         appoverStatus != this.contractSelected?.approveStatus
@@ -761,6 +757,9 @@ export class ContractsComponent extends UIComponent {
               funcID: this.view.formModel.funcID,
               recID: data.recID,
               data: dataSource,
+              entityName: this.frmModelExport.entityName,
+              formName: this.frmModelExport.formName,
+              gridViewName: this.frmModelExport.gridViewName,
             };
             this.release(data, category, exportData);
           });
@@ -1216,7 +1215,7 @@ export class ContractsComponent extends UIComponent {
             e,
             data,
             this.afterSave,
-            this.view.formModel,
+            this.frmModelExport, //this.view.formModel,
             this.view.dataService,
             this,
             customData
