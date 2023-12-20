@@ -2897,13 +2897,17 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
                 this.recIDParent
               )
               .then((source) => {
+                let formModelEx = this.frmModelExport;
+                if (task.taskType != 'CO' && task.taskType != 'Q') {
+                  formModelEx = this.getFormModelEx(formModelEx);
+                }
                 let exportData: ExportData = {
                   funcID: 'DPT04',
                   recID: task?.recID,
                   data: source,
-                  entityName: this.frmModelExport.entityName,
-                  formName: this.frmModelExport.formName,
-                  gridViewName: this.frmModelExport.gridViewName,
+                  entityName: formModelEx.entityName,
+                  formName: formModelEx.formName,
+                  gridViewName: formModelEx.gridViewName,
                 };
                 this.release(task, res, exportData);
               });
@@ -3121,17 +3125,53 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
           customData.refType = 'DP_Steps_Tasks';
         }
 
+        let formModelEx = this.frmModelExport;
+        if (data.taskType != 'CO' && data.taskType != 'Q') {
+          formModelEx = this.getFormModelEx(formModelEx);
+        }
+
         this.codxShareService.defaultMoreFunc(
           e,
           data,
           this.afterSave,
-          this.frmModelExport,
+          formModelEx,
           null,
           this,
           customData
         );
         this.changeDetectorRef.detectChanges();
       });
+  }
+
+  getFormModelEx(formModelEx: FormModel) {
+    switch (this.entityName) {
+      case 'CM_Deals':
+        formModelEx.entityName = 'CM_Deals';
+        formModelEx.gridViewName = 'grvCMDeals';
+        formModelEx.formName = 'CMDeals';
+        break;
+      case 'CM_Cases':
+        formModelEx.entityName = 'CM_Cases';
+        formModelEx.gridViewName = 'grvCMCases';
+        formModelEx.formName = 'CMDeals';
+        break;
+      case 'CM_Leads':
+        formModelEx.entityName = 'CM_Leads';
+        formModelEx.gridViewName = 'grvCMLeads';
+        formModelEx.formName = 'CMLeads';
+        break;
+      case 'CM_Contracts':
+        formModelEx.entityName = 'CM_Contracts';
+        formModelEx.gridViewName = 'grvCMContracts';
+        formModelEx.formName = 'CMContracts';
+        break;
+      case 'CM_Campaigns':
+        formModelEx.entityName = 'CM_Campaigns';
+        formModelEx.gridViewName = 'grvCMCampaigns';
+        formModelEx.formName = 'CMCampaigns';
+        break;
+    }
+    return formModelEx;
   }
 
   //export Form Nhập liệu
