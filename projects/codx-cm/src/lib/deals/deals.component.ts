@@ -144,6 +144,7 @@ export class DealsComponent
   viewMode = 2;
   // const set value
   readonly btnAdd: string = 'btnAdd';
+  readonly applyFor: string = '1';
 
   request: ResourceModel;
   resourceKanban?: ResourceModel;
@@ -222,7 +223,7 @@ export class DealsComponent
     // if (this.processID) this.dataObj = { processID: this.processID };
 
     // this.getListStatusCode();
-    this.codxCmService.getRecIDProcessDefault('1').subscribe((res) => {
+    this.codxCmService.getRecIDProcessDefault(this.applyFor).subscribe((res) => {
       if (res) {
         this.processIDDefault = res;
         this.processIDKanban = res;
@@ -657,7 +658,7 @@ export class DealsComponent
   }
   afterSave(e?: any, that: any = null) {
     if (e) {
-      let appoverStatus = e.unbounds.statusApproval;
+      let appoverStatus = e?.unbounds?.statusApproval;
       if (
         appoverStatus != null &&
         appoverStatus != this.dataSelected.approveStatus
@@ -685,8 +686,8 @@ export class DealsComponent
       .subscribe((x) => {
         if (x.event && x.event.status == 'Y') {
           // this.startDeal(data);
-          this.codxCmService.startNewInstance([data.refID]).subscribe((res)=> {
-            if(res) {
+          this.codxCmService.startNewInstance([data.refID]).subscribe((res) => {
+            if (res) {
               let dataUpdate = [
                 res[1],
                 null,
@@ -699,18 +700,21 @@ export class DealsComponent
                 .subscribe((deal) => {
                   if (deal) {
                     this.dataSelected = deal;
-                    this.view.dataService.update(this.dataSelected, true).subscribe();
+                    this.view.dataService
+                      .update(this.dataSelected, true)
+                      .subscribe();
                     if (this.kanban) {
                       this.renderKanban(this.dataSelected);
                     }
-                    if (this.detailViewDeal) this.detailViewDeal.dataSelected = this.dataSelected;
+                    if (this.detailViewDeal)
+                      this.detailViewDeal.dataSelected = this.dataSelected;
                     this.detailViewDeal?.reloadListStep(res[0]);
                     this.detectorRef.detectChanges();
                     this.resetStatusCode();
                   }
                 });
             }
-          })
+          });
         }
       });
   }
@@ -911,7 +915,7 @@ export class DealsComponent
             deal: data,
             stepReason: stepReason,
             headerTitle: this.titleAction,
-            applyFor: '1',
+            applyFor: this.applyFor,
             dataCM: dataCM,
           };
           let dialogMoveStage = this.callfc.openForm(
@@ -934,7 +938,7 @@ export class DealsComponent
                   e.event?.comment,
                   e.event?.expectedClosed,
                   this.statusCodeID,
-                  this.statusCodeCmt
+                  this.statusCodeCmt,
                 ];
                 this.codxCmService
                   .moveStageBackDataCM(dataUpdate)
@@ -1073,7 +1077,7 @@ export class DealsComponent
       headerTitle: fun.defaultName,
       formModel: formMD,
       isReason: isMoveSuccess,
-      applyFor: '1',
+      applyFor: this.applyFor,
       dataCM: dataCM,
       processID: data?.processID,
       stepName: data.currentStepName,
@@ -1177,7 +1181,7 @@ export class DealsComponent
       data: data,
       gridViewSetup: this.gridViewSetup,
       formModel: this.view.formModel,
-      applyFor: '1',
+      applyFor: this.applyFor,
       titleAction: this.titleAction,
       owner: data.owner,
       //startControl: data.steps.startControl,
@@ -1337,6 +1341,7 @@ export class DealsComponent
                 JSON.stringify(this.dataSelected)
               );
               this.detailViewDeal?.promiseAllAsync();
+              this.detailViewDeal.loadContactEdit();
             }
             this.isChangeOwner = ownerIdOld != e.event.owner;
             this.changeDetectorRef.detectChanges();
@@ -2058,10 +2063,8 @@ export class DealsComponent
     let oldStatus = data?.status;
     this.dataSelected = data;
     let dialogModel = new DialogModel();
-    dialogModel.zIndex = 1001;
+    dialogModel.zIndex = 999;
     dialogModel.FormModel = this.view.formModel;
-    // this.statusCodeID = data?.statusCodeID;
-    // this.statusCodeCmt = data?.statusCodeCmt;
     let obj = {
       statusDefault: this.dataSelected?.statusCodeID,
       statusCodecmt: this.dataSelected?.statusCodeCmt,
@@ -2069,12 +2072,12 @@ export class DealsComponent
       title: this.titleAction,
       recID: this.dataSelected.recID,
       gridViewSetup: this.gridViewSetup,
-      category: '1',
+      category: this.applyFor,
       formModel: this.view?.formModel,
       statusOld: this.dataSelected?.status,
       owner: this.dataSelected.owner,
     };
-    let dialogStatus= this.callfc.openForm(
+    let dialogStatus = this.callfc.openForm(
       PopupUpdateStatusComponent,
       '',
       500,
@@ -2105,10 +2108,9 @@ export class DealsComponent
           if (status) {
             switch (status) {
               case '2':
-                if(oldStatus == '1') {
+                if (oldStatus == '1') {
                   this.startNow(this.dataSelected);
-                }
-                else {
+                } else {
                   this.moveStage(this.dataSelected);
                 }
                 break;
@@ -2121,8 +2123,7 @@ export class DealsComponent
                 break;
             }
           }
-        }
-        else {
+        } else {
           this.dataSelected.statusCodeID = this.statusCodeID;
           this.dataSelected.statusCodeCmt = this.statusCodeCmt;
           this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
@@ -2299,7 +2300,9 @@ export class DealsComponent
                       );
                     }
 
-                    this.view.dataService.update(this.dataSelected, true).subscribe();
+                    this.view.dataService
+                      .update(this.dataSelected, true)
+                      .subscribe();
                     this.detectorRef.detectChanges();
                   }
                 });

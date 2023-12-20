@@ -109,6 +109,8 @@ export class LeadsComponent
   oldIdDeal: string = '';
   oldIdContact: string = '';
   oldIdLead: string = '';
+  statusCodeID: string = '';
+  statusCodeCmt: string = '';
   viewActiveType = '';
   applyApprover = '0';
   gridDetailView = '2';
@@ -433,7 +435,7 @@ export class LeadsComponent
       // Thêm, xóa, copy
       eventItem.disabled = data.write
         ? data.closed ||
-          (data.status != '13' && this.checkMoreReason(data)) ||
+          (data.status != '13' && this.checkMoreReason(data, false)) ||
           (!this.checkApplyProcess(data) && ['3', '5'].includes(data.status))
         : true;
       // eventItem.disabled  = false;
@@ -590,7 +592,8 @@ export class LeadsComponent
     return functionMappings[type];
   }
 
-  checkMoreReason(data) {
+  checkMoreReason(data, isShow: boolean = true) {
+    if (data?.isAdminAll && isShow) return false;
     return data?.status != '1' && data?.status != '2' && data?.status != '15';
   }
 
@@ -715,7 +718,7 @@ export class LeadsComponent
       SYS02: () => this.delete(data),
       CM0205_1: () => this.convertLead(data),
       CM0205_2: () => this.mergeLead(data),
-      CM0205_4: () => this.startDay(data),
+      CM0205_4: () => this.startNow(data),
       CM0205_10: () => this.openOrCloseLead(data, true),
       CM0205_11: () => this.openOrCloseLead(data, false),
       CM0205_3: () => this.moveStage(data),
@@ -1169,7 +1172,7 @@ export class LeadsComponent
   }
   //#endregion
 
-  startDay(data) {
+  startNow(data) {
     this.notificationsService
       .alertCode('DP033', null, ['"' + data?.leadName + '"' || ''])
       .subscribe((x) => {
@@ -1197,6 +1200,42 @@ export class LeadsComponent
             });
         }
       });
+  }
+  startNew(data) {
+    this.notificationsService
+      .alertCode('CM063', null, ['"' + data?.leadName + '"' || ''])
+      .subscribe((x) => {
+        if (x.event && x.event.status == 'Y') {
+          // this.startDeal(data);
+          this.codxCmService.startNewInstance([data.refID]).subscribe((res)=> {
+            if(res) {
+              let dataUpdate = [
+                res[1],
+                null,
+                data?.expectedClosed,
+                this.statusCodeID,
+                this.statusCodeCmt,
+              ];
+              this.codxCmService
+                .moveStageBackLead(dataUpdate)
+                .subscribe((deal) => {
+                  if (deal) {
+                    this.dataSelected = deal;
+                    this.view.dataService.update(this.dataSelected, true).subscribe();
+                    if (this.detailViewLead) this.detailViewLead.dataSelected = this.dataSelected;
+                    this.detailViewLead?.reloadListStep(res[0]);
+                    this.detectorRef.detectChanges();
+                    this.resetStatusCode();
+                  }
+                });
+            }
+          })
+        }
+      });
+  }
+  resetStatusCode() {
+    this.statusCodeCmt = '';
+    this.statusCodeID = '';
   }
   startFirst(data) {
     this.notificationsService
@@ -1614,62 +1653,82 @@ export class LeadsComponent
   }
 
   changeStatus(data) {
+    let oldStatus = data?.status;
     this.dataSelected = data;
-    if (this.dataSelected.applyProcess) {
-      let formMD = new FormModel();
-      let dialogModel = new DialogModel();
-      formMD.funcID = this.funcIDCrr.functionID;
-      formMD.entityName = this.view?.formModel.entityName;
-      formMD.formName = this.view?.formModel.formName;
-      formMD.gridViewName = this.view?.formModel.gridViewName;
-      dialogModel.zIndex = 999;
-      dialogModel.FormModel = formMD;
-      let obj = {
-        statusDefault: this.dataSelected?.statusCode,
-        statusCodecmt: this.dataSelected?.statusCodeCmt,
-        applyProcess: true,
-        title: this.titleAction,
-        recID: this.dataSelected.recID,
-        valueListStatusCode: this.valueListStatusCode,
-        gridViewSetup: this.gridViewSetup,
-        category: this.applyFor,
-        statusOld: this.dataSelected?.status,
-      };
-      let dialog = this.callfc.openForm(
-        PopupUpdateStatusComponent,
-        '',
-        500,
-        400,
-        '',
-        obj,
-        '',
-        dialogModel
-      );
-      dialog.closed.subscribe((e) => {
-        if (e && e?.event != null) {
-          this.dataSelected.statusCode = e?.event?.statusDefault;
-          this.dataSelected.statusCodeCmt = e?.event?.statusCodecmt;
+    let dialogModel = new DialogModel();
+    dialogModel.zIndex = 999;
+    dialogModel.FormModel = this.view.formModel;
+    let obj = {
+      statusDefault: this.dataSelected?.statusCode,
+      statusCodecmt: this.dataSelected?.statusCodeCmt,
+      applyProcess: true,
+      title: this.titleAction,
+      formModel: this.view?.formModel,
+      recID: this.dataSelected.recID,
+      valueListStatusCode: this.valueListStatusCode,
+      gridViewSetup: this.gridViewSetup,
+      category: this.applyFor,
+      statusOld: this.dataSelected?.status,
+    };
+    let dialog = this.callfc.openForm(
+      PopupUpdateStatusComponent,
+      '',
+      500,
+      400,
+      '',
+      obj,
+      '',
+      dialogModel
+    );
+    dialog.closed.subscribe((e) => {
+      if (e && e?.event != null) {
+        this.statusCodeID = e?.event?.statusDefault;
+        this.statusCodeCmt = e?.event?.statusCodecmt;
+        let status = e?.event?.status;
+        let message = e?.event?.message;
+        if (status && !this.dataSelected.applyProcess) {
+          this.dataSelected.status = status;
+        }
+        if (message) {
+          this.notificationsService.notifyCode(
+            message,
+            0,
+            "'" + this.dataSelected?.dealName + "'"
+          );
+          return;
+        }
+        if (this.dataSelected.applyProcess && e?.event?.isOpenForm) {
+          if (status) {
+            switch (status) {
+              case '2':
+                if(oldStatus == '1') {
+                 this.startNow(this.dataSelected);
+                }
+                else {
+                  this.moveStage(this.dataSelected);
+                }
+                break;
+              case '1':
+               this.startNew(this.dataSelected);
+                break;
+              case '3':
+              case '5':
+                this.moveReason(this.dataSelected, status === '3');
+                break;
+            }
+          }
+        }
+        else {
+          this.dataSelected.statusCode = this.statusCodeID;
+          this.dataSelected.statusCodeCmt = this.statusCodeCmt;
           this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
           this.view.dataService.dataSelected = this.dataSelected;
           this.view.dataService.update(this.dataSelected, true).subscribe();
           this.detectorRef.detectChanges();
           this.notificationsService.notifyCode('SYS007');
         }
-      });
-    } else {
-      this.dataSelected = data;
-      this.statusDefault = this.dataSelected.applyProcess
-        ? this.dataSelected?.statusCode
-        : ['1', '15'].includes(this.dataSelected?.status)
-        ? ''
-        : this.dataSelected?.status;
-      this.dialogQuestionCopy = this.callfc.openForm(
-        this.popUpQuestionCopy,
-        '',
-        400,
-        200
-      );
-    }
+      }
+    });
   }
   valueChangeStatus($event) {
     if ($event) {
@@ -1678,7 +1737,7 @@ export class LeadsComponent
   }
   afterSave(e?: any, that: any = null) {
     if (e) {
-      let appoverStatus = e.unbounds.statusApproval;
+      let appoverStatus = e?.unbounds?.statusApproval;
       if (
         appoverStatus != null &&
         appoverStatus != this.dataSelected.approveStatus

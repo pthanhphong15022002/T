@@ -48,7 +48,6 @@ export class DP_Processes {
   autoNameTabFields: string;
   steps: DP_Steps[] = [];
   approveRule: boolean = false;
-
   icon: string;
   released: boolean;
   releasedName: string;
@@ -66,6 +65,8 @@ export class DP_Processes {
   tabControl: string;
   businessLineID:string;
   allowEstimatedEnd:boolean;
+  allowEditInstanceControl:boolean;
+  allowReturnInstanceControl:boolean;
 }
 
 export class DP_Processes_Permission {
