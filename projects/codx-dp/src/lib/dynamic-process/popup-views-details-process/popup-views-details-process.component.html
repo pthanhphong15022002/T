@@ -173,9 +173,9 @@
         <div cdkDropList class="list mw-900px" style="margin: 0 auto">
           <div>
             <ng-container *ngFor="let step of process.steps">
-              <div class="" *ngIf="!step?.isFailStep && !step?.isSuccessStep">
+              <div class="mb-3" *ngIf="!step?.isFailStep && !step?.isSuccessStep">
                 <div class="card card-steplist">
-                  <div class="step border border-gray-200 rounded px-6 py-4">
+                  <div class="step border border-gray-200 rounded px-6 py-3">
                     <ng-container
                       [ngTemplateOutlet]="viewStep"
                       [ngTemplateOutletContext]="{step}"
@@ -183,8 +183,8 @@
                   </div>
                   <div *ngIf="step?.taskGroups?.length > 0">
                     <div
-                      class="group border border-gray-200 rounded px-6 py-4"
-                      style="margin: 10px 0 10px 20px"
+                      class="group border border-gray-200 rounded px-6 py-3"
+                      style="margin: 10px 0 0 25px"
                       *ngFor="let group of step?.taskGroups"
                     >
                       <ng-container
@@ -242,7 +242,7 @@
             ></codx-icon-step>
           </span>
         </div>
-        <span class="ms-3">
+        <span class="ms-3 text-dark">
           {{ " " + data?.stepName }}
         </span>
       </div>
@@ -282,9 +282,9 @@
           [typeTask]="'G'"
           [isStep]="false"
           [listTypeTask]="listType"
-          [size]="30"
+          [size]="25"
         ></codx-icon-step>
-        <div class="line-clamp line-clamp-1 fw-bold fs-5">
+        <div class="line-clamp line-clamp-1 fw-bold fs-5 ms-3">
           {{ " " + data?.taskGroupName }}
         </div>
       </div>
@@ -307,7 +307,7 @@
           [listTypeTask]="listType"
           [isStep]="false"
         ></codx-icon-step>
-        <span class="fs-5-sm fw-bold">{{ data?.taskName }}</span>
+        <span class="fs-5-sm fw-bold ms-3">{{ data?.taskName }}</span>
       </div>
       <div class="mt-3">
         <ng-container
@@ -316,7 +316,7 @@
         ></ng-container>
       </div>
     </div>
-    <div style="margin-left: 35px">
+    <div style="margin-left: 45px">
       <codx-attachment
         #attachment
         [objectType]="'DP_Steps_Tasks'"

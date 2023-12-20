@@ -4403,3 +4403,24 @@ lib-cm-dashboard{
   text-overflow: ellipsis;
   display: block;
 }
+
+process-views-tabs-details{
+  .e-kanban-header{
+    .e-header-row{
+      background-color: white;
+    }
+  }
+  .e-kanban-content{
+    height: calc(100vh - 185px)!important;
+    &>div{
+      height:100%;
+      &>table{
+        height:100%;
+        .e-card-wrapper{
+          height: 100% !important;
+        }
+      }
+    }
+  }
+} 
+
