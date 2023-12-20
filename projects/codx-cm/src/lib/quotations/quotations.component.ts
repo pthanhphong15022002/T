@@ -682,7 +682,6 @@ export class QuotationsComponent extends UIComponent implements OnInit {
         this.codxCmService
           .getDataSource(dt.recID, 'QuotationsBusiness')
           .then((dataSource) => {
-<<<<<<< HEAD
             let exportData: ExportData = {
               funcID: this.view.formModel.funcID,
               recID: dt.recID,
@@ -691,12 +690,6 @@ export class QuotationsComponent extends UIComponent implements OnInit {
               formName: this.frmModelExport.formName,
               gridViewName: this.frmModelExport.gridViewName,
             };
-=======
-            let exportData= new ExportData(); 
-            exportData.funcID= this.view.formModel.funcID,
-            exportData.recID= dt.recID,
-            exportData.data= dataSource,
->>>>>>> 48dd3fc2bbb461e2ef2cf663283216b6eabc87ac
             this.release(dt, res, exportData);
           });
       });
