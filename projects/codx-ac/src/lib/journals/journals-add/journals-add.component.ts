@@ -413,18 +413,15 @@ export class JournalsAddComponent extends UIComponent {
             '',
             option
           );
+          dialog.closed.subscribe((res) => {
+            if (res.event) {
+              this.formJournal.form.setValue('voucherFormat',res.event.autoNoCode,{});
+            }
+          });
         }
       })
     
-    // dialog.closed.subscribe((res) => {
-    //   console.log(res);
-
-    //   // if (res.event) {
-    //   //   this.form.formGroup.patchValue({
-    //   //     voucherFormat: res.event.autoNoCode,
-    //   //   });
-    //   // }
-    // });
+    
   }
 
   beforeOpenCbxAutoNumber(event){
