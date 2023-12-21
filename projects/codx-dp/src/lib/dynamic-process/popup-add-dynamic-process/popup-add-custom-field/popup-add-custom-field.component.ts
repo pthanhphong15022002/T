@@ -504,6 +504,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
                   this.field = crrF;
                   this.field.recID = recID;
                   this.field.stepID = stepID;
+
                   // this.field.title = crrF.title;
                   // this.field.fieldName = crrF.fieldName;
                   // this.field.dataFormat = crrF.dataFormat;
