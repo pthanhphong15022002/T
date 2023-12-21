@@ -35,9 +35,9 @@
       </div>
     </div>
     <ng-container>
-      <div style="margin-left: 35px" class="d-flex align-items-center">
+      <div *ngIf="formCashReceipt && !formCashReceipt?.data?.validated" style="margin-left: 35px" class="d-flex align-items-center">
         <i class="icon-arrow_drop_down_circle icon-16 mt-1"></i>
-        <div *ngIf="formCashReceipt && !formCashReceipt?.data?.validated" style="margin-left: -5px;"
+        <div style="margin-left: -5px;"
           class="input-circle h-20px input-border-0 w-400px mb-1">
           <codx-dropdown-select #eleCbxSubType [showFooter]="false" [isToolbar]="false" [cssClass]="'rounded-pill border-1'"
             cssPopup="h-350px w-550px" [isMulti]="false" type="valuelist" field="subType"
@@ -78,7 +78,7 @@
   <!-- End: Tab General -->
 
   <!-- Start: Tab Detail -->
-  <div style="height: calc(100vh - 420px) !important;min-height: 300px;">
+  <div style="height: calc(100vh - 420px) !important;">
     <!-- Start: Tab Detail -->
     <ejs-tab #elementTabDetail (created)="createTabDetail($event,elementTabDetail)"
       (selecting)="onTabSelectedDetail($event)">

@@ -17,8 +17,7 @@
     <div class=" row">
       <div class="form-group  col-6">
         <codx-label fiedName="Email" [formModel]="formModel"> </codx-label>
-        <codx-input field="email" type="text" [crrValue]="data?.email"
-          (valueChange)="valueChange($event)">
+        <codx-input field="email" type="text" [crrValue]="data?.email" (valueChange)="valueChange($event)">
         </codx-input>
       </div>
       <div class="form-group col-6">
@@ -46,26 +45,26 @@
     </div>
     <div class="row pt-5">
       <div class="col-6 d-flex flex-column align-items-center justify-content-center ">
-        <codx-img #imgSignature1  [imageType]="'square'"
-        [width]="180" referType="IDFront" [objectId]="currSignature?.recID" [objectType]="'ES_Signatures'"
-        data-kt-menu-trigger="click" data-kt-menu-attach="parent" data-kt-menu-placement="bottom-end"
-        data-kt-menu-flip="bottom" [isAllowEdit]="true" [updateDirect]="true" [funcId]="'ESS21'">
-      </codx-img>
-      <codx-label class="pt-3" name="lblIDFront" default="Mặt trước" formName="Signatures" gridViewName="grvSignatures"></codx-label>
+        <codx-img #imgSignature1
+          class="border border-gray-300 border-dashed rounded symbol symbol-200 square me-2 image-inpt-wrapper fullImage"
+          [imageType]="'square'" [width]="200" referType="IDFront" [objectId]="currSignature?.recID"
+          [objectType]="'ES_Signatures'" data-kt-menu-trigger="click" data-kt-menu-attach="parent"
+          data-kt-menu-placement="bottom-end" data-kt-menu-flip="bottom" [isAllowEdit]="true" [updateDirect]="true"
+          [funcId]="'ESS21'">
+        </codx-img>
+        <codx-label class="pt-3" name="lblIDFront" default="Mặt trước" formName="Signatures"
+          gridViewName="grvSignatures"></codx-label>
       </div>
-      <div  class="col-6 d-flex flex-column align-items-center justify-content-center">
-        <codx-img #imgSignature2 referType="IDBack" [imageType]="'square'"[width]="180"
-        [objectId]="currSignature?.recID" [objectType]="'ES_Signatures'" data-kt-menu-trigger="click"
-        data-kt-menu-attach="parent" data-kt-menu-placement="bottom-end" data-kt-menu-flip="bottom" [isAllowEdit]="true"
-        [updateDirect]="true" [funcId]="'ESS21'">
-      </codx-img>
-      <codx-label  class="pt-3"  name="lblIDBack" default="Mặt sau" formName="Signatures" gridViewName="grvSignatures"></codx-label>
-      
+      <div class="col-6 d-flex flex-column align-items-center justify-content-center">
+        <codx-img #imgSignature2 referType="IDBack" [imageType]="'square'" [width]="200"
+          class="border border-gray-300 border-dashed rounded symbol symbol-200 square me-2 image-inpt-wrapper fullImage"
+          [objectId]="currSignature?.recID" [objectType]="'ES_Signatures'" data-kt-menu-trigger="click"
+          data-kt-menu-attach="parent" data-kt-menu-placement="bottom-end" data-kt-menu-flip="bottom"
+          [isAllowEdit]="true" [updateDirect]="true" [funcId]="'ESS21'">
+        </codx-img>
+        <codx-label class="pt-3" name="lblIDBack" default="Mặt sau" formName="Signatures"
+          gridViewName="grvSignatures"></codx-label>
       </div>
-      
-
-      
-
     </div>
   </ng-template>
 
