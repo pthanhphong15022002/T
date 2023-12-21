@@ -1,12 +1,11 @@
-import { map } from 'rxjs';
+import { map, filter } from 'rxjs';
 import { Component, Injector, TemplateRef, ViewChild } from '@angular/core';
-import { ButtonModel, CRUDService, CallFuncService, CodxGridviewV2Component, CodxService, NotificationsService, ResourceModel, SidebarModel, UIComponent, ViewModel, ViewType } from 'codx-core';
+import { ButtonModel, CRUDService, CallFuncService, CodxGridviewV2Component, CodxService, NotificationsService, ResourceModel, SidebarModel, UIComponent, ViewModel, ViewType, Util } from 'codx-core';
 import { CodxHrService } from 'projects/codx-hr/src/lib/codx-hr.service';
 import { KowdsScheduleComponent } from './kowds-schedule/kowds-schedule.component';
 import { PopupEkowdsComponent } from './popup-ekowds/popup-ekowds.component';
 import { ActivatedRoute } from '@angular/router';
 import { PopupCopyEkowdsComponent } from './popup-copy-ekowds/popup-copy-ekowds.component';
-
 @Component({
   selector: 'lib-employee-kowds',
   templateUrl: './employee-kowds.component.html',
@@ -48,6 +47,8 @@ export class EmployeeKowdsComponent extends UIComponent{
   editHeaderText;
   userPermission: any;
   formHeaderText;
+  grvSetup: any;
+  arrSearchField : any = [];
 
   @ViewChild('tempEmployee', { static: true }) tempEmployee: TemplateRef<any>;
   @ViewChild('tempDayData', { static: true }) tempDayData: TemplateRef<any>;
@@ -103,6 +104,15 @@ export class EmployeeKowdsComponent extends UIComponent{
     this.getHrKows().subscribe((res) => {
       this.lstHrKow = res;
     })
+
+    //console.log('grv setup' , this.view.gridViewSetup);
+    
+    
+    // this.cache
+    // .gridViewSetup(this.view., 'grvKowDsUIByDay')
+    // .subscribe((res) => {
+    //   this.grvSetup = res;
+    // });
     
 
     // this.testAPILoadDetailData().subscribe((res) => {
@@ -148,9 +158,9 @@ export class EmployeeKowdsComponent extends UIComponent{
     if(event.data != null){
       this.isOnlyReadSavedData = event.data;
       this.dataValues = [this.filterOrgUnit, this.filterMonth, this.filterYear, this.filterGroupSalCode, this.filterDowCode, this.isOnlyReadSavedData.toString()].join(';');
-      if(this.viewDetailData){
-        this.calendarGrid.refresh();
-      }
+      // if(this.viewDetailData){
+      //   this.calendarGrid.refresh();
+      // }
     }
   }
 
@@ -180,8 +190,30 @@ export class EmployeeKowdsComponent extends UIComponent{
         },
       },
     ];
-    // }
+  }
 
+  handleSearch(event){
+    if(event == ''){
+      if(this.viewDetailData == true){
+        this.calendarGrid.refresh();
+      }
+    }
+    else{
+      let data = this.calendarGrid.dataSource
+      let resData = []
+      if(this.viewDetailData == true){
+        let data = this.calendarGrid.dataSource
+        for(let i =0; i < this.arrSearchField.length; i++){
+          for(let j = 0; j < data.length; j++){
+            if(data[j][this.arrSearchField[i]] == event){
+              resData.push(data[j])
+            }
+          }
+        }
+      }
+      this.calendarGrid.dataSource = resData;
+    }
+    debugger
   }
 
   clickMF(event){
@@ -319,6 +351,29 @@ export class EmployeeKowdsComponent extends UIComponent{
 
   onLoadedData(event){
     console.log('load data xong', event);
+    if(this.view?.gridViewSetup != null){
+      this.grvSetup = this.view.gridViewSetup
+      let arrObj = Object.keys(this.view?.gridViewSetup).map(key => ({ [key]: this.view?.gridViewSetup[key] }))
+      // this.arrSearchField = this.grvSetup.filter((item) => {
+      //   return item.isQuickSearch == true;
+      // })
+      debugger
+      let arrTemp = arrObj.map((item) => {
+        let key = Object.keys(item);
+        if(item[key[0]].isQuickSearch){
+          return key;
+        }
+        return null;
+      })
+      this.arrSearchField = []
+      for(let i = 0; i < arrTemp.length; i++){
+        if(arrTemp[i] != null && this.arrSearchField.indexOf((arrTemp[i])[0]) == -1){
+          let str = (arrTemp[i])[0];
+          this.arrSearchField.push(Util.camelize(str))
+        }
+      }
+      console.log('arr search field ', this.arrSearchField);
+    }
   }
 
   switchModeView(mode){
@@ -697,21 +752,21 @@ export class EmployeeKowdsComponent extends UIComponent{
 
   onAction(event){
     // thay doi gia tri filter
+    debugger
     if(event.type == 'pined-filter'){
-      console.log('filter thay doi', event)
+      let oldFilterDow = this.filterDowCode;
+      let oldFilterGroupSal = this.filterGroupSalCode;
       this.filterDowCode =  event?.data[0].value;
       let temp = event?.data[0].value.split('/');
       this.filterMonth = temp[1];
       this.filterYear = temp[0];
 
-      let groupSalCode = event?.data[1];
-      console.log('filter month', this.filterMonth);
-      console.log('filter year', this.filterYear);
-      console.log('filter groupSalCode', groupSalCode);
+      this.filterGroupSalCode = event?.data[1].value;
+
+      if((this.filterDowCode != oldFilterDow) || this.filterGroupSalCode != oldFilterGroupSal){
+        if(this.viewDetailData == true){
+          this.calendarGrid.refresh();
+        }
+      }
   }}
-
-  // callFunc(event){
-  //   debugger
-  // }
-
 }
