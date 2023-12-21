@@ -403,6 +403,7 @@ export class InstanceDetailComponent implements OnInit {
       (x) => x.stepID == this.dataSelect.stepID
     )?.recID;
   }
+
   saveDataStep(e) {
     let stepInsIdx = this.listSteps.findIndex((x) => {
       x.recID == e.recID;
@@ -410,8 +411,27 @@ export class InstanceDetailComponent implements OnInit {
     if (stepInsIdx != -1) {
       this.listSteps[stepInsIdx] = e;
     }
-    this.loadingDatas();
+    if (e?.fields?.length > 0) this.updateDuplicateField(e);
+    //datas đã get từ trong ra nên ko cần cái này nữa
+    //this.loadingDatas();
   }
+
+  updateDuplicateField(step) {
+    let fields = step.fields;
+    this.listSteps.forEach((st) => {
+      if (st?.fields?.length > 0 && st.recID != step.recID) {
+        fields.forEach((f) => {
+          let idxField = st.fields.findIndex(
+            (x) => x.fieldName == f.fieldName && x.dataValue != f.dataValue
+          );
+          if (idxField != -1) {
+            st.fields[idxField].dataValue = f.dataValue;
+          }
+        });
+      }
+    });
+  }
+
   loadingDatas() {
     let listField = [];
     this.listSteps.forEach((st) => {

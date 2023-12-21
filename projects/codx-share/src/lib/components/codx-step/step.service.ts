@@ -734,7 +734,7 @@ export class StepService {
     if (location == 'right') {
       let option = new SidebarModel();
       option.Width = '550px';
-      option.zIndex = 1100;
+      option.zIndex = 1010;
       option.FormModel = frmModel;
       popupAddTask = this.callFunc.openSide(CodxAddTaskComponent, data, option);
     } else {
