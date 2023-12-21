@@ -43,6 +43,7 @@ import {
 import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
 import { PdfComponent } from 'projects/codx-common/src/lib/component/pdf/pdf.component';
 import { CodxCommonService } from 'projects/codx-common/src/lib/codx-common.service';
+import { PopupAddPersonSignerComponent } from 'projects/codx-share/src/lib/components/codx-approve-steps/popup-add-person-signer/popup-add-person-signer.component';
 
 @Component({
   selector: 'popup-add-sign-file',
@@ -141,6 +142,8 @@ export class PopupAddSignFileComponent implements OnInit {
   tempProcessRecID: any;
   tempSampleProcessName: any;
   reloadedStep= true;
+  popupApproverInfo=false;
+  lstpartners = [];
   constructor(
     private auth: AuthStore,
     private esService: CodxEsService,
@@ -1332,13 +1335,20 @@ export class PopupAddSignFileComponent implements OnInit {
         break;
 
       case 1:
-        if (this.data.approveControl == '3') {
-          this.applyTemplate();
+        //////////////////////////////////////////////////////////
+        if(this.popupApproverInfo){
+          this.checkApproverInfo(oldNode,newNode);
         }
-        this.oldNode = oldNode;
-        this.newNode = newNode;
-        this.onSaveSignFile();
-        this.nextClick = true;
+        else{
+          if (this.data.approveControl == '3') {
+            this.applyTemplate();
+          }
+          this.oldNode = oldNode;
+          this.newNode = newNode;
+          this.onSaveSignFile();
+          this.nextClick = true;
+        }
+        
         break;
       case 2:
         if (this.esService.getApprovalStep) break;
@@ -1399,14 +1409,12 @@ export class PopupAddSignFileComponent implements OnInit {
         !(this.isTemplate && this.data.refType == 'ES_Categories')
       ) {
         this.data.approveControl = '1';
-        this.dialogSignFile.patchValue({ approveControl: '1' });
-      
+        this.dialogSignFile.patchValue({ approveControl: '1' });      
         this.reloadedStep=false;
         this.cr.detectChanges();
         this.onSaveSignFile();
         this.reloadedStep=true;
         this.cr.detectChanges();
-
       }
     }
   }
@@ -1414,7 +1422,63 @@ export class PopupAddSignFileComponent implements OnInit {
   openPopup(content) {
     this.callfuncService.openForm(content, '', 400, 250);
   }
-
+  checkPopupApproverInfo(evt:any){
+    if(evt){
+      this.popupApproverInfo =true;
+      this.cr.detectChanges();
+    }
+  }
+  checkApproverInfo(oldNode, newNode){
+    
+    this.lstpartners=[];
+    this.codxShareService.getStepsByTransID(this.data.processID).subscribe((steps:any)=>{
+      if(steps){
+        Array.from(steps).forEach((step:any)=>{
+          if(step?.approvers){
+            let partner = step?.approvers.filter(x=>x?.roleType =="PE");
+            if(partner?.length>0){
+              this.lstpartners = partner;
+              //this.partners.concat(partner);
+            }
+          } 
+        });
+        if(this.lstpartners?.length>0){
+            let popupApproverPE = this.callfuncService.openForm(              
+              PopupAddPersonSignerComponent,
+              '',
+              550,
+              screen.height,
+              '',
+              {
+                approverData: this.lstpartners[0],
+                lstApprover: steps,
+                isAddNew: true,
+              }
+            );
+            popupApproverPE.closed.subscribe((res) => {
+              if (res?.event) {
+                steps?.forEach(step=>{
+                  step.transID = this.data.recID;
+                  this.data.approveControl ="1";
+                  this.data.processID = this.data?.recID;                  
+                  this.dialogSignFile.patchValue({ approveControl: "1",processID:this.data?.recID });                  
+                  step.approvers = step?.approvers.filter(x=>x?.recID != res?.event?.recID);
+                  step.approvers.push(res?.event);
+                });
+                this.codxShareService.addCustomStep(steps).subscribe(added=>{
+                  if(added){                    
+                    this.oldNode = oldNode;
+                    this.newNode = newNode;
+                    this.onSaveSignFile();
+                    this.nextClick = true;
+                  }
+                })
+              }
+            });
+        }
+      }
+    });
+  }
   extendShowPlan() {
     this.showPlan = !this.showPlan;
   }
