@@ -239,6 +239,7 @@ export class AddTemplateComponent implements OnInit{
 
   openFormAddImportDetail(data:any , type = 'new')
   {
+    debugger
     if(type == 'edit' && !data?.mappingTemplate) return;
     let sourceField = XLSX.utils.sheet_to_json(this.wb.Sheets[this.sheet[0]], {
       header: this.importAddTmpGroup.value.firstCell,
@@ -263,6 +264,7 @@ export class AddTemplateComponent implements OnInit{
 
   openFormIETables()
   {
+    debugger
     let sourceField = XLSX.utils.sheet_to_json(this.wb.Sheets[this.sheet[0]], {
       header: this.importAddTmpGroup.value.firstCell,
     });

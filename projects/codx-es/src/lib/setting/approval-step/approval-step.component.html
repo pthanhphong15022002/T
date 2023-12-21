@@ -108,7 +108,8 @@
                                 cardCss="card-template p-3"
                                 *ngIf="
                                   approver.roleType?.length == 1 ||
-                                  approver.roleType == 'PA'
+                                  approver.roleType == 'PA'||
+                                  approver.roleType == 'PE'
                                 "
                                 [imageId]="approver.approver"
                                 [title]="approver.name"
@@ -128,7 +129,8 @@
                                 cardCss="card-template p-3"
                                 *ngIf="
                                   approver.roleType.length > 1 &&
-                                  approver.roleType != 'PA'
+                                  (approver.roleType != 'PA'||
+                                  approver.roleType == 'PE')
                                 "
                                 [imageSrc]="
                                   './assets/themes/sys/default/img/' +
@@ -300,7 +302,8 @@
                           cardCss="card-template p-3"
                           *ngIf="
                             approver.roleType?.length == 1 ||
-                            approver.roleType == 'PA'
+                            approver.roleType == 'PA'||
+                            approver.roleType == 'PE'
                           "
                           [imageId]="approver.approver"
                           [title]="approver.name"
@@ -318,7 +321,8 @@
                           cardCss="card-template p-3"
                           *ngIf="
                             approver.roleType.length > 1 &&
-                            approver.roleType != 'PA'
+                            (approver.roleType != 'PA'||
+                            approver.roleType == 'PE')
                           "
                           [imageSrc]="
                             './assets/themes/sys/default/img/' +

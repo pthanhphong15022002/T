@@ -44,8 +44,9 @@ import { ContractsViewDetailComponent } from './contracts-view-right/contracts-v
 import { PopupAssginDealComponent } from '../deals/popup-assgin-deal/popup-assgin-deal.component';
 import { StepService } from 'projects/codx-share/src/lib/components/codx-step/step.service';
 import { ContractsDetailComponent } from './contracts-detail/contracts-detail.component';
-import { ExportData } from 'projects/codx-share/src/lib/models/ApproveProcess.model';
 import { CodxCommonService } from 'projects/codx-common/src/lib/codx-common.service';
+import { DP_Instances_Steps_Tasks, DP_Instances_Steps_Tasks_Roles } from 'projects/codx-dp/src/lib/models/models';
+import { ExportData } from 'projects/codx-common/src/lib/models/ApproveProcess.model';
 
 @Component({
   selector: 'contracts-detail',
@@ -70,6 +71,8 @@ export class ContractsComponent extends UIComponent {
   @ViewChild('tempStepID') tempStepID: TemplateRef<any>;
   @ViewChild('tempStatus') tempStatus: TemplateRef<any>;
   @ViewChild('tempOwner') tempOwner: TemplateRef<any>;
+
+  @ViewChild('liquidationTmp') liquidationTmp: TemplateRef<any>;
 
   listClicked = [];
   views: Array<ViewModel> = [];
@@ -115,6 +118,12 @@ export class ContractsComponent extends UIComponent {
     formName: 'CMContractsPaymentsHistory',
     gridViewName: 'grvCMContractsPaymentsHistory',
   };
+
+  frmModelExport: FormModel = {
+    formName: 'CMTempDataSources',
+    gridViewName: 'grvCMTempDataSources',
+    entityName: 'CM_TempDataSources',
+  };
   functionMappings;
   //test
   moreDefaut = {
@@ -144,6 +153,8 @@ export class ContractsComponent extends UIComponent {
   runMode: any;
   user;
   taskAdd;
+  popupLiquidation;
+  disposalOn;disposalAll;disposalCmt;
   constructor(
     private inject: Injector,
     private cmService: CodxCmService,
@@ -303,6 +314,9 @@ export class ContractsComponent extends UIComponent {
           case 'CM0204_16': // mở lại hợp đồng
             res.disabled = !data?.closed;
             break;
+          case 'CM0204_18': // mở lại hợp đồng
+            res.disabled = data?.status == "17";
+            break;
         }
       });
     }
@@ -380,6 +394,9 @@ export class ContractsComponent extends UIComponent {
       case 'CM0204_13':
         this.addTask(data);
         break;
+      case 'CM0204_18': // thanh lý hợp đồng
+        this.liquidationContract(data);
+        break;
       default: {
         // var customData = {
         //   refID: data.recID,
@@ -389,6 +406,7 @@ export class ContractsComponent extends UIComponent {
         //   customData.refID = data.processID;
         //   customData.refType = 'DP_Processes';
         // }
+        this.contractSelected == data;
         this.codxShareService.defaultMoreFunc(
           e,
           data,
@@ -403,9 +421,9 @@ export class ContractsComponent extends UIComponent {
       }
     }
   }
-  
-  async addTask(contract: CM_Contracts){
-    let taskOutput = await this.stepService.addTaskCM(contract, "CM_Contracts");
+
+  async addTask(contract: CM_Contracts) {
+    let taskOutput = await this.stepService.addTaskCM(contract, 'CM_Contracts');
     this.taskAdd = taskOutput;
   }
 
@@ -465,14 +483,87 @@ export class ContractsComponent extends UIComponent {
 
   afterSave(e?: any, that: any = null) {
     if (e) {
-      let appoverStatus = e.unbounds.statusApproval;
+      if(e?.funcID == "SYS004"){
+        if(e?.result?.isSendMail){
+          this.addTaskMail(e);
+          this.notiService.notifyCode('SYS006');
+        }else{
+          this.notiService.notify('Gửi mail thất bại','3');
+        }
+      }
+      let appoverStatus = e?.unbounds?.statusApproval;
       if (
         appoverStatus != null &&
-        appoverStatus != this.contractSelected.approveStatus
+        appoverStatus != this.contractSelected?.approveStatus
       ) {
         this.contractSelected.approveStatus = appoverStatus;
       }
       this.view.dataService.update(this.contractSelected).subscribe();
+    }
+  }
+
+  addTaskMail(e){
+    let task = new DP_Instances_Steps_Tasks();
+    let mail = e?.result?.data;
+    task.taskName = mail?.subject || 'Email';
+    task.owner = this.user?.UserID;
+    task.actualEnd = new Date();
+    task.status = "3";
+    task.progress = 100;
+    task.recID =  Util.uid();
+    task.refID =  Util.uid();
+    task.taskType = "E";
+    task.approveStatus = '1';
+    task.dependRule = '0';
+    task.isTaskDefault = false;
+    task.assigned = '0'; 
+    let role = new DP_Instances_Steps_Tasks_Roles();
+    role.recID = Util.uid();
+    role.taskID = task.recID;
+    role.objectName = this.user?.userName;
+    role.objectID = this.user?.userID;
+    role.createdOn = new Date();
+    role.createdBy = this.user?.userID;
+    role.roleType = 'O';
+    role.objectType = this.user?.objectType;
+    task.owner = role.objectID;
+    task.roles = [role];
+    if(this.contractSelected?.applyProcess){
+      task.stepID = this.contractSelected?.stepID;
+      task.instanceID = this.contractSelected?.refID;
+      this.api
+      .exec<any>('DP', 'InstancesStepsBusiness', 'AddTaskStepAsync', [
+        task,
+        false,
+        false,
+      ])
+      .subscribe((res) => {
+        if (res) {
+          this.taskAdd = {
+            task: res[0],
+            progressGroup: res[1],
+            progressStep: res[2],
+            isCreateMeeting: false,
+          };
+        }
+      });
+    }else{
+      task.objectID = this.contractSelected?.recID;
+      task.objectType = "CM_Contracts"
+      this.api
+          .exec<any>('DP', 'ActivitiesBusiness', 'AddActivitiesAsync', [
+            task,
+            false,
+            false,
+          ])
+          .subscribe((res) => {
+            if (res) {
+              this.taskAdd = {
+                task: res,
+                isCreateMeeting: false,
+              };
+            }
+          });
     }
   }
 
@@ -686,6 +777,9 @@ export class ContractsComponent extends UIComponent {
               funcID: this.view.formModel.funcID,
               recID: data.recID,
               data: dataSource,
+              entityName: this.frmModelExport.entityName,
+              formName: this.frmModelExport.formName,
+              gridViewName: this.frmModelExport.gridViewName,
             };
             this.release(data, category, exportData);
           });
@@ -1141,7 +1235,7 @@ export class ContractsComponent extends UIComponent {
             e,
             data,
             this.afterSave,
-            this.view.formModel,
+            this.frmModelExport, //this.view.formModel,
             this.view.dataService,
             this,
             customData
@@ -1149,6 +1243,50 @@ export class ContractsComponent extends UIComponent {
           this.detectorRef.detectChanges();
         }
       });
+  }
+
+  liquidationContract(data){
+    this.disposalOn = new Date();
+    this.contractSelected = data;
+    let opt = new DialogModel();
+      opt.FormModel = this.view.formModel;
+      this.popupLiquidation = this.callFunc.openForm(
+        this.liquidationTmp,
+        '',
+        500,
+        600,
+        '',
+        data,
+        '',
+        opt
+      );
+  }
+
+  changeData(event){
+    if(event?.field== "disposalOn"){
+      this[event?.field]= event?.data?.fromDate;
+    }else{
+      this[event?.field]= event?.data;
+    }
+  }
+  saveLiquidation(){
+    this.api
+        .exec<any>('CM', 'ContractsBusiness', 'LiquidationContractAsync', [
+          this.contractSelected?.recID, this.disposalOn, this.disposalAll, this.disposalCmt
+        ])
+        .subscribe((res) => {
+          console.log(res);
+          if (res) {
+            this.contractSelected.status = "17";
+            this.contractSelected.disposalOn = this.disposalOn;
+            this.contractSelected.disposalAll = this.disposalAll;
+            this.contractSelected.disposalCmt = this.disposalCmt;
+            this.view.dataService.update(this.contractSelected, true).subscribe();
+            this.changeDetectorRef.markForCheck();
+            this.popupLiquidation.close()
+            this.notiService.notifyCode('SYS007');
+          }
+        });
   }
 }
 

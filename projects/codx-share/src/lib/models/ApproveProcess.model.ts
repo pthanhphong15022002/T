@@ -82,6 +82,7 @@ export const ShareType = {
 
   //Mở form để nhập data
   Partner: 'PA', //	Đối tác
+  Personal: 'PE', //Cá nhân ngoài hệ thống
 
   //Lấy data tĩnh từ combobox
   User: 'U', //	Người dùng

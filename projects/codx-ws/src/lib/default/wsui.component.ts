@@ -22,7 +22,7 @@ export abstract class WSUIComponent implements OnInit {
     abstract onInit(): void;
     protected route!: ActivatedRoute;
     protected router!: Router;
-    protected codxWsService!: CodxWsService;
+    public codxWsService!: CodxWsService;
     protected api: ApiHttpService;
     protected codxService: CodxService;
     protected authStore: AuthStore;
@@ -51,6 +51,7 @@ export abstract class WSUIComponent implements OnInit {
     getFuncID()
     {
         this.funcID = this.route.snapshot.paramMap.get('funcID');
+        if(!this.funcID) this.funcID = this.route.snapshot['_routerState'].url.split("/")[4]
         this.codxWsService.funcChange.next(this.funcID);
     }
 

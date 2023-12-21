@@ -62,6 +62,18 @@
   </div>
 </div>
 
+<div
+  *ngIf="viewType == '5' && countData > 0"
+  (click)="openViewPopup && countData > 0 ? openPopup() : ''"
+>
+  <div class="d-flex align-items-center cursor-pointer text-hover-primary">
+    <div class="d-flex align-items-center me-1 position-relative" [ngbTooltip]="tooltip">
+      <i class="icon-i-clipboard icon-18"></i>
+      <span class="count-file">{{ countData }}</span>
+    </div>
+  </div>
+</div>
+
 <ng-template #tmpListItem let-dialog>
   <codx-form
     [body]="body"

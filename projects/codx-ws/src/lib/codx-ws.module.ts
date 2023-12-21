@@ -115,10 +115,10 @@ const routes: Routes = [
         data: { noReuse: true },
         component: EPBookingComponent,
       },
-      {
-        path: 'dispatches/:funcID',
-        component: IncommingComponent,
-      },
+      // {
+      //   path: 'dispatches/:funcID',
+      //   component: IncommingComponent,
+      // },
       {
         path: 'wsdashboard/:funcID',
         component: DashboardComponent,
@@ -154,11 +154,7 @@ const routes: Routes = [
           },
         ],
       },
-      //Task + duyyet TM
-      {
-        path: 'tasks/:funcID',
-        component: TasksComponent,
-      },
+      
       {
         path: 'taskextends/:funcID',
         component: TaskExtendsComponent,
@@ -255,6 +251,21 @@ const routes: Routes = [
     component: Layout2Component,
     children: [
       //-----------Khai báo routing nghiệp vu---------------
+      {
+        path: '',
+        component: WorkspaceComponent,
+        children:[
+           {
+            path: 'dispatches/:funcID',
+            component: IncommingComponent,
+          },
+           //Task + duyyet TM
+          {
+            path: 'tasks/:funcID',
+            component: TasksComponent,
+          },
+        ]
+      },
       {
         path: 'workspace/:funcID',
         component: WorkspaceComponent,
