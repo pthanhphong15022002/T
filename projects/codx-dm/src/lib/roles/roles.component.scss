@@ -13,16 +13,17 @@
     border-left-color: #3699ff;
 }
 
-.role-left .user-mini-nav,
+.role-left .user-mini-nav{
+    height: calc(100% - 30px) !important;
+    overflow: auto;
+    padding-left: 0!important;
+}
 .role-right {
-    max-height: calc(100vh - 200px) !important;
+    height: calc(100% - 62px) !important;
     overflow: auto;
 }
-
 .table {
     width: 100%;
-    margin-bottom: 1rem;
-    color: #3f4254;
     background-color: transparent;
 }
 
@@ -47,14 +48,14 @@ th {
     font-weight: 500;
     font-size: 1rem;
     border-bottom-width: 1px;
-    padding-top: 1rem;
-    padding-bottom: 1rem;
+    padding-top: 7px;
+    padding-bottom: 7px;
     color: var(--text-dark);
 }
 
 .table thead th {
     vertical-align: bottom;
-    border-bottom: 2px solid #ebedf3;
+    border-bottom:1px solid var(--gray-200);
 }
 
 // .table tbody td, .table thead th {

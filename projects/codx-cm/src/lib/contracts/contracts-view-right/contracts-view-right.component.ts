@@ -31,6 +31,7 @@ export class ContractsViewDetailComponent
   implements OnChanges
 {
   @ViewChild('quotationsTab') quotationsTab: TemplateRef<any>;
+  @ViewChild('contractLinkTem') contractLinkTem: TemplateRef<any>;
   @Input() taskAdd;
   @Input() formModel: FormModel;
   @Input() listInsStepStart = [];
@@ -59,6 +60,7 @@ export class ContractsViewDetailComponent
   listTypeContract = [];
   oCountFooter: any = {};
   isLoading: boolean = true;
+  contractLink:CM_Contracts[] = [];
 
   tabControl = [
     { name: 'History', textDefault: 'Lịch sử', isActive: true, template: null },
@@ -135,6 +137,7 @@ export class ContractsViewDetailComponent
             this.contactPerson = res;
           }
         });
+      this.getContractLink();
     }
     if (changes?.listInsStepStart && changes?.listInsStepStart?.currentValue) {
       this.listInsStep = this.listInsStepStart;
@@ -155,6 +158,16 @@ export class ContractsViewDetailComponent
     this.vllStatus = this.grvSetup['Status'].referedValue;
     this.getAccount();
     this.loadTabs();
+  }
+  ngAfterViewInit(): void {
+    let  contractLink = {
+      name: 'contractLink',
+      textDefault: 'Liên kết',
+      isActive: false,
+      template: this.contractLinkTem,
+      icon: 'icon-i-link',
+    };
+    this.tabControl.push(contractLink);
   }
 
   setDataInput() {
@@ -190,6 +203,15 @@ export class ContractsViewDetailComponent
     this.clickMoreFunc.emit({ e: event, data: data });
   }
 
+  getContractLink(){
+    if(this.contract?.parentID){
+      this.contractService.getContractByRecID(this.contract?.parentID).subscribe((res) => {
+        this.contractLink = res;
+      })
+    }else{
+      this.contractLink = [];
+    }
+  }
   getPayMentByContractID(contractID) {
     if (contractID) {
       this.contractService

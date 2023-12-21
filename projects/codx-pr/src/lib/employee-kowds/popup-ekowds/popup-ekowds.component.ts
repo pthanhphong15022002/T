@@ -37,6 +37,7 @@ export class PopupEkowdsComponent extends UIComponent implements OnInit{
   employeeId: string;
   currentYear: any;
   currentMonth: any;
+  groupSal: any = '';
   minDate: any;
   maxDate: any;
   fromDateVal: any;
@@ -98,6 +99,9 @@ export class PopupEkowdsComponent extends UIComponent implements OnInit{
     if(data?.data?.dowCode){
       this.dowCode = JSON.parse(JSON.stringify(data?.data?.dowCode));
     }
+    if(data?.data?.groupSal){
+      this.groupSal = JSON.parse(JSON.stringify(data?.data?.groupSal));
+    }
     let day = JSON.parse(JSON.stringify(data?.data?.selectedDate));
     this.selectedDate = new Date(this.currentYear, this.currentMonth, day);
     this.minDate = new Date(this.currentYear, this.currentMonth, 1);
@@ -113,7 +117,7 @@ export class PopupEkowdsComponent extends UIComponent implements OnInit{
 
   addRowGrid1() {
     let idx = this.gridView1?.dataSource?.length > 0 ? this.gridView1.dataSource.length : 0;
-    let temp = new Kowds(Util.uid(), '', '','', this.dowCode);
+    let temp = new Kowds(Util.uid(), '', '','', this.dowCode, this.groupSal);
     this.gridView1.addRow(temp, idx, false, true);
 
     // if (this.alpolicyObj.policyID) {

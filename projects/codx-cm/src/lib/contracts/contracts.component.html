@@ -325,6 +325,8 @@
         <codx-input
           field="disposalOn"
           [formModel]="view?.formModel"
+          [crrValue]="contractSelected?.disposalOn || disposalOn"
+          (valueChange)="changeData($event)"
         ></codx-input>
       </div>
 
@@ -333,10 +335,12 @@
           class="me-3"
           field="disposalAll"
           [formModel]="view?.formModel"
+          (valueChange)="changeData($event)"
         ></codx-input>
         <codx-label
           [formModel]="view?.formModel"
           fiedName="disposalAll"
+          [crrValue]="contractSelected?.disposalAll"
         ></codx-label>
        
       </div>
@@ -347,8 +351,10 @@
           fiedName="disposalCmt"
         ></codx-label>
         <codx-input
-          field="disposalCmt "
+          field="disposalCmt"
           [formModel]="view?.formModel"
+          (valueChange)="changeData($event)"
+          [crrValue]="contractSelected?.disposalCmt"
         ></codx-input>
       </div>
     </div>

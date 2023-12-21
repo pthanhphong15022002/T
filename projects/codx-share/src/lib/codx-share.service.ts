@@ -670,6 +670,16 @@ export class CodxShareService {
     );
   }
 
+  getOrCreateSignature(email: string, signatureType: string,supplier: string, userID: string) {
+    return this.api.execSv<any>(
+      'ES',
+      'ERM.Business.ES',
+      'SignaturesBusiness',
+      'GetApproverSignatureAsync',
+      [email, signatureType,supplier,userID]
+    );
+  }
+
   getNewDefaultEmail() {
     return this.api.execSv(
       'SYS',
@@ -1414,6 +1424,24 @@ export class CodxShareService {
       'ApprovalStepsBusiness',
       'ViewApprovalStepAsync',
       [transID, isSettingMode, dynamicApprovers]
+    );
+  }
+  getStepsByTransID(transID :any) {
+    return this.api.execSv<any>(
+      'ES',
+      'ES',
+      'ApprovalStepsBusiness',
+      'GetByTransIDAsync',
+      [transID]
+    );
+  }
+  addCustomStep(steps:any) {
+    return this.api.execSv<any>(
+      'ES',
+      'ES',
+      'ApprovalStepsBusiness',
+      'AddCustomStepAsync',
+      [steps]
     );
   }
 

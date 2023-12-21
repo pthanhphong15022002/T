@@ -348,30 +348,6 @@
               </div>
               <ng-container *ngIf="viewModelDetail == 'F'">
                 <div class="px-3">
-                  <!-- <ng-container *ngFor="let item of listSteps">
-                    <codx-fields-detail-temp
-                      *ngIf="item?.fields?.length > 0"
-                      [dataStep]="item"
-                      [typeView]="'0'"
-                      [showColumnControl]="showColumnControl(item.stepID)"
-                      [isUpdate]="
-                        dataSelect.write &&
-                        !dataSelect.closed &&
-                        (dataSelect.status == '1' ||
-                          dataSelect.status == '2') &&
-                        dataSelect?.approveStatus != '3'
-                      "
-                      [currentElmID]="currentElmID"
-                      (inputElmIDCF)="inputElmIDCustomField($event)"
-                      [isSaving]="isSaving"
-                      (actionSaveCF)="actionSaveCustomField($event)"
-                      [titleHeaderFormCF]="titleDefault"
-                      [viewsCurrent]="viewsCurrent"
-                      (saveDataStep)="saveDataStep($event)"
-                    >
-                    </codx-fields-detail-temp>
-                  </ng-container> -->
-
                   <div class="d-flex flex-column mt-5">
                     <ng-container *ngFor="let item of listSteps">
                       <codx-fields-detail-temp
@@ -496,28 +472,28 @@
       </span>
     </div>
   </div> -->
-    <div class="w-100 h-100" id="tabGantt">
-      <!-- <codx-step-chart
+  <div class="w-100 h-100" id="tabGantt">
+    <!-- <codx-step-chart
         [instance]="this.dataSelect"
         [type]="'DP'"
       ></codx-step-chart> -->
-      <div *ngIf="listSteps?.length > 0 && listSteps">
-        <step-task-instance
-          [entityName]="'DP_Instances'"
-          [isDataLoading]="false"
-          [instance]="dataSelect"
-          [listInstanceStep]="listSteps"
-          [formModel]="formModel"
-          [applyFor]="applyFor"
-          (saveAssignTask)="saveAssignTask($event)"
-          (changeProgress)="autoStartInstance.emit($event)"
-          [dealName]="dataSelect?.title"
-          [ownerInstance]="dataSelect?.owner"
-          [isChangeOwner]="isChangeOwner"
-          (addTaskHaveAssign)="addTaskHaveAssign($event)"
-        >
-        </step-task-instance>
-      </div>
+    <div *ngIf="listSteps?.length > 0 && listSteps">
+      <step-task-instance
+        [entityName]="'DP_Instances'"
+        [isDataLoading]="false"
+        [instance]="dataSelect"
+        [listInstanceStep]="listSteps"
+        [formModel]="formModel"
+        [applyFor]="applyFor"
+        (saveAssignTask)="saveAssignTask($event)"
+        (changeProgress)="autoStartInstance.emit($event)"
+        [dealName]="dataSelect?.title"
+        [ownerInstance]="dataSelect?.owner"
+        [isChangeOwner]="isChangeOwner"
+        (addTaskHaveAssign)="addTaskHaveAssign($event)"
+      >
+      </step-task-instance>
+    </div>
     <!-- <codx-gantt-chart
       [dataSource]="ganttDs"
       [taskFields]="taskFields"

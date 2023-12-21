@@ -237,6 +237,13 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     if (DP032.datas) {
       this.vllDataStep = DP032?.datas;
     }
+    this.cache.moreFunction('DPInstancesStepsTasks','grvDPInstancesStepsTasks').subscribe((res) =>{
+      console.log("--------------", res);
+      // const objectMoi = {};
+      // for (const obj of res) {
+      //   objectMoi[obj.id] = obj;
+      // }
+    })
     this.getDefaultCM();
     this.frmModelInstancesGroup = {
       formName: 'DPInstancesStepsTaskGroups',

@@ -47,6 +47,7 @@ import { ContractsDetailComponent } from './contracts-detail/contracts-detail.co
 import { CodxCommonService } from 'projects/codx-common/src/lib/codx-common.service';
 import { DP_Instances_Steps_Tasks, DP_Instances_Steps_Tasks_Roles } from 'projects/codx-dp/src/lib/models/models';
 import { ExportData } from 'projects/codx-common/src/lib/models/ApproveProcess.model';
+import { PopupPermissionsComponent } from '../popup-permissions/popup-permissions.component';
 
 @Component({
   selector: 'contracts-detail',
@@ -154,7 +155,7 @@ export class ContractsComponent extends UIComponent {
   user;
   taskAdd;
   popupLiquidation;
-
+  disposalOn;disposalAll;disposalCmt;
   constructor(
     private inject: Injector,
     private cmService: CodxCmService,
@@ -314,6 +315,9 @@ export class ContractsComponent extends UIComponent {
           case 'CM0204_16': // mở lại hợp đồng
             res.disabled = !data?.closed;
             break;
+          case 'CM0204_18': // thanh lý
+            res.disabled = data?.status == "17" && data?.disposalAll;
+            break;
         }
       });
     }
@@ -394,6 +398,9 @@ export class ContractsComponent extends UIComponent {
       case 'CM0204_18': // thanh lý hợp đồng
         this.liquidationContract(data);
         break;
+      case 'CM0204_17': // thanh lý hợp đồng
+        this.popupPermissions(data);
+        break;
       default: {
         // var customData = {
         //   refID: data.recID,
@@ -419,6 +426,37 @@ export class ContractsComponent extends UIComponent {
     }
   }
 
+  popupPermissions(data) {
+    let dialogModel = new DialogModel();
+    let formModel = new FormModel();
+    formModel.formName = 'CMPermissions';
+    formModel.gridViewName = 'grvCMPermissions';
+    formModel.entityName = 'CM_Permissions';
+    dialogModel.zIndex = 999;
+    dialogModel.FormModel = formModel;
+    let obj = {
+      data: data,
+      title: this.actionName,
+      entityName: this.view.formModel.entityName,
+    };
+    this.callfc
+      .openForm(
+        PopupPermissionsComponent,
+        '',
+        950,
+        650,
+        '',
+        obj,
+        '',
+        dialogModel
+      )
+      .closed.subscribe((e) => {
+        if (e?.event && e?.event != null) {
+          this.view.dataService.update(e?.event, true).subscribe();
+          this.detectorRef.detectChanges();
+        }
+      });
+  }
   async addTask(contract: CM_Contracts) {
     let taskOutput = await this.stepService.addTaskCM(contract, 'CM_Contracts');
     this.taskAdd = taskOutput;
@@ -1243,6 +1281,8 @@ export class ContractsComponent extends UIComponent {
   }
 
   liquidationContract(data){
+    this.disposalOn = new Date();
+    this.contractSelected = data;
     let opt = new DialogModel();
       opt.FormModel = this.view.formModel;
       this.popupLiquidation = this.callFunc.openForm(
@@ -1257,8 +1297,31 @@ export class ContractsComponent extends UIComponent {
       );
   }
 
+  changeData(event){
+    if(event?.field== "disposalOn"){
+      this[event?.field]= event?.data?.fromDate;
+    }else{
+      this[event?.field]= event?.data;
+    }
+  }
   saveLiquidation(){
-
+    this.api
+        .exec<any>('CM', 'ContractsBusiness', 'LiquidationContractAsync', [
+          this.contractSelected?.recID, this.disposalOn, this.disposalAll, this.disposalCmt
+        ])
+        .subscribe((res) => {
+          console.log(res);
+          if (res) {
+            this.contractSelected.status = "17";
+            this.contractSelected.disposalOn = this.disposalOn;
+            this.contractSelected.disposalAll = this.disposalAll;
+            this.contractSelected.disposalCmt = this.disposalCmt;
+            this.view.dataService.update(this.contractSelected, true).subscribe();
+            this.changeDetectorRef.markForCheck();
+            this.popupLiquidation.close()
+            this.notiService.notifyCode('SYS007');
+          }
+        });
   }
 }
 

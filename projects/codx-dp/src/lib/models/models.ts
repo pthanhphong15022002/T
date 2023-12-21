@@ -63,10 +63,10 @@ export class DP_Processes {
   instanceProgressControl: boolean;
   startInstanceControl: boolean = false;
   tabControl: string;
-  businessLineID:string;
-  allowEstimatedEnd:boolean;
-  allowEditInstanceControl:boolean;
-  allowReturnInstanceControl:boolean;
+  businessLineID: string;
+  allowEstimatedEnd: boolean;
+  allowEditInstanceControl: boolean;
+  allowReturnInstanceControl: boolean;
 }
 
 export class DP_Processes_Permission {
@@ -288,6 +288,11 @@ export class DP_Steps_Fields {
   createdBy: string;
   modifiedOn: Date;
   modifiedBy: string;
+  read: boolean = true;
+  create: boolean = true;
+  write: boolean = true;
+  assign: boolean = true;
+  delete: boolean = true;
 }
 
 export class DP_Instances {

@@ -198,6 +198,7 @@ import { CheckRoleStepPipe } from './components/codx-step/pipes/check-role-step.
 import { SetColorTaskPipe } from './components/codx-step/pipes/set-color-task.pipe';
 import { CodxAuthFileComponent } from './components/codx-auth-file/codx-auth-file.component';
 import { CodxViewFileComponent } from './components/codx-view-file/codx-view-file.component';
+import { PopupAddPersonSignerComponent } from './components/codx-approve-steps/popup-add-person-signer/popup-add-person-signer.component';
 
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
@@ -378,6 +379,7 @@ const T_Component: Type<any>[] = [
   CodxGetTemplateSignFileComponent,
   CodxViewDetailSignFileComponent,
 
+
   //View
   CodxView2Component,
   FormSettingComponent,
@@ -398,6 +400,7 @@ const T_Pipe: Type<any>[] = [FormatDataValuePipe];
     CodxEmailComponent,
     AddEditApprovalStepComponent,
     PopupAddApproverComponent,
+    PopupAddPersonSignerComponent,
     CodxClearCacheComponent,
     CodxCreateIndexComponent,
     UsingHistoryComponent,

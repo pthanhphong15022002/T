@@ -783,9 +783,23 @@ export class PdfComponent
     }
   }
   popupPublicESign(status) {
-    this.publicSignStatus = status;
-    var dialog = this.callfc.openForm(this.publicSignInfo, '', 450, 270);
-    this.detectorRef.detectChanges();
+    if(this.oApprovalTrans.approverType=='PE'){
+      this.codxCommonService
+      .codxApprove(this.transRecID, status, null, null, null)
+      .subscribe((res: ResponseModel) => {
+        if (res?.msgCodeError == null && res?.rowCount > 0) {
+          this.notificationsService.notifyCode('SYS034');
+          this.isSigned = true;
+          this.detectorRef.detectChanges();
+          this.changeConfirmState(res);
+        }
+      });
+    }
+    else{
+      this.publicSignStatus = status;
+      var dialog = this.callfc.openForm(this.publicSignInfo, '', 450, 270);
+      this.detectorRef.detectChanges();
+    }
   }
   publicESign(dialog) {
     this.esService.editSignature(this.paSignature).subscribe((res) => {

@@ -21,7 +21,11 @@
 .fs-body{
   font-size: var(--fs-body);
 }
-
+.e-control, .e-css, .e-listview, .e-splitter.e-splitter-horizontal .e-pane, 
+.e-splitter.e-splitter-vertical .e-pane {
+  font-family: 'Roboto', Segoe UI, serif;
+  
+}
 .e-device .e-dlg-content,
 .e-device .e-dlg-content * {
   font-size: inherit;
@@ -3518,6 +3522,7 @@ lib-layoutonlyheader{
 }
 ::-webkit-scrollbar-thumb:hover {
   background-color: #bebed3 !important;
+
 }
 
 
@@ -4423,4 +4428,23 @@ process-views-tabs-details{
     }
   }
 } 
+codx-page-title ul.breadcrumb{
+  .dropdown-item{
+    cursor: pointer;
+  }
+  a{
+    cursor: pointer;
+  }
+  &+.icon-keyboard_arrow_down{
+    cursor: pointer;
+  }
+}
 
+codx-filter-form ejs-dropdownlist{
+  height: 26px !important;
+  margin-top: 2px;
+  input.e-input {
+    height: 26px !important;
+    line-height: 26px;
+  }
+}
