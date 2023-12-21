@@ -530,6 +530,7 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
           case ShareType.Personal: //	Đối tác
           this.newAppr.write = true;
           this.newAppr.roleType = element.objectType;
+          this.newAppr.position = element.objectName;
             let popupApproverPE = this.callfc.openForm(              
               PopupAddPersonSignerComponent,
               '',
