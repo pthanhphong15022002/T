@@ -353,6 +353,7 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
   stepIDDrop: any;
   dialogAccess: any;
   alertMessger = '';
+  arrFieldDup = []; //mang field trung
 
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
@@ -921,7 +922,7 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
       this.process.businessLineID = $event?.data;
     }
   }
-  //endregion
+  //end
 
   closePopup() {
     //dung bat dong bo rjx
@@ -1826,15 +1827,13 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
       } else if ($event.field === 'no' && $event.component.checked === true) {
         this.process.allowEstimatedEnd = false;
       }
-    }
-    else if (view === 'EditInstanceView') {
+    } else if (view === 'EditInstanceView') {
       if ($event.field === 'yes' && $event.component.checked === true) {
         this.process.allowEditInstanceControl = true;
       } else if ($event.field == 'no' && $event.component.checked === true) {
         this.process.allowEditInstanceControl = false;
       }
-    }
-    else if (view === 'ReturnInstanceView') {
+    } else if (view === 'ReturnInstanceView') {
       if ($event.field === 'yes' && $event.component.checked === true) {
         this.process.allowReturnInstanceControl = true;
       } else if ($event.field === 'no' && $event.component.checked === true) {
@@ -2396,6 +2395,7 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
             option.FormModel = this.formModelField;
             option.Width = '550px';
             option.zIndex = 1010;
+
             let object = {
               field: this.fieldCrr,
               action: 'add',
@@ -2519,6 +2519,33 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
   }
 
   editCustomField(field, textTitle, enabled) {
+    let fieldNameArr = this.getFieldNameArr();
+    this.arrFieldDup = fieldNameArr.filter(
+      (x) => x.fieldName == field.fieldName && x.recID != field.recID
+    );
+    if (this.arrFieldDup?.length > 0) {
+      let nameSteps = this.arrFieldDup.map((x) => x.stepName);
+      //Trường tùy chỉnh đã được thiết lập tại bước {0} các thay đổi sẽ cập nhật lại ở tất cả các bước. Bạn có muốn tiếp tục ?
+      //The custom field was set up in step {0} and the changes will update at all steps. Do you want to continue ?
+      this.notiService
+        .alertCode('DP044', null, [
+          '<b class="text-danger">"' + nameSteps.join(';') + '"</b>' || '',
+        ])
+        .subscribe((event) => {
+          if (event?.event && event?.event?.status == 'Y') {
+            this.confirmEdit(field, textTitle, enabled, fieldNameArr, true);
+          }
+        });
+    } else this.confirmEdit(field, textTitle, enabled, fieldNameArr);
+  }
+
+  confirmEdit(
+    field,
+    textTitle,
+    enabled,
+    fieldNameArr,
+    isDuplicateField = false
+  ) {
     let oldStepID = field?.stepID;
     this.fieldCrr = field;
     this.cache.gridView('grvDPStepsFields').subscribe((res) => {
@@ -2529,6 +2556,7 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
           option.FormModel = this.formModelField;
           option.Width = '550px';
           option.zIndex = 1010;
+
           let object = {
             field: this.fieldCrr,
             action: 'edit',
@@ -2543,6 +2571,8 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
             refValueDataType:
               this.process.applyFor == '1' ? 'DP022_1' : 'DP022',
             processNo: this.process.processNo,
+            fieldNameArr: fieldNameArr,
+            isDuplicateField: isDuplicateField,
           };
           let dialogCustomField = this.callfc.openSide(
             PopupAddCustomFieldComponent,
@@ -2557,14 +2587,30 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
                 this.process.processNo = e.event[1];
               }
               if (oldStepID == this.fieldCrr.stepID) {
+                let arrStepDup = [];
+                if (isDuplicateField)
+                  arrStepDup = this.arrFieldDup.map((x) => x.stepID);
                 this.stepList.forEach((obj) => {
-                  if (obj.recID == this.fieldCrr.stepID) {
-                    let index = obj.fields.findIndex(
-                      (x) => x.recID == this.fieldCrr.recID
+                  if (
+                    obj.recID == this.fieldCrr.stepID ||
+                    (isDuplicateField && arrStepDup.includes(obj.recID))
+                  ) {
+                    let recDup = this.arrFieldDup.findIndex(
+                      (x) => x.stepID == obj.recID
                     );
-                    if (index != -1) {
-                      obj.fields[index] = this.fieldCrr;
+                    let recIDF = this.fieldCrr.recID;
+                    let fieldCrr = JSON.parse(JSON.stringify(this.fieldCrr));
+                    if (recDup != -1 && isDuplicateField) {
+                      recIDF = this.arrFieldDup[recDup].recID;
+                      fieldCrr.recID = recIDF;
+                      fieldCrr.stepID = obj.recID;
                     }
+
+                    let index = obj.fields.findIndex((x) => x.recID == recIDF);
+                    if (index != -1) {
+                      obj.fields[index] = fieldCrr;
+                    }
+
                     if (this.action == 'edit') {
                       let check = this.listStepEdit.some(
                         (id) => id == obj?.recID
@@ -2604,6 +2650,25 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
           });
         });
     });
+  }
+
+  getFieldNameArr() {
+    let fieldNameArr = [];
+    this.stepList.forEach((objStep) => {
+      if (objStep?.fields?.length > 0) {
+        let arrFn = objStep?.fields.map((x) => {
+          let obj = {
+            fieldName: x.fieldName,
+            recID: x.recID,
+            stepID: objStep.recID,
+            stepName: objStep.stepName,
+          };
+          return obj;
+        });
+        fieldNameArr = fieldNameArr.concat(arrFn);
+      }
+    });
+    return fieldNameArr;
   }
 
   deleteCustomField(field) {
@@ -2868,7 +2933,7 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
       }
     });
   }
-  //endregion
+  //end
 
   // Step task nvthuan
   // step
@@ -5120,4 +5185,5 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
     }
     this.changeDetectorRef.markForCheck();
   }
+  //end
 }

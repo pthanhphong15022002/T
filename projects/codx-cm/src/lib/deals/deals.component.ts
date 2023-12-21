@@ -43,10 +43,11 @@ import { PopupPermissionsComponent } from '../popup-permissions/popup-permission
 import { PopupAssginDealComponent } from './popup-assgin-deal/popup-assgin-deal.component';
 import { PopupUpdateStatusComponent } from './popup-update-status/popup-update-status.component';
 import { StepService } from 'projects/codx-share/src/lib/components/codx-step/step.service';
-import { ExportData } from 'projects/codx-share/src/lib/models/ApproveProcess.model';
+
 import { Internationalization } from '@syncfusion/ej2-base';
 import { ViewDealDetailComponent } from './view-deal-detail/view-deal-detail.component';
 import { CodxCommonService } from 'projects/codx-common/src/lib/codx-common.service';
+import { ExportData } from 'projects/codx-common/src/lib/models/ApproveProcess.model';
 
 @Component({
   selector: 'lib-deals',
@@ -223,12 +224,14 @@ export class DealsComponent
     // if (this.processID) this.dataObj = { processID: this.processID };
 
     // this.getListStatusCode();
-    this.codxCmService.getRecIDProcessDefault(this.applyFor).subscribe((res) => {
-      if (res) {
-        this.processIDDefault = res;
-        this.processIDKanban = res;
-      }
-    });
+    this.codxCmService
+      .getRecIDProcessDefault(this.applyFor)
+      .subscribe((res) => {
+        if (res) {
+          this.processIDDefault = res;
+          this.processIDKanban = res;
+        }
+      });
 
     this.executeApiCallFunctionID('CMDeals', 'grvCMDeals');
   }
@@ -617,7 +620,7 @@ export class DealsComponent
       CM0201_8: () => this.openOrCloseDeal(data, true),
       CM0201_7: () => this.popupOwnerRoles(data),
       CM0201_9: () => this.openOrCloseDeal(data, false),
-      CM0201_5: () => this.exportFile(data),
+      // CM0201_5: () => this.exportFile(data), // đã bỏ
       CM0201_6: () => this.approvalTrans(data),
       CM0201_12: () => this.confirmOrRefuse(true, data),
       CM0201_13: () => this.confirmOrRefuse(false, data),
@@ -1441,9 +1444,9 @@ export class DealsComponent
   }
 
   //xuất file
-  exportFile(dt) {
-    this.codxCmService.exportFile(dt, this.titleAction);
-  }
+  // exportFile(dt) {
+  //   this.codxCmService.exportFile(dt, this.titleAction);
+  // }
 
   //------------------------- Ký duyệt  ----------------------------------------//
   approvalTrans(dt) {
@@ -1464,6 +1467,9 @@ export class DealsComponent
                     funcID: this.view.formModel.funcID,
                     recID: dt.recID,
                     data: dataSource,
+                    entityName: this.view.formModel.entityName,
+                    formName: this.view.formModel.formName,
+                    gridViewName: this.view.formModel.gridViewName,
                   };
                   this.release(dt, res, exportData);
                 });
