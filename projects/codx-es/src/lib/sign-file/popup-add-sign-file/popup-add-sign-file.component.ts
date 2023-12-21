@@ -1457,9 +1457,6 @@ export class PopupAddSignFileComponent implements OnInit {
   }
 
   close() {
-    // if(this.isAddNew == true && this.isSaved == false && this.data?.category == "ES_SignFiles" && this.data?.refType == "ES_SignFiles"){
-
-    // }
     if (
       this.processTab == 0 ||
       (this.isAddNew == true &&
