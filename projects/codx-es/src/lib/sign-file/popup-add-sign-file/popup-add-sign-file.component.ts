@@ -1461,9 +1461,13 @@ export class PopupAddSignFileComponent implements OnInit {
                   step.transID = this.data.recID;
                   this.data.approveControl ="1";
                   this.data.processID = this.data?.recID;                  
-                  this.dialogSignFile.patchValue({ approveControl: "1",processID:this.data?.recID });                  
-                  step.approvers = step?.approvers.filter(x=>x?.recID != res?.event?.recID);
-                  step.approvers.push(res?.event);
+                  this.dialogSignFile.patchValue({ approveControl: "1",processID:this.data?.recID });    
+                                
+                  let stepP = step?.approvers.filter(x=>x?.recID == res?.event?.recID);
+                  if(stepP?.length>0){
+                    step.approvers=[];
+                    step.approvers.push(res?.event);
+                  }
                 });
                 this.codxShareService.addCustomStep(steps).subscribe(added=>{
                   if(added){                    
