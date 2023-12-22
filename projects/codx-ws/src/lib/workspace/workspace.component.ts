@@ -115,7 +115,6 @@ export class WorkspaceComponent extends WSUIComponent{
           }
         }
       }
-      debugger
       if(this.funcID == "WS001") this.codxService.navigate("WTMT0201");
     }
   }
