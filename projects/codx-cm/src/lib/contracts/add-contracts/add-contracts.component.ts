@@ -13,6 +13,7 @@ import {
   CM_Quotations,
   CM_QuotationsLines,
   CM_ContractsPayments,
+  CM_Permissions,
 } from '../../models/cm_model';
 import {
   Util,
@@ -37,6 +38,7 @@ import { ContractsService } from '../service-contracts.service';
 import { StepService } from 'projects/codx-share/src/lib/components/codx-step/step.service';
 import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
 import { PopupAddCategoryComponent } from 'projects/codx-es/src/lib/setting/category/popup-add-category/popup-add-category.component';
+import { tmpInstances } from '../../models/tmpModel';
 
 @Component({
   selector: 'add-contracts',
@@ -237,7 +239,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
   }
 
   async ngOnInit() {
-    this.action != 'edit' && (await this.getSettingContract());
+    this.action != 'edit' && await this.getSettingContract();
     this.setDataContract(this.contractsInput);
     if (this.type == 'task') {
       this.cache
@@ -297,7 +299,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
         this.contracts.contractDate = new Date();
         this.contracts.effectiveFrom = new Date();
         this.contracts.projectID = this.projectID;
-        this.contracts.applyProcess = this.isApplyProcess;
+        this.contracts.applyProcess = false;
         this.contracts.currencyID = this.currencyIDDefault;
         this.contracts.pmtStatus = this.contracts.pmtStatus
           ? this.contracts.pmtStatus
@@ -341,7 +343,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
         delete this.contracts['id'];
         this.contracts.recID = Util.uid();
         this.contracts.status = '1';
-        this.contracts.applyProcess = this.isApplyProcess;
+        // this.contracts.applyProcess = this.isApplyProcess;
         this.contracts.currencyID = this.currencyIDDefault;
         if (!this.contracts?.applyProcess) {
           this.contracts.contractID = null;
@@ -355,7 +357,9 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
         if (data) {
           this.contracts = JSON.parse(JSON.stringify(data));
           delete this.contracts['id'];
+          this.contracts.parentID = this.contracts?.recID;
           this.contracts.recID = Util.uid();
+          this.contracts.status = '1';
         }
         this.getCustomersDefaults(this.contracts?.customerID);
         break;
@@ -441,10 +445,12 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
       });
     }
   }
+
   GetProcessNoByProcessID(processID) {
     let process = this.listProcessNo?.find((x) => x?.processID === processID);
     if (process) {
       this.contracts.contractID = process?.processNo;
+      this.disabledShowInput = true;
     } else {
       this.contractService
         .GetProcessNoByProcessID(processID)
@@ -502,10 +508,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
 
   // check trùm mã khi nhạp tay
   changeAutoNum(e) {
-    if (
-      this.countInputChangeAuto == 0 &&
-      !(this.autoNumber && this.isApplyProcess)
-    ) {
+    if (this.countInputChangeAuto == 0 && !this.autoNumber && !this.contracts?.applyProcess && e?.data) {
       if (!this.disabledShowInput && (this.action !== 'edit' && this.action !== 'extend' ) && e) {
         this.contracts.contractID = e?.data;
         if (
@@ -629,6 +632,9 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
   }
 
   async addContracts() {
+    if(this.contracts?.applyProcess){
+      this.contracts.permissions = [];
+    }
     if (this.type == 'contract') {
       this.dialog.dataService
         .save((opt: any) => this.beforeSave(opt), 0)
@@ -751,17 +757,26 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
         break;
       case 'businessLineID':
         if (event?.field == 'businessLineID' && event?.data) {
-          let processID = event?.component?.itemsSelected
-            ? event?.component?.itemsSelected[0]?.ProcessContractID
-            : null;
+          let processID = event?.component?.itemsSelected ? event?.component?.itemsSelected[0]?.ProcessContractID : null;
           this.contracts.businessLineID = event?.data;
           if (processID) {
             this.contracts.processID = processID;
-          } else {
-            this.GetProcesIDDefault();
-          }
-          if (this.isApplyProcess && this.autoNumber) {
+            this.contracts.applyProcess = true;
             this.GetProcessNoByProcessID(processID);
+            this.disabledShowInput = true;
+          } else {
+            if(this.isApplyProcess){
+              this.GetProcesIDDefault();
+            }else{
+              this.contracts.applyProcess = false;
+              this.contracts.processID = null;
+              if(this.autoNumber){
+                this.contracts.contractID = this.autoNumber;
+              }else{
+                this.contracts.contractID = '';
+                this.disabledShowInput = false;
+              }
+            }
           }
         }
         break;
@@ -1205,6 +1220,63 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
   //#endregion
 
   //#region seve Instance
+  convertDataInstance(contract: CM_Contracts, instance: tmpInstances) {
+    if (this.action === "edit") {
+      instance.recID = contract.refID;
+    }
+    if (this.action !== "edit") {
+      instance.startDate = null;
+      instance.status = '1';
+    }
+    instance.title = contract?.contractName?.trim();
+    instance.memo = contract?.note?.trim();
+    instance.endDate = contract.effectiveTo;
+    instance.instanceNo = contract.contractID;
+    instance.owner = contract?.owner;
+    instance.processID = contract.processID;
+    instance.stepID = contract.stepID;
+  }
+
+  insertInstance() {
+    if (this.type != "DP") {
+      let data = [this.instance, this.listInstanceSteps, this.oldIdInstance];
+      this.cmService.addInstance(data).subscribe((instance) => {
+        if (instance) {
+          // this.instanceRes = instance;
+          // this.deal.status = instance.status;
+          // this.deal.datas = instance.datas;
+          // this.addPermission(instance?.permissions);
+          // this.onAdd();
+        }
+      });
+    } else {
+      this.onAddInstance();
+    }
+  }
+
+  copyPermission(permissionDP: any) {
+    let permission = new CM_Permissions();
+    permission.objectID = permissionDP.objectID;
+    permission.objectName = permissionDP.objectName;
+    permission.objectType = permissionDP.objectType;
+    permission.roleType = permissionDP.roleType;
+    // permission.full =  permissionDP.full;
+    permission.read = permissionDP.read;
+    permission.update = permissionDP.update;
+    permission.assign = permissionDP.assign;
+    permission.delete = permissionDP.delete;
+    permission.upload = permissionDP.upload;
+    permission.download = permissionDP.download;
+    permission.create = permissionDP.create;
+    permission.memberType = '2'; // Data from DP
+    permission.allowPermit = permissionDP.allowPermit;
+    permission.allowUpdateStatus = permissionDP.allowUpdateStatus;
+    permission.createdOn = new Date();
+    permission.createdBy = this.user.userID;
+    permission.isActive = true;
+    return permission;
+  }
+
   beforeSaveInstance(option: RequestOption) {
     option.service = 'DP';
     option.className = 'InstancesBusiness';

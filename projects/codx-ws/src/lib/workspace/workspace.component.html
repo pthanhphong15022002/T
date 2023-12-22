@@ -33,6 +33,7 @@
                   <span
                     class="menu-icon"
                     *ngIf="f.functionType != 'G'"
+                    (click)="itemClick(f.functionID)"
                   >
                     <span
                       *ngIf="!f.smallIcon && f.largeIcon"

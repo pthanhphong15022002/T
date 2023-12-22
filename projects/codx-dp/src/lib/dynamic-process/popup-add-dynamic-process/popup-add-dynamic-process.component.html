@@ -467,11 +467,35 @@
               >
               </codx-label>
             </div>
-            <codx-input
+            <!-- <codx-input
               [formModel]="dialog?.formModel"
               field="businessLineID"
               [disabled]="action === 'edit' || systemProcess == '2'"
               [model]="{ ProcessID: process?.recID }"
+              [crrValue]="process?.businessLineID"
+              (valueChange)="valueChangebusinessLineID($event)"
+            >
+            </codx-input> -->
+            <codx-input
+              *ngIf="process.applyFor == '1'"
+              type="combobox"
+              refType="3"
+              refValue="DPBusinessLinesDeals"
+              field="businessLineID"
+              [disabled]="action === 'edit' || systemProcess == '2'"
+              [model]="{ ProcessID: process?.recID }"
+              [crrValue]="process?.businessLineID"
+              (valueChange)="valueChangebusinessLineID($event)"
+            >
+            </codx-input>
+            <codx-input
+              *ngIf="process.applyFor == '4'"
+              type="combobox"
+              refType="3"
+              refValue="DPBusinessLinesContracts"
+              field="businessLineID"
+              [disabled]="action === 'edit' || systemProcess == '2'"
+              [model]="{ ProcessContractID: process?.recID }"
               [crrValue]="process?.businessLineID"
               (valueChange)="valueChangebusinessLineID($event)"
             >
@@ -1378,7 +1402,9 @@
                     [label]="titleRadioYes"
                     [checked]="process?.allowEstimatedEnd ?? false"
                     [crrValue]="process?.allowEstimatedEnd"
-                    (valueChange)="valueRadioInfo($event, 'AllowEstimatedEndView')"
+                    (valueChange)="
+                      valueRadioInfo($event, 'AllowEstimatedEndView')
+                    "
                   >
                   </codx-input>
                 </div>
@@ -1391,7 +1417,9 @@
                     [label]="titleRadioNo"
                     [checked]="!process?.allowEstimatedEnd ?? false"
                     [crrValue]="process?.allowEstimatedEnd"
-                    (valueChange)="valueRadioInfo($event, 'AllowEstimatedEndView')"
+                    (valueChange)="
+                      valueRadioInfo($event, 'AllowEstimatedEndView')
+                    "
                     readonly
                   >
                   </codx-input>

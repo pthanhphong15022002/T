@@ -535,7 +535,7 @@ export class QuotationsComponent extends UIComponent implements OnInit {
         res.status = '0';
         res.approveStatus = '1';
         res.approvedDate = null;
-        res.refID = data.recID;
+        res.parentID = data.recID; //luc trước dùng refID  giờ đổi qua parent cho hợp lý
       }
 
       var obj = {

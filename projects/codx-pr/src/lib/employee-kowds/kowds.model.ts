@@ -4,12 +4,14 @@ export class Kowds{
     kowCode: string;
     dowCode: string;
     dayNum: number;
+    groupSal: number;
 
-    constructor(recID, employeeID, kowCode, dayNum, dowCode){
+    constructor(recID, employeeID, kowCode, dayNum, dowCode, groupSal){
         this.recID = recID;
         this.employeeID = employeeID;
         this.kowCode = kowCode;
         this.dayNum = dayNum;
-        this.dowCode = dowCode
+        this.dowCode = dowCode;
+        this.groupSal = groupSal;
     }
 }

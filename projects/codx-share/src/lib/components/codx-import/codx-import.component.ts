@@ -163,7 +163,7 @@ export class CodxImportComponent implements OnInit, OnChanges, AfterViewInit {
             }
             if (index == total) {
               this.notifySvr.notifyCode('SYS006');
-              this.realHub.stop();
+              //this.realHub.stop();
               (this.dialog as DialogRef).close();
             }
             if (index >= 0 && total > 0) {

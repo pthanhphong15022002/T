@@ -172,6 +172,9 @@ export class PopupAddCustomFieldComponent implements OnInit {
     this.processNo = dt?.data?.processNo; //de sinh vll
     this.fieldNameArr = dt?.data?.fieldNameArr ?? [];
     this.isDuplicateField = dt?.data?.isDuplicateField ?? false;
+    this.titleAction = dt?.data?.titleAction;
+    this.stepList = dt?.data?.stepList;
+    this.grvSetup = dt.data?.grvSetup;
 
     this.creatFieldCustom();
     this.widthDefault = this.dialog.dialog.width
@@ -198,10 +201,6 @@ export class PopupAddCustomFieldComponent implements OnInit {
     } else {
       this.fieldNameOld = this.field.fieldName;
     }
-
-    this.titleAction = dt?.data?.titleAction;
-    this.stepList = dt?.data?.stepList;
-    this.grvSetup = dt.data?.grvSetup;
   }
 
   ngOnInit(): void {
@@ -428,7 +427,10 @@ export class PopupAddCustomFieldComponent implements OnInit {
   }
 
   removeAccents(str) {
-    if (!str) return;
+    if (!str) {
+      this.field.fieldName = '';
+      return;
+    }
     var format = str
       .trim()
       .normalize('NFD')
@@ -447,9 +449,11 @@ export class PopupAddCustomFieldComponent implements OnInit {
     if (
       this.action == 'edit' &&
       this.isDuplicateField &&
-      this.field.fieldName == this.fieldNameOld
-    )
+      this.field.fieldName.toLowerCase() == this.fieldNameOld.toLowerCase()
+    ) {
+      this.field.fieldName = this.fieldNameOld;
       return;
+    }
     if (this.fieldNameArr?.length > 0) {
       let checkArrDup = this.fieldNameArr.filter(
         (x) =>
@@ -457,6 +461,14 @@ export class PopupAddCustomFieldComponent implements OnInit {
           x.stepID != this.field.stepID
       );
       if (checkArrDup?.length > 0) {
+        if (this.action == 'edit') {
+          this.notiService.notifyCode(
+            'DP026',
+            0,
+            '"' + this.grvSetup['FieldName']?.headerText + '"'
+          );
+          return;
+        }
         this.isDuplicateField = true;
         //thông báo test chưa có mes code
         let nameSteps = checkArrDup.map((x) => x.stepName);
@@ -466,10 +478,13 @@ export class PopupAddCustomFieldComponent implements OnInit {
         //   '{0}',
         //   '"' + nameSteps.join(';') + '"'
         // );
+        //this.notiService
+        // .alert(this.title, titleConfirmDup, config)
+        // .closed.subscribe((res) => {
         this.notiService
-          // .alert(this.title, titleConfirmDup, config)
-          // .closed.subscribe((res) => {
-          .alertCode('DP042', null, ['"' + nameSteps.join(';') + '"' || ''])
+          .alertCode('DP042', null, [
+            '<b class="text-danger">"' + nameSteps.join(';') + '"</b>' || '',
+          ])
           .subscribe((res) => {
             if (res?.event && res?.event?.status == 'Y') {
               let fieldDup = checkArrDup[0];
@@ -489,6 +504,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
                   this.field = crrF;
                   this.field.recID = recID;
                   this.field.stepID = stepID;
+
                   // this.field.title = crrF.title;
                   // this.field.fieldName = crrF.fieldName;
                   // this.field.dataFormat = crrF.dataFormat;
