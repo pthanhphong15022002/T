@@ -11,6 +11,7 @@ import { PopupAddCustomerGroupsComponent } from './customer-groups/popup-add-cus
 import { ApproversComponent } from 'projects/codx-ad/src/lib/approvers/approvers.component';
 import { StatusCodeComponent } from './status-code/status-code.component';
 import { PopupAddStatusCodeComponent } from './status-code/popup-add-status-code/popup-add-status-code.component';
+import { DocCategoryComponent } from 'projects/codx-es/src/lib/setting/category/category.component';
 
 const routes: Routes = [
   {
@@ -29,12 +30,22 @@ const routes: Routes = [
         path: 'statuscode/:funcID',
         component: StatusCodeComponent,
       },
+      {
+        path: 'categories/:funcID',
+        component: DocCategoryComponent,
+        data: { noReuse: true },
+      },
     ],
   },
 ];
 
 @NgModule({
-  declarations: [CustomerGroupsComponent, PopupAddCustomerGroupsComponent, StatusCodeComponent, PopupAddStatusCodeComponent],
+  declarations: [
+    CustomerGroupsComponent,
+    PopupAddCustomerGroupsComponent,
+    StatusCodeComponent,
+    PopupAddStatusCodeComponent,
+  ],
   imports: [
     RouterModule.forChild(routes),
     CommonModule,

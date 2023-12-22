@@ -1,7 +1,7 @@
 <codx-form [headerText]="titleDialog" [body]="body" [footer]="footer" [dialog]="dialog">
   <ng-template #body>
-    <div class="row">
-      <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 border-right role-left">
+    <div class="d-flex align-items-top position-relative h-100">
+      <div class="w-30 border-right role-left">
         <div class="user-mini-nav">
           <div *ngIf="fileEditing != null && fileEditing?.permissions != null">
             <ng-container *ngFor="let perm of fileEditing?.permissions; index as i;">
@@ -47,8 +47,8 @@
           </codx-input>
         </div>
       </div>
-      <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 ps-6">
-        <div class="role-right">
+      <div class="w-70 role-right">
+        <div class="role-right-main">
           <table class="table">
             <thead>
               <tr>
@@ -185,13 +185,13 @@
             </tbody>
           </table>
         </div>
-        <div class="row">
+        <div class="role-right-footer row m-0">
           <div class="col-xl-4 col-lg-6 col-md-6">
-            <div class="form-group row mb-0 pl-3">
-              <label class="col-12 pr-0 col-form-label pb-1">
+            <div class="form-group mb-0 pl-3">
+              <label class="col-form-label pb-1">
                 <codx-label [default]="titleFromDate" [fiedName]="'titleFromDate'" [formName]="'fmPermisstionDM'"></codx-label>
               </label>
-              <div class="col-12">
+              <div class="">
                 <ng-container *ngIf="startDate else datenull">
                   <codx-input class="form-control test-datetime" type="dateTime" style="width:100%" format="d"
                     [crrValue]="startDate" [disabled]="this.checkCurrentRightUpdate()"
@@ -203,10 +203,10 @@
           </div>
           <div class="col-xl-4 col-lg-6 col-md-6">
             <div class="form-group row mb-0">
-              <label class="col-12 pr-0 col-form-label pb-1">
+              <label class="col-form-label pb-1">
                 <codx-label [default]="titleToDate" [fiedName]="'titleToDate'" [formName]="'fmPermisstionDM'"></codx-label>
               </label>
-              <div class="col-12">
+              <div class="">
                 <ng-container *ngIf="endDate else datenull">
                   <codx-input class="form-control test-datetime" type="dateTime" style="width:100%" format="d"
                     [crrValue]="endDate" [disabled]="this.checkCurrentRightUpdate()"

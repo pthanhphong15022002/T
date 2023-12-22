@@ -45,8 +45,7 @@ import { variableAudio } from './extention';
 })
 export class ViewFileDialogComponent implements OnInit, OnChanges {
   @ViewChild('contentViewFileDialog') contentViewFileDialog;
-  @ViewChild('documenteditor_default')
-  public container: DocumentEditorContainerComponent;
+  @ViewChild('documenteditor_default') public container: DocumentEditorContainerComponent;
   // @ViewChild('pdfviewer') pdfviewer: PdfViewerComponent;
   @ViewChild('spreadsheet') public spreadsheetObj: SpreadsheetComponent;
   src: string = null;
@@ -87,10 +86,8 @@ export class ViewFileDialogComponent implements OnInit, OnChanges {
     public dmSV: CodxDMService,
     private fileService: FileService,
     private changeDetectorRef: ChangeDetectorRef,
-    private systemDialogService: SystemDialogService,
     private notificationsService: NotificationsService,
     private callfc: CallFuncService,
-    private elementRef: ElementRef,
     private sanitizer: DomSanitizer,
     private route: ActivatedRoute,
     private api: ApiHttpService,

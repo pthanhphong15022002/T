@@ -187,39 +187,21 @@
       </div>
       <div class="w-150px min-w-150px">
         <div class="d-flex align-items-center">
-          <!-- <div class="d-flex align-items-center me-3 {{data?.comments  ? 'text-success' : 'text-gray-600'}}">
-          <span class="text-hover-primary icon-chat_bubble_outline icon-16"></span>
-          <span class="ms-1"> {{data?.comments}}</span>
-        </div> -->
-          <span class="me-3">
+          <!-- <span class="me-3">
             <codx-comment-temp [objectID]="data.recID"></codx-comment-temp>
-          </span>
-          <!-- <div
-            class="d-flex align-items-center me-3 {{
-              data?.todo ? 'text-success' : 'text-gray-600'
-            }}"
-          >
-            <span class="text-hover-primary icon-check-correct icon-16"></span>
-            <span class="ms-1"> {{ data?.todo }}</span>
-          </div> -->
+          </span> -->
           <codx-task-goal-temp
             [taskID]="data.taskID"
             [countData]="data?.todo"
             [viewType]="2"
           ></codx-task-goal-temp>
-          <!-- <div class="d-flex align-items-center me-3 {{data?.attachments ? 'text-success' : 'text-gray-600'}}">
-          <span class="text-hover-primary icon-attach_file icon-16"></span>
-          <span>
-            {{data?.attachments}}
-          </span>
-        </div> -->
-          <span class="me-3">
+          <!-- <span class="me-3">
             <codx-attachment-temp
               [objectID]="data.recID"
               [formModel]="formModel"
               referType="source"
             ></codx-attachment-temp>
-          </span>
+          </span> -->
         </div>
       </div>
       <div class="w-50px min-w-50px">

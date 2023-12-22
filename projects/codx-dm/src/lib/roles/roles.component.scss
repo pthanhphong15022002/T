@@ -1,8 +1,4 @@
-.add-user {
-    position: absolute;
-    right: 635px;
-    bottom: 0;
-}
+
 
 .user-nav-item {
     border-left: 3px solid transparent;
@@ -12,15 +8,38 @@
     background-color: #f4f7ff;
     border-left-color: #3699ff;
 }
-
+.role-left{
+    position: relative;
+    .add-user {
+        position: absolute;
+        right: 10px;
+        bottom: 4px;
+    }
+}
 .role-left .user-mini-nav{
     height: calc(100% - 30px) !important;
     overflow: auto;
     padding-left: 0!important;
 }
 .role-right {
-    height: calc(100% - 62px) !important;
-    overflow: auto;
+    position: absolute;
+    top: 0;
+    left: 30%;
+    right: 0;
+    bottom: 0px;
+    padding-left: 15px;
+    overflow: hidden;
+    .role-right-main{
+        height: calc(100% - 70px)!important;
+        overflow: auto;
+    }
+    .role-right-footer{
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 70px;
+    }
 }
 .table {
     width: 100%;
