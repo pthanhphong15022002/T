@@ -340,12 +340,32 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         this.carFM?.gridViewName
       );
     });
+    setTimeout(() => {
+      let elements = document.getElementsByClassName('step-task-right');
+      const listTask = Array.from(elements);
+      if (listTask?.length > 0 ) {
+        let maxWidth = 0;
+        for (const element of listTask) {
+          const computedWidth = window.getComputedStyle(element).width;
+          const width = parseFloat(computedWidth);
+  
+          if (width > maxWidth) {
+            maxWidth = width;
+          }
+        }
+        this.widthTask = maxWidth.toString() + 'px';
+        console.log(this.widthTask);
+        this.isFirstTime = false;
+      }
+    }, 3000);
   }
 
   ngAfterViewChecked() {
+  }
+  setWidth(){
     let elements = document.getElementsByClassName('step-task-right');
     const listTask = Array.from(elements);
-    if (listTask?.length > 0 && this.isFirstTime) {
+    if (listTask?.length > 0) {
       let maxWidth = 0;
       for (const element of listTask) {
         const computedWidth = window.getComputedStyle(element).width;
@@ -2968,6 +2988,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     if (res?.msgCodeError) this.notiService.notify(res?.msgCodeError);
     else {
       this.taskApproval.approveStatus = res?.returnStatus || '3';
+      this.setWidth();
       this.moreDefaut = JSON.parse(JSON.stringify(this.moreDefaut));
       this.changeDetectorRef.markForCheck();
     }
