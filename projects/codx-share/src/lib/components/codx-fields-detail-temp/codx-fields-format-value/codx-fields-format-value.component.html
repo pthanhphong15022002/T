@@ -1,4 +1,4 @@
-<ng-container *ngIf="!data.dataValue">
+<ng-container *ngIf="data.dataValue == null || data.dataValue == undefined">
   <!-- margin-l -->
   <span class="place-holder" *ngIf="data.dataType != 'R'">
     {{ data.title }}
@@ -21,7 +21,7 @@
   </ng-container>
 </ng-container>
 <!-- margin-l -->
-<ng-container *ngIf="data.dataValue">
+<ng-container *ngIf="data.dataValue != null && data.dataValue != undefined">
   <span class="text-dark" *ngIf="data.dataType == 'T'">
     {{ data.dataValue }}
   </span>
