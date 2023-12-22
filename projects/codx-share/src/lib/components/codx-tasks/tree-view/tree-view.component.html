@@ -103,55 +103,21 @@
           ></span>
         </div>
         <div class="w-125px min-w-125px d-flex align-items-center">
-          <!-- <div
-            [class]="
-              'd-flex align-items-center me-3' +
-              ' ' +
-              (item?.comments ? 'text-success' : 'text-gray-600')
-            "
-          >
-            <span
-              class="text-hover-primary icon-chat_bubble_outline icon-16"
-            ></span>
-            <span class="ms-1"> {{ item?.comments }}</span>
-          </div>
-          <div
-            [class]="
-              'd-flex align-items-center me-3' +
-              ' ' +
-              (item?.todo ? 'text-success' : 'text-gray-600')
-            "
-          >
-            <span class="text-hover-primary icon-check-correct icon-16"></span>
-            <span class="ms-1"> {{ item?.todo }}</span>
-          </div>
-          <div
-            [class]="
-              'd-flex align-items-center' +
-              ' ' +
-              (item?.attachments ? 'text-success' : 'text-gray-600')
-            "
-          >
-            <span class="text-hover-primary icon-attach_file icon-16"></span>
-            <span>
-              {{ item?.attachments }}
-            </span>
-          </div> -->
-          <span class="me-3">
+          <!-- <span class="me-3">
             <codx-comment-temp [objectID]="item.recID"></codx-comment-temp>
-          </span>
+          </span> -->
           <codx-task-goal-temp
             [taskID]="item.taskID"
             [countData]="item?.todo"
             [viewType]="2"
           ></codx-task-goal-temp>
-          <span class="me-3">
+          <!-- <span class="me-3">
             <codx-attachment-temp
               [objectID]="item.recID"
               [formModel]="formModel"
               referType="source"
             ></codx-attachment-temp>
-          </span>
+          </span> -->
         </div>
         <div class="w-50px min-w-50px pe-6">
           <div class="d-flex flex-column justify-content-start">

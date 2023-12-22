@@ -33,7 +33,6 @@
                   <span
                     class="menu-icon"
                     *ngIf="f.functionType != 'G'"
-                    (click)="itemClick(f.functionID)"
                   >
                     <span
                       *ngIf="!f.smallIcon && f.largeIcon"
@@ -49,6 +48,7 @@
                   </span>
                   <span
                     [ngClass]="(f.functionType == 'G') ? 'fw-bold text-uppercase' :'menu-title'"
+                    (click)="itemClick(f.functionID)"
                     >{{ f.customName }}</span
                   >
                 </ng-container>
@@ -68,6 +68,7 @@
                       ? 'here show'
                       : ''
                   "
+                   (click)="itemClick(f.functionID)"
                 >
                   <span class="menu-link" 
                     *ngIf="c?.customName"
@@ -175,7 +176,7 @@
     </div>
     </div>
   </div>
-  <div class="w-100 h-100">
+  <div class="h-100" style="width:calc( 100% - 350px)">
     <router-outlet></router-outlet>
     <!-- Speed dial -->
     <div class="speedial">
