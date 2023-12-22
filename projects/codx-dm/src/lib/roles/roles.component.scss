@@ -19,8 +19,14 @@
     padding-left: 0!important;
 }
 .role-right {
-    height: calc(100% - 62px) !important;
-    overflow: auto;
+    max-height: 80% !important;
+    //overflow: hidden;
+   // border: 1px rgb(209, 255, 135) solid;
+    .role-right-main{
+        height: calc(100% - 80px) !important;
+        overflow: auto;
+        //border: 1px rgb(234, 0, 255) solid;
+    }
 }
 .table {
     width: 100%;
