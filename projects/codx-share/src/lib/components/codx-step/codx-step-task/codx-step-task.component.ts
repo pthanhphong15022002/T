@@ -357,12 +357,13 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         console.log(this.widthTask);
         this.isFirstTime = false;
       }
-    }, 3000);
+    }, 1000);
   }
 
   ngAfterViewChecked() {
   }
   setWidth(){
+    this.widthTask = "auto";
     let elements = document.getElementsByClassName('step-task-right');
     const listTask = Array.from(elements);
     if (listTask?.length > 0) {
