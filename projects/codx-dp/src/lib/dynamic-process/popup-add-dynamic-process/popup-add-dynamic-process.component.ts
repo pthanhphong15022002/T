@@ -2677,9 +2677,8 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
       this.fieldCrr?.recID,
       this.fieldCrr?.stepID
     );
-    //Trường tùy chỉnh đã liên kết với công việc {0} , thao tác xóa sẽ hủy đi các liên kết trong công việc trước đó. Bạn có muốn tiếp tục !
     let mes = task ? 'DP045' : 'SYS030';
-    this.notiService.alertCode(mes, null, ['']).subscribe((x) => {
+    this.notiService.alertCode(mes).subscribe((x) => {
       if (x.event && x.event.status == 'Y') {
         if (task) {
           let fieldId = this.convertString(task?.fieldID, this.fieldCrr?.recID);

@@ -151,6 +151,10 @@ export class PopupAddCustomFieldComponent implements OnInit {
   isDuplicateField = false;
   isEditFieldDuplicate = false;
   fieldNameOld = '';
+  //create autoNumber
+  vllDateFormat: any;
+  fieldNoAutoEx: string = '';
+  adAutoNumber: any;
 
   constructor(
     private cache: CacheService,
@@ -974,6 +978,166 @@ export class PopupAddCustomFieldComponent implements OnInit {
       if (this.fieldCus) {
         this.fieldCus.defaultValue = this.fieldCus.dataValue = result;
       }
+    }
+  }
+  //end
+  //đánh số tự động
+  //Popup setiing autoNumber - Thao- Please
+  async openAutoNumPopup() {
+    // if (!this.instanceNoSetting || this.instanceNoSetting.trim() == '') {
+    //   if (this.autoNumberSetting.nativeElement) {
+    //     let ele = this.autoNumberSetting.nativeElement.querySelectorAll(
+    //       'codx-input[type="text"]'
+    //     );
+    //     if (ele) {
+    //       let htmlE = ele[0] as HTMLElement;
+    //       let input = htmlE.querySelector('input.codx-text') as HTMLElement;
+    //       if (input) input.focus();
+    //     }
+    //   }
+    //   return;
+    // }
+    //view new
+    // if (!this.process?.processNo) {
+    //   this.process.processNo = await firstValueFrom(
+    //     this.dpService
+    //       .genAutoNumber(this.funcID, this.entityName, 'ProcessNo')
+    //       .pipe(takeUntil(this.destroyFrom$))
+    //   );
+    // }
+    // this.instanceNoSetting = this.process.processNo;
+    // let obj = {};
+    // if (!this.process?.instanceNoSetting) {
+    //   //save new autoNumber
+    //   obj = {
+    //     autoNoCode: this.instanceNoSetting,
+    //     description: 'DP_Instances',
+    //     newAutoNoCode: this.instanceNoSetting,
+    //     isSaveNew: '1',
+    //   };
+    // } else {
+    //   //cap nhật
+    //   obj = {
+    //     autoNoCode: this.instanceNoSetting,
+    //     description: 'DP_Instances',
+    //   };
+    // }
+    // let op = new DialogModel();
+    // op.IsFull = true;
+    // let popupAutoNum = this.callfc.openForm(
+    //   PopupAddAutoNumberComponent,
+    //   '',
+    //   0,
+    //   0,
+    //   '',
+    //   obj,
+    //   '',
+    //   op
+    // );
+    // popupAutoNum.closed.subscribe((res) => {
+    //   if (res?.event) {
+    //     if (
+    //       this.process.instanceNoSetting != res?.event?.autoNoCode &&
+    //       !this.isChange
+    //     )
+    //       this.isChange = true;
+    //     this.process.instanceNoSetting = res?.event?.autoNoCode;
+    //     this.setViewAutoNumber(res?.event);
+    //     //bo canh bao
+    //     // let input: any;
+    //     // if (this.autoNumberSetting.nativeElement) {
+    //     //   let ele = this.autoNumberSetting.nativeElement.querySelectorAll(
+    //     //     'codx-input[type="text"]'
+    //     //   );
+    //     //   if (ele) {
+    //     //     let htmlE = ele[0] as HTMLElement;
+    //     //     input = htmlE.querySelector('input.codx-text') as HTMLElement;
+    //     //   }
+    //     //   if (input) {
+    //     //     input.style.removeProperty('border-color', 'red', 'important');
+    //     //   }
+    //     // }
+    //   }
+    // });
+  }
+
+  setViewAutoNumber(data) {
+    if (this.vllDateFormat?.datas.length > 0) {
+      let dateFormat = '';
+      if (data?.dateFormat != '0') {
+        dateFormat =
+          this.vllDateFormat.datas.filter((p) => p.value == data?.dateFormat)[0]
+            ?.text ?? '';
+      }
+
+      let lengthNumber;
+      let strNumber = '';
+      this.fieldNoAutoEx = data?.fixedString + data?.separator + dateFormat;
+      lengthNumber = data?.maxLength - this.fieldNoAutoEx.length;
+      strNumber = '#'.repeat(lengthNumber);
+      switch (data?.stringFormat) {
+        // {value: '0', text: 'Chuỗi & Ngày - Số', default: 'Chuỗi & Ngày - Số', color: null, textColor: null, …}
+        case '0': {
+          this.fieldNoAutoEx =
+            data?.fixedString + dateFormat + data?.separator + strNumber;
+          break;
+        }
+        // {value: '1', text: 'Chuỗi & Số - Ngày', default: 'Chuỗi & Số - Ngày', color: null, textColor: null, …}
+        case '1': {
+          this.fieldNoAutoEx =
+            data?.fixedString + strNumber + data?.separator + dateFormat;
+          break;
+        }
+        // {value: '2', text: 'Số - Chuỗi & Ngày', default: 'Số - Chuỗi & Ngày', color: null, textColor: null, …}
+        case '2':
+          this.fieldNoAutoEx =
+            strNumber + data?.separator + data?.fixedString + dateFormat;
+          break;
+        // {value: '3', text: 'Số - Ngày & Chuỗi', default: 'Số - Ngày & Chuỗi', color: null, textColor: null, …}
+        case '3':
+          this.fieldNoAutoEx =
+            strNumber + data?.separator + dateFormat + data?.fixedString;
+          break;
+
+        // {value: '4', text: 'Ngày - Số & Chuỗi', default: 'Ngày - Số & Chuỗi', color: null, textColor: null, …}
+        case '4': {
+          this.fieldNoAutoEx =
+            dateFormat + data?.separator + strNumber + data?.fixedString;
+          break;
+        }
+        // {value: '5', text: 'Ngày & Chuỗi & Số', default: 'Ngày & Chuỗi & Số', color: null, textColor: null, …}
+        case '5': {
+          this.fieldNoAutoEx = data?.fixedString + dateFormat;
+          lengthNumber = data?.maxLength - this.fieldNoAutoEx.length;
+          strNumber = '#'.repeat(lengthNumber);
+          this.fieldNoAutoEx = dateFormat + data?.fixedString + strNumber;
+          break;
+        }
+        // {value: '6', text: 'Chuỗi - Ngày', default: 'Chuỗi - Ngày', color: null, textColor: null, …}
+        case '6': {
+          this.fieldNoAutoEx = data?.fixedString + data?.separator + dateFormat;
+          break;
+        }
+        // {value: '7', text: 'Ngày - Chuỗi', default: 'Ngày - Chuỗi', color: null, textColor: null, …}
+        case '7': {
+          this.fieldNoAutoEx = dateFormat + data?.separator + data?.fixedString;
+          break;
+        }
+      }
+
+      this.fieldNoAutoEx = this.fieldNoAutoEx.substring(0, data?.maxLength);
+      // this.changeDetectorRef.detectChanges();
+      this.changeRef.markForCheck();
+    }
+  }
+
+  async getVllFormat() {
+    this.vllDateFormat = await firstValueFrom(this.cache.valueList('L0088'));
+    if (!this.adAutoNumber && this.action != 'add') {
+      this.adAutoNumber = await firstValueFrom(
+        this.dpService.getADAutoNumberByAutoNoCode(this.field.recID)
+      );
+      if (this.adAutoNumber) this.setViewAutoNumber(this.adAutoNumber);
     }
   }
   //end

@@ -82,7 +82,6 @@ export class HolidayComponent extends UIComponent {
     // LS_SysHolidayConfig & LS_SysHoliday ko có functionID -> ko có functionName
     this.speedDialItems.push({id:"LS_SysHoliday",text:"Ngày cụ thể theo năm"});
     this.speedDialItems.push({id:"LS_SysHolidayConfig",text:"Ngày lễ quy định hàng năm"});
-    // this.testGenTable();
   }
 
   ngAfterViewInit(): void {
@@ -407,13 +406,4 @@ export class HolidayComponent extends UIComponent {
   }
 
 
-  // test gen tabl db cho SP tính phép
-  testGenTable(){
-    // this.api.execSv("HR","LS","SysHolidayBusiness","TestGenTable")
-    // .subscribe();
-    // this.api.execSv("HR","ERM.Business.TS","ScanCodeBusiness","TestGenTable")
-    // .subscribe();
-    // this.api.execSv("HR","HR","HRBusiness","TestGenTable")
-    // .subscribe();
-  }
 }
