@@ -31,7 +31,14 @@ import {
   DP_Steps_Fields,
   tempVllDP,
 } from '../../../models/models';
-import { Observable, finalize, firstValueFrom, map } from 'rxjs';
+import {
+  Observable,
+  Subject,
+  finalize,
+  firstValueFrom,
+  map,
+  takeUntil,
+} from 'rxjs';
 import { X } from '@angular/cdk/keycodes';
 import test from 'node:test';
 import { ComboBoxComponent } from '@syncfusion/ej2-angular-dropdowns';
@@ -41,6 +48,7 @@ import { PopupSettingTableComponent } from './popup-setting-table/popup-setting-
 import { PopupSettingReferenceComponent } from './popup-setting-reference/popup-setting-reference.component';
 import { CodxInputCustomFieldComponent } from 'projects/codx-share/src/lib/components/codx-input-custom-field/codx-input-custom-field.component';
 import { CodxFieldsFormatValueComponent } from 'projects/codx-share/src/lib/components/codx-fields-detail-temp/codx-fields-format-value/codx-fields-format-value.component';
+import { PopupAddAutoNumberComponent } from 'projects/codx-es/src/lib/setting/category/popup-add-auto-number/popup-add-auto-number.component';
 
 @Component({
   selector: 'lib-popup-add-custom-field',
@@ -137,6 +145,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
   listColumns = [];
   settingWidth = false;
   settingCount = false;
+  totalColumns = false;
   isShowMore = false;
   widthDefault = '550';
 
@@ -155,6 +164,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
   vllDateFormat: any;
   fieldNoAutoEx: string = '';
   adAutoNumber: any;
+  private destroyFrom$: Subject<void> = new Subject<void>();
 
   constructor(
     private cache: CacheService,
@@ -864,6 +874,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
               this.listColumns = res.event[0];
               this.settingWidth = this.listColumns[0]?.settingWidth ?? false;
               this.settingCount = this.listColumns[0]?.settingCount ?? false;
+              this.totalColumns = this.listColumns[0]?.totalColumns ?? false;
 
               this.field.dataFormat = JSON.stringify(this.listColumns);
             }
@@ -886,6 +897,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
       this.listColumns = arr;
       this.settingWidth = this.listColumns[0]?.settingWidth ?? false;
       this.settingCount = this.listColumns[0]?.settingCount ?? false;
+      this.totalColumns = this.listColumns[0]?.totalColumns ?? false;
     } else this.listColumns = [];
     this.changeRef.detectChanges();
   }
@@ -982,83 +994,48 @@ export class PopupAddCustomFieldComponent implements OnInit {
   }
   //end
   //đánh số tự động
-  //Popup setiing autoNumber - Thao- Please
+  //Popup setiing autoNumber
   async openAutoNumPopup() {
-    // if (!this.instanceNoSetting || this.instanceNoSetting.trim() == '') {
-    //   if (this.autoNumberSetting.nativeElement) {
-    //     let ele = this.autoNumberSetting.nativeElement.querySelectorAll(
-    //       'codx-input[type="text"]'
-    //     );
-    //     if (ele) {
-    //       let htmlE = ele[0] as HTMLElement;
-    //       let input = htmlE.querySelector('input.codx-text') as HTMLElement;
-    //       if (input) input.focus();
-    //     }
-    //   }
-    //   return;
-    // }
     //view new
-    // if (!this.process?.processNo) {
-    //   this.process.processNo = await firstValueFrom(
-    //     this.dpService
-    //       .genAutoNumber(this.funcID, this.entityName, 'ProcessNo')
-    //       .pipe(takeUntil(this.destroyFrom$))
-    //   );
-    // }
-    // this.instanceNoSetting = this.process.processNo;
-    // let obj = {};
-    // if (!this.process?.instanceNoSetting) {
-    //   //save new autoNumber
-    //   obj = {
-    //     autoNoCode: this.instanceNoSetting,
-    //     description: 'DP_Instances',
-    //     newAutoNoCode: this.instanceNoSetting,
-    //     isSaveNew: '1',
-    //   };
-    // } else {
-    //   //cap nhật
-    //   obj = {
-    //     autoNoCode: this.instanceNoSetting,
-    //     description: 'DP_Instances',
-    //   };
-    // }
-    // let op = new DialogModel();
-    // op.IsFull = true;
-    // let popupAutoNum = this.callfc.openForm(
-    //   PopupAddAutoNumberComponent,
-    //   '',
-    //   0,
-    //   0,
-    //   '',
-    //   obj,
-    //   '',
-    //   op
-    // );
-    // popupAutoNum.closed.subscribe((res) => {
-    //   if (res?.event) {
-    //     if (
-    //       this.process.instanceNoSetting != res?.event?.autoNoCode &&
-    //       !this.isChange
-    //     )
-    //       this.isChange = true;
-    //     this.process.instanceNoSetting = res?.event?.autoNoCode;
-    //     this.setViewAutoNumber(res?.event);
-    //     //bo canh bao
-    //     // let input: any;
-    //     // if (this.autoNumberSetting.nativeElement) {
-    //     //   let ele = this.autoNumberSetting.nativeElement.querySelectorAll(
-    //     //     'codx-input[type="text"]'
-    //     //   );
-    //     //   if (ele) {
-    //     //     let htmlE = ele[0] as HTMLElement;
-    //     //     input = htmlE.querySelector('input.codx-text') as HTMLElement;
-    //     //   }
-    //     //   if (input) {
-    //     //     input.style.removeProperty('border-color', 'red', 'important');
-    //     //   }
-    //     // }
-    //   }
-    // });
+
+    let noAuto = await firstValueFrom(
+      this.dpService
+        .getADAutoNumberByAutoNoCode(this.field.recID)
+        .pipe(takeUntil(this.destroyFrom$))
+    );
+    let obj = {};
+    if (!noAuto) {
+      //save new autoNumber
+      obj = {
+        autoNoCode: this.field.recID,
+        description: 'DP_Instances',
+        newAutoNoCode: this.field.recID,
+        isSaveNew: '1',
+      };
+    } else {
+      //cap nhật
+      obj = {
+        autoNoCode: this.fieldNoAutoEx,
+        description: 'DP_Instances',
+      };
+    }
+    let op = new DialogModel();
+    op.IsFull = true;
+    let popupAutoNum = this.callfc.openForm(
+      PopupAddAutoNumberComponent,
+      '',
+      0,
+      0,
+      '',
+      obj,
+      '',
+      op
+    );
+    popupAutoNum.closed.subscribe((res) => {
+      if (res?.event) {
+        this.setViewAutoNumber(res?.event);
+      }
+    });
   }
 
   setViewAutoNumber(data) {
@@ -1140,5 +1117,9 @@ export class PopupAddCustomFieldComponent implements OnInit {
       if (this.adAutoNumber) this.setViewAutoNumber(this.adAutoNumber);
     }
   }
+  //end
+
+  //Trường tính toán
+
   //end
 }
