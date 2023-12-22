@@ -198,7 +198,8 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   approverDialog;
   titleLanguageAdd = '';
   titleLanguageEdit = '';
-
+  widthTask = 'auto';
+  isFirstTime = true;
   //#endregion
   constructor(
     private cache: CacheService,
@@ -237,13 +238,15 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     if (DP032.datas) {
       this.vllDataStep = DP032?.datas;
     }
-    this.cache.moreFunction('DPInstancesStepsTasks','grvDPInstancesStepsTasks').subscribe((res) =>{
-      console.log("--------------", res);
-      // const objectMoi = {};
-      // for (const obj of res) {
-      //   objectMoi[obj.id] = obj;
-      // }
-    })
+    this.cache
+      .moreFunction('DPInstancesStepsTasks', 'grvDPInstancesStepsTasks')
+      .subscribe((res) => {
+        // console.log("--------------", res);
+        // const objectMoi = {};
+        // for (const obj of res) {
+        //   objectMoi[obj.id] = obj;
+        // }
+      });
     this.getDefaultCM();
     this.frmModelInstancesGroup = {
       formName: 'DPInstancesStepsTaskGroups',
@@ -339,6 +342,24 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     });
   }
 
+  ngAfterViewChecked() {
+    let elements = document.getElementsByClassName('step-task-right');
+    const listTask = Array.from(elements);
+    if (listTask?.length > 0 && this.isFirstTime) {
+      let maxWidth = 0;
+      for (const element of listTask) {
+        const computedWidth = window.getComputedStyle(element).width;
+        const width = parseFloat(computedWidth);
+
+        if (width > maxWidth) {
+          maxWidth = width;
+        }
+      }
+      this.widthTask = maxWidth.toString() + 'px';
+      console.log(this.widthTask);
+      this.isFirstTime = false;
+    }
+  }
   async drop(event: CdkDragDrop<string[]>, data = null, isParent = false) {}
 
   //#region get Data
