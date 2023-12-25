@@ -93,8 +93,6 @@ export class LoginDefaultComponent extends UIComponent {
     spcialChar: true,
   };
 
-  urlAppleStore: string='https://apps.apple.com/us/app/codx/id6459408551';
-  urlPlayStore: string='https://play.google.com/store/apps/details?id=com.lacviet.codxaws';
   public qrDisplayText?: DisplayTextModel;
 
   constructor(

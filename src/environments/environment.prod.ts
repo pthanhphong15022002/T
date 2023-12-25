@@ -14,16 +14,18 @@ export const environment = {
   appName: 'hps-file-test', // Tam thoi de hard
   saas: 0,
   tenantFirst: true,
-  layoutCZ: 'lacviet',
   themeMode: 'body', //layout
   hideFavCount: false,
   singleExec: false,
   asideMinimize: 'icon-title',
   loginHCS: '',
   layout: {
+    id: 'lacviet',
     title: '',
     icon: '',
     logo: '',
+    appleStore: '',
+    playStore: ''
   },
   asideMode: '1',
   externalLogin: {

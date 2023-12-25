@@ -323,13 +323,13 @@
                 </div>
               </div>
               <div class="d-flex align-items-center">
-                <div class="d-flex flex-column align-items-center">
-                  <ejs-qrcodegenerator width="120px" height="120px" mode="SVG" [displayText] = 'qrDisplayText' value="{{urlAppleStore}}"></ejs-qrcodegenerator>
-                  <a href="{{urlAppleStore}}" style="position:relative;bottom:25px;"><img class="mx-3 h-60px cursor-pointer" src="./assets/themes/sys/default/img/appstore.png" /></a>
+                <div class="d-flex flex-column align-items-center" *ngIf="environment.layout.appleStore">
+                  <ejs-qrcodegenerator width="120px" height="120px" mode="SVG" [displayText] = 'qrDisplayText' value="{{environment.layout.appleStore}}"></ejs-qrcodegenerator>
+                  <a href="{{environment.layout.appleStore}}" style="position:relative;bottom:25px;"><img class="mx-3 h-60px cursor-pointer" src="./assets/themes/sys/default/img/appstore.png" /></a>
                 </div>
-                <div class="d-flex flex-column align-items-center">
-                  <ejs-qrcodegenerator width="120px" height="120px" mode="SVG" [displayText] = 'qrDisplayText' value="{{urlPlayStore}}"></ejs-qrcodegenerator>
-                  <a href="{{urlPlayStore}}" style="position:relative;bottom:25px;"><img class="h-55px cursor-pointer" src="./assets/themes/sys/default/img/chplay.png"/></a>
+                <div class="d-flex flex-column align-items-center" *ngIf="environment.layout.playStore">
+                  <ejs-qrcodegenerator width="120px" height="120px" mode="SVG" [displayText] = 'qrDisplayText' value="{{environment.layout.playStore}}"></ejs-qrcodegenerator>
+                  <a href="{{environment.layout.playStore}}" style="position:relative;bottom:25px;"><img class="h-55px cursor-pointer" src="./assets/themes/sys/default/img/chplay.png"/></a>
                 </div>
               </div>
               <!--end::Content body-->
