@@ -263,11 +263,13 @@
                     <div class="form-group">
                       <codx-label fiedName="CategoryID" [formModel]="formModelCustom">
                       </codx-label>
-                      <codx-input field="categoryID"  [crrValue]="data?.categoryID"
+                      <codx-input *ngIf="!showCateNameOnly" field="categoryID"  [crrValue]="data?.categoryID"
                         [placeholder]="gvSetup?.CategoryID?.description" [refValue]="
                         this.cbxCategory ??
                         gvSetup?.CategoryID?.referedValue
                       " type="combobox" (valueChange)="valueChange($event)" [disabled]="disableCateID">
+                      </codx-input>
+                      <codx-input *ngIf="showCateNameOnly" field="categoryID" [crrValue]="cateName" type="text" (valueChange)="valueChange($event)" [disabled]="disableCateID">
                       </codx-input>
                     </div>
                   </div>
@@ -333,9 +335,9 @@
                 data?.approveControl == '1' ? data.recID : data.processID" [approveControl]="data?.approveControl"
                 [dynamicApprovers]="dynamicApprovers" [isTemplate]="data?.isTemplate" [recID]="data.recID" [type]="'1'"
                 [eSign]="eSign" [signatureType]="signatureType"
-                [refType]="data?.refType !=null ? data?.refType :refType"
+                [refType]="data?.refType !=null ? data?.refType : refType"
                 [isSettingMode]="data?.isTemplate ? true :false" [mssgDelete]="mssgDelete"
-                (addEditItem)="dataStepChange($event)">
+                (addEditItem)="dataStepChange($event)" (checkPopupApproverInfo)="checkPopupApproverInfo($event)">
               </codx-approval-steps>
             </div>
             <div class="tab-pane fade" id="pane_3" [ngClass]="currentTab == 2 ? 'active show' : ''"></div>

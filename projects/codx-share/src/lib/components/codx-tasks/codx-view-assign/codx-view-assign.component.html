@@ -115,12 +115,14 @@
             >
               <span class="me-4">
                 <codx-assign-temp
+                  [assignTo]="data?.assignTo"
+                  [isUsedAssignTo]="true"
                   [objectID]="data.taskID"
                   [formModel]="formModel"
                 ></codx-assign-temp>
               </span>
-              <span class="me-4">
-                <codx-comment-temp [objectID]="data.recID"></codx-comment-temp>
+              <!-- <span class="me-4">
+               <codx-comment-temp [objectID]="data.recID"></codx-comment-temp> 
               </span>
               <span class="me-4">
                 <codx-attachment-temp
@@ -128,8 +130,8 @@
                   [formModel]="formModel"
                   [referType]="referType"
                 ></codx-attachment-temp>
-              </span>
-              <!-- [viewType]="'4'" -->
+              </span> -->
+
               <div class="w-125px d-flex justify-content-end">
                 <codx-vll
                   [name]="data?.category == '3' ? vllStatusAssign : vllStatus"

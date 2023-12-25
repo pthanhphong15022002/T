@@ -530,27 +530,28 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
           case ShareType.Personal: //	Đối tác
           this.newAppr.write = true;
           this.newAppr.roleType = element.objectType;
-            let popupApproverPE = this.callfc.openForm(              
-              PopupAddPersonSignerComponent,
-              '',
-              550,
-              screen.height,
-              '',
-              {
-                approverData: this.newAppr,
-                lstApprover: this.lstApprover,
-                isAddNew: true,
-              }
-            );
-            popupApproverPE.closed.subscribe((res) => {
-              if (res.event) {
-                this.newAppr = res?.event;
-                //this.lstApprover.push(res.event);
-              }
-              else{
-                this.newAppr.roleType=null;
-              }
-            });
+          this.newAppr.position = element.objectName;
+            // let popupApproverPE = this.callfc.openForm(              
+            //   PopupAddPersonSignerComponent,
+            //   '',
+            //   550,
+            //   screen.height,
+            //   '',
+            //   {
+            //     approverData: this.newAppr,
+            //     lstApprover: this.lstApprover,
+            //     isAddNew: true,
+            //   }
+            // );
+            // popupApproverPE.closed.subscribe((res) => {
+            //   if (res.event) {
+            //     this.newAppr = res?.event;
+            //     //this.lstApprover.push(res.event);
+            //   }
+            //   else{
+            //     this.newAppr.roleType=null;
+            //   }
+            // });
             break;
 
           //----------------------------------------------------------------------------------//

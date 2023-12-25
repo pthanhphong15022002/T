@@ -16,6 +16,7 @@ import {
   CM_Quotations,
   CM_QuotationsLines,
   CM_ContractsPayments,
+  CM_Deals,
 } from '../../models/cm_model';
 import { firstValueFrom } from 'rxjs';
 import { CodxCmService } from '../../codx-cm.service';
@@ -31,6 +32,7 @@ export class ContractsViewDetailComponent
   implements OnChanges
 {
   @ViewChild('quotationsTab') quotationsTab: TemplateRef<any>;
+  @ViewChild('contractLinkTem') contractLinkTem: TemplateRef<any>;
   @Input() taskAdd;
   @Input() formModel: FormModel;
   @Input() listInsStepStart = [];
@@ -59,6 +61,9 @@ export class ContractsViewDetailComponent
   listTypeContract = [];
   oCountFooter: any = {};
   isLoading: boolean = true;
+  contractLink:CM_Contracts;
+  deal: CM_Deals;
+  quotation: CM_Quotations;
 
   tabControl = [
     { name: 'History', textDefault: 'Lịch sử', isActive: true, template: null },
@@ -135,6 +140,7 @@ export class ContractsViewDetailComponent
             this.contactPerson = res;
           }
         });
+      this.getContractLink();
     }
     if (changes?.listInsStepStart && changes?.listInsStepStart?.currentValue) {
       this.listInsStep = this.listInsStepStart;
@@ -155,6 +161,16 @@ export class ContractsViewDetailComponent
     this.vllStatus = this.grvSetup['Status'].referedValue;
     this.getAccount();
     this.loadTabs();
+  }
+  ngAfterViewInit(): void {
+    let  contractLink = {
+      name: 'contractLink',
+      textDefault: 'Liên kết',
+      isActive: false,
+      template: this.contractLinkTem,
+      icon: 'icon-i-link',
+    };
+    this.tabControl.push(contractLink);
   }
 
   setDataInput() {
@@ -188,6 +204,34 @@ export class ContractsViewDetailComponent
 
   clickMF(event, data) {
     this.clickMoreFunc.emit({ e: event, data: data });
+  }
+
+  getContractLink(){
+    if(this.contract?.parentID){
+      this.contractService.getContractByRecID(this.contract?.parentID).subscribe((res) => {
+        this.contractLink = res;
+      })
+    }else{
+      this.contractLink = null;
+    }
+  }
+  getDeal(){
+    if(this.contract?.dealID){
+      this.contractService.getContractByRecID(this.contract?.parentID).subscribe((res) => {
+        this.contractLink = res;
+      })
+    }else{
+      this.contractLink = null;
+    }
+  }
+  getQuotation(){
+    if(this.contract?.quotationID){
+      this.contractService.getContractByRecID(this.contract?.parentID).subscribe((res) => {
+        this.contractLink = res;
+      })
+    }else{
+      this.contractLink = null;
+    }
   }
 
   getPayMentByContractID(contractID) {

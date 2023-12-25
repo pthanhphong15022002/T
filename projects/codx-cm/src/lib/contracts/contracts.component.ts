@@ -47,6 +47,7 @@ import { ContractsDetailComponent } from './contracts-detail/contracts-detail.co
 import { CodxCommonService } from 'projects/codx-common/src/lib/codx-common.service';
 import { DP_Instances_Steps_Tasks, DP_Instances_Steps_Tasks_Roles } from 'projects/codx-dp/src/lib/models/models';
 import { ExportData } from 'projects/codx-common/src/lib/models/ApproveProcess.model';
+import { PopupPermissionsComponent } from '../popup-permissions/popup-permissions.component';
 
 @Component({
   selector: 'contracts-detail',
@@ -314,8 +315,8 @@ export class ContractsComponent extends UIComponent {
           case 'CM0204_16': // mở lại hợp đồng
             res.disabled = !data?.closed;
             break;
-          case 'CM0204_18': // mở lại hợp đồng
-            res.disabled = data?.status == "17";
+          case 'CM0204_18': // thanh lý
+            res.disabled = data?.status == "17" && data?.disposalAll;
             break;
         }
       });
@@ -397,6 +398,9 @@ export class ContractsComponent extends UIComponent {
       case 'CM0204_18': // thanh lý hợp đồng
         this.liquidationContract(data);
         break;
+      case 'CM0204_17': // thanh lý hợp đồng
+        this.popupPermissions(data);
+        break;
       default: {
         // var customData = {
         //   refID: data.recID,
@@ -422,6 +426,37 @@ export class ContractsComponent extends UIComponent {
     }
   }
 
+  popupPermissions(data) {
+    let dialogModel = new DialogModel();
+    let formModel = new FormModel();
+    formModel.formName = 'CMPermissions';
+    formModel.gridViewName = 'grvCMPermissions';
+    formModel.entityName = 'CM_Permissions';
+    dialogModel.zIndex = 999;
+    dialogModel.FormModel = formModel;
+    let obj = {
+      data: data,
+      title: this.actionName,
+      entityName: this.view.formModel.entityName,
+    };
+    this.callfc
+      .openForm(
+        PopupPermissionsComponent,
+        '',
+        950,
+        650,
+        '',
+        obj,
+        '',
+        dialogModel
+      )
+      .closed.subscribe((e) => {
+        if (e?.event && e?.event != null) {
+          this.view.dataService.update(e?.event, true).subscribe();
+          this.detectorRef.detectChanges();
+        }
+      });
+  }
   async addTask(contract: CM_Contracts) {
     let taskOutput = await this.stepService.addTaskCM(contract, 'CM_Contracts');
     this.taskAdd = taskOutput;
