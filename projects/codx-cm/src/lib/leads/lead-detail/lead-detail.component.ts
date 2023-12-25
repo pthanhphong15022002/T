@@ -203,7 +203,8 @@ export class LeadDetailComponent implements OnInit {
     this.seesionID = this.dataSelected.recID; //da doi lai lay bang recID
     this.loadTree(this.seesionID);
     this.isDataLoading = true;
-    this.dataSelected.applyProcess && (await this.getListInstanceStep());
+    this.stepCurrent = null;
+    this.dataSelected.applyProcess && (await this.getListInstanceStep())
     this.dataSelected.dealID && (await this.getTmpDeal());
   }
   async executeApiCalls() {

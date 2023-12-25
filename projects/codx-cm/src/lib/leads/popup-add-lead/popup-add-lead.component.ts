@@ -292,7 +292,7 @@ export class PopupAddLeadComponent
         let owner = $event.component.itemsSelected[0]?.Owner;
         let ownerName = '';
         if (this.applyProcess) {
-          let index = this.listParticipants.findIndex((x) => x.userID);
+          let index = this.listParticipants.findIndex((x) => x.userID == owner);
 
           if (index != -1) {
             this.owner = owner;

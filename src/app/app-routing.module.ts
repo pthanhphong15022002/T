@@ -168,6 +168,14 @@ var childAuthRoutes: Routes = [
     path: 'tr',
     canActivate: [AuthGuard],
     loadChildren: () =>
+      import('projects/codx-tr/src/lib/codx-tr.module').then(
+        (m) => m.CodxTrModule
+      ),
+  },
+  {
+    path: 'pr',
+    canActivate: [AuthGuard],
+    loadChildren: () =>
       import('projects/codx-pr/src/lib/codx-pr.module').then(
         (m) => m.CodxPrModule
       ),

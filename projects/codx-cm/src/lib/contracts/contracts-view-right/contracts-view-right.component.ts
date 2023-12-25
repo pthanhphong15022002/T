@@ -16,11 +16,13 @@ import {
   CM_Quotations,
   CM_QuotationsLines,
   CM_ContractsPayments,
+  CM_Deals,
 } from '../../models/cm_model';
 import { firstValueFrom } from 'rxjs';
+import { Location } from '@angular/common';
 import { CodxCmService } from '../../codx-cm.service';
 import { ContractsService } from '../service-contracts.service';
-import { DialogData, DialogRef, FormModel, UIComponent } from 'codx-core';
+import { DialogData, DialogRef, FormModel, NotificationsService, TenantStore, UIComponent } from 'codx-core';
 @Component({
   selector: 'contracts-view-detail',
   templateUrl: './contracts-view-right.component.html',
@@ -60,7 +62,9 @@ export class ContractsViewDetailComponent
   listTypeContract = [];
   oCountFooter: any = {};
   isLoading: boolean = true;
-  contractLink:CM_Contracts[] = [];
+  contractLink:CM_Contracts;
+  deal: CM_Deals;
+  quotation: CM_Quotations;
 
   tabControl = [
     { name: 'History', textDefault: 'Lịch sử', isActive: true, template: null },
@@ -101,6 +105,12 @@ export class ContractsViewDetailComponent
     entityName: 'CM_Quotations',
     gridViewName: 'grvCMQuotations',
   };
+  fmDeals: FormModel = {
+    funcID: 'CM02021',
+    formName: 'CMDeals',
+    entityName: 'CM_Deals',
+    gridViewName: 'grvCMDeals',
+  };
   formModelContact: FormModel = {
     formName: 'CMContacts',
     entityName: 'CM_Contacts',
@@ -109,11 +119,14 @@ export class ContractsViewDetailComponent
   
   constructor(
     private inject: Injector,
-    private contractService: ContractsService,
+    private location: Location,
+    private tenantStore: TenantStore,
     private codxCmService: CodxCmService,
+    private contractService: ContractsService,
+    private notiService: NotificationsService,
     private changeDetectorRef: ChangeDetectorRef,
+    @Optional() dialog?: DialogRef,
     @Optional() dt?: DialogData,
-    @Optional() dialog?: DialogRef
   ) {
     super(inject);
     this.dialog = dialog;
@@ -138,6 +151,8 @@ export class ContractsViewDetailComponent
           }
         });
       this.getContractLink();
+      this.getQuotation();
+      this.getDeal();
     }
     if (changes?.listInsStepStart && changes?.listInsStepStart?.currentValue) {
       this.listInsStep = this.listInsStepStart;
@@ -204,14 +219,30 @@ export class ContractsViewDetailComponent
   }
 
   getContractLink(){
+    this.contractLink = null;
     if(this.contract?.parentID){
       this.contractService.getContractByRecID(this.contract?.parentID).subscribe((res) => {
         this.contractLink = res;
       })
-    }else{
-      this.contractLink = [];
     }
   }
+  getDeal(){
+    this.deal = null;
+    if(this.contract?.dealID){
+      this.codxCmService.getDealByRecID(this.contract?.dealID).subscribe((res) => {
+        this.deal = res;
+      })
+    }
+  }
+  getQuotation(){
+    this.quotation = null;
+    if(this.contract?.quotationID){
+      this.contractService.getQuotationByQuotationID(this.contract?.quotationID).subscribe((res) => {
+        this.quotation = res;
+      })
+    }
+  }
+
   getPayMentByContractID(contractID) {
     if (contractID) {
       this.contractService
@@ -319,5 +350,34 @@ export class ContractsViewDetailComponent
     oCountFooter[key] = value;
     this.oCountFooter = JSON.parse(JSON.stringify(oCountFooter));
     this.changeDetectorRef.markForCheck();
+  }
+
+  linkData(type:string, recID:string){
+    if (type && recID) {
+      const url1 = this.location.prepareExternalUrl(this.location.path());
+      const parser = document.createElement('a');
+      parser.href = url1;
+      const domain = parser.origin;
+
+      let tenant = this.tenantStore.get().tenant;
+      let url = ``
+      switch(type){
+        case "contract":
+          url = `${domain}/${tenant}/cm/contracts/CM0204?predicate=RecID=@0&dataValue=${recID}`;
+          break;
+        case "deal":
+          url = `${domain}/${tenant}/cm/deals/CM0201?predicate=RecID=@0&dataValue=${recID}`;
+          break;
+        case "quotation":
+          url = `${domain}/${tenant}/cm/quotations/CM0202?predicate=RecID=@0&dataValue=${recID}`;
+          break;
+      }
+      if(url){
+        window.open(url, '_blank');
+      }
+      return;
+    } else {
+      this.notiService.notify('Không tìm thấy dữ liệu', '3');
+    }
   }
 }
