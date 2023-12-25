@@ -143,7 +143,9 @@ export class PopupAddSignFileComponent implements OnInit {
   tempSampleProcessName: any;
   reloadedStep= true;
   popupApproverInfo=false;
+  showCateNameOnly=false;
   lstpartners = [];
+  cateName ="";
   constructor(
     private auth: AuthStore,
     private esService: CodxEsService,
@@ -184,6 +186,7 @@ export class PopupAddSignFileComponent implements OnInit {
     this.templateRefID = data?.data?.templateRefID; //refID truyền vào form export template    
     this.refID = data?.data?.refID; // Bắt buộc truyền nếu từ module != ES: Lưu RefID của SignFile
     this.refType = this.approverProcess?.category?.category !=null ?this.approverProcess?.category?.category :  data?.data?.refID ? data?.data?.refID : 'ES_SignFiles';// Bắt buộc truyền nếu từ module != ES: Lưu RefType của SignFile và lấy Category của Module
+    
     this.editApprovers = false ;//data?.data?.editApprovers ?? false;
     this.approvers = data?.data?.approvers ?? null;
     this.approverProcess = data?.data?.approverProcess ?? null;
@@ -203,6 +206,10 @@ export class PopupAddSignFileComponent implements OnInit {
         appr.approver = this.approverProcess?.data?.owner;
         this.dynamicApprovers.push(appr);
       }
+    }
+    if(this.approverProcess?.category?.categoryName && this.disableCateID){
+      this.showCateNameOnly=true;
+      this.cateName = this.approverProcess?.category?.categoryName;
     }
 
     if (this.modeView == '2') {

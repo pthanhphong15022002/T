@@ -51,7 +51,6 @@ import { ViewsTabsDetailsComponent } from './dynamic-process/popup-views-details
 
 import { PinchZoomModule } from '@meddv/ngx-pinch-zoom';
 import { CodxCmModule } from 'projects/codx-cm/src/lib/codx-cm.module';
-import { CodxInstancesComponent } from 'projects/codx-share/src/lib/components/codx-instances/codx-instances.component';
 import { InstanceDashboardComponent } from './instances/instance-dashboard/instance-dashboard.component';
 import { PopupAddVllCustomComponent } from './dynamic-process/popup-add-dynamic-process/popup-add-custom-field/popup-add-vll-custom/popup-add-vll-custom.component';
 import { PopupAddColumnTableComponent } from './dynamic-process/popup-add-dynamic-process/popup-add-custom-field/popup-setting-table/popup-add-column-table/popup-add-column-table.component';
@@ -62,6 +61,7 @@ import { PopupSettingReferenceComponent } from './dynamic-process/popup-add-dyna
 import { ReplaceProgressPipe } from './pipes/replace-progress.pipe';
 import { StepTaskInstanceComponent } from './instances/instance-detail/step-task-instance/step-task-instance.component';
 import { PopupReleaseProcessComponent } from './dynamic-process/popup-release-process/popup-release-process.component';
+import { ViewDetailApprovalCustomComponent } from './approvals/view-detail-approval-custom/view-detail-approval-custom.component';
 
 export const routes: Routes = [
   {
@@ -143,6 +143,7 @@ const T_Component: Type<any>[] = [
   CarouselStageComponent,
   InputNumberDurationComponent,
   ApprovalsComponent,
+  ViewDetailApprovalCustomComponent, //chuyển về từ share sau co thể xóa nếu ko cần
   PopupEditOwnerstepComponent,
   PopupSelectTempletComponent,
   ViewsTabsDetailsComponent,

@@ -263,11 +263,13 @@
                     <div class="form-group">
                       <codx-label fiedName="CategoryID" [formModel]="formModelCustom">
                       </codx-label>
-                      <codx-input field="categoryID"  [crrValue]="data?.categoryID"
+                      <codx-input *ngIf="!showCateNameOnly" field="categoryID"  [crrValue]="data?.categoryID"
                         [placeholder]="gvSetup?.CategoryID?.description" [refValue]="
                         this.cbxCategory ??
                         gvSetup?.CategoryID?.referedValue
                       " type="combobox" (valueChange)="valueChange($event)" [disabled]="disableCateID">
+                      </codx-input>
+                      <codx-input *ngIf="showCateNameOnly" field="categoryID" [crrValue]="cateName" type="text" (valueChange)="valueChange($event)" [disabled]="disableCateID">
                       </codx-input>
                     </div>
                   </div>

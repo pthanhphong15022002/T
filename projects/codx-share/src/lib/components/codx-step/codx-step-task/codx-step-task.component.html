@@ -268,80 +268,82 @@
                           }"
                         ></ng-container>
                       </div>
-                      <div class="d-flex align-items-center">
-                        <ng-container
-                          *ngIf="
-                            task?.approveRule &&
-                            task?.approveStatus &&
-                            task?.approveStatus != '1'
-                          "
-                        >
-                          <codx-vll
-                            [name]="'DP043'"
-                            [field]="'ApproveStatus'"
-                            [value]="task?.approveStatus"
-                            [showText]="true"
-                            [showBgColor]="true"
-                            class="badge badge-light badge-sm line-clamp-vll"
-                          >
-                          </codx-vll>
-                        </ng-container>
-                        <span
-                          *ngIf="task?.approveRule"
-                          (click)="openFormApprover(task)"
-                          class="icon-18 icon-i-pen cursor-pointer fw-bold me-2"
-                          ngbTooltip="Kí, duyệt"
-                        ></span>
-                        <codx-attachment-temp
-                          [viewType]="'5'"
-                          [hideMoreF]="0"
-                          [objectID]="task?.refID"
-                          [formModel]="grvMoreFunction"
-                          [tooltip]="'Tài liệu mẫu'"
-                        >
-                        </codx-attachment-temp>
-                        <ng-container
-                          [ngTemplateOutlet]="timeAndProgress"
-                          [ngTemplateOutletContext]="{
-                            value: { value: task, group: groupTask, type: 'T' }
-                          }"
-                        ></ng-container>
-                        <div class="model-func">
-                          <codx-mfunc
+                      <div
+                        class="d-flex justify-content-end align-items-center step-task-right w-auto"
+                        [ngStyle]="{ width: widthTask }"
+                      >
+                        <div class="w-125px d-flex justify-content-end">
+                          <ng-container
+                            [ngTemplateOutlet]="buttonTem"
+                            [ngTemplateOutletContext]="{
+                              data: { task: task, group: groupTask }
+                            }"
+                          ></ng-container>
+                        </div>
+                        <div class="d-flex align-items-center justify-content-end w-350px">
+                          <ng-container
                             *ngIf="
-                              (!isMoveStage && !isViewStep && !isClose) ||
-                              (isClose && !task?.isTaskDefault)
-                            "
-                            [formModel]="grvMoreFunction"
-                            [isBookMark]="true"
-                            [dataItem]="moreDefaut"
-                            [type]="'view'"
-                            (clickMF)="clickMFTask($event, groupTask, task)"
-                            (changeDataMF)="
-                              changeDataMFTask($event, task, groupTask)
+                              task?.approveRule &&
+                              task?.approveStatus &&
+                              task?.approveStatus != '1'
                             "
                           >
-                          </codx-mfunc>
+                            <codx-vll
+                              [name]="'DP043'"
+                              [field]="'ApproveStatus'"
+                              [value]="task?.approveStatus"
+                              [showText]="true"
+                              [showBgColor]="true"
+                              class="badge badge-light badge-sm line-clamp-vll"
+                            >
+                            </codx-vll>
+                          </ng-container>
+                          <span
+                            *ngIf="task?.approveRule"
+                            (click)="openFormApprover(task)"
+                            class="icon-18 icon-i-pen cursor-pointer fw-bold me-1"
+                            ngbTooltip="Kí, duyệt"
+                          ></span>
+                          <codx-attachment-temp
+                            [viewType]="'5'"
+                            [hideMoreF]="0"
+                            [objectID]="task?.refID"
+                            [formModel]="grvMoreFunction"
+                            [tooltip]="'Tài liệu mẫu'"
+                          >
+                          </codx-attachment-temp>
+                          <ng-container
+                            [ngTemplateOutlet]="timeAndProgress"
+                            [ngTemplateOutletContext]="{
+                              value: {
+                                value: task,
+                                group: groupTask,
+                                type: 'T'
+                              }
+                            }"
+                          ></ng-container>
+                          <div class="model-func">
+                            <codx-mfunc
+                              *ngIf="
+                                (!isMoveStage && !isViewStep && !isClose) ||
+                                (isClose && !task?.isTaskDefault)
+                              "
+                              [formModel]="grvMoreFunction"
+                              [isBookMark]="true"
+                              [dataItem]="moreDefaut"
+                              [type]="'view'"
+                              (clickMF)="clickMFTask($event, groupTask, task)"
+                              (changeDataMF)="
+                                changeDataMFTask($event, task, groupTask)
+                              "
+                            >
+                            </codx-mfunc>
+                          </div>
                         </div>
                       </div>
                     </div>
 
                     <div class="ms-12 d-flex align-items-center">
-                      <!-- <div
-                        *ngIf="task?.approveRule"
-                        class="d-flex align-items-center cursor-pointer me-4"
-                        (click)="openFormApprover(task)"
-                      >
-                        <span
-                          class="icon-check-correct text-primary icon-18 me-1"
-                        ></span>
-                        <codx-label
-                          class="text-gray-500 popup-hover "
-                          name="progressDefault2"
-                          [formModel]="grvMoreFunction"
-                          default="Các bước duyệt"
-                        ></codx-label>
-                      </div> -->
                       <div
                         *ngIf="task?.fieldID"
                         class="d-flex align-items-center cursor-pointer"
@@ -472,7 +474,7 @@
 </ng-template>
 
 <ng-template #timeAndProgress let-data="value">
-  <div class="d-flex align-items-center justify-content-end me-2 time-progress">
+  <div class="d-flex align-items-center justify-content-end me-1 time-progress">
     <div
       #popoverTooltip="ngbPopover"
       [ngbPopover]="tooltipDate"
@@ -697,6 +699,111 @@
     </div>
   </div>
 </ng-template>
+
+<ng-template #buttonTem let-data="data">
+  <div class="me-2">
+    <button
+      *ngIf="
+        (data?.task?.taskType == 'C' || data?.task?.taskType == 'T') &&
+        data?.task?.status == '1'
+      "
+      type="button"
+      class="btn btn-outline-primary btn-sm"
+      (click)="startTask(data?.task, data?.group)"
+    >
+      <codx-label
+        class="text-nowrap"
+        name="Save"
+        formName="Sprints"
+        default="Bắt đầu ngay"
+      ></codx-label>
+    </button>
+    <!-- <button
+      *ngIf=""
+      type="button"
+      class="btn btn-primary ms-1"
+    >
+      <codx-label
+        name="Save"
+        formName="Sprints"
+        default="Gửi duyệt"
+      ></codx-label>
+    </button> -->
+    <button
+      *ngIf="data?.task?.taskType == 'E'"
+      type="button"
+      class="btn btn-outline-primary btn-sm"
+    >
+      <codx-label
+        class="text-nowrap"
+        name="Save"
+        formName="Sprints"
+        default="Gửi mail"
+      ></codx-label>
+    </button>
+    <button
+      *ngIf="data?.task?.taskType == 'CO'"
+      type="button"
+      class="btn btn-outline-primary btn-sm"
+    >
+      <codx-label
+        class="text-nowrap"
+        name="Save"
+        formName="Sprints"
+        default="Tạo hợp đồng"
+      ></codx-label>
+    </button>
+    <button
+      *ngIf="data?.task?.taskType == 'M'"
+      type="button"
+      class="btn btn-outline-primary btn-sm"
+    >
+      <codx-label
+        class="text-nowrap"
+        name="Save"
+        formName="Sprints"
+        default="Tạo lịch họp"
+      ></codx-label>
+    </button>
+    <button
+      *ngIf="data?.task?.taskType == 'F'"
+      type="button"
+      class="btn btn-outline-primary btn-sm"
+    >
+      <codx-label
+        class="text-nowrap"
+        name="Save"
+        formName="Sprints"
+        default="Nhập form"
+      ></codx-label>
+    </button>
+    <button
+      *ngIf="data?.task?.taskType == 'S'"
+      type="button"
+      class="btn btn-outline-primary btn-sm"
+    >
+      <codx-label
+        class="text-nowrap"
+        name="Save"
+        formName="Sprints"
+        default="Tạo khảo sát"
+      ></codx-label>
+    </button>
+    <button
+      *ngIf="data?.task?.taskType == 'B'"
+      type="button"
+      class="btn btn-outline-primary btn-sm"
+    >
+      <codx-label
+        class="text-nowrap"
+        name="Save"
+        formName="Sprints"
+        default="Đặt xe"
+      ></codx-label>
+    </button>
+  </div>
+</ng-template>
+
 <!-- <codx-vll
       *ngIf="data?.group && !isMoveStage && !isViewStep"
       [name]="'DP048'"

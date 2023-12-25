@@ -691,4 +691,5 @@ export class ColumnTable {
   iconSet: string = '';
   settingWidth: boolean = true;
   settingCount: boolean = true;
+  totalColumns: boolean = false;
 }

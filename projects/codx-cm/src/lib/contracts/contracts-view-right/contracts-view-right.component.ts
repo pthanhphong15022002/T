@@ -16,6 +16,7 @@ import {
   CM_Quotations,
   CM_QuotationsLines,
   CM_ContractsPayments,
+  CM_Deals,
 } from '../../models/cm_model';
 import { firstValueFrom } from 'rxjs';
 import { CodxCmService } from '../../codx-cm.service';
@@ -60,7 +61,9 @@ export class ContractsViewDetailComponent
   listTypeContract = [];
   oCountFooter: any = {};
   isLoading: boolean = true;
-  contractLink:CM_Contracts[] = [];
+  contractLink:CM_Contracts;
+  deal: CM_Deals;
+  quotation: CM_Quotations;
 
   tabControl = [
     { name: 'History', textDefault: 'Lịch sử', isActive: true, template: null },
@@ -209,9 +212,28 @@ export class ContractsViewDetailComponent
         this.contractLink = res;
       })
     }else{
-      this.contractLink = [];
+      this.contractLink = null;
     }
   }
+  getDeal(){
+    if(this.contract?.dealID){
+      this.contractService.getContractByRecID(this.contract?.parentID).subscribe((res) => {
+        this.contractLink = res;
+      })
+    }else{
+      this.contractLink = null;
+    }
+  }
+  getQuotation(){
+    if(this.contract?.quotationID){
+      this.contractService.getContractByRecID(this.contract?.parentID).subscribe((res) => {
+        this.contractLink = res;
+      })
+    }else{
+      this.contractLink = null;
+    }
+  }
+
   getPayMentByContractID(contractID) {
     if (contractID) {
       this.contractService
