@@ -31,7 +31,14 @@ import {
   DP_Steps_Fields,
   tempVllDP,
 } from '../../../models/models';
-import { Observable, finalize, firstValueFrom, map } from 'rxjs';
+import {
+  Observable,
+  Subject,
+  finalize,
+  firstValueFrom,
+  map,
+  takeUntil,
+} from 'rxjs';
 import { X } from '@angular/cdk/keycodes';
 import test from 'node:test';
 import { ComboBoxComponent } from '@syncfusion/ej2-angular-dropdowns';
@@ -41,6 +48,7 @@ import { PopupSettingTableComponent } from './popup-setting-table/popup-setting-
 import { PopupSettingReferenceComponent } from './popup-setting-reference/popup-setting-reference.component';
 import { CodxInputCustomFieldComponent } from 'projects/codx-share/src/lib/components/codx-input-custom-field/codx-input-custom-field.component';
 import { CodxFieldsFormatValueComponent } from 'projects/codx-share/src/lib/components/codx-fields-detail-temp/codx-fields-format-value/codx-fields-format-value.component';
+import { PopupAddAutoNumberComponent } from 'projects/codx-es/src/lib/setting/category/popup-add-auto-number/popup-add-auto-number.component';
 
 @Component({
   selector: 'lib-popup-add-custom-field',
@@ -137,6 +145,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
   listColumns = [];
   settingWidth = false;
   settingCount = false;
+  totalColumns = false;
   isShowMore = false;
   widthDefault = '550';
 
@@ -151,6 +160,11 @@ export class PopupAddCustomFieldComponent implements OnInit {
   isDuplicateField = false;
   isEditFieldDuplicate = false;
   fieldNameOld = '';
+  //create autoNumber
+  vllDateFormat: any;
+  fieldNoAutoEx: string = '';
+  adAutoNumber: any;
+  private destroyFrom$: Subject<void> = new Subject<void>();
 
   constructor(
     private cache: CacheService,
@@ -172,6 +186,9 @@ export class PopupAddCustomFieldComponent implements OnInit {
     this.processNo = dt?.data?.processNo; //de sinh vll
     this.fieldNameArr = dt?.data?.fieldNameArr ?? [];
     this.isDuplicateField = dt?.data?.isDuplicateField ?? false;
+    this.titleAction = dt?.data?.titleAction;
+    this.stepList = dt?.data?.stepList;
+    this.grvSetup = dt.data?.grvSetup;
 
     this.creatFieldCustom();
     this.widthDefault = this.dialog.dialog.width
@@ -198,10 +215,6 @@ export class PopupAddCustomFieldComponent implements OnInit {
     } else {
       this.fieldNameOld = this.field.fieldName;
     }
-
-    this.titleAction = dt?.data?.titleAction;
-    this.stepList = dt?.data?.stepList;
-    this.grvSetup = dt.data?.grvSetup;
   }
 
   ngOnInit(): void {
@@ -428,7 +441,10 @@ export class PopupAddCustomFieldComponent implements OnInit {
   }
 
   removeAccents(str) {
-    if (!str) return;
+    if (!str) {
+      this.field.fieldName = '';
+      return;
+    }
     var format = str
       .trim()
       .normalize('NFD')
@@ -447,9 +463,11 @@ export class PopupAddCustomFieldComponent implements OnInit {
     if (
       this.action == 'edit' &&
       this.isDuplicateField &&
-      this.field.fieldName == this.fieldNameOld
-    )
+      this.field.fieldName.toLowerCase() == this.fieldNameOld.toLowerCase()
+    ) {
+      this.field.fieldName = this.fieldNameOld;
       return;
+    }
     if (this.fieldNameArr?.length > 0) {
       let checkArrDup = this.fieldNameArr.filter(
         (x) =>
@@ -457,6 +475,14 @@ export class PopupAddCustomFieldComponent implements OnInit {
           x.stepID != this.field.stepID
       );
       if (checkArrDup?.length > 0) {
+        if (this.action == 'edit') {
+          this.notiService.notifyCode(
+            'DP026',
+            0,
+            '"' + this.grvSetup['FieldName']?.headerText + '"'
+          );
+          return;
+        }
         this.isDuplicateField = true;
         //thông báo test chưa có mes code
         let nameSteps = checkArrDup.map((x) => x.stepName);
@@ -466,10 +492,13 @@ export class PopupAddCustomFieldComponent implements OnInit {
         //   '{0}',
         //   '"' + nameSteps.join(';') + '"'
         // );
+        //this.notiService
+        // .alert(this.title, titleConfirmDup, config)
+        // .closed.subscribe((res) => {
         this.notiService
-          // .alert(this.title, titleConfirmDup, config)
-          // .closed.subscribe((res) => {
-          .alertCode('DP042', null, ['"' + nameSteps.join(';') + '"' || ''])
+          .alertCode('DP042', null, [
+            '<b class="text-danger">"' + nameSteps.join(';') + '"</b>' || '',
+          ])
           .subscribe((res) => {
             if (res?.event && res?.event?.status == 'Y') {
               let fieldDup = checkArrDup[0];
@@ -489,6 +518,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
                   this.field = crrF;
                   this.field.recID = recID;
                   this.field.stepID = stepID;
+
                   // this.field.title = crrF.title;
                   // this.field.fieldName = crrF.fieldName;
                   // this.field.dataFormat = crrF.dataFormat;
@@ -844,6 +874,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
               this.listColumns = res.event[0];
               this.settingWidth = this.listColumns[0]?.settingWidth ?? false;
               this.settingCount = this.listColumns[0]?.settingCount ?? false;
+              this.totalColumns = this.listColumns[0]?.totalColumns ?? false;
 
               this.field.dataFormat = JSON.stringify(this.listColumns);
             }
@@ -866,6 +897,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
       this.listColumns = arr;
       this.settingWidth = this.listColumns[0]?.settingWidth ?? false;
       this.settingCount = this.listColumns[0]?.settingCount ?? false;
+      this.totalColumns = this.listColumns[0]?.totalColumns ?? false;
     } else this.listColumns = [];
     this.changeRef.detectChanges();
   }
@@ -960,5 +992,134 @@ export class PopupAddCustomFieldComponent implements OnInit {
       }
     }
   }
+  //end
+  //đánh số tự động
+  //Popup setiing autoNumber
+  async openAutoNumPopup() {
+    //view new
+
+    let noAuto = await firstValueFrom(
+      this.dpService
+        .getADAutoNumberByAutoNoCode(this.field.recID)
+        .pipe(takeUntil(this.destroyFrom$))
+    );
+    let obj = {};
+    if (!noAuto) {
+      //save new autoNumber
+      obj = {
+        autoNoCode: this.field.recID,
+        description: 'DP_Instances',
+        newAutoNoCode: this.field.recID,
+        isSaveNew: '1',
+      };
+    } else {
+      //cap nhật
+      obj = {
+        autoNoCode: this.fieldNoAutoEx,
+        description: 'DP_Instances',
+      };
+    }
+    let op = new DialogModel();
+    op.IsFull = true;
+    let popupAutoNum = this.callfc.openForm(
+      PopupAddAutoNumberComponent,
+      '',
+      0,
+      0,
+      '',
+      obj,
+      '',
+      op
+    );
+    popupAutoNum.closed.subscribe((res) => {
+      if (res?.event) {
+        this.setViewAutoNumber(res?.event);
+      }
+    });
+  }
+
+  setViewAutoNumber(data) {
+    if (this.vllDateFormat?.datas.length > 0) {
+      let dateFormat = '';
+      if (data?.dateFormat != '0') {
+        dateFormat =
+          this.vllDateFormat.datas.filter((p) => p.value == data?.dateFormat)[0]
+            ?.text ?? '';
+      }
+
+      let lengthNumber;
+      let strNumber = '';
+      this.fieldNoAutoEx = data?.fixedString + data?.separator + dateFormat;
+      lengthNumber = data?.maxLength - this.fieldNoAutoEx.length;
+      strNumber = '#'.repeat(lengthNumber);
+      switch (data?.stringFormat) {
+        // {value: '0', text: 'Chuỗi & Ngày - Số', default: 'Chuỗi & Ngày - Số', color: null, textColor: null, …}
+        case '0': {
+          this.fieldNoAutoEx =
+            data?.fixedString + dateFormat + data?.separator + strNumber;
+          break;
+        }
+        // {value: '1', text: 'Chuỗi & Số - Ngày', default: 'Chuỗi & Số - Ngày', color: null, textColor: null, …}
+        case '1': {
+          this.fieldNoAutoEx =
+            data?.fixedString + strNumber + data?.separator + dateFormat;
+          break;
+        }
+        // {value: '2', text: 'Số - Chuỗi & Ngày', default: 'Số - Chuỗi & Ngày', color: null, textColor: null, …}
+        case '2':
+          this.fieldNoAutoEx =
+            strNumber + data?.separator + data?.fixedString + dateFormat;
+          break;
+        // {value: '3', text: 'Số - Ngày & Chuỗi', default: 'Số - Ngày & Chuỗi', color: null, textColor: null, …}
+        case '3':
+          this.fieldNoAutoEx =
+            strNumber + data?.separator + dateFormat + data?.fixedString;
+          break;
+
+        // {value: '4', text: 'Ngày - Số & Chuỗi', default: 'Ngày - Số & Chuỗi', color: null, textColor: null, …}
+        case '4': {
+          this.fieldNoAutoEx =
+            dateFormat + data?.separator + strNumber + data?.fixedString;
+          break;
+        }
+        // {value: '5', text: 'Ngày & Chuỗi & Số', default: 'Ngày & Chuỗi & Số', color: null, textColor: null, …}
+        case '5': {
+          this.fieldNoAutoEx = data?.fixedString + dateFormat;
+          lengthNumber = data?.maxLength - this.fieldNoAutoEx.length;
+          strNumber = '#'.repeat(lengthNumber);
+          this.fieldNoAutoEx = dateFormat + data?.fixedString + strNumber;
+          break;
+        }
+        // {value: '6', text: 'Chuỗi - Ngày', default: 'Chuỗi - Ngày', color: null, textColor: null, …}
+        case '6': {
+          this.fieldNoAutoEx = data?.fixedString + data?.separator + dateFormat;
+          break;
+        }
+        // {value: '7', text: 'Ngày - Chuỗi', default: 'Ngày - Chuỗi', color: null, textColor: null, …}
+        case '7': {
+          this.fieldNoAutoEx = dateFormat + data?.separator + data?.fixedString;
+          break;
+        }
+      }
+
+      this.fieldNoAutoEx = this.fieldNoAutoEx.substring(0, data?.maxLength);
+      // this.changeDetectorRef.detectChanges();
+      this.changeRef.markForCheck();
+    }
+  }
+
+  async getVllFormat() {
+    this.vllDateFormat = await firstValueFrom(this.cache.valueList('L0088'));
+    if (!this.adAutoNumber && this.action != 'add') {
+      this.adAutoNumber = await firstValueFrom(
+        this.dpService.getADAutoNumberByAutoNoCode(this.field.recID)
+      );
+      if (this.adAutoNumber) this.setViewAutoNumber(this.adAutoNumber);
+    }
+  }
+  //end
+
+  //Trường tính toán
+
   //end
 }

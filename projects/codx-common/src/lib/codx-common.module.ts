@@ -58,6 +58,8 @@ import { AttachmentWebComponent } from './component/attachment/attachment-web/at
 
 //#region Pipe
 import { ColorPipe } from './pipe/Color.pipe';
+import { SecurePipe } from './pipe/secure.pipe';
+
 import { DisplayValue } from './pipe/displayValue.pipe';
 import { FileSizePipe } from './pipe/file-size.pipe';
 import { FileImage } from './pipe/fileImage.pipe';
@@ -131,6 +133,7 @@ const T_Component: Type<any>[] = [
 const T_Pipe: Type<any>[] = [
   //#region Pipe
   ColorPipe,
+  SecurePipe,
   DatetimePipe,
   DisplayValue,
   FileImage,

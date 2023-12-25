@@ -76,13 +76,13 @@ codx-wrapper {
     background-color: var(--bg-card);
     border: 1px rgba(255, 255, 255, 0.05) solid!important;
 }
-.card.codx_cardimg:hover {
-    border-color: rgba(255, 255, 255, 0.12)!important;
+.card.codx_cardimg:hover { 
+    border-color: rgba(255, 255, 255, 0.1)!important;
     transition: all 2ms;
 }
-// .card.codx_cardimg:hover {
-//     background-color: #2f2f53 !important;
-// }
+.dms-card .card.codx_cardimg:hover {
+    background-color: rgba(255, 255, 255, 0.035)!important;
+}
 
 codx-setting-paramater .bg-body {
     background-color: var(--bg-card) !important;
@@ -780,9 +780,9 @@ label,
     border-color: var(--border-list);
 }
 
-codx-attachment .card {
-    background-color: transparent;
-}
+// codx-attachment .card {
+//     background-color: transparent;
+// }
 
 .e-listview .e-list-item .note-option {
     color: var(--text-dark);
@@ -824,13 +824,15 @@ codx-filter-form .list-group-item {
 }
 
 .user-mini-nav {
-    background-color: var(--bg-card-item) !important;
+    //background-color: var(--bg-card-item) !important;
 
     a {
         color: var(--primary);
     }
 }
-
+.user-nav-item.user-nav-active {
+    background-color: #f8faff09;
+}
 .input-number,
 .btn-outline-secondary {
     border-color: var(--border-list);
@@ -958,11 +960,11 @@ ejs-tab#calendarTab .e-calendar {
 .badge-secondary {
     color: var(--text-body);
 }
-::-webkit-scrollbar-thumb:hover {
-    background-color: #22223a !important;
-}
-::-webkit-scrollbar-thumb {
+::-webkit-scrollbar-thumb, .dropdown-menu::-webkit-scrollbar-thumb {
     background-color: #2b2f42 !important;
+}
+::-webkit-scrollbar-thumb:hover, .dropdown-menu::-webkit-scrollbar-thumb:hover {
+    background-color: #22223a !important;
 }
 
 .personal-menu .e-tab-header {

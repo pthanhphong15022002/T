@@ -198,7 +198,8 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   approverDialog;
   titleLanguageAdd = '';
   titleLanguageEdit = '';
-
+  widthTask = 'auto';
+  isFirstTime = true;
   //#endregion
   constructor(
     private cache: CacheService,
@@ -237,6 +238,15 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     if (DP032.datas) {
       this.vllDataStep = DP032?.datas;
     }
+    this.cache
+      .moreFunction('DPInstancesStepsTasks', 'grvDPInstancesStepsTasks')
+      .subscribe((res) => {
+        // console.log("--------------", res);
+        // const objectMoi = {};
+        // for (const obj of res) {
+        //   objectMoi[obj.id] = obj;
+        // }
+      });
     this.getDefaultCM();
     this.frmModelInstancesGroup = {
       formName: 'DPInstancesStepsTaskGroups',
@@ -330,8 +340,47 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         this.carFM?.gridViewName
       );
     });
+    setTimeout(() => {
+      let elements = document.getElementsByClassName('step-task-right');
+      const listTask = Array.from(elements);
+      if (listTask?.length > 0 ) {
+        let maxWidth = 0;
+        for (const element of listTask) {
+          const computedWidth = window.getComputedStyle(element).width;
+          const width = parseFloat(computedWidth);
+  
+          if (width > maxWidth) {
+            maxWidth = width;
+          }
+        }
+        this.widthTask = maxWidth.toString() + 'px';
+        console.log(this.widthTask);
+        this.isFirstTime = false;
+      }
+    }, 1000);
   }
 
+  ngAfterViewChecked() {
+  }
+  setWidth(){
+    this.widthTask = "auto";
+    let elements = document.getElementsByClassName('step-task-right');
+    const listTask = Array.from(elements);
+    if (listTask?.length > 0) {
+      let maxWidth = 0;
+      for (const element of listTask) {
+        const computedWidth = window.getComputedStyle(element).width;
+        const width = parseFloat(computedWidth);
+
+        if (width > maxWidth) {
+          maxWidth = width;
+        }
+      }
+      this.widthTask = maxWidth.toString() + 'px';
+      console.log(this.widthTask);
+      this.isFirstTime = false;
+    }
+  }
   async drop(event: CdkDragDrop<string[]>, data = null, isParent = false) {}
 
   //#region get Data
@@ -2940,6 +2989,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     if (res?.msgCodeError) this.notiService.notify(res?.msgCodeError);
     else {
       this.taskApproval.approveStatus = res?.returnStatus || '3';
+      this.setWidth();
       this.moreDefaut = JSON.parse(JSON.stringify(this.moreDefaut));
       this.changeDetectorRef.markForCheck();
     }

@@ -117,9 +117,9 @@ export class QuotationsViewDetailComponent implements OnChanges, OnInit {
           this.dataSource = res;
         }
       });
-    if (this.itemSelected.refID) {
+    if (this.itemSelected.parentID) {
       this.codxCM
-        .getOneObject(this.itemSelected.refID, 'QuotationsBusiness')
+        .getOneObject(this.itemSelected.parentID, 'QuotationsBusiness')
         .subscribe((ref) => {
           this.dataRef = ref;
           this.loadedRef = true;

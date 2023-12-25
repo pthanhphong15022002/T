@@ -1426,6 +1426,24 @@ export class CodxShareService {
       [transID, isSettingMode, dynamicApprovers]
     );
   }
+  getStepsByTransID(transID :any) {
+    return this.api.execSv<any>(
+      'ES',
+      'ES',
+      'ApprovalStepsBusiness',
+      'GetByTransIDAsync',
+      [transID]
+    );
+  }
+  addCustomStep(steps:any) {
+    return this.api.execSv<any>(
+      'ES',
+      'ES',
+      'ApprovalStepsBusiness',
+      'AddCustomStepAsync',
+      [steps]
+    );
+  }
 
   createNewESSF(sf: any) {
     return this.api.execSv<any>(

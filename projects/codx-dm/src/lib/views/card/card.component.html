@@ -10,7 +10,7 @@
     <div *ngIf="(data.folderName && !data?.extension) then folder else file"></div>
     <ng-template #folder>
       <div class="d-flex flex-column w-100 dms-footer-r align-items-center ms-2 mt-2">
-        <div class="d-flex align-items-center">
+        <div class="d-flex align-items-center w-auto justify-content-center mb-1">
           <div *ngIf="(data.icon != null && data.icon != '') then showicon2 else noshowicon2"></div>
           <div class="fw-bold file-name">{{data.folderName}}</div>
           <ng-template #showicon2>
@@ -20,7 +20,7 @@
               <img alt="" class="mh-15px me-2" src="{{dmSV.getSvg(data.icon)}}">
             </ng-template>
             <ng-template #noshowsvg2>
-              <span class="me-2" [ngClass]="dmSV.getFolderClass(data.icon)"></span>
+              <span class="fs-7 me-2" [ngClass]="dmSV.getFolderClass(data.icon)"></span>
             </ng-template>
           </ng-template>
           <ng-template #noshowicon2>
@@ -31,10 +31,10 @@
           <div *ngIf="(!data.isSystem) then createBy2 else nocreateBy2">
           </div>
           <ng-template #createBy2>
-            <span class="text-gray-500">{{data.userName}}</span>
+            <span class="text-gray-500 fs-7">{{data.userName}}</span>
           </ng-template>
           <ng-template #nocreateBy2>
-            <span class="text-gray-500"></span>
+            <span class="text-gray-500 fs-7"></span>
           </ng-template>
           <span *ngIf="dmSV.checkView(data.read) == false" class="icon-security text-primary icon-18 position-absolute end-0" title="Tài liệu bảo mật"></span>
           <span *ngIf="data?.approvalStatus == '1'" class="icon-i-shield-fill-exclamation icon-18 position-absolute end-0" [style.color]="'#FFA800'" title="Tài liệu chờ duyệt"></span>
