@@ -16,6 +16,7 @@
         [objectType]="'DP_Instances_Steps_Fields'"
         [formModel]="dialog.formModel"
         [isAdd]="action != 'edit'"
+        [isDataTable]="true"
         (valueChangeCustom)="valueChangeCustom($event)"
         (addFileCompleted)="addFileCompleted($event)"
       ></codx-input-custom-field>

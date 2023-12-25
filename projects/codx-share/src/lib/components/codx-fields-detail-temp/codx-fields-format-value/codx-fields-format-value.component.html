@@ -22,7 +22,7 @@
 </ng-container>
 <!-- margin-l -->
 <ng-container *ngIf="data.dataValue != null && data.dataValue != undefined">
-  <span class="text-dark" *ngIf="data.dataType == 'T'">
+  <span class="text-dark" *ngIf="data.dataType == 'T' || data.dataType == 'AT'">
     {{ data.dataValue }}
   </span>
   <!-- margin-l -->
