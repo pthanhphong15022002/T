@@ -94,7 +94,6 @@ export class PopupJobComponent implements OnInit, OnDestroy {
     private callfunc: CallFuncService,
     private notiService: NotificationsService,
     private changeDetectorRef: ChangeDetectorRef,
-    private callfc: CallFuncService,
     private api: ApiHttpService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
@@ -655,7 +654,7 @@ export class PopupJobComponent implements OnInit, OnDestroy {
               let opt = new DialogModel();
               opt.FormModel = formES;
               option.zIndex = 1100;
-              let popupEditES = this.callfc.openForm(
+              let popupEditES = this.callfunc.openForm(
                 PopupAddCategoryComponent,
                 '',
                 800,
