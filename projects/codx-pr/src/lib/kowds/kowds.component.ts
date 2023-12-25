@@ -1,17 +1,17 @@
-import { map, filter } from 'rxjs';
 import { Component, Injector, TemplateRef, ViewChild } from '@angular/core';
-import { ButtonModel, CRUDService, CallFuncService, CodxGridviewV2Component, CodxService, NotificationsService, ResourceModel, SidebarModel, UIComponent, ViewModel, ViewType, Util } from 'codx-core';
-import { CodxHrService } from 'projects/codx-hr/src/lib/codx-hr.service';
-import { KowdsScheduleComponent } from './kowds-schedule/kowds-schedule.component';
-import { PopupEkowdsComponent } from './popup-ekowds/popup-ekowds.component';
 import { ActivatedRoute } from '@angular/router';
-import { PopupCopyEkowdsComponent } from './popup-copy-ekowds/popup-copy-ekowds.component';
+import { ButtonModel, CRUDService, CallFuncService, CodxGridviewV2Component, CodxService, NotificationsService, ResourceModel, SidebarModel, UIComponent, Util, ViewModel, ViewType } from 'codx-core';
+import { CodxHrService } from 'projects/codx-hr/src/public-api';
+import { PopupEkowdsComponent } from './popup/popup-ekowds/popup-ekowds.component';
+import { PopupCopyEkowdsComponent } from './popup/popup-copy-ekowds/popup-copy-ekowds.component';
+import { KowdsScheduleComponent } from './kowds-schedule/kowds-schedule.component';
+
 @Component({
-  selector: 'lib-employee-kowds',
-  templateUrl: './employee-kowds.component.html',
-  styleUrls: ['./employee-kowds.component.css']
+  selector: 'pr-kowds',
+  templateUrl: './kowds.component.html',
+  styleUrls: ['./kowds.component.css']
 })
-export class EmployeeKowdsComponent extends UIComponent{
+export class KowdsComponent extends UIComponent{
   daysOfWeek = ['Chủ nhật', 'Thứ hai', 'Thứ ba', 'Thứ tư', 'Thứ năm', 'Thứ sáu', 'Thứ bảy'];
   days = [];
   daysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
@@ -57,7 +57,7 @@ export class EmployeeKowdsComponent extends UIComponent{
   @ViewChild('calendarGrid') calendarGrid: CodxGridviewV2Component;
   @ViewChild('calendarGrid2') calendarGrid2: CodxGridviewV2Component;
   @ViewChild('tempTree') tempTree: TemplateRef<any>;
-  @ViewChild('tmpOrgChart') tmpOrgChart: TemplateRef<any>;
+  // @ViewChild('tmpOrgChart') tmpOrgChart: TemplateRef<any>;
   @ViewChild('leftPanel') leftPanel: TemplateRef<any>;
   @ViewChild('tmpPanelRight') tmpPanelRight: TemplateRef<any>;
   @ViewChild('KowdsScheduleComponent') kowdsSchedule: KowdsScheduleComponent;
@@ -117,7 +117,6 @@ export class EmployeeKowdsComponent extends UIComponent{
 
     // this.testAPILoadDetailData().subscribe((res) => {
     //   console.log('load data mau', res);
-    //   debugger
     // })
 
     // this.testAPILoadStatisticData().subscribe((res) => {
@@ -213,7 +212,6 @@ export class EmployeeKowdsComponent extends UIComponent{
       }
       this.calendarGrid.dataSource = resData;
     }
-    debugger
   }
 
   clickMF(event){
@@ -306,7 +304,6 @@ export class EmployeeKowdsComponent extends UIComponent{
   }
 
   handleCopyEmpKows(actionHeaderText, actionType: string, data: any){
-    debugger
     let option = new SidebarModel();
     option.FormModel = this.view.formModel;
     option.Width = '550px';
@@ -357,7 +354,6 @@ export class EmployeeKowdsComponent extends UIComponent{
       // this.arrSearchField = this.grvSetup.filter((item) => {
       //   return item.isQuickSearch == true;
       // })
-      debugger
       let arrTemp = arrObj.map((item) => {
         let key = Object.keys(item);
         if(item[key[0]].isQuickSearch){
@@ -492,7 +488,6 @@ export class EmployeeKowdsComponent extends UIComponent{
 
   loadDataEmp(){
     // this.getEmpList().subscribe((res) =>{
-    // debugger
     // console.log('nv tra ve', res);
     //   this.lstEmp = res[0]
     //   for(let i = 0; i < this.lstEmp.length; i++){
@@ -529,7 +524,6 @@ export class EmployeeKowdsComponent extends UIComponent{
       // this.gridDataSource = [...this.gridDataSource]
       // console.log('griddd dts', this.gridDataSource);
 
-      debugger
       if(!this.calendarGridColumns.length){
         
         this.calendarGridColumns = []
@@ -567,7 +561,6 @@ export class EmployeeKowdsComponent extends UIComponent{
       //     let t = this;
       //     this.calendarGrid.dataService.onAction.subscribe((res) => {
       //       if (res) {
-      //         debugger
       //         if (res.type == 'loaded') {
       //           t.rowCountCalendarGrid = 0;
       //           t.rowCountCalendarGrid = res['data']?.length;
@@ -752,7 +745,6 @@ export class EmployeeKowdsComponent extends UIComponent{
 
   onAction(event){
     // thay doi gia tri filter
-    debugger
     if(event.type == 'pined-filter'){
       let oldFilterDow = this.filterDowCode;
       let oldFilterGroupSal = this.filterGroupSalCode;

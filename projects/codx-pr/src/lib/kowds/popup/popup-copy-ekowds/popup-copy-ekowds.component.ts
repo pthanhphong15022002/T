@@ -3,7 +3,7 @@ import { CallFuncService, DialogData, DialogRef, FormModel, NotificationsService
 import { CodxHrService } from 'projects/codx-hr/src/public-api';
 
 @Component({
-  selector: 'lib-popup-copy-ekowds',
+  selector: 'pr-popup-copy-ekowds',
   templateUrl: './popup-copy-ekowds.component.html',
   styleUrls: ['./popup-copy-ekowds.component.css']
 })
