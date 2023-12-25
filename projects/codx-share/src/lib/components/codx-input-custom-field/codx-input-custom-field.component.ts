@@ -278,7 +278,7 @@ export class CodxInputCustomFieldComponent implements OnInit {
         });
         break;
       case 'AT':
-        if (this.customField.dataValue) return;
+        if (this.customField.dataValue || !this.isAdd) return;
         this.getAutoNumberSetting();
         break;
     }
