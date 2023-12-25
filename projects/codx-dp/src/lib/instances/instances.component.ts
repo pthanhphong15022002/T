@@ -893,7 +893,7 @@ export class InstancesComponent
             switch (res.functionID) {
               case 'SYS003':
                 if (
-                  (data.status != '2' && !data.isAdminAll) ||
+                  (data.status != '2' && !this.isEditInstance(data) ) ||
                   data.closed ||
                   !data.permissionCloseInstances
                 )
@@ -904,21 +904,21 @@ export class InstancesComponent
                 let isUpdate = data.write;
                 if (
                   !isUpdate ||
-                  (data.status != '2' && !data.isAdminAll) ||
+                  (data.status != '2' && !this.isEditInstance(data)) ||
                   data.closed ||
                   !data.permissionMoveInstances
                 )
                   res.disabled = true;
                 break;
               case 'DP09':
-                if (this.checkMoreReason(data, null)) {
+                if ( !this.isReturnInstance(data) && this.checkMoreReason(data, null)) {
                   res.disabled = true;
                 }
                 break;
               //Copy
               case 'SYS104':
               case 'SYS04':
-                if (!this.isCreate || this.checkMoreReasonCopy(data, null))
+                if (!this.isCreate || this.checkMoreReason(data, null))
                   res.disabled = true;
                 break;
               //xóa
@@ -928,7 +928,7 @@ export class InstancesComponent
                 if (
                   !isDelete ||
                   data.closed ||
-                  (data.status != '2' && !data.isAdminAll) ||
+                  (data.status != '2' && !this.isEditInstance(data)) ||
                   !data.permissionMoveInstances
                 )
                   res.disabled = true;
@@ -945,12 +945,12 @@ export class InstancesComponent
                 }
                 break;
               case 'DP02':
-                if (this.checkMoreReasonCopy(data, !this.isUseFail)) {
+                if (this.checkMoreReason(data, !this.isUseFail)) {
                   res.disabled = true;
                 }
                 break;
               case 'DP10':
-                if (this.checkMoreReasonCopy(data, !this.isUseSuccess)) {
+                if (this.checkMoreReason(data, !this.isUseSuccess)) {
                   res.disabled = true;
                 }
                 break;
@@ -1153,16 +1153,29 @@ export class InstancesComponent
   //End
   checkMoreReason(data, isUseReason) {
     if (data.closed) return true;
-    if (data.isAdminAll) return false;
     if (data.status != '2' || isUseReason) return true;
     if (!data.permissionMoveInstances) return true;
     return false;
   }
   checkMoreReasonCopy(data, isUseReason) {
     if (data.closed) return true;
-    if (data.status != '2' || isUseReason) return true;
+    if (this.isReturnInstance(data)) return false;
+    // if (data.status != '2' || isUseReason) return true;
+
     if (!data.permissionMoveInstances) return true;
     return false;
+  }
+  isEditInstance(data) {
+    if(data.isAdminAll) {
+      return true;
+    }
+    return data.permissionMoveInstances && this.process.allowEditInstanceControl;
+  }
+  isReturnInstance(data) {
+    if(data.isAdminAll) {
+      return true;
+    }
+    return data.permissionMoveInstances && this.process.allowReturnInstanceControl;
   }
 
   convertHtmlAgency(buID: any, test: any, test2: any) {

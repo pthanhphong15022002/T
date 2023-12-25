@@ -149,7 +149,7 @@ export class PopupAddDealComponent
   isViewAll: boolean = false;
   isViewContact: boolean = false;
 
-  // processIdDefault: string = '';
+  processIdDefault: string = '';
   defaultDeal: string = '';
   customerCategory: string = '';
 
@@ -159,6 +159,7 @@ export class PopupAddDealComponent
   isviewCustomer: boolean = false;
   isShowField: boolean = false;
   isShowReasonDP: boolean = false;
+  isTurnOnProcess: boolean = true;
   currencyIDOld: string;
   autoNameTabFields: string;
   bussineLineNameTmp: string = '';
@@ -851,7 +852,11 @@ export class PopupAddDealComponent
         //   }
         // }
       this.action = this.action === this.actionCopy ? this.actionAdd: this.action;
-      let processId = $event?.component?.itemsSelected[0]?.ProcessID;
+      let processId =
+            !$event.component.itemsSelected[0].ProcessID &&
+            this.processIdDefault
+              ? this.processIdDefault
+              : $event.component.itemsSelected[0].ProcessID;
       this.listInstanceSteps = [];
       this.listParticipants = [];
       this.owner = null;
@@ -895,17 +900,24 @@ export class PopupAddDealComponent
 
         }
         else {
-          // gán tạm để test
-          this.deal.applyProcess = false;
-          this.owner = this.user.userID;
-          !this.planceHolderAutoNumber && this.getAutoNumber();
-          this.itemTabsInput(this.ischeckFields(this.listInstanceSteps));
-           this.searchOwner('1', 'O', '0', this.owner, this.user.userName);
+          if(!this.isTurnOnProcess) {
+            this.dealDefault();
+          }
+          else {
+            this.getParamatersProcessDefault();
+          }
         }
-
-        this.changeDetectorRef.detectChanges();
+       this.changeDetectorRef.detectChanges();
       }
     }
+  }
+
+  dealDefault() {
+    this.deal.applyProcess = false;
+    this.owner = this.user.userID;
+    !this.planceHolderAutoNumber && this.getAutoNumber();
+    this.itemTabsInput(this.ischeckFields(this.listInstanceSteps));
+     this.searchOwner('1', 'O', '0', this.owner, this.user.userName);
   }
 
   // async executeGetDataParamter() {
@@ -1065,15 +1077,30 @@ export class PopupAddDealComponent
       }
     } catch (error) {}
   }
-  // async getParamatersProcessDefault() {
-  //   this.codxCmService.getListProcessDefault(['1']).subscribe((res) => {
-  //     if (res) {
-  //       this.processIdDefault = res.recID;
-  //       this.deal.processID = this.processIdDefault;
-  //       this.getListInstanceSteps(this.processIdDefault);
-  //     }
-  //   });
-  // }
+  async getParamatersProcessDefault() {
+    let res = await firstValueFrom(
+      this.codxCmService.getParam('CMParameters', '1')
+    );
+    if (res?.dataValue) {
+      let dataValue = JSON.parse(res?.dataValue);
+     this.isTurnOnProcess = dataValue?.ProcessDeal == '1';
+     if(this.isTurnOnProcess) {
+      this.codxCmService.getListProcessDefault(['1']).subscribe((res) => {
+        if (res) {
+          this.processIdDefault = res.recID;
+          this.deal.processID = this.processIdDefault;
+          this.deal.applyProcess = true;
+          this.getListInstanceSteps(this.processIdDefault);
+        }
+      });
+     }
+     else {
+      this.isTurnOnProcess =  false;
+      this.deal.applyProcess = false;
+      this.dealDefault();
+     }
+    }
+  }
 
   async getGridViewSetup(formName, gridViewName) {
     this.cache.gridViewSetup(formName, gridViewName).subscribe((res) => {

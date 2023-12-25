@@ -474,7 +474,7 @@
   <codx-form [body]="templateDetail" [dialog]="popup"> </codx-form>
 </ng-template>
 
-<ng-template #popUpQuestionCopy let-dialog="dialogQuestionCopy">
+<!-- <ng-template #popUpQuestionCopy let-dialog="dialogQuestionCopy">
   <codx-form
     [headerText]="titleAction"
     [body]="bodyFormCopyName"
@@ -482,9 +482,9 @@
     [dialog]="dialogQuestionCopy"
   >
   </codx-form>
-</ng-template>
+</ng-template> -->
 
-<ng-template #bodyFormCopyName>
+<!-- <ng-template #bodyFormCopyName>
   <div class="form-group">
     <ejs-combobox
       [dataSource]="valueListStatus"
@@ -501,7 +501,7 @@
   <button type="button" class="btn btn-primary" (click)="saveStatus()">
     <codx-label fiedName="lblSave" default="Lưu"></codx-label>
   </button>
-</ng-template>
+</ng-template> -->
 <ng-template #baseHeaderRightTmp let-data>
   <div
     [class]="data?.closed ? 'icon-lock text-danger' : ''"

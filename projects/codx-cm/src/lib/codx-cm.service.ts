@@ -1131,14 +1131,14 @@ export class CodxCmService {
       data
     );
   }
-  updateOwnerInstance(data) {
-    return this.api.exec<any>(
-      'DP',
-      'InstancesStepsBusiness',
-      'UpdateOwnerAsync',
-      data
-    );
-  }
+  // updateOwnerInstance(data) {
+  //   return this.api.exec<any>(
+  //     'DP',
+  //     'InstancesStepsBusiness',
+  //     'UpdateOwnerAsync',
+  //     data
+  //   );
+  // }
 
   getViewDetailDealAsync(data) {
     return this.api.exec<any>(

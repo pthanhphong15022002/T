@@ -627,6 +627,8 @@ export class DealsComponent
       CM0201_15: () => this.popupPermissions(data),
       CM0201_17: () => this.changeStatus(data),
       CM0201_18: () => this.addTask(data),
+      CM0201_19: () => this.updateProcess(data, true),
+      CM0201_20: () => this.updateProcess(data, false),
     };
 
     const executeFunction = functionMapping[e.functionID];
@@ -655,6 +657,32 @@ export class DealsComponent
       );
       this.detectorRef.detectChanges();
     }
+  }
+  updateProcess(data, isCheck) {
+    this.notificationsService
+      .alertCode('DP033', null, [
+        '"' + data?.leadName + '" ' + this.titleAction + ' ',
+      ])
+      .subscribe((x) => {
+        if (x.event && x.event.status == 'Y') {
+          let datas = [data.recID, data.status, '', isCheck];
+          this.getApiUpdateProcess(datas);
+        }
+      });
+  }
+  getApiUpdateProcess(datas) {
+    this.codxCmService.updateProcess(datas).subscribe((res) => {
+      if (res) {
+        this.dataSelected = res;
+        this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
+        this.notificationsService.notifyCode('SYS007');
+        this.view.dataService.update(this.dataSelected, true).subscribe();
+        if (this.dataSelected.applyProcess) {
+         // this.detailViewDeal.promiseAllLoad();
+        }
+      }
+      this.detectorRef.detectChanges();
+    });
   }
   afterSave(e?: any, that: any = null) {
     if (e) {
@@ -2068,7 +2096,7 @@ export class DealsComponent
     let obj = {
       statusDefault: this.dataSelected?.statusCodeID,
       statusCodecmt: this.dataSelected?.statusCodeCmt,
-      applyProcess: true,
+      applyProcess: this.dataSelected.applyProcess,
       title: this.titleAction,
       recID: this.dataSelected.recID,
       gridViewSetup: this.gridViewSetup,
