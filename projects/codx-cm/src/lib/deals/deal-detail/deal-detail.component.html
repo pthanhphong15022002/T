@@ -1057,7 +1057,6 @@
 </ng-template>
 
 <ng-template #referencesDeal>
-  {{mergedList|json}}
   <div *ngIf="mergedList?.length > 0 && mergedList != null; else noData">
     <div *ngFor="let item of mergedList" class="p-3">
       <div class="d-flex justify-content-start">
