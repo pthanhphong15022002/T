@@ -1,16 +1,16 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CodxTrComponent } from './codx-tr.component';
+import { KowdsComponent } from './kowds.component';
 
-describe('CodxTrComponent', () => {
-  let component: CodxTrComponent;
-  let fixture: ComponentFixture<CodxTrComponent>;
+describe('KowdsComponent', () => {
+  let component: KowdsComponent;
+  let fixture: ComponentFixture<KowdsComponent>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [CodxTrComponent]
+      declarations: [KowdsComponent]
     });
-    fixture = TestBed.createComponent(CodxTrComponent);
+    fixture = TestBed.createComponent(KowdsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

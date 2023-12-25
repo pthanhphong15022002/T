@@ -2,7 +2,7 @@ import { AfterViewInit, Component, Injector, Input, OnChanges, SimpleChanges, Te
 import { ResourceModel, UIComponent, ViewModel, ViewType } from 'codx-core';
 
 @Component({
-  selector: 'lib-kowds-schedule',
+  selector: 'pr-kowds-schedule',
   templateUrl: './kowds-schedule.component.html',
   styleUrls: ['./kowds-schedule.component.css']
 })

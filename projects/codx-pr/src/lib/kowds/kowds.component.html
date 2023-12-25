@@ -32,7 +32,6 @@ method="LoadDataAsync" -->
     <codx-listview
     id="chartOrg"
     #chartOrg
-    [pageSize]="10"
     [itemTemplate]="tempTree"
     funcId=""
     entityName="HR_OrganizationUnits"
@@ -178,7 +177,7 @@ method="LoadDataAsync" -->
     </ng-container>
   </ng-template>
 
-  <ng-template #tmpOrgChart>
+  <!-- <ng-template #tmpOrgChart>
     <hr-organization-orgchart
       [activeMFC]="true"
       [view]="view"
@@ -187,7 +186,7 @@ method="LoadDataAsync" -->
       [orgUnitID]="orgUnitID"
       [formModelEmployee]="formModelEmployee"
     ></hr-organization-orgchart>
-  </ng-template>
+  </ng-template> -->
 
   <ng-template #tempDayHeader let-data>
     <div *ngIf="data != null && data.field != null">

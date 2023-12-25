@@ -130,43 +130,11 @@ export class LoginDefaultComponent extends UIComponent {
         x.$subjectReal.asObservable().subscribe((z) => {
           if (z.event == 'AcceptLoginQR') {
             if (z.data?.hubConnection == this.hubConnectionID) {
-              if (z.data.isLg2FA == '') {
-                this.authService.setLogin(JSON.parse(z.data.user));
-                this.realHub.stop();
-                setTimeout(() => {
-                  window.location.href = z.data?.host + z.data?.tenant;
-                }, 1000);
-              } else {
-                let user = JSON.parse(z.data.user);
-                let objData = {
-                  data: {
-                    data: {
-                      email: user.Email,
-                      ...user,
-                    },
-                  },
-                  login2FA: z.data.isLg2FA,
-                  hubConnectionID: this.hubConnectionID,
-                };
-
-                let lg2FADialog = this.callfc.openForm(
-                  Login2FAComponent,
-                  '',
-                  400,
-                  600,
-                  '',
-                  objData
-                );
-                lg2FADialog.closed.subscribe((lg2FAEvt) => {
-                  if (lg2FAEvt.event) {
-                    this.authService.setLogin(z.data?.user);
-                    this.realHub.stop();
-                    setTimeout(() => {
-                      window.location.href = z.data?.host + z.data?.tenant;
-                    }, 1000);
-                  }
-                });
-              }
+              this.authService.setLogin(JSON.parse(z.data.user));
+              this.realHub.stop();
+              setTimeout(() => {
+                window.location.href = z.data?.host + z.data?.tenant;
+              }, 1000);
             }
           }
         });

@@ -2,8 +2,10 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  HostListener,
   Injector,
   OnInit,
+  ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
 import {
@@ -52,6 +54,4 @@ export class LayoutComponent extends LayoutBaseComponent {
     //   }
     // })
   }
-
-  
 }

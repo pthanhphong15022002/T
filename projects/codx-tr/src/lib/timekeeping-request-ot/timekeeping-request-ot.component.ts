@@ -23,25 +23,25 @@ import moment from 'moment';
 import { isObservable } from 'rxjs';
 import { DataVll } from 'projects/codx-hr/src/lib/model/HR_OrgChart.model';
 import { PopupOverTimeComponent } from './popup-over-time/popup-over-time.component';
-import { ViewDetailOtComponent } from './view-detail-over-time/view-detail-ot.component';
+import { ViewDetailComponent } from './view-detail/view-detail.component';
 import { CodxOdService } from 'projects/codx-od/src/public-api';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { CodxHrService } from 'projects/codx-hr/src/public-api';
-import { CodxPrService } from '../codx-pr.service';
 import { FormGroup } from '@angular/forms';
 import { CodxCommonService } from 'projects/codx-common/src/lib/codx-common.service';
+import { CodxPrService } from 'projects/codx-pr/src/public-api';
 
 @Component({
-  selector: 'lib-over-time',
-  templateUrl: './over-time.component.html',
-  styleUrls: ['./over-time.component.css'],
+  selector: 'pr-timekeeping-request-ot',
+  templateUrl: './timekeeping-request-ot.component.html',
+  styleUrls: ['./timekeeping-request-ot.component.css'],
 })
-export class OverTimeComponent extends UIComponent {
+export class TimeKeepingRequestOT extends UIComponent {
   console = console;
   //#region declare properties
   @ViewChild('templateListDetail') itemTemplateListDetail?: TemplateRef<any>;
   @ViewChild('panelRightListDetail') panelRightListDetail?: TemplateRef<any>;
-  @ViewChild('viewdetail') viewdetail: ViewDetailOtComponent;
+  @ViewChild('viewdetail') viewdetail: ViewDetailComponent;
   @ViewChild('templateUpdateStatus', { static: true })
   templateUpdateStatus: TemplateRef<any>;
 

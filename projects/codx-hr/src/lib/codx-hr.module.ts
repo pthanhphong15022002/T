@@ -500,7 +500,7 @@ const T_Component: Type<any>[] = [
     BasicPrimitivesModule,
     SpeedDialModule,
   ],
-  exports: [RouterModule],
+  exports:[T_Component],
   declarations: T_Component,
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

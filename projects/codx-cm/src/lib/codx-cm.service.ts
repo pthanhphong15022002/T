@@ -136,6 +136,11 @@ export class CodxCmService {
       objectID,
     ]);
   }
+  getDealByRecID(objectID) {
+    return this.api.exec<any>('CM', 'DealsBusiness', 'GetOneAsync', [
+      objectID,
+    ]);
+  }
 
   getListContactByObjectID(objectID) {
     return this.api.exec<any>(
@@ -944,9 +949,8 @@ export class CodxCmService {
     );
   }
   updateProcessDeal(data) {
-    return this.api.execSv<any>(
+    return this.api.exec<any>(
       'CM',
-      'ERM.Business.CM',
       'DealsBusiness',
       'UpdateProcessDealAsync',
       data
