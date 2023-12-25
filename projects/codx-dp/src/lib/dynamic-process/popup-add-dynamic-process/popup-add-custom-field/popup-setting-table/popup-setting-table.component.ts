@@ -80,6 +80,8 @@ export class PopupSettingTableComponent implements OnInit, AfterViewInit {
     if (this.listColumns?.length > 0) {
       this.settingWidth = this.listColumns[0]?.settingWidth ?? false;
       this.settingCount = this.listColumns[0]?.settingCount ?? false;
+      this.totalColumns =
+        this.listColumns.findIndex((x) => x?.totalColumns) != -1;
     }
     this.widthDefault = this.dialog.dialog.width
       ? this.dialog.dialog.width.toString()
@@ -113,7 +115,11 @@ export class PopupSettingTableComponent implements OnInit, AfterViewInit {
       this[e.field] = value;
       if (this.listColumns?.length > 0) {
         this.listColumns.forEach((x) => {
-          x[e.field] = value;
+          if (
+            (e.field == 'totalColumns' && x.dataType == 'N') ||
+            e.field != 'totalColumns'
+          )
+            x[e.field] = value;
         });
       }
       this.changdef.detectChanges();
@@ -158,6 +164,7 @@ export class PopupSettingTableComponent implements OnInit, AfterViewInit {
     this.column.recID = Util.uid();
     this.column.settingWidth = this.settingWidth;
     this.column.settingCount = this.settingCount;
+    this.column.totalColumns = false;
     let obj = {
       data: this.column,
       action: 'add',
@@ -181,6 +188,8 @@ export class PopupSettingTableComponent implements OnInit, AfterViewInit {
 
     dialogAddColumn.closed.subscribe((res) => {
       if (res && res?.event?.length > 0) {
+        let data = JSON.parse(JSON.stringify(res?.event[0]));
+        if (data.dataType == 'N') this.column.totalColumns = this.totalColumns;
         this.listColumns.push(JSON.parse(JSON.stringify(res?.event[0])));
         if (!this.processNo && res?.event[1]) this.processNo = res?.event[1];
       }
