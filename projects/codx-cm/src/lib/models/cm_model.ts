@@ -800,7 +800,6 @@ export class CM_Contracts {
   effectiveFrom: Date; //Hiệu lực từ
   effectiveTo: Date; //Hiệu lực đến
   extendOn: Date; //Ngày gia hạn
-  disposalOn: Date; //Ngày thanh lý
   warantyMonths: number; //Số tháng bảo hành
   warantyExpired: Date; //Ngày hết hạn bảo hành
   salespersonID: string; //Mã nhân viên kinh doanh
@@ -869,4 +868,10 @@ export class CM_Contracts {
   divisionID: string;
   departmentID: string;
   objectLinked: string;
+  disposalType: string; // loại thanh lý
+  disposalID: string;
+  disposalReason: string;
+  debtClosingOn: Date;
+  disposalOn: Date; //Ngày thanh lý
+  disposalCmt: Date; //Ngày thanh lý
 }
