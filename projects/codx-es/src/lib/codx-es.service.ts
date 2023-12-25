@@ -603,6 +603,11 @@ export class CodxEsService {
       data,
     ]);
   }
+  addEditSignature(data: any,isAdd:boolean) {
+    return this.api.execSv('ES', 'ES', 'SignaturesBusiness', 'AddEditSignatureAsync', [
+      data,isAdd
+    ]);
+  }
 
   //#endregion
 
