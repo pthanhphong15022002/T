@@ -189,8 +189,8 @@ export class PopupSettingTableComponent implements OnInit, AfterViewInit {
     dialogAddColumn.closed.subscribe((res) => {
       if (res && res?.event?.length > 0) {
         let data = JSON.parse(JSON.stringify(res?.event[0]));
-        if (data.dataType == 'N') this.column.totalColumns = this.totalColumns;
-        this.listColumns.push(JSON.parse(JSON.stringify(res?.event[0])));
+        if (data.dataType == 'N') data.totalColumns = this.totalColumns;
+        this.listColumns.push(data);
         if (!this.processNo && res?.event[1]) this.processNo = res?.event[1];
       }
     });
