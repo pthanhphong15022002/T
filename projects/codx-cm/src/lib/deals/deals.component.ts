@@ -690,14 +690,20 @@ export class DealsComponent
       });
   }
   getApiUpdateProcess(datas) {
-    this.codxCmService.updateProcess(datas).subscribe((res) => {
+    this.codxCmService.updateProcessDeal(datas).subscribe((res) => {
       if (res) {
         this.dataSelected = res;
         this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
         this.notificationsService.notifyCode('SYS007');
         this.view.dataService.update(this.dataSelected, true).subscribe();
         if (this.dataSelected.applyProcess) {
-         // this.detailViewDeal.promiseAllLoad();
+         this.detailViewDeal.promiseAllAsync();
+        }
+        else {
+          this.detailViewDeal.reloadListStep([]);
+        }
+        if (this.kanban) {
+          this.renderKanban(this.dataSelected);
         }
       }
       this.detectorRef.detectChanges();

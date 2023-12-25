@@ -21,7 +21,7 @@ import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { Subject, takeUntil } from 'rxjs';
 
 @Component({
-  selector: 'lib-popup-over-time',
+  selector: 'tr-popup-over-time',
   templateUrl: './popup-over-time.component.html',
   styleUrls: ['./popup-over-time.component.css'],
 })
