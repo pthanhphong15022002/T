@@ -752,6 +752,7 @@ export class CodxInputCustomFieldComponent implements OnInit {
           e: JSON.stringify(this.arrDataValue),
           data: this.customField,
         });
+        this.changeRef.detectChanges();
       }
     });
   }
