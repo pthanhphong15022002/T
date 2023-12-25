@@ -1105,12 +1105,12 @@ export class PopupAddCustomFieldComponent implements OnInit {
 
   async getVllFormat() {
     this.vllDateFormat = await firstValueFrom(this.cache.valueList('L0088'));
-    if (!this.adAutoNumber && this.action != 'add') {
-      this.adAutoNumber = await firstValueFrom(
-        this.dpService.getADAutoNumberByAutoNoCode(this.field.recID)
-      );
-      if (this.adAutoNumber) this.setViewAutoNumber(this.adAutoNumber);
-    }
+    // if (!this.adAutoNumber && this.action != 'add') {
+    //   this.adAutoNumber = await firstValueFrom(
+    //     this.dpService.getADAutoNumberByAutoNoCode(this.field.recID)
+    //   );
+    //   if (this.adAutoNumber) this.setViewAutoNumber(this.adAutoNumber);
+    // }
   }
   //end
 

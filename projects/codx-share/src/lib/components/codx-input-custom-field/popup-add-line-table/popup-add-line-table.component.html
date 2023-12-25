@@ -15,6 +15,7 @@
         [objectId]="item.recID"
         [objectType]="'DP_Instances_Steps_Fields'"
         [formModel]="dialog.formModel"
+        [isAdd]="action != 'edit'"
         (valueChangeCustom)="valueChangeCustom($event)"
         (addFileCompleted)="addFileCompleted($event)"
       ></codx-input-custom-field>
