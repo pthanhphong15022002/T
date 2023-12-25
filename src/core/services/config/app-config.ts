@@ -6,7 +6,6 @@ export abstract class AppConfig {
   reportUrl: string;
   office365: string;
   saas: number;
-  layoutCZ: string;
   layout: any;
   asideMode: string;
   themeMode: string;

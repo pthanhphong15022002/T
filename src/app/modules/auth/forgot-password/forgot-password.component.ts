@@ -15,12 +15,12 @@ enum ErrorStates {
   styleUrls: ['./forgot-password.component.scss'],
 })
 export class ForgotPasswordComponent implements OnInit {
+  environment = environment;
   @ViewChild('Error') error: ElementRef;
   formGroup: FormGroup;
   errorState: ErrorStates = ErrorStates.NotSubmitted;
   errorStates = ErrorStates;
   mode = '';
-  layoutCZ: any;
 
   // private fields
   constructor(
@@ -28,7 +28,6 @@ export class ForgotPasswordComponent implements OnInit {
     private authService: AuthService,
     private notificationsService: NotificationsService
   ) {
-    this.layoutCZ = environment.layoutCZ;
   }
 
   ngOnInit(): void {
