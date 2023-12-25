@@ -47,6 +47,8 @@ export class CodxInputCustomFieldComponent implements OnInit {
   @Input() objectIdParent: any = ''; //recID của model cha
   @Input() customerID: string = ''; //Khách hàng cơ hội
 
+  @Input() isDataTable = false; //là data của Table
+
   @ViewChild('attachment') attachment: AttachmentComponent;
   @ViewChild('comboxValue') comboxValue: ComboBoxComponent; ///value seclect 1
   @ViewChild('comboxValueMutilSelect')
@@ -920,7 +922,12 @@ export class CodxInputCustomFieldComponent implements OnInit {
         'ERM.Business.AD',
         'AutoNumbersBusiness',
         'CreateAutoNumberAsync',
-        [this.customField.refID, null, true, null]
+        [
+          this.isDataTable ? this.customField.recID : this.customField.refID,
+          null,
+          true,
+          null,
+        ]
       )
       .subscribe((autoNum) => {
         if (autoNum) {
