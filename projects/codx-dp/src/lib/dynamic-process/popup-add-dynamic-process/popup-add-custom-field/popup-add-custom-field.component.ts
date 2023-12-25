@@ -873,7 +873,8 @@ export class PopupAddCustomFieldComponent implements OnInit {
               this.listColumns = res.event[0];
               this.settingWidth = this.listColumns[0]?.settingWidth ?? false;
               this.settingCount = this.listColumns[0]?.settingCount ?? false;
-              this.totalColumns = this.listColumns[0]?.totalColumns ?? false;
+              this.totalColumns =
+                this.listColumns.findIndex((x) => x?.totalColumns) != -1;
 
               this.field.dataFormat = JSON.stringify(this.listColumns);
             }
@@ -896,7 +897,8 @@ export class PopupAddCustomFieldComponent implements OnInit {
       this.listColumns = arr;
       this.settingWidth = this.listColumns[0]?.settingWidth ?? false;
       this.settingCount = this.listColumns[0]?.settingCount ?? false;
-      this.totalColumns = this.listColumns[0]?.totalColumns ?? false;
+      this.totalColumns =
+        this.listColumns.findIndex((x) => x?.totalColumns) != -1;
     } else this.listColumns = [];
     this.changeRef.detectChanges();
   }
@@ -1105,12 +1107,12 @@ export class PopupAddCustomFieldComponent implements OnInit {
 
   async getVllFormat() {
     this.vllDateFormat = await firstValueFrom(this.cache.valueList('L0088'));
-    if (!this.adAutoNumber && this.action != 'add') {
-      this.adAutoNumber = await firstValueFrom(
-        this.dpService.getADAutoNumberByAutoNoCode(this.field.recID)
-      );
-      if (this.adAutoNumber) this.setViewAutoNumber(this.adAutoNumber);
-    }
+    // if (!this.adAutoNumber && this.action != 'add') {
+    //   this.adAutoNumber = await firstValueFrom(
+    //     this.dpService.getADAutoNumberByAutoNoCode(this.field.recID)
+    //   );
+    //   if (this.adAutoNumber) this.setViewAutoNumber(this.adAutoNumber);
+    // }
   }
   //end
 

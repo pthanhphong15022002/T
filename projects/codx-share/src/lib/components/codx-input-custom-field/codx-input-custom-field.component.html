@@ -576,6 +576,24 @@
                 </td>
               </ng-container>
             </tr>
+            <tr *ngIf="totalColumns">
+              <td class="ps-4" *ngIf="settingCount">
+                <div>
+                  <codx-label
+                    name="lblSum"
+                    formName="System"
+                    [default]="'Tổng cộng'"
+                  ></codx-label>
+                </div>
+              </td>
+              <ng-container *ngFor="let cell of columns">
+                <td class="ps-4">
+                  <div>
+                    <span> {{ 0 }}</span>
+                  </div>
+                </td>
+              </ng-container>
+            </tr>
           </ng-container>
         </tbody>
       </table>

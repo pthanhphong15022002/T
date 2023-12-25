@@ -39,6 +39,7 @@ export class PopupSettingTableComponent implements OnInit, AfterViewInit {
 
   settingWidth = false;
   settingCount = false;
+  totalColumns = false;
   isShowMore = false;
   widthDefault = '550';
   isShowButton = true;
@@ -95,87 +96,21 @@ export class PopupSettingTableComponent implements OnInit, AfterViewInit {
     });
   }
 
-  ngOnInit(): void {
-    // this.columns = [
-    //   { field: "isVisible", header: "Visible in output" },
-    //   { field: "quoteSummary", header: "Quote Summary" },
-    //   { field: "expiring", header: "Expiring" },
-    //   { field: "scaled", header: "Scaled" },
-    //   {
-    //     field: "strategy1",
-    //     header: "First strategy",
-    //     color: "green",
-    //     columns: [
-    //       { field: "quote", header: "Quote" },
-    //       { field: "numericDifference", header: "Delta" },
-    //       { field: "percentageDifference", header: "%" }
-    //     ]
-    //   },
-    //   {
-    //     field: "strategy2",
-    //     header: "Second strategy",
-    //     color: "gold",
-    //     columns: [
-    //       { field: "quote", header: "Quote" },
-    //       { field: "numericDifference", header: "Delta" },
-    //       { field: "percentageDifference", header: "%" }
-    //     ]
-    //   }
-    // ];
-    // this.data = [
-    //   {
-    //     quoteSummary: "Workers Compensation",
-    //     isVisible: true,
-    //     expiring: 490000,
-    //     scaled: 450000,
-    //     strategy1: 500000,
-    //     strategy2: 510000,
-    //     dataType: "quote"
-    //   },
-    //   {
-    //     quoteSummary: "Business Auto",
-    //     isVisible: true,
-    //     expiring: 265000,
-    //     scaled: 270000,
-    //     strategy1: 250000,
-    //     strategy2: 300000,
-    //     dataType: "quote"
-    //   },
-    //   {
-    //     quoteSummary: "Construction Property",
-    //     isVisible: true,
-    //     expiring: 165000,
-    //     scaled: 170000,
-    //     strategy1: 150000,
-    //     strategy2: 100000,
-    //     dataType: "quote"
-    //   },
-    //   {
-    //     quoteSummary: "Notes",
-    //     isVisible: true,
-    //     strategy1: "my notes",
-    //     strategy2: "more notes",
-    //     dataType: "notes"
-    //   },
-    //   {
-    //     quoteSummary: "TCOR",
-    //     isVisible: false,
-    //     expiring: 213213,
-    //     scaled: 223112,
-    //     strategy1: 345432,
-    //     strategy2: 234234,
-    //     dataType: "tcor"
-    //   }
-    // ];
-  }
+  ngOnInit(): void {}
 
   ngAfterViewInit(): void {}
 
   valueChange(e) {
-    if (e.field == 'settingWidth' || e.field == 'settingCount') {
+    if (
+      e.field == 'settingWidth' ||
+      e.field == 'settingCount' ||
+      e.field == 'totalColumns'
+    ) {
       let value = e.data;
-      if (e.field == 'settingWidth') this.settingWidth = value;
-      else this.settingCount = value;
+      // if (e.field == 'settingWidth') this.settingWidth = value;
+      // else this.settingCount = value;
+
+      this[e.field] = value;
       if (this.listColumns?.length > 0) {
         this.listColumns.forEach((x) => {
           x[e.field] = value;
