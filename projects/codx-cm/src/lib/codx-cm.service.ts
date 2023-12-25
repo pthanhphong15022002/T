@@ -944,9 +944,8 @@ export class CodxCmService {
     );
   }
   updateProcessDeal(data) {
-    return this.api.execSv<any>(
+    return this.api.exec<any>(
       'CM',
-      'ERM.Business.CM',
       'DealsBusiness',
       'UpdateProcessDealAsync',
       data
