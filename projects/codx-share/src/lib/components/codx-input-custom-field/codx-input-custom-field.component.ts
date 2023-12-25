@@ -124,6 +124,7 @@ export class CodxInputCustomFieldComponent implements OnInit {
   modelJSON: string = '';
   settingWidth = false;
   settingCount = false;
+  totalColumns = false;
   fieldCurrent = '';
   valueF = 'no';
   valueT = 'yes';
@@ -690,6 +691,7 @@ export class CodxInputCustomFieldComponent implements OnInit {
       this.columns = arr;
       this.settingWidth = this.columns[0]?.settingWidth ?? false;
       this.settingCount = this.columns[0]?.settingCount ?? false;
+      this.totalColumns = this.columns.findIndex((x) => x.totalColumns) != -1;
       this.columns.forEach((x) => {
         this.modelJSON += '"' + x.fieldName + '":"' + '",';
       });

@@ -258,7 +258,6 @@
                 <span>{{ item?.title }}</span>
               </th>
             </ng-container>
-            <!-- <th *ngIf="!disable" scope="col" class="w-100px fw-bold"></th> -->
           </tr>
         </thead>
         <tbody>
@@ -287,6 +286,25 @@
                   </td>
                 </ng-container>
               </tr>
+              <!-- //Tính tổng -->
+              <!-- <tr *ngIf="totalColumns">
+                <td class="ps-4" *ngIf="settingCount">
+                  <div>
+                    <codx-label
+                      name="lblSum"
+                      formName="System"
+                      [default]="'Tổng cộng'"
+                    ></codx-label>
+                  </div>
+                </td>
+                <ng-container *ngFor="let cell of columns">
+                  <td class="ps-4">
+                    <div>
+                      <span> {{ 0 }}</span>
+                    </div>
+                  </td>
+                </ng-container>
+              </tr> -->
             </ng-container>
           </ng-container>
         </tbody>
