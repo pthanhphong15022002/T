@@ -12,7 +12,7 @@
       <div class="d-flex flex-column w-100 dms-footer-r align-items-center ms-2 mt-2">
         <div class="d-flex align-items-center w-auto justify-content-center mb-1">
           <div *ngIf="(data.icon != null && data.icon != '') then showicon2 else noshowicon2"></div>
-          <div class="fw-bold file-name line-clamp line-clamp-1">{{data.folderName}}</div>
+          <div class="fw-bold file-name">{{data.folderName}}</div>
           <ng-template #showicon2>
             <div class="icon-16 me-2" *ngIf="(dmSV.checkIconFolder(data)) then showsvg2 else noshowsvg2">
             </div>
