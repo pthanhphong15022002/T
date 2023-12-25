@@ -1,5 +1,5 @@
-import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
-import { ApiHttpService, AuthStore, CacheService, CallFuncService, CodxService } from 'codx-core';
+import { Component, Input, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { ApiHttpService, AuthStore, CacheService, CallFuncService, CodxInputComponent, CodxService } from 'codx-core';
 import { CodxWsService } from '../../../codx-ws.service';
 import { isObservable } from 'rxjs';
 import { label } from './infomation.variable';
@@ -16,6 +16,7 @@ import { CodxMwpService } from 'projects/codx-mwp/src/public-api';
 })
 export class InformationComponent implements OnInit{
   @Input() menuFunctionID:any;
+  @ViewChild('ipTwoFA') ipTwoFA: CodxInputComponent;
 
   adUser:any;
   user:any;
@@ -163,6 +164,7 @@ export class InformationComponent implements OnInit{
 
   change2FA(e:any)
   {
+    if(this.user.extends.TwoFA == e?.data) return
     this.openFormSercurityLogin(e?.data);
     //this.api.execSv("SYS","AD","UsersBusiness" ,"UpdateTwoFAUserAsync","").subscribe(item=>{})
   }
@@ -182,6 +184,7 @@ export class InformationComponent implements OnInit{
               this.user.extends.TwoFA = id;
               this.authstore.set(this.user);
             }
+            else this.ipTwoFA.currentValue = this.user.extends.TwoFA;
           })
         }
         else
@@ -195,6 +198,7 @@ export class InformationComponent implements OnInit{
           })
         }
       }
+      else this.ipTwoFA.currentValue = this.user.extends.TwoFA;
     })
   }
   
