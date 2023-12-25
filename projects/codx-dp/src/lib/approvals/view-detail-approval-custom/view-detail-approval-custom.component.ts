@@ -13,7 +13,7 @@ import {
   CodxService,
   FormModel,
 } from 'codx-core';
-import { CodxShareService } from '../../../codx-share.service';
+import { CodxShareService } from 'projects/codx-share/src/lib/codx-share.service';
 
 @Component({
   selector: 'codx-view-detail-approval-custom',
