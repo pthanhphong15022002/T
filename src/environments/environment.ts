@@ -13,16 +13,18 @@ export const environment = {
   office365: '',
   appName: '',
   saas: 1,
-  layoutCZ: 'lacviet',
   themeMode: 'body', //layout,
   hideFavCount: false,
   singleExec: false,
   asideMinimize: 'icon-title',
   loginHCS: '',
   layout: {
+    id: 'lacviet',
     title: '',
     icon: '',
     logo: '',
+    appleStore: '',
+    playStore: ''
   },
   asideMode: '1',
   externalLogin: {

@@ -77,8 +77,8 @@ export class LeadsComponent
   @ViewChild('footerButton') footerButton?: TemplateRef<any>;
   @ViewChild('templateMore') templateMore?: TemplateRef<any>;
   @ViewChild('detailViewLead') detailViewLead: LeadDetailComponent;
-  @ViewChild('popUpQuestionCopy', { static: true }) popUpQuestionCopy;
-  dialogQuestionCopy: DialogRef;
+  // @ViewChild('popUpQuestionCopy', { static: true }) popUpQuestionCopy;
+  // dialogQuestionCopy: DialogRef;
   dialogViewLead: DialogRef;
   // extension core
   views: Array<ViewModel> = [];
@@ -408,12 +408,21 @@ export class LeadsComponent
       this.codxShareService.changeMFApproval(event, data?.unbounds);
     } else if (event != null && data != null) {
       for (let eventItem of event) {
-        if (type == 11) eventItem.isbookmark = false;
-        eventItem.isblur = data.approveStatus == '3' && this.funcID == 'CM0205'; //CM0504 o bị isblur more
-        const functionID = eventItem.functionID;
-        const mappingFunction = this.getRoleMoreFunction(functionID);
-        if (mappingFunction) {
-          mappingFunction(eventItem, data);
+        if (data.status != '7') {
+          if (type == 11) {
+            eventItem.isbookmark = false;
+          }
+          eventItem.isblur = data.approveStatus == '3' && this.funcID == 'CM0205'; //CM0504 o bị isblur more
+          const functionID = eventItem.functionID;
+          const mappingFunction = this.getRoleMoreFunction(functionID);
+          mappingFunction && mappingFunction(eventItem, data);
+        } else {
+          eventItem.disabled =
+            eventItem?.functionID !== 'CM0205_12'
+              ? true
+              : data?.alloweStatus == '1'
+              ? false
+              : true;
         }
       }
     }
@@ -896,7 +905,6 @@ export class LeadsComponent
       let option = new SidebarModel();
       option.DataService = this.view.dataService;
       option.FormModel = this.view.formModel;
-
       var formMD = new FormModel();
       option.Width = '800px';
       option.zIndex = 1001;
@@ -1383,31 +1391,28 @@ export class LeadsComponent
       this.cache
         .gridViewSetup(fun.formName, fun.gridViewName)
         .subscribe((grvSt) => {
-          var formMD = new FormModel();
-          formMD.funcID = fun.functionID;
-          formMD.entityName = fun.entityName;
-          formMD.formName = fun.formName;
-          formMD.gridViewName = fun.gridViewName;
-          var stepReason = {
+          let oldStatus = data.status;
+          let oldStepId = data.stepID;
+          let stepReason = {
             isUseFail: false,
             isUseSuccess: false,
           };
-          var dataCM = {
+          let dataCM = {
             refID: data?.refID,
             processID: data?.processID,
             stepID: data?.stepID,
             nextStep: this.stepIdClick ? this.stepIdClick : '',
             isCallInstance: true,
           };
-          var obj = {
-            formModel: formMD,
+          let obj = {
+            formModel:  this.view.formModel,
             deal: data,
             stepReason: stepReason,
             headerTitle: this.titleAction,
             applyFor: this.applyFor,
             dataCM: dataCM,
           };
-          var dialogMoveStage = this.callfc.openForm(
+          let dialogMoveStage = this.callfc.openForm(
             PopupMoveStageComponent,
             '',
             850,
@@ -1417,40 +1422,54 @@ export class LeadsComponent
           );
           dialogMoveStage.closed.subscribe((e) => {
             if (e && e.event != null) {
-              var instance = e.event.instance;
-              var listSteps = e.event?.listStep;
-
-              var index =
-                e.event.listStep.findIndex(
-                  (x) =>
-                    x.stepID === instance.stepID &&
-                    !x.isSuccessStep &&
-                    !x.isFailStep
-                ) + 1;
-              var nextStep = '';
-              if (
-                index != -1 &&
-                !listSteps[index]?.isSuccessStep &&
-                !listSteps[index]?.isFailStep
-              ) {
-                if (index != e.event.listStep.length) {
-                  nextStep = listSteps[index]?.stepID;
-                }
+              let instance = e.event?.instance;
+              let listSteps = e.event?.listStep;
+              let isMoveBackStage = e.event?.isMoveBackStage;
+              let tmpInstaceDTO = e.event?.tmpInstaceDTO;
+              if (isMoveBackStage) {
+                let dataUpdate = [
+                  tmpInstaceDTO,
+                  e.event?.comment,
+                  e.event?.expectedClosed,
+                  this.statusCodeID,
+                  this.statusCodeCmt,
+                ];
+                this.codxCmService
+                  .moveStageBackLead(dataUpdate)
+                  .subscribe((res) => {
+                    if (res) {
+                      this.view.dataService.update(res, true).subscribe();
+                      if (this.detailViewLead)
+                        this.detailViewLead.dataSelected = res;
+                      this.detailViewLead?.reloadListStep(listSteps);
+                      this.detectorRef.detectChanges();
+                    }
+                  });
+              } else {
+                let dataUpdate = [
+                  data.recID,
+                  instance.stepID,
+                  oldStepId,
+                  oldStatus,
+                  e.event?.comment,
+                  e.event?.expectedClosed,
+                  e.event?.permissionCM,
+                ];
+                this.codxCmService
+                  .moveStageLead(dataUpdate)
+                  .subscribe((res) => {
+                    if (res) {
+                      this.view.dataService.update(res, true).subscribe();
+                      if (this.detailViewLead)
+                        this.detailViewLead.dataSelected = res;
+                      if (e.event.isReason != null) {
+                        this.moveReason(res, e.event.isReason);
+                      }
+                      this.detailViewLead?.reloadListStep(listSteps);
+                      this.detectorRef.detectChanges();
+                    }
+                  });
               }
-              var dataUpdate = [data.recID, instance.stepID];
-              this.codxCmService.moveStageLead(dataUpdate).subscribe((res) => {
-                if (res) {
-                  data = res;
-                  this.view.dataService.update(data, true).subscribe();
-                  this.detailViewLead.dataSelected = data;
-
-                  if (e.event.isReason != null) {
-                    this.moveReason(data, e.event.isReason);
-                  }
-                  this.detailViewLead.reloadListStep(listSteps);
-                  this.detectorRef.detectChanges();
-                }
-              });
             }
           });
         });
@@ -1489,7 +1508,7 @@ export class LeadsComponent
       isMoveProcess: false,
     };
 
-    var dialogRevision = this.callfc.openForm(
+    let dialogReason = this.callfc.openForm(
       PopupMoveReasonComponent,
       '',
       800,
@@ -1497,14 +1516,13 @@ export class LeadsComponent
       '',
       obj
     );
-    dialogRevision.closed.subscribe((e) => {
+    dialogReason.closed.subscribe((e) => {
       if (e && e.event != null) {
-        var listSteps = e.event?.listStep;
+        let listSteps = e.event?.listStep;
         this.isLoading = false;
         this.detailViewLead.reloadListStep(listSteps);
         data = this.updateReasonLead(e.event?.instance, data, isMoveSuccess);
-        var datas = [data];
-        this.codxCmService.moveLeadReason(datas).subscribe((res) => {
+        this.codxCmService.moveLeadReason([data]).subscribe((res) => {
           if (res) {
             data = res;
             this.view.dataService.update(data, true).subscribe();
@@ -1625,32 +1643,32 @@ export class LeadsComponent
   checkApplyProcess(data) {
     return data?.applyProcess;
   }
-  saveStatus() {
-    if (
-      this.dataSelected.status === this.statusDefault ||
-      this.dataSelected.statusCode === this.statusDefault
-    ) {
-      this.dialogQuestionCopy.close();
-      this.notificationsService.notifyCode('SYS007');
-    } else {
-      var datas = [this.dataSelected.recID, this.statusDefault];
-      this.codxCmService.changeStatusLead(datas).subscribe((res) => {
-        if (res) {
-          this.dialogQuestionCopy.close();
-          if (this.dataSelected?.applyProcess) {
-            this.dataSelected.statusCode = this.statusDefault;
-          } else {
-            this.dataSelected.status = this.statusDefault;
-          }
-          this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
-          this.view.dataService.dataSelected = this.dataSelected;
-          this.view.dataService.update(this.dataSelected, true).subscribe();
-          this.detectorRef.detectChanges();
-          this.notificationsService.notifyCode('SYS007');
-        }
-      });
-    }
-  }
+  // saveStatus() {
+  //   if (
+  //     this.dataSelected.status === this.statusDefault ||
+  //     this.dataSelected.statusCode === this.statusDefault
+  //   ) {
+  //     this.dialogQuestionCopy.close();
+  //     this.notificationsService.notifyCode('SYS007');
+  //   } else {
+  //     var datas = [this.dataSelected.recID, this.statusDefault];
+  //     this.codxCmService.changeStatusLead(datas).subscribe((res) => {
+  //       if (res) {
+  //         this.dialogQuestionCopy.close();
+  //         if (this.dataSelected?.applyProcess) {
+  //           this.dataSelected.statusCode = this.statusDefault;
+  //         } else {
+  //           this.dataSelected.status = this.statusDefault;
+  //         }
+  //         this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
+  //         this.view.dataService.dataSelected = this.dataSelected;
+  //         this.view.dataService.update(this.dataSelected, true).subscribe();
+  //         this.detectorRef.detectChanges();
+  //         this.notificationsService.notifyCode('SYS007');
+  //       }
+  //     });
+  //   }
+  // }
 
   changeStatus(data) {
     let oldStatus = data?.status;
@@ -1661,7 +1679,7 @@ export class LeadsComponent
     let obj = {
       statusDefault: this.dataSelected?.statusCode,
       statusCodecmt: this.dataSelected?.statusCodeCmt,
-      applyProcess: true,
+      applyProcess: this.dataSelected.applyProcess,
       title: this.titleAction,
       formModel: this.view?.formModel,
       recID: this.dataSelected.recID,
@@ -1730,11 +1748,11 @@ export class LeadsComponent
       }
     });
   }
-  valueChangeStatus($event) {
-    if ($event) {
-      this.statusDefault = $event;
-    }
-  }
+  // valueChangeStatus($event) {
+  //   if ($event) {
+  //     this.statusDefault = $event;
+  //   }
+  // }
   afterSave(e?: any, that: any = null) {
     if (e) {
       let appoverStatus = e?.unbounds?.statusApproval;

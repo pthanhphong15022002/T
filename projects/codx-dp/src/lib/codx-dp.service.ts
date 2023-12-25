@@ -509,7 +509,7 @@ export class CodxDpService {
     return this.api.exec<any>('DP', 'ProcessesBusiness', 'GetAsync', id);
   }
   getAutoNumberByInstanceNoSetting(instanceNoSetting): Observable<any> {
-    return this.api.exec(
+    return this.api.exec<any>(
       'ERM.Business.AD',
       'AutoNumbersBusiness',
       'CreateAutoNumberAsync',

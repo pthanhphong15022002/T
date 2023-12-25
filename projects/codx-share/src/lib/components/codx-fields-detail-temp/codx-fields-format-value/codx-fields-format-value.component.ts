@@ -31,6 +31,7 @@ export class CodxFieldsFormatValueComponent implements OnInit {
   arrDataValue: any[];
   settingWidth = false;
   settingCount = false;
+  totalColumns = false;
   count: number = 0;
   dataValueTypeC: any = [];
   dataValueTypeV: any = [];
@@ -131,6 +132,7 @@ export class CodxFieldsFormatValueComponent implements OnInit {
       this.columns = arr;
       this.settingWidth = this.columns[0]?.settingWidth ?? false;
       this.settingCount = this.columns[0]?.settingCount ?? false;
+      this.totalColumns = this.columns[0]?.totalColumns ?? false;
     } else this.columns = [];
 
     this.arrDataValue = [];

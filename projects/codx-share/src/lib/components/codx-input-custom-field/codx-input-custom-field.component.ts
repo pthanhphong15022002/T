@@ -277,6 +277,10 @@ export class CodxInputCustomFieldComponent implements OnInit {
           }
         });
         break;
+      case 'autoNum':
+        if (this.customField.dataValue) return;
+        this.getAutoNumberSetting();
+        break;
     }
   }
 
@@ -908,4 +912,21 @@ export class CodxInputCustomFieldComponent implements OnInit {
   }
 
   //-----------------------------//
+
+  //-------------AUTONUM-----------------//
+  getAutoNumberSetting() {
+    this.api
+      .exec<any>(
+        'ERM.Business.AD',
+        'AutoNumbersBusiness',
+        'CreateAutoNumberAsync',
+        [this.customField.refID, null, true, null]
+      )
+      .subscribe((autoNum) => {
+        if (autoNum) {
+          this.customField.dataValue = autoNum;
+        }
+      });
+  }
+  //-------------END-----------------//
 }
