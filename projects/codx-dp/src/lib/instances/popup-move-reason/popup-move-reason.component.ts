@@ -182,12 +182,14 @@ export class PopupMoveReasonComponent implements OnInit {
         this.instances = res[0];
         this.listStep = res[1];
 
-        if(this.applyFor != "0" && !this.isCallInstance) {
+        if(!this.isCallInstance) {
           let datas = [null, oldStepId, oldStatus, this.reasonStep.memo,this.instances.recID,this.instances.status,this.instances.stepID];
-          this.codxDpService.moveDealReason(datas).subscribe((res) => {
-            if (res) {
-            }
-          });
+          if(this.applyFor == "1" ) {
+            this.codxDpService.moveDealReason(datas).subscribe((res) => {
+              if (res) {
+              }
+            });
+          }
         }
         let obj = {
           listStep: this.listStep,
@@ -200,7 +202,6 @@ export class PopupMoveReasonComponent implements OnInit {
           title:this.instances.title,
         };
         this.dialog.close(obj);
-
         this.isLockStep  = false;
         this.notiService.notifyCode('SYS007');
         this.changeDetectorRef.detectChanges();

@@ -78,7 +78,7 @@
   <!-- End: Tab General -->
 
   <!-- Start: Tab Detail -->
-  <div style="height: calc(100vh - 420px) !important;">
+  <div style="height: calc(100vh - 430px) !important;">
     <!-- Start: Tab Detail -->
     <ejs-tab #elementTabDetail (created)="createTabDetail($event,elementTabDetail)"
       (selecting)="onTabSelectedDetail($event)">
@@ -174,10 +174,10 @@
   <ng-container *ngIf="formCashReceipt.formGroup">
     <div class="mt-3">
       <div class="row">
-        <div class="col-xl-8 col-lg-8 col-md-6">
-          <div style="max-width: 850px;">
+        <div class="col-xxl-8 col-xl-8 col-lg-8 col-md-7">
+          <div class="container mx-0 px-0">
             <div class="row">
-              <div class="col-xl-4 col-lg-4 col-md-5">
+              <div class="col-xxl-3 col-xl-4 col-lg-4 col-md-5">
                 <div class="form-group">
                   <codx-label style="white-space: nowrap !important" fiedName="CashBookID"
                     [formModel]="dialog?.formModel">
@@ -187,7 +187,7 @@
                   </codx-input>
                 </div>
               </div>
-              <div class="col-xl-2 col-lg-2 col-md-3">
+              <div class="col-xxl-2 col-xl-2 col-lg-3 col-md-3">
                 <div class="form-group">
                   <codx-label style="white-space: nowrap !important" fiedName="TotalAmt"
                     [formModel]="dialog.formModel">
@@ -196,7 +196,7 @@
                       field="totalAmt" (controlBlur)="valueChangeMaster($event)"></codx-input>
                 </div>
               </div>
-              <div class="col-xl-2 col-lg-3 col-md-4">
+              <div class="col-xxl-2 col-xl-3 col-lg-3 col-md-4">
                 <div class="form-group">
                   <codx-label style="white-space: nowrap !important" fiedName="ReasonID"
                     [formModel]="dialog.formModel">
@@ -208,7 +208,7 @@
               </div>
             </div>
             <div class="row">
-              <div class="col-xl-4 col-lg-4 col-md-5">
+              <div class="col-xxl-4 col-xl-5 col-lg-5 col-md-5">
                 <div class="form-group">
                   <codx-label #elelblObjectID style="white-space: nowrap !important" fiedName="ObjectID"
                     [formModel]="dialog.formModel" default="Đối tượng">
@@ -220,7 +220,7 @@
                 </div>
               </div>
               <div [ngStyle]="(formCashReceipt?.data?.subType == '13' || formCashReceipt?.data?.subType == '14') ? '' : {display:'none'}" 
-              class="col-xl-2 col-lg-3 col-md-4">
+              class="col-xxl-2 col-xl-2 col-lg-3 col-md-4">
                 <div class="form-group">
                   <codx-label *ngIf="formCashReceipt?.data?.subType == '13'"
                     default="Đề nghị hoàn ứng" [formModel]="dialog.formModel">
@@ -233,7 +233,7 @@
                 </div>
               </div>
               <div [ngStyle]="(formCashReceipt?.data?.subType == '13' || formCashReceipt?.data?.subType == '14') ? '' : {display:'none'}" 
-              class="col-xl-2 col-lg-2 col-md-3">
+              class="col-xxl-1 xcol-xl-2 col-lg-2 col-md-3">
                 <div class="form-group">
                   <codx-label style="white-space: nowrap !important" *ngIf="formCashReceipt?.data?.subType == '13'"
                     fiedName="lblCashAdvance" default="Số tiền hoàn ứng">
@@ -246,7 +246,7 @@
                 </div>
               </div>
               <div [ngStyle]="(formCashReceipt?.data?.subType != '13' && formCashReceipt?.data?.subType != '14') ? '' : {display:'none'}" 
-              class="col-xl-4 col-lg-5 col-md-7">
+              class="col-xxl-3 col-xl-4 col-lg-5 col-md-7">
                 <div class="form-group">
                   <codx-label style="white-space: nowrap !important" fiedName="Payor"
                     [formModel]="dialog.formModel">
@@ -257,8 +257,8 @@
               </div>
             </div>
             <div class="row">
-              <div class="col-xl-8 col-lg-9 col-md-12">
-                <div class="form-group mb-0">
+              <div class="col-xxl-7 col-xl-9 col-lg-10 col-md-12">
+                <div class="form-group">
                   <codx-label style="white-space: nowrap !important" fiedName="Memo"
                     [formModel]="dialog.formModel">
                   </codx-label>
@@ -268,12 +268,12 @@
                 </div>
               </div>
             </div>
-          </div>  
+          </div>
         </div>
-        <div class="col-xl-4 col-lg-4 col-md-6 d-flex justify-content-end">
-          <div style="max-width: 500px;"  class="d-flex flex-column w-100">
+        <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-5 justify-content-end">
+          <div class="container mx-0 px-0">
             <div *ngIf="journal" class="row justify-content-end">
-              <div class="col-xl-4 col-lg-6 col-md-2">
+              <div class="col-xxl-3 col-xl-4 col-lg-6 col-md-5">
                 <div class="form-group">
                   <codx-label style="white-space: nowrap !important" fiedName="CurrencyID"
                     [formModel]="dialog.formModel">
@@ -284,7 +284,7 @@
                     </codx-input>
                 </div>
               </div>
-              <div class="col-xl-3 col-lg-6 col-md-2">
+              <div class="col-xxl-3 col-xl-4 col-lg-6 col-md-5">
                 <div class="form-group">
                   <codx-label style="white-space: nowrap !important" fiedName="ExchangeRate"
                     [formModel]="dialog.formModel">
@@ -300,7 +300,7 @@
               </div>
             </div>
             <div class="row justify-content-end">
-              <div class="col-xl-4 col-lg-6 col-md-2">
+              <div class="col-xxl-3 col-xl-4 col-lg-6 col-md-5">
                 <div class="form-group">
                   <codx-label style="white-space: nowrap !important" fiedName="VoucherDate"
                     [formModel]="dialog.formModel">
@@ -311,7 +311,7 @@
                     </codx-input>
                 </div>
               </div>
-              <div class="col-xl-3 col-lg-6 col-md-2">
+              <div class="col-xxl-3 col-xl-4 col-lg-6 col-md-5">
                 <div class="form-group">
                   <codx-label style="white-space: nowrap !important" fiedName="VoucherNo"
                     [formModel]="dialog.formModel">
@@ -324,7 +324,7 @@
               </div>
             </div>
             <div *ngIf="postDateControl == '1'" class="row justify-content-end">
-              <div class="col-xl-7 col-lg-12 col-md-4">
+              <div class="col-xxl-6 col-xl-8 col-lg-12 col-md-10">
                 <div class="form-group">
                   <codx-label style="white-space: nowrap !important" fiedName="PostedDate"
                     [formModel]="dialog.formModel">

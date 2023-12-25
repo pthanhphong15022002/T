@@ -153,6 +153,12 @@ export class PopupUpdateStatusComponent
   }
   checkStatus(statusOld, statusNew): string {
     if (statusNew == statusOld && statusNew) return '';
+    if(this.applyFor == '5') {
+      if(statusNew == '11' || statusNew == '13') {
+        this.messageChangeStatus = 'Tiềm năng phải được chuyển đổi thành công cơ hội';
+        return '';
+      }
+    }
     if (statusOld == '0') {
       if (statusNew != '0') {
         this.messageChangeStatus = 'CM058';

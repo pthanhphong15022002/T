@@ -40,7 +40,6 @@ import {
 // } from '@abacritt/angularx-social-login';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { Login2FAComponent } from './login2-fa/login2-fa.component';
-import { SignalRService } from 'projects/codx-common/src/lib/_layout/drawers/chat/services/signalr.service';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
 
 @Component({
@@ -49,6 +48,7 @@ import { NgxUiLoaderService } from 'ngx-ui-loader';
   styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent extends UIComponent implements OnInit, OnDestroy {
+  environment = environment;
   @ViewChild('Error') error: ElementRef;
   defaultAuth: any = {
     email: '', // 'admin@demo.com',
@@ -64,7 +64,6 @@ export class LoginComponent extends UIComponent implements OnInit, OnDestroy {
   email = null;
   mode: string = 'login'; // 'login' | 'firstLogin' | 'activeTenant' | 'changePass';
   user: any;
-  layoutCZ: any;
   sysSetting;
   //login2FA = '';
   hubConnectionID = '';
@@ -82,14 +81,12 @@ export class LoginComponent extends UIComponent implements OnInit, OnDestroy {
     private dt: ChangeDetectorRef,
     private auth: AuthStore,
     private realHub: RealHubService,
-    private signalRService: SignalRService,
     private readonly authService: AuthService,
     private shareService: CodxShareService,
     private loginService: LoginService,
     private ngxLoader: NgxUiLoaderService
   ) {
     super(inject);
-    this.layoutCZ = environment.layoutCZ;
     this.tenant = this.tenantStore.getName();
     CacheRouteReuseStrategy.clear();
 

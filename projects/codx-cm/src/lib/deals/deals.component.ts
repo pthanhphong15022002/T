@@ -507,6 +507,20 @@ export class DealsComponent
             this.checkMoreReason(data, false)
           : true;
     };
+    let isUpdateProcess = (eventItem, data) => {
+      eventItem.disabled = data.full
+        ? data.closed ||
+          data.applyProcess ||
+          this.checkMoreReason(data,false) ||
+          ( data?.applyProcess && ['3', '5'].includes(data.status))
+        : true;
+    };
+    let isDeleteProcess = (eventItem, data) => {
+      eventItem.disabled = data.full
+        ? data.closed || !data.applyProcess || this.checkMoreReason(data,false)
+        : true;
+    };
+
     functionMappings = {
       ...['CM0201_1', 'CM0201_3', 'CM0201_4', 'CM0201_5'].reduce(
         (acc, code) => ({ ...acc, [code]: isDisabled }),
@@ -534,6 +548,8 @@ export class DealsComponent
       CM0201_16: isRejectApprover,
       CM0201_15: isPermission,
       CM0201_17: isChangeStatus,
+      CM0201_19: isUpdateProcess,
+      CM0201_20: isDeleteProcess,
     };
 
     return functionMappings[type];
@@ -630,6 +646,8 @@ export class DealsComponent
       CM0201_15: () => this.popupPermissions(data),
       CM0201_17: () => this.changeStatus(data),
       CM0201_18: () => this.addTask(data),
+      CM0201_19: () => this.updateProcess(data, true),
+      CM0201_20: () => this.updateProcess(data, false),
     };
 
     const executeFunction = functionMapping[e.functionID];
@@ -658,6 +676,38 @@ export class DealsComponent
       );
       this.detectorRef.detectChanges();
     }
+  }
+  updateProcess(data, isCheck) {
+    this.notificationsService
+      .alertCode('DP033', null, [
+        '"' + data?.dealName + '" ' + this.titleAction + ' ',
+      ])
+      .subscribe((x) => {
+        if (x.event && x.event.status == 'Y') {
+          let datas = [data.recID, data.status, '', isCheck];
+          this.getApiUpdateProcess(datas);
+        }
+      });
+  }
+  getApiUpdateProcess(datas) {
+    this.codxCmService.updateProcessDeal(datas).subscribe((res) => {
+      if (res) {
+        this.dataSelected = res;
+        this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
+        this.notificationsService.notifyCode('SYS007');
+        this.view.dataService.update(this.dataSelected, true).subscribe();
+        if (this.dataSelected.applyProcess) {
+         this.detailViewDeal.promiseAllAsync();
+        }
+        else {
+          this.detailViewDeal.reloadListStep([]);
+        }
+        if (this.kanban) {
+          this.renderKanban(this.dataSelected);
+        }
+      }
+      this.detectorRef.detectChanges();
+    });
   }
   afterSave(e?: any, that: any = null) {
     if (e) {
@@ -2074,7 +2124,7 @@ export class DealsComponent
     let obj = {
       statusDefault: this.dataSelected?.statusCodeID,
       statusCodecmt: this.dataSelected?.statusCodeCmt,
-      applyProcess: true,
+      applyProcess: this.dataSelected.applyProcess,
       title: this.titleAction,
       recID: this.dataSelected.recID,
       gridViewSetup: this.gridViewSetup,

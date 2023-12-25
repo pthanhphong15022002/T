@@ -948,6 +948,14 @@ export class CodxCmService {
       data
     );
   }
+  updateProcessDeal(data) {
+    return this.api.exec<any>(
+      'CM',
+      'DealsBusiness',
+      'UpdateProcessDealAsync',
+      data
+    );
+  }
 
   isExistCaseNo(data) {
     return this.api.execSv<any>(
@@ -1136,14 +1144,14 @@ export class CodxCmService {
       data
     );
   }
-  updateOwnerInstance(data) {
-    return this.api.exec<any>(
-      'DP',
-      'InstancesStepsBusiness',
-      'UpdateOwnerAsync',
-      data
-    );
-  }
+  // updateOwnerInstance(data) {
+  //   return this.api.exec<any>(
+  //     'DP',
+  //     'InstancesStepsBusiness',
+  //     'UpdateOwnerAsync',
+  //     data
+  //   );
+  // }
 
   getViewDetailDealAsync(data) {
     return this.api.exec<any>(

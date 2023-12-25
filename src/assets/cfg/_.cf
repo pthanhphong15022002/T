@@ -1,5 +1,5 @@
 {
-  "apiUrl": "http://172.16.7.34:8011",
+  "apiUrl": "http://localhost:8011",
   "reportUrl": "http://172.16.7.34:4203/report",
   "shopping": "https://172.16.7.34:44317/Shopping",
   "urlUpload": "http://172.16.7.34:8011/lvfile",
@@ -14,9 +14,12 @@
   "captchaEnable": 0,
   "loginHCS":"https://surehcs.lacviet.vn/UI2017",
   "layout": {
+    "id": "lacviet",
     "title": "",
     "icon": "",
-    "logo": ""
+    "logo": "",
+    "appleStore":"https://apps.apple.com/us/app/codx/id6459408551",
+    "playStore":"https://play.google.com/store/apps/details?id=com.lacviet.codxaws"
   },
   "asideMode": "all",
   "externalLogin": {
