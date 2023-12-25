@@ -19,9 +19,9 @@ import { RealHub, RealHubService, AuthService, UIComponent } from 'codx-core';
 import { environment } from 'src/environments/environment';
 import { Modal } from 'bootstrap';
 import { Login2FAComponent } from '@modules/auth/login/login2-fa/login2-fa.component';
-import { Device } from 'projects/codx-ad/src/lib/models/userLoginExtend.model';
 import { SelectEventArgs } from '@syncfusion/ej2-angular-navigations';
 import { LoginService } from '@modules/auth/login/login.service';
+import { DisplayTextModel } from '@syncfusion/ej2-angular-barcode-generator';
 
 @Component({
   selector: 'codx-login',
@@ -93,6 +93,10 @@ export class LoginDefaultComponent extends UIComponent {
     spcialChar: true,
   };
 
+  urlAppleStore: string='https://apps.apple.com/us/app/codx/id6459408551';
+  urlPlayStore: string='https://play.google.com/store/apps/details?id=com.lacviet.codxaws';
+  public qrDisplayText?: DisplayTextModel;
+
   constructor(
     private injector: Injector,
     private df: ChangeDetectorRef,
@@ -109,10 +113,15 @@ export class LoginDefaultComponent extends UIComponent {
   }
 
   onInit(): void {
+    
+  this.qrDisplayText = {
+    visibility: false
+  };
+
     if (this.enableCaptcha == 0) {
       this.captChaValid = true;
     } else {
-      let captChaControl = this.loginForm.controls['captCha'];
+      let captChaControl = this.loginForm.controls['captcha'];
       captChaControl?.valueChanges.subscribe((e) => {
         this.captChaValid = captChaControl.valid;
       });
