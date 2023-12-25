@@ -214,7 +214,7 @@ export class DealDetailComponent implements OnInit {
       //   this.dataSelected.recID,
       //   this.dataSelected?.categoryCustomer
       // );
-      // await this.getHistoryByDeaID();
+      await this.getHistoryByDeaID();
       await this.getViewDetailDeal();
     } catch (error) {}
   }
@@ -354,16 +354,16 @@ export class DealDetailComponent implements OnInit {
   //       }
   //     });
   // }
-  // async getHistoryByDeaID() {
-  //   if (this.dataSelected?.recID) {
-  //     var data = [this.dataSelected?.recID];
-  //     this.codxCmService.getDataTabHistoryDealAsync(data).subscribe((res) => {
-  //       if (res) {
-  //         this.mergedList = res[0];
-  //       }
-  //     });
-  //   }
-  // }
+  async getHistoryByDeaID() {
+    if (this.dataSelected?.recID) {
+      let data = [this.dataSelected?.recID];
+      this.codxCmService.getDataTabHistoryDealAsync(data).subscribe((res) => {
+        if (res) {
+          this.mergedList = res;
+        }
+      });
+    }
+  }
   async getViewDetailDeal() {
     if (this.dataSelected?.recID) {
       let data = [

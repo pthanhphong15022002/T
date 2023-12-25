@@ -14,9 +14,12 @@
   "captchaEnable": 0,
   "loginHCS":"https://surehcs.lacviet.vn/UI2017",
   "layout": {
+    "id": "lacviet",
     "title": "",
     "icon": "",
-    "logo": ""
+    "logo": "",
+    "appleStore":"https://apps.apple.com/us/app/codx/id6459408551",
+    "playStore":"https://play.google.com/store/apps/details?id=com.lacviet.codxaws"
   },
   "asideMode": "all",
   "externalLogin": {
