@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
-import { ApiHttpService, AuthStore, CacheService, CodxService, NotificationsService } from 'codx-core';
+import { ApiHttpService, AuthStore, CacheService, CodxService, FormModel, NotificationsService } from 'codx-core';
 
 @Injectable({
   providedIn: 'root'
@@ -62,5 +62,33 @@ export class CodxPrService {
     //#endregion
 
   //#endregion
+  getFormModel(functionID): Promise<FormModel> {
+    return new Promise<FormModel>((resolve, rejects) => {
+      this.cache.functionList(functionID).subscribe((funcList) => {
+        var formModel = new FormModel();
+        if (funcList) {
+          formModel.entityName = funcList?.entityName;
+          formModel.formName = funcList?.formName;
+          formModel.gridViewName = funcList?.gridViewName;
+          formModel.funcID = funcList?.functionID;
+          formModel.entityPer = funcList?.entityPer;
+
+          this.cache.gridView(formModel.gridViewName).subscribe((gridView) => {
+            this.cache.setGridView(formModel.gridViewName, gridView);
+            this.cache
+              .gridViewSetup(formModel.formName, formModel.gridViewName)
+              .subscribe((gridViewSetup) => {
+                this.cache.setGridViewSetup(
+                  formModel.formName,
+                  formModel.gridViewName,
+                  gridViewSetup
+                );
+                resolve(formModel);
+              });
+          });
+        }
+      });
+    });
+  }
 
 }

@@ -2,10 +2,9 @@ import { ChangeDetectorRef, Component, HostListener, Injector, OnInit, Optional,
 import { CRUDService, CacheService, CallFuncService, CodxFormComponent, CodxGridviewV2Component, DialogData, DialogRef, FormModel, NotificationsService, UIComponent, Util } from 'codx-core';
 import { CodxHrService } from 'projects/codx-hr/src/public-api';
 import { EditSettingsModel } from '@syncfusion/ej2-angular-grids';
-import {Kowds} from '../kowds.model';
-import { DateRangePickerModule } from '@syncfusion/ej2-angular-calendars';
+import { Kowds } from '../../../models/kowds.model';
 @Component({
-  selector: 'lib-popup-ekowds',
+  selector: 'pr-popup-ekowds',
   templateUrl: './popup-ekowds.component.html',
   styleUrls: ['./popup-ekowds.component.css']
 })

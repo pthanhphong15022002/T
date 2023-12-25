@@ -22,11 +22,11 @@ import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { Subject, isObservable, takeUntil } from 'rxjs';
 
 @Component({
-  selector: 'lib-view-detail-ot',
-  templateUrl: './view-detail-ot.component.html',
-  styleUrls: ['./view-detail-ot.component.css'],
+  selector: 'tr-view-detail',
+  templateUrl: './view-detail.component.html',
+  styleUrls: ['./view-detail.component.css'],
 })
-export class ViewDetailOtComponent {
+export class ViewDetailComponent {
   tabControl: TabModel[] = [];
 
   @Input() recID;

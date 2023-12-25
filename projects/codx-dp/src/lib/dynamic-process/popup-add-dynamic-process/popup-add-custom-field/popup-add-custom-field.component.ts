@@ -162,7 +162,6 @@ export class PopupAddCustomFieldComponent implements OnInit {
   fieldNameOld = '';
   //create autoNumber
   vllDateFormat: any;
-  fieldNoAutoEx: string = '';
   adAutoNumber: any;
   private destroyFrom$: Subject<void> = new Subject<void>();
 
@@ -993,30 +992,25 @@ export class PopupAddCustomFieldComponent implements OnInit {
     }
   }
   //end
-  //đánh số tự động
-  //Popup setiing autoNumber
-  async openAutoNumPopup() {
-    //view new
 
-    let noAuto = await firstValueFrom(
-      this.dpService
-        .getADAutoNumberByAutoNoCode(this.field.recID)
-        .pipe(takeUntil(this.destroyFrom$))
-    );
+  //** đánh số tự động - Popup setiing autoNumber */
+
+  async openAutoNumPopup() {
+    this.getVllFormat();
     let obj = {};
-    if (!noAuto) {
+    if (!this.field.dataFormat) {
       //save new autoNumber
       obj = {
         autoNoCode: this.field.recID,
-        description: 'DP_Instances',
+        description: 'DP_Instances_Steps_Field',
         newAutoNoCode: this.field.recID,
         isSaveNew: '1',
       };
     } else {
       //cap nhật
       obj = {
-        autoNoCode: this.fieldNoAutoEx,
-        description: 'DP_Instances',
+        autoNoCode: this.field.dataFormat,
+        description: 'DP_Instances_Steps_Field',
       };
     }
     let op = new DialogModel();
@@ -1049,60 +1043,61 @@ export class PopupAddCustomFieldComponent implements OnInit {
 
       let lengthNumber;
       let strNumber = '';
-      this.fieldNoAutoEx = data?.fixedString + data?.separator + dateFormat;
-      lengthNumber = data?.maxLength - this.fieldNoAutoEx.length;
+      let fieldNoAutoEx = data?.fixedString + data?.separator + dateFormat;
+      lengthNumber = data?.maxLength - fieldNoAutoEx.length;
       strNumber = '#'.repeat(lengthNumber);
       switch (data?.stringFormat) {
         // {value: '0', text: 'Chuỗi & Ngày - Số', default: 'Chuỗi & Ngày - Số', color: null, textColor: null, …}
         case '0': {
-          this.fieldNoAutoEx =
+          fieldNoAutoEx =
             data?.fixedString + dateFormat + data?.separator + strNumber;
           break;
         }
         // {value: '1', text: 'Chuỗi & Số - Ngày', default: 'Chuỗi & Số - Ngày', color: null, textColor: null, …}
         case '1': {
-          this.fieldNoAutoEx =
+          fieldNoAutoEx =
             data?.fixedString + strNumber + data?.separator + dateFormat;
           break;
         }
         // {value: '2', text: 'Số - Chuỗi & Ngày', default: 'Số - Chuỗi & Ngày', color: null, textColor: null, …}
         case '2':
-          this.fieldNoAutoEx =
+          fieldNoAutoEx =
             strNumber + data?.separator + data?.fixedString + dateFormat;
           break;
         // {value: '3', text: 'Số - Ngày & Chuỗi', default: 'Số - Ngày & Chuỗi', color: null, textColor: null, …}
         case '3':
-          this.fieldNoAutoEx =
+          fieldNoAutoEx =
             strNumber + data?.separator + dateFormat + data?.fixedString;
           break;
 
         // {value: '4', text: 'Ngày - Số & Chuỗi', default: 'Ngày - Số & Chuỗi', color: null, textColor: null, …}
         case '4': {
-          this.fieldNoAutoEx =
+          fieldNoAutoEx =
             dateFormat + data?.separator + strNumber + data?.fixedString;
           break;
         }
         // {value: '5', text: 'Ngày & Chuỗi & Số', default: 'Ngày & Chuỗi & Số', color: null, textColor: null, …}
         case '5': {
-          this.fieldNoAutoEx = data?.fixedString + dateFormat;
-          lengthNumber = data?.maxLength - this.fieldNoAutoEx.length;
+          fieldNoAutoEx = data?.fixedString + dateFormat;
+          lengthNumber = data?.maxLength - fieldNoAutoEx.length;
           strNumber = '#'.repeat(lengthNumber);
-          this.fieldNoAutoEx = dateFormat + data?.fixedString + strNumber;
+          fieldNoAutoEx = dateFormat + data?.fixedString + strNumber;
           break;
         }
         // {value: '6', text: 'Chuỗi - Ngày', default: 'Chuỗi - Ngày', color: null, textColor: null, …}
         case '6': {
-          this.fieldNoAutoEx = data?.fixedString + data?.separator + dateFormat;
+          fieldNoAutoEx = data?.fixedString + data?.separator + dateFormat;
           break;
         }
         // {value: '7', text: 'Ngày - Chuỗi', default: 'Ngày - Chuỗi', color: null, textColor: null, …}
         case '7': {
-          this.fieldNoAutoEx = dateFormat + data?.separator + data?.fixedString;
+          fieldNoAutoEx = dateFormat + data?.separator + data?.fixedString;
           break;
         }
       }
 
-      this.fieldNoAutoEx = this.fieldNoAutoEx.substring(0, data?.maxLength);
+      fieldNoAutoEx = fieldNoAutoEx.substring(0, data?.maxLength);
+      this.field.dataFormat = fieldNoAutoEx;
       // this.changeDetectorRef.detectChanges();
       this.changeRef.markForCheck();
     }
@@ -1110,12 +1105,12 @@ export class PopupAddCustomFieldComponent implements OnInit {
 
   async getVllFormat() {
     this.vllDateFormat = await firstValueFrom(this.cache.valueList('L0088'));
-    if (!this.adAutoNumber && this.action != 'add') {
-      this.adAutoNumber = await firstValueFrom(
-        this.dpService.getADAutoNumberByAutoNoCode(this.field.recID)
-      );
-      if (this.adAutoNumber) this.setViewAutoNumber(this.adAutoNumber);
-    }
+    // if (!this.adAutoNumber && this.action != 'add') {
+    //   this.adAutoNumber = await firstValueFrom(
+    //     this.dpService.getADAutoNumberByAutoNoCode(this.field.recID)
+    //   );
+    //   if (this.adAutoNumber) this.setViewAutoNumber(this.adAutoNumber);
+    // }
   }
   //end
 

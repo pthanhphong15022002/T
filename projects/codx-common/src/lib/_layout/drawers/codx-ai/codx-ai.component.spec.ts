@@ -1,16 +1,16 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CodxTrComponent } from './codx-tr.component';
+import { CodxAiComponent } from './codx-ai.component';
 
-describe('CodxTrComponent', () => {
-  let component: CodxTrComponent;
-  let fixture: ComponentFixture<CodxTrComponent>;
+describe('CodxAiComponent', () => {
+  let component: CodxAiComponent;
+  let fixture: ComponentFixture<CodxAiComponent>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [CodxTrComponent]
+      declarations: [CodxAiComponent]
     });
-    fixture = TestBed.createComponent(CodxTrComponent);
+    fixture = TestBed.createComponent(CodxAiComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

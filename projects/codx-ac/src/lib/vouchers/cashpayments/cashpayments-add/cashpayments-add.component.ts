@@ -55,6 +55,7 @@ import { Validators } from '@angular/forms';
 import { AC_VATInvoices } from '../../../models/AC_VATInvoices.model';
 import { AC_CashPaymentsLines } from '../../../models/AC_CashPaymentsLines.model';
 import { SuggestionAdd } from '../../../share/suggestion-add/suggestion-add.component';
+import { CodxTabsComponent } from 'projects/codx-share/src/lib/components/codx-tabs/codx-tabs.component';
 @Component({
   selector: 'lib-cashpayments-add',
   templateUrl: './cashpayments-add.component.html',
