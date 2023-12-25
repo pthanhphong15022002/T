@@ -943,6 +943,15 @@ export class CodxCmService {
       data
     );
   }
+  updateProcessDeal(data) {
+    return this.api.execSv<any>(
+      'CM',
+      'ERM.Business.CM',
+      'DealsBusiness',
+      'UpdateProcessDealAsync',
+      data
+    );
+  }
 
   isExistCaseNo(data) {
     return this.api.execSv<any>(
