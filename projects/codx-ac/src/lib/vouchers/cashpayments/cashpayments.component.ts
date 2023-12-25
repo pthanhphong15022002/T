@@ -38,21 +38,21 @@ declare var jsBh: any;
 export class CashPaymentsComponent extends UIComponent {
   //#region Constructor
   views: Array<ViewModel> = []; // model view
-  @ViewChild('templateDetailLeft') templateDetailLeft?: TemplateRef<any>; //? template view danh sách chi tiết (trái)
-  @ViewChild('templateDetailRight') templateDetailRight: TemplateRef<any>; //? template view danh sách chi tiết (phải)
-  @ViewChild('listTemplate') listTemplate?: TemplateRef<any>; //? template view danh sách
-  @ViewChild('templateGrid') templateGrid?: TemplateRef<any>; //? template view lưới
+  @ViewChild('templateDetailLeft') templateDetailLeft?: TemplateRef<any>;
+  @ViewChild('templateDetailRight') templateDetailRight: TemplateRef<any>;
+  @ViewChild('listTemplate') listTemplate?: TemplateRef<any>;
+  @ViewChild('templateGrid') templateGrid?: TemplateRef<any>;
   headerText: any;
   runmode: any;
-  journalNo: string; //? số của sổ nhật kí
-  itemSelected: any; //? data của view danh sách chi tiết khi được chọn
-  userID: any; //?  tên user đăng nhập
-  dataCategory: any; //? data của category
-  journal: any; //? data sổ nhật kí
-  baseCurr: any; //? đồng tiền hạch toán
-  legalName: any; //? tên công ty
-  dataDefault: any; //? data default của phiếu
-  hideFields: Array<any> = []; //? array field được ẩn lấy từ journal
+  journalNo: string;
+  itemSelected: any;
+  userID: any;
+  dataCategory: any;
+  journal: any;
+  baseCurr: any;
+  legalName: any;
+  dataDefault: any;
+  hideFields: Array<any> = [];
   button: ButtonModel[] = [{
     //? nút thêm phiếu
     id: 'btnAdd',
@@ -64,7 +64,7 @@ export class CashPaymentsComponent extends UIComponent {
   bankReceiveName: any;
   viewActive:number = ViewType.listdetail;
   ViewType = ViewType;
-  private destroy$ = new Subject<void>(); //? list observable hủy các subscribe api
+  private destroy$ = new Subject<void>();
   constructor(
     private inject: Injector,
     private acService: CodxAcService,
@@ -80,14 +80,14 @@ export class CashPaymentsComponent extends UIComponent {
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
         if (res.length > 0) {
-          this.baseCurr = res[0].baseCurr; //? get đồng tiền hạch toán
-          this.legalName = res[0].legalName; //? get tên company
+          this.baseCurr = res[0].baseCurr;
+          this.legalName = res[0].legalName;
         }
       });
     this.router.params
       .pipe(takeUntil(this.destroy$))
       .subscribe((params) => {
-        this.journalNo = params?.journalNo; //? get số journal từ router
+        this.journalNo = params?.journalNo;
       });
   }
   //#endregion Constructor
@@ -114,7 +114,7 @@ export class CashPaymentsComponent extends UIComponent {
   ngAfterViewInit() {
     this.views = [
       {
-        type: ViewType.listdetail, //? thiết lập view danh sách chi tiết
+        type: ViewType.listdetail,
         active: true,
         sameData: true,
         model: {
@@ -126,7 +126,7 @@ export class CashPaymentsComponent extends UIComponent {
         },
       },
       {
-        type: ViewType.list, //? thiết lập view danh sách
+        type: ViewType.list,
         active: false,
         sameData: true,
         model: {
@@ -134,7 +134,7 @@ export class CashPaymentsComponent extends UIComponent {
         },
       },
       {
-        type: ViewType.grid, //? thiết lập view lưới
+        type: ViewType.grid,
         active: false,
         sameData: true,
         model: {
@@ -142,7 +142,7 @@ export class CashPaymentsComponent extends UIComponent {
         },
       },
       {
-        type: ViewType.grid_detail, //? thiết lập view lưới
+        type: ViewType.grid_detail,
         active: false,
         sameData: true,
         model: {
@@ -156,7 +156,7 @@ export class CashPaymentsComponent extends UIComponent {
           formName:'CashPaymentsLines',
           gridviewName:'grvCashPaymentsLines',
           parentField:'TransID',
-          parentNameField:'Memo',
+          parentNameField:'VoucherNo',
           hideMoreFunc:true,
           request:{
             service: 'AC',

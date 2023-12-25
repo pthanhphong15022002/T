@@ -78,7 +78,7 @@
   </ejs-tab>
 
   <!-- Start: Tab Detail -->
-  <div style="height: calc(100vh - 380px) !important;">
+  <div style="height: calc(100vh - 395px) !important;">
     <ejs-tab>
       <e-tabitems>
         <e-tabitem>
@@ -144,10 +144,10 @@
   <ng-container *ngIf="formVouchers?.formGroup">
     <div class="mt-3">
       <div class="row">
-        <div class="col-xl-7 col-lg-8">
-          <div style="max-width: 850px;">
+        <div class="col-xxl-8 col-xl-8 col-lg-8">
+          <div class="container mx-0 px-0">
             <div class="row">
-              <div class="col-xl-3 col-lg-4">
+              <div class="col-xxl-2 col-xl-3 col-lg-3">
                 <div class="form-group">
                   <codx-label style="white-space: nowrap !important" fiedName="WarehouseID"
                     [formModel]="dialog.formModel">
@@ -157,7 +157,7 @@
                     </codx-input>
                 </div>
               </div>
-              <div class="col-xl-3 col-lg-4">
+              <div class="col-xxl-2 col-xl-3 col-lg-3">
                 <div class="form-group">
                   <codx-label style="white-space: nowrap !important" fiedName="ReasonID"
                     [formModel]="dialog.formModel">
@@ -169,7 +169,7 @@
               </div>
             </div>
             <div class="row" [ngStyle]="formVouchers?.data?.subType == '0301' || formVouchers?.data?.subType == '0311' ? '' : {display:'none'}">
-              <div class="col-xl-4 col-lg-5">
+              <div class="col-xxl-3 col-xl-4 col-lg-5">
                 <div class="form-group">
                   <codx-label style="white-space: nowrap !important" fiedName="DIM1"
                     [formModel]="dialog.formModel">
@@ -180,7 +180,7 @@
                   </ng-container>
                 </div>
               </div>
-              <div class="col-xl-3 col-lg-4">
+              <div class="col-xxl-3 col-xl-4 col-lg-4">
                 <div class="form-group">
                   <codx-label style="white-space: nowrap !important" fiedName="DIM2"
                     [formModel]="dialog.formModel">
@@ -193,7 +193,7 @@
               </div>
             </div>
             <div class="row" [ngStyle]="formVouchers?.data?.subType == '0302' || formVouchers?.data?.subType == '0312' ? '' : {display:'none'}">
-              <div class="col-xl-6 col-lg-6">
+              <div class="col-xxl-4 col-xl-5 col-lg-6">
                 <div class="form-group">
                   <codx-label style="white-space: nowrap !important" fiedName="ObjectID"
                     [formModel]="dialog.formModel">
@@ -204,7 +204,7 @@
                   </ng-container>
                 </div>
               </div>
-              <div class="col-xl-3 col-lg-3">
+              <div class="col-xxl-2 col-xl-3 col-lg-3">
                 <div class="form-group">
                   <codx-label style="white-space: nowrap !important" fiedName="Requester"
                     [formModel]="dialog.formModel">
@@ -215,7 +215,7 @@
                   </ng-container>
                 </div>
               </div>
-              <div class="col-xl-3 col-lg-3">
+              <div class="col-xxl-2 col-xl-3 col-lg-3">
                 <div class="form-group">
                   <codx-label style="white-space: nowrap !important" fiedName="RequestDate"
                     [formModel]="dialog.formModel">
@@ -229,8 +229,8 @@
               </div>
             </div>
             <div class="row">
-              <div [ngClass]="formVouchers?.data?.subType == '0301' ? 'col-xl-7 col-lg-9' : 'col-xl-12 col-lg-12'">
-                <div class="form-group mb-0">
+              <div [ngClass]="(formVouchers?.data?.subType == '0301' || formVouchers?.data?.subType == '0311') ? 'col-xxl-6 col-xl-8 col-lg-9' : 'col-xxl-8 col-xl-11 col-lg-12'">
+                <div class="form-group">
                   <codx-label style="white-space: nowrap !important" fiedName="Memo"
                     [formModel]="dialog.formModel">
                   </codx-label>
@@ -240,12 +240,12 @@
                 </div>
               </div>
             </div>
-          </div>
+          </div>  
         </div>
-        <div class="col-xl-5 col-lg-4 d-flex justify-content-end">
-          <div style="max-width: 500px;"  class="d-flex flex-column w-100">
+        <div class="col-xxl-4 col-xl-4 col-lg-4 justify-content-end">
+          <div class="container mx-0 px-0">
             <div class="row justify-content-end">
-              <div class="col-xl-4 col-lg-6">
+              <div class="col-xxl-3 col-xl-4 col-lg-6">
                 <div class="form-group">
                   <codx-label style="white-space: nowrap !important" fiedName="VoucherDate"
                     [formModel]="dialog.formModel">
@@ -255,7 +255,7 @@
                     </codx-input>
                 </div>
               </div>
-              <div class="col-xl-4 col-lg-6">
+              <div class="col-xxl-3 col-xl-4 col-lg-6">
                 <div class="form-group">
                   <codx-label style="white-space: nowrap !important" fiedName="VoucherNo"
                     [formModel]="dialog.formModel">
