@@ -11,20 +11,10 @@ export class ContractsService {
     { name: 'general', textDefault: 'Thông tin chung', icon: 'icon-info', isActive: true },
     { name: 'task', textDefault: 'Công việc', icon: 'icon-more', isActive: false },
     { name: 'memo', textDefault: 'Ghi chú', icon: 'icon-sticky_note_2', isActive: false },
+    { name: 'appendix', textDefault: 'Phụ lục', icon: 'icon-appstore', isActive: false },
+    { name: 'disposal', textDefault: 'Thanh lý', icon: 'icon-payments', isActive: false },
   ];
-  // listTypeContractTask = [
-  //   { name: 'general', textDefault: 'Thông tin chung', icon: 'icon-info', isActive: true },
-  //   { name: 'quotations', textDefault: 'Chi tiết mặt hàng', icon: 'icon-link', isActive: false },
-  //   { name: 'pay', textDefault: 'Thanh toán', icon: 'icon-tune', isActive: false },
-  //   { name: 'ship', textDefault: 'Giao hàng', icon: 'icon-tune', isActive: false },
-  //   { name: 'task', textDefault: 'Công việc', icon: 'icon-more', isActive: false },
-  // ];
-  // listTypeContractAdd = [
-  //   { name: 'general', textDefault: 'Thông tin chung', icon: 'icon-info', isActive: true },
-  //   { name: 'quotations', textDefault: 'Chi tiết mặt hàng', icon: 'icon-link', isActive: false },
-  //   { name: 'pay', textDefault: 'Thanh toán', icon: 'icon-tune', isActive: false },
-  //   { name: 'ship', textDefault: 'Giao hàng', icon: 'icon-tune', isActive: false },
-  // ];
+
   footerTab = [
     { name: 'History', textDefault: 'Lịch sử', isActive: true, template: null },
     { template: null, isActive: false, name: 'Comment', textDefault: 'Thảo luận'},
