@@ -142,6 +142,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
   isActivitie = false;
   isSaveTimeTask = true;
   isLoadDateTask = false;
+  popupRealties;
   moreDefaut = {
     read: true,
     share: true,
@@ -1345,21 +1346,25 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
   //#endregion
 
   realtiesContract(){
+    // this.stepService.chooseTypeTask(['G','F'])
     let opt = new DialogModel();
       opt.FormModel = this.formModelAM;
       opt.zIndex = 1100;
-      this.callfunc.openForm(
+    this.popupRealties = this.callfunc.openForm(
         this.realtiesTmp,
         '',
         500,
         600,
         '',
-        this.contracts,
+        null,
         '',
         opt
       );
   }
 
+  saveRealties(){
+
+  }
   // ----------------------------------------------------('-')😒tdtkhanh báo thủ😒('-')-----------------------------------------------
 
   // getQuotationsLinesInContract(contractID, quotationID) {

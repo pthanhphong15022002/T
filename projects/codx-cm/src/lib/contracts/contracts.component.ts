@@ -398,7 +398,7 @@ export class ContractsComponent extends UIComponent {
       case 'CM0204_18': // thanh lý hợp đồng
         this.liquidationContract(data);
         break;
-      case 'CM0204_17': // thanh lý hợp đồng
+      case 'CM0204_17': // chia sẻ
         this.popupPermissions(data);
         break;
       default: {
@@ -1284,7 +1284,6 @@ export class ContractsComponent extends UIComponent {
     this.disposalOn = new Date();
     this.contractSelected = data;
     let opt = new DialogModel();
-      opt.FormModel = this.view.formModel;
       opt.zIndex = 1015;
       this.popupLiquidation = this.callFunc.openForm(
         this.liquidationTmp,
@@ -1292,7 +1291,7 @@ export class ContractsComponent extends UIComponent {
         500,
         600,
         '',
-        data,
+        null,
         '',
         opt
       );

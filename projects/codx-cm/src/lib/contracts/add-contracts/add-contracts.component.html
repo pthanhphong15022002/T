@@ -645,7 +645,121 @@
 </ng-template>
 
 <ng-template #realtiesTmp>
-  OK la
+  <div class="liquidation p-5">
+    <div class="header-liquidation w-100">
+      <div class="d-flex justify-content-between w-100">
+        <span class="fs-5 fw-bold">Thêm vị trí</span>
+        <button
+          class="button-close d-flex"
+          style="border: none; outline: none; background: none"
+          (click)="popupRealties.close()"
+        >
+          <i class="icon-close icon-18 text-hover-danger p-1"></i>
+        </button>
+      </div>
+    </div>
+    <div class="main-liquidation pt-3">
+      <div class="form-group">
+        <codx-label
+          [formModel]="formModelAM"
+          fiedName="assetID"
+        ></codx-label>
+        <codx-input
+          field="assetID"
+          [formModel]="formModelAM"
+          
+        ></codx-input>
+      </div>
+
+      <div class="form-group">
+        <div class="d-flex">
+          <codx-label
+          [formModel]="formModelAM"
+          name="lblUsableArea"
+          [default]="'Diện tích sử dụng'"
+        ></codx-label>
+        <p class="fw-bold m-0"> (m<sup>2</sup>)</p>
+        </div>
+        <codx-input
+          class="me-3"
+          field="usableArea"
+          [formModel]="formModelAM"
+          type="number"
+          min="0"
+        ></codx-input>
+        
+       
+      </div>
+
+      <div class="form-group">
+        <codx-label
+          [formModel]="formModelAM"
+          fiedName="salesPrice"
+        ></codx-label>
+        <codx-input
+          field="salesPrice"
+          [formModel]="formModelAM"
+          type="number"
+          min="0"
+        ></codx-input>
+      </div>
+
+      <div class="form-group">
+        <codx-label
+          [formModel]="formModelAM"
+          name="effectiveSalePrice"
+          [default]="'Giá bán hiệu quả'"
+        ></codx-label>
+        <codx-input
+          field="effectiveSalePrice"
+          [formModel]="formModelAM"
+          type="number"
+          min="0"
+        ></codx-input>
+      </div>
+
+      <div class="form-group">
+        <codx-label
+          [formModel]="formModelAM"
+          name="serviceFee"
+          [default]="'Phí dịch vụ'"
+        ></codx-label>
+        <codx-input
+          field="serviceFee"
+          [formModel]="formModelAM"
+          type="number"
+          min="0"
+        ></codx-input>
+      </div>
+
+      <div class="form-group">
+        <codx-label
+          [formModel]="formModelAM"
+          name="effectiveServiceFee"
+          [default]="'Phí dịch vụ hiệu quả'"
+        ></codx-label>
+        <codx-input
+          field="effectiveServiceFee"
+          [formModel]="formModelAM"
+          type="number"
+          min="0"
+        ></codx-input>
+      </div>
+    </div>
+    <div class="footer-liquidation w-100 d-flex justify-content-end">
+      <button
+        type="button"
+        class="btn btn-primary ms-1"
+        (click)="saveRealties()"
+      >
+        <codx-label
+          name="lblSave"
+          [formModel]="formModelAM"
+          default="Lưu"
+        ></codx-label>
+      </button>
+    </div>
+  </div>
 </ng-template>
 <!-- <div class="py-5" *ngIf="false">
   <header
