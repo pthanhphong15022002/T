@@ -14,6 +14,7 @@ import {
   CM_QuotationsLines,
   CM_ContractsPayments,
   CM_Permissions,
+  AM_Realties,
 } from '../../models/cm_model';
 import {
   Util,
@@ -81,6 +82,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
   quotationLinesAddNew: CM_QuotationsLines[] = [];
   quotationLinesDeleted: CM_QuotationsLines[] = [];
   listQLineOfContractAdd: CM_QuotationsLines[] = [];
+  listRealties: AM_Realties[] = [];
 
   listPayment: CM_ContractsPayments[] = [];
   listPaymentAdd: CM_ContractsPayments[] = [];
@@ -142,6 +144,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
   isActivitie = false;
   isSaveTimeTask = true;
   isLoadDateTask = false;
+  popupRealties;
   moreDefaut = {
     read: true,
     share: true,
@@ -149,6 +152,9 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
     delete: true,
     download: true,
   };
+
+  isShowFieldLeft = false;
+  nameTabFieldsSetting = '';
   // Tab control
   tabInfo = [
     {
@@ -161,18 +167,20 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
     {
       icon: 'icon-reorder',
       text: 'Tham chiếu',
-      name: 'InputInfo',
+      name: 'InputReference',
       subName: 'Input information',
       subText: 'Input information',
     },
-    {
-      icon: 'icon-contact_phone',
-      text: 'Mở rộng',
-      name: 'GeneralContact',
-      subName: 'General contact',
-      subText: 'General contact',
-    },
   ];
+  
+  tabField = {
+    icon: 'icon-reorder',
+    text: 'Thông tin mở rộng',
+    name: 'InputField',
+    subName: 'Input field',
+    subText: 'Input field',
+  };
+
   //#region FormModel
   formModel: FormModel = {
     funcID: 'CM0204',
@@ -1344,22 +1352,139 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
   }
   //#endregion
 
-  realtiesContract(){
-    let opt = new DialogModel();
-      opt.FormModel = this.formModelAM;
-      opt.zIndex = 1100;
-      this.callfunc.openForm(
-        this.realtiesTmp,
-        '',
-        500,
-        600,
-        '',
-        this.contracts,
-        '',
-        opt
-      );
+  async getListInstanceSteps(processId: any) {
+    let data = [processId, this.contracts?.refID, this.action, '4'];
+    this.cmService.getInstanceSteps(data).subscribe(async (res) => {
+      if (res && res.length > 0) {
+        let obj = {
+          id: processId,
+          steps: res[0],
+          permissions: res[1],
+          contractID: this.action !== 'edit' ? res[2] : this.contracts?.contractID,
+          processSetting: res[3],
+        };
+        let isExist = this.listMemorySteps.some((x) => x.id === processId);
+        if (!isExist) {
+          this.listMemorySteps.push(obj);
+        }
+        this.listInstanceSteps = res[0];
+        this.getSettingFields(res[3],this.listInstanceSteps);
+        this.listParticipants = [];
+        this.listParticipants = JSON.parse(JSON.stringify(obj?.permissions));
+        // if (this.action === "edit") {
+        //   // this.owner = this.deal.owner;
+        // } else {
+        //   if (this.listParticipants?.length > 0 && this.listParticipants && !this.owner) {
+        //     let index = this.listParticipants?.findIndex(
+        //       (x) => x.userID === this.user.userID
+        //     );
+        //     this.owner = index != -1 ? this.user.userID : null;
+        //   }
+        //   this.deal.dealID = res[2];
+        // }
+        // this.dateMax = this.HandleEndDate(
+        //   this.listInstanceSteps,
+        //   this.action,
+        //   this.action !== this.actionEdit ||
+        //     (this.action === this.actionEdit &&
+        //       (this.deal.status == '1' || this.deal.status == '15'))
+        //     ? null
+        //     : this.deal.createdOn
+        // );
+        // this.deal.endDate =
+        //   this.action === this.actionEdit ? this.deal?.endDate : this.dateMax;
+        this.changeDetectorRef.detectChanges();
+      }
+    });
   }
 
+  getSettingFields(processSetting,listInstanceSteps) {
+    this.isShowFieldLeft = processSetting?.addFieldsControl == '1';
+    this.setAutoNameTabFields( processSetting?.autoNameTabFields);
+    this.itemTabsInput(this.ischeckFields(listInstanceSteps));
+  }
+
+  setAutoNameTabFields(autoNameTabFields) {
+    this.nameTabFieldsSetting = autoNameTabFields;
+    if (this.tabField) {
+      this.tabField.text = autoNameTabFields?.trim() ? autoNameTabFields?.trim() : "Thông tin mở rộng";
+    }
+  }
+
+  ischeckFields(liststeps: any): boolean {
+    this.listField = [];
+    if(this.action !== 'edit') {
+      let stepCurrent = liststeps[0];
+      if(stepCurrent && stepCurrent.fields?.length > 0 ) {
+        let filteredTasks = stepCurrent.tasks.filter(task => task?.fieldID && task?.fieldID?.trim())
+        .map(task => task.fieldID)
+        .flatMap(item => item.split(';')
+        .filter(item => item !== ''));
+
+        let listField = stepCurrent.fields.filter(field => !filteredTasks.includes(this.action === 'copy'? field?.recID: field?.refID));
+        this.listField = [...this.listField, ...listField];
+      }
+     }
+     else {
+      let idxCrr = liststeps.findIndex((x) => x.stepID == this.instance?.stepID);
+      if (idxCrr != -1) {
+        for (let i = 0; i <= idxCrr; i++) {
+          let stepCurrent = liststeps[i];
+          if(stepCurrent && stepCurrent.fields?.length > 0 ) {
+            let filteredTasks = stepCurrent?.tasks.filter(task => task?.fieldID !== null && task?.fieldID?.trim() !== '')
+            .map(task => task?.fieldID)
+            .flatMap(item => item.split(';').filter(item => item !== ''));
+            let listFields = stepCurrent?.fields.filter(field => !filteredTasks.includes(field?.recID));
+            this.listField = [...this.listField, ...listFields];
+          }
+        }
+      }
+    }
+    return this.listField != null && this.listField?.length > 0;
+  }
+  itemTabsInput(check: boolean,): void {
+    // let menuInput = this.tabInfo.findIndex(
+    //   (item) => item?.name === this.menuInputInfo?.name //Phúc gắn thêm name để nó lấy chính xác hơn.
+    // );
+    // let tabInput = this.tabContent.findIndex(
+    //   (item) => item === this.tabCustomFieldDetail
+    // );
+    // if(this.isShowField) {
+    //   if (check && menuInput == -1 && tabInput == -1) {
+    //     this.tabInfo.splice(2, 0, this.menuInputInfo);
+    //     this.tabContent.splice(2, 0, this.tabCustomFieldDetail);
+    //   } else if ( menuInput != -1 && tabInput != -1) {
+    //     this.tabInfo.splice(menuInput, 1);
+    //     this.tabContent.splice(tabInput, 1);
+    //   }
+    // }
+    // else {
+    //   if (menuInput != -1 && tabInput != -1) {
+    //     this.tabInfo.splice(menuInput, 1);
+    //     this.tabContent.splice(tabInput, 1);
+    //   }
+    // }
+  }
+  // realtiesContract(){
+  //   // this.stepService.chooseTypeTask(['G','F'])
+  //   let opt = new DialogModel();
+  //     opt.FormModel = this.formModelAM;
+  //     opt.zIndex = 1100;
+  //   this.popupRealties = this.callfunc.openForm(
+  //       this.realtiesTmp,
+  //       '',
+  //       500,
+  //       600,
+  //       '',
+  //       null,
+  //       '',
+  //       opt
+  //     );
+  // }
+
+  // saveRealties(){
+
+  // }
   // ----------------------------------------------------('-')😒tdtkhanh báo thủ😒('-')-----------------------------------------------
 
   // getQuotationsLinesInContract(contractID, quotationID) {
