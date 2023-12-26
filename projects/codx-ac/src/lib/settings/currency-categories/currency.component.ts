@@ -42,7 +42,7 @@ export class CurrencyComponent extends UIComponent {
     icon: 'icon-attach_money'
   }];
   headerText:any;
-  dataDefault:any;
+  dataDefault:any;itemSelected:any;
   private destroy$ = new Subject<void>(); //? list observable hủy các subscribe api
   constructor(
     private inject: Injector,
@@ -213,15 +213,26 @@ export class CurrencyComponent extends UIComponent {
    */
   delete(dataDelete) {
     if (dataDelete) this.view.dataService.dataSelected = dataDelete;
-    this.view.dataService.delete([dataDelete], true).subscribe((res: any) => {
-      if (res) {
-        this.api
-          .exec('ERM.Business.BS', 'ExchangeRatesBusiness', 'DeleteAsync', [
-            dataDelete.currencyID,
-          ])
-          .subscribe((res: any) => {});
+    this.view.dataService.delete([dataDelete], true).pipe(takeUntil(this.destroy$)).subscribe((res: any) => {
+      if (res && !res?.error) {
+        if(this.view.dataService.data.length == 0){
+          this.itemSelected = undefined;
+          this.detectorRef.detectChanges();
+        } 
       }
     });
+  }
+
+  changeDataMF(event,type:any=''){
+    event.reduce((pre,element) => {
+      if(type === 'views') element.isbookmark = true;
+      if(!['SYS03','SYS02','SYS04','SYS002'].includes(element.functionID)) element.disabled = true;
+    },{})
+  }
+
+  onSelectedItem(event) {
+    this.itemSelected = event;
+    this.detectorRef.detectChanges();
   }
   //#endregion
 }
