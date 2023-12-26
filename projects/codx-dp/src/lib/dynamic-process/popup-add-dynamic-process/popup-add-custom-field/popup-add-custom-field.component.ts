@@ -224,6 +224,8 @@ export class PopupAddCustomFieldComponent implements OnInit {
     if (this.field.dataType == 'TA') {
       this.getColumnTable(this.field);
     }
+    if (this.field.dataType == 'CF')
+      this.caculateField = this.field.dataFormat ?? '';
   }
 
   async valueChange(e) {
@@ -330,12 +332,15 @@ export class PopupAddCustomFieldComponent implements OnInit {
   // }
   cbxChange(value) {
     let oldStep = this.field['stepID'];
-    if (value && value != oldStep) this.field['stepID'] = value;
-    this.caculateField = '';
+    if (value && value != oldStep) {
+      this.field['stepID'] = value;
+      this.caculateField = '';
+    }
     if (this.field.dataType == 'CF') this.selectFieldNum();
   }
 
   saveData() {
+    if (this.field.dataType == 'CF') this.field.dataFormat = this.caculateField;
     if (
       (!this.field.title || this.field.title.trim() == '') &&
       this.grvSetup['Title']?.isRequire
@@ -1176,14 +1181,22 @@ export class PopupAddCustomFieldComponent implements OnInit {
   fieldSelect(fieldName) {
     //tesst
     this.caculateField += '[' + fieldName + ']'; //Math.random() * 100;
+    this.popover.close();
   }
 
   delChart() {
-    if (this.caculateField)
-      this.caculateField = this.caculateField.substring(
-        0,
-        this.caculateField.length - 1
-      );
+    if (this.caculateField) {
+      let idxLast = this.caculateField.length - 1;
+      if (this.caculateField[idxLast] == ']') {
+        while (
+          this.caculateField?.length == 0 ||
+          this.caculateField[idxLast] != '['
+        ) {
+          this.caculateField = this.caculateField.substring(0, idxLast);
+          idxLast = idxLast - 1;
+        }
+      } else this.caculateField = this.caculateField.substring(0, idxLast);
+    }
   }
   delAll() {
     this.caculateField = '';
@@ -1215,6 +1228,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
 
   popoverSelectField(p) {
     if (this.arrFieldNum?.length > 0) p.open();
+    this.popover = p;
     // else
     //   this.notiService.notify(
     //     'Bước thực hiện không có trường tùy chỉnh kiểu số !',
