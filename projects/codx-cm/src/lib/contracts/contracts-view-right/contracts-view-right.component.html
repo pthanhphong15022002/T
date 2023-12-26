@@ -482,15 +482,29 @@
       </div>
     </div>
   </div>
-  <div>
+  <div class="mt-2">
+    <div>
+      <codx-label
+        class="fs-5-sm fw-bold"
+        fiedName="assetID"
+        default="Ví trí thuê"
+        [formModel]="formModel"
+        [setRequire]="false"
+      >
+      </codx-label>
+    </div>
+    <div>
+      <!-- VỊ trí thuê -->
+    </div>
+  </div>
+  <div class="mt-2">
     <codx-label
       class="fs-5-sm fw-bold"
       name="lblPurpose"
       [formModel]="formModel"
       [setRequire]="false"
       default="Mục đích thuê"
-    >
-    </codx-label>
+    ></codx-label>
     <div class="row my-1">
       <span
         class="text-gray-600"
@@ -500,7 +514,7 @@
       ></span>
     </div>
   </div>
-  <div>
+  <div class="mt-2">
     <codx-label
       class="fs-5-sm fw-bold"
       name="lblNote"
@@ -1203,6 +1217,16 @@
       </div>
     </div>
 
+  </div>
+  <div>
+    <div>
+      <codx-label
+        class="fw-bold fs-5-sm"
+        name="lblDisposal"
+        [formModel]="formModel"
+        [default]="'Thông tin thanh lý'"
+      ></codx-label>
+    </div>
   </div>
 </ng-template>
 <!-- phụ lục -->

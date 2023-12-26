@@ -87,7 +87,7 @@ export class ViewDetailCardsComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes.cardID.currentValue != changes.cardID.previousValue && changes.cardID.previousValue != undefined) {
+    if (changes.cardID.currentValue != changes.cardID?.previousValue) {
       this.backgroundImg = undefined;
       this.getDataCard();
     }

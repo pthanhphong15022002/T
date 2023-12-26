@@ -511,7 +511,7 @@ export class CmCustomerComponent
             let lstContacts = e?.event[1];
             data.modifiedOn = new Date();
             this.dataSelected = JSON.parse(JSON.stringify(data));
-            this.view.dataService.update(data, true).subscribe();
+            //this.view.dataService.update(data, true).subscribe();
             // this.customerDetail.loadTag(this.dataSelected);
             this.detectorRef.detectChanges();
             // this.customerDetail.listTab(this.funcID);

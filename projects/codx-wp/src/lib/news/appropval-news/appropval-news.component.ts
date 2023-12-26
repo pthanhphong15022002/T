@@ -19,6 +19,7 @@ export class AppropvalNewsComponent extends UIComponent {
   selectedID: string = '';
   function:any = null;
   vllWP004:any[] = [];
+  loadedDetail=true;
 
   @ViewChild('itemTemplate') itemTemplate: TemplateRef<any>;
   @ViewChild('panelRightRef') panelRightRef: TemplateRef<any>;
@@ -275,7 +276,15 @@ export class AppropvalNewsComponent extends UIComponent {
           {
             this.tmpDetail.data.approvalStatus = approvalStatus;
             this.tmpDetail.hideMFC = true;
+            this.detectorRef.detectChanges();
           }
+          
+          if(data.recID == this.selectedID){
+            this.loadedDetail = false;
+            this.detectorRef.detectChanges();
+            this.loadedDetail = true;            
+          }
+          this.detectorRef.detectChanges();
           this.notifySvr.notifyCode(mssg);
         }
         else

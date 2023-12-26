@@ -18,6 +18,7 @@ import {
 import { AccountsAddComponent } from './accounts-add/accounts-add.component';
 import { CodxAcService } from '../../codx-ac.service';
 import { Subject, takeUntil } from 'rxjs';
+import { E } from '@angular/cdk/keycodes';
 
 @Component({
   selector: 'lib-accounts',
@@ -35,8 +36,8 @@ export class AccountsComponent extends UIComponent {
     id: 'btnAdd',
   }];
   funcName = '';
+  itemSelected:any;
   headerText: any;
-  optionSidebar: SidebarModel = new SidebarModel();
   private destroy$ = new Subject<void>();
   
   constructor(
@@ -68,12 +69,6 @@ export class AccountsComponent extends UIComponent {
         },
       },
     ];
-
-    //* thiết lập cấu hình sidebar
-    this.optionSidebar.DataService = this.view.dataService;
-    this.optionSidebar.FormModel = this.view.formModel;
-    this.optionSidebar.Width = '800px';
-
   }
 
   ngDoCheck() {
@@ -131,10 +126,14 @@ export class AccountsComponent extends UIComponent {
           headerText: this.headerText,
           dataDefault:{...res}
         };
+        let option = new SidebarModel();
+        option.DataService = this.view.dataService;
+        option.FormModel = this.view.formModel;
+        option.Width = '800px';
         let dialog = this.callfunc.openSide(
           AccountsAddComponent,
           data,
-          this.optionSidebar,
+          option,
           this.view.funcID
         );
       }       
@@ -159,10 +158,15 @@ export class AccountsComponent extends UIComponent {
             dataDefault:{...res},
             funcName:this.funcName
           };
+          let option = new SidebarModel();
+          option.DataService = this.view.dataService;
+          option.FormModel = this.view.formModel;
+          option.Width = '800px';
           let dialog = this.callfunc.openSide(
             AccountsAddComponent,
             data,
-            this.optionSidebar
+            option,
+            this.view.funcID
           );
         }
       });
@@ -186,10 +190,15 @@ export class AccountsComponent extends UIComponent {
             dataDefault:{...res},
             funcName:this.funcName
           };
+          let option = new SidebarModel();
+          option.DataService = this.view.dataService;
+          option.FormModel = this.view.formModel;
+          option.Width = '800px';
           let dialog = this.callfunc.openSide(
             AccountsAddComponent,
             data,
-            this.optionSidebar
+            option,
+            this.view.funcID
           );
         }
       });
@@ -206,6 +215,18 @@ export class AccountsComponent extends UIComponent {
         this.acService.clearCache('account');
       }
     });
+  }
+
+  changeDataMF(event,type:any=''){
+    event.reduce((pre,element) => {
+      if(type === 'views') element.isbookmark = true;
+      if(!['SYS03','SYS02','SYS04','SYS002'].includes(element.functionID)) element.disabled = true;
+    },{})
+  }
+
+  onSelectedItem(event) {
+    this.itemSelected = event;
+    this.detectorRef.detectChanges();
   }
 
   //#endregion Function

@@ -536,7 +536,7 @@ export class PopupAddCardsComponent implements OnInit {
             if (data > this.parameter.MaxPointPerOnce) {
               this.notifySV.notify(
                 'Vượt quá số xu cho phép tặng trong 1 lần',
-                '2'
+                '3'
               );
               data = this.givePoint;
               this.form.patchValue({ coins: this.givePoint });
@@ -564,7 +564,7 @@ export class PopupAddCardsComponent implements OnInit {
                   this.parameter.MaxPoints +
                   ' xu/' +
                   unitName,
-                '2'
+                '3'
               );
               data = this.givePoint;
               this.form.patchValue({ coins: this.givePoint });
@@ -611,7 +611,7 @@ export class PopupAddCardsComponent implements OnInit {
           this.isWalletReciver = true;
         } else {
           this.isWalletReciver = false;
-          this.notifySV.notify('Người nhận chưa tích hợp ví');
+          this.notifySV.notify('Người nhận chưa tích hợp ví', '3');
         }
       });
   }
@@ -845,7 +845,7 @@ export class PopupAddCardsComponent implements OnInit {
     let point = this.givePoint + 1;
     if (this.parameter.MaxPointPerOnceControl === '1') {
       if (point > this.parameter.MaxPointPerOnce) {
-        this.notifySV.notify('Vượt quá số xu cho phép tặng');
+        this.notifySV.notify('Vượt quá số xu cho phép tặng', '3');
         return;
       }
     }
@@ -885,7 +885,7 @@ export class PopupAddCardsComponent implements OnInit {
           res.forEach((gift) => {
             if (gift.availableQty <= 0) {
               this.form.patchValue({ giftID: '' });
-              this.notifySV.notify('Số dư quà tặng không đủ');
+              this.notifySV.notify('Số dư quà tặng không đủ', '3');
               this.dt.detectChanges();
             } else {
               gift.quantity = 1;
@@ -915,7 +915,7 @@ export class PopupAddCardsComponent implements OnInit {
     let gift = this.gifts[index];
     if (quantity > gift.availableQty) {
       gift.quantity = 1;
-      this.notifySV.notify('Vượt quá số dư quà tặng');
+      this.notifySV.notify('Vượt quá số dư quà tặng', '3');
       return;
     } else {
       gift.quantity = quantity;

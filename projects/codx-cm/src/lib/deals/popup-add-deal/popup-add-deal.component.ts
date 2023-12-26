@@ -160,6 +160,7 @@ export class PopupAddDealComponent
   isShowField: boolean = false;
   isShowReasonDP: boolean = false;
   isTurnOnProcess: boolean = true;
+  isSave: boolean = true;
   currencyIDOld: string;
   autoNameTabFields: string;
   bussineLineNameTmp: string = '';
@@ -555,7 +556,6 @@ export class PopupAddDealComponent
   }
 
   saveDeal() {
-    // if (!this.isBlock) return; - xíu mở ra
     if (!this.deal?.businessLineID) {
       this.notificationsService.notifyCode(
         'SYS009',
@@ -634,10 +634,12 @@ export class PopupAddDealComponent
     this.deal.salespersonID = this.owner;
     this.deal.applyProcess && this.convertDataInstance(this.deal, this.instance);
     this.deal.applyProcess && this.updateDateDeal(this.instance, this.deal);
+    if (!this.isSave) return;
     this.executeSaveData();
   }
 
   async executeSaveData() {
+    this.isSave = false;
     if(this.deal.applyProcess) {
       if (this.action !== this.actionEdit) {
         await this.insertInstance();

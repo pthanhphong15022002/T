@@ -478,7 +478,7 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
       event?.data?.forEach((element) => {
         //let appr = new Approvers();
         this.newAppr.name = element?.text;
-        this.newAppr.roleType = element?.objectType;
+        this.newAppr.roleType = element?.objectType =="SYS061" ? element?.id : element?.objectType;
         this.newAppr.icon = element?.icon;
         switch (element?.objectType) {
           //----------------------------------------------------------------------------------//
