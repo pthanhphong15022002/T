@@ -347,8 +347,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         let maxWidth = 0;
         for (const element of listTask) {
           const computedWidth = window.getComputedStyle(element).width;
-          const width = parseFloat(computedWidth);
-  
+          const width = parseFloat(computedWidth) + 10;
           if (width > maxWidth) {
             maxWidth = width;
           }
@@ -370,7 +369,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       let maxWidth = 0;
       for (const element of listTask) {
         const computedWidth = window.getComputedStyle(element).width;
-        const width = parseFloat(computedWidth);
+        const width = parseFloat(computedWidth) + 10;
 
         if (width > maxWidth) {
           maxWidth = width;

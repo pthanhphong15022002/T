@@ -60,11 +60,12 @@ export class AccountsAddComponent extends UIComponent {
     this.funcName = dialogData.data?.funcName;
 
     //* Set data default
-    if(!dialogData?.data?.dataDefault._isEdit) dialogData.data.dataDefault.detail = true;
+    // if(!dialogData?.data?.dataDefault._isEdit) dialogData.data.dataDefault.detail = true;
     if(dialogData?.data?.dataDefault?.loanControl)
       dialogData.data.dataDefault.loanControl = '1';
     else
       dialogData.data.dataDefault.loanControl = '0';
+
     if(dialogData?.data?.dataDefault?.postDetail == '1')
       dialogData.data.dataDefault.postDetail = true;
     else
@@ -100,17 +101,6 @@ export class AccountsAddComponent extends UIComponent {
   //#endregion Init
 
   //#region Event
-
-  /**
-   * *Hàm xử lí khi change value
-   * @param event 
-   */
-  valueChange(event: any) {
-    let field = event?.field || event?.ControlName;
-    let value = event?.data || event?.crrValue;
-    (this.form.form as CodxFormComponent).setValue(field,value,{onlySelf: true,emitEvent: false});
-  }
-
   //#endregion Event
 
   //#region CRUD
@@ -120,7 +110,7 @@ export class AccountsAddComponent extends UIComponent {
    */
   onSave(type) {
     this.formatData();
-    (this.form.form as CodxFormComponent).save(null, 0, '', '', false,{allowCompare:false}).pipe(takeUntil(this.destroy$))
+    this.form.form.save(null, 0, '', '', false,{allowCompare:false}).pipe(takeUntil(this.destroy$))
     .subscribe((res: any) => {
       if (!res) {
         return;
@@ -131,7 +121,6 @@ export class AccountsAddComponent extends UIComponent {
         }else{
           this.dialog.dataService.addNew().subscribe((res: any) => {
             if (res) {
-              res.detail = true;
               if(res.loanControl)
                 res.loanControl = '1';
               else  
@@ -142,8 +131,9 @@ export class AccountsAddComponent extends UIComponent {
               else
                 res.postDetail = false;
               res.isAdd = true;
-              if((this.form.form as CodxFormComponent).data.isEdit || (this.form.form as CodxFormComponent).data.isCopy) this.headerText = (this.lblAdd + ' ' + this.funcName).toUpperCase();
-              (this.form.form as CodxFormComponent).refreshData({...res}); //? set lại data default cho form
+              if(this.form.form.data.isEdit || this.form.form.data.isCopy) this.headerText = (this.lblAdd + ' ' + this.funcName).toUpperCase();
+              (this.form.form as CodxFormComponent).refreshData({...res}); 
+              this.dialog.dataService.clear();
               this.detectorRef.detectChanges();
             }
           });
@@ -153,7 +143,7 @@ export class AccountsAddComponent extends UIComponent {
         else 
             this.notification.notifyCode('SYS007');
 
-        this.acService.clearCache('account'); //? xóa cache account khi thêm tài khoản mới || chỉnh sửa tài khoản
+        this.acService.clearCache('account');
       }
     });
   }
@@ -174,15 +164,15 @@ export class AccountsAddComponent extends UIComponent {
    * *Hàm xử lí format lại data trước khi lưu
    */
   formatData() {
-    if ((this.form.form as CodxFormComponent).data.loanControl == '0') {
-      (this.form.form as CodxFormComponent).setValue('loanControl',false,{onlySelf: true,emitEvent: false},false);
+    if (this.form.form.data.loanControl == '0') {
+      this.form.form.setValue('loanControl',false,{},false);
     } else {
-      (this.form.form as CodxFormComponent).setValue('loanControl',true,{onlySelf: true,emitEvent: false},false);
+      this.form.form.setValue('loanControl',true,{},false);
     }
-    if ((this.form.form as CodxFormComponent).data.postDetail == true) {
-      (this.form.form as CodxFormComponent).setValue('postDetail','1',{onlySelf: true,emitEvent: false},false);
+    if (this.form.form.data.postDetail == true) {
+      this.form.form.setValue('postDetail','1',{},false);
     }else{
-      (this.form.form as CodxFormComponent).setValue('postDetail','0',{onlySelf: true,emitEvent: false},false);
+      this.form.form.setValue('postDetail','0',{},false);
     }
   }
 
@@ -192,9 +182,9 @@ export class AccountsAddComponent extends UIComponent {
   setValidateForm(){
     let rAccountID = true;
     let lsRequire :any = [];
-    if((this.form.form as CodxFormComponent).data?._keyAuto == 'AccountID') rAccountID = false; //? thiết lập không require khi dùng đánh số tự động tài khoản
+    if(this.form.form.data?._keyAuto == 'AccountID') rAccountID = false; //? thiết lập không require khi dùng đánh số tự động tài khoản
     lsRequire.push({field : 'AccountID',isDisable : false,require:rAccountID});
-    (this.form.form as CodxFormComponent).setRequire(lsRequire);
+    this.form.form.setRequire(lsRequire);
   }
 
   //#endregion Function

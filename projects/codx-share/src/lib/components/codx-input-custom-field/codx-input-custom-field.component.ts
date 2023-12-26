@@ -47,6 +47,8 @@ export class CodxInputCustomFieldComponent implements OnInit {
   @Input() objectIdParent: any = ''; //recID của model cha
   @Input() customerID: string = ''; //Khách hàng cơ hội
 
+  @Input() isDataTable = false; //là data của Table
+
   @ViewChild('attachment') attachment: AttachmentComponent;
   @ViewChild('comboxValue') comboxValue: ComboBoxComponent; ///value seclect 1
   @ViewChild('comboxValueMutilSelect')
@@ -122,6 +124,7 @@ export class CodxInputCustomFieldComponent implements OnInit {
   modelJSON: string = '';
   settingWidth = false;
   settingCount = false;
+  totalColumns = false;
   fieldCurrent = '';
   valueF = 'no';
   valueT = 'yes';
@@ -277,8 +280,8 @@ export class CodxInputCustomFieldComponent implements OnInit {
           }
         });
         break;
-      case 'autoNum':
-        if (this.customField.dataValue) return;
+      case 'AT':
+        if (this.customField.dataValue || !this.isAdd) return;
         this.getAutoNumberSetting();
         break;
     }
@@ -688,6 +691,7 @@ export class CodxInputCustomFieldComponent implements OnInit {
       this.columns = arr;
       this.settingWidth = this.columns[0]?.settingWidth ?? false;
       this.settingCount = this.columns[0]?.settingCount ?? false;
+      this.totalColumns = this.columns.findIndex((x) => x.totalColumns) != -1;
       this.columns.forEach((x) => {
         this.modelJSON += '"' + x.fieldName + '":"' + '",';
       });
@@ -748,6 +752,7 @@ export class CodxInputCustomFieldComponent implements OnInit {
           e: JSON.stringify(this.arrDataValue),
           data: this.customField,
         });
+        this.changeRef.detectChanges();
       }
     });
   }
@@ -920,7 +925,12 @@ export class CodxInputCustomFieldComponent implements OnInit {
         'ERM.Business.AD',
         'AutoNumbersBusiness',
         'CreateAutoNumberAsync',
-        [this.customField.refID, null, true, null]
+        [
+          this.isDataTable ? this.customField.recID : this.customField.refID,
+          null,
+          true,
+          null,
+        ]
       )
       .subscribe((autoNum) => {
         if (autoNum) {

@@ -30,16 +30,14 @@ export class AccountsComponent extends UIComponent {
 
   //#region Contructor
   @ViewChild('templateGrid') templateGrid?: TemplateRef<any>;
-  views: Array<ViewModel> = []; //? model view
-  button: ButtonModel[] = [{ //? nút thêm tài khoản
+  views: Array<ViewModel> = [];
+  button: ButtonModel[] = [{
     id: 'btnAdd',
-    icon: 'icon-add_circle_outline',
   }];
-  funcName = ''; //? tên truyền vào headertext
+  funcName = '';
   headerText: any;
   optionSidebar: SidebarModel = new SidebarModel();
-  dataDefault:any;
-  private destroy$ = new Subject<void>(); //? list observable hủy các subscribe api
+  private destroy$ = new Subject<void>();
   
   constructor(
     private inject: Injector,
@@ -126,33 +124,21 @@ export class AccountsComponent extends UIComponent {
    */
   addNew(e) {
     this.headerText = (e.text + ' ' + this.funcName).toUpperCase();
-    let data = {
-      headerText: this.headerText,
-      dataDefault:{...this.dataDefault}
-    };
-    if(!this.dataDefault){
-      this.view.dataService.addNew().subscribe((res: any) => {
-        if(res){
-          res.isAdd = true;
-          this.dataDefault = {...res};
-          data.dataDefault = {...this.dataDefault};
-          let dialog = this.callfunc.openSide(
-            AccountsAddComponent,
-            data,
-            this.optionSidebar,
-            this.view.funcID
-          );
-        }       
-      });
-    }else{
-      let dialog = this.callfunc.openSide(
-        AccountsAddComponent,
-        data,
-        this.optionSidebar,
-        this.view.funcID
-      );
-    }
-    
+    this.view.dataService.addNew().subscribe((res: any) => {
+      if(res){
+        res.isAdd = true;
+        let data = {
+          headerText: this.headerText,
+          dataDefault:{...res}
+        };
+        let dialog = this.callfunc.openSide(
+          AccountsAddComponent,
+          data,
+          this.optionSidebar,
+          this.view.funcID
+        );
+      }       
+    });
   }
 
   /**

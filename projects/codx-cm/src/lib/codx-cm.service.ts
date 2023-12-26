@@ -136,6 +136,11 @@ export class CodxCmService {
       objectID,
     ]);
   }
+  getDealByRecID(objectID) {
+    return this.api.exec<any>('CM', 'DealsBusiness', 'GetOneAsync', [
+      objectID,
+    ]);
+  }
 
   getListContactByObjectID(objectID) {
     return this.api.exec<any>(

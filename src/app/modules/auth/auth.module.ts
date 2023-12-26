@@ -24,6 +24,7 @@ import { RedirectToComponent } from './redirect-to/redirect-to.component';
 import { AngularDeviceInformationService } from 'angular-device-information';
 import { Login2FAComponent } from './login/login2-fa/login2-fa.component';
 import { QRCodeGeneratorAllModule } from '@syncfusion/ej2-angular-barcode-generator';
+import { WaitingLoginQrcodeComponent } from './default/waiting-login-qrcode/waiting-login-qrcode.component';
 
 @NgModule({
   declarations: [
@@ -39,6 +40,7 @@ import { QRCodeGeneratorAllModule } from '@syncfusion/ej2-angular-barcode-genera
     TenantsComponent,
     RedirectToComponent,
     Login2FAComponent,
+    WaitingLoginQrcodeComponent,
   ],
   imports: [
     CommonModule,

@@ -1,0 +1,23 @@
+<ng-container class="container">
+  <div class="nav p-1">
+    <div class="float-end d-flex justify-content-between w-100">
+      <div>
+        <button type="button" class="btn btn-icon" (click)="close()">
+          <i class="icon-close icon-18"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="header p-2 d-flex flex-column" style="height: fit-content">
+    <div class="pt-5">
+      <img src="/assets/img/avatar.png" class="h-35px" alt="" />
+    </div>
+    <codx-label class="text-dark fw-bold fs-3 my-3" default="{{userName}}"></codx-label>
+    <codx-label class="text-gray-500 fs-7 mb-3" default="
+    Quét mã đăng nhập thành công. Vui lòng chọn 'Đăng nhập' trên thiết bị di động của bạn.
+    "></codx-label>
+  </div>
+  <div class="content p-2 mx-3 mt-5">
+      <codx-label class="text-dark fw-bold fs-3 my-3" default="Đăng nhập trên thiết bị di động"></codx-label>
+  </div>
+</ng-container>

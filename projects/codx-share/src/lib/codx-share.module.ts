@@ -196,6 +196,7 @@ import { SetColorTaskPipe } from './components/codx-step/pipes/set-color-task.pi
 import { CodxAuthFileComponent } from './components/codx-auth-file/codx-auth-file.component';
 import { CodxViewFileComponent } from './components/codx-view-file/codx-view-file.component';
 import { PopupAddPersonSignerComponent } from './components/codx-approve-steps/popup-add-person-signer/popup-add-person-signer.component';
+import { SumColumnsTablePipe } from './components/codx-fields-detail-temp/pipes-fields/sum-columns-table.pipe';
 
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
@@ -344,7 +345,6 @@ const T_Component: Type<any>[] = [
   CodxViewTaskComponent,
   CodxTaskbarComponent,
   CodxNoDataComponent,
-  ChangeMemoryCellsPipe,
   CodxInputCustomFieldComponent,
   CodxFieldsDetailTempComponent,
   CodxFieldsFormatValueComponent,
@@ -386,7 +386,11 @@ const T_Component: Type<any>[] = [
   CodxAuthFileComponent,
 ];
 
-const T_Pipe: Type<any>[] = [FormatDataValuePipe];
+const T_Pipe: Type<any>[] = [
+  FormatDataValuePipe,
+  SumColumnsTablePipe,
+  ChangeMemoryCellsPipe,
+];
 
 @NgModule({
   declarations: [
