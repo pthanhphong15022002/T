@@ -729,7 +729,7 @@ export class InstanceDetailComponent implements OnInit {
   }
 
   checkCompletedInstance(instanceStatus: any) {
-    if (instanceStatus === '1' || instanceStatus === '2') {
+    if (instanceStatus == '1' || instanceStatus == '2' || instanceStatus == '15' ) {
       this.deleteListReason(this.listSteps);
     }
   }

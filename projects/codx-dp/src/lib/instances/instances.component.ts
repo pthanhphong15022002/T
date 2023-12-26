@@ -965,6 +965,10 @@ export class InstancesComponent
               // case 'SYS004':
               // case 'SYS002':
               case 'DP18':
+                if(data.status != '1' || data.status != '15' || data.status != '2') {
+                  res.disabled = true;
+                }
+                break;
               case 'DP21':
                 res.disabled = true;
                 break;

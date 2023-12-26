@@ -1285,6 +1285,7 @@ export class ContractsComponent extends UIComponent {
     this.contractSelected = data;
     let opt = new DialogModel();
       opt.FormModel = this.view.formModel;
+      opt.zIndex = 1015;
       this.popupLiquidation = this.callFunc.openForm(
         this.liquidationTmp,
         '',
