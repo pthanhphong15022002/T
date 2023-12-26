@@ -1,7 +1,6 @@
 .body-left {
-  width: 25% !important;
-  border-right: 1px solid var(--gray-150);
-  padding: 10px;
+  width: 20% !important;
+  padding-left: 10px;
   overflow: auto;
   height: calc(100vh - 130px);
   .user-nav-item.user-nav-active {
@@ -29,8 +28,8 @@
 }
 
 .body-right {
-  width: 35% !important;
-  border-left: 1px solid var(--gray-150);
+  width: 30% !important;
+
   padding: 10px;
   overflow: auto;
   height: calc(100vh - 130px);
@@ -38,6 +37,8 @@
 
 .body-center {
   width: 40% !important;
+  margin-left: 10px;
+  margin-right: 10px;
   overflow: auto;
   height: calc(100vh - 130px);
 }
