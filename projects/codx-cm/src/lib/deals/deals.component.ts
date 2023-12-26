@@ -1308,7 +1308,7 @@ export class DealsComponent
       action: action === 'add' ? 'add' : 'copy',
       formMD: formMD,
       titleAction: this.formatTitleMore(this.titleAction),
-      // processID: this.processID,
+      processID: this.processID,
       gridViewSetup: this.gridViewSetup,
       functionModule: this.functionModule,
       currencyIDDefault: this.currencyIDDefault,

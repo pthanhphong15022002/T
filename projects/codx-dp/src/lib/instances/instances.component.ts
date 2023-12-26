@@ -964,6 +964,11 @@ export class InstancesComponent
                 break;
               // case 'SYS004':
               // case 'SYS002':
+              case 'DP18':
+                if(data.status != '1' || data.status != '15' || data.status != '2') {
+                  res.disabled = true;
+                }
+                break;
               case 'DP21':
                 res.disabled = true;
                 break;
@@ -1012,6 +1017,7 @@ export class InstancesComponent
               case 'DP14':
               case 'DP15':
               case 'DP23':
+              case 'DP18':
                 mf.disabled = true;
                 break;
             }
@@ -1063,6 +1069,9 @@ export class InstancesComponent
       case 'DP17':
         this.isFormExport = false;
         this.showFormSubmit();
+        break;
+      case 'DP18':
+
         break;
       case 'DP21':
         this.handelStartDay(data);
@@ -1603,9 +1612,9 @@ export class InstancesComponent
       // }
       if (e && e.event != null) {
         //xu ly data đổ về
-        data = e.event.instance;
-        this.listStepInstances = e.event.listStep;
-        if (e.event.isReason != null) {
+        data = e.event?.instance;
+        this.listStepInstances = e.event?.listStep;
+        if(!e.event.isMoveBackStage && e.event?.isReason != null) {
           this.moveReason(null, data, e.event.isReason);
         }
         this.view.dataService.update(data).subscribe();
