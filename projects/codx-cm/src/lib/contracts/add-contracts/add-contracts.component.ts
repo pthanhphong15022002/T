@@ -58,6 +58,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
   @ViewChild('inputContact') inputContact: CodxInputComponent;
   @ViewChild('inputQuotation') inputQuotation: CodxInputComponent;
   @ViewChild('realtiesTmp') realtiesTmp: TemplateRef<any>;
+
   REQUIRE = [
     'contractID',
     'customerID',
@@ -1353,7 +1354,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
         500,
         600,
         '',
-        null,
+        this.contracts,
         '',
         opt
       );
