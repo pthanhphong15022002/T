@@ -610,7 +610,7 @@
               <ng-container *ngFor="let cell of columns">
                 <td class="ps-4">
                   <div>
-                    <span> {{ 0 }}</span>
+                    <span> {{ cell?.totalColumns ? 0 : "" }}</span>
                   </div>
                 </td>
               </ng-container>
