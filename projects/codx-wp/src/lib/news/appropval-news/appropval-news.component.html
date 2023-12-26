@@ -51,6 +51,7 @@
 <ng-template #panelRightRef>
   <wp-appropval-detail
     #tmpDetail
+    *ngIf="loadedDetail"
     [objectID]="selectedID" 
     [function]="function" 
     [dataService]="view.dataService"

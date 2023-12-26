@@ -148,12 +148,37 @@
               <i class="icon-settings icon-16"></i>
             </button>
           </div>
+          <div
+            class="d-flex justify-content-end"
+            *ngIf="field.dataType == 'AT'"
+          >
+            <button
+              type="button"
+              class="btn btn-icon btn-sm btn-light-primary me-2"
+              (click)="openAutoNumPopup()"
+            >
+              <i class="icon-settings icon-16"></i>
+            </button>
+          </div>
         </div>
         <ng-container
           *ngIf="field.dataType == 'TA'"
           [ngTemplateOutlet]="tempViewTable"
         ></ng-container>
+        <!-- tính toán -->
+        <ng-container
+          *ngIf="field.dataType == 'CF'"
+          [ngTemplateOutlet]="tempSettingCaculate"
+        ></ng-container>
 
+        <codx-input
+          *ngIf="field.dataType == 'AT'"
+          type="text"
+          [crrValue]="field?.dataFormat ?? ''"
+          [placeholder]=""
+          [disabled]="true"
+        >
+        </codx-input>
         <codx-input
           *ngIf="field.dataType == 'N'"
           type="valuelist"
@@ -410,6 +435,7 @@
           </div>
         </div>
       </div>
+
       <div class="form-group">
         <codx-label
           name="Note"
@@ -528,7 +554,146 @@
             </td>
           </ng-container>
         </tr>
+        <tr *ngIf="totalColumns">
+          <td class="ps-4" *ngIf="settingCount">
+            <div>
+              <codx-label
+                name="lblSum"
+                formName="System"
+                [default]="'Tổng cộng'"
+              ></codx-label>
+            </div>
+          </td>
+          <ng-container *ngFor="let cell of listColumns">
+            <td class="ps-4">
+              <div>
+                <span> {{ cell?.totalColumns ? 0 : "" }}</span>
+              </div>
+            </td>
+          </ng-container>
+        </tr>
       </tbody>
     </table>
+  </div>
+</ng-template>
+
+<ng-template #tempSettingCaculate>
+  <div class="mt-3 d-flex justify-content-between">
+    <button
+      type="button"
+      class="btn btn-sm btn-light-primary me-2"
+      [ngbPopover]="tempFieldNum"
+      #p1="ngbPopover"
+      [openDelay]="500"
+      (mouseenter)="popoverSelectField(p1)"
+      autoClose="outside"
+      placement="top right  left"
+      container="body"
+    >
+      {{ "Chọn trường" }}
+    </button>
+    <ng-template #tempFieldNum>
+      <ng-container *ngFor="let fileName of arrFieldNum">
+        <span
+          class="btn btn-sm btn-light-primary cursor-pointer"
+          (click)="fieldSelect(fileName)"
+          >{{ fileName }}</span
+        >
+      </ng-container>
+    </ng-template>
+  </div>
+  <div class="mt-3 d-flex justify-content-between">
+    <button
+      type="button"
+      class="btn btn-icon btn-sm btn-light-primary me-2 cursor-pointer"
+      (click)="buttonOperator('+')"
+    >
+      {{ "+" }}
+    </button>
+    <button
+      type="button"
+      class="btn btn-icon btn-sm btn-light-primary me-2 cursor-pointer"
+      (click)="buttonOperator('-')"
+    >
+      {{ "-" }}
+    </button>
+    <button
+      type="button"
+      class="btn btn-icon btn-sm btn-light-primary me-2 cursor-pointer"
+      (click)="buttonOperator('*')"
+    >
+      {{ "x" }}
+    </button>
+    <button
+      type="button"
+      class="btn btn-icon btn-sm btn-light-primary me-2 cursor-pointer"
+      (click)="buttonOperator('/')"
+    >
+      {{ "/" }}
+    </button>
+    <button
+      type="button"
+      class="btn btn-icon btn-sm btn-light-primary me-2 cursor-pointer"
+      (click)="buttonOperator('Avg')"
+    >
+      {{ "Avg()" }}
+    </button>
+    <button
+      type="button"
+      class="btn btn-icon btn-sm btn-light-primary me-2 cursor-pointer"
+      (click)="buttonOpenParenthesis()"
+    >
+      {{ "(" }}
+    </button>
+    <button
+      type="button"
+      class="btn btn-icon btn-sm btn-light-primary me-2 cursor-pointer"
+      (click)="buttonCloseParenthesis()"
+    >
+      {{ ")" }}
+    </button>
+
+    <button
+      type="button"
+      class="btn btn-icon btn-sm btn-light-primary me-2 cursor-pointer"
+      (click)="decimalPoint()"
+    >
+      {{ "," }}
+    </button>
+
+    <button
+      type="button"
+      class="btn btn-icon btn-sm btn-light-primary me-2 cursor-pointer"
+      (click)="delChart()"
+    >
+      {{ "Del" }}
+    </button>
+    <button
+      type="button"
+      class="btn btn-icon btn-sm btn-light-danger me-2 cursor-pointer"
+      (click)="delAll()"
+    >
+      {{ "AC" }}
+    </button>
+  </div>
+  <!-- Number -->
+  <div class="mt-5 d-flex justify-content-between mb-3">
+    <ng-container *ngFor="let num of arrNum">
+      <button
+        type="button"
+        class="btn btn-icon btn-sm btn-light-primary me-2 cursor-pointer"
+        (click)="buttonNum(num)"
+      >
+        {{ num }}
+      </button>
+    </ng-container>
+  </div>
+
+  <div
+    class="dropzone dropzone-default dropzone-primary d-flex flex-center flex-column"
+  >
+    <div class="mt-5 mb-5 fw-bold">
+      {{ caculateField }}
+    </div>
   </div>
 </ng-template>

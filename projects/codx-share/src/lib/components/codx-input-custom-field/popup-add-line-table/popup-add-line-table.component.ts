@@ -19,6 +19,7 @@ export class PopupAddLineTableComponent implements OnInit {
 
   titleHeader: 'Table ne';
   line: any;
+  action = 'add';
 
   constructor(
     private cache: CacheService,
@@ -30,7 +31,9 @@ export class PopupAddLineTableComponent implements OnInit {
     this.listColumns = dt?.data?.listColumns
       ? JSON.parse(JSON.stringify(dt?.data?.listColumns))
       : [];
+
     this.line = JSON.parse(JSON.stringify(dt?.data?.data));
+    this.action = dt?.data?.action;
   }
   ngOnInit(): void {
     this.listColumns.forEach((x) => {

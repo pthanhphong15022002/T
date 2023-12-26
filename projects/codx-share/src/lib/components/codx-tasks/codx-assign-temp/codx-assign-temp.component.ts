@@ -21,9 +21,11 @@ import {
 export class CodxAssignTempComponent implements OnInit {
   @Input() formModel: FormModel;
   @Input() objectID = '';
-  @Input() openViewPopup = true ;
+  @Input() openViewPopup = true;
   @ViewChild('tmpListResource') tmpListResource: TemplateRef<any>;
-  @Input() zIndex: number = 0
+  @Input() zIndex: number = 0;
+  @Input() assignTo = ''; //assignTo của task
+  @Input() isUsedAssignTo = false; // nếu có sử dụng thì không cần gọi api để count
   countResource = 0;
   listTaskResousce = [];
   listTaskResousceSearch = [];
@@ -32,7 +34,7 @@ export class CodxAssignTempComponent implements OnInit {
   vllStatusAssign = 'TM007';
   vllStatus = 'TM004';
   searchField = '';
-  
+
   constructor(
     private cache: CacheService,
     private api: ApiHttpService,
@@ -46,7 +48,9 @@ export class CodxAssignTempComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getDatas();
+    if (this.isUsedAssignTo) {
+      this.countResource = this.assignTo ? this.assignTo.split(';')?.length : 0;
+    } else this.getDatas();
   }
   getDatas() {
     this.listTaskResousceSearch = [];
@@ -69,18 +73,49 @@ export class CodxAssignTempComponent implements OnInit {
   }
 
   openPopup() {
-    let option = new DialogModel();
-    if (this.zIndex > 0) option.zIndex = this.zIndex;
-    this.callFC.openForm(
-      this.tmpListResource,
-      '',
-      400,
-      500,
-      '',
-      null,
-      '',
-      option
-    );
+    if (this.isUsedAssignTo) {
+      this.listTaskResousceSearch = [];
+      this.api
+        .execSv<any>(
+          'TM',
+          'ERM.Business.TM',
+          'TaskResourcesBusiness',
+          'GetListTaskResourcesByTaskIDAsync',
+          this.objectID
+        )
+        .subscribe((res) => {
+          if (res) {
+            this.listTaskResousce = res;
+            this.listTaskResousceSearch = res;
+            let option = new DialogModel();
+            if (this.zIndex > 0) option.zIndex = this.zIndex;
+            this.callFC.openForm(
+              this.tmpListResource,
+              '',
+              400,
+              500,
+              '',
+              null,
+              '',
+              option
+            );
+          }
+        });
+    } else {
+      //cux
+      let option = new DialogModel();
+      if (this.zIndex > 0) option.zIndex = this.zIndex;
+      this.callFC.openForm(
+        this.tmpListResource,
+        '',
+        400,
+        500,
+        '',
+        null,
+        '',
+        option
+      );
+    }
   }
 
   searchName(e) {

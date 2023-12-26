@@ -111,9 +111,11 @@
     <div class="d-flex justify-content-between">
       <div class="col-4">
         <div class="d-flex align-items-center">
-          <span class="fw-bold line-clamp line-clamp-1 fs-6 text-uppercase me-3">{{ data?.voucherNo }}</span>
+          <codx-label class="fw-bold label-colon" default="Số chứng từ" [formModel]="view.formModel">
+          </codx-label>
+          <span class="text-gray-600 me-3">{{ data?.voucherNo }}</span>
           <img style="width: 18px; height: 18px" src="../assets/themes/ac/default/img/calendar.svg" class="me-2" />
-          <span class="text-gray-600 line-clamp line-clamp-1 mt-1" #voucherDate [innerHTML]="
+          <span class="text-gray-600 line-clamp line-clamp-1" #voucherDate [innerHTML]="
               data?.voucherDate
                 | formatvalue : view.formModel : 'voucherDate' : voucherDate
                 | async

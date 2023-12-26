@@ -509,7 +509,7 @@ export class CodxDpService {
     return this.api.exec<any>('DP', 'ProcessesBusiness', 'GetAsync', id);
   }
   getAutoNumberByInstanceNoSetting(instanceNoSetting): Observable<any> {
-    return this.api.exec(
+    return this.api.exec<any>(
       'ERM.Business.AD',
       'AutoNumbersBusiness',
       'CreateAutoNumberAsync',
@@ -533,14 +533,15 @@ export class CodxDpService {
       data
     );
   }
-  // getGuide(processID) {
-  //   return this.api.exec<any>(
-  //     'DP',
-  //     'StepsBusiness',
-  //     'GetListStepsNameByProcessIDAsync',
-  //     processID
-  //   );
-  // }
+  //delete AutoCode nếu ko dùng nữa
+  removeAutoCode(listAutoCode) {
+    return this.api.exec<any>(
+      'ES',
+      'ApprovalStepsBusiness',
+      'DeleteListAutoNumberAsync',
+      listAutoCode
+    );
+  }
   getADAutoNumberByAutoNoCode(autoNoCode): Observable<any> {
     return this.api.execSv(
       'SYS',

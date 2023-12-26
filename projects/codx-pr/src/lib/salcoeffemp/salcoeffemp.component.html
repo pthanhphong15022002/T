@@ -1,0 +1,28 @@
+<codx-views #view
+    [views]="views"
+    idField="recID"
+    [selectedFirst]="true"
+    [button]="buttonAdd"
+    [service]="'HR'">
+</codx-views>
+<!-- template left -->
+<ng-template #tmpLeft>
+    <codx-treeview
+        [itemTemplate]="itemTemplateTree"
+        funcId="HRS0201"
+        entityName="HR_OrganizationUnits"
+        service="HR"
+        type="treeView"
+        textField="orgUnitName"
+        gridViewName="grvOrganizationUnits"
+        formName="OrganizationUnits"
+        idField="orgUnitID">
+  </codx-treeview>
+</ng-template>
+<!-- template right -->
+<ng-template #tmpRight></ng-template>
+
+<!-- template item tree -->
+<ng-template #itemTemplateTree let-data>
+    <span>{{data.orgUnitName}}</span>
+</ng-template>

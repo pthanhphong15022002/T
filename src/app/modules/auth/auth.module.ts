@@ -21,14 +21,10 @@ import { LoginDefaultComponent } from './default/login-default/login-default.com
 import { LoginQTSCComponent } from './cz/qtsc/login-qtsc/login-qtsc.component';
 import { TenantsComponent } from './tenants/tenants.component';
 import { RedirectToComponent } from './redirect-to/redirect-to.component';
-import {
-  RECAPTCHA_SETTINGS,
-  RecaptchaFormsModule,
-  RecaptchaModule,
-  RecaptchaSettings,
-} from 'ng-recaptcha';
 import { AngularDeviceInformationService } from 'angular-device-information';
 import { Login2FAComponent } from './login/login2-fa/login2-fa.component';
+import { QRCodeGeneratorAllModule } from '@syncfusion/ej2-angular-barcode-generator';
+import { WaitingLoginQrcodeComponent } from './default/waiting-login-qrcode/waiting-login-qrcode.component';
 
 @NgModule({
   declarations: [
@@ -44,14 +40,14 @@ import { Login2FAComponent } from './login/login2-fa/login2-fa.component';
     TenantsComponent,
     RedirectToComponent,
     Login2FAComponent,
+    WaitingLoginQrcodeComponent,
   ],
   imports: [
     CommonModule,
     FormsModule,
-    RecaptchaFormsModule,
-    RecaptchaModule,
     ReactiveFormsModule,
     HttpClientModule,
+    QRCodeGeneratorAllModule,
     SharedModule,
     CoreModule,
     ERMModule,
@@ -60,12 +56,6 @@ import { Login2FAComponent } from './login/login2-fa/login2-fa.component';
     CodxCoreModule.forRoot({ environment }),
   ],
   providers: [
-    {
-      provide: RECAPTCHA_SETTINGS,
-      useValue: {
-        siteKey: environment.captchaKey,
-      } as RecaptchaSettings,
-    },
     AngularDeviceInformationService,
   ],
 })

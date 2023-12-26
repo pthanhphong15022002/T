@@ -22,7 +22,7 @@
 </ng-container>
 <!-- margin-l -->
 <ng-container *ngIf="data.dataValue != null && data.dataValue != undefined">
-  <span class="text-dark" *ngIf="data.dataType == 'T'">
+  <span class="text-dark" *ngIf="data.dataType == 'T' || data.dataType == 'AT'">
     {{ data.dataValue }}
   </span>
   <!-- margin-l -->
@@ -258,7 +258,6 @@
                 <span>{{ item?.title }}</span>
               </th>
             </ng-container>
-            <!-- <th *ngIf="!disable" scope="col" class="w-100px fw-bold"></th> -->
           </tr>
         </thead>
         <tbody>
@@ -287,7 +286,47 @@
                   </td>
                 </ng-container>
               </tr>
+              <!-- //Tính tổng -->
+              <!-- <tr *ngIf="totalColumns">
+                <td class="ps-4" *ngIf="settingCount">
+                  <div>
+                    <codx-label
+                      name="lblSum"
+                      formName="System"
+                      [default]="'Tổng cộng'"
+                    ></codx-label>
+                  </div>
+                </td>
+                <ng-container *ngFor="let cell of columns">
+                  <td class="ps-4">
+                    <div>
+                      <span> {{ 0 }}</span>
+                    </div>
+                  </td>
+                </ng-container>
+              </tr> -->
             </ng-container>
+            <!-- //Tính tổng -->
+            <tr *ngIf="totalColumns">
+              <td class="ps-4" *ngIf="settingCount">
+                <div>
+                  <codx-label
+                    name="lblSum"
+                    formName="System"
+                    [default]="'Tổng cộng'"
+                  ></codx-label>
+                </div>
+              </td>
+              <ng-container *ngFor="let cell of columns">
+                <td class="ps-4">
+                  <div>
+                    <span
+                      [innerHTML]="cell | sumColumnsTable : arrDataValue"
+                    ></span>
+                  </div>
+                </td>
+              </ng-container>
+            </tr>
           </ng-container>
         </tbody>
       </table>

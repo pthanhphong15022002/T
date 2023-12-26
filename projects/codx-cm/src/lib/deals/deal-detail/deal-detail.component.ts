@@ -209,12 +209,12 @@ export class DealDetailComponent implements OnInit {
     this.isDataLoading = true;
     try {
       this.dataSelected.applyProcess && (await this.getListInstanceStep());
-      await this.getTree(); //ve cay giao viec
       // await this.getListContactByDealID(
       //   this.dataSelected.recID,
       //   this.dataSelected?.categoryCustomer
       // );
-      // await this.getHistoryByDeaID();
+      await this.getTree(); //ve cay giao viec
+      await this.getHistoryByDeaID();
       await this.getViewDetailDeal();
     } catch (error) {}
   }
@@ -354,16 +354,16 @@ export class DealDetailComponent implements OnInit {
   //       }
   //     });
   // }
-  // async getHistoryByDeaID() {
-  //   if (this.dataSelected?.recID) {
-  //     var data = [this.dataSelected?.recID];
-  //     this.codxCmService.getDataTabHistoryDealAsync(data).subscribe((res) => {
-  //       if (res) {
-  //         this.mergedList = res[0];
-  //       }
-  //     });
-  //   }
-  // }
+  async getHistoryByDeaID() {
+    if (this.dataSelected?.recID) {
+      let data = [this.dataSelected?.recID];
+      this.codxCmService.getDataTabHistoryDealAsync(data).subscribe((res) => {
+        if (res) {
+          this.mergedList = res;
+        }
+      });
+    }
+  }
   async getViewDetailDeal() {
     if (this.dataSelected?.recID) {
       let data = [
@@ -465,7 +465,10 @@ export class DealDetailComponent implements OnInit {
     });
   }
   getStepCurrent(data) {
-    this.stepCurrent = this.listSteps.filter((x) => x.stepID == data.stepID)[0];
+    this.stepCurrent = null;
+    if( this.listSteps != null &&  this.listSteps.length > 0) {
+      this.stepCurrent = this.listSteps.filter((x) => x.stepID == data.stepID)[0];
+     }
   }
   checkCompletedInstance(dealStatus: any) {
     if (dealStatus == '1' || dealStatus == '2' || dealStatus == '0') {

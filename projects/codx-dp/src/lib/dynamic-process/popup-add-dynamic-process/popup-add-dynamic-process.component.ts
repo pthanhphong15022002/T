@@ -70,6 +70,7 @@ import { takeUntil } from 'rxjs/operators';
 import { CodxViewApproveComponent } from 'projects/codx-share/src/lib/components/codx-step/codx-step-common/codx-view-approve/codx-view-approve.component';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { StepService } from 'projects/codx-share/src/lib/components/codx-step/step.service';
+import { CodxEmailComponent } from 'projects/codx-share/src/lib/components/codx-email/codx-email.component';
 
 @Component({
   selector: 'lib-popup-add-dynamic-process',
@@ -368,7 +369,6 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
     private codxService: CodxService,
     private adService: CodxAdService,
     private codxShareService: CodxShareService,
-    private stepService: StepService,
     @Optional() dialog: DialogRef,
     @Optional() dt: DialogData
   ) {
@@ -2677,9 +2677,8 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
       this.fieldCrr?.recID,
       this.fieldCrr?.stepID
     );
-    //Trường tùy chỉnh đã liên kết với công việc {0} , thao tác xóa sẽ hủy đi các liên kết trong công việc trước đó. Bạn có muốn tiếp tục !
     let mes = task ? 'DP045' : 'SYS030';
-    this.notiService.alertCode(mes, null, ['']).subscribe((x) => {
+    this.notiService.alertCode(mes).subscribe((x) => {
       if (x.event && x.event.status == 'Y') {
         if (task) {
           let fieldId = this.convertString(task?.fieldID, this.fieldCrr?.recID);
@@ -3390,6 +3389,11 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
       taskInput = JSON.parse(JSON.stringify(data));
     }
 
+    if(this.typeTask?.value == "E"){
+      this.handelMail(taskInput, true);
+      return;
+    }
+
     let dataInput = {
       action,
       taskInput,
@@ -3512,6 +3516,34 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
     // this.changeDetectorRef.detectChanges();
   }
 
+  handelMail(stepsTasks, isNewEmails) {
+    let data = {
+      dialog: this.dialog,
+      formGroup: null,
+      templateID: stepsTasks['reference'] || '',
+      showIsTemplate: true,
+      showIsPublish: true,
+      showSendLater: true,
+      files: null,
+      isAddNew: isNewEmails,
+    };
+
+    let popEmail = this.callfc.openForm(
+      CodxEmailComponent,
+      '',
+      800,
+      screen.height,
+      '',
+      data
+    );
+    popEmail.closed.subscribe((res) => {
+      if (res && res.event) {
+        // this.stepsTasks['reference'] = res.event?.recID ? res.event?.recID : '';
+        // this.isNewEmails = this.recIdEmail ? true : false;
+      }
+    });
+  }
+  
   deleteTask(taskList, task) {
     this.notiService.alertCode('SYS030').subscribe((x) => {
       if (x.event && x.event.status == 'Y') {

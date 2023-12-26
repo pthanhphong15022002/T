@@ -305,10 +305,8 @@ export class EditFileComponent implements OnInit {
       });
 
     this.dmSV.isFileEditing.subscribe((item) => {
-      if (item) {
-        debugger;
+      if (item && (!this.fileEditing || (this.fileEditing.recID == item.recID))) {
         this.fileEditing.permissions = item.permissions;
-        this.changeDetectorRef.detectChanges();
       }
     });
   }

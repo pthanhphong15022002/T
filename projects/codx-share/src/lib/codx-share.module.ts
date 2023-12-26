@@ -164,11 +164,9 @@ import { PopupViewContentComponent } from './components/codx-view-content/popup-
 import { CodxNoDataComponent } from './components/codx-step/codx-step-common/codx-no-data/codx-no-data.component';
 import { CodxListReportsComponent } from './components/codx-list-reports/codx-list-reports.component';
 import { CodxReportAddComponent } from './components/codx-list-reports/popup/codx-report-add/codx-report-add.component';
-
 import { CodxAddApproversComponent } from './components/codx-approval-procress/codx-add-approvers/codx-add-approvers.component';
 import { CodxAddSignFileComponent } from './components/codx-approval-procress/codx-add-sign-file/codx-add-sign-file.component';
 import { CodxGetTemplateSignFileComponent } from './components/codx-approval-procress/codx-get-template-sign-file/codx-get-template-sign-file.component';
-import { CodxInstancesComponent } from './components/codx-instances/codx-instances.component';
 import { CodxFilesAttachmentComponent } from './components/codx-files-attachment/codx-files-attachment.component';
 import { CodxFilesAttachmentViewComponent } from './components/codx-files-attachment-view/codx-files-attachment-view.component';
 import { CodxViewReleaseSignFileComponent } from './components/codx-approval-procress/codx-view-release-sign-file/codx-view-release-sign-file.component';
@@ -189,7 +187,6 @@ import { CodxViewApproveComponent } from './components/codx-step/codx-step-commo
 import { LayoutComponent } from './components/layout/layout.component';
 import { FormSettingComponent } from './components/form-setting/form-setting.component';
 import { ChangeMemoryCellsPipe } from './components/codx-fields-detail-temp/pipes-fields/change-memory-cells.pipe';
-import { ViewDetailApprovalCustomComponent } from './components/codx-instances/view-detail-approval-custom/view-detail-approval-custom.component';
 import { ViewHistoryUpdateProgressComponent } from './components/codx-tasks/view-history-update-progress/view-history-update-progress.component';
 import { CodxShareReportComponent } from './components/codx-share-report/codx-share-report.component';
 import { CodxShareDashboardComponent } from './components/codx-share-dashboard/codx-share-dashboard.component';
@@ -199,6 +196,7 @@ import { SetColorTaskPipe } from './components/codx-step/pipes/set-color-task.pi
 import { CodxAuthFileComponent } from './components/codx-auth-file/codx-auth-file.component';
 import { CodxViewFileComponent } from './components/codx-view-file/codx-view-file.component';
 import { PopupAddPersonSignerComponent } from './components/codx-approve-steps/popup-add-person-signer/popup-add-person-signer.component';
+import { SumColumnsTablePipe } from './components/codx-fields-detail-temp/pipes-fields/sum-columns-table.pipe';
 
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
@@ -347,9 +345,6 @@ const T_Component: Type<any>[] = [
   CodxViewTaskComponent,
   CodxTaskbarComponent,
   CodxNoDataComponent,
-  CodxInstancesComponent,
-  ViewDetailApprovalCustomComponent,
-  ChangeMemoryCellsPipe,
   CodxInputCustomFieldComponent,
   CodxFieldsDetailTempComponent,
   CodxFieldsFormatValueComponent,
@@ -379,7 +374,6 @@ const T_Component: Type<any>[] = [
   CodxGetTemplateSignFileComponent,
   CodxViewDetailSignFileComponent,
 
-
   //View
   CodxView2Component,
   FormSettingComponent,
@@ -392,7 +386,11 @@ const T_Component: Type<any>[] = [
   CodxAuthFileComponent,
 ];
 
-const T_Pipe: Type<any>[] = [FormatDataValuePipe];
+const T_Pipe: Type<any>[] = [
+  FormatDataValuePipe,
+  SumColumnsTablePipe,
+  ChangeMemoryCellsPipe,
+];
 
 @NgModule({
   declarations: [

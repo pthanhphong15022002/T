@@ -16,16 +16,19 @@
       class="button-close d-flex p-3"
       style="border: none; outline: none; background: none"
       (click)="dialog.close()"
-    ><i class="icon-close icon-18 text-hover-danger p-1"></i>
+    >
+      <i class="icon-close icon-18 text-hover-danger p-1"></i>
     </button>
   </div>
   <div>
     <div class="d-flex align-items-center text-primary mb-2">
-      <i class="icon-add_shopping_cart icon-18 me-2  text-primary"></i>
+      <i class="icon-add_shopping_cart icon-18 me-2 text-primary"></i>
       <span
         class="fw-bold fs-6"
         [innerHTML]="
-          contract?.businessLineID | formatvalue : formModel : 'BusinessLineID' | async
+          contract?.businessLineID
+            | formatvalue : formModel : 'BusinessLineID'
+            | async
         "
       ></span>
     </div>
@@ -39,23 +42,22 @@
               [objectType]="'CM_Customers'"
               [referType]="'avt'"
               [width]="40"
-              >
+            >
             </codx-img>
             <!-- [objectName]="contract?.customerName" -->
           </div>
           <div class="d-flex flex-column">
             <div
-              class="text-dark codx-textcontent fw-bold "
+              class="text-dark codx-textcontent fw-bold"
               [innerHTML]="
                 contract?.customerID
                   | formatvalue : formModel : 'CustomerID'
                   | async
               "
             ></div>
-            <div class=" text-gray-700 fs-5-sm ">
+            <div class="text-gray-700 fs-5-sm">
               {{ contract?.contractName }}
             </div>
-            
           </div>
         </div>
       </div>
@@ -113,12 +115,12 @@
       <div class="col-6">
         <div class="mb-1">
           <codx-label
-          class="label-colon fs-6 fw-bold"
-          fiedName="contactID"
-          [formModel]="formModel"
-          [setRequire]="false"
-        >
-        </codx-label>
+            class="label-colon fs-6 fw-bold"
+            fiedName="contactID"
+            [formModel]="formModel"
+            [setRequire]="false"
+          >
+          </codx-label>
         </div>
         <div class="d-flex align-items-center">
           <div class="me-3">
@@ -138,10 +140,7 @@
               #contactName
               [innerHTML]="
                 contactPerson?.contactName
-                  | formatvalue
-                    : formModelContact
-                    : 'contactName'
-                    : contactName
+                  | formatvalue : formModelContact : 'contactName' : contactName
                   | async
               "
             ></div>
@@ -156,7 +155,7 @@
                 "
               ></div>
             </div>
-      
+
             <div class="d-flex align-items-start">
               <div
                 class="d-flex align-items-center me-3"
@@ -167,10 +166,7 @@
                   #mobile
                   [innerHTML]="
                     contactPerson?.mobile
-                      | formatvalue
-                        : formModelContact
-                        : 'mobile'
-                        : mobile
+                      | formatvalue : formModelContact : 'mobile' : mobile
                       | async
                   "
                 ></div>
@@ -199,22 +195,20 @@
       <div class="col-6 d-flex flex-column align-items-end">
         <div>
           <codx-label
-          class="label-colon fs-6 fw-bold"
-          fiedName="owner"
-          [formModel]="formModel"
-          [setRequire]="false"
-        >
-        </codx-label>
+            class="label-colon fs-6 fw-bold"
+            fiedName="owner"
+            [formModel]="formModel"
+            [setRequire]="false"
+          >
+          </codx-label>
         </div>
         <div>
           <span
-          class="text-dark fw-bold codx-textcontent"
-          [innerHTML]="
-            contract?.owner
-              | formatvalue : formModel : 'Owner'
-              | async
-          "
-        ></span>
+            class="text-dark fw-bold codx-textcontent"
+            [innerHTML]="
+              contract?.owner | formatvalue : formModel : 'Owner' | async
+            "
+          ></span>
         </div>
       </div>
     </div>
@@ -238,7 +232,7 @@
       ></codx-taskbar>
       <hr class="mt-0" />
     </div>
-    <div class="main-right">
+    <div class="main-right w-100">
       <container-element [ngSwitch]="tabClicked">
         <some-element
           *ngSwitchCase="'general'"
@@ -267,6 +261,14 @@
         <some-element
           *ngSwitchCase="'memo'"
           [ngTemplateOutlet]="memo"
+        ></some-element>
+        <some-element
+          *ngSwitchCase="'disposal'"
+          [ngTemplateOutlet]="disposal"
+        ></some-element>
+        <some-element
+          *ngSwitchCase="'appendix'"
+          [ngTemplateOutlet]="appendix"
         ></some-element>
         <some-element *ngSwitchDefault></some-element>
       </container-element>
@@ -368,7 +370,9 @@
         <span
           class="text-dark fw-bold codx-textcontent"
           [innerHTML]="
-            contract?.interval || 0 | formatvalue : formModel : 'Interval' | async
+            contract?.interval || 0
+              | formatvalue : formModel : 'Interval'
+              | async
           "
         ></span>
         <codx-label
@@ -478,27 +482,39 @@
       </div>
     </div>
   </div>
-  <div>
+  <div class="mt-2">
+    <div>
+      <codx-label
+        class="fs-5-sm fw-bold"
+        fiedName="assetID"
+        default="Ví trí thuê"
+        [formModel]="formModel"
+        [setRequire]="false"
+      >
+      </codx-label>
+    </div>
+    <div>
+      <!-- VỊ trí thuê -->
+    </div>
+  </div>
+  <div class="mt-2">
     <codx-label
       class="fs-5-sm fw-bold"
       name="lblPurpose"
       [formModel]="formModel"
       [setRequire]="false"
       default="Mục đích thuê"
-    >
-    </codx-label>
+    ></codx-label>
     <div class="row my-1">
-        <span
-          class="text-gray-600"
-          [innerHTML]="
-            contract?.purpose
-              | formatvalue : formModel : 'Purpose'
-              | async
-          "
-        ></span>
+      <span
+        class="text-gray-600"
+        [innerHTML]="
+          contract?.purpose | formatvalue : formModel : 'Purpose' | async
+        "
+      ></span>
     </div>
   </div>
-  <div>
+  <div class="mt-2">
     <codx-label
       class="fs-5-sm fw-bold"
       name="lblNote"
@@ -508,17 +524,12 @@
     >
     </codx-label>
     <div class="row my-1">
-        <span
-          class="text-gray-600"
-          [innerHTML]="
-            contract?.note
-              | formatvalue : formModel : 'Note'
-              | async
-          "
-        ></span>
+      <span
+        class="text-gray-600"
+        [innerHTML]="contract?.note | formatvalue : formModel : 'Note' | async"
+      ></span>
     </div>
   </div>
-
 </ng-template>
 
 <ng-template #quotationsTemplate>
@@ -1027,7 +1038,7 @@
     (isSusscess)="checkSusscess($event)"
     [taskAdd]="taskAdd"
   ></step-task>
-    <!-- [taskAdd]="dataTaskAdd" -->
+  <!-- [taskAdd]="dataTaskAdd" -->
 </ng-template>
 
 <!-- báo giá -->
@@ -1050,24 +1061,537 @@
 <ng-template #memo let-data="value">
   <div>
     <codx-tree-comment
-    [objectID]="contract.recID"
-    [objectType]="formModel?.entityName"
-    [actionType]="'C'"
-    [addNew]="true"
-    [funcID]="formModel?.funcID"
-    (totalCommentChange)="changeCountFooter($event, 'comment')"
-  >
-  </codx-tree-comment>
+      [objectID]="contract.recID"
+      [objectType]="formModel?.entityName"
+      [actionType]="'C'"
+      [addNew]="true"
+      [funcID]="formModel?.funcID"
+      (totalCommentChange)="changeCountFooter($event, 'comment')"
+    >
+    </codx-tree-comment>
   </div>
+</ng-template>
+
+<!-- thanh lý -->
+<ng-template #disposal let-data="value">
+  <div>
+    <div class="row mb-2">
+      <div class="col-6 d-flex align-items-center">
+        <div class="w-150px min-w-150px">
+          <codx-label
+            class="label-colon text-gray-600 codx-textlabel"
+            fiedName="disposalID"
+            [formModel]="formModel"
+            [setRequire]="false"
+          >
+          </codx-label>
+        </div>
+        <span
+          class="text-dark fw-bold codx-textcontent"
+          [innerHTML]="
+           contract?.disposalID
+                | formatvalue : formModel : 'DisposalID'
+                | async
+          "
+        ></span>
+      </div>
+      <div class="col-6 d-flex align-items-center">
+        <div class="w-150px min-w-150px">
+          <codx-label
+            class="label-colon text-gray-600 codx-textlabel"
+            fiedName="disposalOn"
+            [formModel]="formModel"
+            [setRequire]="false"
+          >
+          </codx-label>
+        </div>
+        <span
+          class="text-dark fw-bold codx-textcontent"
+          [innerHTML]="contract?.disposalOn
+                | formatvalue : formModel : 'DisposalOn'
+                | async
+          "
+        ></span>
+      </div>
+    </div>
+
+    <div class="row mb-2">
+      <div class="col-6 d-flex align-items-center">
+        <div class="w-150px min-w-150px">
+          <codx-label
+            class="label-colon text-gray-600 codx-textlabel"
+            fiedName="effectiveTo"
+            [formModel]="formModel"
+            [setRequire]="false"
+          >
+          </codx-label>
+        </div>
+        <span
+          class="text-dark fw-bold codx-textcontent"
+          [innerHTML]="
+           contract?.effectiveTo
+                | formatvalue : formModel : 'EffectiveTo'
+                | async
+          "
+        ></span>
+      </div>
+      <div class="col-6 d-flex align-items-center">
+        <div class="w-150px min-w-150px">
+          <codx-label
+            class="label-colon text-gray-600 codx-textlabel"
+            fiedName="debtClosingOn"
+            [formModel]="formModel"
+            [setRequire]="false"
+          >
+          </codx-label>
+        </div>
+        <span
+          class="text-dark fw-bold codx-textcontent"
+          [innerHTML]="contract?.debtClosingOn
+                | formatvalue : formModel : 'DebtClosingOn'
+                | async
+          "
+        ></span>
+      </div>
+    </div>
+
+    <div class="row mb-2">
+      <div class="col-6 d-flex align-items-center">
+        <div class="w-150px min-w-150px">
+          <codx-label
+            class="label-colon text-gray-600 codx-textlabel"
+            fiedName="disposalType"
+            [formModel]="formModel"
+            [setRequire]="false"
+          >
+          </codx-label>
+        </div>
+        <span
+          class="text-dark fw-bold codx-textcontent"
+          [innerHTML]="
+           contract?.disposalType
+                | formatvalue : formModel : 'DisposalType'
+                | async
+          "
+        ></span>
+      </div>
+      <div class="col-6 d-flex align-items-center">
+        <div class="w-150px min-w-150px">
+          <codx-label
+            class="label-colon text-gray-600 codx-textlabel"
+            fiedName="disposalReason"
+            [formModel]="formModel"
+            [setRequire]="false"
+          >
+          </codx-label>
+        </div>
+        <span
+          class="text-dark fw-bold codx-textcontent"
+          [innerHTML]="contract?.disposalReason
+                | formatvalue : formModel : 'DisposalReason'
+                | async
+          "
+        ></span>
+      </div>
+    </div>
+
+    <div class="row mb-2">
+      <div class="d-flex">
+        <div class="w-150px min-w-150px">
+          <codx-label
+            class="label-colon text-gray-600 codx-textlabel"
+            fiedName="disposalCmt"
+            [formModel]="formModel"
+            [setRequire]="false"
+          >
+          </codx-label>
+        </div>
+        <span
+          class="text-dark fw-bold codx-textcontent"
+          [innerHTML]="
+           contract?.disposalCmt
+                | formatvalue : formModel : 'DisposalCmt'
+                | async
+          "
+        ></span>
+      </div>
+    </div>
+
+  </div>
+  <div>
+    <div>
+      <codx-label
+        class="fw-bold fs-5-sm"
+        name="lblDisposal"
+        [formModel]="formModel"
+        [default]="'Thông tin thanh lý'"
+      ></codx-label>
+    </div>
+  </div>
+</ng-template>
+<!-- phụ lục -->
+<ng-template #appendix let-data="value">
+
 </ng-template>
 
 <ng-template #contractLinkTem>
   <div>
-    <div>
-      <span>{{contractLink[0]?.contractName}}</span>
+    <div *ngIf="contractLink" class="p-2 link-container" (dblclick)="linkData('contract', contractLink?.recID)">
+      <div class="d-flex align-items-center">
+        <img width="17px" src="/assets/themes/cm/default/img/CM0204.svg" />
+        <codx-label
+          class="label-colon fs-5-sm fw-bold ms-2"
+          name="lblContractLink"
+          [formModel]="formModel"
+          [default]="'Hợp đồng liên kết'"
+        >
+        </codx-label>
+      </div>
+      <div class="ms-7">
+        <div class="d-flex justify-content-between">
+          <div>
+            <codx-label
+              class="label-colon fs-5-sm"
+              fiedName="contractName"
+              [formModel]="formModel"
+              [setRequire]="false"
+            ></codx-label>
+            <span class="fs-5-sm ms-1">{{ contractLink?.contractName }}</span>
+          </div>
+          <codx-vll
+            [name]="vllStatus"
+            [field]="'Status'"
+            [value]="contractLink?.status"
+            [showText]="true"
+            [showBgColor]="true"
+            class="me-0 badge badge-primary badge-sm"
+          >
+          </codx-vll>
+        </div>
+        <div class="d-flex justify-content-between align-items-center mt-2">
+          <div class="d-flex align-items-center">
+            <codx-label
+              class="label-colon fs-5-sm"
+              fiedName="contractID"
+              [formModel]="formModel"
+              [setRequire]="false"
+            ></codx-label>
+            <span class="fs-5-sm ms-1">{{ contractLink?.contractID }}</span>
+          </div>
+          <div [ngbTooltip]="tooltipDate" class="d-flex align-items-center">
+            <span class="icon-date_range icon-16 me-1"></span>
+            <span
+              class="text-gray-600"
+              [innerHTML]="
+                contractLink?.contractDate
+                  | formatvalue : formModel : 'ContractDate'
+                  | async
+              "
+            >
+              <ng-template #tooltipDate>
+                <codx-label
+                  fiedName="contractDate"
+                  [formModel]="formModel"
+                  [setRequire]="false"
+                ></codx-label>
+              </ng-template>
+            </span>
+          </div>
+        </div>
+
+        <div class="d-flex justify-content-between mt-2">
+          <div class="d-flex align-items-center">
+            <codx-label
+              class="label-colon fs-5-sm"
+              fiedName="contractAmt"
+              [formModel]="formModel"
+              [setRequire]="false"
+            >
+            </codx-label>
+            <div class="d-flex align-items-center fs-5-sm">
+              <span
+                [innerHTML]="
+                  contractLink?.contractAmt
+                    | formatvalue : formModel : 'ContractAmt'
+                    | async
+                "
+              ></span>
+              <span
+                class="ms-1"
+                [innerHTML]="
+                  contractLink?.currencyID
+                    | formatvalue : formModel : 'CurrencyID'
+                    | async
+                "
+              ></span>
+            </div>
+          </div>
+
+          <div class="d-flex align-items-center fs-5-sm" [ngbTooltip]="tooltipOwner">
+            <codx-imgs
+              class="me-3 d-flex align-items-center"
+              [width]="25"
+              ojectType="AD_Users"
+              [numberImages]="1"
+              [isToolTip]="true"
+              [objectId]="contractLink?.owner"
+            ></codx-imgs>
+            <span
+              class="text-dark fw-bold codx-textcontent"
+              [innerHTML]="
+                contractLink?.owner | formatvalue : formModel : 'Owner' | async
+              "
+            ></span>
+            <ng-template #tooltipOwner>
+              <codx-label
+                fiedName="owner"
+                [formModel]="formModel"
+                [setRequire]="false"
+              ></codx-label>
+            </ng-template>
+          </div>
+        </div>
+      </div>
     </div>
-    
-  </div>
+
+    <div *ngIf="deal" class="p-2 link-container" (dblclick)="linkData('deal', deal?.recID)">
+      <div  class="d-flex align-items-center">
+        <img  width="17px" src="/assets/themes/cm/default/img/CM0201.svg"/>
+        <codx-label
+          class="label-colon fs-5-sm fw-bold ms-2"
+          fiedName="dealID"
+          [formModel]="formModel"
+        >
+        </codx-label>
+      </div>
+      <div class="ms-7">
+        <div class="d-flex justify-content-between">
+          <div>
+            <codx-label
+              class="label-colon fs-5-sm"
+              fiedName="dealName"
+              [formModel]="fmDeals"
+              [setRequire]="false"
+            ></codx-label>
+            <span class="fs-5-sm ms-1">{{ deal?.dealName }}</span>
+          </div>
+          <codx-vll
+            [name]="vllStatus"
+            [field]="'Status'"
+            [value]="deal?.status"
+            [showText]="true"
+            [showBgColor]="true"
+            class="me-0 badge badge-primary badge-sm"
+          >
+          </codx-vll>
+        </div>
+        <div class="d-flex justify-content-between align-items-center mt-2">
+          <div class="d-flex align-items-center">
+            <codx-label
+              class="label-colon fs-5-sm"
+              fiedName="dealID"
+              [formModel]="fmDeals"
+              [setRequire]="false"
+            ></codx-label>
+            <span class="fs-5-sm ms-1">{{ deal?.dealID }}</span>
+          </div>
+          <div [ngbTooltip]="tooltipDate" class="d-flex align-items-center">
+            <span class="icon-date_range icon-16 me-1"></span>
+            <span
+              class="text-gray-600"
+              [innerHTML]="
+                deal?.createdOn
+                  | formatvalue : fmDeals : 'CreatedOn'
+                  | async
+              "
+            >
+              <ng-template #tooltipDate>
+                <codx-label
+                  fiedName="createdOn"
+                  [formModel]="fmDeals"
+                  [setRequire]="false"
+                ></codx-label>
+              </ng-template>
+            </span>
+          </div>
+        </div>
+
+        <div class="d-flex justify-content-between mt-2">
+          <div class="d-flex align-items-center">
+            <codx-label
+              class="label-colon fs-5-sm"
+              fiedName="dealValue"
+              [formModel]="fmDeals"
+              [setRequire]="false"
+            >
+            </codx-label>
+            <div class="d-flex align-items-center fs-5-sm">
+              <span
+                [innerHTML]="
+                  deal?.dealValue
+                    | formatvalue : fmDeals : 'DealValue'
+                    | async
+                "
+              ></span>
+              <span
+                class="ms-1"
+                [innerHTML]="
+                  deal?.currencyID
+                    | formatvalue : fmDeals : 'CurrencyID'
+                    | async
+                "
+              ></span>
+            </div>
+          </div>
+
+          <div class="d-flex align-items-center fs-5-sm" [ngbTooltip]="tooltipOwner">
+            <codx-imgs
+              class="me-3 d-flex align-items-center"
+              [width]="25"
+              ojectType="AD_Users"
+              [numberImages]="1"
+              [isToolTip]="true"
+              [objectId]="deal?.owner"
+            ></codx-imgs>
+            <span
+              class="text-dark fw-bold codx-textcontent"
+              [innerHTML]="
+                deal?.owner | formatvalue : fmDeals : 'Owner' | async
+              "
+            ></span>
+            <ng-template #tooltipOwner>
+              <codx-label
+                fiedName="owner"
+                [formModel]="fmDeals"
+                [setRequire]="false"
+              ></codx-label>
+            </ng-template>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="quotation" class="p-2 link-container" (dblclick)="linkData('quotation', quotation?.recID)">
+      <div  class="d-flex align-items-center">
+        <img width="17px" src="/assets/themes/cm/default/img/CM0202.svg"/>
+        <codx-label
+          class="label-colon fs-5-sm fw-bold ms-2"
+          fiedName="quotationID"
+          [formModel]="formModel"
+        >
+        </codx-label>
+      </div>
+      <div class="ms-7">
+        <div class="d-flex justify-content-between">
+          <div>
+            <codx-label
+              class="label-colon fs-5-sm"
+              fiedName="quotationName"
+              [formModel]="fmQuotations"
+              [setRequire]="false"
+            ></codx-label>
+            <span class="fs-5-sm ms-1">{{ quotation?.quotationName }}</span>
+          </div>
+          <codx-vll
+            [name]="'CRM012'"
+            [field]="'Status'"
+            [value]="quotation?.status"
+            [showText]="true"
+            [showBgColor]="true"
+            class="me-0 badge badge-primary badge-sm"
+          >
+          </codx-vll>
+        </div>
+        <div class="d-flex justify-content-between align-items-center mt-2">
+          <div class="d-flex align-items-center">
+            <codx-label
+              class="label-colon fs-5-sm"
+              fiedName="quotationID"
+              [formModel]="fmQuotations"
+              [setRequire]="false"
+            ></codx-label>
+            <span class="fs-5-sm ms-1">{{ quotation?.quotationID }}</span>
+          </div>
+          <div [ngbTooltip]="tooltipDate" class="d-flex align-items-center">
+            <span class="icon-date_range icon-16 me-1"></span>
+            <span
+              class="text-gray-600"
+              [innerHTML]="
+                quotation?.createdOn
+                  | formatvalue : fmQuotations : 'CreatedOn'
+                  | async
+              "
+            >
+              <ng-template #tooltipDate>
+                <codx-label
+                  fiedName="createdOn"
+                  [formModel]="fmQuotations"
+                  [setRequire]="false"
+                ></codx-label>
+              </ng-template>
+            </span>
+          </div>
+        </div>
+
+        <div class="d-flex justify-content-between mt-2">
+          <div class="d-flex align-items-center">
+            <codx-label
+              class="label-colon fs-5-sm"
+              fiedName="totalAmt"
+              [formModel]="fmQuotations"
+              [setRequire]="false"
+            >
+            </codx-label>
+            <div class="d-flex align-items-center fs-5-sm">
+              <span
+                [innerHTML]="
+                  quotation?.totalAmt
+                    | formatvalue : fmQuotations : 'TotalAmt'
+                    | async
+                "
+              ></span>
+              <span
+                class="ms-1"
+                [innerHTML]="
+                  quotation?.currencyID
+                    | formatvalue : fmQuotations : 'CurrencyID'
+                    | async
+                "
+              ></span>
+            </div>
+          </div>
+
+          <div class="d-flex align-items-center fs-5-sm" [ngbTooltip]="tooltipOwner">
+            <codx-imgs
+              class="me-3 d-flex align-items-center"
+              [width]="25"
+              ojectType="AD_Users"
+              [numberImages]="1"
+              [isToolTip]="true"
+              [objectId]="quotation?.createdBy"
+            ></codx-imgs>
+            <span
+              class="text-dark fw-bold codx-textcontent"
+              [innerHTML]="
+                quotation?.createdBy | formatvalue : fmQuotations : 'CreatedBy' | async
+              "
+            ></span>
+            <ng-template #tooltipOwner>
+              <codx-label
+                fiedName="createdBy"
+                [formModel]="fmQuotations"
+                [setRequire]="false"
+              ></codx-label>
+            </ng-template>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="(!quotation && !deal && !contractLink)">
+      <codx-no-data></codx-no-data>
+    </div>
+  </div> 
 </ng-template>
 <!-- ----------------------😒------------------------------>
 <!-- <div class="container_detail mt-1">
@@ -1284,7 +1808,7 @@
     </div>
   </div>
 </div> -->
-  <!-- <div class="A mb-5">
+<!-- <div class="A mb-5">
     <div class="mb-3">
       <span class="fs-6 fw-bold text-primary">Bên A</span>
     </div>
@@ -1294,7 +1818,7 @@
     ></ng-container>
   </div> -->
 
-  <!-- <div class="B mb-5">
+<!-- <div class="B mb-5">
     <div class="mb-3"><span class="fs-6 fw-bold text-primary">Bên B</span></div>
     <ng-container
       [ngTemplateOutlet]="general"

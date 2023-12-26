@@ -143,7 +143,9 @@ export class PopupAddSignFileComponent implements OnInit {
   tempSampleProcessName: any;
   reloadedStep= true;
   popupApproverInfo=false;
+  showCateNameOnly=false;
   lstpartners = [];
+  cateName ="";
   constructor(
     private auth: AuthStore,
     private esService: CodxEsService,
@@ -184,6 +186,7 @@ export class PopupAddSignFileComponent implements OnInit {
     this.templateRefID = data?.data?.templateRefID; //refID truyền vào form export template    
     this.refID = data?.data?.refID; // Bắt buộc truyền nếu từ module != ES: Lưu RefID của SignFile
     this.refType = this.approverProcess?.category?.category !=null ?this.approverProcess?.category?.category :  data?.data?.refID ? data?.data?.refID : 'ES_SignFiles';// Bắt buộc truyền nếu từ module != ES: Lưu RefType của SignFile và lấy Category của Module
+    
     this.editApprovers = false ;//data?.data?.editApprovers ?? false;
     this.approvers = data?.data?.approvers ?? null;
     this.approverProcess = data?.data?.approverProcess ?? null;
@@ -203,6 +206,10 @@ export class PopupAddSignFileComponent implements OnInit {
         appr.approver = this.approverProcess?.data?.owner;
         this.dynamicApprovers.push(appr);
       }
+    }
+    if(this.approverProcess?.category?.categoryName && this.disableCateID){
+      this.showCateNameOnly=true;
+      this.cateName = this.approverProcess?.category?.categoryName;
     }
 
     if (this.modeView == '2') {
@@ -1008,6 +1015,10 @@ export class PopupAddSignFileComponent implements OnInit {
       this.esService.notifyInvalid(this.dialogSignFile, this.formModelCustom);
       return;
     }
+    if(this.data.approveControl = '1'){
+      this.data.processID == this.data.recID;
+      this.dialogSignFile.patchValue({ approveControl: '1', processID:this.data.recID }); 
+    }
     this.data.category = this.refType;
     this.data.refType = this.refType;
     
@@ -1416,6 +1427,11 @@ export class PopupAddSignFileComponent implements OnInit {
         this.reloadedStep=true;
         this.cr.detectChanges();
       }
+      if(this.data.approveControl = '1'){
+        this.data.processID == this.data.recID;
+        this.dialogSignFile.patchValue({ approveControl: '1',processID:this.data.recID }); 
+        this.onSaveSignFile();
+      }
     }
   }
 
@@ -1428,10 +1444,10 @@ export class PopupAddSignFileComponent implements OnInit {
       this.cr.detectChanges();
     }
   }
-  checkApproverInfo(oldNode, newNode){
-    
+  checkApproverInfo(oldNode, newNode){    
     this.lstpartners=[];
-    this.codxShareService.getStepsByTransID(this.data.processID).subscribe((steps:any)=>{
+    let transID = this.data?.approveControl == "1" ? this.data.recID : this.data.processID
+    this.codxShareService.getStepsByTransID(transID).subscribe((steps:any)=>{
       if(steps){
         Array.from(steps).forEach((step:any)=>{
           if(step?.approvers){

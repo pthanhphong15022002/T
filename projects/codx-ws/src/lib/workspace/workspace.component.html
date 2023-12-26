@@ -1,6 +1,6 @@
 
 <div class="d-flex align-items-center w-100 h-100vh">
-  <div class="d-flex flex-column position-relative w-350px h-100 bg-white overflow-auto">
+  <div class="d-flex flex-column position-relative w-300px h-100 bg-white overflow-auto">
     <div id="kt_aside_menu" class="aside-menu flex-column-fluid">
       <div
         #ktAsideScroll
@@ -33,7 +33,6 @@
                   <span
                     class="menu-icon"
                     *ngIf="f.functionType != 'G'"
-                    (click)="itemClick(f.functionID)"
                   >
                     <span
                       *ngIf="!f.smallIcon && f.largeIcon"
@@ -49,6 +48,7 @@
                   </span>
                   <span
                     [ngClass]="(f.functionType == 'G') ? 'fw-bold text-uppercase' :'menu-title'"
+                    (click)="itemClick(f.functionID)"
                     >{{ f.customName }}</span
                   >
                 </ng-container>
@@ -68,6 +68,7 @@
                       ? 'here show'
                       : ''
                   "
+                   (click)="itemClick(f.functionID)"
                 >
                   <span class="menu-link" 
                     *ngIf="c?.customName"
@@ -77,7 +78,7 @@
                         : ''
                     "
                   >
-                    <span class="menu-icon" >
+                    <span class="menu-icon" *ngIf="!c?.childs || c?.childs.length ==0">
                       <span
                         *ngIf="
                           c.largeIcon && !c.smallIcon;
@@ -99,7 +100,7 @@
                   </span>
                   <div
                     role="tabpanel"
-                    class="tab-pane menu-item flex-column d-flex ms-6"
+                    class="tab-pane menu-item flex-column d-flex"
                     [attr.data-funcid]="c.functionID"
                     *ngIf="c?.childs && c.childs.length>0"
                   >
@@ -113,7 +114,7 @@
                       *ngFor="let c2 of c.childs" (click)="itemClick(c2.functionID)"
                     >
                       <span 
-                        class="menu-link" 
+                        class="menu-link ps-0" 
                         [ngClass]="
                           funcID === c2.functionID
                             ? 'active'
@@ -137,7 +138,7 @@
                         }}</span>
                         <span class="menu-arrow"  *ngIf="c2?.favs && c2.favs.length>0"></span>
                       </span>
-                      <div class="menu-sub menu-sub-accordion ms-8" *ngIf="c2?.favs && c2.favs.length > 0">
+                      <div class="menu-sub menu-sub-accordion ms-4" *ngIf="c2?.favs && c2.favs.length > 0">
                         <div class="menu-item" *ngFor="let fv of c2.favs">
                           <a
                             class="menu-link without-sub"
@@ -175,7 +176,7 @@
     </div>
     </div>
   </div>
-  <div class="w-100 h-100">
+  <div class="h-100" style="width:calc( 100% - 300px)">
     <router-outlet></router-outlet>
     <!-- Speed dial -->
     <div class="speedial">

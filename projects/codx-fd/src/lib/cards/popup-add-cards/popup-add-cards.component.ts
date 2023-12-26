@@ -536,7 +536,7 @@ export class PopupAddCardsComponent implements OnInit {
             if (data > this.parameter.MaxPointPerOnce) {
               this.notifySV.notify(
                 'Vượt quá số xu cho phép tặng trong 1 lần',
-                '2'
+                '3'
               );
               data = this.givePoint;
               this.form.patchValue({ coins: this.givePoint });
@@ -564,7 +564,7 @@ export class PopupAddCardsComponent implements OnInit {
                   this.parameter.MaxPoints +
                   ' xu/' +
                   unitName,
-                '2'
+                '3'
               );
               data = this.givePoint;
               this.form.patchValue({ coins: this.givePoint });
@@ -611,7 +611,7 @@ export class PopupAddCardsComponent implements OnInit {
           this.isWalletReciver = true;
         } else {
           this.isWalletReciver = false;
-          this.notifySV.notify('Người nhận chưa tích hợp ví');
+          this.notifySV.notify('Người nhận chưa tích hợp ví', '3');
         }
       });
   }
@@ -631,11 +631,11 @@ export class PopupAddCardsComponent implements OnInit {
       this.cardType != this.CARDTYPE_EMNUM.Radio
     ) {
       let mssg = Util.stringFormat(this.mssgNoti, 'Người nhận');
-      this.notifySV.notify(mssg);
+      this.notifySV.notify(mssg, '3');
       return;
     } else if (!this.form.controls['situation'].value) {
       let mssg = Util.stringFormat(this.mssgNoti, 'Nội dung');
-      this.notifySV.notify(mssg);
+      this.notifySV.notify(mssg, '3');
       return;
     }
     if (this.parameter) {
@@ -645,14 +645,14 @@ export class PopupAddCardsComponent implements OnInit {
         case '1':
           if (!this.form.controls['behavior'].value) {
             let mssg = Util.stringFormat(this.mssgNoti, 'Qui tắc ứng xử');
-            this.notifySV.notify(mssg);
+            this.notifySV.notify(mssg, '3');
             return;
           }
           break;
         case '2':
           if (!this.form.controls['behavior'].value) {
             let mssg = Util.stringFormat(this.mssgNoti, 'Hành vi ứng xử');
-            this.notifySV.notify(mssg);
+            this.notifySV.notify(mssg, '3');
             return;
           }
           break;
@@ -664,10 +664,10 @@ export class PopupAddCardsComponent implements OnInit {
       (!this.myWallet || this.myWallet?.status != '1') &&
       (this.givePoint > 0 || (this.gifts && this.gifts.length > 0))
     ) {
-      this.notifySV.notify('Bạn chưa tích hợp ví');
+      this.notifySV.notify('Bạn chưa tích hợp ví', '3');
       return;
     } else if (this.myWallet && this.myWallet?.coins < this.amount) {
-      this.notifySV.notify('Số dư ví của bạn không đủ');
+      this.notifySV.notify('Số dư ví của bạn không đủ', '3');
       return;
     } else {
       this.card = {
@@ -845,7 +845,7 @@ export class PopupAddCardsComponent implements OnInit {
     let point = this.givePoint + 1;
     if (this.parameter.MaxPointPerOnceControl === '1') {
       if (point > this.parameter.MaxPointPerOnce) {
-        this.notifySV.notify('Vượt quá số xu cho phép tặng');
+        this.notifySV.notify('Vượt quá số xu cho phép tặng', '3');
         return;
       }
     }
@@ -885,7 +885,7 @@ export class PopupAddCardsComponent implements OnInit {
           res.forEach((gift) => {
             if (gift.availableQty <= 0) {
               this.form.patchValue({ giftID: '' });
-              this.notifySV.notify('Số dư quà tặng không đủ');
+              this.notifySV.notify('Số dư quà tặng không đủ', '3');
               this.dt.detectChanges();
             } else {
               gift.quantity = 1;
@@ -915,7 +915,7 @@ export class PopupAddCardsComponent implements OnInit {
     let gift = this.gifts[index];
     if (quantity > gift.availableQty) {
       gift.quantity = 1;
-      this.notifySV.notify('Vượt quá số dư quà tặng');
+      this.notifySV.notify('Vượt quá số dư quà tặng', '3');
       return;
     } else {
       gift.quantity = quantity;
