@@ -62,6 +62,8 @@ import { PopupSettingReferenceComponent } from './dynamic-process/popup-add-dyna
 import { ReplaceProgressPipe } from './pipes/replace-progress.pipe';
 import { StepTaskInstanceComponent } from './instances/instance-detail/step-task-instance/step-task-instance.component';
 import { PopupReleaseProcessComponent } from './dynamic-process/popup-release-process/popup-release-process.component';
+import { ProcessesPropertiesComponent } from './processes-properties/processes-properties.component';
+import { PropertiesFieldComponent } from './processes-properties/properties-field/properties-field.component';
 
 export const routes: Routes = [
   {
@@ -155,6 +157,8 @@ const T_Component: Type<any>[] = [
   ReplaceProgressPipe,
   StepTaskInstanceComponent,
   PopupReleaseProcessComponent,
+  ProcessesPropertiesComponent,
+  PropertiesFieldComponent
 ];
 
 @NgModule({
