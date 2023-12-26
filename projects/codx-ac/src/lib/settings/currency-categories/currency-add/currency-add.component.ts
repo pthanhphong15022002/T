@@ -287,24 +287,15 @@ export class CurrencyAddComponent extends UIComponent implements OnInit {
    * @param data 
    */
   deleteExchangeRate(data: any) {
-    this.notification.alertCode('SYS030', null).subscribe((res) => {
-      if (res.event.status === 'Y') {
-        this.api
-        .exec('BS', 'ExchangeRatesBusiness', 'DeleteOneAsync', [
-          data
-        ])
-        .pipe(takeUntil(this.destroy$))
-        .subscribe((res: any) => {
-          if (res) {
-            let index = this.lstExchangeRate.findIndex((x) => x.recID == data.recID);
-            if (index > -1) {
-              this.lstExchangeRate.splice(index, 1);
-              this.detectorRef.detectChanges();
-            }
-          }
-        });
+    this.exchangeRatesService.delete([data], true,null,null,null,null,null,false).pipe(takeUntil(this.destroy$)).subscribe((res: any) => {
+      if (res && !res?.error) {
+        let index = this.lstExchangeRate.findIndex((x) => x.recID == data.recID);
+        if (index > -1) {
+          this.lstExchangeRate.splice(index, 1);
+          this.detectorRef.detectChanges();
+        }
       }
-    })  
+    });
   }
 
   /**
