@@ -40,6 +40,7 @@ import { StepService } from 'projects/codx-share/src/lib/components/codx-step/st
 import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
 import { PopupAddCategoryComponent } from 'projects/codx-es/src/lib/setting/category/popup-add-category/popup-add-category.component';
 import { tmpInstances } from '../../models/tmpModel';
+import { CodxListContactsComponent } from '../../cmcustomer/cmcustomer-detail/codx-list-contacts/codx-list-contacts.component';
 
 @Component({
   selector: 'add-contracts',
@@ -52,6 +53,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
   @ViewChild('extend') extend: TemplateRef<any>;
   @ViewChild('reference') reference: TemplateRef<any>;
   @ViewChild('information') information: TemplateRef<any>;
+  @ViewChild('fieldTemp') fieldTemp: TemplateRef<any>;
 
   @ViewChild('more') more: TemplateRef<any>;
   @ViewChild('inputDeal') inputDeal: CodxInputComponent;
@@ -59,6 +61,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
   @ViewChild('inputContact') inputContact: CodxInputComponent;
   @ViewChild('inputQuotation') inputQuotation: CodxInputComponent;
   @ViewChild('realtiesTmp') realtiesTmp: TemplateRef<any>;
+  @ViewChild('loadContactDeal') loadContactDeal: CodxListContactsComponent;
 
   REQUIRE = [
     'contractID',
@@ -155,6 +158,9 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
 
   isShowFieldLeft = false;
   nameTabFieldsSetting = '';
+  lstContactDeal: any[] = [];
+  lstContactDelete: any[] = [];
+  isBlock = true;
   // Tab control
   tabInfo = [
     {
@@ -779,7 +785,9 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
             this.contracts.applyProcess = true;
             this.GetProcessNoByProcessID(processID);
             this.disabledShowInput = true;
+            this.getListInstanceSteps(processID);
           } else {
+            this.itemTabsInput(false);
             if(this.isApplyProcess){
               this.GetProcesIDDefault();
             }else{
@@ -1352,9 +1360,9 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
   }
   //#endregion
 
-  async getListInstanceSteps(processId: any) {
+  getListInstanceSteps(processId: any) {
     let data = [processId, this.contracts?.refID, this.action, '4'];
-    this.cmService.getInstanceSteps(data).subscribe(async (res) => {
+    this.cmService.getInstanceSteps(data).subscribe((res) => {
       if (res && res.length > 0) {
         let obj = {
           id: processId,
@@ -1371,28 +1379,6 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
         this.getSettingFields(res[3],this.listInstanceSteps);
         this.listParticipants = [];
         this.listParticipants = JSON.parse(JSON.stringify(obj?.permissions));
-        // if (this.action === "edit") {
-        //   // this.owner = this.deal.owner;
-        // } else {
-        //   if (this.listParticipants?.length > 0 && this.listParticipants && !this.owner) {
-        //     let index = this.listParticipants?.findIndex(
-        //       (x) => x.userID === this.user.userID
-        //     );
-        //     this.owner = index != -1 ? this.user.userID : null;
-        //   }
-        //   this.deal.dealID = res[2];
-        // }
-        // this.dateMax = this.HandleEndDate(
-        //   this.listInstanceSteps,
-        //   this.action,
-        //   this.action !== this.actionEdit ||
-        //     (this.action === this.actionEdit &&
-        //       (this.deal.status == '1' || this.deal.status == '15'))
-        //     ? null
-        //     : this.deal.createdOn
-        // );
-        // this.deal.endDate =
-        //   this.action === this.actionEdit ? this.deal?.endDate : this.dateMax;
         this.changeDetectorRef.detectChanges();
       }
     });
@@ -1416,13 +1402,13 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
     if(this.action !== 'edit') {
       let stepCurrent = liststeps[0];
       if(stepCurrent && stepCurrent.fields?.length > 0 ) {
-        let filteredTasks = stepCurrent.tasks.filter(task => task?.fieldID && task?.fieldID?.trim())
+        let fieldIdAllTask = stepCurrent.tasks.filter(task => task?.fieldID && task?.fieldID?.trim())
         .map(task => task.fieldID)
         .flatMap(item => item.split(';')
         .filter(item => item !== ''));
 
-        let listField = stepCurrent.fields.filter(field => !filteredTasks.includes(this.action === 'copy'? field?.recID: field?.refID));
-        this.listField = [...this.listField, ...listField];
+        let listField = stepCurrent.fields.filter(field => !fieldIdAllTask.includes(this.action === 'copy'? field?.recID: field?.refID));
+        this.listField = listField || [];
       }
      }
      else {
@@ -1443,28 +1429,141 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
     return this.listField != null && this.listField?.length > 0;
   }
   itemTabsInput(check: boolean,): void {
-    // let menuInput = this.tabInfo.findIndex(
-    //   (item) => item?.name === this.menuInputInfo?.name //Phúc gắn thêm name để nó lấy chính xác hơn.
-    // );
-    // let tabInput = this.tabContent.findIndex(
-    //   (item) => item === this.tabCustomFieldDetail
-    // );
-    // if(this.isShowField) {
-    //   if (check && menuInput == -1 && tabInput == -1) {
-    //     this.tabInfo.splice(2, 0, this.menuInputInfo);
-    //     this.tabContent.splice(2, 0, this.tabCustomFieldDetail);
-    //   } else if ( menuInput != -1 && tabInput != -1) {
-    //     this.tabInfo.splice(menuInput, 1);
-    //     this.tabContent.splice(tabInput, 1);
-    //   }
-    // }
-    // else {
-    //   if (menuInput != -1 && tabInput != -1) {
-    //     this.tabInfo.splice(menuInput, 1);
-    //     this.tabContent.splice(tabInput, 1);
-    //   }
-    // }
+    let menuInput = this.tabInfo.findIndex(
+      (item) => item?.name === this.tabField?.name
+    );
+    let tabInput = this.tabContent.findIndex(
+      (item) => item === this.fieldTemp
+    );
+    if(this.isShowFieldLeft) {
+      if (check && menuInput == -1 && tabInput == -1) {
+        this.tabInfo.splice(2, 0, this.tabField);
+        this.tabContent.splice(2, 0, this.fieldTemp);
+      } else if (!check && menuInput != -1 && tabInput != -1) {
+        this.tabInfo.splice(menuInput, 1);
+        this.tabContent.splice(tabInput, 1);
+      }
+    }
+    else {
+      if (menuInput != -1 && tabInput != -1) {
+        this.tabInfo.splice(menuInput, 1);
+        this.tabContent.splice(tabInput, 1);
+      }
+    }
   }
+
+  addFileCompleted(e) {
+    this.isBlock = e;
+  }
+  valueChangeCustom(event) {
+    //bo event.e vì nhan dc gia trị null
+    if (event && event.data) {
+      let result = event.e?.data;
+      let field = event.data;
+      switch (field.dataType) {
+        case 'D':
+          result = event.e?.data.fromDate;
+          break;
+        case 'P':
+        case 'R':
+        case 'A':
+        case 'L':
+        case 'TA':
+        case 'PA':
+          result = event?.e;
+          break;
+        case 'C':
+          result = event?.e;
+          let type = event?.type ?? '';
+          let contact = event?.result ?? '';
+          this.convertToFieldDp(contact, type);
+          break;
+      }
+      let index = this.listInstanceSteps.findIndex(
+        (x) => x.recID == field.stepID
+      );
+      if (index != -1) {
+        if (this.listInstanceSteps[index].fields?.length > 0) {
+          let idxField = this.listInstanceSteps[index].fields.findIndex(
+            (x) => x.recID == event.data.recID
+          );
+          if (idxField != -1) {
+            this.listInstanceSteps[index].fields[idxField].dataValue = result;
+            let idxEdit = this.listCustomFile.findIndex(
+              (x) =>
+                x.recID == this.listInstanceSteps[index].fields[idxField].recID
+            );
+            if (idxEdit != -1) {
+              this.listCustomFile[idxEdit] =
+                this.listInstanceSteps[index].fields[idxField];
+            } else
+              this.listCustomFile.push(
+                this.listInstanceSteps[index].fields[idxField]
+              );
+          }
+        }
+      }
+    }
+  }
+//#region Convert contact to field DP
+convertToFieldDp(contact, type) {
+  if (contact != null) {
+    if (this.lstContactDeal != null && this.lstContactDeal.length > 0) {
+      let index = -1;
+
+      if (contact.refID != null && contact.refID?.trim() != '') {
+        index = this.lstContactDeal.findIndex(
+          (x) => x.refID == contact.refID
+        );
+      } else {
+        index = this.lstContactDeal.findIndex(
+          (x) => x.recID == contact.recID
+        );
+      }
+      let idxDefault = -1;
+      if (contact?.isDefault) {
+        idxDefault = this.lstContactDeal.findIndex(
+          (x) => x.isDefault && x.recID != contact.recID
+        );
+      }
+      if (index != -1) {
+        if (type != 'delete') {
+          this.lstContactDeal[index] = contact;
+        } else {
+          this.lstContactDeal.splice(index, 1);
+        }
+      } else {
+        if (type != 'delete') {
+          this.lstContactDeal.push(Object.assign({}, contact));
+        }
+      }
+      if (idxDefault != -1 && type != 'delete') {
+        this.lstContactDeal[idxDefault].isDefault = false;
+      }
+    } else {
+      if (type != 'delete') {
+        let lst = [];
+        lst.push(Object.assign({}, contact));
+        this.lstContactDeal = lst;
+      }
+    }
+    if (this.loadContactDeal) {
+      this.loadContactDeal.loadListContact(this.lstContactDeal);
+    }
+    // this.lstContactDeal = JSON.parse(JSON.stringify(this.lstContactDeal));
+    this.changeDetectorRef.detectChanges();
+  }
+}
+
+lstContactEmit(e) {
+  this.lstContactDeal =
+    e != null && e?.length > 0 ? JSON.parse(JSON.stringify(e)) : [];
+  this.changeDetectorRef.detectChanges();
+  // if (!this.isCheckContact) this.isCheckContact = true;
+}
+lstContactDeleteEmit(e) {
+  this.lstContactDelete = e;
+}
   // realtiesContract(){
   //   // this.stepService.chooseTypeTask(['G','F'])
   //   let opt = new DialogModel();

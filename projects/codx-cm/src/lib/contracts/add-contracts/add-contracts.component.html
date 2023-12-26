@@ -641,6 +641,28 @@
   </div> -->
 </ng-template>
 
+<ng-template #fieldTemp>
+  <ng-container *ngIf="listField && listField?.length > 0">
+    <ng-container *ngFor="let item of listField">
+      <div class="form-group">
+        <codx-input-custom-field
+          [customField]="item"
+          [checkValid]="false"
+          [objectId]="item.recID"
+          [objectType]="'DP_Instances_Steps_Fields'"
+          [objectIdParent]="contracts?.recID"
+          [customerID]="contracts?.customerID"
+          [formModel]="dialog.formModel"
+          [isAdd]="action == 'add'"
+          (valueChangeCustom)="valueChangeCustom($event)"
+          (addFileCompleted)="addFileCompleted($event)"
+        >
+        </codx-input-custom-field>
+      </div>
+    </ng-container>
+  </ng-container>
+</ng-template>
+
 <ng-template #extendTemp>
   <div>
     
@@ -788,6 +810,25 @@
       </button>
     </div>
   </div>
+</ng-template>
+
+<ng-template #contact>
+  <ng-container>
+    <codx-list-contacts
+      #loadContactDeal
+      [selectAll]="false"
+      [funcID]="'CM0201'"
+      [objectID]="contracts?.recID"
+      [listContacts]="lstContactDeal"
+      [customerID]="customerID"
+      (lstContactEmit)="lstContactEmit($event)"
+      (lstContactDeleteEmit)="lstContactDeleteEmit($event)"
+      [objectType]="'4'"
+      [objectName]="contracts?.contractName"
+      [hidenMF]="false"
+      [type]="'formAdd'"
+    ></codx-list-contacts>
+  </ng-container>
 </ng-template>
 <!-- <div class="py-5" *ngIf="false">
   <header
