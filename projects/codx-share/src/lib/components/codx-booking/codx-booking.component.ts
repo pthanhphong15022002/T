@@ -545,7 +545,7 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
     if(!item && this.view?.dataService?.data?.length>0) {
       item = this.view?.dataService?.data[0];
       this.view.dataService.dataSelected = item;
-    }  
+    }
     this.codxBookingService.getBookingByID(item?.recID).subscribe((data) => {
       if (data) {
         this.popupTitle = event?.text + ' ' + this.funcIDName;
@@ -1108,7 +1108,7 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
           );
           dialogAdd.closed.subscribe((returnData) => {
             if (returnData?.event) {
-              this.view?.dataService?.update(returnData?.event);
+              //this.view?.dataService?.update(returnData?.event);
             } else {
               this.view.dataService.clear();
             }
