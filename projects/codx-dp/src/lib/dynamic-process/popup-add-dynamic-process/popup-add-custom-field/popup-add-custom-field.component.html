@@ -165,6 +165,11 @@
           *ngIf="field.dataType == 'TA'"
           [ngTemplateOutlet]="tempViewTable"
         ></ng-container>
+        <!-- tính toán -->
+        <ng-container
+          *ngIf="field.dataType == 'CF'"
+          [ngTemplateOutlet]="tempSettingCaculate"
+        ></ng-container>
 
         <codx-input
           *ngIf="field.dataType == 'AT'"
@@ -430,6 +435,7 @@
           </div>
         </div>
       </div>
+
       <div class="form-group">
         <codx-label
           name="Note"
@@ -548,7 +554,103 @@
             </td>
           </ng-container>
         </tr>
+        <tr *ngIf="totalColumns">
+          <td class="ps-4" *ngIf="settingCount">
+            <div>
+              <codx-label
+                name="lblSum"
+                formName="System"
+                [default]="'Tổng cộng'"
+              ></codx-label>
+            </div>
+          </td>
+          <ng-container *ngFor="let cell of listColumns">
+            <td class="ps-4">
+              <div>
+                <span> {{ cell?.totalColumns ? 0 : "" }}</span>
+              </div>
+            </td>
+          </ng-container>
+        </tr>
       </tbody>
     </table>
+  </div>
+</ng-template>
+
+<ng-template #tempSettingCaculate>
+  <div class="d-flex justify-content-between">
+    <button
+      type="button"
+      class="btn btn-icon btn-sm btn-light-primary me-2"
+      (click)="buttonOperator('+')"
+    >
+      {{ "+" }}
+    </button>
+    <button
+      type="button"
+      class="btn btn-icon btn-sm btn-light-primary me-2"
+      (click)="buttonOperator('-')"
+    >
+      {{ "-" }}
+    </button>
+    <button
+      type="button"
+      class="btn btn-icon btn-sm btn-light-primary me-2"
+      (click)="buttonOperator('x')"
+    >
+      {{ "x" }}
+    </button>
+    <button
+      type="button"
+      class="btn btn-icon btn-sm btn-light-primary me-2"
+      (click)="buttonOperator('/')"
+    >
+      {{ "/" }}
+    </button>
+    <button
+      type="button"
+      class="btn btn-icon btn-sm btn-light-primary me-2"
+      (click)="buttonOperator('Avg')"
+    >
+      {{ "Avg()" }}
+    </button>
+    <button
+      type="button"
+      class="btn btn-icon btn-sm btn-light-primary me-2"
+      (click)="buttonOpenParenthesis()"
+    >
+      {{ "(" }}
+    </button>
+    <button
+      type="button"
+      class="btn btn-icon btn-sm btn-light-primary me-2"
+      (click)="buttonCloseParenthesis()"
+    >
+      {{ ")" }}
+    </button>
+    <button
+      type="button"
+      class="btn btn-icon btn-sm btn-light-primary me-2"
+      (click)="fieldSelect()"
+    >
+      {{ "Chọn trường test" }}
+    </button>
+    <button
+      type="button"
+      class="btn btn-icon btn-sm btn-light-primary me-2"
+      (click)="delChart()"
+    >
+      {{ "Del" }}
+    </button>
+    <button
+      type="button"
+      class="btn btn-icon btn-sm btn-light-danger me-2"
+      (click)="delAll()"
+    >
+      {{ "AC" }}
+    </button>
+  </div>
+  <div class="mt-5 mb-5 fs-7">
+    {{ caculateField }}
   </div>
 </ng-template>

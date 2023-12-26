@@ -262,6 +262,14 @@
           *ngSwitchCase="'memo'"
           [ngTemplateOutlet]="memo"
         ></some-element>
+        <some-element
+          *ngSwitchCase="'disposal'"
+          [ngTemplateOutlet]="disposal"
+        ></some-element>
+        <some-element
+          *ngSwitchCase="'appendix'"
+          [ngTemplateOutlet]="appendix"
+        ></some-element>
         <some-element *ngSwitchDefault></some-element>
       </container-element>
     </div>
@@ -474,15 +482,29 @@
       </div>
     </div>
   </div>
-  <div>
+  <div class="mt-2">
+    <div>
+      <codx-label
+        class="fs-5-sm fw-bold"
+        fiedName="assetID"
+        default="Ví trí thuê"
+        [formModel]="formModel"
+        [setRequire]="false"
+      >
+      </codx-label>
+    </div>
+    <div>
+      <!-- VỊ trí thuê -->
+    </div>
+  </div>
+  <div class="mt-2">
     <codx-label
       class="fs-5-sm fw-bold"
       name="lblPurpose"
       [formModel]="formModel"
       [setRequire]="false"
       default="Mục đích thuê"
-    >
-    </codx-label>
+    ></codx-label>
     <div class="row my-1">
       <span
         class="text-gray-600"
@@ -492,7 +514,7 @@
       ></span>
     </div>
   </div>
-  <div>
+  <div class="mt-2">
     <codx-label
       class="fs-5-sm fw-bold"
       name="lblNote"
@@ -1048,6 +1070,168 @@
     >
     </codx-tree-comment>
   </div>
+</ng-template>
+
+<!-- thanh lý -->
+<ng-template #disposal let-data="value">
+  <div>
+    <div class="row mb-2">
+      <div class="col-6 d-flex align-items-center">
+        <div class="w-150px min-w-150px">
+          <codx-label
+            class="label-colon text-gray-600 codx-textlabel"
+            fiedName="disposalID"
+            [formModel]="formModel"
+            [setRequire]="false"
+          >
+          </codx-label>
+        </div>
+        <span
+          class="text-dark fw-bold codx-textcontent"
+          [innerHTML]="
+           contract?.disposalID
+                | formatvalue : formModel : 'DisposalID'
+                | async
+          "
+        ></span>
+      </div>
+      <div class="col-6 d-flex align-items-center">
+        <div class="w-150px min-w-150px">
+          <codx-label
+            class="label-colon text-gray-600 codx-textlabel"
+            fiedName="disposalOn"
+            [formModel]="formModel"
+            [setRequire]="false"
+          >
+          </codx-label>
+        </div>
+        <span
+          class="text-dark fw-bold codx-textcontent"
+          [innerHTML]="contract?.disposalOn
+                | formatvalue : formModel : 'DisposalOn'
+                | async
+          "
+        ></span>
+      </div>
+    </div>
+
+    <div class="row mb-2">
+      <div class="col-6 d-flex align-items-center">
+        <div class="w-150px min-w-150px">
+          <codx-label
+            class="label-colon text-gray-600 codx-textlabel"
+            fiedName="effectiveTo"
+            [formModel]="formModel"
+            [setRequire]="false"
+          >
+          </codx-label>
+        </div>
+        <span
+          class="text-dark fw-bold codx-textcontent"
+          [innerHTML]="
+           contract?.effectiveTo
+                | formatvalue : formModel : 'EffectiveTo'
+                | async
+          "
+        ></span>
+      </div>
+      <div class="col-6 d-flex align-items-center">
+        <div class="w-150px min-w-150px">
+          <codx-label
+            class="label-colon text-gray-600 codx-textlabel"
+            fiedName="debtClosingOn"
+            [formModel]="formModel"
+            [setRequire]="false"
+          >
+          </codx-label>
+        </div>
+        <span
+          class="text-dark fw-bold codx-textcontent"
+          [innerHTML]="contract?.debtClosingOn
+                | formatvalue : formModel : 'DebtClosingOn'
+                | async
+          "
+        ></span>
+      </div>
+    </div>
+
+    <div class="row mb-2">
+      <div class="col-6 d-flex align-items-center">
+        <div class="w-150px min-w-150px">
+          <codx-label
+            class="label-colon text-gray-600 codx-textlabel"
+            fiedName="disposalType"
+            [formModel]="formModel"
+            [setRequire]="false"
+          >
+          </codx-label>
+        </div>
+        <span
+          class="text-dark fw-bold codx-textcontent"
+          [innerHTML]="
+           contract?.disposalType
+                | formatvalue : formModel : 'DisposalType'
+                | async
+          "
+        ></span>
+      </div>
+      <div class="col-6 d-flex align-items-center">
+        <div class="w-150px min-w-150px">
+          <codx-label
+            class="label-colon text-gray-600 codx-textlabel"
+            fiedName="disposalReason"
+            [formModel]="formModel"
+            [setRequire]="false"
+          >
+          </codx-label>
+        </div>
+        <span
+          class="text-dark fw-bold codx-textcontent"
+          [innerHTML]="contract?.disposalReason
+                | formatvalue : formModel : 'DisposalReason'
+                | async
+          "
+        ></span>
+      </div>
+    </div>
+
+    <div class="row mb-2">
+      <div class="d-flex">
+        <div class="w-150px min-w-150px">
+          <codx-label
+            class="label-colon text-gray-600 codx-textlabel"
+            fiedName="disposalCmt"
+            [formModel]="formModel"
+            [setRequire]="false"
+          >
+          </codx-label>
+        </div>
+        <span
+          class="text-dark fw-bold codx-textcontent"
+          [innerHTML]="
+           contract?.disposalCmt
+                | formatvalue : formModel : 'DisposalCmt'
+                | async
+          "
+        ></span>
+      </div>
+    </div>
+
+  </div>
+  <div>
+    <div>
+      <codx-label
+        class="fw-bold fs-5-sm"
+        name="lblDisposal"
+        [formModel]="formModel"
+        [default]="'Thông tin thanh lý'"
+      ></codx-label>
+    </div>
+  </div>
+</ng-template>
+<!-- phụ lục -->
+<ng-template #appendix let-data="value">
+
 </ng-template>
 
 <ng-template #contractLinkTem>

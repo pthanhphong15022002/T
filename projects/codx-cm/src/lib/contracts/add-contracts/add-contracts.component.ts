@@ -57,6 +57,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
   @ViewChild('attachment') attachment: AttachmentComponent;
   @ViewChild('inputContact') inputContact: CodxInputComponent;
   @ViewChild('inputQuotation') inputQuotation: CodxInputComponent;
+  @ViewChild('realtiesTmp') realtiesTmp: TemplateRef<any>;
   REQUIRE = [
     'contractID',
     'customerID',
@@ -202,6 +203,11 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
     formName: 'DPInstancesStepsTasks',
     entityName: 'DP_Instances_Steps_Tasks',
     gridViewName: 'grvDPInstancesStepsTasks',
+  };
+  formModelAM: FormModel = {
+    formName: 'CMRealties',
+    entityName: 'AM_Realties',
+    gridViewName: 'grvCMRealties',
   };
   //#endregion
 
@@ -1336,6 +1342,22 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
       });
   }
   //#endregion
+
+  realtiesContract(){
+    let opt = new DialogModel();
+      opt.FormModel = this.formModelAM;
+      opt.zIndex = 1100;
+      this.callfunc.openForm(
+        this.realtiesTmp,
+        '',
+        500,
+        600,
+        '',
+        null,
+        '',
+        opt
+      );
+  }
 
   // ----------------------------------------------------('-')😒tdtkhanh báo thủ😒('-')-----------------------------------------------
 

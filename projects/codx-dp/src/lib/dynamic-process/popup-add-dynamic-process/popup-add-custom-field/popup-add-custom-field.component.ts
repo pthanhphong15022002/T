@@ -163,6 +163,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
   //create autoNumber
   vllDateFormat: any;
   adAutoNumber: any;
+  caculateField = '';
   private destroyFrom$: Subject<void> = new Subject<void>();
 
   constructor(
@@ -873,7 +874,8 @@ export class PopupAddCustomFieldComponent implements OnInit {
               this.listColumns = res.event[0];
               this.settingWidth = this.listColumns[0]?.settingWidth ?? false;
               this.settingCount = this.listColumns[0]?.settingCount ?? false;
-              this.totalColumns = this.listColumns[0]?.totalColumns ?? false;
+              this.totalColumns =
+                this.listColumns.findIndex((x) => x?.totalColumns) != -1;
 
               this.field.dataFormat = JSON.stringify(this.listColumns);
             }
@@ -896,7 +898,8 @@ export class PopupAddCustomFieldComponent implements OnInit {
       this.listColumns = arr;
       this.settingWidth = this.listColumns[0]?.settingWidth ?? false;
       this.settingCount = this.listColumns[0]?.settingCount ?? false;
-      this.totalColumns = this.listColumns[0]?.totalColumns ?? false;
+      this.totalColumns =
+        this.listColumns.findIndex((x) => x?.totalColumns) != -1;
     } else this.listColumns = [];
     this.changeRef.detectChanges();
   }
@@ -1115,6 +1118,61 @@ export class PopupAddCustomFieldComponent implements OnInit {
   //end
 
   //Trường tính toán
+  operator = ['+', '-', 'x', '/', 'Avg('];
+  accessField = [']'];
+  buttonOperator(op) {
+    if (
+      this.caculateField &&
+      this.caculateField[this.caculateField.length - 1] == '('
+    )
+      return;
+    if (op == 'Avg') op = 'Avg(';
+    if (
+      this.caculateField &&
+      this.operator.includes(this.caculateField[this.caculateField.length - 1])
+    )
+      this.caculateField = this.caculateField.substring(
+        0,
+        this.caculateField.length - 1
+      );
+    this.caculateField += op;
+  }
 
+  buttonOpenParenthesis() {
+    if (
+      this.caculateField &&
+      this.operator.includes(this.caculateField[this.caculateField.length - 1])
+    )
+      this.caculateField += '(';
+  }
+
+  buttonCloseParenthesis() {
+    if (
+      this.caculateField &&
+      !Number.isNaN(this.caculateField[this.caculateField.length - 1])
+      //this.accessField.includes(this.caculateField[this.caculateField.length - 1])
+    )
+      this.caculateField += ')';
+  }
+  //test
+  fieldSelect() {
+    //tesst
+    this.caculateField += Math.random() * 100; //'[' + fieldName + ']';
+  }
+
+  delChart() {
+    if (this.caculateField)
+      this.caculateField = this.caculateField.substring(
+        0,
+        this.caculateField.length - 1
+      );
+  }
+  delAll() {
+    this.caculateField = '';
+  }
+
+  checkCaculateField() {
+    return true;
+  }
   //end
 }

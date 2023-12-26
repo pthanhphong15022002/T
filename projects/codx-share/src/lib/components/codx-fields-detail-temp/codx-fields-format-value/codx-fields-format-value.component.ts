@@ -14,7 +14,7 @@ import moment from 'moment';
 })
 export class CodxFieldsFormatValueComponent implements OnInit {
   @Input() data: any;
-  listColumns = []; //columfield TA
+
   dtFormatDate: any;
   formModelContact: FormModel = {
     formName: 'CMContacts',
@@ -132,7 +132,7 @@ export class CodxFieldsFormatValueComponent implements OnInit {
       this.columns = arr;
       this.settingWidth = this.columns[0]?.settingWidth ?? false;
       this.settingCount = this.columns[0]?.settingCount ?? false;
-      this.totalColumns = this.columns[0]?.totalColumns ?? false;
+      this.totalColumns = this.columns.findIndex((x) => x?.totalColumns) != -1;
     } else this.columns = [];
 
     this.arrDataValue = [];

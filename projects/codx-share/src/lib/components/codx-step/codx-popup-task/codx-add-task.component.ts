@@ -1098,6 +1098,12 @@ export class CodxAddTaskComponent implements OnInit {
       }
     }
 
+    if (this.type == 'cm') {
+      if (!this.stepsTasks?.stepID && !this.isActivitie) {
+        message.push(this.view['stepID']);
+      }
+    }
+
     if (!this.stepsTasks['taskName']?.trim()) {
       message.push(this.view['taskName']);
     }
