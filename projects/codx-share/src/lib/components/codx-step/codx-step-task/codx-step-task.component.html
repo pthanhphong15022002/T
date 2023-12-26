@@ -279,7 +279,7 @@
                             }"
                           ></ng-container>
                         </div>
-                        <div class="d-flex align-items-center justify-content-end step-task-right" [ngStyle]="{ width: widthTask }">
+                        <div class="d-flex align-items-center justify-content-end step-task-right" [ngStyle]="{ width: widthTask }" style="min-width: 340px;">
                           <ng-container
                             *ngIf="
                               task?.approveRule &&
@@ -704,7 +704,7 @@
     <button
       *ngIf="
         (data?.task?.taskType == 'C' || data?.task?.taskType == 'T') &&
-        data?.task?.status == '1'
+        data?.task?.status == '1' && data?.task?.dependRule == '0' && (isOnlyView || isTaskFirst)
       "
       type="button"
       class="btn btn-outline-primary btn-sm"
