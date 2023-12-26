@@ -883,6 +883,8 @@ export class AM_Realties{
   usableArea: number;
   extendInfo: string;
 
+  block: string;
+  purpose: string;
   salesPrice: number;
   effectiveSalePrice: number;
   serviceFee: number;

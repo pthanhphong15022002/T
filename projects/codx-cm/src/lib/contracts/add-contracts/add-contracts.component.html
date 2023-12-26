@@ -562,30 +562,6 @@
   </div>
 
   <div class="row form-group">
-    <div  class="d-flex justify-content-between align-items-center">
-      <codx-label
-        [formModel]="dialog?.formModel"
-        fiedName="assetID"
-        default="Ví trí thuê"
-      ></codx-label>
-
-      <button type="button" class="btn btn-outline-primary btn-sm d-flex align-items-center" (click)="realtiesContract()">
-        <span class="icon-add me-1 fw-bold"></span>
-        <codx-label
-          class="text-nowrap fw-bold"
-          name="lblAdd"
-          default="Thêm"
-        ></codx-label>
-      </button>
-    </div>
-    <div>
-
-    </div>
-  </div>
-</ng-template>
-
-<ng-template #extendTemp>
-  <div class="row form-group">
     <div class="col-6">
       <div>
         <codx-label
@@ -642,6 +618,33 @@
       </codx-input>
     </div>
   </div>
+  <!-- <div class="row form-group">
+    <div  class="d-flex justify-content-between align-items-center">
+      <codx-label
+        [formModel]="dialog?.formModel"
+        fiedName="assetID"
+        default="Ví trí thuê"
+      ></codx-label>
+
+      <button type="button" class="btn btn-outline-primary btn-sm d-flex align-items-center" (click)="realtiesContract()">
+        <span class="icon-add me-1 fw-bold"></span>
+        <codx-label
+          class="text-nowrap fw-bold"
+          name="lblAdd"
+          default="Thêm"
+        ></codx-label>
+      </button>
+    </div>
+    <div>
+
+    </div>
+  </div> -->
+</ng-template>
+
+<ng-template #extendTemp>
+  <div>
+    
+  </div>
 </ng-template>
 
 <ng-template #realtiesTmp>
@@ -672,11 +675,24 @@
       </div>
 
       <div class="form-group">
+        <codx-label
+          [formModel]="formModelAM"
+          fiedName="block"
+          [default]="'Số lô'"
+        ></codx-label>
+        <codx-input
+          field="block"
+          [formModel]="formModelAM"
+          
+        ></codx-input>
+      </div>
+
+      <div class="form-group">
         <div class="d-flex">
           <codx-label
           [formModel]="formModelAM"
           name="lblUsableArea"
-          [default]="'Diện tích sử dụng'"
+          [default]="'Diện tích thuê'"
         ></codx-label>
         <p class="fw-bold m-0"> (m<sup>2</sup>)</p>
         </div>
@@ -708,7 +724,7 @@
         <codx-label
           [formModel]="formModelAM"
           name="effectiveSalePrice"
-          [default]="'Giá bán hiệu quả'"
+          [default]="' Ngày hiệu lực tính chi phí'"
         ></codx-label>
         <codx-input
           field="effectiveSalePrice"
@@ -736,10 +752,23 @@
         <codx-label
           [formModel]="formModelAM"
           name="effectiveServiceFee"
-          [default]="'Phí dịch vụ hiệu quả'"
+          [default]="'Ngày hiệu lực tính chi phí dịch vụ'"
         ></codx-label>
         <codx-input
           field="effectiveServiceFee"
+          [formModel]="formModelAM"
+          type="number"
+          min="0"
+        ></codx-input>
+      </div>
+      <div class="form-group">
+        <codx-label
+          [formModel]="formModelAM"
+          name="purpose"
+          [default]="'Mục đích'"
+        ></codx-label>
+        <codx-input
+          field="purpose"
           [formModel]="formModelAM"
           type="number"
           min="0"
@@ -750,7 +779,6 @@
       <button
         type="button"
         class="btn btn-primary ms-1"
-        (click)="saveRealties()"
       >
         <codx-label
           name="lblSave"
