@@ -3942,7 +3942,7 @@ app-setting  ejs-tab .e-tab .e-tab-header.e-vertical:before {
     //bottom: 0;
     //left: 20px;
     //right: 20px;
-    background-color: var(--white);
+    background-color: var(--bg-body);
 
     .e-content{
       height: calc(100vh - 282px)!important;
@@ -4448,3 +4448,12 @@ codx-filter-form ejs-dropdownlist{
     line-height: 26px;
   }
 }
+.card-periodic{
+  .codx-image{
+    height: 150px!important;
+  }
+  .card-body{
+    display: flex;
+    align-items: center;
+  }
+} 

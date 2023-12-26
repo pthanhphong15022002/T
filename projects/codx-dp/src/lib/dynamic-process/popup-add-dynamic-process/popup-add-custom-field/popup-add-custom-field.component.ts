@@ -165,6 +165,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
   adAutoNumber: any;
   caculateField = '';
   private destroyFrom$: Subject<void> = new Subject<void>();
+  arrFieldNum = [];
 
   constructor(
     private cache: CacheService,
@@ -269,6 +270,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
     }
     if (e.field == 'dataFormat' || e.field == 'refValue')
       this.creatFieldCustom();
+    if (e.field == 'dataType' && e.data == 'CF') this.selectFieldNum();
   }
   //chang title va change field name
   valueChangeText(e) {
@@ -327,7 +329,10 @@ export class PopupAddCustomFieldComponent implements OnInit {
   //   }
   // }
   cbxChange(value) {
-    if (value) this.field['stepID'] = value;
+    let oldStep = this.field['stepID'];
+    if (value && value != oldStep) this.field['stepID'] = value;
+    this.caculateField = '';
+    if (this.field.dataType == 'CF') this.selectFieldNum();
   }
 
   saveData() {
@@ -1120,21 +1125,34 @@ export class PopupAddCustomFieldComponent implements OnInit {
   //Trường tính toán
   operator = ['+', '-', 'x', '/', 'Avg('];
   accessField = [']'];
+  arrNum = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
   buttonOperator(op) {
-    if (
-      this.caculateField &&
-      this.caculateField[this.caculateField.length - 1] == '('
-    )
-      return;
-    if (op == 'Avg') op = 'Avg(';
-    if (
-      this.caculateField &&
-      this.operator.includes(this.caculateField[this.caculateField.length - 1])
-    )
-      this.caculateField = this.caculateField.substring(
-        0,
-        this.caculateField.length - 1
-      );
+    if (this.caculateField) {
+      if (this.caculateField[this.caculateField.length - 1] == '(') return;
+      if (op == 'Avg') {
+        if (
+          this.arrNum.includes(
+            this.caculateField[this.caculateField.length - 1]
+          ) ||
+          this.accessField.includes(
+            this.caculateField[this.caculateField.length - 1]
+          )
+        ) {
+          return;
+        }
+        op = 'Avg(';
+      }
+      if (
+        this.operator.includes(
+          this.caculateField[this.caculateField.length - 1]
+        )
+      )
+        this.caculateField = this.caculateField.substring(
+          0,
+          this.caculateField.length - 1
+        );
+    }
+
     this.caculateField += op;
   }
 
@@ -1155,9 +1173,9 @@ export class PopupAddCustomFieldComponent implements OnInit {
       this.caculateField += ')';
   }
   //test
-  fieldSelect() {
+  fieldSelect(fieldName) {
     //tesst
-    this.caculateField += Math.random() * 100; //'[' + fieldName + ']';
+    this.caculateField += '[' + fieldName + ']'; //Math.random() * 100;
   }
 
   delChart() {
@@ -1169,6 +1187,39 @@ export class PopupAddCustomFieldComponent implements OnInit {
   }
   delAll() {
     this.caculateField = '';
+  }
+  // Num
+  buttonNum(num) {
+    this.caculateField += num;
+  }
+  decimalPoint() {
+    this.caculateField += ',';
+  }
+
+  selectFieldNum() {
+    this.arrFieldNum = [];
+    var idx = this.stepList.findIndex(
+      (x) => x.recID == this.field.stepID && x.fields?.length > 0
+    );
+    if (idx != -1) {
+      this.arrFieldNum = this.stepList[idx].fields
+        .filter((x) => x.dataType == 'N')
+        .map((x) => x.fieldName);
+    }
+    if (!this.arrFieldNum || this.arrFieldNum?.length == 0)
+      this.notiService.notify(
+        'Bước thực hiện không có trường tùy chỉnh kiểu số !',
+        '3'
+      );
+  }
+
+  popoverSelectField(p) {
+    if (this.arrFieldNum?.length > 0) p.open();
+    // else
+    //   this.notiService.notify(
+    //     'Bước thực hiện không có trường tùy chỉnh kiểu số !',
+    //     '3'
+    //   );
   }
 
   checkCaculateField() {
