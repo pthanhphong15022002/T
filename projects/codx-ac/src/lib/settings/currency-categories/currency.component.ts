@@ -39,10 +39,9 @@ export class CurrencyComponent extends UIComponent {
   views: Array<ViewModel> = [];
   button?: ButtonModel[] = [{
     id: 'btnAdd',
-    icon: 'icon-add_circle_outline'
+    icon: 'icon-attach_money'
   }];
   headerText:any;
-  optionSidebar: SidebarModel = new SidebarModel();
   dataDefault:any;
   private destroy$ = new Subject<void>(); //? list observable hủy các subscribe api
   constructor(
@@ -75,11 +74,6 @@ export class CurrencyComponent extends UIComponent {
         },
       },
     ];
-
-    //* thiết lập cấu hình sidebar
-    this.optionSidebar.DataService = this.view.dataService;
-    this.optionSidebar.FormModel = this.view.formModel;
-    this.optionSidebar.Width = '550px';
   }
 
   ngDoCheck() {
@@ -128,32 +122,25 @@ export class CurrencyComponent extends UIComponent {
    */
   addNew(e) {
     this.headerText = (e.text + ' ' + this.funcName).toUpperCase();
-    let data = {
-      headerText: this.headerText,
-      dataDefault:{...this.dataDefault}
-    };
-    if(!this.dataDefault){
-      this.view.dataService.addNew().subscribe((res: any) => {
-        if(res){
-          res.isAdd = true;
-          this.dataDefault = {...res};
-          data.dataDefault = {...this.dataDefault};
-          let dialog = this.callfunc.openSide(
-            CurrencyAddComponent,
-            data,
-            this.optionSidebar,
-            this.view.funcID
-          );
-        }       
-      });
-    }else{
-      let dialog = this.callfunc.openSide(
-        CurrencyAddComponent,
-        data,
-        this.optionSidebar,
-        this.view.funcID
-      );
-    }
+    this.view.dataService.addNew().subscribe((res: any) => {
+      if(res){
+        res.isAdd = true;
+        let data = {
+          headerText: this.headerText,
+          dataDefault:{...res}
+        };
+        let option = new SidebarModel();
+        option.DataService = this.view.dataService;
+        option.FormModel = this.view.formModel;
+        option.Width = '550px';
+        let dialog = this.callfunc.openSide(
+          CurrencyAddComponent,
+          data,
+          option,
+          this.view.funcID
+        );
+      }       
+    });
   }
 
   /**
@@ -174,10 +161,14 @@ export class CurrencyComponent extends UIComponent {
             dataDefault:{...res},
             funcName:this.funcName
           };
+          let option = new SidebarModel();
+          option.DataService = this.view.dataService;
+          option.FormModel = this.view.formModel;
+          option.Width = '550px';
           let dialog = this.callfunc.openSide(
             CurrencyAddComponent,
             data,
-            this.optionSidebar,
+            option,
             this.view.funcID
           );
         }
@@ -209,7 +200,7 @@ export class CurrencyComponent extends UIComponent {
           let dialog = this.callfunc.openSide(
             CurrencyAddComponent,
             data,
-            this.optionSidebar,
+            option,
             this.view.funcID
           );
         }
