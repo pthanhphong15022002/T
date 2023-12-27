@@ -13,13 +13,13 @@
 </ng-container>
 <ng-template #tmpHeader>
   <ng-container *ngIf="listBookMarks && listBookMarks.length>0">
-    <div class="d-flex flex-column h-310px position-relative">
-      <codx-label class="pt-2 ms-6 fw-bold" default="Đã ghim" fiedName="lblWSBookMark" [formName]="'fmWSBookMark'"></codx-label>
+    <div class="d-flex flex-column h-275px position-relative">
+      <codx-label class="ms-6 fw-bold" default="Đã ghim" fiedName="lblWSBookMark" [formName]="'fmWSBookMark'"></codx-label>
       <div class="d-flex flex-wrap h-auto pt-2 px-4">
         <ng-container *ngFor="let item of listBookMarks ; let i = index">
           <ng-container *ngIf="i < (countBookMarks - 1)">
             <codx-card-img
-              imgCss="h-170px rounded border-bottom"
+              imgCss="h-150px rounded border-bottom"
               cardCss="border rounded h-100"
               [imageSrc]="item?.background || imgDefault"
               [footer]="footer"
@@ -34,7 +34,7 @@
         </ng-container>
       </div>
       <ng-container *ngIf="listBookMarks.length > (countBookMarks - 1)">
-        <div class="d-flex align-items-center justify-content-center w-35px h-35px border border-gray rounded-circle position-absolute bottom-0 end-0 ws-btn-more bg-white cursor-pointer" (click)="selectMoreBookmark()">
+        <div class="d-flex align-items-center justify-content-center w-30px h-30px border border-gray rounded-circle position-absolute bottom-0 end-0 ws-btn-more bg-white cursor-pointer" (click)="selectMoreBookmark()">
           <i class="icon-more_horiz"></i>
         </div>
       </ng-container>
@@ -42,12 +42,12 @@
   </ng-container>
 </ng-template>
 <ng-template #tmp let-data>
-  <div class="d-flex flex-column w-250px  m-2 text-white position-relative cursor-pointer ws-report-card " 
+  <div class="d-flex flex-column w-225px m-2 position-relative cursor-pointer ws-report-card " 
     (click)="selectedChange(data)"
   >
     <codx-card-img
-      imgCss="h-170px rounded border-bottom"
-      cardCss="border rounded"
+      imgCss="h-150px rounded border-bottom"
+      cardCss="border rounded h-225px"
       [imageSrc]="data?.background || imgDefault"
       [footer]="footer"
     >
@@ -78,19 +78,20 @@
   </ng-container>
 </ng-template>
 <ng-template #tmpFooter let-data let-bookmark="bookmark">
-  <div class="d-flex align-items-center justify-content-between h-70px pb-6">
-    <div class="d-flex flex-column justify-content-center text-dark py-2">
-      <span class="fs-5-sm line-clamp text-wrap">{{data.customName}}</span>
-      <span class="fs-7 opacity-75 line-clamp line-clamp-1" [title]="data.description">{{data.description}}</span>
-      <div class="d-flex align-items-center py-1 position-absolute bottom-0 ">
-        <i class="icon-i-star text-warning icon-14"></i>
-        <span class="text-warning ms-1 mt-2px">4.5</span>
-        <i class="icon-i-eye icon-18 ms-5"></i>
-        <span class="ms-1 mt-1px">{{data?.views}}</span>
-      </div>
+  <div class="d-flex flex-column w-100">
+    <span class="fw-bold line-clamp text-wrap">{{data.customName}}</span>
+    <span class="fs-7 text-gray-600 line-clamp line-clamp-1" [title]="data.description">{{data.description}}</span>
+  </div>
+  <div class="d-flex align-items-center justify-content-between">
+    <div class="d-flex align-items-center pt-2 bottom-0 ">
+      <i class="icon-i-star text-warning icon-14"></i>
+      <span class="text-warning ms-2">4.5</span>
+      <i class="icon-i-eye icon-16 ms-5"></i>
+      <span class="ms-1 mt-1px">{{data?.views}}</span>
     </div>
-    <div *ngIf="bookmark" [id]="'ws-report-bookmark' + data?.recID" class="d-flex align-items-center justify-content-center w-35px h-35px border border-gray rounded-circle ms-2 ws-report-bookmark" [ngClass]="!data.isBookMark?'opacity-25':'opacity-100'"  (click)="setBookMark(data?.recID);$event.stopPropagation()">
-      <span class="icon-24 icon-bookmark text-warning"></span>
+    <div *ngIf="bookmark" [id]="'ws-report-bookmark' + data?.recID" class="d-flex align-items-center justify-content-center w-30px h-30px border border-gray rounded-circle ms-2 ws-report-bookmark" [ngClass]="!data.isBookMark?'opacity-25':'opacity-100'"  (click)="setBookMark(data?.recID);$event.stopPropagation()">
+      <span class="icon-18 icon-bookmark text-warning"></span>
     </div>
   </div>
+  
 </ng-template>

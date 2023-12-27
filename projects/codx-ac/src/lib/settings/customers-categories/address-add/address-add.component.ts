@@ -21,6 +21,7 @@ import {
 } from 'codx-core';
 import { ContactAddComponent } from '../contact-add/contact-add.component';
 import { CodxAcService } from '../../../codx-ac.service';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'lib-pop-add-address',
@@ -35,6 +36,10 @@ export class AddressAddComponent extends UIComponent{
   dialogData: DialogData;
   headerText: string;
   dataDefault:any;
+  objectID:any;
+  objectName : any;
+  objectType : any;
+  private destroy$ = new Subject<void>();
   constructor(
     inject: Injector,
     private dt: ChangeDetectorRef,
@@ -47,6 +52,9 @@ export class AddressAddComponent extends UIComponent{
     this.dialog = dialog;
     this.headerText = dialogData.data?.headerText;
     this.dataDefault = dialogData.data?.dataDefault;
+    this.objectID = dialogData.data?.objectID;
+    this.objectName = dialogData.data?.objectName;
+    this.objectType = dialogData.data?.objectType;
   }
   //#endregion
 
@@ -78,127 +86,55 @@ export class AddressAddComponent extends UIComponent{
   ngDoCheck() {
     this.detectorRef.detectChanges();
   }
+
+  ngOnDestroy() {
+    this.onDestroy();
+  }
+
+  onDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
   //#endregion
 
   //#region Function
-  openPopupContact() {
-    // var obj = {
-    //   headerText: this.lblAdd + ' ' + this.lblContacts,
-    //   datacontact: this.objectContactAddress,
-    //   recIdAddress: this.address.recID,
-    // };
-    // let opt = new DialogModel();
-    // let dataModel = new FormModel();
-    // dataModel.formName = 'ContactBook';
-    // dataModel.gridViewName = 'grvContactBook';
-    // dataModel.entityName = 'BS_ContactBook';
-    // opt.FormModel = dataModel;
-    // this.cache
-    //   .gridViewSetup('ContactBook', 'grvContactBook')
-    //   .subscribe((res) => {
-    //     if (res) {
-    //       var dialogcontact = this.callfc.openForm(
-    //         PopAddContactComponent,
-    //         '',
-    //         650,
-    //         550,
-    //         '',
-    //         obj,
-    //         '',
-    //         opt
-    //       );
-    //       dialogcontact.closed.subscribe((x) => {
-    //         var datacontact = JSON.parse(localStorage.getItem('datacontact'));
-    //         if (datacontact != null) {
-    //           datacontact.reference = this.address.recID;
-    //           this.objectContactAddress.push(datacontact);
-    //         }
-    //         window.localStorage.removeItem('datacontact');
-    //       });
-    //     }
-    //   });
-  }
-
-  editobject(data: any, type: any) {
-    // let index = this.objectContactAddress.findIndex(
-    //   (x) => x.contactID == data.contactID
-    // );
-    // var ob = {
-    //   headerText: this.lblEdit + ' ' + this.lblContacts,
-    //   type: 'editContact',
-    //   data: { ...data },
-    // };
-    // let opt = new DialogModel();
-    // let dataModel = new FormModel();
-    // dataModel.formName = 'ContactBook';
-    // dataModel.gridViewName = 'grvContactBook';
-    // dataModel.entityName = 'BS_ContactBook';
-    // opt.FormModel = dataModel;
-    // this.cache
-    //   .gridViewSetup('ContactBook', 'grvContactBook')
-    //   .subscribe((res) => {
-    //     if (res) {
-    //       var dialogcontact = this.callfc.openForm(
-    //         PopAddContactComponent,
-    //         '',
-    //         650,
-    //         550,
-    //         '',
-    //         ob,
-    //         '',
-    //         opt
-    //       );
-    //       dialogcontact.closed.subscribe((x) => {
-    //         var datacontact = JSON.parse(localStorage.getItem('datacontact'));
-    //         if (datacontact != null) {
-    //           this.objectContactAddress[index] = datacontact;
-    //         }
-    //         window.localStorage.removeItem('datacontact');
-    //       });
-    //     }
-    //   });
-  }
-
-  deleteobject(data: any, type: any) {
-    // let index = this.objectContactAddress.findIndex(
-    //   (x) => x.reference == data.reference && x.recID == data.recID
-    // );
-    // this.objectContactAddress.splice(index, 1);
-    // this.objectContactAddressDelete.push(data);
-    // this.notification.notifyCode('SYS008', 0, '');
-  }
-
-  clearAddress() {
-    // this.form.formGroup.reset();
-    // //this.address = new any();
-    // this.objectContactAddress = [];
-  }
   
-  //#endregion
+  //#endregion Function
 
   //#region Method
   onSave() {
-    let validate = this.form.validation(true,false); //? chekc validate tỷ giá
-    if(validate) return;
-    this.dialog.close({address:{...this.form.data}});
+    this.form.setValue('objectID',this.objectID,{});
+    this.form.setValue('objectName',this.objectName,{});
+    this.form.setValue('objectType',this.objectType,{});
+    this.form.save(null, 0, '', '', false).pipe(takeUntil(this.destroy$))
+    .subscribe((res: any) => {
+      if(!res) return;
+      if(res.hasOwnProperty('save')){
+        if(res.save.hasOwnProperty('data') && !res.save.data) return;
+      }
+      if(res.hasOwnProperty('update')){
+        if(res.update.hasOwnProperty('data') && !res.update.data) return;
+      }
+      this.dialog.close({address:{...this.form.data}});
+    })
   }
-  onSaveAdd() {
-    // this.checkValidate();
-    // if (this.validate > 0) {
-    //   this.validate = 0;
-    //   return;
-    // } else {
-    //   this.objectAddress.push({ ...this.address });
-    //   this.objectContactAddress.forEach((element) => {
-    //     this.objectContactAddressAfter.push({ ...element });
-    //   });
-    //   if (this.type == 'editaddress') {
-    //     this.notification.notifyCode('SYS007', 0, '');
-    //   } else {
-    //     this.notification.notifyCode('SYS006', 0, '');
-    //   }
-    //   this.clearAddress();
-    // }
-  }
+  // onSaveAdd() {
+  //   // this.checkValidate();
+  //   // if (this.validate > 0) {
+  //   //   this.validate = 0;
+  //   //   return;
+  //   // } else {
+  //   //   this.objectAddress.push({ ...this.address });
+  //   //   this.objectContactAddress.forEach((element) => {
+  //   //     this.objectContactAddressAfter.push({ ...element });
+  //   //   });
+  //   //   if (this.type == 'editaddress') {
+  //   //     this.notification.notifyCode('SYS007', 0, '');
+  //   //   } else {
+  //   //     this.notification.notifyCode('SYS006', 0, '');
+  //   //   }
+  //   //   this.clearAddress();
+  //   // }
+  // }
   //#endregion
 }
