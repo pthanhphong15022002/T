@@ -230,8 +230,45 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
   }
 
   handelContinueStep(event, step) {
+    
     this.continueStep.emit({ isTaskEnd: event, step: step });
   }
+
+  // continueStep(isTaskEnd) {
+  //   let isShowFromTaskAll = false;
+  //   let isShowFromTaskEnd = !this.checkContinueStep(true);
+  //   let isContinueTaskEnd = isTaskEnd;
+  //   let isContinueTaskAll = this.checkContinueStep(false);
+  //   let dataInstance = {
+  //     instance: this.instance,
+  //     listStep: this.listStep,
+  //     step: this.step,
+  //     isAuto: {
+  //       isShowFromTaskAll,
+  //       isShowFromTaskEnd,
+  //       isContinueTaskEnd,
+  //       isContinueTaskAll,
+  //     },
+  //   };
+  //   this.serviceInstance.autoMoveStage(dataInstance);
+  // }
+
+  // checkContinueStep(isDefault) {
+  //   let check = true;
+  //   let listTask = isDefault
+  //     ? this.step?.tasks?.filter((task) => task?.requireCompleted)
+  //     : this.step?.tasks;
+  //   if (listTask?.length <= 0) {
+  //     return isDefault ? true : false;
+  //   }
+  //   for (let task of listTask) {
+  //     if (task.progress != 100) {
+  //       check = false;
+  //       break;
+  //     }
+  //   }
+  //   return check;
+  // }
 
   handelSaveAssignTask(event) {
     this.saveAssignTask.emit(event);
