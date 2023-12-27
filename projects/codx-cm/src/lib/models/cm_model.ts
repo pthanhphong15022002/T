@@ -874,4 +874,5 @@ export class CM_Contracts {
   debtClosingOn: Date;
   disposalOn: Date; //Ngày thanh lý
   disposalCmt: Date; //Ngày thanh lý
+  displayed: boolean; //Ngày thanh lý
 }

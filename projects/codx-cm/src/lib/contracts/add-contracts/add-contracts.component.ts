@@ -314,12 +314,12 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
         this.contracts.pmtStatus = '1';
         this.contracts.delStatus = '1';
         this.contracts.recID = Util.uid();
-        this.contracts.refID = Util.uid();
         this.contracts.pmtMethodID = 'ATM';
         this.contracts.contractDate = new Date();
         this.contracts.effectiveFrom = new Date();
         this.contracts.projectID = this.projectID;
         this.contracts.applyProcess = false;
+        this.contracts.displayed = true;
         this.contracts.currencyID = this.currencyIDDefault;
         this.contracts.pmtStatus = this.contracts.pmtStatus
           ? this.contracts.pmtStatus
@@ -384,7 +384,6 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
           this.contracts = JSON.parse(JSON.stringify(data));
           delete this.contracts['id'];
           this.contracts.parentID = this.contracts?.recID;
-          this.contracts.recID = Util.uid();
           this.contracts.status = '1';
         }
         if(this.contracts?.applyProcess && this.contracts.processID){
@@ -1145,7 +1144,8 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
   //#endregion
 
   getListInstanceSteps(processId: any) {
-    let data = [processId, this.contracts?.refID, this.action, '4'];
+    let action = this.action == "extend" ? "copy" :  this.action;
+    let data = [processId, this.contracts?.refID, action, '4'];
     this.cmService.getInstanceSteps(data).subscribe((res) => {
       if (res && res.length > 0) {
         let obj = {
@@ -1594,8 +1594,8 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
   }
 
   convertDataInstance(contract: CM_Contracts, instance: tmpInstances) {
-            this.oldIdInstance = this.contracts?.refID; 
-        this.contracts.refID = Util.uid();
+    this.oldIdInstance = this.contracts?.refID; 
+    this.contracts.refID = Util.uid();
     if (this.action === 'edit') {
       instance.recID = contract.refID;
     }
