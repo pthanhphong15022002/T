@@ -344,7 +344,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
   ) {
     if (this.form.formGroup.valid) {
       this.dialog.dataService
-        .save((opt: any) => this.beforeSave(opt), 0, '', '', false)
+        .save((opt: any) => this.beforeSave(opt), 0, '', '', true)
         .pipe(takeUntil(this.destroy$))
         .subscribe((res) => {
           if (!res?.error) {
