@@ -974,7 +974,7 @@ export class PopupAddLeadComponent
       if (check && menuInput == -1 && tabInput == -1) {
         this.tabInfo.splice(2, 0, this.menuInputInfo);
         this.tabContent.splice(2, 0, this.tabCustomFieldDetail);
-      } else if ( menuInput != -1 && tabInput != -1) {
+      } else if ( !check && menuInput != -1 && tabInput != -1) {
         this.tabInfo.splice(menuInput, 1);
         this.tabContent.splice(tabInput, 1);
       }
@@ -1010,7 +1010,7 @@ export class PopupAddLeadComponent
         let filteredTasks = stepCurrent.tasks.filter(task => task?.fieldID !== null && task?.fieldID?.trim() !== '')
         .map(task => task.fieldID)
         .flatMap(item => item.split(';').filter(item => item !== ''));
-        let listFields = stepCurrent.fields.filter(field => !filteredTasks.includes(this.action === 'copy'? field?.reCID: field?.refID));
+        let listFields = stepCurrent.fields.filter(field => !filteredTasks.includes(this.action === 'copy'? field?.recID: field?.refID));
         this.listFields = [...this.listFields, ...listFields];
       }
      }
