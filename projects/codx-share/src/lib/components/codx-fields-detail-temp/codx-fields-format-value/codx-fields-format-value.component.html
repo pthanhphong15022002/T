@@ -28,7 +28,11 @@
   <!-- margin-l -->
   <span
     class="text-dark"
-    *ngIf="data.dataType == 'N' && data.dataFormat && data.dataValue"
+    *ngIf="
+      (data.dataType == 'N' || data.dataType == 'CF') &&
+      data.dataFormat &&
+      data.dataValue
+    "
     [innerHTML]="
       data.dataValue | formatDataValue : data.dataType : data.dataFormat | async
     "

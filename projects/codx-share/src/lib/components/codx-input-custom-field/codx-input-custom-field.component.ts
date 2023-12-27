@@ -128,6 +128,7 @@ export class CodxInputCustomFieldComponent implements OnInit {
   fieldCurrent = '';
   valueF = 'no';
   valueT = 'yes';
+  dataValueCaculate = '';
 
   constructor(
     private cache: CacheService,
@@ -283,6 +284,13 @@ export class CodxInputCustomFieldComponent implements OnInit {
       case 'AT':
         if (this.customField.dataValue || !this.isAdd) return;
         this.getAutoNumberSetting();
+        break;
+      case 'CF':
+        if (
+          this.customField.dataValue &&
+          !Number.parseFloat(this.customField.dataValue)
+        )
+          this.dataValueCaculate = this.customField.dataValue;
         break;
     }
   }

@@ -44,6 +44,7 @@ import { LayoutComponent } from '../_layout/layout.component';
 import { PopupAddCategoryComponent } from 'projects/codx-es/src/lib/setting/category/popup-add-category/popup-add-category.component';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { PopupReleaseProcessComponent } from './popup-release-process/popup-release-process.component';
+import { ProcessesPropertiesComponent } from '../processes-properties/processes-properties.component';
 
 @Component({
   selector: 'lib-dynamic-process',
@@ -808,6 +809,30 @@ export class DynamicProcessComponent
       this.isButton = true;
       if (!e.event) this.view.dataService.clear();
     });
+    // let option = new DialogModel();
+    // option.IsFull = true;
+    // option.zIndex = 1010;
+    // let formModelField = new FormModel();
+    // formModelField.formName = "DPStepsFields";
+    // formModelField.gridViewName = "grvDPStepsFields";
+    // formModelField.entityName = "DP_Steps_Fields";
+    // formModelField.userPermission = this.view?.formModel?.userPermission;
+    // option.FormModel = formModelField;
+    // let popupDialog = this.callfc.openForm(
+    //   ProcessesPropertiesComponent,
+    //   '',
+    //   null,
+    //   null,
+    //   '',
+    //   data,
+    //   '',
+    //   option
+    // );
+    // popupDialog.closed.subscribe((dg) => {
+    //   if(dg){
+
+    //   }
+    // })
   }
 
   //#region đang test ai cần list phần quyền la vô đâyu nha

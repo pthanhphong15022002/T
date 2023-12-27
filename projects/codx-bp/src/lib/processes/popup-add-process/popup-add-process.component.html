@@ -1,0 +1,274 @@
+<div class="card-body p-0 codx-card-custom">
+  <div class="codx-stepper stepper stepper-pills">
+    <div class="stepper-header d-flex flex-wrap flex-stack ps-6">
+      <div class="d-flex align-items-center">
+        <h2 class="h2-title">
+          <!-- xài code label truyền lên không load lại data, bật lần 2 thì load -->
+          <codx-label
+            default="Form nhập liệu"
+            [formModel]="dialog.formModel"
+            name="lblForms"
+          >
+          </codx-label>
+        </h2>
+      </div>
+      <div class="d-flex align-items-center">
+        <div class="stepper-nav flex-center flex-wrap" #status>
+          <div
+            [ngClass]="
+              action == 'add' ? 'stepper-item active' : 'stepper-item approve'
+            "
+            data-kt-stepper-element="nav"
+            data-kt-stepper-action="step"
+            (click)="clickTab(0)"
+          >
+            <div class="stepper-wrapper d-flex align-items-center flex-column">
+              <div class="stepper-icon h-30px">
+                <i
+                  class="stepper-default icon-24 icon-radio_button_checked"
+                ></i>
+                <i
+                  class="stepper-active icon-30 text-primary icon-radio_button_checked"
+                ></i>
+                <div
+                  class="stepper-approve badge badge-primary badge-lg badge-circle p-1"
+                >
+                  <span class="icon-check icon-18"></span>
+                </div>
+                <div
+                  class="stepper-approve-disabled badge badge-light-primary badge-lg badge-circle p-1"
+                >
+                  <span class="icon-check icon-18"></span>
+                </div>
+              </div>
+              <div
+                class="stepper-label"
+                [ngClass]="currentTab == 0 ? 'fw-bold text-primary' : ''"
+              >
+                <codx-label
+                  name="lblInfomations"
+                  [formModel]="dialog.formModel"
+                  default="Thông tin chung"
+                ></codx-label>
+              </div>
+            </div>
+          </div>
+          <div
+            [ngClass]="
+              action == 'add' ? 'stepper-item' : 'stepper-item approve-disabled'
+            "
+            data-kt-stepper-element="nav"
+            data-kt-stepper-action="step"
+            (click)="clickTab(1)"
+          >
+            <div class="stepper-wrapper d-flex align-items-center flex-column">
+              <div class="stepper-icon h-30px">
+                <i
+                  class="stepper-default icon-24 icon-radio_button_checked"
+                ></i>
+                <i
+                  class="stepper-active icon-30 text-primary icon-radio_button_checked"
+                ></i>
+                <div
+                  class="stepper-approve badge badge-primary badge-lg badge-circle p-1"
+                >
+                  <span class="icon-check icon-18"></span>
+                </div>
+                <div
+                  class="stepper-approve-disabled badge badge-light-primary badge-lg badge-circle p-1"
+                >
+                  <span class="icon-check icon-18"></span>
+                </div>
+              </div>
+              <div
+                class="stepper-label"
+                [ngClass]="currentTab == 1 ? 'fw-bold text-primary' : ''"
+              >
+                <codx-label
+                  name="lblProcessSteps"
+                  [formModel]="dialog.formModel"
+                  default="Quy trình xử lí"
+                ></codx-label>
+              </div>
+            </div>
+          </div>
+          <div
+            [ngClass]="
+              action == 'add' ? 'stepper-item' : 'stepper-item approve-disabled'
+            "
+            data-kt-stepper-element="nav"
+            data-kt-stepper-action="step"
+            (click)="clickTab(2)"
+          >
+            <div class="stepper-wrapper d-flex align-items-center flex-column">
+              <div class="stepper-icon h-30px">
+                <i
+                  class="stepper-default icon-24 icon-radio_button_checked"
+                ></i>
+                <i
+                  class="stepper-active icon-30 text-primary icon-radio_button_checked"
+                ></i>
+                <div
+                  class="stepper-approve badge badge-primary badge-lg badge-circle p-1"
+                >
+                  <span class="icon-check icon-18"></span>
+                </div>
+                <div
+                  class="stepper-approve-disabled badge badge-light-primary badge-lg badge-circle p-1"
+                >
+                  <span class="icon-check icon-18"></span>
+                </div>
+              </div>
+              <div
+                class="stepper-label"
+                [ngClass]="currentTab == 2 ? 'fw-bold text-primary' : ''"
+              >
+                <codx-label
+                  name="lblResult"
+                  [formModel]="dialog.formModel"
+                  default="Kết quả đầu ra"
+                ></codx-label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="d-flex justify-content-end">
+        <div class="btn btn-sm btn-bg-white text-inverse-white mb-2">
+          <i
+            class="icon-close icon-18 text-hover-danger"
+            (click)="dialog.close()"
+          ></i>
+        </div>
+      </div>
+    </div>
+    <div class="stepper-body pt-2">
+      <div class="card shadow-none border-0 rounded-2 mx-auto w-100 h-100">
+        <div
+          class="scroll-y"
+          class="dp-step step-content"
+          data-kt-scroll="true"
+          data-kt-scroll-activate="{default: true}"
+          data-kt-scroll-height="auto"
+          data-kt-scroll-dependencies=".tab-pane-header,.tab-pane-footer"
+          data-kt-scroll-wrappers=".stepper-body"
+          data-kt-scroll-offset="0px"
+        >
+          <div class="tab-content">
+            <!--Phần thông tin quy trình - Phúc làm-->
+            <div
+              class="tab-pane fade"
+              id="pane_1"
+              [ngClass]="currentTab == 0 ? 'active show' : ''"
+            >
+              <ng-template [ngTemplateOutlet]="tmpInfomation"></ng-template>
+            </div>
+            <div
+              class="tab-pane fade"
+              id="pane_2"
+              [ngClass]="currentTab == 1 ? 'active show' : ''"
+            >
+              <!-- Thiet lap giai doan thuan -->
+              <ng-template [ngTemplateOutlet]="tmpStepFields"></ng-template>
+            </div>
+            <div
+              class="tab-pane fade"
+              id="pane_2"
+              [ngClass]="currentTab == 2 ? 'active show' : ''"
+            >
+              <!-- Thiet lap giai doan thuan -->
+              <ng-template [ngTemplateOutlet]="tmpResult"></ng-template>
+            </div>
+          </div>
+          <div
+            class="d-flex flex-stack justify-content-between card-footer border-top"
+          >
+            <div class="left" *ngIf="currentTab != 0">
+              <button
+                type="button"
+                class="btn btn-outline-primary me-3"
+                (click)="previous(currentTab)"
+              >
+                <codx-label
+                  name="lblBack"
+                  [formModel]="dialog.formModel"
+                  default="Quay lại"
+                >
+                </codx-label>
+              </button>
+            </div>
+            <div
+              *ngIf="currentTab == 0"
+              class="left d-flex cursor-pointer text-primary"
+            >
+              <span class="icon-16 icon-settings me-2"></span>
+              <codx-label
+                name="lblSetting"
+                [formModel]="dialog.formModel"
+                default="Thiết lập nâng cao"
+              >
+              </codx-label>
+            </div>
+            <div class="right d-flex justify-content-between">
+              <div *ngIf="currentTab == 0"
+                class="d-flex justify-content-start cursor-pointer text-primary"
+                (click)="formPropertieFields()"
+              >
+                <span class="icon-16 icon-edit_square me-2"></span>
+                <codx-label
+                  name="lblFormFields"
+                  [formModel]="dialog.formModel"
+                  default="Chỉnh sửa form"
+                >
+                </codx-label>
+              </div>
+              <div class="d-flex justify-content-end">
+                <button
+
+                *ngIf="currentTab != 2"
+                type="button"
+                class="btn btn-primary"
+                (click)="continue(currentTab)"
+              >
+                <codx-label
+                  [name]="'lblContinue'"
+                  [default]="'Tiếp tục'"
+                  [formModel]="dialog.formModel"
+                ></codx-label>
+              </button>
+
+              <button
+                *ngIf="currentTab == 2"
+                type="button"
+                class="btn btn-primary"
+              >
+                <codx-label
+                  [name]="'lblSave'"
+                  [default]="'Lưu'"
+                  [formModel]="dialog.formModel"
+                ></codx-label>
+              </button>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #tmpInfomation>
+  <div class="container-infomation">
+    <div class="info-left"></div>
+    <div class="info-right"></div>
+  </div>
+</ng-template>
+
+<ng-template #tmpStepFields>
+  <div class="dp-step step-content">
+    <!--phần core-->
+  </div>
+</ng-template>
+
+<ng-template #tmpResult></ng-template>
