@@ -19,6 +19,7 @@ import {
   UIComponent,
 } from 'codx-core';
 import { CodxAcService } from '../../../codx-ac.service';
+import { Subject, takeUntil } from 'rxjs';
 @Component({
   selector: 'lib-pop-add-bank',
   templateUrl: './bank-add.component.html',
@@ -32,6 +33,9 @@ export class BankAddComponent extends UIComponent implements OnInit {
   dialogData: DialogData;
   headerText: string;
   dataDefault:any;
+  objectID:any;
+  objectType : any;
+  private destroy$ = new Subject<void>();
   constructor(
     inject: Injector,
     private dt: ChangeDetectorRef,
@@ -44,6 +48,8 @@ export class BankAddComponent extends UIComponent implements OnInit {
     this.dialog = dialog;
     this.headerText = dialogData.data?.headerText;
     this.dataDefault = dialogData.data?.dataDefault;
+    this.objectID = dialogData.data?.objectID;
+    this.objectType = dialogData.data?.objectType;
   }
   //#endregion
 
@@ -55,27 +61,36 @@ export class BankAddComponent extends UIComponent implements OnInit {
   ngDoCheck() {
     this.detectorRef.detectChanges();
   }
+
+  ngOnDestroy() {
+    this.onDestroy();
+  }
+
+  onDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
   //#endregion
 
   //#region Function
-  valueChange(e: any) {
-  }
-  clearBankAccount() {
-    this.form.formGroup.reset();
-    //this.bankaccount = new BankAccount();
-  }
   
   //#endregion
 
   //#region CRUD
   onSave() {
-    let validate = this.form.validation(true,false); //? chekc validate tỷ giá
-    if(validate) return;
-    this.dialog.close({bank:{...this.form.data}});
-  }
-  
-  onSaveAdd() {
-    
+    this.form.setValue('objectID',this.objectID,{});
+    this.form.setValue('objectType',this.objectType,{});
+    this.form.save(null, 0, '', '', false).pipe(takeUntil(this.destroy$))
+    .subscribe((res: any) => {
+      if(!res) return;
+      if(res.hasOwnProperty('save')){
+        if(res.save.hasOwnProperty('data') && !res.save.data) return;
+      }
+      if(res.hasOwnProperty('update')){
+        if(res.update.hasOwnProperty('data') && !res.update.data) return;
+      }
+      this.dialog.close({bank:{...this.form.data}});
+    })
   }
   //#endregion
 }

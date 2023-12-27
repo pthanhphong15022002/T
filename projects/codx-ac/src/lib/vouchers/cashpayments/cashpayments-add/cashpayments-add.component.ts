@@ -159,6 +159,10 @@ export class CashPaymentAddComponent extends UIComponent {
     }
   }
 
+  ngOnDestroy() {
+    this.onDestroy();
+  }
+
   ngDoCheck() {
     this.detectorRef.detectChanges();
   }

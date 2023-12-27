@@ -130,6 +130,7 @@ export class CodxImportComponent implements OnInit, OnChanges, AfterViewInit {
     );
   }
   text = '';
+  total = 0;
   ngOnInit(): void {
     //Tạo formGroup
     this.importGroup = this.formBuilder.group({
@@ -141,7 +142,6 @@ export class CodxImportComponent implements OnInit, OnChanges, AfterViewInit {
     this.request.gridViewName = this.formModel.gridViewName;
     this.request.funcID = this.formModel?.funcID;
     this.getData();
-    let total = 0;
     let index = -1;
 
     this.realHub.start(this.service).then((x: RealHub) => {
@@ -155,19 +155,19 @@ export class CodxImportComponent implements OnInit, OnChanges, AfterViewInit {
           ) {
             this.text = z?.data?.text;
             if (z.event == 'ImportStart') {
-              if (z?.data?.total) total = z?.data?.total * 2;
+              if (z?.data?.total) this.total = z?.data?.total * 2;
               else index = z?.data?.index;
             } else if (z.event == 'ImportSingle') index += z?.data?.index;
             else {
-              index = total;
+              index = this.total;
             }
-            if (index == total) {
+            if (index == this.total) {
               this.notifySvr.notifyCode('SYS006');
               //this.realHub.stop();
               (this.dialog as DialogRef).close();
             }
-            if (index >= 0 && total > 0) {
-              this.valueProgress = (index / total) * 100;
+            if (index >= 0 && this.total > 0) {
+              this.valueProgress = (index / this.total) * 100;
               document.getElementById('pb-import').style.width =
                 this.valueProgress + '%';
               this.ref.detectChanges();
@@ -223,7 +223,7 @@ export class CodxImportComponent implements OnInit, OnChanges, AfterViewInit {
       this.dt_AD_IEConnections = item;
       this.importGroup
         .get('dataImport')
-        .setValue(this.dt_AD_IEConnections[0].recID);
+        .setValue(this.dt_AD_IEConnections[0]?.recID);
     });
   }
   private fetch(): Observable<any[]> {
