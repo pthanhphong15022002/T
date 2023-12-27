@@ -80,7 +80,7 @@ export class PopupCustomFieldComponent implements OnInit {
       if (index != -1) {
         this.fields[index].dataValue = result;
       }
-      if (field.dataType == 'N') this.caculateField(field.fieldName, result);
+      if (field.dataType == 'N') this.caculateField();
     }
   }
   // partValue(item) {
@@ -156,18 +156,21 @@ export class PopupCustomFieldComponent implements OnInit {
     this.isAddComplete = e;
   }
 
-  //tính toán
+  //----------------------CACULATE---------------------------//
   arrCheck = ['+', '-', 'x', '/', 'Avg(', '(', ')'];
   parenthesis = ['(', ')'];
   operator = ['+', '-', 'x', '/', 'Avg('];
   operatorAddMinus = ['+', '-'];
   operatorMulDiv = ['x', '/'];
   //tính toán
-  caculateField(fieldName, dataValue) {
+  caculateField() {
     if (!this.arrCaculateField || this.arrCaculateField?.length == 0) return;
+    let fieldsNum = this.fields.filter((x) => x.dataType == 'N');
+    if (!fieldsNum || fieldsNum?.length == 0) return;
+
     this.arrCaculateField.forEach((obj) => {
       let dataFormat = obj.dataFormat;
-      this.fields.forEach((f) => {
+      fieldsNum.forEach((f) => {
         if (
           dataFormat.includes('[' + f.fieldName + ']') &&
           f.dataValue &&
@@ -219,6 +222,7 @@ export class PopupCustomFieldComponent implements OnInit {
 
     for (var i = 1; i < stringMath.length; i++) {
       if (this.operatorAddMinus.includes(stringMath[i])) {
+        num = this.converCommaDot(num);
         if (opera == '+') {
           sum += Number.parseFloat(num);
         } else {
@@ -230,6 +234,7 @@ export class PopupCustomFieldComponent implements OnInit {
         num += stringMath[i];
       }
     }
+    num = this.converCommaDot(num);
     if (opera == '+') {
       sum += Number.parseFloat(num);
     } else {
@@ -247,6 +252,7 @@ export class PopupCustomFieldComponent implements OnInit {
 
     for (var i = 1; i < stringMath.length; i++) {
       if (this.operatorMulDiv.includes(stringMath[i])) {
+        num = this.converCommaDot(num);
         if (opera == 'x') {
           mul = mul * Number.parseFloat(num);
         } else {
@@ -259,6 +265,7 @@ export class PopupCustomFieldComponent implements OnInit {
         num += stringMath[i];
       }
     }
+    num = this.converCommaDot(num);
     if (opera == 'x') {
       mul = mul * Number.parseFloat(num);
     } else {
@@ -307,6 +314,22 @@ export class PopupCustomFieldComponent implements OnInit {
   //check undifine
   isUndifine(string) {
     return string.includes('_');
+  }
+  //xác định dấu "." hay "," ngăn cách phần thập phân
+  converCommaDot(num) {
+    if (num.includes('.') || num.includes(',')) {
+      const string1 = '1,23'; //parFloat
+      const string2 = '1.23';
+      const result = Number.parseFloat(string1) - Number.parseFloat(string2);
+      if (result > 0) {
+        console.log('Dấu , phân tách phần thập phân 1,234 - 1');
+        if (num.includes('.')) num = num.replaceAll('.', ',');
+      } else {
+        console.log('Dấu . phân tách phần thập phân 1-1,23');
+        if (num.includes(',')) num = num.replaceAll(',', '.');
+      }
+    }
+    return num;
   }
 
   agv(arr: Array<number>) {

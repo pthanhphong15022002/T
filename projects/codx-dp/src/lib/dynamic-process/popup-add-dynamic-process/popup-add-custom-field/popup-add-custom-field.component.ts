@@ -1133,25 +1133,18 @@ export class PopupAddCustomFieldComponent implements OnInit {
   arrNum = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
   buttonOperator(op) {
     if (this.caculateField) {
-      if (this.caculateField[this.caculateField.length - 1] == '(') return;
+      let chartLast = this.caculateField[this.caculateField.length - 1];
+      if (chartLast == '(') return;
       if (op == 'Avg') {
         if (
-          this.arrNum.includes(
-            this.caculateField[this.caculateField.length - 1]
-          ) ||
-          this.accessField.includes(
-            this.caculateField[this.caculateField.length - 1]
-          )
+          this.arrNum.includes(chartLast) ||
+          this.accessField.includes(chartLast)
         ) {
           return;
         }
         op = 'Avg(';
       }
-      if (
-        this.operator.includes(
-          this.caculateField[this.caculateField.length - 1]
-        )
-      )
+      if (this.operator.includes(chartLast))
         this.caculateField = this.caculateField.substring(
           0,
           this.caculateField.length - 1
@@ -1211,6 +1204,15 @@ export class PopupAddCustomFieldComponent implements OnInit {
     this.caculateField += num;
   }
   decimalPoint() {
+    if (!this.caculateField) return;
+    let chartLast = this.caculateField[this.caculateField.length - 1];
+    if (
+      chartLast == ',' ||
+      this.accessField.includes(chartLast) ||
+      this.operator.includes(chartLast)
+    )
+      return;
+    //chua check hết
     this.caculateField += ',';
   }
 

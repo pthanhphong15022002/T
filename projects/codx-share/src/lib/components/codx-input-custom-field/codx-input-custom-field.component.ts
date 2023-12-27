@@ -951,10 +951,13 @@ export class CodxInputCustomFieldComponent implements OnInit {
   arrCheck = ['+', '-', 'x', '/', 'Avg(', '(', ')'];
   isExitOperator(string) {
     var check = false;
-    this.arrCheck.forEach((op) => {
+    this.arrCheck.forEach((op, idx) => {
       if (string.includes(op)) {
         check = true;
-        return;
+        if (idx == 0 && op == '-') {
+          check = false;
+        }
+        if (check) return;
       }
     });
     return check;
