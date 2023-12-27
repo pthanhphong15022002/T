@@ -155,10 +155,18 @@
         <div [ngbNavOutlet]="nav" class="ms-4"></div>
         <div *ngIf="isSave" class="d-flex flex-column">
           <div class="progress">
-            <div id="pb-import" class="progress-bar" role="progressbar" [style.width]="'0%'" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+            <div
+              id="pb-import"
+              class="progress-bar"
+              role="progressbar"
+              [style.width]="'0%'"
+              aria-valuenow="25"
+              aria-valuemin="0"
+              aria-valuemax="100"
+            ></div>
           </div>
           <div class="h-30px py-2">
-            <span >{{ text }}</span>
+            <span>{{ text }} - {{ total / 2 }}</span>
           </div>
         </div>
       </div>
@@ -166,10 +174,24 @@
   </div>
 </ng-template>
 <ng-template #footer>
-    <div class="d-flex justify-content-between">
-      <button type="button" class="btn btn-outline-primary btn-mgl" (click)="openFormAddTemplate()"><codx-label [formModel]="formModel" [fiedName]="'addTemplate'" [default]="'Thêm template'"></codx-label></button>
-      <button class="btn btn-primary" [disabled]="isSave" (click)="onSave()">
-        <codx-label [formModel]="formModel" [fiedName]="'importFile'" [default]="'Import File'"></codx-label>
-      </button>
-    </div>
+  <div class="d-flex justify-content-between">
+    <button
+      type="button"
+      class="btn btn-outline-primary btn-mgl"
+      (click)="openFormAddTemplate()"
+    >
+      <codx-label
+        [formModel]="formModel"
+        [fiedName]="'addTemplate'"
+        [default]="'Thêm template'"
+      ></codx-label>
+    </button>
+    <button class="btn btn-primary" [disabled]="isSave" (click)="onSave()">
+      <codx-label
+        [formModel]="formModel"
+        [fiedName]="'importFile'"
+        [default]="'Import File'"
+      ></codx-label>
+    </button>
+  </div>
 </ng-template>
