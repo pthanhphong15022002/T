@@ -4457,3 +4457,6 @@ codx-filter-form ejs-dropdownlist{
     align-items: center;
   }
 } 
+.h-450px.w-300px.dropdown-menu{
+  max-height:calc(100vh - 150px) ;
+}
