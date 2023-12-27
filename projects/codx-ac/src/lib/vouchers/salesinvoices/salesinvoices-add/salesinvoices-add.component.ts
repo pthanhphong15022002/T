@@ -366,19 +366,20 @@ export class SalesinvoicesAddComponent extends UIComponent{
     this.formSalesInvoice.save(null, 0, '', '', false)
     .pipe(takeUntil(this.destroy$))
     .subscribe((res: any) => {
-      if(!res) return;
-      if (res || res.save || res.update) {
-        if(res?.save?.error || res?.save?.error?.subErrorList || res?.update?.error || res?.update?.error?.subErrorList) return;
-        if (res || !res.save.error || !res.update.error) {
-          if (this.eleGridSalesInvoice && this.elementTabDetail?.selectingID == '0') { //? nếu lưới cashpayment có active hoặc đang edit
-            this.eleGridSalesInvoice.saveRow((res:any)=>{ //? save lưới trước
-              if(res){
-                this.addRowDetailByType(typeBtn);
-              }
-            })
-            return;
+      if (!res) return;
+      if (res.hasOwnProperty('save')) {
+        if (res.save.hasOwnProperty('data') && !res.save.data) return;
+      }
+      if (res.hasOwnProperty('update')) {
+        if (res.update.hasOwnProperty('data') && !res.update.data) return;
+      }
+      if (this.eleGridSalesInvoice && this.elementTabDetail?.selectingID == '0') {
+        this.eleGridSalesInvoice.saveRow((res:any)=>{ //? save lưới trước
+          if(res){
+            this.addRowDetailByType(typeBtn);
           }
-        }
+        })
+        return;
       }
     })
   }
@@ -420,20 +421,21 @@ export class SalesinvoicesAddComponent extends UIComponent{
     this.formSalesInvoice.save(null, 0, '', '', false)
     .pipe(takeUntil(this.destroy$))
     .subscribe((res: any) => {
-      if(!res) return;
-      if (res || res.save || res.update) {
-        if(res?.save?.error || res?.save?.error?.subErrorList || res?.update?.error || res?.update?.error?.subErrorList) return;
-        if (res || !res.save.error || !res.update.error) {
-          if ((this.eleGridSalesInvoice || this.eleGridSalesInvoice?.isEdit) && this.elementTabDetail?.selectingID == '0') { //? nếu lưới cashpayment có active hoặc đang edit
-            this.eleGridSalesInvoice.saveRow((res:any)=>{ //? save lưới trước
-              if(res){
-                this.saveVoucher(type);
-              }
-            })
-            return;
-          }   
-        }
+      if (!res) return;
+      if (res.hasOwnProperty('save')) {
+        if (res.save.hasOwnProperty('data') && !res.save.data) return;
       }
+      if (res.hasOwnProperty('update')) {
+        if (res.update.hasOwnProperty('data') && !res.update.data) return;
+      }
+      if ((this.eleGridSalesInvoice || this.eleGridSalesInvoice?.isEdit) && this.elementTabDetail?.selectingID == '0') {
+        this.eleGridSalesInvoice.saveRow((res:any)=>{ //? save lưới trước
+          if(res){
+            this.saveVoucher(type);
+          }
+        })
+        return;
+      }   
     });
   }
 

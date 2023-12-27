@@ -360,26 +360,28 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
     this.formPurchaseInvoices.save(null, 0, '', '', false)
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
-        if(!res) return;
-        if (res || res.save || res.update) {
-          if (res || !res.save.error || !res.update.error) {
-            if (this.eleGridPurchaseInvoice && this.elementTabDetail?.selectingID == '0') { //? nếu lưới cashpayment có active hoặc đang edit
-              this.eleGridPurchaseInvoice.saveRow((res:any)=>{ //? save lưới trước
-                if(res){
-                  this.addRowDetailByType(typeBtn);
-                }
-              })
-              return;
+        if (!res) return;
+        if (res.hasOwnProperty('save')) {
+          if (res.save.hasOwnProperty('data') && !res.save.data) return;
+        }
+        if (res.hasOwnProperty('update')) {
+          if (res.update.hasOwnProperty('data') && !res.update.data) return;
+        }
+        if (this.eleGridPurchaseInvoice && this.elementTabDetail?.selectingID == '0') {
+          this.eleGridPurchaseInvoice.saveRow((res:any)=>{ //? save lưới trước
+            if(res){
+              this.addRowDetailByType(typeBtn);
             }
-            if (this.eleGridVatInvoices && this.elementTabDetail?.selectingID == '1') { //? nếu lưới cashpayment có active hoặc đang edit
-              this.eleGridVatInvoices.saveRow((res:any)=>{ //? save lưới trước
-                if(res){
-                  this.addRowDetailByType(typeBtn);
-                }
-              })
-              return;
+          })
+          return;
+        }
+        if (this.eleGridVatInvoices && this.elementTabDetail?.selectingID == '1') {
+          this.eleGridVatInvoices.saveRow((res:any)=>{ //? save lưới trước
+            if(res){
+              this.addRowDetailByType(typeBtn);
             }
-          }
+          })
+          return;
         }
       })
   }
@@ -444,27 +446,29 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
     this.formPurchaseInvoices.save(null, 0, '', '', false)
     .pipe(takeUntil(this.destroy$))
     .subscribe((res: any) => {
-      if(!res) return;
-      if (res || res.save || res.update) {
-        if (res || !res.save.error || !res.update.error) {
-          if ((this.eleGridPurchaseInvoice || this.eleGridPurchaseInvoice?.isEdit) && this.elementTabDetail?.selectingID == '0') { //? nếu lưới cashpayment có active hoặc đang edit
-            this.eleGridPurchaseInvoice.saveRow((res:any)=>{ //? save lưới trước
-              if(res){
-                this.saveVoucher(type);
-              }
-            })
-            return;
-          }
-          if ((this.eleGridVatInvoices || this.eleGridVatInvoices?.isEdit) && this.elementTabDetail?.selectingID == '1') { //? nếu lưới cashpayment có active hoặc đang edit
-            this.eleGridVatInvoices.saveRow((res:any)=>{ //? save lưới trước
-              if(res){
-                this.saveVoucher(type);
-              }
-            })
-            return;
-          }      
-        }
+      if (!res) return;
+      if (res.hasOwnProperty('save')) {
+        if (res.save.hasOwnProperty('data') && !res.save.data) return;
       }
+      if (res.hasOwnProperty('update')) {
+        if (res.update.hasOwnProperty('data') && !res.update.data) return;
+      }
+      if ((this.eleGridPurchaseInvoice || this.eleGridPurchaseInvoice?.isEdit) && this.elementTabDetail?.selectingID == '0') { 
+        this.eleGridPurchaseInvoice.saveRow((res:any)=>{ //? save lưới trước
+          if(res){
+            this.saveVoucher(type);
+          }
+        })
+        return;
+      }
+      if ((this.eleGridVatInvoices || this.eleGridVatInvoices?.isEdit) && this.elementTabDetail?.selectingID == '1') {
+        this.eleGridVatInvoices.saveRow((res:any)=>{ //? save lưới trước
+          if(res){
+            this.saveVoucher(type);
+          }
+        })
+        return;
+      }  
     });
   }
 

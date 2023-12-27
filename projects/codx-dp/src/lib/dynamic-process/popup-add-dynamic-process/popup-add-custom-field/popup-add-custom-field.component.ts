@@ -1163,8 +1163,11 @@ export class PopupAddCustomFieldComponent implements OnInit {
 
   buttonOpenParenthesis() {
     if (
-      this.caculateField &&
-      this.operator.includes(this.caculateField[this.caculateField.length - 1])
+      (this.caculateField &&
+        this.operator.includes(
+          this.caculateField[this.caculateField.length - 1]
+        )) ||
+      !this.caculateField
     )
       this.caculateField += '(';
   }
@@ -1195,7 +1198,9 @@ export class PopupAddCustomFieldComponent implements OnInit {
           this.caculateField = this.caculateField.substring(0, idxLast);
           idxLast = idxLast - 1;
         }
-      } else this.caculateField = this.caculateField.substring(0, idxLast);
+      }
+      //else this.caculateField = this.caculateField.substring(0, idxLast);
+      this.caculateField = this.caculateField.substring(0, idxLast);
     }
   }
   delAll() {

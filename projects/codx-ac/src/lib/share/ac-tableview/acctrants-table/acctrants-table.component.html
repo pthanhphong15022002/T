@@ -121,11 +121,11 @@
                         </div>
                     </td>
                     <td style="min-width: 150px;" class="w-15 text-end">
-                        <span class="fw-bold line-clamp line-clamp-1" [innerHTML]="item?.transAmt2
+                        <span *ngIf="!item.crediting" class="fw-bold line-clamp line-clamp-1" [innerHTML]="item?.transAmt2
                     | tranformValueNumber : 'B' | async"></span>
                     </td>
                     <td style="min-width: 150px;" class="w-15 text-end">
-                        <span class="fw-bold line-clamp line-clamp-1" [innerHTML]="item?.transAmt2
+                        <span *ngIf="item.crediting" class="fw-bold line-clamp line-clamp-1" [innerHTML]="item?.transAmt2
                   | tranformValueNumber : 'B' | async"></span>
                     </td>
                     <td style="min-width: 150px;" *ngIf="baseCurr && itemSelected?.currencyID != baseCurr" class="w-15 text-end">
