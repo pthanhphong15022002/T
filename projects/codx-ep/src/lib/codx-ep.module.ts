@@ -41,6 +41,7 @@ import { DealsComponent } from 'projects/codx-cm/src/lib/deals/deals.component';
 import { CasesComponent } from 'projects/codx-cm/src/lib/cases/cases.component';
 import { ViewInstancesComponent } from 'projects/codx-dp/src/lib/view-instances/view-instances.component';
 import { LeadsComponent } from 'projects/codx-cm/src/lib/leads/leads.component';
+import { ContractsComponent } from 'projects/codx-cm/src/lib/contracts/contracts.component';
 
 export const routes: Routes = [
   {
@@ -130,6 +131,11 @@ export const routes: Routes = [
       {
         path: 'leads/:funcID',
         component: LeadsComponent,
+        data: { noReuse: true },
+      },
+      {
+        path: 'contracts/:funcID',
+        component: ContractsComponent,
         data: { noReuse: true },
       },
       {

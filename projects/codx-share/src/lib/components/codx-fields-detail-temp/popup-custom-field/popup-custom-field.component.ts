@@ -157,6 +157,12 @@ export class PopupCustomFieldComponent implements OnInit {
   }
 
   //tính toán
+  arrCheck = ['+', '-', 'x', '/', 'Avg(', '(', ')'];
+  parenthesis = ['(', ')'];
+  operator = ['+', '-', 'x', '/', 'Avg('];
+  operatorAddMinus = ['+', '-'];
+  operatorMulDiv = ['x', '/'];
+  //tính toán
   caculateField(fieldName, dataValue) {
     if (!this.arrCaculateField || this.arrCaculateField?.length == 0) return;
     this.arrCaculateField.forEach((obj) => {
@@ -175,25 +181,18 @@ export class PopupCustomFieldComponent implements OnInit {
         }
       });
 
-      if (!obj.dataValue.includes('[')) {
+      if (!dataFormat.includes('[')) {
         //tinh toán
         //Hiện tại sẽ lấy data đã
-        obj.dataValue = this.caculate(obj.dataValue);
+        obj.dataValue = this.caculate(dataFormat);
         //tính toan end
         let index = this.fields.findIndex((x) => x.recID == obj.recID);
         if (index != -1) {
-          this.fields[index].dataValue = obj.dataValue;
+          this.fields[index].dataValue = dataFormat;
         }
       }
     });
   }
-
-  //tính toán
-  arrCheck = ['+', '-', 'x', '/', 'Avg(', '(', ')'];
-  parenthesis = ['(', ')'];
-  operator = ['+', '-', 'x', '/', 'Avg('];
-  operatorAddMinus = ['+', '-'];
-  operatorMulDiv = ['x', '/'];
 
   caculate(stringMath) {
     if (stringMath.includes('_')) return stringMath;
@@ -206,7 +205,7 @@ export class PopupCustomFieldComponent implements OnInit {
           // co nhan chia
           stringMath = this.sumAndMul(stringMath);
         } else {
-          stringMath = this.sum(stringMath);
+          stringMath = this.sumSub(stringMath);
         }
       }
     }
@@ -214,12 +213,12 @@ export class PopupCustomFieldComponent implements OnInit {
   }
 
   //phep toan co ban
-  sum(stringMath) {
+  sumSub(stringMath, opera = '+') {
     if (!stringMath || !this.isExitOperator(this.operatorAddMinus, stringMath))
       return stringMath;
     let sum = 0;
     let num = stringMath[0];
-    let opera = '+';
+
     for (var i = 1; i < stringMath.length; i++) {
       if (this.operatorAddMinus.includes(stringMath[i])) {
         if (opera == '+') {
@@ -242,12 +241,12 @@ export class PopupCustomFieldComponent implements OnInit {
   }
 
   //phep nhan chia
-  multDiv(stringMath) {
+  multDiv(stringMath, opera = 'x') {
     if (!stringMath || !this.isExitOperator(this.operatorMulDiv, stringMath))
       return stringMath;
     let mul = 1;
     let num = stringMath[0];
-    let opera = 'x';
+
     for (var i = 1; i < stringMath.length; i++) {
       if (this.operatorMulDiv.includes(stringMath[i])) {
         if (opera == 'x') {
@@ -272,17 +271,17 @@ export class PopupCustomFieldComponent implements OnInit {
   }
 
   // pheptoan + ,-,x,/
-  sumAndMul(stringMath) {
+  sumAndMul(stringMath, haveSum = false) {
     if (!stringMath || !this.isExitOperator(this.operator, stringMath))
       return stringMath;
     if (stringMath.includes('+')) {
       let arrAdd = stringMath.trim().split('+');
       if (arrAdd?.length > 0) {
         let arrRes = arrAdd.map((str) => {
-          return this.sumAndMul(str);
+          return this.sumAndMul(str, true);
         });
         // stringMath = this.sumAndMul(arrRes.join('+'));
-        return this.sum(arrRes.join('+'));
+        return this.sumSub(arrRes.join('+'));
       }
     } else if (stringMath.includes('-')) {
       let arrMunus = stringMath.trim().split('-');
@@ -291,6 +290,7 @@ export class PopupCustomFieldComponent implements OnInit {
           return this.sumAndMul(str);
         });
         stringMath = arrRes.join('-');
+        if (!haveSum) return this.sumSub(stringMath);
       }
     } else stringMath = this.multDiv(stringMath);
     return stringMath;
@@ -305,6 +305,10 @@ export class PopupCustomFieldComponent implements OnInit {
       }
     });
     return check;
+  }
+  //check undifine
+  isUndifine(string) {
+    return string.includes('_');
   }
 
   agv(arr: Array<number>) {
