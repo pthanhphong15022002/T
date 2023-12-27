@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Injector, Optional, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, HostListener, Injector, Optional, ViewChild } from '@angular/core';
 import { CodxFormComponent, CodxGridviewV2Component, DialogData, DialogRef, NotificationsService, UIComponent, Util } from 'codx-core';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-approval/tab/model/tabControl.model';
 import { Subject, takeUntil } from 'rxjs';
@@ -36,6 +36,7 @@ export class WarehouseTransfersAddComponent extends UIComponent {
   fmReceiptTransfersLines: any = fmReceiptTransfersLines;
   baseCurr: any; //? đồng tiền hạch toán
   isPreventChange: any = false;
+  nextTabIndex:any;
   private destroy$ = new Subject<void>(); //? list observable hủy các subscribe api
   constructor(
     inject: Injector,
@@ -110,10 +111,10 @@ export class WarehouseTransfersAddComponent extends UIComponent {
   clickMF(event: any, data) {
     switch (event.functionID) {
       case 'SYS104':
-        //this.copyRow(data);
+        this.copyRow(data);
         break;
       case 'SYS102':
-        //this.deleteRow(data);
+        this.deleteRow(data);
         break;
     }
   }
@@ -129,15 +130,34 @@ export class WarehouseTransfersAddComponent extends UIComponent {
   valueChangeMaster(event: any) {
     let field = event?.field || event?.ControlName;
     let value = event?.data || event?.crrValue;
-    if (event && value && this.formWareHouse.hasChange(this.formWareHouse.preData,this.formWareHouse.data)) {
-      switch (field.toLowerCase()) {
-        case 'reasonid':
-        case 'fromwhid':
-        case 'towhid':
-          this.formWareHouse.data.memo = this.getMemoMaster();
-          this.formWareHouse.setValue('memo',this.formWareHouse.data.memo,{});
-          break;
-      }
+    switch (field.toLowerCase()) {
+      case 'reasonid':
+        let indexrs = this.eleCbxReasonID?.ComponentCurrent?.dataService?.data.findIndex((x) => x.ReasonID == this.eleCbxReasonID?.ComponentCurrent?.value);
+        if (value == '' || value == null || indexrs == -1) {
+          this.isPreventChange = true;
+          let memo = this.getMemoMaster();
+          this.formWareHouse.setValue(field, null, {});
+          this.formWareHouse.setValue('memo', memo, {});
+          this.isPreventChange = false;
+          return;
+        } 
+        let memo = this.getMemoMaster();
+        this.formWareHouse.setValue('memo',memo,{});
+        break;
+      case 'fromwhid':
+      case 'towhid':
+        let index = this.eleCbxFromWHID?.ComponentCurrent?.dataService?.data.findIndex((x) => x.WarehouseID == this.eleCbxFromWHID?.ComponentCurrent?.value);
+        if (value == '' || value == null || index == -1) {
+          this.isPreventChange = true;
+          let memo = this.getMemoMaster();
+          this.formWareHouse.setValue(field, null, {});
+          this.formWareHouse.setValue('memo', memo, {});
+          this.isPreventChange = false;
+          return;
+        }
+        let memo2 = this.getMemoMaster();
+        this.formWareHouse.setValue('memo',memo2,{});
+        break;
     }
   }
 
@@ -165,6 +185,27 @@ export class WarehouseTransfersAddComponent extends UIComponent {
       }
     })
   }
+
+  onTabSelectedDetail(event){
+    switch(event?.selectedIndex){
+      case 0:
+        if (this.eleGridIssue && this.eleGridIssue.isEdit) {
+          event.cancel = true;
+          this.nextTabIndex = event?.selectingIndex;
+          return;
+        }
+        this.eleGridIssue.refresh();
+        break;
+      case 1:
+        if (this.eleGridReceipt && this.eleGridReceipt.isEdit) {
+          event.cancel = true;
+          this.nextTabIndex = event?.selectingIndex;
+          return;
+        }
+        this.eleGridReceipt.refresh();
+        break;
+    }
+  }
   //#endregion Event
 
   //#region Method
@@ -179,7 +220,7 @@ export class WarehouseTransfersAddComponent extends UIComponent {
             .subscribe((res) => {
               if (res.data != null) {
                 this.notification.notifyCode('E0860');
-                this.dialog.close();
+                this.dialog.close({type:'discard'});
                 this.onDestroy();
               }
             });
@@ -199,27 +240,29 @@ export class WarehouseTransfersAddComponent extends UIComponent {
     this.formWareHouse.save(null, 0, '', '', false)
     .pipe(takeUntil(this.destroy$))
     .subscribe((res: any) => {
-      if(!res) return;
-      if (res || res.save || res.update) {
-        if (res || !res.save.error || !res.update.error) {
-          if ((this.eleGridIssue || this.eleGridIssue?.isEdit) && this.elementTabDetail?.selectingID == '0') { //?
-            this.eleGridIssue.saveRow((res:any)=>{ //? save lưới trước
-              if(res){
-                this.saveVoucher(type);
-              }
-            })
-            return;
-          }    
-          if ((this.eleGridReceipt || this.eleGridReceipt?.isEdit) && this.elementTabDetail?.selectingID == '1') { //?
-            this.eleGridReceipt.saveRow((res:any)=>{ //? save lưới trước
-              if(res){
-                this.saveVoucher(type);
-              }
-            })
-            return;
-          }    
-        }
+      if (!res) return;
+      if (res.hasOwnProperty('save')) {
+        if (res.save.hasOwnProperty('data') && !res.save.data) return;
       }
+      if (res.hasOwnProperty('update')) {
+        if (res.update.hasOwnProperty('data') && !res.update.data) return;
+      }
+      if ((this.eleGridIssue || this.eleGridIssue?.isEdit) && this.elementTabDetail?.selectingID == '0') {
+        this.eleGridIssue.saveRow((res:any)=>{
+          if(res){
+            this.saveVoucher(type);
+          }
+        })
+        return;
+      }    
+      if ((this.eleGridReceipt || this.eleGridReceipt?.isEdit) && this.elementTabDetail?.selectingID == '1') {
+        this.eleGridReceipt.saveRow((res:any)=>{
+          if(res){
+            this.saveVoucher(type);
+          }
+        })
+        return;
+      }    
     });
   }
 
@@ -278,25 +321,27 @@ export class WarehouseTransfersAddComponent extends UIComponent {
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
         if (!res) return;
-        if (res || res.save || res.update) {
-          if (res || !res.save.error || !res.update.error) {
-            if (this.eleGridIssue && this.elementTabDetail?.selectingID == '0') {
-              this.eleGridIssue.saveRow((res: any) => { //? save lưới trước
-                if (res) {
-                  this.addLine(type);
-                }
-              })
-              return;
+        if (res.hasOwnProperty('save')) {
+          if (res.save.hasOwnProperty('data') && !res.save.data) return;
+        }
+        if (res.hasOwnProperty('update')) {
+          if (res.update.hasOwnProperty('data') && !res.update.data) return;
+        }
+        if (this.eleGridIssue && this.elementTabDetail?.selectingID == '0') {
+          this.eleGridIssue.saveRow((res: any) => {
+            if (res) {
+              this.addLine(type);
             }
-            if (this.eleGridIssue && this.elementTabDetail?.selectingID == '1') {
-              this.eleGridReceipt.saveRow((res: any) => { //? save lưới trước
-                if (res) {
-                  this.addLine(type);
-                }
-              })
-              return;
+          })
+          return;
+        }
+        if (this.eleGridIssue && this.elementTabDetail?.selectingID == '1') {
+          this.eleGridReceipt.saveRow((res: any) => {
+            if (res) {
+              this.addLine(type);
             }
-          }
+          })
+          return;
         }
       })
   }
@@ -325,26 +370,30 @@ export class WarehouseTransfersAddComponent extends UIComponent {
     return oLine;
   }
 
-  onActionGrid(event: any) {
-    // switch (event.type) {
-    //   case 'autoAdd':
-    //     this.onAddLine();
-    //     break;
-    //   case 'add':
-    //   case 'update':
-    //     this.dialog.dataService.update(this.formVouchers.data).subscribe();
-    //     break;
-    //   case 'closeEdit': //? khi thoát dòng
-    //   if (this.eleGridVouchers && this.eleGridVouchers.rowDataSelected) {
-    //     this.eleGridVouchers.rowDataSelected = null;
-    //   }
-    //   if(this.eleGridVouchers.isSaveOnClick) this.eleGridVouchers.isSaveOnClick = false; //? trường save row nhưng chưa tới actioncomplete
-    //   setTimeout(() => {
-    //     let element = document.getElementById('btnAddVou'); //? focus lại nút thêm dòng
-    //     element.focus();
-    //   }, 100);
-    //     break;
-    // }
+  onActionGrid(event: any,type) {
+    switch (event.type) {
+      case 'autoAdd':
+        this.onAddLine(type);
+        break;
+      case 'add':
+      case 'update':
+        this.dialog.dataService.update(this.formWareHouse.data).subscribe();
+        break;
+      case 'closeEdit': //? khi thoát dòng
+      if (this.eleGridIssue && this.eleGridIssue.rowDataSelected) {
+        this.eleGridIssue.rowDataSelected = null;
+      }
+      if (this.eleGridReceipt && this.eleGridReceipt.rowDataSelected) {
+        this.eleGridReceipt.rowDataSelected = null;
+      }
+      if(this.eleGridIssue.isSaveOnClick) this.eleGridIssue.isSaveOnClick = false;
+      if(this.eleGridReceipt.isSaveOnClick) this.eleGridReceipt.isSaveOnClick = false;
+      setTimeout(() => {
+        let element = document.getElementById('btnAddVou'); //? focus lại nút thêm dòng
+        element.focus();
+      }, 100);
+        break;
+    }
   }
 
   getMemoMaster() {
@@ -411,5 +460,85 @@ export class WarehouseTransfersAddComponent extends UIComponent {
       }
     });
   }
+
+  
+  copyRow(data) {
+    if (this.eleGridIssue && this.elementTabDetail?.selectingID == '0') {
+      this.eleGridIssue.saveRow((res:any)=>{ //? save lưới trước
+        if(res){
+          data.recID = Util.uid();
+          data.index = this.eleGridIssue.dataSource.length;
+          delete data?._oldData;
+          this.eleGridIssue.addRow(data, this.eleGridIssue.dataSource.length);
+        }
+      })
+    }
+    if (this.eleGridReceipt && this.elementTabDetail?.selectingID == '2') {
+      this.eleGridReceipt.saveRow((res:any)=>{ //? save lưới trước
+        if(res){
+          data.recID = Util.uid();
+          data.index = this.eleGridReceipt.dataSource.length;
+          delete data?._oldData;
+          this.eleGridReceipt.addRow(data, this.eleGridReceipt.dataSource.length);
+        }
+      })
+    }
+  }
+
+  deleteRow(data) {
+    if (this.eleGridIssue && this.elementTabDetail?.selectingID == '0') {
+      this.eleGridIssue.saveRow((res:any)=>{ //? save lưới trước
+        if(res){
+          this.eleGridIssue.deleteRow(data);
+        }
+      })
+    }
+    if (this.eleGridReceipt && this.elementTabDetail?.selectingID == '1') {
+      this.eleGridReceipt.saveRow((res:any)=>{ //? save lưới trước
+        if(res){
+          this.eleGridReceipt.deleteRow(data);
+        }
+      })
+    }
+  }
+
+  @HostListener('click', ['$event']) //? focus out grid
+  onClick(e) {
+    if (
+      (e.target.closest('.e-grid') == null &&
+      e.target.closest('.e-popup') == null &&
+      e.target.closest('.edit-value') == null) && 
+      e.target.closest('button') == null
+    ) {
+      if (this.eleGridIssue && this.eleGridIssue?.gridRef?.isEdit) {
+        this.eleGridIssue.saveRow((res:any)=>{ //? save lưới trước
+          if(res){
+            this.eleGridIssue.isSaveOnClick = false;
+            if(this.nextTabIndex) this.elementTabDetail.select(this.nextTabIndex);
+            setTimeout(() => {
+              if ((e.target as HTMLElement).tagName.toLowerCase() === 'input') {
+                e.target.focus();
+                e.target.select();
+              }
+            }, 100);
+          }
+        })
+      }
+      if (this.eleGridReceipt && this.eleGridReceipt?.gridRef?.isEdit) {
+        this.eleGridReceipt.saveRow((res:any)=>{ //? save lưới trước
+          if(res){
+            this.eleGridReceipt.isSaveOnClick = false;
+            setTimeout(() => {
+              if ((e.target as HTMLElement).tagName.toLowerCase() === 'input') {
+                e.target.focus();
+                e.target.select();
+              }
+            }, 100);
+          }
+        })
+      }
+    }
+  }
+
   //#endregion Function
 }

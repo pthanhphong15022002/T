@@ -98,7 +98,8 @@ export class AddImportDetailsComponent implements OnInit, AfterViewInit{
 
     if (this.type == 'new') {
       this.getGridViewSetup();
-    } else if (this.type == 'edit') {
+    } 
+    else if (this.type == 'edit') {
       this.getDataEdit();
     }
     this.formatSourceField();
@@ -107,8 +108,11 @@ export class AddImportDetailsComponent implements OnInit, AfterViewInit{
     var cbb = [];
     if (this.sourceField && Array.isArray(this.sourceField)) {
       var cbb = [];
-      for (var i = 0; i < this.sourceField.length; i++) {
+      for (var i = 0; i < this.sourceField.length; i++) 
+      {
         var textStr = this.sourceField[i].normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+        //Xóa dấu
+        textStr = this.deleteMark(textStr);
         //In hoa
         textStr = textStr.toUpperCase();
         //Thay ký tự rỗng thành _
@@ -134,6 +138,26 @@ export class AddImportDetailsComponent implements OnInit, AfterViewInit{
     }
     this.dataCbb['SourceField'] = cbb;
   }
+
+  
+  deleteMark(str) {
+    str = str.replace(/à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ/g, "a");
+    str = str.replace(/è|é|ẹ|ẻ|ẽ|ê|ề|ế|ệ|ể|ễ/g, "e");
+    str = str.replace(/ì|í|ị|ỉ|ĩ/g, "i");
+    str = str.replace(/ò|ó|ọ|ỏ|õ|ô|ồ|ố|ộ|ổ|ỗ|ơ|ờ|ớ|ợ|ở|ỡ/g, "o");
+    str = str.replace(/ù|ú|ụ|ủ|ũ|ư|ừ|ứ|ự|ử|ữ/g, "u");
+    str = str.replace(/ỳ|ý|ỵ|ỷ|ỹ/g, "y");
+    str = str.replace(/đ/g, "d");
+    str = str.replace(/À|Á|Ạ|Ả|Ã|Â|Ầ|Ấ|Ậ|Ẩ|Ẫ|Ă|Ằ|Ắ|Ặ|Ẳ|Ẵ/g, "A");
+    str = str.replace(/È|É|Ẹ|Ẻ|Ẽ|Ê|Ề|Ế|Ệ|Ể|Ễ/g, "E");
+    str = str.replace(/Ì|Í|Ị|Ỉ|Ĩ/g, "I");
+    str = str.replace(/Ò|Ó|Ọ|Ỏ|Õ|Ô|Ồ|Ố|Ộ|Ổ|Ỗ|Ơ|Ờ|Ớ|Ợ|Ở|Ỡ/g, "O");
+    str = str.replace(/Ù|Ú|Ụ|Ủ|Ũ|Ư|Ừ|Ứ|Ự|Ử|Ữ/g, "U");
+    str = str.replace(/Ỳ|Ý|Ỵ|Ỷ|Ỹ/g, "Y");
+    str = str.replace(/Đ/g, "D");
+    return str;
+  }
+
   getDataEdit() {
     this.getDataIEMapping();
     this.getDataFieldMapping();
@@ -173,10 +197,8 @@ export class AddImportDetailsComponent implements OnInit, AfterViewInit{
             if (grdViews) {
               var key = Object.keys(grdViews);
               for (var i = 0; i < key.length; i++) {
-                var fs = key[i].slice(0,1).toLowerCase();
-                var s = key[i].slice(1);
-                let keys = fs + s;
-                var check = this.dataImport2.findIndex(x=>x.destinationField == keys);
+                let keys = key[i].slice(0,1).toLowerCase() + key[i].slice(1);
+                var check = this.dataImport2.findIndex(x=>x.destinationField == keys || x.destinationField == key[i]);
                 if (grdViews[key[i]]?.isImport && check<0) {
                   var obj = {
                     destinationField: key[i],
@@ -324,9 +346,16 @@ export class AddImportDetailsComponent implements OnInit, AfterViewInit{
           var key = Object.keys(item);
           for (var i = 0; i < key.length; i++) {
             if (item[key[i]]?.isImport) {
+              var textStr = item[key[i]].headerText.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+              //Xóa dấu
+              textStr = this.deleteMark(textStr);
+              //In hoa
+              textStr = textStr.toUpperCase();
+              //Thay ký tự rỗng thành _
+              textStr = textStr.replaceAll(" ","_");
               var obj = {
                 destinationfield: key[i],
-                sourcefield: item[key[i]].headerText,
+                sourcefield: textStr,
                 columnOrder: item[key[i]].columnOrder,
                 datatype: item[key[i]].dataType
               };
@@ -428,8 +457,11 @@ export class AddImportDetailsComponent implements OnInit, AfterViewInit{
   mapField()
   {
     this.dataCbb['SourceField'].forEach(elm => {
-      var index = this.dataImport2.findIndex(x=>x.destinationField == elm.value);
-      if(index >= 0) this.dataImport2[index].sourceField = elm.value
+      var index = this.dataImport2.findIndex(x=>x.destinationField == elm.value || x.sourcefield == elm.value);
+      if(index >= 0) {
+        this.dataImport2[index].sourceField = elm.value;
+        this.dataImport2[index].sourceType = "0";
+      }
     });
     this.gridView2.refresh();
   }
@@ -438,6 +470,7 @@ export class AddImportDetailsComponent implements OnInit, AfterViewInit{
   {
     this.dataImport2.forEach(elm=>{
       elm.sourceField = "";
+      elm.sourceType = "";
     })
     this.gridView2.refresh();
   }

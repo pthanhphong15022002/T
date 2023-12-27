@@ -45,8 +45,7 @@ import { variableAudio } from './extention';
 })
 export class ViewFileDialogComponent implements OnInit, OnChanges {
   @ViewChild('contentViewFileDialog') contentViewFileDialog;
-  @ViewChild('documenteditor_default')
-  public container: DocumentEditorContainerComponent;
+  @ViewChild('documenteditor_default') public container: DocumentEditorContainerComponent;
   // @ViewChild('pdfviewer') pdfviewer: PdfViewerComponent;
   @ViewChild('spreadsheet') public spreadsheetObj: SpreadsheetComponent;
   src: string = null;
@@ -69,12 +68,14 @@ export class ViewFileDialogComponent implements OnInit, OnChanges {
   linkFile: any;
   isShow = false;
   isOffice = false;
-  isClose = false;
   isAudio = false;
   public urlSafe: any;
+  env = environment;
   @Input() id: string;
   @Input() ext: string;
   @Input() dataFile: any;
+  @Input() isClose = false;
+  @Input() recID:any;
   @Input('viewBase') viewBase: ViewsComponent;
   dialog: any;
   public service: string = environment.pdfUrl; //'https://ej2services.syncfusion.com/production/web-services/api/pdfviewer';
@@ -85,10 +86,8 @@ export class ViewFileDialogComponent implements OnInit, OnChanges {
     public dmSV: CodxDMService,
     private fileService: FileService,
     private changeDetectorRef: ChangeDetectorRef,
-    private systemDialogService: SystemDialogService,
     private notificationsService: NotificationsService,
     private callfc: CallFuncService,
-    private elementRef: ElementRef,
     private sanitizer: DomSanitizer,
     private route: ActivatedRoute,
     private api: ApiHttpService,
@@ -100,14 +99,7 @@ export class ViewFileDialogComponent implements OnInit, OnChanges {
       this.dataFile = data.data;
       this.isClose = true;
     }
-    // this.fileService.getFile(this.id).subscribe(item => {
-    //   if (item != null) {
-    //     this.data = item;
-    //   }
-    // });
     this.dialog = dialog;
-    //  var data: any = this.auth.user$;
-    // this.user = data.source.value;
   }
   @HostBinding('class') someField = 'h-100 bg-white';
 
@@ -127,9 +119,11 @@ export class ViewFileDialogComponent implements OnInit, OnChanges {
     }
   }
   ngOnInit(): void {
-    this.route.queryParams.subscribe((params) => {
-      if (params && params.id) {
-        this.api
+    if(!this.recID)
+    {
+      this.route.queryParams.subscribe((params) => {
+        if (params && params.id) {
+          this.api
           .execSv('DM', 'DM', 'FileBussiness', 'GetFilesByIDAsync', params.id)
           .subscribe((item) => {
             if (item) {
@@ -140,14 +134,29 @@ export class ViewFileDialogComponent implements OnInit, OnChanges {
               this.changeDetectorRef.detectChanges();
             }
           });
-      } else if (params) {
-        this.data = this.dataFile;
-        this.getData();
-      }
-    });
+        } else if (params) {
+          this.data = this.dataFile;
+          this.getData();
+        }
+      });
+    }
+    else this.getDataFile(this.recID)
     //if(this.data)this.getData();
   }
 
+  getDataFile(recID:any)
+  {
+    this.api
+    .execSv('DM', 'DM', 'FileBussiness', 'GetFilesByIDAsync', recID)
+    .subscribe((item) => {
+      if (item) {
+        this.dataFile = item;
+        this.data = item;
+        this.getData();
+        this.changeDetectorRef.detectChanges();
+      }
+    });
+  }
   //Lấy version đầu tiên
   formatFristVersion(data) {
     if (data.history && data.history.length > 0) {
@@ -387,7 +396,6 @@ export class ViewFileDialogComponent implements OnInit, OnChanges {
   closeOpenForm(e: any) {}
 
   getData() {
-    debugger;
     this.id = this.dataFile?.recID;
     let baseurlExcel: string =
       environment.apiUrl + '/api/documenteditor/openexcel';

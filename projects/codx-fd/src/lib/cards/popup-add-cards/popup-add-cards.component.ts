@@ -31,6 +31,7 @@ import { CardType, Valuelist } from '../../models/model';
 import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
 import { tmpPost } from '../../models/tmpPost.model';
 import { CodxFdService } from '../../codx-fd.service';
+import { zip } from 'rxjs';
 
 @Component({
   selector: 'lib-popup-add-cards',
@@ -50,6 +51,7 @@ export class PopupAddCardsComponent implements OnInit {
   behavior: any[] = [];
   lstShare: any[] = [];
   gifts: any[] = [];
+  giftIDs: string;
   slides: any[] = [];
 
   patternSelected: any;
@@ -89,10 +91,13 @@ export class PopupAddCardsComponent implements OnInit {
   amount: number = 0;
   price: number = 0;
   totalRecorItem: number = 4;
+  width = 720;
+  height = window.innerHeight;
 
   isWalletReciver: boolean = false;
   showNavigationArrows: boolean = false;
   readOnly: boolean = false;
+  showPopupGift: boolean = false;
 
   MEMBERTYPE = {
     CREATED: '1',
@@ -135,6 +140,7 @@ export class PopupAddCardsComponent implements OnInit {
   showLabelAttachment = false;
   type = 'add';
   reduceCoCoins = 0;
+  cointsError = "";
 
   constructor(
     private api: ApiHttpService,
@@ -156,7 +162,6 @@ export class PopupAddCardsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    
     this.initForm();
     this.loadDataAsync(this.funcID);
     this.getMessageNoti('SYS009');
@@ -402,7 +407,7 @@ export class PopupAddCardsComponent implements OnInit {
 
     let data = e.data;
     let field = e.field;
-    console.log(field)
+    console.log(field);
     switch (field) {
       case 'rating':
         this.rating = data;
@@ -410,33 +415,33 @@ export class PopupAddCardsComponent implements OnInit {
         break;
 
       case 'giftID':
-        this.getGiftInfor(data);
+        this.getGiftInfor(data.value);
         break;
 
-      case 'quantity':
-        if (
-          !this.gifts[0] ||
-          !this.gifts[0]?.availableQty ||
-          this.gifts[0]?.price == null
-        ) {
-          // this.form.patchValue({ quantity: 0 });
-          this.notifySV.notify('Vui lòng chọn quà tặng');
-          return;
-        } else if (data > this.gifts[0].availableQty) {
-          this.quantity = 1;
-          this.amount = this.quantity * this.gifts[0].price;
-          this.gifts[0].quantity = this.quantity;
-          this.form.patchValue({ quantity: this.quantity });
-          this.notifySV.notify('Vượt quá số dư quà tặng');
-          return;
-        } else {
-          // this.quantityOld = data - 1;
-          this.quantity = data;
-          this.amount = this.quantity * this.gifts[0].price;
-          this.gifts[0].quantity = this.quantity;
-          this.form.patchValue({ quantity: data });
-        }
-        break;
+      // case 'quantity':
+      //   if (
+      //     !this.gifts[0] ||
+      //     !this.gifts[0]?.availableQty ||
+      //     this.gifts[0]?.price == null
+      //   ) {
+      //     // this.form.patchValue({ quantity: 0 });
+      //     this.notifySV.notify('Vui lòng chọn quà tặng');
+      //     return;
+      //   } else if (data > this.gifts[0].availableQty) {
+      //     this.quantity = 1;
+      //     this.amount = this.quantity * this.gifts[0].price;
+      //     this.gifts[0].quantity = this.quantity;
+      //     this.form.patchValue({ quantity: this.quantity });
+      //     this.notifySV.notify('Vượt quá số dư quà tặng');
+      //     return;
+      //   } else {
+      //     // this.quantityOld = data - 1;
+      //     this.quantity = data;
+      //     this.amount = this.quantity * this.gifts[0].price;
+      //     this.gifts[0].quantity = this.quantity;
+      //     this.form.patchValue({ quantity: data });
+      //   }
+      //   break;
 
       case 'behavior':
         this.behavior = data;
@@ -527,34 +532,51 @@ export class PopupAddCardsComponent implements OnInit {
         }
         break;
       case 'coins':
+        this.cointsError = "";
         if (data) {
           if (this.parameter.MaxPointPerOnceControl === '1') {
             if (data > this.parameter.MaxPointPerOnce) {
-              this.notifySV.notify('Vượt quá số xu cho phép tặng trong 1 lần', '2');
-              data = this.givePoint;
-              this.form.patchValue({ coins: this.givePoint });
+              this.cointsError = "Vượt quá số xu cho phép tặng trong 1 lần";
+              return;
+              // this.notifySV.notify(
+              //   'Vượt quá số xu cho phép tặng trong 1 lần',
+              //   '3'
+              // );
+              // data = this.givePoint;
+              // this.form.patchValue({ coins: this.givePoint });
             }
           }
-          if(data && this.parameter.MaxPointControl === '1'){
-            let unitName = "";
+          if (data && this.parameter.MaxPointControl === '1') {
+            let unitName = '';
             switch (this.parameter.MaxPointPeriod) {
-              case "1":
-                unitName = "tuần";
+              case '1':
+                unitName = 'tuần';
                 break;
-              case "2":
-                unitName = "tháng";
+              case '2':
+                unitName = 'tháng';
                 break;
-              case "3":
-                unitName = "quý";
+              case '3':
+                unitName = 'quý';
                 break;
-              case "4":
-                unitName = "năm";
+              case '4':
+                unitName = 'năm';
                 break;
             }
-            if((this.reduceCoCoins + data) > this.parameter.MaxPoints){
-              this.notifySV.notify('Vượt quá số xu cho phép tặng: ' + this.parameter.MaxPoints + ' xu/' + unitName, '2');
-              data = this.givePoint;
-              this.form.patchValue({ coins: this.givePoint });
+            if (this.reduceCoCoins + data > this.parameter.MaxPoints) {
+              this.cointsError = "Vượt quá số xu cho phép tặng: " +
+                this.parameter.MaxPoints +
+                ' xu/' +
+                unitName;
+              return;
+              // this.notifySV.notify(
+              //   'Vượt quá số xu cho phép tặng: ' +
+              //     this.parameter.MaxPoints +
+              //     ' xu/' +
+              //     unitName,
+              //   '3'
+              // );
+              // data = this.givePoint;
+              // this.form.patchValue({ coins: this.givePoint });
             }
           }
           this.givePoint = data;
@@ -568,17 +590,17 @@ export class PopupAddCardsComponent implements OnInit {
     this.dt.detectChanges();
   }
 
-  CheckAvalidMaxPointPeriod(){
+  CheckAvalidMaxPointPeriod() {
     this.api
       .execSv<any>(
         'FD',
         'ERM.Business.FD',
         'CardsBusiness',
         'CheckAvalidMaxPointPeriod',
-        ["FDParameters", this.cardType, this.user.userID]
+        ['FDParameters', this.cardType, this.user.userID]
       )
       .subscribe((res) => {
-        if(res){
+        if (res) {
           this.reduceCoCoins = res;
         }
       });
@@ -598,7 +620,7 @@ export class PopupAddCardsComponent implements OnInit {
           this.isWalletReciver = true;
         } else {
           this.isWalletReciver = false;
-          this.notifySV.notify('Người nhận chưa tích hợp ví');
+          this.notifySV.notify('Người nhận chưa tích hợp ví', '3');
         }
       });
   }
@@ -618,11 +640,11 @@ export class PopupAddCardsComponent implements OnInit {
       this.cardType != this.CARDTYPE_EMNUM.Radio
     ) {
       let mssg = Util.stringFormat(this.mssgNoti, 'Người nhận');
-      this.notifySV.notify(mssg);
+      this.notifySV.notify(mssg, '3');
       return;
     } else if (!this.form.controls['situation'].value) {
       let mssg = Util.stringFormat(this.mssgNoti, 'Nội dung');
-      this.notifySV.notify(mssg);
+      this.notifySV.notify(mssg, '3');
       return;
     }
     if (this.parameter) {
@@ -632,14 +654,14 @@ export class PopupAddCardsComponent implements OnInit {
         case '1':
           if (!this.form.controls['behavior'].value) {
             let mssg = Util.stringFormat(this.mssgNoti, 'Qui tắc ứng xử');
-            this.notifySV.notify(mssg);
+            this.notifySV.notify(mssg, '3');
             return;
           }
           break;
         case '2':
           if (!this.form.controls['behavior'].value) {
             let mssg = Util.stringFormat(this.mssgNoti, 'Hành vi ứng xử');
-            this.notifySV.notify(mssg);
+            this.notifySV.notify(mssg, '3');
             return;
           }
           break;
@@ -651,10 +673,10 @@ export class PopupAddCardsComponent implements OnInit {
       (!this.myWallet || this.myWallet?.status != '1') &&
       (this.givePoint > 0 || (this.gifts && this.gifts.length > 0))
     ) {
-      this.notifySV.notify('Bạn chưa tích hợp ví');
+      this.notifySV.notify('Bạn chưa tích hợp ví', '3');
       return;
     } else if (this.myWallet && this.myWallet?.coins < this.amount) {
-      this.notifySV.notify('Số dư ví của bạn không đủ');
+      this.notifySV.notify('Số dư ví của bạn không đủ', '3');
       return;
     } else {
       this.card = {
@@ -832,7 +854,7 @@ export class PopupAddCardsComponent implements OnInit {
     let point = this.givePoint + 1;
     if (this.parameter.MaxPointPerOnceControl === '1') {
       if (point > this.parameter.MaxPointPerOnce) {
-        this.notifySV.notify('Vượt quá số xu cho phép tặng');
+        this.notifySV.notify('Vượt quá số xu cho phép tặng', '3');
         return;
       }
     }
@@ -840,37 +862,54 @@ export class PopupAddCardsComponent implements OnInit {
     this.dt.detectChanges();
   }
 
+  clickAddGift() {
+    this.showPopupGift = !this.showPopupGift;
+    this.dt.detectChanges();
+  }
+
   // get gift infor
-  getGiftInfor(giftID: string) {
+  getGiftInfor(e: any) {
+    this.showPopupGift = !this.showPopupGift;
+    if (!e) return;
     this.min = 0;
     this.max = 0;
+    this.giftIDs = e.id;
+    let giftIDs = e.id.split(';');
 
-    if (giftID) {
-      this.api
-        .execSv('FD', 'ERM.Business.FD', 'GiftsBusiness', 'GetGiftAsync', [
-          giftID,
-        ])
-        .subscribe((res: any) => {
-          if (res) {
-            if (res.availableQty <= 0) {
+    if (giftIDs?.length > 0) {
+      let obs = giftIDs.map((x) =>
+        this.api.execSv(
+          'FD',
+          'ERM.Business.FD',
+          'GiftsBusiness',
+          'GetGiftAsync',
+          [x]
+        )
+      );
+      zip(obs).subscribe((res: any) => {
+        if (res) {
+          if (this.gifts.length != 0) {
+            this.gifts = [];
+          }
+          res.forEach((gift) => {
+            if (gift.availableQty <= 0) {
               this.form.patchValue({ giftID: '' });
-              this.notifySV.notify('Số dư quà tặng không đủ');
+              this.notifySV.notify('Số dư quà tặng không đủ', '3');
               this.dt.detectChanges();
             } else {
-              if (this.gifts.length != 0) {
-                this.gifts = [];
-              }
-              res.quantity = 1;
-              this.gifts.push(res);
-              this.form.patchValue({ giftID: giftID });
-              this.max = res.availableQty;
-              this.min = 1;
-              this.quantity = 1;
-              this.amount = this.quantity * this.gifts[0].price;
-              this.form.patchValue({ quantity: 1 });
+              gift.quantity = 1;
+              this.gifts.push(gift);
+              // this.form.patchValue({ giftID: giftID });
+              // this.max = res.availableQty;
+              // this.min = 1;
+              // this.quantity = 1;
+              // this.amount = this.quantity * this.gifts[0].price;
+              // this.form.patchValue({ quantity: 1 });
             }
-          }
-        });
+          });
+          this.updateAmountGift();
+        }
+      });
     } else {
       this.gifts = [];
       this.form.patchValue({ giftID: '' });
@@ -878,6 +917,25 @@ export class PopupAddCardsComponent implements OnInit {
       this.amount = 0;
       this.dt.detectChanges();
     }
+  }
+
+  updateQuantity(e: any, index: number) {
+    let quantity = e?.component?.crrValue || 1;
+    let gift = this.gifts[index];
+    if (quantity > gift.availableQty) {
+      gift.quantity = 1;
+      this.notifySV.notify('Vượt quá số dư quà tặng', '3');
+      return;
+    } else {
+      gift.quantity = quantity;
+    }
+    this.updateAmountGift();
+  }
+
+  updateAmountGift() {
+    this.amount = this.gifts.reduce((p, c) => {
+      return p + c.price * c.quantity;
+    }, 0);
   }
 
   addFile(evt: any) {

@@ -12,7 +12,7 @@
           <codx-label [formModel]="form.formModel" fiedName="AccountID"></codx-label>
           <codx-input [Group]="form.formGroup" [formModel]="form.formModel"
             [disabled]="form?.form?.data?._keyAuto == 'AccountID' ? true : false || form?.form?.data?.isEdit ? true : false"
-            field="accountID" (controlBlur)="valueChange($event)">
+            field="accountID">
           </codx-input>
         </div>
       </div>
@@ -20,7 +20,7 @@
         <div class="form-group">
           <codx-label [formModel]="form.formModel" fiedName="ParentID"></codx-label>
           <codx-input [Group]="form.formGroup" [formModel]="form.formModel"
-            field="parentID" (valueChange)="valueChange($event)">
+            field="parentID">
           </codx-input>
         </div>
       </div>
@@ -28,32 +28,32 @@
     <div class="form-group">
       <codx-label [formModel]="form.formModel" fiedName="AccountName"></codx-label>
       <codx-input [Group]="form.formGroup" field="accountName"
-        [formModel]="form.formModel" (controlBlur)="valueChange($event)">
+        [formModel]="form.formModel">
       </codx-input>
     </div>
     <div class="form-group">
       <codx-label [formModel]="form.formModel" fiedName="AccountType"></codx-label>
       <codx-input [Group]="form.formGroup" [formModel]="form.formModel"
-        field="accountType" (valueChange)="valueChange($event)">
+        field="accountType">
       </codx-input>
     </div>
     <div class="d-flex align-items-center mb-2">
       <div class="me-2">
-        <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="detail" (valueChange)="valueChange($event)">
+        <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="detail">
         </codx-input>
       </div>
       <codx-label [formModel]="form.formModel" fiedName="Detail"></codx-label>
     </div>
     <div class="d-flex align-items-center mb-2">
       <div class="me-2">
-        <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="multiCurrency" (valueChange)="valueChange($event)">
+        <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="multiCurrency">
         </codx-input>
       </div>
       <codx-label [formModel]="form.formModel" fiedName="MultiCurrency"></codx-label>
     </div>
     <div class="d-flex align-items-center mb-4">
       <div class="me-2">
-        <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="subLGControl" (valueChange)="valueChange($event)">
+        <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="subLGControl">
         </codx-input>
       </div>
       <codx-label [formModel]="form.formModel" fiedName="SubLGControl"></codx-label>
@@ -63,35 +63,33 @@
         <div class="form-group">
           <codx-label [formModel]="form.formModel" fiedName="SubLGType"></codx-label>
           <codx-input [disabled]="!form.form.data.subLGControl ? true : false" [Group]="form.formGroup" [formModel]="form.formModel"
-            field="subLGType" (valueChange)="valueChange($event)">
+            field="subLGType">
           </codx-input>
         </div>
       </div>
       <div class="col-6">
         <div class="form-group">
           <codx-label [formModel]="form.formModel" fiedName="ObjectID"></codx-label>
-          <codx-input [disabled]="!form.form.data.subLGControl ? true : false" [Group]="form.formGroup" [formModel]="form.formModel" field="objectID"
-          (valueChange)="valueChange($event)">
+          <codx-input [disabled]="!form.form.data.subLGControl ? true : false" [Group]="form.formGroup" [formModel]="form.formModel" field="objectID">
           </codx-input>
         </div>
       </div>
     </div>
     <div class="d-flex align-items-center mb-2">
       <div class="me-2">
-        <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="postDetail" (valueChange)="valueChange($event)">
+        <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="postDetail">
         </codx-input>
       </div>
       <codx-label [formModel]="form.formModel" fiedName="PostDetail"></codx-label>
     </div>
     <div class="form-group">
       <codx-label [formModel]="form.formModel" fiedName="Note"></codx-label>
-      <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="note" tab-index = "13"
-        (valueChange)="valueChange($event)">
+      <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="note" tab-index = "13">
       </codx-input>
     </div>
     <div class="d-flex align-items-center">
       <div class="me-2">
-        <codx-input [formModel]="form.formModel" field="stop" (valueChange)="valueChange($event)" tab-index=""
+        <codx-input [formModel]="form.formModel" field="stop" tab-index=""
         [Group]="form.formGroup">
         </codx-input>
       </div>
@@ -110,7 +108,7 @@
     <div class="form-group">
       <codx-label [formModel]="form.formModel" fiedName="DiM1Control"></codx-label>
       <codx-input [Group]="form.formGroup" [formModel]="form.formModel"
-        field="diM1Control" (valueChange)="valueChange($event)">
+        field="diM1Control">
       </codx-input>
     </div>
     <!-- <div class="form-group">
@@ -122,25 +120,25 @@
     <div class="form-group">
       <codx-label [formModel]="form.formModel" fiedName="DiM2Control"></codx-label>
       <codx-input [Group]="form.formGroup" [formModel]="form.formModel"
-        field="diM2Control" (valueChange)="valueChange($event)">
+        field="diM2Control">
       </codx-input>
     </div>
     <div class="form-group">
       <codx-label [formModel]="form.formModel" fiedName="DiM3Control"></codx-label>
       <codx-input [Group]="form.formGroup" [formModel]="form.formModel"
-        field="diM3Control" (valueChange)="valueChange($event)">
+        field="diM3Control">
       </codx-input>
     </div>
     <div class="form-group">
       <codx-label [formModel]="form.formModel" fiedName="LoanControl"></codx-label>
       <codx-input [Group]="form.formGroup" [formModel]="form.formModel"
-        field="loanControl" (valueChange)="valueChange($event)">
+        field="loanControl">
       </codx-input>
     </div>
     <div class="form-group">
       <codx-label [formModel]="form.formModel" fiedName="AssetControl"></codx-label>
       <codx-input [Group]="form.formGroup" [formModel]="form.formModel"
-        field="assetControl" (valueChange)="valueChange($event)">
+        field="assetControl">
       </codx-input>
     </div>
     <div class="mb-3 text-primary fw-bold fs-6">
@@ -151,7 +149,7 @@
         <div class="form-group">
           <codx-label [formModel]="form.formModel" fiedName="BudgetControl"></codx-label>
           <codx-input [Group]="form.formGroup" [formModel]="form.formModel"
-            field="budgetControl" (valueChange)="valueChange($event)">
+            field="budgetControl">
           </codx-input>
         </div>
       </div>
@@ -159,7 +157,7 @@
         <div class="form-group">
           <codx-label [formModel]="form.formModel" fiedName="balControl"></codx-label>
           <codx-input [Group]="form.formGroup" [formModel]="form.formModel"
-            field="balControl" (valueChange)="valueChange($event)">
+            field="balControl">
           </codx-input>
         </div>
       </div>
@@ -171,13 +169,13 @@
 <!-- Start: Footer -->
 <ng-template #footer>
   <div class="d-flex align-items-center justify-content-end btn-ac-footer mt-1">
-    <button id="btnsaveas" [shortcut]="'alt+shift+s'" [autoClick]="true" tab-index=""
+    <button id="btnsaveas" tab-index=""
       style="border: 1px solid var(--primary-dark) !important" type="button"
       (keydown.enter)="onSave('saveadd'); $event.preventDefault()" (click)="onSave('saveadd')" class="btn btn-md btn-light-primary me-2">
       <codx-label class="fw-normal" fiedName="lblSaveAndClear" default="Lưu & Thêm"></codx-label>
     </button>
-    <button [shortcut]="'alt+s'" [autoClick]="true"id="btnsave" type="button" tab-index=""
-      class="btn btn-md btn-light-primary" style="border: 1px solid var(--primary-dark) !important"
+    <button id="btnsave" type="button" tab-index=""
+      class="btn btn-md btn-primary" style="border: 1px solid var(--primary-dark) !important"
       (keydown.enter)="onSave('save'); $event.preventDefault()" (click)="onSave('save')">
       <codx-label class="fw-normal" fiedName="lblSave" default="Lưu"></codx-label>
     </button>

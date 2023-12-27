@@ -1,6 +1,19 @@
-import { Component, OnInit, AfterViewInit, ChangeDetectorRef, Optional } from "@angular/core";
-import { CacheService, AuthStore, NotificationsService, DialogRef, DialogData, ApiHttpService } from "codx-core";
-import { CodxEsService } from "../../../codx-es.service";
+import {
+  Component,
+  OnInit,
+  AfterViewInit,
+  ChangeDetectorRef,
+  Optional,
+} from '@angular/core';
+import {
+  CacheService,
+  AuthStore,
+  NotificationsService,
+  DialogRef,
+  DialogData,
+  ApiHttpService,
+} from 'codx-core';
+import { CodxEsService } from '../../../codx-es.service';
 
 @Component({
   selector: 'lib-popup-add-segment',
@@ -8,85 +21,139 @@ import { CodxEsService } from "../../../codx-es.service";
   styleUrls: ['./popup-add-segment.component.scss'],
 })
 export class PopupAddSegmentComponent implements OnInit, AfterViewInit {
-
-  dialog!:any;
-  data:any={};
-  model: any = {GridViewName: "grvAutoNumberSegments"}
-  headerText:string = "Thêm mới yếu tố";
-  colums:any=[];
-  attributeType:string='';
-  disableCharNum:boolean = true;
-  disableDataFormat:boolean = false;
-  disableDataFormatSelect:boolean = true;
-  diasbleAtt:boolean = false;
+  dialog!: any;
+  data: any = {};
+  model: any = { GridViewName: 'grvAutoNumberSegments' };
+  headerText: string = 'Thêm mới yếu tố';
+  colums: any = [];
+  attributeType: string = '';
+  disableCharNum: boolean = true;
+  disableDataFormat: boolean = false;
+  disableDataFormatSelect: boolean = true;
+  diasbleAtt: boolean = true;
   vllDataFormat: string = 'AD010';
-  autoNoSetting:any={};
-  constructor(private cache: CacheService,
+  autoNoSetting: any = {};
+  functionID: string = '';
+  function: any = {};
+  constructor(
+    private cache: CacheService,
     private cr: ChangeDetectorRef,
     private api: ApiHttpService,
     private notify: NotificationsService,
     @Optional() dialog: DialogRef,
-    @Optional() dt: DialogData){
-      this.dialog = dialog;
-      if(dt?.data && Object.keys(dt.data).length){
-       if(dt.data.segment) this.data= dt.data.segment;
-       if(dt.data.columns) this.colums = dt.data.columns;
-       if(dt.data.autoNoSetting) this.autoNoSetting = dt.data.autoNoSetting;
-       if(Object.keys(this.data).length == 0 && Object.keys(this.autoNoSetting).length){
-        this.data.numberSettingID = this.autoNoSetting.numberSettingID;
-       }
+    @Optional() dt: DialogData
+  ) {
+    this.dialog = dialog;
+    if (dt?.data && Object.keys(dt.data).length) {
+      if (dt.data.segment){
+        this.data = dt.data.segment;
+        this.headerText = 'Cập nhật'
+        if(this.data.dataType !='0') this.disableDataFormatSelect = false;
+        if(this.data.dataType =='2') this.vllDataFormat = 'AD010';
+        else this.vllDataFormat = 'AD012'
+        if(this.data.dataFormat){
+          this.data.charsNum = parseInt(this.data.dataFormat.match(/\d+/g)?.join(""));
+          this.data.dateFormat= this.data.dataFormat.match(/[a-z]+/gi).join("");
+        }
+        if (this.colums.length && this.data.atttributeName) {
+          let col = this.colums.find((x: any) => x.fieldName == this.data.atttributeName);
+          if (col) {
+            this.attributeType = col.dataType;
+            if (this.attributeType?.toLowerCase() == 'datetime') {
+              this.disableCharNum = true;
+              this.vllDataFormat = 'AD010';
+            }
+            if (this.attributeType?.toLowerCase() == 'string') {
+              this.vllDataFormat = 'AD012';
+              this.disableCharNum = false;
+            }
+          }
+        }
+
       }
+      if (dt.data.columns) this.colums = dt.data.columns;
+      if (dt.data.autoNoSetting) this.autoNoSetting = dt.data.autoNoSetting;
+      if (dt.data.functionID) this.functionID = dt.data.functionID;
+      if (
+        Object.keys(this.data).length == 0 &&
+        Object.keys(this.autoNoSetting).length
+      ) {
+        this.data.numberSettingID = this.autoNoSetting.numberSettingID;
+      }
+    }
   }
 
-  ngAfterViewInit(): void {
-
-  }
+  ngAfterViewInit(): void {}
   ngOnInit(): void {
+    if (this.functionID) {
+      this.cache.functionList(this.functionID).subscribe((res) => {
+        if (res) this.function = res;
 
+      });
+    }
   }
 
-  valueChange(e:any){
+  valueChange(e: any) {
     this.disableDataFormatSelect = false;
     this.disableCharNum = false;
     this.disableDataFormat = false;
     this.diasbleAtt = false;
 
     this.data[e.field] = e.data;
-    if(e.field == 'attributeName'){
-      if(this.colums.length){
-        let col = this.colums.find((x:any)=> x.fieldName ==e.data);
-        if(col){
+    if (e.field == 'atttributeName') {
+      if (this.colums.length) {
+        let col = this.colums.find((x: any) => x.fieldName == e.data);
+        if (col) {
           this.attributeType = col.dataType;
         }
       }
+    }
+    if(e.field == 'dataType'){
+      if(e.data=='1'){
+        this.data.autoNumber=true;
+      }
+      else  this.data.autoNumber=false;
     }
     switch (this.data.dataType) {
       case '0':
         this.disableDataFormatSelect = true;
         this.disableCharNum = true;
         this.disableDataFormat = false;
+        this.vllDataFormat = 'AD012';
         this.diasbleAtt = true;
         break;
       case '1':
         this.disableDataFormat = true;
+        this.disableDataFormatSelect = true;
         this.disableCharNum = true;
-      break;
+        this.diasbleAtt = true;
+        this.vllDataFormat = 'AD012';
+        break;
       case '2':
         this.disableDataFormat = true;
+        this.disableDataFormatSelect = false;
+        this.diasbleAtt = true;
         this.vllDataFormat = 'AD010';
         this.disableCharNum = true;
-      break;
+        break;
       case '4':
         this.disableDataFormat = true;
-        if( this.attributeType?.toLowerCase() =='datetime'){
+        this.disableDataFormatSelect = false;
+        if (this.attributeType?.toLowerCase() == 'datetime') {
           this.disableCharNum = true;
+          this.vllDataFormat = 'AD010';
         }
-        if(this.attributeType?.toLowerCase() == 'string'){
+        if (this.attributeType?.toLowerCase() == 'string') {
           this.vllDataFormat = 'AD012';
           this.disableCharNum = false;
         }
-      break;
-
+        break;
+    }
+    if(e.field=='charsNum'){
+      if(this.data.dateFormat) this.data.dataFormat = e.data + this.data.dateFormat;
+    }
+    if(e.field=='dateFormat'){
+      if(this.data.charsNum) this.data.dataFormat =this.data.charsNum+ e.data;
     }
     // if(this.data.dataType != '0'){
     //   this.disableDataFormat = true;
@@ -106,13 +173,13 @@ export class PopupAddSegmentComponent implements OnInit, AfterViewInit {
     // }
   }
 
-  onSaveForm(){
-    if(this.data.dataType && this.data.dataType !='0'){
-      if(this.data.dateFormat) this.data.dataFormat =this.data.dateFormat ;
-      if(this.data.charsNum) this.data.dataFormat = this.data.charsNum+this.data.dataFormat
+  onSaveForm() {
+    if (this.data.dataType && this.data.dataType != '0') {
+      if (this.data.dateFormat) this.data.dataFormat = this.data.dateFormat;
+      if (this.data.charsNum)
+         this.data.dataFormat = this.data.charsNum + this.data.dataFormat;
     }
 
     this.dialog.close(this.data);
   }
-
 }

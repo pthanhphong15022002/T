@@ -93,7 +93,6 @@
     [icoStatusVll2]="'TM005'"
     [title]="data.userName"
     [subTitle]="data.positionName"
-    [content]="data.taskName"
     [status]="data.status"
     [statusVll]="vllStatus"
     [showBgColorVll]="true"
@@ -104,11 +103,45 @@
     [setting]="setting"
     [footer]="cardImgFooter"
     [dataItem]="data"
+    [contentTmp]="cardContent"
   >
   </codx-card-img>
 </ng-template>
+<!-- [contentTmp]="" thay [content]="data.taskName"-->
+<ng-template #cardContent let-data>
+  <div class="line-clamp-card">
+    <span
+      [ngbPopover]="toolTipTaskName"
+      #popToolTip="ngbPopover"
+      [openDelay]="500"
+      (mouseenter)="popToolTip.open()"
+      (mouseleave)="popToolTip.close()"
+      placement="top right bottom left"
+      container="body"
+      >{{ data?.taskName }}</span
+    >
+  </div>
+  <ng-template #toolTipTaskName>
+    <div>{{ data?.taskName }}</div>
+  </ng-template>
+</ng-template>
 
 <ng-template #cardImgFooter let-data let-setting="setting">
+  <!-- <div class="d-flex flex-column text-content flex-grow-1">
+    <span
+      [ngbPopover]="toolTipTaskName"
+      #popToolTip="ngbPopover"
+      [openDelay]="500"
+      (mouseenter)="popToolTip.open()"
+      (mouseleave)="popToolTip.close()"
+      placement="top right bottom left"
+      container="body"
+      >{{ data?.taskName }}</span
+    >
+  </div>
+  <ng-template #toolTipTaskName>
+    <div>{{ data?.taskName }}</div>
+  </ng-template> -->
   <div class="d-flex flex-column flex-grow-1">
     <div
       *ngIf="setting?.tags"
@@ -172,33 +205,21 @@
           </div>
         </ng-container>
         <ng-container *ngIf="setting?.countObjects">
-          <codx-comment-temp
+          <!-- <codx-comment-temp
             [objectID]="data.recID"
             [viewType]="3"
             [openViewPopup]="true"
-          ></codx-comment-temp>
-
-          <!-- <div
-            class="d-flex align-items-center position-relative me-4"
-            (click)="openPopupTodoList(data.taskID)"
-          >
-            <span class="icon-i-check2-square icon-18 text-gray-400"></span>
-            <span
-              *ngIf="data?.todo > 0"
-              class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-primary badge-sm mn-6"
-              >{{ data?.todo }}</span
-            >
-          </div> -->
+          ></codx-comment-temp> -->
           <codx-task-goal-temp
             [taskID]="data.taskID"
             [countData]="data?.todo"
           ></codx-task-goal-temp>
-          <codx-attachment-temp
+          <!-- <codx-attachment-temp
             [objectID]="data?.recID"
             [formModel]="view.formModel"
             [viewType]="3"
             [openViewPopup]="true"
-          ></codx-attachment-temp>
+          ></codx-attachment-temp> -->
         </ng-container>
       </div>
       <div class="ms-3 h-25px mt-3" id="{{ data.taskID }}">
@@ -261,7 +282,7 @@
           ></span>
           <span
             id="icon-{{ data.recID }}"
-            class="icon-keyboard_arrow_right mt-1 icon-14 align-item-center justify-content-center"
+            class="icon-keyboard_arrow_right icon-14 align-item-center justify-content-center"
           >
           </span>
         </div>

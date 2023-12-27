@@ -51,6 +51,46 @@
       >
       </codx-input>
     </div>
+    <div class="form-group">
+      <codx-label class="me-4" name="lblIDCardType" default="Giấy tờ cá nhân" [formModel]="formModel"> </codx-label>
+      <codx-input
+      name="idCardRadio" class="me-4"
+        field="idCardType1"
+        type="radio"
+        [checked]="true"
+        [label]="'CCCD'"
+        (valueChange)="cardTypeChange($event,'1')"
+      >
+      </codx-input>
+      <codx-input  class="me-4"
+      name="idCardRadio"
+        field="idCardType2"
+        type="radio"
+        [checked]="false"
+        [label]="'CMND'"
+        (valueChange)="cardTypeChange($event,'2')"
+      >
+      </codx-input>
+      <codx-input class="me-4"
+        name="idCardRadio"
+        field="idCardType3"
+        type="radio"
+        [checked]="false"
+        [label]="'Hộ chiếu'"
+        (valueChange)="cardTypeChange($event,'3')"
+      >
+      </codx-input>
+    </div>
+    <div class="form-group">
+      <codx-label name="lblIDCardNo"  default="Số giấy tờ"  [formModel]="formModel"> </codx-label>
+      <codx-input
+        field="idCardNo"
+        type="text"
+        [crrValue]="data?.idCardNo"
+        (valueChange)="valueChange($event)"
+      >
+      </codx-input>
+    </div>
   </ng-template>
 
   <ng-template #footer>

@@ -54,7 +54,7 @@ th {
 
 .table thead th {
   vertical-align: bottom;
-  border-bottom: 2px solid #ebedf3;
+  border-bottom:1px solid var(--gray-200);
 }
 
 

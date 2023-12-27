@@ -1,5 +1,5 @@
 <div class="notify-popup">
-  <codx-form [body]="body" [dialog]="dialogRef" [subHeader]="subheader"></codx-form>
+  <codx-form [body]="body" [dialog]="dialogRef" [subHeader]="subheader" *ngIf="isAfterRender"></codx-form>
 </div>
 <ng-template #subheader>
 </ng-template>
@@ -10,13 +10,13 @@
       <ul class="nav nav-tabs w-100 border-0">
         <li class="nav-item ms-3">
           <a [class.active]="mode=='0'" class="nav-link" (click)="clickTab('0')">
-            <codx-label class="text-uppercase" [formModel]="dialogRef.formModel" name="lblNotification"
+            <codx-label class="text-uppercase" [formModel]="dialogRef.formModel" name="lblNotification"  [gridViewName]="funcList?.gridViewName" [formName]="funcList?.formName"
               default="Thông báo"></codx-label>
           </a>
         </li>
         <li class="nav-item">
           <a [class.active]="mode=='1'" class="nav-link" (click)="clickTab('1')">
-            <codx-label class="text-uppercase" [formModel]="dialogRef.formModel" name="lblBookmark"
+            <codx-label class="text-uppercase" [formModel]="dialogRef.formModel" name="lblBookmark"  [gridViewName]="funcList?.gridViewName" [formName]="funcList?.formName"
               default="Đã ghim"></codx-label>
           </a>
         </li>

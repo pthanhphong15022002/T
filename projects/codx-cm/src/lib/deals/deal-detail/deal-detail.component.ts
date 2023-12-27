@@ -37,15 +37,18 @@ export class DealDetailComponent implements OnInit {
   @Input() listSteps: any;
   @Input() colorReasonSuccess: any;
   @Input() colorReasonFail: any;
-  @Input() valueListStatusCode: any;
+  // @Input() valueListStatusCode: any;
   @Input() funcID = 'CM0201'; //
   @Input() checkMoreReason = true;
   @Input() isChangeOwner = false;
+  @Input() taskAdd;
 
   @Output() clickMoreFunc = new EventEmitter<any>();
   @Output() changeMF = new EventEmitter<any>();
   // @Output() saveAssign = new EventEmitter<any>(); ko can tra ve
   @Output() changeProgress = new EventEmitter<any>();
+  @Output() changeDataCustomers = new EventEmitter<any>();
+
   @ViewChild('tabDetailView', { static: true })
   tabDetailView: TemplateRef<any>;
   @ViewChild('popDetail') popDetail: TemplateRef<any>;
@@ -103,12 +106,12 @@ export class DealDetailComponent implements OnInit {
   viewSettings: any;
   contactPerson: any;
   oCountFooter: any = {};
-  stepCurrent:any;
+  stepCurrent: any;
 
   isShow: boolean = false;
   isCategoryCustomer: boolean = false;
   hasRunOnce: boolean = false;
-  isHaveField:boolean = false;
+  isHaveField: boolean = false;
   customerName;
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
@@ -173,7 +176,7 @@ export class DealDetailComponent implements OnInit {
         changes['dataSelected'].currentValue != null &&
         changes['dataSelected'].currentValue?.recID
       ) {
-        var index = this.tabControl.findIndex((x) => x.name === 'Deal');
+        let index = this.tabControl.findIndex((x) => x.name === 'Deal');
         if (index != -1) {
           this.tabControl.splice(index, 1);
         }
@@ -193,9 +196,11 @@ export class DealDetailComponent implements OnInit {
         }
         this.oldRecId = changes['dataSelected'].currentValue.recID;
         this.dataSelected = this.dataSelected;
-        this.codxCmService.getCustomerNameByrecID(this.dataSelected?.customerID).subscribe(res =>{
-          this.customerName = res;
-        });
+        this.codxCmService
+          .getCustomerNameByrecID(this.dataSelected?.customerID)
+          .subscribe((res) => {
+            this.customerName = res;
+          });
       }
     }
   }
@@ -203,13 +208,13 @@ export class DealDetailComponent implements OnInit {
   async promiseAllAsync() {
     this.isDataLoading = true;
     try {
-      await this.getListInstanceStep();
-      await this.getTree(); //ve cay giao viec
+      this.dataSelected.applyProcess && (await this.getListInstanceStep());
       // await this.getListContactByDealID(
       //   this.dataSelected.recID,
       //   this.dataSelected?.categoryCustomer
       // );
-      // await this.getHistoryByDeaID();
+      await this.getTree(); //ve cay giao viec
+      await this.getHistoryByDeaID();
       await this.getViewDetailDeal();
     } catch (error) {}
   }
@@ -268,17 +273,15 @@ export class DealDetailComponent implements OnInit {
   }
   async executeApiCalls() {
     try {
-
-  //    await this.getGridViewQuotation();
-   //   await this.getGridViewContract();
- //     await this.getGridViewLead();
-    //  await this.getValueList();
-   //   await this.getValueListRole();
-    //  await this.getListStatusCode();
+      //    await this.getGridViewQuotation();
+      //   await this.getGridViewContract();
+      //     await this.getGridViewLead();
+      //  await this.getValueList();
+      //   await this.getValueListRole();
+      //  await this.getListStatusCode();
       await this.getGrvViewDetailDealAsync();
     } catch (error) {}
   }
-
 
   getGrvViewDetailDealAsync() {
     this.codxCmService.getSettingViewDetailDealAsync().subscribe((res) => {
@@ -290,8 +293,6 @@ export class DealDetailComponent implements OnInit {
       }
     });
   }
-
-
 
   // async getValueListRole() {
   //   this.cache.valueList('CRM040').subscribe((res) => {
@@ -353,35 +354,40 @@ export class DealDetailComponent implements OnInit {
   //       }
   //     });
   // }
-  // async getHistoryByDeaID() {
-  //   if (this.dataSelected?.recID) {
-  //     var data = [this.dataSelected?.recID];
-  //     this.codxCmService.getDataTabHistoryDealAsync(data).subscribe((res) => {
-  //       if (res) {
-  //         this.mergedList = res[0];
-  //       }
-  //     });
-  //   }
-  // }
+  async getHistoryByDeaID() {
+    if (this.dataSelected?.recID) {
+      let data = [this.dataSelected?.recID];
+      this.codxCmService.getDataTabHistoryDealAsync(data).subscribe((res) => {
+        if (res) {
+          this.mergedList = res;
+        }
+      });
+    }
+  }
   async getViewDetailDeal() {
     if (this.dataSelected?.recID) {
-      let data = [this.dataSelected?.recID,this.dataSelected?.customerCategory];
+      let data = [
+        this.dataSelected?.recID,
+        this.dataSelected?.customerCategory,
+      ];
       this.codxCmService.getViewDetailDealAsync(data).subscribe((res) => {
         if (res) {
-          if(res[0] && res[0].length > 0 ) {
-              let listContact = res[0];
-              let contactMain = listContact.filter(x=>x.isDefault)[0];
-              this.contactPerson = contactMain ? contactMain : null;
-              this.loadContactDeal && this.loadContactDeal?.loadListContact(listContact);
-          }
-          else {
+          if (res[0] && res[0].length > 0) {
+            let listContact = res[0];
+            let contactMain = listContact.filter((x) => x.isDefault)[0];
+            this.contactPerson = contactMain ? contactMain : null;
+          } else {
             this.contactPerson = null;
-            this.loadContactDeal && this.loadContactDeal?.loadListContact([]);
           }
           this.mergedList = res[1];
         }
       });
     }
+  }
+
+  loadContactEdit() {
+    this.loadContactDeal && this.loadContactDeal?.getListContacts();
+    this.changeDetectorRef.detectChanges();
   }
   // async getContactByDeaID(recID) {
   //   this.codxCmService.getContactByObjectID(recID).subscribe((res) => {
@@ -412,7 +418,7 @@ export class DealDetailComponent implements OnInit {
     if ($event) {
       this.contactPerson = $event?.isDefault ? $event : null;
       this.changeDetectorRef.detectChanges();
-    }else{
+    } else {
       this.contactPerson = null;
     }
   }
@@ -445,22 +451,24 @@ export class DealDetailComponent implements OnInit {
     this.codxCmService.getViewDetailInstanceStep(data).subscribe((res) => {
       if (res) {
         this.listSteps = res[0];
-        this.isHaveField =res[1];
+        this.isHaveField = res[1];
         if (this.listSteps) {
           this.lstStepsOld = JSON.parse(JSON.stringify(this.listSteps));
           this.getStepCurrent(this.dataSelected);
         }
         this.isDataLoading = false;
         this.checkCompletedInstance(this.dataSelected?.status);
-      }
-      else {
+      } else {
         this.listSteps = [];
-        this.isHaveField =false;
+        this.isHaveField = false;
       }
     });
   }
   getStepCurrent(data) {
-    this.stepCurrent = this.listSteps.filter(x=>x.stepID == data.stepID)[0];
+    this.stepCurrent = null;
+    if( this.listSteps != null &&  this.listSteps.length > 0) {
+      this.stepCurrent = this.listSteps.filter((x) => x.stepID == data.stepID)[0];
+     }
   }
   checkCompletedInstance(dealStatus: any) {
     if (dealStatus == '1' || dealStatus == '2' || dealStatus == '0') {
@@ -669,10 +677,10 @@ export class DealDetailComponent implements OnInit {
 
   lstContactEmit(e) {
     this.lstContacts = e ?? [];
-    let index = this.lstContacts.findIndex(x => x.isDefault);
-    if(index != -1){
+    let index = this.lstContacts.findIndex((x) => x.isDefault);
+    if (index != -1) {
       this.getContactPerson(this.lstContacts[index]);
-    }else{
+    } else {
       this.getContactPerson(null);
     }
     this.changeDetectorRef.detectChanges();
@@ -830,13 +838,19 @@ export class DealDetailComponent implements OnInit {
     this.oCountFooter = JSON.parse(JSON.stringify(oCountFooter));
     this.changeDetectorRef.detectChanges();
   }
-  getStatusCode(status) {
-    if(status) {
-      let result = this.valueListStatusCode.filter(x=>x.value === status)[0];
-      if(result) {
-        return result?.text;
-      }
-    }
-    return '';
+  // getStatusCode(status) {
+  //   if(status) {
+  //     let result = this.valueListStatusCode.filter(x=>x.value === status)[0];
+  //     if(result) {
+  //       return result?.text;
+  //     }
+  //   }
+  //   return '';
+  // }
+
+  //#region edit customer
+  editCustomer(data) {
+    this.changeDataCustomers.emit({ data: data });
   }
+  //#endregion
 }

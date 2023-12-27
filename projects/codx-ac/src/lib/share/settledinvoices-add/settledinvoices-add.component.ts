@@ -52,8 +52,13 @@ export class SettledInvoicesAdd extends UIComponent implements OnInit {
   dataValues: string;
   objectName:any;
   isDblCLick: boolean = false;
-  oldSelected: any = [];
   dataFilter:any = {};
+  dataSourceBefore:any;
+  selectRow:any=[];
+  typePay:any;
+  baseCurr:any;
+  isPreventLoad:any = false;
+  selectionOptions:SelectionSettingsModel = {checkboxOnly:true, type: 'Single' };
   private destroy$ = new Subject<void>();
   constructor(
     inject: Injector,
@@ -67,6 +72,7 @@ export class SettledInvoicesAdd extends UIComponent implements OnInit {
     this.cashpayment = dialogData.data.cashpayment;
     this.objectName = dialogData.data.objectName;
     this.title = dialogData.data.title;
+    this.typePay = this.cashpayment.totalAmt == 0 ? 0 : 1;
     this.gridModel.page = 1;
   }
   //#endregion Constructor
@@ -75,11 +81,19 @@ export class SettledInvoicesAdd extends UIComponent implements OnInit {
   onInit(): void {
     this.acService.setPopupSize(this.dialog, '80%', '90%'); 
     this.setDefault();
-    let type = this.cashpayment.totalAmt == 0 ? 0 : 1; 
-    this.getDataSubInvoice(type);
+    this.loadData(this.typePay);
   }
 
-  ngAfterViewInit() {}
+  ngAfterViewInit() {
+    this.cache
+      .companySetting()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res: any) => {
+        if (res.length > 0) {
+          this.baseCurr = res[0].baseCurr;
+        }
+      });
+  }
 
   ngDoCheck() {
     this.detectorRef.detectChanges();
@@ -88,6 +102,17 @@ export class SettledInvoicesAdd extends UIComponent implements OnInit {
   onDestroy() {
     this.destroy$.next();
     this.destroy$.complete();
+  }
+
+  beforeInitGrid(eleGrid:CodxGridviewV2Component){
+    this.settingFormatGridSettledInvoices(eleGrid);
+    let hideFields = [];
+    if (this.cashpayment.currencyID == this.baseCurr) {
+      hideFields.push('BalAmt2');
+      hideFields.push('SettledAmt2');
+      hideFields.push('CashDisc2');
+    }
+    eleGrid.showHideColumns(hideFields);
   }
 
   /**
@@ -111,41 +136,26 @@ export class SettledInvoicesAdd extends UIComponent implements OnInit {
    * @returns 
    */
   onSelected(event) {
+    if(this.grid.editSelectedItem) return;
     if (event) {
-      let index = this.grid.editIndex;
-      if(index == 0) this.grid.editSelectedItem = false;
       let data = event;
       if (data?.settledAmt != 0) return;
-      if(!this.oldSelected.includes(data._rowIndex)) this.oldSelected.push(data._rowIndex);
-      this.acService.execApi('AC', 'SettledInvoicesBusiness', 'SettlementOneLineAsync', [
-        data,
+      this.api.exec('AC', 'SettledInvoicesBusiness', 'AutoPayOnLineAsync', [
+        [data],
         this.dataFilter?.accountID ? this.dataFilter.accountID : '',
         this.cashpayment.objectID,
         this.cashpayment.journalType,
         this.cashpayment.voucherDate,
-        data?.cashDiscDate,
         this.cashpayment.currencyID,
-        this.cashpayment.exchangeRate,
-        this.dataFilter.payAmt,
+        this.cashpayment.exchangeRate
       ]).pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
-        if (res) {
-          this.grid.updateRow(data._rowIndex,res,false);
-          if (data._rowIndex && Array.isArray(data._rowIndex)) {
-            this.oldSelected = data._rowIndex;
-          }
-          setTimeout(() => {
-            this.grid.gridRef?.selectRows(this.oldSelected);
-            if(index != 0) this.grid.gridRef.startEdit();
-            //if(this.grid.editIndex != 0) this.grid.gridRef.startEdit();
-            
-            // if (this.isDblCLick) {
-            //   this.isDblCLick = false;
-            //   this.grid.gridRef.startEdit();
-            //   this.detectorRef.detectChanges();
-            // } else {
-            //   this.grid.gridRef?.selectRows(this.grid.selectedIndexes);
-            // }     
-          },20);
+        if (res.length) {
+          res.reduce((pre, data) => { 
+            this.grid.gridRef.setCellValue(data.recID,'settledAmt',data.settledAmt);
+            this.grid.gridRef.setCellValue(data.recID,'settledAmt2',data.settledAmt2);
+            this.grid.gridRef.setCellValue(data.recID,'cashDisc',data.cashDisc);
+            this.grid.gridRef.setCellValue(data.recID,'cashDisc2',data.cashDisc2);
+          }, {});
         }
       }) 
     }
@@ -157,15 +167,50 @@ export class SettledInvoicesAdd extends UIComponent implements OnInit {
    */
   onDeselected(event:any){
     let arrdata = [];
-    if(event && !event?.data.length) return;
+    if(!event.target) return;
+    if(event && !event?.data.length){
+      let data = event?.data;
+      this.grid.gridRef.setCellValue(data?.recID, 'settledAmt', 0);
+      this.grid.gridRef.setCellValue(data?.recID, 'settledAmt2', 0);
+      this.grid.gridRef.setCellValue(data?.recID, 'cashDisc', 0);
+      this.grid.gridRef.setCellValue(data?.recID, 'cashDisc2', 0);
+      return;
+    } 
     arrdata = event?.data;
-    arrdata.forEach(data => {
-      let index = this.grid.arrSelectedRows.findIndex(
-        (x) => x.recID == data.recID
-      );
-      if(index > -1) this.grid.arrSelectedRows.splice(index,1);
-    });
+    arrdata.reduce((pre, data) => { 
+      this.grid.gridRef.setCellValue(data.recID,'settledAmt',0);
+      this.grid.gridRef.setCellValue(data.recID,'settledAmt2',0);
+      this.grid.gridRef.setCellValue(data.recID,'cashDisc',0);
+      this.grid.gridRef.setCellValue(data.recID,'cashDisc2',0);
+    }, this.subInvoices);
+    this.grid.arrSelectedRows = [];
     this.detectorRef.detectChanges();
+  }
+
+  onCheckAll(event:any){
+    if (event) {
+      if(!event?.checked) return;
+      if(event?.checked && event.target.closest('.e-checkselectall') != null){
+        this.api.exec('AC', 'SettledInvoicesBusiness', 'AutoPayOnLineAsync', [
+          this.grid.arrSelectedRows,
+          this.dataFilter?.accountID ? this.dataFilter.accountID : '',
+          this.cashpayment.objectID,
+          this.cashpayment.journalType,
+          this.cashpayment.voucherDate,
+          this.cashpayment.currencyID,
+          this.cashpayment.exchangeRate
+        ]).pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
+          if (res.length) {
+            res.reduce((pre, data) => { 
+              this.grid.gridRef.setCellValue(data.recID,'settledAmt',data.settledAmt);
+              this.grid.gridRef.setCellValue(data.recID,'settledAmt2',data.settledAmt2);
+              this.grid.gridRef.setCellValue(data.recID,'cashDisc',data.cashDisc);
+              this.grid.gridRef.setCellValue(data.recID,'cashDisc2',data.cashDisc2);
+            }, {});
+          }
+        }) 
+      }
+    }
   }
 
   /**
@@ -177,6 +222,7 @@ export class SettledInvoicesAdd extends UIComponent implements OnInit {
     if (!e.data || typeof e.data === 'undefined') {
       this.mapPredicates.delete(field);
       this.mapDataValues.delete(field);
+      if(e.field.toLowerCase() == 'payamt') this.dataFilter.payAmt = 0;
       return;
     }
     switch(e.field.toLowerCase()){
@@ -212,67 +258,51 @@ export class SettledInvoicesAdd extends UIComponent implements OnInit {
         if(e.data == '4') this.gridModel.sort = [{ field: 'BalAmt', dir: 'asc' },{ field: 'InvoiceDueDate', dir: 'asc' }];
         if(e.data == '5') this.gridModel.sort = [{ field: 'BalAmt', dir: 'desc' },{ field: 'InvoiceDueDate', dir: 'asc'}];
         break;
-      case 'payAmt':
+      case 'payamt':
         this.dataFilter.payAmt = e.data;
         break;
     }
   }
 
-  /**
-   * *Hàm set predicate
-   * @param type 
-   */
-  getDataSubInvoice(type:number) {
-    let predicates = Array.from(
-      this.mapPredicates,
-      ([name, value]) => value
-    ).join('|');
-    let dataValues = Array.from(
-      this.mapDataValues,
-      ([name, value]) => value
-    ).join('|');
-
-    this.gridModel.predicates = predicates;
-    this.gridModel.dataValues = dataValues;
-    this.loadData(type);
+  valueChangeLine(event:any){
+    let oLine = event.data;
+    this.grid.startProcess();
+    switch (event.field.toLowerCase()) {
+      case 'settledamt':
+        this.api.exec('AC', 'SettledInvoicesBusiness', 'ValueChangedAsync', [
+          event.field,
+          oLine,
+          this.cashpayment.voucherDate,
+          this.cashpayment.currencyID,
+          this.cashpayment.exchangeRate
+        ]).pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
+          if (res) {
+            this.grid.gridRef.setCellValue(res?.recID, 'settledAmt', res?.settledAmt);
+            this.grid.gridRef.setCellValue(res?.recID, 'settledAmt2', res?.settledAmt2);
+            this.grid.gridRef.setCellValue(res?.recID, 'cashDisc', res?.cashDisc);
+            this.grid.gridRef.setCellValue(res?.recID, 'cashDisc2', res?.cashDisc2);
+            this.grid.endProcess();
+          }
+        }) 
+        break;
+    }
   }
 
   /**
    * *Hàm xử lí click chọn hóa đơn
    */
   apply() {
-    let data = this.grid.arrSelectedRows;
     this.api
-      .exec('AC', 'SettledInvoicesBusiness', 'SaveListSettledInvoicesAsync', [
+      .exec('AC', 'SettledInvoicesBusiness', 'SaveListAsync', [
         this.cashpayment,
-        data,
+        this.grid.arrSelectedRows,
       ])
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
         if (res) {
-          this.dialog.close(data);
+          this.dialog.close(true);
         }
       });
-  }
-
-  paymentAmt(data) {
-    // let data = this.sublegendOpen;
-    let termID = [];
-    data.filter((x) => {
-      if (x.invoiceDueDate <= this.cashpayment.voucherDate && x.pmtTermID)
-        termID.push(x.pmtTermID);
-    });
-
-    if (termID) {
-      this.acService.execApi('BS',
-      'PaymentTermsBusiness',
-      'GetListPmtAsync',
-      JSON.stringify(termID)).pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
-        if(res){
-          this.handSettledAmt(data, res);
-        }
-      })
-    } else this.handSettledAmt(data);
   }
 
   /**
@@ -285,6 +315,20 @@ export class SettledInvoicesAdd extends UIComponent implements OnInit {
   //#endregion Event
 
   //#region Function
+
+  /**
+   * *Hàm set predicate
+   * @param type 
+   */
+  getDataSubInvoice(type:number) {
+    if (type == 1) {
+      if (this.dataFilter.payAmt == 0) {
+        this.notification.notifyCode('E0510',0);
+        return;
+      }
+    }
+    this.loadData(type);
+  }
 
   /**
    * *Hàm set date predicate
@@ -302,62 +346,23 @@ export class SettledInvoicesAdd extends UIComponent implements OnInit {
   }
 
   /**
-   * *Hàm tính chiết khấu,tiền chi trả
-   * @param data 
-   * @param terms 
-   */
-  handSettledAmt(data = [], terms = []) {
-    let pay = this.dataFilter.payAmt;
-    let len = data.length;
-    let indexes = this.grid.selectedIndexes;
-    data.forEach((e: any, i: number) => {
-      if (e.invoiceDueDate <= this.cashpayment.voucherDate) {
-        let settled = terms.find((x) => x.pmtTermID == e.pmtTermID);
-        let mustPay = e.balanceAmt;
-        let settledDisc = e.settledDisc || 0;
-        if (pay > 0) {
-          // Tinh chiet khau
-          if (
-            (settled && settled.discPartial) ||
-            (!settled.discPartial && e.balanceAmt == pay)
-          ) {
-            settledDisc = settled.discPct * e.balanceAmt;
-          }
-
-          //Tinh so tien chi tra
-          mustPay = e.balanceAmt - settledDisc;
-
-          if (pay > mustPay) {
-            e.settledAmt = mustPay;
-            pay -= mustPay;
-          } else {
-            e.settledAmt = pay;
-            pay = 0;
-          }
-          // this.grid.gridRef.updateRow(e._rowIndex, e);
-          // setTimeout(() => {
-          //   this.grid.gridRef?.selectRow(e._rowIndex);
-          // }, 100);
-        }
-        e.settledDisc = settledDisc;
-        if (i == len - 1) {
-          //  this.grid.gridRef.refresh();
-          this.subInvoices = data;
-          setTimeout(() => {
-            this.grid.gridRef?.selectRows(indexes);
-          }, 100);
-        }
-      }
-    });
-  }
-
-  /**
    * *Hàm load lọc dữ liệu
    * @param type 
    */
   loadData(type) {
+    let predicates = Array.from(
+      this.mapPredicates,
+      ([name, value]) => value
+    ).join('|');
+    let dataValues = Array.from(
+      this.mapDataValues,
+      ([name, value]) => value
+    ).join('|');
+
+    this.gridModel.predicates = predicates;
+    this.gridModel.dataValues = dataValues;
     this.gridModel.entityName = 'AC_SubInvoices';
-    this.acService.execApi('AC', 'SettledInvoicesBusiness', 'LoadSettledAsync', [
+    this.api.exec('AC', 'SettledInvoicesBusiness', 'LoadSettledAsync', [
       this.gridModel,
       this.dataFilter?.accountID ? this.dataFilter.accountID : '',
       this.cashpayment.objectID,
@@ -371,14 +376,9 @@ export class SettledInvoicesAdd extends UIComponent implements OnInit {
       if (res && res.length) {
         if (res[0].length > 0) {
           this.subInvoices = res[0];
-          if (type == 1) {
-            setTimeout(() => {
-              this.grid.gridRef?.selectRows(res[2]);
-            }, 100);
-          }
-          setTimeout(() => {
-            this.grid.refresh();
-          });     
+          this.selectRow = res[2];
+          this.dataSourceBefore = JSON.stringify(this.subInvoices);
+          this.isPreventLoad = true;
           this.detectorRef.detectChanges();
         }else{
           this.notification.notifyCode('AC0027');
@@ -387,40 +387,36 @@ export class SettledInvoicesAdd extends UIComponent implements OnInit {
     })
   }
 
-  /**
-   * *Hàm cấn trừ tự động
-   * @param data 
-   */
-  autoPay(data: []) {
-    let accID = this.form.formGroup.controls.accountID.value;
-    this.acService.execApi('AC', 'SettledInvoicesBusiness', 'SettlementAsync', [
-      data,
-      this.cashpayment,
-      accID,
-      this.dataFilter.payAmt,
-    ]).pipe(takeUntil(this.destroy$)).subscribe((res)=>{
-      if (res) {
-        this.subInvoices = res[0];
-        setTimeout(() => {
-          this.grid.gridRef?.selectRows(res[1]);
-        }, 100);
-      }
-    })
-  }
-  onDoubleClick(e: any) {
-    if (e.rowIndex) {
-      this.isDblCLick = true;
-      this.grid.gridRef.selectRow(e.rowIndex);
+  onAction(event: any) {
+    switch (event.type) {
+      case 'refresh':
+        if (this.typePay == 1) {
+          this.grid.gridRef?.selectRows(this.selectRow);
+        }
+        if(this.isPreventLoad){
+          this.isPreventLoad = false;
+          return;
+        }
+        if (this.dataSourceBefore) {
+          this.isPreventLoad = true;
+          this.subInvoices = JSON.parse(this.dataSourceBefore);
+        }
+        break;
     }
   }
 
-  onAction(e: any) {
-    if (e.type == 'endEdit') {
-      if (this.oldSelected && this.oldSelected.length && this.grid.gridRef) {
-        setTimeout(() => {
-          this.grid.gridRef.selectRows(this.oldSelected);
-        }, 500);
-      }
+  settingFormatGridSettledInvoices(eleGrid){
+    let setting = eleGrid.systemSetting;
+    if (this.cashpayment.currencyID == this.baseCurr) { //? nếu chứng từ có tiền tệ = đồng tiền hạch toán
+      eleGrid.setFormatField('balAmt','n'+(setting.dBaseCurr || 0));
+      eleGrid.setFormatField('balAmt2','n'+(setting.dBaseCurr || 0));
+      eleGrid.setFormatField('settledAmt','n'+(setting.dBaseCurr || 0));
+      eleGrid.setFormatField('settledAmt2','n'+(setting.dBaseCurr || 0));
+    } else { //? nếu chứng từ có tiền tệ != đồng tiền hạch toán
+      eleGrid.setFormatField('balAmt','n'+(setting.dSourceCurr || 0));
+      eleGrid.setFormatField('balAmt2','n'+(setting.dSourceCurr || 0));
+      eleGrid.setFormatField('settledAmt','n'+(setting.dBaseCurr || 0));
+      eleGrid.setFormatField('settledAmt2','n'+(setting.dBaseCurr || 0));
     }
   }
   //#endregion Function

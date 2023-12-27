@@ -77,7 +77,6 @@ import { environment } from 'src/environments/environment';
 import { log } from 'console';
 import { PopupEdocumentsComponent } from '../../employee-profile/popup-edocuments/popup-edocuments.component';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
-import { Data } from '@syncfusion/ej2-angular-grids';
 
 @Component({
   selector: 'lib-employee-info-detail',
@@ -7099,6 +7098,11 @@ dataService.clear();
     }
   }
 
+
+  logDataDegree(data){
+    console.log('data degree load len', data);
+  }
+
   valueChangeYearFilterBenefit(evt) {
     if (evt.formatDate == undefined && evt.toDate == undefined) {
       this.startDateEBenefitFilterValue = null;
@@ -7486,7 +7490,6 @@ dataService.clear();
 
       //Gọi refresh luôn để dữ liệu hiển thị đúng theo sort
       gridView.refresh();
-
       returnVal = 1;
     } else if (actionType == 'edit') {
       // (gridView?.dataService as CRUDService)?.update(newData).subscribe();

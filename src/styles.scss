@@ -21,7 +21,11 @@
 .fs-body{
   font-size: var(--fs-body);
 }
-
+.e-control, .e-css, .e-listview, .e-splitter.e-splitter-horizontal .e-pane, 
+.e-splitter.e-splitter-vertical .e-pane {
+  font-family: 'Roboto', Segoe UI, serif;
+  
+}
 .e-device .e-dlg-content,
 .e-device .e-dlg-content * {
   font-size: inherit;
@@ -1193,7 +1197,7 @@ codx-layout-add .card-header {
 }
 
 .header-fixed.toolbar-enabled .wrapper .fillter-card-header + .fillter-card-body {
-  max-height: calc(100vh - 282px);
+  max-height: calc(100vh - 290px);
 }
 
 .card .card-header.fillter-card-header {
@@ -2164,7 +2168,7 @@ a.nav-link {
   font-size: var(--fs-6);
 }
 .e-tab .e-tab-header .e-toolbar-item:not(.e-separator) {
-  margin-right: 10px;
+  margin-right: 10px!important;
 }
 .personal-menu .e-tab .e-tab-header .e-toolbar-item:not(.e-separator) {
   margin-right: 0;
@@ -3518,6 +3522,7 @@ lib-layoutonlyheader{
 }
 ::-webkit-scrollbar-thumb:hover {
   background-color: #bebed3 !important;
+
 }
 
 
@@ -3937,7 +3942,7 @@ app-setting  ejs-tab .e-tab .e-tab-header.e-vertical:before {
     //bottom: 0;
     //left: 20px;
     //right: 20px;
-    background-color: var(--white);
+    background-color: var(--bg-body);
 
     .e-content{
       height: calc(100vh - 282px)!important;
@@ -4178,7 +4183,7 @@ codx-aside-v2.aside-v2-lighter{
     {
       color: var(--primary) !important;
     }
-    background-color: var(--primary-lighter);
+   // background-color: var(--primary-lighter);
   }
   .aside-menu .menu-sub .menu-item .menu-link{
     padding-top: 0.45rem;
@@ -4373,4 +4378,85 @@ codx-view-list-detail .codx-detail-footer {
 }
 codx-toolbar-report .btn{
   white-space: nowrap;
+}
+.codx-form > .card-header, .e-dialog .e-dlg-header .card-header {
+  border-radius: 3px;
+}
+@media (min-width: 992px){
+.toolbar-enabled:not(.toolbar-fixed) .toolbar {
+    margin-bottom: 5px;
+}
+}
+
+.e-switch-wrapper, .e-css.e-switch-wrapper {
+  height: 16px!important;
+  width: 30px!important;
+}
+
+lib-cm-dashboard{
+  codx-views .container-toolbar + div.container-fluid.p-0 ejs-dashboardlayout{
+    margin-bottom: 10px;
+  }
+  text{
+    font-family: 'Roboto'!important;
+  }
+}
+
+.modal-subheader .text-fix-100px, .offcanvas-content .text-fix-100px{
+  max-width: 100px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+}
+
+process-views-tabs-details{
+  .e-kanban-header{
+    .e-header-row{
+      background-color: white;
+    }
+  }
+  .e-kanban-content{
+    height: calc(100vh - 185px)!important;
+    &>div{
+      height:100%;
+      &>table{
+        height:100%;
+        .e-card-wrapper{
+          height: 100% !important;
+        }
+      }
+    }
+  }
+} 
+codx-page-title ul.breadcrumb{
+  .dropdown-item{
+    cursor: pointer;
+  }
+  a{
+    cursor: pointer;
+  }
+  &+.icon-keyboard_arrow_down{
+    cursor: pointer;
+  }
+}
+
+codx-filter-form ejs-dropdownlist{
+  height: 26px !important;
+  margin-top: 2px;
+  input.e-input {
+    height: 26px !important;
+    line-height: 26px;
+  }
+}
+.card-periodic{
+  .codx-image{
+    height: 150px!important;
+  }
+  .card-body{
+    display: flex;
+    align-items: center;
+  }
+} 
+.h-450px.w-300px.dropdown-menu{
+  max-height:calc(100vh - 150px) ;
 }

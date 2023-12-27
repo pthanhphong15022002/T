@@ -30,6 +30,8 @@ import { CodxShareService } from 'projects/codx-share/src/lib/codx-share.service
 import { CM_Contracts, CM_Quotations } from '../models/cm_model';
 import { AddContractsComponent } from '../contracts/add-contracts/add-contracts.component';
 import { debug } from 'util';
+import { ExportData } from 'projects/codx-common/src/lib/models/ApproveProcess.model';
+import { CodxCommonService } from 'projects/codx-common/src/lib/codx-common.service';
 
 @Component({
   selector: 'lib-quotations',
@@ -79,6 +81,11 @@ export class QuotationsComponent extends UIComponent implements OnInit {
     gridViewName: 'grvCMQuotations',
     funcID: 'CM0202',
   };
+  frmModelExport: FormModel = {
+    formName: 'CMTempDataSources',
+    gridViewName: 'grvCMTempDataSources',
+    entityName: 'CM_TempDataSources',
+  };
   customerIDCrr = '';
   requestData = new DataRequest();
   listQuotations = [];
@@ -103,6 +110,7 @@ export class QuotationsComponent extends UIComponent implements OnInit {
     private codxShareService: CodxShareService,
     private callfunc: CallFuncService,
     private notiService: NotificationsService,
+    private codxCommonService: CodxCommonService,
     private routerActive: ActivatedRoute,
     private codxCmService: CodxCmService,
     @Optional() dialog?: DialogRef
@@ -402,6 +410,9 @@ export class QuotationsComponent extends UIComponent implements OnInit {
       case 'CM0202_5':
         this.viewDetail(data);
         break;
+      case 'SYS002':
+        this.exportTemplet(e, data);
+        break;
       default: {
         this.codxShareService.defaultMoreFunc(
           e,
@@ -418,7 +429,7 @@ export class QuotationsComponent extends UIComponent implements OnInit {
   }
   afterSave(e?: any, that: any = null) {
     if (e) {
-      let appoverStatus = e.unbounds.statusApproval;
+      let appoverStatus = e?.unbounds?.statusApproval;
       if (
         appoverStatus != null &&
         appoverStatus != this.itemSelected.approveStatus
@@ -524,7 +535,7 @@ export class QuotationsComponent extends UIComponent implements OnInit {
         res.status = '0';
         res.approveStatus = '1';
         res.approvedDate = null;
-        res.refID = data.recID;
+        res.parentID = data.recID; //luc trước dùng refID  giờ đổi qua parent cho hợp lý
       }
 
       var obj = {
@@ -668,20 +679,37 @@ export class QuotationsComponent extends UIComponent implements OnInit {
           return;
         }
 
-        //ko phân biệt eSign
-        this.release(dt, res);
+        this.codxCmService
+          .getDataSource(dt.recID, 'QuotationsBusiness')
+          .then((dataSource) => {
+            let exportData: ExportData = {
+              funcID: this.view.formModel.funcID,
+              recID: dt.recID,
+              data: dataSource,
+              entityName: this.frmModelExport.entityName,
+              formName: this.frmModelExport.formName,
+              gridViewName: this.frmModelExport.gridViewName,
+            };
+            this.release(dt, res, exportData);
+          });
       });
   }
   //Gửi duyệt
-  release(data: any, category: any) {
-    this.codxShareService.codxReleaseDynamic(
+  release(data: any, category: any, exportData = null) {
+    this.codxCommonService.codxReleaseDynamic(
       this.view.service,
       data,
       category,
       this.view.formModel.entityName,
       this.view.formModel.funcID,
       data?.title,
-      this.releaseCallback.bind(this)
+      this.releaseCallback.bind(this),
+      null,
+      null,
+      null,
+      null,
+      null,
+      exportData
     );
   }
   //call Back
@@ -705,7 +733,7 @@ export class QuotationsComponent extends UIComponent implements OnInit {
           break;
       }
       this.view.dataService.update(this.itemSelected).subscribe();
-      this.notiService.notifyCode('ES007');
+      // this.notiService.notifyCode('ES007');
     }
   }
 
@@ -721,7 +749,7 @@ export class QuotationsComponent extends UIComponent implements OnInit {
                 //trình ký
               } else if (res2?.eSign == false) {
                 //kí duyet
-                this.codxShareService
+                this.codxCommonService
                   .codxCancel(
                     'CM',
                     dt?.recID,
@@ -747,4 +775,29 @@ export class QuotationsComponent extends UIComponent implements OnInit {
   }
   //end duyet
   //--------------------------------------------------------------------//
+  //Export----------------------------------------------------//
+  exportTemplet(e, data) {
+    this.codxCmService
+      .getDataSource(data.recID, 'QuotationsBusiness')
+      .then((dataSource) => {
+        if (dataSource) {
+          let customData = {
+            refID: data.recID,
+            refType: this.view.entityName,
+            dataSource: dataSource,
+          };
+
+          this.codxShareService.defaultMoreFunc(
+            e,
+            data,
+            this.afterSave,
+            this.frmModelExport, //this.view.formModel,
+            this.view.dataService,
+            this,
+            customData
+          );
+          this.detectorRef.detectChanges();
+        }
+      });
+  }
 }

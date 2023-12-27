@@ -36,6 +36,7 @@ export class ViewDetailWrComponent implements OnInit {
   @Input() listRoles = [];
   @Input() isDbClick: boolean = false;
   @Input() asideMode: string;
+  @Input() dataFavorite: any;
   @ViewChild('viewUpdate') viewUpdate: ViewTabUpdateComponent;
   @ViewChild('problem', { read: ElementRef }) memo: ElementRef<HTMLElement>;
 
@@ -80,12 +81,15 @@ export class ViewDetailWrComponent implements OnInit {
   contact2JSON: any;
   serviceTime: any;
   loaded: boolean;
+  isSwitch: boolean = false;
+  paraValues: any;
   constructor(
     private authstore: AuthStore,
     private changeDetectorRef: ChangeDetectorRef,
     private cache: CacheService,
     private callFc: CallFuncService,
-    private api: ApiHttpService
+    private api: ApiHttpService,
+    private wrSv: CodxWrService,
   ) {
     this.user = this.authstore.get();
   }
@@ -103,12 +107,15 @@ export class ViewDetailWrComponent implements OnInit {
         this.id = changes['dataSelected'].currentValue?.recID;
         this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
         this.contact2JSON = null;
+        this.isSwitch = false;
         if (
           this.dataSelected?.extendInfo &&
           this.dataSelected?.extendInfo?.trim() != ''
         ) {
           this.contact2JSON = JSON.parse(this.dataSelected?.extendInfo);
+          console.log('ExtendInfo: ', this.contact2JSON)
         }
+
         this.setTimeEdit();
         this.expanding = false;
         this.overflowed = false;
@@ -118,8 +125,10 @@ export class ViewDetailWrComponent implements OnInit {
   }
 
   ngAfterViewChecked(): void {
+    this.paraValues = this.dataFavorite?.paraValues;
     const element: HTMLElement = this.memo?.nativeElement;
     this.overflowed = element?.scrollHeight > element?.clientHeight;
+    this.changeDetectorRef.detectChanges()
   }
 
   //#region set serviceTime
@@ -138,7 +147,7 @@ export class ViewDetailWrComponent implements OnInit {
         ':' +
         this.padTo2Digits(getEndTime.getMinutes());
       let endTime = current1;
-      const date = this.formatDate(new Date(this.dataSelected?.scheduleStart));
+      const date = this.wrSv.formatDate(new Date(this.dataSelected?.scheduleStart));
       this.serviceTime = date + ' ' + startTime + ' - ' + endTime;
     }
   }
@@ -147,23 +156,6 @@ export class ViewDetailWrComponent implements OnInit {
     return String(num).padStart(2, '0');
   }
 
-  formatDate(date) {
-    let language = this.user?.language?.toLowerCase() == 'vn' ? 'vi' : 'en-US';
-    const currentDate = date;
-    const weekdayDate = new Intl.DateTimeFormat(language, {
-      weekday: 'long',
-    }).format(currentDate);
-    const dayDate = new Intl.DateTimeFormat(language, {
-      day: 'numeric',
-    }).format(currentDate);
-    const monthDate = new Intl.DateTimeFormat(language, {
-      month: 'long',
-    }).format(currentDate);
-    const yearDate = new Intl.DateTimeFormat(language, {
-      year: 'numeric',
-    }).format(currentDate);
-    return weekdayDate + ', ' + dayDate + ' ' + monthDate + ' ' + yearDate;
-  }
   //#endregion
 
   //#region click MF and ChangeMF
@@ -195,11 +187,18 @@ export class ViewDetailWrComponent implements OnInit {
   //#endregion
 
   //#region emit tab update
-  listOrderUpdate(lstUpdate) {
+  listOrderUpdate() {
     if (this.viewUpdate) {
-      this.viewUpdate.lstUpdate = JSON.parse(JSON.stringify(lstUpdate));
+      this.viewUpdate.getListOrderUpdate();
       this.changeDetectorRef.detectChanges();
     }
+  }
+  //#endregion
+
+  //#region switch
+  switchContact(isSwitch) {
+    this.isSwitch = !isSwitch;
+    this.changeDetectorRef.detectChanges();
   }
   //#endregion
   getIcon($event) {

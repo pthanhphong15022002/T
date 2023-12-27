@@ -73,6 +73,7 @@ export class WarrantiesComponent
   dataSelected: any;
   viewCrr: any;
   request: ResourceModel;
+  showMoreAdd: boolean;
   button?: ButtonModel[] = [{ id: 'btnAdd' }];
   readonly btnAdd: string = 'btnAdd';
   funcIDCrr: any;
@@ -105,6 +106,7 @@ export class WarrantiesComponent
   popoverList: any;
   moreFuncEdit = '';
   asideMode: string = '1';
+  dataFavorite: any;
   constructor(
     private inject: Injector,
     private cacheSv: CacheService,
@@ -124,6 +126,14 @@ export class WarrantiesComponent
   }
 
   onInit(): void {
+    this.dataFavorite = null;
+    this.wrSv.childMenuClick.subscribe((res) => {
+      if (res) {
+        this.dataFavorite = res?.data;
+        this.wrSv.childMenuClick.next(null);
+      }
+    });
+    this.showMoreAdd = false; //Hiện tại theo bên digipro tắt.
     this.asideMode = this.codxService?.asideMode;
 
     this.button = [
@@ -366,15 +376,173 @@ export class WarrantiesComponent
             )) ||
           ['WR0101_7', 'WR0102_7', 'WR0103_7', 'WR0104_7', 'WR0103_8'].includes(
             res.functionID
-          )
+          ) ||
+          ['SYS02', 'SYS04'].includes(res.functionID)
         )
           res.disabled = true;
+        if (
+          ![
+            'SYS004',
+            'SYS003',
+            'SYS002',
+            'SYS001',
+            'WR0101_5',
+            'WR0102_5',
+            'WR0103_5',
+            'WR0104_5',
+            'WR0101_4',
+            'WR0102_4',
+            'WR0103_4',
+            'WR0104_4',
+            'WR0101_3',
+            'WR0102_3',
+            'WR0103_3',
+            'WR0104_3',
+            'WR0101_7',
+            'WR0102_7',
+            'WR0103_7',
+            'WR0104_7',
+            'WR0103_8',
+            'SYS03',
+            'WR0101_6',
+            'WR0102_6',
+            'WR0103_6',
+            'WR0104_6',
+          ].includes(res.functionID)
+        )
+          res.isblur = this.isDisableMoreByFavorites(res.functionID);
       });
+    } else {
+      if (data == null) {
+        $event.forEach((res) => {
+          res.disabled = true;
+        });
+      }
     }
   }
 
-  isFunctionToDisable(functionID, disabledFunctions) {
-    return disabledFunctions.includes(functionID);
+  isDisableMoreByFavorites(functionID) {
+    let isblur = false;
+    if (this.dataFavorite) {
+      const paraValues = this.dataFavorite.paraValues;
+      switch (paraValues) {
+        //#region logictis
+        case 'LOG2': //Nhận part mới
+          if (functionID != 'WR0103_15' && functionID != 'WR0103_9') {
+            isblur = true;
+          }
+          break;
+        case 'LOG4': //Cho Logictis
+          if (functionID != 'WR0103_11' && functionID != 'WR0103_10') {
+            isblur = true;
+          }
+          break;
+        case 'LOG6': //Cho DHL
+          if (functionID != 'WR0103_12') {
+            isblur = true;
+          }
+          break;
+        case 'LOG8': //Part đã trả
+        case 'LOG12': //Log POH Case
+        case 'LOG20': //Part đã trả Agency
+          isblur = true;
+          //Not func
+          break;
+        case 'LOG10': //Log All Onsite cases
+          if (
+            ![
+              'WR0103_15',
+              'WR0103_11',
+              'WR0103_12',
+              'WR0103_10',
+              'WR0103_9',
+              'WR0103_13',
+              'WR0103_14',
+            ].includes(functionID)
+          )
+            isblur = true;
+          break;
+        //not func
+        case 'LOG14': //Nhận part mới Agency
+          !['WR0103_15', 'WR0103_9', 'WR0103_13', 'WR0103_14'].includes(
+            functionID
+          );
+          break;
+        case 'LOG16': //Cho Logictis Agency
+          if (functionID != 'WR0103_11' && functionID != 'WR0103_10') {
+            isblur = true;
+          }
+          break;
+        case 'LOG18': //Cho DHL Agency
+          if (functionID != 'WR0103_12') {
+            isblur = true;
+          }
+          break;
+        case 'LOG22': //Log Agency All Onsite cases
+          if (
+            ![
+              'WR0103_15',
+              'WR0103_11',
+              'WR0103_12',
+              'WR0103_10',
+              'WR0103_9',
+              'WR0103_13',
+              'WR0103_14',
+            ].includes(functionID)
+          )
+            isblur = true;
+          break;
+        //#endregion
+        //#region CIS
+        case 'CIS2': //Open CIS cases
+        case 'CIS4': //Completed CIS cases
+        case 'CIS6': //Cancelled CIS cases
+        case 'CIS8': //Closed CIS cases
+        case 'CIS10': //All CIS cases
+          if (!['WR0101_1', 'WR0101_2', 'WR0101_16'].includes(functionID))
+            isblur = true;
+          break;
+        case 'CIS12': //All CIS cases ReadOnly
+          isblur = true;
+          break;
+        //#endregion
+        //#region Onsite case
+        case 'ONS2': //New Onsite cases
+        case 'ONS26': //All Case Onsite
+          if (!['WR0102_1', 'WR0102_16', 'WR0102_13'].includes(functionID))
+            isblur = true;
+          break;
+        case 'ONS6': //Set ETA with customer
+        case 'ONS8': //Waiting assign engineer
+        case 'ONS10': //Engineer onsite
+        case 'ONS12': //Miss RC17
+          if (!['WR0102_1', 'WR0102_2'].includes(functionID)) isblur = true;
+          break;
+        case 'ONS14': //Request  to cancel
+        case 'ONS16': //Completed Onsite cases
+        case 'ONS20': //Cancelled Onsite cases
+        case 'ONS22': //Closed Onsite cases
+        case 'ONS18': //Dell cancelled
+        case 'ONS4': //Waiting part
+        case 'ONS24': //Slots booked scheduling
+          if (!['WR0102_1', 'WR0102_2', 'WR0102_16'].includes(functionID))
+            isblur = true;
+          break;
+        case 'ONS28': //All Case Onsite ReadOnly
+          isblur = true;
+          break;
+        //#endregion
+        //#region Pro-deloy
+        case 'PRO2': //Open ProDeloy cases
+        case 'PRO4': //Comleted ProDeloy cases
+        case 'PRO6': //Closed ProDeloy cases
+          isblur = true;
+          break;
+        //#endregion
+      }
+    } else {
+    }
+    return isblur;
   }
 
   async getGridViewSetup(formName, gridViewName) {
@@ -615,7 +783,7 @@ export class WarrantiesComponent
                 if (index != -1) {
                   this.lstOrderUpdate[index] = e?.event;
                 } else {
-                  this.lstOrderUpdate.push(e?.event);
+                  this.lstOrderUpdate.unshift(e?.event);
                 }
                 this.dataSelected = JSON.parse(
                   JSON.stringify(this.dataSelected)
@@ -623,8 +791,7 @@ export class WarrantiesComponent
                 this.view.dataService
                   .update(this.dataSelected, true)
                   .subscribe();
-                if (this.viewDetail)
-                  this.viewDetail.listOrderUpdate(this.lstOrderUpdate);
+                if (this.viewDetail) this.viewDetail.listOrderUpdate();
 
                 this.detectorRef.detectChanges();
               }
@@ -660,18 +827,7 @@ export class WarrantiesComponent
           this.dataSelected.owner = e?.event[0];
           this.dataSelected.feedbackComment = e?.event[1];
           this.dataSelected.lastUpdatedOn = new Date();
-          let index = this.lstOrderUpdate.findIndex(
-            (x) =>
-              x.statusCode == this.dataSelected?.statusCode &&
-              x.transID == this.dataSelected?.recID
-          );
-          if (index != -1) {
-            this.lstOrderUpdate[index].engineerID =
-              this.dataSelected.engineerID;
-          }
-
-          if (this.viewDetail)
-            this.viewDetail.listOrderUpdate(this.lstOrderUpdate);
+          if (this.viewDetail) this.viewDetail.listOrderUpdate();
           this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
           this.view.dataService.update(this.dataSelected, true).subscribe();
           this.detectorRef.detectChanges();
@@ -719,6 +875,7 @@ export class WarrantiesComponent
 
   //#region update status
   updateStatusWarranty(status, data) {
+    this.cancelledNote = data?.cancelledNote;
     var config = new AlertConfirmInputConfig();
     config.type = 'YesNo';
     this.notificationsService
@@ -879,48 +1036,46 @@ export class WarrantiesComponent
       formModel.gridViewName = 'grvWRProducts';
       formModel.entityName = 'WR_Products';
       formModel.funcID = 'WRS0103';
+      formModel.userPermission = this.view?.formModel?.userPermission;
       opt.FormModel = formModel;
-
-      this.cache.moreFunction('CoDXSystem', '').subscribe((res) => {
-        if (res && res.length) {
-          let m = res.find((x) => x.functionID == 'SYS03');
-
-          this.cache
-            .gridViewSetup(formModel.formName, formModel.gridViewName)
-            .subscribe((grid) => {
-              if (grid) {
-                var obj = {
-                  data: data,
-                  title:
-                    m?.defaultName +
-                    ' ' +
-                    this.gridViewSetup?.ProductID?.headerText?.toLowerCase(),
-                  addProduct: true,
-                  gridViewSetup: grid,
-                  recID: data.recID,
-                };
-                var dialog = this.callFc.openForm(
-                  PopupAddServicetagComponent,
-                  '',
-                  500,
-                  450,
-                  '',
-                  obj,
-                  '',
-                  opt
-                );
-                dialog.closed.subscribe((ele) => {
-                  if (ele && ele?.event) {
-                    this.dataSelected = JSON.parse(JSON.stringify(ele?.event));
-                    this.view.dataService
-                      .update(this.dataSelected, true)
-                      .subscribe();
-                    this.detectorRef.detectChanges();
-                  }
-                });
-              }
-            });
-        }
+      this.cache.functionList('WRS0103').subscribe((func) => {
+        this.cache
+          .gridViewSetup(formModel.formName, formModel.gridViewName)
+          .subscribe((grid) => {
+            if (grid) {
+              var obj = {
+                data: data,
+                title:
+                  this.moreFuncEdit +
+                  ' ' +
+                  (func?.defaultName
+                    ? func?.defaultName?.toLowerCase()
+                    : 'product'),
+                addProduct: true,
+                gridViewSetup: grid,
+                recID: data.recID,
+              };
+              var dialog = this.callFc.openForm(
+                PopupAddServicetagComponent,
+                '',
+                500,
+                450,
+                '',
+                obj,
+                '',
+                opt
+              );
+              dialog.closed.subscribe((ele) => {
+                if (ele && ele?.event) {
+                  this.dataSelected = JSON.parse(JSON.stringify(ele?.event));
+                  this.view.dataService
+                    .update(this.dataSelected, true)
+                    .subscribe();
+                  this.detectorRef.detectChanges();
+                }
+              });
+            }
+          });
       });
     }
   }

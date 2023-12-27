@@ -34,6 +34,7 @@ import { AD_UserRoles } from '../../models/AD_UserRoles.models';
 import { DomSanitizer } from '@angular/platform-browser';
 import { environment } from 'src/environments/environment';
 import { Subject, takeUntil } from 'rxjs';
+import { CodxShareService } from 'projects/codx-share/src/lib/codx-share.service';
 
 @Component({
   selector: 'lib-add-user',
@@ -86,11 +87,13 @@ export class AddUserComponent extends UIComponent implements OnInit {
   //employeeID first change
   isEmpIDNotNull: boolean = false;
   isSaas = false;
+  unWelcomeUser:any;
   constructor(
     private injector: Injector,
     private changeDetector: ChangeDetectorRef,
     private auth: AuthStore,
     private adService: CodxAdService,
+    private codxShareService: CodxShareService,
     private notification: NotificationsService,
     private sanitizer: DomSanitizer,
     @Optional() dialog?: DialogRef,
@@ -349,8 +352,20 @@ export class AddUserComponent extends UIComponent implements OnInit {
         .subscribe((res) => {
           if (!res?.error) {
             if (!this.isSaved) {
-              this.getHTMLFirstPost(this.adUser);
-              this.adService.createFirstPost(this.tmpPost).subscribe();
+              if(this.unWelcomeUser == null){
+                this.codxShareService.getSettingValueWithOption('F','WPParameters',null,'1').subscribe(settings=>{
+                  if(settings?.length>0 && settings[0]?.dataValue){
+                    let wpSetting = JSON.parse(settings[0]?.dataValue);
+                    if(wpSetting){
+                      this.unWelcomeUser = wpSetting?.UnWelcomeUser =="1" ? false : true;
+                      this.welcomeUserPost();
+                    }
+                  }
+                })
+              }
+              else{
+                this.welcomeUserPost();
+              }
               if (res.save) {
                 this.dataAfterSave = res.save;
                 this.adUser.userID = res.save.userID;
@@ -445,6 +460,12 @@ export class AddUserComponent extends UIComponent implements OnInit {
     };
   }
 
+  welcomeUserPost(){
+    if(this.unWelcomeUser){
+      this.getHTMLFirstPost(this.adUser);
+      this.adService.createFirstPost(this.tmpPost).subscribe();
+    }
+  }
   reloadAvatar(data: any): void {
     this.imageUpload?.reloadImageWhenUpload();
   }

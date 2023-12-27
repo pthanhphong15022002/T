@@ -31,17 +31,12 @@ import { CodxAddBookingRoomComponent } from './codx-add-booking-room/codx-add-bo
 import { CodxAddBookingStationeryComponent } from './codx-add-booking-stationery/codx-add-booking-stationery.component';
 import { CodxRescheduleBookingRoomComponent } from './codx-reschedule-booking-room/codx-reschedule-booking-room.component';
 import { CodxInviteRoomAttendeesComponent } from './codx-invite-room-attendees/codx-invite-room-attendees.component';
-// import { codxBookingService } from '../../codx-ep.service';
-// import { PopupAddAttendeesComponent } from './popup-add-attendees/popup-add-attendees.component';
-// import { PopupAddBookingRoomComponent } from './popup-add-booking-room/popup-add-booking-room.component';
-// import { PopupRescheduleBookingComponent } from './popup-reschedule-booking/popup-reschedule-booking.component';
 import { ɵglobal as global } from '@angular/core';
 import { CodxBookingService } from './codx-booking.service';
-import { CodxBookingViewDetailComponent } from './codx-booking-view-detail/codx-booking-view-detail.component';
+import { CodxCommonService } from 'projects/codx-common/src/lib/codx-common.service';
 import { GridColumn } from '@syncfusion/ej2-angular-grids';
 import { Approver, ResponseModel } from '../../models/ApproveProcess.model';
 import { EP_BookingInputParam } from './codx-booking.model';
-import { FormSettingComponent } from '../form-setting/form-setting.component';
 
 @Component({
   selector: 'codx-booking',
@@ -124,6 +119,7 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
   constructor(
     injector: Injector,
     private codxShareService: CodxShareService,
+    private codxCommonService: CodxCommonService,
     private codxBookingService: CodxBookingService,
     private notificationsService: NotificationsService,
     private authService: AuthService,
@@ -549,7 +545,7 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
     if(!item && this.view?.dataService?.data?.length>0) {
       item = this.view?.dataService?.data[0];
       this.view.dataService.dataSelected = item;
-    }  
+    }
     this.codxBookingService.getBookingByID(item?.recID).subscribe((data) => {
       if (data) {
         this.popupTitle = event?.text + ' ' + this.funcIDName;
@@ -914,7 +910,7 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
         this.codxBookingService
           .getProcessByCategoryID(this.categoryIDProcess)
           .subscribe((category: any) => {
-            this.codxShareService.codxReleaseDynamic(
+            this.codxCommonService.codxReleaseDynamic(
               'EP',
               data,
               category,
@@ -983,7 +979,7 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
       this.curUser?.userID == data?.createdBy ||
       this.codxBookingService.checkAdminRole(this.curUser, this.isAdmin)
     ) {
-      this.codxShareService
+      this.codxCommonService
         .codxCancel('EP', data?.recID, this.formModel.entityName, null, null)
         .subscribe((res: any) => {
           if (res && res?.msgCodeError == null) {
@@ -1112,7 +1108,7 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
           );
           dialogAdd.closed.subscribe((returnData) => {
             if (returnData?.event) {
-              this.view?.dataService?.update(returnData?.event);
+              //this.view?.dataService?.update(returnData?.event);
             } else {
               this.view.dataService.clear();
             }
@@ -1323,7 +1319,7 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
         .subscribe((trans: any) => {
           trans.map((item: any) => {
             if (item?.stepType === 'I') {
-              this.codxShareService
+              this.codxCommonService
                 .codxApprove(item?.recID, this.allocateStatus, null, null, null)
                 .subscribe((res: any) => {
                   if (res?.msgCodeError == null && res?.rowCount >= 0) {

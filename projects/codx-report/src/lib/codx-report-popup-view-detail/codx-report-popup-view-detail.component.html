@@ -1,0 +1,11 @@
+<codx-form [body]="body" [bodyCss]="'overflow-hidden'" [headerText]="data?.customName" [dialog]="dialogRef" >
+  <ng-template #body>
+    <ng-container *ngIf=" data?.displayMode == '3' || data?.displayMode == '4'; else reportBolder ">
+      <lib-pdf *ngIf="url" [inputUrl]="url" [hideActions]="true" [hideThumbnail]="true"></lib-pdf>
+    </ng-container>
+    <ng-template #reportBolder>
+      <codx-report-iframe [service]="data?.service" [funcID]="data?.recID" [predicates]="predicate" [dataValues]="dataValue" [printMode]="!data?.displayMode || data?.displayMode=='0'?  false:true"
+        [print]="print" [param]="_paramString" [labels]="_labelString" [format]="_formatString"></codx-report-iframe>
+    </ng-template>
+  </ng-template>
+</codx-form>

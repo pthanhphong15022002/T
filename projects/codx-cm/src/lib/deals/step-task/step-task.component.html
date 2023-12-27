@@ -29,7 +29,8 @@
       </div>
     </div>
     <div class="right d-flex align-items-center">
-      <div
+      <div  
+        *ngIf="!isViewStep"
         (click)="addTask()"
         class="d-flex align-items-center me-3 cursor-pointer"
         ngbTooltip="Thêm công việc tại giai đoạn hiện tại"
@@ -80,6 +81,8 @@
     [dealName]="dealName"
     [customerName]="customerName"
     [ownerInstance]="owner"
+    [activitiAdd]="isAddTask ? taskAdd : null"
+    [applyFor]="applyFor"
   ></task>
 </div>
 
@@ -157,11 +160,16 @@
         [customerName]="customerName"
         [ownerInstance]="owner"
         [entity]="'CM'"
+        [taskAdd]="setTask(instanceStep?.recID)"
+        [isViewStep]="isViewStep"
+        [entityName]="entityName"
+        [recIDParent]="dataCM?.recID"
+        [applyFor]="applyFor"
       ></codx-step-task>
       <div
         *ngIf="
           (instanceStep?.isFailStep || instanceStep?.isSuccessStep) &&
-          !['0', '1', '2','15'].includes(dataCM?.status)
+          !['0', '1', '2','15','17'].includes(dataCM?.status)
         "
       >
         <div>

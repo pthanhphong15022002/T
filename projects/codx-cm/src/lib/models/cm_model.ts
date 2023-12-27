@@ -54,6 +54,8 @@ export class CM_Quotations {
   category: string;
   orderPoolID: string;
   customerID: string;
+  customerName: string;
+  shortName: string;
   salespersonID: string;
   contactID: string;
   consultantID: string;
@@ -63,6 +65,7 @@ export class CM_Quotations {
   pmtMethodID: string;
   currencyID: string;
   status: string = '1';
+  approveStatus: string;
   exchangeRate: number;
   deadline: Date;
   memo: string;
@@ -205,6 +208,7 @@ export class CM_Deals {
   companyID: string;
   customerName: string;
   customerCategory: string;
+  applyProcess: boolean;
 }
 
 export class CM_Permissions {
@@ -796,7 +800,6 @@ export class CM_Contracts {
   effectiveFrom: Date; //Hiệu lực từ
   effectiveTo: Date; //Hiệu lực đến
   extendOn: Date; //Ngày gia hạn
-  disposalOn: Date; //Ngày thanh lý
   warantyMonths: number; //Số tháng bảo hành
   warantyExpired: Date; //Ngày hết hạn bảo hành
   salespersonID: string; //Mã nhân viên kinh doanh
@@ -865,4 +868,25 @@ export class CM_Contracts {
   divisionID: string;
   departmentID: string;
   objectLinked: string;
+  disposalType: string; // loại thanh lý
+  disposalID: string;
+  disposalReason: string;
+  debtClosingOn: Date;
+  disposalOn: Date; //Ngày thanh lý
+  disposalCmt: Date; //Ngày thanh lý
+}
+
+export class AM_Realties{
+  recID: string;
+  contractID: string;
+  assetID: string;
+  usableArea: number;
+  extendInfo: string;
+
+  block: string;
+  purpose: string;
+  salesPrice: number;
+  effectiveSalePrice: number;
+  serviceFee: number;
+  effectiveServiceFee: number;
 }

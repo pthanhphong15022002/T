@@ -157,7 +157,7 @@
                 ? 'visible'
                 : 'hidden'
             ">
-            <codx-label Name="lblAprrove" class="text-white" [formModel]="dialog.formModel"
+            <codx-label Name="lblAprrove" class="text-white" [formModel]="dialog.formModel" [formName]="formModelCustom?.formName" [gridViewName]="formModelCustom?.gridViewName"
               default="Gửi duyệt"></codx-label>
           </button>
         </ng-container>
@@ -263,11 +263,13 @@
                     <div class="form-group">
                       <codx-label fiedName="CategoryID" [formModel]="formModelCustom">
                       </codx-label>
-                      <codx-input field="categoryID"  [crrValue]="data?.categoryID"
+                      <codx-input *ngIf="!showCateNameOnly" field="categoryID"  [crrValue]="data?.categoryID"
                         [placeholder]="gvSetup?.CategoryID?.description" [refValue]="
                         this.cbxCategory ??
                         gvSetup?.CategoryID?.referedValue
                       " type="combobox" (valueChange)="valueChange($event)" [disabled]="disableCateID">
+                      </codx-input>
+                      <codx-input *ngIf="showCateNameOnly" field="categoryID" [crrValue]="cateName" type="text" (valueChange)="valueChange($event)" [disabled]="disableCateID">
                       </codx-input>
                     </div>
                   </div>
@@ -333,9 +335,9 @@
                 data?.approveControl == '1' ? data.recID : data.processID" [approveControl]="data?.approveControl"
                 [dynamicApprovers]="dynamicApprovers" [isTemplate]="data?.isTemplate" [recID]="data.recID" [type]="'1'"
                 [eSign]="eSign" [signatureType]="signatureType"
-                [refType]="data?.refType !=null ? data?.refType :refType"
+                [refType]="data?.refType !=null ? data?.refType : refType"
                 [isSettingMode]="data?.isTemplate ? true :false" [mssgDelete]="mssgDelete"
-                (addEditItem)="dataStepChange($event)">
+                (addEditItem)="dataStepChange($event)" (checkPopupApproverInfo)="checkPopupApproverInfo($event)">
               </codx-approval-steps>
             </div>
             <div class="tab-pane fade" id="pane_3" [ngClass]="currentTab == 2 ? 'active show' : ''"></div>
@@ -350,12 +352,12 @@
               <codx-label fiedName="lblDownloadFile" default="Tải tài liệu mẫu" [formModel]="formModelCustom"  ></codx-label>
             </button> -->
             <button type="button" class="btn btn-primary me-3" *ngIf="currentTab != 0" (click)="previous(currentTab)">
-              <codx-label name="lblBack" [formModel]="formModelCustom" default="Quay lại">
+              <codx-label name="lblBack" [formModel]="formModelCustom"  [formName]="formModelCustom?.formName" [gridViewName]="formModelCustom?.gridViewName" default="Quay lại">
               </codx-label>
             </button>
-            <button type="button" class="btn btn-light-primary me-3" *ngIf="currentTab != 0 && !isTemplate"
+            <button type="button" class="btn btn-light-primary me-3" *ngIf="currentTab != 0 && !isTemplate && eSign"
               [disabled]="modeView == '2' ? true : false" (click)="openPopup(processTemplate)">
-              <codx-label name="lblBtnTemplate" [formModel]="formModelCustom" default="Dùng quy trình mẫu">
+              <codx-label name="lblBtnTemplate" [formModel]="formModelCustom"  [formName]="formModelCustom?.formName" [gridViewName]="formModelCustom?.gridViewName" default="Dùng quy trình mẫu">
               </codx-label>
             </button>
             <span *ngIf="sampleProcessName && data?.approveControl=='2'"
@@ -372,7 +374,7 @@
                 ? 'disabled'
                 : ''
             ">
-            <codx-label name="lblContinue" [formModel]="formModelCustom" default="Tiếp tục"></codx-label>
+            <codx-label name="lblContinue" [formModel]="formModelCustom"  [formName]="formModelCustom?.formName" [gridViewName]="formModelCustom?.gridViewName" default="Tiếp tục"></codx-label>
           </button>
 
           <div class="d-flex"
@@ -387,7 +389,7 @@
                 (valueChange)="applyTemplate($event)"
               ></ejs-combobox>
               </div> -->
-              <div ngbDropdown class="dropdown">
+              <!-- <div ngbDropdown class="dropdown">
                 <button
                   class="btn btn-sm btn-bg-primary text-inverse-primary me-2 mb-2 min-w-60px rounded-4 d-flex align-items-center"
                   type="button" aria-expanded="false">
@@ -418,7 +420,7 @@
                     </a>
                   </li>
                 </ul>
-              </div>
+              </div> -->
               <!-- <a class="btn btn-sm btn-bg-success text-inverse-primary me-2 mb-2 min-w-60px rounded-4"
                 *ngIf="isTemplate " (click)="openTemplateName(addTemplateName)">
                 <codx-label Name="lblAprrove" [formModel]="dialog.formModel"

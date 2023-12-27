@@ -347,6 +347,9 @@ export class PopupAddQuotationsComponent implements OnInit {
 
           this.contactCbx.ComponentCurrent.dataService.data = [];
           this.contactCbx.crrValue = null;
+          this.contactCbx.model = {
+            objectID: this.quotations.customerID,
+          };
           this.crrCustomerID = this.quotations.customerID;
         }
         break;
@@ -360,7 +363,13 @@ export class PopupAddQuotationsComponent implements OnInit {
           this.contactCbx.ComponentCurrent.dataService.data = [];
           this.contactCbx.crrValue = null;
           this.quotations.contactID = null;
+          this.contactCbx.model = {
+            objectID: this.quotations.customerID,
+          };
         }
+        this.quotations.customerName =
+          e?.component?.itemsSelected[0]?.CustomerName;
+        this.quotations.shortName = e?.component?.itemsSelected[0]?.ShortName;
 
         break;
       case 'contactID':
@@ -697,4 +706,35 @@ export class PopupAddQuotationsComponent implements OnInit {
         });
     }
   }
+
+  //addLine NEW- save tung dong- được cái này thì mất cái khác...
+  beforeSaveNew(op: RequestOption) {
+    let data = [];
+    if (this.action == 'add' || this.action == 'copy') {
+      op.methodName = 'AddQuotationsAsync';
+      data = [this.quotations, this.listQuotationLines, this.isNewVersion];
+    }
+    if (this.action == 'edit') {
+      op.methodName = 'EditQuotationsAsync';
+      data = [
+        this.quotations,
+        this.quotationLinesAddNew,
+        this.quotationLinesEdit,
+        this.quotationLinesDeleted,
+      ];
+    }
+    op.data = data;
+    return true;
+  }
+  eventButtonAddLine(e) {
+    if (e) {
+      this.form.save(null, 0, '', '', false).subscribe((res) => {
+        if (res) {
+          console.log(res);
+          if (this.viewQuotationsLine) this.viewQuotationsLine.addLines();
+        }
+      });
+    }
+  }
+  //END
 }

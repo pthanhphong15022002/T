@@ -378,16 +378,19 @@
                   [allowFiltering]="false"
                   [allowSorting]="false"
                   [dataSource]="autoNoSegments"
-
                   service="EI"
-                  [height]="200"
+                  [height]="300"
                   [autoLoad]="false"
                   rowHeight="40"
+                  [templateMore]="mfCol"
+                  [selectionOptions]="{type:'Single'}"
+                  [allowRowDragAndDrop]="true"
+                  (eventAction)="eventAction($event)"
 
                 ></codx-gridview-v2>
               </div>
             </div>
-            
+
           </div>
           <!-- <div class="col-3">
             <div class="form-group">
@@ -453,3 +456,32 @@
     </div>
   </ng-template>
 </codx-form>
+
+<ng-template #mfCol let-data>
+  <div ngbDropdown class="d-inline-block" #dropdown="ngbDropdown" container="body"display="dynamic"  (click)="$event.preventDefault()">
+    <button class="btn btn-sm text-hover-primary"
+       (click)="$event.preventDefault()"
+       ngbDropdownToggle
+       style="z-index: 9999;"
+       container="body"
+       [id]="'dromdownMorePin'">
+      <i class="icon-more_vert icon-21"></i>
+    </button>
+
+    <div
+      ngbDropdownMenu
+      #popup
+      [attr.aria-labelledby]="'dromdownMorePin'"
+      class="h-auto w-150px rounded-3"
+    >
+      <div class="w-auto h-100">
+          <div class="w-100 d-flex align-items-center h-30px more-custom" style="cursor:pointer" (click)="dropdown.close();clickMF({type:'edit',data:data})">
+            <i class="icon-edit icon-16 text-primary mx-3"></i><span><codx-label formName="sys" default="Chỉnh sửa" name="lblEdit"></codx-label></span>
+          </div>
+          <div class="w-100 d-flex align-items-center h-30px more-custom" style="cursor:pointer" (click)="dropdown.close();clickMF({type:'delete',data:data})">
+            <i class="icon-delete icon-16 text-danger mx-3"></i><span><codx-label formName="sys" default="Xóa" name="lblDelete"></codx-label></span>
+          </div>
+      </div>
+    </div>
+  </div>
+</ng-template>

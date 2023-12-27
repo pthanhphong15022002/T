@@ -214,6 +214,7 @@ export class PopupAddLeadComponent
         this.lead.leadID = '';
         this.lead.contactID = Util.uid();
         this.lead.recID = Util.uid();
+        this.lead.permissions = this.lead?.permissions.filter(x=> x.memberType != '2');
       } else {
         this.planceHolderAutoNumber = this.lead?.leadID;
       }
@@ -291,7 +292,7 @@ export class PopupAddLeadComponent
         let owner = $event.component.itemsSelected[0]?.Owner;
         let ownerName = '';
         if (this.applyProcess) {
-          let index = this.listParticipants.findIndex((x) => x.userID);
+          let index = this.listParticipants.findIndex((x) => x.userID == owner);
 
           if (index != -1) {
             this.owner = owner;
@@ -544,6 +545,7 @@ export class PopupAddLeadComponent
     permission.update = true;
     permission.upload = true;
     permission.download = true;
+    permission.isActive = true;
     permission.allowUpdateStatus = roleType === 'O' || roleType === 'S' ? '1' : '0';
     permission.full = roleType === 'O';
     permission.assign = roleType === 'O';
@@ -580,7 +582,7 @@ export class PopupAddLeadComponent
     permission.delete = permissionDP.delete;
     permission.upload = permissionDP.upload;
     permission.download = permissionDP.download;
-    permission.isActive = permissionDP.isActive;
+    permission.isActive = true;
     permission.create = permissionDP.create;
     permission.memberType = '2'; // Data from DP
     permission.allowPermit = permissionDP.allowPermit;
@@ -972,7 +974,7 @@ export class PopupAddLeadComponent
       if (check && menuInput == -1 && tabInput == -1) {
         this.tabInfo.splice(2, 0, this.menuInputInfo);
         this.tabContent.splice(2, 0, this.tabCustomFieldDetail);
-      } else if ( menuInput != -1 && tabInput != -1) {
+      } else if ( !check && menuInput != -1 && tabInput != -1) {
         this.tabInfo.splice(menuInput, 1);
         this.tabContent.splice(tabInput, 1);
       }
@@ -1008,12 +1010,12 @@ export class PopupAddLeadComponent
         let filteredTasks = stepCurrent.tasks.filter(task => task?.fieldID !== null && task?.fieldID?.trim() !== '')
         .map(task => task.fieldID)
         .flatMap(item => item.split(';').filter(item => item !== ''));
-        let listFields = stepCurrent.fields.filter(field => !filteredTasks.includes(this.action === 'copy'? field?.reCID: field?.refID));
+        let listFields = stepCurrent.fields.filter(field => !filteredTasks.includes(this.action === 'copy'? field?.recID: field?.refID));
         this.listFields = [...this.listFields, ...listFields];
       }
      }
      else {
-      let idxCrr = liststeps.findIndex((x) => x.stepID == this.instance?.stepID);
+      let idxCrr = liststeps.findIndex((x) => x.stepID == this.lead?.stepID);
       if (idxCrr != -1) {
         for (let i = 0; i <= idxCrr; i++) {
           let stepCurrent = liststeps[i];

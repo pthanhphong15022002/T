@@ -8,11 +8,10 @@ import {
 } from '@angular/core';
 import { AuthStore, ButtonModel, DataRequest, DialogModel, NotificationsService, SidebarModel, TenantStore, UIComponent, ViewModel, ViewType } from 'codx-core';
 import { BehaviorSubject, Subject, distinctUntilKeyChanged, takeUntil } from 'rxjs';
-import { JournalService } from '../../journals/journals.service';
 import { SalesinvoicesAddComponent } from './salesinvoices-add/salesinvoices-add.component';
-import { SalesInvoiceService } from './salesinvoices.service';
 import { CodxAcService } from '../../codx-ac.service';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
+import { CodxCommonService } from 'projects/codx-common/src/lib/codx-common.service';
 import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
 import { CodxListReportsComponent } from 'projects/codx-share/src/lib/components/codx-list-reports/codx-list-reports.component';
 
@@ -54,9 +53,9 @@ export class SalesinvoicesComponent extends UIComponent
     private acService: CodxAcService,
     private authStore: AuthStore,
     private shareService: CodxShareService,
+    private codxCommonService: CodxCommonService,
     private notification: NotificationsService,
     private tenant: TenantStore,
-    private journalService: JournalService
   ) {
     super(inject);
     this.cache
@@ -120,7 +119,7 @@ export class SalesinvoicesComponent extends UIComponent
         },
       },
     ];
-    this.journalService.setChildLinks(this.journalNo);
+    this.acService.setChildLinks();
   }
 
   ngDoCheck() {
@@ -201,170 +200,11 @@ export class SalesinvoicesComponent extends UIComponent
    * @param data
    * @returns
    */
-  changeMFDetail(event: any, data: any, type: any = '') {
-    this.acService.changeMFSale(event,data,type,this.journal,this.view.formModel);
-  //   let arrBookmark = event.filter(
-  //     // danh sách các morefunction
-  //     (x: { functionID: string }) =>
-  //       x.functionID == 'ACT041003' || // MF ghi sổ (PC)
-  //       x.functionID == 'ACT042905' || // MF ghi sổ (UNC)
-  //       x.functionID == 'ACT041002' || // MF gửi duyệt (PC)
-  //       x.functionID == 'ACT042903' || // MF gửi duyệt (UNC)
-  //       x.functionID == 'ACT041004' || // MF hủy yêu cầu duyệt (PC)
-  //       x.functionID == 'ACT042904' || // MF hủy yêu cầu duyệt (UNC)
-  //       x.functionID == 'ACT041008' || // Mf khôi phục (PC)
-  //       x.functionID == 'ACT042906' || // Mf khôi phục (UNC)
-  //       x.functionID == 'ACT042901' || // Mf chuyển tiền điện tử
-  //       x.functionID == 'ACT041010' || // Mf in (PC)
-  //       x.functionID == 'ACT042907' || // Mf in (UNC)
-  //       x.functionID == 'ACT041009' || // MF kiểm tra tính hợp lệ (PC)
-  //       x.functionID == 'ACT042902' // MF kiểm tra tính hợp lệ (UNC)
-  //   );
-  //   if (arrBookmark.length > 0) {
-  //     if (type == 'viewgrid') {
-  //       arrBookmark.forEach((element) => {
-  //         element.isbookmark = false;
-  //       });
-  //     }
-  //     switch (data?.status) {
-  //       case '1':
-  //         if (this.journal.approvalControl == '0') {
-  //           arrBookmark.forEach((element) => {
-  //             if (
-  //               element.functionID == 'ACT041003' ||
-  //               element.functionID == 'ACT041010' ||
-  //               element.functionID == 'ACT042905' ||
-  //               element.functionID == 'ACT042907' ||
-  //               (element.functionID == 'ACT042901' &&
-  //                 this.view.formModel.funcID == 'ACT0429')
-  //             ) {
-  //               element.disabled = false;
-  //             } else {
-  //               element.disabled = true;
-  //             }
-  //           });
-  //         } else {
-  //           arrBookmark.forEach((element) => {
-  //             if (
-  //               element.functionID == 'ACT041002' ||
-  //               element.functionID == 'ACT041010' ||
-  //               element.functionID == 'ACT042903' ||
-  //               element.functionID == 'ACT042907'
-  //             ) {
-  //               element.disabled = false;
-  //             } else {
-  //               element.disabled = true;
-  //             }
-  //           });
-  //         }
-  //         break;
-  //       case '3':
-  //         arrBookmark.forEach((element) => {
-  //           if (
-  //             element.functionID == 'ACT041004' ||
-  //             element.functionID == 'ACT041010' ||
-  //             element.functionID == 'ACT042904' ||
-  //             element.functionID == 'ACT042907'
-  //           ) {
-  //             element.disabled = false;
-  //           } else {
-  //             element.disabled = true;
-  //           }
-  //         });
-  //         break;
-  //       case '5':
-  //         arrBookmark.forEach((element) => {
-  //           if (
-  //             element.functionID == 'ACT041003' ||
-  //             element.functionID == 'ACT041010' ||
-  //             element.functionID == 'ACT042905' ||
-  //             element.functionID == 'ACT042907' ||
-  //             (element.functionID == 'ACT042901' &&
-  //               this.view.formModel.funcID == 'ACT0429')
-  //           ) {
-  //             element.disabled = false;
-  //           } else {
-  //             element.disabled = true;
-  //           }
-  //         });
-  //         break;
-  //       case '6':
-  //         arrBookmark.forEach((element) => {
-  //           if (
-  //             element.functionID == 'ACT041008' ||
-  //             element.functionID == 'ACT041010' ||
-  //             element.functionID == 'ACT042906' ||
-  //             element.functionID == 'ACT042907'
-  //           ) {
-  //             element.disabled = false;
-  //           } else {
-  //             element.disabled = true;
-  //           }
-  //         });
-  //         break;
-  //       case '2':
-  //       case '7':
-  //         arrBookmark.forEach((element) => {
-  //           if (
-  //             element.functionID == 'ACT041009' ||
-  //             element.functionID == 'ACT041010' ||
-  //             element.functionID == 'ACT042902' ||
-  //             element.functionID == 'ACT042907'
-  //           ) {
-  //             element.disabled = false;
-  //           } else {
-  //             element.disabled = true;
-  //           }
-  //         });
-  //         break;
-  //       case '8':
-  //       case '11':
-  //         arrBookmark.forEach((element) => {
-  //           if (
-  //             element.functionID == 'ACT042907' &&
-  //             this.view.formModel.funcID == 'ACT0429'
-  //           ) {
-  //             element.disabled = false;
-  //           } else {
-  //             element.disabled = true;
-  //           }
-  //         });
-  //         break;
-  //       case '9':
-  //         arrBookmark.forEach((element) => {
-  //           if (
-  //             element.functionID == 'ACT041003' ||
-  //             element.functionID == 'ACT041010' ||
-  //             element.functionID == 'ACT042905' ||
-  //             element.functionID == 'ACT042907'
-  //           ) {
-  //             element.disabled = false;
-  //           } else {
-  //             element.disabled = true;
-  //           }
-  //         });
-  //         break;
-  //       case '10':
-  //         arrBookmark.forEach((element) => {
-  //           if (
-  //             element.functionID == 'ACT042905' ||
-  //             (element.functionID == 'ACT042907' &&
-  //               this.view.formModel.funcID == 'ACT0429')
-  //           ) {
-  //             element.disabled = false;
-  //           } else {
-  //             element.disabled = true;
-  //           }
-  //         });
-  //         break;
-  //       default:
-  //         arrBookmark.forEach((element) => {
-  //           element.disabled = true;
-  //         });
-  //         break;
-  //     }
-  //   }
-  //   return;
+  changeMFDetail(event: any,type: any = '') {
+    let data = this.view.dataService.dataSelected;
+    if (data) {
+      this.acService.changeMFSale(event,data,type,this.journal,this.view.formModel);
+    }
 }
 
   /**
@@ -426,6 +266,16 @@ export class SalesinvoicesComponent extends UIComponent
             optionSidebar,
             this.view.funcID
           );
+          dialog.closed.subscribe((res) => {
+            if (res && res?.event) {
+              if (res?.event?.type === 'discard') {
+                if(this.view.dataService.data.length == 0){
+                  this.itemSelected = undefined;
+                  this.detectorRef.detectChanges();
+                } 
+              }
+            }
+          })
         }
       });
   }
@@ -457,6 +307,16 @@ export class SalesinvoicesComponent extends UIComponent
           optionSidebar,
           this.view.funcID
         );
+        dialog.closed.subscribe((res) => {
+          if (res && res?.event) {
+            if (res?.event?.type === 'discard') {
+              if(this.view.dataService.data.length == 0){
+                this.itemSelected = undefined;
+                this.detectorRef.detectChanges();
+              } 
+            }
+          }
+        })
       });
   }
 
@@ -495,6 +355,16 @@ export class SalesinvoicesComponent extends UIComponent
                   optionSidebar,
                   this.view.funcID
                 );
+                dialog.closed.subscribe((res) => {
+                  if (res && res?.event) {
+                    if (res?.event?.type === 'discard') {
+                      if(this.view.dataService.data.length == 0){
+                        this.itemSelected = undefined;
+                        this.detectorRef.detectChanges();
+                      } 
+                    }
+                  }
+                })
                 this.view.dataService
                   .add(datas)
                   .pipe(takeUntil(this.destroy$))
@@ -513,7 +383,14 @@ export class SalesinvoicesComponent extends UIComponent
     this.view.dataService
       .delete([dataDelete], true)
       .pipe(takeUntil(this.destroy$))
-      .subscribe((res: any) => {});
+      .subscribe((res: any) => {
+        if (res && !res?.error) {
+          if(this.view.dataService.data.length == 0){
+            this.itemSelected = undefined;
+            this.detectorRef.detectChanges();
+          } 
+        }
+      });
   }
 
   /**
@@ -577,7 +454,7 @@ export class SalesinvoicesComponent extends UIComponent
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         this.dataCategory = res;
-        this.shareService
+        this.codxCommonService
           .codxRelease(
             'AC',
             data.recID,
@@ -611,7 +488,7 @@ export class SalesinvoicesComponent extends UIComponent
    * @param data
    */
   cancelReleaseVoucher(text: any, data: any) {
-    this.shareService
+    this.codxCommonService
       .codxCancel('AC', data?.recID, this.view.formModel.entityName, null, null)
       .pipe(takeUntil(this.destroy$))
       .subscribe((result: any) => {

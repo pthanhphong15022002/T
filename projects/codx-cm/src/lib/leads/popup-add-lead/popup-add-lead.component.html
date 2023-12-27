@@ -11,8 +11,9 @@
 
 <ng-template #body let-form>
   <!--Phúc bổ sung thêm điều kiện này vì dùng formGroup nên kiểm tra trước cho đỡ lỗi-->
-  <div class="contaner" *ngIf="!convertCustomerToLead">
-    <div class="row">
+
+  <div class="contaner">
+    <div class="row" *ngIf="!convertCustomerToLead">
       <div class="col-6">
         <div class="form-group">
           <codx-input
@@ -459,7 +460,7 @@
         >
         </codx-input> -->
 
-        <!-- <codx-input
+          <!-- <codx-input
       type="combobox"
       [model]="{ ProcessID: lead?.processID }"
       refValue="DPUserProcess"
@@ -468,7 +469,6 @@
       (valueChange)="valueChangeOwner($event, viewOwnerProcess)"
      >
        </codx-input> -->
-
         </ng-template>
       </div>
     </div>
@@ -494,20 +494,21 @@
   </div>
 
   <div *ngIf="!isShowField">
-    <ng-container *ngIf="listFields &&listFields?.length > 0">
+    <ng-container *ngIf="listFields && listFields?.length > 0">
       <ng-container *ngFor="let item of listFields">
         <div class="form-group">
           <codx-input-custom-field
-          [customField]="item"
-          [checkValid]="false"
-          [objectId]="item.recID"
-          [objectType]="'DP_Instances_Steps_Fields'"
-          [formModel]="dialog.formModel"
-          [objectIdParent]="lead?.recID"
-          (valueChangeCustom)="valueChangeCustom($event)"
-          (addFileCompleted)="addFileCompleted($event)"
-        >
-        </codx-input-custom-field>
+            [customField]="item"
+            [checkValid]="false"
+            [objectId]="item.recID"
+            [objectType]="'DP_Instances_Steps_Fields'"
+            [formModel]="dialog.formModel"
+            [objectIdParent]="lead?.recID"
+            [isAdd]="action == actionAdd"
+            (valueChangeCustom)="valueChangeCustom($event)"
+            (addFileCompleted)="addFileCompleted($event)"
+          >
+          </codx-input-custom-field>
         </div>
       </ng-container>
     </ng-container>
@@ -711,20 +712,21 @@
 </ng-template>
 
 <ng-template #tabCustomFieldDetail let-form>
-  <ng-container *ngIf="listFields &&listFields?.length > 0">
+  <ng-container *ngIf="listFields && listFields?.length > 0">
     <ng-container *ngFor="let item of listFields">
       <div class="form-group">
         <codx-input-custom-field
-        [customField]="item"
-        [checkValid]="false"
-        [objectId]="item.recID"
-        [objectType]="'DP_Instances_Steps_Fields'"
-        [formModel]="dialog.formModel"
-        [objectIdParent]="lead?.recID"
-        (valueChangeCustom)="valueChangeCustom($event)"
-        (addFileCompleted)="addFileCompleted($event)"
-      >
-      </codx-input-custom-field>
+          [customField]="item"
+          [checkValid]="false"
+          [objectId]="item.recID"
+          [objectType]="'DP_Instances_Steps_Fields'"
+          [formModel]="dialog.formModel"
+          [objectIdParent]="lead?.recID"
+          [isAdd]="action == actionAdd"
+          (valueChangeCustom)="valueChangeCustom($event)"
+          (addFileCompleted)="addFileCompleted($event)"
+        >
+        </codx-input-custom-field>
       </div>
     </ng-container>
   </ng-container>

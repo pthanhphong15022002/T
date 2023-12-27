@@ -43,7 +43,7 @@
                         <div class="form-group">
                             <codx-label [formModel]="dialog.formModel" name="Behavior" default="Qui tắc ứng xử">
                             </codx-label>
-                            <codx-input type="combobox" name="Behaviors_Grp"
+                            <codx-input type="combobox" name="Behaviors_Grp" [Group]="form"
                                 [crrValue]="form.controls['behavior']?.value" field="behavior"
                                 [refValue]="'Behaviors_Grp'" (valueChange)="valueChange($event)">
                             </codx-input>
@@ -53,8 +53,9 @@
                         <div class="form-group">
                             <codx-label [formModel]="dialog.formModel" name="Behavior" default="Hành vi ứng xử">
                             </codx-label>
-                            <codx-input type="combobox" name="Behaviors" [crrValue]="form.controls['behavior']?.value"
-                                field="behavior" [refValue]="'Behaviors'" (valueChange)="valueChange($event)">
+                            <codx-input type="combobox" name="Behaviors" [Group]="form"
+                                [crrValue]="form.controls['behavior']?.value" field="behavior" [refValue]="'Behaviors'"
+                                (valueChange)="valueChange($event)">
                             </codx-input>
                         </div>
                     </ng-container>
@@ -123,7 +124,15 @@
                 <codx-label [formModel]="dialog.formModel" name="Situation" default="Nội dung">
                 </codx-label>
 
-                <codx-input ControlName="situation" [formModel]="dialog.formModel" [Group]="form">
+                <codx-input 
+                    type="textarea" 
+                    headerposition="none"
+                    format="ed"
+                    height="150" 
+                    ControlName="situation" 
+                    field="situation"
+                    [Group]="form"
+                >
                 </codx-input>
                 <!-- <codx-input class="form-control" type="textarea" [crrValue]="form.controls['situation'].value"
                     field="situation" (valueChange)="valueChange($event)">
@@ -180,8 +189,7 @@
                 </div>
             </ng-container>
             <div class="clear"></div>
-            <ng-container *ngIf="cardType != CARDTYPE_EMNUM.SuggestionImprovement 
-                && cardType != CARDTYPE_EMNUM.Share 
+            <ng-container *ngIf="cardType != CARDTYPE_EMNUM.Share 
                 && cardType != CARDTYPE_EMNUM.Radio">
                 <div class="d-flex align-items-center justify-content-between mb-3 mt-9">
                     <div class="text-dark fw-bold">
@@ -193,98 +201,96 @@
                         </codx-label>
                     </div>
                 </div>
-                <!-- <div class="card-slider d-flex align-items-center mt-4 w-100"> -->
-                    <div>
-                    <!-- <ngb-carousel #carousel [wrap]="false" [interval]="0" [keyboard]="false" [pauseOnHover]="false"
-                        [showNavigationArrows]="showNavigationArrows" [showNavigationIndicators]="false">
-                        <ng-container *ngFor="let item of lstPattern; let i = index;">
-                            <ng-template ngbSlide *ngIf="i <= lstPattern.length">
-                                <div class="d-flex flex-wrap align-items-center">
-                                    <ng-container *ngFor="let itemChild of lstPattern; let idxChild = index;">
-                                        <ng-container *ngIf="idxChild >= (i) && idxChild <= (lstPattern.length)">
-                                            <div class="mb-3 fd-parttern-item me-5 position-relative">
-                                                <ng-container *ngIf="itemChild.backgroundColor;else noBackgroundColor">
-                                                    <div class="w-100 h-100 rounded-2"
-                                                        [style.background-color]="itemChild.backgroundColor"
-                                                        (click)="selectCard(itemChild)">
-                                                    </div>
-                                                </ng-container>
-                                                <ng-template #noBackgroundColor>
-                                                    <codx-img [objectId]="itemChild.recID" [funcId]="funcID"
-                                                        [isDefaulImg]="true" [imageType]="'square'" referType="image"
-                                                        objectType="FD_Patterns" [width]="100"
-                                                        (click)="selectCard(itemChild)">
-                                                    </codx-img>
-                                                </ng-template>
-                                                <i *ngIf="itemChild.patternID == patternSelected.patternID"
-                                                    class="icon-i-check2-circle pattern-selected"></i>
+                <div>
+                    <ngb-carousel #carousel [pauseOnFocus]="true" [pauseOnHover]="true" [wrap]="false"
+                        [interval]="false" [keyboard]="false" [showNavigationIndicators]="false"
+                        [showNavigationArrows]="true">
+                        <ng-template ngbSlide *ngFor="let slide of slides">
+                            <div class="d-flex flex-wrap align-items-center justify-content-center">
+                                <ng-container *ngFor="let itemChild of slide">
+                                    <div class="mb-3 fd-parttern-item me-5 position-relative">
+                                        <ng-container *ngIf="itemChild.backgroundColor;else noBackgroundColor">
+                                            <div class="w-100 h-100 rounded-2"
+                                                [style.background-color]="itemChild.backgroundColor"
+                                                (click)="selectCard(itemChild)">
                                             </div>
                                         </ng-container>
-                                    </ng-container>
-                                </div>
-                            </ng-template>
-                        </ng-container>
-                    </ngb-carousel> -->
-                    <ngb-carousel #carousel [pauseOnFocus]="true" [pauseOnHover]="true" [wrap]="false" [interval]="false"
-                        [keyboard]="false" [showNavigationIndicators]="false" [showNavigationArrows]="true">
-                            <ng-template ngbSlide *ngFor="let slide of slides">
-                                <div class="d-flex flex-wrap align-items-center justify-content-center">
-                                    <ng-container *ngFor="let itemChild of slide">
-                                            <div class="mb-3 fd-parttern-item me-5 position-relative">
-                                                <ng-container *ngIf="itemChild.backgroundColor;else noBackgroundColor">
-                                                    <div class="w-100 h-100 rounded-2"
-                                                        [style.background-color]="itemChild.backgroundColor"
-                                                        (click)="selectCard(itemChild)">
-                                                    </div>
-                                                </ng-container>
-                                                <ng-template #noBackgroundColor>
-                                                    <codx-img [objectId]="itemChild.recID" [funcId]="funcID"
-                                                        [isDefaulImg]="true" [imageType]="'square'" referType="image"
-                                                        objectType="FD_Patterns" [width]="100"
-                                                        (click)="selectCard(itemChild)">
-                                                    </codx-img>
-                                                </ng-template>
-                                                <i *ngIf="itemChild.patternID == patternSelected.patternID"
-                                                    class="icon-i-check2-circle pattern-selected"></i>
-                                            </div>
-                                    </ng-container>
-                                </div>
-                            </ng-template>
+                                        <ng-template #noBackgroundColor>
+                                            <codx-img [objectId]="itemChild.recID" [funcId]="funcID"
+                                                [isDefaulImg]="true" [imageType]="'square'" referType="image"
+                                                objectType="FD_Patterns" [width]="100" (click)="selectCard(itemChild)">
+                                            </codx-img>
+                                        </ng-template>
+                                        <i *ngIf="itemChild.patternID == patternSelected.patternID"
+                                            class="icon-i-check2-circle pattern-selected"></i>
+                                    </div>
+                                </ng-container>
+                            </div>
+                        </ng-template>
                     </ngb-carousel>
                 </div>
             </ng-container>
             <ng-container *ngIf="parameter && cardType != CARDTYPE_EMNUM.Radio">
                 <ng-container *ngIf="parameter.HasGifts && parameter.HasGifts == '1'">
-                    <div class="form-group mt-6">
-                        <codx-label [formModel]="dialog.formModel" name="HasGifts" default="Quà tặng"></codx-label>
+                    <div class="d-flex align-items-center justify-content-between mt-4">
+                        <div class="d-flex align-items-center">
+                            <div class="fw-bold fs-6">
+                                <codx-label [formModel]="dialog.formModel" name="HasGifts"
+                                    default="Quà tặng"></codx-label>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center py-1" style="white-space: nowrap;">
+                            <ng-container *ngIf="amount">
+                                <span><codx-label [formModel]="dialog.formModel" name="lblfFDTotalPrice"
+                                        default="Tổng xu"></codx-label>: {{amount}}</span>
+                            </ng-container>
 
-                        <!-- <codx-input ControlName="giftID" [formModel]="dialog.formModel" [Group]="form">
-                        </codx-input> -->
-                        <codx-input type="combobox" name="FDGifts" class="form-control borderless p-0"
-                            refValue="FDGifts" field="giftID" [crrValue]="form.controls['giftID'].value"
-                            (valueChange)="valueChange($event)">
-                        </codx-input>
-                    </div>
-                    <div class="d-flex form-group row">
-                        <div class="col-6">
-                            <codx-label [formModel]="dialog.formModel" name="lblFDQuantityGifts" default="Số lượng">
-                            </codx-label>
-                            <codx-input ControlName="number" [min]="min" [formModel]="dialog.formModel" [Group]="form"
-                                type="number" field="quantity" (valueChange)="valueChange($event)">
-                            </codx-input>
-                            <!-- <codx-input type="number" [min]="min" class="form-control" [max]="max"
-                                [crrValue]="form.controls['quantity'].value" field="quantity"
-                                (valueChange)="valueChange($event)">
-                            </codx-input> -->
+                            <button type="button" class="cursor-pointer btn btn-icon btn-light-primary"
+                                style="margin-left: 5px;" (click)="clickAddGift()">
+                                <span class="icon-add icon-18"></span>
+                            </button>
+                            <ng-container *ngIf="showPopupGift">
+                                <codx-combobox-popup [comboboxName]="'FDGifts'" [multiple]="true" [width]="width"
+                                    [height]="height" [value]="giftIDs" (clickSave)="getGiftInfor($event)">
+                                </codx-combobox-popup>
+                            </ng-container>
                         </div>
-                        <div class="col-6" #TotalPrice>
-                            <codx-label [formModel]="dialog.formModel" name="lblfFDTotalPrice" default="Tổng xu">
-                            </codx-label>
-                            <codx-input class="form-control" type="text" [crrValue]="amount" [disabled]="true"
-                                field="amount">
-                            </codx-input>
-                        </div>
+
                     </div>
+                    <ng-container *ngFor="let data of gifts; index as i">
+                        <div class="d-flex align-items-center user-card mb-5">
+                            <span class="me-4">
+
+                                <codx-img class="rounded-2" [objectId]="data.giftID" [objectType]="'FD_Gifts'"
+                                    imageType="square" [width]="35"></codx-img>
+                                <!-- <codx-img *ngIf="data.gift.category == '3' || data.gift.category == '4'"
+                                    class="rounded-2" [imgSource]="data.gift.image" [objectType]="'FD_Gifts'"
+                                    imageType="square" [width]="35"></codx-img> -->
+                            </span>
+                            <div class="d-flex flex-column">
+                                <div class="text-dark fw-bold">
+                                    {{data.giftName}}</div>
+                                <span class="fw-bold text-dark">
+                                    <codx-label [formModel]="dialog.formModel" name="lblGroup"
+                                        default="Nhóm"></codx-label>
+                                    <span>: {{data.groupName}}</span>
+                                </span>
+                                <div class="text-dark fw-bold">
+                                    {{data.price}}
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center" style="margin-left: auto;margin-right: 0;">
+                                <codx-label [formModel]="dialog.formModel" name="lblFDQuantityGifts" default="SL: ">
+                                </codx-label>
+                                <codx-input style="margin-left: 5px;" ControlName="number" [min]="1" [step]="1"
+                                    [max]="data.availableQty" [formModel]="dialog.formModel" type="number"
+                                    field="quantity" [crrValue]="data.quantity"
+                                    (valueChange)="updateQuantity($event, i)">
+                                </codx-input>
+                            </div>
+                        </div>
+                    </ng-container>
+
                 </ng-container>
                 <ng-container *ngIf="parameter.HasPoints && parameter.HasPoints == '1'">
                     <div class="row mt-8">
@@ -305,9 +311,12 @@
                             <!-- <codx-input type="number" [crrValue]="givePoint" [min]="0" 
                                 [step]="1" field="coins" (valueChange)="valueChange($event)">
                             </codx-input> -->
-                            <codx-input ControlName="number" [formModel]="dialog.formModel" [Group]="form"
-                                type="number" field="coins" [min]="0" [step]="1" (valueChange)="valueChange($event)">
+                            <codx-input ControlName="number" [formModel]="dialog.formModel" [Group]="form" type="number"
+                                field="coins" [min]="0" [step]="1" (valueChange)="valueChange($event)">
                             </codx-input>
+                            <div *ngIf="cointsError" class="errorMessage text-danger ms-3" data-field="taskName">
+                                {{cointsError}}
+                            </div>
                         </div>
 
                     </div>
@@ -337,7 +346,8 @@
     <div class="offcanvas-footer">
         <div class="d-flex align-items-center justify-content-between">
             <div class="d-flex align-items-center justify-content-between">
-                <button type="button" class="btn btn-light-primary me-3" [disabled]="readOnly" (click)="addFile($event)">
+                <button type="button" class="btn btn-light-primary me-3" [disabled]="readOnly"
+                    (click)="addFile($event)">
                     <i class="icon-cloud_upload fs-5"></i><span>
                         <codx-label name="UploadFile" formName="Tasks" default="Đính kèm"></codx-label>
                     </span>

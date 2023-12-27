@@ -1,5 +1,5 @@
 .search{
-   background-color: #F5F8FA;
+   background-color:var(--gray-100);
 }
 .icon-step{
    border: 2px solid;
@@ -32,7 +32,7 @@
   background-color: rgb(231, 231, 231);
 }
 .show-step{
-  box-shadow: 0 0px 5px 1px #a2ecff;
+  box-shadow: 0 0px 5px 1px #a2ecff3b;
   padding: 2px;
   border-radius: 2px;
 }

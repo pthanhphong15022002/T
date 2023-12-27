@@ -40,9 +40,6 @@ import {
 // } from '@abacritt/angularx-social-login';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { Login2FAComponent } from './login2-fa/login2-fa.component';
-import { AngularDeviceInformationService } from 'angular-device-information';
-import { Device } from 'projects/codx-ad/src/lib/models/userLoginExtend.model';
-import { SignalRService } from 'projects/codx-common/src/lib/_layout/drawers/chat/services/signalr.service';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
 
 @Component({
@@ -51,6 +48,7 @@ import { NgxUiLoaderService } from 'ngx-ui-loader';
   styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent extends UIComponent implements OnInit, OnDestroy {
+  environment = environment;
   @ViewChild('Error') error: ElementRef;
   defaultAuth: any = {
     email: '', // 'admin@demo.com',
@@ -66,14 +64,12 @@ export class LoginComponent extends UIComponent implements OnInit, OnDestroy {
   email = null;
   mode: string = 'login'; // 'login' | 'firstLogin' | 'activeTenant' | 'changePass';
   user: any;
-  layoutCZ: any;
   sysSetting;
   //login2FA = '';
   hubConnectionID = '';
   // private fields
   unsubscribe: Subscription[] = [];
   iParams = '';
-  loginDevice: Device;
   tenant;
   constructor(
     private inject: Injector,
@@ -85,15 +81,12 @@ export class LoginComponent extends UIComponent implements OnInit, OnDestroy {
     private dt: ChangeDetectorRef,
     private auth: AuthStore,
     private realHub: RealHubService,
-    private signalRService: SignalRService,
     private readonly authService: AuthService,
     private shareService: CodxShareService,
-    private deviceInfo: AngularDeviceInformationService,
     private loginService: LoginService,
     private ngxLoader: NgxUiLoaderService
   ) {
     super(inject);
-    this.layoutCZ = environment.layoutCZ;
     this.tenant = this.tenantStore.getName();
     CacheRouteReuseStrategy.clear();
 
@@ -148,18 +141,16 @@ export class LoginComponent extends UIComponent implements OnInit, OnDestroy {
         });
       }
     });
-    let dInfo = this.deviceInfo.getDeviceInfo();
-    this.loginDevice = {
-      name: dInfo.browser,
-      os: dInfo.os + ' ' + dInfo.osVersion,
-      ip: '',
-      imei: null,
-      id: null,
-      trust: false,
-      tenantID: this.tenant,
-      times: '1',
-    };
-    console.log('login device info', this.loginDevice);
+    // let dInfo = this.deviceInfo.getDeviceInfo();
+    // this.loginDevice = {
+    //   name: dInfo.browser,
+    //   os: dInfo.os + ' ' + dInfo.osVersion,
+    //   trust: false,
+    //   tenantID: this.tenant,
+    //   //times: '1',
+    //   id: null,
+    // };
+    // console.log('login device info', this.loginDevice);
   }
 
   onInit(): void {
@@ -330,7 +321,7 @@ export class LoginComponent extends UIComponent implements OnInit, OnDestroy {
     if (!type) {
       type = '';
     }
-    let loginType = ['', 'otp', 'qr'];
+    let loginType = ['', 'otp'];
     if (loginType.includes(type)) {
       this.login(type);
     } else {
@@ -410,14 +401,17 @@ export class LoginComponent extends UIComponent implements OnInit, OnDestroy {
 
   //#region Login
   private login(type: string) {
-    this.loginDevice.session = this.loginService.session;
+    this.loginService.loginDevice.session = this.loginService.session;
+    this.loginService.loginDevice.tenantID = this.tenant;
+    this.loginService.loginDevice.loginType = type;
+    var email = this.f.email.value;
     const loginSubscr = this.authService
       .login(
-        this.f.email.value,
+        email,
         this.f.password.value,
         type,
         false,
-        JSON.stringify(this.loginDevice)
+        JSON.stringify(this.loginService.loginDevice)
       )
       .pipe()
       .subscribe((data) => {
@@ -425,12 +419,12 @@ export class LoginComponent extends UIComponent implements OnInit, OnDestroy {
           console.log(this.auth.get());
           let trust2FA = data?.data?.extends?.Trust2FA ?? '';
           let hideTrustDevice = data?.data?.extends?.HideTrustDevice;
-          this.loginDevice.loginType = data.data.extends.LoginType ?? '';
+          //this.loginDevice.loginType = data.data.extends.LoginType ?? '';
           let objData = {
-            data: data.data,
+            data: email,
             login2FA: data?.data?.extends?.TwoFA,
             hubConnectionID: this.hubConnectionID,
-            loginDevice: this.loginDevice,
+            //loginDevice: this.loginDevice,
             hideTrustDevice,
           };
 
@@ -450,7 +444,7 @@ export class LoginComponent extends UIComponent implements OnInit, OnDestroy {
             });
           } else {
             this.authService.setLogin(data.data);
-            this.loginService.loginAfter(data);
+            this.loginService.loginAfter(data, type=='otp');
           }
         } else {
           this.loginService.loginAfter(data);

@@ -1,4 +1,3 @@
-import { dialog } from '@syncfusion/ej2-angular-spreadsheet';
 import {
   AfterViewInit,
   ChangeDetectorRef,
@@ -11,15 +10,13 @@ import {
   TemplateRef,
   ViewChild,
 } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
 import {
-  AlertConfirmInputConfig,
   ApiHttpService,
   AuthStore,
   CacheService,
   CallFuncService,
   DialogData,
-  DialogModel,
   DialogRef,
   Filters,
   FormModel,
@@ -33,6 +30,7 @@ import { PopupAddApproverComponent } from '../popup-add-approver/popup-add-appro
 import { CodxEmailComponent } from 'projects/codx-share/src/lib/components/codx-email/codx-email.component';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { ShareType } from '../../../models/ApproveProcess.model';
+import { PopupAddPersonSignerComponent } from '../popup-add-person-signer/popup-add-person-signer.component';
 
 @Component({
   selector: 'lib-add-edit-approval-step',
@@ -40,7 +38,7 @@ import { ShareType } from '../../../models/ApproveProcess.model';
   styleUrls: ['./add-edit-approval-step.component.scss'],
 })
 export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
-  @ViewChild('tabInfo0', { static: true }) tabInfo0: TemplateRef<any>;
+  @ViewChild('tabInfo', { static: true }) tabInfo: TemplateRef<any>;
   @ViewChild('tabQuery', { static: true }) tabQuery: TemplateRef<any>;
   @ViewChild('tabEmail', { static: true }) tabEmail: TemplateRef<any>;
   @ViewChild('tabAnother', { static: true }) tabAnother: TemplateRef<any>;
@@ -52,7 +50,7 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
   @Input() transId = '';
   @Input() stepNo = 1;
   @Input() vllShare = null;
-  @Input() hideTabQuery = false;
+  @Input() hideTabQuery = true;
   @Input() isSettingMode = true;
   dataEdit: any;
 
@@ -74,7 +72,7 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
   lstStep;
   isSaved = false;
   header1 = 'Thiết lập quy trình duyệt';
-  subHeaderText = 'Qui trình duyệt';
+  subHeaderText = 'Quy trình duyệt';
   defaultSignType = '';
   eSign: boolean = false;
 
@@ -86,9 +84,9 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
   user; //Thông tin người đang nhập
 
   title = '';
-  tabInfo: any[] = [
+  listTab: any[] = [
     { icon: 'icon-info', text: 'Thông tin chung', name: 'tabInfo' },
-    { icon: 'icon-rule', text: 'Điều kiện', name: 'tabQuery' },
+    // { icon: 'icon-rule', text: 'Điều kiện', name: 'tabQuery' },
     {
       icon: 'icon-email',
       text: 'Email/thông báo',
@@ -100,7 +98,6 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
       name: 'tabAnother',
     },
   ];
-  tabContent: any[];
   qbFilter: any;
   vllStepType = [];
   userOrg: any;
@@ -142,11 +139,11 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
   ) {
     this.user = this.auth.get();
     this.dialog = dialog;
-    this.transId = data?.data.transID;
-    this.stepNo = data?.data.stepNo;
-    this.lstStep = data?.data.lstStep;
-    this.isAdd = data?.data.isAdd;
-    this.dataEdit = data?.data.dataEdit;
+    this.transId = data?.data?.transID;
+    this.stepNo = data?.data?.stepNo;
+    this.lstStep = data?.data?.lstStep;
+    this.isAdd = data?.data?.isAdd;
+    this.dataEdit = data?.data?.dataEdit;
     this.defaultSignType = data?.data?.signatureType;
 
     this.allowEditAreas = data?.data?.allowEditAreas;
@@ -165,7 +162,7 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
         data?.data?.vllShare != null ? data?.data?.vllShare : 'ES014';
     }
 
-    this.hideTabQuery = data?.data.hideTabQuery ?? false;
+    //this.hideTabQuery = data?.data?.hideTabQuery ?? true;
     if (this.isAdd) {
       this.qbFilter = new Filters();
       this.qbFilter.logic = 'or';
@@ -176,32 +173,6 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
       } else {
         this.qbFilter = new Filters();
       }
-    }
-    this.tabContent = [
-      this.tabInfo0,
-      this.tabQuery,
-      this.tabEmail,
-      this.tabAnother,
-    ];
-
-    //test tabQuery
-    //this.hideTabQuery = !this.hideTabQuery;
-
-    if (this.hideTabQuery) {
-      this.tabInfo = [
-        { icon: 'icon-info', text: 'Thông tin chung', name: 'tabInfo' },
-        {
-          icon: 'icon-email',
-          text: 'Email/thông báo',
-          name: 'tabEmail',
-        },
-        {
-          icon: 'icon-tune',
-          text: 'Thông tin khác',
-          name: 'tabAnother',
-        },
-      ];
-      this.tabContent = [this.tabInfo0, this.tabEmail, this.tabAnother];
     }
   }
 
@@ -346,7 +317,7 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
               this.confirmControl = element?.confirmControl ?? '0';
               this.allowEditAreas = element?.allowEditAreas ?? false;
 
-              if (element.roleType == 'PA') element.write = true;
+              if (element.roleType == 'PA' || element.roleType == 'PE') element.write = true;
               else element.write = false;
 
               element.delete = true;
@@ -446,6 +417,7 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
     this.newAppr = new Approvers();
     this.newAppr.signatureType = '2';
     this.newAppr.stepType = 'A2';
+    this.newAppr.idCardType = '1';
     this.newAppr.confirmControl = this.confirmControl ?? '0';
     this.newAppr.allowEditAreas = this.allowEditAreas ?? true;
     this.newAppr.createdBy= this.user?.userID;
@@ -460,6 +432,7 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
           this.newAppr = new Approvers();
           this.newAppr.signatureType = '2';
           this.newAppr.stepType = 'A2';
+          this.newAppr.idCardType = '1';
           this.newAppr.confirmControl = this.confirmControl ?? '0';
           this.newAppr.allowEditAreas = this.allowEditAreas ?? true;
           this.newAppr.createdBy= this.user?.userID;
@@ -505,7 +478,7 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
       event?.data?.forEach((element) => {
         //let appr = new Approvers();
         this.newAppr.name = element?.text;
-        this.newAppr.roleType = element?.objectType;
+        this.newAppr.roleType = element?.objectType =="SYS061" ? element?.id : element?.objectType;
         this.newAppr.icon = element?.icon;
         switch (element?.objectType) {
           //----------------------------------------------------------------------------------//
@@ -547,7 +520,38 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
                 this.newAppr = res?.event;
                 //this.lstApprover.push(res.event);
               }
+              else{
+                this.newAppr.roleType=null;
+              }
             });
+            break;
+
+          //----------------------------------------------------------------------------------//
+          case ShareType.Personal: //	Đối tác
+          this.newAppr.write = true;
+          this.newAppr.roleType = element.objectType;
+          this.newAppr.position = element.objectName;
+            // let popupApproverPE = this.callfc.openForm(              
+            //   PopupAddPersonSignerComponent,
+            //   '',
+            //   550,
+            //   screen.height,
+            //   '',
+            //   {
+            //     approverData: this.newAppr,
+            //     lstApprover: this.lstApprover,
+            //     isAddNew: true,
+            //   }
+            // );
+            // popupApproverPE.closed.subscribe((res) => {
+            //   if (res.event) {
+            //     this.newAppr = res?.event;
+            //     //this.lstApprover.push(res.event);
+            //   }
+            //   else{
+            //     this.newAppr.roleType=null;
+            //   }
+            // });
             break;
 
           //----------------------------------------------------------------------------------//
@@ -743,8 +747,6 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
     }
   }
 
-  checkedOnlineChange(event) {}
-
   openSetupEmail(email) {
     if (email?.isEmail == '1') {
       let data = {
@@ -810,126 +812,6 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
     }
   }
 
-  testdata(share) {
-    this.callfc.openForm(share, '', 420, window.innerHeight);
-  }
-
-  applyShare(event) {
-    if (event) {
-      event.forEach((element) => {
-        let appr = new Approvers();
-        appr.name = element?.text;
-        appr.roleType = element?.objectType;
-        appr.icon = element?.icon;
-        switch (element?.objectType) {
-          //----------------------------------------------------------------------------------//
-          case ShareType.ResourceOwner: //	Chủ sở hữu nguồn lực
-          case ShareType.Owner: //	Người sở hữu
-          case ShareType.Employee: //	Nhân viên
-          case ShareType.Created: //	Người tạo
-          case ShareType.TeamLead: //	Trưởng nhóm
-          case ShareType.AM: //	Thư ký phòng
-          case ShareType.DM: //	Phó phòng
-          case ShareType.MA: //	Trưởng phòng
-          case ShareType.AD: //	Thư ký Giám đốc khối
-          case ShareType.DD: //	Phó Giám đốc khối
-          case ShareType.DI: //	Giám đốc khối
-          case ShareType.DR: //	Báo cáo trực tiếp
-          case ShareType.IR: //	Báo cáo gián tiếp
-            //appr.approver = element?.objectType;
-            appr.position = element?.objectName;
-            this.lstApprover.push(appr);
-            break;
-          //----------------------------------------------------------------------------------//
-          case ShareType.Partner: //	Đối tác
-            appr.write = true;
-            appr.roleType = element.objectType;
-            let popupApprover = this.callfc.openForm(
-              PopupAddApproverComponent,
-              '',
-              550,
-              screen.height,
-              '',
-              {
-                approverData: appr,
-                lstApprover: this.lstApprover,
-                isAddNew: true,
-              }
-            );
-            popupApprover.closed.subscribe((res) => {
-              if (res.event) {
-                this.lstApprover.push(res.event);
-              }
-            });
-            break;
-
-          //----------------------------------------------------------------------------------//
-          case ShareType.AC: //	Thư ký Giám đốc công ty
-          case ShareType.DC: //	Phó Giám đốc công ty
-          case ShareType.CEO: //	Giám đốc công ty
-            this.codxService
-              .getCompanyApprover(this.userOrg?.companyID, element?.objectType)
-              .subscribe((companyAppr) => {
-                if (companyAppr) {
-                  appr.position = companyAppr?.position ?? element?.objectName;
-                  appr.userID = companyAppr?.userID;
-                  appr.userName = companyAppr?.userName;
-                  appr.orgUnitName = companyAppr?.orgUnitName;
-                }
-                this.lstApprover.push(appr);
-              });
-            break;
-          //----------------------------------------------------------------------------------//
-          case ShareType.User: //	Người dùng
-            appr.approver = element?.id;
-            appr.position = element?.dataSelected?.PositionName;
-            appr.userID = element?.dataSelected?.UserID;
-            appr.userName = element?.dataSelected?.UserName;
-            appr.orgUnitName = element?.dataSelected?.OrgUnitName;
-            this.lstApprover.push(appr);
-            break;
-          //----------------------------------------------------------------------------------//
-          case ShareType.Position: //	Chức danh công việc
-            if (element?.id != null) {
-              this.codxService
-                .getUserIDByPositionsID(element?.id)
-                .subscribe((lstUserInfo) => {
-                  if (lstUserInfo) {
-                    if (lstUserInfo != null && lstUserInfo.length >= 2) {
-                      this.notifySvr.alertCode('ES033').subscribe((x) => {
-                        if (x.event?.status == 'Y') {
-                          appr.approver = element?.id;
-                          appr.roleType = element?.objectType;
-                          appr.name = element?.text;
-                          appr.position = element?.dataSelected?.PositionName;
-                          appr.userID = lstUserInfo[0]?.userID;
-                          appr.userName = lstUserInfo[0]?.userName;
-                          appr.orgUnitName = lstUserInfo[0]?.orgUnitName;
-                          this.lstApprover.push(appr);
-                        } else {
-                          return;
-                        }
-                      });
-                    } else {
-                      appr.approver = element?.id;
-                      appr.roleType = element?.objectType;
-                      appr.name = element?.text;
-                      appr.position = element?.dataSelected?.PositionName;
-                      appr.userID = lstUserInfo[0]?.userID;
-                      appr.userName = lstUserInfo[0]?.userName;
-                      appr.orgUnitName = lstUserInfo[0]?.orgUnitName;
-                      this.lstApprover.push(appr);
-                    }
-                  }
-                });
-            }
-            break;
-
-          //----------------------------------------------------------------------------------//
-        }
-      });
-    }
-  }
 
   drop(event: CdkDragDrop<string[]>) {
     moveItemInArray(this.lstApprover, event.previousIndex, event.currentIndex);

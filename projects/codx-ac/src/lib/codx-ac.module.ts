@@ -18,7 +18,7 @@ import { CodxShareModule } from 'projects/codx-share/src/public-api';
 import { CoreModule } from '../../../../src/core/core.module';
 import { LayoutComponent } from './_layout/layout.component';
 import { ApprovalsComponent } from './approvals/approvals.component';
-import { ApprovalsComponent as ApprovalsComponentWS} from 'projects/codx-ws/src/lib/approvals/approvals.component';
+import { ApprovalsComponent as ApprovalsComponentWS } from 'projects/codx-ws/src/lib/approvals/approvals.component';
 import { CodxAcComponent } from './codx-ac.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { DropdownDetailComponent } from './journals/components/dropdown-detail/dropdown-detail.component';
@@ -33,15 +33,12 @@ import { PopAddDeductPrepaidExpensesComponent } from './periodic/deduct-prepaid-
 import { DepreciatingFixedAssetsComponent } from './periodic/depreciating-fixed-assets/depreciating-fixed-assets.component';
 import { PopAddDepreciatingFixedAssetsComponent } from './periodic/depreciating-fixed-assets/pop-add-depreciating-fixed-assets/pop-add-depreciating-fixed-assets.component';
 import { PeriodicComponent } from './periodic/periodic.component';
-import { PopAddRunPeriodicComponent } from './periodic/run-periodic/pop-add-run-periodic/pop-add-run-periodic.component';
 import { RunPeriodicComponent } from './periodic/run-periodic/run-periodic.component';
-import { PopAddUpdateTheLedgerComponent } from './periodic/update-the-ledger/pop-add-update-the-ledger/pop-add-update-the-ledger.component';
 import { UpdateTheLedgerComponent } from './periodic/update-the-ledger/update-the-ledger.component';
 import { NameByIdPipe } from './pipes/name-by-id.pipe';
 import { ReplacePipe } from './pipes/replace.pipe';
 import { ReportsComponent } from './reports/reports.component';
 import { SearchingComponent } from './searching/searching.component';
-import { CashtransfersComponent } from './vouchers/cashtransfers/cashtransfers.component';
 import { ReceiptTransactionsAddComponent } from './vouchers/receipt-transactions/receipt-transactions-add/receipt-transactions-add.component';
 import { ReceiptTransactionsComponent } from './vouchers/receipt-transactions/receipt-transactions.component';
 import { SalesinvoicesComponent } from './vouchers/salesinvoices/salesinvoices.component';
@@ -69,9 +66,6 @@ import { TranformClassBorderPipe } from './pipes/tranform-class-border.pipe';
 import { PurchaseinvoicesComponent } from './vouchers/purchaseinvoices/purchaseinvoices.component';
 import { PurchaseinvoicesAddComponent } from './vouchers/purchaseinvoices/purchaseinvoices-add/purchaseinvoices-add.component';
 import { SalesinvoicesAddComponent } from './vouchers/salesinvoices/salesinvoices-add/salesinvoices-add.component';
-import { SalesinvoiceslinesAddComponent } from './vouchers/salesinvoices/salesinvoiceslines-add/salesinvoiceslines-add.component';
-import { CashtransferAddComponent as CashtransfersAddComponent } from './vouchers/cashtransfers/cashtransfers-add/cashtransfers-add.component';
-import { AdvancePayment } from './vouchers/cashpayments/cashpayments-add-advancepayment/advancepayment.component';
 import { IssueTransactionsComponent } from './vouchers/issue-transactions/issue-transactions.component';
 import { IssueTransactionsAddComponent } from './vouchers/issue-transactions/issue-transactions-add/issue-transactions-add.component';
 import { IsObjectEmptyPipe } from './pipes/is-object-empty.pipe';
@@ -81,7 +75,6 @@ import { PurchaseinvoicesDetailComponent } from './vouchers/purchaseinvoices/pur
 import { IssueTransactionsDetailComponent } from './vouchers/issue-transactions/issue-transactions-detail/issue-transactions-detail.component';
 import { ReceiptTransactionsDetailComponent } from './vouchers/receipt-transactions/receipt-transactions-detail/receipt-transactions-detail.component';
 import { SalesinvoicesDetailComponent } from './vouchers/salesinvoices/salesinvoices-detail/salesinvoices-detail.component';
-import { CashtransfersDetailComponent } from './vouchers/cashtransfers/cashtransfers-detail/cashtransfers-detail.component';
 import { TranformValueNumberPipe } from './pipes/tranform-value-number.pipe';
 import { AcctrantsTableComponent } from './share/ac-tableview/acctrants-table/acctrants-table.component';
 import { SettledinvoicesTableComponent } from './share/ac-tableview/settledinvoices-table/settledinvoices-table.component';
@@ -115,6 +108,14 @@ import { TransfersTableComponent } from './share/ac-tableview/transfers-table/tr
 import { AllocationAddComponent } from './vouchers/purchaseinvoices/allocation-add/allocation-add.component';
 import { LayoutNoToolbarComponent } from './_layout-no-toolbar/layout-no-toolbar.component';
 import { AllocationTableComponent } from './share/ac-tableview/allocation-table/allocation-table.component';
+import { SuggestionAdd  } from './share/suggestion-add/suggestion-add.component';
+import { DealsComponent } from 'projects/codx-cm/src/lib/deals/deals.component';
+import { CasesComponent } from 'projects/codx-cm/src/lib/cases/cases.component';
+import { LeadsComponent } from 'projects/codx-cm/src/lib/leads/leads.component';
+import { ViewInstancesComponent } from 'projects/codx-dp/src/lib/view-instances/view-instances.component';
+import { CashtransfersComponent } from './vouchers/cashtransfers/cashtransfers.component';
+import { CashtransfersAddComponent } from './vouchers/cashtransfers/cashtransfers-add/cashtransfers-add.component';
+import { RunPeriodicAddComponent } from './periodic/run-periodic/run-periodic-add/run-periodic-add.component';
 export const routes: Routes = [
   {
     path: '',
@@ -126,7 +127,7 @@ export const routes: Routes = [
         data: { noReuse: true },
       },
       {
-        path: 'report/:funcID',                
+        path: 'report/:funcID',
         component: CodxReportViewsComponent,
       },
       {
@@ -200,7 +201,7 @@ export const routes: Routes = [
       },
       {
         path: 'issuetransaction/:funcID/:journalNo',
-        component: IssueTransactionsComponent,
+        component: ReceiptTransactionsComponent,
         data: { noReuse: true },
       },
       {
@@ -209,7 +210,7 @@ export const routes: Routes = [
         data: { noReuse: true },
       },
       {
-        path: 'updatetheledger/:funcID',
+        path: 'updatingtheledger/:funcID',
         component: UpdateTheLedgerComponent,
         data: { noReuse: true },
       },
@@ -264,6 +265,28 @@ export const routes: Routes = [
         data: { noReuse: true },
       },
       { path: '', redirectTo: 'journalnames/ACT', pathMatch: 'full' },
+      //----phát hành quy trình DP-CRM----//
+      {
+        path: 'deals/:funcID',
+        component: DealsComponent,
+        data: { noReuse: true },
+      },
+      {
+        path: 'cases/:funcID',
+        component: CasesComponent,
+        data: { noReuse: true },
+      },
+      {
+        path: 'leads/:funcID',
+        component: LeadsComponent,
+        data: { noReuse: true },
+      },
+      {
+        path: 'instances/:funcID/:processID',
+        component: ViewInstancesComponent,
+        data: { noReuse: true },
+      },
+      //-----------end--------------//
     ],
   },
 
@@ -340,11 +363,10 @@ export const routes: Routes = [
   declarations: [
     CodxAcComponent,
     LayoutComponent,
+    CashtransfersComponent,
     LayoutNoToolbarComponent,
     CashPaymentsComponent,
     CashPaymentAddComponent,
-    CashtransfersComponent,
-    CashtransfersAddComponent,
     PurchaseinvoicesComponent,
     PurchaseinvoicesAddComponent,
     JournalsAddComponent,
@@ -354,7 +376,6 @@ export const routes: Routes = [
     PeriodicComponent,
     SalesinvoicesComponent,
     SalesinvoicesAddComponent,
-    SalesinvoiceslinesAddComponent,
     SearchingComponent,
     ReceiptTransactionsComponent,
     ReceiptTransactionsAddComponent,
@@ -362,11 +383,10 @@ export const routes: Routes = [
     Group067Component,
     GroupShareComponent,
     RunPeriodicComponent,
-    PopAddRunPeriodicComponent,
-    AdvancePayment,
+    RunPeriodicAddComponent,
+    SuggestionAdd ,
     ReplacePipe,
     UpdateTheLedgerComponent,
-    PopAddUpdateTheLedgerComponent,
     JournalspermissionEditComponent,
     DepreciatingFixedAssetsComponent,
     PopAddDepreciatingFixedAssetsComponent,
@@ -401,7 +421,6 @@ export const routes: Routes = [
     IssueTransactionsDetailComponent,
     ReceiptTransactionsDetailComponent,
     SalesinvoicesDetailComponent,
-    CashtransfersDetailComponent,
     AcctrantsTableComponent,
     SettledinvoicesTableComponent,
     VatinvoicesTableComponent,
@@ -429,6 +448,7 @@ export const routes: Routes = [
     TransfersTableComponent,
     AllocationAddComponent,
     AllocationTableComponent,
+    CashtransfersAddComponent,
   ],
   exports: [RouterModule],
   providers: [AccumulationTooltipService],

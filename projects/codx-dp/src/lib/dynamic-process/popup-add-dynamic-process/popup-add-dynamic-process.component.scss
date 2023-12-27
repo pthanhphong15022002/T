@@ -29,6 +29,7 @@
   align-items: center;
   border-radius: 8px!important;
   overflow: hidden;
+  background-color: white;
 }
 
 .dropzone-msg-title {
@@ -477,6 +478,7 @@ codx-attachment{
       .process-step{
         position: relative;
         display: inline-block;
+        padding-right: 25px;
       }
 
       .step-node{
@@ -484,7 +486,7 @@ codx-attachment{
         border-radius: 100%;
         width: 40px;
         height: 40px;
-        background-color: #fff;
+        background-color: var(--primary-lightest);
         font-family: sans-serif;
         font-size: 16px;
         position: relative;
@@ -499,7 +501,7 @@ codx-attachment{
 
       .process-step::after {
         content: "";
-        background-color: #dbdbdb;
+        background-color: var(--primary-light);
         height: 3px;
         width: 100%;
         position: absolute;

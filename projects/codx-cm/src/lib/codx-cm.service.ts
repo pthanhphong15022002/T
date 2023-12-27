@@ -136,6 +136,11 @@ export class CodxCmService {
       objectID,
     ]);
   }
+  getDealByRecID(objectID) {
+    return this.api.exec<any>('CM', 'DealsBusiness', 'GetOneAsync', [
+      objectID,
+    ]);
+  }
 
   getListContactByObjectID(objectID) {
     return this.api.exec<any>(
@@ -456,7 +461,7 @@ export class CodxCmService {
       )
       .pipe(
         //tap((p) => console.log(p)),
-        map((p) => JSON.parse(p[0]))
+        map((p) => p && p[0] ? JSON.parse(p[0]) : null)
         //tap((p) => console.log(p))
       );
   }
@@ -521,6 +526,15 @@ export class CodxCmService {
       data
     );
   }
+  updateMoveProcess(data) {
+    return this.api.exec<any>(
+      'DP',
+      'InstancesBusiness',
+      'UpdateMoveProcessReasonAsync',
+      data
+    );
+  }
+
   moveReasonByIdInstance(data) {
     return this.api.exec<any>(
       'DP',
@@ -803,6 +817,9 @@ export class CodxCmService {
     );
   }
   // API for More in deal
+  getOneDataCM(data) {
+    return this.api.exec<any>('CM', 'DealsBusiness', 'GetOneDealAsync', data);
+  }
   getEmployeesByDomainID(data) {
     return this.api.execSv(
       'HR',
@@ -857,6 +874,15 @@ export class CodxCmService {
       data
     );
   }
+  startNewInstance(data) {
+    return this.api.execSv<any>(
+      'DP',
+      'ERM.Business.DP',
+      'InstancesStepsBusiness',
+      'MoveStageStartInstanceAsync',
+      data
+    );
+  }
 
   startLead(data) {
     return this.api.execSv<any>(
@@ -894,6 +920,24 @@ export class CodxCmService {
       data
     );
   }
+  moveStageBackDataCM(data) {
+    return this.api.execSv<any>(
+      'CM',
+      'ERM.Business.CM',
+      'DealsBusiness',
+      'MoveStageBackByRefIDAsync',
+      data
+    );
+  }
+  moveStageBackLead(data) {
+    return this.api.execSv<any>(
+      'CM',
+      'ERM.Business.CM',
+      'LeadsBusiness',
+      'MoveStageBackByLeadAsync',
+      data
+    );
+  }
 
   moveStageDeal(data) {
     return this.api.execSv<any>(
@@ -910,6 +954,14 @@ export class CodxCmService {
       'ERM.Business.CM',
       'LeadsBusiness',
       'UpdateProcessLeadAsync',
+      data
+    );
+  }
+  updateProcessDeal(data) {
+    return this.api.exec<any>(
+      'CM',
+      'DealsBusiness',
+      'UpdateProcessDealAsync',
       data
     );
   }
@@ -1008,6 +1060,14 @@ export class CodxCmService {
       data
     );
   }
+  getIdBusinessLineByProcessContractID(data) {
+    return this.api.exec<any>(
+      'CM',
+      'BusinessLinesBusiness',
+      'GetOneBusinessLineByProcessContractIDAsync',
+      data
+    );
+  }
 
   isCheckDealInUse(data) {
     return this.api.exec<any>(
@@ -1093,14 +1153,14 @@ export class CodxCmService {
       data
     );
   }
-  updateOwnerInstance(data) {
-    return this.api.exec<any>(
-      'DP',
-      'InstancesStepsBusiness',
-      'UpdateOwnerAsync',
-      data
-    );
-  }
+  // updateOwnerInstance(data) {
+  //   return this.api.exec<any>(
+  //     'DP',
+  //     'InstancesStepsBusiness',
+  //     'UpdateOwnerAsync',
+  //     data
+  //   );
+  // }
 
   getViewDetailDealAsync(data) {
     return this.api.exec<any>(
@@ -1298,6 +1358,17 @@ export class CodxCmService {
       'CategoriesBusiness',
       'GetByCategoryIDAsync',
       categoryID
+    );
+  }
+
+  //trinh ký
+  getESCategoryByCategoryIDByType(categoryID, category, refID = null) {
+    return this.api.execSv<any>(
+      'ES',
+      'ES',
+      'CategoriesBusiness',
+      'GetByCategoryIDTypeAsync',
+      [categoryID, category, refID]
     );
   }
 
@@ -1600,7 +1671,27 @@ export class CodxCmService {
       recID
     );
   }
+
+  //get dataSource
+  getDataSource(recID, className): Promise<string> {
+    return new Promise<string>((resolve, rejects) => {
+      this.api
+        .execSv<any>('CM', 'CM', className, 'GetDataSourceExportAsync', recID)
+        .subscribe((str) => {
+          let dataSource = '';
+          if (str && str?.length > 0) {
+            dataSource = '[' + str[0] + ']';
+            if (str[1]) {
+              let datas = str[1];
+              if (datas && datas.includes('[{')) datas = datas.substring(2);
+              let fix = str[0];
+              fix = fix.substring(1, fix.length - 1);
+              dataSource = '[{ ' + fix + ',' + datas;
+            }
+          }
+          resolve(dataSource);
+        });
+    });
+  }
   //end
-
-
 }

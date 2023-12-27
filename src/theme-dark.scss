@@ -1,3 +1,5 @@
+@import "src/bootstrap-dark.scss";
+
 .text-gray-900 {
     color: var(--gray-900) !important;
 }
@@ -31,7 +33,7 @@
 }
 
 .header-fixed .header {
-    background-color: var(--bg-card);
+    background-color: var(--bg-body);
 }
 
 .header .svg-icon svg [fill]:not(.permanent):not(g) {
@@ -71,11 +73,15 @@ codx-wrapper {
 }
 
 .card.codx_cardimg {
-    background-color: #25253e;
+    background-color: var(--bg-card);
+    border: 1px rgba(255, 255, 255, 0.05) solid!important;
 }
-
-.card.codx_cardimg:hover {
-    background-color: #2f2f53 !important;
+.card.codx_cardimg:hover { 
+    border-color: rgba(255, 255, 255, 0.1)!important;
+    transition: all 2ms;
+}
+.dms-card .card.codx_cardimg:hover {
+    background-color: rgba(255, 255, 255, 0.035)!important;
 }
 
 codx-setting-paramater .bg-body {
@@ -170,6 +176,8 @@ bg-input .e-listview .e-list-item {
 
 .menu-title-gray-800 .menu-item .menu-link {
     color: var(--text-title);
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
 }
 
 .e-splitter.e-splitter-horizontal .e-pane,
@@ -186,7 +194,8 @@ codx-view-list-detail .nav-link {
 }
 
 textarea.codx-textarea {
-    background-color: var(--bg-input);
+   // background-color: var(--bg-input);
+   background-color: inherit;
     color: var(--text-title);
     border-color: var(--border-gray);
 }
@@ -227,7 +236,12 @@ textarea.codx-textarea {
 
 .header-fixed.toolbar-fixed .toolbar {
     border-top-color: var(--border-light);
+    border-top-color: transparent;
 }
+codx-header-v2{
+    border-bottom: 1px var(--border-light) solid;
+}
+
 
 // .e-grid .e-table,
 // .e-grid .e-gridcontent,
@@ -246,8 +260,8 @@ textarea.codx-textarea {
 }
 
 codx-view-list-detail .codx-detail-footer {
-    background-color: var(--primary-lighter) !important;
-    border-color: var(--border-gray);
+    background-color: #1b1e24 !important;
+    border-color: #242830;
 }
 
 .nav-tabs {
@@ -480,7 +494,7 @@ h1,
 .nav-tabs .nav-link.active,
 .nav-tabs .nav-item.show .nav-link {
     color: var(--primary);
-    background-color: var(--bg-card);
+    //background-color: var(--bg-card);
     border-color: var(--border-list);
 }
 
@@ -544,7 +558,8 @@ codx-view-kanban .e-kanban .e-kanban-content .e-content-row .e-content-cells .e-
 .e-input-group.e-float-icon-left:not(.e-success):not(.e-warning):not(.e-error).e-disabled .e-input-in-wrap,
 .e-input-group.e-control-wrapper:not(.e-success):not(.e-warning):not(.e-error):not(.e-float-icon-left).e-disabled,
 .e-input-group.e-control-wrapper.e-float-icon-left:not(.e-success):not(.e-warning):not(.e-error).e-disabled .e-input-in-wrap {
-    background: var(--bg-input);
+    //background: var(--bg-input);
+    background-color: #252532;
     color: var(--text-des);
 }
 
@@ -559,7 +574,7 @@ codx-view-kanban .e-kanban .e-kanban-content .e-content-row .e-content-cells .e-
 
 .e-tab .e-tab-header .e-toolbar-item.e-active {
     border-color: var(--primary) !important;
-    background-color: var(--primary-light);
+    //background-color: var(--primary-light);
 }
 
 .card-footer {
@@ -624,9 +639,9 @@ codx-user-inner a.menu-link {
     border-color: var(--border-gray);
 }
 
-.text-primary {
-    color: var(--primary) !important;
-}
+// .text-primary {
+//     color: var(--primary) !important;
+// }
 
 .wp-template-share {
     border-color: var(--border-gray);
@@ -674,10 +689,12 @@ ejs-listview {
 }
 
 .btn.btn-light-primary {
-    color: var(--text-des);
+    color: var(--text-title)!important;
     background-color: var(--primary-light) !important;
 }
-
+.btn.btn-light-primary:hover {
+    color: var(--white);
+}
 .e-work-cells.e-work-hours {
     background-color: inherit !important;
 }
@@ -750,7 +767,7 @@ label,
 }
 
 .btn {
-    color: var(--primary);
+    //color: var(--primary);
     //border-color:var(--border-light) ;
 }
 
@@ -763,12 +780,12 @@ label,
     border-color: var(--border-list);
 }
 
-codx-attachment .card {
-    background-color: transparent;
-}
+// codx-attachment .card {
+//     background-color: transparent;
+// }
 
 .e-listview .e-list-item .note-option {
-    color: var(--black);
+    color: var(--text-dark);
 }
 
 .checkbox-list input {
@@ -807,13 +824,15 @@ codx-filter-form .list-group-item {
 }
 
 .user-mini-nav {
-    background-color: var(--bg-card-item) !important;
+    //background-color: var(--bg-card-item) !important;
 
     a {
         color: var(--primary);
     }
 }
-
+.user-nav-item.user-nav-active {
+    background-color: #f8faff09;
+}
 .input-number,
 .btn-outline-secondary {
     border-color: var(--border-list);
@@ -869,9 +888,7 @@ codx-view-list-detail .e-listview .e-list-parent {
     background-color: rgba(255, 255, 255, 0.085) !important;
 }
 
-.e-listview .e-list-item.e-active {
-    background-color: rgba(255, 255, 255, 0.05) !important;
-}
+
 
 .e-schedule .e-timeline-year-view .e-resource-column-wrap .e-resource-cells {
     border-color: var(--gray-200) !important;
@@ -918,6 +935,7 @@ ejs-tab#calendarTab .e-calendar {
     //color: #6f7475;
     //border-color: #f5f9fa;
     background-color: var(--bg-card);
+    border-color: var(--border-list);
 }
 .data-text-color {
     color: var(--gray-400);
@@ -942,9 +960,179 @@ ejs-tab#calendarTab .e-calendar {
 .badge-secondary {
     color: var(--text-body);
 }
-::-webkit-scrollbar-thumb:hover {
-    background-color: #22223a !important;
-}
-::-webkit-scrollbar-thumb {
+::-webkit-scrollbar-thumb, .dropdown-menu::-webkit-scrollbar-thumb {
     background-color: #2b2f42 !important;
 }
+::-webkit-scrollbar-thumb:hover, .dropdown-menu::-webkit-scrollbar-thumb:hover {
+    background-color: #22223a !important;
+}
+
+.personal-menu .e-tab-header {
+    background-color: var(--bg-card);
+}
+.calendar-left {
+    background-color: var(--bg-card);
+}
+.e-grid .e-gridheader {
+    border-bottom-color: var(--border-gray);
+}
+.e-richtexteditor .e-rte-content, .e-richtexteditor .e-source-content {
+    background: #0000000d;
+}
+.form-control {
+    color: var(--text-title);
+    background-color: var(--bg-card);
+    border-color: var(--gray-400);
+}
+.input-group-text{
+    border-color: var(--gray-400);
+}
+
+/*** when have bootrap-dark  ***/
+.list-group-item {
+    background-color: var(--bg-card);
+    color: var(--text-body);
+}
+codx-listview.card .card-header {
+    background-color:transparent;
+}
+.e-listview .e-list-item {
+    border-bottom-color: transparent;
+}
+.e-calendar, .e-bigger.e-small .e-calendar {
+    border-color: transparent!important;
+}
+.e-splitter.e-splitter-horizontal, .e-splitter.e-splitter-vertical {
+    border-color: transparent!important;
+}
+.e-listview:not(.e-list-template) .e-list-item {
+    height: auto;
+    line-height: normal;
+    padding: 2px 6px;
+}
+.e-listview {
+    border-color:transparent;
+}
+.e-splitter .e-split-bar.e-split-bar-horizontal {
+    background: transparent;
+    margin: 0!important;
+}
+
+/** kanban **/
+.e-kanban .e-kanban-table.e-content-table .e-content-row:not(.e-swimlane-row) td {
+    background: transparent;
+}
+.e-kanban .e-kanban-content .e-content-row .e-content-cells .e-card-wrapper, .e-kanban .e-kanban-content .e-content-row .e-content-cells .e-card-container {
+    padding: 0;
+}
+.e-kanban .e-kanban-content .e-content-row .e-content-cells .e-card-wrapper .e-card,.e-kanban .e-kanban-content .e-content-row .e-content-cells .e-card-container .e-card {
+    border: 1px transparent solid!important;
+}
+.e-kanban .e-kanban-content .e-content-row .e-content-cells .e-card-wrapper .e-card.e-selection, .e-kanban .e-kanban-content .e-content-row .e-content-cells .e-card-container .e-card.e-selection {
+    border-color: #dde1f10c!important;
+}
+// .e-kanban .e-kanban-content .e-content-row .e-content-cells .e-card-wrapper .e-card:hover, .e-kanban .e-kanban-content .e-content-row .e-content-cells .e-card-container .e-card:hover {
+//     border-color: #f7fbff0a!important;
+// }
+.e-card {
+    line-height: 1.4!important;
+    color: var(--text-body);
+}
+.e-input-group .e-input-group-icon, .e-input-group.e-control-wrapper .e-input-group-icon {
+    border-color: #24323e;
+}
+.e-richtexteditor.e-rte-tb-expand {
+    border-color:  #24323e;
+}
+.e-richtexteditor.e-rte-tb-expand .e-rte-content, .e-richtexteditor.e-rte-tb-expand .e-source-content {
+    border-bottom: 0;
+}
+
+.e-dialog .e-dlg-header-content {
+    border-bottom: 0;
+    padding: 0;
+}
+.e-dialog .e-dlg-header{
+    width: 100%;
+}
+.e-dialog .e-footer-content {
+    border-top:0;
+}
+.e-dialog .e-dlg-content {
+    padding: 0!important;
+}
+
+.feed-box .e-float-input input {
+    border-color: transparent !important;
+}
+.e-toolbar .e-toolbar-items {
+    background: #1b1b28;
+    .e-toolbar-item .e-tbar-btn {
+        background: #0f1014;
+    }
+    &:hover{
+        color: var(--primary-dark);
+    }
+}
+.e-listview .e-list-item.e-active {
+    background-color: rgb(0 0 0 / 2%) !important;
+}
+.e-listview .e-list-item.e-hover{
+    border-color:transparent!important;
+    background-color: #1f2128bb!important;
+}
+.aside.aside-v2-lighter {
+    background-color: var(--bg-body);
+    border-right: 1px #1f212a solid;
+    .border-top.menu-title.menu-aside-group{
+        border-top: 0;
+    }
+  }
+  .dropdown-menu .b-active{
+    background-color: #20242c;
+}
+ejs-dashboardlayout .card {
+    background-color: var(--white);
+    border-radius: 4px!important;
+}
+ejs-dashboardlayout layout-panel .border{
+    border-color: transparent!important;
+}
+
+codx-views .e-grid {
+    border-color: var(--border-list);
+    .e-table {
+        background-color: var(--bg-card);
+    }
+}
+#gridViewV2.e-grid td.e-active{
+    color: var(--text-body);
+    background-color: #0000001c;
+}
+.e-grid .e-rowcell, .e-grid .e-groupcaption, .e-grid .e-indentcell, .e-grid .e-recordplusexpand, .e-grid .e-recordpluscollapse, .e-grid .e-rowdragdropcell, .e-grid .e-detailrowcollapse, .e-grid .e-detailrowexpand, .e-grid .e-detailindentcell, .e-grid .e-detailcell {
+    border-color: var(--border-list);
+}
+.e-sidebar-overlay {
+    background-color: rgb(0 0 0 / 75%);
+}
+.popup-process-detail{
+    .step{
+      background: #202229;
+      border: 1px solid var(--border-gray);
+    }
+}
+codx-view-kanban .e-kanban .e-kanban-header .e-header-cells {
+    height: 38px!important;
+}
+.place-holder {
+    opacity: 0.5;
+}
+
+.dropzone.dropzone-default {
+    background: #1d1f20;
+}
+lib-view-instances .e-kanban-header{
+    .e-header-row{
+      background-color: white;
+    }
+  }

@@ -21,7 +21,7 @@
   <div (click)="clickTreeNode($event)">
     <div class="d-flex justify-content-between w-100 mb-5">
       <div class="d-flex flex-row">
-        <div class="d-flex flex-column w-400px min-w-400px">
+        <div class="d-flex flex-column w-500px min-w-500px">
           <div class="me-4 d-flex fw-bold fs-6 mb-1">
             <span
               class="me-2 icon-16"
@@ -62,17 +62,20 @@
             ></span>
           </div>
           <div
-            class="text-dark fw-bold"
+            class="d-flex text-dark fw-bold"
             [ngClass]="data.parentID == null ? 'fs-5-sm' : 'fs-6'"
           >
-            {{ data.name }}
+            <span class="me-1" *ngIf="data.id">
+              {{ data.id }}
+            </span>
+            <span>-</span>
+            <span class="ms-1"> {{ data.name }} </span>
           </div>
-          <div
-            class="d-flex mt-1"
-            *ngIf="data.type == '1'"
-            [ngbTooltip]="popupBusinessLines"
-          >
-            <span class="me-2 icon-16 icon-corporate_fare"></span>
+          <div class="d-flex mt-1" *ngIf="data.type == '1'">
+            <span
+              class="me-2 icon-16 icon-corporate_fare"
+              [ngbTooltip]="popupBusinessLines"
+            ></span>
             <div
               class="text-gray-600"
               [innerHTML]="
@@ -89,12 +92,11 @@
               ></codx-label>
             </ng-template>
           </div>
-          <div
-            class="d-flex"
-            *ngIf="data.type != '1'"
-            [ngbTooltip]="popupCustomer"
-          >
-            <span class="me-2 icon-16 icon-corporate_fare"></span>
+          <div class="d-flex" *ngIf="data.type != '1'">
+            <span
+              class="me-2 icon-16 icon-corporate_fare"
+              [ngbTooltip]="popupCustomer"
+            ></span>
             <div
               class="text-gray-600"
               [innerHTML]="
@@ -184,12 +186,20 @@
                 class="d-flex align-items-center"
               >
                 <span
-                  [ngClass]=" data?.stepID | customIcon : 'icon' : lstStep : 'stepID'"
-                  [ngStyle]="{ color: data?.stepID | customIcon : 'iconColor' : lstStep : 'stepID' }"
+                  [ngClass]="
+                    data?.stepID | customIcon : 'icon' : lstStep : 'stepID'
+                  "
+                  [ngStyle]="{
+                    color:
+                      data?.stepID
+                      | customIcon : 'iconColor' : lstStep : 'stepID'
+                  }"
                   class="me-1"
                 ></span>
                 <div
-                  [ngbPopover]="data?.stepID | customIcon : 'stepName' : lstStep : 'stepID'"
+                  [ngbPopover]="
+                    data?.stepID | customIcon : 'stepName' : lstStep : 'stepID'
+                  "
                   #pStep="ngbPopover"
                   [openDelay]="500"
                   (mouseenter)="pStep.open()"
@@ -198,8 +208,15 @@
                 >
                   <span
                     class="line-clamp line-clamp-1"
-                    [ngStyle]="{ color: data?.stepID | customIcon : 'textColor' : lstStep : 'stepID' }"
-                    [innerHTML]="data?.stepID | customIcon : 'stepName' : lstStep : 'stepID'"
+                    [ngStyle]="{
+                      color:
+                        data?.stepID
+                        | customIcon : 'textColor' : lstStep : 'stepID'
+                    }"
+                    [innerHTML]="
+                      data?.stepID
+                        | customIcon : 'stepName' : lstStep : 'stepID'
+                    "
                   ></span>
                 </div>
               </div>

@@ -8,6 +8,7 @@ import { BehaviorSubject, Observable, Subject, finalize, map, share } from 'rxjs
 export class CodxWsService {
   listBreadCumb = [];
   functionID:any;
+  wsActive:any;
   SetLayout = new BehaviorSubject<any>(null);
   private caches = new Map<string, Map<string, any>>();
   private cachedObservables = new Map<string, Observable<any>>();
@@ -144,5 +145,17 @@ export class CodxWsService {
     return this.loadData(paras,keyRoot,"SYS","SYS","FunctionListBusiness","GetListFunctionListByModuleIDAsync")
   }
 
- 
+  loadListFucByParentID(funcID:any)
+  {
+    let paras = [funcID,true];
+    let keyRoot = "WSFCByParent" + funcID;
+    return this.loadData(paras,keyRoot,"SYS","SYS","FunctionListBusiness","GetFunctListByParentIDAsync")
+  }
+
+  loadListFucByParentIDChild(funcID:any)
+  {
+    let paras = [funcID];
+    let keyRoot = "WSFCByParentChild" + funcID;
+    return this.loadData(paras,keyRoot,"SYS","SYS","FunctionListBusiness","GetFuncByParentAsync")
+  }
 }

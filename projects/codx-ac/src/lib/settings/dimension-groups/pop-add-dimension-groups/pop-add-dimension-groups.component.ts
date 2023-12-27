@@ -63,8 +63,8 @@ export class PopAddDimensionGroupsComponent
     this.keyField = dialog.dataService!.keyField;
     if (this.formType == 'edit') {
       if (this.dimensionGroups.dimGroupID != null) {
-        this.acService
-          .loadData(
+        this.api
+          .exec(
             'ERM.Business.IV',
             'DimensionSetupBusiness',
             'LoadDataAsync',
@@ -73,8 +73,8 @@ export class PopAddDimensionGroupsComponent
           .subscribe((res: any) => {
             this.objectDimensionSetup = res;
           });
-        this.acService
-          .loadData(
+        this.api
+          .exec(
             'ERM.Business.IV',
             'DimensionControlBusiness',
             'LoadDataAsync',
@@ -272,16 +272,16 @@ export class PopAddDimensionGroupsComponent
             {
               this.dimensionGroups.dimGroupID = res.save.dimGroupID;
             }
-            this.acService
-              .addData(
+            this.api
+              .exec(
                 'ERM.Business.IV',
                 'DimensionSetupBusiness',
                 'AddAsync',
                 [this.dimensionGroups.dimGroupID, this.objectDimensionSetup]
               )
               .subscribe(() => {});
-            this.acService
-              .addData(
+            this.api
+              .exec(
                 'ERM.Business.IV',
                 'DimensionControlBusiness',
                 'AddAsync',
@@ -312,16 +312,16 @@ export class PopAddDimensionGroupsComponent
           })
           .subscribe((res) => {
             if (res.save || res.update) {
-              this.acService
-                .addData(
+              this.api
+                .exec(
                   'ERM.Business.IV',
                   'DimensionSetupBusiness',
                   'UpdateAsync',
                   [this.dimensionGroups.dimGroupID, this.objectDimensionSetup]
                 )
                 .subscribe(() => {});
-              this.acService
-                .addData(
+              this.api
+                .exec(
                   'ERM.Business.IV',
                   'DimensionControlBusiness',
                   'UpdateAsync',
@@ -363,8 +363,8 @@ export class PopAddDimensionGroupsComponent
           {
             this.dimensionGroups.dimGroupID = res.save.dimGroupID;
           }
-          this.acService
-            .addData(
+          this.api
+            .exec(
               'ERM.Business.IV',
               'DimensionSetupBusiness',
               'AddAsync',
@@ -372,8 +372,8 @@ export class PopAddDimensionGroupsComponent
             )
             .subscribe((res) => {
               if (res) {
-                this.acService
-                  .addData(
+                this.api
+                  .exec(
                     'ERM.Business.IV',
                     'DimensionControlBusiness',
                     'AddAsync',

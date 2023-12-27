@@ -11,6 +11,7 @@ import { ExternalSigningComponent } from 'projects/codx-es/src/lib/external-sign
 import { ViewFileDialogComponent } from 'projects/codx-common/src/lib/component/viewFileDialog/viewFileDialog.component';
 import { LayoutOnlyHeaderComponent } from 'projects/codx-common/src/lib/_layout/_onlyHeader/_onlyHeader.component';
 import { LayoutNoAsideComponent } from 'projects/codx-common/src/lib/_layout/_noAside/_noAside.component';
+import { CodxViewFileComponent } from 'projects/codx-share/src/lib/components/codx-view-file/codx-view-file.component';
 
 var childAuthRoutes: Routes = [
   {
@@ -164,6 +165,14 @@ var childAuthRoutes: Routes = [
       ),
   },
   {
+    path: 'tr',
+    canActivate: [AuthGuard],
+    loadChildren: () =>
+      import('projects/codx-tr/src/lib/codx-tr.module').then(
+        (m) => m.CodxTrModule
+      ),
+  },
+  {
     path: 'pr',
     canActivate: [AuthGuard],
     loadChildren: () =>
@@ -269,16 +278,6 @@ var childAuthRoutes: Routes = [
       },
     ],
   },
-  //tesst chuyen instaces qua share
-  {
-    path: 'instances',
-    // canActivate: [AuthGuard],
-    loadChildren: () =>
-      import(
-        'projects/codx-share/src/lib/components/codx-instances/codx-instances.module'
-      ).then((m) => m.CodxInstancesModule),
-  },
-  //end tesst
   {
     path: 'sos',
     component: SosComponent,
@@ -302,6 +301,10 @@ var childPublicRoutes: Routes = [
   {
     path: 'viewfile',
     component: ViewFileDialogComponent,
+  },
+  {
+    path: 'file',
+    component: CodxViewFileComponent,
   },
   {
     path: 'forms',

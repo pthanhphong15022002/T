@@ -245,15 +245,6 @@ export class StepService {
     return false;
   }
 
-  // checOwnerTask(data, type, user) {
-  //   let check =
-  //     data?.roles?.some(
-  //       (element) =>
-  //         element?.objectID == user.userID && element.roleType == type
-  //     ) || false;
-  //   return check;
-  // }
-  //setDeFault
   getDefault(service, funcID, entityName, id = null) {
     return this.api.execSv<any>(
       service,
@@ -329,8 +320,7 @@ export class StepService {
     });
   }
 
-  async chooseTypeTask(isAddGroup = true) {
-    let typeDisableds = isAddGroup ? ['G'] : [];
+  async chooseTypeTask(typeDisableds: string[]) {
     let popupTypeTask = this.callFunc.openForm(
       CodxTypeTaskComponent,
       '',
@@ -609,10 +599,17 @@ export class StepService {
     );
   }
 
-  async openPopupTaskContract(data, action, task, stepID, groupTaskID) {
-    if(task){
+  async openPopupTaskContract(
+    data,
+    action,
+    task,
+    stepID,
+    groupTaskID,
+    isStartIns
+  ) {
+    if (task) {
       task = JSON.parse(JSON.stringify(task));
-    }else{
+    } else {
       if (action == 'add') {
         task = task ? task : {};
         task.recID = Util.uid();
@@ -644,19 +641,25 @@ export class StepService {
         // task.objectLinked = contract?.recID;
       }
     }
-    data = {...data,stepsTasks: task}
+   
+    let quotationID = task?.objectLinked;
+    if ((action == 'edit' || action == 'copy') && quotationID) {
+      let contractData = await firstValueFrom(this.getOneContract(quotationID));    
+      if(contractData){
+        data = { ...data, contract: contractData, stepsTasks: task, isStartIns };
+      }else{
+        this.notiService.notify('Báo giá không tồn tại','3');
+        return;
+      }
+    }else{
+      data = { ...data, stepsTasks: task, isStartIns };
+    }
+
     let contractOuput = await this.openPopupContract(data);
     let contract = contractOuput?.event?.contract;
     if (contract) {
       task.objectLinked = contract?.recID;
-      // task.taskName = contract?.contractName;
       task.owner = contract?.owner;
-      // task.startDate = Date.parse(contract?.effectiveFrom)
-      //   ? contract?.effectiveFrom
-      //   : new Date();
-      // task.endDate = Date.parse(contract?.effectiveTo)
-      //   ? contract?.effectiveTo
-      //   : null;
       let minus = this.minusDate(task.endDate, task.startDate, 'hours');
       task.durationDay = minus ? minus % 24 : 0;
       task.durationHour = minus ? Math.floor(minus / 24) : 0;
@@ -720,7 +723,7 @@ export class StepService {
   }
 
   async openPopupCodxTask(data, location) {
-    //default => data = {action,taskType,isSave,type: 'calendar'|'step'|'activitie'|'notStep'|'group'};
+    //default => data = {action,taskType,isSave,type: 'calendar'|'step'|'activitie'|'instance'|'group'};
     let frmModel: FormModel = {
       entityName: 'DP_Instances_Steps_Tasks',
       formName: 'DPInstancesStepsTasks',
@@ -731,7 +734,7 @@ export class StepService {
     if (location == 'right') {
       let option = new SidebarModel();
       option.Width = '550px';
-      option.zIndex = 1001;
+      option.zIndex = 1010;
       option.FormModel = frmModel;
       popupAddTask = this.callFunc.openSide(CodxAddTaskComponent, data, option);
     } else {
@@ -951,9 +954,14 @@ export class StepService {
   }
 
   //get dataSource
-  getDataSource(data, instanceID): Promise<string> {
+  getDataSource(
+    data,
+    instanceID,
+    entityName = null,
+    recIDParent = null
+  ): Promise<string> {
     return new Promise<string>((resolve, rejects) => {
-      let mehthol = 'GetDataSourceExportTaskAsync';
+      let methol = 'GetDataSourceExportTaskAsync';
       let className = 'ContractsBusiness';
       let service = 'CM';
       let request = [instanceID, data.objectLinked];
@@ -965,21 +973,33 @@ export class StepService {
           className = 'QuotationsBusiness';
           break;
         case 'F':
-          service = 'DP';
-          className = 'InstancesBusiness';
-          mehthol = 'GetDatasByInstanceIDAsync';
-          request = [instanceID];
+          if (entityName != null && recIDParent != null) {
+            className = this.getClassName(entityName);
+            methol = 'GetDataSourceExportAsync';
+            request = recIDParent;
+          } else {
+            service = 'DP';
+            className = 'InstancesBusiness';
+            methol = 'GetDatasByInstanceIDAsync';
+            request = [instanceID];
+          }
           break;
         default:
           return resolve('');
           break;
       }
       this.api
-        .execSv<any>(service, service, className, mehthol, request)
+        .execSv<any>(service, service, className, methol, request)
         .subscribe((str) => {
           let dataSource = '';
           if (str) {
-            if (data.taskType != 'F') {
+            if (
+              data.taskType == 'F' &&
+              entityName == null &&
+              recIDParent == null
+            ) {
+              dataSource = str;
+            } else {
               if (str?.length > 0) {
                 dataSource = '[' + str[0] + ']';
                 if (str[1]) {
@@ -990,12 +1010,111 @@ export class StepService {
                   dataSource = '[{ ' + fix + ',' + datas;
                 }
               }
-            } else {
-              dataSource = str;
             }
           }
           resolve(dataSource);
         });
     });
+  }
+
+  getClassName(entityName) {
+    let className = '';
+    switch (entityName) {
+      case 'CM_Deals':
+        className = 'DealsBusiness';
+        break;
+      case 'CM_Cases':
+        className = 'CasesBusiness';
+        break;
+      case 'CM_Leads':
+        className = 'LeadsBusiness';
+        break;
+      case 'CM_Contracts':
+        className = 'ContractsBusiness';
+        break;
+      case 'CM_Campaigns':
+        className = 'CampaignsBusiness';
+        break;
+    }
+    return className;
+  }
+  //end
+
+  async addTaskCM(dataParent, entityName) {
+    let typeCM;
+    let instanceID;
+    let isStart;
+    let isActivitie;
+    let applyFor;
+    switch (entityName) {
+      case 'CM_Deals':
+        instanceID = dataParent?.refID;
+        isStart = dataParent?.status != '1';
+        isActivitie = false;
+        applyFor = '1';
+        typeCM = '5';
+        break;
+      case 'CM_Leads':
+        instanceID = dataParent?.applyProcess ? dataParent?.refID : null;
+        isStart = dataParent?.status != '1';
+        isActivitie = !dataParent?.applyProcess;
+        applyFor = '5';
+        typeCM = '3';
+        break;
+      case 'CM_Cases':
+        instanceID = dataParent?.refID;
+        isStart = dataParent?.status != '1';
+        isActivitie = false;
+        applyFor = dataParent?.caseType == '1' ? '2' : ' 3';
+        typeCM = '9';
+        break;
+      case 'CM_Customers':
+        instanceID = null;
+        isStart = true;
+        isActivitie = true;
+        applyFor = '5';
+        typeCM = '1';
+        break;
+      case 'CM_Contracts':
+        instanceID = dataParent?.applyProcess ? dataParent?.refID : null;
+        isStart = dataParent?.status != '1';
+        isActivitie = !dataParent?.applyProcess;
+        applyFor = '4';
+        typeCM = '7';
+        break;
+    }
+
+    let typeTask = await this.chooseTypeTask(['G', 'F']);
+    if (typeTask) {
+      let data = {
+        typeCM,
+        isStart,
+        instanceID,
+        type: 'cm',
+        isActivitie,
+        isSave: true,
+        action: 'add',
+        taskType: typeTask,
+        objectID: dataParent?.recID,
+        objectType: 'CM_Contracts',
+        ownerInstance: dataParent?.owner,
+        dataParentTask: {
+          applyFor: '4',
+          parentTaskID: dataParent?.recID,
+        },
+      };
+
+      return await this.openPopupCodxTask(data, 'right');
+    }
+  }
+
+  getESCategoryByCategoryIDType(categoryID, category, refID = null) {
+    return this.api.execSv<any>(
+      'ES',
+      'ES',
+      'CategoriesBusiness',
+      'GetByCategoryIDTypeAsync',
+      [categoryID, category, refID]
+    );
   }
 }

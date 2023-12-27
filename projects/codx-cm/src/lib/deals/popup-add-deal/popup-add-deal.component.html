@@ -12,35 +12,35 @@
   <div class="row">
     <div class="col-6">
       <div class="form-group">
-              <codx-label
-                [formModel]="form.formModel"
-                [Group]="form.formGroup"
-                fiedName="BusinessLineID"
-              >
-              </codx-label>
-              <div *ngIf="deal?.businessLineID && isViewAll; else viewAll">
-                <codx-input
-                  [formModel]="form.formModel"
-                  field="businessLineID"
-                  [crrValue]="deal?.businessLineID"
-                  [disabled]="deal?.processID || action === actionEdit"
-                  [model]="{ ProcessID: deal?.processID }"
-                  (valueChange)="valueChangeBusinessLine($event)"
-                >
-                </codx-input>
-              </div>
-              <ng-template #viewAll>
-                <codx-input
-                  [formModel]="form.formModel"
-                  field="businessLineID"
-                  [disabled]="action === actionEdit"
-                  [crrValue]="deal?.businessLineID"
-                  (valueChange)="valueChangeBusinessLine($event)"
-                >
-                </codx-input>
-              </ng-template>
-            </div>
-          </div>
+        <codx-label
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          fiedName="BusinessLineID"
+        >
+        </codx-label>
+        <div *ngIf="deal?.businessLineID && isViewAll; else viewAll">
+          <codx-input
+            [formModel]="form.formModel"
+            field="businessLineID"
+            [crrValue]="deal?.businessLineID"
+            [disabled]="deal?.processID || action === actionEdit "
+            [model]="{ ProcessID: deal?.processID }"
+            (valueChange)="valueChangeBusinessLine($event)"
+          >
+          </codx-input>
+        </div>
+        <ng-template #viewAll>
+          <codx-input
+            [formModel]="form.formModel"
+            field="businessLineID"
+            [disabled]="action === actionEdit"
+            [crrValue]="deal?.businessLineID"
+            (valueChange)="valueChangeBusinessLine($event)"
+          >
+          </codx-input>
+        </ng-template>
+      </div>
+    </div>
     <div class="col-6">
       <div class="form-group">
         <codx-label
@@ -49,14 +49,24 @@
           [Group]="form.formGroup"
         >
         </codx-label>
-        <codx-input
+        <!-- <codx-input
           type="text"
           field="dealID"
           [crrValue]="deal?.dealID"
           [disabled]="true"
           (valueChange)="valueChange($event)"
         >
-        </codx-input>
+        </codx-input> -->
+            <!-- {deal?.dealID}
+{planceHolderAutoNumber} -->
+        <codx-input
+        field="dealID"
+        type="text"
+        [crrValue]="deal?.applyProcess ?deal?.dealID :planceHolderAutoNumber"
+        [disabled]="true"
+        (controlBlur)="changeAutoNum($event)"
+      ></codx-input>
+
       </div>
     </div>
 
@@ -106,13 +116,12 @@
           [Group]="form.formGroup"
           field="customerID"
           [refValue]="'CMCustomers'"
+          [disabled]="isviewCustomer"
           (valueChange)="valueChange($event)"
         >
         </codx-input>
       </div>
     </div>
-
-
   </div>
   <div class="row">
     <div class="col-12">
@@ -143,15 +152,15 @@
           [Group]="form.formGroup"
         >
         </codx-label>
-            <codx-input
-              type="number"
-              field="dealValue"
-              [min]="0"
-              [crrValue]="deal?.dealValue"
-              (valueChange)="valueChange($event)"
-            >
-            </codx-input>
-            <!-- <codx-input
+        <codx-input
+          type="number"
+          field="dealValue"
+          [min]="0"
+          [crrValue]="deal?.dealValue"
+          (valueChange)="valueChange($event)"
+        >
+        </codx-input>
+        <!-- <codx-input
             field="currencyID"
             [formModel]="form.formModel"
             [Group]="form.formGroup"
@@ -229,28 +238,28 @@
           [Group]="form.formGroup"
         >
         </codx-label>
-        <ejs-combobox
+
+        <div *ngIf="!deal.applyProcess; else ownerProcess">
+          <codx-input
+            field="owner"
+            [formModel]="form.formModel"
+            [placeholder]="gridViewSetup?.SalespersonID?.description"
+            [crrValue]="owner"
+            (valueChange)="valueChangeOwner($event, viewOwnerDefault)"
+          >
+          </codx-input>
+        </div>
+        <ng-template #ownerProcess>
+          <ejs-combobox
           [dataSource]="listParticipants"
-          (valueChange)="valueChangeOwner($event)"
+          (valueChange)="valueChangeOwner($event,viewOwnerProcess)"
           [fields]="fieldCbxParticipants"
           [placeholder]="gridViewSetup?.SalespersonID?.description"
           [allowFiltering]="true"
           [filterType]="'Contains'"
           [value]="owner"
         ></ejs-combobox>
-
-
-  <!-- <codx-input
-      type="combobox"
-      [model]="{ ProcessID: deal.processID }"
-      refValue="DPUserProcess"
-      [placeholder]="gridViewSetup?.SalespersonID?.description"
-      [value]="owner"
-      (valueChange)="valueChangeOwner($event)"
-     >
-  </codx-input> -->
-
-
+        </ng-template>
       </div>
     </div>
     <div class="col-6">
@@ -270,7 +279,6 @@
         </codx-input>
       </div>
     </div>
-
   </div>
   <div class="row">
     <div class="col-6">
@@ -344,8 +352,6 @@
         </codx-input>
       </div>
     </div> -->
-
-
   </div>
 
   <div class="row">
@@ -400,6 +406,7 @@
             [objectIdParent]="deal?.recID"
             [customerID]="deal?.customerID"
             [formModel]="dialog.formModel"
+            [isAdd]="action == actionAdd"
             (valueChangeCustom)="valueChangeCustom($event)"
             (addFileCompleted)="addFileCompleted($event)"
           >
@@ -417,7 +424,7 @@
       type="button"
       button
       class="btn btn-primary ms-1"
-      (click)="saveOpportunity()"
+      (click)="saveDeal()"
     >
       <codx-label default="Lưu"></codx-label>
     </button>
@@ -447,7 +454,7 @@
       </ng-container>
     </ng-container>
   </ng-container> -->
-  <ng-container *ngIf="listFields &&listFields?.length > 0">
+  <ng-container *ngIf="listFields && listFields?.length > 0">
     <ng-container *ngFor="let item of listFields">
       <div class="form-group">
         <codx-input-custom-field
@@ -458,6 +465,7 @@
           [objectIdParent]="deal?.recID"
           [customerID]="deal?.customerID"
           [formModel]="dialog.formModel"
+          [isAdd]="action == actionAdd"
           (valueChangeCustom)="valueChangeCustom($event)"
           (addFileCompleted)="addFileCompleted($event)"
         >
@@ -466,7 +474,6 @@
     </ng-container>
   </ng-container>
 </ng-template>
-
 
 <ng-container>
   <codx-layout-add

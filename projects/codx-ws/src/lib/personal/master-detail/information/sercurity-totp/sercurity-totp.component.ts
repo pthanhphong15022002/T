@@ -15,6 +15,7 @@ export class SercurityTOTPComponent implements OnInit , AfterViewInit {
   authSteps = authSteps;
   secret:any;
   twoFA:any;
+  show:any = false;
   constructor(
     private api: ApiHttpService,
     @Optional() dialog?: DialogRef,
@@ -39,7 +40,7 @@ export class SercurityTOTPComponent implements OnInit , AfterViewInit {
       if (e.target.type === "text") {
        var data = e.clipboardData.getData('Text');
        data = data.split('');
-       [].forEach.call(document.querySelectorAll(".otp"), (node, index) => {
+       [].forEach.call(document.querySelectorAll(".ws-input"), (node, index) => {
           node.value = data[index];
         });
       }
@@ -119,4 +120,8 @@ export class SercurityTOTPComponent implements OnInit , AfterViewInit {
       });
   }
 
+  showLogin()
+  {
+    this.show = !this.show;
+  }
 }

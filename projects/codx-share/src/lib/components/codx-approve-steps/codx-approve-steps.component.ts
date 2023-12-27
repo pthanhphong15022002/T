@@ -56,6 +56,7 @@ export class CodxApproveStepsComponent
   @Input() dynamicApprovers = [];
   @Input() isSettingMode = true; //True: ko hiện user nếu chọn role position
   @Output() addEditItem = new EventEmitter();
+  @Output() checkPopupApproverInfo = new EventEmitter();
 
   headerText = '';
   subHeaderText;
@@ -81,6 +82,7 @@ export class CodxApproveStepsComponent
   isAfterRender = false;
   lblAllowEditAreas: any;
   lblConfirmControl: any;
+  popupApproverInfo =false;
   constructor(
     private cfService: CallFuncService,
     private cr: ChangeDetectorRef,
@@ -167,6 +169,10 @@ export class CodxApproveStepsComponent
                   if (st?.approvers) {
                     for (let ap of st?.approvers) {
                       let curAp = [];
+                      if (ap?.roleType == 'PA' || ap?.roleType == 'PE') {
+                        this.popupApproverInfo = true;
+                        this.checkPopupApproverInfo.emit(true);
+                      }
                       if (ap?.roleType == 'P' || ap?.roleType == 'U') {
                         curAp = apInfos.filter(
                           (x) =>
@@ -185,7 +191,7 @@ export class CodxApproveStepsComponent
                           ap.userID = curAp[0]?.userID;
                           ap.userName = curAp[0]?.userName;
                           ap.employeeID = curAp[0]?.employeeID;
-                          ap.position = ap?.position ?? curAp[0]?.positionName;
+                          ap.position = curAp[0]?.positionName ?? ap.position;
                           ap.orgUnitName = curAp[0]?.orgUnitName;
                         }
                       }

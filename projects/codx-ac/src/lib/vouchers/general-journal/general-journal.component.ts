@@ -3,9 +3,9 @@ import { AuthStore, ButtonModel, DataRequest, NotificationsService, SidebarModel
 import { Subject, takeUntil } from 'rxjs';
 import { CodxAcService } from '../../codx-ac.service';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
-import { JournalService } from '../../journals/journals.service';
 import { GeneralJournalAddComponent } from './general-journal-add/general-journal-add.component';
 import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
+import { CodxCommonService } from 'projects/codx-common/src/lib/codx-common.service';
 
 @Component({
   selector: 'lib-general-journal',
@@ -45,9 +45,9 @@ export class GeneralJournalComponent extends UIComponent {
     private acService: CodxAcService,
     private authStore: AuthStore,
     private shareService: CodxShareService,
+    private codxCommonService: CodxCommonService,
     private notification: NotificationsService,
     private tenant: TenantStore,
-    private journalService: JournalService
   ) {
     super(inject);
     this.cache
@@ -118,7 +118,7 @@ export class GeneralJournalComponent extends UIComponent {
         },
       },
     ];
-    this.journalService.setChildLinks(this.journalNo);
+    this.acService.setChildLinks();
   }
 
   ngOnDestroy() {
@@ -242,6 +242,16 @@ export class GeneralJournalComponent extends UIComponent {
             optionSidebar,
             this.view.funcID
           );
+          dialog.closed.subscribe((res) => {
+            if (res && res?.event) {
+              if (res?.event?.type === 'discard') {
+                if(this.view.dataService.data.length == 0){
+                  this.itemSelected = undefined;
+                  this.detectorRef.detectChanges();
+                } 
+              }
+            }
+          })
         }
       });
   }
@@ -273,6 +283,16 @@ export class GeneralJournalComponent extends UIComponent {
           optionSidebar,
           this.view.funcID
         );
+        dialog.closed.subscribe((res) => {
+          if (res && res?.event) {
+            if (res?.event?.type === 'discard') {
+              if(this.view.dataService.data.length == 0){
+                this.itemSelected = undefined;
+                this.detectorRef.detectChanges();
+              } 
+            }
+          }
+        })
       });
   }
 
@@ -311,6 +331,16 @@ export class GeneralJournalComponent extends UIComponent {
                   optionSidebar,
                   this.view.funcID
                 );
+                dialog.closed.subscribe((res) => {
+                  if (res && res?.event) {
+                    if (res?.event?.type === 'discard') {
+                      if(this.view.dataService.data.length == 0){
+                        this.itemSelected = undefined;
+                        this.detectorRef.detectChanges();
+                      } 
+                    }
+                  }
+                })
                 this.view.dataService
                   .add(datas)
                   .pipe(takeUntil(this.destroy$))
@@ -329,7 +359,14 @@ export class GeneralJournalComponent extends UIComponent {
     this.view?.currentView?.dataService
       .delete([dataDelete], true)
       .pipe(takeUntil(this.destroy$))
-      .subscribe((res: any) => {});
+      .subscribe((res: any) => {
+        if (res && !res?.error) {
+          if(this.view.dataService.data.length == 0){
+            this.itemSelected = undefined;
+            this.detectorRef.detectChanges();
+          } 
+        }
+      });
   }
 
   /**
@@ -342,7 +379,7 @@ export class GeneralJournalComponent extends UIComponent {
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         this.dataCategory = res;
-        this.shareService
+        this.codxCommonService
           .codxRelease(
             'AC',
             data.recID,
@@ -378,7 +415,7 @@ export class GeneralJournalComponent extends UIComponent {
    * @param data
    */
   cancelReleaseVoucher(text: any, data: any) {
-    this.shareService
+    this.codxCommonService
       .codxCancel('AC', data?.recID, this.view.formModel.entityName, null, null)
       .pipe(takeUntil(this.destroy$))
       .subscribe((result: any) => {
@@ -500,16 +537,12 @@ export class GeneralJournalComponent extends UIComponent {
    * @param data
    * @returns
    */
-  changeMFDetail(event: any, data: any, type: any = '') {
-    this.acService.changeMFGeneralJournal(
-      event,
-      data,
-      type,
-      this.journal,
-      this.view.formModel
-    );
+  changeMFDetail(event: any,type: any = '') {
+    let data = this.view.dataService.dataSelected;
+    if (data) {
+      this.acService.changeMFGeneralJournal(event,data,type,this.journal,this.view.formModel);
+    }
   }
-
 
   /**
    * *Hàm get data mặc định của chứng từ

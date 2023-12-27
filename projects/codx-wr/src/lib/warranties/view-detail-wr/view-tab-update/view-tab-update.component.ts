@@ -13,6 +13,7 @@ import {
 import {
   AlertConfirmInputConfig,
   ApiHttpService,
+  AuthStore,
   CacheService,
   CallFuncService,
   CodxGridviewV2Component,
@@ -23,10 +24,11 @@ import {
   SortModel,
   Util,
 } from 'codx-core';
-import { Observable, finalize, firstValueFrom, map } from 'rxjs';
+import { Observable, Subject, finalize, firstValueFrom, map } from 'rxjs';
 import { CodxWrService } from '../../../codx-wr.service';
 import { EditSettingsModel } from '@syncfusion/ej2-angular-grids';
 import { PopupUpdateReasonCodeComponent } from '../../popup-update-reasoncode/popup-update-reasoncode.component';
+import moment from 'moment';
 
 @Component({
   selector: 'wr-view-tab-update',
@@ -84,6 +86,10 @@ export class ViewTabUpdateComponent implements OnInit {
   columnsGrid = [];
   dataSelected: any;
   titleAction = '';
+  adjustWorkOrderUpdate = '0';
+  private destroy$ = new Subject<void>(); //? list observable hủy các subscribe api
+  language = '';
+
   constructor(
     private api: ApiHttpService,
     private cache: CacheService,
@@ -91,9 +97,11 @@ export class ViewTabUpdateComponent implements OnInit {
     private detectorRef: ChangeDetectorRef,
     private callFc: CallFuncService,
     private notiSv: NotificationsService,
-    private codxShareService: CodxShareService
+    private codxShareService: CodxShareService,
+    private auth: AuthStore,
+
   ) {
-    this.getGridViewSetup();
+    this.language = this.auth?.get()?.language?.toLowerCase();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -111,17 +119,32 @@ export class ViewTabUpdateComponent implements OnInit {
     }
   }
 
-  ngOnInit(): void {
+  async ngOnInit() {
     // this.getGridViewSetup();
     //this.sortField = new SortModel();
     // this.sortField.field = 'statusCode';
     // this.sortField.dir = 'asc';
+    var param = await firstValueFrom(
+      this.cache.viewSettingValues('WRParameters')
+    );
+    if (param?.length > 0) {
+      let dataParam = param.filter((x) => x.category == '1' && !x.transType)[0];
+      if (dataParam) {
+        let paramDefault = JSON.parse(dataParam.dataValue);
+        this.adjustWorkOrderUpdate = paramDefault['AdjustWorkOrderUpdate'] ?? '0';
+      }
+    }
   }
 
   ngAfterViewInit(): void {
-    this.detectorRef.detectChanges();
+    this.getGridViewSetup();
+
   }
 
+  onDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
   getListOrderUpdate() {
     this.loaded = false;
     this.request.predicates = this.predicates;
@@ -216,6 +239,7 @@ export class ViewTabUpdateComponent implements OnInit {
             .map((x: any) => x.fieldName);
           this.getColumsGrid(res);
         }
+        this.detectorRef.detectChanges();
       });
   }
 
@@ -298,7 +322,7 @@ export class ViewTabUpdateComponent implements OnInit {
             break;
           case 'SYS02':
           case 'SYS03':
-            if (data?.exported) res.disabled = true;
+            if (data?.exported || this.adjustWorkOrderUpdate == '0') res.disabled = true;
 
             break;
           default:
@@ -306,6 +330,22 @@ export class ViewTabUpdateComponent implements OnInit {
         }
       });
     }
+  }
+  //#endregion
+
+  //#region  set time scheduleTime
+  setTimeEdit(startDate, scheduleTime) {
+    let serviceTime = null;
+    if (startDate && scheduleTime) {
+      let date = new Date(startDate);
+
+      serviceTime = moment(date).format("DD/MM/YYYY")  + ' ' + scheduleTime;
+    }
+    return serviceTime
+  }
+
+  padTo2Digits(num) {
+    return String(num).padStart(2, '0');
   }
   //#endregion
 
@@ -345,14 +385,19 @@ export class ViewTabUpdateComponent implements OnInit {
             )
             .closed.subscribe((e) => {
               if (e && e?.event != null) {
-                var data = e?.event;
+                let data = e?.event;
+                if(data?.statusCode == 'C01' || data?.statusCode == 'C03'){
+                  if(!this.lstUpdate.some(x => x.statusCode == 'E01') && this.lstUpdate.some(x => x.statusCode == 'P01')){
+                    this.getListOrderUpdate();
+                  }
+                }
                 let idx = this.lstUpdate.findIndex(
                   (x) => x.recID == data.recID
                 );
                 if (idx != -1) {
                   this.lstUpdate[idx] = data;
                 } else {
-                  this.lstUpdate.push(Object.assign({}, data));
+                  this.lstUpdate.unshift(data);
                 }
                 this.lstUpdate = JSON.parse(JSON.stringify(this.lstUpdate));
                 this.wrSv.listOrderUpdateSubject.next({

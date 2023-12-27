@@ -12,8 +12,10 @@ import {
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { DomSanitizer } from '@angular/platform-browser';
 import {
+  AESCryptoService,
   ApiHttpService,
   AuthStore,
+  CallFuncService,
   DialogData,
   DialogRef,
   NotificationsService,
@@ -28,6 +30,9 @@ import { FileInfo, FileUpload, Permission } from '@shared/models/file.model';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { SystemDialogService } from 'projects/codx-common/src/lib/component/viewFileDialog/systemDialog.service';
+import { shareTitle } from './share-title';
+import { CodxEmailComponent } from 'projects/codx-share/src/lib/components/codx-email/codx-email.component';
+import { E } from '@angular/cdk/keycodes';
 
 @Component({
   selector: 'share',
@@ -65,7 +70,7 @@ export class ShareComponent implements OnInit {
   title = 'Thông báo';
   titleDialog = `Chia sẻ`;
   titleDialogRequest = `Yêu cầu cấp quyền`;
-  fileEditing: FileUpload;
+  fileEditing: FileUpload | any;
   titleShared = 'Chia sẻ thành công';
   titleShareContent = 'Nhập nội dung';
   titleRequestTitle = 'Nhập lý do...';
@@ -94,25 +99,29 @@ export class ShareComponent implements OnInit {
   ccPermission: Permission[];
   bccPermission: Permission[];
   shareGroup: FormGroup;
+
+  shareTitle = shareTitle;
+  shareType:string = "0";
+  shareGroup2: FormGroup;
+  pwOTP:string = "";
+  qrBase64:any;
   //   @ViewChild(ContextMenuComponent) public basicMenu: ContextMenuComponent;
   @ViewChild('view') view!: ViewsComponent;
-
+  @ViewChild('qrtmp') qrtmp:any;
+  
   @Output() eventShow = new EventEmitter<boolean>();
   constructor(
-    private domSanitizer: DomSanitizer,
-    private tenantService: TenantService,
     private folderService: FolderService,
     private fileService: FileService,
     private api: ApiHttpService,
     public dmSV: CodxDMService,
-    private modalService: NgbModal,
     private formBuilder: FormBuilder,
     private auth: AuthStore,
     private notificationsService: NotificationsService,
     private router: Router,
-    // private confirmationDialogService: ConfirmationDialogService,
     private changeDetectorRef: ChangeDetectorRef,
-    private systemDialogService: SystemDialogService,
+    private callfunc: CallFuncService,
+    private aesCrypto: AESCryptoService,
     @Optional() data?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -131,10 +140,18 @@ export class ShareComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    
     this.shareGroup = this.formBuilder.group({
       by: '',
       per: 'readonly',
     });
+    
+    this.shareGroup2 = this.formBuilder.group({
+      shareType: '0',
+      pwType: '1',
+      permissions: ''
+    });
+
     this.user = this.auth.get();
     if (
       this.dmSV.breakCumArr.length > 0 &&
@@ -143,6 +160,9 @@ export class ShareComponent implements OnInit {
       this.fullName = null;
     if (!this.isShare) this.getOwner();
     else this.getEmailTemplate();
+
+    this.changeValueFormGroup();
+    this.randomPW();
   }
 
   getEmailTemplate() {
@@ -442,5 +462,135 @@ export class ShareComponent implements OnInit {
         this.postblog = $event.data;
         break;
     }
+  }
+
+  changeValueFormGroup()
+  {
+    this.shareGroup2.controls['shareType'].valueChanges.subscribe(value => {
+      this.shareType = value;
+    });
+  }
+  randomPW()
+  {
+    if(this.type != "file") return;
+    this.pwOTP = this.makeid(8);
+  }
+  makeid(length) {
+    let result = '';
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    const charactersLength = characters.length;
+    let counter = 0;
+    while (counter < length) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+      counter += 1;
+    }
+    return result;
+  }
+
+  sendMail()
+  {
+    var dialog = this.callfunc.openForm(CodxEmailComponent, '', 900, 800);
+    dialog.closed.subscribe((x) => {
+      if (x.event) {
+      
+      }
+    });
+  }
+
+  saveShare(type:any)
+  {
+    let data = this.shareGroup2.value;
+
+    //Bất kỳ ai || Đối tượng cụ thể
+    if(data.shareType == "0" || data.shareType == "1")
+    {
+      data.module = this.formModel.entityName.split("_")[0];
+      data.functionID = this.formModel.funcID;
+      data.url = this.fileEditing?.recID;
+
+      if(data.pwType == "2") data.pw = this.pwOTP
+      if(data.shareType == "1")
+      {
+        let listPer = data.permissions.split(";");
+        data.permissions = [];
+        if(listPer.length >0)
+        {
+          listPer.forEach(element => {
+            var per = new Permission();
+            per.objectID = element;
+            per.objectType = "Email";
+            per.read = true;
+            data.permissions.push(per);
+          });
+        }
+      }
+
+      this.api.execSv("BG","BG","SharingsBusiness","SaveItemAsync",data).subscribe((item:any)=>{
+        if(item)
+        {
+          if(type=="link")
+          {
+            this.copyToClipboard(this.getLink(item.recID));
+            this.notificationsService.notify(this.titleCopyUrl);
+          }
+          else if(type == "qr")
+          {
+            this.callfunc.openForm(
+              this.qrtmp,
+              null,
+              520,
+              520,
+              '',
+              null,
+              null
+            );
+            this.api
+            .execSv<string>(
+              'SYS',
+              'ERM.Business.AD',
+              'UsersBusiness',
+              'GenQRCodeByContentAsync',
+              this.getLink(item.recID)
+            )
+            .subscribe((qrImg) => {
+              if (qrImg) {
+                this.qrBase64 = 'data:image/png;base64,' + qrImg;
+              }
+            });
+            
+          }
+        }
+      });
+    }
+    //Nội bộ
+    else
+    {
+
+    }
+  }
+
+  getLink(recID:any)
+  {
+    const queryParams = 
+    {
+      _k : this.aesCrypto.encode(recID)
+    };
+
+    var l = this.router.url.split('/');
+    const url = this.router.serializeUrl(
+      this.router.createUrlTree([`/` + l[1] + `/file`], {
+        queryParams: queryParams,
+      })
+    );
+
+    return window.location.host + url;
+  }
+
+  downloadQR(img:any)
+  {
+    var a = document.createElement("a"); //Create <a>
+    a.href = img; //Image Base64 Goes here
+    a.download = this.data.fileName + "-qr.png"; //File name Here
+    a.click()
   }
 }

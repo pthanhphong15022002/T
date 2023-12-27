@@ -23,8 +23,9 @@
   (clickMF)="clickMF($event, dataSelected)"
   (changeDataMF)="changeDataMF($event, dataSelected)"
   (requestEnded)="requestEnded($event)"
+  [autoSearch]="true"
+  (searchChanged)="searchChanged($event)"
 ></codx-views>
-
 <!-- KANBAN -->
 <ng-template #cardKanban let-data let-setting="setting">
   <codx-card-img
@@ -172,7 +173,7 @@
         >
           {{ getStatusCode(data?.statusCodeID) }}</span
         > -->
-        <span
+        <!-- <span
           class="text-ellipsis line-clamp line-clamp-2"
           [ngbTooltip]="
             data?.statusCodeID | formatStatusCode : valueListStatusCode
@@ -181,7 +182,14 @@
             data?.statusCodeID | formatStatusCode : valueListStatusCode
           "
         >
-        </span>
+        </span> -->
+
+        <span
+        class="text-ellipsis line-clamp line-clamp-2"
+        #statusCodeID
+        [innerHTML]="data?.statusCodeID| formatvalue : view.formModel : 'statusCodeID'  | async "
+      >
+      </span>
       </div>
     </div>
     <div class="d-flex justify-content-between align-items-center mt-1">
@@ -567,14 +575,15 @@
     [gridViewSetup]="gridViewSetup"
     [funcID]="funcID"
     [listSteps]="listSteps"
-    [valueListStatusCode]="valueListStatusCode"
     [colorReasonSuccess]="colorReasonSuccess"
     [colorReasonFail]="colorReasonFail"
     (changeMF)="changeMF($event)"
     (clickMoreFunc)="clickMoreFunc($event)"
     [checkMoreReason]="checkMoreReason(dataSelected)"
     (changeProgress)="autoStart($event)"
+    (changeDataCustomers)="editCustomer($event)"
     [isChangeOwner]="isChangeOwner"
+    [taskAdd]="taskAdd"
   >
   </codx-deal-detail>
 </ng-template>
@@ -587,7 +596,6 @@
     [gridViewSetup]="gridViewSetup"
     [funcID]="funcID"
     [listSteps]="listSteps"
-    [valueListStatusCode]="valueListStatusCode"
     [colorReasonSuccess]="colorReasonSuccess"
     [colorReasonFail]="colorReasonFail"
     (changeMF)="changeMF($event)"
@@ -814,7 +822,7 @@
   ></span>
 </ng-template>
 
-<ng-template #templateStatusCode let-data>
+<!-- <ng-template #templateStatusCode let-data>
   <div
     *ngIf="data?.statusCodeID"
     class="badge badge-sm d-flex align-items-center me-0 color-theme me-1"
@@ -826,7 +834,7 @@
       {{ getStatusCode(data?.statusCodeID) }}</span
     >
   </div>
-</ng-template>
+</ng-template> -->
 <ng-template #templateIndustries let-data>
   <span
     class="text-gray-600 fs-7"

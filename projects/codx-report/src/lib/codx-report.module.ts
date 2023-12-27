@@ -8,6 +8,7 @@ import { CodxCoreModule, EnvironmentConfig } from 'codx-core';
 import { CodxShareModule } from 'projects/codx-share/src/public-api';
 import { environment } from 'src/environments/environment';
 import { CodxReportViewDetailComponent } from './codx-report-view-detail/codx-report-view-detail.component';
+import { CodxReportPopupViewDetailComponent } from './codx-report-popup-view-detail/codx-report-popup-view-detail.component';
 import { CodxReportViewsComponent } from './codx-report-views/codx-report-views.component';
 import { CodxReportComponent } from './codx-report.component';
 import { PopupAddReportComponent } from './popup-add-report/popup-add-report.component';
@@ -50,6 +51,7 @@ const routes: Routes = [
     CodxReportViewDetailComponent,
     CodxReportViewsComponent,
     PopupShowDatasetComponent,
+    CodxReportPopupViewDetailComponent,
   ],
   imports: [
     RouterModule.forChild(routes),
@@ -65,7 +67,8 @@ const routes: Routes = [
     PopupAddReportComponent,
     CodxReportIframeComponent,
     CodxReportViewDetailComponent,
-    CodxReportViewsComponent
+    CodxReportViewsComponent,
+    CodxReportPopupViewDetailComponent,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

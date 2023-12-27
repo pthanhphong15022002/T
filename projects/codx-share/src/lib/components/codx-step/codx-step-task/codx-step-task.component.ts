@@ -24,6 +24,7 @@ import {
   AlertConfirmInputConfig,
   Util,
   DialogRef,
+  TenantStore,
 } from 'codx-core';
 import {
   DP_Instances_Steps,
@@ -55,11 +56,15 @@ import {
 } from '../../codx-tmmeetings/models/CO_Meetings.model';
 import { CodxBookingService } from '../../codx-booking/codx-booking.service';
 import { CodxShareService } from '../../../codx-share.service';
-import { ActivatedRoute } from '@angular/router';
-import { ExportData } from '../../../models/ApproveProcess.model';
+import { CodxCommonService } from 'projects/codx-common/src/lib/codx-common.service';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CodxViewApproveComponent } from '../codx-step-common/codx-view-approve/codx-view-approve.component';
 import { PopupCustomFieldComponent } from '../../codx-fields-detail-temp/popup-custom-field/popup-custom-field.component';
 import { Subject, firstValueFrom } from 'rxjs';
+import { ContractsDetailComponent } from 'projects/codx-cm/src/lib/contracts/contracts-detail/contracts-detail.component';
+import { environment } from 'src/environments/environment';
+import { Location } from '@angular/common';
+import { ExportData } from 'projects/codx-common/src/lib/models/ApproveProcess.model';
 @Component({
   selector: 'codx-step-task',
   templateUrl: './codx-step-task.component.html',
@@ -74,8 +79,10 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   @Input() formModel: FormModel;
   @Input() instanceStep: DP_Instances_Steps;
   @Input() listInstanceStep: DP_Instances_Steps[];
-  @Input() taskAdd: DP_Instances_Steps_Tasks;
   @Input() groupTaskAdd: DP_Instances_Steps_TaskGroups;
+  @Input() taskAdd;
+  @Input() entityName;
+  @Input() recIDParent;
 
   @Input() isTaskFirst = false; // giai đoạn đầu tiên
   @Input() isStart = true; // bắt đầu ngay
@@ -97,6 +104,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   @Input() isMoveStage = false; // chuyển giai đoạn
   @Input() isLockSuccess = false; // lọc cái task 100%
 
+  @Input() applyFor; //tìm sesion giao việc
   @Input() sessionID = ''; // sesion giao việc
   @Input() formModelAssign: FormModel; // formModel của giao việc
   @Input() isChangeOwner = false;
@@ -114,6 +122,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   @Output() valueChangeProgress = new EventEmitter<any>(); // type A = all, D=default, R = required
   @Output() changeProgress = new EventEmitter<any>();
   @Output() isSuccessStep = new EventEmitter<any>();
+  @Output() recIDTaskAdd = new EventEmitter<any>();
   //#endregion
 
   //#region variable
@@ -146,6 +155,8 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
 
   frmModelInstancesGroup: FormModel;
   frmModelInstancesTask: FormModel;
+  frmModelContracts: FormModel;
+  frmModelQuotation: FormModel;
   dialogGuide: DialogRef;
   vllDataTask;
   vllDataStep;
@@ -177,8 +188,18 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     entityName: 'DP_Instances',
     gridViewName: 'grvDPInstances',
   };
+
+  frmModelExport: FormModel = {
+    formName: 'CMTempDataSources',
+    gridViewName: 'grvCMTempDataSources',
+    entityName: 'CM_TempDataSources',
+  };
   taskApprover;
   approverDialog;
+  titleLanguageAdd = '';
+  titleLanguageEdit = '';
+  widthTask = 'auto';
+  isFirstTime = true;
   //#endregion
   constructor(
     private cache: CacheService,
@@ -191,7 +212,11 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     private changeDetectorRef: ChangeDetectorRef,
     private bookingService: CodxBookingService,
     private codxShareService: CodxShareService,
-    private activedRouter: ActivatedRoute
+    private codxCommonService: CodxCommonService,
+    private activedRouter: ActivatedRoute,
+    private tenantStore: TenantStore,
+    private router: Router,
+    private location: Location
   ) {
     this.user = this.authStore.get();
     this.id = Util.uid();
@@ -213,6 +238,15 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     if (DP032.datas) {
       this.vllDataStep = DP032?.datas;
     }
+    this.cache
+      .moreFunction('DPInstancesStepsTasks', 'grvDPInstancesStepsTasks')
+      .subscribe((res) => {
+        // console.log("--------------", res);
+        // const objectMoi = {};
+        // for (const obj of res) {
+        //   objectMoi[obj.id] = obj;
+        // }
+      });
     this.getDefaultCM();
     this.frmModelInstancesGroup = {
       formName: 'DPInstancesStepsTaskGroups',
@@ -224,6 +258,19 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       formName: 'DPInstancesStepsTasks',
       entityName: 'DP_Instances_Steps_Tasks',
       gridViewName: 'grvDPInstancesStepsTasks',
+    };
+    this.frmModelContracts = {
+      funcID: 'CM0204',
+      formName: 'CMContracts',
+      entityName: 'CM_Contracts',
+      entityPer: 'CM_Contracts',
+      gridViewName: 'grvCMContracts',
+    };
+    this.frmModelQuotation = {
+      formName: 'CMQuotationsLines',
+      gridViewName: 'grvCMQuotationsLines',
+      entityName: 'CM_QuotationsLines',
+      funcID: 'CM02021',
     };
   }
 
@@ -247,15 +294,13 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       this.listGroupTask?.splice(index, 0, this.groupTaskAdd);
     }
     if (changes?.taskAdd && this.taskAdd) {
-      let group = this.listGroupTask?.find(
-        (group) => group.refID == this.taskAdd?.taskGroupID
+      this.changeTaskAdd(
+        this.taskAdd?.task,
+        this.taskAdd?.progressGroup,
+        this.taskAdd?.progressStep,
+        this.taskAdd?.isCreateMeeting
       );
-      if (group) {
-        if (!group?.task) {
-          group['task'] = [];
-        }
-        group?.task?.push(this.taskAdd);
-      }
+      this.taskAdd = null;
     }
     if (changes?.isAddTask && this.isRoleAll && this.isAddTask) {
       this.chooseTypeTask(['F']);
@@ -295,8 +340,46 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         this.carFM?.gridViewName
       );
     });
+    setTimeout(() => {
+      let elements = document.getElementsByClassName('step-task-right');
+      const listTask = Array.from(elements);
+      if (listTask?.length > 0 ) {
+        let maxWidth = 0;
+        for (const element of listTask) {
+          const computedWidth = window.getComputedStyle(element).width;
+          const width = parseFloat(computedWidth) + 10;
+          if (width > maxWidth) {
+            maxWidth = width;
+          }
+        }
+        this.widthTask = maxWidth.toString() + 'px';
+        console.log(this.widthTask);
+        this.isFirstTime = false;
+      }
+    }, 1000);
   }
 
+  ngAfterViewChecked() {
+  }
+  setWidth(){
+    this.widthTask = "auto";
+    let elements = document.getElementsByClassName('step-task-right');
+    const listTask = Array.from(elements);
+    if (listTask?.length > 0) {
+      let maxWidth = 0;
+      for (const element of listTask) {
+        const computedWidth = window.getComputedStyle(element).width;
+        const width = parseFloat(computedWidth) + 10;
+
+        if (width > maxWidth) {
+          maxWidth = width;
+        }
+      }
+      this.widthTask = maxWidth.toString() + 'px';
+      console.log(this.widthTask);
+      this.isFirstTime = false;
+    }
+  }
   async drop(event: CdkDragDrop<string[]>, data = null, isParent = false) {}
 
   //#region get Data
@@ -480,12 +563,16 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
           case 'SYS001':
           case 'SYS002':
             break;
+          case 'SYS004': //mail
+            // res.disabled = task?.taskType != "E";
+            break;
           case 'SYS02': //xóa
             if (!(!task?.isTaskDefault && (this.isRoleAll || isGroup))) {
               res.disabled = true;
             }
             break;
           case 'SYS03': //sửa
+            this.titleLanguageEdit;
             if (!(this.isRoleAll || isGroup || isTask)) {
               res.disabled = true;
             } else {
@@ -505,6 +592,13 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
             }
             break;
           case 'DP20': // tiến độ
+            if (
+              (task?.taskType == 'Q' || task?.taskType == 'CO') &&
+              !task?.objectLinked
+            ) {
+              res.isblur = true;
+              break;
+            }
             res.isblur = this.isOnlyView
               ? !(
                   (this.isRoleAll || isGroup || isTask) &&
@@ -541,7 +635,6 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
             break;
           case 'DP25':
           case 'DP26':
-          case 'SYS004':
             res.disabled = true;
             break;
           case 'DP27': // đặt xe
@@ -778,9 +871,9 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       case 'DP29':
         this.deleteMeeting(task);
         break;
-      case 'SYS004':
-        this.sendMail();
-        break;
+      // case 'SYS004':
+      //   this.sendMailTask(task);
+      //   break;
       case 'DP27':
         this.addBookingCar(task);
         break;
@@ -805,7 +898,17 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         //   customData.refID =  task.refID ;
         //   customData.refType ='DP_Steps_Tasks'
         // }
-  
+        // let frmModel: FormModel;
+        // switch (task?.taskType) {
+        //   case 'CO':
+        //     frmModel = this.frmModelContracts;
+        //     break;
+        //   case 'Q':
+        //     frmModel = this.frmModelQuotation;
+        //     break;
+        //   default:
+        //     frmModel = this.frmModelInstancesTask;
+        // }
         this.codxShareService.defaultMoreFunc(
           e,
           task,
@@ -845,6 +948,15 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   }
   //#endregion
 
+  sendMailTask(data) {
+    this.api
+      .exec<any>('DP', 'InstancesStepsBusiness', 'SendMailTaskAsync', [
+        data,
+        null,
+      ])
+      .subscribe((res) => {});
+  }
+
   //#region start task
   async startTask(task: DP_Instances_Steps_Tasks, groupTask) {
     let objectLinked = task?.objectLinked;
@@ -852,16 +964,22 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       //báo giá
       this.addQuotation();
     } else if (task?.taskType == 'CO' && !task?.objectLinked) {
-      let data = { action: 'add', type: 'task'};
+      let data = {
+        action: 'add',
+        type: 'task',
+        entityName: this.entityName,
+        parentID: this.recIDParent,
+      };
       let taskContract = await this.stepService.openPopupTaskContract(
         data,
         'add',
         task,
         this.currentStep?.recID,
-        groupTask
+        groupTask,
+        this.isStart
       );
       objectLinked = taskContract?.objectLinked;
-      if(!taskContract){
+      if (!taskContract) {
         return;
       }
     }
@@ -1086,13 +1204,19 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         }
       });
     } else if (this.taskType?.value == 'CO') {
-      let data = { action: 'add', type: 'task' };
+      let data = {
+        action: 'add',
+        type: 'task',
+        entityName: this.entityName,
+        parentID: this.recIDParent,
+      };
       let taskContract = await this.stepService.openPopupTaskContract(
         data,
         'add',
         null,
         this.currentStep?.recID,
-        groupID
+        groupID,
+        this.isStart
       );
       this.api
         .exec<any>('DP', 'InstancesStepsBusiness', 'AddTaskStepAsync', [
@@ -1141,6 +1265,9 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       this.currentStep.progress = progressStep;
       this.notiService.notifyCode('SYS006');
       isCreateMeeting && this.addMeetings(task);
+      if (task?.assigned == '1') {
+        this.recIDTaskAdd.emit(task?.recID);
+      }
     }
     this.changeDetectorRef.markForCheck();
   }
@@ -1219,14 +1346,15 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
           action: 'edit',
           type: 'task',
           recIDContract: task.objectLinked,
-          stepsTasks:task,
+          stepsTasks: task,
         };
         let taskContract = await this.stepService.openPopupTaskContract(
           data,
           'edit',
           task,
           this.currentStep?.recID,
-          null
+          null,
+          this.isStart
         );
         this.api
           .exec<any>('DP', 'InstancesStepsBusiness', 'UpdateTaskStepAsync', [
@@ -1243,6 +1371,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
           (type) => type.value == task?.taskType
         );
         let dataOutput = await this.openPopupTask('edit', 'step', task);
+        this.titleAction = '';
         if (dataOutput?.task) {
           this.changeTaskEdit(dataOutput?.task, groupIdOld);
         }
@@ -1307,7 +1436,8 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
           'copy',
           task,
           this.currentStep?.recID,
-          null
+          null,
+          this.isStart
         );
         this.api
           .exec<any>('DP', 'InstancesStepsBusiness', 'AddTaskStepAsync', [
@@ -1323,7 +1453,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
           (type) => type.value == task?.taskType
         );
         let taskOutput = await this.openPopupTask('copy', 'step', task);
-
+        this.titleAction = '';
         if (taskOutput?.task) {
           let data = taskOutput;
           this.currentStep?.tasks?.push(data.task);
@@ -1433,59 +1563,85 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       this.notiService.notify('tesst kiem tra da giao task');
       return;
     }
-    var task = new TM_Tasks();
-    task.taskName = data.taskName;
-    task.refID = data?.recID;
-    task.refType = 'DP_Instances_Steps_Tasks';
-    task.dueDate = data?.endDate;
-    task.sessionID = this.sessionID ?? this.currentStep?.instanceID;
-    let dataReferences = [
-      {
-        recIDReferences: data.recID,
-        refType: 'DP_Instances_Steps_Tasks',
-        createdOn: data.createdOn,
-        memo: data.taskName,
-        createdBy: data.createdBy,
-      },
-    ];
-    let assignModel: AssignTaskModel = {
-      vllRole: 'TM001',
-      title: moreFunc.customName,
-      vllShare: 'TM003',
-      task: task,
-    };
-    let option = new SidebarModel();
+    this.getSession().then((session) => {
+      if (session) {
+        var task = new TM_Tasks();
+        task.taskName = data.taskName;
+        task.refID = data?.recID;
+        task.refType = 'DP_Instances_Steps_Tasks';
+        task.dueDate = data?.endDate;
+        task.sessionID = this.sessionID ?? this.currentStep?.instanceID;
+        let dataReferences = [
+          {
+            recIDReferences: data.recID,
+            refType: 'DP_Instances_Steps_Tasks',
+            createdOn: data.createdOn,
+            memo: data.taskName,
+            createdBy: data.createdBy,
+          },
+        ];
+        let assignModel: AssignTaskModel = {
+          vllRole: 'TM001',
+          title: moreFunc.customName,
+          vllShare: 'TM003',
+          task: task,
+        };
+        let option = new SidebarModel();
 
-    option.FormModel = this.formModelAssign
-      ? this.formModelAssign
-      : this.frmModelInstances;
+        option.FormModel = this.formModelAssign
+          ? this.formModelAssign
+          : this.frmModelInstances;
 
-    option.Width = '550px';
-    var dialogAssign = this.callfc.openSide(
-      AssignInfoComponent,
-      assignModel,
-      option
-    );
-    dialogAssign.closed.subscribe((e) => {
-      var doneSave = false;
-      if (e && e.event != null) {
-        doneSave = true;
+        option.Width = '550px';
+        var dialogAssign = this.callfc.openSide(
+          AssignInfoComponent,
+          assignModel,
+          option
+        );
+        dialogAssign.closed.subscribe((e) => {
+          var doneSave = false;
+          if (e && e.event != null) {
+            doneSave = true;
+            this.api
+              .execSv<any>(
+                'DP',
+                'DP',
+                'InstancesStepsBusiness',
+                'UpdatedAssignedStepTasksAsync',
+                [data.stepID, data.recID]
+              )
+              .subscribe((res) => {
+                if (res) {
+                  data.assigned = '1';
+                  this.changeDetectorRef.markForCheck();
+                }
+              });
+          }
+          this.saveAssign.emit(doneSave);
+        });
+      }
+    });
+  }
+
+  //getSessionTask - session khi giao việc
+  getSession(): Promise<string> {
+    return new Promise<string>((resolve, rejects) => {
+      if (this.sessionID) {
+        resolve(this.sessionID);
+      } else if (this.applyFor == 0) resolve(this.currentStep?.instanceID);
+      else {
         this.api
           .execSv<any>(
-            'DP',
-            'DP',
-            'InstancesStepsBusiness',
-            'UpdatedAssignedStepTasksAsync',
-            [data.stepID, data.recID]
+            'CM',
+            'CM',
+            'DealsBusiness',
+            'GetRecIDCRMByRecIDInstancesAsync',
+            [this.currentStep?.instanceID, this.applyFor]
           )
-          .subscribe((res) => {
-            if (res) {
-              data.assigned = '1';
-              this.changeDetectorRef.markForCheck();
-            }
+          .subscribe((sessionID) => {
+            resolve(sessionID);
           });
       }
-      this.saveAssign.emit(doneSave);
     });
   }
   //#endregion
@@ -1681,6 +1837,14 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         );
       }
     }
+    if (
+      (data?.taskType == 'Q' || data?.taskType == 'CO') &&
+      !data?.objectLinked &&
+      this.isTaskFirst &&
+      this.isRoleAll
+    ) {
+      return false;
+    }
     return this.isTaskFirst && this.isRoleAll;
   }
 
@@ -1694,6 +1858,12 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       (id) => id == data?.taskGroupID
     );
     if (type != 'P' && type != 'G') {
+      if (
+        (data?.taskType == 'Q' || data?.taskType == 'CO') &&
+        !data?.objectLinked
+      ) {
+        return;
+      }
       let checkTaskLink = this.stepService.checkTaskLink(
         data,
         this.currentStep
@@ -1784,7 +1954,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
 
   startTaskAuto(task) {
     const taskFinds = this.currentStep?.tasks?.filter((taskF) =>
-      taskF.parentID.includes(task?.refID)
+      taskF?.parentID?.includes(task?.refID)
     );
     if (taskFinds && taskFinds.length > 0) {
       taskFinds.forEach((element) => {
@@ -1877,9 +2047,16 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         }
         //làm như vậy để cập nhật file
         let dataCopy = JSON.parse(JSON.stringify(data));
-        let groupFind = this.listGroupTask.find(
-          (group) => group.refID == dataCopy?.taskGroupID
-        );
+        // let groupFind = this.listGroupTask.find(
+        //   (group) => group.refID == dataCopy?.taskGroupID
+        // );
+        let groupFind = this.listGroupTask.find((group) => {
+          if (dataCopy?.taskGroupID) {
+            return group.refID == dataCopy?.taskGroupID;
+          } else {
+            return !!group.refID == !!dataCopy?.taskGroupID;
+          }
+        });
         if (groupFind) {
           let index = groupFind?.task?.findIndex(
             (taskFind) => taskFind.recID == dataCopy?.recID
@@ -1902,84 +2079,118 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
 
   //#region view
   viewTask(data, type) {
-    if (data?.taskType == 'CO') {
-      this.cache.functionList('CM0204').subscribe((res) => {
+    if (data && !this.isViewStep && !this.isMoveStage) {
+      if (data?.taskType == 'CO') {
+        if (data?.objectLinked) {
+          const url1 = this.location.prepareExternalUrl(this.location.path());
+          const parser = document.createElement('a');
+          parser.href = url1;
+          const domain = parser.origin;
+
+          let tenant = this.tenantStore.get().tenant;
+          let url = `${domain}/${tenant}/cm/contracts/CM0204?predicate=RecID=@0&dataValue=${data?.objectLinked}`;
+          window.open(url, '_blank');
+          return;
+        } else {
+          this.notiService.notify('Bắt đầu ngay để thiết lập hợp đồng', '3');
+        }
+      } else {
+      }
+      let frmModel: FormModel = {
+        entityName: 'DP_Instances_Steps_Tasks',
+        formName: 'DPInstancesStepsTasks',
+        gridViewName: 'grvDPInstancesStepsTasks',
+      };
+      //a thao laasy refID
+      let listRefIDAssign = '';
+      switch (type) {
+        case 'T':
+          listRefIDAssign = data.recID;
+          break;
+        case 'G':
+          if (data.task?.length > 0) {
+            let arrRecIDTask = data.task.map((x) => x.recID);
+            listRefIDAssign = arrRecIDTask.join(';');
+          }
+          break;
+        case 'P':
+          if (data.taskGroup?.length > 0) {
+            if (data.taskGroup?.task?.length > 0) {
+              let arrRecIDTask = data.taskGroup.task.map((x) => x.recID);
+              if (listRefIDAssign && listRefIDAssign.trim() != '')
+                listRefIDAssign += ';' + arrRecIDTask.join(';');
+              else listRefIDAssign = arrRecIDTask.split(';');
+            }
+            //thieu cong task ngooai mai hoir thuan de xets
+          }
+          break;
+      }
+
+      let listData = {
+        type,
+        value: data,
+        step: this.currentStep,
+        isRoleAll: this.isRoleAll,
+        isUpdate: this.isUpdate,
+        isOnlyView: this.isOnlyView,
+        isUpdateProgressGroup: this.isUpdateProgressGroup,
+        listRefIDAssign: listRefIDAssign,
+        instanceStep: this.currentStep,
+        sessionID: this.sessionID, // session giao việc
+        formModelAssign: this.formModelAssign, // formModel của giao việc
+        customerName: this.customerName,
+        dealName: this.dealName,
+        contractName: this.contractName,
+        leadName: this.leadName,
+        listField: this.listFieldTask,
+      };
+      let option = new SidebarModel();
+      option.Width = '550px';
+      option.zIndex = 1011;
+      option.FormModel = frmModel;
+      let dialog = this.callfc.openSide(
+        CodxViewTaskComponent,
+        listData,
+        option
+      );
+      dialog.closed.subscribe(async (dataOuput) => {
+        if (dataOuput?.event?.dataProgress) {
+          this.handelProgress(data, dataOuput?.event?.dataProgress);
+        }
+        if (dataOuput?.event?.task || dataOuput?.event?.group) {
+          await this.getStepById();
+        }
+        this.moreDefaut = { ...this.moreDefaut };
+      });
+    }
+  }
+
+  viewDetailContract(task) {
+    if (task?.objectLinked) {
+      this.stepService.getOneContract(task?.objectLinked).subscribe((res) => {
         if (res) {
-          this.url = res?.url;
-          this.codxService.navigate('', this.url, {
-            recID: data?.CallType,
-          });
+          let data = {
+            contract: res,
+          };
+          let option = new DialogModel();
+          option.IsFull = true;
+          option.zIndex = 1001;
+          this.callfc.openForm(
+            ContractsDetailComponent,
+            '',
+            null,
+            null,
+            '',
+            data,
+            '',
+            option
+          );
+        } else {
+          this.notiService.notify('Không tìm thấy hợp đồng', '3');
         }
       });
     } else {
-      if (data && !this.isViewStep && !this.isMoveStage) {
-        let frmModel: FormModel = {
-          entityName: 'DP_Instances_Steps_Tasks',
-          formName: 'DPInstancesStepsTasks',
-          gridViewName: 'grvDPInstancesStepsTasks',
-        };
-        //a thao laasy refID
-        let listRefIDAssign = '';
-        switch (type) {
-          case 'T':
-            listRefIDAssign = data.recID;
-            break;
-          case 'G':
-            if (data.task?.length > 0) {
-              let arrRecIDTask = data.task.map((x) => x.recID);
-              listRefIDAssign = arrRecIDTask.join(';');
-            }
-            break;
-          case 'P':
-            if (data.taskGroup?.length > 0) {
-              if (data.taskGroup?.task?.length > 0) {
-                let arrRecIDTask = data.taskGroup.task.map((x) => x.recID);
-                if (listRefIDAssign && listRefIDAssign.trim() != '')
-                  listRefIDAssign += ';' + arrRecIDTask.join(';');
-                else listRefIDAssign = arrRecIDTask.split(';');
-              }
-              //thieu cong task ngooai mai hoir thuan de xets
-            }
-            break;
-        }
-
-        let listData = {
-          type,
-          value: data,
-          step: this.currentStep,
-          isRoleAll: this.isRoleAll,
-          isUpdate: this.isUpdate,
-          isOnlyView: this.isOnlyView,
-          isUpdateProgressGroup: this.isUpdateProgressGroup,
-          listRefIDAssign: listRefIDAssign,
-          instanceStep: this.currentStep,
-          sessionID: this.sessionID, // session giao việc
-          formModelAssign: this.formModelAssign, // formModel của giao việc
-          customerName: this.customerName,
-          dealName: this.dealName,
-          contractName: this.contractName,
-          leadName: this.leadName,
-          listField: this.listFieldTask,
-        };
-        let option = new SidebarModel();
-        option.Width = '550px';
-        option.zIndex = 1011;
-        option.FormModel = frmModel;
-        let dialog = this.callfc.openSide(
-          CodxViewTaskComponent,
-          listData,
-          option
-        );
-        dialog.closed.subscribe(async (dataOuput) => {
-          if (dataOuput?.event?.dataProgress) {
-            this.handelProgress(data, dataOuput?.event?.dataProgress);
-          }
-          if (dataOuput?.event?.task || dataOuput?.event?.group) {
-            await this.getStepById();
-          }
-          this.moreDefaut = { ...this.moreDefaut };
-        });
-      }
+      this.notiService.notify('Không tìm thấy hợp đồng', '3');
     }
   }
   //#endregion
@@ -2709,14 +2920,17 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   approvalTrans(task: DP_Instances_Steps_Tasks) {
     this.taskApproval = task;
     let idTask = task?.isTaskDefault ? task?.refID : task?.recID;
+    let category = task?.isTaskDefault
+      ? 'DP_Steps_Tasks'
+      : 'DP_Instances_Steps_Tasks';
     if (task?.approveRule && task?.recID) {
       this.api
         .execSv<any>(
           'ES',
           'ES',
           'CategoriesBusiness',
-          'GetByCategoryIDAsync',
-          idTask
+          'GetByCategoryIDTypeAsync',
+          [idTask, category, null]
         )
         .subscribe((res) => {
           if (!res) {
@@ -2724,12 +2938,24 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
             return;
           } else {
             this.stepService
-              .getDataSource(task, this.currentStep.instanceID)
+              .getDataSource(
+                task,
+                this.currentStep.instanceID,
+                this.entityName,
+                this.recIDParent
+              )
               .then((source) => {
+                let formModelEx = this.frmModelExport;
+                if (task.taskType != 'CO' && task.taskType != 'Q') {
+                  formModelEx = this.getFormModelEx(formModelEx);
+                }
                 let exportData: ExportData = {
                   funcID: 'DPT04',
                   recID: task?.recID,
                   data: source,
+                  entityName: formModelEx.entityName,
+                  formName: formModelEx.formName,
+                  gridViewName: formModelEx.gridViewName,
                 };
                 this.release(task, res, exportData);
               });
@@ -2741,11 +2967,11 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   }
 
   release(data: any, category: any, exportData = null) {
-    this.codxShareService.codxReleaseDynamic(
+    this.codxCommonService.codxReleaseDynamic(
       'DP',
       data,
       category,
-      'DP_Instances_Steps_Tasks',
+      'DP_Instances_Steps_Tasks', // entyname của đối tượng gửi duyệt ???????????
       'DPT04',
       data?.taskName,
       this.releaseCallback.bind(this),
@@ -2762,6 +2988,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     if (res?.msgCodeError) this.notiService.notify(res?.msgCodeError);
     else {
       this.taskApproval.approveStatus = res?.returnStatus || '3';
+      this.setWidth();
       this.moreDefaut = JSON.parse(JSON.stringify(this.moreDefaut));
       this.changeDetectorRef.markForCheck();
     }
@@ -2769,7 +2996,9 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
 
   cancelApprover(task) {
     let idTask = task?.isTaskDefault ? task?.refID : task?.recID;
-
+    let category = task?.isTaskDefault
+      ? 'DP_Steps_Tasks'
+      : 'DP_Instances_Steps_Tasks';
     this.notiService.alertCode('ES016').subscribe((x) => {
       if (x.event.status == 'Y') {
         this.api
@@ -2777,12 +3006,12 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
             'ES',
             'ES',
             'CategoriesBusiness',
-            'GetByCategoryIDAsync',
-            idTask
+            'GetByCategoryIDTypeAsync',
+            [idTask, category, null]
           )
           .subscribe((res: any) => {
             if (res) {
-              this.codxShareService
+              this.codxCommonService
                 .codxCancel(
                   'DP',
                   task?.recID,
@@ -2808,6 +3037,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       }
     });
   }
+
   openFormApprover(task) {
     this.taskApproval = task;
     this.approverDialog = this.callfc.openForm(
@@ -2819,6 +3049,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       { categoryID: task?.recID, type: '2', stepsTasks: task }
     );
   }
+
   openFormField(task) {
     let listField = this.getFields(this.currentStep?.fields, task?.fieldID);
     let obj = {
@@ -2885,7 +3116,9 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
             true
           );
         }
-        this.changeProgress.emit(true);
+        if (this.isTaskFirst && !this.isStart && this.isRoleAll) {
+          this.changeProgress.emit(true);
+        }
         this.changeDetectorRef.markForCheck();
       }
     });
@@ -2923,100 +3156,72 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
 
   exportTemplet(e, data) {
     this.stepService
-      .getDataSource(data, this.currentStep.instanceID)
+      .getDataSource(
+        data,
+        this.currentStep.instanceID,
+        this.entityName,
+        this.recIDParent
+      )
       .then((res) => {
         var customData = {
           refID: data.recID,
           refType: 'DP_Instances_Steps_Tasks',
-          dataSource: res,
+          dataSource: res ?? '',
         };
-        debugger
-        if(data?.isTaskDefault){
-          customData.refID =  data.refID ;
-          customData.refType ='DP_Steps_Tasks'
+        debugger;
+        if (data?.isTaskDefault) {
+          customData.refID = data.refID;
+          customData.refType = 'DP_Steps_Tasks';
         }
+
+        let formModelEx = this.frmModelExport;
+        if (data.taskType != 'CO' && data.taskType != 'Q') {
+          formModelEx = this.getFormModelEx(formModelEx);
+        }
+
         this.codxShareService.defaultMoreFunc(
           e,
           data,
           this.afterSave,
-          this.frmModelInstancesTask,
+          formModelEx,
           null,
           this,
           customData
         );
         this.changeDetectorRef.detectChanges();
       });
-    //   let mehthol = 'GetDataSourceExportTaskAsync';
-    //   let className = 'ContractsBusiness';
-    //   let service = 'CM';
-    //   let request = [this.currentStep.instanceID, data.objectLinked];
-    //   switch (this.taskAdd.taskType) {
-    //     case 'CO':
-    //       className = 'ContractsBusiness';
-    //       break;
-    //     case 'Q':
-    //       className = 'QuotationsBusiness';
-    //       break;
-    //     case 'F':
-    //       service = 'DP';
-    //       className = 'InstancesBusiness';
-    //       mehthol = 'GetDatasByInstanceIDAsync';
-    //       request = [this.currentStep.instanceID];
-    //       break;
-    //     default:
-    //       var customData = {
-    //         refID: data.recID,
-    //         refType: 'DP_Instances_Steps_Tasks',
-    //       };
-    //       this.codxShareService.defaultMoreFunc(
-    //         e,
-    //         data,
-    //         this.afterSave,
-    //         this.frmModelInstancesTask,
-    //         null,
-    //         this,
-    //         customData
-    //       );
-    //       this.changeDetectorRef.detectChanges();
-    //       return;
-    //       break;
-    //   }
-    //   this.api
-    //     .execSv<any>(service, service, className, mehthol, request)
-    //     .subscribe((str) => {
-    //       let dataSource = '';
-    //       if (str) {
-    //         if (this.taskAdd.taskType != 'F') {
-    //           if (str?.length > 0) {
-    //             dataSource = str[1];
-    //             if (str[0]) {
-    //               let datas = str[1];
-    //               if (datas && datas.includes('[{')) datas = datas.substring(2);
-    //               let fix = str[0]; // data đối tượng cần export
-    //               fix = fix.substring(1, fix.length - 1);
-    //               dataSource = '[{ ' + fix + ',' + datas;
-    //             }
-    //           }
-    //         } else {
-    //           dataSource = str;
-    //         }
-    //       }
-    //       var customData = {
-    //         refID: data.recID,
-    //         refType: 'DP_Instances_Steps_Tasks',
-    //         dataSource: dataSource,
-    //       };
-    //       this.codxShareService.defaultMoreFunc(
-    //         e,
-    //         data,
-    //         this.afterSave,
-    //         this.frmModelInstancesTask,
-    //         null,
-    //         this,
-    //         customData
-    //       );
-    //       this.changeDetectorRef.detectChanges();
-    //     });
+  }
+
+  getFormModelEx(formModelEx: FormModel) {
+    switch (this.entityName) {
+      case 'CM_Deals':
+        formModelEx.entityName = 'CM_Deals';
+        formModelEx.gridViewName = 'grvCMDeals';
+        formModelEx.formName = 'CMDeals';
+        break;
+      case 'CM_Cases':
+        formModelEx.entityName = 'CM_Cases';
+        formModelEx.gridViewName = 'grvCMCases';
+        formModelEx.formName = 'CMDeals';
+        break;
+      case 'CM_Leads':
+        formModelEx.entityName = 'CM_Leads';
+        formModelEx.gridViewName = 'grvCMLeads';
+        formModelEx.formName = 'CMLeads';
+        break;
+      //contrack và quations thì dùng măc định
+      // case 'CM_Contracts':
+      //   formModelEx.entityName = 'CM_Contracts';
+      //   formModelEx.gridViewName = 'grvCMContracts';
+      //   formModelEx.formName = 'CMContracts';
+      //   break;
+      case 'CM_Campaigns':
+        formModelEx.entityName = 'CM_Campaigns';
+        formModelEx.gridViewName = 'grvCMCampaigns';
+        formModelEx.formName = 'CMCampaigns';
+        break;
+    }
+    return formModelEx;
   }
 
   //export Form Nhập liệu

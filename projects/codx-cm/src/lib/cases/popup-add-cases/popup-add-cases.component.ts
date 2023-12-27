@@ -431,6 +431,7 @@ export class PopupAddCasesComponent
     permission.assign = roleType === 'O';
     permission.delete = roleType === 'O';
     permission.allowPermit = roleType === 'O';
+    permission.isActive = true;
     this.cases.permissions = this.cases?.permissions
       ? this.cases.permissions
       : [];
@@ -738,7 +739,7 @@ export class PopupAddCasesComponent
     permission.delete = permissionDP.delete;
     permission.upload = permissionDP.upload;
     permission.download = permissionDP.download;
-    permission.isActive = permissionDP.isActive;
+    permission.isActive = true;
     permission.create = permissionDP.create;
     permission.memberType = '2'; // Data from DP
     permission.allowPermit = permissionDP.allowPermit;
@@ -1041,7 +1042,7 @@ export class PopupAddCasesComponent
       }
      }
      else {
-      let idxCrr = liststeps.findIndex((x) => x.stepID == this.instance?.stepID);
+      let idxCrr = liststeps.findIndex((x) => x.stepID == this.cases?.stepID);
       if (idxCrr != -1) {
         for (let i = 0; i <= idxCrr; i++) {
           let stepCurrent = liststeps[i];

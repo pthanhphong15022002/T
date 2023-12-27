@@ -12,9 +12,11 @@ import {
 } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { EditSettingsModel } from '@syncfusion/ej2-angular-grids';
-import { ApiHttpService, CodxService, FormModel } from 'codx-core';
+import { ApiHttpService, CodxService, FormModel, TenantStore } from 'codx-core';
 import { CodxCmService } from '../../codx-cm.service';
 import { CM_Contracts } from '../../models/cm_model';
+import { environment } from 'src/environments/environment';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'lib-quotations-view-detail',
@@ -92,7 +94,9 @@ export class QuotationsViewDetailComponent implements OnChanges, OnInit {
     private codxCM: CodxCmService,
     private codxService: CodxService,
     protected sanitizer: DomSanitizer,
-    private changeDef: ChangeDetectorRef
+    private changeDef: ChangeDetectorRef,
+    private tenantStore: TenantStore,
+    private routerActive: ActivatedRoute
   ) {}
   ngOnInit(): void {
     if (this.codxService.asideMode == '2') this.hideMF = true;
@@ -113,9 +117,9 @@ export class QuotationsViewDetailComponent implements OnChanges, OnInit {
           this.dataSource = res;
         }
       });
-    if (this.itemSelected.refID) {
+    if (this.itemSelected.parentID) {
       this.codxCM
-        .getOneObject(this.itemSelected.refID, 'QuotationsBusiness')
+        .getOneObject(this.itemSelected.parentID, 'QuotationsBusiness')
         .subscribe((ref) => {
           this.dataRef = ref;
           this.loadedRef = true;
@@ -171,5 +175,13 @@ export class QuotationsViewDetailComponent implements OnChanges, OnInit {
 
   clickMF(e, data) {
     this.clickMoreFunction.emit({ e: e, data: data });
+  }
+
+  openRef() {
+    let tenant = this.tenantStore.get().tenant;
+    let apiUrl = location.href.slice(0, location.href.indexOf(tenant) - 1);
+    let url = `${apiUrl}/${tenant}/cm/quotations/CM0202?predicate=RecID=@0&dataValue=${this.dataRef?.recID}`;
+
+    window.open(url, '_blank');
   }
 }

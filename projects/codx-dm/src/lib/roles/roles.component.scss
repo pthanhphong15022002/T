@@ -1,8 +1,4 @@
-.add-user {
-    position: absolute;
-    right: 635px;
-    bottom: 0;
-}
+
 
 .user-nav-item {
     border-left: 3px solid transparent;
@@ -12,17 +8,41 @@
     background-color: #f4f7ff;
     border-left-color: #3699ff;
 }
-
-.role-left .user-mini-nav,
-.role-right {
-    max-height: calc(100vh - 200px) !important;
-    overflow: auto;
+.role-left{
+    position: relative;
+    .add-user {
+        position: absolute;
+        right: 10px;
+        bottom: 4px;
+    }
 }
-
+.role-left .user-mini-nav{
+    height: calc(100% - 30px) !important;
+    overflow: auto;
+    padding-left: 0!important;
+}
+.role-right {
+    position: absolute;
+    top: 0;
+    left: 30%;
+    right: 0;
+    bottom: 0px;
+    padding-left: 15px;
+    overflow: hidden;
+    .role-right-main{
+        height: calc(100% - 70px)!important;
+        overflow: auto;
+    }
+    .role-right-footer{
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 70px;
+    }
+}
 .table {
     width: 100%;
-    margin-bottom: 1rem;
-    color: #3f4254;
     background-color: transparent;
 }
 
@@ -47,14 +67,14 @@ th {
     font-weight: 500;
     font-size: 1rem;
     border-bottom-width: 1px;
-    padding-top: 1rem;
-    padding-bottom: 1rem;
+    padding-top: 7px;
+    padding-bottom: 7px;
     color: var(--text-dark);
 }
 
 .table thead th {
     vertical-align: bottom;
-    border-bottom: 2px solid #ebedf3;
+    border-bottom:1px solid var(--gray-200);
 }
 
 // .table tbody td, .table thead th {

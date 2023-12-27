@@ -509,7 +509,7 @@ export class CodxDpService {
     return this.api.exec<any>('DP', 'ProcessesBusiness', 'GetAsync', id);
   }
   getAutoNumberByInstanceNoSetting(instanceNoSetting): Observable<any> {
-    return this.api.exec(
+    return this.api.exec<any>(
       'ERM.Business.AD',
       'AutoNumbersBusiness',
       'CreateAutoNumberAsync',
@@ -533,14 +533,15 @@ export class CodxDpService {
       data
     );
   }
-  // getGuide(processID) {
-  //   return this.api.exec<any>(
-  //     'DP',
-  //     'StepsBusiness',
-  //     'GetListStepsNameByProcessIDAsync',
-  //     processID
-  //   );
-  // }
+  //delete AutoCode nếu ko dùng nữa
+  removeAutoCode(listAutoCode) {
+    return this.api.exec<any>(
+      'ES',
+      'ApprovalStepsBusiness',
+      'DeleteListAutoNumberAsync',
+      listAutoCode
+    );
+  }
   getADAutoNumberByAutoNoCode(autoNoCode): Observable<any> {
     return this.api.execSv(
       'SYS',
@@ -555,12 +556,12 @@ export class CodxDpService {
     return this.api.exec<any>('DP', 'ProcessGroupsBusiness', 'GetAsync');
   }
 
-  openOrClosedInstance(recID, check,applyFor) {
+  openOrClosedInstance(recID, check, applyFor) {
     return this.api.exec<any>(
       'DP',
       'InstancesBusiness',
       'OpenOrClosedInstanceAsync',
-      [recID, check,applyFor]
+      [recID, check, applyFor]
     );
   }
 
@@ -764,6 +765,7 @@ export class CodxDpService {
       tranID
     );
   }
+
   getESCategoryByCategoryID(categoryID) {
     return this.api.execSv<any>(
       'ES',
@@ -771,6 +773,16 @@ export class CodxDpService {
       'CategoriesBusiness',
       'GetByCategoryIDAsync',
       categoryID
+    );
+  }
+
+  getESCategoryByCategoryIDType(categoryID, category, refID = null) {
+    return this.api.execSv<any>(
+      'ES',
+      'ES',
+      'CategoriesBusiness',
+      'GetByCategoryIDTypeAsync',
+      [categoryID, category, refID]
     );
   }
 
@@ -936,6 +948,15 @@ export class CodxDpService {
       'ERM.Business.CM',
       'DealsBusiness',
       'MoveDealReasonAsync',
+      data
+    );
+  }
+  moveStageBackDataCM(data) {
+    return this.api.execSv<any>(
+      'CM',
+      'ERM.Business.CM',
+      'DealsBusiness',
+      'MoveStageBackByRefIDAsync',
       data
     );
   }

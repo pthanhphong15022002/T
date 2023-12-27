@@ -27,7 +27,7 @@ import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { ProgressBar } from '@syncfusion/ej2-angular-progressbar';
 import { CodxListReportsComponent } from 'projects/codx-share/src/lib/components/codx-list-reports/codx-list-reports.component';
 import { Subject, takeUntil } from 'rxjs';
-import { JournalService } from '../../journals/journals.service';
+import { CodxCommonService } from 'projects/codx-common/src/lib/codx-common.service';
 declare var jsBh: any;
 @Component({
   selector: 'lib-cashpayments',
@@ -38,21 +38,21 @@ declare var jsBh: any;
 export class CashPaymentsComponent extends UIComponent {
   //#region Constructor
   views: Array<ViewModel> = []; // model view
-  @ViewChild('templateDetailLeft') templateDetailLeft?: TemplateRef<any>; //? template view danh sách chi tiết (trái)
-  @ViewChild('templateDetailRight') templateDetailRight: TemplateRef<any>; //? template view danh sách chi tiết (phải)
-  @ViewChild('listTemplate') listTemplate?: TemplateRef<any>; //? template view danh sách
-  @ViewChild('templateGrid') templateGrid?: TemplateRef<any>; //? template view lưới
-  headerText: any; //? tên tiêu đề truyền cho form thêm mới
+  @ViewChild('templateDetailLeft') templateDetailLeft?: TemplateRef<any>;
+  @ViewChild('templateDetailRight') templateDetailRight: TemplateRef<any>;
+  @ViewChild('listTemplate') listTemplate?: TemplateRef<any>;
+  @ViewChild('templateGrid') templateGrid?: TemplateRef<any>;
+  headerText: any;
   runmode: any;
-  journalNo: string; //? số của sổ nhật kí
-  itemSelected: any; //? data của view danh sách chi tiết khi được chọn
-  userID: any; //?  tên user đăng nhập
-  dataCategory: any; //? data của category
-  journal: any; //? data sổ nhật kí
-  baseCurr: any; //? đồng tiền hạch toán
-  legalName: any; //? tên công ty
-  dataDefault: any; //? data default của phiếu
-  hideFields: Array<any> = []; //? array field được ẩn lấy từ journal
+  journalNo: string;
+  itemSelected: any;
+  userID: any;
+  dataCategory: any;
+  journal: any;
+  baseCurr: any;
+  legalName: any;
+  dataDefault: any;
+  hideFields: Array<any> = [];
   button: ButtonModel[] = [{
     //? nút thêm phiếu
     id: 'btnAdd',
@@ -64,16 +64,15 @@ export class CashPaymentsComponent extends UIComponent {
   bankReceiveName: any;
   viewActive:number = ViewType.listdetail;
   ViewType = ViewType;
-  isLoad = false;
-  private destroy$ = new Subject<void>(); //? list observable hủy các subscribe api
+  private destroy$ = new Subject<void>();
   constructor(
     private inject: Injector,
     private acService: CodxAcService,
     private authStore: AuthStore,
+    private codxCommonService: CodxCommonService,
     private shareService: CodxShareService,
     private notification: NotificationsService,
     private tenant: TenantStore,
-    private journalService: JournalService
   ) {
     super(inject);
     this.cache
@@ -81,53 +80,41 @@ export class CashPaymentsComponent extends UIComponent {
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
         if (res.length > 0) {
-          this.baseCurr = res[0].baseCurr; //? get đồng tiền hạch toán
-          this.legalName = res[0].legalName; //? get tên company
+          this.baseCurr = res[0].baseCurr;
+          this.legalName = res[0].legalName;
         }
       });
     this.router.params
       .pipe(takeUntil(this.destroy$))
       .subscribe((params) => {
-        this.journalNo = params?.journalNo; //? get số journal từ router
+        this.journalNo = params?.journalNo;
       });
   }
   //#endregion Constructor
 
   //#region Init
   onInit(): void {
-
     if(!this.funcID) this.funcID = this.router.snapshot.params['funcID'];
-
-    this.getJournal(); //? lấy data journal và các field ẩn từ sổ nhật kí
-    this.getFunction(this.funcID);
-
+    this.cache
+    .functionList(this.funcID)
+    .pipe(takeUntil(this.destroy$))
+    .subscribe((res) => {
+      if (res) {
+        this.headerText = res?.defaultName || res?.customName;
+        this.runmode = res?.runMode;
+      }
+    });
+    this.getJournal();
   }
 
   ngDoCheck() {
     this.detectorRef.detectChanges();
   }
 
-  getFunction(funcID:any)
-  {
-    this.cache
-    .functionList(funcID)
-    .pipe(takeUntil(this.destroy$))
-    .subscribe((res) => {
-      if (res) {
-        this.isLoad = true;
-        this.headerText = res?.defaultName; //? lấy tên chứng từ (Phiếu chi)
-        this.runmode = res?.runMode; //? lấy runmode
-      }
-    });
-  }
-
   ngAfterViewInit() {
-    
-   this.getFunction(this.funcID)
-
     this.views = [
       {
-        type: ViewType.listdetail, //? thiết lập view danh sách chi tiết
+        type: ViewType.listdetail,
         active: true,
         sameData: true,
         model: {
@@ -139,7 +126,7 @@ export class CashPaymentsComponent extends UIComponent {
         },
       },
       {
-        type: ViewType.list, //? thiết lập view danh sách
+        type: ViewType.list,
         active: false,
         sameData: true,
         model: {
@@ -147,7 +134,7 @@ export class CashPaymentsComponent extends UIComponent {
         },
       },
       {
-        type: ViewType.grid, //? thiết lập view lưới
+        type: ViewType.grid,
         active: false,
         sameData: true,
         model: {
@@ -155,7 +142,7 @@ export class CashPaymentsComponent extends UIComponent {
         },
       },
       {
-        type: ViewType.grid_detail, //? thiết lập view lưới
+        type: ViewType.grid_detail,
         active: false,
         sameData: true,
         model: {
@@ -169,7 +156,7 @@ export class CashPaymentsComponent extends UIComponent {
           formName:'CashPaymentsLines',
           gridviewName:'grvCashPaymentsLines',
           parentField:'TransID',
-          parentNameField:'Memo',
+          parentNameField:'VoucherNo',
           hideMoreFunc:true,
           request:{
             service: 'AC',
@@ -178,7 +165,7 @@ export class CashPaymentsComponent extends UIComponent {
         }
       },
     ];
-    this.journalService.setChildLinks(this.journalNo);
+    this.acService.setChildLinks();
   }
 
   ngOnDestroy() {
@@ -266,18 +253,6 @@ export class CashPaymentsComponent extends UIComponent {
   onSelectedItem(event) {
     this.itemSelected = event;
     this.detectorRef.detectChanges();
-    // if (this.view?.views) {
-    //   let view = this.view?.views.find((x) => x.type == 1);
-    //   if (view && view.active == true) return;
-    // }
-    // if (typeof event.data !== 'undefined') {
-    //   if (event?.data.data || event?.data.error) {
-    //     return;
-    //   } else {
-    //     this.itemSelected = event?.data;
-    //     this.detectorRef.detectChanges();
-    //   }
-    // }
   }
 
   viewChanged(view) {
@@ -318,6 +293,16 @@ export class CashPaymentsComponent extends UIComponent {
             optionSidebar,
             this.view.funcID
           );
+          dialog.closed.subscribe((res) => {
+            if (res && res?.event) {
+              if (res?.event?.type === 'discard') {
+                if(this.view.dataService.data.length == 0){
+                  this.itemSelected = undefined;
+                  this.detectorRef.detectChanges();
+                } 
+              }
+            }
+          })
         }
       });
   }
@@ -350,6 +335,16 @@ export class CashPaymentsComponent extends UIComponent {
           optionSidebar,
           this.view.funcID
         );
+        dialog.closed.subscribe((res) => {
+          if (res && res?.event) {
+            if (res?.event?.type === 'discard') {
+              if(this.view.dataService.data.length == 0){
+                this.itemSelected = undefined;
+                this.detectorRef.detectChanges();
+              } 
+            }
+          }
+        })
       });
   }
 
@@ -389,6 +384,16 @@ export class CashPaymentsComponent extends UIComponent {
                   optionSidebar,
                   this.view.funcID
                 );
+                dialog.closed.subscribe((res) => {
+                  if (res && res?.event) {
+                    if (res?.event?.type === 'discard') {
+                      if(this.view.dataService.data.length == 0){
+                        this.itemSelected = undefined;
+                        this.detectorRef.detectChanges();
+                      } 
+                    }
+                  }
+                })
                 this.view.dataService
                   .add(datas)
                   .pipe(takeUntil(this.destroy$))
@@ -404,7 +409,7 @@ export class CashPaymentsComponent extends UIComponent {
    * @param dataDelete : data xóa
    */
   deleteVoucher(dataDelete) {
-    this.view?.currentView?.dataService
+    this.view.dataService
       .delete([dataDelete], true)
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
@@ -451,7 +456,8 @@ export class CashPaymentsComponent extends UIComponent {
    * @param data
    * @returns
    */
-  changeMFDetail(event: any, data: any, type: any = '') {
+  changeMFDetail(event: any,type: any = '') {
+    let data = this.view?.dataService?.dataSelected;
     if (data) {
       this.acService.changeMFCashPayment(event,data,type,this.journal,this.view.formModel);
     }
@@ -467,7 +473,7 @@ export class CashPaymentsComponent extends UIComponent {
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         this.dataCategory = res;
-        this.shareService
+        this.codxCommonService
           .codxRelease(
             'AC',
             data.recID,
@@ -503,7 +509,7 @@ export class CashPaymentsComponent extends UIComponent {
    * @param data
    */
   cancelReleaseVoucher(text: any, data: any) {
-    this.shareService
+    this.codxCommonService
       .codxCancel('AC', data?.recID, this.view.formModel.entityName, null, null)
       .pipe(takeUntil(this.destroy$))
       .subscribe((result: any) => {

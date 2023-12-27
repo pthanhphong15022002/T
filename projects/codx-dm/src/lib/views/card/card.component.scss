@@ -76,10 +76,12 @@ codx-card-img .line-clamp-2 {
 }
 .file-name
 {
-    width: 150px;
+    //width: 150px;
     white-space: nowrap;
     /* word-break: break-all; */
     text-overflow: ellipsis;
     overflow: hidden;
     text-align: center;
+    max-width: 170px;
+    text-overflow: ellipsis;
 }

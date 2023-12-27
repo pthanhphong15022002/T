@@ -59,7 +59,7 @@ export class CodxListContactsComponent implements OnInit {
   service = 'CM';
   assemblyName = 'ERM.Business.CM';
   className = 'ContactsBusiness';
-  method = 'GetListByTabAsync';
+  method = 'GetListContactAsync';
   isButton = true;
   currentRecID = '';
   lstConvertContact = [];
@@ -96,6 +96,7 @@ export class CodxListContactsComponent implements OnInit {
           this.listContacts = [];
           if (changes['objectID']?.currentValue == this.id) return;
           this.id = changes['objectID']?.currentValue;
+          this.loaded = false;
           this.getListContacts();
         }
       } else {
@@ -150,41 +151,35 @@ export class CodxListContactsComponent implements OnInit {
   }
 
   getListContacts() {
-    this.loaded = false;
-    if (!this.selectAll) {
-      let predicate = 'ObjectID=@0';
-      let dataValue = this.objectID;
-      // if (this.objectType == '1') {
-      //   predicate += ' and CreatedBy.Contains(@1)';
-      //   dataValue += ';' + this.owner;
+    let predicate = 'ObjectID=@0';
+    let dataValue = this.objectID;
+    // if (this.objectType == '1') {
+    //   predicate += ' and CreatedBy.Contains(@1)';
+    //   dataValue += ';' + this.owner;
+    // }
+    this.request.predicates = predicate;
+    this.request.dataValues = dataValue;
+    this.request.pageLoading = false;
+    this.request.entityName = 'CM_Contacts';
+    this.className = 'ContactsBusiness';
+    this.fetch().subscribe((item) => {
+      // if (this.listContacts != null && this.listContacts.length > 0) {
+      //   this.listContacts.forEach((res) => {
+      //     if (!item.some((x) => x.recID == res.recID)) {
+      //       item.push(res);
+      //     }
+      //   });
       // }
-      this.request.predicates = predicate;
-      this.request.dataValues = dataValue;
-      this.request.pageLoading = false;
-      this.request.entityName = 'CM_Contacts';
-      this.request.funcID = 'CM0102';
-      this.className = 'ContactsBusiness';
-      this.fetch().subscribe((item) => {
-        if(this.listContacts != null && this.listContacts.length > 0){
-          this.listContacts.forEach(res => {
-            if(!item.some(x => x.recID == res.recID)){
-              item.push(res);
-            }
-          })
-        }
-        this.listContacts = this.cmSv.bringDefaultContactToFront(item);
-        if (this.listContacts != null && this.listContacts.length > 0) {
-          this.changeContacts(this.listContacts[0]);
-          // if (this.isConvertLeadToCus) this.insertFieldCheckbox();
-        }
+      this.listContacts = this.cmSv.bringDefaultContactToFront(item);
+      if (this.listContacts != null && this.listContacts.length > 0) {
+        this.changeContacts(this.listContacts[0]);
+        // if (this.isConvertLeadToCus) this.insertFieldCheckbox();
+      }
+      if (this.type != 'formDetail')
         this.lstContactEmit.emit(this.listContacts);
-        this.loaded = true;
-        this.changeDetectorRef.detectChanges();
-      });
-    } else {
-      this.loadListContact(this.listContacts);
       this.loaded = true;
-    }
+      this.changeDetectorRef.detectChanges();
+    });
   }
   private fetch(): Observable<any[]> {
     return this.api

@@ -12,6 +12,7 @@ import {
   SliderTickRenderedEventArgs,
 } from '@syncfusion/ej2-angular-inputs';
 import {
+  AlertConfirmInputConfig,
   ApiHttpService,
   AuthStore,
   CacheService,
@@ -30,7 +31,14 @@ import {
   DP_Steps_Fields,
   tempVllDP,
 } from '../../../models/models';
-import { Observable, finalize, firstValueFrom, map } from 'rxjs';
+import {
+  Observable,
+  Subject,
+  finalize,
+  firstValueFrom,
+  map,
+  takeUntil,
+} from 'rxjs';
 import { X } from '@angular/cdk/keycodes';
 import test from 'node:test';
 import { ComboBoxComponent } from '@syncfusion/ej2-angular-dropdowns';
@@ -40,6 +48,7 @@ import { PopupSettingTableComponent } from './popup-setting-table/popup-setting-
 import { PopupSettingReferenceComponent } from './popup-setting-reference/popup-setting-reference.component';
 import { CodxInputCustomFieldComponent } from 'projects/codx-share/src/lib/components/codx-input-custom-field/codx-input-custom-field.component';
 import { CodxFieldsFormatValueComponent } from 'projects/codx-share/src/lib/components/codx-fields-detail-temp/codx-fields-format-value/codx-fields-format-value.component';
+import { PopupAddAutoNumberComponent } from 'projects/codx-es/src/lib/setting/category/popup-add-auto-number/popup-add-auto-number.component';
 
 @Component({
   selector: 'lib-popup-add-custom-field',
@@ -84,7 +93,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
   stepList = [];
   itemView = '';
   vllDynamic = 'DP0271';
-  fileNameArr = [];
+  fieldNameArr = [];
   refValueDataType = 'DP022';
 
   //vll dang DPF..
@@ -136,6 +145,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
   listColumns = [];
   settingWidth = false;
   settingCount = false;
+  totalColumns = false;
   isShowMore = false;
   widthDefault = '550';
 
@@ -143,6 +153,19 @@ export class PopupAddCustomFieldComponent implements OnInit {
   entityNamePA = '';
   servicePA: string;
   fieldCus: any;
+  title = 'Thông báo ';
+  titleConfirm: string =
+    'Trường tùy chỉnh đã được thiết lập tại bước {0} bạn có muốn tái sử dụng !';
+
+  isDuplicateField = false;
+  isEditFieldDuplicate = false;
+  fieldNameOld = '';
+  //create autoNumber
+  vllDateFormat: any;
+  adAutoNumber: any;
+  caculateField = '';
+  private destroyFrom$: Subject<void> = new Subject<void>();
+  arrFieldNum = [];
 
   constructor(
     private cache: CacheService,
@@ -162,26 +185,36 @@ export class PopupAddCustomFieldComponent implements OnInit {
     this.enabled = dt?.data?.enabled;
     this.refValueDataType = dt?.data?.refValueDataType ?? this.refValueDataType;
     this.processNo = dt?.data?.processNo; //de sinh vll
+    this.fieldNameArr = dt?.data?.fieldNameArr ?? [];
+    this.isDuplicateField = dt?.data?.isDuplicateField ?? false;
+    this.titleAction = dt?.data?.titleAction;
+    this.stepList = dt?.data?.stepList;
+    this.grvSetup = dt.data?.grvSetup;
+
     this.creatFieldCustom();
     this.widthDefault = this.dialog.dialog.width
       ? this.dialog.dialog.width.toString()
       : '550';
-    if (this.action == 'add' || this.action == 'copy')
+    if (this.action == 'add' || this.action == 'copy') {
       this.field.recID = Util.uid();
-
-    this.titleAction = dt?.data?.titleAction;
-    this.stepList = dt?.data?.stepList;
-    this.grvSetup = dt.data?.grvSetup;
-    if (this.stepList?.length > 0) {
-      this.stepList.forEach((obj) => {
-        if (obj?.fields?.length > 0) {
-          let arrFn = obj?.fields.map((x) => {
-            let obj = { fieldName: x.fieldName, recID: x.recID };
-            return obj;
-          });
-          this.fileNameArr = this.fileNameArr.concat(arrFn);
-        }
-      });
+      if (this.stepList?.length > 0) {
+        this.stepList.forEach((objStep) => {
+          if (objStep?.fields?.length > 0) {
+            let arrFn = objStep?.fields.map((x) => {
+              let obj = {
+                fieldName: x.fieldName,
+                recID: x.recID,
+                stepID: objStep.recID,
+                stepName: objStep.stepName,
+              };
+              return obj;
+            });
+            this.fieldNameArr = this.fieldNameArr.concat(arrFn);
+          }
+        });
+      }
+    } else {
+      this.fieldNameOld = this.field.fieldName;
     }
   }
 
@@ -191,6 +224,8 @@ export class PopupAddCustomFieldComponent implements OnInit {
     if (this.field.dataType == 'TA') {
       this.getColumnTable(this.field);
     }
+    if (this.field.dataType == 'CF')
+      this.caculateField = this.field.dataFormat ?? '';
   }
 
   async valueChange(e) {
@@ -235,9 +270,17 @@ export class PopupAddCustomFieldComponent implements OnInit {
       this.servicePA = e?.component?.itemsSelected[0]?.Service;
       this.entityNamePA = e?.component?.itemsSelected[0]?.TableName;
     }
-    this.creatFieldCustom();
+    if (e.field == 'dataFormat' || e.field == 'refValue')
+      this.creatFieldCustom();
+    if (e.field == 'dataType' && e.data == 'CF') this.selectFieldNum();
+  }
+  //chang title va change field name
+  valueChangeText(e) {
+    // if (e && e.field) this.field[e.field] = e?.data;
 
-    // this.changdef.detectChanges(); thua
+    // if (e.field == 'title' || e.field == 'fieldName')
+    //   this.removeAccents(e.data);
+    this.duplicateField();
   }
 
   creatFieldCustom() {
@@ -250,7 +293,6 @@ export class PopupAddCustomFieldComponent implements OnInit {
         this.field.refValue) ||
       (this.field.dataType == 'L' && this.field.dataFormat == 'B')
     ) {
-      debugger;
       this.fieldCus = JSON.parse(
         JSON.stringify(
           Object.assign(this.field, {
@@ -258,6 +300,8 @@ export class PopupAddCustomFieldComponent implements OnInit {
           })
         )
       );
+    } else {
+      this.fieldCus = null;
     }
   }
 
@@ -287,10 +331,16 @@ export class PopupAddCustomFieldComponent implements OnInit {
   //   }
   // }
   cbxChange(value) {
-    if (value) this.field['stepID'] = value;
+    let oldStep = this.field['stepID'];
+    if (value && value != oldStep) {
+      this.field['stepID'] = value;
+      this.caculateField = '';
+    }
+    if (this.field.dataType == 'CF') this.selectFieldNum();
   }
 
   saveData() {
+    if (this.field.dataType == 'CF') this.field.dataFormat = this.caculateField;
     if (
       (!this.field.title || this.field.title.trim() == '') &&
       this.grvSetup['Title']?.isRequire
@@ -313,11 +363,12 @@ export class PopupAddCustomFieldComponent implements OnInit {
       );
       return;
     }
-    if (this.fileNameArr.length > 0) {
-      let check = this.fileNameArr.some(
+    if (this.fieldNameArr.length > 0) {
+      let check = this.fieldNameArr.some(
         (x) =>
           x.fieldName.toLowerCase() == this.field.fieldName.toLowerCase() &&
-          x.recID != this.field.recID
+          x.recID != this.field.recID &&
+          x.stepID == this.field.stepID
       );
       if (check) {
         this.notiService.notifyCode(
@@ -392,12 +443,18 @@ export class PopupAddCustomFieldComponent implements OnInit {
       return;
     }
 
-    this.dialog.close([this.field, this.processNo]);
-    this.field = new DP_Steps_Fields(); //tắt bùa
+    this.dialog.close([this.field, this.processNo, this.isEditFieldDuplicate]);
+
+    this.field = new DP_Steps_Fields();
+    this.isDuplicateField = false;
+    this.isEditFieldDuplicate = false;
   }
 
   removeAccents(str) {
-    if (!str) return;
+    if (!str) {
+      this.field.fieldName = '';
+      return;
+    }
     var format = str
       .trim()
       .normalize('NFD')
@@ -410,6 +467,93 @@ export class PopupAddCustomFieldComponent implements OnInit {
     }
     this.field.fieldName = format;
   }
+
+  //---------Trùng Field------------//
+  duplicateField() {
+    if (
+      this.action == 'edit' &&
+      this.isDuplicateField &&
+      this.field.fieldName.toLowerCase() == this.fieldNameOld.toLowerCase()
+    ) {
+      this.field.fieldName = this.fieldNameOld;
+      return;
+    }
+    if (this.fieldNameArr?.length > 0) {
+      let checkArrDup = this.fieldNameArr.filter(
+        (x) =>
+          x.fieldName.toLowerCase() == this.field.fieldName.toLowerCase() &&
+          x.stepID != this.field.stepID
+      );
+      if (checkArrDup?.length > 0) {
+        if (this.action == 'edit') {
+          this.notiService.notifyCode(
+            'DP026',
+            0,
+            '"' + this.grvSetup['FieldName']?.headerText + '"'
+          );
+          return;
+        }
+        this.isDuplicateField = true;
+        //thông báo test chưa có mes code
+        let nameSteps = checkArrDup.map((x) => x.stepName);
+        // let config = new AlertConfirmInputConfig();
+        // config.type = 'YesNo';
+        // let titleConfirmDup = this.titleConfirm.replace(
+        //   '{0}',
+        //   '"' + nameSteps.join(';') + '"'
+        // );
+        //this.notiService
+        // .alert(this.title, titleConfirmDup, config)
+        // .closed.subscribe((res) => {
+        this.notiService
+          .alertCode('DP042', null, [
+            '<b class="text-danger">"' + nameSteps.join(';') + '"</b>' || '',
+          ])
+          .subscribe((res) => {
+            if (res?.event && res?.event?.status == 'Y') {
+              let fieldDup = checkArrDup[0];
+              let idx = this.stepList.findIndex(
+                (x) => x.recID == fieldDup.stepID
+              );
+              if (idx != -1) {
+                let idxField = this.stepList[idx].fields.findIndex(
+                  (x) => x.recID == fieldDup.recID
+                );
+                if (idxField != -1) {
+                  let crrF = JSON.parse(
+                    JSON.stringify(this.stepList[idx].fields[idxField])
+                  );
+                  let recID = this.field.recID;
+                  let stepID = this.field.stepID;
+                  this.field = crrF;
+                  this.field.recID = recID;
+                  this.field.stepID = stepID;
+
+                  // this.field.title = crrF.title;
+                  // this.field.fieldName = crrF.fieldName;
+                  // this.field.dataFormat = crrF.dataFormat;
+                  // this.field.dataType = crrF.dataType;
+                  // this.field.multiselect = crrF.multiselect;
+                  // this.field.rank = crrF.rank;
+                  // this.field.rankIcon = crrF.rankIcon;
+                  // this.field.refValue = crrF.refValue;
+                  // this.field.refType = crrF.refType;
+                  // this.field.note = crrF.note;
+                  // this.field.defaultValue = crrF.defaultValue;
+                  // this.field.isRequired = crrF.isRequire;
+                  this.form.formGroup.patchValue(this.field);
+                }
+              }
+            }
+          });
+      } else {
+        this.isDuplicateField = false;
+        this.isEditFieldDuplicate = false;
+      }
+    }
+  }
+
+  //---------------End - DuplicateField ------------------//
 
   //----------------Value List -----------------------//
   async clickAddVll() {
@@ -548,7 +692,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
       this.crrDatasVll.defaultValues
     ) {
       this.crrVll = this.crrDatasVll;
-      // this.changeFormVll();
+
       var arr = this.crrDatasVll.defaultValues.split(';');
 
       if (Array.isArray(arr) && arr?.length > 0) {
@@ -559,7 +703,6 @@ export class PopupAddCustomFieldComponent implements OnInit {
           };
           return obj;
         });
-        // this.crrValueFirst = this.datasVllCrr[0].textValue;
       }
     }
   }
@@ -741,6 +884,8 @@ export class PopupAddCustomFieldComponent implements OnInit {
               this.listColumns = res.event[0];
               this.settingWidth = this.listColumns[0]?.settingWidth ?? false;
               this.settingCount = this.listColumns[0]?.settingCount ?? false;
+              this.totalColumns =
+                this.listColumns.findIndex((x) => x?.totalColumns) != -1;
 
               this.field.dataFormat = JSON.stringify(this.listColumns);
             }
@@ -763,6 +908,8 @@ export class PopupAddCustomFieldComponent implements OnInit {
       this.listColumns = arr;
       this.settingWidth = this.listColumns[0]?.settingWidth ?? false;
       this.settingCount = this.listColumns[0]?.settingCount ?? false;
+      this.totalColumns =
+        this.listColumns.findIndex((x) => x?.totalColumns) != -1;
     } else this.listColumns = [];
     this.changeRef.detectChanges();
   }
@@ -856,6 +1003,246 @@ export class PopupAddCustomFieldComponent implements OnInit {
         this.fieldCus.defaultValue = this.fieldCus.dataValue = result;
       }
     }
+  }
+  //end
+
+  //** đánh số tự động - Popup setiing autoNumber */
+
+  async openAutoNumPopup() {
+    this.getVllFormat();
+    let obj = {};
+    if (!this.field.dataFormat) {
+      //save new autoNumber
+      obj = {
+        autoNoCode: this.field.recID,
+        description: 'DP_Instances_Steps_Field',
+        newAutoNoCode: this.field.recID,
+        isSaveNew: '1',
+      };
+    } else {
+      //cap nhật
+      obj = {
+        autoNoCode: this.field.dataFormat,
+        description: 'DP_Instances_Steps_Field',
+      };
+    }
+    let op = new DialogModel();
+    op.IsFull = true;
+    let popupAutoNum = this.callfc.openForm(
+      PopupAddAutoNumberComponent,
+      '',
+      0,
+      0,
+      '',
+      obj,
+      '',
+      op
+    );
+    popupAutoNum.closed.subscribe((res) => {
+      if (res?.event) {
+        this.setViewAutoNumber(res?.event);
+      }
+    });
+  }
+
+  setViewAutoNumber(data) {
+    if (this.vllDateFormat?.datas.length > 0) {
+      let dateFormat = '';
+      if (data?.dateFormat != '0') {
+        dateFormat =
+          this.vllDateFormat.datas.filter((p) => p.value == data?.dateFormat)[0]
+            ?.text ?? '';
+      }
+
+      let lengthNumber;
+      let strNumber = '';
+      let fieldNoAutoEx = data?.fixedString + data?.separator + dateFormat;
+      lengthNumber = data?.maxLength - fieldNoAutoEx.length;
+      strNumber = '#'.repeat(lengthNumber);
+      switch (data?.stringFormat) {
+        // {value: '0', text: 'Chuỗi & Ngày - Số', default: 'Chuỗi & Ngày - Số', color: null, textColor: null, …}
+        case '0': {
+          fieldNoAutoEx =
+            data?.fixedString + dateFormat + data?.separator + strNumber;
+          break;
+        }
+        // {value: '1', text: 'Chuỗi & Số - Ngày', default: 'Chuỗi & Số - Ngày', color: null, textColor: null, …}
+        case '1': {
+          fieldNoAutoEx =
+            data?.fixedString + strNumber + data?.separator + dateFormat;
+          break;
+        }
+        // {value: '2', text: 'Số - Chuỗi & Ngày', default: 'Số - Chuỗi & Ngày', color: null, textColor: null, …}
+        case '2':
+          fieldNoAutoEx =
+            strNumber + data?.separator + data?.fixedString + dateFormat;
+          break;
+        // {value: '3', text: 'Số - Ngày & Chuỗi', default: 'Số - Ngày & Chuỗi', color: null, textColor: null, …}
+        case '3':
+          fieldNoAutoEx =
+            strNumber + data?.separator + dateFormat + data?.fixedString;
+          break;
+
+        // {value: '4', text: 'Ngày - Số & Chuỗi', default: 'Ngày - Số & Chuỗi', color: null, textColor: null, …}
+        case '4': {
+          fieldNoAutoEx =
+            dateFormat + data?.separator + strNumber + data?.fixedString;
+          break;
+        }
+        // {value: '5', text: 'Ngày & Chuỗi & Số', default: 'Ngày & Chuỗi & Số', color: null, textColor: null, …}
+        case '5': {
+          fieldNoAutoEx = data?.fixedString + dateFormat;
+          lengthNumber = data?.maxLength - fieldNoAutoEx.length;
+          strNumber = '#'.repeat(lengthNumber);
+          fieldNoAutoEx = dateFormat + data?.fixedString + strNumber;
+          break;
+        }
+        // {value: '6', text: 'Chuỗi - Ngày', default: 'Chuỗi - Ngày', color: null, textColor: null, …}
+        case '6': {
+          fieldNoAutoEx = data?.fixedString + data?.separator + dateFormat;
+          break;
+        }
+        // {value: '7', text: 'Ngày - Chuỗi', default: 'Ngày - Chuỗi', color: null, textColor: null, …}
+        case '7': {
+          fieldNoAutoEx = dateFormat + data?.separator + data?.fixedString;
+          break;
+        }
+      }
+
+      fieldNoAutoEx = fieldNoAutoEx.substring(0, data?.maxLength);
+      this.field.dataFormat = fieldNoAutoEx;
+      // this.changeDetectorRef.detectChanges();
+      this.changeRef.markForCheck();
+    }
+  }
+
+  async getVllFormat() {
+    this.vllDateFormat = await firstValueFrom(this.cache.valueList('L0088'));
+    // if (!this.adAutoNumber && this.action != 'add') {
+    //   this.adAutoNumber = await firstValueFrom(
+    //     this.dpService.getADAutoNumberByAutoNoCode(this.field.recID)
+    //   );
+    //   if (this.adAutoNumber) this.setViewAutoNumber(this.adAutoNumber);
+    // }
+  }
+  //end
+
+  //Trường tính toán
+  operator = ['+', '-', 'x', '/', 'Avg('];
+  accessField = [']'];
+  arrNum = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+  buttonOperator(op) {
+    if (this.caculateField) {
+      if (this.caculateField[this.caculateField.length - 1] == '(') return;
+      if (op == 'Avg') {
+        if (
+          this.arrNum.includes(
+            this.caculateField[this.caculateField.length - 1]
+          ) ||
+          this.accessField.includes(
+            this.caculateField[this.caculateField.length - 1]
+          )
+        ) {
+          return;
+        }
+        op = 'Avg(';
+      }
+      if (
+        this.operator.includes(
+          this.caculateField[this.caculateField.length - 1]
+        )
+      )
+        this.caculateField = this.caculateField.substring(
+          0,
+          this.caculateField.length - 1
+        );
+    }
+
+    this.caculateField += op;
+  }
+
+  buttonOpenParenthesis() {
+    if (
+      (this.caculateField &&
+        this.operator.includes(
+          this.caculateField[this.caculateField.length - 1]
+        )) ||
+      !this.caculateField
+    )
+      this.caculateField += '(';
+  }
+
+  buttonCloseParenthesis() {
+    if (
+      this.caculateField &&
+      !Number.isNaN(this.caculateField[this.caculateField.length - 1])
+      //this.accessField.includes(this.caculateField[this.caculateField.length - 1])
+    )
+      this.caculateField += ')';
+  }
+  //test
+  fieldSelect(fieldName) {
+    //tesst
+    this.caculateField += '[' + fieldName + ']'; //Math.random() * 100;
+    this.popover.close();
+  }
+
+  delChart() {
+    if (this.caculateField) {
+      let idxLast = this.caculateField.length - 1;
+      if (this.caculateField[idxLast] == ']') {
+        while (
+          this.caculateField?.length == 0 ||
+          this.caculateField[idxLast] != '['
+        ) {
+          this.caculateField = this.caculateField.substring(0, idxLast);
+          idxLast = idxLast - 1;
+        }
+      }
+      //else this.caculateField = this.caculateField.substring(0, idxLast);
+      this.caculateField = this.caculateField.substring(0, idxLast);
+    }
+  }
+  delAll() {
+    this.caculateField = '';
+  }
+  // Num
+  buttonNum(num) {
+    this.caculateField += num;
+  }
+  decimalPoint() {
+    this.caculateField += ',';
+  }
+
+  selectFieldNum() {
+    this.arrFieldNum = [];
+    var idx = this.stepList.findIndex(
+      (x) => x.recID == this.field.stepID && x.fields?.length > 0
+    );
+    if (idx != -1) {
+      this.arrFieldNum = this.stepList[idx].fields
+        .filter((x) => x.dataType == 'N')
+        .map((x) => x.fieldName);
+    }
+    if (!this.arrFieldNum || this.arrFieldNum?.length == 0)
+      this.notiService.notify(
+        'Bước thực hiện không có trường tùy chỉnh kiểu số !',
+        '3'
+      );
+  }
+
+  popoverSelectField(p) {
+    if (this.arrFieldNum?.length > 0) p.open();
+    this.popover = p;
+    // else
+    //   this.notiService.notify(
+    //     'Bước thực hiện không có trường tùy chỉnh kiểu số !',
+    //     '3'
+    //   );
+  }
+
+  checkCaculateField() {
+    return true;
   }
   //end
 }

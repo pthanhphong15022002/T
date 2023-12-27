@@ -19,6 +19,7 @@ export class AppropvalNewsComponent extends UIComponent {
   selectedID: string = '';
   function:any = null;
   vllWP004:any[] = [];
+  loadedDetail=true;
 
   @ViewChild('itemTemplate') itemTemplate: TemplateRef<any>;
   @ViewChild('panelRightRef') panelRightRef: TemplateRef<any>;
@@ -168,7 +169,8 @@ export class AppropvalNewsComponent extends UIComponent {
       case 'SYS03': //edit
         this.editPost(event,data);
         break;
-      case "WPT02121": // duyệt
+      case "WPT02121":
+      case "WPT02131": // duyệt
           this.notifySvr.alertCode("WP004")
           .subscribe((option:any) =>{
             if(option?.event?.status == "Y")
@@ -186,12 +188,13 @@ export class AppropvalNewsComponent extends UIComponent {
           }
         });
         break;
-      case "WPT02123": // từ chối
+      case "WPT02123": 
+      case "WPT02133": // từ chối
         this.notifySvr.alertCode("WP006")
           .subscribe((option:any) =>{
             if(option?.event?.status == "Y")
             {
-              this.approvalPost(this.function.entityName,data, "2","WP007");
+              this.approvalPost(this.function.entityName,data, "4","WP007");
             }
         });
         break;
@@ -237,12 +240,23 @@ export class AppropvalNewsComponent extends UIComponent {
   //change data moreFC
   changeDataMF(evt:any[],item:any){
     evt.map(x => {
-      if(x.functionID == "SYS02" || x.functionID == "SYS03")
-        x.disabled = false;
-      else if(x.functionID == "WPT02131" || x.functionID == "WPT02132" || x.functionID == "WPT02133")
-        x.disabled = item.approveControl == "0" || (item.approveControl == "1" && item.approveStatus == "5");
-      else
-        x.disabled = true;
+      // if(x.functionID == "SYS02" || x.functionID == "SYS03")
+      //   x.disabled = false;
+      // else if(x.functionID == "WPT02131" || x.functionID == "WPT02132" || x.functionID == "WPT02133")
+      //   x.disabled = item.approveControl == "0" || (item.approveControl == "1" && item.approveStatus == "5");
+      // else
+      //   x.disabled = true;
+
+      if (
+        x.functionID == 'WPT02131' ||
+        x.functionID == 'WPT02133' ||
+        x.functionID == 'WPT02121' ||
+        x.functionID == 'WPT02123'
+      )
+        x.disabled =
+          item.approveControl == '0' ||
+          (item.approveControl == '1' && item.approveStatus != '3');
+      else x.disabled = true;
     });
   }
 
@@ -262,7 +276,15 @@ export class AppropvalNewsComponent extends UIComponent {
           {
             this.tmpDetail.data.approvalStatus = approvalStatus;
             this.tmpDetail.hideMFC = true;
+            this.detectorRef.detectChanges();
           }
+          
+          if(data.recID == this.selectedID){
+            this.loadedDetail = false;
+            this.detectorRef.detectChanges();
+            this.loadedDetail = true;            
+          }
+          this.detectorRef.detectChanges();
           this.notifySvr.notifyCode(mssg);
         }
         else

@@ -74,7 +74,7 @@ import { StepTaskComponent } from './deals/step-task/step-task.component';
 import { LayoutNoAsideComponent } from 'projects/codx-common/src/lib/_layout/_noAside/_noAside.component';
 import { QuotationsTabViewComponent } from './quotations/quotations-tab-view/quotations-tab-view.component';
 import { ContractsComponent } from './contracts/contracts.component';
-import { ContractsViewDetailComponent } from './contracts/contracts-view-detail/contracts-view-detail.component';
+import { ContractsViewDetailComponent } from './contracts/contracts-view-right/contracts-view-right.component';
 import { TaskComponent } from './deals/step-task/task/task.component';
 import { ViewIconGroupComponent } from './quotations/view-icon-group/view-icon-group.component';
 import { CmDashboardComponent } from './cm-dashboard/cm-dashboard.component';
@@ -119,17 +119,15 @@ import { ViewTotalDealValueComponent } from './deals/view-total-deal-value/view-
 import { ContractsDetailComponent } from './contracts/contracts-detail/contracts-detail.component';
 import { StyleHeaderColumnsPipe } from './pipes/style-header-columns.pipe';
 import { FormatStatusCodePipe } from './pipes/format-status-code.pipe';
+import { ScrollSpyDirective } from './contracts/contracts-detail/scroll-spy.directive';
+import { ViewInstancesComponent } from 'projects/codx-dp/src/lib/view-instances/view-instances.component';
+import { CodxViewComponent } from './contracts/codx-view/codx-view.component';
 
 export const routes: Routes = [
   {
     path: '',
     component: LayoutComponent,
     children: [
-      {
-        path: 'view',
-        component: ContractsDetailComponent,
-        data: { noReuse: true },
-      },
       {
         path: 'customers/:funcID',
         component: CmCustomerComponent,
@@ -138,7 +136,7 @@ export const routes: Routes = [
       {
         path: 'deals/:funcID',
         component: DealsComponent,
-        // data: { noReuse: true },
+        data: { noReuse: true },
       },
       {
         path: 'marketings/:funcID',
@@ -153,17 +151,17 @@ export const routes: Routes = [
       {
         path: 'contracts/:funcID',
         component: ContractsComponent,
-        // data: { noReuse: true },
+        data: { noReuse: true },
       },
       {
         path: 'cases/:funcID',
         component: CasesComponent,
-        // data: { noReuse: true },
+        data: { noReuse: true },
       },
       {
         path: 'leads/:funcID',
         component: LeadsComponent,
-        // data: { noReuse: true },
+        data: { noReuse: true },
       },
       {
         path: 'calendars/:funcID',
@@ -198,6 +196,12 @@ export const routes: Routes = [
       {
         path: '**',
         redirectTo: 'error/404',
+      },
+      //phat hành quy trình
+      {
+        path: 'instances/:funcID/:processID',
+        component: ViewInstancesComponent,
+        data: { noReuse: true },
       },
     ],
   },
@@ -296,6 +300,8 @@ const T_Component: Type<any>[] = [
   CodxShowMoreLessComponent,
   ViewDealDetailComponent,
   ViewLeadDetailComponent,
+  ScrollSpyDirective,
+  CodxViewComponent,
 ];
 
 @NgModule({

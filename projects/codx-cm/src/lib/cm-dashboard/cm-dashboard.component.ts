@@ -425,7 +425,14 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   dataReasonsFails = [];
   tabActiveReson = 'btReasonSucess';
   textTitle = '';
+
   //end
+  //thông số thiết lập
+  toppSuccessFail = 7; //top thành công thất bại
+  winReason = 7; //top lý do thành công
+  loseReason = 7; //top lý do thất bại
+  employeeProductivity = 7; //top năng suất nhân viên
+
   constructor(
     inject: Injector,
     private layout: LayoutComponent,
@@ -557,12 +564,12 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
         //dashboard moi
         // this.getDashBoardTargets();
         method = 'GetDashBoardTargetAsync';
-        this.getDataset(method, param, null, null);
+        this.getDataset(method, param);
         break;
       // nhom chua co tam
       case 'CMD002':
         //this.getDataDashboard(predicates, dataValues, param);
-        this.getDataset('GetReportSourceAsync', param, null, null);
+        this.getDataset('GetReportSourceAsync', param);
         break;
       //ca nha chua co ne de vay
       case 'CMD003':
@@ -575,12 +582,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
         // predicates += predicate;
         // dataValues += dataValue;
         // this.getDataDashboard(predicates, dataValues, param);
-        this.getDataset(
-          'GetReportSourceAsync',
-          param,
-          '@0.Contains(Owner)',
-          this.user.userID
-        );
+        this.getDataset('GetReportSourceAsync', param);
         break;
       // target
       case 'CMD004':
@@ -863,7 +865,19 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
         let dataParam = res.filter((x) => x.category == '1' && !x.transType)[0];
         if (dataParam) {
           let paramDefault = JSON.parse(dataParam.dataValue);
+          this.toppSuccessFail =
+            Number.parseInt(paramDefault['ToppSuccessFail']) ??
+            this.toppSuccessFail;
+          this.winReason =
+            Number.parseInt(paramDefault['WinReason']) ?? this.winReason;
+          this.loseReason =
+            Number.parseInt(paramDefault['LoseReason']) ?? this.loseReason;
+          this.employeeProductivity =
+            Number.parseInt(paramDefault['EmployeeProductivity']) ??
+            this.employeeProductivity;
+
           this.currencyID = paramDefault['DefaultCurrency'] ?? 'VND';
+          //this.employeeProductivity = paramDefault['EmployeeProductivity'];
           this.cmSv
             .getExchangeRate(this.currencyID, new Date())
             .subscribe((res) => {
@@ -983,18 +997,13 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
                   case 'CMD001':
                     //dashboard moi
                     // this.getDashBoardTargets();
-                    this.getDataset(
-                      'GetDashBoardTargetAsync',
-                      null,
-                      null,
-                      null
-                    );
+                    this.getDataset('GetDashBoardTargetAsync');
                     break;
                   // nhom chua co tam
                   case 'CMD002':
                     // cu
                     // this.getDataDashboard();
-                    this.getDataset('GetReportSourceAsync', null, null, null);
+                    this.getDataset('GetReportSourceAsync');
                     break;
                   //ca nhan chua co ne de vay
                   case 'CMD003':
@@ -1002,12 +1011,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
                     // let dataValues = this.user.userID;
                     // this.getDataDashboard(predicates, dataValues);
                     //test DataSet
-                    this.getDataset(
-                      'GetReportSourceAsync',
-                      null,
-                      '@0.Contains(Owner)',
-                      this.user.userID
-                    );
+                    this.getDataset('GetReportSourceAsync');
                     break;
                   // target
                   case 'CMD004':
@@ -1056,13 +1060,18 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     if (this.isLoaded) return;
     this.resetData();
     if (method) {
+      let requets = [parameters, predicate, dataValue];
+
+      if (this.funcID == 'CMD002' || this.funcID == 'CMD003')
+        requets = [parameters, predicate, dataValue, this.funcID];
+
       this.subscription = this.api
         .execSv<any[]>(
           'rptcm',
           'Codx.RptBusiness.CM',
           'SalesDataSetBusiness',
           method,
-          [parameters, predicate, dataValue]
+          requets
         )
         .subscribe((res) => {
           if (res) {
@@ -1079,8 +1088,8 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
               case 'CMD003':
                 this.changeMySales(res);
                 break;
-              case 'CMD001':
-                break;
+              //case 'CMD001':
+              //  break;
             }
           }
           setTimeout(() => {
@@ -1338,9 +1347,15 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
       this.maxOwners = JSON.parse(JSON.stringify(owner)).sort(
         (a, b) => b.quantity - a.quantity
       );
+
       this.minOwners = JSON.parse(JSON.stringify(owner)).sort(
         (a, b) => a.quantity - b.quantity
       );
+
+      if (this.maxOwners?.length > this.toppSuccessFail) {
+        this.maxOwners = this.maxOwners.splice(0, this.toppSuccessFail - 1);
+        this.minOwners = this.minOwners.splice(0, this.toppSuccessFail - 1);
+      }
     }
   }
 
@@ -1394,6 +1409,14 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
           this.productivityOwner.push(obj);
         }
       }
+      this.productivityOwner = this.productivityOwner.sort(
+        (a, b) => b.sumTarget - a.sumTarget
+      );
+      if (this.productivityOwner.length > this.employeeProductivity)
+        this.productivityOwner = this.productivityOwner.slice(
+          0,
+          this.employeeProductivity - 1
+        );
     }
   }
 
@@ -1416,6 +1439,14 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
           };
           this.dataReasonsSuscess.push(rsSucess);
         }
+        this.dataReasonsSuscess = this.dataReasonsSuscess.sort(
+          (a, b) => b.quantity - a.quantity
+        );
+        if (this.dataReasonsSuscess?.length > this.winReason)
+          this.dataReasonsSuscess = this.dataReasonsSuscess.splice(
+            0,
+            this.winReason - 1
+          );
       }
     }
     let listRsFails = dataReason.filter((x) => x.reasonType == '2');
@@ -1433,6 +1464,14 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
           };
           this.dataReasonsFails.push(rsFails);
         }
+        this.dataReasonsFails = this.dataReasonsFails.sort(
+          (a, b) => b.quantity - a.quantity
+        );
+        if (this.dataReasonsFails?.length > this.loseReason)
+          this.dataReasonsFails = this.dataReasonsFails.splice(
+            0,
+            this.loseReason - 1
+          );
       }
     }
   }
@@ -2419,7 +2458,12 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
       });
 
       // Giới hạn danh sách tối đa 5 đối tượng
-      lstUsers = lstUsers.slice(0, 10); // lấy tối đa bao nhiêu đối tượng chưa lafm - get param ra để lấy
+      // let employeeProductivity = 10;
+      // if (this.employeeProductivity) {
+      //   employeeProductivity = this.employeeProductivity;
+      // }
+      if (lstUsers?.length > this.employeeProductivity)
+        lstUsers = lstUsers.slice(0, this.employeeProductivity); // lấy tối đa bao nhiêu đối tượng chưa lafm - get param ra để lấy
 
       lstUsers.forEach((item) => {
         var tmp = {};

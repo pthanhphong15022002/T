@@ -603,6 +603,11 @@ export class CodxEsService {
       data,
     ]);
   }
+  addEditSignature(data: any,isAdd:boolean) {
+    return this.api.execSv('ES', 'ES', 'SignaturesBusiness', 'AddEditSignatureAsync', [
+      data,isAdd
+    ]);
+  }
 
   //#endregion
 
@@ -645,13 +650,13 @@ export class CodxEsService {
     );
   }
 
-  getCategoryByCateIDType(categoryID: string, category: string) {
+  getCategoryByCateIDType(categoryID: string, category: string,refID:string=null) {
     return this.api.execSv<any>(
       'ES',
       'ES',
       'CategoriesBusiness',
       'GetByCategoryIDTypeAsync',
-      [categoryID, category]
+      [categoryID, category,refID]
     );
   }
 
@@ -1497,39 +1502,6 @@ export class CodxEsService {
         lstHLArea,
         rerenderPages,
       ]
-    );
-  }
-
-  SignAsync(
-    stepNo,
-    isAwait,
-    userID,
-    sfID,
-    signType,
-    supplier,
-    hasCA,
-    mode,
-    comment,
-    transRecID
-  ) {
-    let data = [
-      stepNo,
-      isAwait,
-      userID,
-      sfID,
-      signType,
-      supplier,
-      hasCA,
-      mode,
-      comment,
-      transRecID,
-    ];
-    return this.api.execSv(
-      'es',
-      'ERM.Business.ES',
-      'ApprovalTransBusiness',
-      'SignAsync',
-      data
     );
   }
 

@@ -36,6 +36,7 @@ import { ViewJobComponent } from '../../dynamic-process/popup-add-dynamic-proces
 import { CodxViewTaskComponent } from 'projects/codx-share/src/lib/components/codx-step/codx-view-task/codx-view-task.component';
 import { StagesDetailComponent } from './stages-detail/stages-detail.component';
 import { ActivatedRoute, Route } from '@angular/router';
+import { CodxTabsComponent } from 'projects/codx-share/src/lib/components/codx-tabs/codx-tabs.component';
 
 @Component({
   selector: 'codx-instance-detail',
@@ -44,7 +45,7 @@ import { ActivatedRoute, Route } from '@angular/router';
 })
 export class InstanceDetailComponent implements OnInit {
   @ViewChild('codxStage') codxStage: StagesDetailComponent;
-
+  @ViewChild('tabFooter') tabFooter: CodxTabsComponent;
   @Input() formModel: any;
   @Input() stepName: string;
   @Input() progress = '0';
@@ -279,6 +280,7 @@ export class InstanceDetailComponent implements OnInit {
   aproveTranID = ''; //instance CRR
   listIDTransApprove = [];
   asideMode: string;
+  listRecIDAddNew: any;
 
   constructor(
     private callfc: CallFuncService,
@@ -346,6 +348,7 @@ export class InstanceDetailComponent implements OnInit {
       this.loaded = false; /// bien này không cần cũng được tại luôn có dataSelect -- bỏ loader vào  loadChangeData thì bị giật
       this.id = changes['dataSelect'].currentValue.recID;
       this.loadChangeData();
+      this.listRecIDAddNew = [];
       this.isChangeData = false;
     }
   }
@@ -376,7 +379,10 @@ export class InstanceDetailComponent implements OnInit {
         this.listSteps = res;
         this.stepIDFirst = this.listSteps[0]?.recID;
         this.getViewApprove();
-        this.loadTree(this.id);
+
+        if (this.applyFor != '0') this.getListTaskRef();
+        //this.loadTree(this.id); // load khi change tabs
+
         this.handleProgressInstance();
         if (this.runMode != '1') {
           this.getStageByStep();
@@ -397,6 +403,7 @@ export class InstanceDetailComponent implements OnInit {
       (x) => x.stepID == this.dataSelect.stepID
     )?.recID;
   }
+
   saveDataStep(e) {
     let stepInsIdx = this.listSteps.findIndex((x) => {
       x.recID == e.recID;
@@ -404,8 +411,27 @@ export class InstanceDetailComponent implements OnInit {
     if (stepInsIdx != -1) {
       this.listSteps[stepInsIdx] = e;
     }
-    this.loadingDatas();
+    if (e?.fields?.length > 0) this.updateDuplicateField(e);
+    //datas đã get từ trong ra nên ko cần cái này nữa
+    //this.loadingDatas();
   }
+
+  updateDuplicateField(step) {
+    let fields = step.fields;
+    this.listSteps.forEach((st) => {
+      if (st?.fields?.length > 0 && st.recID != step.recID) {
+        fields.forEach((f) => {
+          let idxField = st.fields.findIndex(
+            (x) => x.fieldName == f.fieldName && x.dataValue != f.dataValue
+          );
+          if (idxField != -1) {
+            st.fields[idxField].dataValue = f.dataValue;
+          }
+        });
+      }
+    });
+  }
+
   loadingDatas() {
     let listField = [];
     this.listSteps.forEach((st) => {
@@ -436,8 +462,8 @@ export class InstanceDetailComponent implements OnInit {
         this.stepName = data.stepName;
         this.currentStep = stepNo;
         this.currentNameStep = this.currentStep;
-       // this.tmpDataSteps = JSON.parse(JSON.stringify(data));
-       this.tmpDataSteps = data;
+        // this.tmpDataSteps = JSON.parse(JSON.stringify(data));
+        this.tmpDataSteps = data;
         this.outStepInstance.emit({ data: this.tmpDataSteps });
         this.stepValue = {
           textColor: data.textColor,
@@ -455,9 +481,7 @@ export class InstanceDetailComponent implements OnInit {
   getInvolved(roles) {
     var id = '';
     if (roles != null && roles.length > 0) {
-      var lstRole = roles.filter(
-        (x) => x.roleType == 'R'
-      );
+      var lstRole = roles.filter((x) => x.roleType == 'R');
       lstRole.forEach((element) => {
         if (!id.split(';').includes(element.objectID)) {
           id = id + ';' + element.objectID;
@@ -705,7 +729,7 @@ export class InstanceDetailComponent implements OnInit {
   }
 
   checkCompletedInstance(instanceStatus: any) {
-    if (instanceStatus === '1' || instanceStatus === '2') {
+    if (instanceStatus == '1' || instanceStatus == '2' || instanceStatus == '15' ) {
       this.deleteListReason(this.listSteps);
     }
   }
@@ -826,11 +850,28 @@ export class InstanceDetailComponent implements OnInit {
   }
 
   saveAssign(e) {
-    if (e) {
-      this.loadTree(this.id);
-      // this.GetStepsByInstanceIDAsync();
+    if (e && this.tabFooter) {
+      //this.loadTree(this.id);//cũ
+      if (this.applyFor != '0') {
+        // this.getListTaskRef();
+        this.tabFooter.listRefID = this.listRefTask;
+        this.tabFooter.sessionID = null;
+      } else this.tabFooter.sessionID = this.id;
+      this.tabFooter.changeTreeAssign();
     }
   }
+  getListTaskRef() {
+    this.listRefTask = [];
+    this.listStepInstance.forEach((x) => {
+      let refTask = (x.tasks as Array<any>).map((x) => {
+        return x.recID;
+      });
+      if (refTask?.length > 0) {
+        this.listRefTask = this.listRefTask.concat(refTask);
+      }
+    });
+  }
+
   showColumnControl(stepID) {
     if (this.listStepsProcess?.length > 0) {
       var idx = this.listStepsProcess.findIndex((x) => x.recID == stepID);
@@ -942,51 +983,49 @@ export class InstanceDetailComponent implements OnInit {
   //       this.handleMoveStage(this.completedAllTasks(step), step.stepID);
   //   }
   //}
-   handleMoveStage(isStopAuto, stepID) {
-  //   if (!isStopAuto) {
-  //     this.dealComponent.moveStage(this.dataSelected);
-  //   } else {
-  //     let index = this.listSteps.findIndex((x) => x.stepID === stepID);
-  //     let isUpdate = false;
-  //     let nextStep;
-  //     if (index != -1) {
-  //       nextStep = this.listSteps.findIndex(
-  //         (x) => x.stepID == this.listSteps[index + 1].stepID
-  //       );
-  //       if (nextStep != -1) {
-  //         isUpdate = true;
-  //       }
-  //     }
-  //     if (isUpdate) {
-  //       var config = new AlertConfirmInputConfig();
-  //       config.type = 'YesNo';
-  //       this.notificationsService.alertCode('DP034', config).subscribe((x) => {
-  //         if (x.event?.status == 'Y') {
-  //           this.listSteps[nextStep].stepStatus = '1';
-  //           this.listSteps[nextStep].actualStart = new Date();
-  //           this.listSteps[index].stepStatus = '3';
-  //           if (this.listSteps[index].actualEnd !== null) {
-  //             this.listSteps[index].actualEnd = new Date();
-  //           }
-
-  //           var listInstanceStep = [];
-  //           listInstanceStep.push(this.listSteps[index]);
-  //           listInstanceStep.push(this.listSteps[nextStep]);
-  //           var nextStepDeal = this.listSteps.find(
-  //             (x) => x.stepID == this.listSteps[nextStep + 1].stepID
-  //           );
-  //           this.dataSelected.stepID = this.listSteps[nextStep].stepID;
-  //           if (nextStepDeal) {
-  //             this.dataSelected.nextStep = nextStepDeal.stepID;
-  //           } else {
-  //             this.dataSelected.nextStep = null;
-  //           }
-
-  //           this.promiseAll(listInstanceStep);
-  //         }
-  //       });
-  //     }
-  //   }
+  handleMoveStage(isStopAuto, stepID) {
+    //   if (!isStopAuto) {
+    //     this.dealComponent.moveStage(this.dataSelected);
+    //   } else {
+    //     let index = this.listSteps.findIndex((x) => x.stepID === stepID);
+    //     let isUpdate = false;
+    //     let nextStep;
+    //     if (index != -1) {
+    //       nextStep = this.listSteps.findIndex(
+    //         (x) => x.stepID == this.listSteps[index + 1].stepID
+    //       );
+    //       if (nextStep != -1) {
+    //         isUpdate = true;
+    //       }
+    //     }
+    //     if (isUpdate) {
+    //       var config = new AlertConfirmInputConfig();
+    //       config.type = 'YesNo';
+    //       this.notificationsService.alertCode('DP034', config).subscribe((x) => {
+    //         if (x.event?.status == 'Y') {
+    //           this.listSteps[nextStep].stepStatus = '1';
+    //           this.listSteps[nextStep].actualStart = new Date();
+    //           this.listSteps[index].stepStatus = '3';
+    //           if (this.listSteps[index].actualEnd !== null) {
+    //             this.listSteps[index].actualEnd = new Date();
+    //           }
+    //           var listInstanceStep = [];
+    //           listInstanceStep.push(this.listSteps[index]);
+    //           listInstanceStep.push(this.listSteps[nextStep]);
+    //           var nextStepDeal = this.listSteps.find(
+    //             (x) => x.stepID == this.listSteps[nextStep + 1].stepID
+    //           );
+    //           this.dataSelected.stepID = this.listSteps[nextStep].stepID;
+    //           if (nextStepDeal) {
+    //             this.dataSelected.nextStep = nextStepDeal.stepID;
+    //           } else {
+    //             this.dataSelected.nextStep = null;
+    //           }
+    //           this.promiseAll(listInstanceStep);
+    //         }
+    //       });
+    //     }
+    //   }
   }
   saveAssignTask(e) {
     // if (e) this.saveAssign.emit(e);
@@ -994,5 +1033,15 @@ export class InstanceDetailComponent implements OnInit {
   }
   autoStart(event) {
     this.changeProgress.emit(event);
+  }
+
+  addTaskHaveAssign(e) {
+    if (e) {
+      this.listRefTask.push(e);
+    }
+    if (this.tabFooter && this.applyFor != '0') {
+      this.tabFooter.listRefID = this.listRefTask;
+      this.tabFooter.changeTreeAssign();
+    }
   }
 }

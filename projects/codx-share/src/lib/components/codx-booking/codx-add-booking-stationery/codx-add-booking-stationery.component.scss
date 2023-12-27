@@ -27,9 +27,12 @@
 
 .cart {
   padding: 8px;
-  color: #fc1302 !important;
-  background-color: rgba($color: #bbf4dc, $alpha: 0.5) !important;
+  color:var(--primary-dark) !important;
+  background-color:var(--primary-lighter);
   border-radius: 50% !important;
+}
+.cart:hover {
+  background-color:var(--primary-light);
 }
 
 .active {

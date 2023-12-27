@@ -385,7 +385,7 @@ export class CmCustomerComponent
   changeDataMF(e, data, type = 2) {
     if (e != null && data != null) {
       e.forEach((res) => {
-        if(type == 11) res.isbookmark = false;
+        if (type == 11) res.isbookmark = false;
         if (this.dataSelected != null) {
           if (data?.status != '99') {
             switch (res.functionID) {
@@ -511,7 +511,7 @@ export class CmCustomerComponent
             let lstContacts = e?.event[1];
             data.modifiedOn = new Date();
             this.dataSelected = JSON.parse(JSON.stringify(data));
-            this.view.dataService.update(data).subscribe();
+            //this.view.dataService.update(data, true).subscribe();
             // this.customerDetail.loadTag(this.dataSelected);
             this.detectorRef.detectChanges();
             // this.customerDetail.listTab(this.funcID);
@@ -563,7 +563,7 @@ export class CmCustomerComponent
                 this.customerDetail.onChangeContact(lstContact);
                 this.customerDetail.onChangeAddress(lstAddress);
               }
-              this.view.dataService.update(data).subscribe();
+              this.view.dataService.update(this.dataSelected, true).subscribe();
               this.detectorRef.detectChanges();
             }
           });
@@ -620,7 +620,7 @@ export class CmCustomerComponent
                 let lstContacts = e?.event[1];
                 data.modifiedOn = new Date();
                 this.dataSelected = JSON.parse(JSON.stringify(data));
-                this.view.dataService.update(data).subscribe();
+                this.view.dataService.update(data, true).subscribe();
                 // this.customerDetail.loadTag(this.dataSelected);
                 this.detectorRef.detectChanges();
 
@@ -634,62 +634,16 @@ export class CmCustomerComponent
 
   async delete(data: any) {
     this.view.dataService.dataSelected = data;
-    var check = false;
-    if (this.funcID == 'CM0101' || this.funcID == 'CM0105') {
-      check = await firstValueFrom(
-        this.cmSv.checkCustomerIDByDealsAsync(data?.recID)
-      );
-      if (check) {
-        this.notiService.notifyCode('CM009');
-        return;
-      }
-      check = await firstValueFrom(
-        this.api.execSv<any>(
-          'CM',
-          'ERM.Business.CM',
-          'ContractsBusiness',
-          'IsExitsByContractAsync',
-          [data.recID]
-        )
-      );
-      if (check) {
-        this.notiService.notifyCode('CM011');
-        return;
-      }
-      check = await firstValueFrom(
-        this.api.execSv<any>(
-          'CM',
-          'ERM.Business.CM',
-          'CustomersBusiness',
-          'IsExitsByQuotationAsync',
-          [data.recID]
-        )
-      );
-      if (check) {
-        this.notiService.notifyCode('CM024');
-        return;
-      }
-    }
-
-    if (this.funcID == 'CM0102') {
-      check = await firstValueFrom(
-        this.api.execSv<any>(
-          'CM',
-          'ERM.Business.CM',
-          'ContactsBusiness',
-          'CheckContactDealAsync',
-          [data.recID]
-        )
-      );
-      if (check) {
-        this.notiService.notifyCode('CM012');
-        return;
-      }
-    }
-
     this.view.dataService
-      .delete([this.view.dataService.dataSelected], true, (opt) =>
-        this.beforeDel(opt)
+      .delete(
+        [this.view.dataService.dataSelected],
+        true,
+        (opt) => this.beforeDel(opt),
+        null,
+        null,
+        null,
+        null,
+        false
       )
       .subscribe((res) => {
         if (res) {
@@ -697,6 +651,7 @@ export class CmCustomerComponent
             type: 'delete',
             data: data,
           });
+          this.notiService.notifyCode('SYS008');
         }
       });
 
@@ -858,6 +813,7 @@ export class CmCustomerComponent
           formModel.formName = 'CMLeads';
           formModel.entityName = 'CM_Leads';
           formModel.gridViewName = 'grvCMLeads';
+          formModel.userPermission = this?.view?.formModel?.userPermission;
           option.FormModel = formModel;
           option.Width = '800px';
           option.zIndex = 1001;
@@ -923,7 +879,7 @@ export class CmCustomerComponent
       )
       .closed.subscribe((e) => {
         if (e?.event && e?.event != null) {
-          this.view.dataService.update(e?.event).subscribe();
+          this.view.dataService.update(e?.event, true).subscribe();
           this.detectorRef.detectChanges();
         }
       });
@@ -956,7 +912,9 @@ export class CmCustomerComponent
                 this.dataSelected.contactType = null;
                 this.dataSelected.objectType = null;
                 this.dataSelected.objectName = null;
-                this.view.dataService.update(this.dataSelected).subscribe();
+                this.view.dataService
+                  .update(this.dataSelected, true)
+                  .subscribe();
                 this.notiService.notifyCode('SYS008');
                 this.detectorRef.detectChanges();
               }
@@ -1000,7 +958,7 @@ export class CmCustomerComponent
     this.dataSelected.provinceID = e ? e?.provinceID : null;
     this.dataSelected.districtID = e ? e?.districtID : null;
     this.dataSelected.wardID = e ? e?.wardID : null;
-    this.view.dataService.update(this.dataSelected).subscribe();
+    this.view.dataService.update(this.dataSelected, true).subscribe();
     this.detectorRef.detectChanges();
   }
 

@@ -67,7 +67,8 @@
                     "
                     [imageSrc]="
                       (approver?.roleType != 'U' && !approver?.userID) ||
-                      approver?.roleType == 'PA'
+                      approver?.roleType == 'PA' ||
+                                  approver?.roleType == 'PE'
                         ? './assets/themes/sys/default/img/' +
                           (approver?.icon
                             ? approver?.icon
@@ -76,7 +77,8 @@
                     "
                     [imgCss]="
                       (approver?.roleType != 'U' && !approver?.userID) ||
-                      approver?.roleType == 'PA'
+                      approver?.roleType == 'PA'||
+                                  approver?.roleType == 'PE'
                         ? 'w-30px p-2 me-3 user-mini-icon'
                         : 'w-35px me-3'
                     "
@@ -139,14 +141,16 @@
               "
               [imageSrc]="
                 (approver?.roleType != 'U' && !approver?.userID) ||
-                approver?.roleType == 'PA'
+                approver?.roleType == 'PA'||
+                                  approver?.roleType == 'PE'
                   ? './assets/themes/sys/default/img/' +
                     (approver?.icon ? approver?.icon : 'share_default.svg')
                   : null
               "
               [imgCss]="
                 (approver?.roleType != 'U' && !approver?.userID) ||
-                approver?.roleType == 'PA'
+                approver?.roleType == 'PA'||
+                                  approver?.roleType == 'PE'
                   ? 'w-30px p-2 me-3 user-mini-icon'
                   : 'w-35px me-3'
               "
@@ -238,14 +242,16 @@
             "
             [imageSrc]="
               (approver?.roleType != 'U' && !approver?.userID) ||
-              approver?.roleType == 'PA'
+              approver?.roleType == 'PA'||
+                                  approver?.roleType == 'PE'
                 ? './assets/themes/sys/default/img/' +
                   (approver?.icon ? approver?.icon : 'share_default.svg')
                 : null
             "
             [imgCss]="
               (approver?.roleType != 'U' && !approver?.userID) ||
-              approver?.roleType == 'PA'
+              approver?.roleType == 'PA'||
+                                  approver?.roleType == 'PE'
                 ? 'w-30px p-2 me-3 user-mini-icon'
                 : 'w-35px me-3'
             "

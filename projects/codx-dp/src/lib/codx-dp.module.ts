@@ -28,19 +28,16 @@ import { InstancesComponent } from './instances/instances.component';
 import { InstanceDetailComponent } from './instances/instance-detail/instance-detail.component';
 import { PopupAddInstanceComponent } from './instances/popup-add-instance/popup-add-instance.component';
 import { SliderModule } from '@syncfusion/ej2-angular-inputs';
-
 import { PopupMoveStageComponent } from './instances/popup-move-stage/popup-move-stage.component';
 import { PopupMoveReasonComponent } from './instances/popup-move-reason/popup-move-reason.component';
 import { ViewJobComponent } from './dynamic-process/popup-add-dynamic-process/step-task/view-step-task/view-step-task.component';
 import { StepTaskGroupComponent } from './dynamic-process/popup-add-dynamic-process/step-task/step-task-group/step-task-group.component';
 import { UserComponent } from './dynamic-process/popup-add-dynamic-process/step-task/user/user.component';
-
 import { StagesDetailComponent } from './instances/instance-detail/stages-detail/stages-detail.component';
 import { PopupRolesDynamicComponent } from './dynamic-process/popup-roles-dynamic/popup-roles-dynamic.component';
 import { PopupPropertiesComponent } from './dynamic-process/popup-properties/popup-properties.component';
 import { PopupUserPropertiesComponent } from './dynamic-process/popup-properties/popup-user-properties/popup-user-properties.component';
 import { PopupParticipantsComponent } from './dynamic-process/popup-participants/popup-participants.component';
-import { LayoutInstancesComponent } from './layout-instances/layout-instances.component';
 import { CarouselStageComponent } from './instances/instance-detail/carousel-stage/carousel-stage.component';
 import { InputNumberDurationComponent } from './dynamic-process/popup-add-dynamic-process/input-number-duration/input-number-duration.component';
 import { ApprovalsComponent } from './approvals/approvals.component';
@@ -54,7 +51,6 @@ import { ViewsTabsDetailsComponent } from './dynamic-process/popup-views-details
 
 import { PinchZoomModule } from '@meddv/ngx-pinch-zoom';
 import { CodxCmModule } from 'projects/codx-cm/src/lib/codx-cm.module';
-import { CodxInstancesComponent } from 'projects/codx-share/src/lib/components/codx-instances/codx-instances.component';
 import { InstanceDashboardComponent } from './instances/instance-dashboard/instance-dashboard.component';
 import { PopupAddVllCustomComponent } from './dynamic-process/popup-add-dynamic-process/popup-add-custom-field/popup-add-vll-custom/popup-add-vll-custom.component';
 import { PopupAddColumnTableComponent } from './dynamic-process/popup-add-dynamic-process/popup-add-custom-field/popup-setting-table/popup-add-column-table/popup-add-column-table.component';
@@ -64,6 +60,10 @@ import { PopupSettingTableComponent } from './dynamic-process/popup-add-dynamic-
 import { PopupSettingReferenceComponent } from './dynamic-process/popup-add-dynamic-process/popup-add-custom-field/popup-setting-reference/popup-setting-reference.component';
 import { ReplaceProgressPipe } from './pipes/replace-progress.pipe';
 import { StepTaskInstanceComponent } from './instances/instance-detail/step-task-instance/step-task-instance.component';
+import { PopupReleaseProcessComponent } from './dynamic-process/popup-release-process/popup-release-process.component';
+import { ViewDetailApprovalCustomComponent } from './approvals/view-detail-approval-custom/view-detail-approval-custom.component';
+import { ProcessesPropertiesComponent } from './processes-properties/processes-properties.component';
+import { PropertiesFieldComponent } from './processes-properties/properties-field/properties-field.component';
 
 export const routes: Routes = [
   {
@@ -124,7 +124,6 @@ export const routes: Routes = [
 const T_Component: Type<any>[] = [
   CodxDpComponent,
   LayoutComponent,
-  LayoutInstancesComponent,
   DynamicProcessComponent,
   PopupAddDynamicProcessComponent,
   PopupJobComponent,
@@ -146,6 +145,7 @@ const T_Component: Type<any>[] = [
   CarouselStageComponent,
   InputNumberDurationComponent,
   ApprovalsComponent,
+  ViewDetailApprovalCustomComponent, //chuyển về từ share sau co thể xóa nếu ko cần
   PopupEditOwnerstepComponent,
   PopupSelectTempletComponent,
   ViewsTabsDetailsComponent,
@@ -157,6 +157,9 @@ const T_Component: Type<any>[] = [
   ViewInstancesComponent,
   ReplaceProgressPipe,
   StepTaskInstanceComponent,
+  PopupReleaseProcessComponent,
+  ProcessesPropertiesComponent,
+  PropertiesFieldComponent
 ];
 
 @NgModule({

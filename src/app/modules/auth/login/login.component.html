@@ -1,7 +1,7 @@
 ﻿<div codxcontainer></div>
 <div modifyLang></div>
 <ng-container *ngIf="f && c && fl">
-  <ng-container *ngIf="layoutCZ == 'qtsc'; else default">
+  <ng-container *ngIf="environment.layout.id == 'qtsc'; else default">
     <qtsc-login
       [loginForm]="loginForm"
       [changePassForm]="changePassForm"
@@ -37,7 +37,6 @@
     [returnUrl]="returnUrl"
     [alerttext]="alerttext"
     [sessionID]="sessionID"
-    [loginDevice]="loginDevice"
     [sysSetting]="sysSetting"
     [email]="email"
     [mode]="mode"

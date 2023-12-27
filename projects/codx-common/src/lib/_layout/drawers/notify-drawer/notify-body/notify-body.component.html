@@ -1,8 +1,8 @@
-<div class="w-100 h-100 scroll-y" (scroll)="onScroll()">
+<div class="w-100 h-100 scroll-y" (scroll)="onScroll()" *ngIf="isAfterRender">
     <ng-container *ngIf="loaded;else noData">
         <ng-container *ngIf="bookmark.length > 0">
             <div *ngIf="notiFilter.mode==''" class="d-flex align-items-center justify-content-between mt-3">
-                <codx-label class="fw-bold fs-6 text-primary" [formModel]="formModel" name="lblBG_Notifilcation"
+                <codx-label class="fw-bold fs-6 text-primary" [formModel]="formModel" name="lblBG_Notifilcation"  [gridViewName]="funcList?.gridViewName" [formName]="funcList?.formName"
                     default="Đã ghim">
                 </codx-label>
             </div>
@@ -36,7 +36,7 @@
         <ng-container *ngIf="noti.length > 0 ;">
             <div *ngIf="notiFilter.mode==''" class="d-flex align-items-center justify-content-between mt-3">
                 <span>
-                    <codx-label class="fw-bold fs-6 text-primary" [formModel]="formModel" name="lblBG_Notifilcation"
+                    <codx-label class="fw-bold fs-6 text-primary" [formModel]="formModel" name="lblBG_Notifilcation"  [gridViewName]="funcList?.gridViewName" [formName]="funcList?.formName"
                         default="Thông báo"></codx-label>
                 </span>
             </div>

@@ -1,391 +1,245 @@
 import {
-  ChangeDetectorRef,
-  Component,
-  ElementRef,
-  EventEmitter,
-  Input,
   OnInit,
-  Output,
-  Renderer2,
+  Optional,
+  Component,
+  OnChanges,
   SimpleChanges,
-  TemplateRef,
-  ViewChild,
+  ChangeDetectorRef,
 } from '@angular/core';
-import {
-  ApiHttpService,
-  CRUDService,
-  CacheService,
-  DataRequest,
-  DialogRef,
-  FormModel,
-  ImageViewerComponent,
-  ResourceModel,
-} from 'codx-core';
 import { CodxCmService } from '../../codx-cm.service';
-import { firstValueFrom } from 'rxjs';
-import { CM_Deals } from '../../models/cm_model';
-import { TabComponent } from '@syncfusion/ej2-angular-navigations';
+import { CM_Contracts, CM_Customers, CM_Deals, CM_Leads } from '../../models/cm_model';
+import { ApiHttpService, CacheService, DialogData, DialogRef, NotificationsService} from 'codx-core';
+import { ContractsService } from '../../contracts/service-contracts.service';
 
 @Component({
   selector: 'view-lead-detail',
   templateUrl: './view-lead-detail.component.html',
   styleUrls: ['./view-lead-detail.component.scss']
 })
-export class ViewLeadDetailComponent implements OnInit {
-  @ViewChild('tabObj') tabObj: TabComponent;
-  @Input() dataSelected: any;
-  @Input() dataService: CRUDService;
-  @Input() formModel: any;
-  @Input() funcID: any; //
-  @Input() gridViewSetup: any;
-  @Input() colorReasonSuccess: any;
-  @Input() colorReasonFail: any;
-  @Input() action: any;
-  @Input() applyProcess: any;
-  @Input() listCategory: any;
-  @Input() valueListStatusCode: any;
-  @Input() dialog: DialogRef;
-  @Output() clickMoreFunc = new EventEmitter<any>();
-  @Output() changeMF = new EventEmitter<any>();
-  @ViewChild('referencesDeal') referencesDeal: TemplateRef<any>;
-  @ViewChild('comment') comment: TemplateRef<any>;
+export class ViewLeadDetailComponent implements OnInit, OnChanges {
+  dialog: DialogRef;
+  lead: CM_Leads;
+  Customers: CM_Customers;
+  listTabRight = [];
+  tabRightSelect;
+  tabLeftSelect;
 
-  seesionID = '';
-  viewTag: string = '';
-  listRoles = [];
-  listSteps = [];
-  listStepsProcess = [];
-  treeTask = [];
-  listCategoryTmp = ([] = []);
+  listInsStep;
+  listInsStepStart;
 
-  tmpDeal: any;
+  contact;
+  contractRecId;
+  customers;
+
+  grvSetup;
+  vllStatus;
   oCountFooter: any = {};
-  contactPerson: any;
-  gridViewSetupDeal: any;
-  request: ResourceModel;
-  formModelDeal: FormModel;
+  dataTree = [];
 
-  isDataLoading = false;
-
-  // type of string
-  oldRecId: string = '';
-  companyNo: string = '';
-  customerNo: string = '';
-  companyName: string = '';
-  customerName: string = '';
-
-  isHidden: boolean = true;
-  isBool: boolean = false;
-  hasRunOnce: boolean = false;
-  isShow = false;
-  isLoadOwner: boolean = true;
-  isShowContanct = {show: true};
-  isShowFields = {show: true};
-  isShowTask = {show: true};
-  isShowOpponent = {show: true};
-  tabControl = [
-    {
-      name: 'History',
-      textDefault: 'Lịch sử',
-      isActive: true,
-      template: null,
-    },
-    {
-      name: 'Attachment',
-      textDefault: 'Đính kèm',
-      isActive: false,
-      template: null,
-    },
-    {
-      name: 'AssignTo',
-      textDefault: 'Giao việc',
-      isActive: false,
-      template: null,
-    },
-    {
-      name: 'Approve',
-      textDefault: 'Ký duyệt',
-      isActive: false,
-      template: null,
-    },
+  formModelCustomer = {
+    formName: 'CMCustomers',
+    entityName: 'CM_Customers',
+    gridViewName: 'grvCMCustomers',
+  };
+  formModelContact = {
+    formName: 'CMContacts',
+    entityName: 'CM_Contacts',
+    gridViewName: 'grvCMContacts',
+  };
+  
+  listTabLeft = [
+    { id: 'listTabInformation', name: 'Thông tin hợp đồng', icon: 'icon-info' },
+    { id: 'listHistory', name: 'Lịch sử', icon: 'icon-i-clock-history' },
+    { id: 'listFile', name: 'Đính kèm', icon: 'icon-i-paperclip' },
+    { id: 'listAddTask', name: 'Giao việc', icon: 'icon-i-clipboard-check' },
+    { id: 'listApprove', name: 'Ký, duyệt', icon: 'icon-edit-one' },
+    { id: 'listLink', name: 'Liên kết', icon: 'icon-i-link' },
   ];
-
+  listTabInformation = [
+    { id: 'information', name: 'Thông tin chung' },
+    { id: 'fields', name: 'Thông tin mở rộng' },
+    { id: 'tasks', name: 'Công việc' },
+    { id: 'note', name: 'Ghi chú' },
+  ];
+  listHistory = [{ id: 'history', name:'Lịch sử'}];
+  listFile = [{ id: 'file', name:'Đính kèm'}];
+  listAddTask = [{ id: 'addTask', name:'Giao việc'}];
+  listApprove = [{ id: 'approve', name:'Ký, duyệt'}];
+  listLink = [{ id: 'link', name:'Liên kết'}];
   constructor(
-    private changeDetectorRef: ChangeDetectorRef,
     private cache: CacheService,
     private codxCmService: CodxCmService,
+    private contractService: ContractsService,
+    private notiService: NotificationsService,
+    private changeDetectorRef: ChangeDetectorRef,
     private api: ApiHttpService,
+    @Optional() dt?: DialogData,
+    @Optional() dialog?: DialogRef
   ) {
-    this.isDataLoading = true;
-    this.executeApiCalls();
-  }
-
-  ngOnInit(): void {}
-
-  // ngAfterViewInit(): void {}
-  ngAfterViewChecked() {
-    // if (!this.hasRunOnce) {
-    //   this.resetTab(this.dataSelected?.applyProcess);
-    // }
-  }
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['dataSelected']) {
-      if (
-        changes['dataSelected'].currentValue != null &&
-        changes['dataSelected'].currentValue?.recID
-      ) {
-        this.dataSelected = this.dataSelected;
-        var index = this.tabControl.findIndex((x) => x.name === 'Deal');
-        if (index != -1) {
-          this.tabControl.splice(index, 1);
-        }
-        let references = {
-          name: 'Deal',
-          textDefault: 'Liên kết',
-          isActive: false,
-          template: this.referencesDeal,
-          icon: 'icon-i-link',
-        };
-        this.isLoadOwner = false;
-        if (
-          this.oldRecId !== changes['dataSelected'].currentValue?.recID &&
-          this.oldRecId
-        ) {
-          this.hasRunOnce = true;
-          //  this.resetTab(this.dataSelected.applyProcess);
-          this.promiseAllLoad();
-        }
-        !this.hasRunOnce && this.promiseAllLoad();
-        this.oldRecId = changes['dataSelected'].currentValue.recID;
-
-        this.tabControl.push(references);
-        if (!this.dataSelected?.dealID) {
-          this.tmpDeal = null;
-        }
-      }
-      this.getTags(this.dataSelected);
-    }
-    if (
-      changes['listCategory']?.currentValue &&
-      this.listCategoryTmp.length <= 0
-    ) {
-      this.listCategoryTmp = changes['listCategory'].currentValue;
-      this.getValuelistCategory(this.listCategoryTmp);
-    }
-  }
-
-  clickMF(e, data) {
-    this.clickMoreFunc.emit({ e: e, data: data });
-  }
-
-  changeDataMF(e, data) {
-    this.changeMF.emit({
-      e: e,
-      data: data,
-    });
-  }
-
-  changeFooter(e) {}
-  // resetTab(data) {
-  //   if (this.tabObj) {
-  //     this.isBool = data;
-  //     if (this.isBool) {
-  //       (this.tabObj as TabComponent).hideTab(1, true);
-  //       (this.tabObj as TabComponent).hideTab(2, false);
-  //     } else {
-  //       (this.tabObj as TabComponent).hideTab(1, false);
-  //       (this.tabObj as TabComponent).hideTab(2, true);
-  //     }
-  //   }
-  // }
-
-  async promiseAllLoad() {
-    this.isLoadOwner = true;
-    this.seesionID = this.dataSelected.recID; //da doi lai lay bang recID
-    this.loadTree(this.seesionID);
-    this.isDataLoading = true;
-    this.dataSelected.applyProcess && (await this.getListInstanceStep());
-    this.dataSelected.dealID && (await this.getTmpDeal());
-  }
-  async executeApiCalls() {
-    await this.getValueListRole();
-    await this.getGridViewSetupDeal();
-  }
-  getValuelistCategory(listCategory) {
-    const mappings = {
-      '5': 'companyNo',
-      '6': 'customerNo',
-      '7': 'companyName',
-      '8': 'customerName',
-    };
-    for (const key in mappings) {
-      const value = mappings[key];
-      this[value] = listCategory.find((x) => x.value === key)?.text || '';
-    }
-    this.changeDetectorRef.detectChanges();
-  }
-  async getGridViewSetupDeal() {
-    this.formModelDeal = await this.codxCmService.getFormModel('CM0201');
-    this.gridViewSetupDeal = await firstValueFrom(
-      this.cache.gridViewSetup(
-        this.formModelDeal?.formName,
-        this.formModelDeal?.gridViewName
-      )
-    );
-  }
-
-  async getValueListRole() {
-    this.cache.valueList('CRM040').subscribe((res) => {
-      if (res && res?.datas.length > 0) {
-        this.listRoles = res.datas;
-      }
-    });
-  }
-  getListInstanceStep() {
-    var data = [
-      this.dataSelected?.refID,
-      this.dataSelected?.processID,
-      this.dataSelected?.status,
-      '5',
-    ];
-    this.codxCmService.getStepInstance(data).subscribe((res) => {
-      if (res) {
-        this.listSteps = res;
-        this.isDataLoading = false;
-        this.checkCompletedInstance(this.dataSelected?.status);
-      } else {
-        this.listSteps = null;
-      }
-    });
-  }
-  checkCompletedInstance(dealStatus: any) {
-    if (dealStatus == '1' || dealStatus == '2') {
-      this.deleteListReason(this.listSteps);
-    }
-  }
-  deleteListReason(listStep: any): void {
-    listStep.pop();
-    listStep.pop();
-  }
-  checkHaveField(listStep: any) {
-    var isCheck = false;
-    for (let item of listStep) {
-      if (item?.fields?.length > 0 && item?.fields) {
-        isCheck = true;
-        return isCheck;
+    this.dialog = dialog;
+    this.lead = dt?.data?.dataView;
+    this.contractRecId = dt?.data?.contactRecId;
+    this.listInsStepStart = dt?.data?.listInsStepStart;
+    if(!this.dialog?.formModel){
+      this.dialog.formModel = {
+        entityName: "CM_Contracts",
+        entityPer: "CM_Contracts",
+        formName: "CMContracts",
+        funcID:"CM0204",
+        gridViewName:"grvCMContracts",
       }
     }
-    return isCheck;
   }
-
-  async getTmpDeal() {
-    this.codxCmService
-      .getOneTmpDeal([this.dataSelected.dealID])
+  ngOnInit() {
+    this.listTabRight = this.listTabInformation;
+    this.tabRightSelect = this.listTabRight[0]?.id;
+    this.tabLeftSelect = this.listTabLeft[0];
+    this.listInsStep = this.listInsStepStart;
+    this.getContract();
+    this.cache
+      .gridViewSetup('CMContracts', 'grvCMContracts')
       .subscribe((res) => {
         if (res) {
-          this.tmpDeal = res[0];
-        } else {
-          this.tmpDeal = null;
+          this.grvSetup = res;
+          this.vllStatus = this.grvSetup['Status'].referedValue;
         }
       });
   }
+  ngOnChanges(changes: SimpleChanges) {}
 
-  getIcon($event) {
-    if ($event == '1') {
-      return this.listRoles.filter((x) => x.value == '1')[0]?.icon ?? null;
-    } else if ($event == '5') {
-      return this.listRoles.filter((x) => x.value == '5')[0]?.icon ?? null;
-    } else if ($event == '3') {
-      return this.listRoles.filter((x) => x.value == '3')[0]?.icon ?? null;
+  getContract() {
+    if (this.lead) {
+      this.getCutomer();
+      this.getContact();
+      this.getListInstanceStep(this.lead);
+      return;
     }
-    return this.listRoles.filter((x) => x.value == '1')[0]?.icon ?? null;
-  }
-  getTags(data) {
-    this.viewTag = '';
-    this.isLoadOwner = true;
-    setTimeout(() => {
-      this.viewTag = this.dataSelected?.tags;
-    }, 100);
-  }
-  showColumnControl(stepID) {
-    if (this.listStepsProcess?.length > 0) {
-      var idx = this.listStepsProcess.findIndex((x) => x.recID == stepID);
-      if (idx == -1) return 1;
-      return this.listStepsProcess[idx]?.showColumnControl;
+    if (!this.contractRecId) {
+      this.dialog.close();
+      this.notiService.notify('Không tìm thấy hợp đồng', '3');
+      return;
     }
-    return 1;
+    this.contractService.getContractByRecID(this.contractRecId).subscribe((res) => {
+      if (res) {
+        this.lead = res;
+        this.getCutomer();
+        this.getContact();
+        this.changeDetectorRef.markForCheck();
+      } else {
+        this.dialog.close(); 
+        this.notiService.notify('Không tìm thấy hợp đồng', '3');
+      }
+    });
   }
-  continueStep(event) {
-    let isTaskEnd = event?.isTaskEnd;
-    let step = event?.step;
 
-    let transferControl = this.dataSelected.steps.transferControl;
-    if (transferControl == '0') return;
+  changeTabLeft(e) {
+    this.tabLeftSelect = this.listTabLeft.find((x) => x.id == e);
+    this.listTabRight = this[e];
+    this.tabRightSelect = this.listTabRight[0]?.id;
+    if(e == 'listAddTask'){
+      this.loadTree(this.lead?.recID);
+    }
   }
 
+  getListInstanceStep(contract) {
+    if (contract?.processID) {
+      var data = [contract?.refID, contract?.processID, contract?.status, '1'];
+      this.codxCmService.getStepInstance(data).subscribe((res) => {
+        if (res) {
+          this.listInsStep = res;
+        }
+      });
+    }
+  }
+
+  close() {
+    this.dialog.close();
+  }
+
+  onSectionChange(data: any, index: number = -1) {
+    if (index > -1) {
+      this.tabRightSelect = this.listTabInformation?.find((x) => x.id == data)?.id;
+      this.changeDetectorRef.markForCheck();
+    }
+  }
+
+  navChange(evt: any, index: number = -1, btnClick) {
+    this.tabRightSelect = evt;
+    let element = document.getElementById(evt);
+    element.scrollIntoView({
+      behavior: 'smooth',
+      block: 'start',
+      inline: 'nearest',
+    });
+    this.changeDetectorRef.markForCheck();
+  }
+
+    getCutomer() {
+    this.contractService
+      .getCustomerByRecID(this.lead?.customerID)
+      .subscribe((res) => {
+        if (res) {
+          this.customers = res;
+        }
+      });
+  }
+    getContact() {
+    if (this.lead?.recID) {
+      let data = [this.lead?.recID,this.lead?.currencyID];
+      this.codxCmService.getViewDetailDealAsync(data).subscribe((res) => {
+        if (res) {
+          if(res[0] && res[0].length > 0 ) {
+              let listContact = res[0];
+              let contactMain = listContact.filter(x=>x.isDefault)[0];
+              this.contact = contactMain ? contactMain : null;
+          }
+          else {
+            this.contact = null;
+          }
+        }
+      });
+    }
+  }
+
+  //comment
   changeCountFooter(value: number, key: string) {
     let oCountFooter = JSON.parse(JSON.stringify(this.oCountFooter));
     oCountFooter[key] = value;
     this.oCountFooter = JSON.parse(JSON.stringify(oCountFooter));
-    this.changeDetectorRef.detectChanges();
+    this.changeDetectorRef.markForCheck();
   }
 
-  reloadListStep(listSteps: any) {
-    this.isDataLoading = true;
-    this.listSteps = listSteps;
-    this.isDataLoading = false;
-    this.changeDetectorRef.detectChanges();
+  showColumnControl(stepID) {
+    // if (this.listStepsProcess?.length > 0) {
+    //   var idx = this.listStepsProcess.findIndex((x) => x.recID == stepID);
+    //   if (idx == -1) return 1;
+    //   return this.listStepsProcess[idx]?.showColumnControl;
+    // }
+    return 1;
   }
+  saveDataStep(e) {
 
-  // //load giao việc
-  // getTree() {
-  //   let seesionID = this.dataSelected.recID;
-  //   this.codxCmService.getTreeBySessionID(seesionID).subscribe((tree) => {
-  //     this.treeTask = tree || [];
-  //   });
-  // }
-
-  saveAssign(e) {
-    if (e) {
-      this.loadTree(this.seesionID);
+  }
+  fileSave(e) {
+    if (e && typeof e === 'object') {
+      var createdBy = Array.isArray(e) ? e[0].data.createdBy : e.createdBy;
+      this.api
+        .execSv<any>('TM', 'TM', 'TaskBusiness', 'AddPermissionFileAsync', [
+          this.lead?.recID,
+          createdBy,
+        ])
+        .subscribe();
     }
   }
-
   loadTree(recID) {
     if (!recID) {
-      this.treeTask = [];
+      this.dataTree = [];
       return;
     }
     this.api
       .exec<any>('TM', 'TaskBusiness', 'GetListTaskTreeBySessionIDAsync', recID)
       .subscribe((res) => {
-        this.treeTask = res ? res : [];
+        this.dataTree = res ? res : [];
       });
-  }
-  clickShowTab(isShow) {
-    this.isShow = isShow;
-    this.changeDetectorRef.detectChanges();
-  }
-  getStatusCode(status) {
-    if(status) {
-      let result = this.valueListStatusCode.filter(x=>x.value === status)[0];
-      if(result) {
-        return result?.text;
-      }
-    }
-
-    return '';
-  }
-
-  toggleElemen(data){
-    data.show = !data?.show;
-  }
-
-  handelToggleStep(){
-    this.isShow = !this.isShow;
-    this.isShowContanct.show = this.isShow;
-    this.isShowFields.show = this.isShow;
-    this.isShowTask.show = this.isShow;
-    this.isShowOpponent.show = this.isShow;
   }
 }

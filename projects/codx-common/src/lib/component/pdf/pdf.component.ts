@@ -282,7 +282,7 @@ export class PdfComponent
         this.signerInfo.email,
         this.signerInfo?.signType,
         null,
-        this.signerInfo?.approver
+        null,
       )
       .subscribe((signature) => {
         if (signature) {
@@ -743,13 +743,13 @@ export class PdfComponent
   }
 
   //get
-  getAreaOwnerName(authorID) {
-    return this.lstSigners.find((signer) => {
-      return (
-        signer.authorID == authorID
-        // || signer?.roleType == this.curSignerType
-      );
-    })?.fullName;
+  getAreaOwnerName(authorID,objectID) {
+    if(objectID !=null){
+      return this.lstSigners.find((signer) =>signer?.authorID == authorID && signer?.userID ==objectID)?.fullName ?? "";
+    }
+    else{      
+      return this.lstSigners.find((signer) =>signer?.authorID == authorID)?.fullName ?? "";
+    }    
   }
 
   getListCA() {
@@ -783,9 +783,23 @@ export class PdfComponent
     }
   }
   popupPublicESign(status) {
-    this.publicSignStatus = status;
-    var dialog = this.callfc.openForm(this.publicSignInfo, '', 450, 270);
-    this.detectorRef.detectChanges();
+    if(this.oApprovalTrans.approverType=='PE'){
+      this.codxCommonService
+      .codxApprove(this.transRecID, status, null, null, null)
+      .subscribe((res: ResponseModel) => {
+        if (res?.msgCodeError == null && res?.rowCount > 0) {
+          this.notificationsService.notifyCode('SYS034');
+          this.isSigned = true;
+          this.detectorRef.detectChanges();
+          this.changeConfirmState(res);
+        }
+      });
+    }
+    else{
+      this.publicSignStatus = status;
+      var dialog = this.callfc.openForm(this.publicSignInfo, '', 450, 270);
+      this.detectorRef.detectChanges();
+    }
   }
   publicESign(dialog) {
     this.esService.editSignature(this.paSignature).subscribe((res) => {
@@ -1067,10 +1081,14 @@ export class PdfComponent
               ? false
               : !area.isLock;
           if (isRender) {
-            let curSignerInfo = this.lstSigners.find(
-              (signer) => signer.authorID == area.signer
-              // ||                this.curSignerType == area.signer
-            );
+            
+            let curSignerInfo =null;
+            if(area?.objectID !=null){
+              curSignerInfo= this.lstSigners.find((signer) =>signer?.authorID == area?.signer && signer?.userID ==area?.objectID);
+            }
+            else{      
+              curSignerInfo = this.lstSigners.find((signer) =>signer?.authorID == area?.signer);
+            } 
             let url = '';
             let isChangeUrl = false;
             switch (area.labelType) {
@@ -2362,6 +2380,7 @@ export class PdfComponent
       .subscribe((res) => {
         if (res) {
           this.lstAreas = res;
+          this.detectorRef.detectChanges();
         }
         this.curFileUrl = this.fileInfo.fileUrl;
         this.curFileName = this.fileInfo.fileName;

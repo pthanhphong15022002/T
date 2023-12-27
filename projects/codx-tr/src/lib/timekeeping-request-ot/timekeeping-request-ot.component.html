@@ -1,0 +1,433 @@
+<codx-views
+  #view
+  service="PR"
+  assemblyName="PR"
+  entityName="PR_TimeKeepingRequest"
+  className="TimeKeepingRequestBusiness"
+  method="GetListAsync"
+  [views]="views"
+  [autoLoad]="true"
+  [selectedFirst]="true"
+  idField="recID"
+  [button]="buttons"
+  [funcID]="funcID"
+  (buttonClick)="click($event)"
+  (onActions)="onActionClick($event)"
+  (selectedChange)="selectedChange($event)"
+>
+</codx-views>
+
+<ng-template #templateListDetail let-data>
+  <codx-temp-full
+    [imgCss]="'me-4'"
+    cardCss="card-template border-bottom p-3 when-hover-box"
+    (clickMF)="clickMF($event, data)"
+    [moreFuncCss]="'me-5'"
+    [imageId]="data.emp?.employeeID"
+    [imageObjType]="'HR_Employees'"
+    [imageObjName]="data?.emp?.employeeName"
+    [imageWidth]="35"
+    [formModel]="view.formModel"
+    [dataItem]="data"
+    [typeMF]="'view'"
+    [titleTmp]="titleTmp"
+    [titleCss]="'fs-6 mb-1 then-text-primary'"
+    [subTitle]="data?.emp?.positionName"
+    [subTitleCss]="'fs-7 text-gray-500'"
+    [descTmp]="descTmp"
+    [desc2Tmp]="desc2Tmp"
+    (changeDataMF)="changeDataMF($event, data)"
+  >
+  </codx-temp-full>
+
+  <ng-template #titleTmp>
+    <span class="fw-bold fs-6 mb-1 then-text-primary">
+      {{ data.emp?.employeeName }}
+    </span>
+  </ng-template>
+
+  <ng-template #descTmp>
+    <div class="d-flex align-items-center mt-1 flex-wrap">
+      <span class="icon-calendar_today icon-14 me-1"></span>
+      <span class="fs-7" [ngbTooltip]="grvSetup?.FromDate?.headerText">
+        {{ data.fromDate | fmDT }}
+      </span>
+      <span
+        *ngIf="data.toDate && data.fromDate != data.toDate"
+        class="mx-1 fs-7"
+      >
+        -
+      </span>
+      <span
+        class="fs-7"
+        *ngIf="data.toDate && data.fromDate != data.toDate"
+        [ngbTooltip]="grvSetup?.ToDate?.headerText"
+      >
+        {{ data.toDate | fmDT }}
+      </span>
+
+      <span class="icon-access_time icon-14 ms-4 me-1"></span>
+      <ng-container *ngIf="data.registerForm != '2'">
+        <span class="fs-7" [ngbTooltip]="grvSetup?.FromTime?.headerText">
+          {{ getHour(data.fromTime) }}
+        </span>
+        <span
+          *ngIf="data.toTime && data.fromTime != data.toTime"
+          class="mx-1 fs-7"
+        >
+          -
+        </span>
+        <span
+          class="fs-7"
+          *ngIf="data.toTime && data.fromTime != data.toTime"
+          [ngbTooltip]="grvSetup?.ToTime?.headerText"
+        >
+          {{ getHour(data.toTime) }}
+        </span>
+      </ng-container>
+      <ng-container *ngIf="data.registerForm == '2'">
+        <span class="fs-7" [ngbTooltip]="grvSetup?.hours?.headerText">
+          {{ data.hours }}
+        </span>
+        <span
+          *ngIf="data.hours && data.fromTime != data.toTime"
+          class="mx-1 fs-7"
+        >
+        </span>
+      </ng-container>
+    </div>
+  </ng-template>
+
+  <ng-template #desc2Tmp>
+    <div class="">
+      <div
+        class="fs-7 my-1"
+        *ngIf="data.reason"
+        [ngbTooltip]="grvSetup?.Reason?.headerText"
+      >
+        {{ data.reason }}
+      </div>
+
+      <ng-container *ngIf="flagChangeMF">
+        <ng-container *ngIf="runModeCheck; else elseVll">
+          <codx-vll
+            [showText]="true"
+            [showBgColor]="true"
+            [name]="'ES030'"
+            [value]="data?.unbounds?.statusApproval + data?.unbounds?.stepType"
+            class="badge badge-sm"
+          >
+          </codx-vll>
+        </ng-container>
+        <ng-template #elseVll>
+          <codx-vll
+            [formModel]="view.formModel"
+            [field]="'Status'"
+            [value]="data?.status"
+            [showText]="true"
+            [showIcon]="false"
+            [showBgColor]="true"
+            ngClass="badge badge-sm"
+          >
+          </codx-vll>
+        </ng-template>
+        <span
+          *ngIf="data?.approvedOn"
+          class="me-4"
+          [ngbTooltip]="grvSetup?.ApprovedOn?.headerText"
+        >
+          {{ data?.approvedOn | fmDT }}
+        </span>
+      </ng-container>
+    </div>
+  </ng-template>
+</ng-template>
+
+<ng-template #panelRightListDetail>
+  <tr-view-detail
+    #viewdetail
+    [recID]="recID"
+    [view]="view"
+    [formModel]="view.formModel"
+    [grvSetup]="grvSetup"
+    (clickMoreFunction)="receiveMF($event)"
+    [itemSelected]="itemSelected"
+    [showMoreFunc]="showMoreFunc"
+    [dataService]="view.dataService"
+  >
+  </tr-view-detail>
+</ng-template>
+
+<!-- Content schedule left -->
+<ng-template #resourceHeader let-data>
+  <div class="container">
+    <div class="d-flex pb-1">
+      <codx-img
+        [width]="35"
+        class="me-4"
+        [objectId]="data.resourceData.employeeID"
+        [referType]="'avt'"
+        [objectName]="data.resourceData.employeeName"
+        [objectType]="'HR_Employees'"
+      >
+      </codx-img>
+      <div class="text-wrap">
+        <div class="text-dark fw-bold">
+          <span>
+            {{ data.resourceData.employeeName }}
+          </span>
+        </div>
+        <span
+          class="text-gray-500 fs-7"
+          *ngIf="data.resourceData?.positionName"
+        >
+          {{ data.resourceData?.positionName }}
+        </span>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #mfButton let-data>
+  <div class="mt-2 me-2">
+    <codx-mfunc
+      [dataItem]="data"
+      [formModel]="view.formModel"
+      (clickMF)="clickMF($event, data)"
+      (changeDataMF)="changeDataMF($event, data)"
+      type="hover"
+    >
+    </codx-mfunc>
+  </div>
+</ng-template>
+
+<ng-template #cardTemplate let-data>
+  <div class="d-flex flex-row justify-content-start align-items-center w-100">
+    <div class="ps-3 d-flex w-100 flex-column pe-12">
+      <span class="w-100 text-truncate" *ngIf="data.registerForm == '1'"
+        >{{ getHour(data.fromTime) }} - {{ getHour(data.toTime) }}</span
+      >
+      <span
+        class="w-100 text-truncate"
+        *ngIf="data.registerForm == '2'"
+        [innerHTML]="data.hours + ' Hours'"
+      ></span>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #contentTmp let-data>
+  <div class="d-flex flex-row justify-content-start align-items-center w-100">
+    <div class="ps-3 d-flex w-100 flex-column">
+      <div class="text-wrap border-bottom p-2">
+        <div class="text-dark fw-bold text-uppercase">
+          <codx-label [default]="funcIDName"></codx-label>
+        </div>
+        <div class="text-dark float-end">
+          <codx-label
+            class="label-colon"
+            fiedName="StartDate"
+            default="Ngày đăng ký"
+          >
+          </codx-label>
+          <span
+            *ngIf="data?.createdOn"
+            class="text-gray-700"
+            #fromDate
+            [innerHTML]="data?.createdOn | fmDT"
+          ></span>
+        </div>
+      </div>
+      <div class="text-wrap border-bottom p-2 mb-2">
+        <codx-img
+          [objectId]="data?.employeeID"
+          [objectName]="data?.employeeID"
+          objectType="HR_Employees"
+          [width]="30"
+          class="me-2"
+        >
+        </codx-img>
+        <span class="fw-bold fs-6 mb-1 then-text-primary me-1">
+          {{ data.emp?.employeeName }}
+        </span>
+        <div class="d-flex align-items-center mt-2 flex-wrap mb-2">
+          <span class="icon-calendar_today icon-14 me-1"></span>
+          <span class="fs-7" [ngbTooltip]="grvSetup?.FromDate?.headerText">
+            {{ data.fromDate | fmDT }}
+          </span>
+          <span
+            *ngIf="data.toDate && data.fromDate != data.toDate"
+            class="mx-1 fs-7"
+          >
+            -
+          </span>
+          <span
+            class="fs-7"
+            *ngIf="data.toDate && data.fromDate != data.toDate"
+            [ngbTooltip]="grvSetup?.ToDate?.headerText"
+          >
+            {{ data.toDate | fmDT }}
+          </span>
+
+          <span class="icon-access_time icon-14 ms-4 me-1"></span>
+          <ng-container *ngIf="data.registerForm != '2'">
+            <span class="fs-7" [ngbTooltip]="grvSetup?.FromTime?.headerText">
+              {{ getHour(data.fromTime) }}
+            </span>
+            <span
+              *ngIf="data.toTime && data.fromTime != data.toTime"
+              class="mx-1 fs-7"
+            >
+              -
+            </span>
+            <span
+              class="fs-7"
+              *ngIf="data.toTime && data.fromTime != data.toTime"
+              [ngbTooltip]="grvSetup?.ToTime?.headerText"
+            >
+              {{ getHour(data.toTime) }}
+            </span>
+          </ng-container>
+          <ng-container *ngIf="data.registerForm == '2'">
+            <span class="fs-7" [ngbTooltip]="grvSetup?.hours?.headerText">
+              {{ data.hours }}
+            </span>
+            <span
+              *ngIf="data.hours && data.fromTime != data.toTime"
+              class="mx-1 fs-7"
+            >
+            </span>
+          </ng-container>
+        </div>
+        <div class="d-flex align-items-center mt-1 flex-wrap mb-2">
+          <div class="text-gray-700">
+            <codx-label
+              class="label-colon"
+              fiedName="Reason"
+              default="Lý do tăng ca"
+            >
+            </codx-label>
+            <span
+              *ngIf="data?.reason"
+              class="text-gray-700 fw-bold"
+              [innerHTML]="data?.reason"
+            ></span>
+          </div>
+        </div>
+      </div>
+      <div class="text-wrap p-2 mb-2">
+        <ng-container *ngIf="flagChangeMF">
+          <ng-container *ngIf="runModeCheck; else elseVll">
+            <codx-vll
+              [showText]="true"
+              [showBgColor]="true"
+              [name]="'ES030'"
+              [value]="
+                data?.unbounds?.statusApproval + data?.unbounds?.stepType
+              "
+              class="badge badge-sm"
+            >
+            </codx-vll>
+          </ng-container>
+          <ng-template #elseVll>
+            <codx-vll
+              [formModel]="view.formModel"
+              [name]="'EP022'"
+              [field]="'Status'"
+              [value]="data?.status"
+              [showText]="true"
+              [showIcon]="false"
+              [showBgColor]="true"
+              ngClass="badge badge-sm"
+            >
+            </codx-vll>
+          </ng-template>
+        </ng-container>
+        <span
+          *ngIf="data?.approvedOn"
+          class="me-4"
+          [ngbTooltip]="grvSetup?.ApprovedOn?.headerText"
+        >
+          {{ data?.approvedOn | fmDT }}
+        </span>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #templateUpdateStatus let-dialog1>
+  <div class="codx-form card w-100 h-100 rounded-0 border-0">
+    <div class="card-header flex-column">
+      <div class="d-flex align-items-center justify-content-between w-100">
+        <div class="card-title">
+          <div class="d-flex flex-column">
+            <codx-label
+              class="dialog-title line-clamp line-clamp-1"
+              name="lblEquipment"
+              default="Cập nhật trạng thái"
+              [formModel]="view.formModel"
+            ></codx-label>
+          </div>
+        </div>
+        <div class="card-toolbar">
+          <button
+            type="button"
+            class="btn btn-flex text-dark-75 text-hover-primary px-0"
+            (click)="CloseStatus(dialog1)"
+          >
+            <span class="icon-close icon-18"></span>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="align-items-center me-3 mt-10">
+        <div class="form-group">
+          <label>
+            <codx-label
+              fiedName="status"
+              [formModel]="view.formModel"
+              default="Tình trạng"
+            >
+            </codx-label>
+          </label>
+          <div class="p-disabled">
+            <codx-input
+              field="status"
+              [formModel]="view.formModel"
+              [Group]="formGroup"
+            >
+            </codx-input>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>
+            <codx-label
+              fiedName="comments"
+              [formModel]="view.formModel"
+              [default]="grvSetup?.Comments?.description"
+            ></codx-label>
+          </label>
+          <codx-input
+            type="text"
+            [formModel]="view.formModel"
+            (valueChange)="ValueChangeComment($event)"
+          >
+          </codx-input>
+        </div>
+      </div>
+    </div>
+    <div class="card-footer border-0">
+      <div class="d-flex justify-content-end">
+        <button class="btn btn-primary" (click)="onSaveUpdateForm()">
+          <i class="icon-save"></i>
+          <codx-label
+            default="Lưu"
+            name="lblSave"
+            [formModel]="view.formModel"
+          ></codx-label>
+        </button>
+      </div>
+    </div>
+  </div>
+</ng-template>

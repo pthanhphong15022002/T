@@ -48,18 +48,16 @@ import { InstanceDetailComponent } from './instance-detail/instance-detail.compo
 import { PopupAddInstanceComponent } from './popup-add-instance/popup-add-instance.component';
 import { PopupMoveReasonComponent } from './popup-move-reason/popup-move-reason.component';
 import { PopupMoveStageComponent } from './popup-move-stage/popup-move-stage.component';
-import { LayoutInstancesComponent } from '../layout-instances/layout-instances.component';
 import { LayoutComponent } from '../_layout/layout.component';
 import { Observable, finalize, map, filter, firstValueFrom } from 'rxjs';
-import { PopupEditOwnerstepComponent } from './popup-edit-ownerstep/popup-edit-ownerstep.component';
 import { PopupSelectTempletComponent } from './popup-select-templet/popup-select-templet.component';
-import { X } from '@angular/cdk/keycodes';
 import { PopupAddDealComponent } from 'projects/codx-cm/src/lib/deals/popup-add-deal/popup-add-deal.component';
 import { PopupAddCasesComponent } from 'projects/codx-cm/src/lib/cases/popup-add-cases/popup-add-cases.component';
 import { GridModels } from './instance-dashboard/instance-dashboard.component';
 import { AddContractsComponent } from 'projects/codx-cm/src/lib/contracts/add-contracts/add-contracts.component';
 import { PopupAssginDealComponent } from 'projects/codx-cm/src/lib/deals/popup-assgin-deal/popup-assgin-deal.component';
 import { ExportData } from 'projects/codx-share/src/lib/models/ApproveProcess.model';
+import { CodxCommonService } from 'projects/codx-common/src/lib/codx-common.service';
 
 @Component({
   selector: 'codx-instances',
@@ -250,20 +248,19 @@ export class InstancesComponent
     private callFunc: CallFuncService,
     private codxDpService: CodxDpService,
     private codxShareService: CodxShareService,
+    private codxCommonService: CodxCommonService,
     private changeDetectorRef: ChangeDetectorRef,
     private notificationsService: NotificationsService,
     private authStore: AuthStore,
-    private pageTitle: PageTitleService,
-    private layout: LayoutService,
     private auth: AuthService,
+    // private pageTitle: PageTitleService,
+    // private layout: LayoutService,
     // private layoutInstance: LayoutInstancesComponent,
-    private layoutDP: LayoutComponent,
+    // private layoutDP: LayoutComponent,
     @Optional() dialog: DialogRef,
     @Optional() dt: DialogData
   ) {
     super(inject);
-    // this.funcID = 'DPT04';
-    // this.dialog = dialog;
 
     this.user = this.authStore.get();
     this.router.params.subscribe((param) => {
@@ -275,16 +272,31 @@ export class InstancesComponent
       if (this.funcID != 'DPT0502') {
         this.processID = param['processID'];
         //data từ service ném qua
-        this.codxDpService.dataProcess.subscribe((res) => {
-          if (res) this.haveDataService = true;
-          else this.haveDataService = false;
-          if (res && res.read) {
-            this.loadData(res);
-          }
+        if (this.funcID == 'DPT04') {
+          this.codxDpService.dataProcess.subscribe((res) => {
+            if (res) {
+              this.haveDataService = true;
+              if (res.read) this.loadData(res);
+            } else this.haveDataService = false;
+          });
+        } else {
+          this.haveDataService = false;
+        }
+
+        this.cache.functionList(this.funcID).subscribe((f) => {
+          this.cache
+            .moreFunction(f.formName, f.gridViewName)
+            .subscribe((res) => {
+              if (res && res.length > 0) {
+                this.moreFuncInstance = res;
+                this.moreFuncStart = this.moreFuncInstance.filter(
+                  (x) => x.functionID == 'DP21'
+                )[0];
+              }
+            });
         });
       } else {
-        this.layoutDP.viewNameProcess(null);
-        // if (this.crrFunc && this.crrFunc != this.funcID) this.changeView(null);
+        // this.layoutDP.viewNameProcess(null);
       }
     });
 
@@ -305,18 +317,6 @@ export class InstancesComponent
         }
       });
 
-    if (this.funcID != 'DPT0502')
-      this.cache.functionList(this.funcID).subscribe((f) => {
-        // if (f) this.pageTitle.setSubTitle(f?.customName);
-        this.cache.moreFunction(f.formName, f.gridViewName).subscribe((res) => {
-          if (res && res.length > 0) {
-            this.moreFuncInstance = res;
-            this.moreFuncStart = this.moreFuncInstance.filter(
-              (x) => x.functionID == 'DP21'
-            )[0];
-          }
-        });
-      });
     let theme = this.auth.userValue.theme.split('|')[0];
     this.colorDefault = this.themeDatas[theme] || this.themeDatas.default;
   }
@@ -377,9 +377,6 @@ export class InstancesComponent
     this.view.dataService.methodDelete = 'DeletedInstanceAsync';
   }
 
-  // ngAfterViewChecked(){
-  //   this.setColorKanban();
-  // }
   onInit() {
     this.asideMode = this.codxService.asideMode;
 
@@ -388,7 +385,9 @@ export class InstancesComponent
         id: 'btnAdd',
       },
     ];
-    if (this.funcID == 'DPT04') {
+
+    //khac "DPT0502" - func Duyệt
+    if (this.funcID != 'DPT0502') {
       this.dataObj = {
         processID: this.processID,
         haveDataService: this.haveDataService ? '1' : '0',
@@ -657,14 +656,16 @@ export class InstancesComponent
     this.detailViewInstance;
     let dialogCustomField = this.checkPopupInCM(applyFor, obj, option);
     dialogCustomField.closed.subscribe((e) => {
+      if (!e?.event) {
+        this.view.dataService.clear();
+      }
       if (e && e.event != null) {
         this.dataSelected = JSON.parse(JSON.stringify(e.event));
-        this.view?.dataService.update(this.dataSelected);
+        this.view?.dataService.update(this.dataSelected, true);
         if (this.kanban) {
-          // this.kanban.updateCard(data);  //core mới lỗi chô này
           if (this.kanban?.dataSource?.length == 1) {
             this.kanban.refresh();
-          }
+          }else this.kanban?.updateCard(this.dataSelected);
         }
         if (this.detailViewInstance) {
           this.detailViewInstance.dataSelect = this.dataSelected;
@@ -705,7 +706,7 @@ export class InstancesComponent
     dialogEditInstance.closed.subscribe((e) => {
       if (e && e.event != null) {
         this.dataSelected = JSON.parse(JSON.stringify(e.event));
-        this.view.dataService.update(e.event).subscribe();
+        this.view.dataService.update(e.event, true).subscribe();
         if (this.kanban) {
           if (this.kanban?.dataSource?.length == 1) {
             this.kanban.refresh();
@@ -876,9 +877,7 @@ export class InstancesComponent
   }
 
   changeDataMF(e, data) {
-    // data.permissionMoveInstances = true;
-    // data.permissionCloseInstances = true;
-    // data.isAdminAll = true;
+    if(!data) return;
     if (e != null && data != null) {
       if (data?.approveStatus == '3') {
         e.forEach((res) => {
@@ -892,7 +891,7 @@ export class InstancesComponent
             switch (res.functionID) {
               case 'SYS003':
                 if (
-                  (data.status != '2' && !data.isAdminAll) ||
+                  (data.status != '2' && !this.isEditInstance(data) ) ||
                   data.closed ||
                   !data.permissionCloseInstances
                 )
@@ -903,21 +902,21 @@ export class InstancesComponent
                 let isUpdate = data.write;
                 if (
                   !isUpdate ||
-                  (data.status != '2' && !data.isAdminAll) ||
+                  (data.status != '2' && !this.isEditInstance(data)) ||
                   data.closed ||
                   !data.permissionMoveInstances
                 )
                   res.disabled = true;
                 break;
               case 'DP09':
-                if (this.checkMoreReason(data, null)) {
+                if ( !this.isReturnInstance(data) && this.checkMoreReason(data, null)) {
                   res.disabled = true;
                 }
                 break;
               //Copy
               case 'SYS104':
               case 'SYS04':
-                if (!this.isCreate || this.checkMoreReasonCopy(data, null))
+                if (!this.isCreate || this.checkMoreReason(data, null))
                   res.disabled = true;
                 break;
               //xóa
@@ -927,7 +926,7 @@ export class InstancesComponent
                 if (
                   !isDelete ||
                   data.closed ||
-                  (data.status != '2' && !data.isAdminAll) ||
+                  (data.status != '2' && !this.isEditInstance(data)) ||
                   !data.permissionMoveInstances
                 )
                   res.disabled = true;
@@ -944,12 +943,12 @@ export class InstancesComponent
                 }
                 break;
               case 'DP02':
-                if (this.checkMoreReasonCopy(data, !this.isUseFail)) {
+                if (this.checkMoreReason(data, !this.isUseFail)) {
                   res.disabled = true;
                 }
                 break;
               case 'DP10':
-                if (this.checkMoreReasonCopy(data, !this.isUseSuccess)) {
+                if (this.checkMoreReason(data, !this.isUseSuccess)) {
                   res.disabled = true;
                 }
                 break;
@@ -963,6 +962,11 @@ export class InstancesComponent
                 break;
               // case 'SYS004':
               // case 'SYS002':
+              case 'DP18':
+                if( (data.refID && data.refID !== this.guidEmpty) || data.closed ||data.status == '1' || data.status == '15' || data.status == '2'|| !this.isMoveProcess(data)) {
+                  res.disabled = true;
+                }
+                break;
               case 'DP21':
                 res.disabled = true;
                 break;
@@ -1011,6 +1015,7 @@ export class InstancesComponent
               case 'DP14':
               case 'DP15':
               case 'DP23':
+              case 'DP18':
                 mf.disabled = true;
                 break;
             }
@@ -1062,6 +1067,9 @@ export class InstancesComponent
       case 'DP17':
         this.isFormExport = false;
         this.showFormSubmit();
+        break;
+      case 'DP18':
+        this.moveProcessBack(data);
         break;
       case 'DP21':
         this.handelStartDay(data);
@@ -1152,16 +1160,30 @@ export class InstancesComponent
   //End
   checkMoreReason(data, isUseReason) {
     if (data.closed) return true;
-    if (data.isAdminAll) return false;
     if (data.status != '2' || isUseReason) return true;
     if (!data.permissionMoveInstances) return true;
     return false;
   }
   checkMoreReasonCopy(data, isUseReason) {
     if (data.closed) return true;
-    if (data.status != '2' || isUseReason) return true;
+    if (this.isReturnInstance(data)) return false;
+    // if (data.status != '2' || isUseReason) return true;
+
     if (!data.permissionMoveInstances) return true;
     return false;
+  }
+  isEditInstance(data) {
+    if(data.isAdminAll) {
+      return true;
+    }
+    return data.permissionMoveInstances && this.process.allowEditInstanceControl;
+  }
+  isReturnInstance(data) {
+    if (data.closed) return false;
+    if(data.isAdminAll) {
+      return true;
+    }
+    return data.permissionMoveInstances && this.process.allowReturnInstanceControl;
   }
 
   convertHtmlAgency(buID: any, test: any, test2: any) {
@@ -1261,6 +1283,7 @@ export class InstancesComponent
         startControl: startControl,
         applyProcess: true,
         buid: data.buid,
+        isCallInstance: this.process?.applyFor != '0',
       };
       var dialog = this.callfc.openForm(
         PopupAssginDealComponent,
@@ -1403,10 +1426,6 @@ export class InstancesComponent
           }
         }
       }
-      // else {
-      //  // data.stepID = this.crrStepID;
-      //   this.changeDetectorRef.detectChanges();
-      // }
     }
   }
 
@@ -1414,7 +1433,6 @@ export class InstancesComponent
     this.router.params.subscribe((param) => {
       this.funcID = param['funcID'];
     });
-
     if (!this.crrFunc || this.crrFunc == this.funcID) {
       if (!this.crrFunc) this.crrFunc = this.funcID;
       switch (e?.view.type) {
@@ -1449,7 +1467,7 @@ export class InstancesComponent
         });
         this.crrFunc = this.funcID;
         if (this.funcID == 'DPT0502') {
-          this.layoutDP.viewNameProcess(null);
+          // this.layoutDP.viewNameProcess(null);
 
           if (viewModel) {
             this.view.viewActiveType = viewModel.type;
@@ -1496,7 +1514,7 @@ export class InstancesComponent
       listStepCbx = this.listSteps;
     }
     this.isClick = false;
-    this.crrStepID = data.stepID;
+    // this.crrStepID = data.stepID;
     let option = new SidebarModel();
     option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;
@@ -1586,15 +1604,15 @@ export class InstancesComponent
     dialogMoveStage.closed.subscribe((e) => {
       this.isClick = true;
       this.stepIdClick = '';
-      if (!e || !e.event) {
-        data.stepID = this.crrStepID;
-        this.changeDetectorRef.detectChanges();
-      }
+      // if (!e || !e.event) {
+      //   data.stepID = this.crrStepID;
+      //   this.changeDetectorRef.detectChanges();
+      // }
       if (e && e.event != null) {
         //xu ly data đổ về
-        data = e.event.instance;
-        this.listStepInstances = e.event.listStep;
-        if (e.event.isReason != null) {
+        data = e.event?.instance;
+        this.listStepInstances = e.event?.listStep;
+        if(!e.event.isMoveBackStage && e.event?.isReason != null) {
           this.moveReason(null, data, e.event.isReason);
         }
         this.view.dataService.update(data).subscribe();
@@ -1618,7 +1636,7 @@ export class InstancesComponent
   }
 
   moveReason(dataMore, data: any, isMoveSuccess: Boolean) {
-    this.crrStepID = data.stepID;
+    // this.crrStepID = data.stepID;
     let option = new SidebarModel();
     option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;
@@ -1731,12 +1749,12 @@ export class InstancesComponent
           dataInstance.instance.stepID = instanceStepId.find(
             (item) => item.stepStatus == '1'
           ).stepID;
-          var processId = dataInstance.instance.processID;
-          var data = [instanceStepId, processId];
+          let processId = dataInstance.instance.processID;
+          let data = [instanceStepId, processId];
           this.codxDpService.autoMoveStage(data).subscribe((res) => {
             if (res) {
               var stepsUpdate = dataInstance.listStep.map((item1) => {
-                var item2 = instanceStepId.find(
+                let item2 = instanceStepId.find(
                   (item2) => item1.stepID === item2.stepID
                 );
                 if (item2) {
@@ -1745,7 +1763,6 @@ export class InstancesComponent
                   return item1;
                 }
               });
-
               this.listStepInstances = stepsUpdate;
               this.dataSelected = dataInstance.instance;
               this.view.dataService.update(this.dataSelected).subscribe();
@@ -1864,10 +1881,6 @@ export class InstancesComponent
       obj
     );
     dialogRevision.closed.subscribe((e) => {
-      if (!e || !e.event) {
-        data.stepID = this.crrStepID;
-        this.changeDetectorRef.detectChanges();
-      }
       if (e && e.event != null) {
         //xu ly data đổ về
         data = e.event?.instance;
@@ -1905,16 +1918,10 @@ export class InstancesComponent
             e.event?.applyForMove,
             e.event?.ownerMove,
             e.event?.title,
-            'add'
+            'add',
           );
         }
         this.detectorRef.detectChanges();
-      } else {
-        if (this.kanban) {
-          this.dataSelected.stepID = this.crrStepID;
-          this.kanban.updateCard(this.dataSelected);
-          this.detectorRef.detectChanges();
-        }
       }
     });
   }
@@ -1966,7 +1973,7 @@ export class InstancesComponent
 
   getListCbxProccess(applyFor: any) {
     this.cache.valueList('DP031').subscribe((data) => {
-      this.codxDpService.getlistCbxProccess(applyFor).subscribe((res) => {
+      this.codxDpService.getlistCbxProccess('').subscribe((res) => {
         this.listProccessCbx = res[0];
         var obj = {
           recID: this.guidEmpty,
@@ -2151,8 +2158,9 @@ export class InstancesComponent
     this.loadEx();
     this.loadWord();
     this.addFieldsControl = ps?.addFieldsControl;
-    // this.layoutInstance.viewNameProcess(ps);
-    this.layoutDP.viewNameProcess(ps);
+
+    //tăt
+    //this.layoutDP.viewNameProcess(ps);
     this.stepsResource = this.process?.steps?.map((x) => {
       let obj = {
         icon: x?.icon,
@@ -2473,7 +2481,8 @@ export class InstancesComponent
                   recID: this.dataSelected.recID,
                   data: dt[1]?.datas,
                 };
-                this.release(dt[0], this.esCategory, exportData);
+                let viewHtml = this.dataSelected.title + ' - ' + dt[0].stepName; //`<div class="d-flex flex-column"><div class="line-clamp line-clamp-2 text-dark">${this.dataSelected.title}</div><div class="text-gray-700 line-clamp">${dt[0].stepName}</div></div>`; // ES ko cho truyền chuỗi html
+                this.release(dt[0], this.esCategory, exportData, viewHtml);
               }
             });
 
@@ -2490,14 +2499,14 @@ export class InstancesComponent
   }
 
   // // data?.stepName, => tên theo quy trình
-  release(data: any, category: any, exportData: any) {
-    this.codxShareService.codxReleaseDynamic(
+  release(data: any, category: any, exportData: any, viewHtml) {
+    this.codxCommonService.codxReleaseDynamic(
       'DP',
       data,
       category,
       'DP_Instances_Steps',
       this.view.formModel.funcID,
-      this.dataSelected.title, //html truyen qua
+      viewHtml, // this.dataSelected.title, //html truyen qua
       this.releaseCallback.bind(this),
       null,
       null,
@@ -2515,12 +2524,12 @@ export class InstancesComponent
       this.dataSelected.approveStatus = res?.returnStatus ?? '3';
       this.view.dataService.update(this.dataSelected).subscribe();
       if (this.kanban) this.kanban.updateCard(this.dataSelected);
-      this.notificationsService.notifyCode('ES007');
+      // this.notificationsService.notifyCode('ES007'); // ES trả về rồi
     }
   }
 
   releaseInstances(data: any, category: any) {
-    this.codxShareService.codxReleaseDynamic(
+    this.codxCommonService.codxReleaseDynamic(
       'DP',
       data,
       category,
@@ -2537,7 +2546,7 @@ export class InstancesComponent
       this.dataSelected.approveStatus = res?.returnStatus ?? '3';
       this.view.dataService.update(this.dataSelected).subscribe();
       if (this.kanban) this.kanban.updateCard(this.dataSelected);
-      this.notificationsService.notifyCode('ES007');
+      // this.notificationsService.notifyCode('ES007');
     }
   }
 
@@ -2571,7 +2580,7 @@ export class InstancesComponent
   }
 
   cancelRelease(transID, entityName) {
-    this.codxShareService
+    this.codxCommonService
       .codxCancel('DP', transID, entityName, null, null)
       .subscribe((res3) => {
         if (res3) {
@@ -2643,9 +2652,8 @@ export class InstancesComponent
     } else if (applyFor == '2' || applyFor == '3') {
       return this.callfc.openSide(PopupAddCasesComponent, obj, option);
     } else if (applyFor == '4') {
-      option.isFull = true;
+      obj = { ...obj, type: 'DP', contractRefID: this.oldIdInstance, processID: this.processID };
       option.FormModel = obj?.formMD;
-      obj = { ...obj, type: 'DP', contractRefID: this.oldIdInstance };
       return this.callfc.openSide(AddContractsComponent, obj, option);
     }
     return null;
@@ -2735,6 +2743,7 @@ export class InstancesComponent
           processMove: processMove,
           ownerMove: ownerMove,
           title: title,
+          recID: this.dataSelected?.recID
         };
         this.cache
           .gridViewSetup(fun.formName, fun.gridViewName)
@@ -2783,12 +2792,71 @@ export class InstancesComponent
     this.detailViewInstance;
     let dialogCustomField = this.checkPopupInCM(applyFor, obj, option);
     dialogCustomField.closed.subscribe((e) => {
-      if (e && e.event != null) {
-        this.detectorRef.detectChanges();
+      if (!e?.event) {
+        this.view.dataService.clear();
       }
+      if (this.kanban && !e?.event) this.kanban.refresh();
+      this.detectorRef.detectChanges();
     });
   }
   autoStartInstance() {
     this.startInstance(this.dataSelected);
+  }
+  openMoveProcess(applyForMove,processMove,title,ownerMove,recId: '' ){
+    if (
+      applyForMove &&
+      processMove &&
+      this.process.applyFor !== applyForMove
+    ) {
+      this.moreFuncStart = this.moreFuncInstance.filter(
+        (x) => x.functionID == 'SYS01'
+      )[0];
+      this.addMoveProcess(
+        processMove,
+        applyForMove,
+        ownerMove,
+        title,
+        'add'
+      );
+    }
+  }
+  isMoveProcess(data) {
+    let isOpenForm = false;
+    let processID = '';
+    if(data.status === '3' || data.status === '4') {
+      isOpenForm = true;
+      processID = this.stepSuccess?.newProcessID;
+     }
+     else if(data.status === '5' || data.status == '6') {
+      isOpenForm = true;
+      processID = this.stepFail?.newProcessID;
+     }
+     let applyForMove = this.listProccessCbx.filter(x=>x.recID == processID)[0]?.applyFor;
+     return applyForMove !== this.process.applyFor;
+  }
+  moveProcessBack(data) {
+   this.dataSelected = data;
+   let isOpenForm = false;
+   let processID = '';
+   if(data.status === '3' || data.status === '4') {
+    isOpenForm = true;
+    processID = this.stepSuccess?.newProcessID;
+   }
+   else if(data.status === '5' || data.status == '6') {
+    isOpenForm = true;
+    processID = this.stepFail?.newProcessID;
+   }
+   if(isOpenForm && processID !== this.guidEmpty ) {
+    let applyForMove = this.listProccessCbx.filter(x=>x.recID == processID)[0]?.applyFor;
+    if(applyForMove != this.process.applyFor) {
+      this.addMoveProcess(
+        processID,
+       applyForMove,
+       '',
+       data.title,
+       'add'
+     );
+    }
+   }
   }
 }

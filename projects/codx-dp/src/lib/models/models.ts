@@ -48,7 +48,6 @@ export class DP_Processes {
   autoNameTabFields: string;
   steps: DP_Steps[] = [];
   approveRule: boolean = false;
-
   icon: string;
   released: boolean;
   releasedName: string;
@@ -64,8 +63,10 @@ export class DP_Processes {
   instanceProgressControl: boolean;
   startInstanceControl: boolean = false;
   tabControl: string;
-  businessLineID:string;
-  allowEstimatedEnd:boolean;
+  businessLineID: string;
+  allowEstimatedEnd: boolean;
+  allowEditInstanceControl: boolean;
+  allowReturnInstanceControl: boolean;
 }
 
 export class DP_Processes_Permission {
@@ -287,6 +288,11 @@ export class DP_Steps_Fields {
   createdBy: string;
   modifiedOn: Date;
   modifiedBy: string;
+  read: boolean = true;
+  create: boolean = true;
+  write: boolean = true;
+  assign: boolean = true;
+  delete: boolean = true;
 }
 
 export class DP_Instances {
@@ -685,4 +691,5 @@ export class ColumnTable {
   iconSet: string = '';
   settingWidth: boolean = true;
   settingCount: boolean = true;
+  totalColumns: boolean = false;
 }

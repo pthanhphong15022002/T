@@ -18,14 +18,15 @@
       </div>
       <div class="codx-approval-content ms-12 ps-1">
         <ng-container *ngFor="let approver of item?.approvers">
-          <div class="d-flex justify-content-between align-items-start">
+          <div class="d-flex justify-content-between align-items-start mb-2">
 
             <codx-temp-full
             [imageId]=" approver?.roleType =='U' ? approver?.approver : approver?.userID" [imageObjType]="'AD_Users'" [imageWidth]="30" 
             [title]="approver?.userName ? approver?.userName : approver?.name ? approver?.name : approver?.approver ? (approver?.approver | vll : 'ES014' : 'text' | async) : (approver?.roleType | vll : 'ES014' : 'text' | async)"
-            [subTitle]="approver?.position ? approver?.position: approver?.roleType | vll : 'ES014' : 'text' | async"            
-            [imageSrc]="(approver?.roleType !='U' && !approver?.userID) || approver?.roleType =='PA' ? './assets/themes/sys/default/img/' + (approver?.icon ? approver?.icon : 'share_default.svg') : null"
-            [imgCss]="(approver?.roleType !='U' && !approver?.userID) || approver?.roleType =='PA' ? 'w-30px p-2 me-3 user-mini-icon' :'w-35px me-3'"                          
+            [subTitle]=""            
+            [desc]="approver?.position ? approver?.position: approver?.roleType | vll : 'ES014' : 'text' | async"
+            [imageSrc]="(approver?.roleType !='U' && !approver?.userID) || approver?.roleType =='PA' || approver?.roleType == 'PE' ? './assets/themes/sys/default/img/' + (approver?.icon ? approver?.icon : 'share_default.svg') : null"
+            [imgCss]="(approver?.roleType !='U' && !approver?.userID) || approver?.roleType =='PA' || approver?.roleType == 'PE'|| approver?.roleType == 'PE'? 'w-30px p-2 me-3 user-mini-icon' :'w-35px me-3'"                          
             
             >
             </codx-temp-full>
@@ -68,7 +69,7 @@
                     <codx-label></codx-label>
                   </span>
                   <span class="fw-bold me-1">
-                    <codx-label name="lblLeadtime" default="Dự kiến">
+                    <codx-label name="lblLeadtime" default="Dự kiến" formName="ApprovalSteps" gridViewName="grvApprovalSteps">
                     </codx-label>
                     :
                   </span>
@@ -79,7 +80,7 @@
                 |
                 <div class="d-flex text-nowrap ms-3">
                   <span class="fw-bold me-1">
-                    <codx-label name="lblDuration" default="Thực tế">
+                    <codx-label name="lblDuration" default="Thực tế"  formName="ApprovalSteps" gridViewName="grvApprovalSteps">
                     </codx-label>
                     :
                   </span>
@@ -108,19 +109,17 @@
       <div class="codx-approval-content ms-17">
         <ng-container *ngFor="let approver of item?.approvers">
           <div class="d-flex justify-content-between align-items-start mb-3">
-            <codx-temp-full [imageId]="approver?.approverType !='PA' ? approver?.approver :null" [imageObjType]="'AD_Users'" [imageWidth]="35" 
-            [imageSrc]="approver?.approverType =='PA' ? './assets/themes/sys/default/img/' + (approver?.icon ? approver?.icon : 'share_default.svg') : null"
-            [imgCss]="approver?.approverType =='PA' ? 'w-30px p-2 me-3 user-mini-icon' :'w-35px me-3'"                          
+            <codx-temp-full [imageId]="approver?.approverType !='PA' || approver?.roleType == 'PE' ? approver?.approver :null" [imageObjType]="'AD_Users'" [imageWidth]="35" 
+            [imageSrc]="approver?.approverType =='PA'|| approver?.roleType == 'PE' ? './assets/themes/sys/default/img/' + (approver?.icon ? approver?.icon : 'share_default.svg') : null"
+            [imgCss]="approver?.approverType =='PA'|| approver?.roleType == 'PE' ? 'w-30px p-2 me-3 user-mini-icon' :'w-35px me-3'"                          
             
             [title]="
                 approver?.name ??
                 approver?.approverName ??
                 (approver?.approver | vll : 'ES014' : 'text' | async)
-              " [desc]="
-                approver?.position ??
-                approver?.approverPosition ??
-                positionDefault
-              ">
+              " [desc]="approver?.position ??
+                  approver?.approverPosition"
+              >
             </codx-temp-full>
             
             <div class="d-flex justify-content-between">
@@ -174,7 +173,7 @@
                     <codx-label></codx-label>
                   </span>
                   <span class="fw-bold me-1">
-                    <codx-label name="lblLeadtime" default="Dự kiến">
+                    <codx-label name="lblLeadtime" default="Dự kiến" formName="ApprovalSteps" gridViewName="grvApprovalSteps">
                     </codx-label>
                     :
                   </span>
@@ -185,7 +184,7 @@
                 |
                 <div class="d-flex text-nowrap ms-3">
                   <span class="fw-bold me-1">
-                    <codx-label name="lblDuration" default="Thực tế">
+                    <codx-label name="lblDuration" default="Thực tế"  formName="ApprovalSteps" gridViewName="grvApprovalSteps">
                     </codx-label>
                     :
                   </span>
@@ -228,18 +227,16 @@
           <div class="codx-approval-content ms-17">
             <ng-container *ngFor="let approver of item?.approvers">
               <div class="d-flex justify-content-between align-items-start mb-3">
-                <codx-temp-full [imageId]="approver?.approverType !='PA' ? approver?.approver :null" [imageObjType]="'AD_Users'" [imageWidth]="35" 
-                [imageSrc]="approver?.approverType =='PA' ? './assets/themes/sys/default/img/' + (approver?.icon ? approver?.icon : 'share_default.svg') : null"
-            [imgCss]="approver?.approverType =='PA' ? 'w-30px p-2 me-3 user-mini-icon' :'w-35px me-3'"                          
+                <codx-temp-full [imageId]="approver?.approverType !='PA'|| approver?.roleType == 'PE' ? approver?.approver :null" [imageObjType]="'AD_Users'" [imageWidth]="35" 
+                [imageSrc]="approver?.approverType =='PA'|| approver?.roleType == 'PE' ? './assets/themes/sys/default/img/' + (approver?.icon ? approver?.icon : 'share_default.svg') : null"
+            [imgCss]="approver?.approverType =='PA'|| approver?.roleType == 'PE' ? 'w-30px p-2 me-3 user-mini-icon' :'w-35px me-3'"                          
             [title]="
                   approver?.name ??
                   approver?.approverName ??
                   (approver?.approver | vll : 'ES014' : 'text' | async)
-                " [desc]="
-                  approver?.position ??
-                  approver?.approverPosition ??
-                  positionDefault
-                ">
+                " [desc]="approver?.position ??
+                  approver?.approverPosition "
+                >
                 </codx-temp-full>
                 
                 <div class="d-flex justify-content-between">
@@ -287,7 +284,7 @@
                         <codx-label></codx-label>
                       </span>
                       <span class="fw-bold me-1">
-                        <codx-label name="lblLeadtime" default="Dự kiến">
+                        <codx-label name="lblLeadtime" default="Dự kiến" formName="ApprovalSteps" gridViewName="grvApprovalSteps">
                         </codx-label>
                         :
                       </span>
@@ -298,7 +295,7 @@
                     |
                     <div class="d-flex text-nowrap ms-3">
                       <span class="fw-bold me-1">
-                        <codx-label name="lblDuration" default="Thực tế">
+                        <codx-label name="lblDuration" default="Thực tế"  formName="ApprovalSteps" gridViewName="grvApprovalSteps">
                         </codx-label>
                         :
                       </span>

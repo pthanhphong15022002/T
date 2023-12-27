@@ -84,14 +84,14 @@
             >
               <i class="icon-playlist_add_check icon-16"></i>
             </button>
-            <button type="button" class="btn btn-icon btn-sm btn-light ms-1">
+            <!-- <button type="button" class="btn btn-icon btn-sm btn-light ms-1">
               <i class="icon-open_in_new icon-16"></i>
-            </button>
+            </button> -->
           </div>
         </div>
       </div>
       <div class="chat-list-body">
-        <codx-chat-list #listChat></codx-chat-list>
+        <codx-chat-list #listChat (countTotalMessage)="getTotalMessage()" ></codx-chat-list>
       </div>
     </div>
   </div>

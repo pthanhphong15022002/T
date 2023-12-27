@@ -416,7 +416,7 @@ export class CatagoryComponent implements OnInit {
                   dt.dataValue = JSON.stringify(dataValue);
                   this.api
                     .execAction('SYS_SettingValues', [dt], 'UpdateAsync')
-                    .subscribe((res) => {});
+                    .subscribe((res) => { });
                 }
               }
             });
@@ -915,6 +915,7 @@ export class CatagoryComponent implements OnInit {
           }
 
           if (!this.dialog) {
+            this.oldDataValue = JSON.parse(JSON.stringify(this.dataValue));
             if (dt) {
               dt.dataValue = JSON.stringify(this.dataValue[transType]);
               this.api
@@ -1098,12 +1099,12 @@ export class CatagoryComponent implements OnInit {
           funcID == 'CMS0301'
             ? '1'
             : funcID == 'CMS0302'
-            ? '2'
-            : funcID == 'CMS0303'
-            ? '3'
-            : funcID == 'CMS0304'
-            ? '5'
-            : '4',
+              ? '2'
+              : funcID == 'CMS0303'
+                ? '3'
+                : funcID == 'CMS0304'
+                  ? '5'
+                  : '4',
         ]
       )
       .subscribe((data) => {

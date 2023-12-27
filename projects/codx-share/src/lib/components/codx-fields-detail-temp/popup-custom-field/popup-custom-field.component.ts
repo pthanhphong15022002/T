@@ -27,6 +27,8 @@ export class PopupCustomFieldComponent implements OnInit {
   objectIdParent: any;
   customerID: any; //Khách hàng cơ hội
 
+  arrCaculateField = []; //cac field co tinh toán
+
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private cache: CacheService,
@@ -40,6 +42,7 @@ export class PopupCustomFieldComponent implements OnInit {
     this.objectIdParent = dt?.data?.objectIdParent;
     this.customerID = dt?.data?.customerID;
     this.dialog = dialog;
+    this.arrCaculateField = this.fields.filter((x) => x.dataType == 'CF');
   }
 
   ngOnInit(): void {
@@ -77,6 +80,7 @@ export class PopupCustomFieldComponent implements OnInit {
       if (index != -1) {
         this.fields[index].dataValue = result;
       }
+      if (field.dataType == 'N') this.caculateField(field.fieldName, result);
     }
   }
   // partValue(item) {
@@ -151,4 +155,162 @@ export class PopupCustomFieldComponent implements OnInit {
   addFileCompleted(e) {
     this.isAddComplete = e;
   }
+
+  //tính toán
+  caculateField(fieldName, dataValue) {
+    if (!this.arrCaculateField || this.arrCaculateField?.length == 0) return;
+    this.arrCaculateField.forEach((obj) => {
+      let dataFormat = obj.dataFormat;
+      this.fields.forEach((f) => {
+        if (
+          dataFormat.includes('[' + f.fieldName + ']') &&
+          f.dataValue &&
+          f.dataType == 'N'
+        ) {
+          dataFormat = dataFormat.replaceAll(
+            '[' + f.fieldName + ']',
+            f.dataValue
+          );
+          obj.dataValue = dataFormat;
+        }
+      });
+
+      if (!obj.dataValue.includes('[')) {
+        //tinh toán
+        //Hiện tại sẽ lấy data đã
+        obj.dataValue = this.caculate(obj.dataValue);
+        //tính toan end
+        let index = this.fields.findIndex((x) => x.recID == obj.recID);
+        if (index != -1) {
+          this.fields[index].dataValue = obj.dataValue;
+        }
+      }
+    });
+  }
+
+  //tính toán
+  arrCheck = ['+', '-', 'x', '/', 'Avg(', '(', ')'];
+  parenthesis = ['(', ')'];
+  operator = ['+', '-', 'x', '/', 'Avg('];
+  operatorAddMinus = ['+', '-'];
+  operatorMulDiv = ['x', '/'];
+
+  caculate(stringMath) {
+    if (stringMath.includes('_')) return stringMath;
+    if (this.isExitOperator(this.arrCheck, stringMath)) {
+      if (this.isExitOperator(this.parenthesis, stringMath)) {
+        //có ngoặc => chưa làm
+      } else if (this.isExitOperator(this.operator, stringMath)) {
+        //chi la phep toan
+        if (this.isExitOperator(this.operatorMulDiv, stringMath)) {
+          // co nhan chia
+          stringMath = this.sumAndMul(stringMath);
+        } else {
+          stringMath = this.sum(stringMath);
+        }
+      }
+    }
+    return stringMath;
+  }
+
+  //phep toan co ban
+  sum(stringMath) {
+    if (!stringMath || !this.isExitOperator(this.operatorAddMinus, stringMath))
+      return stringMath;
+    let sum = 0;
+    let num = stringMath[0];
+    let opera = '+';
+    for (var i = 1; i < stringMath.length; i++) {
+      if (this.operatorAddMinus.includes(stringMath[i])) {
+        if (opera == '+') {
+          sum += Number.parseFloat(num);
+        } else {
+          sum -= Number.parseFloat(num);
+        }
+        num = '';
+        opera = stringMath[i];
+      } else {
+        num += stringMath[i];
+      }
+    }
+    if (opera == '+') {
+      sum += Number.parseFloat(num);
+    } else {
+      sum -= Number.parseFloat(num);
+    }
+    return sum.toString();
+  }
+
+  //phep nhan chia
+  multDiv(stringMath) {
+    if (!stringMath || !this.isExitOperator(this.operatorMulDiv, stringMath))
+      return stringMath;
+    let mul = 1;
+    let num = stringMath[0];
+    let opera = 'x';
+    for (var i = 1; i < stringMath.length; i++) {
+      if (this.operatorMulDiv.includes(stringMath[i])) {
+        if (opera == 'x') {
+          mul = mul * Number.parseFloat(num);
+        } else {
+          if (Number.parseFloat(num) == 0) return '_'; //ko chia dc cho 0
+          mul = mul / Number.parseFloat(num);
+        }
+        num = '';
+        opera = stringMath[i];
+      } else {
+        num += stringMath[i];
+      }
+    }
+    if (opera == 'x') {
+      mul = mul * Number.parseFloat(num);
+    } else {
+      if (Number.parseFloat(num) == 0) return '_'; //ko chia dc cho 0
+      mul = mul / Number.parseFloat(num);
+    }
+    return mul.toString();
+  }
+
+  // pheptoan + ,-,x,/
+  sumAndMul(stringMath) {
+    if (!stringMath || !this.isExitOperator(this.operator, stringMath))
+      return stringMath;
+    if (stringMath.includes('+')) {
+      let arrAdd = stringMath.trim().split('+');
+      if (arrAdd?.length > 0) {
+        let arrRes = arrAdd.map((str) => {
+          return this.sumAndMul(str);
+        });
+        // stringMath = this.sumAndMul(arrRes.join('+'));
+        return this.sum(arrRes.join('+'));
+      }
+    } else if (stringMath.includes('-')) {
+      let arrMunus = stringMath.trim().split('-');
+      if (arrMunus?.length > 0) {
+        let arrRes = arrMunus.map((str) => {
+          return this.sumAndMul(str);
+        });
+        stringMath = arrRes.join('-');
+      }
+    } else stringMath = this.multDiv(stringMath);
+    return stringMath;
+  }
+  //check tồn tại
+  isExitOperator(arrOperator, string) {
+    var check = false;
+    arrOperator.forEach((op) => {
+      if (string.includes(op)) {
+        check = true;
+        return;
+      }
+    });
+    return check;
+  }
+
+  agv(arr: Array<number>) {
+    let sum = 0;
+    arr.forEach((n) => (sum += n));
+    return sum / arr.length;
+  }
+  //
 }

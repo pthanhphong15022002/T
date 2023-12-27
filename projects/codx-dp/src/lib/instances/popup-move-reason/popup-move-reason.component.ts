@@ -66,6 +66,7 @@ export class PopupMoveReasonComponent implements OnInit {
   dataCM: any;
   recID: string = '';
   nextStep: string = '';
+  memo:string = '';
 
   readonly fieldCbxProccess = { text: 'processName', value: 'recID' };
   readonly fieldCbxParticipants = { text: 'userName', value: 'userID' };
@@ -98,10 +99,9 @@ export class PopupMoveReasonComponent implements OnInit {
     this.isCallInstance = dt?.data?.isCallInstance;
     this.user = this.authStore.get();
     this.userId = this.user?.userID;
-
+    this.reasonStep = dt?.data?.objReason;
     if (this.applyFor == '0') {
       this.viewClick = this.viewKanban;
-      this.reasonStep = dt?.data?.objReason;
       this.listReason = this.reasonStep?.reasons;
       this.instances = JSON.parse(JSON.stringify(dt?.data?.instance));
   //    this.listCbxProccess = dt?.data?.listProccessCbx;
@@ -117,9 +117,12 @@ export class PopupMoveReasonComponent implements OnInit {
     this.recID = this.dataCM ? this.dataCM?.refID : dt?.data?.instance?.recID;
     this.applyFor != '0' && this.executeApiCalls();
     this.getValueListReason();
-   if( this.isMoveProcess) {
-    this.reasonStep?.newProcessID === this.guidEmpty &&  this.getValueListMoveProcess();
-    this.reasonStep?.newProcessID !== this.guidEmpty && this.getListProcesByMoveProcess();
+   if( this.isMoveProcess && this.reasonStep) {
+    if (this.reasonStep?.newProcessID === this.guidEmpty || !this.reasonStep.newProcessID) {
+              this.getValueListMoveProcess();
+              this.moveProccess = this.reasonStep.newProcessID;
+    };
+    (this.reasonStep?.newProcessID !== this.guidEmpty && this.reasonStep.newProcessID ) && this.getListProcesByMoveProcess();
    }
    else {
       this.getListMoveReason();
@@ -157,10 +160,11 @@ export class PopupMoveReasonComponent implements OnInit {
     let data = [
       this.recID,
       this.moveProccess,
-      this.reasonStep,
+      this.reasonStep.reasons,
       this.isReason,
       this.ownerMove,
       this.applyForMove,
+      this.memo
     ];
     // let obj = {
     //           listStep: this.listStep,
@@ -178,12 +182,14 @@ export class PopupMoveReasonComponent implements OnInit {
         this.instances = res[0];
         this.listStep = res[1];
 
-        if(this.applyFor != "0" && !this.isCallInstance) {
+        if(!this.isCallInstance) {
           let datas = [null, oldStepId, oldStatus, this.reasonStep.memo,this.instances.recID,this.instances.status,this.instances.stepID];
-          this.codxDpService.moveDealReason(datas).subscribe((res) => {
-            if (res) {
-            }
-          });
+          if(this.applyFor == "1" ) {
+            this.codxDpService.moveDealReason(datas).subscribe((res) => {
+              if (res) {
+              }
+            });
+          }
         }
         let obj = {
           listStep: this.listStep,
@@ -196,7 +202,6 @@ export class PopupMoveReasonComponent implements OnInit {
           title:this.instances.title,
         };
         this.dialog.close(obj);
-
         this.isLockStep  = false;
         this.notiService.notifyCode('SYS007');
         this.changeDetectorRef.detectChanges();
@@ -230,7 +235,9 @@ export class PopupMoveReasonComponent implements OnInit {
       .getInstanceStepsMoveReason(datas)
       .subscribe(async (res) => {
         if (res && res.length > 0) {
-          this.listReason = res[0];
+          // this.listReason = res[0];
+          this.reasonStep = res[0];
+          this.listReason = this.reasonStep.reasons
           this.stepName = res[1];
           this.changeDetectorRef.detectChanges();
         }
@@ -262,7 +269,7 @@ export class PopupMoveReasonComponent implements OnInit {
   }
   valueChange($event) {
     if ($event) {
-      this.reasonStep[$event.field] = $event.data;
+      this.memo = $event.data;
     }
   }
     getListProcesByMoveProcess() {

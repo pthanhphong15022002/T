@@ -71,6 +71,11 @@ export class PopupAddApproverComponent implements OnInit {
       this.cr.detectChanges();
     }
   }
+  cardTypeChange(evt:any,data){
+    if(data != null && evt?.field){      
+      this.data.idCardType = data;
+    }
+  }
 
   onSaveForm() {
     if (this.fgroupApprover.invalid) {

@@ -18,10 +18,10 @@ import {
 import { RealHub, RealHubService, AuthService, UIComponent } from 'codx-core';
 import { environment } from 'src/environments/environment';
 import { Modal } from 'bootstrap';
-import { Login2FAComponent } from '@modules/auth/login/login2-fa/login2-fa.component';
-import { Device } from 'projects/codx-ad/src/lib/models/userLoginExtend.model';
 import { SelectEventArgs } from '@syncfusion/ej2-angular-navigations';
 import { LoginService } from '@modules/auth/login/login.service';
+import { DisplayTextModel } from '@syncfusion/ej2-angular-barcode-generator';
+import { WaitingLoginQrcodeComponent } from '../waiting-login-qrcode/waiting-login-qrcode.component';
 
 @Component({
   selector: 'codx-login',
@@ -52,7 +52,6 @@ export class LoginDefaultComponent extends UIComponent {
   @Input() fl: any;
   @Input() isNotADMode: boolean;
   @Input() hubConnectionID: string;
-  @Input() loginDevice: Device;
   @Input() sysSetting;
 
   @Output() submitEvent = new EventEmitter<string>();
@@ -94,12 +93,14 @@ export class LoginDefaultComponent extends UIComponent {
     spcialChar: true,
   };
 
+  public qrDisplayText?: DisplayTextModel;
+
   constructor(
     private injector: Injector,
     private df: ChangeDetectorRef,
     private realHub: RealHubService,
     private authService: AuthService,
-    private loginService: LoginService
+    private loginService: LoginService,
   ) {
     super(injector);
 
@@ -110,11 +111,15 @@ export class LoginDefaultComponent extends UIComponent {
   }
 
   onInit(): void {
-    console.log('logindefault device info', this.loginDevice);
+    
+  this.qrDisplayText = {
+    visibility: false
+  };
+
     if (this.enableCaptcha == 0) {
       this.captChaValid = true;
     } else {
-      let captChaControl = this.loginForm.controls['captCha'];
+      let captChaControl = this.loginForm.controls['captcha'];
       captChaControl?.valueChanges.subscribe((e) => {
         this.captChaValid = captChaControl.valid;
       });
@@ -125,44 +130,28 @@ export class LoginDefaultComponent extends UIComponent {
         x.$subjectReal.asObservable().subscribe((z) => {
           if (z.event == 'AcceptLoginQR') {
             if (z.data?.hubConnection == this.hubConnectionID) {
-              if (z.data.isLg2FA == '') {
-                this.authService.setLogin(JSON.parse(z.data.user));
-                this.realHub.stop();
-                setTimeout(() => {
-                  window.location.href = z.data?.host + z.data?.tenant;
-                }, 1000);
-              } else {
-                let user = JSON.parse(z.data.user);
-                let objData = {
-                  data: {
-                    data: {
-                      email: user.Email,
-                      ...user,
-                    },
-                  },
-                  login2FA: z.data.isLg2FA,
-                  hubConnectionID: this.hubConnectionID,
-                };
-
-                let lg2FADialog = this.callfc.openForm(
-                  Login2FAComponent,
-                  '',
-                  400,
-                  600,
-                  '',
-                  objData
-                );
-                lg2FADialog.closed.subscribe((lg2FAEvt) => {
-                  if (lg2FAEvt.event) {
-                    this.authService.setLogin(z.data?.user);
-                    this.realHub.stop();
-                    setTimeout(() => {
-                      window.location.href = z.data?.host + z.data?.tenant;
-                    }, 1000);
-                  }
-                });
-              }
+              this.authService.setLogin(JSON.parse(z.data.user));
+              this.realHub.stop();
+              setTimeout(() => {
+                window.location.href = z.data?.host + z.data?.tenant;
+              }, 1000);
             }
+          } else if (z.event == 'WaitingLoginQRCode') {
+            let user = JSON.parse(z.data.user);
+            let objData = {
+              userName: user.userName,
+            };
+            let waitingLogin = this.callfc.openForm(
+              WaitingLoginQrcodeComponent,
+              '',
+              400,
+              600,
+              '',
+              objData
+            );
+            waitingLogin.closed.subscribe();
+          } else if (z.event == 'CancelLoginQR') {
+            window.location.reload();
           }
         });
       }
@@ -272,8 +261,8 @@ export class LoginDefaultComponent extends UIComponent {
         'GenQRCodeAsync',
         [
           this.hubConnectionID,
-          this.loginDevice.name,
-          this.loginDevice.os,
+          this.loginService.loginDevice.name,
+          this.loginService.loginDevice.os,
           ';;',
           // position.coords.accuracy +
           //   ';' +

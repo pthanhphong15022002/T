@@ -1,0 +1,304 @@
+<codx-views
+  #view
+  [views]="views"
+  [selectedFirst]="true"
+  idField="recID"
+  [button]="buttonAdd"
+  (selectedChange)="onSelectionChanged($event)"
+  (buttonClick)="btnClick($event)"
+  (onActions)="onAction($event)"
+  (clickMF)="clickMF($event)"
+  [titleToolBarTmp]="breadCumbs"
+  [autoSearch]="false"
+  (searchChanged) = handleSearch($event)
+  [service]="'HR'"
+  (changeDataMF)="handleShowHideMF($event)"
+  >
+  <!-- (viewChanged)="viewChanged($event)" -->
+<!-- service="PR"
+assemblyName="ERM.Business.PR"
+className="KowDsBusiness"
+method="LoadDataAsync" -->
+</codx-views>
+
+<!-- <ng-template #tempTree let-data>
+    <div class="d-flex align-items-top py-1">
+      <i class="icon-home me-2"></i>
+      <span>{{ data.orgUnitName }}</span>
+    </div>
+  </ng-template> -->
+
+  <ng-template #leftPanel let-data>
+    <codx-listview
+    id="chartOrg"
+    #chartOrg
+    [itemTemplate]="tempTree"
+    funcId=""
+    entityName="HR_OrganizationUnits"
+    service="HR"
+    type="treeView"
+    assemblyName="ERM.Business.HR"
+    className="OrganizationUnitsBusiness"
+    textField="orgUnitName"
+    gridViewName="grvOrganizationUnits"
+    formName="OrganizationUnits"
+    [enableCheck]="false"
+    [method]="'GetDataOrgAsync'"
+    idField="orgUnitID"
+    [dataService]="dtService"
+    (onSelectionChanged)="onSelectionChangedTreeOrg($event)"
+  >
+  </codx-listview>
+
+  <div *ngIf="viewDetailData == true && calendarGrid">
+    <codx-input
+    type="switch"
+    [checked]="isOnlyReadSavedData"
+    (valueChange)="onChangeIsReadSavedData($event)"
+  ></codx-input>
+  <codx-label
+    [formModel]="view.formModel"
+    [name]="'lblOnlyReadSavedData'"
+    [default]="'Chỉ đọc số liệu đã lưu'"
+    class="ms-2 text-primary"
+  >
+  </codx-label>
+  </div>
+
+  <div *ngIf="calendarGrid || calendarGrid2"
+    class="btn-group"
+    ngbDropdown
+    role="group"
+    aria-label="Button group with nested dropdown "
+    container="body"
+  >
+    <button
+      id="show_menu"
+      style="border-radius: 0 0px 0px 0 !important"
+      type=""
+      class="dropdown-toggle-split dropdown-toggle-click"
+      ngbDropdownToggle
+    >
+    <div>
+      <span class="icon-sticky_note_2">
+
+      </span>
+      <codx-label default="Chú thích loại công" name="lblNote" [formModel]="view.formModel">
+      </codx-label>
+    </div>
+    </button>
+    <div class="dropdown-menu" ngbDropdownMenu>
+      <div *ngFor="let item of lstHrKow">
+        <span
+        class="w-25px fw-bold"
+        [style.background-color]="item.background"
+        [style.color]="item.fontColor"
+        >
+          {{item.kowID}}
+        </span>
+        <span class="ms-4">
+          {{item.kowName}}
+        </span>
+      </div>
+      <!-- <button
+        ngbDropdownItem
+        style="align-items: center"
+        *ngFor="let item of childFunc"
+        (click)="clickButton(item)"
+        [disabled]="!isEdit"
+      >
+        <div class="text-hover-primary d-flex">
+          <i class="{{ item.icon }}"></i>
+          <span class="ms-2">{{ item.text }}</span>
+        </div>
+      </button> -->
+    </div>
+  </div>
+  </ng-template>
+
+  <ng-template #tempTree let-data>
+    <div class="d-flex align-items-top py-1">
+      <i class="icon-home me-2"></i>
+      <span>{{ data.orgUnitName }}</span>
+    </div>
+  </ng-template>
+
+  <ng-template #tmpPanelRight>
+    <!-- <ng-container *ngIf="isAfterViewSelect == true && filterOrgUnit" >
+      <lib-kowds-schedule
+        [filterOrg] = "filterOrgUnit"
+      >
+      </lib-kowds-schedule>
+    </ng-container> -->
+
+    <ng-container class="h-100" >
+      <!-- Lưới đọc gridviewsetup a trầm -->
+      <codx-gridview-v2
+      *ngIf="viewDetailData == true && calendarGridColumns.length > 0"
+      #calendarGrid
+      [formName]="view.formModel?.formName"
+      [entityName]="view.formModel?.entityName"
+      [gridViewName]="'grvKowDsUIByDay'"
+      [columnsGrid]="calendarGridColumns"
+      [service]="'HR'"
+      [assemblyName]="'PR'"
+      [checkboxSelect] = "true"
+      [className]="'KowDsBusiness'"
+      [predicates]=""
+      [dataValues]="dataValues"
+      [autoFitColumns]="false"
+      [hideMoreFunc]="true"
+      (onDoubleClick)="doubleClickGrid($event)"
+      [height]="'100%'"
+      [method]="'LoadDataForGridAsync'"
+      [idField]="'employeeID'"
+      (onDatabound)="onLoadedData($event)"
+      ></codx-gridview-v2>
+
+      <!-- Lưới cũ chưa sửa theo setting mới -->
+      <codx-gridview-v2
+      *ngIf="viewStatistic == true && gridStatisticColumns.length > 0"
+      #calendarGrid2
+      [formModel]="view.formModel"
+      [columnsGrid]="gridStatisticColumns"
+      [autoFitColumns]="false"
+      [gridViewName]="'grvKowDsUIByKow'"
+      [hideMoreFunc]="true"
+      [height]="'100%'"
+      [service]="'HR'"
+      [assemblyName]="'PR'"
+      [className]="'KowDsBusiness'"
+      [predicates]=""
+      [method]="'LoadDataForGridStatisticAsync'"
+      [dataValues]="dataValues"
+      [idField]="'emp'"
+      ></codx-gridview-v2>
+      <!-- (onDoubleClick)="doubleClickGrid($event)" -->
+    </ng-container>
+  </ng-template>
+
+  <!-- <ng-template #tmpOrgChart>
+    <hr-organization-orgchart
+      [activeMFC]="true"
+      [view]="view"
+      [dataService]="view.dataService"
+      [formModel]="view.formModel"
+      [orgUnitID]="orgUnitID"
+      [formModelEmployee]="formModelEmployee"
+    ></hr-organization-orgchart>
+  </ng-template> -->
+
+  <ng-template #tempDayHeader let-data>
+    <div *ngIf="data != null && data.field != null">
+      {{handleColHeader(data)}}
+    </div>
+    <span>
+      {{data.headerText}}
+    </span>
+  </ng-template>
+
+  <ng-template #tempEmployee let-data>
+    <!-- {{logData(data)}} -->
+    <!-- {{data? data[data.column.field] : "" }} -->
+  <div class="d-flex align-items-center w-100" >
+    <div class="p-3 ps-5"
+    >
+        <div class="d-flex align-items-center">
+          <div class="d-flex flex-column me-4">
+            <codx-img [funcId]="'HRT03a1'" [objectId]="data?.emp?.employeeID" [objectName]="data?.emp?.employeeName"
+              objectType="HR_Employees" [width]="40"
+              [imageType]="'circle'"
+              class="pic-emloyee"
+              >
+            </codx-img>
+          </div>
+          <div class="d-flex flex-column">
+              <div
+              class="align-items-center line-clamp line-clamp-1 mb-1">
+              <span class="fw-bold fs-6 me-3 text-nowrap">
+                {{data?.emp?.employeeName}}</span>
+              <i class="icon-qr_code_scanner text-danger icon-14 me-1"></i>
+              <span class="text-danger">{{ data?.emp?.employeeID }}</span>
+              <!-- <ng-template #nameTooltip>
+                <div class="inline-tooltip">
+                  <span class="fw-bold fs-6 me-3 text-nowrap">
+                    {{data?.emp?.employeeName}}</span>
+                  <i class="icon-qr_code_scanner text-danger icon-14 me-1"></i>
+                  <span class="text-danger">{{ data?.emp?.employeeID }}</span>
+                </div>
+              </ng-template> -->
+            </div>
+            <div>
+              {{data?.positionName}}
+            </div>
+          </div>
+        </div>
+      </div>
+      </div>
+  </ng-template>
+
+
+  <ng-template #tempDayData let-data>
+    <!-- {{logData(data[data.column.field])}} //null
+    {{logData(data)}} //object -->
+    <!-- {{logData(data)}} -->
+    <div *ngIf="data && data[data.column.field]">
+      {{handleKowColor(data[data.column.field])}}
+      <div *ngIf="data && data[data.column.field]">
+        <div *ngFor="let kow of data[data.column.field]">
+          <span class="me-2">
+            {{kow.dayNum}}
+          </span>
+
+          <span
+          class="w-25px fw-bold"
+          [style.background-color]="kow.background"
+          [style.color]="kow.fontColor"
+          >
+            {{kow.kowCode}}
+          </span>
+          <!-- <span>{{kow.dayNum}} {{kow.kowCode}}</span> -->
+        </div>
+      </div>
+    </div>
+
+    <!-- <span>
+      {{data? data[data.column.field][0]?.kowCode : "" }}
+    </span> -->
+  </ng-template>
+
+  <ng-template #tempEmployeeTC let-data>
+    <!-- {{logData(data)}} //object -->
+    <span class="fw-bold">
+      {{data? data[data.column.field] : "0" }}
+    </span>
+  </ng-template>
+
+  <ng-template #breadCumbs>
+    <codx-label
+    [formModel]="view.formModel"
+    [name]="'lblbreadCumbs'"
+    [default]="formHeaderText"
+    class="fw-bold fs-4"
+  >
+  </codx-label>
+  <span *ngIf="timeKeepingMode == '2'">
+    <codx-label
+    [formModel]="view.formModel"
+    [name]="'lblbreadCumbs2'"
+    [default]="' > Chi tiết theo ngày '"
+   (click)="switchModeView(1)"
+    class="ms-2 fw-bold fs-4 text-primary"
+  >
+  </codx-label>
+    <span class="ms-2 fw-bold fs-4 text-primary"> | </span>
+    <codx-label
+    [formModel]="view.formModel"
+    [name]="'lblbreadCumbs3'"
+    [default]="'Bảng công tổng hợp'"
+    (click)="switchModeView(2)"
+    class="ms-2 fw-bold fs-4 text-primary"
+    >
+    </codx-label>
+  </span>
+  </ng-template>

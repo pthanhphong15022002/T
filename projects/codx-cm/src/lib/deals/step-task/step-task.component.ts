@@ -27,6 +27,7 @@ import { CodxCmService } from '../../codx-cm.service';
 import { tmpInstancesStepsReasons } from '../../models/tmpModel';
 import { falseLine } from '@syncfusion/ej2-gantt/src/gantt/base/css-constants';
 import { CM_Deals } from '../../models/cm_model';
+import { StepService } from 'projects/codx-share/src/lib/components/codx-step/step.service';
 
 @Component({
   selector: 'step-task',
@@ -54,7 +55,9 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
   @Input() dealName: string;
   @Input() contractName: string;
   @Input() leadName: string;
-  @Input() isHeightAuto = false;
+  @Input() isHeightAuto = true;
+  @Input() taskAdd;
+  @Input() isViewStep = false;
 
   @Output() continueStep = new EventEmitter<any>();
   @Output() saveAssignTask = new EventEmitter<any>();
@@ -103,16 +106,19 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
   renderer: any;
   taskHeight = '415px';
   user;
+  isAddTask = false;
+  dataTaskAdd;
 
   constructor(
     private cache: CacheService,
-    private callFunc: CallFuncService,
     private api: ApiHttpService,
+    private authstore: AuthStore,
+    private callfc: CallFuncService,
+    private stepService: StepService,
+    private callFunc: CallFuncService,
+    private codxCmService: CodxCmService,
     private notiService: NotificationsService,
     private changeDetectorRef: ChangeDetectorRef,
-    private callfc: CallFuncService,
-    private codxCmService: CodxCmService,
-    private authstore: AuthStore
   ) {
     this.promiseAll();
     this.user = this.authstore.get();
@@ -138,11 +144,11 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes?.listInstanceStep) {
+    if (changes?.listInstanceStep && changes?.listInstanceStep?.currentValue?.length > 0) {
       this.listInstanceStepShow = this.listInstanceStep;
       if (!['0', '1', '2','15'].includes(this.dataCM?.status)) {
         this.stepIdReason =
-          this.listInstanceStep[this.listInstanceStep.length - 1].stepID;
+          this.listInstanceStep[this.listInstanceStep?.length - 1].stepID;
         this.listStepReasonValue =
           this.listInstanceStep[this.listInstanceStep.length - 1].reasons;
           this.isShowSuccess =  true;
@@ -161,7 +167,7 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
       }
     }
 
-    if (changes.dataCM) {
+    if (changes?.dataCM) {
       this.type = this.dataCM.viewModeDetail || 'S';
       if (!this.isAdmin) {
         this.isAdmin =
@@ -170,14 +176,26 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
       }
       if(this.entityName == 'CM_Customers'){
         this.applyProcess = false;
-      }else if(this.entityName == 'CM_Deals'){
-        this.applyProcess = true;
-      }else{
+      }
+      // else if(this.entityName == 'CM_Deals')
+      // {
+      //   this.applyProcess = true;
+      // }
+      else{
         this.applyProcess = this.dataCM?.applyProcess;
       }
       this.owner = this.dataCM?.owner;
-  
+
     }
+
+    if(changes?.taskAdd && changes?.taskAdd?.currentValue?.task){
+      this.dataTaskAdd = JSON.parse(JSON.stringify(this.taskAdd));
+      this.taskAdd.task = null;
+      this.isAddTask = true;
+    }else{
+      this.isAddTask = false;
+    }
+
   }
 
   ngAfterViewInit(): void {
@@ -503,5 +521,16 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
   }
   toggleReason() {
     this.isShowSuccess = !this.isShowSuccess;
+  }
+  setTask(stepID){
+    if(!this.dataTaskAdd || !this.dataTaskAdd?.task){
+      return null;
+    }else{
+      let data = stepID == this.dataTaskAdd?.task?.stepID ? this.dataTaskAdd : null;
+      if(data){
+        this.isAddTask = false;
+      }
+      return data;
+    }
   }
 }

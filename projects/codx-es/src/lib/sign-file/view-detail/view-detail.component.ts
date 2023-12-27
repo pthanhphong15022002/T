@@ -34,6 +34,7 @@ import { TM_Tasks } from 'projects/codx-share/src/lib/components/codx-tasks/mode
 import { CodxEsService, GridModels } from '../../codx-es.service';
 import { PopupAddSignFileComponent } from '../popup-add-sign-file/popup-add-sign-file.component';
 import { CodxShareService } from 'projects/codx-share/src/lib/codx-share.service';
+import { CodxCommonService } from 'projects/codx-common/src/lib/codx-common.service';
 
 @Component({
   selector: 'lib-view-detail',
@@ -50,6 +51,7 @@ export class ViewDetailComponent extends UIDetailComponent implements OnInit {
     private df: ChangeDetectorRef,
     private callfunc: CallFuncService,
     private notify: NotificationsService,
+    private codxCommonService: CodxCommonService,
     private router: ActivatedRoute,
     private authStore: AuthStore,
     private codxService : CodxService,
@@ -661,15 +663,24 @@ export class ViewDetailComponent extends UIDetailComponent implements OnInit {
   }
 
   cancel(datas: any) {
-    this.esService
-      .cancelSignfile(datas?.recID, this.comment)
-      .subscribe((res) => {
-        if (res) {
-          datas.approveStatus = '0';
-          this.view.dataService.update(datas).subscribe();
-          this.notify.notifyCode('SYS034');
-        }
-      });
+    // this.esService
+    //   .cancelSignfile(datas?.recID, this.comment)
+    //   .subscribe((res) => {
+    //     if (res) {
+    //       datas.approveStatus = '0';
+    //       this.view.dataService.update(datas).subscribe();
+    //       this.notify.notifyCode('SYS034');
+    //     }
+    //   });
+    this.codxCommonService
+    .codxCancel("ES",datas?.recID, 'ES_SignFiles', this.comment,this.user?.userID)
+    .subscribe((res:any) => {
+      if (!res?.msgCodeError && res?.rowCount >0) {
+        datas.approveStatus = res?.returnStatus ?? "0";
+        this.view.dataService.update(datas).subscribe();
+        this.notify.notifyCode('SYS034');
+      }
+    });
   }
 
   viewSFile(datas: any, mF: any) {
@@ -783,7 +794,7 @@ export class ViewDetailComponent extends UIDetailComponent implements OnInit {
     //   return;
     // }
 
-    this.codxShareService
+    this.codxCommonService
       .codxRelease(
         'ES',
         this.itemDetail?.recID,

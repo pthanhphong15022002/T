@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ApiHttpService, NotificationsService } from 'codx-core';
+import { ApiHttpService, AuthStore, NotificationsService } from 'codx-core';
 import { BehaviorSubject, Observable, finalize, map } from 'rxjs';
 
 @Injectable({
@@ -8,11 +8,17 @@ import { BehaviorSubject, Observable, finalize, map } from 'rxjs';
 export class CodxWrService {
   // listOrderPartsSubject = new BehaviorSubject<any>(null);
   listOrderUpdateSubject = new BehaviorSubject<any>(null);
-
+  language = '';
+  childMenuClick = new BehaviorSubject<any>(null);
   constructor(
     private api: ApiHttpService,
-    private notification: NotificationsService
-  ) {}
+    private notification: NotificationsService,
+    private auth: AuthStore,
+
+  ) {
+    this.language = this.auth?.get()?.language?.toLowerCase();
+
+  }
 
   getOneCustomer(recID) {
     return this.api.exec<any>('CM', 'CustomersBusiness', 'GetOneAsync', [
@@ -30,6 +36,24 @@ export class CodxWrService {
     return this.api.exec<any>('WR', 'ServiceTagsBusiness', 'GetOneAsync', [
       key,
     ]);
+  }
+
+  formatDate(date) {
+    let language = this.language == 'vn' ? 'vi' : 'en-US';
+    const currentDate = date;
+    const weekdayDate = new Intl.DateTimeFormat(language, {
+      weekday: 'long',
+    }).format(currentDate);
+    const dayDate = new Intl.DateTimeFormat(language, {
+      day: 'numeric',
+    }).format(currentDate);
+    const monthDate = new Intl.DateTimeFormat(language, {
+      month: 'long',
+    }).format(currentDate);
+    const yearDate = new Intl.DateTimeFormat(language, {
+      year: 'numeric',
+    }).format(currentDate);
+    return weekdayDate + ', ' + dayDate + ' ' + monthDate + ' ' + yearDate;
   }
 
   checkValidate(gridViewSetup, data, count = 0) {

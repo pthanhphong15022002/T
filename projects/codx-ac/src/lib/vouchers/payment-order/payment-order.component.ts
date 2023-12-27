@@ -3,8 +3,8 @@ import { AuthStore, ButtonModel, DialogModel, NotificationsService, UIComponent,
 import { Subject, takeUntil } from 'rxjs';
 import { CodxAcService } from '../../codx-ac.service';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
-import { JournalService } from '../../journals/journals.service';
 import { PaymentOrderAddComponent } from './payment-order-add/payment-order-add.component';
+import { CodxCommonService } from 'projects/codx-common/src/lib/codx-common.service';
 
 @Component({
   selector: 'lib-payment-order',
@@ -36,9 +36,9 @@ export class PaymentOrderComponent extends UIComponent {
     private inject: Injector,
     private acService: CodxAcService,
     private authStore: AuthStore,
+    private codxCommonService: CodxCommonService,
     private shareService: CodxShareService,
     private notification: NotificationsService,
-    private journalService: JournalService
   ) {
     super(inject);
   }
@@ -311,7 +311,7 @@ export class PaymentOrderComponent extends UIComponent {
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         this.dataCategory = res;
-        this.shareService
+        this.codxCommonService
           .codxRelease(
             'AC',
             data.recID,
@@ -345,7 +345,7 @@ export class PaymentOrderComponent extends UIComponent {
    * @param data
    */
   cancelReleaseVoucher(text: any, data: any) {
-    this.shareService
+    this.codxCommonService
       .codxCancel('AC', data?.recID, this.view.formModel.entityName, null, null)
       .pipe(takeUntil(this.destroy$))
       .subscribe((result: any) => {

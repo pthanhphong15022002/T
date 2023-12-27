@@ -79,6 +79,12 @@ import { SearchingComponent } from './searching/searching.component';
 import { CodxReportViewsComponent } from 'projects/codx-report/src/lib/codx-report-views/codx-report-views.component';
 import { LayoutNoAsideToolbarFluidComponent } from 'projects/codx-common/src/lib/_layout/_noAsideToolbarFluid/_noAsideToolbarFluid.component';
 import { LayoutComponent } from './_layout/layout.component';
+import { DealsComponent } from 'projects/codx-cm/src/lib/deals/deals.component';
+import { CasesComponent } from 'projects/codx-cm/src/lib/cases/cases.component';
+import { LeadsComponent } from 'projects/codx-cm/src/lib/leads/leads.component';
+import { ViewInstancesComponent } from 'projects/codx-dp/src/lib/view-instances/view-instances.component';
+import { CodxDashboardViewsComponent } from 'projects/codx-share/src/lib/components/codx-dashboard/dashboard-view/dashboard-view.component';
+import { InstancesComponent } from 'projects/codx-dp/src/lib/instances/instances.component';
 
 export const routes: Routes = [
   {
@@ -96,6 +102,10 @@ export const routes: Routes = [
       {
         path: 'dashboard/:funcID',
         component: TMDashboardComponent,
+      },
+      {
+        path: 'dashboard-view/:funcID',
+        component: CodxDashboardViewsComponent,
       },
       {
         path: 'share/dynamic/:funcID',
@@ -134,6 +144,28 @@ export const routes: Routes = [
         path: '**',
         redirectTo: 'error/404',
       },
+      //----phát hành quy trình DP-CRM----//
+      {
+        path: 'deals/:funcID',
+        component: DealsComponent,
+        data: { noReuse: true },
+      },
+      {
+        path: 'cases/:funcID',
+        component: CasesComponent,
+        data: { noReuse: true },
+      },
+      {
+        path: 'leads/:funcID',
+        component: LeadsComponent,
+        data: { noReuse: true },
+      },
+      {
+        path: 'instances/:funcID/:processID',
+        component: ViewInstancesComponent,
+        data: { noReuse: true },
+      },
+      //-----------end--------------//
     ],
   },
   {
@@ -243,7 +275,7 @@ const T_Component: Type<any>[] = [
     NgbModule,
     SplitterModule,
     CodxReportModule,
-    AccumulationChartModule
+    AccumulationChartModule,
   ],
   exports: [RouterModule],
   declarations: T_Component,
@@ -256,7 +288,7 @@ const T_Component: Type<any>[] = [
     GaugeTooltipService,
     LegendService,
     LegendCircularGaugeService,
-    AccumulationDataLabelService
+    AccumulationDataLabelService,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

@@ -2,7 +2,7 @@
   "apiUrl": "http://localhost:8011",
   "reportUrl": "http://172.16.7.34:4203/report",
   "shopping": "https://172.16.7.34:44317/Shopping",
-  "urlUpload": "http://172.16.7.91/lvfile",
+  "urlUpload": "http://172.16.7.34:8011/lvfile",
   "office365": "",
   "saas": 1,
   "layoutCZ": "lacviet",
@@ -14,11 +14,14 @@
   "captchaEnable": 0,
   "loginHCS":"https://surehcs.lacviet.vn/UI2017",
   "layout": {
+    "id": "lacviet",
     "title": "",
     "icon": "",
-    "logo": ""
+    "logo": "",
+    "appleStore":"https://apps.apple.com/us/app/codx/id6459408551",
+    "playStore":"https://play.google.com/store/apps/details?id=com.lacviet.codxaws"
   },
-  "asideMode": "developer;zlvcodxuniverseprogress;lacvietdemo",
+  "asideMode": "all",
   "externalLogin": {
     "amazonId": "amzn1.application-oa2-client.f074ae67c0a146b6902cc0c4a3297935",
     "facebookId": "553419903425493",
