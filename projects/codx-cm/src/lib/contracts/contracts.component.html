@@ -306,7 +306,7 @@
   <div class="liquidation p-5">
     <div class="header-liquidation w-100">
       <div class="d-flex justify-content-between w-100">
-        <span class="fs-5 fw-bold">{{actionName}}</span>
+        <span class="fs-5 fw-bold">{{ actionName }}</span>
         <button
           class="button-close d-flex"
           style="border: none; outline: none; background: none"
@@ -320,31 +320,82 @@
       <div class="form-group">
         <codx-label
           [formModel]="view?.formModel"
-          fiedName="disposalOn"
+          fiedName="disposalID"
         ></codx-label>
         <codx-input
-          field="disposalOn"
+          field="disposalID"
           [formModel]="view?.formModel"
-          [crrValue]="contractSelected?.disposalOn || disposalOn"
+          [crrValue]="liquidation?.disposalID"
+          (valueChange)="changeData($event)"
+          [disabled]="true"
+        ></codx-input>
+      </div>
+
+      <div class="row form-group">
+        <div class="col-6 ">
+          <codx-label
+            [formModel]="view?.formModel"
+            fiedName="disposalOn"
+          ></codx-label>
+          <codx-input
+            field="disposalOn"
+            [formModel]="view?.formModel"
+            [crrValue]="liquidation?.disposalOn"
+            (valueChange)="changeData($event)"
+          ></codx-input>
+        </div>
+        <div class="col-6">
+          <codx-label
+            [formModel]="view?.formModel"
+            fiedName="debtClosingOn"
+          ></codx-label>
+          <codx-input
+            field="debtClosingOn"
+            [formModel]="view?.formModel"
+            [crrValue]="liquidation?.debtClosingOn"
+            (valueChange)="changeData($event)"
+          ></codx-input>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <codx-label
+          [formModel]="view?.formModel"
+          fiedName="disposalType"
+          [crrValue]="liquidation?.disposalType"
+        ></codx-label>
+        <codx-input
+          class="me-3"
+          field="disposalType"
+          [formModel]="view?.formModel"
           (valueChange)="changeData($event)"
         ></codx-input>
       </div>
 
       <div class="form-group">
-        <codx-input
-          class="me-3"
-          field="disposalAll"
-          [formModel]="view?.formModel"
-          (valueChange)="changeData($event)"
-        ></codx-input>
         <codx-label
           [formModel]="view?.formModel"
-          fiedName="disposalAll"
-          [crrValue]="contractSelected?.disposalAll"
+          fiedName="pmtMethodID"
         ></codx-label>
-       
+        <codx-input
+          field="pmtMethodID"
+          [formModel]="view?.formModel"
+          (valueChange)="changeData($event)"
+          [crrValue]="liquidation?.disposalCmt"
+        ></codx-input>
       </div>
-
+      <div class="form-group">
+        <codx-label
+          [formModel]="view?.formModel"
+          fiedName="disposalReason"
+        ></codx-label>
+        <codx-input
+          field="disposalReason"
+          [formModel]="view?.formModel"
+          (valueChange)="changeData($event)"
+          [crrValue]="liquidation?.disposalCmt"
+        ></codx-input>
+      </div>
       <div class="form-group">
         <codx-label
           [formModel]="view?.formModel"
@@ -354,7 +405,7 @@
           field="disposalCmt"
           [formModel]="view?.formModel"
           (valueChange)="changeData($event)"
-          [crrValue]="contractSelected?.disposalCmt"
+          [crrValue]="liquidation?.disposalCmt"
         ></codx-input>
       </div>
     </div>
