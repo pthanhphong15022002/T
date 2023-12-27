@@ -288,7 +288,7 @@ export class CodxInputCustomFieldComponent implements OnInit {
       case 'CF':
         if (
           this.customField.dataValue &&
-          !Number.parseFloat(this.customField.dataValue)
+          !Number.isNaN(this.customField.dataValue)
         )
           this.dataValueCaculate = this.customField.dataValue;
         break;
