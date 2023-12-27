@@ -25,7 +25,7 @@ export class PopupAddGiftComponent implements OnInit {
   funcID: string = null;
   title: string = null;
   transType: string = "3";
-  cardTypeDefault: string = "6";
+  cardTypeDefault: string = "1";
   patternIDSeleted: string = null;
   userReciver: string = "";
   userReceiverName: string = "";
@@ -43,6 +43,7 @@ export class PopupAddGiftComponent implements OnInit {
   min: number = 0;
   max: number = 0;
   quantityOld: number = 0;
+  date = new Date();
 
 
   constructor(

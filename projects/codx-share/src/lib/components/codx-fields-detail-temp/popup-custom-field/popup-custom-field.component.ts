@@ -27,6 +27,8 @@ export class PopupCustomFieldComponent implements OnInit {
   objectIdParent: any;
   customerID: any; //Khách hàng cơ hội
 
+  arrCaculateField = []; //cac field co tinh toán
+
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private cache: CacheService,
@@ -40,6 +42,7 @@ export class PopupCustomFieldComponent implements OnInit {
     this.objectIdParent = dt?.data?.objectIdParent;
     this.customerID = dt?.data?.customerID;
     this.dialog = dialog;
+    this.arrCaculateField = this.fields.filter((x) => x.dataType == 'CF');
   }
 
   ngOnInit(): void {
@@ -77,6 +80,7 @@ export class PopupCustomFieldComponent implements OnInit {
       if (index != -1) {
         this.fields[index].dataValue = result;
       }
+      if (field.dataType == 'N') this.caculateField(field.fieldName, result);
     }
   }
   // partValue(item) {
@@ -151,4 +155,63 @@ export class PopupCustomFieldComponent implements OnInit {
   addFileCompleted(e) {
     this.isAddComplete = e;
   }
+
+  //tính toán
+  caculateField(filedName, dataValue) {
+    if (!this.arrCaculateField || this.arrCaculateField?.length == 0) return;
+    this.arrCaculateField.forEach((obj) => {
+      let dataFormat = obj.dataFormat;
+      if (dataFormat.includes('[' + filedName + ']')) {
+        dataFormat = dataFormat.replaceAll('[' + filedName + ']', dataValue);
+        obj.dataValue = dataFormat;
+      }
+      if (!obj.dataValue.includes('[')) {
+        //tinh toán
+        //Hiện tại sẽ lấy data đã
+        obj.dataValue = Number.parseFloat(dataValue);
+        //tính toan end
+        let index = this.fields.findIndex((x) => x.recID == obj.recID);
+        if (index != -1) {
+          this.fields[index].dataValue = obj.dataValue;
+        }
+      }
+    });
+  }
+
+  //tính toán
+  operator = ['+', '-', 'x', '/', 'Avg('];
+  accessField = [']'];
+  parenthesis = ['(', ')'];
+  arrCheck = ['+', '-', 'x', '/', 'Avg(', '(', ')'];
+  caculate(stringMath) {
+    //Không chưa ngoặc
+    let check = stringMath.filter((x) => this.arrCheck.includes(x));
+    if (check?.length > 0) {
+      //công trừ cơ bản
+      //công trừ nhân chiacơ bản
+      //Có chứ avg tạm tắt
+      //ngoặc
+    } else return stringMath;
+  }
+
+  sum(arr: Array<number>) {
+    let sum = 0;
+    arr.forEach((n) => (sum += n));
+    return sum;
+  }
+
+  mult(arr: Array<number>) {
+    let mul = 0;
+    arr.forEach((n) => mul * n);
+    return mul;
+  }
+  div(a: number, b: number) {
+    return a / b;
+  }
+  agv(arr: Array<number>) {
+    let sum = 0;
+    arr.forEach((n) => (sum += n));
+    return sum / arr.length;
+  }
+  //
 }

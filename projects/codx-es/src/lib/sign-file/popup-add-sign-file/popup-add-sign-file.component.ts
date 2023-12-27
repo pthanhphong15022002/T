@@ -1015,6 +1015,10 @@ export class PopupAddSignFileComponent implements OnInit {
       this.esService.notifyInvalid(this.dialogSignFile, this.formModelCustom);
       return;
     }
+    if(this.data.approveControl == '1'){
+      this.data.processID == this.data.recID;
+      this.dialogSignFile.patchValue({ approveControl: '1', processID:this.data.recID }); 
+    }
     this.data.category = this.refType;
     this.data.refType = this.refType;
     
@@ -1423,6 +1427,11 @@ export class PopupAddSignFileComponent implements OnInit {
         this.reloadedStep=true;
         this.cr.detectChanges();
       }
+      if(this.data.approveControl = '1'){
+        this.data.processID == this.data.recID;
+        this.dialogSignFile.patchValue({ approveControl: '1',processID:this.data.recID }); 
+        this.onSaveSignFile();
+      }
     }
   }
 
@@ -1435,10 +1444,10 @@ export class PopupAddSignFileComponent implements OnInit {
       this.cr.detectChanges();
     }
   }
-  checkApproverInfo(oldNode, newNode){
-    
+  checkApproverInfo(oldNode, newNode){    
     this.lstpartners=[];
-    this.codxShareService.getStepsByTransID(this.data.processID).subscribe((steps:any)=>{
+    let transID = this.data?.approveControl == "1" ? this.data.recID : this.data.processID
+    this.codxShareService.getStepsByTransID(transID).subscribe((steps:any)=>{
       if(steps){
         Array.from(steps).forEach((step:any)=>{
           if(step?.approvers){

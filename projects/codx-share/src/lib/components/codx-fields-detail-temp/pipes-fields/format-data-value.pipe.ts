@@ -31,6 +31,9 @@ export class FormatDataValuePipe implements PipeTransform {
       case 'D':
         return this.formatDateTime(value, dataFormat);
         break;
+      case 'CF':
+        if (!Number.parseFloat(value)) value = '_';
+        else return this.formatNumber(value, 'B');
     }
 
     return of(value || '');

@@ -179,8 +179,8 @@ export class EditPatternComponent implements OnInit {
   async handleFileInput(event) {}
 
   savePattern() {
-    if (!this.pattern.patternName.trim()) {
-      this.notificationsService.notify('Vui lòng nhập mô tả', '2');
+    if (!this.pattern?.patternName?.trim()) {
+      this.notificationsService.notify('Vui lòng nhập mô tả', '3');
       return;
     }
     if (this.formType == 'edit' && this.checkFileUpload && this.checkGetFile) {
