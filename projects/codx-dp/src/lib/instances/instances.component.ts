@@ -963,7 +963,7 @@ export class InstancesComponent
               // case 'SYS004':
               // case 'SYS002':
               case 'DP18':
-                if( data.closed ||data.status == '1' || data.status == '15' || data.status == '2'|| !this.isMoveProcess(data)) {
+                if( (data.refID && data.refID !== this.guidEmpty) || data.closed ||data.status == '1' || data.status == '15' || data.status == '2'|| !this.isMoveProcess(data)) {
                   res.disabled = true;
                 }
                 break;
