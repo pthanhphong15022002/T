@@ -1440,7 +1440,7 @@ export class PopupAddDealComponent
       }
      }
      else {
-      let idxCrr = liststeps.findIndex((x) => x.stepID == this.instance?.stepID);
+      let idxCrr = liststeps.findIndex((x) => x.stepID == this.deal?.stepID);
       if (idxCrr != -1) {
         for (let i = 0; i <= idxCrr; i++) {
           let stepCurrent = liststeps[i];
