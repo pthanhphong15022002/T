@@ -177,18 +177,16 @@ export class PopupCustomFieldComponent implements OnInit {
             '[' + f.fieldName + ']',
             f.dataValue
           );
-          obj.dataValue = dataFormat;
         }
       });
 
       if (!dataFormat.includes('[')) {
         //tinh toán
-        //Hiện tại sẽ lấy data đã
         obj.dataValue = this.caculate(dataFormat);
         //tính toan end
         let index = this.fields.findIndex((x) => x.recID == obj.recID);
         if (index != -1) {
-          this.fields[index].dataValue = dataFormat;
+          this.fields[index].dataValue = obj.dataValue;
         }
       }
     });
