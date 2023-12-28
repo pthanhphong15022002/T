@@ -152,6 +152,7 @@ export class PopupAddDealComponent
   processIdDefault: string = '';
   defaultDeal: string = '';
   customerCategory: string = '';
+  recIdMove : string = '';
 
   // load data form DP
   isLoading: boolean = false;
@@ -204,6 +205,7 @@ export class PopupAddDealComponent
         this.deal.owner =this.instanceReason?.ownerMove;
         this.deal.salespersonID = this.instanceReason?.ownerMove;
         this.owner =  this.instanceReason?.ownerMove;
+        this.recIdMove = this.instanceReason?.recID;
         this.isShowReasonDP = true;
       //  this.deal.processID = this.instanceReason?.processMove;
       }
@@ -342,7 +344,6 @@ export class PopupAddDealComponent
           this.deal.customerID = this.customerID;
           this.customerName = $event.component?.itemsSelected[0]?.CustomerName;
           this.customerNameTmp = this.customerName?.trim();
-
           this.deal.industries = $event.component?.itemsSelected[0]?.Industries;
           this.deal.shortName = $event.component?.itemsSelected[0]?.ShortName;
           this.deal.customerName = $event.component?.itemsSelected[0]?.CustomerName;
@@ -946,6 +947,7 @@ export class PopupAddDealComponent
   }
   onAddInstance() {
     if(this.isShowReasonDP) {
+      debugger;
       let data = [this.instance, this.listInstanceSteps, this.oldIdInstance];
       this.codxCmService.addInstance(data).subscribe((instance) => {
         if (instance) {
@@ -959,6 +961,14 @@ export class PopupAddDealComponent
 
             }
           });
+          if(this.recIdMove) {
+            this.codxCmService.updateMoveProcess([this.recIdMove,this.deal?.processID]).subscribe((res) => {
+              if (res) {
+
+              }
+            });
+          }
+
           this.dialog.close();
         }
       });
@@ -1328,7 +1338,6 @@ export class PopupAddDealComponent
       const isSaturday = dayOff.includes('7');
       const isSunday = dayOff.includes('8');
       let day = 0;
-
       for (
         let currentDate = new Date(startDay);
         currentDate <= endDay;
@@ -1389,7 +1398,7 @@ export class PopupAddDealComponent
       if (check && menuInput == -1 && tabInput == -1) {
         this.tabInfo.splice(2, 0, this.menuInputInfo);
         this.tabContent.splice(2, 0, this.tabCustomFieldDetail);
-      } else if ( menuInput != -1 && tabInput != -1) {
+      } else if ( !check && menuInput != -1 && tabInput != -1) {
         this.tabInfo.splice(menuInput, 1);
         this.tabContent.splice(tabInput, 1);
       }
@@ -1426,12 +1435,12 @@ export class PopupAddDealComponent
         let filteredTasks = stepCurrent.tasks.filter(task => task?.fieldID !== null && task?.fieldID?.trim() !== '')
         .map(task => task.fieldID)
         .flatMap(item => item.split(';').filter(item => item !== ''));
-        let listFields = stepCurrent.fields.filter(field => !filteredTasks.includes(this.action === 'copy'? field?.reCID: field?.refID));
+        let listFields = stepCurrent.fields.filter(field => !filteredTasks.includes(this.action === 'copy'? field?.recID: field?.refID));
         this.listFields = [...this.listFields, ...listFields];
       }
      }
      else {
-      let idxCrr = liststeps.findIndex((x) => x.stepID == this.instance?.stepID);
+      let idxCrr = liststeps.findIndex((x) => x.stepID == this.deal?.stepID);
       if (idxCrr != -1) {
         for (let i = 0; i <= idxCrr; i++) {
           let stepCurrent = liststeps[i];

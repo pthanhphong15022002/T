@@ -874,19 +874,5 @@ export class CM_Contracts {
   debtClosingOn: Date;
   disposalOn: Date; //Ngày thanh lý
   disposalCmt: Date; //Ngày thanh lý
-}
-
-export class AM_Realties{
-  recID: string;
-  contractID: string;
-  assetID: string;
-  usableArea: number;
-  extendInfo: string;
-
-  block: string;
-  purpose: string;
-  salesPrice: number;
-  effectiveSalePrice: number;
-  serviceFee: number;
-  effectiveServiceFee: number;
+  displayed: boolean; //Ngày thanh lý
 }
