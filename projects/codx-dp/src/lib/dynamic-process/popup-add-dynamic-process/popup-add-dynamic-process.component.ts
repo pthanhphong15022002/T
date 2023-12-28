@@ -3,6 +3,7 @@ import {
   DP_Steps_Roles,
   DP_Steps_TaskGroups_Roles,
   DP_Steps_Tasks,
+  DP_Steps_Tasks_Roles,
 } from './../../models/models';
 import { CodxDpService } from './../../codx-dp.service';
 import {
@@ -3390,7 +3391,7 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
     }
 
     if(this.typeTask?.value == "E"){
-      this.handelMail(taskInput, true);
+      this.handelMail(taskInput, action, taskGroupIdOld, roleOld);
       return;
     }
 
@@ -3413,9 +3414,9 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
         .subscribe(async (grv) => {
           let option = new SidebarModel();
           let formModel = this.dialog?.formModel;
-          formModel.formName = f.formName;
-          formModel.gridViewName = f.gridViewName;
-          formModel.entityName = f.entityName;
+          formModel.formName = "DPStepsTasks";
+          formModel.gridViewName = "grvDPStepsTasks";
+          formModel.entityName = "DP_Steps_Tasks";
           formModel.funcID = functionID;
           option.FormModel = formModel;
           option.Width = '550px';
@@ -3516,16 +3517,18 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
     // this.changeDetectorRef.detectChanges();
   }
 
-  handelMail(stepsTasks, isNewEmails) {
+  handelMail(stepsTasks:DP_Steps_Tasks, action, taskGroupIdOld = null, roleOld = null) {
     let data = {
       dialog: this.dialog,
       formGroup: null,
-      templateID: stepsTasks['reference'] || '',
+      templateID: stepsTasks['reference'],
       showIsTemplate: true,
       showIsPublish: true,
       showSendLater: true,
       files: null,
-      isAddNew: isNewEmails,
+      isAddNew: action == "edit" ? false : true,
+      saveIsTemplate: action == "edit" ? false : true,
+      notSendMail: true,
     };
 
     let popEmail = this.callfc.openForm(
@@ -3537,9 +3540,32 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
       data
     );
     popEmail.closed.subscribe((res) => {
-      if (res && res.event) {
+      if (res && res?.event) {
         // this.stepsTasks['reference'] = res.event?.recID ? res.event?.recID : '';
         // this.isNewEmails = this.recIdEmail ? true : false;
+        let mail = res?.event;
+        if (action === 'add' || action === 'copy') {
+          stepsTasks.taskName = mail?.subject || "Email";
+          stepsTasks.durationDay = 1;
+          stepsTasks.dependRule = "0";
+          stepsTasks.stepID = this.step?.recID;
+          stepsTasks.reference = mail?.recID;
+          stepsTasks.memo = mail?.message;
+          stepsTasks.taskType = "E";
+          let role = new DP_Steps_Tasks_Roles();
+          role.objectID = this.user?.userID;
+          role.objectName = this.user?.username;
+          role.objectType = "1";
+          role.roleType = "O";
+          role.taskID =  stepsTasks?.recID;
+          stepsTasks.roles = [role];
+          this.addTask(stepsTasks);
+        } else {
+          stepsTasks.taskName = mail?.subject || "Email";
+          stepsTasks.memo = mail?.message;
+          this.editTask(stepsTasks, taskGroupIdOld, roleOld);
+        }
+        this.changeDetectorRef.markForCheck();
       }
     });
   }

@@ -59,6 +59,7 @@ export class PopupTabsViewsDetailsComponent implements OnInit, AfterViewInit {
   listRecID = [];
   loading: boolean = true;
   dataUp: any;
+  viewMode: any; // viewMode mặc định
 
   constructor(
     private tmSv: CodxTMService,
@@ -70,6 +71,7 @@ export class PopupTabsViewsDetailsComponent implements OnInit, AfterViewInit {
     this.data = dt?.data?.data;
     this.dataObj = dt?.data?.dataObj;
     this.functionParent = this.activedRouter.snapshot.params['funcID'];
+    this.viewMode = this.dataObj?.viewMode;
 
     if (this.data?.iterationID) {
       // this.projectCategory = this.data?.projectCategory;
