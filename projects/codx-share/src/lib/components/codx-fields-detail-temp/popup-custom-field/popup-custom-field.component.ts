@@ -28,6 +28,7 @@ export class PopupCustomFieldComponent implements OnInit {
   customerID: any; //Khách hàng cơ hội
 
   arrCaculateField = []; //cac field co tinh toán
+  point: string = ','; //dấu phân cách thập phân
 
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
@@ -43,6 +44,7 @@ export class PopupCustomFieldComponent implements OnInit {
     this.customerID = dt?.data?.customerID;
     this.dialog = dialog;
     this.arrCaculateField = this.fields.filter((x) => x.dataType == 'CF');
+    if (this.arrCaculateField?.length > 0) this.decimalPointSeparation();
   }
 
   ngOnInit(): void {
@@ -317,19 +319,24 @@ export class PopupCustomFieldComponent implements OnInit {
   }
   //xác định dấu "." hay "," ngăn cách phần thập phân
   converCommaDot(num) {
-    if (num.includes('.') || num.includes(',')) {
-      const string1 = '1,23'; //parFloat
-      const string2 = '1.23';
-      const result = Number.parseFloat(string1) - Number.parseFloat(string2);
-      if (result > 0) {
-        console.log('Dấu , phân tách phần thập phân 1,234 - 1');
-        if (num.includes('.')) num = num.replaceAll('.', ',');
-      } else {
-        console.log('Dấu . phân tách phần thập phân 1-1,23');
-        if (num.includes(',')) num = num.replaceAll(',', '.');
-      }
-    }
+    if (this.point == ',' && num.includes('.')) {
+      num = num.replaceAll('.', ',');
+    } else if (this.point == '.' && num.includes(','))
+      num = num.replaceAll(',', '.');
     return num;
+  }
+  //Decimal point separation
+  decimalPointSeparation() {
+    const string1 = '1,23'; //parFloat
+    const string2 = '1.23';
+    const result = Number.parseFloat(string1) - Number.parseFloat(string2);
+    if (result > 0) {
+      //'Dấu , phân tách phần thập phân 1,234 - 1'
+      this.point = ',';
+    } else {
+      //'Dấu . phân tách phần thập phân 1-1.23'
+      this.point = '.';
+    }
   }
 
   agv(arr: Array<number>) {
@@ -337,5 +344,5 @@ export class PopupCustomFieldComponent implements OnInit {
     arr.forEach((n) => (sum += n));
     return sum / arr.length;
   }
-  //
+  //------------------END_CACULATE--------------------//
 }
