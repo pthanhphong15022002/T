@@ -66,7 +66,6 @@ export class PopupAddColumnTableComponent implements OnInit, AfterViewInit {
   tooltip: Object = { isVisible: true, placement: 'Before', showOn: 'Hover' };
 
   fieldsResource = { text: 'stepName', value: 'recID' };
-  stepList = [];
   itemView = '';
   vllDynamic = 'DP0271';
   fileNameArr = [];
@@ -120,6 +119,9 @@ export class PopupAddColumnTableComponent implements OnInit, AfterViewInit {
   disable = false;
   vllDateFormat: any;
   adAutoNumber: any;
+  // Tính
+  caculateField = '';
+  arrFieldNum = [];
 
   constructor(
     private changdef: ChangeDetectorRef,
@@ -142,11 +144,17 @@ export class PopupAddColumnTableComponent implements OnInit, AfterViewInit {
     this.titleAction = dt?.data?.titleAction;
     this.grvSetup = dt?.data?.grvSetup;
     this.processNo = dt?.data?.processNo; //de sinh vll
+    this.listColumns = dt?.data?.listColumns;
   }
 
   ngOnInit(): void {
     if (this.column?.dataType == 'L' && this.column?.dataFormat == 'V')
       this.loadDataVll();
+
+    if (this.column?.dataType == 'CF') {
+      this.selectFieldNum();
+      this.caculateField = this.column?.dataFormat ?? '';
+    }
   }
   ngAfterViewInit() {}
 
@@ -183,7 +191,7 @@ export class PopupAddColumnTableComponent implements OnInit, AfterViewInit {
         // this.changeFormVll();
       }
     }
-
+    if (e.field == 'dataType' && e.data == 'CF') this.selectFieldNum();
     this.changdef.detectChanges();
   }
 
@@ -196,10 +204,6 @@ export class PopupAddColumnTableComponent implements OnInit, AfterViewInit {
 
   sliderChange(e) {
     this.column.rank = e?.value;
-  }
-
-  cbxChange(value) {
-    if (value) this.column['stepID'] = value;
   }
 
   removeAccents(str) {
@@ -666,6 +670,10 @@ export class PopupAddColumnTableComponent implements OnInit, AfterViewInit {
   }
 
   saveColumn() {
+    if (this.column.dataType == 'CF') {
+      this.column.dataFormat = this.caculateField;
+    }
+
     if (!this.checkValidate()) return;
     this.dialog.close([this.column, this.processNo]);
   }
@@ -780,11 +788,139 @@ export class PopupAddColumnTableComponent implements OnInit, AfterViewInit {
 
   async getVllFormat() {
     this.vllDateFormat = await firstValueFrom(this.cache.valueList('L0088'));
-    // if (!this.adAutoNumber && this.action != 'add') {
-    //   this.adAutoNumber = await firstValueFrom(
-    //     this.dpService.getADAutoNumberByAutoNoCode(this.column.recID)
-    //   );
-    //   if (this.adAutoNumber) this.setViewAutoNumber(this.adAutoNumber);
-    // }
   }
+
+  //--------------------------------------------------//
+  //--------------CACULATE FIELD----------------------//
+  //--------------------------------------------------//
+
+  operator = ['+', '-', 'x', '/', 'Avg('];
+  accessField = [']'];
+  arrNum = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+  buttonOperator(op) {
+    if (this.caculateField) {
+      let chartLast = this.caculateField[this.caculateField.length - 1];
+      if (chartLast == '(') return;
+      if (op == 'Avg') {
+        if (
+          this.arrNum.includes(chartLast) ||
+          this.accessField.includes(chartLast)
+        ) {
+          return;
+        }
+        op = 'Avg(';
+      }
+      if (this.operator.includes(chartLast))
+        this.caculateField = this.caculateField.substring(
+          0,
+          this.caculateField.length - 1
+        );
+    }
+
+    this.caculateField += op;
+  }
+
+  buttonOpenParenthesis() {
+    if (this.caculateField) {
+      let idxLast = this.caculateField.length - 1;
+      if (
+        this.arrNum.includes(this.caculateField[idxLast]) ||
+        this.caculateField[idxLast] == ')' ||
+        this.caculateField[idxLast] == ','
+      )
+        return;
+    }
+    this.caculateField += '(';
+  }
+
+  buttonCloseParenthesis() {
+    if (this.caculateField) {
+      let idxLast = this.caculateField.length - 1;
+      if (
+        this.operator.includes(this.caculateField[idxLast]) ||
+        this.caculateField[idxLast] == '(' ||
+        this.caculateField[idxLast] == ','
+      )
+        return;
+    }
+    this.caculateField += ')';
+  }
+
+  fieldSelect(fieldName) {
+    if (this.caculateField) {
+      let idxLast = this.caculateField.length - 1;
+      if (
+        this.caculateField[idxLast] == ']' ||
+        this.caculateField[idxLast] == ')' ||
+        this.caculateField[idxLast] == ','
+      )
+        return;
+    }
+    this.caculateField += '[' + fieldName + ']';
+    this.popover.close();
+  }
+
+  delChart() {
+    if (this.caculateField) {
+      let idxLast = this.caculateField.length - 1;
+      if (this.caculateField[idxLast] == ']') {
+        while (
+          this.caculateField?.length == 0 ||
+          this.caculateField[idxLast] != '['
+        ) {
+          this.caculateField = this.caculateField.substring(0, idxLast);
+          idxLast = idxLast - 1;
+        }
+      }
+      //else this.caculateField = this.caculateField.substring(0, idxLast);
+      this.caculateField = this.caculateField.substring(0, idxLast);
+    }
+  }
+  delAll() {
+    this.caculateField = '';
+  }
+  // Num
+  buttonNum(num) {
+    this.caculateField += num;
+  }
+  decimalPoint() {
+    if (!this.caculateField) return;
+    let chartLast = this.caculateField[this.caculateField.length - 1];
+    if (
+      chartLast == ',' ||
+      this.accessField.includes(chartLast) ||
+      this.operator.includes(chartLast)
+    )
+      return;
+    //chua check hết
+    this.caculateField += ',';
+  }
+
+  selectFieldNum() {
+    this.arrFieldNum = [];
+    this.arrFieldNum = this.listColumns
+      .filter((x) => x.dataType == 'N')
+      .map((x) => x.fieldName);
+
+    if (!this.arrFieldNum || this.arrFieldNum?.length == 0)
+      this.notiService.notify(
+        'Bước thực hiện không có trường tùy chỉnh kiểu số !',
+        '3'
+      );
+  }
+
+  popoverSelectField(p) {
+    if (this.arrFieldNum?.length > 0) p.open();
+    this.popover = p;
+    // else
+    //   this.notiService.notify(
+    //     'Bước thực hiện không có trường tùy chỉnh kiểu số !',
+    //     '3'
+    //   );
+  }
+
+  checkCaculateField() {
+    return true;
+  }
+  //-----------------end CACULATE FIELD------------------//
 }

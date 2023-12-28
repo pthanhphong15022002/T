@@ -271,7 +271,7 @@
               <div>
                 <!-- <span> {{ cell?.totalColumns ? 0 : "" }}</span> -->
                 <codx-input
-                  *ngIf="cell.dataType == 'N'"
+                  *ngIf="cell.dataType == 'N' || cell.dataType == 'CF'"
                   type="checkbox"
                   [field]="cell.fieldName"
                   (valueChange)="valueChangeColumns($event)"
