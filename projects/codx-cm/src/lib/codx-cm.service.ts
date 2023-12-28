@@ -526,6 +526,15 @@ export class CodxCmService {
       data
     );
   }
+  updateMoveProcess(data) {
+    return this.api.exec<any>(
+      'DP',
+      'InstancesBusiness',
+      'UpdateMoveProcessReasonAsync',
+      data
+    );
+  }
+
   moveReasonByIdInstance(data) {
     return this.api.exec<any>(
       'DP',

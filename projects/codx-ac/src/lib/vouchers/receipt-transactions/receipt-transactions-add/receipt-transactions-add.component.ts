@@ -209,17 +209,21 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
     this.formVouchers.save(null, 0, '', '', false)
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
-        if(!res) return;
-        if (res || res.save || res.update) {
-          if (res || !res.save.error || !res.update.error) {
-            if (this.eleGridVouchers) {
-              this.eleGridVouchers.saveRow((res:any)=>{ //? save lưới trước
-                if(res){
-                  this.addLine();
-                }
-              })
-              return;
-            }
+        if (!res) return;
+        if (res.hasOwnProperty('save')) {
+          if (res.save.hasOwnProperty('data') && !res.save.data) return;
+        }
+        if (res.hasOwnProperty('update')) {
+          if (res.update.hasOwnProperty('data') && !res.update.data) return;
+        }
+        if (res || !res.save.error || !res.update.error) {
+          if (this.eleGridVouchers) {
+            this.eleGridVouchers.saveRow((res:any)=>{ //? save lưới trước
+              if(res){
+                this.addLine();
+              }
+            })
+            return;
           }
         }
       })
@@ -259,19 +263,21 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
     this.formVouchers.save(null, 0, '', '', false)
     .pipe(takeUntil(this.destroy$))
     .subscribe((res: any) => {
-      if(!res) return;
-      if (res || res.save || res.update) {
-        if (res || !res.save.error || !res.update.error) {
-          if ((this.eleGridVouchers || this.eleGridVouchers?.isEdit)) { //?
-            this.eleGridVouchers.saveRow((res:any)=>{ //? save lưới trước
-              if(res){
-                this.saveVoucher(type);
-              }
-            })
-            return;
-          }    
-        }
+      if (!res) return;
+      if (res.hasOwnProperty('save')) {
+        if (res.save.hasOwnProperty('data') && !res.save.data) return;
       }
+      if (res.hasOwnProperty('update')) {
+        if (res.update.hasOwnProperty('data') && !res.update.data) return;
+      }
+      if ((this.eleGridVouchers || this.eleGridVouchers?.isEdit)) { //?
+        this.eleGridVouchers.saveRow((res:any)=>{ //? save lưới trước
+          if(res){
+            this.saveVoucher(type);
+          }
+        })
+        return;
+      }  
     });
   }
 

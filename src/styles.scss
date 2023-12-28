@@ -4457,3 +4457,10 @@ codx-filter-form ejs-dropdownlist{
     align-items: center;
   }
 } 
+.h-450px.w-300px.dropdown-menu{
+  max-height:calc(100vh - 150px) ;
+}
+
+.card-survey .list.answer codx-input input.e-input.border-0 {
+  border-color: var(--gray-150)!important;
+}

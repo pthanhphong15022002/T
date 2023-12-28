@@ -248,6 +248,15 @@ export class PopupSettingTableComponent implements OnInit, AfterViewInit {
     });
   }
 
+  valueChangeColumns(e) {
+    if (this.listColumns?.length > 0) {
+      this.listColumns.forEach((x) => {
+        if (e.field == x.fieldName && x.dataType == 'N')
+          x.totalColumns = e.data;
+      });
+    }
+  }
+
   //------------------------------------END---------------------------------//
 
   //--------------------------------------------------------------------------//

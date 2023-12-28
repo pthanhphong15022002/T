@@ -1015,7 +1015,7 @@ export class PopupAddSignFileComponent implements OnInit {
       this.esService.notifyInvalid(this.dialogSignFile, this.formModelCustom);
       return;
     }
-    if(this.data.approveControl = '1'){
+    if(this.data.approveControl == '1'){
       this.data.processID == this.data.recID;
       this.dialogSignFile.patchValue({ approveControl: '1', processID:this.data.recID }); 
     }

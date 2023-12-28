@@ -108,7 +108,7 @@ import { TransfersTableComponent } from './share/ac-tableview/transfers-table/tr
 import { AllocationAddComponent } from './vouchers/purchaseinvoices/allocation-add/allocation-add.component';
 import { LayoutNoToolbarComponent } from './_layout-no-toolbar/layout-no-toolbar.component';
 import { AllocationTableComponent } from './share/ac-tableview/allocation-table/allocation-table.component';
-import { SuggestionAdd  } from './share/suggestion-add/suggestion-add.component';
+import { SuggestionAdd } from './share/suggestion-add/suggestion-add.component';
 import { DealsComponent } from 'projects/codx-cm/src/lib/deals/deals.component';
 import { CasesComponent } from 'projects/codx-cm/src/lib/cases/cases.component';
 import { LeadsComponent } from 'projects/codx-cm/src/lib/leads/leads.component';
@@ -116,6 +116,7 @@ import { ViewInstancesComponent } from 'projects/codx-dp/src/lib/view-instances/
 import { CashtransfersComponent } from './vouchers/cashtransfers/cashtransfers.component';
 import { CashtransfersAddComponent } from './vouchers/cashtransfers/cashtransfers-add/cashtransfers-add.component';
 import { RunPeriodicAddComponent } from './periodic/run-periodic/run-periodic-add/run-periodic-add.component';
+import { ContractsComponent } from 'projects/codx-cm/src/lib/contracts/contracts.component';
 export const routes: Routes = [
   {
     path: '',
@@ -282,6 +283,11 @@ export const routes: Routes = [
         data: { noReuse: true },
       },
       {
+        path: 'contracts/:funcID',
+        component: ContractsComponent,
+        data: { noReuse: true },
+      },
+      {
         path: 'instances/:funcID/:processID',
         component: ViewInstancesComponent,
         data: { noReuse: true },
@@ -384,7 +390,7 @@ export const routes: Routes = [
     GroupShareComponent,
     RunPeriodicComponent,
     RunPeriodicAddComponent,
-    SuggestionAdd ,
+    SuggestionAdd,
     ReplacePipe,
     UpdateTheLedgerComponent,
     JournalspermissionEditComponent,

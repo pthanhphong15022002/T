@@ -1,6 +1,6 @@
-import { ChangeDetectorRef, Component, OnInit, Optional } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, Optional, ViewChild } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { DialogData, DialogRef, FormModel, NotificationsService } from 'codx-core';
+import { DialogData, DialogRef, FormModel, ImageViewerComponent, NotificationsService } from 'codx-core';
 import { CodxShareService } from '../../../codx-share.service';
 import { CodxEsService } from 'projects/codx-es/src/lib/codx-es.service';
 
@@ -10,6 +10,8 @@ import { CodxEsService } from 'projects/codx-es/src/lib/codx-es.service';
   styleUrls: ['./popup-add-person-signer.component.scss'],
 })
 export class PopupAddPersonSignerComponent implements OnInit {
+  @ViewChild('imgSignature2') imgSignature2: ImageViewerComponent;
+  @ViewChild('imgSignature1') imgSignature1: ImageViewerComponent;
   fgroupApprover: FormGroup;
   formModel: FormModel;
   dialog: DialogRef;
@@ -105,8 +107,24 @@ export class PopupAddPersonSignerComponent implements OnInit {
         this.currSignature.category = "1";
         this.currSignature.signatureType = this.data.signatureType;
         
-        this.esService.addEditSignature(this.currSignature,this.isNewSignature).subscribe(res=>{
-          if(res){
+        this.esService.addEditSignature(this.currSignature,this.isNewSignature).subscribe((signature:any)=>{
+          if(signature){
+            if (this.imgSignature1?.imageUpload?.item) {
+              this.imgSignature1
+                .updateFileDirectReload(signature.recID)
+                .subscribe((result) => {
+                  if (result) {                    
+                  }
+                });
+            }
+            if (this.imgSignature2?.imageUpload?.item) {
+              this.imgSignature2
+                .updateFileDirectReload(signature.recID)
+                .subscribe((result) => {
+                  if (result) {                    
+                  }
+                });
+            }
             let lstExisted = this.lstApprover.filter(
               (p) => p.email == this.data?.email
             );

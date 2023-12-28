@@ -31,6 +31,7 @@ import { CasesComponent } from 'projects/codx-cm/src/lib/cases/cases.component';
 import { LeadsComponent } from 'projects/codx-cm/src/lib/leads/leads.component';
 import { ViewInstancesComponent } from 'projects/codx-dp/src/lib/view-instances/view-instances.component';
 import { FormatDatePipe } from './pipes/format-date.pipe';
+import { ContractsComponent } from 'projects/codx-cm/src/lib/contracts/contracts.component';
 
 var routes: Routes = [
   {
@@ -56,6 +57,11 @@ var routes: Routes = [
       {
         path: 'cases/:funcID',
         component: CasesComponent,
+        data: { noReuse: true },
+      },
+      {
+        path: 'contracts/:funcID',
+        component: ContractsComponent,
         data: { noReuse: true },
       },
       {
@@ -88,7 +94,7 @@ var routes: Routes = [
     ViewTabPartsComponent,
     ImportpartsComponent,
     PopupDetailImportPartsComponent,
-    FormatDatePipe
+    FormatDatePipe,
   ],
   imports: [
     CodxCoreModule.forRoot({ environment }),

@@ -140,6 +140,7 @@ export class PopupAddCardsComponent implements OnInit {
   showLabelAttachment = false;
   type = 'add';
   reduceCoCoins = 0;
+  cointsError = "";
 
   constructor(
     private api: ApiHttpService,
@@ -531,15 +532,18 @@ export class PopupAddCardsComponent implements OnInit {
         }
         break;
       case 'coins':
+        this.cointsError = "";
         if (data) {
           if (this.parameter.MaxPointPerOnceControl === '1') {
             if (data > this.parameter.MaxPointPerOnce) {
-              this.notifySV.notify(
-                'Vượt quá số xu cho phép tặng trong 1 lần',
-                '3'
-              );
-              data = this.givePoint;
-              this.form.patchValue({ coins: this.givePoint });
+              this.cointsError = "Vượt quá số xu cho phép tặng trong 1 lần";
+              return;
+              // this.notifySV.notify(
+              //   'Vượt quá số xu cho phép tặng trong 1 lần',
+              //   '3'
+              // );
+              // data = this.givePoint;
+              // this.form.patchValue({ coins: this.givePoint });
             }
           }
           if (data && this.parameter.MaxPointControl === '1') {
@@ -559,15 +563,20 @@ export class PopupAddCardsComponent implements OnInit {
                 break;
             }
             if (this.reduceCoCoins + data > this.parameter.MaxPoints) {
-              this.notifySV.notify(
-                'Vượt quá số xu cho phép tặng: ' +
-                  this.parameter.MaxPoints +
-                  ' xu/' +
-                  unitName,
-                '3'
-              );
-              data = this.givePoint;
-              this.form.patchValue({ coins: this.givePoint });
+              this.cointsError = "Vượt quá số xu cho phép tặng: " +
+                this.parameter.MaxPoints +
+                ' xu/' +
+                unitName;
+              return;
+              // this.notifySV.notify(
+              //   'Vượt quá số xu cho phép tặng: ' +
+              //     this.parameter.MaxPoints +
+              //     ' xu/' +
+              //     unitName,
+              //   '3'
+              // );
+              // data = this.givePoint;
+              // this.form.patchValue({ coins: this.givePoint });
             }
           }
           this.givePoint = data;

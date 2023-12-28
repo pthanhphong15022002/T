@@ -786,6 +786,7 @@ export class CM_Contracts {
   objectName: string; //Tên đối tượng
   contactID: string; //Liên hệ
   customerID: string; //Khách hàng
+  customerName: string; //Khách hàng
   currencyID: string; //Tiền tệ
   exchangeRate: number; //Tỷ giá hối đoái
   contractAmt: number; //Giá trị hợp đồng
@@ -874,17 +875,5 @@ export class CM_Contracts {
   debtClosingOn: Date;
   disposalOn: Date; //Ngày thanh lý
   disposalCmt: Date; //Ngày thanh lý
-}
-
-export class AM_Realties{
-  recID: string;
-  contractID: string;
-  assetID: string;
-  usableArea: number;
-  extendInfo: string;
-
-  salesPrice: number;
-  effectiveSalePrice: number;
-  serviceFee: number;
-  effectiveServiceFee: number;
+  displayed: boolean; //Ngày thanh lý
 }

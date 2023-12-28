@@ -269,7 +269,14 @@
           <ng-container *ngFor="let cell of listColumns">
             <td class="ps-4">
               <div>
-                <span> {{ cell?.totalColumns ? 0 : "" }}</span>
+                <!-- <span> {{ cell?.totalColumns ? 0 : "" }}</span> -->
+                <codx-input
+                  *ngIf="cell.dataType == 'N'"
+                  type="checkbox"
+                  [field]="cell.fieldName"
+                  (valueChange)="valueChangeColumns($event)"
+                  [crrValue]="cell?.totalColumns"
+                ></codx-input>
               </div>
             </td>
           </ng-container>

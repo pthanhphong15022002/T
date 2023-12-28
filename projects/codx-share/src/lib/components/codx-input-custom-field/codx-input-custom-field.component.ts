@@ -128,6 +128,7 @@ export class CodxInputCustomFieldComponent implements OnInit {
   fieldCurrent = '';
   valueF = 'no';
   valueT = 'yes';
+  dataValueCaculate = '';
 
   constructor(
     private cache: CacheService,
@@ -283,6 +284,13 @@ export class CodxInputCustomFieldComponent implements OnInit {
       case 'AT':
         if (this.customField.dataValue || !this.isAdd) return;
         this.getAutoNumberSetting();
+        break;
+      case 'CF':
+        if (
+          this.customField.dataValue &&
+          !this.isExitOperator(this.customField.dataValue)
+        )
+          this.dataValueCaculate = this.customField.dataValue;
         break;
     }
   }
@@ -939,4 +947,21 @@ export class CodxInputCustomFieldComponent implements OnInit {
       });
   }
   //-------------END-----------------//
+
+  //----------------Tính toán---------------------//
+  arrCheck = ['+', '-', 'x', '/', 'Avg(', '(', ')'];
+  isExitOperator(string) {
+    var check = false;
+    this.arrCheck.forEach((op, idx) => {
+      if (string.includes(op)) {
+        check = true;
+        if (idx == 0 && op == '-') {
+          check = false;
+        }
+        if (check) return;
+      }
+    });
+    return check;
+  }
+  //----------------------------------------------//
 }

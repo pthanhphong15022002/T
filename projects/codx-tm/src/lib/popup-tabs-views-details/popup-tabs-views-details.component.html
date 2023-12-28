@@ -155,6 +155,8 @@
                 [showButtonAdd]="showButtonAdd"
                 [showMoreFunc]="showMoreFunc"
                 [funcID]="'TMT03011'"
+                [hideSearchFav]="true"
+                [viewMode]="viewMode"
                 (resourceNew)="addNewResource($event)"
               >
               </codx-tasks-share>
@@ -236,6 +238,8 @@
     [refType]="'CO_Meetings'"
     [sessionID]="data.meetingID"
     [isResourceAssignSession]="true"
+    [hideSearchFav]="true"
+    [viewMode]="viewMode"
   ></codx-tasks-share>
 </ng-template>
 
@@ -247,5 +251,7 @@
     [refType]="'TM_Sprints'"
     [sessionID]="data.iterationID"
     [showButtonAdd]="true"
+    [hideSearchFav]="true"
+    [viewMode]="viewMode"
   ></codx-tasks-share>
 </ng-template>
