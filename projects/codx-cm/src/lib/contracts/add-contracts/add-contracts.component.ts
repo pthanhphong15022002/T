@@ -33,7 +33,7 @@ import {
   NotificationsService,
 } from 'codx-core';
 import { CodxCmService } from '../../codx-cm.service';
-import { Subject, firstValueFrom, takeUntil } from 'rxjs';
+import { Observable, Subject, firstValueFrom, takeUntil } from 'rxjs';
 import { ContractsService } from '../service-contracts.service';
 import { StepService } from 'projects/codx-share/src/lib/components/codx-step/step.service';
 import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
@@ -386,6 +386,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
           this.contracts.parentID = this.contracts?.recID;
           this.contracts.recID = Util.uid();
           this.contracts.status = '1';
+          this.contracts.useType = '5';
         }
         if(this.contracts?.applyProcess && this.contracts.processID){
           this.getListInstanceSteps(this.contracts.processID);
@@ -641,6 +642,18 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
         this.disabledDelActualDate =
           event?.data == '0' || event?.data == '1' ? true : false;
         break;
+      case 'contractType':
+        if(event?.component?.itemsSelected[0]){
+          let autoNumber = event?.component?.itemsSelected[0]?.AutoNumber
+          if(autoNumber){
+            this.getADAutoNumberByAutoNoCode(autoNumber).subscribe(res => {
+              if(res){
+                this.contracts.contractID = res;
+              }
+            })
+          }
+        }
+        break;
       case 'businessLineID':
         if (event?.field == 'businessLineID' && event?.data) {
           let processID = event?.component?.itemsSelected
@@ -650,7 +663,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
           if (processID) {
             this.contracts.processID = processID;
             this.contracts.applyProcess = true;
-            this.GetProcessNoByProcessID(processID);
+            // this.GetProcessNoByProcessID(processID);
             this.disabledShowInput = true;
             this.getListInstanceSteps(processID);
           } else {
@@ -673,6 +686,16 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
     }
     this.form.formGroup.patchValue(this.contracts);
   }
+
+  getADAutoNumberByAutoNoCode(autoNoCode): Observable<any> {
+    return this.api.exec<any>(
+      'ERM.Business.AD',
+      'AutoNumbersBusiness',
+      'CreateAutoNumberAsync',
+      [autoNoCode, null, true, null]
+    );
+  }
+
 
   getContactByCustomerID(customerID) {
     this.contractService

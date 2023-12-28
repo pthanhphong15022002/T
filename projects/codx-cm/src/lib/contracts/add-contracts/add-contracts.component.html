@@ -315,6 +315,7 @@
         field="useType"
         [crrValue]="contracts?.useType"
         (valueChange)="valueChangeCombobox($event)"
+        [disabled]="action == 'extend'"
       >
       </codx-input>
     </div>
@@ -348,7 +349,7 @@
         [formModel]="form?.formModel"
         [crrValue]="contracts?.customerID"
         (valueChange)="valueChangeCombobox($event)"
-        [disabled]="type == 'deal' || type == 'quotation' || type == 'customer'"
+        [disabled]="type == 'deal' || type == 'quotation' || type == 'customer' || action == 'extend'"
       >
       </codx-input>
     </div>
