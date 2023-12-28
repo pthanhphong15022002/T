@@ -321,12 +321,6 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
         this.contracts.applyProcess = false;
         this.contracts.displayed = true;
         this.contracts.currencyID = this.currencyIDDefault;
-        this.contracts.pmtStatus = this.contracts.pmtStatus
-          ? this.contracts.pmtStatus
-          : '0';
-        this.contracts.contractType = this.contracts.contractType
-          ? this.contracts.contractType
-          : '1';
         this.loadExchangeRate(this.contracts.currencyID);
         this.setContractByDataOutput();
         this.getAutoNumber();
@@ -649,6 +643,8 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
             this.getADAutoNumberByAutoNoCode(autoNumber).subscribe(res => {
               if(res){
                 this.contracts.contractID = res;
+              }else{
+                this.contracts.contractID = this.autoNumber;
               }
             })
           }
