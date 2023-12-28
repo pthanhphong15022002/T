@@ -173,14 +173,12 @@ export class PopupCustomFieldComponent implements OnInit {
     this.arrCaculateField.forEach((obj) => {
       let dataFormat = obj.dataFormat;
       fieldsNum.forEach((f) => {
-        if (
-          dataFormat.includes('[' + f.fieldName + ']') &&
-          f.dataValue &&
-          f.dataType == 'N'
-        ) {
+        if (dataFormat.includes('[' + f.fieldName + ']') && f.dataValue) {
+          let dataValue = f.dataValue;
+          if (f.dataFormat == 'P') dataValue = dataValue + '/100';
           dataFormat = dataFormat.replaceAll(
             '[' + f.fieldName + ']',
-            f.dataValue
+            dataValue
           );
         }
       });

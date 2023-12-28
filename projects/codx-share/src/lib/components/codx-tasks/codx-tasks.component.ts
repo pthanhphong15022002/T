@@ -87,6 +87,7 @@ export class CodxTasksComponent
   @Input() className = 'TaskBusiness';
   @Input() method = 'GetTasksAsync';
   @Input() hideSearchFav = false; //ẩn/hiện seach fav trên toolbar
+  @Input() viewMode: any;
 
   @ViewChild('panelRight') panelRight?: TemplateRef<any>;
   @ViewChild('itemTemplate') itemTemplate!: TemplateRef<any>;
@@ -169,7 +170,7 @@ export class CodxTasksComponent
   dataTree = [];
   listDataTree = [];
   iterationID: any;
-  viewMode: any;
+  // viewMode: any;
   projectID?: any;
   listViewModel = [];
   dataReferences = [];
@@ -237,7 +238,8 @@ export class CodxTasksComponent
       this.funcID = this.activedRouter.snapshot.params['funcID'];
     this.crrFuncID = this.funcID;
     this.projectID = this.dataObj?.projectID;
-    this.viewMode = this.dataObj?.viewMode;
+    //tắt vì có input rồi
+    // this.viewMode = this.dataObj?.viewMode;
 
     //them prdicate vao loc
     if (this.predicate && this.dataValue) {

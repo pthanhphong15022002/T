@@ -947,7 +947,8 @@ export class CodxInputCustomFieldComponent implements OnInit {
       });
   }
   //-------------END-----------------//
-  //-------Tính toán-------------//
+
+  //----------------Tính toán---------------------//
   arrCheck = ['+', '-', 'x', '/', 'Avg(', '(', ')'];
   isExitOperator(string) {
     var check = false;
@@ -962,5 +963,5 @@ export class CodxInputCustomFieldComponent implements OnInit {
     });
     return check;
   }
-  //-----------------------------//
+  //----------------------------------------------//
 }
