@@ -639,6 +639,7 @@
       type="button"
       class="btn btn-icon btn-sm btn-light-primary me-2 cursor-pointer"
       [disabled]="true"
+      [ngbTooltip]="note"
     >
       <!-- (click)="buttonOperator('Avg')" -->
       {{ "Avg()" }}
@@ -646,18 +647,24 @@
     <button
       type="button"
       class="btn btn-icon btn-sm btn-light-primary me-2 cursor-pointer"
-      (click)="buttonOpenParenthesis()"
+      [disabled]="true"
+      [ngbTooltip]="note"
     >
+      <!-- (click)="buttonOpenParenthesis()" -->
       {{ "(" }}
     </button>
     <button
       type="button"
       class="btn btn-icon btn-sm btn-light-primary me-2 cursor-pointer"
-      (click)="buttonCloseParenthesis()"
+      [disabled]="true"
+      [ngbTooltip]="note"
     >
+      <!-- (click)="buttonCloseParenthesis()" -->
       {{ ")" }}
     </button>
-
+    <ng-template #note>{{
+      "Chưa phát triển tính năng này ! Ưu tiên sau ^^!"
+    }}</ng-template>
     <button
       type="button"
       class="btn btn-icon btn-sm btn-light-primary me-2 cursor-pointer"
