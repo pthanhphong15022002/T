@@ -1,11 +1,15 @@
 import { Injectable } from '@angular/core';
+import { CacheService, NotificationsService } from 'codx-core';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CustomFieldService {
   point = '';
-  constructor() {}
+  constructor(
+    private cache: CacheService,
+    private notiService: NotificationsService
+  ) {}
   //----------------------CACULATE---------------------------//
   arrCheck = ['+', '-', 'x', '/', 'Avg(', '(', ')'];
   parenthesis = ['(', ')'];
@@ -162,4 +166,36 @@ export class CustomFieldService {
     return sum / arr.length;
   }
   //------------------END_CACULATE--------------------//
+
+  //----------------CheckFormat----------------------//  => chưa gom
+  checkFormat(field) {
+    if (field.dataType == 'T') {
+      if (field.dataFormat == 'E') {
+        var validEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+        if (!field.dataValue.toLowerCase().match(validEmail)) {
+          this.cache.message('SYS037').subscribe((res) => {
+            if (res) {
+              var errorMessage = res.customName || res.defaultName;
+              this.notiService.notify(errorMessage, '2');
+            }
+          });
+          return false;
+        }
+      }
+      if (field.dataFormat == 'P') {
+        var validPhone = /(((09|03|07|08|05)+([0-9]{8})|(01+([0-9]{9})))\b)/;
+        if (!field.dataValue.toLowerCase().match(validPhone)) {
+          this.cache.message('RS030').subscribe((res) => {
+            if (res) {
+              var errorMessage = res.customName || res.defaultName;
+              this.notiService.notify(errorMessage, '2');
+            }
+          });
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+  //--------------------------------------------------//
 }

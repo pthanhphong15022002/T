@@ -157,7 +157,6 @@ export class PopupAddLineTableComponent implements OnInit {
 
       if (!dataFormat.includes('[')) {
         //tinh toán
-        // obj.dataValue = this.caculate(dataFormat);
         obj.dataValue = this.customFieldSV.caculate(dataFormat, this.point);
         //tính toan end
         let index = this.fieldFormat.findIndex((x) => x.recID == obj.recID);

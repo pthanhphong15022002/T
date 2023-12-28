@@ -161,12 +161,6 @@ export class PopupCustomFieldComponent implements OnInit {
   }
 
   //----------------------CACULATE---------------------------//
-  arrCheck = ['+', '-', 'x', '/', 'Avg(', '(', ')'];
-  parenthesis = ['(', ')'];
-  operator = ['+', '-', 'x', '/', 'Avg('];
-  operatorAddMinus = ['+', '-'];
-  operatorMulDiv = ['x', '/'];
-  //tính toán
   caculateField() {
     if (!this.arrCaculateField || this.arrCaculateField?.length == 0) return;
     let fieldsNum = this.fields.filter((x) => x.dataType == 'N');
@@ -189,7 +183,6 @@ export class PopupCustomFieldComponent implements OnInit {
         //tinh toán
         // obj.dataValue = this.caculate(dataFormat);
         obj.dataValue = this.customFieldSV.caculate(dataFormat, this.point);
-
         //tính toan end
         let index = this.fields.findIndex((x) => x.recID == obj.recID);
         if (index != -1) {
@@ -198,7 +191,24 @@ export class PopupCustomFieldComponent implements OnInit {
       }
     });
   }
-
+  decimalPointSeparation() {
+    const string1 = '1,23'; //parFloat
+    const string2 = '1.23';
+    const result = Number.parseFloat(string1) - Number.parseFloat(string2);
+    if (result > 0) {
+      //'Dấu , phân tách phần thập phân 1,234 - 1'
+      this.point = ',';
+    } else {
+      //'Dấu . phân tách phần thập phân 1-1.23'
+      this.point = '.';
+    }
+  }
+  //đã đưa vào chung trong service
+  // arrCheck = ['+', '-', 'x', '/', 'Avg(', '(', ')'];
+  // parenthesis = ['(', ')'];
+  // operator = ['+', '-', 'x', '/', 'Avg('];
+  // operatorAddMinus = ['+', '-'];
+  // operatorMulDiv = ['x', '/'];
   // caculate(stringMath) {
   //   if (stringMath.includes('_')) return stringMath;
   //   if (this.isExitOperator(this.arrCheck, stringMath)) {
@@ -328,23 +338,6 @@ export class PopupCustomFieldComponent implements OnInit {
   //   return num;
   // }
   //Decimal point separation
-  decimalPointSeparation() {
-    const string1 = '1,23'; //parFloat
-    const string2 = '1.23';
-    const result = Number.parseFloat(string1) - Number.parseFloat(string2);
-    if (result > 0) {
-      //'Dấu , phân tách phần thập phân 1,234 - 1'
-      this.point = ',';
-    } else {
-      //'Dấu . phân tách phần thập phân 1-1.23'
-      this.point = '.';
-    }
-  }
 
-  // agv(arr: Array<number>) {
-  //   let sum = 0;
-  //   arr.forEach((n) => (sum += n));
-  //   return sum / arr.length;
-  // }
   //------------------END_CACULATE--------------------//
 }
