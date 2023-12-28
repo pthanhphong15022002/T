@@ -1232,8 +1232,6 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     }
   }
 
-
-
   changeTaskAdd(task, progressGroup, progressStep, isCreateMeeting) {
     if (task) {
       let groupData = this.currentStep?.taskGroups.find((group) =>
@@ -1360,7 +1358,9 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
               this.changeTaskEdit(res, res?.taskGroupID);
             }
           });
-      } else {
+      } else if (task?.taskType == 'E'){
+        this.handelMail(task, 'edit')
+      }  else {
         let groupIdOld = task?.taskGroupID;
         this.taskType = this.listTaskType.find(
           (type) => type.value == task?.taskType
@@ -1443,6 +1443,8 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
               this.changeTaskAdd(res[0], res[1], res[2], false);
             }
           });
+      }else if (task?.taskType == 'E') {
+        this.handelMail(task, 'copy');
       } else {
         this.taskType = this.listTaskType.find(
           (type) => type.value == task?.taskType
@@ -3211,7 +3213,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
 
   //export Form Nhập liệu
 
-  sendMail(task,isAddNew) {
+  sendMail(task,group) {
     let data = {
       dialog: null,
       formGroup: null,
@@ -3220,7 +3222,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       showIsPublish: true,
       showSendLater: true,
       files: null,
-      isAddNew: isAddNew,
+      isAddNew: false,
     };
 
     let popEmail = this.callfc.openForm(
@@ -3232,22 +3234,24 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       data
     );
     popEmail.closed.subscribe((res) => {
-      if (res && res?.event) {
+      if (res?.event?.isSendMail && task?.status == "1") {
+        this.startTask(task,group)
       }
     })
   }
 
   handelMail(stepsTasks: DP_Instances_Steps_Tasks, action) {
+    let task = stepsTasks ? stepsTasks : new DP_Instances_Steps_Tasks();
     let data = {
       formGroup: null,
-      templateID: stepsTasks['reference'],
+      templateID: task?.reference || null,
       showIsTemplate: true,
       showIsPublish: true,
       showSendLater: true,
       files: null,
       isAddNew: action == "edit" ? false : true,
-      saveIsTemplate: action == "edit" ? false : true,
-      notSendMail: true,
+      saveIsTemplate: action == "edit" || this.isStart ? false : true,
+      notSendMail: this.isStart ? false : true,
     };
 
     let popEmail = this.callfc.openForm(
@@ -3262,26 +3266,38 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       if (res && res?.event) {
         let mail = res?.event;
         if (action === 'add' || action === 'copy') {
-          stepsTasks = new DP_Instances_Steps_Tasks();
-          stepsTasks.refID = Util.uid();
-          stepsTasks.status = '1';
-          stepsTasks.taskName = this.taskType?.text;
-          stepsTasks.taskType = this.taskType?.value;
-          stepsTasks.approveStatus = '1';
-          stepsTasks.dependRule = '0';
-          stepsTasks.isTaskDefault = false;
-          stepsTasks.progress = 0;
-          stepsTasks.assigned = '0';
-          stepsTasks.stepID = this.currentStep?.recID;
-          stepsTasks.approveStatus = '1';
-          this.setRole(stepsTasks);
-          stepsTasks.taskName = mail?.subject || stepsTasks.taskName;
-          stepsTasks.reference = mail?.recID;
-          stepsTasks.memo = mail?.message;
-          stepsTasks.taskType = "E";
+          task.refID = Util.uid();
+          task.status = '1';
+          task.progress = 0;
+          task.assigned = '0';
+          task.dependRule = '0';
+          task.approveStatus = '1';
+          task.approveStatus = '1';
+          task.isTaskDefault = false;
+          task.taskType = "E";
+          task.stepID = this.currentStep?.recID;
+          task.taskName = mail?.subject || this.taskType?.text;
+          task.durationDay = 1;
+          task.reference = mail?.recID;
+          task.memo = mail?.message;
+          task.indexNo = this.currentStep?.tasks.length + 1;
+          if(this.isStart){
+            if(mail?.isSendMail){
+              task.actualEnd =  new Date();
+              task.status = "3";
+              task.progress = 100;
+            }else{
+              task.startDate = new Date();
+              task.endDate = new Date();
+              task.endDate.setDate(task.startDate.getDate() + 1);
+              task.status = "1";
+              task.progress = 0;
+            }
+          }
+          this.setRole(task);
           this.api
           .exec<any>('DP', 'InstancesStepsBusiness', 'AddTaskStepAsync', [
-            stepsTasks,
+            task,
           ])
           .subscribe((res) => {
             if (res) {
@@ -3289,9 +3305,17 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
             }
           });
         } else {
-          stepsTasks.taskName = mail?.subject || "Email";
-          stepsTasks.memo = mail?.message;
-          
+          task.taskName = mail?.subject || "Email";
+          task.memo = mail?.message;
+          this.api
+          .exec<any>('DP', 'InstancesStepsBusiness', 'UpdateTaskStepAsync', [
+            task,
+          ])
+          .subscribe((res) => {
+            if (res) {
+              this.changeTaskEdit(res, res?.taskGroupID);
+            }
+          });
         }
         this.changeDetectorRef.markForCheck();
       }

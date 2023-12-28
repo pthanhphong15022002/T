@@ -279,7 +279,7 @@
                             }"
                           ></ng-container>
                         </div>
-                        <div class="d-flex align-items-center justify-content-end step-task-right" [ngStyle]="{ width: widthTask }" style="min-width: 340px;">
+                        <div class="d-flex align-items-center justify-content-end step-task-right">
                           <ng-container
                             *ngIf="
                               task?.approveRule &&
@@ -729,10 +729,10 @@
       ></codx-label>
     </button> -->
     <button
-      *ngIf="data?.task?.taskType == 'E'"
+      *ngIf="data?.task?.taskType == 'E' && data?.task?.status != '3'"
       type="button"
       class="btn btn-outline-primary btn-sm"
-      (click)="sendMail(data?.task,true)"
+      (click)="sendMail(data?.task, data?.group)"
     >
       <codx-label
         class="text-nowrap"

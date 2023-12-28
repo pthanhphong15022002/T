@@ -3541,8 +3541,6 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
     );
     popEmail.closed.subscribe((res) => {
       if (res && res?.event) {
-        // this.stepsTasks['reference'] = res.event?.recID ? res.event?.recID : '';
-        // this.isNewEmails = this.recIdEmail ? true : false;
         let mail = res?.event;
         if (action === 'add' || action === 'copy') {
           stepsTasks.taskName = mail?.subject || "Email";
@@ -3559,6 +3557,8 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
           role.roleType = "O";
           role.taskID =  stepsTasks?.recID;
           stepsTasks.roles = [role];
+          stepsTasks.owner = role.objectID; 
+          stepsTasks.indexNo = this.step?.tasks.length + 1;
           this.addTask(stepsTasks);
         } else {
           stepsTasks.taskName = mail?.subject || "Email";

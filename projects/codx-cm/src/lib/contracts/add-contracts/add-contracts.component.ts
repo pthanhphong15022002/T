@@ -49,7 +49,6 @@ import { CodxListContactsComponent } from '../../cmcustomer/cmcustomer-detail/co
 export class AddContractsComponent implements OnInit, AfterViewInit {
   @ViewChild('task') task: TemplateRef<any>;
   @ViewChild('form') form: CodxFormComponent;
-  @ViewChild('extend') extend: TemplateRef<any>;
   @ViewChild('reference') reference: TemplateRef<any>;
   @ViewChild('information') information: TemplateRef<any>;
   @ViewChild('fieldTemp') fieldTemp: TemplateRef<any>;
@@ -275,7 +274,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
   }
 
   async ngAfterViewInit() {
-    this.tabContent = [this.information, this.reference, this.extend];
+    this.tabContent = [this.information, this.reference];
     if (this.type == 'task') {
       this.tabInfo.push({
         icon: 'icon-more',
@@ -1504,7 +1503,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
   }
 
   addInstance() {
-    if (this.type == 'contract') {
+    if (this.type == 'contract' || this.type == 'task') {
       let data = [this.instance, this.listInstanceSteps, this.oldIdInstance];
       this.cmService.addInstance(data).subscribe((instance) => {
         if (instance) {
@@ -1586,9 +1585,10 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
           }
           this.changeDetectorRef.markForCheck();
         });
-    } else if (this.type == 'DP') {
+    } else if (this.type == 'DP' || this.type == 'task') {
       this.cmService.addContracts([this.contracts]).subscribe((res) => {
         if (res) {
+          this.dialog.close({ contract: res, action: this.action });
         }
       });
     } else {
@@ -1596,7 +1596,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
         .addContracts([this.contracts, this.listPaymentAdd])
         .subscribe((res) => {
           if (res) {
-            this.dialog.close({ contract: res, action: this.action });
+            
           }
         });
     }
