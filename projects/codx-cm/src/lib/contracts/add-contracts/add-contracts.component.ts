@@ -411,6 +411,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
       this.customer = customer;
       this.customerID = { customerID: customer?.recID };
       this.contracts.customerID = customer?.recID;
+      this.contracts.customerName = customer?.customerName;
       this.contracts.taxCode = customer?.taxCode;
       this.contracts.address = customer?.address;
       this.contracts.phone = customer?.phone;
@@ -614,10 +615,14 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
         this.inputDeal.ComponentCurrent.dataService.data = [];
         this.inputDeal.model = { customerID: this.contracts.customerID };
 
-        this.contracts.quotationID = null;
-        this.inputQuotation.crrValue = null;
-        this.inputQuotation.ComponentCurrent.dataService.data = [];
-        this.inputQuotation.model = { customerID: this.contracts.customerID };
+        // this.contracts.quotationID = null;
+        // this.inputQuotation.crrValue = null;
+        // this.inputQuotation.ComponentCurrent.dataService.data = [];
+        // this.inputQuotation.model = { customerID: this.contracts.customerID };
+        if(event?.component?.itemsSelected[0]){
+          let customerName = event?.component?.itemsSelected[0]?.CustomerName
+          this.contracts.customerName = customerName;
+        }
         break;
       case 'dealID':
         if (!this.contracts.customerID && this.contracts?.dealID) {
@@ -1596,7 +1601,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
 
   convertDataInstance(contract: CM_Contracts, instance: tmpInstances) {
     this.oldIdInstance = this.contracts?.refID; 
-    this.contracts.refID = Util.uid();
+    // this.contracts.refID = Util.uid();
     if (this.action === 'edit') {
       instance.recID = contract.refID;
     }

@@ -786,6 +786,7 @@ export class CM_Contracts {
   objectName: string; //Tên đối tượng
   contactID: string; //Liên hệ
   customerID: string; //Khách hàng
+  customerName: string; //Khách hàng
   currencyID: string; //Tiền tệ
   exchangeRate: number; //Tỷ giá hối đoái
   contractAmt: number; //Giá trị hợp đồng
