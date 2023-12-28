@@ -46,7 +46,7 @@ export class PopupCustomFieldComponent implements OnInit {
     this.customerID = dt?.data?.customerID;
     this.dialog = dialog;
     this.arrCaculateField = this.fields.filter((x) => x.dataType == 'CF');
-    if (this.arrCaculateField?.length > 0) this.decimalPointSeparation();
+    // if (this.arrCaculateField?.length > 0) this.decimalPointSeparation();
   }
 
   ngOnInit(): void {
@@ -182,7 +182,7 @@ export class PopupCustomFieldComponent implements OnInit {
       if (!dataFormat.includes('[')) {
         //tinh toán
         // obj.dataValue = this.caculate(dataFormat);
-        obj.dataValue = this.customFieldSV.caculate(dataFormat, this.point);
+        obj.dataValue = this.customFieldSV.caculate(dataFormat);
         //tính toan end
         let index = this.fields.findIndex((x) => x.recID == obj.recID);
         if (index != -1) {
@@ -191,18 +191,18 @@ export class PopupCustomFieldComponent implements OnInit {
       }
     });
   }
-  decimalPointSeparation() {
-    const string1 = '1,23'; //parFloat
-    const string2 = '1.23';
-    const result = Number.parseFloat(string1) - Number.parseFloat(string2);
-    if (result > 0) {
-      //'Dấu , phân tách phần thập phân 1,234 - 1'
-      this.point = ',';
-    } else {
-      //'Dấu . phân tách phần thập phân 1-1.23'
-      this.point = '.';
-    }
-  }
+  // decimalPointSeparation() {
+  //   const string1 = '1,23'; //parFloat
+  //   const string2 = '1.23';
+  //   const result = Number.parseFloat(string1) - Number.parseFloat(string2);
+  //   if (result > 0) {
+  //     //'Dấu , phân tách phần thập phân 1,234 - 1'
+  //     this.point = ',';
+  //   } else {
+  //     //'Dấu . phân tách phần thập phân 1-1.23'
+  //     this.point = '.';
+  //   }
+  // }
   //đã đưa vào chung trong service
   // arrCheck = ['+', '-', 'x', '/', 'Avg(', '(', ')'];
   // parenthesis = ['(', ')'];
