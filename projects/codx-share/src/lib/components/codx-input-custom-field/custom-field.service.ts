@@ -17,12 +17,14 @@ export class CustomFieldService {
   operatorAddMinus = ['+', '-'];
   operatorMulDiv = ['x', '/'];
   //chung all
-  caculate(stringMath, point) {
-    this.point = point;
+  caculate(stringMath) {
+    if(this.point) this.decimalPointSeparation()
     if (stringMath.includes('_')) return stringMath;
     if (this.isExitOperator(this.arrCheck, stringMath)) {
       if (this.isExitOperator(this.parenthesis, stringMath)) {
-        //có ngoặc => chưa làm
+        //có ngoặc 
+        stringMath = this.caculate(this.operatorParentheses(stringMath))
+
       } else if (this.isExitOperator(this.operator, stringMath)) {
         //chi la phep toan
         if (this.isExitOperator(this.operatorMulDiv, stringMath)) {
@@ -158,6 +160,17 @@ export class CustomFieldService {
       //'Dấu . phân tách phần thập phân 1-1.23'
       this.point = '.';
     }
+  }
+
+  //toán tử trong dấu ngoặc đơn
+  operatorParentheses(stringMath) {
+    let lastIndexOpen = stringMath.lastIndexOf("(") ;
+    let indexClose = stringMath.lastIndexOf(")") ;
+    if(indexClose > lastIndexOpen){
+      let stringReturn = this.caculate(stringMath.substring(lastIndexOpen+1,indexClose-1))
+      stringMath = stringMath.substring(0,lastIndexOpen) + stringReturn+ stringMath.substring(indexClose+1,stringMath.length)
+    }
+    return stringMath
   }
 
   agv(arr: Array<number>) {
