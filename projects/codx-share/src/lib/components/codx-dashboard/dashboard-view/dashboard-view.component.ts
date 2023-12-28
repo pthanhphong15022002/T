@@ -27,7 +27,7 @@ import { CodxReportService } from 'projects/codx-report/src/public-api';
 @Component({
   selector: 'dashboard-view',
   templateUrl: './dashboard-view.component.html',
-  styleUrls: ['./dashboard-view.component.scss'],
+  styleUrls: ['./dashboard-view.component.scss']
 })
 export class CodxDashboardViewsComponent
   extends UIComponent
