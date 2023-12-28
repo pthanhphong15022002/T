@@ -727,6 +727,13 @@ export class ContractsComponent extends UIComponent {
       data,
       option
     );
+    popupContract.closed.subscribe((res) => {
+      if(res?.event && action == "extend"){
+        this.view.dataService.remove(contract).subscribe();
+        this.view.currentView['schedule'].refresh();
+        this.detectorRef.detectChanges();
+      }
+    })
   }
 
   getAccount() {
