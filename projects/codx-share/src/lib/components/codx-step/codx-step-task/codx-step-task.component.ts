@@ -59,12 +59,13 @@ import { CodxShareService } from '../../../codx-share.service';
 import { CodxCommonService } from 'projects/codx-common/src/lib/codx-common.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CodxViewApproveComponent } from '../codx-step-common/codx-view-approve/codx-view-approve.component';
-import { PopupCustomFieldComponent } from '../../codx-fields-detail-temp/popup-custom-field/popup-custom-field.component';
+
 import { Subject, firstValueFrom } from 'rxjs';
 import { ContractsDetailComponent } from 'projects/codx-cm/src/lib/contracts/contracts-detail/contracts-detail.component';
 import { environment } from 'src/environments/environment';
 import { Location } from '@angular/common';
 import { ExportData } from 'projects/codx-common/src/lib/models/ApproveProcess.model';
+import { PopupCustomFieldComponent } from '../../codx-input-custom-field/codx-fields-detail-temp/popup-custom-field/popup-custom-field.component';
 @Component({
   selector: 'codx-step-task',
   templateUrl: './codx-step-task.component.html',
@@ -343,7 +344,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     setTimeout(() => {
       let elements = document.getElementsByClassName('step-task-right');
       const listTask = Array.from(elements);
-      if (listTask?.length > 0 ) {
+      if (listTask?.length > 0) {
         let maxWidth = 0;
         for (const element of listTask) {
           const computedWidth = window.getComputedStyle(element).width;
@@ -359,10 +360,9 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     }, 1000);
   }
 
-  ngAfterViewChecked() {
-  }
-  setWidth(){
-    this.widthTask = "auto";
+  ngAfterViewChecked() {}
+  setWidth() {
+    this.widthTask = 'auto';
     let elements = document.getElementsByClassName('step-task-right');
     const listTask = Array.from(elements);
     if (listTask?.length > 0) {

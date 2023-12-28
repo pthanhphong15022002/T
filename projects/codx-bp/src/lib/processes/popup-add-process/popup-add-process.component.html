@@ -266,9 +266,93 @@
 </ng-template>
 
 <ng-template #tmpStepFields>
-  <div class="dp-step step-content">
-    <!--phần core-->
+  <div class="dp-step step-content container-fluid p-0" *ngIf="currentTab == 1">
+    <button class="btn btn-danger" (click)="clickchoi()">click chơi</button>
+    <button class="btn btn-danger" (click)="clickPan(true)">zoom Pan</button>
+    <button class="btn btn-danger" (click)="clickPan(false)">zoom Pan</button>
+    <div class="container-fluid h-100 p-0 diagramzone">
+      <div class="row h-100">
+        <div style="width:10%">
+
+            <div cdkDropList class="w-100 h-100 mt-5" style="background-color:#fff" [cdkDropListSortingDisabled]="true"  >
+              <div class="d-flex align-items-center p-3 border rounded h-40px m-3" style="cursor:pointer" [id]="item.id" cdkDrag cdkDragBoundary=".diagramzone"  *ngFor="let item of menuDrag" (cdkDragStarted)="onDragStart($event)" (cdkDragDropped)="dragEnter($event)">
+                <span class="icon-20 me-2" [ngClass]="item.icon" style="width:20%"></span>
+                <div class="text-primary d-flex justify-content-center fw-bold" style="width:80%">{{item.text}}</div>
+                <div *cdkDragPreview class="border rounded d-flex align-items-center" style="background-color:#fff;cursor:pointer" >
+                    <ng-container [ngSwitch]="item.id">
+                      <ng-container *ngSwitchCase="'start_end'">
+                        <span class="icon-35" [ngClass]="item.icon"></span>
+                      </ng-container>
+                      <ng-container *ngSwitchCase="'decision'">
+                        <span class="icon-35" [ngClass]="item.icon"></span>
+                      </ng-container>
+                      <ng-container *ngSwitchCase="'connector'">
+                        <span class="icon-35" [ngClass]="item.icon"></span>
+                      </ng-container>
+                      <ng-container *ngSwitchCase="'swimlane'">
+                        <span class="icon-35" [ngClass]="item.icon"></span>
+                      </ng-container>
+                      <ng-container *ngSwitchDefault>
+                        <span class="h-100px w-100px" [ngClass]="item.icon">
+                          {{item.text}}
+                        </span>
+                      </ng-container>
+                    </ng-container>
+                </div>
+              </div>
+            </div>
+        </div>
+        <div style="width:90%;height:100%">
+          <ejs-diagram #diagram  id="diagram"   [nodes]="nodes" [snapSettings]="snapSettings" (created)="created()" (mouseEnter)="mouseEnter($event)" (dragEnter)="eleDraw($event)">
+            <ng-template #nodeTemplate let-data>
+              <ng-container [ngSwitch]="data.shape?.version">
+                <ng-container *ngSwitchCase="'forms'">
+                  <ng-container *ngTemplateOutlet="formTemplate; context:{$implicit:data}"></ng-container>
+                </ng-container>
+                <ng-container *ngSwitchCase="'image'">
+                  <ng-container *ngTemplateOutlet="imgTemplate; context:{$implicit:data}"></ng-container>
+                </ng-container>
+              </ng-container>
+            </ng-template>
+          </ejs-diagram>
+        </div>
+      </div>
+    </div>
+
   </div>
 </ng-template>
 
 <ng-template #tmpResult></ng-template>
+
+
+<!--- Đây là khu vực template dành cho diagram node --->
+
+<ng-template #formTemplate let-data>
+  <ng-container class="border border-dark rounded" style="background-color:#fff">
+    <div class="container h-200px w-300px border border-dark rounded" style="background-color:#fff">
+      <div class="row h-30px">
+        <div class="col-3 d-flex align-items-center" (click)="clickAddForm(data)">
+          <span class="icon-note_add icon-21 me-1 text-primary"></span>
+          <span class="text-primary fw-bold"><codx-label formName="sys" default="forms" name="lblForm"></codx-label> </span>
+        </div>
+        <div class="col-9 d-flex align-items-center justify-content-end p-0">
+           <div class="border rounded bg-warning px-1 me-3 ">2 giờ</div>
+           <i class="icon-i-three-dots icon-16 me-2"></i>
+           <i class="icon-close icon-16 text-danger" (click)="deleteNode(data)"></i>
+        </div>
+      </div>
+      <div class="row h-100px d-flex align-items-center">
+        <codx-input type="textarea" format="ed3"></codx-input>
+        <codx-input type="colorpicker"></codx-input>
+      </div>
+
+    </div>
+
+  </ng-container>
+</ng-template>
+<ng-template #imgTemplate let-data>
+  <div class="h-150px w-100px">
+    <img class="border rounded-3 w-100 h-100" src="https://i.pinimg.com/564x/6b/eb/9c/6beb9c44d9cfed918fbb82568acd051b.jpg"/>
+  </div>
+</ng-template>
+
