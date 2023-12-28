@@ -732,6 +732,7 @@
       *ngIf="data?.task?.taskType == 'E'"
       type="button"
       class="btn btn-outline-primary btn-sm"
+      (click)="sendMail(data?.task,true)"
     >
       <codx-label
         class="text-nowrap"
