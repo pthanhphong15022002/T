@@ -20,6 +20,7 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 import { PinchZoomModule } from '@meddv/ngx-pinch-zoom';
 import { PopupAddProcessComponent } from './processes/popup-add-process/popup-add-process.component';
 import { FormPropertiesFieldsComponent } from './processes/popup-add-process/form-properties-fields/form-properties-fields.component';
+import { ConnectorEditing, DiagramModule, SymbolPaletteModule } from '@syncfusion/ej2-angular-diagrams';
 
 export const routes: Routes = [
   {
@@ -54,8 +55,11 @@ export const routes: Routes = [
     OverlayModule,
     TabModule,
     CommonModule,
-    DragDropModule,
+
     PinchZoomModule,
+    DiagramModule,
+    DragDropModule,
+
     // NgxImageZoomModule
   ],
   exports: [CodxBpComponent],
