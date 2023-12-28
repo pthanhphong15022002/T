@@ -65,7 +65,7 @@ export class ContractsViewDetailComponent
   contractLink:CM_Contracts;
   deal: CM_Deals;
   quotation: CM_Quotations;
-
+  listContractInParentID: CM_Contracts[] = [];
   tabControl = [
     { name: 'History', textDefault: 'Lịch sử', isActive: true, template: null },
     {
@@ -153,6 +153,7 @@ export class ContractsViewDetailComponent
       this.getContractLink();
       this.getQuotation();
       this.getDeal();
+      this.getListCOntractByParentID();
     }
     if (changes?.listInsStepStart && changes?.listInsStepStart?.currentValue) {
       this.listInsStep = this.listInsStepStart;
@@ -379,5 +380,17 @@ export class ContractsViewDetailComponent
     } else {
       this.notiService.notify('Không tìm thấy dữ liệu', '3');
     }
+  }
+
+  getListCOntractByParentID(){
+    this.listContractInParentID = [];
+    if(this.contract.parentID) {
+      this.contractService.getContractByParentID(this.contract.parentID).subscribe((res)=>{
+        if(res){
+          this.listContractInParentID = res;
+        }
+      })
+    }
+    
   }
 }

@@ -1074,7 +1074,7 @@
 
 <!-- thanh lý -->
 <ng-template #disposal let-data="value">
-  <div>
+  <div *ngIf="contract?.disposalID">
     <div class="row mb-2">
       <div class="col-6 d-flex align-items-center">
         <div class="w-150px min-w-150px">
@@ -1237,10 +1237,31 @@
     </div>
 
   </div>
+  <div *ngIf="!contract?.disposalID">
+    <codx-no-data></codx-no-data>
+  </div>
 </ng-template>
 <!-- phụ lục -->
-<ng-template #appendix let-data="value">
-
+<ng-template #appendix >
+  <div *ngIf="listContractInParentID?.length > 0">
+    <div *ngFor="let contract of listContractInParentID">
+      <div>
+        <codx-label
+          class="label-colon text-gray-600 codx-textlabel"
+          fiedName="useType"
+          [formModel]="formModel"
+          [setRequire]="false"
+        >
+      </codx-label>
+      </div>
+      <div>
+        <span>{{contract?.contractName}}</span>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="listContractInParentID?.length <= 0">
+    <codx-no-data></codx-no-data>
+  </div>
 </ng-template>
 
 <ng-template #contractLinkTem>

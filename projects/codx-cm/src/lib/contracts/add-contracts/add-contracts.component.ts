@@ -384,6 +384,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
           this.contracts = JSON.parse(JSON.stringify(data));
           delete this.contracts['id'];
           this.contracts.parentID = this.contracts?.recID;
+          this.contracts.recID = Util.uid();
           this.contracts.status = '1';
         }
         if(this.contracts?.applyProcess && this.contracts.processID){

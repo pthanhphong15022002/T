@@ -210,6 +210,14 @@ export class ContractsService {
     );
   }
 
+  getContractByParentID(data) {
+    return this.api.exec<any>(
+      'CM',
+      'ContractsBusiness',
+      'GetListContractByParentIDAsync',
+      data
+    );
+  }
   // async loadSetting() {
   //   this.grvSetup = await firstValueFrom(
   //     this.cache.gridViewSetup('CMQuotations', 'grvCMQuotations')
