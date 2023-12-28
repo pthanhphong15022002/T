@@ -41,7 +41,7 @@ export class PopupAddLineTableComponent implements OnInit {
     this.action = dt?.data?.action;
 
     this.arrCaculateField = this.listColumns.filter((x) => x.dataType == 'CF');
-    // if (this.arrCaculateField?.length > 0) this.decimalPointSeparation();
+  
   }
   ngOnInit(): void {
     this.listColumns.forEach((x) => {
@@ -168,18 +168,5 @@ export class PopupAddLineTableComponent implements OnInit {
       }
     });
   }
-  //Decimal point separation
-  // decimalPointSeparation() {
-  //   const string1 = '1,23'; //parFloat
-  //   const string2 = '1.23';
-  //   const result = Number.parseFloat(string1) - Number.parseFloat(string2);
-  //   if (result > 0) {
-  //     //'Dấu , phân tách phần thập phân 1,234 - 1'
-  //     this.point = ',';
-  //   } else {
-  //     //'Dấu . phân tách phần thập phân 1-1.23'
-  //     this.point = '.';
-  //   }
-  // }
   //------------------END_CACULATE--------------------//
 }

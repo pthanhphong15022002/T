@@ -18,20 +18,20 @@ export class CustomFieldService {
   operatorMulDiv = ['x', '/'];
   //chung all
   caculate(stringMath) {
-    if(this.point) this.decimalPointSeparation()
+    if(!this.point) this.decimalPointSeparation()
     if (stringMath.includes('_')) return stringMath;
     if (this.isExitOperator(this.arrCheck, stringMath)) {
       if (this.isExitOperator(this.parenthesis, stringMath)) {
         //có ngoặc 
-        stringMath = this.caculate(this.operatorParentheses(stringMath))
+        return this.caculate(this.operatorParentheses(stringMath))
 
       } else if (this.isExitOperator(this.operator, stringMath)) {
         //chi la phep toan
         if (this.isExitOperator(this.operatorMulDiv, stringMath)) {
           // co nhan chia
-          stringMath = this.sumAndMul(stringMath);
+          return this.sumAndMul(stringMath);
         } else {
-          stringMath = this.sumSub(stringMath);
+          return this.sumSub(stringMath);
         }
       }
     }
