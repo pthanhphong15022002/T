@@ -640,26 +640,22 @@
       class="btn btn-icon btn-sm btn-light-primary me-2 cursor-pointer"
       [disabled]="true"
       [ngbTooltip]="note"
+      (click)="buttonOperator('Avg')"
     >
-      <!-- (click)="buttonOperator('Avg')" -->
       {{ "Avg()" }}
     </button>
     <button
       type="button"
       class="btn btn-icon btn-sm btn-light-primary me-2 cursor-pointer"
-      [disabled]="true"
-      [ngbTooltip]="note"
+      (click)="buttonOpenParenthesis()"
     >
-      <!-- (click)="buttonOpenParenthesis()" -->
       {{ "(" }}
     </button>
     <button
       type="button"
       class="btn btn-icon btn-sm btn-light-primary me-2 cursor-pointer"
-      [disabled]="true"
-      [ngbTooltip]="note"
+      (click)="buttonCloseParenthesis()"
     >
-      <!-- (click)="buttonCloseParenthesis()" -->
       {{ ")" }}
     </button>
     <ng-template #note>{{

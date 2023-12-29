@@ -151,7 +151,7 @@ export class CustomFieldService {
   decimalPointSeparation() {
     const string1 = '1,23'; //parFloat
     const string2 = '1.23';
-    const result = Number.parseFloat(string1) - Number.parseFloat(string2);
+    const result = Number.parseFloat(string1) - Number.parseFloat(string2); //string1.localeCompare(string2);
     if (result > 0) {
       //'Dấu , phân tách phần thập phân 1,234 - 1'
       this.point = ',';
@@ -165,7 +165,7 @@ export class CustomFieldService {
   operatorParentheses(stringMath) {
     let lastIndexOpen = stringMath.lastIndexOf('(');
     let lastIndexClose = stringMath.lastIndexOf(')');
-    let indexClose = stringMath.findIndex(')');
+    let indexClose = stringMath.indexOf(')');
     while (indexClose < lastIndexOpen) {
       for (let i = indexClose + 1; i <= lastIndexClose; i++) {
         if (stringMath[i] == ')') {
