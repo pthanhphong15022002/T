@@ -5,12 +5,12 @@ import { CacheService, NotificationsService } from 'codx-core';
   providedIn: 'root',
 })
 export class CustomFieldService {
-  point = '';
   constructor(
     private cache: CacheService,
     private notiService: NotificationsService
   ) {}
   //----------------------CACULATE---------------------------//
+  point = '';
   arrCheck = ['+', '-', 'x', '/', 'Avg(', '(', ')'];
   parenthesis = ['(', ')'];
   operator = ['+', '-', 'x', '/', 'Avg('];
