@@ -983,6 +983,14 @@ export class CodxCmService {
       data
     );
   }
+  updateProcessCase(data) {
+    return this.api.exec<any>(
+      'CM',
+      'CasesBusiness',
+      'UpdateProcessCasesAsync',
+      data
+    );
+  }
 
   isExistCaseNo(data) {
     return this.api.execSv<any>(
