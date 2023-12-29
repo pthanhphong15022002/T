@@ -18,13 +18,12 @@ export class CustomFieldService {
   operatorMulDiv = ['x', '/'];
   //chung all
   caculate(stringMath) {
-    if(!this.point) this.decimalPointSeparation()
+    if (!this.point) this.decimalPointSeparation();
     if (stringMath.includes('_')) return stringMath;
     if (this.isExitOperator(this.arrCheck, stringMath)) {
       if (this.isExitOperator(this.parenthesis, stringMath)) {
-        //có ngoặc 
-        return this.caculate(this.operatorParentheses(stringMath))
-
+        //có ngoặc
+        return this.caculate(this.operatorParentheses(stringMath));
       } else if (this.isExitOperator(this.operator, stringMath)) {
         //chi la phep toan
         if (this.isExitOperator(this.operatorMulDiv, stringMath)) {
@@ -164,13 +163,27 @@ export class CustomFieldService {
 
   //toán tử trong dấu ngoặc đơn
   operatorParentheses(stringMath) {
-    let lastIndexOpen = stringMath.lastIndexOf("(") ;
-    let indexClose = stringMath.lastIndexOf(")") ;
-    if(indexClose > lastIndexOpen){
-      let stringReturn = this.caculate(stringMath.substring(lastIndexOpen+1,indexClose-1))
-      stringMath = stringMath.substring(0,lastIndexOpen) + stringReturn+ stringMath.substring(indexClose+1,stringMath.length)
+    let lastIndexOpen = stringMath.lastIndexOf('(');
+    let lastIndexClose = stringMath.lastIndexOf(')');
+    let indexClose = stringMath.findIndex(')');
+    while (indexClose < lastIndexOpen) {
+      for (let i = indexClose + 1; i <= lastIndexClose; i++) {
+        if (stringMath[i] == ')') {
+          indexClose = i;
+          break;
+        }
+      }
     }
-    return stringMath
+
+    let stringReturn = this.caculate(
+      stringMath.substring(lastIndexOpen + 1, indexClose)
+    );
+    stringMath =
+      stringMath.substring(0, lastIndexOpen) +
+      stringReturn +
+      stringMath.substring(indexClose + 1, stringMath.length);
+
+    return stringMath;
   }
 
   agv(arr: Array<number>) {
