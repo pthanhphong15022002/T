@@ -643,8 +643,14 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
             this.getADAutoNumberByAutoNoCode(autoNumber).subscribe(res => {
               if(res){
                 this.contracts.contractID = res;
+                this.disabledShowInput = true;
               }else{
-                this.contracts.contractID = this.autoNumber;
+                if(this.autoNumber){
+                  this.contracts.contractID = this.autoNumber;
+                  this.disabledShowInput = true;
+                }else{
+                  this.disabledShowInput = false;
+                }
               }
             })
           }
