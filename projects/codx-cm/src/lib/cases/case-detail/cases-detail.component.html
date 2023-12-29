@@ -10,7 +10,35 @@
     (clickMF)="clickMF($event, dataSelected)"
   >
     <ng-template #header let-data>
-      <div class="fs-2 sm mt-n8 fw-bold">{{ dataSelected?.caseName }}</div>
+      <div class="d-flex align-items-center justify-content-between">
+        <div
+          class="d-flex align-items-center mb-2"
+          [ngbTooltip]="gridViewSetup['CaseName']?.headerText"
+        >
+          <span
+            class="text-dark fs-6 fw-bold line-clamp line-clamp-1"
+            #caseName
+            [innerHTML]="
+              dataSelected?.caseName
+                | formatvalue : formModel : 'caseName' : caseName
+                | async
+            "
+          ></span>
+        </div>
+        <div class="toolbar-detail" *ngIf="asideMode != '2'">
+          <codx-mfunc
+            [hideMF]="false"
+            [dataItem]="dataSelected"
+            [formModel]="formModel"
+            (changeDataMF)="changeDataMF($event, dataSelected)"
+            (clickMF)="clickMF($event, dataSelected)"
+            [isBookMark]="true"
+            type="view"
+          ></codx-mfunc>
+        </div>
+      </div>
+      <!-- <div class="fs-2 sm mt-n8 fw-bold">{{ dataSelected?.caseName }}</div> -->
+
       <div class="container_detail mt-3">
         <div class="d-flex align-items-center justify-content-between mb-1">
           <div class="d-flex flex-row">
@@ -46,51 +74,58 @@
           <div class="ms-3">
             <div class="d-flex justify-content-end">
               <div
-              *ngIf="dataSelected?.statusCodeID"
-              class="badge badge-sm d-flex align-items-center me-0 color-theme me-1"
-            >
-              <span
-                class="text-ellipsis line-clamp line-clamp-2"
-                [ngbTooltip]="getStatusCode(dataSelected?.statusCodeID)"
-                > {{getStatusCode(dataSelected?.statusCodeID)}}</span
-              >
-            </div>
-
-              <!-- <div
-                *ngIf="dataSelected.status == '1'"
-                [ngStyle]="{
-                  'background-color':
-                    dataSelected.status == '3' || dataSelected.status == '4'
-                      ? colorReasonSuccess?.color
-                      : dataSelected.status == '5' || dataSelected.status == '6'
-                      ? colorReasonFail?.color
-                      : dataSelected?.steps['backgroundColor']
-                }"
-                class="badge badge-sm d-flex align-items-center"
+                *ngIf="dataSelected?.statusCode"
+                class="badge badge-sm d-flex align-items-center me-0 color-theme me-1"
               >
                 <span
-                  [ngClass]="dataSelected?.steps['icon']"
-                  [ngStyle]="{ color: dataSelected?.steps['iconColor'] }"
+                  class="text-ellipsis-1"
+                  #statusCode
+                  [innerHTML]="
+                    dataSelected?.statusCode
+                      | formatvalue : formModel : 'statusCode'
+                      | async
+                  "
+                >
+                </span>
+              </div>
+
+              <div
+                *ngIf="
+                  dataSelected.status == '2' && stepCurrent;
+                  else statusDefault
+                "
+                [ngStyle]="{
+                  'background-color': stepCurrent?.backgroundColor
+                }"
+                class="badge badge-sm d-flex align-items-center me-0"
+              >
+                <span
+                  [ngClass]="stepCurrent?.icon"
+                  [ngStyle]="{
+                    color: stepCurrent?.iconColor
+                  }"
                   class="me-1"
                 ></span>
                 <span
-                  class="menu-title fw-bold line-clamp line-clamp-2"
-                  [ngbTooltip]="dataSelected?.currentStepName"
-                  [ngStyle]="{ color: data?.steps['textColor'] }"
-                  >{{ dataSelected?.currentStepName }}</span
+                  class="text-ellipsis line-clamp line-clamp-2"
+                  [ngbTooltip]="stepCurrent?.stepName"
+                  [ngStyle]="{
+                    color: stepCurrent.textColor
+                  }"
+                  >{{ stepCurrent?.stepName }}</span
                 >
-              </div> -->
-              <div *ngIf="dataSelected.status != '1'">
+              </div>
+              <ng-template #statusDefault>
                 <codx-vll
-                  [name]="'DP028'"
+                  [name]="gridViewSetup?.Status?.referedValue"
                   [field]="'Status'"
                   [value]="dataSelected?.status"
                   [showText]="true"
                   [showBgColor]="true"
-                  class="badge badge-light badge-sm"
+                  class="badge badge-light badge-sm me-0"
                 >
                 </codx-vll>
-              </div>
+              </ng-template>
             </div>
           </div>
         </div>
@@ -176,9 +211,7 @@
                 <span
                   class="icon-16 me-1"
                   [class]="
-                    dataSelected?.severity
-                      | vll : vllPriority : 'icon'
-                      | async
+                    dataSelected?.severity | vll : vllPriority : 'icon' | async
                   "
                   [style.color]="
                     dataSelected?.severity
@@ -198,10 +231,7 @@
                   #severity
                   [innerHTML]="
                     dataSelected?.severity
-                      | formatvalue
-                        : formModel
-                        : 'severity'
-                        : severity
+                      | formatvalue : formModel : 'severity' : severity
                       | async
                   "
                 ></span>
@@ -219,9 +249,7 @@
                 <span
                   class="icon-16 me-1"
                   [class]="
-                    dataSelected?.priority
-                      | vll : vllPriority : 'icon'
-                      | async
+                    dataSelected?.priority | vll : vllPriority : 'icon' | async
                   "
                   [style.color]="
                     dataSelected?.priority
@@ -393,10 +421,7 @@
                         #processID
                         [innerHTML]="
                           dataSelected?.processName
-                            | formatvalue
-                              : formModel
-                              : 'processID'
-                              : processID
+                            | formatvalue : formModel : 'processID' : processID
                             | async
                         "
                       ></span>
@@ -440,17 +465,14 @@
                         ></codx-label>
                       </div>
                       <span
-                          class="text-dark fw-bold"
-                          #channelID
-                          [innerHTML]="
-                            dataSelected?.channelID
-                              | formatvalue
-                                : formModel
-                                : 'channelID'
-                                : channelID
-                              | async
-                          "
-                        >
+                        class="text-dark fw-bold"
+                        #channelID
+                        [innerHTML]="
+                          dataSelected?.channelID
+                            | formatvalue : formModel : 'channelID' : channelID
+                            | async
+                        "
+                      >
                       </span>
                     </div>
                   </div>
@@ -480,7 +502,6 @@
                               | async
                           "
                         ></span>
-
                       </div>
                     </div>
                     <div class="col-lg-12 col-xl-6">
@@ -517,7 +538,8 @@
                 </div>
                 <div class="d-flex pb-2 w-100">
                   <div class="me-2 text-nowrap">
-                    <codx-label class="text-gray-600"
+                    <codx-label
+                      class="text-gray-600"
                       default="Hiện trạng"
                       fieldName="Reality"
                     ></codx-label
@@ -529,10 +551,7 @@
                       #reality
                       [innerHTML]="
                         dataSelected?.reality
-                          | formatvalue
-                            : formModel
-                            : 'reality'
-                            : reality
+                          | formatvalue : formModel : 'reality' : reality
                           | async
                       "
                     ></span>
@@ -540,7 +559,8 @@
                 </div>
                 <div class="d-flex w-100 mb-2">
                   <div class="me-2 text-nowrap">
-                    <codx-label class="text-gray-600"
+                    <codx-label
+                      class="text-gray-600"
                       default="Mô tả chi tiết"
                       fieldName="Memo"
                     ></codx-label
@@ -552,10 +572,7 @@
                       #memo
                       [innerHTML]="
                         dataSelected?.memo
-                          | formatvalue
-                            : formModel
-                            : 'memo'
-                            : memo
+                          | formatvalue : formModel : 'memo' : memo
                           | async
                       "
                     ></span>
@@ -575,10 +592,7 @@
                       #solution
                       [innerHTML]="
                         dataSelected?.solution
-                          | formatvalue
-                            : formModel
-                            : 'solution'
-                            : solution
+                          | formatvalue : formModel : 'solution' : solution
                           | async
                       "
                     ></span>
@@ -595,7 +609,7 @@
                     [dataStep]="item"
                     [showColumnControl]="showColumnControl(item.stepID)"
                     [isUpdate]="
-                      ['1', '2','15'].includes(dataSelected.status) &&
+                      ['1', '2', '15'].includes(dataSelected.status) &&
                       dataSelected?.full &&
                       !dataSelected.closed
                     "
@@ -607,8 +621,6 @@
                 </ng-container>
               </div>
             </div>
-
-
           </ng-template>
         </e-tabitem>
         <e-tabitem>
@@ -626,16 +638,16 @@
           <ng-template #content let-data="value">
             <div class="mt-4">
               <step-task
-              [listInstanceStep]="listSteps"
-              [entityName]="'CM_Leads'"
-              [dataCM]="dataSelected"
-              [formModel]="formModel"
-              [applyFor]="'5'"
-              [isDataLoading]="isDataLoading"
-              (saveAssignTask)="saveAssign($event)"
-              (continueStep)="continueStep($event)"
-              (saveAssignTask)="saveAssign($event)"
-            ></step-task>
+                [listInstanceStep]="listSteps"
+                [entityName]="'CM_Leads'"
+                [dataCM]="dataSelected"
+                [formModel]="formModel"
+                [applyFor]="'5'"
+                [isDataLoading]="isDataLoading"
+                (saveAssignTask)="saveAssign($event)"
+                (continueStep)="continueStep($event)"
+                (saveAssignTask)="saveAssign($event)"
+              ></step-task>
             </div>
           </ng-template>
         </e-tabitem>

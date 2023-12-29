@@ -460,6 +460,7 @@ export class DealDetailComponent implements OnInit {
         this.checkCompletedInstance(this.dataSelected?.status);
       } else {
         this.listSteps = [];
+        this.stepCurrent = null;
         this.isHaveField = false;
       }
     });
