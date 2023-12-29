@@ -131,6 +131,7 @@ export class PopupAddCasesComponent
   applyProcess = false;
   isBlock: boolean = true;
   isShowField: boolean = false;
+  isTurnOnProcess: boolean = true;
   caseNoSetting: any;
   idxCrr: any = -1;
 
@@ -165,12 +166,12 @@ export class PopupAddCasesComponent
       }
     } else {
       this.cases =
-        this.action != this.actionAdd
+        this.action !== this.actionAdd
           ? JSON.parse(JSON.stringify(dialog.dataService?.dataSelected))
           : this.cases;
     }
 
-    if (this.action != this.actionAdd) {
+    if (this.action !== this.actionAdd) {
       this.applyProcess = this.cases.applyProcess;
       this.processID = this.cases.processID;
       this.getListContacts(this.cases?.customerID);
@@ -279,6 +280,8 @@ export class PopupAddCasesComponent
       this.convertDataInstance(this.cases, this.instance);
     }
 
+    console.log('---------',this.applyProcess);
+
     // if (this.action !== this.actionEdit) {
     //   this.insertInstance();
     // } else {
@@ -308,12 +311,21 @@ export class PopupAddCasesComponent
     if ($event) {
       this.cases[$event.field] = $event.data;
       if ($event.data) {
+        this.action = this.action === this.actionCopy ? this.actionAdd : this.action;
+        this.listInstanceSteps = [];
+        this.listParticipants = [];
+        this.owner = null;
+        this.cases.permissions = this.cases?.permissions && this.cases?.permissions?.length > 0 ?
+        this.cases?.permissions.filter(x=>x.roleType != 'O' && x.objectType != '1')
+        : this.cases?.permissions;
         let result = this.checkProcessInList($event.data);
         if (result) {
           this.listInstanceSteps = result?.steps;
-          this.listParticipants = result?.permissions;
+          this.listParticipants = JSON.parse(
+            JSON.stringify(result?.permissions)
+          );
           this.setAutoNameTabFields(result?.autoNameTabFields);
-          this.cases.caseNo = result?.dealId;
+          this.cases.caseNo = result?.caseNo;
           this.cases.endDate = this.HandleEndDate(
             this.listInstanceSteps,
             this.action,
@@ -574,12 +586,10 @@ export class PopupAddCasesComponent
       }
       this.cases.applyProcess = this.applyProcess;
       this.checkApplyProcess(this.cases.applyProcess);
-
-      return;
     }
     if (this.action !== this.actionAdd) {
-      this.cases.applyProcess && await this.getListInstanceSteps(this.cases?.processID);
-      !this.cases.applyProcess && await this.getAutoNumber();
+      this.applyProcess && await this.getListInstanceSteps(this.cases?.processID);
+      !this.applyProcess && await this.getAutoNumber();
     }
   }
 
@@ -611,7 +621,7 @@ export class PopupAddCasesComponent
           id: processId,
           steps: res[0],
           permissions: res[1],
-          dealId: this.action !== this.actionEdit ? res[2] : this.cases.caseNo,
+          caseNo: this.action !== this.actionEdit ? res[2] : this.cases.caseNo,
           processSetting: res[3],
         };
         let isExist = this.listMemorySteps.some((x) => x.id === processId);
@@ -889,7 +899,6 @@ export class PopupAddCasesComponent
       const isSaturday = dayOff.includes('7');
       const isSunday = dayOff.includes('8');
       let day = 0;
-
       for (
         let currentDate = new Date(startDay);
         currentDate <= endDay;
@@ -970,7 +979,7 @@ export class PopupAddCasesComponent
     let res = await firstValueFrom(
       this.codxCmService.getParam('CMParameters', '1')
     );
-    if (res?.dataValue) {
+    if (res?.dataValue && this.action === this.actionAdd) {
       let dataValue = JSON.parse(res?.dataValue);
       this.applyProcess =
         this.funcID == 'CM0401'

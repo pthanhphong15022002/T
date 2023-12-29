@@ -21,6 +21,9 @@ import { PinchZoomModule } from '@meddv/ngx-pinch-zoom';
 import { PopupAddProcessComponent } from './processes/popup-add-process/popup-add-process.component';
 import { FormPropertiesFieldsComponent } from './processes/popup-add-process/form-properties-fields/form-properties-fields.component';
 import { ConnectorEditing, DiagramModule, SymbolPaletteModule } from '@syncfusion/ej2-angular-diagrams';
+import { SettingFieldsComponent } from './processes/popup-add-process/form-properties-fields/setting-fields/setting-fields.component';
+import { environment } from 'src/environments/environment';
+import { FormFormatValueComponent } from './processes/popup-add-process/form-properties-fields/form-format-value/form-format-value.component';
 
 export const routes: Routes = [
   {
@@ -42,12 +45,17 @@ export const routes: Routes = [
     ProcessesComponent,
     PopupAddProcessComponent,
     FormPropertiesFieldsComponent,
+    SettingFieldsComponent,
+    FormFormatValueComponent,
   ],
   imports: [
+    CodxCoreModule.forRoot({ environment }),
     RouterModule.forChild(routes),
+    CommonModule,
     FormsModule,
     ReactiveFormsModule,
     SharedModule,
+    TabModule,
     CodxShareModule,
     NgbModule,
     CoreModule,
@@ -56,6 +64,8 @@ export const routes: Routes = [
     TabModule,
     CommonModule,
 
+    DragDropModule,
+    CoreModule,
     PinchZoomModule,
     DiagramModule,
     DragDropModule,

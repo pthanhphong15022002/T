@@ -1,0 +1,44 @@
+.ratio-slider {
+  position: relative;
+}
+
+.icons-container {
+  position: absolute;
+  top: -7px; /* Điều chỉnh khoảng cách giữa thanh slider và icon */
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-between;
+}
+
+.icons-container.progresspg{
+  top: -20px;
+}
+
+input[type="range"] {
+  width: 100%;
+  margin-top: 20px; /* Điều chỉnh khoảng cách giữa thanh slider và icon */
+}
+
+.size-icon{
+  font-size: 20px;
+}
+
+.icon {
+  width: 20px;
+  height: 20px;
+  border: 2px solid #3498db;
+  border-radius: 5px;
+  background-color: #fff;
+  color: #3498db;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+input[type="range"]:disabled {
+  opacity: 0.5; /* Điều chỉnh độ mờ khi slider bị tắt */
+  cursor: not-allowed; /* Thay đổi kiểu con trỏ khi slider bị tắt */
+}
+
