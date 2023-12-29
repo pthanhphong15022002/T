@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
-import { CRUDService, DataRequest, ApiHttpService, CallFuncService, CacheService, NotificationsService, DialogModel, RequestOption, ImageViewerComponent } from 'codx-core';
+import { CRUDService, DataRequest, ApiHttpService, CallFuncService, CacheService, NotificationsService, DialogModel, RequestOption, ImageViewerComponent, AuthStore } from 'codx-core';
 import { PopupAddComponent } from '../../popup/popup-add/popup-add.component';
 import { DateTime } from '@syncfusion/ej2-angular-charts';
 import { PopupAddCommentComponent } from '../../popup/popup-add-comment/popup-add-comment.component';
@@ -26,7 +26,9 @@ export class AppropvalNewsDetailComponent implements OnInit {
   data: any = null;
   hideMFC:boolean = false;
   imgOn:DateTime = new DateTime();
+  user: import("codx-core").UserModel;
   constructor(
+    private auth: AuthStore,
     private api:ApiHttpService,
     private dt:ChangeDetectorRef,
     private callFuc:CallFuncService,
@@ -36,6 +38,7 @@ export class AppropvalNewsDetailComponent implements OnInit {
     { }
   ngOnInit(): void {
     this.getPostInfo(this.objectID);
+    this.user = this.auth.get();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -224,14 +227,11 @@ export class AppropvalNewsDetailComponent implements OnInit {
   //change data moreFC
   changeDataMF(evt:any[],data:any){
     evt.map(x => {
-      // if(x.functionID == "SYS02" || x.functionID == "SYS03")
-      //   x.disabled = false;
-      // else if(x.functionID == "WPT02131" || x.functionID == "WPT02132" || x.functionID == "WPT02133")
-      //   x.disabled = data.approveControl == "0" || (data.approveControl == "1" && data.approveStatus == "5");
-      // else
-      //   x.disabled = true;
-
-      if (
+      if(data?.approveStatus == "1" && (x.functionID == "SYS02" || x.functionID == "SYS03") && this.function.functionID =='WPT0211')
+        x.disabled = false;
+      else if(x.functionID == "WPT02131" || x.functionID == "WPT02132" || x.functionID == "WPT02133")
+        x.disabled = data.approveControl == "0" || (data.approveControl == "1" && data.approveStatus == "5");
+      else if (
         x.functionID == 'WPT02131' ||
         x.functionID == 'WPT02133' ||
         x.functionID == 'WPT02121' ||
@@ -241,6 +241,8 @@ export class AppropvalNewsDetailComponent implements OnInit {
           data.approveControl == '0' ||
           (data.approveControl == '1' && data.approveStatus != '3');
       else x.disabled = true;
+
+      
     });
   }
 }

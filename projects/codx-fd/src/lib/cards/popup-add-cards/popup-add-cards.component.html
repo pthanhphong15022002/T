@@ -124,7 +124,15 @@
                 <codx-label [formModel]="dialog.formModel" name="Situation" default="Nội dung">
                 </codx-label>
 
-                <codx-input ControlName="situation" [formModel]="dialog.formModel" [Group]="form">
+                <codx-input 
+                    type="textarea" 
+                    headerposition="none"
+                    format="ed"
+                    height="150" 
+                    ControlName="situation" 
+                    field="situation"
+                    [Group]="form"
+                >
                 </codx-input>
                 <!-- <codx-input class="form-control" type="textarea" [crrValue]="form.controls['situation'].value"
                     field="situation" (valueChange)="valueChange($event)">
@@ -306,6 +314,9 @@
                             <codx-input ControlName="number" [formModel]="dialog.formModel" [Group]="form" type="number"
                                 field="coins" [min]="0" [step]="1" (valueChange)="valueChange($event)">
                             </codx-input>
+                            <div *ngIf="cointsError" class="errorMessage text-danger ms-3" data-field="taskName">
+                                {{cointsError}}
+                            </div>
                         </div>
 
                     </div>

@@ -6,6 +6,7 @@ import {
   DialogRef,
   NotificationsService,
 } from 'codx-core';
+import { CustomFieldService } from '../../custom-field.service';
 
 @Component({
   selector: 'lib-popup-custom-field',
@@ -27,11 +28,15 @@ export class PopupCustomFieldComponent implements OnInit {
   objectIdParent: any;
   customerID: any; //Khách hàng cơ hội
 
+  arrCaculateField = []; //cac field co tinh toán
+  point: string = ','; //dấu phân cách thập phân
+
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private cache: CacheService,
     private api: ApiHttpService,
     private notiService: NotificationsService,
+    private customFieldSV: CustomFieldService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -40,6 +45,7 @@ export class PopupCustomFieldComponent implements OnInit {
     this.objectIdParent = dt?.data?.objectIdParent;
     this.customerID = dt?.data?.customerID;
     this.dialog = dialog;
+    this.arrCaculateField = this.fields.filter((x) => x.dataType == 'CF');
   }
 
   ngOnInit(): void {
@@ -76,6 +82,7 @@ export class PopupCustomFieldComponent implements OnInit {
       let index = this.fields.findIndex((x) => x.recID == field.recID);
       if (index != -1) {
         this.fields[index].dataValue = result;
+        if (field.dataType == 'N') this.caculateField();
       }
     }
   }
@@ -151,4 +158,37 @@ export class PopupCustomFieldComponent implements OnInit {
   addFileCompleted(e) {
     this.isAddComplete = e;
   }
+
+  //----------------------CACULATE---------------------------//
+  caculateField() {
+    if (!this.arrCaculateField || this.arrCaculateField?.length == 0) return;
+    let fieldsNum = this.fields.filter((x) => x.dataType == 'N');
+    if (!fieldsNum || fieldsNum?.length == 0) return;
+
+    this.arrCaculateField.forEach((obj) => {
+      let dataFormat = obj.dataFormat;
+      fieldsNum.forEach((f) => {
+        if (dataFormat.includes('[' + f.fieldName + ']') && f.dataValue) {
+          let dataValue = f.dataValue;
+          if (f.dataFormat == 'P') dataValue = dataValue + '/100';
+          dataFormat = dataFormat.replaceAll(
+            '[' + f.fieldName + ']',
+            dataValue
+          );
+        }
+      });
+
+      if (!dataFormat.includes('[')) {
+        //tinh toán
+        obj.dataValue = this.customFieldSV.caculate(dataFormat);
+        //tính toan end
+        let index = this.fields.findIndex((x) => x.recID == obj.recID);
+        if (index != -1) {
+          this.fields[index].dataValue = obj.dataValue;
+        }
+      }
+    });
+  }
+
+  //------------------END_CACULATE--------------------//
 }

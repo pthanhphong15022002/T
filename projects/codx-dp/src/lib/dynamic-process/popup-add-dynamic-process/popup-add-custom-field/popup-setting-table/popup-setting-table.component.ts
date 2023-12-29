@@ -171,6 +171,7 @@ export class PopupSettingTableComponent implements OnInit, AfterViewInit {
       titleAction: this.actionAdd,
       grvSetup: this.grvSetup,
       processNo: this.processNo,
+      listColumns: this.listColumns,
     };
     let option = new DialogModel();
     option.FormModel = this.dialog.formModel;
@@ -206,6 +207,7 @@ export class PopupSettingTableComponent implements OnInit, AfterViewInit {
       grvSetup: this.grvSetup,
       processNo: this.processNo,
       disable: this.actionField == 'edit',
+      listColumns: this.listColumns,
     };
 
     let option = new DialogModel();
@@ -246,6 +248,15 @@ export class PopupSettingTableComponent implements OnInit, AfterViewInit {
         this.changeRef.detectChanges();
       }
     });
+  }
+
+  valueChangeColumns(e) {
+    if (this.listColumns?.length > 0) {
+      this.listColumns.forEach((x) => {
+        if (e.field == x.fieldName && (x.dataType == 'N' || x.dataType == 'CF'))
+          x.totalColumns = e.data;
+      });
+    }
   }
 
   //------------------------------------END---------------------------------//

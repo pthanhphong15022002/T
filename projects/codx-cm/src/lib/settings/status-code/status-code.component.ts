@@ -379,6 +379,12 @@ export class StatusCodeComponent extends UIComponent implements OnInit {
     } else if (value == '7') {
       return 'CRM015';
     }
+    else if (value == '9' ) {
+      return 'CRM076';
+    }
+    else if (value == '11' ) {
+      return 'CRM077';
+    }
     return '';
   }
 }
