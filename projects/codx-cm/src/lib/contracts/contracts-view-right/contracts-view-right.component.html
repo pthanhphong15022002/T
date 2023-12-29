@@ -420,7 +420,7 @@
       </div>
     </div>
 
-    <div class="row my-1">
+    <!-- <div class="row my-1">
       <div class="col-6">
         <codx-label
           class="label-colon text-gray-600 codx-textlabel"
@@ -480,40 +480,9 @@
         >
         </codx-label>
       </div>
-    </div>
+    </div> -->
   </div>
-  <div class="mt-2">
-    <div>
-      <codx-label
-        class="fs-5-sm fw-bold"
-        fiedName="assetID"
-        default="Ví trí thuê"
-        [formModel]="formModel"
-        [setRequire]="false"
-      >
-      </codx-label>
-    </div>
-    <div>
-      <!-- VỊ trí thuê -->
-    </div>
-  </div>
-  <div class="mt-2">
-    <codx-label
-      class="fs-5-sm fw-bold"
-      name="lblPurpose"
-      [formModel]="formModel"
-      [setRequire]="false"
-      default="Mục đích thuê"
-    ></codx-label>
-    <div class="row my-1">
-      <span
-        class="text-gray-600"
-        [innerHTML]="
-          contract?.purpose | formatvalue : formModel : 'Purpose' | async
-        "
-      ></span>
-    </div>
-  </div>
+  
   <div class="mt-2">
     <codx-label
       class="fs-5-sm fw-bold"

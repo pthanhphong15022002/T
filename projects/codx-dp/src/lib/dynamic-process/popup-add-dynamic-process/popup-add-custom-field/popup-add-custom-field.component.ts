@@ -933,57 +933,68 @@ export class PopupAddCustomFieldComponent implements OnInit {
       );
       return;
     }
+    this.api
+      .exec<any>(
+        'SYS',
+        'GridViewSetupBusiness',
+        'GetGrvStAndFormNameByEntityNameAsync',
+        this.entityNamePA
+      )
+      .subscribe((res) => {
+        if (res) {
+          let formName = res?.formName;
+          let gridViewName = res?.gridViewName;
 
-    //bùa vậy vì ko có cách nào lấy grv bằng entityname cả
-    let formName = this.entityNamePA.replace('_', '');
-    let gridViewName = 'grv' + formName;
-    // let formName = 'CMCustomers';
-    // let gridViewName = 'grv' + formName;
-
-    this.cache.gridViewSetup(formName, gridViewName).subscribe((grv) => {
-      if (grv) {
-        let option = new DialogModel();
-        console.log(grv);
-        option.zIndex = 1050;
-        let obj = {
-          datas: grv,
-          entityName: this.entityNamePA,
-          action: this.action,
-          titleAction: 'Thêm trường liên kết', //test
-          dataRef: JSON.parse(this.field.dataFormat),
-        };
-        let dialogColumn = this.callfc.openForm(
-          PopupSettingReferenceComponent,
-          '',
-          550,
-          Util.getViewPort().height - 100,
-          '',
-          obj,
-          '',
-          option
-        );
-        dialogColumn.closed.subscribe((res) => {
-          if (res && res.event && res.event[1]) {
-            this.field.refType = '3';
-            this.fieldCus.referType = '3';
-            if (res.event && res.event[0]) {
-              this.field.dataFormat = JSON.stringify(res.event[0]);
-              this.fieldCus.dataFormat = JSON.stringify(res.event[0]);
-            } else {
-              this.field.dataFormat = '';
-              this.fieldCus.dataFormat = '';
-            }
-            if (this.tempInput) this.tempInput.viewFieldRef();
-            if (this.tempView)
-              this.tempView.parseValuePA(this.fieldCus.dataValue);
-          }
-        });
-      } else
-        this.notiService.notify(
-          'Grid View Setup chưa được thiết lập, hãy chọn đối tượng khác !',
-          '3'
-        );
-    });
+          this.cache.gridViewSetup(formName, gridViewName).subscribe((grv) => {
+            if (grv) {
+              let option = new DialogModel();
+              console.log(grv);
+              option.zIndex = 1050;
+              let obj = {
+                datas: grv,
+                entityName: this.entityNamePA,
+                action: this.action,
+                titleAction: 'Thêm trường liên kết', //test
+                dataRef: JSON.parse(this.field.dataFormat),
+              };
+              let dialogColumn = this.callfc.openForm(
+                PopupSettingReferenceComponent,
+                '',
+                550,
+                Util.getViewPort().height - 100,
+                '',
+                obj,
+                '',
+                option
+              );
+              dialogColumn.closed.subscribe((res) => {
+                if (res && res.event && res.event[1]) {
+                  this.field.refType = '3';
+                  this.fieldCus.referType = '3';
+                  if (res.event && res.event[0]) {
+                    this.field.dataFormat = JSON.stringify(res.event[0]);
+                    this.fieldCus.dataFormat = JSON.stringify(res.event[0]);
+                  } else {
+                    this.field.dataFormat = '';
+                    this.fieldCus.dataFormat = '';
+                  }
+                  if (this.tempInput) this.tempInput.viewFieldRef();
+                  if (this.tempView)
+                    this.tempView.parseValuePA(this.fieldCus.dataValue);
+                }
+              });
+            } else
+              this.notiService.notify(
+                'Grid View Setup chưa được thiết lập, hãy chọn đối tượng khác !',
+                '3'
+              );
+          });
+        } else
+          this.notiService.notify(
+            'Grid View Setup chưa được thiết lập, hãy chọn đối tượng khác !',
+            '3'
+          );
+      });
   }
 
   //lưu giá trị mặc định
