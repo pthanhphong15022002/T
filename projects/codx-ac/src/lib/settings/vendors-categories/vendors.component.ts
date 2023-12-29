@@ -36,12 +36,10 @@ export class VendorsComponent extends UIComponent {
   views: Array<ViewModel> = []; //? model view
   button: ButtonModel[] = [{
     id: 'btnAdd',
-    icon: 'icon-i-person-plus',
+    icon: 'icon-business',
   }];
   funcName = ''; //? tên truyền vào headertext
   headerText: any;
-  optionSidebar: SidebarModel = new SidebarModel();
-  dataDefault: any;
   private destroy$ = new Subject<void>(); //? list observable hủy các subscribe api
 
   constructor(
@@ -72,11 +70,6 @@ export class VendorsComponent extends UIComponent {
         },
       },
     ];
-
-    //* thiết lập cấu hình sidebar
-    this.optionSidebar.DataService = this.view.dataService;
-    this.optionSidebar.FormModel = this.view.formModel;
-    this.optionSidebar.Width = '800px';
   }
 
   ngDoCheck() {
@@ -123,33 +116,25 @@ export class VendorsComponent extends UIComponent {
   //#region Function
   addNew(e) {
     this.headerText = (e.text + ' ' + this.funcName).toUpperCase();
-    let data = {
-      headerText: this.headerText,
-      dataDefault: { ...this.dataDefault }
-    };
-    if (!this.dataDefault) {
-      this.view.dataService.addNew().subscribe((res: any) => {
-        if (res) {
-          res.isAdd = true;
-          this.dataDefault = { ...res };
-          data.dataDefault = { ...this.dataDefault };
-          let dialog = this.callfunc.openSide(
-            VendorsAddComponent,
-            data,
-            this.optionSidebar,
-            this.view.funcID
-          );
-        }
-      });
-    } else {
-      data.dataDefault.recID = Util.uid();
-      let dialog = this.callfunc.openSide(
-        VendorsAddComponent,
-        data,
-        this.optionSidebar,
-        this.view.funcID
-      );
-    }
+    this.view.dataService.addNew().subscribe((res: any) => {
+      if (res) {
+        res.isAdd = true;
+        let data = {
+          headerText: this.headerText,
+          dataDefault: { ...res }
+        };
+        let option = new SidebarModel();
+        option.DataService = this.view?.dataService;
+        option.FormModel = this.view?.formModel;
+        option.Width = '800px';
+        let dialog = this.callfunc.openSide(
+          VendorsAddComponent,
+          data,
+          option,
+          this.view.funcID
+        );
+      }
+    });
   }
   edit(e, dataEdit) {
     this.headerText = (e.text + ' ' + this.funcName).toUpperCase();
@@ -165,10 +150,14 @@ export class VendorsComponent extends UIComponent {
             headerText: this.headerText,
             dataDefault: { ...res }
           };
+          let option = new SidebarModel();
+          option.DataService = this.view?.dataService;
+          option.FormModel = this.view?.formModel;
+          option.Width = '800px';
           let dialog = this.callfunc.openSide(
             VendorsAddComponent,
             data,
-            this.optionSidebar,
+            option,
             this.view.funcID
           );
         }
@@ -187,10 +176,14 @@ export class VendorsComponent extends UIComponent {
           headerText: this.headerText,
           dataDefault: { ...res }
         };
+        let option = new SidebarModel();
+          option.DataService = this.view?.dataService;
+          option.FormModel = this.view?.formModel;
+          option.Width = '800px';
         let dialog = this.callfunc.openSide(
           VendorsAddComponent,
           data,
-          this.optionSidebar,
+          option,
           this.view.funcID
         );
       }

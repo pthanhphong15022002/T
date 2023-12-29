@@ -19,6 +19,8 @@ import {
   DialogModel,
   DialogRef,
   NotificationsService,
+  PageLink,
+  PageTitleService,
   RequestOption,
   ResourceModel,
   SidebarModel,
@@ -84,6 +86,8 @@ export class CodxTasksComponent
   @Input() assemblyName = 'ERM.Business.TM';
   @Input() className = 'TaskBusiness';
   @Input() method = 'GetTasksAsync';
+  @Input() hideSearchFav = false; //ẩn/hiện seach fav trên toolbar
+  @Input() viewMode: any;
 
   @ViewChild('panelRight') panelRight?: TemplateRef<any>;
   @ViewChild('itemTemplate') itemTemplate!: TemplateRef<any>;
@@ -101,7 +105,6 @@ export class CodxTasksComponent
   @ViewChild('headerTemp') headerTemp?: TemplateRef<any>;
   @ViewChild('popupToDoList') popupToDoList?: TemplateRef<any>;
 
-  @Input() viewsInput: Array<ViewModel> = [];
   views: Array<ViewModel> = [];
   viewsDefault: Array<ViewModel> = [];
 
@@ -167,7 +170,7 @@ export class CodxTasksComponent
   dataTree = [];
   listDataTree = [];
   iterationID: any;
-  viewMode: any;
+  // viewMode: any;
   projectID?: any;
   listViewModel = [];
   dataReferences = [];
@@ -205,6 +208,9 @@ export class CodxTasksComponent
   selectedFirst = true;
   queryParams: any;
 
+  entityID = ''; //get seachface
+  func: any;
+
   constructor(
     inject: Injector,
     private authStore: AuthStore,
@@ -213,7 +219,8 @@ export class CodxTasksComponent
     private tmSv: CodxTasksService,
     private codxShareService: CodxShareService,
     public sanitizer: DomSanitizer,
-    private changeDetectorRef: ChangeDetectorRef
+    private changeDetectorRef: ChangeDetectorRef,
+    private pageTitle: PageTitleService
   ) {
     super(inject);
     this.user = this.authStore.get();
@@ -231,7 +238,8 @@ export class CodxTasksComponent
       this.funcID = this.activedRouter.snapshot.params['funcID'];
     this.crrFuncID = this.funcID;
     this.projectID = this.dataObj?.projectID;
-    this.viewMode = this.dataObj?.viewMode;
+    //tắt vì có input rồi
+    // this.viewMode = this.dataObj?.viewMode;
 
     //them prdicate vao loc
     if (this.predicate && this.dataValue) {
@@ -284,24 +292,28 @@ export class CodxTasksComponent
 
   afterLoad() {
     this.queryParams = this.router.snapshot.queryParams;
-
     this.cache.functionList(this.funcID).subscribe((f) => {
-      if (f)
+      if (f) {
+        this.entityID = f.entityName;
+        this.func = f;
         this.cache.moreFunction(f.formName, f.gridViewName).subscribe((res) => {
           if (res) {
             this.moreFunction = res;
           }
         });
-      this.cache.gridViewSetup(f.formName, f.gridViewName).subscribe((grv) => {
-        if (grv) {
-          this.vllStatus = grv?.Status?.referedValue;
-          this.vllApproveStatus = grv?.ApproveStatus?.referedValue;
-          this.vllExtendStatus = grv?.ExtendStatus?.referedValue;
-          this.vllVerifyStatus = grv?.VerifyStatus?.referedValue;
-          this.vllConfirmStatus = grv?.ConfirmStatus?.referedValue;
-          this.vllPriority = grv?.Priority?.referedValue;
-        }
-      });
+        this.cache
+          .gridViewSetup(f.formName, f.gridViewName)
+          .subscribe((grv) => {
+            if (grv) {
+              this.vllStatus = grv?.Status?.referedValue;
+              this.vllApproveStatus = grv?.ApproveStatus?.referedValue;
+              this.vllExtendStatus = grv?.ExtendStatus?.referedValue;
+              this.vllVerifyStatus = grv?.VerifyStatus?.referedValue;
+              this.vllConfirmStatus = grv?.ConfirmStatus?.referedValue;
+              this.vllPriority = grv?.Priority?.referedValue;
+            }
+          });
+      }
     });
 
     this.showButtonAdd =
@@ -1106,6 +1118,14 @@ export class CodxTasksComponent
   //#endregion
   //#region Event đã có dùng clickChildrenMenu truyền về
   changeView(evt: any) {
+    if (
+      this.funcID == 'TMT03011' ||
+      this.funcID == 'TMT05011' ||
+      this.hideSearchFav
+    ) {
+      (this.view as any).pageTitle.showBreadcrumbs(false);
+      // this.getSearchFav(); // vẽ lại cái searchFav
+    }
     this.viewCrr = evt?.view?.type;
     if (this.crrFuncID != this.funcID) {
       this.afterLoad();
@@ -2285,5 +2305,77 @@ export class CodxTasksComponent
         break;
     }
     return check;
+  }
+
+  //menu 2
+
+  getSearchFav() {
+    this.api
+      .execSv('SYS', 'SYS', 'SearchFavoriteBusiness', 'GetFavoriteAsync', [
+        this.entityID,
+        1,
+        null,
+        false,
+      ])
+      .subscribe((res: any) => {
+        let favs = res?.favs;
+        let favDefaultID = res?.defaultId;
+        let favDefaultName = '';
+        let arrChildren: Array<PageLink> = [];
+        for (let i = 0; i < favs.length; i++) {
+          if (favDefaultID == favs[i].recID) favDefaultName = favs[i].favorite;
+          let pageLink: PageLink = {
+            title: favs[i].favorite,
+          };
+          arrChildren.push(pageLink);
+        }
+        this.pageTitle.setChildren(arrChildren);
+
+        this.setBreadCrumb(favDefaultName);
+
+        // var favIDs: any[] = [];
+        // favs.forEach((x: any) => {
+        //   favIDs.push(x.recID);
+        // });
+        // let className = 'DataBusiness';
+        // let methol = 'GetCountFavoriteAsync';
+        // let assemblyName = 'Core';
+        // if (
+        //   this.funcID == 'TMT0206' ||
+        //   this.funcID == 'TMT0301' ||
+        //   this.funcID == 'TMT0302'
+        // ) {
+        //   assemblyName = 'TM';
+        //   className = 'TaskBusiness';
+        //   methol = 'CountFavoriteModuleAsync';
+        // }
+        // this.tmSv
+        //   .countFavorite(this.funcID, favIDs, assemblyName, className, methol)
+        //   .subscribe((res) => {
+        //     favs.forEach((x: any) => {
+        //       x.count = res ? res[x.recID] ?? 0 : 0;
+        //     });
+        //     //tram keu bo vao dday ne
+        //     let arrChildren: Array<PageLink> = [];
+        //     for (let i = 0; i < favs.length; i++) {
+        //       let pageLink: PageLink = {
+        //         title: favs[i].favorite,
+        //         path: '',
+        //         // this.rootFunction.module.toLowerCase() +
+        //         // '/report/detail/' +
+        //         // this.orgReportList[i].recID,
+        //       };
+        //       arrChildren.push(pageLink);
+        //     }
+        //     this.pageTitle.setChildren(arrChildren);
+        //     // this.setBreadCrumb(this.func);
+        //   });
+      });
+  }
+  setBreadCrumb(defaultName: any, deleteChild: boolean = false) {
+    if (defaultName) {
+      !deleteChild && this.pageTitle.setSubTitle(defaultName);
+      deleteChild && this.pageTitle.setSubTitle('');
+    }
   }
 }

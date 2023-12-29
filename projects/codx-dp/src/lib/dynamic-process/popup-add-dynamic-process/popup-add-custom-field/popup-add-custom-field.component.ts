@@ -47,8 +47,8 @@ import { PopupAddVllCustomComponent } from './popup-add-vll-custom/popup-add-vll
 import { PopupSettingTableComponent } from './popup-setting-table/popup-setting-table.component';
 import { PopupSettingReferenceComponent } from './popup-setting-reference/popup-setting-reference.component';
 import { CodxInputCustomFieldComponent } from 'projects/codx-share/src/lib/components/codx-input-custom-field/codx-input-custom-field.component';
-import { CodxFieldsFormatValueComponent } from 'projects/codx-share/src/lib/components/codx-fields-detail-temp/codx-fields-format-value/codx-fields-format-value.component';
 import { PopupAddAutoNumberComponent } from 'projects/codx-es/src/lib/setting/category/popup-add-auto-number/popup-add-auto-number.component';
+import { CodxFieldsFormatValueComponent } from 'projects/codx-share/src/lib/components/codx-input-custom-field/codx-fields-detail-temp/codx-fields-format-value/codx-fields-format-value.component';
 
 @Component({
   selector: 'lib-popup-add-custom-field',
@@ -1006,8 +1006,9 @@ export class PopupAddCustomFieldComponent implements OnInit {
   }
   //end
 
-  //** đánh số tự động - Popup setiing autoNumber */
-
+  //--------------------------------------------------//
+  //** đánh số tự động - Popup setiing autoNumber    */
+  //--------------------------------------------------//
   async openAutoNumPopup() {
     this.getVllFormat();
     let obj = {};
@@ -1118,40 +1119,30 @@ export class PopupAddCustomFieldComponent implements OnInit {
 
   async getVllFormat() {
     this.vllDateFormat = await firstValueFrom(this.cache.valueList('L0088'));
-    // if (!this.adAutoNumber && this.action != 'add') {
-    //   this.adAutoNumber = await firstValueFrom(
-    //     this.dpService.getADAutoNumberByAutoNoCode(this.field.recID)
-    //   );
-    //   if (this.adAutoNumber) this.setViewAutoNumber(this.adAutoNumber);
-    // }
   }
-  //end
+  //-----------------------END AUTONUM------------------//
 
-  //Trường tính toán
+  //--------------------------------------------------//
+  //--------------CACULATE FIELD----------------------//
+  //--------------------------------------------------//
+
   operator = ['+', '-', 'x', '/', 'Avg('];
   accessField = [']'];
   arrNum = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
   buttonOperator(op) {
     if (this.caculateField) {
-      if (this.caculateField[this.caculateField.length - 1] == '(') return;
+      let chartLast = this.caculateField[this.caculateField.length - 1];
+      if (chartLast == '(') return;
       if (op == 'Avg') {
         if (
-          this.arrNum.includes(
-            this.caculateField[this.caculateField.length - 1]
-          ) ||
-          this.accessField.includes(
-            this.caculateField[this.caculateField.length - 1]
-          )
+          this.arrNum.includes(chartLast) ||
+          this.accessField.includes(chartLast)
         ) {
           return;
         }
         op = 'Avg(';
       }
-      if (
-        this.operator.includes(
-          this.caculateField[this.caculateField.length - 1]
-        )
-      )
+      if (this.operator.includes(chartLast))
         this.caculateField = this.caculateField.substring(
           0,
           this.caculateField.length - 1
@@ -1162,25 +1153,42 @@ export class PopupAddCustomFieldComponent implements OnInit {
   }
 
   buttonOpenParenthesis() {
-    if (
-      this.caculateField &&
-      this.operator.includes(this.caculateField[this.caculateField.length - 1])
-    )
-      this.caculateField += '(';
+    if (this.caculateField) {
+      let idxLast = this.caculateField.length - 1;
+      if (
+        this.arrNum.includes(this.caculateField[idxLast]) ||
+        this.caculateField[idxLast] == ')' ||
+        this.caculateField[idxLast] == ','
+      )
+        return;
+    }
+    this.caculateField += '(';
   }
 
   buttonCloseParenthesis() {
-    if (
-      this.caculateField &&
-      !Number.isNaN(this.caculateField[this.caculateField.length - 1])
-      //this.accessField.includes(this.caculateField[this.caculateField.length - 1])
-    )
-      this.caculateField += ')';
+    if (this.caculateField) {
+      let idxLast = this.caculateField.length - 1;
+      if (
+        this.operator.includes(this.caculateField[idxLast]) ||
+        this.caculateField[idxLast] == '(' ||
+        this.caculateField[idxLast] == ','
+      )
+        return;
+    }
+    this.caculateField += ')';
   }
-  //test
+
   fieldSelect(fieldName) {
-    //tesst
-    this.caculateField += '[' + fieldName + ']'; //Math.random() * 100;
+    if (this.caculateField) {
+      let idxLast = this.caculateField.length - 1;
+      if (
+        this.caculateField[idxLast] == ']' ||
+        this.caculateField[idxLast] == ')' ||
+        this.caculateField[idxLast] == ','
+      )
+        return;
+    }
+    this.caculateField += '[' + fieldName + ']';
     this.popover.close();
   }
 
@@ -1195,7 +1203,9 @@ export class PopupAddCustomFieldComponent implements OnInit {
           this.caculateField = this.caculateField.substring(0, idxLast);
           idxLast = idxLast - 1;
         }
-      } else this.caculateField = this.caculateField.substring(0, idxLast);
+      }
+      //else this.caculateField = this.caculateField.substring(0, idxLast);
+      this.caculateField = this.caculateField.substring(0, idxLast);
     }
   }
   delAll() {
@@ -1206,6 +1216,15 @@ export class PopupAddCustomFieldComponent implements OnInit {
     this.caculateField += num;
   }
   decimalPoint() {
+    if (!this.caculateField) return;
+    let chartLast = this.caculateField[this.caculateField.length - 1];
+    if (
+      chartLast == ',' ||
+      this.accessField.includes(chartLast) ||
+      this.operator.includes(chartLast)
+    )
+      return;
+    //chua check hết
     this.caculateField += ',';
   }
 
@@ -1239,5 +1258,5 @@ export class PopupAddCustomFieldComponent implements OnInit {
   checkCaculateField() {
     return true;
   }
-  //end
+  //-----------------end CACULATE FIELD------------------//
 }

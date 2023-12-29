@@ -59,12 +59,13 @@ import { CodxShareService } from '../../../codx-share.service';
 import { CodxCommonService } from 'projects/codx-common/src/lib/codx-common.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CodxViewApproveComponent } from '../codx-step-common/codx-view-approve/codx-view-approve.component';
-import { PopupCustomFieldComponent } from '../../codx-fields-detail-temp/popup-custom-field/popup-custom-field.component';
+
 import { Subject, firstValueFrom } from 'rxjs';
 import { ContractsDetailComponent } from 'projects/codx-cm/src/lib/contracts/contracts-detail/contracts-detail.component';
 import { environment } from 'src/environments/environment';
 import { Location } from '@angular/common';
 import { ExportData } from 'projects/codx-common/src/lib/models/ApproveProcess.model';
+import { PopupCustomFieldComponent } from '../../codx-input-custom-field/codx-fields-detail-temp/popup-custom-field/popup-custom-field.component';
 @Component({
   selector: 'codx-step-task',
   templateUrl: './codx-step-task.component.html',
@@ -343,7 +344,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     setTimeout(() => {
       let elements = document.getElementsByClassName('step-task-right');
       const listTask = Array.from(elements);
-      if (listTask?.length > 0 ) {
+      if (listTask?.length > 0) {
         let maxWidth = 0;
         for (const element of listTask) {
           const computedWidth = window.getComputedStyle(element).width;
@@ -359,10 +360,9 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     }, 1000);
   }
 
-  ngAfterViewChecked() {
-  }
-  setWidth(){
-    this.widthTask = "auto";
+  ngAfterViewChecked() {}
+  setWidth() {
+    this.widthTask = 'auto';
     let elements = document.getElementsByClassName('step-task-right');
     const listTask = Array.from(elements);
     if (listTask?.length > 0) {
@@ -564,7 +564,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
           case 'SYS002':
             break;
           case 'SYS004': //mail
-            // res.disabled = task?.taskType != "E";
+            res.disabled = task?.taskType != "E";
             break;
           case 'SYS02': //xóa
             if (!(!task?.isTaskDefault && (this.isRoleAll || isGroup))) {
@@ -871,9 +871,9 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       case 'DP29':
         this.deleteMeeting(task);
         break;
-      // case 'SYS004':
-      //   this.sendMailTask(task);
-      //   break;
+      case 'SYS004':
+        this.sendMail(task,false);
+        break;
       case 'DP27':
         this.addBookingCar(task);
         break;
@@ -947,15 +947,6 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     }
   }
   //#endregion
-
-  sendMailTask(data) {
-    this.api
-      .exec<any>('DP', 'InstancesStepsBusiness', 'SendMailTaskAsync', [
-        data,
-        null,
-      ])
-      .subscribe((res) => {});
-  }
 
   //#region start task
   async startTask(task: DP_Instances_Steps_Tasks, groupTask) {
@@ -1227,6 +1218,8 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
             this.changeTaskAdd(res[0], res[1], res[2], false);
           }
         });
+    }else if (this.taskType?.value == 'E'){
+      this.handelMail(null,"add");
     } else {
       let type = groupID ? 'group' : 'step';
       let taskOutput = await this.openPopupTask('add', type, task, groupID);
@@ -1365,7 +1358,9 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
               this.changeTaskEdit(res, res?.taskGroupID);
             }
           });
-      } else {
+      } else if (task?.taskType == 'E'){
+        this.handelMail(task, 'edit')
+      }  else {
         let groupIdOld = task?.taskGroupID;
         this.taskType = this.listTaskType.find(
           (type) => type.value == task?.taskType
@@ -1448,6 +1443,8 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
               this.changeTaskAdd(res[0], res[1], res[2], false);
             }
           });
+      }else if (task?.taskType == 'E') {
+        this.handelMail(task, 'copy');
       } else {
         this.taskType = this.listTaskType.find(
           (type) => type.value == task?.taskType
@@ -2531,16 +2528,6 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   }
   //#endregion
 
-  //#region mail
-  sendMail() {
-    let dialogEmail = this.callfc.openForm(CodxEmailComponent, '', 900, 800);
-    dialogEmail.closed.subscribe((x) => {
-      if (x.event != null) {
-      }
-    });
-  }
-  //#endregion
-
   //#region Booking Car
   async updateBookingCar(task) {
     let booking = await firstValueFrom(
@@ -3225,4 +3212,127 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   }
 
   //export Form Nhập liệu
+
+  sendMail(task,group) {
+    let data = {
+      dialog: null,
+      formGroup: null,
+      templateID: task?.reference,
+      showIsTemplate: true,
+      showIsPublish: true,
+      showSendLater: true,
+      files: null,
+      isAddNew: false,
+    };
+
+    let popEmail = this.callfc.openForm(
+      CodxEmailComponent,
+      '',
+      800,
+      screen.height,
+      '',
+      data
+    );
+    popEmail.closed.subscribe((res) => {
+      if (res?.event?.isSendMail && task?.status == "1") {
+        this.startTask(task,group)
+      }
+    })
+  }
+
+  handelMail(stepsTasks: DP_Instances_Steps_Tasks, action) {
+    let task = stepsTasks ? stepsTasks : new DP_Instances_Steps_Tasks();
+    let data = {
+      formGroup: null,
+      templateID: task?.reference || null,
+      showIsTemplate: true,
+      showIsPublish: true,
+      showSendLater: true,
+      files: null,
+      isAddNew: action == "edit" ? false : true,
+      saveIsTemplate: action == "edit" || this.isStart ? false : true,
+      notSendMail: this.isStart ? false : true,
+    };
+
+    let popEmail = this.callfc.openForm(
+      CodxEmailComponent,
+      '',
+      800,
+      screen.height,
+      '',
+      data
+    );
+    popEmail.closed.subscribe((res) => {
+      if (res && res?.event) {
+        let mail = res?.event;
+        if (action === 'add' || action === 'copy') {
+          task.refID = Util.uid();
+          task.status = '1';
+          task.progress = 0;
+          task.assigned = '0';
+          task.dependRule = '0';
+          task.approveStatus = '1';
+          task.approveStatus = '1';
+          task.isTaskDefault = false;
+          task.taskType = "E";
+          task.stepID = this.currentStep?.recID;
+          task.taskName = mail?.subject || this.taskType?.text;
+          task.durationDay = 1;
+          task.reference = mail?.recID;
+          task.memo = mail?.message;
+          task.indexNo = this.currentStep?.tasks.length + 1;
+          if(this.isStart){
+            if(mail?.isSendMail){
+              task.actualEnd =  new Date();
+              task.status = "3";
+              task.progress = 100;
+            }else{
+              task.startDate = new Date();
+              task.endDate = new Date();
+              task.endDate.setDate(task.startDate.getDate() + 1);
+              task.status = "1";
+              task.progress = 0;
+            }
+          }
+          this.setRole(task);
+          this.api
+          .exec<any>('DP', 'InstancesStepsBusiness', 'AddTaskStepAsync', [
+            task,
+          ])
+          .subscribe((res) => {
+            if (res) {
+              this.changeTaskAdd(res[0], res[1], res[2], false);
+            }
+          });
+        } else {
+          task.taskName = mail?.subject || "Email";
+          task.memo = mail?.message;
+          this.api
+          .exec<any>('DP', 'InstancesStepsBusiness', 'UpdateTaskStepAsync', [
+            task,
+          ])
+          .subscribe((res) => {
+            if (res) {
+              this.changeTaskEdit(res, res?.taskGroupID);
+            }
+          });
+        }
+        this.changeDetectorRef.markForCheck();
+      }
+    });
+  }
+
+  setRole(task) {
+    let role = new DP_Instances_Steps_Tasks_Roles();
+    role.recID = Util.uid();
+    role.objectName = this.user?.userName;
+    role.objectID = this.user?.userID;
+    role.createdOn = new Date();
+    role.createdBy = this.user?.userID;
+    role.roleType = 'O';
+    role.objectType = this.user?.objectType;
+    task.owner = role.objectID;
+    task.roles = [role];
+    return role;
+  }
 }

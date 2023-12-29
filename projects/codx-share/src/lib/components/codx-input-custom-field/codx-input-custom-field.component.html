@@ -73,6 +73,36 @@
         >
           <i class="icon-add_box icon-16"></i></button
       ></span>
+
+      <span *ngIf="customField.dataType == 'CF'" class="ms-2">
+        <span
+          class="btn btn-icon btn-light-primary me-2"
+          [ngbPopover]="toolTip"
+          #p="ngbPopover"
+          [openDelay]="500"
+          (mouseenter)="p.open()"
+          (mouseleave)="p.close()"
+          placement="bottom right top"
+          [popoverClass]="'cfField'"
+          container="body"
+          placement="top right left"
+        >
+          <i class="icon-calculate icon-16"></i></span
+      ></span>
+      <ng-template #toolTip>
+        <div class="">
+          <codx-label
+            class="label-colon fw-bold"
+            name="lblRecipe"
+            formName="DPInstancesStepsFields"
+            gridViewName="grvDPInstancesStepsFields"
+            default="Công thức"
+          ></codx-label>
+          <div class="fw-bold text-primary">
+            {{ customField.dataFormat }}
+          </div>
+        </div>
+      </ng-template>
       <!-- </div> -->
       <!-- </div> -->
     </div>
@@ -654,7 +684,7 @@
   <ng-container *ngIf="customField.dataType == 'CF'">
     <codx-input
       [field]="customField.fieldName"
-      type="number"
+      type="text"
       [placeholder]="customField.note || customField.dataFormat"
       [crrValue]="dataValueCaculate"
       [disabled]="true"

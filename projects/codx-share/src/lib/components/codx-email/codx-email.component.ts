@@ -61,6 +61,7 @@ export class CodxEmailComponent implements OnInit {
   templateType:string = "";
 
   saveIsTemplate: boolean = false;
+  notSendMail = false; //nvthuan khong cho phep gui mail chỉ tao temp
   // email: any;
   dialogETemplate: FormGroup;
   isAfterRender = false;
@@ -146,6 +147,8 @@ export class CodxEmailComponent implements OnInit {
 
     this.isAddNew = data.data?.isAddNew ?? false;
     this.files = data?.data?.files;
+    this.saveIsTemplate = data?.data?.saveIsTemplate ?? false;
+    this.notSendMail = data?.data?.notSendMail ?? false;
 
     this.renderer.listen('window', 'click', (e: Event) => {
       if (this.isInside == false && this.show == true) {

@@ -288,7 +288,7 @@ export class CodxInputCustomFieldComponent implements OnInit {
       case 'CF':
         if (
           this.customField.dataValue &&
-          !Number.parseFloat(this.customField.dataValue)
+          !this.isExitOperator(this.customField.dataValue)
         )
           this.dataValueCaculate = this.customField.dataValue;
         break;
@@ -947,4 +947,21 @@ export class CodxInputCustomFieldComponent implements OnInit {
       });
   }
   //-------------END-----------------//
+
+  //----------------Tính toán---------------------//
+  arrCheck = ['+', '-', 'x', '/', 'Avg(', '(', ')'];
+  isExitOperator(string) {
+    var check = false;
+    this.arrCheck.forEach((op, idx) => {
+      if (string.includes(op)) {
+        check = true;
+        if (idx == 0 && op == '-') {
+          check = false;
+        }
+        if (check) return;
+      }
+    });
+    return check;
+  }
+  //----------------------------------------------//
 }

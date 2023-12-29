@@ -460,4 +460,12 @@ export class CodxTasksService {
       });
   }
   //----------------END------------------//
+
+  //count động
+  countFavorite(funcID: any, favsID: any, assemblyName, className, methol) {
+    return this.api.execSv('TM', assemblyName, className, methol, [
+      funcID,
+      favsID,
+    ]);
+  }
 }

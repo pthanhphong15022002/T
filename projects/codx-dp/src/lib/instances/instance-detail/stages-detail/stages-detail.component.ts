@@ -37,7 +37,7 @@ import { CodxDpService } from '../../../codx-dp.service';
 import { InstancesComponent } from '../../instances.component';
 import { UpdateProgressComponent } from 'projects/codx-share/src/lib/components/codx-step/codx-progress/codx-progress.component';
 import { CodxTypeTaskComponent } from 'projects/codx-share/src/lib/components/codx-step/codx-step-common/codx-type-task/codx-type-task.component';
-import { PopupCustomFieldComponent } from 'projects/codx-share/src/lib/components/codx-fields-detail-temp/popup-custom-field/popup-custom-field.component';
+import { PopupCustomFieldComponent } from 'projects/codx-share/src/lib/components/codx-input-custom-field/codx-fields-detail-temp/popup-custom-field/popup-custom-field.component';
 
 @Component({
   selector: 'codx-stages-detail',

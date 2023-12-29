@@ -144,8 +144,7 @@ import { CodxAddBookingStationeryComponent } from './components/codx-booking/cod
 import { CodxInviteRoomAttendeesComponent } from './components/codx-booking/codx-invite-room-attendees/codx-invite-room-attendees.component';
 import { CodxRescheduleBookingRoomComponent } from './components/codx-booking/codx-reschedule-booking-room/codx-reschedule-booking-room.component';
 import { CodxInputCustomFieldComponent } from './components/codx-input-custom-field/codx-input-custom-field.component';
-import { CodxFieldsDetailTempComponent } from './components/codx-fields-detail-temp/codx-fields-detail-temp.component';
-import { PopupCustomFieldComponent } from './components/codx-fields-detail-temp/popup-custom-field/popup-custom-field.component';
+
 import { CodxTaskbarComponent } from './components/codx-step/codx-step-common/codx-taskbar/codx-taskbar.component';
 import { CodxViewDetailLittleComponent } from './components/codx-view-detail-little/codx-view-detail-little.component';
 import { AddNoteComponent } from './components/calendar-notes/add-note/add-note.component';
@@ -173,12 +172,10 @@ import { CodxViewReleaseSignFileComponent } from './components/codx-approval-pro
 import { CodxViewDetailBookingComponent } from './components/codx-booking/codx-view-detail-booking/codx-view-detail-booking.component';
 import { CodxView2Component } from './components/codx-view2/codx-view2.component';
 import { NgxCaptureModule } from 'ngx-capture';
-import { CodxFieldsFormatValueComponent } from './components/codx-fields-detail-temp/codx-fields-format-value/codx-fields-format-value.component';
 import { PopupAddLineTableComponent } from './components/codx-input-custom-field/popup-add-line-table/popup-add-line-table.component';
 import { AddTemplateComponent } from './components/codx-import/add-template/add-template.component';
 import { CodxDateComponent } from './components/codx-date/codx-date.component';
 import { CodxCommonModule } from 'projects/codx-common/src/public-api';
-import { FormatDataValuePipe } from './components/codx-fields-detail-temp/pipes-fields/format-data-value.pipe';
 import { AddImportDetailsComponent } from './components/codx-import/add-template/add-import-details/add-import-details.component';
 import { AddIetablesComponent } from './components/codx-import/add-template/add-ietables/add-ietables.component';
 import { FreezeService, GridModule } from '@syncfusion/ej2-angular-grids';
@@ -186,7 +183,6 @@ import { CodxViewDetailSignFileComponent } from './components/codx-approval-proc
 import { CodxViewApproveComponent } from './components/codx-step/codx-step-common/codx-view-approve/codx-view-approve.component';
 import { LayoutComponent } from './components/layout/layout.component';
 import { FormSettingComponent } from './components/form-setting/form-setting.component';
-import { ChangeMemoryCellsPipe } from './components/codx-fields-detail-temp/pipes-fields/change-memory-cells.pipe';
 import { ViewHistoryUpdateProgressComponent } from './components/codx-tasks/view-history-update-progress/view-history-update-progress.component';
 import { CodxShareReportComponent } from './components/codx-share-report/codx-share-report.component';
 import { CodxShareDashboardComponent } from './components/codx-share-dashboard/codx-share-dashboard.component';
@@ -196,7 +192,12 @@ import { SetColorTaskPipe } from './components/codx-step/pipes/set-color-task.pi
 import { CodxAuthFileComponent } from './components/codx-auth-file/codx-auth-file.component';
 import { CodxViewFileComponent } from './components/codx-view-file/codx-view-file.component';
 import { PopupAddPersonSignerComponent } from './components/codx-approve-steps/popup-add-person-signer/popup-add-person-signer.component';
-import { SumColumnsTablePipe } from './components/codx-fields-detail-temp/pipes-fields/sum-columns-table.pipe';
+import { CodxFieldsDetailTempComponent } from './components/codx-input-custom-field/codx-fields-detail-temp/codx-fields-detail-temp.component';
+import { CodxFieldsFormatValueComponent } from './components/codx-input-custom-field/codx-fields-detail-temp/codx-fields-format-value/codx-fields-format-value.component';
+import { PopupCustomFieldComponent } from './components/codx-input-custom-field/codx-fields-detail-temp/popup-custom-field/popup-custom-field.component';
+import { FormatDataValuePipe } from './components/codx-input-custom-field/codx-fields-detail-temp/pipes-fields/format-data-value.pipe';
+import { SumColumnsTablePipe } from './components/codx-input-custom-field/codx-fields-detail-temp/pipes-fields/sum-columns-table.pipe';
+import { ChangeMemoryCellsPipe } from './components/codx-input-custom-field/codx-fields-detail-temp/pipes-fields/change-memory-cells.pipe';
 
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
