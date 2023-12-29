@@ -166,6 +166,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
   caculateField = '';
   private destroyFrom$: Subject<void> = new Subject<void>();
   arrFieldNum = [];
+  showCaculate = true;
 
   constructor(
     private cache: CacheService,
@@ -215,6 +216,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
       }
     } else {
       this.fieldNameOld = this.field.fieldName;
+      this.showCaculate = false;
     }
   }
 
@@ -1182,11 +1184,25 @@ export class PopupAddCustomFieldComponent implements OnInit {
       if (
         this.operator.includes(this.caculateField[idxLast]) ||
         this.caculateField[idxLast] == '(' ||
-        this.caculateField[idxLast] == ','
+        this.caculateField[idxLast] == ',' ||
+        this.compareParenthesis(this.caculateField) == 0
       )
         return;
-    }
+    } else return;
     this.caculateField += ')';
+  }
+
+  compareParenthesis(string) {
+    let countOpen = 0;
+    let countClose = 0;
+    for (const c of string) {
+      if (c == '(') {
+        countOpen++;
+      } else if (c === ')') {
+        countClose++;
+      }
+    }
+    return countOpen - countClose;
   }
 
   fieldSelect(fieldName) {
@@ -1268,6 +1284,10 @@ export class PopupAddCustomFieldComponent implements OnInit {
 
   checkCaculateField() {
     return true;
+  }
+
+  openCaculate() {
+    this.showCaculate = !this.showCaculate;
   }
   //-----------------end CACULATE FIELD------------------//
 }
