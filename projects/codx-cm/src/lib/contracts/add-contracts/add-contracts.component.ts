@@ -177,7 +177,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
   ];
 
   tabField = {
-    icon: 'icon-reorder',
+    icon: 'icon-i-menu-button-wide',
     text: 'Thông tin mở rộng',
     name: 'InputField',
     subName: 'Input field',
@@ -597,6 +597,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
         startDate.setMonth(startDate.getMonth() + interval)
       );
     }
+    this.changeDetectorRef.markForCheck();
   }
 
   valueChangeCombobox(event) {
