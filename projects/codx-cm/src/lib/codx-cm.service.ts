@@ -983,6 +983,14 @@ export class CodxCmService {
       data
     );
   }
+  updateProcessCase(data) {
+    return this.api.exec<any>(
+      'CM',
+      'CasesBusiness',
+      'UpdateProcessCasesAsync',
+      data
+    );
+  }
 
   isExistCaseNo(data) {
     return this.api.execSv<any>(
@@ -1665,6 +1673,14 @@ export class CodxCmService {
     );
   }
 
+  getAutoNumberByAutoNoCode(autoNoCode){
+    return this.api.exec<any>(
+      'ERM.Business.AD',
+      'AutoNumbersBusiness',
+      'CreateAutoNumberAsync',
+      [autoNoCode, null, true, null]
+    );
+  }
   //#region
 
   getOneObject(recID, className) {

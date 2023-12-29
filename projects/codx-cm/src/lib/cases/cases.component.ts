@@ -533,6 +533,8 @@ export class CasesComponent
         CM0402_11: () => this.cancelApprover(data),
         CM0401_10: () => this.popupPermissions(data),
         CM0401_12: () => this.changeStatus(data),
+        CM0401_14: () => this.updateProcess(data, true),
+        CM0401_15: () => this.updateProcess(data, false),
         SYS002: () => this.exportTemplet(e, data),
       };
     }
@@ -553,6 +555,8 @@ export class CasesComponent
         CM0402_11: () => this.cancelApprover(data),
         CM0402_10: () => this.popupPermissions(data),
         CM0402_12: () => this.changeStatus(data),
+        CM0402_14: () => this.updateProcess(data, true),
+        CM0402_15: () => this.updateProcess(data, false),
         SYS002: () => this.exportTemplet(e, data),
       };
     }
@@ -584,6 +588,40 @@ export class CasesComponent
       );
     }
   }
+
+  updateProcess(data, isCheck) {
+    this.notificationsService
+      .alertCode('DP033', null, [
+        '"' + data?.caseName + '" ' + this.titleAction + ' ',
+      ])
+      .subscribe((x) => {
+        if (x.event && x.event.status == 'Y') {
+          let datas = [data.recID, data.status, '', isCheck];
+          this.getApiUpdateProcess(datas);
+        }
+      });
+  }
+  getApiUpdateProcess(datas) {
+    this.codxCmService.updateProcessCase(datas).subscribe((res) => {
+      if (res) {
+        this.dataSelected = res;
+        this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
+        this.notificationsService.notifyCode('SYS007');
+        this.view.dataService.update(this.dataSelected, true).subscribe();
+        if (this.dataSelected.applyProcess) {
+         this.detailViewCase.promiseAllAsync();
+        }
+        else {
+          this.detailViewCase.reloadListStep([]);
+        }
+        if (this.kanban) {
+          //this.renderKanban(this.dataSelected);
+        }
+      }
+      this.detectorRef.detectChanges();
+    });
+  }
+
   changeStatus(data) {
     let oldStatus = data?.status;
     this.dataSelected = data;
@@ -1111,7 +1149,7 @@ export class CasesComponent
   }
 
   openFormCases(formMD, option, action) {
-    var obj = {
+    let obj = {
       action: action === 'add' ? 'add' : 'copy',
       formMD: formMD,
       caseType: this.caseType,
@@ -1182,15 +1220,9 @@ export class CasesComponent
       let option = new SidebarModel();
       option.DataService = this.view.dataService;
       option.FormModel = this.view.formModel;
-
-      var formMD = new FormModel();
-      // formMD.funcID = funcIDApplyFor;
-      // formMD.entityName = fun.entityName;
-      // formMD.formName = fun.formName;
-      // formMD.gridViewName = fun.gridViewName;
       option.Width = '800px';
       option.zIndex = 1001;
-      this.openFormCases(formMD, option, 'copy');
+      this.openFormCases(this.view.formModel, option, 'copy');
     });
   }
 
