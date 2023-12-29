@@ -169,21 +169,24 @@ export class CardsComponent extends UIComponent {
 
   clickMF(event: any, data: any) {
     if (event.functionID === 'SYS04') {
-      // copy
-      let option = new SidebarModel();
-      option.DataService = this.view.dataService;
-      option.FormModel = this.view.formModel;
-      option.Width = '550px';
-      this.callfc.openSide(
-        PopupAddCardsComponent,
-        {
-          funcID: this.funcID,
-          data: data,
-          title: 'Sao chép phiếu',
-          type: 'copy',
-        },
-        option
-      );
+      this.fdService.checkValidAdd(this.cardType).subscribe((res: any) => {
+        if (!res.error) {
+          let option = new SidebarModel();
+          option.DataService = this.view.dataService;
+          option.FormModel = this.view.formModel;
+          option.Width = '550px';
+          this.callfc.openSide(
+            PopupAddCardsComponent,
+            {
+              funcID: this.funcID,
+              data: data,
+              title: 'Sao chép phiếu',
+              type: 'copy',
+            },
+            option
+          );
+        } else this.notiService.notifyCode('FD001');
+      });
     } else if (event.functionID === 'SYS02') {
       // delete
       (this.view.dataService as CRUDService)

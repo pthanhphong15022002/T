@@ -345,7 +345,8 @@
                     <div class="ms-12 d-flex align-items-center">
                       <div
                         *ngIf="task?.fieldID"
-                        class="d-flex align-items-center cursor-pointer"
+                        class="d-flex align-items-center"
+                        [ngClass]="(this.isOnlyView || (this.isTaskFirst && this.isRoleAll)) ? 'cursor-pointer' : 'cursor-not-allowed'"
                         (click)="openFormField(task)"
                       >
                         <span

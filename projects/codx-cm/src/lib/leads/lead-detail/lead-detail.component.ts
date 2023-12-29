@@ -255,6 +255,7 @@ export class LeadDetailComponent implements OnInit {
         this.getStepCurrent(this.dataSelected);
         this.checkCompletedInstance(this.dataSelected?.status);
       } else {
+        this.stepCurrent = null;
         this.listSteps = null;
       }
     });

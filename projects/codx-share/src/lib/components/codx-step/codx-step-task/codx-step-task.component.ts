@@ -3038,6 +3038,9 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   }
 
   openFormField(task) {
+    if(!(this.isOnlyView || (this.isTaskFirst && this.isRoleAll))){
+      return;
+    }
     let listField = this.getFields(this.currentStep?.fields, task?.fieldID);
     let obj = {
       data: JSON.parse(JSON.stringify(listField)),

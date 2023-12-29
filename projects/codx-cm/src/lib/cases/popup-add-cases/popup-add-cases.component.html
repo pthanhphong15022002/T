@@ -286,20 +286,22 @@
           <codx-input
             field="owner"
             [formModel]="form.formModel"
+            [placeholder]="gridViewSetup?.SalespersonID?.description"
             [crrValue]="owner"
-            (valueChange)="valueChangeOwner($event)"
+            (valueChange)="valueChangeOwner($event, viewOwnerDefault)"
           >
           </codx-input>
         </div>
         <ng-template #ownerProcess>
           <ejs-combobox
-            [dataSource]="listParticipants"
-            (valueChange)="valueChangeOwner($event)"
-            [fields]="fieldCbxParticipants"
-            [allowFiltering]="true"
-            [value]="owner"
-            [placeholder]="gridViewSetup?.Owner?.description"
-          ></ejs-combobox>
+          [dataSource]="listParticipants"
+          (valueChange)="valueChangeOwner($event,viewOwnerProcess)"
+          [fields]="fieldCbxParticipants"
+          [placeholder]="gridViewSetup?.Owner?.description"
+          [allowFiltering]="true"
+          [filterType]="'Contains'"
+          [value]="owner"
+        ></ejs-combobox>
         </ng-template>
       </div>
     </div>
@@ -338,14 +340,14 @@
             field="owner"
             [formModel]="form.formModel"
             [crrValue]="owner"
-            (valueChange)="valueChangeOwner($event)"
+            (valueChange)="valueChangeOwner($event, viewOwnerDefault)"
           >
           </codx-input>
         </div>
         <ng-template #ownerProcess>
           <ejs-combobox
             [dataSource]="listParticipants"
-            (valueChange)="valueChangeOwner($event)"
+            (valueChange)="valueChangeOwner($event,viewOwnerProcess)"
             [fields]="fieldCbxParticipants"
             [allowFiltering]="true"
             [value]="owner"

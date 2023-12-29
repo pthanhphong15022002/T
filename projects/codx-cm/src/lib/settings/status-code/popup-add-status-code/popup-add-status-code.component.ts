@@ -212,22 +212,6 @@ export class PopupAddStatusCodeComponent implements OnInit, AfterViewInit {
 
   // hard code
   getValueTypeCategory(value) {
-    // if (value == '1') {
-    //   return 'CRM039'; //lead
-    // } else if (value == '3') {
-    //   return 'CRM041';
-    // } else if (value == '5') {
-    //   //lead
-    //   return 'CRM042';
-    // } else if (value == '7') {
-    //   return 'CRM015';
-    // } else if (value == '9') {
-    //   return 'CRM015';
-    // } else if (value == '11') {
-    //   return 'CRM015';
-    // }
-
-    //CRM062
     let vll = '';
     switch (value) {
       case '1': //custormer
@@ -240,10 +224,13 @@ export class PopupAddStatusCodeComponent implements OnInit, AfterViewInit {
         vll = 'CRM042';
         break;
       case '7': //contract
-      //test của bảo
-      case '9': //case
-      case '11': //request
         vll = 'CRM015';
+        break;
+      case '9': //case
+        vll = 'CRM076';
+        break;
+      case '11': //request
+        vll = 'CRM077';
         break;
     }
 

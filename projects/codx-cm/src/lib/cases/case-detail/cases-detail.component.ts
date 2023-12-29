@@ -89,6 +89,7 @@ export class CasesDetailComponent
   casesType: string = '';
   oldRecId: string = '';
   asideMode: string = '';
+  stepCurrent:any;
 
   contactPerson = new CM_Contacts();
   isDataLoading: boolean = true;
@@ -144,11 +145,19 @@ export class CasesDetailComponent
       this.dataSelected?.applyProcess && (await this.getListInstanceStep());
     } catch (error) {}
   }
+
   reloadListStep(listSteps: any) {
     this.isDataLoading = true;
     this.listSteps = listSteps;
+    this.getStepCurrent(this.dataSelected);
     this.isDataLoading = false;
     this.changeDetectorRef.detectChanges();
+  }
+  getStepCurrent(data) {
+    this.stepCurrent = null;
+    if( this.listSteps != null &&  this.listSteps.length > 0) {
+      this.stepCurrent = this.listSteps.filter((x) => x.stepID == data.stepID)[0];
+     }
   }
   getListInstanceStep() {
     var data = [
@@ -160,9 +169,11 @@ export class CasesDetailComponent
     this.codxCmService.getStepInstance(data).subscribe((res) => {
       if (res) {
         this.listSteps = res;
+        this.getStepCurrent(this.dataSelected);
         this.isDataLoading = false;
         this.checkCompletedInstance(this.dataSelected?.status);
       } else {
+        this.stepCurrent = null;
         this.listSteps = null;
       }
     });
