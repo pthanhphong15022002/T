@@ -40,6 +40,8 @@ export class ViewDetailCardsComponent implements OnInit, OnChanges {
   data: any = null;
   user = null;
   behavior: any[] = [];
+  showmore: boolean = false;
+  showSM: boolean = false;
   tabControl = [
     {
       name: 'History',
@@ -87,7 +89,7 @@ export class ViewDetailCardsComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes.cardID.currentValue != changes.cardID?.previousValue) {
+    if (changes.cardID.currentValue != changes.cardID.previousValue && changes.cardID.previousValue != undefined) {
       this.backgroundImg = undefined;
       this.getDataCard();
     }
@@ -173,6 +175,22 @@ export class ViewDetailCardsComponent implements OnInit, OnChanges {
           }
           this.dt.detectChanges();
         }
+        const textElement = document.getElementById('situation');
+        const lineHeight = parseInt(getComputedStyle(textElement).lineHeight);
+        const height = textElement.clientHeight;
+        const lineCount = Math.round(height / lineHeight);
+        if (lineCount && lineCount > 10) {
+          this.showSM = true;
+          this.showmore = true;
+        } else {
+          this.showmore = false;
+          this.showSM = false;
+        }
       });
+  }
+
+  showMore() {
+    this.showmore = false;
+    this.showSM = false;
   }
 }
