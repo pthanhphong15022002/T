@@ -649,6 +649,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
                   this.contracts.contractID = this.autoNumber;
                   this.disabledShowInput = true;
                 }else{
+                  this.contracts.contractID = '';
                   this.disabledShowInput = false;
                 }
               }
