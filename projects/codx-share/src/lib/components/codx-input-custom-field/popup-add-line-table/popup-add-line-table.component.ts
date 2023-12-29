@@ -41,7 +41,6 @@ export class PopupAddLineTableComponent implements OnInit {
     this.action = dt?.data?.action;
 
     this.arrCaculateField = this.listColumns.filter((x) => x.dataType == 'CF');
-  
   }
   ngOnInit(): void {
     this.listColumns.forEach((x) => {
@@ -79,9 +78,8 @@ export class PopupAddLineTableComponent implements OnInit {
         this.fieldFormat[idxUp]['dataValue'] = result;
         let fieldName = this.fieldFormat[idxUp]['fieldName'];
         this.line[fieldName] = result;
+        if (field.dataType == 'N') this.caculateField();
       }
-
-      if (field.dataType == 'N') this.caculateField();
     }
   }
 

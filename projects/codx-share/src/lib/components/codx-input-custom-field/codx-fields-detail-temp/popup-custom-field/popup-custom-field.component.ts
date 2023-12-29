@@ -83,8 +83,8 @@ export class PopupCustomFieldComponent implements OnInit {
       let index = this.fields.findIndex((x) => x.recID == field.recID);
       if (index != -1) {
         this.fields[index].dataValue = result;
+        if (field.dataType == 'N') this.caculateField();
       }
-      if (field.dataType == 'N') this.caculateField();
     }
   }
   // partValue(item) {
