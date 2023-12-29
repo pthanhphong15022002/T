@@ -32,14 +32,14 @@ import {
   CodxInputComponent,
   NotificationsService,
 } from 'codx-core';
+import { tmpInstances } from '../../models/tmpModel';
 import { CodxCmService } from '../../codx-cm.service';
-import { Observable, Subject, firstValueFrom, takeUntil } from 'rxjs';
 import { ContractsService } from '../service-contracts.service';
+import { Observable, Subject, firstValueFrom, takeUntil } from 'rxjs';
 import { StepService } from 'projects/codx-share/src/lib/components/codx-step/step.service';
 import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
-import { PopupAddCategoryComponent } from 'projects/codx-es/src/lib/setting/category/popup-add-category/popup-add-category.component';
-import { tmpInstances } from '../../models/tmpModel';
 import { CodxListContactsComponent } from '../../cmcustomer/cmcustomer-detail/codx-list-contacts/codx-list-contacts.component';
+import { PopupAddCategoryComponent } from 'projects/codx-es/src/lib/setting/category/popup-add-category/popup-add-category.component';
 
 @Component({
   selector: 'add-contracts',
@@ -60,6 +60,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
   @ViewChild('inputQuotation') inputQuotation: CodxInputComponent;
   @ViewChild('realtiesTmp') realtiesTmp: TemplateRef<any>;
   @ViewChild('loadContactDeal') loadContactDeal: CodxListContactsComponent;
+  @ViewChild('comboboxContractType') comboboxContractType: CodxInputComponent;
 
   REQUIRE = [
     'contractID',
@@ -90,12 +91,14 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
   listPaymentDelete: CM_ContractsPayments[] = [];
   listPaymentHistory: CM_ContractsPayments[] = [];
 
+  private destroyFrom$: Subject<void> = new Subject<void>();
+  titleAction: any;
+
   account: any;
   columns: any;
   grvPayments: any;
   projectID: string;
   dialog!: DialogRef;
-  view = [];
   isLoadDate = true;
   checkPhone = true;
   isErorrDate = true;
@@ -110,6 +113,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
   tabClicked = '';
   headerTest = '';
   contractRefID = '';
+  view = [];
   listField = [];
   customerID = {};
   listProcessNo = [];
@@ -135,7 +139,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
   isApplyProcess = false;
   countInputChangeAuto = 0;
   // task
-  instance = new tmpInstances();;
+  instance = new tmpInstances();
   viewTask;
   stepsTasks;
   oldIdInstance;
@@ -145,6 +149,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
   isSaveTimeTask = true;
   isLoadDateTask = false;
   popupRealties;
+  autoCode = '';
   moreDefaut = {
     read: true,
     share: true,
@@ -251,8 +256,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
     this.stepsTasks = dt?.data?.stepsTasks || {};
     this.contractsInput = dt?.data?.contract || dt?.data?.dataCM || null;
     this.user = this.authStore.get();
-    // this.getTitle();
-    this.getFormModel();
+    this.getHeaderText();
     this.getGrvSetup();
   }
 
@@ -273,7 +277,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
     }
   }
 
-  async ngAfterViewInit() {
+  ngAfterViewInit() {
     this.tabContent = [this.information, this.reference];
     if (this.type == 'task') {
       this.tabInfo.push({
@@ -284,6 +288,34 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
         subText: 'General task',
       });
       this.tabContent.push(this.task);
+    }
+  }
+
+  ngAfterViewChecked() {
+    if (
+      (this.action == 'copy' || this.action == 'extend') &&
+      this.comboboxContractType &&
+      this.contracts?.contractType &&
+      !this.autoCode
+    ) {
+      let data = this.comboboxContractType?.ComponentCurrent?.dataService?.data;
+      if (data?.length > 0) {
+        this.autoCode = data[0]?.AutoNumber;
+        this.cmService.getAutoNumberByAutoNoCode(this.autoCode).subscribe((res) => {
+          if (res) {
+            this.contracts.contractID = res;
+            this.disabledShowInput = true;
+          } else {
+            if (this.autoNumber) {
+              this.contracts.contractID = this.autoNumber;
+              this.disabledShowInput = true;
+            } else {
+              this.contracts.contractID = '';
+              this.disabledShowInput = false;
+            }
+          }
+        });
+      }
     }
   }
   //#region setData
@@ -340,7 +372,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
             this.contracts = dataEdit;
           }
         }
-        if(this.contracts?.applyProcess && this.contracts.processID){
+        if (this.contracts?.applyProcess && this.contracts.processID) {
           this.getListInstanceSteps(this.contracts.processID);
         }
         this.getCustomersDefaults(this.contracts?.customerID);
@@ -367,7 +399,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
         } else {
           this.disabledShowInput = true;
         }
-        if(this.contracts?.applyProcess && this.contracts?.processID){
+        if (this.contracts?.applyProcess && this.contracts?.processID) {
           this.getListInstanceSteps(this.contracts.processID);
         }
         this.getCustomersDefaults(this.contracts?.customerID);
@@ -381,7 +413,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
           this.contracts.status = '1';
           this.contracts.useType = '5';
         }
-        if(this.contracts?.applyProcess && this.contracts.processID){
+        if (this.contracts?.applyProcess && this.contracts.processID) {
           this.getListInstanceSteps(this.contracts.processID);
         }
         this.getCustomersDefaults(this.contracts?.customerID);
@@ -614,8 +646,8 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
         // this.inputQuotation.crrValue = null;
         // this.inputQuotation.ComponentCurrent.dataService.data = [];
         // this.inputQuotation.model = { customerID: this.contracts.customerID };
-        if(event?.component?.itemsSelected[0]){
-          let customerName = event?.component?.itemsSelected[0]?.CustomerName
+        if (event?.component?.itemsSelected[0]) {
+          let customerName = event?.component?.itemsSelected[0]?.CustomerName;
           this.contracts.customerName = customerName;
         }
         break;
@@ -637,23 +669,23 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
           event?.data == '0' || event?.data == '1' ? true : false;
         break;
       case 'contractType':
-        if(event?.component?.itemsSelected[0]){
-          let autoNumber = event?.component?.itemsSelected[0]?.AutoNumber
-          if(autoNumber){
-            this.getADAutoNumberByAutoNoCode(autoNumber).subscribe(res => {
-              if(res){
+        if (event?.component?.itemsSelected[0]) {
+          let autoNumber = event?.component?.itemsSelected[0]?.AutoNumber;
+          if (autoNumber) {
+            this.cmService.getAutoNumberByAutoNoCode(autoNumber).subscribe((res) => {
+              if (res) {
                 this.contracts.contractID = res;
                 this.disabledShowInput = true;
-              }else{
-                if(this.autoNumber){
+              } else {
+                if (this.autoNumber) {
                   this.contracts.contractID = this.autoNumber;
                   this.disabledShowInput = true;
-                }else{
+                } else {
                   this.contracts.contractID = '';
                   this.disabledShowInput = false;
                 }
               }
-            })
+            });
           }
         }
         break;
@@ -689,16 +721,6 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
     }
     this.form.formGroup.patchValue(this.contracts);
   }
-
-  getADAutoNumberByAutoNoCode(autoNoCode): Observable<any> {
-    return this.api.exec<any>(
-      'ERM.Business.AD',
-      'AutoNumbersBusiness',
-      'CreateAutoNumberAsync',
-      [autoNoCode, null, true, null]
-    );
-  }
-
 
   getContactByCustomerID(customerID) {
     this.contractService
@@ -813,7 +835,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
   //#endregion
 
   //#region setDefault
-  getFormModel() {
+  getHeaderText() {
     this.cache
       .gridViewSetup(
         this.dialog?.formModel?.formName,
@@ -828,46 +850,21 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
         }
       });
   }
+
   getTitle() {
     this.cache.functionList(this.dialog?.formModel.funcID).subscribe((f) => {
       if (f) {
+        let title = f?.defaultName?.toString()?.toLowerCase()?.trim();
         if (this.headerTest) {
-          this.headerTest =
-            this.headerTest + ' ' + f?.defaultName.toString().toLowerCase();
-        } else {
-          this.cache.moreFunction('CoDXSystem', '').subscribe((res: any) => {
-            if (res) {
-              if (this.action == 'add') {
-                let title =
-                  res?.find((x) => x.functionID == 'SYS01')?.description || '';
-                this.headerTest = (
-                  title +
-                  ' ' +
-                  f?.defaultName.toString()
-                ).toUpperCase();
-              } else if (this.action == 'edit') {
-                let title =
-                  res?.find((x) => x.functionID == 'SYS03')?.description || '';
-                this.headerTest = (
-                  title +
-                  ' ' +
-                  f?.defaultName.toString()
-                ).toUpperCase();
-              } else if (this.action == 'copy') {
-                let title =
-                  res?.find((x) => x.functionID == 'SYS04')?.description || '';
-                this.headerTest = (
-                  title +
-                  ' ' +
-                  f?.defaultName.toString()
-                ).toUpperCase();
-              }
-            }
-          });
+          let check = this.headerTest.includes(title);
+          this.headerTest = check
+            ? this.headerTest + ' '
+            : this.headerTest + ' ' + f?.defaultName.toString().toLowerCase();
         }
       }
     });
   }
+
   getGrvSetup() {
     this.cache
       .gridViewSetup(
@@ -1006,9 +1003,6 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
   //#endregion
 
   //#region Approve
-  private destroyFrom$: Subject<void> = new Subject<void>();
-  titleAction: any;
-
   async clickSettingApprove() {
     let category;
     let categoryName = this.stepsTasks?.isTaskDefault
@@ -1176,7 +1170,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
   //#endregion
 
   getListInstanceSteps(processId: any) {
-    let action = this.action == "extend" ? "copy" :  this.action;
+    let action = this.action == 'extend' ? 'copy' : this.action;
     let data = [processId, this.contracts?.refID, action, '4'];
     this.cmService.getInstanceSteps(data).subscribe((res) => {
       if (res && res.length > 0) {
@@ -1258,6 +1252,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
     }
     return this.listField != null && this.listField?.length > 0;
   }
+
   itemTabsInput(check: boolean): void {
     let menuInput = this.tabInfo.findIndex(
       (item) => item?.name === this.tabField?.name
@@ -1282,6 +1277,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
   addFileCompleted(e) {
     this.isBlock = e;
   }
+
   valueChangeCustom(event) {
     //bo event.e vì nhan dc gia trị null
     if (event && event.data) {
@@ -1388,6 +1384,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
     this.changeDetectorRef.detectChanges();
     // if (!this.isCheckContact) this.isCheckContact = true;
   }
+
   lstContactDeleteEmit(e) {
     this.lstContactDelete = e;
   }
@@ -1505,7 +1502,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
         } else {
           this.editContract();
         }
-        
+
         break;
     }
   }
@@ -1538,6 +1535,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
         });
     }
   }
+
   async editInstance() {
     if (this.type == 'contract') {
       let data = [this.instance, this.listCustomFile];
@@ -1553,28 +1551,28 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
           this.editContract();
         }
       });
-    } else if(this.type == 'DP') {
+    } else if (this.type == 'DP') {
       this.dialog.dataService
-      .save((option: any) => this.beforeSaveInstance(option))
-      .subscribe((res) => {
-        if (res.update) {
-          this.contracts.status = res?.update?.status;
-          this.contracts.datas = res?.update?.datas;
-          this.contracts.permissions = this.contracts?.permissions.filter(
-            (x) => x.memberType != '2'
-          );
-          this.addPermission(res?.update?.permissions);
-          let datas = [
-            this.contracts,
-            null,
-            this.lstContactDeal,
-            null,
-            this.lstContactDelete,
-          ];
-          this.editContract();
-          this.dialog.close(res?.update);
-        }
-      });
+        .save((option: any) => this.beforeSaveInstance(option))
+        .subscribe((res) => {
+          if (res.update) {
+            this.contracts.status = res?.update?.status;
+            this.contracts.datas = res?.update?.datas;
+            this.contracts.permissions = this.contracts?.permissions.filter(
+              (x) => x.memberType != '2'
+            );
+            this.addPermission(res?.update?.permissions);
+            let datas = [
+              this.contracts,
+              null,
+              this.lstContactDeal,
+              null,
+              this.lstContactDelete,
+            ];
+            this.editContract();
+            this.dialog.close(res?.update);
+          }
+        });
     }
   }
 
@@ -1604,7 +1602,6 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
         .addContracts([this.contracts, this.listPaymentAdd])
         .subscribe((res) => {
           if (res) {
-            
           }
         });
     }
@@ -1627,7 +1624,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
   }
 
   convertDataInstance(contract: CM_Contracts, instance: tmpInstances) {
-    this.oldIdInstance = this.contracts?.refID; 
+    this.oldIdInstance = this.contracts?.refID;
     // this.contracts.refID = Util.uid();
     if (this.action === 'edit') {
       instance.recID = contract.refID;
@@ -1655,6 +1652,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
       }
     }
   }
+  
   updateDateDeal(instance: tmpInstances, contract: CM_Contracts) {
     if (this.action !== 'edit') {
       contract.stepID = this.listInstanceSteps[0].stepID;
