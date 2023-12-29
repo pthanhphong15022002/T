@@ -81,6 +81,8 @@ export class PopupAddCasesComponent
 
   readonly fieldCbxContacts = { text: 'contactName', value: 'recID' };
   readonly guidEmpty: string = '00000000-0000-0000-0000-000000000000'; // for save BE
+  readonly viewOwnerProcess: string = 'viewOwnerProcess';
+  readonly viewOwnerDefault: string = 'viewOwnerDefault';
 
   // Tab control
   menuGeneralInfo = {
@@ -128,6 +130,7 @@ export class PopupAddCasesComponent
   processID: string = '';
   applyProcess = false;
   isBlock: boolean = true;
+  isShowField: boolean = false;
   caseNoSetting: any;
   idxCrr: any = -1;
 
@@ -148,6 +151,7 @@ export class PopupAddCasesComponent
     this.action = dt?.data?.action;
     this.applyFor = dt?.data?.applyFor;
     // this.caseType = dt?.data?.caseType;
+    this.gridViewSetup = dt?.data?.gridViewSetup;
     this.isLoading = dt?.data?.isLoad;
     this.processID = dt?.data?.processID;
     this.funcID = dt?.data?.funcID;
@@ -192,7 +196,8 @@ export class PopupAddCasesComponent
   }
   ngAfterViewInit(): void {
     this.executeApiCalls();
-
+    this.tabInfo = [this.menuGeneralInfo];
+    this.tabContent = [this.tabGeneralInfoDetail];
     // this.tabInfo = this.applyProcess ? [this.menuGeneralInfo, this.menuInputInfo] : [this.menuGeneralInfo];
     // this.tabContent = [this.tabGeneralInfoDetail, this.tabCustomFieldDetail];
   }
@@ -303,17 +308,18 @@ export class PopupAddCasesComponent
     if ($event) {
       this.cases[$event.field] = $event.data;
       if ($event.data) {
-        var result = this.checkProcessInList($event.data);
+        let result = this.checkProcessInList($event.data);
         if (result) {
           this.listInstanceSteps = result?.steps;
           this.listParticipants = result?.permissions;
           this.setAutoNameTabFields(result?.autoNameTabFields);
-          this.cases.caseNo = result?.caseId;
+          this.cases.caseNo = result?.dealId;
           this.cases.endDate = this.HandleEndDate(
             this.listInstanceSteps,
             this.action,
             null
           );
+          this.getSettingFields(result?.processSetting,this.listInstanceSteps)
           this.changeDetectorRef.detectChanges();
         } else {
           this.getListInstanceSteps($event.data);
@@ -366,22 +372,29 @@ export class PopupAddCasesComponent
       }
     }
   }
-  valueChangeOwner($event) {
-    // if ($event) {
-    //   this.owner = this.cases.applyProcess ? $event : $event.data;
-    //   this.cases.owner = this.owner;
-    // }
-    if ($event) {
-      this.owner = this.cases.applyProcess ? $event : $event.data;
-      let ownerName = '';
-      if (this.listParticipants.length > 0 && this.listParticipants) {
-        ownerName = this.listParticipants.filter(
-          (x) => x.userID === this.owner
-        )[0]?.userName;
+  async valueChangeOwner($event, view) {
+    if (view === this.viewOwnerDefault) {
+      if ($event?.data && $event?.data !== '') {
+        let ownerName = '';
+        this.owner = $event?.data;
+        ownerName = $event?.component?.itemsSelected[0]?.UserName;
+        this.searchOwner('1', 'O', '0', this.owner, ownerName);
+      } else if ($event === null || $event === '' || $event === '') {
+        this.deleteOwner('1', 'O', '0', this.cases.owner, 'owner');
       }
-      this.searchOwner('1', 'O', '0', this.owner, ownerName);
-    } else if ($event == null || $event == '') {
-      this.deleteOwner('1', 'O', '0', this.owner, 'owner');
+    } else if (view === this.viewOwnerProcess) {
+      if ($event) {
+        this.owner = $event;
+        let ownerName = '';
+        if (this.listParticipants.length > 0 && this.listParticipants) {
+          ownerName = this.listParticipants.filter(
+            (x) => x.userID === this.owner
+          )[0].userName;
+        }
+        this.searchOwner('1', 'O', '0', this.owner, ownerName);
+      } else if ($event === null || $event === '') {
+        this.deleteOwner('1', 'O', '0', this.cases.owner, 'owner');
+      }
     }
   }
   searchOwner(
@@ -461,7 +474,10 @@ export class PopupAddCasesComponent
   }
   valueChangeCustomer($event) {
     if ($event) {
-      var result = this.checkContactInList($event.data);
+      let result = this.checkContactInList($event.data);
+      this.cases.customerName =  $event.component?.itemsSelected[0]?.CustomerName;
+      this.cases.shortName = $event.component?.itemsSelected[0]?.ShortName;
+      this.cases.customerCategory = $event.component?.itemsSelected[0]?.Category;
       if (result) {
         this.listCbxContacts = result?.contacts;
         this.changeDetectorRef.detectChanges();
@@ -545,28 +561,25 @@ export class PopupAddCasesComponent
   }
 
   async executeApiCalls() {
-    await this.getGridView(this.formModel);
-    if (this.action == 'add') {
-      this.itemTabs(false);
+   this.isLoading && await this.getGridView(this.formModel);
+    if (this.action == this.actionAdd) {
+     // this.itemTabs(false);
 
       let res = await firstValueFrom(
         this.codxCmService.getParam('CMParameters', '1')
       );
       if (res?.dataValue) {
         let dataValue = JSON.parse(res?.dataValue);
-        console.log(dataValue);
-        this.applyProcess = dataValue?.ProcessCase == '1';
+        this.applyProcess = this.caseType == '1' ? dataValue?.ProcessCase == '1': dataValue?.ProcessRequest == '1';
       }
       this.cases.applyProcess = this.applyProcess;
       this.checkApplyProcess(this.cases.applyProcess);
 
       return;
     }
-
-    if (this.processID) {
-      await this.getListInstanceSteps(this.cases.processID);
-    } else {
-      this.itemTabs(false);
+    if (this.action !== this.actionAdd) {
+      this.cases.applyProcess && await this.getListInstanceSteps(this.cases?.processID);
+      !this.cases.applyProcess && await this.getAutoNumber();
     }
   }
 
@@ -591,30 +604,33 @@ export class PopupAddCasesComponent
   }
 
   async getListInstanceSteps(processId: any) {
-    processId =
-      this.action === this.actionCopy ? this.cases.processID : processId;
-    var data = [processId, this.cases.refID, this.action, this.applyFor];
+    let data = [processId, this.cases?.refID, this.action, this.caseType];
     this.codxCmService.getInstanceSteps(data).subscribe(async (res) => {
       if (res && res.length > 0) {
-        var obj = {
+        let obj = {
           id: processId,
           steps: res[0],
           permissions: res[1],
-          caseNO: this.action !== this.actionEdit ? this.cases.caseNo : res[2],
-          autoNameTabFields: res[3]?.autoNameTabFields,
+          dealId: this.action !== this.actionEdit ? res[2] : this.cases.caseNo,
+          processSetting: res[3],
         };
-        var isExist = this.listMemorySteps.some((x) => x.id === processId);
+        let isExist = this.listMemorySteps.some((x) => x.id === processId);
         if (!isExist) {
           this.listMemorySteps.push(obj);
         }
         this.listInstanceSteps = res[0];
-        this.setAutoNameTabFields(obj?.autoNameTabFields);
-        this.itemTabs(this.ischeckFields(this.listInstanceSteps));
-
-        this.listParticipants = obj.permissions;
+        this.getSettingFields(res[3],this.listInstanceSteps);
+        this.listParticipants = [];
+        this.listParticipants = JSON.parse(JSON.stringify(obj?.permissions));
         if (this.action === this.actionEdit) {
           this.owner = this.cases.owner;
         } else {
+          if (this.listParticipants?.length > 0 && this.listParticipants && !this.owner) {
+            let index = this.listParticipants?.findIndex(
+              (x) => x.userID === this.user.userID
+            );
+            this.owner = index != -1 ? this.user.userID : null;
+          }
           this.cases.caseNo = res[2];
         }
         this.dateMax = this.HandleEndDate(
@@ -631,6 +647,34 @@ export class PopupAddCasesComponent
         this.changeDetectorRef.detectChanges();
       }
     });
+  }
+  getSettingFields(processSetting,listInstanceSteps) {
+    this.isShowField = processSetting?.addFieldsControl == '1';
+    this.setAutoNameTabFields( processSetting?.autoNameTabFields);
+    this.itemTabsInput(this.ischeckFields(listInstanceSteps));
+  }
+  itemTabsInput(check: boolean,): void {
+    let menuInput = this.tabInfo.findIndex(
+      (item) => item?.name === this.menuInputInfo?.name //Phúc gắn thêm name để nó lấy chính xác hơn.
+    );
+    let tabInput = this.tabContent.findIndex(
+      (item) => item === this.tabCustomFieldDetail
+    );
+    if(this.isShowField) {
+      if (check && menuInput == -1 && tabInput == -1) {
+        this.tabInfo.splice(1, 0, this.menuInputInfo);
+        this.tabContent.splice(1, 0, this.tabCustomFieldDetail);
+      } else if ( !check && menuInput != -1 && tabInput != -1) {
+        this.tabInfo.splice(menuInput, 1);
+        this.tabContent.splice(tabInput, 1);
+      }
+    }
+    else {
+      if (menuInput != -1 && tabInput != -1) {
+        this.tabInfo.splice(menuInput, 1);
+        this.tabContent.splice(tabInput, 1);
+      }
+    }
   }
 
   //get autoname tab fields
@@ -938,12 +982,9 @@ export class PopupAddCasesComponent
 
   checkApplyProcess(check: boolean) {
     if (check) {
-      // this.placeHolderAutoNumber = this.leadNoProcess;
       this.disabledShowInput = true;
-      // this.itemTabsInput(true);
     } else {
       this.getAutoNumber();
-      // this.itemTabsInput(false);
     }
 
     this.cases.applyProcess = check;
@@ -1020,15 +1061,15 @@ export class PopupAddCasesComponent
   //#endregion
 
   // --------------------------lOad Tabs ----------------------- //
-  itemTabs(check: boolean): void {
-    if (check) {
-      this.tabInfo = [this.menuGeneralInfo, this.menuInputInfo];
-      this.tabContent = [this.tabGeneralInfoDetail, this.tabCustomFieldDetail];
-    } else {
-      this.tabInfo = [this.menuGeneralInfo];
-      this.tabContent = [this.tabGeneralInfoDetail];
-    }
-  }
+  // itemTabs(check: boolean): void {
+  //   if (check) {
+  //     this.tabInfo = [this.menuGeneralInfo, this.menuInputInfo];
+  //     this.tabContent = [this.tabGeneralInfoDetail, this.tabCustomFieldDetail];
+  //   } else {
+  //     this.tabInfo = [this.menuGeneralInfo];
+  //     this.tabContent = [this.tabGeneralInfoDetail];
+  //   }
+  // }
   ischeckFields(liststeps: any): boolean {
     this.listFields = [];
     if(this.action !== 'edit') {
@@ -1037,7 +1078,7 @@ export class PopupAddCasesComponent
         let filteredTasks = stepCurrent.tasks.filter(task => task?.fieldID !== null && task?.fieldID?.trim() !== '')
         .map(task => task.fieldID)
         .flatMap(item => item.split(';').filter(item => item !== ''));
-        let listFields = stepCurrent.fields.filter(field => !filteredTasks.includes(this.action === 'copy'? field?.reCID: field?.refID));
+        let listFields = stepCurrent.fields.filter(field => !filteredTasks.includes(this.action === 'copy'? field?.recID: field?.refID));
         this.listFields = [...this.listFields, ...listFields];
       }
      }

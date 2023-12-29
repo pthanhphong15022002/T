@@ -543,6 +543,13 @@ export class CM_Cases {
   divisionID: string;
   departmentID: string;
   companyID: string;
+  statusCode: string;
+  approveStatus: string;
+  groupUserID: string;
+  assignType: string;
+  customerName: string;
+  customerCategory: string;
+  shortName: string;
 }
 
 export class CM_Partners {

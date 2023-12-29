@@ -183,13 +183,21 @@ export class PopupMoveReasonComponent implements OnInit {
         this.listStep = res[1];
 
         if(!this.isCallInstance) {
-          let datas = [null, oldStepId, oldStatus, this.reasonStep.memo,this.instances.recID,this.instances.status,this.instances.stepID];
-          if(this.applyFor == "1" ) {
-            this.codxDpService.moveDealReason(datas).subscribe((res) => {
-              if (res) {
-              }
-            });
+          if(this.applyFor == '1') {
+            let datas = [null, oldStepId, oldStatus, this.reasonStep.memo,this.instances.recID,this.instances.status,this.instances.stepID];
+            if(this.applyFor == "1" ) {
+              this.codxDpService.moveDealReason(datas).subscribe((res) => {
+                if (res) {
+                }
+              });
+            }
           }
+          else {
+            let datas = [null,this.instances.recID,this.instances.status,this.instances.stepID];
+            (this.applyFor == '2' || this.applyFor == '3') && this.codxDpService.moveCaseReason(datas).subscribe((res) => {  if (res) {} });
+            (this.applyFor == '4' ) && this.codxDpService.moveLeadReason(datas).subscribe((res) => {  if (res) {} });
+          }
+
         }
         let obj = {
           listStep: this.listStep,
