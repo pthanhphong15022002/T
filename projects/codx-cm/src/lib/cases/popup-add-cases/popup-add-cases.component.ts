@@ -24,6 +24,7 @@ import { tmpInstances } from '../../models/tmpModel';
 import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
 import { ActivatedRoute } from '@angular/router';
 import { Observable, firstValueFrom, map, tap } from 'rxjs';
+import { CustomFieldService } from 'projects/codx-share/src/lib/components/codx-input-custom-field/custom-field.service';
 
 @Component({
   selector: 'lib-popup-add-cases',
@@ -68,7 +69,7 @@ export class PopupAddCasesComponent
 
   listTypeCases: any[] = [];
   listCbxContacts: any[] = [];
-  listFields:any[]=[];
+  listFields: any[] = [];
 
   // const
   readonly actionAdd: string = 'add';
@@ -134,12 +135,16 @@ export class PopupAddCasesComponent
   isTurnOnProcess: boolean = true;
   caseNoSetting: any;
   idxCrr: any = -1;
+  //CF
+  arrCaculateField: any[] = [];
+  isLoadedCF = false;
 
   constructor(
     private inject: Injector,
     private changeDetectorRef: ChangeDetectorRef,
     private notificationsService: NotificationsService,
     private codxCmService: CodxCmService,
+    private customFieldSV: CustomFieldService,
     private authStore: AuthStore,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
@@ -280,7 +285,7 @@ export class PopupAddCasesComponent
       this.convertDataInstance(this.cases, this.instance);
     }
 
-    console.log('---------',this.applyProcess);
+    console.log('---------', this.applyProcess);
 
     // if (this.action !== this.actionEdit) {
     //   this.insertInstance();
@@ -311,13 +316,17 @@ export class PopupAddCasesComponent
     if ($event) {
       this.cases[$event.field] = $event.data;
       if ($event.data) {
-        this.action = this.action === this.actionCopy ? this.actionAdd : this.action;
+        this.action =
+          this.action === this.actionCopy ? this.actionAdd : this.action;
         this.listInstanceSteps = [];
         this.listParticipants = [];
         this.owner = null;
-        this.cases.permissions = this.cases?.permissions && this.cases?.permissions?.length > 0 ?
-        this.cases?.permissions.filter(x=>x.roleType != 'O' && x.objectType != '1')
-        : this.cases?.permissions;
+        this.cases.permissions =
+          this.cases?.permissions && this.cases?.permissions?.length > 0
+            ? this.cases?.permissions.filter(
+                (x) => x.roleType != 'O' && x.objectType != '1'
+              )
+            : this.cases?.permissions;
         let result = this.checkProcessInList($event.data);
         if (result) {
           this.listInstanceSteps = result?.steps;
@@ -331,7 +340,7 @@ export class PopupAddCasesComponent
             this.action,
             null
           );
-          this.getSettingFields(result?.processSetting,this.listInstanceSteps)
+          this.getSettingFields(result?.processSetting, this.listInstanceSteps);
           this.changeDetectorRef.detectChanges();
         } else {
           this.getListInstanceSteps($event.data);
@@ -381,6 +390,7 @@ export class PopupAddCasesComponent
               );
           }
         }
+        if (field.dataType == 'N') this.caculateField();
       }
     }
   }
@@ -487,9 +497,11 @@ export class PopupAddCasesComponent
   valueChangeCustomer($event) {
     if ($event) {
       let result = this.checkContactInList($event.data);
-      this.cases.customerName =  $event.component?.itemsSelected[0]?.CustomerName;
+      this.cases.customerName =
+        $event.component?.itemsSelected[0]?.CustomerName;
       this.cases.shortName = $event.component?.itemsSelected[0]?.ShortName;
-      this.cases.customerCategory = $event.component?.itemsSelected[0]?.Category;
+      this.cases.customerCategory =
+        $event.component?.itemsSelected[0]?.Category;
       if (result) {
         this.listCbxContacts = result?.contacts;
         this.changeDetectorRef.detectChanges();
@@ -573,23 +585,27 @@ export class PopupAddCasesComponent
   }
 
   async executeApiCalls() {
-   this.isLoading && await this.getGridView(this.formModel);
+    this.isLoading && (await this.getGridView(this.formModel));
     if (this.action == this.actionAdd) {
-     // this.itemTabs(false);
+      // this.itemTabs(false);
 
       let res = await firstValueFrom(
         this.codxCmService.getParam('CMParameters', '1')
       );
       if (res?.dataValue) {
         let dataValue = JSON.parse(res?.dataValue);
-        this.applyProcess = this.caseType == '1' ? dataValue?.ProcessCase == '1': dataValue?.ProcessRequest == '1';
+        this.applyProcess =
+          this.caseType == '1'
+            ? dataValue?.ProcessCase == '1'
+            : dataValue?.ProcessRequest == '1';
       }
       this.cases.applyProcess = this.applyProcess;
       this.checkApplyProcess(this.cases.applyProcess);
     }
     if (this.action !== this.actionAdd) {
-      this.applyProcess && await this.getListInstanceSteps(this.cases?.processID);
-      !this.applyProcess && await this.getAutoNumber();
+      this.applyProcess &&
+        (await this.getListInstanceSteps(this.cases?.processID));
+      !this.applyProcess && (await this.getAutoNumber());
     }
   }
 
@@ -629,13 +645,17 @@ export class PopupAddCasesComponent
           this.listMemorySteps.push(obj);
         }
         this.listInstanceSteps = res[0];
-        this.getSettingFields(res[3],this.listInstanceSteps);
+        this.getSettingFields(res[3], this.listInstanceSteps);
         this.listParticipants = [];
         this.listParticipants = JSON.parse(JSON.stringify(obj?.permissions));
         if (this.action === this.actionEdit) {
           this.owner = this.cases.owner;
         } else {
-          if (this.listParticipants?.length > 0 && this.listParticipants && !this.owner) {
+          if (
+            this.listParticipants?.length > 0 &&
+            this.listParticipants &&
+            !this.owner
+          ) {
             let index = this.listParticipants?.findIndex(
               (x) => x.userID === this.user.userID
             );
@@ -658,28 +678,27 @@ export class PopupAddCasesComponent
       }
     });
   }
-  getSettingFields(processSetting,listInstanceSteps) {
+  getSettingFields(processSetting, listInstanceSteps) {
     this.isShowField = processSetting?.addFieldsControl == '1';
-    this.setAutoNameTabFields( processSetting?.autoNameTabFields);
+    this.setAutoNameTabFields(processSetting?.autoNameTabFields);
     this.itemTabsInput(this.ischeckFields(listInstanceSteps));
   }
-  itemTabsInput(check: boolean,): void {
+  itemTabsInput(check: boolean): void {
     let menuInput = this.tabInfo.findIndex(
       (item) => item?.name === this.menuInputInfo?.name //Phúc gắn thêm name để nó lấy chính xác hơn.
     );
     let tabInput = this.tabContent.findIndex(
       (item) => item === this.tabCustomFieldDetail
     );
-    if(this.isShowField) {
+    if (this.isShowField) {
       if (check && menuInput == -1 && tabInput == -1) {
         this.tabInfo.splice(1, 0, this.menuInputInfo);
         this.tabContent.splice(1, 0, this.tabCustomFieldDetail);
-      } else if ( !check && menuInput != -1 && tabInput != -1) {
+      } else if (!check && menuInput != -1 && tabInput != -1) {
         this.tabInfo.splice(menuInput, 1);
         this.tabContent.splice(tabInput, 1);
       }
-    }
-    else {
+    } else {
       if (menuInput != -1 && tabInput != -1) {
         this.tabInfo.splice(menuInput, 1);
         this.tabContent.splice(tabInput, 1);
@@ -881,7 +900,7 @@ export class PopupAddCasesComponent
     var endDate =
       action == 'add' || action == 'copy' ? new Date() : new Date(endDateValue);
     for (let i = 0; i < listSteps.length; i++) {
-      if(!listSteps[i].isSuccessStep && !listSteps[i].isFailStep) {
+      if (!listSteps[i].isSuccessStep && !listSteps[i].isFailStep) {
         endDate.setDate(endDate.getDate() + listSteps[i].durationDay);
         endDate.setHours(endDate.getHours() + listSteps[i].durationHour);
         endDate = this.setTimeHoliday(
@@ -1081,26 +1100,38 @@ export class PopupAddCasesComponent
   // }
   ischeckFields(liststeps: any): boolean {
     this.listFields = [];
-    if(this.action !== 'edit') {
+    if (this.action !== 'edit') {
       let stepCurrent = liststeps[0];
-      if(stepCurrent && stepCurrent.fields?.length > 0 ) {
-        let filteredTasks = stepCurrent.tasks.filter(task => task?.fieldID !== null && task?.fieldID?.trim() !== '')
-        .map(task => task.fieldID)
-        .flatMap(item => item.split(';').filter(item => item !== ''));
-        let listFields = stepCurrent.fields.filter(field => !filteredTasks.includes(this.action === 'copy'? field?.recID: field?.refID));
+      if (stepCurrent && stepCurrent.fields?.length > 0) {
+        let filteredTasks = stepCurrent.tasks
+          .filter(
+            (task) => task?.fieldID !== null && task?.fieldID?.trim() !== ''
+          )
+          .map((task) => task.fieldID)
+          .flatMap((item) => item.split(';').filter((item) => item !== ''));
+        let listFields = stepCurrent.fields.filter(
+          (field) =>
+            !filteredTasks.includes(
+              this.action === 'copy' ? field?.recID : field?.refID
+            )
+        );
         this.listFields = [...this.listFields, ...listFields];
       }
-     }
-     else {
+    } else {
       let idxCrr = liststeps.findIndex((x) => x.stepID == this.cases?.stepID);
       if (idxCrr != -1) {
         for (let i = 0; i <= idxCrr; i++) {
           let stepCurrent = liststeps[i];
-          if(stepCurrent && stepCurrent.fields?.length > 0 ) {
-            let filteredTasks = stepCurrent?.tasks.filter(task => task?.fieldID !== null && task?.fieldID?.trim() !== '')
-            .map(task => task?.fieldID)
-            .flatMap(item => item.split(';').filter(item => item !== ''));
-            let listFields = stepCurrent?.fields.filter(field => !filteredTasks.includes(field?.recID));
+          if (stepCurrent && stepCurrent.fields?.length > 0) {
+            let filteredTasks = stepCurrent?.tasks
+              .filter(
+                (task) => task?.fieldID !== null && task?.fieldID?.trim() !== ''
+              )
+              .map((task) => task?.fieldID)
+              .flatMap((item) => item.split(';').filter((item) => item !== ''));
+            let listFields = stepCurrent?.fields.filter(
+              (field) => !filteredTasks.includes(field?.recID)
+            );
             this.listFields = [...this.listFields, ...listFields];
           }
         }
@@ -1123,4 +1154,79 @@ export class PopupAddCasesComponent
     this.isBlock = e;
   }
   //----------------------------end---------------------------//
+
+  //----------------------CACULATE---------------------------//
+
+  getArrCaculateField() {
+    this.arrCaculateField = [];
+    this.listInstanceSteps.forEach((x) => {
+      if (x.fields?.length > 0) {
+        let fnum = x.fields.filter((x) => x.dataType == 'CF');
+        if (fnum?.length > 0)
+          this.arrCaculateField = this.arrCaculateField.concat(fnum);
+      }
+    });
+    this.isLoadedCF = true;
+  }
+  //tính toán
+  caculateField() {
+    if (!this.isLoadedCF) this.getArrCaculateField();
+    if (!this.arrCaculateField || this.arrCaculateField?.length == 0) return;
+    let fieldsNum = [];
+    this.listInstanceSteps.forEach((x) => {
+      if (x.fields?.length > 0) {
+        let fnum = x.fields.filter((x) => x.dataType == 'N');
+        if (fnum?.length > 0) fieldsNum = fieldsNum.concat(fnum);
+      }
+    });
+    if (!fieldsNum || fieldsNum?.length == 0) return;
+
+    this.arrCaculateField.forEach((obj) => {
+      let dataFormat = obj.dataFormat;
+      fieldsNum.forEach((f) => {
+        if (dataFormat.includes('[' + f.fieldName + ']') && f.dataValue) {
+          let dataValue = f.dataValue;
+          if (f.dataFormat == 'P') dataValue = dataValue + '/100';
+          dataFormat = dataFormat.replaceAll(
+            '[' + f.fieldName + ']',
+            dataValue
+          );
+        }
+      });
+
+      if (!dataFormat.includes('[')) {
+        //tinh toán
+        obj.dataValue = this.customFieldSV.caculate(dataFormat);
+        //tính toan end
+        let index = this.listInstanceSteps.findIndex(
+          (x) => x.recID == obj.stepID
+        );
+        if (index != -1) {
+          if (this.listInstanceSteps[index].fields?.length > 0) {
+            let idxField = this.listInstanceSteps[index].fields.findIndex(
+              (x) => x.recID == obj.recID
+            );
+            if (idxField != -1) {
+              this.listInstanceSteps[index].fields[idxField].dataValue =
+                obj.dataValue;
+
+              let idxEdit = this.listCustomFile.findIndex(
+                (x) =>
+                  x.recID ==
+                  this.listInstanceSteps[index].fields[idxField].recID
+              );
+              if (idxEdit != -1) {
+                this.listCustomFile[idxEdit] =
+                  this.listInstanceSteps[index].fields[idxField];
+              } else
+                this.listCustomFile.push(
+                  this.listInstanceSteps[index].fields[idxField]
+                );
+            }
+          }
+        }
+      }
+    });
+  }
+  //------------------END_CACULATE--------------------//
 }

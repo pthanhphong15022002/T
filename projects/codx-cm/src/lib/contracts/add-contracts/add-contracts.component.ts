@@ -40,6 +40,7 @@ import { StepService } from 'projects/codx-share/src/lib/components/codx-step/st
 import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
 import { CodxListContactsComponent } from '../../cmcustomer/cmcustomer-detail/codx-list-contacts/codx-list-contacts.component';
 import { PopupAddCategoryComponent } from 'projects/codx-es/src/lib/setting/category/popup-add-category/popup-add-category.component';
+import { CustomFieldService } from 'projects/codx-share/src/lib/components/codx-input-custom-field/custom-field.service';
 
 @Component({
   selector: 'add-contracts',
@@ -226,6 +227,10 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
     entityName: 'AM_Realties',
     gridViewName: 'grvCMRealties',
   };
+
+  //CF
+  arrCaculateField: any[] = [];
+  isLoadedCF = false;
   //#endregion
 
   constructor(
@@ -238,6 +243,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
     private notiService: NotificationsService,
     private contractService: ContractsService,
     private changeDetectorRef: ChangeDetectorRef,
+    private customFieldSV: CustomFieldService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -301,20 +307,22 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
       let data = this.comboboxContractType?.ComponentCurrent?.dataService?.data;
       if (data?.length > 0) {
         this.autoCode = data[0]?.AutoNumber;
-        this.cmService.getAutoNumberByAutoNoCode(this.autoCode).subscribe((res) => {
-          if (res) {
-            this.contracts.contractID = res;
-            this.disabledShowInput = true;
-          } else {
-            if (this.autoNumber) {
-              this.contracts.contractID = this.autoNumber;
+        this.cmService
+          .getAutoNumberByAutoNoCode(this.autoCode)
+          .subscribe((res) => {
+            if (res) {
+              this.contracts.contractID = res;
               this.disabledShowInput = true;
             } else {
-              this.contracts.contractID = '';
-              this.disabledShowInput = false;
+              if (this.autoNumber) {
+                this.contracts.contractID = this.autoNumber;
+                this.disabledShowInput = true;
+              } else {
+                this.contracts.contractID = '';
+                this.disabledShowInput = false;
+              }
             }
-          }
-        });
+          });
       }
     }
   }
@@ -672,20 +680,22 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
         if (event?.component?.itemsSelected[0]) {
           let autoNumber = event?.component?.itemsSelected[0]?.AutoNumber;
           if (autoNumber) {
-            this.cmService.getAutoNumberByAutoNoCode(autoNumber).subscribe((res) => {
-              if (res) {
-                this.contracts.contractID = res;
-                this.disabledShowInput = true;
-              } else {
-                if (this.autoNumber) {
-                  this.contracts.contractID = this.autoNumber;
+            this.cmService
+              .getAutoNumberByAutoNoCode(autoNumber)
+              .subscribe((res) => {
+                if (res) {
+                  this.contracts.contractID = res;
                   this.disabledShowInput = true;
                 } else {
-                  this.contracts.contractID = '';
-                  this.disabledShowInput = false;
+                  if (this.autoNumber) {
+                    this.contracts.contractID = this.autoNumber;
+                    this.disabledShowInput = true;
+                  } else {
+                    this.contracts.contractID = '';
+                    this.disabledShowInput = false;
+                  }
                 }
-              }
-            });
+              });
           }
         }
         break;
@@ -1325,6 +1335,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
               );
           }
         }
+        if (field.dataType == 'N') this.caculateField();
       }
     }
   }
@@ -1652,7 +1663,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
       }
     }
   }
-  
+
   updateDateDeal(instance: tmpInstances, contract: CM_Contracts) {
     if (this.action !== 'edit') {
       contract.stepID = this.listInstanceSteps[0].stepID;
@@ -1688,4 +1699,79 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
     }
   }
   //#endregion
+
+  v; //----------------------CACULATE---------------------------//
+
+  getArrCaculateField() {
+    this.arrCaculateField = [];
+    this.listInstanceSteps.forEach((x) => {
+      if (x.fields?.length > 0) {
+        let fnum = x.fields.filter((x) => x.dataType == 'CF');
+        if (fnum?.length > 0)
+          this.arrCaculateField = this.arrCaculateField.concat(fnum);
+      }
+    });
+    this.isLoadedCF = true;
+  }
+  //tính toán
+  caculateField() {
+    if (!this.isLoadedCF) this.getArrCaculateField();
+    if (!this.arrCaculateField || this.arrCaculateField?.length == 0) return;
+    let fieldsNum = [];
+    this.listInstanceSteps.forEach((x) => {
+      if (x.fields?.length > 0) {
+        let fnum = x.fields.filter((x) => x.dataType == 'N');
+        if (fnum?.length > 0) fieldsNum = fieldsNum.concat(fnum);
+      }
+    });
+    if (!fieldsNum || fieldsNum?.length == 0) return;
+
+    this.arrCaculateField.forEach((obj) => {
+      let dataFormat = obj.dataFormat;
+      fieldsNum.forEach((f) => {
+        if (dataFormat.includes('[' + f.fieldName + ']') && f.dataValue) {
+          let dataValue = f.dataValue;
+          if (f.dataFormat == 'P') dataValue = dataValue + '/100';
+          dataFormat = dataFormat.replaceAll(
+            '[' + f.fieldName + ']',
+            dataValue
+          );
+        }
+      });
+
+      if (!dataFormat.includes('[')) {
+        //tinh toán
+        obj.dataValue = this.customFieldSV.caculate(dataFormat);
+        //tính toan end
+        let index = this.listInstanceSteps.findIndex(
+          (x) => x.recID == obj.stepID
+        );
+        if (index != -1) {
+          if (this.listInstanceSteps[index].fields?.length > 0) {
+            let idxField = this.listInstanceSteps[index].fields.findIndex(
+              (x) => x.recID == obj.recID
+            );
+            if (idxField != -1) {
+              this.listInstanceSteps[index].fields[idxField].dataValue =
+                obj.dataValue;
+
+              let idxEdit = this.listCustomFile.findIndex(
+                (x) =>
+                  x.recID ==
+                  this.listInstanceSteps[index].fields[idxField].recID
+              );
+              if (idxEdit != -1) {
+                this.listCustomFile[idxEdit] =
+                  this.listInstanceSteps[index].fields[idxField];
+              } else
+                this.listCustomFile.push(
+                  this.listInstanceSteps[index].fields[idxField]
+                );
+            }
+          }
+        }
+      }
+    });
+  }
+  //------------------END_CACULATE--------------------//
 }
