@@ -52,6 +52,7 @@ import {
 import { ExportData } from 'projects/codx-common/src/lib/models/ApproveProcess.model';
 import { PopupPermissionsComponent } from '../popup-permissions/popup-permissions.component';
 import { J } from '@angular/cdk/keycodes';
+import { resetBlazorTemplate } from '@syncfusion/ej2-base';
 
 @Component({
   selector: 'contracts-detail',
@@ -255,11 +256,7 @@ export class ContractsComponent extends UIComponent {
       this.codxShareService.changeMFApproval(event, data?.unbounds);
     } else if (event != null) {
       event.forEach((res) => {
-        if (data?.approveStatus == '3') {
-          res.disable = res.functionID != 'CM0204_2';
-          return;
-        }
-
+        res.isblur = data.approveStatus == '3' && res.functionID != 'CM0204_2';
         if (isDetail) {
           res.isbookmark = false;
         }
