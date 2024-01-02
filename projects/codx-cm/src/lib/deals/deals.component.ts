@@ -278,7 +278,7 @@ export class DealsComponent
         sameData: true,
         model: {
           template2: this.templateMore,
-          //groupSettings: {showDropArea: false,columns:['businessLineID']}
+          // groupSettings: {showDropArea: false,columns:['customerName']}
           //resources: this.columnGrids,
           // frozenColumns: 1,
         },
@@ -692,11 +692,37 @@ export class DealsComponent
       ])
       .subscribe((x) => {
         if (x.event && x.event.status == 'Y') {
-          let datas = [data.recID, data.status, '', isCheck];
-          this.getApiUpdateProcess(datas);
+          this.checkOwner(data,isCheck);
         }
       });
   }
+  checkOwner(data,isCheck) {
+  if(isCheck && data?.owner) {
+    let datas = [data.processID, data.businessLineID,data.owner, this.applyFor];
+    this.codxCmService.isExistOwnerInProcess(datas).subscribe((res) => {
+      if(res) {
+        let dataUpdateProcess = [data.recID, data.status, '', isCheck,data.owner];
+        this.getApiUpdateProcess(dataUpdateProcess);
+      }
+      else  {
+        this.notificationsService
+        .alertCode('DP033', null, [
+          '"' + data?.dealName + '" ' + 'Người phụ trách không tồn tại trong quy trình' + ' ',
+        ])
+        .subscribe((x) => {
+          if (x.event && x.event.status == 'Y') {
+            let dataUpdateProcess = [data.recID, data.status, '', isCheck,''];
+            this.getApiUpdateProcess(dataUpdateProcess);
+          }
+        });
+      }
+    });
+  }
+  else {
+    let dataUpdateProcess = [data.recID, data.status, '', isCheck];
+    this.getApiUpdateProcess(dataUpdateProcess);
+  }
+ }
   getApiUpdateProcess(datas) {
     this.codxCmService.updateProcessDeal(datas).subscribe((res) => {
       if (res) {
@@ -1379,7 +1405,7 @@ export class DealsComponent
         );
         dialogCustomDeal.closed.subscribe((e) => {
           if (e && e.event != null) {
-            this.view.dataService.update(e.event, true).subscribe();
+            //this.view.dataService.update(e.event, true).subscribe();
             //up kaban
             if (
               this.kanban &&
