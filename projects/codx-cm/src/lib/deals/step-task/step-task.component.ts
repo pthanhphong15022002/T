@@ -200,6 +200,13 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
 
   ngAfterViewInit(): void {
     !this.isHeightAuto && this.setHeight();
+    let a = document.getElementById('container-step');
+    if(a){
+      console.log('------------',a);
+      const computedWidth = window.getComputedStyle(a).width;
+      console.log(computedWidth);
+      
+    }
   }
   changeValue(e) {
     this.type = e.data;

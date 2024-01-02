@@ -938,6 +938,24 @@ export class CodxCmService {
       data
     );
   }
+  moveStageBackCase(data) {
+    return this.api.execSv<any>(
+      'CM',
+      'ERM.Business.CM',
+      'CasesBusiness',
+      'MoveStageBackByCaseAsync',
+      data
+    );
+  }
+  moveStageBackCases(data) {
+    return this.api.execSv<any>(
+      'CM',
+      'ERM.Business.CM',
+      'CasesBusiness',
+      'MoveStageBackByCasesAsync',
+      data
+    );
+  }
 
   moveStageDeal(data) {
     return this.api.execSv<any>(
@@ -962,6 +980,14 @@ export class CodxCmService {
       'CM',
       'DealsBusiness',
       'UpdateProcessDealAsync',
+      data
+    );
+  }
+  updateProcessCase(data) {
+    return this.api.exec<any>(
+      'CM',
+      'CasesBusiness',
+      'UpdateProcessCasesAsync',
       data
     );
   }
@@ -1023,15 +1049,7 @@ export class CodxCmService {
       [recID, check, returnedCmt]
     );
   }
-  // moveDealReason(data) {
-  //   return this.api.execSv<any>(
-  //     'CM',
-  //     'ERM.Business.CM',
-  //     'DealsBusiness',
-  //     'MoveDealReasonAsync',
-  //     data
-  //   );
-  // }
+
   moveDealReason(data) {
     return this.api.execSv<any>(
       'CM',
@@ -1048,6 +1066,15 @@ export class CodxCmService {
       'ERM.Business.CM',
       'LeadsBusiness',
       'MoveLeadReasonAsync',
+      data
+    );
+  }
+  moveCaseReason(data) {
+    return this.api.execSv<any>(
+      'CM',
+      'ERM.Business.CM',
+      'CasesBusiness',
+      'MoveCaseReasonAsync',
       data
     );
   }
@@ -1646,6 +1673,14 @@ export class CodxCmService {
     );
   }
 
+  getAutoNumberByAutoNoCode(autoNoCode){
+    return this.api.exec<any>(
+      'ERM.Business.AD',
+      'AutoNumbersBusiness',
+      'CreateAutoNumberAsync',
+      [autoNoCode, null, true, null]
+    );
+  }
   //#region
 
   getOneObject(recID, className) {

@@ -14,26 +14,16 @@
     <!-- [subHeader]="subHeader" -->
     <ng-template #information>
       <ng-container
-        *ngIf="form?.formGroup"
         [ngTemplateOutlet]="informationTemp"
       ></ng-container>
     </ng-template>
     <ng-template #reference>
       <ng-container
-        *ngIf="form?.formGroup"
         [ngTemplateOutlet]="referenceTemp"
-      ></ng-container>
-    </ng-template>
-
-    <ng-template #extend>
-      <ng-container
-        *ngIf="form?.formGroup"
-        [ngTemplateOutlet]="extendTemp"
       ></ng-container>
     </ng-template>
     <ng-template #task>
       <ng-container
-        *ngIf="form?.formGroup"
         [ngTemplateOutlet]="taskTemp"
       ></ng-container>
     </ng-template>
@@ -296,6 +286,7 @@
         default="Loại hợp đồng"
       ></codx-label>
       <codx-input
+        #comboboxContractType
         field="contractType"
         [formModel]="form?.formModel"
         [Group]="form.formGroup"
@@ -596,12 +587,6 @@
       </div>
     </ng-container>
   </ng-container>
-</ng-template>
-
-<ng-template #extendTemp>
-  <div>
-    
-  </div>
 </ng-template>
 
 <ng-template #realtiesTmp>

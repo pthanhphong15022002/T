@@ -73,7 +73,13 @@ export class ProcessesComponent
     ];
   }
 
-  onInit(): void {}
+  onInit(): void {
+    this.button = [
+      {
+        id: this.btnAdd,
+      },
+    ];
+  }
 
   //#region  event emit change codx-view
   onDragDrop(e) {}

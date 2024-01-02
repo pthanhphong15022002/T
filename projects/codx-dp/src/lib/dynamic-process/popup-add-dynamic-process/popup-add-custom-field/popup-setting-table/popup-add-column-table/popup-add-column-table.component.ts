@@ -122,6 +122,7 @@ export class PopupAddColumnTableComponent implements OnInit, AfterViewInit {
   // Tính
   caculateField = '';
   arrFieldNum = [];
+  showCaculate = true
 
   constructor(
     private changdef: ChangeDetectorRef,
@@ -145,6 +146,7 @@ export class PopupAddColumnTableComponent implements OnInit, AfterViewInit {
     this.grvSetup = dt?.data?.grvSetup;
     this.processNo = dt?.data?.processNo; //de sinh vll
     this.listColumns = dt?.data?.listColumns;
+    this.showCaculate = this.action !='edit'
   }
 
   ngOnInit(): void {
@@ -881,11 +883,20 @@ export class PopupAddColumnTableComponent implements OnInit, AfterViewInit {
   }
   // Num
   buttonNum(num) {
+    if (this.caculateField) {
+      let idxLast = this.caculateField.length - 1;
+      if (
+        this.caculateField[idxLast] == ']' ||
+        this.caculateField[idxLast] == ')' 
+      )
+        return;
+    }
     this.caculateField += num;
   }
   decimalPoint() {
     if (!this.caculateField) return;
-    let chartLast = this.caculateField[this.caculateField.length - 1];
+    let idxLast = this.caculateField.length - 1;
+    let chartLast = this.caculateField[idxLast]; 
     if (
       chartLast == ',' ||
       this.accessField.includes(chartLast) ||
@@ -893,6 +904,11 @@ export class PopupAddColumnTableComponent implements OnInit, AfterViewInit {
     )
       return;
     //chua check hết
+    idxLast= idxLast -1
+    while(!this.operator.includes(this.accessField[idxLast]) || idxLast!=-1){
+      if(this.caculateField[idxLast]==",")  return;
+      idxLast--
+    }
     this.caculateField += ',';
   }
 
@@ -921,6 +937,10 @@ export class PopupAddColumnTableComponent implements OnInit, AfterViewInit {
 
   checkCaculateField() {
     return true;
+  }
+
+  openCaculate(){
+    this.showCaculate = ! this.showCaculate
   }
   //-----------------end CACULATE FIELD------------------//
 }
