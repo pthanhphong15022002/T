@@ -209,7 +209,7 @@
               >
               </codx-label>
             </div>
-            <div class="right d-flex justify-content-between">
+            <div class="right d-flex" [ngClass]="currentTab == 0 ? 'justify-content-between' : 'justify-content-end'">
               <div *ngIf="currentTab == 0"
                 class="d-flex justify-content-start cursor-pointer text-primary"
                 (click)="formPropertieFields()"

@@ -24,6 +24,7 @@ import { ConnectorEditing, DiagramModule, SymbolPaletteModule } from '@syncfusio
 import { SettingFieldsComponent } from './processes/popup-add-process/form-properties-fields/setting-fields/setting-fields.component';
 import { environment } from 'src/environments/environment';
 import { FormFormatValueComponent } from './processes/popup-add-process/form-properties-fields/form-format-value/form-format-value.component';
+import { FormatValuelistComponent } from './processes/popup-add-process/form-properties-fields/format-valuelist/format-valuelist.component';
 
 export const routes: Routes = [
   {
@@ -47,6 +48,7 @@ export const routes: Routes = [
     FormPropertiesFieldsComponent,
     SettingFieldsComponent,
     FormFormatValueComponent,
+    FormatValuelistComponent,
   ],
   imports: [
     CodxCoreModule.forRoot({ environment }),
