@@ -1548,7 +1548,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
   }
 
   async editInstance() {
-    if (this.type == 'contract') {
+    if (this.type == 'contract'|| this.type == 'task') {
       let data = [this.instance, this.listCustomFile];
       this.cmService.editInstance(data).subscribe((instance) => {
         if (instance) {

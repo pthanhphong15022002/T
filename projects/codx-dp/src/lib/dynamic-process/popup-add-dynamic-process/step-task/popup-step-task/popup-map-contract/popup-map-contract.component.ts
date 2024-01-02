@@ -1,3 +1,4 @@
+import { filter } from 'rxjs';
 import {
   AfterViewInit,
   ChangeDetectorRef,
@@ -40,7 +41,10 @@ export class PopupMapContractComponent implements OnInit, AfterViewInit {
   fieldsFields = { text: 'title', value: 'recID' };
   listFields;
   itemOld;
+  listFieldConvert;
+  indexRemote;
   constructor(
+    private changeDetectorRef: ChangeDetectorRef,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -53,7 +57,8 @@ export class PopupMapContractComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit(): void {}
   ngOnInit(): void {
-    this.datas = this.datas?.map(item => ({...item,show: false, hover: false}))
+    this.datas = this.datas?.map(item => ({...item,show: false, hover: false,field: null}))
+    this.listFields = this.listFields?.map(item => ({title: item?.title, recID: item?.recID}));
   }
 
 
@@ -70,28 +75,42 @@ export class PopupMapContractComponent implements OnInit, AfterViewInit {
     return idx != -1;
   }
 
-  saveData() {
-    this.dialog.close(this.dataSelect);
-  }
-  close(){
-    this.dataSelect.check = false;
-    this.dialog.close();
-  }
   onClick(item){
-    item.hover = true;
     if(this.itemOld && this.itemOld != item){
       this.itemOld.hover = false;
+      let index = this.listFields?.findIndex(x => x.recID == this.indexRemote?.recID);
+      if(index >= 0){
+        this.listFields?.splice(index, 1);
+      }
+      if(item?.field){
+        let check = this.listFields?.some(x => x.recID == item?.field?.recID);
+        if(!check){
+          this.listFields.push(item?.field);
+        }
+      }
     }
+    item.show = false;
+    item.hover = true;
     this.itemOld = item;
+    this.changeDetectorRef.detectChanges();
   }
   onMouseLeave(item){
+    if(item?.field){
+      let index = this.listFields.findIndex(x => x.recID == item?.field?.recID);
+      if(index >= 0){
+        this.listFields?.splice(index,1);
+      }
+    }
     item.show = false;
   }
   onMouseEnter(item){
-    item.show = true;
-    if(this.itemOld){
-
+    if(item?.field){
+      let check = this.listFields.some(x => x.recID == item?.field?.recID);
+      if(!check){
+        this.listFields.push(item?.field);
+      }
     }
+    item.show = true;
   }
   handleDivClick(event: Event,item) {
     event.stopPropagation(); // Ngăn chặn lan truyền của sự kiện click
@@ -100,6 +119,33 @@ export class PopupMapContractComponent implements OnInit, AfterViewInit {
     console.log('Clicked inside div!');
   }
 
+  fieldIDChange(event, item){
+    if(event){
+      let index = this.listFields?.findIndex(x => x.recID == event);
+      if(index >= 0){
+        if(item.field && !this.listFields?.some(x => x.recID == item?.field?.recID) ){
+          this.listFields.push(item.field);
+        }
+        item.field = this.listFields[index];
+        this.indexRemote = this.listFields[index];
+      }
+    }
+  }
+  saveData() {
+    let data = this.datas?.filter(x => x.field);
+    let fields = [];
+    let fieldIDs = [];
+    if(data?.length > 0){
+      fields = data?.map(x => (x.field?.recID + '/' + x?.fieldName))
+      fieldIDs = data?.map(x => (x.field?.recID))
+    }
+    this.dialog.close({fields, fieldIDs});
+  }
+  
+  close(){
+    this.dataSelect.check = false;
+    this.dialog.close();
+  }
   // @HostListener('document:mousemove', ['$event'])
   // onMouseMove(event: MouseEvent) {
   //    consthoveredElement = event.target as HTMLElement;
