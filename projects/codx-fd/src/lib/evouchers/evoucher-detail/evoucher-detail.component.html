@@ -2,6 +2,7 @@
     [headerText]="headerText"
     [dialog]="dialog"
     [body]="body"
+    [footer]="type != 'detail' ? footer : null"
 >
 </codx-form>
 <ng-template #body>
@@ -16,7 +17,14 @@
                 </div>
                 <div class="d-flex flex-column" *ngIf="data?.size && data?.size.length>0">
                     <div class="d-flex flex-wrap">
-                        <div class="border rounded-0 px-2 py-1 me-1 mb-2" *ngFor="let item of data?.size">{{item?.pricePrice | currency:'VND':true}}</div>
+                        <ng-container *ngFor="let item of data?.size">
+                            <button 
+                                [disabled]="type == 'detail'" 
+                                type="button" class="btn mg-5" 
+                                (click)="selectSize(item)"
+                                [ngClass]="{'btn-primary': sizeSelected?.sizeId == item?.sizeId, 'btn-outline-primary':  sizeSelected?.sizeId != item?.sizeId}"
+                            >{{item?.pricePrice | currency:'VND':true}}</button>
+                        </ng-container>
                     </div>
                 </div>
             </div>
@@ -31,5 +39,10 @@
                 <div class="ps-4" [innerHTML]="data?.brandDesc"></div>
             </div>
         </div>
+    </div>
+</ng-template>
+<ng-template #footer>
+    <div class="d-flex justify-content-end">
+        <button type="button" class="btn btn-primary" (click)="save()">Lưu lại</button>
     </div>
 </ng-template>

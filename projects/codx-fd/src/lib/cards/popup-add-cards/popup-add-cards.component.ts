@@ -92,12 +92,14 @@ export class PopupAddCardsComponent implements OnInit {
   price: number = 0;
   totalRecorItem: number = 4;
   width = 720;
+  widthEvoucher = 747;
   height = window.innerHeight;
 
   isWalletReciver: boolean = false;
   showNavigationArrows: boolean = false;
   readOnly: boolean = false;
   showPopupGift: boolean = false;
+  showPopupEvoucher: boolean = false;
 
   MEMBERTYPE = {
     CREATED: '1',
@@ -141,6 +143,7 @@ export class PopupAddCardsComponent implements OnInit {
   type = 'add';
   reduceCoCoins = 0;
   cointsError = "";
+  dataSelectedEvoucher: any[] = [];
 
   constructor(
     private api: ApiHttpService,
@@ -867,6 +870,11 @@ export class PopupAddCardsComponent implements OnInit {
     this.dt.detectChanges();
   }
 
+  clickAddEvoucher() {
+    this.showPopupEvoucher = !this.showPopupEvoucher;
+    this.dt.detectChanges();
+  }
+
   // get gift infor
   getGiftInfor(e: any) {
     this.showPopupGift = !this.showPopupGift;
@@ -932,6 +940,19 @@ export class PopupAddCardsComponent implements OnInit {
     this.updateAmountGift();
   }
 
+  updateQuantityEvoucher(e: any, index: number) {
+    // let quantity = e?.component?.crrValue || 1;
+    // let gift = this.gifts[index];
+    // if (quantity > gift.availableQty) {
+    //   gift.quantity = 1;
+    //   this.notifySV.notify('Vượt quá số dư quà tặng', '3');
+    //   return;
+    // } else {
+    //   gift.quantity = quantity;
+    // }
+    // this.updateAmountGift();
+  }
+
   updateAmountGift() {
     this.amount = this.gifts.reduce((p, c) => {
       return p + c.price * c.quantity;
@@ -950,5 +971,18 @@ export class PopupAddCardsComponent implements OnInit {
     if (e > 0 || e?.data?.length > 0) this.isHaveFile = true;
     else this.isHaveFile = false;
     this.showLabelAttachment = this.isHaveFile;
+  }
+
+  closeEvoucher(event) {
+    if(event){
+      this.showPopupEvoucher = false;
+      this.dt.detectChanges();
+    }
+  }
+
+  saveEvoucher(data: any) {
+    this.dataSelectedEvoucher = [...data];
+    this.showPopupEvoucher = false;
+    this.dt.detectChanges();
   }
 }

@@ -160,7 +160,8 @@ export class EVouchersComponent extends UIComponent implements AfterViewInit{
   {
     this.callFunc.openForm(EvoucherDetailComponent,"",900 , 800 , "" , {
       productID : productID,
-      headerText: "Chi tiết thẻ quà tặng"
+      headerText: "Chi tiết thẻ quà tặng",
+      type: 'detail'
     })
   }
   GetAllCategory()
