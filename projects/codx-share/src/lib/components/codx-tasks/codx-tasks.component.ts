@@ -1745,6 +1745,7 @@ export class CodxTasksComponent
         break;
       case 'TMT02015':
       case 'TMT02025':
+      case 'TMT030115':
         this.assignTask(e.data, data);
         break;
       case 'TMT02016':
@@ -1763,28 +1764,35 @@ export class CodxTasksComponent
       case 'TMT02018':
       case 'TMT02026':
       case 'TMT02035':
+      case 'TMT030116':
         this.openUpdateProgress(e.data, data);
         break;
       //Hoàn tất
       case 'TMT02011':
       case 'TMT02021':
       case 'TMT02031':
+      case 'TMT030111':
       //Đang thực hiện
       case 'TMT02012':
       case 'TMT02022':
       case 'TMT02032':
+      case 'TMT030112':
       //Hoãn lai
       case 'TMT02013':
       case 'TMT02023':
       case 'TMT02033':
+      case 'TMT030113':
       //Hủy
       case 'TMT02014':
       case 'TMT02024':
       case 'TMT02034':
+      case 'TMT030114':
         this.changeStatusTask(e.data, data);
         break;
+      //gia han cv
       case 'TMT02019':
       case 'TMT02027':
+      case 'TMT030117':
         this.openExtendsAction(e.data, data);
         break;
       default: {
@@ -1818,6 +1826,7 @@ export class CodxTasksComponent
           //an gia hạn cong viec
           case 'TMT02019':
           case 'TMT02027':
+          case 'TMT030117':
             if (
               !data.write ||
               (data.verifyControl == '0' &&
@@ -1847,6 +1856,7 @@ export class CodxTasksComponent
           //an giao viec
           case 'TMT02015':
           case 'TMT02025':
+          case 'TMT030115':
             if (
               !data.write ||
               data.status == '90' ||
@@ -1861,6 +1871,7 @@ export class CodxTasksComponent
           case 'TMT02018':
           case 'TMT02026':
           case 'TMT02035':
+          case 'TMT030116':
             if (
               !data.write ||
               data.status == '90' ||
@@ -1923,6 +1934,7 @@ export class CodxTasksComponent
           case 'TMT02011':
           case 'TMT02021':
           case 'TMT02031':
+          case 'TMT030111':
             if (
               !data.write ||
               (data.status != '20' &&
@@ -1935,6 +1947,7 @@ export class CodxTasksComponent
           case 'TMT02012':
           case 'TMT02022':
           case 'TMT02032':
+          case 'TMT030112':
             if (
               !data.write ||
               data.status == '20' ||
@@ -1948,6 +1961,7 @@ export class CodxTasksComponent
           case 'TMT02013':
           case 'TMT02023':
           case 'TMT02033':
+          case 'TMT030113':
             if (
               !data.write ||
               data.status == '90' ||
@@ -1963,6 +1977,7 @@ export class CodxTasksComponent
           case 'TMT02014':
           case 'TMT02024':
           case 'TMT02034':
+          case 'TMT030114':
             if (
               !data.write ||
               data.status == '80' ||
