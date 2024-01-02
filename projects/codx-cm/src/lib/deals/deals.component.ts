@@ -276,7 +276,7 @@ export class DealsComponent
         sameData: true,
         model: {
           template2: this.templateMore,
-          //groupSettings: {showDropArea: false,columns:['businessLineID']}
+          // groupSettings: {showDropArea: false,columns:['customerName']}
           //resources: this.columnGrids,
           // frozenColumns: 1,
         },
@@ -1376,7 +1376,7 @@ export class DealsComponent
         );
         dialogCustomDeal.closed.subscribe((e) => {
           if (e && e.event != null) {
-            this.view.dataService.update(e.event, true).subscribe();
+            //this.view.dataService.update(e.event, true).subscribe();
             //up kaban
             if (
               this.kanban &&

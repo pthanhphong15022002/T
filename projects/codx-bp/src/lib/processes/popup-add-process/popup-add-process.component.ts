@@ -386,7 +386,7 @@ menuDrag:any=[
       width: 100,
       height: 100,
       margin: { left: 100, top: 100 },
-      style: {borderColor:'#fff'}
+      style: {strokeColor:'#000'}
   };
 
   //model.offsetX = model.offsetX -  this.diagram.diagramLayer?.getBoundingClientRect().width
@@ -405,7 +405,7 @@ menuDrag:any=[
               trigger: 'None'
           }
        };
-       model.offsetY = model.offsetY -100;
+       model.offsetY = model.offsetY -50;
        if(this.targetItem && this.targetItem.isLane && swimlane && laneID)this.diagram.addNodeToLane(model,swimlane,laneID)
        else this.diagram.add(model);
       break;
@@ -429,31 +429,37 @@ menuDrag:any=[
         this.diagram.addConnector(connector)
     break;
     case 'swimlane':
-        let swimLane:any= {
+        let swimLane:NodeModel= {
           id: this.makeid(10),
           shape: {
               type: 'SwimLane',
-              borderColor: '#ddd',
               header: {
 
-                      height: 0.5,
+                      height: 30,
                       style:{fill:'#fff',textAlign:'Left'},
-                       annotation: {content:''}
+                       annotation: {content:'Quy trình động'}
                     },
               lanes: [
                   {
                       id: this.makeid(10),
                       canMove:true,
-                      borderColor: '#fff',
-                      style: { borderColor: '#fff',strokeColor: '#ddd' }, height: 500, width: 300,
-                      header: {  height:30, style: { strokeColor: '#fff', fontSize: 11 },annotation: {content:'Bước quy trình'}},
+                       height: 500, width: 400,
+                      header: {  height:30, style: { fontSize: 14,fill:'#fff' },annotation: {content:'Bước quy trình'}},
                   }
               ],
-              style: { borderColor: '#fff' },
-              orientation: 'Vertical', isLane: true
+              phases: [
+                {
+                    id:this.makeid(10), offset: 170,
+                    header: { annotation: { content: '' } }
+                },
+            ],
+            phaseSize: 0.5,
+            orientation: 'Vertical', isLane: true,
+
           },
           height: 500,
-          // style: { fill: '#f5f5f5' },
+          width:400,
+           style: { strokeColor: '#ffffff', fill:'#ffffff' },
           offsetX: model.offsetX,
           offsetY: model.offsetY +100,
         }
@@ -528,7 +534,8 @@ menuDrag:any=[
             newLane.id= this.makeid(10);
               newLane.header={
                     width: existingLane.header.width, height: existingLane.header.height,
-                    style: existingLane.header.style as ShapeStyleModel
+                    style: existingLane.header.style as ShapeStyleModel,
+                    annotation: {content:'Bước quy trình'}
                 } as HeaderModel;
 
             if (shape.orientation === 'Horizontal') {
