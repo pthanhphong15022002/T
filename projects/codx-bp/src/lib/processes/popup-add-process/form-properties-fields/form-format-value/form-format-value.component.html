@@ -1,0 +1,256 @@
+<div class="p-5 h-100 w-100" cdkDropListGroup>
+  <div class="d-flex flex-column" *ngFor="let item of lstFields">
+    <div cdkDropList (cdkDropListDropped)="drop($event)">
+      <div
+        cdkDrag
+        [cdkDragData]="item"
+        class="mb-5"
+        *ngIf="item?.controlType == 'F'"
+        (click)="clickData(item)"
+      >
+        <div class="d-flex align-items-center h2-title mb-2">
+          <div *ngIf="item?.title != null && item?.title?.trim() != ''">
+            {{ item?.title }}
+          </div>
+        </div>
+        <div class="text-gray-500">
+          <div *ngIf="item?.note != null && item?.note?.trim() != ''">
+            {{ item?.note }}
+          </div>
+        </div>
+      </div>
+      <ng-container *ngIf="countData > 0; else empty">
+        <div cdkDropList (cdkDropListDropped)="drop($event)">
+          <div
+            class="form-group"
+            (click)="clickData(item)"
+            *ngIf="item?.controlType != 'F'"
+          >
+            <div
+              class="d-flex justify-content-between align-content-center mb-2"
+            >
+              <div class="d-flex justify-content-start mb-2">
+                <span
+                  class="cursor-pointer icon-16 icon-drag_indicator me-2"
+                ></span>
+                <span class="text-dark fw-bold">{{ item?.title }}</span>
+                <span class="text-danger ms-2" *ngIf="item?.isRequired">*</span>
+              </div>
+              <div class="d-flex justify-content-end">
+                <ng-container *ngIf="item?.controlType == 'YesNo'">
+                  <codx-input
+                    [field]="item?.fieldName"
+                    type="switch"
+                    *ngIf="item?.dataType == 's'"
+                    [showSpinButton]="false"
+                    [crrValue]="item?.dataFormat ?? false"
+                    [disabled]="true"
+                  ></codx-input>
+                  <div *ngIf="item?.dataType == 'c'">
+                    <codx-input
+                      id="yes"
+                      name="{{ item?.recID }} {{ item.fieldName }}"
+                      class="test-check me-3"
+                      type="radio"
+                      label="Yes"
+                      field="yes"
+                      [checked]="item?.dataFormat ?? false"
+                      [disabled]="true"
+                    ></codx-input>
+                    <codx-input
+                      id="no"
+                      name="{{ item?.recID }}{{ item.fieldName }}"
+                      class="test-check"
+                      type="radio"
+                      label="No"
+                      field="no"
+                      [checked]="!item?.dataFormat ?? false"
+                      [disabled]="true"
+                    ></codx-input>
+                  </div>
+                  <codx-input
+                    [field]="item?.fieldName"
+                    *ngIf="item?.dataType == 'checkbox'"
+                    type="checkbox"
+                    [showSpinButton]="false"
+                    [crrValue]="item?.dataFormat || false"
+                    [disabled]="true"
+                  ></codx-input>
+                </ng-container>
+                <div *ngIf="item?.controlType == 'User' && item?.dataType == 'po'">
+                  <button
+                    type="button"
+                    class="btn btn-sm btn-icon btn-light-primary"
+                    (click)="openPopup()"
+                  >
+                    <span class="icon-person_add_alt_1 icon-16"></span>
+                  </button>
+                  <ng-container *ngIf="isPopupUserCbb">
+                    <codx-combobox-popup
+                      [comboboxName]="'Users'"
+                      [field]="'cbbUser'"
+                      [multiple]="item.multiselect ?? false"
+                      [width]="700"
+                      [height]="600"
+                      [value]=""
+                      [formModel]="formModel"
+                      (clickSave)="valueChangePop($event)"
+                    >
+                    </codx-combobox-popup>
+                  </ng-container>
+                </div>
+              </div>
+            </div>
+
+            <codx-input
+              *ngIf="item?.controlType == 'Text' || item?.controlType == 'Phone' || item?.controlType == 'Email' || item?.controlType == 'Address' || item?.controlType == 'Expression'"
+              [field]="item?.fieldName"
+              type="text"
+              [require]="item?.isRequired"
+              [placeholder]="item?.note || ''"
+              [crrValue]="item?.dataFormat ?? ''"
+              [disabled]="true"
+            ></codx-input>
+            <codx-input
+              *ngIf="item?.controlType == 'ValueList'"
+              [field]="item?.fieldName"
+              [type]="'valuelist'"
+              [refValue]="item?.refValue"
+              [require]="item?.isRequired"
+              [placeholder]="item?.note || ''"
+              [crrValue]="item?.dataFormat ?? ''"
+              [disabled]="true"
+            ></codx-input>
+            <codx-input
+              *ngIf="item?.controlType == 'Combobox'"
+              [field]="item?.fieldName"
+              [type]="'combobox'"
+              [refValue]="item?.refValue"
+              [require]="item?.isRequired"
+              [placeholder]="item?.note || ''"
+              [crrValue]="item?.dataFormat ?? ''"
+              [disabled]="true"
+            ></codx-input>
+            <codx-input
+              [field]="item?.fieldName"
+              *ngIf="item?.controlType == 'Datetime'"
+              type="datetime"
+              [format]="item?.dataType"
+              [placeholder]="item?.note || ''"
+              [crrValue]="item?.dataFormat ?? ''"
+              [disabled]="true"
+            ></codx-input>
+            <codx-input
+              [field]="item?.fieldName"
+              *ngIf="item?.controlType == 'Number'"
+              type="number"
+              [showSpinButton]="false"
+              [placeholder]="item?.note || ''"
+              [crrValue]="item?.dataFormat ?? ''"
+              [disabled]="true"
+            ></codx-input>
+            <ng-container
+              *ngIf="item?.controlType == 'User' && item?.dataType == 'd'"
+            >
+              <codx-input
+                [field]="item?.fieldName"
+                type="combobox"
+                [showSpinButton]="false"
+                [multiple]="item?.multiselect"
+                [refValue]="'Users'"
+                [placeholder]="item?.note || ''"
+                [crrValue]="item?.dataFormat ?? ''"
+                [disabled]="true"
+              ></codx-input>
+              <span *ngIf="item.dataType == 'popup'" class="ms-2">
+                <button
+                  type="button"
+                  class="btn btn-icon btn-light-primary"
+                  [disabled]="true"
+                >
+                  <span class="icon-group_add icon-16"></span>
+                </button>
+              </span>
+            </ng-container>
+            <ng-container *ngIf="item?.controlType == 'Rank'">
+              <div class="ratio-slider">
+                <div class="icons-container">
+                  <div
+                    *ngFor="
+                      let i of createRangeArray(
+                        item?.rank?.minValue,
+                        item?.rank?.maxValue
+                      )
+                    "
+                  >
+                    <div
+                      [ngClass]="
+                        item?.rank?.type == '2' ? item?.rank?.icon : 'icon'
+                      "
+                      [ngbTooltip]="item?.rank?.type == '2' ? i : null"
+                      [attr.data-value]="i"
+                      [ngStyle]="
+                        item?.rank?.type == '2'
+                          ? { color: item?.rank?.color, 'font-size': '20px' }
+                          : ''
+                      "
+                    >
+                      {{ item?.rank?.type == '1' ? i : "" }}
+                    </div>
+                  </div>
+                </div>
+                <input
+                  type="range"
+                  id="ratio"
+                  [min]="item?.rank?.minValue"
+                  [max]="item?.rank?.maxValue"
+                  step="1"
+                  [value]="item?.dataFormat || '0'"
+                  [disabled]="true"
+                />
+              </div>
+            </ng-container>
+            <ng-container *ngIf="item?.controlType == 'Progress'">
+              <div class="ratio-slider mt-5">
+                <div class="icons-container progresspg">
+                  <div [attr.data-value]="0">0%</div>
+                  <div [attr.data-value]="100">100%</div>
+                </div>
+                <div
+                  class="h-10px position-relative bg-gray-200 rounded-4 w-100"
+                >
+                  <div
+                    class="rounded-4 h-10px"
+                    [style.background-color]="item.rank?.color"
+                    role="progressbar"
+                    [style.width]="'50%'"
+                    aria-valuenow="50"
+                    aria-valuemin="0"
+                    aria-valuemax="100"
+                  ></div>
+                </div>
+              </div>
+            </ng-container>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+</div>
+<ng-template #empty>
+  <div class="empty-data">
+    <div class="container h-100">
+      <div class="list-empty card card-flush h-100">
+        <div class="d-flex flex-column flex-center justify-content-center">
+          <img
+            src="../assets/themes/sys/default/img/DataEmpty.svg"
+            class="w-200px"
+          />
+          <div class="fs-5 text-dark fw-bold mt-2 text-center">
+            {{ "BP011" | mssg | async }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>

@@ -47,8 +47,8 @@ import { PopupAddVllCustomComponent } from './popup-add-vll-custom/popup-add-vll
 import { PopupSettingTableComponent } from './popup-setting-table/popup-setting-table.component';
 import { PopupSettingReferenceComponent } from './popup-setting-reference/popup-setting-reference.component';
 import { CodxInputCustomFieldComponent } from 'projects/codx-share/src/lib/components/codx-input-custom-field/codx-input-custom-field.component';
-import { CodxFieldsFormatValueComponent } from 'projects/codx-share/src/lib/components/codx-fields-detail-temp/codx-fields-format-value/codx-fields-format-value.component';
 import { PopupAddAutoNumberComponent } from 'projects/codx-es/src/lib/setting/category/popup-add-auto-number/popup-add-auto-number.component';
+import { CodxFieldsFormatValueComponent } from 'projects/codx-share/src/lib/components/codx-input-custom-field/codx-fields-detail-temp/codx-fields-format-value/codx-fields-format-value.component';
 
 @Component({
   selector: 'lib-popup-add-custom-field',
@@ -163,7 +163,10 @@ export class PopupAddCustomFieldComponent implements OnInit {
   //create autoNumber
   vllDateFormat: any;
   adAutoNumber: any;
+  caculateField = '';
   private destroyFrom$: Subject<void> = new Subject<void>();
+  arrFieldNum = [];
+  showCaculate = true;
 
   constructor(
     private cache: CacheService,
@@ -213,6 +216,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
       }
     } else {
       this.fieldNameOld = this.field.fieldName;
+      this.showCaculate = false;
     }
   }
 
@@ -222,6 +226,8 @@ export class PopupAddCustomFieldComponent implements OnInit {
     if (this.field.dataType == 'TA') {
       this.getColumnTable(this.field);
     }
+    if (this.field.dataType == 'CF')
+      this.caculateField = this.field.dataFormat ?? '';
   }
 
   async valueChange(e) {
@@ -268,6 +274,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
     }
     if (e.field == 'dataFormat' || e.field == 'refValue')
       this.creatFieldCustom();
+    if (e.field == 'dataType' && e.data == 'CF') this.selectFieldNum();
   }
   //chang title va change field name
   valueChangeText(e) {
@@ -326,10 +333,16 @@ export class PopupAddCustomFieldComponent implements OnInit {
   //   }
   // }
   cbxChange(value) {
-    if (value) this.field['stepID'] = value;
+    let oldStep = this.field['stepID'];
+    if (value && value != oldStep) {
+      this.field['stepID'] = value;
+      this.caculateField = '';
+    }
+    if (this.field.dataType == 'CF') this.selectFieldNum();
   }
 
   saveData() {
+    if (this.field.dataType == 'CF') this.field.dataFormat = this.caculateField;
     if (
       (!this.field.title || this.field.title.trim() == '') &&
       this.grvSetup['Title']?.isRequire
@@ -873,7 +886,8 @@ export class PopupAddCustomFieldComponent implements OnInit {
               this.listColumns = res.event[0];
               this.settingWidth = this.listColumns[0]?.settingWidth ?? false;
               this.settingCount = this.listColumns[0]?.settingCount ?? false;
-              this.totalColumns = this.listColumns[0]?.totalColumns ?? false;
+              this.totalColumns =
+                this.listColumns.findIndex((x) => x?.totalColumns) != -1;
 
               this.field.dataFormat = JSON.stringify(this.listColumns);
             }
@@ -896,7 +910,8 @@ export class PopupAddCustomFieldComponent implements OnInit {
       this.listColumns = arr;
       this.settingWidth = this.listColumns[0]?.settingWidth ?? false;
       this.settingCount = this.listColumns[0]?.settingCount ?? false;
-      this.totalColumns = this.listColumns[0]?.totalColumns ?? false;
+      this.totalColumns =
+        this.listColumns.findIndex((x) => x?.totalColumns) != -1;
     } else this.listColumns = [];
     this.changeRef.detectChanges();
   }
@@ -920,57 +935,68 @@ export class PopupAddCustomFieldComponent implements OnInit {
       );
       return;
     }
+    this.api
+      .exec<any>(
+        'SYS',
+        'GridViewSetupBusiness',
+        'GetGrvStAndFormNameByEntityNameAsync',
+        this.entityNamePA
+      )
+      .subscribe((res) => {
+        if (res) {
+          let formName = res?.formName;
+          let gridViewName = res?.gridViewName;
 
-    //bùa vậy vì ko có cách nào lấy grv bằng entityname cả
-    let formName = this.entityNamePA.replace('_', '');
-    let gridViewName = 'grv' + formName;
-    // let formName = 'CMCustomers';
-    // let gridViewName = 'grv' + formName;
-
-    this.cache.gridViewSetup(formName, gridViewName).subscribe((grv) => {
-      if (grv) {
-        let option = new DialogModel();
-        console.log(grv);
-        option.zIndex = 1050;
-        let obj = {
-          datas: grv,
-          entityName: this.entityNamePA,
-          action: this.action,
-          titleAction: 'Thêm trường liên kết', //test
-          dataRef: JSON.parse(this.field.dataFormat),
-        };
-        let dialogColumn = this.callfc.openForm(
-          PopupSettingReferenceComponent,
-          '',
-          550,
-          Util.getViewPort().height - 100,
-          '',
-          obj,
-          '',
-          option
-        );
-        dialogColumn.closed.subscribe((res) => {
-          if (res && res.event && res.event[1]) {
-            this.field.refType = '3';
-            this.fieldCus.referType = '3';
-            if (res.event && res.event[0]) {
-              this.field.dataFormat = JSON.stringify(res.event[0]);
-              this.fieldCus.dataFormat = JSON.stringify(res.event[0]);
-            } else {
-              this.field.dataFormat = '';
-              this.fieldCus.dataFormat = '';
-            }
-            if (this.tempInput) this.tempInput.viewFieldRef();
-            if (this.tempView)
-              this.tempView.parseValuePA(this.fieldCus.dataValue);
-          }
-        });
-      } else
-        this.notiService.notify(
-          'Grid View Setup chưa được thiết lập, hãy chọn đối tượng khác !',
-          '3'
-        );
-    });
+          this.cache.gridViewSetup(formName, gridViewName).subscribe((grv) => {
+            if (grv) {
+              let option = new DialogModel();
+              console.log(grv);
+              option.zIndex = 1050;
+              let obj = {
+                datas: grv,
+                entityName: this.entityNamePA,
+                action: this.action,
+                titleAction: 'Thêm trường liên kết', //test
+                dataRef: JSON.parse(this.field.dataFormat),
+              };
+              let dialogColumn = this.callfc.openForm(
+                PopupSettingReferenceComponent,
+                '',
+                550,
+                Util.getViewPort().height - 100,
+                '',
+                obj,
+                '',
+                option
+              );
+              dialogColumn.closed.subscribe((res) => {
+                if (res && res.event && res.event[1]) {
+                  this.field.refType = '3';
+                  this.fieldCus.referType = '3';
+                  if (res.event && res.event[0]) {
+                    this.field.dataFormat = JSON.stringify(res.event[0]);
+                    this.fieldCus.dataFormat = JSON.stringify(res.event[0]);
+                  } else {
+                    this.field.dataFormat = '';
+                    this.fieldCus.dataFormat = '';
+                  }
+                  if (this.tempInput) this.tempInput.viewFieldRef();
+                  if (this.tempView)
+                    this.tempView.parseValuePA(this.fieldCus.dataValue);
+                }
+              });
+            } else
+              this.notiService.notify(
+                'Grid View Setup chưa được thiết lập, hãy chọn đối tượng khác !',
+                '3'
+              );
+          });
+        } else
+          this.notiService.notify(
+            'Grid View Setup chưa được thiết lập, hãy chọn đối tượng khác !',
+            '3'
+          );
+      });
   }
 
   //lưu giá trị mặc định
@@ -993,8 +1019,9 @@ export class PopupAddCustomFieldComponent implements OnInit {
   }
   //end
 
-  //** đánh số tự động - Popup setiing autoNumber */
-
+  //--------------------------------------------------//
+  //** đánh số tự động - Popup setiing autoNumber    */
+  //--------------------------------------------------//
   async openAutoNumPopup() {
     this.getVllFormat();
     let obj = {};
@@ -1105,16 +1132,176 @@ export class PopupAddCustomFieldComponent implements OnInit {
 
   async getVllFormat() {
     this.vllDateFormat = await firstValueFrom(this.cache.valueList('L0088'));
-    // if (!this.adAutoNumber && this.action != 'add') {
-    //   this.adAutoNumber = await firstValueFrom(
-    //     this.dpService.getADAutoNumberByAutoNoCode(this.field.recID)
-    //   );
-    //   if (this.adAutoNumber) this.setViewAutoNumber(this.adAutoNumber);
-    // }
   }
-  //end
+  //-----------------------END AUTONUM------------------//
 
-  //Trường tính toán
+  //--------------------------------------------------//
+  //--------------CACULATE FIELD----------------------//
+  //--------------------------------------------------//
 
-  //end
+  operator = ['+', '-', 'x', '/', 'Avg('];
+  accessField = [']'];
+  arrNum = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+  buttonOperator(op) {
+    if (this.caculateField) {
+      let chartLast = this.caculateField[this.caculateField.length - 1];
+      if (chartLast == '(') return;
+      if (op == 'Avg') {
+        if (
+          this.arrNum.includes(chartLast) ||
+          this.accessField.includes(chartLast)
+        ) {
+          return;
+        }
+        op = 'Avg(';
+      }
+      if (this.operator.includes(chartLast))
+        this.caculateField = this.caculateField.substring(
+          0,
+          this.caculateField.length - 1
+        );
+    }
+
+    this.caculateField += op;
+  }
+
+  buttonOpenParenthesis() {
+    if (this.caculateField) {
+      let idxLast = this.caculateField.length - 1;
+      if (
+        this.arrNum.includes(this.caculateField[idxLast]) ||
+        this.caculateField[idxLast] == ')' ||
+        this.caculateField[idxLast] == ','
+      )
+        return;
+    }
+    this.caculateField += '(';
+  }
+
+  buttonCloseParenthesis() {
+    if (this.caculateField) {
+      let idxLast = this.caculateField.length - 1;
+      if (
+        this.operator.includes(this.caculateField[idxLast]) ||
+        this.caculateField[idxLast] == '(' ||
+        this.caculateField[idxLast] == ',' ||
+        this.compareParenthesis(this.caculateField) == 0
+      )
+        return;
+    } else return;
+    this.caculateField += ')';
+  }
+
+  compareParenthesis(string) {
+    let countOpen = 0;
+    let countClose = 0;
+    for (const c of string) {
+      if (c == '(') {
+        countOpen++;
+      } else if (c === ')') {
+        countClose++;
+      }
+    }
+    return countOpen - countClose;
+  }
+
+  fieldSelect(fieldName) {
+    if (this.caculateField) {
+      let idxLast = this.caculateField.length - 1;
+      if (
+        this.caculateField[idxLast] == ']' ||
+        this.caculateField[idxLast] == ')' ||
+        this.caculateField[idxLast] == ','
+      )
+        return;
+    }
+    this.caculateField += '[' + fieldName + ']';
+    this.popover.close();
+  }
+
+  delChart() {
+    if (this.caculateField) {
+      let idxLast = this.caculateField.length - 1;
+      if (this.caculateField[idxLast] == ']') {
+        while (
+          this.caculateField?.length == 0 ||
+          this.caculateField[idxLast] != '['
+        ) {
+          this.caculateField = this.caculateField.substring(0, idxLast);
+          idxLast = idxLast - 1;
+        }
+      }
+      //else this.caculateField = this.caculateField.substring(0, idxLast);
+      this.caculateField = this.caculateField.substring(0, idxLast);
+    }
+  }
+  delAll() {
+    this.caculateField = '';
+  }
+  // Num
+  buttonNum(num) {
+    if (this.caculateField) {
+      let idxLast = this.caculateField.length - 1;
+      if (
+        this.caculateField[idxLast] == ']' ||
+        this.caculateField[idxLast] == ')' 
+      )
+        return;
+    }
+    this.caculateField += num;
+  }
+  decimalPoint() {
+    if (!this.caculateField) return;
+    let idxLast = this.caculateField.length - 1;
+    let chartLast = this.caculateField[idxLast]; 
+    if (
+      chartLast == ',' ||
+      this.accessField.includes(chartLast) ||
+      this.operator.includes(chartLast)
+    )
+      return;
+    //chua check hết
+    idxLast= idxLast -1
+    while(!this.operator.includes(this.accessField[idxLast]) || idxLast!=-1){
+      if(this.caculateField[idxLast]==",")  return;
+      idxLast--
+    }
+    this.caculateField += ',';
+  }
+
+  selectFieldNum() {
+    this.arrFieldNum = [];
+    var idx = this.stepList.findIndex(
+      (x) => x.recID == this.field.stepID && x.fields?.length > 0
+    );
+    if (idx != -1) {
+      this.arrFieldNum = this.stepList[idx].fields
+        .filter((x) => x.dataType == 'N')
+        .map((x) => x.fieldName);
+    }
+    if (!this.arrFieldNum || this.arrFieldNum?.length == 0)
+      this.notiService.notify(
+        'Bước thực hiện không có trường tùy chỉnh kiểu số !',
+        '3'
+      );
+  }
+
+  popoverSelectField(p) {
+    if (this.arrFieldNum?.length > 0) p.open();
+    this.popover = p;
+    // else
+    //   this.notiService.notify(
+    //     'Bước thực hiện không có trường tùy chỉnh kiểu số !',
+    //     '3'
+    //   );
+  }
+
+  checkCaculateField() {
+    return true;
+  }
+
+  openCaculate() {
+    this.showCaculate = !this.showCaculate;
+  }
+  //-----------------end CACULATE FIELD------------------//
 }

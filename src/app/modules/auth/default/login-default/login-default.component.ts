@@ -18,10 +18,10 @@ import {
 import { RealHub, RealHubService, AuthService, UIComponent } from 'codx-core';
 import { environment } from 'src/environments/environment';
 import { Modal } from 'bootstrap';
-import { Login2FAComponent } from '@modules/auth/login/login2-fa/login2-fa.component';
 import { SelectEventArgs } from '@syncfusion/ej2-angular-navigations';
 import { LoginService } from '@modules/auth/login/login.service';
 import { DisplayTextModel } from '@syncfusion/ej2-angular-barcode-generator';
+import { WaitingLoginQrcodeComponent } from '../waiting-login-qrcode/waiting-login-qrcode.component';
 
 @Component({
   selector: 'codx-login',
@@ -100,7 +100,7 @@ export class LoginDefaultComponent extends UIComponent {
     private df: ChangeDetectorRef,
     private realHub: RealHubService,
     private authService: AuthService,
-    private loginService: LoginService
+    private loginService: LoginService,
   ) {
     super(injector);
 
@@ -136,6 +136,22 @@ export class LoginDefaultComponent extends UIComponent {
                 window.location.href = z.data?.host + z.data?.tenant;
               }, 1000);
             }
+          } else if (z.event == 'WaitingLoginQRCode') {
+            let user = JSON.parse(z.data.user);
+            let objData = {
+              userName: user.userName,
+            };
+            let waitingLogin = this.callfc.openForm(
+              WaitingLoginQrcodeComponent,
+              '',
+              400,
+              600,
+              '',
+              objData
+            );
+            waitingLogin.closed.subscribe();
+          } else if (z.event == 'CancelLoginQR') {
+            window.location.reload();
           }
         });
       }

@@ -274,7 +274,7 @@
       <span class="icon-event_notes icon-20 me-1 fw-bold"></span>
       <codx-label
         class="text-gray-600 ms-2 fs-5-sm fw-bold text-primary"
-        fiedName="note"
+        fiedName="memo"
         [formModel]="dialog?.formModel"
         [default]="'Ghi chú'"
       ></codx-label>
@@ -283,7 +283,7 @@
       <span
         class="text-gray-600"
         [innerHTML]="
-          deal?.note | formatvalue : dialog?.formModel : 'Note' | async
+          deal?.memo | formatvalue : dialog?.formModel : 'Memo' | async
         "
       ></span>
     </div>

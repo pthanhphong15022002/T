@@ -49,7 +49,7 @@
           class="border border-gray-300 border-dashed rounded symbol symbol-200 square me-2 image-inpt-wrapper fullImage"
           [imageType]="'square'" [width]="200" referType="IDFront" [objectId]="currSignature?.recID"
           [objectType]="'ES_Signatures'" data-kt-menu-trigger="click" data-kt-menu-attach="parent"
-          data-kt-menu-placement="bottom-end" data-kt-menu-flip="bottom" [isAllowEdit]="currSignature !=null ?true:false" [updateDirect]="true"
+          data-kt-menu-placement="bottom-end" data-kt-menu-flip="bottom" [isAllowEdit]="currSignature !=null ?true:false" [updateDirect]="false"
           [funcId]="'ESS21'">
         </codx-img>
         <codx-label class="pt-3" name="lblIDFront" default="Mặt trước" formName="Signatures"
@@ -60,7 +60,7 @@
           class="border border-gray-300 border-dashed rounded symbol symbol-200 square me-2 image-inpt-wrapper fullImage"
           [objectId]="currSignature?.recID" [objectType]="'ES_Signatures'" data-kt-menu-trigger="click"
           data-kt-menu-attach="parent" data-kt-menu-placement="bottom-end" data-kt-menu-flip="bottom"
-          [isAllowEdit]="currSignature !=null ?true:false" [updateDirect]="true" [funcId]="'ESS21'">
+          [isAllowEdit]="currSignature !=null ?true:false" [updateDirect]="false" [funcId]="'ESS21'">
         </codx-img>
         <codx-label class="pt-3" name="lblIDBack" default="Mặt sau" formName="Signatures"
           gridViewName="grvSignatures"></codx-label>

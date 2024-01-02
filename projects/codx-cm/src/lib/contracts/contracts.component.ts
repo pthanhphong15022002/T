@@ -48,6 +48,7 @@ import { CodxCommonService } from 'projects/codx-common/src/lib/codx-common.serv
 import { DP_Instances_Steps_Tasks, DP_Instances_Steps_Tasks_Roles } from 'projects/codx-dp/src/lib/models/models';
 import { ExportData } from 'projects/codx-common/src/lib/models/ApproveProcess.model';
 import { PopupPermissionsComponent } from '../popup-permissions/popup-permissions.component';
+import { J } from '@angular/cdk/keycodes';
 
 @Component({
   selector: 'contracts-detail',
@@ -155,7 +156,7 @@ export class ContractsComponent extends UIComponent {
   user;
   taskAdd;
   popupLiquidation;
-  disposalOn;disposalAll;disposalCmt;
+  liquidation: CM_Contracts;
   constructor(
     private inject: Injector,
     private cmService: CodxCmService,
@@ -316,7 +317,7 @@ export class ContractsComponent extends UIComponent {
             res.disabled = !data?.closed;
             break;
           case 'CM0204_18': // thanh lý
-            res.disabled = data?.status == "17" && data?.disposalAll;
+            res.disabled = data?.status == "17" && data?.disposalType != '1';
             break;
         }
       });
@@ -398,7 +399,7 @@ export class ContractsComponent extends UIComponent {
       case 'CM0204_18': // thanh lý hợp đồng
         this.liquidationContract(data);
         break;
-      case 'CM0204_17': // thanh lý hợp đồng
+      case 'CM0204_17': // chia sẻ
         this.popupPermissions(data);
         break;
       default: {
@@ -717,7 +718,7 @@ export class ContractsComponent extends UIComponent {
     };
     let option = new SidebarModel();
     option.Width = '800px';
-    option.zIndex = 1001;
+    option.zIndex = 1000;
     option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;
 
@@ -726,6 +727,13 @@ export class ContractsComponent extends UIComponent {
       data,
       option
     );
+    popupContract.closed.subscribe((res) => {
+      if(res?.event && action == "extend"){
+        this.view.dataService.remove(contract).subscribe();
+        this.view.currentView['schedule'].refresh();
+        this.detectorRef.detectChanges();
+      }
+    })
   }
 
   getAccount() {
@@ -1281,42 +1289,44 @@ export class ContractsComponent extends UIComponent {
   }
 
   liquidationContract(data){
-    this.disposalOn = new Date();
     this.contractSelected = data;
+    this.liquidation = JSON.parse(JSON.stringify(data));
+    this.liquidation.status = "17";
+    this.liquidation.disposalID = this.liquidation?.contractID;
+    this.liquidation.disposalOn = new Date();
+    this.liquidation.debtClosingOn = new Date();
+    this.liquidation.disposalID = this.liquidation?.contractID;
+    this.liquidation.pmtMethodID = "CK";
     let opt = new DialogModel();
-      opt.FormModel = this.view.formModel;
+      opt.zIndex = 1015;
       this.popupLiquidation = this.callFunc.openForm(
         this.liquidationTmp,
         '',
         500,
         600,
         '',
-        data,
+        null,
         '',
         opt
       );
   }
 
   changeData(event){
-    if(event?.field== "disposalOn"){
-      this[event?.field]= event?.data?.fromDate;
+    if(event?.field== "disposalOn" || event?.field == "debtClosingOn"){
+      this.liquidation[event?.field]= event?.data?.fromDate;
     }else{
-      this[event?.field]= event?.data;
+      this.liquidation[event?.field]= event?.data;
     }
   }
+  
   saveLiquidation(){
     this.api
-        .exec<any>('CM', 'ContractsBusiness', 'LiquidationContractAsync', [
-          this.contractSelected?.recID, this.disposalOn, this.disposalAll, this.disposalCmt
-        ])
+        .exec<any>('CM', 'ContractsBusiness', 'DisposalContractAsync', [this.liquidation])
         .subscribe((res) => {
           console.log(res);
           if (res) {
-            this.contractSelected.status = "17";
-            this.contractSelected.disposalOn = this.disposalOn;
-            this.contractSelected.disposalAll = this.disposalAll;
-            this.contractSelected.disposalCmt = this.disposalCmt;
-            this.view.dataService.update(this.contractSelected, true).subscribe();
+            this.contractSelected.status = res.status; 
+            this.view.dataService.update(res, true).subscribe();
             this.changeDetectorRef.markForCheck();
             this.popupLiquidation.close()
             this.notiService.notifyCode('SYS007');

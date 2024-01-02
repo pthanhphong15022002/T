@@ -928,14 +928,13 @@ export class CodxAcService {
     // }
   }
 
-  changeMFJournal(event) {
-    event.filter((x) => !Object.values(MorfuncDefault).includes(x.functionID)) 
-      .reduce((pre, element) => { element.disabled = true }, {});
-    event = event.filter((x) => Object.values(MorfuncDefault).includes(x.functionID));
-    event.forEach(element => {
+  changeMFJournal(event,type) {
+    event.reduce((pre,element) => {
+      if(!Object.values(MorfuncDefault).includes(element.functionID)) element.disabled = true;
       if([MorfuncDefault.XuatDuLieu].includes(element.functionID)) element.disabled = true;
       element.isbookmark = true;
-    });
+      if(type === '3' && element.functionID === 'ACT09')  element.disabled = false;
+    },{})
   }
 
   getSettingFromJournal(eleGrid:CodxGridviewV2Component,journal:any,data:any = null,baseCurr:any = '',hideFields:any = []){

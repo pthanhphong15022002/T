@@ -7,7 +7,6 @@ import { CodxBpComponent } from './codx-bp.component';
 import { TesthtmlComponent } from './testhtml/testhtml.component';
 import { LayoutComponent } from './_layout/layout.component';
 import { ProcessesComponent } from './processes/processes.component';
-import { ViewListProcessesComponent } from './processes/view-list-processes/view-list-processes.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { CodxCoreModule } from 'codx-core';
 import { CoreModule } from '@core/core.module';
@@ -15,24 +14,16 @@ import { HttpClientModule } from '@angular/common/http';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { AccordionModule, TabModule } from '@syncfusion/ej2-angular-navigations';
 import { CommonModule } from '@angular/common';
-import { PopupAddProcessesComponent } from './processes/popup-add-processes/popup-add-processes.component';
-import { ProcessStepsComponent } from './processsteps/processsteps.component';
-import { PopupAddProcessStepsComponent } from './processsteps/popup-add-process-steps/popup-add-process-steps.component';
-import { RevisionsComponent } from './processes/revisions/revisions.component';
 import { LayoutNoAsideComponent } from 'projects/codx-common/src/lib/_layout/_noAside/_noAside.component';
-import { PropertiesComponent } from './properties/properties.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
-import { PopupAddPermissionComponent } from './processes/popup-add-permission/popup-add-permission.component';
-import { AprpermissionComponent } from './aprpermission/aprpermission.component';
-import { ViewFlowchartComponent } from './processsteps/view-flowchart/view-flowchart.component';
-import { PopupRolesComponent } from './processes/popup-roles/popup-roles.component';
 // import { NgxImageZoomModule } from 'ngx-image-zoom';
 import { PinchZoomModule } from '@meddv/ngx-pinch-zoom';
-import { PopupUpdateRevisionsComponent } from './processes/popup-update-revisions/popup-update-revisions.component';
-import { PopupViewDetailProcessesComponent } from './popup-view-detail-processes/popup-view-detail-processes.component';
-import { PopupPhasesActivitiesComponent } from './processes/popup-phases-activities/popup-phases-activities.component';
-import { ShowMoreLessComponent } from './processes/show-more-less/show-more-less.component';
-import { PopupApprovalComponent } from './aprpermission/popup-approval/popup-approval.component';
+import { PopupAddProcessComponent } from './processes/popup-add-process/popup-add-process.component';
+import { FormPropertiesFieldsComponent } from './processes/popup-add-process/form-properties-fields/form-properties-fields.component';
+import { ConnectorEditing, DiagramModule, SymbolPaletteModule } from '@syncfusion/ej2-angular-diagrams';
+import { SettingFieldsComponent } from './processes/popup-add-process/form-properties-fields/setting-fields/setting-fields.component';
+import { environment } from 'src/environments/environment';
+import { FormFormatValueComponent } from './processes/popup-add-process/form-properties-fields/form-format-value/form-format-value.component';
 import { ModeviewComponent } from './modeview/modeview.component';
 
 export const routes: Routes = [
@@ -44,38 +35,18 @@ export const routes: Routes = [
         path: 'processes/:funcID',
         component: ProcessesComponent,
         data: { noReuse: true },
-      },
-      {
-        path: 'approvals/:funcID',
-        component: ProcessesComponent,
-        data: { noReuse: true },
-      },
-      {
-        path: 'aprpermission/:funcID',
-        component: AprpermissionComponent,
-        data: { noReuse: true },
-      },
-      {
-        path: 'testhtml',
-        component: TesthtmlComponent,
-      }
-    ],
+      }]
   },
   {
     path: '',
     component: LayoutNoAsideComponent,
     children: [
       {
-        path: 'processstep/:funcID',
-        component: ProcessStepsComponent,
-        data: { noReuse: true },
-      },
-      {
         path: 'modeview',
         component: ModeviewComponent,
       },
     ],
-  },
+  }
 ];
 @NgModule({
   declarations: [
@@ -83,29 +54,19 @@ export const routes: Routes = [
     TesthtmlComponent,
     LayoutComponent,
     ProcessesComponent,
-    PopupAddProcessesComponent,
-    ViewListProcessesComponent,
-    ProcessStepsComponent,
-    PopupAddProcessStepsComponent,
-    PopupAddProcessStepsComponent,
-    RevisionsComponent,
-    PropertiesComponent,
-    PopupAddPermissionComponent,
-    AprpermissionComponent,
-    ViewFlowchartComponent,
-    PopupRolesComponent,
-    PopupUpdateRevisionsComponent,
-    PopupViewDetailProcessesComponent,
-    PopupPhasesActivitiesComponent,
-    ShowMoreLessComponent,
-    PopupApprovalComponent,
-    ModeviewComponent
+    PopupAddProcessComponent,
+    FormPropertiesFieldsComponent,
+    SettingFieldsComponent,
+    FormFormatValueComponent,
   ],
   imports: [
+    CodxCoreModule.forRoot({ environment }),
     RouterModule.forChild(routes),
+    CommonModule,
     FormsModule,
     ReactiveFormsModule,
     SharedModule,
+    TabModule,
     CodxShareModule,
     NgbModule,
     CoreModule,
@@ -113,9 +74,13 @@ export const routes: Routes = [
     OverlayModule,
     TabModule,
     CommonModule,
+
     DragDropModule,
+    CoreModule,
     PinchZoomModule,
-    AccordionModule
+    DiagramModule,
+    DragDropModule,
+
     // NgxImageZoomModule
   ],
   exports: [CodxBpComponent],

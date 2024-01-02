@@ -520,6 +520,9 @@ export class DealsComponent
         ? data.closed || !data.applyProcess || this.checkMoreReason(data,false)
         : true;
     };
+    let isAddTask =  (eventItem, data) => {
+      eventItem.disabled = !data?.isAdminAll || data.closed || data.status == '7';
+    };
 
     functionMappings = {
       ...['CM0201_1', 'CM0201_3', 'CM0201_4', 'CM0201_5'].reduce(
@@ -550,6 +553,7 @@ export class DealsComponent
       CM0201_17: isChangeStatus,
       CM0201_19: isUpdateProcess,
       CM0201_20: isDeleteProcess,
+      CM0201_18: isAddTask
     };
 
     return functionMappings[type];
@@ -1308,7 +1312,7 @@ export class DealsComponent
       action: action === 'add' ? 'add' : 'copy',
       formMD: formMD,
       titleAction: this.formatTitleMore(this.titleAction),
-      // processID: this.processID,
+      processID: this.processID,
       gridViewSetup: this.gridViewSetup,
       functionModule: this.functionModule,
       currencyIDDefault: this.currencyIDDefault,

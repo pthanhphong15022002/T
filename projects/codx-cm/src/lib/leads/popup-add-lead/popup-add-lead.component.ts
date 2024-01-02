@@ -31,6 +31,7 @@ import { environment } from 'src/environments/environment';
 import { T } from '@angular/cdk/keycodes';
 import { filter, firstValueFrom } from 'rxjs';
 import moment from 'moment';
+import { CustomFieldService } from 'projects/codx-share/src/lib/components/codx-input-custom-field/custom-field.service';
 
 @Component({
   selector: 'lib-popup-add-lead',
@@ -178,12 +179,16 @@ export class PopupAddLeadComponent
   convertCustomerToLead: boolean = false; //Phúc bổ sung chỗ này để convert customer qua lead
   transIDCamp: any;
   autoNameTabFields: string;
+  arrCaculateField: any[]=[];
+  isLoadedCF = false;
+
   constructor(
     private inject: Injector,
     private changeDetectorRef: ChangeDetectorRef,
     private notificationsService: NotificationsService,
     private authStore: AuthStore,
     private codxCmService: CodxCmService,
+    private customFieldSV : CustomFieldService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -974,7 +979,7 @@ export class PopupAddLeadComponent
       if (check && menuInput == -1 && tabInput == -1) {
         this.tabInfo.splice(2, 0, this.menuInputInfo);
         this.tabContent.splice(2, 0, this.tabCustomFieldDetail);
-      } else if ( menuInput != -1 && tabInput != -1) {
+      } else if ( !check && menuInput != -1 && tabInput != -1) {
         this.tabInfo.splice(menuInput, 1);
         this.tabContent.splice(tabInput, 1);
       }
@@ -1010,12 +1015,12 @@ export class PopupAddLeadComponent
         let filteredTasks = stepCurrent.tasks.filter(task => task?.fieldID !== null && task?.fieldID?.trim() !== '')
         .map(task => task.fieldID)
         .flatMap(item => item.split(';').filter(item => item !== ''));
-        let listFields = stepCurrent.fields.filter(field => !filteredTasks.includes(this.action === 'copy'? field?.reCID: field?.refID));
+        let listFields = stepCurrent.fields.filter(field => !filteredTasks.includes(this.action === 'copy'? field?.recID: field?.refID));
         this.listFields = [...this.listFields, ...listFields];
       }
      }
      else {
-      let idxCrr = liststeps.findIndex((x) => x.stepID == this.instance?.stepID);
+      let idxCrr = liststeps.findIndex((x) => x.stepID == this.lead?.stepID);
       if (idxCrr != -1) {
         for (let i = 0; i <= idxCrr; i++) {
           let stepCurrent = liststeps[i];
@@ -1083,8 +1088,8 @@ export class PopupAddLeadComponent
   valueChangeCustom(event) {
     //bo event.e vì nhan dc gia trị null
     if (event && event.data) {
-      var result = event.e?.data;
-      var field = event.data;
+      let result = event.e?.data;
+      let field = event.data;
       switch (field.dataType) {
         case 'D':
           result = event.e?.data.fromDate;
@@ -1122,6 +1127,7 @@ export class PopupAddLeadComponent
               );
           }
         }
+        if(field.dataType=='N') this.caculateField()
       }
     }
   }
@@ -1168,4 +1174,73 @@ export class PopupAddLeadComponent
   addFileCompleted(e) {
     this.isBlock = e;
   }
+
+  //----------------------CACULATE---------------------------//
+
+  getArrCaculateField() {
+    this.arrCaculateField = [];
+    this.listInstanceSteps.forEach((x) => {
+      if (x.fields?.length > 0) {
+        let fnum = x.fields.filter((x) => x.dataType == 'CF');
+        if (fnum?.length > 0)
+          this.arrCaculateField = this.arrCaculateField.concat(fnum);
+      }
+    });
+    this.isLoadedCF = true;
+  }
+  //tính toán
+  caculateField() {
+    if (!this.isLoadedCF) this.getArrCaculateField();
+    if (!this.arrCaculateField || this.arrCaculateField?.length == 0) return;
+    let fieldsNum = [];
+    this.listInstanceSteps.forEach((x) => {
+      if (x.fields?.length > 0) {
+        let fnum = x.fields.filter((x) => x.dataType == 'N');
+        if (fnum?.length > 0) fieldsNum = fieldsNum.concat(fnum);
+      }
+    });
+    if (!fieldsNum || fieldsNum?.length == 0) return;
+
+    this.arrCaculateField.forEach((obj) => {
+      let dataFormat = obj.dataFormat;
+      fieldsNum.forEach((f) => {
+        if (dataFormat.includes('[' + f.fieldName + ']') && f.dataValue) {
+          let dataValue = f.dataValue;
+          if (f.dataFormat == 'P') dataValue = dataValue + '/100';
+          dataFormat = dataFormat.replaceAll(
+            '[' + f.fieldName + ']',
+            dataValue
+          );
+        }
+      });
+
+      if (!dataFormat.includes('[')) {
+        //tinh toán
+        obj.dataValue = this.customFieldSV.caculate(dataFormat);
+        //tính toan end
+        let index = this.listInstanceSteps.findIndex((x) => x.recID == obj.stepID);
+        if (index != -1) {
+          if (this.listInstanceSteps[index].fields?.length > 0) {
+            let idxField = this.listInstanceSteps[index].fields.findIndex(
+              (x) => x.recID == obj.recID
+            );
+            if (idxField != -1) {
+              this.listInstanceSteps[index].fields[idxField].dataValue = obj.dataValue;
+
+              let idxEdit = this.listCustomFile.findIndex(
+                (x) => x.recID == this.listInstanceSteps[index].fields[idxField].recID
+              );
+              if (idxEdit != -1) {
+                this.listCustomFile[idxEdit] =
+                  this.listInstanceSteps[index].fields[idxField];
+              } else
+                this.listCustomFile.push(this.listInstanceSteps[index].fields[idxField]);
+            }
+          }
+        }
+      }
+    });
+  }
+  //------------------END_CACULATE--------------------//
 }
+

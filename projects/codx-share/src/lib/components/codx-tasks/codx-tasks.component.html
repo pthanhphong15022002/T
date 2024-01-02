@@ -93,7 +93,6 @@
     [icoStatusVll2]="'TM005'"
     [title]="data.userName"
     [subTitle]="data.positionName"
-    [content]="data.taskName"
     [status]="data.status"
     [statusVll]="vllStatus"
     [showBgColorVll]="true"
@@ -104,11 +103,45 @@
     [setting]="setting"
     [footer]="cardImgFooter"
     [dataItem]="data"
+    [contentTmp]="cardContent"
   >
   </codx-card-img>
 </ng-template>
+<!-- [contentTmp]="" thay [content]="data.taskName"-->
+<ng-template #cardContent let-data>
+  <div class="line-clamp-card">
+    <span
+      [ngbPopover]="toolTipTaskName"
+      #popToolTip="ngbPopover"
+      [openDelay]="500"
+      (mouseenter)="popToolTip.open()"
+      (mouseleave)="popToolTip.close()"
+      placement="top right bottom left"
+      container="body"
+      >{{ data?.taskName }}</span
+    >
+  </div>
+  <ng-template #toolTipTaskName>
+    <div>{{ data?.taskName }}</div>
+  </ng-template>
+</ng-template>
 
 <ng-template #cardImgFooter let-data let-setting="setting">
+  <!-- <div class="d-flex flex-column text-content flex-grow-1">
+    <span
+      [ngbPopover]="toolTipTaskName"
+      #popToolTip="ngbPopover"
+      [openDelay]="500"
+      (mouseenter)="popToolTip.open()"
+      (mouseleave)="popToolTip.close()"
+      placement="top right bottom left"
+      container="body"
+      >{{ data?.taskName }}</span
+    >
+  </div>
+  <ng-template #toolTipTaskName>
+    <div>{{ data?.taskName }}</div>
+  </ng-template> -->
   <div class="d-flex flex-column flex-grow-1">
     <div
       *ngIf="setting?.tags"

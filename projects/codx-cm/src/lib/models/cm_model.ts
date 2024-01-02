@@ -543,6 +543,13 @@ export class CM_Cases {
   divisionID: string;
   departmentID: string;
   companyID: string;
+  statusCode: string;
+  approveStatus: string;
+  groupUserID: string;
+  assignType: string;
+  customerName: string;
+  customerCategory: string;
+  shortName: string;
 }
 
 export class CM_Partners {
@@ -786,6 +793,7 @@ export class CM_Contracts {
   objectName: string; //Tên đối tượng
   contactID: string; //Liên hệ
   customerID: string; //Khách hàng
+  customerName: string; //Khách hàng
   currencyID: string; //Tiền tệ
   exchangeRate: number; //Tỷ giá hối đoái
   contractAmt: number; //Giá trị hợp đồng
@@ -800,7 +808,6 @@ export class CM_Contracts {
   effectiveFrom: Date; //Hiệu lực từ
   effectiveTo: Date; //Hiệu lực đến
   extendOn: Date; //Ngày gia hạn
-  disposalOn: Date; //Ngày thanh lý
   warantyMonths: number; //Số tháng bảo hành
   warantyExpired: Date; //Ngày hết hạn bảo hành
   salespersonID: string; //Mã nhân viên kinh doanh
@@ -869,4 +876,11 @@ export class CM_Contracts {
   divisionID: string;
   departmentID: string;
   objectLinked: string;
+  disposalType: string; // loại thanh lý
+  disposalID: string;
+  disposalReason: string;
+  debtClosingOn: Date;
+  disposalOn: Date; //Ngày thanh lý
+  disposalCmt: Date; //Ngày thanh lý
+  displayed: boolean; //Ngày thanh lý
 }

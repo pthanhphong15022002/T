@@ -32,6 +32,7 @@ import { toCamelCase } from '../utils';
   styleUrls: ['./journal-v2.component.scss'],
 })
 export class JournalV2Component extends UIComponent implements OnInit {
+  //#region Contrucstor
   @ViewChild('grid') grid?: CodxGridviewV2Component;
   @ViewChild('contentTemplate') contentTemplate: TemplateRef<any>;
   views: Array<ViewModel> = [];
@@ -69,9 +70,10 @@ export class JournalV2Component extends UIComponent implements OnInit {
   ) {
     super(inject);
   }
+  //#endregion Contrucstor
 
   //#region Init
-  override onInit(): void {
+  onInit() {
     this.cache.valueList('AC077').subscribe((func) => {
       if (func) this.func = func.datas;
     });
@@ -104,76 +106,9 @@ export class JournalV2Component extends UIComponent implements OnInit {
     this.assignVllToProp2('AC136', 'journalTypes136');
     this.assignVllToProp2('AC137', 'journalTypes137');
     this.assignVllToProp2('AC138', 'journalTypes138');
-
-    // combineLatest({
-    //   users: this.journalService.getUsers$(),
-    //   userGroups: this.journalService.getUserGroups$(),
-    //   userRoles: this.journalService.getUserRoles$(),
-    //   random: this.randomSubject.asObservable(),
-    // }).subscribe(({ users, userGroups, userRoles }) => {
-    //   const options = new DataRequest();
-    //   options.entityName = 'AC_JournalsPermission';
-    //   options.pageLoading = false;
-    //   this.acService
-    //     .loadData$('AC', options)
-    //     .subscribe((journalPermissions: IJournalPermission[]) => {
-    //       let createrMap: Map<string, string[]> = new Map();
-    //       let posterMap: Map<string, string[]> = new Map();
-
-    //       for (const permission of journalPermissions) {
-    //         let name: string;
-    //         if (permission.objectType === 'U') {
-    //           name = this.nameByIdPipe.transform(
-    //             users,
-    //             'UserID',
-    //             'UserName',
-    //             permission.objectID
-    //           );
-    //         } else if (permission.objectType === 'UG') {
-    //           name = this.nameByIdPipe.transform(
-    //             userGroups,
-    //             'GroupID',
-    //             'GroupName',
-    //             permission.objectID
-    //           );
-    //         } else {
-    //           name = this.nameByIdPipe.transform(
-    //             userRoles,
-    //             'RoleID',
-    //             'RoleName',
-    //             permission.objectID
-    //           );
-    //         }
-
-    //         if (permission.add === '1') {
-    //           let creaters: string[] =
-    //             createrMap.get(permission.journalNo) ?? [];
-    //           creaters.push(name);
-    //           createrMap.set(permission.journalNo, creaters);
-    //         }
-
-    //         if (permission.post === '1') {
-    //           let posters: string[] = posterMap.get(permission.journalNo) ?? [];
-    //           posters.push(name);
-    //           posterMap.set(permission.journalNo, posters);
-    //         }
-    //       }
-
-    //       this.creaters = Array.from(createrMap, ([key, value]) => ({
-    //         journalNo: key,
-    //         value: value.join(', '),
-    //       }));
-    //       this.posters = Array.from(posterMap, ([key, value]) => ({
-    //         journalNo: key,
-    //         value: value.join(', '),
-    //       }));
-    //     });
-    // });
   }
 
   ngAfterViewInit() {
-    //this.acService.changeToolBar.next(this.view.funcID);
-
     this.cache.functionList(this.view.funcID).subscribe((res) => {
       if (res) {
         this.funcName = res.defaultName;
@@ -214,8 +149,7 @@ export class JournalV2Component extends UIComponent implements OnInit {
     this.destroy$.next();
     this.destroy$.complete();
   }
-
-  //#region Init
+  //#endregion Init
 
   //#region Event
   viewChanged(view) {
@@ -239,6 +173,9 @@ export class JournalV2Component extends UIComponent implements OnInit {
         break;
       case 'SYS04':
         this.copy(e, data);
+        break;
+      case 'ACT09':
+        this.addNewJournalSample(e, data);
         break;
     }
   }
@@ -279,7 +216,7 @@ export class JournalV2Component extends UIComponent implements OnInit {
 
   changeMF(event){
     if (event) {
-      this.acService.changeMFJournal(event); 
+      this.acService.changeMFJournal(event,this.mainFilterValue); 
     }
   }
 
@@ -345,38 +282,7 @@ export class JournalV2Component extends UIComponent implements OnInit {
           );
         }
       });
-    // this.view.dataService
-    //   .addNew(() =>
-    //     this.api.exec(
-    //       'AC',
-    //       'JournalsBusiness',
-    //       'SetDefaultAsync',
-    //       this.mainFilterValue == '3'
-    //     )
-    //   )
-    //   .subscribe(() => {
-    //     const options = new SidebarModel();
-    //     options.Width = '800px';
-    //     options.DataService = this.view.dataService;
-    //     options.FormModel = this.view.formModel;
-
-    //     this.callfc.openSide(
-    //       JournalsAddComponent,
-    //       {
-    //         formType: 'add',
-    //         formTitle: `${e.text} ${this.functionName}`,
-    //       },
-    //       options,
-    //       this.view.funcID
-    //     );
-    //   });
   }
-
-  //#endregion Function
-
-
-  //#region Method
-  
 
   edit(e, dataEdit): void {
     this.headerText = (e.text + ' ' + this.funcName).toUpperCase();
@@ -401,34 +307,6 @@ export class JournalV2Component extends UIComponent implements OnInit {
           this.view.funcID
         );
       });
-    // console.log('edit', { data });
-
-    // let tempData = { ...data };
-    // // if (data.extras) {
-    // //   tempData = { ...data, ...JSON.parse(data.extras) };
-    // // }
-
-    // this.view.dataService.dataSelected = tempData;
-    // this.view.dataService.edit(tempData).subscribe(() => {
-    //   const options = new SidebarModel();
-    //   options.Width = '800px';
-    //   options.DataService = this.view.dataService;
-    //   options.FormModel = this.view.formModel;
-
-    //   this.callfc
-    //     .openSide(
-    //       JournalsAddComponent,
-    //       {
-    //         formType: 'edit',
-    //         formTitle: `${e.text} ${this.functionName}`,
-    //       },
-    //       options,
-    //       this.view.funcID
-    //     )
-    //     .closed.subscribe(() => {
-    //       this.randomSubject.next(Math.random()); // ❌ bùa refresh
-    //     });
-    // });
   }
 
   copy(e, dataCopy): void {
@@ -455,30 +333,6 @@ export class JournalV2Component extends UIComponent implements OnInit {
           );
         }
       });
-    // console.log('copy', data);
-
-    // let tempData = { ...data };
-    // if (data.extras) {
-    //   tempData = { ...data, ...JSON.parse(data.extras) };
-    // }
-
-    // this.view.dataService.dataSelected = tempData;
-    // this.view.dataService.copy().subscribe(() => {
-    //   const options = new SidebarModel();
-    //   options.Width = '800px';
-    //   options.DataService = this.view.dataService;
-    //   options.FormModel = this.view.formModel;
-
-    //   this.callfc.openSide(
-    //     JournalsAddComponent,
-    //     {
-    //       formType: 'add',
-    //       formTitle: `${e.text} ${this.functionName}`,
-    //     },
-    //     options,
-    //     this.view.funcID
-    //   );
-    // });
   }
 
   delete(data): void {
@@ -498,9 +352,37 @@ export class JournalV2Component extends UIComponent implements OnInit {
     //   });
     // });
   }
-  //#region Method
 
-  //#region Function
+  addNewJournalSample(e, data){
+    let oData = {...data};
+    this.api.exec('AC', 'JournalsBusiness', 'SetDefaultAsync', [
+      this.mainFilterValue,
+    ]).pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
+      delete oData?.journalNo;
+      delete oData?.recID;
+      Object.assign(res?.data,oData);
+      res.data.status = '1';
+      res.data.isTemplate = false;
+      res.data.journalName = data?.journalNo;
+      let journal = res.data;
+      this.api
+        .execAction('AC_Journals', [journal], 'SaveAsync')
+        .subscribe((res: any) => {
+          if (res) {
+            let f = this.func.find((x) => x.value === journal.journalType);
+            if (!f) return;
+            this.cache.functionList(f?.default).subscribe((func) => {
+              if (func) {
+                let urlRedirect = '/' + UrlUtil.getTenant();
+                if (func && func.url && func.url.charAt(0) != '/') urlRedirect += '/';
+                urlRedirect += func.url + '/' + journal?.journalNo;
+                this.route.navigate([urlRedirect]);
+              }
+            });  
+          }
+        })
+    })
+  }
 
   setDefault() {
     return this.api.exec('AC', 'JournalsBusiness', 'SetDefaultAsync', [
@@ -565,5 +447,5 @@ export class JournalV2Component extends UIComponent implements OnInit {
       }
     }
   }
-  //#endregion
+  //#endregion Function  
 }

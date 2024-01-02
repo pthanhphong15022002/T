@@ -16,3 +16,14 @@
 //    box-shadow: 0 0px 5px 1px #a1a1a1;
 //    border-radius: 3px;
 //  }
+.liquidation {
+   display: flex;
+   flex-direction: column;
+   height: 100%;
+   .header-liquidation, .footer-liquidation {
+      flex: 0 0 auto; 
+    }
+    .main-liquidation {
+      flex: 1 1 auto; 
+    }
+ }

@@ -31,21 +31,15 @@
 <!-- Start: TmpFooter -->
 <ng-template #footer>
   <div class="d-flex align-items-center justify-content-end btn-ac-footer mt-1">
-    <button id="btnsaveas" tab-index="" style="border: 1px solid var(--primary-dark) !important" type="button"
-      (keydown.enter)="onSave('saveadd'); $event.preventDefault()" (click)="onSave('saveadd')"
-      class="btn btn-md btn-light-primary me-2">
-      <div class="d-flex align-items-center">
-        <i class="icon-add_to_photos icon-16"></i>
-        <codx-label class="fw-normal" fiedName="lblSaveAndClear" default="Lưu & Thêm"></codx-label>
-      </div>
+    <button id="btnsaveas" [shortcut]="'alt+shift+s'" [autoClick]="true" tab-index=""
+      style="border: 1px solid var(--primary-dark) !important" type="button"
+      (keydown.enter)="onSave('saveadd'); $event.preventDefault()" (click)="onSave('saveadd')" class="btn btn-md btn-light-primary me-2">
+      <codx-label class="fw-normal" fiedName="lblSaveAndClear" default="Lưu & Thêm"></codx-label>
     </button>
-    <button id="btnsave" type="button" tab-index="" class="btn btn-md btn-light-primary"
-      style="border: 1px solid var(--primary-dark) !important" (keydown.enter)="onSave('save'); $event.preventDefault()"
-      (click)="onSave('save')">
-      <div class="d-flex align-items-center">
-        <i class="icon-save_alt icon-16"></i>
-        <codx-label class="fw-normal" fiedName="lblSave" default="Lưu"></codx-label>
-      </div>
+    <button [shortcut]="'alt+s'" [autoClick]="true"id="btnsave" type="button" tab-index=""
+      class="btn btn-md btn-primary" style="border: 1px solid var(--primary-dark) !important"
+      (keydown.enter)="onSave('save'); $event.preventDefault()" (click)="onSave('save')">
+      <codx-label class="fw-normal" fiedName="lblSave" default="Lưu"></codx-label>
     </button>
   </div>
 </ng-template>

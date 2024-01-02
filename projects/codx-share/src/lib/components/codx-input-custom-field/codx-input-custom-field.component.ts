@@ -47,6 +47,8 @@ export class CodxInputCustomFieldComponent implements OnInit {
   @Input() objectIdParent: any = ''; //recID của model cha
   @Input() customerID: string = ''; //Khách hàng cơ hội
 
+  @Input() isDataTable = false; //là data của Table
+
   @ViewChild('attachment') attachment: AttachmentComponent;
   @ViewChild('comboxValue') comboxValue: ComboBoxComponent; ///value seclect 1
   @ViewChild('comboxValueMutilSelect')
@@ -122,9 +124,11 @@ export class CodxInputCustomFieldComponent implements OnInit {
   modelJSON: string = '';
   settingWidth = false;
   settingCount = false;
+  totalColumns = false;
   fieldCurrent = '';
   valueF = 'no';
   valueT = 'yes';
+  dataValueCaculate = '';
 
   constructor(
     private cache: CacheService,
@@ -280,6 +284,13 @@ export class CodxInputCustomFieldComponent implements OnInit {
       case 'AT':
         if (this.customField.dataValue || !this.isAdd) return;
         this.getAutoNumberSetting();
+        break;
+      case 'CF':
+        if (
+          this.customField.dataValue &&
+          !this.isExitOperator(this.customField.dataValue)
+        )
+          this.dataValueCaculate = this.customField.dataValue;
         break;
     }
   }
@@ -688,6 +699,7 @@ export class CodxInputCustomFieldComponent implements OnInit {
       this.columns = arr;
       this.settingWidth = this.columns[0]?.settingWidth ?? false;
       this.settingCount = this.columns[0]?.settingCount ?? false;
+      this.totalColumns = this.columns.findIndex((x) => x.totalColumns) != -1;
       this.columns.forEach((x) => {
         this.modelJSON += '"' + x.fieldName + '":"' + '",';
       });
@@ -748,6 +760,7 @@ export class CodxInputCustomFieldComponent implements OnInit {
           e: JSON.stringify(this.arrDataValue),
           data: this.customField,
         });
+        this.changeRef.detectChanges();
       }
     });
   }
@@ -920,7 +933,12 @@ export class CodxInputCustomFieldComponent implements OnInit {
         'ERM.Business.AD',
         'AutoNumbersBusiness',
         'CreateAutoNumberAsync',
-        [this.customField.refID, null, true, null]
+        [
+          this.isDataTable ? this.customField.recID : this.customField.refID,
+          null,
+          true,
+          null,
+        ]
       )
       .subscribe((autoNum) => {
         if (autoNum) {
@@ -929,4 +947,21 @@ export class CodxInputCustomFieldComponent implements OnInit {
       });
   }
   //-------------END-----------------//
+
+  //----------------Tính toán---------------------//
+  arrCheck = ['+', '-', 'x', '/', 'Avg(', '(', ')'];
+  isExitOperator(string) {
+    var check = false;
+    this.arrCheck.forEach((op, idx) => {
+      if (string.includes(op)) {
+        check = true;
+        if (idx == 0 && op == '-') {
+          check = false;
+        }
+        if (check) return;
+      }
+    });
+    return check;
+  }
+  //----------------------------------------------//
 }
