@@ -1299,13 +1299,23 @@ export class CasesComponent
     if (dt?.applyProcess && dt?.processID) {
       this.codxCmService.getProcess(dt?.processID).subscribe((process) => {
         if (process) {
-          this.approvalTransAction(dt, process.processNo);
+          if (process.approveRule)
+            this.approvalTransAction(dt, process.processNo);
+          else
+            this.notificationsService.notifyCode(
+              'Quy trình đang thực hiện chưa bật chức năng ký duyệt !'
+            );
         } else {
           this.notificationsService.notifyCode('DP040');
         }
       });
     } else {
-      this.approvalTransAction(dt, 'ES_CM0504');
+      //case chua có quy trình duyệt tạm lấy của leads test
+      if (this.applyApprover == '1') this.approvalTransAction(dt, 'ES_CM0504');
+      else
+        this.notificationsService.notifyCode(
+          'Thiết lập hệ thống chưa bật chức năng ký duyệt !'
+        );
     }
   }
 

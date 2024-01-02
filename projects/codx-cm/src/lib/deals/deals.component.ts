@@ -190,6 +190,8 @@ export class DealsComponent
   totalView: string;
   moreEdit = '';
   taskAdd;
+  applyApprover = '0';
+
   constructor(
     private inject: Injector,
     private cacheSv: CacheService,
@@ -470,6 +472,7 @@ export class DealsComponent
     let isApprovalTrans = (eventItem, data) => {
       eventItem.disabled =
         (data.closed && data.status != '1') ||
+        (this.applyApprover != '1' && !data.applyProcess) ||
         data.status == '0' ||
         data?.approveStatus >= '3';
     };
@@ -1504,39 +1507,82 @@ export class DealsComponent
 
   //------------------------- Ký duyệt  ----------------------------------------//
   approvalTrans(dt) {
-    this.codxCmService.getProcess(dt.processID).subscribe((process) => {
-      if (process) {
-        if (process.approveRule) {
-          this.codxCmService
-            .getESCategoryByCategoryID(process.processNo)
-            .subscribe((res) => {
-              if (!res) {
-                this.notificationsService.notifyCode('ES028');
-                return;
-              }
-              this.codxCmService
-                .getDataSource(dt.recID, 'DealsBusiness')
-                .then((dataSource) => {
-                  let exportData: ExportData = {
-                    funcID: this.view.formModel.funcID,
-                    recID: dt.recID,
-                    data: dataSource,
-                    entityName: this.view.formModel.entityName,
-                    formName: this.view.formModel.formName,
-                    gridViewName: this.view.formModel.gridViewName,
-                  };
-                  this.release(dt, res, exportData);
-                });
-            });
+    if (dt?.applyProcess && dt?.processID) {
+      this.codxCmService.getProcess(dt?.processID).subscribe((process) => {
+        if (process) {
+          if (process.approveRule)
+            this.approvalTransAction(dt, process.processNo);
+          else
+            this.notificationsService.notifyCode(
+              'Quy trình đang thực hiện chưa bật chức năng ký duyệt !'
+            );
         } else {
-          this.notificationsService.notifyCode(
-            'Quy trình chưa bật chức năng ký duyệt'
-          );
+          this.notificationsService.notifyCode('DP040');
         }
-      } else {
-        this.notificationsService.notifyCode('DP040');
-      }
-    });
+      });
+    } else {
+      if (this.applyApprover == '1') this.approvalTransAction(dt, 'ES_CM0503');
+      this.notificationsService.notifyCode(
+        'Thiết lập hệ thống chưa bật chức năng ký duyệt !'
+      );
+    }
+    // this.codxCmService.getProcess(dt.processID).subscribe((process) => {
+    //   if (process) {
+    //     if (process.approveRule) {
+    //       this.codxCmService
+    //         .getESCategoryByCategoryID(process.processNo)
+    //         .subscribe((res) => {
+    //           if (!res) {
+    //             this.notificationsService.notifyCode('ES028');
+    //             return;
+    //           }
+    //           this.codxCmService
+    //             .getDataSource(dt.recID, 'DealsBusiness')
+    //             .then((dataSource) => {
+    //               let exportData: ExportData = {
+    //                 funcID: this.view.formModel.funcID,
+    //                 recID: dt.recID,
+    //                 data: dataSource,
+    //                 entityName: this.view.formModel.entityName,
+    //                 formName: this.view.formModel.formName,
+    //                 gridViewName: this.view.formModel.gridViewName,
+    //               };
+    //               this.release(dt, res, exportData);
+    //             });
+    //         });
+    //     } else {
+    //       this.notificationsService.notifyCode(
+    //         'Quy trình chưa bật chức năng ký duyệt'
+    //       );
+    //     }
+    //   } else {
+    //     this.notificationsService.notifyCode('DP040');
+    //   }
+    // });
+  }
+
+  approvalTransAction(data, categoryID) {
+    this.codxCmService
+      .getESCategoryByCategoryID(categoryID)
+      .subscribe((category) => {
+        if (!category) {
+          this.notificationsService.notifyCode('ES028');
+          return;
+        }
+        this.codxCmService
+          .getDataSource(data.recID, 'DealsBusiness')
+          .then((dataSource) => {
+            let exportData: ExportData = {
+              funcID: this.view.formModel.funcID,
+              recID: data.recID,
+              data: dataSource,
+              entityName: this.view.formModel.entityName,
+              formName: this.view.formModel.formName,
+              gridViewName: this.view.formModel.gridViewName,
+            };
+            this.release(data, category, exportData);
+          });
+      });
   }
 
   release(data: any, category: any, exportData = null) {
@@ -2044,15 +2090,15 @@ export class DealsComponent
 
   loadParam() {
     //approver
-    // this.codxCmService.getParam('CMParameters', '4').subscribe((res) => {
-    //   if (res) {
-    //     let dataValue = JSON.parse(res.dataValue);
-    //     if (Array.isArray(dataValue)) {
-    //       let setting = dataValue.find((x) => x.Category == 'CM_Contracts');
-    //       if (setting) this.applyApprover = setting['ApprovalRule'];
-    //     }
-    //   }
-    // });
+    this.codxCmService.getParam('CMParameters', '4').subscribe((res) => {
+      if (res) {
+        let dataValue = JSON.parse(res.dataValue);
+        if (Array.isArray(dataValue)) {
+          let setting = dataValue.find((x) => x.Category == 'CM_Contracts');
+          if (setting) this.applyApprover = setting['ApprovalRule'];
+        }
+      }
+    });
 
     //tien te
     this.codxCmService.getParam('CMParameters', '1').subscribe((dataParam1) => {

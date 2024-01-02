@@ -1856,13 +1856,38 @@ export class LeadsComponent
     if (dt?.applyProcess && dt?.processID) {
       this.codxCmService.getProcess(dt?.processID).subscribe((process) => {
         if (process) {
-          this.approvalTransAction(dt, process.processNo);
+          if (process.approveRule)
+            this.approvalTransAction(dt, process.processNo);
+          else
+            this.notificationsService.notifyCode(
+              'Quy trình đang thực hiện chưa bật chức năng ký duyệt !'
+            );
         } else {
           this.notificationsService.notifyCode('DP040');
         }
       });
     } else {
-      this.approvalTransAction(dt, 'ES_CM0504');
+      if (this.applyApprover == '1') this.approvalTransAction(dt, 'ES_CM0504');
+      this.notificationsService.notifyCode(
+        'Thiết lập hệ thống chưa bật chức năng ký duyệt !'
+      );
+
+      // this.codxCmService.getParam('CMParameters', '4').subscribe((res) => {
+      //   if (res) {
+      //     let dataValue = JSON.parse(res.dataValue);
+      //     if (Array.isArray(dataValue)) {
+      //       let setting = dataValue.find((x) => x.Category == 'CM_Leads');
+      //       if (setting) {
+      //         if (setting['ApprovalRule'] == '1')
+      //           this.approvalTransAction(dt, 'ES_CM0504');
+      //         else
+      //           this.notificationsService.notifyCode(
+      //             'Thiết lập hệ thống chưa bật chức năng ký duyệt !'
+      //           );
+      //       }
+      //     }
+      //   }
+      // });
     }
   }
   approvalTransAction(data, categoryID) {
