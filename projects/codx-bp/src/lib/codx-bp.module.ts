@@ -13,7 +13,7 @@ import { CodxCoreModule } from 'codx-core';
 import { CoreModule } from '@core/core.module';
 import { HttpClientModule } from '@angular/common/http';
 import { OverlayModule } from '@angular/cdk/overlay';
-import { TabModule } from '@syncfusion/ej2-angular-navigations';
+import { AccordionModule, TabModule } from '@syncfusion/ej2-angular-navigations';
 import { CommonModule } from '@angular/common';
 import { PopupAddProcessesComponent } from './processes/popup-add-processes/popup-add-processes.component';
 import { ProcessStepsComponent } from './processsteps/processsteps.component';
@@ -33,6 +33,7 @@ import { PopupViewDetailProcessesComponent } from './popup-view-detail-processes
 import { PopupPhasesActivitiesComponent } from './processes/popup-phases-activities/popup-phases-activities.component';
 import { ShowMoreLessComponent } from './processes/show-more-less/show-more-less.component';
 import { PopupApprovalComponent } from './aprpermission/popup-approval/popup-approval.component';
+import { ModeviewComponent } from './modeview/modeview.component';
 
 export const routes: Routes = [
   {
@@ -57,7 +58,7 @@ export const routes: Routes = [
       {
         path: 'testhtml',
         component: TesthtmlComponent,
-      },
+      }
     ],
   },
   {
@@ -68,6 +69,10 @@ export const routes: Routes = [
         path: 'processstep/:funcID',
         component: ProcessStepsComponent,
         data: { noReuse: true },
+      },
+      {
+        path: 'modeview',
+        component: ModeviewComponent,
       },
     ],
   },
@@ -94,6 +99,7 @@ export const routes: Routes = [
     PopupPhasesActivitiesComponent,
     ShowMoreLessComponent,
     PopupApprovalComponent,
+    ModeviewComponent
   ],
   imports: [
     RouterModule.forChild(routes),
@@ -109,6 +115,7 @@ export const routes: Routes = [
     CommonModule,
     DragDropModule,
     PinchZoomModule,
+    AccordionModule
     // NgxImageZoomModule
   ],
   exports: [CodxBpComponent],
