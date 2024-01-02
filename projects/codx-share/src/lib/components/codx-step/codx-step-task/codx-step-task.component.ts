@@ -564,7 +564,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
           case 'SYS002':
             break;
           case 'SYS004': //mail
-            res.disabled = task?.taskType != "E";
+            res.disabled = task?.taskType != 'E';
             break;
           case 'SYS02': //xóa
             if (!(!task?.isTaskDefault && (this.isRoleAll || isGroup))) {
@@ -872,7 +872,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         this.deleteMeeting(task);
         break;
       case 'SYS004':
-        this.sendMail(task,false);
+        this.sendMail(task, false);
         break;
       case 'DP27':
         this.addBookingCar(task);
@@ -1218,8 +1218,8 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
             this.changeTaskAdd(res[0], res[1], res[2], false);
           }
         });
-    }else if (this.taskType?.value == 'E'){
-      this.handelMail(null,"add");
+    } else if (this.taskType?.value == 'E') {
+      this.handelMail(null, 'add');
     } else {
       let type = groupID ? 'group' : 'step';
       let taskOutput = await this.openPopupTask('add', type, task, groupID);
@@ -1358,9 +1358,9 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
               this.changeTaskEdit(res, res?.taskGroupID);
             }
           });
-      } else if (task?.taskType == 'E'){
-        this.handelMail(task, 'edit')
-      }  else {
+      } else if (task?.taskType == 'E') {
+        this.handelMail(task, 'edit');
+      } else {
         let groupIdOld = task?.taskGroupID;
         this.taskType = this.listTaskType.find(
           (type) => type.value == task?.taskType
@@ -1443,7 +1443,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
               this.changeTaskAdd(res[0], res[1], res[2], false);
             }
           });
-      }else if (task?.taskType == 'E') {
+      } else if (task?.taskType == 'E') {
         this.handelMail(task, 'copy');
       } else {
         this.taskType = this.listTaskType.find(
@@ -3038,7 +3038,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   }
 
   openFormField(task) {
-    if(!(this.isOnlyView || (this.isTaskFirst && this.isRoleAll))){
+    if (!(this.isOnlyView || (this.isTaskFirst && this.isRoleAll))) {
       return;
     }
     let listField = this.getFields(this.currentStep?.fields, task?.fieldID);
@@ -3046,7 +3046,8 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       data: JSON.parse(JSON.stringify(listField)),
       titleHeader: task?.taskName,
       objectIdParent: 'task?.stepID',
-      customerID: '',
+      // customerID: '',
+      isAdd: false, ///là add form để lấy giá trị mặc định gán vào
     };
     let formModel: FormModel = {
       entityName: 'DP_Instances_Steps_Fields',
@@ -3216,7 +3217,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
 
   //export Form Nhập liệu
 
-  sendMail(task,group) {
+  sendMail(task, group) {
     let data = {
       dialog: null,
       formGroup: null,
@@ -3237,10 +3238,10 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       data
     );
     popEmail.closed.subscribe((res) => {
-      if (res?.event?.isSendMail && task?.status == "1") {
-        this.startTask(task,group)
+      if (res?.event?.isSendMail && task?.status == '1') {
+        this.startTask(task, group);
       }
-    })
+    });
   }
 
   handelMail(stepsTasks: DP_Instances_Steps_Tasks, action) {
@@ -3252,8 +3253,8 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       showIsPublish: true,
       showSendLater: true,
       files: null,
-      isAddNew: action == "edit" ? false : true,
-      saveIsTemplate: action == "edit" || this.isStart ? false : true,
+      isAddNew: action == 'edit' ? false : true,
+      saveIsTemplate: action == 'edit' || this.isStart ? false : true,
       notSendMail: this.isStart ? false : true,
     };
 
@@ -3277,48 +3278,48 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
           task.approveStatus = '1';
           task.approveStatus = '1';
           task.isTaskDefault = false;
-          task.taskType = "E";
+          task.taskType = 'E';
           task.stepID = this.currentStep?.recID;
           task.taskName = mail?.subject || this.taskType?.text;
           task.durationDay = 1;
           task.reference = mail?.recID;
           task.memo = mail?.message;
           task.indexNo = this.currentStep?.tasks.length + 1;
-          if(this.isStart){
-            if(mail?.isSendMail){
-              task.actualEnd =  new Date();
-              task.status = "3";
+          if (this.isStart) {
+            if (mail?.isSendMail) {
+              task.actualEnd = new Date();
+              task.status = '3';
               task.progress = 100;
-            }else{
+            } else {
               task.startDate = new Date();
               task.endDate = new Date();
               task.endDate.setDate(task.startDate.getDate() + 1);
-              task.status = "1";
+              task.status = '1';
               task.progress = 0;
             }
           }
           this.setRole(task);
           this.api
-          .exec<any>('DP', 'InstancesStepsBusiness', 'AddTaskStepAsync', [
-            task,
-          ])
-          .subscribe((res) => {
-            if (res) {
-              this.changeTaskAdd(res[0], res[1], res[2], false);
-            }
-          });
+            .exec<any>('DP', 'InstancesStepsBusiness', 'AddTaskStepAsync', [
+              task,
+            ])
+            .subscribe((res) => {
+              if (res) {
+                this.changeTaskAdd(res[0], res[1], res[2], false);
+              }
+            });
         } else {
-          task.taskName = mail?.subject || "Email";
+          task.taskName = mail?.subject || 'Email';
           task.memo = mail?.message;
           this.api
-          .exec<any>('DP', 'InstancesStepsBusiness', 'UpdateTaskStepAsync', [
-            task,
-          ])
-          .subscribe((res) => {
-            if (res) {
-              this.changeTaskEdit(res, res?.taskGroupID);
-            }
-          });
+            .exec<any>('DP', 'InstancesStepsBusiness', 'UpdateTaskStepAsync', [
+              task,
+            ])
+            .subscribe((res) => {
+              if (res) {
+                this.changeTaskEdit(res, res?.taskGroupID);
+              }
+            });
         }
         this.changeDetectorRef.markForCheck();
       }

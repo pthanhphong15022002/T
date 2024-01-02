@@ -631,6 +631,7 @@ clickchoi(){
     @Optional() dt: DialogData
   ) {
     this.dialog = dialog;
+    this.data = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
   }
 
   ngOnInit(): void {}

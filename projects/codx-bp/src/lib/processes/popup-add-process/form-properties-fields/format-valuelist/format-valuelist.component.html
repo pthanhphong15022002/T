@@ -1,0 +1,46 @@
+<ng-container *ngIf="item?.refType == '2'">
+  <ng-container *ngIf="!mutiSelectVll">
+    <ejs-combobox
+      #viewComboxForm
+      [dataSource]="datasVll"
+      [fields]="fields"
+      [value]=""
+      [allowFiltering]="false"
+      [placeholder]="plancehoderVll ?? ''"
+      [itemTemplate]="customTemplate"
+      [valueTemplate]="valueCustomTemplate"
+    >
+    </ejs-combobox>
+  </ng-container>
+
+  <ng-container *ngIf="mutiSelectVll">
+    <ejs-multiselect
+      [dataSource]="datasVll"
+      [mode]="'Default'"
+      [fields]="fields"
+      [value]="[]"
+      [showDropDownIcon]="true"
+      [placeholder]="plancehoderVll ?? ''"
+      [itemTemplate]="customTemplate"
+      [valueTemplate]="valueCustomTemplate"
+    >
+    </ejs-multiselect>
+  </ng-container>
+</ng-container>
+<ng-container *ngIf="item?.refType == '2C'"> bbbb </ng-container>
+<ng-template #customTemplate let-data>
+  <div class="d-flex align-items-center">
+    <span [ngClass]="data?.icon" class="me-2" [style.color]="data.textColor" [style.backgroundColor]="data.color"></span>
+    <span [style.color]="data.textColor" [style.backgroundColor]="data.color">{{
+      data.textValue
+    }}</span>
+  </div>
+</ng-template>
+<ng-template #valueCustomTemplate let-data>
+  <div class="d-flex align-items-center p-1">
+    <span [ngClass]="data?.icon" class="me-2" [style.color]="data.textColor" [style.backgroundColor]="data.color"></span>
+    <span [style.color]="data.textColor" [style.backgroundColor]="data.color">{{
+      data.textValue
+    }}</span>
+  </div>
+</ng-template>
