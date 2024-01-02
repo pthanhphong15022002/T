@@ -58,6 +58,7 @@ export const routes: Routes = [
     FormPropertiesFieldsComponent,
     SettingFieldsComponent,
     FormFormatValueComponent,
+    ModeviewComponent
   ],
   imports: [
     CodxCoreModule.forRoot({ environment }),
@@ -74,13 +75,11 @@ export const routes: Routes = [
     OverlayModule,
     TabModule,
     CommonModule,
-
+    AccordionModule,
     DragDropModule,
     CoreModule,
     PinchZoomModule,
     DiagramModule,
-    DragDropModule,
-
     // NgxImageZoomModule
   ],
   exports: [CodxBpComponent],
