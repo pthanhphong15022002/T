@@ -475,7 +475,7 @@
             class="test-check"
             type="radio"
             field="dropDown"
-            [checked]="setValueRadio('dropDown')"
+            [checked]="dataCurrent?.refType == '2' ?? false"
             (valueChange)="changeRadio($event, 'dropDown')"
           ></codx-input>
         </span>
@@ -496,7 +496,7 @@
             class="test-check"
             type="radio"
             field="checkBox"
-            [checked]="setValueRadio('checkBox')"
+            [checked]="dataCurrent.refType != '2' ?? false"
             (valueChange)="changeRadio($event, 'checkBox')"
           ></codx-input>
         </span>

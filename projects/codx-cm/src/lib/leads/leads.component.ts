@@ -412,7 +412,8 @@ export class LeadsComponent
           if (type == 11) {
             eventItem.isbookmark = false;
           }
-          eventItem.isblur = data.approveStatus == '3' && this.funcID == 'CM0205'; //CM0504 o bị isblur more
+          eventItem.isblur =
+            data.approveStatus == '3' && this.funcID == 'CM0205'; //CM0504 o bị isblur more
           const functionID = eventItem.functionID;
           const mappingFunction = this.getRoleMoreFunction(functionID);
           mappingFunction && mappingFunction(eventItem, data);
@@ -1215,8 +1216,8 @@ export class LeadsComponent
       .subscribe((x) => {
         if (x.event && x.event.status == 'Y') {
           // this.startDeal(data);
-          this.codxCmService.startNewInstance([data.refID]).subscribe((res)=> {
-            if(res) {
+          this.codxCmService.startNewInstance([data.refID]).subscribe((res) => {
+            if (res) {
               let dataUpdate = [
                 res[1],
                 null,
@@ -1229,15 +1230,18 @@ export class LeadsComponent
                 .subscribe((deal) => {
                   if (deal) {
                     this.dataSelected = deal;
-                    this.view.dataService.update(this.dataSelected, true).subscribe();
-                    if (this.detailViewLead) this.detailViewLead.dataSelected = this.dataSelected;
+                    this.view.dataService
+                      .update(this.dataSelected, true)
+                      .subscribe();
+                    if (this.detailViewLead)
+                      this.detailViewLead.dataSelected = this.dataSelected;
                     this.detailViewLead?.reloadListStep(res[0]);
                     this.detectorRef.detectChanges();
                     this.resetStatusCode();
                   }
                 });
             }
-          })
+          });
         }
       });
   }
@@ -1433,7 +1437,7 @@ export class LeadsComponent
             isCallInstance: true,
           };
           let obj = {
-            formModel:  this.view.formModel,
+            formModel: this.view.formModel,
             deal: data,
             stepReason: stepReason,
             headerTitle: this.titleAction,
@@ -1747,15 +1751,14 @@ export class LeadsComponent
           if (status) {
             switch (status) {
               case '2':
-                if(oldStatus == '1') {
-                 this.startNow(this.dataSelected);
-                }
-                else {
+                if (oldStatus == '1') {
+                  this.startNow(this.dataSelected);
+                } else {
                   this.moveStage(this.dataSelected);
                 }
                 break;
               case '1':
-               this.startNew(this.dataSelected);
+                this.startNew(this.dataSelected);
                 break;
               case '3':
               case '5':
@@ -1763,8 +1766,7 @@ export class LeadsComponent
                 break;
             }
           }
-        }
-        else {
+        } else {
           this.dataSelected.statusCode = this.statusCodeID;
           this.dataSelected.statusCodeCmt = this.statusCodeCmt;
           this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
@@ -1882,13 +1884,38 @@ export class LeadsComponent
     if (dt?.applyProcess && dt?.processID) {
       this.codxCmService.getProcess(dt?.processID).subscribe((process) => {
         if (process) {
-          this.approvalTransAction(dt, process.processNo);
+          if (process.approveRule)
+            this.approvalTransAction(dt, process.processNo);
+          else
+            this.notificationsService.notifyCode(
+              'Quy trình đang thực hiện chưa bật chức năng ký duyệt !'
+            );
         } else {
           this.notificationsService.notifyCode('DP040');
         }
       });
     } else {
-      this.approvalTransAction(dt, 'ES_CM0504');
+      if (this.applyApprover == '1') this.approvalTransAction(dt, 'ES_CM0504');
+      this.notificationsService.notifyCode(
+        'Thiết lập hệ thống chưa bật chức năng ký duyệt !'
+      );
+
+      // this.codxCmService.getParam('CMParameters', '4').subscribe((res) => {
+      //   if (res) {
+      //     let dataValue = JSON.parse(res.dataValue);
+      //     if (Array.isArray(dataValue)) {
+      //       let setting = dataValue.find((x) => x.Category == 'CM_Leads');
+      //       if (setting) {
+      //         if (setting['ApprovalRule'] == '1')
+      //           this.approvalTransAction(dt, 'ES_CM0504');
+      //         else
+      //           this.notificationsService.notifyCode(
+      //             'Thiết lập hệ thống chưa bật chức năng ký duyệt !'
+      //           );
+      //       }
+      //     }
+      //   }
+      // });
     }
   }
   approvalTransAction(data, categoryID) {
@@ -1975,28 +2002,29 @@ export class LeadsComponent
       .getESCategoryByCategoryID(categoryID)
       .subscribe((res2: any) => {
         if (res2) {
-          if (res2?.eSign == true) {
-            //trình ký
-          } else if (res2?.eSign == false) {
-            //kí duyet
-            this.codxCommonService
-              .codxCancel(
-                'CM',
-                dt?.recID,
-                this.view.formModel.entityName,
-                null,
-                null
-              )
-              .subscribe((res3) => {
-                if (res3) {
-                  this.dataSelected.approveStatus = '0';
-                  this.view.dataService
-                    .update(this.dataSelected, true)
-                    .subscribe();
-                  this.notificationsService.notifyCode('SYS007');
-                } else this.notificationsService.notifyCode('SYS021');
-              });
-          }
+          //ko phân biệt (res2?.eSign == true) nữa
+          // if (res2?.eSign == true) {
+          //   //trình ký
+          // } else if (res2?.eSign == false) {
+          //kí duyet
+          this.codxCommonService
+            .codxCancel(
+              'CM',
+              dt?.recID,
+              this.view.formModel.entityName,
+              null,
+              null
+            )
+            .subscribe((res3) => {
+              if (res3) {
+                this.dataSelected.approveStatus = '0';
+                this.view.dataService
+                  .update(this.dataSelected, true)
+                  .subscribe();
+                this.notificationsService.notifyCode('SYS007');
+              } else this.notificationsService.notifyCode('SYS021');
+            });
+          // }
         } else this.notificationsService.notifyCode('ES028');
       });
   }

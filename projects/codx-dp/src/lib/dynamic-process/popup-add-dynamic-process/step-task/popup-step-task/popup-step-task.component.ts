@@ -7,6 +7,7 @@ import {
   ChangeDetectionStrategy,
   OnDestroy,
   ChangeDetectorRef,
+  HostListener,
 } from '@angular/core';
 import {
   Util,
@@ -32,6 +33,7 @@ import { AttachmentComponent } from 'projects/codx-common/src/lib/component/atta
 import { Subject, firstValueFrom, takeUntil } from 'rxjs';
 import { PopupAddCategoryComponent } from 'projects/codx-es/src/lib/setting/category/popup-add-category/popup-add-category.component';
 import { PopupSettingReferenceComponent } from '../../popup-add-custom-field/popup-setting-reference/popup-setting-reference.component';
+import { PopupMapContractComponent } from './popup-map-contract/popup-map-contract.component';
 
 @Component({
   selector: 'lib-popup-job',
@@ -78,8 +80,12 @@ export class PopupJobComponent implements OnInit, OnDestroy {
   isHaveFile = false;
   isBoughtTM = false;
   showLabelAttachment = false;
+  listField = [];
+  titleField = '';
   listApproverView;
   grvContracts;
+  listGrvContracts;
+  showSelect = false;
   listCombobox = {
     U: 'Share_Users_Sgl',
     O: 'Share_OrgUnits_Sgl',
@@ -192,6 +198,17 @@ export class PopupJobComponent implements OnInit, OnDestroy {
       this.cache.gridViewSetup("CMContracts", "grvCMContracts").subscribe((grv) => {
         if (grv) {
           this.grvContracts = grv;
+          for (var key in grv) {
+            let data = {
+              fieldName: grv[key]?.fieldName,
+              headerText: grv[key]?.headerText,
+              dataType: grv[key]?.dataType,
+              fieldLindID: '',
+              fieldLindName: '',
+            }
+            this.listGrvContracts = this.listGrvContracts?.length > 0 ? this.listGrvContracts : [];
+            this.listGrvContracts?.push(data);
+          }
         }
       })
     }
@@ -527,9 +544,13 @@ export class PopupJobComponent implements OnInit, OnDestroy {
   fieldIDChange(event) {
     this.listFieldID = event;
     let field = this.listFields.find(fieldID => fieldID.recID == event[0]);
-    this.clickSettingReference(field);
+    // this.clickSettingReference(field);
   }
-
+  onItemClick(e){
+    console.log(e);
+    console.log(e?.item?.value);
+    
+  }
   valueChangeText(event) {
     this.stepsTasks[event?.field] = JSON.parse(JSON.stringify(event?.data));
   }
@@ -727,19 +748,55 @@ export class PopupJobComponent implements OnInit, OnDestroy {
     );
   }
 
-  clickSettingReference(field){
+  handleDivClick(event: Event) {
+    event.stopPropagation(); // Ngăn chặn lan truyền của sự kiện click
+    // Thực hiện các hành động khi click vào div
+    this.showSelect = !this.showSelect;
+    console.log('Clicked inside div!');
+  }
+
+  @HostListener('document:click', ['$event'])
+  handleDocumentClick(event: Event) {
+    // Kiểm tra xem click có xảy ra bên trong hay bên ngoài div
+    const clickedInsideDiv = event.target && event.target instanceof HTMLElement && event.target.closest('div');
+    this.showSelect = false;
+  }
+
+  chooseData(field){
+  let data = {
+    recID: field?.recID,
+    title: field.title,
+    link:'',
+  }
+  this.listField = this.listField?.length > 0 ? this.listField : [];
+  this.listField?.push(data);
+  this.titleField = this.listField?.map(field => field.title)?.join(', ');
+   this.clickSettingReference(data);
+  }
+
+  removeField(field){
+    let index = this.listField?.findIndex(x => x.recID == field.recID);
+    if(index >= 0){
+      this.listField?.splice(index, 1);
+      this.titleField = this.listField?.map(field => field.title)?.join(', ');
+    }
+  }
+  chooseField(field){
+    let grv = this.listGrvContracts.find(grv => grv.fieldName == field.link)
+    if(grv){
+      grv.show = true;
+    }
     let option = new DialogModel();
     console.log(this.grvContracts);
     option.zIndex = 1050;
     let obj = {
-      datas: this.grvContracts,
+      datas: this.listGrvContracts,
       entityName: 'CM_Contracts',
       action: this.action,
       titleAction: 'Thêm trường liên kết', //test
-      dataRef: JSON.parse(field.dataFormat),
     };
     let dialogColumn = this.callfunc.openForm(
-      PopupSettingReferenceComponent,
+      PopupMapContractComponent,
       '',
       550,
       Util.getViewPort().height - 100,
@@ -748,5 +805,41 @@ export class PopupJobComponent implements OnInit, OnDestroy {
       '',
       option
     );
+    dialogColumn?.closed.subscribe(res => {
+      if(res?.event){
+        field.link = res.event?.fieldName;
+        res.event.show = false;
+      }else{
+        field.show = false;
+      }
+    })
+  }
+  clickSettingReference(field = null){
+    let option = new DialogModel();
+    console.log(this.grvContracts);
+    option.zIndex = 1050;
+    let obj = {
+      datas: this.listGrvContracts,
+      entityName: 'CM_Contracts',
+      action: this.action,
+      titleAction: 'Thêm trường liên kết', //test
+      listFields: this.listFields,
+    };
+    let dialogColumn = this.callfunc.openForm(
+      PopupMapContractComponent,
+      '',
+      1000,
+      Util.getViewPort().height - 100,
+      '',
+      obj,
+      '',
+      option
+    );
+    dialogColumn?.closed.subscribe(res => {
+      if(res?.event){
+        field.link = res.event?.fieldName;
+        res.event.show = false;
+      }
+    })
   }
 }

@@ -80,6 +80,7 @@ import { CoDxAddApproversComponent } from './component/codx-approval-procress/co
 import { CoDxViewReleaseSignFileComponent } from './component/codx-approval-procress/codx-view-release-sign-file/codx-view-release-sign-file.component';
 import { CoDxGetTemplateSignFileComponent } from './component/codx-approval-procress/codx-get-template-sign-file/codx-get-template-sign-file.component';
 import { CodxAiComponent } from './_layout/drawers/codx-ai/codx-ai.component';
+import { PresentationComponent } from './_layout/drawers/codx-ai/presentation/presentation.component';
 
 //#endregion
 
@@ -130,7 +131,8 @@ const T_Component: Type<any>[] = [
   CoDxGetTemplateSignFileComponent,
 
   //Ai Tool
-  CodxAiComponent
+  CodxAiComponent,
+  PresentationComponent
   
 ];
 

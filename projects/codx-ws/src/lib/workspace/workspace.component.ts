@@ -84,6 +84,7 @@ export class WorkspaceComponent extends WSUIComponent{
   }
 
   resetActiveMenu() {
+    if(!this.codxWsService.wsActive) this.codxWsService.wsActive = {activeMenu:{}};
     this.codxWsService.wsActive.activeMenu.id = '';
     this.codxWsService.wsActive.activeMenu.func0 = '';
     this.codxWsService.wsActive.activeMenu.func1 = '';

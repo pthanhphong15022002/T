@@ -166,6 +166,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
   caculateField = '';
   private destroyFrom$: Subject<void> = new Subject<void>();
   arrFieldNum = [];
+  showCaculate = true;
 
   constructor(
     private cache: CacheService,
@@ -215,6 +216,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
       }
     } else {
       this.fieldNameOld = this.field.fieldName;
+      this.showCaculate = false;
     }
   }
 
@@ -1182,11 +1184,25 @@ export class PopupAddCustomFieldComponent implements OnInit {
       if (
         this.operator.includes(this.caculateField[idxLast]) ||
         this.caculateField[idxLast] == '(' ||
-        this.caculateField[idxLast] == ','
+        this.caculateField[idxLast] == ',' ||
+        this.compareParenthesis(this.caculateField) == 0
       )
         return;
-    }
+    } else return;
     this.caculateField += ')';
+  }
+
+  compareParenthesis(string) {
+    let countOpen = 0;
+    let countClose = 0;
+    for (const c of string) {
+      if (c == '(') {
+        countOpen++;
+      } else if (c === ')') {
+        countClose++;
+      }
+    }
+    return countOpen - countClose;
   }
 
   fieldSelect(fieldName) {
@@ -1224,11 +1240,20 @@ export class PopupAddCustomFieldComponent implements OnInit {
   }
   // Num
   buttonNum(num) {
+    if (this.caculateField) {
+      let idxLast = this.caculateField.length - 1;
+      if (
+        this.caculateField[idxLast] == ']' ||
+        this.caculateField[idxLast] == ')' 
+      )
+        return;
+    }
     this.caculateField += num;
   }
   decimalPoint() {
     if (!this.caculateField) return;
-    let chartLast = this.caculateField[this.caculateField.length - 1];
+    let idxLast = this.caculateField.length - 1;
+    let chartLast = this.caculateField[idxLast]; 
     if (
       chartLast == ',' ||
       this.accessField.includes(chartLast) ||
@@ -1236,6 +1261,11 @@ export class PopupAddCustomFieldComponent implements OnInit {
     )
       return;
     //chua check hết
+    idxLast= idxLast -1
+    while(!this.operator.includes(this.accessField[idxLast]) || idxLast!=-1){
+      if(this.caculateField[idxLast]==",")  return;
+      idxLast--
+    }
     this.caculateField += ',';
   }
 
@@ -1268,6 +1298,10 @@ export class PopupAddCustomFieldComponent implements OnInit {
 
   checkCaculateField() {
     return true;
+  }
+
+  openCaculate() {
+    this.showCaculate = !this.showCaculate;
   }
   //-----------------end CACULATE FIELD------------------//
 }

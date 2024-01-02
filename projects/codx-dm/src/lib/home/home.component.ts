@@ -236,8 +236,8 @@ export class HomeComponent extends UIComponent implements OnDestroy {
         var tree = this.codxview?.currentView?.currentComponent?.treeView;
         if (
           tree &&
-          (this.funcID != 'DMT00' ||
-            (this.funcID == 'DMT00' &&
+          ((this.funcID != 'DMT00' &&  this.funcID != 'WDMT00')||
+            ((this.funcID == 'DMT00' || this.funcID == 'WDMT00') &&
               this.codxview?.currentView?.currentComponent?.treeView?.data[0]
                 ?.items &&
               this.codxview?.currentView?.currentComponent?.treeView?.data[0]
@@ -265,12 +265,12 @@ export class HomeComponent extends UIComponent implements OnDestroy {
         this.view.viewChange(this.viewActive);
         this.codxview.currentView.viewModel.model.panelLeftHide = false;
 
-        if (this.funcID == 'DMT04' || this.funcID == 'DMT05')
+        if (this.funcID.includes('DMT04') || this.funcID.includes('DMT05'))
           this.codxview.currentView.viewModel.model.panelLeftHide = true;
         if (tree) {
           tree.textField = 'folderName';
           if (res.recID) {
-            if (this.funcID == 'DMT00') {
+            if (this.funcID.includes('DMT00')) {
               this.folderService.getFolder(res.recID).subscribe((res2) => {
                 if (res) {
                   this.dmSV.folderID = res2.recID;
@@ -333,7 +333,7 @@ export class HomeComponent extends UIComponent implements OnDestroy {
 
         this.dmSV.parentCreate = false;
 
-        if (this.funcID == 'DMT00') {
+        if (this.funcID.includes('DMT00')) {
           this.folderService.getFolder(res.recID).subscribe((res2) => {
             if (res) {
               this.dmSV.folderID = res2.recID;
@@ -356,7 +356,8 @@ export class HomeComponent extends UIComponent implements OnDestroy {
               this.dmSV.breadcumb.next(breadcumb);
             }
           });
-        } else if (this.funcID == 'DMT05') {
+        } else if (this.funcID.includes('DMT05')) 
+        {
           this.dmSV.getRight(res);
           this.refeshData();
           this.getDataFolder(res.recID);
@@ -390,9 +391,9 @@ export class HomeComponent extends UIComponent implements OnDestroy {
 
     this.dmSV.isRefreshTree.subscribe((res) => {
       if (
-        this.funcID != 'DMT02' &&
-        this.funcID != 'DMT03' &&
-        this.funcID != 'DMT04'
+        !this.funcID.includes('DMT02') &&
+        !this.funcID.includes('DMT03') &&
+        !this.funcID.includes('DMT04')
       )
         return;
       if (res) {
@@ -415,7 +416,7 @@ export class HomeComponent extends UIComponent implements OnDestroy {
         this.dmSV.folderID = '';
         this.view.dataService.dataSelected = null;
         var index = this.button.findIndex(x=>x.id == "btnUpload");
-        if (this.funcID != 'DMT03') {
+        if (!this.funcID.includes('DMT03')) {
           this.button[index].disabled = true;
           this.dmSV.disableInput.next(true);
         } else {
@@ -433,7 +434,7 @@ export class HomeComponent extends UIComponent implements OnDestroy {
           this.codxview.currentView.viewModel.model.panelLeftHide = false;
         }
 
-        if (this.funcID == 'DMT04') {
+        if (this.funcID.includes('DMT04')) {
           this.codxview.currentView.viewModel.model.panelLeftHide = true;
         }
         //this.data = this.view.dataService.data
@@ -527,7 +528,7 @@ export class HomeComponent extends UIComponent implements OnDestroy {
       if (res) {
         this.loaded = false;
         var tree = this.codxview?.currentView?.currentComponent?.treeView;
-        if (tree != null && this.funcID != 'DMT00') tree.setNodeTree(res);
+        if (tree != null && !this.funcID.includes('DMT00')) tree.setNodeTree(res);
         //  that.dmSV.folderId.next(res.recID);
         var index = this.data.findIndex((x) => x.recID == res.recID);
         if (index >= 0) {
@@ -698,35 +699,35 @@ export class HomeComponent extends UIComponent implements OnDestroy {
         this.dmSV.isSearchView = false;
         this.setDisableAddNewFolder();
         this.setBreadCumb();
-        if (this.funcID == 'DMT00') this.selectedFirst = true;
+        if (this.funcID.includes('DMT00')) this.selectedFirst = true;
         else this.selectedFirst = false;
 
        
         if (
-          this.funcID == 'DMT06' ||
-          this.funcID == 'DMT05' ||
-          this.funcID == 'DMT07'
+          this.funcID.includes('DMT06') ||
+          this.funcID.includes('DMT05') ||
+          this.funcID.includes('DMT07')
         ) {
           this.fileService.options.favoriteID = '';
           this.folderService.options.favoriteID = '';
         }
         if (
-          this.funcID == 'DMT03' ||
-          this.funcID == 'DMT02' ||
-          this.funcID == 'DMT00'
+          this.funcID.includes('DMT03') ||
+          this.funcID.includes('DMT02') ||
+          this.funcID.includes('DMT00')
         ) {
           this.viewActive.model.panelLeftHide = false;
           this.view.viewChange(this.viewActive);
         } else if (
-          this.funcID == 'DMT06' ||
-          this.funcID == 'DMT07' ||
-          this.funcID == 'DMT08'
+          this.funcID.includes('DMT06') ||
+          this.funcID.includes('DMT07') ||
+          this.funcID.includes('DMT08')
         ) {
           this.views[2].model.panelLeftHide = true;
           this.view.viewChange(this.views[2]);
         } else this.view.viewChange(this.viewActive);
 
-        if (this.funcID == 'DMT08') {
+        if (this.funcID.includes('DMT08')) {
           this.titleCreatedBy = 'Người xóa thư mục / tệp tin';
           this.titleCreatedOn = 'Ngày xóa thư mục / tệp tin';
           var innerDiv = document.getElementById('tabel-div');
@@ -754,7 +755,7 @@ export class HomeComponent extends UIComponent implements OnDestroy {
   setDisableAddNewFolder() {
     var index = this.button.findIndex(x=>x.id == "btnUpload");
     var dis = true;
-    if (this.funcID == 'DMT03') {
+    if (this.funcID.includes('DMT03')) {
       dis = false;
       this.button[index].disabled = false;
     } else this.button[index].disabled = true;
@@ -764,7 +765,7 @@ export class HomeComponent extends UIComponent implements OnDestroy {
   //Set chiều cao view list
   setHeight() {
     this.maxHeightScroll = window.innerHeight - 180;
-    if (this.funcID == 'DMT08') this.maxHeightScroll = window.innerHeight - 250;
+    if (this.funcID.includes('DMT08')) this.maxHeightScroll = window.innerHeight - 250;
   }
   //Refesh lại data
   refeshData() {
@@ -798,7 +799,7 @@ export class HomeComponent extends UIComponent implements OnDestroy {
       });
 
       let funcIDs = this.router?.snapshot?.params?.funcID;
-      if(funcIDs == "DMT00" && (queryParams?._fo || queryParams?._f))
+      if(funcIDs.includes("DMT00") && (queryParams?._fo || queryParams?._f))
       {
        
         var type = queryParams?._fo ? "folder" : "file";
@@ -829,7 +830,7 @@ export class HomeComponent extends UIComponent implements OnDestroy {
           }
         });
       }
-      else if(funcIDs == "DMT00")
+      else if(funcIDs.includes("DMT00"))
       {
         this.disableMark();
         this.folderService.getFolders('').subscribe((res) => {
@@ -1020,8 +1021,8 @@ export class HomeComponent extends UIComponent implements OnDestroy {
 
   fileUploadDropped($event) {
     if (
-      this.dmSV.idMenuActive == 'DMT02' ||
-      this.dmSV.idMenuActive == 'DMT03'
+      this.dmSV.idMenuActive.includes('DMT02') ||
+      this.dmSV.idMenuActive.includes('DMT03')
     ) {
       this.attachment.fileUploadList = [];
       this.attachment.handleFileInput($event, true).then((r) => {
@@ -1119,7 +1120,7 @@ export class HomeComponent extends UIComponent implements OnDestroy {
   //   .subscribe();
   // }
   onSelectionChanged($data, noTree = false) {
-    if (this.funcID == 'DMT00' && $data.data.folderId == 'DM') return;
+    if ((this.funcID.includes('DMT00')) && $data.data.folderId == 'DM') return;
     ScrollComponent.reinitialization();
     this.scrollTop();
     if (!$data || !$data?.data) return;
@@ -1209,9 +1210,9 @@ export class HomeComponent extends UIComponent implements OnDestroy {
         this.dmSV.breadcumbLink = [''];
         //Tài liệu yêu cầu chia sẻ
         if (
-          this.funcID == 'DMT06' ||
-          this.funcID == 'DMT05' ||
-          this.funcID == 'DMT07'
+          this.funcID.includes('DMT06') ||
+          this.funcID.includes('DMT05') ||
+          this.funcID.includes('DMT07')
         ) {
           var x = this.breakCumbArr.filter((x) => x.id == this.funcID);
           breadcumb.push(x[0].sub[0].name);
@@ -1224,12 +1225,12 @@ export class HomeComponent extends UIComponent implements OnDestroy {
       }
 
       if (
-        this.funcID != 'DMT00' &&
-        this.funcID != 'DMT06' &&
-        this.funcID != 'DMT07'
+        !this.funcID.includes('DMT00')&&
+        !this.funcID.includes('DMT06') &&
+        !this.funcID.includes('DMT07')
       )
         this.getDataByFuncID(this.funcID);
-      else if (this.funcID == 'DMT06' || this.funcID == 'DMT07') {
+      else if (this.funcID.includes('DMT06') || this.funcID.includes('DMT07')) {
         var vll = this.dmSV.loadValuelist('DM003') as any;
         if (isObservable(vll)) {
           vll.subscribe((item: any) => {
@@ -1409,9 +1410,9 @@ export class HomeComponent extends UIComponent implements OnDestroy {
       if (this.textSearch == null || this.textSearch == '') {
         this.isScrollSearch = false;
         if (
-          this.view.funcID == 'DMT02' ||
-          this.view.funcID == 'DMT03' ||
-          this.view.funcID == 'DMT00'
+          this.view.funcID.includes('DMT02') ||
+          this.view.funcID.includes('DMT03') ||
+          this.view.funcID.includes('DMT00') 
         ) {
           this.dmSV.isSearchView = false;
           this.setHideModeView();
@@ -1698,10 +1699,10 @@ export class HomeComponent extends UIComponent implements OnDestroy {
   onJump() {
     //Tài liệu chia sẻ hoặc tài liệu yêu cầu chia sẻ
     if (
-      this.dmSV.idMenuActive == 'DMT06' ||
-      this.dmSV.idMenuActive == 'DMT05' ||
-      this.dmSV.idMenuActive == 'DMT07' ||
-      this.dmSV.idMenuActive == 'DMT00' 
+      this.dmSV.idMenuActive.includes('DMT06') ||
+      this.dmSV.idMenuActive.includes('DMT05') ||
+      this.dmSV.idMenuActive.includes('DMT07') ||
+      this.dmSV.idMenuActive.includes('DMT00')
     )
       return;
     var data = {} as any;

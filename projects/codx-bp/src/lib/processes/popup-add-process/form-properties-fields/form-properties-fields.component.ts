@@ -27,44 +27,17 @@ export class FormPropertiesFieldsComponent implements OnInit {
     {
       value: '1',
       text: 'Cơ bản',
-      datas: [
-        { value: 'F', text: 'Forms', icon: 'icon-i-clipboard' },
-        { value: 'T', text: 'Văn bản', icon: 'icon-i-layout-text-sidebar' },
-        { value: 'L', text: 'Danh sách', icon: 'icon-i-list-check' },
-        { value: 'PA', text: 'Dữ liệu liên kết', icon: 'icon-wb_cloudy' },
-        { value: 'D', text: 'Ngày', icon: 'icon-today' },
-        { value: 'A', text: 'Tệp đính kèm', icon: 'icon-attach_file' },
-        { value: 'N', text: 'Số', icon: 'icon-i-bootstrap' },
-        { value: 'YesNo', text: 'Yes/no', icon: 'icon-switch_left' },
-        { value: 'User', text: 'Người', icon: 'icon-person' },
-        { value: 'Share', text: 'Chia sẻ', icon: 'icon-i-people' },
-      ],
+      datas: [],
     },
     {
       value: '2',
       text: 'Nâng cao',
-      datas: [
-        { value: 'Rank', text: 'Xếp hạng', icon: 'icon-i-star' },
-        { value: 'Table', text: 'Bảng', icon: 'icon-i-table' },
-        { value: 'Progress', text: 'Tiến độ', icon: 'icon-i-battery-half' },
-        { value: 'Phone', text: 'Số điện thoại', icon: 'icon-i-telephone' },
-        { value: 'Email', text: 'Email', icon: 'icon-email' },
-        { value: 'Address', text: 'Địa chỉ', icon: 'icon-location_on' },
-        {
-          value: 'Expression',
-          text: 'Công thức',
-          icon: 'icon-i-calculator-fill',
-        },
-      ],
+      datas: [],
     },
     {
       value: '3',
       text: 'Form nhập liệu',
-      datas: [
-        { value: 'id17', text: 'Email', icon: 'icon-email' },
-        { value: 'id18', text: 'Địa chỉ', icon: 'icon-location_on' },
-        { value: 'id19', text: 'Công thức', icon: 'icon-i-calculator-fill' },
-      ],
+      datas: [],
     },
   ];
   currentID: string = 'F';
@@ -233,6 +206,12 @@ export class FormPropertiesFieldsComponent implements OnInit {
     if (e && e?.e) {
       this.lstStepFields = e?.e;
     }
+  }
+  //#endregion
+
+  //#region  save field
+  onSave(){
+    this.dialog.close(this.lstStepFields);
   }
   //#endregion
 }

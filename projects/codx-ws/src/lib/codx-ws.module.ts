@@ -75,6 +75,7 @@ import { CodxWpV2Module } from 'projects/codx-wp/src/lib/codx-wp-v2.module';
 import { AcModule } from 'projects/codx-ac/src/public-api';
 import { CodxHRModule } from 'projects/codx-hr/src/public-api';
 import { Layout2Component } from './_layout/layout2/layout2.component';
+import { HomeComponent as HomeDMComponent } from 'projects/codx-dm/src/lib/home/home.component';
 //import { CodxWpV2Module } from 'projects/codx-wp/src/lib/codx-wp-v2.module';
 const routes: Routes = [
   {
@@ -263,6 +264,11 @@ const routes: Routes = [
           {
             path: 'tasks/:funcID',
             component: TasksComponent,
+          },
+          //Kho tài liệu
+          {
+            path: 'files/:funcID',
+            component: HomeDMComponent,
           },
         ]
       },

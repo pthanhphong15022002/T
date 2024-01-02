@@ -164,6 +164,7 @@ export class CodxFieldsDetailTempComponent implements OnInit {
       titleHeader: this.titleHeaderFormCF,
       objectIdParent: this.objectIdParent,
       customerID: this.customerID,
+      isAdd: false,
     };
     let formModel: FormModel = {
       entityName: 'DP_Instances_Steps_Fields',

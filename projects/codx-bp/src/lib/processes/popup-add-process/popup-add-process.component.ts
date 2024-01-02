@@ -9,8 +9,8 @@ import {
 } from '@angular/core';
 import { CallFuncService, DialogData, DialogModel, DialogRef, FormModel, Util } from 'codx-core';
 import { FormPropertiesFieldsComponent } from './form-properties-fields/form-properties-fields.component';
-import {Diagram,ConnectorEditing, DiagramComponent, SymbolPaletteComponent, SnapSettingsModel, SnapConstraints, NodeModel, PaletteModel, PortVisibility, PortConstraints, BpmnShapeModel, BpmnDiagramsService, ComplexHierarchicalTreeService, ConnectorBridgingService, ConnectorEditingService, DataBindingService, DiagramContextMenuService, HierarchicalTreeService, LayoutAnimationService, MindMapService, PrintAndExportService, RadialTreeService, SnappingService, SymmetricLayoutService, UndoRedoService, ConnectorModel, HeaderModel, DiagramTools } from '@syncfusion/ej2-angular-diagrams';
-import { ExpandMode } from '@syncfusion/ej2-angular-navigations';
+import {Diagram,ConnectorEditing, DiagramComponent, SymbolPaletteComponent, SnapSettingsModel, SnapConstraints, NodeModel, PaletteModel, PortVisibility, PortConstraints, BpmnShapeModel, BpmnDiagramsService, ComplexHierarchicalTreeService, ConnectorBridgingService, ConnectorEditingService, DataBindingService, DiagramContextMenuService, HierarchicalTreeService, LayoutAnimationService, MindMapService, PrintAndExportService, RadialTreeService, SnappingService, SymmetricLayoutService, UndoRedoService, ConnectorModel, HeaderModel, DiagramTools, ContextMenuSettingsModel, DiagramBeforeMenuOpenEventArgs, LaneModel, ShapeStyleModel, SwimLaneModel, cloneObject, randomId } from '@syncfusion/ej2-angular-diagrams';
+import { ExpandMode, MenuEventArgs } from '@syncfusion/ej2-angular-navigations';
 import { log } from 'console';
 Diagram.Inject(ConnectorEditing)
 @Component({
@@ -198,9 +198,9 @@ menuDrag:any=[
   {id:'decision',text: 'Điều kiện', icon:'icon-i-diamond'},
   {id:'form',text: 'Forms', icon:'icon-note_add'},
   {id:'event',text: 'Sự kiện', icon:'icon-i-calendar2-event-fill'},
-  {id:'mail',text: 'Gửi mail', icon:'icon-mail'},
+  {id:'email',text: 'Gửi mail', icon:'icon-mail'},
   {id:'task',text: 'Công việc', icon:'icon-check-correct'},
-  {id:'forward',text: 'Chuyển tiếp', icon:'icon-send_to'},
+  {id:'esign',text: 'Ký số', icon:'icon-i-pen'},
   {id:'image',text: 'hình ảnh', icon:'icon-broken_image'},
 ]
 
@@ -346,8 +346,27 @@ menuDrag:any=[
           ], title: 'Connectors'
       }
   ];
+  contextMenuSettings: ContextMenuSettingsModel = {
+    show: true, items: [
+        {
+            text: 'Clone', id: 'Clone', target: '.e-diagramcontent',
+        },
+        {
+            text: 'Cut', id: 'Cut', target: '.e-diagramcontent',
+        },
+        {
+            text: 'InsertLaneBefore', id: 'InsertLaneBefore', target: '.e-diagramcontent',
+        },
+        {
+            text: 'InsertLaneAfter', id: 'InsertLaneAfter', target: '.e-diagramcontent',
+        }],
+    showCustomMenuOnly: true,
+};
   dragEnter(e:any){
-    if(!e.event.target) return;
+    //console.log(e);
+    //let objDragpane = document.querySelector('.dragarea').getBoundingClientRect();
+    //if(objDragpane && e.dropPoint.x < objDragpane.x) return;
+    //if(!e.event.target) return;
 
     let targetId = e.event.target.id.includes('_content') ? e.event.target.id.split('_content')[0] : e.event.target.id;
     let swimlane=''
@@ -367,7 +386,7 @@ menuDrag:any=[
       width: 100,
       height: 100,
       margin: { left: 100, top: 100 },
-      style: {borderColor:'#fff'}
+      style: {strokeColor:'#000'}
   };
 
   //model.offsetX = model.offsetX -  this.diagram.diagramLayer?.getBoundingClientRect().width
@@ -386,7 +405,8 @@ menuDrag:any=[
               trigger: 'None'
           }
        };
-       if(swimlane && laneID)this.diagram.addNodeToLane(model,swimlane,laneID)
+       model.offsetY = model.offsetY -50;
+       if(this.targetItem && this.targetItem.isLane && swimlane && laneID)this.diagram.addNodeToLane(model,swimlane,laneID)
        else this.diagram.add(model);
       break;
     case 'decision':
@@ -395,51 +415,64 @@ menuDrag:any=[
         shape: 'Decision',
 
         };
-        if(swimlane && laneID)this.diagram.addNodeToLane(model,swimlane,laneID)
+        model.offsetY = model.offsetY -100;
+        if(this.targetItem && this.targetItem.isLane && swimlane && laneID)this.diagram.addNodeToLane(model,swimlane,laneID)
         else this.diagram.add(model);
     break;
     case 'connector':
         let connector: ConnectorModel={
-          id: Util.uid(),
-          sourcePoint: { x: model.offsetX -100, y: model.offsetY  -100 }, targetPoint: { x: model.offsetX, y: model.offsetY },
-        targetDecorator: { shape: 'Arrow', style: {strokeColor: '#757575', fill: '#757575'} }, style: { strokeWidth: 1, strokeColor: '#757575' },
+          id: this.makeid(10),
+          sourcePoint: { x: model.offsetX -200, y: model.offsetY -100 }, targetPoint: { x: model.offsetX -100, y: model.offsetY-100 },
+          targetDecorator: { shape: 'Arrow', style: {strokeColor: '#757575', fill: '#757575'} }, style: { strokeWidth: 3, strokeColor: '#757575' },
+          type:'Bezier'
         }
         this.diagram.addConnector(connector)
     break;
     case 'swimlane':
-        let swimLane:any= {
+        let swimLane:NodeModel= {
           id: this.makeid(10),
           shape: {
               type: 'SwimLane',
-              borderColor: '#ddd',
               header: {
-                      annotation: { content: 'Bước quy trình', },
+
                       height: 30,
-                      style:{fill:'#fff',textAlign:'Left'}
+                      style:{fill:'#fff',textAlign:'Left'},
+                       annotation: {content:'Quy trình động'}
                     },
               lanes: [
                   {
                       id: this.makeid(10),
                       canMove:true,
-                      borderColor: '#fff',
-                      style: { borderColor: '#fff',strokeColor: '#ddd' }, height: 500, width: 200,
-                      header: {  height: 0.5, style: { strokeColor: '#fff', fontSize: 11 }, annotation: { content:''} },
+                       height: 500, width: 400,
+                      header: {  height:30, style: { fontSize: 14,fill:'#fff' },annotation: {content:'Bước quy trình'}},
                   }
               ],
-              style: { borderColor: '#fff' },
-              orientation: 'Vertical', isLane: true
+              phases: [
+                {
+                    id:this.makeid(10), offset: 170,
+                    header: { annotation: { content: '' } }
+                },
+            ],
+            phaseSize: 0.5,
+            orientation: 'Vertical', isLane: true,
+
           },
           height: 500,
-          width: 200,
-          // style: { fill: '#f5f5f5' },
+          width:400,
+           style: { strokeColor: '#ffffff', fill:'#ffffff' },
           offsetX: model.offsetX,
-          offsetY: model.offsetY,
+          offsetY: model.offsetY +100,
         }
         this.diagram.add(swimLane);
     break;
     case 'form':
+    case 'esign':
+    case 'image':
+    case 'task':
+    case 'event':
+    case 'email':
         model.id = this.makeid(10);
-        model.shape = { type: 'HTML', version: 'forms' };
+        model.shape = { type: 'HTML', version: e.item?.element?.nativeElement?.id };
         model.width = 300;
         model.height = 200;
         // if(swimlane)this.diagram.addNodeToLane(model,swimlane,laneID)
@@ -447,23 +480,15 @@ menuDrag:any=[
         this.diagram.add(model)
         if(this.targetItem && this.targetItem.isLane)  this.diagram.addChild(this.targetItem,model.id);
     break;
-    case 'image':
-      model.id = this.makeid(10);
-      model.shape = { type: 'HTML', version: 'image' };
-      model.width = 300;
-      model.height = 200;
-      // if(swimlane)this.diagram.addNodeToLane(model,swimlane,laneID)
-      // else this.diagram.add(model);
-      this.diagram.add(model)
-      if(this.targetItem && this.targetItem.isLane)   this.diagram.addChild(this.targetItem,model.id);
-    break;
+
 
   }
 
 
   // this.diagram.add(model);
   // this.diagram.addChild(this.targetItem,model.id)
-  this.diagram.dataBind()
+  this.targetItem = undefined;
+  //this.diagram.dataBind()
   }
 
   logData(e){
@@ -483,7 +508,64 @@ menuDrag:any=[
     }
   }
 
-  makeid(length) {
+  contextMenuOpen(args: DiagramBeforeMenuOpenEventArgs): void {
+    for (let item of args.items) {
+        if ((this.diagram.selectedItems.connectors.length + this.diagram.selectedItems.nodes.length) > 0) {
+            if (item.id === 'InsertLaneBefore' || item.id === 'InsertLaneAfter') {
+                if (this.diagram.selectedItems.connectors.length || (this.diagram.selectedItems.nodes.length && !(this.diagram.selectedItems.nodes[0] as any).isLane)) {
+                    args.hiddenItems.push(item.text);
+                }
+            }
+        } else {
+            args.hiddenItems.push(item.text);
+        }
+    }
+  }
+
+  contextMenuClick(args: MenuEventArgs): void {
+    if (args.item.id === 'InsertLaneBefore' || args.item.id === 'InsertLaneAfter') {
+        if (this.diagram.selectedItems.nodes.length > 0 && (this.diagram.selectedItems.nodes[0] as any).isLane) {
+            let index: number;
+            let node: any = this.diagram.selectedItems.nodes[0];
+            let swimlane: NodeModel = this.diagram.getObject((this.diagram.selectedItems.nodes[0] as any).parentId);
+            let shape: SwimLaneModel = swimlane.shape as SwimLaneModel;
+            let existingLane: LaneModel = cloneObject(shape.lanes[0]);
+            let newLane = existingLane;
+            newLane.id= this.makeid(10);
+              newLane.header={
+                    width: existingLane.header.width, height: existingLane.header.height,
+                    style: existingLane.header.style as ShapeStyleModel,
+                    annotation: {content:'Bước quy trình'}
+                } as HeaderModel;
+
+            if (shape.orientation === 'Horizontal') {
+                let exclude = 0;
+                exclude += (shape.header) ? 1 : 0;
+                exclude += (shape.phases.length) ? 1 : 0;
+                index = node.rowIndex - exclude;
+                newLane.header.width = existingLane.header.width;
+                newLane.header.height = existingLane.height;
+            } else {
+                index = node.columnIndex - 1;
+                newLane.header.width = existingLane.width;
+                newLane.header.height = existingLane.header.height;
+            }
+            if (args.item.id === 'InsertLaneBefore') {
+                this.diagram.addLanes(swimlane, [newLane], 0);
+            } else {
+                this.diagram.addLanes(swimlane, [newLane], 0);
+                this.diagram.refresh();
+            }
+            this.diagram.clearSelection();
+        }
+    } else if (args.item.id === 'Cut') {
+        this.diagram.cut();
+    } else if (args.item.id === 'Clone') {
+        this.diagram.copy();
+        this.diagram.paste();
+    }
+}
+ private makeid(length) {
     let result = '';
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     const charactersLength = characters.length;
@@ -501,7 +583,9 @@ menuDrag:any=[
     debugger
   }
   mouseEnter(e:any){
-    if(this.isDragging) this.targetItem = e.actualObject
+    if(this.isDragging) this.targetItem = e.actualObject;
+    console.log(this.targetItem);
+
   }
   targetItem:any;
   isDragging:boolean=false;
@@ -547,6 +631,7 @@ clickchoi(){
     @Optional() dt: DialogData
   ) {
     this.dialog = dialog;
+    this.data = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
   }
 
   ngOnInit(): void {}

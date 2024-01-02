@@ -16,7 +16,7 @@ export class FormFormatValueComponent implements OnInit {
   };
   @Output() renderData = new EventEmitter<any>();
   @Output() dropLists = new EventEmitter<any>();
-
+  datasVll = [];
   countData = 0;
   isPopupUserCbb = false;
   constructor(private detectorRef: ChangeDetectorRef, private callFc: CallFuncService){

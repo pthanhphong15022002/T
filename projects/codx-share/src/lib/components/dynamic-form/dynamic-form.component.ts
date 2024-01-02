@@ -92,7 +92,7 @@ export class DynamicFormComponent extends UIComponent {
     this.views = [
       {
         type: ViewType.grid,
-        sameData: false,
+        sameData: true,
         active: true,
         model: {
           //resources: this.columnsGrid,
@@ -109,10 +109,12 @@ export class DynamicFormComponent extends UIComponent {
   }
 
   viewChanged(evt: any, view: ViewsComponent) {
+
     // this.cache
     //   .gridViewSetup(view.function.formName, view.function.gridViewName)
     //   .subscribe(() => {});
     this.view = view;
+    (this.view as any).pageTitle.showBreadcrumbs(false)
     //var formName = view.function!.formName;
     this.layout.setLogo(null);
     this.pageTitle.setBreadcrumbs([]);
