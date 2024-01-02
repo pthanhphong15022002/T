@@ -280,9 +280,19 @@
     </div>
 
     <div class="form-group">
-      <div>
-        <codx-label fiedName="FieldID" [formModel]="form?.formModel">
-        </codx-label>
+      <div class="d-flex justify-content-between align-items-center">
+        <codx-label
+          fiedName="FieldID"
+          [formModel]="form?.formModel"
+        ></codx-label>
+        <button
+          *ngIf="typeTask?.value === 'CO'"
+          type="button"
+          class="btn btn-icon btn-sm btn-light-primary ms-3"
+          (click)="clickSettingReference()"
+        >
+          <i class="icon-settings icon-16"></i>
+        </button>
         <!-- <span *ngIf="typeTask?.value === 'F'" class="default">*</span> -->
       </div>
       <div>
@@ -297,13 +307,13 @@
         ></ejs-multiselect>
         <!-- <span class="e-input-group-icon e-spin-down icon-link"></span> -->
       </div>
-      <div (click)="handleDivClick($event)" (document:click)="handleDocumentClick($event)" >
+      <!-- <div (click)="handleDivClick($event)" (document:click)="handleDocumentClick($event)" >
         <div class="input-custom d-flex align-items-center justify-content-between">
           <span [ngClass]="showSelect ? 'd-none' : ''" class="popup-data" class="ps-2">{{titleField}}</span>
           <div class="d-flex align-items-center flex-wrap" [ngClass]="showSelect ? '' : 'd-none'">
-            <div *ngFor="let field of listField" class="d-flex align-items-center m-1 item-show ms-2">
+            <div *ngFor="let field of listField" class="d-flex align-items-center m-1 item-show ms-2 cursor-pointer">
               <span class="text-nowrap"  (click)="chooseField(field)" >{{field?.title}}</span>
-              <span class="icon-close icon-18 ms-1 cursor-pointer" (click)="removeField(field)"></span>
+              <span class="icon-close icon-18 ms-1" (click)="removeField(field)"></span>
             </div>
           </div>
           <div>
@@ -315,7 +325,7 @@
             <span >{{item?.title}}</span>
           </div>
         </div>
-      </div>
+      </div> -->
     </div>
 
     <div class="form-group" *ngIf="typeTask?.value != 'F'">
@@ -514,7 +524,6 @@
         ></codx-view-approve>
       </div>
     </div>
-
   </div>
 
   <ng-container>
