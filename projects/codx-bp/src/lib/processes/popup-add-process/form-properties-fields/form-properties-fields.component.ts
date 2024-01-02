@@ -1,4 +1,4 @@
-import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import { CdkDrag, CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import {
   ChangeDetectorRef,
   Component,
@@ -23,26 +23,12 @@ export class FormPropertiesFieldsComponent implements OnInit {
 
   dialog!: DialogRef;
   dataFormat: any = { value: 'F', text: 'Forms', icon: 'icon-i-clipboard' };
-  lstDataLeft = [
-    {
-      value: '1',
-      text: 'Cơ bản',
-      datas: [],
-    },
-    {
-      value: '2',
-      text: 'Nâng cao',
-      datas: [],
-    },
-    {
-      value: '3',
-      text: 'Form nhập liệu',
-      datas: [],
-    },
-  ];
-  currentID: string = 'F';
-  lstStepFields = [];
+  vllBP002: any;
   dataCurrent: any = {};
+  lstStepFields = [];
+  currentID: string = 'F';
+  table: Array<any> = [];
+
   tempVllBP: tempVllBP;
   constructor(
     private detectorRef: ChangeDetectorRef,
@@ -54,67 +40,152 @@ export class FormPropertiesFieldsComponent implements OnInit {
     this.dialog = dialog;
   }
   ngOnInit(): void {
-    this.defaultForm();
-    this.getControlType();
+    this.getVll();
   }
 
-  getControlType() {
-    this.cache.valueList('BP002').subscribe((vll) => {
-      if (vll && vll?.datas) {
-        let datas = vll?.datas ?? [];
-        let datas1 = [];
-        let datas2 = [];
-        for (var i = 0; i < datas.length; i++) {
-          if (i >= 0 && i <= 8) {
-            datas1.push(datas[i]);
-          } else {
-            datas2.push(datas[i]);
-          }
-        }
-        this.lstDataLeft.find((x) => x.value == '1').datas = datas1;
-        this.lstDataLeft
-          .find((x) => x.value == '1')
-          .datas.unshift({ value: 'F', text: 'Forms', icon: null });
-        this.lstDataLeft.find((x) => x.value == '2').datas = datas2;
+  getVll() {
+    let basic = [
+      'Text',
+      'ValueList',
+      'Combobox',
+      'Datetime',
+      'Attachment',
+      'Number',
+      'YesNo',
+      'User',
+      'Share',
+    ];
+    let advanced = [
+      'Rank',
+      'Table',
+      'Progress',
+      'Phone',
+      'Email',
+      'Address',
+      'Expression',
+    ];
+    this.cache.valueList('BP002').subscribe((item) => {
+      if (item) {
+        item.datas.forEach((elm) => {
+          if (basic.includes(elm.value)) elm.groupType = 0;
+          else if (advanced.includes(elm.value)) elm.groupType = 1;
+        });
+        this.vllBP002 = item;
       }
     });
   }
 
-  defaultForm() {
-    let fieldForms = {};
-    fieldForms['recID'] = Util.uid();
-    fieldForms['controlType'] = 'F';
-    let data = 'Forms';
-    if (data) {
-      const str = data as any;
-      fieldForms['title'] = str;
-
-      fieldForms['fieldName'] = this.bpSv.createAutoNumber(str);
-    }
-    this.dataCurrent = fieldForms;
-    this.lstStepFields.push(fieldForms);
+  trackByFn(i: number) {
+    return i;
   }
-  //#region change actived
-  changeActived(data) {
-    this.currentID = data?.value;
-    this.detectorRef.markForCheck();
-  }
-  //#endregion
 
-  //#region drop - kéo thả
-  drop(event: CdkDragDrop<any[]>): void {
-    const item = event.item.data;
-    if (event.container === event.previousContainer) {
-    } else {
-      this.dataFormat = item;
-      this.dataCurrent = this.setDataFields(item);
+  drop(event: any) {
+    if (event.previousContainer !== event.container) {
+      // copyArrayItem(
+      //   event.previousContainer.data,
+      //   event.container.data,
+      //   event.previousIndex,
+      //   event.currentIndex
+      // );
+      let data = JSON.parse(
+        JSON.stringify(event.previousContainer.data[event.previousIndex])
+      );
+      data.parentID = this.table.length;
+      this.dataFormat = data;
+      this.dataCurrent = this.setDataFields(data);
+      data.recID = this.dataCurrent?.recID;
+      let object = {
+        name: '',
+        id: this.table.length,
+        children: [data],
+      };
       this.lstStepFields.push(this.dataCurrent);
-      this.formMatRef.loadData(this.lstStepFields);
-      this.settingFielfs.loadData(this.dataCurrent);
+      console.log('drop 1 != :', data);
+      this.table.splice(event.currentIndex, 0, object);
+    } else {
+      this.table[event.currentIndex].id = event.previousIndex;
+      this.table[event.previousIndex].id = event.currentIndex;
+      this.table[event.currentIndex].children.forEach((elm) => {
+        elm.parentID = event.previousIndex;
+      });
+      this.table[event.previousIndex].children.forEach((elm) => {
+        elm.parentID = event.currentIndex;
+      });
+      moveItemInArray(
+        event.container.data,
+        event.previousIndex,
+        event.currentIndex
+      );
+      console.log('drop 1 == ');
     }
-    this.detectorRef.markForCheck();
   }
-  //#endregion
+
+  drop2(event: any) {
+    let data = JSON.parse(
+      JSON.stringify(event.previousContainer.data[event.previousIndex])
+    );
+    if (
+      event.previousContainer === event.container &&
+      event.event.target.id == event.container.id
+    ) {
+      //delete this.table[data.parentID].children[event.previousIndex];
+      moveItemInArray(
+        event.container.data,
+        event.previousIndex,
+        event.currentIndex
+      );
+    } else if (event.event.target.id != event.container.id) {
+      var object = {
+        name: '',
+        id: 0,
+        children: [data],
+      };
+
+      let index = this.table.findIndex((x) => x.id == data.parentID);
+      this.table[index].children.splice(event.previousIndex, 1);
+      if (event.event.target.id != event.container.id) {
+        (object.id = object.children[0].parentID = this.table.length),
+          this.table.push(object);
+      } else {
+        (object.id = object.children[0].parentID = data.parentID + 1),
+          this.table.splice(data.parentID + 1, 0, object);
+      }
+    } else {
+      (event.previousContainer.data[event.previousIndex].parentID =
+        event.container.data[0].parentID),
+        transferArrayItem(
+          event.previousContainer.data,
+          event.container.data,
+          event.previousIndex,
+          event.currentIndex
+        );
+    }
+
+    this.table = this.table.filter(
+      (x) => x.children != null && x.children.length > 0
+    );
+  }
+
+  evenPredicate(name: string) {
+    return (item: CdkDrag<any>) => {
+      return name == item.data;
+    };
+  }
+
+  exited(event: any) {
+    // const currentIdx = event.container.data.findIndex(
+    //   (f) => f.id === event.item.data.id
+    // );
+    // this.menu.splice(currentIdx + 1, 0, {
+    //   ...event.item.data,
+    //   temp: true,
+    // });
+    console.log('exited: ', event);
+  }
+  entered() {
+    console.log('entered: 12');
+    //this.menu = this.menu.filter((f) => !f.temp);
+  }
 
   //#region
   setDataFields(data) {
@@ -159,8 +230,14 @@ export class FormPropertiesFieldsComponent implements OnInit {
     }
     return null;
   }
-  //#endregion
 
+  returnData(data){
+    let dataField = {};
+    const indx = this.lstStepFields.findIndex(x => data.value == x.controlType && x.recID == data.recID);
+    dataField = indx != -1 ? this.lstStepFields[indx] : null;
+    return dataField;
+  }
+  //#endregion
   //#region event emit
   dataValueEmit(e) {
     if (e && e?.data) {
@@ -169,48 +246,46 @@ export class FormPropertiesFieldsComponent implements OnInit {
         if (e?.type == 'delete') {
           this.lstStepFields.splice(indx, 1);
           this.dataCurrent = this.lstStepFields[0];
-          this.dataFormat = this.lstDataLeft
-            .find((x) => x.datas.some((y) => y.value == 'F'))
-            ?.datas?.find((y) => y.value == 'F');
         } else {
           this.lstStepFields[indx] = e?.data;
+          this.dataCurrent = JSON.parse(
+            JSON.stringify(this.lstStepFields[indx])
+          );
         }
       }
-      this.formMatRef.loadData(this.lstStepFields);
     }
     this.detectorRef.markForCheck();
+  }
+
+  selectedItem(data: any) {
+    if (this.dataCurrent?.recID != data?.recID) {
+      this.dataFormat = this.table
+        .find((x) => x.children.some((y) => y.value == data?.value))
+        ?.children?.find((y) => y.value == data?.value);
+      this.dataCurrent = JSON.parse(
+        JSON.stringify(this.lstStepFields.find((x) => x.recID == data?.recID))
+      );
+    }
   }
 
   renderData(e) {
     if (e && e?.data) {
       if (this.dataCurrent?.recID != e?.data?.recID) {
-        this.dataFormat = this.lstDataLeft
-          .find((x) => x.datas.some((y) => y.value == e?.data?.controlType))
-          ?.datas?.find((y) => y.value == e?.data?.controlType);
+        this.dataFormat = this.table
+          .find((x) => x.children.some((y) => y.value == e?.data?.value))
+          ?.children?.find((y) => y.value == e?.data?.value);
         this.dataCurrent = JSON.parse(
           JSON.stringify(
             this.lstStepFields.find((x) => x.recID == e?.data?.recID)
           )
         );
-        this.settingFielfs.loadData(this.dataCurrent);
       }
     } else {
-      this.dataFormat = this.lstDataLeft
-        .find((x) => x.datas.some((y) => y.value == 'F'))
-        ?.datas?.find((y) => y.value == 'F');
     }
     this.detectorRef.markForCheck();
   }
-
-  dropLists(e) {
-    if (e && e?.e) {
-      this.lstStepFields = e?.e;
-    }
-  }
-  //#endregion
-
   //#region  save field
-  onSave(){
+  onSave() {
     this.dialog.close(this.lstStepFields);
   }
   //#endregion

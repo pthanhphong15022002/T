@@ -3045,9 +3045,10 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     let obj = {
       data: JSON.parse(JSON.stringify(listField)),
       titleHeader: task?.taskName,
-      objectIdParent: 'task?.stepID',
+      objectIdParent: task?.stepID,
       // customerID: '',
       isAdd: false, ///là add form để lấy giá trị mặc định gán vào
+      taskID: task.recID,
     };
     let formModel: FormModel = {
       entityName: 'DP_Instances_Steps_Fields',
