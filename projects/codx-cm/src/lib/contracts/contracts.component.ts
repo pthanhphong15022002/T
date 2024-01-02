@@ -914,26 +914,26 @@ export class ContractsComponent extends UIComponent {
   cancelAction(dt, categoryID, category = null) {
     this.getESCategory(categoryID, category).subscribe((res2: any) => {
       if (res2) {
-        if (res2?.eSign == true) {
-          //trình ký
-        } else if (res2?.eSign == false) {
-          //kí duyet
-          this.codxCommonService
-            .codxCancel(
-              'CM',
-              dt?.recID,
-              this.view.formModel.entityName,
-              null,
-              null
-            )
-            .subscribe((res3) => {
-              if (res3) {
-                this.contractSelected.approveStatus = '0';
-                this.view.dataService.update(this.contractSelected).subscribe();
-                this.notiService.notifyCode('SYS007');
-              } else this.notiService.notifyCode('SYS021');
-            });
-        }
+        // if (res2?.eSign == true) {
+        //   //trình ký
+        // } else if (res2?.eSign == false) {
+        //kí duyet
+        this.codxCommonService
+          .codxCancel(
+            'CM',
+            dt?.recID,
+            this.view.formModel.entityName,
+            null,
+            null
+          )
+          .subscribe((res3) => {
+            if (res3) {
+              this.contractSelected.approveStatus = '0';
+              this.view.dataService.update(this.contractSelected).subscribe();
+              this.notiService.notifyCode('SYS007');
+            } else this.notiService.notifyCode('SYS021');
+          });
+        // }
       } else this.notiService.notifyCode('ES028');
     });
   }

@@ -511,17 +511,18 @@ export class DealsComponent
       eventItem.disabled = data.full
         ? data.closed ||
           data.applyProcess ||
-          this.checkMoreReason(data,false) ||
-          ( data?.applyProcess && ['3', '5'].includes(data.status))
+          this.checkMoreReason(data, false) ||
+          (data?.applyProcess && ['3', '5'].includes(data.status))
         : true;
     };
     let isDeleteProcess = (eventItem, data) => {
       eventItem.disabled = data.full
-        ? data.closed || !data.applyProcess || this.checkMoreReason(data,false)
+        ? data.closed || !data.applyProcess || this.checkMoreReason(data, false)
         : true;
     };
-    let isAddTask =  (eventItem, data) => {
-      eventItem.disabled = !data?.isAdminAll || data.closed || data.status == '7';
+    let isAddTask = (eventItem, data) => {
+      eventItem.disabled =
+        !data?.isAdminAll || data.closed || data.status == '7';
     };
 
     functionMappings = {
@@ -553,7 +554,7 @@ export class DealsComponent
       CM0201_17: isChangeStatus,
       CM0201_19: isUpdateProcess,
       CM0201_20: isDeleteProcess,
-      CM0201_18: isAddTask
+      CM0201_18: isAddTask,
     };
 
     return functionMappings[type];
@@ -701,9 +702,8 @@ export class DealsComponent
         this.notificationsService.notifyCode('SYS007');
         this.view.dataService.update(this.dataSelected, true).subscribe();
         if (this.dataSelected.applyProcess) {
-         this.detailViewDeal.promiseAllAsync();
-        }
-        else {
+          this.detailViewDeal.promiseAllAsync();
+        } else {
           this.detailViewDeal.reloadListStep([]);
         }
         if (this.kanban) {
@@ -1590,30 +1590,30 @@ export class DealsComponent
               .getESCategoryByCategoryID(process.processNo)
               .subscribe((res2: any) => {
                 if (res2) {
-                  if (res2?.eSign == true) {
-                    //trình ký
-                  } else if (res2?.eSign == false) {
-                    //kí duyet
-                    this.codxCommonService
-                      .codxCancel(
-                        'CM',
-                        dt?.recID,
-                        this.view.formModel.entityName,
-                        null,
-                        null
-                      )
-                      .subscribe((res3) => {
-                        if (res3) {
-                          this.dataSelected.approveStatus = '0';
-                          this.view.dataService
-                            .update(this.dataSelected)
-                            .subscribe();
-                          if (this.kanban)
-                            this.kanban.updateCard(this.dataSelected);
-                          this.notificationsService.notifyCode('SYS007');
-                        } else this.notificationsService.notifyCode('SYS021');
-                      });
-                  }
+                  // if (res2?.eSign == true) {
+                  //   //trình ký
+                  // } else if (res2?.eSign == false) {
+                  //kí duyet
+                  this.codxCommonService
+                    .codxCancel(
+                      'CM',
+                      dt?.recID,
+                      this.view.formModel.entityName,
+                      null,
+                      null
+                    )
+                    .subscribe((res3) => {
+                      if (res3) {
+                        this.dataSelected.approveStatus = '0';
+                        this.view.dataService
+                          .update(this.dataSelected)
+                          .subscribe();
+                        if (this.kanban)
+                          this.kanban.updateCard(this.dataSelected);
+                        this.notificationsService.notifyCode('SYS007');
+                      } else this.notificationsService.notifyCode('SYS021');
+                    });
+                  // }
                 }
               });
           } else {
