@@ -30,6 +30,7 @@ export class PopupCustomFieldComponent implements OnInit {
 
   arrCaculateField = []; //cac field co tinh toán
   point: string = ','; //dấu phân cách thập phân
+  isAdd = false;
 
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
@@ -45,6 +46,7 @@ export class PopupCustomFieldComponent implements OnInit {
     this.objectIdParent = dt?.data?.objectIdParent;
     this.customerID = dt?.data?.customerID;
     this.dialog = dialog;
+    this.isAdd = dt?.data?.isAdd ?? false;
     this.arrCaculateField = this.fields.filter((x) => x.dataType == 'CF');
   }
 

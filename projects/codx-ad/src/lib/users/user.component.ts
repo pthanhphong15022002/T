@@ -251,6 +251,7 @@ export class UserComponent extends UIComponent {
           if (!x?.event) this.view.dataService.clear();
           if (x.event) {
             x.event.modifiedOn = new Date();
+            this.view.dataService.update(x.event).subscribe();
             this.changeDetectorRef.detectChanges();
           }
         });
