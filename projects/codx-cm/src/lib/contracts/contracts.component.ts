@@ -804,13 +804,21 @@ export class ContractsComponent extends UIComponent {
       if (dt?.applyProcess && dt?.processID) {
         this.cmService.getProcess(dt?.processID).subscribe((process) => {
           if (process) {
-            this.approvalTransAction(dt, process.processNo);
+            if (process.approveRule)
+              this.approvalTransAction(dt, process.processNo);
+            else
+              this.notiService.notifyCode(
+                'Quy trình đang thực hiện chưa bật chức năng ký duyệt !'
+              );
           } else {
             this.notiService.notifyCode('DP040');
           }
         });
       } else {
-        this.approvalTransAction(dt, 'ES_CM0502');
+        if (this.approveRule == '1') this.approvalTransAction(dt, 'ES_CM0502');
+        this.notiService.notifyCode(
+          'Thiết lập hệ thống chưa bật chức năng ký duyệt !'
+        );
       }
     }
   }
