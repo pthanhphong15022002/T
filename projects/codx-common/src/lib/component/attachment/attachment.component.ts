@@ -1352,6 +1352,13 @@ export class AttachmentComponent implements OnInit, OnChanges {
           ObjectId: this.objectId,
           EntityName: this.formModel?.entityName,
         },
+        Privileges: [
+          {
+            "Type": "7",
+            "Values": ""
+          }
+        ],
+        
       },
     });
   }

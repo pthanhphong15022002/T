@@ -12,7 +12,7 @@ import { CodxCoreModule } from 'codx-core';
 import { CoreModule } from '@core/core.module';
 import { HttpClientModule } from '@angular/common/http';
 import { OverlayModule } from '@angular/cdk/overlay';
-import { TabModule } from '@syncfusion/ej2-angular-navigations';
+import { AccordionModule, TabModule } from '@syncfusion/ej2-angular-navigations';
 import { CommonModule } from '@angular/common';
 import { LayoutNoAsideComponent } from 'projects/codx-common/src/lib/_layout/_noAside/_noAside.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
@@ -24,6 +24,7 @@ import { ConnectorEditing, DiagramModule, SymbolPaletteModule } from '@syncfusio
 import { SettingFieldsComponent } from './processes/popup-add-process/form-properties-fields/setting-fields/setting-fields.component';
 import { environment } from 'src/environments/environment';
 import { FormFormatValueComponent } from './processes/popup-add-process/form-properties-fields/form-format-value/form-format-value.component';
+import { ModeviewComponent } from './modeview/modeview.component';
 
 export const routes: Routes = [
   {
@@ -36,6 +37,16 @@ export const routes: Routes = [
         data: { noReuse: true },
       }]
   },
+  {
+    path: '',
+    component: LayoutNoAsideComponent,
+    children: [
+      {
+        path: 'modeview',
+        component: ModeviewComponent,
+      },
+    ],
+  }
 ];
 @NgModule({
   declarations: [
@@ -47,6 +58,7 @@ export const routes: Routes = [
     FormPropertiesFieldsComponent,
     SettingFieldsComponent,
     FormFormatValueComponent,
+    ModeviewComponent
   ],
   imports: [
     CodxCoreModule.forRoot({ environment }),
@@ -63,13 +75,11 @@ export const routes: Routes = [
     OverlayModule,
     TabModule,
     CommonModule,
-
+    AccordionModule,
     DragDropModule,
     CoreModule,
     PinchZoomModule,
     DiagramModule,
-    DragDropModule,
-
     // NgxImageZoomModule
   ],
   exports: [CodxBpComponent],
