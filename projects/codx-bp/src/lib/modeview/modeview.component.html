@@ -1,0 +1,382 @@
+<div class="d-flex align-items-center w-100 h-100 bp-mw-accordion-a" *ngIf="vllBP002">
+  <div
+    cdkDropList
+    #menuList="cdkDropList"
+    [cdkDropListData]="vllBP002?.datas"
+    cdkDropListSortingDisabled
+    [cdkDropListConnectedTo]="[tableList]"
+    (cdkDropListDropped)="drop($event)"
+    (cdkDropListExited)="exited($event)"
+    (cdkDropListEntered)="entered()" 
+    class="d-flex flex-column w-350px h-100 bg-white overflow-auto px-2"
+  >
+    <ejs-accordion>
+      <e-accordionitems>
+        <e-accordionitem expanded='true'>
+          <ng-template #header>
+            <div class="fw-bold">Cơ bản</div>
+          </ng-template>
+          <ng-template #content>
+            <div class="d-flex flex-column">
+              <ng-container *ngFor="let item of vllBP002?.datas">
+                <div class="w-100 py-3 px-4 mb-3 bg-item-lightest rd-3px cursor-move mw-300px" cdkDrag [cdkDragData]="item" *ngIf="item.groupType == 0">
+                  <i [ngClass]="item.icon"></i>
+                  <span class="fw-bold ms-2">{{item.text}}</span>
+                </div>
+              </ng-container>
+            </div>
+          </ng-template>
+        </e-accordionitem>
+        <e-accordionitem expanded='true'>
+          <ng-template #header>
+            <div class="fw-bold">Nâng cao</div>
+          </ng-template>
+          <ng-template #content>
+            <div class="d-flex flex-column">
+              <ng-container *ngFor="let item of vllBP002?.datas">
+                <div class="w-100 py-3 px-4 mt-3 bg-item-lightest rd-3px cursor-move mw-300px" cdkDrag [cdkDragData]="item" *ngIf="item.groupType == 1">
+                  <i [ngClass]="item.icon"></i>
+                  <span class="fw-bold ms-2">{{item.text}}</span>
+                </div>
+              </ng-container>
+            </div>
+          </ng-template>
+        </e-accordionitem>
+      </e-accordionitems>
+    </ejs-accordion>
+  </div>
+
+  <div class="d-flex justify-content-center w-100 h-100">
+    <div
+      class="d-flex flex-column w-700px h-100 bg-white overflow-auto"
+    >
+      <div class="d-flex flex-column w-100 px-6 pt-6 pb-4">
+        <span class="fw-bold fs-5">Tên biểu mẫu</span>
+        <span class="text-muted">Nhập mô tả biểu mẫu</span>
+      </div>
+      <div
+        class="h-100 mt-2 px-4"
+        cdkDropList
+        #tableList="cdkDropList"
+        [cdkDropListData]="table"
+        (cdkDropListDropped)="drop($event)"
+      >
+        <div cdkDropListGroup>
+          <div  *ngFor="let item of table ; let i = index" cdkDrag [cdkDragDisabled]="true">
+            <div 
+              class="d-flex align-items-center justify-content-between" 
+              #childList="cdkDropList" *ngIf="item.children && item.children.length>0" 
+              [cdkDropListData]="item.children"
+              cdkDropList 
+              cdkDropListOrientation="horizontal" 
+              (cdkDropListDropped)="drop2($event)" 
+              [cdkDropListEnterPredicate]="evenPredicate(item.name)"
+            >
+              <div class="d-flex align-items-center p-2 w-100" 
+                *ngFor="let subItem of item.children" 
+                cdkDrag 
+                [cdkDragData]="item.name"
+                (click)="selectedItem(subItem)"
+              >
+               <ng-container [ngSwitch]="subItem.value">
+                  <ng-container *ngSwitchCase="'Text'">
+                    <ng-container *ngTemplateOutlet="text ; context: { $implicit: subItem }"></ng-container>
+                  </ng-container>
+                  <ng-container *ngSwitchCase="'ValueList'">
+                    <ng-container *ngTemplateOutlet="valueList ; context: { $implicit: subItem }"></ng-container>
+                  </ng-container>
+                  <ng-container *ngSwitchCase="'Combobox'">
+                    <ng-container *ngTemplateOutlet="combobox ; context: { $implicit: subItem }"></ng-container>
+                  </ng-container>
+                  <ng-container *ngSwitchCase="'Datetime'">
+                    <ng-container *ngTemplateOutlet="datetime ; context: { $implicit: subItem }"></ng-container>
+                  </ng-container>
+                  <ng-container *ngSwitchCase="'Attachment'">
+                    <ng-container *ngTemplateOutlet="attachment ; context: { $implicit: subItem }"></ng-container>
+                  </ng-container>
+                  <ng-container *ngSwitchCase="'Number'">
+                    <ng-container *ngTemplateOutlet="text ; context: { $implicit: subItem }"></ng-container>
+                  </ng-container>
+                  <ng-container *ngSwitchCase="'YesNo'">
+                    <ng-container *ngTemplateOutlet="yesno ; context: { $implicit: subItem }"></ng-container>
+                  </ng-container>
+                  <ng-container *ngSwitchCase="'User'">
+                    <ng-container *ngTemplateOutlet="valueList ; context: { $implicit: subItem }"></ng-container>
+                  </ng-container>
+                  <ng-container *ngSwitchCase="'Share'">
+                    <ng-container *ngTemplateOutlet="share ; context: { $implicit: subItem }"></ng-container>
+                  </ng-container>
+                  <ng-container *ngSwitchCase="'Rank'">
+                    <ng-container *ngTemplateOutlet="rank ; context: { $implicit: subItem }"></ng-container>
+                  </ng-container>
+                  <ng-container *ngSwitchCase="'Table'">
+                    <ng-container *ngTemplateOutlet="tables ; context: { $implicit: subItem }"></ng-container>
+                  </ng-container>
+                  <ng-container *ngSwitchCase="'Progress'">
+                    <ng-container *ngTemplateOutlet="progress ; context: { $implicit: subItem }"></ng-container>
+                  </ng-container>
+                  <ng-container *ngSwitchCase="'Email'">
+                    <ng-container *ngTemplateOutlet="email ; context: { $implicit: subItem }"></ng-container>
+                  </ng-container>
+                  <ng-container *ngSwitchCase="'Address'">
+                    <ng-container *ngTemplateOutlet="address ; context: { $implicit: subItem }"></ng-container>
+                  </ng-container>
+                  <ng-container *ngSwitchCase="'Expression'">
+                    <ng-container *ngTemplateOutlet="expression ; context: { $implicit: subItem }"></ng-container>
+                  </ng-container>
+                  <ng-container *ngSwitchCase="'Phone'">
+                    <ng-container *ngTemplateOutlet="phone ; context: { $implicit: subItem }"></ng-container>
+                  </ng-container>
+                  <ng-container *ngSwitchDefault>...</ng-container>
+                </ng-container>
+  
+                <!-- Văn bản || Số -->
+                <ng-template #text let-data>
+                  <div class="d-flex flex-column w-100">
+                    <div class="d-flex align-items-center">
+                      <i class="icon-grid_round me-2 cursor-move" cdkDragHandle></i>
+                      <span class="fw-bold">{{data.text}}</span>
+                    </div>
+                    <div class="w-100 border mt-2 px-4 py-3 rd-3px">
+                      <span class="text-muted text-truncate mw-55px">Câu trả lời</span>
+                    </div>
+                  </div>
+                </ng-template>
+                
+                <!-- Danh sách || User-->
+                <ng-template #valueList let-data>
+                  <div class="d-flex flex-column w-100">
+                     <div class="d-flex align-items-center">
+                      <i class="icon-grid_round me-2 cursor-move" cdkDragHandle></i>
+                      <span class="fw-bold">{{data.text}}</span>
+                    </div>
+                    <div class="d-flex align-items-center justify-content-between w-100 border mt-2 px-4 py-3 rd-3px">
+                      <span class="text-muted text-truncate mw-55px">Câu trả lời</span>
+                      <i class="icon-keyboard_arrow_down text-dark"></i>
+                    </div>
+                  </div>
+                </ng-template>
+  
+                <!-- Combobox -->
+                <ng-template #combobox let-data>
+                  <div class="d-flex flex-column w-100">
+                    <div class="d-flex align-items-center">
+                      <i class="icon-grid_round me-2 cursor-move" cdkDragHandle></i>
+                      <span class="fw-bold">{{data.text}}</span>
+                    </div>
+                    <div class="d-flex align-items-center justify-content-between w-100 border mt-2 px-4 py-3 rd-3px">
+                      <span class="text-muted text-truncate mw-55px">Câu trả lời</span>
+                      <i class="icon-i-plus-square text-dark"></i>
+                    </div>
+                  </div>
+                </ng-template>
+  
+                <!-- DateTime -->
+                <ng-template #datetime let-data>
+                  <div class="d-flex flex-column w-100">
+                    <div class="d-flex align-items-center">
+                      <i class="icon-grid_round me-2 cursor-move" cdkDragHandle></i>
+                      <span class="fw-bold">{{data.text}}</span>
+                    </div>
+                    <div class="d-flex align-items-center justify-content-between w-100 border mt-2 px-4 py-3 rd-3px">
+                      <span class="text-muted text-truncate mw-55px">Câu trả lời</span>
+                      <div class="d-flex align-items-center">
+                        <i class="icon-i-calendar text-dark"></i>
+                        <i class="icon-i-clock ms-3 text-dark"></i>
+                      </div>
+                    </div>
+                  </div>
+                </ng-template>
+  
+  
+                <!-- attachment -->
+                <ng-template #attachment let-data>
+                  <div class="d-flex flex-column w-100">
+                    <div class="d-flex align-items-center">
+                      <i class="icon-grid_round me-2 cursor-move" cdkDragHandle></i>
+                      <span class="fw-bold">{{data.text}}</span>
+                    </div>
+                    <div class="d-flex align-items-center justify-content-between w-100 border-dotted mt-2 px-4 py-8 rd-5px bd-w-2px bg-item-lightest bc-item-lighter">
+                      <div class="d-flex flex-column">
+                        <span class="fw-bold">Chọn 1 file từ máy của bạn</span>
+                        <span class="text-muted">Kéo thả tài liệu vào đây</span>
+                      </div>
+                      <div class="d-flex align-items-center justify-content-between rounded bg-primary py-3 px-5">
+                        <span class="text-white">Chọn tập tin</span>
+                        <img src="../../assets/themes/sys/default/img/BrowseLocal.svg" class="text-white ms-6"/>
+                        <img src="../../assets/themes/sys/default/img/BrowseCoDX.svg" class="img-attachment-codx ms-3"/>
+                      </div>
+                    </div>
+                  </div>
+                </ng-template>
+  
+                <!-- yesno -->
+                <ng-template #yesno let-data>
+                  <div class="d-flex align-items-center justify-content-between w-100 form-switch ps-0">
+                    <div class="d-flex align-items-center">
+                      <i class="icon-grid_round me-2 cursor-move" cdkDragHandle></i>
+                      <span class="fw-bold">{{data.text}}</span>
+                    </div>
+                    <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault">
+                  </div>
+                </ng-template>
+  
+                <!-- Share -->
+                <ng-template #share let-data>
+                  <div class="d-flex flex-column w-100">
+                    <div class="d-flex align-items-center">
+                      <i class="icon-grid_round me-2 cursor-move" cdkDragHandle></i>
+                      <span class="fw-bold">{{data.text}}</span>
+                    </div>
+                    <div class="d-flex align-items-center justify-content-between w-100 border mt-2 px-4 py-3 rd-3px">
+                      <span class="text-muted text-truncate mw-55px">Câu trả lời</span>
+                      <i class="icon-person_add_alt_1 text-primary"></i>
+                    </div>
+                  </div>
+                </ng-template>
+  
+                <!-- Share -->
+                <ng-template #rank let-data>
+                  <div class="d-flex flex-column w-100">
+                    <div class="d-flex align-items-center">
+                      <i class="icon-grid_round me-2 cursor-move" cdkDragHandle></i>
+                      <span class="fw-bold">{{data.text}}</span>
+                    </div>
+                    <div class="d-flex align-items-center justify-content-between w-100 mt-2 px-4 py-3 rd-3px">
+                      <div class="bp-box-number text-primary fw-bold" *ngFor="let item of [].constructor(5); let i = index">
+                        {{(i + 1)}}
+                      </div>
+                    </div>
+                  </div>
+                </ng-template>
+  
+                <!-- Table -->
+                <ng-template #tables let-data>
+                  <div class="d-flex flex-column w-100">
+                    <div class="d-flex align-items-center">
+                      <i class="icon-grid_round me-2 cursor-move" cdkDragHandle></i>
+                      <span class="fw-bold">{{data.text}}</span>
+                    </div>
+                    <table class="table table-bordered mt-2">
+                      <thead>
+                        <tr>
+                          <th scope="col">#</th>
+                          <th scope="col">First</th>
+                          <th scope="col">Last</th>
+                          <th scope="col">Handle</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <th scope="row">1</th>
+                          <td>Mark</td>
+                          <td>Otto</td>
+                          <td>@mdo</td>
+                        </tr>
+                        <tr>
+                          <th scope="row">2</th>
+                          <td>Jacob</td>
+                          <td>Thornton</td>
+                          <td>@fat</td>
+                        </tr>
+                        <tr>
+                          <th scope="row">3</th>
+                          <td colspan="2">Larry the Bird</td>
+                          <td>@twitter</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </ng-template>
+  
+                <!-- Progress -->
+                <ng-template #progress let-data>
+                  <div class="d-flex flex-column w-100">
+                    <div class="d-flex align-items-center">
+                      <i class="icon-grid_round me-2 cursor-move" cdkDragHandle></i>
+                      <span class="fw-bold">{{data.text}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between mt-2 px-1">
+                      <div>
+                        0%
+                      </div>
+                      <div>
+                        100%
+                      </div>
+                    </div>
+                    <div class="progress mt-2">
+                      <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                  </div>
+                </ng-template>
+  
+                <!-- Email -->
+                <ng-template #email let-data>
+                  <div class="d-flex flex-column w-100">
+                    <div class="d-flex align-items-center">
+                      <i class="icon-grid_round me-2 cursor-move" cdkDragHandle></i>
+                      <span class="fw-bold">{{data.text}}</span>
+                    </div>
+                    <div class="d-flex align-items-center justify-content-between w-100 border mt-2 px-4 py-3 rd-3px">
+                      <span class="text-muted text-truncate mw-55px">Câu trả lời</span>
+                      <i class="icon-email text-dark"></i>
+                    </div>
+                  </div>
+                </ng-template>
+  
+                <!-- Address -->
+                <ng-template #address let-data>
+                  <div class="d-flex flex-column w-100">
+                    <div class="d-flex align-items-center">
+                      <i class="icon-grid_round me-2 cursor-move" cdkDragHandle></i>
+                      <span class="fw-bold">{{data.text}}</span>
+                    </div>
+                    <div class="d-flex align-items-center justify-content-between w-100 border mt-2 px-4 py-3 rd-3px">
+                      <span class="text-muted text-truncate mw-55px">Câu trả lời</span>
+                      <i class="icon-location_on text-dark"></i>
+                    </div>
+                  </div>
+                </ng-template>
+  
+                <!-- Expression -->
+                <ng-template #expression let-data>
+                  <div class="d-flex flex-column w-100">
+                    <div class="d-flex align-items-center">
+                      <i class="icon-grid_round me-2 cursor-move" cdkDragHandle></i>
+                      <span class="fw-bold">{{data.text}}</span>
+                    </div>
+                    <div class="d-flex align-items-center justify-content-between w-100 border mt-2 px-4 py-3 rd-3px">
+                      <span class="text-muted text-truncate mw-55px">Câu trả lời</span>
+                      <i class="icon-calculate text-dark"></i>
+                    </div>
+                  </div>
+                </ng-template>
+
+                <!-- Phone -->
+                <ng-template #phone let-data>
+                  <div class="d-flex flex-column w-100">
+                    <div class="d-flex align-items-center">
+                      <i class="icon-grid_round me-2 cursor-move" cdkDragHandle></i>
+                      <span class="fw-bold">{{data.text}}</span>
+                    </div>
+                    <div class="d-flex align-items-center justify-content-between w-100 border mt-2 px-4 py-3 rd-3px">
+                      <span class="text-muted text-truncate mw-55px">Câu trả lời</span>
+                      <i class="icon-settings_phone text-dark"></i>
+                    </div>
+                  </div>
+                </ng-template>
+           
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+     
+    </div>
+  </div>
+
+  <div class="w-400px h-100 bg-white">
+    properties
+  </div>
+</div>
+

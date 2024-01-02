@@ -49,7 +49,7 @@
                   <span
                     [ngClass]="(f.functionType == 'G') ? 'fw-bold text-uppercase' :'menu-title'"
                     (click)="itemClick(f.functionID)"
-                    >{{ f.customName }}</span
+                    >{{f.customName }}</span
                   >
                 </ng-container>
               </div>
@@ -68,7 +68,7 @@
                       ? 'here show'
                       : ''
                   "
-                   (click)="itemClick(f.functionID)"
+                   (click)="itemClick(c.functionID)"
                 >
                   <span class="menu-link" 
                     *ngIf="c?.customName"

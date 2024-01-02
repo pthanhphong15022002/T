@@ -85,29 +85,7 @@ export class SettingFieldsComponent implements AfterViewInit {
 
   ngAfterViewInit(): void {
     if (this.dataCurrent) {
-      switch (this.dataCurrent?.controlType) {
-        case 'ValueList':
-          if (
-            this.dataCurrent?.refValue != null &&
-            this.dataCurrent?.refValue?.trim() != ''
-          ) {
-            this.cache
-              .valueList(this.dataCurrent?.refValue)
-              .subscribe((res) => {
-                if (res && res.datas?.length > 0) {
-                  this.lstDatasVlls = res?.datas;
-                }
-              });
-          }
-          break;
-        case 'Datetime':
-          this.isTime = this.dataCurrent?.dataType == 'F' ? true : false;
-          break;
-        case 'YesNo':
-          break;
-        default:
-          break;
-      }
+      this.loadData(this.dataCurrent);
     }
   }
 
@@ -166,6 +144,7 @@ export class SettingFieldsComponent implements AfterViewInit {
                 }
               });
           } else {
+            this.dataCurrent.refType = '2';
             if (this.maxNumber > 0) {
               this.crrVll = new tempVllBP();
               this.crrVll.language = this.user.language;
@@ -373,10 +352,11 @@ export class SettingFieldsComponent implements AfterViewInit {
     if (e.component.checked === true) {
       switch (e?.field) {
         case 'dropDown':
-          this.dataCurrent['dataType'] = 'd';
+          this.dataCurrent.refType =
+            this.dataCurrent.controlType == 'Combobox' ? '3' : '2';
           break;
         case 'checkBox':
-          this.dataCurrent['dataType'] = 'c';
+          this.dataCurrent.refType = '2C';
           break;
         case 'int':
           this.dataCurrent['dataType'] = 'i';
@@ -391,7 +371,7 @@ export class SettingFieldsComponent implements AfterViewInit {
           this.dataCurrent['dataType'] = 's';
           break;
         case 'popup':
-          this.dataCurrent['dataType'] = 'po';
+          this.dataCurrent['dataType'] = 'P';
           break;
         case 'rankNumber':
           this.dataCurrent.rank.type = '1';
@@ -441,8 +421,8 @@ export class SettingFieldsComponent implements AfterViewInit {
   //#endregion
 
   //#region remove field
-  removeField(data){
-    if(data?.controlType == 'ValueList'){
+  removeField(data) {
+    if (data?.controlType == 'ValueList') {
       this.dataCurrent = data;
       this.deleteVll(false);
     }
@@ -455,7 +435,6 @@ export class SettingFieldsComponent implements AfterViewInit {
   async saveVll(action = 'add') {
     if (this.lstDatasVlls == null || this.lstDatasVlls?.length == 0) {
       this.isRender = false;
-      this.notiSv.notifyCode('Vui lòng nhập danh sách giá trị');
       return;
     }
 
@@ -468,12 +447,7 @@ export class SettingFieldsComponent implements AfterViewInit {
     );
     if (checkValidate) {
       this.isRender = false;
-      this.notiSv.notifyCode('Vui lòng nhập giá trị value');
       return;
-    }
-    if (action == 'add') {
-      this.dataCurrent.refValue = this.crrVll.listName;
-      this.dataCurrent.refType = '2';
     }
     let vl = [];
     let textColorSet = [];
@@ -519,14 +493,10 @@ export class SettingFieldsComponent implements AfterViewInit {
     );
     if (res) {
       this.isRender = true;
-      if (action == 'add') {
-        this.dataCurrent.refValue = this.crrVll.listName;
-        this.dataCurrent.refType = '2';
-      }
+      this.dataCurrent.refValue = this.crrVll.listName;
     } else {
       if (action == 'add') {
         this.dataCurrent.refValue = null;
-        this.dataCurrent.refType = null;
       }
       this.isRender = false;
       return;
@@ -549,7 +519,6 @@ export class SettingFieldsComponent implements AfterViewInit {
       this.crrVll.iconSet = null;
       this.crrVll.colorSet = null;
       this.dataCurrent.refValue = null;
-      this.dataCurrent.refType = null;
       showNoti && this.notiSv.notifyCode('SYS008');
     } else {
       showNoti && this.notiSv.notifyCode('SYS022');

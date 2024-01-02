@@ -299,7 +299,7 @@ export class QuestionsComponent
       if (this.dataSV?.settings?.image)
         this.avatar = this.shareService.getThumbByUrl(
           this.dataSV?.settings?.image,
-          120
+          900
         );
       if (this.dataSV?.settings?.primaryColor)
         this.primaryColor = this.dataSV?.settings?.primaryColor;

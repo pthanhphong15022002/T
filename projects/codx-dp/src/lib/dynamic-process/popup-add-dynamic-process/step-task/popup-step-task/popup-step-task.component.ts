@@ -202,8 +202,9 @@ export class PopupJobComponent implements OnInit, OnDestroy {
             let data = {
               fieldName: grv[key]?.fieldName,
               headerText: grv[key]?.headerText,
-              check: false,
-              show: true,
+              dataType: grv[key]?.dataType,
+              fieldLindID: '',
+              fieldLindName: '',
             }
             this.listGrvContracts = this.listGrvContracts?.length > 0 ? this.listGrvContracts : [];
             this.listGrvContracts?.push(data);
@@ -770,7 +771,7 @@ export class PopupJobComponent implements OnInit, OnDestroy {
   this.listField = this.listField?.length > 0 ? this.listField : [];
   this.listField?.push(data);
   this.titleField = this.listField?.map(field => field.title)?.join(', ');
-   this.clickSettingReference(field);
+   this.clickSettingReference(data);
   }
 
   removeField(field){
@@ -781,7 +782,10 @@ export class PopupJobComponent implements OnInit, OnDestroy {
     }
   }
   chooseField(field){
-    field.show =true;
+    let grv = this.listGrvContracts.find(grv => grv.fieldName == field.link)
+    if(grv){
+      grv.show = true;
+    }
     let option = new DialogModel();
     console.log(this.grvContracts);
     option.zIndex = 1050;
@@ -810,7 +814,7 @@ export class PopupJobComponent implements OnInit, OnDestroy {
       }
     })
   }
-  clickSettingReference(field){
+  clickSettingReference(field = null){
     let option = new DialogModel();
     console.log(this.grvContracts);
     option.zIndex = 1050;
@@ -819,11 +823,12 @@ export class PopupJobComponent implements OnInit, OnDestroy {
       entityName: 'CM_Contracts',
       action: this.action,
       titleAction: 'Thêm trường liên kết', //test
+      listFields: this.listFields,
     };
     let dialogColumn = this.callfunc.openForm(
       PopupMapContractComponent,
       '',
-      550,
+      1000,
       Util.getViewPort().height - 100,
       '',
       obj,
