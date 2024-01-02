@@ -94,7 +94,7 @@ export class SettingFieldsComponent implements AfterViewInit {
     this.lstDatasVlls = [];
     this.isRender = true;
     this.isChangeColor = false;
-    this.crrVll = null;
+    this.crrVll = new tempVllDP;
     if (data) {
       switch (data?.controlType) {
         case 'ValueList':
