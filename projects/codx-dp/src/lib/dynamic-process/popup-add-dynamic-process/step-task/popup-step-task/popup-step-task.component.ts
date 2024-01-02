@@ -317,9 +317,11 @@ export class PopupJobComponent implements OnInit, OnDestroy {
     this.stepsTasks['roles'] = [...this.owner, ...this.participant];
     this.stepsTasks['parentID'] = this.listParentID.join(';');
     let listFieldIDConvert = [];
+    let listFieldID = [];
     if(this.listFieldID?.length > 0){
       for(let filter of this.listFieldID){
         if(filter){
+          listFieldID.push(filter);
           let find = this.listFieldLink?.find(x => x.includes(filter));
           if(find){
             listFieldIDConvert.push(find);
@@ -329,7 +331,8 @@ export class PopupJobComponent implements OnInit, OnDestroy {
         }
       }
     }
-    this.stepsTasks.fieldID= listFieldIDConvert.join(';');
+    this.stepsTasks.fieldID = listFieldID.join(';');
+    this.stepsTasks.reference = listFieldIDConvert.join(';');
     let message = [];
     for (let key of this.REQUIRE) {
       if (this.typeTask?.value == 'F' && key == 'dependRule') {
