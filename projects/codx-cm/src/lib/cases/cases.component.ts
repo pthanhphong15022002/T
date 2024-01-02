@@ -596,11 +596,37 @@ export class CasesComponent
       ])
       .subscribe((x) => {
         if (x.event && x.event.status == 'Y') {
-          let datas = [data.recID, data.status, '', isCheck];
-          this.getApiUpdateProcess(datas);
+          this.checkOwner(data,isCheck);
         }
       });
   }
+  checkOwner(data,isCheck) {
+    if(isCheck && data?.owner) {
+      let datas = [data.processID, data.businessLineID,data.owner, this.applyFor];
+      this.codxCmService.isExistOwnerInProcess(datas).subscribe((res) => {
+        if(res) {
+          let dataUpdateProcess = [data.recID, data.status, '', isCheck,data.owner];
+          this.getApiUpdateProcess(dataUpdateProcess);
+        }
+        else  {
+          this.notificationsService
+          .alertCode('DP033', null, [
+            '"' + data?.dealName + '" ' + 'Người phụ trách không tồn tại trong quy trình' + ' ',
+          ])
+          .subscribe((x) => {
+            if (x.event && x.event.status == 'Y') {
+              let dataUpdateProcess = [data.recID, data.status, '', isCheck,''];
+              this.getApiUpdateProcess(dataUpdateProcess);
+            }
+          });
+        }
+      });
+    }
+    else {
+      let dataUpdateProcess = [data.recID, data.status, '', isCheck];
+      this.getApiUpdateProcess(dataUpdateProcess);
+    }
+   }
   getApiUpdateProcess(datas) {
     this.codxCmService.updateProcessCase(datas).subscribe((res) => {
       if (res) {

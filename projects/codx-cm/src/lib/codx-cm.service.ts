@@ -1164,6 +1164,14 @@ export class CodxCmService {
       data
     );
   }
+  isExistOwnerInProcess(data) {
+    return this.api.exec<any>(
+      'CM',
+      'DealsBusiness',
+      'IsExistOwnerInProcessAsync',
+      data
+    );
+  }
   updateOwnerLead(data) {
     return this.api.exec<any>(
       'CM',

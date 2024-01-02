@@ -1370,7 +1370,7 @@ export class InstancesComponent
       return;
     }
     if (data.status == '1') {
-      this.notificationsService.notifyCode('DP038', 0, '"' + data.title + '"');
+      this.notificationsService.notifyCode('DP038', 0, '"' + data?.title + '"');
       this.changeDetectorRef.detectChanges();
       return;
     }
