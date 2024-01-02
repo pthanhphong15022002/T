@@ -25,6 +25,7 @@ import { SettingFieldsComponent } from './processes/popup-add-process/form-prope
 import { environment } from 'src/environments/environment';
 import { FormFormatValueComponent } from './processes/popup-add-process/form-properties-fields/form-format-value/form-format-value.component';
 import { ModeviewComponent } from './modeview/modeview.component';
+import { FormatValuelistComponent } from './processes/popup-add-process/form-properties-fields/format-valuelist/format-valuelist.component';
 
 export const routes: Routes = [
   {
@@ -58,7 +59,8 @@ export const routes: Routes = [
     FormPropertiesFieldsComponent,
     SettingFieldsComponent,
     FormFormatValueComponent,
-    ModeviewComponent
+    ModeviewComponent,
+    FormatValuelistComponent,
   ],
   imports: [
     CodxCoreModule.forRoot({ environment }),

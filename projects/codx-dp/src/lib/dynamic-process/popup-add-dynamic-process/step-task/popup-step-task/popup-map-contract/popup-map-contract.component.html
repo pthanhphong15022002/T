@@ -15,7 +15,7 @@
       <button
         type="button"
         class="btn btn-primary ms-2"
-        (click)="dialog.close()"
+        (click)="close()"
       >
         <codx-label name="lblSave" formName="System" default="Huỷ"></codx-label>
       </button>
@@ -26,48 +26,68 @@
   </ng-template>
 </codx-form>
 <ng-template #tempViewField>
-  <table id="table table-view table-row-bordered mt-3">
+  <table class="table table-bordered">
     <thead>
       <tr class="bg-gray-100">
-        <th scope="col" class="fw-bold ps-4"></th>
-        <ng-container>
-          <th scope="col" class="fw-bold ps-4">
-            <codx-label
-              class="fw-bold line-clamp line-clamp-1 text-dark codx-label"
-              fiedName="Title"
-              [formModel]="formModelField"
-            >
-            </codx-label>
-          </th>
-          <th scope="col" class="fw-bold ps-4">
-            <codx-label
-              class="fw-bold line-clamp line-clamp-1 text-dark codx-label"
-              fiedName="FieldName"
-              [formModel]="formModelField"
-            >
-            </codx-label>
-          </th>
-        </ng-container>
+        <th scope="col" class="fw-bold ps-4">
+          <codx-label
+            class="fw-bold line-clamp line-clamp-1 text-dark codx-label"
+            fiedName="Title"
+            [formModel]="formModelField"
+          >
+          </codx-label>
+        </th>
+        <th scope="col" class="fw-bold ps-4">
+          <codx-label
+            class="fw-bold line-clamp line-clamp-1 text-dark codx-label"
+            fiedName="FieldName"
+            [formModel]="formModelField"
+          >
+          </codx-label>
+        </th>
+        <th scope="col" class="fw-bold ps-4">
+          <codx-label
+            class="fw-bold line-clamp line-clamp-1 text-dark codx-label"
+            fiedName="FieldType"
+            [formModel]="formModelField"
+            default="Kiểu dữ liệu"
+          >
+          </codx-label>
+        </th>
+        <th scope="col" class="fw-bold ps-4" style="width: 350px;">
+          <codx-label
+            class="fw-bold line-clamp line-clamp-1 text-dark codx-label"
+            name="lblField"
+            [formModel]="formModelField"
+            [default]="'Trường tùy chỉnh liên kết'"
+          >
+          </codx-label>
+        </th>
       </tr>
     </thead>
     <tbody>
       <ng-container *ngFor="let item of datas">
-        <tr *ngIf="item?.show">
-          <td class="ps-4">
-            <span>
-              <input
-                #checkShareRight1
-                type="checkbox"
-                [checked]="item?.check"
-                (change)="selectField(item)"
-              />
-            </span>
-          </td>
+        <tr>
           <td class="ps-4">
             <div>{{ item.headerText }}</div>
           </td>
           <td class="ps-4">
             <div>{{ item.fieldName }}</div>
+          </td>
+          <td class="ps-4">
+            <div>{{ item.dataType }}</div>
+          </td>
+          <td [ngClass]="item?.show || item?.hover ? 'p-0' : 'ps-4'" (mouseenter)="onMouseEnter(item)" (mouseleave)="onMouseLeave(item)" (click)="onClick(item)">
+            <div [ngClass]="item?.show || item?.hover ? 'd-none' : ''">{{ item.fieldLindName }}</div>
+            <div [ngClass]="item?.show || item?.hover ? '' : 'd-none'" style="height: 39px;">
+              <ejs-combobox
+                class="custom-combobox h-100"
+                [dataSource]="listFields"
+                [fields]="fieldsFields"
+                [value]=" item.fieldLindID"
+                [allowCustom]="false"
+              ></ejs-combobox>
+            </div>
           </td>
         </tr>
       </ng-container>

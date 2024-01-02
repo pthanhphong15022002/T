@@ -77,7 +77,9 @@
                     [disabled]="true"
                   ></codx-input>
                 </ng-container>
-                <div *ngIf="item?.controlType == 'User' && item?.dataType == 'po'">
+                <div
+                  *ngIf="item?.controlType == 'User' && item?.dataType == 'P'"
+                >
                   <button
                     type="button"
                     class="btn btn-sm btn-icon btn-light-primary"
@@ -103,7 +105,13 @@
             </div>
 
             <codx-input
-              *ngIf="item?.controlType == 'Text' || item?.controlType == 'Phone' || item?.controlType == 'Email' || item?.controlType == 'Address' || item?.controlType == 'Expression'"
+              *ngIf="
+                item?.controlType == 'Text' ||
+                item?.controlType == 'Phone' ||
+                item?.controlType == 'Email' ||
+                item?.controlType == 'Address' ||
+                item?.controlType == 'Expression'
+              "
               [field]="item?.fieldName"
               type="text"
               [require]="item?.isRequired"
@@ -111,16 +119,12 @@
               [crrValue]="item?.dataFormat ?? ''"
               [disabled]="true"
             ></codx-input>
-            <codx-input
+            <ng-container
               *ngIf="item?.controlType == 'ValueList'"
-              [field]="item?.fieldName"
-              [type]="'valuelist'"
-              [refValue]="item?.refValue"
-              [require]="item?.isRequired"
-              [placeholder]="item?.note || ''"
-              [crrValue]="item?.dataFormat ?? ''"
-              [disabled]="true"
-            ></codx-input>
+              [ngTemplateOutlet]="tempValueList"
+              [ngTemplateOutletContext]="{ $implicit: item }"
+            >
+            </ng-container>
             <codx-input
               *ngIf="item?.controlType == 'Combobox'"
               [field]="item?.fieldName"
@@ -195,7 +199,7 @@
                           : ''
                       "
                     >
-                      {{ item?.rank?.type == '1' ? i : "" }}
+                      {{ item?.rank?.type == "1" ? i : "" }}
                     </div>
                   </div>
                 </div>
@@ -237,6 +241,11 @@
     </div>
   </div>
 </div>
+
+<ng-template #tempValueList let-item>
+  <lib-format-valuelist [item]="item"></lib-format-valuelist>
+</ng-template>
+
 <ng-template #empty>
   <div class="empty-data">
     <div class="container h-100">

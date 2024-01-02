@@ -61,7 +61,9 @@
                   class="list-datas user-nav-item"
                   (click)="changeActived(field)"
                   *ngIf="field.value != 'F'"
-                  [ngClass]="field.value == currentID ? 'user-nav-active' : null"
+                  [ngClass]="
+                    field.value == currentID ? 'user-nav-active' : null
+                  "
                 >
                   <span class="icon-16 me-2" [ngClass]="field?.icon"></span>
                   <span class="text-dark fw-bold" style="font-size: 16px">{{
@@ -97,7 +99,7 @@
           style="padding-top: 20px"
         >
           <div class="d-flex justify-content-end">
-            <button type="button" class="btn btn-primary">
+            <button type="button" class="btn btn-primary" (click)="onSave()">
               <codx-label
                 name="lblSuscess"
                 [formModel]="dialog.formModel"
