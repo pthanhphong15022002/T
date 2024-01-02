@@ -1,0 +1,27 @@
+<codx-form
+    headerText="Gợi ý bài trình bày"
+    [dialog]="dialog"
+    [body]="body"
+    [footer]="footer"
+>
+
+</codx-form>
+<ng-template #body>
+    <div class="d-flex flex-column">
+        <codx-label default="Nội dung trình bày" formName="fnAIContentTitle" fiedName="aiContentTitle" class="fw-bold"></codx-label>
+        <codx-input type="textarea" format="ed2" [Group]="presentationForm" ControlName="content" class="h-100px"></codx-input>
+    </div>
+    <div class="d-flex flex-column mt-4">
+        <codx-label default="Số silde" formName="fnAINumberSilde" fiedName="aiNumberSilde" class="fw-bold"></codx-label>
+        <codx-input type="number" [Group]="presentationForm" ControlName="number"></codx-input>
+    </div>
+    <div class="d-flex flex-column mt-4">
+        <codx-label default="Kết quả" formName="fnAIResult" fiedName="aiResult" class="fw-bold"></codx-label>
+        <codx-input type="textarea" format="ed" [Group]="presentationForm" ControlName="result"></codx-input>
+    </div>
+</ng-template>
+<ng-template #footer>
+    <div class="d-flex w-100">
+        <button type="button" class="btn btn-primary w-100" (click)="onSave()"><codx-label default="Tạo gợi ý"></codx-label></button>
+    </div>
+</ng-template>

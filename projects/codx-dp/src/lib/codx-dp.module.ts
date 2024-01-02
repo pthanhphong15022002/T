@@ -64,6 +64,7 @@ import { PopupReleaseProcessComponent } from './dynamic-process/popup-release-pr
 import { ViewDetailApprovalCustomComponent } from './approvals/view-detail-approval-custom/view-detail-approval-custom.component';
 import { ProcessesPropertiesComponent } from './processes-properties/processes-properties.component';
 import { PropertiesFieldComponent } from './processes-properties/properties-field/properties-field.component';
+import { PopupMapContractComponent } from './dynamic-process/popup-add-dynamic-process/step-task/popup-step-task/popup-map-contract/popup-map-contract.component';
 
 export const routes: Routes = [
   {
@@ -159,7 +160,8 @@ const T_Component: Type<any>[] = [
   StepTaskInstanceComponent,
   PopupReleaseProcessComponent,
   ProcessesPropertiesComponent,
-  PropertiesFieldComponent
+  PropertiesFieldComponent,
+  PopupMapContractComponent
 ];
 
 @NgModule({

@@ -126,14 +126,14 @@
     <div class="d-flex align-items-center justify-content-start mb-1">
       <div>
         <codx-vll
-        [name]="'DP028'"
-        [field]="'Status'"
-        [value]="data?.status"
-        [showText]="true"
-        [showBgColor]="true"
-        class="badge badge-light badge-sm"
-      >
-      </codx-vll>
+          [name]="gridViewSetup?.Status?.referedValue"
+          [field]="'Status'"
+          [value]="data?.status"
+          [showText]="true"
+          [showBgColor]="true"
+          class="badge badge-light badge-sm"
+        >
+        </codx-vll>
         <ng-container *ngIf="data?.approveStatus && data?.approveStatus != '1'">
           <codx-vll
             [name]="vllApprove"

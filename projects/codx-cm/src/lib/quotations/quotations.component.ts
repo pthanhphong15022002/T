@@ -745,30 +745,28 @@ export class QuotationsComponent extends UIComponent implements OnInit {
           .getESCategoryByCategoryID('ES_CM0501')
           .subscribe((res2: any) => {
             if (res2) {
-              if (res2?.eSign == true) {
-                //trình ký
-              } else if (res2?.eSign == false) {
-                //kí duyet
-                this.codxCommonService
-                  .codxCancel(
-                    'CM',
-                    dt?.recID,
-                    this.view.formModel.entityName,
-                    null,
-                    null
-                  )
-                  .subscribe((res3) => {
-                    if (res3) {
-                      this.itemSelected.approveStatus = '0';
-                      this.itemSelected.status = '0';
-                      this.view.dataService
-                        .update(this.itemSelected)
-                        .subscribe();
-                      this.notiService.notifyCode('SYS007');
-                    } else this.notiService.notifyCode('SYS021');
-                  });
-              }
+              // if (res2?.eSign == true) {
+              //   //trình ký
+              // } else if (res2?.eSign == false) {
+              //kí duyet
+              this.codxCommonService
+                .codxCancel(
+                  'CM',
+                  dt?.recID,
+                  this.view.formModel.entityName,
+                  null,
+                  null
+                )
+                .subscribe((res3) => {
+                  if (res3) {
+                    this.itemSelected.approveStatus = '0';
+                    this.itemSelected.status = '0';
+                    this.view.dataService.update(this.itemSelected).subscribe();
+                    this.notiService.notifyCode('SYS007');
+                  } else this.notiService.notifyCode('SYS021');
+                });
             }
+            // }
           });
       }
     });

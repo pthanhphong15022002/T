@@ -109,7 +109,7 @@
             [formModel]="form.formModel"
             field="processID"
             [model]="{ ApplyFor: applyFor }"
-            [disabled]="processID"
+            [disabled]="action === actionEdit"
             [crrValue]="cases?.processID"
             (valueChange)="cbxProcessChange($event)"
           >
