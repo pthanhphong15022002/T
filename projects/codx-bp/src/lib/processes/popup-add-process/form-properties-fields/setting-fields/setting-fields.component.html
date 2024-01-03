@@ -1,0 +1,799 @@
+<div
+  (mouseenter)="closePopover()"
+  class="p-1 h-100"
+  *ngIf="dataFormat"
+  (mouseenter)="closePopover()"
+>
+  <div
+    (mouseenter)="closePopover()"
+    class="header d-flex align-items-center justify-content-between mb-2"
+  >
+    <div (mouseenter)="closePopover()" class="text-dark fw-bold">
+      <span [ngClass]="dataFormat?.icon" class="icon-18 me-2"></span>
+      <span>{{ dataFormat?.text }}</span>
+    </div>
+    <div
+      (mouseenter)="closePopover()"
+      class="text-gray-800"
+      *ngIf="dataFormat?.value != 'F'"
+      (click)="removeField(dataCurrent)"
+    >
+      <span class="icon-18 icon-delete cursor-pointer"></span>
+    </div>
+  </div>
+  <div (mouseenter)="closePopover()" class="body">
+    <div (mouseenter)="closePopover()" class="form-group">
+      <codx-label [formModel]="formModel" fiedName="title"></codx-label>
+      <codx-input
+        type="text"
+        field="title"
+        [crrValue]="dataCurrent?.title ?? ''"
+        (valueChange)="valueChange($event)"
+      ></codx-input>
+    </div>
+    <div
+      (mouseenter)="closePopover()"
+      class="form-group"
+      *ngIf="dataFormat?.value == 'F'"
+    >
+      <codx-label [formModel]="formModel" fiedName="Note"></codx-label>
+      <codx-input
+        field="note"
+        [formModel]="formModel"
+        [crrValue]="dataCurrent?.note ?? ''"
+        (valueChange)="valueChange($event)"
+      ></codx-input>
+    </div>
+    <div
+      (mouseenter)="closePopover()"
+      class="form-group"
+      *ngIf="
+        dataFormat?.value != 'F' &&
+        dataFormat?.value != 'User' &&
+        dataFormat?.value != 'Rank' &&
+        dataFormat?.value != 'Progress' &&
+        dataFormat?.value != 'Expression'
+      "
+    >
+      <codx-label
+        default="Giá trị mặc định khi thêm mới biểu mẫu"
+        [formModel]="formModel"
+        fiedName="DefaultValue"
+      ></codx-label>
+      <codx-input
+        *ngIf="dataFormat?.value != 'Datetime'"
+        field="defaultValue"
+        [type]="dataFormat?.value == 'Number' ? 'number' : 'text'"
+        [crrValue]="dataCurrent?.defaultValue ?? ''"
+        (valueChange)="valueChange($event)"
+      ></codx-input>
+      <codx-input
+        *ngIf="dataFormat?.value == 'Datetime'"
+        field="defaultValue"
+        type="datetime"
+        format="F"
+        [crrValue]="dataCurrent?.defaultValue ?? ''"
+        (valueChange)="valueDateChange($event)"
+      ></codx-input>
+    </div>
+    <div
+      (mouseenter)="closePopover()"
+      class="form-group"
+      *ngIf="
+        dataFormat?.value != 'F' &&
+        dataFormat?.value != 'Rank' &&
+        dataFormat?.value != 'Progress'
+      "
+    >
+      <codx-label
+        default="Hiển thị chuỗi gợi ý khi chưa có dữ liệu"
+        [formModel]="formModel"
+        fiedName="Placeholder"
+      ></codx-label>
+      <codx-input
+        field="note"
+        type="text"
+        [crrValue]="dataCurrent?.note ?? ''"
+        (valueChange)="valueChange($event)"
+      ></codx-input>
+    </div>
+    <ng-container
+      *ngIf="dataFormat?.value == 'Rank'"
+      [ngTemplateOutlet]="tempRank"
+    ></ng-container>
+    <ng-container *ngIf="dataFormat?.value == 'Progress'">
+      <codx-label
+        default="Màu hiển thị"
+        [formModel]="formModel"
+        name="lblColorPG"
+      ></codx-label>
+      <div (mouseenter)="closePopover()" class="form-group">
+        <codx-input
+          field="color"
+          class="ms-4"
+          type="colorpicker"
+          [showButtons]="false"
+          placeholder="A"
+          [showText]="false"
+          [modeSwitcher]="false"
+          [crrValue]="dataCurrent?.rank?.color"
+          (valueChange)="valueRankChange($event)"
+        ></codx-input>
+      </div>
+    </ng-container>
+    <div
+      (mouseenter)="closePopover()"
+      *ngIf="dataFormat?.value != 'F'"
+      class="form-group mt-3 mb-3"
+      style="border-bottom: 1px solid var(--gray-150)"
+    ></div>
+    <ng-container
+      *ngIf="dataFormat?.value == 'Number'"
+      [ngTemplateOutlet]="tempNumber"
+    >
+    </ng-container>
+
+    <ng-container
+      *ngIf="dataFormat?.value == 'YesNo'"
+      [ngTemplateOutlet]="tempYesNo"
+    >
+    </ng-container>
+    <ng-container
+      *ngIf="dataFormat?.value == 'User'"
+      [ngTemplateOutlet]="tempPerson"
+    >
+    </ng-container>
+    <ng-container
+      *ngIf="dataFormat?.value == 'ValueList'"
+      [ngTemplateOutlet]="tempListFormat"
+    ></ng-container>
+    <div
+      (mouseenter)="closePopover()"
+      class="form-group"
+      *ngIf="dataFormat?.value == 'Text'"
+    >
+      <div (mouseenter)="closePopover()" class="d-flex">
+        <codx-input
+          type="switch"
+          field="formatHtml"
+          [crrValue]="dataCurrent?.formatHtml"
+          (valueChange)="valueChange($event)"
+        ></codx-input>
+        <codx-label
+          default="Có format HTML"
+          name="lblFomartHtml"
+          [formModel]="formModel"
+          class="ms-1"
+        ></codx-label>
+      </div>
+    </div>
+    <div
+      (mouseenter)="closePopover()"
+      class="form-group"
+      *ngIf="dataFormat?.value == 'Datetime'"
+    >
+      <div (mouseenter)="closePopover()" class="d-flex">
+        <codx-input
+          type="switch"
+          field="isTime"
+          [crrValue]="isTime"
+          (valueChange)="valueChange($event)"
+        ></codx-input>
+        <codx-label
+          default="Có sử dụng thời gian"
+          name="lblTime"
+          [formModel]="formModel"
+          class="ms-1"
+        ></codx-label>
+      </div>
+    </div>
+    <div
+      (mouseenter)="closePopover()"
+      class="form-group"
+      *ngIf="
+        dataFormat?.value == 'ValueList' ||
+        (dataFormat?.value == 'User' && dataFormat?.value == 'Combobox')
+      "
+    >
+      <div (mouseenter)="closePopover()" class="d-flex">
+        <codx-input
+          field="multiselect"
+          [crrValue]="dataCurrent?.multiselect"
+          type="switch"
+          (valueChange)="valueChange($event)"
+        ></codx-input>
+        <codx-label
+          fiedName="Multiselect"
+          [formModel]="formModel"
+          default="Chọn nhiều giá trị"
+          class="ms-1"
+        ></codx-label>
+      </div>
+    </div>
+    <div
+      (mouseenter)="closePopover()"
+      class="form-group"
+      *ngIf="dataFormat?.value != 'F'"
+    >
+      <div (mouseenter)="closePopover()" class="d-flex">
+        <codx-input
+          field="isRequired"
+          type="switch"
+          [crrValue]="dataCurrent?.isRequired"
+          (valueChange)="valueChange($event)"
+        ></codx-input>
+        <codx-label
+          fiedName="IsRequired"
+          [formModel]="formModel"
+          class="ms-1"
+        ></codx-label>
+      </div>
+    </div>
+    <div
+      (mouseenter)="closePopover()"
+      class="form-group"
+      *ngIf="dataFormat?.value != 'F'"
+    >
+      <div (mouseenter)="closePopover()" class="d-flex">
+        <codx-input
+          type="switch"
+          field="isShow"
+          [crrValue]="dataCurrent?.isShow"
+          (valueChange)="valueChange($event)"
+        ></codx-input>
+        <codx-label
+          default="Điều kiện hiển thị"
+          name="lblIsShow"
+          [formModel]="formModel"
+          class="ms-1"
+        ></codx-label>
+      </div>
+    </div>
+    <div
+      (mouseenter)="closePopover()"
+      class="form-group"
+      *ngIf="dataFormat?.value == 'Text'"
+    >
+      <div (mouseenter)="closePopover()" class="d-flex">
+        <codx-input
+          field="isUpdate"
+          type="switch"
+          [crrValue]="dataCurrent?.isUpdate"
+          (valueChange)="valueChange($event)"
+        ></codx-input>
+        <codx-label
+          name="lblIsRequired"
+          [formModel]="formModel"
+          default="Cho phép chỉnh sửa và cập nhật các dữ liệu trùng nhau"
+          class="ms-1"
+        ></codx-label>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--List-->
+<ng-template #tempListFormat>
+  <div (mouseenter)="closePopover()" class="d-flex justify-content-start mb-1">
+    <codx-label
+      name="lblListValues"
+      [formModel]="formModel"
+      default="Danh sách giá trị"
+    ></codx-label>
+  </div>
+  <div (mouseenter)="closePopover()" class="form-group">
+    <ng-container *ngFor="let item of lstDatasVlls; index as i">
+      <div (mouseenter)="closePopover()" class="d-flex w-100 mt-3">
+        <div
+          (mouseenter)="closePopover()"
+          class="d-flex align-items-center w-15"
+        >
+          <div
+            (mouseenter)="closePopover()"
+            class="d-flex ms-3"
+            (click)="handelTextValue(i)"
+          >
+            <codx-input
+              class="me-4"
+              field="icon"
+              type="vllicon"
+              [disabled]="i != indexCurrentvll"
+              [refValue]="'L1470'"
+              [crrValue]="item?.icon"
+              (valueChange)="valueChange($event)"
+            >
+            </codx-input>
+          </div>
+        </div>
+        <div (mouseenter)="closePopover()" class="w-50 me-5">
+          <!-- <span
+            class="no-border"
+            *ngIf="i != indexCurrentvll"
+            [ngStyle]="{
+              color: item?.color,
+              'background-color': item?.backgroundColor
+            }"
+            (click)="handelTextValue(i)"
+            [innerText]="item?.textValue ?? ''"
+          ></span> -->
+          <input
+            class="no-border"
+            [ngStyle]="{
+              color: item?.color,
+              'background-color': item?.backgroundColor
+            }"
+            #textEditValue
+            type="text"
+            name="textEditValue"
+            matInput
+            autofocus
+            [value]="item.textValue"
+            (blur)="onEditTextValue(textEditValue, item.value)"
+            placeholder="Nhập giá trị value"
+            (keydown.enter)="onEditTextValue(textEditValue, item.value)"
+          />
+        </div>
+        <div
+          (mouseenter)="closePopover()"
+          class="w-15 justify-content-center me-1"
+          (click)="handelTextValue(i)"
+        >
+          <codx-input
+            field="color"
+            class="ms-4"
+            type="colorpicker"
+            [showButtons]="false"
+            placeholder="A"
+            [showText]="false"
+            [modeSwitcher]="false"
+            [crrValue]="item.color"
+            (valueChange)="valueChange($event)"
+          >
+          </codx-input>
+        </div>
+        <div
+          (mouseenter)="closePopover()"
+          class="w-15 align-items-center me-1"
+          (click)="handelTextValue(i)"
+        >
+          <codx-input
+            field="backgroundColor"
+            class="ms-4"
+            type="colorpicker"
+            [showButtons]="false"
+            [showText]="false"
+            [modeSwitcher]="false"
+            [crrValue]="item?.backgroundColor"
+            (valueChange)="valueChange($event)"
+          >
+          </codx-input>
+        </div>
+        <div
+          (mouseenter)="closePopover()"
+          class="w-5 d-flex justify-content-center align-items-center"
+          (click)="removeVll(i)"
+        >
+          <span class="icon-20 icon-close cursor-pointer"></span>
+        </div>
+      </div>
+    </ng-container>
+    <div (mouseenter)="closePopover()" class="d-flex w-100 mt-3">
+      <div (mouseenter)="closePopover()" class="d-flex align-items-center w-15">
+        <div
+          (mouseenter)="closePopover()"
+          class="d-flex ms-3"
+          (click)="handelTextValue(-1)"
+        >
+          <codx-input
+            class="me-4"
+            field="icon"
+            type="vllicon"
+            [refValue]="'L1470'"
+            [crrValue]="dataVll?.icon"
+            (valueChange)="valueChange($event)"
+          >
+          </codx-input>
+        </div>
+      </div>
+      <div
+        (mouseenter)="closePopover()"
+        class="w-50 me-5"
+        (click)="handelTextValue(-1)"
+      >
+        <input
+          class="no-border w-100"
+          #textAddValue
+          type="text"
+          name="textAddValue"
+          id="textAddValue"
+          matInput
+          autofocus
+          (blur)="onAddTextValue(textAddValue)"
+          placeholder="Nhập giá trị value"
+          (blur)="onAddTextValue(textAddValue)"
+        />
+      </div>
+      <div
+        (mouseenter)="closePopover()"
+        class="w-15 justify-content-center me-1"
+        (click)="handelTextValue(-1)"
+      >
+        <codx-input
+          field="color"
+          class="ms-4"
+          type="colorpicker"
+          [showButtons]="false"
+          placeholder="A"
+          [showText]="false"
+          [crrValue]="dataVll?.color"
+          [modeSwitcher]="false"
+          (valueChange)="valueChange($event)"
+        >
+        </codx-input>
+      </div>
+      <div
+        (mouseenter)="closePopover()"
+        class="w-15 align-items-center me-1"
+        (click)="handelTextValue(-1)"
+      >
+        <codx-input
+          field="backgroundColor"
+          class="ms-4"
+          type="colorpicker"
+          [showButtons]="false"
+          [showText]="false"
+          [crrValue]="dataVll?.backgroundColor"
+          [modeSwitcher]="false"
+          (valueChange)="valueChange($event)"
+        >
+        </codx-input>
+      </div>
+      <div
+        (mouseenter)="closePopover()"
+        class="w-5 d-flex justify-content-center align-items-center"
+        (click)="handelTextValue(-1)"
+      >
+        <span class="icon-20 icon-close cursor-pointer"></span>
+      </div>
+    </div>
+  </div>
+  <div
+    (mouseenter)="closePopover()"
+    class="form-group mt-3 mb-3"
+    style="border-bottom: 1px solid var(--gray-150)"
+  ></div>
+  <div (mouseenter)="closePopover()" class="form-group">
+    <div (mouseenter)="closePopover()" class="d-flex">
+      <div (mouseenter)="closePopover()" class="d-flex me-2">
+        <span
+          class="d-flex"
+          style="margin-top: -7px; margin-right: 20px !important"
+        >
+          <codx-input
+            id="dropDown"
+            name="{{ dataCurrent?.recID }}"
+            class="test-check"
+            type="radio"
+            field="dropDown"
+            [checked]="dataCurrent?.refType == '2' ?? false"
+            (valueChange)="changeRadio($event, 'dropDown')"
+          ></codx-input>
+        </span>
+        <codx-label
+          name="lblDropDown"
+          [formModel]="formModel"
+          default="DropDown"
+        ></codx-label>
+      </div>
+      <div (mouseenter)="closePopover()" class="d-flex">
+        <span
+          class="d-flex"
+          style="margin-top: -7px; margin-right: 20px !important"
+        >
+          <codx-input
+            id="checkBox"
+            name="{{ dataCurrent?.recID }}"
+            class="test-check"
+            type="radio"
+            field="checkBox"
+            [checked]="dataCurrent.refType != '2' ?? false"
+            (valueChange)="changeRadio($event, 'checkBox')"
+          ></codx-input>
+        </span>
+        <codx-label
+          fiedName="CheckBox"
+          [formModel]="formModel"
+          default="CheckBox"
+        ></codx-label>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<!--number-->
+<ng-template #tempNumber>
+  <div
+    (mouseenter)="closePopover()"
+    class="form-group"
+    *ngIf="dataFormat?.value == 'Number'"
+  >
+    <div (mouseenter)="closePopover()" class="d-flex">
+      <div (mouseenter)="closePopover()" class="d-flex me-4">
+        <span
+          class="d-flex"
+          style="margin-top: -7px; margin-right: 20px !important"
+        >
+          <codx-input
+            id="int"
+            name="{{ dataCurrent?.recID }}"
+            class="test-check"
+            type="radio"
+            field="int"
+            [checked]="setValueRadio('int')"
+            (valueChange)="changeRadio($event, 'int')"
+          ></codx-input>
+        </span>
+        <codx-label
+          name="lblInt"
+          [formModel]="formModel"
+          default="Số nguyên"
+        ></codx-label>
+      </div>
+      <div (mouseenter)="closePopover()" class="d-flex me-4">
+        <span
+          class="d-flex"
+          style="margin-top: -7px; margin-right: 20px !important"
+        >
+          <codx-input
+            id="float"
+            name="{{ dataCurrent?.recID }}"
+            class="test-check"
+            type="radio"
+            field="float"
+            [checked]="setValueRadio('float')"
+            (valueChange)="changeRadio($event, 'float')"
+          ></codx-input>
+        </span>
+        <codx-label
+          name="lblFloat"
+          [formModel]="formModel"
+          default="Số thập phân"
+        ></codx-label>
+      </div>
+      <div (mouseenter)="closePopover()" class="d-flex">
+        <span
+          class="d-flex"
+          style="margin-top: -7px; margin-right: 20px !important"
+        >
+          <codx-input
+            id="percent"
+            name="{{ dataCurrent?.recID }}"
+            class="test-check"
+            type="radio"
+            field="percent"
+            [checked]="setValueRadio('percent')"
+            (valueChange)="changeRadio($event, 'percent')"
+          ></codx-input>
+        </span>
+        <codx-label
+          name="lblPercent"
+          [formModel]="formModel"
+          default="Số thập phân"
+        ></codx-label>
+      </div>
+    </div>
+  </div>
+</ng-template>
+<!--YesNo-->
+<ng-template #tempYesNo>
+  <div
+    (mouseenter)="closePopover()"
+    class="form-group"
+    *ngIf="dataFormat?.value == 'YesNo'"
+  >
+    <div (mouseenter)="closePopover()" class="d-flex">
+      <div (mouseenter)="closePopover()" class="d-flex me-4">
+        <span
+          class="d-flex"
+          style="margin-top: -7px; margin-right: 20px !important"
+        >
+          <codx-input
+            id="switch"
+            name="{{ dataCurrent?.recID }}"
+            class="test-check"
+            type="radio"
+            field="switch"
+            [checked]="setValueRadio('switch')"
+            (valueChange)="changeRadio($event, 'switch')"
+          ></codx-input>
+        </span>
+        <codx-label
+          name="lblSwitch"
+          [formModel]="formModel"
+          default="Switch"
+        ></codx-label>
+      </div>
+      <div (mouseenter)="closePopover()" class="d-flex">
+        <span
+          class="d-flex"
+          style="margin-top: -7px; margin-right: 20px !important"
+        >
+          <codx-input
+            id="checkBox"
+            name="{{ dataCurrent?.recID }}"
+            class="test-check"
+            type="radio"
+            field="checkBox"
+            [checked]="setValueRadio('checkBox')"
+            (valueChange)="changeRadio($event, 'checkBox')"
+          ></codx-input>
+        </span>
+        <codx-label
+          name="lblCheckBox"
+          [formModel]="formModel"
+          default="CheckBox"
+        ></codx-label>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<!--Person-->
+<ng-template #tempPerson>
+  <div (mouseenter)="closePopover()" class="form-group">
+    <div (mouseenter)="closePopover()" class="d-flex">
+      <div (mouseenter)="closePopover()" class="d-flex me-2">
+        <span
+          class="d-flex"
+          style="margin-top: -7px; margin-right: 20px !important"
+        >
+          <codx-input
+            id="dropDown"
+            name="{{ dataCurrent?.recID }}"
+            class="test-check"
+            type="radio"
+            field="dropDown"
+            [checked]="setValueRadio('dropDown')"
+            (valueChange)="changeRadio($event, 'dropDown')"
+          ></codx-input>
+        </span>
+        <codx-label
+          name="lblDropDown"
+          [formModel]="formModel"
+          default="DropDown"
+        ></codx-label>
+      </div>
+      <div (mouseenter)="closePopover()" class="d-flex">
+        <span
+          class="d-flex"
+          style="margin-top: -7px; margin-right: 20px !important"
+        >
+          <codx-input
+            id="popup"
+            name="{{ dataCurrent?.recID }}"
+            class="test-check"
+            type="radio"
+            field="popup"
+            [checked]="setValueRadio('popup')"
+            (valueChange)="changeRadio($event, 'popup')"
+          ></codx-input>
+        </span>
+        <codx-label
+          name="lblPopup"
+          [formModel]="formModel"
+          default="Popup"
+        ></codx-label>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<!--rank-->
+<ng-template #tempRank>
+  <div (mouseenter)="closePopover()" class="form-group">
+    <div (mouseenter)="closePopover()" class="d-flex align-items-center mb-2">
+      <codx-label
+        default="Tỷ lệ từ"
+        [formModel]="formModel"
+        name="lblRatio"
+        class="me-2"
+      ></codx-label>
+      <div (mouseenter)="closePopover()" class="w-15 me-2">
+        <codx-input
+          type="number"
+          field="minValue"
+          [min]="0"
+          [crrValue]="dataCurrent?.rank?.minValue"
+          (valueChange)="valueRankChange($event)"
+        ></codx-input>
+      </div>
+      <codx-label
+        default="đến"
+        [formModel]="formModel"
+        name="lblTo"
+        class="me-2"
+      ></codx-label>
+      <div (mouseenter)="closePopover()" class="w-15">
+        <codx-input
+          type="number"
+          field="maxValue"
+          [max]="10"
+          [crrValue]="dataCurrent?.rank?.maxValue"
+          (valueChange)="valueRankChange($event)"
+        ></codx-input>
+      </div>
+    </div>
+    <div (mouseenter)="closePopover()" class="d-flex mb-2">
+      <span
+        class="d-flex"
+        style="margin-top: -7px; margin-right: 20px !important"
+      >
+        <codx-input
+          id="rankNumber"
+          name="{{ dataCurrent?.recID }}"
+          class="test-check"
+          type="radio"
+          field="rankNumber"
+          [checked]="dataCurrent?.rank.type == '1'"
+          [crrValue]="dataCurrent?.rank.type == '1' || false"
+          (valueChange)="changeRadio($event, 'rankNumber')"
+        ></codx-input>
+      </span>
+      <codx-label
+        name="lblRankNumber"
+        [formModel]="formModel"
+        default="Hiển thị hạng theo số"
+      ></codx-label>
+    </div>
+    <div (mouseenter)="closePopover()" class="d-flex">
+      <span
+        class="d-flex"
+        style="margin-top: -7px; margin-right: 20px !important"
+      >
+        <codx-input
+          id="rankIcon"
+          name="{{ dataCurrent?.recID }}"
+          class="test-check"
+          type="radio"
+          field="rankIcon"
+          [checked]="dataCurrent?.rank.type == '2'"
+          (valueChange)="changeRadio($event, 'rankIcon')"
+          [crrValue]="dataCurrent?.rank.type == '2' || false"
+        ></codx-input>
+      </span>
+      <div (mouseenter)="closePopover()" class="d-flex flex-column">
+        <codx-label
+          class="mb-1"
+          name="lblRankIcon"
+          [formModel]="formModel"
+          default="Hiển thị hạng theo icon"
+        ></codx-label>
+        <div (mouseenter)="closePopover()" class="d-flex">
+          <codx-input
+            class="me-3"
+            field="icon"
+            type="vllicon"
+            [disabled]="dataCurrent?.rank.type == '1' ? true : false"
+            [refValue]="'L1470'"
+            [crrValue]="dataCurrent?.rank?.icon"
+            (valueChange)="valueRankChange($event)"
+          >
+          </codx-input>
+          <codx-input
+            field="color"
+            class="ms-4"
+            type="colorpicker"
+            [showButtons]="false"
+            [disabled]="dataCurrent?.rank.type == '1' ? true : false"
+            placeholder="A"
+            [showText]="false"
+            [modeSwitcher]="false"
+            [crrValue]="dataCurrent?.rank?.color"
+            (valueChange)="valueRankChange($event)"
+          >
+          </codx-input>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>

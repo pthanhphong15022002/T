@@ -6,6 +6,7 @@ import {
   DialogRef,
   NotificationsService,
 } from 'codx-core';
+import { CustomFieldService } from '../../custom-field.service';
 
 @Component({
   selector: 'lib-popup-custom-field',
@@ -28,12 +29,16 @@ export class PopupCustomFieldComponent implements OnInit {
   customerID: any; //Khách hàng cơ hội
 
   arrCaculateField = []; //cac field co tinh toán
+  point: string = ','; //dấu phân cách thập phân
+  isAdd = false;
+  taskID = ''; //task
 
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private cache: CacheService,
     private api: ApiHttpService,
     private notiService: NotificationsService,
+    private customFieldSV: CustomFieldService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -41,7 +46,9 @@ export class PopupCustomFieldComponent implements OnInit {
     this.titleHeader = dt?.data?.titleHeader;
     this.objectIdParent = dt?.data?.objectIdParent;
     this.customerID = dt?.data?.customerID;
+    this.taskID = dt?.data?.taskID;
     this.dialog = dialog;
+    this.isAdd = dt?.data?.isAdd ?? false;
     this.arrCaculateField = this.fields.filter((x) => x.dataType == 'CF');
   }
 
@@ -78,9 +85,10 @@ export class PopupCustomFieldComponent implements OnInit {
       //no bij map nguoc dataa
       let index = this.fields.findIndex((x) => x.recID == field.recID);
       if (index != -1) {
-        this.fields[index].dataValue = result;
+        this.fields[index] = this.upDataVersion(this.fields[index], result);
+        // this.fields[index].dataValue = result;
+        if (field.dataType == 'N') this.caculateField();
       }
-      if (field.dataType == 'N') this.caculateField(field.fieldName, result);
     }
   }
   // partValue(item) {
@@ -156,29 +164,28 @@ export class PopupCustomFieldComponent implements OnInit {
     this.isAddComplete = e;
   }
 
-  //tính toán
-  caculateField(fieldName, dataValue) {
+  //----------------------CACULATE---------------------------//
+  caculateField() {
     if (!this.arrCaculateField || this.arrCaculateField?.length == 0) return;
+    let fieldsNum = this.fields.filter((x) => x.dataType == 'N');
+    if (!fieldsNum || fieldsNum?.length == 0) return;
+
     this.arrCaculateField.forEach((obj) => {
       let dataFormat = obj.dataFormat;
-      this.fields.forEach((f) => {
-        if (
-          dataFormat.includes('[' + f.fieldName + ']') &&
-          f.dataValue &&
-          f.dataType == 'N'
-        ) {
+      fieldsNum.forEach((f) => {
+        if (dataFormat.includes('[' + f.fieldName + ']') && f.dataValue) {
+          let dataValue = f.dataValue;
+          if (f.dataFormat == 'P') dataValue = dataValue + '/100';
           dataFormat = dataFormat.replaceAll(
             '[' + f.fieldName + ']',
-            f.dataValue
+            dataValue
           );
-          obj.dataValue = dataFormat;
         }
       });
 
-      if (!obj.dataValue.includes('[')) {
+      if (!dataFormat.includes('[')) {
         //tinh toán
-        //Hiện tại sẽ lấy data đã
-        obj.dataValue = this.caculate(obj.dataValue);
+        obj.dataValue = this.customFieldSV.caculate(dataFormat);
         //tính toan end
         let index = this.fields.findIndex((x) => x.recID == obj.recID);
         if (index != -1) {
@@ -188,129 +195,36 @@ export class PopupCustomFieldComponent implements OnInit {
     });
   }
 
-  //tính toán
-  arrCheck = ['+', '-', 'x', '/', 'Avg(', '(', ')'];
-  parenthesis = ['(', ')'];
-  operator = ['+', '-', 'x', '/', 'Avg('];
-  operatorAddMinus = ['+', '-'];
-  operatorMulDiv = ['x', '/'];
+  //------------------END_CACULATE--------------------//
 
-  caculate(stringMath) {
-    if (stringMath.includes('_')) return stringMath;
-    if (this.isExitOperator(this.arrCheck, stringMath)) {
-      if (this.isExitOperator(this.parenthesis, stringMath)) {
-        //có ngoặc => chưa làm
-      } else if (this.isExitOperator(this.operator, stringMath)) {
-        //chi la phep toan
-        if (this.isExitOperator(this.operatorMulDiv, stringMath)) {
-          // co nhan chia
-          stringMath = this.sumAndMul(stringMath);
-        } else {
-          stringMath = this.sum(stringMath);
+  //updata Version
+  upDataVersion(field, value) {
+    field.dataValue = value;
+    if (this.taskID) {
+      if (field?.versions?.length > 0 && this.taskID) {
+        let idx = field?.versions.findIndex((x) => x.refID == this.taskID);
+        if (idx != -1) field.versions[idx].dataValue = value;
+        else {
+          let vs = field?.versions;
+          let obj = {
+            refID: this.taskID,
+            dataValue: value,
+            createdOn: new Date(),
+          };
+          vs.push(obj);
+          field.versions = vs;
         }
-      }
-    }
-    return stringMath;
-  }
-
-  //phep toan co ban
-  sum(stringMath) {
-    if (!stringMath || !this.isExitOperator(this.operatorAddMinus, stringMath))
-      return stringMath;
-    let sum = 0;
-    let num = stringMath[0];
-    let opera = '+';
-    for (var i = 1; i < stringMath.length; i++) {
-      if (this.operatorAddMinus.includes(stringMath[i])) {
-        if (opera == '+') {
-          sum += Number.parseFloat(num);
-        } else {
-          sum -= Number.parseFloat(num);
-        }
-        num = '';
-        opera = stringMath[i];
       } else {
-        num += stringMath[i];
+        field['versions'] = [
+          {
+            refID: this.taskID,
+            dataValue: value,
+            createdOn: new Date(),
+          },
+        ];
       }
     }
-    if (opera == '+') {
-      sum += Number.parseFloat(num);
-    } else {
-      sum -= Number.parseFloat(num);
-    }
-    return sum.toString();
-  }
 
-  //phep nhan chia
-  multDiv(stringMath) {
-    if (!stringMath || !this.isExitOperator(this.operatorMulDiv, stringMath))
-      return stringMath;
-    let mul = 1;
-    let num = stringMath[0];
-    let opera = 'x';
-    for (var i = 1; i < stringMath.length; i++) {
-      if (this.operatorMulDiv.includes(stringMath[i])) {
-        if (opera == 'x') {
-          mul = mul * Number.parseFloat(num);
-        } else {
-          if (Number.parseFloat(num) == 0) return '_'; //ko chia dc cho 0
-          mul = mul / Number.parseFloat(num);
-        }
-        num = '';
-        opera = stringMath[i];
-      } else {
-        num += stringMath[i];
-      }
-    }
-    if (opera == 'x') {
-      mul = mul * Number.parseFloat(num);
-    } else {
-      if (Number.parseFloat(num) == 0) return '_'; //ko chia dc cho 0
-      mul = mul / Number.parseFloat(num);
-    }
-    return mul.toString();
+    return field;
   }
-
-  // pheptoan + ,-,x,/
-  sumAndMul(stringMath) {
-    if (!stringMath || !this.isExitOperator(this.operator, stringMath))
-      return stringMath;
-    if (stringMath.includes('+')) {
-      let arrAdd = stringMath.trim().split('+');
-      if (arrAdd?.length > 0) {
-        let arrRes = arrAdd.map((str) => {
-          return this.sumAndMul(str);
-        });
-        // stringMath = this.sumAndMul(arrRes.join('+'));
-        return this.sum(arrRes.join('+'));
-      }
-    } else if (stringMath.includes('-')) {
-      let arrMunus = stringMath.trim().split('-');
-      if (arrMunus?.length > 0) {
-        let arrRes = arrMunus.map((str) => {
-          return this.sumAndMul(str);
-        });
-        stringMath = arrRes.join('-');
-      }
-    } else stringMath = this.multDiv(stringMath);
-    return stringMath;
-  }
-  //check tồn tại
-  isExitOperator(arrOperator, string) {
-    var check = false;
-    arrOperator.forEach((op) => {
-      if (string.includes(op)) {
-        check = true;
-        return;
-      }
-    });
-    return check;
-  }
-
-  agv(arr: Array<number>) {
-    let sum = 0;
-    arr.forEach((n) => (sum += n));
-    return sum / arr.length;
-  }
-  //
 }

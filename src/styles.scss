@@ -3576,7 +3576,7 @@ lib-layoutonlyheader{
   }
 }
 .text-feed{
-  height: 210px;
+  height: 232px;
   font-size: 12px!important;
   overflow-y: scroll;
   -webkit-overflow-scrolling: touch;
@@ -4459,4 +4459,8 @@ codx-filter-form ejs-dropdownlist{
 } 
 .h-450px.w-300px.dropdown-menu{
   max-height:calc(100vh - 150px) ;
+}
+
+.card-survey .list.answer codx-input input.e-input.border-0 {
+  border-color: var(--gray-150)!important;
 }

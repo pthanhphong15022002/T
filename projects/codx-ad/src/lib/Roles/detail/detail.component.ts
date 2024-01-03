@@ -332,7 +332,10 @@ export class RoleDetailComponent
         var check = 'false';
         if (checkbox) {
           var input = checkbox.querySelector('input');
-          check = checkbox?.ariaChecked || input?.checked + '';
+          check =
+            (!checkbox.ariaChecked || checkbox.ariaChecked === 'false') && input
+              ? input.checked + ''
+              : checkbox.ariaChecked;
         }
         if (!check || check === 'false') {
           if (dt && dt.length > 0) {

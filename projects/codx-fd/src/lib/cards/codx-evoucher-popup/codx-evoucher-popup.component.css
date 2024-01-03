@@ -1,0 +1,46 @@
+.bg-e-voucher-img
+{
+    width: 30px;
+    height: 30px;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+}
+.bg-e-voucher-img-2
+{
+  width: 25px;
+  height: 25px;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+}
+.h-222px
+{
+    height: 222px;
+}
+.h-evoucher
+{
+  height: calc(100% - 47px)
+}
+.mt-15per
+{
+  margin-top: -15%;
+}
+
+.mgl-20px
+{
+  margin-left: 20px;
+}
+
+.selected {
+  background-color: var(--border-light) !important;
+}
+
+.pattern-selected {
+  position: absolute;
+  z-index: 99;
+  top: 8px;
+  right: 10px;
+  color: var(--primary);
+  font-size: 22px !important;
+}

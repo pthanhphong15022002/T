@@ -12,7 +12,7 @@ import { CodxCoreModule } from 'codx-core';
 import { CoreModule } from '@core/core.module';
 import { HttpClientModule } from '@angular/common/http';
 import { OverlayModule } from '@angular/cdk/overlay';
-import { TabModule } from '@syncfusion/ej2-angular-navigations';
+import { AccordionModule, TabModule } from '@syncfusion/ej2-angular-navigations';
 import { CommonModule } from '@angular/common';
 import { LayoutNoAsideComponent } from 'projects/codx-common/src/lib/_layout/_noAside/_noAside.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
@@ -20,6 +20,12 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 import { PinchZoomModule } from '@meddv/ngx-pinch-zoom';
 import { PopupAddProcessComponent } from './processes/popup-add-process/popup-add-process.component';
 import { FormPropertiesFieldsComponent } from './processes/popup-add-process/form-properties-fields/form-properties-fields.component';
+import { ConnectorEditing, DiagramModule, SymbolPaletteModule } from '@syncfusion/ej2-angular-diagrams';
+import { SettingFieldsComponent } from './processes/popup-add-process/form-properties-fields/setting-fields/setting-fields.component';
+import { environment } from 'src/environments/environment';
+import { FormFormatValueComponent } from './processes/popup-add-process/form-properties-fields/form-format-value/form-format-value.component';
+import { ModeviewComponent } from './modeview/modeview.component';
+import { FormatValuelistComponent } from './processes/popup-add-process/form-properties-fields/format-valuelist/format-valuelist.component';
 
 export const routes: Routes = [
   {
@@ -32,6 +38,16 @@ export const routes: Routes = [
         data: { noReuse: true },
       }]
   },
+  {
+    path: '',
+    component: LayoutNoAsideComponent,
+    children: [
+      {
+        path: 'modeview',
+        component: ModeviewComponent,
+      },
+    ],
+  }
 ];
 @NgModule({
   declarations: [
@@ -41,12 +57,19 @@ export const routes: Routes = [
     ProcessesComponent,
     PopupAddProcessComponent,
     FormPropertiesFieldsComponent,
+    SettingFieldsComponent,
+    FormFormatValueComponent,
+    ModeviewComponent,
+    FormatValuelistComponent,
   ],
   imports: [
+    CodxCoreModule.forRoot({ environment }),
     RouterModule.forChild(routes),
+    CommonModule,
     FormsModule,
     ReactiveFormsModule,
     SharedModule,
+    TabModule,
     CodxShareModule,
     NgbModule,
     CoreModule,
@@ -54,8 +77,11 @@ export const routes: Routes = [
     OverlayModule,
     TabModule,
     CommonModule,
+    AccordionModule,
     DragDropModule,
+    CoreModule,
     PinchZoomModule,
+    DiagramModule,
     // NgxImageZoomModule
   ],
   exports: [CodxBpComponent],

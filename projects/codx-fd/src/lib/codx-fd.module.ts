@@ -87,6 +87,9 @@ import { ViewInstancesComponent } from 'projects/codx-dp/src/lib/view-instances/
 import { LeadsComponent } from 'projects/codx-cm/src/lib/leads/leads.component';
 import { CasesComponent } from 'projects/codx-cm/src/lib/cases/cases.component';
 import { CodxDashboardViewsComponent } from 'projects/codx-share/src/lib/components/codx-dashboard/dashboard-view/dashboard-view.component';
+import { ContractsComponent } from 'projects/codx-cm/src/lib/contracts/contracts.component';
+import { CodxEvoucherPopupComponent } from './cards/codx-evoucher-popup/codx-evoucher-popup.component';
+import { DialogModule } from '@syncfusion/ej2-angular-popups';
 
 export const routes: Routes = [
   {
@@ -138,8 +141,8 @@ export const routes: Routes = [
         path: 'dashboard-view/:funcID',
         component: CodxDashboardViewsComponent,
       },
-       //----phát hành quy trình DP-CRM----//
-       {
+      //----phát hành quy trình DP-CRM----//
+      {
         path: 'deals/:funcID',
         component: DealsComponent,
         data: { noReuse: true },
@@ -152,6 +155,11 @@ export const routes: Routes = [
       {
         path: 'leads/:funcID',
         component: LeadsComponent,
+        data: { noReuse: true },
+      },
+      {
+        path: 'contracts/:funcID',
+        component: ContractsComponent,
         data: { noReuse: true },
       },
       {
@@ -229,7 +237,6 @@ export const routes: Routes = [
         path: 'setting/evouchers/:funcID',
         component: EVouchersComponent,
       },
-
     ],
   },
 ];
@@ -289,6 +296,7 @@ const Component: Type<any>[] = [
   AchievementsComponent,
   PersonalAchievementComponent,
   PersonalUsageHistoryComponent,
+  CodxEvoucherPopupComponent,
 ];
 const T_Pipe: Type<any>[] = [];
 @NgModule({
@@ -307,6 +315,7 @@ const T_Pipe: Type<any>[] = [];
     TreeMapModule,
     DropDownListModule,
     RouterModule.forChild(routes),
+    DialogModule,
   ],
   exports: [RouterModule],
   declarations: [

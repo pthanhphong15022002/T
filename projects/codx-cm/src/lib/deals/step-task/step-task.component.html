@@ -1,4 +1,4 @@
-<div *ngIf="applyProcess">
+<div id="container-step" *ngIf="applyProcess">
   <header class="d-flex align-items-center justify-content-between search p-2">
     <div class="left d-flex align-items-center">
       <div>
@@ -165,6 +165,7 @@
         [entityName]="entityName"
         [recIDParent]="dataCM?.recID"
         [applyFor]="applyFor"
+        [businessLineID]="dataCM?.businessLineID || ''"
       ></codx-step-task>
       <div
         *ngIf="

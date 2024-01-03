@@ -569,20 +569,30 @@ export class PopupMoveStageComponent implements OnInit {
           permissionCM: res[2],
         };
         // save deal form dp
-        if (this.applyFor == '1' && !this.isCallInstance) {
-          let dataUpdate = [
-            this.instance.recID,
-            this.instance.stepID,
-            this.oldStepID,
-            this.oldStatus,
-            this.instancesStepOld?.note,
-            this.expectedClosed,
-            res[2]
-          ];
-          this.codxDpService.moveStageDeal(dataUpdate).subscribe((res) => {
-            if (res) {
-            }
-          });
+        if ( !this.isCallInstance) {
+          if(this.applyFor == '1') {
+            let dataUpdate = [
+              this.instance.recID,
+              this.instance.stepID,
+              this.oldStepID,
+              this.oldStatus,
+              this.instancesStepOld?.note,
+              this.expectedClosed,
+              res[2]
+            ];
+            this.codxDpService.moveStageDeal(dataUpdate).subscribe((res) => {  if (res) {}});
+          }
+          else {
+            let dataUpdate = [
+              this.instance.recID,
+              this.instance.stepID,
+              res[2]
+            ];
+            this.applyFor == '5' && this.codxDpService.moveStageBackLead(dataUpdate).subscribe((res) => {  if (res) {}});
+            // this.applyFor == '4' && this.codxDpService.moveStageBackLead(dataUpdate).subscribe((res) => {  if (res) {}});
+            (this.applyFor == '2' || this.applyFor == '3') && this.codxDpService.moveStageBackCases(dataUpdate).subscribe((res) => {  if (res) {}});
+          }
+
         }
         this.stepIdClick = '';
         this.stepIdOld = '';

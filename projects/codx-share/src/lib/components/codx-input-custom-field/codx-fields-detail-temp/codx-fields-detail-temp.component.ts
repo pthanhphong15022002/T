@@ -17,8 +17,6 @@ import {
   SidebarModel,
 } from 'codx-core';
 import { PopupCustomFieldComponent } from './popup-custom-field/popup-custom-field.component';
-import moment from 'moment';
-import { CodxFieldsFormatValueComponent } from './codx-fields-format-value/codx-fields-format-value.component';
 
 @Component({
   selector: 'codx-fields-detail-temp',
@@ -166,6 +164,7 @@ export class CodxFieldsDetailTempComponent implements OnInit {
       titleHeader: this.titleHeaderFormCF,
       objectIdParent: this.objectIdParent,
       customerID: this.customerID,
+      isAdd: false,
     };
     let formModel: FormModel = {
       entityName: 'DP_Instances_Steps_Fields',
@@ -197,32 +196,6 @@ export class CodxFieldsDetailTempComponent implements OnInit {
       }
     });
   }
-
-  // partNum(num): number {
-  //   return Number.parseInt(num);
-  // }
-
-  // fomatvalue(df) {
-  //   //xu ly tam
-  //   var index = this.dtFormatDate.findIndex((x) => x.value == df);
-  //   if (index == -1) return '';
-  //   return this.dtFormatDate[index]?.text;
-  // }
-  // getFormatTime(dv) {
-  //   if (!dv) return '';
-  //   var arrTime = dv.split(':');
-  //   return moment(new Date())
-  //     .set({ hour: arrTime[0], minute: arrTime[1] })
-  //     .toDate();
-  // }
-  // formatNumber(dt) {
-  //   if (!dt.dataValue) return '';
-  //   if (dt.dataFormat == 'I') return Number.parseFloat(dt.dataValue).toFixed(0);
-  //   return (
-  //     Number.parseFloat(dt.dataValue).toFixed(2) +
-  //     (dt.dataFormat == 'P' ? '%' : '')
-  //   );
-  // }
 
   clickInput(eleID, dataStep = null, isClick = false) {
     if (this.isSaving) return;
@@ -359,69 +332,4 @@ export class CodxFieldsDetailTempComponent implements OnInit {
         }
       });
   }
-
-  // parseValue(dataValue) {
-  //   return JSON.parse(dataValue);
-  // }
-
-  // listValue(dataValue) {
-  //   return dataValue?.split(';');
-  // }
-
-  // getViewText(refValue, value) {
-  //   this.cache.combobox(refValue).subscribe((data) => {
-  //     let gridModel = new DataRequest();
-  //     gridModel.entityName = data.entityName;
-  //     gridModel.entityPermission = data.entityName;
-  //     gridModel.pageLoading = false;
-  //     gridModel.comboboxName = data.comboboxName;
-  //     gridModel.currentValue = value;
-  //     this.api
-  //       .execSv<any>(
-  //         'DP',
-  //         'ERM.Business.Core',
-  //         'DataBusiness',
-  //         'LoadOneDataCbxAsync',
-  //         gridModel
-  //       )
-  //       .subscribe((cbbData) => {
-  //         let map = JSON.parse(cbbData[0]);
-  //         if (map?.length > 0) {
-  //           let crr = map.find((x) => (x[data.valueMember] = value));
-  //           if (crr) {
-  //             let view = crr[data.viewMember];
-  //             return view;
-  //           }
-  //         }
-  //         return value;
-  //       });
-  //   });
-  //   // return value;
-  // }
-
-  //--------------format table---------------//
-  // formatTable(data) {
-  //   if (!data.dataFormat) return [];
-  //   return JSON.parse(data.dataFormat);
-  // }
-
-  // formatData(dataValue) {
-  //   if (!dataValue) return [];
-  //   return JSON.parse(dataValue);
-  // }
-
-  // formatViewTable(data, value) {
-  //   let arrColumn = JSON.parse(data.dataFormat);
-  //   let arrField = [];
-  //   if (Array.isArray(arrColumn)) {
-  //     arrColumn.forEach((x) => {
-  //       let object = Object.assign(x, {
-  //         dataValue: value?.[x.fieldName],
-  //       });
-  //       arrField.push(arrField);
-  //     });
-  //   }
-  //   return arrField;
-  // }
-  //--------------end------------//
 }

@@ -86,3 +86,34 @@
     padding-left: 2px;
     font-weight: bold;
   }
+
+  .input-custom{
+    border: 1px solid gray;
+    box-sizing: border-box;
+    cursor: text;
+    line-height: normal;
+    min-height: 30px;
+    padding: 0 32px 0 0;
+    position: relative;
+    -webkit-user-select: none;
+    user-select: none;
+    width: 100%;
+    border: 1px solid #d8dbdd;
+    border-radius: 3px;
+    margin-top: 5px;
+  }
+.popup-data{
+  box-shadow: 0px 0px 5px 2px #dddddd;
+  border-radius: 5px;
+  margin-top: 5px;
+  .item-popup:hover{
+    background-color: #e5e5e5;
+    cursor: pointer;
+  }
+}
+.item-show{
+  background: #3699ff;
+  color: white;
+  padding: 2px 5px;
+  border-radius: 3px;
+}
