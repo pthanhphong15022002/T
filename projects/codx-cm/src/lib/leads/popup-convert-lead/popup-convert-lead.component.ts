@@ -539,6 +539,7 @@ export class PopupConvertLeadComponent implements OnInit {
   }
 
   async onConvert() {
+    debugger;
     let result = [];
     if (
       this.lead.applyProcess &&

@@ -16,6 +16,8 @@ export class EvoucherDetailComponent implements OnInit{
   data:any;
   type: string;
   sizeSelected: any;
+  coCoins: number = 0;
+  exchangeRateEVoucher: number = 1;
 
   constructor(
     private FDService: CodxFdService,
@@ -28,6 +30,8 @@ export class EvoucherDetailComponent implements OnInit{
     this.headerText = dt?.data?.headerText;
     this.type = dt?.data?.type;
     this.sizeSelected = dt?.data?.sizeSelected;
+    this.coCoins = dt?.data?.coCoins || 0;
+    this.exchangeRateEVoucher = dt?.data?.exchangeRateEVoucher || 0;
   }
   ngOnInit(): void {
     this.loadData();
@@ -66,5 +70,12 @@ export class EvoucherDetailComponent implements OnInit{
     } else {
       this.sizeSelected = size;
     }
+  }
+
+  checkDisable(size:any) {
+    if(this.coCoins > ((size?.pricePrice * this.exchangeRateEVoucher) / 1000 )) { 
+      return false;
+    }
+    return true;
   }
 }

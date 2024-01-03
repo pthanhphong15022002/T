@@ -151,6 +151,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
 
   //Field PA
   entityNamePA = '';
+  funcCBX = '';
   servicePA: string;
   fieldCus: any;
   title = 'Thông báo ';
@@ -167,6 +168,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
   private destroyFrom$: Subject<void> = new Subject<void>();
   arrFieldNum = [];
   showCaculate = true;
+  titleField: any = '';
 
   constructor(
     private cache: CacheService,
@@ -235,6 +237,10 @@ export class PopupAddCustomFieldComponent implements OnInit {
       this.field[e.field] = e.data;
       return;
     }
+    if (e.field == 'dataType') {
+      this.titleField = e?.component?.selectedItems[0]?.text;
+      return;
+    }
     if (
       (e.field == 'dataType' && e.data != this.field.dataType) ||
       (e.field == 'dataFormat' && e.data != this.field.dataFormat)
@@ -267,10 +273,24 @@ export class PopupAddCustomFieldComponent implements OnInit {
         // this.changeFormVll();
       }
     }
-    if (e.field == 'refValue' && this.field.dataType == 'PA') {
+    if (
+      e.field == 'refValue' &&
+      this.field.dataType == 'PA' &&
+      e.data &&
+      e.data != this.field.refValue
+    ) {
       this.field.refType = '3';
-      this.servicePA = e?.component?.itemsSelected[0]?.Service;
-      this.entityNamePA = e?.component?.itemsSelected[0]?.TableName;
+      this.cache.combobox(e.data).subscribe((cb) => {
+        if (cb) {
+          this.servicePA = cb?.service;
+          this.entityNamePA = cb?.tableName;
+          this.funcCBX = cb?.linkFunction;
+        } else {
+          this.servicePA = '';
+          this.entityNamePA = '';
+          this.funcCBX = '';
+        }
+      });
     }
     if (e.field == 'dataFormat' || e.field == 'refValue')
       this.creatFieldCustom();
@@ -939,68 +959,80 @@ export class PopupAddCustomFieldComponent implements OnInit {
       );
       return;
     }
-    this.api
-      .exec<any>(
-        'SYS',
-        'GridViewSetupBusiness',
-        'GetGrvStAndFormNameByEntityNameAsync',
-        this.entityNamePA
-      )
-      .subscribe((res) => {
-        if (res) {
-          let formName = res?.formName;
-          let gridViewName = res?.gridViewName;
-
-          this.cache.gridViewSetup(formName, gridViewName).subscribe((grv) => {
-            if (grv) {
-              let option = new DialogModel();
-              console.log(grv);
-              option.zIndex = 1050;
-              let obj = {
-                datas: grv,
-                entityName: this.entityNamePA,
-                action: this.action,
-                titleAction: 'Thêm trường liên kết', //test
-                dataRef: JSON.parse(this.field.dataFormat),
-              };
-              let dialogColumn = this.callfc.openForm(
-                PopupSettingReferenceComponent,
-                '',
-                550,
-                Util.getViewPort().height - 100,
-                '',
-                obj,
-                '',
-                option
-              );
-              dialogColumn.closed.subscribe((res) => {
-                if (res && res.event && res.event[1]) {
-                  this.field.refType = '3';
-                  this.fieldCus.referType = '3';
-                  if (res.event && res.event[0]) {
-                    this.field.dataFormat = JSON.stringify(res.event[0]);
-                    this.fieldCus.dataFormat = JSON.stringify(res.event[0]);
-                  } else {
-                    this.field.dataFormat = '';
-                    this.fieldCus.dataFormat = '';
-                  }
-                  if (this.tempInput) this.tempInput.viewFieldRef();
-                  if (this.tempView)
-                    this.tempView.parseValuePA(this.fieldCus.dataValue);
-                }
-              });
-            } else
-              this.notiService.notify(
-                'Grid View Setup chưa được thiết lập, hãy chọn đối tượng khác !',
-                '3'
-              );
-          });
-        } else
+    if (this.funcCBX) {
+      this.cache.functionList(this.funcCBX).subscribe((f) => {
+        if (f) this.loadDataTypeRef(f?.formName, f?.gridViewName);
+        else
           this.notiService.notify(
             'Grid View Setup chưa được thiết lập, hãy chọn đối tượng khác !',
             '3'
           );
       });
+    } else {
+      this.api
+        .exec<any>(
+          'SYS',
+          'GridViewSetupBusiness',
+          'GetGrvStAndFormNameByEntityNameAsync',
+          this.entityNamePA
+        )
+        .subscribe((res) => {
+          if (res) {
+            this.loadDataTypeRef(res?.formName, res?.gridViewName);
+          } else
+            this.notiService.notify(
+              'Grid View Setup chưa được thiết lập, hãy chọn đối tượng khác !',
+              '3'
+            );
+        });
+    }
+  }
+
+  loadDataTypeRef(formName, gridViewName) {
+    this.cache.gridViewSetup(formName, gridViewName).subscribe((grv) => {
+      if (grv) {
+        let option = new DialogModel();
+        console.log(grv);
+        option.zIndex = 1050;
+        let obj = {
+          datas: grv,
+          entityName: this.entityNamePA,
+          action: this.action,
+          titleAction: this.titleField, //test
+          dataRef: JSON.parse(this.field.dataFormat),
+        };
+        let dialogColumn = this.callfc.openForm(
+          PopupSettingReferenceComponent,
+          '',
+          550,
+          Util.getViewPort().height - 100,
+          '',
+          obj,
+          '',
+          option
+        );
+        dialogColumn.closed.subscribe((res) => {
+          if (res && res.event && res.event[1]) {
+            this.field.refType = '3';
+            this.fieldCus.referType = '3';
+            if (res.event && res.event[0]) {
+              this.field.dataFormat = JSON.stringify(res.event[0]);
+              this.fieldCus.dataFormat = JSON.stringify(res.event[0]);
+            } else {
+              this.field.dataFormat = '';
+              this.fieldCus.dataFormat = '';
+            }
+            if (this.tempInput) this.tempInput.viewFieldRef();
+            if (this.tempView)
+              this.tempView.parseValuePA(this.fieldCus.dataValue);
+          }
+        });
+      } else
+        this.notiService.notify(
+          'Grid View Setup chưa được thiết lập, hãy chọn đối tượng khác !',
+          '3'
+        );
+    });
   }
 
   //lưu giá trị mặc định

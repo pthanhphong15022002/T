@@ -12,6 +12,8 @@ import { EvoucherDetailComponent } from '../../evouchers/evoucher-detail/evouche
 export class CodxEvoucherPopupComponent implements OnInit {
   @Input() height: string = '100%';
   @Input() width: string = '100%';
+  @Input() coCoins: number = 0;
+  @Input() exchangeRateEVoucher: number = 1;
 
   @Output() onSaveData: EventEmitter<any> = new EventEmitter<any>();
   @Output() onClose: EventEmitter<any> = new EventEmitter<any>();
@@ -122,6 +124,8 @@ export class CodxEvoucherPopupComponent implements OnInit {
       headerText: "Chi tiết thẻ quà tặng",
       type: 'getPrice',
       sizeSelected: sizeSelected,
+      coCoins: this.coCoins,
+      exchangeRateEVoucher: this.exchangeRateEVoucher
     })
     modal.closed.subscribe((data:any)=>{
       if(data?.event){
