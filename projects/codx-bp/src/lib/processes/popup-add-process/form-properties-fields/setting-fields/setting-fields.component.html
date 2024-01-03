@@ -1,21 +1,24 @@
 <div
   (mouseenter)="closePopover()"
-  class="p-1 h-100"
-  *ngIf="dataFormat"
+  class="p-2 h-100"
   (mouseenter)="closePopover()"
 >
   <div
     (mouseenter)="closePopover()"
     class="header d-flex align-items-center justify-content-between mb-2"
   >
-    <div (mouseenter)="closePopover()" class="text-dark fw-bold">
-      <span [ngClass]="dataFormat?.icon" class="icon-18 me-2"></span>
+    <div (mouseenter)="closePopover()" class="d-flex text-dark fw-bold">
+      <span
+        *ngIf="dataFormat?.icon"
+        [ngClass]="dataFormat?.icon"
+        class="icon-18 me-2"
+      ></span>
       <span>{{ dataFormat?.text }}</span>
     </div>
     <div
       (mouseenter)="closePopover()"
       class="text-gray-800"
-      *ngIf="dataFormat?.value != 'F'"
+      *ngIf="dataCurrent?.controlType != 'Title'"
       (click)="removeField(dataCurrent)"
     >
       <span class="icon-18 icon-delete cursor-pointer"></span>
@@ -23,7 +26,16 @@
   </div>
   <div (mouseenter)="closePopover()" class="body">
     <div (mouseenter)="closePopover()" class="form-group">
-      <codx-label [formModel]="formModel" fiedName="title"></codx-label>
+      <codx-label
+        [default]="
+          dataCurrent?.controlType == 'Title'
+            ? 'Tên biểu mẫu'
+            : 'Tên ô nhập liệu'
+        "
+        [formName]="'DynamicForms'"
+        [gridViewName]="'grvDynamicFormsTitle' + dataCurrent?.controlType"
+        [name]="'lbl' + dataCurrent?.controlType"
+      ></codx-label>
       <codx-input
         type="text"
         field="title"
@@ -34,13 +46,20 @@
     <div
       (mouseenter)="closePopover()"
       class="form-group"
-      *ngIf="dataFormat?.value == 'F'"
+      *ngIf="dataCurrent?.controlType == 'Title'"
     >
-      <codx-label [formModel]="formModel" fiedName="Note"></codx-label>
+      <codx-label
+        [default]="
+          'Mô tả'
+        "
+        [formName]="'DynamicForms'"
+        [gridViewName]="'grvDynamicFormsTitle' + dataCurrent?.controlType"
+        name="lblMemo"
+      ></codx-label>
       <codx-input
-        field="note"
+        field="memo"
         [formModel]="formModel"
-        [crrValue]="dataCurrent?.note ?? ''"
+        [crrValue]="dataCurrent?.memo ?? ''"
         (valueChange)="valueChange($event)"
       ></codx-input>
     </div>
@@ -48,11 +67,11 @@
       (mouseenter)="closePopover()"
       class="form-group"
       *ngIf="
-        dataFormat?.value != 'F' &&
-        dataFormat?.value != 'User' &&
-        dataFormat?.value != 'Rank' &&
-        dataFormat?.value != 'Progress' &&
-        dataFormat?.value != 'Expression'
+        dataCurrent?.controlType != 'Title' &&
+        dataCurrent?.controlType != 'User' &&
+        dataCurrent?.controlType != 'Rank' &&
+        dataCurrent?.controlType != 'Progress' &&
+        dataCurrent?.controlType != 'Expression'
       "
     >
       <codx-label
@@ -61,14 +80,14 @@
         fiedName="DefaultValue"
       ></codx-label>
       <codx-input
-        *ngIf="dataFormat?.value != 'Datetime'"
+        *ngIf="dataCurrent?.controlType != 'Datetime'"
         field="defaultValue"
-        [type]="dataFormat?.value == 'Number' ? 'number' : 'text'"
+        [type]="dataCurrent?.controlType == 'Number' ? 'number' : 'text'"
         [crrValue]="dataCurrent?.defaultValue ?? ''"
         (valueChange)="valueChange($event)"
       ></codx-input>
       <codx-input
-        *ngIf="dataFormat?.value == 'Datetime'"
+        *ngIf="dataCurrent?.controlType == 'Datetime'"
         field="defaultValue"
         type="datetime"
         format="F"
@@ -80,9 +99,9 @@
       (mouseenter)="closePopover()"
       class="form-group"
       *ngIf="
-        dataFormat?.value != 'F' &&
-        dataFormat?.value != 'Rank' &&
-        dataFormat?.value != 'Progress'
+        dataCurrent?.controlType != 'Title' &&
+        dataCurrent?.controlType != 'Rank' &&
+        dataCurrent?.controlType != 'Progress'
       "
     >
       <codx-label
@@ -98,10 +117,10 @@
       ></codx-input>
     </div>
     <ng-container
-      *ngIf="dataFormat?.value == 'Rank'"
+      *ngIf="dataCurrent?.controlType == 'Rank'"
       [ngTemplateOutlet]="tempRank"
     ></ng-container>
-    <ng-container *ngIf="dataFormat?.value == 'Progress'">
+    <ng-container *ngIf="dataCurrent?.controlType == 'Progress'">
       <codx-label
         default="Màu hiển thị"
         [formModel]="formModel"
@@ -123,34 +142,34 @@
     </ng-container>
     <div
       (mouseenter)="closePopover()"
-      *ngIf="dataFormat?.value != 'F'"
+      *ngIf="dataCurrent?.controlType != 'Title'"
       class="form-group mt-3 mb-3"
       style="border-bottom: 1px solid var(--gray-150)"
     ></div>
     <ng-container
-      *ngIf="dataFormat?.value == 'Number'"
+      *ngIf="dataCurrent?.controlType == 'Number'"
       [ngTemplateOutlet]="tempNumber"
     >
     </ng-container>
 
     <ng-container
-      *ngIf="dataFormat?.value == 'YesNo'"
+      *ngIf="dataCurrent?.controlType == 'YesNo'"
       [ngTemplateOutlet]="tempYesNo"
     >
     </ng-container>
     <ng-container
-      *ngIf="dataFormat?.value == 'User'"
+      *ngIf="dataCurrent?.controlType == 'User'"
       [ngTemplateOutlet]="tempPerson"
     >
     </ng-container>
     <ng-container
-      *ngIf="dataFormat?.value == 'ValueList'"
+      *ngIf="dataCurrent?.controlType == 'ValueList'"
       [ngTemplateOutlet]="tempListFormat"
     ></ng-container>
     <div
       (mouseenter)="closePopover()"
       class="form-group"
-      *ngIf="dataFormat?.value == 'Text'"
+      *ngIf="dataCurrent?.controlType == 'Text'"
     >
       <div (mouseenter)="closePopover()" class="d-flex">
         <codx-input
@@ -170,7 +189,7 @@
     <div
       (mouseenter)="closePopover()"
       class="form-group"
-      *ngIf="dataFormat?.value == 'Datetime'"
+      *ngIf="dataCurrent?.controlType == 'Datetime'"
     >
       <div (mouseenter)="closePopover()" class="d-flex">
         <codx-input
@@ -191,8 +210,9 @@
       (mouseenter)="closePopover()"
       class="form-group"
       *ngIf="
-        dataFormat?.value == 'ValueList' ||
-        (dataFormat?.value == 'User' && dataFormat?.value == 'Combobox')
+        dataCurrent?.controlType == 'ValueList' ||
+        (dataCurrent?.controlType == 'User' &&
+          dataCurrent?.controlType == 'Combobox')
       "
     >
       <div (mouseenter)="closePopover()" class="d-flex">
@@ -213,7 +233,7 @@
     <div
       (mouseenter)="closePopover()"
       class="form-group"
-      *ngIf="dataFormat?.value != 'F'"
+      *ngIf="dataCurrent?.controlType != 'Title'"
     >
       <div (mouseenter)="closePopover()" class="d-flex">
         <codx-input
@@ -232,7 +252,7 @@
     <div
       (mouseenter)="closePopover()"
       class="form-group"
-      *ngIf="dataFormat?.value != 'F'"
+      *ngIf="dataCurrent?.controlType != 'Title'"
     >
       <div (mouseenter)="closePopover()" class="d-flex">
         <codx-input
@@ -252,7 +272,7 @@
     <div
       (mouseenter)="closePopover()"
       class="form-group"
-      *ngIf="dataFormat?.value == 'Text'"
+      *ngIf="dataCurrent?.controlType == 'Text'"
     >
       <div (mouseenter)="closePopover()" class="d-flex">
         <codx-input
@@ -476,6 +496,7 @@
             type="radio"
             field="dropDown"
             [checked]="dataCurrent?.refType == '2' ?? false"
+            [crrValue]="dataCurrent?.refType == '2'"
             (valueChange)="changeRadio($event, 'dropDown')"
           ></codx-input>
         </span>
@@ -497,6 +518,7 @@
             type="radio"
             field="checkBox"
             [checked]="dataCurrent.refType != '2' ?? false"
+            [crrValue]="dataCurrent.refType != '2'"
             (valueChange)="changeRadio($event, 'checkBox')"
           ></codx-input>
         </span>
@@ -515,7 +537,7 @@
   <div
     (mouseenter)="closePopover()"
     class="form-group"
-    *ngIf="dataFormat?.value == 'Number'"
+    *ngIf="dataCurrent?.controlType == 'Number'"
   >
     <div (mouseenter)="closePopover()" class="d-flex">
       <div (mouseenter)="closePopover()" class="d-flex me-4">
@@ -589,7 +611,7 @@
   <div
     (mouseenter)="closePopover()"
     class="form-group"
-    *ngIf="dataFormat?.value == 'YesNo'"
+    *ngIf="dataCurrent?.controlType == 'YesNo'"
   >
     <div (mouseenter)="closePopover()" class="d-flex">
       <div (mouseenter)="closePopover()" class="d-flex me-4">
