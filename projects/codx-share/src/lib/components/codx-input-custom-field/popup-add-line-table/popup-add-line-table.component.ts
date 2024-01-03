@@ -143,7 +143,10 @@ export class PopupAddLineTableComponent implements OnInit {
     this.arrCaculateField.forEach((obj) => {
       let dataFormat = obj.dataFormat;
       fieldsNum.forEach((f) => {
-        if (dataFormat.includes('[' + f.fieldName + ']') && f.dataValue) {
+        if (
+          dataFormat.includes('[' + f.fieldName + ']') &&
+          f.dataValue?.toString()
+        ) {
           let dataValue = f.dataValue;
           if (f.dataFormat == 'P') dataValue = dataValue + '/100';
           dataFormat = dataFormat.replaceAll(

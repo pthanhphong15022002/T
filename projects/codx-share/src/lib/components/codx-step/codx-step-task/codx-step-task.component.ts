@@ -110,6 +110,8 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   @Input() formModelAssign: FormModel; // formModel của giao việc
   @Input() isChangeOwner = false;
 
+  @Input() businessLineID: string;
+  @Input() processID: string;
   @Input() customerName: string;
   @Input() dealName: string;
   @Input() contractName: string;
@@ -960,6 +962,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         type: 'task',
         entityName: this.entityName,
         parentID: this.recIDParent,
+        processID: this.processID,
       };
       let taskContract = await this.stepService.openPopupTaskContract(
         data,
@@ -1200,6 +1203,8 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         type: 'task',
         entityName: this.entityName,
         parentID: this.recIDParent,
+        businessLineID: this.businessLineID,
+        processID: this.processID,
       };
       let taskContract = await this.stepService.openPopupTaskContract(
         data,
@@ -3045,9 +3050,10 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     let obj = {
       data: JSON.parse(JSON.stringify(listField)),
       titleHeader: task?.taskName,
-      objectIdParent: 'task?.stepID',
+      objectIdParent: task?.stepID,
       // customerID: '',
       isAdd: false, ///là add form để lấy giá trị mặc định gán vào
+      taskID: task.recID,
     };
     let formModel: FormModel = {
       entityName: 'DP_Instances_Steps_Fields',

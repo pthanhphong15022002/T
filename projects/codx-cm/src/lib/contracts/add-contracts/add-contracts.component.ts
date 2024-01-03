@@ -35,7 +35,7 @@ import {
 import { tmpInstances } from '../../models/tmpModel';
 import { CodxCmService } from '../../codx-cm.service';
 import { ContractsService } from '../service-contracts.service';
-import { Observable, Subject, firstValueFrom, takeUntil } from 'rxjs';
+import { Observable, Subject, takeUntil, filter, firstValueFrom } from 'rxjs';
 import { StepService } from 'projects/codx-share/src/lib/components/codx-step/step.service';
 import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
 import { CodxListContactsComponent } from '../../cmcustomer/cmcustomer-detail/codx-list-contacts/codx-list-contacts.component';
@@ -150,6 +150,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
   isSaveTimeTask = true;
   isLoadDateTask = false;
   popupRealties;
+  procesID;
   autoCode = '';
   moreDefaut = {
     read: true,
@@ -164,6 +165,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
   lstContactDeal: any[] = [];
   lstContactDelete: any[] = [];
   isBlock = true;
+  businessLineID = '';
   // Tab control
   tabInfo = [
     {
@@ -259,6 +261,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
     this.isStartIns = !!dt?.data?.isStartIns;
     this.contractRefID = dt?.data?.contractRefID;
     this.recIDContract = dt?.data?.recIDContract;
+    this.businessLineID = dt?.data?.businessLineID;
     this.stepsTasks = dt?.data?.stepsTasks || {};
     this.contractsInput = dt?.data?.contract || dt?.data?.dataCM || null;
     this.user = this.authStore.get();
@@ -360,13 +363,21 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
         this.contracts.applyProcess = false;
         this.contracts.displayed = true;
         this.contracts.currencyID = this.currencyIDDefault;
+        this.contracts.businessLineID = this.businessLineID || '';
         this.loadExchangeRate(this.contracts.currencyID);
         this.setContractByDataOutput();
         this.getAutoNumber();
         this.setDataParent();
-        if ((this.type == 'DP', this.processID)) {
+        if (this.type == 'DP' && this.processID) {
           this.contracts.processID = this.processID;
+          this.getBusinessLineByProcessContractID(this.processID);
+        }
+        if(this.type == 'task' && this.processID){
+          this.contracts.applyProcess = true;
+           this.contracts.processID = this.processID;
           this.getBusinessLineByProcessID(this.processID);
+          this.getListInstanceSteps(this.contracts.processID);
+          this.mapDataInfield();
         }
         break;
       case 'edit':
@@ -401,6 +412,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
         this.contracts.status = '1';
         // this.contracts.applyProcess = this.isApplyProcess;
         this.contracts.currencyID = this.currencyIDDefault;
+        this.contracts.businessLineID = this.businessLineID || '';
         if (!this.contracts?.applyProcess) {
           this.contracts.contractID = null;
           this.getAutoNumberSetting();
@@ -427,6 +439,32 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
         this.getCustomersDefaults(this.contracts?.customerID);
         break;
       default:
+    }
+  }
+
+  mapDataInfield(){
+    if(this.type == 'task' && this.stepsTasks && this.stepsTasks?.reference){
+      this.cmService.getInstancerStepByRecID((this.stepsTasks?.stepID)).subscribe(res => {
+        if(res){
+          let step = res;
+          if(step && this.stepsTasks?.reference){
+            let fields = this.stepsTasks?.reference?.split(";");
+            let listField = step?.fields;
+            let link = fields?.filter(x => x.includes("/"));
+            if(link){
+              let data = [];
+              for(let item of link){
+                let x = item?.split("/");
+                if(x?.length  == 2){
+                  let field = listField?.find(j => j.refID == x[0]);
+                  let y =  x[1].charAt(0).toLowerCase() + x[1].slice(1);
+                  this.contracts[y] = field?.dataValue;
+                }
+              }
+            }
+          }
+        }
+      })
     }
   }
 
@@ -939,9 +977,18 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
     });
   }
 
-  getBusinessLineByProcessID(processID) {
+  getBusinessLineByProcessContractID(processID) {
     this.cmService
       .getIdBusinessLineByProcessContractID([processID])
+      .subscribe((res) => {
+        if (res) {
+          this.contracts.businessLineID = res;
+        }
+      });
+  }
+  getBusinessLineByProcessID(processID) {
+    this.cmService
+      .getIdBusinessLineByProcessID([processID])
       .subscribe((res) => {
         if (res) {
           this.contracts.businessLineID = res;
@@ -1200,6 +1247,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
         this.getSettingFields(res[3], this.listInstanceSteps);
         this.listParticipants = [];
         this.listParticipants = JSON.parse(JSON.stringify(obj?.permissions));
+
         this.changeDetectorRef.detectChanges();
       }
     });
@@ -1465,7 +1513,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
     return '';
   }
 
-  save() {
+  async save() {
     if (this.stepService.checkRequire(this.REQUIRE, this.contracts, this.view))
       return;
     if (
@@ -1496,26 +1544,51 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
       this.convertDataInstance(this.contracts, this.instance);
     this.contracts.applyProcess &&
       this.updateDateDeal(this.instance, this.contracts);
-
-    switch (this.action) {
-      case 'add':
-      case 'copy':
-      case 'extend':
-        if (this.contracts.applyProcess) {
-          this.addInstance();
-        } else {
-          this.addContracts();
+      if (this.attachment && this.attachment.fileUploadList.length) {
+        (await this.attachment.saveFilesObservable()).subscribe((res) => {
+          if (res) {
+            switch (this.action) {
+              case 'add':
+              case 'copy':
+              case 'extend':
+                if (this.contracts.applyProcess) {
+                  this.addInstance();
+                } else {
+                  this.addContracts();
+                }
+                break;
+              case 'edit':
+                if (this.contracts.applyProcess) {
+                  this.editInstance();
+                } else {
+                  this.editContract();
+                }
+        
+                break;
+            }
+          }
+        });
+      } else {
+        switch (this.action) {
+          case 'add':
+          case 'copy':
+          case 'extend':
+            if (this.contracts.applyProcess) {
+              this.addInstance();
+            } else {
+              this.addContracts();
+            }
+            break;
+          case 'edit':
+            if (this.contracts.applyProcess) {
+              this.editInstance();
+            } else {
+              this.editContract();
+            }
+    
+            break;
         }
-        break;
-      case 'edit':
-        if (this.contracts.applyProcess) {
-          this.editInstance();
-        } else {
-          this.editContract();
-        }
-
-        break;
-    }
+      }
   }
 
   addInstance() {
@@ -1548,7 +1621,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
   }
 
   async editInstance() {
-    if (this.type == 'contract') {
+    if (this.type == 'contract'|| this.type == 'task') {
       let data = [this.instance, this.listCustomFile];
       this.cmService.editInstance(data).subscribe((instance) => {
         if (instance) {
@@ -1729,7 +1802,10 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
     this.arrCaculateField.forEach((obj) => {
       let dataFormat = obj.dataFormat;
       fieldsNum.forEach((f) => {
-        if (dataFormat.includes('[' + f.fieldName + ']') && f.dataValue) {
+        if (
+          dataFormat.includes('[' + f.fieldName + ']') &&
+          f.dataValue?.toString()
+        ) {
           let dataValue = f.dataValue;
           if (f.dataFormat == 'P') dataValue = dataValue + '/100';
           dataFormat = dataFormat.replaceAll(
@@ -1774,4 +1850,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
     });
   }
   //------------------END_CACULATE--------------------//
+  addFile(evt: any) {
+    this.attachment.uploadFile();
+  }
 }

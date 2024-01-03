@@ -8,7 +8,9 @@ import { CallFuncService, FormModel } from 'codx-core';
   styleUrls: ['./form-format-value.component.css']
 })
 export class FormFormatValueComponent implements OnInit {
-  @Input() lstFields: any;
+  @Input() subItem: any;
+  @Input() dataCurrent: any;
+  @Input() isShowTextHeader: boolean = false;
   @Input() formModel: FormModel = {
     formName: 'DPStepsFields',
     gridViewName: 'grvDPStepsFields',
@@ -24,11 +26,10 @@ export class FormFormatValueComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.isPopupUserCbb = false;
   }
 
-  loadData(lstFields){
-    this.lstFields = JSON.parse(JSON.stringify(lstFields));
-    this.countData = this.lstFields?.filter(x => x.controlType != 'F')?.length;
+  loadData(){
     this.isPopupUserCbb = false;
     this.detectorRef.detectChanges();
   }
@@ -36,25 +37,6 @@ export class FormFormatValueComponent implements OnInit {
   clickData(data){
     this.renderData.emit({data: data});
   }
-
-  //#region drop
-  drop(event: CdkDragDrop<any[]>): void {
-    const item = event.item.data;
-    if (event.container === event.previousContainer) {
-      moveItemInArray(this.lstFields, event.previousIndex, event.currentIndex);
-      this.dropLists.emit({e: this.lstFields})
-    } else {
-      transferArrayItem(
-        event.previousContainer.data,
-        this.lstFields,
-        event.previousIndex + 1,
-        event.currentIndex + 1
-      );
-      this.dropLists.emit({ e: this.lstFields });
-    }
-    this.detectorRef.detectChanges();
-  }
-  //#endregion
 
   //#region popup
   openPopup(){

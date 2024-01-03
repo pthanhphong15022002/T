@@ -852,6 +852,7 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
   }
 
   addStepsBeforeSave() {
+    this.setCreateTaskTM();
     this.addReasonInStep(this.stepList, this.stepSuccess, this.stepFail);
     let stepListSave = JSON.parse(JSON.stringify(this.stepList));
     if (stepListSave.length > 0) {
@@ -875,6 +876,14 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
     this.process['steps'] = stepListSave;
   }
 
+  setCreateTaskTM() {
+    for (const stepItem of this.stepList ?? []) {
+      for (const task of stepItem.tasks ?? []) {
+        task.createTask = this.process?.createTask ?? false;
+        task.dependRule = this.process?.dependRule ?? "0";
+      }
+    }
+  }
   valueChange(e) {
     if (this.process[e.field] != e.data && !this.isChange) this.isChange = true;
     let value = e.data;
@@ -1839,6 +1848,12 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
         this.process.allowReturnInstanceControl = true;
       } else if ($event.field === 'no' && $event.component.checked === true) {
         this.process.allowReturnInstanceControl = false;
+      }
+    }else if ("CreateTask"){
+      if ($event.field === 'yes' && $event.component.checked === true) {
+        this.process.createTask = true;
+      } else if ($event.field === 'no' && $event.component.checked === true) {
+        this.process.createTask = false;
       }
     }
 
@@ -2899,7 +2914,7 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
     if (step) {
       let tasks = step.tasks;
       if (tasks?.length > 0) {
-        let task = tasks.find((x) => x.fieldID.includes(fieldID));
+        let task = tasks.find((x) => x?.fieldID?.includes(fieldID));
         if (task) return task;
       }
     }

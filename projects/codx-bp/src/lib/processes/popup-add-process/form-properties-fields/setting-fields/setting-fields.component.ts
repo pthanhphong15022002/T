@@ -29,6 +29,7 @@ import { Observable, finalize, firstValueFrom, map } from 'rxjs';
 export class SettingFieldsComponent implements AfterViewInit {
   @Input() dataFormat: any;
   @Input() dataCurrent: any = {};
+  @Input() lstFields = [];
   @Input() formModel: FormModel = {
     formName: 'DPStepsFields',
     gridViewName: 'grvDPStepsFields',
@@ -144,7 +145,6 @@ export class SettingFieldsComponent implements AfterViewInit {
                 }
               });
           } else {
-            this.dataCurrent.refType = '2';
             if (this.maxNumber > 0) {
               this.crrVll = new tempVllBP();
               this.crrVll.language = this.user.language;
@@ -290,7 +290,7 @@ export class SettingFieldsComponent implements AfterViewInit {
       this.dataCurrent[e?.field] = e?.data;
       switch (e?.field) {
         case 'title':
-          this.dataCurrent['fieldName'] = this.bpSv.createAutoNumber(e?.data);
+          this.dataCurrent['fieldName'] = this.bpSv.createAutoNumber(e?.data, this.lstFields, 'fieldName');
           break;
         case 'defaultValue':
           this.dataCurrent['dataFormat'] = e?.data;
@@ -324,7 +324,6 @@ export class SettingFieldsComponent implements AfterViewInit {
           break;
         case 'multiselect':
           if (this.dataCurrent?.controlType == 'ValueList') {
-            this.crrVll.multiSelect = e?.data;
             if (this.dataCurrent.refValue) {
               this.saveVll('edit');
             } else {
@@ -352,11 +351,11 @@ export class SettingFieldsComponent implements AfterViewInit {
     if (e.component.checked === true) {
       switch (e?.field) {
         case 'dropDown':
-          this.dataCurrent.refType =
+          this.dataCurrent['refType'] =
             this.dataCurrent.controlType == 'Combobox' ? '3' : '2';
           break;
         case 'checkBox':
-          this.dataCurrent.refType = '2C';
+          this.dataCurrent['refType'] = '2C';
           break;
         case 'int':
           this.dataCurrent['dataType'] = 'i';
@@ -371,7 +370,7 @@ export class SettingFieldsComponent implements AfterViewInit {
           this.dataCurrent['dataType'] = 's';
           break;
         case 'popup':
-          this.dataCurrent['dataType'] = 'P';
+          this.dataCurrent['dataType'] = this.dataCurrent.controlType == 'Combobox' ? '3P' : 'P';
           break;
         case 'rankNumber':
           this.dataCurrent.rank.type = '1';
@@ -433,6 +432,10 @@ export class SettingFieldsComponent implements AfterViewInit {
   //#region setting list vll
   //save vll
   async saveVll(action = 'add') {
+    if(this.crrVll?.listName == null || this.crrVll?.listName?.trim() == ''){
+      this.isRender = false;
+
+    }
     if (this.lstDatasVlls == null || this.lstDatasVlls?.length == 0) {
       this.isRender = false;
       return;

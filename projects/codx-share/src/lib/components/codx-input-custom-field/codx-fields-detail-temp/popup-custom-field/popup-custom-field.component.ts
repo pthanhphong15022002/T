@@ -31,6 +31,7 @@ export class PopupCustomFieldComponent implements OnInit {
   arrCaculateField = []; //cac field co tinh toán
   point: string = ','; //dấu phân cách thập phân
   isAdd = false;
+  taskID = ''; //task
 
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
@@ -45,6 +46,7 @@ export class PopupCustomFieldComponent implements OnInit {
     this.titleHeader = dt?.data?.titleHeader;
     this.objectIdParent = dt?.data?.objectIdParent;
     this.customerID = dt?.data?.customerID;
+    this.taskID = dt?.data?.taskID;
     this.dialog = dialog;
     this.isAdd = dt?.data?.isAdd ?? false;
     this.arrCaculateField = this.fields.filter((x) => x.dataType == 'CF');
@@ -83,7 +85,8 @@ export class PopupCustomFieldComponent implements OnInit {
       //no bij map nguoc dataa
       let index = this.fields.findIndex((x) => x.recID == field.recID);
       if (index != -1) {
-        this.fields[index].dataValue = result;
+        this.fields[index] = this.upDataVersion(this.fields[index], result);
+        // this.fields[index].dataValue = result;
         if (field.dataType == 'N') this.caculateField();
       }
     }
@@ -170,7 +173,10 @@ export class PopupCustomFieldComponent implements OnInit {
     this.arrCaculateField.forEach((obj) => {
       let dataFormat = obj.dataFormat;
       fieldsNum.forEach((f) => {
-        if (dataFormat.includes('[' + f.fieldName + ']') && f.dataValue) {
+        if (
+          dataFormat.includes('[' + f.fieldName + ']') &&
+          f.dataValue?.toString()
+        ) {
           let dataValue = f.dataValue;
           if (f.dataFormat == 'P') dataValue = dataValue + '/100';
           dataFormat = dataFormat.replaceAll(
@@ -186,11 +192,46 @@ export class PopupCustomFieldComponent implements OnInit {
         //tính toan end
         let index = this.fields.findIndex((x) => x.recID == obj.recID);
         if (index != -1) {
-          this.fields[index].dataValue = obj.dataValue;
+          this.fields[index] = this.upDataVersion(
+            this.fields[index],
+            obj.dataValue
+          );
+          // this.fields[index].dataValue = obj.dataValue;
         }
       }
     });
   }
 
   //------------------END_CACULATE--------------------//
+
+  //updata Version
+  upDataVersion(field, value) {
+    field.dataValue = value;
+    if (this.taskID) {
+      if (field?.versions?.length > 0 && this.taskID) {
+        let idx = field?.versions.findIndex((x) => x.refID == this.taskID);
+        if (idx != -1) field.versions[idx].dataValue = value;
+        else {
+          let vs = field?.versions;
+          let obj = {
+            refID: this.taskID,
+            dataValue: value,
+            createdOn: new Date(),
+          };
+          vs.push(obj);
+          field.versions = vs;
+        }
+      } else {
+        field['versions'] = [
+          {
+            refID: this.taskID,
+            dataValue: value,
+            createdOn: new Date(),
+          },
+        ];
+      }
+    }
+
+    return field;
+  }
 }

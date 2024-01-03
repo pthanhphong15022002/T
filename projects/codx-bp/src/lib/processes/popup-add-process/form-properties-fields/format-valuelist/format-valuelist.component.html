@@ -1,6 +1,7 @@
 <ng-container *ngIf="item?.refType == '2'">
   <ng-container *ngIf="!mutiSelectVll">
     <ejs-combobox
+      class="w-100"
       #viewComboxForm
       [dataSource]="datasVll"
       [fields]="fields"
@@ -15,6 +16,7 @@
 
   <ng-container *ngIf="mutiSelectVll">
     <ejs-multiselect
+      class="w-100"
       [dataSource]="datasVll"
       [mode]="'Default'"
       [fields]="fields"
@@ -30,7 +32,12 @@
 <ng-container *ngIf="item?.refType == '2C'"> bbbb </ng-container>
 <ng-template #customTemplate let-data>
   <div class="d-flex align-items-center">
-    <span [ngClass]="data?.icon" class="me-2" [style.color]="data.textColor" [style.backgroundColor]="data.color"></span>
+    <span
+      [ngClass]="data?.icon"
+      class="me-2"
+      [style.color]="data.textColor"
+      [style.backgroundColor]="data.color"
+    ></span>
     <span [style.color]="data.textColor" [style.backgroundColor]="data.color">{{
       data.textValue
     }}</span>
@@ -38,7 +45,12 @@
 </ng-template>
 <ng-template #valueCustomTemplate let-data>
   <div class="d-flex align-items-center p-1">
-    <span [ngClass]="data?.icon" class="me-2" [style.color]="data.textColor" [style.backgroundColor]="data.color"></span>
+    <span
+      [ngClass]="data?.icon"
+      class="me-2"
+      [style.color]="data.textColor"
+      [style.backgroundColor]="data.color"
+    ></span>
     <span [style.color]="data.textColor" [style.backgroundColor]="data.color">{{
       data.textValue
     }}</span>
