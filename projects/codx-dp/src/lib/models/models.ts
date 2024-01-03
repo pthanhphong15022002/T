@@ -68,7 +68,7 @@ export class DP_Processes {
   allowEditInstanceControl: boolean;
   allowReturnInstanceControl: boolean;
   createTask: boolean;
-  dependRule: boolean;
+  dependRule: string;
 }
 
 export class DP_Processes_Permission {
