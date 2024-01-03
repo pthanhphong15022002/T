@@ -67,6 +67,8 @@ export class DP_Processes {
   allowEstimatedEnd: boolean;
   allowEditInstanceControl: boolean;
   allowReturnInstanceControl: boolean;
+  createTask: boolean;
+  dependRule: boolean;
 }
 
 export class DP_Processes_Permission {
