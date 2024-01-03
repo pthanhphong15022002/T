@@ -145,7 +145,7 @@ export class PopupJobComponent implements OnInit, OnDestroy {
       this.stepsTasks = dt?.data?.taskInput || new DP_Steps_Tasks();
       this.showLabelAttachment = true;
       this.loadListApproverStep();
-    }    
+    }
   }
   ngOnDestroy(): void {
     this.onDestroy();
@@ -183,57 +183,75 @@ export class PopupJobComponent implements OnInit, OnDestroy {
       : [];
     this.listFields = this.step?.fields || [];
 
-    if(this.typeTask?.value == "CO"){
-      this.cache.gridViewSetup("CMContracts", "grvCMContracts").subscribe((grv) => {
-        if (grv) {
-          let grvShow = ['contractID','contractDate','contractType','useType','contractName','customerID','contactID','owner','contractAmt','pmtMethodID','interval','disposalBefore','effectiveFrom','effectiveTo','note','dealID','quotationID']
-          this.listGrvContracts = this.listGrvContracts?.length > 0 ? this.listGrvContracts : [];
-          let listFieldLinkConvert = [];
-          if(this.stepsTasks?.reference){
-            let listField = this.stepsTasks?.reference?.split(';');
-            if(listField?.length > 0){
-              let listFieldLink = listField?.filter(x => x.includes("/"));
-              if(listFieldLink?.length > 0){
-                for(let item of listFieldLink){
-                  let field = item.split('/');
-                  if(field?.length  == 2){
-                    let fieldFind = this.step?.fields?.find(x => x.recID == field[0]);
-                    let fieldLink = {
-                      recID: field[0],
-                      fieldName: field[1],
-                      title: fieldFind?.title,
-                    }
-                    listFieldLinkConvert.push(fieldLink);
-                  }
-                }
+    if (this.typeTask?.value == 'CO') {
+      this.cache
+        .gridViewSetup('CMContracts', 'grvCMContracts')
+        .subscribe((grv) => {
+          if (grv) {
+            let grvShow = [
+              'contractID',
+              'contractDate',
+              'contractType',
+              'useType',
+              'contractName',
+              'customerID',
+              'contactID',
+              'owner',
+              'contractAmt',
+              'pmtMethodID',
+              'interval',
+              'disposalBefore',
+              'effectiveFrom',
+              'effectiveTo',
+              'note',
+              'dealID',
+              'quotationID',
+            ];
+            this.listGrvContracts =
+              this.listGrvContracts?.length > 0 ? this.listGrvContracts : [];
+            const listFieldLinkConvert = (
+              this.stepsTasks?.reference
+                ? this.stepsTasks.reference.split(';')
+                : []
+            )
+              .filter((field) => field.includes('/'))
+              .map((item) => {
+                const [recID, fieldName] = item.split('/');
+                const fieldFind = this.step?.fields?.find(
+                  (x) => x.recID == recID
+                );
+                return fieldFind
+                  ? { recID, fieldName, title: fieldFind.title }
+                  : null;
+              })
+              .filter(Boolean);
+            for (var key in grv) {
+              if (grvShow?.some((x) => x.toLowerCase() == key.toLowerCase())) {
+                let filed = listFieldLinkConvert?.find(
+                  (x) => x?.fieldName == grv[key]?.fieldName
+                );
+                let data = {
+                  fieldName: grv[key]?.fieldName,
+                  headerText: grv[key]?.headerText,
+                  dataType: grv[key]?.dataType,
+                  field: filed || null,
+                  show: false,
+                };
+                this.listGrvContracts?.push(data);
               }
             }
           }
-          for (var key in grv) {
-            if(grvShow?.some(x => x.toLowerCase() == key.toLowerCase())){
-              let filed = listFieldLinkConvert?.find(x => x?.fieldName == grv[key]?.fieldName);
-              let data = {
-                fieldName: grv[key]?.fieldName,
-                headerText: grv[key]?.headerText,
-                dataType: grv[key]?.dataType,
-                field: filed || null,
-                show: false,
-              }
-              this.listGrvContracts?.push(data);
-            }
-          }
-        }
-      })
+        });
     }
   }
 
-  setRoleDefaut(){
+  setRoleDefaut() {
     let role = new DP_Steps_Tasks_Roles();
     role.objectID = this.user?.userID;
     role.objectName = this.user?.username;
-    role.objectType = "1";
-    role.roleType = "O";
-    role.taskID =  this.stepsTasks?.recID;
+    role.objectType = '1';
+    role.roleType = 'O';
+    role.taskID = this.stepsTasks?.recID;
     this.stepsTasks.roles = [role];
   }
   ngAfterViewInit() {}
@@ -258,7 +276,8 @@ export class PopupJobComponent implements OnInit, OnDestroy {
     let data = {
       dialog: this.dialog,
       formGroup: null,
-      templateID: this.stepsTasks['reference'] || '48a624a5-a55a-11ee-94cf-00155d035517',
+      templateID:
+        this.stepsTasks['reference'] || '48a624a5-a55a-11ee-94cf-00155d035517',
       showIsTemplate: true,
       showIsPublish: true,
       showSendLater: true,
@@ -328,23 +347,19 @@ export class PopupJobComponent implements OnInit, OnDestroy {
   async saveData() {
     this.stepsTasks['roles'] = [...this.owner, ...this.participant];
     this.stepsTasks['parentID'] = this.listParentID.join(';');
-    let listFieldIDConvert = [];
-    let listFieldID = [];
-    if(this.listFieldID?.length > 0){
-      for(let filter of this.listFieldID){
-        if(filter){
-          listFieldID.push(filter);
-          let find = this.listFieldLink?.find(x => x.includes(filter));
-          if(find){
-            listFieldIDConvert.push(find);
-          }else{
-            listFieldIDConvert.push(filter)
-          }
+    if (this.listGrvContracts?.length > 0) {
+      let listFieldIDLink = [];
+      for (let grv of this.listGrvContracts) {
+        if (grv?.field) {
+          let fieldAndfieldName = grv?.field?.recID + '/' + grv?.fieldName;
+          listFieldIDLink.push(fieldAndfieldName);
         }
       }
+      this.stepsTasks.reference = listFieldIDLink.join(';');
     }
-    // this.stepsTasks.fieldID = listFieldID.join(';');
-    this.stepsTasks.reference = listFieldIDConvert.join(';');
+    if(this.typeTask?.value == 'F' && this.listFieldID){
+      this.stepsTasks.fieldID = this.listFieldID.join(';');
+    }
     let message = [];
     for (let key of this.REQUIRE) {
       if (this.typeTask?.value == 'F' && key == 'dependRule') {
@@ -572,13 +587,12 @@ export class PopupJobComponent implements OnInit, OnDestroy {
   }
   fieldIDChange(event) {
     this.listFieldID = event;
-    let field = this.listFields.find(fieldID => fieldID.recID == event[0]);
+    let field = this.listFields.find((fieldID) => fieldID.recID == event[0]);
     // this.clickSettingReference(field);
   }
-  onItemClick(e){
+  onItemClick(e) {
     console.log(e);
     console.log(e?.item?.value);
-    
   }
   valueChangeText(event) {
     this.stepsTasks[event?.field] = JSON.parse(JSON.stringify(event?.data));
@@ -777,73 +791,7 @@ export class PopupJobComponent implements OnInit, OnDestroy {
     );
   }
 
-  handleDivClick(event: Event) {
-    event.stopPropagation(); // Ngăn chặn lan truyền của sự kiện click
-    // Thực hiện các hành động khi click vào div
-    this.showSelect = !this.showSelect;
-    console.log('Clicked inside div!');
-  }
-
-  @HostListener('document:click', ['$event'])
-  handleDocumentClick(event: Event) {
-    // Kiểm tra xem click có xảy ra bên trong hay bên ngoài div
-    const clickedInsideDiv = event.target && event.target instanceof HTMLElement && event.target.closest('div');
-    this.showSelect = false;
-  }
-
-  chooseData(field){
-  let data = {
-    recID: field?.recID,
-    title: field.title,
-    link:'',
-  }
-  this.listField = this.listField?.length > 0 ? this.listField : [];
-  this.listField?.push(data);
-  this.titleField = this.listField?.map(field => field.title)?.join(', ');
-   this.clickSettingReference(data);
-  }
-
-  removeField(field){
-    let index = this.listField?.findIndex(x => x.recID == field.recID);
-    if(index >= 0){
-      this.listField?.splice(index, 1);
-      this.titleField = this.listField?.map(field => field.title)?.join(', ');
-    }
-  }
-  chooseField(field){
-    let grv = this.listGrvContracts.find(grv => grv.fieldName == field.link)
-    if(grv){
-      grv.show = true;
-    }
-    let option = new DialogModel();
-    option.zIndex = 1050;
-    let obj = {
-      datas: this.listGrvContracts,
-      entityName: 'CM_Contracts',
-      action: this.action,
-      titleAction: 'Thêm trường liên kết', //test
-    };
-    let dialogColumn = this.callfunc.openForm(
-      PopupMapContractComponent,
-      '',
-      550,
-      Util.getViewPort().height - 100,
-      '',
-      obj,
-      '',
-      option
-    );
-    dialogColumn?.closed.subscribe(res => {
-      if(res?.event){
-        field.link = res.event?.fieldName;
-        res.event.show = false;
-      }else{
-        field.show = false;
-      }
-    })
-  }
-
-  clickSettingReference(field = null){
+  clickSettingReference(field = null) {
     let option = new DialogModel();
     option.zIndex = 1050;
     let obj = {
@@ -863,16 +811,18 @@ export class PopupJobComponent implements OnInit, OnDestroy {
       '',
       option
     );
-    dialogColumn?.closed.subscribe(res => {
-      if(res?.event){
-        let fieldIDs = res.event?.fieldIDs;
-        if(fieldIDs){
-          let data = Array.from(new Set(this.listFieldID.concat(fieldIDs)));
-          this.listFieldID = data;
+    dialogColumn?.closed.subscribe((res) => {
+      if (res?.event) {
+        this.listGrvContracts = res?.event;
+        this.listFieldID = [];
+        for (let grv of this.listGrvContracts) {
+          grv.show = false;
+          if (grv?.field?.recID) {
+            this.listFieldID.push(grv?.field?.recID);
+          }
         }
-        this.listFieldLink = res.event?.fields;
         this.changeDetectorRef.markForCheck();
       }
-    })
+    });
   }
 }

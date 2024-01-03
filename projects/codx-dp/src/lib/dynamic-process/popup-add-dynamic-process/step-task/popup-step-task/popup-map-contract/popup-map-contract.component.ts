@@ -29,7 +29,6 @@ export class PopupMapContractComponent implements OnInit {
   datas: any;
   titleAction = '';
   data: any;
-  listField = []; //mảng field
   entityName = 'entityName'; //test
   formModelField: FormModel = {
     gridViewName: 'grvDPStepsFields',
@@ -39,7 +38,7 @@ export class PopupMapContractComponent implements OnInit {
   dataRef = [];
   dataSelect;
   fieldsFields = { text: 'title', value: 'recID' };
-  listFields;
+  listField;
   grvOld;
   listFieldConvert;
   indexRemote;
@@ -55,19 +54,19 @@ export class PopupMapContractComponent implements OnInit {
     this.dialog = dialog;
     this.datas = dt?.data?.datas;
     this.titleAction = dt?.data?.titleAction;
-    this.listFields = dt?.data?.listFields;
+    this.listField = dt?.data?.listFields;
   }
 
   ngOnInit(): void {
     this.grvContracts = JSON.parse(JSON.stringify(this.datas));
-    this.listFields = this.listFields?.map(item => ({title: item?.title, recID: item?.recID, fieldName: null}));
+    this.listField = this.listField?.map(item => ({title: item?.title, recID: item?.recID, fieldName: null}));
     this.listFieldIDChoose = this.grvContracts?.filter(x => x.field)?.map(y => y?.field?.recID);
     this.setListFieldShow();
   }
 
   setListFieldShow(){
     this.listFieldShow = [];
-    for(let field of this.listFields){
+    for(let field of this.listField){
       if(!this.listFieldIDChoose?.some(x => x == field?.recID)){
         this.listFieldShow?.push(field);
       }
@@ -95,20 +94,14 @@ export class PopupMapContractComponent implements OnInit {
   }
 
 
-  fieldIDChange(event, item){
+  fieldIDChange(event, grv){
     if(event){
       let data = event?.value;
       if(data){
-        let index = this.listFields?.findIndex(x => x.recID == data);
-        if(index >= 0){
-          if(item.field && !this.listFields?.some(x => x.recID == item?.field?.recID) ){
-            this.listFields.push(item.field);
-          }
-          item.field = this.listFields[index];
-          this.indexRemote = this.listFields[index];
-        }
+        let field = this.listFieldShow?.find(x => x.recID == data);
+        if(field) grv.field = field;
       }else{
-        item.field = null;
+        grv.field = null;
         this.indexRemote = null;
       }
     }
