@@ -230,6 +230,20 @@ export class PopupAddCustomFieldComponent implements OnInit {
     }
     if (this.field.dataType == 'CF')
       this.caculateField = this.field.dataFormat ?? '';
+
+    if(this.field.dataType == 'PA'){
+      this.cache.combobox(this.field.refValue).subscribe((cb) => {
+        if (cb) {
+          this.servicePA = cb?.service;
+          this.entityNamePA = cb?.tableName;
+          this.funcCBX = cb?.linkFunction;
+        } else {
+          this.servicePA = '';
+          this.entityNamePA = '';
+          this.funcCBX = '';
+        }
+      });
+    }
   }
 
   async valueChange(e) {
@@ -239,7 +253,6 @@ export class PopupAddCustomFieldComponent implements OnInit {
     }
     if (e.field == 'dataType') {
       this.titleField = e?.component?.selectedItems[0]?.text;
-      return;
     }
     if (
       (e.field == 'dataType' && e.data != this.field.dataType) ||
@@ -276,8 +289,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
     if (
       e.field == 'refValue' &&
       this.field.dataType == 'PA' &&
-      e.data &&
-      e.data != this.field.refValue
+      e.data 
     ) {
       this.field.refType = '3';
       this.cache.combobox(e.data).subscribe((cb) => {
@@ -554,19 +566,6 @@ export class PopupAddCustomFieldComponent implements OnInit {
                   this.field = crrF;
                   this.field.recID = recID;
                   this.field.stepID = stepID;
-
-                  // this.field.title = crrF.title;
-                  // this.field.fieldName = crrF.fieldName;
-                  // this.field.dataFormat = crrF.dataFormat;
-                  // this.field.dataType = crrF.dataType;
-                  // this.field.multiselect = crrF.multiselect;
-                  // this.field.rank = crrF.rank;
-                  // this.field.rankIcon = crrF.rankIcon;
-                  // this.field.refValue = crrF.refValue;
-                  // this.field.refType = crrF.refType;
-                  // this.field.note = crrF.note;
-                  // this.field.defaultValue = crrF.defaultValue;
-                  // this.field.isRequired = crrF.isRequire;
                   this.form.formGroup.patchValue(this.field);
                 }
               }
