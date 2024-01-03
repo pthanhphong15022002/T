@@ -342,7 +342,11 @@ export class PopupAddCustomFieldComponent implements OnInit {
   }
 
   saveData() {
-    if (this.field.dataType == 'CF') this.field.dataFormat = this.caculateField;
+    if (this.field.dataType == 'CF') {
+      if (this.checkCaculateField()) this.field.dataFormat = this.caculateField;
+      else return;
+    }
+
     if (
       (!this.field.title || this.field.title.trim() == '') &&
       this.grvSetup['Title']?.isRequire
@@ -1244,7 +1248,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
       let idxLast = this.caculateField.length - 1;
       if (
         this.caculateField[idxLast] == ']' ||
-        this.caculateField[idxLast] == ')' 
+        this.caculateField[idxLast] == ')'
       )
         return;
     }
@@ -1253,7 +1257,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
   decimalPoint() {
     if (!this.caculateField) return;
     let idxLast = this.caculateField.length - 1;
-    let chartLast = this.caculateField[idxLast]; 
+    let chartLast = this.caculateField[idxLast];
     if (
       chartLast == ',' ||
       this.accessField.includes(chartLast) ||
@@ -1261,10 +1265,13 @@ export class PopupAddCustomFieldComponent implements OnInit {
     )
       return;
     //chua check hết
-    idxLast= idxLast -1
-    while(!this.operator.includes(this.accessField[idxLast]) || idxLast!=-1){
-      if(this.caculateField[idxLast]==",")  return;
-      idxLast--
+    idxLast = idxLast - 1;
+    while (
+      !this.operator.includes(this.accessField[idxLast]) ||
+      idxLast != -1
+    ) {
+      if (this.caculateField[idxLast] == ',') return;
+      idxLast--;
     }
     this.caculateField += ',';
   }
@@ -1297,6 +1304,19 @@ export class PopupAddCustomFieldComponent implements OnInit {
   }
 
   checkCaculateField() {
+    if (!this.caculateField) {
+      this.notiService.notify('Phép toán chưa được thiết lập !', '3');
+      return false;
+    }
+
+    let lastChart = this.caculateField[this.caculateField.length - 1];
+    if (
+      this.compareParenthesis(this.caculateField) > 0 ||
+      this.operator.includes(lastChart)
+    ) {
+      this.notiService.notify('Phép toán chưa đúng ! Hãy kiểm tra lại !', '3');
+      return false;
+    }
     return true;
   }
 
