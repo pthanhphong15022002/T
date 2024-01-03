@@ -243,6 +243,11 @@
 </div> -->
 
 <ng-container [ngSwitch]="subItem.controlType">
+  <ng-container *ngSwitchCase="'SubTitle'">
+    <ng-container
+      *ngTemplateOutlet="text; context: { $implicit: subItem }"
+    ></ng-container>
+  </ng-container>
   <ng-container *ngSwitchCase="'Text'">
     <ng-container
       *ngTemplateOutlet="text; context: { $implicit: subItem }"

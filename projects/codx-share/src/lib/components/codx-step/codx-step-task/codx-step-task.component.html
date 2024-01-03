@@ -279,7 +279,9 @@
                             }"
                           ></ng-container>
                         </div>
-                        <div class="d-flex align-items-center justify-content-end step-task-right">
+                        <div
+                          class="d-flex align-items-center justify-content-end step-task-right"
+                        >
                           <ng-container
                             *ngIf="
                               task?.approveRule &&
@@ -346,7 +348,12 @@
                       <div
                         *ngIf="task?.fieldID"
                         class="d-flex align-items-center"
-                        [ngClass]="(this.isOnlyView || (this.isTaskFirst && this.isRoleAll)) ? 'cursor-pointer' : 'cursor-not-allowed'"
+                        [ngClass]="
+                          this.isOnlyView ||
+                          (this.isTaskFirst && this.isRoleAll)
+                            ? 'cursor-pointer'
+                            : 'cursor-not-allowed'
+                        "
                         (click)="openFormField(task)"
                       >
                         <span
@@ -428,7 +435,7 @@
           *
         </div>
       </div>
-      <div class="line-clamp line-clamp-1" [ngbTooltip]=" data?.task?.note">
+      <div class="line-clamp line-clamp-1" [ngbTooltip]="data?.task?.note">
         <span class="text-gray-500">{{ data?.task?.note }}</span>
       </div>
     </div>
@@ -450,8 +457,7 @@
     allowMultiFile="1"
     referType="source"
     displayThumb="simple"
-  >
-  </codx-attachment>
+  ></codx-attachment>
 </ng-template>
 
 <ng-template #buttonTemplate let-data="value">
@@ -708,7 +714,9 @@
     <button
       *ngIf="
         (data?.task?.taskType == 'C' || data?.task?.taskType == 'T') &&
-        data?.task?.status == '1' && data?.task?.dependRule == '0' && (isOnlyView || isTaskFirst)
+        data?.task?.status == '1' &&
+        data?.task?.dependRule == '0' &&
+        (isOnlyView || isTaskFirst)
       "
       type="button"
       class="btn btn-outline-primary btn-sm"
