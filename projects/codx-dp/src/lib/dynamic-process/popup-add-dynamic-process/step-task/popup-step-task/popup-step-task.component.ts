@@ -84,7 +84,6 @@ export class PopupJobComponent implements OnInit, OnDestroy {
   listField = [];
   titleField = '';
   listApproverView;
-  grvContracts;
   listGrvContracts;
   showSelect = false;
   listCombobox = {
@@ -184,31 +183,44 @@ export class PopupJobComponent implements OnInit, OnDestroy {
       : [];
     this.listFields = this.step?.fields || [];
 
-    // let listField = [];
-    // if (this.step?.tasks?.length > 0) {
-    //   this.step.tasks.forEach((task) => {
-    //     if (task?.fieldID && task.recID != this.stepsTasks?.recID) {
-    //       listField.push(...task.fieldID.split(';'));
-    //     }
-    //   });
-    // }
-    // this.listFields = this.step?.fields.filter(
-    //   (field) => !listField.includes(field.recID)
-    // );
     if(this.typeTask?.value == "CO"){
       this.cache.gridViewSetup("CMContracts", "grvCMContracts").subscribe((grv) => {
         if (grv) {
-          this.grvContracts = grv;
-          for (var key in grv) {
-            let data = {
-              fieldName: grv[key]?.fieldName,
-              headerText: grv[key]?.headerText,
-              dataType: grv[key]?.dataType,
-              fieldLindID: '',
-              fieldLindName: '',
+          let grvShow = ['contractID','contractDate','contractType','useType','contractName','customerID','contactID','owner','contractAmt','pmtMethodID','interval','disposalBefore','effectiveFrom','effectiveTo','note','dealID','quotationID']
+          this.listGrvContracts = this.listGrvContracts?.length > 0 ? this.listGrvContracts : [];
+          let listFieldLinkConvert = [];
+          if(this.stepsTasks?.reference){
+            let listField = this.stepsTasks?.reference?.split(';');
+            if(listField?.length > 0){
+              let listFieldLink = listField?.filter(x => x.includes("/"));
+              if(listFieldLink?.length > 0){
+                for(let item of listFieldLink){
+                  let field = item.split('/');
+                  if(field?.length  == 2){
+                    let fieldFind = this.step?.fields?.find(x => x.recID == field[0]);
+                    let fieldLink = {
+                      recID: field[0],
+                      fieldName: field[1],
+                      title: fieldFind?.title,
+                    }
+                    listFieldLinkConvert.push(fieldLink);
+                  }
+                }
+              }
             }
-            this.listGrvContracts = this.listGrvContracts?.length > 0 ? this.listGrvContracts : [];
-            this.listGrvContracts?.push(data);
+          }
+          for (var key in grv) {
+            if(grvShow?.some(x => x.toLowerCase() == key.toLowerCase())){
+              let filed = listFieldLinkConvert?.find(x => x?.fieldName == grv[key]?.fieldName);
+              let data = {
+                fieldName: grv[key]?.fieldName,
+                headerText: grv[key]?.headerText,
+                dataType: grv[key]?.dataType,
+                field: filed || null,
+                show: false,
+              }
+              this.listGrvContracts?.push(data);
+            }
           }
         }
       })
@@ -331,7 +343,7 @@ export class PopupJobComponent implements OnInit, OnDestroy {
         }
       }
     }
-    this.stepsTasks.fieldID = listFieldID.join(';');
+    // this.stepsTasks.fieldID = listFieldID.join(';');
     this.stepsTasks.reference = listFieldIDConvert.join(';');
     let message = [];
     for (let key of this.REQUIRE) {
@@ -804,7 +816,6 @@ export class PopupJobComponent implements OnInit, OnDestroy {
       grv.show = true;
     }
     let option = new DialogModel();
-    console.log(this.grvContracts);
     option.zIndex = 1050;
     let obj = {
       datas: this.listGrvContracts,
@@ -834,7 +845,6 @@ export class PopupJobComponent implements OnInit, OnDestroy {
 
   clickSettingReference(field = null){
     let option = new DialogModel();
-    console.log(this.grvContracts);
     option.zIndex = 1050;
     let obj = {
       datas: this.listGrvContracts,
