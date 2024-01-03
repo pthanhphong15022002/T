@@ -295,7 +295,7 @@
                     <div class="d-flex align-items-center justify-content-between mt-4">
                         <div class="d-flex align-items-center">
                             <div class="fw-bold fs-6">
-                                <codx-label [formModel]="dialog.formModel" default="Evoucher"></codx-label>
+                                <codx-label [formModel]="dialog.formModel" default="Quà tặng evoucher"></codx-label>
                             </div>
                         </div>
                         <div class="d-flex align-items-center py-1" style="white-space: nowrap;">
@@ -315,6 +315,8 @@
                                     [width]="widthEvoucher"
                                     [height]="height"
                                     [dataSelcected]="evoucher"
+                                    [coCoins]="myWallet?.coCoins"
+                                    [exchangeRateEVoucher]="exchangeRateEVoucher"
                                 >
                                 </codx-evoucher-popup>
                             </ng-container>
