@@ -972,7 +972,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
         .exec<any>(
           'SYS',
           'GridViewSetupBusiness',
-          'GetGrvStAndFormNameByEntityNameAsync',
+          'GetGrvNameAndFormNameByEntityNameAsync',
           this.entityNamePA
         )
         .subscribe((res) => {
