@@ -1197,21 +1197,21 @@ export class CodxCmService {
   //   );
   // }
 
-  getViewDetailDealAsync(data) {
-    return this.api.exec<any>(
-      'CM',
-      'DealsBusiness',
-      'GetViewDetailDealAsync',
-      data
-    );
-  }
-  getSettingViewDetailDealAsync() {
-    return this.api.exec<any>(
-      'CM',
-      'DealsBusiness',
-      'GetSettingViewDetailDealAsync'
-    );
-  }
+  // getViewDetailDealAsync(data) {
+  //   return this.api.exec<any>(
+  //     'CM',
+  //     'DealsBusiness',
+  //     'GetViewDetailDealAsync',
+  //     data
+  //   );
+  // }
+  // getSettingViewDetailDealAsync() {
+  //   return this.api.exec<any>(
+  //     'CM',
+  //     'DealsBusiness',
+  //     'GetSettingViewDetailDealAsync'
+  //   );
+  // }
 
   getDataTabHistoryDealAsync(data) {
     return this.api.exec<any>(

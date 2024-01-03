@@ -1057,104 +1057,275 @@
 </ng-template>
 
 <ng-template #referencesDeal>
-  <div *ngIf="mergedList?.length > 0 && mergedList != null; else noData">
-    <div *ngFor="let item of mergedList" class="p-3">
-      <div class="d-flex justify-content-start">
-        <div>
-          <i [class]="getSettingValue(item?.type, 'icon')"></i>
-        </div>
-        <div class="d-flex align-items-stretch">
-          <codx-label
-            [default]="getSettingValue(item?.type, 'headerText')"
-            class="pe-2"
-          ></codx-label>
-          <span
-            *ngIf="item?.type == '1'"
-            class="text-gray-700 line-clamp line-clamp-1"
-            [ngbTooltip]="grvSetupQuotation['VersionName']?.headerText"
-            #versionName
-            [innerHTML]="
-              item?.versionName
-                | formatvalue : formModelQuotations : 'versionName'
-                | async
-            "
-          ></span>
-        </div>
-        <div
-          class="ms-auto"
-          [ngbTooltip]="getSettingValue(item?.type, 'deadValue')"
-        >
-          <span
-            class="icon-monetization_on pe-1 text-warning icon-16 mt-1"
-          ></span>
-          <span
-            class="text-gray-700 line-clamp line-clamp-1 pe-2"
-            #totalAmt
-            [innerHTML]="
-              item?.totalAmt
-                | formatvalue : formModelQuotations : 'totalAmt'
-                | async
-            "
-          ></span>
-          <span
-            class="text-gray-700 line-clamp line-clamp-1"
-            #currencyID
-            [innerHTML]="
-              item?.currencyID
-                | formatvalue
-                  : getSettingValue(item?.type, 'formModel')
-                  : 'currencyID'
-                | async
-            "
-          ></span>
-        </div>
-      </div>
-      <div class="d-flex justify-content-start">
-        <span [ngbTooltip]="getSettingValue(item?.type, 'name')">
-          {{ item?.name }}
-        </span>
-      </div>
-      <div class="d-flex justify-content-between">
-        <div class="first-div d-flex align-items-start">
-          <codx-vll
-            [name]="getSettingValue(item?.type, 'status')"
-            [field]="'Status'"
-            [value]="item?.status"
-            [showText]="true"
-            [showBgColor]="true"
-            class="badge badge-light badge-sm me-0"
-          >
-          </codx-vll>
+  <div *ngIf="isViewLink; else noData">
+    <div *ngIf=" listContracts && listContracts.length > 0 ">
+      <div *ngFor="let item of listContracts" class="p-3">
+        <div class="d-flex justify-content-start">
+          <div>
+            <i class="icon-sticky_note_2"></i>
+          </div>
+          <div class="d-flex align-items-stretch">
+            <codx-label
+              [default]="'Hợp đồng'"
+              class="pe-2"
+            ></codx-label>
+          </div>
           <div
-            class="d-flex align-items-center"
-            [ngbTooltip]="getSettingValue(item?.type, 'createOn')"
+            class="ms-auto line-clamp line-clamp-1 d-flex"
+            [ngbTooltip]="grvSetupContract['ContractAmt']?.headerText"
           >
-            <span class="icon-16 icon-av_timer me-1"></span>
             <span
-              class="text-gray-700 line-clamp line-clamp-1"
-              #createdOn
+              class="icon-monetization_on pe-1 text-warning icon-16 mt-1"
+            ></span>
+            <span
+              class="text-gray-700  pe-2"
+              #contractAmt
               [innerHTML]="
-                item?.createdOn
+                item?.contractAmt
+                  | formatvalue : formModelContact : 'contractAmt'
+                  | async
+              "
+            ></span>
+            <span
+              class="text-gray-700 "
+              #currencyID
+              [innerHTML]="
+                item?.currencyID
                   | formatvalue
-                    : getSettingValue(item?.type, 'formModel')
-                    : 'createdOn'
+                    : formModelContact
+                    : 'currencyID'
                   | async
               "
             ></span>
           </div>
         </div>
-        <div class="last-div h-20px">
-          <codx-imgs
-            [isToolTip]="true"
-            [width]="20"
-            [objectId]="item?.createdBy"
-            objectType="AD_Users"
-            [numberImages]="1"
-          >
-          </codx-imgs>
+        <div class="d-flex justify-content-start">
+          <span [ngbTooltip]="grvSetupContract['ContractName']?.headerText">
+            {{ item?.contractName }}
+          </span>
+        </div>
+        <div class="d-flex justify-content-between">
+          <div class="first-div d-flex align-items-start">
+            <codx-vll
+              [name]="vllStatusContract"
+              [field]="'Status'"
+              [value]="item?.status"
+              [showText]="true"
+              [showBgColor]="true"
+              class="badge badge-light badge-sm me-0"
+            >
+            </codx-vll>
+          <div
+              class="d-flex align-items-center"
+              [ngbTooltip]="grvSetupContract['ContractName']?.headerText"
+            >
+              <span class="icon-16 icon-av_timer me-1"></span>
+              <span
+                class="text-gray-700 line-clamp line-clamp-1"
+                #createdOn
+                [innerHTML]="
+                  item?.createdOn
+                    | formatvalue
+                      : formModelContact
+                      : 'createdOn'
+                    | async
+                "
+              ></span>
+            </div>
+          </div>
+          <div class="last-div h-20px">
+            <codx-imgs
+              [isToolTip]="true"
+              [width]="20"
+              [objectId]="item?.createdBy"
+              objectType="AD_Users"
+              [numberImages]="1"
+            >
+            </codx-imgs>
+          </div>
         </div>
       </div>
     </div>
+
+    <div *ngIf=" listLeads && listLeads.length > 0 ">
+      <div *ngFor="let item of listLeads" class="p-3">
+        <div class="d-flex justify-content-start">
+          <div>
+            <i class="icon-sticky_note_2"></i>
+          </div>
+          <div class="d-flex align-items-stretch">
+            <codx-label
+              [default]="'Tiềm năng'"
+              class="pe-2"
+            ></codx-label>
+          </div>
+          <div
+            class="ms-auto line-clamp line-clamp-1 d-flex"
+            [ngbTooltip]="grvSetupLead['DealValue']?.headerText"
+          >
+            <span
+              class="icon-monetization_on pe-1 text-warning icon-16 mt-1"
+            ></span>
+            <span
+              class="text-gray-700  pe-2"
+              #dealValue
+              [innerHTML]="
+                item?.dealValue
+                  | formatvalue : formModelLead : 'dealValue'
+                  | async
+              "
+            ></span>
+            <span
+              class="text-gray-700 "
+              #currencyID
+              [innerHTML]="
+                item?.currencyID
+                  | formatvalue
+                    : formModelLead
+                    : 'currencyID'
+                  | async
+              "
+            ></span>
+          </div>
+        </div>
+        <div class="d-flex justify-content-start">
+          <span [ngbTooltip]="grvSetupLead['LeadName']?.headerText">
+            {{ item?.leadName }}
+          </span>
+        </div>
+        <div class="d-flex justify-content-between">
+          <div class="first-div d-flex align-items-start">
+            <codx-vll
+              [name]="vllStatusLead"
+              [field]="'Status'"
+              [value]="item?.status"
+              [showText]="true"
+              [showBgColor]="true"
+              class="badge badge-light badge-sm me-0"
+            >
+            </codx-vll>
+          <div
+              class="d-flex align-items-center"
+              [ngbTooltip]="grvSetupLead['LeadName']?.headerText"
+            >
+              <span class="icon-16 icon-av_timer me-1"></span>
+              <span
+                class="text-gray-700 line-clamp line-clamp-1"
+                #createdOn
+                [innerHTML]="
+                  item?.createdOn
+                    | formatvalue
+                      : formModelLead
+                      : 'createdOn'
+                    | async
+                "
+              ></span>
+            </div>
+          </div>
+          <div class="last-div h-20px">
+            <codx-imgs
+              [isToolTip]="true"
+              [width]="20"
+              [objectId]="item?.createdBy"
+              objectType="AD_Users"
+              [numberImages]="1"
+            >
+            </codx-imgs>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf=" listQuotations && listQuotations.length > 0 ">
+      <div *ngFor="let item of listQuotations" class="p-3">
+        <div class="d-flex justify-content-start">
+          <div>
+            <i class="icon-sticky_note_2"></i>
+          </div>
+          <div class="d-flex align-items-stretch">
+            <codx-label
+              [default]="'Báo giá'"
+              class="pe-2"
+            ></codx-label>
+          </div>
+          <div
+            class="ms-auto line-clamp line-clamp-1 d-flex"
+            [ngbTooltip]="grvSetupQuotation['TotalAmt']?.headerText"
+          >
+            <span
+              class="icon-monetization_on pe-1 text-warning icon-16 mt-1"
+            ></span>
+            <span
+              class="text-gray-700  pe-2"
+              #totalAmt
+              [innerHTML]="
+                item?.totalAmt
+                  | formatvalue : formModelQuotations : 'totalAmt'
+                  | async
+              "
+            ></span>
+            <span
+              class="text-gray-700 "
+              #currencyID
+              [innerHTML]="
+                item?.currencyID
+                  | formatvalue
+                    : formModelQuotations
+                    : 'currencyID'
+                  | async
+              "
+            ></span>
+          </div>
+        </div>
+        <div class="d-flex justify-content-start">
+          <span [ngbTooltip]="grvSetupQuotation['QuotationName']?.headerText">
+            {{ item?.quotationName }}
+          </span>
+        </div>
+        <div class="d-flex justify-content-between">
+          <div class="first-div d-flex align-items-start">
+            <codx-vll
+              [name]="vllStatusQuotation"
+              [field]="'Status'"
+              [value]="item?.status"
+              [showText]="true"
+              [showBgColor]="true"
+              class="badge badge-light badge-sm me-0"
+            >
+            </codx-vll>
+          <div
+              class="d-flex align-items-center"
+              [ngbTooltip]="grvSetupQuotation['QuotationName']?.headerText"
+            >
+              <span class="icon-16 icon-av_timer me-1"></span>
+              <span
+                class="text-gray-700 line-clamp line-clamp-1"
+                #createdOn
+                [innerHTML]="
+                  item?.createdOn
+                    | formatvalue
+                      : formModelQuotations
+                      : 'createdOn'
+                    | async
+                "
+              ></span>
+            </div>
+          </div>
+          <div class="last-div h-20px">
+            <codx-imgs
+              [isToolTip]="true"
+              [width]="20"
+              [objectId]="item?.createdBy"
+              objectType="AD_Users"
+              [numberImages]="1"
+            >
+            </codx-imgs>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
   </div>
   <ng-template #noData>
     <codx-no-data> </codx-no-data>

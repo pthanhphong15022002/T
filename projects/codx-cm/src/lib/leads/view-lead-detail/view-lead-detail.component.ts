@@ -10,6 +10,7 @@ import { CodxCmService } from '../../codx-cm.service';
 import { CM_Contracts, CM_Customers, CM_Deals, CM_Leads } from '../../models/cm_model';
 import { ApiHttpService, CacheService, DialogData, DialogRef, NotificationsService} from 'codx-core';
 import { ContractsService } from '../../contracts/service-contracts.service';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'view-lead-detail',
@@ -35,6 +36,8 @@ export class ViewLeadDetailComponent implements OnInit, OnChanges {
   vllStatus;
   oCountFooter: any = {};
   dataTree = [];
+  tmpDeal:any;
+  gridViewSetupDeal:any;
 
   formModelCustomer = {
     formName: 'CMCustomers',
@@ -46,7 +49,14 @@ export class ViewLeadDetailComponent implements OnInit, OnChanges {
     entityName: 'CM_Contacts',
     gridViewName: 'grvCMContacts',
   };
-  
+
+  formModelDeal = {
+    formName: 'CMDeals',
+    entityName: 'CM_Deals',
+    gridViewName: 'grvCMDeals',
+  };
+
+
   listTabLeft = [
     { id: 'listTabInformation', name: 'Thông tin hợp đồng', icon: 'icon-info' },
     { id: 'listHistory', name: 'Lịch sử', icon: 'icon-i-clock-history' },
@@ -104,6 +114,8 @@ export class ViewLeadDetailComponent implements OnInit, OnChanges {
           this.vllStatus = this.grvSetup['Status'].referedValue;
         }
       });
+    this.getGridViewSetupDeal();
+    this.getTmpDeal();
   }
   ngOnChanges(changes: SimpleChanges) {}
 
@@ -126,7 +138,7 @@ export class ViewLeadDetailComponent implements OnInit, OnChanges {
         this.getContact();
         this.changeDetectorRef.markForCheck();
       } else {
-        this.dialog.close(); 
+        this.dialog.close();
         this.notiService.notify('Không tìm thấy hợp đồng', '3');
       }
     });
@@ -141,6 +153,15 @@ export class ViewLeadDetailComponent implements OnInit, OnChanges {
     }
   }
 
+  async getGridViewSetupDeal() {
+    this.gridViewSetupDeal = await firstValueFrom(
+      this.cache.gridViewSetup(
+        this.formModelDeal?.formName,
+        this.formModelDeal?.gridViewName
+      )
+    );
+  }
+
   getListInstanceStep(contract) {
     if (contract?.processID) {
       var data = [contract?.refID, contract?.processID, contract?.status, '1'];
@@ -151,6 +172,18 @@ export class ViewLeadDetailComponent implements OnInit, OnChanges {
       });
     }
   }
+  async getTmpDeal() {
+    this.codxCmService
+      .getOneTmpDeal([this.lead.dealID])
+      .subscribe((res) => {
+        if (res) {
+          this.tmpDeal = res[0];
+        } else {
+          this.tmpDeal = null;
+        }
+      });
+  }
+
 
   close() {
     this.dialog.close();
@@ -185,19 +218,19 @@ export class ViewLeadDetailComponent implements OnInit, OnChanges {
   }
     getContact() {
     if (this.lead?.recID) {
-      let data = [this.lead?.recID,this.lead?.currencyID];
-      this.codxCmService.getViewDetailDealAsync(data).subscribe((res) => {
-        if (res) {
-          if(res[0] && res[0].length > 0 ) {
-              let listContact = res[0];
-              let contactMain = listContact.filter(x=>x.isDefault)[0];
-              this.contact = contactMain ? contactMain : null;
-          }
-          else {
-            this.contact = null;
-          }
-        }
-      });
+      // let data = [this.lead?.recID,this.lead?.currencyID];
+      // this.codxCmService.getViewDetailDealAsync(data).subscribe((res) => {
+      //   if (res) {
+      //     if(res[0] && res[0].length > 0 ) {
+      //         let listContact = res[0];
+      //         let contactMain = listContact.filter(x=>x.isDefault)[0];
+      //         this.contact = contactMain ? contactMain : null;
+      //     }
+      //     else {
+      //       this.contact = null;
+      //     }
+      //   }
+      // });
     }
   }
 
