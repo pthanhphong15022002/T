@@ -344,6 +344,7 @@
                                 <codx-input style="margin-left: 5px;" ControlName="number" [min]="1" [step]="1"
                                     [formModel]="dialog.formModel" type="number"
                                     field="quantity" [crrValue]="data?.quantity"
+                                    [disabled]="isLoadingEvoucher"
                                     (valueChange)="updateQuantityEvoucher($event, i)">
                                 </codx-input>
                             </div>

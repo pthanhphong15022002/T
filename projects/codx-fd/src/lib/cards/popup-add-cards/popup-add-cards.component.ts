@@ -721,8 +721,10 @@ export class PopupAddCardsComponent implements OnInit {
         }
       }
 
-      if (this.gifts && this.gifts.length > 0 
-        || this.evoucherGift && this.evoucherGift.length > 0) {
+      if (
+        (this.gifts && this.gifts.length > 0 ) || 
+        (this.evoucherGift && this.evoucherGift.length > 0)
+      ) {
         this.card.hasGifts = true;
         this.card.gifts = [...this.gifts, ...this.evoucherGift];
       }
@@ -963,8 +965,10 @@ export class PopupAddCardsComponent implements OnInit {
   updateQuantityEvoucher(e: any, index: number) {
     let quantity = e?.component?.crrValue || 1;
     let evoucher = this.evoucher[index];
-    evoucher.quantity = quantity;
-    this.updateAmountEvoucher();
+    if(quantity != evoucher.quantity) {
+      evoucher.quantity = quantity;
+      this.updateAmountEvoucher();
+    }
   }
 
   updateAmountEvoucher() {
@@ -1008,6 +1012,7 @@ export class PopupAddCardsComponent implements OnInit {
           '2'
         ]).subscribe((data) => {
           if (data.length != 0 && data[0] != null) {
+            data[0].quantity = quantity;
             this.evoucherGift.push(data[0]);
           }
           this.isLoadingEvoucher = false;
