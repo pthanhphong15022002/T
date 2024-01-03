@@ -35,7 +35,7 @@ import {
 import { tmpInstances } from '../../models/tmpModel';
 import { CodxCmService } from '../../codx-cm.service';
 import { ContractsService } from '../service-contracts.service';
-import { Observable, Subject, firstValueFrom, takeUntil } from 'rxjs';
+import { Observable, Subject, takeUntil, filter, firstValueFrom } from 'rxjs';
 import { StepService } from 'projects/codx-share/src/lib/components/codx-step/step.service';
 import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
 import { CodxListContactsComponent } from '../../cmcustomer/cmcustomer-detail/codx-list-contacts/codx-list-contacts.component';
@@ -373,7 +373,11 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
           this.getBusinessLineByProcessContractID(this.processID);
         }
         if(this.type == 'task' && this.processID){
+          this.contracts.applyProcess = true;
+           this.contracts.processID = this.processID;
           this.getBusinessLineByProcessID(this.processID);
+          this.getListInstanceSteps(this.contracts.processID);
+          this.mapDataInfield();
         }
         break;
       case 'edit':
@@ -435,6 +439,32 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
         this.getCustomersDefaults(this.contracts?.customerID);
         break;
       default:
+    }
+  }
+
+  mapDataInfield(){
+    if(this.type == 'task' && this.stepsTasks && this.stepsTasks?.reference){
+      this.cmService.getInstancerStepByRecID((this.stepsTasks?.stepID)).subscribe(res => {
+        if(res){
+          let step = res;
+          if(step && this.stepsTasks?.reference){
+            let fields = this.stepsTasks?.reference?.split(";");
+            let listField = step?.fields;
+            let link = fields?.filter(x => x.includes("/"));
+            if(link){
+              let data = [];
+              for(let item of link){
+                let x = item?.split("/");
+                if(x?.length  == 2){
+                  let field = listField?.find(j => j.refID == x[0]);
+                  let y =  x[1].charAt(0).toLowerCase() + x[1].slice(1);
+                  this.contracts[y] = field?.dataValue;
+                }
+              }
+            }
+          }
+        }
+      })
     }
   }
 
@@ -1217,6 +1247,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
         this.getSettingFields(res[3], this.listInstanceSteps);
         this.listParticipants = [];
         this.listParticipants = JSON.parse(JSON.stringify(obj?.permissions));
+
         this.changeDetectorRef.detectChanges();
       }
     });
