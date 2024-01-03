@@ -148,6 +148,18 @@
     border: 1px solid var(--primary) !important;
 }
 
+.ac-badge-light-success {
+    color: rgb(39, 240, 39) !important;
+    background: none !important;
+    border: 1px solid rgb(39, 240, 39) !important;
+}
+
+.ac-badge-light-warning {
+    color: rgb(255, 216, 40) !important;
+    background: none !important;
+    border: 1px solid rgb(255, 216, 40) !important;
+}
+
 
 /* css vẽ khung input trước khi init */
 .ac-input {

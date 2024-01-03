@@ -2,17 +2,19 @@ import { ChangeDetectorRef, Component, Injector, Optional, TemplateRef, ViewChil
 import { ActivatedRoute } from '@angular/router';
 import { ButtonModel, CallFuncService, DataRequest, DialogRef, NotificationsService, SidebarModel, UIComponent, ViewModel, ViewType } from 'codx-core';
 import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
+import { DynamicSettingControlComponent } from 'projects/codx-share/src/lib/components/dynamic-setting/dynamic-setting-control/dynamic-setting-control.component';
 
 @Component({
   selector: 'lib-update-the-ledger',
   templateUrl: './update-the-ledger.component.html',
-  styleUrls: ['./update-the-ledger.component.css']
+  styleUrls: ['./update-the-ledger.component.css'],
 })
 export class UpdateTheLedgerComponent extends UIComponent{
-  
+  //#region Contrucstor
   views: Array<ViewModel> = [];
-  @ViewChild('templateMore') templateMore?: TemplateRef<any>;
-  @ViewChild('itemTemplate') itemTemplate?: TemplateRef<any>;
+  @ViewChild('template') template?: TemplateRef<any>;
+  setting:any = [];
+  dataValue :any = {};
   constructor(
     private inject: Injector,
     private notification: NotificationsService,
@@ -23,32 +25,34 @@ export class UpdateTheLedgerComponent extends UIComponent{
     super(inject);
   }
 
-  //region Init
+  //#endregion Contrustor
+
+  //#region Init
   onInit(): void {
+    if(!this.funcID) this.funcID = this.router.snapshot.params['funcID'];
+    this.api.execSv('BG','BG','ScheduleTasksBusiness','GetScheduleTasksAsync',this.funcID).subscribe((res:any)=>{
+      if (res) {
+        this.setting = res?.paras;
+        this.dataValue = JSON.parse(res?.paraValues);
+      }
+    })
   }
 
   ngAfterViewInit() {
     this.views = [
       {
-        type: ViewType.grid,
-        active: true,
-        sameData: true,
-        model: {
-          template2: this.templateMore,
-          frozenColumns: 1,
-        },
-      },
-      {
-        type: ViewType.smallcard,
+        type: ViewType.content,
         active: false,
         sameData: true,
+        showFilter:false,
+        showSearchBar:false,
         model: {
-          template: this.itemTemplate,
+          panelRightRef: this.template
         },
       },
     ];
   }
-  //endRegion Init
+  //#endregion Init
 
   //#region Event
 
@@ -59,12 +63,12 @@ export class UpdateTheLedgerComponent extends UIComponent{
         break;
     }
   }
-  //#endRegion Event
+  //#endregion Event
 
-  //region Function
-  changeMFDetail(event:any){
+  //#region Function
+  changeMF(event:any){
     console.log(event);
   }
-  //endRegion Function
+  //#endregion Function
 
 }

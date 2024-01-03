@@ -1,4 +1,4 @@
-import { Component, Injector, OnInit, Optional, ViewChild } from '@angular/core';
+import { Component, OnInit, Optional } from '@angular/core';
 import { CodxFdService } from '../../codx-fd.service';
 import { DialogData, DialogRef } from 'codx-core';
 import { Observable, isObservable } from 'rxjs';
@@ -10,10 +10,12 @@ import { Observable, isObservable } from 'rxjs';
 })
 export class EvoucherDetailComponent implements OnInit{
   
-  dialog:any;
+  dialog: DialogRef;
   productID:any;
   headerText:any;
   data:any;
+  type: string;
+  sizeSelected: any;
 
   constructor(
     private FDService: CodxFdService,
@@ -24,6 +26,8 @@ export class EvoucherDetailComponent implements OnInit{
     this.dialog = dialog;
     this.productID = dt?.data?.productID;
     this.headerText = dt?.data?.headerText;
+    this.type = dt?.data?.type;
+    this.sizeSelected = dt?.data?.sizeSelected;
   }
   ngOnInit(): void {
     this.loadData();
@@ -45,5 +49,22 @@ export class EvoucherDetailComponent implements OnInit{
     let paras = [productID];
     let keyRoot = "FDEVoucher" + productID;
     return this.FDService.loadData(paras,keyRoot,"FD","FD","VouchersBusiness","GotITGetProductDetail");
+  }
+
+  save() {
+    this.dialog.close(
+      {
+        data: this.sizeSelected,
+        role: "save"
+      }
+    );
+  }
+
+  selectSize(size:any){
+    if(this.sizeSelected?.sizeId == size.sizeId) {
+      this.sizeSelected = null;
+    } else {
+      this.sizeSelected = size;
+    }
   }
 }

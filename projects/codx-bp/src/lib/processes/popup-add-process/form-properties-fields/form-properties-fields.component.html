@@ -40,58 +40,140 @@
       </div>
     </div>
     <div class="stepper-body pt-1">
-      <div class="w-100 h-100" cdkDropListGroup>
-        <div
-          class="d-flex justify-content-between flex-row dp-step step-content"
-        >
+      <div class="w-100 h-100">
+        <div class="dp-step step-content">
           <div
-            class="d-flex flex-column body-left card shadow-none"
-            cdkDropList
-            (cdkDropListDropped)="drop($event)"
+            class="d-flex align-items-center w-100 h-100 bp-mw-accordion-a"
+            *ngIf="vllBP002"
           >
-            <ng-container *ngFor="let item of lstDataLeft">
-              <div class="mb-5 mt-3 text-dark fw-bold" style="font-size: 18px">
-                {{ item?.text }}
-              </div>
-              <ng-container *ngFor="let field of item?.datas">
-                <div
-                  cdkDrag
-                  [cdkDragData]="field"
-                  style="height: 40px !important"
-                  class="list-datas user-nav-item"
-                  (click)="changeActived(field)"
-                  *ngIf="field.value != 'F'"
-                  [ngClass]="
-                    field.value == currentID ? 'user-nav-active' : null
-                  "
-                >
-                  <span class="icon-16 me-2" [ngClass]="field?.icon"></span>
-                  <span class="text-dark fw-bold" style="font-size: 16px">{{
-                    field?.text
-                  }}</span>
+            <div
+              cdkDropList
+              #menuList="cdkDropList"
+              [cdkDropListData]="vllBP002?.datas"
+              cdkDropListSortingDisabled
+              [cdkDropListConnectedTo]="[tableList]"
+              (cdkDropListDropped)="drop($event)"
+              (cdkDropListExited)="exited($event)"
+              (cdkDropListEntered)="entered()"
+              class="d-flex flex-column w-350px h-100 bg-white overflow-auto px-2"
+            >
+              <ejs-accordion>
+                <e-accordionitems>
+                  <e-accordionitem expanded="true">
+                    <ng-template #header>
+                      <div class="fw-bold">
+                        <codx-label
+                          default="Cơ bản"
+                          [formModel]="dialog.formModel"
+                          name="lblBasic"
+                        ></codx-label>
+                      </div>
+                    </ng-template>
+                    <ng-template #content>
+                      <div class="d-flex flex-column">
+                        <ng-container *ngFor="let item of vllBP002?.datas">
+                          <div
+                            class="w-100 py-3 px-4 mb-3 bg-item-lightest rd-3px cursor-move mw-300px"
+                            cdkDrag
+                            [cdkDragData]="item"
+                            *ngIf="item.groupType == 0"
+                          >
+                            <i [ngClass]="item.icon"></i>
+                            <span class="fw-bold ms-2">{{ item.text }}</span>
+                          </div>
+                        </ng-container>
+                      </div>
+                    </ng-template>
+                  </e-accordionitem>
+                  <e-accordionitem expanded="true">
+                    <ng-template #header>
+                      <div class="fw-bold">
+                        <codx-label
+                          default="Nâng cao"
+                          [formModel]="dialog.formModel"
+                          name="lblAdvanced"
+                        ></codx-label>
+                      </div>
+                    </ng-template>
+                    <ng-template #content>
+                      <div class="d-flex flex-column">
+                        <ng-container *ngFor="let item of vllBP002?.datas">
+                          <div
+                            class="w-100 py-3 px-4 mt-3 bg-item-lightest rd-3px cursor-move mw-300px"
+                            cdkDrag
+                            [cdkDragData]="item"
+                            *ngIf="item.groupType == 1"
+                          >
+                            <i [ngClass]="item.icon"></i>
+                            <span class="fw-bold ms-2">{{ item.text }}</span>
+                          </div>
+                        </ng-container>
+                      </div>
+                    </ng-template>
+                  </e-accordionitem>
+                </e-accordionitems>
+              </ejs-accordion>
+            </div>
+
+            <div class="d-flex justify-content-center w-100 h-100">
+              <div
+                class="d-flex flex-column w-700px h-100 bg-white overflow-auto"
+              >
+                <div class="d-flex flex-column w-100 px-6 pt-6 pb-4">
+                  <span class="fw-bold fs-5">Tên biểu mẫu</span>
+                  <span class="text-muted">Nhập mô tả biểu mẫu</span>
                 </div>
-              </ng-container>
-            </ng-container>
-          </div>
-          <div
-            class="d-flex body-center card shadow-none"
-            cdkDropList
-            (cdkDropListDropped)="drop($event)"
-          >
-            <codx-form-format-value
-              #formMatRef
-              [lstFields]="lstStepFields"
-              (renderData)="renderData($event)"
-              (dropLists)="dropLists($event)"
-            ></codx-form-format-value>
-          </div>
-          <div class="d-flex justify-content-start body-right card shadow-none">
-            <codx-setting-fields
-              #settingFielfs
-              [dataFormat]="dataFormat"
-              [dataCurrent]="dataCurrent"
-              (dataValueEmit)="dataValueEmit($event)"
-            ></codx-setting-fields>
+                <div
+                  class="h-100 mt-2 px-4"
+                  cdkDropList
+                  #tableList="cdkDropList"
+                  [cdkDropListData]="table"
+                  (cdkDropListDropped)="drop($event)"
+                >
+                  <div cdkDropListGroup>
+                    <div
+                      *ngFor="let item of table; let i = index"
+                      cdkDrag
+                      [cdkDragDisabled]="true"
+                    >
+                      <div
+                        class="d-flex align-items-center justify-content-between"
+                        #childList="cdkDropList"
+                        *ngIf="item.children && item.children.length > 0"
+                        [cdkDropListData]="item.children"
+                        cdkDropList
+                        cdkDropListOrientation="horizontal"
+                        (cdkDropListDropped)="drop2($event)"
+                        [cdkDropListEnterPredicate]="evenPredicate(item.name)"
+                      >
+                        <div
+                          class="d-flex align-items-center p-2 w-100"
+                          *ngFor="let subItem of item.children"
+                          cdkDrag
+                          [cdkDragData]="item.name"
+                          (click)="selectedItem(subItem)"
+                        >
+                          <codx-form-format-value
+                            [subItem]="returnData(subItem)"
+                            [dataCurrent]="dataCurrent"
+                            [isShowTextHeader]="true"
+                          ></codx-form-format-value>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="w-800px h-100 bg-white">
+              <codx-setting-fields
+                #settingFielfs
+                [dataFormat]="dataFormat"
+                [dataCurrent]="dataCurrent"
+                (dataValueEmit)="dataValueEmit($event)"
+              ></codx-setting-fields>
+            </div>
           </div>
         </div>
         <div

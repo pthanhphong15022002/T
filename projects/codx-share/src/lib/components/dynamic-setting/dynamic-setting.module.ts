@@ -19,6 +19,7 @@ import { DetailPolicyComponent } from '../../../../../codx-fd//src/lib/setting/f
 import { CodxShareModule } from '../../codx-share.module';
 import { HttpClientModule } from '@angular/common/http';
 import { PositionPipe } from './pipes/position.pipe';
+import { DynamicSettingControlComponent } from './dynamic-setting-control/dynamic-setting-control.component';
 //import { PatternComponent } from 'projects/codx-fd/src/lib/setting/feedback-message/pattern/pattern.component';
 //import { EditPatternComponent } from 'projects/codx-fd/src/lib/setting/feedback-message/pattern/edit-pattern/edit-pattern.component';
 
@@ -47,6 +48,7 @@ const T_Component: Type<any>[] = [
   PatternComponent,
   EditPatternComponent,
   DetailPolicyComponent,
+  
 ];
 
 const T_Pipe: Type<any>[] = [
@@ -56,6 +58,7 @@ const T_Pipe: Type<any>[] = [
   ShareSettingPipe,
   BindValuePipe,
   PositionPipe,
+  DynamicSettingControlComponent
 ];
 
 @NgModule({

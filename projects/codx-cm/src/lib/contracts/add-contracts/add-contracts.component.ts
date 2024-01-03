@@ -150,6 +150,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
   isSaveTimeTask = true;
   isLoadDateTask = false;
   popupRealties;
+  procesID;
   autoCode = '';
   moreDefaut = {
     read: true,
@@ -164,6 +165,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
   lstContactDeal: any[] = [];
   lstContactDelete: any[] = [];
   isBlock = true;
+  businessLineID = '';
   // Tab control
   tabInfo = [
     {
@@ -259,6 +261,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
     this.isStartIns = !!dt?.data?.isStartIns;
     this.contractRefID = dt?.data?.contractRefID;
     this.recIDContract = dt?.data?.recIDContract;
+    this.businessLineID = dt?.data?.businessLineID;
     this.stepsTasks = dt?.data?.stepsTasks || {};
     this.contractsInput = dt?.data?.contract || dt?.data?.dataCM || null;
     this.user = this.authStore.get();
@@ -360,12 +363,16 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
         this.contracts.applyProcess = false;
         this.contracts.displayed = true;
         this.contracts.currencyID = this.currencyIDDefault;
+        this.contracts.businessLineID = this.businessLineID || '';
         this.loadExchangeRate(this.contracts.currencyID);
         this.setContractByDataOutput();
         this.getAutoNumber();
         this.setDataParent();
-        if ((this.type == 'DP', this.processID)) {
+        if (this.type == 'DP' && this.processID) {
           this.contracts.processID = this.processID;
+          this.getBusinessLineByProcessContractID(this.processID);
+        }
+        if(this.type == 'task' && this.processID){
           this.getBusinessLineByProcessID(this.processID);
         }
         break;
@@ -401,6 +408,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
         this.contracts.status = '1';
         // this.contracts.applyProcess = this.isApplyProcess;
         this.contracts.currencyID = this.currencyIDDefault;
+        this.contracts.businessLineID = this.businessLineID || '';
         if (!this.contracts?.applyProcess) {
           this.contracts.contractID = null;
           this.getAutoNumberSetting();
@@ -939,9 +947,18 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
     });
   }
 
-  getBusinessLineByProcessID(processID) {
+  getBusinessLineByProcessContractID(processID) {
     this.cmService
       .getIdBusinessLineByProcessContractID([processID])
+      .subscribe((res) => {
+        if (res) {
+          this.contracts.businessLineID = res;
+        }
+      });
+  }
+  getBusinessLineByProcessID(processID) {
+    this.cmService
+      .getIdBusinessLineByProcessID([processID])
       .subscribe((res) => {
         if (res) {
           this.contracts.businessLineID = res;
@@ -1548,7 +1565,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
   }
 
   async editInstance() {
-    if (this.type == 'contract') {
+    if (this.type == 'contract'|| this.type == 'task') {
       let data = [this.instance, this.listCustomFile];
       this.cmService.editInstance(data).subscribe((instance) => {
         if (instance) {

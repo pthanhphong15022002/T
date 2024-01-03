@@ -1,32 +1,17 @@
 <codx-views class="ac-views" #view idField="recID" [views]="views" service="AC" [entityName]="view?.entityName"
-  (buttonClick)="toolBarClick($event)" (changeDataMF)="changeMFDetail($event)" [hideMoreFuncs]="true">
+  (buttonClick)="toolBarClick($event)" (changeDataMF)="changeMF($event)" [isSubView]="true">
 </codx-views>
-<!-- <ng-template #templateMore let-data>
-    <div>
-      <codx-mfunc [dataItem]="data" [formModel]="view.formModel" (clickMF)="clickMF($event, data)" [isBookMark]="true"
-        type="view"></codx-mfunc>
+<ng-template #template let-data>
+  <div class="h-100 overflow-auto">
+    <div class="d-flex container mb-5">
+      <div class="bg-body rounded-3 p-6 flex-grow-1 overflow-auto">
+        <dynamic-setting-control *ngIf="setting" [setting]="setting" [dataValue]="dataValue"></dynamic-setting-control>
+      </div>
     </div>
-</ng-template> -->
-
-<ng-template #itemTemplate let-data>
-  <codx-card-center
-    cardCss="dp-card-process border rounded-2 h-100"
-    [resourceObjType]="view?.entityName"
-    [rootData]="data"
-    [dataItem]="data"
-    [formModel]="view.formModel"
-    [typeMF]="'hover'"
-    [titleTmp]="titleTmp"
-    [descTmp]="descTmp"
-    [baseHeaderRightTmp]="baseHeaderRightTmp"
-  >
-  </codx-card-center>
-</ng-template>
-
-<ng-template #titleTmp let-data>
-</ng-template>
-<ng-template #descTmp let-data>
-</ng-template>
-<ng-template #baseHeaderRightTmp let-data>
-  <span class="icon-lock text-danger"></span>
+    <div class="d-flex container ">
+      <div class="bg-body rounded-3 p-6 flex-grow-1">
+        <periodic-control [data]="view.dataService.data"></periodic-control>
+      </div>
+    </div>
+  </div>
 </ng-template>
