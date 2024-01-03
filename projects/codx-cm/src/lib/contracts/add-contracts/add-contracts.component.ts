@@ -1513,7 +1513,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
     return '';
   }
 
-  save() {
+  async save() {
     if (this.stepService.checkRequire(this.REQUIRE, this.contracts, this.view))
       return;
     if (
@@ -1544,26 +1544,51 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
       this.convertDataInstance(this.contracts, this.instance);
     this.contracts.applyProcess &&
       this.updateDateDeal(this.instance, this.contracts);
-
-    switch (this.action) {
-      case 'add':
-      case 'copy':
-      case 'extend':
-        if (this.contracts.applyProcess) {
-          this.addInstance();
-        } else {
-          this.addContracts();
+      if (this.attachment && this.attachment.fileUploadList.length) {
+        (await this.attachment.saveFilesObservable()).subscribe((res) => {
+          if (res) {
+            switch (this.action) {
+              case 'add':
+              case 'copy':
+              case 'extend':
+                if (this.contracts.applyProcess) {
+                  this.addInstance();
+                } else {
+                  this.addContracts();
+                }
+                break;
+              case 'edit':
+                if (this.contracts.applyProcess) {
+                  this.editInstance();
+                } else {
+                  this.editContract();
+                }
+        
+                break;
+            }
+          }
+        });
+      } else {
+        switch (this.action) {
+          case 'add':
+          case 'copy':
+          case 'extend':
+            if (this.contracts.applyProcess) {
+              this.addInstance();
+            } else {
+              this.addContracts();
+            }
+            break;
+          case 'edit':
+            if (this.contracts.applyProcess) {
+              this.editInstance();
+            } else {
+              this.editContract();
+            }
+    
+            break;
         }
-        break;
-      case 'edit':
-        if (this.contracts.applyProcess) {
-          this.editInstance();
-        } else {
-          this.editContract();
-        }
-
-        break;
-    }
+      }
   }
 
   addInstance() {
@@ -1825,4 +1850,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
     });
   }
   //------------------END_CACULATE--------------------//
+  addFile(evt: any) {
+    this.attachment.uploadFile();
+  }
 }
