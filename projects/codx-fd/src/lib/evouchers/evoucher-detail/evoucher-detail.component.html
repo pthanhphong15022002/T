@@ -19,7 +19,7 @@
                     <div class="d-flex flex-wrap">
                         <ng-container *ngFor="let item of data?.size">
                             <button 
-                                [disabled]="type == 'detail'" 
+                                [disabled]="(type == 'detail') || checkDisable(item)" 
                                 type="button" class="btn mg-5" 
                                 (click)="selectSize(item)"
                                 [ngClass]="{'btn-primary': sizeSelected?.sizeId == item?.sizeId, 'btn-outline-primary':  sizeSelected?.sizeId != item?.sizeId}"
@@ -42,7 +42,13 @@
     </div>
 </ng-template>
 <ng-template #footer>
-    <div class="d-flex justify-content-end">
-        <button type="button" class="btn btn-primary" (click)="save()">Lưu lại</button>
+    <div class="d-flex justify-content-between">
+        <div class="d-block" style="text-align: left;">
+            <h5>Số dư quỹ cho: <span class="text-primary"> {{coCoins | number}} Xu </span></h5>
+            <h5>Tỷ lệ chuyển đổi: <span class="text-primary"> 1.000đ = {{exchangeRateEVoucher | number}} Xu </span></h5>
+        </div>
+        <div class="d-flex justify-content-end">
+            <button type="button" class="btn btn-primary" (click)="save()">Lưu lại</button>
+        </div>
     </div>
 </ng-template>

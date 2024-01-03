@@ -80,7 +80,9 @@ export class PopupUpdateStatusComponent
   }
   saveForm() {
     if (this.isLockStep) return;
-    this.status = this.checkStatus(this.statusOld, this.status);
+    if(this.applyProcess) {
+      this.status = this.checkStatus(this.statusOld, this.status);
+    }
     this.isLockStep = true;
     if( (this.status || this.messageChangeStatus ) && this.applyProcess ) {
       let obj = {

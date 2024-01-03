@@ -171,7 +171,8 @@ export class CodxInputCustomFieldComponent implements OnInit {
       let idx = this.customField.versions.findIndex(
         (x) => x.refID == this.refVersion
       );
-      this.customField.dataValue = this.customField.versions[idx].dataValue;
+      if (idx != -1)
+        this.customField.dataValue = this.customField.versions[idx].dataValue;
     }
 
     switch (this.customField.dataType) {
