@@ -116,6 +116,10 @@ import { ViewInstancesComponent } from 'projects/codx-dp/src/lib/view-instances/
 import { CashtransfersComponent } from './vouchers/cashtransfers/cashtransfers.component';
 import { CashtransfersAddComponent } from './vouchers/cashtransfers/cashtransfers-add/cashtransfers-add.component';
 import { RunPeriodicAddComponent } from './periodic/run-periodic/run-periodic-add/run-periodic-add.component';
+import { DynamicSettingControlComponent } from 'projects/codx-share/src/lib/components/dynamic-setting/dynamic-setting-control/dynamic-setting-control.component';
+import { DynamicSettingModule } from 'projects/codx-share/src/lib/components/dynamic-setting/dynamic-setting.module';
+import { PeriodicControlComponent } from './share/periodic-control/periodic-control.component';
+import { FormatDatePipe } from './share/periodic-control/formatDate/format-date.pipe';
 export const routes: Routes = [
   {
     path: '',
@@ -206,57 +210,68 @@ export const routes: Routes = [
       },
       {
         path: 'calculatingthecostprice/:funcID',
-        component: RunPeriodicComponent,
+        //component: RunPeriodicComponent,
+        component: PeriodicControlComponent,
         data: { noReuse: true },
       },
       {
         path: 'updatingtheledger/:funcID',
-        component: UpdateTheLedgerComponent,
+        //component: UpdateTheLedgerComponent,
+        component: PeriodicControlComponent,
         data: { noReuse: true },
       },
       {
         path: 'depreciatingfixedassets/:funcID',
-        component: DepreciatingFixedAssetsComponent,
+        //component: DepreciatingFixedAssetsComponent,
+        component: PeriodicControlComponent,
         data: { noReuse: true },
       },
       {
         path: 'allocatingtools/:funcID',
-        component: AllocateToolsComponent,
+        //component: AllocateToolsComponent,
+        component: PeriodicControlComponent,
         data: { noReuse: true },
       },
       {
         path: 'deductprepaidexpenses/:funcID',
-        component: DeductPrepaidExpensesComponent,
+        //component: DeductPrepaidExpensesComponent,
+        component: PeriodicControlComponent,
         data: { noReuse: true },
       },
       {
         path: 'deductinterestexpenses/:funcID',
-        component: DeductInterestExpensesComponent,
+        //component: DeductInterestExpensesComponent,
+        component: PeriodicControlComponent,
         data: { noReuse: true },
       },
       {
         path: 'closingtransaction/:funcID',
-        component: ClosingTransactionComponent,
+        //component: ClosingTransactionComponent,
+        component: PeriodicControlComponent,
         data: { noReuse: true },
       },
       {
         path: 'calculatingcostofproduct/:funcID',
-        component: CalculatingCostOfProductComponent,
+        //component: CalculatingCostOfProductComponent,
+        component: PeriodicControlComponent,
         data: { noReuse: true },
       },
       {
         path: 'exchangeratetransaction/:funcID',
-        component: ExchangeRateTransactionComponent,
+        //component: ExchangeRateTransactionComponent,
+        component: PeriodicControlComponent,
         data: { noReuse: true },
       },
       {
         path: 'invoicesetlement/:funcID',
-        component: InvoiceSetlementComponent,
+        //component: InvoiceSetlementComponent,
+        component: PeriodicControlComponent,
         data: { noReuse: true },
       },
       {
         path: 'closingdata/:funcID',
-        component: ClosingDataComponent,
+        //component: ClosingDataComponent,
+        component: PeriodicControlComponent,
         data: { noReuse: true },
       },
       {
@@ -449,6 +464,8 @@ export const routes: Routes = [
     AllocationAddComponent,
     AllocationTableComponent,
     CashtransfersAddComponent,
+    PeriodicControlComponent,
+    FormatDatePipe,
   ],
   exports: [RouterModule],
   providers: [AccumulationTooltipService],
@@ -473,6 +490,7 @@ export const routes: Routes = [
     ChartAllModule,
     TranformValueNumberPipe,
     NgbAccordionModule,
+    DynamicSettingModule,
   ],
 })
 export class AcModule {}
