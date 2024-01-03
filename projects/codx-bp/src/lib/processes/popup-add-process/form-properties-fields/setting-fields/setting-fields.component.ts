@@ -29,6 +29,7 @@ import { Observable, finalize, firstValueFrom, map } from 'rxjs';
 export class SettingFieldsComponent implements AfterViewInit {
   @Input() dataFormat: any;
   @Input() dataCurrent: any = {};
+  @Input() lstFields = [];
   @Input() formModel: FormModel = {
     formName: 'DPStepsFields',
     gridViewName: 'grvDPStepsFields',
@@ -290,7 +291,7 @@ export class SettingFieldsComponent implements AfterViewInit {
       this.dataCurrent[e?.field] = e?.data;
       switch (e?.field) {
         case 'title':
-          this.dataCurrent['fieldName'] = this.bpSv.createAutoNumber(e?.data);
+          this.dataCurrent['fieldName'] = this.bpSv.createAutoNumber(e?.data, this.lstFields, 'fieldName');
           break;
         case 'defaultValue':
           this.dataCurrent['dataFormat'] = e?.data;

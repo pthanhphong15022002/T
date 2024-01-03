@@ -30,6 +30,7 @@ export class FormPropertiesFieldsComponent implements OnInit {
   table: Array<any> = [];
 
   tempVllBP: tempVllBP;
+  isForm: boolean = true;
   constructor(
     private detectorRef: ChangeDetectorRef,
     private cache: CacheService,
@@ -41,8 +42,38 @@ export class FormPropertiesFieldsComponent implements OnInit {
   }
   ngOnInit(): void {
     this.getVll();
+    this.setDefaultTitle();
   }
 
+  setDefaultTitle(){
+    let tmpField = {};
+    let lst = [];
+    tmpField['recID'] = Util.uid();
+    tmpField['fieldName'] = 'Title';
+    tmpField['title'] = 'Tên biểu mẫu';
+    tmpField['dataType'] = 'String';
+    tmpField['controlType'] = 'Title';
+    tmpField['isRequired'] = true;
+    tmpField['defaultValue'] = 'Tên biểu mẫu';
+    lst.push(tmpField);
+    this.dataCurrent = tmpField;
+    if(this.isForm){
+      let tmpFieldSub = {};
+      tmpFieldSub['recID'] = Util.uid();
+      tmpFieldSub['fieldName'] = 'SubTitle';
+      tmpFieldSub['description'] = 'Câu trả lời';
+      tmpFieldSub['title'] = 'Mô tả ngắn gọn';
+      tmpFieldSub['dataType'] = 'String';
+      tmpFieldSub['controlType'] = 'SubTitle';
+      tmpFieldSub['isRequired'] = true;
+      tmpFieldSub['defaultValue'] = 'Mô tả ngắn gọn';
+      lst.push(tmpFieldSub);
+    }
+    this.lstStepFields = [...this.lstStepFields, ...lst];
+    console.log(this.lstStepFields);
+  }
+
+  //#region setting drop keo tha - anh Chung
   getVll() {
     let basic = [
       'Text',
@@ -101,6 +132,7 @@ export class FormPropertiesFieldsComponent implements OnInit {
       };
       this.lstStepFields.push(this.dataCurrent);
       console.log('drop 1 != :', data);
+      this.settingFielfs.loadData(this.dataCurrent);
       this.table.splice(event.currentIndex, 0, object);
     } else {
       this.table[event.currentIndex].id = event.previousIndex;
@@ -118,6 +150,7 @@ export class FormPropertiesFieldsComponent implements OnInit {
       );
       console.log('drop 1 == ');
     }
+    this.detectorRef.markForCheck();
   }
 
   drop2(event: any) {
@@ -164,6 +197,7 @@ export class FormPropertiesFieldsComponent implements OnInit {
     this.table = this.table.filter(
       (x) => x.children != null && x.children.length > 0
     );
+    this.detectorRef.markForCheck();
   }
 
   evenPredicate(name: string) {
@@ -186,7 +220,7 @@ export class FormPropertiesFieldsComponent implements OnInit {
     console.log('entered: 12');
     //this.menu = this.menu.filter((f) => !f.temp);
   }
-
+  //#endregion
   //#region
   setDataFields(data) {
     if (data) {
@@ -198,8 +232,8 @@ export class FormPropertiesFieldsComponent implements OnInit {
         const count = this.lstStepFields.filter(
           (x) => x.controlType == field['controlType']
         ).length;
-        field['title'] = str + (count > 0 ? count.toString() : '');
-        field['fieldName'] = this.bpSv.createAutoNumber(str);
+        field['title'] = this.bpSv.createAutoNumber(str, this.lstStepFields, 'title');
+        field['fieldName'] = this.bpSv.createAutoNumber(str, this.lstStepFields, 'fieldName');
       }
       if (data?.value == 'YesNo') {
         field['dataType'] = 's';
@@ -237,6 +271,10 @@ export class FormPropertiesFieldsComponent implements OnInit {
     dataField = indx != -1 ? this.lstStepFields[indx] : null;
     return dataField;
   }
+
+  dataForm(type){
+    return this.lstStepFields?.find(x => x.fieldName=='Title') ? this.lstStepFields?.find(x => x.fieldName=='Title')[type] : null;
+  }
   //#endregion
   //#region event emit
   dataValueEmit(e) {
@@ -245,7 +283,7 @@ export class FormPropertiesFieldsComponent implements OnInit {
       if (indx != -1) {
         if (e?.type == 'delete') {
           this.lstStepFields.splice(indx, 1);
-          this.dataCurrent = this.lstStepFields[0];
+          this.dataCurrent = this.lstStepFields.find(x => x.controlType == 'Title');
         } else {
           this.lstStepFields[indx] = e?.data;
           this.dataCurrent = JSON.parse(
@@ -253,6 +291,9 @@ export class FormPropertiesFieldsComponent implements OnInit {
           );
         }
       }
+      this.table = this.table.filter(
+        (x) => x.children != null && x.children.length > 0
+      );
     }
     this.detectorRef.markForCheck();
   }
@@ -265,6 +306,7 @@ export class FormPropertiesFieldsComponent implements OnInit {
       this.dataCurrent = JSON.parse(
         JSON.stringify(this.lstStepFields.find((x) => x.recID == data?.recID))
       );
+      this.settingFielfs.loadData(this.dataCurrent);
     }
   }
 

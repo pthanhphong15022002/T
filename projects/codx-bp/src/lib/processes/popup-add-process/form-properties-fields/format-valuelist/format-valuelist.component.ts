@@ -17,10 +17,15 @@ export class FormatValuelistComponent {
 
   }
 
-  ngAfterViewInit(): void {
+  ngOnInit(): void {
     if(this.item?.refValue != null && this.item?.refValue?.trim() != ''){
       this.loadDataVll();
     }
+
+  }
+
+  ngAfterViewInit(): void {
+
 
   }
 

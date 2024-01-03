@@ -120,8 +120,8 @@
                 class="d-flex flex-column w-700px h-100 bg-white overflow-auto"
               >
                 <div class="d-flex flex-column w-100 px-6 pt-6 pb-4">
-                  <span class="fw-bold fs-5">Tên biểu mẫu</span>
-                  <span class="text-muted">Nhập mô tả biểu mẫu</span>
+                  <span class="fw-bold fs-5" [innerHTML]="dataForm('title')"></span>
+                  <span class="text-muted" [innerHTML]="dataForm('memo')"></span>
                 </div>
                 <div
                   class="h-100 mt-2 px-4"
@@ -171,6 +171,7 @@
                 #settingFielfs
                 [dataFormat]="dataFormat"
                 [dataCurrent]="dataCurrent"
+                [lstFields]="lstStepFields"
                 (dataValueEmit)="dataValueEmit($event)"
               ></codx-setting-fields>
             </div>
