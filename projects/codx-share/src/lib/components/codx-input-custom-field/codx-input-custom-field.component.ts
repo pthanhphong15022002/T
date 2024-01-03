@@ -164,12 +164,15 @@ export class CodxInputCustomFieldComponent implements OnInit {
 
   ngOnInit(): void {
     //gia tri mặc dinh khi them moi
-    if (this.refVersion) {
-      // let idx = this.customField?.versions?.fiin;
-      // this.customField.dataValue =
-    }
     if (this.isAdd && this.customField.defaultValue)
       this.customField.dataValue = this.customField.defaultValue;
+    //gia tri tung form
+    if (this.refVersion && this.customField?.versions?.length > 0) {
+      let idx = this.customField.versions.findIndex(
+        (x) => x.refID == this.refVersion
+      );
+      this.customField.dataValue = this.customField.versions[idx].dataValue;
+    }
 
     switch (this.customField.dataType) {
       case 'PA':
