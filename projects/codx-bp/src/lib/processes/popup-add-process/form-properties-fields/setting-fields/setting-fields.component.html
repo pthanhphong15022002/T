@@ -1,4 +1,5 @@
 <div
+  *ngIf="loadedRenderHTML"
   (mouseenter)="closePopover()"
   class="p-2 h-100"
   (mouseenter)="closePopover()"
@@ -34,7 +35,7 @@
         "
         [formName]="'DynamicForms'"
         [gridViewName]="'grvDynamicFormsTitle' + dataCurrent?.controlType"
-        [name]="'lbl' + dataCurrent?.controlType"
+        [name]="'lblTitle'"
       ></codx-label>
       <codx-input
         type="text"
@@ -49,9 +50,7 @@
       *ngIf="dataCurrent?.controlType == 'Title'"
     >
       <codx-label
-        [default]="
-          'Mô tả'
-        "
+        [default]="'Mô tả'"
         [formName]="'DynamicForms'"
         [gridViewName]="'grvDynamicFormsTitle' + dataCurrent?.controlType"
         name="lblMemo"
@@ -69,6 +68,7 @@
       *ngIf="
         dataCurrent?.controlType != 'Title' &&
         dataCurrent?.controlType != 'User' &&
+        dataCurrent?.controlType != 'ComboBox' &&
         dataCurrent?.controlType != 'Rank' &&
         dataCurrent?.controlType != 'Progress' &&
         dataCurrent?.controlType != 'Expression'
@@ -76,21 +76,22 @@
     >
       <codx-label
         default="Giá trị mặc định khi thêm mới biểu mẫu"
-        [formModel]="formModel"
-        fiedName="DefaultValue"
+        [formName]="'DynamicForms'"
+        [gridViewName]="'grvDynamicFormsTitle' + dataCurrent?.controlType"
+        [name]="'lblDefaultValue'"
       ></codx-label>
       <codx-input
-        *ngIf="dataCurrent?.controlType != 'Datetime'"
+        *ngIf="dataCurrent?.controlType != 'DateTime'"
         field="defaultValue"
-        [type]="dataCurrent?.controlType == 'Number' ? 'number' : 'text'"
+        [type]="'text'"
         [crrValue]="dataCurrent?.defaultValue ?? ''"
         (valueChange)="valueChange($event)"
       ></codx-input>
       <codx-input
-        *ngIf="dataCurrent?.controlType == 'Datetime'"
+        *ngIf="dataCurrent?.controlType == 'DateTime'"
         field="defaultValue"
         type="datetime"
-        format="F"
+        [format]="dataCurrent?.dataFormat"
         [crrValue]="dataCurrent?.defaultValue ?? ''"
         (valueChange)="valueDateChange($event)"
       ></codx-input>
@@ -105,14 +106,50 @@
       "
     >
       <codx-label
+        [formName]="'DynamicForms'"
+        [gridViewName]="'grvDynamicFormsTitle' + dataCurrent?.controlType"
+        [name]="'lblDescription'"
         default="Hiển thị chuỗi gợi ý khi chưa có dữ liệu"
-        [formModel]="formModel"
-        fiedName="Placeholder"
       ></codx-label>
       <codx-input
-        field="note"
+        field="description"
         type="text"
-        [crrValue]="dataCurrent?.note ?? ''"
+        [crrValue]="dataCurrent?.description ?? ''"
+        (valueChange)="valueChange($event)"
+      ></codx-input>
+    </div>
+    <div
+      (mouseenter)="closePopover()"
+      class="form-group"
+      *ngIf="
+        dataCurrent?.controlType == 'Text' ||
+        dataCurrent?.controlType == 'DateTime'
+      "
+    >
+      <codx-label
+        [formName]="'DynamicForms'"
+        [gridViewName]="'grvDynamicFormsTitle' + dataCurrent?.controlType"
+        [name]="'lblDataFormat'"
+        [default]="
+          dataCurrent?.controlType == 'Text'
+            ? 'Định dạng hiển thị'
+            : 'Định dạng ngày'
+        "
+      ></codx-label>
+      <codx-input
+        *ngIf="dataCurrent?.controlType == 'Text'"
+        field="dataFormat"
+        type="valuelist"
+        [refValue]="'BP003'"
+        [crrValue]="dataCurrent?.description ?? ''"
+        (valueChange)="valueChange($event)"
+      ></codx-input>
+      <codx-input
+        *ngIf="dataCurrent?.controlType == 'DateTime'"
+        field="dataFormat"
+        type="valuelist"
+        [refValue]="'BP004'"
+        [crrValue]="dataCurrent?.description ?? ''"
         (valueChange)="valueChange($event)"
       ></codx-input>
     </div>
@@ -123,7 +160,8 @@
     <ng-container *ngIf="dataCurrent?.controlType == 'Progress'">
       <codx-label
         default="Màu hiển thị"
-        [formModel]="formModel"
+        [formName]="'DynamicForms'"
+        [gridViewName]="'grvDynamicFormsTitle' + dataCurrent?.controlType"
         name="lblColorPG"
       ></codx-label>
       <div (mouseenter)="closePopover()" class="form-group">
@@ -166,30 +204,14 @@
       *ngIf="dataCurrent?.controlType == 'ValueList'"
       [ngTemplateOutlet]="tempListFormat"
     ></ng-container>
+    <ng-container
+      *ngIf="dataCurrent?.controlType == 'ComboBox'"
+      [ngTemplateOutlet]="tempComboBox"
+    ></ng-container>
     <div
       (mouseenter)="closePopover()"
       class="form-group"
-      *ngIf="dataCurrent?.controlType == 'Text'"
-    >
-      <div (mouseenter)="closePopover()" class="d-flex">
-        <codx-input
-          type="switch"
-          field="formatHtml"
-          [crrValue]="dataCurrent?.formatHtml"
-          (valueChange)="valueChange($event)"
-        ></codx-input>
-        <codx-label
-          default="Có format HTML"
-          name="lblFomartHtml"
-          [formModel]="formModel"
-          class="ms-1"
-        ></codx-label>
-      </div>
-    </div>
-    <div
-      (mouseenter)="closePopover()"
-      class="form-group"
-      *ngIf="dataCurrent?.controlType == 'Datetime'"
+      *ngIf="dataCurrent?.controlType == 'DateTime'"
     >
       <div (mouseenter)="closePopover()" class="d-flex">
         <codx-input
@@ -201,7 +223,8 @@
         <codx-label
           default="Có sử dụng thời gian"
           name="lblTime"
-          [formModel]="formModel"
+          [formName]="'DynamicForms'"
+          [gridViewName]="'grvDynamicFormsTitle' + dataCurrent?.controlType"
           class="ms-1"
         ></codx-label>
       </div>
@@ -211,8 +234,8 @@
       class="form-group"
       *ngIf="
         dataCurrent?.controlType == 'ValueList' ||
-        (dataCurrent?.controlType == 'User' &&
-          dataCurrent?.controlType == 'Combobox')
+        dataCurrent?.controlType == 'User' ||
+        dataCurrent?.controlType == 'ComboBox'
       "
     >
       <div (mouseenter)="closePopover()" class="d-flex">
@@ -223,8 +246,9 @@
           (valueChange)="valueChange($event)"
         ></codx-input>
         <codx-label
-          fiedName="Multiselect"
-          [formModel]="formModel"
+          name="lblMultiselect"
+          [formName]="'DynamicForms'"
+          [gridViewName]="'grvDynamicFormsTitle' + dataCurrent?.controlType"
           default="Chọn nhiều giá trị"
           class="ms-1"
         ></codx-label>
@@ -243,8 +267,10 @@
           (valueChange)="valueChange($event)"
         ></codx-input>
         <codx-label
-          fiedName="IsRequired"
-          [formModel]="formModel"
+          name="lblIsRequired"
+          [formName]="'DynamicForms'"
+          [gridViewName]="'grvDynamicFormsTitle' + dataCurrent?.controlType"
+          default="Bắt buộc"
           class="ms-1"
         ></codx-label>
       </div>
@@ -264,7 +290,8 @@
         <codx-label
           default="Điều kiện hiển thị"
           name="lblIsShow"
-          [formModel]="formModel"
+          [formName]="'DynamicForms'"
+          [gridViewName]="'grvDynamicFormsTitle' + dataCurrent?.controlType"
           class="ms-1"
         ></codx-label>
       </div>
@@ -283,7 +310,8 @@
         ></codx-input>
         <codx-label
           name="lblIsRequired"
-          [formModel]="formModel"
+          [formName]="'DynamicForms'"
+          [gridViewName]="'grvDynamicFormsTitle' + dataCurrent?.controlType"
           default="Cho phép chỉnh sửa và cập nhật các dữ liệu trùng nhau"
           class="ms-1"
         ></codx-label>
@@ -502,7 +530,8 @@
         </span>
         <codx-label
           name="lblDropDown"
-          [formModel]="formModel"
+          [formName]="'DynamicForms'"
+          [gridViewName]="'grvDynamicFormsTitle' + dataCurrent?.controlType"
           default="DropDown"
         ></codx-label>
       </div>
@@ -523,15 +552,81 @@
           ></codx-input>
         </span>
         <codx-label
-          fiedName="CheckBox"
-          [formModel]="formModel"
+          name="lblCheckBox"
+          [formName]="'DynamicForms'"
+          [gridViewName]="'grvDynamicFormsTitle' + dataCurrent?.controlType"
           default="CheckBox"
         ></codx-label>
       </div>
     </div>
   </div>
 </ng-template>
-
+<!--ComboBox-->
+<ng-template #tempComboBox>
+  <div (mouseenter)="closePopover()" class="d-flex justify-content-start mb-1">
+    <codx-label
+      name="lblListValues"
+      [formModel]="formModel"
+      default="Danh sách giá trị"
+    ></codx-label>
+  </div>
+  <div (mouseenter)="closePopover()" class="form-group"></div>
+  <div
+    (mouseenter)="closePopover()"
+    class="form-group mt-3 mb-3"
+    style="border-bottom: 1px solid var(--gray-150)"
+  ></div>
+  <div (mouseenter)="closePopover()" class="form-group">
+    <div (mouseenter)="closePopover()" class="d-flex">
+      <div (mouseenter)="closePopover()" class="d-flex me-2">
+        <span
+          class="d-flex"
+          style="margin-top: -7px; margin-right: 20px !important"
+        >
+          <codx-input
+            id="dropDown"
+            name="{{ dataCurrent?.recID }}"
+            class="test-check"
+            type="radio"
+            field="dropDown"
+            [checked]="dataCurrent?.refType == '3' ?? false"
+            [crrValue]="dataCurrent?.refType == '3'"
+            (valueChange)="changeRadio($event, 'dropDown')"
+          ></codx-input>
+        </span>
+        <codx-label
+          name="lblDropDown"
+          [formName]="'DynamicForms'"
+          [gridViewName]="'grvDynamicFormsTitle' + dataCurrent?.controlType"
+          default="DropDown"
+        ></codx-label>
+      </div>
+      <div (mouseenter)="closePopover()" class="d-flex">
+        <span
+          class="d-flex"
+          style="margin-top: -7px; margin-right: 20px !important"
+        >
+          <codx-input
+            id="popup"
+            name="{{ dataCurrent?.recID }}"
+            class="test-check"
+            type="radio"
+            field="popup"
+            [checked]="dataCurrent.refType != '3' ?? false"
+            [crrValue]="dataCurrent.refType != '3'"
+            (valueChange)="changeRadio($event, 'popup')"
+          ></codx-input>
+        </span>
+        <codx-label
+          name="lblPopup"
+          [formName]="'DynamicForms'"
+          [gridViewName]="'grvDynamicFormsTitle' + dataCurrent?.controlType"
+          default="Popup"
+        ></codx-label>
+      </div>
+    </div>
+  </div>
+</ng-template>
 <!--number-->
 <ng-template #tempNumber>
   <div
