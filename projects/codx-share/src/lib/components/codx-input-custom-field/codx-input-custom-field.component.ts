@@ -165,7 +165,7 @@ export class CodxInputCustomFieldComponent implements OnInit {
   ngOnInit(): void {
     //gia tri mặc dinh khi them moi
     if (this.refVersion) {
-      let idx = this.customField?.versions?.fiin;
+      // let idx = this.customField?.versions?.fiin;
       // this.customField.dataValue =
     }
     if (this.isAdd && this.customField.defaultValue)
