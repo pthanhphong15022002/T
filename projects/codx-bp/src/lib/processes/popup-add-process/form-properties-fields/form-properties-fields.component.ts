@@ -229,19 +229,18 @@ export class FormPropertiesFieldsComponent implements OnInit {
       field['controlType'] = data?.value;
       if (data && data?.text) {
         const str = data?.text;
-        const count = this.lstStepFields.filter(
-          (x) => x.controlType == field['controlType']
-        ).length;
         field['title'] = this.bpSv.createAutoNumber(str, this.lstStepFields, 'title');
         field['fieldName'] = this.bpSv.createAutoNumber(str, this.lstStepFields, 'fieldName');
       }
-      if (data?.value == 'YesNo') {
-        field['dataType'] = 's';
-        field['dataFormat'] = true;
+
+      if(data?.value == 'Text' || data?.value == 'ValueList' || data?.value == 'Combobox'){
+        field['isRequired'] = false;
+        field['dataType'] = 'String';
+        if(data?.value == 'ValueList' || data?.value == 'Combobox'){
+          field['refType'] = data?.value == 'ValueList' ? '2' : '3';
+        }
       }
-      if (data?.value == 'User') {
-        field['dataType'] = 'd';
-      }
+
       if (data?.value == 'Rank') {
         field['rank'] = {
           type: '1',

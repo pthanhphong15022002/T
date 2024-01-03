@@ -34,7 +34,7 @@
         "
         [formName]="'DynamicForms'"
         [gridViewName]="'grvDynamicFormsTitle' + dataCurrent?.controlType"
-        name="lblTitle"
+        [name]="'lbl' + dataCurrent?.controlType"
       ></codx-label>
       <codx-input
         type="text"
@@ -496,6 +496,7 @@
             type="radio"
             field="dropDown"
             [checked]="dataCurrent?.refType == '2' ?? false"
+            [crrValue]="dataCurrent?.refType == '2'"
             (valueChange)="changeRadio($event, 'dropDown')"
           ></codx-input>
         </span>
@@ -517,6 +518,7 @@
             type="radio"
             field="checkBox"
             [checked]="dataCurrent.refType != '2' ?? false"
+            [crrValue]="dataCurrent.refType != '2'"
             (valueChange)="changeRadio($event, 'checkBox')"
           ></codx-input>
         </span>

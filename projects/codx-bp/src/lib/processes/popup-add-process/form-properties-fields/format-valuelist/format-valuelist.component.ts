@@ -62,8 +62,6 @@ export class FormatValuelistComponent {
 
           //chua lam 2
         } else this.datasVll = [];
-        this.detectorRef.detectChanges();
-
       });
   }
 
