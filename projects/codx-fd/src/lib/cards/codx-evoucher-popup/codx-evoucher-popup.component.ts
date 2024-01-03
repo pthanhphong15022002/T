@@ -109,17 +109,37 @@ export class CodxEvoucherPopupComponent implements OnInit {
   }
 
   selectItem(item: any) {
+    let sizeSelected = null;
+    const index = this.dataSelcected.findIndex((x) => x.productId == item.productId);
+    if(index > -1) {
+      sizeSelected = this.dataSelcected[index].selectedSize;
+    } else {
+      sizeSelected = item.selectedSize;
+    }
+
     const modal = this.callFunc.openForm(EvoucherDetailComponent,"",900 , 800 , "" , {
       productID : item.productId,
       headerText: "Chi tiết thẻ quà tặng",
-      type: 'getPrice'
+      type: 'getPrice',
+      sizeSelected: sizeSelected,
     })
     modal.closed.subscribe((data:any)=>{
       if(data?.event){
-        item.selectedSize = data?.event;
-        const index = this.dataSelcected.findIndex((x) => x.productId == item.productId);
-        if(index > -1) this.dataSelcected.splice(index, 1);
-        else this.dataSelcected.push(item);
+        if(data.event?.role == "save" && data.event?.data) {
+          item.selectedSize = data.event?.data;
+          const index = this.dataSelcected.findIndex((x) => x.productId == item.productId);
+          if(index == -1) {
+            this.dataSelcected.push(item);
+          } else {
+            this.dataSelcected[index] = item;
+          }
+        } else {
+          item.selectedSize = null;
+          const index = this.dataSelcected.findIndex((x) => x.productId == item.productId);
+          if(index > -1) {
+            this.dataSelcected.splice(index, 1);
+          }
+        }
       }
     })
   }

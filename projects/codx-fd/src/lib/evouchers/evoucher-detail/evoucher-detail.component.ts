@@ -1,6 +1,6 @@
-import { Component, Injector, OnInit, Optional, ViewChild } from '@angular/core';
+import { Component, OnInit, Optional } from '@angular/core';
 import { CodxFdService } from '../../codx-fd.service';
-import { DialogData, DialogRef, NotificationsService } from 'codx-core';
+import { DialogData, DialogRef } from 'codx-core';
 import { Observable, isObservable } from 'rxjs';
 
 @Component({
@@ -10,7 +10,7 @@ import { Observable, isObservable } from 'rxjs';
 })
 export class EvoucherDetailComponent implements OnInit{
   
-  dialog:any;
+  dialog: DialogRef;
   productID:any;
   headerText:any;
   data:any;
@@ -19,7 +19,6 @@ export class EvoucherDetailComponent implements OnInit{
 
   constructor(
     private FDService: CodxFdService,
-    private notifySV: NotificationsService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) 
@@ -28,6 +27,7 @@ export class EvoucherDetailComponent implements OnInit{
     this.productID = dt?.data?.productID;
     this.headerText = dt?.data?.headerText;
     this.type = dt?.data?.type;
+    this.sizeSelected = dt?.data?.sizeSelected;
   }
   ngOnInit(): void {
     this.loadData();
@@ -52,14 +52,19 @@ export class EvoucherDetailComponent implements OnInit{
   }
 
   save() {
-    if(this.sizeSelected) {
-      this.dialog.close(this.sizeSelected);
-    } else {
-      this.notifySV.notify("Vui lòng chọn giá", "3");
-    }
+    this.dialog.close(
+      {
+        data: this.sizeSelected,
+        role: "save"
+      }
+    );
   }
 
   selectSize(size:any){
-    this.sizeSelected = size;
+    if(this.sizeSelected?.sizeId == size.sizeId) {
+      this.sizeSelected = null;
+    } else {
+      this.sizeSelected = size;
+    }
   }
 }

@@ -49,6 +49,8 @@ export class CodxInputCustomFieldComponent implements OnInit {
 
   @Input() isDataTable = false; //là data của Table
 
+  @Input() refVersion = ''; //là recID của form Task
+
   @ViewChild('attachment') attachment: AttachmentComponent;
   @ViewChild('comboxValue') comboxValue: ComboBoxComponent; ///value seclect 1
   @ViewChild('comboxValueMutilSelect')
@@ -162,6 +164,10 @@ export class CodxInputCustomFieldComponent implements OnInit {
 
   ngOnInit(): void {
     //gia tri mặc dinh khi them moi
+    if (this.refVersion) {
+      // let idx = this.customField?.versions?.fiin;
+      // this.customField.dataValue =
+    }
     if (this.isAdd && this.customField.defaultValue)
       this.customField.dataValue = this.customField.defaultValue;
 
