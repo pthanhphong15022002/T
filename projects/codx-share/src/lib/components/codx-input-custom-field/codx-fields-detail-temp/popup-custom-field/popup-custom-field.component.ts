@@ -173,7 +173,10 @@ export class PopupCustomFieldComponent implements OnInit {
     this.arrCaculateField.forEach((obj) => {
       let dataFormat = obj.dataFormat;
       fieldsNum.forEach((f) => {
-        if (dataFormat.includes('[' + f.fieldName + ']') && f.dataValue) {
+        if (
+          dataFormat.includes('[' + f.fieldName + ']') &&
+          f.dataValue?.toString()
+        ) {
           let dataValue = f.dataValue;
           if (f.dataFormat == 'P') dataValue = dataValue + '/100';
           dataFormat = dataFormat.replaceAll(
@@ -189,7 +192,11 @@ export class PopupCustomFieldComponent implements OnInit {
         //tính toan end
         let index = this.fields.findIndex((x) => x.recID == obj.recID);
         if (index != -1) {
-          this.fields[index].dataValue = obj.dataValue;
+          this.fields[index] = this.upDataVersion(
+            this.fields[index],
+            obj.dataValue
+          );
+          // this.fields[index].dataValue = obj.dataValue;
         }
       }
     });

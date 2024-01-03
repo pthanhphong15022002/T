@@ -89,15 +89,19 @@ export class PopupAddCardsComponent implements OnInit {
   quantity: number = 0;
   quantityOld: number = 0;
   amount: number = 0;
+  amountEvoucher: number = 0;
   price: number = 0;
   totalRecorItem: number = 4;
   width = 720;
+  widthEvoucher = 747;
   height = window.innerHeight;
+  exchangeRateEVoucher: number = 1;
 
   isWalletReciver: boolean = false;
   showNavigationArrows: boolean = false;
   readOnly: boolean = false;
   showPopupGift: boolean = false;
+  showPopupEvoucher: boolean = false;
 
   MEMBERTYPE = {
     CREATED: '1',
@@ -141,6 +145,7 @@ export class PopupAddCardsComponent implements OnInit {
   type = 'add';
   reduceCoCoins = 0;
   cointsError = "";
+  dataSelectedEvoucher: any[] = [];
 
   constructor(
     private api: ApiHttpService,
@@ -270,6 +275,20 @@ export class PopupAddCardsComponent implements OnInit {
                       this.cardType,
                       '1'
                     );
+                  }
+                }
+              });
+            this.api
+              .execSv<any>('SYS', 'SYS', 'SettingValuesBusiness', 'GetByModuleAsync', [
+                'FDParameters',
+                'ActiveCoins',
+              ])
+              .subscribe((res) => {
+                if (res) {
+                  let data = JSON.parse(res.dataValue);
+                  if (data) {
+                    // tỷ lệ giữa 1 xu và 1.000 vnđ
+                    this.exchangeRateEVoucher = parseInt(data.ExchangeRateEVoucher);
                   }
                 }
               });
@@ -867,6 +886,11 @@ export class PopupAddCardsComponent implements OnInit {
     this.dt.detectChanges();
   }
 
+  clickAddEvoucher() {
+    this.showPopupEvoucher = !this.showPopupEvoucher;
+    this.dt.detectChanges();
+  }
+
   // get gift infor
   getGiftInfor(e: any) {
     this.showPopupGift = !this.showPopupGift;
@@ -932,6 +956,20 @@ export class PopupAddCardsComponent implements OnInit {
     this.updateAmountGift();
   }
 
+  updateQuantityEvoucher(e: any, index: number) {
+    let quantity = e?.component?.crrValue || 1;
+    let evoucher = this.dataSelectedEvoucher[index];
+    evoucher.quantity = quantity;
+    this.updateAmountEvoucher();
+  }
+
+  updateAmountEvoucher() {
+    const temp = this.dataSelectedEvoucher.reduce((p, c) => {
+      return p + c?.selectedSize?.pricePrice * c.quantity;
+    }, 0);
+    this.amountEvoucher = ((temp) * this.exchangeRateEVoucher) / 1000;
+  }
+
   updateAmountGift() {
     this.amount = this.gifts.reduce((p, c) => {
       return p + c.price * c.quantity;
@@ -950,5 +988,24 @@ export class PopupAddCardsComponent implements OnInit {
     if (e > 0 || e?.data?.length > 0) this.isHaveFile = true;
     else this.isHaveFile = false;
     this.showLabelAttachment = this.isHaveFile;
+  }
+
+  closeEvoucher(event) {
+    if(event){
+      this.showPopupEvoucher = false;
+      this.dt.detectChanges();
+    }
+  }
+
+  saveEvoucher(data: any) {
+    data.forEach((item) => {
+      if(!item?.quantity) {
+        item.quantity = 1;
+      }
+    });
+    this.dataSelectedEvoucher = [...data];
+    this.showPopupEvoucher = false;
+    this.updateAmountEvoucher();
+    this.dt.detectChanges();
   }
 }

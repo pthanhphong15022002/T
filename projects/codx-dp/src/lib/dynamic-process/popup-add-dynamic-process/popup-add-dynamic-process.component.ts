@@ -2899,7 +2899,7 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
     if (step) {
       let tasks = step.tasks;
       if (tasks?.length > 0) {
-        let task = tasks.find((x) => x.fieldID.includes(fieldID));
+        let task = tasks.find((x) => x?.fieldID?.includes(fieldID));
         if (task) return task;
       }
     }

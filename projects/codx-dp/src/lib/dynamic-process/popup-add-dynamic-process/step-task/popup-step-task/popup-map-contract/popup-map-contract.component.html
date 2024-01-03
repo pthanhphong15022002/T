@@ -78,14 +78,15 @@
             <div>{{ item.dataType }}</div>
           </td>
           <td [ngClass]="item?.show || item?.hover ? 'p-0' : 'ps-4'" (mouseenter)="onMouseEnter(item)" (mouseleave)="onMouseLeave(item)" (click)="onClick(item)">
-            <div [ngClass]="item?.show || item?.hover ? 'd-none' : ''">{{ item.fieldLindName }}</div>
-            <div [ngClass]="item?.show || item?.hover ? '' : 'd-none'" style="height: 39px;">
+            <div [ngClass]="item?.show || item?.hover ? 'd-none' : ''">{{ item?.field?.title }}</div>
+            <div *ngIf="item?.show || item?.hover" style="height: 39px;">
               <ejs-combobox
                 class="custom-combobox h-100"
                 [dataSource]="listFields"
                 [fields]="fieldsFields"
-                [value]=" item.fieldLindID"
+                [value]="item?.field?.recID"
                 [allowCustom]="false"
+                (valueChange)="fieldIDChange($event,item )"
               ></ejs-combobox>
             </div>
           </td>

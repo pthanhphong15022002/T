@@ -30,7 +30,7 @@ import {
 import { ComboBoxComponent } from '@syncfusion/ej2-angular-dropdowns';
 import { CodxEmailComponent } from 'projects/codx-share/src/lib/components/codx-email/codx-email.component';
 import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
-import { Subject, firstValueFrom, takeUntil } from 'rxjs';
+import { Subject, takeUntil, filter, firstValueFrom } from 'rxjs';
 import { PopupAddCategoryComponent } from 'projects/codx-es/src/lib/setting/category/popup-add-category/popup-add-category.component';
 import { PopupSettingReferenceComponent } from '../../popup-add-custom-field/popup-setting-reference/popup-setting-reference.component';
 import { PopupMapContractComponent } from './popup-map-contract/popup-map-contract.component';
@@ -69,6 +69,7 @@ export class PopupJobComponent implements OnInit, OnDestroy {
   view = [];
   listFields = [];
   listFieldID = [];
+  listFieldLink = [];
   listParentID = [];
   listTaskLink = [];
   listGroupTask = [];
@@ -315,7 +316,23 @@ export class PopupJobComponent implements OnInit, OnDestroy {
   async saveData() {
     this.stepsTasks['roles'] = [...this.owner, ...this.participant];
     this.stepsTasks['parentID'] = this.listParentID.join(';');
-    this.stepsTasks['fieldID'] = this.listFieldID.join(';');
+    let listFieldIDConvert = [];
+    let listFieldID = [];
+    if(this.listFieldID?.length > 0){
+      for(let filter of this.listFieldID){
+        if(filter){
+          listFieldID.push(filter);
+          let find = this.listFieldLink?.find(x => x.includes(filter));
+          if(find){
+            listFieldIDConvert.push(find);
+          }else{
+            listFieldIDConvert.push(filter)
+          }
+        }
+      }
+    }
+    this.stepsTasks.fieldID = listFieldID.join(';');
+    this.stepsTasks.reference = listFieldIDConvert.join(';');
     let message = [];
     for (let key of this.REQUIRE) {
       if (this.typeTask?.value == 'F' && key == 'dependRule') {
@@ -814,6 +831,7 @@ export class PopupJobComponent implements OnInit, OnDestroy {
       }
     })
   }
+
   clickSettingReference(field = null){
     let option = new DialogModel();
     console.log(this.grvContracts);
@@ -837,8 +855,13 @@ export class PopupJobComponent implements OnInit, OnDestroy {
     );
     dialogColumn?.closed.subscribe(res => {
       if(res?.event){
-        field.link = res.event?.fieldName;
-        res.event.show = false;
+        let fieldIDs = res.event?.fieldIDs;
+        if(fieldIDs){
+          let data = Array.from(new Set(this.listFieldID.concat(fieldIDs)));
+          this.listFieldID = data;
+        }
+        this.listFieldLink = res.event?.fields;
+        this.changeDetectorRef.markForCheck();
       }
     })
   }

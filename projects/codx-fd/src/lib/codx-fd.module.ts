@@ -88,6 +88,8 @@ import { LeadsComponent } from 'projects/codx-cm/src/lib/leads/leads.component';
 import { CasesComponent } from 'projects/codx-cm/src/lib/cases/cases.component';
 import { CodxDashboardViewsComponent } from 'projects/codx-share/src/lib/components/codx-dashboard/dashboard-view/dashboard-view.component';
 import { ContractsComponent } from 'projects/codx-cm/src/lib/contracts/contracts.component';
+import { CodxEvoucherPopupComponent } from './cards/codx-evoucher-popup/codx-evoucher-popup.component';
+import { DialogModule } from '@syncfusion/ej2-angular-popups';
 
 export const routes: Routes = [
   {
@@ -294,6 +296,7 @@ const Component: Type<any>[] = [
   AchievementsComponent,
   PersonalAchievementComponent,
   PersonalUsageHistoryComponent,
+  CodxEvoucherPopupComponent,
 ];
 const T_Pipe: Type<any>[] = [];
 @NgModule({
@@ -312,6 +315,7 @@ const T_Pipe: Type<any>[] = [];
     TreeMapModule,
     DropDownListModule,
     RouterModule.forChild(routes),
+    DialogModule,
   ],
   exports: [RouterModule],
   declarations: [

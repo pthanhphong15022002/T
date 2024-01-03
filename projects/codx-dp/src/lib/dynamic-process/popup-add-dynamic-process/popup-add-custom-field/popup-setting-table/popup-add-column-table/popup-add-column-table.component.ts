@@ -122,7 +122,7 @@ export class PopupAddColumnTableComponent implements OnInit, AfterViewInit {
   // Tính
   caculateField = '';
   arrFieldNum = [];
-  showCaculate = true
+  showCaculate = true;
 
   constructor(
     private changdef: ChangeDetectorRef,
@@ -146,7 +146,7 @@ export class PopupAddColumnTableComponent implements OnInit, AfterViewInit {
     this.grvSetup = dt?.data?.grvSetup;
     this.processNo = dt?.data?.processNo; //de sinh vll
     this.listColumns = dt?.data?.listColumns;
-    this.showCaculate = this.action !='edit'
+    this.showCaculate = this.action != 'edit';
   }
 
   ngOnInit(): void {
@@ -673,7 +673,9 @@ export class PopupAddColumnTableComponent implements OnInit, AfterViewInit {
 
   saveColumn() {
     if (this.column.dataType == 'CF') {
-      this.column.dataFormat = this.caculateField;
+      if (this.checkCaculateField())
+        this.column.dataFormat = this.caculateField;
+      else return;
     }
 
     if (!this.checkValidate()) return;
@@ -841,11 +843,25 @@ export class PopupAddColumnTableComponent implements OnInit, AfterViewInit {
       if (
         this.operator.includes(this.caculateField[idxLast]) ||
         this.caculateField[idxLast] == '(' ||
-        this.caculateField[idxLast] == ','
+        this.caculateField[idxLast] == ',' ||
+        this.compareParenthesis(this.caculateField) == 0
       )
         return;
-    }
+    } else return;
     this.caculateField += ')';
+  }
+
+  compareParenthesis(string) {
+    let countOpen = 0;
+    let countClose = 0;
+    for (const c of string) {
+      if (c == '(') {
+        countOpen++;
+      } else if (c === ')') {
+        countClose++;
+      }
+    }
+    return countOpen - countClose;
   }
 
   fieldSelect(fieldName) {
@@ -887,7 +903,7 @@ export class PopupAddColumnTableComponent implements OnInit, AfterViewInit {
       let idxLast = this.caculateField.length - 1;
       if (
         this.caculateField[idxLast] == ']' ||
-        this.caculateField[idxLast] == ')' 
+        this.caculateField[idxLast] == ')'
       )
         return;
     }
@@ -896,7 +912,7 @@ export class PopupAddColumnTableComponent implements OnInit, AfterViewInit {
   decimalPoint() {
     if (!this.caculateField) return;
     let idxLast = this.caculateField.length - 1;
-    let chartLast = this.caculateField[idxLast]; 
+    let chartLast = this.caculateField[idxLast];
     if (
       chartLast == ',' ||
       this.accessField.includes(chartLast) ||
@@ -904,10 +920,13 @@ export class PopupAddColumnTableComponent implements OnInit, AfterViewInit {
     )
       return;
     //chua check hết
-    idxLast= idxLast -1
-    while(!this.operator.includes(this.accessField[idxLast]) || idxLast!=-1){
-      if(this.caculateField[idxLast]==",")  return;
-      idxLast--
+    idxLast = idxLast - 1;
+    while (
+      !this.operator.includes(this.accessField[idxLast]) ||
+      idxLast != -1
+    ) {
+      if (this.caculateField[idxLast] == ',') return;
+      idxLast--;
     }
     this.caculateField += ',';
   }
@@ -936,11 +955,24 @@ export class PopupAddColumnTableComponent implements OnInit, AfterViewInit {
   }
 
   checkCaculateField() {
+    if (!this.caculateField) {
+      this.notiService.notify('Phép toán chưa được thiết lập !', '3');
+      return false;
+    }
+
+    let lastChart = this.caculateField[this.caculateField.length - 1];
+    if (
+      this.compareParenthesis(this.caculateField) > 0 ||
+      this.operator.includes(lastChart)
+    ) {
+      this.notiService.notify('Phép toán chưa đúng ! Hãy kiểm tra lại !', '3');
+      return false;
+    }
     return true;
   }
 
-  openCaculate(){
-    this.showCaculate = ! this.showCaculate
+  openCaculate() {
+    this.showCaculate = !this.showCaculate;
   }
   //-----------------end CACULATE FIELD------------------//
 }
