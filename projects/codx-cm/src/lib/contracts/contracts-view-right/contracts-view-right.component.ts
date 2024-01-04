@@ -38,7 +38,7 @@ export class ContractsViewDetailComponent
   @Input() formModel: FormModel;
   @Input() listInsStepStart = [];
   @Input() contract: CM_Contracts;
-
+  // @Input() dataSelected: any;
   @Output() changeMF = new EventEmitter<any>();
   @Output() isSusscess = new EventEmitter<any>();
   @Output() clickMoreFunc = new EventEmitter<any>();
@@ -52,6 +52,7 @@ export class ContractsViewDetailComponent
   account: any;
   isView = true;
   grvSetup: any;
+  stepCurrent:any;
   contactPerson;
   treeTask = [];
   vllStatus = '';
@@ -59,7 +60,7 @@ export class ContractsViewDetailComponent
   tabClicked = '';
   listInsStep = [];
   lstStepsOld = [];
-  isShowFull = false;  
+  isShowFull = false;
   listTypeContract = [];
   oCountFooter: any = {};
   isLoading: boolean = true;
@@ -69,7 +70,6 @@ export class ContractsViewDetailComponent
   listContractInParentID: CM_Contracts[] = [];
   isHaveField: boolean = false;
   listStepsProcess = [];
-  stepCurrent: any;
 
   tabControl = [
     { name: 'History', textDefault: 'Lịch sử', isActive: true, template: null },
@@ -122,7 +122,7 @@ export class ContractsViewDetailComponent
     gridViewName: 'grvCMContacts',
   };
   lstContacts: any;
-  
+
   constructor(
     private inject: Injector,
     private location: Location,
@@ -198,6 +198,9 @@ export class ContractsViewDetailComponent
     if (this.contract?.applyProcess) {
       this.getListInstanceStep();
     }
+    else {
+      this.stepCurrent = null;
+    }
     this.sessionID = this.contract?.recID;
     this.loadTree(this.sessionID);
   }
@@ -238,12 +241,6 @@ export class ContractsViewDetailComponent
   deleteListReason(listStep: any): void {
     listStep.pop();
     listStep.pop();
-  }
-  getStepCurrent(data) {
-    this.getStepCurrent = null;
-    if( this.listInsStep != null &&  this.listInsStep.length > 0) {
-      this.stepCurrent = this.listInsStep.filter((x) => x.stepID == data.stepID)[0];
-     }
   }
   showColumnControl(stepID) {
     if (this.listStepsProcess?.length > 0) {
@@ -534,6 +531,16 @@ export class ContractsViewDetailComponent
         }
       })
     }
-    
   }
+  reloadListStep(listSteps: any) {
+    this.isLoading = true;
+    this.listInsStep = listSteps;
+    this.getStepCurrent(this.contract);
+    this.isLoading = false;
+    this.changeDetectorRef.detectChanges();
+  }
+  getStepCurrent(data) {
+    this.stepCurrent = this.listInsStep.filter(x=>x.stepID == data.stepID)[0];
+  }
+
 }

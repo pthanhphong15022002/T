@@ -893,6 +893,15 @@ export class CodxCmService {
       data
     );
   }
+  startContrart(data) {
+    return this.api.execSv<any>(
+      'CM',
+      'ERM.Business.CM',
+      'ContractsBusiness',
+      'StartContractAsync',
+      data
+    );
+  }
   moveStartFirstLead(data) {
     return this.api.execSv<any>(
       'CM',
@@ -938,6 +947,17 @@ export class CodxCmService {
       data
     );
   }
+  moveStageBackContract(data) {
+    return this.api.execSv<any>(
+      'CM',
+      'ERM.Business.CM',
+      'ContractsBusiness',
+      'MoveStageBackByContractAsync',
+      data
+    );
+  }
+
+
   moveStageBackCase(data) {
     return this.api.execSv<any>(
       'CM',
@@ -1020,7 +1040,15 @@ export class CodxCmService {
       data
     );
   }
-
+  moveStageContract(data) {
+    return this.api.execSv<any>(
+      'CM',
+      'ERM.Business.CM',
+      'ContractsBusiness',
+      'MoveStageContractAsync',
+      data
+    );
+  }
   updateDeal(data) {
     return this.api.execSv<any>(
       'CM',
@@ -1075,6 +1103,15 @@ export class CodxCmService {
       'ERM.Business.CM',
       'CasesBusiness',
       'MoveCaseReasonAsync',
+      data
+    );
+  }
+  moveContractReason(data) {
+    return this.api.execSv<any>(
+      'CM',
+      'ERM.Business.CM',
+      'ContractsBusiness',
+      'MoveContractReasonAsync',
       data
     );
   }
