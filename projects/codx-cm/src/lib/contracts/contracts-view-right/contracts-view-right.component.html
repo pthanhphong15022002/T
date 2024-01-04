@@ -98,15 +98,43 @@
       <div class="col-6"></div>
       <div class="col-6">
         <div class="d-flex justify-content-end align-items-center mb-2">
-          <codx-vll
-            [name]="vllStatus"
-            [field]="'Status'"
-            [value]="contract?.status"
-            [showText]="true"
-            [showBgColor]="true"
-            class="me-0 badge badge-primary badge-sm"
+          <div
+          *ngIf="
+            contract.status == '2' && stepCurrent;
+            else statusDefault
+          "
+          [ngStyle]="{
+            'background-color': stepCurrent?.backgroundColor
+          }"
+          class="badge badge-sm d-flex align-items-center me-0"
+        >
+          <span
+            [ngClass]="stepCurrent?.icon"
+            [ngStyle]="{
+              color: stepCurrent?.iconColor
+            }"
+            class="me-1"
+          ></span>
+          <span
+            class="text-ellipsis line-clamp line-clamp-2"
+            [ngbTooltip]="stepCurrent?.stepName"
+            [ngStyle]="{
+              color: stepCurrent.textColor
+            }"
+            >{{ stepCurrent?.stepName }}</span
           >
-          </codx-vll>
+        </div>
+        <ng-template #statusDefault>
+          <codx-vll
+          [name]="vllStatus"
+          [field]="'Status'"
+          [value]="contract?.status"
+          [showText]="true"
+          [showBgColor]="true"
+          class="me-0 badge badge-primary badge-sm"
+        >
+        </codx-vll>
+        </ng-template>
         </div>
       </div>
     </div>
@@ -482,7 +510,7 @@
       </div>
     </div> -->
   </div>
-  
+
   <div class="mt-2">
     <codx-label
       class="fs-5-sm fw-bold"

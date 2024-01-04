@@ -38,7 +38,7 @@ export class ContractsViewDetailComponent
   @Input() formModel: FormModel;
   @Input() listInsStepStart = [];
   @Input() contract: CM_Contracts;
-
+  // @Input() dataSelected: any;
   @Output() changeMF = new EventEmitter<any>();
   @Output() isSusscess = new EventEmitter<any>();
   @Output() clickMoreFunc = new EventEmitter<any>();
@@ -52,13 +52,14 @@ export class ContractsViewDetailComponent
   account: any;
   isView = true;
   grvSetup: any;
+  stepCurrent:any;
   contactPerson;
   treeTask = [];
   vllStatus = '';
   sessionID = '';
   tabClicked = '';
   listInsStep = [];
-  isShowFull = false;  
+  isShowFull = false;
   listTypeContract = [];
   oCountFooter: any = {};
   isLoading: boolean = true;
@@ -116,7 +117,7 @@ export class ContractsViewDetailComponent
     entityName: 'CM_Contacts',
     gridViewName: 'grvCMContacts',
   };
-  
+
   constructor(
     private inject: Injector,
     private location: Location,
@@ -192,6 +193,9 @@ export class ContractsViewDetailComponent
     if (this.contract?.applyProcess) {
       this.getListInstanceStep(this.contract);
     }
+    else {
+      this.stepCurrent = null;
+    }
     this.sessionID = this.contract?.recID;
     this.loadTree(this.sessionID);
   }
@@ -206,6 +210,7 @@ export class ContractsViewDetailComponent
       this.codxCmService.getStepInstance(data).subscribe((res) => {
         if (res) {
           this.listInsStep = res;
+          this.getStepCurrent(this.contract);
         }
       });
     }
@@ -391,6 +396,16 @@ export class ContractsViewDetailComponent
         }
       })
     }
-    
   }
+  reloadListStep(listSteps: any) {
+    this.isLoading = true;
+    this.listInsStep = listSteps;
+    this.getStepCurrent(this.contract);
+    this.isLoading = false;
+    this.changeDetectorRef.detectChanges();
+  }
+  getStepCurrent(data) {
+    this.stepCurrent = this.listInsStep.filter(x=>x.stepID == data.stepID)[0];
+  }
+
 }
