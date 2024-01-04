@@ -110,6 +110,8 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   @Input() formModelAssign: FormModel; // formModel của giao việc
   @Input() isChangeOwner = false;
 
+  @Input() businessLineID: string;
+  @Input() processID: string;
   @Input() customerName: string;
   @Input() dealName: string;
   @Input() contractName: string;
@@ -960,6 +962,8 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         type: 'task',
         entityName: this.entityName,
         parentID: this.recIDParent,
+        processID: this.processID,
+        businessLineID: this.businessLineID,
       };
       let taskContract = await this.stepService.openPopupTaskContract(
         data,
@@ -1200,6 +1204,8 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         type: 'task',
         entityName: this.entityName,
         parentID: this.recIDParent,
+        businessLineID: this.businessLineID,
+        processID: this.processID,
       };
       let taskContract = await this.stepService.openPopupTaskContract(
         data,
@@ -1425,6 +1431,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
           action: 'copy',
           type: 'task',
           recIDContract: task.objectLinked,
+          businessLineID: this.businessLineID,
         };
         let taskContract = await this.stepService.openPopupTaskContract(
           data,
@@ -3045,9 +3052,10 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     let obj = {
       data: JSON.parse(JSON.stringify(listField)),
       titleHeader: task?.taskName,
-      objectIdParent: 'task?.stepID',
+      objectIdParent: task?.stepID,
       // customerID: '',
       isAdd: false, ///là add form để lấy giá trị mặc định gán vào
+      taskID: task.recID,
     };
     let formModel: FormModel = {
       entityName: 'DP_Instances_Steps_Fields',
@@ -3068,20 +3076,21 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       option
     );
     fieldPopup.closed.subscribe((res) => {
-      let filels = res?.event;
-      let listFilelStep = this.currentStep?.fields;
+      let fields = res?.event;
+      let listFieldStep = this.currentStep?.fields;
       let countFieldChange = 0;
-      if (filels?.length > 0 && listFilelStep?.length > 0) {
-        filels?.forEach((element) => {
-          let filel = listFilelStep?.find((x) => x.recID == element?.recID);
-          if (filel) {
-            filel.dataValue = element?.dataValue;
+      if (fields?.length > 0 && listFieldStep?.length > 0) {
+        fields?.forEach((element) => {
+          let field = listFieldStep?.find((x) => x.recID == element?.recID);
+          if (field) {
+            field.dataValue = element?.dataValue;
+            field['versions'] = element?.versions; // lưu version
             if (element?.dataValue) {
               countFieldChange++;
             }
           }
         });
-        if (countFieldChange == filels?.length) {
+        if (countFieldChange == fields?.length) {
           task.status = '3';
           let actualEnd = new Date();
           this.updateProgressForm(
@@ -3094,7 +3103,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
             true
           );
         } else {
-          let progress = Math.floor((countFieldChange / filels?.length) * 100);
+          let progress = Math.floor((countFieldChange / fields?.length) * 100);
           task.progress = progress >= 0 ? progress : 0;
           task.status = '2';
           this.updateProgressForm(

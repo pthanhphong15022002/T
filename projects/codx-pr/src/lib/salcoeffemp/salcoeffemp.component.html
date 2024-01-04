@@ -3,7 +3,8 @@
     idField="recID"
     [selectedFirst]="true"
     [button]="buttonAdd"
-    [service]="'HR'">
+    [service]="'HR'"
+    (filterChange)="filterChange($event)">
 </codx-views>
 <!-- template left -->
 <ng-template #tmpLeft>
@@ -16,13 +17,72 @@
         textField="orgUnitName"
         gridViewName="grvOrganizationUnits"
         formName="OrganizationUnits"
-        idField="orgUnitID">
-  </codx-treeview>
+        [enableCheck]="false"
+        [data]="null"
+        [idField]="'orgUnitID'"
+        [parentIdField]="'ParentID'"
+        [dataService]="dataServiceHR">
+      </codx-treeview>
 </ng-template>
 <!-- template right -->
-<ng-template #tmpRight></ng-template>
+<ng-template #tmpRight>
+    <codx-gridview-v2
+    *ngIf="columnsGrid && columnsGrid.length > 0"
+    #codxGridViewV2
+    [formName]="'SalCoeffEmp'"
+    [gridViewName]="'grvSalCoeffEmpUI'"      
+    [entityName]="view.formModel.entityName"
+    [columnsGrid]="columnsGrid"
+    [service]="'HR'"
+    [assemblyName]="'ERM.Business.PR'"
+    [className]="'SalCoeffEmpBusiness'"
+    [method]="'LoadDataGridAsync'"
+    [dataSource]="dataSources"
+    [checkboxSelect]="true"
+    [autoFitColumns]="false"
+    [hideMoreFunc]="true"
+    [height]="'100%'"
+    [idField]="'employeeID'"
+    (onDoubleClick)="onDoubleClick($event)">
+    </codx-gridview-v2>
+</ng-template>
 
 <!-- template item tree -->
 <ng-template #itemTemplateTree let-data>
-    <span>{{data.orgUnitName}}</span>
+    <div class="d-flex align-items-center">
+        <!-- <span class="bg-primary text-white p-2">
+            <i class="icon-add"></i>
+        </span> -->
+        <span>{{data.orgUnitName}}</span>
+    </div>
+</ng-template>
+
+
+<!-- template employee -->
+<ng-template #tmpEmployee let-data>
+    <div class="d-flex align-items-center p-2" *ngIf="data && data?.employee">
+        <div class="me-4">
+            <codx-img 
+                [objectId]="data.employee.employeeID" 
+                [objectName]="data.employee.employeeName"
+                objectType="HR_Employees" 
+                [width]="30"
+                [imageType]="'circle'">
+            </codx-img>
+        </div>
+        <div>
+            <div class="align-items-center line-clamp line-clamp-1 mb-1">
+                <span class="fw-bold text-nowrap me-3">{{data.employee.employeeName}}</span>
+                <i class="icon-qr_code_scanner text-danger icon-14 me-1"></i>
+                <span class="text-danger">{{ data.employee.employeeID }}</span>
+            </div>
+            <div>
+                <span class="text-gray-500">{{data.employee.positionName}}</span>
+            </div>
+        </div>
+    </div>
+</ng-template>
+<!-- template data -->
+<ng-template #tmpData let-data>
+    <span>{{data[data.column.field]}}</span>
 </ng-template>

@@ -202,7 +202,22 @@
 
 <ng-template #footer let-form>
   <div class="d-flex justify-content-between">
-    <div></div>
+    <div>
+      <button
+      type="button"
+      class="btn btn-light-primary me-3"
+      (click)="addFile($event)"
+    >
+      <i class="icon-cloud_upload fs-5"></i
+      ><span>
+        <codx-label
+          name="UploadFile"
+          formName="Tasks"
+          default="Đính kèm"
+        ></codx-label>
+      </span>
+    </button>
+    </div>
     <button type="button" button class="btn btn-primary ms-1" (click)="save()">
       <codx-label
         name="lblSave"
@@ -490,6 +505,7 @@
       </div>
     </div>
   </div>
+
   <div class="row form-group">
     <div>
       <codx-label
@@ -509,6 +525,7 @@
       </codx-input>
     </div>
   </div>
+
   <div *ngIf="!isShowFieldLeft">
     <ng-container *ngIf="listField && listField?.length > 0">
       <ng-container *ngFor="let item of listField">
@@ -530,6 +547,40 @@
       </ng-container>
     </ng-container>
   </div>
+
+  <ng-container>
+    <div class="d-flex align-items-center nav-item w-100 mb-1">
+      <div class="d-flex align-items-center mb-2">
+        <span class="icon-attach_file icon-18 me-2 text-primary"></span>
+        <div class="fw-bold text-primary">
+          <codx-label
+            name="lblAttachments"
+            [formModel]="dialog.formModel"
+            default="Tài liệu đính kèm"
+          >
+          </codx-label>
+        </div>
+      </div>
+    </div>
+    <div>
+      <codx-attachment
+        #attachment
+        [objectType]="dialog.formModel.entityName"
+        [objectId]="contracts?.recID"
+        hideFolder="1"
+        hideImageUpload="0"
+        hideImageThumb="0"
+        hideUploadBtn="1"
+        [showMessage]="0"
+        hideDes="1"
+        type="inline"
+        allowMultiFile="1"
+        referType="source"
+        displayThumb="simple"
+      >
+      </codx-attachment>
+    </div>
+  </ng-container>
 </ng-template>
 
 <ng-template #referenceTemp>

@@ -557,6 +557,7 @@ export class ViewDetailComponent extends UIDetailComponent implements OnInit {
           formModel: this.view?.formModel,
           option: option,
           refID: datas?.recID,
+          refType: this.view?.formModel?.entityName,
         },
         '',
         dialogModel

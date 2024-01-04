@@ -893,6 +893,15 @@ export class CodxCmService {
       data
     );
   }
+  startContrart(data) {
+    return this.api.execSv<any>(
+      'CM',
+      'ERM.Business.CM',
+      'ContractsBusiness',
+      'StartContractAsync',
+      data
+    );
+  }
   moveStartFirstLead(data) {
     return this.api.execSv<any>(
       'CM',
@@ -938,6 +947,17 @@ export class CodxCmService {
       data
     );
   }
+  moveStageBackContract(data) {
+    return this.api.execSv<any>(
+      'CM',
+      'ERM.Business.CM',
+      'ContractsBusiness',
+      'MoveStageBackByContractAsync',
+      data
+    );
+  }
+
+
   moveStageBackCase(data) {
     return this.api.execSv<any>(
       'CM',
@@ -1020,7 +1040,15 @@ export class CodxCmService {
       data
     );
   }
-
+  moveStageContract(data) {
+    return this.api.execSv<any>(
+      'CM',
+      'ERM.Business.CM',
+      'ContractsBusiness',
+      'MoveStageContractAsync',
+      data
+    );
+  }
   updateDeal(data) {
     return this.api.execSv<any>(
       'CM',
@@ -1078,6 +1106,15 @@ export class CodxCmService {
       data
     );
   }
+  moveContractReason(data) {
+    return this.api.execSv<any>(
+      'CM',
+      'ERM.Business.CM',
+      'ContractsBusiness',
+      'MoveContractReasonAsync',
+      data
+    );
+  }
 
   getIdBusinessLineByProcessID(data) {
     return this.api.exec<any>(
@@ -1093,6 +1130,22 @@ export class CodxCmService {
       'BusinessLinesBusiness',
       'GetOneBusinessLineByProcessContractIDAsync',
       data
+    );
+  }
+  getProcessByBusinessLineID(bussinessID) {
+    return this.api.exec<any>(
+      'CM',
+      'BusinessLinesBusiness',
+      'GetProcessByBussinessIDAsync',
+      bussinessID
+    );
+  }
+  getBusinessLineByBusinessLineID(bussinessID) {
+    return this.api.exec<any>(
+      'CM',
+      'BusinessLinesBusiness',
+      'GetOneAsync',
+      bussinessID
     );
   }
 
@@ -1164,6 +1217,14 @@ export class CodxCmService {
       data
     );
   }
+  isExistOwnerInProcess(data) {
+    return this.api.exec<any>(
+      'CM',
+      'DealsBusiness',
+      'IsExistOwnerInProcessAsync',
+      data
+    );
+  }
   updateOwnerLead(data) {
     return this.api.exec<any>(
       'CM',
@@ -1189,21 +1250,21 @@ export class CodxCmService {
   //   );
   // }
 
-  getViewDetailDealAsync(data) {
-    return this.api.exec<any>(
-      'CM',
-      'DealsBusiness',
-      'GetViewDetailDealAsync',
-      data
-    );
-  }
-  getSettingViewDetailDealAsync() {
-    return this.api.exec<any>(
-      'CM',
-      'DealsBusiness',
-      'GetSettingViewDetailDealAsync'
-    );
-  }
+  // getViewDetailDealAsync(data) {
+  //   return this.api.exec<any>(
+  //     'CM',
+  //     'DealsBusiness',
+  //     'GetViewDetailDealAsync',
+  //     data
+  //   );
+  // }
+  // getSettingViewDetailDealAsync() {
+  //   return this.api.exec<any>(
+  //     'CM',
+  //     'DealsBusiness',
+  //     'GetSettingViewDetailDealAsync'
+  //   );
+  // }
 
   getDataTabHistoryDealAsync(data) {
     return this.api.exec<any>(
@@ -1623,15 +1684,6 @@ export class CodxCmService {
     );
   }
 
-  getProcessByBusinessLineID(bussinessID) {
-    return this.api.exec<any>(
-      'CM',
-      'BusinessLinesBusiness',
-      'GetProcessByBussinessIDAsync',
-      bussinessID
-    );
-  }
-
   getCustomerNameByrecID(id) {
     return id
       ? this.api.execSv<any>(
@@ -1681,10 +1733,18 @@ export class CodxCmService {
       [autoNoCode, null, true, null]
     );
   }
+  getInstancerStepByRecID(recID) {
+    return this.api.exec<any>(
+      'DP',
+      'InstancesStepsBusiness',
+      'GetInstanceStepByRecIDAsync',
+      [recID]
+    );
+  }
   //#region
 
   getOneObject(recID, className) {
-    return this.api.exec<any>('CM', className, 'GetOneAsync', recID);
+    return this.api.exec<any>('DP', className, 'GetOneAsync', recID);
   }
   //#region getParamModule
   getParam(sformName, category) {

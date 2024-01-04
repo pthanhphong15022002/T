@@ -99,7 +99,7 @@ export class PopupAddLeadComponent
   lstContactDeletes: any[] = [];
   listIndustries: any[] = [];
   listCategory: any[] = [];
-  listFields:any[]=[];
+  listFields: any[] = [];
   // const
   readonly actionAdd: string = 'add';
   readonly actionCopy: string = 'copy';
@@ -179,7 +179,7 @@ export class PopupAddLeadComponent
   convertCustomerToLead: boolean = false; //Phúc bổ sung chỗ này để convert customer qua lead
   transIDCamp: any;
   autoNameTabFields: string;
-  arrCaculateField: any[]=[];
+  arrCaculateField: any[] = [];
   isLoadedCF = false;
 
   constructor(
@@ -188,7 +188,7 @@ export class PopupAddLeadComponent
     private notificationsService: NotificationsService,
     private authStore: AuthStore,
     private codxCmService: CodxCmService,
-    private customFieldSV : CustomFieldService,
+    private customFieldSV: CustomFieldService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -212,14 +212,18 @@ export class PopupAddLeadComponent
           ? dt?.data?.contactIdOld
           : this.lead.contactID;
       this.leadId =
-        this.action === this.actionCopy ? dt?.data?.leadIdOld : this.lead?.recID;
+        this.action === this.actionCopy
+          ? dt?.data?.leadIdOld
+          : this.lead?.recID;
       if (this.action === this.actionCopy) {
         this.oldIdInstance = this.lead?.refID;
         this.lead.applyProcess = dt?.data?.applyProcess;
         this.lead.leadID = '';
         this.lead.contactID = Util.uid();
         this.lead.recID = Util.uid();
-        this.lead.permissions = this.lead?.permissions.filter(x=> x.memberType != '2');
+        this.lead.permissions = this.lead?.permissions.filter(
+          (x) => x.memberType != '2'
+        );
       } else {
         this.planceHolderAutoNumber = this.lead?.leadID;
       }
@@ -246,7 +250,7 @@ export class PopupAddLeadComponent
     this.lead.permissions = !this.lead?.permissions
       ? []
       : this.lead?.permissions;
-      this.owner = this.lead?.owner;
+    this.owner = this.lead?.owner;
   }
 
   async getParameterAddress() {
@@ -551,12 +555,15 @@ export class PopupAddLeadComponent
     permission.upload = true;
     permission.download = true;
     permission.isActive = true;
-    permission.allowUpdateStatus = roleType === 'O' || roleType === 'S' ? '1' : '0';
+    permission.allowUpdateStatus =
+      roleType === 'O' || roleType === 'S' ? '1' : '0';
     permission.full = roleType === 'O';
     permission.assign = roleType === 'O';
     permission.delete = roleType === 'O';
     permission.allowPermit = roleType === 'O';
-    this.lead.permissions = this.lead?.permissions ? this.lead?.permissions:[];
+    this.lead.permissions = this.lead?.permissions
+      ? this.lead?.permissions
+      : [];
     this.lead.permissions.push(permission);
   }
   // valueChangeIndustries($event) {
@@ -898,8 +905,7 @@ export class PopupAddLeadComponent
         this.planceHolderAutoNumber = this.lead.leadID;
 
         this.changeDetectorRef.detectChanges();
-      }
-      else {
+      } else {
         this.lead.applyProcess = false;
       }
     });
@@ -916,7 +922,7 @@ export class PopupAddLeadComponent
     let dateNow = endDateValue;
     let endDate = endDateValue;
     for (let i = 0; i < listSteps.length; i++) {
-      if(!listSteps[i].isSuccessStep && !listSteps[i].isFailStep) {
+      if (!listSteps[i].isSuccessStep && !listSteps[i].isFailStep) {
         endDate.setDate(endDate.getDate() + listSteps[i].durationDay);
         endDate.setHours(endDate.getHours() + listSteps[i].durationHour);
         endDate = this.setTimeHoliday(
@@ -975,16 +981,15 @@ export class PopupAddLeadComponent
     let tabInput = this.tabContent.findIndex(
       (item) => item === this.tabCustomFieldDetail
     );
-    if(this.isShowField) {
+    if (this.isShowField) {
       if (check && menuInput == -1 && tabInput == -1) {
         this.tabInfo.splice(2, 0, this.menuInputInfo);
         this.tabContent.splice(2, 0, this.tabCustomFieldDetail);
-      } else if ( !check && menuInput != -1 && tabInput != -1) {
+      } else if (!check && menuInput != -1 && tabInput != -1) {
         this.tabInfo.splice(menuInput, 1);
         this.tabContent.splice(tabInput, 1);
       }
-    }
-    else {
+    } else {
       if (menuInput != -1 && tabInput != -1) {
         this.tabInfo.splice(menuInput, 1);
         this.tabContent.splice(tabInput, 1);
@@ -1009,26 +1014,38 @@ export class PopupAddLeadComponent
 
   ischeckFields(liststeps: any): boolean {
     this.listFields = [];
-    if(this.action !== 'edit') {
+    if (this.action !== 'edit') {
       let stepCurrent = liststeps[0];
-      if(stepCurrent && stepCurrent.fields?.length > 0 ) {
-        let filteredTasks = stepCurrent.tasks.filter(task => task?.fieldID !== null && task?.fieldID?.trim() !== '')
-        .map(task => task.fieldID)
-        .flatMap(item => item.split(';').filter(item => item !== ''));
-        let listFields = stepCurrent.fields.filter(field => !filteredTasks.includes(this.action === 'copy'? field?.recID: field?.refID));
+      if (stepCurrent && stepCurrent.fields?.length > 0) {
+        let filteredTasks = stepCurrent.tasks
+          .filter(
+            (task) => task?.fieldID !== null && task?.fieldID?.trim() !== ''
+          )
+          .map((task) => task.fieldID)
+          .flatMap((item) => item.split(';').filter((item) => item !== ''));
+        let listFields = stepCurrent.fields.filter(
+          (field) =>
+            !filteredTasks.includes(
+              this.action === 'copy' ? field?.recID : field?.refID
+            )
+        );
         this.listFields = [...this.listFields, ...listFields];
       }
-     }
-     else {
+    } else {
       let idxCrr = liststeps.findIndex((x) => x.stepID == this.lead?.stepID);
       if (idxCrr != -1) {
         for (let i = 0; i <= idxCrr; i++) {
           let stepCurrent = liststeps[i];
-          if(stepCurrent && stepCurrent.fields?.length > 0 ) {
-            let filteredTasks = stepCurrent?.tasks.filter(task => task?.fieldID !== null && task?.fieldID?.trim() !== '')
-            .map(task => task?.fieldID)
-            .flatMap(item => item.split(';').filter(item => item !== ''));
-            let listFields = stepCurrent?.fields.filter(field => !filteredTasks.includes(field?.recID));
+          if (stepCurrent && stepCurrent.fields?.length > 0) {
+            let filteredTasks = stepCurrent?.tasks
+              .filter(
+                (task) => task?.fieldID !== null && task?.fieldID?.trim() !== ''
+              )
+              .map((task) => task?.fieldID)
+              .flatMap((item) => item.split(';').filter((item) => item !== ''));
+            let listFields = stepCurrent?.fields.filter(
+              (field) => !filteredTasks.includes(field?.recID)
+            );
             this.listFields = [...this.listFields, ...listFields];
           }
         }
@@ -1127,7 +1144,7 @@ export class PopupAddLeadComponent
               );
           }
         }
-        if(field.dataType=='N') this.caculateField()
+        if (field.dataType == 'N') this.caculateField();
       }
     }
   }
@@ -1204,7 +1221,10 @@ export class PopupAddLeadComponent
     this.arrCaculateField.forEach((obj) => {
       let dataFormat = obj.dataFormat;
       fieldsNum.forEach((f) => {
-        if (dataFormat.includes('[' + f.fieldName + ']') && f.dataValue) {
+        if (
+          dataFormat.includes('[' + f.fieldName + ']') &&
+          f.dataValue?.toString()
+        ) {
           let dataValue = f.dataValue;
           if (f.dataFormat == 'P') dataValue = dataValue + '/100';
           dataFormat = dataFormat.replaceAll(
@@ -1218,23 +1238,30 @@ export class PopupAddLeadComponent
         //tinh toán
         obj.dataValue = this.customFieldSV.caculate(dataFormat);
         //tính toan end
-        let index = this.listInstanceSteps.findIndex((x) => x.recID == obj.stepID);
+        let index = this.listInstanceSteps.findIndex(
+          (x) => x.recID == obj.stepID
+        );
         if (index != -1) {
           if (this.listInstanceSteps[index].fields?.length > 0) {
             let idxField = this.listInstanceSteps[index].fields.findIndex(
               (x) => x.recID == obj.recID
             );
             if (idxField != -1) {
-              this.listInstanceSteps[index].fields[idxField].dataValue = obj.dataValue;
+              this.listInstanceSteps[index].fields[idxField].dataValue =
+                obj.dataValue;
 
               let idxEdit = this.listCustomFile.findIndex(
-                (x) => x.recID == this.listInstanceSteps[index].fields[idxField].recID
+                (x) =>
+                  x.recID ==
+                  this.listInstanceSteps[index].fields[idxField].recID
               );
               if (idxEdit != -1) {
                 this.listCustomFile[idxEdit] =
                   this.listInstanceSteps[index].fields[idxField];
               } else
-                this.listCustomFile.push(this.listInstanceSteps[index].fields[idxField]);
+                this.listCustomFile.push(
+                  this.listInstanceSteps[index].fields[idxField]
+                );
             }
           }
         }
@@ -1243,4 +1270,3 @@ export class PopupAddLeadComponent
   }
   //------------------END_CACULATE--------------------//
 }
-

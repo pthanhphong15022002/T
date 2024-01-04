@@ -49,6 +49,9 @@ export class CodxInputCustomFieldComponent implements OnInit {
 
   @Input() isDataTable = false; //là data của Table
 
+  @Input() refVersion = ''; //là recID của form Task
+  @Input() refInstance = ''; //là recID của Instance liên quan
+
   @ViewChild('attachment') attachment: AttachmentComponent;
   @ViewChild('comboxValue') comboxValue: ComboBoxComponent; ///value seclect 1
   @ViewChild('comboxValueMutilSelect')
@@ -164,8 +167,19 @@ export class CodxInputCustomFieldComponent implements OnInit {
     //gia tri mặc dinh khi them moi
     if (this.isAdd && this.customField.defaultValue)
       this.customField.dataValue = this.customField.defaultValue;
+    //gia tri tung form
+    if (this.refVersion && this.customField?.versions?.length > 0) {
+      let idx = this.customField.versions.findIndex(
+        (x) => x.refID == this.refVersion
+      );
+      if (idx != -1)
+        this.customField.dataValue = this.customField.versions[idx].dataValue;
+    }
 
     switch (this.customField.dataType) {
+      case 'N':
+        this.formatHaveE();
+        break;
       case 'PA':
         this.viewFieldRef();
         break;
@@ -340,6 +354,15 @@ export class CodxInputCustomFieldComponent implements OnInit {
 
             if (!this.checkValid) return;
           } else this.showErrMess = false;
+        }
+        break;
+      case 'N':
+        let idxE = e.data?.toString().toLowerCase().indexOf('e');
+        if (idxE != -1) {
+          this.notiService.notify(
+            'Số nhập vào quá lớn sẽ lưu giá trị gần đúng !',
+            '3'
+          );
         }
         break;
     }
@@ -826,49 +849,6 @@ export class CodxInputCustomFieldComponent implements OnInit {
       e: e.data,
       data: this.customField,
     });
-    // }
-    // let value = e.data;
-    // this.cache.combobox(this.customField.refValue).subscribe((res) => {
-    //   let gridModel = new DataRequest();
-    //   let entityName = res?.tableName;
-    //   gridModel.entityName = entityName;
-    //   gridModel.entityPermission = entityName;
-    //   gridModel.pageLoading = false;
-
-    //   let predicate = res.valueMember + '=@0';
-    //   if (res.predicate) {
-    //     predicate += ' and ' + res.predicate;
-    //   }
-    //   gridModel.predicate = predicate;
-    //   gridModel.dataValue = value;
-
-    //   this.api
-    //     .execSv<any>(
-    //       res.service,
-    //       'ERM.Business.Core',
-    //       'DataBusiness',
-    //       'LoadDataAsync',
-    //       gridModel
-    //     )
-    //     .subscribe((dataRes) => {
-    //       if (dataRes) {
-    //         let crrData = dataRes[0][0];
-    //         if (crrData) {
-    //           //this.refValuePA(crrData);
-
-    //           this.valueChangeCustom.emit({
-    //             e: e.data,
-    //             data: this.customField,
-    //           });
-    //         } else {
-    //           this.valueChangeCustom.emit({
-    //             e: null,
-    //             data: this.customField,
-    //           });
-    //         }
-    //       }
-    //     });
-    // });
   }
   refValuePA(crrData) {
     this.dataRef = '';
@@ -963,5 +943,28 @@ export class CodxInputCustomFieldComponent implements OnInit {
     });
     return check;
   }
+  //----------------------------------------------//
+
+  //-------------- Data num co E ---------------//
+  formatHaveE() {
+    let idxE = this.customField.dataValue.toString().toLowerCase().indexOf('e');
+    if (idxE != -1) {
+      let mu = Number.parseFloat(
+        this.customField.dataValue.substring(
+          idxE + 2,
+          this.customField.dataValue?.length
+        )
+      );
+      this.customField.dataValue =
+        Number.parseFloat(this.customField.dataValue.substring(0, idxE)) *
+        Math.pow(10, mu);
+    }
+  }
+  //-----------------------------------------------//
+
+  //-----------------------------------------------//
+  //-------------- Data tham chiếu ---------------//
+  //-----------------------------------------------//
+  selectDataRef() {}
   //----------------------------------------------//
 }

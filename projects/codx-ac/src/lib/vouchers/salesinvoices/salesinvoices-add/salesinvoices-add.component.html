@@ -174,7 +174,7 @@
                 <codx-label style="white-space: nowrap !important" fiedName="ObjectName"
                   [formModel]="dialog.formModel">
                 </codx-label>
-                <codx-input [disabled]="true" [Group]="formSalesInvoice.formGroup" field="objectName" [formModel]="dialog.formModel"
+                <codx-input [Group]="formSalesInvoice.formGroup" field="objectName" [formModel]="dialog.formModel"
                   (valueChange)="valueChangeMaster($event)">
                 </codx-input>
               </div>
@@ -184,7 +184,7 @@
                 <codx-label style="white-space: nowrap !important" fiedName="Address"
                   [formModel]="dialog.formModel">
                 </codx-label>
-                <codx-input [disabled]="true" [Group]="formSalesInvoice.formGroup" field="address" [formModel]="dialog.formModel"
+                <codx-input [Group]="formSalesInvoice.formGroup" field="address" [formModel]="dialog.formModel"
                   (valueChange)="valueChangeMaster($event)">
                 </codx-input>
               </div>
@@ -194,7 +194,7 @@
                 <codx-label style="white-space: nowrap !important" fiedName="TaxCode"
                   [formModel]="dialog.formModel">
                 </codx-label>
-                <codx-input [disabled]="true" [Group]="formSalesInvoice.formGroup" field="taxCode" [formModel]="dialog.formModel"
+                <codx-input [Group]="formSalesInvoice.formGroup" field="taxCode" [formModel]="dialog.formModel"
                   (valueChange)="valueChangeMaster($event)">
                 </codx-input>
               </div>
@@ -287,33 +287,6 @@
         </div>
         <div class="col-xxl-3 col-xl-3 col-lg-12 col-md-5 justify-content-end">
           <div class="container mx-0 px-0">
-            <div *ngIf="journal" class="row justify-content-end">
-              <div class="col-xxl-4 col-xl-5 col-lg-2 col-md-5">
-                <div class="form-group">
-                  <codx-label style="white-space: nowrap !important" fiedName="CurrencyID"
-                    [formModel]="dialog.formModel">
-                  </codx-label>
-                  <codx-input #cbxCurrencyID [disabled]="!journal.multiCurrency" [Group]="formSalesInvoice.formGroup"
-                      field="currencyID" [formModel]="dialog.formModel"
-                      (valueChange)="valueChangeMaster($event)">
-                    </codx-input>
-                </div>
-              </div>
-              <div class="col-xxl-4 col-xl-5 col-lg-2 col-md-5">
-                <div class="form-group">
-                  <codx-label style="white-space: nowrap !important" fiedName="ExchangeRate"
-                    [formModel]="dialog.formModel">
-                  </codx-label>
-                  <codx-input [disabled]="
-                        !journal.multiCurrency ||
-                        formSalesInvoice.data.currencyID == baseCurr ||
-                        (formSalesInvoice.data.currencyID == null || formSalesInvoice.data.currencyID == '')
-                      " [Group]="formSalesInvoice.formGroup" field="exchangeRate"
-                      [formModel]="dialog.formModel" (controlBlur)="valueChangeMaster($event)">
-                    </codx-input>
-                </div>
-              </div>
-            </div>
             <div class="row justify-content-end">
               <div class="col-xxl-4 col-xl-5 col-lg-2 col-md-5">
                 <div class="form-group">
@@ -346,6 +319,33 @@
                   </codx-label>
                   <codx-input [Group]="formSalesInvoice.formGroup" field="postedDate"
                       [formModel]="dialog.formModel" (valueChange)="valueChangeMaster($event)">
+                    </codx-input>
+                </div>
+              </div>
+            </div>
+            <div *ngIf="journal" class="row justify-content-end">
+              <div class="col-xxl-4 col-xl-5 col-lg-2 col-md-5">
+                <div class="form-group">
+                  <codx-label style="white-space: nowrap !important" fiedName="CurrencyID"
+                    [formModel]="dialog.formModel">
+                  </codx-label>
+                  <codx-input #cbxCurrencyID [disabled]="!journal.multiCurrency" [Group]="formSalesInvoice.formGroup"
+                      field="currencyID" [formModel]="dialog.formModel"
+                      (valueChange)="valueChangeMaster($event)">
+                    </codx-input>
+                </div>
+              </div>
+              <div class="col-xxl-4 col-xl-5 col-lg-2 col-md-5">
+                <div class="form-group">
+                  <codx-label style="white-space: nowrap !important" fiedName="ExchangeRate"
+                    [formModel]="dialog.formModel">
+                  </codx-label>
+                  <codx-input [disabled]="
+                        !journal.multiCurrency ||
+                        formSalesInvoice.data.currencyID == baseCurr ||
+                        (formSalesInvoice.data.currencyID == null || formSalesInvoice.data.currencyID == '')
+                      " [Group]="formSalesInvoice.formGroup" field="exchangeRate"
+                      [formModel]="dialog.formModel" (controlBlur)="valueChangeMaster($event)">
                     </codx-input>
                 </div>
               </div>

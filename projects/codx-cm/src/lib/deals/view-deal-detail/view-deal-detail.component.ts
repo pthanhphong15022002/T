@@ -8,7 +8,7 @@ import {
 } from '@angular/core';
 import { CodxCmService } from '../../codx-cm.service';
 import { CM_Contracts, CM_Customers, CM_Deals } from '../../models/cm_model';
-import { ApiHttpService, CacheService, DialogData, DialogRef, NotificationsService} from 'codx-core';
+import { ApiHttpService, CacheService, DialogData, DialogRef, FormModel, NotificationsService} from 'codx-core';
 import { ContractsService } from '../../contracts/service-contracts.service';
 
 @Component({
@@ -31,10 +31,28 @@ export class ViewDealDetailComponent implements OnInit, OnChanges {
   contractRecId;
   customers;
 
-  grvSetup;
-  vllStatus;
+  grvSetupContract;
+  vllStatusContract;
+
+
+  grvSetupLead;
+  vllStatusLead;
+
+  grvSetupQuotation;
+  vllStatusQuotation;
+
+
   oCountFooter: any = {};
   dataTree = [];
+  // mergedList: any[] = [];
+  listLeads: any[] = [];
+  listContracts: any[] = [];
+  listQuotations: any[] = [];
+  isViewLink: boolean = false;
+
+
+
+  viewSettings: any;
 
   formModelCustomer = {
     formName: 'CMCustomers',
@@ -46,7 +64,17 @@ export class ViewDealDetailComponent implements OnInit, OnChanges {
     entityName: 'CM_Contacts',
     gridViewName: 'grvCMContacts',
   };
-  
+  formModelQuotations: FormModel = {
+    formName: 'CMQuotations',
+    gridViewName: 'grvCMQuotations',
+    entityName: 'CM_Quotations',
+  };
+  formModelLead: FormModel = {
+    formName: 'CMLeads',
+    gridViewName: 'grvCMLeads',
+    entityName: 'CM_Leads',
+  };
+
   listTabLeft = [
     { id: 'listTabInformation', name: 'Thông tin hợp đồng', icon: 'icon-info' },
     { id: 'listHistory', name: 'Lịch sử', icon: 'icon-i-clock-history' },
@@ -100,12 +128,15 @@ export class ViewDealDetailComponent implements OnInit, OnChanges {
       .gridViewSetup('CMContracts', 'grvCMContracts')
       .subscribe((res) => {
         if (res) {
-          this.grvSetup = res;
-          this.vllStatus = this.grvSetup['Status'].referedValue;
+          this.grvSetupContract = res;
+          this.vllStatusContract = this.grvSetupContract['Status'].referedValue;
         }
       });
+
   }
   ngOnChanges(changes: SimpleChanges) {}
+
+
 
   getContract() {
     if (this.deal) {
@@ -126,7 +157,7 @@ export class ViewDealDetailComponent implements OnInit, OnChanges {
         this.getContact();
         this.changeDetectorRef.markForCheck();
       } else {
-        this.dialog.close(); 
+        this.dialog.close();
         this.notiService.notify('Không tìm thấy hợp đồng', '3');
       }
     });
@@ -139,6 +170,38 @@ export class ViewDealDetailComponent implements OnInit, OnChanges {
     if(e == 'listAddTask'){
       this.loadTree(this.deal?.recID);
     }
+    if(e == 'listLink') {
+      this.getLink();
+    }
+  }
+  getLink() {
+    // this.cache
+    // .gridViewSetup('CMContracts', 'grvCMContracts')
+    // .subscribe((res) => {
+    //   if (res) {
+    //     this.grvSetup = res;
+    //     this.vllStatus = this.grvSetup['Status'].referedValue;
+    //   }
+    // });
+    this.cache
+    .gridViewSetup('CMLeads', 'grvCMLeads')
+    .subscribe((res) => {
+      if (res) {
+          this.grvSetupLead = res;
+          this.vllStatusLead = this.grvSetupLead['Status'].referedValue;
+      }
+    });
+
+    this.cache
+    .gridViewSetup('CMQuotations', 'grvCMQuotations')
+    .subscribe((res) => {
+      if (res) {
+          this.grvSetupQuotation = res;
+          this.vllStatusQuotation = this.grvSetupQuotation['Status'].referedValue;
+      }
+    });
+
+  this.getHistoryByDeaID();
   }
 
   getListInstanceStep(contract) {
@@ -184,21 +247,18 @@ export class ViewDealDetailComponent implements OnInit, OnChanges {
       });
   }
     getContact() {
-    if (this.deal?.recID) {
-      let data = [this.deal?.recID,this.deal?.customerCategory];
-      this.codxCmService.getViewDetailDealAsync(data).subscribe((res) => {
-        if (res) {
-          if(res[0] && res[0].length > 0 ) {
-              let listContact = res[0];
-              let contactMain = listContact.filter(x=>x.isDefault)[0];
-              this.contact = contactMain ? contactMain : null;
-          }
-          else {
+      if(this.deal.customerCategory == '1' ) {
+        this.codxCmService.getContactByObjectID(this.deal.recID).subscribe((res) => {
+          if (res) {
+            this.contact = res;
+          } else {
             this.contact = null;
           }
-        }
-      });
-    }
+        });
+      }
+      else {
+        this.contact = null;
+      }
   }
 
   //comment
@@ -241,6 +301,80 @@ export class ViewDealDetailComponent implements OnInit, OnChanges {
       .subscribe((res) => {
         this.dataTree = res ? res : [];
       });
+  }
+
+  async getHistoryByDeaID() {
+    if (this.deal?.recID) {
+      let data = [this.deal?.recID];
+      this.codxCmService.getDataTabHistoryDealAsync(data).subscribe((res) => {
+        if (res) {
+          // this.mergedList = res;
+          this.listQuotations = res[0];
+          this.listContracts = res[1];
+          this.listLeads = res[2];
+
+          this.isViewLink = (this.listQuotations != null &&  this.listQuotations.length > 0)  ||
+          (this.listContracts != null &&  this.listContracts.length > 0)
+          || (this.listLeads != null &&  this.listLeads.length > 0)
+
+        }
+      });
+    }
+  }
+  getSettingValue(type: string, fieldName: string): any {
+    const obj = this.viewSettings[type];
+    if (obj) {
+      switch (fieldName) {
+        case 'icon':
+          return obj.icon + ' icon-22 me-2 text-gray-700';
+        case 'name':
+          return obj.name;
+        case 'headerText':
+          return obj.headerText;
+        case 'deadValue':
+          return obj.deadValue;
+        case 'formModel':
+          return obj.formModel;
+        case 'status':
+          return obj.status;
+        case 'gridViewSetup':
+          return obj.gridViewSetup;
+        case 'createOn':
+          return obj.gridViewSetup['CreatedOn']?.headerText;
+      }
+    }
+    return '';
+  }
+  settingViewValue() {
+    this.viewSettings = {
+      '1': {
+        icon: 'icon-monetization_on',
+        headerText: 'Báo giá',
+        // deadValue: this.grvSetupQuotation['TotalAmt']?.headerText,
+        // formModel: this.formModelQuotations,
+        // status: this.vllStatusQuotation,
+        // gridViewSetup: this.grvSetupQuotation,
+        // name: this.grvSetupQuotation['QuotationName']?.headerText,
+      },
+      '2': {
+        icon: 'icon-sticky_note_2',
+        headerText: 'Hợp đồng',
+        // deadValue: this.grvSetupContract['ContractAmt']?.headerText,
+        // formModel: this.formModelContract,
+        // status: this.vllStatusContract,
+        // gridViewSetup: this.grvSetupContract,
+        // name: this.grvSetupContract['ContractName']?.headerText,
+      },
+      '3': {
+        icon: 'icon-monetization_on',
+        headerText: 'Tiềm năng',
+        // deadValue: this.grvSetupLead['DealValue']?.headerText,
+        // formModel: this.formModelLead,
+        // status: this.vllStatusLead,
+        // gridViewSetup: this.grvSetupLead,
+        // name: this.grvSetupLead['LeadName']?.headerText,
+      },
+    };
   }
 }
 
