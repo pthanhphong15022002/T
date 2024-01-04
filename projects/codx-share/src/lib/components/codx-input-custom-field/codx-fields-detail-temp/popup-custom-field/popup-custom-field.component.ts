@@ -198,6 +198,7 @@ export class PopupCustomFieldComponent implements OnInit {
           );
           // this.fields[index].dataValue = obj.dataValue;
         }
+        this.changeDetectorRef.detectChanges();
       }
     });
   }
