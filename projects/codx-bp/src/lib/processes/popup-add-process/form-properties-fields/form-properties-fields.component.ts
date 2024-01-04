@@ -78,8 +78,8 @@ export class FormPropertiesFieldsComponent implements OnInit {
     let basic = [
       'Text',
       'ValueList',
-      'Combobox',
-      'Datetime',
+      'ComboBox',
+      'DateTime',
       'Attachment',
       'Number',
       'YesNo',
@@ -123,7 +123,7 @@ export class FormPropertiesFieldsComponent implements OnInit {
       );
       data.parentID = this.table.length;
       this.dataFormat = data;
-      this.dataCurrent = this.setDataFields(data);
+      this.dataCurrent = JSON.parse(JSON.stringify(this.setDataFields(data)));
       data.recID = this.dataCurrent?.recID;
       let object = {
         name: '',
@@ -132,7 +132,7 @@ export class FormPropertiesFieldsComponent implements OnInit {
       };
       this.lstStepFields.push(this.dataCurrent);
       console.log('drop 1 != :', data);
-      this.settingFielfs.loadData(this.dataCurrent);
+      // this.settingFielfs.loadData(this.dataCurrent);
       this.table.splice(event.currentIndex, 0, object);
     } else {
       this.table[event.currentIndex].id = event.previousIndex;
@@ -150,6 +150,9 @@ export class FormPropertiesFieldsComponent implements OnInit {
       );
       console.log('drop 1 == ');
     }
+    this.table = this.table.filter(
+      (x) => x.children != null && x.children.length > 0
+    );
     this.detectorRef.markForCheck();
   }
 
@@ -222,46 +225,67 @@ export class FormPropertiesFieldsComponent implements OnInit {
   }
   //#endregion
   //#region
-  setDataFields(data) {
-    if (data) {
-      let field = {};
-      field['recID'] = Util.uid();
-      field['controlType'] = data?.value;
-      if (data && data?.text) {
-        const str = data?.text;
-        field['title'] = this.bpSv.createAutoNumber(str, this.lstStepFields, 'title');
-        field['fieldName'] = this.bpSv.createAutoNumber(str, this.lstStepFields, 'fieldName');
-      }
-
-      if(data?.value == 'Text' || data?.value == 'ValueList' || data?.value == 'Combobox'){
-        field['isRequired'] = false;
-        field['dataType'] = 'String';
-        if(data?.value == 'ValueList' || data?.value == 'Combobox'){
-          field['refType'] = data?.value == 'ValueList' ? '2' : '3';
-        }
-      }
-
-      if (data?.value == 'Rank') {
-        field['rank'] = {
-          type: '1',
-          icon: null,
-          minValue: 0,
-          maxValue: 5,
-          color: null,
-        };
-      }
-      if (data?.value == 'Progress') {
-        field['rank'] = {
-          type: '3',
-          icon: null,
-          minValue: 0,
-          maxValue: 100,
-          color: '#3699ff',
-        };
-      }
-      return field;
+  setDataFields(data): any {
+    if (!data) {
+      return null;
     }
-    return null;
+
+    const field: any = {
+      recID: Util.uid(),
+      controlType: data.value,
+    };
+
+    if (data.text) {
+      const str = data.text;
+      const autoNumberTitle = this.bpSv.createAutoNumber(str, this.lstStepFields, 'title');
+      const autoNumberFieldName = this.bpSv.createAutoNumber(str, this.lstStepFields, 'fieldName');
+
+      field.title = autoNumberTitle;
+      field.fieldName = autoNumberFieldName;
+    }
+
+    if (['Text', 'ValueList', 'ComboBox', 'Attachment'].includes(data.value)) {
+      field.isRequired = false;
+      field.dataType = 'String';
+
+      if (['ValueList', 'ComboBox'].includes(data.value)) {
+        field.refType = data.value === 'ValueList' ? '2' : '3';
+      }else if(data.value == 'Text'){
+        field.dataFormat = '';
+      }
+    }
+
+    if(data.value == 'DateTime'){
+      field.dataFormat = 'd';
+      field.dataType = 'DateTime';
+    }
+
+    if(data.value == 'Number'){
+      field.dataFormat = 'I';
+      field.dataType = 'Int';
+    }
+
+    if (data.value === 'Rank') {
+      field.rank = {
+        type: '1',
+        icon: null,
+        minValue: 0,
+        maxValue: 5,
+        color: null,
+      };
+    }
+
+    if (data.value === 'Progress') {
+      field.rank = {
+        type: '3',
+        icon: null,
+        minValue: 0,
+        maxValue: 100,
+        color: '#3699ff',
+      };
+    }
+
+    return field;
   }
 
   returnData(data){
@@ -272,7 +296,7 @@ export class FormPropertiesFieldsComponent implements OnInit {
   }
 
   dataForm(type){
-    return this.lstStepFields?.find(x => x.fieldName=='Title') ? this.lstStepFields?.find(x => x.fieldName=='Title')[type] : null;
+    return this.lstStepFields?.find(x => x.fieldName=='Title') ? (type ? this.lstStepFields?.find(x => x.fieldName=='Title')[type] : null) : this.lstStepFields?.find(x => x.fieldName=='Title');
   }
   //#endregion
   //#region event emit
@@ -285,14 +309,12 @@ export class FormPropertiesFieldsComponent implements OnInit {
           this.dataCurrent = this.lstStepFields.find(x => x.controlType == 'Title');
         } else {
           this.lstStepFields[indx] = e?.data;
-          this.dataCurrent = JSON.parse(
-            JSON.stringify(this.lstStepFields[indx])
-          );
+          this.dataCurrent = this.lstStepFields[indx];
         }
       }
-      this.table = this.table.filter(
-        (x) => x.children != null && x.children.length > 0
-      );
+      if(e?.data?.controlType == 'ValueList'){
+        this.table = JSON.parse(JSON.stringify(this.table));
+      }
     }
     this.detectorRef.markForCheck();
   }
@@ -306,6 +328,8 @@ export class FormPropertiesFieldsComponent implements OnInit {
         JSON.stringify(this.lstStepFields.find((x) => x.recID == data?.recID))
       );
       this.settingFielfs.loadData(this.dataCurrent);
+      this.table = JSON.parse(JSON.stringify(this.table));
+      this.detectorRef.markForCheck();
     }
   }
 

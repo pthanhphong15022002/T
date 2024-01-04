@@ -108,6 +108,20 @@ export class DealDetailComponent implements OnInit {
   oCountFooter: any = {};
   stepCurrent: any;
 
+  listLeads: any[] = [];
+  listContracts: any[] = [];
+  listQuotations: any[] = [];
+  isViewLink: boolean = false;
+
+  // grvSetupContract;
+  // vllStatusContract;
+
+  // grvSetupLead;
+  // vllStatusLead;
+  //  grvSetupQuotation;
+  // vllStatusQuotation;
+
+
   isShow: boolean = false;
   isCategoryCustomer: boolean = false;
   hasRunOnce: boolean = false;
@@ -214,8 +228,10 @@ export class DealDetailComponent implements OnInit {
       //   this.dataSelected?.categoryCustomer
       // );
       await this.getTree(); //ve cay giao viec
-      await this.getHistoryByDeaID();
-      await this.getViewDetailDeal();
+      await this.getLink();
+      await this.getContactByDeaID(this.dataSelected.recID);
+      // await this.getHistoryByDeaID();
+      //await this.getViewDetailDeal();
     } catch (error) {}
   }
   reloadListStep(listSteps: any) {
@@ -229,6 +245,36 @@ export class DealDetailComponent implements OnInit {
     if (!this.hasRunOnce) {
       this.resetTab(this.dataSelected?.customerCategory);
     }
+  }
+
+  getLink() {
+    this.cache
+    .gridViewSetup('CMContracts', 'grvCMContracts')
+    .subscribe((res) => {
+      if (res) {
+        this.grvSetupContract = res;
+        this.vllStatusContract = this.grvSetupContract['Status'].referedValue;
+      }
+    });
+    this.cache
+    .gridViewSetup('CMLeads', 'grvCMLeads')
+    .subscribe((res) => {
+      if (res) {
+          this.grvSetupLead = res;
+          this.vllStatusLead = this.grvSetupLead['Status'].referedValue;
+      }
+    });
+
+    this.cache
+    .gridViewSetup('CMQuotations', 'grvCMQuotations')
+    .subscribe((res) => {
+      if (res) {
+          this.grvSetupQuotation = res;
+          this.vllStatusQuotation = this.grvSetupQuotation['Status'].referedValue;
+      }
+    });
+
+  this.getHistoryByDeaID();
   }
 
   resetTab(data) {
@@ -277,30 +323,30 @@ export class DealDetailComponent implements OnInit {
       //   await this.getGridViewContract();
       //     await this.getGridViewLead();
       //  await this.getValueList();
-      //   await this.getValueListRole();
+        await this.getValueListRole();
       //  await this.getListStatusCode();
-      await this.getGrvViewDetailDealAsync();
+   //   await this.getGrvViewDetailDealAsync();
     } catch (error) {}
   }
 
-  getGrvViewDetailDealAsync() {
-    this.codxCmService.getSettingViewDetailDealAsync().subscribe((res) => {
-      if (res) {
-        this.grvSetupQuotation = res[0];
-        this.grvSetupContract = res[1];
-        this.grvSetupLead = res[2];
-        this.listRoles = res[3]?.datas;
-      }
-    });
-  }
-
-  // async getValueListRole() {
-  //   this.cache.valueList('CRM040').subscribe((res) => {
-  //     if (res && res?.datas.length > 0) {
-  //       this.listRoles = res.datas;
+  // getGrvViewDetailDealAsync() {
+  //   this.codxCmService.getSettingViewDetailDealAsync().subscribe((res) => {
+  //     if (res) {
+  //       this.grvSetupQuotation = res[0];
+  //       this.grvSetupContract = res[1];
+  //       this.grvSetupLead = res[2];
+  //       this.listRoles = res[3]?.datas;
   //     }
   //   });
   // }
+
+  async getValueListRole() {
+    this.cache.valueList('CRM040').subscribe((res) => {
+      if (res && res?.datas.length > 0) {
+        this.listRoles = res.datas;
+      }
+    });
+  }
   // async getValueList() {
   //   this.cache.valueList('CRM010').subscribe((res) => {
   //     if (res.datas) {
@@ -351,45 +397,59 @@ export class DealDetailComponent implements OnInit {
       let data = [this.dataSelected?.recID];
       this.codxCmService.getDataTabHistoryDealAsync(data).subscribe((res) => {
         if (res) {
-          this.mergedList = res;
+          // this.mergedList = res;
+          this.listQuotations = res[0];
+          this.listContracts = res[1];
+          this.listLeads = res[2];
+
+          this.isViewLink = (this.listQuotations != null &&  this.listQuotations.length > 0)  ||
+          (this.listContracts != null &&  this.listContracts.length > 0)
+          || (this.listLeads != null &&  this.listLeads.length > 0)
+
         }
       });
     }
   }
-  async getViewDetailDeal() {
-    if (this.dataSelected?.recID) {
-      let data = [
-        this.dataSelected?.recID,
-        this.dataSelected?.customerCategory,
-      ];
-      this.codxCmService.getViewDetailDealAsync(data).subscribe((res) => {
-        if (res) {
-          if (res[0] && res[0].length > 0) {
-            let listContact = res[0];
-            let contactMain = listContact.filter((x) => x.isDefault)[0];
-            this.contactPerson = contactMain ? contactMain : null;
-          } else {
-            this.contactPerson = null;
-          }
-          this.mergedList = res[1];
-        }
-      });
-    }
-  }
+  // async getViewDetailDeal() {
+  //   if (this.dataSelected?.recID) {
+  //     let data = [
+  //       this.dataSelected?.recID,
+  //       this.dataSelected?.customerCategory,
+  //     ];
+  //     this.codxCmService.getViewDetailDealAsync(data).subscribe((res) => {
+  //       if (res) {
+  //         if (res[0] && res[0].length > 0) {
+  //           let listContact = res[0];
+  //           let contactMain = listContact.filter((x) => x.isDefault)[0];
+  //           this.contactPerson = contactMain ? contactMain : null;
+  //         } else {
+  //           this.contactPerson = null;
+  //         }
+  //         this.mergedList = res[1];
+  //       }
+  //     });
+  //   }
+  // }
 
   loadContactEdit() {
     this.loadContactDeal && this.loadContactDeal?.getListContacts();
     this.changeDetectorRef.detectChanges();
   }
-  // async getContactByDeaID(recID) {
-  //   this.codxCmService.getContactByObjectID(recID).subscribe((res) => {
-  //     if (res) {
-  //       this.contactPerson = res;
-  //     } else {
-  //       this.contactPerson = null;
-  //     }
-  //   });
-  // }
+  async getContactByDeaID(recID) {
+    if(this.dataSelected.customerCategory == '1' ) {
+      this.codxCmService.getContactByObjectID(recID).subscribe((res) => {
+        if (res) {
+          this.contactPerson = res;
+        } else {
+          this.contactPerson = null;
+        }
+      });
+    }
+    else {
+      this.contactPerson = null;
+    }
+
+  }
   // async getListContactByDealID(objectID, categoryCustomer) {
   //   if (categoryCustomer == '1') {
   //     this.codxCmService.getListContactByObjectID(objectID).subscribe((res) => {
@@ -474,37 +534,6 @@ export class DealDetailComponent implements OnInit {
     listStep.pop();
     listStep.pop();
   }
-  settingViewValue() {
-    this.viewSettings = {
-      '1': {
-        icon: 'icon-monetization_on',
-        headerText: 'Báo giá',
-        deadValue: this.grvSetupQuotation['TotalAmt']?.headerText,
-        formModel: this.formModelQuotations,
-        status: this.vllStatusQuotation,
-        gridViewSetup: this.grvSetupQuotation,
-        name: this.grvSetupQuotation['QuotationName']?.headerText,
-      },
-      '2': {
-        icon: 'icon-sticky_note_2',
-        headerText: 'Hợp đồng',
-        deadValue: this.grvSetupContract['ContractAmt']?.headerText,
-        formModel: this.formModelContract,
-        status: this.vllStatusContract,
-        gridViewSetup: this.grvSetupContract,
-        name: this.grvSetupContract['ContractName']?.headerText,
-      },
-      '3': {
-        icon: 'icon-monetization_on',
-        headerText: 'Tiềm năng',
-        deadValue: this.grvSetupLead['DealValue']?.headerText,
-        formModel: this.formModelLead,
-        status: this.vllStatusLead,
-        gridViewSetup: this.grvSetupLead,
-        name: this.grvSetupLead['LeadName']?.headerText,
-      },
-    };
-  }
   //truong tuy chinh - đang cho bằng 1
   showColumnControl(stepID) {
     if (this.listStepsProcess?.length > 0) {
@@ -515,30 +544,30 @@ export class DealDetailComponent implements OnInit {
     return 1;
   }
 
-  getSettingValue(type: string, fieldName: string): any {
-    const obj = this.viewSettings[type];
-    if (obj) {
-      switch (fieldName) {
-        case 'icon':
-          return obj.icon + ' icon-22 me-2 text-gray-700';
-        case 'name':
-          return obj.name;
-        case 'headerText':
-          return obj.headerText;
-        case 'deadValue':
-          return obj.deadValue;
-        case 'formModel':
-          return obj.formModel;
-        case 'status':
-          return obj.status;
-        case 'gridViewSetup':
-          return obj.gridViewSetup;
-        case 'createOn':
-          return obj.gridViewSetup['CreatedOn']?.headerText;
-      }
-    }
-    return '';
-  }
+  // getSettingValue(type: string, fieldName: string): any {
+  //   const obj = this.viewSettings[type];
+  //   if (obj) {
+  //     switch (fieldName) {
+  //       case 'icon':
+  //         return obj.icon + ' icon-22 me-2 text-gray-700';
+  //       case 'name':
+  //         return obj.name;
+  //       case 'headerText':
+  //         return obj.headerText;
+  //       case 'deadValue':
+  //         return obj.deadValue;
+  //       case 'formModel':
+  //         return obj.formModel;
+  //       case 'status':
+  //         return obj.status;
+  //       case 'gridViewSetup':
+  //         return obj.gridViewSetup;
+  //       case 'createOn':
+  //         return obj.gridViewSetup['CreatedOn']?.headerText;
+  //     }
+  //   }
+  //   return '';
+  // }
   saveDataStep(e) {
     if (e) {
       if (e?.fields != null && e?.fields?.length > 0) {

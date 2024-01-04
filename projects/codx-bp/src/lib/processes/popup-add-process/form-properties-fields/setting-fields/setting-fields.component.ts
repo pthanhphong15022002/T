@@ -67,6 +67,7 @@ export class SettingFieldsComponent implements AfterViewInit {
   isEditVll: boolean = false;
   isRender: boolean = true; //cho phép binding khi save thành công.
   isChangeColor: boolean = false;
+  loadedRenderHTML: boolean;
   constructor(
     private detectorRef: ChangeDetectorRef,
     private cache: CacheService,
@@ -78,16 +79,23 @@ export class SettingFieldsComponent implements AfterViewInit {
     this.user = this.authstore.get();
   }
 
-  ngOnInit(): void {
-    //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
-    //Add 'implements OnInit' to the class.
-    // this.loadDataVll();
+  ngOnChanges(changes: SimpleChanges): void {
+    //Called before any other lifecycle hook. Use it to inject dependencies, but avoid any serious work here.
+    //Add '${implements OnChanges}' to the class.
+    this.loadedRenderHTML = false;
+    setTimeout(() => {
+      this.loadedRenderHTML = true;
+    }, 0);
   }
 
-  ngAfterViewInit(): void {
+  ngOnInit(): void {
     if (this.dataCurrent) {
       this.loadData(this.dataCurrent);
     }
+  }
+
+  ngAfterViewInit(): void {
+
   }
 
   //#region loadData
@@ -264,8 +272,6 @@ export class SettingFieldsComponent implements AfterViewInit {
   valueDateChange(e) {
     if (e) {
       this.dataCurrent[e?.field] = e?.data?.fromDate || null;
-      if (e?.field == 'defaultValue')
-        this.dataCurrent['dataFormat'] = e?.data?.fromDate ?? null;
       if (this.isRender) this.dataValueEmit.emit({ data: this.dataCurrent });
       this.detectorRef.detectChanges();
     }
@@ -432,8 +438,18 @@ export class SettingFieldsComponent implements AfterViewInit {
   //#region setting list vll
   //save vll
   async saveVll(action = 'add') {
+    let timeOut = 100;
     if(this.crrVll?.listName == null || this.crrVll?.listName?.trim() == ''){
-      this.isRender = false;
+      if (this.loaded) {
+        if (!this.processNo)
+          this.processNo = await firstValueFrom(
+            this.bpSv.genAutoNumber('DP0204', 'DP_Processes', 'ProcessNo')
+          );
+        this.crrVll.listName = 'BPF' + this.processNo + '-' + this.maxNumber;
+      } else {
+        timeOut += 100;
+        await this.getDefaultVll(timeOut);
+      }
 
     }
     if (this.lstDatasVlls == null || this.lstDatasVlls?.length == 0) {
@@ -497,6 +513,7 @@ export class SettingFieldsComponent implements AfterViewInit {
     if (res) {
       this.isRender = true;
       this.dataCurrent.refValue = this.crrVll.listName;
+      this.dataValueEmit.emit({ data: this.dataCurrent });
     } else {
       if (action == 'add') {
         this.dataCurrent.refValue = null;

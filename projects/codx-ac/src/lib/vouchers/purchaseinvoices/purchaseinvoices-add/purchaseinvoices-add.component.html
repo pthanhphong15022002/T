@@ -186,7 +186,7 @@
                 <codx-label style="white-space: nowrap !important" fiedName="ObjectName"
                   [formModel]="dialog.formModel">
                 </codx-label>
-                <codx-input [disabled]="true" [Group]="formPurchaseInvoices.formGroup" field="objectName" [formModel]="dialog.formModel"
+                <codx-input [Group]="formPurchaseInvoices.formGroup" field="objectName" [formModel]="dialog.formModel"
                   (valueChange)="valueChangeMaster($event)">
                 </codx-input>
               </div>
@@ -196,7 +196,7 @@
                 <codx-label style="white-space: nowrap !important" fiedName="Address"
                   [formModel]="dialog.formModel">
                 </codx-label>
-                <codx-input [disabled]="true" [Group]="formPurchaseInvoices.formGroup" field="address" [formModel]="dialog.formModel"
+                <codx-input [Group]="formPurchaseInvoices.formGroup" field="address" [formModel]="dialog.formModel"
                   (valueChange)="valueChangeMaster($event)">
                 </codx-input>
               </div>
@@ -206,7 +206,7 @@
                 <codx-label style="white-space: nowrap !important" fiedName="TaxCode"
                   [formModel]="dialog.formModel">
                 </codx-label>
-                <codx-input [disabled]="true" [Group]="formPurchaseInvoices.formGroup" field="taxCode" [formModel]="dialog.formModel"
+                <codx-input [Group]="formPurchaseInvoices.formGroup" field="taxCode" [formModel]="dialog.formModel"
                   (valueChange)="valueChangeMaster($event)">
                 </codx-input>
               </div>
@@ -317,6 +317,30 @@
         </div>
         <div class="col-xxl-3 col-xl-3 col-lg-12 col-md-5 justify-content-end">
           <div class="container mx-0 px-0">
+            <div class="row justify-content-end">
+              <div class="col-xxl-4 col-xl-5 col-lg-2 col-md-5">
+                <div class="form-group">
+                  <codx-label style="white-space: nowrap !important" fiedName="VoucherDate"
+                    [formModel]="dialog.formModel">
+                  </codx-label>
+                  <codx-input [Group]="formPurchaseInvoices.formGroup"
+                      [formModel]="dialog.formModel" field="voucherDate"
+                      (valueChange)="valueChangeMaster($event)">
+                    </codx-input>
+                </div>
+              </div>
+              <div class="col-xxl-4 col-xl-5 col-lg-2 col-md-5">
+                <div class="form-group">
+                  <codx-label style="white-space: nowrap !important" fiedName="VoucherNo"
+                    [formModel]="dialog.formModel">
+                  </codx-label>
+                  <codx-input [Group]="formPurchaseInvoices.formGroup" field="voucherNo"
+                      [formModel]="dialog.formModel" (valueChange)="valueChangeMaster($event)"
+                      [disabled]="journal?.assignRule != '0'">
+                    </codx-input>
+                </div>
+              </div>
+            </div>
             <div *ngIf="journal" class="row justify-content-end">
               <div class="col-xxl-4 col-xl-5 col-lg-2 col-md-5">
                 <div class="form-group">
@@ -340,30 +364,6 @@
                         (formPurchaseInvoices.data.currencyID == null || formPurchaseInvoices.data.currencyID == '')
                       " [Group]="formPurchaseInvoices.formGroup" field="exchangeRate"
                       [formModel]="dialog.formModel" (controlBlur)="valueChangeMaster($event)">
-                    </codx-input>
-                </div>
-              </div>
-            </div>
-            <div class="row justify-content-end">
-              <div class="col-xxl-4 col-xl-5 col-lg-2 col-md-5">
-                <div class="form-group">
-                  <codx-label style="white-space: nowrap !important" fiedName="VoucherDate"
-                    [formModel]="dialog.formModel">
-                  </codx-label>
-                  <codx-input [Group]="formPurchaseInvoices.formGroup"
-                      [formModel]="dialog.formModel" field="voucherDate"
-                      (valueChange)="valueChangeMaster($event)">
-                    </codx-input>
-                </div>
-              </div>
-              <div class="col-xxl-4 col-xl-5 col-lg-2 col-md-5">
-                <div class="form-group">
-                  <codx-label style="white-space: nowrap !important" fiedName="VoucherNo"
-                    [formModel]="dialog.formModel">
-                  </codx-label>
-                  <codx-input [Group]="formPurchaseInvoices.formGroup" field="voucherNo"
-                      [formModel]="dialog.formModel" (valueChange)="valueChangeMaster($event)"
-                      [disabled]="journal?.assignRule != '0'">
                     </codx-input>
                 </div>
               </div>

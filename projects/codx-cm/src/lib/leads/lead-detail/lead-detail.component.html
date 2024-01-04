@@ -1044,36 +1044,15 @@
     <div class="d-flex align-items-top ms-4">
       <div class="d-flex flex-column w-130px min-w-130px">
         <div class="d-flex align-items-center justify-content-end mb-1">
-          <div
-            *ngIf="dataSelected.status == '5'; else statusDefault"
-            [ngStyle]="{
-              'background-color': stepCurrent?.backgroundColor
-            }"
-            class="me-0 badge badge-sm d-flex align-items-center mw-125px"
-          >
-            <span
-              [ngClass]="stepCurrent?.icon"
-              [ngStyle]="{ color: stepCurrent?.iconColor }"
-              class="me-1"
-            ></span>
-            <span
-              class="text-ellipsis line-clamp line-clamp-1"
-              [ngbTooltip]="stepCurrent?.currentStepName"
-              [ngStyle]="{ color: stepCurrent?.textColor }"
-              >{{ stepCurrent?.currentStepName }}</span
-            >
-          </div>
-          <ng-template #statusDefault>
-            <codx-vll
-              [name]="gridViewSetupDeal?.Status?.referedValue"
-              [field]="'Status'"
-              [value]="tmpDeal?.status"
-              [showText]="true"
-              [showBgColor]="true"
-              class="badge badge-light badge-sm me-0"
-            >
-            </codx-vll>
-          </ng-template>
+          <codx-vll
+          [name]="gridViewSetupDeal?.Status?.referedValue"
+          [field]="'Status'"
+          [value]="tmpDeal?.status"
+          [showText]="true"
+          [showBgColor]="true"
+          class="badge badge-light badge-sm me-0"
+        >
+        </codx-vll>
         </div>
         <div class="ms-1 d-flex justify-content-end align-items-center mt-1">
           <span
