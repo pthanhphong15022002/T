@@ -197,6 +197,7 @@ export class KowdsComponent extends UIComponent{
         this.calendarGrid.refresh();
       }
     }
+    
     else{
       let data = this.calendarGrid.dataSource
       let resData = []
@@ -542,6 +543,7 @@ export class KowdsComponent extends UIComponent{
         //   template: this.tempDayData,
         // })
 
+        debugger
         for(let i = 0; i < this.daysInMonth[this.filterMonth]; i++){
           let date = new Date(this.filterYear, this.filterMonth, i+1);
           let dayOfWeek = date.getDay();

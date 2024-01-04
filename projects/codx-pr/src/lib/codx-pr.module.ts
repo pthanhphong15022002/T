@@ -27,6 +27,7 @@ import { KowdsComponent } from './kowds/kowds.component';
 import { KowdsScheduleComponent } from './kowds/kowds-schedule/kowds-schedule.component';
 import { PopupCopyEkowdsComponent } from './kowds/popup/popup-copy-ekowds/popup-copy-ekowds.component';
 import { PopupEkowdsComponent } from './kowds/popup/popup-ekowds/popup-ekowds.component';
+import { PopupAddSalcoeffempComponent } from './salcoeffemp/popup/popup-add-salcoeffemp/popup-add-salcoeffemp.component';
 
 export const routes: Routes = [
   {
@@ -79,6 +80,7 @@ const T_Component: Type<any>[] = [
   KowdsScheduleComponent,
   PopupCopyEkowdsComponent,
   PopupEkowdsComponent,
+  PopupAddSalcoeffempComponent
 ];
 
 @NgModule({
