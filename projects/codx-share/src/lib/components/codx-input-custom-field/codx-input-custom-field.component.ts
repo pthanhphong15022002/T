@@ -947,7 +947,7 @@ export class CodxInputCustomFieldComponent implements OnInit {
 
   //-------------- Data num co E ---------------//
   formatHaveE() {
-    let idxE = this.customField.dataValue.indexOf('E');
+    let idxE = this.customField.dataValue.toString().toLowerCase().indexOf('e');
     if (idxE != -1) {
       let mu = Number.parseFloat(
         this.customField.dataValue.substring(

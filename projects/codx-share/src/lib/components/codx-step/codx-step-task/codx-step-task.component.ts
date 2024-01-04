@@ -3076,20 +3076,21 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       option
     );
     fieldPopup.closed.subscribe((res) => {
-      let filels = res?.event;
-      let listFilelStep = this.currentStep?.fields;
+      let fields = res?.event;
+      let listFieldStep = this.currentStep?.fields;
       let countFieldChange = 0;
-      if (filels?.length > 0 && listFilelStep?.length > 0) {
-        filels?.forEach((element) => {
-          let filel = listFilelStep?.find((x) => x.recID == element?.recID);
-          if (filel) {
-            filel.dataValue = element?.dataValue;
+      if (fields?.length > 0 && listFieldStep?.length > 0) {
+        fields?.forEach((element) => {
+          let field = listFieldStep?.find((x) => x.recID == element?.recID);
+          if (field) {
+            field.dataValue = element?.dataValue;
+            field['versions'] = element?.version; // lưu version
             if (element?.dataValue) {
               countFieldChange++;
             }
           }
         });
-        if (countFieldChange == filels?.length) {
+        if (countFieldChange == fields?.length) {
           task.status = '3';
           let actualEnd = new Date();
           this.updateProgressForm(
@@ -3102,7 +3103,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
             true
           );
         } else {
-          let progress = Math.floor((countFieldChange / filels?.length) * 100);
+          let progress = Math.floor((countFieldChange / fields?.length) * 100);
           task.progress = progress >= 0 ? progress : 0;
           task.status = '2';
           this.updateProgressForm(
