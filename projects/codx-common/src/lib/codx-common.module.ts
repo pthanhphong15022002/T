@@ -81,7 +81,7 @@ import { CoDxViewReleaseSignFileComponent } from './component/codx-approval-proc
 import { CoDxGetTemplateSignFileComponent } from './component/codx-approval-procress/codx-get-template-sign-file/codx-get-template-sign-file.component';
 import { CodxAiComponent } from './_layout/drawers/codx-ai/codx-ai.component';
 import { PresentationComponent } from './_layout/drawers/codx-ai/presentation/presentation.component';
-
+import { SubstringPipe } from './pipe/substring';
 //#endregion
 
 const T_Component: Type<any>[] = [
@@ -155,6 +155,7 @@ const T_Pipe: Type<any>[] = [
   ScrollPipe,
   FilterPipe,
   TimeFromPipe,
+  SubstringPipe,
   //#endregion
 ];
 
