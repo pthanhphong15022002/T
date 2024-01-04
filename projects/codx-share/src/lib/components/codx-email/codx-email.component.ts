@@ -103,6 +103,7 @@ export class CodxEmailComponent implements OnInit {
   //(1)(2)(3)(4) => ưu tiên get danh sách
   //cubeID: string; //Truyền vào (1) hoặc AD_EmailTemplates.CubeID (2) => get danh sách field để chọn (từ gridViewSetup)
   functionID: string; //truyền vào (3) hoặc lấy funtion nghiệp vụ (4) => get danh sách field để chọn (từ gridViewSetup)
+  vllShareData: any;
 
   constructor(
     private api: ApiHttpService,
@@ -137,6 +138,7 @@ export class CodxEmailComponent implements OnInit {
     console.log(data?.data);
 
     this.cache.valueList('ES014').subscribe((res) => {
+      this.vllShareData = res;
       console.log('vll', res);
     });
 
@@ -694,11 +696,14 @@ export class CodxEmailComponent implements OnInit {
           let isExist = this.isExist(element?.objectType, sendType);
           if (isExist == false) {
             let appr = new EmailSendTo();
-            appr.objectID = element?.objectType;
-            appr.text = element?.objectName;
-            appr.objectType = element?.objectType;
-            appr.sendType = sendType.toString();
-            appr.icon = sendType.icon;
+            appr.objectID = element?.objectType == "SYS061" ?element?.id : element?.objectType;
+            appr.text =  element?.objectType == "SYS061" ? element?.text : element?.objectName;
+            appr.objectType = element?.objectType == "SYS061" ?element?.id : element?.objectType;
+            appr.sendType = sendType.toString();            
+            appr.icon = element?.icon ?? element?.dataSelected?.icon;
+            if(element?.objectType == "SYS061" && !appr.icon){
+              appr.icon = this.vllShareData?.datas?.find(x=>x.value == "SYS061")?.icon;
+            }
             lst.push(appr);
           }
         }

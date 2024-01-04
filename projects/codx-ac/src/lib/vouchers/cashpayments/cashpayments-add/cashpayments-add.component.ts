@@ -125,6 +125,7 @@ export class CashPaymentAddComponent extends UIComponent {
   ) {
     super(inject);
     this.dialog = dialog;
+    console.log(this.dialog.formModel);
     this.dialogData = dialogData;
     this.headerText = dialogData.data?.headerText;
     this.dataDefault = { ...dialogData.data?.oData };

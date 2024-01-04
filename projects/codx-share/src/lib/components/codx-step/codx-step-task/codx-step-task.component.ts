@@ -963,6 +963,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         entityName: this.entityName,
         parentID: this.recIDParent,
         processID: this.processID,
+        businessLineID: this.businessLineID,
       };
       let taskContract = await this.stepService.openPopupTaskContract(
         data,
@@ -1430,6 +1431,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
           action: 'copy',
           type: 'task',
           recIDContract: task.objectLinked,
+          businessLineID: this.businessLineID,
         };
         let taskContract = await this.stepService.openPopupTaskContract(
           data,

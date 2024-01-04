@@ -279,7 +279,7 @@
       </div>
     </div>
 
-    <div class="form-group">
+    <div class="form-group" *ngIf="typeTask?.value === 'CO' || typeTask?.value === 'F'">
       <div class="d-flex justify-content-between align-items-center">
         <codx-label
           fiedName="FieldID"
@@ -303,6 +303,7 @@
           (valueChange)="fieldIDChange($event)"
           [showDropDownIcon]="true"
           (tagObjects)="onItemClick($event)"
+          [enabled]="!(typeTask?.value === 'CO')"
         ></ejs-multiselect>
       </div>
     </div>

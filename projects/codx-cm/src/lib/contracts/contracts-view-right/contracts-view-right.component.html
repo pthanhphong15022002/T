@@ -356,40 +356,6 @@
       <div class="col-6">
         <codx-label
           class="label-colon text-gray-600 codx-textlabel"
-          fiedName="area"
-          [formModel]="formModel"
-          [setRequire]="false"
-        >
-        </codx-label>
-        <span
-          class="text-dark fw-bold codx-textcontent"
-          [innerHTML]="
-            contract?.area | formatvalue : formModel : 'Area' | async
-          "
-        ></span>
-      </div>
-
-      <div class="col-6">
-        <codx-label
-          class="label-colon text-gray-600 codx-textlabel"
-          fiedName="assetID"
-          [formModel]="formModel"
-          [setRequire]="false"
-        >
-        </codx-label>
-        <span
-          class="text-dark fw-bold codx-textcontent"
-          [innerHTML]="
-            contract?.assetID | formatvalue : formModel : 'AssetID' | async
-          "
-        ></span>
-      </div>
-    </div>
-
-    <div class="row my-1">
-      <div class="col-6">
-        <codx-label
-          class="label-colon text-gray-600 codx-textlabel"
           fiedName="interval"
           [formModel]="formModel"
           [setRequire]="false"
@@ -447,68 +413,6 @@
         ></span>
       </div>
     </div>
-
-    <!-- <div class="row my-1">
-      <div class="col-6">
-        <codx-label
-          class="label-colon text-gray-600 codx-textlabel"
-          fiedName="adjustYear"
-          [formModel]="formModel"
-          [setRequire]="false"
-        >
-        </codx-label>
-        <span
-          class="text-dark fw-bold codx-textcontent"
-          [innerHTML]="
-            contract?.adjustYear
-              | formatvalue : formModel : 'AdjustYear'
-              | async
-          "
-        ></span>
-        <codx-label
-          class="mx-1"
-          name="lblYear"
-          [formModel]="formModel"
-          default="năm"
-        >
-        </codx-label>
-        <span>(</span>
-        <span
-          class="text-dark fw-bold codx-textcontent"
-          [innerHTML]="
-            contract?.adjustPercent
-              | formatvalue : formModel : 'AdjustPercent'
-              | async
-          "
-        ></span>
-        <span>%)</span>
-      </div>
-
-      <div class="col-6">
-        <codx-label
-          class="label-colon text-gray-600 codx-textlabel"
-          fiedName="disposalBefore"
-          [formModel]="formModel"
-          [setRequire]="false"
-        >
-        </codx-label>
-        <span
-          class="text-dark fw-bold codx-textcontent"
-          [innerHTML]="
-            contract?.disposalBefore
-              | formatvalue : formModel : 'DisposalBefore'
-              | async
-          "
-        ></span>
-        <codx-label
-          class="mx-1"
-          name="lblMonth"
-          [formModel]="formModel"
-          default="tháng"
-        >
-        </codx-label>
-      </div>
-    </div> -->
   </div>
 
   <div class="mt-2">
@@ -525,6 +429,33 @@
         class="text-gray-600"
         [innerHTML]="contract?.note | formatvalue : formModel : 'Note' | async"
       ></span>
+    </div>
+  </div>
+
+  <div class="mt-2" *ngIf="isHaveField">
+    <codx-label
+      class="fs-5-sm fw-bold"
+      name="lblExpanded"
+      [formModel]="formModel"
+      [setRequire]="false"
+      default="Thông tin mở rộng"
+    ></codx-label>
+    <div class="d-flex flex-column">
+      <ng-container *ngFor="let item of listInsStep">
+        <codx-fields-detail-temp
+          *ngIf="item?.fields?.length > 0"
+          [dataStep]="item"
+          [showColumnControl]="showColumnControl(item.stepID)"
+          [isUpdate]="
+            ['1', '2', '15'].includes(contract.status) &&
+            !contract.closed
+          "
+          [objectIdParent]="contract.recID"
+          [customerID]="contract.customerID"
+          (saveDataStep)="saveDataStep($event)"
+        >
+        </codx-fields-detail-temp>
+      </ng-container>
     </div>
   </div>
 </ng-template>

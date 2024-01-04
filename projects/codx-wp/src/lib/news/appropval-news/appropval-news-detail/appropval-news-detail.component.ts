@@ -64,7 +64,7 @@ export class AppropvalNewsDetailComponent implements OnInit {
       [this.objectID,this.function.entityName])
       .subscribe((res:any) => {
         this.data = JSON.parse(JSON.stringify(res));
-        this.hideMFC = res?.approveStatus == "5";    
+        //this.hideMFC = res?.approveStatus == "5";    
         this.imgOn = new DateTime();
         this.dt.detectChanges();
       });
@@ -127,7 +127,7 @@ export class AppropvalNewsDetailComponent implements OnInit {
       if(res)
       {
         this.data.approveStatus = approvalStatus;
-        this.hideMFC = true;
+        //this.hideMFC = true;
         this.notifySvr.notifyCode(mssg);
         this.evtApprovalPost.emit(this.data);
         this.dt.detectChanges();
@@ -227,8 +227,31 @@ export class AppropvalNewsDetailComponent implements OnInit {
   //change data moreFC
   changeDataMF(evt:any[],data:any){
     evt.map(x => {
-      if(data?.approveStatus == "1" && (x.functionID == "SYS02" || x.functionID == "SYS03") && this.function.functionID =='WPT0211')
-        x.disabled = false;
+      if((x.functionID == "SYS02" || x.functionID == "SYS03") && this.function.functionID =='WPT0211')
+      {
+        x.disabled = true;
+        //Ko duyệt
+        if(data.approveControl == "0"){
+          if(data?.status =="1" ){
+            x.disabled = false;
+          }
+          else if(data?.status =="2" ){
+            if(this.user.administrator && x.functionID == "SYS02"){
+              x.disabled = false;
+            }
+          }
+        }        
+        //Có duyệt
+        else if(data.approveControl == "1"){
+          if(data?.approveStatus =="1" ){
+            x.disabled = false;
+          }
+          else if(this.user.administrator && x.functionID == "SYS02")
+          {
+            x.disabled = false;    
+          }
+        }
+      }
       else if(x.functionID == "WPT02131" || x.functionID == "WPT02132" || x.functionID == "WPT02133")
         x.disabled = data.approveControl == "0" || (data.approveControl == "1" && data.approveStatus == "5");
       else if (
