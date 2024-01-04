@@ -256,7 +256,6 @@ export class PopupAddPostComponent implements OnInit {
 
   // edit post
   editPost() {
-    debugger;
     if (
       !this.data.contents &&
       this.codxViewFiles.files.length == 0 &&
@@ -316,7 +315,6 @@ export class PopupAddPostComponent implements OnInit {
 
   // chia sẻ người dùng
   addPerShares(event: any) {
-    debugger;
     let arrPermisison = Array.from<any>(event);
     if (arrPermisison?.length > 0) {
       let fisrtPermission = arrPermisison[0];
@@ -396,7 +394,6 @@ export class PopupAddPostComponent implements OnInit {
   // gắn thẻ người dùng
 
   addPerTags(event: any) {
-    debugger;
     let arrPermission = Array.from<any>(event.dataSelected);
     if (arrPermission?.length > 0) {
       if (!this.data.permissions) this.data.permissions = [];

@@ -94,7 +94,7 @@ export class ViewDetailComponent
   active = 1;
   checkUserPer: any;
   userID: any;
-  user:any;
+  user: any;
   referType = 'source';
   dvlSecurity: any;
   dvlUrgency: any;
@@ -144,12 +144,11 @@ export class ViewDetailComponent
     this.dataRq.funcID = this.formModel?.funcID;
     //this.getGridViewSetup(this.funcID);
     this.userID = this.authStore.get().userID;
-    if(this.codxService.asideMode == "2") this.hideMF = true;
+    if (this.codxService.asideMode == '2') this.hideMF = true;
 
-    if(this.recID)
-    {
+    if (this.recID) {
       this.getGridViewSetup(this.funcID);
-      this.getDtDis(this.recID)
+      this.getDtDis(this.recID);
       this.getPermission(this.recID);
     }
   }
@@ -183,16 +182,14 @@ export class ViewDetailComponent
     if (
       changes?.dataItem &&
       !changes?.dataItem?.firstChange &&
-      changes?.dataItem?.currentValue != changes?.dataItem?.previousValue && 
+      changes?.dataItem?.currentValue != changes?.dataItem?.previousValue &&
       !this.recID
-    )
-    {
+    ) {
       this.dataItem = changes?.dataItem?.currentValue;
-      this.getDtDis(this.dataItem.recID)
+      this.getDtDis(this.dataItem.recID);
       this.getPermission(this.dataItem.recID);
     }
-      
-    
+
     if (changes?.view?.currentValue != changes?.view?.previousValue)
       this.formModel = changes?.view?.currentValue?.formModel;
     if (changes?.funcID?.currentValue != changes?.funcID?.previousValue) {
@@ -235,17 +232,21 @@ export class ViewDetailComponent
   updateTabControl() {
     if (
       (this.defaultValue == '2' ||
-      (this.defaultValue == '3' && this.data?.dispatchType == '3') ||
-      this.xd) && this.tabControl.filter(e => e.name === 'Approve').length == 0
+        (this.defaultValue == '3' && this.data?.dispatchType == '3') ||
+        this.xd) &&
+      this.tabControl.filter((e) => e.name === 'Approve').length == 0
     )
       this.tabControl.push({
         name: 'Approve',
         textDefault: 'Xét duyệt',
         isActive: false,
       });
-     
 
-    if (this.defaultValue != '2' && this.defaultValue != '3' && this.tabControl.filter(e => e.name === 'AssignTo').length == 0) {
+    if (
+      this.defaultValue != '2' &&
+      this.defaultValue != '3' &&
+      this.tabControl.filter((e) => e.name === 'AssignTo').length == 0
+    ) {
       this.tabControl.push({
         name: 'AssignTo',
         textDefault: 'Giao việc',
@@ -682,7 +683,7 @@ export class ViewDetailComponent
             if (x.event) {
               //this.detectorRef.detectChanges();
               //var index = this.view.dataService.data.findIndex(i => i.recID === x.event.recID);
-             
+
               //this.view.dataService.add(x.event,index,true).subscribe((index)=>{
               //this.view.dataService.update(x.event).subscribe();
 
@@ -951,8 +952,7 @@ export class ViewDetailComponent
                   if (index >= 0) this.data.files[index] = x.event;
                 }
               });
-            }
-            else this.notifySvr.notifyCode("DM001",0, " đính kèm ");
+            } else this.notifySvr.notifyCode('DM001', 0, ' đính kèm ');
           });
         break;
       }
@@ -1320,23 +1320,21 @@ export class ViewDetailComponent
             datas.approveStatus = '3';
 
             //Xét quyền công văn
-            if(e?.event[2] && e?.event[2].length > 0)
-            {
-              if(!Array.isArray(datas?.permissions)) datas.permissions = [];
+            if (e?.event[2] && e?.event[2].length > 0) {
+              if (!Array.isArray(datas?.permissions)) datas.permissions = [];
 
-              e?.event[2].forEach(elm => {
-                var per = 
-                {
+              e?.event[2].forEach((elm) => {
+                var per = {
                   recID: Util.uid(),
                   roleType: elm.roleType,
                   objectID: elm.resourceID,
                   objectName: elm.resourceName,
-                  objectType: "U",
+                  objectType: 'U',
                   isActive: true,
                   read: true,
                   download: true,
-                  share: true
-                }
+                  share: true,
+                };
                 datas.permissions.push(per);
               });
             }
@@ -1348,7 +1346,7 @@ export class ViewDetailComponent
             //   this.getTree.bind(this)
             // );
             //change lại tree VTHAO - đã sửa component để cho hợp lý
-            if(this.footTabs) this.footTabs.changeTreeAssign();
+            if (this.footTabs) this.footTabs.changeTreeAssign();
 
             that.odService
               .updateDispatch(
@@ -1532,10 +1530,6 @@ export class ViewDetailComponent
       case 'ODT1013': {
         if (e?.result && e?.result[0]) {
           e.data.status = '3';
-          // debugger;
-          // that.odService.getTaskByRefID(e.data.recID).subscribe(item=>{
-          //   if(item) that.data.tasks= item;
-          // })
           that.odService
             .updateDispatch(e.data, '', false, this.referType)
             .subscribe((item) => {
@@ -1635,7 +1629,7 @@ export class ViewDetailComponent
         if (unbm[0]) unbm[0].disabled = true;
         if (bm[0]) bm[0].disabled = false;
       }
-      
+
       if (
         (this.defaultValue == '2' || this.defaultValue == '3') &&
         data?.status != '1' &&
@@ -1684,7 +1678,13 @@ export class ViewDetailComponent
         }
 
         //Hiện thị chức năng gửi duyệt khi xét duyệt
-        if (data?.approveStatus == '1' && data?.status == '3' && (data.createdBy == this.userID || this.user?.administrator || this.user?.functionAdmin)) {
+        if (
+          data?.approveStatus == '1' &&
+          data?.status == '3' &&
+          (data.createdBy == this.userID ||
+            this.user?.administrator ||
+            this.user?.functionAdmin)
+        ) {
           //Chức năng Gửi duyệt
           var approvel = e.filter(
             (x: { functionID: string }) =>
@@ -1763,67 +1763,77 @@ export class ViewDetailComponent
       //Chức năng cập nhật tiến độ
       var progressUpdate = e.filter(
         (x: { functionID: string }) =>
-          x.functionID == 'ODT103' || x.functionID == 'ODT202' || x.functionID == 'ODT3002' || x.functionID == 'ODT5102' || x.functionID == 'ODT5203'
+          x.functionID == 'ODT103' ||
+          x.functionID == 'ODT202' ||
+          x.functionID == 'ODT3002' ||
+          x.functionID == 'ODT5102' ||
+          x.functionID == 'ODT5203'
       );
       if (progressUpdate[0]) progressUpdate[0].disabled = true;
 
       //Chức năng cập nhật phiên bản
       var updateVer = e.filter(
         (x: { functionID: string }) =>
-          x.functionID == 'ODT108' || x.functionID == 'ODT207' || x.functionID == 'ODT3007' || x.functionID == 'ODT5107' || x.functionID == 'ODT5208'
+          x.functionID == 'ODT108' ||
+          x.functionID == 'ODT207' ||
+          x.functionID == 'ODT3007' ||
+          x.functionID == 'ODT5107' ||
+          x.functionID == 'ODT5208'
       );
       if (updateVer[0]) updateVer[0].disabled = true;
-      
+
       //Chức năng cập nhật tiến độ || //Chức năng cập nhật phiên bản
-      if(data.owner == this.userID || data.createdBy == this.userID || this.user?.administrator || this.user?.functionAdmin)
-      {
+      if (
+        data.owner == this.userID ||
+        data.createdBy == this.userID ||
+        this.user?.administrator ||
+        this.user?.functionAdmin
+      ) {
         if (updateVer[0]) updateVer[0].disabled = false;
         if (progressUpdate[0]) progressUpdate[0].disabled = false;
       }
-
     }
   }
   //Gửi duyệt
   release(data: any, cate: any) {
-    this.codxCommonService
-      .codxReleaseDynamic(
-        this.view.service,
-        data,
-        cate,
-        this.view.formModel.entityName,
-        this.formModel.funcID,
-        data?.title,
-        (res2: any) => {
-          if (res2?.msgCodeError) this.notifySvr.notify(res2?.msgCodeError);
-          else {
-            data.status = '3';
-            data.approveStatus = '3';
-            //this.notifySvr.notifyCode('ES007');
-  
-            this.odService
-              .updateDispatch(
-                data,
-                '',
-                false,
-                this.referType,
-                this.formModel?.entityName
-              )
-              .subscribe((item) => {
-                if (item.status == 0) {
-                  this.view.dataService.update(item?.data).subscribe();
-                  this.data.status = item?.data?.status;
-                  this.data.approveStatus = '3';
-                  this.data = [...this.data];
-                } else this.notifySvr.notify(item.message);
-              });
-            //add công văn nội bộ đến khi duyệt thành công công văn nội bộ đi
-            if (data.dispatchType == '3') {
-              this.addInternalIncoming(data);
-            }
+    this.codxCommonService.codxReleaseDynamic(
+      this.view.service,
+      data,
+      cate,
+      this.view.formModel.entityName,
+      this.formModel.funcID,
+      data?.title,
+      (res2: any) => {
+        if (res2?.msgCodeError) this.notifySvr.notify(res2?.msgCodeError);
+        else {
+          data.status = '3';
+          data.approveStatus = '3';
+          //this.notifySvr.notifyCode('ES007');
+
+          this.odService
+            .updateDispatch(
+              data,
+              '',
+              false,
+              this.referType,
+              this.formModel?.entityName
+            )
+            .subscribe((item) => {
+              if (item.status == 0) {
+                this.view.dataService.update(item?.data).subscribe();
+                this.data.status = item?.data?.status;
+                this.data.approveStatus = '3';
+                this.data = [...this.data];
+              } else this.notifySvr.notify(item.message);
+            });
+          //add công văn nội bộ đến khi duyệt thành công công văn nội bộ đi
+          if (data.dispatchType == '3') {
+            this.addInternalIncoming(data);
           }
-          //this.notifySvr.notify(res2?.msgCodeError)
-        })
-      
+        }
+        //this.notifySvr.notify(res2?.msgCodeError)
+      }
+    );
   }
 
   //new công văn nội bộ đến

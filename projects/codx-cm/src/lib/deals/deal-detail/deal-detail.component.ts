@@ -346,14 +346,6 @@ export class DealDetailComponent implements OnInit {
 
   changeFooter(e) {}
 
-  // async getListStatusCode() {
-  //     this.codxCmService.getListStatusCode(['5']).subscribe((res) => {
-  //       if (res) {
-  //         debugger;
-  //         this.listStatusCode = res;
-  //       }
-  //     });
-  // }
   async getHistoryByDeaID() {
     if (this.dataSelected?.recID) {
       let data = [this.dataSelected?.recID];
@@ -467,9 +459,11 @@ export class DealDetailComponent implements OnInit {
   }
   getStepCurrent(data) {
     this.stepCurrent = null;
-    if( this.listSteps != null &&  this.listSteps.length > 0) {
-      this.stepCurrent = this.listSteps.filter((x) => x.stepID == data.stepID)[0];
-     }
+    if (this.listSteps != null && this.listSteps.length > 0) {
+      this.stepCurrent = this.listSteps.filter(
+        (x) => x.stepID == data.stepID
+      )[0];
+    }
   }
   checkCompletedInstance(dealStatus: any) {
     if (dealStatus == '1' || dealStatus == '2' || dealStatus == '0') {

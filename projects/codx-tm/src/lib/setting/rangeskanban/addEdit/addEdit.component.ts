@@ -86,7 +86,6 @@ export class AddEditComponent implements OnInit {
         if (this.action == 'edit') {
           this.master.rangeName = this.orgData.rangeName;
           this.master.note = this.orgData.note;
-          debugger;
         } else {
           if (this.dialog.dataService.hasSaved)
             this.dialog.dataService
