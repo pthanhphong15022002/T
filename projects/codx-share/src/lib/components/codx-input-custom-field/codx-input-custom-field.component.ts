@@ -360,7 +360,7 @@ export class CodxInputCustomFieldComponent implements OnInit {
         let idxE = e.data?.toString().toLowerCase().indexOf('e');
         if (idxE != -1) {
           this.notiService.notify(
-            'Số nhập vào quá lớn chỉ lưu được giá trựi gần đúng !',
+            'Số nhập vào quá lớn sẽ lưu giá trị gần đúng !',
             '3'
           );
         }
