@@ -504,7 +504,7 @@ export class ContractsViewDetailComponent
       let url = ``
       switch(type){
         case "contract":
-          url = `${domain}/${tenant}/cm/contracts/CM0204?predicate=RecID=@0&dataValue=${recID}`;
+          url = `${domain}/${tenant}/cm/contracts/CM0206?predicate=RecID=@0&dataValue=${recID}`;
           break;
         case "deal":
           url = `${domain}/${tenant}/cm/deals/CM0201?predicate=RecID=@0&dataValue=${recID}`;
