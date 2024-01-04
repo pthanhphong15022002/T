@@ -138,7 +138,11 @@ export class PopupAddCasesComponent
   //CF
   arrCaculateField: any[] = [];
   isLoadedCF = false;
-
+  customerCategory: any;
+  instanceReason: any;
+  recIdMove:any;
+  isShowReasonDP: boolean = false;
+  isViewAll: boolean = false;
   constructor(
     private inject: Injector,
     private changeDetectorRef: ChangeDetectorRef,
@@ -165,15 +169,25 @@ export class PopupAddCasesComponent
 
     if (this.isLoading) {
       this.formModel = dt?.data?.formMD;
-      // this.caseType = this.applyFor == '2' ? '1' : '2';
       if (this.action != this.actionAdd) {
         this.cases = dt?.data?.dataCM;
+        //       this.owner = this.deal.owner;
+        this.customerCategory = dt?.data?.dataCM?.customerCategory;
+      }
+      this.instanceReason = dt?.data?.instanceReason;
+      if (this.instanceReason) {
+        this.cases.caseName = this.instanceReason?.title;
+        this.cases.owner = this.instanceReason?.ownerMove;
+        this.owner = this.instanceReason?.ownerMove;
+        this.recIdMove = this.instanceReason?.recID;
+        this.isShowReasonDP = true;
       }
     } else {
       this.cases =
         this.action !== this.actionAdd
           ? JSON.parse(JSON.stringify(dialog.dataService?.dataSelected))
           : this.cases;
+          this.customerCategory = dt?.data?.customerCategory;
     }
 
     if (this.action !== this.actionAdd) {
@@ -185,6 +199,7 @@ export class PopupAddCasesComponent
     }
     if (dt?.data.processID) {
       this.cases.processID = this.processID;
+      this.isViewAll = true;
     }
     if (this.action === this.actionCopy) {
       this.cases.owner = null;
@@ -195,7 +210,7 @@ export class PopupAddCasesComponent
   }
 
   async onInit(): Promise<void> {
-    this.action != this.actionEdit && (await this.getCurrentSetting());
+    // this.action != this.actionEdit && !this.isLoading && (await this.getCurrentSetting());
     // this.tabInfo = this.applyProcess
     //   ? [this.menuGeneralInfo, this.menuInputInfo]
     //   : [this.menuGeneralInfo];
@@ -284,9 +299,6 @@ export class PopupAddCasesComponent
       this.updateDataCases(this.instance, this.cases);
       this.convertDataInstance(this.cases, this.instance);
     }
-
-    console.log('---------', this.applyProcess);
-
     // if (this.action !== this.actionEdit) {
     //   this.insertInstance();
     // } else {
@@ -530,7 +542,34 @@ export class PopupAddCasesComponent
       });
   }
   onAddInstance() {
-    this.dialog.dataService
+    if(this.isShowReasonDP) {
+      let data = [this.instance, this.listInstanceSteps, this.oldIdInstance];
+      this.codxCmService.addInstance(data).subscribe((instance) => {
+        if (instance) {
+          this.instanceRes = instance;
+          this.cases.status = instance.status;
+          this.cases.datas = instance.datas;
+          this.addPermission(instance?.permissions);
+          let datas = [this.cases];
+          this.codxCmService.addCases(datas).subscribe((cases) => {
+            if (cases) {
+            }
+          });
+          if (this.recIdMove) {
+            this.codxCmService
+              .updateMoveProcess([this.recIdMove, this.cases?.processID])
+              .subscribe((res) => {
+                if (res) {
+                }
+              });
+          }
+
+          this.dialog.close();
+        }
+      });
+    }
+    else {
+      this.dialog.dataService
       .save((option: any) => this.beforeSaveInstance(option))
       .subscribe((res) => {
         if (res && res.save) {
@@ -545,6 +584,8 @@ export class PopupAddCasesComponent
           this.changeDetectorRef.detectChanges();
         }
       });
+    }
+
   }
   onUpdateInstance() {
     this.dialog.dataService
@@ -586,7 +627,7 @@ export class PopupAddCasesComponent
 
   async executeApiCalls() {
     this.isLoading && (await this.getGridView(this.formModel));
-    if (this.action == this.actionAdd) {
+    if (this.action == this.actionAdd && !this.isLoading) {
       // this.itemTabs(false);
 
       let res = await firstValueFrom(
@@ -602,6 +643,12 @@ export class PopupAddCasesComponent
       this.cases.applyProcess = this.applyProcess;
       this.checkApplyProcess(this.cases.applyProcess);
     }
+    if(this.isViewAll && this.processID && this.action === this.actionAdd) {
+      this.applyProcess  = true;
+      this.cases.applyProcess =  this.applyProcess ;
+      await this.getListInstanceSteps(this.processID);
+    }
+
     if (this.action !== this.actionAdd) {
       this.applyProcess &&
         (await this.getListInstanceSteps(this.cases?.processID));
@@ -610,13 +657,20 @@ export class PopupAddCasesComponent
   }
 
   async executeSaveData() {
-    if (this.action !== this.actionEdit) {
-      this.cases.applyProcess && (await this.insertInstance());
-      !this.cases.applyProcess && this.onAdd();
+    if (this.cases.applyProcess) {
+      if (this.action !== this.actionEdit) {
+        await this.insertInstance();
+      } else {
+        await this.editInstance();
+      }
     } else {
-      this.cases.applyProcess && (await this.editInstance());
-      !this.cases.applyProcess && this.onEdit();
+      if (this.action !== this.actionEdit) {
+        await this.onAdd();
+      } else {
+        await this.onEdit();
+      }
     }
+
   }
 
   async getGridView(formModel) {
@@ -782,6 +836,10 @@ export class PopupAddCasesComponent
           this.instanceRes = instance;
           this.cases.status = instance.status;
           this.cases.datas = instance.datas;
+          this.cases.permissions = this.cases?.permissions?.filter(
+            (x) => x.memberType != '2'
+          );
+          this.addPermission(instance.permissions);
           this.onEdit();
         }
       });

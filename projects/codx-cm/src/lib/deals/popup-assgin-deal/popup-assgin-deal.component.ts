@@ -137,12 +137,7 @@ export class PopupAssginDealComponent
     this.data = dataCM[0];
   }
   async promiseAll() {
-    this.applyProcess &&
-      (await this.getListPermission(
-        this.processID,
-        this.applyFor,
-        this.stepID
-      ));
+    (this.applyProcess || this.isCallInstance ) && await this.getListPermission( this.processID, this.applyFor,  this.stepID  );
     this.owner && (await this.getInformationUser(this.owner));
   }
   async getListPermission(processId, applyFor, stepID) {
