@@ -51,6 +51,7 @@ export class CodxInputCustomFieldComponent implements OnInit {
 
   @Input() refVersion = ''; //là recID của form Task
   @Input() refInstance = ''; //là recID của Instance liên quan
+  @Input() refStepID = ''; //là recID của step Ins liên quan
 
   @ViewChild('attachment') attachment: AttachmentComponent;
   @ViewChild('comboxValue') comboxValue: ComboBoxComponent; ///value seclect 1
@@ -132,6 +133,8 @@ export class CodxInputCustomFieldComponent implements OnInit {
   valueF = 'no';
   valueT = 'yes';
   dataValueCaculate = '';
+  listFieldRef = []; //All field
+  listFieldsSelect = []; //fields selectd
 
   constructor(
     private cache: CacheService,
@@ -164,6 +167,8 @@ export class CodxInputCustomFieldComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    //load data truong tùy chỉnh ref
+    if (this.refInstance) this.loadDataRef();
     //gia tri mặc dinh khi them moi
     if (this.isAdd && this.customField.defaultValue)
       this.customField.dataValue = this.customField.defaultValue;
@@ -947,17 +952,15 @@ export class CodxInputCustomFieldComponent implements OnInit {
 
   //-------------- Data num co E ---------------//
   formatHaveE() {
-    let idxE = this.customField.dataValue.toString().toLowerCase().indexOf('e');
+    let idxE = this.customField.dataValue.toString().indexOf('E');
     if (idxE != -1) {
-      let mu = Number.parseFloat(
-        this.customField.dataValue.substring(
-          idxE + 2,
-          this.customField.dataValue?.length
-        )
+      let mu = this.customField.dataValue.substring(
+        idxE + 2,
+        this.customField.dataValue?.length
       );
       this.customField.dataValue =
         Number.parseFloat(this.customField.dataValue.substring(0, idxE)) *
-        Math.pow(10, mu);
+        Math.pow(10, Number.parseInt(mu));
     }
   }
   //-----------------------------------------------//
@@ -965,6 +968,25 @@ export class CodxInputCustomFieldComponent implements OnInit {
   //-----------------------------------------------//
   //-------------- Data tham chiếu ---------------//
   //-----------------------------------------------//
-  selectDataRef() {}
+  selectDataRef() {
+    if (this.listFieldRef?.length > 0) {
+      this.listFieldsSelect = this.listFieldRef.filter(
+        (x) => x.dataType == this.customField.dataType
+      );
+    }
+  }
+
+  loadDataRef() {
+    if (this.refInstance) {
+      this.api
+        .exec<any>('DP', 'DPInstances', 'GetListFieldsAsync', [
+          this.refInstance,
+          this.refStepID,
+        ])
+        .subscribe((res) => {
+          if (res) this.listFieldRef = res;
+        });
+    }
+  }
   //----------------------------------------------//
 }
