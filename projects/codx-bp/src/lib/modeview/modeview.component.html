@@ -20,7 +20,7 @@
           <codx-label default="Xem" class="mt-1"></codx-label>
         </label>
       </div>
-      <div class="ms-5 mt-1 cursor-pointer">
+      <div class="ms-5 mt-1 cursor-pointer" (click)="save()">
         <i class="icon-close icon-20 text-dark"></i>
       </div>
     </div>
@@ -28,7 +28,7 @@
 </ng-template>
 
 <ng-template #body>
-  <div class="d-flex align-items-center w-100 h-100 bp-mw-accordion-a" *ngIf="vllBP002">
+  <div class="d-flex align-items-center w-100 h-100 bp-mw-accordion-a overflow-auto" *ngIf="vllBP002">
     <div
       cdkDropList
       #menuList="cdkDropList"
@@ -36,8 +36,7 @@
       cdkDropListSortingDisabled
       [cdkDropListConnectedTo]="[tableList]"
       (cdkDropListDropped)="drop($event)"
-      (cdkDropListExited)="exited($event)"
-      (cdkDropListEntered)="entered()" 
+   
       class="d-flex flex-column w-350px h-100 bg-white overflow-auto px-2"
     >
       <ejs-accordion>
@@ -49,9 +48,9 @@
             <ng-template #content>
               <div class="d-flex flex-column">
                 <ng-container *ngFor="let item of vllBP002?.datas">
-                  <div class="w-100 py-3 px-4 mb-3 bg-item-lightest rd-3px cursor-move mw-300px" cdkDrag [cdkDragData]="item" *ngIf="item.groupType == 0">
-                    <i [ngClass]="item.icon"></i>
-                    <span class="fw-bold ms-2">{{item.text}}</span>
+                  <div class="w-100 py-3 px-4 mb-3 bg-item-lightest rd-3px cursor-move mw-300px d-flex align-items-center" cdkDrag [cdkDragData]="item" *ngIf="item.groupType == 0">
+                    <i [ngClass]="item.icon" class="icon-22"></i>
+                    <span class="fw-bold ms-4 mt-1">{{item.text}}</span>
                   </div>
                 </ng-container>
               </div>
@@ -64,9 +63,9 @@
             <ng-template #content>
               <div class="d-flex flex-column">
                 <ng-container *ngFor="let item of vllBP002?.datas">
-                  <div class="w-100 py-3 px-4 mt-3 bg-item-lightest rd-3px cursor-move mw-300px" cdkDrag [cdkDragData]="item" *ngIf="item.groupType == 1">
-                    <i [ngClass]="item.icon"></i>
-                    <span class="fw-bold ms-2">{{item.text}}</span>
+                  <div class="w-100 py-3 px-4 mt-3 bg-item-lightest rd-3px cursor-move mw-300px d-flex align-items-center" cdkDrag [cdkDragData]="item" *ngIf="item.groupType == 1">
+                    <i [ngClass]="item.icon" class="icon-22"></i>
+                    <span class="fw-bold ms-4 mt-1">{{item.text}}</span>
                   </div>
                 </ng-container>
               </div>
@@ -80,10 +79,6 @@
       <div
         class="d-flex flex-column w-700px h-100 bg-white overflow-auto"
       >
-        <div class="d-flex flex-column w-100 px-6 pt-6 pb-4">
-          <span class="fw-bold fs-5">Tên biểu mẫu</span>
-          <span class="text-muted">Nhập mô tả biểu mẫu</span>
-        </div>
         <div
           class="h-100 mt-2 px-4"
           cdkDropList
@@ -102,9 +97,10 @@
                 (cdkDropListDropped)="drop2($event)" 
                 [cdkDropListEnterPredicate]="evenPredicate(item.name)"
               >
-                <div class="d-flex align-items-center p-2 w-100" 
+                <div class="d-flex align-items-center p-2 w-100 cursor-pointer" 
                   *ngFor="let subItem of item.children" 
                   cdkDrag 
+                  [cdkDragDisabled]="subItem.controlType == 'Title'"
                   [cdkDragData]="item.name"
                   (click)="selectedItem(subItem)"
                 >
@@ -115,10 +111,10 @@
                     <ng-container *ngSwitchCase="'ValueList'">
                       <ng-container *ngTemplateOutlet="valueList ; context: { $implicit: subItem }"></ng-container>
                     </ng-container>
-                    <ng-container *ngSwitchCase="'Combobox'">
+                    <ng-container *ngSwitchCase="'ComboBox'">
                       <ng-container *ngTemplateOutlet="combobox ; context: { $implicit: subItem }"></ng-container>
                     </ng-container>
-                    <ng-container *ngSwitchCase="'Datetime'">
+                    <ng-container *ngSwitchCase="'DateTime'">
                       <ng-container *ngTemplateOutlet="datetime ; context: { $implicit: subItem }"></ng-container>
                     </ng-container>
                     <ng-container *ngSwitchCase="'Attachment'">
@@ -157,18 +153,27 @@
                     <ng-container *ngSwitchCase="'Phone'">
                       <ng-container *ngTemplateOutlet="phone ; context: { $implicit: subItem }"></ng-container>
                     </ng-container>
+                    <ng-container *ngSwitchCase="'Title'">
+                      <ng-container *ngTemplateOutlet="form ; context: { $implicit: subItem }"></ng-container>
+                    </ng-container>
                     <ng-container *ngSwitchDefault>...</ng-container>
                   </ng-container>
-    
+                  <!-- Biểu mẫu -->
+                  <ng-template #form let-data>
+                    <div class="d-flex flex-column w-100 py-4">
+                      <span class="fw-bold fs-5">{{data.title}}</span>
+                      <span class="text-muted mt-2">{{data.description }}</span>
+                    </div>
+                  </ng-template>
                   <!-- Văn bản || Số -->
                   <ng-template #text let-data>
                     <div class="d-flex flex-column w-100">
                       <div class="d-flex align-items-center">
-                        <i class="icon-grid_round me-2 cursor-move" cdkDragHandle></i>
-                        <span class="fw-bold">{{data.text}}</span>
+                        <i class="icon-drag_indicator me-2 cursor-move" cdkDragHandle></i>
+                        <span class="fw-bold">{{data.title}}</span>
                       </div>
                       <div class="w-100 border mt-2 px-4 py-3 rd-3px">
-                        <span class="text-muted text-truncate mw-55px">Câu trả lời</span>
+                        <span class="text-muted text-truncate mw-55px">{{data.defaultValue || data.description}}</span>
                       </div>
                     </div>
                   </ng-template>
@@ -177,12 +182,12 @@
                   <ng-template #valueList let-data>
                     <div class="d-flex flex-column w-100">
                        <div class="d-flex align-items-center">
-                        <i class="icon-grid_round me-2 cursor-move" cdkDragHandle></i>
-                        <span class="fw-bold">{{data.text}}</span>
+                        <i class="icon-drag_indicator me-2 cursor-move" cdkDragHandle></i>
+                        <span class="fw-bold">{{data.title}}</span>
                       </div>
                       <div class="d-flex align-items-center justify-content-between w-100 border mt-2 px-4 py-3 rd-3px">
-                        <span class="text-muted text-truncate mw-55px">Câu trả lời</span>
-                        <i class="icon-keyboard_arrow_down text-dark"></i>
+                        <span class="text-muted text-truncate mw-55px">{{data.defaultValue || data.description}}</span>
+                        <i [ngClass]="data.refType == '3P' ? 'icon-person_add_alt_1 text-primary' :'icon-keyboard_arrow_down text-dark' "></i>
                       </div>
                     </div>
                   </ng-template>
@@ -191,7 +196,7 @@
                   <ng-template #combobox let-data>
                     <div class="d-flex flex-column w-100">
                       <div class="d-flex align-items-center">
-                        <i class="icon-grid_round me-2 cursor-move" cdkDragHandle></i>
+                        <i class="icon-drag_indicator me-2 cursor-move" cdkDragHandle></i>
                         <span class="fw-bold">{{data.text}}</span>
                       </div>
                       <div class="d-flex align-items-center justify-content-between w-100 border mt-2 px-4 py-3 rd-3px">
@@ -205,11 +210,11 @@
                   <ng-template #datetime let-data>
                     <div class="d-flex flex-column w-100">
                       <div class="d-flex align-items-center">
-                        <i class="icon-grid_round me-2 cursor-move" cdkDragHandle></i>
-                        <span class="fw-bold">{{data.text}}</span>
+                        <i class="icon-drag_indicator me-2 cursor-move" cdkDragHandle></i>
+                        <span class="fw-bold">{{data.title}}</span>
                       </div>
                       <div class="d-flex align-items-center justify-content-between w-100 border mt-2 px-4 py-3 rd-3px">
-                        <span class="text-muted text-truncate mw-55px">Câu trả lời</span>
+                        <span class="text-muted text-truncate mw-55px">{{data.defaultValue ? (data.defaultValue | date: 'dd/MM/yyyy HH:mm:ss') : data.description}}</span>
                         <div class="d-flex align-items-center">
                           <i class="icon-i-calendar text-dark"></i>
                           <i class="icon-i-clock ms-3 text-dark"></i>
@@ -223,7 +228,7 @@
                   <ng-template #attachment let-data>
                     <div class="d-flex flex-column w-100">
                       <div class="d-flex align-items-center">
-                        <i class="icon-grid_round me-2 cursor-move" cdkDragHandle></i>
+                        <i class="icon-drag_indicator me-2 cursor-move" cdkDragHandle></i>
                         <span class="fw-bold">{{data.text}}</span>
                       </div>
                       <div class="d-flex align-items-center justify-content-between w-100 border-dotted mt-2 px-4 py-8 rd-5px bd-w-2px bg-item-lightest bc-item-lighter">
@@ -242,12 +247,32 @@
     
                   <!-- yesno -->
                   <ng-template #yesno let-data>
-                    <div class="d-flex align-items-center justify-content-between w-100 form-switch ps-0">
+                    <div class="d-flex align-items-center justify-content-between w-100 ps-0">
                       <div class="d-flex align-items-center">
-                        <i class="icon-grid_round me-2 cursor-move" cdkDragHandle></i>
-                        <span class="fw-bold">{{data.text}}</span>
+                        <i class="icon-drag_indicator me-2 cursor-move" cdkDragHandle></i>
+                        <span class="fw-bold">{{data.title}}</span>
                       </div>
-                      <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault">
+                      <ng-container *ngIf="data.controlType == 'Switch'">
+                        <div class="form-switch">
+                          <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" disabled>
+                        </div>
+                      </ng-container>
+                      <ng-container *ngIf="data.controlType == 'CheckBox'">
+                        <div class="d-flex align-items-center">
+                          <div class="form-check">
+                            <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" checked>
+                            <label class="form-check-label" for="flexRadioDefault1">
+                              Yes
+                            </label>
+                          </div>
+                          <div class="form-check ms-4">
+                            <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
+                            <label class="form-check-label" for="flexRadioDefault1">
+                              No
+                            </label>
+                          </div>
+                        </div>
+                      </ng-container>
                     </div>
                   </ng-template>
     
@@ -255,27 +280,34 @@
                   <ng-template #share let-data>
                     <div class="d-flex flex-column w-100">
                       <div class="d-flex align-items-center">
-                        <i class="icon-grid_round me-2 cursor-move" cdkDragHandle></i>
-                        <span class="fw-bold">{{data.text}}</span>
+                        <i class="icon-drag_indicator me-2 cursor-move" cdkDragHandle></i>
+                        <span class="fw-bold">{{data.title}}</span>
                       </div>
                       <div class="d-flex align-items-center justify-content-between w-100 border mt-2 px-4 py-3 rd-3px">
-                        <span class="text-muted text-truncate mw-55px">Câu trả lời</span>
+                        <span class="text-muted text-truncate mw-55px">{{data.defaultValue || data.description}}</span>
                         <i class="icon-person_add_alt_1 text-primary"></i>
                       </div>
                     </div>
                   </ng-template>
     
-                  <!-- Share -->
+                  <!-- Rank -->
                   <ng-template #rank let-data>
                     <div class="d-flex flex-column w-100">
                       <div class="d-flex align-items-center">
-                        <i class="icon-grid_round me-2 cursor-move" cdkDragHandle></i>
+                        <i class="icon-drag_indicator me-2 cursor-move" cdkDragHandle></i>
                         <span class="fw-bold">{{data.text}}</span>
                       </div>
                       <div class="d-flex align-items-center justify-content-between w-100 mt-2 px-4 py-3 rd-3px">
-                        <div class="bp-box-number text-primary fw-bold" *ngFor="let item of [].constructor(5); let i = index">
-                          {{(i + 1)}}
-                        </div>
+                        <ng-container *ngFor="let item of [].constructor(data.rank.maxValue); let i = index">
+                          <ng-container *ngIf="data.rank.type == '1'">
+                            <div class="bp-box-number fw-bold" [style.color]="data.rank.color" [style.borderColor]="data.rank.color" >
+                              {{(i + 1)}}
+                            </div>
+                          </ng-container>
+                          <ng-container *ngIf="data.rank.type == '2'">
+                            <i [ngClass]="data.rank.icon" [style.color]="data.rank.color"></i>
+                          </ng-container>
+                        </ng-container>
                       </div>
                     </div>
                   </ng-template>
@@ -284,7 +316,7 @@
                   <ng-template #tables let-data>
                     <div class="d-flex flex-column w-100">
                       <div class="d-flex align-items-center">
-                        <i class="icon-grid_round me-2 cursor-move" cdkDragHandle></i>
+                        <i class="icon-drag_indicator me-2 cursor-move" cdkDragHandle></i>
                         <span class="fw-bold">{{data.text}}</span>
                       </div>
                       <table class="table table-bordered mt-2">
@@ -323,7 +355,7 @@
                   <ng-template #progress let-data>
                     <div class="d-flex flex-column w-100">
                       <div class="d-flex align-items-center">
-                        <i class="icon-grid_round me-2 cursor-move" cdkDragHandle></i>
+                        <i class="icon-drag_indicator me-2 cursor-move" cdkDragHandle></i>
                         <span class="fw-bold">{{data.text}}</span>
                       </div>
                       <div class="d-flex justify-content-between mt-2 px-1">
@@ -344,11 +376,11 @@
                   <ng-template #email let-data>
                     <div class="d-flex flex-column w-100">
                       <div class="d-flex align-items-center">
-                        <i class="icon-grid_round me-2 cursor-move" cdkDragHandle></i>
-                        <span class="fw-bold">{{data.text}}</span>
+                        <i class="icon-drag_indicator me-2 cursor-move" cdkDragHandle></i>
+                        <span class="fw-bold">{{data.title}}</span>
                       </div>
                       <div class="d-flex align-items-center justify-content-between w-100 border mt-2 px-4 py-3 rd-3px">
-                        <span class="text-muted text-truncate mw-55px">Câu trả lời</span>
+                        <span class="text-muted text-truncate mw-55px">{{data.defaultValue || data.description}}</span>
                         <i class="icon-email text-dark"></i>
                       </div>
                     </div>
@@ -358,11 +390,11 @@
                   <ng-template #address let-data>
                     <div class="d-flex flex-column w-100">
                       <div class="d-flex align-items-center">
-                        <i class="icon-grid_round me-2 cursor-move" cdkDragHandle></i>
-                        <span class="fw-bold">{{data.text}}</span>
+                        <i class="icon-drag_indicator me-2 cursor-move" cdkDragHandle></i>
+                        <span class="fw-bold">{{data.title}}</span>
                       </div>
                       <div class="d-flex align-items-center justify-content-between w-100 border mt-2 px-4 py-3 rd-3px">
-                        <span class="text-muted text-truncate mw-55px">Câu trả lời</span>
+                        <span class="text-muted text-truncate mw-55px">{{data.defaultValue || data.description}}</span>
                         <i class="icon-location_on text-dark"></i>
                       </div>
                     </div>
@@ -372,11 +404,11 @@
                   <ng-template #expression let-data>
                     <div class="d-flex flex-column w-100">
                       <div class="d-flex align-items-center">
-                        <i class="icon-grid_round me-2 cursor-move" cdkDragHandle></i>
-                        <span class="fw-bold">{{data.text}}</span>
+                        <i class="icon-drag_indicator me-2 cursor-move" cdkDragHandle></i>
+                        <span class="fw-bold">{{data.title}}</span>
                       </div>
                       <div class="d-flex align-items-center justify-content-between w-100 border mt-2 px-4 py-3 rd-3px">
-                        <span class="text-muted text-truncate mw-55px">Câu trả lời</span>
+                        <span class="text-muted text-truncate mw-55px">{{data.defaultValue || data.description}}</span>
                         <i class="icon-calculate text-dark"></i>
                       </div>
                     </div>
@@ -386,11 +418,11 @@
                   <ng-template #phone let-data>
                     <div class="d-flex flex-column w-100">
                       <div class="d-flex align-items-center">
-                        <i class="icon-grid_round me-2 cursor-move" cdkDragHandle></i>
-                        <span class="fw-bold">{{data.text}}</span>
+                        <i class="icon-drag_indicator me-2 cursor-move" cdkDragHandle></i>
+                        <span class="fw-bold">{{data.title}}</span>
                       </div>
                       <div class="d-flex align-items-center justify-content-between w-100 border mt-2 px-4 py-3 rd-3px">
-                        <span class="text-muted text-truncate mw-55px">Câu trả lời</span>
+                        <span class="text-muted text-truncate mw-55px">{{data.defaultValue || data.description}}</span>
                         <i class="icon-settings_phone text-dark"></i>
                       </div>
                     </div>
@@ -405,8 +437,46 @@
       </div>
     </div>
   
-    <div class="w-400px h-100 bg-white">
-      properties
+    <div class="w-500px h-100 bg-white">
+      <ng-container [ngSwitch]="dataSelected?.value">
+        <ng-container *ngSwitchCase="'Title'">
+          <lib-property-form [data]="dataSelected" (dataChange)="dataChange($event)"></lib-property-form>
+        </ng-container>
+        <ng-container *ngSwitchCase="'Text'">
+          <lib-property-text [data]="dataSelected" (dataChange)="dataChange($event)"></lib-property-text>
+        </ng-container>
+        <ng-container *ngSwitchCase="'ValueList'">
+          <lib-property-valuelist [data]="dataSelected" (dataChange)="dataChange($event)"></lib-property-valuelist>
+        </ng-container>
+        <ng-container *ngSwitchCase="'DateTime'">
+          <lib-property-datetime [data]="dataSelected" (dataChange)="dataChange($event)"></lib-property-datetime>
+        </ng-container>
+        <ng-container *ngSwitchCase="'Number'">
+          <lib-property-number [data]="dataSelected" (dataChange)="dataChange($event)"></lib-property-number>
+        </ng-container>
+        <ng-container *ngSwitchCase="'YesNo'">
+          <lib-property-yesno [data]="dataSelected" (dataChange)="dataChange($event)"></lib-property-yesno>
+        </ng-container>
+        <ng-container *ngSwitchCase="'User'">
+          <lib-property-user [data]="dataSelected" (dataChange)="dataChange($event)"></lib-property-user>
+        </ng-container>
+        <ng-container *ngSwitchCase="'Rank'">
+          <lib-property-rank [data]="dataSelected" (dataChange)="dataChange($event)"></lib-property-rank>
+        </ng-container>
+        <ng-container *ngSwitchCase="'Progress'">
+          <lib-property-progress [data]="dataSelected" (dataChange)="dataChange($event)"></lib-property-progress>
+        </ng-container>
+        <ng-container *ngSwitchCase="'Phone'">
+          <lib-property-phone [data]="dataSelected" (dataChange)="dataChange($event)"></lib-property-phone>
+        </ng-container>
+        <ng-container *ngSwitchCase="'Email'">
+          <lib-property-phone [data]="dataSelected" (dataChange)="dataChange($event)"></lib-property-phone>
+        </ng-container>
+        <ng-container *ngSwitchCase="'Address'">
+          <lib-property-phone [data]="dataSelected" (dataChange)="dataChange($event)"></lib-property-phone>
+        </ng-container>
+      </ng-container>
+      
     </div>
   </div>
 </ng-template>
