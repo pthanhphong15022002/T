@@ -298,7 +298,7 @@ export class CodxAddTaskComponent implements OnInit {
       this.stepsTasks.refID = Util.uid();
       this.stepsTasks.status = '1';
       this.stepsTasks.progress = 0;
-      this.stepsTasks.fieldID = null;
+      // this.stepsTasks.fieldID = null;
       this.stepsTasks.dependRule = '0';
       this.stepsTasks.parentID = null;
       this.stepsTasks.isTaskDefault = false;
