@@ -357,10 +357,12 @@ export class CodxInputCustomFieldComponent implements OnInit {
         }
         break;
       case 'N':
-        let idxE = e.data?.toLowerCase().indexOf('e');
+        let idxE = e.data?.toString().toLowerCase().indexOf('e');
         if (idxE != -1) {
-          this.notiService.notify('Số nhập vào quá giá trị cho phép !', '3');
-          return;
+          this.notiService.notify(
+            'Số nhập vào quá lớn chỉ lưu được giá trựi gần đúng !',
+            '3'
+          );
         }
         break;
     }
