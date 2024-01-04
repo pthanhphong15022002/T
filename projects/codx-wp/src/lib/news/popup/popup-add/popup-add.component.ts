@@ -394,7 +394,6 @@ export class PopupAddComponent implements OnInit {
 
   //update
   clickUpdate() {
-    debugger;
     if (this.checkValidate()) return;
     this.loading = true;
     if (this.fileDelete.length > 0) {

@@ -3168,7 +3168,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
           refType: 'DP_Instances_Steps_Tasks',
           dataSource: res ?? '',
         };
-        debugger;
+
         if (data?.isTaskDefault) {
           customData.refID = data.refID;
           customData.refType = 'DP_Steps_Tasks';

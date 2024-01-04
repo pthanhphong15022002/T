@@ -58,7 +58,7 @@ export class CodxEmailComponent implements OnInit {
   formModel: FormModel;
   date: any;
   templateID: string = '';
-  templateType:string = "";
+  templateType: string = '';
 
   saveIsTemplate: boolean = false;
   notSendMail = false; //nvthuan khong cho phep gui mail chỉ tao temp
@@ -121,9 +121,8 @@ export class CodxEmailComponent implements OnInit {
     @Optional() data: DialogData
   ) {
     this.dialog = dialog;
-    
-    if(data?.data)
-    {
+
+    if (data?.data) {
       this.templateID = data.data.templateID;
       this.email = data.data.email as email;
       this.option = data.data.option as option;
@@ -133,7 +132,6 @@ export class CodxEmailComponent implements OnInit {
     if (!this.functionID) {
       this.functionID = window.location.pathname.split('/').pop();
     }
-
 
     console.log(data?.data);
 
@@ -195,10 +193,9 @@ export class CodxEmailComponent implements OnInit {
           this.dialogETemplate = this.mainService.buildFormGroup(
             this.formModel.formName,
             this.formModel.gridViewName,
-            ""
+            ''
           );
 
-          
           if (this.templateID) {
             this.codxService
               .getEmailTemplate(this.templateID)
@@ -244,17 +241,14 @@ export class CodxEmailComponent implements OnInit {
                       }
                     });
                   }
-                  this.formModel.currentData = this.data = this.dialogETemplate.value;
+                  this.formModel.currentData = this.data =
+                    this.dialogETemplate.value;
                   this.isAfterRender = true;
                 }
                 //this.cr.detectChanges();
               });
-          } 
-          else if(this.templateType)
-          {
-
-          }
-          else {
+          } else if (this.templateType) {
+          } else {
             this.codxService
               .getDataDefault(this.functionID)
               .subscribe((res) => {
@@ -263,14 +257,14 @@ export class CodxEmailComponent implements OnInit {
 
                   this.data = res;
                   this.dialogETemplate.patchValue(this.data);
-                  if(this.email)
-                    this.dialogETemplate.patchValue(this.email);
+                  if (this.email) this.dialogETemplate.patchValue(this.email);
                   this.dialogETemplate.addControl(
                     'recID',
                     new FormControl(this.data.recID)
                   );
                   this.loadListFieldByFuntion();
-                  this.formModel.currentData = this.data = this.dialogETemplate.value;
+                  this.formModel.currentData = this.data =
+                    this.dialogETemplate.value;
                   this.isAfterRender = true;
                   //this.cr.detectChanges();
                 }
@@ -365,7 +359,6 @@ export class CodxEmailComponent implements OnInit {
     this.cache.functionList(this.functionID).subscribe((res) => {
       if (res) {
         this.loadListFieldByGridViewName(res.formName, res.gridViewName);
-      
       }
     });
   }
@@ -385,12 +378,15 @@ export class CodxEmailComponent implements OnInit {
       ...this.lstCc,
       ...this.lstBcc,
     ];
-    
-    this.codxService.sendEmail(this.data, lstSento , this.option).subscribe((res) => {
-      if (res) {
-        this.dialog && this.dialog.close({isSendMail: res, data: this.data});
-      }
-    });
+
+    this.codxService
+      .sendEmail(this.data, lstSento, this.option)
+      .subscribe((res) => {
+        if (res) {
+          this.dialog &&
+            this.dialog.close({ isSendMail: res, data: this.data });
+        }
+      });
   }
 
   onSaveForm(dialog1: DialogRef) {
@@ -767,7 +763,7 @@ export class CodxEmailComponent implements OnInit {
     const tempElem: HTMLElement = this.richtexteditor.control.createElement(
       this.richtexteditor.control.enterKey
     );
-    debugger;
+
     console.log('message', this.data.message);
     console.log(
       'before angularvalue',
@@ -794,7 +790,8 @@ export class CodxEmailComponent implements OnInit {
       }
 
       this.richtexteditor.control.executeCommand('insertHTML', html);
-      this.data.message = this.richtexteditor?.control?.contentModule?.editableElement?.innerHTML;
+      this.data.message =
+        this.richtexteditor?.control?.contentModule?.editableElement?.innerHTML;
       this.dialogETemplate.patchValue({ message: this.data.message });
 
       this.cr.detectChanges();
@@ -835,16 +832,15 @@ export class CodxEmailComponent implements OnInit {
   onActionComplete(args: any): void {}
 }
 
-class email{
+class email {
   subject?: string;
-  message?: string
+  message?: string;
 }
 
-class option{
+class option {
   service?: string;
   assembly?: string;
-  className?:string;
-  method?:string;
-  data?:string
+  className?: string;
+  method?: string;
+  data?: string;
 }
-

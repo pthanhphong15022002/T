@@ -121,8 +121,7 @@ export class PopupEProcessContractComponent
     this.actionType = data?.data?.actionType;
     if (this.actionType == 'view') {
       this.disabledInput = true;
-    }
-    else if(this.actionType == 'copyMulti'){
+    } else if (this.actionType == 'copyMulti') {
       this.isMultiCopy = true;
     }
     this.data = JSON.parse(JSON.stringify(data?.data?.dataObj));
@@ -308,7 +307,6 @@ export class PopupEProcessContractComponent
       option
     );
     dialogAdd.closed.subscribe((res) => {
-      debugger;
       if (res?.event) {
         this.changedInForm = true;
         if (actionType == 'add') {
@@ -362,8 +360,8 @@ export class PopupEProcessContractComponent
     // this.form.formGroup.patchValue(this.data);
 
     if (this.employeeObj) {
-      this.data.orgUnitID = this.employeeObj.orgUnitID,
-      this.data.positionID = this.employeeObj.positionID;
+      (this.data.orgUnitID = this.employeeObj.orgUnitID),
+        (this.data.positionID = this.employeeObj.positionID);
 
       // this.form.formGroup.patchValue({
       //   orgUnitID: this.employeeObj.orgUnitID,
@@ -444,7 +442,7 @@ export class PopupEProcessContractComponent
             //       });
             //     }
 
-                // this.isAfterRender = true;
+            // this.isAfterRender = true;
             //     this.cr.detectChanges();
             //   });
             // }
@@ -561,10 +559,9 @@ export class PopupEProcessContractComponent
     this.data.attachments =
       this.attachment?.data?.length + this.attachment?.fileUploadList?.length;
 
-      if(!this.data.attachments){
-        this.data.attachments = 0;
-      }
-
+    if (!this.data.attachments) {
+      this.data.attachments = 0;
+    }
 
     if (this.attachment.fileUploadList.length !== 0) {
       (await this.attachment.saveFilesObservable()).subscribe((item2: any) => {
@@ -601,7 +598,9 @@ export class PopupEProcessContractComponent
                       });
                   } else if (res[1] == 'HR009') {
                     this.data.hiredOn = this.data.effectedDate;
-                    this.form.formGroup.patchValue({ hiredOn: this.data.hiredOn });
+                    this.form.formGroup.patchValue({
+                      hiredOn: this.data.hiredOn,
+                    });
 
                     this.hrSevice
                       .addEContract(this.data)
@@ -641,8 +640,8 @@ export class PopupEProcessContractComponent
   }
 
   renderChange(event) {
-    if(event.dataTemp){
-      debugger
+    if (event.dataTemp) {
+      debugger;
       let tmp = JSON.parse(event.dataTemp)[0]?.ContractGroup;
       if (tmp) {
         this.itemContractGroup = tmp;
@@ -677,7 +676,9 @@ export class PopupEProcessContractComponent
             event.component.comboBoxObject.itemData.ContractGroup;
           this.data.limitMonths =
             event?.component?.itemsSelected[0]?.LimitMonths;
-          this.form.formGroup.patchValue({ limitMonths: this.data.limitMonths });
+          this.form.formGroup.patchValue({
+            limitMonths: this.data.limitMonths,
+          });
           this.setExpiredDate(this.data.limitMonths);
           break;
         }
