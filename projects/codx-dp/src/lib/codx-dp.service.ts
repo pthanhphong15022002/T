@@ -891,7 +891,7 @@ export class CodxDpService {
   }
 
   getOneDeal(data) {
-    return this.api.exec<any>('CM', 'DealsBusiness', 'GetOneDealAsync', data);
+    return this.api.exec<any>('CM', 'DealsBusiness', 'GetDataCMAsync', data);
   }
   isCheckDealInUse(data) {
     return this.api.exec<any>(
@@ -929,6 +929,28 @@ export class CodxDpService {
       data
     );
   }
+
+  moveStageCases(data) {
+    return this.api.execSv<any>(
+      'CM',
+      'ERM.Business.CM',
+      'CasesBusiness',
+      'MoveStageCasesAsync',
+      data
+    );
+  }
+
+
+  moveStageContract(data) {
+    return this.api.execSv<any>(
+      'CM',
+      'ERM.Business.CM',
+      'ContractsBusiness',
+      'MoveStageContractAsync',
+      data
+    );
+  }
+
   moveStageBackLead(data) {
     return this.api.execSv<any>(
       'CM',
@@ -987,12 +1009,40 @@ export class CodxDpService {
       data
     );
   }
+  moveContractReason(data) {
+    return this.api.execSv<any>(
+      'CM',
+      'ERM.Business.CM',
+      'ContractsBusiness',
+      'MoveContractReasonAsync',
+      data
+    );
+  }
   moveStageBackDataCM(data) {
     return this.api.execSv<any>(
       'CM',
       'ERM.Business.CM',
       'DealsBusiness',
       'MoveStageBackByRefIDAsync',
+      data
+    );
+  }
+
+  moveStageBackContractCM(data) {
+    return this.api.execSv<any>(
+      'CM',
+      'ERM.Business.CM',
+      'ContractsBusiness',
+      'MoveStageBackByContractAsync',
+      data
+    );
+  }
+  moveStageBackCasesCM(data) {
+    return this.api.execSv<any>(
+      'CM',
+      'ERM.Business.CM',
+      'CasesBusiness',
+      'MoveStageBackByCaseAsync',
       data
     );
   }

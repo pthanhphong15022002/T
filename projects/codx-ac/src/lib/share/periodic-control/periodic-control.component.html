@@ -54,12 +54,14 @@
                                           | formatvalue : view.formModel : 'runDate' : runDate
                                           | async
                                       " class="me-3"></span>
-                          <span *ngIf="item?.runMode === '1'" class="badge ac-badge-light-warning">
-                            Mô phỏng
-                          </span>
-                          <span *ngIf="item?.runMode === '2'" class="badge ac-badge-light-success">
-                            Chính thức
-                          </span>
+                          <ng-container *ngIf="displayMode && displayMode === '1'">
+                            <span *ngIf="item?.runMode === '1'" class="badge ac-badge-light-warning">
+                              Mô phỏng
+                            </span>
+                            <span *ngIf="item?.runMode === '2'" class="badge ac-badge-light-success">
+                              Chính thức
+                            </span>
+                          </ng-container>
                         </div>
                         <div class="text-dark">
                           <span class="mt-1">{{title+' tháng '}}</span>
