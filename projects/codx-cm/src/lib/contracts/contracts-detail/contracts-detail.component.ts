@@ -5,6 +5,7 @@ import {
   OnChanges,
   SimpleChanges,
   ChangeDetectorRef,
+  Input,
 } from '@angular/core';
 import { CodxCmService } from '../../codx-cm.service';
 import { ContractsService } from '../service-contracts.service';
@@ -46,7 +47,7 @@ export class ContractsDetailComponent implements OnInit, OnChanges {
     entityName: 'CM_Contacts',
     gridViewName: 'grvCMContacts',
   };
-  
+
   listTabLeft = [
     { id: 'listTabInformation', name: 'Thông tin hợp đồng', icon: 'icon-info' },
     { id: 'listHistory', name: 'Lịch sử', icon: 'icon-i-clock-history' },
@@ -105,7 +106,8 @@ export class ContractsDetailComponent implements OnInit, OnChanges {
         }
       });
   }
-  ngOnChanges(changes: SimpleChanges) {}
+  ngOnChanges(changes: SimpleChanges) {
+  }
 
   getContract() {
     if (this.contract) {
@@ -126,7 +128,7 @@ export class ContractsDetailComponent implements OnInit, OnChanges {
         this.getContact();
         this.changeDetectorRef.markForCheck();
       } else {
-        this.dialog.close(); 
+        this.dialog.close();
         this.notiService.notify('Không tìm thấy hợp đồng', '3');
       }
     });

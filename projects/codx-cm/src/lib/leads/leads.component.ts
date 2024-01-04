@@ -1461,10 +1461,10 @@ export class LeadsComponent
               if (isMoveBackStage) {
                 let dataUpdate = [
                   tmpInstaceDTO,
-                  e.event?.comment,
-                  e.event?.expectedClosed,
-                  this.statusCodeID,
-                  this.statusCodeCmt,
+                  // e.event?.comment,
+                  // e.event?.expectedClosed,
+                  // this.statusCodeID,
+                  // this.statusCodeCmt,
                 ];
                 this.codxCmService
                   .moveStageBackLead(dataUpdate)
@@ -1481,11 +1481,11 @@ export class LeadsComponent
                 let dataUpdate = [
                   data.recID,
                   instance.stepID,
-                  oldStepId,
-                  oldStatus,
-                  e.event?.comment,
-                  e.event?.expectedClosed,
-                  e.event?.permissionCM,
+                  // oldStepId,
+                  // oldStatus,
+                  // e.event?.comment,
+                  // e.event?.expectedClosed,
+                  // e.event?.permissionCM,
                 ];
                 this.codxCmService
                   .moveStageLead(dataUpdate)
@@ -1552,12 +1552,12 @@ export class LeadsComponent
       if (e && e.event != null) {
         let listSteps = e.event?.listStep;
         this.isLoading = false;
-        this.detailViewLead.reloadListStep(listSteps);
         data = this.updateReasonLead(e.event?.instance, data, isMoveSuccess);
         this.codxCmService.moveLeadReason([data]).subscribe((res) => {
           if (res) {
             data = res;
             this.view.dataService.update(data, true).subscribe();
+            this.detailViewLead.reloadListStep(listSteps);
             this.detectorRef.detectChanges();
           }
         });

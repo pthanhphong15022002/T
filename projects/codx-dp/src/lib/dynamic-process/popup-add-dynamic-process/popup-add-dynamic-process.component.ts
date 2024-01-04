@@ -880,7 +880,7 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
     for (const stepItem of this.stepList ?? []) {
       for (const task of stepItem.tasks ?? []) {
         task.createTask = this.process?.createTask ?? false;
-        task.dependRule = this.process?.dependRule ?? "0";
+        task.assignControl = this.process?.dependRule ?? "0";
       }
     }
   }
