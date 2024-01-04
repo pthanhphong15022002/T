@@ -3084,7 +3084,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
           let field = listFieldStep?.find((x) => x.recID == element?.recID);
           if (field) {
             field.dataValue = element?.dataValue;
-            field['versions'] = element?.version; // lưu version
+            field['versions'] = element?.versions; // lưu version
             if (element?.dataValue) {
               countFieldChange++;
             }
