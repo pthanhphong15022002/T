@@ -372,11 +372,9 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
           this.contracts.processID = this.processID;
           this.getBusinessLineByProcessContractID(this.processID);
         }
-        if(this.type == 'task' && this.processID){
+        if(this.type == 'task'){
           this.contracts.applyProcess = true;
-           this.contracts.processID = this.processID;
-          this.getBusinessLineByProcessID(this.processID);
-          this.getListInstanceSteps(this.contracts.processID);
+          this.getBusinessLineByBusinessLineID(this.contracts?.businessLineID);
           this.mapDataInfield();
         }
         break;
@@ -829,7 +827,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
   }
 
   setValueComboboxQuotation() {
-    let listQuotation = this.inputQuotation.ComponentCurrent.dataService.data;
+    let listQuotation = this.inputQuotation?.ComponentCurrent?.dataService?.data;
     if (listQuotation) {
       if (this.customerIdOld != this.contracts.customerID) {
         this.contracts.quotationID = null;
@@ -994,6 +992,18 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
           this.contracts.businessLineID = res;
         }
       });
+  }
+  getBusinessLineByBusinessLineID(businessLine) {
+    if(businessLine){
+      this.cmService
+      .getBusinessLineByBusinessLineID([businessLine])
+      .subscribe((res) => {
+        if (res) {
+          this.contracts.processID = res?.processContractID;
+          this.getListInstanceSteps(this.contracts.processID);
+        }
+      });
+    }
   }
   //#endregion
 
