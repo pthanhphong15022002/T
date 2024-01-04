@@ -150,7 +150,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
 
   onInit(): void {
     this.pageTitle.setBreadcrumbs([]);
-    if (this.curUser.employee == null) {
+    if (this.curUser.employee == null || true) {
       this.codxOmService.getUser([this.curUser?.userID]).subscribe((user) => {
         if (user) {
           this.codxOmService
@@ -639,19 +639,19 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
       let okrLevel = '';
       switch (this.funcID) {
         case OMCONST.FUNCID.COMP:
-          tempOrgID = this.curUser?.employee.companyID;
+          tempOrgID = this.curUser?.employee?.companyID;
           okrLevel = OMCONST.VLL.OKRLevel.COMP;
           break;
         case OMCONST.FUNCID.DEPT:
-          tempOrgID = this.curUser?.employee.departmentID;
+          tempOrgID = this.curUser?.employee?.departmentID;
           okrLevel = OMCONST.VLL.OKRLevel.DEPT;
           break;
         case OMCONST.FUNCID.ORG:
-          tempOrgID = this.curUser?.employee.orgUnitID;
+          tempOrgID = this.curUser?.employee?.orgUnitID;
           okrLevel = OMCONST.VLL.OKRLevel.ORG;
           break;
         case OMCONST.FUNCID.PERS:
-          tempOrgID = this.curUser?.employee.employeeID;
+          tempOrgID = this.curUser?.employee?.employeeID;
           okrLevel = OMCONST.VLL.OKRLevel.PERS;
           break;
       }

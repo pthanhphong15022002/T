@@ -1743,7 +1743,7 @@ export class LeadsComponent
           this.notificationsService.notifyCode(
             message,
             0,
-            "'" + this.dataSelected?.dealName + "'"
+            "'" + this.dataSelected?.leadName + "'"
           );
           return;
         }

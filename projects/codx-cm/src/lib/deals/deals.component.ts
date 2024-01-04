@@ -499,7 +499,7 @@ export class DealsComponent
       eventItem.disabled = true;
     };
     let isChangeStatus = (eventItem, data) => {
-      eventItem.disabled = data?.alloweStatus == '1' ? false : true;
+      eventItem.disabled = data?.alloweStatus == '1' || data?.status != '0' ? false : true;
     };
     let isMoveReason = (eventItem, data) => {
       eventItem.disabled =

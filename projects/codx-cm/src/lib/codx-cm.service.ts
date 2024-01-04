@@ -1197,21 +1197,21 @@ export class CodxCmService {
   //   );
   // }
 
-  getViewDetailDealAsync(data) {
-    return this.api.exec<any>(
-      'CM',
-      'DealsBusiness',
-      'GetViewDetailDealAsync',
-      data
-    );
-  }
-  getSettingViewDetailDealAsync() {
-    return this.api.exec<any>(
-      'CM',
-      'DealsBusiness',
-      'GetSettingViewDetailDealAsync'
-    );
-  }
+  // getViewDetailDealAsync(data) {
+  //   return this.api.exec<any>(
+  //     'CM',
+  //     'DealsBusiness',
+  //     'GetViewDetailDealAsync',
+  //     data
+  //   );
+  // }
+  // getSettingViewDetailDealAsync() {
+  //   return this.api.exec<any>(
+  //     'CM',
+  //     'DealsBusiness',
+  //     'GetSettingViewDetailDealAsync'
+  //   );
+  // }
 
   getDataTabHistoryDealAsync(data) {
     return this.api.exec<any>(
@@ -1689,10 +1689,18 @@ export class CodxCmService {
       [autoNoCode, null, true, null]
     );
   }
+  getInstancerStepByRecID(recID) {
+    return this.api.exec<any>(
+      'DP',
+      'InstancesStepsBusiness',
+      'GetInstanceStepByRecIDAsync',
+      [recID]
+    );
+  }
   //#region
 
   getOneObject(recID, className) {
-    return this.api.exec<any>('CM', className, 'GetOneAsync', recID);
+    return this.api.exec<any>('DP', className, 'GetOneAsync', recID);
   }
   //#region getParamModule
   getParam(sformName, category) {
