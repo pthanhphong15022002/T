@@ -268,9 +268,6 @@ export class ContractsComponent extends UIComponent {
           res.isbookmark = false;
         }
         switch (res.functionID) {
-          // SYS03: isEdit,
-          // SYS04: isCopy,
-          // SYS02: isDelete,
           case 'SYS02':
             res.disabled = data.delete
             ? data.closed ||
@@ -344,7 +341,10 @@ export class ContractsComponent extends UIComponent {
             res.disabled = data?.closed;
             break;
           case 'CM0204_14': // phân công người phụ trách
-            res.disabled = data?.closed ||  this.checkMoreReason(data);
+            res.disabled =
+            data?.alloweStatus == '1'
+              ? !['1', '2', '15'].includes(data.status) || data.closed
+              : true;
             break;
           case 'CM0204_15': // Đóng hợp đồng
             res.disabled = data?.closed;
