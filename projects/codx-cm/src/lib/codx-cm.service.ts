@@ -1095,6 +1095,22 @@ export class CodxCmService {
       data
     );
   }
+  getProcessByBusinessLineID(bussinessID) {
+    return this.api.exec<any>(
+      'CM',
+      'BusinessLinesBusiness',
+      'GetProcessByBussinessIDAsync',
+      bussinessID
+    );
+  }
+  getBusinessLineByBusinessLineID(bussinessID) {
+    return this.api.exec<any>(
+      'CM',
+      'BusinessLinesBusiness',
+      'GetOneAsync',
+      bussinessID
+    );
+  }
 
   isCheckDealInUse(data) {
     return this.api.exec<any>(
@@ -1628,15 +1644,6 @@ export class CodxCmService {
       'ProcessesBusiness',
       'GetRecIDProcessDefaultAsync',
       applyFor
-    );
-  }
-
-  getProcessByBusinessLineID(bussinessID) {
-    return this.api.exec<any>(
-      'CM',
-      'BusinessLinesBusiness',
-      'GetProcessByBussinessIDAsync',
-      bussinessID
     );
   }
 
