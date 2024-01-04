@@ -1088,7 +1088,7 @@ export class DealsComponent
   }
 
   openOrCloseDeal(data, check) {
-    var datas = [data.recID, data.processID, check];
+    var datas = [data.recID, check];
     this.notificationsService
       .alertCode('DP018', null, this.titleAction, "'" + data.dealName + "'")
       .subscribe((info) => {

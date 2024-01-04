@@ -26,6 +26,17 @@ import { environment } from 'src/environments/environment';
 import { FormFormatValueComponent } from './processes/popup-add-process/form-properties-fields/form-format-value/form-format-value.component';
 import { ModeviewComponent } from './modeview/modeview.component';
 import { FormatValuelistComponent } from './processes/popup-add-process/form-properties-fields/format-valuelist/format-valuelist.component';
+import { PropertyValueListComponent } from './modeview/properties/property-valuelist/property-valuelist.component';
+import { PropertyFormComponent } from './modeview/properties/property-form/property-form.component';
+import { PropertyTextComponent } from './modeview/properties/property-text/property-text.component';
+import { PropertyDatetimeComponent } from './modeview/properties/property-datetime/property-datetime.component';
+import { PropertyNumberComponent } from './modeview/properties/property-number/property-number.component';
+import { PropertyYesnoComponent } from './modeview/properties/property-yesno/property-yesno.component';
+import { PropertyUserComponent } from './modeview/properties/property-user/property-user.component';
+import { PropertyRankComponent } from './modeview/properties/property-rank/property-rank.component';
+import { PropertyProgressComponent } from './modeview/properties/property-progress/property-progress.component';
+import { PropertyPhoneComponent } from './modeview/properties/property-phone/property-phone.component';
+import { PropertyExpressionComponent } from './modeview/properties/property-expression/property-expression.component';
 import { FormSettingComboboxComponent } from './processes/popup-add-process/form-properties-fields/setting-fields/form-setting-combobox/form-setting-combobox.component';
 
 export const routes: Routes = [
@@ -62,6 +73,19 @@ export const routes: Routes = [
     FormFormatValueComponent,
     ModeviewComponent,
     FormatValuelistComponent,
+
+    //Propreties
+    PropertyValueListComponent,
+    PropertyFormComponent,
+    PropertyTextComponent,
+    PropertyDatetimeComponent,
+    PropertyNumberComponent,
+    PropertyYesnoComponent,
+    PropertyUserComponent,
+    PropertyRankComponent,
+    PropertyProgressComponent,
+    PropertyPhoneComponent,
+    PropertyExpressionComponent,
     FormSettingComboboxComponent,
   ],
   imports: [

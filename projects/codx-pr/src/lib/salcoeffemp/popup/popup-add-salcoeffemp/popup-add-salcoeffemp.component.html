@@ -1,0 +1,45 @@
+<codx-form [body]="body" [footer]="footer" [data]="data" [dialog]="dialog" [headerText]="headerText"></codx-form>
+
+<ng-template #body>
+    <div class="container">
+        <div class="row">
+            <div class="form-group">
+                <codx-label [formModel]="dialog.formModel" name="EmployeeID" [default]="'Nhân viên'"></codx-label>
+                <codx-input [formModel]="dialog.formModel" [field]="'EmployeeID'" [crrValue]=""></codx-input>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group">
+                <codx-input type="checkbox" [formModel]="dialog.formModel" name="" field="checked" [crrValue]="checked" [label]="'Hiển thị tất cả hệ số'" [labelPosition]="'After'"></codx-input>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group">
+                <codx-gridview-v2
+                    *ngIf="columnGrids && columnGrids.length > 0"
+                    #codxGridViewV2
+                    [columnsGrid]="columnGrids"
+                    [entityName]="dialog.formModel.entityName"
+                    [hideMoreFunc]="true"
+                    [autoFitColumns]="false"
+                    [editOnClick]="true"
+                    [autoAddRow]="false"
+                    [showEmptyRecord]="false"
+                    [dataSource]="dataSources"
+                    [idField]="'coeffCode'"
+                    [rowHeight]="35">
+                </codx-gridview-v2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 text-end">
+                <button type="button" class="btn btn-outline-info" (click)="addRowGrid()">+ Thêm</button>
+            </div>
+        </div>
+    </div>
+</ng-template>
+<ng-template #footer>
+    <div class="d-flex justify-content-end w-100">
+        <button type="button" class="btn btn-primary">Lưu</button>
+    </div>
+</ng-template>

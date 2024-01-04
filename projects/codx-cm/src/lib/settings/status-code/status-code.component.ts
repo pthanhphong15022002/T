@@ -78,9 +78,11 @@ export class StatusCodeComponent extends UIComponent implements OnInit {
 
   onInit(): void {
     // this.afterLoad();
-    this.button = [{
-      id: this.btnAdd,
-    }];
+    this.button = [
+      {
+        id: this.btnAdd,
+      },
+    ];
   }
 
   ngAfterViewInit(): void {
@@ -129,21 +131,6 @@ export class StatusCodeComponent extends UIComponent implements OnInit {
         .sort((x: any, y: any) => x.columnOrder - y.columnOrder)
         .map((x: any) => x.fieldName);
     }
-    // if (this.arrFieldIsVisible?.length > 0) {
-    //   this.arrFieldIsVisible.forEach((key) => {
-    //     let field = Util.camelize(key);
-    //     let template: any;
-    //     let colums: any;
-    //     debugger;
-    //     switch (key) {
-    //       case 'ObjectStatus':
-    //         template = this.templateObjectStatus;
-    //         break;
-    //       default:
-    //         break;
-    //     }
-    //   });
-    // }
     this.columnGrids = [];
 
     this.arrFieldIsVisible.forEach((key) => {
@@ -378,11 +365,9 @@ export class StatusCodeComponent extends UIComponent implements OnInit {
       return 'CRM042';
     } else if (value == '7') {
       return 'CRM015';
-    }
-    else if (value == '9' ) {
+    } else if (value == '9') {
       return 'CRM076';
-    }
-    else if (value == '11' ) {
+    } else if (value == '11') {
       return 'CRM077';
     }
     return '';

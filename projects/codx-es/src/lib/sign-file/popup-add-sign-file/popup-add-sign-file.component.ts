@@ -182,6 +182,9 @@ export class PopupAddSignFileComponent implements OnInit {
     this.cbxCategory = data?.data?.cbxCategory ?? null; // Ten CBB
     this.headerText = data?.data?.headerText ?? '';
     this.isTemplate = data?.data?.isTemplate ? true : false;
+    
+    this.cateName = data?.data?.cateName ?? '';
+    this.showCateNameOnly = data?.data?.showCateNameOnly ? true : false;
     this.templateRefType = data?.data?.templateRefType; //refType truyền vào form export template
     this.templateRefID = data?.data?.templateRefID; //refID truyền vào form export template    
     this.refID = data?.data?.refID; // Bắt buộc truyền nếu từ module != ES: Lưu RefID của SignFile
@@ -209,7 +212,7 @@ export class PopupAddSignFileComponent implements OnInit {
     }
     if(this.approverProcess?.category?.categoryName && this.disableCateID){
       this.showCateNameOnly=true;
-      this.cateName = this.approverProcess?.category?.categoryName;
+      this.cateName = this.approverProcess?.category?.categoryName ?? this.cateName;
     }
 
     if (this.modeView == '2') {
