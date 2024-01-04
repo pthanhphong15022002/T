@@ -953,15 +953,17 @@ export class CodxInputCustomFieldComponent implements OnInit {
 
   //-------------- Data num co E ---------------//
   formatHaveE() {
-    let idxE = this.customField.dataValue.toString().indexOf('E');
-    if (idxE != -1) {
-      let mu = this.customField.dataValue
-        .toString()
-        .substring(idxE + 2, this.customField.dataValue?.length);
-      this.customField.dataValue =
-        Number.parseFloat(
-          this.customField.dataValue.toString().substring(0, idxE)
-        ) * Math.pow(10, Number.parseInt(mu));
+    if (this.customField.dataValue) {
+      let idxE = this.customField.dataValue?.toString().indexOf('E');
+      if (idxE != -1) {
+        let mu = this.customField.dataValue
+          .toString()
+          .substring(idxE + 2, this.customField.dataValue?.length);
+        this.customField.dataValue =
+          Number.parseFloat(
+            this.customField.dataValue.toString().substring(0, idxE)
+          ) * Math.pow(10, Number.parseInt(mu));
+      }
     }
   }
   //-----------------------------------------------//
