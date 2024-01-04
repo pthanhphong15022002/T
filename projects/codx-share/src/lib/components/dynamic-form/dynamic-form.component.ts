@@ -109,12 +109,11 @@ export class DynamicFormComponent extends UIComponent {
   }
 
   viewChanged(evt: any, view: ViewsComponent) {
-
     // this.cache
     //   .gridViewSetup(view.function.formName, view.function.gridViewName)
     //   .subscribe(() => {});
     this.view = view;
-    (this.view as any).pageTitle.showBreadcrumbs(false)
+    (this.view as any).pageTitle.showBreadcrumbs(false);
     //var formName = view.function!.formName;
     this.layout.setLogo(null);
     this.pageTitle.setBreadcrumbs([]);
@@ -360,7 +359,6 @@ export class DynamicFormComponent extends UIComponent {
       option.Width = this.width;
       option.DataService = this.viewBase?.dataService;
       option.FormModel = this.viewBase?.currentView?.formModel;
-      debugger;
 
       var dialog = this.callfc.openSide(
         CodxFormDynamicComponent,

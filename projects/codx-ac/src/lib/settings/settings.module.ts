@@ -26,8 +26,6 @@ import { PopAddInventoryComponent } from './inventory/pop-add-inventory/pop-add-
 import { PopAddConversionComponent } from './unitsofmearsure/pop-add-conversion/pop-add-conversion.component';
 import { PopAddMearsureComponent } from './unitsofmearsure/pop-add-mearsure/pop-add-mearsure.component';
 import { UnitsofmearsureComponent } from './unitsofmearsure/unitsofmearsure.component';
-import { PopAddWarehousesComponent } from './warehouses/pop-add-warehouses/pop-add-warehouses.component';
-import { WarehousesComponent } from './warehouses/warehouses.component';
 import { FiscalPeriodsComponent } from './fiscal-periods/fiscal-periods.component';
 import { PopAddFiscalPeriodsComponent } from './fiscal-periods/pop-add-fiscal-periods/pop-add-fiscal-periods.component';
 import { ItemBatchsComponent } from './item-batchs/item-batchs.component';
@@ -60,6 +58,8 @@ import { ItemsSizeAddComponent } from './items-categories/items-size-add/items-s
 import { ItemsStyleAddComponent } from './items-categories/items-style-add/items-style-add.component';
 import { ItemsColorAddComponent } from './items-categories/items-color-add/items-color-add.component';
 import { ItemsConversionAddComponent } from './items-categories/items-conversion-add/items-conversion-add.component';
+import { WarehousesComponent } from './warehouses-categories/warehouses.component';
+import { WarehousesAddComponent } from './warehouses-categories/warehouses-add/warehouses-add.component';
 
 var routes: Routes = [
   {
@@ -164,7 +164,7 @@ var routes: Routes = [
     ItemsStyleAddComponent,
     ItemsColorAddComponent,
     WarehousesComponent,
-    PopAddWarehousesComponent,
+    WarehousesAddComponent,
     UnitsofmearsureComponent,
     PopAddMearsureComponent,
     PopAddConversionComponent,

@@ -66,14 +66,14 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
   eContractFuncID = null;
   //#endregion
 
-    //#region url
-    ePassportURL = 'hreprofile01cv-passport';
-    eVisaURL = 'hreprofile01cv-visa';
-    eWorkPermitURL = 'hreprofile01cv-workpermit';
-    eBasicSalaryURL = 'hreprofile03salary-esalary';
-    ebenefitURL = 'hreprofile03salary-ebenefit';
-    eContractURL = 'hreprofile04process-econtract';
-    //#endregion
+  //#region url
+  ePassportURL = 'hreprofile01cv-passport';
+  eVisaURL = 'hreprofile01cv-visa';
+  eWorkPermitURL = 'hreprofile01cv-workpermit';
+  eBasicSalaryURL = 'hreprofile03salary-esalary';
+  ebenefitURL = 'hreprofile03salary-ebenefit';
+  eContractURL = 'hreprofile04process-econtract';
+  //#endregion
 
   //#region columnGrid
   passportColumnGrid: any;
@@ -206,7 +206,7 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
     this.hasFilter = data?.data?.hasFilter;
     let funcURL = data?.data?.funcUrl;
 
-    switch(funcURL){
+    switch (funcURL) {
       case this.ePassportURL:
         this.ePassportFuncID = this.funcID;
         break;
@@ -295,21 +295,19 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
   // }
 
   onInit(): void {
-    debugger
+    debugger;
     //#region columnGrid EPassport - Hộ chiếu
     if (!this.passportColumnGrid && this.ePassportFuncID) {
       this.hrService.getHeaderText(this.ePassportFuncID).then((res) => {
         this.passportHeaderText = res;
         this.passportColumnGrid = [
           {
-            headerText:
-              this.passportHeaderText['PassportNo'],
+            headerText: this.passportHeaderText['PassportNo'],
             template: this.passportCol1,
             width: '150',
           },
           {
-            headerText:
-              this.passportHeaderText['PassportType'],
+            headerText: this.passportHeaderText['PassportType'],
             template: this.passportCol2,
             width: '150',
           },
@@ -317,7 +315,7 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
             headerText: this.passportHeaderText['ExpiredDate'],
             template: this.passportCol3,
             width: '150',
-          }
+          },
         ];
         if (this.funcID == this.ePassportFuncID) {
           this.columnGrid = this.passportColumnGrid;
@@ -335,8 +333,7 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
         this.visaHeaderText = res;
         this.visaColumnGrid = [
           {
-            headerText:
-            this.visaHeaderText['VisaNo'],
+            headerText: this.visaHeaderText['VisaNo'],
             template: this.visaCol1,
             width: '150',
           },
@@ -578,20 +575,25 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
     //#endregion
   }
 
-  handleShowHideMfWs(evt, func){
-    if(func.isPortal == false){
+  handleShowHideMfWs(evt, func) {
+    if (func.isPortal == false) {
       //Được add/edit, ko delete
-      for(let i = 0; i < evt.length; i++){
-        if(evt[i].functionID == "SYS02"){
+      for (let i = 0; i < evt.length; i++) {
+        if (evt[i].functionID == 'SYS02') {
           evt[i].disabled = true;
         }
       }
     }
 
-    if(func.isPortal == true || this.empQuitJobStatus == '90'){
+    if (func.isPortal == true || this.empQuitJobStatus == '90') {
       //Hide edit/copy/delete more func
-      for(let i = 0; i < evt.length; i++){
-        if(evt[i].functionID == "SYS02" || evt[i].functionID == "SYS03" || evt[i].functionID == "SYS01" || evt[i].functionID == "SYS04"){
+      for (let i = 0; i < evt.length; i++) {
+        if (
+          evt[i].functionID == 'SYS02' ||
+          evt[i].functionID == 'SYS03' ||
+          evt[i].functionID == 'SYS01' ||
+          evt[i].functionID == 'SYS04'
+        ) {
           evt[i].disabled = true;
         }
       }
@@ -648,7 +650,6 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
       this.funcID == this.eContractFuncID ||
       this.funcID == this.eBasicSalaryFuncID
     ) {
-      debugger;
       let lstData = this.gridView.dataService.data;
       let lstResult = [];
       for (let i = 0; i < lstData.length; i++) {
@@ -975,7 +976,6 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
       option
     );
     dialogAdd.closed.subscribe((res) => {
-      debugger;
       if (res.event) {
         this.updateGridView(this.gridView, actionType, res.event, data);
       }
@@ -987,12 +987,10 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
     (this.gridView.predicates = prdc),
       (this.gridView.dataValues = dtvl),
       (this.gridView.dataSource = lst);
-    debugger;
   }
 
   //#region filter
   UpdateEBenefitPredicate() {
-    debugger;
     this.filterEBenefitPredicates = '';
     if (
       this.filterByBenefitIDArr.length > 0 &&
@@ -1111,12 +1109,11 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
   }
 
   handleEContractInfo(actionHeaderText, actionType: string, data: any) {
-    debugger;
     let option = new SidebarModel();
     option.Width = '850px';
     option.FormModel = this.formModel;
     let isAppendix = false;
-    debugger;
+
     if (
       (actionType == 'edit' || actionType == 'copy') &&
       data.isAppendix == true
@@ -1129,8 +1126,7 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
         actionType: actionType,
         dataObj: data,
         empObj: this.infoPersonal,
-        headerText:
-          actionHeaderText + ' ', //+ this.getFormHeader2(this.eContractFuncID, this.lstFuncHRProcess),
+        headerText: actionHeaderText + ' ', //+ this.getFormHeader2(this.eContractFuncID, this.lstFuncHRProcess),
         employeeId: this.employeeId,
         funcID: this.eContractFuncID,
       },
@@ -1144,8 +1140,8 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
     });
   }
 
-  viewGridDetail(data, funcID){
-    switch(funcID){
+  viewGridDetail(data, funcID) {
+    switch (funcID) {
       case this.ePassportFuncID:
         // Phải gán cứng vì hệ thống không có morefunc xem chi tiết nên không lấy action text như add và edit được
         this.handleEmployeePassportInfo('Xem chi tiết', 'view', data);

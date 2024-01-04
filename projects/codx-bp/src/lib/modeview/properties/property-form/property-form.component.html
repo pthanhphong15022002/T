@@ -1,0 +1,14 @@
+<div class="d-flex flex-column w-100 h-100 px-4 py-6">
+    <div class="d-flex align-items-center my-2">
+        <i class="icon-24 text-primary" [ngClass]="data?.icon"></i>
+        <codx-label formName="DynamicForms" [fiedName]="'titles'" default="Forms" class="fw-bold fs-5-sm ms-2 mt-1"></codx-label>
+    </div>
+    <div class="mt-4">
+        <codx-label formName="DynamicForms" [gridViewName]="'grvDynamicForms' + data.controlType" [fiedName]="'title'" default="Tên biểu mẫu" class="fw-bold"></codx-label>
+        <codx-input type="text" [crrValue]="data.title" field="title" (valueChange)="changeValue($event)"></codx-input>
+    </div>
+    <div class="mt-4">
+        <codx-label formName="DynamicForms" [gridViewName]="'grvDynamicForms' + data.controlType" [fiedName]="'description'" default="Mô tả" class="fw-bold"></codx-label>
+        <codx-input type="textarea" format="ed2" [crrValue]="data.description" field="description" (valueChange)="changeValue($event)"></codx-input>
+    </div>
+</div>

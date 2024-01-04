@@ -12,7 +12,9 @@ import {
   ApiHttpService,
   AuthStore,
   CacheService,
+  CallFuncService,
   DataRequest,
+  DialogModel,
   FormModel,
   NotificationsService,
 } from 'codx-core';
@@ -20,6 +22,7 @@ import { tempVllBP } from 'projects/codx-bp/src/lib/models/models';
 import { CodxBpService } from 'projects/codx-bp/src/public-api';
 import { tempVllDP } from 'projects/codx-dp/src/lib/models/models';
 import { Observable, finalize, firstValueFrom, map } from 'rxjs';
+import { FormSettingComboboxComponent } from './form-setting-combobox/form-setting-combobox.component';
 
 @Component({
   selector: 'codx-setting-fields',
@@ -61,6 +64,7 @@ export class SettingFieldsComponent implements AfterViewInit {
   user: any;
   processNo: any;
   listVll = [];
+  listCbx = [{name: 'i'}];
   tempVllBP: tempVllBP;
   crrVll: tempVllDP;
   loaded: boolean;
@@ -74,7 +78,8 @@ export class SettingFieldsComponent implements AfterViewInit {
     private bpSv: CodxBpService,
     private api: ApiHttpService,
     private authstore: AuthStore,
-    private notiSv: NotificationsService
+    private notiSv: NotificationsService,
+    private callFc: CallFuncService
   ) {
     this.user = this.authstore.get();
   }
@@ -105,7 +110,7 @@ export class SettingFieldsComponent implements AfterViewInit {
     this.isChangeColor = false;
     this.crrVll = null;
     if (data) {
-      switch (data?.controlType) {
+      switch (data?.fieldType) {
         case 'ValueList':
           this.loadDataVll();
           if (data?.refValue != null && data?.refValue?.trim() != '') {
@@ -329,7 +334,7 @@ export class SettingFieldsComponent implements AfterViewInit {
 
           break;
         case 'multiselect':
-          if (this.dataCurrent?.controlType == 'ValueList') {
+          if (this.dataCurrent?.fieldType == 'ValueList') {
             if (this.dataCurrent.refValue) {
               this.saveVll('edit');
             } else {
@@ -358,31 +363,38 @@ export class SettingFieldsComponent implements AfterViewInit {
       switch (e?.field) {
         case 'dropDown':
           this.dataCurrent['refType'] =
-            this.dataCurrent.controlType == 'Combobox' ? '3' : '2';
+            this.dataCurrent.fieldType == 'ValueList' ? '2' : '3';
           break;
         case 'checkBox':
-          this.dataCurrent['refType'] = '2C';
+          if(this.dataCurrent.fieldType == 'ValueList'){
+            this.dataCurrent['refType'] = '2C';
+          }else{
+            this.dataCurrent['controlType'] = 'CheckBox';
+          }
           break;
         case 'int':
-          this.dataCurrent['dataType'] = 'i';
+          this.dataCurrent['dataFormat'] = 'I';
           break;
         case 'float':
-          this.dataCurrent['dataType'] = 'f';
+          this.dataCurrent['dataFormat'] = 'D';
           break;
         case 'percent':
-          this.dataCurrent['dataType'] = 'p';
+          this.dataCurrent['dataFormat'] = 'P';
           break;
         case 'switch':
-          this.dataCurrent['dataType'] = 's';
+          this.dataCurrent['controlType'] = 'Switch';
           break;
         case 'popup':
-          this.dataCurrent['dataType'] = this.dataCurrent.controlType == 'Combobox' ? '3P' : 'P';
+          this.dataCurrent['refType'] = this.dataCurrent.fieldType == 'ValueList' ? 'P' : '3P';
           break;
         case 'rankNumber':
           this.dataCurrent.rank.type = '1';
+          this.dataCurrent.rank.icon = null;
+          this.dataCurrent.rank.color = '#0078FF';
           break;
         case 'rankIcon':
           this.dataCurrent.rank.type = '2';
+          this.dataCurrent.rank.icon = 'icon-i-star-fill';
           break;
       }
     }
@@ -427,7 +439,7 @@ export class SettingFieldsComponent implements AfterViewInit {
 
   //#region remove field
   removeField(data) {
-    if (data?.controlType == 'ValueList') {
+    if (data?.fieldType == 'ValueList') {
       this.dataCurrent = data;
       this.deleteVll(false);
     }
@@ -547,7 +559,7 @@ export class SettingFieldsComponent implements AfterViewInit {
   }
 
   closePopover() {
-    if (this.isChangeColor) {
+    if (this.isChangeColor && this.dataCurrent.fieldType == 'ValueList') {
       if (this.dataCurrent.refValue) {
         this.saveVll('edit');
       } else {
@@ -611,6 +623,36 @@ export class SettingFieldsComponent implements AfterViewInit {
   handelTextValue(i) {
     this.indexCurrentvll = i;
     this.detectorRef.markForCheck();
+  }
+  //#endregion
+
+  //#region setting list cbx
+  openSettingCbx(){
+    let option = new DialogModel();
+    option.zIndex = 1010;
+    let formModelField = new FormModel();
+    formModelField = this.formModel;
+    option.FormModel = formModelField;
+    let data = {
+      lstCbx: this.listCbx,
+      data: this.dataCurrent,
+      title: 'Thiết lập' + ' ' + this.dataFormat?.text
+    };
+    let popupDialog = this.callFc.openForm(
+      FormSettingComboboxComponent,
+      '',
+      650,
+      600,
+      '',
+      data,
+      '',
+      option
+    );
+    popupDialog.closed.subscribe((dg) => {
+      if(dg){
+
+      }
+    })
   }
   //#endregion
 }

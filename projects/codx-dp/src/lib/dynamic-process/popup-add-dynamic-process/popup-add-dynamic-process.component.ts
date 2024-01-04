@@ -880,7 +880,7 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
     for (const stepItem of this.stepList ?? []) {
       for (const task of stepItem.tasks ?? []) {
         task.createTask = this.process?.createTask ?? false;
-        task.assignControl = this.process?.dependRule ?? "0";
+        task.assignControl = this.process?.dependRule ?? '0';
       }
     }
   }
@@ -1849,7 +1849,7 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
       } else if ($event.field === 'no' && $event.component.checked === true) {
         this.process.allowReturnInstanceControl = false;
       }
-    }else if ("CreateTask"){
+    } else if ('CreateTask') {
       if ($event.field === 'yes' && $event.component.checked === true) {
         this.process.createTask = true;
       } else if ($event.field === 'no' && $event.component.checked === true) {
@@ -3405,7 +3405,7 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
       taskInput = JSON.parse(JSON.stringify(data));
     }
 
-    if(this.typeTask?.value == "E"){
+    if (this.typeTask?.value == 'E') {
       this.handelMail(taskInput, action, taskGroupIdOld, roleOld);
       return;
     }
@@ -3429,9 +3429,9 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
         .subscribe(async (grv) => {
           let option = new SidebarModel();
           let formModel = this.dialog?.formModel;
-          formModel.formName = "DPStepsTasks";
-          formModel.gridViewName = "grvDPStepsTasks";
-          formModel.entityName = "DP_Steps_Tasks";
+          formModel.formName = 'DPStepsTasks';
+          formModel.gridViewName = 'grvDPStepsTasks';
+          formModel.entityName = 'DP_Steps_Tasks';
           formModel.funcID = functionID;
           option.FormModel = formModel;
           option.Width = '550px';
@@ -3532,7 +3532,12 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
     // this.changeDetectorRef.detectChanges();
   }
 
-  handelMail(stepsTasks:DP_Steps_Tasks, action, taskGroupIdOld = null, roleOld = null) {
+  handelMail(
+    stepsTasks: DP_Steps_Tasks,
+    action,
+    taskGroupIdOld = null,
+    roleOld = null
+  ) {
     let data = {
       dialog: this.dialog,
       formGroup: null,
@@ -3541,8 +3546,8 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
       showIsPublish: true,
       showSendLater: true,
       files: null,
-      isAddNew: action == "edit" ? false : true,
-      saveIsTemplate: action == "edit" ? false : true,
+      isAddNew: action == 'edit' ? false : true,
+      saveIsTemplate: action == 'edit' ? false : true,
       notSendMail: true,
     };
 
@@ -3558,25 +3563,25 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
       if (res && res?.event) {
         let mail = res?.event;
         if (action === 'add' || action === 'copy') {
-          stepsTasks.taskName = mail?.subject || "Email";
+          stepsTasks.taskName = mail?.subject || 'Email';
           stepsTasks.durationDay = 1;
-          stepsTasks.dependRule = "0";
+          stepsTasks.dependRule = '0';
           stepsTasks.stepID = this.step?.recID;
           stepsTasks.reference = mail?.recID;
           stepsTasks.memo = mail?.message;
-          stepsTasks.taskType = "E";
+          stepsTasks.taskType = 'E';
           let role = new DP_Steps_Tasks_Roles();
           role.objectID = this.user?.userID;
           role.objectName = this.user?.username;
-          role.objectType = "1";
-          role.roleType = "O";
-          role.taskID =  stepsTasks?.recID;
+          role.objectType = '1';
+          role.roleType = 'O';
+          role.taskID = stepsTasks?.recID;
           stepsTasks.roles = [role];
-          stepsTasks.owner = role.objectID; 
+          stepsTasks.owner = role.objectID;
           stepsTasks.indexNo = this.step?.tasks.length + 1;
           this.addTask(stepsTasks);
         } else {
-          stepsTasks.taskName = mail?.subject || "Email";
+          stepsTasks.taskName = mail?.subject || 'Email';
           stepsTasks.memo = mail?.message;
           this.editTask(stepsTasks, taskGroupIdOld, roleOld);
         }
@@ -3584,7 +3589,7 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
       }
     });
   }
-  
+
   deleteTask(taskList, task) {
     this.notiService.alertCode('SYS030').subscribe((x) => {
       if (x.event && x.event.status == 'Y') {
@@ -4052,19 +4057,6 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
       }
     });
   }
-
-  //ko cần bắt event =>> can thì bật lên
-  // @HostListener('document:click', ['$event'])
-  // clickout(event) {
-  //   debugger;
-  // }
-
-  // @HostListener('document:keydown', ['$event'])
-  // onKeyDown(event: KeyboardEvent) {
-  //   if (event.code === 'F5') {
-  //     // xử lý sự kiện nhấn F5 ở đây
-  //   }
-  // }
 
   // add role to permissions process
   addRole(role: object, roleOld?: object) {
