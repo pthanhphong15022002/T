@@ -1,247 +1,131 @@
 <ng-container *ngIf="documentObj">
-
-<codx-form
-    #form
-    [headerText] = "headerText"
-    [body]="body"
-    [formModel]="formModel"
-    [footer]="footer"
-    [dialog]="dialog"
-    [data]="documentObj"
-    >
-    <!-- [group]="form.formGroup"
-    *ngIf="isAfterRender" -->
-<ng-template #body>
-<ng-container *ngIf="form.formGroup">
-        <!-- <content-dynamic
-            [formModel]="form.formModel"
-            [Group]="form.formGroup"
-            [data]="documentObj"
-            [keyField]="'RecID'"
-            [isView]="disabledInput"
-            [functionID]="funcID"
-            [formName]="form.formModel.formName"
-            [gridViewName]="form.formModel.gridViewName"
-            [entityName]="form.formModel.entityName"
-            (dataChanged)="dataChange($event)"
-        >
-        </content-dynamic> -->
-
-    
-    <div class="form-group row mt-5">
-       <div class="form-group mt-5">
-        <codx-label
-        *ngIf="form.gridviewSetup.DocumentTypeID.allowPopup == true"
-            fiedName="DocumentTypeID"
-            [formModel]="form.formModel"
-        ></codx-label>
-        <codx-input
-        *ngIf="form.gridviewSetup.DocumentTypeID.allowPopup == true"
-        [disabled]="disabledInput"
-            field="documentTypeID"
-            [formModel]="form.formModel"
-            [Group]="form.formGroup"
-            (valueChange)="onChangeDocumentType($event)"
-        ></codx-input>
-    </div>
-</div>
-    <div class="form-group row">
-        <div class="col-12" *ngIf="documentObj.submitWhen != null">
-            <codx-label
-            *ngIf="form.gridviewSetup.SubmitWhen.allowPopup == true"
-                fiedName="SubmitWhen"
-                [formModel]="form.formModel"
-            ></codx-label>
-            <span>: </span>
-            <span class="text-gray-600"
-            *ngIf="form.gridviewSetup.SubmitWhen.allowPopup == true"
-                [innerHTML]="
+    <codx-form #form [headerText]="headerText" [body]="body" [formModel]="formModel" [footer]="footer" [dialog]="dialog"
+        [data]="documentObj">
+        <ng-template #body>
+            <ng-container *ngIf="form.formGroup">
+                <div class="form-group row mt-5">
+                    <div class="form-group mt-5">
+                        <codx-label *ngIf="form.gridviewSetup.DocumentTypeID.allowPopup == true"
+                            fiedName="DocumentTypeID" [formModel]="form.formModel"></codx-label>
+                        <codx-input *ngIf="form.gridviewSetup.DocumentTypeID.allowPopup == true"
+                            [disabled]="disabledInput" field="documentTypeID" [formModel]="form.formModel"
+                            [Group]="form.formGroup" (valueChange)="onChangeDocumentType($event)"></codx-input>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-12" *ngIf="documentObj.submitWhen != null">
+                        <codx-label *ngIf="form.gridviewSetup.SubmitWhen.allowPopup == true" fiedName="SubmitWhen"
+                            [formModel]="form.formModel"></codx-label>
+                        <span>: </span>
+                        <span class="text-gray-600" *ngIf="form.gridviewSetup.SubmitWhen.allowPopup == true"
+                            [innerHTML]="
                 documentObj.submitWhen
                     | formatvalue : formModel : 'submitWhen'
                     | async
-                "
-            ></span>
-        </div>   
-    </div>
-
-    <div class="form-group row">
-        <div class="col-6">
-            <div class="">
-                <codx-label
-                *ngIf="form.gridviewSetup.IsRequired.allowPopup == true"
-                    fiedName="IsRequired"
-                    [formModel]="form.formModel"
-                ></codx-label>
-            </div>
-            <div class="mt-2">
-                <codx-input
-                *ngIf="form.gridviewSetup.IsRequired.allowPopup == true"
-                [disabled]="disabledInput"
-                    field="isRequired"
-                    [formModel]="form.formModel"
-                    [Group]="form.formGroup"
-                ></codx-input>
+                "></span>
+                    </div>
                 </div>
+
+                <div class="form-group row">
+                    <div class="col-6">
+                        <div class="">
+                            <codx-label *ngIf="form.gridviewSetup.IsRequired.allowPopup == true" fiedName="IsRequired"
+                                [formModel]="form.formModel"></codx-label>
+                        </div>
+                        <div class="mt-2">
+                            <codx-input *ngIf="form.gridviewSetup.IsRequired.allowPopup == true"
+                                [disabled]="disabledInput" field="isRequired" [formModel]="form.formModel"
+                                [Group]="form.formGroup"></codx-input>
+                        </div>
+                    </div>
+
+                    <div class="col-6">
+                        <div class="d-flex align-items-center justify-content-between">
+                            <codx-label *ngIf="form.gridviewSetup.IsSubmitted.allowPopup == true" fiedName="IsSubmitted"
+                                [formModel]="form.formModel"></codx-label>
+                            <codx-input *ngIf="form.gridviewSetup.IsSubmitted.allowPopup == true"
+                                [disabled]="disabledInput" field="isSubmitted" [formModel]="form.formModel"
+                                [Group]="form.formGroup"
+                                (valueChange)="onChangeSwitch($event, 'isSubmitted')"></codx-input>
+                        </div>
+                        <div>
+                            <codx-input *ngIf="form.gridviewSetup.SubmittedDate.allowPopup == true"
+                                [disabled]="disabledInput || disabledSubmittedDate || !documentObj.isSubmitted"
+                                field="submittedDate" [formModel]="form.formModel"
+                                [Group]="form.formGroup"></codx-input>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-6">
+                        <div>
+                            <codx-label *ngIf="form.gridviewSetup.HasReturn.allowPopup == true" fiedName="HasReturn"
+                                [formModel]="form.formModel"></codx-label>
+                        </div>
+                        <div class="mt-2">
+                            <codx-input *ngIf="form.gridviewSetup.HasReturn.allowPopup == true"
+                                [disabled]="disabledInput" field="hasReturn" [formModel]="form.formModel"
+                                [Group]="form.formGroup"></codx-input>
+                        </div>
+                    </div>
+
+                    <div class="col-6">
+                        <div class="d-flex align-items-center justify-content-between">
+                            <codx-label *ngIf="form.gridviewSetup.IsReturned.allowPopup == true" fiedName="IsReturned"
+                                [formModel]="form.formModel"></codx-label>
+                            <codx-input *ngIf="form.gridviewSetup.IsReturned.allowPopup == true"
+                                [disabled]="disabledInput" field="isReturned"
+                                (valueChange)="onChangeSwitch($event, 'isReturned')" [formModel]="form.formModel"
+                                [Group]="form.formGroup"></codx-input>
+                        </div>
+                        <div>
+                            <codx-input *ngIf="form.gridviewSetup.ReturnedDate.allowPopup == true"
+                                [disabled]="disabledInput || disabledReturnedDate || !documentObj.isReturned"
+                                field="returnedDate" [formModel]="form.formModel" [Group]="form.formGroup"></codx-input>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <codx-label *ngIf="form.gridviewSetup.Note.allowPopup == true" fiedName="Note"
+                        [formModel]="form.formModel"></codx-label>
+                    <codx-input *ngIf="form.gridviewSetup.Note.allowPopup == true" [disabled]="disabledInput"
+                        field="note" [formModel]="form.formModel" [Group]="form.formGroup"></codx-input>
+                </div>
+
+                <div class="fs-5-sm fw-bold text-primary mt-6 mb-1" *ngIf="documentObj?.attachments > 0">
+                    <codx-label name="lblAttachFile" [formModel]="form.formModel" [default]="'File đính kèm'">
+                    </codx-label>
+                </div>
+
+                <div class="flex-nowrap">
+                    <codx-attachment #attachment [objectType]="formModel?.entityName" showMessage="0" hideBtnSave="1"
+                        hideFolder="1" hideUploadBtn="1" hideDes="1" hideImageUpload="0" hideImageThumb="0"
+                        [objectId]="documentObj?.recID" [allowMultiFile]="1" [idBrowse]="'add'" displayThumb="full"
+                        [functionID]="funcID" (fileAdded)="addFiles($event)">
+                        [referType]="'source'"
+                        >
+                    </codx-attachment>
+                </div>
+            </ng-container>
+        </ng-template>
+    </codx-form>
+
+    <ng-template #footer>
+        <div class="d-flex justify-content-between" *ngIf="actionType != 'view'">
+            <button (click)="popupUploadFile()"
+                class="btn btn-sm btn-outline btn-outline-primary btn-active-light-primary d-flex flex-row">
+                <span class="icon-cloud_upload btn-text-primary me-2"></span>
+                <codx-label fiedName="lblUploadFile" default="Đính kèm" [formModel]="form.formModel"></codx-label>
+            </button>
+
+            <button class="btn btn-primary" (click)="onSaveForm()"
+                [disabled]="!form.formModel.currentData.updateColumn && !changedInForm">
+                <i class="icon-save"></i>
+                <codx-label default="Lưu" name="lblSave" [formModel]="form.formModel"></codx-label>
+            </button>
         </div>
 
-        <div class="col-6">
-            <div class="d-flex align-items-center justify-content-between">
-                <codx-label
-                *ngIf="form.gridviewSetup.IsSubmitted.allowPopup == true"
-                    fiedName="IsSubmitted"
-                    [formModel]="form.formModel"
-                ></codx-label>
-                <codx-input
-                *ngIf="form.gridviewSetup.IsSubmitted.allowPopup == true"
-                [disabled]="disabledInput"
-                    field="isSubmitted"
-                    [formModel]="form.formModel"
-                    [Group]="form.formGroup"
-                    (valueChange)="onChangeSwitch($event, 'isSubmitted')"
-                ></codx-input>
-            </div>
-            <div>
-                <codx-input
-                *ngIf="form.gridviewSetup.SubmittedDate.allowPopup == true"
-                [disabled]="disabledInput || disabledSubmittedDate || !documentObj.isSubmitted"
-                    field="submittedDate"
-                    [formModel]="form.formModel"
-                    [Group]="form.formGroup"
-                ></codx-input>
-            </div>
-        </div>
-    </div>
-
-    <div class="form-group row">
-        <div class="col-6">
-            <div>
-                <codx-label
-                *ngIf="form.gridviewSetup.HasReturn.allowPopup == true"
-                    fiedName="HasReturn"
-                    [formModel]="form.formModel"
-                ></codx-label>
-            </div>
-            <div class="mt-2">
-                <codx-input
-                *ngIf="form.gridviewSetup.HasReturn.allowPopup == true"
-                [disabled]="disabledInput"
-                    field="hasReturn"
-                    [formModel]="form.formModel"
-                    [Group]="form.formGroup"
-                ></codx-input>
-            </div>
-        </div>
-
-        <div class="col-6">
-            <div class="d-flex align-items-center justify-content-between">
-                <codx-label
-                *ngIf="form.gridviewSetup.IsReturned.allowPopup == true"
-                    fiedName="IsReturned"
-                    [formModel]="form.formModel"
-                ></codx-label>
-                <codx-input
-                *ngIf="form.gridviewSetup.IsReturned.allowPopup == true"
-                [disabled]="disabledInput"
-                    field="isReturned"
-                    (valueChange)="onChangeSwitch($event, 'isReturned')"
-                    [formModel]="form.formModel"
-                    [Group]="form.formGroup"
-                ></codx-input>
-            </div>
-            <div>
-                <codx-input
-                *ngIf="form.gridviewSetup.ReturnedDate.allowPopup == true"
-                    [disabled]="disabledInput || disabledReturnedDate || !documentObj.isReturned"
-                    field="returnedDate"
-                    [formModel]="form.formModel"
-                    [Group]="form.formGroup"
-                ></codx-input>
-            </div>
-        </div>
-    </div>
-
-    <div class="form-group row">
-            <codx-label
-            *ngIf="form.gridviewSetup.Note.allowPopup == true"
-                fiedName="Note"
-                [formModel]="form.formModel"
-            ></codx-label>
-            <codx-input
-            *ngIf="form.gridviewSetup.Note.allowPopup == true"
-            [disabled]="disabledInput"
-                field="note"
-                [formModel]="form.formModel"
-                [Group]="form.formGroup"
-            ></codx-input>
-    </div>
-
-    <div class="fs-5-sm fw-bold text-primary mt-6 mb-1" *ngIf="documentObj?.attachments > 0">
-        <codx-label
-            name="lblAttachFile"
-            [formModel]="form.formModel"
-            [default]="'File đính kèm'"
-        >
-        </codx-label>
-    </div>
-
-    <div class="flex-nowrap">
-        <codx-attachment
-            #attachment
-            [objectType]="formModel?.entityName"
-            showMessage="0"
-            hideBtnSave="1"
-            hideFolder="1"
-            hideUploadBtn="1"
-            hideDes="1"
-            hideImageUpload="0"
-            hideImageThumb="0"
-            [objectId]="documentObj?.recID"
-            [allowMultiFile]="1"
-            [idBrowse]="'add'"
-            displayThumb="full"
-            [functionID]="funcID"
-            (fileAdded)="addFiles($event)">
-            [referType]="'source'"
-            >
-            <!-- [formModel]="form.formModel"
-            [idField]="'RecID'" -->
-        <!-- (fileDelete)="handleDelete($event)"
-        (fileCount)="getfileCount($event)"
-        (fileGet)="getfileCount($event)" -->
-        </codx-attachment>
-    </div>  
+    </ng-template>
 </ng-container>
-</ng-template>
-</codx-form>
-
-<ng-template #footer>
-    <div class="d-flex justify-content-between" *ngIf="actionType != 'view'">
-      <button
-        (click)="popupUploadFile()"
-        class="btn btn-sm btn-outline btn-outline-primary btn-active-light-primary d-flex flex-row"
-      >
-        <span class="icon-cloud_upload btn-text-primary me-2"></span>
-        <codx-label
-          fiedName="lblUploadFile"
-          default="Đính kèm"
-          [formModel]="form.formModel"
-        ></codx-label>
-      </button>
-  
-      <button
-        class="btn btn-primary"
-        (click)="onSaveForm()"
-        [disabled]="!form.formModel.currentData.updateColumn && !changedInForm"
-      >
-        <i class="icon-save"></i>
-        <codx-label
-          default="Lưu"
-          name="lblSave"
-          [formModel]="form.formModel"
-        ></codx-label>
-      </button>
-    </div>
-    
-  </ng-template>
-</ng-container>
-

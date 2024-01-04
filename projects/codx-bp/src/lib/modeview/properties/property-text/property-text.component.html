@@ -1,0 +1,33 @@
+<div class="d-flex flex-column w-100 h-100 px-4 py-6">
+    <div class="d-flex align-items-center justify-content-between my-2">
+        <div class="d-flex align-items-center">
+            <i class="icon-24" [ngClass]="data?.icon" [style.color]="data?.textColor"></i>
+            <codx-label formName="DynamicForms" [fiedName]="'titles'" [default]="data?.text" class="fw-bold fs-5-sm ms-2 mt-1"></codx-label>
+        </div>
+        <div class="cursor-pointer">
+            <i class="icon-delete_outline"></i>
+        </div>
+    </div>
+    <div class="mt-4">
+        <codx-label formName="DynamicForms" [gridViewName]="'grvDynamicForms' + data.controlType" [fiedName]="'title'" default="Tên ô nhập liệu" class="fw-bold"></codx-label>
+        <codx-input type="text" [crrValue]="data.title" field="title" (valueChange)="changeValue($event)"></codx-input>
+    </div>
+    <div class="mt-4">
+        <codx-label formName="DynamicForms" [gridViewName]="'grvDynamicForms' + data.controlType" [fiedName]="'defaultValue'" default="Giá trị mặc định khi thêm mới biểu mẫu" class="fw-bold"></codx-label>
+        <codx-input type="text" [crrValue]="data.defaultValue " field="defaultValue" (valueChange)="changeValue($event)" placeholder="Nhập giá trị mặc định"></codx-input>
+    </div>
+    <div class="mt-4">
+        <codx-label formName="DynamicForms" [gridViewName]="'grvDynamicForms' + data.controlType" [fiedName]="'description'" default="Hiển thị chuỗi gợi ý khi chưa có dữ liệu" class="fw-bold"></codx-label>
+        <codx-input type="text" [crrValue]="data.description" field="description" placeholder="Nhập giá trị hiển thị" (valueChange)="changeValue($event)"></codx-input>
+    </div>
+    <div class="mt-4">
+        <codx-label formName="DynamicForms" [gridViewName]="'grvDynamicForms' + data.controlType" [fiedName]="'dataFormat'" default="Định dạng hiển thị" class="fw-bold"></codx-label>
+        <codx-input type="valuelist" [crrValue]="data.dataFormat" field="dataFormat" [refValue]="'BP003'"  (valueChange)="changeValue($event)"></codx-input>
+    </div>
+    <div class="border-top mt-8">
+        <div class="d-flex align-items-center mt-4">
+            <codx-input type="switch" [crrValue]="data.isRequired" field="isRequired" label="Bắt buộc"  (valueChange)="changeValue($event)" class="mt-2"></codx-input>
+            <codx-label formName="DynamicForms" [gridViewName]="'grvDynamicForms' + data.controlType" [fiedName]="'IsRequired'" default="Bắt buộc" class="fw-bold ms-2"></codx-label>
+        </div>
+    </div>
+</div>

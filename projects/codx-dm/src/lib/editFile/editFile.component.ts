@@ -278,7 +278,6 @@ export class EditFileComponent implements OnInit {
     @Optional() data?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
-    debugger;
     this.data = data.data;
     this.fileEditing = JSON.parse(JSON.stringify(this.data[1]));
     this.user = this.auth.get();
@@ -305,7 +304,7 @@ export class EditFileComponent implements OnInit {
       });
 
     this.dmSV.isFileEditing.subscribe((item) => {
-      if (item && (!this.fileEditing || (this.fileEditing.recID == item.recID))) {
+      if (item && (!this.fileEditing || this.fileEditing.recID == item.recID)) {
         this.fileEditing.permissions = item.permissions;
       }
     });

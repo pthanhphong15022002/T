@@ -224,7 +224,6 @@ export class PopupAddCommentComponent {
 
   // publich Post
   publishPost() {
-    debugger;
     if (!this.data.contents && this.codxViewFiles.files.length == 0) {
       this.notifySvr.notifyCode(
         'SYS009',
@@ -256,7 +255,6 @@ export class PopupAddCommentComponent {
 
   // edit post
   editPost() {
-    debugger;
     if (
       !this.data.contents &&
       this.codxViewFiles.files.length == 0 &&
@@ -295,7 +293,6 @@ export class PopupAddCommentComponent {
 
   // share post
   sharePost() {
-    debugger;
     this.loaded = true;
     this.data.category = this.CATEGORY.SHARE;
     this.data.approveControl = this.data.shares.isActive ? '0' : '1';
@@ -318,7 +315,6 @@ export class PopupAddCommentComponent {
 
   // chia sẻ người dùng
   addPerrmissonShares(event: any) {
-    debugger;
     if (Array.isArray(event)) {
       let arrPermisison = Array.from<any>(event);
       let fisrtPermission = arrPermisison[0];
@@ -394,7 +390,6 @@ export class PopupAddCommentComponent {
 
   // gắn thẻ người dùng
   addPerrmissonTags(event: any) {
-    debugger;
     if (event) {
       let arrPermission = Array.from<any>(event.dataSelected);
       if (Array.isArray(arrPermission)) {

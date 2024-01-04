@@ -714,25 +714,36 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
         break;
       case 'contractType':
         if (event?.component?.itemsSelected[0]) {
-          let autoNumber = event?.component?.itemsSelected[0]?.AutoNumber;
-          if (autoNumber) {
-            this.cmService
-              .getAutoNumberByAutoNoCode(autoNumber)
-              .subscribe((res) => {
-                if (res) {
-                  this.contracts.contractID = res;
-                  this.disabledShowInput = true;
-                } else {
-                  if (this.autoNumber) {
-                    this.contracts.contractID = this.autoNumber;
+          if(event?.component?.itemsSelected[0]?.AutoNumberControl == "1"){
+            let autoNumberCode = event?.component?.itemsSelected[0]?.AutoNumber;
+            if (autoNumberCode) {
+              this.cmService
+                .getAutoNumberByAutoNoCode(autoNumberCode)
+                .subscribe((res) => {
+                  if (res) {
+                    this.contracts.contractID = res;
                     this.disabledShowInput = true;
                   } else {
-                    this.contracts.contractID = '';
-                    this.disabledShowInput = false;
+                    if (this.autoNumber) {
+                      this.contracts.contractID = this.autoNumber;
+                      this.disabledShowInput = true;
+                    } else {
+                      this.contracts.contractID = '';
+                      this.disabledShowInput = false;
+                    }
                   }
-                }
-              });
+                });
+            }
+          }else{
+            if (this.autoNumber) {
+              this.contracts.contractID = this.autoNumber;
+              this.disabledShowInput = true;
+            } else {
+              this.contracts.contractID = '';
+              this.disabledShowInput = false;
+            }
           }
+          
         }
         break;
       case 'businessLineID':
@@ -745,7 +756,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
             this.contracts.processID = processID;
             this.contracts.applyProcess = true;
             // this.GetProcessNoByProcessID(processID);
-            this.disabledShowInput = true;
+            // this.disabledShowInput = true;
             this.getListInstanceSteps(processID);
           } else {
             this.itemTabsInput(false);
@@ -754,12 +765,12 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
             } else {
               this.contracts.applyProcess = false;
               this.contracts.processID = null;
-              if (this.autoNumber) {
-                this.contracts.contractID = this.autoNumber;
-              } else {
-                this.contracts.contractID = '';
-                this.disabledShowInput = false;
-              }
+              // if (this.autoNumber) {
+              //   this.contracts.contractID = this.autoNumber;
+              // } else {
+              //   this.contracts.contractID = '';
+              //   this.disabledShowInput = false;
+              // }
             }
           }
         }
