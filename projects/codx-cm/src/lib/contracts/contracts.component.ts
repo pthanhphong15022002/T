@@ -524,7 +524,7 @@ export class ContractsComponent extends UIComponent {
       .subscribe((info) => {
         if (info.event.status == 'Y') {
           this.contractService
-            .closeContract([data?.recID, type])
+            .closeContract([data?.recID,type])
             .subscribe((res) => {
               if (res) {
                 data.closed = type;
