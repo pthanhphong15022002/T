@@ -38,7 +38,7 @@
     <ng-template #tmpElse>
       <ng-container
         *ngIf="
-          data.displayMode == '3' || data.displayMode == '4';
+          data?.displayMode == '3' || data?.displayMode == '4';
           else reportBolder
         "
       >
