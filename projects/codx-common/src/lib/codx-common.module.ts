@@ -79,7 +79,9 @@ import { BackHomeComponent } from './_layout/back-home/back-home.component';
 import { CoDxAddApproversComponent } from './component/codx-approval-procress/codx-add-approvers/codx-add-approvers.component';
 import { CoDxViewReleaseSignFileComponent } from './component/codx-approval-procress/codx-view-release-sign-file/codx-view-release-sign-file.component';
 import { CoDxGetTemplateSignFileComponent } from './component/codx-approval-procress/codx-get-template-sign-file/codx-get-template-sign-file.component';
-
+import { CodxAiComponent } from './_layout/drawers/codx-ai/codx-ai.component';
+import { PresentationComponent } from './_layout/drawers/codx-ai/presentation/presentation.component';
+import { SubstringPipe } from './pipe/substring';
 //#endregion
 
 const T_Component: Type<any>[] = [
@@ -127,6 +129,10 @@ const T_Component: Type<any>[] = [
   CoDxAddApproversComponent,
   CoDxViewReleaseSignFileComponent,
   CoDxGetTemplateSignFileComponent,
+
+  //Ai Tool
+  CodxAiComponent,
+  PresentationComponent
   
 ];
 
@@ -149,6 +155,7 @@ const T_Pipe: Type<any>[] = [
   ScrollPipe,
   FilterPipe,
   TimeFromPipe,
+  SubstringPipe,
   //#endregion
 ];
 

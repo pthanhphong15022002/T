@@ -1,43 +1,21 @@
 import { ViewEncapsulation } from '@angular/core';
 import {
-  ChangeDetectorRef,
   Component,
   Injector,
-  OnInit,
   TemplateRef,
   ViewChild,
 } from '@angular/core';
-import { FormGroup, FormControl } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
-import { WPService } from '@core/services/signalr/apiwp.service';
-import { NgbCarousel, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { Permission } from '@shared/models/file.model';
-import { Thickness } from '@syncfusion/ej2-angular-charts';
 import {
   ButtonModel,
   ViewModel,
-  CodxListviewComponent,
-  ViewsComponent,
-  ApiHttpService,
   NotificationsService,
-  AuthStore,
-  CallFuncService,
-  FilesService,
-  CacheService,
-  DataRequest,
   ViewType,
   UIComponent,
   SidebarModel,
   AuthService,
   CRUDService,
-  SortModel,
-  ResourceModel,
 } from 'codx-core';
-import { FD_Permissions } from '../models/FD_Permissionn.model';
-import { FED_Card } from '../models/FED_Card.model';
-import { CardType, FunctionName, Valuelist } from '../models/model';
 import { PopupAddCardsComponent } from './popup-add-cards/popup-add-cards.component';
-import { PopupApprovalComponent } from '../approvals/popup-approval/popup-approval.component';
 import { CodxFdService } from '../codx-fd.service';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 
@@ -75,10 +53,8 @@ export class CardsComponent extends UIComponent {
 
   constructor(
     private inject: Injector,
-    private notifiSV: NotificationsService,
     private auth: AuthService,
     private notiService: NotificationsService,
-    private callFC: CallFuncService,
     private fdService: CodxFdService,
     private shareService: CodxShareService
   ) {
@@ -193,21 +169,24 @@ export class CardsComponent extends UIComponent {
 
   clickMF(event: any, data: any) {
     if (event.functionID === 'SYS04') {
-      // copy
-      let option = new SidebarModel();
-      option.DataService = this.view.dataService;
-      option.FormModel = this.view.formModel;
-      option.Width = '550px';
-      this.callfc.openSide(
-        PopupAddCardsComponent,
-        {
-          funcID: this.funcID,
-          data: data,
-          title: 'Sao chép phiếu',
-          type: 'copy',
-        },
-        option
-      );
+      this.fdService.checkValidAdd(this.cardType).subscribe((res: any) => {
+        if (!res.error) {
+          let option = new SidebarModel();
+          option.DataService = this.view.dataService;
+          option.FormModel = this.view.formModel;
+          option.Width = '550px';
+          this.callfc.openSide(
+            PopupAddCardsComponent,
+            {
+              funcID: this.funcID,
+              data: data,
+              title: 'Sao chép phiếu',
+              type: 'copy',
+            },
+            option
+          );
+        } else this.notiService.notifyCode('FD001');
+      });
     } else if (event.functionID === 'SYS02') {
       // delete
       (this.view.dataService as CRUDService)

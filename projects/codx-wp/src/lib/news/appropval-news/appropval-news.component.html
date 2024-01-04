@@ -36,21 +36,35 @@
       [showIcoText]="false"
       [title]="data.title"
       [desc]="data.descriptions"
+      [desc2Tmp]="desc2Temp"
       descLine="2" 
-      [date]="data.modifiedOn || data.createdOn"
-      [status]="data.approveStatus" 
-      statusVll="CO003" 
+      
       [bookmark]="false"
       cardCss="card-template border-bottom p-4"
       typeMF="hover" 
       (changeDataMF)="changeDataMF($event,data)"
       (clickMF)="clickMF($event,data)">
+      <!-- [date]="data.modifiedOn || data.createdOn"
+      [status]="data.approveStatus" 
+      statusVll="CO003"  -->
     </codx-temp-full>
+    <ng-template #desc2Temp let-data>
+      <div>
+        <codx-vll [showText]="true" [showBgColor]="true" [name]="'WP008'" [value]="data?.status"
+        class="badge badge-light badge-md fs-7">
+      </codx-vll>
+      <codx-vll *ngIf="data?.approveStatus" [showText]="true" [showBgColor]="true" [name]="'WP007'" [value]="data?.approveStatus"
+      class="badge badge-light badge-md fs-7">
+      <span [innerHTML]="data?.modifiedOn ?? data?.createdOn | fmDT "></span>
+      </codx-vll>
+      </div>
+    </ng-template>
   </div>
 </ng-template>
 <ng-template #panelRightRef>
   <wp-appropval-detail
     #tmpDetail
+    *ngIf="loadedDetail"
     [objectID]="selectedID" 
     [function]="function" 
     [dataService]="view.dataService"
@@ -58,4 +72,5 @@
     (evtApprovalPost)="changeApproSatusPost($event)">
   </wp-appropval-detail>
 </ng-template>
+
 

@@ -269,8 +269,7 @@
                         ></ng-container>
                       </div>
                       <div
-                        class="d-flex justify-content-end align-items-center step-task-right w-auto"
-                        [ngStyle]="{ width: widthTask }"
+                        class="d-flex justify-content-end align-items-center w-auto"
                       >
                         <div class="w-125px d-flex justify-content-end">
                           <ng-container
@@ -280,7 +279,9 @@
                             }"
                           ></ng-container>
                         </div>
-                        <div class="d-flex align-items-center justify-content-end w-350px">
+                        <div
+                          class="d-flex align-items-center justify-content-end step-task-right"
+                        >
                           <ng-container
                             *ngIf="
                               task?.approveRule &&
@@ -301,7 +302,7 @@
                           <span
                             *ngIf="task?.approveRule"
                             (click)="openFormApprover(task)"
-                            class="icon-18 icon-i-pen cursor-pointer fw-bold me-1"
+                            class="icon-16 icon-i-pen cursor-pointer fw-bold me-2"
                             ngbTooltip="Kí, duyệt"
                           ></span>
                           <codx-attachment-temp
@@ -346,7 +347,13 @@
                     <div class="ms-12 d-flex align-items-center">
                       <div
                         *ngIf="task?.fieldID"
-                        class="d-flex align-items-center cursor-pointer"
+                        class="d-flex align-items-center"
+                        [ngClass]="
+                          this.isOnlyView ||
+                          (this.isTaskFirst && this.isRoleAll)
+                            ? 'cursor-pointer'
+                            : 'cursor-not-allowed'
+                        "
                         (click)="openFormField(task)"
                       >
                         <span
@@ -428,6 +435,9 @@
           *
         </div>
       </div>
+      <div class="line-clamp line-clamp-1" [ngbTooltip]="data?.task?.note">
+        <span class="text-gray-500">{{ data?.task?.note }}</span>
+      </div>
     </div>
   </div>
 </ng-template>
@@ -447,8 +457,7 @@
     allowMultiFile="1"
     referType="source"
     displayThumb="simple"
-  >
-  </codx-attachment>
+  ></codx-attachment>
 </ng-template>
 
 <ng-template #buttonTemplate let-data="value">
@@ -705,7 +714,9 @@
     <button
       *ngIf="
         (data?.task?.taskType == 'C' || data?.task?.taskType == 'T') &&
-        data?.task?.status == '1'
+        data?.task?.status == '1' &&
+        data?.task?.dependRule == '0' &&
+        (isOnlyView || isTaskFirst)
       "
       type="button"
       class="btn btn-outline-primary btn-sm"
@@ -730,9 +741,10 @@
       ></codx-label>
     </button> -->
     <button
-      *ngIf="data?.task?.taskType == 'E'"
+      *ngIf="data?.task?.taskType == 'E' && data?.task?.status != '3'"
       type="button"
       class="btn btn-outline-primary btn-sm"
+      (click)="sendMail(data?.task, data?.group)"
     >
       <codx-label
         class="text-nowrap"
@@ -742,9 +754,10 @@
       ></codx-label>
     </button>
     <button
-      *ngIf="data?.task?.taskType == 'CO'"
+      *ngIf="data?.task?.taskType == 'CO' && !data?.task?.objectLinked"
       type="button"
       class="btn btn-outline-primary btn-sm"
+      (click)="startTask(data?.task, data?.group)"
     >
       <codx-label
         class="text-nowrap"
@@ -757,6 +770,7 @@
       *ngIf="data?.task?.taskType == 'M'"
       type="button"
       class="btn btn-outline-primary btn-sm"
+      (click)="createMeeting(data?.task)"
     >
       <codx-label
         class="text-nowrap"
@@ -769,6 +783,7 @@
       *ngIf="data?.task?.taskType == 'F'"
       type="button"
       class="btn btn-outline-primary btn-sm"
+      (click)="openFormField(data?.task)"
     >
       <codx-label
         class="text-nowrap"
@@ -793,6 +808,7 @@
       *ngIf="data?.task?.taskType == 'B'"
       type="button"
       class="btn btn-outline-primary btn-sm"
+      (click)="addBookingCar(data?.task)"
     >
       <codx-label
         class="text-nowrap"

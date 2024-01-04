@@ -22,7 +22,7 @@
             </div>
             <div class="container p-5">
                 <div class="d-flex dt-card">
-                    <ng-container>
+                    <ng-container *ngIf="data?.cardType != CARDTYPE_EMNUM.Radio">
                         <div class="h-450px min-h-450px w-300px min-w-300px me-9 p-6 viewcard-indetail dt-card-left" id="pattern-img"
                             [style.background]="data.backgroundColor?data.backgroundColor:'url('+backgroundImg+')'">
                             <h2 class="card-title fw-bolderer mb-5 mt-8 text-center" [style.color]="data.headerColor">
@@ -43,8 +43,7 @@
                                         class="symbol-image icon-money-1 h-25px me-2" />
                                 </div>
                             </div>
-                            <div *ngIf="data?.cardType != CARDTYPE_EMNUM.Radio"
-                                class="d-flex align-items-center justify-content-center mt-3">
+                            <div class="d-flex align-items-center justify-content-center mt-3">
                                 <codx-img class="symbol-circle" [objectId]="data.senderID" objectType="AD_Users"
                                     [width]="30">
                                 </codx-img>
@@ -57,7 +56,7 @@
                                 </codx-img>
                             </div>
                             <div class="content-card text-feed mt-6 pe-1">
-                                <div *ngIf="data?.cardType == CARDTYPE_EMNUM.Radio" class="text-primary fw-bold mb-2">
+                                <div class="text-primary fw-bold mb-2">
                                     <codx-label formName="" name="lblSituation" default="Nội dung"></codx-label></div>
                                 <div class="modal-card-sms" id="situation" [className]="showmore?'show-more':''"
                                     [style.color]="data.textColor" [innerHTML]="data.situation">
@@ -161,7 +160,7 @@
                                 </div>
                             </ng-container>
                         </div>
-                        <div *ngIf="data?.cardType != CARDTYPE_EMNUM.Radio" class="mt-6">
+                        <div *ngIf="data?.cardType == CARDTYPE_EMNUM.Radio" class="mt-6">
                             <div class="text-primary fw-bold mb-2"><codx-label formName="" name="lblSituation"
                                     default="Nội dung"></codx-label></div>
                             <div class="modal-card-sms mb-5 text-gray-700">

@@ -240,27 +240,29 @@ export class WarehouseTransfersAddComponent extends UIComponent {
     this.formWareHouse.save(null, 0, '', '', false)
     .pipe(takeUntil(this.destroy$))
     .subscribe((res: any) => {
-      if(!res) return;
-      if (res || res.save || res.update) {
-        if (res || !res.save.error || !res.update.error) {
-          if ((this.eleGridIssue || this.eleGridIssue?.isEdit) && this.elementTabDetail?.selectingID == '0') { //?
-            this.eleGridIssue.saveRow((res:any)=>{ //? save lưới trước
-              if(res){
-                this.saveVoucher(type);
-              }
-            })
-            return;
-          }    
-          if ((this.eleGridReceipt || this.eleGridReceipt?.isEdit) && this.elementTabDetail?.selectingID == '1') { //?
-            this.eleGridReceipt.saveRow((res:any)=>{ //? save lưới trước
-              if(res){
-                this.saveVoucher(type);
-              }
-            })
-            return;
-          }    
-        }
+      if (!res) return;
+      if (res.hasOwnProperty('save')) {
+        if (res.save.hasOwnProperty('data') && !res.save.data) return;
       }
+      if (res.hasOwnProperty('update')) {
+        if (res.update.hasOwnProperty('data') && !res.update.data) return;
+      }
+      if ((this.eleGridIssue || this.eleGridIssue?.isEdit) && this.elementTabDetail?.selectingID == '0') {
+        this.eleGridIssue.saveRow((res:any)=>{
+          if(res){
+            this.saveVoucher(type);
+          }
+        })
+        return;
+      }    
+      if ((this.eleGridReceipt || this.eleGridReceipt?.isEdit) && this.elementTabDetail?.selectingID == '1') {
+        this.eleGridReceipt.saveRow((res:any)=>{
+          if(res){
+            this.saveVoucher(type);
+          }
+        })
+        return;
+      }    
     });
   }
 
@@ -319,25 +321,27 @@ export class WarehouseTransfersAddComponent extends UIComponent {
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
         if (!res) return;
-        if (res || res.save || res.update) {
-          if (res || !res.save.error || !res.update.error) {
-            if (this.eleGridIssue && this.elementTabDetail?.selectingID == '0') {
-              this.eleGridIssue.saveRow((res: any) => { //? save lưới trước
-                if (res) {
-                  this.addLine(type);
-                }
-              })
-              return;
+        if (res.hasOwnProperty('save')) {
+          if (res.save.hasOwnProperty('data') && !res.save.data) return;
+        }
+        if (res.hasOwnProperty('update')) {
+          if (res.update.hasOwnProperty('data') && !res.update.data) return;
+        }
+        if (this.eleGridIssue && this.elementTabDetail?.selectingID == '0') {
+          this.eleGridIssue.saveRow((res: any) => {
+            if (res) {
+              this.addLine(type);
             }
-            if (this.eleGridIssue && this.elementTabDetail?.selectingID == '1') {
-              this.eleGridReceipt.saveRow((res: any) => { //? save lưới trước
-                if (res) {
-                  this.addLine(type);
-                }
-              })
-              return;
+          })
+          return;
+        }
+        if (this.eleGridIssue && this.elementTabDetail?.selectingID == '1') {
+          this.eleGridReceipt.saveRow((res: any) => {
+            if (res) {
+              this.addLine(type);
             }
-          }
+          })
+          return;
         }
       })
   }

@@ -3,6 +3,7 @@ import {
   DP_Steps_Roles,
   DP_Steps_TaskGroups_Roles,
   DP_Steps_Tasks,
+  DP_Steps_Tasks_Roles,
 } from './../../models/models';
 import { CodxDpService } from './../../codx-dp.service';
 import {
@@ -70,6 +71,7 @@ import { takeUntil } from 'rxjs/operators';
 import { CodxViewApproveComponent } from 'projects/codx-share/src/lib/components/codx-step/codx-step-common/codx-view-approve/codx-view-approve.component';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { StepService } from 'projects/codx-share/src/lib/components/codx-step/step.service';
+import { CodxEmailComponent } from 'projects/codx-share/src/lib/components/codx-email/codx-email.component';
 
 @Component({
   selector: 'lib-popup-add-dynamic-process',
@@ -368,7 +370,6 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
     private codxService: CodxService,
     private adService: CodxAdService,
     private codxShareService: CodxShareService,
-    private stepService: StepService,
     @Optional() dialog: DialogRef,
     @Optional() dt: DialogData
   ) {
@@ -851,6 +852,7 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
   }
 
   addStepsBeforeSave() {
+    this.setCreateTaskTM();
     this.addReasonInStep(this.stepList, this.stepSuccess, this.stepFail);
     let stepListSave = JSON.parse(JSON.stringify(this.stepList));
     if (stepListSave.length > 0) {
@@ -874,6 +876,14 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
     this.process['steps'] = stepListSave;
   }
 
+  setCreateTaskTM() {
+    for (const stepItem of this.stepList ?? []) {
+      for (const task of stepItem.tasks ?? []) {
+        task.createTask = this.process?.createTask ?? false;
+        task.assignControl = this.process?.dependRule ?? "0";
+      }
+    }
+  }
   valueChange(e) {
     if (this.process[e.field] != e.data && !this.isChange) this.isChange = true;
     let value = e.data;
@@ -1838,6 +1848,12 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
         this.process.allowReturnInstanceControl = true;
       } else if ($event.field === 'no' && $event.component.checked === true) {
         this.process.allowReturnInstanceControl = false;
+      }
+    }else if ("CreateTask"){
+      if ($event.field === 'yes' && $event.component.checked === true) {
+        this.process.createTask = true;
+      } else if ($event.field === 'no' && $event.component.checked === true) {
+        this.process.createTask = false;
       }
     }
 
@@ -2898,7 +2914,7 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
     if (step) {
       let tasks = step.tasks;
       if (tasks?.length > 0) {
-        let task = tasks.find((x) => x.fieldID.includes(fieldID));
+        let task = tasks.find((x) => x?.fieldID?.includes(fieldID));
         if (task) return task;
       }
     }
@@ -3389,6 +3405,11 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
       taskInput = JSON.parse(JSON.stringify(data));
     }
 
+    if(this.typeTask?.value == "E"){
+      this.handelMail(taskInput, action, taskGroupIdOld, roleOld);
+      return;
+    }
+
     let dataInput = {
       action,
       taskInput,
@@ -3408,9 +3429,9 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
         .subscribe(async (grv) => {
           let option = new SidebarModel();
           let formModel = this.dialog?.formModel;
-          formModel.formName = f.formName;
-          formModel.gridViewName = f.gridViewName;
-          formModel.entityName = f.entityName;
+          formModel.formName = "DPStepsTasks";
+          formModel.gridViewName = "grvDPStepsTasks";
+          formModel.entityName = "DP_Steps_Tasks";
           formModel.funcID = functionID;
           option.FormModel = formModel;
           option.Width = '550px';
@@ -3511,6 +3532,59 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
     // this.changeDetectorRef.detectChanges();
   }
 
+  handelMail(stepsTasks:DP_Steps_Tasks, action, taskGroupIdOld = null, roleOld = null) {
+    let data = {
+      dialog: this.dialog,
+      formGroup: null,
+      templateID: stepsTasks['reference'],
+      showIsTemplate: true,
+      showIsPublish: true,
+      showSendLater: true,
+      files: null,
+      isAddNew: action == "edit" ? false : true,
+      saveIsTemplate: action == "edit" ? false : true,
+      notSendMail: true,
+    };
+
+    let popEmail = this.callfc.openForm(
+      CodxEmailComponent,
+      '',
+      800,
+      screen.height,
+      '',
+      data
+    );
+    popEmail.closed.subscribe((res) => {
+      if (res && res?.event) {
+        let mail = res?.event;
+        if (action === 'add' || action === 'copy') {
+          stepsTasks.taskName = mail?.subject || "Email";
+          stepsTasks.durationDay = 1;
+          stepsTasks.dependRule = "0";
+          stepsTasks.stepID = this.step?.recID;
+          stepsTasks.reference = mail?.recID;
+          stepsTasks.memo = mail?.message;
+          stepsTasks.taskType = "E";
+          let role = new DP_Steps_Tasks_Roles();
+          role.objectID = this.user?.userID;
+          role.objectName = this.user?.username;
+          role.objectType = "1";
+          role.roleType = "O";
+          role.taskID =  stepsTasks?.recID;
+          stepsTasks.roles = [role];
+          stepsTasks.owner = role.objectID; 
+          stepsTasks.indexNo = this.step?.tasks.length + 1;
+          this.addTask(stepsTasks);
+        } else {
+          stepsTasks.taskName = mail?.subject || "Email";
+          stepsTasks.memo = mail?.message;
+          this.editTask(stepsTasks, taskGroupIdOld, roleOld);
+        }
+        this.changeDetectorRef.markForCheck();
+      }
+    });
+  }
+  
   deleteTask(taskList, task) {
     this.notiService.alertCode('SYS030').subscribe((x) => {
       if (x.event && x.event.status == 'Y') {

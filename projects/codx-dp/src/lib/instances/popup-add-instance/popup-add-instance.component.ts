@@ -24,6 +24,7 @@ import moment from 'moment';
 import { CodxDpService } from '../../codx-dp.service';
 import { DP_Instances, DP_Instances_Steps } from '../../models/models';
 import { stringify } from 'querystring';
+import { CustomFieldService } from 'projects/codx-share/src/lib/components/codx-input-custom-field/custom-field.service';
 
 @Component({
   selector: 'lib-popup-add-instance',
@@ -86,7 +87,7 @@ export class PopupAddInstanceComponent implements OnInit {
   recID: any;
   lstParticipants = [];
   listCustomFile = [];
-  listFields:any[]=[];
+  listFields: any[] = [];
   listStep = [];
   userName = '';
   positionName = '';
@@ -102,6 +103,9 @@ export class PopupAddInstanceComponent implements OnInit {
   processID: string = '';
   idxCrr: number = -1;
   autoNameTabFields: string;
+  arrCaculateField = []; //cac field co tinh toán
+  isLoadedCF = false; // da lay danh sach CF
+
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private notificationsService: NotificationsService,
@@ -109,6 +113,7 @@ export class PopupAddInstanceComponent implements OnInit {
     private codxDpService: CodxDpService,
     private callfc: CallFuncService,
     private authStore: AuthStore,
+    private customFieldSV: CustomFieldService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -322,9 +327,11 @@ export class PopupAddInstanceComponent implements OnInit {
               this.listCustomFile.push(this.listStep[index].fields[idxField]);
           }
         }
+        if (field.dataType) this.caculateField();
       }
     }
   }
+
   cbxChange(e) {
     this.instance.stepID = e;
   }
@@ -499,26 +506,40 @@ export class PopupAddInstanceComponent implements OnInit {
 
   ischeckFields(liststeps: any): boolean {
     this.listFields = [];
-    if(this.action !== 'edit') {
+    if (this.action !== 'edit') {
       let stepCurrent = liststeps[0];
-      if(stepCurrent && stepCurrent.fields?.length > 0 ) {
-        let filteredTasks = stepCurrent.tasks.filter(task => task?.fieldID !== null && task?.fieldID?.trim() !== '')
-        .map(task => task.fieldID)
-        .flatMap(item => item.split(';').filter(item => item !== ''));
-        let listFields = stepCurrent.fields.filter(field => !filteredTasks.includes(this.action === 'copy'? field?.reCID: field?.refID));
+      if (stepCurrent && stepCurrent.fields?.length > 0) {
+        let filteredTasks = stepCurrent.tasks
+          .filter(
+            (task) => task?.fieldID !== null && task?.fieldID?.trim() !== ''
+          )
+          .map((task) => task.fieldID)
+          .flatMap((item) => item.split(';').filter((item) => item !== ''));
+        let listFields = stepCurrent.fields.filter(
+          (field) =>
+            !filteredTasks.includes(
+              this.action === 'copy' ? field?.reCID : field?.refID
+            )
+        );
         this.listFields = [...this.listFields, ...listFields];
       }
-     }
-     else {
-      let idxCrr = liststeps.findIndex((x) => x.stepID == this.instance?.stepID);
+    } else {
+      let idxCrr = liststeps.findIndex(
+        (x) => x.stepID == this.instance?.stepID
+      );
       if (idxCrr != -1) {
         for (let i = 0; i <= idxCrr; i++) {
           let stepCurrent = liststeps[i];
-          if(stepCurrent && stepCurrent.fields?.length > 0 ) {
-            let filteredTasks = stepCurrent?.tasks.filter(task => task?.fieldID !== null && task?.fieldID?.trim() !== '')
-            .map(task => task?.fieldID)
-            .flatMap(item => item.split(';').filter(item => item !== ''));
-            let listFields = stepCurrent?.fields.filter(field => !filteredTasks.includes(field?.recID));
+          if (stepCurrent && stepCurrent.fields?.length > 0) {
+            let filteredTasks = stepCurrent?.tasks
+              .filter(
+                (task) => task?.fieldID !== null && task?.fieldID?.trim() !== ''
+              )
+              .map((task) => task?.fieldID)
+              .flatMap((item) => item.split(';').filter((item) => item !== ''));
+            let listFields = stepCurrent?.fields.filter(
+              (field) => !filteredTasks.includes(field?.recID)
+            );
             this.listFields = [...this.listFields, ...listFields];
           }
         }
@@ -580,4 +601,75 @@ export class PopupAddInstanceComponent implements OnInit {
     }
     return endDay;
   }
+
+  //----------------------CACULATE---------------------------//
+
+  getArrCaculateField() {
+    this.arrCaculateField = [];
+    this.listStep.forEach((x) => {
+      if (x.fields?.length > 0) {
+        let fnum = x.fields.filter((x) => x.dataType == 'CF');
+        if (fnum?.length > 0)
+          this.arrCaculateField = this.arrCaculateField.concat(fnum);
+      }
+    });
+    this.isLoadedCF = true;
+  }
+  //tính toán
+  caculateField() {
+    if (!this.isLoadedCF) this.getArrCaculateField();
+    if (!this.arrCaculateField || this.arrCaculateField?.length == 0) return;
+    let fieldsNum = [];
+    this.listStep.forEach((x) => {
+      if (x.fields?.length > 0) {
+        let fnum = x.fields.filter((x) => x.dataType == 'N');
+        if (fnum?.length > 0) fieldsNum = fieldsNum.concat(fnum);
+      }
+    });
+    if (!fieldsNum || fieldsNum?.length == 0) return;
+
+    this.arrCaculateField.forEach((obj) => {
+      let dataFormat = obj.dataFormat;
+      fieldsNum.forEach((f) => {
+        if (
+          dataFormat.includes('[' + f.fieldName + ']') &&
+          f.dataValue?.toString()
+        ) {
+          let dataValue = f.dataValue;
+          if (f.dataFormat == 'P') dataValue = dataValue + '/100';
+          dataFormat = dataFormat.replaceAll(
+            '[' + f.fieldName + ']',
+            dataValue
+          );
+        }
+      });
+
+      if (!dataFormat.includes('[')) {
+        //tinh toán
+        obj.dataValue = this.customFieldSV.caculate(dataFormat);
+        //tính toan end
+        let index = this.listStep.findIndex((x) => x.recID == obj.stepID);
+        if (index != -1) {
+          if (this.listStep[index].fields?.length > 0) {
+            let idxField = this.listStep[index].fields.findIndex(
+              (x) => x.recID == obj.recID
+            );
+            if (idxField != -1) {
+              this.listStep[index].fields[idxField].dataValue = obj.dataValue;
+
+              let idxEdit = this.listCustomFile.findIndex(
+                (x) => x.recID == this.listStep[index].fields[idxField].recID
+              );
+              if (idxEdit != -1) {
+                this.listCustomFile[idxEdit] =
+                  this.listStep[index].fields[idxField];
+              } else
+                this.listCustomFile.push(this.listStep[index].fields[idxField]);
+            }
+          }
+        }
+      }
+    });
+  }
+  //------------------END_CACULATE--------------------//
 }

@@ -136,6 +136,11 @@ export class CodxCmService {
       objectID,
     ]);
   }
+  getDealByRecID(objectID) {
+    return this.api.exec<any>('CM', 'DealsBusiness', 'GetOneAsync', [
+      objectID,
+    ]);
+  }
 
   getListContactByObjectID(objectID) {
     return this.api.exec<any>(
@@ -521,6 +526,15 @@ export class CodxCmService {
       data
     );
   }
+  updateMoveProcess(data) {
+    return this.api.exec<any>(
+      'DP',
+      'InstancesBusiness',
+      'UpdateMoveProcessReasonAsync',
+      data
+    );
+  }
+
   moveReasonByIdInstance(data) {
     return this.api.exec<any>(
       'DP',
@@ -924,6 +938,24 @@ export class CodxCmService {
       data
     );
   }
+  moveStageBackCase(data) {
+    return this.api.execSv<any>(
+      'CM',
+      'ERM.Business.CM',
+      'CasesBusiness',
+      'MoveStageBackByCaseAsync',
+      data
+    );
+  }
+  moveStageBackCases(data) {
+    return this.api.execSv<any>(
+      'CM',
+      'ERM.Business.CM',
+      'CasesBusiness',
+      'MoveStageBackByCasesAsync',
+      data
+    );
+  }
 
   moveStageDeal(data) {
     return this.api.execSv<any>(
@@ -944,11 +976,18 @@ export class CodxCmService {
     );
   }
   updateProcessDeal(data) {
-    return this.api.execSv<any>(
+    return this.api.exec<any>(
       'CM',
-      'ERM.Business.CM',
       'DealsBusiness',
       'UpdateProcessDealAsync',
+      data
+    );
+  }
+  updateProcessCase(data) {
+    return this.api.exec<any>(
+      'CM',
+      'CasesBusiness',
+      'UpdateProcessCasesAsync',
       data
     );
   }
@@ -1010,15 +1049,7 @@ export class CodxCmService {
       [recID, check, returnedCmt]
     );
   }
-  // moveDealReason(data) {
-  //   return this.api.execSv<any>(
-  //     'CM',
-  //     'ERM.Business.CM',
-  //     'DealsBusiness',
-  //     'MoveDealReasonAsync',
-  //     data
-  //   );
-  // }
+
   moveDealReason(data) {
     return this.api.execSv<any>(
       'CM',
@@ -1035,6 +1066,15 @@ export class CodxCmService {
       'ERM.Business.CM',
       'LeadsBusiness',
       'MoveLeadReasonAsync',
+      data
+    );
+  }
+  moveCaseReason(data) {
+    return this.api.execSv<any>(
+      'CM',
+      'ERM.Business.CM',
+      'CasesBusiness',
+      'MoveCaseReasonAsync',
       data
     );
   }
@@ -1124,6 +1164,14 @@ export class CodxCmService {
       data
     );
   }
+  isExistOwnerInProcess(data) {
+    return this.api.exec<any>(
+      'CM',
+      'DealsBusiness',
+      'IsExistOwnerInProcessAsync',
+      data
+    );
+  }
   updateOwnerLead(data) {
     return this.api.exec<any>(
       'CM',
@@ -1149,21 +1197,21 @@ export class CodxCmService {
   //   );
   // }
 
-  getViewDetailDealAsync(data) {
-    return this.api.exec<any>(
-      'CM',
-      'DealsBusiness',
-      'GetViewDetailDealAsync',
-      data
-    );
-  }
-  getSettingViewDetailDealAsync() {
-    return this.api.exec<any>(
-      'CM',
-      'DealsBusiness',
-      'GetSettingViewDetailDealAsync'
-    );
-  }
+  // getViewDetailDealAsync(data) {
+  //   return this.api.exec<any>(
+  //     'CM',
+  //     'DealsBusiness',
+  //     'GetViewDetailDealAsync',
+  //     data
+  //   );
+  // }
+  // getSettingViewDetailDealAsync() {
+  //   return this.api.exec<any>(
+  //     'CM',
+  //     'DealsBusiness',
+  //     'GetSettingViewDetailDealAsync'
+  //   );
+  // }
 
   getDataTabHistoryDealAsync(data) {
     return this.api.exec<any>(
@@ -1633,10 +1681,26 @@ export class CodxCmService {
     );
   }
 
+  getAutoNumberByAutoNoCode(autoNoCode){
+    return this.api.exec<any>(
+      'ERM.Business.AD',
+      'AutoNumbersBusiness',
+      'CreateAutoNumberAsync',
+      [autoNoCode, null, true, null]
+    );
+  }
+  getInstancerStepByRecID(recID) {
+    return this.api.exec<any>(
+      'DP',
+      'InstancesStepsBusiness',
+      'GetInstanceStepByRecIDAsync',
+      [recID]
+    );
+  }
   //#region
 
   getOneObject(recID, className) {
-    return this.api.exec<any>('CM', className, 'GetOneAsync', recID);
+    return this.api.exec<any>('DP', className, 'GetOneAsync', recID);
   }
   //#region getParamModule
   getParam(sformName, category) {

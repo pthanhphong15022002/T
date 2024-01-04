@@ -12,6 +12,7 @@ import {
   AlertConfirmInputConfig,
   ApiHttpService,
   AuthStore,
+  CacheService,
   CallFuncService,
   CodxFormComponent,
   CodxInputComponent,
@@ -28,6 +29,7 @@ import { Observable, finalize, firstValueFrom, map } from 'rxjs';
 
 import { PopupAddVllCustomComponent } from '../../popup-add-vll-custom/popup-add-vll-custom.component';
 import { CodxDpService } from 'projects/codx-dp/src/lib/codx-dp.service';
+import { PopupAddAutoNumberComponent } from 'projects/codx-es/src/lib/setting/category/popup-add-auto-number/popup-add-auto-number.component';
 
 @Component({
   selector: 'lib-popup-add-column-table',
@@ -64,7 +66,6 @@ export class PopupAddColumnTableComponent implements OnInit, AfterViewInit {
   tooltip: Object = { isVisible: true, placement: 'Before', showOn: 'Hover' };
 
   fieldsResource = { text: 'stepName', value: 'recID' };
-  stepList = [];
   itemView = '';
   vllDynamic = 'DP0271';
   fileNameArr = [];
@@ -116,6 +117,12 @@ export class PopupAddColumnTableComponent implements OnInit, AfterViewInit {
 
   dialogAddColumn: DialogRef;
   disable = false;
+  vllDateFormat: any;
+  adAutoNumber: any;
+  // Tính
+  caculateField = '';
+  arrFieldNum = [];
+  showCaculate = true;
 
   constructor(
     private changdef: ChangeDetectorRef,
@@ -125,6 +132,7 @@ export class PopupAddColumnTableComponent implements OnInit, AfterViewInit {
     private api: ApiHttpService,
     private dpService: CodxDpService,
     private authstore: AuthStore,
+    private cache: CacheService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -137,11 +145,18 @@ export class PopupAddColumnTableComponent implements OnInit, AfterViewInit {
     this.titleAction = dt?.data?.titleAction;
     this.grvSetup = dt?.data?.grvSetup;
     this.processNo = dt?.data?.processNo; //de sinh vll
+    this.listColumns = dt?.data?.listColumns;
+    this.showCaculate = this.action != 'edit';
   }
 
   ngOnInit(): void {
     if (this.column?.dataType == 'L' && this.column?.dataFormat == 'V')
       this.loadDataVll();
+
+    if (this.column?.dataType == 'CF') {
+      this.selectFieldNum();
+      this.caculateField = this.column?.dataFormat ?? '';
+    }
   }
   ngAfterViewInit() {}
 
@@ -178,7 +193,7 @@ export class PopupAddColumnTableComponent implements OnInit, AfterViewInit {
         // this.changeFormVll();
       }
     }
-
+    if (e.field == 'dataType' && e.data == 'CF') this.selectFieldNum();
     this.changdef.detectChanges();
   }
 
@@ -191,10 +206,6 @@ export class PopupAddColumnTableComponent implements OnInit, AfterViewInit {
 
   sliderChange(e) {
     this.column.rank = e?.value;
-  }
-
-  cbxChange(value) {
-    if (value) this.column['stepID'] = value;
   }
 
   removeAccents(str) {
@@ -661,7 +672,307 @@ export class PopupAddColumnTableComponent implements OnInit, AfterViewInit {
   }
 
   saveColumn() {
+    if (this.column.dataType == 'CF') {
+      if (this.checkCaculateField())
+        this.column.dataFormat = this.caculateField;
+      else return;
+    }
+
     if (!this.checkValidate()) return;
     this.dialog.close([this.column, this.processNo]);
   }
+
+  async openAutoNumPopup() {
+    this.getVllFormat();
+    let obj = {};
+    if (!this.column.dataFormat) {
+      //save new autoNumber
+      obj = {
+        autoNoCode: this.column.recID,
+        description: 'DP_Instances_Steps_Field',
+        newAutoNoCode: this.column.recID,
+        isSaveNew: '1',
+      };
+    } else {
+      //cap nhật
+      obj = {
+        autoNoCode: this.column.dataFormat,
+        description: 'DP_Instances_Steps_Field',
+      };
+    }
+    let op = new DialogModel();
+    op.IsFull = true;
+    let popupAutoNum = this.callfc.openForm(
+      PopupAddAutoNumberComponent,
+      '',
+      0,
+      0,
+      '',
+      obj,
+      '',
+      op
+    );
+    popupAutoNum.closed.subscribe((res) => {
+      if (res?.event) {
+        this.setViewAutoNumber(res?.event);
+      }
+    });
+  }
+
+  setViewAutoNumber(data) {
+    if (this.vllDateFormat?.datas.length > 0) {
+      let dateFormat = '';
+      if (data?.dateFormat != '0') {
+        dateFormat =
+          this.vllDateFormat.datas.filter((p) => p.value == data?.dateFormat)[0]
+            ?.text ?? '';
+      }
+
+      let lengthNumber;
+      let strNumber = '';
+      let fieldNoAutoEx = data?.fixedString + data?.separator + dateFormat;
+      lengthNumber = data?.maxLength - fieldNoAutoEx.length;
+      strNumber = '#'.repeat(lengthNumber);
+      switch (data?.stringFormat) {
+        // {value: '0', text: 'Chuỗi & Ngày - Số', default: 'Chuỗi & Ngày - Số', color: null, textColor: null, …}
+        case '0': {
+          fieldNoAutoEx =
+            data?.fixedString + dateFormat + data?.separator + strNumber;
+          break;
+        }
+        // {value: '1', text: 'Chuỗi & Số - Ngày', default: 'Chuỗi & Số - Ngày', color: null, textColor: null, …}
+        case '1': {
+          fieldNoAutoEx =
+            data?.fixedString + strNumber + data?.separator + dateFormat;
+          break;
+        }
+        // {value: '2', text: 'Số - Chuỗi & Ngày', default: 'Số - Chuỗi & Ngày', color: null, textColor: null, …}
+        case '2':
+          fieldNoAutoEx =
+            strNumber + data?.separator + data?.fixedString + dateFormat;
+          break;
+        // {value: '3', text: 'Số - Ngày & Chuỗi', default: 'Số - Ngày & Chuỗi', color: null, textColor: null, …}
+        case '3':
+          fieldNoAutoEx =
+            strNumber + data?.separator + dateFormat + data?.fixedString;
+          break;
+
+        // {value: '4', text: 'Ngày - Số & Chuỗi', default: 'Ngày - Số & Chuỗi', color: null, textColor: null, …}
+        case '4': {
+          fieldNoAutoEx =
+            dateFormat + data?.separator + strNumber + data?.fixedString;
+          break;
+        }
+        // {value: '5', text: 'Ngày & Chuỗi & Số', default: 'Ngày & Chuỗi & Số', color: null, textColor: null, …}
+        case '5': {
+          fieldNoAutoEx = data?.fixedString + dateFormat;
+          lengthNumber = data?.maxLength - fieldNoAutoEx.length;
+          strNumber = '#'.repeat(lengthNumber);
+          fieldNoAutoEx = dateFormat + data?.fixedString + strNumber;
+          break;
+        }
+        // {value: '6', text: 'Chuỗi - Ngày', default: 'Chuỗi - Ngày', color: null, textColor: null, …}
+        case '6': {
+          fieldNoAutoEx = data?.fixedString + data?.separator + dateFormat;
+          break;
+        }
+        // {value: '7', text: 'Ngày - Chuỗi', default: 'Ngày - Chuỗi', color: null, textColor: null, …}
+        case '7': {
+          fieldNoAutoEx = dateFormat + data?.separator + data?.fixedString;
+          break;
+        }
+      }
+
+      fieldNoAutoEx = fieldNoAutoEx.substring(0, data?.maxLength);
+      this.column.dataFormat = fieldNoAutoEx;
+
+      this.changeRef.markForCheck();
+    }
+  }
+
+  async getVllFormat() {
+    this.vllDateFormat = await firstValueFrom(this.cache.valueList('L0088'));
+  }
+
+  //--------------------------------------------------//
+  //--------------CACULATE FIELD----------------------//
+  //--------------------------------------------------//
+
+  operator = ['+', '-', 'x', '/', 'Avg('];
+  accessField = [']'];
+  arrNum = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+  buttonOperator(op) {
+    if (this.caculateField) {
+      let chartLast = this.caculateField[this.caculateField.length - 1];
+      if (chartLast == '(') return;
+      if (op == 'Avg') {
+        if (
+          this.arrNum.includes(chartLast) ||
+          this.accessField.includes(chartLast)
+        ) {
+          return;
+        }
+        op = 'Avg(';
+      }
+      if (this.operator.includes(chartLast))
+        this.caculateField = this.caculateField.substring(
+          0,
+          this.caculateField.length - 1
+        );
+    }
+
+    this.caculateField += op;
+  }
+
+  buttonOpenParenthesis() {
+    if (this.caculateField) {
+      let idxLast = this.caculateField.length - 1;
+      if (
+        this.arrNum.includes(this.caculateField[idxLast]) ||
+        this.caculateField[idxLast] == ')' ||
+        this.caculateField[idxLast] == ','
+      )
+        return;
+    }
+    this.caculateField += '(';
+  }
+
+  buttonCloseParenthesis() {
+    if (this.caculateField) {
+      let idxLast = this.caculateField.length - 1;
+      if (
+        this.operator.includes(this.caculateField[idxLast]) ||
+        this.caculateField[idxLast] == '(' ||
+        this.caculateField[idxLast] == ',' ||
+        this.compareParenthesis(this.caculateField) == 0
+      )
+        return;
+    } else return;
+    this.caculateField += ')';
+  }
+
+  compareParenthesis(string) {
+    let countOpen = 0;
+    let countClose = 0;
+    for (const c of string) {
+      if (c == '(') {
+        countOpen++;
+      } else if (c === ')') {
+        countClose++;
+      }
+    }
+    return countOpen - countClose;
+  }
+
+  fieldSelect(fieldName) {
+    if (this.caculateField) {
+      let idxLast = this.caculateField.length - 1;
+      if (
+        this.caculateField[idxLast] == ']' ||
+        this.caculateField[idxLast] == ')' ||
+        this.caculateField[idxLast] == ','
+      )
+        return;
+    }
+    this.caculateField += '[' + fieldName + ']';
+    this.popover.close();
+  }
+
+  delChart() {
+    if (this.caculateField) {
+      let idxLast = this.caculateField.length - 1;
+      if (this.caculateField[idxLast] == ']') {
+        while (
+          this.caculateField?.length == 0 ||
+          this.caculateField[idxLast] != '['
+        ) {
+          this.caculateField = this.caculateField.substring(0, idxLast);
+          idxLast = idxLast - 1;
+        }
+      }
+      //else this.caculateField = this.caculateField.substring(0, idxLast);
+      this.caculateField = this.caculateField.substring(0, idxLast);
+    }
+  }
+  delAll() {
+    this.caculateField = '';
+  }
+  // Num
+  buttonNum(num) {
+    if (this.caculateField) {
+      let idxLast = this.caculateField.length - 1;
+      if (
+        this.caculateField[idxLast] == ']' ||
+        this.caculateField[idxLast] == ')'
+      )
+        return;
+    }
+    this.caculateField += num;
+  }
+  decimalPoint() {
+    if (!this.caculateField) return;
+    let idxLast = this.caculateField.length - 1;
+    let chartLast = this.caculateField[idxLast];
+    if (
+      chartLast == ',' ||
+      this.accessField.includes(chartLast) ||
+      this.operator.includes(chartLast)
+    )
+      return;
+    //chua check hết
+    idxLast = idxLast - 1;
+    while (
+      !this.operator.includes(this.accessField[idxLast]) ||
+      idxLast != -1
+    ) {
+      if (this.caculateField[idxLast] == ',') return;
+      idxLast--;
+    }
+    this.caculateField += ',';
+  }
+
+  selectFieldNum() {
+    this.arrFieldNum = [];
+    this.arrFieldNum = this.listColumns
+      .filter((x) => x.dataType == 'N')
+      .map((x) => x.fieldName);
+
+    if (!this.arrFieldNum || this.arrFieldNum?.length == 0)
+      this.notiService.notify(
+        'Bước thực hiện không có trường tùy chỉnh kiểu số !',
+        '3'
+      );
+  }
+
+  popoverSelectField(p) {
+    if (this.arrFieldNum?.length > 0) p.open();
+    this.popover = p;
+    // else
+    //   this.notiService.notify(
+    //     'Bước thực hiện không có trường tùy chỉnh kiểu số !',
+    //     '3'
+    //   );
+  }
+
+  checkCaculateField() {
+    if (!this.caculateField) {
+      this.notiService.notify('Phép toán chưa được thiết lập !', '3');
+      return false;
+    }
+
+    let lastChart = this.caculateField[this.caculateField.length - 1];
+    if (
+      this.compareParenthesis(this.caculateField) > 0 ||
+      this.operator.includes(lastChart)
+    ) {
+      this.notiService.notify('Phép toán chưa đúng ! Hãy kiểm tra lại !', '3');
+      return false;
+    }
+    return true;
+  }
+
+  openCaculate() {
+    this.showCaculate = !this.showCaculate;
+  }
+  //-----------------end CACULATE FIELD------------------//
 }

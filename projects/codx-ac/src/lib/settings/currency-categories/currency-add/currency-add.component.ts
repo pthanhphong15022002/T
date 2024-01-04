@@ -48,7 +48,6 @@ export class CurrencyAddComponent extends UIComponent implements OnInit {
   @ViewChild('form') public form: CodxFormComponent;
   headerText: string;
   dataDefault: any;
-  dataDefaultExRate: any;
   lstExchangeRate: any = [];
   dialog!: DialogRef;
   dialogData!: DialogData;
@@ -68,7 +67,6 @@ export class CurrencyAddComponent extends UIComponent implements OnInit {
     entityPer: 'BS_ExchangeRates',
   }
   exchangeRatesService: CRUDService;
-  optionDialog: DialogModel = new DialogModel();
   private destroy$ = new Subject<void>();
   constructor(
     inject: Injector,
@@ -146,9 +144,6 @@ export class CurrencyAddComponent extends UIComponent implements OnInit {
   }
 
   ngAfterViewInit() {
-    //* thiết lập cấu hình sidebar
-    this.optionDialog.DataService = this.exchangeRatesService
-    this.optionDialog.FormModel = this.fmExchangeRates;
   }
 
   onAfterInit(e){
@@ -226,42 +221,39 @@ export class CurrencyAddComponent extends UIComponent implements OnInit {
    * *Hàm thêm mới tỷ giá 
    */
   addNewExchangeRate() {
-    let data = {
-      headerText: (this.lblAdd + ' ' + this.lblExChangeRate).toUpperCase(),
-      dataDefaultExRate: {...this.dataDefaultExRate},
-      lstExchangeRate: this.lstExchangeRate,
-    };
-    if(!this.dataDefaultExRate){
-      this.exchangeRatesService.addNew().subscribe((res: any) => {
-        if (res) {
-          this.dataDefaultExRate = {...res};
-          data.dataDefaultExRate = {...this.dataDefaultExRate};
-          let dialog = this.callfc.openForm(
-            ExchangerateAddComponent,
-            '',
-            500,
-            450,
-            '',
-            data,
-            '',
-            this.optionDialog
-          );
+    this.form.save(null, 0, '', '', false).pipe(takeUntil(this.destroy$))
+    .subscribe((res: any) => {
+      if(!res) return;
+      if (res || res.save || res.update) {
+        if (res || !res.save.error || !res.update.error) {
+          this.exchangeRatesService.addNew().subscribe((res: any) => {
+            if (res) {
+              let data = {
+                headerText: (this.lblAdd + ' ' + this.lblExChangeRate).toUpperCase(),
+                dataDefaultExRate: {...res},
+                lstExchangeRate: this.lstExchangeRate,
+                currencyID : this.form.data.currencyID
+              };
+              let option = new DialogModel();
+              option.DataService = this.exchangeRatesService
+              option.FormModel = this.fmExchangeRates;
+              this.cache.gridViewSetup(this.fmExchangeRates.formName,this.fmExchangeRates.gridViewName).subscribe((o)=>{
+                let dialog = this.callfc.openForm(
+                  ExchangerateAddComponent,
+                  '',
+                  300,
+                  450,
+                  '',
+                  data,
+                  '',
+                  option
+                );
+              })
+            }
+          })
         }
-      })
-    }else{
-      data.dataDefaultExRate.recID = Util.uid();
-      let dialog = this.callfc.openForm(
-        ExchangerateAddComponent,
-        '',
-        500,
-        450,
-        '',
-        data,
-        '',
-        this.optionDialog
-      );
-    }
-    
+      }
+    })
   }
 
   /**
@@ -275,6 +267,9 @@ export class CurrencyAddComponent extends UIComponent implements OnInit {
       dataDefaultExRate: {...dataEdit},
       lstExchangeRate: this.lstExchangeRate,
     };
+    let option = new DialogModel();
+    option.DataService = this.exchangeRatesService
+    option.FormModel = this.fmExchangeRates;
     let dialog = this.callfc.openForm(
       ExchangerateAddComponent,
       '',
@@ -283,7 +278,7 @@ export class CurrencyAddComponent extends UIComponent implements OnInit {
       '',
       data,
       '',
-      this.optionDialog
+      option
     );
   }
 
@@ -292,24 +287,15 @@ export class CurrencyAddComponent extends UIComponent implements OnInit {
    * @param data 
    */
   deleteExchangeRate(data: any) {
-    this.notification.alertCode('SYS030', null).subscribe((res) => {
-      if (res.event.status === 'Y') {
-        this.api
-        .exec('BS', 'ExchangeRatesBusiness', 'DeleteOneAsync', [
-          data
-        ])
-        .pipe(takeUntil(this.destroy$))
-        .subscribe((res: any) => {
-          if (res) {
-            let index = this.lstExchangeRate.findIndex((x) => x.recID == data.recID);
-            if (index > -1) {
-              this.lstExchangeRate.splice(index, 1);
-              this.detectorRef.detectChanges();
-            }
-          }
-        });
+    this.exchangeRatesService.delete([data], true,null,null,null,null,null,false).pipe(takeUntil(this.destroy$)).subscribe((res: any) => {
+      if (res && !res?.error) {
+        let index = this.lstExchangeRate.findIndex((x) => x.recID == data.recID);
+        if (index > -1) {
+          this.lstExchangeRate.splice(index, 1);
+          this.detectorRef.detectChanges();
+        }
       }
-    })  
+    });
   }
 
   /**
@@ -330,39 +316,28 @@ export class CurrencyAddComponent extends UIComponent implements OnInit {
   onSave(type) {
     this.form.save(null, 0, '', '', false).pipe(takeUntil(this.destroy$))
     .subscribe((res: any) => {
-      if (!res) {
-        return;
-      }
-      if((res.save && !res.save.error) || (res.update && !res.update.error)){
-        this.api
-          .exec(
-            'BS',
-            'ExchangeRatesBusiness',
-            'SaveAsync',
-            [this.form.data.currencyID,this.lstExchangeRate]
-          )
-          .pipe(takeUntil(this.destroy$))
-          .subscribe((res: any) => {
-            if (res) {
-              if (type == 'save') {
-                this.dialog.close(); 
-              }else{
-                this.dialog.dataService.addNew().subscribe((res: any) => {
-                  if (res) {
-                    res.isAdd = true;
-                    if(this.form.data.isEdit || this.form.data.isCopy) this.headerText = (this.lblAdd + ' ' + this.funcName).toUpperCase();
-                    this.form.refreshData({...res});
-                    this.lstExchangeRate = [];
-                    this.detectorRef.detectChanges();
-                  }
-                });
+      if(!res) return;
+      if (res || res.save || res.update) {
+        if (res || !res.save.error || !res.update.error) {
+          if (type == 'save') {
+            this.dialog.close(); 
+          }else{
+            this.dialog.dataService.clear();
+            this.dialog.dataService.addNew().subscribe((res: any) => {
+              if (res) {
+                res.isAdd = true;
+                if(this.form.data.isEdit || this.form.data.isCopy) this.headerText = (this.lblAdd + ' ' + this.funcName).toUpperCase();
+                this.form.refreshData({...res});
+                this.lstExchangeRate = [];
+                this.detectorRef.detectChanges();
               }
-              if (this.form.data.isAdd || this.form.data.isCopy)
-                this.notification.notifyCode('SYS006');
-              else 
-                this.notification.notifyCode('SYS007');
-            }
-          });
+            });
+          }
+          if (this.form.data.isAdd || this.form.data.isCopy)
+            this.notification.notifyCode('SYS006');
+          else 
+            this.notification.notifyCode('SYS007');
+        }
       }
     });
   }

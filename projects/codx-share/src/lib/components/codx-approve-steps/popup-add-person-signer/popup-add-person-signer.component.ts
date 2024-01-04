@@ -1,6 +1,6 @@
-import { ChangeDetectorRef, Component, OnInit, Optional } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, Optional, ViewChild } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { DialogData, DialogRef, FormModel } from 'codx-core';
+import { DialogData, DialogRef, FormModel, ImageViewerComponent, NotificationsService } from 'codx-core';
 import { CodxShareService } from '../../../codx-share.service';
 import { CodxEsService } from 'projects/codx-es/src/lib/codx-es.service';
 
@@ -10,6 +10,8 @@ import { CodxEsService } from 'projects/codx-es/src/lib/codx-es.service';
   styleUrls: ['./popup-add-person-signer.component.scss'],
 })
 export class PopupAddPersonSignerComponent implements OnInit {
+  @ViewChild('imgSignature2') imgSignature2: ImageViewerComponent;
+  @ViewChild('imgSignature1') imgSignature1: ImageViewerComponent;
   fgroupApprover: FormGroup;
   formModel: FormModel;
   dialog: DialogRef;
@@ -27,6 +29,7 @@ export class PopupAddPersonSignerComponent implements OnInit {
     private cr: ChangeDetectorRef,
     private esService: CodxEsService,
     private codxShareService: CodxShareService,
+    private notiService: NotificationsService,
 
     @Optional() data?: DialogData,
     @Optional() dialog?: DialogRef
@@ -48,7 +51,6 @@ export class PopupAddPersonSignerComponent implements OnInit {
     this.formModel.gridViewName = 'grvApprovalSteps_Approvers';
     this.dialog.formModel = this.formModel;
     this.codxShareService.setCacheFormModel(this.formModel);
-    this.getOrCreateSignature();
     this.codxShareService
       .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
       .then((fg) => {
@@ -67,26 +69,7 @@ export class PopupAddPersonSignerComponent implements OnInit {
         this.isNewSignature = res[1];      
       }
     })
-  }
-  saveSignature(){
-    this.currSignature.fullName = this.data.name;
-    this.currSignature.phone = this.data.phone;
-    this.currSignature.idCardType = this.data.idCardType;
-    this.currSignature.idCardNo = this.data.idCardNo;
-    this.currSignature.email = this.data.email;
-    this.currSignature.category = "1";
-    this.currSignature.signatureType = this.data.signatureType;
-    if(this.isNewSignature){
-      this.esService.addNewSignature(this.currSignature).subscribe(res=>{
-
-      });
-    }
-    else{
-      this.esService.editSignature(this.currSignature).subscribe(res=>{
-
-      });
-    }
-  }
+  }  
   valueChange(event: any, field: string = '') {
     if (!field) field = event?.field;
     if (field && event.component) {
@@ -94,6 +77,8 @@ export class PopupAddPersonSignerComponent implements OnInit {
       if (field == 'email') {
         this.data.approver = this.data.email;
         this.fgroupApprover.patchValue({ approver: this.data.approver });        
+        this.currSignature =null;
+        this.getOrCreateSignature()
       }
       this.cr.detectChanges();
     }
@@ -109,49 +94,56 @@ export class PopupAddPersonSignerComponent implements OnInit {
       this.codxShareService.notifyInvalid(this.fgroupApprover, this.formModel);
       return;
     }
-    this.saveSignature();
-    //Kiểm tra Insert thêm 1 dòng trong danh mục chữ ký số
-    // this.esService
-    //   .getDataDefault('ESS21', 'ES_Signatures', 'RecID')
-    //   .subscribe((res) => {
-    //     let oSignature = res.data;
-    //     oSignature.signatureType = '3';
-    //     oSignature.fullName = this.data.name;
-    //     oSignature.email = this.data.email;
-    //     oSignature.position = this.data.position;
-    //     oSignature.userID = this.data.email;
-    //     oSignature.phone = this.data.phone;
-
-    //     this.esService
-    //     .getSettingByPredicate(
-    //       'FormName=@0 and Category=@1',
-    //       'ESParameters;1'
-    //       )
-    //       .subscribe((setting) => {
-    //         if (setting) {
-    //           let format = JSON.parse(setting?.dataValue);
-    //           console.log('res', oSignature);
-
-    //           oSignature.otpControl = format?.ParnerOTPControl;
-
-    //         }
-    //         //this.esService.addNewSignature(oSignature).subscribe((res) => {});
-    //       });
-    //   });
-
-    let lstExisted = this.lstApprover.filter(
-      (p) => p.email == this.data?.email
-    );
-    if (this.isAddNew && lstExisted.length > 0) {
-      return;
-    }
-
-    if (!this.isAddNew && lstExisted.length > 1) {
-      return;
-    }
-
-    this.data.approver = this.data.email;
-
-    this.dialog && this.dialog.close(this.data); 
+    this.codxShareService.getOrCreateSignature(this.data?.email, this.data?.signatureType,null,null).subscribe(res=>{
+      if(res){
+        this.currSignature = res[0];  
+        this.isNewSignature = res[1];  
+        
+        this.currSignature.fullName = this.data.name;
+        this.currSignature.phone = this.data.phone;
+        this.currSignature.idCardType = this.data.idCardType;
+        this.currSignature.idCardNo = this.data.idCardNo;
+        this.currSignature.email = this.data.email;
+        this.currSignature.category = "1";
+        this.currSignature.signatureType = this.data.signatureType;
+        
+        this.esService.addEditSignature(this.currSignature,this.isNewSignature).subscribe((signature:any)=>{
+          if(signature){
+            if (this.imgSignature1?.imageUpload?.item) {
+              this.imgSignature1
+                .updateFileDirectReload(signature.recID)
+                .subscribe((result) => {
+                  if (result) {                    
+                  }
+                });
+            }
+            if (this.imgSignature2?.imageUpload?.item) {
+              this.imgSignature2
+                .updateFileDirectReload(signature.recID)
+                .subscribe((result) => {
+                  if (result) {                    
+                  }
+                });
+            }
+            let lstExisted = this.lstApprover.filter(
+              (p) => p.email == this.data?.email
+            );
+            if (this.isAddNew && lstExisted.length > 0) {
+              return;
+            }
+        
+            if (!this.isAddNew && lstExisted.length > 1) {
+              return;
+            }
+        
+            this.data.approver = this.data.email;
+        
+            this.dialog && this.dialog.close(this.data); 
+          }
+        })
+        
+      }
+    })    
+    
   }
 }

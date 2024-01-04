@@ -1,0 +1,348 @@
+<ng-container *ngIf="data.dataValue == null || data.dataValue == undefined">
+  <!-- margin-l -->
+  <span class="place-holder" *ngIf="data.dataType != 'R'">
+    {{ data.title }}
+  </span>
+  <ng-container *ngIf="data.dataType == 'R'">
+    <ngb-rating
+      rate="0"
+      [max]="data?.rank"
+      [readonly]="true"
+      [starTemplate]="temp"
+    >
+      <ng-template #temp let-fill="fill" let-index="index">
+        <span
+          class="rankIcon {{ data?.rankIcon }} filled"
+          [class.filled]="fill === 100"
+          [class.bad]="index < data?.rank"
+        ></span>
+      </ng-template>
+    </ngb-rating>
+  </ng-container>
+</ng-container>
+<!-- margin-l -->
+<ng-container *ngIf="data.dataValue != null && data.dataValue != undefined">
+  <span class="text-dark" *ngIf="data.dataType == 'T' || data.dataType == 'AT'">
+    {{ data.dataValue }}
+  </span>
+  <!-- margin-l -->
+  <span
+    class="text-dark"
+    *ngIf="
+      (data.dataType == 'N' || data.dataType == 'CF') &&
+      data.dataFormat &&
+      data.dataValue
+    "
+    [innerHTML]="
+      data.dataValue | formatDataValue : data.dataType : data.dataFormat | async
+    "
+  >
+    <!-- <span *ngIf="data.dataFormat == 'P'">%</span> -->
+  </span>
+  <!-- margin-l -->
+  <span class="text-dark" *ngIf="data.dataType == 'D'">
+    <span
+      [innerHTML]="
+        data.dataValue
+          | formatDataValue : data.dataType : data.dataFormat
+          | async
+      "
+    ></span>
+  </span>
+  <ng-container *ngIf="data.dataType == 'R'">
+    <ngb-rating
+      [rate]="data.dataValue | number"
+      [max]="data?.rank"
+      [readonly]="true"
+      [starTemplate]="temp"
+    >
+      <ng-template #temp let-fill="fill" let-index="index">
+        <span
+          class="rankIcon {{ data?.rankIcon }} filled"
+          [class.filled]="fill === 100"
+          [class.bad]="index < data?.rank"
+        ></span>
+      </ng-template>
+    </ngb-rating>
+  </ng-container>
+
+  <ng-container *ngIf="data.dataType == 'P'">
+    <codx-imgs
+      [width]="35"
+      [objectId]="data.dataValue"
+      [objectType]="'AD_Users'"
+      [numberImages]="5"
+    ></codx-imgs>
+  </ng-container>
+
+  <ng-container *ngIf="data.dataType == 'A' && data.dataValue">
+    <codx-attachment
+      #attachment
+      [objectId]="data.dataValue.split(';')[0]"
+      [objectType]="data.dataValue.split(';')[1]"
+      hideFolder="1"
+      hideImageUpload="0"
+      hideImageThumb="0"
+      hideUploadBtn="1"
+      hideDes="1"
+      type="inline"
+      [allowMultiFile]="data.multiple ? '1' : '0'"
+      displayThumb="full"
+      showMessage="0"
+      [hideDelete]="'1'"
+      [hideMoreF]="'0'"
+      [referType]="'source'"
+    >
+    </codx-attachment>
+  </ng-container>
+
+  <ng-container *ngIf="data.dataType == 'C' && dataValueTypeC?.length > 0">
+    <div class="d-flex flex-column">
+      <ng-container *ngFor="let item of dataValueTypeC">
+        <div class="mt-2">
+          <ng-container
+            *ngTemplateOutlet="tempPopover; context: { $implicit: item }"
+          ></ng-container>
+        </div>
+      </ng-container>
+    </div>
+    <ng-template #tempPopover let-data>
+      <div class="d-flex">
+        <codx-img
+          class="me-1"
+          [objectId]="data?.recID"
+          [objectName]="data?.contactName"
+          [objectType]="'CM_Contacts'"
+          [width]="40"
+        >
+        </codx-img>
+        <div class="d-flex flex-column">
+          <div clas="mb-1 d-flex align-items-top">
+            <span class="fw-bold text-dark me-1">
+              {{ data?.contactName }}
+            </span>
+          </div>
+          <div class="d-flex">
+            <div
+              [style.disabled]="!data?.allowCall"
+              class="d-flex align-items-center me-2"
+              [ngbTooltip]="popupAllowCall"
+            >
+              <ng-template #popupAllowCall>
+                <codx-label
+                  name="lblAllowCall"
+                  [formModel]="formModel"
+                  [default]="
+                    data?.allowCall
+                      ? 'Cho phép điện thoại'
+                      : 'Không cho phép điện thoại'
+                  "
+                ></codx-label>
+              </ng-template>
+              <span
+                class=""
+                [innerHTML]="
+                  data?.mobile
+                    | formatvalue : formModelContact : 'mobile'
+                    | async
+                "
+              ></span>
+            </div>
+            <div
+              class="d-flex align-items-center"
+              [style.disabled]="!data?.allowEmail"
+              [ngbTooltip]="popupAllowEmail"
+            >
+              <ng-template #popupAllowEmail>
+                <codx-label
+                  name="lblAllowEmail"
+                  [formModel]="formModel"
+                  [default]="
+                    data?.allowEmail
+                      ? 'Cho phép gửi mail'
+                      : 'Không cho phép gửi mail'
+                  "
+                ></codx-label>
+              </ng-template>
+              <span
+                class=""
+                [style.disabled]="!data?.allowEmail"
+                [innerHTML]="
+                  data?.personalEmail
+                    | formatvalue : formModelContact : 'personalEmail'
+                    | async
+                "
+              ></span>
+            </div>
+          </div>
+          <div>
+            <span
+              class=""
+              [innerHTML]="
+                data?.role | formatvalue : formModelContact : 'role' | async
+              "
+            >
+            </span>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+  </ng-container>
+  <!-- //test -->
+  <ng-container *ngIf="data.dataType == 'L' && data.dataValue">
+    <ng-container *ngIf="data.dataFormat == 'C'">
+      <span
+        [innerHTML]="
+          data.dataValue
+            | formatDataValue : data.dataType : data.dataFormat : data.refValue
+            | async
+        "
+      ></span>
+    </ng-container>
+
+    <ng-container *ngIf="data.dataFormat == 'V'">
+      <div class="flex flex-column">
+        <div *ngFor="let item of dataValueTypeV">
+          <span>{{ item }}</span>
+        </div>
+      </div>
+    </ng-container>
+
+    <ng-container *ngIf="data.dataFormat == 'B'">
+      <div class="flex flex-column">
+        <span
+          [innerHTML]="
+            data.dataValue
+              | formatDataValue
+                : data.dataType
+                : data.dataFormat
+                : data.refValue
+              | async
+          "
+        ></span>
+      </div>
+    </ng-container>
+  </ng-container>
+
+  <!-- table -->
+  <ng-container *ngIf="data.dataType == 'TA'">
+    <div
+      class="h-100 scroll-x"
+      data-kt-scroll="true"
+      data-kt-scroll-activate="{default: true}"
+      data-kt-scroll-width="auto"
+    >
+      <table
+        class="{{
+          settingWidth ? '' : 'table'
+        }} table-view table-row-bordered mt-3"
+        *ngIf="columns?.length > 0"
+      >
+        <thead>
+          <tr class="bg-gray-100">
+            <th *ngIf="settingCount" scope="col" class="fw-bold ps-4">
+              <div>
+                <codx-label
+                  name="lblNo"
+                  formName="System"
+                  [default]="'STT'"
+                ></codx-label>
+              </div>
+            </th>
+            <ng-container *ngFor="let item of columns">
+              <th
+                scope="col"
+                class="fw-bold ps-4"
+                [style]="
+                  item?.columnWidth > 0 && settingWidth
+                    ? 'width :' + item.columnWidth + 'px !important'
+                    : ''
+                "
+              >
+                <span>{{ item?.title }}</span>
+              </th>
+            </ng-container>
+          </tr>
+        </thead>
+        <tbody>
+          <ng-container>
+            <ng-container *ngFor="let value of arrDataValue; let index = index">
+              <tr>
+                <td class="ps-4" *ngIf="settingCount">
+                  <div>
+                    <span>{{ index + 1 }}</span>
+                  </div>
+                </td>
+                <ng-container
+                  *ngFor="let fieldFormat of formatViewTable(value)"
+                >
+                  <td
+                    class="ps-4"
+                    [style]="
+                      fieldFormat?.columnWidth > 0 && settingWidth
+                        ? 'width :' + fieldFormat.columnWidth + 'px !important'
+                        : ''
+                    "
+                  >
+                    <codx-fields-format-value
+                      [data]="fieldFormat"
+                    ></codx-fields-format-value>
+                  </td>
+                </ng-container>
+              </tr>
+              <!-- //Tính tổng -->
+              <!-- <tr *ngIf="totalColumns">
+                <td class="ps-4" *ngIf="settingCount">
+                  <div>
+                    <codx-label
+                      name="lblSum"
+                      formName="System"
+                      [default]="'Tổng cộng'"
+                    ></codx-label>
+                  </div>
+                </td>
+                <ng-container *ngFor="let cell of columns">
+                  <td class="ps-4">
+                    <div>
+                      <span> {{ 0 }}</span>
+                    </div>
+                  </td>
+                </ng-container>
+              </tr> -->
+            </ng-container>
+            <!-- //Tính tổng -->
+            <tr *ngIf="totalColumns">
+              <td class="ps-4" *ngIf="settingCount">
+                <div>
+                  <codx-label
+                    name="lblSum"
+                    formName="System"
+                    [default]="'Tổng cộng'"
+                  ></codx-label>
+                </div>
+              </td>
+              <ng-container *ngFor="let cell of columns">
+                <td class="ps-4">
+                  <div>
+                    <span
+                      [innerHTML]="cell | sumColumnsTable : arrDataValue"
+                    ></span>
+                  </div>
+                </td>
+              </ng-container>
+            </tr>
+          </ng-container>
+        </tbody>
+      </table>
+    </div>
+  </ng-container>
+  <!-- ref -->
+  <ng-container *ngIf="data.dataType == 'PA' && dataValueTypePA?.length > 0">
+    <codx-fields-detail-temp
+      [listFields]="dataValueTypePA"
+      [showColumnControl]="1"
+      [isShowTitle]="false"
+    >
+    </codx-fields-detail-temp>
+  </ng-container>
+</ng-container>

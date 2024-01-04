@@ -19,9 +19,10 @@ import {
   CM_Deals,
 } from '../../models/cm_model';
 import { firstValueFrom } from 'rxjs';
+import { Location } from '@angular/common';
 import { CodxCmService } from '../../codx-cm.service';
 import { ContractsService } from '../service-contracts.service';
-import { DialogData, DialogRef, FormModel, UIComponent } from 'codx-core';
+import { DialogData, DialogRef, FormModel, NotificationsService, TenantStore, UIComponent } from 'codx-core';
 @Component({
   selector: 'contracts-view-detail',
   templateUrl: './contracts-view-right.component.html',
@@ -57,6 +58,7 @@ export class ContractsViewDetailComponent
   sessionID = '';
   tabClicked = '';
   listInsStep = [];
+  lstStepsOld = [];
   isShowFull = false;  
   listTypeContract = [];
   oCountFooter: any = {};
@@ -64,6 +66,10 @@ export class ContractsViewDetailComponent
   contractLink:CM_Contracts;
   deal: CM_Deals;
   quotation: CM_Quotations;
+  listContractInParentID: CM_Contracts[] = [];
+  isHaveField: boolean = false;
+  listStepsProcess = [];
+  stepCurrent: any;
 
   tabControl = [
     { name: 'History', textDefault: 'Lịch sử', isActive: true, template: null },
@@ -104,19 +110,29 @@ export class ContractsViewDetailComponent
     entityName: 'CM_Quotations',
     gridViewName: 'grvCMQuotations',
   };
+  fmDeals: FormModel = {
+    funcID: 'CM02021',
+    formName: 'CMDeals',
+    entityName: 'CM_Deals',
+    gridViewName: 'grvCMDeals',
+  };
   formModelContact: FormModel = {
     formName: 'CMContacts',
     entityName: 'CM_Contacts',
     gridViewName: 'grvCMContacts',
   };
+  lstContacts: any;
   
   constructor(
     private inject: Injector,
-    private contractService: ContractsService,
+    private location: Location,
+    private tenantStore: TenantStore,
     private codxCmService: CodxCmService,
+    private contractService: ContractsService,
+    private notiService: NotificationsService,
     private changeDetectorRef: ChangeDetectorRef,
+    @Optional() dialog?: DialogRef,
     @Optional() dt?: DialogData,
-    @Optional() dialog?: DialogRef
   ) {
     super(inject);
     this.dialog = dialog;
@@ -141,6 +157,9 @@ export class ContractsViewDetailComponent
           }
         });
       this.getContractLink();
+      this.getQuotation();
+      this.getDeal();
+      this.getListCOntractByParentID();
     }
     if (changes?.listInsStepStart && changes?.listInsStepStart?.currentValue) {
       this.listInsStep = this.listInsStepStart;
@@ -177,7 +196,7 @@ export class ContractsViewDetailComponent
     this.getQuotationsAndQuotationsLinesByTransID(this.contract?.quotationID);
     this.getPayMentByContractID(this.contract?.recID);
     if (this.contract?.applyProcess) {
-      this.getListInstanceStep(this.contract);
+      this.getListInstanceStep();
     }
     this.sessionID = this.contract?.recID;
     this.loadTree(this.sessionID);
@@ -187,16 +206,153 @@ export class ContractsViewDetailComponent
     this.tabClicked = e;
   }
 
-  getListInstanceStep(contract) {
-    if (contract?.processID) {
-      var data = [contract?.refID, contract?.processID, contract?.status, '4'];
-      this.codxCmService.getStepInstance(data).subscribe((res) => {
-        if (res) {
-          this.listInsStep = res;
+  getListInstanceStep() {
+    var data = [
+      this.contract?.refID,
+      this.contract?.processID,
+      this.contract?.status,
+      '4',
+    ];
+    this.codxCmService.getViewDetailInstanceStep(data).subscribe((res) => {
+      if (res) {
+        this.listInsStep = res[0];
+        this.isHaveField = res[1];
+        if (this.listInsStep) {
+          this.lstStepsOld = JSON.parse(JSON.stringify(this.listInsStep));
+          this.getStepCurrent(this.contract);
         }
-      });
+        this.checkCompletedInstance(this.contract?.status);
+      } else {
+        this.listInsStep = [];
+        this.stepCurrent = null;
+        this.isHaveField = false;
+      }
+    });
+  }
+
+  checkCompletedInstance(dealStatus: any) {
+    if (dealStatus == '1' || dealStatus == '2' || dealStatus == '0') {
+      this.deleteListReason(this.listInsStep);
     }
   }
+  deleteListReason(listStep: any): void {
+    listStep.pop();
+    listStep.pop();
+  }
+  getStepCurrent(data) {
+    this.getStepCurrent = null;
+    if( this.listInsStep != null &&  this.listInsStep.length > 0) {
+      this.stepCurrent = this.listInsStep.filter((x) => x.stepID == data.stepID)[0];
+     }
+  }
+  showColumnControl(stepID) {
+    if (this.listStepsProcess?.length > 0) {
+      var idx = this.listStepsProcess.findIndex((x) => x.recID == stepID);
+      if (idx == -1) return 1;
+      return this.listStepsProcess[idx]?.showColumnControl;
+    }
+    return 1;
+  }
+
+  saveDataStep(e) {
+    if (e) {
+      if (e?.fields != null && e?.fields?.length > 0) {
+        var lstStepsOld = JSON.parse(JSON.stringify(this.lstStepsOld));
+        let lstOlds = [];
+        if (lstStepsOld != null && lstStepsOld.length > 0) {
+          for (var step of lstStepsOld) {
+            if (step?.fields != null && step?.fields?.length > 0) {
+              let js = step?.fields?.find(
+                (x) =>
+                  x?.dataType == 'C' &&
+                  x?.dataValue != null &&
+                  x?.dataValue?.trim() != ''
+              );
+              if (js != null && js?.dataValue != null) {
+                let lsJs = JSON.parse(js?.dataValue);
+                lsJs.forEach((element) => {
+                  if (!lstOlds.some((x) => x.recID == element?.recID)) {
+                    lstOlds.push(element);
+                  }
+                });
+              }
+            }
+          }
+        }
+        for (var item of e?.fields) {
+          if (
+            item?.dataType == 'C' &&
+            item?.dataValue != null &&
+            item?.dataValue?.trim() != ''
+          ) {
+            var lst = JSON.parse(item?.dataValue);
+            if (lstOlds != null && lstOlds.length > 0) {
+              let lstDelete = [];
+              if (lst != null && lst.length > 0) {
+                lstOlds.forEach((ele) => {
+                  let isCheck = lst.some((x) => x.recID == ele?.recID);
+                  if (!isCheck) lstDelete.push(ele);
+                });
+              } else {
+                lstDelete = lstOlds;
+              }
+              for (let i = 0; i < lstDelete.length; i++) {
+                let recID = lstDelete[i]?.recID;
+                var indx = this.lstContacts.findIndex((x) => x.recID == recID);
+                if (indx != -1) {
+                  this.lstContacts.splice(indx, 1);
+                }
+              }
+            }
+            for (var contact of lst) {
+              let idx = this.lstContacts?.findIndex(
+                (x) => x.recID == contact?.recID
+              );
+              if (idx != -1) {
+                this.lstContacts[idx] = contact;
+              } else {
+                this.lstContacts.push(Object.assign({}, contact));
+              }
+            }
+          }
+        }
+        this.lstStepsOld = this.listInsStep;
+        // if (this.loadContactDeal) {
+        //   this.loadContactDeal.loadListContact(this.lstContacts);
+        // }
+      }
+      this.changeDetectorRef.detectChanges();
+    }
+
+    // this.listSteps = e;
+    // this.outDataStep.emit(this.dataStep);
+  }
+
+  // getListInstanceStep() {
+  //   var data = [
+  //     this.dataSelected?.refID,
+  //     this.dataSelected?.processID,
+  //     this.dataSelected?.status,
+  //     '1',
+  //   ];
+
+  //   this.codxCmService.getViewDetailInstanceStep(data).subscribe((res) => {
+  //     if (res) {
+  //       this.listSteps = res[0];
+  //       this.isHaveField = res[1];
+  //       if (this.listSteps) {
+  //         this.lstStepsOld = JSON.parse(JSON.stringify(this.listSteps));
+  //         this.getStepCurrent(this.dataSelected);
+  //       }
+  //       this.isDataLoading = false;
+  //       this.checkCompletedInstance(this.dataSelected?.status);
+  //     } else {
+  //       this.listSteps = [];
+  //       this.stepCurrent = null;
+  //       this.isHaveField = false;
+  //     }
+  //   });
+  // }
 
   changeDataMF(event, data: CM_Contracts) {
     this.changeMF.emit({ e: event, data: data });
@@ -207,30 +363,27 @@ export class ContractsViewDetailComponent
   }
 
   getContractLink(){
+    this.contractLink = null;
     if(this.contract?.parentID){
       this.contractService.getContractByRecID(this.contract?.parentID).subscribe((res) => {
         this.contractLink = res;
       })
-    }else{
-      this.contractLink = null;
     }
   }
   getDeal(){
+    this.deal = null;
     if(this.contract?.dealID){
-      this.contractService.getContractByRecID(this.contract?.parentID).subscribe((res) => {
-        this.contractLink = res;
+      this.codxCmService.getDealByRecID(this.contract?.dealID).subscribe((res) => {
+        this.deal = res;
       })
-    }else{
-      this.contractLink = null;
     }
   }
   getQuotation(){
+    this.quotation = null;
     if(this.contract?.quotationID){
-      this.contractService.getContractByRecID(this.contract?.parentID).subscribe((res) => {
-        this.contractLink = res;
+      this.contractService.getQuotationByQuotationID(this.contract?.quotationID).subscribe((res) => {
+        this.quotation = res;
       })
-    }else{
-      this.contractLink = null;
     }
   }
 
@@ -341,5 +494,46 @@ export class ContractsViewDetailComponent
     oCountFooter[key] = value;
     this.oCountFooter = JSON.parse(JSON.stringify(oCountFooter));
     this.changeDetectorRef.markForCheck();
+  }
+
+  linkData(type:string, recID:string){
+    if (type && recID) {
+      const url1 = this.location.prepareExternalUrl(this.location.path());
+      const parser = document.createElement('a');
+      parser.href = url1;
+      const domain = parser.origin;
+
+      let tenant = this.tenantStore.get().tenant;
+      let url = ``
+      switch(type){
+        case "contract":
+          url = `${domain}/${tenant}/cm/contracts/CM0204?predicate=RecID=@0&dataValue=${recID}`;
+          break;
+        case "deal":
+          url = `${domain}/${tenant}/cm/deals/CM0201?predicate=RecID=@0&dataValue=${recID}`;
+          break;
+        case "quotation":
+          url = `${domain}/${tenant}/cm/quotations/CM0202?predicate=RecID=@0&dataValue=${recID}`;
+          break;
+      }
+      if(url){
+        window.open(url, '_blank');
+      }
+      return;
+    } else {
+      this.notiService.notify('Không tìm thấy dữ liệu', '3');
+    }
+  }
+
+  getListCOntractByParentID(){
+    this.listContractInParentID = [];
+    if(this.contract.parentID) {
+      this.contractService.getContractByParentID(this.contract.parentID).subscribe((res)=>{
+        if(res){
+          this.listContractInParentID = res;
+        }
+      })
+    }
+    
   }
 }

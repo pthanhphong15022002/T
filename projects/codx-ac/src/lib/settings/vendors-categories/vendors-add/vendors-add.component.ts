@@ -15,6 +15,7 @@ import {
   CacheService,
   CallFuncService,
   CodxFormComponent,
+  DataRequest,
   DialogData,
   DialogModel,
   DialogRef,
@@ -69,13 +70,13 @@ export class VendorsAddComponent extends UIComponent implements OnInit {
   }
   lstBank: any = [];
   tabInfo: any[] = [
-    { icon: 'icon-info', text: 'Thông tin chung', name: 'Description' },
-    { icon: 'icon-settings icon-20 me-3', text: 'Thiết lập', name: 'Establish' },
-    { icon: 'icon-directions_bus', text: 'Thông tin giao hàng', name: 'Shipment Details' },
-    { icon: 'icon-location_on', text: 'Danh sách địa chỉ', name: 'Location' },
-    { icon: 'icon-person_pin', text: 'Người liên hệ', name: 'Contact' },
-    { icon: 'icon-i-credit-card-2-back', text: 'Tài khoản ngân hàng', name: 'Banking Account' },
-    { icon: 'icon-20 me-2 icon-tune', text: 'Thông tin khác', name: 'Other Infomation' }
+    { icon: 'icon-info', text: 'Thông tin chung', name: 'description' },
+    { icon: 'icon-settings icon-20 me-3', text: 'Thiết lập', name: 'establish' },
+    { icon: 'icon-directions_bus', text: 'Thông tin giao hàng', name: 'shipment-details' },
+    { icon: 'icon-location_on', text: 'Danh sách địa chỉ', name: 'location' },
+    { icon: 'icon-person_pin', text: 'Người liên hệ', name: 'contact' },
+    { icon: 'icon-i-credit-card-2-back', text: 'Tài khoản ngân hàng', name: 'banking-account' },
+    { icon: 'icon-20 me-2 icon-tune', text: 'Thông tin khác', name: 'other-infomation' }
   ];
   private destroy$ = new Subject<void>();
   constructor(
@@ -108,14 +109,6 @@ export class VendorsAddComponent extends UIComponent implements OnInit {
       this.fmBank,
       'BS'
     );
-
-    if (this.dataDefault.isEdit) {
-      this.api.exec('BS', 'BSBusiness', 'LoadDataAsync', [this.dataDefault.vendorID, "2"]).subscribe((res: any) => {
-        this.lstAddress = res?.lstAddress || [];
-        this.lstContact = res?.lstcontact || [];
-        this.lstBank = res?.lstBank || [];
-      })
-    }
   }
   //#endregion
 
@@ -198,24 +191,70 @@ export class VendorsAddComponent extends UIComponent implements OnInit {
   setValidateForm() {
     let rCustomerID = true;
     let lsRequire: any = [];
-    if (this.form.form.data?._keyAuto == 'CustomerID') rCustomerID = false;
-    lsRequire.push({ field: 'CustomerID', isDisable: false, require: rCustomerID });
+    if (this.form.form.data?._keyAuto == 'VendorID') rCustomerID = false;
+    lsRequire.push({ field: 'VendorID', isDisable: false, require: rCustomerID });
     this.form.form.setRequire(lsRequire);
   }
 
   openFormBank() {
-    let data = {
-      headerText: (this.lblAdd + ' ' + 'tài khoản ngân hàng').toUpperCase(),
-      lstBank: this.lstBank,
-      dataDefault: null,
-    };
-    let option = new DialogModel();
-    option.FormModel = this.fmBank;
-    option.DataService = this.bankService;
-    this.bankService.addNew().subscribe((res: any) => {
+    this.form.form.save(null, 0, '', '', false).pipe(takeUntil(this.destroy$))
+    .subscribe((res: any) => {
+      if(!res) return;
+      if(res.hasOwnProperty('save')){
+        if(res.save.hasOwnProperty('data') && !res.save.data) return;
+      }
+      if(res.hasOwnProperty('update')){
+        if(res.update.hasOwnProperty('data') && !res.update.data) return;
+      }
+      this.bankService.addNew().subscribe((res: any) => {
+        if (res) {
+          let data = {
+            headerText: (this.lblAdd + ' ' + 'tài khoản ngân hàng').toUpperCase(),
+            lstBank: [...this.lstBank],
+            dataDefault: { ...res },
+            objectID : this.form.form.data.vendorID,
+            objectType : '2',
+          };
+          this.cache.gridViewSetup(this.fmBank.formName,this.fmBank.gridViewName).subscribe((o)=>{
+            let option = new DialogModel();
+            option.FormModel = this.fmBank;
+            option.DataService = this.bankService;
+            let dialog = this.callfc.openForm(
+              BankAddComponent,
+              '',
+              500,
+              400,
+              '',
+              data,
+              '',
+              option
+            );
+            dialog.closed.subscribe((res) => {
+              if (res && res?.event) {
+                this.lstBank.push({...res?.event?.bank});
+                this.detectorRef.detectChanges();
+              }
+            })
+          })
+        }
+      })
+    })
+  }
+
+  editBank(dataEdit: any) {  
+    this.bankService.edit(dataEdit).subscribe((res:any)=>{
       if (res) {
-        data.dataDefault = { ...res };
+        let data = {
+          headerText: (this.lblAdd + ' ' + 'tài khoản ngân hàng').toUpperCase(),
+          lstBank: [...this.lstBank],
+          dataDefault: { ...res },
+          objectID : this.form.form.data.vendorID,
+          objectType : '2',
+        };
         this.cache.gridViewSetup(this.fmBank.formName,this.fmBank.gridViewName).subscribe((o)=>{
+          let option = new DialogModel();
+          option.FormModel = this.fmBank;
+          option.DataService = this.bankService;
           let dialog = this.callfc.openForm(
             BankAddComponent,
             '',
@@ -228,7 +267,11 @@ export class VendorsAddComponent extends UIComponent implements OnInit {
           );
           dialog.closed.subscribe((res) => {
             if (res && res?.event) {
-              this.lstBank.push({...res?.event?.bank});
+              let data = res?.event?.bank;
+              let index = this.lstBank.findIndex((x) => x.recID == data.recID);
+              if (index > -1) {
+                this.lstBank[index] = data;
+              }
               this.detectorRef.detectChanges();
             }
           })
@@ -237,19 +280,79 @@ export class VendorsAddComponent extends UIComponent implements OnInit {
     })
   }
 
+  deleteBank(dataDelete: any) {
+    this.bankService.delete([dataDelete], true,null,null,null,null,null,false).pipe(takeUntil(this.destroy$)).subscribe((res: any) => {
+      if (res && !res?.error) {
+        let index = this.lstBank.findIndex((x) => x.recID == dataDelete.recID);
+        if (index > -1) {
+          this.lstBank.splice(index, 1);
+          this.detectorRef.detectChanges();
+        }
+      }
+    });
+  }
+
   openFormContact() {
-    let data = {
-      headerText: (this.lblAdd + ' ' + 'người liên hệ').toUpperCase(),
-      lstContact: [...this.lstContact],
-      dataDefault: null,
-    };
-    let option = new DialogModel();
-    option.FormModel = this.fmContact;
-    option.DataService = this.contactService;
-    this.contactService.addNew().subscribe((res: any) => {
+    this.form.form.save(null, 0, '', '', false).pipe(takeUntil(this.destroy$))
+    .subscribe((res: any) => {
+      if(!res) return;
+      if(res.hasOwnProperty('save')){
+        if(res.save.hasOwnProperty('data') && !res.save.data) return;
+      }
+      if(res.hasOwnProperty('update')){
+        if(res.update.hasOwnProperty('data') && !res.update.data) return;
+      }
+      this.contactService.addNew().subscribe((res: any) => {
+        if (res) {
+          let data = {
+            headerText: (this.lblAdd + ' ' + 'người liên hệ').toUpperCase(),
+            lstContact: [...this.lstContact],
+            dataDefault: { ...res },
+            objectID : this.form.form.data.vendorID,
+            objectName : this.form.form.data.vendorName,
+            objectType : '2',
+          };
+          this.cache.gridViewSetup(this.fmContact.formName,this.fmContact.gridViewName).subscribe((o)=>{
+            let option = new DialogModel();
+            option.FormModel = this.fmContact;
+            option.DataService = this.contactService;
+            let dialog = this.callfc.openForm(
+              ContactAddComponent,
+              '',
+              650,
+              600,
+              '',
+              data,
+              '',
+              option
+            );
+            dialog.closed.subscribe((res) => {
+              if (res && res?.event) {
+                this.lstContact.push({...res?.event?.contact});
+                this.detectorRef.detectChanges();
+              }
+            })
+          })
+        }
+      })
+    })
+  }
+
+  editContact(dataEdit: any){
+    this.contactService.edit(dataEdit).subscribe((res:any)=>{
       if (res) {
-        data.dataDefault = { ...res };
+        let data = {
+          headerText: (this.lblAdd + ' ' + 'người liên hệ').toUpperCase(),
+          lstContact: [...this.lstContact],
+          dataDefault: { ...res },
+          objectID : this.form.form.data.vendorID,
+          objectName : this.form.form.data.vendorName,
+          objectType : '2',
+        };
         this.cache.gridViewSetup(this.fmContact.formName,this.fmContact.gridViewName).subscribe((o)=>{
+          let option = new DialogModel();
+          option.FormModel = this.fmContact;
+          option.DataService = this.contactService;
           let dialog = this.callfc.openForm(
             ContactAddComponent,
             '',
@@ -262,7 +365,11 @@ export class VendorsAddComponent extends UIComponent implements OnInit {
           );
           dialog.closed.subscribe((res) => {
             if (res && res?.event) {
-              this.lstContact.push({...res?.event?.contact});
+              let data = res?.event?.contact;
+              let index = this.lstContact.findIndex((x) => x.recID == data.recID);
+              if (index > -1) {
+                this.lstContact[index] = data;
+              }
               this.detectorRef.detectChanges();
             }
           })
@@ -271,19 +378,79 @@ export class VendorsAddComponent extends UIComponent implements OnInit {
     })
   }
 
+  deleteContact(dataDelete:any){
+    this.contactService.delete([dataDelete], true,null,null,null,null,null,false).pipe(takeUntil(this.destroy$)).subscribe((res: any) => {
+      if (res && !res?.error) {
+        let index = this.lstContact.findIndex((x) => x.recID == dataDelete.recID);
+        if (index > -1) {
+          this.lstContact.splice(index, 1);
+          this.detectorRef.detectChanges();
+        }
+      }
+    });
+  }
+
   openFormAddress() {
-    let data = {
-      headerText: (this.lblAdd + ' ' + 'địa chỉ').toUpperCase(),
-      lstAddress: [...this.lstAddress],
-      dataDefault: null,
-    };
-    let option = new DialogModel();
-    option.FormModel = this.fmAddress;
-    option.DataService = this.addressService;
-    this.addressService.addNew().subscribe((res: any) => {
+    this.form.form.save(null, 0, '', '', false).pipe(takeUntil(this.destroy$))
+    .subscribe((res: any) => {
+      if(!res) return;
+      if(res.hasOwnProperty('save')){
+        if(res.save.hasOwnProperty('data') && !res.save.data) return;
+      }
+      if(res.hasOwnProperty('update')){
+        if(res.update.hasOwnProperty('data') && !res.update.data) return;
+      }
+      this.addressService.addNew().subscribe((res: any) => {
+        if (res) {
+          let data = {
+            headerText: (this.lblAdd + ' ' + 'địa chỉ').toUpperCase(),
+            lstAddress: [...this.lstAddress],
+            dataDefault: { ...res },
+            objectID : this.form.form.data.vendorID,
+            objectName : this.form.form.data.vendorName,
+            objectType : '2',
+          };
+          this.cache.gridViewSetup(this.fmAddress.formName, this.fmAddress.gridViewName).subscribe((o) => {
+            let option = new DialogModel();
+            option.FormModel = this.fmAddress;
+            option.DataService = this.addressService;
+            let dialog = this.callfc.openForm(
+              AddressAddComponent,
+              '',
+              600,
+              500,
+              '',
+              data,
+              '',
+              option
+            );
+            dialog.closed.subscribe((res) => {
+              if (res && res?.event) {
+                this.lstAddress.push({ ...res?.event?.address });
+                this.detectorRef.detectChanges();
+              }
+            })
+          })
+        }
+      })
+    })
+  }
+
+  editAddress(dataEdit: any){
+    this.addressService.edit(dataEdit).subscribe((res:any)=>{
       if (res) {
-        data.dataDefault = { ...res };
-        this.cache.gridViewSetup(this.fmAddress.formName,this.fmAddress.gridViewName).subscribe((o)=>{
+        let data = {
+          headerText: (this.lblAdd + ' ' + 'địa chỉ').toUpperCase(),
+          lstAddress: [...this.lstAddress],
+          dataDefault: { ...res },
+          objectID : this.form.form.data.vendorID,
+          objectName : this.form.form.data.vendorName,
+          objectType : '2',
+        };
+        this.cache.gridViewSetup(this.fmAddress.formName, this.fmAddress.gridViewName).subscribe((o) => {
+          let option = new DialogModel();
+          option.FormModel = this.fmAddress;
+          option.DataService = this.addressService;
           let dialog = this.callfc.openForm(
             AddressAddComponent,
             '',
@@ -296,7 +463,11 @@ export class VendorsAddComponent extends UIComponent implements OnInit {
           );
           dialog.closed.subscribe((res) => {
             if (res && res?.event) {
-              this.lstAddress.push({...res?.event?.address});
+              let data = res?.event?.address;
+              let index = this.lstAddress.findIndex((x) => x.recID == data.recID);
+              if (index > -1) {
+                this.lstAddress[index] = data;
+              }
               this.detectorRef.detectChanges();
             }
           })
@@ -305,37 +476,77 @@ export class VendorsAddComponent extends UIComponent implements OnInit {
     })
   }
 
+  deleteAddress(dataDelete:any){
+    this.addressService.delete([dataDelete], true,null,null,null,null,null,false).pipe(takeUntil(this.destroy$)).subscribe((res: any) => {
+      if (res && !res?.error) {
+        let index = this.lstAddress.findIndex((x) => x.recID == dataDelete.recID);
+        if (index > -1) {
+          this.lstAddress.splice(index, 1);
+          this.detectorRef.detectChanges();
+        }
+      }
+    });
+  }
+
+  tabChange(event:any){
+    if(event?.nextId.toLowerCase() === 'location' && this.form.form.data.isEdit && this.lstAddress.length == 0){
+      let options = new DataRequest();
+      options.entityName = 'BS_AddressBook';
+      options.pageLoading = false;
+      options.predicates = 'ObjectID=@0 and ObjectType=@1';
+      options.dataValues = `${this.form.form.data.vendorID};2`;
+      this.api
+        .execSv('BS', 'Core', 'DataBusiness', 'LoadDataAsync', options).subscribe((res: any) => {
+          this.lstAddress = res[0];
+          this.detectorRef.detectChanges();
+        })
+    }
+
+    if(event?.nextId.toLowerCase() === 'contact' && this.form.form.data.isEdit && this.lstContact.length == 0){
+      let options = new DataRequest();
+      options.entityName = 'BS_Contacts';
+      options.pageLoading = false;
+      options.predicates = 'ObjectID=@0 and ObjectType=@1';
+      options.dataValues = `${this.form.form.data.vendorID};2`;
+      this.api
+        .execSv('BS', 'Core', 'DataBusiness', 'LoadDataAsync', options).subscribe((res: any) => {
+          this.lstContact = res[0];
+          this.detectorRef.detectChanges();
+        })
+    }
+
+    if(event?.nextId.toLowerCase() === 'banking-account' && this.form.form.data.isEdit && this.lstBank.length == 0){
+      let options = new DataRequest();
+      options.entityName = 'BS_BankAccounts';
+      options.pageLoading = false;
+      options.predicates = 'ObjectID=@0 and ObjectType=@1';
+      options.dataValues = `${this.form.form.data.vendorID};2`;
+      this.api
+        .execSv('BS', 'Core', 'DataBusiness', 'LoadDataAsync', options).subscribe((res: any) => {
+          this.lstBank = res[0];
+          this.detectorRef.detectChanges();
+        })
+    }
+  }
+
   //#endregion
 
   //#region CRUD
   onSave() {
-    this.form.form.setValue('customerID','0',{});
-    this.form.form.save((o: RequestOption) => {
-      o.service = 'PS';
-      o.assemblyName = 'PS';
-      o.className = 'VendorsBusiness';
-      o.methodName = (this.form.form.data.isAdd || this.form.form.data.isCopy) ? 'SaveAsync' : 'UpdateAsync';
-      o.data = [this.form.form.data,this.lstAddress,this.lstContact,this.lstBank];
-      return true;
-    }, 0, '', '', false)
-    .pipe(takeUntil(this.destroy$))
+    this.form.form.save(null, 0, '', '', false).pipe(takeUntil(this.destroy$))
     .subscribe((res: any) => {
       if(!res) return;
-      if (res) {
-        if (this.form.form.data.isAdd || this.form.form.data.isCopy) {
-          this.dialog.dataService
-            .add(this.form.form.data)
-            .subscribe();
-        }else{
-          this.dialog.dataService.update({...this.form.form.data},true).subscribe();
-          this.detectorRef.detectChanges();
-        }
-        this.dialog.close();
-        if (this.form.data.isAdd || this.form.data.isCopy)
-            this.notification.notifyCode('SYS006');
-        else 
-            this.notification.notifyCode('SYS007');
+      if(res.hasOwnProperty('save')){
+        if(res.save.hasOwnProperty('data') && !res.save.data) return;
       }
+      if(res.hasOwnProperty('update')){
+        if(res.update.hasOwnProperty('data') && !res.update.data) return;
+      }
+      this.dialog.close();
+      if (this.form.data.isAdd || this.form.data.isCopy)
+        this.notification.notifyCode('SYS006');
+      else
+        this.notification.notifyCode('SYS007');
     })
   }
   //#endregion

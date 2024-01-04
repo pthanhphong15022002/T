@@ -35,17 +35,14 @@ export class CustomersComponent extends UIComponent {
 
   //#region Contructor
   @ViewChild('templateGrid') templateGrid?: TemplateRef<any>;
-  views: Array<ViewModel> = []; //? model view
+  views: Array<ViewModel> = [];
   button: ButtonModel[] = [{
     id: 'btnAdd',
-    icon: 'icon-i-person-plus',
+    icon: 'icon-business',
   }];
-  funcName = ''; //? tên truyền vào headertext
+  funcName = '';
   headerText: any;
-  optionSidebar: SidebarModel = new SidebarModel();
-  dataDefault:any;
-  private destroy$ = new Subject<void>(); //? list observable hủy các subscribe api
-  
+  private destroy$ = new Subject<void>();
   constructor(
     private inject: Injector,
     private callfunc: CallFuncService,
@@ -74,11 +71,6 @@ export class CustomersComponent extends UIComponent {
         },
       },
     ];
-
-    //* thiết lập cấu hình sidebar
-    this.optionSidebar.DataService = this.view.dataService;
-    this.optionSidebar.FormModel = this.view.formModel;
-    this.optionSidebar.Width = '800px';
   }
 
   ngDoCheck() {
@@ -125,33 +117,25 @@ export class CustomersComponent extends UIComponent {
   //#region Function
   addNew(e) {
     this.headerText = (e.text + ' ' + this.funcName).toUpperCase();
-    let data = {
-      headerText: this.headerText,
-      dataDefault:{...this.dataDefault}
-    };
-    if(!this.dataDefault){
-      this.view.dataService.addNew().subscribe((res: any) => {
-        if(res){
-          res.isAdd = true;
-          this.dataDefault = {...res};
-          data.dataDefault = {...this.dataDefault};
-          let dialog = this.callfunc.openSide(
-            CustomersAddComponent,
-            data,
-            this.optionSidebar,
-            this.view.funcID
-          );
-        }       
-      });
-    }else{
-      data.dataDefault.recID = Util.uid();
-      let dialog = this.callfunc.openSide(
-        CustomersAddComponent,
-        data,
-        this.optionSidebar,
-        this.view.funcID
-      );
-    }
+    this.view.dataService.addNew().subscribe((res: any) => {
+      if(res){
+        res.isAdd = true;
+        let data = {
+          headerText: this.headerText,
+          dataDefault:{...res}
+        };
+        let option = new SidebarModel();
+        option.DataService = this.view?.dataService;
+        option.FormModel = this.view?.formModel;
+        option.Width = '800px';
+        let dialog = this.callfunc.openSide(
+          CustomersAddComponent,
+          data,
+          option,
+          this.view.funcID
+        );
+      }       
+    });
   }
   edit(e, dataEdit) {
     this.headerText = (e.text + ' ' + this.funcName).toUpperCase();
@@ -167,10 +151,14 @@ export class CustomersComponent extends UIComponent {
             headerText: this.headerText,
             dataDefault:{...res}
           };
+          let option = new SidebarModel();
+          option.DataService = this.view?.dataService;
+          option.FormModel = this.view?.formModel;
+          option.Width = '800px';
           let dialog = this.callfunc.openSide(
             CustomersAddComponent,
             data,
-            this.optionSidebar,
+            option,
             this.view.funcID
           );
         }    
@@ -189,10 +177,14 @@ export class CustomersComponent extends UIComponent {
           headerText: this.headerText,
           dataDefault:{...res}
         };
+        let option = new SidebarModel();
+        option.DataService = this.view?.dataService;
+        option.FormModel = this.view?.formModel;
+        option.Width = '800px';
         let dialog = this.callfunc.openSide(
           CustomersAddComponent,
           data,
-          this.optionSidebar,
+          option,
           this.view.funcID
         );
       }   

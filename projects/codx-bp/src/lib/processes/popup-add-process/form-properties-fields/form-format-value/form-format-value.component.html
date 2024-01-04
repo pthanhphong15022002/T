@@ -1,0 +1,591 @@
+<ng-container [ngSwitch]="subItem.controlType">
+  <ng-container *ngSwitchCase="'SubTitle'">
+    <ng-container
+      *ngTemplateOutlet="text; context: { $implicit: subItem }"
+    ></ng-container>
+  </ng-container>
+  <ng-container *ngSwitchCase="'Text'">
+    <ng-container
+      *ngTemplateOutlet="text; context: { $implicit: subItem }"
+    ></ng-container>
+  </ng-container>
+  <ng-container *ngSwitchCase="'ValueList'">
+    <ng-container
+      *ngTemplateOutlet="valueList; context: { $implicit: subItem }"
+    ></ng-container>
+  </ng-container>
+  <ng-container *ngSwitchCase="'ComboBox'">
+    <ng-container
+      *ngTemplateOutlet="combobox; context: { $implicit: subItem }"
+    ></ng-container>
+  </ng-container>
+  <ng-container *ngSwitchCase="'DateTime'">
+    <ng-container
+      *ngTemplateOutlet="datetime; context: { $implicit: subItem }"
+    ></ng-container>
+  </ng-container>
+  <ng-container *ngSwitchCase="'Attachment'">
+    <ng-container
+      *ngTemplateOutlet="attachment; context: { $implicit: subItem }"
+    ></ng-container>
+  </ng-container>
+  <ng-container *ngSwitchCase="'Number'">
+    <ng-container
+      *ngTemplateOutlet="text; context: { $implicit: subItem }"
+    ></ng-container>
+  </ng-container>
+  <ng-container *ngSwitchCase="'YesNo'">
+    <ng-container
+      *ngTemplateOutlet="yesno; context: { $implicit: subItem }"
+    ></ng-container>
+  </ng-container>
+  <ng-container *ngSwitchCase="'User'">
+    <ng-container
+      *ngTemplateOutlet="valueList; context: { $implicit: subItem }"
+    ></ng-container>
+  </ng-container>
+  <ng-container *ngSwitchCase="'Share'">
+    <ng-container
+      *ngTemplateOutlet="share; context: { $implicit: subItem }"
+    ></ng-container>
+  </ng-container>
+  <ng-container *ngSwitchCase="'Rank'">
+    <ng-container
+      *ngTemplateOutlet="rank; context: { $implicit: subItem }"
+    ></ng-container>
+  </ng-container>
+  <ng-container *ngSwitchCase="'Table'">
+    <ng-container
+      *ngTemplateOutlet="tables; context: { $implicit: subItem }"
+    ></ng-container>
+  </ng-container>
+  <ng-container *ngSwitchCase="'Progress'">
+    <ng-container
+      *ngTemplateOutlet="progress; context: { $implicit: subItem }"
+    ></ng-container>
+  </ng-container>
+  <ng-container *ngSwitchCase="'Email'">
+    <ng-container
+      *ngTemplateOutlet="text; context: { $implicit: subItem }"
+    ></ng-container>
+  </ng-container>
+  <ng-container *ngSwitchCase="'Address'">
+    <ng-container
+      *ngTemplateOutlet="text; context: { $implicit: subItem }"
+    ></ng-container>
+  </ng-container>
+  <ng-container *ngSwitchCase="'Expression'">
+    <ng-container
+      *ngTemplateOutlet="text; context: { $implicit: subItem }"
+    ></ng-container>
+  </ng-container>
+  <ng-container *ngSwitchCase="'Phone'">
+    <ng-container
+      *ngTemplateOutlet="text; context: { $implicit: subItem }"
+    ></ng-container>
+  </ng-container>
+  <ng-container *ngSwitchDefault>...</ng-container>
+</ng-container>
+
+<!-- Văn bản || Số -->
+<ng-template #text let-data>
+  <div class="d-flex flex-column w-100">
+    <div class="d-flex align-items-center" *ngIf="isShowTextHeader">
+      <i class="icon-grid_round me-2 cursor-move" cdkDragHandle></i>
+      <span class="fw-bold">{{ data.title }}</span>
+      <span class="text-danger ms-2" *ngIf="data?.isRequired">(*)</span>
+    </div>
+    <codx-input
+      *ngIf="data?.controlType != 'Number'"
+      class="w-100 border mt-2 px-4 py-3 rd-3px"
+      [field]="data?.fieldName"
+      type="text"
+      [format]="data?.dataFormat"
+      [require]="data?.isRequired"
+      [placeholder]="data?.description || ''"
+      [crrValue]="data?.defaultValue"
+      [disabled]="true"
+    ></codx-input>
+    <codx-input
+      *ngIf="data?.controlType == 'Number'"
+      class="w-100 border mt-2 px-4 py-3 rd-3px"
+      [field]="data?.fieldName"
+      type="number"
+      [format]="data?.dataFormat"
+      [require]="data?.isRequired"
+      [placeholder]="data?.description || ''"
+      [crrValue]="data?.defaultValue"
+      [disabled]="true"
+    ></codx-input>
+  </div>
+</ng-template>
+
+<!-- Danh sách || User-->
+<ng-template #valueList let-data>
+  <div class="d-flex flex-column w-100">
+    <div class="d-flex align-items-center" *ngIf="isShowTextHeader">
+      <i class="icon-grid_round me-2 cursor-move" cdkDragHandle></i>
+      <span class="fw-bold">{{ data.title }}</span>
+      <span class="text-danger ms-2" *ngIf="data?.isRequired">(*)</span>
+    </div>
+
+    <div *ngIf="data?.controlType == 'ValueList'" class="mt-2">
+      <ng-container *ngIf="data?.refType == '2'">
+        <ng-container *ngIf="!mutiSelectVll">
+          <ejs-combobox
+            class="w-100"
+            #viewComboxForm
+            [dataSource]="datasVll"
+            [fields]="fields"
+            [value]=""
+            [allowFiltering]="false"
+            [placeholder]="data?.description ?? ''"
+            [itemTemplate]="customTemplate"
+            [valueTemplate]="valueCustomTemplate"
+          >
+          </ejs-combobox>
+        </ng-container>
+
+        <ng-container *ngIf="mutiSelectVll">
+          <ejs-multiselect
+            class="w-100"
+            [dataSource]="datasVll"
+            [mode]="'Default'"
+            [fields]="fields"
+            [value]="[]"
+            [showDropDownIcon]="true"
+            [placeholder]="data?.description ?? ''"
+            [itemTemplate]="customTemplate"
+            [valueTemplate]="valueCustomTemplate"
+          >
+          </ejs-multiselect>
+        </ng-container>
+      </ng-container>
+      <ng-container *ngIf="data?.refType == '2C'"> bbbb </ng-container>
+      <ng-template #customTemplate let-data>
+        <div class="d-flex align-items-center">
+          <span
+            [ngClass]="data?.icon"
+            class="me-2"
+            [style.color]="data.textColor"
+            [style.backgroundColor]="data.color"
+          ></span>
+          <span
+            [style.color]="data.textColor"
+            [style.backgroundColor]="data.color"
+            >{{ data.textValue }}</span
+          >
+        </div>
+      </ng-template>
+      <ng-template #valueCustomTemplate let-data>
+        <div class="d-flex align-items-center p-1">
+          <span
+            [ngClass]="data?.icon"
+            class="me-2"
+            [style.color]="data.textColor"
+            [style.backgroundColor]="data.color"
+          ></span>
+          <span
+            [style.color]="data.textColor"
+            [style.backgroundColor]="data.color"
+            >{{ data.textValue }}</span
+          >
+        </div>
+      </ng-template>
+    </div>
+    <div *ngIf="data?.controlType == 'User'">
+      <div *ngIf="data?.dataType == 'P'">
+        <button
+          type="button"
+          class="btn btn-sm btn-icon btn-light-primary d-flex align-items-center justify-content-between w-100 border mt-2 px-4 py-3 rd-3px"
+          (click)="openPopup()"
+        >
+          <span class="icon-person_add_alt_1 icon-16"></span>
+        </button>
+        <ng-container *ngIf="isPopupUserCbb">
+          <codx-combobox-popup
+            [comboboxName]="'Users'"
+            [field]="'cbbUser'"
+            [multiple]="data.multiselect ?? false"
+            [width]="700"
+            [height]="600"
+            [value]=""
+            (clickSave)="valueChangePop($event)"
+          >
+          </codx-combobox-popup>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<!-- ComboBox -->
+<ng-template #combobox let-data>
+  <div class="d-flex flex-column w-100">
+    <div class="d-flex align-items-center" *ngIf="isShowTextHeader">
+      <i class="icon-grid_round me-2 cursor-move" cdkDragHandle></i>
+      <span class="fw-bold">{{ data.title }}</span>
+      <span class="text-danger ms-2" *ngIf="data?.isRequired">(*)</span>
+    </div>
+    <codx-input
+      class="d-flex align-items-center justify-content-between w-100 border mt-2 px-4 py-3 rd-3px"
+      [field]="data?.fieldName"
+      type="combobox"
+      [refType]="data?.refType"
+      [refValue]="data?.refValue"
+      [format]="data?.dataType"
+      [placeholder]="data?.description || ''"
+      [crrValue]="data?.defaultValue"
+      [disabled]="true"
+    ></codx-input>
+  </div>
+</ng-template>
+
+<!-- DateTime -->
+<ng-template #datetime let-data>
+  <div class="d-flex flex-column w-100">
+    <div class="d-flex align-items-center" *ngIf="isShowTextHeader">
+      <i class="icon-grid_round me-2 cursor-move" cdkDragHandle></i>
+      <span class="fw-bold">{{ data.title }}</span>
+      <span class="text-danger ms-2" *ngIf="data?.isRequired">(*)</span>
+    </div>
+    <codx-input
+      class="d-flex align-items-center justify-content-between w-100 border mt-2 px-4 py-3 rd-3px"
+      [field]="data?.fieldName"
+      type="datetime"
+      [format]="data?.dataFormat"
+      [placeholder]="data?.description || ''"
+      [crrValue]="data?.defaultValue ?? ''"
+      [disabled]="true"
+    ></codx-input>
+  </div>
+</ng-template>
+
+<!-- attachment -->
+<ng-template #attachment let-data>
+  <div class="d-flex flex-column w-100">
+    <div class="d-flex align-items-center" *ngIf="isShowTextHeader">
+      <i class="icon-grid_round me-2 cursor-move" cdkDragHandle></i>
+      <span class="fw-bold">{{ data.title }}</span>
+      <span class="text-danger ms-2" *ngIf="data?.isRequired">(*)</span>
+    </div>
+    <div
+      class="d-flex align-items-center justify-content-between w-100 border-dotted mt-2 px-4 py-8 rd-5px bd-w-2px bg-item-lightest bc-item-lighter"
+    >
+      <div class="d-flex flex-column">
+        <span class="fw-bold">Chọn 1 file từ máy của bạn</span>
+        <span class="text-muted">Kéo thả tài liệu vào đây</span>
+      </div>
+      <div
+        class="d-flex align-items-center justify-content-between rounded bg-primary py-3 px-5"
+      >
+        <span class="text-white">Chọn tập tin</span>
+        <img
+          src="../../assets/themes/sys/default/img/BrowseLocal.svg"
+          class="text-white ms-6"
+        />
+        <img
+          src="../../assets/themes/sys/default/img/BrowseCoDX.svg"
+          class="img-attachment-codx ms-3"
+        />
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<!-- yesno -->
+<ng-template #yesno let-data>
+  <div
+    class="d-flex align-items-center justify-content-between w-100 form-switch ps-0"
+  >
+    <div class="d-flex align-items-center" *ngIf="isShowTextHeader">
+      <i class="icon-grid_round me-2 cursor-move" cdkDragHandle></i>
+      <span class="fw-bold">{{ data.title }}</span>
+      <span class="text-danger ms-2" *ngIf="data?.isRequired">(*)</span>
+    </div>
+    <codx-input
+      [field]="data?.fieldName"
+      type="switch"
+      *ngIf="data?.dataType == 's'"
+      [showSpinButton]="false"
+      [crrValue]="data?.defaultValue ?? false"
+      [disabled]="true"
+    ></codx-input>
+    <div *ngIf="data?.dataType == 'c'">
+      <codx-input
+        id="yes"
+        name="{{ data?.recID }} {{ data.fieldName }}"
+        class="test-check me-3"
+        type="radio"
+        label="Yes"
+        field="yes"
+        [checked]="data?.defaultValue ?? false"
+        [disabled]="true"
+      ></codx-input>
+      <codx-input
+        id="no"
+        name="{{ data?.recID }}{{ data.fieldName }}"
+        class="test-check"
+        type="radio"
+        label="No"
+        field="no"
+        [checked]="!data?.defaultValue ?? false"
+        [disabled]="true"
+      ></codx-input>
+    </div>
+    <codx-input
+      [field]="data?.fieldName"
+      *ngIf="data?.dataType == 'checkbox'"
+      type="checkbox"
+      [showSpinButton]="false"
+      [crrValue]="data?.defaultValue || false"
+      [disabled]="true"
+    ></codx-input>
+  </div>
+</ng-template>
+
+<!-- Share -->
+<ng-template #share let-data>
+  <div class="d-flex flex-column w-100">
+    <div class="d-flex align-items-center" *ngIf="isShowTextHeader">
+      <i class="icon-grid_round me-2 cursor-move" cdkDragHandle></i>
+      <span class="fw-bold">{{ data.title }}</span>
+      <span class="text-danger ms-2" *ngIf="data?.isRequired">(*)</span>
+    </div>
+    <div
+      class="d-flex align-items-center justify-content-between w-100 border mt-2 px-4 py-3 rd-3px"
+    >
+      <span class="text-muted text-truncate mw-55px">Câu trả lời</span>
+      <i class="icon-person_add_alt_1 text-primary"></i>
+    </div>
+  </div>
+</ng-template>
+
+<!-- Rank -->
+<ng-template #rank let-data>
+  <div class="d-flex flex-column w-100">
+    <div class="d-flex align-items-center" *ngIf="isShowTextHeader">
+      <i class="icon-grid_round me-2 cursor-move" cdkDragHandle></i>
+      <span class="fw-bold">{{ data.title }}</span>
+      <span class="text-danger ms-2" *ngIf="data?.isRequired">(*)</span>
+    </div>
+    <div class="mt-2">
+      <div class="ratio-slider">
+        <div class="icons-container">
+          <div
+            *ngFor="
+              let i of createRangeArray(
+                data?.rank?.minValue,
+                data?.rank?.maxValue
+              )
+            "
+          >
+            <div
+              [ngClass]="data?.rank?.type == '2' ? data?.rank?.icon : 'icon'"
+              [ngbTooltip]="data?.rank?.type == '2' ? i : null"
+              [attr.data-value]="i"
+              [ngStyle]="
+                data?.rank?.type == '2'
+                  ? { color: data?.rank?.color, 'font-size': '20px' }
+                  : ''
+              "
+            >
+              {{ data?.rank?.type == "1" ? i : "" }}
+            </div>
+          </div>
+        </div>
+        <input
+          type="range"
+          id="ratio"
+          [min]="data?.rank?.minValue"
+          [max]="data?.rank?.maxValue"
+          step="1"
+          [value]="data?.defaultValue || '0'"
+          [disabled]="true"
+        />
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<!-- Table -->
+<ng-template #tables let-data>
+  <div class="d-flex flex-column w-100">
+    <div class="d-flex align-items-center" *ngIf="isShowTextHeader">
+      <i class="icon-grid_round me-2 cursor-move" cdkDragHandle></i>
+      <span class="fw-bold">{{ data.title }}</span>
+      <span class="text-danger ms-2" *ngIf="data?.isRequired">(*)</span>
+    </div>
+    <table class="table table-bordered mt-2">
+      <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">First</th>
+          <th scope="col">Last</th>
+          <th scope="col">Handle</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th scope="row">1</th>
+          <td>Mark</td>
+          <td>Otto</td>
+          <td>@mdo</td>
+        </tr>
+        <tr>
+          <th scope="row">2</th>
+          <td>Jacob</td>
+          <td>Thornton</td>
+          <td>@fat</td>
+        </tr>
+        <tr>
+          <th scope="row">3</th>
+          <td colspan="2">Larry the Bird</td>
+          <td>@twitter</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</ng-template>
+
+<!-- Progress -->
+<ng-template #progress let-data>
+  <div class="d-flex flex-column w-100">
+    <div class="d-flex align-items-center" *ngIf="isShowTextHeader">
+      <i class="icon-grid_round me-2 cursor-move" cdkDragHandle></i>
+      <span class="fw-bold">{{ data.title }}</span>
+      <span class="text-danger ms-2" *ngIf="data?.isRequired">(*)</span>
+    </div>
+    <div class="ratio-slider mt-5">
+      <div class="icons-container progresspg">
+        <div [attr.data-value]="0">0%</div>
+        <div [attr.data-value]="100">100%</div>
+      </div>
+      <div class="h-10px position-relative bg-gray-200 rounded-4 w-100">
+        <div
+          class="rounded-4 h-10px"
+          [style.background-color]="data?.rank?.color"
+          role="progressbar"
+          [style.width]="'50%'"
+          aria-valuenow="50"
+          aria-valuemin="0"
+          aria-valuemax="100"
+        ></div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<!-- Email -->
+<ng-template #email let-data>
+  <div class="d-flex flex-column w-100">
+    <div class="d-flex align-items-center" *ngIf="isShowTextHeader">
+      <i class="icon-grid_round me-2 cursor-move" cdkDragHandle></i>
+      <span class="fw-bold">{{ data.title }}</span>
+      <span class="text-danger ms-2" *ngIf="data?.isRequired">(*)</span>
+    </div>
+    <div class="d-flex align-items-center justify-content-between w-100">
+      <codx-input
+        class="border mt-2 px-4 py-3 rd-3px"
+        [field]="data?.fieldName"
+        type="text"
+        [require]="data?.isRequired"
+        [placeholder]="data?.description || ''"
+        [crrValue]="data?.defaultValue ?? ''"
+        [disabled]="true"
+      ></codx-input>
+      <i class="icon-email text-dark"></i>
+    </div>
+  </div>
+</ng-template>
+
+<!-- Address -->
+<ng-template #address let-data>
+  <div class="d-flex flex-column w-100">
+    <div class="d-flex align-items-center" *ngIf="isShowTextHeader">
+      <i class="icon-grid_round me-2 cursor-move" cdkDragHandle></i>
+      <span class="fw-bold">{{ data.title }}</span>
+      <span class="text-danger ms-2" *ngIf="data?.isRequired">(*)</span>
+    </div>
+    <div class="d-flex align-items-center justify-content-between w-100">
+      <codx-input
+        class="border mt-2 px-4 py-3 rd-3px"
+        [field]="data?.fieldName"
+        type="text"
+        [require]="data?.isRequired"
+        [placeholder]="data?.description || ''"
+        [crrValue]="data?.defaultValue ?? ''"
+        [disabled]="true"
+      ></codx-input>
+      <i class="icon-location_on text-dark"></i>
+    </div>
+  </div>
+</ng-template>
+
+<!-- Expression -->
+<ng-template #expression let-data>
+  <div class="d-flex flex-column w-100">
+    <div class="d-flex align-items-center" *ngIf="isShowTextHeader">
+      <i class="icon-grid_round me-2 cursor-move" cdkDragHandle></i>
+      <span class="fw-bold">{{ data.title }}</span>
+      <span class="text-danger ms-2" *ngIf="data?.isRequired">(*)</span>
+    </div>
+    <div class="d-flex align-items-center justify-content-between w-100">
+      <codx-input
+        class="border mt-2 px-4 py-3 rd-3px"
+        [field]="data?.fieldName"
+        type="text"
+        [require]="data?.isRequired"
+        [placeholder]="data?.description || ''"
+        [crrValue]="data?.defaultValue ?? ''"
+        [disabled]="true"
+      ></codx-input>
+      <i class="icon-calculate text-dark"></i>
+    </div>
+  </div>
+</ng-template>
+
+<!-- Phone -->
+<ng-template #phone let-data>
+  <div class="d-flex flex-column w-100">
+    <div class="d-flex align-items-center" *ngIf="isShowTextHeader">
+      <i class="icon-grid_round me-2 cursor-move" cdkDragHandle></i>
+      <span class="fw-bold">{{ data.title }}</span>
+      <span class="text-danger ms-2" *ngIf="data?.isRequired">(*)</span>
+    </div>
+    <div class="d-flex align-items-center justify-content-between w-100">
+      <codx-input
+        class="border mt-2 px-4 py-3 rd-3px"
+        [field]="data?.fieldName"
+        type="text"
+        [require]="data?.isRequired"
+        [placeholder]="data?.description || ''"
+        [crrValue]="data?.defaultValue ?? ''"
+        [disabled]="true"
+      ></codx-input>
+      <i class="icon-settings_phone text-dark"></i>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #tempValueList let-item>
+  <lib-format-valuelist [item]="item"></lib-format-valuelist>
+</ng-template>
+
+<ng-template #empty>
+  <div class="empty-data">
+    <div class="container h-100">
+      <div class="list-empty card card-flush h-100">
+        <div class="d-flex flex-column flex-center justify-content-center">
+          <img
+            src="../assets/themes/sys/default/img/DataEmpty.svg"
+            class="w-200px"
+          />
+          <div class="fs-5 text-dark fw-bold mt-2 text-center">
+            {{ "BP011" | mssg | async }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>

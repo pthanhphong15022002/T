@@ -279,11 +279,20 @@
       </div>
     </div>
 
-    <div class="form-group" *ngIf="typeTask?.value == 'F'">
-      <div>
-        <codx-label fiedName="FieldID" [formModel]="form?.formModel">
-        </codx-label>
-        <span *ngIf="typeTask?.value === 'F'" class="default">*</span>
+    <div class="form-group" *ngIf="typeTask?.value === 'CO' || typeTask?.value === 'F'">
+      <div class="d-flex justify-content-between align-items-center">
+        <codx-label
+          fiedName="FieldID"
+          [formModel]="form?.formModel"
+        ></codx-label>
+        <button
+          *ngIf="typeTask?.value === 'CO'"
+          type="button"
+          class="btn btn-icon btn-sm btn-light-primary ms-3"
+          (click)="clickSettingReference()"
+        >
+          <i class="icon-settings icon-16"></i>
+        </button>
       </div>
       <div>
         <ejs-multiselect
@@ -293,8 +302,9 @@
           [value]="listFieldID"
           (valueChange)="fieldIDChange($event)"
           [showDropDownIcon]="true"
+          (tagObjects)="onItemClick($event)"
+          [enabled]="!(typeTask?.value === 'CO')"
         ></ejs-multiselect>
-        <!-- <span class="e-input-group-icon e-spin-down icon-link"></span> -->
       </div>
     </div>
 
@@ -410,7 +420,7 @@
       ></codx-label>
     </div>
 
-    <div
+    <!-- <div
       class="d-flex align-items-center justify-content-between form-group"
       *ngIf="isBoughtTM && typeTask?.value != 'F'"
     >
@@ -441,7 +451,7 @@
         >
         </codx-input>
       </div>
-    </div>
+    </div> -->
 
     <div class="d-flex align-items-center form-group">
       <codx-input
@@ -494,7 +504,6 @@
         ></codx-view-approve>
       </div>
     </div>
-
   </div>
 
   <ng-container>
@@ -621,5 +630,5 @@
             ></span>
           </button>
         </div>
-      </div> -->
-<!-- End gui mail -->
+      </div>  -->
+<!-- End gui mail-->

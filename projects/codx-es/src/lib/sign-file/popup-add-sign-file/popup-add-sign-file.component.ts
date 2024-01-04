@@ -182,10 +182,13 @@ export class PopupAddSignFileComponent implements OnInit {
     this.cbxCategory = data?.data?.cbxCategory ?? null; // Ten CBB
     this.headerText = data?.data?.headerText ?? '';
     this.isTemplate = data?.data?.isTemplate ? true : false;
+    
+    this.cateName = data?.data?.cateName ?? '';
+    this.showCateNameOnly = data?.data?.showCateNameOnly ? true : false;
     this.templateRefType = data?.data?.templateRefType; //refType truyền vào form export template
     this.templateRefID = data?.data?.templateRefID; //refID truyền vào form export template    
     this.refID = data?.data?.refID; // Bắt buộc truyền nếu từ module != ES: Lưu RefID của SignFile
-    this.refType = this.approverProcess?.category?.category !=null ?this.approverProcess?.category?.category :  data?.data?.refID ? data?.data?.refID : 'ES_SignFiles';// Bắt buộc truyền nếu từ module != ES: Lưu RefType của SignFile và lấy Category của Module
+    this.refType = this.approverProcess?.category?.category !=null ?this.approverProcess?.category?.category :  data?.data?.refType ? data?.data?.refType : 'ES_SignFiles';// Bắt buộc truyền nếu từ module != ES: Lưu RefType của SignFile và lấy Category của Module
     
     this.editApprovers = false ;//data?.data?.editApprovers ?? false;
     this.approvers = data?.data?.approvers ?? null;
@@ -209,7 +212,7 @@ export class PopupAddSignFileComponent implements OnInit {
     }
     if(this.approverProcess?.category?.categoryName && this.disableCateID){
       this.showCateNameOnly=true;
-      this.cateName = this.approverProcess?.category?.categoryName;
+      this.cateName = this.approverProcess?.category?.categoryName ?? this.cateName;
     }
 
     if (this.modeView == '2') {
@@ -266,13 +269,13 @@ export class PopupAddSignFileComponent implements OnInit {
           this.eSign = cate?.eSign ;
           this.signatureType = cate?.signatureType;
           this.data.category = cate?.category;
-          this.refType = cate?.category;
+          this.refType = cate?.category ?? this.refType;
         }
         else{          
           this.eSign = this.approverProcess?.category?.eSign ;
           this.signatureType = this.approverProcess?.category?.signatureType;
           this.data.category = this.approverProcess?.category?.category;
-          this.refType = cate?.category;
+          this.refType = cate?.category ?? this.refType;
         }
       });
     //Lấy quy trình mẫu cũ
@@ -1015,11 +1018,15 @@ export class PopupAddSignFileComponent implements OnInit {
       this.esService.notifyInvalid(this.dialogSignFile, this.formModelCustom);
       return;
     }
+    if(this.data.approveControl == '1'){
+      this.data.processID == this.data.recID;
+      this.dialogSignFile.patchValue({ approveControl: '1', processID:this.data.recID }); 
+    }
     this.data.category = this.refType;
-    this.data.refType = this.refType;
     
     if (!this.isSaved && this.isAddNew) {
-      if (this.data.refType == null || this.data.refType == '') {
+
+      if (this.refType && this.data.refID) {
         this.data.refType = this.refType;
         this.data.refID = this.refID;
       }
@@ -1423,6 +1430,11 @@ export class PopupAddSignFileComponent implements OnInit {
         this.reloadedStep=true;
         this.cr.detectChanges();
       }
+      if(this.data.approveControl = '1'){
+        this.data.processID == this.data.recID;
+        this.dialogSignFile.patchValue({ approveControl: '1',processID:this.data.recID }); 
+        this.onSaveSignFile();
+      }
     }
   }
 
@@ -1435,10 +1447,10 @@ export class PopupAddSignFileComponent implements OnInit {
       this.cr.detectChanges();
     }
   }
-  checkApproverInfo(oldNode, newNode){
-    
+  checkApproverInfo(oldNode, newNode){    
     this.lstpartners=[];
-    this.codxShareService.getStepsByTransID(this.data.processID).subscribe((steps:any)=>{
+    let transID = this.data?.approveControl == "1" ? this.data.recID : this.data.processID
+    this.codxShareService.getStepsByTransID(transID).subscribe((steps:any)=>{
       if(steps){
         Array.from(steps).forEach((step:any)=>{
           if(step?.approvers){

@@ -18,6 +18,7 @@ import {
   UIComponent,
   Util,
 } from 'codx-core';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'lib-currency-exchangerate-add',
@@ -35,6 +36,8 @@ export class ExchangerateAddComponent extends UIComponent implements OnInit {
   dialogData!: DialogData;
   formModel: FormModel;
   dataDefaultExRate: any;
+  currencyID:any;
+  private destroy$ = new Subject<void>();
   constructor(
     private inject: Injector,
     private dt: ChangeDetectorRef,
@@ -46,6 +49,7 @@ export class ExchangerateAddComponent extends UIComponent implements OnInit {
     this.dialog = dialog;
     this.headerText = dialogData.data?.headerText;
     this.dataDefaultExRate = {...dialogData.data?.dataDefaultExRate};
+    this.currencyID = dialogData.data.currencyID;
     this.dialogData = {...dialogData};
   }
   //#endregion Contructor
@@ -68,32 +72,41 @@ export class ExchangerateAddComponent extends UIComponent implements OnInit {
    * @returns 
    */
   onSave(type) {
-    let validate = this.form.validation(true,false); //? chekc validate tỷ giá
-    if(validate) return;
+    this.form.setValue('currencyID',this.currencyID,{});
+    this.form.setValue('toTime',this.form.data.toDate,{});
     let index = this.dialogData.data?.lstExchangeRate.findIndex(x => x.toDate == this.form.data.toDate && x.sourceType == this.form.data.sourceType && x.recID != this.form.data.recID);
-      if (index > -1) { //? check trùng tỷ giá và loại tỷ giá
-        this.notification.notifyCode(
-          'AC0031',
-          0,
-          ''
-        );
-        return;
-      }  
-    if (!this.form?.data.isEdit) {
-      this.dialogData.data?.lstExchangeRate?.push({...this.form?.data});
-    }else{
-      let index = this.dialogData.data?.lstExchangeRate.findIndex(x => x.recID == this.form.data.recID);
-      if (index > -1) {
-        this.dialogData.data.lstExchangeRate[index] = {...this.form.data};
+    if (index > -1) {
+      this.notification.notifyCode('AC0031',0,'');
+      return;
+    }
+    this.form.save(null, 0, '', '', false,{allowCompare:false}).pipe(takeUntil(this.destroy$))
+    .subscribe((res: any) => {
+      if(!res) return;
+      if (res || res.save || res.update) {
+        if (res || !res.save.error || !res.update.error) {
+          if (!this.form?.data.isEdit) {
+            this.dialogData.data?.lstExchangeRate?.push({ ...this.form?.data });
+          } else {
+            let index = this.dialogData.data?.lstExchangeRate.findIndex(x => x.recID == this.form.data.recID);
+            if (index > -1) {
+              this.dialogData.data.lstExchangeRate[index] = { ...this.form.data };
+            }
+          }
+  
+          if (type === 'save') {
+            this.dialog.close();
+          } else {
+            this.dialog.dataService.clear();
+            this.dialog.dataService.addNew().subscribe((res: any) => {
+              if (res) {
+                this.form.refreshData({ ...res });
+                this.detectorRef.detectChanges();
+              }
+            })
+          }
+        }
       }
-    }
-    
-    if (type === 'save') {
-      this.dialog.close();
-    }else{
-      this.dialogData.data.dataDefaultExRate.recID = Util.uid();
-      this.form.refreshData({...this.dialogData?.data?.dataDefaultExRate});
-    }
+    })
   }
   //#endregion Method
 }

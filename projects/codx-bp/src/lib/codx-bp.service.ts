@@ -9,11 +9,6 @@ import {
   Observable,
   of,
 } from 'rxjs';
-import {
-  BP_Processes,
-  tmpInforSentEMail,
-  BP_ProcessPermissions,
-} from './models/BP_Processes.model';
 
 @Injectable({
   providedIn: 'root',
@@ -21,267 +16,63 @@ import {
 export class CodxBpService {
   viewProcesses = new BehaviorSubject<any>(null);
   constructor(private api: ApiHttpService) {}
-  public bpProcesses = new BehaviorSubject<BP_Processes>(null);
-  isProcess = this.bpProcesses.asObservable();
   getFlowChartNew = new BehaviorSubject<any>(null);
   crrFlowChart = this.getFlowChartNew.asObservable();
 
   funcIDParent = new BehaviorSubject<any>(null);
 
-  getListFunctionMenuCreatedStepAsync(funcID) {
-    return this.api.exec<any>(
-      'BP',
-      'ProcessStepsBusiness',
-      'GetListFunctionMenuCreatedStepAsync',
-      funcID
-    );
+  createAutoNumber(str, lst = [], type) {
+    let format = this.formatText(str);
+    let lstFormat = [];
+
+    lstFormat = lst.filter((x) => x.fieldName?.toLowerCase().startsWith(format?.toLowerCase()));
+    let count = 0;
+    if (lstFormat?.length > 0) {
+      count = this.getMaxNumberFromStrings(lstFormat.map((x) => x.fieldName));
+    }
+    let returnStr = '';
+    if (type == 'title') {
+      returnStr = str + (count > 0 ? ' ' + count : '');
+    } else {
+      returnStr = format + (count > 0 ? '_' + count : '');
+    }
+    console.log('Số tự động: ', returnStr);
+    return returnStr;
   }
 
-  getListProcessSteps(gridModel) {
-    return this.api.exec<any>(
-      'BP',
-      'ProcessStepsBusiness',
-      'GetProcessStepsAsync',
-      gridModel
-    );
+  formatText(str) {
+    let format = str
+      .trim()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/đ/g, 'd')
+      .replace(/Đ/g, 'D');
+    format = format.replaceAll(' ', '_');
+    while (format.includes('__')) {
+      format = format.replaceAll('__', '_');
+    }
+    return format;
   }
 
-  addProcessStep(data) {
-    return this.api.exec<any>(
-      'BP',
-      'ProcessStepsBusiness',
-      'AddProcessStepAsync',
-      data
-    );
-  }
-  copyProcessStep(data) {
-    return this.api.exec<any>(
-      'BP',
-      'ProcessStepsBusiness',
-      'CopyProcessStepAsync',
-      data
-    );
-  }
-  updateProcessStep(data) {
-    return this.api.exec<any>(
-      'BP',
-      'ProcessStepsBusiness',
-      'UpdateProcessStepAsync',
-      data
-    );
+  extractNumbers(str: string): number[] {
+    return str.match(/\d+/g)?.map(Number) || [];
   }
 
-  updateStepNo(data) {
-    return this.api.exec<any>(
-      'BP',
-      'ProcessStepsBusiness',
-      'UpdateStepNoAsync',
-      data
-    );
-  }
-  updateDataDrapDrop(data) {
-    return this.api.exec<any>(
-      'BP',
-      'ProcessStepsBusiness',
-      'UpdateProcessStepWithDropDrapAsync',
-      data
-    );
+  getMaxNumberFromStrings(strings: string[]): number {
+    const allNumbers = strings.map((str) => this.extractNumbers(str)).flat();
+    if (allNumbers.length === 0) {
+      return 1;
+    }
+    return Math.max(...allNumbers) + 1;
   }
 
-  updatePermissionProcess(data: any, lstTmp: BP_ProcessPermissions[]) {
-    return this.api.exec<any>(
-      'BP',
-      'ProcessesBusiness',
-      'UpdatePermissionProcessAsync',
-      [data, lstTmp]
-    );
-  }
-
-  getOwnersByParentID(data) {
-    return this.api.exec<any>(
-      'BP',
-      'ProcessStepsBusiness',
-      'GetOwnersByParentIDAsync',
-      data
-    );
-  }
-  getProcessesByID(data) {
-    return this.api.exec<any>(
-      'BP',
-      'ProcessesBusiness',
-      'GetProcessesAsync',
-      data
-    );
-  }
-  getProcessesByVersion(data) {
-    return this.api.exec<any>(
-      'BP',
-      'ProcessesBusiness',
-      'GetProcessesByVersionAsync',
-      data
-    );
-  }
-  getListUserIDByListPositionsID(listPositionID) {
+  genAutoNumber(funcID: any, entityName: string, key: any) {
     return this.api.execSv<any>(
-      'HR',
-      'HR',
-      'EmployeesBusiness',
-      'GetListUserIDByListPositionsIDAsync',
-      listPositionID
-    );
-  }
-  getProcessStepDetailsByRecID(recID) {
-    return this.api.exec<any>(
-      'BP',
-      'ProcessStepsBusiness',
-      'GetProcessStepDetailsByRecIDAsync',
-      recID
-    );
-  }
-
-  setViewRattings(
-    recID: string,
-    ratting: string,
-    comment: string,
-    funcID: string,
-    entityName: string
-  ) {
-    return this.api.exec<any>(
-      'BP',
-      'ProcessesBusiness',
-      'SetViewRattingAsync',
-      [recID, ratting, comment, funcID, entityName]
-    );
-  }
-
-  loadUserName(id: string) {
-    return this.api.exec<any>('AD', 'UsersBusiness', 'GetAsync', id);
-  }
-
-  loadProcess(id: string) {
-    return this.api.exec<any>('BP', 'ProcessesBusiness', 'GetAsync', id);
-  }
-
-  setApproveStatus(
-    recID: string,
-    permission: BP_ProcessPermissions,
-    funcID: string,
-    entity: string
-  ) {
-    return this.api.exec<any>(
-      'BP',
-      'ProcessesBusiness',
-      'SetAprroveStatusPermissionsAsync',
-      [recID, permission, funcID, entity]
-    );
-  }
-
-  updateHistoryViewProcessesAsync(id: string) {
-    return this.api.exec<any>(
-      'BP',
-      'ProcessesBusiness',
-      'UpdateHistoryViewAsync',
-      id
-    );
-  }
-
-  public listTags = new BehaviorSubject<any>(null);
-  isListTags = this.listTags.asObservable();
-
-  public ChangeData = new BehaviorSubject<boolean>(null);
-  isChangeData = this.ChangeData.asObservable();
-
-  searchDataProcess(gridModel, searchKey): Observable<any> {
-    return this.api.exec<any>(
-      'BP',
-      'ProcessesBusiness',
-      'GetProcessesByKeyAsync',
-      [gridModel, searchKey]
-    );
-  }
-
-  updateRevision(
-    funcID,
-    recID,
-    verNo,
-    verName,
-    comment,
-    entityName,
-    fucntionIdMain
-  ): Observable<any> {
-    return this.api.execSv<any>(
-      'BP',
-      'BP',
-      'ProcessesBusiness',
-      'UpdateVersionAsync',
-      [funcID, recID, verNo, verName, comment, entityName, fucntionIdMain]
-    );
-  }
-
-  updateReleaseProcess(data) {
-    return this.api.exec<any>(
-      'BP',
-      'ProcessesBusiness',
-      'UpdateReleaseProcess',
-      data
-    );
-  }
-  async checkAdminOfBP(userId: string){
-    return this.api.exec<any>(
-      'BP',
-      'ProcessesBusiness',
-      'CheckAdminPermissionBPAsync',
-      [userId]
-    );
-  }
-
-  isCheckExitName(nameProcess: string, id: string): Observable<any> {
-    return this.api.execSv<any>(
-      'BP',
-      'BP',
-      'ProcessesBusiness',
-      'isExitNameProcessAsync',
-      [nameProcess, id]
-    );
-  }
-
-  deleteBin(data) {
-    return this.api.exec<any>(
-      'BP',
-      'ProcessesBusiness',
-      'DeleteProcessesBinAsync',
-      data
-    );
-  }
-  restoreBinById(data) {
-    return this.api.exec<any>(
-      'BP',
-      'ProcessesBusiness',
-      'UpdateDeletedProcessesAsync',
-      data
-    );
-  }
-  getUserByProcessId(data) {
-    return this.api.exec<any>(
-      'BP',
-      'ProcessesBusiness',
-      'GetAllUserPermissionAsync',
-      data
-    );
-  }
-
-  getRoles(recID: String) {
-    return this.api.exec<any>('AD', 'RolesBusiness', 'GetAsync', recID);
-  }
-  getUserNameByListId(listUser: any) {
-    return this.api
-    .execSv<any>(
       'SYS',
       'AD',
-      'UsersBusiness',
-      'LoadUserListByIDAsync',
-      JSON.stringify(listUser)
+      'AutoNumbersBusiness',
+      'GenAutoNumberAsync',
+      [funcID, entityName, key]
     );
   }
-
 }

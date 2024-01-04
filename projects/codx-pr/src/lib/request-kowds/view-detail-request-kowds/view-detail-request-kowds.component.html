@@ -1,0 +1,149 @@
+
+<ng-container >
+    <codx-detail-tmp
+    [header]="header"
+    [formModel]="oFormModel"
+    [dataItem]="itemDetail"
+    [body]="body"
+    [footer]="!hideFooter ? footer : null"
+    [hideMF]="hideMF"
+    (clickMF)="openFormFuncID($event)"
+    (changeDataMF)="changeDataMF($event, itemDetail)"
+    class="h-100"
+    >
+
+    <ng-template #header>
+        <div *ngIf="itemDetail" class="d-flex flex-column" >
+            <div class="">
+                <span class=" fw-bold ">{{itemDetail?.requestName}}</span>            
+            </div>
+            <div class="d-flex flex-row">
+                <div class=" d-flex flex-row">
+                    <codx-label class="text-gray-600" name="lblDowCode" default="Kỳ công:" [formName]="oFormModel?.formName" [gridViewName]="oFormModel?.gridViewName" ></codx-label>
+                    <span class="fw-bold ps-2">{{itemDetail?.dowCode}}</span>
+                </div>
+                <div class="ps-5 d-flex flex-row">
+                    <codx-label class="text-gray-600" name="lblOrgUnit" default="Bộ phận:" [formName]="oFormModel?.formName" [gridViewName]="oFormModel?.gridViewName" ></codx-label>
+                    <span class=" ps-2" [innerHTML]="itemDetail?.orgUnitID | formatvalue : oFormModel : 'orgUnitID' | async"></span>
+                </div>
+            </div>
+            <div class="">
+                <div>
+                    <codx-label class="text-gray-600" name="lblNote" default="Ghi chú:" [formName]="oFormModel?.formName" [gridViewName]="oFormModel?.gridViewName" ></codx-label>
+                    <span class=" ps-2">{{itemDetail?.note}}</span>
+                </div>
+            </div>
+            <div class="d-flex flex-row">
+                    <codx-label class="text-gray-600" name="lblCreatedInfo" default="Ngày|Người tạo:" [formName]="oFormModel?.formName" [gridViewName]="oFormModel?.gridViewName" ></codx-label>
+                    <span class=" ps-2" [innerHTML]="itemDetail?.createdOn | fmDT : 'dmy'"></span>
+                    <div class="ps-5 d-flex align-items-center justify-content-start">
+                        <codx-img [width]="25" [objectId]="itemDetail?.createdBy" objectType="AD_Users"></codx-img>
+                        <div class="ms-2">
+                          <!-- <span class="fw-bold" [innerHTML]="itemDetail?.createdBy | formatvalue : oFormModel : 'createdBy' | async"></span> -->
+                          <span class="fw-bold" [innerHTML]="createdName"></span>
+                        </div>
+                      </div>
+            </div>
+        </div>
+    </ng-template>    
+    
+    <ng-template #body>
+    <div>
+        <div class="d-flex flex-row justify-content-between">
+            <div>
+                <codx-label class="text-primary fw-bold"  name="lblRequestDetail" default="Bảng công chi tiết" [formName]="oFormModel?.formName" [gridViewName]="oFormModel?.gridViewName" ></codx-label>
+            </div>
+            <div class="d-flex flex-row align-items-center" (click)="explanPopup()">
+                <span class="text-primary icon-sticky_note_2 pe-1"></span>
+                <codx-label class="text-primary fw-bold" name="lblExplanation" default="Chú thích bảng công" [formName]="oFormModel?.formName" [gridViewName]="oFormModel?.gridViewName" ></codx-label>
+            </div>
+            
+        </div>
+        <div *ngIf="loadedCBB">
+            <total-kowds [cbbKowCode]="cbbKowCode" [predicate]="totalKowPr" [dataValue]="totalKowDV" [mode]="'2'" ></total-kowds> 
+            <!-- <codx-gridview-v2                
+                #gridview
+                *ngIf="renderedGrid"
+                [formModel]="gridFM"
+                [columnsGrid]="gridKowColumns"
+                [autoFitColumns]="false"
+                [formName]="'KowDs'"
+                [gridViewName]="'grvKowDsUIByKow'"
+                [hideMoreFunc]="true"
+                [height]="'100%'"
+                [service]="'HR'"
+                [assemblyName]="'PR'"
+                [className]="'KowDSBusiness'"
+                [predicate]="totalKowPr"
+                [method]="'LoadTotalKowDsAsync'"
+                [dataValue]="totalKowDV"
+                [idField]="'employeeID'"
+            ></codx-gridview-v2> -->
+            <ng-template #tempKowTotal let-data>    
+                <div *ngIf="data && data[data.column.field]">
+                {{data[data?.column?.field]}}
+                </div>
+            </ng-template>
+
+            <ng-template #tempEmployee let-data>
+            <div class="d-flex align-items-center w-100" >
+                <div class="p-3 ps-5"
+                >
+                    <div class="d-flex align-items-center">
+                    <div class="d-flex flex-column me-4">
+                        <codx-img [funcId]="'HRT03a1'" [objectId]="data?.EmployeeID" [objectName]="data?.EmployeeName"
+                        objectType="HR_Employees" [width]="40"
+                        [imageType]="'circle'"
+                        class="pic-emloyee"
+                        >
+                        </codx-img>
+                    </div>
+                    <div class="d-flex flex-column">
+                        <div
+                        class="align-items-center line-clamp line-clamp-1 mb-1">
+                        <span class="fw-bold fs-6 me-3 text-nowrap">
+                            {{data?.EmployeeName}}</span>
+                        <i class="icon-qr_code_scanner text-danger icon-14 me-1"></i>
+                        <span class="text-danger">{{ data?.EmployeeID }}</span>
+                        </div>
+                        <div>
+                        {{data?.PositionName}}
+                        </div>
+                    </div>
+                    </div>
+                </div>
+                </div>
+            </ng-template>
+        </div>
+    </div>
+    </ng-template>
+
+    <ng-template #footer>
+        <codx-tabs
+          #footTabs
+          [entityName]="oFormModel?.entityName"
+          [objectID]="itemDetail?.recID"
+          [funcID]="oFormModel?.funcID"
+          [refID]="itemDetail?.recID"
+          [refType]="oFormModel?.entityName"
+          [TabControl]="tabControl"
+          [transID]="itemDetail?.recID"
+          [approveStatus]="itemDetail?.approveStatus"
+          [formModel]="oFormModel"
+          [dataSelected]="itemDetail"
+        ></codx-tabs>
+      </ng-template>
+    </codx-detail-tmp>
+    
+<ng-template #explanation>
+    <div>
+        <codx-label class="text-primary fw-bold" name="lblExplanation2" default="Chú thích " [formName]="oFormModel?.formName" [gridViewName]="oFormModel?.gridViewName" ></codx-label>
+        <div>
+            <div *ngFor="let item of vllKowCode">
+
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+</ng-container>

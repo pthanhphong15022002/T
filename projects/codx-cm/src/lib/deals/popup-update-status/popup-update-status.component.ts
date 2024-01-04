@@ -46,7 +46,7 @@ export class PopupUpdateStatusComponent
   fieldName: string = '';
   // data:any;
   messageChangeStatus: string = '';
-  valueListStatusCode: any[] = [];
+  // valueListStatusCode: any[] = [];
   owner: any;
   readonly fieldCbxStatusCode = { text: 'text', value: 'value' };
   constructor(
@@ -66,7 +66,6 @@ export class PopupUpdateStatusComponent
     // // this.data = JSON.parse(JSON.stringify(dialogData?.data));
     this.owner = dialogData?.data?.owner;
     this.title = dialogData?.data?.title;
-    this.valueListStatusCode = dialogData?.data.valueListStatusCode;
     this.gridViewSetup = dialogData?.data?.gridViewSetup;
     this.applyFor = dialogData?.data?.category;
     this.formModel = dialogData?.data?.formModel;
@@ -81,7 +80,9 @@ export class PopupUpdateStatusComponent
   }
   saveForm() {
     if (this.isLockStep) return;
-    this.status = this.checkStatus(this.statusOld, this.status);
+    if(this.applyProcess) {
+      this.status = this.checkStatus(this.statusOld, this.status);
+    }
     this.isLockStep = true;
     if( (this.status || this.messageChangeStatus ) && this.applyProcess ) {
       let obj = {
@@ -212,6 +213,6 @@ export class PopupUpdateStatusComponent
 
   getFieldName(applyFor){
     if(applyFor == '1') return 'statusCodeID';
-    return 'StatusCode';
+    return 'statusCode';
   }
 }

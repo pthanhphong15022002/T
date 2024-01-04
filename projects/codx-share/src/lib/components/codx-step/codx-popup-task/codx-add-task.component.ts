@@ -298,7 +298,7 @@ export class CodxAddTaskComponent implements OnInit {
       this.stepsTasks.refID = Util.uid();
       this.stepsTasks.status = '1';
       this.stepsTasks.progress = 0;
-      this.stepsTasks.fieldID = null;
+      // this.stepsTasks.fieldID = null;
       this.stepsTasks.dependRule = '0';
       this.stepsTasks.parentID = null;
       this.stepsTasks.isTaskDefault = false;
@@ -1095,6 +1095,12 @@ export class CodxAddTaskComponent implements OnInit {
             message.push(this.view['stepID']);
           }
         }
+      }
+    }
+
+    if (this.type == 'cm') {
+      if (!this.stepsTasks?.stepID && !this.isActivitie) {
+        message.push(this.view['stepID']);
       }
     }
 

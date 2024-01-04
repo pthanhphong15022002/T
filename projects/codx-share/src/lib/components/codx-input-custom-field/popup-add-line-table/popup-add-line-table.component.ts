@@ -6,6 +6,7 @@ import {
   NotificationsService,
   Util,
 } from 'codx-core';
+import { CustomFieldService } from '../custom-field.service';
 
 @Component({
   selector: 'lib-popup-add-line-table',
@@ -19,10 +20,15 @@ export class PopupAddLineTableComponent implements OnInit {
 
   titleHeader: 'Table ne';
   line: any;
+  action = 'add';
+  //Tisnh
+  point = ',';
+  arrCaculateField = [];
 
   constructor(
     private cache: CacheService,
     private notiService: NotificationsService,
+    private customFieldSV: CustomFieldService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -30,7 +36,11 @@ export class PopupAddLineTableComponent implements OnInit {
     this.listColumns = dt?.data?.listColumns
       ? JSON.parse(JSON.stringify(dt?.data?.listColumns))
       : [];
+
     this.line = JSON.parse(JSON.stringify(dt?.data?.data));
+    this.action = dt?.data?.action;
+
+    this.arrCaculateField = this.listColumns.filter((x) => x.dataType == 'CF');
   }
   ngOnInit(): void {
     this.listColumns.forEach((x) => {
@@ -68,6 +78,7 @@ export class PopupAddLineTableComponent implements OnInit {
         this.fieldFormat[idxUp]['dataValue'] = result;
         let fieldName = this.fieldFormat[idxUp]['fieldName'];
         this.line[fieldName] = result;
+        if (field.dataType == 'N') this.caculateField();
       }
     }
   }
@@ -121,4 +132,42 @@ export class PopupAddLineTableComponent implements OnInit {
     }
     return true;
   }
+
+  //----------------------CACULATE---------------------------//
+  //tính toán
+  caculateField() {
+    if (!this.arrCaculateField || this.arrCaculateField?.length == 0) return;
+    let fieldsNum = this.fieldFormat.filter((x) => x.dataType == 'N');
+    if (!fieldsNum || fieldsNum?.length == 0) return;
+
+    this.arrCaculateField.forEach((obj) => {
+      let dataFormat = obj.dataFormat;
+      fieldsNum.forEach((f) => {
+        if (
+          dataFormat.includes('[' + f.fieldName + ']') &&
+          f.dataValue?.toString()
+        ) {
+          let dataValue = f.dataValue;
+          if (f.dataFormat == 'P') dataValue = dataValue + '/100';
+          dataFormat = dataFormat.replaceAll(
+            '[' + f.fieldName + ']',
+            dataValue
+          );
+        }
+      });
+
+      if (!dataFormat.includes('[')) {
+        //tinh toán
+        obj.dataValue = this.customFieldSV.caculate(dataFormat);
+        //tính toan end
+        let index = this.fieldFormat.findIndex((x) => x.recID == obj.recID);
+        if (index != -1) {
+          this.fieldFormat[index]['dataValue'] = obj.dataValue;
+          let fieldName = this.fieldFormat[index]['fieldName'];
+          this.line[fieldName] = obj.dataValue;
+        }
+      }
+    });
+  }
+  //------------------END_CACULATE--------------------//
 }

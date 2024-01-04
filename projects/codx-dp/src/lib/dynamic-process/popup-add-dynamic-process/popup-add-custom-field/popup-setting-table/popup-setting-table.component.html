@@ -55,6 +55,23 @@
       ></codx-label>
     </span>
   </div>
+
+  <div class="form-group">
+    <codx-input
+      type="checkbox"
+      field="totalColumns"
+      (valueChange)="valueChange($event)"
+      [crrValue]="settingCount"
+    ></codx-input>
+    <span>
+      <codx-label
+        class="ms-2"
+        name="lblTotalColumns"
+        [formModel]="formTable?.formModel"
+        default="Thiết lập tính tổng cho từng cột"
+      ></codx-label>
+    </span>
+  </div>
   <!-- d-flex justify-content-end align-items-center -->
   <div class="">
     <button
@@ -93,89 +110,6 @@
     data-kt-scroll-activate="{default: true}"
     data-kt-scroll-width="auto"
   >
-    <!-- table  {{ settingWidth ? 'scroll-x' : 'w-100 ' -->
-
-    <!-- <table
-      id="table"
-      class=" {{ settingWidth ? '' : 'table' }} table-view table-row-bordered mt-3"
-      *ngIf="listColumns?.length > 0" 
-    >
-      <thead>
-        <tr class="bg-gray-100">
-          <th *ngIf="settingCount" scope="col" class="fw-bold ps-4">
-            <div>
-              <codx-label
-                name="lblNo"
-                formName="System"
-                [default]="'STT'"
-              ></codx-label>
-            </div>
-          </th>
-          <ng-container *ngFor="let item of listColumns; let index = index">
-            <th
-              [style]="
-                item?.columnWidth > 0 && settingWidth
-                  ? 'width :' + item.columnWidth + 'px!important'
-                  : ''
-              "
-              scope="col"
-              class="fw-bold ps-4 has-action-menu position-relative"
-            >
-              <div>
-                <span>{{ item?.title }}</span>
-              </div>
-              <div>
-                <span class="text-gray-500">{{ item?.fieldName }}</span>
-              </div>
-              <div class="action-menu-column d-flex">
-                <div class="d-flex justify-content-end align-items-center">
-                  <button
-                    class="btn btn-sm btn-icon btn-light-warning"
-                    (click)="editColumn(item, index)"
-                  >
-                    <i class="icon icon-14 icon-edit"></i>
-                  </button>
-                  <button
-                    class="btn btn-sm btn-icon btn-light-danger ms-2"
-                    (click)="deleteColumn(index)"
-                  >
-                    <i class="icon icon-14 icon-close"></i>
-                  </button>
-                </div>
-              </div>
-            </th>
-          </ng-container>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td class="ps-4" *ngIf="settingCount">
-            <div>
-              <codx-label
-                name="lblNo"
-                formName="System"
-                [default]="'STT'"
-              ></codx-label>
-            </div>
-          </td>
-          <ng-container *ngFor="let item of listColumns; let index = index">
-            <td
-              class="ps-4"
-              [style]="
-                item?.columnWidth > 0 && settingWidth
-                  ? 'width :' + item.columnWidth + 'px!important'
-                  : ''
-              "
-            >
-              <div>{{ item?.note }}</div>
-            </td>
-          </ng-container>
-        </tr>
-      </tbody>
-    </table> -->
-
-    <!-- [ngClass]="tableThemeClass"   [ngClass]="{'table' : settingWidth}"-->
-
     <table
       *ngIf="listColumns?.length > 0"
       mat-table
@@ -262,6 +196,13 @@
                         </div>
                       </th>
                     </tr>
+                    <tr class="bg-gray-100">
+                      <th class="fw-bold ps-4" scope="col">
+                        <div>
+                          <span>{{ "Tổng :" + column?.title }}</span>
+                        </div>
+                      </th>
+                    </tr>
                   </thead>
                 </div>
               </div>
@@ -269,24 +210,6 @@
             </th>
           </ng-container>
         </tr>
-        <!-- //con ben trong -->
-        <!-- <tr>
-          <ng-container *ngFor="let column of listColumns, let i = index">
-            <ng-container *ngIf="!column?.columns">
-              <th></th>
-            </ng-container>
-    
-            <ng-container *ngIf="column.columns">
-              <th>{{column.header}}</th>
-            </ng-container> 
-    
-            <ng-container *ngFor="let subColumn of column?.columns">
-              <th>
-                {{subColumn.title}}
-              </th>
-            </ng-container>
-          </ng-container>
-        </tr> -->
       </thead>
       <tbody
         cdkDropList
@@ -326,10 +249,34 @@
                   : ''
               "
             >
-              <!-- {{sumQuotes(cell.field)}}  -->
-
               <div>
                 <span> {{ cell?.note }}</span>
+              </div>
+            </td>
+          </ng-container>
+        </tr>
+        <!-- //Tính tổng -->
+        <tr *ngIf="totalColumns">
+          <td class="ps-4" *ngIf="settingCount">
+            <div>
+              <codx-label
+                name="lblSum"
+                formName="System"
+                [default]="'Tổng cộng'"
+              ></codx-label>
+            </div>
+          </td>
+          <ng-container *ngFor="let cell of listColumns">
+            <td class="ps-4">
+              <div>
+                <!-- <span> {{ cell?.totalColumns ? 0 : "" }}</span> -->
+                <codx-input
+                  *ngIf="cell.dataType == 'N' || cell.dataType == 'CF'"
+                  type="checkbox"
+                  [field]="cell.fieldName"
+                  (valueChange)="valueChangeColumns($event)"
+                  [crrValue]="cell?.totalColumns"
+                ></codx-input>
               </div>
             </td>
           </ng-container>

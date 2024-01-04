@@ -47,8 +47,8 @@ import { PopupAddVllCustomComponent } from './popup-add-vll-custom/popup-add-vll
 import { PopupSettingTableComponent } from './popup-setting-table/popup-setting-table.component';
 import { PopupSettingReferenceComponent } from './popup-setting-reference/popup-setting-reference.component';
 import { CodxInputCustomFieldComponent } from 'projects/codx-share/src/lib/components/codx-input-custom-field/codx-input-custom-field.component';
-import { CodxFieldsFormatValueComponent } from 'projects/codx-share/src/lib/components/codx-fields-detail-temp/codx-fields-format-value/codx-fields-format-value.component';
 import { PopupAddAutoNumberComponent } from 'projects/codx-es/src/lib/setting/category/popup-add-auto-number/popup-add-auto-number.component';
+import { CodxFieldsFormatValueComponent } from 'projects/codx-share/src/lib/components/codx-input-custom-field/codx-fields-detail-temp/codx-fields-format-value/codx-fields-format-value.component';
 
 @Component({
   selector: 'lib-popup-add-custom-field',
@@ -151,6 +151,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
 
   //Field PA
   entityNamePA = '';
+  funcCBX = '';
   servicePA: string;
   fieldCus: any;
   title = 'Thông báo ';
@@ -162,9 +163,12 @@ export class PopupAddCustomFieldComponent implements OnInit {
   fieldNameOld = '';
   //create autoNumber
   vllDateFormat: any;
-  fieldNoAutoEx: string = '';
   adAutoNumber: any;
+  caculateField = '';
   private destroyFrom$: Subject<void> = new Subject<void>();
+  arrFieldNum = [];
+  showCaculate = true;
+  titleField: any = '';
 
   constructor(
     private cache: CacheService,
@@ -214,6 +218,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
       }
     } else {
       this.fieldNameOld = this.field.fieldName;
+      this.showCaculate = false;
     }
   }
 
@@ -223,12 +228,31 @@ export class PopupAddCustomFieldComponent implements OnInit {
     if (this.field.dataType == 'TA') {
       this.getColumnTable(this.field);
     }
+    if (this.field.dataType == 'CF')
+      this.caculateField = this.field.dataFormat ?? '';
+
+    if(this.field.dataType == 'PA'){
+      this.cache.combobox(this.field.refValue).subscribe((cb) => {
+        if (cb) {
+          this.servicePA = cb?.service;
+          this.entityNamePA = cb?.tableName;
+          this.funcCBX = cb?.linkFunction;
+        } else {
+          this.servicePA = '';
+          this.entityNamePA = '';
+          this.funcCBX = '';
+        }
+      });
+    }
   }
 
   async valueChange(e) {
     if (e.field == 'multiselect') {
       this.field[e.field] = e.data;
       return;
+    }
+    if (e.field == 'dataType') {
+      this.titleField = e?.component?.selectedItems[0]?.text;
     }
     if (
       (e.field == 'dataType' && e.data != this.field.dataType) ||
@@ -262,13 +286,27 @@ export class PopupAddCustomFieldComponent implements OnInit {
         // this.changeFormVll();
       }
     }
-    if (e.field == 'refValue' && this.field.dataType == 'PA') {
+    if (
+      e.field == 'refValue' &&
+      this.field.dataType == 'PA' &&
+      e.data 
+    ) {
       this.field.refType = '3';
-      this.servicePA = e?.component?.itemsSelected[0]?.Service;
-      this.entityNamePA = e?.component?.itemsSelected[0]?.TableName;
+      this.cache.combobox(e.data).subscribe((cb) => {
+        if (cb) {
+          this.servicePA = cb?.service;
+          this.entityNamePA = cb?.tableName;
+          this.funcCBX = cb?.linkFunction;
+        } else {
+          this.servicePA = '';
+          this.entityNamePA = '';
+          this.funcCBX = '';
+        }
+      });
     }
     if (e.field == 'dataFormat' || e.field == 'refValue')
       this.creatFieldCustom();
+    if (e.field == 'dataType' && e.data == 'CF') this.selectFieldNum();
   }
   //chang title va change field name
   valueChangeText(e) {
@@ -327,10 +365,20 @@ export class PopupAddCustomFieldComponent implements OnInit {
   //   }
   // }
   cbxChange(value) {
-    if (value) this.field['stepID'] = value;
+    let oldStep = this.field['stepID'];
+    if (value && value != oldStep) {
+      this.field['stepID'] = value;
+      this.caculateField = '';
+    }
+    if (this.field.dataType == 'CF') this.selectFieldNum();
   }
 
   saveData() {
+    if (this.field.dataType == 'CF') {
+      if (this.checkCaculateField()) this.field.dataFormat = this.caculateField;
+      else return;
+    }
+
     if (
       (!this.field.title || this.field.title.trim() == '') &&
       this.grvSetup['Title']?.isRequire
@@ -518,19 +566,6 @@ export class PopupAddCustomFieldComponent implements OnInit {
                   this.field = crrF;
                   this.field.recID = recID;
                   this.field.stepID = stepID;
-
-                  // this.field.title = crrF.title;
-                  // this.field.fieldName = crrF.fieldName;
-                  // this.field.dataFormat = crrF.dataFormat;
-                  // this.field.dataType = crrF.dataType;
-                  // this.field.multiselect = crrF.multiselect;
-                  // this.field.rank = crrF.rank;
-                  // this.field.rankIcon = crrF.rankIcon;
-                  // this.field.refValue = crrF.refValue;
-                  // this.field.refType = crrF.refType;
-                  // this.field.note = crrF.note;
-                  // this.field.defaultValue = crrF.defaultValue;
-                  // this.field.isRequired = crrF.isRequire;
                   this.form.formGroup.patchValue(this.field);
                 }
               }
@@ -874,7 +909,8 @@ export class PopupAddCustomFieldComponent implements OnInit {
               this.listColumns = res.event[0];
               this.settingWidth = this.listColumns[0]?.settingWidth ?? false;
               this.settingCount = this.listColumns[0]?.settingCount ?? false;
-              this.totalColumns = this.listColumns[0]?.totalColumns ?? false;
+              this.totalColumns =
+                this.listColumns.findIndex((x) => x?.totalColumns) != -1;
 
               this.field.dataFormat = JSON.stringify(this.listColumns);
             }
@@ -897,7 +933,8 @@ export class PopupAddCustomFieldComponent implements OnInit {
       this.listColumns = arr;
       this.settingWidth = this.listColumns[0]?.settingWidth ?? false;
       this.settingCount = this.listColumns[0]?.settingCount ?? false;
-      this.totalColumns = this.listColumns[0]?.totalColumns ?? false;
+      this.totalColumns =
+        this.listColumns.findIndex((x) => x?.totalColumns) != -1;
     } else this.listColumns = [];
     this.changeRef.detectChanges();
   }
@@ -921,13 +958,36 @@ export class PopupAddCustomFieldComponent implements OnInit {
       );
       return;
     }
+    if (this.funcCBX) {
+      this.cache.functionList(this.funcCBX).subscribe((f) => {
+        if (f) this.loadDataTypeRef(f?.formName, f?.gridViewName);
+        else
+          this.notiService.notify(
+            'Grid View Setup chưa được thiết lập, hãy chọn đối tượng khác !',
+            '3'
+          );
+      });
+    } else {
+      this.api
+        .exec<any>(
+          'SYS',
+          'GridViewSetupBusiness',
+          'GetGrvNameAndFormNameByEntityNameAsync',
+          this.entityNamePA
+        )
+        .subscribe((res) => {
+          if (res) {
+            this.loadDataTypeRef(res?.formName, res?.gridViewName);
+          } else
+            this.notiService.notify(
+              'Grid View Setup chưa được thiết lập, hãy chọn đối tượng khác !',
+              '3'
+            );
+        });
+    }
+  }
 
-    //bùa vậy vì ko có cách nào lấy grv bằng entityname cả
-    let formName = this.entityNamePA.replace('_', '');
-    let gridViewName = 'grv' + formName;
-    // let formName = 'CMCustomers';
-    // let gridViewName = 'grv' + formName;
-
+  loadDataTypeRef(formName, gridViewName) {
     this.cache.gridViewSetup(formName, gridViewName).subscribe((grv) => {
       if (grv) {
         let option = new DialogModel();
@@ -937,7 +997,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
           datas: grv,
           entityName: this.entityNamePA,
           action: this.action,
-          titleAction: 'Thêm trường liên kết', //test
+          titleAction: this.titleField, //test
           dataRef: JSON.parse(this.field.dataFormat),
         };
         let dialogColumn = this.callfc.openForm(
@@ -993,30 +1053,26 @@ export class PopupAddCustomFieldComponent implements OnInit {
     }
   }
   //end
-  //đánh số tự động
-  //Popup setiing autoNumber
-  async openAutoNumPopup() {
-    //view new
 
-    let noAuto = await firstValueFrom(
-      this.dpService
-        .getADAutoNumberByAutoNoCode(this.field.recID)
-        .pipe(takeUntil(this.destroyFrom$))
-    );
+  //--------------------------------------------------//
+  //** đánh số tự động - Popup setiing autoNumber    */
+  //--------------------------------------------------//
+  async openAutoNumPopup() {
+    this.getVllFormat();
     let obj = {};
-    if (!noAuto) {
+    if (!this.field.dataFormat) {
       //save new autoNumber
       obj = {
         autoNoCode: this.field.recID,
-        description: 'DP_Instances',
+        description: 'DP_Instances_Steps_Field',
         newAutoNoCode: this.field.recID,
         isSaveNew: '1',
       };
     } else {
       //cap nhật
       obj = {
-        autoNoCode: this.fieldNoAutoEx,
-        description: 'DP_Instances',
+        autoNoCode: this.field.dataFormat,
+        description: 'DP_Instances_Steps_Field',
       };
     }
     let op = new DialogModel();
@@ -1049,60 +1105,61 @@ export class PopupAddCustomFieldComponent implements OnInit {
 
       let lengthNumber;
       let strNumber = '';
-      this.fieldNoAutoEx = data?.fixedString + data?.separator + dateFormat;
-      lengthNumber = data?.maxLength - this.fieldNoAutoEx.length;
+      let fieldNoAutoEx = data?.fixedString + data?.separator + dateFormat;
+      lengthNumber = data?.maxLength - fieldNoAutoEx.length;
       strNumber = '#'.repeat(lengthNumber);
       switch (data?.stringFormat) {
         // {value: '0', text: 'Chuỗi & Ngày - Số', default: 'Chuỗi & Ngày - Số', color: null, textColor: null, …}
         case '0': {
-          this.fieldNoAutoEx =
+          fieldNoAutoEx =
             data?.fixedString + dateFormat + data?.separator + strNumber;
           break;
         }
         // {value: '1', text: 'Chuỗi & Số - Ngày', default: 'Chuỗi & Số - Ngày', color: null, textColor: null, …}
         case '1': {
-          this.fieldNoAutoEx =
+          fieldNoAutoEx =
             data?.fixedString + strNumber + data?.separator + dateFormat;
           break;
         }
         // {value: '2', text: 'Số - Chuỗi & Ngày', default: 'Số - Chuỗi & Ngày', color: null, textColor: null, …}
         case '2':
-          this.fieldNoAutoEx =
+          fieldNoAutoEx =
             strNumber + data?.separator + data?.fixedString + dateFormat;
           break;
         // {value: '3', text: 'Số - Ngày & Chuỗi', default: 'Số - Ngày & Chuỗi', color: null, textColor: null, …}
         case '3':
-          this.fieldNoAutoEx =
+          fieldNoAutoEx =
             strNumber + data?.separator + dateFormat + data?.fixedString;
           break;
 
         // {value: '4', text: 'Ngày - Số & Chuỗi', default: 'Ngày - Số & Chuỗi', color: null, textColor: null, …}
         case '4': {
-          this.fieldNoAutoEx =
+          fieldNoAutoEx =
             dateFormat + data?.separator + strNumber + data?.fixedString;
           break;
         }
         // {value: '5', text: 'Ngày & Chuỗi & Số', default: 'Ngày & Chuỗi & Số', color: null, textColor: null, …}
         case '5': {
-          this.fieldNoAutoEx = data?.fixedString + dateFormat;
-          lengthNumber = data?.maxLength - this.fieldNoAutoEx.length;
+          fieldNoAutoEx = data?.fixedString + dateFormat;
+          lengthNumber = data?.maxLength - fieldNoAutoEx.length;
           strNumber = '#'.repeat(lengthNumber);
-          this.fieldNoAutoEx = dateFormat + data?.fixedString + strNumber;
+          fieldNoAutoEx = dateFormat + data?.fixedString + strNumber;
           break;
         }
         // {value: '6', text: 'Chuỗi - Ngày', default: 'Chuỗi - Ngày', color: null, textColor: null, …}
         case '6': {
-          this.fieldNoAutoEx = data?.fixedString + data?.separator + dateFormat;
+          fieldNoAutoEx = data?.fixedString + data?.separator + dateFormat;
           break;
         }
         // {value: '7', text: 'Ngày - Chuỗi', default: 'Ngày - Chuỗi', color: null, textColor: null, …}
         case '7': {
-          this.fieldNoAutoEx = dateFormat + data?.separator + data?.fixedString;
+          fieldNoAutoEx = dateFormat + data?.separator + data?.fixedString;
           break;
         }
       }
 
-      this.fieldNoAutoEx = this.fieldNoAutoEx.substring(0, data?.maxLength);
+      fieldNoAutoEx = fieldNoAutoEx.substring(0, data?.maxLength);
+      this.field.dataFormat = fieldNoAutoEx;
       // this.changeDetectorRef.detectChanges();
       this.changeRef.markForCheck();
     }
@@ -1110,16 +1167,192 @@ export class PopupAddCustomFieldComponent implements OnInit {
 
   async getVllFormat() {
     this.vllDateFormat = await firstValueFrom(this.cache.valueList('L0088'));
-    if (!this.adAutoNumber && this.action != 'add') {
-      this.adAutoNumber = await firstValueFrom(
-        this.dpService.getADAutoNumberByAutoNoCode(this.field.recID)
-      );
-      if (this.adAutoNumber) this.setViewAutoNumber(this.adAutoNumber);
+  }
+  //-----------------------END AUTONUM------------------//
+
+  //--------------------------------------------------//
+  //--------------CACULATE FIELD----------------------//
+  //--------------------------------------------------//
+
+  operator = ['+', '-', 'x', '/', 'Avg('];
+  accessField = [']'];
+  arrNum = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+  buttonOperator(op) {
+    if (this.caculateField) {
+      let chartLast = this.caculateField[this.caculateField.length - 1];
+      if (chartLast == '(') return;
+      if (op == 'Avg') {
+        if (
+          this.arrNum.includes(chartLast) ||
+          this.accessField.includes(chartLast)
+        ) {
+          return;
+        }
+        op = 'Avg(';
+      }
+      if (this.operator.includes(chartLast))
+        this.caculateField = this.caculateField.substring(
+          0,
+          this.caculateField.length - 1
+        );
+    }
+
+    this.caculateField += op;
+  }
+
+  buttonOpenParenthesis() {
+    if (this.caculateField) {
+      let idxLast = this.caculateField.length - 1;
+      if (
+        this.arrNum.includes(this.caculateField[idxLast]) ||
+        this.caculateField[idxLast] == ')' ||
+        this.caculateField[idxLast] == ','
+      )
+        return;
+    }
+    this.caculateField += '(';
+  }
+
+  buttonCloseParenthesis() {
+    if (this.caculateField) {
+      let idxLast = this.caculateField.length - 1;
+      if (
+        this.operator.includes(this.caculateField[idxLast]) ||
+        this.caculateField[idxLast] == '(' ||
+        this.caculateField[idxLast] == ',' ||
+        this.compareParenthesis(this.caculateField) == 0
+      )
+        return;
+    } else return;
+    this.caculateField += ')';
+  }
+
+  compareParenthesis(string) {
+    let countOpen = 0;
+    let countClose = 0;
+    for (const c of string) {
+      if (c == '(') {
+        countOpen++;
+      } else if (c === ')') {
+        countClose++;
+      }
+    }
+    return countOpen - countClose;
+  }
+
+  fieldSelect(fieldName) {
+    if (this.caculateField) {
+      let idxLast = this.caculateField.length - 1;
+      if (
+        this.caculateField[idxLast] == ']' ||
+        this.caculateField[idxLast] == ')' ||
+        this.caculateField[idxLast] == ','
+      )
+        return;
+    }
+    this.caculateField += '[' + fieldName + ']';
+    this.popover.close();
+  }
+
+  delChart() {
+    if (this.caculateField) {
+      let idxLast = this.caculateField.length - 1;
+      if (this.caculateField[idxLast] == ']') {
+        while (
+          this.caculateField?.length == 0 ||
+          this.caculateField[idxLast] != '['
+        ) {
+          this.caculateField = this.caculateField.substring(0, idxLast);
+          idxLast = idxLast - 1;
+        }
+      }
+      //else this.caculateField = this.caculateField.substring(0, idxLast);
+      this.caculateField = this.caculateField.substring(0, idxLast);
     }
   }
-  //end
+  delAll() {
+    this.caculateField = '';
+  }
+  // Num
+  buttonNum(num) {
+    if (this.caculateField) {
+      let idxLast = this.caculateField.length - 1;
+      if (
+        this.caculateField[idxLast] == ']' ||
+        this.caculateField[idxLast] == ')'
+      )
+        return;
+    }
+    this.caculateField += num;
+  }
+  decimalPoint() {
+    if (!this.caculateField) return;
+    let idxLast = this.caculateField.length - 1;
+    let chartLast = this.caculateField[idxLast];
+    if (
+      chartLast == ',' ||
+      this.accessField.includes(chartLast) ||
+      this.operator.includes(chartLast)
+    )
+      return;
+    //chua check hết
+    idxLast = idxLast - 1;
+    while (
+      !this.operator.includes(this.accessField[idxLast]) ||
+      idxLast != -1
+    ) {
+      if (this.caculateField[idxLast] == ',') return;
+      idxLast--;
+    }
+    this.caculateField += ',';
+  }
 
-  //Trường tính toán
+  selectFieldNum() {
+    this.arrFieldNum = [];
+    var idx = this.stepList.findIndex(
+      (x) => x.recID == this.field.stepID && x.fields?.length > 0
+    );
+    if (idx != -1) {
+      this.arrFieldNum = this.stepList[idx].fields
+        .filter((x) => x.dataType == 'N')
+        .map((x) => x.fieldName);
+    }
+    if (!this.arrFieldNum || this.arrFieldNum?.length == 0)
+      this.notiService.notify(
+        'Bước thực hiện không có trường tùy chỉnh kiểu số !',
+        '3'
+      );
+  }
 
-  //end
+  popoverSelectField(p) {
+    if (this.arrFieldNum?.length > 0) p.open();
+    this.popover = p;
+    // else
+    //   this.notiService.notify(
+    //     'Bước thực hiện không có trường tùy chỉnh kiểu số !',
+    //     '3'
+    //   );
+  }
+
+  checkCaculateField() {
+    if (!this.caculateField) {
+      this.notiService.notify('Phép toán chưa được thiết lập !', '3');
+      return false;
+    }
+
+    let lastChart = this.caculateField[this.caculateField.length - 1];
+    if (
+      this.compareParenthesis(this.caculateField) > 0 ||
+      this.operator.includes(lastChart)
+    ) {
+      this.notiService.notify('Phép toán chưa đúng ! Hãy kiểm tra lại !', '3');
+      return false;
+    }
+    return true;
+  }
+
+  openCaculate() {
+    this.showCaculate = !this.showCaculate;
+  }
+  //-----------------end CACULATE FIELD------------------//
 }

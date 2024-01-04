@@ -18,6 +18,7 @@ import {
 import { AccountsAddComponent } from './accounts-add/accounts-add.component';
 import { CodxAcService } from '../../codx-ac.service';
 import { Subject, takeUntil } from 'rxjs';
+import { E } from '@angular/cdk/keycodes';
 
 @Component({
   selector: 'lib-accounts',
@@ -30,16 +31,14 @@ export class AccountsComponent extends UIComponent {
 
   //#region Contructor
   @ViewChild('templateGrid') templateGrid?: TemplateRef<any>;
-  views: Array<ViewModel> = []; //? model view
-  button: ButtonModel[] = [{ //? nút thêm tài khoản
+  views: Array<ViewModel> = [];
+  button: ButtonModel[] = [{
     id: 'btnAdd',
-    icon: 'icon-add_circle_outline',
   }];
-  funcName = ''; //? tên truyền vào headertext
+  funcName = '';
+  itemSelected:any;
   headerText: any;
-  optionSidebar: SidebarModel = new SidebarModel();
-  dataDefault:any;
-  private destroy$ = new Subject<void>(); //? list observable hủy các subscribe api
+  private destroy$ = new Subject<void>();
   
   constructor(
     private inject: Injector,
@@ -70,12 +69,6 @@ export class AccountsComponent extends UIComponent {
         },
       },
     ];
-
-    //* thiết lập cấu hình sidebar
-    this.optionSidebar.DataService = this.view.dataService;
-    this.optionSidebar.FormModel = this.view.formModel;
-    this.optionSidebar.Width = '800px';
-
   }
 
   ngDoCheck() {
@@ -126,33 +119,25 @@ export class AccountsComponent extends UIComponent {
    */
   addNew(e) {
     this.headerText = (e.text + ' ' + this.funcName).toUpperCase();
-    let data = {
-      headerText: this.headerText,
-      dataDefault:{...this.dataDefault}
-    };
-    if(!this.dataDefault){
-      this.view.dataService.addNew().subscribe((res: any) => {
-        if(res){
-          res.isAdd = true;
-          this.dataDefault = {...res};
-          data.dataDefault = {...this.dataDefault};
-          let dialog = this.callfunc.openSide(
-            AccountsAddComponent,
-            data,
-            this.optionSidebar,
-            this.view.funcID
-          );
-        }       
-      });
-    }else{
-      let dialog = this.callfunc.openSide(
-        AccountsAddComponent,
-        data,
-        this.optionSidebar,
-        this.view.funcID
-      );
-    }
-    
+    this.view.dataService.addNew().subscribe((res: any) => {
+      if(res){
+        res.isAdd = true;
+        let data = {
+          headerText: this.headerText,
+          dataDefault:{...res}
+        };
+        let option = new SidebarModel();
+        option.DataService = this.view.dataService;
+        option.FormModel = this.view.formModel;
+        option.Width = '800px';
+        let dialog = this.callfunc.openSide(
+          AccountsAddComponent,
+          data,
+          option,
+          this.view.funcID
+        );
+      }       
+    });
   }
 
   /**
@@ -173,10 +158,15 @@ export class AccountsComponent extends UIComponent {
             dataDefault:{...res},
             funcName:this.funcName
           };
+          let option = new SidebarModel();
+          option.DataService = this.view.dataService;
+          option.FormModel = this.view.formModel;
+          option.Width = '800px';
           let dialog = this.callfunc.openSide(
             AccountsAddComponent,
             data,
-            this.optionSidebar
+            option,
+            this.view.funcID
           );
         }
       });
@@ -200,10 +190,15 @@ export class AccountsComponent extends UIComponent {
             dataDefault:{...res},
             funcName:this.funcName
           };
+          let option = new SidebarModel();
+          option.DataService = this.view.dataService;
+          option.FormModel = this.view.formModel;
+          option.Width = '800px';
           let dialog = this.callfunc.openSide(
             AccountsAddComponent,
             data,
-            this.optionSidebar
+            option,
+            this.view.funcID
           );
         }
       });
@@ -220,6 +215,18 @@ export class AccountsComponent extends UIComponent {
         this.acService.clearCache('account');
       }
     });
+  }
+
+  changeDataMF(event,type:any=''){
+    event.reduce((pre,element) => {
+      if(type === 'views') element.isbookmark = true;
+      if(!['SYS03','SYS02','SYS04','SYS002'].includes(element.functionID)) element.disabled = true;
+    },{})
+  }
+
+  onSelectedItem(event) {
+    this.itemSelected = event;
+    this.detectorRef.detectChanges();
   }
 
   //#endregion Function

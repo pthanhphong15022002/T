@@ -11,7 +11,7 @@
 }
 
 .table-ac {
-    height: calc(100vh - 460px);
+    height: calc(100vh - 465px);
 }
 
 .table-thead-ac {
@@ -33,7 +33,7 @@
 
 .ac-empty {
     width: 100%;
-    height: calc(100vh - 500px);
+    height: calc(100vh - 505px);
     justify-content: center !important;
     display: flex;
     align-items: center;
@@ -45,19 +45,19 @@
 }
 
 .tabline-content .e-content {
-    height: calc(100vh - 490px) !important;
+    height: calc(100vh - 500px) !important;
 }
 
 .tablinevoucher-content .e-content {
-    height: calc(100vh - 450px) !important;
+    height: calc(100vh - 465px) !important;
 }
 
 .tablinegeneral-content .e-content {
-    height: calc(100vh - 430px) !important;
+    height: calc(100vh - 440px) !important;
 }
 
 .tablinetranfer-content .e-content {
-    height: calc(100vh - 450px) !important;
+    height: calc(100vh - 465px) !important;
 }
 
 .tabadvance-content .e-content {
@@ -146,6 +146,18 @@
     color: var(--primary) !important;
     background: none !important;
     border: 1px solid var(--primary) !important;
+}
+
+.ac-badge-light-success {
+    color: rgb(39, 240, 39) !important;
+    background: none !important;
+    border: 1px solid rgb(39, 240, 39) !important;
+}
+
+.ac-badge-light-warning {
+    color: rgb(255, 216, 40) !important;
+    background: none !important;
+    border: 1px solid rgb(255, 216, 40) !important;
 }
 
 

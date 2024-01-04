@@ -126,14 +126,14 @@
     <div class="d-flex align-items-center justify-content-start mb-1">
       <div>
         <codx-vll
-        [name]="'DP028'"
-        [field]="'Status'"
-        [value]="data?.status"
-        [showText]="true"
-        [showBgColor]="true"
-        class="badge badge-light badge-sm"
-      >
-      </codx-vll>
+          [name]="gridViewSetup?.Status?.referedValue"
+          [field]="'Status'"
+          [value]="data?.status"
+          [showText]="true"
+          [showBgColor]="true"
+          class="badge badge-light badge-sm"
+        >
+        </codx-vll>
         <ng-container *ngIf="data?.approveStatus && data?.approveStatus != '1'">
           <codx-vll
             [name]="vllApprove"
@@ -212,7 +212,7 @@
   </span>
 </ng-template>
 <ng-template #popDetailPriority let-data>
-  <!-- <span>
+  <span>
     <codx-label
       fiedName="lblPriority"
       [formModel]="view.formModel"
@@ -220,7 +220,7 @@
     ></codx-label> </span
   ><span>
     {{ data?.priority | vll : vllPriority : "text" | async }}
-  </span> -->
+  </span>
 </ng-template>
 
 <!--list details tempfull-->
@@ -232,7 +232,6 @@
     [dataSelected]="dataSelected"
     [gridViewSetup]="gridViewSetup"
     [funcID]="funcID"
-    [valueListStatusCode]="valueListStatusCode"
     [colorReasonSuccess]="colorReasonSuccess"
     [colorReasonFail]="colorReasonFail"
     (changeMF)="changeMF($event)"

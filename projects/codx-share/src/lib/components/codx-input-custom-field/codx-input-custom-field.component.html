@@ -73,6 +73,36 @@
         >
           <i class="icon-add_box icon-16"></i></button
       ></span>
+
+      <span *ngIf="customField.dataType == 'CF'" class="ms-2">
+        <span
+          class="btn btn-icon btn-light-primary me-2"
+          [ngbPopover]="toolTip"
+          #p="ngbPopover"
+          [openDelay]="500"
+          (mouseenter)="p.open()"
+          (mouseleave)="p.close()"
+          placement="bottom right top"
+          [popoverClass]="'cfField'"
+          container="body"
+          placement="top right left"
+        >
+          <i class="icon-calculate icon-16"></i></span
+      ></span>
+      <ng-template #toolTip>
+        <div class="">
+          <codx-label
+            class="label-colon fw-bold"
+            name="lblRecipe"
+            formName="DPInstancesStepsFields"
+            gridViewName="grvDPInstancesStepsFields"
+            default="Công thức"
+          ></codx-label>
+          <div class="fw-bold text-primary">
+            {{ customField.dataFormat }}
+          </div>
+        </div>
+      </ng-template>
       <!-- </div> -->
       <!-- </div> -->
     </div>
@@ -551,6 +581,27 @@
                 </div>
               </tr>
             </ng-container>
+            <!-- //Tính tổng -->
+            <tr *ngIf="totalColumns">
+              <td class="ps-4" *ngIf="settingCount">
+                <div>
+                  <codx-label
+                    name="lblSum"
+                    formName="System"
+                    [default]="'Tổng cộng'"
+                  ></codx-label>
+                </div>
+              </td>
+              <ng-container *ngFor="let cell of columns">
+                <td class="ps-4">
+                  <div>
+                    <span
+                      [innerHTML]="cell | sumColumnsTable : arrDataValue"
+                    ></span>
+                  </div>
+                </td>
+              </ng-container>
+            </tr>
           </ng-container>
           <ng-container *ngIf="disable">
             <tr>
@@ -576,6 +627,24 @@
                 </td>
               </ng-container>
             </tr>
+            <tr *ngIf="totalColumns">
+              <td class="ps-4" *ngIf="settingCount">
+                <div>
+                  <codx-label
+                    name="lblSum"
+                    formName="System"
+                    [default]="'Tổng cộng'"
+                  ></codx-label>
+                </div>
+              </td>
+              <ng-container *ngFor="let cell of columns">
+                <td class="ps-4">
+                  <div>
+                    <span> {{ cell?.totalColumns ? 0 : "" }}</span>
+                  </div>
+                </td>
+              </ng-container>
+            </tr>
           </ng-container>
         </tbody>
       </table>
@@ -598,6 +667,31 @@
       {{ dataRef }}
     </div>
   </ng-container>
+
+  <ng-container *ngIf="customField.dataType == 'AT'">
+    <codx-input
+      [field]="customField.fieldName"
+      type="text"
+      [placeholder]="customField.note || customField.dataFormat"
+      [crrValue]="customField.dataValue || ''"
+      (keyUpEnter)="valueChange($event)"
+      (valueChange)="valueChange($event)"
+      [disabled]="disable"
+    >
+    </codx-input>
+  </ng-container>
+
+  <ng-container *ngIf="customField.dataType == 'CF'">
+    <codx-input
+      [field]="customField.fieldName"
+      type="text"
+      [placeholder]="customField.note || customField.dataFormat"
+      [crrValue]="dataValueCaculate"
+      [disabled]="true"
+    >
+    </codx-input>
+  </ng-container>
+
   <div *ngIf="showErrMess" class="errorMessage text-danger ms-3" data-field="">
     {{ errorMessage }}
   </div>

@@ -114,15 +114,34 @@
                                                 <div class="fd-parttern-item mx-5 position-relative">
                                                     <ng-container
                                                         *ngIf="itemChild.backgroundColor;else noBackgroundColor">
-                                                        <div class="w-100 h-100 rounded-2" style="width:100px"
-                                                            [style.background-color]="itemChild.backgroundColor"
-                                                            (click)="selectCard(itemChild)">
-                                                        </div>
+                                                        <codx-img
+                                                            [width]="100"
+                                                            [height]="150"
+                                                            [isFull]="true"
+                                                            imageType="square"
+                                                            [objectId]="itemChild.recID"
+                                                            [imgOn]="date"
+                                                            [imgSource]="'none'"
+                                                            referType="image"
+                                                            objectType="FD_Patterns"
+                                                            [backgroundColor]="itemChild.backgroundColor"
+                                                            [isLoadName]="false"
+                                                            (click)="selectCard(itemChild)"
+                                                        >
+                                                        </codx-img>
                                                     </ng-container>
                                                     <ng-template #noBackgroundColor>
-                                                        <codx-img [objectId]="itemChild.recID" [funcId]="funcID"
-                                                            [isDefaulImg]="true" [imageType]="'square'"
-                                                            objectType="FD_Patterns" [width]="100"
+                                                        <codx-img 
+                                                            [width]="100"
+                                                            [height]="150"
+                                                            [isFull]="true"
+                                                            imageType="square"
+                                                            [objectId]="itemChild.recID"
+                                                            [imgOn]="date"
+                                                            [isDefaulImg]="true"
+                                                            [imgSource]="'./assets/themes/fd/default/img/' + itemChild.fileName"
+                                                            referType="image"
+                                                            objectType="FD_Patterns"
                                                             (click)="selectCard(itemChild)">
                                                         </codx-img>
                                                     </ng-template>
@@ -185,12 +204,34 @@
     <div class="fd-preview-card">
         <div class="fd-preview-card-background">
             <ng-container *ngIf="patternSelected.backgroundColor ; else havePattern">
-                <div class="w-100 h-100" [style.background-color]="patternSelected.backgroundColor"
-                    style="height:498px!important"></div>
+                <codx-img
+                    [width]="100"
+                    [height]="150"
+                    [isFull]="true"
+                    imageType="square"
+                    [objectId]="patternSelected.recID"
+                    [imgOn]="date"
+                    [imgSource]="'none'"
+                    referType="image"
+                    objectType="FD_Patterns"
+                    [backgroundColor]="patternSelected.backgroundColor"
+                    [isLoadName]="false"
+                    style="height:498px!important"
+                >
+                </codx-img>
             </ng-container>
             <ng-template #havePattern>
-                <codx-img [objectId]="patternSelected.recID" [funcId]="giftTrans.FunctionID" [isDefaulImg]="true"
-                    [imageType]="'square'" [objectType]="'FD_Patterns'" [width]="400">
+                <codx-img 
+                    [width]="400"
+                    [isFull]="true"
+                    imageType="square"
+                    [objectId]="patternSelected.recID"
+                    [funcId]="giftTrans.FunctionID"
+                    [imgOn]="date"
+                    [isDefaulImg]="true"
+                    [imgSource]="'./assets/themes/fd/default/img/' + patternSelected.fileName"
+                    referType="image"
+                    objectType="FD_Patterns">
                 </codx-img>
             </ng-template>
         </div>

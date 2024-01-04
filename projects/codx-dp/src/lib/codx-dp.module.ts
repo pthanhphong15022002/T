@@ -62,6 +62,9 @@ import { ReplaceProgressPipe } from './pipes/replace-progress.pipe';
 import { StepTaskInstanceComponent } from './instances/instance-detail/step-task-instance/step-task-instance.component';
 import { PopupReleaseProcessComponent } from './dynamic-process/popup-release-process/popup-release-process.component';
 import { ViewDetailApprovalCustomComponent } from './approvals/view-detail-approval-custom/view-detail-approval-custom.component';
+import { ProcessesPropertiesComponent } from './processes-properties/processes-properties.component';
+import { PropertiesFieldComponent } from './processes-properties/properties-field/properties-field.component';
+import { PopupMapContractComponent } from './dynamic-process/popup-add-dynamic-process/step-task/popup-step-task/popup-map-contract/popup-map-contract.component';
 
 export const routes: Routes = [
   {
@@ -156,6 +159,9 @@ const T_Component: Type<any>[] = [
   ReplaceProgressPipe,
   StepTaskInstanceComponent,
   PopupReleaseProcessComponent,
+  ProcessesPropertiesComponent,
+  PropertiesFieldComponent,
+  PopupMapContractComponent
 ];
 
 @NgModule({

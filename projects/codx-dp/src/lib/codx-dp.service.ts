@@ -533,14 +533,15 @@ export class CodxDpService {
       data
     );
   }
-  // getGuide(processID) {
-  //   return this.api.exec<any>(
-  //     'DP',
-  //     'StepsBusiness',
-  //     'GetListStepsNameByProcessIDAsync',
-  //     processID
-  //   );
-  // }
+  //delete AutoCode nếu ko dùng nữa
+  removeAutoCode(listAutoCode) {
+    return this.api.exec<any>(
+      'ES',
+      'ApprovalStepsBusiness',
+      'DeleteListAutoNumberAsync',
+      listAutoCode
+    );
+  }
   getADAutoNumberByAutoNoCode(autoNoCode): Observable<any> {
     return this.api.execSv(
       'SYS',
@@ -928,6 +929,24 @@ export class CodxDpService {
       data
     );
   }
+  moveStageBackLead(data) {
+    return this.api.execSv<any>(
+      'CM',
+      'ERM.Business.CM',
+      'LeadsBusiness',
+      'MoveStageBackByLeadAsync',
+      data
+    );
+  }
+  moveStageBackCases(data) {
+    return this.api.execSv<any>(
+      'CM',
+      'ERM.Business.CM',
+      'CasesBusiness',
+      'MoveStageCasesAsync',
+      data
+    );
+  }
 
   getOneObject(recID, className) {
     return this.api.exec<any>('DP', className, 'GetOneAsync', recID);
@@ -947,6 +966,24 @@ export class CodxDpService {
       'ERM.Business.CM',
       'DealsBusiness',
       'MoveDealReasonAsync',
+      data
+    );
+  }
+  moveCaseReason(data) {
+    return this.api.execSv<any>(
+      'CM',
+      'ERM.Business.CM',
+      'CasesBusiness',
+      'MoveCaseReasonAsync',
+      data
+    );
+  }
+  moveLeadReason(data) {
+    return this.api.execSv<any>(
+      'CM',
+      'ERM.Business.CM',
+      'LeadsBusiness',
+      'MoveLeadReasonAsync',
       data
     );
   }

@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { ButtonModel, CallFuncService, DataRequest, DialogRef, FormModel, NotificationsService, RequestOption, SidebarModel, UIComponent, ViewModel, ViewType } from 'codx-core';
 import { Subject, takeUntil } from 'rxjs';
 import { RunPeriodicAddComponent } from './run-periodic-add/run-periodic-add.component';
+import { DynamicSettingControlComponent } from 'projects/codx-share/src/lib/components/dynamic-setting/dynamic-setting-control/dynamic-setting-control.component';
 
 @Component({
   selector: 'lib-run-periodic',
@@ -15,15 +16,18 @@ export class RunPeriodicComponent extends UIComponent{
   views: Array<ViewModel> = [];
   @ViewChild('templateCard') templateCard?: TemplateRef<any>;
   @ViewChild('templateGrid') templateGrid?: TemplateRef<any>;
+  @ViewChild('template') template?: TemplateRef<any>;
   headerText:any;
   itemSelected:any;
+  setting:any;
+  dataValue :any = {};
   private destroy$ = new Subject<void>();
   constructor(
     private inject: Injector,
     private notification: NotificationsService,
     private callfunc: CallFuncService,
     private routerActive: ActivatedRoute,
-    private dt: ChangeDetectorRef,
+    private dt: ChangeDetectorRef, 
     @Optional() dialog?: DialogRef
   ) {
     super(inject);
@@ -33,27 +37,37 @@ export class RunPeriodicComponent extends UIComponent{
 
   //#region Init
   onInit(): void {
+    if(!this.funcID) this.funcID = this.router.snapshot.params['funcID'];
+    this.api.execSv('BG','BG','ScheduleTasksBusiness','GetScheduleTasksAsync',this.funcID).subscribe((res:any)=>{
+      if (res) {
+        this.setting = res?.paras || [];
+        this.dataValue = JSON.parse(res?.paraValues);
+      }
+    })
   }
 
   ngAfterViewInit() {
     this.views = [
-      {
-        type: ViewType.grid,
-        active: true,
-        sameData: true,
-        model: {
-          template2: this.templateGrid,
-          frozenColumns: 1,
-        },
-      },
       // {
-      //   type: ViewType.smallcard,
-      //   active: false,
+      //   type: ViewType.grid,
+      //   active: true,
       //   sameData: true,
       //   model: {
-      //     template: this.templateCard,
+      //     template2: this.templateGrid,
+      //     frozenColumns: 1,
       //   },
       // },
+      {
+        type: ViewType.content,
+        active: false,
+        sameData: true,
+        showFilter:false,
+        showSearchBar:false,
+        model: {
+          //template: this.templateCard,
+          panelRightRef: this.template
+        },
+      },
     ];
   }
 

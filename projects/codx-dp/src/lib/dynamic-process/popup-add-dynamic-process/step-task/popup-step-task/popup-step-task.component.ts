@@ -7,6 +7,7 @@ import {
   ChangeDetectionStrategy,
   OnDestroy,
   ChangeDetectorRef,
+  HostListener,
 } from '@angular/core';
 import {
   Util,
@@ -29,8 +30,10 @@ import {
 import { ComboBoxComponent } from '@syncfusion/ej2-angular-dropdowns';
 import { CodxEmailComponent } from 'projects/codx-share/src/lib/components/codx-email/codx-email.component';
 import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
-import { Subject, firstValueFrom, takeUntil } from 'rxjs';
+import { Subject, takeUntil, filter, firstValueFrom } from 'rxjs';
 import { PopupAddCategoryComponent } from 'projects/codx-es/src/lib/setting/category/popup-add-category/popup-add-category.component';
+import { PopupSettingReferenceComponent } from '../../popup-add-custom-field/popup-setting-reference/popup-setting-reference.component';
+import { PopupMapContractComponent } from './popup-map-contract/popup-map-contract.component';
 
 @Component({
   selector: 'lib-popup-job',
@@ -66,6 +69,7 @@ export class PopupJobComponent implements OnInit, OnDestroy {
   view = [];
   listFields = [];
   listFieldID = [];
+  listFieldLink = [];
   listParentID = [];
   listTaskLink = [];
   listGroupTask = [];
@@ -77,7 +81,11 @@ export class PopupJobComponent implements OnInit, OnDestroy {
   isHaveFile = false;
   isBoughtTM = false;
   showLabelAttachment = false;
+  listField = [];
+  titleField = '';
   listApproverView;
+  listGrvContracts;
+  showSelect = false;
   listCombobox = {
     U: 'Share_Users_Sgl',
     O: 'Share_OrgUnits_Sgl',
@@ -94,7 +102,6 @@ export class PopupJobComponent implements OnInit, OnDestroy {
     private callfunc: CallFuncService,
     private notiService: NotificationsService,
     private changeDetectorRef: ChangeDetectorRef,
-    private callfc: CallFuncService,
     private api: ApiHttpService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
@@ -127,7 +134,9 @@ export class PopupJobComponent implements OnInit, OnDestroy {
       this.stepsTasks['taskType'] = this.typeTask?.value;
       this.stepsTasks['taskGroupID'] = dt?.data?.groupTaskID;
       this.stepsTasks['createTask'] = this.isBoughtTM;
+      this.stepsTasks.taskName = this.typeTask?.text;
       this.stepsTasks.assignControl = this.stepsTasks?.createTask ? '0' : null;
+      this.setRoleDefaut();
     } else if (this.action == 'copy') {
       this.stepsTasks = dt?.data?.taskInput || new DP_Steps_Tasks();
       this.stepsTasks['recID'] = Util.uid();
@@ -149,7 +158,6 @@ export class PopupJobComponent implements OnInit, OnDestroy {
 
   async ngOnInit() {
     this.getFormModel();
-
     this.roles = this.stepsTasks['roles'];
     this.owner = this.roles?.filter((role) => role.roleType == 'O') || [];
     this.participant =
@@ -175,19 +183,77 @@ export class PopupJobComponent implements OnInit, OnDestroy {
       : [];
     this.listFields = this.step?.fields || [];
 
-    let listField = [];
-    if (this.step?.tasks?.length > 0) {
-      this.step.tasks.forEach((task) => {
-        if (task?.fieldID && task.recID != this.stepsTasks?.recID) {
-          listField.push(...task.fieldID.split(';'));
-        }
-      });
+    if (this.typeTask?.value == 'CO') {
+      this.cache
+        .gridViewSetup('CMContracts', 'grvCMContracts')
+        .subscribe((grv) => {
+          if (grv) {
+            let grvShow = [
+              'contractID',
+              'contractDate',
+              'contractType',
+              'useType',
+              'contractName',
+              'customerID',
+              'contactID',
+              'owner',
+              'contractAmt',
+              'pmtMethodID',
+              'interval',
+              'disposalBefore',
+              'effectiveFrom',
+              'effectiveTo',
+              'note',
+              'dealID',
+              'quotationID',
+            ];
+            this.listGrvContracts =
+              this.listGrvContracts?.length > 0 ? this.listGrvContracts : [];
+            const listFieldLinkConvert = (
+              this.stepsTasks?.reference
+                ? this.stepsTasks.reference.split(';')
+                : []
+            )
+              .filter((field) => field.includes('/'))
+              .map((item) => {
+                const [recID, fieldName] = item.split('/');
+                const fieldFind = this.step?.fields?.find(
+                  (x) => x.recID == recID
+                );
+                return fieldFind
+                  ? { recID, fieldName, title: fieldFind.title }
+                  : null;
+              })
+              .filter(Boolean);
+            for (var key in grv) {
+              if (grvShow?.some((x) => x.toLowerCase() == key.toLowerCase())) {
+                let filed = listFieldLinkConvert?.find(
+                  (x) => x?.fieldName == grv[key]?.fieldName
+                );
+                let data = {
+                  fieldName: grv[key]?.fieldName,
+                  headerText: grv[key]?.headerText,
+                  dataType: grv[key]?.dataType,
+                  field: filed || null,
+                  show: false,
+                };
+                this.listGrvContracts?.push(data);
+              }
+            }
+          }
+        });
     }
-    this.listFields = this.step?.fields.filter(
-      (field) => !listField.includes(field.recID)
-    );
   }
 
+  setRoleDefaut() {
+    let role = new DP_Steps_Tasks_Roles();
+    role.objectID = this.user?.userID;
+    role.objectName = this.user?.username;
+    role.objectType = '1';
+    role.roleType = 'O';
+    role.taskID = this.stepsTasks?.recID;
+    this.stepsTasks.roles = [role];
+  }
   ngAfterViewInit() {}
   getFormModel() {
     this.cache
@@ -210,7 +276,8 @@ export class PopupJobComponent implements OnInit, OnDestroy {
     let data = {
       dialog: this.dialog,
       formGroup: null,
-      templateID: this.stepsTasks['reference'] || '',
+      templateID:
+        this.stepsTasks['reference'] || '48a624a5-a55a-11ee-94cf-00155d035517',
       showIsTemplate: true,
       showIsPublish: true,
       showSendLater: true,
@@ -280,7 +347,19 @@ export class PopupJobComponent implements OnInit, OnDestroy {
   async saveData() {
     this.stepsTasks['roles'] = [...this.owner, ...this.participant];
     this.stepsTasks['parentID'] = this.listParentID.join(';');
-    this.stepsTasks['fieldID'] = this.listFieldID.join(';');
+    if (this.listGrvContracts?.length > 0) {
+      let listFieldIDLink = [];
+      for (let grv of this.listGrvContracts) {
+        if (grv?.field) {
+          let fieldAndfieldName = grv?.field?.recID + '/' + grv?.fieldName;
+          listFieldIDLink.push(fieldAndfieldName);
+        }
+      }
+      this.stepsTasks.reference = listFieldIDLink.join(';');
+    }
+    if(this.typeTask?.value == 'F' && this.listFieldID){
+      this.stepsTasks.fieldID = this.listFieldID.join(';');
+    }
     let message = [];
     for (let key of this.REQUIRE) {
       if (this.typeTask?.value == 'F' && key == 'dependRule') {
@@ -508,8 +587,13 @@ export class PopupJobComponent implements OnInit, OnDestroy {
   }
   fieldIDChange(event) {
     this.listFieldID = event;
+    let field = this.listFields.find((fieldID) => fieldID.recID == event[0]);
+    // this.clickSettingReference(field);
   }
-
+  onItemClick(e) {
+    console.log(e);
+    console.log(e?.item?.value);
+  }
   valueChangeText(event) {
     this.stepsTasks[event?.field] = JSON.parse(JSON.stringify(event?.data));
   }
@@ -655,7 +739,7 @@ export class PopupJobComponent implements OnInit, OnDestroy {
               let opt = new DialogModel();
               opt.FormModel = formES;
               option.zIndex = 1100;
-              let popupEditES = this.callfc.openForm(
+              let popupEditES = this.callfunc.openForm(
                 PopupAddCategoryComponent,
                 '',
                 800,
@@ -705,5 +789,40 @@ export class PopupJobComponent implements OnInit, OnDestroy {
       'GetListStepByCategoryIDAsync',
       categoryID
     );
+  }
+
+  clickSettingReference(field = null) {
+    let option = new DialogModel();
+    option.zIndex = 1050;
+    let obj = {
+      datas: this.listGrvContracts,
+      entityName: 'CM_Contracts',
+      action: this.action,
+      titleAction: 'Thêm trường liên kết', //test
+      listFields: this.listFields,
+    };
+    let dialogColumn = this.callfunc.openForm(
+      PopupMapContractComponent,
+      '',
+      1000,
+      Util.getViewPort().height - 100,
+      '',
+      obj,
+      '',
+      option
+    );
+    dialogColumn?.closed.subscribe((res) => {
+      if (res?.event) {
+        this.listGrvContracts = res?.event;
+        this.listFieldID = [];
+        for (let grv of this.listGrvContracts) {
+          grv.show = false;
+          if (grv?.field?.recID) {
+            this.listFieldID.push(grv?.field?.recID);
+          }
+        }
+        this.changeDetectorRef.markForCheck();
+      }
+    });
   }
 }

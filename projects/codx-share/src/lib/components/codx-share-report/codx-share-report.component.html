@@ -50,7 +50,7 @@
         cardCss="border rounded h-100"
         [imageSrc]="data?.background || imgDefault"
         [footer]="footer"
-        ngClass="h-100"
+        ngClass="h-100 card-share-report"
       >
       </codx-card-img>
     </div>
@@ -78,20 +78,23 @@
     </ng-container>
   </ng-template>
   <ng-template #tmpFooter let-data let-bookmark="bookmark">
-    <div class="d-flex align-items-top justify-content-between h-40px">
-      <div class="d-flex flex-column">
-        <div class="text-dark line-clamp line-clamp-2 text-wrap">{{data.customName}}</div>
+    <div class="d-flex align-items-top justify-content-between">
+      <div class="d-flex flex-column w-100">
+        <div class="text-dark line-clamp line-clamp-1 text-wrap">{{data.customName}}</div>
         <!-- <span class="fs-7 opacity-75 line-clamp line-clamp-1" [title]="data.description">{{data.description}}</span>   ///////anh Thoi keu bo nha Chung -->
-        
+
+      </div> 
+    </div>
+    <div class="d-flex align-items-center justify-content-between">
+      <div class="d-flex align-items-center">
+        <i class="icon-i-star text-warning icon-14"></i>
+        <span class="text-warning ms-1 mt-2px">4.5</span>
+        <i class="icon-i-eye icon-18 ms-5"></i>
+        <span class="ms-1 mt-1px">{{data?.views}}</span>
       </div>
       <div *ngIf="bookmark" [id]="'ws-report-bookmark' + data?.recID" class="d-flex align-items-center justify-content-center w-30px h-30px border border-gray rounded-circle ms-2 ws-report-bookmark" [ngClass]="!data.isBookMark?'opacity-25':'opacity-100'"  (click)="setBookMark(data?.recID);$event.stopPropagation()">
         <span class="icon-18 icon-bookmark text-warning"></span>
       </div>
     </div>
-    <div class="d-flex align-items-center">
-      <i class="icon-i-star text-warning icon-14"></i>
-      <span class="text-warning ms-1 mt-2px">4.5</span>
-      <i class="icon-i-eye icon-18 ms-5"></i>
-      <span class="ms-1 mt-1px">{{data?.views}}</span>
-    </div>
+    
   </ng-template>
