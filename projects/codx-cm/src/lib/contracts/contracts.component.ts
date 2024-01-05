@@ -264,7 +264,7 @@ export class ContractsComponent extends UIComponent {
       this.codxShareService.changeMFApproval(event, data?.unbounds);
     } else if (event != null) {
       event.forEach((res) => {
-        res.isblur = data.approveStatus == '3' && res.functionID != 'CM0204_2';
+        res.isblur = data?.approveStatus == '3' && res?.functionID != 'CM0204_2';
         if (isDetail) {
           res.isbookmark = false;
         }

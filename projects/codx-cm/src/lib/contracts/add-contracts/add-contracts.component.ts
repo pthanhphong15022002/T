@@ -233,6 +233,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
   //CF
   arrCaculateField: any[] = [];
   isLoadedCF = false;
+  refInstance = ''; //Biến tham chiếu data từ cơ hội
   //#endregion
 
   constructor(
@@ -372,7 +373,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
           this.contracts.processID = this.processID;
           this.getBusinessLineByProcessContractID(this.processID);
         }
-        if(this.type == 'task'){
+        if (this.type == 'task') {
           this.contracts.applyProcess = true;
           this.getBusinessLineByBusinessLineID(this.contracts?.businessLineID);
           this.mapDataInfield();
@@ -454,29 +455,31 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
     }
   }
 
-  mapDataInfield(){
-    if(this.type == 'task' && this.stepsTasks && this.stepsTasks?.reference){
-      this.cmService.getInstancerStepByRecID((this.stepsTasks?.stepID)).subscribe(res => {
-        if(res){
-          let step = res;
-          if(step && this.stepsTasks?.reference){
-            let fields = this.stepsTasks?.reference?.split(";");
-            let listField = step?.fields;
-            let link = fields?.filter(x => x.includes("/"));
-            if(link){
-              let data = [];
-              for(let item of link){
-                let x = item?.split("/");
-                if(x?.length  == 2){
-                  let field = listField?.find(j => j.refID == x[0]);
-                  let y =  x[1].charAt(0).toLowerCase() + x[1].slice(1);
-                  this.contracts[y] = field?.dataValue;
+  mapDataInfield() {
+    if (this.type == 'task' && this.stepsTasks && this.stepsTasks?.reference) {
+      this.cmService
+        .getInstancerStepByRecID(this.stepsTasks?.stepID)
+        .subscribe((res) => {
+          if (res) {
+            let step = res;
+            if (step && this.stepsTasks?.reference) {
+              let fields = this.stepsTasks?.reference?.split(';');
+              let listField = step?.fields;
+              let link = fields?.filter((x) => x.includes('/'));
+              if (link) {
+                let data = [];
+                for (let item of link) {
+                  let x = item?.split('/');
+                  if (x?.length == 2) {
+                    let field = listField?.find((j) => j.refID == x[0]);
+                    let y = x[1].charAt(0).toLowerCase() + x[1].slice(1);
+                    this.contracts[y] = field?.dataValue;
+                  }
                 }
               }
             }
           }
-        }
-      })
+        });
     }
   }
 
@@ -710,6 +713,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
         }
         break;
       case 'dealID':
+        this.refInstance = event?.component?.itemsSelected[0]?.RefID;
         if (!this.contracts.customerID && this.contracts?.dealID) {
           this.getCustomerByDealID(event?.data);
           this.setValueComboboxQuotation();
@@ -728,7 +732,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
         break;
       case 'contractType':
         if (event?.component?.itemsSelected[0]) {
-          if(event?.component?.itemsSelected[0]?.AutoNumberControl == "1"){
+          if (event?.component?.itemsSelected[0]?.AutoNumberControl == '1') {
             let autoNumberCode = event?.component?.itemsSelected[0]?.AutoNumber;
             if (autoNumberCode) {
               this.cmService
@@ -748,7 +752,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
                   }
                 });
             }
-          }else{
+          } else {
             if (this.autoNumber) {
               this.contracts.contractID = this.autoNumber;
               this.disabledShowInput = true;
@@ -757,7 +761,6 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
               this.disabledShowInput = false;
             }
           }
-          
         }
         break;
       case 'businessLineID':
@@ -852,7 +855,8 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
   }
 
   setValueComboboxQuotation() {
-    let listQuotation = this.inputQuotation?.ComponentCurrent?.dataService?.data;
+    let listQuotation =
+      this.inputQuotation?.ComponentCurrent?.dataService?.data;
     if (listQuotation) {
       if (this.customerIdOld != this.contracts.customerID) {
         this.contracts.quotationID = null;
@@ -1019,15 +1023,15 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
       });
   }
   getBusinessLineByBusinessLineID(businessLine) {
-    if(businessLine){
+    if (businessLine) {
       this.cmService
-      .getBusinessLineByBusinessLineID([businessLine])
-      .subscribe((res) => {
-        if (res) {
-          this.contracts.processID = res?.processContractID;
-          this.getListInstanceSteps(this.contracts.processID);
-        }
-      });
+        .getBusinessLineByBusinessLineID([businessLine])
+        .subscribe((res) => {
+          if (res) {
+            this.contracts.processID = res?.processContractID;
+            this.getListInstanceSteps(this.contracts.processID);
+          }
+        });
     }
   }
   //#endregion
@@ -1623,9 +1627,9 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
               this.editContract();
             }
 
-            break;
-        }
+          break;
       }
+    }
   }
 
   addInstance() {

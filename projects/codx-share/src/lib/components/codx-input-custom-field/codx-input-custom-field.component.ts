@@ -24,6 +24,7 @@ import { ComboBoxComponent } from '@syncfusion/ej2-angular-dropdowns';
 import { PopupAddLineTableComponent } from './popup-add-line-table/popup-add-line-table.component';
 import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
 import { moveItemInArray } from '@angular/cdk/drag-drop';
+import { PopupSelectFieldReferenceComponent } from './popup-select-field-reference/popup-select-field-reference.component';
 
 @Component({
   selector: 'codx-input-custom-field',
@@ -50,7 +51,7 @@ export class CodxInputCustomFieldComponent implements OnInit {
   @Input() isDataTable = false; //là data của Table
 
   @Input() refVersion = ''; //là recID của form Task
-  @Input() refInstance = ''; //là recID của Instance liên quan
+  @Input() refInstance = ''; //'63484925-9f24-11ee-a457-c025a5a4cd5d'; //'63484925-9f24-11ee-a457-c025a5a4cd5d'; //tesst; //là recID của Instance liên quan
   @Input() refStepID = ''; //là recID của step Ins liên quan
 
   @ViewChild('attachment') attachment: AttachmentComponent;
@@ -167,8 +168,6 @@ export class CodxInputCustomFieldComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    //load data truong tùy chỉnh ref
-    if (this.refInstance) this.loadDataRef();
     //gia tri mặc dinh khi them moi
     if (this.isAdd && this.customField.defaultValue)
       this.customField.dataValue = this.customField.defaultValue;
@@ -952,15 +951,17 @@ export class CodxInputCustomFieldComponent implements OnInit {
 
   //-------------- Data num co E ---------------//
   formatHaveE() {
-    let idxE = this.customField.dataValue.toString().indexOf('E');
-    if (idxE != -1) {
-      let mu = this.customField.dataValue.substring(
-        idxE + 2,
-        this.customField.dataValue?.length
-      );
-      this.customField.dataValue =
-        Number.parseFloat(this.customField.dataValue.substring(0, idxE)) *
-        Math.pow(10, Number.parseInt(mu));
+    if (this.customField.dataValue) {
+      let idxE = this.customField.dataValue?.toString().indexOf('E');
+      if (idxE != -1) {
+        let mu = this.customField.dataValue
+          .toString()
+          .substring(idxE + 2, this.customField.dataValue?.length);
+        this.customField.dataValue =
+          Number.parseFloat(
+            this.customField.dataValue.toString().substring(0, idxE)
+          ) * Math.pow(10, Number.parseInt(mu));
+      }
     }
   }
   //-----------------------------------------------//
@@ -969,11 +970,83 @@ export class CodxInputCustomFieldComponent implements OnInit {
   //-------------- Data tham chiếu ---------------//
   //-----------------------------------------------//
   selectDataRef() {
-    if (this.listFieldRef?.length > 0) {
-      this.listFieldsSelect = this.listFieldRef.filter(
-        (x) => x.dataType == this.customField.dataType
-      );
+    if (this.refInstance) {
+      this.api
+        .exec<any>('DP', 'InstancesStepsBusiness', 'GetListFieldsAsync', [
+          this.refInstance,
+          this.refStepID,
+          this.customField,
+        ])
+        .subscribe((fiels) => {
+          if (fiels?.length > 0) {
+            let dialogModel = new DialogModel();
+            dialogModel.zIndex = 1200;
+            let obj = {
+              listField: fiels,
+              field: this.customField,
+            };
+            let pop = this.callfc.openForm(
+              PopupSelectFieldReferenceComponent,
+              '',
+              500,
+              700,
+              null,
+              obj,
+              null,
+              dialogModel
+            );
+
+            pop.closed.subscribe((res) => {
+              if (res?.event) {
+                this.customField = res.event;
+                this.changeRef.detectChanges();
+              }
+            });
+          } else
+            this.notiService.notify(
+              'Không có data phù hợp với trường được chọn ! Vui lòng nhập giá trị của bạn !',
+              '3'
+            );
+        });
     }
+
+    // if (this.listFieldRef?.length > 0) {
+    //   this.listFieldsSelect = this.listFieldRef.filter(
+    //     (x) =>
+    //       x.dataType == this.customField.dataType &&
+    //       x.refType == this.customField.refType &&
+    //       x.refValue == this.customField.refValue &&
+    //       x.dataValue
+    //   );
+    //   if (this.listFieldsSelect?.length > 0) {
+    //     let dialogModel = new DialogModel();
+    //     dialogModel.zIndex = 1200;
+    //     let obj = {
+    //       listField: this.listFieldsSelect,
+    //       field: this.customField,
+    //     };
+    //     let pop = this.callfc.openForm(
+    //       PopupSelectFieldReferenceComponent,
+    //       '',
+    //       500,
+    //       700,
+    //       null,
+    //       obj,
+    //       null,
+    //       dialogModel
+    //     );
+
+    //     pop.closed.subscribe((res) => {
+    //       if (res?.event) {
+    //         this.customField = res.event;
+    //         this.changeRef.detectChanges();
+    //       }
+    //     });
+    //   } else
+    //     this.notiService.notify(
+    //       'Không có data phù hợp với trường được chọn ! Vui lòng nhập giá trị của bạn !'
+    //     );
+    // }
   }
 
   loadDataRef() {
@@ -982,6 +1055,7 @@ export class CodxInputCustomFieldComponent implements OnInit {
         .exec<any>('DP', 'DPInstances', 'GetListFieldsAsync', [
           this.refInstance,
           this.refStepID,
+          this.customField,
         ])
         .subscribe((res) => {
           if (res) this.listFieldRef = res;
