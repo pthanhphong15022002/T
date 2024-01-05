@@ -180,8 +180,8 @@ export class PeriodicControlComponent extends UIComponent {
       text
     ]).pipe(takeUntil(this.destroy$))
     .subscribe((res:any)=>{
-      if (res) {
-        this.oData = [res];
+      if (res && !res?.isError) {
+        this.oData = [res?.data];
         if(this.showLess) this.showLess = false;
         this.notification.notifyCode('AC0029', 0, text);
         this.detectorRef.detectChanges();
