@@ -1004,7 +1004,8 @@ export class CodxInputCustomFieldComponent implements OnInit {
             });
           } else
             this.notiService.notify(
-              'Không có data phù hợp với trường được chọn ! Vui lòng nhập giá trị của bạn !'
+              'Không có data phù hợp với trường được chọn ! Vui lòng nhập giá trị của bạn !',
+              '3'
             );
         });
     }
