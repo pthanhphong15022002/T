@@ -106,7 +106,7 @@
         <!-- </div> -->
       </div>
     </div>
-    <div *ngIf="refInstance">
+    <div *ngIf="refInstance && customField.dataType != 'CF'">
       <button
         type="button"
         class="btn btn-icon btn-light-primary me-2"

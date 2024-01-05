@@ -51,7 +51,7 @@ export class CodxInputCustomFieldComponent implements OnInit {
   @Input() isDataTable = false; //là data của Table
 
   @Input() refVersion = ''; //là recID của form Task
-  @Input() refInstance = '63484925-9f24-11ee-a457-c025a5a4cd5d'; //'63484925-9f24-11ee-a457-c025a5a4cd5d'; //tesst; //là recID của Instance liên quan
+  @Input() refInstance = ''; //'63484925-9f24-11ee-a457-c025a5a4cd5d'; //'63484925-9f24-11ee-a457-c025a5a4cd5d'; //tesst; //là recID của Instance liên quan
   @Input() refStepID = ''; //là recID của step Ins liên quan
 
   @ViewChild('attachment') attachment: AttachmentComponent;

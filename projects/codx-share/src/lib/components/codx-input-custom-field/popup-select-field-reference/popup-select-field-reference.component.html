@@ -8,6 +8,7 @@
               type="checkbox"
               class="me-5"
               [field]="f.fieldName"
+              [crrValue]="fieldNameRef == f.fieldName"
               (valueChange)="valueChange($event, f)"
             ></codx-input>
           </div>
