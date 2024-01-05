@@ -151,6 +151,9 @@ export class DynamicFormComponent extends UIComponent {
       case 'SYS04':
         this.copy(data, evt);
         break;
+      case 'SYS05':
+        this.View(data, evt);
+        break;
       //Export file
       case 'SYS002':
         this.export(data);
@@ -424,6 +427,26 @@ export class DynamicFormComponent extends UIComponent {
           }
         });
     });
+  }
+  private View(evt?, mFunc?) {
+    if (evt) this.viewBase.dataService.dataSelected = this.dataSelected = evt;
+    let option = new SidebarModel();
+    option.Width = this.width;
+    option.DataService = this.viewBase?.dataService;
+    option.FormModel = this.viewBase?.currentView?.formModel;
+    this.dialog = this.callfc.openSide(
+      CodxFormDynamicComponent,
+      {
+        formModel: option.FormModel,
+        data: this.dataSelected,
+        function: this.function,
+        dataService: this.viewBase.dataService,
+        isAddMode: false,
+        titleMore: mFunc ? mFunc.text : '',
+        isView: true,
+      },
+      option
+    );
   }
 
   private copy(evt: any, mFunc?) {
