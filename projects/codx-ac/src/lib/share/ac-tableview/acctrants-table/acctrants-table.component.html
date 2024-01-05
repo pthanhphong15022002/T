@@ -1,50 +1,50 @@
-<div class="table-responsive table-ac mb-2">
+<div class="table-responsive table-ac">
     <table class="table mb-0">
         <thead class="border-gray-200 table-thead-ac">
             <tr class="border-bottom">
-                <th style="min-width: 400px;" class="w-40 border-bottom">
+                <th class="border-bottom" style="width: 30em;min-width: 25em;">
                     <!-- <div class="d-flex align-items-center justify-content-start ps-3">
                         <codx-label class="fw-bold" fiedName="lblAccountName" default="Tài khoản">
                         </codx-label>
                     </div> -->
                     <span class="fw-bold">Tài khoản</span>
                 </th>
-                <th style="min-width: 150px;" *ngIf="baseCurr && itemSelected?.currencyID == baseCurr" class="w-15 border-bottom text-end">
+                <th *ngIf="baseCurr && itemSelected?.currencyID == baseCurr" class="border-bottom text-end" style="width: 15em;min-width: 10em;">
                     <!-- <codx-label class="fw-bold" fiedName="lblAccountID" default="Nợ">
                     </codx-label> -->
                     <span class="fw-bold">Nợ</span>
                 </th>
-                <th style="min-width: 150px;" *ngIf="baseCurr && itemSelected?.currencyID != baseCurr" class="w-15 border-bottom text-end">
+                <th *ngIf="baseCurr && itemSelected?.currencyID != baseCurr" class="border-bottom text-end" style="width: 15em;min-width: 10em;">
                     <!-- <codx-label class="fw-bold" fiedName="lblAccountID" default="Nợ, HT">
                     </codx-label> -->
                     <span class="fw-bold">Nợ, HT</span>
                 </th>
-                <th style="min-width: 150px;" *ngIf="baseCurr && itemSelected?.currencyID == baseCurr" class="w-15 border-bottom text-end">
+                <th *ngIf="baseCurr && itemSelected?.currencyID == baseCurr" class="border-bottom text-end" style="width: 15em;min-width: 10em;">
                     <!-- <codx-label class="fw-bold" fiedName="lblOffSetAccID" default="Có">
                     </codx-label> -->
                     <span class="fw-bold">Có</span>
                 </th>
-                <th style="min-width: 150px;" *ngIf="baseCurr && itemSelected?.currencyID != baseCurr" class="w-15 border-bottom text-end">
+                <th *ngIf="baseCurr && itemSelected?.currencyID != baseCurr" class="border-bottom text-end" style="width: 15em;min-width: 10em;">
                     <!-- <codx-label class="fw-bold" fiedName="lblOffSetAccID" default="Có, HT">
                     </codx-label> -->
                     <span class="fw-bold">Có, HT</span>
                 </th>
-                <th style="min-width: 150px;" *ngIf="baseCurr && itemSelected?.currencyID != baseCurr" class="w-15 border-bottom text-end">
+                <th *ngIf="baseCurr && itemSelected?.currencyID != baseCurr" class="border-bottom text-end" style="width: 15em;min-width: 10em;">
                     <!-- <codx-label class="fw-bold" fiedName="lblDR2" default="Số tiền, NT">
                     </codx-label> -->
                     <span class="fw-bold">Số tiền, NT</span>
                 </th>
-                <th style="min-width: 350px;" class="w-30 border-bottom">
+                <th class="border-bottom" style="width: 30em;min-width: 25em;">
                     <!-- <codx-label class="fw-bold" fiedName="lblNote" default="Ghi chú">
                     </codx-label> -->
                     <span class="fw-bold">Ghi chú</span>
                 </th>
             </tr>
         </thead>
-        <tbody>
+        <tbody *ngIf="listAcctrants && listAcctrants.length" class="table-body-ac">
             <ng-container *ngFor="let item of listAcctrants;trackBy: trackByFn">
                 <tr [style]="item | tranformClassBorder : listAcctrants">
-                    <td style="min-width: 400px;" class="w-40">
+                    <td style="width: 30em;min-width: 25em;">
                         <div class="d-flex justify-content-start">
                             <div class="w-100px min-w-100px">
                                 <div class="d-flex align-items-center justify-content-start">
@@ -71,7 +71,7 @@
                                         &nbsp;
                                         <div class="w-100" style="text-align: left;display: inline-block;">
                                             <div style="display: inline;text-overflow: ellipsis;">
-                                                <span style="word-wrap: break-word;" class="fs-7 text-gray-700 line-clamp line-clamp-2">
+                                                <span style="word-wrap: break-word;" class="fs-7 text-gray-700 line-clamp line-clamp-1">
                                                     {{item.objectName}}
                                                 </span>
                                             </div>
@@ -86,7 +86,7 @@
                                         </codx-label>
                                         <div class="w-100" style="text-align: left;display: inline-block;">
                                             <div style="display: inline;text-overflow: ellipsis;">
-                                                <span style="word-wrap: break-word;" class="fs-7 text-gray-700 line-clamp line-clamp-2">{{item.diM3 + ' - ' + item.costItemName}}</span>
+                                                <span style="word-wrap: break-word;" class="fs-7 text-gray-700 line-clamp line-clamp-1">{{item.diM3 + ' - ' + item.costItemName}}</span>
                                             </div>
                                         </div>
                                     </ng-container>
@@ -99,7 +99,7 @@
                                         </codx-label>
                                         <div class="w-100" style="text-align: left;display: inline-block;">
                                             <div style="display: inline;text-overflow: ellipsis;">
-                                                <span style="word-wrap: break-word;" class="fs-7 text-gray-700 line-clamp line-clamp-2">{{item.diM2 + ' - ' + item.costCenterName}}</span>
+                                                <span style="word-wrap: break-word;" class="fs-7 text-gray-700 line-clamp line-clamp-1">{{item.diM2 + ' - ' + item.costCenterName}}</span>
                                             </div>
                                         </div>
                                     </ng-container>
@@ -112,7 +112,7 @@
                                         </codx-label>
                                         <div class="w-100" style="text-align: left;display: inline-block;">
                                             <div style="display: inline;text-overflow: ellipsis;">
-                                                <span style="word-wrap: break-word;" class="fs-7 text-gray-700 line-clamp line-clamp-2">{{item.diM1 + ' - ' + item.profitCenterName}}</span>
+                                                <span style="word-wrap: break-word;" class="fs-7 text-gray-700 line-clamp line-clamp-1">{{item.diM1 + ' - ' + item.profitCenterName}}</span>
                                             </div>
                                         </div>
                                     </ng-container>
@@ -120,40 +120,111 @@
                             </div>
                         </div>
                     </td>
-                    <td style="min-width: 150px;" class="w-15 text-end">
+                    <td style="width: 15em;min-width: 10em;" class="text-end">
                         <span *ngIf="!item.crediting" class="fw-bold line-clamp line-clamp-1" [innerHTML]="item?.transAmt2
                     | tranformValueNumber : 'B' | async"></span>
                     </td>
-                    <td style="min-width: 150px;" class="w-15 text-end">
+                    <td style="width: 15em;min-width: 10em;" class="text-end">
                         <span *ngIf="item.crediting" class="fw-bold line-clamp line-clamp-1" [innerHTML]="item?.transAmt2
                   | tranformValueNumber : 'B' | async"></span>
                     </td>
-                    <td style="min-width: 150px;" *ngIf="baseCurr && itemSelected?.currencyID != baseCurr" class="w-15 text-end">
+                    <td style="width: 15em;min-width: 10em;" *ngIf="baseCurr && itemSelected?.currencyID != baseCurr" class="text-end">
                         <span class="fw-bold line-clamp line-clamp-1" [innerHTML]="item?.transAmt
                 | tranformValueNumber : 'S' | async"></span>
                     </td>
-                    <td style="min-width: 350px;" class="w-30">
+                    <td style="width: 30em;min-width: 25em;">
                         <span class="line-clamp line-clamp-2 text-gray-600 fs-7">{{ item.note }}</span>
                     </td>
                 </tr>
             </ng-container>
         </tbody>
+        <div *ngIf="listAcctrants && listAcctrants.length == 0" class="ac-empty">
+            <img src="../assets/themes/sys/default/img/DataEmpty.svg" />
+                    <div class="fs-6 text-dark mt-2 text-center">
+                        {{ "SYS011" | mssg | async }}
+                    </div>
+        </div>
     </table>
-    <div *ngIf="listAcctrants && listAcctrants.length == 0" class="ac-empty">
-        <!-- <div style="padding-top: 0px !important;" class="list-empty card card-flush h-100">
-            <div class="d-flex flex-column flex-center justify-content-center">
-                <img src="../assets/themes/sys/default/img/DataEmpty.svg" class="w-200px" />
-                <div class="fs-6 text-dark mt-2 text-center">
-                    {{ "SYS011" | mssg | async }}
+    <table *ngIf="listAcctrants && listAcctrants.length" class="table mb-0 table-footer-ac">
+        <thead class="border-gray-200 bg-gray-100">
+            <tr>
+                <th class="text-end" style="width: 30em;min-width: 25em;">
+                    <codx-label *ngIf="listAcctrants && listAcctrants.length > 0" class="fw-bold line-clamp line-clamp-1" fiedName="lblTotal"
+                        default="Tổng cộng">
+                    </codx-label>
+                </th>
+                <th class="text-end" style="width: 15em;min-width: 10em;">
+                    <span *ngIf="listAcctrants && listAcctrants.length > 0" class="fw-bold line-clamp line-clamp-1" [innerHTML]="totalAcctDR
+                        | tranformValueNumber : 'B' | async"></span>
+                </th>
+                <th class="text-end" style="width: 15em;min-width: 10em;">
+                    <span *ngIf="listAcctrants && listAcctrants.length > 0" class="fw-bold line-clamp line-clamp-1" [innerHTML]="totalAcctCR
+                        | tranformValueNumber : 'B' | async"></span>
+                </th>
+                <th *ngIf="baseCurr && itemSelected?.currencyID != baseCurr" class="text-end" style="width: 15em;min-width: 10em;">
+                    <span *ngIf="listAcctrants && listAcctrants.length > 0" class="fw-bold line-clamp line-clamp-1" [innerHTML]="totalTransAmt
+                        | tranformValueNumber : 'S' | async"></span>
+                </th>
+                <th style="width: 30em;min-width: 25em;">
+                    
+                </th>
+            </tr>
+        </thead>
+    </table>
+    <!-- <table class="table mb-0">
+        <tfoot>
+            <td class="text-end" style="width: 35em;min-width: 30em;">
+                <codx-label *ngIf="listAcctrants && listAcctrants.length > 0" class="fw-bold line-clamp line-clamp-1" fiedName="lblTotal"
+                    default="Tổng cộng">
+                </codx-label>
+            </td>
+            <td class="text-end" style="width: 15em;min-width: 10em;">
+                <span *ngIf="listAcctrants && listAcctrants.length > 0" class="fw-bold line-clamp line-clamp-1" #transAmt [innerHTML]="totalAcctDR
+                    | tranformValueNumber : 'B' | async"></span>
+            </td>
+            <td class="text-end" style="width: 15em;min-width: 10em;">
+                <div class="d-flex align-items-center justify-content-end ps-3 h-30px">
+                    <span *ngIf="listAcctrants && listAcctrants.length > 0" class="fw-bold line-clamp line-clamp-1" #transAmt [innerHTML]="totalAcctCR
+                      | tranformValueNumber : 'B' | async"></span>
                 </div>
-            </div>
-        </div> -->
-        <img src="../assets/themes/sys/default/img/DataEmpty.svg" />
-                <div class="fs-6 text-dark mt-2 text-center">
-                    {{ "SYS011" | mssg | async }}
+            </td>
+            <td *ngIf="baseCurr && itemSelected?.currencyID != baseCurr" class="text-end" style="width: 15em;min-width: 10em;">
+                <div class="d-flex align-items-center justify-content-end ps-3 h-30px">
+                    <span *ngIf="listAcctrants && listAcctrants.length > 0" class="fw-bold line-clamp line-clamp-1" #transAmt [innerHTML]="totalTransAmt
+                      | tranformValueNumber : 'S' | async"></span>
                 </div>
-    </div>
+            </td>
+            <td class="" style="width: 40em;min-width: 35em;"></td>
+        </tfoot>
+    </table> -->
+    <!-- <table class="table mb-0">
+        <tfoot class="table-footer-ac">
+            <td class="text-end" style="width: 35em;">
+                <codx-label *ngIf="listAcctrants && listAcctrants.length > 0" class="fw-bold line-clamp line-clamp-1" fiedName="lblTotal"
+                    default="Tổng cộng">
+                </codx-label>
+            </td>
+            <td class="text-end" style="width: 15em;">
+                <span *ngIf="listAcctrants && listAcctrants.length > 0" class="fw-bold line-clamp line-clamp-1" #transAmt [innerHTML]="totalAcctDR
+                    | tranformValueNumber : 'B' | async"></span>
+            </td>
+            <td class="text-end" style="width: 15em;">
+                <div class="d-flex align-items-center justify-content-end ps-3 h-30px">
+                    <span *ngIf="listAcctrants && listAcctrants.length > 0" class="fw-bold line-clamp line-clamp-1" #transAmt [innerHTML]="totalAcctCR
+                      | tranformValueNumber : 'B' | async"></span>
+                </div>
+            </td>
+            <td *ngIf="baseCurr && itemSelected?.currencyID != baseCurr" class="text-end" style="width: 15em;">
+                <div class="d-flex align-items-center justify-content-end ps-3 h-30px">
+                    <span *ngIf="listAcctrants && listAcctrants.length > 0" class="fw-bold line-clamp line-clamp-1" #transAmt [innerHTML]="totalTransAmt
+                      | tranformValueNumber : 'S' | async"></span>
+                </div>
+            </td>
+            <td class="" style="width: 40em;"></td>
+        </tfoot>
+    </table> -->
 </div>
+
 <!-- <div *ngIf="listAcctrants && listAcctrants.length > 0"  clas="mb-2">
     <ng-container *ngIf="baseCurr && itemSelected?.currencyID == baseCurr">
         <span class="fw-bold">Tổng Nợ:</span>&nbsp;<span class="text-gray-600" [innerHTML]="totalAcctDR
