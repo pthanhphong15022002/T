@@ -279,7 +279,7 @@
       </div>
     </div>
 
-    <div class="form-group">
+    <div class="form-group" *ngIf="typeTask?.value === 'CO' || typeTask?.value === 'F'">
       <div class="d-flex justify-content-between align-items-center">
         <codx-label
           fiedName="FieldID"
@@ -293,7 +293,6 @@
         >
           <i class="icon-settings icon-16"></i>
         </button>
-        <!-- <span *ngIf="typeTask?.value === 'F'" class="default">*</span> -->
       </div>
       <div>
         <ejs-multiselect
@@ -304,28 +303,9 @@
           (valueChange)="fieldIDChange($event)"
           [showDropDownIcon]="true"
           (tagObjects)="onItemClick($event)"
+          [enabled]="!(typeTask?.value === 'CO')"
         ></ejs-multiselect>
-        <!-- <span class="e-input-group-icon e-spin-down icon-link"></span> -->
       </div>
-      <!-- <div (click)="handleDivClick($event)" (document:click)="handleDocumentClick($event)" >
-        <div class="input-custom d-flex align-items-center justify-content-between">
-          <span [ngClass]="showSelect ? 'd-none' : ''" class="popup-data" class="ps-2">{{titleField}}</span>
-          <div class="d-flex align-items-center flex-wrap" [ngClass]="showSelect ? '' : 'd-none'">
-            <div *ngFor="let field of listField" class="d-flex align-items-center m-1 item-show ms-2 cursor-pointer">
-              <span class="text-nowrap"  (click)="chooseField(field)" >{{field?.title}}</span>
-              <span class="icon-close icon-18 ms-1" (click)="removeField(field)"></span>
-            </div>
-          </div>
-          <div>
-            <span class="e-input-group-icon e-ddl-icon"></span>
-          </div>
-        </div>
-        <div [ngClass]="showSelect ? '' : 'd-none'" class="popup-data" >
-          <div class="py-1 px-3 item-popup" *ngFor="let item of listFields" (click)="chooseData(item)">
-            <span >{{item?.title}}</span>
-          </div>
-        </div>
-      </div> -->
     </div>
 
     <div class="form-group" *ngIf="typeTask?.value != 'F'">
@@ -440,7 +420,7 @@
       ></codx-label>
     </div>
 
-    <div
+    <!-- <div
       class="d-flex align-items-center justify-content-between form-group"
       *ngIf="isBoughtTM && typeTask?.value != 'F'"
     >
@@ -471,7 +451,7 @@
         >
         </codx-input>
       </div>
-    </div>
+    </div> -->
 
     <div class="d-flex align-items-center form-group">
       <codx-input

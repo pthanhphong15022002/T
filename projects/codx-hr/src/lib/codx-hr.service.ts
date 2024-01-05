@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Injector } from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -9,6 +9,7 @@ import { LayoutModel } from '@shared/models/layout.model';
 import {
   ApiHttpService,
   AuthStore,
+  CRUDService,
   CacheService,
   CodxService,
   DataRequest,
@@ -66,6 +67,27 @@ export class CodxHrService {
     private fb: FormBuilder,
     private notiService: NotificationsService
   ) {}
+
+  createCRUDService(
+    injector: Injector,
+    formModel: FormModel,
+    service?: string,
+    gridView?: any
+  ): CRUDService {
+    const crudService = new CRUDService(injector);
+    if (service) {
+      crudService.service = service;
+    }
+    if (gridView) {
+      crudService.gridView = gridView;
+    }
+    crudService.request.entityName = formModel.entityName;
+    crudService.request.entityPermission = formModel.entityPer;
+    crudService.request.formName = formModel.formName;
+    crudService.request.gridViewName = formModel.gridViewName;
+    return crudService;
+  }
+
   loadEmployByPosition(positionID: string, _status: string): Observable<any> {
     return this.api
       .call(
@@ -1025,11 +1047,7 @@ export class CodxHrService {
   }
 
   UpdateEmployeeAppointionsInfoCore(data) {
-    return this.api.execAction(
-      'HR_EAppointions',
-      [data],
-      'UpdateAsync'
-    );
+    return this.api.execAction('HR_EAppointions', [data], 'UpdateAsync');
   }
 
   DeleteEmployeeAppointionsInfo(data) {

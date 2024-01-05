@@ -641,17 +641,22 @@ export class StepService {
         // task.objectLinked = contract?.recID;
       }
     }
-   
+
     let quotationID = task?.objectLinked;
     if ((action == 'edit' || action == 'copy') && quotationID) {
-      let contractData = await firstValueFrom(this.getOneContract(quotationID));    
-      if(contractData){
-        data = { ...data, contract: contractData, stepsTasks: task, isStartIns };
-      }else{
-        this.notiService.notify('Báo giá không tồn tại','3');
+      let contractData = await firstValueFrom(this.getOneContract(quotationID));
+      if (contractData) {
+        data = {
+          ...data,
+          contract: contractData,
+          stepsTasks: task,
+          isStartIns,
+        };
+      } else {
+        this.notiService.notify('Báo giá không tồn tại', '3');
         return;
       }
-    }else{
+    } else {
       data = { ...data, stepsTasks: task, isStartIns };
     }
 
@@ -980,8 +985,11 @@ export class StepService {
           } else {
             service = 'DP';
             className = 'InstancesBusiness';
-            methol = 'GetDatasByInstanceIDAsync';
-            request = [instanceID];
+            //Data version
+            methol = 'GetDatasVersionFieldAsync';
+            request = [instanceID, data.stepID, data.recID];
+            // methol = 'GetDatasByInstanceIDAsync';
+            //request = [instanceID];
           }
           break;
         default:

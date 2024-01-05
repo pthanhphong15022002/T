@@ -138,10 +138,12 @@
 <!-- temp right -->
 <ng-template #templateDetail>
   <contracts-view-detail
+    #detailViewContract
     [listInsStepStart]="listInsStep"
     [contract]="contractSelected"
     [formModel]="view?.formModel"
     [taskAdd]="taskAdd"
+    [contractAppendix]="contractAppendix"
     (clickMoreFunc)="clickMoreFunc($event)"
     (changeProgress)="autoStart($event)"
     (isSusscess)="autoOpenPopupSusscess($event)"
@@ -160,7 +162,7 @@
       type="view"
     ></codx-mfunc>
   </div>
-  <!-- <div class=""> 
+  <!-- <div class="">
     <codx-mfunc
       type="view"
       [dataItem]="moreDefaut"

@@ -981,7 +981,6 @@ export class PopupAddDealComponent
   }
   onAddInstance() {
     if (this.isShowReasonDP) {
-      debugger;
       let data = [this.instance, this.listInstanceSteps, this.oldIdInstance];
       this.codxCmService.addInstance(data).subscribe((instance) => {
         if (instance) {
@@ -1629,7 +1628,10 @@ export class PopupAddDealComponent
     this.arrCaculateField.forEach((obj) => {
       let dataFormat = obj.dataFormat;
       fieldsNum.forEach((f) => {
-        if (dataFormat.includes('[' + f.fieldName + ']') && f.dataValue) {
+        if (
+          dataFormat.includes('[' + f.fieldName + ']') &&
+          f.dataValue?.toString()
+        ) {
           let dataValue = f.dataValue;
           if (f.dataFormat == 'P') dataValue = dataValue + '/100';
           dataFormat = dataFormat.replaceAll(

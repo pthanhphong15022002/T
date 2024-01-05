@@ -1384,58 +1384,10 @@
         <div class="row">
           <div class="col-6">
             <codx-label
-              fiedName="AllowEstimatedEnd"
-              [formName]="'DPProcesses'"
-              [gridViewName]="'grvDPProcesses'"
-            >
-            </codx-label>
-          </div>
-          <div class="col-6 row">
-            <div class="col-lg-12 col-xl-8">
-              <div class="d-flex align-items-center">
-                <div class="me-5">
-                  <codx-input
-                    name="allowEstimatedEnd-radio"
-                    type="radio"
-                    style="width: 100%"
-                    field="yes"
-                    [label]="titleRadioYes"
-                    [checked]="process?.allowEstimatedEnd ?? false"
-                    [crrValue]="process?.allowEstimatedEnd"
-                    (valueChange)="
-                      valueRadioInfo($event, 'AllowEstimatedEndView')
-                    "
-                  >
-                  </codx-input>
-                </div>
-                <div class="me-5">
-                  <codx-input
-                    name="allowEstimatedEnd-radio"
-                    type="radio"
-                    style="width: 100%"
-                    field="no"
-                    [label]="titleRadioNo"
-                    [checked]="!process?.allowEstimatedEnd ?? false"
-                    [crrValue]="process?.allowEstimatedEnd"
-                    (valueChange)="
-                      valueRadioInfo($event, 'AllowEstimatedEndView')
-                    "
-                    readonly
-                  >
-                  </codx-input>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="form-group margin-form mb-4">
-        <div class="row">
-          <div class="col-6">
-            <codx-label
               fiedName="TabControl"
               [formName]="'DPProcesses'"
               [gridViewName]="'grvDPProcesses'"
+              [setRequire]="false"
             >
             </codx-label>
           </div>
@@ -1453,6 +1405,124 @@
             </div>
             <!-- <codx-input [crrValue]="process.showInstanceControl" (valueChange)="valueChange($event)" field="showInstanceControl" [formModel]="formModel" [Group]="formGroup" >
             </codx-input> -->
+          </div>
+        </div>
+      </div>
+      <div class="form-group margin-form mb-4">
+        <div class="row">
+          <div class="col-6">
+            <codx-label
+              fiedName="AllowCopy"
+              [formName]="'DPProcesses'"
+              [gridViewName]="'grvDPProcesses'"
+            >
+            </codx-label>
+          </div>
+          <div class="col-6 row">
+            <div class="col-lg-12 col-xl-8">
+              <div class="d-flex align-items-center">
+                <div class="me-5">
+                  <codx-input
+                    name="copy-radio"
+                    type="radio"
+                    style="width: 100%"
+                    field="yes"
+                    [label]="titleRadioYes"
+                    [checked]="process?.allowCopy ?? false"
+                    [crrValue]="process?.allowCopy"
+                    (valueChange)="valueRadioInfo($event, 'AllowCopyView')"
+                  >
+                  </codx-input>
+                </div>
+                <div class="me-5">
+                  <codx-input
+                    name="copy-radio"
+                    type="radio"
+                    style="width: 100%"
+                    field="no"
+                    [label]="titleRadioNo"
+                    [checked]="!process?.allowCopy ?? false"
+                    [crrValue]="process?.allowCopy"
+                    (valueChange)="valueRadioInfo($event, 'AllowCopyView')"
+                    readonly
+                  >
+                  </codx-input>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group margin-form mb-4" *ngIf="isBoughtTM">
+        <div class="row">
+          <div class="col-6">
+            <codx-label
+              fiedName="createTask"
+              [formName]="'DPProcesses'"
+              [gridViewName]="'grvDPProcesses'"
+            >
+            </codx-label>
+          </div>
+          <div class="col-6 row">
+            <div class="col-lg-12 col-xl-8">
+              <div class="d-flex align-items-center">
+                <div class="me-5">
+                  <codx-input
+                    name="createTask-radio"
+                    type="radio"
+                    style="width: 100%"
+                    field="yes"
+                    [label]="titleRadioYes"
+                    [checked]="process?.createTask ?? false"
+                    [crrValue]="process?.createTask"
+                    (valueChange)="valueRadioInfo($event, 'CreateTask')"
+                  >
+                  </codx-input>
+                </div>
+                <div class="me-5">
+                  <codx-input
+                    name="createTask-radio"
+                    type="radio"
+                    style="width: 100%"
+                    field="no"
+                    [label]="titleRadioNo"
+                    [checked]="!process?.createTask ?? false"
+                    [crrValue]="process?.createTask"
+                    (valueChange)="valueRadioInfo($event, 'CreateTask')"
+                    readonly
+                  >
+                  </codx-input>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group margin-form mb-4" *ngIf="isBoughtTM">
+        <div class="row">
+          <div class="col-6">
+            <codx-label
+              fiedName="dependRule"
+              [formName]="'DPProcesses'"
+              [gridViewName]="'grvDPProcesses'"
+              [setRequire]="false"
+            >
+            </codx-label>
+          </div>
+          <div class="col-6 row">
+            <div class="col-lg-12 col-xl-8">
+              <codx-input
+                field="dependRule"
+                [crrValue]="process.dependRule"
+                refValue="DP025"
+                type="valuelist"
+                (valueChange)="valueChange($event)"
+                [disabled]="!process?.createTask"
+              >
+              </codx-input>
+            </div>
           </div>
         </div>
       </div>

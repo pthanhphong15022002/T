@@ -32,6 +32,7 @@ import { AttachmentComponent } from 'projects/codx-common/src/lib/component/atta
 import { tmpPost } from '../../models/tmpPost.model';
 import { CodxFdService } from '../../codx-fd.service';
 import { zip } from 'rxjs';
+import moment from 'moment';
 
 @Component({
   selector: 'lib-popup-add-cards',
@@ -89,15 +90,19 @@ export class PopupAddCardsComponent implements OnInit {
   quantity: number = 0;
   quantityOld: number = 0;
   amount: number = 0;
+  amountEvoucher: number = 0;
   price: number = 0;
   totalRecorItem: number = 4;
   width = 720;
+  widthEvoucher = 747;
   height = window.innerHeight;
+  exchangeRateEVoucher: number = 1;
 
   isWalletReciver: boolean = false;
   showNavigationArrows: boolean = false;
   readOnly: boolean = false;
   showPopupGift: boolean = false;
+  showPopupEvoucher: boolean = false;
 
   MEMBERTYPE = {
     CREATED: '1',
@@ -141,6 +146,8 @@ export class PopupAddCardsComponent implements OnInit {
   type = 'add';
   reduceCoCoins = 0;
   cointsError = "";
+  evoucher: any[] = [];
+  evoucherSelected: any[] = [];
 
   constructor(
     private api: ApiHttpService,
@@ -270,6 +277,20 @@ export class PopupAddCardsComponent implements OnInit {
                       this.cardType,
                       '1'
                     );
+                  }
+                }
+              });
+            this.api
+              .execSv<any>('SYS', 'SYS', 'SettingValuesBusiness', 'GetByModuleAsync', [
+                'FDParameters',
+                'ActiveCoins',
+              ])
+              .subscribe((res) => {
+                if (res) {
+                  let data = JSON.parse(res.dataValue);
+                  if (data) {
+                    // tỷ lệ giữa 1 xu và 1.000 vnđ
+                    this.exchangeRateEVoucher = parseInt(data.ExchangeRateEVoucher);
                   }
                 }
               });
@@ -699,9 +720,12 @@ export class PopupAddCardsComponent implements OnInit {
         }
       }
 
-      if (this.gifts && this.gifts.length > 0) {
+      if (
+        (this.gifts && this.gifts.length > 0 ) || 
+        (this.evoucher && this.evoucher.length > 0)
+      ) {
         this.card.hasGifts = true;
-        this.card.gifts = this.gifts;
+        this.card.gifts = [...this.gifts, ...this.evoucher];
       }
 
       if (this.givePoint > 0) {
@@ -867,6 +891,11 @@ export class PopupAddCardsComponent implements OnInit {
     this.dt.detectChanges();
   }
 
+  clickAddEvoucher() {
+    this.showPopupEvoucher = !this.showPopupEvoucher;
+    this.dt.detectChanges();
+  }
+
   // get gift infor
   getGiftInfor(e: any) {
     this.showPopupGift = !this.showPopupGift;
@@ -950,5 +979,18 @@ export class PopupAddCardsComponent implements OnInit {
     if (e > 0 || e?.data?.length > 0) this.isHaveFile = true;
     else this.isHaveFile = false;
     this.showLabelAttachment = this.isHaveFile;
+  }
+
+  closeEvoucher(event) {
+    if(event){
+      this.showPopupEvoucher = false;
+      this.dt.detectChanges();
+    }
+  }
+
+  saveEvoucher(data: any) {
+    this.evoucher = [...data.evoucherGift];
+    this.evoucherSelected = [...data.dataSelcected];
+    this.showPopupEvoucher = false;
   }
 }

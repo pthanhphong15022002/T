@@ -35,7 +35,7 @@ import {
 import { tmpInstances } from '../../models/tmpModel';
 import { CodxCmService } from '../../codx-cm.service';
 import { ContractsService } from '../service-contracts.service';
-import { Observable, Subject, firstValueFrom, takeUntil } from 'rxjs';
+import { Observable, Subject, takeUntil, filter, firstValueFrom } from 'rxjs';
 import { StepService } from 'projects/codx-share/src/lib/components/codx-step/step.service';
 import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
 import { CodxListContactsComponent } from '../../cmcustomer/cmcustomer-detail/codx-list-contacts/codx-list-contacts.component';
@@ -123,7 +123,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
   listMemorySteps: any[] = [];
   listInstanceSteps: any[] = [];
   REQUIRE_TASK = ['taskName', 'endDate', 'startDate'];
-  type: 'contract' | 'DP' | 'deal' | 'quotation' | 'customer' | 'task';
+  type: 'contract' | 'DP' | 'deal' | 'quotation' | 'customer' | 'task'|'appendix';
 
   listParticipants;
   objPermissions = {};
@@ -150,6 +150,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
   isSaveTimeTask = true;
   isLoadDateTask = false;
   popupRealties;
+  procesID;
   autoCode = '';
   moreDefaut = {
     read: true,
@@ -164,6 +165,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
   lstContactDeal: any[] = [];
   lstContactDelete: any[] = [];
   isBlock = true;
+  businessLineID = '';
   // Tab control
   tabInfo = [
     {
@@ -231,6 +233,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
   //CF
   arrCaculateField: any[] = [];
   isLoadedCF = false;
+  refInstance = ''; //Biến tham chiếu data từ cơ hội
   //#endregion
 
   constructor(
@@ -259,6 +262,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
     this.isStartIns = !!dt?.data?.isStartIns;
     this.contractRefID = dt?.data?.contractRefID;
     this.recIDContract = dt?.data?.recIDContract;
+    this.businessLineID = dt?.data?.businessLineID;
     this.stepsTasks = dt?.data?.stepsTasks || {};
     this.contractsInput = dt?.data?.contract || dt?.data?.dataCM || null;
     this.user = this.authStore.get();
@@ -360,13 +364,19 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
         this.contracts.applyProcess = false;
         this.contracts.displayed = true;
         this.contracts.currencyID = this.currencyIDDefault;
+        this.contracts.businessLineID = this.businessLineID || '';
         this.loadExchangeRate(this.contracts.currencyID);
         this.setContractByDataOutput();
         this.getAutoNumber();
         this.setDataParent();
-        if ((this.type == 'DP', this.processID)) {
+        if (this.type == 'DP' && this.processID) {
           this.contracts.processID = this.processID;
-          this.getBusinessLineByProcessID(this.processID);
+          this.getBusinessLineByProcessContractID(this.processID);
+        }
+        if (this.type == 'task') {
+          this.contracts.applyProcess = true;
+          this.getBusinessLineByBusinessLineID(this.contracts?.businessLineID);
+          this.mapDataInfield();
         }
         break;
       case 'edit':
@@ -426,7 +436,50 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
         }
         this.getCustomersDefaults(this.contracts?.customerID);
         break;
+      case 'appendix':
+        if (data) {
+          this.contracts = JSON.parse(JSON.stringify(data));
+          delete this.contracts['id'];
+          this.contracts.parentID = this.contracts?.recID;
+          this.contracts.recID = Util.uid();
+          this.contracts.status = '1';
+          this.contracts.useType = '3';
+          this.contracts.displayed = false;
+        }
+        if (this.contracts?.applyProcess && this.contracts.processID) {
+          this.getListInstanceSteps(this.contracts.processID);
+        }
+        this.getCustomersDefaults(this.contracts?.customerID);
+        break;
       default:
+    }
+  }
+
+  mapDataInfield() {
+    if (this.type == 'task' && this.stepsTasks && this.stepsTasks?.reference) {
+      this.cmService
+        .getInstancerStepByRecID(this.stepsTasks?.stepID)
+        .subscribe((res) => {
+          if (res) {
+            let step = res;
+            if (step && this.stepsTasks?.reference) {
+              let fields = this.stepsTasks?.reference?.split(';');
+              let listField = step?.fields;
+              let link = fields?.filter((x) => x.includes('/'));
+              if (link) {
+                let data = [];
+                for (let item of link) {
+                  let x = item?.split('/');
+                  if (x?.length == 2) {
+                    let field = listField?.find((j) => j.refID == x[0]);
+                    let y = x[1].charAt(0).toLowerCase() + x[1].slice(1);
+                    this.contracts[y] = field?.dataValue;
+                  }
+                }
+              }
+            }
+          }
+        });
     }
   }
 
@@ -660,6 +713,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
         }
         break;
       case 'dealID':
+        this.refInstance = event?.component?.itemsSelected[0]?.RefID;
         if (!this.contracts.customerID && this.contracts?.dealID) {
           this.getCustomerByDealID(event?.data);
           this.setValueComboboxQuotation();
@@ -678,24 +732,34 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
         break;
       case 'contractType':
         if (event?.component?.itemsSelected[0]) {
-          let autoNumber = event?.component?.itemsSelected[0]?.AutoNumber;
-          if (autoNumber) {
-            this.cmService
-              .getAutoNumberByAutoNoCode(autoNumber)
-              .subscribe((res) => {
-                if (res) {
-                  this.contracts.contractID = res;
-                  this.disabledShowInput = true;
-                } else {
-                  if (this.autoNumber) {
-                    this.contracts.contractID = this.autoNumber;
+          if (event?.component?.itemsSelected[0]?.AutoNumberControl == '1') {
+            let autoNumberCode = event?.component?.itemsSelected[0]?.AutoNumber;
+            if (autoNumberCode) {
+              this.cmService
+                .getAutoNumberByAutoNoCode(autoNumberCode)
+                .subscribe((res) => {
+                  if (res) {
+                    this.contracts.contractID = res;
                     this.disabledShowInput = true;
                   } else {
-                    this.contracts.contractID = '';
-                    this.disabledShowInput = false;
+                    if (this.autoNumber) {
+                      this.contracts.contractID = this.autoNumber;
+                      this.disabledShowInput = true;
+                    } else {
+                      this.contracts.contractID = '';
+                      this.disabledShowInput = false;
+                    }
                   }
-                }
-              });
+                });
+            }
+          } else {
+            if (this.autoNumber) {
+              this.contracts.contractID = this.autoNumber;
+              this.disabledShowInput = true;
+            } else {
+              this.contracts.contractID = '';
+              this.disabledShowInput = false;
+            }
           }
         }
         break;
@@ -709,7 +773,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
             this.contracts.processID = processID;
             this.contracts.applyProcess = true;
             // this.GetProcessNoByProcessID(processID);
-            this.disabledShowInput = true;
+            // this.disabledShowInput = true;
             this.getListInstanceSteps(processID);
           } else {
             this.itemTabsInput(false);
@@ -718,12 +782,12 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
             } else {
               this.contracts.applyProcess = false;
               this.contracts.processID = null;
-              if (this.autoNumber) {
-                this.contracts.contractID = this.autoNumber;
-              } else {
-                this.contracts.contractID = '';
-                this.disabledShowInput = false;
-              }
+              // if (this.autoNumber) {
+              //   this.contracts.contractID = this.autoNumber;
+              // } else {
+              //   this.contracts.contractID = '';
+              //   this.disabledShowInput = false;
+              // }
             }
           }
         }
@@ -791,7 +855,8 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
   }
 
   setValueComboboxQuotation() {
-    let listQuotation = this.inputQuotation.ComponentCurrent.dataService.data;
+    let listQuotation =
+      this.inputQuotation?.ComponentCurrent?.dataService?.data;
     if (listQuotation) {
       if (this.customerIdOld != this.contracts.customerID) {
         this.contracts.quotationID = null;
@@ -939,7 +1004,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
     });
   }
 
-  getBusinessLineByProcessID(processID) {
+  getBusinessLineByProcessContractID(processID) {
     this.cmService
       .getIdBusinessLineByProcessContractID([processID])
       .subscribe((res) => {
@@ -947,6 +1012,27 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
           this.contracts.businessLineID = res;
         }
       });
+  }
+  getBusinessLineByProcessID(processID) {
+    this.cmService
+      .getIdBusinessLineByProcessID([processID])
+      .subscribe((res) => {
+        if (res) {
+          this.contracts.businessLineID = res;
+        }
+      });
+  }
+  getBusinessLineByBusinessLineID(businessLine) {
+    if (businessLine) {
+      this.cmService
+        .getBusinessLineByBusinessLineID([businessLine])
+        .subscribe((res) => {
+          if (res) {
+            this.contracts.processID = res?.processContractID;
+            this.getListInstanceSteps(this.contracts.processID);
+          }
+        });
+    }
   }
   //#endregion
 
@@ -1180,7 +1266,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
   //#endregion
 
   getListInstanceSteps(processId: any) {
-    let action = this.action == 'extend' ? 'copy' : this.action;
+    let action = this.action == 'extend' || this.action == 'appendix' ? 'copy' : this.action;
     let data = [processId, this.contracts?.refID, action, '4'];
     this.cmService.getInstanceSteps(data).subscribe((res) => {
       if (res && res.length > 0) {
@@ -1200,6 +1286,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
         this.getSettingFields(res[3], this.listInstanceSteps);
         this.listParticipants = [];
         this.listParticipants = JSON.parse(JSON.stringify(obj?.permissions));
+
         this.changeDetectorRef.detectChanges();
       }
     });
@@ -1465,7 +1552,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
     return '';
   }
 
-  save() {
+  async save() {
     if (this.stepService.checkRequire(this.REQUIRE, this.contracts, this.view))
       return;
     if (
@@ -1496,30 +1583,57 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
       this.convertDataInstance(this.contracts, this.instance);
     this.contracts.applyProcess &&
       this.updateDateDeal(this.instance, this.contracts);
+      if (this.attachment && this.attachment.fileUploadList.length) {
+        (await this.attachment.saveFilesObservable()).subscribe((res) => {
+          if (res) {
+            switch (this.action) {
+              case 'add':
+              case 'copy':
+              case 'extend':
+              case 'appendix':
+                if (this.contracts.applyProcess) {
+                  this.addInstance();
+                } else {
+                  this.addContracts();
+                }
+                break;
+              case 'edit':
+                if (this.contracts.applyProcess) {
+                  this.editInstance();
+                } else {
+                  this.editContract();
+                }
 
-    switch (this.action) {
-      case 'add':
-      case 'copy':
-      case 'extend':
-        if (this.contracts.applyProcess) {
-          this.addInstance();
-        } else {
-          this.addContracts();
-        }
-        break;
-      case 'edit':
-        if (this.contracts.applyProcess) {
-          this.editInstance();
-        } else {
-          this.editContract();
-        }
+                break;
+            }
+          }
+        });
+      } else {
+        switch (this.action) {
+          case 'add':
+          case 'copy':
+          case 'extend':
+          case 'appendix':
+            if (this.contracts.applyProcess) {
+              this.addInstance();
+            } else {
+              this.addContracts();
+            }
+            break;
+          case 'edit':
+            if (this.contracts.applyProcess) {
+              this.editInstance();
+            } else {
+              this.editContract();
+            }
 
-        break;
+          break;
+      }
     }
   }
 
   addInstance() {
-    if (this.type == 'contract' || this.type == 'task') {
+    if (this.type == 'contract' || this.type == 'task' || this.type == 'appendix') {
       let data = [this.instance, this.listInstanceSteps, this.oldIdInstance];
       this.cmService.addInstance(data).subscribe((instance) => {
         if (instance) {
@@ -1548,7 +1662,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
   }
 
   async editInstance() {
-    if (this.type == 'contract') {
+    if (this.type == 'contract'|| this.type == 'task' || this.type == 'appendix') {
       let data = [this.instance, this.listCustomFile];
       this.cmService.editInstance(data).subscribe((instance) => {
         if (instance) {
@@ -1602,7 +1716,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
           }
           this.changeDetectorRef.markForCheck();
         });
-    } else if (this.type == 'DP' || this.type == 'task') {
+    } else if (this.type == 'DP' || this.type == 'task' || this.type == 'appendix') {
       this.cmService.addContracts([this.contracts]).subscribe((res) => {
         if (res) {
           this.dialog.close({ contract: res, action: this.action });
@@ -1622,7 +1736,8 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
     if (
       this.action == 'add' ||
       this.action == 'copy' ||
-      this.action == 'extend'
+      this.action == 'extend' ||
+      this.action == 'appendix'
     ) {
       op.methodName = 'AddContractsAsync';
       op.data = [this.contracts];
@@ -1635,23 +1750,50 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
   }
 
   convertDataInstance(contract: CM_Contracts, instance: tmpInstances) {
-    this.oldIdInstance = this.contracts?.refID;
-    // this.contracts.refID = Util.uid();
     if (this.action === 'edit') {
-      instance.recID = contract.refID;
+      instance.recID = this.contracts.refID;
     }
-    if (this.action !== 'edit') {
+    if (this.action !== 'edit')  {
+      this.oldIdInstance = this.contracts?.refID;
       instance.startDate = null;
       instance.status = '1';
+      instance.stepID = this.listInstanceSteps[0].stepID;
     }
     instance.title = contract?.contractName?.trim();
     instance.memo = contract?.note?.trim();
-    instance.endDate = contract.effectiveTo;
-    instance.instanceNo = contract.contractID;
+    instance.instanceNo = contract.dealID;
     instance.owner = contract?.owner;
     instance.processID = contract.processID;
-    instance.stepID = contract.stepID;
+    // instance.stepID = contract.stepID;
   }
+  updateDateDeal(instance: tmpInstances, contract: CM_Contracts) {
+    if (this.action !== 'edit') {
+      contract.stepID = this.listInstanceSteps[0].stepID;
+      contract.status = '1';
+      contract.refID = instance.recID;
+    }
+  }
+
+  // convertDataInstance(contract: CM_Contracts, instance: tmpInstances) {
+  //   this.oldIdInstance = this.contracts?.refID;
+  //   instance.stepID = contract.stepID;
+  //   // this.contracts.refID = Util.uid();
+  //   if (this.action === 'edit') {
+  //     instance.recID = contract.refID;
+  //   }
+  //   if (this.action !== 'edit') {
+  //     instance.startDate = null;
+  //     instance.status = '1';
+  //     instance.stepID = this.listInstanceSteps[0].stepID;
+  //   }
+  //   instance.title = contract?.contractName?.trim();
+  //   instance.memo = contract?.note?.trim();
+  //   instance.endDate = contract.effectiveTo;
+  //   instance.instanceNo = contract.contractID;
+  //   instance.owner = contract?.owner;
+  //   instance.processID = contract.processID;
+
+  // }
 
   addPermission(permissionDP) {
     if (permissionDP && permissionDP?.length > 0) {
@@ -1664,15 +1806,15 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
     }
   }
 
-  updateDateDeal(instance: tmpInstances, contract: CM_Contracts) {
-    if (this.action !== 'edit') {
-      contract.stepID = this.listInstanceSteps[0].stepID;
-      contract.status = '1';
-      contract.refID = instance.recID;
-    }
-    // deal.owner = this.owner;
-    // deal.salespersonID = this.owner;
-  }
+  // updateDateDeal(instance: tmpInstances, contract: CM_Contracts) {
+  //   if (this.action !== 'edit') {
+  //     contract.stepID = this.listInstanceSteps[0].stepID;
+  //     contract.status = '1';
+  //     contract.refID = instance.recID;
+  //   }
+  //   // deal.owner = this.owner;
+  //   // deal.salespersonID = this.owner;
+  // }
 
   editContract() {
     if (this.dialog?.dataService) {
@@ -1729,7 +1871,10 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
     this.arrCaculateField.forEach((obj) => {
       let dataFormat = obj.dataFormat;
       fieldsNum.forEach((f) => {
-        if (dataFormat.includes('[' + f.fieldName + ']') && f.dataValue) {
+        if (
+          dataFormat.includes('[' + f.fieldName + ']') &&
+          f.dataValue?.toString()
+        ) {
           let dataValue = f.dataValue;
           if (f.dataFormat == 'P') dataValue = dataValue + '/100';
           dataFormat = dataFormat.replaceAll(
@@ -1774,4 +1919,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
     });
   }
   //------------------END_CACULATE--------------------//
+  addFile(evt: any) {
+    this.attachment.uploadFile();
+  }
 }

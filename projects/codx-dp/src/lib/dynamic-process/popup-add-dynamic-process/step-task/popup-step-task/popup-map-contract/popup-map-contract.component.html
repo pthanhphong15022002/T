@@ -66,26 +66,27 @@
       </tr>
     </thead>
     <tbody>
-      <ng-container *ngFor="let item of datas">
+      <ng-container *ngFor="let grv of grvContracts">
         <tr>
           <td class="ps-4">
-            <div>{{ item.headerText }}</div>
+            <div>{{ grv.headerText }}</div>
           </td>
           <td class="ps-4">
-            <div>{{ item.fieldName }}</div>
+            <div>{{ grv.fieldName }}</div>
           </td>
           <td class="ps-4">
-            <div>{{ item.dataType }}</div>
+            <div>{{ grv.dataType }}</div>
           </td>
-          <td [ngClass]="item?.show || item?.hover ? 'p-0' : 'ps-4'" (mouseenter)="onMouseEnter(item)" (mouseleave)="onMouseLeave(item)" (click)="onClick(item)">
-            <div [ngClass]="item?.show || item?.hover ? 'd-none' : ''">{{ item.fieldLindName }}</div>
-            <div [ngClass]="item?.show || item?.hover ? '' : 'd-none'" style="height: 39px;">
+          <td [ngClass]="grv?.show ? 'p-0' : 'ps-4'" (click)="onClickCombobox(grv)" class="cursor-pointer">
+            <div [ngClass]="grv?.show ? 'd-none' : ''">{{ grv?.field?.title }}</div>
+            <div *ngIf="grv?.show" style="height: 39px;">
               <ejs-combobox
                 class="custom-combobox h-100"
-                [dataSource]="listFields"
+                [dataSource]="listFieldShow"
                 [fields]="fieldsFields"
-                [value]=" item.fieldLindID"
+                [value]="grv?.field?.recID"
                 [allowCustom]="false"
+                (change)="fieldIDChange($event,grv )"
               ></ejs-combobox>
             </div>
           </td>

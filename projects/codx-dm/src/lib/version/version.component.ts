@@ -573,7 +573,6 @@ export class VersionComponent implements OnInit {
         .updateVersionFile(this.fileEditing)
         .subscribe(async (res) => {
           if (res.status == 0) {
-            debugger;
             var files = that.dmSV.listFiles;
             let index = files.findIndex(
               (d) => d.recID.toString() === this.fileEditing.recID

@@ -1,0 +1,92 @@
+<ejs-dialog
+  #dialog
+  [showCloseIcon]="true"
+  [allowDragging]="true"
+  [enableResize]="true"
+  [resizeHandles]="resizeHandles"
+  target="body"
+  [width]="width"
+  [height]="height"
+  (beforeOpen)="beforeOpen($event)"
+  [position]="position"
+  [zIndex]="zIndex"
+  [isModal]="true"
+>
+  <ng-template #header>
+    <div class="card-header">
+      <div class="d-flex align-items-center justify-content-between w-100">
+        <div class="card-title">{{ title }}</div>
+        <div class="card-toolbar">
+          <button type="button" class="btn btn-icon" (click)="close(dialog)">
+            <span class="icon-close icon-18"></span>
+          </button>
+        </div>
+      </div>
+      <div
+        *ngIf="subHeader"
+        class="d-flex align-items-end justify-content-between w-100"
+      >
+        <ng-container *ngTemplateOutlet="subHeader"></ng-container>
+      </div>
+    </div>
+    <div class="mgl-20px d-flex align-items-center py-2">     
+      <codx-input
+        field="categories"
+        type="combobox"
+        refValue="FDCategories"
+        placeholder="Nhãn hàng"
+        ngClass="me-2"
+        (valueChange)="changeValue($event)"
+      >
+      </codx-input>
+      <codx-input
+        field="brands"
+        type="combobox"
+        refValue="FDBrands"
+        placeholder="Thương hiệu"
+        (valueChange)="changeValue($event)"
+      >
+      </codx-input>
+    </div>
+  </ng-template>
+  <ng-template #content>
+    <div class="d-flex w-100 h-evoucher px-4 pt-4">
+      <div class="d-flex flex-wrap w-100 h-100 bg-white overflow-auto pt-2" (scroll)="scrollData($event)">
+        <ng-container *ngFor="let item of dataItems">
+          <codx-card-img
+              [imageSrc]="item?.productImg"
+              [dataItem]="item"
+              cardCss="border card-img-mwp img-storage w-225px h-222px ms-4 mt-2" 
+              [title]="item?.productNm"
+              [titleLine]="'1 w-200px'"
+              [contentCss]="'mt-2'" 
+              imgCss="h-150px w-100 border-bottom mb-2"
+              [footer]="tmpFooter"
+              (click)="selectItem(item)"
+          >
+          </codx-card-img>
+          <ng-template #tmpFooter>
+            <div class="d-flex flex-column">
+              <div class="d-flex align-items-center">
+                <div class="rounded-circle bg-e-voucher-img" [style.background-image]="'url(' + item?.brandLogo + ')'"></div>
+                <div class="ms-2 text-gray-600 text-truncate" [title]="item?.brandNm">{{item?.brandNm}}</div>
+                <i *ngIf="checkSelected(item)" class="icon-i-check2-circle pattern-selected"></i>
+              </div>
+            </div>
+          </ng-template>
+        </ng-container>
+      </div>
+    </div>
+  </ng-template>
+  <ng-template #footerTemplate>
+    <div class="card-footer">
+      <button
+        type="button"
+        (click)="onSave(dialog)"
+        class="btn btn-primary"
+      >
+        Ok
+      </button>
+    </div>
+  </ng-template>
+</ejs-dialog>
