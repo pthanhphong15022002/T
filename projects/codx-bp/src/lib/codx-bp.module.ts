@@ -87,10 +87,10 @@ export const routes: Routes = [
     PropertyProgressComponent,
     PropertyPhoneComponent,
     PropertyExpressionComponent,
-    PropertyAttachmentComponent
+    PropertyAttachmentComponent,
 
 
-    
+
     FormSettingComboboxComponent,
   ],
   imports: [
