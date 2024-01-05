@@ -301,7 +301,8 @@
   <div (mouseenter)="closePopover()" class="d-flex justify-content-start mb-1">
     <codx-label
       name="lblListValues"
-      [formModel]="formModel"
+      [formName]="'DynamicForms'"
+      [gridViewName]="'grvDynamicFormsTitle' + dataCurrent?.fieldType"
       default="Danh sách giá trị"
     ></codx-label>
   </div>
@@ -546,11 +547,13 @@
     >
       <codx-label
         name="lblListValues"
-        [formModel]="formModel"
+        [formName]="'DynamicForms'"
+        [gridViewName]="'grvDynamicFormsTitle' + dataCurrent?.fieldType"
         default="Danh sách giá trị"
       ></codx-label>
     </div>
     <div
+      *ngIf="listCbx?.length > 0"
       class="d-flex justify-content-end me-2 cursor-pointer"
       (click)="openSettingCbx()"
     >
@@ -559,7 +562,7 @@
   </div>
   <div
     (mouseenter)="closePopover()"
-    class="form-group d-flex justify-content-center align-items-center"
+    class="form-group d-flex justify-content-center align-items-center mt-4"
   >
     <ng-container [ngTemplateOutlet]="tempTableCombobox"></ng-container>
   </div>
@@ -817,7 +820,8 @@
     <div (mouseenter)="closePopover()" class="d-flex align-items-center mb-2">
       <codx-label
         default="Tỷ lệ từ"
-        [formModel]="formModel"
+        [formName]="'DynamicForms'"
+        [gridViewName]="'grvDynamicFormsTitle' + dataCurrent?.fieldType"
         name="lblRatio"
         class="me-2"
       ></codx-label>
@@ -832,7 +836,8 @@
       </div>
       <codx-label
         default="đến"
-        [formModel]="formModel"
+        [formName]="'DynamicForms'"
+        [gridViewName]="'grvDynamicFormsTitle' + dataCurrent?.fieldType"
         name="lblTo"
         class="me-2"
       ></codx-label>
@@ -864,7 +869,8 @@
       </span>
       <codx-label
         name="lblRankNumber"
-        [formModel]="formModel"
+        [formName]="'DynamicForms'"
+        [gridViewName]="'grvDynamicFormsTitle' + dataCurrent?.fieldType"
         default="Hiển thị hạng theo số"
       ></codx-label>
     </div>
@@ -888,7 +894,8 @@
         <codx-label
           class="mb-1"
           name="lblRankIcon"
-          [formModel]="formModel"
+          [formName]="'DynamicForms'"
+          [gridViewName]="'grvDynamicFormsTitle' + dataCurrent?.fieldType"
           default="Hiển thị hạng theo icon"
         ></codx-label>
         <div (mouseenter)="closePopover()" class="d-flex">
@@ -923,7 +930,7 @@
 
 <!--table combobox-->
 <ng-template #tempTableCombobox>
-  <div class="table-cbx" *ngIf="listCbx?.length > 0; else noData">
+  <ng-container *ngIf="listCbx?.length > 0; else noData">
     <table class="table">
       <thead class="thead-light">
         <tr class="fw-bold">
@@ -962,26 +969,38 @@
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td scope="row">1</td>
-          <td>Mark</td>
-          <td>Otto</td>
-          <td>@mdo</td>
-        </tr>
-        <tr>
-          <td scope="row">2</td>
-          <td>Jacob</td>
-          <td>Thornton</td>
-          <td>@fat</td>
-        </tr>
-        <tr>
-          <td scope="row">3</td>
-          <td colspan="2">Larry the Bird</td>
-          <td>@twitter</td>
+        <tr *ngFor="let item of listCbx; index as i">
+          <td scope="row" style="border: none; padding: 0">
+            <span>{{item?.headerText}}</span>
+          </td>
+          <td>
+            <codx-input
+              field="allowShow"
+              type="checkbox"
+              [crrValue]="item?.allowShow ?? false"
+              [disabled]="true"
+            ></codx-input>
+          </td>
+          <td>
+            <codx-input
+              field="allowSave"
+              type="checkbox"
+              [crrValue]="item?.allowSave ?? false"
+              [disabled]="true"
+            ></codx-input>
+          </td>
+          <td>
+            <codx-input
+              field="allowFilter"
+              type="checkbox"
+              [crrValue]="item?.allowFilter ?? false"
+              [disabled]="true"
+            ></codx-input>
+          </td>
         </tr>
       </tbody>
     </table>
-  </div>
+  </ng-container>
   <ng-template #noData>
     <div class="emtry-table" (click)="openSettingCbx()">
       <codx-label

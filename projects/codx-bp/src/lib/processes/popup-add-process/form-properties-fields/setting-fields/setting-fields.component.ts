@@ -64,7 +64,7 @@ export class SettingFieldsComponent implements AfterViewInit {
   user: any;
   processNo: any;
   listVll = [];
-  listCbx = [{name: 'i'}];
+  listCbx = [];
   tempVllBP: tempVllBP;
   crrVll: tempVllDP;
   loaded: boolean;
@@ -87,13 +87,14 @@ export class SettingFieldsComponent implements AfterViewInit {
   ngOnChanges(changes: SimpleChanges): void {
     //Called before any other lifecycle hook. Use it to inject dependencies, but avoid any serious work here.
     //Add '${implements OnChanges}' to the class.
+
+  }
+
+  ngOnInit(): void {
     this.loadedRenderHTML = false;
     setTimeout(() => {
       this.loadedRenderHTML = true;
     }, 0);
-  }
-
-  ngOnInit(): void {
     if (this.dataCurrent) {
       this.loadData(this.dataCurrent);
     }
@@ -633,6 +634,9 @@ export class SettingFieldsComponent implements AfterViewInit {
     let formModelField = new FormModel();
     formModelField = this.formModel;
     option.FormModel = formModelField;
+    if(this.dataCurrent.dataFormat != null && this.dataCurrent?.dataFormat?.trim() != ''){
+      this.listCbx = JSON.parse(this.dataCurrent.dataFormat);
+    }
     let data = {
       lstCbx: this.listCbx,
       data: this.dataCurrent,
@@ -649,8 +653,13 @@ export class SettingFieldsComponent implements AfterViewInit {
       option
     );
     popupDialog.closed.subscribe((dg) => {
-      if(dg){
-
+      if(dg && dg?.event){
+        this.dataCurrent = dg?.event;
+        if(this.dataCurrent.dataFormat){
+          this.listCbx = JSON.parse(this.dataCurrent.dataFormat);
+        }
+        this.dataValueEmit.emit({ data: this.dataCurrent });
+        this.detectorRef.detectChanges();
       }
     })
   }

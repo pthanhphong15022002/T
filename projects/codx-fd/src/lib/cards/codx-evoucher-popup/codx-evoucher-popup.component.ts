@@ -1,6 +1,6 @@
 import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Injector, Input, OnChanges, OnDestroy, OnInit, Optional, Output, SimpleChanges, TemplateRef, ViewChild } from '@angular/core';
 import { Dialog, PositionDataModel, ResizeDirections } from '@syncfusion/ej2-angular-popups';
-import { ApiHttpService, AuthStore, CRUDService, CacheService, CallFuncService, CodxComboboxPopupComponent, CodxListviewComponent, EnvironmentConfig, LayoutService, UrlUtil, Util } from 'codx-core';
+import { ApiHttpService, AuthStore, CRUDService, CacheService, CallFuncService, CodxComboboxPopupComponent, CodxListviewComponent, DialogModel, EnvironmentConfig, LayoutService, UrlUtil, Util } from 'codx-core';
 import { Subject } from 'rxjs';
 import { EvoucherDetailComponent } from '../../evouchers/evoucher-detail/evoucher-detail.component';
 
@@ -12,8 +12,11 @@ import { EvoucherDetailComponent } from '../../evouchers/evoucher-detail/evouche
 export class CodxEvoucherPopupComponent implements OnInit {
   @Input() height: string = '100%';
   @Input() width: string = '100%';
-  @Input() coCoins: number = 0;
-  @Input() exchangeRateEVoucher: number = 1;
+  @Input() dataSelcected: any[] = [];
+  @Input() evoucherGift: any[] = [];
+  @Input() formName: string = '';
+  @Input() funcID: string = '';
+  @Input() entityName: string = '';
 
   @Output() onSaveData: EventEmitter<any> = new EventEmitter<any>();
   @Output() onClose: EventEmitter<any> = new EventEmitter<any>();
@@ -27,8 +30,6 @@ export class CodxEvoucherPopupComponent implements OnInit {
     "categoryNm",
     "brandNm",
   ];
-  entityName: string = 'FD_EVouchers';
-  @Input() dataSelcected: any[] = [];
   dataItems: any[] = [];
   request: any = {
     categoryID: 0,
@@ -67,9 +68,8 @@ export class CodxEvoucherPopupComponent implements OnInit {
       }
     }
     this.zIndex = highestZ - 1;
-    let temp = [];
-    temp = [...this.dataSelcected]
-    this.dataSelcected = temp;
+    this.dataSelcected = [...this.dataSelcected];
+    this.evoucherGift = [...this.evoucherGift];
     this.loadDataEvocher();
   }
 
@@ -115,8 +115,6 @@ export class CodxEvoucherPopupComponent implements OnInit {
     const index = this.dataSelcected.findIndex((x) => x.productId == item.productId);
     if(index > -1) {
       sizeSelected = this.dataSelcected[index].selectedSize;
-    } else {
-      sizeSelected = item.selectedSize;
     }
 
     const modal = this.callFunc.openForm(EvoucherDetailComponent,"",900 , 800 , "" , {
@@ -124,24 +122,27 @@ export class CodxEvoucherPopupComponent implements OnInit {
       headerText: "Chi tiết thẻ quà tặng",
       type: 'getPrice',
       sizeSelected: sizeSelected,
-      coCoins: this.coCoins,
-      exchangeRateEVoucher: this.exchangeRateEVoucher
+      formName: this.formName,
+      funcID: this.funcID,
+      entityName: this.entityName,
+      quantity: this.evoucherGift[index]?.quantity || 1,
     })
     modal.closed.subscribe((data:any)=>{
       if(data?.event){
-        if(data.event?.role == "save" && data.event?.data) {
-          item.selectedSize = data.event?.data;
-          const index = this.dataSelcected.findIndex((x) => x.productId == item.productId);
+        if(data.event?.role == "save" && data.event?.selectSize) {
+          item.selectedSize = data.event?.selectSize;
           if(index == -1) {
             this.dataSelcected.push(item);
+            this.evoucherGift.push(data.event?.data);
           } else {
             this.dataSelcected[index] = item;
+            this.evoucherGift[index] = data.event?.data;
           }
         } else {
           item.selectedSize = null;
-          const index = this.dataSelcected.findIndex((x) => x.productId == item.productId);
           if(index > -1) {
             this.dataSelcected.splice(index, 1);
+            this.evoucherGift.splice(index, 1);
           }
         }
       }
@@ -159,7 +160,10 @@ export class CodxEvoucherPopupComponent implements OnInit {
   }
 
   onSave(dialog: Dialog) {
-    this.onSaveData.emit(this.dataSelcected);
+    this.onSaveData.emit({
+      evoucherGift: this.evoucherGift,
+      dataSelcected: this.dataSelcected,
+    });
     dialog.hide();
     dialog.destroy();
   }

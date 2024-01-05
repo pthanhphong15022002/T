@@ -47,8 +47,8 @@ export class FormSettingComboboxComponent {
     this.data = JSON.parse(JSON.stringify(dt?.data?.data));
     this.titleAction = dt?.data?.title;
     this.lstDatas =
-      this.lstDatas?.length > 0
-        ? JSON.parse(JSON.stringify(this.lstDatas))
+      dt?.data?.lstCbx?.length > 0
+        ? JSON.parse(JSON.stringify(dt?.data?.lstCbx))
         : [];
   }
 
@@ -76,7 +76,11 @@ export class FormSettingComboboxComponent {
   }
 
   //#region value change
-  valueChange(e) {}
+  valueChange(e) {
+    if(e && e?.data){
+      this.data[e?.field] = e?.data;
+    }
+  }
 
   //#region combobox
   cbxContact(e, index) {
@@ -119,24 +123,19 @@ export class FormSettingComboboxComponent {
         const idxGrid = this.lstGrids.findIndex(
           (x) => x.fieldName == fieldName
         );
-        if (idxGrid != -1) {
+        if (idxGrid == -1) {
           for (let key in this.gridViewSetup) {
-            if (
-              key == fieldName &&
-              !this.lstGrids.some((x) => x.fieldName == fieldName)
-            ) {
+            if (key == fieldName) {
               this.lstGrids.push(this.gridViewSetup[key]);
             }
           }
-          if (this.cbxNew){
+          if (this.cbxNew) {
             this.cbxNew.dataSource = this.lstGrids;
             this.cbxNew.refresh();
-
           }
           if (this.cbx) {
             this.cbx.dataSource = this.lstGrids;
             this.cbx.refresh();
-
           }
         }
         this.lstDatas.splice(index, 1);
@@ -146,7 +145,7 @@ export class FormSettingComboboxComponent {
   }
 
   valueChangeCheckBox(e, index) {
-    if (e && e?.data) {
+    if (e) {
       if (index != -1) {
         this.lstDatas[index][e?.field] = e?.data ?? false;
       } else {
@@ -167,6 +166,11 @@ export class FormSettingComboboxComponent {
   isActived(value) {}
 
   //#region  save
-  onSave() {}
+  onSave() {
+    if(this.lstDatas?.length > 0){
+      this.data.dataFormat = JSON.stringify(this.lstDatas);
+    }
+    this.dialog.close(this.data);
+  }
   //#endregion
 }
