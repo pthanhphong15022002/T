@@ -110,7 +110,8 @@
     <div
       *ngIf="
         refInstance &&
-        (customField.dataType != 'CF' || customField.dataType != 'TA')
+        customField.dataType != 'CF' &&
+        customField.dataType != 'TA'
       "
     >
       <button
