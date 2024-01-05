@@ -653,7 +653,7 @@ export class InstancesComponent
       categoryCustomer: this.categoryCustomer,
       autoNameTabFields: this.process?.autoNameTabFields,
     };
-    this.detailViewInstance;
+
     let dialogCustomField = this.checkPopupInCM(applyFor, obj, option);
     dialogCustomField.closed.subscribe((e) => {
       if (!e?.event) {
@@ -2789,7 +2789,6 @@ export class InstancesComponent
       categoryCustomer: this.categoryCustomer,
       instanceReason: instanceReason,
     };
-    this.detailViewInstance;
     let dialogCustomField = this.checkPopupInCM(applyFor, obj, option);
     dialogCustomField.closed.subscribe((e) => {
       if (!e?.event) {

@@ -387,8 +387,7 @@ export class CodxReportViewDetailComponent
       });
   }
 
-  filterReportChange(e: any) {
-    if (this.isRunMode) this.isRunMode = false;
+  filterReportChange(e: any) {    
     if (e == null) return;
     let objParam: any = {};
     let objLabel: any = {};
@@ -456,6 +455,8 @@ export class CodxReportViewDetailComponent
 
   clickViewReport() {
     (document.querySelector('.btnApply') as any)?.click();
+    if (this.isRunMode) this.isRunMode = false;
+    this.detectorRef.detectChanges();
   }
 
   url: string = '';

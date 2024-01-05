@@ -149,6 +149,7 @@ import { LeadsComponent } from 'projects/codx-cm/src/lib/leads/leads.component';
 import { CasesComponent } from 'projects/codx-cm/src/lib/cases/cases.component';
 import { ViewInstancesComponent } from 'projects/codx-dp/src/lib/view-instances/view-instances.component';
 import { ContractsComponent } from 'projects/codx-cm/src/lib/contracts/contracts.component';
+import { GetHeaderTextPipe } from './pipe/get-header-text.pipe';
 export const routes: Routes = [
   {
     path: '',
@@ -480,7 +481,6 @@ const T_Component: Type<any>[] = [
   EmployeeAnnualLeaveByOrgComponent,
   PopupCalculateAnnualLeaveComponent,
   PopupAnnualLeaveMonthComponent,
-  DatePipe,
   PopupIncludeExcludeObjComponent,
   PopupContractbenefitComponent,
   PopupEquitComponent,
@@ -488,6 +488,10 @@ const T_Component: Type<any>[] = [
   EmployeeQuitComponent,
   ViewDetailEquitComponent,
   HolidayComponent,
+
+  //Pipe
+  DatePipe,
+  GetHeaderTextPipe,
 ];
 @NgModule({
   imports: [

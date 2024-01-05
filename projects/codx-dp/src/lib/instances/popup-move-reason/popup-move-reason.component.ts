@@ -195,7 +195,8 @@ export class PopupMoveReasonComponent implements OnInit {
           else {
             let datas = [null,this.instances.recID,this.instances.status,this.instances.stepID];
             (this.applyFor == '2' || this.applyFor == '3') && this.codxDpService.moveCaseReason(datas).subscribe((res) => {  if (res) {} });
-            (this.applyFor == '4' ) && this.codxDpService.moveLeadReason(datas).subscribe((res) => {  if (res) {} });
+            // (this.applyFor == '5' ) && this.codxDpService.moveLeadReason(datas).subscribe((res) => {  if (res) {} });
+             (this.applyFor == '4' ) && this.codxDpService.moveContractReason(datas).subscribe((res) => {  if (res) {} });
           }
 
         }

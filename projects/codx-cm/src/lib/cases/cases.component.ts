@@ -933,7 +933,7 @@ export class CasesComponent
   }
 
   openOrCloseCases(data, check) {
-    var datas = [data.recID, data.processID, check];
+    var datas = [data.recID, check];
     this.notificationsService
       .alertCode(
         'DP018',

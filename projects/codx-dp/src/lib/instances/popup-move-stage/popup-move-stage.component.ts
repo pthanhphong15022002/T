@@ -499,19 +499,48 @@ export class PopupMoveStageComponent implements OnInit {
           tmpInstaceDTO: tmpInstaceDTO,
         };
 
-        if (this.applyFor == '1' && !this.isCallInstance) {
-          let dataUpdate = [
-            this.stepIdOld,
-            this.oldStatus,
-            this.instancesStepOld?.note,
-            this.expectedClosed,
-            tmpInstaceDTO,
-          ];
-          this.codxDpService.moveStageBackDataCM(dataUpdate).subscribe((res) => {
-            if (res) {
+        if(!this.isCallInstance) {
+          if (this.applyFor == '1' ) {
+            // let dataUpdate = [
+            //   this.stepIdOld,
+            //   this.oldStatus,
+            //   this.instancesStepOld?.note,
+            //   this.expectedClosed,
+            //   tmpInstaceDTO,
+            // ];
+            let dataUpdate = [
+              tmpInstaceDTO,
+              this.instancesStepOld?.note,
+              this.expectedClosed,
+            ];
+
+            this.codxDpService.moveStageBackDataCM(dataUpdate).subscribe((res) => {
+              if (res) {
+              }
+            });
+          }
+          else {
+            let dataUpdate = [
+              tmpInstaceDTO
+            ];
+
+            if(this.applyFor == '4') {
+              this.codxDpService.moveStageBackContractCM(dataUpdate).subscribe((res) => {
+                if (res) {
+                }
+              });
             }
-          });
+            else if(this.applyFor == '2' || this.applyFor == '3') {
+              this.codxDpService.moveStageBackCasesCM(dataUpdate).subscribe((res) => {
+                if (res) {
+                }
+              });
+            }
+
+
+          }
         }
+
 
         this.dialog.close(obj);
         this.changeDetectorRef.detectChanges();
@@ -588,9 +617,8 @@ export class PopupMoveStageComponent implements OnInit {
               this.instance.stepID,
               res[2]
             ];
-            this.applyFor == '5' && this.codxDpService.moveStageBackLead(dataUpdate).subscribe((res) => {  if (res) {}});
-            // this.applyFor == '4' && this.codxDpService.moveStageBackLead(dataUpdate).subscribe((res) => {  if (res) {}});
-            (this.applyFor == '2' || this.applyFor == '3') && this.codxDpService.moveStageBackCases(dataUpdate).subscribe((res) => {  if (res) {}});
+            this.applyFor == '4' && this.codxDpService.moveStageContract(dataUpdate).subscribe((res) => {  if (res) {}});
+            (this.applyFor == '2' || this.applyFor == '3') && this.codxDpService.moveStageCases(dataUpdate).subscribe((res) => {  if (res) {}});
           }
 
         }

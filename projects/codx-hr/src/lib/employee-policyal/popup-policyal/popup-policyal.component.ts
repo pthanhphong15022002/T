@@ -228,7 +228,7 @@ export class PopupPolicyalComponent extends UIComponent implements OnInit {
     super(injector);
     this.dialog = dialog;
     this.formModel = dialog?.formModel;
-    debugger;
+
     this.headerText = data?.data?.headerText;
     this.funcID = data?.data?.funcID;
     this.actionType = data?.data?.actionType;
@@ -244,7 +244,6 @@ export class PopupPolicyalComponent extends UIComponent implements OnInit {
   }
 
   addFiles(evt) {
-    debugger;
     this.alpolicyObj.attachments = this.alpolicyObj.attachments + 1;
   }
 
@@ -258,7 +257,7 @@ export class PopupPolicyalComponent extends UIComponent implements OnInit {
     if (evt) {
       this.alpolicyObj.attachments -= evt.length;
     }
-    debugger;
+
     // let index = this.attachment.data.indexOf(evt[0])
     // if(index > -1){
     //   this.attachment.data = this.attachment.data.splice(index,1);
@@ -282,9 +281,7 @@ export class PopupPolicyalComponent extends UIComponent implements OnInit {
     );
   }
 
-  onAfterInitForm(evt) {
-    debugger;
-  }
+  onAfterInitForm(evt) {}
 
   loadEmpFullInfo(empID) {
     return this.api.execSv<any>(
@@ -351,7 +348,7 @@ export class PopupPolicyalComponent extends UIComponent implements OnInit {
   }
 
   deleteApplyExcludeObjMain(data, from, lstBeneficiaries) {
-    debugger
+    debugger;
     switch (data) {
       case '1':
         lstBeneficiaries = lstBeneficiaries.map((item) => ({
@@ -396,7 +393,6 @@ export class PopupPolicyalComponent extends UIComponent implements OnInit {
         // lstBeneficiaries.contractTypeID = null
         break;
       case '7':
-        debugger;
         lstBeneficiaries = lstBeneficiaries.map((item) => ({
           ...item,
           employeeID: null,
@@ -545,7 +541,6 @@ export class PopupPolicyalComponent extends UIComponent implements OnInit {
         )
         .subscribe((res: any) => {
           if (res) {
-            debugger;
             res.data.status = '1';
 
             if (res.data.activeOn == '0001-01-01T00:00:00') {
@@ -557,7 +552,6 @@ export class PopupPolicyalComponent extends UIComponent implements OnInit {
               this.df.detectChanges();
             }
             this.loadedAutoField = true;
-            
 
             // this.formModel.currentData = this.alpolicyObj;
             // this.formGroup.patchValue(this.alpolicyObj);
@@ -1065,8 +1059,6 @@ export class PopupPolicyalComponent extends UIComponent implements OnInit {
       return;
     }
 
-    
-
     if (
       this.attachment.fileUploadList &&
       this.attachment.fileUploadList.length > 0
@@ -1104,7 +1096,6 @@ export class PopupPolicyalComponent extends UIComponent implements OnInit {
         }
       });
     } else if (this.actionType === 'edit') {
-      debugger;
       if (
         this.form.data.policyID != '' &&
         this.form.form.preData.policyID != this.form.data.policyID

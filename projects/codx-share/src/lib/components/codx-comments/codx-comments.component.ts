@@ -392,7 +392,6 @@ export class CodxCommentsComponent implements OnInit, OnChanges {
 
   // doubleclick votes
   dbLikePost(data) {
-    debugger;
     if (data && this.defaulVote) {
       this.votePost(data, this.defaulVote.value);
     }

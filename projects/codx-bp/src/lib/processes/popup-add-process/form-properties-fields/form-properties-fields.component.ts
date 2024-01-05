@@ -42,31 +42,34 @@ export class FormPropertiesFieldsComponent implements OnInit {
   }
   ngOnInit(): void {
     this.getVll();
-    this.setDefaultTitle();
   }
 
   setDefaultTitle(){
     let tmpField = {};
     let lst = [];
+    let dataVllTitle = this.vllBP002?.datas?.find(x => x.value == 'Title');
+    let dataVllSubTitle = this.vllBP002?.datas?.find(x => x.value == 'SubTitle');
     tmpField['recID'] = Util.uid();
-    tmpField['fieldName'] = 'Title';
-    tmpField['title'] = 'Tên biểu mẫu';
+    tmpField['fieldName'] = this.bpSv.createAutoNumber(dataVllTitle?.text, this.lstStepFields, 'fieldName');
+    tmpField['title'] = this.bpSv.createAutoNumber(dataVllTitle?.text, this.lstStepFields, 'title');
     tmpField['dataType'] = 'String';
-    tmpField['controlType'] = 'Title';
+    tmpField['fieldType'] = dataVllTitle.value;
+    tmpField['controlType'] = 'TextBox';
     tmpField['isRequired'] = true;
-    tmpField['defaultValue'] = 'Tên biểu mẫu';
+    tmpField['defaultValue'] = tmpField['title'];
     lst.push(tmpField);
     this.dataCurrent = tmpField;
     if(this.isForm){
       let tmpFieldSub = {};
       tmpFieldSub['recID'] = Util.uid();
-      tmpFieldSub['fieldName'] = 'SubTitle';
+      tmpFieldSub['fieldName'] = this.bpSv.createAutoNumber(dataVllSubTitle?.text, this.lstStepFields, 'fieldName');
       tmpFieldSub['description'] = 'Câu trả lời';
-      tmpFieldSub['title'] = 'Mô tả ngắn gọn';
+      tmpFieldSub['title'] = this.bpSv.createAutoNumber(dataVllSubTitle?.text, this.lstStepFields, 'title');
       tmpFieldSub['dataType'] = 'String';
-      tmpFieldSub['controlType'] = 'SubTitle';
+      tmpFieldSub['fieldType'] = dataVllTitle.value;
+      tmpFieldSub['controlType'] = 'TextBox';
       tmpFieldSub['isRequired'] = true;
-      tmpFieldSub['defaultValue'] = 'Mô tả ngắn gọn';
+      tmpFieldSub['defaultValue'] = tmpFieldSub['title'];
       lst.push(tmpFieldSub);
     }
     this.lstStepFields = [...this.lstStepFields, ...lst];
@@ -102,6 +105,8 @@ export class FormPropertiesFieldsComponent implements OnInit {
           else if (advanced.includes(elm.value)) elm.groupType = 1;
         });
         this.vllBP002 = item;
+        this.setDefaultTitle();
+
       }
     });
   }
@@ -232,7 +237,8 @@ export class FormPropertiesFieldsComponent implements OnInit {
 
     const field: any = {
       recID: Util.uid(),
-      controlType: data.value,
+      fieldType: data.value,
+      isRequired: false,
     };
 
     if (data.text) {
@@ -245,44 +251,82 @@ export class FormPropertiesFieldsComponent implements OnInit {
     }
 
     if (['Text', 'ValueList', 'ComboBox', 'Attachment'].includes(data.value)) {
-      field.isRequired = false;
       field.dataType = 'String';
 
       if (['ValueList', 'ComboBox'].includes(data.value)) {
         field.refType = data.value === 'ValueList' ? '2' : '3';
+        field.controlType = 'ComboBox';
       }else if(data.value == 'Text'){
         field.dataFormat = '';
+        field.controlType = 'TextBox';
+      }else{
+        field.controlType = 'Attachment';
       }
     }
 
     if(data.value == 'DateTime'){
       field.dataFormat = 'd';
       field.dataType = 'DateTime';
+      field.controlType = 'MaskBox';
     }
 
     if(data.value == 'Number'){
       field.dataFormat = 'I';
-      field.dataType = 'Int';
+      field.dataType = 'Decimal';
+      field.controlType = 'TextBox';
+    }
+
+    if(data.value == 'YesNo'){
+      field.dataType = 'Bool';
+      field.controlType = 'Switch';
+    }
+
+    if(data.value == 'User'){
+      field.dataType = 'String';
+      field.refValue = 'Users';
+      field.refType = '3';
+      field.controlType = 'ComboBox';
     }
 
     if (data.value === 'Rank') {
+      field.controlType = 'Rank';
+      field.dataType = 'Decimal';
       field.rank = {
         type: '1',
         icon: null,
         minValue: 0,
         maxValue: 5,
-        color: null,
+        color: '#0078FF',
       };
     }
 
     if (data.value === 'Progress') {
+      field.dataType = 'Decimal';
+      field.controlType = 'Progress';
       field.rank = {
         type: '3',
         icon: null,
         minValue: 0,
         maxValue: 100,
-        color: '#3699ff',
+        color: '#0078FF',
       };
+    }
+
+    if(['Phone', 'Email', 'Address'].includes(data.value)){
+      field.dataType = 'String';
+      field.dataFormat = data.value;
+      field.controlType = 'TextBox';
+    }
+
+    if(data.value == 'Expression'){
+      field.dataType = 'String';
+      field.controlType = 'TextBox';
+      field.refType = 'E';
+    }
+
+    if(data.value == 'Table'){
+      field.dataType = 'String';
+      field.controlType = 'Table';
     }
 
     return field;
@@ -290,13 +334,13 @@ export class FormPropertiesFieldsComponent implements OnInit {
 
   returnData(data){
     let dataField = {};
-    const indx = this.lstStepFields.findIndex(x => data.value == x.controlType && x.recID == data.recID);
+    const indx = this.lstStepFields.findIndex(x => data.value == x.fieldType && x.recID == data.recID);
     dataField = indx != -1 ? this.lstStepFields[indx] : null;
     return dataField;
   }
 
   dataForm(type){
-    return this.lstStepFields?.find(x => x.fieldName=='Title') ? (type ? this.lstStepFields?.find(x => x.fieldName=='Title')[type] : null) : this.lstStepFields?.find(x => x.fieldName=='Title');
+    return this.lstStepFields?.find(x => x.fieldType=='Title') ? (type ? this.lstStepFields?.find(x => x.fieldType=='Title')[type] : null) : this.lstStepFields?.find(x => x.fieldType=='Title');
   }
   //#endregion
   //#region event emit
@@ -306,13 +350,13 @@ export class FormPropertiesFieldsComponent implements OnInit {
       if (indx != -1) {
         if (e?.type == 'delete') {
           this.lstStepFields.splice(indx, 1);
-          this.dataCurrent = this.lstStepFields.find(x => x.controlType == 'Title');
+          this.dataCurrent = this.lstStepFields.find(x => x.fieldType == 'Title');
         } else {
           this.lstStepFields[indx] = e?.data;
           this.dataCurrent = this.lstStepFields[indx];
         }
       }
-      if(e?.data?.controlType == 'ValueList'){
+      if(e?.data?.fieldType == 'ValueList'){
         this.table = JSON.parse(JSON.stringify(this.table));
       }
     }

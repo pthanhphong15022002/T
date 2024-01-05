@@ -981,7 +981,6 @@ export class PopupAddDealComponent
   }
   onAddInstance() {
     if (this.isShowReasonDP) {
-      debugger;
       let data = [this.instance, this.listInstanceSteps, this.oldIdInstance];
       this.codxCmService.addInstance(data).subscribe((instance) => {
         if (instance) {

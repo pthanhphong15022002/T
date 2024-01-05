@@ -963,6 +963,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         entityName: this.entityName,
         parentID: this.recIDParent,
         processID: this.processID,
+        businessLineID: this.businessLineID,
       };
       let taskContract = await this.stepService.openPopupTaskContract(
         data,
@@ -1430,6 +1431,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
           action: 'copy',
           type: 'task',
           recIDContract: task.objectLinked,
+          businessLineID: this.businessLineID,
         };
         let taskContract = await this.stepService.openPopupTaskContract(
           data,
@@ -2090,7 +2092,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
           const domain = parser.origin;
 
           let tenant = this.tenantStore.get().tenant;
-          let url = `${domain}/${tenant}/cm/contracts/CM0204?predicate=RecID=@0&dataValue=${data?.objectLinked}`;
+          let url = `${domain}/${tenant}/cm/contracts/CM0206?predicate=RecID=@0&dataValue=${data?.objectLinked}`;
           window.open(url, '_blank');
           return;
         } else {
@@ -3074,20 +3076,21 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       option
     );
     fieldPopup.closed.subscribe((res) => {
-      let filels = res?.event;
-      let listFilelStep = this.currentStep?.fields;
+      let fields = res?.event;
+      let listFieldStep = this.currentStep?.fields;
       let countFieldChange = 0;
-      if (filels?.length > 0 && listFilelStep?.length > 0) {
-        filels?.forEach((element) => {
-          let filel = listFilelStep?.find((x) => x.recID == element?.recID);
-          if (filel) {
-            filel.dataValue = element?.dataValue;
+      if (fields?.length > 0 && listFieldStep?.length > 0) {
+        fields?.forEach((element) => {
+          let field = listFieldStep?.find((x) => x.recID == element?.recID);
+          if (field) {
+            field.dataValue = element?.dataValue;
+            field['versions'] = element?.versions; // lưu version
             if (element?.dataValue) {
               countFieldChange++;
             }
           }
         });
-        if (countFieldChange == filels?.length) {
+        if (countFieldChange == fields?.length) {
           task.status = '3';
           let actualEnd = new Date();
           this.updateProgressForm(
@@ -3100,7 +3103,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
             true
           );
         } else {
-          let progress = Math.floor((countFieldChange / filels?.length) * 100);
+          let progress = Math.floor((countFieldChange / fields?.length) * 100);
           task.progress = progress >= 0 ? progress : 0;
           task.status = '2';
           this.updateProgressForm(
@@ -3165,7 +3168,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
           refType: 'DP_Instances_Steps_Tasks',
           dataSource: res ?? '',
         };
-        debugger;
+
         if (data?.isTaskDefault) {
           customData.refID = data.refID;
           customData.refType = 'DP_Steps_Tasks';

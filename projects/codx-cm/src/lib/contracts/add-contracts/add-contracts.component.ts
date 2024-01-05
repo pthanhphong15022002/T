@@ -372,11 +372,9 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
           this.contracts.processID = this.processID;
           this.getBusinessLineByProcessContractID(this.processID);
         }
-        if(this.type == 'task' && this.processID){
+        if(this.type == 'task'){
           this.contracts.applyProcess = true;
-           this.contracts.processID = this.processID;
-          this.getBusinessLineByProcessID(this.processID);
-          this.getListInstanceSteps(this.contracts.processID);
+          this.getBusinessLineByBusinessLineID(this.contracts?.businessLineID);
           this.mapDataInfield();
         }
         break;
@@ -716,25 +714,36 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
         break;
       case 'contractType':
         if (event?.component?.itemsSelected[0]) {
-          let autoNumber = event?.component?.itemsSelected[0]?.AutoNumber;
-          if (autoNumber) {
-            this.cmService
-              .getAutoNumberByAutoNoCode(autoNumber)
-              .subscribe((res) => {
-                if (res) {
-                  this.contracts.contractID = res;
-                  this.disabledShowInput = true;
-                } else {
-                  if (this.autoNumber) {
-                    this.contracts.contractID = this.autoNumber;
+          if(event?.component?.itemsSelected[0]?.AutoNumberControl == "1"){
+            let autoNumberCode = event?.component?.itemsSelected[0]?.AutoNumber;
+            if (autoNumberCode) {
+              this.cmService
+                .getAutoNumberByAutoNoCode(autoNumberCode)
+                .subscribe((res) => {
+                  if (res) {
+                    this.contracts.contractID = res;
                     this.disabledShowInput = true;
                   } else {
-                    this.contracts.contractID = '';
-                    this.disabledShowInput = false;
+                    if (this.autoNumber) {
+                      this.contracts.contractID = this.autoNumber;
+                      this.disabledShowInput = true;
+                    } else {
+                      this.contracts.contractID = '';
+                      this.disabledShowInput = false;
+                    }
                   }
-                }
-              });
+                });
+            }
+          }else{
+            if (this.autoNumber) {
+              this.contracts.contractID = this.autoNumber;
+              this.disabledShowInput = true;
+            } else {
+              this.contracts.contractID = '';
+              this.disabledShowInput = false;
+            }
           }
+          
         }
         break;
       case 'businessLineID':
@@ -747,7 +756,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
             this.contracts.processID = processID;
             this.contracts.applyProcess = true;
             // this.GetProcessNoByProcessID(processID);
-            this.disabledShowInput = true;
+            // this.disabledShowInput = true;
             this.getListInstanceSteps(processID);
           } else {
             this.itemTabsInput(false);
@@ -756,12 +765,12 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
             } else {
               this.contracts.applyProcess = false;
               this.contracts.processID = null;
-              if (this.autoNumber) {
-                this.contracts.contractID = this.autoNumber;
-              } else {
-                this.contracts.contractID = '';
-                this.disabledShowInput = false;
-              }
+              // if (this.autoNumber) {
+              //   this.contracts.contractID = this.autoNumber;
+              // } else {
+              //   this.contracts.contractID = '';
+              //   this.disabledShowInput = false;
+              // }
             }
           }
         }
@@ -829,7 +838,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
   }
 
   setValueComboboxQuotation() {
-    let listQuotation = this.inputQuotation.ComponentCurrent.dataService.data;
+    let listQuotation = this.inputQuotation?.ComponentCurrent?.dataService?.data;
     if (listQuotation) {
       if (this.customerIdOld != this.contracts.customerID) {
         this.contracts.quotationID = null;
@@ -994,6 +1003,18 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
           this.contracts.businessLineID = res;
         }
       });
+  }
+  getBusinessLineByBusinessLineID(businessLine) {
+    if(businessLine){
+      this.cmService
+      .getBusinessLineByBusinessLineID([businessLine])
+      .subscribe((res) => {
+        if (res) {
+          this.contracts.processID = res?.processContractID;
+          this.getListInstanceSteps(this.contracts.processID);
+        }
+      });
+    }
   }
   //#endregion
 
@@ -1563,7 +1584,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
                 } else {
                   this.editContract();
                 }
-        
+
                 break;
             }
           }
@@ -1585,7 +1606,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
             } else {
               this.editContract();
             }
-    
+
             break;
         }
       }
@@ -1708,23 +1729,49 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
   }
 
   convertDataInstance(contract: CM_Contracts, instance: tmpInstances) {
-    this.oldIdInstance = this.contracts?.refID;
-    // this.contracts.refID = Util.uid();
     if (this.action === 'edit') {
-      instance.recID = contract.refID;
+      instance.recID = this.contracts.refID;
     }
-    if (this.action !== 'edit') {
+    if (this.action !== 'edit')  {
       instance.startDate = null;
       instance.status = '1';
+      instance.stepID = this.listInstanceSteps[0].stepID;
     }
     instance.title = contract?.contractName?.trim();
     instance.memo = contract?.note?.trim();
-    instance.endDate = contract.effectiveTo;
-    instance.instanceNo = contract.contractID;
+    instance.instanceNo = contract.dealID;
     instance.owner = contract?.owner;
     instance.processID = contract.processID;
-    instance.stepID = contract.stepID;
+    // instance.stepID = contract.stepID;
   }
+  updateDateDeal(instance: tmpInstances, contract: CM_Contracts) {
+    if (this.action !== 'edit') {
+      contract.stepID = this.listInstanceSteps[0].stepID;
+      contract.status = '1';
+      contract.refID = instance.recID;
+    }
+  }
+
+  // convertDataInstance(contract: CM_Contracts, instance: tmpInstances) {
+  //   this.oldIdInstance = this.contracts?.refID;
+  //   instance.stepID = contract.stepID;
+  //   // this.contracts.refID = Util.uid();
+  //   if (this.action === 'edit') {
+  //     instance.recID = contract.refID;
+  //   }
+  //   if (this.action !== 'edit') {
+  //     instance.startDate = null;
+  //     instance.status = '1';
+  //     instance.stepID = this.listInstanceSteps[0].stepID;
+  //   }
+  //   instance.title = contract?.contractName?.trim();
+  //   instance.memo = contract?.note?.trim();
+  //   instance.endDate = contract.effectiveTo;
+  //   instance.instanceNo = contract.contractID;
+  //   instance.owner = contract?.owner;
+  //   instance.processID = contract.processID;
+
+  // }
 
   addPermission(permissionDP) {
     if (permissionDP && permissionDP?.length > 0) {
@@ -1737,15 +1784,15 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
     }
   }
 
-  updateDateDeal(instance: tmpInstances, contract: CM_Contracts) {
-    if (this.action !== 'edit') {
-      contract.stepID = this.listInstanceSteps[0].stepID;
-      contract.status = '1';
-      contract.refID = instance.recID;
-    }
-    // deal.owner = this.owner;
-    // deal.salespersonID = this.owner;
-  }
+  // updateDateDeal(instance: tmpInstances, contract: CM_Contracts) {
+  //   if (this.action !== 'edit') {
+  //     contract.stepID = this.listInstanceSteps[0].stepID;
+  //     contract.status = '1';
+  //     contract.refID = instance.recID;
+  //   }
+  //   // deal.owner = this.owner;
+  //   // deal.salespersonID = this.owner;
+  // }
 
   editContract() {
     if (this.dialog?.dataService) {
