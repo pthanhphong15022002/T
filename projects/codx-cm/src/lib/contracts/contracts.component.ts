@@ -688,20 +688,20 @@ export class ContractsComponent extends UIComponent {
 
   async addContract() {
     this.view.dataService.addNew().subscribe(async (res) => {
-      await this.openPopupContract(null, 'add', res);
+      await this.openPopupContract(null, 'add','contract', res);
     });
   }
 
   async addContractAdjourn(data: CM_Contracts) {
     this.view.dataService.addNew().subscribe(async (res) => {
       let contracts = JSON.parse(JSON.stringify(data)) as CM_Contracts;
-      this.openPopupContract(null, 'extend', contracts);
+      this.openPopupContract(null,'copy', 'extend', contracts);
     });
   }
 
   async addContractAppendix(data: CM_Contracts) {
     let contracts = JSON.parse(JSON.stringify(data)) as CM_Contracts;
-      this.openPopupContract(null, 'appendix', contracts);
+      this.openPopupContract(null, 'copy','appendix', contracts);
   }
 
   async editContract(contract) {
@@ -710,14 +710,14 @@ export class ContractsComponent extends UIComponent {
     }
     let dataEdit = this.view.dataService.dataSelected;
     this.view.dataService.edit(dataEdit).subscribe(async (res) => {
-      this.openPopupContract(null, 'edit', dataEdit);
+      this.openPopupContract(null, 'edit', 'contract', dataEdit);
     });
   }
 
   async copyContract(contract) {
     this.view.dataService.addNew().subscribe(async (res) => {
       let dataCopy = JSON.parse(JSON.stringify(contract));
-      this.openPopupContract(null, 'copy', dataCopy);
+      this.openPopupContract(null, 'copy', 'contract', dataCopy);
     });
   }
 
@@ -771,13 +771,13 @@ export class ContractsComponent extends UIComponent {
     }
   }
 
-  async openPopupContract(projectID, action, contract?) {
+  async openPopupContract(projectID, action, type = 'contract', contract?) {
     let data = {
       projectID,
       action,
       contract: contract || null,
       account: this.account,
-      type: action == 'appendix' ? 'appendix' :'contract',
+      type: type,
       actionName: this.actionName || '',
     };
     let option = new SidebarModel();
