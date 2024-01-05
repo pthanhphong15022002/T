@@ -426,7 +426,6 @@ export class CodxReportViewDetailComponent
     }
     // get report PDF
     if (this.data.displayMode == '3' || this.data.displayMode == '4') {
-      debugger
       this.getReportPDF(this.data.recID);
     }
   }
