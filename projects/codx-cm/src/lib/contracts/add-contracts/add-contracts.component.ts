@@ -123,7 +123,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
   listMemorySteps: any[] = [];
   listInstanceSteps: any[] = [];
   REQUIRE_TASK = ['taskName', 'endDate', 'startDate'];
-  type: 'contract' | 'DP' | 'deal' | 'quotation' | 'customer' | 'task';
+  type: 'contract' | 'DP' | 'deal' | 'quotation' | 'customer' | 'task'|'appendix';
 
   listParticipants;
   objPermissions = {};
@@ -410,7 +410,6 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
         this.contracts.status = '1';
         // this.contracts.applyProcess = this.isApplyProcess;
         this.contracts.currencyID = this.currencyIDDefault;
-        this.contracts.businessLineID = this.businessLineID || '';
         if (!this.contracts?.applyProcess) {
           this.contracts.contractID = null;
           this.getAutoNumberSetting();
@@ -430,6 +429,21 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
           this.contracts.recID = Util.uid();
           this.contracts.status = '1';
           this.contracts.useType = '5';
+        }
+        if (this.contracts?.applyProcess && this.contracts.processID) {
+          this.getListInstanceSteps(this.contracts.processID);
+        }
+        this.getCustomersDefaults(this.contracts?.customerID);
+        break;
+      case 'appendix':
+        if (data) {
+          this.contracts = JSON.parse(JSON.stringify(data));
+          delete this.contracts['id'];
+          this.contracts.parentID = this.contracts?.recID;
+          this.contracts.recID = Util.uid();
+          this.contracts.status = '1';
+          this.contracts.useType = '3';
+          this.contracts.displayed = false;
         }
         if (this.contracts?.applyProcess && this.contracts.processID) {
           this.getListInstanceSteps(this.contracts.processID);
@@ -1248,7 +1262,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
   //#endregion
 
   getListInstanceSteps(processId: any) {
-    let action = this.action == 'extend' ? 'copy' : this.action;
+    let action = this.action == 'extend' || this.action == 'appendix' ? 'copy' : this.action;
     let data = [processId, this.contracts?.refID, action, '4'];
     this.cmService.getInstanceSteps(data).subscribe((res) => {
       if (res && res.length > 0) {
@@ -1572,6 +1586,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
               case 'add':
               case 'copy':
               case 'extend':
+              case 'appendix':
                 if (this.contracts.applyProcess) {
                   this.addInstance();
                 } else {
@@ -1594,6 +1609,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
           case 'add':
           case 'copy':
           case 'extend':
+          case 'appendix':
             if (this.contracts.applyProcess) {
               this.addInstance();
             } else {
@@ -1613,7 +1629,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
   }
 
   addInstance() {
-    if (this.type == 'contract' || this.type == 'task') {
+    if (this.type == 'contract' || this.type == 'task' || this.type == 'appendix') {
       let data = [this.instance, this.listInstanceSteps, this.oldIdInstance];
       this.cmService.addInstance(data).subscribe((instance) => {
         if (instance) {
@@ -1642,7 +1658,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
   }
 
   async editInstance() {
-    if (this.type == 'contract'|| this.type == 'task') {
+    if (this.type == 'contract'|| this.type == 'task' || this.type == 'appendix') {
       let data = [this.instance, this.listCustomFile];
       this.cmService.editInstance(data).subscribe((instance) => {
         if (instance) {
@@ -1696,7 +1712,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
           }
           this.changeDetectorRef.markForCheck();
         });
-    } else if (this.type == 'DP' || this.type == 'task') {
+    } else if (this.type == 'DP' || this.type == 'task' || this.type == 'appendix') {
       this.cmService.addContracts([this.contracts]).subscribe((res) => {
         if (res) {
           this.dialog.close({ contract: res, action: this.action });
@@ -1716,7 +1732,8 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
     if (
       this.action == 'add' ||
       this.action == 'copy' ||
-      this.action == 'extend'
+      this.action == 'extend' ||
+      this.action == 'appendix'
     ) {
       op.methodName = 'AddContractsAsync';
       op.data = [this.contracts];
@@ -1733,6 +1750,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
       instance.recID = this.contracts.refID;
     }
     if (this.action !== 'edit')  {
+      this.oldIdInstance = this.contracts?.refID;
       instance.startDate = null;
       instance.status = '1';
       instance.stepID = this.listInstanceSteps[0].stepID;
