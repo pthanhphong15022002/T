@@ -178,6 +178,17 @@ export class PopupCustomFieldComponent implements OnInit {
           f.dataValue?.toString()
         ) {
           let dataValue = f.dataValue;
+          // //loai e
+          // let idxE = dataValue.toString().toLowerCase().indexOf('e');
+          // if (idxE != -1) {
+          //   let mu = dataValue
+          //     .toString()
+          //     .substring(idxE + 2, dataValue?.length);
+          //   dataValue =
+          //     Number.parseFloat(dataValue.toString().substring(0, idxE)) *
+          //     Math.pow(10, Number.parseInt(mu));
+          // }
+          // //
           if (f.dataFormat == 'P') dataValue = dataValue + '/100';
           dataFormat = dataFormat.replaceAll(
             '[' + f.fieldName + ']',

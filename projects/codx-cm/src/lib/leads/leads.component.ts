@@ -1303,38 +1303,57 @@ export class LeadsComponent
       ])
       .subscribe((x) => {
         if (x.event && x.event.status == 'Y') {
-          this.checkOwner(data,isCheck);
+          this.checkOwner(data, isCheck);
         }
       });
   }
 
-  checkOwner(data,isCheck) {
-    if(isCheck && data?.owner) {
-      let datas = [data.processID, data.businessLineID,data.owner, this.applyFor];
+  checkOwner(data, isCheck) {
+    if (isCheck && data?.owner) {
+      let datas = [
+        data.processID,
+        data.businessLineID,
+        data.owner,
+        this.applyFor,
+      ];
       this.codxCmService.isExistOwnerInProcess(datas).subscribe((res) => {
-        if(res) {
-          let dataUpdateProcess = [data.recID, data.status, '', isCheck,data.owner];
+        if (res) {
+          let dataUpdateProcess = [
+            data.recID,
+            data.status,
+            '',
+            isCheck,
+            data.owner,
+          ];
           this.getApiUpdateProcess(dataUpdateProcess);
-        }
-        else  {
+        } else {
           this.notificationsService
-          .alertCode('DP033', null, [
-            '"' + data?.dealName + '" ' + 'Người phụ trách không tồn tại trong quy trình' + ' ',
-          ])
-          .subscribe((x) => {
-            if (x.event && x.event.status == 'Y') {
-              let dataUpdateProcess = [data.recID, data.status, '', isCheck,''];
-              this.getApiUpdateProcess(dataUpdateProcess);
-            }
-          });
+            .alertCode('DP033', null, [
+              '"' +
+                data?.dealName +
+                '" ' +
+                'Người phụ trách không tồn tại trong quy trình' +
+                ' ',
+            ])
+            .subscribe((x) => {
+              if (x.event && x.event.status == 'Y') {
+                let dataUpdateProcess = [
+                  data.recID,
+                  data.status,
+                  '',
+                  isCheck,
+                  '',
+                ];
+                this.getApiUpdateProcess(dataUpdateProcess);
+              }
+            });
         }
       });
-    }
-    else {
+    } else {
       let dataUpdateProcess = [data.recID, data.status, '', isCheck];
       this.getApiUpdateProcess(dataUpdateProcess);
     }
-   }
+  }
 
   addPermission(permissionDP, lead) {
     if (permissionDP?.length > 0 && permissionDP) {
@@ -1981,7 +2000,6 @@ export class LeadsComponent
   cancelApprover(dt) {
     this.notificationsService.alertCode('ES016').subscribe((x) => {
       if (x.event.status == 'Y') {
-        debugger;
         if (dt.applyProcess) {
           this.codxCmService.getProcess(dt.processID).subscribe((process) => {
             if (process) {

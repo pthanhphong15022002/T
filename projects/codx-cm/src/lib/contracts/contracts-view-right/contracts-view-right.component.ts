@@ -38,6 +38,7 @@ export class ContractsViewDetailComponent
   @Input() formModel: FormModel;
   @Input() listInsStepStart = [];
   @Input() contract: CM_Contracts;
+  @Input() contractAppendix: CM_Contracts;
   // @Input() dataSelected: any;
   @Output() changeMF = new EventEmitter<any>();
   @Output() isSusscess = new EventEmitter<any>();
@@ -160,6 +161,10 @@ export class ContractsViewDetailComponent
       this.getQuotation();
       this.getDeal();
       this.getListCOntractByParentID();
+    }
+    if (changes?.contractAppendix && changes?.contractAppendix?.currentValue) {
+      this.listContractInParentID = this.listContractInParentID ? this.listContractInParentID : [];
+      this.listContractInParentID?.push(changes?.contractAppendix?.currentValue);
     }
     if (changes?.listInsStepStart && changes?.listInsStepStart?.currentValue) {
       this.listInsStep = this.listInsStepStart;
@@ -504,7 +509,7 @@ export class ContractsViewDetailComponent
       let url = ``
       switch(type){
         case "contract":
-          url = `${domain}/${tenant}/cm/contracts/CM0204?predicate=RecID=@0&dataValue=${recID}`;
+          url = `${domain}/${tenant}/cm/contracts/CM0206?predicate=RecID=@0&dataValue=${recID}`;
           break;
         case "deal":
           url = `${domain}/${tenant}/cm/deals/CM0201?predicate=RecID=@0&dataValue=${recID}`;

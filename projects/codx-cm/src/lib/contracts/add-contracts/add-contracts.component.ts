@@ -123,7 +123,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
   listMemorySteps: any[] = [];
   listInstanceSteps: any[] = [];
   REQUIRE_TASK = ['taskName', 'endDate', 'startDate'];
-  type: 'contract' | 'DP' | 'deal' | 'quotation' | 'customer' | 'task';
+  type: 'contract' | 'DP' | 'deal' | 'quotation' | 'customer' | 'task'|'appendix';
 
   listParticipants;
   objPermissions = {};
@@ -233,6 +233,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
   //CF
   arrCaculateField: any[] = [];
   isLoadedCF = false;
+  refInstance = ''; //Biến tham chiếu data từ cơ hội
   //#endregion
 
   constructor(
@@ -372,7 +373,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
           this.contracts.processID = this.processID;
           this.getBusinessLineByProcessContractID(this.processID);
         }
-        if(this.type == 'task'){
+        if (this.type == 'task') {
           this.contracts.applyProcess = true;
           this.getBusinessLineByBusinessLineID(this.contracts?.businessLineID);
           this.mapDataInfield();
@@ -410,7 +411,6 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
         this.contracts.status = '1';
         // this.contracts.applyProcess = this.isApplyProcess;
         this.contracts.currencyID = this.currencyIDDefault;
-        this.contracts.businessLineID = this.businessLineID || '';
         if (!this.contracts?.applyProcess) {
           this.contracts.contractID = null;
           this.getAutoNumberSetting();
@@ -436,33 +436,50 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
         }
         this.getCustomersDefaults(this.contracts?.customerID);
         break;
+      case 'appendix':
+        if (data) {
+          this.contracts = JSON.parse(JSON.stringify(data));
+          delete this.contracts['id'];
+          this.contracts.parentID = this.contracts?.recID;
+          this.contracts.recID = Util.uid();
+          this.contracts.status = '1';
+          this.contracts.useType = '3';
+          this.contracts.displayed = false;
+        }
+        if (this.contracts?.applyProcess && this.contracts.processID) {
+          this.getListInstanceSteps(this.contracts.processID);
+        }
+        this.getCustomersDefaults(this.contracts?.customerID);
+        break;
       default:
     }
   }
 
-  mapDataInfield(){
-    if(this.type == 'task' && this.stepsTasks && this.stepsTasks?.reference){
-      this.cmService.getInstancerStepByRecID((this.stepsTasks?.stepID)).subscribe(res => {
-        if(res){
-          let step = res;
-          if(step && this.stepsTasks?.reference){
-            let fields = this.stepsTasks?.reference?.split(";");
-            let listField = step?.fields;
-            let link = fields?.filter(x => x.includes("/"));
-            if(link){
-              let data = [];
-              for(let item of link){
-                let x = item?.split("/");
-                if(x?.length  == 2){
-                  let field = listField?.find(j => j.refID == x[0]);
-                  let y =  x[1].charAt(0).toLowerCase() + x[1].slice(1);
-                  this.contracts[y] = field?.dataValue;
+  mapDataInfield() {
+    if (this.type == 'task' && this.stepsTasks && this.stepsTasks?.reference) {
+      this.cmService
+        .getInstancerStepByRecID(this.stepsTasks?.stepID)
+        .subscribe((res) => {
+          if (res) {
+            let step = res;
+            if (step && this.stepsTasks?.reference) {
+              let fields = this.stepsTasks?.reference?.split(';');
+              let listField = step?.fields;
+              let link = fields?.filter((x) => x.includes('/'));
+              if (link) {
+                let data = [];
+                for (let item of link) {
+                  let x = item?.split('/');
+                  if (x?.length == 2) {
+                    let field = listField?.find((j) => j.refID == x[0]);
+                    let y = x[1].charAt(0).toLowerCase() + x[1].slice(1);
+                    this.contracts[y] = field?.dataValue;
+                  }
                 }
               }
             }
           }
-        }
-      })
+        });
     }
   }
 
@@ -696,6 +713,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
         }
         break;
       case 'dealID':
+        this.refInstance = event?.component?.itemsSelected[0]?.RefID;
         if (!this.contracts.customerID && this.contracts?.dealID) {
           this.getCustomerByDealID(event?.data);
           this.setValueComboboxQuotation();
@@ -714,24 +732,34 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
         break;
       case 'contractType':
         if (event?.component?.itemsSelected[0]) {
-          let autoNumber = event?.component?.itemsSelected[0]?.AutoNumber;
-          if (autoNumber) {
-            this.cmService
-              .getAutoNumberByAutoNoCode(autoNumber)
-              .subscribe((res) => {
-                if (res) {
-                  this.contracts.contractID = res;
-                  this.disabledShowInput = true;
-                } else {
-                  if (this.autoNumber) {
-                    this.contracts.contractID = this.autoNumber;
+          if (event?.component?.itemsSelected[0]?.AutoNumberControl == '1') {
+            let autoNumberCode = event?.component?.itemsSelected[0]?.AutoNumber;
+            if (autoNumberCode) {
+              this.cmService
+                .getAutoNumberByAutoNoCode(autoNumberCode)
+                .subscribe((res) => {
+                  if (res) {
+                    this.contracts.contractID = res;
                     this.disabledShowInput = true;
                   } else {
-                    this.contracts.contractID = '';
-                    this.disabledShowInput = false;
+                    if (this.autoNumber) {
+                      this.contracts.contractID = this.autoNumber;
+                      this.disabledShowInput = true;
+                    } else {
+                      this.contracts.contractID = '';
+                      this.disabledShowInput = false;
+                    }
                   }
-                }
-              });
+                });
+            }
+          } else {
+            if (this.autoNumber) {
+              this.contracts.contractID = this.autoNumber;
+              this.disabledShowInput = true;
+            } else {
+              this.contracts.contractID = '';
+              this.disabledShowInput = false;
+            }
           }
         }
         break;
@@ -745,7 +773,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
             this.contracts.processID = processID;
             this.contracts.applyProcess = true;
             // this.GetProcessNoByProcessID(processID);
-            this.disabledShowInput = true;
+            // this.disabledShowInput = true;
             this.getListInstanceSteps(processID);
           } else {
             this.itemTabsInput(false);
@@ -754,12 +782,12 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
             } else {
               this.contracts.applyProcess = false;
               this.contracts.processID = null;
-              if (this.autoNumber) {
-                this.contracts.contractID = this.autoNumber;
-              } else {
-                this.contracts.contractID = '';
-                this.disabledShowInput = false;
-              }
+              // if (this.autoNumber) {
+              //   this.contracts.contractID = this.autoNumber;
+              // } else {
+              //   this.contracts.contractID = '';
+              //   this.disabledShowInput = false;
+              // }
             }
           }
         }
@@ -827,7 +855,8 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
   }
 
   setValueComboboxQuotation() {
-    let listQuotation = this.inputQuotation?.ComponentCurrent?.dataService?.data;
+    let listQuotation =
+      this.inputQuotation?.ComponentCurrent?.dataService?.data;
     if (listQuotation) {
       if (this.customerIdOld != this.contracts.customerID) {
         this.contracts.quotationID = null;
@@ -994,15 +1023,15 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
       });
   }
   getBusinessLineByBusinessLineID(businessLine) {
-    if(businessLine){
+    if (businessLine) {
       this.cmService
-      .getBusinessLineByBusinessLineID([businessLine])
-      .subscribe((res) => {
-        if (res) {
-          this.contracts.processID = res?.processContractID;
-          this.getListInstanceSteps(this.contracts.processID);
-        }
-      });
+        .getBusinessLineByBusinessLineID([businessLine])
+        .subscribe((res) => {
+          if (res) {
+            this.contracts.processID = res?.processContractID;
+            this.getListInstanceSteps(this.contracts.processID);
+          }
+        });
     }
   }
   //#endregion
@@ -1237,7 +1266,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
   //#endregion
 
   getListInstanceSteps(processId: any) {
-    let action = this.action == 'extend' ? 'copy' : this.action;
+    let action = this.action == 'extend' || this.action == 'appendix' ? 'copy' : this.action;
     let data = [processId, this.contracts?.refID, action, '4'];
     this.cmService.getInstanceSteps(data).subscribe((res) => {
       if (res && res.length > 0) {
@@ -1561,6 +1590,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
               case 'add':
               case 'copy':
               case 'extend':
+              case 'appendix':
                 if (this.contracts.applyProcess) {
                   this.addInstance();
                 } else {
@@ -1583,6 +1613,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
           case 'add':
           case 'copy':
           case 'extend':
+          case 'appendix':
             if (this.contracts.applyProcess) {
               this.addInstance();
             } else {
@@ -1596,13 +1627,13 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
               this.editContract();
             }
 
-            break;
-        }
+          break;
       }
+    }
   }
 
   addInstance() {
-    if (this.type == 'contract' || this.type == 'task') {
+    if (this.type == 'contract' || this.type == 'task' || this.type == 'appendix') {
       let data = [this.instance, this.listInstanceSteps, this.oldIdInstance];
       this.cmService.addInstance(data).subscribe((instance) => {
         if (instance) {
@@ -1631,7 +1662,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
   }
 
   async editInstance() {
-    if (this.type == 'contract'|| this.type == 'task') {
+    if (this.type == 'contract'|| this.type == 'task' || this.type == 'appendix') {
       let data = [this.instance, this.listCustomFile];
       this.cmService.editInstance(data).subscribe((instance) => {
         if (instance) {
@@ -1685,7 +1716,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
           }
           this.changeDetectorRef.markForCheck();
         });
-    } else if (this.type == 'DP' || this.type == 'task') {
+    } else if (this.type == 'DP' || this.type == 'task' || this.type == 'appendix') {
       this.cmService.addContracts([this.contracts]).subscribe((res) => {
         if (res) {
           this.dialog.close({ contract: res, action: this.action });
@@ -1705,7 +1736,8 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
     if (
       this.action == 'add' ||
       this.action == 'copy' ||
-      this.action == 'extend'
+      this.action == 'extend' ||
+      this.action == 'appendix'
     ) {
       op.methodName = 'AddContractsAsync';
       op.data = [this.contracts];
@@ -1722,6 +1754,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
       instance.recID = this.contracts.refID;
     }
     if (this.action !== 'edit')  {
+      this.oldIdInstance = this.contracts?.refID;
       instance.startDate = null;
       instance.status = '1';
       instance.stepID = this.listInstanceSteps[0].stepID;

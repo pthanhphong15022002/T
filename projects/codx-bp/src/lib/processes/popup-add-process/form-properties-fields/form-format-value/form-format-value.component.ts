@@ -58,8 +58,8 @@ export class FormFormatValueComponent implements OnInit {
   loadSubItem(){}
 
   loadData() {
-    if (this.subItem?.controlType) {
-      switch (this.subItem?.controlType) {
+    if (this.subItem?.fieldType) {
+      switch (this.subItem?.fieldType) {
         case 'ValueList':
           if (this.subItem?.refValue) this.loadDataVll();
           break;
