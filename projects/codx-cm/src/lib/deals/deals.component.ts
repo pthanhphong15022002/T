@@ -278,7 +278,7 @@ export class DealsComponent
         sameData: true,
         model: {
           template2: this.templateMore,
-          // groupSettings: {showDropArea: false,columns:['customerName']}
+          groupSettings: {showDropArea: false,columns:['customerName']}
           //resources: this.columnGrids,
           // frozenColumns: 1,
         },
@@ -1088,7 +1088,7 @@ export class DealsComponent
   }
 
   openOrCloseDeal(data, check) {
-    var datas = [data.recID, data.processID, check];
+    var datas = [data.recID, check];
     this.notificationsService
       .alertCode('DP018', null, this.titleAction, "'" + data.dealName + "'")
       .subscribe((info) => {
@@ -1356,7 +1356,7 @@ export class DealsComponent
     );
     dialogCustomDeal.closed.subscribe((e) => {
       if (e && e.event != null) {
-        this.view.dataService.update(e.event, true).subscribe();
+        //this.view.dataService.update(e.event, true).subscribe();
         //up kaban nee đúng process
         if (this.kanban && this.processIDKanban == e.event?.processID) {
           let dt = e.event;
@@ -1407,31 +1407,31 @@ export class DealsComponent
           if (e && e.event != null) {
             //this.view.dataService.update(e.event, true).subscribe();
             //up kaban
-            if (
-              this.kanban &&
-              (dealValueOld != e.event?.dealValue ||
-                exchangeRateOld != e.event?.exchangeRate)
-            ) {
-              let dt = e.event;
-              let money =
-                dt.dealValue * dt.exchangeRate - dealValueOld * exchangeRateOld;
-              this.renderTotal(dt.stepID, 'add', money);
+          //   if (
+          //     this.kanban &&
+          //     (dealValueOld != e.event?.dealValue ||
+          //       exchangeRateOld != e.event?.exchangeRate)
+          //   ) {
+          //     let dt = e.event;
+          //     let money =
+          //       dt.dealValue * dt.exchangeRate - dealValueOld * exchangeRateOld;
+          //     this.renderTotal(dt.stepID, 'add', money);
 
-              // this.kanban?.updateCard(dt);
-              // this.kanban?.kanbanObj?.refreshHeader();
-              // this.kanban.refreshUI();
-              this.kanban.refresh();
-            }
-            if (this.detailViewDeal) {
-              this.detailViewDeal.dataSelected = JSON.parse(
-                JSON.stringify(this.dataSelected)
-              );
-              this.detailViewDeal?.promiseAllAsync();
-              this.detailViewDeal.loadContactEdit();
-            }
-            this.isChangeOwner = ownerIdOld != e.event.owner;
-            this.changeDetectorRef.detectChanges();
-          }
+          //     // this.kanban?.updateCard(dt);
+          //     // this.kanban?.kanbanObj?.refreshHeader();
+          //     // this.kanban.refreshUI();
+          //     this.kanban.refresh();
+          //   }
+          //   if (this.detailViewDeal) {
+          //     this.detailViewDeal.dataSelected = JSON.parse(
+          //       JSON.stringify(this.dataSelected)
+          //     );
+          //     this.detailViewDeal?.promiseAllAsync();
+          //     this.detailViewDeal.loadContactEdit();
+          //   }
+          //   this.isChangeOwner = ownerIdOld != e.event.owner;
+          //   this.changeDetectorRef.detectChanges();
+           }
         });
       });
   }

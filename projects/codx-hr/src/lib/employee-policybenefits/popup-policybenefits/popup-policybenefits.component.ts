@@ -208,7 +208,7 @@ export class PopupPolicybenefitsComponent
     this.actionType = data?.data?.actionType;
     this.benefitPolicyObj = JSON.parse(JSON.stringify(data?.data?.dataObj));
     console.log('benefit policy nhan vao', this.benefitPolicyObj);
-    debugger;
+
     // if(this.benefitPolicyObj && this.actionType == 'edit'){
     //   this.originPolicyId = this.benefitPolicyObj.policyID;
     //   this.originPolicyBenefitObj = JSON.parse(JSON.stringify(this.benefitPolicyObj));
@@ -216,7 +216,6 @@ export class PopupPolicybenefitsComponent
   }
 
   onInit(): void {
-    debugger;
     if (!this.columnGrid1) {
       this.columnGrid1 = [
         {
@@ -472,14 +471,13 @@ export class PopupPolicybenefitsComponent
   }
 
   addFiles(evt) {
-    debugger;
     this.benefitPolicyObj.attachments = this.benefitPolicyObj.attachments + 1;
   }
   deleteFile(evt) {
     if (evt) {
       this.benefitPolicyObj.attachments -= evt.length;
     }
-    debugger;
+
     // let index = this.attachment.data.indexOf(evt[0])
     // if(index > -1){
     //   this.attachment.data = this.attachment.data.splice(index,1);
@@ -488,7 +486,6 @@ export class PopupPolicybenefitsComponent
     this.EditPolicyBenefits(this.benefitPolicyObj).subscribe((res) => {});
   }
   countFile() {
-    debugger;
     // this.benefitPolicyObj.attachments = this.attachment.fileUploadList.length
   }
   fileAdded(evt) {}
@@ -1709,7 +1706,6 @@ export class PopupPolicybenefitsComponent
   }
 
   async onSaveForm() {
-    debugger;
     if (this.form.formGroup.invalid) {
       this.hrSevice.notifyInvalid(this.form.formGroup, this.formModel);
       this.form.form.validation(false);
@@ -1775,13 +1771,11 @@ export class PopupPolicybenefitsComponent
         if (res) {
           this.notify.notifyCode('SYS006');
           for (let i = 0; i < this.lstPolicyBeneficiariesApply.length; i++) {
-            debugger;
             this.AddPolicyBeneficiaries(
               this.lstPolicyBeneficiariesApply[i]
             ).subscribe((res) => {});
           }
           for (let i = 0; i < this.lstPolicyBeneficiariesExclude.length; i++) {
-            debugger;
             this.AddPolicyBeneficiaries(
               this.lstPolicyBeneficiariesExclude[i]
             ).subscribe((res) => {});
@@ -1802,7 +1796,6 @@ export class PopupPolicybenefitsComponent
         }
       });
     } else if (this.actionType === 'edit') {
-      debugger;
       if (
         this.form.form.data.policyID != '' &&
         this.form.form.preData.policyID != this.benefitPolicyObj.policyID

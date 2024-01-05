@@ -19,6 +19,7 @@ export class PeriodicControlComponent extends UIComponent {
   oData: any = [];
   functionType:any;
   dataDefault:any;
+  displayMode:any;
   @ViewChild('template') template?: TemplateRef<any>;
   private destroy$ = new Subject<void>();
   constructor(
@@ -43,6 +44,7 @@ export class PeriodicControlComponent extends UIComponent {
     });
     this.cache.functionList(this.funcID).subscribe((res:any)=>{
       this.functionType = res?.functionType;
+      this.displayMode = res?.displayMode;
     })
   }
 

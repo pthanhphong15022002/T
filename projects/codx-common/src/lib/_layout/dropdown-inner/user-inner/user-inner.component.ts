@@ -58,7 +58,7 @@ export class UserInnerComponent implements OnInit, OnDestroy {
   formModel: any;
   modifiedOn = new Date();
   sysSetting;
-  profileURL=null;
+  profileURL = null;
   constructor(
     public codxService: CodxService,
     private auth: AuthService,
@@ -72,7 +72,7 @@ export class UserInnerComponent implements OnInit, OnDestroy {
     private element: ElementRef,
     private signalRSV: SignalRService,
     private callSV: CallFuncService,
-    private fileSv: FilesService,
+    private fileSv: FilesService
   ) {
     this.cache.functionList('ADS05').subscribe((res) => {
       if (res) {
@@ -105,9 +105,9 @@ export class UserInnerComponent implements OnInit, OnDestroy {
     this.setTheme(th.toLowerCase());
     this.setThemeMode(thMode.toLowerCase());
 
-    this.codxCMService.isSetChangeThemes.subscribe(item=>{
+    this.codxCMService.isSetChangeThemes.subscribe((item) => {
       this.setTheme(item);
-    })
+    });
   }
 
   ngAfterViewInit() {
@@ -268,29 +268,7 @@ export class UserInnerComponent implements OnInit, OnDestroy {
     this.callSV.openForm(CodxCreateIndexComponent, 'Create Index', 700, 700);
   }
 
-  clearTenant() {
-    // var config = new AlertConfirmInputConfig();
-    // config.type = 'text';
-    // config.label = 'predicate';
-    // this.notifyService
-    //   .alert(
-    //     'Cánh báo',
-    //     '<span style="color: red">CHỨC NĂNG NÀY SẼ XÓA CÁC TENANT HIỆN TẠI THEO ĐIỀU KIỆN!!!! VUI LÒNG BACKUP DATA TRƯỚC KHI THỰC HIỆN!!! XIN CẢM ƠN!!!</span><div><a href="tel:+84363966390">Gọi hỗ trợ</a></div><div><a href="mailto:Quangvovan22@gmail.com">Gửi mail hỗ trợ</a></div>',
-    //     config
-    //   )
-    //   .closed.subscribe((x) => {
-    //     debugger;
-    //     if (x.event && x.event.status == 'Y' && x.event.data) {
-    //       this.api
-    //         .execSv('Tenant', 'Tenant', 'TenantsBusiness', 'DropTenantAsync', [
-    //           x.event.data,
-    //         ])
-    //         .subscribe((res) => {
-    //           if (res) console.log(res);
-    //         });
-    //     }
-    //   });
-  }
+  clearTenant() {}
 
   testFormatString() {
     this.api
@@ -309,7 +287,6 @@ export class UserInnerComponent implements OnInit, OnDestroy {
         'HRS0211',
       ])
       .subscribe((res) => {
-        debugger;
         var sampleArr = this.base64ToArrayBuffer(res);
         this.saveByteArray('excel', sampleArr);
         console.log(res);
@@ -360,33 +337,31 @@ export class UserInnerComponent implements OnInit, OnDestroy {
   }
   // link my profile
   myProfile() {
-    if(this.profileURL!=null){
-      this.codxService.navigate(null,this.profileURL);
-    }
-    else{
-      this.cache.functionList("WS006").subscribe(res=>{
-        if(res?.url){
-          this.profileURL=res?.url;
-          this.codxService.navigate(null,this.profileURL);
+    if (this.profileURL != null) {
+      this.codxService.navigate(null, this.profileURL);
+    } else {
+      this.cache.functionList('WS006').subscribe((res) => {
+        if (res?.url) {
+          this.profileURL = res?.url;
+          this.codxService.navigate(null, this.profileURL);
         }
       });
     }
-    
   }
 
-  formSetting(){
+  formSetting() {
     let dModel = new DialogModel();
-        dModel.FormModel = this.formModel;
-        let dialogStationery = this.callSV.openForm(
-          FormSettingComponent,
-          'Danh sách chức năng',
-          1024,
-          768,
-          null,
-          [],
-          '',
-          dModel
-        );
+    dModel.FormModel = this.formModel;
+    let dialogStationery = this.callSV.openForm(
+      FormSettingComponent,
+      'Danh sách chức năng',
+      1024,
+      768,
+      null,
+      [],
+      '',
+      dModel
+    );
   }
 }
 

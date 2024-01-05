@@ -38,6 +38,7 @@ import { PropertyProgressComponent } from './modeview/properties/property-progre
 import { PropertyPhoneComponent } from './modeview/properties/property-phone/property-phone.component';
 import { PropertyExpressionComponent } from './modeview/properties/property-expression/property-expression.component';
 import { PropertyAttachmentComponent } from './modeview/properties/property-attachment/property-attachment.component';
+import { FormSettingComboboxComponent } from './processes/popup-add-process/form-properties-fields/setting-fields/form-setting-combobox/form-setting-combobox.component';
 
 export const routes: Routes = [
   {
@@ -87,6 +88,10 @@ export const routes: Routes = [
     PropertyPhoneComponent,
     PropertyExpressionComponent,
     PropertyAttachmentComponent
+
+
+    
+    FormSettingComboboxComponent,
   ],
   imports: [
     CodxCoreModule.forRoot({ environment }),

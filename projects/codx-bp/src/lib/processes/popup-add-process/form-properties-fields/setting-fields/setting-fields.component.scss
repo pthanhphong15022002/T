@@ -30,7 +30,7 @@
   overflow-y: hidden;
 }
 
-.footer{
+.footer {
   margin: 2px;
   height: 50px;
 }
@@ -38,11 +38,59 @@
   position: relative;
 }
 
-.bg-danger{
+.bg-danger {
   background-color: red;
 }
 
 /* Áp dụng màu cho phần progress */
 .rounded-4.h-5px {
   background-size: 100% 100%; /* Tùy chỉnh kích thước cho mỗi phần */
+}
+
+.emtry-table {
+  height: 35px;
+  width: 80%;
+  background-color: #e8e8e8;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 2px;
+  cursor: pointer;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.table-cbx{
+  width: 100%;
+  margin-top: 10px;
+}
+
+table {
+
+  border-collapse: collapse;
+  width: 100%;
+}
+
+
+th,
+td {
+  padding: 2px 7px!important;
+  white-space: nowrap;
+  border-bottom: 1px var(--gray-100) solid !important;
+  height: 32px;
+  vertical-align: middle;
+}
+.table tbody tr:last-child td{
+  border-bottom: 1px var(--gray-100) solid !important;
+}
+.bg-150 {
+ border-top:2px var(--primary-lighter) solid;
+}
+
+th {
+  position: sticky;
+  left: 0;
+  top: 0;
+  z-index: 2;
+  background-color: var(--gray-100)!important;
 }
