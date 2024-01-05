@@ -17,6 +17,7 @@ import {
   DialogModel,
   FormModel,
   NotificationsService,
+  Util,
 } from 'codx-core';
 import { PopupQuickaddContactComponent } from 'projects/codx-cm/src/lib/cmcustomer/cmcustomer-detail/codx-list-contacts/popup-quickadd-contact/popup-quickadd-contact.component';
 import { CodxShareService } from '../../codx-share.service';
@@ -33,9 +34,6 @@ import { PopupSelectFieldReferenceComponent } from './popup-select-field-referen
 })
 export class CodxInputCustomFieldComponent implements OnInit {
   @Input() customField: any = null;
-  @Output() valueChangeCustom = new EventEmitter<any>();
-  @Output() addFileCompleted = new EventEmitter<boolean>();
-
   @Input() isAdd = false; //la add new
   @Input() showTitle = true; // show Title hoặc "gia trị măc định"
   @Input() objectId: any = ''; //objectId của file
@@ -49,10 +47,15 @@ export class CodxInputCustomFieldComponent implements OnInit {
   @Input() customerID: string = ''; //Khách hàng cơ hội
 
   @Input() isDataTable = false; //là data của Table
-
+  @Input() isRezisePopup = false; //resize popup
+  @Input() widthRezise = '1000'; //resize width popup
   @Input() refVersion = ''; //là recID của form Task
   @Input() refInstance = ''; //'63484925-9f24-11ee-a457-c025a5a4cd5d'; //'63484925-9f24-11ee-a457-c025a5a4cd5d'; //tesst; //là recID của Instance liên quan
   @Input() refStepID = ''; //là recID của step Ins liên quan
+
+  @Output() valueChangeCustom = new EventEmitter<any>();
+  @Output() addFileCompleted = new EventEmitter<boolean>();
+  @Output() rezisePopup = new EventEmitter<any>();
 
   @ViewChild('attachment') attachment: AttachmentComponent;
   @ViewChild('comboxValue') comboxValue: ComboBoxComponent; ///value seclect 1
@@ -136,6 +139,7 @@ export class CodxInputCustomFieldComponent implements OnInit {
   dataValueCaculate = '';
   listFieldRef = []; //All field
   listFieldsSelect = []; //fields selectd
+  isShowMore = false;
 
   constructor(
     private cache: CacheService,
@@ -743,6 +747,12 @@ export class CodxInputCustomFieldComponent implements OnInit {
         }
       }
     }
+    //tinh lại withd resize
+    if (this.isRezisePopup) {
+      let width = Util.getViewPort().width;
+      let widthRez = Number.parseInt(this.widthRezise);
+      if (widthRez && width < widthRez) this.widthRezise = width.toString();
+    }
     this.changeRef.detectChanges();
   }
 
@@ -1063,4 +1073,10 @@ export class CodxInputCustomFieldComponent implements OnInit {
     }
   }
   //----------------------------------------------//
+
+  //rezisePopup --nếu có TA
+  showMore() {
+    this.isShowMore = !this.isShowMore;
+    this.rezisePopup.emit(this.widthRezise);
+  }
 }
