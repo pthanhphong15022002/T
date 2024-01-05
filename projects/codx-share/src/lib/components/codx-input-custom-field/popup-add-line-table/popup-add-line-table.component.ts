@@ -18,7 +18,7 @@ export class PopupAddLineTableComponent implements OnInit {
   dialog: any;
   fieldFormat = [];
 
-  titleHeader: 'Table ne';
+  titleHeader: '';
   line: any;
   action = 'add';
   //Tisnh
@@ -39,7 +39,7 @@ export class PopupAddLineTableComponent implements OnInit {
 
     this.line = JSON.parse(JSON.stringify(dt?.data?.data));
     this.action = dt?.data?.action;
-
+    this.titleHeader = dt?.data?.titleAction ?? '';
     this.arrCaculateField = this.listColumns.filter((x) => x.dataType == 'CF');
   }
   ngOnInit(): void {
