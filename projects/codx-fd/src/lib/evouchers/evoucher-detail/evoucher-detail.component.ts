@@ -1,6 +1,6 @@
 import { Component, OnInit, Optional } from '@angular/core';
 import { CodxFdService } from '../../codx-fd.service';
-import { ApiHttpService, AuthService, DialogData, DialogRef, UserModel } from 'codx-core';
+import { ApiHttpService, AuthService, DialogData, DialogRef, NotificationsService, UserModel } from 'codx-core';
 import { Observable, isObservable } from 'rxjs';
 import moment from 'moment';
 
@@ -27,11 +27,13 @@ export class EvoucherDetailComponent implements OnInit{
   funcID: string;
   entityName: string;
   quantity: number = 1;
+  maxQuantity: number = 1;
 
   constructor(
     private FDService: CodxFdService,
     private api: ApiHttpService,
     private auth: AuthService,
+    private noti: NotificationsService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) 
@@ -62,12 +64,23 @@ export class EvoucherDetailComponent implements OnInit{
       detail.subscribe(item=>{
         this.data = item;
         this.data.quantity = this.quantity;
+        this.updateMaxQuantity();
       })
     } else {
       this.data = detail;
       this.data.quantity = this.quantity;
+      this.updateMaxQuantity();
     }
   }
+
+  updateMaxQuantity() {
+    if(this.coinsUsed > 0) {
+      this.maxQuantity = Math.floor(this.coins / (this.coinsUsed * 1));
+    } else {
+      this.maxQuantity = 1;
+    }
+  }
+
   loadEVoucherDetail(productID:any): Observable<any>
   {
     let paras = [productID];
@@ -133,9 +146,11 @@ export class EvoucherDetailComponent implements OnInit{
     if(this.sizeSelected?.sizeId == size.sizeId) {
       this.sizeSelected = null;
       this.coinsUsed = 0;
+      this.updateMaxQuantity();
     } else {
       this.sizeSelected = size;
       this.coinsUsed = ((size?.pricePrice * this.exchangeRateEVoucher) / 1000 );
+      this.updateMaxQuantity();
     }
   }
 
@@ -172,6 +187,7 @@ export class EvoucherDetailComponent implements OnInit{
           this.exchangeRateEVoucher = parseInt(data.ExchangeRateEVoucher);
           if(this.sizeSelected) {
             this.coinsUsed = ((this.sizeSelected?.pricePrice * this.exchangeRateEVoucher) / 1000 );
+            this.updateMaxQuantity();
           }
         }
       }
@@ -181,7 +197,12 @@ export class EvoucherDetailComponent implements OnInit{
   updateQuantityEvoucher(e: any) {
     let quantity = e?.component?.crrValue || 1;
     if(quantity != this.data?.quantity) {
-      this.data.quantity = quantity;
+      if(this.coinsUsed * quantity < this.coins) {
+        this.data.quantity = quantity;
+      } else {
+        this.data.quantity = this.maxQuantity;
+        this.noti.notify("Số xu không đủ để mua số lượng này", "3");
+      }
     }
   }
 }
