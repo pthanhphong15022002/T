@@ -409,7 +409,6 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
         delete this.contracts['id'];
         this.contracts.recID = Util.uid();
         this.contracts.status = '1';
-        // this.contracts.applyProcess = this.isApplyProcess;
         this.contracts.currencyID = this.currencyIDDefault;
         if (!this.contracts?.applyProcess) {
           this.contracts.contractID = null;
@@ -1579,10 +1578,8 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
       return;
     }
     this.checkRequiredTask();
-    this.contracts.applyProcess &&
-      this.convertDataInstance(this.contracts, this.instance);
-    this.contracts.applyProcess &&
-      this.updateDateDeal(this.instance, this.contracts);
+    this.contracts.applyProcess && this.convertDataInstance(this.contracts, this.instance);
+    this.contracts.applyProcess && this.updateDateDeal(this.instance, this.contracts);
       if (this.attachment && this.attachment.fileUploadList.length) {
         (await this.attachment.saveFilesObservable()).subscribe((res) => {
           if (res) {
@@ -1641,6 +1638,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
           this.contracts.status = instance.status;
           this.contracts.datas = instance.datas;
           this.contracts.stepID = instance.stepID;
+          this.contracts.refID = instance.recID;
           this.addPermission(instance?.permissions);
           this.addContracts();
         }
