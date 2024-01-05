@@ -152,6 +152,7 @@ export class ModeviewComponent implements OnInit{
       {
         this.count.attachment ++;
         data.title += " " + this.count.attachment;
+        data.documentControl = [];
         break;
       }
       case "Number":
@@ -197,7 +198,7 @@ export class ModeviewComponent implements OnInit{
         {
           type: "1",
           icon: "icon-i-star-fill",
-          minValue: 0,
+          minValue: 1,
           maxValue: 5,
           color: '#0078FF'
         }

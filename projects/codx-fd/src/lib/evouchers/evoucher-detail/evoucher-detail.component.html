@@ -56,7 +56,8 @@
             <div class="d-flex align-items-center" style="margin-left: auto;margin-right: 0;">
                 <codx-label default="SL: ">
                 </codx-label>
-                <codx-input style="margin-left: 5px;" ControlName="number" [min]="1" [step]="1"
+                <codx-input style="margin-left: 5px;" ControlName="number" 
+                    [min]="1" [step]="1" [max]="maxQuantity"
                     type="number"
                     field="quantity" [crrValue]="data?.quantity"
                     (valueChange)="updateQuantityEvoucher($event)">

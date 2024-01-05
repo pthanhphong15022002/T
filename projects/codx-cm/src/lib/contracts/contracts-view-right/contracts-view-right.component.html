@@ -100,7 +100,7 @@
         <div class="d-flex justify-content-end align-items-center mb-2">
           <div
           *ngIf="
-            contract.status == '2' && stepCurrent;
+            contract?.status == '2' && stepCurrent;
             else statusDefault
           "
           [ngStyle]="{

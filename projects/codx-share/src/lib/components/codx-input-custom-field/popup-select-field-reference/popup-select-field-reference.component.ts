@@ -10,6 +10,7 @@ export class PopupSelectFieldReferenceComponent implements OnInit {
   dialog: DialogRef;
   listField = [];
   field: any;
+  fieldNameRef = '';
   constructor(@Optional() dt?: DialogData, @Optional() dialog?: DialogRef) {
     this.dialog = dialog;
     this.listField = dt?.data?.listField;
@@ -17,7 +18,10 @@ export class PopupSelectFieldReferenceComponent implements OnInit {
   }
   ngOnInit(): void {}
   valueChange(e, f) {
-    if (e.data) this.field.dataValue = f.dataValue;
+    if (e.data) {
+      this.fieldNameRef = e.field;
+      this.field.dataValue = f.dataValue;
+    }
   }
   selected() {
     this.dialog.close(this.field);

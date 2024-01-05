@@ -33,15 +33,16 @@ export class CodxFieldsDetailTempComponent implements OnInit {
   @Input() currentElmID: any;
   @Input() viewsCurrent = '';
   @Input() typeView = '1';
-  @Output() inputElmIDCF = new EventEmitter<any>();
   @Input() isSaving = false;
   @Input() isShowTitle = true;
-  @Output() actionSaveCF = new EventEmitter<any>();
-  @Output() saveDataStep = new EventEmitter<any>();
   @Input() listFields!: any;
   //dung cho co hoi
   @Input() objectIdParent: any = '';
   @Input() customerID: string = ''; //Khách hàng cơ hội
+
+  @Output() inputElmIDCF = new EventEmitter<any>();
+  @Output() actionSaveCF = new EventEmitter<any>();
+  @Output() saveDataStep = new EventEmitter<any>();
 
   viewsCrr: any;
   currentRate = 0;

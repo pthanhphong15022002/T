@@ -600,7 +600,7 @@ clickchoi(){
   let dataDiagram = this.diagram.saveDiagram();
   let obj = JSON.parse(dataDiagram);
   if(Object.keys(obj).length && obj.nodes){
-    console.log(obj.nodes);
+    console.log(obj.nodes.toString());
   }
 
   }

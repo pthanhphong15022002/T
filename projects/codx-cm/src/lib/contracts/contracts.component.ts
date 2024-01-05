@@ -95,6 +95,7 @@ export class ContractsComponent extends UIComponent {
   tabClicked = '';
   actionName = '';
   isAddContract = true;
+  contractAppendix;
 
   service = 'CM';
   entityName = 'CM_Contracts';
@@ -457,6 +458,9 @@ export class ContractsComponent extends UIComponent {
       case 'CM0204_17': // chia sẻ
         this.popupPermissions(data);
         break;
+      case 'CM0204_21': // phụ lục
+      this.addContractAppendix(data);
+        break;
       default: {
         // var customData = {
         //   refID: data.recID,
@@ -684,15 +688,20 @@ export class ContractsComponent extends UIComponent {
 
   async addContract() {
     this.view.dataService.addNew().subscribe(async (res) => {
-      await this.openPopupContract(null, 'add', res);
+      await this.openPopupContract(null, 'add','contract', res);
     });
   }
 
   async addContractAdjourn(data: CM_Contracts) {
     this.view.dataService.addNew().subscribe(async (res) => {
       let contracts = JSON.parse(JSON.stringify(data)) as CM_Contracts;
-      this.openPopupContract(null, 'extend', contracts);
+      this.openPopupContract(null,'copy', 'extend', contracts);
     });
+  }
+
+  async addContractAppendix(data: CM_Contracts) {
+    let contracts = JSON.parse(JSON.stringify(data)) as CM_Contracts;
+      this.openPopupContract(null, 'copy','appendix', contracts);
   }
 
   async editContract(contract) {
@@ -701,14 +710,14 @@ export class ContractsComponent extends UIComponent {
     }
     let dataEdit = this.view.dataService.dataSelected;
     this.view.dataService.edit(dataEdit).subscribe(async (res) => {
-      this.openPopupContract(null, 'edit', dataEdit);
+      this.openPopupContract(null, 'edit', 'contract', dataEdit);
     });
   }
 
   async copyContract(contract) {
     this.view.dataService.addNew().subscribe(async (res) => {
       let dataCopy = JSON.parse(JSON.stringify(contract));
-      this.openPopupContract(null, 'copy', dataCopy);
+      this.openPopupContract(null, 'copy', 'contract', dataCopy);
     });
   }
 
@@ -762,13 +771,13 @@ export class ContractsComponent extends UIComponent {
     }
   }
 
-  async openPopupContract(projectID, action, contract?) {
+  async openPopupContract(projectID, action, type = 'contract', contract?) {
     let data = {
       projectID,
       action,
       contract: contract || null,
       account: this.account,
-      type: 'contract',
+      type: type,
       actionName: this.actionName || '',
     };
     let option = new SidebarModel();
@@ -786,6 +795,10 @@ export class ContractsComponent extends UIComponent {
       if (res?.event && action == 'extend') {
         this.view.dataService.remove(contract).subscribe();
         this.view.currentView['schedule'].refresh();
+        this.detectorRef.detectChanges();
+      }
+      if (res?.event && action == 'appendix') {
+        this.contractAppendix = res?.event?.contract;
         this.detectorRef.detectChanges();
       }
     });
@@ -1133,7 +1146,7 @@ export class ContractsComponent extends UIComponent {
                     if (res) {
                       this.view.dataService.update(res, true).subscribe();
                       if (this.detailViewContract) {
-                        this.detailViewContract.contract =this.dataSelected;
+                        this.detailViewContract.contract = this.dataSelected;
                       }
                       this.detailViewContract?.reloadListStep(listSteps);
                       this.detectorRef.detectChanges();
