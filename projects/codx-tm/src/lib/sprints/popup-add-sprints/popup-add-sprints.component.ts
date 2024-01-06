@@ -1,4 +1,5 @@
 import {
+  AfterViewInit,
   ChangeDetectorRef,
   Component,
   EventEmitter,
@@ -6,6 +7,7 @@ import {
   OnInit,
   Optional,
   Output,
+  TemplateRef,
   ViewChild,
 } from '@angular/core';
 import { drillThroughClosed } from '@syncfusion/ej2-pivotview';
@@ -14,6 +16,7 @@ import {
   AuthStore,
   CacheService,
   CallFuncService,
+  CodxFormComponent,
   CRUDService,
   DialogData,
   DialogRef,
@@ -32,7 +35,7 @@ import { AttachmentComponent } from 'projects/codx-common/src/lib/component/atta
   templateUrl: './popup-add-sprints.component.html',
   styleUrls: ['./popup-add-sprints.component.css'],
 })
-export class PopupAddSprintsComponent implements OnInit {
+export class PopupAddSprintsComponent implements OnInit,AfterViewInit {
   master: any;
   title = '';
   readOnly = false;
@@ -54,9 +57,38 @@ export class PopupAddSprintsComponent implements OnInit {
   titleAction = '';
   customName = '';
   isClickSave = false;
+
   @ViewChild('imageAvatar') imageAvatar: ImageViewerComponent;
   @ViewChild('attachment') attachment: AttachmentComponent;
+  @ViewChild('tabGeneralInfo') tabGeneralInfo: TemplateRef<any>;
+  @ViewChild('tabExpandedInfo') tabExpandedInfo: TemplateRef<any>;
+  @ViewChild('avatar') avatar: TemplateRef<any>;
+  @ViewChild('footer') footer: TemplateRef<any>;
+  @ViewChild('bodyContent') bodyContent: TemplateRef<any>;
+  @ViewChild('form') form: CodxFormComponent;
+  @ViewChild('formlayoutadd') formlayoutadd: CodxFormComponent;
+
+
   @Output() loadData = new EventEmitter();
+
+  menuGeneralInfo = {
+    icon: 'icon-info',
+    text: 'Thông tin chung',
+    name: 'GeneralInfo',
+    subName: 'General information',
+    subText: 'General information',
+  };
+
+  menuExpandedInfo = {
+    icon: 'icon-reorder',
+    text: 'Thông tin mở rộng',
+    name: 'ExpandedInfo',
+    subName: 'Expanded information',
+    subText: 'Expanded information',
+  };
+  tabInfo:any[] = [];
+  tabContent : any[] =[]
+  isSaveParent = false;
 
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
@@ -107,8 +139,14 @@ export class PopupAddSprintsComponent implements OnInit {
       });
   }
 
+  ngAfterViewInit(): void {
+  //du an tich hop
+  this.tabInfo=[this.menuGeneralInfo,this.menuExpandedInfo]
+  this.tabContent=[this.tabGeneralInfo,this.tabExpandedInfo]
+  }
+
   //#region init
-  ngOnInit(): void {
+  ngOnInit(): void {   
     this.cache.functionList(this.funcID).subscribe((f) => {
       if (f) {
         this.customName = f?.customName;
@@ -376,4 +414,13 @@ export class PopupAddSprintsComponent implements OnInit {
   //   }
   //   return noValidCout;
   // }
+
+
+  //du an tich hop
+  tabChange(e){
+   //bat evnt luu du an trươc khi luu sprint
+   if(e?.nextId.toLowerCase() === 'tabexpandedinfo'){
+   this.notiService.notify("Tab change")
+  }
+  }
 }

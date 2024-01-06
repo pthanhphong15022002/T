@@ -129,7 +129,7 @@ export class SprintsComponent extends UIComponent {
       let option = new SidebarModel();
       option.DataService = this.view?.currentView?.dataService;
       option.FormModel = this.view?.currentView?.formModel;
-      option.Width = '550px';
+      option.Width = res?.iterationType == '1' ? '800px' : '550px';
       this.dialog = this.callfc.openSide(
         PopupAddSprintsComponent,
         [this.view.dataService.dataSelected, 'add', this.titleAction],
@@ -161,7 +161,7 @@ export class SprintsComponent extends UIComponent {
         let option = new SidebarModel();
         option.DataService = this.view?.currentView?.dataService;
         option.FormModel = this.view?.currentView?.formModel;
-        option.Width = '550px';
+        option.Width = res?.iterationType == '1' ? '800px' : '550px';
         this.dialog = this.callfc.openSide(
           PopupAddSprintsComponent,
           [this.view.dataService.dataSelected, 'edit', this.titleAction],
@@ -189,7 +189,7 @@ export class SprintsComponent extends UIComponent {
       let option = new SidebarModel();
       option.DataService = this.view?.currentView?.dataService;
       option.FormModel = this.view?.currentView?.formModel;
-      option.Width = '550px';
+      option.Width = res?.iterationType == '1' ? '800px' : '550px';
       this.dialog = this.callfc.openSide(
         PopupAddSprintsComponent,
         [this.view.dataService.dataSelected, 'copy', this.titleAction],
