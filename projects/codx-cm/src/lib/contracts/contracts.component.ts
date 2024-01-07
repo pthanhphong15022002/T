@@ -270,21 +270,21 @@ export class ContractsComponent extends UIComponent {
         }
         switch (res.functionID) {
           case 'SYS02':
-            res.disabled = data.delete
+            res.disabled = data?.delete
             ? data.closed ||
                this.checkMoreReason(data) ||
               (!data.applyProcess && ['3', '5'].includes(data.status))
             : true;
             break;
           case 'SYS03':
-            res.disabled = data.write
-            ? data.closed ||
+            res.disabled = data?.write
+            ? data?.closed ||
               this.checkMoreReason(data) ||
               (!data.applyProcess && ['3', '5'].includes(data.status))
             : true;
             break;
           case 'SYS04':
-            res.disabled = data.write
+            res.disabled = data?.write
             ? data.closed ||
               (data.status != '13' && this.checkMoreReason(data, false)) ||
               (!data.applyProcess && ['3', '5'].includes(data.status))
@@ -357,16 +357,16 @@ export class ContractsComponent extends UIComponent {
             res.disabled = data?.status == '17' && data?.disposalType != '1';
             break;
           case 'CM0204_19': // đưa vào quy trình xử lý
-            res.disabled =data.full
-                      ? data.closed ||
-                        data.applyProcess ||
+            res.disabled =data?.full
+                      ? data?.closed ||
+                        data?.applyProcess ||
                         this.checkMoreReason(data) ||
-                        (!data.applyProcess && ['3', '5'].includes(data.status))
+                        (!data?.applyProcess && ['3', '5'].includes(data?.status))
                       : true;
             break;
           case 'CM0204_20': // không sử dụng quy trình
-            res.disabled =  data.full
-            ? data.closed || !data.applyProcess || this.checkMoreReason(data)
+            res.disabled =  data?.full
+            ? data?.closed || !data?.applyProcess || this.checkMoreReason(data)
             : true;
             break;
         }
@@ -792,12 +792,12 @@ export class ContractsComponent extends UIComponent {
       option
     );
     popupContract.closed.subscribe((res) => {
-      if (res?.event && action == 'extend') {
+      if (res?.event && type == 'extend') {
         this.view.dataService.remove(contract).subscribe();
         this.view.currentView['schedule'].refresh();
         this.detectorRef.detectChanges();
       }
-      if (res?.event && action == 'appendix') {
+      if (res?.event && type == 'appendix') {
         this.contractAppendix = res?.event?.contract;
         this.detectorRef.detectChanges();
       }

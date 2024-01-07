@@ -407,8 +407,8 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
         delete this.contracts['id'];
         this.contracts.status = '1';
         this.contracts.contractID = ''
-        this.contracts.recID = Util.uid();
         this.contracts.parentID = this.contracts?.recID;
+        this.contracts.recID = Util.uid();
         this.contracts.currencyID = this.currencyIDDefault;
         this.oldIdInstance = this.contracts?.refID;
         this.disabledShowInput = false;
@@ -1657,10 +1657,10 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
       let data = [this.instance, this.listInstanceSteps, this.oldIdInstance];
       this.cmService.addInstance(data).subscribe((instance) => {
         if (instance) {
-          this.contracts.status = instance.status;
-          this.contracts.datas = instance.datas;
-          this.contracts.stepID = instance.stepID;
-          this.contracts.refID = instance.recID;
+          this.contracts.status = instance?.status;
+          this.contracts.datas = instance?.datas;
+          this.contracts.stepID = instance?.stepID;
+          this.contracts.refID = instance?.recID;
           this.addPermission(instance?.permissions);
           this.addContracts();
         }
