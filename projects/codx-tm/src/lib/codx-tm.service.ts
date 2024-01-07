@@ -1,5 +1,10 @@
 import { Injectable } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
 import { APICONSTANT } from '@shared/constant/api-const';
 import {
   ApiHttpService,
@@ -8,6 +13,7 @@ import {
   UploadFile,
   UserModel,
   CacheService,
+  Util,
 } from 'codx-core';
 import moment from 'moment';
 import { BehaviorSubject } from 'rxjs';
@@ -680,6 +686,31 @@ export class CodxTMService {
       funcID,
       favsID,
     ]);
+  }
+
+  getFormGroupV2(formName, gridView): Promise<FormGroup> {
+    return new Promise<FormGroup>((resolve, reject) => {
+      this.cache.gridViewSetup(formName, gridView).subscribe((gv: any) => {
+        if (gv) {
+          var arrgv = Object.values(gv) as any[];
+          const group: any = {};
+          arrgv.forEach((element) => {
+            var keytmp = Util.camelize(element.fieldName);
+            var value = null;
+            var type = element.dataType.toLowerCase();
+            if (type === 'bool') value = false;
+            if (type === 'datetime') value = new Date();
+            if (type === 'int' || type === 'decimal') value = 0;
+            group[keytmp] = element.isRequire
+              ? new FormControl(value, Validators.required)
+              : new FormControl(value);
+          });
+          group['updateColumn'] = new FormControl('');
+          var formGroup = new FormGroup(group);
+          resolve(formGroup);
+        }
+      });
+    });
   }
 }
 

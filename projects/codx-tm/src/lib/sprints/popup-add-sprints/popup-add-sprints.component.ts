@@ -20,6 +20,7 @@ import {
   CRUDService,
   DialogData,
   DialogRef,
+  FormModel,
   ImageViewerComponent,
   NotificationsService,
   UploadFile,
@@ -35,7 +36,7 @@ import { AttachmentComponent } from 'projects/codx-common/src/lib/component/atta
   templateUrl: './popup-add-sprints.component.html',
   styleUrls: ['./popup-add-sprints.component.css'],
 })
-export class PopupAddSprintsComponent implements OnInit,AfterViewInit {
+export class PopupAddSprintsComponent implements OnInit, AfterViewInit {
   master: any;
   title = '';
   readOnly = false;
@@ -68,7 +69,6 @@ export class PopupAddSprintsComponent implements OnInit,AfterViewInit {
   @ViewChild('form') form: CodxFormComponent;
   @ViewChild('formlayoutadd') formlayoutadd: CodxFormComponent;
 
-
   @Output() loadData = new EventEmitter();
 
   menuGeneralInfo = {
@@ -86,9 +86,23 @@ export class PopupAddSprintsComponent implements OnInit,AfterViewInit {
     subName: 'Expanded information',
     subText: 'Expanded information',
   };
-  tabInfo:any[] = [];
-  tabContent : any[] =[]
+  tabInfo: any[] = [];
+  tabContent: any[] = [];
   isSaveParent = false;
+  showFooterSprint = false;
+  //FormModel Project
+  project: any;
+  formModelProject: FormModel = {
+    formName: 'TMProjects',
+    gridViewName: 'grvTMProjects',
+    entityName: 'PM_Projects',
+  };
+  formGroupProject: any;
+  grvProject: any;
+  disabledShowInput = false;
+  planceHolderAutoNumber = '';
+  added = false; //da add
+  actionProject = 'add';
 
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
@@ -104,8 +118,12 @@ export class PopupAddSprintsComponent implements OnInit,AfterViewInit {
   ) {
     this.master = JSON.parse(JSON.stringify(dialog.dataService!.dataSelected));
 
-    this.action = dt?.data[1];
-    this.titleAction = dt?.data[2];
+    this.action = dt?.data?.action;
+    this.actionProject = this.action;
+    this.titleAction = dt?.data?.titleAction;
+    this.project = dt?.data?.project;
+    this.grvProject = dt?.data?.grvProject;
+
     this.dialog = dialog;
     this.user = this.authStore.get();
     this.funcID = this.dialog.formModel.funcID;
@@ -121,9 +139,7 @@ export class PopupAddSprintsComponent implements OnInit,AfterViewInit {
           if (res) this.master.iterationID = res;
         });
     }
-    //đã bổ sung nên có thể xóa
-    // if (this.funcID == 'TMT0301') this.master.iterationType == '1';
-    // else if (this.funcID == 'TMT0302') this.master.iterationType == '0';
+
     this.sprintDefaut = this.dialog.dataService.data[0];
     this.dataDefault.push(this.sprintDefaut);
     this.dataOnLoad = this.dialog.dataService.data;
@@ -137,16 +153,35 @@ export class PopupAddSprintsComponent implements OnInit,AfterViewInit {
           this.gridViewSetup = res;
         }
       });
+    if (this.master.iterationType == '1')
+      this.api
+        .execSv<any>(
+          'SYS',
+          'AD',
+          'AutoNumberDefaultsBusiness',
+          'GetFieldAutoNoAsync',
+          ['TMS031', 'PM_Project']
+        )
+        .subscribe((res) => {
+          if (res && !res.stop) {
+            this.disabledShowInput = true;
+            this.cache.message('AD019').subscribe((mes) => {
+              if (mes)
+                this.planceHolderAutoNumber =
+                  mes?.customName || mes?.description;
+            });
+          } else {
+            this.disabledShowInput = false;
+          }
+        });
+
+    this.showFooterSprint = this.master.iterationType == '0';
   }
 
-  ngAfterViewInit(): void {
-  //du an tich hop
-  this.tabInfo=[this.menuGeneralInfo,this.menuExpandedInfo]
-  this.tabContent=[this.tabGeneralInfo,this.tabExpandedInfo]
-  }
+  ngAfterViewInit(): void {}
 
   //#region init
-  ngOnInit(): void {   
+  ngOnInit(): void {
     this.cache.functionList(this.funcID).subscribe((f) => {
       if (f) {
         this.customName = f?.customName;
@@ -169,25 +204,54 @@ export class PopupAddSprintsComponent implements OnInit,AfterViewInit {
   //#endregion
 
   //#region CRUD
-  async saveData(id) {
-    if (
-      this.master.iterationType == '1' &&
-      (this.master.projectID == null || this.master.projectID.trim() == '')
-    ) {
-      // return this.notiService.notifyCode('TM035');
-      let headerText =
-        this.gridViewSetup['ProjectID']?.headerText ?? 'ProjectID';
-      return this.notiService.notifyCode('SYS009', 0, '"' + headerText + '"');
-    }
-    if (
-      this.master.iterationName == null ||
-      this.master.iterationName.trim() == ''
-    ) {
-      let headerText =
-        this.gridViewSetup['IterationName']?.headerText ?? 'IterationName';
-      return this.notiService.notifyCode('SYS009', 0, '"' + headerText + '"');
+  saveData(id) {
+    if (this.master.iterationType == '0') {
+      // //cu
+      // if (
+      //   this.master.iterationType == '1' &&
+      //   (this.master.projectID == null || this.master.projectID.trim() == '')
+      // ) {
+      //   // return this.notiService.notifyCode('TM035');
+      //   let headerText =
+      //     this.gridViewSetup['ProjectID']?.headerText ?? 'ProjectID';
+      //   return this.notiService.notifyCode('SYS009', 0, '"' + headerText + '"');
+      // }
+      if (
+        this.master.iterationName == null ||
+        this.master.iterationName.trim() == ''
+      ) {
+        let headerText =
+          this.gridViewSetup['IterationName']?.headerText ?? 'IterationName';
+        return this.notiService.notifyCode('SYS009', 0, '"' + headerText + '"');
+      }
+    } else if (this.master.iterationType == '1' && !this.isSaveParent) {
+      this.actionSaveProject(true);
     }
 
+    this.actionSaveSprint();
+    // if (this.master.projectID && Array.isArray(this.master.projectID))
+    //   this.master.projectID = this.master.projectID[0];
+    // if (!this.master.isShared) this.master.resources = null;
+    // if (this.resources == '') this.master.resources = null;
+    // else this.master.resources = this.resources;
+    // var isAdd = this.action == 'edit' ? false : true;
+    // if (this.isClickSave) return;
+    // this.isClickSave = true;
+    // if (this.attachment && this.attachment.fileUploadList.length)
+    //   (await this.attachment.saveFilesObservable()).subscribe((res) => {
+    //     if (res) {
+    //       let attachments = Array.isArray(res) ? res.length : 1;
+    //       if (isAdd) this.master.attachments = attachments;
+    //       else this.master.attachments += attachments;
+    //       this.saveMaster(isAdd);
+    //     }
+    //   });
+    // else {
+    //   this.saveMaster(isAdd);
+    // }
+  }
+
+  async actionSaveSprint() {
     if (this.master.projectID && Array.isArray(this.master.projectID))
       this.master.projectID = this.master.projectID[0];
     if (!this.master.isShared) this.master.resources = null;
@@ -415,12 +479,77 @@ export class PopupAddSprintsComponent implements OnInit,AfterViewInit {
   //   return noValidCout;
   // }
 
+  //----------------------------------------------//
+  //--------------du an tich hop-----------------//
+  //----------------------------------------------//
 
-  //du an tich hop
-  tabChange(e){
-   //bat evnt luu du an trươc khi luu sprint
-   if(e?.nextId.toLowerCase() === 'tabexpandedinfo'){
-   this.notiService.notify("Tab change")
+  tabChange(e) {
+    //bat evnt luu du an trươc khi luu sprint
+    if (e?.nextId == 'ExpandedInfo') {
+      if (!this.isSaveParent) {
+        this.actionSaveProject();
+        // if (this.added) {
+        //   this.actionProject = 'edit';
+        // }
+        // this.saveProject().subscribe((pr) => {
+        //   if (pr) {
+        //     debugger;
+        //     this.showFooterSprint = true;
+        //     if (this.action == 'add' || this.action == 'copy') {
+        //       this.master.projectID = pr?.projectID;
+        //       this.master.iterationName = pr?.projectName;
+        //     }
+        //     this.isSaveParent = true;
+        //     this.added = true;
+        //   }
+        // });
+      } else this.showFooterSprint = true;
+    } else {
+      this.showFooterSprint = false;
+    }
   }
+
+  valueChange(e) {
+    if (e.field) {
+      if (this.project[e.field] != e.data) this.isSaveParent = false;
+      this.project[e.field] = e.data;
+    }
   }
+
+  valueChangeDate(e) {
+    if (e.field) this.project[e.field] = e?.data?.formDate;
+  }
+
+  saveProject() {
+    let method = 'AddProjectAsync';
+    if (this.actionProject == 'edit') {
+      method = 'UpdateProjectAsync';
+    }
+    return this.api.exec<any>('PM', 'ProjectsBusiness', method, this.project);
+  }
+
+  actionSaveProject(saveSprint = false) {
+    if (this.added) {
+      this.actionProject = 'edit';
+    }
+    this.saveProject().subscribe((pr) => {
+      if (pr) {
+        this.showFooterSprint = true;
+        if (this.actionProject == 'add' || this.actionProject == 'copy') {
+          this.added = true;
+          this.master.projectID = pr?.projectID;
+          this.master.iterationName = pr?.projectName;
+          this.project = pr;
+        } else if (this.master.iterationName != this.project?.projectName)
+          this.master.iterationName = this.project?.projectName;
+
+        this.isSaveParent = true;
+        if (saveSprint) {
+          this.actionSaveSprint();
+        }
+      }
+    });
+  }
+
+  //-----------------END ----------------------//
 }
