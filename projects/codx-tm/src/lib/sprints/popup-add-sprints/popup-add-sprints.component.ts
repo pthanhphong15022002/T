@@ -226,6 +226,7 @@ export class PopupAddSprintsComponent implements OnInit, AfterViewInit {
       }
     } else if (this.master.iterationType == '1' && !this.isSaveParent) {
       this.actionSaveProject(true);
+      return;
     }
 
     this.actionSaveSprint();
@@ -488,22 +489,8 @@ export class PopupAddSprintsComponent implements OnInit, AfterViewInit {
     if (e?.nextId == 'ExpandedInfo') {
       if (!this.isSaveParent) {
         this.actionSaveProject();
-        // if (this.added) {
-        //   this.actionProject = 'edit';
-        // }
-        // this.saveProject().subscribe((pr) => {
-        //   if (pr) {
-        //     debugger;
-        //     this.showFooterSprint = true;
-        //     if (this.action == 'add' || this.action == 'copy') {
-        //       this.master.projectID = pr?.projectID;
-        //       this.master.iterationName = pr?.projectName;
-        //     }
-        //     this.isSaveParent = true;
-        //     this.added = true;
-        //   }
-        // });
-      } else this.showFooterSprint = true;
+      }
+      this.showFooterSprint = true;
     } else {
       this.showFooterSprint = false;
     }
@@ -513,6 +500,8 @@ export class PopupAddSprintsComponent implements OnInit, AfterViewInit {
     if (e.field) {
       if (this.project[e.field] != e.data) this.isSaveParent = false;
       this.project[e.field] = e.data;
+      if (e.field == 'projectName')
+        this.master.iterationName = this.project?.projectName;
     }
   }
 
@@ -534,14 +523,14 @@ export class PopupAddSprintsComponent implements OnInit, AfterViewInit {
     }
     this.saveProject().subscribe((pr) => {
       if (pr) {
-        this.showFooterSprint = true;
         if (this.actionProject == 'add' || this.actionProject == 'copy') {
           this.added = true;
           this.master.projectID = pr?.projectID;
-          this.master.iterationName = pr?.projectName;
+          //   this.master.iterationName = pr?.projectName;
           this.project = pr;
-        } else if (this.master.iterationName != this.project?.projectName)
-          this.master.iterationName = this.project?.projectName;
+        }
+        //else if (this.master.iterationName != this.project?.projectName)
+        //  this.master.iterationName = this.project?.projectName;
 
         this.isSaveParent = true;
         if (saveSprint) {
