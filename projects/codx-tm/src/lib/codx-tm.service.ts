@@ -712,6 +712,15 @@ export class CodxTMService {
       });
     });
   }
+
+  getProject(projectID) {
+    return this.api.exec<any>(
+      'PM',
+      'ProjectsBusiness',
+      'GetProjectByIDAsync',
+      projectID
+    );
+  }
 }
 
 export class LayoutModel {
