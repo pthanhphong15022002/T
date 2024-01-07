@@ -1,16 +1,16 @@
 <ng-container *ngIf="master.iterationType == '0'">
-<codx-form
-  #form
-  headerText="{{ title }}"
-  subHeaderText=""
-  [body]="body"
-  [footer]="footer"
-  [dialog]="dialog"
-  [formModel]="dialog.formModel"
-  [data]="master"
->
-  <ng-template popup adde #body>
-    <!-- <div class="form-group">
+  <codx-form
+    #form
+    headerText="{{ title }}"
+    subHeaderText=""
+    [body]="body"
+    [footer]="footer"
+    [dialog]="dialog"
+    [formModel]="dialog.formModel"
+    [data]="master"
+  >
+    <ng-template popup adde #body>
+      <!-- <div class="form-group">
       <div class="image-input image-input-outline mb-3" id="kt_user_add_avatar">
         <codx-img
           #imageAvatar
@@ -28,9 +28,9 @@
         </codx-img>
       </div>
     </div> -->
-    <ng-container [ngTemplateOutlet]='avatar'></ng-container>
+      <ng-container [ngTemplateOutlet]="avatar"></ng-container>
 
-    <!-- <div class="form-group" *ngIf="master.iterationType == '1'">
+      <!-- <div class="form-group" *ngIf="master.iterationType == '1'">
       <div class="text-dark fw-bold mb-1">
         <codx-label
           fiedName="ProjectName"
@@ -45,24 +45,24 @@
         (valueChange)="changeProject($event)"
       ></codx-input>
     </div> -->
-    <div class="form-group">
-      <div class="text-dark fw-bold mb-1">
-        <codx-label
-          fiedName="IterationName"
+      <div class="form-group">
+        <div class="text-dark fw-bold mb-1">
+          <codx-label
+            fiedName="IterationName"
+            [formModel]="form.formModel"
+            default="Tên kỳ"
+          ></codx-label>
+        </div>
+        <codx-input
+          field="iterationName"
+          [disabled]="readOnly"
           [formModel]="form.formModel"
-          default="Tên kỳ"
-        ></codx-label>
+          [crrValue]="master.iterationName"
+          (valueChange)="changeData($event)"
+        >
+        </codx-input>
       </div>
-      <codx-input
-        field="iterationName"
-        [disabled]="readOnly"
-        [formModel]="form.formModel"
-        [crrValue]="master.iterationName"
-        (valueChange)="changeData($event)"
-      >
-      </codx-input>
-    </div>
-    <!-- <div class="form-group">
+      <!-- <div class="form-group">
       <div class="text-dark fw-bold mb-1">
         <codx-label
           fiedName="ViewMode"
@@ -193,18 +193,21 @@
         </codx-attachment>
       </div>
     </ng-container> -->
-    <ng-container [ngTemplateOutlet]="bodyContent" [ngTemplateOutletContext]="{$implicit: form }">
-    </ng-container>
-  </ng-template>
-</codx-form>
+      <ng-container
+        [ngTemplateOutlet]="bodyContent"
+        [ngTemplateOutletContext]="{ $implicit: form }"
+      >
+      </ng-container>
+    </ng-template>
+  </codx-form>
 </ng-container>
 
-<ng-container *ngIf="master.iterationType == '1' ">
+<ng-container *ngIf="master.iterationType == '1'">
   <codx-layout-add
     #formlayoutadd
     [title]="title"
-    [tabInfo]="tabInfo"
-    [tabContent]="tabContent"
+    [tabInfo]="[this.menuGeneralInfo, this.menuExpandedInfo]"
+    [tabContent]="[this.tabGeneralInfo, this.tabExpandedInfo]"
     [openMore]="true"
     (tabChange)="tabChange($event)"
     [dialog]="dialog"
@@ -215,12 +218,14 @@
 
   <ng-template #tabGeneralInfo>
     <ng-container [ngTemplateOutlet]="avatar"></ng-container>
-    <ng-container [ngTemplateOutlet]="bodyProject">
-    </ng-container>
+    <ng-container [ngTemplateOutlet]="bodyProject"> </ng-container>
   </ng-template>
-  
+
   <ng-template #tabExpandedInfo>
-    <ng-container [ngTemplateOutlet]="bodyContent" [ngTemplateOutletContext]="{$implicit: formlayoutadd }">
+    <ng-container
+      [ngTemplateOutlet]="bodyContent"
+      [ngTemplateOutletContext]="{ $implicit: formlayoutadd }"
+    >
     </ng-container>
   </ng-template>
 </ng-container>
@@ -381,46 +386,202 @@
 </ng-template>
 
 <ng-template #bodyProject>
-Du asn nè
+  <div class="row">
+    <div class="form-group col-6">
+      <codx-label fiedName="ProjectID" [formModel]="formModelProject">
+      </codx-label>
+      <div>
+        <codx-input
+          field="projectID"
+          type="text"
+          [placeholder]="
+            disabledShowInput
+              ? planceHolderAutoNumber
+              : grvProject['ProjectID']?.description
+          "
+          [disabled]="disabledShowInput"
+          [crrValue]="project?.projectID"
+          (valueChange)="valueChange($event)"
+        >
+        </codx-input>
+      </div>
+    </div>
+    <div class="col-6">
+      <codx-label
+        fiedName="ProjectCategory"
+        default="Phân loại"
+        [formModel]="formModelProject"
+      >
+      </codx-label>
+      <codx-input
+        field="projectCategory"
+        [formModel]="formModelProject"
+        [crrValue]="project?.projectCategory"
+        (valueChange)="valueChange($event)"
+      >
+      </codx-input>
+    </div>
+  </div>
+  <div class="form-group">
+    <codx-label fiedName="ProjectName" [formModel]="formModelProject">
+    </codx-label>
+    <codx-input
+      field="projectName"
+      [formModel]="formModelProject"
+      [crrValue]="project?.projectName"
+      (valueChange)="valueChange($event)"
+    >
+    </codx-input>
+  </div>
+  <div class="form-group">
+    <codx-label
+      fiedName="ProjectGroupID"
+      [formModel]="formModelProject"
+      default="Nhóm dự án"
+    >
+    </codx-label>
+    <codx-input
+      field="projectGroupID"
+      [formModel]="formModelProject"
+      [crrValue]="project?.projectGroupID"
+      (valueChange)="valueChange($event)"
+    >
+    </codx-input>
+  </div>
+  <div class="form-group">
+    <codx-label
+      fiedName="CustomerID"
+      [formModel]="formModelProject"
+      default="Khách hàng"
+    >
+    </codx-label>
+    <codx-input
+      field="customerID"
+      [formModel]="formModelProject"
+      [crrValue]="project?.customerID"
+      (valueChange)="valueChange($event)"
+    >
+    </codx-input>
+  </div>
+  <div class="form-group">
+    <codx-label
+      fiedName="Location"
+      [formModel]="formModelProject"
+      default="Địa điểm"
+    >
+    </codx-label>
+    <codx-input
+      field="location"
+      [formModel]="formModelProject"
+      [crrValue]="project?.location"
+      (valueChange)="valueChange($event)"
+    >
+    </codx-input>
+  </div>
+  <div class="form-group">
+    <codx-label
+      fiedName="ProjectManeger"
+      [formModel]="formModelProject"
+      default="Quản lý dự án"
+    >
+    </codx-label>
+
+    <codx-input
+      field="projectManeger"
+      [formModel]="formModelProject"
+      [crrValue]="project?.projectManeger"
+      (valueChange)="valueChange($event)"
+    >
+    </codx-input>
+  </div>
+  <div class="form-group row">
+    <div class="col-6">
+      <label>
+        <codx-label
+          fiedName="StartDate"
+          [formModel]="formModelProject"
+          default="Ngày bắt đầu"
+        >
+        </codx-label>
+      </label>
+      <codx-input
+        field="startDate"
+        [formModel]="formModelProject"
+        [crrValue]="project?.startDate"
+        (valueChange)="valueChangeDate($event)"
+      >
+      </codx-input>
+    </div>
+    <div class="col-6">
+      <label>
+        <codx-label
+          fiedName="EndDate"
+          [formModel]="formModelProject"
+          default="Ngày kết thúc"
+        >
+        </codx-label>
+      </label>
+      <codx-input
+        [formModel]="formModelProject"
+        [crrValue]="project?.finishDate"
+        field="finishDate"
+        (valueChange)="valueChangeDate($event)"
+      >
+      </codx-input>
+    </div>
+  </div>
+  <div class="form-group">
+    <codx-label
+      fiedName="Memo"
+      [formModel]="formModelProject"
+      default="Ghi chú"
+    >
+    </codx-label>
+    <codx-input
+      field="memo"
+      [formModel]="formModelProject"
+      [crrValue]="project?.memo"
+      (valueChange)="valueChange($event)"
+    >
+      ></codx-input
+    >
+  </div>
 </ng-template>
 
 <ng-template #footer>
-    <div class="d-flex justify-content-between">
-      <codx-input
-        type="checkbox"
-        (valueChange)="valueChangeSharedResource($event)"
-        labelPosition="After"
-        label="Chia sẻ board cho nguồn lực"
-        [crrValue]="master.isShared"
-      ></codx-input>
-    </div>
-    <div class="d-flex justify-content-between mt-4">
-      <button
-        type="button"
-        class="btn btn-light-primary me-3"
-        [disabled]="readOnly"
-        (click)="addFile($event)"
-      >
-        <i class="icon-cloud_upload fs-5"></i
-        ><span>
-          <codx-label
-            name="UploadFile"
-            formName="Tasks"
-            default="Upload File"
-          ></codx-label>
-        </span>
-      </button>
-      <button
-        type="button"
-        class="btn btn-primary"
-        (click)="saveData(master.iterationID)"
-      >
-        <codx-label name="Save" formName="Sprints" default="Lưu"></codx-label>
-      </button>
-    </div>
-  </ng-template>
-
-  
-
-
-
+  <div class="d-flex justify-content-between" *ngIf="showFooterSprint">
+    <codx-input
+      type="checkbox"
+      (valueChange)="valueChangeSharedResource($event)"
+      labelPosition="After"
+      label="Chia sẻ board cho nguồn lực"
+      [crrValue]="master.isShared"
+    ></codx-input>
+  </div>
+  <div class="d-flex justify-content-between mt-4">
+    <button
+      *ngIf="showFooterSprint"
+      type="button"
+      class="btn btn-light-primary me-3"
+      [disabled]="readOnly"
+      (click)="addFile($event)"
+    >
+      <i class="icon-cloud_upload fs-5"></i
+      ><span>
+        <codx-label
+          name="UploadFile"
+          formName="Tasks"
+          default="Upload File"
+        ></codx-label>
+      </span>
+    </button>
+    <div *ngIf="!showFooterSprint"></div>
+    <button
+      type="button"
+      class="btn btn-primary"
+      (click)="saveData(master.iterationID)"
+    >
+      <codx-label name="Save" formName="Sprints" default="Lưu"></codx-label>
+    </button>
+  </div>
+</ng-template>
