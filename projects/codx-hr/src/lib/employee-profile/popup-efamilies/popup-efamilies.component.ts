@@ -30,34 +30,32 @@ import { CalendarView } from '@syncfusion/ej2-angular-calendars';
   templateUrl: './popup-efamilies.component.html',
   styleUrls: ['./popup-efamilies.component.css'],
 })
-export class PopupEFamiliesComponent extends UIComponent implements OnInit, AfterViewInit, OnChanges {
+export class PopupEFamiliesComponent
+  extends UIComponent
+  implements OnInit, AfterViewInit, OnChanges
+{
   @ViewChild('imageUpLoad') imageUpLoad: ImageViewerComponent;
   start: CalendarView = 'Year';
   depth: CalendarView = 'Year';
   format: string = 'MM/yyyy';
   fromdateVal: any;
   todateVal: any;
-  deadMonthVal : any;
+  deadMonthVal: any;
   formModel: FormModel;
-  // formGroup: FormGroup;
   employId: string;
   actionType: string;
   disabledInput = false;
   dialog: DialogRef;
-  fieldHeaderTexts
+  fieldHeaderTexts;
   changedInForm = false;
-  // lstFamilyMembers;
-  // indexSelected;
   isEmployee = false;
   idField = 'RecID';
 
   familyMemberObj;
   headerText: '';
-  // isAfterRender = false;
   @ViewChild('form') form: CodxFormComponent;
   @ViewChild('registerFromDatePicker') registerFromDatePicker: ElementRef;
   @ViewChild('registerToDatePicker') registerToDatePicker: ElementRef;
-  // @ViewChild('listView') listView: CodxListviewComponent;
 
   constructor(
     injector: Injector,
@@ -73,30 +71,27 @@ export class PopupEFamiliesComponent extends UIComponent implements OnInit, Afte
     this.employId = data?.data?.employeeId;
     this.headerText = data?.data?.headerText;
     this.actionType = data?.data?.actionType;
-    if(this.actionType == 'view'){
+    if (this.actionType == 'view') {
       this.disabledInput = true;
     }
     this.familyMemberObj = JSON.parse(
       JSON.stringify(data?.data?.familyMemberObj)
     );
     this.formModel = dialog?.formModel;
-    console.log('formModel nhan vao e fam', this.formModel);
-    
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    debugger
     if (
       changes['deadMonthVal'] &&
-      changes['deadMonthVal']?.currentValue != changes['deadMonthVal']?.previousValue && changes['deadMonthVal']?.previousValue
+      changes['deadMonthVal']?.currentValue !=
+        changes['deadMonthVal']?.previousValue &&
+      changes['deadMonthVal']?.previousValue
     ) {
       this.changedInForm = true;
     }
   }
 
-  ngAfterViewInit(): void {
-
-  }
+  ngAfterViewInit(): void {}
 
   initForm() {
     if (this.actionType == 'add') {
@@ -109,83 +104,48 @@ export class PopupEFamiliesComponent extends UIComponent implements OnInit, Afte
         .subscribe((res: any) => {
           if (res) {
             this.familyMemberObj = res?.data;
-            if(new Date(this.familyMemberObj.registerFrom).getFullYear() == 1){
+            if (
+              new Date(this.familyMemberObj.registerFrom).getFullYear() == 1
+            ) {
               this.familyMemberObj.registerFrom = null;
             }
-            if(new Date(this.familyMemberObj.registerTo).getFullYear() == 1){
+            if (new Date(this.familyMemberObj.registerTo).getFullYear() == 1) {
               this.familyMemberObj.registerTo = null;
             }
             this.familyMemberObj.employeeID = this.employId;
-            // this.formModel.currentData = this.familyMemberObj;
-            // this.form.formGroup.patchValue(this.familyMemberObj);
             this.cr.detectChanges();
-            // this.isAfterRender = true;
           }
         });
     } else {
-      if (this.actionType === 'edit' || this.actionType === 'copy' || this.actionType === 'view') {
-        if (new Date(this.familyMemberObj.registerFrom).getFullYear() == 1)
-        {
+      if (
+        this.actionType === 'edit' ||
+        this.actionType === 'copy' ||
+        this.actionType === 'view'
+      ) {
+        if (new Date(this.familyMemberObj.registerFrom).getFullYear() == 1) {
           this.familyMemberObj.registerFrom = null;
         }
-        if (new Date(this.familyMemberObj.registerTo).getFullYear() == 1)
-        {
+        if (new Date(this.familyMemberObj.registerTo).getFullYear() == 1) {
           this.familyMemberObj.registerTo = null;
         }
         if (this.actionType == 'edit') {
           this.familyMemberObj.modifiedOn = new Date();
         }
-        debugger
-        // this.form.formGroup.patchValue(this.familyMemberObj);
-        // this.formModel.currentData = this.familyMemberObj;
         this.fromdateVal = this.familyMemberObj.registerFrom;
         this.todateVal = this.familyMemberObj.registerTo;
         this.deadMonthVal = this.familyMemberObj.deadMonth;
-        // this.isAfterRender = true;
         this.cr.detectChanges();
       }
     }
-    // if(this.disabledInput == true){
-    //   this.registerToDatePicker.nativeElement.disabled = true;
-    //   this.registerFromDatePicker.nativeElement.disabled = true;
-    // }
   }
   onInit(): void {
-  //   if (!this.formModel) {
-  //   //   this.hrService.getFormModel(this.funcID).then((formModel) => {
-  //   //     if (formModel) {
-  //   //       this.formModel = formModel;
-  //   //       this.hrService
-  //   //         .getFormGroup(this.formModel.formName, this.formModel.gridViewName, this.formModel)
-  //   //         .then((fg) => {
-  //   //           if (fg) {
-  //   //             this.form.formGroup = fg;
-  //   //             this.initForm();
-  //   //           }
-  //   //         });
-  //   //     }
-  //   //   });
-  //   // } else{
-  //   //   this.hrService
-  //   //     .getFormGroup(this.formModel.formName, this.formModel.gridViewName, this.formModel)
-  //   //     .then((fg) => {
-  //   //       if (fg) {
-  //   //         this.form.formGroup = fg;
-  //   //         this.initForm();
-  //   //       }
-  //   //     });
-  //   //   }
-    
-  // }
-  this.initForm();
-  this.hrService.getHeaderText(this.funcID).then((res) => {
-    this.fieldHeaderTexts = res;
-  })
-}
+    this.initForm();
+    this.hrService.getHeaderText(this.funcID).then((res) => {
+      this.fieldHeaderTexts = res;
+    });
+  }
 
   onSaveForm() {
-    debugger
-    
     let today = new Date();
 
     this.familyMemberObj.registerFrom = this.fromdateVal;
@@ -204,18 +164,22 @@ export class PopupEFamiliesComponent extends UIComponent implements OnInit, Afte
     }
 
     let ddd = new Date();
-    if(this.familyMemberObj.passportIssuedOn > ddd.toISOString()){
-      this.notify.notifyCode('HR014',0,this.fieldHeaderTexts['PassportIssuedOn']);
+    if (this.familyMemberObj.passportIssuedOn > ddd.toISOString()) {
+      this.notify.notifyCode(
+        'HR014',
+        0,
+        this.fieldHeaderTexts['PassportIssuedOn']
+      );
       return;
     }
 
-    if(this.familyMemberObj.IDIssuedOn > ddd.toISOString()){
-      this.notify.notifyCode('HR014',0,this.fieldHeaderTexts['IDIssuedOn']);
+    if (this.familyMemberObj.IDIssuedOn > ddd.toISOString()) {
+      this.notify.notifyCode('HR014', 0, this.fieldHeaderTexts['IDIssuedOn']);
       return;
     }
 
-    if(this.familyMemberObj.isEmergency == true){
-      if(!this.familyMemberObj.mobile){
+    if (this.familyMemberObj.isEmergency == true) {
+      if (!this.familyMemberObj.mobile) {
         this.notify.notifyCode('HR013');
         return;
       }
@@ -268,30 +232,12 @@ export class PopupEFamiliesComponent extends UIComponent implements OnInit, Afte
     }
   }
 
-  // click(data) {
-  //   console.log('formdata', data);
-  //   this.familyMemberObj = data;
-  //   this.formModel.currentData = JSON.parse(
-  //     JSON.stringify(this.familyMemberObj)
-  //   );
-  //   // this.indexSelected = this.lstFamilyMembers.findIndex(
-  //   //   (p) => (p.recID = this.familyMemberObj.recID)
-  //   // );
-  //   this.fromdateVal = this.familyMemberObj.registerFrom;
-  //   this.todateVal = this.familyMemberObj.registerTo;
-  //   this.actionType = 'edit';
-  //   this.form.formGroup?.patchValue(this.familyMemberObj);
-  //   this.cr.detectChanges();
-  // }
-
   focus(evt) {
-    debugger
     this.isEmployee = evt.data;
     this.cr.detectChanges();
   }
 
   onSelectEmployee(evt) {
-    debugger
     this.familyMemberObj.relationName =
       evt.component.itemsSelected[0].EmployeeName;
     this.familyMemberObj.gender = evt.component.itemsSelected[0].Gender;
@@ -311,27 +257,31 @@ export class PopupEFamiliesComponent extends UIComponent implements OnInit, Afte
     this.cr.detectChanges();
   }
 
-  // afterRenderListView(evt) {
-  //   this.listView = evt;
-  //   console.log(this.listView);
-  // }
-
   UpdateRegisterFrom(e) {
-    if(new Date(this.fromdateVal).toJSON() != new Date(e).toJSON() && this.fromdateVal){
+    if (
+      new Date(this.fromdateVal).toJSON() != new Date(e).toJSON() &&
+      this.fromdateVal
+    ) {
       this.changedInForm = true;
     }
     this.fromdateVal = e;
   }
   UpdateRegisterTo(e) {
-    if(new Date(this.todateVal).toJSON() != new Date(e).toJSON() && this.todateVal){
+    if (
+      new Date(this.todateVal).toJSON() != new Date(e).toJSON() &&
+      this.todateVal
+    ) {
       this.changedInForm = true;
     }
 
     this.todateVal = e;
   }
 
-  UpdateDeadMonth(e){
-    if(new Date(this.deadMonthVal).toJSON() != new Date(e).toJSON() && this.deadMonthVal){
+  UpdateDeadMonth(e) {
+    if (
+      new Date(this.deadMonthVal).toJSON() != new Date(e).toJSON() &&
+      this.deadMonthVal
+    ) {
       this.changedInForm = true;
     }
     this.deadMonthVal = e;
