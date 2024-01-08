@@ -30,6 +30,12 @@ export class PropertyAttachmentComponent extends BasePropertyComponent{
     this.dataChange.emit(this.data);
   }
 
+  uploadFile(recID:any)
+  {
+    this.attachment.objectId = recID;
+    this.attachment.uploadFile();
+  }
+
   valueChangeAttach(e:any,index:any)
   {
     this.data.documentControl[index][e?.field]= e?.data;
