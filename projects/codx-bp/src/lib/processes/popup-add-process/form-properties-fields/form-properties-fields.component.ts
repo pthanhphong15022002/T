@@ -79,6 +79,7 @@ export class FormPropertiesFieldsComponent implements OnInit {
     tmpField['controlType'] = 'TextBox';
     tmpField['isRequired'] = true;
     tmpField['defaultValue'] = tmpField['title'];
+    this.dataFormat = dataVllTitle;
     lst.push(tmpField);
     this.dataCurrent = tmpField;
     if (this.isForm) {
@@ -383,6 +384,7 @@ export class FormPropertiesFieldsComponent implements OnInit {
       field.dataType = 'String';
       field.controlType = 'TextBox';
       field.refType = 'E';
+      field.description = 'Exp [So_luong] * [Don_gia]';
     }
 
     if (data.value == 'Table') {
@@ -461,6 +463,14 @@ export class FormPropertiesFieldsComponent implements OnInit {
           this.dataCurrent = this.lstStepFields.find(
             (x) => x.fieldType == 'Title'
           );
+          let idxTab = this.table.findIndex((x) =>
+            x.children.some((y) => y.recID == e?.data?.recID)
+          );
+          if (idxTab != -1) {
+            this.table.splice(idxTab, 1);
+          }
+
+          this.dataFormat = this.vllBP002.datas.find((x) => x.value == 'Title');
         } else {
           this.lstStepFields[indx] = e?.data;
           this.dataCurrent = this.lstStepFields[indx];

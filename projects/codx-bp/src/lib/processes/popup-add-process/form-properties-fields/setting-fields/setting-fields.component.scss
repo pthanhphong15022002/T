@@ -176,3 +176,13 @@ codx-input {
 .cdk-drop-list-dragging-over .cdk-drag-dragging {
   transform: translateY(0);
 }
+
+:host ::ng-deep #specialCodxInput {
+  > div.e-float-input.mt-0 {
+    height: 100% !important;
+  }
+
+  > input.e-input.form-control.ng-pristine.ng-valid.codx-text.ng-touched {
+    height: 100% !important;
+  }
+}
