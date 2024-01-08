@@ -62,15 +62,11 @@ export class PopupEbenefitComponent extends UIComponent implements OnInit {
     this.employId = data?.data?.employeeId;
     this.funcID = data?.data?.funcID;
     this.formModel = dialog?.formModel;
-    // this.employeeId = data?.data?.employeeId;
     this.benefitObj = JSON.parse(JSON.stringify(data?.data?.benefitObj));
     this.useForQTNS = data?.data?.useForQTNS;
     if (data.data.empObj) {
       this.employeeObj = JSON.parse(JSON.stringify(data?.data?.empObj));
     }
-
-    // this.indexSelected =
-    //   data?.data?.indexSelected != undefined ? data?.data?.indexSelected : -1;
     this.actionType = data?.data?.actionType;
     if (this.actionType == 'view') {
       this.disabledInput = true;
@@ -79,14 +75,7 @@ export class PopupEbenefitComponent extends UIComponent implements OnInit {
       this.originEmpID = this.employId;
       this.originEmpBeforeSelectMulti = this.employeeObj;
     }
-    //this.listBenefits = data?.data?.listBenefits;
     this.headerText = data?.data?.headerText;
-    // if (this.actionType === 'edit' || this.actionType === 'copy') {
-    //   this.benefitObj = JSON.parse(
-    //     JSON.stringify(this.listBenefits[this.indexSelected])
-    //   );
-    //   this.benefitObj = JSON.parse(JSON.stringify(this.benefitObj));
-    // }
   }
 
   onInit(): void {
