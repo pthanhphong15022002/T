@@ -618,7 +618,6 @@ export class ViewDetailComponent
   formModelAdd = new FormModel();
   dataService: CRUDService;
   openFormFuncID(val: any, datas: any = null, isData = false) {
-    debugger
     let that = this;
     var funcID = val?.functionID;
     if (!datas) datas = this.data;
@@ -940,7 +939,6 @@ export class ViewDetailComponent
           )
           .closed.subscribe((x) => {
             if (x.event) {
-              debugger
               this.data = x.event;
               this.view.dataService.update(x.event).subscribe();
             }
