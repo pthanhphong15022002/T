@@ -56,7 +56,7 @@
       <codx-input
         field="description"
         [formModel]="formModel"
-        [crrValue]="dataCurrent?.Description ?? ''"
+        [crrValue]="dataCurrent?.description ?? ''"
         (valueChange)="valueChange($event)"
       ></codx-input>
     </div>
@@ -862,7 +862,7 @@
         name="lblRatio"
         class="me-2"
       ></codx-label>
-      <div (mouseenter)="closePopover()" class="w-15 me-2">
+      <div (mouseenter)="closePopover()" class="me-2" style="width: 25% !important;">
         <codx-input
           type="number"
           field="minValue"
@@ -879,7 +879,7 @@
         name="lblTo"
         class="me-2"
       ></codx-label>
-      <div (mouseenter)="closePopover()" class="w-15">
+      <div (mouseenter)="closePopover()" style="width: 25% !important;">
         <codx-input
           type="number"
           field="maxValue"
@@ -1283,7 +1283,7 @@
     [disabled]="true"
     format="ed2"
     field="refValue"
-    placeholder="Exp [So_luong] * [Don_gia]"
+    [placeholder]="dataCurrent?.description"
     [crrValue]="dataCurrent?.refValue"
   ></codx-input>
   <div
@@ -1311,13 +1311,13 @@
             [gridViewName]="'grvDynamicFormsTitle' + dataCurrent?.fieldType"
           ></codx-label>
           <div
+            class="h-100"
             cdkDropList
             #tableList="cdkDropList"
             (cdkDropListDropped)="drop($event)"
           >
             <codx-input
               id="specialCodxInput"
-              class="h-100 d-flex"
               type="text"
               [crrValue]="refValueEpress ?? ''"
               placeholder="Exp [So_luong] * [Don_gia]"
