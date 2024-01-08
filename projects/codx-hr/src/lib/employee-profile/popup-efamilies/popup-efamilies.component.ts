@@ -1,21 +1,15 @@
-import { FormGroup } from '@angular/forms';
-import { Dialog } from '@syncfusion/ej2-angular-popups';
 import {
   ChangeDetectorRef,
   Component,
   ElementRef,
-  OnChanges,
   OnInit,
   Optional,
-  SimpleChanges,
   ViewChild,
 } from '@angular/core';
 import { CodxHrService } from '../../codx-hr.service';
 import { Injector, AfterViewInit } from '@angular/core';
 import {
   CodxFormComponent,
-  CodxListviewComponent,
-  CRUDService,
   DialogData,
   DialogRef,
   FormModel,
@@ -23,7 +17,6 @@ import {
   NotificationsService,
   UIComponent,
 } from 'codx-core';
-import { CalendarView } from '@syncfusion/ej2-angular-calendars';
 
 @Component({
   selector: 'lib-popup-efamilies',
@@ -32,12 +25,9 @@ import { CalendarView } from '@syncfusion/ej2-angular-calendars';
 })
 export class PopupEFamiliesComponent
   extends UIComponent
-  implements OnInit, AfterViewInit, OnChanges
+  implements OnInit, AfterViewInit
 {
   @ViewChild('imageUpLoad') imageUpLoad: ImageViewerComponent;
-  start: CalendarView = 'Year';
-  depth: CalendarView = 'Year';
-  format: string = 'MM/yyyy';
   fromdateVal: any;
   todateVal: any;
   deadMonthVal: any;
@@ -49,9 +39,7 @@ export class PopupEFamiliesComponent
   fieldHeaderTexts;
   changedInForm = false;
   isEmployee = false;
-  idField = 'RecID';
-
-  familyMemberObj;
+  data: any;
   headerText: '';
   @ViewChild('form') form: CodxFormComponent;
   @ViewChild('registerFromDatePicker') registerFromDatePicker: ElementRef;
@@ -74,70 +62,38 @@ export class PopupEFamiliesComponent
     if (this.actionType == 'view') {
       this.disabledInput = true;
     }
-    this.familyMemberObj = JSON.parse(
-      JSON.stringify(data?.data?.familyMemberObj)
-    );
+    this.data = data?.data?.familyMemberObj;
+    this.dialog.dataService.dataSelected = data;
     this.formModel = dialog?.formModel;
-  }
-
-  ngOnChanges(changes: SimpleChanges): void {
-    if (
-      changes['deadMonthVal'] &&
-      changes['deadMonthVal']?.currentValue !=
-        changes['deadMonthVal']?.previousValue &&
-      changes['deadMonthVal']?.previousValue
-    ) {
-      this.changedInForm = true;
-    }
   }
 
   ngAfterViewInit(): void {}
 
   initForm() {
     if (this.actionType == 'add') {
-      this.hrService
-        .getDataDefault(
-          this.formModel.funcID,
-          this.formModel.entityName,
-          this.idField
-        )
-        .subscribe((res: any) => {
-          if (res) {
-            this.familyMemberObj = res?.data;
-            if (
-              new Date(this.familyMemberObj.registerFrom).getFullYear() == 1
-            ) {
-              this.familyMemberObj.registerFrom = null;
-            }
-            if (new Date(this.familyMemberObj.registerTo).getFullYear() == 1) {
-              this.familyMemberObj.registerTo = null;
-            }
-            this.familyMemberObj.employeeID = this.employId;
-            this.cr.detectChanges();
-          }
-        });
-    } else {
-      if (
-        this.actionType === 'edit' ||
-        this.actionType === 'copy' ||
-        this.actionType === 'view'
-      ) {
-        if (new Date(this.familyMemberObj.registerFrom).getFullYear() == 1) {
-          this.familyMemberObj.registerFrom = null;
+      this.dialog.dataService.addNew().subscribe((res: any) => {
+        if (res) {
+          this.data = res;
+          this.data.employeeID = this.employId;
         }
-        if (new Date(this.familyMemberObj.registerTo).getFullYear() == 1) {
-          this.familyMemberObj.registerTo = null;
+      });
+    } else if (this.actionType == 'copy') {
+      this.dialog.dataService.copy().subscribe((res: any) => {
+        if (res) {
+          this.data = res;
+          this.data.employeeID = this.employId;
         }
-        if (this.actionType == 'edit') {
-          this.familyMemberObj.modifiedOn = new Date();
+      });
+    } else if (this.actionType == 'edit') {
+      this.dialog.dataService.edit(this.data).subscribe((res: any) => {
+        if (res) {
+          this.data = res;
+          this.data.employeeID = this.employId;
         }
-        this.fromdateVal = this.familyMemberObj.registerFrom;
-        this.todateVal = this.familyMemberObj.registerTo;
-        this.deadMonthVal = this.familyMemberObj.deadMonth;
-        this.cr.detectChanges();
-      }
+      });
     }
   }
+
   onInit(): void {
     this.initForm();
     this.hrService.getHeaderText(this.funcID).then((res) => {
@@ -146,25 +102,13 @@ export class PopupEFamiliesComponent
   }
 
   onSaveForm() {
-    let today = new Date();
-
-    this.familyMemberObj.registerFrom = this.fromdateVal;
-    this.familyMemberObj.registerTo = this.todateVal;
-    this.familyMemberObj.deadMonth = this.deadMonthVal;
-
-    if (this.form.formGroup.invalid) {
-      this.hrService.notifyInvalid(this.form.formGroup, this.formModel);
-      this.form.validation(false);
-      return;
-    }
-
-    if (this.familyMemberObj.birthday >= today.toJSON()) {
+    let now = new Date();
+    if (this.data.birthday >= now.toJSON()) {
       this.notify.notifyCode('HR004');
       return;
     }
 
-    let ddd = new Date();
-    if (this.familyMemberObj.passportIssuedOn > ddd.toISOString()) {
+    if (this.data.passportIssuedOn > now.toISOString()) {
       this.notify.notifyCode(
         'HR014',
         0,
@@ -173,117 +117,62 @@ export class PopupEFamiliesComponent
       return;
     }
 
-    if (this.familyMemberObj.IDIssuedOn > ddd.toISOString()) {
+    if (this.data.IDIssuedOn > now.toISOString()) {
       this.notify.notifyCode('HR014', 0, this.fieldHeaderTexts['IDIssuedOn']);
       return;
     }
 
-    if (this.familyMemberObj.isEmergency == true) {
-      if (!this.familyMemberObj.mobile) {
+    if (this.data.isEmergency == true) {
+      if (!this.data.mobile) {
         this.notify.notifyCode('HR013');
         return;
       }
     }
+    this.form.save(null, 0, '', '', true).subscribe((res) => {
+      if (res.save?.data || res.update?.data) {
+        if (this.imageUpLoad?.imageUpload?.item) {
+          this.imageUpLoad
+            .updateFileDirectReload(this.data.recID)
+            .subscribe((img) => {
+              this.dialog &&
+                this.dialog.close(res.save?.data || res.update?.data);
+            });
+        }
+        return (
+          this.dialog && this.dialog.close(res.save?.data || res.update?.data)
+        );
+      }
 
-    this.familyMemberObj.employeeID = this.employId;
-
-    if (this.actionType === 'add' || this.actionType === 'copy') {
-      this.hrService
-        .AddEmployeeFamilyInfo(this.familyMemberObj)
-        .subscribe((p) => {
-          if (p != null) {
-            this.notify.notifyCode('SYS006');
-            if (this.imageUpLoad?.imageUpload?.item) {
-              this.imageUpLoad
-                .updateFileDirectReload(this.familyMemberObj.recID)
-                .subscribe((img) => {
-                  this.dialog && this.dialog.close(p);
-                });
-            } else {
-              this.dialog && this.dialog.close(p);
-            }
-          } else this.notify.notifyCode('SYS023');
-        });
-    } else {
-      this.hrService
-        .UpdateEmployeeFamilyInfo(this.formModel.currentData)
-        .subscribe((p) => {
-          if (p != null) {
-            if (this.imageUpLoad?.imageUpload?.item) {
-              this.imageUpLoad
-                .updateFileDirectReload(this.familyMemberObj.recID)
-                .subscribe((img) => {
-                  this.dialog && this.dialog.close(p);
-                });
-            } else {
-              this.dialog && this.dialog.close(p);
-            }
-            this.notify.notifyCode('SYS007');
-          } else this.notify.notifyCode('SYS021');
-        });
-    }
+      if (this.imageUpLoad?.imageUpload?.item && this.actionType == 'edit') {
+        this.imageUpLoad
+          .updateFileDirectReload(this.data.recID)
+          .subscribe((img) => {
+            this.dialog &&
+              this.dialog.close(res.save?.data || res.update?.data);
+          });
+      }
+      this.dialog && this.dialog.close();
+    });
   }
-
-  saveImageUpload() {}
 
   changeAvatar(event: any) {
     if (event) {
-      this.familyMemberObj['modifiedOn'] = new Date();
+      this.changedInForm = true;
     }
-  }
-
-  focus(evt) {
-    this.isEmployee = evt.data;
-    this.cr.detectChanges();
   }
 
   onSelectEmployee(evt) {
-    this.familyMemberObj.relationName =
-      evt.component.itemsSelected[0].EmployeeName;
-    this.familyMemberObj.gender = evt.component.itemsSelected[0].Gender;
-    this.familyMemberObj.birthday = evt.component.itemsSelected[0].Birthday;
-    this.familyMemberObj.nationalityID =
-      evt.component.itemsSelected[0].NationalityID;
-    this.familyMemberObj.mobile = evt.component.itemsSelected[0].Mobile;
-    this.familyMemberObj.personalEmail =
-      evt.component.itemsSelected[0].PersonalEmail;
-    this.familyMemberObj.idIssuedOn = evt.component.itemsSelected[0].IssuedOn;
-    this.familyMemberObj.idCardNo = evt.component.itemsSelected[0].IDCardNo;
-    this.familyMemberObj.idIssuedBy = evt.component.itemsSelected[0].IssuedBy;
-    this.familyMemberObj.pitNumber = evt.component.itemsSelected[0].PITNumber;
-    this.familyMemberObj.siRegisterNo =
-      evt.component.itemsSelected[0].SIRegisterNo;
-    this.form.formGroup.patchValue(this.familyMemberObj);
-    this.cr.detectChanges();
-  }
-
-  UpdateRegisterFrom(e) {
-    if (
-      new Date(this.fromdateVal).toJSON() != new Date(e).toJSON() &&
-      this.fromdateVal
-    ) {
-      this.changedInForm = true;
-    }
-    this.fromdateVal = e;
-  }
-  UpdateRegisterTo(e) {
-    if (
-      new Date(this.todateVal).toJSON() != new Date(e).toJSON() &&
-      this.todateVal
-    ) {
-      this.changedInForm = true;
-    }
-
-    this.todateVal = e;
-  }
-
-  UpdateDeadMonth(e) {
-    if (
-      new Date(this.deadMonthVal).toJSON() != new Date(e).toJSON() &&
-      this.deadMonthVal
-    ) {
-      this.changedInForm = true;
-    }
-    this.deadMonthVal = e;
+    this.data.relationName = evt.component.itemsSelected[0].EmployeeName;
+    this.data.gender = evt.component.itemsSelected[0].Gender;
+    this.data.birthday = evt.component.itemsSelected[0].Birthday;
+    this.data.nationalityID = evt.component.itemsSelected[0].NationalityID;
+    this.data.mobile = evt.component.itemsSelected[0].Mobile;
+    this.data.personalEmail = evt.component.itemsSelected[0].PersonalEmail;
+    this.data.idIssuedOn = evt.component.itemsSelected[0].IssuedOn;
+    this.data.idCardNo = evt.component.itemsSelected[0].IDCardNo;
+    this.data.idIssuedBy = evt.component.itemsSelected[0].IssuedBy;
+    this.data.pitNumber = evt.component.itemsSelected[0].PITNumber;
+    this.data.siRegisterNo = evt.component.itemsSelected[0].SIRegisterNo;
+    this.form.formGroup.patchValue(this.data);
   }
 }

@@ -303,10 +303,6 @@ export class PopupEBasicSalariesComponent
           } else {
             this.dialog && this.dialog.close();
           }
-          // if(res == true){
-          //   this.notify.notifyCode('SYS006');
-          //   this.dialog && this.dialog.close();
-          // }
         });
     } else {
       if (this.actionType === 'add' || this.actionType === 'copy') {
