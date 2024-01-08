@@ -127,6 +127,7 @@ export class AppropvalNewsDetailComponent implements OnInit {
       if(res)
       {
         this.data.approveStatus = approvalStatus;
+        this.data.status = approvalStatus =='5' ? '2' : this.data.status;
         //this.hideMFC = true;
         this.notifySvr.notifyCode(mssg);
         this.evtApprovalPost.emit(this.data);
