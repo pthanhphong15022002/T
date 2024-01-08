@@ -168,7 +168,7 @@ export class ContractsComponent extends UIComponent {
 
   statusCodeID:any;
   statusCodeCmt:any;
-
+  processID = '';
   constructor(
     private inject: Injector,
     private cmService: CodxCmService,
@@ -180,6 +180,7 @@ export class ContractsComponent extends UIComponent {
     private changeDetectorRef: ChangeDetectorRef,
     private stepService: StepService,
     private authStore: AuthStore,
+    private activedRouter: ActivatedRoute,
     @Optional() dialog?: DialogRef
   ) {
     super(inject);
@@ -209,6 +210,7 @@ export class ContractsComponent extends UIComponent {
     this.vllStatus = this.grvSetup['Status'].referedValue;
     this.vllApprove = this.grvSetup['ApproveStatus'].referedValue;
     this.tabControl = this.contractService?.footerTab;
+    this.processID = this.activedRouter.snapshot?.queryParams['processID'];
     this.getAccount();
     this.getColumsGrid(this.grvSetup);
   }
@@ -688,7 +690,7 @@ export class ContractsComponent extends UIComponent {
 
   async addContract() {
     this.view.dataService.addNew().subscribe(async (res) => {
-      await this.openPopupContract(null, 'add','contract',null, res);
+      await this.openPopupContract(this.processID, 'add','contract',null, res);
     });
   }
 
@@ -771,9 +773,9 @@ export class ContractsComponent extends UIComponent {
     }
   }
 
-  async openPopupContract(projectID, action, type = 'contract',contractOld, contract) {
+  async openPopupContract(processID, action, type = 'contract',contractOld, contract) {
     let data = {
-      projectID,
+      processID,
       action,
       contract: contract || null,
       account: this.account,

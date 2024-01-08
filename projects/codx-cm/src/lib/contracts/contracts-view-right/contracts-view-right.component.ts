@@ -39,6 +39,8 @@ export class ContractsViewDetailComponent
   @Input() listInsStepStart = [];
   @Input() contract: CM_Contracts;
   @Input() contractAppendix: CM_Contracts;
+  @Input() processID: string;
+
   // @Input() dataSelected: any;
   @Output() changeMF = new EventEmitter<any>();
   @Output() isSusscess = new EventEmitter<any>();
