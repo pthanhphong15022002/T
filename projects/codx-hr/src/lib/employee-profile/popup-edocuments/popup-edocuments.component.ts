@@ -143,7 +143,7 @@ export class PopupEdocumentsComponent extends UIComponent implements OnInit {
         (item2: any) => {}
       );
     }
-    this.form.save(null, 0, '', '', false).subscribe((res: any) => {
+    this.form.save(null, 0, '', '', true).subscribe((res: any) => {
       if (res.hasOwnProperty('save')) {
         if (res.save.hasOwnProperty('data')) {
           if (res.save.data)
@@ -158,36 +158,6 @@ export class PopupEdocumentsComponent extends UIComponent implements OnInit {
       }
       this.dialog && this.dialog.close();
     });
-
-    // if (this.actionType === 'add' || this.actionType === 'copy') {
-    //   // this.hrService.AddEmployeeVisaInfo(this.documentObj).subscribe((p) => {
-    //   //   if (p != null) {
-    //   //     this.documentObj.recID = p.recID;
-    //   //     this.notify.notifyCode('SYS006');
-    //   //     this.dialog && this.dialog.close(p);
-    //   //   } else this.notify.notifyCode('SYS023');
-    //   // });
-    // } else {
-    //   if (this.originDocumentTypeID != this.documentObj.documentTypeID) {
-    //     this.UpdateEDocumentIdEdited(this.formModel.currentData).subscribe(
-    //       (p) => {
-    //         if (p != null) {
-    //           this.notify.notifyCode('SYS007');
-    //           this.dialog && this.dialog.close(p);
-    //         }
-    //         // else this.notify.notifyCode('SYS021');
-    //       }
-    //     );
-    //   } else {
-    //     this.UpdateEDocument(this.formModel.currentData).subscribe((p) => {
-    //       if (p != null) {
-    //         this.notify.notifyCode('SYS007');
-    //         this.dialog && this.dialog.close(p);
-    //       }
-    //       // else this.notify.notifyCode('SYS021');
-    //     });
-    //   }
-    // }
   }
 
   //#region APIs
