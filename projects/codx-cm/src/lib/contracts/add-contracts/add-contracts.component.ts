@@ -41,6 +41,7 @@ import { AttachmentComponent } from 'projects/codx-common/src/lib/component/atta
 import { CodxListContactsComponent } from '../../cmcustomer/cmcustomer-detail/codx-list-contacts/codx-list-contacts.component';
 import { PopupAddCategoryComponent } from 'projects/codx-es/src/lib/setting/category/popup-add-category/popup-add-category.component';
 import { CustomFieldService } from 'projects/codx-share/src/lib/components/codx-input-custom-field/custom-field.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'add-contracts',
@@ -98,7 +99,6 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
   account: any;
   columns: any;
   grvPayments: any;
-  projectID: string;
   dialog!: DialogRef;
   isLoadDate = true;
   checkPhone = true;
@@ -256,7 +256,6 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
     this.action = dt?.data?.action;
     this.account = dt?.data?.account;
     this.parentID = dt?.data?.parentID;
-    this.projectID = dt?.data?.projectID;
     this.processID = dt?.data?.processID;
     this.headerTest = dt?.data?.actionName;
     this.entityName = dt?.data?.entityName;
@@ -366,7 +365,6 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
         this.contracts.pmtMethodID = 'ATM';
         this.contracts.contractDate = new Date();
         this.contracts.effectiveFrom = new Date();
-        this.contracts.projectID = this.projectID;
         this.contracts.applyProcess = false;
         this.contracts.displayed = true;
         this.contracts.currencyID = this.currencyIDDefault;
@@ -376,14 +374,13 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
         this.getAutoNumber();
         this.setDataParent();
         //thêm từ DP
-        if (this.type == 'DP' && this.processID) {
-          this.contracts.processID = this.processID;
-          this.getBusinessLineByProcessContractID(this.processID);
+        if(this.businessLineID){
+          this.getBusinessLineByBusinessLineID(this.contracts?.businessLineID);
+        }else if(this.processID){
+          this.getBusinessLineByProcessContractID(this.processID);       
         }
         // thêm từ task
         if (this.type == 'task') {
-          this.contracts.applyProcess = true;
-          this.getBusinessLineByBusinessLineID(this.contracts?.businessLineID);
           this.mapDataInfield();
         }
         break;
@@ -407,22 +404,24 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
         delete this.contracts['id'];
         this.contracts.status = '1';
         this.contracts.contractID = ''
-        this.contracts.parentID = this.contracts?.recID;
-        this.contracts.recID = Util.uid();
         this.contracts.currencyID = this.currencyIDDefault;
         this.oldIdInstance = this.contracts?.refID;
         this.disabledShowInput = false;
+        this.contracts.parentID = '';
         switch (this.type) {
           case 'extend':
             this.contracts.useType = '5';
             this.disabledUserType = true;
+            this.contracts.parentID = this.contracts?.recID;
             break;
           case 'appendix':
             this.contracts.useType = '3';
             this.contracts.displayed = false;
             this.disabledUserType = true;
+            this.contracts.parentID = this.contracts?.recID;
             break;
         }
+        this.contracts.recID = Util.uid();
         if (this.contracts?.applyProcess && this.contracts?.processID) {
           this.getListInstanceSteps(this.contracts.processID);
         }
@@ -964,17 +963,10 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
       .getIdBusinessLineByProcessContractID([processID])
       .subscribe((res) => {
         if (res) {
-          this.contracts.businessLineID = res;
-        }
-      });
-  }
-
-  getBusinessLineByProcessID(processID) {
-    this.cmService
-      .getIdBusinessLineByProcessID([processID])
-      .subscribe((res) => {
-        if (res) {
-          this.contracts.businessLineID = res;
+          this.contracts.businessLineID = res?.businessLineID || '';
+          this.contracts.processID = res?.processContractID || '';
+          this.contracts.applyProcess = !!this.contracts.processID;
+          this.contracts?.processID && this.getListInstanceSteps(this.contracts?.processID);
         }
       });
   }
@@ -985,8 +977,10 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
         .getBusinessLineByBusinessLineID([businessLine])
         .subscribe((res) => {
           if (res) {
-            this.contracts.processID = res?.processContractID;
-            this.getListInstanceSteps(this.contracts.processID);
+            this.contracts.businessLineID = res?.businessLineID || '';
+          this.contracts.processID = res?.processContractID || '';
+          this.contracts.applyProcess = !!this.contracts.processID;
+          this.contracts?.processID && this.getListInstanceSteps(this.contracts?.processID);
           }
         });
     }
@@ -1210,8 +1204,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
   //#endregion
 
   getListInstanceSteps(processId: any) {
-    let action = this.action == 'extend' || this.action == 'appendix' ? 'copy' : this.action;
-    let data = [processId, this.contracts?.refID, action, '4'];
+    let data = [processId, this.contracts?.refID, this.action, '4'];
     this.cmService.getInstanceSteps(data).subscribe((res) => {
       if (res && res.length > 0) {
         let obj = {
