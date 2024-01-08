@@ -25,6 +25,9 @@ import {
   ViewsComponent,
   UIDetailComponent,
   CodxService,
+  FormModel,
+  CRUDService,
+  CodxFormDynamicComponent,
 } from 'codx-core';
 import { ES_SignFile, File } from 'projects/codx-es/src/lib/codx-es.model';
 import { PopupAddSignFileComponent } from 'projects/codx-es/src/lib/sign-file/popup-add-sign-file/popup-add-sign-file.component';
@@ -60,6 +63,7 @@ import { ApproveProcess } from 'projects/codx-share/src/lib/models/ApproveProces
 import { CodxTasksService } from 'projects/codx-share/src/lib/components/codx-tasks/codx-tasks.service';
 import { CodxTabsComponent } from 'projects/codx-share/src/lib/components/codx-tabs/codx-tabs.component';
 import { CodxCommonService } from 'projects/codx-common/src/lib/codx-common.service';
+import { EditFileComponent } from '../edit-file/edit-file.component';
 
 @Component({
   selector: 'app-view-detail',
@@ -120,7 +124,7 @@ export class ViewDetailComponent
   dataTree = [];
 
   constructor(
-    inject: Injector,
+    private inject: Injector,
     private odService: DispatchService,
     private taskService: CodxTasksService,
     private authStore: AuthStore,
@@ -611,8 +615,10 @@ export class ViewDetailComponent
       if (item.status == 0) this.checkUserPer = item.data;
     });
   }
-
+  formModelAdd = new FormModel();
+  dataService: CRUDService;
   openFormFuncID(val: any, datas: any = null, isData = false) {
+    debugger
     let that = this;
     var funcID = val?.functionID;
     if (!datas) datas = this.data;
@@ -636,6 +642,116 @@ export class ViewDetailComponent
     delete datas.hasChildren;
     delete datas.includeTables;
     switch (funcID) {
+      case 'ODT116':
+        {
+          this.dataService = new CRUDService(this.inject);
+          // this.cache.functionList("ODS25").subscribe(item=>{
+            
+          // })
+          this.api
+          .execSv(
+            'SYS',
+            'ERM.Business.SYS',
+            'ComboboxListBusiness',
+            'GetFormAddNewAsync',
+            "ODS25"
+          )
+          .subscribe((res: any) => {
+            if (res) {
+              //this.settingAddnew = res;
+              var func = res[0];
+              var gridView = res[1];           
+              this.cache.setGridView(func.gridViewName, gridView);
+              var grvSetup = res[2];
+              this.cache.setGridViewSetup(
+                func.formName,
+                func.gridViewName,
+                grvSetup
+              );
+              var entity = res[3];
+              this.formModelAdd.formName = func.formName;
+              this.formModelAdd.gridViewName = func.gridViewName;
+              this.formModelAdd.entityName = entity.physicalName;
+              this.formModelAdd.entityPer = func.entityName;
+              this.formModelAdd.funcID = "ODS25";
+              this.dataService.request.funcID = this.formModelAdd.funcID;
+              this.dataService.request.entityName = this.formModelAdd.entityName;
+              this.dataService.service = "PM";
+              (this.dataService as CRUDService).addNew().subscribe((res) => {
+                res.projectID = datas.refNo;
+                res.projectName = datas.title;
+                res.refType = this.formModel.entityName;
+                res.refNo = datas.refNo
+                this.dataService.dataSelected = res;
+                var obj = {
+                  gridViewName: this.formModelAdd.gridViewName,
+                  formName: this.formModelAdd.formName,
+                  functionID: this.formModelAdd.funcID,
+                  entityName: this.formModelAdd.entityName,
+                  formModel: this.formModelAdd,
+                  dataService: this.dataService,
+                  data: res,
+                };
+                let dialog = this.callfc.openForm(
+                  CodxFormDynamicComponent,
+                  '',
+                  0,
+                  window.innerHeight,
+                  this.formModelAdd.funcID,
+                  obj
+                );
+              
+                dialog.closed.subscribe(res=>{
+                  if(res?.event?.save?.data)
+                  {
+                    let ress = res?.event?.save?.data;
+                    this.data.projectID = ress.projectID;
+                    this.odService
+                    .updateDispatch(
+                      this.data,
+                      this.formModel.funcID,
+                      false,
+                      this.referType,
+                      this.formModel?.entityName
+                    )
+                    .subscribe(res4=>{
+                      // if (res4?.status == 0) this.notifySvr.notifyCode("SYS007")
+                      // else this.notifySvr.notifyCode("SYS021")
+                    })
+                  }
+                })
+              });
+            }
+          });
+          break;
+        }
+      case "ODT117":
+        {
+          let option = new DialogModel();
+          option.IsFull = true;
+          this.callfc
+            .openForm(
+              EditFileComponent,
+              null,
+              600,
+              400,
+              null,
+              { 
+                headerText: val?.data?.customName,
+                data: datas,
+                formModel: this.formModel, 
+              },
+              '',
+              option
+            )
+            .closed.subscribe((x) => {
+              if (x.event) {
+                this.data = x.event;
+                this.view.dataService.update(x.event).subscribe();
+              }
+            });
+          break;
+        }
       //chỉ xem
       case 'read': {
         let option = new SidebarModel();

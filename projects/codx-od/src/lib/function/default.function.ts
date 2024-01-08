@@ -83,11 +83,11 @@ function convertHtmlAgency(agencyName: any , headerText: any , agencies:any = nu
     var name = "";
     if("agencyID" in agencies[0]) name = agencies.map(u=>(u.agencyName)).join(" , ");
     else  name = agencies.map(u=>(u.AgencyName)).join(" , ");
-    var html = '<div class="d-flex align-items-center me-2 mt-1"><span class="icon-i-building icon-16 text-gray-600"></span><span class="ms-1">'+name+'</span></div>';
+    var html = '<div class="d-flex align-items-center me-2 mt-1"><span class="icon-i-building icon-16 text-gray-600"></span><span class="ms-1 line-clamp line-clamp-2">'+name+'</span></div>';
     divE.innerHTML = html;
   }
   else if(agencyName)
-    divE.innerHTML = '<div class="d-flex align-items-center me-2 mt-1"><span class="icon-i-building icon-16 text-gray-600"></span><span class="ms-1">' + agencyName + '</span></div>';
+    divE.innerHTML = '<div class="d-flex align-items-center me-2 mt-1"><span class="icon-i-building icon-16 text-gray-600"></span><span class="ms-1 line-clamp line-clamp-2">' + agencyName + '</span></div>';
   else
   {
     divE.classList.add("text-gray-400")

@@ -48,9 +48,9 @@
 }
 
 .emtry-table {
-  height: 35px;
+  height: 40px;
   width: 80%;
-  background-color: #e8e8e8;
+  background-color: #f3fbfc;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -96,5 +96,93 @@ th {
 codx-input {
   .input.e-input {
     border: none !important;
+  }
+}
+
+.bg-item-lightest {
+  background-color: var(--primary-lightest);
+}
+.rd-3px {
+  border-radius: 3px;
+}
+.mw-300px {
+  max-width: 300px;
+}
+.bp-mw-accordion-a {
+  .e-accordion .e-acrdn-item.e-selected > .e-acrdn-header:focus {
+    box-shadow: none !important;
+  }
+  .e-accordion,
+  .e-accordion .e-acrdn-item.e-select.e-selected:first-child,
+  .e-accordion .e-acrdn-item.e-select {
+    border: none !important;
+  }
+  .e-accordion .e-acrdn-item.e-selected.e-select > .e-acrdn-header {
+    background-color: transparent !important;
+    border: none !important;
+  }
+  .e-accordion
+    .e-acrdn-item.e-selected
+    > .e-acrdn-header
+    > .e-acrdn-header-content {
+    color: black !important;
+  }
+}
+
+.e-float-input {
+  height: 100% !important;
+}
+
+.border-table {
+  height: 40px;
+  width: 80%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px dashed #000;
+  padding: 7px;
+  margin-top: 10px;
+}
+.cdk-drag,
+.cdk-drop-list {
+  transition: background-color 0.3s;
+}
+
+.cdk-drag-dragging {
+  opacity: 0.8;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+.cdk-drop-list-dragging-over {
+  background-color: #ecf0f1;
+}
+
+.cdk-drop-list-dragging-entered {
+  background-color: rgba(52, 152, 219, 0.1);
+}
+
+.cdk-drag-placeholder {
+  border: 2px dashed #3498db;
+  background-color: #ecf0f1;
+}
+.cdk-drag-dragging {
+  transition: transform 0.3s ease-in-out;
+}
+
+.cdk-drag-dragging {
+  transform: translateY(-10px);
+}
+
+.cdk-drop-list-dragging-over .cdk-drag-dragging {
+  transform: translateY(0);
+}
+
+:host ::ng-deep #specialCodxInput {
+  > div.e-float-input.mt-0 {
+    height: 100% !important;
+  }
+
+  > input.e-input.form-control.ng-pristine.ng-valid.codx-text.ng-touched {
+    height: 100% !important;
   }
 }

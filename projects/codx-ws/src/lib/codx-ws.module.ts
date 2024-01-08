@@ -76,6 +76,11 @@ import { AcModule } from 'projects/codx-ac/src/public-api';
 import { CodxHRModule } from 'projects/codx-hr/src/public-api';
 import { Layout2Component } from './_layout/layout2/layout2.component';
 import { HomeComponent as HomeDMComponent } from 'projects/codx-dm/src/lib/home/home.component';
+import { CardsComponent } from 'projects/codx-fd/src/lib/cards/cards.component';
+import { SignFileComponent } from 'projects/codx-es/src/lib/sign-file/sign-file.component';
+import { CalendarsComponent } from 'projects/codx-cm/src/lib/calendars/calendars.component';
+import { SprintsComponent } from 'projects/codx-tm/src/lib/sprints/sprints.component';
+import { TMMeetingsComponent } from 'projects/codx-tm/src/lib/tmmeetings/tmmeetings.component';
 //import { CodxWpV2Module } from 'projects/codx-wp/src/lib/codx-wp-v2.module';
 const routes: Routes = [
   {
@@ -101,16 +106,7 @@ const routes: Routes = [
         path: 'wsapprovals/:funcID',
         component: ApprovalsComponentWS,
       },
-      {
-        path: 'bookingrooms/:funcID',
-        data: { noReuse: true },
-        component: EPBookingComponent,
-      },
-      {
-        path: 'bookingcars/:funcID',
-        data: { noReuse: true },
-        component: EPBookingComponent,
-      },
+     
       {
         path: 'bookingstationery/:funcID',
         data: { noReuse: true },
@@ -145,54 +141,35 @@ const routes: Routes = [
     //     path: 'employeedetail/:funcID',
     //     component: EmployeeInfoDetailComponent,
     //   },
-      {
-        path: '',
-        component: LayoutOnlyHeaderComponent,
-        children: [
-          {
-            path: 'employeedetail/:funcID',
-            component: EmployeeInfoDetailComponent,
-          },
-        ],
-      },
       
       {
         path: 'taskextends/:funcID',
         component: TaskExtendsComponent,
       },
-      //CM mục tiêu + cơ hội
-      {
-        path: 'targets/:funcID',
-        component: TargetsComponent,
-        data: { noReuse: true },
-      },
-      {
-        path: 'deals/:funcID',
-        component: DealsComponent,
-        // data: { noReuse: true },
-      },
-      {
-        path: '',
-        component: LayoutNoasideAcComponent,
-        children: [
-          {
-            path: 'requestsforadvances/:funcID',
-            component: AdvancePaymentRequestComponent,
-            data: { noReuse: true },
-          },
-        ],
-      },
-      {
-        path: '',
-        component: LayoutNoasideAcComponent,
-        children: [
-          {
-            path: 'paymentorders/:funcID',
-            component: PaymentOrderComponent,
-            data: { noReuse: true },
-          },
-        ],
-      },
+      
+      
+      // {
+      //   path: '',
+      //   component: LayoutNoasideAcComponent,
+      //   children: [
+      //     {
+      //       path: 'requestsforadvances/:funcID',
+      //       component: AdvancePaymentRequestComponent,
+      //       data: { noReuse: true },
+      //     },
+      //   ],
+      // },
+      // {
+      //   path: '',
+      //   component: LayoutNoasideAcComponent,
+      //   children: [
+      //     {
+      //       path: 'paymentorders/:funcID',
+      //       component: PaymentOrderComponent,
+      //       data: { noReuse: true },
+      //     },
+      //   ],
+      // },
       // Phiếu chi
       // {
       //   path: 'cashpayments/:funcID',
@@ -270,6 +247,80 @@ const routes: Routes = [
             path: 'files/:funcID',
             component: HomeDMComponent,
           },
+          //Tuyên dương
+          {
+            path: 'cards/:funcID',
+            component: CardsComponent,
+          },
+          //Trình ký
+          {
+            path: 'signfiles/:funcID',
+            component: SignFileComponent,
+          },
+          {
+            path: 'wsbookingrooms/:funcID',
+            data: { noReuse: true },
+            component: EPBookingComponent,
+          },
+          {
+            path: 'wsbookingcars/:funcID',
+            data: { noReuse: true },
+            component: EPBookingComponent,
+          },
+          {
+            path: 'wsbookingstationery/:funcID',
+            data: { noReuse: true },
+            component: EPBookingComponent,
+          },
+          {
+            path: 'requestsforadvances/:funcID',
+            component: AdvancePaymentRequestComponent,
+            data: { noReuse: true },
+          },
+          {
+            path: 'requestsforadvances/:funcID',
+            component: AdvancePaymentRequestComponent,
+            data: { noReuse: true },
+          },
+          {
+            path: 'paymentorders/:funcID',
+            component: PaymentOrderComponent,
+            data: { noReuse: true },
+          },
+          //CM mục tiêu + cơ hội
+          {
+            path: 'targets/:funcID',
+            component: TargetsComponent,
+            data: { noReuse: true },
+          },
+          {
+            path: 'wsdeals/:funcID',
+            component: DealsComponent,
+            // data: { noReuse: true },
+          },
+          {
+            path: 'calendars/:funcID',
+            component: CalendarsComponent,
+            data: { noReuse: true },
+          },
+          {
+            path: 'viewboards/:funcID',
+            component: SprintsComponent,
+          },
+          {
+            path: 'meeting/:funcID',
+            component: TMMeetingsComponent,
+          },
+          {
+            path: 'employeedetail/:funcID',
+            component: EmployeeInfoDetailComponent,
+          },
+          // //Tìm kiếm
+          // {
+          //   path: 'searching/:funcID',
+          //   component: SearchingComponent,
+          // },
+          
         ]
       },
       {
