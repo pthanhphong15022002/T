@@ -99,7 +99,6 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
   account: any;
   columns: any;
   grvPayments: any;
-  projectID: string;
   dialog!: DialogRef;
   isLoadDate = true;
   checkPhone = true;
@@ -257,7 +256,6 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
     this.action = dt?.data?.action;
     this.account = dt?.data?.account;
     this.parentID = dt?.data?.parentID;
-    this.projectID = dt?.data?.projectID;
     this.processID = dt?.data?.processID;
     this.headerTest = dt?.data?.actionName;
     this.entityName = dt?.data?.entityName;
@@ -367,7 +365,6 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
         this.contracts.pmtMethodID = 'ATM';
         this.contracts.contractDate = new Date();
         this.contracts.effectiveFrom = new Date();
-        // this.contracts.projectID = this.projectID;
         this.contracts.applyProcess = false;
         this.contracts.displayed = true;
         this.contracts.currencyID = this.currencyIDDefault;
@@ -377,14 +374,20 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
         this.getAutoNumber();
         this.setDataParent();
         //thêm từ DP
+        if(this.businessLineID){
+          this.getBusinessLineByBusinessLineID(this.contracts?.businessLineID);
+        }else if(this.processID){
+          this.getBusinessLineByProcessContractID(this.processID);       
+        }
+
         if (this.processID) {
           this.contracts.processID = this.processID;
-          this.getBusinessLineByProcessContractID(this.processID);
+          // this.getBusinessLineByProcessContractID(this.processID);
         }
         // thêm từ task
         if (this.type == 'task') {
           this.contracts.applyProcess = true;
-          this.getBusinessLineByBusinessLineID(this.contracts?.businessLineID);
+          // this.getBusinessLineByBusinessLineID(this.contracts?.businessLineID);
           this.mapDataInfield();
         }
         break;
@@ -967,17 +970,9 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
       .getIdBusinessLineByProcessContractID([processID])
       .subscribe((res) => {
         if (res) {
-          this.contracts.businessLineID = res;
-        }
-      });
-  }
-
-  getBusinessLineByProcessID(processID) {
-    this.cmService
-      .getIdBusinessLineByProcessID([processID])
-      .subscribe((res) => {
-        if (res) {
-          this.contracts.businessLineID = res;
+          this.contracts.businessLineID = res?.businessLineID || '';
+          this.contracts.processID = res?.processContractID || '';
+          this.contracts?.processID && this.getListInstanceSteps(this.contracts?.processID);
         }
       });
   }
@@ -988,8 +983,9 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
         .getBusinessLineByBusinessLineID([businessLine])
         .subscribe((res) => {
           if (res) {
-            this.contracts.processID = res?.processContractID;
-            this.getListInstanceSteps(this.contracts.processID);
+            this.contracts.businessLineID = res?.businessLineID || '';
+          this.contracts.processID = res?.processContractID || '';
+          this.contracts?.processID && this.getListInstanceSteps(this.contracts?.processID);
           }
         });
     }
