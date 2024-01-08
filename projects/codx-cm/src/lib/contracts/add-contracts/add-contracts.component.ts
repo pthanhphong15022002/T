@@ -379,15 +379,8 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
         }else if(this.processID){
           this.getBusinessLineByProcessContractID(this.processID);       
         }
-
-        if (this.processID) {
-          this.contracts.processID = this.processID;
-          // this.getBusinessLineByProcessContractID(this.processID);
-        }
         // thêm từ task
         if (this.type == 'task') {
-          this.contracts.applyProcess = true;
-          // this.getBusinessLineByBusinessLineID(this.contracts?.businessLineID);
           this.mapDataInfield();
         }
         break;
@@ -972,6 +965,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
         if (res) {
           this.contracts.businessLineID = res?.businessLineID || '';
           this.contracts.processID = res?.processContractID || '';
+          this.contracts.applyProcess = !!this.contracts.processID;
           this.contracts?.processID && this.getListInstanceSteps(this.contracts?.processID);
         }
       });
@@ -985,6 +979,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
           if (res) {
             this.contracts.businessLineID = res?.businessLineID || '';
           this.contracts.processID = res?.processContractID || '';
+          this.contracts.applyProcess = !!this.contracts.processID;
           this.contracts?.processID && this.getListInstanceSteps(this.contracts?.processID);
           }
         });

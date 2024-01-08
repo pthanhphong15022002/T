@@ -8,6 +8,7 @@ import {
   AfterViewInit,
   SimpleChanges,
   ViewChild,
+  TemplateRef,
 } from '@angular/core';
 import {
   ApiHttpService,
@@ -16,6 +17,7 @@ import {
   CallFuncService,
   DataRequest,
   DialogModel,
+  DialogRef,
   FormModel,
   NotificationsService,
   Util,
@@ -34,6 +36,7 @@ import { AttachmentComponent } from 'projects/codx-common/src/lib/component/atta
 })
 export class SettingFieldsComponent implements AfterViewInit {
   @ViewChild('attachment') attachment: AttachmentComponent;
+  @ViewChild('itemExpression') itemExpression: TemplateRef<any>;
   @Input() dataFormat: any;
   @Input() dataCurrent: any = {};
   @Input() lstFields = [];
@@ -44,6 +47,8 @@ export class SettingFieldsComponent implements AfterViewInit {
   };
   @Input() process: any;
   @Output() dataValueEmit = new EventEmitter<any>();
+  dialogExpress!: DialogRef;
+
   serviceTemp = 'SYS';
   assemblyNameTemp = 'SYS';
   classNameTemp = 'ValueListBusiness';
@@ -88,6 +93,9 @@ export class SettingFieldsComponent implements AfterViewInit {
   };
   showFile = false;
   id: any;
+  titleAction = '';
+  lstEpresssions = [];
+  refValueEpress: string;
   constructor(
     private detectorRef: ChangeDetectorRef,
     private cache: CacheService,
@@ -711,13 +719,11 @@ export class SettingFieldsComponent implements AfterViewInit {
   //#endregion
 
   //#region setting attachment
-  onChangeText(e, indx){
+  onChangeText(e, indx) {
     if (!e.value || e.value.trim() == '') return;
     if (indx != -1) {
       this.documentControls[indx].title = e?.value;
-      this.dataCurrent.documentControl = JSON.stringify(
-        this.documentControls
-      );
+      this.dataCurrent.documentControl = JSON.stringify(this.documentControls);
       this.dataValueEmit.emit({ data: this.dataCurrent });
     } else {
       this.document.title = e?.value;
@@ -755,7 +761,6 @@ export class SettingFieldsComponent implements AfterViewInit {
     }
     this.detectorRef.detectChanges();
   }
-
 
   async uploadFile(indx) {
     if (indx != -1) {
@@ -829,6 +834,79 @@ export class SettingFieldsComponent implements AfterViewInit {
       return input.substring(0, index);
     }
     return input;
+  }
+  //#endregion
+
+  //#region setting Expression
+  openSettingExpression() {
+    this.refValueEpress = this.dataCurrent.refValue
+      ? JSON.parse(JSON.stringify(this.dataCurrent.refValue))
+      : '';
+    let option = new DialogModel();
+    option.zIndex = 1010;
+    this.titleAction = 'Thiết lập' + ' ' + this.dataFormat.text;
+    this.lstEpresssions = this.lstFields.filter(
+      (x) => x.fieldType != 'Expression'
+    );
+    this.dialogExpress = this.callFc.openForm(
+      this.itemExpression,
+      '',
+      700,
+      700,
+      null,
+      null,
+      null,
+      option
+    );
+    this.dialogExpress.closed.subscribe((ele) => {
+      if (ele && ele?.event) {
+        this.dataCurrent.refValue = JSON.parse(JSON.stringify(ele?.event));
+        this.notiSv.notifyCode('SYS007');
+        this.dataValueEmit.emit({ data: this.dataCurrent });
+        this.detectorRef.detectChanges();
+      }
+    });
+  }
+
+  onSave() {
+    this.dialogExpress.close(this.refValueEpress);
+  }
+
+  valueChangeExp(e) {
+    if (e && e?.data) {
+      if (e?.data != this.refValueEpress) this.refValueEpress = e?.data;
+    }
+    this.detectorRef.detectChanges();
+  }
+
+  drop(event) {
+    if (event.previousContainer !== event.container) {
+      let ref = this.refValueEpress?.toString();
+      let data = JSON.parse(
+        JSON.stringify(event.previousContainer.data[event.previousIndex])
+      );
+      console.log(data);
+      ref = this.refValueEpress
+        ? this.refValueEpress.toString() +
+          ' ' +
+          '[' +
+          data?.fieldName.toString() +
+          ']'
+        : '[' + data?.fieldName.toString() + ']';
+      this.refValueEpress = ref;
+      this.detectorRef.detectChanges();
+    }
+  }
+
+  selectItemEpr(data) {
+    this.refValueEpress = this.refValueEpress
+      ? '[' +
+        this.refValueEpress.toString() +
+        ' ' +
+        data?.fieldName.toString() +
+        ']'
+      : '[' + data?.fieldName.toString() + ']';
+    this.detectorRef.detectChanges();
   }
   //#endregion
 }

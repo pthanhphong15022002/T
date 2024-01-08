@@ -81,7 +81,7 @@
   </ng-container>
   <ng-container *ngSwitchCase="'Expression'">
     <ng-container
-      *ngTemplateOutlet="text; context: { $implicit: subItem }"
+      *ngTemplateOutlet="expression; context: { $implicit: subItem }"
     ></ng-container>
   </ng-container>
   <ng-container *ngSwitchCase="'Phone'">
@@ -95,8 +95,8 @@
 <!--Form-->
 <ng-template #title let-data>
   <div class="d-flex flex-column w-100 py-4">
-    <span class="fw-bold fs-5">{{data.title}}</span>
-    <span class="text-muted mt-2">{{data.description }}</span>
+    <span class="fw-bold fs-5">{{ data.title }}</span>
+    <span class="text-muted mt-2">{{ data.description }}</span>
   </div>
 </ng-template>
 <!-- Văn bản || Số -->
@@ -537,18 +537,16 @@
       <span class="fw-bold">{{ data.title }}</span>
       <span class="text-danger ms-2" *ngIf="data?.isRequired">(*)</span>
     </div>
-    <div class="d-flex align-items-center justify-content-between w-100 mb-4">
-      <codx-input
-        class="border mt-2 px-4 py-3 rd-3px"
-        [field]="data?.fieldName"
-        type="text"
-        [require]="data?.isRequired"
-        [placeholder]="data?.description || ''"
-        [crrValue]="data?.defaultValue ?? ''"
-        [disabled]="true"
-      ></codx-input>
-      <i class="icon-calculate text-dark"></i>
-    </div>
+    <codx-input
+      *ngIf="data?.fieldType != 'Number'"
+      class="w-100 border mt-2 px-4 py-3 rd-3px"
+      [field]="data?.fieldName"
+      type="text"
+      [require]="data?.isRequired"
+      [placeholder]="data?.description || ''"
+      [crrValue]="data?.refValue"
+      [disabled]="true"
+    ></codx-input>
   </div>
 </ng-template>
 
