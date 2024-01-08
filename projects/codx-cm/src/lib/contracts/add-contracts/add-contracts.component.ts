@@ -407,22 +407,24 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
         delete this.contracts['id'];
         this.contracts.status = '1';
         this.contracts.contractID = ''
-        this.contracts.parentID = this.contracts?.recID;
-        this.contracts.recID = Util.uid();
         this.contracts.currencyID = this.currencyIDDefault;
         this.oldIdInstance = this.contracts?.refID;
         this.disabledShowInput = false;
+        this.contracts.parentID = '';
         switch (this.type) {
           case 'extend':
             this.contracts.useType = '5';
             this.disabledUserType = true;
+            this.contracts.parentID = this.contracts?.recID;
             break;
           case 'appendix':
             this.contracts.useType = '3';
             this.contracts.displayed = false;
             this.disabledUserType = true;
+            this.contracts.parentID = this.contracts?.recID;
             break;
         }
+        this.contracts.recID = Util.uid();
         if (this.contracts?.applyProcess && this.contracts?.processID) {
           this.getListInstanceSteps(this.contracts.processID);
         }
@@ -1210,8 +1212,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
   //#endregion
 
   getListInstanceSteps(processId: any) {
-    let action = this.action == 'extend' || this.action == 'appendix' ? 'copy' : this.action;
-    let data = [processId, this.contracts?.refID, action, '4'];
+    let data = [processId, this.contracts?.refID, this.action, '4'];
     this.cmService.getInstanceSteps(data).subscribe((res) => {
       if (res && res.length > 0) {
         let obj = {
