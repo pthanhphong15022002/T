@@ -530,7 +530,7 @@ export class ContractsViewDetailComponent
   getListCOntractByParentID(){
     this.listContractInParentID = [];
     if(this.contract.parentID) {
-      this.contractService.getContractByParentID(this.contract.parentID).subscribe((res)=>{
+      this.contractService.getContractByParentID([this.contract?.recID, this.contract.parentID]).subscribe((res)=>{
         if(res){
           this.listContractInParentID = res;
         }
