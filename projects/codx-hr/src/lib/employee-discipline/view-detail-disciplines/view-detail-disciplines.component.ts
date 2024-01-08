@@ -36,7 +36,7 @@ export class ViewDetailDisciplinesComponent {
     private notify: NotificationsService,
     private shareService: CodxShareService,
     private codxODService: CodxOdService,
-    public codxService : CodxService
+    public codxService: CodxService
   ) {}
 
   @ViewChild('attachment') attachment;
@@ -68,22 +68,7 @@ export class ViewDetailDisciplinesComponent {
     });
   }
 
-  ngOnChanges(changes: SimpleChanges) {
-    // if (
-    //   changes?.itemDetail &&
-    //   changes.itemDetail?.previousValue?.recID !=
-    //     changes.itemDetail?.currentValue?.recID
-    // ) {
-    //   this.hrService
-    //     .loadDataEDisciplines(changes.itemDetail?.currentValue?.recID)
-    //     .subscribe((res) => {
-    //       if (res) {
-    //         this.itemDetail = res;
-    //         this.df.detectChanges();
-    //       }
-    //     });
-    // }
-  }
+  ngOnChanges(changes: SimpleChanges) {}
 
   changeDataMF(e: any, data: any) {
     this.hrService.handleShowHideMF(e, data, this.view.formModel);

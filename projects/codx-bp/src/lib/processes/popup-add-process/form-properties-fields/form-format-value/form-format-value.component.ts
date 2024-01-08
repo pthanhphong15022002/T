@@ -18,7 +18,7 @@ import { ApiHttpService, CallFuncService, FormModel } from 'codx-core';
 @Component({
   selector: 'codx-form-format-value',
   templateUrl: './form-format-value.component.html',
-  styleUrls: ['./form-format-value.component.css'],
+  styleUrls: ['./form-format-value.component.scss'],
 })
 export class FormFormatValueComponent implements OnInit {
   @Input() subItem: any;

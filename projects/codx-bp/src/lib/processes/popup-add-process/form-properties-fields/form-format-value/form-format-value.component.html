@@ -1,4 +1,9 @@
 <ng-container [ngSwitch]="subItem.fieldType">
+  <ng-container *ngSwitchCase="'Title'">
+    <ng-container
+      *ngTemplateOutlet="title; context: { $implicit: subItem }"
+    ></ng-container>
+  </ng-container>
   <ng-container *ngSwitchCase="'SubTitle'">
     <ng-container
       *ngTemplateOutlet="text; context: { $implicit: subItem }"
@@ -87,9 +92,16 @@
   <ng-container *ngSwitchDefault>...</ng-container>
 </ng-container>
 
+<!--Form-->
+<ng-template #title let-data>
+  <div class="d-flex flex-column w-100 py-4">
+    <span class="fw-bold fs-5">{{data.title}}</span>
+    <span class="text-muted mt-2">{{data.description }}</span>
+  </div>
+</ng-template>
 <!-- Văn bản || Số -->
 <ng-template #text let-data>
-  <div class="d-flex flex-column w-100">
+  <div class="d-flex flex-column w-100 mb-4">
     <div class="d-flex align-items-center" *ngIf="isShowTextHeader">
       <i class="icon-grid_round me-2 cursor-move" cdkDragHandle></i>
       <span class="fw-bold">{{ data.title }}</span>
@@ -122,7 +134,7 @@
 
 <!-- Danh sách-->
 <ng-template #valueList let-data>
-  <div class="d-flex flex-column w-100">
+  <div class="d-flex flex-column w-100 mb-4">
     <div class="d-flex align-items-center" *ngIf="isShowTextHeader">
       <i class="icon-grid_round me-2 cursor-move" cdkDragHandle></i>
       <span class="fw-bold">{{ data.title }}</span>
@@ -198,7 +210,7 @@
 
 <!-- ComboBox || User -->
 <ng-template #combobox let-data>
-  <div class="d-flex flex-column w-100">
+  <div class="d-flex flex-column w-100 mb-4">
     <div class="d-flex justify-content-between">
       <div class="d-flex align-items-center" *ngIf="isShowTextHeader">
         <i class="icon-grid_round me-2 cursor-move" cdkDragHandle></i>
@@ -244,7 +256,7 @@
 
 <!-- DateTime -->
 <ng-template #datetime let-data>
-  <div class="d-flex flex-column w-100">
+  <div class="d-flex flex-column w-100 mb-4">
     <div class="d-flex align-items-center" *ngIf="isShowTextHeader">
       <i class="icon-grid_round me-2 cursor-move" cdkDragHandle></i>
       <span class="fw-bold">{{ data.title }}</span>
@@ -264,7 +276,7 @@
 
 <!-- attachment -->
 <ng-template #attachment let-data>
-  <div class="d-flex flex-column w-100">
+  <div class="d-flex flex-column w-100 mb-4">
     <div class="d-flex align-items-center" *ngIf="isShowTextHeader">
       <i class="icon-grid_round me-2 cursor-move" cdkDragHandle></i>
       <span class="fw-bold">{{ data.title }}</span>
@@ -341,7 +353,7 @@
 
 <!-- Share -->
 <ng-template #share let-data>
-  <div class="d-flex flex-column w-100">
+  <div class="d-flex flex-column w-100 mb-4">
     <div class="d-flex align-items-center" *ngIf="isShowTextHeader">
       <i class="icon-grid_round me-2 cursor-move" cdkDragHandle></i>
       <span class="fw-bold">{{ data.title }}</span>
@@ -358,7 +370,7 @@
 
 <!-- Rank -->
 <ng-template #rank let-data>
-  <div class="d-flex flex-column w-100">
+  <div class="d-flex flex-column w-100 mb-4">
     <div class="d-flex align-items-center" *ngIf="isShowTextHeader">
       <i class="icon-grid_round me-2 cursor-move" cdkDragHandle></i>
       <span class="fw-bold">{{ data.title }}</span>
@@ -405,7 +417,7 @@
 
 <!-- Table -->
 <ng-template #tables let-data>
-  <div class="d-flex flex-column w-100">
+  <div class="d-flex flex-column w-100 mb-4">
     <div class="d-flex align-items-center" *ngIf="isShowTextHeader">
       <i class="icon-grid_round me-2 cursor-move" cdkDragHandle></i>
       <span class="fw-bold">{{ data.title }}</span>
@@ -445,7 +457,7 @@
 
 <!-- Progress -->
 <ng-template #progress let-data>
-  <div class="d-flex flex-column w-100">
+  <div class="d-flex flex-column w-100 mb-4">
     <div class="d-flex align-items-center" *ngIf="isShowTextHeader">
       <i class="icon-grid_round me-2 cursor-move" cdkDragHandle></i>
       <span class="fw-bold">{{ data.title }}</span>
@@ -456,7 +468,7 @@
         <div [attr.data-value]="0">0%</div>
         <div [attr.data-value]="100">100%</div>
       </div>
-      <div class="h-10px position-relative bg-gray-200 rounded-4 w-100">
+      <div class="h-10px position-relative bg-gray-200 rounded-4 w-100 mb-4">
         <div
           class="rounded-4 h-10px"
           [style.background-color]="data?.rank?.color"
@@ -473,13 +485,13 @@
 
 <!-- Email -->
 <ng-template #email let-data>
-  <div class="d-flex flex-column w-100">
+  <div class="d-flex flex-column w-100 mb-4">
     <div class="d-flex align-items-center" *ngIf="isShowTextHeader">
       <i class="icon-grid_round me-2 cursor-move" cdkDragHandle></i>
       <span class="fw-bold">{{ data.title }}</span>
       <span class="text-danger ms-2" *ngIf="data?.isRequired">(*)</span>
     </div>
-    <div class="d-flex align-items-center justify-content-between w-100">
+    <div class="d-flex align-items-center justify-content-between w-100 mb-4">
       <codx-input
         class="border mt-2 px-4 py-3 rd-3px"
         [field]="data?.fieldName"
@@ -496,13 +508,13 @@
 
 <!-- Address -->
 <ng-template #address let-data>
-  <div class="d-flex flex-column w-100">
+  <div class="d-flex flex-column w-100 mb-4">
     <div class="d-flex align-items-center" *ngIf="isShowTextHeader">
       <i class="icon-grid_round me-2 cursor-move" cdkDragHandle></i>
       <span class="fw-bold">{{ data.title }}</span>
       <span class="text-danger ms-2" *ngIf="data?.isRequired">(*)</span>
     </div>
-    <div class="d-flex align-items-center justify-content-between w-100">
+    <div class="d-flex align-items-center justify-content-between w-100 mb-4">
       <codx-input
         class="border mt-2 px-4 py-3 rd-3px"
         [field]="data?.fieldName"
@@ -519,13 +531,13 @@
 
 <!-- Expression -->
 <ng-template #expression let-data>
-  <div class="d-flex flex-column w-100">
+  <div class="d-flex flex-column w-100 mb-4">
     <div class="d-flex align-items-center" *ngIf="isShowTextHeader">
       <i class="icon-grid_round me-2 cursor-move" cdkDragHandle></i>
       <span class="fw-bold">{{ data.title }}</span>
       <span class="text-danger ms-2" *ngIf="data?.isRequired">(*)</span>
     </div>
-    <div class="d-flex align-items-center justify-content-between w-100">
+    <div class="d-flex align-items-center justify-content-between w-100 mb-4">
       <codx-input
         class="border mt-2 px-4 py-3 rd-3px"
         [field]="data?.fieldName"
@@ -542,13 +554,13 @@
 
 <!-- Phone -->
 <ng-template #phone let-data>
-  <div class="d-flex flex-column w-100">
+  <div class="d-flex flex-column w-100 mb-4">
     <div class="d-flex align-items-center" *ngIf="isShowTextHeader">
       <i class="icon-grid_round me-2 cursor-move" cdkDragHandle></i>
       <span class="fw-bold">{{ data.title }}</span>
       <span class="text-danger ms-2" *ngIf="data?.isRequired">(*)</span>
     </div>
-    <div class="d-flex align-items-center justify-content-between w-100">
+    <div class="d-flex align-items-center justify-content-between w-100 mb-4">
       <codx-input
         class="border mt-2 px-4 py-3 rd-3px"
         [field]="data?.fieldName"

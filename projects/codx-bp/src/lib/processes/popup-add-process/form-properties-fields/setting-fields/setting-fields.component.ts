@@ -7,6 +7,7 @@ import {
   EventEmitter,
   AfterViewInit,
   SimpleChanges,
+  ViewChild,
 } from '@angular/core';
 import {
   ApiHttpService,
@@ -17,12 +18,14 @@ import {
   DialogModel,
   FormModel,
   NotificationsService,
+  Util,
 } from 'codx-core';
 import { tempVllBP } from 'projects/codx-bp/src/lib/models/models';
 import { CodxBpService } from 'projects/codx-bp/src/public-api';
 import { tempVllDP } from 'projects/codx-dp/src/lib/models/models';
 import { Observable, finalize, firstValueFrom, map } from 'rxjs';
 import { FormSettingComboboxComponent } from './form-setting-combobox/form-setting-combobox.component';
+import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
 
 @Component({
   selector: 'codx-setting-fields',
@@ -30,14 +33,16 @@ import { FormSettingComboboxComponent } from './form-setting-combobox/form-setti
   styleUrls: ['./setting-fields.component.scss'],
 })
 export class SettingFieldsComponent implements AfterViewInit {
+  @ViewChild('attachment') attachment: AttachmentComponent;
   @Input() dataFormat: any;
   @Input() dataCurrent: any = {};
   @Input() lstFields = [];
   @Input() formModel: FormModel = {
     formName: 'DPStepsFields',
     gridViewName: 'grvDPStepsFields',
-    entityName: 'DP_Steps_Fields',
+    entityName: 'BP_Processes_Steps_ExtendInfo',
   };
+  @Input() process: any;
   @Output() dataValueEmit = new EventEmitter<any>();
   serviceTemp = 'SYS';
   assemblyNameTemp = 'SYS';
@@ -72,6 +77,17 @@ export class SettingFieldsComponent implements AfterViewInit {
   isRender: boolean = true; //cho phép binding khi save thành công.
   isChangeColor: boolean = false;
   loadedRenderHTML: boolean;
+  documentControls = [];
+  document: {
+    recID: string;
+    title: string;
+    memo: string;
+    isRequired: boolean;
+    count: number;
+    templateID: string;
+  };
+  showFile = false;
+  id: any;
   constructor(
     private detectorRef: ChangeDetectorRef,
     private cache: CacheService,
@@ -85,28 +101,32 @@ export class SettingFieldsComponent implements AfterViewInit {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    //Called before any other lifecycle hook. Use it to inject dependencies, but avoid any serious work here.
-    //Add '${implements OnChanges}' to the class.
-
-  }
-
-  ngOnInit(): void {
-    this.loadedRenderHTML = false;
-    setTimeout(() => {
-      this.loadedRenderHTML = true;
-    }, 0);
-    if (this.dataCurrent) {
-      this.loadData(this.dataCurrent);
+    if (changes['dataCurrent']) {
+      if (
+        changes['dataCurrent'].currentValue != null &&
+        changes['dataCurrent'].currentValue?.recID
+      ) {
+        this.id = changes['dataCurrent'].currentValue?.recID;
+        this.loadedRenderHTML = false;
+        setTimeout(() => {
+          this.loadedRenderHTML = true;
+        }, 0);
+        if (this.dataCurrent) {
+          this.loadData(this.dataCurrent);
+        }
+      }
     }
   }
 
-  ngAfterViewInit(): void {
+  ngOnInit(): void {}
 
-  }
+  ngAfterViewInit(): void {}
 
   //#region loadData
   async loadData(data) {
     this.lstDatasVlls = [];
+    this.documentControls = [];
+    this.listCbx = [];
     this.isRender = true;
     this.isChangeColor = false;
     this.crrVll = null;
@@ -177,9 +197,27 @@ export class SettingFieldsComponent implements AfterViewInit {
           }
           break;
         case 'Datetime':
-          this.isTime = data?.dataType == 'F' ? true : false;
           break;
         case 'YesNo':
+          break;
+        case 'Attachment':
+          if (
+            this.dataCurrent.documentControl != null &&
+            this.dataCurrent.documentControl?.trim() != ''
+          ) {
+            this.documentControls = JSON.parse(
+              this.dataCurrent.documentControl
+            );
+          }
+          this.defaultDocument();
+          break;
+        case 'ComboBox':
+          if (
+            this.dataCurrent.dataFormat &&
+            this.dataCurrent.dataFormat?.trim() != ''
+          ) {
+            this.listCbx = JSON.parse(this.dataCurrent.dataFormat);
+          }
           break;
         default:
           break;
@@ -302,7 +340,11 @@ export class SettingFieldsComponent implements AfterViewInit {
       this.dataCurrent[e?.field] = e?.data;
       switch (e?.field) {
         case 'title':
-          this.dataCurrent['fieldName'] = this.bpSv.createAutoNumber(e?.data, this.lstFields, 'fieldName');
+          this.dataCurrent['fieldName'] = this.bpSv.createAutoNumber(
+            e?.data,
+            this.lstFields,
+            'fieldName'
+          );
           break;
         case 'defaultValue':
           this.dataCurrent['dataFormat'] = e?.data;
@@ -367,9 +409,9 @@ export class SettingFieldsComponent implements AfterViewInit {
             this.dataCurrent.fieldType == 'ValueList' ? '2' : '3';
           break;
         case 'checkBox':
-          if(this.dataCurrent.fieldType == 'ValueList'){
+          if (this.dataCurrent.fieldType == 'ValueList') {
             this.dataCurrent['refType'] = '2C';
-          }else{
+          } else {
             this.dataCurrent['controlType'] = 'CheckBox';
           }
           break;
@@ -386,7 +428,8 @@ export class SettingFieldsComponent implements AfterViewInit {
           this.dataCurrent['controlType'] = 'Switch';
           break;
         case 'popup':
-          this.dataCurrent['refType'] = this.dataCurrent.fieldType == 'ValueList' ? 'P' : '3P';
+          this.dataCurrent['refType'] =
+            this.dataCurrent.fieldType == 'ValueList' ? 'P' : '3P';
           break;
         case 'rankNumber':
           this.dataCurrent.rank.type = '1';
@@ -452,7 +495,7 @@ export class SettingFieldsComponent implements AfterViewInit {
   //save vll
   async saveVll(action = 'add') {
     let timeOut = 100;
-    if(this.crrVll?.listName == null || this.crrVll?.listName?.trim() == ''){
+    if (this.crrVll?.listName == null || this.crrVll?.listName?.trim() == '') {
       if (this.loaded) {
         if (!this.processNo)
           this.processNo = await firstValueFrom(
@@ -463,7 +506,6 @@ export class SettingFieldsComponent implements AfterViewInit {
         timeOut += 100;
         await this.getDefaultVll(timeOut);
       }
-
     }
     if (this.lstDatasVlls == null || this.lstDatasVlls?.length == 0) {
       this.isRender = false;
@@ -628,19 +670,22 @@ export class SettingFieldsComponent implements AfterViewInit {
   //#endregion
 
   //#region setting list cbx
-  openSettingCbx(){
+  openSettingCbx() {
     let option = new DialogModel();
     option.zIndex = 1010;
     let formModelField = new FormModel();
     formModelField = this.formModel;
     option.FormModel = formModelField;
-    if(this.dataCurrent.dataFormat != null && this.dataCurrent?.dataFormat?.trim() != ''){
+    if (
+      this.dataCurrent.dataFormat != null &&
+      this.dataCurrent?.dataFormat?.trim() != ''
+    ) {
       this.listCbx = JSON.parse(this.dataCurrent.dataFormat);
     }
     let data = {
       lstCbx: this.listCbx,
       data: this.dataCurrent,
-      title: 'Thiết lập' + ' ' + this.dataFormat?.text
+      title: 'Thiết lập' + ' ' + this.dataFormat?.text,
     };
     let popupDialog = this.callFc.openForm(
       FormSettingComboboxComponent,
@@ -653,15 +698,137 @@ export class SettingFieldsComponent implements AfterViewInit {
       option
     );
     popupDialog.closed.subscribe((dg) => {
-      if(dg && dg?.event){
+      if (dg && dg?.event) {
         this.dataCurrent = dg?.event;
-        if(this.dataCurrent.dataFormat){
+        if (this.dataCurrent.dataFormat) {
           this.listCbx = JSON.parse(this.dataCurrent.dataFormat);
         }
         this.dataValueEmit.emit({ data: this.dataCurrent });
         this.detectorRef.detectChanges();
       }
-    })
+    });
+  }
+  //#endregion
+
+  //#region setting attachment
+  onChangeText(e, indx){
+    if (!e.value || e.value.trim() == '') return;
+    if (indx != -1) {
+      this.documentControls[indx].title = e?.value;
+      this.dataCurrent.documentControl = JSON.stringify(
+        this.documentControls
+      );
+      this.dataValueEmit.emit({ data: this.dataCurrent });
+    } else {
+      this.document.title = e?.value;
+      if (this.document.title != null && this.document.title?.trim() != '') {
+        this.documentControls.push(this.document);
+        this.dataCurrent.documentControl = JSON.stringify(
+          this.documentControls
+        );
+        this.dataValueEmit.emit({ data: this.dataCurrent });
+      }
+      this.defaultDocument();
+    }
+    e.value = '';
+    this.detectorRef.detectChanges();
+  }
+  valueChangeFile(e, indx) {
+    if (e) {
+      if (indx != -1) {
+        this.documentControls[indx][e?.field] = e?.data;
+        this.dataCurrent.documentControl = JSON.stringify(
+          this.documentControls
+        );
+        this.dataValueEmit.emit({ data: this.dataCurrent });
+      } else {
+        this.document[e?.field] = e?.data;
+        if (this.document.title != null && this.document.title?.trim() != '') {
+          this.documentControls.push(this.document);
+          this.dataCurrent.documentControl = JSON.stringify(
+            this.documentControls
+          );
+          this.dataValueEmit.emit({ data: this.dataCurrent });
+        }
+        this.defaultDocument();
+      }
+    }
+    this.detectorRef.detectChanges();
+  }
+
+
+  async uploadFile(indx) {
+    if (indx != -1) {
+      if (this.documentControls[indx]) {
+        this.document = this.documentControls[indx];
+      }
+    }
+    // let count = 0;
+    // count = await firstValueFrom(
+    //   this.api.execSv('DM', 'DM', 'FileBussiness', 'CountAttachmentAsync', [
+    //     this.document.recID,
+    //     'source',
+    //     'BP_Processes_Steps_ExtendInfo',
+    //   ])
+    // );
+    // this.document.count = count ?? 0;
+    this.attachment.objectType = 'BP_Processes_Steps_ExtendInfo'; //truyền như này mới nhận đúng objectType
+    this.attachment.objectId = this.document?.recID;
+    this.attachment.parentID = this.process?.recID;
+    this.attachment.uploadFile();
+  }
+
+  defaultDocument() {
+    this.document = {
+      recID: Util.uid(),
+      title: null,
+      memo: null,
+      isRequired: false,
+      count: 0,
+      templateID: null,
+    };
+  }
+
+  getfileCount(e) {
+    if (e > 0 || e?.data?.length > 0) {
+    }
+  }
+
+  async fileAdded(e) {
+    if (e && e?.data?.length > 0) {
+      if (this.document.title == null || this.document?.title?.trim() == '') {
+        this.document.title = this.formatStr(e?.data[0]?.fileName);
+      }
+      if (this.attachment?.fileUploadList?.length > 0) {
+        (await this.attachment.saveFilesObservable()).subscribe((res) => {
+          if (res) {
+            this.document.count += e?.data?.length;
+            const idx = this.documentControls.findIndex(
+              (x) => x.recID == this.document.recID
+            );
+            if (idx != -1) {
+              this.documentControls[idx] = this.document;
+            } else {
+              this.documentControls.push(this.document);
+            }
+            this.dataCurrent.documentControl = JSON.stringify(
+              this.documentControls
+            );
+            this.dataValueEmit.emit({ data: this.dataCurrent });
+            this.defaultDocument();
+            this.detectorRef.detectChanges();
+          }
+        });
+      }
+    }
+  }
+
+  formatStr(input: string): string {
+    const index = input.indexOf('.');
+    if (index !== -1) {
+      return input.substring(0, index);
+    }
+    return input;
   }
   //#endregion
 }

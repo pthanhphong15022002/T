@@ -1,7 +1,7 @@
 <div
   *ngIf="loadedRenderHTML"
   (mouseenter)="closePopover()"
-  class="p-2 h-100"
+  class="p-4 h-100"
   (mouseenter)="closePopover()"
 >
   <div
@@ -51,12 +51,12 @@
         [default]="'Mô tả'"
         [formName]="'DynamicForms'"
         [gridViewName]="'grvDynamicFormsTitle' + dataCurrent?.fieldType"
-        name="lblMemo"
+        name="lblDescription"
       ></codx-label>
       <codx-input
-        field="memo"
+        field="description"
         [formModel]="formModel"
-        [crrValue]="dataCurrent?.memo ?? ''"
+        [crrValue]="dataCurrent?.Description ?? ''"
         (valueChange)="valueChange($event)"
       ></codx-input>
     </div>
@@ -69,7 +69,8 @@
         dataCurrent?.fieldType != 'ComboBox' &&
         dataCurrent?.fieldType != 'Rank' &&
         dataCurrent?.fieldType != 'Progress' &&
-        dataCurrent?.fieldType != 'Expression'
+        dataCurrent?.fieldType != 'Expression' &&
+        dataCurrent?.fieldType != 'Attachment'
       "
     >
       <codx-label
@@ -100,7 +101,8 @@
       *ngIf="
         dataCurrent?.fieldType != 'Title' &&
         dataCurrent?.fieldType != 'Rank' &&
-        dataCurrent?.fieldType != 'Progress'
+        dataCurrent?.fieldType != 'Progress' &&
+        dataCurrent?.fieldType != 'Attachment'
       "
     >
       <codx-label
@@ -181,6 +183,11 @@
       class="form-group mt-3 mb-3"
       style="border-bottom: 1px solid var(--gray-150)"
     ></div>
+    <ng-container
+      *ngIf="dataCurrent?.fieldType == 'Attachment'"
+      [ngTemplateOutlet]="tempAttachment"
+    >
+    </ng-container>
     <ng-container
       *ngIf="dataCurrent?.fieldType == 'Number'"
       [ngTemplateOutlet]="tempNumber"
@@ -435,7 +442,6 @@
           autofocus
           (blur)="onAddTextValue(textAddValue)"
           placeholder="Nhập giá trị value"
-          (blur)="onAddTextValue(textAddValue)"
         />
       </div>
       <div
@@ -829,6 +835,7 @@
         <codx-input
           type="number"
           field="minValue"
+          [showSpinButton]="true"
           [min]="0"
           [crrValue]="dataCurrent?.rank?.minValue"
           (valueChange)="valueRankChange($event)"
@@ -845,6 +852,7 @@
         <codx-input
           type="number"
           field="maxValue"
+          [showSpinButton]="true"
           [max]="10"
           [crrValue]="dataCurrent?.rank?.maxValue"
           (valueChange)="valueRankChange($event)"
@@ -971,7 +979,7 @@
       <tbody>
         <tr *ngFor="let item of listCbx; index as i">
           <td scope="row" style="border: none; padding: 0">
-            <span>{{item?.headerText}}</span>
+            <span>{{ item?.headerText }}</span>
           </td>
           <td>
             <codx-input
@@ -1011,4 +1019,156 @@
       ></codx-label>
     </div>
   </ng-template>
+</ng-template>
+
+<ng-template #tempAttachment>
+  <div class="d-flex justify-content-between">
+    <div
+      (mouseenter)="closePopover()"
+      class="form-group d-flex justify-content-start mb-1"
+    >
+      <codx-label
+        name="lblListAttach"
+        [formName]="'DynamicForms'"
+        [gridViewName]="'grvDynamicFormsTitle' + dataCurrent?.fieldType"
+        default="Danh sách mẫu"
+      ></codx-label>
+    </div>
+  </div>
+  <div
+    (mouseenter)="closePopover()"
+    class="form-group d-flex justify-content-center align-items-center mt-4"
+  >
+    <ng-container>
+      <table class="table">
+        <thead class="thead-light">
+          <tr class="fw-bold">
+            <th scope="col-8 d-flex justify-content-center align-items-center">
+              <codx-label
+                default="Tên file"
+                name="lblNameFile"
+                [formName]="'DynamicForms'"
+                [gridViewName]="'grvDynamicFormsTitle' + dataCurrent?.fieldType"
+              ></codx-label>
+            </th>
+            <th scope="col-2 d-flex justify-content-center align-items-center">
+              <codx-label
+                default="Mẫu"
+                name="lblForm"
+                [formName]="'DynamicForms'"
+                [gridViewName]="'grvDynamicFormsTitle' + dataCurrent?.fieldType"
+              ></codx-label>
+            </th>
+            <th scope="col-2 d-flex justify-content-center align-items-center">
+              <codx-label
+                default="Bắt buộc"
+                name="lblIsRequiredAttach"
+                [formName]="'DynamicForms'"
+                [gridViewName]="'grvDynamicFormsTitle' + dataCurrent?.fieldType"
+              ></codx-label>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of documentControls; index as i">
+            <td scope="row" style="border: none; padding: 0">
+              <input
+                class="no-border"
+                #textEditValue
+                type="text"
+                name="title"
+                matInput
+                autofocus
+                [value]="item.title"
+                (blur)="onChangeText(textEditValue, i)"
+                (keydown.enter)="onChangeText(textEditValue, i)"
+              />
+            </td>
+            <td>
+              <div class="position-relative d-flex align-items-center">
+                <span
+                  class="me-1 icon-16 icon-i-paperclip cursor-pointer text-hover-primary"
+                  (click)="uploadFile(i)"
+                ></span>
+                <span
+                  *ngIf="item?.count > 0"
+                  class="position-absolute topbar-badge translate-middle badge badge-sm rounded-pill bg-danger top-0"
+                  style="left: 45% !important"
+                  >{{ item?.count }}</span
+                >
+              </div>
+            </td>
+            <td>
+              <codx-input
+                field="isRequired"
+                type="checkbox"
+                (valueChange)="valueChangeFile($event, i)"
+                [crrValue]="item.isRequired ?? false"
+              ></codx-input>
+            </td>
+          </tr>
+          <tr>
+            <td scope="row" style="border: none; padding: 0">
+              <input
+                class="no-border"
+                #textValue
+                id="textValue"
+                type="text"
+                name="title"
+                matInput
+                autofocus
+                [value]="''"
+                placeholder="Thêm file"
+                (blur)="onChangeText(textValue, -1)"
+                (keydown.enter)="onChangeText(textValue, -1)"
+              />
+
+            </td>
+            <td>
+              <div class="position-relative d-flex align-items-center">
+                <span
+                  class="me-1 icon-16 icon-i-paperclip cursor-pointer text-hover-primary"
+                  (click)="uploadFile(-1)"
+                ></span>
+              </div>
+            </td>
+            <td>
+              <codx-input
+                field="isRequired"
+                type="checkbox"
+                (valueChange)="valueChangeFile($event, -1)"
+                [crrValue]="false"
+              ></codx-input>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </ng-container>
+  </div>
+  <div>
+    <codx-attachment
+      #attachment
+      [objectId]="document?.recID"
+      [objectType]="'BP_Processes_Steps_ExtendInfo'"
+      [referType]="'source'"
+      [parentID]="process?.recID"
+      hideFolder="1"
+      hideImageUpload="1"
+      hideImageThumb="1"
+      hideUploadBtn="1"
+      hideDes="1"
+      type="inline"
+      allowMultiFile="1"
+      (fileAdded)="fileAdded($event)"
+      (fileCount)="getfileCount($event)"
+      displayThumb="full"
+      showMessage="1"
+    >
+    </codx-attachment>
+  </div>
+  <div
+    (mouseenter)="closePopover()"
+    class="form-group mt-3 mb-3"
+    style="border-bottom: 1px solid var(--gray-150)"
+  ></div>
 </ng-template>
