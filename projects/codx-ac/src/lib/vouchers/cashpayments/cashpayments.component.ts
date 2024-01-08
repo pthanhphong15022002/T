@@ -212,6 +212,9 @@ export class CashPaymentsComponent extends UIComponent {
       case 'SYS04':
         this.copyVoucher(data); //? sao chép chứng từ
         break;
+      case 'SYS05':
+        this.viewVoucher(data); //? sao chép chứng từ
+        break;
       case 'SYS002':
         this.exportVoucher(data); //? xuất dữ liệu chứng từ
         break;
@@ -312,19 +315,20 @@ export class CashPaymentsComponent extends UIComponent {
    * @param dataEdit : data chứng từ chỉnh sửa
    */
   editVoucher(dataEdit) {
-    this.view.dataService.dataSelected = dataEdit;
+    delete dataEdit.isReadOnly;
+    this.view.dataService.dataSelected = {...dataEdit};
     this.view.dataService
       .edit(dataEdit)
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
         res.isEdit = true;
         let data = {
-          headerText: this.headerText, //? tiêu đề voucher
-          journal: { ...this.journal }, //?  data journal
-          oData: { ...res }, //?  data của cashpayment
-          hideFields: [...this.hideFields], //? array các field ẩn từ sổ nhật ký
-          baseCurr: this.baseCurr, //?  đồng tiền hạch toán
-          legalName: this.legalName, //? tên company
+          headerText: this.headerText,
+          journal: { ...this.journal },
+          oData: { ...res },
+          hideFields: [...this.hideFields],
+          baseCurr: this.baseCurr,
+          legalName: this.legalName,
         };
         let optionSidebar = new SidebarModel();
         optionSidebar.DataService = this.view?.dataService;
@@ -405,6 +409,34 @@ export class CashPaymentsComponent extends UIComponent {
   }
 
   /**
+   * *Hàm xem chứng từ
+   * @param dataEdit : data chứng từ chỉnh sửa
+   */
+  viewVoucher(dataView) {
+    delete dataView.isEdit;
+    dataView.isReadOnly = true;
+    let data = {
+      headerText: this.headerText,
+      journal: { ...this.journal },
+      oData: { ...dataView },
+      hideFields: [...this.hideFields],
+      baseCurr: this.baseCurr,
+      legalName: this.legalName,
+    };
+    let optionSidebar = new SidebarModel();
+    optionSidebar.DataService = this.view?.dataService;
+    optionSidebar.FormModel = this.view?.formModel;
+    let dialog = this.callfc.openSide(
+      CashPaymentAddComponent,
+      data,
+      optionSidebar,
+      this.view.funcID
+    );
+    dialog.closed.subscribe((res) => {
+    })
+  }
+
+  /**
    * *Hàm xóa chứng từ
    * @param dataDelete : data xóa
    */
@@ -457,6 +489,7 @@ export class CashPaymentsComponent extends UIComponent {
    * @returns
    */
   changeMFDetail(event: any,type: any = '') {
+    console.log(event);
     let data = this.view?.dataService?.dataSelected;
     if (data) {
       this.acService.changeMFCashPayment(event,data,type,this.journal,this.view.formModel);

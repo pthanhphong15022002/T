@@ -32,6 +32,8 @@ export class PopupCustomFieldComponent implements OnInit {
   point: string = ','; //dấu phân cách thập phân
   isAdd = false;
   taskID = ''; //task
+  isShowMore = false; //mở rộng popup
+  widthDefault = '550';
 
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
@@ -50,6 +52,10 @@ export class PopupCustomFieldComponent implements OnInit {
     this.dialog = dialog;
     this.isAdd = dt?.data?.isAdd ?? false;
     this.arrCaculateField = this.fields.filter((x) => x.dataType == 'CF');
+    //lấy độ rộng popup
+    this.widthDefault = this.dialog.dialog.width
+      ? this.dialog.dialog.width.toString()
+      : '550';
   }
 
   ngOnInit(): void {
@@ -245,5 +251,12 @@ export class PopupCustomFieldComponent implements OnInit {
     }
 
     return field;
+  }
+
+  //openpopup
+  rezisePopup(width = '1000') {
+    this.isShowMore = !this.isShowMore;
+    this.dialog.setWidth(this.isShowMore ? width : this.widthDefault);
+    this.changeDetectorRef.detectChanges();
   }
 }

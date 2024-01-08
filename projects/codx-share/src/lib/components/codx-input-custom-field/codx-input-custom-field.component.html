@@ -71,8 +71,30 @@
             (click)="clickAddLine()"
             [disabled]="disable"
           >
-            <i class="icon-add_box icon-16"></i></button
-        ></span>
+            <i class="icon-add_box icon-16"></i>
+          </button>
+          <button
+            *ngIf="isRezisePopup"
+            type="button"
+            class="btn btn-icon btn-sm btn-light-primary me-2"
+            (click)="showMore()"
+          >
+            <span>
+              <i
+                class="icon icon-14 {{
+                  isShowMore ? 'icon-last_page' : 'icon-first_page'
+                }}"
+              ></i
+            ></span>
+            <span>
+              <i
+                class="icon icon-14 {{
+                  !isShowMore ? 'icon-last_page' : 'icon-first_page'
+                }}"
+              ></i
+            ></span>
+          </button>
+        </span>
 
         <span *ngIf="customField.dataType == 'CF'" class="ms-2">
           <span

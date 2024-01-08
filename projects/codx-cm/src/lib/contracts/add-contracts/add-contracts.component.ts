@@ -123,7 +123,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
   listMemorySteps: any[] = [];
   listInstanceSteps: any[] = [];
   REQUIRE_TASK = ['taskName', 'endDate', 'startDate'];
-  type: 'contract' | 'DP' | 'deal' | 'quotation' | 'customer' | 'task'|'appendix';
+  type: 'contract' | 'DP' | 'deal' | 'quotation' | 'customer' | 'task'|'appendix'| 'extend';
 
   listParticipants;
   objPermissions = {};
@@ -143,7 +143,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
   instance = new tmpInstances();
   viewTask;
   stepsTasks;
-  oldIdInstance;
+  oldIdInstance = "";
   listApproverView;
   isStartIns = false;
   isActivitie = false;
@@ -230,6 +230,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
     gridViewName: 'grvCMRealties',
   };
 
+  disabledUserType = false;
   //CF
   arrCaculateField: any[] = [];
   isLoadedCF = false;
@@ -301,17 +302,19 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
     }
   }
 
+  // tra và sink mã tự động
   ngAfterViewChecked() {
     if (
-      (this.action == 'copy' || this.action == 'extend') &&
-      this.comboboxContractType &&
+      (this.action == 'copy') &&
       this.contracts?.contractType &&
-      !this.autoCode
+      this.comboboxContractType &&
+      (!this.autoCode || this.autoNumber)
     ) {
       let data = this.comboboxContractType?.ComponentCurrent?.dataService?.data;
       if (data?.length > 0) {
         this.autoCode = data[0]?.AutoNumber;
-        this.cmService
+        if(data[0]?.AutoNumberControl == '1'){
+          this.cmService
           .getAutoNumberByAutoNoCode(this.autoCode)
           .subscribe((res) => {
             if (res) {
@@ -322,14 +325,17 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
                 this.contracts.contractID = this.autoNumber;
                 this.disabledShowInput = true;
               } else {
-                this.contracts.contractID = '';
-                this.disabledShowInput = false;
+                this.getAutoNumber();
               }
             }
           });
+        }else{
+          this.getAutoNumber();
+        }
       }
     }
   }
+  
   //#region setData
   setDataParent() {
     if (this.entityName && this.parentID) {
@@ -365,14 +371,16 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
         this.contracts.displayed = true;
         this.contracts.currencyID = this.currencyIDDefault;
         this.contracts.businessLineID = this.businessLineID || '';
-        this.loadExchangeRate(this.contracts.currencyID);
+        this.loadExchangeRate(this.contracts.currencyID);//tiền tệ
         this.setContractByDataOutput();
         this.getAutoNumber();
         this.setDataParent();
+        //thêm từ DP
         if (this.type == 'DP' && this.processID) {
           this.contracts.processID = this.processID;
           this.getBusinessLineByProcessContractID(this.processID);
         }
+        // thêm từ task
         if (this.type == 'task') {
           this.contracts.applyProcess = true;
           this.getBusinessLineByBusinessLineID(this.contracts?.businessLineID);
@@ -383,104 +391,69 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
         if (data) {
           this.contracts = data;
         } else if (this.recIDContract) {
-          let dataEdit = await firstValueFrom(
-            this.contractService.getContractByRecID(this.recIDContract)
-          );
-          if (dataEdit) {
-            this.contracts = dataEdit;
-          }
+          this.contracts = await this.getContractByRecID();
         }
         if (this.contracts?.applyProcess && this.contracts.processID) {
           this.getListInstanceSteps(this.contracts.processID);
         }
-        this.getCustomersDefaults(this.contracts?.customerID);
+        this.getCustomersDefaults(this.contracts?.customerID); //lấy người đại diện
         break;
       case 'copy':
         if (data) {
           this.contracts = data;
         } else if (this.recIDContract) {
-          let dataCopy = await firstValueFrom(
-            this.contractService.getContractByRecID(this.recIDContract)
-          );
-          if (dataCopy) {
-            this.contracts = dataCopy;
-          }
+          this.contracts = await this.getContractByRecID();
         }
         delete this.contracts['id'];
-        this.contracts.recID = Util.uid();
         this.contracts.status = '1';
-        // this.contracts.applyProcess = this.isApplyProcess;
+        this.contracts.contractID = ''
+        this.contracts.parentID = this.contracts?.recID;
+        this.contracts.recID = Util.uid();
         this.contracts.currencyID = this.currencyIDDefault;
-        if (!this.contracts?.applyProcess) {
-          this.contracts.contractID = null;
-          this.getAutoNumberSetting();
-        } else {
-          this.disabledShowInput = true;
+        this.oldIdInstance = this.contracts?.refID;
+        this.disabledShowInput = false;
+        switch (this.type) {
+          case 'extend':
+            this.contracts.useType = '5';
+            this.disabledUserType = true;
+            break;
+          case 'appendix':
+            this.contracts.useType = '3';
+            this.contracts.displayed = false;
+            this.disabledUserType = true;
+            break;
         }
         if (this.contracts?.applyProcess && this.contracts?.processID) {
           this.getListInstanceSteps(this.contracts.processID);
         }
         this.getCustomersDefaults(this.contracts?.customerID);
         break;
-      case 'extend':
-        if (data) {
-          this.contracts = JSON.parse(JSON.stringify(data));
-          delete this.contracts['id'];
-          this.contracts.parentID = this.contracts?.recID;
-          this.contracts.recID = Util.uid();
-          this.contracts.status = '1';
-          this.contracts.useType = '5';
-        }
-        if (this.contracts?.applyProcess && this.contracts.processID) {
-          this.getListInstanceSteps(this.contracts.processID);
-        }
-        this.getCustomersDefaults(this.contracts?.customerID);
-        break;
-      case 'appendix':
-        if (data) {
-          this.contracts = JSON.parse(JSON.stringify(data));
-          delete this.contracts['id'];
-          this.contracts.parentID = this.contracts?.recID;
-          this.contracts.recID = Util.uid();
-          this.contracts.status = '1';
-          this.contracts.useType = '3';
-          this.contracts.displayed = false;
-        }
-        if (this.contracts?.applyProcess && this.contracts.processID) {
-          this.getListInstanceSteps(this.contracts.processID);
-        }
-        this.getCustomersDefaults(this.contracts?.customerID);
-        break;
-      default:
     }
   }
 
+  async getContractByRecID(){
+    return this.recIDContract ? await firstValueFrom(this.contractService.getContractByRecID(this.recIDContract)) : null;
+  }
+
   mapDataInfield() {
-    if (this.type == 'task' && this.stepsTasks && this.stepsTasks?.reference) {
-      this.cmService
-        .getInstancerStepByRecID(this.stepsTasks?.stepID)
-        .subscribe((res) => {
-          if (res) {
-            let step = res;
-            if (step && this.stepsTasks?.reference) {
-              let fields = this.stepsTasks?.reference?.split(';');
-              let listField = step?.fields;
-              let link = fields?.filter((x) => x.includes('/'));
-              if (link) {
-                let data = [];
-                for (let item of link) {
-                  let x = item?.split('/');
-                  if (x?.length == 2) {
-                    let field = listField?.find((j) => j.refID == x[0]);
-                    let y = x[1].charAt(0).toLowerCase() + x[1].slice(1);
-                    this.contracts[y] = field?.dataValue;
-                  }
-                }
-              }
-            }
-          }
-        });
+    if (this.type !== 'task' || !this.stepsTasks || !this.stepsTasks?.reference) {
+      return;
     }
+    const stepID = this.stepsTasks.stepID;
+    this.cmService.getInstancerStepByRecID(stepID).subscribe((res) => {
+      if (!res) return; // Nếu không có dữ liệu từ service, thoát khỏi hàm
+      const fields = this.stepsTasks.reference.split(';');
+      const listField = res.fields;
+      const links = fields.filter((x) => x.includes('/'));
+      for (const item of links) {
+        const [refID, propName] = item.split('/');
+        if (refID && propName) {
+          const field = listField.find((j) => j.refID === refID);
+          const propertyName = propName.charAt(0).toLowerCase() + propName.slice(1);
+          this.contracts[propertyName] = field?.dataValue;
+        }
+      }
+    });
   }
 
   setContractByDataOutput() {
@@ -586,7 +559,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
     return null;
   }
   // kiểm tra có thiết lập tư động ko
-  async getAutoNumber() {
+  getAutoNumber() {
     this.cmService
       .getFieldAutoNoDefault(
         this.dialog.formModel.funcID,
@@ -625,19 +598,9 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
 
   // check trùm mã khi nhạp tay
   changeAutoNum(e) {
-    if (
-      this.countInputChangeAuto == 0 &&
-      !this.autoNumber &&
-      !this.contracts?.applyProcess &&
-      e?.data
-    ) {
-      if (
-        !this.disabledShowInput &&
-        this.action !== 'edit' &&
-        this.action !== 'extend' &&
-        e
-      ) {
-        this.contracts.contractID = e?.data;
+    if (this.countInputChangeAuto == 0 && !this.autoNumber && e?.data) {
+      if (!this.disabledShowInput && this.action !== 'edit' && this.action !== 'extend' && e) {
+        this.contracts.contractID = e?.data?.trim();
         if (
           this.contracts.contractID &&
           this.contracts.contractID.includes(' ')
@@ -772,8 +735,6 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
           if (processID) {
             this.contracts.processID = processID;
             this.contracts.applyProcess = true;
-            // this.GetProcessNoByProcessID(processID);
-            // this.disabledShowInput = true;
             this.getListInstanceSteps(processID);
           } else {
             this.itemTabsInput(false);
@@ -782,12 +743,6 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
             } else {
               this.contracts.applyProcess = false;
               this.contracts.processID = null;
-              // if (this.autoNumber) {
-              //   this.contracts.contractID = this.autoNumber;
-              // } else {
-              //   this.contracts.contractID = '';
-              //   this.disabledShowInput = false;
-              // }
             }
           }
         }
@@ -1013,6 +968,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
         }
       });
   }
+
   getBusinessLineByProcessID(processID) {
     this.cmService
       .getIdBusinessLineByProcessID([processID])
@@ -1022,6 +978,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
         }
       });
   }
+
   getBusinessLineByBusinessLineID(businessLine) {
     if (businessLine) {
       this.cmService
@@ -1250,19 +1207,6 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
     return permission;
   }
 
-  beforeSaveInstance(option: RequestOption) {
-    option.service = 'DP';
-    option.className = 'InstancesBusiness';
-    option.assemblyName = 'ERM.Business.DP';
-    if (this.action === 'add' || this.action === 'copy') {
-      option.methodName = 'AddInstanceAsync';
-      option.data = [this.instance, this.listInstanceSteps, this.oldIdInstance];
-    } else if (this.action === 'edit') {
-      option.methodName = 'EditInstanceAsync';
-      option.data = [this.instance, this.listCustomFile];
-    }
-    return true;
-  }
   //#endregion
 
   getListInstanceSteps(processId: any) {
@@ -1488,45 +1432,6 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
   }
 
   //#region CRUD
-  checkRequiredTask() {
-    if (this.type == 'task') {
-      let message = [];
-      if (!this.isSaveTimeTask) {
-        this.notiService.notifyCode('DP019');
-        return;
-      }
-      if (!this.stepsTasks['taskName']?.trim()) {
-        message.push(this.view['taskName']);
-      }
-      if (this.stepsTasks?.roles?.length <= 0) {
-        message.push(this.view['roles']);
-      }
-
-      if (this.isStartIns) {
-        if (this.stepsTasks?.status != '3') {
-          if (!this.stepsTasks?.startDate) {
-            message.push(this.view['startDate']);
-          }
-          if (!this.stepsTasks?.endDate) {
-            message.push(this.view['endDate']);
-          }
-        }
-      } else {
-        if (
-          !this.stepsTasks['durationDay'] &&
-          !this.stepsTasks['durationHour']
-        ) {
-          message.push(this.view['durationDay']);
-        }
-      }
-      if (message.length > 0) {
-        this.notiService.notifyCode('SYS009', 0, message.join(', '));
-        return;
-      }
-    }
-  }
-
-  checkRequiredContract() {}
 
   checkFormat(field) {
     if (field.dataType == 'T') {
@@ -1552,249 +1457,6 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
     return '';
   }
 
-  async save() {
-    if (this.stepService.checkRequire(this.REQUIRE, this.contracts, this.view))
-      return;
-    if (
-      this.contracts?.delPhone &&
-      !this.stepService.isValidPhoneNumber(this.contracts?.delPhone)
-    ) {
-      this.notiService.notifyCode('RS030');
-      return;
-    }
-    if (this.contracts.contractID && this.contracts.contractID.includes(' ')) {
-      this.notiService.notifyCode(
-        'CM026',
-        0,
-        '"' + this.grvSetup['ContractID'].headerText + '"'
-      );
-      return;
-    }
-    if (this.isExitAutoNum) {
-      this.notiService.notifyCode(
-        'CM003',
-        0,
-        '"' + this.grvSetup['ContractID'].headerText + '"'
-      );
-      return;
-    }
-    this.checkRequiredTask();
-    this.contracts.applyProcess &&
-      this.convertDataInstance(this.contracts, this.instance);
-    this.contracts.applyProcess &&
-      this.updateDateDeal(this.instance, this.contracts);
-      if (this.attachment && this.attachment.fileUploadList.length) {
-        (await this.attachment.saveFilesObservable()).subscribe((res) => {
-          if (res) {
-            switch (this.action) {
-              case 'add':
-              case 'copy':
-              case 'extend':
-              case 'appendix':
-                if (this.contracts.applyProcess) {
-                  this.addInstance();
-                } else {
-                  this.addContracts();
-                }
-                break;
-              case 'edit':
-                if (this.contracts.applyProcess) {
-                  this.editInstance();
-                } else {
-                  this.editContract();
-                }
-
-                break;
-            }
-          }
-        });
-      } else {
-        switch (this.action) {
-          case 'add':
-          case 'copy':
-          case 'extend':
-          case 'appendix':
-            if (this.contracts.applyProcess) {
-              this.addInstance();
-            } else {
-              this.addContracts();
-            }
-            break;
-          case 'edit':
-            if (this.contracts.applyProcess) {
-              this.editInstance();
-            } else {
-              this.editContract();
-            }
-
-          break;
-      }
-    }
-  }
-
-  addInstance() {
-    if (this.type == 'contract' || this.type == 'task' || this.type == 'appendix') {
-      let data = [this.instance, this.listInstanceSteps, this.oldIdInstance];
-      this.cmService.addInstance(data).subscribe((instance) => {
-        if (instance) {
-          // this.instanceRes = instance;
-          this.contracts.status = instance.status;
-          this.contracts.datas = instance.datas;
-          this.contracts.stepID = instance.stepID;
-          this.addPermission(instance?.permissions);
-          this.addContracts();
-        }
-      });
-    } else if (this.type == 'DP') {
-      this.dialog.dataService
-        .save((option: any) => this.beforeSaveInstance(option))
-        .subscribe((res) => {
-          if (res && res.save) {
-            this.contracts.status = res?.save?.status;
-            this.contracts.datas = res?.save?.datas;
-            this.addPermission(res?.save?.permissions);
-            this.addContracts();
-            this.dialog.close(res?.save);
-            this.changeDetectorRef.detectChanges();
-          }
-        });
-    }
-  }
-
-  async editInstance() {
-    if (this.type == 'contract'|| this.type == 'task' || this.type == 'appendix') {
-      let data = [this.instance, this.listCustomFile];
-      this.cmService.editInstance(data).subscribe((instance) => {
-        if (instance) {
-          // this.instanceRes = instance;
-          this.contracts.status = instance.status;
-          this.contracts.datas = instance.datas;
-          this.contracts.permissions = this.contracts?.permissions?.filter(
-            (x) => x.memberType != '2'
-          );
-          this.addPermission(instance.permissions);
-          this.editContract();
-        }
-      });
-    } else if (this.type == 'DP') {
-      this.dialog.dataService
-        .save((option: any) => this.beforeSaveInstance(option))
-        .subscribe((res) => {
-          if (res.update) {
-            this.contracts.status = res?.update?.status;
-            this.contracts.datas = res?.update?.datas;
-            this.contracts.permissions = this.contracts?.permissions.filter(
-              (x) => x.memberType != '2'
-            );
-            this.addPermission(res?.update?.permissions);
-            let datas = [
-              this.contracts,
-              null,
-              this.lstContactDeal,
-              null,
-              this.lstContactDelete,
-            ];
-            this.editContract();
-            this.dialog.close(res?.update);
-          }
-        });
-    }
-  }
-
-  addContracts() {
-    if (this.type == 'contract') {
-      this.dialog.dataService
-        .save((opt: any) => this.beforeSave(opt), 0)
-        .subscribe((res) => {
-          if (res.save) {
-            (this.dialog.dataService as CRUDService)
-              .update(res.save)
-              .subscribe();
-            this.dialog.close(res.save);
-          } else {
-            this.dialog.close();
-          }
-          this.changeDetectorRef.markForCheck();
-        });
-    } else if (this.type == 'DP' || this.type == 'task' || this.type == 'appendix') {
-      this.cmService.addContracts([this.contracts]).subscribe((res) => {
-        if (res) {
-          this.dialog.close({ contract: res, action: this.action });
-        }
-      });
-    } else {
-      this.cmService
-        .addContracts([this.contracts, this.listPaymentAdd])
-        .subscribe((res) => {
-          if (res) {
-          }
-        });
-    }
-  }
-
-  beforeSave(op: RequestOption) {
-    if (
-      this.action == 'add' ||
-      this.action == 'copy' ||
-      this.action == 'extend' ||
-      this.action == 'appendix'
-    ) {
-      op.methodName = 'AddContractsAsync';
-      op.data = [this.contracts];
-    }
-    if (this.action == 'edit') {
-      op.methodName = 'UpdateContractAsync';
-      op.data = [this.contracts];
-    }
-    return true;
-  }
-
-  convertDataInstance(contract: CM_Contracts, instance: tmpInstances) {
-    if (this.action === 'edit') {
-      instance.recID = this.contracts.refID;
-    }
-    if (this.action !== 'edit')  {
-      this.oldIdInstance = this.contracts?.refID;
-      instance.startDate = null;
-      instance.status = '1';
-      instance.stepID = this.listInstanceSteps[0].stepID;
-    }
-    instance.title = contract?.contractName?.trim();
-    instance.memo = contract?.note?.trim();
-    instance.instanceNo = contract.dealID;
-    instance.owner = contract?.owner;
-    instance.processID = contract.processID;
-    // instance.stepID = contract.stepID;
-  }
-  updateDateDeal(instance: tmpInstances, contract: CM_Contracts) {
-    if (this.action !== 'edit') {
-      contract.stepID = this.listInstanceSteps[0].stepID;
-      contract.status = '1';
-      contract.refID = instance.recID;
-    }
-  }
-
-  // convertDataInstance(contract: CM_Contracts, instance: tmpInstances) {
-  //   this.oldIdInstance = this.contracts?.refID;
-  //   instance.stepID = contract.stepID;
-  //   // this.contracts.refID = Util.uid();
-  //   if (this.action === 'edit') {
-  //     instance.recID = contract.refID;
-  //   }
-  //   if (this.action !== 'edit') {
-  //     instance.startDate = null;
-  //     instance.status = '1';
-  //     instance.stepID = this.listInstanceSteps[0].stepID;
-  //   }
-  //   instance.title = contract?.contractName?.trim();
-  //   instance.memo = contract?.note?.trim();
-  //   instance.endDate = contract.effectiveTo;
-  //   instance.instanceNo = contract.contractID;
-  //   instance.owner = contract?.owner;
-  //   instance.processID = contract.processID;
-
-  // }
-
   addPermission(permissionDP) {
     if (permissionDP && permissionDP?.length > 0) {
       this.contracts.permissions = this.contracts?.permissions
@@ -1806,44 +1468,10 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
     }
   }
 
-  // updateDateDeal(instance: tmpInstances, contract: CM_Contracts) {
-  //   if (this.action !== 'edit') {
-  //     contract.stepID = this.listInstanceSteps[0].stepID;
-  //     contract.status = '1';
-  //     contract.refID = instance.recID;
-  //   }
-  //   // deal.owner = this.owner;
-  //   // deal.salespersonID = this.owner;
-  // }
 
-  editContract() {
-    if (this.dialog?.dataService) {
-      this.dialog.dataService
-        .save((opt: any) => this.beforeSave(opt))
-        .subscribe((res) => {
-          if (res.update) {
-            (this.dialog.dataService as CRUDService)
-              .update(res.update)
-              .subscribe();
-            this.dialog.close({ contract: res.update, action: this.action });
-            this.changeDetectorRef.markForCheck();
-          } else {
-            this.dialog.close();
-          }
-        });
-    } else {
-      let data = [this.contracts];
-      this.cmService.editContracts(data).subscribe((res) => {
-        if (res) {
-          this.dialog.close({ contract: res, action: this.action });
-        }
-      });
-    }
-  }
   //#endregion
 
-  v; //----------------------CACULATE---------------------------//
-
+  //#region CACULATE
   getArrCaculateField() {
     this.arrCaculateField = [];
     this.listInstanceSteps.forEach((x) => {
@@ -1918,8 +1546,257 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
       }
     });
   }
-  //------------------END_CACULATE--------------------//
+  //#endregion
   addFile(evt: any) {
     this.attachment.uploadFile();
   }
+
+  checkRequiredTask() {
+    if (this.type == 'task') {
+      let message = [];
+      if (!this.isSaveTimeTask) {
+        this.notiService.notifyCode('DP019');
+        return false;
+      }
+      if (!this.stepsTasks['taskName']?.trim()) {
+        message.push(this.view['taskName']);
+      }
+      if (this.stepsTasks?.roles?.length <= 0) {
+        message.push(this.view['roles']);
+      }
+
+      if (this.isStartIns) {
+        if (this.stepsTasks?.status != '3') {
+          if (!this.stepsTasks?.startDate) {
+            message.push(this.view['startDate']);
+          }
+          if (!this.stepsTasks?.endDate) {
+            message.push(this.view['endDate']);
+          }
+        }
+      } else {
+        if (!this.stepsTasks['durationDay'] && !this.stepsTasks['durationHour']) {
+          message.push(this.view['durationDay']);
+        }
+      }
+      if (message.length > 0) {
+        this.notiService.notifyCode('SYS009', 0, message.join(', '));
+        return false;
+      }
+    }
+    return true;
+  }
+  checkRequiredContract(){
+    if (this.stepService.checkRequire(this.REQUIRE, this.contracts, this.view)) return false;
+    if (this.contracts?.delPhone && !this.stepService.isValidPhoneNumber(this.contracts?.delPhone)) {
+      this.notiService.notifyCode('RS030');
+      return false;
+    }
+
+    if (this.contracts.contractID && this.contracts.contractID.includes(' ')) {
+      this.notiService.notifyCode('CM026',0,'"' + this.grvSetup['ContractID'].headerText + '"');
+      return false;
+    }
+
+    if (this.isExitAutoNum) {
+      this.notiService.notifyCode('CM003',0,'"' + this.grvSetup['ContractID'].headerText + '"');
+      return false;
+    }
+    return true
+  }
+  //#region CRUD
+  async save() {
+    if(!this.checkRequiredTask() || !this.checkRequiredContract()) return;
+    if(this.contracts?.applyProcess){
+      this.convertData(this.contracts, this.instance);
+    }
+    if (this.attachment && this.attachment.fileUploadList.length) {
+      (await this.attachment.saveFilesObservable()).subscribe((res) => {
+        if (res) {
+          this.handelSave();
+        }
+      });
+    } else {
+      this.handelSave();
+    }
+  }
+
+  handelSave(){
+    switch (this.action) {
+      case 'add':
+      case 'copy':
+        this.contracts.applyProcess ? this.addInstance() : this.addContracts();
+        break;
+      case 'edit':
+        this.contracts.applyProcess ? this.editInstance() : this.editContract();
+        break;
+    }
+   }
+
+  convertData(contract: CM_Contracts, instance: tmpInstances) {
+    if (this.action === 'edit') {
+      instance.recID = this.contracts.refID;
+    } else {
+      instance.startDate = null;
+      instance.status = '1';
+      instance.stepID = this.listInstanceSteps[0].stepID;
+      contract.stepID = instance.stepID
+      contract.status = '1';
+      contract.refID = instance.recID;
+    }
+  
+    instance.title = contract?.contractName?.trim();
+    instance.memo = contract?.note?.trim();
+    instance.instanceNo = contract.contractID;
+    instance.owner = contract?.owner;
+    instance.processID = contract.processID;
+  }
+
+  addInstance() {
+    if (this.type != 'DP') {
+      let data = [this.instance, this.listInstanceSteps, this.oldIdInstance];
+      this.cmService.addInstance(data).subscribe((instance) => {
+        if (instance) {
+          this.contracts.status = instance?.status;
+          this.contracts.datas = instance?.datas;
+          this.contracts.stepID = instance?.stepID;
+          this.contracts.refID = instance?.recID;
+          this.addPermission(instance?.permissions);
+          this.addContracts();
+        }
+      });
+    } else {
+      this.dialog.dataService
+        .save((option: any) => this.beforeSaveInstance(option))
+        .subscribe((res) => {
+          if (res && res.save) {
+            this.contracts.status = res?.save?.status;
+            this.contracts.datas = res?.save?.datas;
+            this.addPermission(res?.save?.permissions);
+            this.addContracts();
+            this.dialog.close(res?.save);
+            this.changeDetectorRef.detectChanges();
+          }
+        });
+    }
+  }
+  async editInstance() {
+    if (this.type != 'DP') {
+      let data = [this.instance, this.listCustomFile];
+      this.cmService.editInstance(data).subscribe((instance) => {
+        if (instance) {
+          // this.instanceRes = instance;
+          this.contracts.status = instance.status;
+          this.contracts.datas = instance.datas;
+          this.contracts.permissions = this.contracts?.permissions?.filter(
+            (x) => x.memberType != '2'
+          );
+          this.addPermission(instance.permissions);
+          this.editContract();
+        }
+      });
+    } else{
+      this.dialog.dataService
+        .save((option: any) => this.beforeSaveInstance(option))
+        .subscribe((res) => {
+          if (res.update) {
+            this.contracts.status = res?.update?.status;
+            this.contracts.datas = res?.update?.datas;
+            this.contracts.permissions = this.contracts?.permissions.filter(
+              (x) => x.memberType != '2'
+            );
+            this.addPermission(res?.update?.permissions);
+            let datas = [
+              this.contracts,
+              null,
+              this.lstContactDeal,
+              null,
+              this.lstContactDelete,
+            ];
+            this.editContract();
+            this.dialog.close(res?.update);
+          }
+        });
+    }
+  }
+  beforeSaveInstance(option: RequestOption) {
+    option.service = 'DP';
+    option.className = 'InstancesBusiness';
+    option.assemblyName = 'ERM.Business.DP';
+    if (this.action === 'add' || this.action === 'copy') {
+      option.methodName = 'AddInstanceAsync';
+      option.data = [this.instance, this.listInstanceSteps, this.oldIdInstance];
+    } else if (this.action === 'edit') {
+      option.methodName = 'EditInstanceAsync';
+      option.data = [this.instance, this.listCustomFile];
+    }
+    return true;
+  }
+
+  addContracts() {
+    if (['contract','extend'].some(x => x == this.type)) {
+      this.dialog.dataService
+        .save((opt: any) => this.beforeSaveContract(opt), 0)
+        .subscribe((res) => {
+          if (res.save) {
+            (this.dialog.dataService as CRUDService)
+              .update(res.save)
+              .subscribe();
+            this.dialog.close(res.save);
+          } else {
+            this.dialog.close();
+          }
+          this.changeDetectorRef.markForCheck();
+        });
+    } else if (['DP','task','appendix'].some(x => x == this.type)) {
+      this.cmService.addContracts([this.contracts]).subscribe((res) => {
+        if (res) {
+          this.dialog.close({ contract: res, action: this.action });
+        }
+      });
+    } 
+  }
+
+  editContract() {
+    if (['contract','extend'].some(x => x == this.type)) {
+      this.dialog.dataService
+        .save((opt: any) => this.beforeSaveContract(opt))
+        .subscribe((res) => {
+          if (res.update) {
+            (this.dialog.dataService as CRUDService)
+              .update(res.update)
+              .subscribe();
+            this.dialog.close({ contract: res.update, action: this.action });
+            this.changeDetectorRef.markForCheck();
+          } else {
+            this.dialog.close();
+          }
+        });
+    } else if(['DP','task','appendix'].some(x => x == this.type)) {
+      let data = [this.contracts];
+      this.cmService.editContracts(data).subscribe((res) => {
+        if (res) {
+          this.dialog.close({ contract: res, action: this.action });
+        }
+      });
+    }
+  }
+  
+  beforeSaveContract(op: RequestOption) {
+    if (
+      this.action == 'add' ||
+      this.action == 'copy' ||
+      this.action == 'extend' ||
+      this.action == 'appendix'
+    ) {
+      op.methodName = 'AddContractsAsync';
+      op.data = [this.contracts];
+    }
+    if (this.action == 'edit') {
+      op.methodName = 'UpdateContractAsync';
+      op.data = [this.contracts];
+    }
+    return true;
+  }
+  //#endregion
 }

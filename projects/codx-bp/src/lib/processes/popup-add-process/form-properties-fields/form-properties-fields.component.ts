@@ -31,6 +31,7 @@ export class FormPropertiesFieldsComponent implements OnInit {
 
   tempVllBP: tempVllBP;
   isForm: boolean = true;
+  process: any;
   constructor(
     private detectorRef: ChangeDetectorRef,
     private cache: CacheService,
@@ -39,6 +40,7 @@ export class FormPropertiesFieldsComponent implements OnInit {
     @Optional() dt: DialogData
   ) {
     this.dialog = dialog;
+    this.process = dt?.data?.process;
   }
   ngOnInit(): void {
     this.getVll();
