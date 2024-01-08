@@ -302,32 +302,12 @@ export class CodxHrService {
   //#endregion
 
   //#region EPassportsBusiness
-
-  getEmpTotalPassportNum() {
-    return this.api.execSv<any>(
-      'HR',
-      'HR',
-      'EPassportsBusiness',
-      'CountEmpTotalRecordAsync'
-    );
-  }
-
   getEmployeePassportModel() {
     return this.api.execSv<any>(
       'HR',
       'HR',
       'EPassportsBusiness',
       'GetEmployeePassportModelAsync'
-    );
-  }
-
-  GetListPassportByEmpID(empID: string) {
-    return this.api.execSv<any>(
-      'HR',
-      'HR',
-      'EPassportsBusiness',
-      'GetListPassportByEmpIDAsync',
-      [empID]
     );
   }
 
@@ -396,14 +376,6 @@ export class CodxHrService {
   //#endregion
 
   //#region EVisasBusiness
-  getEmpTotalVisaNum() {
-    return this.api.execSv<any>(
-      'HR',
-      'HR',
-      'EVisasBusiness',
-      'CountEmpTotalRecordAsync'
-    );
-  }
 
   getEmployeeVisaModel() {
     return this.api.execSv<any>(
@@ -440,16 +412,6 @@ export class CodxHrService {
       'HR',
       'EVisasBusiness',
       'DeleteEmployeeVisaInfoAsync',
-      data
-    );
-  }
-
-  getListVisaByEmployeeID(data) {
-    return this.api.execSv<any>(
-      'HR',
-      'HR',
-      'EVisasBusiness',
-      'GetListByEmployeeIDAsync',
       data
     );
   }
@@ -537,18 +499,6 @@ export class CodxHrService {
       [data, functionID]
     );
   }
-  //#endregion
-
-  //#region EWorkPermitsBusiness
-  // getListWorkPermitByEmployeeID(employeeID: string) {
-  //   return this.api.execSv<any>(
-  //     'HR',
-  //     'HR',
-  //     'EWorkPermitsBusiness',
-  //     'GetListWorkPermitsByEmployeeIDAsync',
-  //     [employeeID]
-  //   );
-  // }
 
   GetEmpCurrentWorkpermit(empID: string) {
     return this.api.execSv<any>(
@@ -569,36 +519,6 @@ export class CodxHrService {
       data
     );
   }
-
-  getEmployeeWorkingLisenceModel() {
-    return this.api.execSv<any>(
-      'HR',
-      'HR',
-      'EWorkPermitsBusiness',
-      'GetEmployeeWorkPermitModelAsync'
-    );
-  }
-
-  getEmployeeDesciplinesInfo(data) {
-    return this.api.execSv<any>(
-      'HR',
-      'HR',
-      'EDisciplinesBusiness',
-      'GetEmployeeDisciplinesInfoAsync',
-      data
-    );
-  }
-
-  loadDataEDisciplines(data) {
-    return this.api.execSv<any>(
-      'HR',
-      'ERM.Business.HR',
-      'EDisciplinesBusiness',
-      'LoadEDisciplineWithEmpInfoAsync',
-      data
-    );
-  }
-
   updateEmployeePassportInfo(data) {
     return this.api.execSv<any>(
       'HR',
@@ -608,7 +528,6 @@ export class CodxHrService {
       data
     );
   }
-
   addEmployeePassportInfo(data) {
     return this.api.execSv<any>(
       'HR',
@@ -618,7 +537,6 @@ export class CodxHrService {
       data
     );
   }
-
   DeleteEmployeePassportInfo(data) {
     return this.api.execSv<any>(
       'HR',
@@ -628,7 +546,6 @@ export class CodxHrService {
       data
     );
   }
-
   updateEmployeeWorkPermitDetail(data) {
     return this.api.execSv<any>(
       'HR',
@@ -2622,26 +2539,6 @@ export class CodxHrService {
   }
 
   //#endregion
-
-  countEmpTotalRecord(empId, business) {
-    return this.api.execSv<any>(
-      'HR',
-      'HR',
-      business,
-      'CountEmpTotalRecordAsync',
-      empId
-    );
-  }
-
-  // getFunctionList(funcID: string) {
-  //   return this.api.execSv<any>(
-  //     'SYS',
-  //     'AD',
-  //     'SystemSettingsBusiness',
-  //     'GetFunctionAsync',
-  //     funcID
-  //   );
-  // }
 
   getFunctionList(funcID: string) {
     return this.api.execSv<any>(

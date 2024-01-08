@@ -121,7 +121,7 @@ export class PopupTabsViewsDetailsComponent implements OnInit, AfterViewInit {
       this.showButtonAdd = true;
       this.showMoreFunc = true;
     }
-
+    this.getProject();
     this.dialog = dialog;
   }
 
@@ -227,5 +227,13 @@ export class PopupTabsViewsDetailsComponent implements OnInit, AfterViewInit {
 
   getContent(e) {
     this.data.contents = e;
+  }
+
+  getProject() {
+    if (this.projectID) {
+      this.tmSv.getProject(this.projectID).subscribe((prCrr) => {
+        if (prCrr) this.projectCategory = prCrr.projectCategory;
+      });
+    }
   }
 }

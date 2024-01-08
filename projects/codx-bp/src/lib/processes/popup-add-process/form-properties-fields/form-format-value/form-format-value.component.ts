@@ -18,7 +18,7 @@ import { ApiHttpService, CallFuncService, FormModel } from 'codx-core';
 @Component({
   selector: 'codx-form-format-value',
   templateUrl: './form-format-value.component.html',
-  styleUrls: ['./form-format-value.component.css'],
+  styleUrls: ['./form-format-value.component.scss'],
 })
 export class FormFormatValueComponent implements OnInit {
   @Input() subItem: any;
@@ -43,6 +43,8 @@ export class FormFormatValueComponent implements OnInit {
     color: 'color',
     textColor: 'textColor',
   };
+  lstTables = [];
+  hasIndexNo: boolean = false;
   constructor(
     private detectorRef: ChangeDetectorRef,
     private callFc: CallFuncService,
@@ -64,6 +66,17 @@ export class FormFormatValueComponent implements OnInit {
           if (this.subItem?.refValue) this.loadDataVll();
           break;
         case 'Combobox':
+          break;
+        case 'Table':
+          if(this.subItem?.tableFormat){
+            const format = JSON.parse(this.subItem?.tableFormat);
+            this.hasIndexNo = format?.hasIndexNo;
+          }
+          let tables = [];
+          if(this.subItem?.dataFormat){
+             tables = JSON.parse(this.subItem?.dataFormat);
+          }
+          this.lstTables = JSON.parse(JSON.stringify(tables));
           break;
       }
     }
