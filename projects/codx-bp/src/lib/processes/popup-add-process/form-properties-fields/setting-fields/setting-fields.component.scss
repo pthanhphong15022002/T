@@ -143,29 +143,24 @@ codx-input {
   padding: 7px;
   margin-top: 10px;
 }
-/* Định nghĩa một lớp chung cho các phần tử có thể kéo thả và danh sách chứa chúng */
 .cdk-drag,
 .cdk-drop-list {
   transition: background-color 0.3s;
 }
 
-/* Hiệu ứng khi kéo thả phần tử */
 .cdk-drag-dragging {
   opacity: 0.8;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
 }
 
-/* Hiệu ứng khi phần tử rơi vào vị trí mới */
 .cdk-drop-list-dragging-over {
   background-color: #ecf0f1;
 }
 
-/* Hiệu ứng khi kéo thả thành công */
 .cdk-drop-list-dragging-entered {
   background-color: rgba(52, 152, 219, 0.1);
 }
 
-/* Hiệu ứng khi phần tử được kéo thả vào trong danh sách */
 .cdk-drag-placeholder {
   border: 2px dashed #3498db;
   background-color: #ecf0f1;
@@ -174,12 +169,10 @@ codx-input {
   transition: transform 0.3s ease-in-out;
 }
 
-/* Hiệu ứng di chuyển khi đang kéo thả */
 .cdk-drag-dragging {
   transform: translateY(-10px);
 }
 
-/* Hiệu ứng di chuyển khi phần tử được kéo thả vào vị trí mới */
 .cdk-drop-list-dragging-over .cdk-drag-dragging {
   transform: translateY(0);
 }
