@@ -883,4 +883,5 @@ export class CM_Contracts {
   disposalOn: Date; //Ngày thanh lý
   disposalCmt: Date; //Ngày thanh lý
   displayed: boolean; //Ngày thanh lý
+  disposalExpired: boolean; //Ngày thanh lý
 }

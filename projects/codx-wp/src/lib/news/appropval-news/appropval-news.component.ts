@@ -291,6 +291,7 @@ export class AppropvalNewsComponent extends UIComponent {
         if(res)
         {
           data.approveStatus = approvalStatus;
+          data.status = approvalStatus =='5' ? '2' : data.status;
           this.changeApproSatusPost(data);
           if(this.tmpDetail.objectID == data.recID)
           {
