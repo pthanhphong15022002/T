@@ -262,7 +262,7 @@ export class CodxTasksComponent
     this.resourceKanban.assemblyName = 'SYS';
     this.resourceKanban.className = 'CommonBusiness';
     this.resourceKanban.method = 'GetColumnsKanbanAsync';
-    this.resourceKanban.dataObj = '125125';
+    // this.resourceKanban.dataObj = '';
 
     this.request = new ResourceModel();
     this.request.service = 'TM';
@@ -287,7 +287,7 @@ export class CodxTasksComponent
     //this.getParams(); //cai nay lúc trước lọc ngày schedule
     this.getParam();
 
-    this.dataObj = JSON.stringify(this.dataObj);
+    // this.dataObj = JSON.stringify(this.dataObj);
   }
 
   afterLoad() {
@@ -508,6 +508,14 @@ export class CodxTasksComponent
           panelLeftRef: this.treeView,
         },
       },
+      // {
+      //   type: ViewType.chart,
+      //   active: false,
+      //   sameData: false,
+      //   model: {
+      //     panelLeftRef: this.treeView,
+      //   },
+      // },
     ];
 
     if (this.funcID == 'TMT03011') {

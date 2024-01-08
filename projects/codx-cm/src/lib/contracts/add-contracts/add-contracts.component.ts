@@ -41,6 +41,7 @@ import { AttachmentComponent } from 'projects/codx-common/src/lib/component/atta
 import { CodxListContactsComponent } from '../../cmcustomer/cmcustomer-detail/codx-list-contacts/codx-list-contacts.component';
 import { PopupAddCategoryComponent } from 'projects/codx-es/src/lib/setting/category/popup-add-category/popup-add-category.component';
 import { CustomFieldService } from 'projects/codx-share/src/lib/components/codx-input-custom-field/custom-field.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'add-contracts',
@@ -366,7 +367,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
         this.contracts.pmtMethodID = 'ATM';
         this.contracts.contractDate = new Date();
         this.contracts.effectiveFrom = new Date();
-        this.contracts.projectID = this.projectID;
+        // this.contracts.projectID = this.projectID;
         this.contracts.applyProcess = false;
         this.contracts.displayed = true;
         this.contracts.currencyID = this.currencyIDDefault;
@@ -376,7 +377,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
         this.getAutoNumber();
         this.setDataParent();
         //thêm từ DP
-        if (this.type == 'DP' && this.processID) {
+        if (this.processID) {
           this.contracts.processID = this.processID;
           this.getBusinessLineByProcessContractID(this.processID);
         }

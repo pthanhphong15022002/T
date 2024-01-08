@@ -39,6 +39,8 @@ export class ContractsViewDetailComponent
   @Input() listInsStepStart = [];
   @Input() contract: CM_Contracts;
   @Input() contractAppendix: CM_Contracts;
+  @Input() processID: string;
+
   // @Input() dataSelected: any;
   @Output() changeMF = new EventEmitter<any>();
   @Output() isSusscess = new EventEmitter<any>();
@@ -530,7 +532,7 @@ export class ContractsViewDetailComponent
   getListCOntractByParentID(){
     this.listContractInParentID = [];
     if(this.contract.parentID) {
-      this.contractService.getContractByParentID(this.contract.parentID).subscribe((res)=>{
+      this.contractService.getContractByParentID([this.contract?.recID, this.contract.parentID]).subscribe((res)=>{
         if(res){
           this.listContractInParentID = res;
         }

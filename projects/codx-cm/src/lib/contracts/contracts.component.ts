@@ -168,7 +168,7 @@ export class ContractsComponent extends UIComponent {
 
   statusCodeID:any;
   statusCodeCmt:any;
-
+  processID = '';
   constructor(
     private inject: Injector,
     private cmService: CodxCmService,
@@ -180,6 +180,7 @@ export class ContractsComponent extends UIComponent {
     private changeDetectorRef: ChangeDetectorRef,
     private stepService: StepService,
     private authStore: AuthStore,
+    private activedRouter: ActivatedRoute,
     @Optional() dialog?: DialogRef
   ) {
     super(inject);
@@ -209,6 +210,7 @@ export class ContractsComponent extends UIComponent {
     this.vllStatus = this.grvSetup['Status'].referedValue;
     this.vllApprove = this.grvSetup['ApproveStatus'].referedValue;
     this.tabControl = this.contractService?.footerTab;
+    this.processID = this.activedRouter.snapshot?.queryParams['processID'];
     this.getAccount();
     this.getColumsGrid(this.grvSetup);
   }
@@ -688,20 +690,20 @@ export class ContractsComponent extends UIComponent {
 
   async addContract() {
     this.view.dataService.addNew().subscribe(async (res) => {
-      await this.openPopupContract(null, 'add','contract', res);
+      await this.openPopupContract(this.processID, 'add','contract',null, res);
     });
   }
 
   async addContractAdjourn(data: CM_Contracts) {
     this.view.dataService.addNew().subscribe(async (res) => {
       let contracts = JSON.parse(JSON.stringify(data)) as CM_Contracts;
-      this.openPopupContract(null,'copy', 'extend', contracts);
+      this.openPopupContract(null,'copy', 'extend', data, contracts);
     });
   }
 
   async addContractAppendix(data: CM_Contracts) {
     let contracts = JSON.parse(JSON.stringify(data)) as CM_Contracts;
-      this.openPopupContract(null, 'copy','appendix', contracts);
+      this.openPopupContract(null, 'copy','appendix',data, contracts);
   }
 
   async editContract(contract) {
@@ -710,14 +712,14 @@ export class ContractsComponent extends UIComponent {
     }
     let dataEdit = this.view.dataService.dataSelected;
     this.view.dataService.edit(dataEdit).subscribe(async (res) => {
-      this.openPopupContract(null, 'edit', 'contract', dataEdit);
+      this.openPopupContract(null, 'edit', 'contract', contract, dataEdit);
     });
   }
 
   async copyContract(contract) {
     this.view.dataService.addNew().subscribe(async (res) => {
       let dataCopy = JSON.parse(JSON.stringify(contract));
-      this.openPopupContract(null, 'copy', 'contract', dataCopy);
+      this.openPopupContract(null, 'copy', 'contract',contract, dataCopy);
     });
   }
 
@@ -771,9 +773,9 @@ export class ContractsComponent extends UIComponent {
     }
   }
 
-  async openPopupContract(projectID, action, type = 'contract', contract?) {
+  async openPopupContract(processID, action, type = 'contract',contractOld, contract) {
     let data = {
-      projectID,
+      processID,
       action,
       contract: contract || null,
       account: this.account,
@@ -793,7 +795,7 @@ export class ContractsComponent extends UIComponent {
     );
     popupContract.closed.subscribe((res) => {
       if (res?.event && type == 'extend') {
-        this.view.dataService.remove(contract).subscribe();
+        this.view.dataService.remove(contractOld).subscribe();
         this.view.currentView['schedule'].refresh();
         this.detectorRef.detectChanges();
       }
