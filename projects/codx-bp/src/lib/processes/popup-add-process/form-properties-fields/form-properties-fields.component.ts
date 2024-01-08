@@ -487,6 +487,14 @@ export class FormPropertiesFieldsComponent implements OnInit {
     }
   }
 
+  selectForm(indx) {
+    this.dataFormat = this.vllBP002.datas.find((x) => x.value == 'Title');
+    this.dataCurrent = JSON.parse(
+      JSON.stringify(this.lstStepFields.find((x) => x.fieldType == 'Title'))
+    );
+    this.detectorRef.markForCheck();
+  }
+
   renderData(e) {
     if (e && e?.data) {
       if (this.dataCurrent?.recID != e?.data?.recID) {

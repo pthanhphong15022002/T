@@ -426,7 +426,14 @@
     <table class="table table-bordered mt-2">
       <thead>
         <tr >
-          <th *ngIf="hasIndexNo">STT</th>
+          <th *ngIf="hasIndexNo"><codx-label
+            [default]="
+              'STT'
+            "
+            [formName]="'DynamicForms'"
+            [gridViewName]="'grvDynamicFormsTitle' + dataCurrent?.fieldType"
+            [name]="'lblStt'"
+          ></codx-label></th>
           <th *ngFor="let table of lstTables" scope="col">{{ table?.title }}</th>
         </tr>
       </thead>
