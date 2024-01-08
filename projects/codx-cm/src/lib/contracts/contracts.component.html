@@ -361,8 +361,23 @@
         </div>
       </div>
 
-      <div class="form-group">
-        <codx-label
+      <div class="row form-group">
+        <div class="col-6 ">
+          <codx-label
+          [formModel]="view?.formModel"
+          fiedName="disposalExpired"
+          [crrValue]="liquidation?.disposalExpired"
+        ></codx-label>
+        <codx-input
+          class="me-3"
+          field="disposalExpired"
+          [formModel]="view?.formModel"
+          (valueChange)="changeData($event)"
+          [crrValue]="liquidation?.disposalExpired"
+        ></codx-input>
+        </div>
+        <div class="col-6 ">
+          <codx-label
           [formModel]="view?.formModel"
           fiedName="disposalType"
           [crrValue]="liquidation?.disposalType"
@@ -374,6 +389,11 @@
           (valueChange)="changeData($event)"
           [crrValue]="liquidation?.disposalType"
         ></codx-input>
+        </div>
+      </div>
+
+      <div class="form-group">
+        
       </div>
 
       <div class="form-group">
