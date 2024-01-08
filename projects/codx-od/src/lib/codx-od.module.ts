@@ -50,6 +50,8 @@ import { CasesComponent } from 'projects/codx-cm/src/lib/cases/cases.component';
 import { LeadsComponent } from 'projects/codx-cm/src/lib/leads/leads.component';
 import { ViewInstancesComponent } from 'projects/codx-dp/src/lib/view-instances/view-instances.component';
 import { ContractsComponent } from 'projects/codx-cm/src/lib/contracts/contracts.component';
+import { EditFileComponent } from './incomming/edit-file/edit-file.component';
+import { DocumentEditorAllModule, DocumentEditorContainerAllModule } from '@syncfusion/ej2-angular-documenteditor';
 const routes: Routes = [
   {
     path: '',
@@ -159,6 +161,7 @@ const routes: Routes = [
     UpdateVersionComponent,
     ApprovalStepComponent,
     ODDashboardComponent,
+    EditFileComponent
   ],
   imports: [
     RouterModule.forChild(routes),
@@ -173,6 +176,8 @@ const routes: Routes = [
     UploaderModule,
     ProgressBarModule,
     TreeMapModule,
+    DocumentEditorAllModule,
+    DocumentEditorContainerAllModule,
     // NgbModule
   ],
   exports: [RouterModule],

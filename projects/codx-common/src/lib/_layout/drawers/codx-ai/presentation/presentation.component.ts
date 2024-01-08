@@ -30,11 +30,11 @@ export class PresentationComponent {
     };
     let prompt = `Mẫu promt (tiếng Việt): Bạn hãy tạo bài thuyết trình dạng ppt theo nội dung ${this.presentationForm.value.content} , khoảng ${this.presentationForm.value.number} slide.`;
     this.fetch(data,prompt).then((res:any) => 
-    {
-      //this.presentationForm.result = res.data.Data.replace(/\n/g,"<br/>");
-      this.presentationForm.get('result').patchValue(res.data.Data.replace(/\n/g,"<br/>"));
-    }).catch((err)=> {
-  });
+      {
+        //this.presentationForm.result = res.data.Data.replace(/\n/g,"<br/>");
+        this.presentationForm.get('result').patchValue(res.data.Data.replace(/\n/g,"<br/>"));
+      }).catch((err)=> {
+    });
   }
 
   fetch(data:any,prompt:any)

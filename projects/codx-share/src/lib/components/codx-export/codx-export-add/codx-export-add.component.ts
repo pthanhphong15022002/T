@@ -40,8 +40,7 @@ import { capitalizeFirstLetter } from '@syncfusion/ej2-angular-grids';
   styleUrls: ['./codx-export-add.component.scss'],
 })
 export class CodxExportAddComponent implements OnInit, OnChanges {
-  @ViewChild('documenteditor_default')
-  public container: DocumentEditorContainerComponent;
+  @ViewChild('documenteditor_default') public container: DocumentEditorContainerComponent;
   @ViewChild('attachment1') attachment1: AttachmentComponent;
   @ViewChild('attachment2') attachment2: AttachmentComponent;
   @Output() setDefaultValue = new EventEmitter();
