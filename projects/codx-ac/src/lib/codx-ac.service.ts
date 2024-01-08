@@ -188,6 +188,7 @@ export enum MorfuncDefault {
   Xoa = 'SYS02',
   SaoChep = 'SYS04',
   XuatDuLieu = 'SYS002',
+  Xem = 'SYS05'
   //DocXML = 'ACT060109'
 }
 
@@ -436,7 +437,7 @@ export class CodxAcService {
       if(!Object.values(MorfuncCash).includes(element.functionID) && !Object.values(MorfuncDefault).includes(element.functionID)) element.disabled = true;
       if (type === 'viewgrid') element.isbookmark = false;
       if (type === 'viewdetail'){
-        if (![MorfuncDefault.XuatDuLieu].includes(element.functionID)) {
+        if (![MorfuncDefault.XuatDuLieu,MorfuncDefault.Xem].includes(element.functionID)) {
           element.isbookmark = true;
         }
       }

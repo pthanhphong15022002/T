@@ -2092,7 +2092,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
           const domain = parser.origin;
 
           let tenant = this.tenantStore.get().tenant;
-          let url = `${domain}/${tenant}/cm/contracts/CM0204?predicate=RecID=@0&dataValue=${data?.objectLinked}`;
+          let url = `${domain}/${tenant}/cm/contracts/CM0206?predicate=RecID=@0&dataValue=${data?.objectLinked}`;
           window.open(url, '_blank');
           return;
         } else {

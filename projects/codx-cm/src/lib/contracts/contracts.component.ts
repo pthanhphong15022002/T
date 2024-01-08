@@ -95,6 +95,7 @@ export class ContractsComponent extends UIComponent {
   tabClicked = '';
   actionName = '';
   isAddContract = true;
+  contractAppendix;
 
   service = 'CM';
   entityName = 'CM_Contracts';
@@ -263,27 +264,27 @@ export class ContractsComponent extends UIComponent {
       this.codxShareService.changeMFApproval(event, data?.unbounds);
     } else if (event != null) {
       event.forEach((res) => {
-        res.isblur = data.approveStatus == '3' && res.functionID != 'CM0204_2';
+        res.isblur = data?.approveStatus == '3' && res?.functionID != 'CM0204_2';
         if (isDetail) {
           res.isbookmark = false;
         }
         switch (res.functionID) {
           case 'SYS02':
-            res.disabled = data.delete
+            res.disabled = data?.delete
             ? data.closed ||
                this.checkMoreReason(data) ||
               (!data.applyProcess && ['3', '5'].includes(data.status))
             : true;
             break;
           case 'SYS03':
-            res.disabled = data.write
-            ? data.closed ||
+            res.disabled = data?.write
+            ? data?.closed ||
               this.checkMoreReason(data) ||
               (!data.applyProcess && ['3', '5'].includes(data.status))
             : true;
             break;
           case 'SYS04':
-            res.disabled = data.write
+            res.disabled = data?.write
             ? data.closed ||
               (data.status != '13' && this.checkMoreReason(data, false)) ||
               (!data.applyProcess && ['3', '5'].includes(data.status))
@@ -356,16 +357,16 @@ export class ContractsComponent extends UIComponent {
             res.disabled = data?.status == '17' && data?.disposalType != '1';
             break;
           case 'CM0204_19': // đưa vào quy trình xử lý
-            res.disabled =data.full
-                      ? data.closed ||
-                        data.applyProcess ||
+            res.disabled =data?.full
+                      ? data?.closed ||
+                        data?.applyProcess ||
                         this.checkMoreReason(data) ||
-                        (!data.applyProcess && ['3', '5'].includes(data.status))
+                        (!data?.applyProcess && ['3', '5'].includes(data?.status))
                       : true;
             break;
           case 'CM0204_20': // không sử dụng quy trình
-            res.disabled =  data.full
-            ? data.closed || !data.applyProcess || this.checkMoreReason(data)
+            res.disabled =  data?.full
+            ? data?.closed || !data?.applyProcess || this.checkMoreReason(data)
             : true;
             break;
         }
@@ -457,6 +458,9 @@ export class ContractsComponent extends UIComponent {
       case 'CM0204_17': // chia sẻ
         this.popupPermissions(data);
         break;
+      case 'CM0204_21': // phụ lục
+      this.addContractAppendix(data);
+        break;
       default: {
         // var customData = {
         //   refID: data.recID,
@@ -524,7 +528,7 @@ export class ContractsComponent extends UIComponent {
       .subscribe((info) => {
         if (info.event.status == 'Y') {
           this.contractService
-            .closeContract([data?.recID, type])
+            .closeContract([data?.recID,type])
             .subscribe((res) => {
               if (res) {
                 data.closed = type;
@@ -684,15 +688,20 @@ export class ContractsComponent extends UIComponent {
 
   async addContract() {
     this.view.dataService.addNew().subscribe(async (res) => {
-      await this.openPopupContract(null, 'add', res);
+      await this.openPopupContract(null, 'add','contract', res);
     });
   }
 
   async addContractAdjourn(data: CM_Contracts) {
     this.view.dataService.addNew().subscribe(async (res) => {
       let contracts = JSON.parse(JSON.stringify(data)) as CM_Contracts;
-      this.openPopupContract(null, 'extend', contracts);
+      this.openPopupContract(null,'copy', 'extend', contracts);
     });
+  }
+
+  async addContractAppendix(data: CM_Contracts) {
+    let contracts = JSON.parse(JSON.stringify(data)) as CM_Contracts;
+      this.openPopupContract(null, 'copy','appendix', contracts);
   }
 
   async editContract(contract) {
@@ -701,14 +710,14 @@ export class ContractsComponent extends UIComponent {
     }
     let dataEdit = this.view.dataService.dataSelected;
     this.view.dataService.edit(dataEdit).subscribe(async (res) => {
-      this.openPopupContract(null, 'edit', dataEdit);
+      this.openPopupContract(null, 'edit', 'contract', dataEdit);
     });
   }
 
   async copyContract(contract) {
     this.view.dataService.addNew().subscribe(async (res) => {
       let dataCopy = JSON.parse(JSON.stringify(contract));
-      this.openPopupContract(null, 'copy', dataCopy);
+      this.openPopupContract(null, 'copy', 'contract', dataCopy);
     });
   }
 
@@ -762,13 +771,13 @@ export class ContractsComponent extends UIComponent {
     }
   }
 
-  async openPopupContract(projectID, action, contract?) {
+  async openPopupContract(projectID, action, type = 'contract', contract?) {
     let data = {
       projectID,
       action,
       contract: contract || null,
       account: this.account,
-      type: 'contract',
+      type: type,
       actionName: this.actionName || '',
     };
     let option = new SidebarModel();
@@ -783,9 +792,13 @@ export class ContractsComponent extends UIComponent {
       option
     );
     popupContract.closed.subscribe((res) => {
-      if (res?.event && action == 'extend') {
+      if (res?.event && type == 'extend') {
         this.view.dataService.remove(contract).subscribe();
         this.view.currentView['schedule'].refresh();
+        this.detectorRef.detectChanges();
+      }
+      if (res?.event && type == 'appendix') {
+        this.contractAppendix = res?.event?.contract;
         this.detectorRef.detectChanges();
       }
     });
@@ -1133,7 +1146,7 @@ export class ContractsComponent extends UIComponent {
                     if (res) {
                       this.view.dataService.update(res, true).subscribe();
                       if (this.detailViewContract) {
-                        this.detailViewContract.contract =this.dataSelected;
+                        this.detailViewContract.contract = this.dataSelected;
                       }
                       this.detailViewContract?.reloadListStep(listSteps);
                       this.detectorRef.detectChanges();

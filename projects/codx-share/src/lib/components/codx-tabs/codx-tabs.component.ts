@@ -262,11 +262,15 @@ export class CodxTabsComponent implements OnInit, OnChanges {
   fileSave(e) {
     if (e && typeof e === 'object' && this.isUpPermission) {
       var createdBy = Array.isArray(e) ? e[0].data.createdBy : e.createdBy;
+      let arr = this.entityName.split('_');
+      let service = arr[0];
+      let className = '';
+      if (service != 'TM')
+        className = arr.slice(1, arr.length).join('') + 'Business';
+      else className = 'TaskBusiness'; //Luc truoc tạo business chưa đúng logic
+      let methol = 'AddPermissionFileAsync';
       this.api
-        .execSv<any>('TM', 'TM', 'TaskBusiness', 'AddPermissionFileAsync', [
-          this.objectID,
-          createdBy,
-        ])
+        .exec<any>(service, className, methol, [this.objectID, createdBy])
         .subscribe();
     }
   }

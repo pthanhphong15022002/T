@@ -100,7 +100,7 @@
         <div class="d-flex justify-content-end align-items-center mb-2">
           <div
           *ngIf="
-            contract.status == '2' && stepCurrent;
+            contract?.status == '2' && stepCurrent;
             else statusDefault
           "
           [ngStyle]="{
@@ -1190,7 +1190,28 @@
       </div>
       <div class="ms-5">
         <div class="d-flex align-items-center justify-content-between">
-          <span class="fs-5-sm">{{ contract?.contractName }}</span>
+          <div class="d-flex align-items-center">
+            <span [ngbTooltip]="contractNameTmp" class="fs-5-sm">{{ contract?.contractName }}</span>
+            <span  class="mx-2">-</span>
+            <span [ngbTooltip]="contractIDTmp">{{contract?.contractID}}</span>
+            <ng-template #contractIDTmp>
+              <codx-label
+                class="text-gray-600"
+                fiedName="contractID"
+                [formModel]="formModel"
+                [setRequire]="false"
+              ></codx-label>
+            </ng-template>
+            <ng-template #contractNameTmp>
+              <codx-label
+                class="text-gray-600"
+                fiedName="contractName"
+                [formModel]="formModel"
+                [setRequire]="false"
+              ></codx-label>
+            </ng-template>
+          </div>
+
           <div class="d-flex justify-content-end align-items-center mb-2">
             <span class="icon-monetization_on icon-18 me-1 text-warning"></span>
             <span

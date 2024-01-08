@@ -1,4 +1,9 @@
-<ng-container [ngSwitch]="subItem.controlType">
+<ng-container [ngSwitch]="subItem.fieldType">
+  <ng-container *ngSwitchCase="'Title'">
+    <ng-container
+      *ngTemplateOutlet="title; context: { $implicit: subItem }"
+    ></ng-container>
+  </ng-container>
   <ng-container *ngSwitchCase="'SubTitle'">
     <ng-container
       *ngTemplateOutlet="text; context: { $implicit: subItem }"
@@ -41,7 +46,7 @@
   </ng-container>
   <ng-container *ngSwitchCase="'User'">
     <ng-container
-      *ngTemplateOutlet="valueList; context: { $implicit: subItem }"
+      *ngTemplateOutlet="combobox; context: { $implicit: subItem }"
     ></ng-container>
   </ng-container>
   <ng-container *ngSwitchCase="'Share'">
@@ -87,16 +92,23 @@
   <ng-container *ngSwitchDefault>...</ng-container>
 </ng-container>
 
+<!--Form-->
+<ng-template #title let-data>
+  <div class="d-flex flex-column w-100 py-4">
+    <span class="fw-bold fs-5">{{data.title}}</span>
+    <span class="text-muted mt-2">{{data.description }}</span>
+  </div>
+</ng-template>
 <!-- Văn bản || Số -->
 <ng-template #text let-data>
-  <div class="d-flex flex-column w-100">
+  <div class="d-flex flex-column w-100 mb-4">
     <div class="d-flex align-items-center" *ngIf="isShowTextHeader">
       <i class="icon-grid_round me-2 cursor-move" cdkDragHandle></i>
       <span class="fw-bold">{{ data.title }}</span>
       <span class="text-danger ms-2" *ngIf="data?.isRequired">(*)</span>
     </div>
     <codx-input
-      *ngIf="data?.controlType != 'Number'"
+      *ngIf="data?.fieldType != 'Number'"
       class="w-100 border mt-2 px-4 py-3 rd-3px"
       [field]="data?.fieldName"
       type="text"
@@ -107,7 +119,7 @@
       [disabled]="true"
     ></codx-input>
     <codx-input
-      *ngIf="data?.controlType == 'Number'"
+      *ngIf="data?.fieldType == 'Number'"
       class="w-100 border mt-2 px-4 py-3 rd-3px"
       [field]="data?.fieldName"
       type="number"
@@ -120,16 +132,16 @@
   </div>
 </ng-template>
 
-<!-- Danh sách || User-->
+<!-- Danh sách-->
 <ng-template #valueList let-data>
-  <div class="d-flex flex-column w-100">
+  <div class="d-flex flex-column w-100 mb-4">
     <div class="d-flex align-items-center" *ngIf="isShowTextHeader">
       <i class="icon-grid_round me-2 cursor-move" cdkDragHandle></i>
       <span class="fw-bold">{{ data.title }}</span>
       <span class="text-danger ms-2" *ngIf="data?.isRequired">(*)</span>
     </div>
 
-    <div *ngIf="data?.controlType == 'ValueList'" class="mt-2">
+    <div *ngIf="data?.fieldType == 'ValueList'" class="mt-2">
       <ng-container *ngIf="data?.refType == '2'">
         <ng-container *ngIf="!mutiSelectVll">
           <ejs-combobox
@@ -193,57 +205,58 @@
         </div>
       </ng-template>
     </div>
-    <div *ngIf="data?.controlType == 'User'">
-      <div *ngIf="data?.dataType == 'P'">
-        <button
-          type="button"
-          class="btn btn-sm btn-icon btn-light-primary d-flex align-items-center justify-content-between w-100 border mt-2 px-4 py-3 rd-3px"
-          (click)="openPopup()"
-        >
-          <span class="icon-person_add_alt_1 icon-16"></span>
-        </button>
-        <ng-container *ngIf="isPopupUserCbb">
-          <codx-combobox-popup
-            [comboboxName]="'Users'"
-            [field]="'cbbUser'"
-            [multiple]="data.multiselect ?? false"
-            [width]="700"
-            [height]="600"
-            [value]=""
-            (clickSave)="valueChangePop($event)"
-          >
-          </codx-combobox-popup>
-        </ng-container>
-      </div>
-    </div>
   </div>
 </ng-template>
 
-<!-- ComboBox -->
+<!-- ComboBox || User -->
 <ng-template #combobox let-data>
-  <div class="d-flex flex-column w-100">
-    <div class="d-flex align-items-center" *ngIf="isShowTextHeader">
-      <i class="icon-grid_round me-2 cursor-move" cdkDragHandle></i>
-      <span class="fw-bold">{{ data.title }}</span>
-      <span class="text-danger ms-2" *ngIf="data?.isRequired">(*)</span>
+  <div class="d-flex flex-column w-100 mb-4">
+    <div class="d-flex justify-content-between">
+      <div class="d-flex align-items-center" *ngIf="isShowTextHeader">
+        <i class="icon-grid_round me-2 cursor-move" cdkDragHandle></i>
+        <span class="fw-bold">{{ data.title }}</span>
+        <span class="text-danger ms-2" *ngIf="data?.isRequired">(*)</span>
+      </div>
+      <div class="d-flex justify-content-end align-items-center me-3">
+        <div *ngIf="data?.refType == '3P'">
+          <button
+            type="button"
+            class="btn btn-sm btn-icon btn-light-primary"
+            (click)="openPopup()"
+          >
+            <span class="icon-person_add_alt_1 icon-16"></span>
+          </button>
+          <ng-container *ngIf="isPopupUserCbb">
+            <codx-combobox-popup
+              [comboboxName]="data?.refValue"
+              [field]="'cbbUser'"
+              [multiple]="data.multiselect ?? false"
+              [width]="700"
+              [height]="600"
+              [value]=""
+              (clickSave)="valueChangePop($event)"
+            >
+            </codx-combobox-popup>
+          </ng-container>
+        </div>
+      </div>
     </div>
-    <codx-input
-      class="d-flex align-items-center justify-content-between w-100 border mt-2 px-4 py-3 rd-3px"
-      [field]="data?.fieldName"
-      type="combobox"
-      [refType]="data?.refType"
-      [refValue]="data?.refValue"
-      [format]="data?.dataType"
-      [placeholder]="data?.description || ''"
-      [crrValue]="data?.defaultValue"
-      [disabled]="true"
-    ></codx-input>
+    <div class="mt-2" *ngIf="data?.refType == '3'">
+      <codx-input
+        [field]="data?.fieldName"
+        type="combobox"
+        [refValue]="data?.refValue"
+        [refType]="data.refType"
+        [placeholder]="data?.description"
+        [multiple]="data.multiselect ?? false"
+      ></codx-input>
+    </div>
   </div>
 </ng-template>
 
 <!-- DateTime -->
 <ng-template #datetime let-data>
-  <div class="d-flex flex-column w-100">
+  <div class="d-flex flex-column w-100 mb-4">
     <div class="d-flex align-items-center" *ngIf="isShowTextHeader">
       <i class="icon-grid_round me-2 cursor-move" cdkDragHandle></i>
       <span class="fw-bold">{{ data.title }}</span>
@@ -263,7 +276,7 @@
 
 <!-- attachment -->
 <ng-template #attachment let-data>
-  <div class="d-flex flex-column w-100">
+  <div class="d-flex flex-column w-100 mb-4">
     <div class="d-flex align-items-center" *ngIf="isShowTextHeader">
       <i class="icon-grid_round me-2 cursor-move" cdkDragHandle></i>
       <span class="fw-bold">{{ data.title }}</span>
@@ -306,12 +319,12 @@
     <codx-input
       [field]="data?.fieldName"
       type="switch"
-      *ngIf="data?.dataType == 's'"
+      *ngIf="data?.controlType == 'Switch'"
       [showSpinButton]="false"
       [crrValue]="data?.defaultValue ?? false"
       [disabled]="true"
     ></codx-input>
-    <div *ngIf="data?.dataType == 'c'">
+    <div *ngIf="data?.controlType == 'CheckBox'">
       <codx-input
         id="yes"
         name="{{ data?.recID }} {{ data.fieldName }}"
@@ -319,7 +332,8 @@
         type="radio"
         label="Yes"
         field="yes"
-        [checked]="data?.defaultValue ?? false"
+        [checked]="true"
+        [crrValue]="true"
         [disabled]="true"
       ></codx-input>
       <codx-input
@@ -329,24 +343,17 @@
         type="radio"
         label="No"
         field="no"
-        [checked]="!data?.defaultValue ?? false"
+        [checked]="false"
+        [crrValue]="false"
         [disabled]="true"
       ></codx-input>
     </div>
-    <codx-input
-      [field]="data?.fieldName"
-      *ngIf="data?.dataType == 'checkbox'"
-      type="checkbox"
-      [showSpinButton]="false"
-      [crrValue]="data?.defaultValue || false"
-      [disabled]="true"
-    ></codx-input>
   </div>
 </ng-template>
 
 <!-- Share -->
 <ng-template #share let-data>
-  <div class="d-flex flex-column w-100">
+  <div class="d-flex flex-column w-100 mb-4">
     <div class="d-flex align-items-center" *ngIf="isShowTextHeader">
       <i class="icon-grid_round me-2 cursor-move" cdkDragHandle></i>
       <span class="fw-bold">{{ data.title }}</span>
@@ -363,7 +370,7 @@
 
 <!-- Rank -->
 <ng-template #rank let-data>
-  <div class="d-flex flex-column w-100">
+  <div class="d-flex flex-column w-100 mb-4">
     <div class="d-flex align-items-center" *ngIf="isShowTextHeader">
       <i class="icon-grid_round me-2 cursor-move" cdkDragHandle></i>
       <span class="fw-bold">{{ data.title }}</span>
@@ -410,7 +417,7 @@
 
 <!-- Table -->
 <ng-template #tables let-data>
-  <div class="d-flex flex-column w-100">
+  <div class="d-flex flex-column w-100 mb-4">
     <div class="d-flex align-items-center" *ngIf="isShowTextHeader">
       <i class="icon-grid_round me-2 cursor-move" cdkDragHandle></i>
       <span class="fw-bold">{{ data.title }}</span>
@@ -450,7 +457,7 @@
 
 <!-- Progress -->
 <ng-template #progress let-data>
-  <div class="d-flex flex-column w-100">
+  <div class="d-flex flex-column w-100 mb-4">
     <div class="d-flex align-items-center" *ngIf="isShowTextHeader">
       <i class="icon-grid_round me-2 cursor-move" cdkDragHandle></i>
       <span class="fw-bold">{{ data.title }}</span>
@@ -461,7 +468,7 @@
         <div [attr.data-value]="0">0%</div>
         <div [attr.data-value]="100">100%</div>
       </div>
-      <div class="h-10px position-relative bg-gray-200 rounded-4 w-100">
+      <div class="h-10px position-relative bg-gray-200 rounded-4 w-100 mb-4">
         <div
           class="rounded-4 h-10px"
           [style.background-color]="data?.rank?.color"
@@ -478,13 +485,13 @@
 
 <!-- Email -->
 <ng-template #email let-data>
-  <div class="d-flex flex-column w-100">
+  <div class="d-flex flex-column w-100 mb-4">
     <div class="d-flex align-items-center" *ngIf="isShowTextHeader">
       <i class="icon-grid_round me-2 cursor-move" cdkDragHandle></i>
       <span class="fw-bold">{{ data.title }}</span>
       <span class="text-danger ms-2" *ngIf="data?.isRequired">(*)</span>
     </div>
-    <div class="d-flex align-items-center justify-content-between w-100">
+    <div class="d-flex align-items-center justify-content-between w-100 mb-4">
       <codx-input
         class="border mt-2 px-4 py-3 rd-3px"
         [field]="data?.fieldName"
@@ -501,13 +508,13 @@
 
 <!-- Address -->
 <ng-template #address let-data>
-  <div class="d-flex flex-column w-100">
+  <div class="d-flex flex-column w-100 mb-4">
     <div class="d-flex align-items-center" *ngIf="isShowTextHeader">
       <i class="icon-grid_round me-2 cursor-move" cdkDragHandle></i>
       <span class="fw-bold">{{ data.title }}</span>
       <span class="text-danger ms-2" *ngIf="data?.isRequired">(*)</span>
     </div>
-    <div class="d-flex align-items-center justify-content-between w-100">
+    <div class="d-flex align-items-center justify-content-between w-100 mb-4">
       <codx-input
         class="border mt-2 px-4 py-3 rd-3px"
         [field]="data?.fieldName"
@@ -524,13 +531,13 @@
 
 <!-- Expression -->
 <ng-template #expression let-data>
-  <div class="d-flex flex-column w-100">
+  <div class="d-flex flex-column w-100 mb-4">
     <div class="d-flex align-items-center" *ngIf="isShowTextHeader">
       <i class="icon-grid_round me-2 cursor-move" cdkDragHandle></i>
       <span class="fw-bold">{{ data.title }}</span>
       <span class="text-danger ms-2" *ngIf="data?.isRequired">(*)</span>
     </div>
-    <div class="d-flex align-items-center justify-content-between w-100">
+    <div class="d-flex align-items-center justify-content-between w-100 mb-4">
       <codx-input
         class="border mt-2 px-4 py-3 rd-3px"
         [field]="data?.fieldName"
@@ -547,13 +554,13 @@
 
 <!-- Phone -->
 <ng-template #phone let-data>
-  <div class="d-flex flex-column w-100">
+  <div class="d-flex flex-column w-100 mb-4">
     <div class="d-flex align-items-center" *ngIf="isShowTextHeader">
       <i class="icon-grid_round me-2 cursor-move" cdkDragHandle></i>
       <span class="fw-bold">{{ data.title }}</span>
       <span class="text-danger ms-2" *ngIf="data?.isRequired">(*)</span>
     </div>
-    <div class="d-flex align-items-center justify-content-between w-100">
+    <div class="d-flex align-items-center justify-content-between w-100 mb-4">
       <codx-input
         class="border mt-2 px-4 py-3 rd-3px"
         [field]="data?.fieldName"

@@ -600,7 +600,7 @@ clickchoi(){
   let dataDiagram = this.diagram.saveDiagram();
   let obj = JSON.parse(dataDiagram);
   if(Object.keys(obj).length && obj.nodes){
-    console.log(obj.nodes);
+    console.log(obj.nodes.toString());
   }
 
   }
@@ -732,7 +732,9 @@ clickchoi(){
     formModelField.entityName = "DP_Steps_Fields";
     formModelField.userPermission = this.dialog?.formModel?.userPermission;
     option.FormModel = formModelField;
-    let data = {};
+    let data = {
+      process: this.data
+    };
     let popupDialog = this.callfc.openForm(
       FormPropertiesFieldsComponent,
       '',

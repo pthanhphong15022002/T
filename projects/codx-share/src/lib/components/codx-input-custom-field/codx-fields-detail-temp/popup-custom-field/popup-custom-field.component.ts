@@ -32,6 +32,8 @@ export class PopupCustomFieldComponent implements OnInit {
   point: string = ','; //dấu phân cách thập phân
   isAdd = false;
   taskID = ''; //task
+  isShowMore = false; //mở rộng popup
+  widthDefault = '550';
 
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
@@ -50,6 +52,10 @@ export class PopupCustomFieldComponent implements OnInit {
     this.dialog = dialog;
     this.isAdd = dt?.data?.isAdd ?? false;
     this.arrCaculateField = this.fields.filter((x) => x.dataType == 'CF');
+    //lấy độ rộng popup
+    this.widthDefault = this.dialog.dialog.width
+      ? this.dialog.dialog.width.toString()
+      : '550';
   }
 
   ngOnInit(): void {
@@ -178,6 +184,17 @@ export class PopupCustomFieldComponent implements OnInit {
           f.dataValue?.toString()
         ) {
           let dataValue = f.dataValue;
+          // //loai e
+          // let idxE = dataValue.toString().toLowerCase().indexOf('e');
+          // if (idxE != -1) {
+          //   let mu = dataValue
+          //     .toString()
+          //     .substring(idxE + 2, dataValue?.length);
+          //   dataValue =
+          //     Number.parseFloat(dataValue.toString().substring(0, idxE)) *
+          //     Math.pow(10, Number.parseInt(mu));
+          // }
+          // //
           if (f.dataFormat == 'P') dataValue = dataValue + '/100';
           dataFormat = dataFormat.replaceAll(
             '[' + f.fieldName + ']',
@@ -234,5 +251,12 @@ export class PopupCustomFieldComponent implements OnInit {
     }
 
     return field;
+  }
+
+  //openpopup
+  rezisePopup(width = '1000') {
+    this.isShowMore = !this.isShowMore;
+    this.dialog.setWidth(this.isShowMore ? width : this.widthDefault);
+    this.changeDetectorRef.detectChanges();
   }
 }

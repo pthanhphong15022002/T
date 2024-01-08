@@ -7,8 +7,8 @@
         </div>
         <div class="d-status me-5">
           <codx-vll
-            *ngIf="data?.iterationID"
-            [name]="'PM001'"
+            *ngIf="data?.iterationID && projectCategory"
+            [name]="'TM020'"
             [value]="projectCategory"
             [showText]="true"
             [showBgColor]="true"
@@ -117,7 +117,6 @@
   </div>
   <!-- </div> -->
   <div class="w-100 bg-gray-100 pt-2 view-details-main">
-    
     <div class="view-details-content bg-body scroll-y mx-0 px-3">
       <div
         class="sprints-task-detail"

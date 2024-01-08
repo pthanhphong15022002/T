@@ -198,6 +198,7 @@ import { PopupCustomFieldComponent } from './components/codx-input-custom-field/
 import { FormatDataValuePipe } from './components/codx-input-custom-field/codx-fields-detail-temp/pipes-fields/format-data-value.pipe';
 import { SumColumnsTablePipe } from './components/codx-input-custom-field/codx-fields-detail-temp/pipes-fields/sum-columns-table.pipe';
 import { ChangeMemoryCellsPipe } from './components/codx-input-custom-field/codx-fields-detail-temp/pipes-fields/change-memory-cells.pipe';
+import { PopupSelectFieldReferenceComponent } from './components/codx-input-custom-field/popup-select-field-reference/popup-select-field-reference.component';
 
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
@@ -356,6 +357,7 @@ const T_Component: Type<any>[] = [
   CodxViewApproveComponent,
   CheckRoleStepPipe,
   SetColorTaskPipe,
+  PopupSelectFieldReferenceComponent,
   //CO
   AddNoteComponent,
   PopupTitleComponent,

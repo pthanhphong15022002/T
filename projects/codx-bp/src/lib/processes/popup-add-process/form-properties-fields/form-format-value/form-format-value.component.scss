@@ -1,78 +1,45 @@
-.body-left {
-  width: 20% !important;
-  padding-left: 10px;
-  overflow: auto;
-  height: calc(100vh - 130px);
-  .user-nav-item.user-nav-active {
-    background-color: #f4f7ff;
-    border-left-color: #3699ff;
-  }
-  .user-nav-item:hover {
-    background-color: var(--primary-lighter);
-  }
-  .list-datas {
-    width: 95%;
-    background-color: #dadada;
-    border-radius: 3px;
-    margin-bottom: 8px;
-    display: flex;
-    align-items: center;
-    /* font-size: 40px; */
-    /* margin-right: 3px; */
-    padding: 7px 3px 7px 9px;
-    .text-gray-500 {
-      font-weight: 500;
-      font-size: 20px;
-    }
-  }
+.ratio-slider {
+  position: relative;
 }
 
-.body-right {
-  width: 30% !important;
-
-  padding: 10px;
-  overflow: auto;
-  height: calc(100vh - 130px);
+.icons-container {
+  position: absolute;
+  top: -7px; /* Điều chỉnh khoảng cách giữa thanh slider và icon */
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-between;
 }
 
-.body-center {
-  width: 40% !important;
-  margin-left: 10px;
-  margin-right: 10px;
-  overflow: auto;
-  height: calc(100vh - 130px);
+.icons-container.progresspg{
+  top: -20px;
 }
 
-.dp-step.step-content {
-  height: calc(100vh - 130px);
-  .tab-pane#pane_2 {
-    padding: 0;
-  }
-  .tab-content {
-    height: 100%;
-  }
+input[type="range"] {
+  width: 100%;
+  margin-top: 20px; /* Điều chỉnh khoảng cách giữa thanh slider và icon */
 }
 
-codx-setting-fields{
-  width: 100% !important;
-  height: 100% !important;
-}
-codx-form-format-value{
-  width: 100% !important;
-  height: 100% !important;
+.size-icon{
+  font-size: 20px;
 }
 
-.item {
-  margin-bottom: 12px;
-  padding: 20px;
-  border: solid 1px;
-  background: #fff;
-  cursor: move;
+.icon {
+  width: 20px;
+  height: 20px;
+  border: 2px solid #3498db;
+  border-radius: 5px;
+  background-color: #fff;
+  color: #3498db;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
 }
 
-.table,
-.menu {
-  padding: 20px;
+input[type="range"]:disabled {
+  opacity: 0.5; /* Điều chỉnh độ mờ khi slider bị tắt */
+  cursor: not-allowed; /* Thay đổi kiểu con trỏ khi slider bị tắt */
 }
 
 .drap-copy {

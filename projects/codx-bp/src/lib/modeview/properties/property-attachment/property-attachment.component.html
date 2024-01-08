@@ -12,9 +12,31 @@
         <codx-label formName="DynamicForms" [gridViewName]="'grvDynamicForms' + data.controlType" [fiedName]="'title'" default="Tên ô nhập liệu" class="fw-bold"></codx-label>
         <codx-input type="text" [crrValue]="data.title" field="title" (valueChange)="changeValue($event)"></codx-input>
     </div>
-    <div class="mt-4">
-        <codx-label formName="DynamicForms" [gridViewName]="'grvDynamicForms' + data.controlType" [fiedName]="'description'" default="Hiển thị chuỗi gợi ý khi chưa có dữ liệu" class="fw-bold"></codx-label>
-        <codx-input type="text" [crrValue]="data.description" field="description" placeholder="Nhập giá trị hiển thị" (valueChange)="changeValue($event)"></codx-input>
+    <div class="d-flex flex-column mt-4">
+        <codx-label formName="DynamicForms" [gridViewName]="'grvDynamicForms' + data.controlType" [fiedName]="'documentControl'" default="Danh sách mẫu" class="fw-bold"></codx-label>
+        <table class="table mt-2">
+            <thead>
+              <tr class="bg-light">
+                <th scope="col">Tên file</th>
+                <th scope="col">Mẫu</th>
+                <th scope="col">Bắt buộc</th>
+                <th scope="col"></th>
+              </tr>
+            </thead>
+            <tbody>
+                <tr class="border-top" *ngFor="let item of data.documentControl , let i = index">                
+                    <th><codx-input type="text" placeholder="Tên File" field="title" [crrValue]="item.title" (valueChange)="valueChangeAttach($event,i)"></codx-input></th>
+                    <td><i class="icon-attach_file"></i></td>
+                    <td class="text-center"><codx-input type="checkbox" [checked]="item.isRequired" field="isRequired" (valueChange)="valueChangeAttach($event,i)"></codx-input></td>
+                    <td><i class="icon-close cursor-pointer" (click)="deleteRow(i)"></i></td>
+                </tr>
+                <tr class="border-top cursor-pointer" (click)="addRow()">                
+                    <th class="text-muted">Thêm file</th>
+                    <td><i class="icon-attach_file"></i></td>
+                    <td class="text-center"><input type="checkbox" disabled/></td>
+                </tr>
+            </tbody>
+          </table>
     </div>
     <div class="border-top mt-8">
         <div class="d-flex align-items-center mt-4">

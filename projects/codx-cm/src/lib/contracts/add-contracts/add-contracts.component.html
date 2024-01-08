@@ -13,19 +13,13 @@
   >
     <!-- [subHeader]="subHeader" -->
     <ng-template #information>
-      <ng-container
-        [ngTemplateOutlet]="informationTemp"
-      ></ng-container>
+      <ng-container [ngTemplateOutlet]="informationTemp"></ng-container>
     </ng-template>
     <ng-template #reference>
-      <ng-container
-        [ngTemplateOutlet]="referenceTemp"
-      ></ng-container>
+      <ng-container [ngTemplateOutlet]="referenceTemp"></ng-container>
     </ng-template>
     <ng-template #task>
-      <ng-container
-        [ngTemplateOutlet]="taskTemp"
-      ></ng-container>
+      <ng-container [ngTemplateOutlet]="taskTemp"></ng-container>
     </ng-template>
   </codx-layout-add>
 </ng-container>
@@ -204,19 +198,19 @@
   <div class="d-flex justify-content-between">
     <div>
       <button
-      type="button"
-      class="btn btn-light-primary me-3"
-      (click)="addFile($event)"
-    >
-      <i class="icon-cloud_upload fs-5"></i
-      ><span>
-        <codx-label
-          name="UploadFile"
-          formName="Tasks"
-          default="Đính kèm"
-        ></codx-label>
-      </span>
-    </button>
+        type="button"
+        class="btn btn-light-primary me-3"
+        (click)="addFile($event)"
+      >
+        <i class="icon-cloud_upload fs-5"></i
+        ><span>
+          <codx-label
+            name="UploadFile"
+            formName="Tasks"
+            default="Đính kèm"
+          ></codx-label>
+        </span>
+      </button>
     </div>
     <button type="button" button class="btn btn-primary ms-1" (click)="save()">
       <codx-label
@@ -321,7 +315,7 @@
         field="useType"
         [crrValue]="contracts?.useType"
         (valueChange)="valueChangeCombobox($event)"
-        [disabled]="action == 'extend'"
+        [disabled]="disabledUserType"
       >
       </codx-input>
     </div>
@@ -355,7 +349,12 @@
         [formModel]="form?.formModel"
         [crrValue]="contracts?.customerID"
         (valueChange)="valueChangeCombobox($event)"
-        [disabled]="type == 'deal' || type == 'quotation' || type == 'customer' || action == 'extend'"
+        [disabled]="
+          type == 'deal' ||
+          type == 'quotation' ||
+          type == 'customer' ||
+          action == 'extend'
+        "
       >
       </codx-input>
     </div>
@@ -631,6 +630,7 @@
           [customerID]="contracts?.customerID"
           [formModel]="dialog.formModel"
           [isAdd]="action == 'add'"
+          [refInstance]="refInstance"
           (valueChangeCustom)="valueChangeCustom($event)"
           (addFileCompleted)="addFileCompleted($event)"
         >
@@ -656,15 +656,8 @@
     </div>
     <div class="main-liquidation pt-3">
       <div class="form-group">
-        <codx-label
-          [formModel]="formModelAM"
-          fiedName="assetID"
-        ></codx-label>
-        <codx-input
-          field="assetID"
-          [formModel]="formModelAM"
-          
-        ></codx-input>
+        <codx-label [formModel]="formModelAM" fiedName="assetID"></codx-label>
+        <codx-input field="assetID" [formModel]="formModelAM"></codx-input>
       </div>
 
       <div class="form-group">
@@ -673,21 +666,17 @@
           fiedName="block"
           [default]="'Số lô'"
         ></codx-label>
-        <codx-input
-          field="block"
-          [formModel]="formModelAM"
-          
-        ></codx-input>
+        <codx-input field="block" [formModel]="formModelAM"></codx-input>
       </div>
 
       <div class="form-group">
         <div class="d-flex">
           <codx-label
-          [formModel]="formModelAM"
-          name="lblUsableArea"
-          [default]="'Diện tích thuê'"
-        ></codx-label>
-        <p class="fw-bold m-0"> (m<sup>2</sup>)</p>
+            [formModel]="formModelAM"
+            name="lblUsableArea"
+            [default]="'Diện tích thuê'"
+          ></codx-label>
+          <p class="fw-bold m-0">(m<sup>2</sup>)</p>
         </div>
         <codx-input
           class="me-3"
@@ -696,8 +685,6 @@
           type="number"
           min="0"
         ></codx-input>
-        
-       
       </div>
 
       <div class="form-group">
@@ -769,10 +756,7 @@
       </div>
     </div>
     <div class="footer-liquidation w-100 d-flex justify-content-end">
-      <button
-        type="button"
-        class="btn btn-primary ms-1"
-      >
+      <button type="button" class="btn btn-primary ms-1">
         <codx-label
           name="lblSave"
           [formModel]="formModelAM"

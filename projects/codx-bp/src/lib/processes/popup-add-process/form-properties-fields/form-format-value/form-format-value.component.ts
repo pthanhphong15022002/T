@@ -18,7 +18,7 @@ import { ApiHttpService, CallFuncService, FormModel } from 'codx-core';
 @Component({
   selector: 'codx-form-format-value',
   templateUrl: './form-format-value.component.html',
-  styleUrls: ['./form-format-value.component.css'],
+  styleUrls: ['./form-format-value.component.scss'],
 })
 export class FormFormatValueComponent implements OnInit {
   @Input() subItem: any;
@@ -58,8 +58,8 @@ export class FormFormatValueComponent implements OnInit {
   loadSubItem(){}
 
   loadData() {
-    if (this.subItem?.controlType) {
-      switch (this.subItem?.controlType) {
+    if (this.subItem?.fieldType) {
+      switch (this.subItem?.fieldType) {
         case 'ValueList':
           if (this.subItem?.refValue) this.loadDataVll();
           break;

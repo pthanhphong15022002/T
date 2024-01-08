@@ -366,9 +366,8 @@ export class KowdsComponent extends UIComponent {
         this.filterDowCode,
         this.isOnlyReadSavedData.toString(),
       ].join(';');
-      // if(this.viewDetailData){
-      //   this.calendarGrid.refresh();
-      // }
+      this.detectorRef.detectChanges();    
+      this.loadDataInGrid();
     }
   }
   handleShowHideMF(event) {
@@ -490,12 +489,10 @@ export class KowdsComponent extends UIComponent {
   }
 
   doubleClickGrid(event) {
-    let searchStr = 'workDate';
-    let date = parseInt(event.column.field.replace(searchStr, ''));
-    let data = event.rowData[`workDate${date}`];
-    let employeeId = event.rowData.emp.employeeID;
+    let data = event.rowData[event.column.field];
+    let employeeId = event?.rowData?.EmployeeID;
     if (this.userPermission.write != 0 || this.userPermission.isAdmin == true) {
-      this.handleEmpKows(this.editHeaderText, 'edit', data, employeeId, date);
+      this.handleEmpKows(this.editHeaderText, 'edit', data, employeeId, event.column.field);
     }
   }
 
