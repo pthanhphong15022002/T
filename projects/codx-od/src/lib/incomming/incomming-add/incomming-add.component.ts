@@ -99,7 +99,7 @@ export class IncommingAddComponent implements OnInit {
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
-    this.data = JSON.parse(JSON.stringify(dt?.data));
+    this.data = dt?.data//JSON.parse(JSON.stringify(dt?.data));
     this.dialog = dialog;
   }
   public disEdit: any;

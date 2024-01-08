@@ -940,6 +940,7 @@ export class ViewDetailComponent
           )
           .closed.subscribe((x) => {
             if (x.event) {
+              debugger
               this.data = x.event;
               this.view.dataService.update(x.event).subscribe();
             }
