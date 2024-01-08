@@ -199,6 +199,7 @@ import { FormatDataValuePipe } from './components/codx-input-custom-field/codx-f
 import { SumColumnsTablePipe } from './components/codx-input-custom-field/codx-fields-detail-temp/pipes-fields/sum-columns-table.pipe';
 import { ChangeMemoryCellsPipe } from './components/codx-input-custom-field/codx-fields-detail-temp/pipes-fields/change-memory-cells.pipe';
 import { PopupSelectFieldReferenceComponent } from './components/codx-input-custom-field/popup-select-field-reference/popup-select-field-reference.component';
+import { ViewGanttChartComponent } from './components/codx-tasks/view-gantt-chart/view-gantt-chart.component';
 
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
@@ -264,6 +265,7 @@ const T_Component: Type<any>[] = [
   PopupAddComponent,
   CodxTasksComponent,
   TreeViewComponent,
+  ViewGanttChartComponent,
   PopupUpdateStatusComponent,
   CodxTaskGoalTempComponent,
   ViewHistoryUpdateProgressComponent,
