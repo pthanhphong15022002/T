@@ -890,6 +890,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
 
   //#region Create dataservice
   edocumentCRUD: CRUDService = null;
+  eFamilyCRUD: CRUDService = null;
   //#endregion
 
   onInit(): void {
@@ -1882,6 +1883,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
   }
 
   clickMF(event: any, data: any, funcID = null) {
+    debugger;
     let subStr = event.functionID.substr(event.functionID.length - 3);
     if (subStr == 'A13') {
       let subFunc = event.functionID.substr(0, event.functionID.length - 3);
@@ -2006,17 +2008,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
           }
           break;
 
-        case 'SYS02': //delete
-          // if (event.isRenderDelete === true) {
-          //   this.hrService.GetCurrentBenefit(this.employeeID).subscribe((res) => {
-          //     if (res) {
-          //       this.listCrrBenefit = res;
-          //       this.df.detectChanges();
-          //     }
-          //   });
-          //   break;
-          // }
-
+        case 'SYS02':
           this.notifySvr.alertCode('SYS030').subscribe((x) => {
             if (x.event?.status == 'Y') {
               if (funcID == 'passport') {
@@ -2796,7 +2788,6 @@ export class EmployeeInfoDetailComponent extends UIComponent {
             } else if (res[i].url == this.ePartyURL) {
               this.ePartyFuncID = res[i].functionID;
               this.ePartyFunc = res[i];
-              console.log('dang doan', this.ePartyFunc);
             } else if (res[i].url == this.eFamiliesURL) {
               this.eFamiliesFuncID = res[i].functionID;
               this.eFamiliesFunc = res[i];
@@ -4349,6 +4340,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
   handleEFamilyInfo(actionHeaderText, actionType: string, data: any) {
     let option = new SidebarModel();
     option.FormModel = this.eFamilyFormModel;
+    option.DataService = this.eFamily();
     option.Width = '550px';
     let dialogAdd = this.callfunc.openSide(
       PopupEFamiliesComponent,
@@ -7328,6 +7320,16 @@ export class EmployeeInfoDetailComponent extends UIComponent {
         'HR'
       );
     return this.edocumentCRUD;
+  }
+
+  eFamily() {
+    if (!this.eFamilyCRUD)
+      this.eFamilyCRUD = this.hrService.createCRUDService(
+        this.inject,
+        this.eFamilyFormModel,
+        'HR'
+      );
+    return this.eFamilyCRUD;
   }
   //#endregion
 }
