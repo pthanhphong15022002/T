@@ -104,6 +104,7 @@ export class CodxTasksComponent
   @ViewChild('contentTmp') contentTmp?: TemplateRef<any>;
   @ViewChild('headerTemp') headerTemp?: TemplateRef<any>;
   @ViewChild('popupToDoList') popupToDoList?: TemplateRef<any>;
+  @ViewChild('viewGanttChart') viewGanttChart!: TemplateRef<any>;
 
   views: Array<ViewModel> = [];
   viewsDefault: Array<ViewModel> = [];
@@ -509,11 +510,12 @@ export class CodxTasksComponent
         },
       },
       // {
-      //   type: ViewType.chart,
+      //   type: ViewType.gantt,
       //   active: false,
       //   sameData: false,
       //   model: {
-      //     panelLeftRef: this.treeView,
+      //     panelLeftRef: this.viewGanttChart,
+      //     // template2: this.viewGanttChart,
       //   },
       // },
     ];
