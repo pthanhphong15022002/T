@@ -33,17 +33,21 @@ export class ProcessesComponent
   @ViewChild('templateListCard', { static: true })
   templateListCard: TemplateRef<any>;
   @ViewChild('headerTemplate') headerTemplate: TemplateRef<any>;
+  @ViewChild('templateMore') templateMore: TemplateRef<any>;
 
   views: Array<ViewModel> = [];
   moreFuncs: Array<ButtonModel> = [];
   button?: ButtonModel[];
-  method = '';
+  method = 'GetListProcessesAsync';
   showButtonAdd: boolean = true;
   dataObj: any;
   titleAction = '';
   heightWin: any;
   widthWin: any;
   itemSelected: any;
+  popoverDetail: any;
+  popupOld: any;
+  popoverList: any;
   readonly btnAdd: string = 'btnAdd';
   constructor(
     inject: Injector,
@@ -70,6 +74,17 @@ export class ProcessesComponent
           headerTemplate: this.headerTemplate,
         },
       },
+      {
+        type: ViewType.grid,
+        active: false,
+        sameData: true,
+        model: {
+          template2: this.templateMore,
+          groupSettings: { showDropArea: false, columns: ['groupID'] },
+          //resources: this.columnGrids,
+          // frozenColumns: 1,
+        },
+      },
     ];
   }
 
@@ -89,6 +104,25 @@ export class ProcessesComponent
     this.itemSelected = process?.data ? process?.data : process;
     this.detectorRef.detectChanges();
   }
+
+  PopoverDetail(e, p: any, emp, field: string) {
+    let parent = e.currentTarget.parentElement.offsetWidth;
+    let child = e.currentTarget.offsetWidth;
+    if (this.popupOld?.popoverClass !== p?.popoverClass) {
+      this.popupOld?.close();
+    }
+
+    if (emp != null) {
+      this.popoverList?.close();
+      this.popoverDetail = emp;
+      if (emp[field] != null && emp[field]?.trim() != '') {
+        if (parent <= child) {
+          p.open();
+        }
+      }
+    } else p.close();
+    this.popupOld = p;
+  }
   //#endregion
 
   //#region event more
@@ -101,8 +135,7 @@ export class ProcessesComponent
     }
   }
 
-  clickMF(e, data) {
-  }
+  clickMF(e, data) {}
 
   changeDataMF(e, data) {}
   //#endregion
@@ -124,7 +157,7 @@ export class ProcessesComponent
           if (res) {
             let obj = {
               gridViewSetup: res,
-              action: 'add'
+              action: 'add',
             };
             var dialog = this.callfc.openForm(
               PopupAddProcessComponent,
