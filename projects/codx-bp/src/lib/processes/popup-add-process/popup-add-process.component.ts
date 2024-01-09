@@ -1113,9 +1113,11 @@ export class PopupAddProcessComponent {
   //#endregion
 
   //#region Thong tin chung - Infomations
-  valueTagChange(e) {}
-
-  valueChange(e) {}
+  valueChange(e) {
+    if(e){
+      this.data[e?.field] = e?.data;
+    }
+  }
 
   //---- AVATA ---- //
   addAvatar() {
