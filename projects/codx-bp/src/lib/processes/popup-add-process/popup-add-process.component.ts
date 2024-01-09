@@ -952,6 +952,7 @@ export class PopupAddProcessComponent {
   linkAvatar = '';
   vllBP002: any;
   lstStepFields = [];
+  title = '';
   constructor(
     private detectorRef: ChangeDetectorRef,
     private callfc: CallFuncService,
@@ -964,6 +965,7 @@ export class PopupAddProcessComponent {
     this.dialog = dialog;
     this.data = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
     this.action = dt?.data?.action;
+    this.title = dt?.data?.title;
   }
 
   ngOnInit(): void {
