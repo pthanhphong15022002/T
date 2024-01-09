@@ -508,6 +508,15 @@ export class CodxTasksComponent
           panelLeftRef: this.treeView,
         },
       },
+      {
+        type: ViewType.gantt,
+        active: false,
+        sameData: true,
+
+        model: {
+          eventModel:this.taskSettings
+        },
+      },
     ];
 
     if (this.funcID == 'TMT03011') {
@@ -2106,7 +2115,12 @@ export class CodxTasksComponent
     TextField: 'userName',
     Title: 'Resources',
   };
-
+  taskSettings = {
+    id: 'taskID',
+    name: 'taskName',
+    startDate: 'startDate',
+    endDate: 'endDate',
+};
   getCellContent(evt: any) {
     if (this.dayoff.length > 0) {
       for (let i = 0; i < this.dayoff.length; i++) {
