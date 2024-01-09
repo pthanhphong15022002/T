@@ -156,3 +156,14 @@ codx-treeview .no-permission {
 {
   border: 1px dashed;
 }
+.bg-dm-trans
+{
+  background-color: rgb(239 239 239 / 30%);
+}
+.bg-dm-trans.selected
+{
+  i
+  {
+    color: var(--text-primary);
+  }
+}

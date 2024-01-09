@@ -83,8 +83,6 @@ export class PopupAddCardsComponent implements OnInit {
   countCardReive: number = 0;
   countCardSend: number = 0;
   countPointSend: number = 0;
-  max: number = 0;
-  min: number = 0;
   giftCount: number;
   givePoint: number = 0;
   quantity: number = 0;
@@ -900,8 +898,6 @@ export class PopupAddCardsComponent implements OnInit {
   getGiftInfor(e: any) {
     this.showPopupGift = !this.showPopupGift;
     if (!e) return;
-    this.min = 0;
-    this.max = 0;
     this.giftIDs = e.id;
     let giftIDs = e.id.split(';');
 
@@ -928,12 +924,6 @@ export class PopupAddCardsComponent implements OnInit {
             } else {
               gift.quantity = 1;
               this.gifts.push(gift);
-              // this.form.patchValue({ giftID: giftID });
-              // this.max = res.availableQty;
-              // this.min = 1;
-              // this.quantity = 1;
-              // this.amount = this.quantity * this.gifts[0].price;
-              // this.form.patchValue({ quantity: 1 });
             }
           });
           this.updateAmountGift();
@@ -990,6 +980,9 @@ export class PopupAddCardsComponent implements OnInit {
 
   saveEvoucher(data: any) {
     this.evoucher = [...data.evoucherGift];
+    this.amountEvoucher = this.evoucher.reduce((p, c) => {
+      return p + c.price * c.quantity;
+    }, 0);
     this.evoucherSelected = [...data.dataSelcected];
     this.showPopupEvoucher = false;
   }

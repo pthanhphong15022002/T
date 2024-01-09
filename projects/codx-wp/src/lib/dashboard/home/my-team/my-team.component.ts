@@ -43,6 +43,7 @@ export class MyTeamComponent implements OnInit {
   @ViewChild("ktAside", { static: true }) ktAside: ElementRef;
   @ViewChild("ktHeaderMobile", { static: true }) ktHeaderMobile: ElementRef;
   @ViewChild("ktHeader", { static: true }) ktHeader: ElementRef;
+  lstEmp=[];
 
   constructor(router: Router,
     private layout: LayoutService,
@@ -83,7 +84,8 @@ export class MyTeamComponent implements OnInit {
     this.footerCSSClasses = this.layout.getStringCSSClasses("footer");
     this.headerCSSClasses = this.layout.getStringCSSClasses("header");
     this.headerHTMLAttributes = this.layout.getHTMLAttributes("header");
-    this.getMyTeam();
+    //this.getMyTeam();
+    this.getBirthDayEmps();
   }
 
   ngAfterViewInit(): void {
@@ -120,9 +122,24 @@ export class MyTeamComponent implements OnInit {
 
   pageIndex:number = 1;
   total:number = 0;
-  lstMyTeam:any[] = [];
+  lstMyTeam = [];
   scrolling:boolean = false;
   //get my team 
+  getBirthDayEmps(){
+    this.api
+    .execSv("HR",
+    "ERM.Business.HR",
+    "EmployeesBusiness",
+    "LoadBirthDayEmpsAsync",
+    [])
+    .subscribe((res:any) => {
+      if(res){
+        this.lstEmp=res;
+        this.dt.detectChanges();        
+        setInterval(() => this.showSlides(), 5000);
+      }
+    });
+  }
   getMyTeam(){
     this.api
     .execSv("HR",
@@ -155,7 +172,7 @@ export class MyTeamComponent implements OnInit {
     if(this.scrolling && ele.offsetHeight - ele.scrollHeight <= 50)
     {
       this.scrolling = false;
-      this.getMyTeam();
+      //this.getMyTeam();
     }
   }
   employeeSeletecd:any = null;
@@ -199,5 +216,22 @@ export class MyTeamComponent implements OnInit {
   valueChange(value:any){
     debugger
     this.searchText = value.data;
+  }
+
+  slideIndex = 0;
+
+  showSlides() {
+    let i;
+    let slides = document.getElementsByClassName("mySlides") as HTMLCollectionOf<HTMLElement>;
+    if(slides?.length>0){
+      for (i = 0; i < slides.length; i++) {
+        slides[i].style.display = "none";  
+      }      
+      if (this.slideIndex >= slides.length) {this.slideIndex = 0}  
+      if(this.slideIndex >=0 && this.slideIndex<slides.length){
+        slides[this.slideIndex].style.display = "block";  
+      }      
+      this.slideIndex++;
+    }
   }
 }

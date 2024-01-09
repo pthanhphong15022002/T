@@ -5,7 +5,6 @@
     <div class="page-profile">
       <div class="d-flex">
         <div class="user-left me-4 border w-350px min-w-350px bg-white">
-          <!-- <div class="bg-sidebar"> -->
           <div class="profile-bg"></div>
           <div class="d-flex flex-column text-center mx-4 profile-info">
             <div class="mb-3 d-flex justify-content-between align-items-top">
@@ -49,7 +48,6 @@
                                   <codx-vll [name]="'HRGender'" [showText]="true" [field]="'Gender'"
                                     [showBgColor]="true" [formModel]="eInfoFormModel" [showIcon]="false"
                                     [value]="infoPersonal?.gender">
-                                    <!-- class="badge badge-light badge-md fs-body border-0 me-2" -->
                                   </codx-vll>
                                 </span>
                               </div>
@@ -360,7 +358,7 @@
             </ul>
           </div>
         </div>
-        <div class="w-100 user-right">
+        <div class="w-100 user-right overflow-hidden">
           <div class="tab-content">
             <!-- Pane 1: Sơ yếu lí lịch -->
             <div *ngIf="curriculumVitaeFunc && curriculumVitaeFunc.isActive == true" class="tab-pane fade show"
@@ -401,50 +399,7 @@
         </div>
       </div>
     </div>
-
-    <!-- nut bam dropdown them moi -->
-
-    <!-- <div
-      ngbDropdown
-      class="emp-check-add rounded-circle"
-      *ngIf="lstBtnAdd && lstBtnAdd.length > 0 && infoPersonal && infoPersonal.status != '90'"
-    >
-      <span
-        ngbDropdownToggle
-        class="btn btn-icon btn-primary rounded-circle fs-1 icon-add icon-22"
-      >
-
-      </span>
-      <div ngbDropdownMenu class="min-w-200px">
-        <div class="card card-flush">
-          <div class="d-flex flex-column" *ngIf="lstBtnAdd">
-            <ng-container *ngFor="let item of lstBtnAdd">
-              <a
-                class="w-100 btn btn-flex btn-active-light-primary"
-                (click)="add(item.functionID)"
-              >
-                <div class="d-flex align-items-bottom">
-                  <span
-                    class="icon-18 me-2"
-                    [ngClass]="item?.largeIcon ? item.largeIcon : 'icon-person'"
-                  ></span>
-                  <div class="fw-bold text-left">{{ item.customName }}</div>
-                </div>
-              </a>
-            </ng-container>
-          </div>
-        </div>
-      </div>
-    </div> -->
   </div>
-  <!-- <div class="more-function">
-    <div class="d-flex flex-column">
-      <span class="postnews mt-3">
-        <a class="btn btn-icon btn-primary"><i class="icon-add fs-1"></i></a>
-      </span>
-    </div>
-  </div>
--->
 </ng-template>
 
 <!-- pane_1 Sơ yếu lí lịch -->
@@ -2358,13 +2313,13 @@
             <div class="row mb-5">
               <div class="col">
                 <div class="text-gray-600 pb-1">
-                  <codx-label fiedName="PayrollGroupID" [formModel]="eInfoFormModel" [setRequire]="false">
+                  <codx-label fiedName="GroupSalCode" [formModel]="eInfoFormModel" [setRequire]="false">
                   </codx-label>
                 </div>
                 <div class="d-flex align-items-center">
                   <span class="fw-bold text-dark" [innerHTML]="
-                      infoPersonal?.payrollGroupID
-                        | formatvalue : eInfoFormModel : 'payrollGroupID'
+                      infoPersonal?.groupSalCode
+                        | formatvalue : eInfoFormModel : 'groupSalCode'
                         | async
                     "></span>
                 </div>
@@ -2410,27 +2365,6 @@
                     [disabled]="true"></codx-input>
                 </div>
               </div>
-              <!-- <div class="col-8">
-                <div class="text-gray-600 pb-1">
-                  <codx-label
-                    fiedName="AdvanceAmount"
-                    [formModel]="eInfoFormModel"
-                    [setRequire]="false"
-                  >
-                  </codx-label>
-                </div>
-                <div class="d-flex align-items-center">
-                  <span
-                    class="fw-bold text-dark"
-                    [innerHTML]="
-                      infoPersonal?.advanceAmount
-                        | formatvalue : eInfoFormModel : 'advanceAmount'
-                        | async
-                    "
-                  >
-                  </span>
-                </div>
-              </div> -->
             </div>
           </div>
         </div>
@@ -2465,11 +2399,6 @@
                   <div class="issubcheck me-3 w-25px h-25px position-relative">
                     <span class="icon-i-circle-fill icon-22 text-gray-300 position-absolute top-0 left-0"></span>
                     <span class="position-absolute top-0 left-0" *ngIf="doc?.isSubmitted == true">
-                      <!-- <codx-input
-                        [type]="'checkbox'"
-                        [checked]="true"
-                        [disabled]="true"
-                      ></codx-input> -->
                       <span class="icon-i-check-circle-fill icon-22 text-primary"></span>
                     </span>
                     <span *ngIf="doc?.isRequired == true" class="h-15px position-absolute end-0 bottom-0">
@@ -2531,11 +2460,6 @@
     data-kt-scroll-max-height="auto" data-kt-scroll-dependencies=".pw-profile,.pw-menu"
     data-kt-scroll-wrappers=".employee-container" data-kt-scroll-offset="0px" scrollSpy [spiedTags]="['DIV']"
     (sectionChange)="onSectionChange($event, 2)">
-    <!-- <div
-      class="user-content flex-row-fluid"
-      scrollSpy
-      (sectionChange)="onSectionChange($event)"
-    > -->
 
     <!-- Lương -->
     <div class="user-profile overview d-block" [id]="eBasicSalaryFuncID"
@@ -2554,7 +2478,7 @@
             <div
               *ngIf="salaryBenefitInfoPer.eBasicSalaryFuncID.write == true && (fromWS == false || salaryBenefitInfoPer.eBasicSalaryFuncID.isPortal == false)">
               <button type="button" class="btn btn-icon btn-sm btn-white" (click)="
-                  HandleEmployeeBasicSalariesInfo(addHeaderText, 'add', null)
+                  handleEBasicSalaries(addHeaderText, 'add', null)
                 ">
                 <span class="icon-add icon-18"></span>
               </button>

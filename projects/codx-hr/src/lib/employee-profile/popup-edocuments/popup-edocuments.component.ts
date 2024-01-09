@@ -139,22 +139,11 @@ export class PopupEdocumentsComponent extends UIComponent implements OnInit {
       this.attachment.fileUploadList.length > 0
     ) {
       this.attachment.objectId = this.documentObj?.recID;
-      (await this.attachment.saveFilesObservable()).subscribe(
-        (item2: any) => {}
-      );
+      (await this.attachment.saveFilesObservable()).subscribe();
     }
     this.form.save(null, 0, '', '', true).subscribe((res: any) => {
-      if (res.hasOwnProperty('save')) {
-        if (res.save.hasOwnProperty('data')) {
-          if (res.save.data)
-            return this.dialog && this.dialog.close(res.save.data);
-        }
-      }
-      if (res.hasOwnProperty('update')) {
-        if (res.update.hasOwnProperty('data')) {
-          if (res.update.data)
-            return this.dialog && this.dialog.close(res.update.data);
-        }
+      if (res.save?.data || res.update?.data) {
+        return this.dialog && this.dialog.close(res.save.data);
       }
       this.dialog && this.dialog.close();
     });

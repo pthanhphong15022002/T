@@ -24,6 +24,8 @@ export class FormFormatValueComponent implements OnInit {
   @Input() subItem: any;
   @Input() dataCurrent: any;
   @Input() isShowTextHeader: boolean = false;
+  @Input() showIconDrop: boolean = true;
+
   @Input() formModel: FormModel = {
     formName: 'DPStepsFields',
     gridViewName: 'grvDPStepsFields',
@@ -43,6 +45,8 @@ export class FormFormatValueComponent implements OnInit {
     color: 'color',
     textColor: 'textColor',
   };
+  lstTables = [];
+  hasIndexNo: boolean = false;
   constructor(
     private detectorRef: ChangeDetectorRef,
     private callFc: CallFuncService,
@@ -64,6 +68,17 @@ export class FormFormatValueComponent implements OnInit {
           if (this.subItem?.refValue) this.loadDataVll();
           break;
         case 'Combobox':
+          break;
+        case 'Table':
+          if(this.subItem?.tableFormat){
+            const format = JSON.parse(this.subItem?.tableFormat);
+            this.hasIndexNo = format?.hasIndexNo;
+          }
+          let tables = [];
+          if(this.subItem?.dataFormat){
+             tables = JSON.parse(this.subItem?.dataFormat);
+          }
+          this.lstTables = JSON.parse(JSON.stringify(tables));
           break;
       }
     }

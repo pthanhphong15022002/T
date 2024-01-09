@@ -1,11 +1,8 @@
-import { dialog } from '@syncfusion/ej2-angular-spreadsheet';
-import { FormGroup } from '@angular/forms';
 import { CodxHrService } from './../../codx-hr.service';
-import { Injector, inject, ChangeDetectorRef, Input } from '@angular/core';
+import { Injector, ChangeDetectorRef } from '@angular/core';
 import { Component, OnInit, Optional, ViewChild } from '@angular/core';
 import {
   CodxFormComponent,
-  CodxListviewComponent,
   DataRequest,
   DialogData,
   DialogRef,
@@ -26,17 +23,13 @@ export class PopupEBasicSalariesComponent
   implements OnInit
 {
   formModel: FormModel;
-  // formGroup: FormGroup;
   dialog: DialogRef;
-  // lstEBSalary
-  // indexSelected
   EBasicSalaryObj: any;
   idField = 'RecID';
   actionType: string;
   disabledInput = false;
   isMultiCopy: boolean = false;
   employeeId: string | null;
-  // isAfterRender = false;
   headerText: ' ';
   autoNumField: string;
   @ViewChild('form') form: CodxFormComponent;
@@ -282,8 +275,6 @@ export class PopupEBasicSalariesComponent
     }
 
     if (this.actionType == 'copyMulti') {
-      console.log('chay vao add multi');
-
       this.hrService
         .AddMultiEmployeeBasicSalariesInfo(this.form.formGroup.value)
         .subscribe((res) => {
@@ -303,10 +294,6 @@ export class PopupEBasicSalariesComponent
           } else {
             this.dialog && this.dialog.close();
           }
-          // if(res == true){
-          //   this.notify.notifyCode('SYS006');
-          //   this.dialog && this.dialog.close();
-          // }
         });
     } else {
       if (this.actionType === 'add' || this.actionType === 'copy') {

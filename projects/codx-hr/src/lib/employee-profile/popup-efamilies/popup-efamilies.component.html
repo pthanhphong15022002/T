@@ -1,48 +1,46 @@
-<ng-container *ngIf="familyMemberObj">
+<ng-container *ngIf="data">
 
   <codx-form #form [headerText]="headerText" [body]="formbody" [formModel]="formModel" [footer]="footer"
-    [dialog]="dialog" [data]="familyMemberObj">
+    [dialog]="dialog" [data]="data">
     <ng-template #formbody>
       <ng-container *ngIf="form.formGroup">
-
         <div class="form-group row">
           <div class="col-6">
             <codx-img #imageUpLoad [width]="80" [objectType]="formModel.entityName" aria-disabled="true"
-              [funcId]="funcID" [isAllowEdit]="true" [objectId]="familyMemberObj?.recID"
-              [objectName]="familyMemberObj?.recID" [updateDirect]="false" [imgOn]="familyMemberObj?.modifiedOn"
-              (dataChanged)="changeAvatar($event)">
+              [funcId]="funcID" [isAllowEdit]="true" [objectId]="data?.recID" [objectName]="data?.recID"
+              [updateDirect]="false" [imgOn]="data?.modifiedOn" (handleInput)="changeAvatar($event)">
             </codx-img>
           </div>
           <div class="col-6">
             <div class="form-group">
-              <codx-input [disabled]="disabledInput" (valueChange)="focus($event)" [formModel]="form.formModel"
-                [Group]="form.formGroup" field="isEmployee"></codx-input>
+              <codx-input [disabled]="disabledInput" [formModel]="form.formModel" [Group]="form.formGroup"
+                field="isEmployee"></codx-input>
               <codx-label class="ms-3" [formModel]="form.formModel" fiedName="IsEmployee"></codx-label>
             </div>
 
             <div class="form-group mb-0">
               <codx-label [formModel]="form.formModel" fiedName="RefEmployeeID"></codx-label>
-              <codx-input [disabled]="!this.isEmployee || disabledInput" [Group]="form.formGroup"
+              <codx-input [disabled]="!this.data.isEmployee || disabledInput" [Group]="form.formGroup"
                 [formModel]="form.formModel" field="refEmployeeID"
                 (valueChange)="onSelectEmployee($event)"></codx-input>
             </div>
           </div>
         </div>
 
-        <div class="form-group row" *ngIf="form.gridviewSetup.RelationName.allowPopup == true">
+        <div class="form-group row">
           <codx-label [formModel]="form.formModel" fiedName="RelationName"></codx-label>
           <codx-input [disabled]="disabledInput" [Group]="form.formGroup" [formModel]="form.formModel"
             field="relationName"></codx-input>
         </div>
 
         <div class="form-group row">
-          <div class="col-6" *ngIf="form.gridviewSetup.Gender.allowPopup == true">
+          <div class="col-6">
             <codx-label [formModel]="form.formModel" fiedName="Gender"></codx-label>
             <codx-input [disabled]="disabledInput" [Group]="form.formGroup" [formModel]="form.formModel"
               field="gender"></codx-input>
           </div>
 
-          <div class="col-6" *ngIf="form.gridviewSetup.Birthday.allowPopup == true">
+          <div class="col-6">
             <codx-label fiedName="Birthday" [formModel]="form.formModel"></codx-label>
             <codx-input [disabled]="disabledInput" field="birthday" [Group]="form.formGroup"
               [formModel]="form.formModel"></codx-input>
@@ -169,12 +167,12 @@
         <div class="form-group row">
           <div class="col-6">
             <codx-label fiedName="IDCardNo" [formModel]="form.formModel"></codx-label>
-            <codx-input [disabled]="disabledInput" field="IDCardNo" [Group]="form.formGroup"
+            <codx-input [disabled]="disabledInput" field="idCardNo" [Group]="form.formGroup"
               [formModel]="form.formModel"></codx-input>
           </div>
           <div class="col-6">
             <codx-label fiedName="IDIssuedOn" [formModel]="form.formModel"></codx-label>
-            <codx-input [disabled]="disabledInput" field="IDIssuedOn" [Group]="form.formGroup"
+            <codx-input [disabled]="disabledInput" field="idIssuedOn" [Group]="form.formGroup"
               [formModel]="form.formModel"></codx-input>
           </div>
         </div>
@@ -183,7 +181,7 @@
           <div class="col-6">
             <codx-label [formModel]="form.formModel" fiedName="IDIssuedBy"></codx-label>
             <codx-input [disabled]="disabledInput" [Group]="form.formGroup" [formModel]="form.formModel"
-              field="IDIssuedBy"></codx-input>
+              field="idIssuedBy"></codx-input>
           </div>
 
           <div class="col-6">
@@ -195,40 +193,35 @@
 
         <div class="form-group row">
           <div class="col-6">
-            <codx-label *ngIf="form.gridviewSetup.PassportNo.allowPopup == true" fiedName="PassportNo"
-              [formModel]="form.formModel"></codx-label>
-            <codx-input *ngIf="form.gridviewSetup.PassportNo.allowPopup == true" [disabled]="disabledInput"
-              field="passportNo" [Group]="form.formGroup" [formModel]="form.formModel"></codx-input>
+            <codx-label fiedName="PassportNo" [formModel]="form.formModel"></codx-label>
+            <codx-input [disabled]="disabledInput" field="passportNo" [Group]="form.formGroup"
+              [formModel]="form.formModel"></codx-input>
           </div>
           <div class="col-6">
-            <codx-label *ngIf="form.gridviewSetup.PassportIssuedOn.allowPopup == true" fiedName="PassportIssuedOn"
-              [formModel]="form.formModel"></codx-label>
-            <codx-input *ngIf="form.gridviewSetup.PassportIssuedOn.allowPopup == true" [disabled]="disabledInput"
-              field="passportIssuedOn" [Group]="form.formGroup" [formModel]="form.formModel"></codx-input>
+            <codx-label fiedName="PassportIssuedOn" [formModel]="form.formModel"></codx-label>
+            <codx-input [disabled]="disabledInput" field="passportIssuedOn" [Group]="form.formGroup"
+              [formModel]="form.formModel"></codx-input>
           </div>
         </div>
 
         <div class="form-group row">
           <div class="col-6">
-            <codx-label *ngIf="form.gridviewSetup.PITNumber.allowPopup == true" fiedName="PITNumber"
-              [formModel]="form.formModel"></codx-label>
-            <codx-input *ngIf="form.gridviewSetup.PITNumber.allowPopup == true" [disabled]="disabledInput"
-              field="pitNumber" [Group]="form.formGroup" [formModel]="form.formModel"></codx-input>
+            <codx-label fiedName="PITNumber" [formModel]="form.formModel"></codx-label>
+            <codx-input [disabled]="disabledInput" field="pitNumber" [Group]="form.formGroup"
+              [formModel]="form.formModel"></codx-input>
           </div>
           <div class="col-6">
-            <codx-label *ngIf="form.gridviewSetup.SIRegisterNo.allowPopup == true" fiedName="SIRegisterNo"
-              [formModel]="form.formModel"></codx-label>
-            <codx-input *ngIf="form.gridviewSetup.SIRegisterNo.allowPopup == true" [disabled]="disabledInput"
-              field="siRegisterNo" [Group]="form.formGroup" [formModel]="form.formModel"></codx-input>
+            <codx-label fiedName="SIRegisterNo" [formModel]="form.formModel"></codx-label>
+            <codx-input [disabled]="disabledInput" field="siRegisterNo" [Group]="form.formGroup"
+              [formModel]="form.formModel"></codx-input>
           </div>
         </div>
 
 
         <div class="form-group row">
-          <codx-label *ngIf="form.gridviewSetup.Note.allowPopup == true" [formModel]="form.formModel"
-            fiedName="Note"></codx-label>
-          <codx-input *ngIf="form.gridviewSetup.Note.allowPopup == true" [disabled]="disabledInput"
-            [Group]="form.formGroup" [formModel]="form.formModel" field="note"></codx-input>
+          <codx-label [formModel]="form.formModel" fiedName="Note"></codx-label>
+          <codx-input [disabled]="disabledInput" [Group]="form.formGroup" [formModel]="form.formModel"
+            field="note"></codx-input>
         </div>
       </ng-container>
     </ng-template>
@@ -236,8 +229,7 @@
 
   <ng-template #footer>
     <div class="d-flex justify-content-end" *ngIf="actionType != 'view'">
-      <button class="btn btn-primary" (click)="onSaveForm()"
-        [disabled]="!form.formModel.currentData.updateColumn && !changedInForm">
+      <button class="btn btn-primary" (click)="onSaveForm()" [disabled]="!form.data.updateColumn && !changedInForm">
         <i class="icon-save"></i>
         <codx-label default="Lưu" name="lblSave" [formModel]="form.formModel"></codx-label>
       </button>

@@ -104,6 +104,7 @@ export class CodxTasksComponent
   @ViewChild('contentTmp') contentTmp?: TemplateRef<any>;
   @ViewChild('headerTemp') headerTemp?: TemplateRef<any>;
   @ViewChild('popupToDoList') popupToDoList?: TemplateRef<any>;
+  @ViewChild('viewGanttChart') viewGanttChart!: TemplateRef<any>;
 
   views: Array<ViewModel> = [];
   viewsDefault: Array<ViewModel> = [];
@@ -508,14 +509,15 @@ export class CodxTasksComponent
           panelLeftRef: this.treeView,
         },
       },
-      // {
-      //   type: ViewType.chart,
-      //   active: false,
-      //   sameData: false,
-      //   model: {
-      //     panelLeftRef: this.treeView,
-      //   },
-      // },
+      {
+        type: ViewType.gantt,
+        active: false,
+        sameData: true,
+
+        model: {
+          eventModel:this.taskSettings
+        },
+      },
     ];
 
     if (this.funcID == 'TMT03011') {
@@ -1749,8 +1751,11 @@ export class CodxTasksComponent
       case 'SYS04':
         this.copy(data);
         break;
-      case 'sendemail':
+      case 'SYS05':
+        this.viewTask(data);
         break;
+      // case 'sendemail':
+      //   break;
       case 'TMT02015':
       case 'TMT02025':
       case 'TMT030115':
@@ -2114,7 +2119,12 @@ export class CodxTasksComponent
     TextField: 'userName',
     Title: 'Resources',
   };
-
+  taskSettings = {
+    id: 'taskID',
+    name: 'taskName',
+    startDate: 'startDate',
+    endDate: 'endDate',
+};
   getCellContent(evt: any) {
     if (this.dayoff.length > 0) {
       for (let i = 0; i < this.dayoff.length; i++) {

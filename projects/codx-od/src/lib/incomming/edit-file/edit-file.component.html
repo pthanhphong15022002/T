@@ -1,0 +1,61 @@
+<div class="d-flex flex-column w-100 h-100">
+    <ng-container *ngTemplateOutlet="header"></ng-container>
+    <ng-container *ngTemplateOutlet="body"></ng-container>
+</div>
+
+<ng-template #header>
+    <div class="d-flex align-items-center justify-content-between h-50px px-4">
+        <span class="fs-2 fw-bold">{{headerText}}</span>
+        <div class="d-flex align-items-center">
+            <button *ngIf="isWord" class="btn btn-outline-primary mx-4" (click)="onSave()"><codx-label [formName]="formModel.formName" fiedName="lblSave" default="Lưu"></codx-label></button>
+            <div class="cursor-pointer" (click)="dialog.close()">
+                <i class="icon-close"></i>
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #body>
+    <ng-container *ngIf="isWord ; else emty">
+        <div class="d-flex w-100" style="height: calc(100% - 50px)">
+            <ejs-documenteditorcontainer 
+                #documenteditor_default 
+                [enableToolbar]="true"  
+                [serviceUrl]="serviceUrl" 
+                height="100%" 
+                style="display:block;"
+                (created)="onCreate()"
+                (contentChange)="onDocumentChange()"
+                (toolbarClick)="toolbarClick($event)"
+                [autoResizeOnVisibilityChange]="true"
+            >
+            </ejs-documenteditorcontainer>
+        </div>
+    </ng-container>
+   
+</ng-template>
+
+<ng-template #emty>
+    <div class="d-flex align-items-center justify-content-center w-100 h-100">
+        <span class="fs-4">Loại File này chưa hỗ trợ chỉnh sửa nội dung</span>
+    </div>
+</ng-template>
+<codx-attachment
+    #attachment1
+    [objectType]="formModel.entityName"
+    hideBtnSave="1"
+    hideFolder="1"
+    hideUploadBtn="1"
+    hideDes="1"
+    hideImageUpload="1"
+    hideImageThumb="1"
+    [functionID]="formModel?.funcID"
+    [objectId]="data?.recID"
+    [allowMultiFile]="0"
+    showMessage="0"
+    idBrowse="3"
+    [allowExtensions]="'.docx'"
+    [isSaveSelected]="'2'"
+    class="w-100"
+    >
+</codx-attachment>
