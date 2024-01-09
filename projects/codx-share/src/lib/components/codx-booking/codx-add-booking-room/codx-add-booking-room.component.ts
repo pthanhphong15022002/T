@@ -1,5 +1,5 @@
 import { components } from './../../../../../../codx-ws/src/lib/approvals/routing';
-import { filter } from 'rxjs';
+import { Subject, filter, takeUntil } from 'rxjs';
 import { Permission } from '../../../../../../../src/shared/models/file.model';
 import {
   ChangeDetectorRef,
@@ -72,6 +72,7 @@ export class CodxAddBookingRoomComponent extends UIComponent {
   startTime: string;
   endTime: string;
   listUM = [];
+  private destroy$ = new Subject<void>();
   tabControl = [
     { name: 'History', textDefault: 'Lịch sử', isActive: true },
     { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
@@ -169,6 +170,8 @@ export class CodxAddBookingRoomComponent extends UIComponent {
   autoApproveItem: any;
   approvalRuleSta: any;
   haveEP = true;
+  oStartDate: any;
+  oEndDate: any;
   constructor(
     injector: Injector,
     private notificationsService: NotificationsService,
@@ -540,7 +543,7 @@ export class CodxAddBookingRoomComponent extends UIComponent {
                     }
                   });
                   this.validateStartEndTime(this.startTime, this.endTime);
-                  this.getResourceForCurrentTime();
+                  //this.getResourceForCurrentTime();
                 }
               });
           }
@@ -869,7 +872,7 @@ export class CodxAddBookingRoomComponent extends UIComponent {
   showAllResourceChange(evt: any) {
     if (evt != null) {
       this.showAllResource = evt;
-      this.getResourceForCurrentTime();
+      this.getResourceForCurrentTime(true);
       this.detectorRef.detectChanges();
     }
   }
@@ -1609,53 +1612,57 @@ export class CodxAddBookingRoomComponent extends UIComponent {
   //-----------------------------------Custom Func-----------------------------------//
   //---------------------------------------------------------------------------------//
 
-  getResourceForCurrentTime() {
+  getResourceForCurrentTime(showAllChange = false) {
     if(!this.haveEP) return;//Ko mua EP => ko cần lấy phòng khả dụng mà cho nhập dịa điểm
-    this.codxBookingService
-      .getAvailableResources(
-        '1',
-        this.data.startDate,
-        this.data.endDate,
-        this.data.recID,
-        this.showAllResource
-      )
-      .subscribe((res: any) => {
-        if (res) {
-          this.cbbResource = [];
-          Array.from(res).forEach((item: any) => {
-            let tmpRes = new Resource();
-            tmpRes.resourceID = item?.resourceID;
-            tmpRes.resourceName = item?.resourceName;
-            tmpRes.capacity = item?.capacity;
-            tmpRes.equipments = item?.equipments;
-            tmpRes.owner = item?.owner;
-            this.cbbResource.push(tmpRes);
-          });
-          let resourceStillAvailable = false;
-          if (this.data.resourceID != null) {
-            for (let i = 0; i < this.cbbResource?.length; i++) {
-              if (this.cbbResource[i]?.resourceID == this.data.resourceID) {
-                resourceStillAvailable = true;
+    let getNewList = true;
+    if(!showAllChange){
+      if(this.oStartDate?.toString() == this.data?.startDate?.toString() && this.oEndDate?.toString() == this.data?.endDate?.toString()) getNewList = false;
+    }
+    if(getNewList){
+      this.oStartDate= this.data.startDate;
+      this.oEndDate= this.data.endDate;
+      this.codxBookingService
+        .getAvailableResources(
+          '1',
+          this.data.startDate,
+          this.data.endDate,
+          this.data.recID,
+          this.showAllResource
+        ).pipe(takeUntil(this.destroy$))
+        .subscribe((res: any) => {
+          if (res) {
+            this.cbbResource = [];
+            Array.from(res).forEach((item: any) => {
+              let tmpRes = new Resource();
+              tmpRes.resourceID = item?.resourceID;
+              tmpRes.resourceName = item?.resourceName;
+              tmpRes.capacity = item?.capacity;
+              tmpRes.equipments = item?.equipments;
+              tmpRes.owner = item?.owner;
+              this.cbbResource.push(tmpRes);
+            });
+            let resourceStillAvailable = false;
+            if (this.data.resourceID != null) {
+              for (let i = 0; i < this.cbbResource?.length; i++) {
+                if (this.cbbResource[i]?.resourceID == this.data.resourceID) {
+                  resourceStillAvailable = true;
+                }
+              }
+              if (!resourceStillAvailable) {
+                this.data.resourceID = null;
+                this.tmplstDevice = [];
+                this.cusCBB.value = null;
+              } else {
+                this.cbxResourceChange(this.data.resourceID);
+                this.cusCBB.value = this.data.resourceID;
               }
             }
-            // this.cbbResource.forEach((item) => {
-            //   if (item.resourceID == this.data.resourceID) {
-            //     resourceStillAvailable = true;
-            //   }
-            // });
-            if (!resourceStillAvailable) {
-              this.data.resourceID = null;
-              this.tmplstDevice = [];
-              this.cusCBB.value = null;
-            } else {
-              this.cbxResourceChange(this.data.resourceID);
-              this.cusCBB.value = this.data.resourceID;
-            }
+  
+            this.detectorRef.detectChanges();
           }
-
-          this.detectorRef.detectChanges();
-        }
-      });
+        });
+    }
+    
   }
 
   filterArray(arr) {

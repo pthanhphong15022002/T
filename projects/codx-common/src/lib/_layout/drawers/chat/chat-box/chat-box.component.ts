@@ -1,3 +1,4 @@
+import { detach } from '@syncfusion/ej2-base';
 import { filter } from 'rxjs';
 import {
   ChangeDetectorRef,
@@ -46,7 +47,6 @@ export class CodxChatBoxComponent implements OnInit, AfterViewInit {
   @Input() groupID: any;
   @Output() close = new EventEmitter<any>();
   @Output() collapse = new EventEmitter<any>();
-
   funcID: string = 'WPT11';
   formModel: FormModel = null;
   grdViewSetUp: any = null;
@@ -694,7 +694,18 @@ export class CodxChatBoxComponent implements OnInit, AfterViewInit {
         });
     }
   }
-
+  favorite(){
+    this.api
+        .execSv('WP', 'ERM.Business.WP', 'ContactFavoriteBusiness', 'CheckFavoriteAsync', [
+          this.group?.groupID2,!this.group.isFavorite
+        ])
+        .subscribe((res: any) => {
+          if(res){
+            this.group.isFavorite = !this.group?.isFavorite;
+            this.dt.detectChanges();
+          }
+        });
+  }
   //
   closePopupVote(dialog: any) {
     dialog?.close();

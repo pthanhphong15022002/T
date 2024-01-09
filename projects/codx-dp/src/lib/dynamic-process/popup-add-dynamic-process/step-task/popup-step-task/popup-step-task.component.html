@@ -1,7 +1,7 @@
-div<codx-form
+<codx-form
   #form
   [customToolbar]="header"
-  subHeaderText=""
+  subHeaderText
   [subHeader]="subHeader"
   [body]="body"
   [footer]="footer"
@@ -39,7 +39,7 @@ div<codx-form
       type="colorpicker"
       [showText]="false"
       [modeSwitcher]="false"
-      [crrValue]=""
+      [crrValue]
       field="color"
     >
     </codx-input>
@@ -205,7 +205,7 @@ div<codx-form
                 style="top: 7px; right: 14px"
               >
                 <codx-label
-                  fiedName=""
+                  fiedName
                   [formModel]="form?.formModel"
                   default="Ngày"
                 >
@@ -228,7 +228,7 @@ div<codx-form
                 style="top: 7px; right: 14px"
               >
                 <codx-label
-                  fiedName=""
+                  fiedName
                   [formModel]="form?.formModel"
                   default="Giờ"
                 >
@@ -279,7 +279,10 @@ div<codx-form
       </div>
     </div>
 
-    <div class="form-group" *ngIf="typeTask?.value === 'CO' || typeTask?.value === 'F'">
+    <div
+      class="form-group"
+      *ngIf="typeTask?.value === 'CO' || typeTask?.value === 'F'"
+    >
       <div class="d-flex justify-content-between align-items-center">
         <codx-label
           fiedName="FieldID"
@@ -309,25 +312,94 @@ div<codx-form
     </div>
 
     <div class="form-group" *ngIf="typeTask?.value === 'F1'">
-      <div (click)="handleDivClick($event)" (document:click)="handleDocumentClick($event)" >
-        <div class="input-custom d-flex align-items-center justify-content-between">
-          <span [ngClass]="showSelect ? 'd-none' : ''" class="popup-data" class="ps-2">{{titleField}}</span>
-          <div class="d-flex align-items-center flex-wrap example-list" [ngClass]="showSelect ? '' : 'd-none'" cdkDropList (cdkDropListDropped)="drop($event)">
-            <div cdkDrag *ngFor="let field of listField" class="d-flex align-items-center m-1 item-show ms-2 example-box">
-              <span class="text-nowrap"  (click)="chooseField(field)" >{{field?.title}}</span>
-              <span class="icon-close icon-18 ms-1 cursor-pointer" (click)="removeField(field)"></span>
-            </div>
+      <div
+        (click)="handleDivClick($event)"
+        (document:click)="handleDocumentClick($event)"
+      >
+        <div
+          class="input-custom d-flex align-items-center justify-content-between"
+        >
+          <span
+            [ngClass]="showSelect ? 'd-none' : ''"
+            class="popup-data"
+            class="ps-2 line-clamp line-clamp-1"
+          >
+            {{ titleField }}
+          </span>
+          <div #contenedor class="categories" cdkDropListGroup>
+            <ng-container *ngFor="let field of listField; let i = index">
+              <div
+                class="categories-item"
+                cdkDropList
+                cdkDropListOrientation="horizontal"
+                [cdkDropListData]="{ item: field, index: i }"
+                (cdkDropListDropped)="drop($event)"
+              >
+                <div class="inner" cdkDrag>
+                  <div
+                    class="example-custom-placeholder"
+                    *cdkDragPlaceholder
+                  ></div>
+                  <span
+                    class="my-1 mx-2 line-clamp line-clamp-1"
+                    (click)="chooseField(field)"
+                    style="font-size: 12px; max-width: 70px"
+                  >
+                    {{ field?.title }}
+                  </span>
+                  <span
+                    class="icon-close icon-16 cursor-pointer"
+                    (click)="removeField(field)"
+                  ></span>
+                </div>
+              </div>
+            </ng-container>
           </div>
+
+          <!-- <div
+            class="d-flex align-items-center flex-wrap example-list"
+            [ngClass]="showSelect ? '' : 'd-none'"
+            cdkDropList
+            (cdkDropListDropped)="drop($event)"
+            cdkDropListOrientation="horizontal"
+          >
+            <div
+              cdkDrag
+              *ngFor="let field of listField"
+              class="d-flex align-items-center m-1 item-show ms-2 example-box"
+              cdkDropListItemSize="100px"
+              [ngbTooltip]="field?.title"
+              container="body"
+              placement="top"
+            >
+              <span
+                class="my-1 mx-2 line-clamp line-clamp-1"
+                (click)="chooseField(field)"
+                style="font-size: 12px; max-width: 70px"
+              >
+                {{ field?.title }}
+              </span>
+              <span
+                class="icon-close icon-16 cursor-pointer"
+                (click)="removeField(field)"
+              ></span>
+            </div>
+          </div> -->
           <div>
             <span class="e-input-group-icon e-ddl-icon"></span>
           </div>
         </div>
-        <div [ngClass]="showSelect ? '' : 'd-none'" class="popup-data" >
-          <div class="py-1 px-3 item-popup" *ngFor="let item of listFields" (click)="chooseData(item)">
-            <span >{{item?.title}}</span>
+
+        <div [ngClass]="showSelect ? '' : 'd-none'" class="popup-data">
+          <div
+            class="py-1 px-3 item-popup"
+            *ngFor="let item of listFields"
+            (click)="chooseData(item)"
+          >
+            <span style="font-size: 14px">{{ item?.title }}</span>
           </div>
         </div>
-        </div>
+      </div>
     </div>
 
     <div class="form-group" *ngIf="typeTask?.value != 'F'">
@@ -413,7 +485,7 @@ div<codx-form
         field="memo"
         [formModel]="form?.formModel"
         [crrValue]="stepsTasks?.memo"
-        [Group]=""
+        [Group]
         format="ed"
         type="text"
         [height]="'100'"

@@ -907,7 +907,7 @@ export class SettingFieldsComponent implements AfterViewInit {
 
   valueChangeExp(e) {
     if (e) {
-      if (e?.data != this.refValueEpress) this.refValueEpress = e?.data;
+      if (e != this.refValueEpress) this.refValueEpress = e;
     }
     this.detectorRef.detectChanges();
   }

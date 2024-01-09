@@ -294,12 +294,14 @@ export class PopupAddSignFileComponent implements OnInit {
       this.esService.getFormModel('EST011').then((formModel) => {
         if(formModel){
           this.formModelCustom = formModel;
+          this.cr.detectChanges();
         }
         else{
           this.formModelCustom= new FormModel();
           this.formModelCustom.entityName="ES_SignFiles"
           this.formModelCustom.formName="SignFiles"
           this.formModelCustom.gridViewName="grvSignFiles"
+          this.cr.detectChanges();
         }
         this.cache
           .gridViewSetup(

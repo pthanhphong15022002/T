@@ -103,7 +103,7 @@
 <ng-template #text let-data>
   <div class="d-flex flex-column w-100 mb-4">
     <div class="d-flex align-items-center" *ngIf="isShowTextHeader">
-      <i class="icon-grid_round me-2 cursor-move" cdkDragHandle></i>
+      <i *ngIf="showIconDrop" class="icon-grid_round me-2 cursor-move" cdkDragHandle></i>
       <span class="fw-bold">{{ data.title }}</span>
       <span class="text-danger ms-2" *ngIf="data?.isRequired">(*)</span>
     </div>
@@ -136,7 +136,7 @@
 <ng-template #valueList let-data>
   <div class="d-flex flex-column w-100 mb-4">
     <div class="d-flex align-items-center" *ngIf="isShowTextHeader">
-      <i class="icon-grid_round me-2 cursor-move" cdkDragHandle></i>
+      <i *ngIf="showIconDrop" class="icon-grid_round me-2 cursor-move" cdkDragHandle></i>
       <span class="fw-bold">{{ data.title }}</span>
       <span class="text-danger ms-2" *ngIf="data?.isRequired">(*)</span>
     </div>
@@ -213,7 +213,7 @@
   <div class="d-flex flex-column w-100 mb-4">
     <div class="d-flex justify-content-between">
       <div class="d-flex align-items-center" *ngIf="isShowTextHeader">
-        <i class="icon-grid_round me-2 cursor-move" cdkDragHandle></i>
+        <i *ngIf="showIconDrop" class="icon-grid_round me-2 cursor-move" cdkDragHandle></i>
         <span class="fw-bold">{{ data.title }}</span>
         <span class="text-danger ms-2" *ngIf="data?.isRequired">(*)</span>
       </div>
@@ -258,7 +258,7 @@
 <ng-template #datetime let-data>
   <div class="d-flex flex-column w-100 mb-4">
     <div class="d-flex align-items-center" *ngIf="isShowTextHeader">
-      <i class="icon-grid_round me-2 cursor-move" cdkDragHandle></i>
+      <i *ngIf="showIconDrop" class="icon-grid_round me-2 cursor-move" cdkDragHandle></i>
       <span class="fw-bold">{{ data.title }}</span>
       <span class="text-danger ms-2" *ngIf="data?.isRequired">(*)</span>
     </div>
@@ -278,7 +278,7 @@
 <ng-template #attachment let-data>
   <div class="d-flex flex-column w-100 mb-4">
     <div class="d-flex align-items-center" *ngIf="isShowTextHeader">
-      <i class="icon-grid_round me-2 cursor-move" cdkDragHandle></i>
+      <i *ngIf="showIconDrop" class="icon-grid_round me-2 cursor-move" cdkDragHandle></i>
       <span class="fw-bold">{{ data.title }}</span>
       <span class="text-danger ms-2" *ngIf="data?.isRequired">(*)</span>
     </div>
@@ -312,7 +312,7 @@
     class="d-flex align-items-center justify-content-between w-100 form-switch ps-0"
   >
     <div class="d-flex align-items-center" *ngIf="isShowTextHeader">
-      <i class="icon-grid_round me-2 cursor-move" cdkDragHandle></i>
+      <i *ngIf="showIconDrop" class="icon-grid_round me-2 cursor-move" cdkDragHandle></i>
       <span class="fw-bold">{{ data.title }}</span>
       <span class="text-danger ms-2" *ngIf="data?.isRequired">(*)</span>
     </div>
@@ -355,7 +355,7 @@
 <ng-template #share let-data>
   <div class="d-flex flex-column w-100 mb-4">
     <div class="d-flex align-items-center" *ngIf="isShowTextHeader">
-      <i class="icon-grid_round me-2 cursor-move" cdkDragHandle></i>
+      <i *ngIf="showIconDrop" class="icon-grid_round me-2 cursor-move" cdkDragHandle></i>
       <span class="fw-bold">{{ data.title }}</span>
       <span class="text-danger ms-2" *ngIf="data?.isRequired">(*)</span>
     </div>
@@ -372,7 +372,7 @@
 <ng-template #rank let-data>
   <div class="d-flex flex-column w-100 mb-4">
     <div class="d-flex align-items-center" *ngIf="isShowTextHeader">
-      <i class="icon-grid_round me-2 cursor-move" cdkDragHandle></i>
+      <i *ngIf="showIconDrop" class="icon-grid_round me-2 cursor-move" cdkDragHandle></i>
       <span class="fw-bold">{{ data.title }}</span>
       <span class="text-danger ms-2" *ngIf="data?.isRequired">(*)</span>
     </div>
@@ -419,7 +419,7 @@
 <ng-template #tables let-data>
   <div class="d-flex flex-column w-100 mb-4">
     <div class="d-flex align-items-center" *ngIf="isShowTextHeader">
-      <i class="icon-grid_round me-2 cursor-move" cdkDragHandle></i>
+      <i *ngIf="showIconDrop" class="icon-grid_round me-2 cursor-move" cdkDragHandle></i>
       <span class="fw-bold">{{ data.title }}</span>
       <span class="text-danger ms-2" *ngIf="data?.isRequired">(*)</span>
     </div>
@@ -446,7 +446,7 @@
 <ng-template #progress let-data>
   <div class="d-flex flex-column w-100 mb-4">
     <div class="d-flex align-items-center" *ngIf="isShowTextHeader">
-      <i class="icon-grid_round me-2 cursor-move" cdkDragHandle></i>
+      <i *ngIf="showIconDrop" class="icon-grid_round me-2 cursor-move" cdkDragHandle></i>
       <span class="fw-bold">{{ data.title }}</span>
       <span class="text-danger ms-2" *ngIf="data?.isRequired">(*)</span>
     </div>
@@ -474,7 +474,7 @@
 <ng-template #email let-data>
   <div class="d-flex flex-column w-100 mb-4">
     <div class="d-flex align-items-center" *ngIf="isShowTextHeader">
-      <i class="icon-grid_round me-2 cursor-move" cdkDragHandle></i>
+      <i *ngIf="showIconDrop" class="icon-grid_round me-2 cursor-move" cdkDragHandle></i>
       <span class="fw-bold">{{ data.title }}</span>
       <span class="text-danger ms-2" *ngIf="data?.isRequired">(*)</span>
     </div>
@@ -497,7 +497,7 @@
 <ng-template #address let-data>
   <div class="d-flex flex-column w-100 mb-4">
     <div class="d-flex align-items-center" *ngIf="isShowTextHeader">
-      <i class="icon-grid_round me-2 cursor-move" cdkDragHandle></i>
+      <i *ngIf="showIconDrop" class="icon-grid_round me-2 cursor-move" cdkDragHandle></i>
       <span class="fw-bold">{{ data.title }}</span>
       <span class="text-danger ms-2" *ngIf="data?.isRequired">(*)</span>
     </div>
@@ -520,7 +520,7 @@
 <ng-template #expression let-data>
   <div class="d-flex flex-column w-100 mb-4">
     <div class="d-flex align-items-center" *ngIf="isShowTextHeader">
-      <i class="icon-grid_round me-2 cursor-move" cdkDragHandle></i>
+      <i *ngIf="showIconDrop" class="icon-grid_round me-2 cursor-move" cdkDragHandle></i>
       <span class="fw-bold">{{ data.title }}</span>
       <span class="text-danger ms-2" *ngIf="data?.isRequired">(*)</span>
     </div>
@@ -541,7 +541,7 @@
 <ng-template #phone let-data>
   <div class="d-flex flex-column w-100 mb-4">
     <div class="d-flex align-items-center" *ngIf="isShowTextHeader">
-      <i class="icon-grid_round me-2 cursor-move" cdkDragHandle></i>
+      <i *ngIf="showIconDrop" class="icon-grid_round me-2 cursor-move" cdkDragHandle></i>
       <span class="fw-bold">{{ data.title }}</span>
       <span class="text-danger ms-2" *ngIf="data?.isRequired">(*)</span>
     </div>

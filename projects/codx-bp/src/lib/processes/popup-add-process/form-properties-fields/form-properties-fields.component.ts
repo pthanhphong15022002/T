@@ -39,6 +39,26 @@ export class FormPropertiesFieldsComponent implements OnInit {
   process: any;
   action = 'add';
   type: any;
+  basic = [
+    'Text',
+    'ValueList',
+    'ComboBox',
+    'DateTime',
+    'Attachment',
+    'Number',
+    'YesNo',
+    'User',
+    'Share',
+  ];
+  advanced = [
+    'Rank',
+    'Table',
+    'Progress',
+    'Phone',
+    'Email',
+    'Address',
+    'Expression',
+  ];
   constructor(
     private detectorRef: ChangeDetectorRef,
     private cache: CacheService,
@@ -51,89 +71,114 @@ export class FormPropertiesFieldsComponent implements OnInit {
     this.action = dt?.data?.action ?? 'add';
     this.type = dt?.data?.type;
     this.dataCurrent = dt?.data?.dataCurrent;
+    this.vllBP002 = dt?.data?.vllBP002;
+    this.lstStepFields = dt?.data?.lstStepFields != null ? JSON.parse(JSON.stringify(dt?.data?.lstStepFields)) : [];
+    this.isForm = dt?.data?.isForm ?? false;
   }
   ngOnInit(): void {
-    this.getVll();
+    if (this.vllBP002 && this.vllBP002?.datas?.length > 0) {
+      this.vllBP002.datas.forEach((elm) => {
+        if (this.basic.includes(elm.value)) elm.groupType = 0;
+        else if (this.advanced.includes(elm.value)) elm.groupType = 1;
+      });
+      if (this.lstStepFields?.length > 0) {
+        this.lstStepFields.forEach((ele) => {
+          let dataForm = this.vllBP002.datas.find(
+            (x) => x.value == ele.fieldType
+          );
+          if (ele?.fieldType == 'Title') {
+            this.dataCurrent = ele;
+            this.dataFormat = JSON.parse(JSON.stringify(dataForm));
+          }
+          dataForm.recID = ele?.recID;
+          this.table.push({
+            name: '',
+            columnOrder: this.table.length,
+            children: [dataForm],
+          });
+        });
+      } else {
+        this.setDefaultTitle();
+      }
+    } else {
+      this.getVll();
+    }
   }
 
   setDefaultTitle() {
-    let tmpField = {};
-    let lst = [];
-    let dataVllTitle = this.vllBP002?.datas?.find((x) => x.value == 'Title');
-    let dataVllSubTitle = this.vllBP002?.datas?.find(
-      (x) => x.value == 'SubTitle'
-    );
-    tmpField['recID'] = Util.uid();
-    tmpField['fieldName'] = this.bpSv.createAutoNumber(
-      dataVllTitle?.text,
-      this.lstStepFields,
-      'fieldName'
-    );
-    tmpField['title'] = this.bpSv.createAutoNumber(
-      dataVllTitle?.text,
-      this.lstStepFields,
-      'title'
-    );
-    tmpField['dataType'] = 'String';
-    tmpField['fieldType'] = dataVllTitle.value;
-    tmpField['controlType'] = 'TextBox';
-    tmpField['isRequired'] = true;
-    tmpField['defaultValue'] = tmpField['title'];
-    this.dataFormat = dataVllTitle;
-    lst.push(tmpField);
-    this.dataCurrent = tmpField;
-    if (this.isForm) {
-      let tmpFieldSub = {};
-      tmpFieldSub['recID'] = Util.uid();
-      tmpFieldSub['fieldName'] = this.bpSv.createAutoNumber(
-        dataVllSubTitle?.text,
+    const createField = (value, fieldType, isForm = false) => {
+      const recID = Util.uid();
+      const fieldName = this.bpSv.createAutoNumber(
+        value,
         this.lstStepFields,
         'fieldName'
       );
-      tmpFieldSub['description'] = 'Câu trả lời';
-      tmpFieldSub['title'] = this.bpSv.createAutoNumber(
-        dataVllSubTitle?.text,
+      const title = this.bpSv.createAutoNumber(
+        value,
         this.lstStepFields,
         'title'
       );
-      tmpFieldSub['dataType'] = 'String';
-      tmpFieldSub['fieldType'] = dataVllTitle.value;
-      tmpFieldSub['controlType'] = 'TextBox';
-      tmpFieldSub['isRequired'] = true;
-      tmpFieldSub['defaultValue'] = tmpFieldSub['title'];
-      lst.push(tmpFieldSub);
+
+      const field = {
+        recID,
+        fieldName,
+        title,
+        dataType: 'String',
+        fieldType,
+        controlType: 'TextBox',
+        isRequired: true,
+        defaultValue: null,
+        description: isForm ? 'Câu trả lời' : '',
+      };
+
+      if (isForm) {
+        field.defaultValue = title;
+      }
+
+      return field;
+    };
+
+    const dataVllTitle = this.vllBP002?.datas?.find((x) => x.value === 'Title');
+    const dataVllSubTitle = this.vllBP002?.datas?.find(
+      (x) => x.value === 'SubTitle'
+    );
+
+    const titleField = createField(dataVllTitle?.text, dataVllTitle?.value);
+    const lst = [titleField];
+
+    this.dataFormat = dataVllTitle;
+    this.dataCurrent = titleField;
+
+    const data = { ...this.dataFormat, recID: this.dataCurrent.recID };
+    this.table.push({
+      name: '',
+      columnOrder: this.table.length,
+      children: [data],
+    });
+    if (this.isForm) {
+      const subTitleField = createField(
+        dataVllSubTitle?.text,
+        dataVllSubTitle?.value,
+        true
+      );
+      lst.push(subTitleField);
+      const dataSub = { ...dataVllSubTitle, recID: subTitleField.recID };
+      this.table.push({
+        name: '',
+        columnOrder: this.table.length,
+        children: [dataSub],
+      });
     }
     this.lstStepFields = [...this.lstStepFields, ...lst];
-    console.log(this.lstStepFields);
   }
 
   //#region setting drop keo tha - anh Chung
   getVll() {
-    let basic = [
-      'Text',
-      'ValueList',
-      'ComboBox',
-      'DateTime',
-      'Attachment',
-      'Number',
-      'YesNo',
-      'User',
-      'Share',
-    ];
-    let advanced = [
-      'Rank',
-      'Table',
-      'Progress',
-      'Phone',
-      'Email',
-      'Address',
-      'Expression',
-    ];
     this.cache.valueList('BP002').subscribe((item) => {
       if (item) {
         item.datas.forEach((elm) => {
-          if (basic.includes(elm.value)) elm.groupType = 0;
-          else if (advanced.includes(elm.value)) elm.groupType = 1;
+          if (this.basic.includes(elm.value)) elm.groupType = 0;
+          else if (this.advanced.includes(elm.value)) elm.groupType = 1;
         });
         this.vllBP002 = item;
         if (this.type != 'table') {
