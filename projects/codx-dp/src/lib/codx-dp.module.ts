@@ -67,6 +67,7 @@ import { PropertiesFieldComponent } from './processes-properties/properties-fiel
 import { PopupMapContractComponent } from './dynamic-process/popup-add-dynamic-process/step-task/popup-step-task/popup-map-contract/popup-map-contract.component';
 import { CodxReportViewsComponent } from 'projects/codx-report/src/lib/codx-report-views/codx-report-views.component';
 import { CodxReportViewDetailComponent } from 'projects/codx-report/src/lib/codx-report-view-detail/codx-report-view-detail.component';
+import { DashboardInstancesComponent } from './instances/dashboard-instances/dashboard-instances.component';
 
 export const routes: Routes = [
   {
@@ -160,7 +161,8 @@ const T_Component: Type<any>[] = [
   PopupEditOwnerstepComponent,
   PopupSelectTempletComponent,
   ViewsTabsDetailsComponent,
-  InstanceDashboardComponent,
+  InstanceDashboardComponent, //cũ chuyen qua hết thì xóa đi
+  DashboardInstancesComponent, //mới => chạy theo dataSet
   PopupAddVllCustomComponent,
   PopupAddColumnTableComponent,
   PopupSettingTableComponent,
