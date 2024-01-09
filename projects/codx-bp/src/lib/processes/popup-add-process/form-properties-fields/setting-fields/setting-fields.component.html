@@ -862,7 +862,11 @@
         name="lblRatio"
         class="me-2"
       ></codx-label>
-      <div (mouseenter)="closePopover()" class="me-2" style="width: 25% !important;">
+      <div
+        (mouseenter)="closePopover()"
+        class="me-2"
+        style="width: 25% !important"
+      >
         <codx-input
           type="number"
           field="minValue"
@@ -879,7 +883,7 @@
         name="lblTo"
         class="me-2"
       ></codx-label>
-      <div (mouseenter)="closePopover()" style="width: 25% !important;">
+      <div (mouseenter)="closePopover()" style="width: 25% !important">
         <codx-input
           type="number"
           field="maxValue"
@@ -1310,25 +1314,41 @@
             [formName]="'DynamicForms'"
             [gridViewName]="'grvDynamicFormsTitle' + dataCurrent?.fieldType"
           ></codx-label>
-          <div
-            class="h-100"
-            cdkDropList
+          <input
+            id="specialCodxInput"
+            type="text"
+            #lblWeight
+            name="refValueEpress"
+            matInput
+            autofocus
+            [value]="refValueEpress ?? ''"
+            (blur)="valueChangeExp(lblWeight.value)"
+            (keydown.enter)="
+              valueChangeExp(lblWeight.value)
+            "
+            class="input-container"
+            cdkDrag
             #tableList="cdkDropList"
+            placeholder="Exp [So_luong] * [Don_gia]"
             (cdkDropListDropped)="drop($event)"
-          >
-            <codx-input
-              id="specialCodxInput"
-              type="text"
-              [crrValue]="refValueEpress ?? ''"
-              placeholder="Exp [So_luong] * [Don_gia]"
-              (valueChange)="valueChangeExp($event)"
-              field="refValueEpress"
-              cdkDrag
-              [cdkDragData]="refValueEpress"
-              [cdkDragDisabled]="true"
-              cdkDropList
-            ></codx-input>
-          </div>
+            [cdkDragData]="refValueEpress"
+            [cdkDragDisabled]="true"
+            cdkDropList
+          />
+          <!-- <codx-input
+            id="specialCodxInput"
+            type="text"
+            [crrValue]="refValueEpress ?? ''"
+            (valueChange)="valueChangeExp($event)"
+            field="refValueEpress"
+            cdkDrag
+            #tableList="cdkDropList"
+            placeholder="Exp [So_luong] * [Don_gia]"
+            (cdkDropListDropped)="drop($event)"
+            [cdkDragData]="refValueEpress"
+            [cdkDragDisabled]="true"
+            cdkDropList
+          ></codx-input> -->
         </div>
         <div class="col-4">
           <codx-label

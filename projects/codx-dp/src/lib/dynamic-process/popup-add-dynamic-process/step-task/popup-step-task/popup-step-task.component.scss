@@ -88,12 +88,10 @@
   }
 
   .input-custom{
-    border: 1px solid gray;
     box-sizing: border-box;
     cursor: text;
     line-height: normal;
-    min-height: 30px;
-    padding: 0 32px 0 0;
+    min-height: 33px;
     position: relative;
     -webkit-user-select: none;
     user-select: none;
@@ -116,18 +114,6 @@
   color: white;
   padding: 2px 5px;
   border-radius: 3px;
-}
-
-
-.example-list {
-  // width: 500px;
-  // max-width: 100%;
-  // border: solid 1px #ccc;
-  // min-height: 60px;
-  // background: white;
-  // border-radius: 4px;
-  // overflow: hidden;
-  // display: flex;
 }
 
 .example-box {

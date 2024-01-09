@@ -24,6 +24,8 @@ export class FormFormatValueComponent implements OnInit {
   @Input() subItem: any;
   @Input() dataCurrent: any;
   @Input() isShowTextHeader: boolean = false;
+  @Input() showIconDrop: boolean = true;
+
   @Input() formModel: FormModel = {
     formName: 'DPStepsFields',
     gridViewName: 'grvDPStepsFields',
