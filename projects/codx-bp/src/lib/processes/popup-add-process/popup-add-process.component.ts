@@ -1176,8 +1176,7 @@ export class PopupAddProcessComponent {
       option
     );
     popupDialog.closed.subscribe((e) => {
-      if(e && e?.event){
-
+      if(e){
       }
     })
   }
@@ -1209,8 +1208,10 @@ export class PopupAddProcessComponent {
       '',
       option
     );
-    popupDialog.closed.subscribe((dg) => {
-      if (dg) {
+    popupDialog.closed.subscribe((e) => {
+      if (e) {
+        this.lstStepFields = e?.event?.length > 0 ? JSON.parse(JSON.stringify(e?.event)) : [];
+
       }
     });
   }
