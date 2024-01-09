@@ -199,7 +199,7 @@
             </div>
             <div
               *ngIf="currentTab == 0"
-              class="left d-flex cursor-pointer text-primary"
+              class="left d-flex cursor-pointer text-primary"  (click)="popupAdvancedSetting()"
             >
               <span class="icon-16 icon-settings me-2"></span>
               <codx-label
