@@ -246,7 +246,8 @@ export class IncommingAddComponent implements OnInit {
           agencyName: res.agencyName,
           refNo: res.dispatchNumber,
           refDate: new Date(res.dispatchDate),
-          agencies: this.dispatch.agencies
+          agencies: this.dispatch.agencies,
+          pages: res.numberPage
         });
       }
     })
@@ -255,7 +256,6 @@ export class IncommingAddComponent implements OnInit {
   {
     if(data)
     {
-      console.log(new Date())
       let url = "https://apibot.trogiupluat.vn/api/v2.0/NLP/get-information-extract";
       var form = new FormData();
       form.append("prompt", `
@@ -265,7 +265,8 @@ export class IncommingAddComponent implements OnInit {
         "agencyName": "",
         "dispatchNumber": "",
         "dispatchDate": "",
-        "listAgencyName": ""
+        "listAgencyName": "",
+        "numberPage":""
       }
       Lưu ý: Nếu thông tin không tìm thấy hãy để trống , dispatchDate định dạng kiểu dd/MM/yyy , listAgencyName là danh sách nơi gửi đến theo dạng mảng`);
       form.append("sourceFile", data); 

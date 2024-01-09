@@ -653,7 +653,7 @@ export class StepService {
           isStartIns,
         };
       } else {
-        this.notiService.notify('Báo giá không tồn tại', '3');
+        this.notiService.notify('Hợp đồng không tồn tại', '3');
         return;
       }
     } else {
@@ -661,7 +661,7 @@ export class StepService {
     }
 
     let contractOuput = await this.openPopupContract(data);
-    let contract = contractOuput?.event?.contract;
+    let contract = contractOuput?.event;
     if (contract) {
       task.objectLinked = contract?.recID;
       task.owner = contract?.owner;
