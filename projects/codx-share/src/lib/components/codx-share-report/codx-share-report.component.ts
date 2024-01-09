@@ -1,9 +1,10 @@
-import { AfterViewInit, Component, Input, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, Injector, Input, ViewChild } from '@angular/core';
 import { WSUIComponent } from 'projects/codx-ws/src/lib/default/wsui.component';
 import { CodxView2Component } from '../codx-view2/codx-view2.component';
-import { FormModel } from 'codx-core';
+import { FormModel, Util } from 'codx-core';
 import { isObservable } from 'rxjs';
 import { BookmarkComponent } from 'projects/codx-ws/src/lib/bookmark/bookmark.component';
+import { CodxShareService } from '../../codx-share.service';
 
 @Component({
   selector: 'codx-share-report',
@@ -26,6 +27,14 @@ export class CodxShareReportComponent extends WSUIComponent implements AfterView
   selectedToolBar = "All";
   imgDefault = "assets/themes/ws/default/img/Report_Empty.svg";
   dataModel = new FormModel();
+  shareService: CodxShareService;
+  constructor(
+    inject: Injector,
+  ) 
+  {
+    super(inject);
+    this.shareService = inject.get(CodxShareService);
+  }
 
   override onInit(): void {
     this.formatListGroupReport();
@@ -138,15 +147,54 @@ export class CodxShareReportComponent extends WSUIComponent implements AfterView
 
   formatData(data:any)
   {
-    var listModule = data.map(function(item){return item.moduleID});
-    listModule = this.removeDuplicates(listModule);
-    this.getFuncListByModules(JSON.stringify(listModule))
+    if(this.funcID.includes("WS")) 
+    {
+      var listModule = data.map(function(item){return item.moduleID});
+      listModule = this.removeDuplicates(listModule);
+      this.getFuncListByModules(JSON.stringify(listModule))
+    }
+    else 
+    {
+      let vll = this.shareService.loadValueList("RP001") as any;
+
+      if(isObservable(vll))
+      {
+        vll.subscribe((item:any)=>{
+          this.formatVll(data,item.datas);
+        })
+      }
+      else this.formatVll(data,vll.datas);
+    }
+    
+  }
+
+  formatVll(data:any,vll:any)
+  {
+    var listCategory = [];
+    data.forEach(elm => {
+      var text = vll.filter(x=>x.value == elm.category);
+      if(text.length > 0)
+      {
+        var name = text[0].text;
+        if(!listCategory.some(x=>x.customName == name))
+        {
+          listCategory.push(
+            {
+              functionID: elm.category,
+              customName: name
+            }
+          )
+        }
+      }
+    });
+    this.formatData2(listCategory);
   }
 
   formatData2(data:any)
   {
     this.listGroupReport = this.listGroupReport.concat(data);
   }
+
 
   removeDuplicates(arr:any) {
     return [...new Set(arr)];
@@ -164,7 +212,8 @@ export class CodxShareReportComponent extends WSUIComponent implements AfterView
   {
     this.selectedToolBar = data?.functionID;
     if(this.selectedToolBar == "All") this.listReport = JSON.parse(JSON.stringify(this.listReports));
-    else this.listReport = JSON.parse(JSON.stringify(this.listReports.filter(x=>x.moduleID == this.selectedToolBar)));
+    else if(this.funcID.includes("WS")) this.listReport = JSON.parse(JSON.stringify(this.listReports.filter(x=>x.moduleID == this.selectedToolBar)));
+    else this.listReport = JSON.parse(JSON.stringify(this.listReports.filter(x=>x.category == this.selectedToolBar)));
   }
 
   setBookMark(recID:any)
