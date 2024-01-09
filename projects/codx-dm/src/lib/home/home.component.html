@@ -129,12 +129,22 @@
 <ng-template #templateCard>
   <ng-container *ngIf="data && data.length>0">
     <div class="d-flex flex-wrap dms-card p-5">
-      <ng-container *ngFor="let item of data ; trackBy: trackItem">
+      <div class="position-relative h-170px pe-6 pb-6" *ngFor="let item of data ; trackBy: trackItem">
         <card appDragDropFileFolder [dataDrapDrop]="item" (fileFolderDropped)="fileFolderDropped($event)"
-          [class]="classFile(item, 'pe-6 pb-6')" (viewFile)="viewFile($event)" [data]="item" [formModel]="view?.formModel"
-          [view]="codxview" >
+          (viewFile)="viewFile($event)" [data]="item" [formModel]="view?.formModel"
+          [view]="codxview" 
+        >
         </card>
-      </ng-container>
+        <div 
+          *ngIf="isSelectMulti"
+          [id]="'dm-h-'+item.recID" 
+          class="d-flex align-items-end justify-content-end position-absolute top-0 w-200px h-150px bg-dm-trans cursor-pointer"
+          [class.opacity-25]="!item.moveable"
+          (click)="item.moveable?selectedItem($event,item):undefined"
+          >
+          <i class="icon-i-check-circle-fill mx-2 my-2"></i>
+        </div>
+      </div>
     </div>
   </ng-container>
 </ng-template>

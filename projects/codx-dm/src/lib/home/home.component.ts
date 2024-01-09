@@ -21,6 +21,7 @@ import {
   DialogModel,
   Filters,
   DataRequest,
+  AlertConfirmInputConfig,
 } from 'codx-core';
 import {
   from,
@@ -49,6 +50,7 @@ import {
 } from '@syncfusion/ej2-angular-popups';
 import { E } from '@angular/cdk/keycodes';
 import { CreateFolderComponent } from '../createFolder/createFolder.component';
+import { MoveComponent } from '../move/move.component';
 
 @Component({
   selector: 'home',
@@ -175,8 +177,11 @@ export class HomeComponent extends UIComponent implements OnDestroy {
   ];
 
   vllDM003: any;
-
   loaded = false;
+  isSelectMulti = false;
+  listSeletcMulti = [];
+  fDisUpload:any = null;
+  fDisCreate:any = null;
   constructor(
     inject: Injector,
     public dmSV: CodxDMService,
@@ -206,6 +211,12 @@ export class HomeComponent extends UIComponent implements OnDestroy {
       {
         id: 'btnUpload',
         text: 'Tải lên',
+        hasSet: true,
+      },
+      {
+        id: 'btnSelectMulti',
+        text: 'Chọn',
+        formName: 'System',
         hasSet: true,
       }
     ];
@@ -787,6 +798,7 @@ export class HomeComponent extends UIComponent implements OnDestroy {
     this.disableMark();
     this.getDataFolder(this.dmSV.folderID);
   }
+
   getDataByFuncID00() {
     this.loaded = false;
     this.refeshData();
@@ -1053,7 +1065,8 @@ export class HomeComponent extends UIComponent implements OnDestroy {
       });
     }
     else if(e.id == "btnCreatFolder") this.addFolder();
-   
+    else if(e.id == "btnSelectMulti" || e.id == "btnUnSelectMulti") this.selectMulti(e.id);
+    else if(e.id == "btnCopyMove") this.checkPermissCopyTo();
   }
 
   addFolder() {
@@ -1714,5 +1727,113 @@ export class HomeComponent extends UIComponent implements OnDestroy {
     if (this.dmSV.breadcumbLink)
       this.dmSV.breadcumbLink = this.dmSV.breadcumbLink.slice(0, 1);
     this.changeDetectorRef.detectChanges();
+  }
+
+
+  selectMulti(id:any)
+  {
+
+    var btn = {
+      id: 'btnSelectMulti',
+      text: 'Chọn',
+      formName: 'System',
+      hasSet: true,
+    }
+
+    this.isSelectMulti = false;
+    this.button = this.button.filter(x=>x.id != id);
+    let indexCreatFolder =  this.button.findIndex(x=>x.id == "btnCreatFolder");
+    let indexUpload = this.button.findIndex(x=>x.id == "btnUpload");
+
+    if(this.fDisCreate == null) this.button[indexCreatFolder].disabled;
+    if(this.fDisUpload == null) this.button[indexUpload].disabled;
+    if(id == "btnSelectMulti")
+    {
+      btn.id = "btnUnSelectMulti";
+      btn.text = "Hủy";
+
+      var btn2 = {
+        id: 'btnCopyMove',
+        text: 'Sao chép / di chuyển tới',
+        formName: 'System',
+        hasSet: true,
+      }
+      
+      this.isSelectMulti = true;
+      this.button[indexCreatFolder].disabled = true;
+      this.button[indexUpload].disabled = true;
+      this.button.unshift(btn2);
+
+    }
+    else {
+      this.button[indexCreatFolder].disabled = this.fDisCreate;
+      this.button[indexUpload].disabled = this.fDisUpload;
+      this.button = this.button.filter(x=>x.id != "btnCopyMove");
+    }
+    this.button.push(btn);
+  }
+
+  selectedItem(e:any,data:any)
+  {
+    if(e.srcElement.classList.contains("selected")) {
+      e.srcElement.classList.remove("selected");
+      this.listSeletcMulti = this.listSeletcMulti.filter(x=>x.recID != data.recID);
+    }
+    else {
+      e.srcElement.classList.add("selected");
+      this.listSeletcMulti.push(data);
+    }
+  }
+
+  //Sao chép di chuyển tới
+  copyTo()
+  {
+    if(!this.checkPermiss()) return;
+
+    this.callfc.openForm(
+      MoveComponent,
+      '',
+      500,
+      650,
+      '',
+      ['all', this.listSeletcMulti, 'Di chuyển / Sao chép tới', true],
+      ''
+    );
+  }
+
+  checkPermiss()
+  {
+    if(this.listSeletcMulti.length == 0) {
+      this.notificationsService.notify("Vui lòng chọn Thư mục / tệp tin cần di chuyển");
+      return false;
+    }
+    return true;
+  }
+  checkPermissCopyTo()
+  {
+    var listNo = this.listSeletcMulti.filter(x=>!x.read);
+    if(listNo && listNo.length > 0)
+    {
+      var name = listNo.map((u) => u.folderName || u.fileName ).join(',');
+      name += ' không có quyền, bạn có muốn bỏ qua và tiếp tục thao tác không?';
+      var config = new AlertConfirmInputConfig();
+      config.type = 'YesNo' /* "checkBox" */;
+      
+      this.notificationsService
+        .alert("Thông báo", name, config)
+        .closed.subscribe((x) => {
+          if (x.event.status == 'Y') {
+            debugger
+            this.listSeletcMulti = this.listSeletcMulti.filter(x=>x.read == true);
+            listNo.forEach(elm => {
+              var element = document.getElementById("dm-h-"+elm.recID);
+              element.classList.remove("selected");
+            });
+            this.copyTo();
+          }
+        }
+      )
+    }
+    else this.copyTo();
   }
 }

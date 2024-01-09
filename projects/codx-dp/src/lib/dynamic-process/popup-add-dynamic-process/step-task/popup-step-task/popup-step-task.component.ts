@@ -34,6 +34,7 @@ import { Subject, takeUntil, filter, firstValueFrom } from 'rxjs';
 import { PopupAddCategoryComponent } from 'projects/codx-es/src/lib/setting/category/popup-add-category/popup-add-category.component';
 import { PopupSettingReferenceComponent } from '../../popup-add-custom-field/popup-setting-reference/popup-setting-reference.component';
 import { PopupMapContractComponent } from './popup-map-contract/popup-map-contract.component';
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'lib-popup-job',
@@ -825,4 +826,72 @@ export class PopupJobComponent implements OnInit, OnDestroy {
       }
     });
   }
+
+  handleDivClick(event: Event) {
+    event.stopPropagation(); // Ngăn chặn lan truyền của sự kiện click
+    // Thực hiện các hành động khi click vào div
+    this.showSelect = !this.showSelect;
+    console.log('Clicked inside div!');
+  }
+
+  @HostListener('document:click', ['$event'])
+  handleDocumentClick(event: Event) {
+    // Kiểm tra xem click có xảy ra bên trong hay bên ngoài div
+    const clickedInsideDiv = event.target && event.target instanceof HTMLElement && event.target.closest('div');
+    this.showSelect = false;
+  }
+
+  chooseData(field){
+  let data = {
+    recID: field?.recID,
+    title: field.title,
+    link:'',
+  }
+  this.listField = this.listField?.length > 0 ? this.listField : [];
+  this.listField?.push(data);
+  this.titleField = this.listField?.map(field => field.title)?.join(', ');
+   this.clickSettingReference(field);
+  }
+
+  removeField(field){
+    let index = this.listField?.findIndex(x => x.recID == field.recID);
+    if(index >= 0){
+      this.listField?.splice(index, 1);
+      this.titleField = this.listField?.map(field => field.title)?.join(', ');
+    }
+  }
+  chooseField(field){
+    field.show =true;
+    let option = new DialogModel();
+    option.zIndex = 1050;
+    let obj = {
+      datas: this.listGrvContracts,
+      entityName: 'CM_Contracts',
+      action: this.action,
+      titleAction: 'Thêm trường liên kết', //test
+    };
+    let dialogColumn = this.callfunc.openForm(
+      PopupMapContractComponent,
+      '',
+      550,
+      Util.getViewPort().height - 100,
+      '',
+      obj,
+      '',
+      option
+    );
+    dialogColumn?.closed.subscribe(res => {
+      if(res?.event){
+        field.link = res.event?.fieldName;
+        res.event.show = false;
+      }else{
+        field.show = false;
+      }
+    })
+  }
+
+  drop(event: CdkDragDrop<string[]>) {
+    moveItemInArray(this.listField, event.previousIndex, event.currentIndex);
+  }
+
 }

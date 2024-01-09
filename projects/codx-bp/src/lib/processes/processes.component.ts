@@ -102,7 +102,6 @@ export class ProcessesComponent
   }
 
   clickMF(e, data) {
-    this.add();
   }
 
   changeDataMF(e, data) {}
@@ -125,6 +124,7 @@ export class ProcessesComponent
           if (res) {
             let obj = {
               gridViewSetup: res,
+              action: 'add'
             };
             var dialog = this.callfc.openForm(
               PopupAddProcessComponent,

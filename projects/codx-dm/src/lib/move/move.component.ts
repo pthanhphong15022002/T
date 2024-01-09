@@ -80,15 +80,14 @@ export class MoveComponent implements OnInit {
   path: string;
   disableSave = false;
   dialog: any;
-  data: FileInfo;
+  data: any;
   objectType: string;
   copy = false;
   selectId: string;
   interval: ItemInterval[];
-  //   @ViewChild(ContextMenuComponent) public basicMenu: ContextMenuComponent;
   @ViewChild('view') view!: ViewsComponent;
-
   @Output() eventShow = new EventEmitter<boolean>();
+
   checkFolderName: any;
   constructor(
     private folderService: FolderService,
@@ -102,19 +101,16 @@ export class MoveComponent implements OnInit {
     @Optional() dialog?: DialogRef
   ) {
     this.dialog = dialog;
-    //   this.titleDialog = data.data.title;
     this.objectType = data.data[0];
     this.data = data.data[1];
-    this.id = this.data.recID;
-    // this.titleDialog = data.data[2];
     this.copy = data.data[3];
-    if (this.data != null) {
-      if (this.objectType == 'file') {
-        this.fullName = this.data.fileName;
-      } else this.fullName = this.data.folderName;
+    if(this.objectType != 'all') this.id = this.data.recID;
+    
+    if (this.data != null) 
+    {
+      if (this.objectType == 'file') this.fullName = this.data.fileName;
+      else if(this.objectType == 'folder') this.fullName = this.data.folderName;
     }
-    // this.dmSV.confirmationDialogService = confirmationDialogService;
-    //  this._ngFor.ngForTrackBy = (_: number, item: any) => this._propertyName ? item[this._propertyName] : item;
   }
 
   ngOnInit(): void {
@@ -410,32 +406,6 @@ export class MoveComponent implements OnInit {
     }
   }
 
-  // setFullHtmlNode(folder, text) {
-  //   var item1 = '';
-  //   var item2 = '';
-
-  //   if (folder.icon == '' || folder.icon == null || folder.icon == undefined)
-  //     item1 =
-  //       '<img class="max-h-18px" src="../../../assets/themes/dm/default/img/folder.svg">';
-  //   else {
-  //     if (folder.icon.indexOf('.') == -1)
-  //       item1 = `<i class="${folder.icon}" role="presentation"></i>`;
-  //     else {
-  //       var path = `${this.path}/${folder.icon}`;
-  //       item1 = `<img class="max-h-18px" src="${path}">`;
-  //     }
-  //   }
-
-  //   if (!folder.read)
-  //     item2 = `<i class="icon-per no-permission" role="presentation"></i>`;
-  //   var fullText = `${item1}
-  //                   ${item2}
-  //                   <span class="mytree_node"></span>
-  //                   ${text}`;
-
-  //   return fullText;
-  // }
-
   onSelectionAddChanged($node, tree) {
     var id = $node.data.recID;
     this.selectId = id;
@@ -447,6 +417,11 @@ export class MoveComponent implements OnInit {
         var data = res[0].filter(
           (item) => item.read && item.recID.toString() != this.id
         );
+
+        if(this.objectType == "all")
+        {
+          data = data.filter(x=> !this.data.some(y=>y.recID == x.recID))
+        }
         tree.addChildNodes($node.data, data);
         this.changeDetectorRef.detectChanges();
       });
@@ -455,7 +430,29 @@ export class MoveComponent implements OnInit {
 
   CopyDataTo() {
     var that = this;
-    if (this.objectType == 'file') {
+    if(this.objectType == 'all')
+    {
+      if(this.checkPermiss()) return;
+      else
+      {
+        this.id = this.data.map((u) => u.recID).join(';');
+        this.fileService.copyFileOrFolder(this.id, this.fullName, that.selectId, this.selection)
+        .subscribe(item=>{
+          if(item.status == 0) {
+            if(that.selection == 1)
+            {
+              debugger
+              that.dmSV.listFiles = that.dmSV.listFiles.filter(x=>!this.id.includes(x.recID));
+              that.dmSV.listFolder = that.dmSV.listFolder.filter(x=>!this.id.includes(x.recID));
+              this.dmSV.ChangeDataView.next(true);
+            }
+            this.dialog.close();
+          }
+          this.notificationsService.notify(item.message);
+        });
+      }
+    }
+    else if (this.objectType == 'file') {
       this.fileService
         .copyFile(this.id, this.fullName, that.selectId, this.selection)
         .subscribe(async (res) => {
@@ -536,7 +533,8 @@ export class MoveComponent implements OnInit {
             that.notificationsService.notify(res.message);
           }
         });
-    } else {
+    } 
+    else {
       this.folderService
         .copyFolder(that.id, that.fullName, that.selectId, this.selection, 2)
         .subscribe(async (res) => {
@@ -617,5 +615,26 @@ export class MoveComponent implements OnInit {
           }
         });
     }
+  }
+
+  checkPermiss()
+  {
+    var data = [];
+    for(var i = 0 ; i < this.data.length ; i++)
+    {
+      if(!this.data[i].read) data.push(this.data[i]);
+    }
+    
+    if(data.length > 0) {
+      var a = data.join(";");
+      return true;
+    }
+    
+    if(!this.selectId) 
+    {
+      this.notificationsService.notify("Vui lòng chọn thư mục cần di chuyển đến.");
+      return true;
+    }
+    return false;
   }
 }

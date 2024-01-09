@@ -12,6 +12,7 @@ import { ApproversComponent } from 'projects/codx-ad/src/lib/approvers/approvers
 import { StatusCodeComponent } from './status-code/status-code.component';
 import { PopupAddStatusCodeComponent } from './status-code/popup-add-status-code/popup-add-status-code.component';
 import { DocCategoryComponent } from 'projects/codx-es/src/lib/setting/category/category.component';
+import { ResourcesComponent } from 'projects/codx-ep/src/lib/resources/resources.component';
 
 const routes: Routes = [
   {
@@ -34,6 +35,10 @@ const routes: Routes = [
         path: 'categories/:funcID',
         component: DocCategoryComponent,
         data: { noReuse: true },
+      },
+      {
+        path: 'stationery/:funcID',
+        component: ResourcesComponent,
       },
     ],
   },

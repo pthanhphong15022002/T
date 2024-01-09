@@ -56,7 +56,7 @@
       <codx-input
         field="description"
         [formModel]="formModel"
-        [crrValue]="dataCurrent?.Description ?? ''"
+        [crrValue]="dataCurrent?.description ?? ''"
         (valueChange)="valueChange($event)"
       ></codx-input>
     </div>
@@ -70,7 +70,8 @@
         dataCurrent?.fieldType != 'Rank' &&
         dataCurrent?.fieldType != 'Progress' &&
         dataCurrent?.fieldType != 'Expression' &&
-        dataCurrent?.fieldType != 'Attachment'
+        dataCurrent?.fieldType != 'Attachment' &&
+        dataCurrent?.fieldType != 'Table'
       "
     >
       <codx-label
@@ -102,7 +103,8 @@
         dataCurrent?.fieldType != 'Title' &&
         dataCurrent?.fieldType != 'Rank' &&
         dataCurrent?.fieldType != 'Progress' &&
-        dataCurrent?.fieldType != 'Attachment'
+        dataCurrent?.fieldType != 'Attachment' &&
+        dataCurrent?.fieldType != 'Table'
       "
     >
       <codx-label
@@ -213,9 +215,34 @@
       [ngTemplateOutlet]="tempComboBox"
     ></ng-container>
     <ng-container
+      *ngIf="dataCurrent?.fieldType == 'Table'"
+      [ngTemplateOutlet]="tempTable"
+    ></ng-container>
+    <ng-container
       *ngIf="dataCurrent?.fieldType == 'Expression'"
       [ngTemplateOutlet]="tempExpression"
     ></ng-container>
+    <div
+      (mouseenter)="closePopover()"
+      class="form-group"
+      *ngIf="dataCurrent?.fieldType == 'Table'"
+    >
+      <div (mouseenter)="closePopover()" class="d-flex">
+        <codx-input
+          field="hasIndexNo"
+          [crrValue]="tableFormat?.hasIndexNo ?? false"
+          type="switch"
+          (valueChange)="valueChange($event)"
+        ></codx-input>
+        <codx-label
+          name="lblCountStt"
+          [formName]="'DynamicForms'"
+          [gridViewName]="'grvDynamicFormsTitle' + dataCurrent?.fieldType"
+          default="Có đánh STT dòng"
+          class="ms-1"
+        ></codx-label>
+      </div>
+    </div>
     <div
       (mouseenter)="closePopover()"
       class="form-group"
@@ -572,7 +599,7 @@
   </div>
   <div
     (mouseenter)="closePopover()"
-    class="form-group d-flex justify-content-center align-items-center mt-4"
+    class="form-group d-flex justify-content-center align-items-center mt-3"
   >
     <ng-container [ngTemplateOutlet]="tempTableCombobox"></ng-container>
   </div>
@@ -835,7 +862,11 @@
         name="lblRatio"
         class="me-2"
       ></codx-label>
-      <div (mouseenter)="closePopover()" class="w-15 me-2">
+      <div
+        (mouseenter)="closePopover()"
+        class="me-2"
+        style="width: 25% !important"
+      >
         <codx-input
           type="number"
           field="minValue"
@@ -852,7 +883,7 @@
         name="lblTo"
         class="me-2"
       ></codx-label>
-      <div (mouseenter)="closePopover()" class="w-15">
+      <div (mouseenter)="closePopover()" style="width: 25% !important">
         <codx-input
           type="number"
           field="maxValue"
@@ -1175,6 +1206,61 @@
     style="border-bottom: 1px solid var(--gray-150)"
   ></div>
 </ng-template>
+
+<!--Table-->
+<ng-template #tempTable>
+  <div class="d-flex justify-content-between">
+    <div
+      (mouseenter)="closePopover()"
+      class="form-group d-flex justify-content-start mb-1"
+    >
+      <codx-label
+        name="lblListValues"
+        [formName]="'DynamicForms'"
+        [gridViewName]="'grvDynamicFormsTitle' + dataCurrent?.fieldType"
+        default="Danh sách cột"
+      ></codx-label>
+    </div>
+  </div>
+  <div
+    class="d-flex flex-column align-items-center"
+    cdkDropList
+    (cdkDropListDropped)="dropTable($event)"
+  >
+    <div
+      *ngFor="let item of lstTables; index as i"
+      class="border-table"
+      cdkDrag
+    >
+      <div class="d-flex justify-content-start">
+        <!-- <span class="icon-email icon-18 me-2"></span> -->
+        <span class="">{{ item.title }} ({{ item.fieldName }})</span>
+      </div>
+      <div
+        class="d-flex justify-content-end cursor-pointer"
+        (click)="formPropertieFields('edit', i)"
+      >
+        <span class="icon-18 icon-edit_square me-2"></span>
+        <i class="icon-close cursor-pointer" (click)="deleteRow(i)"></i>
+      </div>
+    </div>
+
+    <div class="emtry-table" (click)="formPropertieFields('add', -1)">
+      <codx-label
+        default="+ Thêm cột"
+        name="lblAddColumn"
+        [formName]="'DynamicForms'"
+        [gridViewName]="'grvDynamicFormsTitle' + dataCurrent?.fieldType"
+      ></codx-label>
+    </div>
+  </div>
+  <div
+    (mouseenter)="closePopover()"
+    class="form-group mt-3 mb-3"
+    style="border-bottom: 1px solid var(--gray-150)"
+  ></div>
+</ng-template>
+
 <!--Expression-->
 <ng-template #tempExpression>
   <div class="d-flex justify-content-between">
@@ -1201,7 +1287,7 @@
     [disabled]="true"
     format="ed2"
     field="refValue"
-    placeholder="Exp [So_luong] * [Don_gia]"
+    [placeholder]="dataCurrent?.description"
     [crrValue]="dataCurrent?.refValue"
   ></codx-input>
   <div
@@ -1228,21 +1314,41 @@
             [formName]="'DynamicForms'"
             [gridViewName]="'grvDynamicFormsTitle' + dataCurrent?.fieldType"
           ></codx-label>
-          <div cdkDropList #tableList="cdkDropList" (cdkDropListDropped)="drop($event)">
-            <codx-input
-              id="specialCodxInput"
-              class="h-100 d-flex"
-              type="text"
-              [crrValue]="refValueEpress ?? ''"
-              placeholder="Exp [So_luong] * [Don_gia]"
-              (valueChange)="valueChangeExp($event)"
-              field="refValueEpress"
-              cdkDrag
-              [cdkDragData]="refValueEpress"
-              [cdkDragDisabled]="true"
-              cdkDropList
-            ></codx-input>
-          </div>
+          <input
+            id="specialCodxInput"
+            type="text"
+            #lblWeight
+            name="refValueEpress"
+            matInput
+            autofocus
+            [value]="refValueEpress ?? ''"
+            (blur)="valueChangeExp(lblWeight.value)"
+            (keydown.enter)="
+              valueChangeExp(lblWeight.value)
+            "
+            class="input-container"
+            cdkDrag
+            #tableList="cdkDropList"
+            placeholder="Exp [So_luong] * [Don_gia]"
+            (cdkDropListDropped)="drop($event)"
+            [cdkDragData]="refValueEpress"
+            [cdkDragDisabled]="true"
+            cdkDropList
+          />
+          <!-- <codx-input
+            id="specialCodxInput"
+            type="text"
+            [crrValue]="refValueEpress ?? ''"
+            (valueChange)="valueChangeExp($event)"
+            field="refValueEpress"
+            cdkDrag
+            #tableList="cdkDropList"
+            placeholder="Exp [So_luong] * [Don_gia]"
+            (cdkDropListDropped)="drop($event)"
+            [cdkDragData]="refValueEpress"
+            [cdkDragDisabled]="true"
+            cdkDropList
+          ></codx-input> -->
         </div>
         <div class="col-4">
           <codx-label

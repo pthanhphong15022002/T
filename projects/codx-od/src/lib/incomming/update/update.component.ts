@@ -56,6 +56,8 @@ export class UpdateExtendComponent implements OnInit {
   fileCount: 0;
   percentage100 = false;
   disableResult = false;
+
+  percentageValue = 0;
   constructor(
     private odService: DispatchService,
     private notifySvr: NotificationsService,
@@ -70,25 +72,17 @@ export class UpdateExtendComponent implements OnInit {
   ngOnInit(): void {
     this.updateForm = this.formBuilder.group({
       updateOn: [this.currentDate, Validators.required],
-      percentage: [this.data?.percentage, Validators.min(1)],
+      percentage: [this.data?.percentage],
       comment: '',
       reporting: false,
     });
     if (this.data?.percentage == 100) this.percentage100 = true;
     this.onChanges();
-    /* updateOn: new FormControl(),
-    percentage : new FormControl(),
-    percentage100 : new FormControl(),
-    comment : new FormControl(),
-    reporting: new FormControl(), */
-    /* this.updateForm.get("updateOn").setValue(new Date());
-    this.updateForm.get("reporting").setValue(false);
-    this.updateForm.get("percentage").setValue(this.data?.percentage);
-    if(this.data?.percentage == 100) this.updateForm.get("percentage100").setValue(true); */
   }
   onChanges(): void {
     this.updateForm.get('percentage').valueChanges.subscribe((val) => {
       if (val == 100) return;
+      this.percentageValue = val;
       this.preValue = val;
     });
   }
@@ -97,10 +91,8 @@ export class UpdateExtendComponent implements OnInit {
   }
   valueChangePercentage100(e: any) {
     this.disableResult = e?.data;
-    if (e?.data) this.updateForm.controls['percentage'].setValue(100);
-    else this.updateForm.controls['percentage'].setValue(this.preValue);
-    /* if()
-    this.updateForm.value.percentage */
+    this.updateForm.patchValue({percentage: e?.data ? 100: this.preValue})
+    this.percentageValue = e?.data ? 100: this.preValue;
   }
   get f(): { [key: string]: AbstractControl } {
     return this.updateForm.controls;
@@ -109,6 +101,7 @@ export class UpdateExtendComponent implements OnInit {
     this.submitted = true;
     if (this.updateForm.invalid) return;
     this.updateForm.value.recID = this.data.recID;
+    this.updateForm.value.percentage = this.percentageValue;
     this.odService
       .updateResultDispatch(this.updateForm.value)
       .subscribe((item) => {

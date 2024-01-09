@@ -333,6 +333,10 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
         }
       }
     }
+    if(this.inputDeal?.ComponentCurrent?.dataService.data?.length > 0 && !this.refInstance){
+      let data = this.inputDeal?.ComponentCurrent?.dataService.data
+      this.refInstance = data[0]?.RefID;
+    }
   }
   
   //#region setData
@@ -1727,7 +1731,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
   }
 
   addContracts() {
-    if (['contract','extend'].some(x => x == this.type)) {
+    if (['contract','extend'].some(x => x == this.type) && this.contracts?.useType != "3") {
       this.dialog.dataService
         .save((opt: any) => this.beforeSaveContract(opt), 0)
         .subscribe((res) => {
@@ -1741,10 +1745,10 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
           }
           this.changeDetectorRef.markForCheck();
         });
-    } else if (['DP','task','appendix'].some(x => x == this.type)) {
+    } else if (['DP','task','appendix'].some(x => x == this.type) || this.contracts?.useType == "3") {
       this.cmService.addContracts([this.contracts]).subscribe((res) => {
         if (res) {
-          this.dialog.close({ contract: res, action: this.action });
+          this.dialog.close(res);
         }
       });
     } 
@@ -1765,11 +1769,11 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
             this.dialog.close();
           }
         });
-    } else if(['DP','task','appendix'].some(x => x == this.type)) {
+    } else if(['DP','task','appendix'].some(x => x == this.type) || this) {
       let data = [this.contracts];
       this.cmService.editContracts(data).subscribe((res) => {
         if (res) {
-          this.dialog.close({ contract: res, action: this.action });
+          this.dialog.close(res);
         }
       });
     }
