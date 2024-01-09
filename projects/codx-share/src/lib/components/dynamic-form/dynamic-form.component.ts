@@ -138,6 +138,21 @@ export class DynamicFormComponent extends UIComponent {
         sendMailActiveMF[0].disabled = true;
       }
     }
+    //ẩn moretakGroup
+    if (e) {
+      e.forEach((x) => {
+        switch (x.functionID) {
+          case 'TMS03601': //Hoàn tất
+          case 'TMS03602': //đang thực hiện
+          case 'TMS03603': //Hoãn lại
+          case 'TMS03604': //Hủy
+            x.disabled = data?.status == x?.data?.defaultValue;
+            break;
+          default:
+            break;
+        }
+      });
+    }
   }
   clickMF(evt?: any, data?: any) {
     this.function = evt;
@@ -621,10 +636,11 @@ export class DynamicFormComponent extends UIComponent {
       ])
       .subscribe((res) => {
         if (res) {
-          this.viewBase.dataService.dataSelected.status = status;
+          data.status = status;
           this.viewBase.dataService
-            .update(this.viewBase.dataService.dataSelected)
+            .update(JSON.parse(JSON.stringify(data)), true)
             .subscribe();
+          this.notifySvr.notifyCode('SYS007');
         }
       });
   }
