@@ -209,8 +209,16 @@
               >
               </codx-label>
             </div>
-            <div class="right d-flex" [ngClass]="currentTab == 0 ? 'justify-content-between' : 'justify-content-end'">
-              <div *ngIf="currentTab == 0"
+            <div
+              class="right d-flex"
+              [ngClass]="
+                currentTab == 0
+                  ? 'justify-content-between'
+                  : 'justify-content-end'
+              "
+            >
+              <div
+                *ngIf="currentTab == 0"
                 class="d-flex justify-content-start cursor-pointer text-primary"
                 (click)="formPropertieFields()"
               >
@@ -224,32 +232,30 @@
               </div>
               <div class="d-flex justify-content-end">
                 <button
+                  *ngIf="currentTab != 2"
+                  type="button"
+                  class="btn btn-primary"
+                  (click)="continue(currentTab)"
+                >
+                  <codx-label
+                    [name]="'lblContinue'"
+                    [default]="'Tiếp tục'"
+                    [formModel]="dialog.formModel"
+                  ></codx-label>
+                </button>
 
-                *ngIf="currentTab != 2"
-                type="button"
-                class="btn btn-primary"
-                (click)="continue(currentTab)"
-              >
-                <codx-label
-                  [name]="'lblContinue'"
-                  [default]="'Tiếp tục'"
-                  [formModel]="dialog.formModel"
-                ></codx-label>
-              </button>
-
-              <button
-                *ngIf="currentTab == 2"
-                type="button"
-                class="btn btn-primary"
-              >
-                <codx-label
-                  [name]="'lblSave'"
-                  [default]="'Lưu'"
-                  [formModel]="dialog.formModel"
-                ></codx-label>
-              </button>
+                <button
+                  *ngIf="currentTab == 2"
+                  type="button"
+                  class="btn btn-primary"
+                >
+                  <codx-label
+                    [name]="'lblSave'"
+                    [default]="'Lưu'"
+                    [formModel]="dialog.formModel"
+                  ></codx-label>
+                </button>
               </div>
-
             </div>
           </div>
         </div>
@@ -260,100 +266,308 @@
 
 <ng-template #tmpInfomation>
   <div class="container-infomation">
-    <div class="info-left"></div>
-    <div class="info-right"></div>
+    <div class="info-left">
+      <div class="form-group">
+        <codx-tag
+          field="tags"
+          [entityName]="dialog.formModel.entityName"
+          [isEdit]="true"
+          [disabled]="false"
+          [value]="data?.tags"
+          (valueChange)="valueTagChange($event)"
+        ></codx-tag>
+      </div>
+      <div class="form-group">
+        <codx-label
+          [formModel]="dialog.formModel"
+          [fiedName]="'GroupID'"
+          default="Nhóm quy trình"
+        >
+        </codx-label>
+        <codx-input
+          [formModel]="dialog.formModel"
+          field="groupID"
+          [crrValue]="data?.groupID"
+          (valueChange)="valueChange($event)"
+        >
+        </codx-input>
+      </div>
+      <div class="form-group">
+        <codx-label
+          [formModel]="dialog.formModel"
+          [fiedName]="'ProcessName'"
+          default="Nhóm quy trình"
+        >
+        </codx-label>
+        <codx-input
+          [formModel]="dialog.formModel"
+          field="processName"
+          [crrValue]="data?.processName"
+          (valueChange)="valueChange($event)"
+        >
+        </codx-input>
+      </div>
+      <div class="form-group">
+        <codx-label
+          name="lblAvatarProcess"
+          [formModel]="dialog.formModel"
+          default="Ảnh đại diện"
+        >
+        </codx-label>
+        <ng-container [ngTemplateOutlet]="avatarProcess"></ng-container>
+      </div>
+      <div class="form-group">
+        <div class="d-flex justify-content-between">
+          <div class="d-flex justify-content-start">
+            <codx-label
+              name="lblPermissions"
+              [formModel]="dialog.formModel"
+              default="Người sử dụng"
+            >
+            </codx-label>
+          </div>
+          <div class="d-flex justify-content-end cursor-pointer">
+            <button
+              type="button"
+              class="btn btn-icon btn-sm btn-light-primary me-2"
+            >
+              <i class="icon-person_add_alt_1 icon-16"></i>
+            </button>
+
+            <button
+              type="button"
+              class="btn btn-icon btn-sm btn-light-primary me-2"
+            >
+              <i class="icon-settings icon-16"></i>
+            </button>
+          </div>
+        </div>
+        <div class="input-user">
+          <codx-input
+            #inputUser
+            field="searchUser"
+            type="combobox"
+            refValue="Users"
+          >
+          </codx-input>
+        </div>
+      </div>
+    </div>
+    <div class="info-right">
+      <ng-container *ngFor="let item of lstStepFields">
+        <codx-form-format-value
+          #formMatRef
+          [subItem]="item"
+          [showIconDrop]="false"
+          [isShowTextHeader]="true"
+        ></codx-form-format-value>
+      </ng-container>
+    </div>
   </div>
 </ng-template>
 
 <ng-template #tmpStepFields>
-  <div class="dp-step step-content container-fluid p-0 h-100" *ngIf="currentTab == 1">
+  <div
+    class="dp-step step-content container-fluid p-0 h-100"
+    *ngIf="currentTab == 1"
+  >
     <button class="btn btn-danger" (click)="clickchoi()">Get JSON data</button>
     <button class="btn btn-info ms-3" (click)="clickPan(true)">zoom Pan</button>
-    <button class="btn btn-danger ms-3" (click)="clickPan(false)">stop zoom Pan</button>
-    <div class="container-fluid h-100 p-0 ">
-      <div class="row h-100" >
-        <div style="width:10%" class="dragarea">
-
-            <div cdkDropList class="w-100 h-100 mt-5" style="background-color:#fff" [cdkDropListSortingDisabled]="true"  >
-              <div class="d-flex align-items-center p-3 border rounded h-40px m-3" style="cursor:pointer" [id]="item.id" cdkDrag cdkDragBoundary=".diagramzone"  *ngFor="let item of menuDrag" (cdkDragStarted)="onDragStart($event)" (cdkDragDropped)="dragEnter($event)">
-                <span class="icon-20 me-2" [ngClass]="item.icon" style="width:20%"></span>
-                <div class="text-primary d-flex justify-content-center fw-bold" style="width:80%">{{item.text}}</div>
-                <div *cdkDragPreview class="border rounded d-flex align-items-center" style="background-color:#fff;cursor:pointer" >
-                    <ng-container [ngSwitch]="item.id">
-                      <ng-container *ngSwitchCase="'start_end'">
-                        <svg height="100" width="100">
-                          <circle cx="50" cy="50" r="40" stroke="black" stroke-width="2" fill="#fff" />
-                        </svg>
-                      </ng-container>
-                      <ng-container *ngSwitchCase="'decision'">
-                        <svg width="100" height="100">
-                          <rect x="50" y="20" width="150" height="150" style="fill:#fff;stroke:#ddd;stroke-width:2;fill-opacity:0.1;stroke-opacity:0.9; rotate: 45deg" />
-                        </svg>
-                      </ng-container>
-                      <ng-container *ngSwitchCase="'connector'">
-                        <span class="icon-35" [ngClass]="item.icon"></span>
-                      </ng-container>
-                      <ng-container *ngSwitchCase="'swimlane'">
-                        <span class="icon-35" [ngClass]="item.icon"></span>
-                      </ng-container>
-                      <ng-container *ngSwitchCase="'form'">
-                        <ng-container *ngTemplateOutlet="formTemplate; context:{$implicit:data}"></ng-container>
-                      </ng-container>
-                      <ng-container *ngSwitchCase="'esign'">
-                        <ng-container *ngTemplateOutlet="esignTemplate; context:{$implicit:data}"></ng-container>
-                      </ng-container>
-                      <ng-container *ngSwitchCase="'event'">
-                        <ng-container *ngTemplateOutlet="eventTemplate; context:{$implicit:data}"></ng-container>
-                      </ng-container>
-                      <ng-container *ngSwitchCase="'image'">
-                        <ng-container *ngTemplateOutlet="imgTemplate; context:{$implicit:data}"></ng-container>
-                      </ng-container>
-                      <ng-container *ngSwitchCase="'task'">
-                        <ng-container *ngTemplateOutlet="taskTemplate; context:{$implicit:data}"></ng-container>
-                      </ng-container>
-                      <ng-container *ngSwitchCase="'email'">
-                        <ng-container *ngTemplateOutlet="emailTemplate; context:{$implicit:data}"></ng-container>
-                      </ng-container>
-                      <ng-container *ngSwitchDefault>
-                        <span class="h-100px w-100px" [ngClass]="item.icon">
-                          {{item.text}}
-                        </span>
-                      </ng-container>
-                    </ng-container>
-                </div>
+    <button class="btn btn-danger ms-3" (click)="clickPan(false)">
+      stop zoom Pan
+    </button>
+    <div class="container-fluid h-100 p-0">
+      <div class="row h-100">
+        <div style="width: 10%" class="dragarea">
+          <div
+            cdkDropList
+            class="w-100 h-100 mt-5"
+            style="background-color: #fff"
+            [cdkDropListSortingDisabled]="true"
+          >
+            <div
+              class="d-flex align-items-center p-3 border rounded h-40px m-3"
+              style="cursor: pointer"
+              [id]="item.id"
+              cdkDrag
+              cdkDragBoundary=".diagramzone"
+              *ngFor="let item of menuDrag"
+              (cdkDragStarted)="onDragStart($event)"
+              (cdkDragDropped)="dragEnter($event)"
+            >
+              <span
+                class="icon-20 me-2"
+                [ngClass]="item.icon"
+                style="width: 20%"
+              ></span>
+              <div
+                class="text-primary d-flex justify-content-center fw-bold"
+                style="width: 80%"
+              >
+                {{ item.text }}
+              </div>
+              <div
+                *cdkDragPreview
+                class="border rounded d-flex align-items-center"
+                style="background-color: #fff; cursor: pointer"
+              >
+                <ng-container [ngSwitch]="item.id">
+                  <ng-container *ngSwitchCase="'start_end'">
+                    <svg height="100" width="100">
+                      <circle
+                        cx="50"
+                        cy="50"
+                        r="40"
+                        stroke="black"
+                        stroke-width="2"
+                        fill="#fff"
+                      />
+                    </svg>
+                  </ng-container>
+                  <ng-container *ngSwitchCase="'decision'">
+                    <svg width="100" height="100">
+                      <rect
+                        x="50"
+                        y="20"
+                        width="150"
+                        height="150"
+                        style="
+                          fill: #fff;
+                          stroke: #ddd;
+                          stroke-width: 2;
+                          fill-opacity: 0.1;
+                          stroke-opacity: 0.9;
+                          rotate: 45deg;
+                        "
+                      />
+                    </svg>
+                  </ng-container>
+                  <ng-container *ngSwitchCase="'connector'">
+                    <span class="icon-35" [ngClass]="item.icon"></span>
+                  </ng-container>
+                  <ng-container *ngSwitchCase="'swimlane'">
+                    <span class="icon-35" [ngClass]="item.icon"></span>
+                  </ng-container>
+                  <ng-container *ngSwitchCase="'form'">
+                    <ng-container
+                      *ngTemplateOutlet="
+                        formTemplate;
+                        context: { $implicit: data }
+                      "
+                    ></ng-container>
+                  </ng-container>
+                  <ng-container *ngSwitchCase="'esign'">
+                    <ng-container
+                      *ngTemplateOutlet="
+                        esignTemplate;
+                        context: { $implicit: data }
+                      "
+                    ></ng-container>
+                  </ng-container>
+                  <ng-container *ngSwitchCase="'event'">
+                    <ng-container
+                      *ngTemplateOutlet="
+                        eventTemplate;
+                        context: { $implicit: data }
+                      "
+                    ></ng-container>
+                  </ng-container>
+                  <ng-container *ngSwitchCase="'image'">
+                    <ng-container
+                      *ngTemplateOutlet="
+                        imgTemplate;
+                        context: { $implicit: data }
+                      "
+                    ></ng-container>
+                  </ng-container>
+                  <ng-container *ngSwitchCase="'task'">
+                    <ng-container
+                      *ngTemplateOutlet="
+                        taskTemplate;
+                        context: { $implicit: data }
+                      "
+                    ></ng-container>
+                  </ng-container>
+                  <ng-container *ngSwitchCase="'email'">
+                    <ng-container
+                      *ngTemplateOutlet="
+                        emailTemplate;
+                        context: { $implicit: data }
+                      "
+                    ></ng-container>
+                  </ng-container>
+                  <ng-container *ngSwitchDefault>
+                    <span class="h-100px w-100px" [ngClass]="item.icon">
+                      {{ item.text }}
+                    </span>
+                  </ng-container>
+                </ng-container>
               </div>
             </div>
+          </div>
         </div>
-        <div style="width:90%;height:100%" class="diagramzone">
-          <ejs-diagram #diagram  id="diagram"
-          [nodes]="nodes"
-          [snapSettings]="snapSettings"
-          (created)="created()"
-          (mouseEnter)="mouseEnter($event)"
-          (dragEnter)="eleDraw($event)"
-          [contextMenuSettings]="contextMenuSettings"
-          (contextMenuOpen)="contextMenuOpen($event)"
-           (contextMenuClick)="contextMenuClick($event)"
+        <div style="width: 90%; height: 100%" class="diagramzone">
+          <ejs-diagram
+            #diagram
+            id="diagram"
+            [nodes]="nodes"
+            [snapSettings]="snapSettings"
+            (created)="created()"
+            (mouseEnter)="mouseEnter($event)"
+            (dragEnter)="eleDraw($event)"
+            [contextMenuSettings]="contextMenuSettings"
+            (contextMenuOpen)="contextMenuOpen($event)"
+            (contextMenuClick)="contextMenuClick($event)"
           >
             <ng-template #nodeTemplate let-data>
               <ng-container [ngSwitch]="data.shape?.version">
                 <ng-container *ngSwitchCase="'form'">
-                  <ng-container *ngTemplateOutlet="formTemplate; context:{$implicit:data}"></ng-container>
+                  <ng-container
+                    *ngTemplateOutlet="
+                      formTemplate;
+                      context: { $implicit: data }
+                    "
+                  ></ng-container>
                 </ng-container>
                 <ng-container *ngSwitchCase="'image'">
-                  <ng-container *ngTemplateOutlet="imgTemplate; context:{$implicit:data}"></ng-container>
+                  <ng-container
+                    *ngTemplateOutlet="
+                      imgTemplate;
+                      context: { $implicit: data }
+                    "
+                  ></ng-container>
                 </ng-container>
                 <ng-container *ngSwitchCase="'task'">
-                  <ng-container *ngTemplateOutlet="taskTemplate; context:{$implicit:data}"></ng-container>
+                  <ng-container
+                    *ngTemplateOutlet="
+                      taskTemplate;
+                      context: { $implicit: data }
+                    "
+                  ></ng-container>
                 </ng-container>
                 <ng-container *ngSwitchCase="'esign'">
-                  <ng-container *ngTemplateOutlet="esignTemplate; context:{$implicit:data}"></ng-container>
+                  <ng-container
+                    *ngTemplateOutlet="
+                      esignTemplate;
+                      context: { $implicit: data }
+                    "
+                  ></ng-container>
                 </ng-container>
                 <ng-container *ngSwitchCase="'event'">
-                  <ng-container *ngTemplateOutlet="eventTemplate; context:{$implicit:data}"></ng-container>
+                  <ng-container
+                    *ngTemplateOutlet="
+                      eventTemplate;
+                      context: { $implicit: data }
+                    "
+                  ></ng-container>
                 </ng-container>
                 <ng-container *ngSwitchCase="'email'">
-                  <ng-container *ngTemplateOutlet="emailTemplate; context:{$implicit:data}"></ng-container>
+                  <ng-container
+                    *ngTemplateOutlet="
+                      emailTemplate;
+                      context: { $implicit: data }
+                    "
+                  ></ng-container>
                 </ng-container>
               </ng-container>
             </ng-template>
@@ -361,165 +575,308 @@
         </div>
       </div>
     </div>
-
   </div>
 </ng-template>
 
 <ng-template #tmpResult></ng-template>
 
+<ng-template #avatarProcess>
+  <div
+    class="dropzone dropzone-default dropzone-primary d-flex flex-center flex-column"
+    (click)="addAvatar()"
+  >
+    <div class="dropzone-msg dz-message needsclick">
+      <ng-container *ngIf="linkAvatar != '' && linkAvatar">
+        <img [src]="linkAvatar" class="image-maxsize" />
+      </ng-container>
+      <ng-container *ngIf="linkAvatar == '' || linkAvatar == null">
+        <div class="dropzone-msg-title mb-2">
+          <i class="icon-image icon-30"></i>
+        </div>
+        <div class="dropzone-msg-title mb-2">
+          <codx-label
+            name="lblContentAddAvatar"
+            [formName]="'DPProcesses'"
+            [gridViewName]="'grvDPProcesses'"
+            default="Chọn hình ảnh"
+            class="fw-bold"
+          >
+          </codx-label>
+        </div>
+        <span class="dropzone-msg-desc">
+          <codx-label
+            name="lblRequiredAvatar"
+            [formName]="'DPProcesses'"
+            [gridViewName]="'grvDPProcesses'"
+            default="(Nên chọn hình ảnh có kích thước ...px đến ...px)"
+            class="fw-bold"
+          ></codx-label>
+        </span>
+      </ng-container>
+    </div>
+  </div>
+  <codx-attachment
+    #imageAvatar
+    [objectId]="data.recID"
+    [objectType]="dialog.formModel.entityName"
+    hideFolder="1"
+    hideImageUpload="1"
+    hideImageThumb="1"
+    hideUploadBtn="1"
+    hideDes="1"
+    type="inline"
+    allowMultiFile="0"
+    [formModel]="dialog.formModel"
+    [functionID]="dialog.formModel.funcID"
+    allowExtensions=".jpg,.png"
+    [isSaveSelected]="0"
+    (fileAdded)="fileImgAdded($event)"
+    displayThumb="full"
+    showMessage="0"
+    category="0"
+  >
+  </codx-attachment>
+</ng-template>
 
 <!--- Đây là khu vực template dành cho diagram node --->
 
 <ng-template #formTemplate let-data>
-  <ng-container class="border  rounded" style="background-color:#fff">
-    <div class="container h-200px w-300px border border-dark rounded" style="background-color:#fff">
+  <ng-container class="border rounded" style="background-color: #fff">
+    <div
+      class="container h-200px w-300px border border-dark rounded"
+      style="background-color: #fff"
+    >
       <div class="row h-30px">
-        <div class="col-3 d-flex align-items-center" (click)="clickAddForm(data)">
+        <div
+          class="col-3 d-flex align-items-center"
+          (click)="clickAddForm(data)"
+        >
           <span class="icon-note_add icon-21 me-1 text-primary"></span>
-          <span class="text-primary fw-bold"><codx-label formName="sys" default="forms" name="lblForm"></codx-label> </span>
+          <span class="text-primary fw-bold"
+            ><codx-label
+              formName="sys"
+              default="forms"
+              name="lblForm"
+            ></codx-label>
+          </span>
         </div>
         <div class="col-9 d-flex align-items-center justify-content-end p-0">
-           <div class="border rounded bg-warning px-1 me-3 ">2 giờ</div>
-           <i class="icon-i-three-dots icon-16 me-2"></i>
-           <i class="icon-close icon-16 text-danger" (click)="deleteNode(data)"></i>
+          <div class="border rounded bg-warning px-1 me-3">2 giờ</div>
+          <i class="icon-i-three-dots icon-16 me-2"></i>
+          <i
+            class="icon-close icon-16 text-danger"
+            (click)="deleteNode(data)"
+          ></i>
         </div>
       </div>
       <div class="row h-100px d-flex align-items-center m-2">
         <codx-input type="textarea" format="ed3"></codx-input>
         <codx-input type="colorpicker"></codx-input>
       </div>
-      <div class="row h-30px ">
+      <div class="row h-30px">
         <div class="col d-flex align-items-center justify-content-end p-0">
-          <div class="border rounded-circle bg-warning px-1 me-3 h-25px w-25px d-flex align-items-center">
+          <div
+            class="border rounded-circle bg-warning px-1 me-3 h-25px w-25px d-flex align-items-center"
+          >
             <i class="icon-i-person-check icon-21"></i>
-           </div>
+          </div>
         </div>
       </div>
     </div>
-
   </ng-container>
 </ng-template>
 
 <ng-template #taskTemplate let-data>
-  <ng-container class="border rounded" style="background-color:#fff;">
-    <div class="container h-auto w-300px border border-dark rounded" style="background-color:#fff">
+  <ng-container class="border rounded" style="background-color: #fff">
+    <div
+      class="container h-auto w-300px border border-dark rounded"
+      style="background-color: #fff"
+    >
       <div class="row h-30px">
-        <div class="col-6 d-flex align-items-center" (click)="clickAddForm(data)">
+        <div
+          class="col-6 d-flex align-items-center"
+          (click)="clickAddForm(data)"
+        >
           <span class="icon-i-check2-square icon-21 me-1 text-success"></span>
-          <span class="text-success fw-bold"><codx-label formName="sys" default="Công việc" name="lblTask"></codx-label> </span>
+          <span class="text-success fw-bold"
+            ><codx-label
+              formName="sys"
+              default="Công việc"
+              name="lblTask"
+            ></codx-label>
+          </span>
         </div>
         <div class="col-6 d-flex align-items-center justify-content-end p-0">
-           <div class="border rounded bg-warning px-1 me-3 ">5 ngày</div>
-           <i class="icon-i-three-dots icon-16 me-2"></i>
-           <i class="icon-close icon-16 text-danger" ></i>
+          <div class="border rounded bg-warning px-1 me-3">5 ngày</div>
+          <i class="icon-i-three-dots icon-16 me-2"></i>
+          <i class="icon-close icon-16 text-danger"></i>
         </div>
       </div>
-      <div class="row h-100px d-flex align-items-center border rounded p-3" style="background-color: #fff">
-       <h5 class="fw-bold">Tiêu đề công việc</h5>
-       <div> Nội dung công việc chi tiết</div>
+      <div
+        class="row h-100px d-flex align-items-center border rounded p-3"
+        style="background-color: #fff"
+      >
+        <h5 class="fw-bold">Tiêu đề công việc</h5>
+        <div>Nội dung công việc chi tiết</div>
       </div>
-      <div class="row h-30px ">
+      <div class="row h-30px">
         <div class="col d-flex align-items-center justify-content-end p-0">
-           <div class="border rounded-circle bg-warning px-1 me-3 h-25px w-25px d-flex align-items-center">
+          <div
+            class="border rounded-circle bg-warning px-1 me-3 h-25px w-25px d-flex align-items-center"
+          >
             <i class="icon-i-person-check icon-21"></i>
-           </div>
+          </div>
         </div>
       </div>
     </div>
-
   </ng-container>
 </ng-template>
 
 <ng-template #imgTemplate let-data>
   <div class="h-150px w-100px">
-    <img class="border rounded-3 w-100 h-100" src="data:image/jpeg;base64,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"/>
+    <img
+      class="border rounded-3 w-100 h-100"
+      src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAoHCBUVFBQVFBQXFxcYGxgdGxobGBsYGx4dGhsbGCAcGyEdICwkHh0rHh0aJTYmLi4yMzMzGiI5PjkxPSwyMzABCwsLEA4QHhISHTIpJCowPTIyMjszMjIyMjIyMDIyMjIyMjAyMjIyMjsyMjIyMjAyMjIyMjIyMjIyMjIyMjIyO//AABEIAOkA2AMBIgACEQEDEQH/xAAcAAEAAQUBAQAAAAAAAAAAAAAABwEDBAUGAgj/xABGEAACAAQDBAgEAwYEAwkBAAABAgADESEEEjEiQVFhBQYTcZGhsfAHMlKBFEJiI3KCksHRM6Lh8VNjcxUWNENEdIOTsiX/xAAZAQEAAwEBAAAAAAAAAAAAAAAAAQIDBAX/xAAmEQACAgICAQUAAgMAAAAAAAAAAQIRAxIhMRMEIkFRYTJxkaHh/9oADAMBAAIRAxEAPwCZoQhACEIQAhCEAIQhACEIQAikI4zrX19k4VmlSlOIxA1loaKldO0fRT+m57tYN0ErOzhEC4/r5j5zENiVkg/kk9mpH8TFnPiO6MMY/F6/j8bX/wBy/pWkZvLFGixSZ9DQiDcB090lLai41yQKhZyrMVx3lQ3fcEWjueqPXsYh1w+JVZc9q5GVqy5lNQtbq4vsmuliYmM1LoiWNx7O6hCEXKCEIQAhCEAIQhACEIQAhCEAIQhACEIQAhCEAIQhACEIQBH/AMR+tj4fLhZDZJ0xczzP+HLJygruzsQQOFCeERUsuWLVLkknLUvUk1JYb6n8zeMb/rihfpDpBiMxDy1y61USUoADalyfuYsdUOqUvFo02aQiV2UlqDXmzspH2ABFq0qI5skrbt8I6sUeFS5ZiSHY27WUn6C4c9xANAe4mLsnEKswoUCTN7L8pHHQb9bVFdTHWYjqJJy/spsxDuzZZifcEA07mEar/uHiMykTZQADAHbNA2XRaCvy6Zrc4w2izo1a+DnsZNJEzMalKOp4ENkIHIg08eMYsyZR7OEZHDq1RVWUKykfxUP2Md70f1Bkqv7eZMmts1oxlrskkUCnNWprXNc3tYDVdZuq6YUGdJVhKJUOA2Z1YnKGJeodCaakFSd4NBMZRvhlZRdW0SH1E60/jpTCYoWfKIExVOywb5XSv5WobbiCI6uIX6gYnJ0nICUyTZU6WaAqaoBN213MCp/m5xNEdkJbKzhnHV0VhCEXKiEIQAhCEAIQhACEIQAhCEAIQhACEIQAhCEAIQhAEEfEqQ0vpHEha0nS5My1jTKZJAPFigH8RO6Ou6rTpcvByBnVQEzMSQqgliDfQDNmAHLfQxo+vuJ/GTxMkJRJSzpZcugaZkcZ2loTmZEKvtbzWg45WB6synw2DGIlzJpCAJIVsqhpmaaa0YDMFNKkgAJxjkypN0dmFuMb/DsUYMAVIIOhBqD3ERWI66Fw05DMOBM6RKVlDS8QqzZQdtKZWzqa2NiK6kUt28vE/sWmGYNDQ5DskbOXJWpYMCCutaiOfJj0Z0QyqSM12CgkkADUk0A7yY03WHEK+ExORlakp2+pWCiuWujA0ymmlY5Pp3Czm7NseZ2JlF2VZeHVZSFl1LZmzt32AOhIMbPpDoKVh8JjzISZKrKmLMkMxZQyrmzjaIrk3gkEHiI08WtN/wDCnl2bSNT8M8OH6Rw5UkiXJnOK60IWUK92cjjE4xC/w5xIw2K7ScjZZ6pJlzBktmdiGda51R2CqHplLDgRE0R2Y+jiyfyKwhCLmYhCEAIQhACEIQAhCEAIQhACEIQAhCEAIQhACEIQBFfRsiWsyfImX7LEz5SoRWonsMQjjmFzX4BjHS4eRSWkt6NlVVNqg0AG/ui1071Zn/izi8L2LGYJYnSp2ZVZpdQkxGVWKuBQaaCMfq5jzOw0qYwoxBVgTUhkYowJ3mqmOHPBp38HoenmpKvkypmCQigGW9yAA1N4B1FdKi9OGseRgh2by6naaY1d4Lu0yo7ifKKYiazlkl1BUoWbRbMrFK61KVqQLZhHpHmlDVJYmV+UOzJSuubIG0vTLrau+MOTfj6KysCiihGbm1C3IE0q1OJqeJMXHkKUaXlGUgqQBQUIoRT7xYwxMuiPXaLFTqoqS2SuooNK23DhFjrJj+wwmImjVUbL+82yv+YiJ5bocJNmlnYVGmYLDSqZXmS5ehBy4RxMms3G0iUq8iToREqxyPV7q5NXEHFYkyw4VllypeZlTOQzuXcAu7UUaAALTu66PQxxcVTPMyyUpWisIQjQzEIQgBCEIAQhCAEIQgBCEIAQhCAEIQgBCEIAQhCAKRHPVyqzOkMOdZWKmsBwlzj2qf8A6bwiRojfp6S46WmtJIE38LJcITRZgEyYjK/A0y0fVSBqKg5Zo3Bm2CVTRtcZh5j0CTeyW+Yqis9agjKXqq761U67qRppvZK5Uzca7fKzLLdt+naJKtfcpoI3PR2PScmZKgglXRrMjjVHG5h4EEEVBBjMjgTrhno0pcmHhcMyVrMeYhoQJgUspsRRgASP3qmu+NT1vXOMJh6V7fFSEI/Qrdo57gFjdYzFJLRndsqrqbk3sAALsxNAALkkARzqSZkzH9HT5oKEzpgly63RBImOxels7kKSNFCgcSdMKuSbMszqDSJShCEegeaIQhACEIQAhCEAIQhACEIQAhCEAIQhACEIQAhCEAIRbmOFBLEAC5JNABzjiumviVhJRZMNXFzRuln9mP3ph2afu5oA7HFYhJaNMdgqICzMTQBVFSTypEX4fpo4jFv0mUKYVVOFBOqrVJqzn4IxbKfo2a2qRy3T3WDF45wk+aFlWYyZdVl0rshz8zsSK3ts6CoiSfh/JH4CXWhExpzGt6gzHUV47IAi0sdxplY5dZJoYroyW7iYM6TKU7SW5RiNwamy4FbBgabo8TejZjaYzEDuXD/1k1jJboaZI/8ACkNL/wCA5pk/6L3yrr+za2gBQWjDxHTkiVUT2MhwuYpMGVqDXLSomd6FhHnSxTi+rPShmxzXdMu4PopUYOzzJ0wfK0xgcu7YVQEU3IqFrS1aRgdIYWbi5gfCuUbBl2WZ+VsRlyiVptJTMJh3ZgtzmA2SYSfiaA5sPIOprSfMHBaf4Sm20duhNAhvHQYXDJLRJctAiIAFVRQADcI3wYHe0jn9R6hVrH/JgdTetUvHysyjJNSgmyjqjceamhoeRGoMdLECdJ4h8D0jiJ+HG3JnOSt6PLmhZrIac3JHAgGJG6D+JGCn5VmMcNMYAhZtlOnyTBsMLilwTwjqcaOVSs7WEeFcEAggg6EXEe4qWEIQgBCEIAQhCAEIQgBCEIAQhCAKQhEQ9deuT4ma+Gwsxkw8slZkxDleay2ZEOoQGxI+bdbWUm3SIbSVs7/pnrhgcLUTsTLDD8inO/8AKtWH3EcX0n8Unaq4LCn/AKmIOUciEUkkb9R3RwUiWiMUVFW1QVAFRvrvqLfzCMn3x18xb1jZYl8syeT6PXSeMxGLObF4h5orUINiUKG2wtKmu81NoxpjqigBR9KqLVOtARoPQAxf9j0F/esY0w5HzspYUoGFyo32GtTS48LRooqK4M7b7LkiXlFzViasdKsdacgAAOQiT/hz0gHwkuURleWGIH1S2mOA4/iDKRuK8xWM5bhhVSCDvG/eeR4R2vU/DvNwVZJC4nCT5vZk2VlmETWlP+h1enIqrarFMnSJid50hi1kypk1/lloznuUE0HO0QjiMfMmM7k1mOS0x9asdQlfyj5RuAAAiS+nZhx+FSRKLS2nZ+0B2Xl9iMzI3PtuyQ8Q5ItEVyKuAFWhFKg2CHercxpQRbFVs6cKXJIvww6TLSpmFY17HK0upqezeuzf6XDAcAyjdHa4nEJLR5kxgiICzMTQAC5JiLeouGeVijiQSZYaXhZh0FZimYGpymfh0p+vfeO+lyPxUxZr3kS2rKTc7qf8Z/qAI2F0tnuSuXKf8nRnNLZkVdMYp5mMxc15ZllnSiGzAdlLCZuDZKEruJI3RqXlKmYMA0o3KkDZ+x/KTU207tNn0tiw8/FzL0adN0uSFYyweeygjAlySxDtelCqi6rwJG9t9dBu4nWK4Rk+zL6NxeIwprhMS8ofRXtJZ3nYeoFTaojr+jvifiEoMXhVmAVrMw70Nv8Alvv/AIhHHe+OmnPX0h7r63HP0g8cWFkkiVsF8R+jpgGac0lrbM2WyEV3VoV8DHUYLGy5yB5MxJiHRkYOPEGPn2fNCiprwoNSTuG48PtHvo7ETsM4nYVxKm2zKPke9cjrowpW4uNRSMni+jRZPs+iYRoeqXWFMdh1mqMjglZiVqUddV5jQg7wR3RvoyNRCEIAQhCAEIQgBCEIA5L4kdNNhcC5lmk2ayypZ3hnqCw5hQxB4gRD+HkiWiouij03kcSamO1+LeLz4rByAfkSZNYc3IloT3UaOP8AY38hz5xviXFmOR80WcSLK30Gpvamj89CT/CIvH3/AFuOUW3a9Do1ge7dXnr9jHpBQCvdw01PA7o2Mj174a+RtWHvhyFtOMPfjy32pFufXKaAnkNaG1gdDTmIEFrDqCzuAADaw+bLqxG+9geXOOy+G+N7PFzZJNpyBlvbPKJzDvKP/kjkpExSoyfKLAU0pYAjVTyi9KxTSpkufLu8pw435gtmSv6lLL94rJXEsnyTbLwUtZjzVQCY4AZhvpQVppWgUE6kKoPyikP9KMkydPmgmWjTJpAUhVIzkB7DVgAx4ljrEq9IdKouDm4pGzIJLTEI3jIWXxtEKCpCg6KAFXhQUqeLem7nGJcs6sK5bJJ+HU9JuEmySpIlzGG18zK4EwMTrXMWAOoyDSlui6cxy4TCTZigDskORdAWplloO9io+8cF8NMXlxcyXumys3Ksp7fciY38sbH4mdI1MnCqf+bM32UlZanvfM3/AMY4xSUfdRnNVJnByJeVVUmtBQnWp/MTvr/eLLS2S6DMu9K6V3od1txoL7t+UfLx01vqL+kY6nPf8m79XE1+nhxpw11ZgXZUwMAw0OlbcgPWPfvhp5Gp9YeXlr5GghX36W8fCLEGOq5nJOiWA/URVmpobEL92jI9/wB7d3rFuQtFA7yfuSTb94nwi5748zzEQiWdH8NekOy6QMqtExUs2/5kraU8v2ZbwHCJkj55kYzsJ+FxBNBKny2Y7sjHK9+GVjH0NHNkVSOiDtFYQhGZcQhCAEIQgBCEIAhHr7P7TpPEcJaSZYN96ma3d88aCfKzrSrLWl1JBruuN1IycZjO2xGKn1qJk+YVP6FORaH91Fi2R9ifsb+RoI6oL2o5pv3GGVYLlc1FqONQQdkncRW/LfXWLuHm5gQRQj5gOVQbHWrA/akVZmXUVHIbQ4VX81uFO4xbkIodmU1DKpAFxYkA+nhFiDK9n1NvKHvjr5i3rD08dPMX9IHn4+ZuPD7RYqY8+SaiYln4bnG5SRvpod1eEesPPDjMN1iDYgj8p3Vr6xe8j4a+RoIxp0sq2ddfzr9S7rb2UVI46b4r0T2b+R00V6PxGDLbWaW0qupltNUzEHHLtfwuOEaMAkhVFWPgBxPKPGKTMgZLldpKb6ClP4gSPvGxwUtQgKnNmAYtxqKj7U0EWxqrSOzBK0Z3QE9MNOkzXaioxMxv0sjSyTyAatP0iMDH45582ZPcUaY2YKfyr8stLaUUCu6pY74x+lcQoyIzqoJq1TSyUNP5ivgYsjFodCT3Kx15gUNoiVbGWd80jziDnIQG1Kuf06Ba/qNfsGjJApb/AE015cIsYQWLb3NTuv8AKF4WApTlF/3Tu5d8EYMe/wC9t9qRSlffHlutFffHmbaw98ddeYtEkD3x5DmOMPde7n3xi4mc3yp8xtXWhIt4C5rupqSIyR73V3Dkd8RZJjdJJmlTBvyt5DN3G4ET/wBXsZ22Fw03fMlS2PeyAnziCHWoI4gjh5aXMS/8M5+fovBmuiFf5HZP6Rhm7Rti+Tq4QhGJqIQhACEIQAjSdb+k/wANgsTPrQpLbL++wyp/mKxuojP4v9IZvwuDU/4jGbM0+SXZQa7ixr/BEpW6IbpWR7gpWSWi7woru5nvq0ZeHwk2YcsuVMmE/SuVTQ7W05Ca2NDaLfd73C3vSN51f6NRkM1pQItmedOAlDUEhE/xL/lcAjjpGufJ44cGeDH5JUyynVXEvq0hSN3bPv8A3U1pz3xck9QZwbOJ0qtG2dsrVsps1Ki44HUmN4uDQkLTDVNLPgnfcBQNnFt1eVY6GVhgkvIqS72KhQiGtm2RWlq2vHmy9Vk+/wDR6UfSY/oi/H4OZJfs5qZW1U1qrgfQ35r6g3FbgVEYWInZaBRmdtBppqSdMtaX501iROsXSeBSU0rEPLeg2ZatmmVA2cgXaVuDWpxiL8M0zaZZZDNclzSi3ogAFSB3LU33x3+nzyyR5RweowRxy4ZmmSxtnYHflyjmdkgjhxjEnYh0NO0SYfoKkPfkld36Yu/hWb/EdiPpTYWn22jfnF+VJVBRVCjfQfc846aZz2jGlTJjDZlhBrtmtK8FW/O5G+LiYY5QGmOwGgByL3bF6VOhJjJ9+PPuh74chfQ74mhs10WpWHRPlRV5gAE8b778Yu++HfyNqQ98NPI1MPZ9TYwILvQ/RjT57S0mLLLIZgDSywJUhWFmGU5WQ79DG2ndUsWvyiS4HCYwNtLMgA/mjTSJ7ypkubLpnltmAJ2TUEMrbwCpI5VB3R3+B634OaoJmiU1gyTP2ZUndU7J5EEgxw+onmhK49f0d3p4YZxqXf8AZH85SjmXMUpMXVHF6biOKk7xUWjH7TamH6Qo8ixuO8CJW6SwEnES/wBqgmLqrL8w/UjLcHuN4jPHYFJE2aizDMQlXDGgbLlAytQAZgyEGwNovg9V5Hq1TKZ/TePlO0Y0uXluxvS501ux4f7DhFZU4N8t+dKDgBexoOHCMdE7QkubA/IKbtSw3mtvd8wDd/t4bresdaORlR7Hpb3pEo/CRh/2ZLT/AIcycp/+xm9GERd7493Mf6x3PwexYBx2H4TFnLetRMXKx8UHjGOVcJmuJ8knwhCMDYQhCAEIQgCkQV1rxnb9I4t61CMJCchKFH/zlonUmPnDCTu0Vpp/8x5jk/vuzE8rRpiXuM8j9pke+PdzFophMQ8qZ2suXKdlGwZilgG0DLloQb6k7t164+LLEhBW4ZmI4D8oOoJrSvCvKPUmQRdjUkDkKnhS1KWpwA5xvOKmtWZRk4vZdm0w/WPpCpZp8tak1VZSkbhXMd+gvGPjMZNm2mz5rj6c+RedVTKrDdccYte+HdyN6wpu921seJikcMI9JF5Zpy7bLcmSqWRQvIADXiN9ouDl73C2oh748zzH+sPfHXzFvWNjIe+OmnPX0h7r63HP0h7HoLj3eHvhp5GpgQPfDmeR/wBIeXlr5GghT3620N/WKFgASSABqdw3kmulvWAKjl4elj4/aLc2cqCrMAN1d9NwGtSeFdItCaz/AOGKL9bAn+RddN5oL749ysOqnNdm+pjmPAUO4b6AUiL+ia+y2Zzt8iZRfbeo5mija8SNIuSZBBLMxZmABJoBaptS1BU61POL3vw58zD3w5nkd0KFnvBzpkk1kzHlE6hCApJ4o1UJ50rHnH4mdNmCY7y82WjESsrOAdkvRqEi9DQa91Ke/HkeVIDl/futqLRTxx22rkt5J663wYuIfKNohVJu60t3hgaAm1b7orKIN1mlxzysvMgqAfOMj08RwHPWKMtv693A99IvRWz178efIRueoWL7LpWRrSfLmSzwqo7Ra7idkj7xoMPMJs3zWru415G6mLkqf2c/CTq07PESWO7ZLAMP5TSKZOYlocSPoqEIRynSIQhACEIQBQiPnmfgGws2dhnFDJdgK2qjEujAjcQR4ER9DRH3xR6vmZLXGSVrNkA51GsyTWrDmVO0P4taiL45aspOOyI4y3rv0rpzN9Ir5E/bXyNBHiVMVlDKagio3VHdprHv3/U296x1nOB79Bbz+0PTx00tqL+kPfHXzFvWHsegvrz+8CB746a31F/SHv8Avf3pFGYAVJtxJpYc9LnjGN+NU2QM5/SLc6sdnXnEWSkZXlX7a+RoItzpyoKswUc7chbf9uEWMs19SssXqF2m8W2RbgDHuRhEU1Aq31MSzX77i3CkRbFI8DEM1paW+pqgU4hPmN+7TWLYw7E5npNoTqcoWhvlWhFajUmsZ/vjyHMRYwx2a6jO1b0JUTDUBtxIqATviGiUyn4sD5wyc2FQOO2tQLcaReVwRUEGuhB46UIsbVi9iXRpjtLltKlk7KM1WAoK1NSDU13nXWMN8GpNRVGO9DlPG4+VrcaxKbasNJOjI98OQ5HfD34cuZjEBmpuEwcqK3KqnZP2Ii5JxSMaA0b6GBDW0sb68KxNkUX/AGd/M8xA+/vz1Foe/Dnrr6QPv1N/ekSQPf8AQX96w98O7kamHkT9tfI0EO73uFvekAeGlio5Gtt9iDUb9T4xjdKrWS430tT6qgim+taD7xme+OnLXX0jadTeiji8fLSlZWGKzZp1GYGqJ93FSDuQxSbSiWgrZOEuuUV1oKxchCOQ6hCEIAQhCAEIQgCLunvhs4mPMwDSwjHMcO9VVW1PZsAcoJpskUG40oBopvUvpMWGFRu6elOdM1DE2wi6yNcIo4JkCdK9XukcPLedMwihJalmbt5bUG+w2vCNUsuYTV3C8kFNdxZq1tyETb8QRXozG/8ARfyFYhiUdleYHLUAnkbUjXHJy7M5xUei3+El1BK5jqCxLHgKZiRxi+OHl3cu+A9/flyEBy/vyFtRxjWjKx7O/mbawPvfrrzFoenjpz119IH2fM3Hu0SB78eY5esY+COyf3pnL87gDgd8ZHl5a+RoIx8Nsqa0WrvcmgGZzQtwUA1J3AGKvjklc8GR74actLmHs+pt5feLuKkhJjy1dJgQgZkOZDYG3cTQ03qYtenjp5i/pExaatBpp0x746+Yt6xanSFcUdQw3VvyFDqP9Yu9/j5m/l9oe/HnoaCAMT8My3lzDyV9ocgGqG1574CfMWzyq80YHvNGpqYy/fDkOR3w907uR5xFfQsxP+0JdcrZlO8MrDXUmopy1i8k7MaS0mTDwSW8y+m4WIjsPhW3/wDQxA3fhl8pp/qTEtgRjLK06NowTVkD9H9W8fiCqy8JMlKTeZPHZKo3HKdpu4DfEvdV+r0vAyFky6salpjn5nc6s3oBuAHfG7isZyk5dl4xUehCEIqWEIQgC12yfUviIdsn1L4iPkqRhs7KiqCzWAsKnh3nTvi4Oj3yK4lsUalGCEi7FQKgWJYUA1NRxEX0Is+se2T6l8RDtk+pfER8ov0TOGX9hM2gSAEYminKailRQ014jiIvSugprJnyKilgq52WWXaitRA1C1mU21qKVhoLPqjtU+pfEQ7VPqXxEfKk/oSejFWw0yocy7S2IMwEjIpC0ZrGwj0/Qc5cueXkqpNXGUChmLlao2XrLeim+zDX9Fn0f1yKt0fjVBBJw86gqNezYjziD8K4MtP3Vr4AmxjkAg4DwitIvD2lJx2O0zDiPXXXmLesMw4jx46X109Y4vKOEMo4RpuV8X6dpmHHz+wv71hmHH+ht5Gpji8o4QyjhDceL9O0qOPf6m3vWKAi9x/vy3W9Y4zKOEMo4Q3Hj/TswRupy4cuY/1iuYcR48NL98cXlHCGUQ3Hj/TtMw4+dNPK5gG5/wBOZtod0cXlHCGUcIbjxfp2mYcR/vyPKGYbqct/IcxHF5RwhQQ3Hi/SX/hYR+OxDEigw6AVI3zD/aJZ7VfqXxEfIxUcBFMq8B4CMZRt2aR4VH112yfUviIdsn1L4iPkbKvAeEUyrwHhEaE2fXXbJ9S+Ih2yfUviI+RKLwHlFcq8B4CGgs+uu2T6l8RFY+RAq8B4QhoLLiOVIZTRlIIPAg1B8Y3LdYXrUS0Wh2ANFQ5AUNsxFEFwVuSb2ppYRoDZSuk1VQglbKMrLVzmBRmdcxCioDPMqKCocaZQYycL1ieWZrKm3NrUmY+S65NqWCFci5UnQmt6CNJCIoHRnra9WIkSwXDo2295TvMmFBQihzTH2xcCm+pOD0j0z20mVI7NVSTm7KjElQ7u7KSRtA5k107MU1IjVQhqgIQhEgQhCAEIQgBCEIAQhCAEIQgBGZ0f0i0rNREcMUJDjMNk18wWU8mMYcIA2q9NU/8ATyDy7MUvSpp/CPuW40irdOkhA0mS5VQoLpmrQKL302RYUp411MIigbNumKtmMiUTlRbruTQ99LE78q8L+x04agiRJWhUjIvZ0CkGgK3oSOO+NTCFA369a5oIPZyyRluQSdkUvfQjUUA2mIoWtb/7yzKAdnLsSa0apJl9ltXuMu7u0pWNJCFAyMfi2mzHmMAC1KgaWUKPvQCvOsIx4RIP/9k="
+    />
   </div>
 </ng-template>
 
 <ng-template #esignTemplate>
-  <ng-container class="border rounded" style="background-color:#fff">
-    <div class="container h-auto w-300px border border-dark rounded" style="background-color:#fff">
+  <ng-container class="border rounded" style="background-color: #fff">
+    <div
+      class="container h-auto w-300px border border-dark rounded"
+      style="background-color: #fff"
+    >
       <div class="row h-30px">
-        <div class="col-4 d-flex align-items-center" (click)="clickAddForm(data)">
+        <div
+          class="col-4 d-flex align-items-center"
+          (click)="clickAddForm(data)"
+        >
           <span class="icon-i-pen icon-21 me-1 text-info"></span>
-          <span class="text-info fw-bold"><codx-label formName="sys" default="Ký số" name="lblESign"></codx-label> </span>
+          <span class="text-info fw-bold"
+            ><codx-label
+              formName="sys"
+              default="Ký số"
+              name="lblESign"
+            ></codx-label>
+          </span>
         </div>
         <div class="col-8 d-flex align-items-center justify-content-end p-0">
-           <div class="border rounded bg-warning px-1 me-3 ">5 ngày</div>
-           <i class="icon-i-three-dots icon-16 me-2"></i>
-           <i class="icon-close icon-16 text-danger" ></i>
+          <div class="border rounded bg-warning px-1 me-3">5 ngày</div>
+          <i class="icon-i-three-dots icon-16 me-2"></i>
+          <i class="icon-close icon-16 text-danger"></i>
         </div>
       </div>
-      <div class="row h-100px d-flex align-items-center border rounded p-3" style="background-color: #fff">
-       <h5 class="fw-bold">Tiêu đề</h5>
-       <div> Nội dung chi tiết</div>
+      <div
+        class="row h-100px d-flex align-items-center border rounded p-3"
+        style="background-color: #fff"
+      >
+        <h5 class="fw-bold">Tiêu đề</h5>
+        <div>Nội dung chi tiết</div>
       </div>
-      <div class="row h-30px ">
+      <div class="row h-30px">
         <div class="col d-flex align-items-center justify-content-end p-0">
-          <div class="border rounded-circle bg-warning px-1 me-3 h-25px w-25px d-flex align-items-center">
+          <div
+            class="border rounded-circle bg-warning px-1 me-3 h-25px w-25px d-flex align-items-center"
+          >
             <i class="icon-i-person-check icon-21"></i>
-           </div>
+          </div>
         </div>
       </div>
     </div>
-
   </ng-container>
 </ng-template>
 <ng-template #eventTemplate>
-  <ng-container class="border rounded" style="background-color:#fff">
-    <div class="container h-auto w-300px border border-dark rounded" style="background-color:#fff">
+  <ng-container class="border rounded" style="background-color: #fff">
+    <div
+      class="container h-auto w-300px border border-dark rounded"
+      style="background-color: #fff"
+    >
       <div class="row h-30px">
-        <div class="col-4 d-flex align-items-center" (click)="clickAddForm(data)">
-          <span class="icon-i-calendar2-event-fill icon-21 me-1 text-warning"></span>
-          <span class="text-warning fw-bold"><codx-label formName="sys" default="Sự kiện" name="lblEvent"></codx-label> </span>
+        <div
+          class="col-4 d-flex align-items-center"
+          (click)="clickAddForm(data)"
+        >
+          <span
+            class="icon-i-calendar2-event-fill icon-21 me-1 text-warning"
+          ></span>
+          <span class="text-warning fw-bold"
+            ><codx-label
+              formName="sys"
+              default="Sự kiện"
+              name="lblEvent"
+            ></codx-label>
+          </span>
         </div>
         <div class="col-8 d-flex align-items-center justify-content-end p-0">
-           <div class="border rounded bg-warning px-1 me-3 ">5 ngày</div>
-           <i class="icon-i-three-dots icon-16 me-2"></i>
-           <i class="icon-close icon-16 text-danger" ></i>
+          <div class="border rounded bg-warning px-1 me-3">5 ngày</div>
+          <i class="icon-i-three-dots icon-16 me-2"></i>
+          <i class="icon-close icon-16 text-danger"></i>
         </div>
       </div>
-      <div class="row h-100px d-flex align-items-center border rounded p-3" style="background-color: #fff">
-       <h5 class="fw-bold">Tên sự kiện</h5>
-       <div> Nội dung sự kiện</div>
+      <div
+        class="row h-100px d-flex align-items-center border rounded p-3"
+        style="background-color: #fff"
+      >
+        <h5 class="fw-bold">Tên sự kiện</h5>
+        <div>Nội dung sự kiện</div>
       </div>
-      <div class="row h-30px ">
+      <div class="row h-30px">
         <div class="col d-flex align-items-center justify-content-end p-0">
-          <div class="border rounded-circle bg-warning px-1 me-3 h-25px w-25px d-flex align-items-center">
+          <div
+            class="border rounded-circle bg-warning px-1 me-3 h-25px w-25px d-flex align-items-center"
+          >
             <i class="icon-i-person-check icon-21"></i>
-           </div>
+          </div>
         </div>
       </div>
     </div>
-
   </ng-container>
 </ng-template>
 <ng-template #emailTemplate>
-  <ng-container class="border rounded" style="background-color:#fff">
-    <div class="container h-auto w-300px border border-dark rounded" style="background-color:#fff">
+  <ng-container class="border rounded" style="background-color: #fff">
+    <div
+      class="container h-auto w-300px border border-dark rounded"
+      style="background-color: #fff"
+    >
       <div class="row h-30px">
-        <div class="col-4 d-flex align-items-center" (click)="clickAddForm(data)">
-          <span class="icon-i-calendar2-event-fill icon-21 me-1 text-warning"></span>
-          <span class="text-warning fw-bold"><codx-label formName="sys" default="Gửi mail" name="lblSendMail"></codx-label> </span>
+        <div
+          class="col-4 d-flex align-items-center"
+          (click)="clickAddForm(data)"
+        >
+          <span
+            class="icon-i-calendar2-event-fill icon-21 me-1 text-warning"
+          ></span>
+          <span class="text-warning fw-bold"
+            ><codx-label
+              formName="sys"
+              default="Gửi mail"
+              name="lblSendMail"
+            ></codx-label>
+          </span>
         </div>
         <div class="col-8 d-flex align-items-center justify-content-end p-0">
-           <div class="border rounded bg-warning px-1 me-3 ">2 giờ</div>
-           <i class="icon-i-three-dots icon-16 me-2"></i>
-           <i class="icon-close icon-16 text-danger" ></i>
+          <div class="border rounded bg-warning px-1 me-3">2 giờ</div>
+          <i class="icon-i-three-dots icon-16 me-2"></i>
+          <i class="icon-close icon-16 text-danger"></i>
         </div>
       </div>
-      <div class="row h-100px d-flex align-items-center border rounded m-3" style="background-color: #fff">
-       <h5 class="fw-bold">Gửi mail đến ...</h5>
-       <div> Nội dung</div>
+      <div
+        class="row h-100px d-flex align-items-center border rounded m-3"
+        style="background-color: #fff"
+      >
+        <h5 class="fw-bold">Gửi mail đến ...</h5>
+        <div>Nội dung</div>
       </div>
-      <div class="row h-30px ">
+      <div class="row h-30px">
         <div class="col d-flex align-items-center justify-content-end p-0">
-          <div class="border rounded-circle bg-warning px-1 me-3 h-25px w-25px d-flex align-items-center">
+          <div
+            class="border rounded-circle bg-warning px-1 me-3 h-25px w-25px d-flex align-items-center"
+          >
             <i class="icon-i-person-check icon-21"></i>
-           </div>
+          </div>
         </div>
       </div>
     </div>
-
   </ng-container>
 </ng-template>

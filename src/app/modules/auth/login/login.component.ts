@@ -161,10 +161,11 @@ export class LoginComponent extends UIComponent implements OnInit, OnDestroy {
       this.router.snapshot.queryParams['returnUrl'.toString()] || '/';
     this.realHub.start('ad').then((x: RealHub) => {
       let t = this;
-      x.hub.invoke('GetConnectionId').then(function (connectionId) {
-        t.realHub['hubConnectionID'] = connectionId;
-        t.hubConnectionID = connectionId;
-      });
+      t.hubConnectionID =x.hub["_connectionId"];
+      // x.hub.invoke('GetConnectionId').then(function (connectionId) {
+      //   t.realHub['hubConnectionID'] = connectionId;
+      //   t.hubConnectionID = connectionId;
+      // });
     });
   }
 

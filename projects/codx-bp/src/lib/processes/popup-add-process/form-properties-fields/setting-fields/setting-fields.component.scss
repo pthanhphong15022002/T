@@ -161,22 +161,21 @@ codx-input {
   background-color: rgba(52, 152, 219, 0.1);
 }
 
-.cdk-drag-placeholder {
-  border: 2px dashed #3498db;
-  background-color: #ecf0f1;
-}
 .cdk-drag-dragging {
   transition: transform 0.3s ease-in-out;
-}
-
-.cdk-drag-dragging {
   transform: translateY(-10px);
+
 }
 
 .cdk-drop-list-dragging-over .cdk-drag-dragging {
   transform: translateY(0);
 }
-
+.cdk-drag-preview {
+  z-index: 20000!important;
+}
+.cdk-drag-placeholder {
+  opacity: 0;
+}
 :host ::ng-deep #specialCodxInput {
   > div.e-float-input.mt-0 {
     height: 100% !important;
