@@ -1501,7 +1501,7 @@ export class ContractsComponent extends UIComponent {
   }
 
   changeData(event) {
-    if (event?.field == 'disposalOn' || event?.field == 'debtClosingOn') {
+    if (event?.field == 'disposalOn' || event?.field == 'debtClosingOn' || event?.field == 'disposalExpired') {
       this.liquidation[event?.field] = event?.data?.fromDate;
     } else {
       this.liquidation[event?.field] = event?.data;
