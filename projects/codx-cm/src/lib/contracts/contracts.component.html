@@ -15,8 +15,8 @@
   [autoLoad]="true"
   [autoSearch]="true"
   (selectedChange)="selectedChange($event)"
-  (clickMF)="clickMF($event, contractSelected)"
-  (changeDataMF)="changeDataMF($event, contractSelected)"
+  (clickMF)="clickMF($event, dataSelected)"
+  (changeDataMF)="changeDataMF($event, dataSelected)"
   (onActions)="onActions($event)"
 ></codx-views>
 <!-- temp left -->
@@ -124,7 +124,7 @@
         <div class="h-25px">
           <codx-imgs
             [width]="25"
-            [objectId]="data?.createdBy"
+            [objectId]="data?.owner"
             ojectType="AD_Users"
             [numberImages]="1"
           >
@@ -140,7 +140,7 @@
   <contracts-view-detail
     #detailViewContract
     [listInsStepStart]="listInsStep"
-    [contract]="contractSelected"
+    [contract]="dataSelected"
     [formModel]="view?.formModel"
     [taskAdd]="taskAdd"
     [processID]="processID"

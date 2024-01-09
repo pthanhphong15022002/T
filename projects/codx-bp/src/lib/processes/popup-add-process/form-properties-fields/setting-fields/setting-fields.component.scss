@@ -161,18 +161,30 @@ codx-input {
   background-color: rgba(52, 152, 219, 0.1);
 }
 
-.cdk-drag-placeholder {
-  border: 2px dashed #3498db;
-  background-color: #ecf0f1;
-}
 .cdk-drag-dragging {
   transition: transform 0.3s ease-in-out;
-}
-
-.cdk-drag-dragging {
   transform: translateY(-10px);
 }
 
 .cdk-drop-list-dragging-over .cdk-drag-dragging {
   transform: translateY(0);
+}
+.cdk-drag-preview {
+  z-index: 20000 !important;
+}
+.cdk-drag-placeholder {
+  opacity: 0;
+}
+.input-container {
+  height: calc(100% - 70px);
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.input-container input {
+  margin-bottom: 5px;
+  overflow-y: auto;
+  box-sizing: border-box;
 }

@@ -56,7 +56,7 @@
       <codx-input
         field="description"
         [formModel]="formModel"
-        [crrValue]="dataCurrent?.Description ?? ''"
+        [crrValue]="dataCurrent?.description ?? ''"
         (valueChange)="valueChange($event)"
       ></codx-input>
     </div>
@@ -862,7 +862,11 @@
         name="lblRatio"
         class="me-2"
       ></codx-label>
-      <div (mouseenter)="closePopover()" class="w-15 me-2">
+      <div
+        (mouseenter)="closePopover()"
+        class="me-2"
+        style="width: 25% !important"
+      >
         <codx-input
           type="number"
           field="minValue"
@@ -879,7 +883,7 @@
         name="lblTo"
         class="me-2"
       ></codx-label>
-      <div (mouseenter)="closePopover()" class="w-15">
+      <div (mouseenter)="closePopover()" style="width: 25% !important">
         <codx-input
           type="number"
           field="maxValue"
@@ -1236,7 +1240,8 @@
         class="d-flex justify-content-end cursor-pointer"
         (click)="formPropertieFields('edit', i)"
       >
-        <span class="icon-18 icon-edit_square"></span>
+        <span class="icon-18 icon-edit_square me-2"></span>
+        <i class="icon-close cursor-pointer" (click)="deleteRow(i)"></i>
       </div>
     </div>
 
@@ -1282,7 +1287,7 @@
     [disabled]="true"
     format="ed2"
     field="refValue"
-    placeholder="Exp [So_luong] * [Don_gia]"
+    [placeholder]="dataCurrent?.description"
     [crrValue]="dataCurrent?.refValue"
   ></codx-input>
   <div
@@ -1309,25 +1314,41 @@
             [formName]="'DynamicForms'"
             [gridViewName]="'grvDynamicFormsTitle' + dataCurrent?.fieldType"
           ></codx-label>
-          <div
-            cdkDropList
+          <input
+            id="specialCodxInput"
+            type="text"
+            #lblWeight
+            name="refValueEpress"
+            matInput
+            autofocus
+            [value]="refValueEpress ?? ''"
+            (blur)="valueChangeExp(lblWeight.value)"
+            (keydown.enter)="
+              valueChangeExp(lblWeight.value)
+            "
+            class="input-container"
+            cdkDrag
             #tableList="cdkDropList"
+            placeholder="Exp [So_luong] * [Don_gia]"
             (cdkDropListDropped)="drop($event)"
-          >
-            <codx-input
-              id="specialCodxInput"
-              class="h-100 d-flex"
-              type="text"
-              [crrValue]="refValueEpress ?? ''"
-              placeholder="Exp [So_luong] * [Don_gia]"
-              (valueChange)="valueChangeExp($event)"
-              field="refValueEpress"
-              cdkDrag
-              [cdkDragData]="refValueEpress"
-              [cdkDragDisabled]="true"
-              cdkDropList
-            ></codx-input>
-          </div>
+            [cdkDragData]="refValueEpress"
+            [cdkDragDisabled]="true"
+            cdkDropList
+          />
+          <!-- <codx-input
+            id="specialCodxInput"
+            type="text"
+            [crrValue]="refValueEpress ?? ''"
+            (valueChange)="valueChangeExp($event)"
+            field="refValueEpress"
+            cdkDrag
+            #tableList="cdkDropList"
+            placeholder="Exp [So_luong] * [Don_gia]"
+            (cdkDropListDropped)="drop($event)"
+            [cdkDragData]="refValueEpress"
+            [cdkDragDisabled]="true"
+            cdkDropList
+          ></codx-input> -->
         </div>
         <div class="col-4">
           <codx-label

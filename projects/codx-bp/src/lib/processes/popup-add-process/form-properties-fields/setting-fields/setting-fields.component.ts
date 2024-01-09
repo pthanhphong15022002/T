@@ -906,8 +906,8 @@ export class SettingFieldsComponent implements AfterViewInit {
   }
 
   valueChangeExp(e) {
-    if (e && e?.data) {
-      if (e?.data != this.refValueEpress) this.refValueEpress = e?.data;
+    if (e) {
+      if (e != this.refValueEpress) this.refValueEpress = e;
     }
     this.detectorRef.detectChanges();
   }
@@ -1004,6 +1004,20 @@ export class SettingFieldsComponent implements AfterViewInit {
         this.detectorRef.markForCheck();
       }
     });
+  }
+
+  deleteRow(indx) {
+    if (indx != -1) {
+      this.lstTables.splice(indx, 1);
+      if (this.lstTables?.length > 0) {
+        this.dataCurrent.dataFormat = JSON.stringify(this.lstTables);
+      } else {
+        this.dataCurrent.dataFormat = null;
+      }
+
+      this.dataValueEmit.emit({ data: this.dataCurrent });
+      this.detectorRef.markForCheck();
+    }
   }
 
   dropTable(event: CdkDragDrop<any[]>) {

@@ -531,13 +531,11 @@ export class ContractsViewDetailComponent
 
   getListCOntractByParentID(){
     this.listContractInParentID = [];
-    if(this.contract.parentID) {
-      this.contractService.getContractByParentID([this.contract?.recID, this.contract.parentID]).subscribe((res)=>{
-        if(res){
-          this.listContractInParentID = res;
-        }
-      })
-    }
+    this.contractService.getContractByParentID([this.contract?.recID, this.contract?.parentID, this.contract?.useType]).subscribe((res)=>{
+      if(res){
+        this.listContractInParentID = res;
+      }
+    })
   }
   reloadListStep(listSteps: any) {
     this.isLoading = true;
