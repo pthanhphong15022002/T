@@ -24,6 +24,7 @@ import {
   map,
   Observable,
   of,
+  mergeMap,
 } from 'rxjs';
 
 @Injectable({
@@ -58,13 +59,10 @@ export class CodxHrService {
   actionCheckResignCancel = 'A12';
   //#endregion
   childMenuClick = new BehaviorSubject<any>(null);
-
   constructor(
     private api: ApiHttpService,
     private cache: CacheService,
     private codxService: CodxService,
-    private auth: AuthStore,
-    private fb: FormBuilder,
     private notiService: NotificationsService
   ) {}
 
@@ -107,6 +105,7 @@ export class CodxHrService {
         finalize(() => null)
       );
   }
+
   loadEmployByCountStatus(positionID: string, _status: any): Observable<any> {
     return this.api.execSv(
       'HR',
@@ -320,11 +319,9 @@ export class CodxHrService {
       [empID]
     );
   }
-
   //#endregion
 
   //#region EDegrees
-
   getEmployeeDegreeModel() {
     return this.api.execSv<any>(
       'HR',
@@ -2061,39 +2058,6 @@ export class CodxHrService {
           resolve(formGroup);
         }
       });
-      // this.cache
-      //   .gridViewSetup(formName, gridView)
-      //   .subscribe((grvSetup: any) => {
-      //     let gv = Util.camelizekeyObj(grvSetup);
-      //     var model = {};
-      //     model['write'] = [];
-      //     model['delete'] = [];
-      //     model['assign'] = [];
-      //     model['share'] = [];
-      //     if (gv) {
-      //       const user = this.auth.get();
-      //       for (const key in gv) {
-      //         const element = gv[key];
-      //         element.fieldName = Util.camelize(element.fieldName);
-      //         model[element.fieldName] = [];
-      //         let modelValidator = [];
-      //         if (element.isRequire) {
-      //           modelValidator.push(Validators.required);
-      //         }
-      //         if (element.fieldName == 'email') {
-      //           modelValidator.push(Validators.email);
-      //         }
-      //         if (modelValidator.length > 0) {
-      //           model[element.fieldName].push(modelValidator);
-      //         }
-      //       }
-      //       model['write'].push(false);
-      //       model['delete'].push(false);
-      //       model['assign'].push(false);
-      //       model['share'].push(false);
-      //     }
-
-      //   });
     });
   }
 
@@ -2338,18 +2302,6 @@ export class CodxHrService {
       }
     });
 
-    // this.api
-    //   .execSv<any>(
-    //     'BG',
-    //     'BG',
-    //     'ScheduleTasksBusiness',
-    //     'GetScheduleTasksByIDAsync',
-    //     scheduelID
-    //   )
-    //   .subscribe((res) => {
-    //     console.log(res);
-    //   });
-
     for (let i = 0; i < evt.length; i++) {
       let funcIDStr = evt[i].functionID;
       let IDCompare = funcIDStr.substr(funcIDStr.length - 3);
@@ -2429,39 +2381,6 @@ export class CodxHrService {
       ) {
         evt[i].disabled = true;
       }
-
-      // if (data.status == '2') {
-      //   if (IDCompare === this.actionSubmit) {
-      //     evt[i].disabled = false;
-      //   }
-      //   if (IDCompare === this.actionCancelSubmit) {
-      //     evt[i].disabled = false;
-      //   }
-      //   if (IDCompare === this.actionEdit) {
-      //     evt[i].disabled = false;
-      //   }
-      // }
-
-      // if (IDCompare === this.actionDelete) {
-      //   if (data.status == '0' || data.status == '4') {
-      //     evt[i].disabled = false;
-      //   }
-      // }
-
-      // if (IDCompare === this.actionSubmit) {
-      //   if (
-      //     data.status === '0' ||
-      //     data.status === '2' ||
-      //     data.status === '4' ||
-      //     data.status === '5' ||
-      //     data.status === '6' ||
-      //     data.status === '9'
-      //   ) {
-      //     evt[i].disabled = true;
-      //   } else {
-      //     evt[i].disabled = false;
-      //   }
-      // }
 
       if (
         data.status == '0' ||
@@ -2764,7 +2683,3 @@ export class CodxHrService {
   }
   //#endregion
 }
-
-import { Pipe, PipeTransform } from '@angular/core';
-import { mergeMap } from 'rxjs';
-import { disableDebugTools } from '@angular/platform-browser';
