@@ -60,22 +60,24 @@
 <!-- Start: TmpBody -->
 <ng-template #TmpBody>
 <!-- Start: Tab General -->
-<ejs-tab>
-  <e-tabitems>
-    <e-tabitem>
-      <ng-template #headerText>
-        <div class="d-flex align-items-top me-2 mt-2">
-          <i class="icon-info icon-18 me-2"></i>
-          <codx-label class="fw-bold" style="font-size: 14px !important" fiedName="lblGeneral"
-            [formModel]="dialog.formModel" default="Thông tin chung"></codx-label>
-        </div>
-      </ng-template>
-      <ng-template #content>
-        <ng-container *ngTemplateOutlet="TmpTabGeneral"></ng-container>
-      </ng-template>
-    </e-tabitem>
-  </e-tabitems>
-</ejs-tab>
+<div style="height: 250px;">
+  <ejs-tab>
+    <e-tabitems>
+      <e-tabitem>
+        <ng-template #headerText>
+          <div class="d-flex align-items-top me-2 mt-2">
+            <i class="icon-info icon-18 me-2"></i>
+            <codx-label class="fw-bold" style="font-size: 14px !important" fiedName="lblGeneral"
+              [formModel]="dialog.formModel" default="Thông tin chung"></codx-label>
+          </div>
+        </ng-template>
+        <ng-template #content>
+          <ng-container *ngTemplateOutlet="TmpTabGeneral"></ng-container>
+        </ng-template>
+      </e-tabitem>
+    </e-tabitems>
+  </ejs-tab>
+</div>
 <!-- End: Tab General -->
 
  <!-- Start: Tab Detail -->
@@ -429,7 +431,7 @@
 <ng-template #TmpTabLine>
   <div class="tabline-content  header-table-ac position-relative">
     <codx-gridview-v2 #eleGridSalesInvoice class="tabLine" [showEmptyRecord]="false" gridLines="Both"
-      [autoFitColumns]="true" [formName]="fmSalesInvoiceLines.formName"
+      [autoFitColumns]="true" [formName]="fmSalesInvoiceLines.formName" [allowRowDragAndDrop]="true"
       [gridViewName]="fmSalesInvoiceLines.gridViewName" [templateMore]="templateMore"
       [entityName]="fmSalesInvoiceLines.entityName" predicates="TransID=@0" (beforeSaveRow)="beforeSaveRowSaleInvoice($event)"
       (gridInit)="beforeInitGridSalesInvoices($event)" [dataValues]="formSalesInvoice?.data?.recID" service="AC"

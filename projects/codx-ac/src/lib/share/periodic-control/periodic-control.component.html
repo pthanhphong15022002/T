@@ -1,13 +1,23 @@
-<codx-views class="ac-views" #view idField="recID" [views]="views" service="AC" [entityName]="view?.entityName" (changeDataMF)="changeDataMF($event,'view')"
-  [isSubView]="true" assemblyName="AC" className="RunPeriodicBusiness" service="AC" method="GetDataAsync" (clickMF)="clickMF($event)" (requestEnded)="requestEnded($event)">
+<codx-views class="ac-views" #view idField="recID" [views]="views" service="AC" [entityName]="view?.entityName" [toolbarDisplay]="false"
+  assemblyName="AC" className="RunPeriodicBusiness" service="AC" method="GetDataAsync" (requestEnded)="requestEnded($event)"
+  (viewChanged)="viewChanged($event)">
 </codx-views>
 <ng-template #template let-data>
 
   <ng-container *ngIf="setting">
+    <div class="w-100 d-flex align-items-center justify-content-between p-3 mb-2">
+      <div class="d-flex align-items-center">
+        <codx-page-title class="d-flex"></codx-page-title>
+      </div>
+      <div class="d-flex align-items-center">
+        <codx-mfunc [formModel]="view.formModel" [isToolBar]="true" type="view"
+        (changeDataMF)="changeDataMF($event,'view')"  (clickMF)="clickMF($event)"></codx-mfunc>
+      </div>
+    </div>
   <div class="h-100 overflow-auto">
     <div class="d-flex container w-60 mb-5">
       <div class="bg-body rounded-3 p-6 flex-grow-1 overflow-auto">
-          <dynamic-setting-control [setting]="setting" [dataValue]="dataValue" (valueChanges)="valuechange($event)"></dynamic-setting-control>
+          <dynamic-setting-control [settingFull]="this.dataDefault" [formModel]="view.formModel" (valueChanges)="valuechange($event)"></dynamic-setting-control>
       </div>
     </div>
     <ng-container *ngIf="setting.length">
