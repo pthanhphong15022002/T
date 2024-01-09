@@ -1751,8 +1751,11 @@ export class CodxTasksComponent
       case 'SYS04':
         this.copy(data);
         break;
-      case 'sendemail':
+      case 'SYS05':
+        this.viewTask(data);
         break;
+      // case 'sendemail':
+      //   break;
       case 'TMT02015':
       case 'TMT02025':
       case 'TMT030115':
