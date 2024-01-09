@@ -990,6 +990,9 @@ export class PopupAddCardsComponent implements OnInit {
 
   saveEvoucher(data: any) {
     this.evoucher = [...data.evoucherGift];
+    this.amountEvoucher = this.evoucher.reduce((p, c) => {
+      return p + c.price * c.quantity;
+    }, 0);
     this.evoucherSelected = [...data.dataSelcected];
     this.showPopupEvoucher = false;
   }

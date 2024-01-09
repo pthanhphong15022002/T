@@ -131,6 +131,7 @@ codx-form-format-value{
               0 3px 14px 2px rgba(0, 0, 0, 0.12);
   max-width: 350px;
   padding: 20px;
+  z-index: 20000 !important;
 }
 
 .cdk-drag-placeholder {
