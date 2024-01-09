@@ -146,8 +146,13 @@ export class CodxChatListComponent implements OnInit, AfterViewInit {
       });
   }
   // searrch
-  search(event: any) {
-    if (event) {
+  search(event: any, isFavorite = false) {
+    if(isFavorite){
+      this.searched = false;
+      this.codxListView.dataService.method = 'GetGroupFavoriteAsync';
+      this.codxListView.dataService.search(event);
+    }
+    else if (event) {
       this.searched = true;
       this.codxListView.dataService.method = 'SearchAsync';
       this.codxListView.dataService.search(event);

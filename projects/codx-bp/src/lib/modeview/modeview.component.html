@@ -90,6 +90,7 @@
         >
           <div cdkDropListGroup>
             <div  *ngFor="let item of table ; let i = index" cdkDrag [cdkDragDisabled]="true">
+              <h2>{{i}}</h2>
               <div 
                 class="d-flex align-items-center justify-content-between" 
                 #childList="cdkDropList" *ngIf="item.children && item.children.length>0 && i>0" 
@@ -100,13 +101,14 @@
                 [cdkDropListEnterPredicate]="evenPredicate(item.name)"
               >
                 <div class="d-flex align-items-center p-2 w-100 cursor-pointer" 
-                  *ngFor="let subItem of item.children" 
+                  *ngFor="let subItem of item.children;let j = index " 
                   cdkDrag 
                   [cdkDragDisabled]="subItem.controlType == 'Title'"
                   [cdkDragData]="item.name"
                   [ngClass]="(dataSelected.columnOrder == subItem.columnOrder &&  dataSelected.columnNo == subItem.columnNo) ? 'active':''"
                   (click)="selectedItem(subItem)"
                 >
+                <h3>{{j}}</h3>
                  <ng-container [ngSwitch]="subItem.value">
                     <ng-container *ngSwitchCase="'Text'">
                       <ng-container *ngTemplateOutlet="text ; context: { $implicit: subItem }"></ng-container>
