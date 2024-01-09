@@ -171,13 +171,13 @@ export class PeriodicControlComponent extends UIComponent {
       }, {});
   }
 
-  onCollaple(){
-    this.oData = [this.oData.shift()];
-    this.view.dataService.request.page = 1;
-    this.showLess = false;
-    this.showAll = false;
-    this.detectorRef.detectChanges();
-  }
+  // onCollaple(){
+  //   this.oData = [this.oData.shift()];
+  //   this.view.dataService.request.page = 1;
+  //   this.showLess = false;
+  //   this.showAll = false;
+  //   this.detectorRef.detectChanges();
+  // }
 
   runPeriodic(runtype:any,storeName:any,recID:any,runMode:any,text:any){
     this.api.exec('AC','RunPeriodicBusiness','RunPeriodicAsync',[
@@ -189,10 +189,9 @@ export class PeriodicControlComponent extends UIComponent {
     ]).pipe(takeUntil(this.destroy$))
     .subscribe((res:any)=>{
       if (res && !res.isError) {
+        this.notification.notifyCode('AC0029', 0, text);
         if (res.data) {
           this.oData = [res?.data];
-          if (this.showLess) this.showLess = false;
-          this.notification.notifyCode('AC0029', 0, text);
           this.detectorRef.detectChanges();
         }
       }else{
