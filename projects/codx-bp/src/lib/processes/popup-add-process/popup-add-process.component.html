@@ -3,13 +3,7 @@
     <div class="stepper-header d-flex flex-wrap flex-stack ps-6">
       <div class="d-flex align-items-center">
         <h2 class="h2-title">
-          <!-- xài code label truyền lên không load lại data, bật lần 2 thì load -->
-          <codx-label
-            default="Form nhập liệu"
-            [formModel]="dialog.formModel"
-            name="lblForms"
-          >
-          </codx-label>
+          {{ title }}
         </h2>
       </div>
       <div class="d-flex align-items-center">
@@ -200,6 +194,7 @@
             <div
               *ngIf="currentTab == 0"
               class="left d-flex cursor-pointer text-primary"
+              (click)="popupAdvancedSetting()"
             >
               <span class="icon-16 icon-settings me-2"></span>
               <codx-label
@@ -274,7 +269,7 @@
           [isEdit]="true"
           [disabled]="false"
           [value]="data?.tags"
-          (valueChange)="valueTagChange($event)"
+          (valueChange)="valueChange($event)"
         ></codx-tag>
       </div>
       <div class="form-group">

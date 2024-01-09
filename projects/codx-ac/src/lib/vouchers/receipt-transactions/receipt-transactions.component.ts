@@ -230,6 +230,7 @@ export class ReceiptTransactionsComponent extends UIComponent {
    * @returns
    */
   onSelectedItem(event) {
+    console.log(event);
     this.itemSelected = event;
     this.detectorRef.detectChanges();
     // if(this.view?.views){

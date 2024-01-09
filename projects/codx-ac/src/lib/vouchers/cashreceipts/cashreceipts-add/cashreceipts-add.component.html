@@ -59,22 +59,24 @@
 <!-- Start: TmpBody -->
 <ng-template #TmpBody>
   <!-- Start: Tab General -->
-  <ejs-tab>
-    <e-tabitems>
-      <e-tabitem>
-        <ng-template #headerText>
-          <div class="d-flex align-items-top me-2 mt-2">
-            <i class="icon-info icon-18 me-2"></i>
-            <codx-label class="fw-bold" style="font-size: 14px !important" fiedName="lblGeneral"
-              [formModel]="dialog.formModel" default="Thông tin chung"></codx-label>
-          </div>
-        </ng-template>
-        <ng-template #content>
-          <ng-container *ngTemplateOutlet="TmpTabGeneral"></ng-container>
-        </ng-template>
-      </e-tabitem>
-    </e-tabitems>
-  </ejs-tab>
+  <div style="height: 250px;">
+    <ejs-tab>
+      <e-tabitems>
+        <e-tabitem>
+          <ng-template #headerText>
+            <div class="d-flex align-items-top me-2 mt-2">
+              <i class="icon-info icon-18 me-2"></i>
+              <codx-label class="fw-bold" style="font-size: 14px !important" fiedName="lblGeneral"
+                [formModel]="dialog.formModel" default="Thông tin chung"></codx-label>
+            </div>
+          </ng-template>
+          <ng-template #content>
+            <ng-container *ngTemplateOutlet="TmpTabGeneral"></ng-container>
+          </ng-template>
+        </e-tabitem>
+      </e-tabitems>
+    </ejs-tab>
+  </div>
   <!-- End: Tab General -->
 
   <!-- Start: Tab Detail -->
@@ -347,8 +349,8 @@
 <ng-template #TmpTabLine>
   <ng-container>
     <div id="gridcash" class="tabline-content header-table-ac position-relative">
-      <codx-gridview-v2 #eleGridCashReceipt class="tabLine" [showEmptyRecord]="false" gridLines="Both"
-        [autoFitColumns]="false" [formName]="journal.entryMode == '1'? 'CashReceiptsLines' : 'CashReceiptsLinesOneAccount'"
+      <codx-gridview-v2 #eleGridCashReceipt class="tabLine" [showEmptyRecord]="false" gridLines="Both" [allowRowDragAndDrop]="true"
+        [autoFitColumns]="true" [formName]="journal.entryMode == '1'? 'CashReceiptsLines' : 'CashReceiptsLinesOneAccount'"
         [gridViewName]="journal.entryMode == '1' ? 'grvCashReceiptsLines' : 'grvCashReceiptsLinesOneAccount'"
         entityName="AC_CashReceiptsLines" predicates="TransID=@0" [dataValues]="formCashReceipt.data.recID"
         (beforeSaveRow)="beforeSaveRow($event)" [templateMore]="templateMore" service="AC"
@@ -389,8 +391,8 @@
     <div id="gridset" class="tabline-content header-table-ac position-relative">
       <codx-gridview-v2 #eleGridSettledInvoices formName="SettledInvoices" gridViewName="grvSettledInvoices"
         [showEmptyRecord]="false" entityName="AC_SettledInvoices" rowHeight="35" [showEmptyRecord]="false"
-        gridLines="Both" [hideMoreFunc]="true" service="AC" predicates="TransID=@0"
-        [dataValues]="formCashReceipt.data.recID" [autoFitColumns]="false"
+        gridLines="Both" [hideMoreFunc]="true" service="AC" predicates="TransID=@0" 
+        [dataValues]="formCashReceipt.data.recID" [autoFitColumns]="true" [allowRowDragAndDrop]="true"
         (gridInit)="beforeInitGridSettledInvoices($event)" (cellChanged)="valueChangeLineSettledInvoices($event)">
       </codx-gridview-v2>
       <div class="btn-addline">
