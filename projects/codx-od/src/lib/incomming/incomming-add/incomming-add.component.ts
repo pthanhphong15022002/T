@@ -9,11 +9,13 @@ import {
 import {
   ApiHttpService,
   AuthStore,
+  CacheService,
   CallFuncService,
   DataRequest,
   DialogData,
   DialogRef,
   NotificationsService,
+  Util,
 } from 'codx-core';
 
 import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
@@ -24,10 +26,11 @@ import {
   getJSONString,
 } from '../../function/default.function';
 import { FileService } from '@shared/services/file.service';
-import { Observable, isObservable } from 'rxjs';
+import { Observable, from, isObservable, of } from 'rxjs';
 import { Permission } from '@shared/models/file.model';
 import { permissionDis } from '../../models/dispatch.model';
 import { CodxOdService } from '../../codx-od.service';
+import axios from 'axios';
 
 @Component({
   selector: 'app-imcomming-add',
@@ -81,7 +84,8 @@ export class IncommingAddComponent implements OnInit {
   organizationUnits: any;
   defaultValue: any;
   readOnly = false;
-
+  isAI = false;
+  addAI = false;
   constructor(
     private api: ApiHttpService,
     private dispatchService: DispatchService,
@@ -90,11 +94,12 @@ export class IncommingAddComponent implements OnInit {
     private callfunc: CallFuncService,
     private ref: ChangeDetectorRef,
     private fileService: FileService,
+    private cache: CacheService,
     private auth: AuthStore,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
-    this.data = JSON.parse(JSON.stringify(dt?.data));
+    this.data = dt?.data//JSON.parse(JSON.stringify(dt?.data));
     this.dialog = dialog;
   }
   public disEdit: any;
@@ -150,11 +155,11 @@ export class IncommingAddComponent implements OnInit {
         if (this.dispatch.agencies && this.dispatch.agencies.length > 0) {
           if ('agencyID' in this.dispatch.agencies[0])
             this.crrAgencies = this.dispatch.agencies
-              .map((u) => u.agencyID)
+              .map((u) => u.agencyName)
               .join(';');
           else
             this.crrAgencies = this.dispatch.agencies
-              .map((u) => u.AgencyID)
+              .map((u) => u.AgencyName)
               .join(';');
         } else {
           this.dispatch.agencies = [
@@ -183,10 +188,99 @@ export class IncommingAddComponent implements OnInit {
     } else if (this.type == 'read') this.disableSave = true;
 
     this.getKeyRequied();
+    this.getPara();
   }
+
+
+  getPara()
+  {
+    this.cache.viewSettingValues('ODParameters').subscribe((res) => {
+      if(res)
+      {
+        var dt = res.filter(x=>x.category == "1");
+        if(dt && dt[0])
+        {
+          var dtValue = JSON.parse(dt[0].dataValue);
+          if(dtValue?.SuggestAI == "1") this.addAI = true;
+        }
+      }
+    })
+  }
+
   fileAdded(event: any) {
     if (event?.data) this.hideThumb = true;
     this.dltDis = false;
+    if(this.type == 'add' && this.addAI)
+    {
+      this.isAI = true;
+      this.readFileAI(event?.data[0]?.item.rawFile)
+    }
+  }
+
+  readFileAI(dataFile:any)
+  {
+    this.fetchAI(dataFile).subscribe(res=>{
+      this.isAI = false;
+      if(res)
+      {
+        this.dispatch.refDate = new Date(res.dispatchDate);
+         if (this.defaultValue == '2') 
+        {
+          this.dispatch.agencies = [];
+          if(res.listAgencyName.length > 0)
+          {
+            res.listAgencyName.forEach(elm => {
+              this.dispatch.agencies.push({
+                agencyID: Util.uid(),
+                agencyName: elm
+              });
+            });
+          }
+          this.crrAgencies = this.dispatch.agencies
+          .map((u) => u.agencyName)
+          .join(';');
+        }
+
+        this.myForm.formGroup.patchValue({
+          title: res.title,
+          agencyName: res.agencyName,
+          refNo: res.dispatchNumber,
+          refDate: new Date(res.dispatchDate),
+          agencies: this.dispatch.agencies
+        });
+      }
+    })
+  }
+  fetchAI(data:any)
+  {
+    if(data)
+    {
+      console.log(new Date())
+      let url = "https://apibot.trogiupluat.vn/api/v2.0/NLP/get-information-extract";
+      var form = new FormData();
+      form.append("prompt", `
+      Hãy trích xuất thông tin công văn với định dạng JSON như sau:
+      {
+        "title": "",
+        "agencyName": "",
+        "dispatchNumber": "",
+        "dispatchDate": "",
+        "listAgencyName": ""
+      }
+      Lưu ý: Nếu thông tin không tìm thấy hãy để trống , dispatchDate định dạng kiểu dd/MM/yyy , listAgencyName là danh sách nơi gửi đến theo dạng mảng`);
+      form.append("sourceFile", data); 
+      return from(axios.post(url, form)
+      .then((res:any) => {
+        var result = JSON.parse(res.data.Data.JsonResult); 
+        result.fileName = res.data.Data?.FileName; 
+        return result
+      })
+      .catch(() => {return null}));
+    }
+    else
+    {
+      return of(null);
+    }
   }
 
   //Mở form thêm mới đơn vị / phòng ban

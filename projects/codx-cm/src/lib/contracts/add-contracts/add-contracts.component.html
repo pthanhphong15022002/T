@@ -325,13 +325,13 @@
     <codx-label
       [formModel]="form?.formModel"
       fiedName="parentID"
-      default="Tên hợp đồng"
     ></codx-label>
     <codx-input
       field="parentID"
       [formModel]="form?.formModel"
       [crrValue]="contracts?.parentID"
       (valueChange)="valueChangeCombobox($event)"
+      [disabled]="type == 'appendix' || type == 'extend'"
     ></codx-input>
   </div>
 

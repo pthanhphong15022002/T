@@ -1,4 +1,4 @@
-<codx-form
+div<codx-form
   #form
   [customToolbar]="header"
   subHeaderText=""
@@ -306,6 +306,28 @@
           [enabled]="!(typeTask?.value === 'CO')"
         ></ejs-multiselect>
       </div>
+    </div>
+
+    <div class="form-group" *ngIf="typeTask?.value === 'F1'">
+      <div (click)="handleDivClick($event)" (document:click)="handleDocumentClick($event)" >
+        <div class="input-custom d-flex align-items-center justify-content-between">
+          <span [ngClass]="showSelect ? 'd-none' : ''" class="popup-data" class="ps-2">{{titleField}}</span>
+          <div class="d-flex align-items-center flex-wrap example-list" [ngClass]="showSelect ? '' : 'd-none'" cdkDropList (cdkDropListDropped)="drop($event)">
+            <div cdkDrag *ngFor="let field of listField" class="d-flex align-items-center m-1 item-show ms-2 example-box">
+              <span class="text-nowrap"  (click)="chooseField(field)" >{{field?.title}}</span>
+              <span class="icon-close icon-18 ms-1 cursor-pointer" (click)="removeField(field)"></span>
+            </div>
+          </div>
+          <div>
+            <span class="e-input-group-icon e-ddl-icon"></span>
+          </div>
+        </div>
+        <div [ngClass]="showSelect ? '' : 'd-none'" class="popup-data" >
+          <div class="py-1 px-3 item-popup" *ngFor="let item of listFields" (click)="chooseData(item)">
+            <span >{{item?.title}}</span>
+          </div>
+        </div>
+        </div>
     </div>
 
     <div class="form-group" *ngIf="typeTask?.value != 'F'">

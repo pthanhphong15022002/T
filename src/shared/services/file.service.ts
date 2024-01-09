@@ -130,6 +130,11 @@ export class FileService implements OnDestroy {
         
     }
 
+    copyFileOrFolder(id: string, fileName: string, id_to: string, move: number = 0, rewrite: number = 0): Observable<any> {
+        
+        return this.api.exec<DataReturn>("DM", "FileBussiness", "CopyFileOrFolderAsync", [id, fileName, id_to, move, rewrite]);
+        
+    }
     // updateFile(id: string, fileName: string): Observable<any> { 
     //     return this.api.exec<FileInfo[]>("DM", "FileBussiness", "UpdateFileAsync", [id, fileName]);
     // }  

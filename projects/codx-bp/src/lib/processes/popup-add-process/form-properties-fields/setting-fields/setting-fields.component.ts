@@ -28,6 +28,12 @@ import { tempVllDP } from 'projects/codx-dp/src/lib/models/models';
 import { Observable, finalize, firstValueFrom, map } from 'rxjs';
 import { FormSettingComboboxComponent } from './form-setting-combobox/form-setting-combobox.component';
 import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
+import { FormPropertiesFieldsComponent } from '../form-properties-fields.component';
+import {
+  CdkDragDrop,
+  moveItemInArray,
+  transferArrayItem,
+} from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'codx-setting-fields',
@@ -96,6 +102,11 @@ export class SettingFieldsComponent implements AfterViewInit {
   titleAction = '';
   lstEpresssions = [];
   refValueEpress: string;
+  lstTables = [];
+  tableFormat = {
+    hasIndexNo: false,
+    sum: '',
+  };
   constructor(
     private detectorRef: ChangeDetectorRef,
     private cache: CacheService,
@@ -138,6 +149,9 @@ export class SettingFieldsComponent implements AfterViewInit {
     this.isRender = true;
     this.isChangeColor = false;
     this.crrVll = null;
+    this.lstTables = [];
+    this.tableFormat.hasIndexNo = false;
+    this.tableFormat.sum = '';
     if (data) {
       switch (data?.fieldType) {
         case 'ValueList':
@@ -225,6 +239,21 @@ export class SettingFieldsComponent implements AfterViewInit {
             this.dataCurrent.dataFormat?.trim() != ''
           ) {
             this.listCbx = JSON.parse(this.dataCurrent.dataFormat);
+          }
+          break;
+        case 'Table':
+          if (
+            this.dataCurrent.dataFormat &&
+            this.dataCurrent.dataFormat?.trim() != ''
+          ) {
+            this.lstTables = JSON.parse(this.dataCurrent.dataFormat);
+          }
+          if (
+            this.dataCurrent.tableFormat &&
+            this.dataCurrent.tableFormat?.trim() != ''
+          ) {
+            const tableFormat = JSON.parse(this.dataCurrent.tableFormat);
+            this.tableFormat = tableFormat;
           }
           break;
         default:
@@ -394,6 +423,10 @@ export class SettingFieldsComponent implements AfterViewInit {
           }
           break;
         case 'Combobox':
+          break;
+        case 'hasIndexNo':
+          this.tableFormat.hasIndexNo = e?.data;
+          this.dataCurrent.tableFormat = JSON.stringify(this.tableFormat);
           break;
       }
 
@@ -873,7 +906,7 @@ export class SettingFieldsComponent implements AfterViewInit {
   }
 
   valueChangeExp(e) {
-    if (e && e?.data) {
+    if (e) {
       if (e?.data != this.refValueEpress) this.refValueEpress = e?.data;
     }
     this.detectorRef.detectChanges();
@@ -907,6 +940,104 @@ export class SettingFieldsComponent implements AfterViewInit {
         ']'
       : '[' + data?.fieldName.toString() + ']';
     this.detectorRef.detectChanges();
+  }
+  //#endregion
+
+  //#region setting Table
+  formPropertieFields(action, index) {
+    let option = new DialogModel();
+    option.IsFull = true;
+    option.zIndex = 1010;
+    let formModelField = new FormModel();
+    formModelField.formName = 'DPStepsFields';
+    formModelField.gridViewName = 'grvDPStepsFields';
+    formModelField.entityName = 'DP_Steps_Fields';
+    option.FormModel = formModelField;
+    let data = {
+      process: this.process,
+      action: action,
+      type: 'table',
+      dataCurrent:
+        index != -1 ? JSON.parse(JSON.stringify(this.lstTables[index])) : null,
+    };
+    let popupDialog = this.callFc.openForm(
+      FormPropertiesFieldsComponent,
+      '',
+      null,
+      null,
+      '',
+      data,
+      '',
+      option
+    );
+    popupDialog.closed.subscribe((dg) => {
+      if (dg && dg?.event) {
+        const data = dg?.event;
+        let indx = this.lstTables.findIndex((x) => x.recID == data?.recID);
+        if (indx != -1) {
+          if (
+            this.lstTables[indx]?.fieldName != data?.fieldName &&
+            this.lstTables.some((x) => x.fieldName == data?.fieldName)
+          ) {
+            data.fieldName = this.bpSv.createAutoNumber(
+              data.title,
+              this.lstTables,
+              'fieldName'
+            );
+          }
+          this.lstTables[indx] = data;
+        } else {
+          if (this.lstTables.some((x) => x.fieldName == data?.fieldName)) {
+            data.fieldName = this.bpSv.createAutoNumber(
+              data.title,
+              this.lstTables,
+              'fieldName'
+            );
+          }
+          this.lstTables.push(data);
+        }
+
+        if (this.lstTables?.length > 0)
+          this.dataCurrent.dataFormat = JSON.stringify(this.lstTables);
+
+        this.dataValueEmit.emit({ data: this.dataCurrent });
+        this.detectorRef.markForCheck();
+      }
+    });
+  }
+
+  deleteRow(indx) {
+    if (indx != -1) {
+      this.lstTables.splice(indx, 1);
+      if (this.lstTables?.length > 0) {
+        this.dataCurrent.dataFormat = JSON.stringify(this.lstTables);
+      } else {
+        this.dataCurrent.dataFormat = null;
+      }
+
+      this.dataValueEmit.emit({ data: this.dataCurrent });
+      this.detectorRef.markForCheck();
+    }
+  }
+
+  dropTable(event: CdkDragDrop<any[]>) {
+    if (event.previousContainer === event.container) {
+      // Kéo thả trong cùng một danh sách
+      moveItemInArray(this.lstTables, event.previousIndex, event.currentIndex);
+    } else {
+      // Kéo thả từ danh sách khác vào
+      transferArrayItem(
+        event.previousContainer.data,
+        event.container.data,
+        event.previousIndex,
+        event.currentIndex
+      );
+    }
+    if (this.lstTables?.length > 0)
+      this.dataCurrent.dataFormat = JSON.stringify(this.lstTables);
+
+    this.dataValueEmit.emit({ data: this.dataCurrent });
+    this.detectorRef.markForCheck();
   }
   //#endregion
 }
