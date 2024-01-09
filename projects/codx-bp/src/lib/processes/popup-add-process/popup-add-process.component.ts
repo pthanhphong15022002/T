@@ -1209,7 +1209,7 @@ export class PopupAddProcessComponent {
       option
     );
     popupDialog.closed.subscribe((e) => {
-      if (e) {
+      if (e && e?.event) {
         this.lstStepFields = e?.event?.length > 0 ? JSON.parse(JSON.stringify(e?.event)) : [];
 
       }
