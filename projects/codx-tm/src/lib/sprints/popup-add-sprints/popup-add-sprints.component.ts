@@ -185,12 +185,14 @@ export class PopupAddSprintsComponent implements OnInit, AfterViewInit {
 
   //#region init
   ngOnInit(): void {
-    if (this.project.startDate)
-      this.project.startDate = moment(
-        new Date(this.project.startDate)
-      ).toDate();
-    if (this.project.endDate)
-      this.project.endDate = moment(new Date(this.project.endDate)).toDate();
+    if (this.master?.iterationType == '1') {
+      if (this.project?.startDate)
+        this.project.startDate = moment(
+          new Date(this.project.startDate)
+        ).toDate();
+      if (this.project?.endDate)
+        this.project.endDate = moment(new Date(this.project.endDate)).toDate();
+    }
 
     this.cache.functionList(this.funcID).subscribe((f) => {
       if (f) {
@@ -205,8 +207,10 @@ export class PopupAddSprintsComponent implements OnInit, AfterViewInit {
 
     if (this.action == 'add') {
       this.master.viewMode = '1';
-      if (this.funcID == 'TMT0301') this.master.iterationType = '1';
-      if (this.funcID == 'TMT0302') this.master.iterationType = '0';
+      if (!this.master.iterationType) {
+        if (this.funcID == 'TMT0301') this.master.iterationType = '1';
+        if (this.funcID == 'TMT0302') this.master.iterationType = '0';
+      }
     } else if (this.action == 'copy')
       this.getSprintsCoppied(this.master.iterationID);
     else this.openInfo(this.master.iterationID, this.action);
