@@ -58,22 +58,25 @@
 </ng-template>
 
 <ng-template #TmpBody>
-    <ejs-tab>
-        <e-tabitems>
-            <e-tabitem>
-                <ng-template #headerText>
-                    <div class="d-flex align-items-top me-2 mt-2">
-                        <i class="icon-info icon-18 me-2"></i>
-                        <codx-label class="fw-bold" style="font-size: 14px !important" fiedName="lblGeneral"
-                            [formModel]="dialog.formModel" default="Thông tin chung"></codx-label>
-                    </div>
-                </ng-template>
-                <ng-template #content>
-                    <ng-container *ngTemplateOutlet="TmpTabGeneral"></ng-container>
-                </ng-template>
-            </e-tabitem>
-        </e-tabitems>
-    </ejs-tab>
+    <div style="height: 250px;">
+        <ejs-tab>
+            <e-tabitems>
+                <e-tabitem>
+                    <ng-template #headerText>
+                        <div class="d-flex align-items-top me-2 mt-2">
+                            <i class="icon-info icon-18 me-2"></i>
+                            <codx-label class="fw-bold" style="font-size: 14px !important" fiedName="lblGeneral"
+                                [formModel]="dialog.formModel" default="Thông tin chung"></codx-label>
+                        </div>
+                    </ng-template>
+                    <ng-template #content>
+                        <ng-container *ngTemplateOutlet="TmpTabGeneral"></ng-container>
+                    </ng-template>
+                </e-tabitem>
+            </e-tabitems>
+        </ejs-tab>
+    </div>
+    
     <!-- Start: Tab Detail -->
     <div style="height: calc(100vh - 395px) !important;">
         <ejs-tab #elementTabDetail (selecting)="onTabSelectedDetail($event)">
@@ -257,7 +260,7 @@
 <!-- Start: Grid Tranfer -->
 <ng-template #TmpTabLine>
     <div class="tablinetranfer-content header-table-ac position-relative">
-        <codx-gridview-v2 #eleGridIssue [showEmptyRecord]="false" gridLines="Both" [autoFitColumns]="false"
+        <codx-gridview-v2 #eleGridIssue [showEmptyRecord]="false" gridLines="Both" [autoFitColumns]="true" [allowRowDragAndDrop]="true"
             [formName]="fmIssueTransfersLines.formName" [gridViewName]="fmIssueTransfersLines.gridViewName"
             [templateMore]="templateMore" [entityName]="fmIssueTransfersLines.entityName" predicates="TransID=@0"
             [dataValues]="formWareHouse?.data?.recID" service="IV" [editOnClick]="true" rowNoField="rowNo"
@@ -280,7 +283,7 @@
 
 <ng-template #TmpTabLine2>
     <div class="tablinetranfer-content header-table-ac position-relative">
-        <codx-gridview-v2 #eleGridReceipt [showEmptyRecord]="false" gridLines="Both" [autoFitColumns]="false"
+        <codx-gridview-v2 #eleGridReceipt [showEmptyRecord]="false" gridLines="Both" [autoFitColumns]="true"
             [formName]="fmReceiptTransfersLines.formName" [gridViewName]="fmReceiptTransfersLines.gridViewName"
             [templateMore]="templateMore" [entityName]="fmReceiptTransfersLines.entityName" predicates="TransID=@0"
             [dataValues]="formWareHouse?.data?.recID" service="IV" [editOnClick]="true" rowNoField="rowNo"

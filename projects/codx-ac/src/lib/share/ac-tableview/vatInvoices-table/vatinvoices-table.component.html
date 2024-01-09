@@ -83,9 +83,9 @@
       </tbody>
       <div *ngIf="listVATInvoices && listVATInvoices.length == 0" class="ac-empty">
         <img src="../assets/themes/sys/default/img/DataEmpty.svg" />
-        <div class="fs-6 text-dark mt-2 text-center">
-            {{ "SYS011" | mssg | async }}
-        </div>
+                    <div class="fs-6 text-dark mt-2 text-center">
+                        {{ "SYS011" | mssg | async }}
+                    </div>
       </div>
     </table>
     <table *ngIf="listVATInvoices && listVATInvoices.length" class="table mb-0 table-footer-ac">

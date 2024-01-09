@@ -30,6 +30,7 @@ import { CodxTMService } from '../../codx-tm.service';
 import { TM_Sprints } from '../../models/TM_Sprints.model';
 import { AttachmentService } from 'projects/codx-common/src/lib/component/attachment/attachment.service';
 import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
+import moment from 'moment';
 
 @Component({
   selector: 'lib-popup-add-sprints',
@@ -58,6 +59,7 @@ export class PopupAddSprintsComponent implements OnInit, AfterViewInit {
   titleAction = '';
   customName = '';
   isClickSave = false;
+  isView = false;
 
   @ViewChild('imageAvatar') imageAvatar: ImageViewerComponent;
   @ViewChild('attachment') attachment: AttachmentComponent;
@@ -119,6 +121,7 @@ export class PopupAddSprintsComponent implements OnInit, AfterViewInit {
     this.master = JSON.parse(JSON.stringify(dialog.dataService!.dataSelected));
 
     this.action = dt?.data?.action;
+    this.readOnly = this.action == 'view';
     this.actionProject = this.action;
     this.titleAction = dt?.data?.titleAction;
     this.project = dt?.data?.project;
@@ -182,6 +185,13 @@ export class PopupAddSprintsComponent implements OnInit, AfterViewInit {
 
   //#region init
   ngOnInit(): void {
+    if (this.project.startDate)
+      this.project.startDate = moment(
+        new Date(this.project.startDate)
+      ).toDate();
+    if (this.project.endDate)
+      this.project.endDate = moment(new Date(this.project.endDate)).toDate();
+
     this.cache.functionList(this.funcID).subscribe((f) => {
       if (f) {
         this.customName = f?.customName;
@@ -253,14 +263,16 @@ export class PopupAddSprintsComponent implements OnInit, AfterViewInit {
   }
 
   async actionSaveSprint() {
+    if (this.isClickSave) return;
+    this.isClickSave = true;
+
     if (this.master.projectID && Array.isArray(this.master.projectID))
       this.master.projectID = this.master.projectID[0];
     if (!this.master.isShared) this.master.resources = null;
     if (this.resources == '') this.master.resources = null;
     else this.master.resources = this.resources;
     var isAdd = this.action == 'edit' ? false : true;
-    if (this.isClickSave) return;
-    this.isClickSave = true;
+
     if (this.attachment && this.attachment.fileUploadList.length)
       (await this.attachment.saveFilesObservable()).subscribe((res) => {
         if (res) {
@@ -348,7 +360,7 @@ export class PopupAddSprintsComponent implements OnInit, AfterViewInit {
   }
 
   openInfo(iterationID, action) {
-    this.readOnly = false;
+    //this.readOnly = false;
 
     this.tmSv.getSprints(iterationID).subscribe((res) => {
       if (res) {
@@ -362,7 +374,7 @@ export class PopupAddSprintsComponent implements OnInit, AfterViewInit {
   }
 
   getSprintsCoppied(interationID) {
-    this.readOnly = false;
+    // this.readOnly = false;
     this.listUserDetail = [];
     this.tmSv.getSprints(interationID).subscribe((res) => {
       if (res) {
@@ -487,7 +499,7 @@ export class PopupAddSprintsComponent implements OnInit, AfterViewInit {
   tabChange(e) {
     //bat evnt luu du an trươc khi luu sprint
     if (e?.nextId == 'ExpandedInfo') {
-      if (!this.isSaveParent) {
+      if (!this.isSaveParent && !this.readOnly) {
         this.actionSaveProject();
       }
       this.showFooterSprint = true;
@@ -506,7 +518,10 @@ export class PopupAddSprintsComponent implements OnInit, AfterViewInit {
   }
 
   valueChangeDate(e) {
-    if (e.field) this.project[e.field] = e?.data?.formDate;
+    if (e.field == 'startDate') {
+      this.project['startDate'] = e?.data?.fromDate;
+    }
+    if (e.field == 'finishDate') this.project.finishDate = e?.data?.fromDate;
   }
 
   saveProject() {
@@ -521,7 +536,9 @@ export class PopupAddSprintsComponent implements OnInit, AfterViewInit {
     if (this.added) {
       this.actionProject = 'edit';
     }
+    this.isClickSave = true;
     this.saveProject().subscribe((pr) => {
+      this.isClickSave = false;
       if (pr) {
         if (this.actionProject == 'add' || this.actionProject == 'copy') {
           this.added = true;

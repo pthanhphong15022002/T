@@ -240,11 +240,9 @@
         objectType="TM_Sprints"
         [referType]="'avt'"
         [funcId]="funcID"
-        isAllowEdit="true"
         [width]="70"
-        [disabled]="readOnly"
         [height]="70"
-        [isAllowEdit]="true"
+        [isAllowEdit]="!readOnly"
       >
       </codx-img>
     </div>
@@ -265,7 +263,8 @@
     <codx-input
       field="viewMode"
       [formModel]="form.formModel"
-      [Group]="form.formGroup"
+      [disabled]="readOnly"
+      [crrValue]="master.viewMode"
       (valueChange)="changeData($event)"
     ></codx-input>
   </div>
@@ -282,7 +281,8 @@
     <codx-input
       field="memo"
       [formModel]="form.formModel"
-      [Group]="form.formGroup"
+      [disabled]="readOnly"
+      [crrValue]="master.memo"
       (valueChange)="changeData($event)"
     >
     </codx-input>
@@ -301,6 +301,7 @@
         </div>
       </div>
       <codx-input
+        [disabled]="readOnly"
         type="Combobox"
         name="combobox"
         [refValue]="
@@ -373,6 +374,7 @@
         type="inline"
         allowMultiFile="1"
         referType="source"
+        [hideMoreF]="readOnly ? '1' : '0'"
         [formModel]="dialog.formModel"
         [functionID]="funcID"
         (fileAdded)="fileAdded($event)"
@@ -399,7 +401,7 @@
               ? planceHolderAutoNumber
               : grvProject['ProjectID']?.description
           "
-          [disabled]="disabledShowInput"
+          [disabled]="disabledShowInput || readOnly"
           [crrValue]="project?.projectID"
           (valueChange)="valueChange($event)"
         >
@@ -417,6 +419,7 @@
         field="projectCategory"
         [formModel]="formModelProject"
         [crrValue]="project?.projectCategory"
+        [disabled]="readOnly"
         (valueChange)="valueChange($event)"
       >
       </codx-input>
@@ -429,6 +432,7 @@
       field="projectName"
       [formModel]="formModelProject"
       [crrValue]="project?.projectName"
+      [disabled]="readOnly"
       (valueChange)="valueChange($event)"
     >
     </codx-input>
@@ -444,6 +448,7 @@
       field="projectGroupID"
       [formModel]="formModelProject"
       [crrValue]="project?.projectGroupID"
+      [disabled]="readOnly"
       (valueChange)="valueChange($event)"
     >
     </codx-input>
@@ -459,6 +464,7 @@
       field="customerID"
       [formModel]="formModelProject"
       [crrValue]="project?.customerID"
+      [disabled]="readOnly"
       (valueChange)="valueChange($event)"
     >
     </codx-input>
@@ -474,6 +480,7 @@
       field="location"
       [formModel]="formModelProject"
       [crrValue]="project?.location"
+      [disabled]="readOnly"
       (valueChange)="valueChange($event)"
     >
     </codx-input>
@@ -482,6 +489,7 @@
     <codx-label
       fiedName="ProjectManeger"
       [formModel]="formModelProject"
+      [disabled]="readOnly"
       default="Quản lý dự án"
     >
     </codx-label>
@@ -490,6 +498,7 @@
       field="projectManeger"
       [formModel]="formModelProject"
       [crrValue]="project?.projectManeger"
+      [disabled]="readOnly"
       (valueChange)="valueChange($event)"
     >
     </codx-input>
@@ -508,6 +517,7 @@
         field="startDate"
         [formModel]="formModelProject"
         [crrValue]="project?.startDate"
+        [disabled]="readOnly"
         (valueChange)="valueChangeDate($event)"
       >
       </codx-input>
@@ -525,6 +535,7 @@
         [formModel]="formModelProject"
         [crrValue]="project?.finishDate"
         field="finishDate"
+        [disabled]="readOnly"
         (valueChange)="valueChangeDate($event)"
       >
       </codx-input>
@@ -541,6 +552,7 @@
       field="memo"
       [formModel]="formModelProject"
       [crrValue]="project?.memo"
+      [disabled]="readOnly"
       (valueChange)="valueChange($event)"
     >
       ></codx-input
@@ -555,6 +567,7 @@
       (valueChange)="valueChangeSharedResource($event)"
       labelPosition="After"
       label="Chia sẻ board cho nguồn lực"
+      [disabled]="readOnly"
       [crrValue]="master.isShared"
     ></codx-input>
   </div>
@@ -579,6 +592,7 @@
     <button
       type="button"
       class="btn btn-primary"
+      [disabled]="readOnly"
       (click)="saveData(master.iterationID)"
     >
       <codx-label name="Save" formName="Sprints" default="Lưu"></codx-label>
