@@ -1113,9 +1113,11 @@ export class PopupAddProcessComponent {
   //#endregion
 
   //#region Thong tin chung - Infomations
-  valueTagChange(e) {}
-
-  valueChange(e) {}
+  valueChange(e) {
+    if(e){
+      this.data[e?.field] = e?.data;
+    }
+  }
 
   //---- AVATA ---- //
   addAvatar() {
@@ -1174,8 +1176,7 @@ export class PopupAddProcessComponent {
       option
     );
     popupDialog.closed.subscribe((e) => {
-      if(e && e?.event){
-
+      if(e){
       }
     })
   }
@@ -1207,8 +1208,10 @@ export class PopupAddProcessComponent {
       '',
       option
     );
-    popupDialog.closed.subscribe((dg) => {
-      if (dg) {
+    popupDialog.closed.subscribe((e) => {
+      if (e && e?.event) {
+        this.lstStepFields = e?.event?.length > 0 ? JSON.parse(JSON.stringify(e?.event)) : [];
+
       }
     });
   }

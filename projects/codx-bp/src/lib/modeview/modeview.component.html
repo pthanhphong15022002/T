@@ -13,7 +13,7 @@
           <i class="icon-edit_square icon-20"></i>
           <codx-label default="Chỉnh sửa" class="mt-1"></codx-label>
         </label>
-      
+
         <input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off">
         <label class="btn btn-outline-secondary" for="btnradio2">
           <i class="icon-i-eye icon-20"></i>
@@ -36,7 +36,7 @@
       cdkDropListSortingDisabled
       [cdkDropListConnectedTo]="[tableList]"
       (cdkDropListDropped)="drop($event)"
-   
+
       class="d-flex flex-column w-350px h-100 bg-white overflow-auto px-2 pb-4"
     >
       <ejs-accordion>
@@ -74,13 +74,13 @@
         </e-accordionitems>
       </ejs-accordion>
     </div>
-  
+
     <div class="d-flex justify-content-center w-100 h-100">
       <div
         class="d-flex flex-column w-700px h-100 bg-white overflow-auto"
       >
         <ng-container *ngTemplateOutlet="form ; context: { $implicit: table[0].children[0] }"></ng-container>
-        
+
         <div
           class="h-100 mt-2 px-4"
           cdkDropList
@@ -90,25 +90,23 @@
         >
           <div cdkDropListGroup>
             <div  *ngFor="let item of table ; let i = index" cdkDrag [cdkDragDisabled]="true">
-              <h2>{{i}}</h2>
-              <div 
-                class="d-flex align-items-center justify-content-between" 
-                #childList="cdkDropList" *ngIf="item.children && item.children.length>0 && i>0" 
+              <div
+                class="d-flex align-items-center justify-content-between"
+                #childList="cdkDropList" *ngIf="item.children && item.children.length>0 && i>0"
                 [cdkDropListData]="item.children"
-                cdkDropList 
-                cdkDropListOrientation="horizontal" 
-                (cdkDropListDropped)="drop2($event)" 
+                cdkDropList
+                cdkDropListOrientation="horizontal"
+                (cdkDropListDropped)="drop2($event)"
                 [cdkDropListEnterPredicate]="evenPredicate(item.name)"
               >
-                <div class="d-flex align-items-center p-2 w-100 cursor-pointer" 
-                  *ngFor="let subItem of item.children;let j = index " 
-                  cdkDrag 
+                <div class="d-flex align-items-center p-2 w-100 cursor-pointer"
+                  *ngFor="let subItem of item.children;let j = index "
+                  cdkDrag
                   [cdkDragDisabled]="subItem.controlType == 'Title'"
                   [cdkDragData]="item.name"
                   [ngClass]="(dataSelected.columnOrder == subItem.columnOrder &&  dataSelected.columnNo == subItem.columnNo) ? 'active':''"
                   (click)="selectedItem(subItem)"
                 >
-                <h3>{{j}}</h3>
                  <ng-container [ngSwitch]="subItem.value">
                     <ng-container *ngSwitchCase="'Text'">
                       <ng-container *ngTemplateOutlet="text ; context: { $implicit: subItem }"></ng-container>
@@ -163,7 +161,7 @@
                     </ng-container>
                     <ng-container *ngSwitchDefault>...</ng-container>
                   </ng-container>
-                
+
                   <!-- Văn bản || Số -->
                   <ng-template #text let-data>
                     <div class="d-flex flex-column w-100">
@@ -176,7 +174,7 @@
                       </div>
                     </div>
                   </ng-template>
-                  
+
                   <!-- Danh sách || User-->
                   <ng-template #valueList let-data>
                     <div class="d-flex flex-column w-100">
@@ -190,7 +188,7 @@
                       </div>
                     </div>
                   </ng-template>
-    
+
                   <!-- Combobox -->
                   <ng-template #combobox let-data>
                     <div class="d-flex flex-column w-100">
@@ -204,7 +202,7 @@
                       </div>
                     </div>
                   </ng-template>
-    
+
                   <!-- DateTime -->
                   <ng-template #datetime let-data>
                     <div class="d-flex flex-column w-100">
@@ -221,8 +219,8 @@
                       </div>
                     </div>
                   </ng-template>
-    
-    
+
+
                   <!-- attachment -->
                   <ng-template #attachment let-data>
                     <div class="d-flex flex-column w-100">
@@ -254,7 +252,7 @@
                             </tr>
                           </thead>
                           <tbody>
-                            <tr class="border-top cursor-pointer" *ngFor="let item of data.documentControl">                
+                            <tr class="border-top cursor-pointer" *ngFor="let item of data.documentControl">
                                 <th>{{item.title}}</th>
                                 <td><div class="d-flex align-items-center"><span>{{item.count}}</span><i class="icon-i-file-earmark-text icon-20 ms-2"></i></div></td>
                                 <td><input class="form-check-input" type="checkbox" id="flexCheckChecked" [checked]="item.isRequired" disabled></td>
@@ -265,7 +263,7 @@
                       </ng-container>
                     </div>
                   </ng-template>
-    
+
                   <!-- yesno -->
                   <ng-template #yesno let-data>
                     <div class="d-flex align-items-center justify-content-between w-100 ps-0">
@@ -296,7 +294,7 @@
                       </ng-container>
                     </div>
                   </ng-template>
-    
+
                   <!-- Share -->
                   <ng-template #share let-data>
                     <div class="d-flex flex-column w-100">
@@ -310,7 +308,7 @@
                       </div>
                     </div>
                   </ng-template>
-    
+
                   <!-- Rank -->
                   <ng-template #rank let-data>
                     <div class="d-flex flex-column w-100">
@@ -332,7 +330,7 @@
                       </div>
                     </div>
                   </ng-template>
-    
+
                   <!-- Table -->
                   <ng-template #tables let-data>
                     <div class="d-flex flex-column w-100">
@@ -371,7 +369,7 @@
                       </table>
                     </div>
                   </ng-template>
-    
+
                   <!-- Progress -->
                   <ng-template #progress let-data>
                     <div class="d-flex flex-column w-100">
@@ -392,7 +390,7 @@
                       </div>
                     </div>
                   </ng-template>
-    
+
                   <!-- Email -->
                   <ng-template #email let-data>
                     <div class="d-flex flex-column w-100">
@@ -406,7 +404,7 @@
                       </div>
                     </div>
                   </ng-template>
-    
+
                   <!-- Address -->
                   <ng-template #address let-data>
                     <div class="d-flex flex-column w-100">
@@ -420,7 +418,7 @@
                       </div>
                     </div>
                   </ng-template>
-    
+
                   <!-- Expression -->
                   <ng-template #expression let-data>
                     <div class="d-flex flex-column w-100">
@@ -434,7 +432,7 @@
                       </div>
                     </div>
                   </ng-template>
-  
+
                   <!-- Phone -->
                   <ng-template #phone let-data>
                     <div class="d-flex flex-column w-100">
@@ -455,7 +453,7 @@
         </div>
       </div>
     </div>
-  
+
     <div class="w-500px h-100 bg-white overflow-auto">
       <ng-container [ngSwitch]="dataSelected?.value">
         <ng-container *ngSwitchCase="'Title'">
@@ -507,8 +505,8 @@
 
 <!-- Biểu mẫu -->
 <ng-template #form let-data>
-  <div 
-    class="d-flex flex-column w-100 p-6 mw-form cursor-pointer" 
+  <div
+    class="d-flex flex-column w-100 p-6 mw-form cursor-pointer"
     (click)="selectedItem(data)"
     [ngClass]="(dataSelected.columnOrder == data.columnOrder &&  dataSelected.columnNo == data.columnNo) ? 'active':''"
   >

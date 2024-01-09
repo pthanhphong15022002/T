@@ -147,10 +147,10 @@
         <div class="w-50px min-w-50px" *ngIf="showMoreFunc">
           <codx-mfunc
             [formModel]="formModel"
-            (clickMF)="clickMF($event, data)"
+            (clickMF)="clickMF($event, item)"
             (changeDataMF)="changeDataMF($event, item)"
             [isBookMark]="false"
-            [dataItem]="data"
+            [dataItem]="item"
             type="hover"
           >
           </codx-mfunc>
