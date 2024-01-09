@@ -120,7 +120,7 @@ export class PopupAddGiftComponent implements OnInit {
       quantity: new FormControl(0),
       amount: new FormControl(0),
       status: new FormControl("1"),
-      siutuation: new FormControl(""),
+      situation: new FormControl(""),
     });
   }
 
