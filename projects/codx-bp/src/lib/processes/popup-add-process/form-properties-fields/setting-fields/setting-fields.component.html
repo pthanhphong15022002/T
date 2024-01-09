@@ -1314,20 +1314,41 @@
             [formName]="'DynamicForms'"
             [gridViewName]="'grvDynamicFormsTitle' + dataCurrent?.fieldType"
           ></codx-label>
-          <codx-input
+          <input
             id="specialCodxInput"
             type="text"
-            [crrValue]="refValueEpress ?? ''"
-            placeholder="Exp [So_luong] * [Don_gia]"
-            (valueChange)="valueChangeExp($event)"
-            field="refValueEpress"
+            #lblWeight
+            name="refValueEpress"
+            matInput
+            autofocus
+            [value]="refValueEpress ?? ''"
+            (blur)="valueChangeExp(lblWeight.value)"
+            (keydown.enter)="
+              valueChangeExp(lblWeight.value)
+            "
+            class="input-container"
             cdkDrag
             #tableList="cdkDropList"
+            placeholder="Exp [So_luong] * [Don_gia]"
             (cdkDropListDropped)="drop($event)"
             [cdkDragData]="refValueEpress"
             [cdkDragDisabled]="true"
             cdkDropList
-          ></codx-input>
+          />
+          <!-- <codx-input
+            id="specialCodxInput"
+            type="text"
+            [crrValue]="refValueEpress ?? ''"
+            (valueChange)="valueChangeExp($event)"
+            field="refValueEpress"
+            cdkDrag
+            #tableList="cdkDropList"
+            placeholder="Exp [So_luong] * [Don_gia]"
+            (cdkDropListDropped)="drop($event)"
+            [cdkDragData]="refValueEpress"
+            [cdkDragDisabled]="true"
+            cdkDropList
+          ></codx-input> -->
         </div>
         <div class="col-4">
           <codx-label
