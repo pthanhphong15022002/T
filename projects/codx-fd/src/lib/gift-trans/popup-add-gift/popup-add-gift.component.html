@@ -40,24 +40,70 @@
             </div>
             <div class="form-group">
                 <codx-label [formModel]="dialogRef.formModel" name="lblGifts" default="Quà tặng"></codx-label>
-                <codx-input type="combobox" name="FDGifts" class="form-control borderless p-0" refValue="FDGifts"
-                    field="giftID" [crrValue]="form.controls['giftID'].value" (valueChange)="valueChange($event)">
-                </codx-input>
-                <!-- <codx-input type="combobox" class="" [crrValue]="giftTrans.ItemID" [multiple]="false" [loadFull]="true"
-                    field="itemID" (valueChange)="valueChange($event)" refValue="FDGifts" name="FDGifts">
-                </codx-input> -->
+                <ng-container *ngIf="funcID == 'FDT091'">
+                    <codx-input type="combobox" name="FDGifts" class="form-control borderless p-0" refValue="FDGifts"
+                        field="giftID" [crrValue]="form.controls['giftID'].value" (valueChange)="valueChange($event)">
+                    </codx-input>
+                </ng-container>
+                <ng-container *ngIf="funcID == 'FDT092'">
+                    <ejs-combobox #combobox
+                        class="e-ddl e-lib e-control overflow-hidden e-popup-open borderless p-0"
+                        id='evoucherCombobox' 
+                        [dataSource]='dataEvoucher' 
+                        [(value)]='valueEvoucher' 
+                        popupHeight='300px' popupWidth='510px'
+                        [fields]='fields'
+                        [itemTemplate]='itemTemplate'
+                        (beforeOpen)="beforeOpen($event)"
+                        (select)="selectEvoucher($event)"
+                    >
+                        <ng-template #itemTemplate let-data>
+                            <div class="mt-9 group-gifts" (click)="selectItem(data)">
+                                <div class="d-flex ms-2">
+                                    <div class="me-5">
+                                        <codx-img [imgSource]="data?.productImg" objectType="FD_Gifts" [width]="100"
+                                            imageType="square">
+                                        </codx-img>
+                                    </div>
+                                    <div class="d-flex flex-column">
+                                        <div class="fw-bold mb-3">{{data?.productNm}}</div>
+                                        <div class="mb-2">
+                                            <span class="fw-normal text-gray-500 me-1">
+                                                <codx-label formName="" name="lblCount"
+                                                    default="Thương hiệu:"></codx-label>
+                                            </span>
+                                            <span>{{data?.brandNm}}</span>
+                                        </div>
+                                        <div class="mb-2">
+                                            <span class="fw-normal text-gray-500 me-1">
+                                                <codx-label formName="" name="lblCount"
+                                                    default="Nhãn hàng:"></codx-label>
+                                            </span>
+                                            <span>{{data?.categoryNm}}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </ng-template>
+                    </ejs-combobox>
+                </ng-container>
             </div>
             <div class="row">
                 <div class="col-6">
                     <div class="form-group">
                         <codx-label [formModel]="dialogRef.formModel" name="lblAmount" default="Số lượng"></codx-label>
-                        <codx-input type="number" [min]="min" class="form-control" [max]="max"
-                            [crrValue]="form.controls['quantity'].value" field="quantity"
-                            (valueChange)="valueChange($event)">
-                        </codx-input>
-                        <!-- <codx-input type="number" class="" [crrValue]="giftTrans.Quantity" [placeholder]="'0'"
-                            field="quantity" (valueChange)="valueChange($event)">
-                        </codx-input> -->
+                        <ng-container *ngIf="funcID == 'FDT091'">
+                            <codx-input type="number" [min]="min" class="form-control" [max]="max"
+                                [crrValue]="form.controls['quantity'].value" field="quantity"
+                                (valueChange)="valueChange($event)">
+                            </codx-input>
+                        </ng-container>
+                        <ng-container *ngIf="funcID == 'FDT092'">
+                            <codx-input type="number" class="form-control"
+                                [crrValue]="quantityEvoucher" field="quantity" 
+                                [disabled]="true">
+                            </codx-input>
+                        </ng-container>
                     </div>
                 </div>
                 <div class="col-6">
