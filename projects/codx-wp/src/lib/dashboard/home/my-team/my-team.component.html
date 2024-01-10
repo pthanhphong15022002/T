@@ -1,11 +1,11 @@
 <div class="card my-team">
     <div class="card-header border-0">
-        <div class="card-title mt-3 d-flex justify-content-center w-100">
-            <codx-label class="mb-1" name="lblTeam" formName="HR_Employees"
-                default="Chúc mừng sinh nhật"></codx-label>
+        <div class="card-title mt-3 h-30px w-100">
+            <!-- <codx-label class="mb-1" name="lblTeam" formName="HR_Employees"
+                default="Chúc mừng sinh nhật"></codx-label> -->
         </div>
     </div>
-    <div class="card-body pt-0 pb-2 ">
+    <div class="card-body pt-30 pb-2 ">
         <div class="team-group pb-3">
             <div class="user-teams">
                 <div *ngIf="lstEmp">
@@ -13,17 +13,20 @@
                         
                         <!--Slider-page-->
                         <div class="mySlides h-100 w-100 pb-5 position-absolute start-0 top-0" *ngFor="let item of lstEmp; let i = index" style="display: none;">
-                            <div class=" flex-column d-flex align-items-center justify-content-center">
+                            <div class="flex-column d-flex">
+                                <!-- 
                                 <div class="d-flex d-flex align-items-center justify-content-center flex-row"> 
-                                    <!-- <span class="mx-5 icon-cake icon-30"></span> -->
+                                    <span class="mx-5 icon-cake icon-30"></span> 
                                     <codx-img class="mx-5" [width]="40" [objectId]="item?.employeeID" [objectName]="item?.employeeName"
                                         [objectType]="'HR_Employees'">
                                     </codx-img>
-                                    <!-- <span class="mx-5 icon-cake icon-30"></span> -->
-                                </div>                                
-                                <div class="text-gray-600 fs-7 mt-2" [innerHTML]="item?.birthday |fmDT "></div> 
-                                <div class="fw-bold fs-5-sm" [innerHTML]="item?.employeeName"></div>
-                                <div class="text-gray-500 fs-7" [innerHTML]="item?.orgUnitName"></div>                                
+                                    <span class="mx-5 icon-cake icon-30"></span>
+                                </div>       
+                                 -->                         
+                                 <div class="text-dark fs-5 mb-2" [innerHTML]="item?.birthday |fmDT "></div> 
+                                <div class="fw-bold fs-3 mb-1" [innerHTML]="item?.employeeName"></div>
+                                
+                                <div class="text-gray-600" [innerHTML]="item?.orgUnitName"></div>                                
                             </div>
                         </div>
 
