@@ -117,6 +117,29 @@ export class GeneralJournalComponent extends UIComponent {
           template2: this.templateGrid,
         },
       },
+      {
+        type: ViewType.grid_detail,
+        active: false,
+        sameData: true,
+        model: {
+          template2: this.templateGrid,
+
+        },
+
+        request:{service:'AC'},
+        subModel:{
+          entityName:'AC_GeneralJournalsLines',
+          formName:'GeneralJournalsLines',
+          gridviewName:'grvGeneralJournalsLines',
+          parentField:'TransID',
+          parentNameField:'VoucherNo',
+          hideMoreFunc:true,
+          request:{
+            service: 'AC',
+          },
+          idField:'recID'
+        }
+      },
     ];
     this.acService.setChildLinks();
   }

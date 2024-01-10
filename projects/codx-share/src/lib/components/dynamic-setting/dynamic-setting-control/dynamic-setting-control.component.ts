@@ -16,6 +16,7 @@ export class DynamicSettingControlComponent extends UIComponent{
   @Input() autoSchedule: boolean = true;
   @Input() headerText: any = 'Thiết lập tham số';
   @Output() valueChanges: EventEmitter<any> = new EventEmitter();
+  @Output() changeAutoSchedules: EventEmitter<any> = new EventEmitter();
   oldDataValue: any = {};
   isauto:any = false;
   componentSub = '';
@@ -64,15 +65,9 @@ export class DynamicSettingControlComponent extends UIComponent{
     this.dataValue[event.field] = event.data;
   }
 
-  valueChangeStop(event:any){
+  changeAutoSchedule(event:any){
     this.settingFull.stop = event.data;
-    this.api
-      .execAction(
-        'BG_ScheduleTasks',
-        [this.settingFull],
-        'UpdateAsync'
-      )
-      .subscribe((res: any) => {});
+    this.changeAutoSchedules.emit(this.settingFull);
   }
 
   openPopup(evt: any, item: any, reference: string = '') {
@@ -120,10 +115,6 @@ export class DynamicSettingControlComponent extends UIComponent{
 
   }
 
-  valueChangesssss(event:any){
-    
-  }
-
   openForm(){
     let option = new DialogModel();
     option.FormModel = this.formModel;
@@ -137,6 +128,13 @@ export class DynamicSettingControlComponent extends UIComponent{
       '',
       option
     );
+    // this.dialog.closed.subscribe((res) => {
+    //   if (res && res?.event) {
+    //     if (res?.event) {
+    //       console.log(res);
+    //     }
+    //   }
+    // })
   }
   //#endregion Event
 
