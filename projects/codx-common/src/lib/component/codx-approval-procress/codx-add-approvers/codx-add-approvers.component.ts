@@ -23,8 +23,8 @@ import {
 export class CoDxAddApproversComponent implements OnInit {
 
   dialogRef: any;
-  headerText='Thêm người duyệt';
   approvers:any;
+  mode = '1';//1:Chọn người Ủy quyền ký duyệt,2:Chọn người chỉ định duyệt
   constructor(
     private detectorRef: ChangeDetectorRef,
     private notificationsService: NotificationsService,
@@ -35,6 +35,7 @@ export class CoDxAddApproversComponent implements OnInit {
     @Optional() dialog?: DialogRef
   ) {
     this.dialogRef=dialog;
+    this.mode=dialogData?.data?.mode;
   }
 
   ngOnInit(): void {

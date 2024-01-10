@@ -53,7 +53,7 @@
       </div>
       </ng-container>
       <span style="margin-left: 30px" *ngIf="(formCashPayment.data?.validated) || (formCashPayment.data?.isReadOnly)">
-        <codx-vll [name]="'AC063'" [formModel]="dialog.formModel" [field]="'SubType'"
+        <codx-vll [name]="formCashPayment?.gridviewSetup['SubType']?.referedValue" [formModel]="dialog.formModel" [field]="'SubType'"
           [value]="formCashPayment?.data?.subType" [showText]="true" [showBgColor]="true"
           class="badge badge-light-primary badge-sm mt-1">
         </codx-vll>

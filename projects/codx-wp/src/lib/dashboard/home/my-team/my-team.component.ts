@@ -6,6 +6,7 @@ import { LayoutService, AuthService, ApiHttpService, CacheService, AuthStore } f
 import { Router } from '@angular/router';
 import { Component, OnInit, ViewChild, ElementRef, ChangeDetectorRef } from '@angular/core';
 import { CodxMwpService } from 'projects/codx-mwp/src/public-api';
+import { CodxShareService } from 'projects/codx-share/src/lib/codx-share.service';
 
 @Component({
   selector: 'app-my-team',
@@ -40,6 +41,7 @@ export class MyTeamComponent implements OnInit {
   online: any;
   offline: any;
   user:any = null;
+  eventPanelType:string;
   @ViewChild("ktAside", { static: true }) ktAside: ElementRef;
   @ViewChild("ktHeaderMobile", { static: true }) ktHeaderMobile: ElementRef;
   @ViewChild("ktHeader", { static: true }) ktHeader: ElementRef;
@@ -52,6 +54,7 @@ export class MyTeamComponent implements OnInit {
     private api: ApiHttpService,
     private dt: ChangeDetectorRef,
     protected cache: CacheService,
+    protected codxShareService: CodxShareService,
     //private cbxsv: ComboboxpopupService,
     private codx_mwp_service: CodxMwpService,
   ) 
@@ -84,8 +87,19 @@ export class MyTeamComponent implements OnInit {
     this.footerCSSClasses = this.layout.getStringCSSClasses("footer");
     this.headerCSSClasses = this.layout.getStringCSSClasses("header");
     this.headerHTMLAttributes = this.layout.getHTMLAttributes("header");
-    //this.getMyTeam();
-    this.getBirthDayEmps();
+    this.codxShareService
+      .getSettingValueWithOption('FTC', 'WPParameters',null,'1')
+      .subscribe((res) => {
+        if(res?.length>0){
+          this.eventPanelType = JSON.parse(res[0]?.dataValue)?.EventPanelType ?? '0';          
+        }
+        if(this.eventPanelType =='1'){
+          this.getBirthDayEmps();
+        }
+        else{
+          this.getMyTeam();
+        }
+      });
   }
 
   ngAfterViewInit(): void {
@@ -172,7 +186,7 @@ export class MyTeamComponent implements OnInit {
     if(this.scrolling && ele.offsetHeight - ele.scrollHeight <= 50)
     {
       this.scrolling = false;
-      //this.getMyTeam();
+      this.getMyTeam();
     }
   }
   employeeSeletecd:any = null;
