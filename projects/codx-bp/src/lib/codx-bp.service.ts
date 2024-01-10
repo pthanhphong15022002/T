@@ -15,7 +15,10 @@ import {
 })
 export class CodxBpService {
   viewProcesses = new BehaviorSubject<any>(null);
-  constructor(private api: ApiHttpService, private notiSv: NotificationsService) {}
+  constructor(
+    private api: ApiHttpService,
+    private notiSv: NotificationsService
+  ) {}
   getFlowChartNew = new BehaviorSubject<any>(null);
   crrFlowChart = this.getFlowChartNew.asObservable();
 
@@ -25,7 +28,9 @@ export class CodxBpService {
     let format = this.formatText(str);
     let lstFormat = [];
 
-    lstFormat = lst.filter((x) => x.fieldName?.toLowerCase().startsWith(format?.toLowerCase()));
+    lstFormat = lst.filter((x) =>
+      x.fieldName?.toLowerCase().startsWith(format?.toLowerCase())
+    );
     let count = 0;
     if (lstFormat?.length > 0) {
       count = this.getMaxNumberFromStrings(lstFormat.map((x) => x.fieldName));
@@ -80,6 +85,7 @@ export class CodxBpService {
     var countValidate = count;
     var keygrid = Object.keys(gridViewSetup);
     var keymodel = Object.keys(data);
+    let str = '';
     for (let index = 0; index < keygrid.length; index++) {
       if (gridViewSetup[keygrid[index]].isRequire == true) {
         for (let i = 0; i < keymodel.length; i++) {
@@ -88,18 +94,29 @@ export class CodxBpService {
               data[keymodel[i]] == null ||
               String(data[keymodel[i]]).match(/^ *$/) !== null
             ) {
-              this.notiSv.notifyCode(
-                'SYS009',
-                0,
-                '"' + gridViewSetup[keygrid[index]].headerText + '"'
-              );
+              str =
+                str?.trim() != ''
+                  ? str + ';' + gridViewSetup[keygrid[index]].headerText
+                  : gridViewSetup[keygrid[index]].headerText;
               countValidate++;
-              return countValidate;
             }
           }
         }
       }
     }
+    if (countValidate > 0) {
+      this.notiSv.notifyCode('SYS009', 0, '"' + str + '"');
+    }
     return countValidate;
+  }
+
+  getPositionsByUserID(userID) {
+    return this.api.execSv<any>(
+      'SYS',
+      'AD',
+      'UsersBusiness',
+      'GetUserByIDAsync',
+      [userID]
+    );
   }
 }

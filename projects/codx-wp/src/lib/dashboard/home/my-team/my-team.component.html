@@ -1,4 +1,4 @@
-<div class="card my-team">
+<div *ngIf="eventPanelType=='1'" class="card my-team">
     <div class="card-header border-0">
         <div class="card-title mt-3 d-flex justify-content-center w-100">
             <codx-label class="mb-1" name="lblTeam" formName="HR_Employees"
@@ -26,7 +26,10 @@
                                 <div class="text-gray-500 fs-7" [innerHTML]="item?.orgUnitName"></div>                                
                             </div>
                         </div>
-
+                        <div class="position-absolute w-100 h-100 top-0 start-0 pyro overflow-hidden">                            
+                            <div class="before"></div>
+                            <div class="after"></div>                           
+                        </div>
                     </div>
                 </div>
             </div>
@@ -35,8 +38,7 @@
     </div>
 </div>
 
-<!-- 
-<div class="card my-team">
+<div *ngIf="eventPanelType=='0'" class="card my-team" >
     <div class="card-header border-0">
         <div class="card-title mt-5">
             <codx-label class="mb-1" name="lblTeam" formName="HR_Employees" default="Thành viên nhóm"></codx-label>
@@ -197,4 +199,3 @@
         <codx-input type="text" class="form-control" [crrValue]="searchText" (valueChange)="valueChange($event)" placeholder="Tìm kiếm"></codx-input>
     </div>
 </ng-template>
- -->

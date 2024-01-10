@@ -1,0 +1,108 @@
+<codx-form [body]="body" [footer]="footer" [data]="fromEmp" [dialog]="dialog" [headerText]="headerText"></codx-form>
+<ng-template #body>
+    <div class="container p-2">
+        <div class="row">
+            <div class="form-group" *ngIf="vllHR057 && vllHR057?.length > 0">
+                <ng-container *ngFor="let item of vllHR057;index as idx">
+                    <div [class]="idx == 0 ? 'mb-2' : '' ">
+                        <codx-input 
+                            type="radio" 
+                            field="vllHR057"
+                            name="radio"
+                            [label]="item.text" 
+                            labelPosition="after" 
+                            [checked]="item.value == 1" 
+                            [crrValue]="item.value"
+                            (valueChange)="valueInputChange($event)">
+                        </codx-input>
+                    </div>
+                </ng-container>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group">
+                <codx-label [formModel]="dialog?.formModel" name="lblEmployee" [default]="'Nhân viên'" class="mb-2"></codx-label>
+                <div class="ps-4">
+                    <codx-temp-full 
+                        *ngIf="fromEmp"
+                        [dataItem]="fromEmp" 
+                        [imageId]="fromEmp.employeeID" 
+                        [imageObjName]="fromEmp.employeeName" 
+                        [imageObjType]="'HR_Employees'" 
+                        [title]="fromEmp.employeeName"
+                        [desc]="fromEmp.positionName"
+                        [hideMF]="true">
+                    </codx-temp-full>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group">
+                <codx-label [formModel]="dialog?.formModel" name="lblCoppySalcoeff" [default]="'Sao chép các hệ số'"></codx-label>
+                <ng-container *ngIf="lstPRSalCoeffEmp && lstPRSalCoeffEmp.length> 0;">
+                    <ng-container *ngFor="let item of lstPRSalCoeffEmp">
+                        <div class="row m-2 ps-2">
+                            <div class="col-2">
+                                <codx-input 
+                                    [formModel]="dialog?.formModel" 
+                                    type="checkbox" 
+                                    [field]="item.coeffCode" 
+                                    [checked]="true"
+                                    (valueChange)="valueCheckBoxChange($event)">
+                                </codx-input>
+                            </div>
+                            <div class="col-5 d-flex flex-column">
+                                <span>{{item.coeffCode}}</span>
+                                <span class="text-gray-600">{{item.coeffCode}}</span>
+                            </div>
+                            <div class="col-5">
+                                <span>{{item.coefficient}}</span>
+                            </div>
+                        </div>
+                    </ng-container>
+                </ng-container>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group">
+                <div class="d-flex align-items-center justify-content-between">
+                    <codx-label [formModel]="dialog?.formModel" name="lblEmployees" [default]="'Đến Nhân viên'"></codx-label>
+                    <button type="button" class="btn btn-icon btn-light" (click)="openPopupEmployees()">
+                        <span class="icon-person_add icon-18"></span>
+                    </button>
+                </div>
+                <ng-container *ngIf="lstToEmp">
+                    <div class="row ps-4">
+                        <ng-container *ngFor="let item of lstToEmp">
+                            <div class="p-2">
+                                <codx-temp-full 
+                                [dataItem]="item" 
+                                [imageId]="item.EmployeeID" 
+                                [imageObjName]="item.EmployeeName" 
+                                [imageObjType]="'HR_Employees'" 
+                                [title]="item.EmployeeName"
+                                [hideMF]="true">
+                            </codx-temp-full>
+                            </div>
+                        </ng-container>
+                    </div>
+                </ng-container>
+            </div>
+        </div>
+    </div>
+</ng-template>
+<ng-template #footer>
+    <div class="d-flex justify-content-end w-100">
+        <button type="button" class="btn btn-primary" (click)="onSave()">Lưu</button>
+    </div>
+</ng-template>
+<ng-container *ngIf="showCBB">
+    <codx-combobox-popup 
+        [comboboxName]="'Employees'" 
+        [multiple]="true"
+        [width]="width"
+        [height]="height" 
+        [value]="toEmps"
+        (clickSave)="valueCbbChange($event)">
+    </codx-combobox-popup>
+</ng-container>

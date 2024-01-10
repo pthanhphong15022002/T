@@ -227,10 +227,11 @@ export class PopupEkowdsComponent extends UIComponent implements OnInit{
     }
 
     let lstDataSave = []
+    var dt = new Date();
     for(let i = 0; i < lstDate.length; i++){
       for(let j = 0; j < lstDataHandle.length; j++){
         let temp = {...lstDataHandle[j]}
-        temp.workDate = new Date(this.fromDateVal.getFullYear(), this.fromDateVal.getMonth(), lstDate[i]);
+        temp.workDate = new Date(this.fromDateVal.getFullYear(), this.fromDateVal.getMonth(), lstDate[i], dt.getHours(), dt.getMinutes(), dt.getSeconds(), dt.getMilliseconds());
         temp.recID = Util.uid();
         temp.updateColumns = ''
         temp.rootKowCode = ''
@@ -242,7 +243,9 @@ export class PopupEkowdsComponent extends UIComponent implements OnInit{
     console.log('list data cbi luu', lstDataSave);
     if(lstDataSave.length > 0){
       if(this.vllMode == '1'){
+
         this.addEmpKow(lstDataSave).subscribe((res) => {
+
           debugger
           if(res == true){
             this.notify.notifyCode('SYS006');
