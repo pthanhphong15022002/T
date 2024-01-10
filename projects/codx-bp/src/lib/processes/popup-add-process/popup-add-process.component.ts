@@ -60,6 +60,7 @@ import { log } from 'console';
 import { environment } from 'src/environments/environment';
 import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
 import { CodxBpService } from '../../codx-bp.service';
+import { FormAdvancedSettingsComponent } from './form-advanced-settings/form-advanced-settings.component';
 Diagram.Inject(ConnectorEditing);
 @Component({
   selector: 'lib-popup-add-process',
@@ -951,6 +952,7 @@ export class PopupAddProcessComponent {
   linkAvatar = '';
   vllBP002: any;
   lstStepFields = [];
+  title = '';
   constructor(
     private detectorRef: ChangeDetectorRef,
     private callfc: CallFuncService,
@@ -963,10 +965,11 @@ export class PopupAddProcessComponent {
     this.dialog = dialog;
     this.data = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
     this.action = dt?.data?.action;
+    this.title = dt?.data?.title;
   }
 
   ngOnInit(): void {
-    if(this.action == 'add') this.getCacheCbxOrVll();
+    if (this.action == 'add') this.getCacheCbxOrVll();
   }
 
   ngAfterViewInit(): void {}
@@ -984,7 +987,11 @@ export class PopupAddProcessComponent {
     const createField = (value, fieldType, isForm = false) => {
       const field = {
         recID: Util.uid(),
-        fieldName: this.bpSv.createAutoNumber(value, this.lstStepFields, 'fieldName'),
+        fieldName: this.bpSv.createAutoNumber(
+          value,
+          this.lstStepFields,
+          'fieldName'
+        ),
         title: this.bpSv.createAutoNumber(value, this.lstStepFields, 'title'),
         dataType: 'String',
         fieldType,
@@ -1003,13 +1010,19 @@ export class PopupAddProcessComponent {
     };
 
     const dataVllTitle = this.vllBP002?.datas?.find((x) => x.value === 'Title');
-    const dataVllSubTitle = this.vllBP002?.datas?.find((x) => x.value === 'SubTitle');
+    const dataVllSubTitle = this.vllBP002?.datas?.find(
+      (x) => x.value === 'SubTitle'
+    );
 
     const titleField = createField(dataVllTitle?.text, dataVllTitle?.value);
     const lst = [titleField];
 
     if (dataVllSubTitle) {
-      const subTitleField = createField(dataVllSubTitle?.text, dataVllSubTitle?.value, true);
+      const subTitleField = createField(
+        dataVllSubTitle?.text,
+        dataVllSubTitle?.value,
+        true
+      );
       lst.push(subTitleField);
     }
 
@@ -1100,9 +1113,11 @@ export class PopupAddProcessComponent {
   //#endregion
 
   //#region Thong tin chung - Infomations
-  valueTagChange(e) {}
-
-  valueChange(e) {}
+  valueChange(e) {
+    if(e){
+      this.data[e?.field] = e?.data;
+    }
+  }
 
   //---- AVATA ---- //
   addAvatar() {
@@ -1142,6 +1157,30 @@ export class PopupAddProcessComponent {
   }
   //#endregion
 
+  //#region setting advanced - thiết lập nâng cao
+  popupAdvancedSetting() {
+    let option = new DialogModel();
+    option.zIndex = 1010;
+    option.FormModel = this.dialog.formModel;
+    let data = {
+      process: this.data,
+    };
+    let popupDialog = this.callfc.openForm(
+      FormAdvancedSettingsComponent,
+      '',
+      700,
+      800,
+      '',
+      data,
+      '',
+      option
+    );
+    popupDialog.closed.subscribe((e) => {
+      if(e){
+      }
+    })
+  }
+  //#endregion
   //#region form setting properties
   formPropertieFields() {
     let option = new DialogModel();
@@ -1157,7 +1196,7 @@ export class PopupAddProcessComponent {
       process: this.data,
       vllBP002: this.vllBP002,
       lstStepFields: this.lstStepFields,
-      isForm: true
+      isForm: true,
     };
     let popupDialog = this.callfc.openForm(
       FormPropertiesFieldsComponent,
@@ -1169,8 +1208,10 @@ export class PopupAddProcessComponent {
       '',
       option
     );
-    popupDialog.closed.subscribe((dg) => {
-      if (dg) {
+    popupDialog.closed.subscribe((e) => {
+      if (e && e?.event) {
+        this.lstStepFields = e?.event?.length > 0 ? JSON.parse(JSON.stringify(e?.event)) : [];
+
       }
     });
   }

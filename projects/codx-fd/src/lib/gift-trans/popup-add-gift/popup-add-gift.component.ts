@@ -4,6 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Thickness } from '@syncfusion/ej2-charts';
 import { ApiHttpService, CacheService, CallFuncService, AuthService, NotificationsService, DialogRef, DialogData, CRUDService, CodxFormComponent } from 'codx-core';
 import { tmpAddGiftTrans } from '../../models/tmpAddGiftTrans.model';
+import { CodxFdService } from '../../codx-fd.service';
 
 @Component({
   selector: 'lib-popup-add-gift',
@@ -55,6 +56,7 @@ export class PopupAddGiftComponent implements OnInit {
     private notifySV: NotificationsService,
     private route: ActivatedRoute,
     private activeRouter: ActivatedRoute,
+    private fdService: CodxFdService,
     @Optional() dialogRef?: DialogRef,
     @Optional() dd?: DialogData) {
     this.dialogRef = dialogRef;
@@ -118,7 +120,7 @@ export class PopupAddGiftComponent implements OnInit {
       quantity: new FormControl(0),
       amount: new FormControl(0),
       status: new FormControl("1"),
-      siutuation: new FormControl(""),
+      situation: new FormControl(""),
     });
   }
 
@@ -206,18 +208,12 @@ export class PopupAddGiftComponent implements OnInit {
   save() {
     this.api.execSv("FD", "ERM.Business.FD", "GiftTransBusiness", "AddGiftTransAsync", [this.giftTrans, this.isSharePortal])
       .subscribe((res: any) => {
-        if (res) {
-          let status = res[0];
-          if (status) {
-            this.notifySV.notify("Thêm thành công!");
-          }
-          else {
-            let message = res[1];
-            this.notifySV.notify(message);
-          }
-        }
-        else {
-          this.notifySV.notify("Thêm không thành công!")
+        if (res && res[0]) {
+          (this.dialogRef.dataService as CRUDService).add(res[0], 0).subscribe();
+          this.dialogRef.close();
+          this.notifySV.notifyCode('SYS006');
+        } else {
+          this.notifySV.notifyCode("SYS023");
         }
       });
   }

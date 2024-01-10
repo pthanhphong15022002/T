@@ -24,7 +24,8 @@
 <ng-template #panelLeftRef>
   <div class="fix-container rounded-4 position-relative">
     <ng-container *ngIf="loaded">
-      <ng-container *ngIf="posts.length > 0 || videos.length > 0;else noData">
+      <!-- <ng-container *ngIf="posts.length > 0 || videos.length > 0;else noData"> -->
+        <ng-container>
         <!-- post -->
         <ng-container *ngIf="posts.length > 0">
           <div>
@@ -64,7 +65,7 @@
                     {{posts[0].subContent | maxlenght:500}}
                   </div>
                   <div class="d-flex justify-content-between fs-7 mt-3">
-                    <span *ngIf="posts[0].approveControl == '1' && posts[0].approveStatus">
+                    <!-- <span *ngIf="posts[0].approveControl == '1' && posts[0].approveStatus">
                       <codx-vll 
                           [name]="'CO003'" 
                           [classList]="'rounded-pill p-2 px-4 text-center'"
@@ -72,7 +73,7 @@
                           [showText]="true" 
                           [showBgColor]="true">
                       </codx-vll>
-                    </span>
+                    </span> -->
                     <span class="text-gray-400" [innerHTML]="posts[0].createdOn | formatvalue:view.formModel:'CreatedOn' | async">
                     </span>
                   </div>
@@ -176,7 +177,7 @@
         {{data.subContent | maxlenght:300}}
       </div>
       <div class="d-flex justify-content-between fs-7 mt-3">
-        <span *ngIf="data.approveControl == '1' && data.approveStatus">
+        <!-- <span *ngIf="data.approveControl == '1' && data.approveStatus">
           <codx-vll 
               [name]="'CO003'" 
               [classList]="'rounded-pill p-2 px-4 text-center'"
@@ -184,7 +185,7 @@
               [showText]="true" 
               [showBgColor]="true">
           </codx-vll>
-        </span>
+        </span> -->
         <span class="text-gray-400" [innerHTML]="data.createdOn | formatvalue:view.formModel:'CreatedOn' | async">
         </span>  
       </div>

@@ -667,10 +667,10 @@ export class OrganizationOrgchartComponent {
         break;
       case 'labelAuto':
         this.labelOrientation = this.LabelOrientation.Auto;
-      //  break;
+        //  break;
 
-      //Vị trí tiêu đề
-      //case 'labelAuto':
+        //Vị trí tiêu đề
+        //case 'labelAuto':
         this.labelPlacement = this.LabelPlacement.Auto;
         break;
       case 'placeLeft':
@@ -1361,7 +1361,7 @@ export class OrganizationOrgchartComponent {
 
       this.hrService
         .copy(data, this.view.formModel, 'OrgUnitID')
-        .subscribe((res) => {
+        .subscribe((res: any) => {
           if (res) {
             res.orgUnitID = '';
 

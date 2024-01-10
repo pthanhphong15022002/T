@@ -43,6 +43,7 @@ export class CodxChatComponent implements OnInit, AfterViewInit {
   
   @Output('countTotalMessage') countTotalMessage: EventEmitter<any> = new EventEmitter();
   loaded = false;
+  loadFavorite = false;
   count: number = 0;
   formModel: FormModel = null;
   user: any = null;
@@ -178,6 +179,13 @@ export class CodxChatComponent implements OnInit, AfterViewInit {
       }
       this.autoClose = true;
     });
+  }
+  clickFavorite(){
+    if (this.listChat) {
+      this.listChat.search(null,!this.loadFavorite);
+      this.loadFavorite=!this.loadFavorite;
+      this.dt.detectChanges();
+    }
   }
   // searrch
   search(event: any) {

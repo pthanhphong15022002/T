@@ -43,22 +43,24 @@
 <!-- Start: TmpBody -->
 <ng-template #TmpBody>
   <!-- Start: Tab General -->
-  <ejs-tab>
-    <e-tabitems>
-      <e-tabitem>
-        <ng-template #headerText>
-          <div class="d-flex align-items-top me-2 mt-2">
-            <i class="icon-info icon-18 me-2"></i>
-            <codx-label class="fw-bold" style="font-size: 14px !important" fiedName="lblGeneral"
-              [formModel]="dialog.formModel" default="Thông tin chung"></codx-label>
-          </div>
-        </ng-template>
-        <ng-template #content>
-          <ng-container *ngTemplateOutlet="TmpTabGeneral"></ng-container>
-        </ng-template>
-      </e-tabitem>
-    </e-tabitems>
-  </ejs-tab>
+  <div style="height: 250px;">
+    <ejs-tab>
+      <e-tabitems>
+        <e-tabitem>
+          <ng-template #headerText>
+            <div class="d-flex align-items-top me-2 mt-2">
+              <i class="icon-info icon-18 me-2"></i>
+              <codx-label class="fw-bold" style="font-size: 14px !important" fiedName="lblGeneral"
+                [formModel]="dialog.formModel" default="Thông tin chung"></codx-label>
+            </div>
+          </ng-template>
+          <ng-template #content>
+            <ng-container *ngTemplateOutlet="TmpTabGeneral"></ng-container>
+          </ng-template>
+        </e-tabitem>
+      </e-tabitems>
+    </ejs-tab>
+  </div>
   <!-- End: Tab General -->
 
   <!-- Start: Tab Detail -->
@@ -281,10 +283,10 @@
 <!-- Start: GridLine -->
 <ng-template #TmpTabLine>
   <div class="tablinegeneral-content header-table-ac position-relative">
-    <codx-gridview-v2 #eleGridGeneral [showEmptyRecord]="false" gridLines="Both" [autoFitColumns]="false"
+    <codx-gridview-v2 #eleGridGeneral [showEmptyRecord]="false" gridLines="Both" [autoFitColumns]="true"
       [formName]="journal.entryMode == '1'? fmGeneralJournalsLines.formName : fmGeneralJournalsLinesOne.formName"
       [gridViewName]="journal.entryMode == '1' ? fmGeneralJournalsLines.gridViewName : fmGeneralJournalsLinesOne.gridViewName"
-      (beforeSaveRow)="beforeSaveRowGeneral($event)" [entityName]="fmGeneralJournalsLines.entityName"
+      (beforeSaveRow)="beforeSaveRowGeneral($event)" [entityName]="fmGeneralJournalsLines.entityName" [allowRowDragAndDrop]="true"
       predicates="TransID=@0" [dataValues]="formGeneral?.data?.recID" [templateMore]="templateMore" service="AC"
       [editOnClick]="true" (gridInit)="beforeInitGridGeneral($event)" rowNoField="rowNo"
       (eventAction)="onActionGridGeneral($event)" (actionCompleted)="onActionGridGeneral($event)"

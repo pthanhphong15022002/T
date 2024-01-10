@@ -19,10 +19,10 @@
   (selectedChange)="selectedChange($event)"
   (clickMF)="clickMF($event, itemSelected)"
   (changeDataMF)="changeDataMF($event, itemSelected)"
-
 >
 </codx-views>
 
+<!--Card-->
 <ng-template #templateListCard let-data>
   <codx-card-img
     cardCss="card-process border border-gray-200 rounded-2 h-250px
@@ -40,10 +40,82 @@
     [footer]="footerbg"
     [typeMF]="'hover'"
     (clickMF)="clickMF($event, data)"
+    [hideMF]="asideMode == '2'"
     (changeDataMF)="changeDataMF($event, data)"
   >
   </codx-card-img>
   <ng-template #footerbg let-data>
-
+    <div class="d-flex bg-footer">
+      <div class="d-flex flex-column w-100">
+        <div class="d-flex flex-column w-100">
+          <div
+            class="d-flex justify-content-between align-items-start w-100 mb-1"
+          >
+            <div
+              #processName
+              class="fs-6 fw-bold line-clamp line-clamp-1 text-popover"
+              [ngbPopover]="data?.processName"
+              #p="ngbPopover"
+              [openDelay]="500"
+              (mouseenter)="PopoverDetail($event, p, data, 'processName')"
+              (mouseleave)="p.close()"
+              placement="bottom right top"
+              [popoverClass]="data.recID"
+              [innerHTML]="
+                data?.processName
+                  | formatvalue : view.formModel : 'ProcessName'
+                  | async
+              "
+            ></div>
+          </div>
+          <div class="d-flex justify-content-start footerCard-item mb-2">
+            Chuẩn
+            <!-- <span
+              class="text-gray-600"
+              [innerHTML]="
+                data?.applyFor | formatvalue : view.formModel : 'applyFor' | async
+              "
+            ></span> -->
+          </div>
+          <div class="d-flex justify-content-between">
+            <div class="d-flex justify-content-start align-items-center codx-badge">
+              <codx-vll
+                [name]="'CRM042'"
+                [field]="'Status'"
+                [value]="data?.status"
+                [showText]="true"
+                [showBgColor]="true"
+                class="badge badge-light badge-sm"
+              >
+              </codx-vll>
+            </div>
+            <div class="d-flex justify-content-end align-items-center">
+              <codx-imgs
+                [width]="25"
+                [objectId]="'ADMIN;2303080005'"
+                objectType="AD_Users"
+                [numberImages]="2"
+                [isToolTip]="true"
+              >
+              </codx-imgs>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </ng-template>
+</ng-template>
+
+<!--Grid more-->
+<!-- temp more cua gird -->
+<ng-template #templateMore let-data>
+  <div class="" style="height: 30px">
+    <codx-mfunc
+      [dataItem]="data"
+      [formModel]="view.formModel"
+      (clickMF)="clickMF($event, data)"
+      [isBookMark]="false"
+      type="view"
+    ></codx-mfunc>
+  </div>
 </ng-template>

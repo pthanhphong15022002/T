@@ -1,5 +1,6 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Injector, Input, OnInit, Output, SimpleChanges } from '@angular/core';
-import { DataRequest, UIComponent } from 'codx-core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Injector, Input, OnInit, Optional, Output, SimpleChanges } from '@angular/core';
+import { CodxFormScheduleComponent, DataRequest, DialogData, DialogModel, DialogRef, UIComponent } from 'codx-core';
+import { CatagoryComponent } from '../catagory/catagory.component';
 
 @Component({
   //standalone:true,
@@ -10,19 +11,44 @@ import { DataRequest, UIComponent } from 'codx-core';
 })
 export class DynamicSettingControlComponent extends UIComponent{
   //#region Contrucstor
-  @Input() setting: any = [];
-  @Input() dataValue: any = {};
+  @Input() settingFull: any;
+  @Input() formModel: any;
   @Output() valueChanges: EventEmitter<any> = new EventEmitter();
   oldDataValue: any = {};
+  isauto:any = false;
+  componentSub = '';
+  lineType = '1';
+  itemSelect:any;
+  dialog?: DialogRef;
+  newSetting:any = [];
+  tilte:any;
+  setting:any = [];
+  dataValue:any = {};
   constructor(
     private inject: Injector,
+    @Optional() dialog: DialogRef,
+    @Optional() data: DialogData
   ) {
     super(inject);
+    this.dialog = dialog;
+    if (data) {
+      this.newSetting = (data.data?.newSetting as []) || [];
+      this.lineType = data.data?.lineType;
+      this.itemSelect = data.data?.itemSelect;
+      this.tilte= data.data?.tilte;
+      this.dataValue = data.data?.dataValue;
+      this.settingFull = data.data?.settingFull;
+    }
   }
   //#endregion Contrucstor
 
   //#region Init
   onInit() {
+    if (!this.dialog) {
+      this.setting = this.settingFull?.paras;
+      this.newSetting = this.setting.filter(x => x.lineType == this.lineType);
+      this.dataValue = JSON.parse(this.settingFull?.paraValues);
+    } 
   }
 
   ngDoCheck() {
@@ -31,12 +57,57 @@ export class DynamicSettingControlComponent extends UIComponent{
   //#endregion Init
 
   //#region Event
-  valueChange(event:any,data: any){
+  valueChange(event:any,data: any = null,autoDefault: any = null){
     this.valueChanges.emit(event);
+    this.dataValue[event.field] = event.data;
+  }
+
+  valueChangeStop(event:any){
+    this.settingFull.stop = event.data;
+    this.api
+      .execAction(
+        'BG_ScheduleTasks',
+        [this.settingFull],
+        'UpdateAsync'
+      )
+      .subscribe((res: any) => {});
   }
 
   openPopup(evt: any, item: any, reference: string = '') {
-
+    let value = item.fieldName;
+    let recID = item.recID;
+    if (!reference) reference = item.reference;
+    let width = 0,
+      height = 0,
+      title = '',
+      funcID = '',
+      data = {},
+      cssClass = '',
+      dialogModel = new DialogModel();
+    if (!reference) {
+      let lineType = +this.lineType + 1 + '';
+      let itemChild = this.setting.filter(
+        (x) => x.refLineID === recID && x.lineType === lineType
+      );
+      data['newSetting'] = itemChild;
+      data['lineType'] = lineType;
+      data['itemSelect'] = item;
+      data['tilte'] = item.tilte;
+      data['dataValue'] = this.dataValue;
+      data['settingFull'] = this.settingFull;
+      width = 500;
+      height = 100 * itemChild.length;
+      this.callfc.openForm(
+        DynamicSettingControlComponent,
+        title,
+        width,
+        height,
+        funcID,
+        data,
+        cssClass,
+        dialogModel
+      );
+    }
   }
 
   openSub(evt: any, data: any, dataValue: any) {
@@ -46,7 +117,43 @@ export class DynamicSettingControlComponent extends UIComponent{
   collapseItem(evt: any, setting: any) {
 
   }
+
+  valueChangesssss(event:any){
+    
+  }
+
+  openForm(){
+    let option = new DialogModel();
+    option.FormModel = this.formModel;
+    this.callfc.openForm(
+      CodxFormScheduleComponent,
+      '',
+      800,
+      screen.height,
+      '',
+      this.settingFull.recID,
+      '',
+      option
+    );
+  }
   //#endregion Event
+
+  //#region Method
+  onSave() {
+    this.settingFull.paraValues = JSON.stringify(this.dataValue);
+    this.api
+      .execAction(
+        'BG_ScheduleTasks',
+        [this.settingFull],
+        'UpdateAsync'
+      )
+      .subscribe((res: any) => {
+        if (res) {
+          this.dialog.close();
+        }
+      });
+  }
+  //#endregion
 
   //#region Function
   //#endregion Function
