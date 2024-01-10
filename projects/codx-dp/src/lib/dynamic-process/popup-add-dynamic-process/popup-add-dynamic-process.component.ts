@@ -5152,11 +5152,19 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
     }
     return check;
   }
-  getFieldInTask(strFieldID) {
-    let fieldTile = this.step?.fields?.filter((field) =>
-      strFieldID?.includes(field?.recID)
-    );
-    return fieldTile?.map((f) => f.title)?.join(', ') || '';
+  
+  getFieldInTask(strFieldID:string) {
+    const listID = strFieldID?.split(';') || [];
+    let fieldTile = '';
+    if(listID?.length > 0 && this.step?.fields?.length > 0){
+      for(const fieldID of listID){
+        let field = this.step?.fields?.find(x => x.recID == fieldID);
+        if(field){
+          fieldTile = fieldTile ? fieldTile + ", " + field?.title : field?.title ;
+        }
+      }
+    }
+    return fieldTile;
   }
 
   openFormApprover(task) {
