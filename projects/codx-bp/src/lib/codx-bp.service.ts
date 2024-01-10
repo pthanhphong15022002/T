@@ -102,4 +102,15 @@ export class CodxBpService {
     }
     return countValidate;
   }
+
+  getPositionsByUserID(userID) {
+    return this.api.execSv<any>(
+      'SYS',
+      'AD',
+      'UsersBusiness',
+      'GetUserByIDAsync',
+      [userID]
+    );
+  }
 }
+
