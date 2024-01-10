@@ -243,6 +243,7 @@
                   *ngIf="currentTab == 2"
                   type="button"
                   class="btn btn-primary"
+                  (click)="onSave()"
                 >
                   <codx-label
                     [name]="'lblSave'"
@@ -325,6 +326,7 @@
             <button
               type="button"
               class="btn btn-icon btn-sm btn-light-primary me-2"
+              (click)="sharePerm(controlShare)"
             >
               <i class="icon-person_add_alt_1 icon-16"></i>
             </button>
@@ -332,19 +334,48 @@
             <button
               type="button"
               class="btn btn-icon btn-sm btn-light-primary me-2"
+              (click)="clickRoles()"
             >
               <i class="icon-settings icon-16"></i>
             </button>
           </div>
         </div>
-        <div class="input-user">
-          <codx-input
-            #inputUser
-            field="searchUser"
-            type="combobox"
-            refValue="Users"
-          >
-          </codx-input>
+        <div
+          class="d-flex flex-wrap mt-5"
+          *ngIf="data.permissions != null && data.permissions?.length > 0"
+        >
+          <ng-container *ngFor="let perm of data.permissions; index as i">
+            <div
+              class="cursor-pointer has-action-menu-od me-5 d-flex align-items-center mt-1 mb-3 position-relative"
+            >
+              <div class="me-2">
+                <codx-img
+                  [width]="20"
+                  [objectId]="perm.objectID"
+                  [objectName]="perm.objectName"
+                  objectType="AD_Users"
+                >
+                </codx-img>
+              </div>
+              <div class="text-gray-600 fw-bold">{{ perm.objectName }}</div>
+              <ng-container *ngIf="checkAssignRemove(i)">
+                <div class="action-menu-od" (click)="removeUser(i)">
+                  <i class="icon-close text-danger icon-16"></i>
+                </div>
+              </ng-container>
+            </div>
+          </ng-container>
+          <div class="input-sm w-250px mb-3">
+            <codx-input
+              #inputUser
+              class="w-250px"
+              field="searchUser"
+              type="combobox"
+              refValue="Users"
+              (valueChange)="searchAddUsers($event)"
+            >
+            </codx-input>
+          </div>
         </div>
       </div>
     </div>
@@ -360,6 +391,75 @@
     </div>
   </div>
 </ng-template>
+<ng-template #avatarProcess>
+  <div
+    class="dropzone dropzone-default dropzone-primary d-flex flex-center flex-column"
+    (click)="addAvatar()"
+  >
+    <div class="dropzone-msg dz-message needsclick">
+      <ng-container *ngIf="linkAvatar != '' && linkAvatar">
+        <img [src]="linkAvatar" class="image-maxsize" />
+      </ng-container>
+      <ng-container *ngIf="linkAvatar == '' || linkAvatar == null">
+        <div class="dropzone-msg-title mb-2">
+          <i class="icon-image icon-30"></i>
+        </div>
+        <div class="dropzone-msg-title mb-2">
+          <codx-label
+            name="lblContentAddAvatar"
+            [formName]="'DPProcesses'"
+            [gridViewName]="'grvDPProcesses'"
+            default="Chọn hình ảnh"
+            class="fw-bold"
+          >
+          </codx-label>
+        </div>
+        <span class="dropzone-msg-desc">
+          <codx-label
+            name="lblRequiredAvatar"
+            [formName]="'DPProcesses'"
+            [gridViewName]="'grvDPProcesses'"
+            default="(Nên chọn hình ảnh có kích thước ...px đến ...px)"
+            class="fw-bold"
+          ></codx-label>
+        </span>
+      </ng-container>
+    </div>
+  </div>
+  <codx-attachment
+    #imageAvatar
+    [objectId]="data.recID"
+    [objectType]="dialog.formModel.entityName"
+    hideFolder="1"
+    hideImageUpload="1"
+    hideImageThumb="1"
+    hideUploadBtn="1"
+    hideDes="1"
+    type="inline"
+    allowMultiFile="0"
+    [formModel]="dialog.formModel"
+    [functionID]="dialog.formModel.funcID"
+    allowExtensions=".jpg,.png"
+    [isSaveSelected]="0"
+    (fileAdded)="fileImgAdded($event)"
+    displayThumb="full"
+    showMessage="0"
+    category="0"
+  >
+  </codx-attachment>
+</ng-template>
+
+<ng-template #controlShare let-dialogControl>
+  <codx-share
+    [dialog]="dialogControl"
+    [multiple]="multiple"
+    [listCombobox]="listCombobox"
+    (eventApply)="applyShare($event)"
+    [listName]="vllShare"
+  >
+  </codx-share>
+</ng-template>
+
 
 <ng-template #tmpStepFields>
   <div
@@ -575,63 +675,7 @@
 
 <ng-template #tmpResult></ng-template>
 
-<ng-template #avatarProcess>
-  <div
-    class="dropzone dropzone-default dropzone-primary d-flex flex-center flex-column"
-    (click)="addAvatar()"
-  >
-    <div class="dropzone-msg dz-message needsclick">
-      <ng-container *ngIf="linkAvatar != '' && linkAvatar">
-        <img [src]="linkAvatar" class="image-maxsize" />
-      </ng-container>
-      <ng-container *ngIf="linkAvatar == '' || linkAvatar == null">
-        <div class="dropzone-msg-title mb-2">
-          <i class="icon-image icon-30"></i>
-        </div>
-        <div class="dropzone-msg-title mb-2">
-          <codx-label
-            name="lblContentAddAvatar"
-            [formName]="'DPProcesses'"
-            [gridViewName]="'grvDPProcesses'"
-            default="Chọn hình ảnh"
-            class="fw-bold"
-          >
-          </codx-label>
-        </div>
-        <span class="dropzone-msg-desc">
-          <codx-label
-            name="lblRequiredAvatar"
-            [formName]="'DPProcesses'"
-            [gridViewName]="'grvDPProcesses'"
-            default="(Nên chọn hình ảnh có kích thước ...px đến ...px)"
-            class="fw-bold"
-          ></codx-label>
-        </span>
-      </ng-container>
-    </div>
-  </div>
-  <codx-attachment
-    #imageAvatar
-    [objectId]="data.recID"
-    [objectType]="dialog.formModel.entityName"
-    hideFolder="1"
-    hideImageUpload="1"
-    hideImageThumb="1"
-    hideUploadBtn="1"
-    hideDes="1"
-    type="inline"
-    allowMultiFile="0"
-    [formModel]="dialog.formModel"
-    [functionID]="dialog.formModel.funcID"
-    allowExtensions=".jpg,.png"
-    [isSaveSelected]="0"
-    (fileAdded)="fileImgAdded($event)"
-    displayThumb="full"
-    showMessage="0"
-    category="0"
-  >
-  </codx-attachment>
-</ng-template>
+
 
 <!--- Đây là khu vực template dành cho diagram node --->
 
