@@ -98,6 +98,7 @@ export class ReceiptTransactionsComponent extends UIComponent {
   //#region Init
 
   onInit(): void {
+    if(!this.funcID) this.funcID = this.router.snapshot.params['funcID'];
     this.getJournal(); //? lấy data journal và các field ẩn từ sổ nhật kí
   }
 
@@ -140,6 +141,29 @@ export class ReceiptTransactionsComponent extends UIComponent {
         model: {
           template2: this.templateGrid,
         },
+      },
+      {
+        type: ViewType.grid_detail,
+        active: false,
+        sameData: true,
+        model: {
+          template2: this.templateGrid,
+
+        },
+
+        request:{service:'IV'},
+        subModel:{
+          entityName:'IV_VouchersLines',
+          formName:'VouchersLinesReceipts',
+          gridviewName:'grvVouchersLinesReceipts',
+          parentField:'TransID',
+          parentNameField:'VoucherNo',
+          hideMoreFunc:true,
+          request:{
+            service: 'IV',
+          },
+          idField:'recID'
+        }
       },
     ];
     this.acService.setChildLinks();
@@ -193,6 +217,9 @@ export class ReceiptTransactionsComponent extends UIComponent {
         break;
       case 'SYS04':
         this.copyVoucher(data); //? sao chép chứng từ
+        break;
+      case 'SYS05':
+        this.viewVoucher(data); //? sao chép chứng từ
         break;
       case 'SYS002':
         this.exportVoucher(data); //? xuất dữ liệu chứng từ
@@ -300,6 +327,8 @@ export class ReceiptTransactionsComponent extends UIComponent {
    * @param dataEdit : data chứng từ chỉnh sửa
    */
   editVoucher(dataEdit) {
+    delete dataEdit.isReadOnly;
+    this.view.dataService.dataSelected = {...dataEdit};
     this.view.dataService.dataSelected = dataEdit;
     this.view.dataService
       .edit(dataEdit)
@@ -400,6 +429,31 @@ export class ReceiptTransactionsComponent extends UIComponent {
           } 
         }
       });
+  }
+
+  /**
+   * *Hàm xem chứng từ
+   * @param dataEdit : data chứng từ chỉnh sửa
+   */
+  viewVoucher(dataView) {
+    delete dataView.isEdit;
+    dataView.isReadOnly = true;
+    let data = {
+      headerText: this.headerText,
+      journal: { ...this.journal },
+      oData: { ...dataView },
+      hideFields: [...this.hideFields],
+      baseCurr: this.baseCurr,
+    };
+    let optionSidebar = new SidebarModel();
+    optionSidebar.DataService = this.view?.dataService;
+    optionSidebar.FormModel = this.view?.formModel;
+    let dialog = this.callfc.openSide(
+      ReceiptTransactionsAddComponent,
+      data,
+      optionSidebar,
+      this.view.funcID
+    );
   }
 
   /**
