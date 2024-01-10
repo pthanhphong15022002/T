@@ -78,7 +78,7 @@
   </codx-temp-full>
   <!-- [iconCss]="data.isTimeOut ? 'icon-notifications expired' : ''"
   [icoStatus2]="data?.priority"
-  [icoStatusVll2]="vllPriority" 
+  [icoStatusVll2]="vllPriority"
     //sua ngày 03/01/2023- hover tooltip
       [imageId]="data.createdBy"
     [imageObjName]="data?.userNameCreate"
@@ -945,3 +945,10 @@
   (changeDataMF)="changeDataMF($event, itemSelected)"
 >
 </codx-views>
+<ng-template #ganttItems let-data>
+  <div class="border rounded-pill h-100 w-100 bg-warning text-truncate d-flex align-items-center" title="{{ data?.taskName }}" >
+    <span class="px-2">{{ data?.taskName }} | {{data.status}}</span>
+  </div>
+
+
+</ng-template>
