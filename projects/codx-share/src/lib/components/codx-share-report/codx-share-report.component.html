@@ -7,6 +7,7 @@
         [tmpRightToolBar]="tmpRightToolBar"
         [bodyCss]="'px-4 pb-5'"
         [isAdd]="false"
+        (selectedChange)="selectedChange($event)"
       >
       </codx-view2>
     </div>
@@ -43,7 +44,6 @@
   </ng-template>
   <ng-template #tmp let-data>
     <div #divCard class="d-flex flex-column w-225px h-225px m-3 text-white position-relative cursor-pointer ws-report-card" 
-      (click)="selectedChange(data)"
     >
       <codx-card-img
         imgCss="h-150px rounded border-bottom"

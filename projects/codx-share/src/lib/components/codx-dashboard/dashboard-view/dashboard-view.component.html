@@ -30,6 +30,7 @@
     [isAdd]="false"
     [tmpRightToolBar]="tmpRightToolBar"
     (dataChange)="dataChange($event)"
+    (selectedChange)="cardClick($event)"
     [tmpHeader]="tmpHeader"
   >
   </codx-view2>
@@ -49,7 +50,7 @@
               [imageSrc]="item?.background || imgDefault"
               [footer]="footer"
               ngClass="h-100 mx-2 w-250px"
-              (click)="selectedChange(item)"
+              (click)="cardClick(item)"
             >
             </codx-card-img>
           </ng-container>
@@ -89,7 +90,6 @@
 
 <ng-template #tmp let-data>
   <div class="d-flex flex-column w-225px m-2 position-relative cursor-pointer ws-report-card " 
-    (click)="cardClick(data)"
   >
     <codx-card-img
       imgCss="h-150px rounded border-bottom"
