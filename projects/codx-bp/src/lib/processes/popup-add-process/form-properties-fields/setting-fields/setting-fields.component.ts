@@ -9,6 +9,7 @@ import {
   SimpleChanges,
   ViewChild,
   TemplateRef,
+  ViewEncapsulation,
 } from '@angular/core';
 import {
   ApiHttpService,
@@ -39,6 +40,7 @@ import {
   selector: 'codx-setting-fields',
   templateUrl: './setting-fields.component.html',
   styleUrls: ['./setting-fields.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class SettingFieldsComponent implements AfterViewInit {
   @ViewChild('attachment') attachment: AttachmentComponent;

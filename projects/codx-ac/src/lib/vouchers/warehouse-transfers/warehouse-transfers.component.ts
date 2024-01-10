@@ -184,6 +184,9 @@ export class WarehouseTransfersComponent extends UIComponent {
       case 'SYS04':
         this.copyVoucher(data); //? sao chép chứng từ
         break;
+      case 'SYS05':
+        this.viewVoucher(data); //? sao chép chứng từ
+        break;
       case 'SYS002':
         this.exportVoucher(data); //? xuất dữ liệu chứng từ
         break;
@@ -272,7 +275,8 @@ export class WarehouseTransfersComponent extends UIComponent {
    * @param dataEdit : data chứng từ chỉnh sửa
    */
   editVoucher(dataEdit) {
-    this.view.dataService.dataSelected = dataEdit;
+    delete dataEdit.isReadOnly;
+    this.view.dataService.dataSelected = {...dataEdit};
     this.view.dataService
       .edit(dataEdit)
       .pipe(takeUntil(this.destroy$))
@@ -378,6 +382,33 @@ export class WarehouseTransfersComponent extends UIComponent {
           } 
         }
       });
+  }
+
+  /**
+   * *Hàm xem chứng từ
+   * @param dataEdit : data chứng từ chỉnh sửa
+   */
+  viewVoucher(dataView) {
+    delete dataView.isEdit;
+    dataView.isReadOnly = true;
+    let data = {
+      headerText: this.headerText,
+      journal: { ...this.journal },
+      oData: { ...dataView },
+      hideFields: [...this.hideFields],
+      baseCurr: this.baseCurr,
+    };
+    let optionSidebar = new SidebarModel();
+    optionSidebar.DataService = this.view?.dataService;
+    optionSidebar.FormModel = this.view?.formModel;
+    let dialog = this.callfc.openSide(
+      WarehouseTransfersAddComponent,
+      data,
+      optionSidebar,
+      this.view.funcID
+    );
+    dialog.closed.subscribe((res) => {
+    })
   }
 
   /**
