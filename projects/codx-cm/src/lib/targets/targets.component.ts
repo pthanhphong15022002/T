@@ -204,9 +204,11 @@ export class TargetsComponent
     // this.viewDashboard = true;
     if (this.viewDashboard) this.viewDataValue = '2';
     this.showButtonAdd = this.viewCurrent == '1' ? true : false;
-    this.button = [{
-      id: this.btnAdd,
-    }];
+    this.button = [
+      {
+        id: this.btnAdd,
+      },
+    ];
 
     this.year = new Date().getFullYear();
 
@@ -577,25 +579,25 @@ export class TargetsComponent
       this.setTargetByExchangeRate(currencyID, exchRate);
       this.currencyID = currencyID;
       this.exchangeRate = exchRate;
-      if(this.codxInputCurrentID && this.codxInputCurrentID?.ComponentCurrent){
+      if (
+        this.codxInputCurrentID &&
+        this.codxInputCurrentID?.ComponentCurrent
+      ) {
         this.codxInputCurrentID.ComponentCurrent?.setValue(this.currencyID);
       }
       this.changeDetec.detectChanges();
     }
   }
 
-  setTargetByExchangeRate(currencyID, exchRate){
+  setTargetByExchangeRate(currencyID, exchRate) {
     this.lstDataTree.forEach((element) => {
-      element.target =
-        (element.target / exchRate) * element.exchangeRate;
-      element.dealValue =
-        (element.dealValue / exchRate) * element.exchangeRate;
+      element.target = (element.target / exchRate) * element.exchangeRate;
+      element.dealValue = (element.dealValue / exchRate) * element.exchangeRate;
       element.currencyID = currencyID;
       element.exchangeRate = exchRate ?? 1;
       if (element?.targetsLines != null) {
         element?.targetsLines.forEach((line) => {
-          line.target =
-            (line.target /exchRate) * line.exchangeRate;
+          line.target = (line.target / exchRate) * line.exchangeRate;
           line.currencyID = currencyID;
           line.exchangeRate = exchRate ?? 1;
         });
@@ -603,8 +605,7 @@ export class TargetsComponent
 
       if (element?.deals != null) {
         element?.deals.forEach((deal) => {
-          deal.dealValue =
-            (deal.dealValue / exchRate) * deal.exchangeRate;
+          deal.dealValue = (deal.dealValue / exchRate) * deal.exchangeRate;
           deal.currencyID = currencyID;
           deal.exchangeRate = exchRate ?? 1;
         });
@@ -612,14 +613,11 @@ export class TargetsComponent
 
       if (element?.items != null) {
         element?.items.forEach((item) => {
-          item.target =
-            (item.target / exchRate) * item.exchangeRate;
-          item.dealValue =
-            (item.dealValue / exchRate) * item.exchangeRate;
+          item.target = (item.target / exchRate) * item.exchangeRate;
+          item.dealValue = (item.dealValue / exchRate) * item.exchangeRate;
           if (item?.targetsLines != null) {
             item?.targetsLines.forEach((line) => {
-              line.target =
-                (line.target / exchRate) * line.exchangeRate;
+              line.target = (line.target / exchRate) * line.exchangeRate;
               line.currencyID = currencyID;
               line.exchangeRate = exchRate ?? 1;
             });
@@ -627,9 +625,7 @@ export class TargetsComponent
 
           if (item?.deals != null) {
             item?.deals.forEach((deal) => {
-              deal.dealValue =
-                (deal.dealValue / exchRate) *
-                deal.exchangeRate;
+              deal.dealValue = (deal.dealValue / exchRate) * deal.exchangeRate;
               deal.currencyID = currencyID;
               deal.exchangeRate = exchRate ?? 1;
             });
@@ -667,6 +663,9 @@ export class TargetsComponent
           break;
         case 'SYS03':
           if (!this.isButton) this.edit(data);
+          break;
+        case 'SYS05':
+          if (!this.isButton) this.viewDetail(data);
           break;
         case 'CM0206_1':
           if (!this.isButton) this.popupChangeAllocationRate(data);
@@ -869,6 +868,59 @@ export class TargetsComponent
       });
   }
 
+  async viewDetail(data) {
+    this.isButton = true;
+    if(data.parentID != null){
+      this.popupChangeAllocationRate(data, true)
+    }else{
+      let lstOwners = [];
+      let lstTargetLines = [];
+      var tar = await firstValueFrom(
+        this.cmSv.getTargetAndLinesAsync(
+          data?.businessLineID,
+          data.year > 0 ? data.year : data.period
+        )
+      );
+      if (tar != null) {
+        lstOwners = tar[2];
+        lstTargetLines = tar[1];
+        this.view.dataService.dataSelected = tar[0];
+      }
+      this.view.dataService
+        .edit(this.view.dataService.dataSelected)
+        .subscribe((res) => {
+          let dialogModel = new DialogModel();
+          dialogModel.DataService = this.view.dataService;
+          dialogModel.FormModel = this.view?.formModel;
+          dialogModel.zIndex = 999;
+          var obj = {
+            action: 'edit',
+            title: this.titleAction,
+            lstOwners: lstOwners,
+            lstTargetLines: lstTargetLines,
+            currencyID: this.currencyID,
+            exchangeRate: this.exchangeRate,
+            gridViewSetupTarget: this.gridViewSetupTarget,
+            isView: true,
+          };
+          var dialog = this.callfc.openForm(
+            PopupAddTargetComponent,
+            '',
+            850,
+            850,
+            '',
+            obj,
+            '',
+            dialogModel
+          );
+          dialog.closed.subscribe((e) => {
+            this.isButton = false;
+          });
+        });
+    }
+
+  }
+
   deleteTargetLine(data) {
     this.view.dataService.dataSelected = data;
     this.view.dataService
@@ -917,7 +969,7 @@ export class TargetsComponent
   //#endregion
 
   //#region Month
-  async popupChangeAllocationRate(data) {
+  async popupChangeAllocationRate(data, isView = false) {
     this.isButton = true;
     var lstLinesBySales = [];
     let result = await firstValueFrom(
@@ -945,6 +997,7 @@ export class TargetsComponent
       currencyID: this.currencyID,
       exchangeRate: this.exchangeRate,
       targetSys: data.target,
+      isView: isView
     };
     var dialog = this.callfc.openForm(
       PopupChangeAllocationRateComponent,

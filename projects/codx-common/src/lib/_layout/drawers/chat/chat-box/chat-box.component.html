@@ -100,7 +100,7 @@
                                        </div>
                                     </div>
                                 </ng-container>
-                                <div class="max-w-250px">
+                                <div class="max-w-250px d-flex flex-column align-items-end">
                                     <ng-container *ngIf="item?.messageType == '5';else tmpSendContent">
                                         <span>{{mssgDeleted}}</span>
                                     </ng-container>
@@ -108,7 +108,7 @@
                                         <!-- message reply -->
                                         <ng-container *ngIf="item?.refID">
                                             <div class="w-fit-content bg-mssg-reply text-break text-justify mb-1 p-2 rounded-1">
-                                                <span class="d-block">{{item?.refContent.createdName}}</span>
+                                                <span class="d-block text-gray-600 fs-8">{{item?.refContent.createdName}}</span>
                                                 <ng-container *ngIf="item?.refContent.content">
                                                     <span class="d-block">{{item?.refContent.content}}</span>
                                                 </ng-container>
@@ -204,6 +204,7 @@
                                             </div>
                                         </ng-container> -->
                                         <ng-container *ngIf="item?.message">
+                                            <span *ngIf="group?.groupType == '2'" class="text-gray-600 fs-8" >{{item?.createdName}}</span>
                                             <div class="text-break text-justify">
                                                 {{item?.message}}
                                                 <ng-container *ngIf="idx == arrMessages?.length - 1 || item?.createdBy != arrMessages[idx+1]?.createdBy">

@@ -14,7 +14,7 @@
     </div>
     
     <div class="d-flex flex-row align-items-center" *ngIf="calendarGrid || gridTotal" (click)="explanPopup()">
-      <span class="icon-sticky_note_2 pe-1"></span>
+      <span class="icon-sticky_note_2 pe-1 text-primary"></span>
       <codx-label class="text-primary fw-bold" name="lblExplanation" default="Chú thích bảng công"
         [formName]="funcList?.formName" [gridViewName]="funcList?.gridViewName"></codx-label>
     </div>
@@ -60,9 +60,8 @@
 </ng-template>
 
 <ng-template #tmpPanelRight>
-
   <ng-container class="h-100">
-    <div [ngClass]="!viewDetailData ? 'd-none' :''">
+    <div [ngClass]="!viewDetailData ? 'd-none' :'d-block'">
       <codx-gridview-v2 *ngIf=" calendarGridColumns.length > 0" #calendarGrid [formName]="view.formModel?.formName"
         [entityName]="view.formModel?.entityName" [gridViewName]="'grvKowDsUIByDay'" [columnsGrid]="calendarGridColumns"
         [service]="'HR'" [assemblyName]="'PR'" [checkboxSelect]="true" [className]="'KowDsBusiness'" [predicates]=""
@@ -71,7 +70,7 @@
         [idField]="'employeeID'" (onDatabound)="onLoadedData($event)"></codx-gridview-v2>
 
     </div>
-    <div [ngClass]="!viewStatistic ? 'd-none' :''">
+    <div [ngClass]="!viewStatistic ? 'd-none' :'d-block'">
       <codx-gridview-v2 #gridTotal *ngIf="columnTotalKow?.length > 0 && loadedTotalGrid && dataValues"
         [columnsGrid]="columnTotalKow" [autoFitColumns]="false" [gridViewName]="'grvKowDsUIByKow'"
         [formModel]="gridTotalFM" [formName]="'KowDs'" [hideMoreFunc]="true" [height]="'100%'" [service]="'HR'"
