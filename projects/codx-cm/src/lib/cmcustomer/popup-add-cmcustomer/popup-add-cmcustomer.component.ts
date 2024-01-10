@@ -108,6 +108,7 @@ export class PopupAddCmCustomerComponent implements OnInit {
   leverSetting: number;
   isSaved = false;
   user: any;
+  isView: boolean = false;
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private api: ApiHttpService,
@@ -125,6 +126,7 @@ export class PopupAddCmCustomerComponent implements OnInit {
     this.action = dt?.data?.action;
     this.titleAction = dt?.data?.title;
     this.autoNumber = dt?.data?.autoNumber;
+    this.isView = dt?.data?.isView ?? false;
     this.user = this.authStore.get();
     if (this.action == 'copy') {
       this.recID = dt?.data[2];

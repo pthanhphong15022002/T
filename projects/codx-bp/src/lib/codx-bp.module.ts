@@ -40,6 +40,7 @@ import { PropertyExpressionComponent } from './modeview/properties/property-expr
 import { PropertyAttachmentComponent } from './modeview/properties/property-attachment/property-attachment.component';
 import { FormSettingComboboxComponent } from './processes/popup-add-process/form-properties-fields/setting-fields/form-setting-combobox/form-setting-combobox.component';
 import { PropertyComboboxComponent } from './modeview/properties/property-combobox/property-combobox.component';
+import { FormAdvancedSettingsComponent } from './processes/popup-add-process/form-advanced-settings/form-advanced-settings.component';
 
 export const routes: Routes = [
   {
@@ -93,6 +94,7 @@ export const routes: Routes = [
 
 
     FormSettingComboboxComponent,
+          FormAdvancedSettingsComponent,
   ],
   imports: [
     CodxCoreModule.forRoot({ environment }),

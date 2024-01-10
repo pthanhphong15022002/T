@@ -72,7 +72,7 @@ export class FormPropertiesFieldsComponent implements OnInit {
     this.type = dt?.data?.type;
     this.dataCurrent = dt?.data?.dataCurrent;
     this.vllBP002 = dt?.data?.vllBP002;
-    this.lstStepFields = dt?.data?.lstStepFields ?? [];
+    this.lstStepFields = dt?.data?.lstStepFields != null ? JSON.parse(JSON.stringify(dt?.data?.lstStepFields)) : [];
     this.isForm = dt?.data?.isForm ?? false;
   }
   ngOnInit(): void {

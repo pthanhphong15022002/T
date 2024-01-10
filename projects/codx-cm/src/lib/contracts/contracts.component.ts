@@ -51,6 +51,7 @@ import { ContractsDetailComponent } from './contracts-detail/contracts-detail.co
 import { CodxCommonService } from 'projects/codx-common/src/lib/codx-common.service';
 import { ExportData } from 'projects/codx-common/src/lib/models/ApproveProcess.model';
 import { PopupPermissionsComponent } from '../popup-permissions/popup-permissions.component';
+import { PopupUpdateStatusComponent } from '../deals/popup-update-status/popup-update-status.component';
 
 
 @Component({
@@ -460,6 +461,9 @@ export class ContractsComponent extends UIComponent {
         break;
       case 'CM0204_21': // phụ lục
       this.addContractAppendix(data);
+        break;
+      case 'CM0204_22': // phụ lục
+      this.changeStatus(data);
         break;
       default: {
         // var customData = {
@@ -1193,6 +1197,82 @@ export class ContractsComponent extends UIComponent {
     });
   }
 
+  changeStatus(data) {
+    let oldStatus = data?.status;
+    this.dataSelected = data;
+    let dialogModel = new DialogModel();
+    dialogModel.zIndex = 999;
+    dialogModel.FormModel = this.view.formModel;
+    let obj = {
+      statusDefault: this.dataSelected?.statusCodeID,
+      statusCodecmt: this.dataSelected?.statusCodeCmt,
+      applyProcess: this.dataSelected.applyProcess,
+      title: this.actionName,
+      recID: this.dataSelected.recID,
+      category: "4",
+      formModel: this.view?.formModel,
+      statusOld: this.dataSelected?.status,
+      owner: this.dataSelected.owner,
+    };
+    let dialogStatus = this.callfc.openForm(
+      PopupUpdateStatusComponent,
+      '',
+      500,
+      400,
+      '',
+      obj,
+      '',
+      dialogModel
+    );
+    dialogStatus.closed.subscribe((e) => {
+      // if (e && e?.event != null) {
+      //   this.statusCodeID = e?.event?.statusDefault;
+      //   this.statusCodeCmt = e?.event?.statusCodecmt;
+      //   let status = e?.event?.status;
+      //   let message = e?.event?.message;
+      //   if (status && !this.dataSelected.applyProcess) {
+      //     this.dataSelected.status = status;
+      //   }
+      //   if (message) {
+      //     this.notificationsService.notifyCode(
+      //       message,
+      //       0,
+      //       "'" + this.dataSelected?.dealName + "'"
+      //     );
+      //     return;
+      //   }
+      //   if (this.dataSelected.applyProcess && e?.event?.isOpenForm) {
+      //     if (status) {
+      //       switch (status) {
+      //         case '2':
+      //           if (oldStatus == '1') {
+      //             this.startNow(this.dataSelected);
+      //           } else {
+      //             this.moveStage(this.dataSelected);
+      //           }
+      //           break;
+      //         case '1':
+      //           this.startNew(this.dataSelected);
+      //           break;
+      //         case '3':
+      //         case '5':
+      //           this.moveReason(this.dataSelected, status === '3');
+      //           break;
+      //       }
+      //     }
+      //   } else {
+      //     this.dataSelected.statusCodeID = this.statusCodeID;
+      //     this.dataSelected.statusCodeCmt = this.statusCodeCmt;
+      //     this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
+      //     this.view.dataService.dataSelected = this.dataSelected;
+      //     this.view.dataService.update(this.dataSelected, true).subscribe();
+      //     this.detectorRef.detectChanges();
+      //     this.notificationsService.notifyCode('SYS007');
+      //   }
+      // }
+    });
+  }
+
   // moveReason(data: any, isMoveSuccess: boolean) {
   //   //lay step Id cu de gen lai total
   //   // if (!this.crrStepID || this.crrStepID != data.stepID)
@@ -1501,7 +1581,7 @@ export class ContractsComponent extends UIComponent {
   }
 
   changeData(event) {
-    if (event?.field == 'disposalOn' || event?.field == 'debtClosingOn') {
+    if (event?.field == 'disposalOn' || event?.field == 'debtClosingOn' || event?.field == 'disposalExpired') {
       this.liquidation[event?.field] = event?.data?.fromDate;
     } else {
       this.liquidation[event?.field] = event?.data;

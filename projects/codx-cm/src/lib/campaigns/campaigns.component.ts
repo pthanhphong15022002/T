@@ -169,6 +169,9 @@ export class CampaignsComponent
       case 'SYS04':
         this.copy(data);
         break;
+      case 'SYS05':
+        this.viewDetail(data);
+        break;
       default: {
         this.codxShareService.defaultMoreFunc(
           e,
@@ -342,6 +345,51 @@ export class CampaignsComponent
           });
       });
     });
+  }
+
+  viewDetail(data){
+    this.isButton = false;
+    if (data) {
+      this.view.dataService.dataSelected = data;
+    }
+    this.view.dataService
+      .edit(this.view.dataService.dataSelected)
+      .subscribe((res) => {
+        this.cache.functionList(this.funcID).subscribe((fun) => {
+          let option = new SidebarModel();
+          option.DataService = this.view.dataService;
+          var formMD = new FormModel();
+          formMD.entityName = fun.entityName;
+          formMD.formName = fun.formName;
+          formMD.gridViewName = fun.gridViewName;
+          formMD.funcID = this.funcID;
+          option.FormModel = JSON.parse(JSON.stringify(formMD));
+          option.Width = '550px';
+
+          var obj = {
+            action: 'edit',
+            title: this.titleAction,
+            gridViewSetup: this.gridViewSetup,
+            isView: true
+          };
+          var dialog = this.callfc.openSide(
+            PopupAddCampaignComponent,
+            obj,
+            option
+          );
+          dialog.closed.subscribe((e) => {
+            this.isButton = true;
+            if (!e?.event) this.view.dataService.clear();
+            if (e && e.event != null) {
+              let data = e?.event;
+              data.modifiedOn = new Date();
+              this.dataSelected = JSON.parse(JSON.stringify(data));
+              this.view.dataService.update(this.dataSelected).subscribe();
+              this.detectorRef.detectChanges();
+            }
+          });
+        });
+      });
   }
 
   delete(data) {

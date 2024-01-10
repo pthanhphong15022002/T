@@ -164,24 +164,27 @@ codx-input {
 .cdk-drag-dragging {
   transition: transform 0.3s ease-in-out;
   transform: translateY(-10px);
-
 }
 
 .cdk-drop-list-dragging-over .cdk-drag-dragging {
   transform: translateY(0);
 }
 .cdk-drag-preview {
-  z-index: 20000!important;
+  z-index: 20000 !important;
 }
 .cdk-drag-placeholder {
   opacity: 0;
 }
-:host ::ng-deep #specialCodxInput {
-  > div.e-float-input.mt-0 {
-    height: 100% !important;
-  }
+.input-container {
+  height: calc(100% - 70px);
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
 
-  > input.e-input.form-control.ng-pristine.ng-valid.codx-text.ng-touched {
-    height: 100% !important;
-  }
+.input-container input {
+  margin-bottom: 5px;
+  overflow-y: auto;
+  box-sizing: border-box;
 }

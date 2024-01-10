@@ -334,6 +334,51 @@ export class SprintsComponent extends UIComponent {
     });
   }
 
+  viewInfo(data) {
+    if (data) {
+      this.view.dataService.dataSelected = data;
+    }
+
+    let option = new SidebarModel();
+    option.DataService = this.view?.currentView?.dataService;
+    option.FormModel = this.view?.currentView?.formModel;
+    if (data?.iterationType == '1') {
+      option.Width = '800px';
+      this.api
+        .exec<any>(
+          'PM',
+          'ProjectsBusiness',
+          'GetProjectByIDAsync',
+          data.projectID
+        )
+        .subscribe((pr) => {
+          if (pr)
+            this.cache
+              .gridViewSetup('TMProjects', 'grvTMProjects')
+              .subscribe((grv) => {
+                if (grv) {
+                  let obj = {
+                    data: this.view.dataService.dataSelected,
+                    action: 'view',
+                    titleAction: this.titleAction,
+                    project: pr,
+                    grvProject: grv,
+                  };
+                  this.openPopUp(obj, option);
+                }
+              });
+        });
+    } else {
+      option.Width = '550px';
+      let obj = {
+        data: this.view.dataService.dataSelected,
+        action: 'view',
+        titleAction: this.titleAction,
+      };
+      this.openPopUp(obj, option);
+    }
+  }
+
   openPopUp(obj, option) {
     this.dialog = this.callfc.openSide(PopupAddSprintsComponent, obj, option);
     this.dialog.closed.subscribe((e) => {
@@ -386,6 +431,9 @@ export class SprintsComponent extends UIComponent {
       case 'SYS04':
         this.copy(data);
         break;
+      case 'SYS05':
+        this.viewInfo(data);
+        break;
       case 'TMT03011':
         if (data.iterationID != this.user.userID) this.shareBoard(e.data, data);
         break;
@@ -419,7 +467,6 @@ export class SprintsComponent extends UIComponent {
   //#endregion
 
   //#region Event
-  sendemail(data) {}
 
   shareBoard(e, data) {
     var listUserDetail = [];
