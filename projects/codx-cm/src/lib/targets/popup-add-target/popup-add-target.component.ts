@@ -74,6 +74,7 @@ export class PopupAddTargetComponent {
   exchangeRateSys: number;
   currencyIDSys: any;
   isCheckSave = false;
+  isView: boolean = false;
   constructor(
     private cache: CacheService,
     private api: ApiHttpService,
@@ -94,6 +95,7 @@ export class PopupAddTargetComponent {
     this.exchangeRateSys = data?.data?.exchangeRate;
     this.gridViewSetupTarget = data?.data?.gridViewSetupTarget;
     this.user = this.authstore.get();
+    this.isView = data?.data?.isView ?? false;
     if (this.action == 'edit') {
       this.lstOwners = data?.data?.lstOwners;
       this.lstOwnersOld = JSON.parse(JSON.stringify(this.lstOwners));
@@ -978,21 +980,23 @@ export class PopupAddTargetComponent {
 
   countClick = 0;
   dbClick(data, type) {
-    if (type == 'target') {
-      if (this.data.target == 0) {
-        this.notiService.notifyCode('CM033');
-        return;
+    if (!this.isView) {
+      if (type == 'target') {
+        if (this.data.target == 0) {
+          this.notiService.notifyCode('CM033');
+          return;
+        }
       }
-    }
-    if (this.countClick == 0) {
-      if (this.lstOwners != null && this.lstOwners.length > 1) {
-        this.editingItem = data;
-        this.typeChange = type;
-        this.countClick = 0;
-      } else {
-        this.countClick += 1;
-        this.notiService.notifyCode('CM034');
-        return;
+      if (this.countClick == 0) {
+        if (this.lstOwners != null && this.lstOwners.length > 1) {
+          this.editingItem = data;
+          this.typeChange = type;
+          this.countClick = 0;
+        } else {
+          this.countClick += 1;
+          this.notiService.notifyCode('CM034');
+          return;
+        }
       }
     }
 

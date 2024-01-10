@@ -91,6 +91,9 @@ export class ProcessesComponent
         },
       },
     ];
+    this.view.dataService.methodSave = 'AddAsync';
+    this.view.dataService.methodUpdate = 'UpdateAsync';
+    this.view.dataService.methodDelete = 'DeleteAsync';
   }
 
   onInit(): void {

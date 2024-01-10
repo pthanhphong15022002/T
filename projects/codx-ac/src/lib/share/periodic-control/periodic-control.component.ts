@@ -149,7 +149,9 @@ export class PeriodicControlComponent extends UIComponent {
           let i = this.oData.findIndex(x => x.recID == item.recID);
           if(i == -1) this.oData.push(item);
         },this.oData)
-        if(res[0].length < this.view.dataService.request.pageSize) this.showAll = true;
+        console.log(res);
+        let total = res[1];
+        if(this.oData.length <= total) this.showAll = true;
         this.detectorRef.detectChanges();
       }
     });

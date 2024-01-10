@@ -399,6 +399,7 @@ export class IncommingAddComponent implements OnInit {
 
   //Các hàm value change
   changeValueAgency(event: any) {
+    debugger
     //ktra nếu giá trị trả vô = giá trị trả ra return null
     //if(this.dispatch.agencyName == event.data[0]) return;
     if (!event.data) return;

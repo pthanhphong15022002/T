@@ -160,6 +160,20 @@
 .icon-combobox{
   position: absolute;
   right: 0;
-  top: 5px;
-  color: #b9b9b9;
+  top: 0px;
+  height: 31px;
+  width: 25px;
+  color: #212529;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 0 3px 3px 0;
+  cursor: pointer;
+}
+.icon-combobox:hover{
+  background-color: #dee1f1;
+}
+.icon-expand_more-1::before{
+  content: "\e729";
+  font-family: "e-icons";
 }

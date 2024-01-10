@@ -186,23 +186,28 @@ export class PopupJobComponent implements OnInit, OnDestroy {
       ? this.stepsTasks?.parentID?.split(';')
       : [];
 
-    this.listFieldID = this.stepsTasks?.fieldID
-      ? this.stepsTasks?.fieldID?.split(';')
-      : [];
+    this.listFieldID = this.stepsTasks?.fieldID ? this.stepsTasks?.fieldID?.split(';') : [];
     this.listFields = this.step?.fields || [];
     this.listFieldConvert = this.listFields?.map(x => ({recID: x?.recID,title: x?.title}));
+
     if(this.listFieldID?.length > 0 && this.listFieldConvert){
       let fields = [];
-      for(let field of this.listFieldConvert ){
-        if(this.listFieldID?.includes(field?.recID)){
+
+      for(let fieldID of this.listFieldID ){
+        let field = this.listFieldConvert?.find(x => x.recID == fieldID)
+        if(field){
           this.listFieldIntask.push(field);
-        }else{
+        }
+      }
+      for(let field of this.listFieldConvert ){
+        if(!this.listFieldID?.includes(field?.recID)){
           fields.push(field);
         }
       }
       this.titleField = this.listFieldIntask?.map(x => x.title)?.join(';');
       this.listFieldConvert = fields;
     }
+
     if (this.typeTask?.value == 'CO') {
       this.cache
         .gridViewSetup('CMContracts', 'grvCMContracts')
