@@ -123,6 +123,17 @@ export class PeriodicControlComponent extends UIComponent {
       });
   }
 
+  changeAutoSchedules(event:any){
+    this.dataDefault = event;
+    this.api
+      .execAction(
+        'BG_ScheduleTasks',
+        [this.dataDefault],
+        'UpdateAsync'
+      )
+      .subscribe((res:any)=>{});
+  }
+
   requestEnded(event: any) {
     if (event.data) {
       if (event.data.length) {
@@ -162,7 +173,6 @@ export class PeriodicControlComponent extends UIComponent {
   }
 
   changeDataMF(event:any,type='view'){
-    console.log(event);
     event.reduce((pre, element) => {
       element.isblur = false;
       element.isbookmark = true;
@@ -222,6 +232,5 @@ export class PeriodicControlComponent extends UIComponent {
       if(element.data?.buttonName != '3') element.disabled = true;
       }, {});
   }
-
-  //#endregion Functione
+  //#endregion Function
 }

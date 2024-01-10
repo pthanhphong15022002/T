@@ -185,11 +185,15 @@
         </span> -->
 
         <span
-        class="text-ellipsis line-clamp line-clamp-2"
-        #statusCodeID
-        [innerHTML]="data?.statusCodeID| formatvalue : view.formModel : 'statusCodeID'  | async "
-      >
-      </span>
+          class="text-ellipsis line-clamp line-clamp-2"
+          #statusCodeID
+          [innerHTML]="
+            data?.statusCodeID
+              | formatvalue : view.formModel : 'statusCodeID'
+              | async
+          "
+        >
+        </span>
       </div>
     </div>
     <div class="d-flex justify-content-between align-items-center mt-1">
@@ -586,6 +590,7 @@
     [taskAdd]="taskAdd"
   >
   </codx-deal-detail>
+  <!-- [isChangeViewDetails]="viewCrr == '2'" -- nó chưa change dc khi đổi view-->
 </ng-template>
 
 <ng-template #templateViewDetail>
@@ -688,6 +693,7 @@
   </div>
 </ng-template>
 
+<!-- TEMP COLUMGRID -->
 <ng-template #templateCustomer let-data>
   <div class="">
     <cm-view-icon-group [customerID]="data?.customerID"></cm-view-icon-group>
@@ -774,24 +780,8 @@
 </ng-template>
 
 <ng-template #templateSteps let-data>
-  <div
-    [ngStyle]="{
-      'background-color': data?.steps['backgroundColor']
-    }"
-    class="me-1 badge badge-sm d-flex align-items-center mw-125px"
-  >
-    <span
-      [ngClass]="data?.steps['icon']"
-      [ngStyle]="{ color: data?.steps['iconColor'] }"
-      class="me-1"
-    ></span>
-    <span
-      class="text-ellipsis line-clamp line-clamp-1"
-      [ngbTooltip]="data?.currentStepName"
-      [ngStyle]="{ color: data?.steps['textColor'] }"
-      >{{ data?.currentStepName }}</span
-    >
-  </div>
+  Khanh kêu click hiện lên 3 cục ...
+  <span> </span>
 </ng-template>
 
 <ng-template #templateExpectedClosed let-data>
@@ -846,6 +836,10 @@
     "
   ></span>
 </ng-template>
+<ng-template #headerTempAct let-data> Công việc </ng-template>
+
+<ng-template #templateAct let-data> Công việc </ng-template>
+<!-- ----END TEMP GRID---- -->
 
 <ng-template #dashBoard>
   <codx-instance-dashboard
