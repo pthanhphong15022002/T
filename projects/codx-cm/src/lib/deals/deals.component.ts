@@ -92,6 +92,7 @@ export class DealsComponent
   @ViewChild('templateNote') templateNote: TemplateRef<any>;
   @ViewChild('templateStatusCode') templateStatusCode: TemplateRef<any>;
   @ViewChild('templateIndustries') templateIndustries: TemplateRef<any>;
+  @ViewChild('templateCost') templateCost: TemplateRef<any>;
   @ViewChild('templateAct') templateAct: TemplateRef<any>;
   @ViewChild('headerTempAct') headerTempAct: TemplateRef<any>;
 
@@ -2031,6 +2032,9 @@ export class DealsComponent
         switch (key) {
           case 'StepID':
             template = this.templateSteps;
+            break;
+          case 'CostItems':
+            template = this.templateCost;
             break;
           default:
             break;
