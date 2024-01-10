@@ -39,6 +39,7 @@ import { PropertyPhoneComponent } from './modeview/properties/property-phone/pro
 import { PropertyExpressionComponent } from './modeview/properties/property-expression/property-expression.component';
 import { PropertyAttachmentComponent } from './modeview/properties/property-attachment/property-attachment.component';
 import { FormSettingComboboxComponent } from './processes/popup-add-process/form-properties-fields/setting-fields/form-setting-combobox/form-setting-combobox.component';
+import { PropertyComboboxComponent } from './modeview/properties/property-combobox/property-combobox.component';
 
 export const routes: Routes = [
   {
@@ -88,7 +89,7 @@ export const routes: Routes = [
     PropertyPhoneComponent,
     PropertyExpressionComponent,
     PropertyAttachmentComponent,
-
+    PropertyComboboxComponent,
 
 
     FormSettingComboboxComponent,

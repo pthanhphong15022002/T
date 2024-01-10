@@ -29,7 +29,9 @@ export class CodxView2Component implements OnInit , AfterViewInit{
   
   @Input() isAdd: boolean = true;
   @Input() isToolBar: boolean = true;
+  @Input() dataRequest:any;
   @Output() btnClick = new EventEmitter();
+  @Output() dataChange = new EventEmitter();
   request:DataRequest;
   viewList: Array<ViewModel> = [];
   fMoreFuncs: ButtonModel[];
@@ -130,7 +132,9 @@ export class CodxView2Component implements OnInit , AfterViewInit{
     this.fetch().subscribe((item:any)=>{
       if(item && item.length > 0)
       {
-        this.dataSource = item[0];
+        if(this.service.includes('rpt')) this.dataSource = item;
+        else this.dataSource = item[0];
+        this.dataChange.emit(this.dataSource)
       }
     });
   }
@@ -142,7 +146,7 @@ export class CodxView2Component implements OnInit , AfterViewInit{
       this.assemblyName,
       this.className,
       this.method,
-      this.request
+      this.dataRequest ? this.dataRequest : this.request
     )
   }
 
