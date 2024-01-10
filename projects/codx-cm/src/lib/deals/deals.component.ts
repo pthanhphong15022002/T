@@ -92,6 +92,9 @@ export class DealsComponent
   @ViewChild('templateNote') templateNote: TemplateRef<any>;
   @ViewChild('templateStatusCode') templateStatusCode: TemplateRef<any>;
   @ViewChild('templateIndustries') templateIndustries: TemplateRef<any>;
+  @ViewChild('templateAct') templateAct: TemplateRef<any>;
+  @ViewChild('headerTempAct') headerTempAct: TemplateRef<any>;
+
   @ViewChild('dashBoard') dashBoard!: TemplateRef<any>;
 
   popupConfirm: DialogRef;
@@ -107,6 +110,7 @@ export class DealsComponent
   // type any for view detail
   @Input() dataObj?: any;
   @Input() showButtonAdd = false;
+
   kanban: any;
   viewGird: any;
 
@@ -249,6 +253,12 @@ export class DealsComponent
 
   ngAfterViewInit(): void {}
 
+  onLoading(e) {
+    //reload filter
+    this.loadViewModel(); //--tạm cmt
+    this.loadDefaultSetting();
+  }
+
   loadViewModel() {
     this.viewsDefault = [
       {
@@ -278,7 +288,7 @@ export class DealsComponent
         sameData: true,
         model: {
           template2: this.templateMore,
-          groupSettings: {showDropArea: false,columns:['customerName']}
+          groupSettings: { showDropArea: false, columns: ['customerName'] },
           //resources: this.columnGrids,
           // frozenColumns: 1,
         },
@@ -294,6 +304,20 @@ export class DealsComponent
           panelLeftRef: this.dashBoard,
         },
       },
+      // {
+      //   //test view mới
+      //   id: 100,
+      //   type: ViewType.grid,
+      //   active: false,
+      //   sameData: true,
+      //   text: 'Lưới custorm column',
+      //   model: {
+      //     template2: this.templateMore,
+      //     groupSettings: { showDropArea: false, columns: ['customerName'] },
+      //     resources: this.columnGrids,
+      //     // frozenColumns: 1,
+      //   },
+      // },
     ];
 
     //this.views = this.viewsDefault;
@@ -499,7 +523,8 @@ export class DealsComponent
       eventItem.disabled = true;
     };
     let isChangeStatus = (eventItem, data) => {
-      eventItem.disabled = data?.alloweStatus == '1' || data?.status != '0' ? false : true;
+      eventItem.disabled =
+        data?.alloweStatus == '1' || data?.status != '0' ? false : true;
     };
     let isMoveReason = (eventItem, data) => {
       eventItem.disabled =
@@ -567,18 +592,6 @@ export class DealsComponent
     this.getGridViewSetup(formName, gridViewName);
     this.getMoreFunction(formName, gridViewName);
   }
-  // async getListStatusCode() {
-  //   this.codxCmService.getListStatusCode(['5']).subscribe((res) => {
-  //     if (res) {
-  //       this.valueListStatusCode = res.map((item) => ({
-  //         text: item.statusName,
-  //         value: item.statusID,
-  //       }));
-  //     } else {
-  //       this.valueListStatusCode = [];
-  //     }
-  //   });
-  // }
 
   getMoreFunction(formName, gridViewName) {
     this.cache.moreFunction(formName, gridViewName).subscribe((res) => {
@@ -599,7 +612,7 @@ export class DealsComponent
     );
     this.vllStatus = this.gridViewSetup?.Status?.referedValue;
     this.vllApprove = this.gridViewSetup?.ApproveStatus?.referedValue;
-    //lay grid view - view gird he thong
+    // lay grid view - view gird he thong
     // let arrField = Object.values(this.gridViewSetup).filter(
     //   (x: any) => x.isVisible
     // );
@@ -608,7 +621,7 @@ export class DealsComponent
     //     .sort((x: any, y: any) => x.columnOrder - y.columnOrder)
     //     .map((x: any) => x.fieldName);
     // }
-    //this.getColumsGrid(this.gridViewSetup);
+    // this.getColumsGrid(this.gridViewSetup);
   }
 
   getColorReason() {
@@ -692,37 +705,56 @@ export class DealsComponent
       ])
       .subscribe((x) => {
         if (x.event && x.event.status == 'Y') {
-          this.checkOwner(data,isCheck);
+          this.checkOwner(data, isCheck);
         }
       });
   }
-  checkOwner(data,isCheck) {
-  if(isCheck && data?.owner) {
-    let datas = [data.processID, data.businessLineID,data.owner, this.applyFor];
-    this.codxCmService.isExistOwnerInProcess(datas).subscribe((res) => {
-      if(res) {
-        let dataUpdateProcess = [data.recID, data.status, '', isCheck,data.owner];
-        this.getApiUpdateProcess(dataUpdateProcess);
-      }
-      else  {
-        this.notificationsService
-        .alertCode('DP033', null, [
-          '"' + data?.dealName + '" ' + 'Người phụ trách không tồn tại trong quy trình' + ' ',
-        ])
-        .subscribe((x) => {
-          if (x.event && x.event.status == 'Y') {
-            let dataUpdateProcess = [data.recID, data.status, '', isCheck,''];
-            this.getApiUpdateProcess(dataUpdateProcess);
-          }
-        });
-      }
-    });
+  checkOwner(data, isCheck) {
+    if (isCheck && data?.owner) {
+      let datas = [
+        data.processID,
+        data.businessLineID,
+        data.owner,
+        this.applyFor,
+      ];
+      this.codxCmService.isExistOwnerInProcess(datas).subscribe((res) => {
+        if (res) {
+          let dataUpdateProcess = [
+            data.recID,
+            data.status,
+            '',
+            isCheck,
+            data.owner,
+          ];
+          this.getApiUpdateProcess(dataUpdateProcess);
+        } else {
+          this.notificationsService
+            .alertCode('DP033', null, [
+              '"' +
+                data?.dealName +
+                '" ' +
+                'Người phụ trách không tồn tại trong quy trình' +
+                ' ',
+            ])
+            .subscribe((x) => {
+              if (x.event && x.event.status == 'Y') {
+                let dataUpdateProcess = [
+                  data.recID,
+                  data.status,
+                  '',
+                  isCheck,
+                  '',
+                ];
+                this.getApiUpdateProcess(dataUpdateProcess);
+              }
+            });
+        }
+      });
+    } else {
+      let dataUpdateProcess = [data.recID, data.status, '', isCheck];
+      this.getApiUpdateProcess(dataUpdateProcess);
+    }
   }
-  else {
-    let dataUpdateProcess = [data.recID, data.status, '', isCheck];
-    this.getApiUpdateProcess(dataUpdateProcess);
-  }
- }
   getApiUpdateProcess(datas) {
     this.codxCmService.updateProcessDeal(datas).subscribe((res) => {
       if (res) {
@@ -1405,33 +1437,33 @@ export class DealsComponent
         );
         dialogCustomDeal.closed.subscribe((e) => {
           if (e && e.event != null) {
-            //this.view.dataService.update(e.event, true).subscribe();
+            this.view.dataService.update(e.event, true).subscribe();
             //up kaban
-          //   if (
-          //     this.kanban &&
-          //     (dealValueOld != e.event?.dealValue ||
-          //       exchangeRateOld != e.event?.exchangeRate)
-          //   ) {
-          //     let dt = e.event;
-          //     let money =
-          //       dt.dealValue * dt.exchangeRate - dealValueOld * exchangeRateOld;
-          //     this.renderTotal(dt.stepID, 'add', money);
+            if (
+              this.kanban &&
+              (dealValueOld != e.event?.dealValue ||
+                exchangeRateOld != e.event?.exchangeRate)
+            ) {
+              let dt = e.event;
+              let money =
+                dt.dealValue * dt.exchangeRate - dealValueOld * exchangeRateOld;
+              this.renderTotal(dt.stepID, 'add', money);
 
-          //     // this.kanban?.updateCard(dt);
-          //     // this.kanban?.kanbanObj?.refreshHeader();
-          //     // this.kanban.refreshUI();
-          //     this.kanban.refresh();
-          //   }
-          //   if (this.detailViewDeal) {
-          //     this.detailViewDeal.dataSelected = JSON.parse(
-          //       JSON.stringify(this.dataSelected)
-          //     );
-          //     this.detailViewDeal?.promiseAllAsync();
-          //     this.detailViewDeal.loadContactEdit();
-          //   }
-          //   this.isChangeOwner = ownerIdOld != e.event.owner;
-          //   this.changeDetectorRef.detectChanges();
-           }
+              // this.kanban?.updateCard(dt);
+              // this.kanban?.kanbanObj?.refreshHeader();
+              // this.kanban.refreshUI();
+              this.kanban.refresh();
+            }
+            if (this.detailViewDeal) {
+              this.detailViewDeal.dataSelected = JSON.parse(
+                JSON.stringify(this.dataSelected)
+              );
+              this.detailViewDeal?.promiseAllAsync();
+              this.detailViewDeal.loadContactEdit();
+            }
+            this.isChangeOwner = ownerIdOld != e.event.owner;
+            this.changeDetectorRef.detectChanges();
+          }
         });
       });
   }
@@ -1508,6 +1540,7 @@ export class DealsComponent
 
   //#region event
   selectedChange(data) {
+    // debugger;
     if (data || data?.data) this.dataSelected = data?.data ? data?.data : data;
   }
   //#endregion
@@ -1859,12 +1892,6 @@ export class DealsComponent
       });
   }
 
-  onLoading(e) {
-    //reload filter
-    this.loadViewModel();
-    this.loadDefaultSetting();
-  }
-
   loadDefaultSetting() {
     this.funcID = this.activedRouter.snapshot.params['funcID'];
 
@@ -2002,40 +2029,9 @@ export class DealsComponent
         let template: any;
         let colums: any;
         switch (key) {
-          case 'CustomerID':
-            template = this.templateCustomer;
-            break;
-          case 'BusinessLineID':
-            template = this.templateBusinessLines;
-            break;
-          case 'DealValue':
-            template = this.templateDealValue;
-            break;
-          case 'Status':
-            template = this.templateStatus;
-            break;
-          case 'Owner':
-            template = this.templateOwner;
-            break;
           case 'StepID':
             template = this.templateSteps;
             break;
-          case 'ConsultantID':
-            template = this.templateConsultant;
-            break;
-          case 'ExpectedClosed':
-            template = this.templateExpectedClosed;
-            break;
-          case 'Note':
-            template = this.templateNote;
-            break;
-          case 'StatusCodeID':
-            template = this.templateStatusCode;
-            break;
-          case 'Industries':
-            template = this.templateIndustries;
-            break;
-
           default:
             break;
         }
@@ -2057,6 +2053,14 @@ export class DealsComponent
         this.columnGrids.push(colums);
       });
     }
+    //set activite
+    let columnActiviti = {
+      headerTemplate: this.headerTempAct,
+      width: '250px',
+      template: this.templateAct,
+      // textAlign: 'center',
+    };
+    this.columnGrids.push(columnActiviti);
 
     this.loadViewModel();
   }
@@ -2452,4 +2456,8 @@ export class DealsComponent
     this.view.dataService.search(e);
     this.detectorRef.detectChanges();
   }
+
+  //-------------GIRD NEW----------------//
+
+  //--------------------------------------//
 }

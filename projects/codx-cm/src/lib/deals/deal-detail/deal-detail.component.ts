@@ -48,6 +48,7 @@ export class DealDetailComponent implements OnInit {
   // @Output() saveAssign = new EventEmitter<any>(); ko can tra ve
   @Output() changeProgress = new EventEmitter<any>();
   @Output() changeDataCustomers = new EventEmitter<any>();
+  @Input() isChangeViewDetails = true; //chỉ change khi view details
 
   @ViewChild('tabDetailView', { static: true })
   tabDetailView: TemplateRef<any>;
@@ -121,7 +122,6 @@ export class DealDetailComponent implements OnInit {
   //  grvSetupQuotation;
   // vllStatusQuotation;
 
-
   isShow: boolean = false;
   isCategoryCustomer: boolean = false;
   hasRunOnce: boolean = false;
@@ -185,6 +185,8 @@ export class DealDetailComponent implements OnInit {
   ngAfterViewInit(): void {}
 
   ngOnChanges(changes: SimpleChanges): void {
+    if (!this.isChangeViewDetails) return;
+
     if (changes.dataSelected) {
       if (
         changes['dataSelected'].currentValue != null &&
@@ -210,11 +212,17 @@ export class DealDetailComponent implements OnInit {
         }
         this.oldRecId = changes['dataSelected'].currentValue.recID;
         this.dataSelected = this.dataSelected;
-        this.codxCmService
-          .getCustomerNameByrecID(this.dataSelected?.customerID)
-          .subscribe((res) => {
-            this.customerName = res;
-          });
+
+        //cái này đã có customer Name
+        if (this.dataSelected?.customerName)
+          this.customerName = this.dataSelected?.customerName;
+        //cái này bua cho data cux
+        else
+          this.codxCmService
+            .getCustomerNameByrecID(this.dataSelected?.customerID)
+            .subscribe((res) => {
+              this.customerName = res;
+            });
       }
     }
   }
@@ -230,8 +238,6 @@ export class DealDetailComponent implements OnInit {
       await this.getTree(); //ve cay giao viec
       await this.getLink();
       await this.getContactByDeaID(this.dataSelected.recID);
-      // await this.getHistoryByDeaID();
-      //await this.getViewDetailDeal();
     } catch (error) {}
   }
   reloadListStep(listSteps: any) {
@@ -249,32 +255,31 @@ export class DealDetailComponent implements OnInit {
 
   getLink() {
     this.cache
-    .gridViewSetup('CMContracts', 'grvCMContracts')
-    .subscribe((res) => {
+      .gridViewSetup('CMContracts', 'grvCMContracts')
+      .subscribe((res) => {
+        if (res) {
+          this.grvSetupContract = res;
+          this.vllStatusContract = this.grvSetupContract['Status'].referedValue;
+        }
+      });
+    this.cache.gridViewSetup('CMLeads', 'grvCMLeads').subscribe((res) => {
       if (res) {
-        this.grvSetupContract = res;
-        this.vllStatusContract = this.grvSetupContract['Status'].referedValue;
-      }
-    });
-    this.cache
-    .gridViewSetup('CMLeads', 'grvCMLeads')
-    .subscribe((res) => {
-      if (res) {
-          this.grvSetupLead = res;
-          this.vllStatusLead = this.grvSetupLead['Status'].referedValue;
+        this.grvSetupLead = res;
+        this.vllStatusLead = this.grvSetupLead['Status'].referedValue;
       }
     });
 
     this.cache
-    .gridViewSetup('CMQuotations', 'grvCMQuotations')
-    .subscribe((res) => {
-      if (res) {
+      .gridViewSetup('CMQuotations', 'grvCMQuotations')
+      .subscribe((res) => {
+        if (res) {
           this.grvSetupQuotation = res;
-          this.vllStatusQuotation = this.grvSetupQuotation['Status'].referedValue;
-      }
-    });
+          this.vllStatusQuotation =
+            this.grvSetupQuotation['Status'].referedValue;
+        }
+      });
 
-  this.getHistoryByDeaID();
+    this.getHistoryByDeaID();
   }
 
   resetTab(data) {
@@ -323,9 +328,9 @@ export class DealDetailComponent implements OnInit {
       //   await this.getGridViewContract();
       //     await this.getGridViewLead();
       //  await this.getValueList();
-        await this.getValueListRole();
+      await this.getValueListRole();
       //  await this.getListStatusCode();
-   //   await this.getGrvViewDetailDealAsync();
+      //   await this.getGrvViewDetailDealAsync();
     } catch (error) {}
   }
 
@@ -402,10 +407,10 @@ export class DealDetailComponent implements OnInit {
           this.listContracts = res[1];
           this.listLeads = res[2];
 
-          this.isViewLink = (this.listQuotations != null &&  this.listQuotations.length > 0)  ||
-          (this.listContracts != null &&  this.listContracts.length > 0)
-          || (this.listLeads != null &&  this.listLeads.length > 0)
-
+          this.isViewLink =
+            (this.listQuotations != null && this.listQuotations.length > 0) ||
+            (this.listContracts != null && this.listContracts.length > 0) ||
+            (this.listLeads != null && this.listLeads.length > 0);
         }
       });
     }
@@ -436,7 +441,7 @@ export class DealDetailComponent implements OnInit {
     this.changeDetectorRef.detectChanges();
   }
   async getContactByDeaID(recID) {
-    if(this.dataSelected.customerCategory == '1' ) {
+    if (this.dataSelected.customerCategory == '1') {
       this.codxCmService.getContactByObjectID(recID).subscribe((res) => {
         if (res) {
           this.contactPerson = res;
@@ -444,11 +449,9 @@ export class DealDetailComponent implements OnInit {
           this.contactPerson = null;
         }
       });
-    }
-    else {
+    } else {
       this.contactPerson = null;
     }
-
   }
   // async getListContactByDealID(objectID, categoryCustomer) {
   //   if (categoryCustomer == '1') {
