@@ -282,6 +282,7 @@ export class ModeviewComponent implements OnInit{
 
   drop2(event:any)
   {
+    debugger
     let data = JSON.parse(JSON.stringify(event.previousContainer.data[event.previousIndex]));
     if(event.previousContainer === event.container && event.event.target.id == event.container.id) {
       //delete this.table[data.parentID].children[event.previousIndex];
@@ -296,7 +297,7 @@ export class ModeviewComponent implements OnInit{
       var object = 
       {
         name: "",
-        columnOrder: 0,
+        columnOrder: this.table.length,
         children: [ 
           data
         ]
@@ -304,14 +305,31 @@ export class ModeviewComponent implements OnInit{
 
       let index = this.table.findIndex(x=>x.columnOrder == data.columnOrder);
       this.table[index].children.splice(event.previousIndex, 1);
+      var ds = false;
       if(event.event.target.id != event.container.id) {
-        object.columnOrder = object.children[0].columnOrder = this.table.length,
+        
+        if(this.dataSelected.columnOrder == object.children[0].columnOrder && this.dataSelected.columnNo == object.children[0].columnNo) ds = true;
+        object.columnOrder = object.children[0].columnOrder = this.table.length;
+        
         this.table.push(object);
+        
+        if(ds) this.selectedItem(object.children[0])
+        
       }
       else {
-        object.columnOrder = object.children[0].columnOrder = data.columnOrder + 1,
+        if(this.dataSelected.columnOrder == object.children[0].columnOrder && this.dataSelected.columnNo == object.children[0].columnNo) ds = true;
+        object.columnOrder = object.children[0].columnOrder = data.columnOrder + 1;
+        if(ds) this.selectedItem(object.children[0])
         this.table.splice((data.columnOrder + 1),0,object);
       }
+
+      if(this.table[index].children.length > 0)
+        {
+          for(var i = 0 ; i < this.table[index].children.length ; i++)
+          {
+            this.table[index].children[i].columnNo = i;
+          }
+        }
     }
     else {
       event.previousContainer.data[event.previousIndex].columnOrder = event.container.data[0].columnOrder,
@@ -322,6 +340,11 @@ export class ModeviewComponent implements OnInit{
         event.previousIndex,
         event.currentIndex
       );
+      
+      for(var i = 0 ; i < this.table[event.container.data[0].columnOrder].children.length ; i++)
+      {
+        this.table[event.container.data[0].columnOrder].children[i].columnNo = i;
+      }
     }
 
     this.table = this.table.filter(x=>x.children != null && x.children.length>0);

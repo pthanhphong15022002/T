@@ -1421,22 +1421,17 @@ export class PopupAddSignFileComponent implements OnInit {
     if (event == true) {
       this.nextClick = false;
       if (
-        this.data.approveControl != '1' &&
-        !(this.isTemplate && this.data.refType == 'ES_Categories')
+        this.data.approveControl != '1' && !this.isTemplate        
       ) {
-        this.data.approveControl = '1';
-        this.dialogSignFile.patchValue({ approveControl: '1' });      
+        this.data.approveControl = '1'; 
+        this.data.processID == this.data.recID;
+        this.dialogSignFile.patchValue({ approveControl: '1',processID:this.data.recID });      
         this.reloadedStep=false;
         this.cr.detectChanges();
         this.onSaveSignFile();
         this.reloadedStep=true;
         this.cr.detectChanges();
-      }
-      if(this.data.approveControl = '1'){
-        this.data.processID == this.data.recID;
-        this.dialogSignFile.patchValue({ approveControl: '1',processID:this.data.recID }); 
-        this.onSaveSignFile();
-      }
+      }      
     }
   }
 

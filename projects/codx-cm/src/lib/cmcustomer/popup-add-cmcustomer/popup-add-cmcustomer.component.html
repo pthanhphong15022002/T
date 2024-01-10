@@ -24,7 +24,7 @@
     field="tags"
     [entityName]="dialog.formModel.entityName"
     [isEdit]="true"
-    [disabled]="false"
+    [disabled]="isView"
     [value]="data?.tags"
     (valueChange)="valueTagChange($event)"
   ></codx-tag>
@@ -58,6 +58,7 @@
         (lstAddressDeleteEmit)="lstAddressDeleteEmit($event)"
         [type]="'formAdd'"
         [funcID]="funcID"
+        [hidden]="isView"
         [entityName]="dialog.formModel.entityName"
         [id]="data.recID"
         [objectName]="getNameCrm(data)"
@@ -76,7 +77,7 @@
         [objectID]="data?.recID"
         [objectType]="funcID == 'CM0101' ? '1' : '3'"
         [objectName]="funcID == 'CM0101' ? data.customerName : data.partnerName"
-        [hidenMF]="false"
+        [hidenMF]="isView"
         [type]="'formAdd'"
       ></codx-list-contacts>
     </div>
@@ -110,6 +111,7 @@
                 (mouseenter)="closePopover()"
                 [formModel]="form.formModel"
                 [Group]="form.formGroup"
+                [disabled]="isView"
                 field="annualRevenue"
               >
               </codx-input>
@@ -122,6 +124,7 @@
                 [formModel]="form.formModel"
                 [Group]="form.formGroup"
                 field="bankAccount"
+                [disabled]="isView"
               >
               </codx-input>
             </div>
@@ -136,6 +139,7 @@
                 [formModel]="form.formModel"
                 [Group]="form.formGroup"
                 field="workingDays"
+                [disabled]="isView"
               >
               </codx-input>
             </div>
@@ -153,6 +157,7 @@
                 [formModel]="form.formModel"
                 [Group]="form.formGroup"
                 field="headcounts"
+                [disabled]="isView"
               >
               </codx-input>
             </div>
@@ -168,6 +173,7 @@
                 [formModel]="form.formModel"
                 [Group]="form.formGroup"
                 field="bankID"
+                [disabled]="isView"
               >
               </codx-input>
             </div>
@@ -187,6 +193,7 @@
                     [formModel]="form.formModel"
                     [Group]="form.formGroup"
                     field="officialHour"
+                    [disabled]="isView"
                   >
                   </codx-input>
                 </div>
@@ -220,6 +227,7 @@
               [formModel]="form.formModel"
               [Group]="form.formGroup"
               field="channelID"
+              [disabled]="isView"
             >
             </codx-input>
           </div>
@@ -252,6 +260,7 @@
             [formModel]="form.formModel"
             [Group]="form.formGroup"
             field="nationality"
+            [disabled]="isView"
           >
           </codx-input>
         </div>
@@ -262,6 +271,7 @@
             [formModel]="form.formModel"
             [Group]="form.formGroup"
             field="birthPlace"
+            [disabled]="isView"
           >
           </codx-input>
         </div>
@@ -275,6 +285,7 @@
             [formModel]="form.formModel"
             [Group]="form.formGroup"
             field="idCardNo"
+            [disabled]="isView"
           >
           </codx-input>
         </div>
@@ -286,6 +297,7 @@
             [formModel]="form.formModel"
             [Group]="form.formGroup"
             field="issuedOn"
+            [disabled]="isView"
           >
           </codx-input>
         </div>
@@ -299,6 +311,7 @@
             [formModel]="form.formModel"
             [Group]="form.formGroup"
             field="ethnicGroup"
+            [disabled]="isView"
           >
           </codx-input>
         </div>
@@ -314,6 +327,7 @@
             [formModel]="form.formModel"
             [Group]="form.formGroup"
             field="religion"
+            [disabled]="isView"
           >
           </codx-input>
         </div>
@@ -331,6 +345,7 @@
             [formModel]="form.formModel"
             [Group]="form.formGroup"
             [field]="'bankAccount'"
+            [disabled]="isView"
           >
           </codx-input>
         </div>
@@ -346,6 +361,7 @@
             [formModel]="form.formModel"
             [Group]="form.formGroup"
             [field]="'bankID'"
+            [disabled]="isView"
           >
           </codx-input>
         </div>
@@ -365,6 +381,7 @@
                 [formModel]="form.formModel"
                 [Group]="form.formGroup"
                 field="phone"
+                [disabled]="isView"
               >
               </codx-input>
             </div>
@@ -380,6 +397,7 @@
                 [formModel]="form.formModel"
                 [Group]="form.formGroup"
                 field="phoneExt"
+                [disabled]="isView"
               >
               </codx-input>
             </div>
@@ -397,6 +415,7 @@
             [formModel]="form.formModel"
             [Group]="form.formGroup"
             field="email"
+            [disabled]="isView"
           >
           </codx-input>
         </div>
@@ -427,6 +446,7 @@
               [formModel]="form.formModel"
               [Group]="form.formGroup"
               field="annualRevenue"
+              [disabled]="isView"
             >
             </codx-input>
           </div>
@@ -441,12 +461,17 @@
               [formModel]="form.formModel"
               [Group]="form.formGroup"
               field="headcounts"
+              [disabled]="isView"
             >
             </codx-input>
           </div>
         </div>
       </div>
-      <div class="mb-2 mt-5" *ngIf="funcID == 'CM0103'" (mouseenter)="closePopover()">
+      <div
+        class="mb-2 mt-5"
+        *ngIf="funcID == 'CM0103'"
+        (mouseenter)="closePopover()"
+      >
         <codx-label
           name="lblSystemInfo"
           class="fs-6 text-dark text-primary fw-bold"
@@ -454,7 +479,7 @@
           [formModel]="form.formModel"
         >
         </codx-label>
-        <div class="row mt-3" >
+        <div class="row mt-3">
           <!-- <div class="col-6 form-group">
             <codx-label [formModel]="form.formModel" fiedName="SegmentID">
             </codx-label>
@@ -477,6 +502,7 @@
               [formModel]="form.formModel"
               [Group]="form.formGroup"
               field="channelID"
+              [disabled]="isView"
             >
             </codx-input>
           </div>
@@ -497,7 +523,11 @@
 </ng-template>
 
 <ng-template #footer>
-  <div class="d-flex justify-content-end" (mouseenter)="closePopover()">
+  <div
+    class="d-flex justify-content-end"
+    *ngIf="!isView"
+    (mouseenter)="closePopover()"
+  >
     <button
       type="button"
       class="btn btn-primary"
@@ -528,6 +558,7 @@
           [formModel]="form.formModel"
           [Group]="form.formGroup"
           field="custGroupID"
+          [disabled]="isView"
         >
         </codx-input>
       </div>
@@ -542,7 +573,7 @@
           (mouseenter)="closePopover()"
           [formModel]="form.formModel"
           [Group]="form.formGroup"
-          [disabled]="action == 'edit' || disabledShowInput"
+          [disabled]="action == 'edit' || disabledShowInput || isView"
           [placeholder]="action != 'edit' ? planceHolderAutoNumber : ''"
           field="customerID"
         >
@@ -567,7 +598,7 @@
               [objectId]="data?.recID"
               [objectType]="form.formModel.entityName"
               [objectName]="getNameCrm(data)"
-              [isAllowEdit]="true"
+              [isAllowEdit]="!isView"
               [isDefaulImg]="true"
               [imgOn]="data?.modifiedOn"
               (handleInput)="changeAvatar()"
@@ -590,6 +621,7 @@
       [formModel]="form.formModel"
       [Group]="form.formGroup"
       field="customerName"
+      [disabled]="isView"
     >
     </codx-input>
   </div>
@@ -603,6 +635,7 @@
           [formModel]="form.formModel"
           [Group]="form.formGroup"
           field="shortName"
+          [disabled]="isView"
         >
         </codx-input>
       </div>
@@ -615,6 +648,7 @@
           [formModel]="form.formModel"
           [Group]="form.formGroup"
           field="taxCode"
+          [disabled]="isView"
         >
         </codx-input>
       </div>
@@ -629,6 +663,7 @@
           [formModel]="form.formModel"
           [Group]="form.formGroup"
           field="gender"
+          [disabled]="isView"
         >
         </codx-input>
       </div>
@@ -641,6 +676,7 @@
           [formModel]="form.formModel"
           [Group]="form.formGroup"
           field="birthday"
+          [disabled]="isView"
         >
         </codx-input>
       </div>
@@ -656,6 +692,7 @@
           [formModel]="form.formModel"
           [Group]="form.formGroup"
           field="idCardNo"
+          [disabled]="isView"
         >
         </codx-input>
       </div>
@@ -673,6 +710,7 @@
           [formModel]="form.formModel"
           [Group]="form.formGroup"
           field="issuedOn"
+          [disabled]="isView"
         >
         </codx-input>
       </div>
@@ -686,6 +724,7 @@
       (valueChange)="valueChangeAdress($event)"
       (focus)="focus($event)"
       field="address"
+      [disabled]="isView"
     >
     </codx-input>
   </div>
@@ -717,6 +756,7 @@
         [formModel]="form.formModel"
         [Group]="form.formGroup"
         [field]="'phone'"
+        [disabled]="isView"
       >
       </codx-input>
     </div>
@@ -746,6 +786,7 @@
         [formModel]="form.formModel"
         [Group]="form.formGroup"
         [field]="'email'"
+        [disabled]="isView"
       >
       </codx-input>
     </div>
@@ -758,6 +799,7 @@
           [formModel]="form.formModel"
           [Group]="form.formGroup"
           field="phone"
+          [disabled]="isView"
         >
         </codx-input>
       </div>
@@ -769,6 +811,7 @@
           [formModel]="form.formModel"
           [Group]="form.formGroup"
           field="faxNo"
+          [disabled]="isView"
         >
         </codx-input>
       </div>
@@ -781,6 +824,7 @@
       [formModel]="form.formModel"
       [Group]="form.formGroup"
       field="webPage"
+      [disabled]="isView"
     >
     </codx-input>
   </div>
@@ -809,6 +853,7 @@
       [formModel]="form.formModel"
       [Group]="form.formGroup"
       field="industries"
+      [disabled]="isView"
       (valueChange)="valueChangeIndustries($event)"
     >
     </codx-input>
@@ -828,6 +873,7 @@
       [formModel]="form.formModel"
       [Group]="form.formGroup"
       field="occupation"
+      [disabled]="isView"
     >
     </codx-input>
   </div>
@@ -842,6 +888,7 @@
       [formModel]="form.formModel"
       [Group]="form.formGroup"
       field="owner"
+      [disabled]="isView"
     >
     </codx-input>
   </div>
@@ -851,6 +898,7 @@
       [formModel]="form.formModel"
       [Group]="form.formGroup"
       field="memo"
+      [disabled]="isView"
     >
     </codx-input>
   </div>
@@ -874,7 +922,7 @@
           <codx-input
             [field]="'objectType'"
             [crrValue]="data.objectType"
-            [disabled]="checkContact"
+            [disabled]="isView || checkContact"
             [formModel]="form.formModel"
             (valueChange)="valueChangeContact($event)"
           ></codx-input>
@@ -892,7 +940,7 @@
             #vllCbx
             [field]="'contactType'"
             id="vllCbx"
-            [disabled]="checkContact"
+            [disabled]="isView || checkContact"
             [crrValue]="data?.contactType"
             [formModel]="form.formModel"
             (valueChange)="valueChangeContact($event)"
@@ -911,7 +959,7 @@
       ></codx-label>
       <codx-input
         [field]="'objectID'"
-        [disabled]="checkContact"
+        [disabled]="isView || checkContact"
         [crrValue]="data?.objectID"
         type="combobox"
         [refValue]="refValueCbx"
@@ -929,6 +977,7 @@
           <codx-input
             [field]="'isDefault'"
             [checked]="data?.isDefault ?? false"
+            [disabled]="isView"
             type="checkbox"
             (valueChange)="valueChecked($event)"
           ></codx-input>
@@ -957,7 +1006,7 @@
           </codx-label>
           <codx-input
             [field]="'contactID'"
-            [disabled]="action == 'edit' || disabledShowInput"
+            [disabled]="action == 'edit' || disabledShowInput || isView"
             [placeholder]="action != 'edit' ? planceHolderAutoNumber : ''"
             [formModel]="form.formModel"
             [Group]="form.formGroup"
@@ -971,6 +1020,7 @@
             [formModel]="form.formModel"
             [Group]="form.formGroup"
             [field]="'salutation'"
+            [disabled]="isView"
           >
           </codx-input>
         </div>
@@ -993,7 +1043,7 @@
                 [objectId]="data?.recID"
                 [objectType]="form.formModel.entityName"
                 [objectName]="getNameCrm(data)"
-                [isAllowEdit]="true"
+                [isAllowEdit]="!isView"
                 [isDefaulImg]="true"
                 [imgOn]="data?.modifiedOn"
                 (handleInput)="changeAvatar()"
@@ -1015,6 +1065,7 @@
         [formModel]="form.formModel"
         [Group]="form.formGroup"
         field="contactName"
+        [disabled]="isView"
       >
       </codx-input>
     </div>
@@ -1026,6 +1077,7 @@
           [formModel]="form.formModel"
           [Group]="form.formGroup"
           field="gender"
+          [disabled]="isView"
         >
         </codx-input>
       </div>
@@ -1036,6 +1088,7 @@
           [formModel]="form.formModel"
           [Group]="form.formGroup"
           field="birthday"
+          [disabled]="isView"
         >
         </codx-input>
       </div>
@@ -1048,6 +1101,7 @@
         (valueChange)="valueChangeAdress($event)"
         (focus)="focus($event)"
         field="address"
+        [disabled]="isView"
       >
       </codx-input>
     </div>
@@ -1079,6 +1133,7 @@
           [formModel]="form.formModel"
           [Group]="form.formGroup"
           [field]="'mobile'"
+          [disabled]="isView"
         >
         </codx-input>
       </div>
@@ -1108,6 +1163,7 @@
           [formModel]="form.formModel"
           [Group]="form.formGroup"
           [field]="'personalEmail'"
+          [disabled]="isView"
         >
         </codx-input>
       </div>
@@ -1119,6 +1175,7 @@
         [formModel]="form.formModel"
         [Group]="form.formGroup"
         [field]="'webPage'"
+        [disabled]="isView"
       >
       </codx-input>
     </div>
@@ -1130,6 +1187,7 @@
           [formModel]="form.formModel"
           [Group]="form.formGroup"
           field="jobTitle"
+          [disabled]="isView"
         >
         </codx-input>
       </div>
@@ -1140,6 +1198,7 @@
           [formModel]="form.formModel"
           [Group]="form.formGroup"
           field="department"
+          [disabled]="isView"
         >
         </codx-input>
       </div>
@@ -1151,6 +1210,7 @@
         [formModel]="form.formModel"
         [Group]="form.formGroup"
         [field]="'memo'"
+        [disabled]="isView"
       >
       </codx-input>
     </div>
@@ -1168,7 +1228,7 @@
         <codx-input
           [formModel]="form.formModel"
           [Group]="form.formGroup"
-          [disabled]="action == 'edit' || disabledShowInput"
+          [disabled]="action == 'edit' || disabledShowInput || isView"
           [placeholder]="action != 'edit' ? planceHolderAutoNumber : ''"
           [field]="funcID == 'CM0103' ? 'partnerID' : 'competitorID'"
         >
@@ -1194,7 +1254,7 @@
               [objectId]="data?.recID"
               [objectType]="form.formModel.entityName"
               [objectName]="getNameCrm(data)"
-              [isAllowEdit]="true"
+              [isAllowEdit]="!isView"
               [isDefaulImg]="true"
               [imgOn]="data?.modifiedOn"
               (handleInput)="changeAvatar()"
@@ -1215,6 +1275,7 @@
       [formModel]="form.formModel"
       [Group]="form.formGroup"
       [field]="funcID == 'CM0103' ? 'partnerName' : 'competitorName'"
+      [disabled]="isView"
     >
     </codx-input>
   </div>
@@ -1226,6 +1287,7 @@
         [formModel]="form.formModel"
         [Group]="form.formGroup"
         field="shortName"
+        [disabled]="isView"
       >
       </codx-input>
     </div>
@@ -1235,6 +1297,7 @@
         [formModel]="form.formModel"
         [Group]="form.formGroup"
         field="taxCode"
+        [disabled]="isView"
       >
       </codx-input>
     </div>
@@ -1247,6 +1310,7 @@
       (valueChange)="valueChangeAdress($event)"
       (focus)="focus($event)"
       field="address"
+      [disabled]="isView"
     >
     </codx-input>
   </div>
@@ -1258,6 +1322,7 @@
         [formModel]="form.formModel"
         [Group]="form.formGroup"
         field="phone"
+        [disabled]="isView"
       >
       </codx-input>
     </div>
@@ -1267,6 +1332,7 @@
         [formModel]="form.formModel"
         [Group]="form.formGroup"
         field="faxNo"
+        [disabled]="isView"
       >
       </codx-input>
     </div>
@@ -1277,6 +1343,7 @@
       [formModel]="form.formModel"
       [Group]="form.formGroup"
       field="webPage"
+      [disabled]="isView"
     >
     </codx-input>
   </div>
@@ -1286,6 +1353,7 @@
       [formModel]="form.formModel"
       [Group]="form.formGroup"
       field="ceo"
+      [disabled]="isView"
     >
     </codx-input>
   </div>
@@ -1297,6 +1365,7 @@
       [formModel]="form.formModel"
       [Group]="form.formGroup"
       field="industries"
+      [disabled]="isView"
     >
     </codx-input>
     <!-- <codx-label [formModel]="form.formModel" fiedName="Industries">
@@ -1319,6 +1388,7 @@
       [formModel]="form.formModel"
       [Group]="form.formGroup"
       field="memo"
+      [disabled]="isView"
     >
     </codx-input>
   </div>

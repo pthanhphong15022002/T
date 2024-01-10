@@ -17,7 +17,7 @@
             #dropCalendar
             cssPopup="h-350px w-550px"
             [value]="date"
-            [disabled]="action == 'edit'"
+            [disabled]="isView || action == 'edit'"
             [selectedType]="'y'"
             [displayOption]="ops"
             cssClass="w-100"
@@ -29,7 +29,7 @@
           </codx-label>
           <codx-input
             #codxInput
-            [disabled]="action == 'edit'"
+            [disabled]="isView || action == 'edit'"
             [formModel]="form.formModel"
             [crrValue]="businessLineID"
             (valueChange)="valueChange($event)"
@@ -46,6 +46,7 @@
             [min]="0"
             (valueChange)="valueChangeTarget($event, 'input')"
             field="target"
+            [disabled]="isView"
           >
           </codx-input>
         </div>
@@ -56,7 +57,7 @@
             [formModel]="form.formModel"
             [crrValue]="data?.currencyID"
             (valueChange)="valueChange($event)"
-            field="currencyID"
+            field="currencyID"[disabled]="isView"
           >
           </codx-input>
         </div>
@@ -78,7 +79,7 @@
               </codx-label>
             </div>
           </div>
-          <div class="d-flex justify-content-end align-content-center">
+          <div class="d-flex justify-content-end align-content-center" *ngIf="!isView">
             <button
               type="button"
               class="btn btn-sm btn-icon btn-light-primary"
@@ -104,7 +105,7 @@
     </ng-container>
   </ng-template>
   <ng-template #footer>
-    <div class="d-flex align-items-center justify-content-between">
+    <div class="d-flex align-items-center justify-content-between" *ngIf="!isView">
       <button
         type="button"
         class="btn btn-outline-primary"
@@ -163,7 +164,7 @@
               <div
                 class="cursor-pointer d-flex justify-content-between has-action-menu-od py-1"
               >
-                <div class="action-menu-od me-1" (click)="removeUser(item)">
+                <div *ngIf="!isView" class="action-menu-od me-1" (click)="removeUser(item)">
                   <i class="icon-close text-danger icon-16"></i>
                 </div>
                 <div

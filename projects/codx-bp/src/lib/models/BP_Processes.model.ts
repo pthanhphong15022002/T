@@ -22,7 +22,7 @@ export class BP_Processes {
   versionNo: string;
   versionOn: Date;
   versions: BP_ProcessRevisions[];
-  permissions: BP_ProcessPermissions[];
+  permissions: BP_Processes_Permissions[];
   phases: number;
   activities: number;
   views: number;
@@ -112,7 +112,7 @@ export class tmpInforSentEMail {
   saveTemplate: boolean;
 }
 
-export class BP_ProcessPermissions {
+export class BP_Processes_Permissions {
   recID: string;
   id: string;
   objectName: string;
@@ -128,7 +128,9 @@ export class BP_ProcessPermissions {
   share: boolean;
   upload: boolean;
   allowPermit: boolean;
+  allowUpdateStatus: string;
   isActive: boolean;
+  autoCreate: string;
   download: boolean;
   publish: boolean;
   memberType: string;
@@ -139,7 +141,6 @@ export class BP_ProcessPermissions {
   approvalRule: string;
   approvedBy: string;
   approvedOn: Date;
-  autoCreate: boolean;
   createdOn: Date;
   createdBy: string;
   modifiedOn: Date;
@@ -171,11 +172,11 @@ export class tmpPermission{
   urlPath: string;
   reason: string;
   memo: string;
-  permissions: BP_ProcessPermissions[];
-  toPermission: BP_ProcessPermissions[];
-  byPermission: BP_ProcessPermissions[];
-  ccPermission: BP_ProcessPermissions[];
-  fromPermission: BP_ProcessPermissions[];
+  permissions: BP_Processes_Permissions[];
+  toPermission: BP_Processes_Permissions[];
+  byPermission: BP_Processes_Permissions[];
+  ccPermission: BP_Processes_Permissions[];
+  fromPermission: BP_Processes_Permissions[];
 }
 
 export class ColumnsModel{

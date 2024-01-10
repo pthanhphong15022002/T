@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ApiHttpService } from 'codx-core';
+import { ApiHttpService, NotificationsService } from 'codx-core';
 import { DataRequest } from 'codx-core/public-api';
 import {
   BehaviorSubject,
@@ -15,7 +15,7 @@ import {
 })
 export class CodxBpService {
   viewProcesses = new BehaviorSubject<any>(null);
-  constructor(private api: ApiHttpService) {}
+  constructor(private api: ApiHttpService, private notiSv: NotificationsService) {}
   getFlowChartNew = new BehaviorSubject<any>(null);
   crrFlowChart = this.getFlowChartNew.asObservable();
 
@@ -75,4 +75,42 @@ export class CodxBpService {
       [funcID, entityName, key]
     );
   }
+
+  checkValidate(gridViewSetup, data, count = 0) {
+    var countValidate = count;
+    var keygrid = Object.keys(gridViewSetup);
+    var keymodel = Object.keys(data);
+    for (let index = 0; index < keygrid.length; index++) {
+      if (gridViewSetup[keygrid[index]].isRequire == true) {
+        for (let i = 0; i < keymodel.length; i++) {
+          if (keygrid[index].toLowerCase() == keymodel[i].toLowerCase()) {
+            if (
+              data[keymodel[i]] == null ||
+              String(data[keymodel[i]]).match(/^ *$/) !== null
+            ) {
+              this.notiSv.notifyCode(
+                'SYS009',
+                0,
+                '"' + gridViewSetup[keygrid[index]].headerText + '"'
+              );
+              countValidate++;
+              return countValidate;
+            }
+          }
+        }
+      }
+    }
+    return countValidate;
+  }
+
+  getPositionsByUserID(userID) {
+    return this.api.execSv<any>(
+      'SYS',
+      'AD',
+      'UsersBusiness',
+      'GetUserByIDAsync',
+      [userID]
+    );
+  }
 }
+

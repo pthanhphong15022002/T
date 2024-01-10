@@ -312,6 +312,9 @@ export class CmCustomerComponent
       case 'SYS04':
         this.copy(data);
         break;
+      case 'SYS05':
+        this.viewCM(data);
+        break;
       case 'CM0105_1':
       case 'CM0101_1':
         this.setIsBlackList(data, true);
@@ -630,6 +633,57 @@ export class CmCustomerComponent
           });
       });
     });
+  }
+
+  viewCM(data){
+    this.isButton = false;
+    if (data) {
+      this.view.dataService.dataSelected = data;
+    }
+    this.view.dataService
+      .edit(this.view.dataService.dataSelected)
+      .subscribe((res) => {
+        this.cache.functionList(this.funcID).subscribe((fun) => {
+          let option = new SidebarModel();
+          option.DataService = this.view.dataService;
+          var formMD = new FormModel();
+          formMD.entityName = fun.entityName;
+          formMD.formName = fun.formName;
+          formMD.gridViewName = fun.gridViewName;
+          formMD.funcID = this.funcID;
+          option.FormModel = JSON.parse(JSON.stringify(formMD));
+          option.Width = '800px';
+
+          var obj = {
+            action: 'edit',
+            title: this.titleAction,
+            isView: true
+          };
+          var dialog = this.callfc.openSide(
+            PopupAddCmCustomerComponent,
+            obj,
+            option
+          );
+          dialog.closed.subscribe((e) => {
+            this.isButton = true;
+            if (!e?.event) this.view.dataService.clear();
+            if (e && e.event != null) {
+              let data = e.event[0];
+              let lstContact = e.event[1] ?? [];
+              let lstAddress = e.event[2] ?? [];
+              data.modifiedOn = new Date();
+              this.dataSelected = JSON.parse(JSON.stringify(data));
+              if (this.customerDetail) {
+                this.customerDetail.getOneCustomerDetail(this.dataSelected);
+                this.customerDetail.onChangeContact(lstContact);
+                this.customerDetail.onChangeAddress(lstAddress);
+              }
+              this.view.dataService.update(this.dataSelected, true).subscribe();
+              this.detectorRef.detectChanges();
+            }
+          });
+        });
+      });
   }
 
   async delete(data: any) {
