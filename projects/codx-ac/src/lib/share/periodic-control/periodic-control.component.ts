@@ -56,6 +56,7 @@ export class PeriodicControlComponent extends UIComponent {
         sameData: true,
         showFilter: false,
         showSearchBar: false,
+        showButton:false,
         model: {
           panelRightRef: this.template
         },
@@ -81,6 +82,12 @@ export class PeriodicControlComponent extends UIComponent {
   //#endregion Init
 
   //#region Event
+  viewChanged(event){
+    // if (event?.view) {
+    //   (this.view as any).pageTitle.showBreadcrumbs(false);
+    // }
+  }
+
   clickMF(event:any,data:any=null){
     if(event?.data){
       let id = event?.data?.buttonName;
@@ -153,6 +160,7 @@ export class PeriodicControlComponent extends UIComponent {
   }
 
   changeDataMF(event:any,type='view'){
+    console.log(event);
     event.reduce((pre, element) => {
       element.isblur = false;
       element.isbookmark = true;
@@ -163,13 +171,13 @@ export class PeriodicControlComponent extends UIComponent {
       }, {});
   }
 
-  onCollaple(){
-    this.oData = [this.oData.shift()];
-    this.view.dataService.request.page = 1;
-    this.showLess = false;
-    this.showAll = false;
-    this.detectorRef.detectChanges();
-  }
+  // onCollaple(){
+  //   this.oData = [this.oData.shift()];
+  //   this.view.dataService.request.page = 1;
+  //   this.showLess = false;
+  //   this.showAll = false;
+  //   this.detectorRef.detectChanges();
+  // }
 
   runPeriodic(runtype:any,storeName:any,recID:any,runMode:any,text:any){
     this.api.exec('AC','RunPeriodicBusiness','RunPeriodicAsync',[
@@ -180,11 +188,12 @@ export class PeriodicControlComponent extends UIComponent {
       text
     ]).pipe(takeUntil(this.destroy$))
     .subscribe((res:any)=>{
-      if (res && !res?.isError) {
-        this.oData = [res?.data];
-        if(this.showLess) this.showLess = false;
+      if (res && !res.isError) {
         this.notification.notifyCode('AC0029', 0, text);
-        this.detectorRef.detectChanges();
+        if (res.data) {
+          this.oData = [res?.data];
+          this.detectorRef.detectChanges();
+        }
       }else{
         this.notification.notifyCode('AC0030', 0, text);
       }

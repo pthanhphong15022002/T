@@ -138,6 +138,21 @@ export class DynamicFormComponent extends UIComponent {
         sendMailActiveMF[0].disabled = true;
       }
     }
+    //ẩn moretakGroup
+    if (e) {
+      e.forEach((x) => {
+        switch (x.functionID) {
+          case 'TMS03601': //Hoàn tất
+          case 'TMS03602': //đang thực hiện
+          case 'TMS03603': //Hoãn lại
+          case 'TMS03604': //Hủy
+            x.disabled = data?.status == x?.data?.defaultValue;
+            break;
+          default:
+            break;
+        }
+      });
+    }
   }
   clickMF(evt?: any, data?: any) {
     this.function = evt;
@@ -196,6 +211,12 @@ export class DynamicFormComponent extends UIComponent {
         this.dropTenant(data);
         break;
       }
+      case 'TMS03601': //Hoàn tất
+      case 'TMS03602': //đang thực hiện
+      case 'TMS03603': //Hoãn lại
+      case 'TMS03604': //Hủy
+        this.updateStatus(data);
+        break;
       default:
         break;
     }
@@ -598,68 +619,30 @@ export class DynamicFormComponent extends UIComponent {
           });
         }
       });
-
-    //code cu
-    // var process = await firstValueFrom(
-    // //   this.api.execSv<any>(
-    // //     'DP',
-    // //     'ERM.Business.DP',
-    // //     'ProcessesBusiness',
-    // //     'GetAsync',
-    // //     [data?.processID]
-    // //   )
-    // );
-    // if (process) {
-    //   this.api
-    //     .execSv<any>(
-    //       'DP',
-    //       'ERM.Business.DP',
-    //       'ProcessGroupsBusiness',
-    //       'GetAsync'
-    //     )
-    //     .subscribe((groups) => {
-    //       if (groups && groups.length > 0) {
-    //         this.cache
-    //           .gridViewSetup('DPProcesses', 'grvDPProcesses')
-    //           .subscribe((res) => {
-    //             let dialogModel = new DialogModel();
-    //             dialogModel.IsFull = true;
-    //             dialogModel.zIndex = 999;
-    //             let formModel = new FormModel();
-    //             formModel.entityName = 'DP_Processes';
-    //             formModel.formName = 'DPProcesses';
-    //             formModel.gridViewName = 'grvDPProcesses';
-    //             formModel.funcID = 'DP01';
-    //             // dialogModel.DataService = this.view?.dataService;
-    //             dialogModel.FormModel = JSON.parse(JSON.stringify(formModel));
-    //             if (res) {
-    //               var obj = {
-    //                 action: 'edit',
-    //                 titleAction: evt ? evt.text : '',
-    //                 gridViewSetup: res,
-    //                 lstGroup: groups,
-    //                 systemProcess: '2',
-    //                 data: process,
-    //               };
-    //               this.callfc.openForm(
-    //                 PopupAddDynamicProcessComponent,
-    //                 '',
-    //                 Util.getViewPort().height - 100,
-    //                 Util.getViewPort().width - 100,
-    //                 '',
-    //                 obj,
-    //                 '',
-    //                 dialogModel
-    //               );
-    //             }
-    //           });
-    //       }
-    //     });
-    // }
   }
   //#endregion
 
   selectedChange(e: any) {
     this.itemSelected = e?.data;
   }
+  //----UpdateStatus Giai Đoạn-----//
+  updateStatus(data) {
+    let status = this.function?.data?.defaultValue;
+    if (data.status == status) return;
+    this.api
+      .exec<any>('TM', 'TaskGroupBusiness', 'UpdateStatusTaskGroupsAsync', [
+        data.taskGroupID,
+        status,
+      ])
+      .subscribe((res) => {
+        if (res) {
+          data.status = status;
+          this.viewBase.dataService
+            .update(JSON.parse(JSON.stringify(data)), true)
+            .subscribe();
+          this.notifySvr.notifyCode('SYS007');
+        }
+      });
+  }
+  //------------- END--------------//
 }
