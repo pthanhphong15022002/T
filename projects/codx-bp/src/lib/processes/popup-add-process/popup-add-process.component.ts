@@ -18,6 +18,7 @@ import {
   DialogRef,
   FormModel,
   NotificationsService,
+  RequestOption,
   Util,
 } from 'codx-core';
 import { FormPropertiesFieldsComponent } from './form-properties-fields/form-properties-fields.component';
@@ -988,7 +989,10 @@ export class PopupAddProcessComponent {
   }
 
   ngOnInit(): void {
-    if (this.action == 'add') this.getCacheCbxOrVll();
+    if (this.action == 'edit') {
+      this.getAvatar(this.data?.recID, this.data?.processName);
+    }
+    this.getCacheCbxOrVll();
   }
 
   ngAfterViewInit(): void {}
@@ -1005,7 +1009,7 @@ export class PopupAddProcessComponent {
       .subscribe((item) => {
         if (item) {
           this.vllBP002 = item;
-          this.setDefaultTitle();
+          if (this.action == 'add') this.setDefaultTitle();
         }
       });
   }
@@ -1165,7 +1169,7 @@ export class PopupAddProcessComponent {
       '',
       this.dialog?.formModel?.funcID,
       objectID,
-      'DP_Processes',
+      'BP_Processes',
       'inline',
       1000,
       proccessName,
@@ -1174,6 +1178,7 @@ export class PopupAddProcessComponent {
     ];
     this.api
       .execSv<any>('DM', 'DM', 'FileBussiness', 'GetAvatarAsync', avatar)
+      .pipe(takeUntil(this.destroyFrom$))
       .subscribe((res) => {
         if (res && res?.url) {
           this.linkAvatar = environment.urlUpload + '/' + res?.url;
@@ -1306,13 +1311,16 @@ export class PopupAddProcessComponent {
   removeUser(index) {
     // let config = new AlertConfirmInputConfig();
     // config.type = 'YesNo';
-    this.notiSv.alertCode('SYS030').subscribe((x) => {
-      if (x.event.status == 'Y') {
-        this.data.permissions.splice(index, 1);
-        // this.changeDetectorRef.detectChanges();
-        this.detectorRef.markForCheck();
-      }
-    });
+    this.notiSv
+      .alertCode('SYS030')
+      .pipe(takeUntil(this.destroyFrom$))
+      .subscribe((x) => {
+        if (x.event.status == 'Y') {
+          this.data.permissions.splice(index, 1);
+          // this.changeDetectorRef.detectChanges();
+          this.detectorRef.markForCheck();
+        }
+      });
   }
 
   checkAssignRemove(i) {
@@ -1427,6 +1435,7 @@ export class PopupAddProcessComponent {
             .update(res.update)
             .subscribe();
           res.update.modifiedOn = new Date();
+          this.dialog.close(res.update);
         }
       });
   }
@@ -1434,12 +1443,14 @@ export class PopupAddProcessComponent {
   beforeSave(op) {
     let data = [];
     op.className = 'ProcessesBusiness';
+    op.service = 'BP';
     data = [this.data];
     if (this.action == 'add' || this.action == 'copy') {
-      op.methodName = 'AddAsync';
+      op.methodName = 'AddProcessAsync';
     } else {
-      op.methodName = 'UpdateAsync';
+      op.methodName = 'UpdateProcessAsync';
     }
     op.data = data;
+    return true;
   }
 }
