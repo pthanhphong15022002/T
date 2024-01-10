@@ -565,7 +565,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
   getAutoNumber() {
     this.cmService
       .getFieldAutoNoDefault(
-        this.dialog.formModel.funcID,
+        "CM0204",
         this.dialog.formModel.entityName
       )
       .subscribe((res) => {
