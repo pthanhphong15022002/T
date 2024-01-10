@@ -63,8 +63,6 @@
   width: 20% !important;
 }
 
-
-
 .line-clamp {
   display: -webkit-box;
   -webkit-line-clamp: 1;
@@ -73,10 +71,9 @@
   /* background-color: #fff; */
   /* ADDED */
   /* max-height: 3em; */
-
 }
 
-.card-body.p-0>.p-3 {
+.card-body.p-0 > .p-3 {
   padding: 0 !important;
 }
 
@@ -92,7 +89,6 @@
   overflow: hidden;
   /* ADDED */
   max-height: 3em;
-
 }
 
 .card-no-body .card-body {
@@ -112,14 +108,14 @@
 /* codx-processsteps {
   height: 100%;
 } */
-.status{
+.status {
   position: relative;
   top: -120px;
 }
 /* :host ::ng-deep codx-wrapper{
   overflow: hidden !important;
 } */
-.process-name{
+.process-name {
   display: -webkit-inline-box !important;
 }
 
@@ -153,6 +149,7 @@
   margin-bottom: 6px;
 }
 
-.h-35px{
+.h-35px {
   height: 35px !important;
 }
+
