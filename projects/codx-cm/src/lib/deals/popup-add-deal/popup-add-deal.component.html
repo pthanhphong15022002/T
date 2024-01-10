@@ -145,6 +145,28 @@
     </div>
   </div>
   <div class="row">
+    <div class="col-12">
+      <div class="form-group">
+        <codx-label
+          fiedName="DealValueTo"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          default="Ngân sách"
+        >
+        </codx-label>
+        <codx-input
+          type="number"
+          field="dealValueTo"
+          [min]="0"
+          [placeholder]="gridViewSetup?.DealValueTo?.description"
+          [crrValue]="deal?.dealValueTo"
+          (valueChange)="valueChange($event)"
+        >
+        </codx-input>
+      </div>
+    </div>
+  </div>
+  <div class="row">
     <div class="col-6">
       <div class="form-group">
         <codx-label
@@ -157,6 +179,7 @@
           type="number"
           field="dealValue"
           [min]="0"
+          [placeholder]="gridViewSetup?.DealValue?.description"
           [crrValue]="deal?.dealValue"
           (valueChange)="valueChange($event)"
         >

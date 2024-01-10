@@ -415,6 +415,10 @@ export class PopupAddDealComponent
           this.deleteOwner('U', 'C', '0', this.deal.consultantID, $event.field);
         }
       }
+      //lãi gộp
+      if ($event.field == 'dealValueTo') {
+        this.deal['grossProfit'] = this.deal['dealValueTo'] - this.totalCost;
+      }
     }
   }
 
