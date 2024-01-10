@@ -1,38 +1,59 @@
 import { AfterViewInit, Component, Injector, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { ApiHttpService, ButtonModel, CRUDService, CodxGridviewV2Component, DataService, SidebarModel, UIComponent, Util, ViewModel, ViewType } from 'codx-core';
-import { PopupAddSalcoeffempComponent } from './popup/popup-add-salcoeffemp/popup-add-salcoeffemp.component';
+import { AuthStore, ButtonModel, CRUDService, CodxGridviewV2Component, DataService, DialogModel, NotificationsService, SidebarModel, UIComponent, Util, ViewModel, ViewType } from 'codx-core';
+import { PopupAddSalCoeffEmpComponent } from './popup/popup-add-salcoeffemp/popup-add-salcoeffemp.component';
+import { PopupCoppySalCoeffEmpComponent } from './popup/popup-coppy-salcoeffemp/popup-coppy-salcoeffemp.component';
 
 @Component({
-  selector: 'lib-salcoeffemp',
+  selector: 'pr-salcoeffemp',
   templateUrl: './salcoeffemp.component.html',
   styleUrls: ['./salcoeffemp.component.css']
 })
-export class SalcoeffempComponent extends UIComponent{
+export class SalcoeffempComponent extends UIComponent implements OnInit, AfterViewInit{
   
 
   views:ViewModel[];
   buttonAdd:ButtonModel[];
-  dataServiceHR:DataService;
+  dtServiceOrgUnit:CRUDService;
   columnsGrid:any[] = [];
   gridViewSetUp:any;
-  dataValues:string = "";
+  dataValues:any;
+  filters:any = {};
+  loading:boolean = false;
+  userPermission:any;
+  lstSalCoeffs:any[] = [];
+  mssgConfirm:string = "";
   @ViewChild("tmpLeft") tmpLeft:TemplateRef<any>;
   @ViewChild("tmpRight") tmpRight:TemplateRef<any>;
   @ViewChild("tmpEmployee") tmpEmployee:TemplateRef<any>;
   @ViewChild("tmpData") tmpData:TemplateRef<any>;
+  @ViewChild("tmpTooltip") tmpTooltip:TemplateRef<any>;
   @ViewChild("codxGridViewV2") codxGridViewV2 : CodxGridviewV2Component;
-
-
   constructor
   (
-    private injector:Injector
+    private injector:Injector,
+    private notiSV: NotificationsService,
+    private auth:AuthStore
   ) 
   {
     super(injector);
+    this.dtServiceOrgUnit = new CRUDService(this.injector);
+    this.dtServiceOrgUnit.idField = "orgUnitID";
+    this.dtServiceOrgUnit.parentField = "ParentID";
   }
 
-  override onInit(): void {
+  onInit(): void {
+    let crrDate = new Date();
+    this.filters["DowCode"] = crrDate.getFullYear() + "/" + crrDate.getMonth() + 1;
+    this.dataValues = JSON.stringify(this.filters);
+    this.cache.message("HR049")
+    .subscribe((mssg:any) => {
+      if(mssg)
+      {
+        this.mssgConfirm = mssg.defaultName ?? mssg.customName;
+      }
+    });
   }
+
   ngAfterViewInit(): void {
     this.views = [
       {
@@ -42,9 +63,6 @@ export class SalcoeffempComponent extends UIComponent{
         model:{
           panelLeftRef: this.tmpLeft,
           panelRightRef: this.tmpRight,
-          widthLeft:300,
-          // minWidthleft:'250px', 
-          // maxWidthleft:'400px', 
           collapsed: true,
           resizable: true
         }
@@ -53,115 +71,215 @@ export class SalcoeffempComponent extends UIComponent{
     this.buttonAdd = [{
       id: 'btnAdd',
     }];
-    this.dataServiceHR = new CRUDService(this.injector);
-    this.dataServiceHR.idField = "orgUnitID";
     this.getColumns();
-    this.getDataSource();
-  }
-  dataSources:any[] = [];
-  // get data sources
-  getDataSource(){
-    this.dataSources = [
-      {
-        employeeID:"ELV00694",
-        employee:
-        {
-          employeeID:"ELV00694",
-          employeeName:"Nguyễn Thị Tuyết Mận",
-          positionName:"Phòng ban CODX"
-        },
-        kpi1:0.7,
-        kpi2:1,
-        hs01:1,
-        hs02:2,
-        dgcn:0.5
-      },
-      {
-        employeeID:"ELV00696",
-        employee:
-        {
-          employeeID:"ELV00696",
-          employeeName:"Hà Giang Thanh",
-          positionName:"Phòng ban CODX"
-        },
-        kpi1:0.7,
-        kpi2:1,
-        hs01:1,
-        hs02:2,
-        dgcn:0.5
-      },
-      {
-        employeeID:"ELV00753",
-        employee:
-        {
-          employeeID:"ELV00753",
-          employeeName:"Nguyễn Thị Tuyết Anh",
-          positionName:"Phòng ban CODX"
-        },
-        kpi1:0.7,
-        kpi2:1,
-        hs01:1,
-        hs02:2,
-        dgcn:0.5
-      },
-      {
-        employeeID:"ELV00767",
-        employee:
-        {
-          employeeID:"ELV00767",
-          employeeName:"Văn Thị Thủy",
-          positionName:"Phòng ban CODX"
-        },
-        kpi1:0.7,
-        kpi2:1,
-        hs01:1,
-        hs02:2,
-        dgcn:0.5
-      }
-    ];
+    this.getUserPermission();
+    this.getListSalCoeff();
+    this.detectorRef.detectChanges();
   }
 
-  // get LS_SalCoeff
+  // get columns grid
   getColumns(){
-    this.columnsGrid.push(
-    {
-      field: 'employeeID', // phải viết field chữ thường nha. Viết hoa core đọc ko dc
-      template: this.tmpEmployee,
-      width:300
-    });
     this.api.execSv("HR","ERM.Business.LS","SalCoeffBusiness","GetAsync")
     .subscribe((res:any) => {
-      if(res[0].length > 0){
-        res[0].forEach(item => {
+      this.columnsGrid.push(
+      {
+        field: 'employeeID',
+        template: this.tmpEmployee,
+        width:300
+      });
+      if(res.length > 0)
+      {
+        res.forEach(item => {
           this.columnsGrid.push({
-            headerText: item.CoeffName,
-            field: item.CoeffCode.toLowerCase(),
+            headerText: item.coeffName,
+            field:  item.coeffCode,
             refField: 'coeffCode',
             template:this.tmpData,
             width:100
           });
         });
       }
+      this.detectorRef.detectChanges();
     });
   }
 
   // double click gridview
   onDoubleClick(event){
-    this.view.dataService.addNew()
-    .subscribe((model:any) => {
-      if(model)
+    if(this.userPermission.write == "9"|| this.userPermission.isAdmin)
+    {
+      this.view.dataService.addNew()
+      .subscribe((model:any) => {
+        if(model)
+        {
+          model.employeeID = event.rowData.employeeID;
+          let obj = {
+            data:model,
+            employeeID : event.rowData.employeeID,
+            dowCode:this.filters.DowCode,
+            userPermission : this.userPermission,
+            headerText : this.view.function.defaultName ?? this.view.function.customName
+          };
+          let option = new SidebarModel();
+          option.Width = '550px';
+          option.FormModel = this.view.formModel;
+          option.DataService = this.view.dataService;
+          this.callfc.openSide(PopupAddSalCoeffEmpComponent,obj,option,this.view.funcID)
+          .closed.subscribe((res:any) => {
+            if(res.event)
+            {
+              this.codxGridViewV2?.refresh();
+            }
+          });
+        }
+      });
+    }
+  }
+
+  // onAction -- filter change
+  onAction(event){
+    if(event && event.data && event.data?.length > 0)
+    {
+      this.filters["DowCode"] = "";
+      this.filters["GroupSalCode"] = "";
+      event.data.forEach(x => this.filters[x.field] = x.value);
+      this.dataValues = JSON.stringify(this.filters);
+      this.detectorRef.detectChanges();
+      this.codxGridViewV2?.refresh();
+    }
+  }
+
+  //selectionChange -- select orgUnitID
+  onSelectionChange(event:any){
+    if(event?.data?.orgUnitID)
+    {
+      this.filters["OrgUnitID"] = event.data.orgUnitID;
+      this.dataValues = JSON.stringify(this.filters);
+      this.detectorRef.detectChanges();
+      this.codxGridViewV2?.refresh();
+    }
+    if(!this.loading)
+    {  this.loading = true;
+      this.detectorRef.detectChanges();
+    }
+  }
+
+  //valueChange
+  valueChange(event){
+    if(event)
+    {
+      this.filters["IsReadSaved"] = event.data;
+      this.dataValues = JSON.stringify(this.filters);
+      this.detectorRef.detectChanges();
+      this.codxGridViewV2?.refresh();
+    }
+  }
+
+  // onDatabound -- set row count page
+  onDatabound(){
+    this.view.dataService.rowCount = this.codxGridViewV2?.dataService.rowCount ?? 0;
+    this.view.setBreadcrumbs();
+    this.detectorRef.detectChanges();
+  }
+
+  // changeDataMF
+  changeDataMF(event:any){
+    event.forEach((x:any) => { 
+      if(x.functionID == 'SYS02' || x.functionID == 'SYS04' && (this.userPermission.write == "9" || this.userPermission.isAdmin))
       {
-        let option = new SidebarModel();
-        option.Width = '550px';
-        option.FormModel = this.view.formModel;
-        option.DataService = this.view.dataService;
-        this.callfc.openSide(PopupAddSalcoeffempComponent,{data:model},option,this.view.funcID).closed.subscribe((res:any) => {
-        });
+        x.disabled = false;
+        x.isbookmark = true;
+        x.isblur = false;
+      }
+      else x.disabled = true;
+    });
+  }
+
+  // clickMF
+  clickMF(event){
+    if(!this.codxGridViewV2.selectedIndexes || this.codxGridViewV2.selectedIndexes?.length == 0)
+    {
+      this.notiSV.notifyCode("HR040");
+      return;
+    }
+    if(event.functionID == "SYS02")
+    {
+      let mssg = Util.stringFormat(this.mssgConfirm,this.filters["DowCode"]);
+      this.notiSV.alertCode(mssg)
+      .subscribe((confirm:any) => {
+        if(confirm && confirm.event && confirm.event.status == "Y")
+        {
+          let lstEmployeeID = this.codxGridViewV2.selectedIndexes.map(idx => this.codxGridViewV2.dataSource[idx].employeeID);
+          this.api.execSv("HR","PR","SalCoeffEmpBusiness","DeleteAsync",[lstEmployeeID,this.filters["DowCode"]])
+          .subscribe((res:any) => {
+            if(res)
+            {
+              this.notiSV.notifyCode("SYS008");
+              this.codxGridViewV2.selectedIndexes.forEach((idx:number) => this.codxGridViewV2.deleteRow(this.codxGridViewV2.dataSource[idx],true));
+              this.view.dataService.rowCount = this.codxGridViewV2.dataService.rowCount;
+              this.view.setBreadcrumbs();
+            }
+            else this.notiSV.notifyCode("SYS022");
+          });
+        }
+      });
+    }
+    else if(event.functionID == "SYS04")
+    {
+      if(this.codxGridViewV2.selectedIndexes.length > 1)
+      {
+        this.notiSV.notifyCode("HR038");
+        return;
+      }
+      let dataSelected = {...this.codxGridViewV2.rowDataSelected};
+      let obj = {
+        data: dataSelected,
+        dowCode: this.filters.DowCode,
+        headerText : event.text + " " + this.view.function.defaultName ?? this.view.function.customName 
+      };
+      let option = new SidebarModel();
+      option.Width = '550px';
+      option.FormModel = this.view.formModel;
+      option.DataService = this.view.dataService;
+      this.callfc.openSide(PopupCoppySalCoeffEmpComponent,obj,option,this.view.funcID)
+      .closed.subscribe((res:any) => {
+        if(res.event)
+        {
+          this.codxGridViewV2.refresh();
+        }
+      });
+    }
+  }
+
+  // coppy từ KowDs -- get permission
+  getUserPermission() {
+    this.api.execSv<any>(
+      'HR',
+      'Core',
+      'DataBusiness',
+      'GetUserPermissionAsync',
+      [this.view.entityName,this.view.funcID]
+    ).subscribe((res:any) => {
+      this.userPermission = res;
+      this.detectorRef.detectChanges();
+    });
+  }
+
+  // get list LS_SalCoeff
+  getListSalCoeff(){
+    this.api.execSv("HR","LS","SalCoeffBusiness","GetAsync")
+    .subscribe((res:any) => {
+      if(res && res.length > 0)
+      {
+        this.lstSalCoeffs = res;
       }
     });
   }
-  // filterChange 
-  filterChange($event){
-    debugger
+
+  // clickShowTooltip
+  clickShowTooltip(){
+    let dialog = new DialogModel();
+    dialog.FormModel = this.view.formModel;
+    this.callfc.openForm(this.tmpTooltip,"",300,0,this.view.funcID,null,"",dialog);
   }
+  
 }

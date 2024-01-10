@@ -4,13 +4,20 @@
     <div class="container">
         <div class="row">
             <div class="form-group">
-                <codx-label [formModel]="dialog.formModel" name="EmployeeID" [default]="'Nhân viên'"></codx-label>
-                <codx-input [formModel]="dialog.formModel" [field]="'EmployeeID'" [crrValue]=""></codx-input>
+                <codx-label [formModel]="dialog?.formModel" name="lblEmployee" [default]="'Nhân viên'"></codx-label>
+                <codx-input [formModel]="dialog?.formModel" [field]="'employeeID'" [crrValue]="data.employeeID" (valueChange)="valueChange($event)"></codx-input>
             </div>
         </div>
         <div class="row">
             <div class="form-group">
-                <codx-input type="checkbox" [formModel]="dialog.formModel" name="" field="checked" [crrValue]="checked" [label]="'Hiển thị tất cả hệ số'" [labelPosition]="'After'"></codx-input>
+                <codx-input 
+                    type="checkbox" 
+                    field="checked" 
+                    [checked]="false" 
+                    [label]="'Hiển thị tất cả hệ số'" 
+                    [labelPosition]="'after'" 
+                    (valueChange)="viewAllCoeffCode($event)">
+                </codx-input>
             </div>
         </div>
         <div class="row">
@@ -19,15 +26,16 @@
                     *ngIf="columnGrids && columnGrids.length > 0"
                     #codxGridViewV2
                     [columnsGrid]="columnGrids"
-                    [entityName]="dialog.formModel.entityName"
-                    [hideMoreFunc]="true"
                     [autoFitColumns]="false"
                     [editOnClick]="true"
                     [autoAddRow]="false"
                     [showEmptyRecord]="false"
+                    [autoLoad]="false"
+                    [templateMore]="tmpMoreFunc"
+                    [editSettings]="editSettings"
                     [dataSource]="dataSources"
-                    [idField]="'coeffCode'"
-                    [rowHeight]="35">
+                    [idField]="'recID'"
+                    (cellChanged)="valueCellChange($event)">
                 </codx-gridview-v2>
             </div>
         </div>
@@ -40,6 +48,16 @@
 </ng-template>
 <ng-template #footer>
     <div class="d-flex justify-content-end w-100">
-        <button type="button" class="btn btn-primary">Lưu</button>
+        <button type="button" class="btn btn-primary" (click)="onSave()">Lưu</button>
     </div>
 </ng-template>
+<ng-template #tmpMoreFunc let-data>
+    <codx-mfunc
+        [dataItem]="data"
+        [formModel]="dialog.formModel"
+        (clickMF)="clickMF($event, data)"
+        (changeDataMF)="changeDataMF($event)"
+        type="hover"
+    ></codx-mfunc>
+</ng-template>
+
