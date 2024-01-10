@@ -72,7 +72,7 @@
 </ng-template>
 
 <ng-template #list let-data>
-    <div class="d-flex align-items-center border-bottom p-4" (click)="selectedItem(data)">
+    <div class="d-flex align-items-center border-bottom p-4 cursor-pointer" (click)="selectedItem(data)">
         {{data.customName}}
     </div>
 </ng-template>
