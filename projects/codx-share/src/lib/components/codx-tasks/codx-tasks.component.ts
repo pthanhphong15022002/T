@@ -104,6 +104,8 @@ export class CodxTasksComponent
   @ViewChild('contentTmp') contentTmp?: TemplateRef<any>;
   @ViewChild('headerTemp') headerTemp?: TemplateRef<any>;
   @ViewChild('popupToDoList') popupToDoList?: TemplateRef<any>;
+  @ViewChild('viewGanttChart') viewGanttChart!: TemplateRef<any>;
+  @ViewChild('ganttItems') ganttItems!: TemplateRef<any>;
 
   views: Array<ViewModel> = [];
   viewsDefault: Array<ViewModel> = [];
@@ -262,7 +264,7 @@ export class CodxTasksComponent
     this.resourceKanban.assemblyName = 'SYS';
     this.resourceKanban.className = 'CommonBusiness';
     this.resourceKanban.method = 'GetColumnsKanbanAsync';
-    this.resourceKanban.dataObj = '125125';
+    // this.resourceKanban.dataObj = '';
 
     this.request = new ResourceModel();
     this.request.service = 'TM';
@@ -287,7 +289,7 @@ export class CodxTasksComponent
     //this.getParams(); //cai nay lúc trước lọc ngày schedule
     this.getParam();
 
-    this.dataObj = JSON.stringify(this.dataObj);
+    // this.dataObj = JSON.stringify(this.dataObj);
   }
 
   afterLoad() {
@@ -502,10 +504,19 @@ export class CodxTasksComponent
         type: ViewType.content,
         active: false,
         sameData: false,
-        text: 'Cây',
-        icon: 'icon-account_tree',
+        text: this.user?.language == 'VN' ? 'Cây giao việc' : 'Tree Assign',
+        //icon: 'icon-account_tree',
         model: {
           panelLeftRef: this.treeView,
+        },
+      },
+      {
+        type: ViewType.gantt,
+        active: false,
+        sameData: true,
+        model: {
+          eventModel:this.taskSettings,
+          //template:this.ganttItems
         },
       },
     ];
@@ -524,15 +535,6 @@ export class CodxTasksComponent
           this.views = viewFunc.sort((a, b) => {
             return a.type - b.type;
           });
-          //Hao da sua core nen cmt lại cai này
-          // let viewModel ;
-          // this.views.forEach((x) => {
-          //   if (x.type == this.viewMode) {
-          //     x.active = true;
-          //     viewModel = x
-          //   }
-          // });
-          // this.view.viewChange(viewModel);
         }
       });
     } else this.views = this.viewsDefault;
@@ -1741,8 +1743,11 @@ export class CodxTasksComponent
       case 'SYS04':
         this.copy(data);
         break;
-      case 'sendemail':
+      case 'SYS05':
+        this.viewTask(data);
         break;
+      // case 'sendemail':
+      //   break;
       case 'TMT02015':
       case 'TMT02025':
       case 'TMT030115':
@@ -2106,7 +2111,12 @@ export class CodxTasksComponent
     TextField: 'userName',
     Title: 'Resources',
   };
-
+  taskSettings = {
+    id: 'taskID',
+    name: 'taskName',
+    startDate: 'startDate',
+    endDate: 'endDate',
+  };
   getCellContent(evt: any) {
     if (this.dayoff.length > 0) {
       for (let i = 0; i < this.dayoff.length; i++) {

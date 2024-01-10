@@ -15,9 +15,17 @@
         <i class="icon-cloud_upload icon-16 me-2"></i><codx-label default="Chọn tệp tin" fiedName="lblSelectFile" [formName]="formModel?.formName"> </codx-label>
       </span>
     </div>
+    <div class="profile-main-loader" *ngIf="isAI">
+      <div class="loader">
+        <svg class="circular-loader"viewBox="25 25 50 50" >
+          <circle class="loader-path" cx="50" cy="50" r="20" fill="none" stroke="#1A83EC" stroke-width="6" />
+        </svg>
+      </div>
+    </div>
     <ng-template #elseSelected>
       <span class="btn btn-sm btn-light btn-pill">
-        <i class="icon-cloud_upload icon-16 me-2"></i><codx-label default="Chọn tệp tin" fiedName="lblSelectFile" [formName]="formModel?.formName"> </codx-label>
+        <i class="icon-cloud_upload icon-16 me-2"></i>
+        <codx-label default="Chọn tệp tin" fiedName="lblSelectFile" [formName]="formModel?.formName"> </codx-label>
       </span>
     </ng-template>
   </div>
@@ -85,8 +93,7 @@
   <div class="row form-group">
     <div class="col-12">
       <codx-label [formModel]="form.formModel" fiedName="ContactName" class="fw-bold"></codx-label>
-      <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="contactName"
-        >
+      <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="contactName">
       </codx-input>
     </div>
   </div>

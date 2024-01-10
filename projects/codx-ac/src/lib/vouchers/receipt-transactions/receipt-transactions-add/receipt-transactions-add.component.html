@@ -60,23 +60,24 @@
 
 <!-- Start: TmpBody -->
 <ng-template #TmpBody>
-  <ejs-tab>
-    <e-tabitems>
-      <e-tabitem>
-        <ng-template #headerText>
-          <div class="d-flex align-items-top me-2 mt-2">
-            <i class="icon-info icon-18 me-2"></i>
-            <codx-label class="fw-bold" style="font-size: 14px !important" fiedName="lblGeneral"
-              [formModel]="dialog.formModel" default="Thông tin chung"></codx-label>
-          </div>
-        </ng-template>
-        <ng-template #content>
-          <ng-container *ngTemplateOutlet="TmpTabGeneral"></ng-container>
-        </ng-template>
-      </e-tabitem>
-    </e-tabitems>
-  </ejs-tab>
-
+  <div style="height: 250px;">
+    <ejs-tab>
+      <e-tabitems>
+        <e-tabitem>
+          <ng-template #headerText>
+            <div class="d-flex align-items-top me-2 mt-2">
+              <i class="icon-info icon-18 me-2"></i>
+              <codx-label class="fw-bold" style="font-size: 14px !important" fiedName="lblGeneral"
+                [formModel]="dialog.formModel" default="Thông tin chung"></codx-label>
+            </div>
+          </ng-template>
+          <ng-template #content>
+            <ng-container *ngTemplateOutlet="TmpTabGeneral"></ng-container>
+          </ng-template>
+        </e-tabitem>
+      </e-tabitems>
+    </ejs-tab>
+  </div>
   <!-- Start: Tab Detail -->
   <div style="height: calc(100vh - 395px) !important;">
     <ejs-tab>
@@ -157,7 +158,7 @@
                     </codx-input>
                 </div>
               </div>
-              <div class="col-xxl-2 col-xl-3 col-lg-3">
+              <div class="col-xxl-4 col-xl-5 col-lg-3">
                 <div class="form-group">
                   <codx-label style="white-space: nowrap !important" fiedName="ReasonID"
                     [formModel]="dialog.formModel">
@@ -277,8 +278,8 @@
 
 <!-- Start: Grid Vouchers -->
 <ng-template #TmpTabLine>
-  <div class="tablinevoucher-content  header-table-ac position-relative">
-    <codx-gridview-v2 #eleGridVouchers [showEmptyRecord]="false" gridLines="Both" [autoFitColumns]="false"
+  <div class="tablinevoucher-content header-table-ac position-relative">
+    <codx-gridview-v2 #eleGridVouchers [showEmptyRecord]="false" gridLines="Both" [autoFitColumns]="true" [allowRowDragAndDrop]="true"
       [formName]="fmVouchersLines.formName" [gridViewName]="fmVouchersLines.gridViewName" [templateMore]="templateMore"
       [entityName]="fmVouchersLines.entityName" predicates="TransID=@0" [dataValues]="formVouchers?.data?.recID"
       service="IV" [editOnClick]="true" rowNoField="rowNo" (gridInit)="beforeInitGrid($event)" (eventAction)="onActionGrid($event)"

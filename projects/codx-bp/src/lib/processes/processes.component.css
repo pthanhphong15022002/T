@@ -122,3 +122,37 @@
 .process-name{
   display: -webkit-inline-box !important;
 }
+
+.processPopoverClass {
+  width: 320px !important;
+}
+.processPopoverClass .popover-body {
+  width: 320px !important;
+  background-color: white;
+  box-shadow: 0 0 35px rgba(0, 0, 0, 0.07);
+}
+.listuser-box {
+  max-height: 250px;
+  overflow: auto;
+  margin-top: 8px;
+  border: 2px var(--gray-100) solid;
+  padding: 5px;
+  clear: both;
+}
+
+.contain-1 {
+  width: 25px;
+  height: 25px;
+  background: gray;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  color: white;
+  font-weight: 400;
+  margin-bottom: 6px;
+}
+
+.h-35px{
+  height: 35px !important;
+}

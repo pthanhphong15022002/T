@@ -7,6 +7,7 @@
         [tmpRightToolBar]="tmpRightToolBar"
         [bodyCss]="'px-4 pb-5'"
         [isAdd]="false"
+        (selectedChange)="selectedChange($event)"
       >
       </codx-view2>
     </div>
@@ -43,7 +44,6 @@
   </ng-template>
   <ng-template #tmp let-data>
     <div #divCard class="d-flex flex-column w-225px h-225px m-3 text-white position-relative cursor-pointer ws-report-card" 
-      (click)="selectedChange(data)"
     >
       <codx-card-img
         imgCss="h-150px rounded border-bottom"
@@ -81,8 +81,7 @@
     <div class="d-flex align-items-top justify-content-between">
       <div class="d-flex flex-column w-100">
         <div class="text-dark line-clamp line-clamp-1 text-wrap">{{data.customName}}</div>
-        <!-- <span class="fs-7 opacity-75 line-clamp line-clamp-1" [title]="data.description">{{data.description}}</span>   ///////anh Thoi keu bo nha Chung -->
-
+        <!-- <span class="fs-7 opacity-75 line-clamp line-clamp-1" [title]="data.description">{{data.description}}</span>   ///////anh Thoi keu bo nha Chung --> 
       </div> 
     </div>
     <div class="d-flex align-items-center justify-content-between">

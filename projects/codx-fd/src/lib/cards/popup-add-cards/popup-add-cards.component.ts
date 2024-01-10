@@ -83,8 +83,6 @@ export class PopupAddCardsComponent implements OnInit {
   countCardReive: number = 0;
   countCardSend: number = 0;
   countPointSend: number = 0;
-  max: number = 0;
-  min: number = 0;
   giftCount: number;
   givePoint: number = 0;
   quantity: number = 0;
@@ -147,8 +145,7 @@ export class PopupAddCardsComponent implements OnInit {
   reduceCoCoins = 0;
   cointsError = "";
   evoucher: any[] = [];
-  evoucherGift: any[] = [];
-  isLoadingEvoucher = false;
+  evoucherSelected: any[] = [];
 
   constructor(
     private api: ApiHttpService,
@@ -723,10 +720,10 @@ export class PopupAddCardsComponent implements OnInit {
 
       if (
         (this.gifts && this.gifts.length > 0 ) || 
-        (this.evoucherGift && this.evoucherGift.length > 0)
+        (this.evoucher && this.evoucher.length > 0)
       ) {
         this.card.hasGifts = true;
-        this.card.gifts = [...this.gifts, ...this.evoucherGift];
+        this.card.gifts = [...this.gifts, ...this.evoucher];
       }
 
       if (this.givePoint > 0) {
@@ -901,8 +898,6 @@ export class PopupAddCardsComponent implements OnInit {
   getGiftInfor(e: any) {
     this.showPopupGift = !this.showPopupGift;
     if (!e) return;
-    this.min = 0;
-    this.max = 0;
     this.giftIDs = e.id;
     let giftIDs = e.id.split(';');
 
@@ -929,12 +924,6 @@ export class PopupAddCardsComponent implements OnInit {
             } else {
               gift.quantity = 1;
               this.gifts.push(gift);
-              // this.form.patchValue({ giftID: giftID });
-              // this.max = res.availableQty;
-              // this.min = 1;
-              // this.quantity = 1;
-              // this.amount = this.quantity * this.gifts[0].price;
-              // this.form.patchValue({ quantity: 1 });
             }
           });
           this.updateAmountGift();
@@ -960,64 +949,6 @@ export class PopupAddCardsComponent implements OnInit {
       gift.quantity = quantity;
     }
     this.updateAmountGift();
-  }
-
-  updateQuantityEvoucher(e: any, index: number) {
-    let quantity = e?.component?.crrValue || 1;
-    let evoucher = this.evoucher[index];
-    if(quantity != evoucher.quantity) {
-      evoucher.quantity = quantity;
-      this.updateAmountEvoucher();
-    }
-  }
-
-  updateAmountEvoucher() {
-    const temp = this.evoucher.reduce((p, c) => {
-      return p + c?.selectedSize?.pricePrice * c.quantity;
-    }, 0);
-    this.amountEvoucher = ((temp) * this.exchangeRateEVoucher) / 1000;
-    this.convertEvoucherToGift();
-  }
-
-  convertEvoucherToGift() {
-    this.evoucherGift = [];
-    this.evoucher.forEach((item) => {
-      let curentMonth = moment().month();
-      let currentYear = moment().year();
-      let productID = item?.productId;
-      let productPriceId = item?.selectedSize?.sizeId;
-      let categoryId = item?.categoryId;
-      let quantity = item?.quantity;
-      let campaignNm = 'LV E-Voucher ' + curentMonth + ' ' + currentYear;
-      let use_otp = 0;
-      let otp_type = 1;
-      let receiver_name = this.user.userName;
-      let phone = this.user.mobile;
-      this.isLoadingEvoucher = true;
-      this.api.execSv<any>('FD', 'FD', 'VouchersBusiness', 'GotITTransaction', 
-        [
-          productID, 
-          productPriceId, 
-          categoryId, 
-          quantity, 
-          campaignNm, 
-          use_otp, 
-          otp_type, 
-          receiver_name, 
-          phone, 
-          this.formName, 
-          this.funcID, 
-          this.entityName, 
-          '4', 
-          '2'
-        ]).subscribe((data) => {
-          if (data.length != 0 && data[0] != null) {
-            data[0].quantity = quantity;
-            this.evoucherGift.push(data[0]);
-          }
-          this.isLoadingEvoucher = false;
-        });
-    });
   }
 
   updateAmountGift() {
@@ -1048,14 +979,11 @@ export class PopupAddCardsComponent implements OnInit {
   }
 
   saveEvoucher(data: any) {
-    data.forEach((item) => {
-      if(!item?.quantity) {
-        item.quantity = 1;
-      }
-    });
-    this.evoucher = [...data];
+    this.evoucher = [...data.evoucherGift];
+    this.amountEvoucher = this.evoucher.reduce((p, c) => {
+      return p + c.price * c.quantity;
+    }, 0);
+    this.evoucherSelected = [...data.dataSelcected];
     this.showPopupEvoucher = false;
-    this.updateAmountEvoucher();
-    this.dt.detectChanges();
   }
 }

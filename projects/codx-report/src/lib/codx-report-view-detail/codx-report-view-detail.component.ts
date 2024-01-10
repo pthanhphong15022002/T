@@ -105,7 +105,7 @@ export class CodxReportViewDetailComponent
     this.router.params.subscribe((param: any) => {
       if (param['funcID']) {
         this.reportID = param['funcID'];
-        this.getReport(this.reportID);
+
       }
     });
 
@@ -130,6 +130,7 @@ export class CodxReportViewDetailComponent
   ngOnChanges(changes: SimpleChanges): void {}
 
   ngAfterViewInit(): void {
+    this.reportID && this.getReport(this.reportID);
     this.views = [
       {
         type: ViewType.content,
@@ -175,7 +176,7 @@ export class CodxReportViewDetailComponent
           this.data = res;
           this.reportID = res.reportID;
           this.isRunMode = res.runMode == '1';
-          this.pageTitle.setRootNode(res.customName);
+          //this.pageTitle.setRootNode(res.customName);
           this.getRootFunction(res.moduleID, res.reportType);
           // if (
           //   res.displayMode == '2' ||
@@ -215,6 +216,7 @@ export class CodxReportViewDetailComponent
               this.rootFunction.functionID,
           };
           this.pageTitle.setParent(parent);
+          this.setBreadCrumb(this.data);
           this.getReportList(this.data.moduleID, this.data.reportType);
         }
       });
@@ -232,6 +234,7 @@ export class CodxReportViewDetailComponent
       .subscribe((res: any) => {
         this.orgReportList = res;
         let arrChildren: Array<PageLink> = [];
+
         for (let i = 0; i < this.orgReportList.length; i++) {
           let pageLink: PageLink = {
             title: this.orgReportList[i].customName,
@@ -246,7 +249,7 @@ export class CodxReportViewDetailComponent
         this.reportList = this.orgReportList.filter(
           (x: any) => x.recID != this.data.recID
         );
-        this.setBreadCrumb(this.data);
+
       });
   }
 
@@ -388,7 +391,6 @@ export class CodxReportViewDetailComponent
   }
 
   filterReportChange(e: any) {
-    if (this.isRunMode) this.isRunMode = false;
     if (e == null) return;
     let objParam: any = {};
     let objLabel: any = {};
@@ -426,7 +428,6 @@ export class CodxReportViewDetailComponent
     }
     // get report PDF
     if (this.data.displayMode == '3' || this.data.displayMode == '4') {
-      debugger
       this.getReportPDF(this.data.recID);
     }
   }
@@ -456,6 +457,8 @@ export class CodxReportViewDetailComponent
 
   clickViewReport() {
     (document.querySelector('.btnApply') as any)?.click();
+    if (this.isRunMode) this.isRunMode = false;
+    this.detectorRef.detectChanges();
   }
 
   url: string = '';

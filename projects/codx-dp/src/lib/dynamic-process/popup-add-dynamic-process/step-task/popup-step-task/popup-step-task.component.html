@@ -1,7 +1,7 @@
 <codx-form
   #form
   [customToolbar]="header"
-  subHeaderText=""
+  subHeaderText
   [subHeader]="subHeader"
   [body]="body"
   [footer]="footer"
@@ -39,7 +39,7 @@
       type="colorpicker"
       [showText]="false"
       [modeSwitcher]="false"
-      [crrValue]=""
+      [crrValue]
       field="color"
     >
     </codx-input>
@@ -205,7 +205,7 @@
                 style="top: 7px; right: 14px"
               >
                 <codx-label
-                  fiedName=""
+                  fiedName
                   [formModel]="form?.formModel"
                   default="Ngày"
                 >
@@ -228,7 +228,7 @@
                 style="top: 7px; right: 14px"
               >
                 <codx-label
-                  fiedName=""
+                  fiedName
                   [formModel]="form?.formModel"
                   default="Giờ"
                 >
@@ -279,7 +279,10 @@
       </div>
     </div>
 
-    <div class="form-group" *ngIf="typeTask?.value === 'CO' || typeTask?.value === 'F'">
+    <div
+      class="form-group"
+      *ngIf="typeTask?.value === 'CO' || typeTask?.value === 'F'"
+    >
       <div class="d-flex justify-content-between align-items-center">
         <codx-label
           fiedName="FieldID"
@@ -294,17 +297,93 @@
           <i class="icon-settings icon-16"></i>
         </button>
       </div>
-      <div>
+      <!-- <div>
         <ejs-multiselect
           [dataSource]="listFields"
           [mode]="'Default'"
           [fields]="fieldsFields"
           [value]="listFieldID"
-          (valueChange)="fieldIDChange($event)"
           [showDropDownIcon]="true"
           (tagObjects)="onItemClick($event)"
           [enabled]="!(typeTask?.value === 'CO')"
         ></ejs-multiselect>
+      </div> -->
+    </div>
+
+    <div class="form-group" *ngIf="typeTask?.value === 'F'">
+      <div id="combobox" (click)="handleDivClick($event)">
+        <div
+          class="input-custom d-flex align-items-center justify-content-between position-relative"
+          [ngStyle]="showSelect ? {'border-color':'#cae8f1'} : {}"
+        >
+          <span
+            [ngClass]="showSelect ? 'd-none' : ''"
+            class="ps-2 line-clamp line-clamp-1 me-10"
+          >
+            {{ titleField }}
+          </span>
+
+          <div
+            [ngClass]="showSelect ? '' : 'd-none'"
+            class="categories me-10"
+            cdkDropListGroup
+          >
+            <ng-container
+              *ngFor="let field of listFieldIntask; let i = index"
+            >
+              <div
+                class="categories-item"
+                cdkDropList
+                cdkDropListOrientation="horizontal"
+                [cdkDropListData]="{ item: field, index: i }"
+                (cdkDropListDropped)="drop($event)"
+              >
+                <div class="inner" cdkDrag>
+                  <div *cdkDragPlaceholder></div>
+                  <div
+                    [ngbTooltip]="field?.title"
+                    container="body"
+                    placement="top"
+                    class="d-flex justify-content-between align-items-center w-100 text-white inner-item"
+                  >
+                    <span
+                      class="my-1 mx-2 line-clamp line-clamp-1"
+                      style="font-size: 12px; max-width: 100px"
+                      >{{ field?.title }}</span
+                    >
+                    <span
+                      class="icon-close icon-16 cursor-pointer fw-bold"
+                      (click)="removeField(field)"
+                    ></span>
+                  </div>
+                </div>
+              </div>
+            </ng-container>
+          </div>
+
+          <div class="icon-combobox">
+            <!-- <span class="icon-18 icon-close"></span> -->
+            <span class="icon-14 icon-expand_more-1"></span>
+          </div>
+          <div>
+            <span class="e-input-group-icon e-ddl-icon"></span>
+          </div>
+        </div>
+
+        <div [ngClass]="showSelect ? '' : 'd-none'" class="popup-data">
+          <div
+            class="py-1 px-3 item-popup"
+            *ngFor="let item of listFieldConvert; let i = index"
+            (click)="chooseFieldCombobox(item, i)"
+          >
+            <span style="font-size: 14px">{{ item?.title }}</span>
+          </div>
+          <div *ngIf="listFieldConvert?.length <= 0" class="d-flex align-items-center justify-content-center">
+            <span style="font-size: 14px; margin-top:6px;"
+              >Chưa có dữ liệu phát sinh</span
+            >
+          </div>
+        </div>
       </div>
     </div>
 
@@ -391,7 +470,7 @@
         field="memo"
         [formModel]="form?.formModel"
         [crrValue]="stepsTasks?.memo"
-        [Group]=""
+        [Group]
         format="ed"
         type="text"
         [height]="'100'"

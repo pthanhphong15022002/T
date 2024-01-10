@@ -11,6 +11,7 @@ import {
   ButtonModel,
   DataRequest,
   DialogModel,
+  FormModel,
   NotificationsService,
   ResourceModel,
   SidebarModel,
@@ -22,7 +23,7 @@ import {
 } from 'codx-core';
 import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
 import { CashPaymentAddComponent } from './cashpayments-add/cashpayments-add.component';
-import { CodxAcService } from '../../codx-ac.service';
+import { CodxAcService, fmCashPaymentsLines, fmCashPaymentsLinesOneAccount, fmSettledInvoices, fmVATInvoices } from '../../codx-ac.service';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { ProgressBar } from '@syncfusion/ej2-angular-progressbar';
 import { CodxListReportsComponent } from 'projects/codx-share/src/lib/components/codx-list-reports/codx-list-reports.component';
@@ -64,6 +65,10 @@ export class CashPaymentsComponent extends UIComponent {
   bankReceiveName: any;
   viewActive:number = ViewType.listdetail;
   ViewType = ViewType;
+  fmCashpaymentLine: FormModel = fmCashPaymentsLines;
+  fmCashpaymentLineOne: FormModel = fmCashPaymentsLinesOneAccount;
+  fmSettledInvoices:FormModel = fmSettledInvoices;
+  fmVATInvoices:FormModel = fmVATInvoices;
   private destroy$ = new Subject<void>();
   constructor(
     private inject: Injector,
@@ -212,6 +217,9 @@ export class CashPaymentsComponent extends UIComponent {
       case 'SYS04':
         this.copyVoucher(data); //? sao chép chứng từ
         break;
+      case 'SYS05':
+        this.viewVoucher(data); //? sao chép chứng từ
+        break;
       case 'SYS002':
         this.exportVoucher(data); //? xuất dữ liệu chứng từ
         break;
@@ -285,24 +293,24 @@ export class CashPaymentsComponent extends UIComponent {
             legalName: this.legalName, //? tên company
           };
           let optionSidebar = new SidebarModel();
-          optionSidebar.DataService = this.view?.dataService;
-          optionSidebar.FormModel = this.view?.formModel;
-          let dialog = this.callfc.openSide(
-            CashPaymentAddComponent,
-            data,
-            optionSidebar,
-            this.view.funcID
-          );
-          dialog.closed.subscribe((res) => {
-            if (res && res?.event) {
-              if (res?.event?.type === 'discard') {
-                if(this.view.dataService.data.length == 0){
-                  this.itemSelected = undefined;
-                  this.detectorRef.detectChanges();
-                } 
+            optionSidebar.DataService = this.view?.dataService;
+            optionSidebar.FormModel = this.view?.formModel;
+            let dialog = this.callfc.openSide(
+              CashPaymentAddComponent,
+              data,
+              optionSidebar,
+              this.view.funcID
+            );
+            dialog.closed.subscribe((res) => {
+              if (res && res?.event) {
+                if (res?.event?.type === 'discard') {
+                  if(this.view.dataService.data.length == 0){
+                    this.itemSelected = undefined;
+                    this.detectorRef.detectChanges();
+                  } 
+                }
               }
-            }
-          })
+            })
         }
       });
   }
@@ -312,19 +320,20 @@ export class CashPaymentsComponent extends UIComponent {
    * @param dataEdit : data chứng từ chỉnh sửa
    */
   editVoucher(dataEdit) {
-    this.view.dataService.dataSelected = dataEdit;
+    delete dataEdit.isReadOnly;
+    this.view.dataService.dataSelected = {...dataEdit};
     this.view.dataService
       .edit(dataEdit)
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
         res.isEdit = true;
         let data = {
-          headerText: this.headerText, //? tiêu đề voucher
-          journal: { ...this.journal }, //?  data journal
-          oData: { ...res }, //?  data của cashpayment
-          hideFields: [...this.hideFields], //? array các field ẩn từ sổ nhật ký
-          baseCurr: this.baseCurr, //?  đồng tiền hạch toán
-          legalName: this.legalName, //? tên company
+          headerText: this.headerText,
+          journal: { ...this.journal },
+          oData: { ...res },
+          hideFields: [...this.hideFields],
+          baseCurr: this.baseCurr,
+          legalName: this.legalName,
         };
         let optionSidebar = new SidebarModel();
         optionSidebar.DataService = this.view?.dataService;
@@ -405,6 +414,34 @@ export class CashPaymentsComponent extends UIComponent {
   }
 
   /**
+   * *Hàm xem chứng từ
+   * @param dataEdit : data chứng từ chỉnh sửa
+   */
+  viewVoucher(dataView) {
+    delete dataView.isEdit;
+    dataView.isReadOnly = true;
+    let data = {
+      headerText: this.headerText,
+      journal: { ...this.journal },
+      oData: { ...dataView },
+      hideFields: [...this.hideFields],
+      baseCurr: this.baseCurr,
+      legalName: this.legalName,
+    };
+    let optionSidebar = new SidebarModel();
+    optionSidebar.DataService = this.view?.dataService;
+    optionSidebar.FormModel = this.view?.formModel;
+    let dialog = this.callfc.openSide(
+      CashPaymentAddComponent,
+      data,
+      optionSidebar,
+      this.view.funcID
+    );
+    dialog.closed.subscribe((res) => {
+    })
+  }
+
+  /**
    * *Hàm xóa chứng từ
    * @param dataDelete : data xóa
    */
@@ -457,6 +494,7 @@ export class CashPaymentsComponent extends UIComponent {
    * @returns
    */
   changeMFDetail(event: any,type: any = '') {
+    console.log(event);
     let data = this.view?.dataService?.dataSelected;
     if (data) {
       this.acService.changeMFCashPayment(event,data,type,this.journal,this.view.formModel);

@@ -49,8 +49,7 @@
                   <span
                     [ngClass]="(f.functionType == 'G') ? 'fw-bold text-uppercase' :'menu-title'"
                     (click)="itemClick(f.functionID)"
-                    >{{f.customName }}</span
-                  >
+                    >{{f.customName }}</span>
                 </ng-container>
               </div>
               <div
@@ -68,7 +67,7 @@
                       ? 'here show'
                       : ''
                   "
-                   (click)="itemClick(c.functionID)"
+                   (click)="c?.customName ? itemClick(c.functionID) : undefined"
                 >
                   <span class="menu-link" 
                     *ngIf="c?.customName"
@@ -133,9 +132,7 @@
                             <img src="/{{ c2.smallIcon }}" />
                           </ng-template>
                         </span>
-                        <span class="menu-title fw-bold">{{
-                          c2.customName
-                        }}</span>
+                        <span class="menu-title fw-bold">{{c2.customName}}</span>
                         <span class="menu-arrow"  *ngIf="c2?.favs && c2.favs.length>0"></span>
                       </span>
                       <div class="menu-sub menu-sub-accordion ms-4" *ngIf="c2?.favs && c2.favs.length > 0">

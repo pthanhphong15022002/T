@@ -17,6 +17,7 @@ import {
   DialogModel,
   FormModel,
   NotificationsService,
+  Util,
 } from 'codx-core';
 import { PopupQuickaddContactComponent } from 'projects/codx-cm/src/lib/cmcustomer/cmcustomer-detail/codx-list-contacts/popup-quickadd-contact/popup-quickadd-contact.component';
 import { CodxShareService } from '../../codx-share.service';
@@ -24,6 +25,7 @@ import { ComboBoxComponent } from '@syncfusion/ej2-angular-dropdowns';
 import { PopupAddLineTableComponent } from './popup-add-line-table/popup-add-line-table.component';
 import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
 import { moveItemInArray } from '@angular/cdk/drag-drop';
+import { PopupSelectFieldReferenceComponent } from './popup-select-field-reference/popup-select-field-reference.component';
 
 @Component({
   selector: 'codx-input-custom-field',
@@ -32,9 +34,6 @@ import { moveItemInArray } from '@angular/cdk/drag-drop';
 })
 export class CodxInputCustomFieldComponent implements OnInit {
   @Input() customField: any = null;
-  @Output() valueChangeCustom = new EventEmitter<any>();
-  @Output() addFileCompleted = new EventEmitter<boolean>();
-
   @Input() isAdd = false; //la add new
   @Input() showTitle = true; // show Title hoặc "gia trị măc định"
   @Input() objectId: any = ''; //objectId của file
@@ -48,8 +47,15 @@ export class CodxInputCustomFieldComponent implements OnInit {
   @Input() customerID: string = ''; //Khách hàng cơ hội
 
   @Input() isDataTable = false; //là data của Table
-
+  @Input() isRezisePopup = false; //resize popup
+  @Input() widthRezise = '1000'; //resize width popup
   @Input() refVersion = ''; //là recID của form Task
+  @Input() refInstance = ''; //'63484925-9f24-11ee-a457-c025a5a4cd5d'; //'63484925-9f24-11ee-a457-c025a5a4cd5d'; //tesst; //là recID của Instance liên quan
+  @Input() refStepID = ''; //là recID của step Ins liên quan
+
+  @Output() valueChangeCustom = new EventEmitter<any>();
+  @Output() addFileCompleted = new EventEmitter<boolean>();
+  @Output() rezisePopup = new EventEmitter<any>();
 
   @ViewChild('attachment') attachment: AttachmentComponent;
   @ViewChild('comboxValue') comboxValue: ComboBoxComponent; ///value seclect 1
@@ -131,6 +137,9 @@ export class CodxInputCustomFieldComponent implements OnInit {
   valueF = 'no';
   valueT = 'yes';
   dataValueCaculate = '';
+  listFieldRef = []; //All field
+  listFieldsSelect = []; //fields selectd
+  isShowMore = false;
 
   constructor(
     private cache: CacheService,
@@ -176,6 +185,9 @@ export class CodxInputCustomFieldComponent implements OnInit {
     }
 
     switch (this.customField.dataType) {
+      case 'N':
+        this.formatHaveE();
+        break;
       case 'PA':
         this.viewFieldRef();
         break;
@@ -350,6 +362,15 @@ export class CodxInputCustomFieldComponent implements OnInit {
 
             if (!this.checkValid) return;
           } else this.showErrMess = false;
+        }
+        break;
+      case 'N':
+        let idxE = e.data?.toString().toLowerCase().indexOf('e');
+        if (idxE != -1) {
+          this.notiService.notify(
+            'Số nhập vào quá lớn sẽ lưu giá trị gần đúng !',
+            '3'
+          );
         }
         break;
     }
@@ -726,6 +747,12 @@ export class CodxInputCustomFieldComponent implements OnInit {
         }
       }
     }
+    //tinh lại withd resize
+    if (this.isRezisePopup) {
+      let width = Util.getViewPort().width;
+      let widthRez = Number.parseInt(this.widthRezise);
+      if (widthRez && width < widthRez) this.widthRezise = width.toString();
+    }
     this.changeRef.detectChanges();
   }
 
@@ -836,49 +863,6 @@ export class CodxInputCustomFieldComponent implements OnInit {
       e: e.data,
       data: this.customField,
     });
-    // }
-    // let value = e.data;
-    // this.cache.combobox(this.customField.refValue).subscribe((res) => {
-    //   let gridModel = new DataRequest();
-    //   let entityName = res?.tableName;
-    //   gridModel.entityName = entityName;
-    //   gridModel.entityPermission = entityName;
-    //   gridModel.pageLoading = false;
-
-    //   let predicate = res.valueMember + '=@0';
-    //   if (res.predicate) {
-    //     predicate += ' and ' + res.predicate;
-    //   }
-    //   gridModel.predicate = predicate;
-    //   gridModel.dataValue = value;
-
-    //   this.api
-    //     .execSv<any>(
-    //       res.service,
-    //       'ERM.Business.Core',
-    //       'DataBusiness',
-    //       'LoadDataAsync',
-    //       gridModel
-    //     )
-    //     .subscribe((dataRes) => {
-    //       if (dataRes) {
-    //         let crrData = dataRes[0][0];
-    //         if (crrData) {
-    //           //this.refValuePA(crrData);
-
-    //           this.valueChangeCustom.emit({
-    //             e: e.data,
-    //             data: this.customField,
-    //           });
-    //         } else {
-    //           this.valueChangeCustom.emit({
-    //             e: null,
-    //             data: this.customField,
-    //           });
-    //         }
-    //       }
-    //     });
-    // });
   }
   refValuePA(crrData) {
     this.dataRef = '';
@@ -974,4 +958,125 @@ export class CodxInputCustomFieldComponent implements OnInit {
     return check;
   }
   //----------------------------------------------//
+
+  //-------------- Data num co E ---------------//
+  formatHaveE() {
+    if (this.customField.dataValue) {
+      let idxE = this.customField.dataValue?.toString().indexOf('E');
+      if (idxE != -1) {
+        let mu = this.customField.dataValue
+          .toString()
+          .substring(idxE + 2, this.customField.dataValue?.length);
+        this.customField.dataValue =
+          Number.parseFloat(
+            this.customField.dataValue.toString().substring(0, idxE)
+          ) * Math.pow(10, Number.parseInt(mu));
+      }
+    }
+  }
+  //-----------------------------------------------//
+
+  //-----------------------------------------------//
+  //-------------- Data tham chiếu ---------------//
+  //-----------------------------------------------//
+  selectDataRef() {
+    if (this.refInstance) {
+      this.api
+        .exec<any>('DP', 'InstancesStepsBusiness', 'GetListFieldsAsync', [
+          this.refInstance,
+          this.refStepID,
+          this.customField,
+        ])
+        .subscribe((fiels) => {
+          if (fiels?.length > 0) {
+            let dialogModel = new DialogModel();
+            dialogModel.zIndex = 1200;
+            let obj = {
+              listField: fiels,
+              field: this.customField,
+            };
+            let pop = this.callfc.openForm(
+              PopupSelectFieldReferenceComponent,
+              '',
+              500,
+              700,
+              null,
+              obj,
+              null,
+              dialogModel
+            );
+
+            pop.closed.subscribe((res) => {
+              if (res?.event) {
+                this.customField = res.event;
+                this.changeRef.detectChanges();
+              }
+            });
+          } else
+            this.notiService.notify(
+              'Không có data phù hợp với trường được chọn ! Vui lòng nhập giá trị của bạn !',
+              '3'
+            );
+        });
+    }
+
+    // if (this.listFieldRef?.length > 0) {
+    //   this.listFieldsSelect = this.listFieldRef.filter(
+    //     (x) =>
+    //       x.dataType == this.customField.dataType &&
+    //       x.refType == this.customField.refType &&
+    //       x.refValue == this.customField.refValue &&
+    //       x.dataValue
+    //   );
+    //   if (this.listFieldsSelect?.length > 0) {
+    //     let dialogModel = new DialogModel();
+    //     dialogModel.zIndex = 1200;
+    //     let obj = {
+    //       listField: this.listFieldsSelect,
+    //       field: this.customField,
+    //     };
+    //     let pop = this.callfc.openForm(
+    //       PopupSelectFieldReferenceComponent,
+    //       '',
+    //       500,
+    //       700,
+    //       null,
+    //       obj,
+    //       null,
+    //       dialogModel
+    //     );
+
+    //     pop.closed.subscribe((res) => {
+    //       if (res?.event) {
+    //         this.customField = res.event;
+    //         this.changeRef.detectChanges();
+    //       }
+    //     });
+    //   } else
+    //     this.notiService.notify(
+    //       'Không có data phù hợp với trường được chọn ! Vui lòng nhập giá trị của bạn !'
+    //     );
+    // }
+  }
+
+  loadDataRef() {
+    if (this.refInstance) {
+      this.api
+        .exec<any>('DP', 'DPInstances', 'GetListFieldsAsync', [
+          this.refInstance,
+          this.refStepID,
+          this.customField,
+        ])
+        .subscribe((res) => {
+          if (res) this.listFieldRef = res;
+        });
+    }
+  }
+  //----------------------------------------------//
+
+  //rezisePopup --nếu có TA
+  showMore() {
+    this.isShowMore = !this.isShowMore;
+    this.rezisePopup.emit(this.widthRezise);
+  }
 }

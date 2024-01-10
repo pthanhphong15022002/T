@@ -5,7 +5,6 @@ import { Component, OnInit, Optional, ViewChild } from '@angular/core';
 
 import {
   CodxFormComponent,
-  CodxListviewComponent,
   CRUDService,
   DialogData,
   DialogRef,
@@ -17,7 +16,6 @@ import {
 @Component({
   selector: 'lib-popup-epassports',
   templateUrl: './popup-epassports.component.html',
-  styleUrls: ['./popup-epassports.component.css'],
 })
 export class PopupEPassportsComponent extends UIComponent implements OnInit {
   formModel: FormModel;
@@ -30,7 +28,7 @@ export class PopupEPassportsComponent extends UIComponent implements OnInit {
   actionType;
   idField = 'RecID';
   // isAfterRender = false;
-  employId;
+  employId: string;
   disabledInput = false;
   @ViewChild('form') form: CodxFormComponent;
 
@@ -45,69 +43,38 @@ export class PopupEPassportsComponent extends UIComponent implements OnInit {
     super(injector);
     this.dialog = dialog;
     this.formModel = dialog?.formModel;
-    
+
     this.headerText = data?.data?.headerText;
     this.funcID = data?.data?.funcID;
     this.employId = data?.data?.employeeId;
     this.actionType = data?.data?.actionType;
-    debugger
-    if(this.actionType == 'view'){
+    if (this.actionType == 'view') {
       this.disabledInput = true;
     }
     this.passportObj = JSON.parse(JSON.stringify(data?.data?.passportObj));
+    this.passportObj.employeeID = this.employId;
   }
 
   onInit(): void {
     this.initForm();
-    // if (!this.formModel) {
-    //   this.hrService.getFormModel(this.funcID).then((formModel) => {
-    //     if (formModel) {
-    //       this.formModel = formModel;
-    //       this.hrService
-    //         .getFormGroup(this.formModel.formName, this.formModel.gridViewName, this.formModel)
-    //         .then((fg) => {
-    //           if (fg) {
-    //             this.form.formGroup = fg;
-    //             this.initForm();
-    //           }
-    //         });
-    //     }
-    //   });
-    // } else {
-    //   this.hrService
-    //     .getFormGroup(this.formModel.formName, this.formModel.gridViewName, this.formModel)
-    //     .then((fg) => {
-    //       if (fg) {
-    //         this.form.formGroup = fg;
-    //         this.initForm();
-    //       }
-    //     });
-    // }
   }
+
   initForm() {
     if (this.actionType == 'add') {
-      this.hrService
-        .getDataDefault(
-          this.formModel.funcID,
-          this.formModel.entityName,
-          this.idField
-        )
-        .subscribe((res: any) => {
-          if (res) {
-            this.passportObj = res?.data;
-
-            this.passportObj.issuedDate = null;
-            this.passportObj.expiredDate = null;
-
-            this.passportObj.employeeID = this.employId;
-            // this.formModel.currentData = this.passportObj;
-            // this.form.formGroup.patchValue(this.passportObj);
-            this.cr.detectChanges();
-            // this.isAfterRender = true;
-          }
-        });
+      this.dialog.dataService.addNew().subscribe((res: any) => {
+        if (res) {
+          this.passportObj = res;
+          this.passportObj.issuedDate = null;
+          this.passportObj.expiredDate = null;
+          this.cr.detectChanges();
+        }
+      });
     } else {
-      if (this.actionType === 'edit' || this.actionType === 'copy' || this.actionType === 'view') {
+      if (
+        this.actionType === 'edit' ||
+        this.actionType === 'copy' ||
+        this.actionType === 'view'
+      ) {
         if (this.actionType == 'copy') {
           if (this.passportObj.issuedDate == '0001-01-01T00:00:00') {
             this.passportObj.issuedDate = null;
@@ -116,57 +83,58 @@ export class PopupEPassportsComponent extends UIComponent implements OnInit {
             this.passportObj.expiredDate = null;
           }
         }
-        // this.form.formGroup.patchValue(this.passportObj);
-        // this.formModel.currentData = this.passportObj;
         this.cr.detectChanges();
-        // this.isAfterRender = true;
       }
     }
-    // this.formModel.currentData = this.passportObj;
-    // this.form.formGroup.patchValue(this.passportObj);
-    // this.cr.detectChanges();
-    // this.isAfterRender = true;
   }
 
   onSaveForm() {
-    if (this.form.formGroup.invalid) {
-      this.hrService.notifyInvalid(this.form.formGroup, this.formModel);
-      this.form.validation(false)
-      return;
+    //Xu li validate thong tin CMND nhan vien
+    if (this.passportObj.expiredDate && this.passportObj.issuedDate) {
+      if (this.passportObj.expiredDate < this.passportObj.issuedDate) {
+        this.hrService.notifyInvalidFromTo(
+          'ExpiredDate',
+          'IssuedDate',
+          this.formModel
+        );
+        return;
+      }
     }
+    // if (this.actionType === 'add' || this.actionType === 'copy') {
+    //   this.hrService
+    //     .addEmployeePassportInfo(this.passportObj)
+    //     .subscribe((p) => {
+    //       if (p != null) {
+    //         this.passportObj = p;
+    //         this.notify.notifyCode('SYS006');
+    //         this.dialog && this.dialog.close(this.passportObj);
+    //       } else this.notify.notifyCode('SYS023');
+    //     });
+    // } else {
+    //   this.hrService
+    //     .updateEmployeePassportInfo(this.form.data)
+    //     .subscribe((p) => {
+    //       if (p != null) {
+    //         this.notify.notifyCode('SYS007');
+    //         this.dialog && this.dialog.close(this.passportObj);
+    //       } else this.notify.notifyCode('SYS021');
+    //     });
+    // }
 
-        //Xu li validate thong tin CMND nhan vien
-        if(this.passportObj.expiredDate && this.passportObj.issuedDate){
-          if (this.passportObj.expiredDate < this.passportObj.issuedDate) {
-            this.hrService.notifyInvalidFromTo(
-              'ExpiredDate',
-              'IssuedDate',
-              this.formModel
-              )
-              return;
-            }
+    this.form.save(null, 0, '', '', true).subscribe((res) => {
+      if (res.hasOwnProperty('save')) {
+        if (res.save.hasOwnProperty('data')) {
+          if (res.save.data)
+            return this.dialog && this.dialog.close(res.save.data);
         }
-
-    this.passportObj.employeeID = this.employId;
-    if (this.actionType === 'add' || this.actionType === 'copy') {
-      this.hrService
-        .addEmployeePassportInfo(this.passportObj)
-        .subscribe((p) => {
-          if (p != null) {
-            this.passportObj = p;
-            this.notify.notifyCode('SYS006');
-            this.dialog && this.dialog.close(this.passportObj);
-          } else this.notify.notifyCode('SYS023');
-        });
-    } else {
-      this.hrService
-        .updateEmployeePassportInfo(this.form.data)
-        .subscribe((p) => {
-          if (p != null) {
-            this.notify.notifyCode('SYS007');
-            this.dialog && this.dialog.close(this.passportObj);
-          } else this.notify.notifyCode('SYS021');
-        });
-    }
+      }
+      if (res.hasOwnProperty('update')) {
+        if (res.update.hasOwnProperty('data')) {
+          if (res.update.data)
+            return this.dialog && this.dialog.close(res.update.data);
+        }
+      }
+      this.dialog && this.dialog.close();
+    });
   }
 }

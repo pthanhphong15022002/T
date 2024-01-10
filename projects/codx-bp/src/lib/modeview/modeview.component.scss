@@ -59,6 +59,12 @@
     font-size: 14px;
   }
   
+  .cdk-drag.active , .mw-form.active
+  {
+    background-color: #fbfbfb;
+    border-radius: 3px;
+  }
+
   .cdk-drag-preview {
     box-sizing: border-box;
     border-radius: 4px;
@@ -150,7 +156,6 @@
 .bp-box-number
 {
   border: solid 2px;
-  border-color: var(--text-primary);
   padding: 2px 7px;
   border-radius: 3px;
 }

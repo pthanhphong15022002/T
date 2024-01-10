@@ -87,8 +87,11 @@ export class KowdsComponent extends UIComponent {
   cbbKowCode: any;
   loadedTotalGrid = false;
   gridTotalFM: FormModel;
-  setHeighted=false;
+  setHeighted = false;
   funcList: any;
+  weekDayVLL = [];
+  showCalendarGrid=false;
+  loadedCalendarGrid: boolean;
   constructor(
     inject: Injector,
     private hrService: CodxHrService,
@@ -111,10 +114,15 @@ export class KowdsComponent extends UIComponent {
     this.gridTotalFM.formName = 'KowDs';
     this.gridTotalFM.gridViewName = 'grvKowDsUIByKow';
     this.gridTotalFM.entityName = 'TS_KowDs';
-    let date = new Date();
-    this.filterDowCode = `${date.getFullYear()}/${date.getMonth() + 1}`;
     this.loadGridTotal();
+
+    let tempDate = new Date();
+    this.filterMonth = tempDate.getMonth();
+    this.filterYear = tempDate.getFullYear();
+    this.filterDowCode = this.filterYear + '/' + (this.filterMonth +1);
+
     this.initHeaderText();
+
     this.getTimeKeepingMode().subscribe((res) => {
       this.timeKeepingMode = res.timeKeepingMode;
       if (this.timeKeepingMode == '2') {
@@ -131,14 +139,6 @@ export class KowdsComponent extends UIComponent {
         this.userPermission = res2;
       });
     });
-
-    for (let i = 1; i <= 31; i++) {
-      this.days.push(i);
-    }
-
-    let tempDate = new Date();
-    this.filterMonth = tempDate.getMonth();
-    this.filterYear = tempDate.getFullYear();
 
     this.hrService.getFormModel('HRT03a1').then((res) => {
       if (res) {
@@ -169,19 +169,19 @@ export class KowdsComponent extends UIComponent {
         },
       },
     ];
-
   }
   afterRenderList() {
-    if(!this.setHeighted){
-      let html =  document?.getElementById('chartOrg')?.getElementsByClassName('card-body');
-      if(html?.length>0){
-        let body = Array.from(html as HTMLCollectionOf<HTMLElement>)[0] ;
-        body.style.height =   body.offsetHeight - 50 +'px'
+    if (!this.setHeighted) {
+      let html = document
+        ?.getElementById('chartOrg')
+        ?.getElementsByClassName('card-body');
+      if (html?.length > 0) {
+        let body = Array.from(html as HTMLCollectionOf<HTMLElement>)[0];
+        body.style.height = body.offsetHeight - 50 + 'px';
       }
-      this.setHeighted =true;
+      this.setHeighted = true;
       this.detectorRef.detectChanges();
     }
-    
   }
   //---------------------------------------------------------------------------------//
   //-----------------------------------Get Cache Data--------------------------------//
@@ -193,7 +193,6 @@ export class KowdsComponent extends UIComponent {
   //---------------------------------------------------------------------------------//
   //-----------------------------------Get Data Func---------------------------------//
   //---------------------------------------------------------------------------------//
-  
 
   loadGridTotal() {
     this.cache
@@ -205,7 +204,7 @@ export class KowdsComponent extends UIComponent {
           for (let field in this.gridKow) {
             if (this.gridKow[field]?.fieldName == 'EmployeeID') {
               this.columnTotalKow.push({
-                headerTemplate: 'Nhân viên',
+                width:300,
                 template: this.tempEmployee,
                 field: 'employeeID',
               });
@@ -244,32 +243,57 @@ export class KowdsComponent extends UIComponent {
       });
   }
 
-  loadDataInGrid() {
-    if (this.viewDetailData == true) {
-      if (!this.calendarGridColumns.length) {
-        this.calendarGridColumns = [];
+  createMonthColumn(){
+    let dates = new Date(this.filterYear, this.filterMonth+1, 0)?.getDate();
+    let weekDay;
+    for (let day = 1; day <= dates; day++) {
+      if (day == 1) {
+        weekDay = new Date(
+          this.filterYear,
+          this.filterMonth,
+          1
+        ).getDay();
+      } else {
+        weekDay = weekDay >= 6 ? 0 : weekDay + 1;
+      }
+      let dayInWeek = this.weekDayVLL?.find((x) => x.value == weekDay)?.text ?? '';
+      this.calendarGridColumns.push({
+        field: day.toString(),
+        refField: 'workDate',
+        headerTemplate: ` ${dayInWeek}
+            <div> ${day} </div> `,
+        template: this.tempKow,
+      });
+    }
+    this.loadedCalendarGrid=true;
+    this.detectorRef.detectChanges();
+  }
 
+  loadDataInGrid(reloadColumn = false) {
+    if (this.viewDetailData == true) {
+      if (!this.calendarGridColumns.length || reloadColumn) {
+        this.calendarGridColumns = [];
+        this.loadedCalendarGrid=false;
+        this.detectorRef.detectChanges();
         this.calendarGridColumns.push({
-          //1headerTemplate: 'Nhân viên',
+          width:300,
           template: this.tempEmployee,
           field: 'employeeID',
         });
-
-        for (let i = 0; i < this.daysInMonth[this.filterMonth]; i++) {
-          let date = new Date(this.filterYear, this.filterMonth, i + 1);
-          let dayOfWeek = date.getDay();
-          this.calendarGridColumns.push({
-            field: `${i + 1}`,
-            refField: 'workDate',
-            headerTemplate: ` ${this.daysOfWeek[dayOfWeek]}
-            <div> ${i + 1} </div> `,
-            template: this.tempKow,
+        
+        if (this.weekDayVLL?.length == 0) {
+          this.cache.valueList('L0012').subscribe((vll) => {
+            if (vll) {
+              this.weekDayVLL = vll?.datas;
+              this.createMonthColumn();
+            }
           });
+        } else {
+          this.createMonthColumn();          
         }
-        this.calendarGridColumns = [...this.calendarGridColumns];
       }
 
-      if (this.calendarGrid) {
+      if (this.calendarGrid ) {
         this.calendarGrid.refresh(true);
       }
     } else if (this.viewStatistic == true) {
@@ -324,7 +348,9 @@ export class KowdsComponent extends UIComponent {
       if (this.gridTotal) {
         this.gridTotal.refresh(true);
       }
+      
     }
+    this.detectorRef.detectChanges();
   }
 
   onLoadedData(event) {
@@ -360,15 +386,14 @@ export class KowdsComponent extends UIComponent {
       this.isOnlyReadSavedData = event.data;
       this.dataValues = [
         this.filterOrgUnit,
-        this.filterMonth,
+        this.filterMonth +1,
         this.filterYear,
         this.filterGroupSalCode,
         this.filterDowCode,
         this.isOnlyReadSavedData.toString(),
       ].join(';');
-      // if(this.viewDetailData){
-      //   this.calendarGrid.refresh();
-      // }
+      this.detectorRef.detectChanges();
+      this.loadDataInGrid();
     }
   }
   handleShowHideMF(event) {
@@ -449,6 +474,7 @@ export class KowdsComponent extends UIComponent {
       this.viewStatistic = true;
       this.viewDetailData = false;
     }
+    this.detectorRef.detectChanges();
     this.loadDataInGrid();
   }
 
@@ -490,12 +516,16 @@ export class KowdsComponent extends UIComponent {
   }
 
   doubleClickGrid(event) {
-    let searchStr = 'workDate';
-    let date = parseInt(event.column.field.replace(searchStr, ''));
-    let data = event.rowData[`workDate${date}`];
-    let employeeId = event.rowData.emp.employeeID;
+    let data = event.rowData[event.column.field];
+    let employeeId = event?.rowData?.EmployeeID;
     if (this.userPermission.write != 0 || this.userPermission.isAdmin == true) {
-      this.handleEmpKows(this.editHeaderText, 'edit', data, employeeId, date);
+      this.handleEmpKows(
+        this.editHeaderText,
+        'edit',
+        data,
+        employeeId,
+        event.column.field
+      );
     }
   }
 
@@ -504,13 +534,13 @@ export class KowdsComponent extends UIComponent {
     this.filterOrgUnit = evt?.data?.orgUnitID;
     this.dataValues = [
       this.filterOrgUnit,
-      this.filterMonth,
+      this.filterMonth +1,
       this.filterYear,
       this.filterGroupSalCode,
       this.filterDowCode,
       this.isOnlyReadSavedData.toString(),
     ].join(';');
-    this.detectorRef.detectChanges();    
+    this.detectorRef.detectChanges();
     this.loadDataInGrid();
   }
 
@@ -562,19 +592,29 @@ export class KowdsComponent extends UIComponent {
     if (event.type == 'pined-filter') {
       let oldFilterDow = this.filterDowCode;
       let oldFilterGroupSal = this.filterGroupSalCode;
-      this.filterDowCode = event?.data[0].value;
-      let temp = event?.data[0].value.split('/');
-      this.filterMonth = temp[1];
-      this.filterYear = temp[0];
+      if (event?.data?.length > 0) {
+        let dowCode = event?.data?.find((x) => x.field == 'DowCode');
+        this.filterDowCode = dowCode?.value ?? null;
 
-      this.filterGroupSalCode = event?.data[1].value;
+        let temp = this.filterDowCode?.split('/');
+        this.filterMonth = temp[1] - 1;
+        this.filterYear = temp[0];
 
+        let groupSC = event?.data?.find((x) => x.field == 'GroupSalCode');
+        this.filterGroupSalCode = groupSC?.value ?? null;
+      } else {
+        this.filterMonth = null;
+        this.filterYear = null;
+        this.filterDowCode = null;
+        this.filterGroupSalCode = null;
+      }
+      this.detectorRef.detectChanges();
       if (
         this.filterDowCode != oldFilterDow ||
         this.filterGroupSalCode != oldFilterGroupSal
       ) {
         if (this.viewDetailData == true) {
-          this.calendarGrid.refresh();
+          this.loadDataInGrid(true);
         }
       }
     }

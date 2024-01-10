@@ -66,6 +66,7 @@ export class SprintsComponent extends UIComponent {
   widthWin: any;
   toolbarCls: string;
   hidenMF: boolean = false;
+  project: any;
 
   constructor(
     inject: Injector,
@@ -129,25 +130,55 @@ export class SprintsComponent extends UIComponent {
       let option = new SidebarModel();
       option.DataService = this.view?.currentView?.dataService;
       option.FormModel = this.view?.currentView?.formModel;
-      option.Width = '550px';
-      this.dialog = this.callfc.openSide(
-        PopupAddSprintsComponent,
-        [this.view.dataService.dataSelected, 'add', this.titleAction],
-        option
-      );
-      this.dialog.closed.subscribe((e) => {
-        if (!e?.event) this.view.dataService.clear();
-        // if (e?.event == null)
-        //   this.view.dataService.delete(
-        //     [this.view.dataService.dataSelected],
-        //     false
-        //   );
-        if (e?.event != null) {
-          e.event.modifiedOn = new Date();
-          this.view.dataService.update(e?.event).subscribe();
-          this.changeDetectorRef.detectChanges();
-        }
-      });
+      // option.Width = res?.iterationType == '1' ? '800px' : '550px';
+      if (res?.iterationType == '1') {
+        option.Width = '800px';
+        this.getDefault('PM', 'TMS031', 'PM_Projects').subscribe((pr) => {
+          if (pr)
+            this.cache
+              .gridViewSetup('TMProjects', 'grvTMProjects')
+              .subscribe((grv) => {
+                if (grv) {
+                  let obj = {
+                    data: this.view.dataService.dataSelected,
+                    action: 'add',
+                    titleAction: this.titleAction,
+                    project: pr?.data,
+                    grvProject: grv,
+                  };
+                  this.openPopUp(obj, option);
+                }
+              });
+        });
+      } else {
+        option.Width = '550px';
+        let obj = {
+          data: this.view.dataService.dataSelected,
+          action: 'add',
+          titleAction: this.titleAction,
+        };
+        this.openPopUp(obj, option);
+      }
+
+      // this.dialog = this.callfc.openSide(
+      //   PopupAddSprintsComponent,
+      //   // [this.view.dataService.dataSelected, 'add', this.titleAction],
+      //   obj,
+      //   option
+      // );
+      // this.dialog.closed.subscribe((e) => {
+      //   if (!e?.event) this.view.dataService.clear();
+      //   // if (e?.event == null)
+      //   //   this.view.dataService.delete(
+      //   //     [this.view.dataService.dataSelected],
+      //   //     false
+      //   //   );
+      //   if (e?.event != null) {
+      //     e.event.modifiedOn = new Date();
+      //     this.view.dataService.update(e?.event).subscribe();
+      //     this.changeDetectorRef.detectChanges();
+      //   }
+      // });
     });
   }
 
@@ -161,25 +192,68 @@ export class SprintsComponent extends UIComponent {
         let option = new SidebarModel();
         option.DataService = this.view?.currentView?.dataService;
         option.FormModel = this.view?.currentView?.formModel;
-        option.Width = '550px';
-        this.dialog = this.callfc.openSide(
-          PopupAddSprintsComponent,
-          [this.view.dataService.dataSelected, 'edit', this.titleAction],
-          option
-        );
-        this.dialog.closed.subscribe((e) => {
-          if (!e?.event) this.view.dataService.clear();
-          // if (e?.event == null)
-          //   this.view.dataService.delete(
-          //     [this.view.dataService.dataSelected],
-          //     false
-          //   );
-          if (e?.event != null) {
-            e.event.modifiedOn = new Date();
-            this.view.dataService.update(e?.event).subscribe();
-            this.changeDetectorRef.detectChanges();
-          }
-        });
+        if (res?.iterationType == '1') {
+          option.Width = '800px';
+          this.api
+            .exec<any>(
+              'PM',
+              'ProjectsBusiness',
+              'GetProjectByIDAsync',
+              data.projectID
+            )
+            .subscribe((pr) => {
+              if (pr)
+                this.cache
+                  .gridViewSetup('TMProjects', 'grvTMProjects')
+                  .subscribe((grv) => {
+                    if (grv) {
+                      let obj = {
+                        data: this.view.dataService.dataSelected,
+                        action: 'edit',
+                        titleAction: this.titleAction,
+                        project: pr,
+                        grvProject: grv,
+                      };
+                      this.openPopUp(obj, option);
+                    }
+                  });
+            });
+        } else {
+          option.Width = '550px';
+          let obj = {
+            data: this.view.dataService.dataSelected,
+            action: 'edit',
+            titleAction: this.titleAction,
+          };
+          this.openPopUp(obj, option);
+        }
+
+        //   option.Width = res?.iterationType == '1' ? '800px' : '550px';
+        //   let obj = {
+        //     data: this.view.dataService.dataSelected,
+        //     action: 'edit',
+        //     titleAction: this.titleAction,
+        //     project: this.project,
+        //   };
+        //   this.dialog = this.callfc.openSide(
+        //     PopupAddSprintsComponent,
+        //     // [this.view.dataService.dataSelected, 'edit', this.titleAction],
+        //     obj,
+        //     option
+        //   );
+        //   this.dialog.closed.subscribe((e) => {
+        //     if (!e?.event) this.view.dataService.clear();
+        //     // if (e?.event == null)
+        //     //   this.view.dataService.delete(
+        //     //     [this.view.dataService.dataSelected],
+        //     //     false
+        //     //   );
+        //     if (e?.event != null) {
+        //       e.event.modifiedOn = new Date();
+        //       this.view.dataService.update(e?.event).subscribe();
+        //       this.changeDetectorRef.detectChanges();
+        //     }
+        //   });
       });
   }
 
@@ -189,25 +263,136 @@ export class SprintsComponent extends UIComponent {
       let option = new SidebarModel();
       option.DataService = this.view?.currentView?.dataService;
       option.FormModel = this.view?.currentView?.formModel;
+
+      if (res?.iterationType == '1') {
+        option.Width = '800px';
+        this.api
+          .exec<any>(
+            'PM',
+            'ProjectsBusiness',
+            'GetProjectByIDAsync',
+            data.projectID
+          )
+          .subscribe((prCrr) => {
+            this.getDefault('PM', 'TMS031', 'PM_Projects').subscribe((pr) => {
+              if (pr) {
+                pr.projectName == prCrr.projectName;
+                pr.note == prCrr.note;
+                this.cache
+                  .gridViewSetup('TMProjects', 'grvTMProjects')
+                  .subscribe((grv) => {
+                    if (grv) {
+                      let obj = {
+                        data: this.view.dataService.dataSelected,
+                        action: 'copy',
+                        titleAction: this.titleAction,
+                        project: pr,
+                        grvProject: grv,
+                      };
+                      this.openPopUp(obj, option);
+                    }
+                  });
+              }
+            });
+          });
+      } else {
+        option.Width = '550px';
+        let obj = {
+          data: this.view.dataService.dataSelected,
+          action: 'copy',
+          titleAction: this.titleAction,
+        };
+        this.openPopUp(obj, option);
+      }
+
+      // option.Width = res?.iterationType == '1' ? '800px' : '550px';
+      // let obj = {
+      //   data: this.view.dataService.dataSelected,
+      //   action: 'copy',
+      //   titleAction: this.titleAction,
+      //   project: this.project,
+      // };
+      // this.dialog = this.callfc.openSide(
+      //   PopupAddSprintsComponent,
+      //   // [this.view.dataService.dataSelected, 'copy', this.titleAction],
+      //   obj,
+      //   option
+      // );
+      // this.dialog.closed.subscribe((e) => {
+      //   if (!e?.event) this.view.dataService.clear();
+      //   // if (e?.event == null)
+      //   //   this.view.dataService.delete(
+      //   //     [this.view.dataService.dataSelected],
+      //   //     false
+      //   //   );
+      //   if (e?.event != null) {
+      //     e.event.modifiedOn = new Date();
+      //     this.view.dataService.update(e?.event).subscribe();
+      //     this.changeDetectorRef.detectChanges();
+      //   }
+      // });
+    });
+  }
+
+  viewInfo(data) {
+    if (data) {
+      this.view.dataService.dataSelected = data;
+    }
+
+    let option = new SidebarModel();
+    option.DataService = this.view?.currentView?.dataService;
+    option.FormModel = this.view?.currentView?.formModel;
+    if (data?.iterationType == '1') {
+      option.Width = '800px';
+      this.api
+        .exec<any>(
+          'PM',
+          'ProjectsBusiness',
+          'GetProjectByIDAsync',
+          data.projectID
+        )
+        .subscribe((pr) => {
+          if (pr)
+            this.cache
+              .gridViewSetup('TMProjects', 'grvTMProjects')
+              .subscribe((grv) => {
+                if (grv) {
+                  let obj = {
+                    data: this.view.dataService.dataSelected,
+                    action: 'view',
+                    titleAction: this.titleAction,
+                    project: pr,
+                    grvProject: grv,
+                  };
+                  this.openPopUp(obj, option);
+                }
+              });
+        });
+    } else {
       option.Width = '550px';
-      this.dialog = this.callfc.openSide(
-        PopupAddSprintsComponent,
-        [this.view.dataService.dataSelected, 'copy', this.titleAction],
-        option
-      );
-      this.dialog.closed.subscribe((e) => {
-        if (!e?.event) this.view.dataService.clear();
-        // if (e?.event == null)
-        //   this.view.dataService.delete(
-        //     [this.view.dataService.dataSelected],
-        //     false
-        //   );
-        if (e?.event != null) {
-          e.event.modifiedOn = new Date();
-          this.view.dataService.update(e?.event).subscribe();
-          this.changeDetectorRef.detectChanges();
-        }
-      });
+      let obj = {
+        data: this.view.dataService.dataSelected,
+        action: 'view',
+        titleAction: this.titleAction,
+      };
+      this.openPopUp(obj, option);
+    }
+  }
+
+  openPopUp(obj, option) {
+    this.dialog = this.callfc.openSide(PopupAddSprintsComponent, obj, option);
+    this.dialog.closed.subscribe((e) => {
+      if (!e?.event) this.view.dataService.clear();
+      // if (e?.event == null)
+      //   this.view.dataService.delete(
+      //     [this.view.dataService.dataSelected],
+      //     false
+      //   );
+      if (e?.event != null) {
+        e.event.modifiedOn = new Date();
+        this.view.dataService.update(e?.event).subscribe();
+        this.changeDetectorRef.detectChanges();
+      }
     });
   }
 
@@ -246,6 +431,9 @@ export class SprintsComponent extends UIComponent {
       case 'SYS04':
         this.copy(data);
         break;
+      case 'SYS05':
+        this.viewInfo(data);
+        break;
       case 'TMT03011':
         if (data.iterationID != this.user.userID) this.shareBoard(e.data, data);
         break;
@@ -279,7 +467,6 @@ export class SprintsComponent extends UIComponent {
   //#endregion
 
   //#region Event
-  sendemail(data) {}
 
   shareBoard(e, data) {
     var listUserDetail = [];
@@ -438,5 +625,15 @@ export class SprintsComponent extends UIComponent {
   selectedChange(sprint: any) {
     this.itemSelected = sprint?.data ? sprint?.data : sprint;
     this.detectorRef.detectChanges();
+  }
+
+  getDefault(service, funcID, entityName) {
+    return this.api.execSv<any>(
+      service,
+      'Core',
+      'DataBusiness',
+      'GetDefaultAsync',
+      [funcID, entityName]
+    );
   }
 }

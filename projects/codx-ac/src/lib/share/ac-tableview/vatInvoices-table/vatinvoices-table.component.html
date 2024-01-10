@@ -1,140 +1,127 @@
 <div class="table-responsive table-ac">
-    <table style="table-layout: fixed;" class="table mb-0">
+    <table class="table mb-0">
       <thead class="border-gray-200 table-thead-ac">
         <tr class="border-bottom">
-          <th class="w-10 border-bottom">
-            <div class="d-flex align-items-center justify-content-start ps-3">
-              <codx-label class="fw-bold" fiedName="lblInvoiceNo" default="Mẫu số">
-              </codx-label>
-            </div>
+          <th class="border-bottom" style="width: 15em;min-width: 10em;">
+            <span class="fw-bold">Mẫu số</span>
           </th>
-          <th class="w-10 border-bottom">
-            <div class="d-flex align-items-center justify-content-start ps-3">
-              <codx-label class="fw-bold" fiedName="lblInvoiceDate" default="Ký hiệu">
-              </codx-label>
-            </div>
+          <th class="border-bottom" style="width: 15em;min-width: 10em;">
+            <span class="fw-bold">Ký hiệu</span>
           </th>
-          <th class="w-15 border-bottom">
-            <div class="d-flex align-items-center justify-content-start ps-3">
-              <codx-label class="fw-bold" fiedName="lblDueDate" default="Số hóa đơn">
-              </codx-label>
-            </div>
+          <th class="border-bottom" style="width: 15em;min-width: 10em;">
+            <span class="fw-bold">Số hóa đơn</span>
           </th>
-          <th class="w-15 border-bottom">
-            <div class="d-flex align-items-center justify-content-start ps-3">
-              <codx-label class="fw-bold" fiedName="lblBalanceAmt" default="Ngày hóa đơn">
-              </codx-label>
-            </div>
+          <th class="border-bottom" style="width: 15em;min-width: 10em;">
+            <span class="fw-bold">Ngày hóa đơn</span>
           </th>
-          <th class="w-25 border-bottom">
-            <div class="d-flex align-items-center justify-content-start ps-3">
-              <codx-label class="fw-bold" fiedName="lblSettledAmt" default="Đối tượng">
-              </codx-label>
-            </div>
+          <th class="border-bottom" style="width: 15em;min-width: 10em;">
+            <span class="fw-bold">Đối tượng</span>
           </th>
-          <th class="w-20 border-bottom">
-            <div class="d-flex align-items-center justify-content-end ps-3">
-              <codx-label class="fw-bold" fiedName="lblNote" default="Số tiền">
-              </codx-label>
-            </div>
+          <th class="border-bottom text-end" style="width: 15em;min-width: 10em;">
+            <span class="fw-bold">Số tiền</span>
           </th>
-          <th class="w-15 border-bottom">
-            <div class="d-flex align-items-center justify-content-end ps-3">
-              <codx-label class="fw-bold" fiedName="lblNote" default="Thuế suất">
-              </codx-label>
-            </div>
+          <th class="border-bottom text-end" style="width: 15em;min-width: 10em;">
+            <span class="fw-bold">Thuế suất</span>
           </th>
-          <th class="w-20 border-bottom">
-            <div class="d-flex align-items-center justify-content-end ps-3">
-              <codx-label class="fw-bold" fiedName="lblNote" default="Tiền thuế">
-              </codx-label>
-            </div>
+          <th class="border-bottom text-end" style="width: 15em;min-width: 10em;">
+            <span class="fw-bold">Tiền thuế</span>
           </th>
-          <th class="w-30 border-bottom">
-            <div class="d-flex align-items-center justify-content-start ps-3">
-              <codx-label class="fw-bold" fiedName="lblNote" default="Ghi chú">
-              </codx-label>
-            </div>
+          <th class="border-bottom" style="width: 30em;min-width: 25em;">
+            <span class="fw-bold">Ghi chú</span>
           </th>
         </tr>
       </thead>
-      <tbody class="border-bottom">
-        <tr *ngFor="let item of listVATInvoices;trackBy: trackByFn">
-          <td>
-            <div class="d-flex align-items-center justify-content-start ps-3">
-              <ng-container *ngIf="(item.invoiceForm != null && item.invoiceForm != '')">
-                <span class="fw-bold line-clamp line-clamp-1">{{item.invoiceForm}}</span>
-              </ng-container>
-            </div>
+      <tbody class="table-body-ac" *ngIf="listVATInvoices && listVATInvoices.length">
+        <tr *ngFor="let item of listVATInvoices;trackBy: trackByFn" style="border-bottom: 1px solid var(--bs-border-color) !important">
+          <td style="width: 15em;min-width: 10em;">
+            <ng-container *ngIf="(item.invoiceForm != null && item.invoiceForm != '')">
+              <span class="fw-bold line-clamp line-clamp-1">{{item.invoiceForm}}</span>
+            </ng-container>
           </td>
-          <td>
-            <div class="d-flex align-items-center justify-content-start ps-3">
-              <ng-container *ngIf="(item.invoiceSeri != null && item.invoiceSeri != '')">
-                <span class="fw-bold">{{item.invoiceSeri}}</span>
-              </ng-container>
-            </div>
+          <td style="width: 15em;min-width: 10em;">
+            <ng-container *ngIf="(item.invoiceSeri != null && item.invoiceSeri != '')">
+              <span class="fw-bold">{{item.invoiceSeri}}</span>
+            </ng-container>
           </td>
-          <td>
-            <div class="d-flex align-items-center justify-content-start ps-3">
-              <ng-container *ngIf="(item.invoiceNo != null && item.invoiceNo != '')">
-                <span class="fw-bold">{{item.invoiceNo}}</span>
-              </ng-container>
-            </div>
+          <td style="width: 15em;min-width: 10em;">
+            <ng-container *ngIf="(item.invoiceNo != null && item.invoiceNo != '')">
+              <span class="fw-bold">{{item.invoiceNo}}</span>
+            </ng-container>
           </td>
-          <td>
-            <div class="d-flex align-items-center justify-content-start ps-3">
-              <ng-container *ngIf="(item.invoiceDate != null && item.invoiceDate != '')">
-                <span #invoiceDate [innerHTML]="
-                    item?.invoiceDate
-              | formatvalue : fmVATInvoices : 'invoiceDate' : invoiceDate | async
-          " class="text-gray-600"></span>
-              </ng-container>
-            </div>
+          <td style="width: 15em;min-width: 10em;">
+            <ng-container *ngIf="(item.invoiceDate != null && item.invoiceDate != '')">
+              <span #invoiceDate [innerHTML]="
+                  item?.invoiceDate
+            | formatvalue : fmVATInvoices : 'invoiceDate' : invoiceDate | async
+        " class="text-gray-600"></span>
+            </ng-container>
           </td>
-          <td>
-            <div class="d-flex align-items-center justify-content-start ps-3">
-              <ng-container *ngIf="(item.objectName != null && item.objectName != '')">
-                <span class="text-gray-600">{{item.objectName}}</span>
-              </ng-container>
-            </div>
+          <td style="width: 15em;min-width: 10em;">
+            <ng-container *ngIf="(item.objectName != null && item.objectName != '')">
+              <span class="text-gray-600">{{item.objectName}}</span>
+            </ng-container>
           </td>
-          <td>
-            <div class="d-flex align-items-center justify-content-end ps-3">
-              <span class="fw-bold line-clamp line-clamp-1" [innerHTML]="item?.vatBase
+          <td class="text-end" style="width: 15em;min-width: 10em;">
+            <span class="fw-bold line-clamp line-clamp-1" [innerHTML]="item?.vatBase
                   | tranformValueNumber : 'B' | async"></span>
-            </div>
           </td>
-          <td>
-            <div class="d-flex align-items-center justify-content-end ps-3">
-              <ng-container *ngIf="(item.vatPct!= null && item.vatPct != '')">
-                <span class="fw-bold">{{item.vatPct * 100 + "%"}}</span>
-              </ng-container>
-            </div>
+          <td class="text-end" style="width: 15em;min-width: 10em;">
+            <ng-container *ngIf="(item.vatPct!= null && item.vatPct != '')">
+              <span class="fw-bold">{{item.vatPct * 100 + "%"}}</span>
+            </ng-container>
           </td>
-          <td>
-            <div class="d-flex align-items-center justify-content-end ps-3">
-              <span class="fw-bold line-clamp line-clamp-1" #vatAmt [innerHTML]="item?.vatAmt
+          <td class="text-end" style="width: 15em;min-width: 10em;">
+            <span class="fw-bold line-clamp line-clamp-1" #vatAmt [innerHTML]="item?.vatAmt
                   | tranformValueNumber : 'B' | async"></span>
-            </div>
           </td>
-          <td>
-            <div class="d-flex align-items-center justify-content-start ps-3">
-              <ng-container *ngIf="(item.note != null && item.note != '')">
-                <span class="fw-bold line-clamp line-clamp-1">{{item.note}}</span>
-              </ng-container>
-            </div>
+          <td style="width: 30em;min-width: 25em;">
+            <ng-container *ngIf="(item.note != null && item.note != '')">
+              <span class="fw-bold line-clamp line-clamp-1">{{item.note}}</span>
+            </ng-container>
           </td>
         </tr>
       </tbody>
-    </table>
-    <div *ngIf="listVATInvoices && listVATInvoices.length == 0" class="ac-empty">
-      <img src="../assets/themes/sys/default/img/DataEmpty.svg" />
-      <div class="fs-6 text-dark mt-2 text-center">
-          {{ "SYS011" | mssg | async }}
+      <div *ngIf="listVATInvoices && listVATInvoices.length == 0" class="ac-empty">
+        <img src="../assets/themes/sys/default/img/DataEmpty.svg" />
+                    <div class="fs-6 text-dark mt-2 text-center">
+                        {{ "SYS011" | mssg | async }}
+                    </div>
       </div>
-    </div>
+    </table>
+    <table *ngIf="listVATInvoices && listVATInvoices.length" class="table mb-0 table-footer-ac">
+      <thead class="border-gray-200 table-thead-ac">
+        <tr class="border-gray-200 bg-gray-100">
+          <th class="text-end" style="width: 15em;min-width: 10em;">
+            <codx-label *ngIf="listVATInvoices && listVATInvoices.length > 0" class="fw-bold line-clamp line-clamp-1" fiedName="lblTotal"
+              default="Tổng cộng">
+          </codx-label>
+          </th>
+          <th class="border-bottom" style="width: 15em;min-width: 10em;">
+          </th>
+          <th class="border-bottom" style="width: 15em;min-width: 10em;">
+          </th>
+          <th class="border-bottom" style="width: 15em;min-width: 10em;">
+          </th>
+          <th class="border-bottom" style="width: 15em;min-width: 10em;">
+          </th>
+          <th class="border-bottom text-end" style="width: 15em;min-width: 10em;">
+            <span *ngIf="listVATInvoices && listVATInvoices.length > 0" class="fw-bold line-clamp line-clamp-1" #vatBase [innerHTML]="totalVatBase
+              | tranformValueNumber : 'B' | async"></span>
+          </th>
+          <th class="border-bottom text-end" style="width: 15em;min-width: 10em;">
+            
+          </th>
+          <th class="border-bottom text-end" style="width: 15em;min-width: 10em;">
+            <span *ngIf="listVATInvoices && listVATInvoices.length > 0" class="fw-bold line-clamp line-clamp-1" #vatAmt [innerHTML]="totalVatAtm
+              | tranformValueNumber : 'B' | async"></span>
+          </th>
+          <th class="border-bottom" style="width: 30em;min-width: 25em;">
+          </th>
+        </tr>
+      </thead>
+    </table>
   </div>
-  <table style="table-layout: fixed;" class="table mb-0">
+  <!-- <table style="table-layout: fixed;" class="table mb-0">
     <tfoot class="table-footer-ac">
       <td class="w-10"></td>
       <td class="w-10"></td>
@@ -161,4 +148,4 @@
       </td>
       <td class="w-30"></td>
     </tfoot>
-  </table>
+  </table> -->

@@ -11,7 +11,8 @@
 }
 
 .table-ac {
-    height: calc(100vh - 465px);
+    height: calc(100vh - 420px);
+    position: relative;
 }
 
 .table-thead-ac {
@@ -21,10 +22,36 @@
     background-color: white !important;
 }
 
+.table-thead-ac tr{
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+    height: fit-content;
+}
+
+.table-body-ac{
+    display: block;
+    overflow-x: hidden;
+    height: calc(100vh - 500px);
+}
+
+.table-body-ac tr{
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+    height: fit-content;
+}
+
 .table-footer-ac {
-    position: sticky !important;
+    position: absolute !important;
     bottom: 0 !important;
-    background-color: #f8f9fa !important;
+}
+
+.table-footer-ac tr{
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+    height: fit-content;
 }
 
 .table-ac table tbody tr {
@@ -40,7 +67,7 @@
     flex-direction: column !important;
 
     img {
-        width: 12% !important;
+        height: 30% !important;
     }
 }
 
@@ -423,11 +450,11 @@
 
 .card-general-less {
     .table-ac {
-        height: calc(100vh - 415px) !important;
+        height: calc(100vh - 380px) !important;
     }
 
     .ac-empty {
-        height: calc(100vh - 455px) !important;
+        height: calc(100vh - 425px) !important;
     }
 }
 
@@ -451,15 +478,15 @@
     }
 }
 
-.card-pur-less {
-    .table-ac {
-        height: calc(100vh - 450px) !important;
-    }
+// .card-pur-less {
+//     .table-ac {
+//         height: calc(100vh - 450px) !important;
+//     }
 
-    .ac-empty {
-        height: calc(100vh - 490px) !important;
-    }
-}
+//     .ac-empty {
+//         height: calc(100vh - 490px) !important;
+//     }
+// }
 
 .card-transfer {
     .table-ac {

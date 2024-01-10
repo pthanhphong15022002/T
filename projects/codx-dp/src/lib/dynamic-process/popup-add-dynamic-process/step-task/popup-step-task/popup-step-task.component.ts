@@ -34,6 +34,7 @@ import { Subject, takeUntil, filter, firstValueFrom } from 'rxjs';
 import { PopupAddCategoryComponent } from 'projects/codx-es/src/lib/setting/category/popup-add-category/popup-add-category.component';
 import { PopupSettingReferenceComponent } from '../../popup-add-custom-field/popup-setting-reference/popup-setting-reference.component';
 import { PopupMapContractComponent } from './popup-map-contract/popup-map-contract.component';
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'lib-popup-job',
@@ -67,7 +68,7 @@ export class PopupJobComponent implements OnInit, OnDestroy {
   linkQuesiton = 'http://';
 
   view = [];
-  listFields = [];
+
   listFieldID = [];
   listFieldLink = [];
   listParentID = [];
@@ -82,10 +83,16 @@ export class PopupJobComponent implements OnInit, OnDestroy {
   isBoughtTM = false;
   showLabelAttachment = false;
   listField = [];
-  titleField = '';
+ 
   listApproverView;
   listGrvContracts;
   showSelect = false;
+
+  listFields = [];
+  listFieldConvert = [];
+  titleField = '';
+  listFieldIntask = [];
+
   listCombobox = {
     U: 'Share_Users_Sgl',
     O: 'Share_OrgUnits_Sgl',
@@ -102,6 +109,7 @@ export class PopupJobComponent implements OnInit, OnDestroy {
     private callfunc: CallFuncService,
     private notiService: NotificationsService,
     private changeDetectorRef: ChangeDetectorRef,
+    private elementRef: ElementRef,
     private api: ApiHttpService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
@@ -178,10 +186,27 @@ export class PopupJobComponent implements OnInit, OnDestroy {
       ? this.stepsTasks?.parentID?.split(';')
       : [];
 
-    this.listFieldID = this.stepsTasks?.fieldID
-      ? this.stepsTasks?.fieldID?.split(';')
-      : [];
+    this.listFieldID = this.stepsTasks?.fieldID ? this.stepsTasks?.fieldID?.split(';') : [];
     this.listFields = this.step?.fields || [];
+    this.listFieldConvert = this.listFields?.map(x => ({recID: x?.recID,title: x?.title}));
+
+    if(this.listFieldID?.length > 0 && this.listFieldConvert){
+      let fields = [];
+
+      for(let fieldID of this.listFieldID ){
+        let field = this.listFieldConvert?.find(x => x.recID == fieldID)
+        if(field){
+          this.listFieldIntask.push(field);
+        }
+      }
+      for(let field of this.listFieldConvert ){
+        if(!this.listFieldID?.includes(field?.recID)){
+          fields.push(field);
+        }
+      }
+      this.titleField = this.listFieldIntask?.map(x => x.title)?.join(';');
+      this.listFieldConvert = fields;
+    }
 
     if (this.typeTask?.value == 'CO') {
       this.cache
@@ -357,8 +382,8 @@ export class PopupJobComponent implements OnInit, OnDestroy {
       }
       this.stepsTasks.reference = listFieldIDLink.join(';');
     }
-    if(this.typeTask?.value == 'F' && this.listFieldID){
-      this.stepsTasks.fieldID = this.listFieldID.join(';');
+    if (this.typeTask?.value == 'F' && this.listFieldIntask) {
+      this.stepsTasks.fieldID = this.listFieldIntask?.map(x => x.recID).join(';');
     }
     let message = [];
     for (let key of this.REQUIRE) {
@@ -585,11 +610,11 @@ export class PopupJobComponent implements OnInit, OnDestroy {
   parentIDChange(event) {
     this.listParentID = event;
   }
-  fieldIDChange(event) {
-    this.listFieldID = event;
-    let field = this.listFields.find((fieldID) => fieldID.recID == event[0]);
-    // this.clickSettingReference(field);
-  }
+  // fieldIDChange(event) {
+  //   this.listFieldID = event;
+  //   let field = this.listFields.find((fieldID) => fieldID.recID == event[0]);
+  //   // this.clickSettingReference(field);
+  // }
   onItemClick(e) {
     console.log(e);
     console.log(e?.item?.value);
@@ -824,5 +849,50 @@ export class PopupJobComponent implements OnInit, OnDestroy {
         this.changeDetectorRef.markForCheck();
       }
     });
+  }
+
+  handleDivClick(event: Event) {
+    event.stopPropagation();
+    this.showSelect = true;
+  }
+
+  @HostListener('document:click', ['$event'])
+  onClick(event: MouseEvent) {
+    const combobox = this.elementRef.nativeElement.querySelector('#combobox');
+    if (combobox && !combobox.contains(event.target as Node)) {
+      this.showSelect = false;
+    }
+  }
+
+  chooseFieldCombobox(field, index) {
+    if(field){
+      this.listFieldIntask = this.listFieldIntask?.length ? this.listFieldIntask : [];
+      this.listFieldIntask.push({recID: field?.recID, title: field?.title});
+      this.titleField = this.listFieldIntask?.map(x => x.title)?.join('; ');
+      if(index >= 0){
+        this.listFieldConvert?.splice(index,1);
+      }
+    }
+  }
+
+  removeField(field) {
+   if(field){
+    let index = this.listFieldIntask.findIndex(x => x.recID === field?.recID);
+    if(index >= 0){
+      this.listFieldIntask?.splice(index,1);
+      this.titleField = this.listFieldIntask?.map(x => x.title)?.join(';');
+      this.listFieldConvert?.unshift(field);
+    }
+   }
+  }
+
+  drop(event: CdkDragDrop<string[]>) {
+    let field = event.previousContainer?.data['item'];
+    let indexContainer = event.container?.data['index'];
+    let indexPrevious = event.previousContainer?.data['index'];
+    if(this.listFieldIntask?.length > 0 && indexContainer >= 0 && indexPrevious>=0 && indexContainer != indexPrevious  && field){
+      this.listFieldIntask.splice(indexPrevious,1);
+      this.listFieldIntask.splice(indexContainer,0,field);
+    }
   }
 }

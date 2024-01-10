@@ -1,110 +1,149 @@
 <div class="form-group w-100">
-  <!-- <div class="d-flex justify-content-between">
-    <div class="'justify-content-start"> -->
-  <div class="d-flex align-items-center mb-2">
-    <div class="me-5">
-      <codx-label
-        *ngIf="showTitle"
-        [name]="customField.fieldName"
-        formName="DPInstancesStepsFields"
-        gridViewName="grvDPInstancesStepsFields"
-        [default]="customField.title"
-      >
-      </codx-label>
-      <codx-label
-        *ngIf="!showTitle"
-        fiedName="DefaultValue"
-        formName="DPStepsFields"
-        gridViewName="grvDPStepsFields"
-      >
-      </codx-label>
-    </div>
-    <div class="d-flex align-items-center text-gray-600">
-      <span *ngIf="viewFieldName && customField.fieldName">
-        {{ "(" + customField.fieldName + ")" }}
-      </span>
-      <span *ngIf="customField.isRequired">
+  <div class="d-flex justify-content-between">
+    <!-- <div class="'justify-content-start"> -->
+    <div class="d-flex align-items-center mb-2">
+      <div class="me-5">
         <codx-label
-          class="text-danger"
-          name="attentionIsRequired"
+          *ngIf="showTitle"
+          [name]="customField.fieldName"
           formName="DPInstancesStepsFields"
           gridViewName="grvDPInstancesStepsFields"
-          default="*"
+          [default]="customField.title"
         >
         </codx-label>
-      </span>
-      <span
-        *ngIf="customField.dataType == 'N' && customField.dataFormat == 'P'"
-        class="codx-label"
-      >
-        (%)
-      </span>
-      <!-- </div> -->
-      <!-- <div class="d-flex justify-content-end"> -->
-      <button
-        type="button"
-        *ngIf="customField.dataType == 'A'"
-        class="me-5 btn btn-icon btn-light-primary"
-        (click)="!disable ? addFile() : ''"
-      >
-        <span class="icon-attach_file icon-18"></span>
-      </button>
-      <span
-        *ngIf="customField.dataType == 'P' || customField.dataType == 'C'"
-        class="ms-2"
-      >
-        <button
-          type="button"
-          class="btn btn-icon btn-light-primary"
-          (click)="
-            customField.dataType == 'P' ? openUserPopup() : openContact()
-          "
-          [disabled]="disable"
+        <codx-label
+          *ngIf="!showTitle"
+          fiedName="DefaultValue"
+          formName="DPStepsFields"
+          gridViewName="grvDPStepsFields"
         >
-          <span class="icon-group_add icon-16"></span>
-        </button>
-      </span>
-      <span *ngIf="customField.dataType == 'TA'" class="ms-2">
-        <button
-          type="button"
-          class="btn btn-icon btn-light-primary me-2"
-          (click)="clickAddLine()"
-          [disabled]="disable"
-        >
-          <i class="icon-add_box icon-16"></i></button
-      ></span>
-
-      <span *ngIf="customField.dataType == 'CF'" class="ms-2">
-        <span
-          class="btn btn-icon btn-light-primary me-2"
-          [ngbPopover]="toolTip"
-          #p="ngbPopover"
-          [openDelay]="500"
-          (mouseenter)="p.open()"
-          (mouseleave)="p.close()"
-          placement="bottom right top"
-          [popoverClass]="'cfField'"
-          container="body"
-          placement="top right left"
-        >
-          <i class="icon-calculate icon-16"></i></span
-      ></span>
-      <ng-template #toolTip>
-        <div class="">
+        </codx-label>
+      </div>
+      <div class="d-flex align-items-center text-gray-600">
+        <span *ngIf="viewFieldName && customField.fieldName">
+          {{ "(" + customField.fieldName + ")" }}
+        </span>
+        <span *ngIf="customField.isRequired">
           <codx-label
-            class="label-colon fw-bold"
-            name="lblRecipe"
+            class="text-danger"
+            name="attentionIsRequired"
             formName="DPInstancesStepsFields"
             gridViewName="grvDPInstancesStepsFields"
-            default="Công thức"
-          ></codx-label>
-          <div class="fw-bold text-primary">
-            {{ customField.dataFormat }}
+            default="*"
+          >
+          </codx-label>
+        </span>
+        <span
+          *ngIf="customField.dataType == 'N' && customField.dataFormat == 'P'"
+          class="codx-label"
+        >
+          (%)
+        </span>
+        <!-- </div> -->
+        <!-- <div class="d-flex justify-content-end"> -->
+        <button
+          type="button"
+          *ngIf="customField.dataType == 'A'"
+          class="me-5 btn btn-icon btn-light-primary"
+          (click)="!disable ? addFile() : ''"
+        >
+          <span class="icon-attach_file icon-18"></span>
+        </button>
+        <span
+          *ngIf="customField.dataType == 'P' || customField.dataType == 'C'"
+          class="ms-2"
+        >
+          <button
+            type="button"
+            class="btn btn-icon btn-light-primary"
+            (click)="
+              customField.dataType == 'P' ? openUserPopup() : openContact()
+            "
+            [disabled]="disable"
+          >
+            <span class="icon-group_add icon-16"></span>
+          </button>
+        </span>
+        <span *ngIf="customField.dataType == 'TA'" class="ms-2">
+          <button
+            type="button"
+            class="btn btn-icon btn-light-primary me-2"
+            (click)="clickAddLine()"
+            [disabled]="disable"
+          >
+            <i class="icon-add_box icon-16"></i>
+          </button>
+          <button
+            *ngIf="isRezisePopup"
+            type="button"
+            class="btn btn-icon btn-sm btn-light-primary me-2"
+            (click)="showMore()"
+          >
+            <span>
+              <i
+                class="icon icon-14 {{
+                  isShowMore ? 'icon-last_page' : 'icon-first_page'
+                }}"
+              ></i
+            ></span>
+            <span>
+              <i
+                class="icon icon-14 {{
+                  !isShowMore ? 'icon-last_page' : 'icon-first_page'
+                }}"
+              ></i
+            ></span>
+          </button>
+        </span>
+
+        <span *ngIf="customField.dataType == 'CF'" class="ms-2">
+          <span
+            class="btn btn-icon btn-light-primary me-2"
+            [ngbPopover]="toolTip"
+            #p="ngbPopover"
+            [openDelay]="500"
+            (mouseenter)="p.open()"
+            (mouseleave)="p.close()"
+            placement="bottom right top"
+            [popoverClass]="'cfField'"
+            container="body"
+            placement="top right left"
+          >
+            <i class="icon-calculate icon-16"></i></span
+        ></span>
+        <ng-template #toolTip>
+          <div class="">
+            <codx-label
+              class="label-colon fw-bold"
+              name="lblRecipe"
+              formName="DPInstancesStepsFields"
+              gridViewName="grvDPInstancesStepsFields"
+              default="Công thức"
+            ></codx-label>
+            <div class="fw-bold text-primary">
+              {{ customField.dataFormat }}
+            </div>
           </div>
-        </div>
-      </ng-template>
-      <!-- </div> -->
-      <!-- </div> -->
+        </ng-template>
+        <!-- </div> -->
+      </div>
+    </div>
+    <!-- Table chưa làm nên tạm ẩn -->
+    <div
+      *ngIf="
+        refInstance &&
+        customField.dataType != 'CF' &&
+        customField.dataType != 'TA'
+      "
+    >
+      <button
+        type="button"
+        class="btn btn-icon btn-light-primary me-2"
+        (click)="selectDataRef()"
+        [disabled]="disable"
+      >
+        <i class="icon-filter_none icon-16"></i>
+      </button>
     </div>
   </div>
 

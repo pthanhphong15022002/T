@@ -18,7 +18,6 @@ import {
 import { CodxHrService } from '../../codx-hr.service';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
-import { createSolutionBuilderHost } from 'typescript';
 
 @Component({
   selector: 'lib-popup-edocuments',
@@ -70,38 +69,13 @@ export class PopupEdocumentsComponent extends UIComponent implements OnInit {
   }
 
   onInit(): void {
-    // if (!this.form.formGroup)
-    //   this.hrService.getFormModel(this.funcID).then((formModel) => {
-    //     if (formModel) {
-    //       this.formModel = formModel;
-    //       this.hrService
-    //         .getFormGroup(this.formModel.formName, this.formModel.gridViewName , this.formModel)
-    //         .then((fg) => {
-    //           if (fg) {
-    //             this.form.formGroup = fg;
-    //             this.initForm();
-    //           }
-    //         });
-    //     }
-    //   });
-    // else
-    //   this.hrService
-    //     .getFormGroup(this.formModel.formName, this.formModel.gridViewName, this.formModel)
-    //     .then((fg) => {
-    //       if (fg) {
-    //         this.form.formGroup = fg;
-    //         this.initForm();
-    //       }
-    //     });
     this.initForm();
     this.hrService.getHeaderText(this.funcID).then((res) => {
       this.fieldHeaderTexts = res;
     });
   }
 
-  dataChange(evt){
-    debugger
-  }
+  dataChange(evt) {}
 
   onChangeSwitch(evt, fieldName) {
     let res = evt.data;
@@ -139,36 +113,17 @@ export class PopupEdocumentsComponent extends UIComponent implements OnInit {
 
   initForm() {
     if (this.actionType == 'add') {
-      this.hrService
-        .getDataDefault(
-          this.formModel.funcID,
-          this.formModel.entityName,
-          this.idField
-        )
-        .subscribe((res: any) => {
-          if (res) {
-            this.documentObj = res?.data;
-            this.documentObj.employeeID = this.employId;
-
-            // this.formModel.currentData = this.documentObj;
-            // this.form.formGroup.patchValue(this.documentObj);
-            this.cr.detectChanges();
-            // this.isAfterRender = true;
-          }
-        });
+      this.dialog.dataService?.addNew().subscribe((res: any) => {
+        if (res) {
+          this.documentObj = res;
+          this.documentObj.employeeID = this.employId;
+          this.cr.detectChanges();
+        }
+      });
     }
-    // else {
-    //   if (this.actionType === 'edit' || this.actionType === 'copy' || this.actionType === 'view') {
-    //     // this.form.formGroup.patchValue(this.documentObj);
-    //     // this.formModel.currentData = this.documentObj;
-    //     this.cr.detectChanges();
-    //     // this.isAfterRender = true;
-    //   }
-    // }
   }
 
   async addFiles(evt) {
-    debugger
     this.changedInForm = true;
     this.documentObj.attachments = evt.data.length;
     this.form.formGroup.patchValue(this.documentObj);
@@ -179,54 +134,19 @@ export class PopupEdocumentsComponent extends UIComponent implements OnInit {
   }
 
   async onSaveForm() {
-    debugger
-
-    if (this.form.formGroup.invalid) {
-      this.hrService.notifyInvalid(this.form.formGroup, this.formModel);
-      this.form.validation(false);
-      return;
-    }
-    debugger;
-
     if (
       this.attachment.fileUploadList &&
       this.attachment.fileUploadList.length > 0
     ) {
       this.attachment.objectId = this.documentObj?.recID;
-      (await this.attachment.saveFilesObservable()).subscribe((item2: any) => {
-        debugger;
-      });
+      (await this.attachment.saveFilesObservable()).subscribe();
     }
-
-    if (this.actionType === 'add' || this.actionType === 'copy') {
-      // this.hrService.AddEmployeeVisaInfo(this.documentObj).subscribe((p) => {
-      //   if (p != null) {
-      //     this.documentObj.recID = p.recID;
-      //     this.notify.notifyCode('SYS006');
-      //     this.dialog && this.dialog.close(p);
-      //   } else this.notify.notifyCode('SYS023');
-      // });
-    } else {
-      if (this.originDocumentTypeID != this.documentObj.documentTypeID) {
-        this.UpdateEDocumentIdEdited(this.formModel.currentData).subscribe(
-          (p) => {
-            if (p != null) {
-              this.notify.notifyCode('SYS007');
-              this.dialog && this.dialog.close(p);
-            }
-            // else this.notify.notifyCode('SYS021');
-          }
-        );
-      } else {
-        this.UpdateEDocument(this.formModel.currentData).subscribe((p) => {
-          if (p != null) {
-            this.notify.notifyCode('SYS007');
-            this.dialog && this.dialog.close(p);
-          }
-          // else this.notify.notifyCode('SYS021');
-        });
+    this.form.save(null, 0, '', '', true).subscribe((res: any) => {
+      if (res.save?.data || res.update?.data) {
+        return this.dialog && this.dialog.close(res.save.data);
       }
-    }
+      this.dialog && this.dialog.close();
+    });
   }
 
   //#region APIs

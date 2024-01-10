@@ -65,6 +65,9 @@ import { ViewDetailApprovalCustomComponent } from './approvals/view-detail-appro
 import { ProcessesPropertiesComponent } from './processes-properties/processes-properties.component';
 import { PropertiesFieldComponent } from './processes-properties/properties-field/properties-field.component';
 import { PopupMapContractComponent } from './dynamic-process/popup-add-dynamic-process/step-task/popup-step-task/popup-map-contract/popup-map-contract.component';
+import { CodxReportViewsComponent } from 'projects/codx-report/src/lib/codx-report-views/codx-report-views.component';
+import { CodxReportViewDetailComponent } from 'projects/codx-report/src/lib/codx-report-view-detail/codx-report-view-detail.component';
+import { DashboardInstancesComponent } from './instances/dashboard-instances/dashboard-instances.component';
 
 export const routes: Routes = [
   {
@@ -96,6 +99,14 @@ export const routes: Routes = [
             (m) => m.ApprovelDpModule
           ),
         data: { noReuse: true },
+      },
+      {
+        path: 'report/:funcID',
+        component: CodxReportViewsComponent,
+      },
+      {
+        path: 'report/detail/:funcID',
+        component: CodxReportViewDetailComponent,
       },
       {
         path: '**',
@@ -150,7 +161,8 @@ const T_Component: Type<any>[] = [
   PopupEditOwnerstepComponent,
   PopupSelectTempletComponent,
   ViewsTabsDetailsComponent,
-  InstanceDashboardComponent,
+  InstanceDashboardComponent, //cũ chuyen qua hết thì xóa đi
+  DashboardInstancesComponent, //mới => chạy theo dataSet
   PopupAddVllCustomComponent,
   PopupAddColumnTableComponent,
   PopupSettingTableComponent,
@@ -161,7 +173,7 @@ const T_Component: Type<any>[] = [
   PopupReleaseProcessComponent,
   ProcessesPropertiesComponent,
   PropertiesFieldComponent,
-  PopupMapContractComponent
+  PopupMapContractComponent,
 ];
 
 @NgModule({

@@ -96,14 +96,13 @@ export class CashPaymentAddComponent extends UIComponent {
     { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
     { name: 'References', textDefault: 'Liên kết', isActive: false },
   ];
-  // childModelCashPayment: SubModel = {
-  //   gridviewName:'grvVATInvoices',
-  //   formName:'VATInvoices',
-  //   entityName:'AC_VATInvoices',
-  //   service:'AC',
-  //   predicates:'LineID=@0',
-  //   rowNoField:'rowNo',
-  // }
+  editSettings:EditSettingsModel = {
+    allowAdding:false,
+    allowEditing:false,
+    allowDeleting:false,
+    allowEditOnDblClick:false,
+    allowNextRowEdit:false
+  }
   baseCurr: any;
   legalName: any;
   vatAccount: any;

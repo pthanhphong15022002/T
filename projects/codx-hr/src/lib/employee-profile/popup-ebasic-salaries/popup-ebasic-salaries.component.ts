@@ -1,12 +1,8 @@
-import { dialog } from '@syncfusion/ej2-angular-spreadsheet';
-import { FormGroup } from '@angular/forms';
 import { CodxHrService } from './../../codx-hr.service';
-import { Injector, inject, ChangeDetectorRef, Input } from '@angular/core';
+import { Injector, ChangeDetectorRef } from '@angular/core';
 import { Component, OnInit, Optional, ViewChild } from '@angular/core';
 import {
   CodxFormComponent,
-  CodxListviewComponent,
-  CRUDService,
   DataRequest,
   DialogData,
   DialogRef,
@@ -27,17 +23,13 @@ export class PopupEBasicSalariesComponent
   implements OnInit
 {
   formModel: FormModel;
-  // formGroup: FormGroup;
   dialog: DialogRef;
-  EBasicSalaryObj: any | null;
-  // lstEBSalary
-  // indexSelected
+  EBasicSalaryObj: any;
   idField = 'RecID';
   actionType: string;
   disabledInput = false;
   isMultiCopy: boolean = false;
   employeeId: string | null;
-  // isAfterRender = false;
   headerText: ' ';
   autoNumField: string;
   @ViewChild('form') form: CodxFormComponent;
@@ -92,8 +84,7 @@ export class PopupEBasicSalariesComponent
 
     if (this.actionType == 'view') {
       this.disabledInput = true;
-    }
-    else if(this.actionType == 'copyMulti'){
+    } else if (this.actionType == 'copyMulti') {
       this.isMultiCopy = true;
       this.originEmpID = this.employeeId;
       this.originEmpBeforeSelectMulti = this.employeeObj;
@@ -119,24 +110,6 @@ export class PopupEBasicSalariesComponent
 
   onInit(): void {
     this.initForm();
-
-    // this.hrService
-    //   .getFormGroup(
-    //     this.formModel.formName,
-    //     this.formModel.gridViewName,
-    //     this.formModel
-    //   )
-    //   .then((fg) => {
-    //     if (fg) {
-    //       this.form.formGroup = fg;
-    //     }
-    //   });
-    //get emp from beginning
-    // this.cache
-    //   .gridViewSetup('EmployeeInfomation', 'grvEmployeeInfomation')
-    //   .subscribe((res) => {
-    //     this.genderGrvSetup = res?.Gender;
-    //   });
     if (this.employeeId != null)
       this.getEmployeeInfoById(this.employeeId, 'employeeID');
     this.showEmpInfo = this.allowToViewEmp();
@@ -226,7 +199,13 @@ export class PopupEBasicSalariesComponent
           this.employeeObj.orgUnitName = res.orgUnitName;
         }
       });
-    if (this.actionType == 'add') {
+    if (
+      this.actionType == 'add' ||
+      this.actionType === 'edit' ||
+      this.actionType === 'copy' ||
+      this.actionType === 'view' ||
+      this.actionType === 'copyMulti'
+    ) {
       this.hrService
         .getDataDefault(
           this.formModel.funcID,
@@ -238,55 +217,24 @@ export class PopupEBasicSalariesComponent
             if (res.key) {
               this.autoNumField = res.key;
             }
-            
-            this.EBasicSalaryObj = res?.data;
+
+            if (this.actionType != 'edit') {
+              this.EBasicSalaryObj = res?.data;
+            }
             this.loadedAutoNum = true;
 
-            this.EBasicSalaryObj.effectedDate = null;
+            if (this.EBasicSalaryObj.signerID) {
+              this.getEmployeeInfoById(
+                this.EBasicSalaryObj.signerID,
+                'signerID'
+              );
+            }
+
             this.EBasicSalaryObj.employeeID = this.employeeId;
-            // this.formModel.currentData = this.EBasicSalaryObj;
-            // this.form.formGroup.patchValue(this.EBasicSalaryObj);
-            // this.isAfterRender = true;
             this.cr.detectChanges();
           }
         });
-    } else {
-      if (
-        this.actionType === 'edit' ||
-        this.actionType === 'copy' ||
-        this.actionType === 'view' ||
-        this.actionType === 'copyMulti'
-      ) {
-        this.hrService
-          .getDataDefault(
-            this.formModel.funcID,
-            this.formModel.entityName,
-            this.idField
-          )
-          .subscribe((res) => {
-            if (res) {
-              this.autoNumField = res.key ? res.key : null;
-            }
-            this.loadedAutoNum = true;
-          });
-        if (this.actionType == 'copy') {
-          if (this.EBasicSalaryObj.effectedDate == '0001-01-01T00:00:00') {
-            this.EBasicSalaryObj.effectedDate = null;
-          }
-        }
-        if (this.EBasicSalaryObj.signerID) {
-          this.getEmployeeInfoById(this.EBasicSalaryObj.signerID, 'signerID');
-        }
-        // this.form.formGroup.patchValue(this.EBasicSalaryObj);
-        // this.formModel.currentData = this.EBasicSalaryObj;
-        // this.isAfterRender = true;
-        this.cr.detectChanges();
-      }
     }
-    // this.form.formGroup.patchValue(this.EBasicSalaryObj);
-    // this.formModel.currentData = this.EBasicSalaryObj;
-    // this.isAfterRender = true;
-    // this.cr.detectChanges();
   }
 
   async onSaveForm() {
@@ -314,9 +262,9 @@ export class PopupEBasicSalariesComponent
     this.EBasicSalaryObj.attachments =
       this.attachment?.data?.length + this.attachment?.fileUploadList?.length;
 
-      if(!this.EBasicSalaryObj.attachments){
-        this.EBasicSalaryObj.attachments = 0;
-      }
+    if (!this.EBasicSalaryObj.attachments) {
+      this.EBasicSalaryObj.attachments = 0;
+    }
 
     if (this.attachment.fileUploadList.length !== 0) {
       (await this.attachment.saveFilesObservable()).subscribe((item2: any) => {
@@ -326,35 +274,28 @@ export class PopupEBasicSalariesComponent
       });
     }
 
-    if(this.actionType == 'copyMulti'){
-      console.log('chay vao add multi');
-      
-      this.hrService.AddMultiEmployeeBasicSalariesInfo(this.form.data).subscribe((res) => {
-        if(res.length > 0){
-          let returnVal;
-          for(let i = 0; i<res.length; i++){
-            if(res[i].employeeID == this.originEmpID){
-              returnVal = res[i];
+    if (this.actionType == 'copyMulti') {
+      this.hrService
+        .AddMultiEmployeeBasicSalariesInfo(this.form.formGroup.value)
+        .subscribe((res) => {
+          if (res.length > 0) {
+            let returnVal;
+            for (let i = 0; i < res.length; i++) {
+              if (res[i].employeeID == this.originEmpID) {
+                returnVal = res[i];
+              }
             }
-          }
-          if(returnVal){
-            returnVal.emp = this.originEmpBeforeSelectMulti;
-            this.dialog && this.dialog.close(returnVal);
-          }
-          else{
+            if (returnVal) {
+              returnVal.emp = this.originEmpBeforeSelectMulti;
+              this.dialog && this.dialog.close(returnVal);
+            } else {
+              this.dialog && this.dialog.close();
+            }
+          } else {
             this.dialog && this.dialog.close();
           }
-        }
-        else{
-          this.dialog && this.dialog.close();
-        }
-        // if(res == true){
-        //   this.notify.notifyCode('SYS006');
-        //   this.dialog && this.dialog.close();
-        // }
-      })
-    }
-    else{
+        });
+    } else {
       if (this.actionType === 'add' || this.actionType === 'copy') {
         this.hrService
           .AddEmployeeBasicSalariesInfo(this.EBasicSalaryObj)

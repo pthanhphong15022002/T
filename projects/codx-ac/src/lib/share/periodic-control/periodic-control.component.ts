@@ -19,6 +19,7 @@ export class PeriodicControlComponent extends UIComponent {
   oData: any = [];
   functionType:any;
   dataDefault:any;
+  displayMode:any;
   @ViewChild('template') template?: TemplateRef<any>;
   private destroy$ = new Subject<void>();
   constructor(
@@ -43,6 +44,7 @@ export class PeriodicControlComponent extends UIComponent {
     });
     this.cache.functionList(this.funcID).subscribe((res:any)=>{
       this.functionType = res?.functionType;
+      this.displayMode = res?.displayMode;
     })
   }
 
@@ -54,6 +56,7 @@ export class PeriodicControlComponent extends UIComponent {
         sameData: true,
         showFilter: false,
         showSearchBar: false,
+        showButton:false,
         model: {
           panelRightRef: this.template
         },
@@ -77,49 +80,27 @@ export class PeriodicControlComponent extends UIComponent {
     this.detectorRef.detectChanges();
   }
   //#endregion Init
+
   //#region Event
-  clickMF(event:any){
+  viewChanged(event){
+    // if (event?.view) {
+    //   (this.view as any).pageTitle.showBreadcrumbs(false);
+    // }
+  }
+
+  clickMF(event:any,data:any=null){
     if(event?.data){
       let id = event?.data?.buttonName;
       if (id) {
         switch(id){
           case '1':
-            this.api.exec('AC','RunPeriodicBusiness','RunPeriodicAsync',[
-              this.dataDefault.refType,
-              this.dataDefault.method,
-              this.dataDefault.refID,
-              '1',
-              event.text
-            ]).pipe(takeUntil(this.destroy$))
-            .subscribe((res:any)=>{
-              if (res) {
-                this.oData = [res];
-                if(this.showLess) this.showLess = false;
-                this.notification.notifyCode('AC0029', 0, event.text);
-                this.detectorRef.detectChanges();
-              }else{
-                this.notification.notifyCode('AC0030', 0, event.text);
-              }
-            })
+            this.runPeriodic(this.dataDefault.refType,this.dataDefault.method,this.dataDefault.refID,'1',event.text);
             break;
           case '2':
-            this.api.exec('AC','RunPeriodicBusiness','RunPeriodicAsync',[
-              this.dataDefault.refType,
-              this.dataDefault.method,
-              this.dataDefault.refID,
-              '2',
-              event.text
-            ]).pipe(takeUntil(this.destroy$))
-            .subscribe((res:any)=>{
-              if (res) {
-                this.oData = [res];
-                if(this.showLess) this.showLess = false;
-                this.notification.notifyCode('AC0029', 0, event.text);
-                this.detectorRef.detectChanges();
-              }else{
-                this.notification.notifyCode('AC0030', 0, event.text);
-              }
-            })
+            this.runPeriodic(this.dataDefault.refType,this.dataDefault.method,this.dataDefault.refID,'2',event.text);
+            break;
+          case '3':
+            this.cancel(event.text,data);
             break;
         }
       }
@@ -142,6 +123,17 @@ export class PeriodicControlComponent extends UIComponent {
       });
   }
 
+  changeAutoSchedules(event:any){
+    this.dataDefault = event;
+    this.api
+      .execAction(
+        'BG_ScheduleTasks',
+        [this.dataDefault],
+        'UpdateAsync'
+      )
+      .subscribe((res:any)=>{});
+  }
+
   requestEnded(event: any) {
     if (event.data) {
       if (event.data.length) {
@@ -155,6 +147,7 @@ export class PeriodicControlComponent extends UIComponent {
     }
   }
   //#endregion Event
+
   //#region Function
   loadData() {
     this.view.dataService.request.pageSize = 10;
@@ -167,7 +160,9 @@ export class PeriodicControlComponent extends UIComponent {
           let i = this.oData.findIndex(x => x.recID == item.recID);
           if(i == -1) this.oData.push(item);
         },this.oData)
-        if(res[0].length < this.view.dataService.request.pageSize) this.showAll = true;
+        console.log(res);
+        let total = res[1];
+        if(this.oData.length <= total) this.showAll = true;
         this.detectorRef.detectChanges();
       }
     });
@@ -177,32 +172,65 @@ export class PeriodicControlComponent extends UIComponent {
     return item.recID;
   }
 
-  changeDataMF(event:any){
-    console.log(this.functionType);
+  changeDataMF(event:any,type='view'){
     event.reduce((pre, element) => {
       element.isblur = false;
       element.isbookmark = true;
       if(this.functionType === 'P'){
         if (element.functionID.includes('SYS')) element.disabled = true;
       }
+      if(type === 'view' && element.data?.buttonName === '3') element.disabled = true;
       }, {});
   }
 
-  onCollaple(){
-    this.oData = [this.oData.shift()];
-    this.view.dataService.request.page = 1;
-    this.showLess = false;
-    this.showAll = false;
-    this.detectorRef.detectChanges();
-  }
+  // onCollaple(){
+  //   this.oData = [this.oData.shift()];
+  //   this.view.dataService.request.page = 1;
+  //   this.showLess = false;
+  //   this.showAll = false;
+  //   this.detectorRef.detectChanges();
+  // }
 
-  cancel(data:any){
-    this.api.exec('AC','RunPeriodicBusiness','CancelAsync',[data,this.dataDefault.refType]).subscribe((res:any)=>{
-      if (res) {
-        this.notification.notifyCode('AC0029', 0, 'Hủy');
+  runPeriodic(runtype:any,storeName:any,recID:any,runMode:any,text:any){
+    this.api.exec('AC','RunPeriodicBusiness','RunPeriodicAsync',[
+      runtype,
+      storeName,
+      recID,
+      runMode,
+      text
+    ]).pipe(takeUntil(this.destroy$))
+    .subscribe((res:any)=>{
+      if (res && !res.isError) {
+        this.notification.notifyCode('AC0029', 0, text);
+        if (res.data) {
+          this.oData = [res?.data];
+          this.detectorRef.detectChanges();
+        }
       }else{
-        this.notification.notifyCode('AC0030', 0, 'Hủy');
+        this.notification.notifyCode('AC0030', 0, text);
       }
     })
   }
+
+  cancel(text:any,data:any){
+    this.api.exec('AC','RunPeriodicBusiness','CancelAsync',[data,this.dataDefault.refType,text]).subscribe((res:any)=>{
+      if (res) {
+        this.notification.notifyCode('AC0029', 0, text);
+      }else{
+        this.notification.notifyCode('AC0030', 0, text);
+      }
+    })
+  }
+
+  showMFCancel(event:any){
+    event.reduce((pre, element) => {
+      element.isblur = false;
+      element.isbookmark = false;
+      if(this.functionType === 'P'){
+        if (element.functionID.includes('SYS')) element.disabled = true;
+      }
+      if(element.data?.buttonName != '3') element.disabled = true;
+      }, {});
+  }
+  //#endregion Function
 }

@@ -38,9 +38,11 @@ export class EmployeePolicyalComponent extends UIComponent {
   formGroup: FormGroup;
   dialog!: DialogRef;
   grvSetup: any;
-  buttonAdd: ButtonModel[] = [{
-    id: 'btnAdd',
-  }];
+  buttonAdd: ButtonModel[] = [
+    {
+      id: 'btnAdd',
+    },
+  ];
 
   constructor(
     inject: Injector,
@@ -157,7 +159,6 @@ export class EmployeePolicyalComponent extends UIComponent {
 
       case 'SYS02': //delete
         this.view.dataService.delete([data]).subscribe((res) => {
-          debugger;
           if (data.attachments > 0) {
             this.deleteFile(data).subscribe((res) => {});
           }
@@ -226,7 +227,6 @@ export class EmployeePolicyalComponent extends UIComponent {
       option
     );
     dialg.closed.subscribe((res) => {
-      debugger;
       if (res.event) {
         this.view.dataService.data = [];
         this.view.dataService.load().subscribe((rrr) => {

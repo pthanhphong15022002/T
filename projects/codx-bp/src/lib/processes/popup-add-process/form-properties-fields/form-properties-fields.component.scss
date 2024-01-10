@@ -131,6 +131,7 @@ codx-form-format-value{
               0 3px 14px 2px rgba(0, 0, 0, 0.12);
   max-width: 350px;
   padding: 20px;
+  z-index: 20000 !important;
 }
 
 .cdk-drag-placeholder {
@@ -214,11 +215,31 @@ border-width: 2px;
 .bp-box-number
 {
 border: solid 2px;
-border-color: var(--text-primary);
 padding: 2px 7px;
 border-radius: 3px;
 }
 .e-accordion .e-acrdn-item .e-acrdn-panel .e-acrdn-content
 {
 padding: 0 12px !important;
+}
+.bp-header-button-group
+{
+.btn
+{
+  border: solid 2px;
+  border-color: var(--gray-150) !important;
+}
+.btn-check+ .btn
+{
+  color: var(--gray-400) !important;
+}
+.btn-check:checked + .btn
+{
+  background-color: white !important;
+  color: var(--text-primary) !important;
+  i
+  {
+    color: var(--text-primary) !important;
+  }
+}
 }

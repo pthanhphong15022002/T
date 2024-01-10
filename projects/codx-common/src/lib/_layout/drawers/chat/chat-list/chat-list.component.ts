@@ -38,8 +38,9 @@ export class CodxChatListComponent implements OnInit, AfterViewInit {
   idField: object = {
     id: 'groupID',
   };
-  
-  @Output('getTotalMessage') getTotalMessage: EventEmitter<any> = new EventEmitter();
+
+  @Output('getTotalMessage') getTotalMessage: EventEmitter<any> =
+    new EventEmitter();
   @ViewChild('codxListView') codxListView: CodxListviewComponent;
   constructor(
     private api: ApiHttpService,
@@ -88,59 +89,41 @@ export class CodxChatListComponent implements OnInit, AfterViewInit {
     // add mesage
     this.signalRSV.chatboxChange.subscribe((res: any) => {
       if (res?.event && res?.data) {
-        switch(res?.event){
-          case CHAT.UI_FUNC.DeletedMessage:
-            {
-              break;
-            }
-          default:{              
+        switch (res?.event) {
+          case CHAT.UI_FUNC.DeletedMessage: {
+            break;
+          }
+          default: {
             let mssg = res.data;
             let lstData = this.codxListView.dataService.data;
-            let idx = lstData.findIndex((x: any) => x.groupID === res.groupID|| x?.groupID == res?.data?.groupID);
+            let idx = lstData.findIndex(
+              (x: any) =>
+                x.groupID === res.groupID || x?.groupID == res?.data?.groupID
+            );
             if (idx != -1 && mssg?.message) {
               let group = JSON.parse(JSON.stringify(lstData[idx]));
               mssg.message =
                 mssg.messageType === '3' || mssg.messageType === '5'
                   ? ''
                   : mssg.message;
-              if(mssg.status)
-              {
-                mssg.isRead = mssg.status.some((x: any) => x.userID === this.user.userID);
+              if (mssg.status) {
+                mssg.isRead = mssg.status.some(
+                  (x: any) => x.userID === this.user.userID
+                );
               }
-              
+
               group.message = JSON.parse(JSON.stringify(mssg));
               lstData.splice(idx, 1);
-              (this.codxListView.dataService as CRUDService).add(group).subscribe();
+              (this.codxListView.dataService as CRUDService)
+                .add(group)
+                .subscribe();
               this.dt.detectChanges();
             }
             break;
           }
         }
-        
       }
     });
-    // this.signalRSV.deletedMessage.subscribe((res: any) => {
-    //   if (res) {
-    //     let lstData = this.codxListView.dataService.data;
-    //     let idx = lstData.findIndex((x: any) => x.groupID === res.groupID || x?.groupID == res?.mssg?.groupID);
-    //     if (idx != -1) {
-    //       let group = JSON.parse(JSON.stringify(lstData[idx]));
-    //       let mssg = JSON.parse(JSON.stringify(group.message));
-    //       mssg.message = '';
-    //       group.message = JSON.parse(JSON.stringify(mssg));
-    //       lstData.splice(idx, 1);
-    //       (this.codxListView.dataService as CRUDService).add(group).subscribe();
-    //       this.dt.detectChanges();
-    //     }
-    //   }
-    // });
-    //Online Status
-    // this.signalRSV.updateOnlineStatus.subscribe((res: any) => {      
-    //   if (res?.data?.length>0 && this.codxListView?.dataService?.data?.length>0) {
-    //     debugger;
-    //     let gr = this.codxListView?.dataService?.data.filter(x=>res?.data?.some( g=> g ==x.group));
-    //   }
-    // });
   }
   // check read all
   readAllMessage() {
@@ -163,15 +146,17 @@ export class CodxChatListComponent implements OnInit, AfterViewInit {
       });
   }
   // searrch
-  search(event: any) {
-    if (event) 
-    {
+  search(event: any, isFavorite = false) {
+    if(isFavorite){
+      this.searched = false;
+      this.codxListView.dataService.method = 'GetGroupFavoriteAsync';
+      this.codxListView.dataService.search(event);
+    }
+    else if (event) {
       this.searched = true;
       this.codxListView.dataService.method = 'SearchAsync';
       this.codxListView.dataService.search(event);
-    } 
-    else 
-    {
+    } else {
       this.searched = false;
       this.codxListView.dataService.method = 'GetGroupAsync';
       this.codxListView.dataService.search(event);
@@ -182,21 +167,21 @@ export class CodxChatListComponent implements OnInit, AfterViewInit {
   //select goup chat
   selectItem(group: any) {
     this.signalRSV.sendData(CHAT.BE_FUNC.LoadGroup, group?.groupID);
-    group.message.isRead=true;
+    group.message.isRead = true;
     this.dt.detectChanges();
     this.api
-    .execSv(
-      'WP',
-      'ERM.Business.WP',
-      'ChatBusiness',
-      'UpdateMessageByGroupAsync',
-      group?.groupID
-    ).subscribe(res=>{
-      if(res){
-        this.getTotalMessage.emit();
-      }
-    })
-
+      .execSv(
+        'WP',
+        'ERM.Business.WP',
+        'ChatBusiness',
+        'UpdateMessageByGroupAsync',
+        group?.groupID
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.getTotalMessage.emit();
+        }
+      });
   }
   // select item search
   selectItemSeach(item: any) {
@@ -210,14 +195,14 @@ export class CodxChatListComponent implements OnInit, AfterViewInit {
   }
 
   // open popup add group chat
-  addGroup(group: any) 
-  {
-    if(group) 
-    {
-      let groups = (this.codxListView.dataService as CRUDService)?.data?.filter(x=>x?.groupID == group?.groupID);
-      if(groups?.length > 0){
+  addGroup(group: any) {
+    if (group) {
+      let groups = (this.codxListView.dataService as CRUDService)?.data?.filter(
+        (x) => x?.groupID == group?.groupID
+      );
+      if (groups?.length > 0) {
         return;
-      }      
+      }
       (this.codxListView.dataService as CRUDService).add(group).subscribe();
     }
   }

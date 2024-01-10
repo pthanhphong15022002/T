@@ -1,4 +1,9 @@
-import { CdkDrag, CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
+import {
+  CdkDrag,
+  CdkDragDrop,
+  moveItemInArray,
+  transferArrayItem,
+} from '@angular/cdk/drag-drop';
 import {
   ChangeDetectorRef,
   Component,
@@ -31,6 +36,29 @@ export class FormPropertiesFieldsComponent implements OnInit {
 
   tempVllBP: tempVllBP;
   isForm: boolean = true;
+  process: any;
+  action = 'add';
+  type: any;
+  basic = [
+    'Text',
+    'ValueList',
+    'ComboBox',
+    'DateTime',
+    'Attachment',
+    'Number',
+    'YesNo',
+    'User',
+    'Share',
+  ];
+  advanced = [
+    'Rank',
+    'Table',
+    'Progress',
+    'Phone',
+    'Email',
+    'Address',
+    'Expression',
+  ];
   constructor(
     private detectorRef: ChangeDetectorRef,
     private cache: CacheService,
@@ -39,69 +67,137 @@ export class FormPropertiesFieldsComponent implements OnInit {
     @Optional() dt: DialogData
   ) {
     this.dialog = dialog;
+    this.process = dt?.data?.process;
+    this.action = dt?.data?.action ?? 'add';
+    this.type = dt?.data?.type;
+    this.dataCurrent = dt?.data?.dataCurrent;
+    this.vllBP002 = dt?.data?.vllBP002;
+    this.lstStepFields = dt?.data?.lstStepFields != null ? JSON.parse(JSON.stringify(dt?.data?.lstStepFields)) : [];
+    this.isForm = dt?.data?.isForm ?? false;
   }
   ngOnInit(): void {
-    this.getVll();
-    this.setDefaultTitle();
+    if (this.vllBP002 && this.vllBP002?.datas?.length > 0) {
+      this.vllBP002.datas.forEach((elm) => {
+        if (this.basic.includes(elm.value)) elm.groupType = 0;
+        else if (this.advanced.includes(elm.value)) elm.groupType = 1;
+      });
+      if (this.lstStepFields?.length > 0) {
+        this.lstStepFields.forEach((ele) => {
+          let dataForm = this.vllBP002.datas.find(
+            (x) => x.value == ele.fieldType
+          );
+          if (ele?.fieldType == 'Title') {
+            this.dataCurrent = ele;
+            this.dataFormat = JSON.parse(JSON.stringify(dataForm));
+          }
+          dataForm.recID = ele?.recID;
+          this.table.push({
+            name: '',
+            columnOrder: this.table.length,
+            children: [dataForm],
+          });
+        });
+      } else {
+        this.setDefaultTitle();
+      }
+    } else {
+      this.getVll();
+    }
   }
 
-  setDefaultTitle(){
-    let tmpField = {};
-    let lst = [];
-    tmpField['recID'] = Util.uid();
-    tmpField['fieldName'] = 'Title';
-    tmpField['title'] = 'Tên biểu mẫu';
-    tmpField['dataType'] = 'String';
-    tmpField['controlType'] = 'Title';
-    tmpField['isRequired'] = true;
-    tmpField['defaultValue'] = 'Tên biểu mẫu';
-    lst.push(tmpField);
-    this.dataCurrent = tmpField;
-    if(this.isForm){
-      let tmpFieldSub = {};
-      tmpFieldSub['recID'] = Util.uid();
-      tmpFieldSub['fieldName'] = 'SubTitle';
-      tmpFieldSub['description'] = 'Câu trả lời';
-      tmpFieldSub['title'] = 'Mô tả ngắn gọn';
-      tmpFieldSub['dataType'] = 'String';
-      tmpFieldSub['controlType'] = 'SubTitle';
-      tmpFieldSub['isRequired'] = true;
-      tmpFieldSub['defaultValue'] = 'Mô tả ngắn gọn';
-      lst.push(tmpFieldSub);
+  setDefaultTitle() {
+    const createField = (value, fieldType, isForm = false) => {
+      const recID = Util.uid();
+      const fieldName = this.bpSv.createAutoNumber(
+        value,
+        this.lstStepFields,
+        'fieldName'
+      );
+      const title = this.bpSv.createAutoNumber(
+        value,
+        this.lstStepFields,
+        'title'
+      );
+
+      const field = {
+        recID,
+        fieldName,
+        title,
+        dataType: 'String',
+        fieldType,
+        controlType: 'TextBox',
+        isRequired: true,
+        defaultValue: null,
+        description: isForm ? 'Câu trả lời' : '',
+      };
+
+      if (isForm) {
+        field.defaultValue = title;
+      }
+
+      return field;
+    };
+
+    const dataVllTitle = this.vllBP002?.datas?.find((x) => x.value === 'Title');
+    const dataVllSubTitle = this.vllBP002?.datas?.find(
+      (x) => x.value === 'SubTitle'
+    );
+
+    const titleField = createField(dataVllTitle?.text, dataVllTitle?.value);
+    const lst = [titleField];
+
+    this.dataFormat = dataVllTitle;
+    this.dataCurrent = titleField;
+
+    const data = { ...this.dataFormat, recID: this.dataCurrent.recID };
+    this.table.push({
+      name: '',
+      columnOrder: this.table.length,
+      children: [data],
+    });
+    if (this.isForm) {
+      const subTitleField = createField(
+        dataVllSubTitle?.text,
+        dataVllSubTitle?.value,
+        true
+      );
+      lst.push(subTitleField);
+      const dataSub = { ...dataVllSubTitle, recID: subTitleField.recID };
+      this.table.push({
+        name: '',
+        columnOrder: this.table.length,
+        children: [dataSub],
+      });
     }
     this.lstStepFields = [...this.lstStepFields, ...lst];
-    console.log(this.lstStepFields);
   }
 
   //#region setting drop keo tha - anh Chung
   getVll() {
-    let basic = [
-      'Text',
-      'ValueList',
-      'ComboBox',
-      'DateTime',
-      'Attachment',
-      'Number',
-      'YesNo',
-      'User',
-      'Share',
-    ];
-    let advanced = [
-      'Rank',
-      'Table',
-      'Progress',
-      'Phone',
-      'Email',
-      'Address',
-      'Expression',
-    ];
     this.cache.valueList('BP002').subscribe((item) => {
       if (item) {
         item.datas.forEach((elm) => {
-          if (basic.includes(elm.value)) elm.groupType = 0;
-          else if (advanced.includes(elm.value)) elm.groupType = 1;
+          if (this.basic.includes(elm.value)) elm.groupType = 0;
+          else if (this.advanced.includes(elm.value)) elm.groupType = 1;
         });
         this.vllBP002 = item;
+        if (this.type != 'table') {
+          this.setDefaultTitle();
+        } else {
+          if (this.action == 'edit') {
+            this.dataFormat = this.vllBP002.datas.find(
+              (x) => x.value == this.dataCurrent?.fieldType
+            );
+            this.dataFormat.recID = this.dataCurrent?.recID;
+            let object = {
+              name: '',
+              id: this.type != 'table' ? this.table.length : 0,
+              children: [this.dataFormat],
+            };
+            this.lstStepFields.push(this.dataCurrent);
+            this.table.splice(0, 0, object);
+          }
+        }
       }
     });
   }
@@ -127,13 +223,21 @@ export class FormPropertiesFieldsComponent implements OnInit {
       data.recID = this.dataCurrent?.recID;
       let object = {
         name: '',
-        id: this.table.length,
+        id: this.type != 'table' ? this.table.length : 0,
         children: [data],
       };
-      this.lstStepFields.push(this.dataCurrent);
-      console.log('drop 1 != :', data);
-      // this.settingFielfs.loadData(this.dataCurrent);
-      this.table.splice(event.currentIndex, 0, object);
+      if (this.type != 'table') {
+        this.lstStepFields.push(this.dataCurrent);
+        this.table.splice(event.currentIndex, 0, object);
+      } else {
+        if (this.lstStepFields?.length > 0) {
+          this.lstStepFields[0] = this.dataCurrent;
+          this.table[0] = object;
+        } else {
+          this.lstStepFields.push(this.dataCurrent);
+          this.table.splice(event.currentIndex, 0, object);
+        }
+      }
     } else {
       this.table[event.currentIndex].id = event.previousIndex;
       this.table[event.previousIndex].id = event.currentIndex;
@@ -232,71 +336,166 @@ export class FormPropertiesFieldsComponent implements OnInit {
 
     const field: any = {
       recID: Util.uid(),
-      controlType: data.value,
+      fieldType: data.value,
+      isRequired: false,
     };
 
     if (data.text) {
       const str = data.text;
-      const autoNumberTitle = this.bpSv.createAutoNumber(str, this.lstStepFields, 'title');
-      const autoNumberFieldName = this.bpSv.createAutoNumber(str, this.lstStepFields, 'fieldName');
+      const autoNumberTitle = this.bpSv.createAutoNumber(
+        str,
+        this.lstStepFields,
+        'title'
+      );
+      const autoNumberFieldName = this.bpSv.createAutoNumber(
+        str,
+        this.lstStepFields,
+        'fieldName'
+      );
 
       field.title = autoNumberTitle;
       field.fieldName = autoNumberFieldName;
     }
 
     if (['Text', 'ValueList', 'ComboBox', 'Attachment'].includes(data.value)) {
-      field.isRequired = false;
       field.dataType = 'String';
 
       if (['ValueList', 'ComboBox'].includes(data.value)) {
         field.refType = data.value === 'ValueList' ? '2' : '3';
-      }else if(data.value == 'Text'){
+        field.controlType = 'ComboBox';
+      } else if (data.value == 'Text') {
         field.dataFormat = '';
+        field.controlType = 'TextBox';
+      } else {
+        field.controlType = 'Attachment';
       }
     }
 
-    if(data.value == 'DateTime'){
+    if (data.value == 'DateTime') {
       field.dataFormat = 'd';
       field.dataType = 'DateTime';
+      field.controlType = 'MaskBox';
     }
 
-    if(data.value == 'Number'){
+    if (data.value == 'Number') {
       field.dataFormat = 'I';
-      field.dataType = 'Int';
+      field.dataType = 'Decimal';
+      field.controlType = 'TextBox';
+    }
+
+    if (data.value == 'YesNo') {
+      field.dataType = 'Bool';
+      field.controlType = 'Switch';
+    }
+
+    if (data.value == 'User') {
+      field.dataType = 'String';
+      field.refValue = 'Users';
+      field.refType = '3';
+      field.controlType = 'ComboBox';
     }
 
     if (data.value === 'Rank') {
+      field.controlType = 'Rank';
+      field.dataType = 'Decimal';
       field.rank = {
         type: '1',
         icon: null,
         minValue: 0,
         maxValue: 5,
-        color: null,
+        color: '#0078FF',
       };
     }
 
     if (data.value === 'Progress') {
+      field.dataType = 'Decimal';
+      field.controlType = 'Progress';
       field.rank = {
         type: '3',
         icon: null,
         minValue: 0,
         maxValue: 100,
-        color: '#3699ff',
+        color: '#0078FF',
       };
+    }
+
+    if (['Phone', 'Email', 'Address'].includes(data.value)) {
+      field.dataType = 'String';
+      field.dataFormat = data.value;
+      field.controlType = 'TextBox';
+    }
+
+    if (data.value == 'Expression') {
+      field.dataType = 'String';
+      field.controlType = 'TextBox';
+      field.refType = 'E';
+      field.description = 'Exp [So_luong] * [Don_gia]';
+    }
+
+    if (data.value == 'Table') {
+      field.dataType = 'String';
+      field.controlType = 'Table';
+      const tbFormat = {
+        hasIndexNo: false,
+        sum: '',
+      };
+      field.tableFormat = JSON.stringify(tbFormat);
+      let tables = [];
+      let column1 = {
+        recID: Util.uid(),
+        fieldName: 'cot_1',
+        title: 'cot_1',
+        fieldType: 'Text',
+        isRequired: false,
+        dataType: 'String',
+        dataFormat: '',
+        controlType: 'TextBox',
+      };
+      tables.push(column1);
+      let column2 = {
+        recID: Util.uid(),
+        fieldName: 'cot_2',
+        title: 'cot_2',
+        fieldType: 'Text',
+        isRequired: false,
+        dataType: 'String',
+        dataFormat: '',
+        controlType: 'TextBox',
+      };
+      tables.push(column2);
+
+      let column3 = {
+        recID: Util.uid(),
+        fieldName: 'cot_3',
+        title: 'cot_3',
+        fieldType: 'Text',
+        isRequired: false,
+        dataType: 'String',
+        dataFormat: '',
+        controlType: 'TextBox',
+      };
+      tables.push(column3);
+      field.dataFormat = JSON.stringify(tables);
     }
 
     return field;
   }
 
-  returnData(data){
+  returnData(data) {
     let dataField = {};
-    const indx = this.lstStepFields.findIndex(x => data.value == x.controlType && x.recID == data.recID);
+    const indx = this.lstStepFields.findIndex(
+      (x) => data.value == x.fieldType && x.recID == data.recID
+    );
     dataField = indx != -1 ? this.lstStepFields[indx] : null;
     return dataField;
   }
 
-  dataForm(type){
-    return this.lstStepFields?.find(x => x.fieldName=='Title') ? (type ? this.lstStepFields?.find(x => x.fieldName=='Title')[type] : null) : this.lstStepFields?.find(x => x.fieldName=='Title');
+  dataForm(type) {
+    return this.lstStepFields?.find((x) => x.fieldType == 'Title')
+      ? type
+        ? this.lstStepFields?.find((x) => x.fieldType == 'Title')[type]
+        : null
+      : this.lstStepFields?.find((x) => x.fieldType == 'Title');
   }
   //#endregion
   //#region event emit
@@ -306,13 +505,23 @@ export class FormPropertiesFieldsComponent implements OnInit {
       if (indx != -1) {
         if (e?.type == 'delete') {
           this.lstStepFields.splice(indx, 1);
-          this.dataCurrent = this.lstStepFields.find(x => x.controlType == 'Title');
+          this.dataCurrent = this.lstStepFields.find(
+            (x) => x.fieldType == 'Title'
+          );
+          let idxTab = this.table.findIndex((x) =>
+            x.children.some((y) => y.recID == e?.data?.recID)
+          );
+          if (idxTab != -1) {
+            this.table.splice(idxTab, 1);
+          }
+
+          this.dataFormat = this.vllBP002.datas.find((x) => x.value == 'Title');
         } else {
           this.lstStepFields[indx] = e?.data;
           this.dataCurrent = this.lstStepFields[indx];
         }
       }
-      if(e?.data?.controlType == 'ValueList'){
+      if (e?.data?.fieldType == 'ValueList' || e?.data?.fieldType == 'Table') {
         this.table = JSON.parse(JSON.stringify(this.table));
       }
     }
@@ -333,6 +542,14 @@ export class FormPropertiesFieldsComponent implements OnInit {
     }
   }
 
+  selectForm(indx) {
+    this.dataFormat = this.vllBP002.datas.find((x) => x.value == 'Title');
+    this.dataCurrent = JSON.parse(
+      JSON.stringify(this.lstStepFields.find((x) => x.fieldType == 'Title'))
+    );
+    this.detectorRef.markForCheck();
+  }
+
   renderData(e) {
     if (e && e?.data) {
       if (this.dataCurrent?.recID != e?.data?.recID) {
@@ -351,7 +568,9 @@ export class FormPropertiesFieldsComponent implements OnInit {
   }
   //#region  save field
   onSave() {
-    this.dialog.close(this.lstStepFields);
+    this.dialog.close(
+      this.type == 'table' ? this.dataCurrent : this.lstStepFields
+    );
   }
   //#endregion
 }

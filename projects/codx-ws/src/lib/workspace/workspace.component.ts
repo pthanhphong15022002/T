@@ -64,6 +64,7 @@ export class WorkspaceComponent extends WSUIComponent{
 
   itemClick(funcId: string, data?: any, type?: string) 
   {
+    debugger
     this.funcID = funcId;
     if(type == "fv")
     {

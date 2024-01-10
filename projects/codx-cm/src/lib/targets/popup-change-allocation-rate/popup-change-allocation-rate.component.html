@@ -96,7 +96,7 @@
                     <div
                       [ngClass]="
                         item?.quarter == this.editingItem &&
-                        typeChange === 'weight'
+                        typeChange === 'weight' && !isView
                           ? 'user-nav-active'
                           : null
                       "
@@ -117,7 +117,7 @@
                     <div
                       [ngClass]="
                         item?.quarter == this.editingItem &&
-                        typeChange === 'weight'
+                        typeChange === 'weight'  && !isView
                           ? 'user-nav-active'
                           : null
                       "
@@ -174,7 +174,7 @@
                     <div
                       [ngClass]="
                         item?.quarter == this.editingItem &&
-                        typeChange === 'target'
+                        typeChange === 'target'  && !isView
                           ? 'user-nav-active'
                           : null
                       "
@@ -190,7 +190,7 @@
                     <div
                       [ngClass]="
                         item?.quarter == this.editingItem &&
-                        typeChange === 'target'
+                        typeChange === 'target'  && !isView
                           ? 'user-nav-active'
                           : null
                       "
@@ -285,6 +285,7 @@
             <codx-input
               type="checkbox"
               [crrValue]="isTargetQuarter"
+              [disabled]="isView"
               (valueChange)="valueChange($event)"
               field="isTargetQuarter"
             >
@@ -328,7 +329,7 @@
                   <div
                     [ngClass]="
                       item?.lineID == this.editingItem &&
-                      typeChange === 'weight'
+                      typeChange === 'weight'  && !isView
                         ? 'user-nav-active'
                         : null
                     "
@@ -349,7 +350,7 @@
                   <div
                     [ngClass]="
                       item?.lineID == this.editingItem &&
-                      typeChange === 'weight'
+                      typeChange === 'weight'  && !isView
                         ? 'user-nav-active'
                         : null
                     "
@@ -397,7 +398,7 @@
                   <div
                     [ngClass]="
                       item?.lineID == this.editingItem &&
-                      typeChange === 'target'
+                      typeChange === 'target' && !isView
                         ? 'user-nav-active'
                         : null
                     "
@@ -413,7 +414,7 @@
                   <div
                     [ngClass]="
                       item?.lineID == this.editingItem &&
-                      typeChange === 'target'
+                      typeChange === 'target' && !isView
                         ? 'user-nav-active'
                         : null
                     "
@@ -476,7 +477,7 @@
     </ng-container>
   </ng-template>
   <ng-template #footer>
-    <div class="d-flex justify-content-between">
+    <div class="d-flex justify-content-between" *ngIf="!isView">
       <button
         type="button"
         class="btn btn-outline-primary"

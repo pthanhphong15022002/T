@@ -70,6 +70,9 @@
           <div
             class="d-flex align-items-center justify-content-end chat-list-header_func ms-6"
           >
+          <button type="button" class="btn-light btn btn-icon btn-sm ms-1"  (click)="clickFavorite()">
+            <span class="icon-16 " [ngClass]="loadFavorite ? 'icon-i-star-fill text-warning':'icon-i-star'" ></span>
+          </button>
             <button
               type="button"
               class="btn btn-icon btn-sm btn-light"

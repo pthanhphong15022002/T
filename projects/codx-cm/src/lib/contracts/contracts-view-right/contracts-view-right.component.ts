@@ -38,7 +38,10 @@ export class ContractsViewDetailComponent
   @Input() formModel: FormModel;
   @Input() listInsStepStart = [];
   @Input() contract: CM_Contracts;
+  @Input() contractAppendix: CM_Contracts;
+  @Input() processID: string;
 
+  // @Input() dataSelected: any;
   @Output() changeMF = new EventEmitter<any>();
   @Output() isSusscess = new EventEmitter<any>();
   @Output() clickMoreFunc = new EventEmitter<any>();
@@ -52,6 +55,7 @@ export class ContractsViewDetailComponent
   account: any;
   isView = true;
   grvSetup: any;
+  stepCurrent:any;
   contactPerson;
   treeTask = [];
   vllStatus = '';
@@ -59,7 +63,7 @@ export class ContractsViewDetailComponent
   tabClicked = '';
   listInsStep = [];
   lstStepsOld = [];
-  isShowFull = false;  
+  isShowFull = false;
   listTypeContract = [];
   oCountFooter: any = {};
   isLoading: boolean = true;
@@ -69,7 +73,6 @@ export class ContractsViewDetailComponent
   listContractInParentID: CM_Contracts[] = [];
   isHaveField: boolean = false;
   listStepsProcess = [];
-  stepCurrent: any;
 
   tabControl = [
     { name: 'History', textDefault: 'Lịch sử', isActive: true, template: null },
@@ -122,7 +125,7 @@ export class ContractsViewDetailComponent
     gridViewName: 'grvCMContacts',
   };
   lstContacts: any;
-  
+
   constructor(
     private inject: Injector,
     private location: Location,
@@ -161,6 +164,10 @@ export class ContractsViewDetailComponent
       this.getDeal();
       this.getListCOntractByParentID();
     }
+    if (changes?.contractAppendix && changes?.contractAppendix?.currentValue) {
+      this.listContractInParentID = this.listContractInParentID ? this.listContractInParentID : [];
+      this.listContractInParentID?.push(changes?.contractAppendix?.currentValue);
+    }
     if (changes?.listInsStepStart && changes?.listInsStepStart?.currentValue) {
       this.listInsStep = this.listInsStepStart;
     }
@@ -197,6 +204,9 @@ export class ContractsViewDetailComponent
     this.getPayMentByContractID(this.contract?.recID);
     if (this.contract?.applyProcess) {
       this.getListInstanceStep();
+    }
+    else {
+      this.stepCurrent = null;
     }
     this.sessionID = this.contract?.recID;
     this.loadTree(this.sessionID);
@@ -238,12 +248,6 @@ export class ContractsViewDetailComponent
   deleteListReason(listStep: any): void {
     listStep.pop();
     listStep.pop();
-  }
-  getStepCurrent(data) {
-    this.getStepCurrent = null;
-    if( this.listInsStep != null &&  this.listInsStep.length > 0) {
-      this.stepCurrent = this.listInsStep.filter((x) => x.stepID == data.stepID)[0];
-     }
   }
   showColumnControl(stepID) {
     if (this.listStepsProcess?.length > 0) {
@@ -507,7 +511,7 @@ export class ContractsViewDetailComponent
       let url = ``
       switch(type){
         case "contract":
-          url = `${domain}/${tenant}/cm/contracts/CM0204?predicate=RecID=@0&dataValue=${recID}`;
+          url = `${domain}/${tenant}/cm/contracts/CM0206?predicate=RecID=@0&dataValue=${recID}`;
           break;
         case "deal":
           url = `${domain}/${tenant}/cm/deals/CM0201?predicate=RecID=@0&dataValue=${recID}`;
@@ -527,13 +531,21 @@ export class ContractsViewDetailComponent
 
   getListCOntractByParentID(){
     this.listContractInParentID = [];
-    if(this.contract.parentID) {
-      this.contractService.getContractByParentID(this.contract.parentID).subscribe((res)=>{
-        if(res){
-          this.listContractInParentID = res;
-        }
-      })
-    }
-    
+    this.contractService.getContractByParentID([this.contract?.recID, this.contract?.parentID, this.contract?.useType]).subscribe((res)=>{
+      if(res){
+        this.listContractInParentID = res;
+      }
+    })
   }
+  reloadListStep(listSteps: any) {
+    this.isLoading = true;
+    this.listInsStep = listSteps;
+    this.getStepCurrent(this.contract);
+    this.isLoading = false;
+    this.changeDetectorRef.detectChanges();
+  }
+  getStepCurrent(data) {
+    this.stepCurrent = this.listInsStep.filter(x=>x.stepID == data.stepID)[0];
+  }
+
 }
