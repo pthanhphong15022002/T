@@ -1,4 +1,3 @@
-
 .e-tab .e-content.e-lib {
     padding-left: 0px !important;
 }
@@ -68,7 +67,7 @@
     flex-direction: column !important;
 
     img {
-        width: 12% !important;
+        height: 30% !important;
     }
 }
 
@@ -451,11 +450,11 @@
 
 .card-general-less {
     .table-ac {
-        height: calc(100vh - 415px) !important;
+        height: calc(100vh - 380px) !important;
     }
 
     .ac-empty {
-        height: calc(100vh - 455px) !important;
+        height: calc(100vh - 425px) !important;
     }
 }
 

@@ -26,10 +26,12 @@
                         <div class="d-flex flex-wrap">
                             <span class="text-gray-600">{{data.gift.giftID}}</span>
                             <span class="mx-2 text-gray-400">|</span>
-                            <span class="fw-bold text-dark">
-                                <codx-label [formModel]="formModel" name="lblGroup" default="Nhóm"></codx-label>
-                            </span>
-                            <span>: {{data.gift.groupName}}</span>
+                            <ng-container *ngIf="data?.gift?.groupName">
+                                <span class="fw-bold text-dark">
+                                    <codx-label [formModel]="formModel" name="lblGroup" default="Nhóm"></codx-label>
+                                </span>
+                                <span>: {{data.gift.groupName}}</span>
+                            </ng-container>
                         </div>
                         <div class="mt-2">
                             {{data.gift.memo}}
@@ -66,12 +68,12 @@
             </div>
             <div class="mt-9">
                 <div class="mb-3">
-                    <codx-label [ngClass]="'fw-bold text-primary fs-6'" [formModel]="formModel" name="lblSiutuation"
+                    <codx-label [ngClass]="'fw-bold text-primary fs-6'" [formModel]="formModel" name="lblSituation"
                         default="Nội dung"></codx-label>
                 </div>
                 <div class="text-gray-600">
-                    <ng-container *ngIf="data.siutuation">
-                        <div>{{data.siutuation}}</div>
+                    <ng-container *ngIf="data.situation">
+                        <div [innerHTML]="data.situation"></div>
                     </ng-container>
                 </div>
             </div>
