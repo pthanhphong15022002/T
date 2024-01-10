@@ -164,6 +164,9 @@ export class GeneralJournalComponent extends UIComponent {
       case 'SYS04':
         this.copyVoucher(data); //? sao chép chứng từ
         break;
+      case 'SYS05':
+        this.viewVoucher(data); //? sao chép chứng từ
+        break;
       case 'SYS002':
         this.exportVoucher(data); //? xuất dữ liệu chứng từ
         break;
@@ -261,6 +264,8 @@ export class GeneralJournalComponent extends UIComponent {
    * @param dataEdit : data chứng từ chỉnh sửa
    */
   editVoucher(dataEdit) {
+    delete dataEdit.isReadOnly;
+    this.view.dataService.dataSelected = {...dataEdit};
     this.view.dataService.dataSelected = dataEdit;
     this.view.dataService
       .edit(dataEdit)
@@ -367,6 +372,32 @@ export class GeneralJournalComponent extends UIComponent {
           } 
         }
       });
+  }
+
+  /**
+   * *Hàm xem chứng từ
+   * @param dataEdit : data chứng từ chỉnh sửa
+   */
+  viewVoucher(dataView) {
+    delete dataView.isEdit;
+    dataView.isReadOnly = true;
+    let data = {
+      headerText: this.headerText,
+      journal: { ...this.journal },
+      oData: { ...dataView },
+      hideFields: [...this.hideFields],
+      baseCurr: this.baseCurr,
+      legalName: this.legalName,
+    };
+    let optionSidebar = new SidebarModel();
+    optionSidebar.DataService = this.view?.dataService;
+    optionSidebar.FormModel = this.view?.formModel;
+    let dialog = this.callfc.openSide(
+      GeneralJournalAddComponent,
+      data,
+      optionSidebar,
+      this.view.funcID
+    );
   }
 
   /**

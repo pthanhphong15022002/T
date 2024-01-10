@@ -194,11 +194,11 @@
                     <div class="d-flex flex-column w-100">
                       <div class="d-flex align-items-center">
                         <i class="icon-drag_indicator me-2 cursor-move" cdkDragHandle></i>
-                        <span class="fw-bold">{{data.text}}</span>
+                        <span class="fw-bold">{{data.title}}</span>
                       </div>
                       <div class="d-flex align-items-center justify-content-between w-100 border mt-2 px-4 py-3 rd-3px">
-                        <span class="text-muted text-truncate mw-55px">Câu trả lời</span>
-                        <i class="icon-i-plus-square text-dark"></i>
+                        <span class="text-muted text-truncate mw-55px">{{data.description}}</span>
+                        <i class="icon-keyboard_arrow_down text-dark"></i>
                       </div>
                     </div>
                   </ng-template>
@@ -497,6 +497,9 @@
         </ng-container>
         <ng-container *ngSwitchCase="'Attachment'">
           <lib-property-attachment [data]="dataSelected" (dataChange)="dataChange($event)"></lib-property-attachment>
+        </ng-container>
+        <ng-container *ngSwitchCase="'ComboBox'">
+          <lib-property-combobox [data]="dataSelected" (dataChange)="dataChange($event)"></lib-property-combobox>
         </ng-container>
       </ng-container>
     </div>

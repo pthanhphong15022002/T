@@ -4,6 +4,7 @@ import { PopupAddPostComponent } from '../../dashboard/home/list-post/popup-add/
 import { PopupAddComponent } from '../popup/popup-add/popup-add.component';
 import { AppropvalNewsDetailComponent } from './appropval-news-detail/appropval-news-detail.component';
 import { PopupAddCommentComponent } from '../popup/popup-add-comment/popup-add-comment.component';
+import { CodxShareService } from 'projects/codx-share/src/lib/codx-share.service';
 
 @Component({
   selector: 'wp-appropval-news',
@@ -30,6 +31,7 @@ export class AppropvalNewsComponent extends UIComponent {
     private injector: Injector,
     private auth: AuthStore,
     private callFuc: CallFuncService,
+    private codxShareService: CodxShareService,
     private notifySvr:NotificationsService
   ) 
   {
@@ -54,6 +56,12 @@ export class AppropvalNewsComponent extends UIComponent {
         });
       }
     });
+    // this.codxShareService
+    //   .getSettingValueWithOption('FTC', 'WPParameters',null,'1')
+    //   .subscribe((res) => {
+    //     if(res){
+    //     }
+    //   });
   }
 
   ngAfterViewInit(): void {
@@ -347,7 +355,8 @@ export class AppropvalNewsComponent extends UIComponent {
             descriptions: res.event.subject,
             category:res.event.category,
             approveControl:res.event.approveControl,
-            approveStatus:res.event.approvalStatus,
+            approveStatus:res.event.approveStatus,
+            status:res.event.status,
             createdBy:res.event.createdBy,
             createdOn:res.event.createdOn,
             modifiedBy:res.event.modifiedBy,

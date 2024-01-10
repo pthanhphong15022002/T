@@ -7,6 +7,7 @@ import { Subject, map, takeUntil } from 'rxjs';
 import { AC_GeneralJournalsLines } from '../../../models/AC_GeneralJournalsLines.model';
 import { SettledInvoicesAdd } from '../../../share/settledinvoices-add/settledinvoices-add.component';
 import { AC_VATInvoices } from '../../../models/AC_VATInvoices.model';
+import { EditSettingsModel } from '@syncfusion/ej2-angular-grids';
 
 @Component({
   selector: 'lib-general-journal-add',
@@ -59,6 +60,13 @@ export class GeneralJournalAddComponent extends UIComponent {
   postDateControl:any;
   preData:any;
   nextTabIndex:any;
+  editSettings:EditSettingsModel = {
+    allowAdding:false,
+    allowEditing:false,
+    allowDeleting:false,
+    allowEditOnDblClick:false,
+    allowNextRowEdit:false
+  }
   private destroy$ = new Subject<void>(); //? list observable hủy các subscribe api
   constructor(
     inject: Injector,
