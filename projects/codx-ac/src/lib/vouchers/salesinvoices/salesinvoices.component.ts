@@ -118,6 +118,29 @@ export class SalesinvoicesComponent extends UIComponent
           template2: this.templateGrid,
         },
       },
+      {
+        type: ViewType.grid_detail,
+        active: false,
+        sameData: true,
+        model: {
+          template2: this.templateGrid,
+
+        },
+
+        request:{service:'AC'},
+        subModel:{
+          entityName:'AC_SalesInvoicesLines',
+          formName:'SalesInvoicesLines',
+          gridviewName:'grvSalesInvoicesLines',
+          parentField:'TransID',
+          parentNameField:'VoucherNo',
+          hideMoreFunc:true,
+          request:{
+            service: 'AC',
+          },
+          idField:'recID'
+        }
+      },
     ];
     this.acService.setChildLinks();
   }
@@ -169,6 +192,9 @@ export class SalesinvoicesComponent extends UIComponent
         break;
       case 'SYS04':
         this.copyVoucher(data); //? sao chép chứng từ
+        break;
+      case 'SYS05':
+        this.viewVoucher(data); //? sao chép chứng từ
         break;
       case 'SYS002':
         this.exportVoucher(data); //? xuất dữ liệu chứng từ
@@ -285,6 +311,8 @@ export class SalesinvoicesComponent extends UIComponent
    * @param dataEdit : data chứng từ chỉnh sửa
    */
   editVoucher(dataEdit) {
+    delete dataEdit.isReadOnly;
+    this.view.dataService.dataSelected = {...dataEdit};
     this.view.dataService.dataSelected = dataEdit;
     this.view.dataService
       .edit(dataEdit)
@@ -391,6 +419,33 @@ export class SalesinvoicesComponent extends UIComponent
           } 
         }
       });
+  }
+
+  /**
+   * *Hàm xem chứng từ
+   * @param dataEdit : data chứng từ chỉnh sửa
+   */
+  viewVoucher(dataView) {
+    delete dataView.isEdit;
+    dataView.isReadOnly = true;
+    let data = {
+      headerText: this.headerText,
+      journal: { ...this.journal },
+      oData: { ...dataView },
+      hideFields: [...this.hideFields],
+      baseCurr: this.baseCurr,
+    };
+    let optionSidebar = new SidebarModel();
+    optionSidebar.DataService = this.view?.dataService;
+    optionSidebar.FormModel = this.view?.formModel;
+    let dialog = this.callfc.openSide(
+      SalesinvoicesAddComponent,
+      data,
+      optionSidebar,
+      this.view.funcID
+    );
+    dialog.closed.subscribe((res) => {
+    })
   }
 
   /**

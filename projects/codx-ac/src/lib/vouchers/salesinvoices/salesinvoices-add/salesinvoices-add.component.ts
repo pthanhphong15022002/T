@@ -28,6 +28,7 @@ import {
 import { Subject, map, takeUntil } from 'rxjs';
 import { TabComponent } from '@syncfusion/ej2-angular-navigations';
 import { AC_SalesInvoicesLines } from '../../../models/AC_SalesInvoicesLines.model';
+import { EditSettingsModel } from '@syncfusion/ej2-angular-grids';
 
 @Component({
   selector: 'lib-salesinvoices-add',
@@ -61,6 +62,13 @@ export class SalesinvoicesAddComponent extends UIComponent{
   isPreventChange:any = false;
   postDateControl:any;
   preData:any;
+  editSettings:EditSettingsModel = {
+    allowAdding:false,
+    allowEditing:false,
+    allowDeleting:false,
+    allowEditOnDblClick:false,
+    allowNextRowEdit:false
+  }
   private destroy$ = new Subject<void>(); //? list observable hủy các subscribe api
 
   constructor(
