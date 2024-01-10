@@ -19,6 +19,7 @@ import {
   OnInit,
   TemplateRef,
   ViewChild,
+  ViewEncapsulation,
 } from '@angular/core';
 import { PopupAddProcessComponent } from './popup-add-process/popup-add-process.component';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
@@ -27,7 +28,8 @@ import { firstValueFrom } from 'rxjs';
 @Component({
   selector: 'lib-processes',
   templateUrl: './processes.component.html',
-  styleUrls: ['./processes.component.css'],
+  styleUrls: ['./processes.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class ProcessesComponent
   extends UIComponent

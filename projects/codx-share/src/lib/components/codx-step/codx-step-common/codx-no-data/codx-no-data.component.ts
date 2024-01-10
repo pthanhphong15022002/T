@@ -7,7 +7,11 @@ import { Component, Input, OnInit } from '@angular/core';
 })
 export class CodxNoDataComponent implements OnInit {
   @Input() size = 200;
+  @Input() type = 200;
   @Input() mesCode = "SYS011";
+  @Input() mould = "1";
+  @Input() isLoading = false;
+
   width = ''
   ngOnInit(): void {
     this.width = this.size.toString() + 'px';
