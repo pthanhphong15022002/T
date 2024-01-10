@@ -307,7 +307,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
       (this.action == 'copy') &&
       this.contracts?.contractType &&
       this.comboboxContractType &&
-      (!this.autoCode || this.autoNumber)
+      (!this.autoCode || !this.autoNumber)
     ) {
       let data = this.comboboxContractType?.ComponentCurrent?.dataService?.data;
       if (data?.length > 0) {
