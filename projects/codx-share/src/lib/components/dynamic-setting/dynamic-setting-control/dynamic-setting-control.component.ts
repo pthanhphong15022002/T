@@ -13,6 +13,8 @@ export class DynamicSettingControlComponent extends UIComponent{
   //#region Contrucstor
   @Input() settingFull: any;
   @Input() formModel: any;
+  @Input() autoSchedule: boolean = true;
+  @Input() headerText: any = 'Thiết lập tham số';
   @Output() valueChanges: EventEmitter<any> = new EventEmitter();
   oldDataValue: any = {};
   isauto:any = false;

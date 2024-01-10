@@ -158,10 +158,15 @@
       <div *ngIf="formCashPayment.formGroup" id="ac-column-def"
         class="d-flex align-items-center cursor-pointer w-fit ac-refdoc mt-2">
         <img src="../assets/themes/ac/default/img/attachment.svg" class="w-20px h-20px me-2" />
-        <codx-input [disabled]="formCashPayment.data?.isReadOnly ? true : false" tab-index="13" #cbxRefdoc
+        <codx-input *ngIf="!formCashPayment.data.isReadOnly" [disabled]="formCashPayment.data?.isReadOnly ? true : false" tab-index="13" #cbxRefdoc
           style="width: 100%" class="fw-bold" [Group]="formCashPayment.formGroup" field="refDocs"
           [formModel]="dialog.formModel" (valueChange)="valueChangeMaster($event)">
         </codx-input>
+        <ng-container *ngIf="formCashPayment.data.isReadOnly">
+          <span *ngIf="formCashPayment.data.refDocs" class="text-gray-600">{{formCashPayment.data?.refDocs}}</span>
+          <span *ngIf="(formCashPayment.data?.refDocs == '' || formCashPayment.data?.refDocs == null) && formCashPayment?.gridviewSetup"
+            class="place-holder text-gray-600">{{formCashPayment?.gridviewSetup['RefDocs'].headerText}}</span>
+        </ng-container>       
       </div>
     </div>
   </div>
@@ -546,9 +551,9 @@
                   <codx-label style="white-space: nowrap !important" fiedName="VoucherNo"
                     [formModel]="dialog.formModel">
                   </codx-label>
-                  <codx-input [disabled]="!journal.multiCurrency || formCashPayment.data?.isReadOnly"
+                  <codx-input
                     [Group]="formCashPayment.formGroup" field="voucherNo" [formModel]="dialog.formModel"
-                    (valueChange)="valueChangeMaster($event)" [disabled]="journal?.assignRule != '0'">
+                    (valueChange)="valueChangeMaster($event)" [disabled]="(journal?.assignRule != '0' || formCashPayment.data?.isReadOnly)">
                   </codx-input>
                 </div>
               </div>
@@ -741,36 +746,38 @@
 <ng-template #TmpTabSettledInvoices>
   <ng-container>
     <div class="tabline-content header-table-ac position-relative">
-      <codx-gridview-v2 #eleGridSettledInvoices [formName]="fmSettledInvoices.formName"
+      <codx-gridview-v2 #eleGridSettledInvoices [formName]="fmSettledInvoices.formName"  [editSettings]="formCashPayment.data?.isReadOnly ? editSettings : {}"
         [gridViewName]="fmSettledInvoices.gridViewName" [editOnClick]="true" [showEmptyRecord]="false"
         [entityName]="fmSettledInvoices.entityName" rowNoField="rowNo" gridLines="Both"
         [hideMoreFunc]="true" service="AC" predicates="TransID=@0" [dataValues]="formCashPayment.data.recID"
         [autoFitColumns]="true" (gridInit)="beforeInitGridSettledInvoices($event)"
         (cellChanged)="valueChangeLineSettledInvoices($event)">
       </codx-gridview-v2>
-      <div class="btn-addline">
-        <div class="d-flex align-items-center">
-          <div>
-            <button style="border: 1px solid !important" tab-index="12" id="btnAddSet" tabindex="-1"
-              class="btn btn-sm btn-light-primary rounded-15" (keydown.enter)="onAddLine();$event.preventDefault()"
-              (click)="onAddLine()">
-              <i class="icon-playlist_add icon-16"></i>
-              <codx-label [formModel]="dialog.formModel" fiedName="lblAddSettledInvoice1"
-                default="Thêm hóa đơn công nợ"></codx-label>
-            </button>
+      <ng-container *ngIf="!formCashPayment.data?.isReadOnly">
+        <div class="btn-addline">
+          <div class="d-flex align-items-center">
+            <div>
+              <button style="border: 1px solid !important" tab-index="12" id="btnAddSet" tabindex="-1"
+                class="btn btn-sm btn-light-primary rounded-15" (keydown.enter)="onAddLine();$event.preventDefault()"
+                (click)="onAddLine()">
+                <i class="icon-playlist_add icon-16"></i>
+                <codx-label [formModel]="dialog.formModel" fiedName="lblAddSettledInvoice1"
+                  default="Thêm hóa đơn công nợ"></codx-label>
+              </button>
+            </div>
+            <!-- <div *ngIf="formCashPayment.data?.subType == '3' || formCashPayment.data?.subType == '4'" class="ms-2">
+              <button style="border: 1px solid !important" tab-index="12" class="btn btn-sm btn-light-primary rounded-15"
+                (keydown.enter)="onAddLine('2'); $event.preventDefault()" (click)="onAddLine('2')">
+                <i class="icon-library_add_check icon-16"></i>
+                <codx-label *ngIf="formCashPayment.data.subType == '3'" [formModel]="dialog.formModel"
+                  fiedName="lblAddVat" default="Thêm đề nghị tạm ứng"></codx-label>
+                <codx-label *ngIf="formCashPayment.data.subType == '4'" [formModel]="dialog.formModel"
+                  fiedName="lblAddVat" default="Thêm đề nghị thanh toán"></codx-label>
+              </button>
+            </div> -->
           </div>
-          <!-- <div *ngIf="formCashPayment.data?.subType == '3' || formCashPayment.data?.subType == '4'" class="ms-2">
-            <button style="border: 1px solid !important" tab-index="12" class="btn btn-sm btn-light-primary rounded-15"
-              (keydown.enter)="onAddLine('2'); $event.preventDefault()" (click)="onAddLine('2')">
-              <i class="icon-library_add_check icon-16"></i>
-              <codx-label *ngIf="formCashPayment.data.subType == '3'" [formModel]="dialog.formModel"
-                fiedName="lblAddVat" default="Thêm đề nghị tạm ứng"></codx-label>
-              <codx-label *ngIf="formCashPayment.data.subType == '4'" [formModel]="dialog.formModel"
-                fiedName="lblAddVat" default="Thêm đề nghị thanh toán"></codx-label>
-            </button>
-          </div> -->
         </div>
-      </div>
+      </ng-container>
     </div>
   </ng-container>
 </ng-template>
@@ -780,25 +787,27 @@
 <ng-template #TmpTabVATInvoices>
   <ng-container>
     <div class="tabline-content header-table-ac position-relative">
-      <codx-gridview-v2 #eleGridVatInvoices [formName]="fmVATInvoices.formName"
+      <codx-gridview-v2 #eleGridVatInvoices [formName]="fmVATInvoices.formName"  [editSettings]="formCashPayment.data?.isReadOnly ? editSettings : {}"
         [gridViewName]="fmVATInvoices.gridViewName" [entityName]="fmVATInvoices.entityName" rowNoField="rowNo"
         (cellChanged)="valueChangeLineVATInvoices($event)" (beforeSaveRow)="beforeSaveRowVATInvoice($event)"
-        (eventAction)="onActionGridVatInvoice($event)" [showEmptyRecord]="false" [editOnClick]="true"
+        (eventAction)="onActionGridVatInvoice($event)" [showEmptyRecord]="false" [editOnClick]="formCashPayment.data?.isReadOnly ? false : true"
         [templateMore]="templateMore" (actionCompleted)="onActionGridVatInvoice($event)" predicates="TransID=@0"
         gridLines="Both" [autoFitColumns]="true" [dataValues]="formCashPayment?.data?.recID" service="AC">
       </codx-gridview-v2>
-      <div #btnRef class="btn-addline">
-        <div class="d-flex align-items-center">
-          <div *ngIf="formCashPayment.data?.subType == '9'" class="ms-2">
-            <button tabindex="-1" style="border: 1px solid !important" tab-index="12"
-              class="btn btn-sm btn-light-primary rounded-15" (keydown.enter)="onAddLine(); $event.preventDefault()"
-              (click)="onAddLine()" id="btnAddVAT">
-              <i class="icon-playlist_add icon-16"></i>
-              <codx-label [formModel]="dialog.formModel" fiedName="lblAddVat" default="Thêm dòng"></codx-label>
-            </button>
+      <ng-container *ngIf="!formCashPayment.data?.isReadOnly">
+        <div #btnRef class="btn-addline">
+          <div class="d-flex align-items-center">
+            <div *ngIf="formCashPayment.data?.subType == '9'" class="ms-2">
+              <button tabindex="-1" style="border: 1px solid !important" tab-index="12"
+                class="btn btn-sm btn-light-primary rounded-15" (keydown.enter)="onAddLine(); $event.preventDefault()"
+                (click)="onAddLine()" id="btnAddVAT">
+                <i class="icon-playlist_add icon-16"></i>
+                <codx-label [formModel]="dialog.formModel" fiedName="lblAddVat" default="Thêm dòng"></codx-label>
+              </button>
+            </div>
           </div>
         </div>
-      </div>
+      </ng-container>
     </div>
   </ng-container>
 </ng-template>
