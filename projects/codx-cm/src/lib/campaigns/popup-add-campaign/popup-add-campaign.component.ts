@@ -34,6 +34,7 @@ export class PopupAddCampaignComponent implements OnInit {
   avatarChange = false;
   gridViewSetup: any;
   count = 0;
+  isView: boolean = false;
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private api: ApiHttpService,
@@ -50,6 +51,7 @@ export class PopupAddCampaignComponent implements OnInit {
     this.titleAction = dt?.data?.title;
     this.gridViewSetup = dt?.data?.gridViewSetup;
     this.autoNumber = dt?.data?.autoNumber;
+    this.isView = dt?.data?.isView ?? false;
   }
   ngOnInit(): void {
     if (this.action != 'edit') this.data.campaignID = this.autoNumber;

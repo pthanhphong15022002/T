@@ -135,56 +135,65 @@ export class TreeViewComponent implements OnInit, AfterViewInit {
   }
 
   changeDataMF(e, data) {
-    // this.changeMoreFunction.emit({e:e,data:data})
-    if (e) {
+    if (data.category == '3') {
       e.forEach((x) => {
-        if (
-          (x.functionID == 'TMT02016' || x.functionID == 'TMT02017') &&
-          data.confirmControl == '0'
-        ) {
-          x.disabled = true;
-        }
-        if (
-          x.functionID == 'TMT02019' &&
-          data.verifyControl == '0' &&
-          data.category == '1'
-        ) {
-          x.disabled = true;
-        }
-        //an giao viec
-        if (x.functionID == 'SYS005') {
-          x.disabled = true;
-        }
-        //an cap nhat tien do khi hoan tat
-        if (
-          (x.functionID == 'TMT02018' ||
-            x.functionID == 'TMT02026' ||
-            x.functionID == 'TMT02035') &&
-          data.status == '90'
-        ) {
-          x.disabled = true;
-        }
-        //an voi ca TMT026
-        if (
-          x.functionID == 'SYS02' ||
-          x.functionID == 'SYS03' ||
-          x.functionID == 'SYS04'
-          // &&this.formModel?.funcID == 'TMT0206'
-        ) {
-          x.disabled = true;
-        }
-        if (
-          (this.formModel?.funcID == 'TMT03011' ||
-            this.formModel?.funcID == 'TMT05011') &&
-          data.category == '1' &&
-          data.createdBy != this.user.userID &&
-          !this.user?.administrator &&
-          (x.functionID == 'SYS02' || x.functionID == 'SYS03')
-        ) {
-          x.disabled = true;
-        }
+        x.isbookmark = false;
+      });
+      this.changeMoreFunction.emit({ e: e, data: data });
+    } else {
+      e.forEach((x) => {
+        if (x.functionID != 'SYS05') x.disabled = true;
       });
     }
+    // if (e) {
+    //   e.forEach((x) => {
+    //     if (
+    //       (x.functionID == 'TMT02016' || x.functionID == 'TMT02017') &&
+    //       data.confirmControl == '0'
+    //     ) {
+    //       x.disabled = true;
+    //     }
+    //     if (
+    //       x.functionID == 'TMT02019' &&
+    //       data.verifyControl == '0' &&
+    //       data.category == '1'
+    //     ) {
+    //       x.disabled = true;
+    //     }
+    //     //an giao viec
+    //     if (x.functionID == 'SYS005') {
+    //       x.disabled = true;
+    //     }
+    //     //an cap nhat tien do khi hoan tat
+    //     if (
+    //       (x.functionID == 'TMT02018' ||
+    //         x.functionID == 'TMT02026' ||
+    //         x.functionID == 'TMT02035') &&
+    //       data.status == '90'
+    //     ) {
+    //       x.disabled = true;
+    //     }
+    //     //an voi ca TMT026
+    //     if (
+    //       x.functionID == 'SYS02' ||
+    //       x.functionID == 'SYS03' ||
+    //       x.functionID == 'SYS04'
+    //       // &&this.formModel?.funcID == 'TMT0206'
+    //     ) {
+    //       x.disabled = true;
+    //     }
+    //     if (
+    //       (this.formModel?.funcID == 'TMT03011' ||
+    //         this.formModel?.funcID == 'TMT05011') &&
+    //       data.category == '1' &&
+    //       data.createdBy != this.user.userID &&
+    //       !this.user?.administrator &&
+    //       (x.functionID == 'SYS02' || x.functionID == 'SYS03')
+    //     ) {
+    //       x.disabled = true;
+    //     }
+    //   });
+    // }
   }
   //#endregion
 

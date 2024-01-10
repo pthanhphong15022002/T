@@ -105,6 +105,7 @@ export class CodxTasksComponent
   @ViewChild('headerTemp') headerTemp?: TemplateRef<any>;
   @ViewChild('popupToDoList') popupToDoList?: TemplateRef<any>;
   @ViewChild('viewGanttChart') viewGanttChart!: TemplateRef<any>;
+  @ViewChild('ganttItems') ganttItems!: TemplateRef<any>;
 
   views: Array<ViewModel> = [];
   viewsDefault: Array<ViewModel> = [];
@@ -503,8 +504,8 @@ export class CodxTasksComponent
         type: ViewType.content,
         active: false,
         sameData: false,
-        text: 'Cây',
-        icon: 'icon-account_tree',
+        text: this.user?.language == 'VN' ? 'Cây giao việc' : 'Tree Assign',
+        //icon: 'icon-account_tree',
         model: {
           panelLeftRef: this.treeView,
         },
@@ -513,9 +514,9 @@ export class CodxTasksComponent
         type: ViewType.gantt,
         active: false,
         sameData: true,
-
         model: {
-          eventModel:this.taskSettings
+          eventModel:this.taskSettings,
+          //template:this.ganttItems
         },
       },
     ];
@@ -534,15 +535,6 @@ export class CodxTasksComponent
           this.views = viewFunc.sort((a, b) => {
             return a.type - b.type;
           });
-          //Hao da sua core nen cmt lại cai này
-          // let viewModel ;
-          // this.views.forEach((x) => {
-          //   if (x.type == this.viewMode) {
-          //     x.active = true;
-          //     viewModel = x
-          //   }
-          // });
-          // this.view.viewChange(viewModel);
         }
       });
     } else this.views = this.viewsDefault;
@@ -2124,7 +2116,7 @@ export class CodxTasksComponent
     name: 'taskName',
     startDate: 'startDate',
     endDate: 'endDate',
-};
+  };
   getCellContent(evt: any) {
     if (this.dayoff.length > 0) {
       for (let i = 0; i < this.dayoff.length; i++) {
