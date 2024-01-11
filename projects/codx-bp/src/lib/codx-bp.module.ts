@@ -94,7 +94,7 @@ export const routes: Routes = [
 
 
     FormSettingComboboxComponent,
-          FormAdvancedSettingsComponent,
+    FormAdvancedSettingsComponent,
   ],
   imports: [
     CodxCoreModule.forRoot({ environment }),

@@ -118,7 +118,7 @@
   <div class="w-100 bg-gray-100 pt-2 view-details-main">
     <div class="view-details-content bg-body scroll-y mx-0 px-3">
       <div
-        class="sprints-task-detail"
+        class="sprints-task-detail tm-task-detail"
         data-kt-scroll="true"
         data-kt-scroll-activate="{default: true}"
         data-kt-scroll-height="auto"
@@ -178,6 +178,7 @@
 
         <ng-container *ngIf="name == 'Comments'">
           <ng-container>
+            <div class="mt-4 mw-900px m-auto">
             <codx-tree-comment
               [objectID]="iterationID ? iterationID : meetingID"
               [objectType]="iterationID ? 'TM_Sprints' : 'CO_Meetings'"
@@ -189,6 +190,7 @@
               [funcID]="functionParent"
             >
             </codx-tree-comment>
+          </div>
           </ng-container>
         </ng-container>
         <ng-container *ngIf="name == 'Meetings'">
