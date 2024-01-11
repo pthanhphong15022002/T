@@ -65,7 +65,7 @@ import { environment } from 'src/environments/environment';
 import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
 import { CodxBpService } from '../../codx-bp.service';
 import { FormAdvancedSettingsComponent } from './form-advanced-settings/form-advanced-settings.component';
-import { BP_Processes_Permissions } from '../../models/BP_Processes.model';
+import { BP_Processes, BP_Processes_Permissions, BP_Processes_Steps } from '../../models/BP_Processes.model';
 import { Subject, takeUntil } from 'rxjs';
 Diagram.Inject(ConnectorEditing);
 @Component({
@@ -951,7 +951,7 @@ export class PopupAddProcessComponent {
   private destroyFrom$: Subject<void> = new Subject<void>();
 
   dialog: any;
-  data: any;
+  data: BP_Processes;
   action = 'add';
   currentTab = 0; //Tab hiện tại
   processTab = 0; // Tổng bước đã quua
@@ -959,7 +959,7 @@ export class PopupAddProcessComponent {
   oldNode: number; // Vị trí node cũ
   linkAvatar = '';
   vllBP002: any;
-  lstStepFields = [];
+  extendInfos = [];
   title = '';
   vllShare = '';
   typeShare = '';
@@ -991,6 +991,8 @@ export class PopupAddProcessComponent {
   ngOnInit(): void {
     if (this.action == 'edit') {
       this.getAvatar(this.data?.recID, this.data?.processName);
+      this.extendInfos = this.data?.steps?.length > 0 ? this.data?.steps?.filter(x => x.activityType == '1')[0]?.extendInfo : [];
+    }else{
     }
     this.getCacheCbxOrVll();
   }
@@ -1002,6 +1004,7 @@ export class PopupAddProcessComponent {
     this.destroyFrom$.complete();
   }
 
+  //#region get or set default form
   getCacheCbxOrVll() {
     this.cache
       .valueList('BP002')
@@ -1009,7 +1012,10 @@ export class PopupAddProcessComponent {
       .subscribe((item) => {
         if (item) {
           this.vllBP002 = item;
-          if (this.action == 'add') this.setDefaultTitle();
+          if (this.action == 'add') {
+            this.setDefaultTitle();
+            this.defaultStep();
+          }
         }
       });
   }
@@ -1020,10 +1026,10 @@ export class PopupAddProcessComponent {
         recID: Util.uid(),
         fieldName: this.bpSv.createAutoNumber(
           value,
-          this.lstStepFields,
+          this.extendInfos,
           'fieldName'
         ),
-        title: this.bpSv.createAutoNumber(value, this.lstStepFields, 'title'),
+        title: this.bpSv.createAutoNumber(value, this.extendInfos, 'title'),
         dataType: 'String',
         fieldType,
         controlType: 'TextBox',
@@ -1057,8 +1063,23 @@ export class PopupAddProcessComponent {
       lst.push(subTitleField);
     }
 
-    this.lstStepFields = [...this.lstStepFields, ...lst];
+    this.extendInfos = [...this.extendInfos, ...lst];
   }
+
+  defaultStep(){
+    let lstStep = [];
+    var step = new BP_Processes_Steps();
+    step.recID = Util.uid();
+    step.stepNo = 1;
+    step.stepName = 'Bước 1';
+    step.activityType = '1';
+    step.stageID = step.recID;
+    step.parentID = this.data.recID;
+    step.extendInfo = this.extendInfos;
+    lstStep.push(step);
+    this.data.steps = lstStep;
+  }
+//#endregion
 
   //#region setting created tab
   clickTab(tabNo: number) {
@@ -1366,7 +1387,7 @@ export class PopupAddProcessComponent {
     let data = {
       process: this.data,
       vllBP002: this.vllBP002,
-      lstStepFields: this.lstStepFields,
+      lstStepFields: this.extendInfos,
       isForm: true,
     };
     let popupDialog = this.callfc.openForm(
@@ -1381,8 +1402,12 @@ export class PopupAddProcessComponent {
     );
     popupDialog.closed.subscribe((e) => {
       if (e && e?.event) {
-        this.lstStepFields =
+        this.extendInfos =
           e?.event?.length > 0 ? JSON.parse(JSON.stringify(e?.event)) : [];
+          if(this.data?.steps[0]?.extendInfo){
+            this.data.steps[0].extendInfo = this.extendInfos;
+          }
+        this.detectorRef.markForCheck()
       }
     });
   }
