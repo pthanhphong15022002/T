@@ -29,10 +29,15 @@ export class CodxView2Component implements OnInit , AfterViewInit{
   
   @Input() isAdd: boolean = true;
   @Input() isToolBar: boolean = true;
+  @Input() dataRequest:any;
   @Output() btnClick = new EventEmitter();
+  @Output() dataChange = new EventEmitter();
+  @Output() selectedChange = new EventEmitter();
+  @Output() viewChange = new EventEmitter();
   request:DataRequest;
   viewList: Array<ViewModel> = [];
   fMoreFuncs: ButtonModel[];
+  viewActive = "1";
   constructor(
     private ref : ChangeDetectorRef,
     private cache: CacheService,
@@ -82,12 +87,12 @@ export class CodxView2Component implements OnInit , AfterViewInit{
         active: true,
         sameData: true,
       },
-      // {
-      //   id: '2',
-      //   type: ViewType.list,
-      //   active: false,
-      //   sameData: true,
-      // },
+      {
+        id: '2',
+        type: ViewType.list,
+        active: false,
+        sameData: true,
+      },
     ];
 
     this.fMoreFuncs = [
@@ -130,7 +135,9 @@ export class CodxView2Component implements OnInit , AfterViewInit{
     this.fetch().subscribe((item:any)=>{
       if(item && item.length > 0)
       {
-        this.dataSource = item[0];
+        if(this.service.includes('rpt')) this.dataSource = item;
+        else this.dataSource = item[0];
+        this.dataChange.emit(this.dataSource)
       }
     });
   }
@@ -142,7 +149,7 @@ export class CodxView2Component implements OnInit , AfterViewInit{
       this.assemblyName,
       this.className,
       this.method,
-      this.request
+      this.dataRequest ? this.dataRequest : this.request
     )
   }
 
@@ -153,9 +160,20 @@ export class CodxView2Component implements OnInit , AfterViewInit{
   
   viewChanged(e:any)
   {
-
+    this.acitveMenuView(e);
   }
   
+  acitveMenuView(view: ViewModel) {
+    let that = this;
+    this.viewList?.filter(function (v) {
+      if (v.type == view.type) {
+        v.active = true;
+        that.viewActive = v.id;
+        that.viewChange.emit(v.id);
+      }
+      else v.active = false;
+    });
+  }
   sortChanged(e:any)
   {
 
@@ -192,5 +210,9 @@ export class CodxView2Component implements OnInit , AfterViewInit{
   {
     if(data[this.idFeild]) this.dataSource = this.dataSource.filter(x=>x[this.idFeild] != data[this.idFeild]);
     this.ref.detectChanges();
+  }
+  selectedItem(e:any)
+  {
+    this.selectedChange.emit(e);
   }
 }

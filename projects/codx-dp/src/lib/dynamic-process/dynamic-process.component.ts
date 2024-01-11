@@ -44,7 +44,6 @@ import { LayoutComponent } from '../_layout/layout.component';
 import { PopupAddCategoryComponent } from 'projects/codx-es/src/lib/setting/category/popup-add-category/popup-add-category.component';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { PopupReleaseProcessComponent } from './popup-release-process/popup-release-process.component';
-import { ProcessesPropertiesComponent } from '../processes-properties/processes-properties.component';
 
 @Component({
   selector: 'lib-dynamic-process',

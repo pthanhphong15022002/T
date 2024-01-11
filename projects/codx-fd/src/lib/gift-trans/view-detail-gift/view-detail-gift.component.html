@@ -25,8 +25,8 @@
                         <div class="fw-bold fs-3 mb-3">{{data.gift.giftName}}</div>
                         <div class="d-flex flex-wrap">
                             <span class="text-gray-600">{{data.gift.giftID}}</span>
-                            <span class="mx-2 text-gray-400">|</span>
                             <ng-container *ngIf="data?.gift?.groupName">
+                                <span class="mx-2 text-gray-400">|</span>
                                 <span class="fw-bold text-dark">
                                     <codx-label [formModel]="formModel" name="lblGroup" default="Nhóm"></codx-label>
                                 </span>
@@ -66,15 +66,13 @@
                     </div>
                 </ng-container>
             </div>
-            <div class="mt-9">
+            <div class="mt-9" *ngIf="data.situation && data.transType == '1'">
                 <div class="mb-3">
                     <codx-label [ngClass]="'fw-bold text-primary fs-6'" [formModel]="formModel" name="lblSituation"
                         default="Nội dung"></codx-label>
                 </div>
                 <div class="text-gray-600">
-                    <ng-container *ngIf="data.situation">
-                        <div [innerHTML]="data.situation"></div>
-                    </ng-container>
+                    <div [innerHTML]="data.situation"></div>
                 </div>
             </div>
             <div class="mt-9">

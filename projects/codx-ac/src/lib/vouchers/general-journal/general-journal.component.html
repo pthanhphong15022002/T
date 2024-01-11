@@ -101,3 +101,83 @@
   </div>
 </ng-template>
 <!-- End: template listdetail -->
+<ng-template #listTemplate let-data>
+  <codx-temp-full [titleTmp]="listtitleTmp" cardCss="card-template border-bottom p-3" [formModel]="view.formModel"
+    [modeImgs]="true" [titleLine]="2" [dataItem]="data" [hideMF]="false" [typeMF]="'hover'" moreFuncCss="mt-5"
+    [hideMF]="codxService.asideMode == '2'">
+  </codx-temp-full>
+</ng-template>
+<ng-template #listtitleTmp let-data>
+  <div class="d-flex flex-column text-content flex-grow-1">
+    <div class="d-flex justify-content-between">
+      <div class="col-4">
+        <div class="d-flex align-items-center">
+          <codx-label class="fw-bold label-colon" default="Số chứng từ" [formModel]="view.formModel">
+          </codx-label>
+          <span class="text-gray-600 me-3">{{ data?.voucherNo }}</span>
+          <img style="width: 18px; height: 18px" src="../assets/themes/ac/default/img/calendar.svg" class="me-2" />
+          <span class="text-gray-600 line-clamp line-clamp-1" #voucherDate [innerHTML]="
+              data?.voucherDate
+                | formatvalue : view.formModel : 'voucherDate' : voucherDate
+                | async
+            "></span>
+        </div>
+        <div class="d-flex align-items-center">
+          <span *ngIf="data?.memo" id="tipmemo" class="text-gray-600 line-clamp line-clamp-1 me-3">{{ data?.memo
+            }}</span>
+          <span *ngIf="(data?.memo == '' || data?.memo == null) && view?.gridViewSetup"
+            class="place-holder text-gray-600 line-clamp line-clamp-1 me-3">{{
+            view?.gridViewSetup["Memo"].headerText}}</span>
+        </div>
+        <div class="d-flex align-items-center">
+          <span *ngIf="data?.objectName" class="text-gray-600 line-clamp line-clamp-1">{{data?.objectName}}</span>
+          <span *ngIf="(data?.objectName == '' || data?.objectName == null) && view.gridViewSetup"
+            class="place-holder text-gray-600">{{view.gridViewSetup['ObjectID'].headerText}}</span>
+        </div>
+      </div>
+      <div class="col-3">
+        <div class="d-flex align-items-center">
+            <codx-label class="fw-bold label-colon text-nowrap" fiedName="MixedPayment" [formModel]="view.formModel">
+            </codx-label>
+            <i *ngIf="!itemSelected?.mixedPayment" class="icon-check_box_outline_blank icon-18"></i>
+            <i *ngIf="itemSelected?.mixedPayment" class="icon-check_box icon-18"></i>
+        </div>
+        <div class="d-flex align-items-center">
+          <codx-label class="fw-bold label-colon text-nowrap" fiedName="ReasonID" [formModel]="view.formModel">
+          </codx-label>
+          <span *ngIf="data?.reasonName" class="text-gray-600">{{data?.reasonName}}</span>
+          <span *ngIf="(data?.reasonName == '' || data?.reasonName == null) && view.gridViewSetup"
+            class="place-holder text-gray-600">{{view.gridViewSetup['ReasonID'].headerText}}</span>
+        </div>
+        <div class="d-flex align-items-center">
+          <span *ngIf="data?.memo" id="tipmemo" class="text-gray-600 line-clamp line-clamp-2 me-3">{{ data?.memo }}</span>
+          <span *ngIf="
+                      (data?.memo == '' || data?.memo == null) && view?.gridViewSetup
+                    " class="place-holder text-gray-600 line-clamp line-clamp-2 me-3">{{ view?.gridViewSetup["Memo"].headerText
+            }}</span>
+        </div>
+      </div>
+      <div class="col-3">
+        <div class="d-flex align-items-center">
+          <span class="fw-bold line-clamp line-clamp-1 fs-6 text-uppercase"
+            [innerHTML]="(data?.totalDR | tranformValueNumber : (data?.currencyID !=  baseCurr ? 'S' : 'B') | async)+' '+data?.currencyID"></span>
+        </div>
+        <div class="d-flex align-items-center">
+          <codx-vll *ngIf="data?.status == '1'" [formModel]="view.formModel" [field]="'Status'"
+            [value]="data?.validated ? '1' : '7'" [showText]="true" [showBgColor]="true" class="badge badge-light badge-sm">
+          </codx-vll>
+          <codx-vll *ngIf="data?.status != '1'" [formModel]="view.formModel" [field]="'Status'" [value]="data?.status"
+            [showText]="true" [showBgColor]="true" class="badge badge-light badge-sm">
+          </codx-vll>
+        </div>
+      </div>
+      <div class="col-1">
+        <div class="d-flex align-items-center">
+          <codx-imgs [isToolTip]="true" [objectId]="data?.createdBy" [objectName]="data?.createdBy"
+            [objectType]="'AD_Users'" [width]="30" [numberImages]="1">
+          </codx-imgs>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>

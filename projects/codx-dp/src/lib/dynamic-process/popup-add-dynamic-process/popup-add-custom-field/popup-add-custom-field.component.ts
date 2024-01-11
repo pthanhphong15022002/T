@@ -231,7 +231,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
     if (this.field.dataType == 'CF')
       this.caculateField = this.field.dataFormat ?? '';
 
-    if(this.field.dataType == 'PA'){
+    if (this.field.dataType == 'PA') {
       this.cache.combobox(this.field.refValue).subscribe((cb) => {
         if (cb) {
           this.servicePA = cb?.service;
@@ -286,11 +286,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
         // this.changeFormVll();
       }
     }
-    if (
-      e.field == 'refValue' &&
-      this.field.dataType == 'PA' &&
-      e.data 
-    ) {
+    if (e.field == 'refValue' && this.field.dataType == 'PA' && e.data) {
       this.field.refType = '3';
       this.cache.combobox(e.data).subscribe((cb) => {
         if (cb) {
@@ -949,7 +945,10 @@ export class PopupAddCustomFieldComponent implements OnInit {
   }
   //---------------------End Column Table-----------------------------//
 
-  //----------------Data Referent__PA-------------------------//
+  //-----------------------------------------------------------//
+  //----------------Data Referent - PA-------------------------//
+  //-----------------------------------------------------------//
+
   clickSettingReference() {
     if (!this.field.refValue || !this.entityNamePA) {
       this.notiService.notify(

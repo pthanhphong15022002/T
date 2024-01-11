@@ -48,6 +48,7 @@ import { Internationalization } from '@syncfusion/ej2-base';
 import { ViewDealDetailComponent } from './view-deal-detail/view-deal-detail.component';
 import { CodxCommonService } from 'projects/codx-common/src/lib/codx-common.service';
 import { ExportData } from 'projects/codx-common/src/lib/models/ApproveProcess.model';
+import { PopupCostItemsComponent } from './popup-cost-items/popup-cost-items.component';
 
 @Component({
   selector: 'lib-deals',
@@ -92,6 +93,10 @@ export class DealsComponent
   @ViewChild('templateNote') templateNote: TemplateRef<any>;
   @ViewChild('templateStatusCode') templateStatusCode: TemplateRef<any>;
   @ViewChild('templateIndustries') templateIndustries: TemplateRef<any>;
+  @ViewChild('templateCost') templateCost: TemplateRef<any>;
+  @ViewChild('templateAct') templateAct: TemplateRef<any>;
+  @ViewChild('headerTempAct') headerTempAct: TemplateRef<any>;
+
   @ViewChild('dashBoard') dashBoard!: TemplateRef<any>;
 
   popupConfirm: DialogRef;
@@ -107,6 +112,7 @@ export class DealsComponent
   // type any for view detail
   @Input() dataObj?: any;
   @Input() showButtonAdd = false;
+
   kanban: any;
   viewGird: any;
 
@@ -213,6 +219,7 @@ export class DealsComponent
       this.predicate = 'RecID=@0';
       this.dataValue = this.queryParams?.recID;
     }
+    this.executeApiCallFunctionID('CMDeals', 'grvCMDeals');
     this.loadParam();
     this.cache.functionList(this.funcID).subscribe((f) => {
       this.funcIDCrr = f;
@@ -234,8 +241,6 @@ export class DealsComponent
           this.processIDKanban = res;
         }
       });
-
-    this.executeApiCallFunctionID('CMDeals', 'grvCMDeals');
   }
 
   async onInit(): Promise<void> {
@@ -248,6 +253,12 @@ export class DealsComponent
   }
 
   ngAfterViewInit(): void {}
+
+  onLoading(e) {
+    //reload filter
+    //this.loadViewModel(); //--tạm cmt
+    // this.loadDefaultSetting();
+  }
 
   loadViewModel() {
     this.viewsDefault = [
@@ -278,7 +289,7 @@ export class DealsComponent
         sameData: true,
         model: {
           template2: this.templateMore,
-          groupSettings: {showDropArea: false,columns:['customerName']}
+          groupSettings: { showDropArea: false, columns: ['customerName'] },
           //resources: this.columnGrids,
           // frozenColumns: 1,
         },
@@ -294,9 +305,23 @@ export class DealsComponent
           panelLeftRef: this.dashBoard,
         },
       },
+      {
+        //test view mới
+        id: 100,
+        type: ViewType.grid,
+        active: false,
+        sameData: true,
+        text: 'Lưới custorm column',
+        model: {
+          template2: this.templateMore,
+          groupSettings: { showDropArea: false, columns: ['customerName'] },
+          resources: this.columnGrids,
+        },
+      },
     ];
+    this.loadDefaultSetting();
 
-    //this.views = this.viewsDefault;
+    //this.views = this.viewsDefault; //--tạm cmt
 
     // this.cache.viewSettings(this.funcID).subscribe((views) => {
     //   this.viewsDefault.forEach((v, index) => {
@@ -355,12 +380,6 @@ export class DealsComponent
 
     if (this.funCrr != this.funcID) {
       this.funCrr = this.funcID;
-      // this.cache.functionList(this.funcID).subscribe((f) => {
-      //   if (f) {
-      //     this.funcIDCrr = f;
-      //     this.runMode = f?.runMode;
-      //   }
-      // });
     } else if (
       this.funcID == 'CM0201' &&
       this.viewCrr == 6 &&
@@ -499,7 +518,8 @@ export class DealsComponent
       eventItem.disabled = true;
     };
     let isChangeStatus = (eventItem, data) => {
-      eventItem.disabled = data?.alloweStatus == '1' || data?.status != '0' ? false : true;
+      eventItem.disabled =
+        data?.alloweStatus == '1' || data?.status != '0' ? false : true;
     };
     let isMoveReason = (eventItem, data) => {
       eventItem.disabled =
@@ -562,23 +582,11 @@ export class DealsComponent
 
     return functionMappings[type];
   }
-
+  //-------------- GET DEFAULT ------------------------//
   executeApiCallFunctionID(formName, gridViewName) {
     this.getGridViewSetup(formName, gridViewName);
     this.getMoreFunction(formName, gridViewName);
   }
-  // async getListStatusCode() {
-  //   this.codxCmService.getListStatusCode(['5']).subscribe((res) => {
-  //     if (res) {
-  //       this.valueListStatusCode = res.map((item) => ({
-  //         text: item.statusName,
-  //         value: item.statusID,
-  //       }));
-  //     } else {
-  //       this.valueListStatusCode = [];
-  //     }
-  //   });
-  // }
 
   getMoreFunction(formName, gridViewName) {
     this.cache.moreFunction(formName, gridViewName).subscribe((res) => {
@@ -593,22 +601,26 @@ export class DealsComponent
       }
     });
   }
-  async getGridViewSetup(formName, gridViewName) {
-    this.gridViewSetup = await firstValueFrom(
-      this.cache.gridViewSetup(formName, gridViewName)
-    );
-    this.vllStatus = this.gridViewSetup?.Status?.referedValue;
-    this.vllApprove = this.gridViewSetup?.ApproveStatus?.referedValue;
-    //lay grid view - view gird he thong
-    // let arrField = Object.values(this.gridViewSetup).filter(
-    //   (x: any) => x.isVisible
-    // );
-    // if (Array.isArray(arrField)) {
-    //   this.arrFieldIsVisible = arrField
-    //     .sort((x: any, y: any) => x.columnOrder - y.columnOrder)
-    //     .map((x: any) => x.fieldName);
-    // }
-    //this.getColumsGrid(this.gridViewSetup);
+
+  getGridViewSetup(formName, gridViewName) {
+    this.cache.gridViewSetup(formName, gridViewName).subscribe((grv) => {
+      if (grv) {
+        this.gridViewSetup = grv;
+        this.vllStatus = this.gridViewSetup?.Status?.referedValue;
+        this.vllApprove = this.gridViewSetup?.ApproveStatus?.referedValue;
+        // lay grid view - view gird he thong
+
+        let arrField = Object.values(this.gridViewSetup).filter(
+          (x: any) => x.isVisible
+        );
+        if (Array.isArray(arrField)) {
+          this.arrFieldIsVisible = arrField
+            .sort((x: any, y: any) => x.columnOrder - y.columnOrder)
+            .map((x: any) => x.fieldName);
+        }
+        this.getColumsGrid(this.gridViewSetup);
+      }
+    });
   }
 
   getColorReason() {
@@ -624,12 +636,15 @@ export class DealsComponent
       }
     });
   }
+  //----------------- END ---------------------------//
 
   checkMoreReason(data, isShow: boolean = true) {
     if (data?.isAdminAll && isShow) return false;
     return data?.status != '1' && data?.status != '2' && data?.status != '15';
   }
+
   clickMF(e, data) {
+    if (!data) return;
     this.dataSelected = data;
     this.titleAction = e.text;
     this.stepIdClick = '';
@@ -637,6 +652,7 @@ export class DealsComponent
       SYS03: () => this.edit(data),
       SYS04: () => this.copy(data),
       SYS02: () => this.delete(data),
+      SYS05: () => this.viewInfo(data),
       CM0201_1: () => this.moveStage(data),
       CM0201_2: () => this.startNow(data),
       CM0201_3: () => this.moveReason(data, true),
@@ -644,7 +660,7 @@ export class DealsComponent
       CM0201_8: () => this.openOrCloseDeal(data, true),
       CM0201_7: () => this.popupOwnerRoles(data),
       CM0201_9: () => this.openOrCloseDeal(data, false),
-      // CM0201_5: () => this.exportFile(data), // đã bỏ
+
       CM0201_6: () => this.approvalTrans(data),
       CM0201_12: () => this.confirmOrRefuse(true, data),
       CM0201_13: () => this.confirmOrRefuse(false, data),
@@ -692,37 +708,56 @@ export class DealsComponent
       ])
       .subscribe((x) => {
         if (x.event && x.event.status == 'Y') {
-          this.checkOwner(data,isCheck);
+          this.checkOwner(data, isCheck);
         }
       });
   }
-  checkOwner(data,isCheck) {
-  if(isCheck && data?.owner) {
-    let datas = [data.processID, data.businessLineID,data.owner, this.applyFor];
-    this.codxCmService.isExistOwnerInProcess(datas).subscribe((res) => {
-      if(res) {
-        let dataUpdateProcess = [data.recID, data.status, '', isCheck,data.owner];
-        this.getApiUpdateProcess(dataUpdateProcess);
-      }
-      else  {
-        this.notificationsService
-        .alertCode('DP033', null, [
-          '"' + data?.dealName + '" ' + 'Người phụ trách không tồn tại trong quy trình' + ' ',
-        ])
-        .subscribe((x) => {
-          if (x.event && x.event.status == 'Y') {
-            let dataUpdateProcess = [data.recID, data.status, '', isCheck,''];
-            this.getApiUpdateProcess(dataUpdateProcess);
-          }
-        });
-      }
-    });
+  checkOwner(data, isCheck) {
+    if (isCheck && data?.owner) {
+      let datas = [
+        data.processID,
+        data.businessLineID,
+        data.owner,
+        this.applyFor,
+      ];
+      this.codxCmService.isExistOwnerInProcess(datas).subscribe((res) => {
+        if (res) {
+          let dataUpdateProcess = [
+            data.recID,
+            data.status,
+            '',
+            isCheck,
+            data.owner,
+          ];
+          this.getApiUpdateProcess(dataUpdateProcess);
+        } else {
+          this.notificationsService
+            .alertCode('DP033', null, [
+              '"' +
+                data?.dealName +
+                '" ' +
+                'Người phụ trách không tồn tại trong quy trình' +
+                ' ',
+            ])
+            .subscribe((x) => {
+              if (x.event && x.event.status == 'Y') {
+                let dataUpdateProcess = [
+                  data.recID,
+                  data.status,
+                  '',
+                  isCheck,
+                  '',
+                ];
+                this.getApiUpdateProcess(dataUpdateProcess);
+              }
+            });
+        }
+      });
+    } else {
+      let dataUpdateProcess = [data.recID, data.status, '', isCheck];
+      this.getApiUpdateProcess(dataUpdateProcess);
+    }
   }
-  else {
-    let dataUpdateProcess = [data.recID, data.status, '', isCheck];
-    this.getApiUpdateProcess(dataUpdateProcess);
-  }
- }
   getApiUpdateProcess(datas) {
     this.codxCmService.updateProcessDeal(datas).subscribe((res) => {
       if (res) {
@@ -1405,33 +1440,33 @@ export class DealsComponent
         );
         dialogCustomDeal.closed.subscribe((e) => {
           if (e && e.event != null) {
-            //this.view.dataService.update(e.event, true).subscribe();
+            this.view.dataService.update(e.event, true).subscribe();
             //up kaban
-          //   if (
-          //     this.kanban &&
-          //     (dealValueOld != e.event?.dealValue ||
-          //       exchangeRateOld != e.event?.exchangeRate)
-          //   ) {
-          //     let dt = e.event;
-          //     let money =
-          //       dt.dealValue * dt.exchangeRate - dealValueOld * exchangeRateOld;
-          //     this.renderTotal(dt.stepID, 'add', money);
+            if (
+              this.kanban &&
+              (dealValueOld != e.event?.dealValue ||
+                exchangeRateOld != e.event?.exchangeRate)
+            ) {
+              let dt = e.event;
+              let money =
+                dt.dealValue * dt.exchangeRate - dealValueOld * exchangeRateOld;
+              this.renderTotal(dt.stepID, 'add', money);
 
-          //     // this.kanban?.updateCard(dt);
-          //     // this.kanban?.kanbanObj?.refreshHeader();
-          //     // this.kanban.refreshUI();
-          //     this.kanban.refresh();
-          //   }
-          //   if (this.detailViewDeal) {
-          //     this.detailViewDeal.dataSelected = JSON.parse(
-          //       JSON.stringify(this.dataSelected)
-          //     );
-          //     this.detailViewDeal?.promiseAllAsync();
-          //     this.detailViewDeal.loadContactEdit();
-          //   }
-          //   this.isChangeOwner = ownerIdOld != e.event.owner;
-          //   this.changeDetectorRef.detectChanges();
-           }
+              // this.kanban?.updateCard(dt);
+              // this.kanban?.kanbanObj?.refreshHeader();
+              // this.kanban.refreshUI();
+              this.kanban.refresh();
+            }
+            if (this.detailViewDeal) {
+              this.detailViewDeal.dataSelected = JSON.parse(
+                JSON.stringify(this.dataSelected)
+              );
+              this.detailViewDeal?.promiseAllAsync();
+              this.detailViewDeal.loadContactEdit();
+            }
+            this.isChangeOwner = ownerIdOld != e.event.owner;
+            this.changeDetectorRef.detectChanges();
+          }
         });
       });
   }
@@ -1504,10 +1539,37 @@ export class DealsComponent
     opt.data = [itemSelected.recID, null];
     return true;
   }
+
+  viewInfo(data) {
+    if (data) {
+      this.view.dataService.dataSelected = data;
+    }
+    let option = new SidebarModel();
+    option.DataService = this.view.dataService;
+    this.funcID;
+    option.FormModel = this.view.formModel;
+    option.Width = '800px';
+    option.zIndex = 1001;
+    var formMD = new FormModel();
+
+    var obj = {
+      action: 'view',
+      formMD: formMD,
+      titleAction: this.formatTitleMore(this.titleAction),
+      gridViewSetup: this.gridViewSetup,
+      customerCategory: this.dataSelected?.customerCategory,
+    };
+    let dialogCustomDeal = this.callfc.openSide(
+      PopupAddDealComponent,
+      obj,
+      option
+    );
+  }
   //#endregion
 
   //#region event
   selectedChange(data) {
+    // debugger;
     if (data || data?.data) this.dataSelected = data?.data ? data?.data : data;
   }
   //#endregion
@@ -1525,11 +1587,6 @@ export class DealsComponent
       this.changeDetectorRef.detectChanges();
     }
   }
-
-  //xuất file
-  // exportFile(dt) {
-  //   this.codxCmService.exportFile(dt, this.titleAction);
-  // }
 
   //------------------------- Ký duyệt  ----------------------------------------//
   approvalTrans(dt) {
@@ -1552,39 +1609,6 @@ export class DealsComponent
         'Thiết lập hệ thống chưa bật chức năng ký duyệt !'
       );
     }
-    // this.codxCmService.getProcess(dt.processID).subscribe((process) => {
-    //   if (process) {
-    //     if (process.approveRule) {
-    //       this.codxCmService
-    //         .getESCategoryByCategoryID(process.processNo)
-    //         .subscribe((res) => {
-    //           if (!res) {
-    //             this.notificationsService.notifyCode('ES028');
-    //             return;
-    //           }
-    //           this.codxCmService
-    //             .getDataSource(dt.recID, 'DealsBusiness')
-    //             .then((dataSource) => {
-    //               let exportData: ExportData = {
-    //                 funcID: this.view.formModel.funcID,
-    //                 recID: dt.recID,
-    //                 data: dataSource,
-    //                 entityName: this.view.formModel.entityName,
-    //                 formName: this.view.formModel.formName,
-    //                 gridViewName: this.view.formModel.gridViewName,
-    //               };
-    //               this.release(dt, res, exportData);
-    //             });
-    //         });
-    //     } else {
-    //       this.notificationsService.notifyCode(
-    //         'Quy trình chưa bật chức năng ký duyệt'
-    //       );
-    //     }
-    //   } else {
-    //     this.notificationsService.notifyCode('DP040');
-    //   }
-    // });
   }
 
   approvalTransAction(data, categoryID) {
@@ -1637,18 +1661,6 @@ export class DealsComponent
       this.dataSelected.status = res?.returnStatus;
       this.view.dataService.update(this.dataSelected).subscribe();
       if (this.kanban) this.kanban.updateCard(this.dataSelected);
-      // this.notificationsService.notifyCode('ES007');
-
-      // this.codxCmService
-      //   .getOneObject(this.dataSelected.recID, 'DealsBusiness')
-      //   .subscribe((q) => {
-      //     if (q) {
-      //       this.dataSelected = q;
-      //       this.view.dataService.update(this.dataSelected, true).subscribe();
-      //       if (this.kanban) this.kanban.updateCard(this.dataSelected);
-      //     }
-      //     this.notificationsService.notifyCode('ES007');
-      //   });
     }
   }
 
@@ -1859,12 +1871,6 @@ export class DealsComponent
       });
   }
 
-  onLoading(e) {
-    //reload filter
-    this.loadViewModel();
-    this.loadDefaultSetting();
-  }
-
   loadDefaultSetting() {
     this.funcID = this.activedRouter.snapshot.params['funcID'];
 
@@ -2002,40 +2008,12 @@ export class DealsComponent
         let template: any;
         let colums: any;
         switch (key) {
-          case 'CustomerID':
-            template = this.templateCustomer;
-            break;
-          case 'BusinessLineID':
-            template = this.templateBusinessLines;
-            break;
-          case 'DealValue':
-            template = this.templateDealValue;
-            break;
-          case 'Status':
-            template = this.templateStatus;
-            break;
-          case 'Owner':
-            template = this.templateOwner;
-            break;
           case 'StepID':
             template = this.templateSteps;
             break;
-          case 'ConsultantID':
-            template = this.templateConsultant;
+          case 'CostItems':
+            template = this.templateCost;
             break;
-          case 'ExpectedClosed':
-            template = this.templateExpectedClosed;
-            break;
-          case 'Note':
-            template = this.templateNote;
-            break;
-          case 'StatusCodeID':
-            template = this.templateStatusCode;
-            break;
-          case 'Industries':
-            template = this.templateIndustries;
-            break;
-
           default:
             break;
         }
@@ -2057,6 +2035,15 @@ export class DealsComponent
         this.columnGrids.push(colums);
       });
     }
+    //set activite
+    let columnActiviti = {
+      isExternal: true,
+      headerTemplate: this.headerTempAct,
+      width: '250px',
+      template: this.templateAct,
+      // textAlign: 'center',
+    };
+    this.columnGrids.push(columnActiviti);
 
     this.loadViewModel();
   }
@@ -2452,4 +2439,28 @@ export class DealsComponent
     this.view.dataService.search(e);
     this.detectorRef.detectChanges();
   }
+
+  //-------------GIRD NEW----------------//
+  viewDetailsCost(transID) {
+    this.codxCmService.getCostItemsByTransID(transID).subscribe((res) => {
+      if (res) {
+        let options = new DialogModel();
+        let obj = {
+          title: this.gridViewSetup?.DealCost?.headerText,
+          listCosts: res,
+        };
+        let dialogCost = this.callfc.openForm(
+          PopupCostItemsComponent,
+          '',
+          500,
+          700,
+          '',
+          obj,
+          null,
+          options
+        );
+      }
+    });
+  }
+  //--------------------------------------//
 }

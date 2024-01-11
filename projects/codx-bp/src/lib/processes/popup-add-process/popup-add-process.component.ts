@@ -10,12 +10,16 @@ import {
 } from '@angular/core';
 import {
   ApiHttpService,
+  AuthStore,
+  CRUDService,
   CacheService,
   CallFuncService,
   DialogData,
   DialogModel,
   DialogRef,
   FormModel,
+  NotificationsService,
+  RequestOption,
   SidebarModel,
   Util,
 } from 'codx-core';
@@ -67,6 +71,9 @@ import { AttachmentComponent } from 'projects/codx-common/src/lib/component/atta
 import { CodxBpService } from '../../codx-bp.service';
 import { FormAdvancedSettingsComponent } from './form-advanced-settings/form-advanced-settings.component';
 import { FormEditConnectorComponent } from './form-edit-connector/form-edit-connector.component';
+import { BP_Processes, BP_Processes_Permissions, BP_Processes_Steps } from '../../models/BP_Processes.model';
+import { Subject, takeUntil } from 'rxjs';
+import { ModeviewComponent } from '../../modeview/modeview.component';
 Diagram.Inject(ConnectorEditing);
 @Component({
   selector: 'lib-popup-add-process',
@@ -1131,8 +1138,10 @@ clickRF(){
 
   //===========
   @ViewChild('imageAvatar') imageAvatar: AttachmentComponent;
+  private destroyFrom$: Subject<void> = new Subject<void>();
+
   dialog: any;
-  data: any;
+  data: BP_Processes;
   action = 'add';
   currentTab = 0; //Tab hiện tại
   processTab = 0; // Tổng bước đã quua
@@ -1140,14 +1149,24 @@ clickRF(){
   oldNode: number; // Vị trí node cũ
   linkAvatar = '';
   vllBP002: any;
-  lstStepFields = [];
+  extendInfos = [];
   title = '';
+  vllShare = '';
+  typeShare = '';
+  multiple = true;
+  listCombobox = {};
+  user: any;
+  countValidate = 0;
+  gridViewSetup: any;
+  lstShowExtends = [];
   constructor(
     private detectorRef: ChangeDetectorRef,
     private callfc: CallFuncService,
     private api: ApiHttpService,
     private cache: CacheService,
     private bpSv: CodxBpService,
+    private authStore: AuthStore,
+    private notiSv: NotificationsService,
     private elementRef: ElementRef,
     @Optional() dialog: DialogRef,
     @Optional() dt: DialogData
@@ -1156,23 +1175,48 @@ clickRF(){
     this.data = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
     this.action = dt?.data?.action;
     this.title = dt?.data?.title;
+    this.user = this.authStore.get();
+    this.gridViewSetup = dt?.data?.gridViewSetup;
   }
 
   ngOnInit(): void {
-    if (this.action == 'add') this.getCacheCbxOrVll();
+    if (this.action == 'edit') {
+      this.getAvatar(this.data?.recID, this.data?.processName);
+      this.extendInfos =
+        this.data?.steps?.length > 0
+          ? this.data?.steps?.filter((x) => x.activityType == '1')[0]
+              ?.extendInfo
+          : [];
+      this.setLstExtends();
+    } else {
+    }
+    this.getCacheCbxOrVll();
   }
 
   ngAfterViewInit(): void {
 
   }
 
+  onDestroy() {
+    this.destroyFrom$.next();
+    this.destroyFrom$.complete();
+  }
+
+  //#region get or set default form
   getCacheCbxOrVll() {
-    this.cache.valueList('BP002').subscribe((item) => {
-      if (item) {
-        this.vllBP002 = item;
-        this.setDefaultTitle();
-      }
-    });
+    this.cache
+      .valueList('BP002')
+      .pipe(takeUntil(this.destroyFrom$))
+      .subscribe((item) => {
+        if (item) {
+          this.vllBP002 = item;
+          if (this.action == 'add') {
+            this.setDefaultTitle();
+            this.defaultStep();
+            this.setLstExtends();
+          }
+        }
+      });
   }
 
   setDefaultTitle() {
@@ -1181,16 +1225,18 @@ clickRF(){
         recID: Util.uid(),
         fieldName: this.bpSv.createAutoNumber(
           value,
-          this.lstStepFields,
+          this.extendInfos,
           'fieldName'
         ),
-        title: this.bpSv.createAutoNumber(value, this.lstStepFields, 'title'),
+        title: this.bpSv.createAutoNumber(value, this.extendInfos, 'title'),
         dataType: 'String',
         fieldType,
         controlType: 'TextBox',
         isRequired: true,
         defaultValue: null,
         description: '',
+        columnOrder: !isForm ? 0 : 1, //parent
+        columnNo: 0, //children
       };
 
       if (isForm) {
@@ -1218,8 +1264,64 @@ clickRF(){
       lst.push(subTitleField);
     }
 
-    this.lstStepFields = [...this.lstStepFields, ...lst];
+    this.extendInfos = [...this.extendInfos, ...lst];
   }
+
+  defaultStep() {
+    let lstStep = [];
+    var step = new BP_Processes_Steps();
+    step.recID = Util.uid();
+    step.stepNo = 1;
+    step.stepName = 'Bước 1';
+    step.activityType = '1';
+    step.stageID = step.recID;
+    step.parentID = this.data.recID;
+    step.extendInfo = this.extendInfos;
+    lstStep.push(step);
+    this.data.steps = lstStep;
+  }
+
+  setLstExtends() {
+    let lst = [];
+    if (this.extendInfos?.length > 0) {
+      console.log('extendInfos: ', this.extendInfos);
+      this.extendInfos.forEach((res) => {
+        let count = 1;
+        let tmp = {};
+        tmp['columnOrder'] = res.columnOrder;
+        const index = lst.findIndex((x) => x.columnOrder == res.columnOrder);
+        if (index != -1) {
+          let indxChild = lst[index]['children'].findIndex(
+            (x) => x.columnNo == res.columnNo
+          );
+          if (indxChild != -1) {
+            lst[index]['children'][indxChild] = res;
+          } else {
+            lst[index]['children'].push(res);
+          }
+          lst[index]['children'].sort((a, b) => a.columnNo - b.columnNo);
+          count = lst[index]['children'].length ?? 1;
+          lst[index]['width'] = (100 / count).toString();
+        } else {
+          count = 1;
+          tmp['width'] = '100';
+          let lstChild = [];
+          lstChild.push(res);
+          tmp['children'] = lstChild;
+          lst.push(tmp);
+        }
+      });
+    }
+    this.lstShowExtends = lst;
+  }
+
+  setColumn(item) {
+    let count = this.extendInfos.filter(
+      (x) => x.columnOrder == item.columnOrder
+    ).length;
+    return count <= 1 ? '100' : (100 / count).toString();
+  }
+  //#endregion
 
   //#region setting created tab
   clickTab(tabNo: number) {
@@ -1314,7 +1416,7 @@ clickRF(){
 
   //#region Thong tin chung - Infomations
   valueChange(e) {
-    if(e){
+    if (e) {
       this.data[e?.field] = e?.data;
     }
   }
@@ -1338,7 +1440,7 @@ clickRF(){
       '',
       this.dialog?.formModel?.funcID,
       objectID,
-      'DP_Processes',
+      'BP_Processes',
       'inline',
       1000,
       proccessName,
@@ -1347,6 +1449,7 @@ clickRF(){
     ];
     this.api
       .execSv<any>('DM', 'DM', 'FileBussiness', 'GetAvatarAsync', avatar)
+      .pipe(takeUntil(this.destroyFrom$))
       .subscribe((res) => {
         if (res && res?.url) {
           this.linkAvatar = environment.urlUpload + '/' + res?.url;
@@ -1354,6 +1457,145 @@ clickRF(){
           this.detectorRef.markForCheck();
         }
       });
+  }
+  //#endregion
+
+  //#region control Share
+  //Control share
+  sharePerm(share) {
+    this.listCombobox = {};
+    this.multiple = true;
+    this.vllShare = 'DP0331';
+    this.typeShare = '1';
+    this.multiple = true;
+    let option = new DialogModel();
+    option.zIndex = 1010;
+    this.callfc.openForm(share, '', 420, 600, null, null, null, option);
+  }
+
+  openPopupParticipants(popupParticipants) {
+    let option = new DialogModel();
+    option.zIndex = 1010;
+    this.callfc.openForm(
+      popupParticipants,
+      '',
+      950,
+      650,
+      null,
+      null,
+      null,
+      option
+    );
+  }
+
+  searchAddUsers(e) {
+    if (e && e?.component?.itemsSelected?.length > 0) {
+      let permissions = this.data.permissions ?? [];
+      const data = e?.component?.itemsSelected[0];
+      if (data) {
+        let perm = new BP_Processes_Permissions();
+        perm.objectID = data?.UserID;
+        perm.objectName = data?.UserName;
+        perm.objectType = 'U';
+        perm.read = true;
+        perm.full = true;
+        perm.create = true;
+        perm.assign = true;
+        perm.edit = true;
+        perm.delete = true;
+        perm.isActive = true;
+
+        permissions = this.checkUserPermission(permissions, perm);
+        this.data.permissions = permissions;
+      }
+
+      this.detectorRef.markForCheck();
+    }
+  }
+
+  applyShare(e) {
+    let permissions = this.data?.permissions ?? [];
+    if (e?.length > 0) {
+      let value = e;
+      //Người giám sát
+      for (let i = 0; i < value.length; i++) {
+        let data = value[i];
+        let perm = new BP_Processes_Permissions();
+        perm.objectName =
+          data?.objectType != '1'
+            ? data.text == null || data.text == ''
+              ? data?.objectName
+              : data?.text
+            : this.user?.userName;
+
+        perm.objectID =
+          data?.objectType != '1'
+            ? data.id != null
+              ? data.id
+              : null
+            : this.user?.userID;
+        perm.objectType = data.objectType;
+        perm.full = true;
+        perm.create = true;
+        perm.read = true;
+        perm.assign = true;
+        perm.edit = true;
+        // perm.publish = true;
+        perm.delete = true;
+        perm.isActive = true;
+        permissions = this.checkUserPermission(permissions, perm);
+      }
+      this.data.permissions = permissions;
+    }
+    // this.changeDetectorRef.detectChanges();
+    this.detectorRef.markForCheck();
+  }
+
+  checkUserPermission(
+    listPerm: BP_Processes_Permissions[],
+    perm: BP_Processes_Permissions
+  ) {
+    let index = -1;
+    if (listPerm != null) {
+      if (perm != null && listPerm.length > 0) {
+        index = listPerm.findIndex(
+          (x) =>
+            (x.objectID != null &&
+              x.objectID === perm.objectID &&
+              x.objectType == perm.objectType) ||
+            (x.objectID == null && x.objectType == perm.objectType)
+        );
+      }
+    } else {
+      listPerm = [];
+    }
+
+    if (index == -1) {
+      listPerm.push(Object.assign({}, perm));
+    }
+
+    return listPerm;
+  }
+
+  clickRoles() {}
+
+  removeUser(index) {
+    // let config = new AlertConfirmInputConfig();
+    // config.type = 'YesNo';
+    this.notiSv
+      .alertCode('SYS030')
+      .pipe(takeUntil(this.destroyFrom$))
+      .subscribe((x) => {
+        if (x.event.status == 'Y') {
+          this.data.permissions.splice(index, 1);
+          // this.changeDetectorRef.detectChanges();
+          this.detectorRef.markForCheck();
+        }
+      });
+  }
+
+  checkAssignRemove(i) {
+    return true;
   }
   //#endregion
 
@@ -1376,9 +1618,9 @@ clickRF(){
       option
     );
     popupDialog.closed.subscribe((e) => {
-      if(e){
+      if (e) {
       }
-    })
+    });
   }
   //#endregion
   //#region form setting properties
@@ -1386,34 +1628,173 @@ clickRF(){
     let option = new DialogModel();
     option.IsFull = true;
     option.zIndex = 1010;
+
     let formModelField = new FormModel();
     formModelField.formName = 'DPStepsFields';
     formModelField.gridViewName = 'grvDPStepsFields';
     formModelField.entityName = 'DP_Steps_Fields';
     formModelField.userPermission = this.dialog?.formModel?.userPermission;
     option.FormModel = formModelField;
-    let data = {
-      process: this.data,
-      vllBP002: this.vllBP002,
-      lstStepFields: this.lstStepFields,
-      isForm: true,
-    };
+    debugger;
+    // let data = {
+    //   process: this.data,
+    //   vllBP002: this.vllBP002,
+    //   lstStepFields: this.extendInfos,
+    //   isForm: true,
+    // };
+    // let popupDialog = this.callfc.openForm(
+    //   FormPropertiesFieldsComponent,
+    //   '',
+    //   null,
+    //   null,
+    //   '',
+    //   data,
+    //   '',
+    //   option
+    // );
+    // popupDialog.closed.subscribe((e) => {
+    //   if (e && e?.event) {
+    //     this.extendInfos =
+    //       e?.event?.length > 0 ? JSON.parse(JSON.stringify(e?.event)) : [];
+
+    //     let extDocumentControls = this.extendInfos.filter(x => x.fieldType == 'Attachment' && x.documentControl != null && x.documentControl?.trim() != '');
+    //     if(extDocumentControls?.length > 0){
+    //       let lstDocumentControl = [];
+    //       extDocumentControls.forEach((ele) => {
+    //         const documents = JSON.parse(ele.documentControl);
+    //         documents.forEach((res) => {
+    //           var tmpDoc = {};
+    //           tmpDoc['recID'] = Util.uid();
+    //           tmpDoc['stepNo'] = 1;
+    //           tmpDoc['fieldID'] = res.recID;
+    //           tmpDoc['title'] = res.title;
+    //           tmpDoc['memo'] = res.memo;
+    //           tmpDoc['isRequired'] = res.isRequired ?? false;
+    //           tmpDoc['count'] = res.count ?? 0;
+    //           tmpDoc['templateID'] = res.templateID;
+    //           lstDocumentControl.push(tmpDoc);
+    //         });
+    //       });
+    //       this.data.documentControl = JSON.stringify(lstDocumentControl);
+    //     }
+    //     if(this.data?.steps[0]?.extendInfo){
+    //       this.data.steps[0].extendInfo = this.extendInfos;
+    //     }
+    //     this.detectorRef.markForCheck()
+    //   }
+    // });
+
     let popupDialog = this.callfc.openForm(
-      FormPropertiesFieldsComponent,
+      ModeviewComponent,
       '',
       null,
       null,
       '',
-      data,
+      this.extendInfos,
       '',
       option
     );
-    popupDialog.closed.subscribe((e) => {
-      if (e && e?.event) {
-        this.lstStepFields = e?.event?.length > 0 ? JSON.parse(JSON.stringify(e?.event)) : [];
-
+    popupDialog.closed.subscribe((res) => {
+      if (res?.event) {
+        this.extendInfos =
+          res?.event?.length > 0 ? JSON.parse(JSON.stringify(res?.event)) : [];
+        this.setLstExtends();
+        let extDocumentControls = this.extendInfos.filter(
+          (x) =>
+            x.fieldType == 'Attachment' &&
+            x.documentControl != null &&
+            x.documentControl?.trim() != ''
+        );
+        if (extDocumentControls?.length > 0) {
+          let lstDocumentControl = [];
+          extDocumentControls.forEach((ele) => {
+            const documents = JSON.parse(ele.documentControl);
+            documents.forEach((res) => {
+              var tmpDoc = {};
+              tmpDoc['recID'] = Util.uid();
+              tmpDoc['stepNo'] = 1;
+              tmpDoc['fieldID'] = res.recID;
+              tmpDoc['title'] = res.title;
+              tmpDoc['memo'] = res.memo;
+              tmpDoc['isRequired'] = res.isRequired ?? false;
+              tmpDoc['count'] = res.count ?? 0;
+              tmpDoc['templateID'] = res.templateID;
+              lstDocumentControl.push(tmpDoc);
+            });
+          });
+          this.data.documentControl = JSON.stringify(lstDocumentControl);
+        }
+        if (this.data?.steps[0]?.extendInfo) {
+          this.data.steps[0].extendInfo = this.extendInfos;
+        }
       }
     });
   }
   //#endregion
+
+  async onSave() {
+    this.data.category = '1';
+    // this.countValidate = this.bpSv.checkValidate(this.gridViewSetup, this.data);
+    // if (this.countValidate > 0) return;
+
+    if (this.imageAvatar?.fileUploadList?.length > 0) {
+      (await this.imageAvatar.saveFilesObservable())
+        .pipe(takeUntil(this.destroyFrom$))
+        .subscribe((res) => {
+          // save file
+          if (res) {
+            this.handlerSave();
+          }
+        });
+    } else {
+      this.handlerSave();
+    }
+  }
+
+  handlerSave() {
+    if (this.action == 'add' || this.action == 'copy') {
+      this.onAdd();
+    }
+    {
+      this.onUpdate();
+    }
+  }
+
+  onAdd() {
+    this.dialog.dataService
+      .save((option: any) => this.beforeSave(option), 0)
+      .subscribe((res) => {
+        if (res) {
+          this.dialog.close(res.save);
+        }
+      });
+  }
+
+  onUpdate() {
+    this.dialog.dataService
+      .save((option: any) => this.beforeSave(option))
+      .subscribe((res) => {
+        if (res && res.update) {
+          (this.dialog.dataService as CRUDService)
+            .update(res.update)
+            .subscribe();
+          res.update.modifiedOn = new Date();
+          this.dialog.close(res.update);
+        }
+      });
+  }
+
+  beforeSave(op) {
+    let data = [];
+    op.className = 'ProcessesBusiness';
+    op.service = 'BP';
+    data = [this.data];
+    if (this.action == 'add' || this.action == 'copy') {
+      op.methodName = 'AddProcessAsync';
+    } else {
+      op.methodName = 'UpdateProcessAsync';
+    }
+    op.data = data;
+    return true;
+  }
 }

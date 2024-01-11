@@ -122,6 +122,7 @@ import { FormatStatusCodePipe } from './pipes/format-status-code.pipe';
 import { ScrollSpyDirective } from './contracts/contracts-detail/scroll-spy.directive';
 import { ViewInstancesComponent } from 'projects/codx-dp/src/lib/view-instances/view-instances.component';
 import { CodxViewComponent } from './contracts/codx-view/codx-view.component';
+import { PopupCostItemsComponent } from './deals/popup-cost-items/popup-cost-items.component';
 
 export const routes: Routes = [
   {
@@ -245,6 +246,7 @@ const T_Component: Type<any>[] = [
   CodxListDealsComponent,
   CodxTabDealcompetitorsComponent,
   PopupAddDealcompetitorComponent,
+  PopupCostItemsComponent,
   ViewDealcompetitorsComponent,
   QuotationsViewDetailComponent,
   CasesComponent,

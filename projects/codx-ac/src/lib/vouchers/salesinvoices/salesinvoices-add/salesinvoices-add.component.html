@@ -1,5 +1,6 @@
-<codx-form class="ac-dialog ac-form" #formSalesInvoice [body]="TmpBody" [footer]="TmpFooter" [formModel]="dialog.formModel" [dialog]="dialog"
-  [customToolbar]="TmpSubToolbar" [data]="dataDefault" [openMore]="false" (onAfterInit)="onAfterInitForm($event)">
+<codx-form class="ac-dialog ac-form" #formSalesInvoice [body]="TmpBody" [footer]="TmpFooter"
+  [formModel]="dialog.formModel" [dialog]="dialog" [customToolbar]="TmpSubToolbar" [data]="dataDefault"
+  [openMore]="false" (onAfterInit)="onAfterInitForm($event)">
 </codx-form>
 
 <!-- Start: Sub toolbar -->
@@ -12,6 +13,7 @@
           <i *ngIf="formSalesInvoice.data?.isAdd" class="text-white icon-i-file-earmark-plus icon-16"></i>
           <i *ngIf="formSalesInvoice.data?.isEdit" class="text-white icon-edit-one icon-16"></i>
           <i *ngIf="formSalesInvoice.data?.isCopy" class="text-white icon-content_copy icon-16"></i>
+          <i *ngIf="formSalesInvoice.data?.isReadOnly" class="text-white bi bi-eye icon-16"></i>
         </div>
         <div class="line-clamp line-clamp-1 me-3 fs-4 fw-bold text-uppercase mt-1">
           {{ headerText }}
@@ -19,10 +21,12 @@
         <div class="input-circle input-sm" *ngIf="formSalesInvoice?.formGroup">
           <span class="me-2">
             <codx-vll *ngIf="formSalesInvoice.data?.status == '1'" [formModel]="dialog.formModel" [field]="'Status'"
-              [value]="formSalesInvoice.data?.validated ? '1' : '7'" [showText]="true" [showBgColor]="true" class="badge badge-light badge-sm">
+              [value]="formSalesInvoice.data?.validated ? '1' : '7'" [showText]="true" [showBgColor]="true"
+              class="badge badge-light badge-sm">
             </codx-vll>
-            <codx-vll *ngIf="formSalesInvoice.data?.status != '1'" [formModel]="dialog.formModel" [field]="'Status'" [value]="formSalesInvoice.data?.status"
-              [showText]="true" [showBgColor]="true" class="badge badge-light badge-sm">
+            <codx-vll *ngIf="formSalesInvoice.data?.status != '1'" [formModel]="dialog.formModel" [field]="'Status'"
+              [value]="formSalesInvoice.data?.status" [showText]="true" [showBgColor]="true"
+              class="badge badge-light badge-sm">
             </codx-vll>
           </span>
         </div>
@@ -36,20 +40,23 @@
       </div>
     </div>
     <ng-container>
-      <div *ngIf="formSalesInvoice && !formSalesInvoice?.data?.validated" style="margin-left: 35px" class="d-flex align-items-center">
-        <i class="icon-arrow_drop_down_circle icon-16 mt-1"></i>
-        <div  style="margin-left: -5px;"
-          class="input-circle h-20px input-border-0 w-400px mb-1">
-          <codx-dropdown-select #eleCbxSubType [showFooter]="false" [isToolbar]="false" [cssClass]="'rounded-pill border-1'"
-            cssPopup="h-350px w-550px" [isMulti]="false" type="valuelist" field="subType"
-            [refValue]="formSalesInvoice?.gridviewSetup['SubType']?.referedValue" [value]="formSalesInvoice?.data?.subType"
-            emptyText="Loại phiếu" (valueChange)="changeSubType($event)"></codx-dropdown-select>
+      <ng-container *ngIf="!formSalesInvoice.data.isReadOnly">
+        <div *ngIf="formSalesInvoice && !formSalesInvoice?.data?.validated" style="margin-left: 35px"
+          class="d-flex align-items-center">
+          <i class="icon-arrow_drop_down_circle icon-16 mt-1"></i>
+          <div style="margin-left: -5px;" class="input-circle h-20px input-border-0 w-400px mb-1">
+            <codx-dropdown-select #eleCbxSubType [showFooter]="false" [isToolbar]="false"
+              [cssClass]="'rounded-pill border-1'" cssPopup="h-350px w-550px" [isMulti]="false" type="valuelist"
+              field="subType" [refValue]="formSalesInvoice?.gridviewSetup['SubType']?.referedValue"
+              [value]="formSalesInvoice?.data?.subType" emptyText="Loại phiếu"
+              (valueChange)="changeSubType($event)"></codx-dropdown-select>
+          </div>
         </div>
-      </div>
-      <span style="margin-left: 30px" *ngIf="formSalesInvoice.data?.validated">
-        <codx-vll [name]="'AC063'" [formModel]="formSalesInvoice.formModel" [field]="'SubType'"
-          [value]="formSalesInvoice.data?.subType" [showText]="true" [showBgColor]="true"
-          class="badge badge-light-primary badge-lg mt-1">
+      </ng-container>
+      <span style="margin-left: 30px" *ngIf="(formSalesInvoice.data?.validated) || (formSalesInvoice.data?.isReadOnly)">
+        <codx-vll [name]="formSalesInvoice?.gridviewSetup['SubType']?.referedValue"
+          [formModel]="formSalesInvoice.formModel" [field]="'SubType'" [value]="formSalesInvoice.data?.subType"
+          [showText]="true" [showBgColor]="true" class="badge badge-light-primary badge-sm mt-1">
         </codx-vll>
       </span>
     </ng-container>
@@ -59,57 +66,63 @@
 
 <!-- Start: TmpBody -->
 <ng-template #TmpBody>
-<!-- Start: Tab General -->
-<div style="height: 250px;">
-  <ejs-tab>
-    <e-tabitems>
-      <e-tabitem>
-        <ng-template #headerText>
-          <div class="d-flex align-items-top me-2 mt-2">
-            <i class="icon-info icon-18 me-2"></i>
-            <codx-label class="fw-bold" style="font-size: 14px !important" fiedName="lblGeneral"
-              [formModel]="dialog.formModel" default="Thông tin chung"></codx-label>
-          </div>
-        </ng-template>
-        <ng-template #content>
-          <ng-container *ngTemplateOutlet="TmpTabGeneral"></ng-container>
-        </ng-template>
-      </e-tabitem>
-    </e-tabitems>
-  </ejs-tab>
-</div>
-<!-- End: Tab General -->
+  <!-- Start: Tab General -->
+  <div style="height: 250px;">
+    <ejs-tab>
+      <e-tabitems>
+        <e-tabitem>
+          <ng-template #headerText>
+            <div class="d-flex align-items-top me-2 mt-2">
+              <i class="icon-info icon-18 me-2"></i>
+              <codx-label class="fw-bold" style="font-size: 14px !important" fiedName="lblGeneral"
+                [formModel]="dialog.formModel" default="Thông tin chung"></codx-label>
+            </div>
+          </ng-template>
+          <ng-template #content>
+            <ng-container *ngTemplateOutlet="TmpTabGeneral"></ng-container>
+          </ng-template>
+        </e-tabitem>
+      </e-tabitems>
+    </ejs-tab>
+  </div>
+  <!-- End: Tab General -->
 
- <!-- Start: Tab Detail -->
- <div style="height: calc(100vh - 430px) !important;">
-  <ejs-tab #elementTabDetail (created)="createTabDetail($event,elementTabDetail)">
-    <e-tabitems>
-      <e-tabitem>
-        <ng-template #headerText>
-          <div class="d-flex align-items-top me-2 mt-2">
-            <i class="icon-format_list_numbered icon-18 me-2"></i>
-            <codx-label style="font-size: 14px !important" class="fw-bold" fiedName="lblDetail1"
-              [formModel]="dialog.formModel" default="Chi tiết"></codx-label>
-          </div>
-        </ng-template>
-        <ng-template #content>
-          <ng-container *ngTemplateOutlet="TmpTabLine"></ng-container>
-        </ng-template>
-      </e-tabitem>
-    </e-tabitems>
-  </ejs-tab>
-</div>
- <!-- End: Tab Detail -->
+  <!-- Start: Tab Detail -->
+  <div style="height: calc(100vh - 430px) !important;">
+    <ejs-tab #elementTabDetail (created)="createTabDetail($event,elementTabDetail)">
+      <e-tabitems>
+        <e-tabitem>
+          <ng-template #headerText>
+            <div class="d-flex align-items-top me-2 mt-2">
+              <i class="icon-format_list_numbered icon-18 me-2"></i>
+              <codx-label style="font-size: 14px !important" class="fw-bold" fiedName="lblDetail1"
+                [formModel]="dialog.formModel" default="Chi tiết"></codx-label>
+            </div>
+          </ng-template>
+          <ng-template #content>
+            <ng-container *ngTemplateOutlet="TmpTabLine"></ng-container>
+          </ng-template>
+        </e-tabitem>
+      </e-tabitems>
+    </ejs-tab>
+  </div>
+  <!-- End: Tab Detail -->
 
- <div class="row ac-empty-record"></div>
+  <div class="row ac-empty-record"></div>
   <div style="height: 35px !important" class="listcash-content row">
     <div class="row align-items-center">
       <div *ngIf="formSalesInvoice.formGroup" id="ac-column-def"
         class="d-flex align-items-center cursor-pointer w-fit ac-refdoc mt-2">
         <i class="w-20px h-20px me-2 icon-sticky_note_2 icon-18"></i>
-        <codx-input tab-index="13" style="width: 100%" class="fw-bold" [Group]="formSalesInvoice.formGroup"
-          field="memo" [formModel]="formSalesInvoice.formModel">
+        <codx-input *ngIf="!formSalesInvoice.data.isReadOnly" tab-index="13" style="width: 100%" class="fw-bold"
+          [Group]="formSalesInvoice.formGroup" field="memo" [formModel]="formSalesInvoice.formModel">
         </codx-input>
+        <ng-container *ngIf="formSalesInvoice.data.isReadOnly">
+          <span *ngIf="formSalesInvoice.data.memo" class="text-gray-600">{{formSalesInvoice.data?.memo}}</span>
+          <span
+            *ngIf="(formSalesInvoice.data?.memo == '' || formSalesInvoice.data?.memo == null) && formSalesInvoice?.gridviewSetup"
+            class="place-holder text-gray-600">{{formSalesInvoice?.gridviewSetup['Memo'].headerText}}</span>
+        </ng-container>
       </div>
     </div>
   </div>
@@ -119,38 +132,39 @@
 <!-- Start: Footer -->
 <ng-template #TmpFooter>
   <div style="display: grid !important" ngClass="collape"
-  class="codx-detail-footer dialog-footer align-items-center collape" *ngIf="formSalesInvoice.data">
-  <div class="d-flex align-items-center justify-content-end btn-ac-footer mt-1">
-    <button id="btncancle" [shortcut]="'alt+c'" [autoClick]="true" tab-index="14"
-      *ngIf="!formSalesInvoice.data?.validated" style="border: 1px solid" type="button"
-      class="btn btn-md btn-light-danger me-2 rounded-15" (keydown.enter)="onDiscardVoucher(); $event.preventDefault()"
-      (click)="onDiscardVoucher()">
-      <div class="d-flex align-items-center">
-        <i class="icon-cancel icon-16"></i>
-        <codx-label class="fw-normal" fiedName="lblDiscard" default="Hủy bỏ"></codx-label>
-      </div>
-    </button>
-    <button id="btnsaveas" [shortcut]="'alt+shift+s'" [autoClick]="true" tab-index="15"
-      style="border: 1px solid var(--primary-dark) !important" type="button"
-      class="btn btn-md btn-light-primary me-2 rounded-15" (keydown.enter)="onSaveVoucher('saveadd'); $event.preventDefault()"
-      (click)="onSaveVoucher('saveadd')">
-      <div class="d-flex align-items-center">
-        <i class="icon-add_to_photos icon-16"></i>
-        <codx-label class="fw-normal" fiedName="lblSaveAndClear" default="Lưu & Thêm"></codx-label>
-      </div>
-    </button>
-    <button [shortcut]="'alt+s'" [autoClick]="true" tab-index="16" id="btnsave" type="button"
-      class="btn btn-md btn-light-primary rounded-15" style="border: 1px solid var(--primary-dark) !important"
-      (keydown.enter)="onSaveVoucher('save'); $event.preventDefault()" (click)="onSaveVoucher('save')">
-      <div class="d-flex align-items-center">
-        <i class="icon-save_alt icon-16"></i>
-        <codx-label class="fw-normal" fiedName="lblSave" default="Lưu"></codx-label>
-      </div>
-    </button>
+    class="codx-detail-footer dialog-footer align-items-center collape" *ngIf="formSalesInvoice.data">
+    <div *ngIf="!formSalesInvoice.data.isReadOnly"
+      class="d-flex align-items-center justify-content-end btn-ac-footer mt-1">
+      <button id="btncancle" [shortcut]="'alt+c'" [autoClick]="true" tab-index="14"
+        *ngIf="!formSalesInvoice.data?.validated" style="border: 1px solid" type="button"
+        class="btn btn-md btn-light-danger me-2 rounded-15"
+        (keydown.enter)="onDiscardVoucher(); $event.preventDefault()" (click)="onDiscardVoucher()">
+        <div class="d-flex align-items-center">
+          <i class="icon-cancel icon-16"></i>
+          <codx-label class="fw-normal" fiedName="lblDiscard" default="Hủy bỏ"></codx-label>
+        </div>
+      </button>
+      <button id="btnsaveas" [shortcut]="'alt+shift+s'" [autoClick]="true" tab-index="15"
+        style="border: 1px solid var(--primary-dark) !important" type="button"
+        class="btn btn-md btn-light-primary me-2 rounded-15"
+        (keydown.enter)="onSaveVoucher('saveadd'); $event.preventDefault()" (click)="onSaveVoucher('saveadd')">
+        <div class="d-flex align-items-center">
+          <i class="icon-add_to_photos icon-16"></i>
+          <codx-label class="fw-normal" fiedName="lblSaveAndClear" default="Lưu & Thêm"></codx-label>
+        </div>
+      </button>
+      <button [shortcut]="'alt+s'" [autoClick]="true" tab-index="16" id="btnsave" type="button"
+        class="btn btn-md btn-light-primary rounded-15" style="border: 1px solid var(--primary-dark) !important"
+        (keydown.enter)="onSaveVoucher('save'); $event.preventDefault()" (click)="onSaveVoucher('save')">
+        <div class="d-flex align-items-center">
+          <i class="icon-save_alt icon-16"></i>
+          <codx-label class="fw-normal" fiedName="lblSave" default="Lưu"></codx-label>
+        </div>
+      </button>
+    </div>
+    <codx-tabs [entityName]="dialog.formModel.entityName" [formModel]="dialog.formModel"
+      [objectID]="formSalesInvoice.data?.recID" [funcID]="dialog.formModel.funcID" [TabControl]="tabInfo"></codx-tabs>
   </div>
-  <codx-tabs [entityName]="dialog.formModel.entityName" [formModel]="dialog.formModel"
-    [objectID]="formSalesInvoice.data?.recID" [funcID]="dialog.formModel.funcID" [TabControl]="tabInfo"></codx-tabs>
-</div>
 </ng-template>
 <!-- End: Footer -->
 
@@ -163,40 +177,40 @@
           <div class="row">
             <div class="col-xxl-2 col-xl-2 col-lg-2">
               <div class="form-group">
-                <codx-label fiedName="ObjectID"
-                  [formModel]="dialog.formModel">
+                <codx-label fiedName="ObjectID" [formModel]="dialog.formModel">
                 </codx-label>
-                <codx-input #eleCbxObjectID [Group]="formSalesInvoice.formGroup" field="objectID" [formModel]="dialog.formModel"
+                <codx-input [disabled]="formSalesInvoice.data?.isReadOnly ? true : false" #eleCbxObjectID
+                  [Group]="formSalesInvoice.formGroup" field="objectID" [formModel]="dialog.formModel"
                   (valueChange)="valueChangeMaster($event)">
                 </codx-input>
               </div>
             </div>
             <div class="col-xxl-3 col-xl-4 col-lg-4">
               <div class="form-group">
-                <codx-label style="white-space: nowrap !important" fiedName="ObjectName"
-                  [formModel]="dialog.formModel">
+                <codx-label style="white-space: nowrap !important" fiedName="ObjectName" [formModel]="dialog.formModel">
                 </codx-label>
-                <codx-input [Group]="formSalesInvoice.formGroup" field="objectName" [formModel]="dialog.formModel"
+                <codx-input [disabled]="formSalesInvoice.data?.isReadOnly ? true : false"
+                  [Group]="formSalesInvoice.formGroup" field="objectName" [formModel]="dialog.formModel"
                   (valueChange)="valueChangeMaster($event)">
                 </codx-input>
               </div>
             </div>
             <div class="col-xxl-3 col-xl-4 col-lg-4">
               <div class="form-group">
-                <codx-label style="white-space: nowrap !important" fiedName="Address"
-                  [formModel]="dialog.formModel">
+                <codx-label style="white-space: nowrap !important" fiedName="Address" [formModel]="dialog.formModel">
                 </codx-label>
-                <codx-input [Group]="formSalesInvoice.formGroup" field="address" [formModel]="dialog.formModel"
+                <codx-input [disabled]="formSalesInvoice.data?.isReadOnly ? true : false"
+                  [Group]="formSalesInvoice.formGroup" field="address" [formModel]="dialog.formModel"
                   (valueChange)="valueChangeMaster($event)">
                 </codx-input>
               </div>
             </div>
             <div class="col-xxl-2 col-xl-2 col-lg-2">
               <div class="form-group">
-                <codx-label style="white-space: nowrap !important" fiedName="TaxCode"
-                  [formModel]="dialog.formModel">
+                <codx-label style="white-space: nowrap !important" fiedName="TaxCode" [formModel]="dialog.formModel">
                 </codx-label>
-                <codx-input [Group]="formSalesInvoice.formGroup" field="taxCode" [formModel]="dialog.formModel"
+                <codx-input [disabled]="formSalesInvoice.data?.isReadOnly ? true : false"
+                  [Group]="formSalesInvoice.formGroup" field="taxCode" [formModel]="dialog.formModel"
                   (valueChange)="valueChangeMaster($event)">
                 </codx-input>
               </div>
@@ -205,40 +219,40 @@
           <div class="row">
             <div class="col-xxl-2 col-xl-2 col-lg-2">
               <div class="form-group">
-                <codx-label fiedName="WarehouseID"
-                  [formModel]="dialog.formModel">
+                <codx-label fiedName="WarehouseID" [formModel]="dialog.formModel">
                 </codx-label>
-                <codx-input [Group]="formSalesInvoice.formGroup" field="warehouseID" [formModel]="dialog.formModel"
+                <codx-input [disabled]="formSalesInvoice.data?.isReadOnly ? true : false"
+                  [Group]="formSalesInvoice.formGroup" field="warehouseID" [formModel]="dialog.formModel"
                   (valueChange)="valueChangeMaster($event)">
                 </codx-input>
               </div>
             </div>
             <div class="col-xxl-3 col-xl-4 col-lg-4">
               <div class="form-group">
-                <codx-label fiedName="PmtTermID"
-                  [formModel]="dialog.formModel">
+                <codx-label fiedName="PmtTermID" [formModel]="dialog.formModel">
                 </codx-label>
-                <codx-input [Group]="formSalesInvoice.formGroup" field="pmtTermID" [formModel]="dialog.formModel"
+                <codx-input [disabled]="formSalesInvoice.data?.isReadOnly ? true : false"
+                  [Group]="formSalesInvoice.formGroup" field="pmtTermID" [formModel]="dialog.formModel"
                   (valueChange)="valueChangeMaster($event)">
                 </codx-input>
               </div>
             </div>
             <div class="col-xxl-3 col-xl-3 col-lg-3">
               <div class="form-group">
-                <codx-label fiedName="PmtMethodID"
-                  [formModel]="dialog.formModel">
+                <codx-label fiedName="PmtMethodID" [formModel]="dialog.formModel">
                 </codx-label>
-                <codx-input [Group]="formSalesInvoice.formGroup" field="pmtMethodID" [formModel]="dialog.formModel"
+                <codx-input [disabled]="formSalesInvoice.data?.isReadOnly ? true : false"
+                  [Group]="formSalesInvoice.formGroup" field="pmtMethodID" [formModel]="dialog.formModel"
                   (valueChange)="valueChangeMaster($event)">
                 </codx-input>
               </div>
             </div>
             <div class="col-xxl-2 col-xl-3 col-lg-3">
               <div class="form-group">
-                <codx-label fiedName="DelModeID"
-                  [formModel]="dialog.formModel">
+                <codx-label fiedName="DelModeID" [formModel]="dialog.formModel">
                 </codx-label>
-                <codx-input [Group]="formSalesInvoice.formGroup" field="delModeID" [formModel]="dialog.formModel"
+                <codx-input [disabled]="formSalesInvoice.data?.isReadOnly ? true : false"
+                  [Group]="formSalesInvoice.formGroup" field="delModeID" [formModel]="dialog.formModel"
                   (valueChange)="valueChangeMaster($event)">
                 </codx-input>
               </div>
@@ -250,9 +264,9 @@
                 <codx-label style="white-space: nowrap !important" fiedName="ChannelID"
                   [formModel]="formSalesInvoice.formModel">
                 </codx-label>
-                <codx-input [Group]="formSalesInvoice.formGroup" field="channelID"
-                    [formModel]="formSalesInvoice.formModel">
-                  </codx-input>
+                <codx-input [disabled]="formSalesInvoice.data?.isReadOnly ? true : false"
+                  [Group]="formSalesInvoice.formGroup" field="channelID" [formModel]="formSalesInvoice.formModel">
+                </codx-input>
               </div>
             </div>
             <div class="col-xxl-3 col-xl-4 col-lg-4">
@@ -260,9 +274,9 @@
                 <codx-label style="white-space: nowrap !important" fiedName="ProjectID"
                   [formModel]="formSalesInvoice.formModel">
                 </codx-label>
-                <codx-input [Group]="formSalesInvoice.formGroup" field="projectID"
-                    [formModel]="formSalesInvoice.formModel">
-                  </codx-input>
+                <codx-input [disabled]="formSalesInvoice.data?.isReadOnly ? true : false"
+                  [Group]="formSalesInvoice.formGroup" field="projectID" [formModel]="formSalesInvoice.formModel">
+                </codx-input>
               </div>
             </div>
             <div class="col-xxl-3 col-xl-3 col-lg-3">
@@ -270,9 +284,9 @@
                 <codx-label style="white-space: nowrap !important" fiedName="SalespersonID"
                   [formModel]="formSalesInvoice.formModel">
                 </codx-label>
-                <codx-input [Group]="formSalesInvoice.formGroup" field="salespersonID"
-                    [formModel]="formSalesInvoice.formModel">
-                  </codx-input>
+                <codx-input [disabled]="formSalesInvoice.data?.isReadOnly ? true : false"
+                  [Group]="formSalesInvoice.formGroup" field="salespersonID" [formModel]="formSalesInvoice.formModel">
+                </codx-input>
               </div>
             </div>
             <div class="col-xxl-2 col-xl-3 col-lg-3">
@@ -280,9 +294,9 @@
                 <codx-label style="white-space: nowrap !important" fiedName="ConsultantID"
                   [formModel]="formSalesInvoice.formModel">
                 </codx-label>
-                <codx-input [Group]="formSalesInvoice.formGroup" field="consultantID"
-                    [formModel]="formSalesInvoice.formModel">
-                  </codx-input>
+                <codx-input [disabled]="formSalesInvoice.data?.isReadOnly ? true : false"
+                  [Group]="formSalesInvoice.formGroup" field="consultantID" [formModel]="formSalesInvoice.formModel">
+                </codx-input>
               </div>
             </div>
           </div>
@@ -295,10 +309,10 @@
                   <codx-label style="white-space: nowrap !important" fiedName="VoucherDate"
                     [formModel]="dialog.formModel">
                   </codx-label>
-                  <codx-input [Group]="formSalesInvoice.formGroup"
-                      [formModel]="dialog.formModel" field="voucherDate"
-                      (valueChange)="valueChangeMaster($event)">
-                    </codx-input>
+                  <codx-input [disabled]="formSalesInvoice.data?.isReadOnly ? true : false"
+                    [Group]="formSalesInvoice.formGroup" [formModel]="dialog.formModel" field="voucherDate"
+                    (valueChange)="valueChangeMaster($event)">
+                  </codx-input>
                 </div>
               </div>
               <div class="col-xxl-4 col-xl-5 col-lg-2 col-md-5">
@@ -306,22 +320,10 @@
                   <codx-label style="white-space: nowrap !important" fiedName="VoucherNo"
                     [formModel]="dialog.formModel">
                   </codx-label>
-                  <codx-input [Group]="formSalesInvoice.formGroup" field="voucherNo"
-                      [formModel]="dialog.formModel" (valueChange)="valueChangeMaster($event)"
-                      [disabled]="journal?.assignRule != '0'">
-                    </codx-input>
-                </div>
-              </div>
-            </div>
-            <div *ngIf="postDateControl == '1'" class="row justify-content-end">
-              <div class="col-xxl-8 col-xl-10 col-lg-4 col-md-10">
-                <div class="form-group">
-                  <codx-label style="white-space: nowrap !important" fiedName="PostedDate"
-                    [formModel]="dialog.formModel">
-                  </codx-label>
-                  <codx-input [Group]="formSalesInvoice.formGroup" field="postedDate"
-                      [formModel]="dialog.formModel" (valueChange)="valueChangeMaster($event)">
-                    </codx-input>
+                  <codx-input [Group]="formSalesInvoice.formGroup" field="voucherNo" [formModel]="dialog.formModel"
+                    (valueChange)="valueChangeMaster($event)"
+                    [disabled]="(journal?.assignRule != '0' || formSalesInvoice.data?.isReadOnly)">
+                  </codx-input>
                 </div>
               </div>
             </div>
@@ -331,10 +333,11 @@
                   <codx-label style="white-space: nowrap !important" fiedName="CurrencyID"
                     [formModel]="dialog.formModel">
                   </codx-label>
-                  <codx-input #cbxCurrencyID [disabled]="!journal.multiCurrency" [Group]="formSalesInvoice.formGroup"
-                      field="currencyID" [formModel]="dialog.formModel"
-                      (valueChange)="valueChangeMaster($event)">
-                    </codx-input>
+                  <codx-input #cbxCurrencyID
+                    [disabled]="(!journal.multiCurrency) || (formSalesInvoice.data?.isReadOnly ? true : false)"
+                    [Group]="formSalesInvoice.formGroup" field="currencyID" [formModel]="dialog.formModel"
+                    (valueChange)="valueChangeMaster($event)">
+                  </codx-input>
                 </div>
               </div>
               <div class="col-xxl-4 col-xl-5 col-lg-2 col-md-5">
@@ -345,10 +348,23 @@
                   <codx-input [disabled]="
                         !journal.multiCurrency ||
                         formSalesInvoice.data.currencyID == baseCurr ||
-                        (formSalesInvoice.data.currencyID == null || formSalesInvoice.data.currencyID == '')
-                      " [Group]="formSalesInvoice.formGroup" field="exchangeRate"
-                      [formModel]="dialog.formModel" (controlBlur)="valueChangeMaster($event)">
-                    </codx-input>
+                        (formSalesInvoice.data.currencyID == null || formSalesInvoice.data.currencyID == '') || formSalesInvoice.data?.isReadOnly
+                      " [Group]="formSalesInvoice.formGroup" field="exchangeRate" [formModel]="dialog.formModel"
+                    (controlBlur)="valueChangeMaster($event)">
+                  </codx-input>
+                </div>
+              </div>
+            </div>
+            <div *ngIf="postDateControl == '1'" class="row justify-content-end">
+              <div class="col-xxl-8 col-xl-10 col-lg-4 col-md-10">
+                <div class="form-group">
+                  <codx-label style="white-space: nowrap !important" fiedName="PostedDate"
+                    [formModel]="dialog.formModel">
+                  </codx-label>
+                  <codx-input [disabled]="formSalesInvoice.data?.isReadOnly ? true : false"
+                    [Group]="formSalesInvoice.formGroup" field="postedDate" [formModel]="dialog.formModel"
+                    (valueChange)="valueChangeMaster($event)">
+                  </codx-input>
                 </div>
               </div>
             </div>
@@ -433,23 +449,27 @@
     <codx-gridview-v2 #eleGridSalesInvoice class="tabLine" [showEmptyRecord]="false" gridLines="Both"
       [autoFitColumns]="true" [formName]="fmSalesInvoiceLines.formName" [allowRowDragAndDrop]="true"
       [gridViewName]="fmSalesInvoiceLines.gridViewName" [templateMore]="templateMore"
-      [entityName]="fmSalesInvoiceLines.entityName" predicates="TransID=@0" (beforeSaveRow)="beforeSaveRowSaleInvoice($event)"
+      [editSettings]="formSalesInvoice.data?.isReadOnly ? editSettings : {}"
+      [hideMoreFunc]="formSalesInvoice.data?.isReadOnly ? true : false"
+      [editOnClick]="formSalesInvoice.data?.isReadOnly ? false : true" [entityName]="fmSalesInvoiceLines.entityName"
+      predicates="TransID=@0" (beforeSaveRow)="beforeSaveRowSaleInvoice($event)"
       (gridInit)="beforeInitGridSalesInvoices($event)" [dataValues]="formSalesInvoice?.data?.recID" service="AC"
-      [editOnClick]="true" (eventAction)="onActionGridSalesInvoice($event)" (cellChanged)="valueChangeLine($event)"
+      (eventAction)="onActionGridSalesInvoice($event)" (cellChanged)="valueChangeLine($event)"
       (actionCompleted)="onActionGridSalesInvoice($event)" rowNoField="rowNo"></codx-gridview-v2>
-      <div class="btn-addline">
-        <div class="d-flex align-items-center">
-          <div>
-            <button style="border: 1px solid !important;" tabindex="-1" tab-index="11" id="btnAddSale"(keydown.enter)="
-            onAddLine('1'); $event.preventDefault()
-            " (click)="onAddLine('1')"
-              class="btn btn-sm btn-light-primary rounded-15 btnAddCash">
-              <i class="icon-playlist_add icon-16"></i>
-              <codx-label fiedName="lblSaveAndClear" default="Thêm dòng"></codx-label>
-            </button>
+      <ng-container *ngIf="!formSalesInvoice.data?.isReadOnly">
+        <div class="btn-addline">
+          <div class="d-flex align-items-center">
+            <div>
+              <button style="border: 1px solid !important;" tabindex="-1" tab-index="11" id="btnAddSale" (keydown.enter)="
+                onAddLine('1'); $event.preventDefault()
+                " (click)="onAddLine('1')" class="btn btn-sm btn-light-primary rounded-15 btnAddCash">
+                <i class="icon-playlist_add icon-16"></i>
+                <codx-label fiedName="lblSaveAndClear" default="Thêm dòng"></codx-label>
+              </button>
+            </div>
           </div>
         </div>
-      </div>
+      </ng-container>
   </div>
 </ng-template>
 <!-- End: Grid PurchaseInvoicesLines -->

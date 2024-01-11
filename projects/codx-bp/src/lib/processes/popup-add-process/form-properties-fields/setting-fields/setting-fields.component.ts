@@ -9,6 +9,7 @@ import {
   SimpleChanges,
   ViewChild,
   TemplateRef,
+  ViewEncapsulation,
 } from '@angular/core';
 import {
   ApiHttpService,
@@ -39,6 +40,7 @@ import {
   selector: 'codx-setting-fields',
   templateUrl: './setting-fields.component.html',
   styleUrls: ['./setting-fields.component.scss'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class SettingFieldsComponent implements AfterViewInit {
   @ViewChild('attachment') attachment: AttachmentComponent;
@@ -127,12 +129,13 @@ export class SettingFieldsComponent implements AfterViewInit {
       ) {
         this.id = changes['dataCurrent'].currentValue?.recID;
         this.loadedRenderHTML = false;
-        setTimeout(() => {
-          this.loadedRenderHTML = true;
-        }, 0);
+
         if (this.dataCurrent) {
           this.loadData(this.dataCurrent);
         }
+        setTimeout(() => {
+          this.loadedRenderHTML = true;
+        }, 0);
       }
     }
   }
@@ -210,7 +213,7 @@ export class SettingFieldsComponent implements AfterViewInit {
 
               if (!this.processNo) {
                 this.processNo = await firstValueFrom(
-                  this.bpSv.genAutoNumber('BPT1', 'BP_Processes', 'ProcessNo')
+                  this.bpSv.genAutoNumber('BPT01', 'BP_Processes', 'ProcessNo')
                 );
               }
               this.crrVll.listName =
@@ -265,7 +268,7 @@ export class SettingFieldsComponent implements AfterViewInit {
   async loadDataVll() {
     this.loaded = false;
     this.processNo = await firstValueFrom(
-      this.bpSv.genAutoNumber('BPT1', 'BP_Processes', 'ProcessNo')
+      this.bpSv.genAutoNumber('BPT01', 'BP_Processes', 'ProcessNo')
     );
 
     this.requestTemp.entityName = 'SYS_ValueList';
