@@ -282,6 +282,10 @@ export class ApprovalsComponent extends UIComponent {
       if (mf) {
         mf.disabled = true;
       }
+      const copy = event.find((i) => i.functionID === "SYS04");
+      if (copy) {
+        copy.disabled = true;
+      }
       if (data?.approveStatus != '0') {
         const fdt1001 = event.find((i) => i.functionID === 'FDT1001');
         if (fdt1001) {

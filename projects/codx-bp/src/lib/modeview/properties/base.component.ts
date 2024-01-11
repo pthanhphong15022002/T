@@ -11,4 +11,10 @@ export abstract class BasePropertyComponent
       this.data[e?.field] = e?.data;
       this.dataChange.emit(this.data);
     }
+
+    deleteValue()
+    {
+      this.data.isDelete = true;
+      this.dataChange.emit(this.data);
+    }
 }

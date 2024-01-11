@@ -503,21 +503,34 @@ export class PopupAddCardsComponent implements OnInit {
         this.industry = data;
         const onwer = e?.component.itemsSelected[0]?.Owner;
         if (onwer) {
-          this.userReciver = onwer;
-          this.api
-            .callSv(
-              'SYS',
-              'ERM.Business.AD',
-              'UsersBusiness',
-              'GetAsync',
-              this.userReciver
-            )
-            .subscribe((res2) => {
-              if (res2.msgBodyData.length) {
-                this.userReciverName = res2.msgBodyData[0].userName;
+          this.fdService
+            .CheckAvalidReceiver(this.cardType, onwer)
+            .subscribe((res: any) => {
+              if (res.error) {
+                this.userReciver = null;
+                this.userReciverName = null;
                 this.form.patchValue({ receiver: this.userReciver });
+                this.notifySV.notifyCode('FD002');
+              } else {
+                this.userReciver = onwer;
+                this.api
+                  .callSv(
+                    'SYS',
+                    'ERM.Business.AD',
+                    'UsersBusiness',
+                    'GetAsync',
+                    this.userReciver
+                  )
+                  .subscribe((res2) => {
+                    if (res2.msgBodyData.length) {
+                      this.userReciverName = res2.msgBodyData[0].userName;
+                      this.form.patchValue({ receiver: this.userReciver });
+                    }
+                  });
               }
             });
+
+          
         }
         break;
 
