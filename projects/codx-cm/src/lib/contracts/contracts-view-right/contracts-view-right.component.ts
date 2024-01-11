@@ -73,6 +73,7 @@ export class ContractsViewDetailComponent
   listContractInParentID: CM_Contracts[] = [];
   isHaveField: boolean = false;
   listStepsProcess = [];
+  isLoadingContract = false;
 
   tabControl = [
     { name: 'History', textDefault: 'Lịch sử', isActive: true, template: null },
@@ -371,7 +372,11 @@ export class ContractsViewDetailComponent
     this.contractLink = null;
     if(this.contract?.parentID){
       this.contractService.getContractByRecID(this.contract?.parentID).subscribe((res) => {
-        this.contractLink = res;
+        if(res){
+          this.contractLink = res || [];
+        }else{
+          this.contractLink = null;
+        }
       })
     }
   }
@@ -531,11 +536,15 @@ export class ContractsViewDetailComponent
   }
 
   getListCOntractByParentID(){
-    this.listContractInParentID = [];
+    this.listContractInParentID = null;
+    this.isLoadingContract = true;
     this.contractService.getContractByParentID([this.contract?.recID, this.contract?.parentID, this.contract?.useType]).subscribe((res)=>{
       if(res){
-        this.listContractInParentID = res;
+        this.listContractInParentID = res || [];
+      }else{
+        this.listContractInParentID = [];
       }
+      this.isLoadingContract = false;
     })
   }
   reloadListStep(listSteps: any) {
