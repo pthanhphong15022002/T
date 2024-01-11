@@ -256,6 +256,7 @@ export class PopupAddDealComponent
       this.customerIDOld = this.deal?.customerID;
       this.customerID = this.deal?.customerID;
       this.costInfos = this.deal?.costItems ?? [];
+      if (this.costInfos?.length > 0) this.calculateTotalCost();
     }
     if (this.action === this.actionCopy) {
       this.deal.applyProcess =
@@ -413,6 +414,10 @@ export class PopupAddDealComponent
         } else if ($event.data === null || $event.data === '') {
           this.deleteOwner('U', 'C', '0', this.deal.consultantID, $event.field);
         }
+      }
+      //lãi gộp
+      if ($event.field == 'dealValueTo') {
+        this.deal['grossProfit'] = this.deal['dealValueTo'] - this.totalCost;
       }
     }
   }
@@ -1460,15 +1465,15 @@ export class PopupAddDealComponent
   // --------------------------lOad Tabs ----------------------- //
   itemTabsInput(check: boolean): void {
     let menuInput = this.tabInfo.findIndex(
-      (item) => item?.name === this.menuInputInfo?.name //Phúc gắn thêm name để nó lấy chính xác hơn.
+      (item) => item?.name == this.menuInputInfo?.name
     );
     let tabInput = this.tabContent.findIndex(
-      (item) => item === this.tabCustomFieldDetail
+      (item) => item == this.tabCustomFieldDetail
     );
     if (this.isShowField) {
       if (check && menuInput == -1 && tabInput == -1) {
-        this.tabInfo.splice(2, 0, this.menuInputInfo);
-        this.tabContent.splice(2, 0, this.tabCustomFieldDetail);
+        this.tabInfo.splice(3, 0, this.menuInputInfo);
+        this.tabContent.splice(3, 0, this.tabCustomFieldDetail);
       } else if (!check && menuInput != -1 && tabInput != -1) {
         this.tabInfo.splice(menuInput, 1);
         this.tabContent.splice(tabInput, 1);
@@ -1489,8 +1494,8 @@ export class PopupAddDealComponent
       (item) => item === this.tabGeneralContactDetail
     );
     if (check && menuContact == -1 && tabContact == -1) {
-      this.tabInfo.splice(1, 0, this.menuGeneralContact);
-      this.tabContent.splice(1, 0, this.tabGeneralContactDetail);
+      this.tabInfo.splice(2, 0, this.menuGeneralContact);
+      this.tabContent.splice(2, 0, this.tabGeneralContactDetail);
     } else if (!check && menuContact != -1 && tabContact != -1) {
       this.tabInfo.splice(menuContact, 1);
       this.tabContent.splice(tabContact, 1);
@@ -1775,7 +1780,6 @@ export class PopupAddDealComponent
         this.totalCost += cost.costAmt;
       });
     }
-    this.detectorRef.detectChanges();
   }
   //---------------------------------------------//
 }

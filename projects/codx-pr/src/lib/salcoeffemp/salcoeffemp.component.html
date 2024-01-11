@@ -1,13 +1,14 @@
 <codx-views #view
     [views]="views"
     idField="recID"
-    [selectedFirst]="true"
     [service]="'HR'"
     [autoLoad]="false"
     [hideMoreFuncs]="false"
+    [autoSearch]="false"
     (onActions)="onAction($event)"
     (clickMF)="clickMF($event)"
-    (changeDataMF)="changeDataMF($event)">
+    (changeDataMF)="changeDataMF($event)"
+    (searchChanged)="searchChanged($event)">
 </codx-views>
 <!-- template left -->
 <ng-template #tmpLeft>

@@ -60,7 +60,7 @@ export class CodxDashboardViewsComponent
   listDashboards = [];
   listBookMarks=[];
   countBookMarks = 0;
-
+  viewID = "1";
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     injector: Injector,
@@ -327,5 +327,9 @@ export class CodxDashboardViewsComponent
   selectMoreBookmark()
   {
     this.callFunc.openForm(BookmarkComponent,"",900,700,"",{listGroup:this.listGroupReport,listBookMarks:this.listBookMarks,type:'D'});
+  }
+  viewChange(e:any)
+  {
+    this.viewID = e;
   }
 }

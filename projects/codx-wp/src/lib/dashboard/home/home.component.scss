@@ -30,7 +30,12 @@
 
 .form-myTeam {
   margin-bottom: 15px;
-  background: url(/assets/img/card-sinhnhat.jpg) no-repeat right bottom !important;
+
+  .card.my-team{
+    background-color: transparent!important;
+    background: url(/assets/img/card-sinhnhat.jpg) no-repeat right bottom !important;
+    background-size: 100%!important;
+  }
 }
 
 .calendar {
