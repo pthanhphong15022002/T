@@ -137,9 +137,7 @@ export class CodxCmService {
     ]);
   }
   getDealByRecID(objectID) {
-    return this.api.exec<any>('CM', 'DealsBusiness', 'GetOneAsync', [
-      objectID,
-    ]);
+    return this.api.exec<any>('CM', 'DealsBusiness', 'GetOneAsync', [objectID]);
   }
 
   getListContactByObjectID(objectID) {
@@ -461,7 +459,7 @@ export class CodxCmService {
       )
       .pipe(
         //tap((p) => console.log(p)),
-        map((p) => p && p[0] ? JSON.parse(p[0]) : null)
+        map((p) => (p && p[0] ? JSON.parse(p[0]) : null))
         //tap((p) => console.log(p))
       );
   }
@@ -956,7 +954,6 @@ export class CodxCmService {
       data
     );
   }
-
 
   moveStageBackCase(data) {
     return this.api.execSv<any>(
@@ -1725,7 +1722,7 @@ export class CodxCmService {
     );
   }
 
-  getAutoNumberByAutoNoCode(autoNoCode){
+  getAutoNumberByAutoNoCode(autoNoCode) {
     return this.api.exec<any>(
       'ERM.Business.AD',
       'AutoNumbersBusiness',
@@ -1789,4 +1786,13 @@ export class CodxCmService {
     });
   }
   //end
+
+  getCostItemsByTransID(transID) {
+    return this.api.exec<any>(
+      'CM',
+      'CostItemsBusiness',
+      'GetCostByTransIDAsync',
+      transID
+    );
+  }
 }
