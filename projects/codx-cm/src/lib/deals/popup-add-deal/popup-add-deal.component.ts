@@ -27,7 +27,12 @@ import {
   DialogModel,
   CodxFormComponent,
 } from 'codx-core';
-import { CM_Contacts, CM_Deals, CM_Permissions } from '../../models/cm_model';
+import {
+  CM_Contacts,
+  CM_CostItems,
+  CM_Deals,
+  CM_Permissions,
+} from '../../models/cm_model';
 import { CodxCmService } from '../../codx-cm.service';
 import { tmpInstances } from '../../models/tmpModel';
 import { debug } from 'console';
@@ -48,6 +53,7 @@ export class PopupAddDealComponent
 {
   // view child
   @ViewChild('tabGeneralInfoDetail') tabGeneralInfoDetail: TemplateRef<any>;
+  @ViewChild('tabCostItems') tabCostItems: TemplateRef<any>;
   @ViewChild('tabCustomFieldDetail')
   tabCustomFieldDetail: TemplateRef<any>;
   @ViewChild('tabGeneralContactDetail')
@@ -116,6 +122,14 @@ export class PopupAddDealComponent
     subText: 'Input information',
   };
 
+  menuCoinsItems = {
+    icon: 'icon-u_dollar-sign-alt',
+    text: 'Chi phí Cơ hội',
+    name: 'tabBookingCost',
+    subName: 'Opportunity Cost',
+    subText: 'Opportunity Cost',
+  };
+
   menuGeneralContact = {
     icon: 'icon-contact_phone',
     text: 'Người liên hệ',
@@ -172,6 +186,12 @@ export class PopupAddDealComponent
 
   arrCaculateField: any[] = [];
   isLoadedCF = false;
+  costInfos = [];
+  totalCost = 0;
+  grViewCost: any;
+  tmpCost: CM_CostItems;
+  viewOnly = false;
+  cost: any;
 
   constructor(
     private inject: Injector,
@@ -235,6 +255,8 @@ export class PopupAddDealComponent
     if (this.action != this.actionAdd) {
       this.customerIDOld = this.deal?.customerID;
       this.customerID = this.deal?.customerID;
+      this.costInfos = this.deal?.costItems ?? [];
+      if (this.costInfos?.length > 0) this.calculateTotalCost();
     }
     if (this.action === this.actionCopy) {
       this.deal.applyProcess =
@@ -252,8 +274,8 @@ export class PopupAddDealComponent
   onInit(): void {}
 
   async ngAfterViewInit(): Promise<void> {
-    this.tabInfo = [this.menuGeneralInfo];
-    this.tabContent = [this.tabGeneralInfoDetail];
+    this.tabInfo = [this.menuGeneralInfo, this.menuCoinsItems];
+    this.tabContent = [this.tabGeneralInfoDetail, this.tabCostItems];
     if (this.action !== this.actionAdd || this.isviewCustomer) {
       if (this.isviewCustomer) {
         this.customerCategory = this.customerView?.category;
@@ -392,6 +414,10 @@ export class PopupAddDealComponent
         } else if ($event.data === null || $event.data === '') {
           this.deleteOwner('U', 'C', '0', this.deal.consultantID, $event.field);
         }
+      }
+      //lãi gộp
+      if ($event.field == 'dealValueTo') {
+        this.deal['grossProfit'] = this.deal['dealValueTo'] - this.totalCost;
       }
     }
   }
@@ -1077,13 +1103,14 @@ export class PopupAddDealComponent
   beforeSave(option: RequestOption) {
     let datas = [];
     if (this.action !== this.actionEdit) {
-      datas = [this.deal, this.lstContactDeal];
+      datas = [this.deal, this.lstContactDeal, this.costInfos];
     } else {
       datas = [
         this.deal,
         this.customerIDOld,
         this.lstContactDeal,
         this.lstContactDelete,
+        this.costInfos,
       ];
     }
 
@@ -1097,11 +1124,20 @@ export class PopupAddDealComponent
 
   async executeApiCalls() {
     try {
-      this.isLoading &&
-        (await this.getGridViewSetup(
+      if (this.isLoading) {
+        this.getGridViewSetup(
           this.formModel.formName,
           this.formModel.gridViewName
-        ));
+        );
+        this.cache
+          .gridViewSetup('CMCostItems', 'grvCMCostItems')
+          .subscribe((grvCost) => {
+            if (grvCost) {
+              this.grViewCost = Util.camelizekeyObj(grvCost);
+            }
+          });
+      }
+
       if (this.action === this.actionAdd) {
         this.loadExchangeRate();
       }
@@ -1429,15 +1465,15 @@ export class PopupAddDealComponent
   // --------------------------lOad Tabs ----------------------- //
   itemTabsInput(check: boolean): void {
     let menuInput = this.tabInfo.findIndex(
-      (item) => item?.name === this.menuInputInfo?.name //Phúc gắn thêm name để nó lấy chính xác hơn.
+      (item) => item?.name == this.menuInputInfo?.name
     );
     let tabInput = this.tabContent.findIndex(
-      (item) => item === this.tabCustomFieldDetail
+      (item) => item == this.tabCustomFieldDetail
     );
     if (this.isShowField) {
       if (check && menuInput == -1 && tabInput == -1) {
-        this.tabInfo.splice(2, 0, this.menuInputInfo);
-        this.tabContent.splice(2, 0, this.tabCustomFieldDetail);
+        this.tabInfo.splice(3, 0, this.menuInputInfo);
+        this.tabContent.splice(3, 0, this.tabCustomFieldDetail);
       } else if (!check && menuInput != -1 && tabInput != -1) {
         this.tabInfo.splice(menuInput, 1);
         this.tabContent.splice(tabInput, 1);
@@ -1458,8 +1494,8 @@ export class PopupAddDealComponent
       (item) => item === this.tabGeneralContactDetail
     );
     if (check && menuContact == -1 && tabContact == -1) {
-      this.tabInfo.splice(1, 0, this.menuGeneralContact);
-      this.tabContent.splice(1, 0, this.tabGeneralContactDetail);
+      this.tabInfo.splice(2, 0, this.menuGeneralContact);
+      this.tabContent.splice(2, 0, this.tabGeneralContactDetail);
     } else if (!check && menuContact != -1 && tabContact != -1) {
       this.tabInfo.splice(menuContact, 1);
       this.tabContent.splice(tabContact, 1);
@@ -1676,4 +1712,74 @@ export class PopupAddDealComponent
     });
   }
   //------------------END_CACULATE--------------------//
+
+  //----------------Cost Items -----------------//
+
+  addCost() {
+    if (this.cost && !this.cost.itemName) {
+      this.notificationsService.notify(
+        'Chưa nhập nội dung chi phí, hãy hoàn thiện chi phí trước khi thêm chi phí mới !',
+        '3'
+      );
+      return;
+    }
+    let newCost = { ...this.tmpCost };
+    newCost.transID = this.deal?.recID;
+    newCost.quantity = 1;
+    newCost.costPrice = 0;
+    if (!this.costInfos) this.costInfos = [];
+
+    this.costInfos.push(newCost);
+    this.cost = newCost;
+    this.calculateTotalCost();
+    this.detectorRef.detectChanges();
+  }
+
+  changeCost(evt: any) {
+    if (evt) {
+    }
+  }
+  deleteCost(index: number) {
+    if (this.costInfos?.length > index) {
+      this.costInfos?.splice(index, 1);
+      this.calculateTotalCost();
+      this.detectorRef.detectChanges();
+    }
+  }
+  editCost(evt: any, index: number) {
+    if (evt && this.costInfos?.length > index) {
+      switch (evt?.field) {
+        case 'quantity':
+          this.costInfos[index].quantity = evt?.data;
+          break;
+
+        case 'costPrice':
+          this.costInfos[index].costPrice = evt?.data;
+          break;
+
+        case 'itemName':
+          this.costInfos[index].itemName = evt?.data;
+          break;
+
+        case 'itemID':
+          this.costInfos[index].itemID = evt?.data;
+          break;
+      }
+
+      this.cost = this.costInfos[index];
+      this.calculateTotalCost();
+    }
+  }
+  calculateTotalCost() {
+    if (this.costInfos?.length > 0) {
+      this.totalCost = 0;
+      this.costInfos?.forEach((cost) => {
+        if (cost?.quantity && cost?.costPrice)
+          cost.costAmt = cost?.quantity * cost?.costPrice;
+        else cost.costAmt = 0;
+        this.totalCost += cost.costAmt;
+      });
+    }
+  }
+  //---------------------------------------------//
 }

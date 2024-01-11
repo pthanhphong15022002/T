@@ -48,7 +48,6 @@ export class EvoucherDetailComponent implements OnInit{
     this.entityName = dt?.data?.entityName;
     this.quantity = dt?.data?.quantity;
     this.user = this.auth.userValue;
-    console.log(this.formName, this.funcID, this.entityName)
   }
   ngOnInit(): void {
     this.loadData();

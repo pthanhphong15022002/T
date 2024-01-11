@@ -217,6 +217,9 @@ export class ContractsViewDetailComponent
   }
 
   getListInstanceStep() {
+    this.listInsStep = [];
+    this.stepCurrent = null;
+    this.isHaveField = false;
     var data = [
       this.contract?.refID,
       this.contract?.processID,
@@ -232,11 +235,7 @@ export class ContractsViewDetailComponent
           this.getStepCurrent(this.contract);
         }
         this.checkCompletedInstance(this.contract?.status);
-      } else {
-        this.listInsStep = [];
-        this.stepCurrent = null;
-        this.isHaveField = false;
-      }
+      } 
     });
   }
 

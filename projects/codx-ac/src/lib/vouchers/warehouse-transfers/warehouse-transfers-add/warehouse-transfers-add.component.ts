@@ -5,6 +5,7 @@ import { Subject, takeUntil } from 'rxjs';
 import { CodxAcService, fmIssueTransfersLines, fmReceiptTransfersLines } from '../../../codx-ac.service';
 import { RoundService } from '../../../round.service';
 import { IV_TransfersLines } from '../../../models/IV_TransfersLines.model';
+import { EditSettingsModel } from '@syncfusion/ej2-angular-grids';
 
 @Component({
   selector: 'lib-warehouse-transfers-add',
@@ -37,6 +38,13 @@ export class WarehouseTransfersAddComponent extends UIComponent {
   baseCurr: any; //? đồng tiền hạch toán
   isPreventChange: any = false;
   nextTabIndex:any;
+  editSettings:EditSettingsModel = {
+    allowAdding:false,
+    allowEditing:false,
+    allowDeleting:false,
+    allowEditOnDblClick:false,
+    allowNextRowEdit:false
+  }
   private destroy$ = new Subject<void>(); //? list observable hủy các subscribe api
   constructor(
     inject: Injector,

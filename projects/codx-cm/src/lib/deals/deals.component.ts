@@ -92,6 +92,7 @@ export class DealsComponent
   @ViewChild('templateNote') templateNote: TemplateRef<any>;
   @ViewChild('templateStatusCode') templateStatusCode: TemplateRef<any>;
   @ViewChild('templateIndustries') templateIndustries: TemplateRef<any>;
+  @ViewChild('templateCost') templateCost: TemplateRef<any>;
   @ViewChild('templateAct') templateAct: TemplateRef<any>;
   @ViewChild('headerTempAct') headerTempAct: TemplateRef<any>;
 
@@ -255,8 +256,8 @@ export class DealsComponent
 
   onLoading(e) {
     //reload filter
-    this.loadViewModel(); //--tạm cmt
-    this.loadDefaultSetting();
+    //this.loadViewModel(); //--tạm cmt
+    // this.loadDefaultSetting();
   }
 
   loadViewModel() {
@@ -304,23 +305,23 @@ export class DealsComponent
           panelLeftRef: this.dashBoard,
         },
       },
-      // {
-      //   //test view mới
-      //   id: 100,
-      //   type: ViewType.grid,
-      //   active: false,
-      //   sameData: true,
-      //   text: 'Lưới custorm column',
-      //   model: {
-      //     template2: this.templateMore,
-      //     groupSettings: { showDropArea: false, columns: ['customerName'] },
-      //     resources: this.columnGrids,
-      //     // frozenColumns: 1,
-      //   },
-      // },
+      {
+        //test view mới
+        id: 100,
+        type: ViewType.grid,
+        active: false,
+        sameData: true,
+        text: 'Lưới custorm column',
+        model: {
+          template2: this.templateMore,
+          groupSettings: { showDropArea: false, columns: ['customerName'] },
+          resources: this.columnGrids,
+        },
+      },
     ];
+    this.loadDefaultSetting();
 
-    //this.views = this.viewsDefault;
+    //this.views = this.viewsDefault; //--tạm cmt
 
     // this.cache.viewSettings(this.funcID).subscribe((views) => {
     //   this.viewsDefault.forEach((v, index) => {
@@ -379,12 +380,6 @@ export class DealsComponent
 
     if (this.funCrr != this.funcID) {
       this.funCrr = this.funcID;
-      // this.cache.functionList(this.funcID).subscribe((f) => {
-      //   if (f) {
-      //     this.funcIDCrr = f;
-      //     this.runMode = f?.runMode;
-      //   }
-      // });
     } else if (
       this.funcID == 'CM0201' &&
       this.viewCrr == 6 &&
@@ -613,15 +608,16 @@ export class DealsComponent
     this.vllStatus = this.gridViewSetup?.Status?.referedValue;
     this.vllApprove = this.gridViewSetup?.ApproveStatus?.referedValue;
     // lay grid view - view gird he thong
-    // let arrField = Object.values(this.gridViewSetup).filter(
-    //   (x: any) => x.isVisible
-    // );
-    // if (Array.isArray(arrField)) {
-    //   this.arrFieldIsVisible = arrField
-    //     .sort((x: any, y: any) => x.columnOrder - y.columnOrder)
-    //     .map((x: any) => x.fieldName);
-    // }
-    // this.getColumsGrid(this.gridViewSetup);
+
+    let arrField = Object.values(this.gridViewSetup).filter(
+      (x: any) => x.isVisible
+    );
+    if (Array.isArray(arrField)) {
+      this.arrFieldIsVisible = arrField
+        .sort((x: any, y: any) => x.columnOrder - y.columnOrder)
+        .map((x: any) => x.fieldName);
+    }
+    this.getColumsGrid(this.gridViewSetup);
   }
 
   getColorReason() {
@@ -2031,6 +2027,9 @@ export class DealsComponent
         switch (key) {
           case 'StepID':
             template = this.templateSteps;
+            break;
+          case 'CostItems':
+            template = this.templateCost;
             break;
           default:
             break;

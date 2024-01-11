@@ -42,6 +42,13 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
     { name: 'References', textDefault: 'Liên kết', isActive: false },
   ];
   isPreventChange:any=false;
+  editSettings:EditSettingsModel = {
+    allowAdding:false,
+    allowEditing:false,
+    allowDeleting:false,
+    allowEditOnDblClick:false,
+    allowNextRowEdit:false
+  }
   private destroy$ = new Subject<void>(); //? list observable hủy các subscribe api
 
   constructor(

@@ -307,7 +307,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
       (this.action == 'copy') &&
       this.contracts?.contractType &&
       this.comboboxContractType &&
-      (!this.autoCode || !this.autoNumber)
+      (!this.autoCode)
     ) {
       let data = this.comboboxContractType?.ComponentCurrent?.dataService?.data;
       if (data?.length > 0) {
@@ -405,6 +405,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
         } else if (this.recIDContract) {
           this.contracts = await this.getContractByRecID();
         }
+        this.getAutoNumber();
         delete this.contracts['id'];
         this.contracts.status = '1';
         this.contracts.contractID = ''
