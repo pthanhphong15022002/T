@@ -780,8 +780,14 @@
 </ng-template>
 
 <ng-template #templateSteps let-data>
-  Khanh kêu click hiện lên 3 cục ...
-  <span> </span>
+  <span class="step-current line-clamp line-clamp-1" (click)="currentStep(data, '2')">Giai đoạn hiện tại</span>
+  <span
+      [innerHTML]="
+        data.stepID
+          | formatvalue : view.formModel : 'StepID'
+          | async
+      "
+    ></span>
 </ng-template>
 
 <ng-template #templateExpectedClosed let-data>

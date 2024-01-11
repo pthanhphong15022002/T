@@ -6,17 +6,17 @@ import {
   SimpleChanges,
   ChangeDetectorRef,
 } from '@angular/core';
-import { CodxCmService } from '../../codx-cm.service';
-import { CM_Contracts, CM_Customers, CM_Deals } from '../../models/cm_model';
 import { ApiHttpService, CacheService, DialogData, DialogRef, FormModel, NotificationsService} from 'codx-core';
-import { ContractsService } from '../../contracts/service-contracts.service';
+import { CM_Customers, CM_Deals } from '../../../models/cm_model';
+import { CodxCmService } from '../../../codx-cm.service';
+import { ContractsService } from '../../../contracts/service-contracts.service';
 
 @Component({
-  selector: 'view-deal-detail',
-  templateUrl: './view-deal-detail.component.html',
-  styleUrls: ['./view-deal-detail.component.scss']
+  selector: 'current-step',
+  templateUrl: './current-step.component.html',
+  styleUrls: ['./current-step.component.scss']
 })
-export class ViewDealDetailComponent implements OnInit, OnChanges {
+export class CurrentStepComponent implements OnInit, OnChanges {
   dialog: DialogRef;
   deal: CM_Deals;
   Customers: CM_Customers;
@@ -382,74 +382,6 @@ export class ViewDealDetailComponent implements OnInit, OnChanges {
       },
     };
   }
-
-  // lstContactEmit(e) {
-  //   this.lstContacts = e ?? [];
-  //   let index = this.lstContacts.findIndex((x) => x.isDefault);
-  //   if (index != -1) {
-  //     this.getContactPerson(this.lstContacts[index]);
-  //   } else {
-  //     this.getContactPerson(null);
-  //   }
-  //   this.changeDetectorRef.detectChanges();
-  // }
-
-  // contactChange($event) {
-  //   if ($event) {
-  //     if ($event?.data) {
-  //       let data = $event?.data;
-  //       if ($event?.action == 'delete') {
-  //         data.isDefault = false;
-  //       }
-  //       if ($event?.action != 'add') {
-  //         let lst = [];
-  //         lst.push(Object.assign({}, $event.data));
-  //         var json = JSON.stringify(lst);
-  //         var lstID = [];
-  //         lstID.push(this.dataSelected?.refID);
-  //         this.codxCmService
-  //           .updateFieldContacts(
-  //             lstID,
-  //             $event?.action == 'edit' ? json : '',
-  //             $event?.action == 'delete' ? json : ''
-  //           )
-  //           .subscribe((res) => {});
-  //         if (this.listSteps != null && this.listSteps?.length > 0) {
-  //           for (var step of this.listSteps) {
-  //             if (step?.fields != null && step?.fields?.length > 0) {
-  //               let idx = step?.fields?.findIndex(
-  //                 (x) =>
-  //                   x?.dataType == 'C' &&
-  //                   x?.dataValue != null &&
-  //                   x?.dataValue?.trim() != ''
-  //               );
-
-  //               if (idx != -1) {
-  //                 let lsJs = [];
-  //                 lsJs = JSON.parse(step?.fields[idx]?.dataValue) ?? [];
-  //                 var idxContactField = lsJs.findIndex(
-  //                   (x) => x.recID == data.recID
-  //                 );
-  //                 if (idxContactField != -1) {
-  //                   if ($event?.action == 'edit') {
-  //                     lsJs[idxContactField] = data;
-  //                   } else {
-  //                     lsJs.splice(idxContactField, 1);
-  //                   }
-  //                   step.fields[idx].dataValue =
-  //                     lsJs != null && lsJs?.length > 0
-  //                       ? JSON.stringify(lsJs)
-  //                       : '';
-  //                 }
-  //               }
-  //             }
-  //           }
-  //         }
-  //       }
-  //     }
-  //   }
-  //   this.changeDetectorRef.detectChanges();
-  // }
 
 }
 

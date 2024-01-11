@@ -48,6 +48,7 @@ import { Internationalization } from '@syncfusion/ej2-base';
 import { ViewDealDetailComponent } from './view-deal-detail/view-deal-detail.component';
 import { CodxCommonService } from 'projects/codx-common/src/lib/codx-common.service';
 import { ExportData } from 'projects/codx-common/src/lib/models/ApproveProcess.model';
+import { CurrentStepComponent } from './step-task/current-step/current-step.component';
 
 @Component({
   selector: 'lib-deals',
@@ -957,28 +958,33 @@ export class DealsComponent
     }
   }
 
-  viewDetail(deal) {
-    let data = {
-      formModel: this.view.formModel,
-      dataView: deal,
-      isView: true,
-      // listInsStepStart: this.listInsStep,
-    };
-    let option = new DialogModel();
-    option.IsFull = true;
-    option.zIndex = 100;
-    option.DataService = this.view.dataService;
-    option.FormModel = this.view.formModel;
-    let popupContract = this.callFunc.openForm(
-      ViewDealDetailComponent,
-      '',
-      null,
-      null,
-      '',
-      data,
-      '',
-      option
-    );
+  viewDetail(deal,type="1") {
+    setTimeout(() => {
+      if(deal){
+        let data = {
+          formModel: this.view.formModel,
+          dataView: deal,
+          isView: true,
+          type,
+          // listInsStepStart: this.listInsStep,
+        };
+        let option = new DialogModel();
+        option.IsFull = true;
+        option.zIndex = 100;
+        option.DataService = this.view.dataService;
+        option.FormModel = this.view.formModel;
+        let popupContract = this.callFunc.openForm(
+          ViewDealDetailComponent,
+          '',
+          null,
+          null,
+          '',
+          data,
+          '',
+          option
+        );
+      }
+    }, 100);
     // this.dataSelected = data;
     // let option = new DialogModel();
     // option.IsFull = true;
@@ -998,6 +1004,35 @@ export class DealsComponent
     // this.popupViewDeal.closed.subscribe((e) => {});
   }
   //end Kanaban
+
+  currentStep(deal,type="1") {
+    setTimeout(() => {
+      if(deal){
+        let data = {
+          formModel: this.view.formModel,
+          dataView: deal,
+          isView: true,
+          type,
+          // listInsStepStart: this.listInsStep,
+        };
+        let option = new DialogModel();
+        option.IsFull = true;
+        option.zIndex = 100;
+        option.DataService = this.view.dataService;
+        option.FormModel = this.view.formModel;
+        let popupContract = this.callFunc.openForm(
+          ViewDealDetailComponent,
+          '',
+          null,
+          Util.getViewPort().height,
+          '',
+          data,
+          '',
+          option
+        );
+      }
+    }, 100);
+  }
 
   moveStage(data: any) {
     let option = new SidebarModel();
@@ -1571,6 +1606,7 @@ export class DealsComponent
   selectedChange(data) {
     // debugger;
     if (data || data?.data) this.dataSelected = data?.data ? data?.data : data;
+    
   }
   //#endregion
 
