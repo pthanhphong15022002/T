@@ -2012,7 +2012,7 @@ export class DealsComponent
           case 'StepID':
             template = this.templateSteps;
             break;
-          case 'CostItems':
+          case 'DealCost':
             template = this.templateCost;
             break;
           default:
