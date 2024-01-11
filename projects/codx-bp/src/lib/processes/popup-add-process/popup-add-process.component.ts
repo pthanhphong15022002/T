@@ -71,6 +71,7 @@ import {
   BP_Processes_Steps,
 } from '../../models/BP_Processes.model';
 import { Subject, takeUntil } from 'rxjs';
+import { ModeviewComponent } from '../../modeview/modeview.component';
 Diagram.Inject(ConnectorEditing);
 @Component({
   selector: 'lib-popup-add-process',
@@ -1388,64 +1389,78 @@ export class PopupAddProcessComponent {
     let option = new DialogModel();
     option.IsFull = true;
     option.zIndex = 1010;
+
     let formModelField = new FormModel();
     formModelField.formName = 'DPStepsFields';
     formModelField.gridViewName = 'grvDPStepsFields';
     formModelField.entityName = 'DP_Steps_Fields';
     formModelField.userPermission = this.dialog?.formModel?.userPermission;
     option.FormModel = formModelField;
-    let data = {
-      process: this.data,
-      vllBP002: this.vllBP002,
-      lstStepFields: this.extendInfos,
-      isForm: true,
-    };
+    debugger
+    // let data = {
+    //   process: this.data,
+    //   vllBP002: this.vllBP002,
+    //   lstStepFields: this.extendInfos,
+    //   isForm: true,
+    // };
+    // let popupDialog = this.callfc.openForm(
+    //   FormPropertiesFieldsComponent,
+    //   '',
+    //   null,
+    //   null,
+    //   '',
+    //   data,
+    //   '',
+    //   option
+    // );
+    // popupDialog.closed.subscribe((e) => {
+    //   if (e && e?.event) {
+    //     this.extendInfos =
+    //       e?.event?.length > 0 ? JSON.parse(JSON.stringify(e?.event)) : [];
+
+    //     let extDocumentControls = this.extendInfos.filter(x => x.fieldType == 'Attachment' && x.documentControl != null && x.documentControl?.trim() != '');
+    //     if(extDocumentControls?.length > 0){
+    //       let lstDocumentControl = [];
+    //       extDocumentControls.forEach((ele) => {
+    //         const documents = JSON.parse(ele.documentControl);
+    //         documents.forEach((res) => {
+    //           var tmpDoc = {};
+    //           tmpDoc['recID'] = Util.uid();
+    //           tmpDoc['stepNo'] = 1;
+    //           tmpDoc['fieldID'] = res.recID;
+    //           tmpDoc['title'] = res.title;
+    //           tmpDoc['memo'] = res.memo;
+    //           tmpDoc['isRequired'] = res.isRequired ?? false;
+    //           tmpDoc['count'] = res.count ?? 0;
+    //           tmpDoc['templateID'] = res.templateID;
+    //           lstDocumentControl.push(tmpDoc);
+    //         });
+    //       });
+    //       this.data.documentControl = JSON.stringify(lstDocumentControl);
+    //     }
+    //     if(this.data?.steps[0]?.extendInfo){
+    //       this.data.steps[0].extendInfo = this.extendInfos;
+    //     }
+    //     this.detectorRef.markForCheck()
+    //   }
+    // });
+
     let popupDialog = this.callfc.openForm(
-      FormPropertiesFieldsComponent,
+      ModeviewComponent,
       '',
       null,
       null,
       '',
-      data,
+      this.extendInfos,
       '',
       option
     );
-    popupDialog.closed.subscribe((e) => {
-      if (e && e?.event) {
-        this.extendInfos =
-          e?.event?.length > 0 ? JSON.parse(JSON.stringify(e?.event)) : [];
-
-        let extDocumentControls = this.extendInfos.filter(
-          (x) =>
-            x.fieldType == 'Attachment' &&
-            x.documentControl != null &&
-            x.documentControl?.trim() != ''
-        );
-        if (extDocumentControls?.length > 0) {
-          let lstDocumentControl = [];
-          extDocumentControls.forEach((ele) => {
-            const documents = JSON.parse(ele.documentControl);
-            documents.forEach((res) => {
-              var tmpDoc = {};
-              tmpDoc['recID'] = Util.uid();
-              tmpDoc['stepNo'] = 1;
-              tmpDoc['fieldID'] = res.recID;
-              tmpDoc['title'] = res.title;
-              tmpDoc['memo'] = res.memo;
-              tmpDoc['isRequired'] = res.isRequired ?? false;
-              tmpDoc['count'] = res.count ?? 0;
-              tmpDoc['templateID'] = res.templateID;
-              lstDocumentControl.push(tmpDoc);
-            });
-          });
-          this.data.documentControl = JSON.stringify(lstDocumentControl);
-        }
-        if (this.data?.steps[0]?.extendInfo) {
-          this.data.steps[0].extendInfo = this.extendInfos;
-        }
-        this.detectorRef.markForCheck();
+    popupDialog.closed.subscribe(res=>{
+      if(res?.event)
+      {
+        this.extendInfos = res?.event?.length > 0 ? JSON.parse(JSON.stringify(res?.event)) : [];
       }
-    });
+    })
   }
   //#endregion
 
