@@ -40,7 +40,7 @@ import {
   selector: 'codx-setting-fields',
   templateUrl: './setting-fields.component.html',
   styleUrls: ['./setting-fields.component.scss'],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
 })
 export class SettingFieldsComponent implements AfterViewInit {
   @ViewChild('attachment') attachment: AttachmentComponent;
@@ -129,12 +129,13 @@ export class SettingFieldsComponent implements AfterViewInit {
       ) {
         this.id = changes['dataCurrent'].currentValue?.recID;
         this.loadedRenderHTML = false;
-        setTimeout(() => {
-          this.loadedRenderHTML = true;
-        }, 0);
+
         if (this.dataCurrent) {
           this.loadData(this.dataCurrent);
         }
+        setTimeout(() => {
+          this.loadedRenderHTML = true;
+        }, 0);
       }
     }
   }

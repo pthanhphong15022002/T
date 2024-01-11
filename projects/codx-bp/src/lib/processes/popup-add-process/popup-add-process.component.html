@@ -393,14 +393,35 @@
       </div>
     </div>
     <div class="info-right">
-      <ng-container *ngFor="let item of extendInfos">
-        <codx-form-format-value
-          #formMatRef
-          [subItem]="item"
-          [showIconDrop]="false"
-          [isShowTextHeader]="true"
-        ></codx-form-format-value>
-      </ng-container>
+      <div
+        class="d-flex flex-column"
+        *ngFor="let item of lstShowExtends; let i = index"
+      >
+        <div
+          class="p-2"
+          *ngIf="item.width == '100'"
+          [style.width.%]="item.width"
+        >
+          <codx-form-format-value
+            #formMatRef
+            [subItem]="item.children[0]"
+            [showIconDrop]="false"
+            [isShowTextHeader]="true"
+          ></codx-form-format-value>
+        </div>
+        <div *ngIf="item.width != '100'" class="row p-2">
+          <ng-container *ngFor="let child of item.children">
+            <div [style.width.%]="item.width">
+              <codx-form-format-value
+                #formMatRef
+                [subItem]="child"
+                [showIconDrop]="false"
+                [isShowTextHeader]="true"
+              ></codx-form-format-value>
+            </div>
+          </ng-container>
+        </div>
+      </div>
     </div>
   </div>
 </ng-template>
