@@ -178,6 +178,7 @@
 
         <ng-container *ngIf="name == 'Comments'">
           <ng-container>
+            <div class="mt-4 mw-900px m-auto">
             <codx-tree-comment
               [objectID]="iterationID ? iterationID : meetingID"
               [objectType]="iterationID ? 'TM_Sprints' : 'CO_Meetings'"
@@ -189,6 +190,7 @@
               [funcID]="functionParent"
             >
             </codx-tree-comment>
+          </div>
           </ng-container>
         </ng-container>
         <ng-container *ngIf="name == 'Meetings'">
