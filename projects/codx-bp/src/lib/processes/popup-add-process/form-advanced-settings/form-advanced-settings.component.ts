@@ -1,25 +1,42 @@
-import { Component, Optional } from '@angular/core';
-import { DialogData, DialogRef } from 'codx-core';
+import { Component, OnInit, Optional, ViewChild } from '@angular/core';
+import { ApiHttpService, DialogData, DialogRef } from 'codx-core';
+import { DynamicSettingControlComponent } from 'projects/codx-share/src/lib/components/dynamic-setting/dynamic-setting-control/dynamic-setting-control.component';
 
 @Component({
   selector: 'lib-form-advanced-settings',
   templateUrl: './form-advanced-settings.component.html',
-  styleUrls: ['./form-advanced-settings.component.scss']
+  styleUrls: ['./form-advanced-settings.component.scss'],
 })
-export class FormAdvancedSettingsComponent {
+export class FormAdvancedSettingsComponent implements OnInit {
+  @ViewChild('settingControl') settingControl: DynamicSettingControlComponent;
 
   dialog: DialogRef;
   title = 'Thiết lập nâng cao';
-  data: any;
+  settings = [];
+  isLoad = false;
   constructor(
-    @Optional() dialog: DialogRef,
+    private api: ApiHttpService,
+    @Optional() dg: DialogRef,
     @Optional() dt: DialogData
-  ){
-    this.dialog = dialog;
-    this.data = dt?.data?.process ? JSON.parse(JSON.stringify(dt?.data?.process)) : {};
+  ) {
+    this.dialog = dg;
+  }
+  ngOnInit(): void {
+    this.api
+      .execSv('BG', 'BG', 'ScheduleTasksBusiness', 'GetScheduleTasksAsync', [
+        'ACP101',
+      ])
+      .subscribe((res: any) => {
+        if (res) {
+          this.settings = res;
+        } else {
+          this.settings = [];
+        }
+        this.isLoad = true;
+        this.settingControl.setting = this.settings;
+        // this.settingControl.dialog = null;
+      });
   }
 
-  valueChange(e){
-
-  }
+  valuechange(e) {}
 }
