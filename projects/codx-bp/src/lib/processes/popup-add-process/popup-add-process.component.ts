@@ -1404,9 +1404,30 @@ export class PopupAddProcessComponent {
       if (e && e?.event) {
         this.extendInfos =
           e?.event?.length > 0 ? JSON.parse(JSON.stringify(e?.event)) : [];
-          if(this.data?.steps[0]?.extendInfo){
-            this.data.steps[0].extendInfo = this.extendInfos;
-          }
+
+        let extDocumentControls = this.extendInfos.filter(x => x.fieldType == 'Attachment' && x.documentControl != null && x.documentControl?.trim() != '');
+        if(extDocumentControls?.length > 0){
+          let lstDocumentControl = [];
+          extDocumentControls.forEach((ele) => {
+            const documents = JSON.parse(ele.documentControl);
+            documents.forEach((res) => {
+              var tmpDoc = {};
+              tmpDoc['recID'] = Util.uid();
+              tmpDoc['stepNo'] = 1;
+              tmpDoc['fieldID'] = res.recID;
+              tmpDoc['title'] = res.title;
+              tmpDoc['memo'] = res.memo;
+              tmpDoc['isRequired'] = res.isRequired ?? false;
+              tmpDoc['count'] = res.count ?? 0;
+              tmpDoc['templateID'] = res.templateID;
+              lstDocumentControl.push(tmpDoc);
+            });
+          });
+          this.data.documentControl = JSON.stringify(lstDocumentControl);
+        }
+        if(this.data?.steps[0]?.extendInfo){
+          this.data.steps[0].extendInfo = this.extendInfos;
+        }
         this.detectorRef.markForCheck()
       }
     });
