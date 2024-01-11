@@ -146,6 +146,7 @@ export class PopupAddCardsComponent implements OnInit {
   cointsError = "";
   evoucher: any[] = [];
   evoucherSelected: any[] = [];
+  isSaving = false;
 
   constructor(
     private api: ApiHttpService,
@@ -759,15 +760,17 @@ export class PopupAddCardsComponent implements OnInit {
       // }
       let post: tmpPost = new tmpPost();
 
-      if (this.attachment && this.attachment.fileUploadList.length)
+      if (this.attachment && this.attachment.fileUploadList.length) {
+        this.isSaving = true;
         (await this.attachment.saveFilesObservable()).subscribe((res) => {
+          this.isSaving = false;
           if (res) {
             let attachments = Array.isArray(res) ? res.length : 1;
             post.attachments = attachments;
             this.addCardAPI(post);
           }
         });
-      else {
+      } else {
         this.addCardAPI(post);
       }
     }
@@ -778,6 +781,7 @@ export class PopupAddCardsComponent implements OnInit {
       this.card.recID = undefined;
     }
     const createNewfeedStr = this.createNewfeed ? '1' : '0';
+    this.isSaving = true;
     this.api
       .execSv<any>('FD', 'ERM.Business.FD', 'CardsBusiness', 'AddNewAsync', [
         this.card,
@@ -785,6 +789,7 @@ export class PopupAddCardsComponent implements OnInit {
         createNewfeedStr,
       ])
       .subscribe(async (res: any[]) => {
+        this.isSaving = false;
         if (res && res[1]) {
           (this.dialog.dataService as CRUDService).add(res[1], 0).subscribe();
           this.dialog.close();

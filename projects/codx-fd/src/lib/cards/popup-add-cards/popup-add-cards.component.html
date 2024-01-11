@@ -421,7 +421,7 @@
                     </div>
                 </div>
             </div>
-            <button type="button" class="btn btn-primary" (click)="Save()">
+            <button type="button" class="btn btn-primary" (click)="Save()" [disabled]="isSaving">
                 <codx-label [formModel]="dialog.formModel" name="lblFDSumbit" default="Thêm"></codx-label>
             </button>
         </div>
