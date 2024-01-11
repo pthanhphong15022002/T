@@ -348,9 +348,15 @@
       type="button"
       button
       class="btn btn-primary ms-1"
+      [disabled]="viewOnly"
       (click)="saveDeal()"
     >
-      <codx-label default="Lưu"></codx-label>
+      <codx-label
+        fiedName="btbSave"
+        formName="CMDeals"
+        gridViewName="grvCMDeals"
+        default="Lưu"
+      ></codx-label>
     </button>
   </div>
 </ng-template>
@@ -390,6 +396,7 @@
           [customerID]="deal?.customerID"
           [formModel]="dialog.formModel"
           [isAdd]="action == actionAdd"
+          [disable]="viewOnly"
           (valueChangeCustom)="valueChangeCustom($event)"
           (addFileCompleted)="addFileCompleted($event)"
         >
@@ -536,6 +543,7 @@
             </td>
             <td>
               <div
+                *ngIf="viewOnly"
                 class="w-10 d-flex align-items-center justify-content-start py-3"
               >
                 <span
