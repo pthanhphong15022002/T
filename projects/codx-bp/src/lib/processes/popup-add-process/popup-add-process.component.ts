@@ -973,7 +973,7 @@ export class PopupAddProcessComponent {
   user: any;
   countValidate = 0;
   gridViewSetup: any;
-
+  lstShowExtends = [];
   constructor(
     private detectorRef: ChangeDetectorRef,
     private callfc: CallFuncService,
@@ -1001,6 +1001,7 @@ export class PopupAddProcessComponent {
           ? this.data?.steps?.filter((x) => x.activityType == '1')[0]
               ?.extendInfo
           : [];
+      this.setLstExtends();
     } else {
     }
     this.getCacheCbxOrVll();
@@ -1024,6 +1025,7 @@ export class PopupAddProcessComponent {
           if (this.action == 'add') {
             this.setDefaultTitle();
             this.defaultStep();
+            this.setLstExtends();
           }
         }
       });
@@ -1089,6 +1091,47 @@ export class PopupAddProcessComponent {
     step.extendInfo = this.extendInfos;
     lstStep.push(step);
     this.data.steps = lstStep;
+  }
+
+  setLstExtends() {
+    let lst = [];
+    if (this.extendInfos?.length > 0) {
+      console.log('extendInfos: ', this.extendInfos);
+      this.extendInfos.forEach((res) => {
+        let count = 1;
+        let tmp = {};
+        tmp['columnOrder'] = res.columnOrder;
+        const index = lst.findIndex((x) => x.columnOrder == res.columnOrder);
+        if (index != -1) {
+          let indxChild = lst[index]['children'].findIndex(
+            (x) => x.columnNo == res.columnNo
+          );
+          if (indxChild != -1) {
+            lst[index]['children'][indxChild] = res;
+          } else {
+            lst[index]['children'].push(res);
+          }
+          lst[index]['children'].sort((a, b) => a.columnNo - b.columnNo);
+          count = lst[index]['children'].length ?? 1;
+          lst[index]['width'] = (100 / count).toString();
+        } else {
+          count = 1;
+          tmp['width'] = '100';
+          let lstChild = [];
+          lstChild.push(res);
+          tmp['children'] = lstChild;
+          lst.push(tmp);
+        }
+      });
+    }
+    this.lstShowExtends = lst;
+  }
+
+  setColumn(item) {
+    let count = this.extendInfos.filter(
+      (x) => x.columnOrder == item.columnOrder
+    ).length;
+    return count <= 1 ? '100' : (100 / count).toString();
   }
   //#endregion
 
@@ -1396,7 +1439,7 @@ export class PopupAddProcessComponent {
     formModelField.entityName = 'DP_Steps_Fields';
     formModelField.userPermission = this.dialog?.formModel?.userPermission;
     option.FormModel = formModelField;
-    debugger
+    debugger;
     // let data = {
     //   process: this.data,
     //   vllBP002: this.vllBP002,
@@ -1455,12 +1498,41 @@ export class PopupAddProcessComponent {
       '',
       option
     );
-    popupDialog.closed.subscribe(res=>{
-      if(res?.event)
-      {
-        this.extendInfos = res?.event?.length > 0 ? JSON.parse(JSON.stringify(res?.event)) : [];
+    popupDialog.closed.subscribe((res) => {
+      if (res?.event) {
+        this.extendInfos =
+          res?.event?.length > 0 ? JSON.parse(JSON.stringify(res?.event)) : [];
+        this.setLstExtends();
+        let extDocumentControls = this.extendInfos.filter(
+          (x) =>
+            x.fieldType == 'Attachment' &&
+            x.documentControl != null &&
+            x.documentControl?.trim() != ''
+        );
+        if (extDocumentControls?.length > 0) {
+          let lstDocumentControl = [];
+          extDocumentControls.forEach((ele) => {
+            const documents = JSON.parse(ele.documentControl);
+            documents.forEach((res) => {
+              var tmpDoc = {};
+              tmpDoc['recID'] = Util.uid();
+              tmpDoc['stepNo'] = 1;
+              tmpDoc['fieldID'] = res.recID;
+              tmpDoc['title'] = res.title;
+              tmpDoc['memo'] = res.memo;
+              tmpDoc['isRequired'] = res.isRequired ?? false;
+              tmpDoc['count'] = res.count ?? 0;
+              tmpDoc['templateID'] = res.templateID;
+              lstDocumentControl.push(tmpDoc);
+            });
+          });
+          this.data.documentControl = JSON.stringify(lstDocumentControl);
+        }
+        if (this.data?.steps[0]?.extendInfo) {
+          this.data.steps[0].extendInfo = this.extendInfos;
+        }
       }
-    })
+    });
   }
   //#endregion
 
