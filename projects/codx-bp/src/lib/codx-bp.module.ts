@@ -40,6 +40,8 @@ import { PropertyExpressionComponent } from './modeview/properties/property-expr
 import { PropertyAttachmentComponent } from './modeview/properties/property-attachment/property-attachment.component';
 import { FormSettingComboboxComponent } from './processes/popup-add-process/form-properties-fields/setting-fields/form-setting-combobox/form-setting-combobox.component';
 import { FormAdvancedSettingsComponent } from './processes/popup-add-process/form-advanced-settings/form-advanced-settings.component';
+import { FormEditConnectorComponent } from './processes/popup-add-process/form-edit-connector/form-edit-connector.component';
+import { SplitterAllModule } from '@syncfusion/ej2-angular-layouts';
 
 export const routes: Routes = [
   {
@@ -89,7 +91,7 @@ export const routes: Routes = [
     PropertyPhoneComponent,
     PropertyExpressionComponent,
     PropertyAttachmentComponent,
-
+    FormEditConnectorComponent,
 
 
     FormSettingComboboxComponent,
@@ -115,6 +117,7 @@ export const routes: Routes = [
     CoreModule,
     PinchZoomModule,
     DiagramModule,
+    SplitterAllModule
     // NgxImageZoomModule
   ],
   exports: [CodxBpComponent],
