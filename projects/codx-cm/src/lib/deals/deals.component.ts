@@ -197,6 +197,7 @@ export class DealsComponent
   moreEdit = '';
   taskAdd;
   applyApprover = '0';
+  startLoad = false;
 
   constructor(
     private inject: Injector,
@@ -219,7 +220,7 @@ export class DealsComponent
       this.predicate = 'RecID=@0';
       this.dataValue = this.queryParams?.recID;
     }
-    this.executeApiCallFunctionID('CMDeals', 'grvCMDeals');
+
     this.loadParam();
     this.cache.functionList(this.funcID).subscribe((f) => {
       this.funcIDCrr = f;
@@ -227,7 +228,7 @@ export class DealsComponent
       this.functionModule = f.module;
       this.nameModule = f.customName;
     });
-
+    this.executeApiCallFunctionID('CMDeals', 'grvCMDeals');
     this.getColorReason();
     // this.processID = this.activedRouter.snapshot?.queryParams['processID'];
     // if (this.processID) this.dataObj = { processID: this.processID };
@@ -243,7 +244,7 @@ export class DealsComponent
       });
   }
 
-  async onInit(): Promise<void> {
+  onInit() {
     this.afterLoad();
     this.button = [
       {
@@ -256,8 +257,7 @@ export class DealsComponent
 
   onLoading(e) {
     //reload filter
-    //this.loadViewModel(); //--tạm cmt
-    // this.loadDefaultSetting();
+    // this.loadViewModel();
   }
 
   loadViewModel() {
@@ -290,8 +290,6 @@ export class DealsComponent
         model: {
           template2: this.templateMore,
           groupSettings: { showDropArea: false, columns: ['customerName'] },
-          //resources: this.columnGrids,
-          // frozenColumns: 1,
         },
       },
       {
@@ -316,6 +314,7 @@ export class DealsComponent
           template2: this.templateMore,
           groupSettings: { showDropArea: false, columns: ['customerName'] },
           resources: this.columnGrids,
+          //frozenColumns: 1,
         },
       },
     ];
@@ -1907,6 +1906,7 @@ export class DealsComponent
           this.views.push(v);
           //  else viewOut = true;
         });
+
         if (!this.views.some((x) => x.active)) {
           if (idxActive != -1) this.views[idxActive].active = true;
           else this.views[0].active = true;
@@ -1917,6 +1917,7 @@ export class DealsComponent
           this.view.viewChange(viewModel);
           if (viewOut) this.view.load();
         }
+        //this.view.views = this.views;
         if ((this.view?.currentView as any)?.kanban) this.loadKanban();
       }
     });
@@ -2463,4 +2464,6 @@ export class DealsComponent
     });
   }
   //--------------------------------------//
+
+  testSpeed() {}
 }
