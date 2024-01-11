@@ -1,21 +1,25 @@
-import { CdkDrag, CdkDragDrop, copyArrayItem, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
-import { Component, OnInit } from '@angular/core';
-import { ApiHttpService, CacheService, Util } from 'codx-core';
+import { CDK_DRAG_CONFIG, CdkDrag, CdkDragDrop, copyArrayItem, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
+import { Component, Input, OnInit, Optional } from '@angular/core';
+import { ApiHttpService, CacheService, DialogData, DialogRef, Util } from 'codx-core';
 import { count } from './modeview.variable';
-type IMenu = {
-  title: string;
-  id: number;
-  price: number;
-  temp?: boolean;
+import { CodxShareService } from 'projects/codx-share/src/public-api';
+import { isObservable } from 'rxjs';
+const DragConfig = {
+  dragStartThreshold: 0,
+  pointerDirectionChangeThreshold: 5,
+  zIndex: 10000
 };
 
 @Component({
   selector: 'lib-modeview',
   templateUrl: './modeview.component.html',
-  styleUrls: ['./modeview.component.scss']
+  styleUrls: ['./modeview.component.scss'],
+  providers: [{ provide: CDK_DRAG_CONFIG, useValue: DragConfig }]
 })
 
-export class ModeviewComponent implements OnInit{
+export class ModeviewComponent implements OnInit {
+  @Input() data:any;
+  
   vllBP002:any;
   table: Array<any> = [];
   basic = ["Text","ValueList","ComboBox","DateTime","Attachment","Number","YesNo","User","Share"];
@@ -23,54 +27,125 @@ export class ModeviewComponent implements OnInit{
   lstDataAdd = [];
   count = count;
   dataSelected: any;
+  dialog:any;
+
   constructor(
     private cache: CacheService,
-    private api: ApiHttpService
+    private api: ApiHttpService,
+    private shareService: CodxShareService,
+    @Optional() dt?: DialogData,
+    @Optional() dialog?: DialogRef
   )
-  {}
+  {
+    this.data = this.data || dt?.data;
+    this.dialog = dialog;
+  }
 
   ngOnInit(): void {
     this.getVll();
-    this.default();
   }
 
   getVll()
   {
-   
-    this.cache.valueList("BP002").subscribe(item=>{
-      if(item)
+    let vll = this.shareService.loadValueList("BP002");
+
+    if(isObservable(vll))
+    {
+      vll.subscribe(item=>{
+        if(item) this.perform(item)
+      })
+    }
+    else this.perform(vll);
+  }
+
+  perform(item:any)
+  {
+    item.datas.forEach(elm => {
+      if(this.basic.includes(elm.value)) elm.groupType = 0;
+      else if(this.advanced.includes(elm.value)) elm.groupType = 1;
+    }); 
+    this.vllBP002 = item;
+    if(!this.data) this.default();
+    else this.formatData(this.data);
+  }
+
+  formatData(data:any)
+  {
+    debugger
+    var vlls = this.vllBP002.datas;
+    data.forEach(elm => {
+      var indexs = vlls.findIndex(x=>x.value == elm.fieldType);
+      elm.value = vlls[indexs].value;
+
+      if(elm.fieldType == "Title") 
       {
-        debugger
-        item.datas.forEach(elm => {
-          if(this.basic.includes(elm.value)) elm.groupType = 0;
-          else if(this.advanced.includes(elm.value)) elm.groupType = 1;
-        }); 
-        this.vllBP002 = item;
+        elm.columnOrder = 0;
+        elm.columnNo = 0;
       }
-    })
+      else if(elm.fieldType == "SubTitle")
+      {
+        elm.columnOrder = 1;
+        elm.columnNo = 0;
+        elm.text = vlls[indexs].text;
+        elm.icon = vlls[indexs].icon;
+        elm.textColor = vlls[indexs].textColor;
+      }
+      else
+      {
+        elm.text = vlls[indexs].text;
+        elm.icon = vlls[indexs].icon;
+        elm.textColor = vlls[indexs].textColor;
+      }
+
+      if(!this.table.some(x=>x.columnOrder == elm.columnOrder))
+      {
+        let object = 
+        {
+          name: "",
+          columnOrder: elm.columnOrder,
+          children: [
+            elm
+          ]
+        }
+        this.table.push(object);
+      }
+      else
+      {
+        var index = this.table.findIndex(x=>x.columnOrder == elm.columnOrder);
+        this.table[index].children.push(elm);
+        this.table[index].children.sort((a,b) => a.columnNo - b.columnNo);
+      }
+    });
+    this.table.sort((a,b) => a.columnOrder - b.columnOrder);
+    this.selectedItem(this.table[0].children[0])
   }
 
   default()
   {
+    var index = this.vllBP002.datas.findIndex(x=>x.value == "Title");
+    var index2 = this.vllBP002.datas.findIndex(x=>x.value == "SubTitle");
+    let data = this.vllBP002.datas[index];
+    let data2 = this.vllBP002.datas[index2];
+    data = this.genData(data);
+    data2 = this.genData(data2);
     let object = 
     {
       name: "",
-      columnOrder: this.table.length,
+      columnOrder: 0,
       children: [
-        {
-          icon:"icon-i-file-earmark-plus",
-          title: "Tên biểu mẫu",
-          dataType: "String",
-          controlType: "Title",
-          description : "Nhập mô tả biểu mẫu",
-          columnOrder: this.table.length,
-          columnNo: 0,
-          value: "Title",
-        }
+        data
+      ]
+    };
+    let object2 = 
+    {
+      name: "",
+      columnOrder: 1,
+      children: [
+        data2
       ]
     }
-
-    this.table.push(object);
+    object2.children[0].columnOrder = 1;
+    this.table.push(object,object2);
     this.selectedItem(object.children[0])
   }
 
@@ -82,7 +157,7 @@ export class ModeviewComponent implements OnInit{
     if (event.previousContainer !== event.container) {
    
       let data = JSON.parse(JSON.stringify(event.previousContainer.data[event.previousIndex]));
-      this.genData(data);
+      data = this.genData(data);
       //this.selectedItem(data);
       let object = 
       {
@@ -116,10 +191,27 @@ export class ModeviewComponent implements OnInit{
 
   genData(data:any)
   {
+    delete data.color;
+    delete data.default;
+    delete data.groupType;
+    delete data.idx;
 
     data.title = data.text;
     switch(data.value)
     {
+      case "Title":
+      {
+        data.controlType = "TextBox";
+        data.isRequired = true;
+        data.description = "Nhập mô tả biểu mẫu"
+        break;
+      }
+      case "SubTitle":
+      {
+        data.controlType = "TextBox";
+        data.isRequired = true;
+        break;
+      }
       case "Text":
       {
         this.count.text ++;
@@ -262,10 +354,10 @@ export class ModeviewComponent implements OnInit{
     data.recID = Util.uid();
     data.width = "";
     data.fieldName = this.formatTitle(data.title);
-    data.description  = "Câu trả lời";
+    data.description  =  data.description || "Câu trả lời";
     data.columnOrder = this.table.length;
     data.columnNo = 0;
-    data.isRequired = false;
+    data.isRequired = data?.isRequired != null ? data.isRequired : false;
     data.dataType = data.controlType || "String";
     data.controlType = data.controlType || data.value;
     data.dataFormat = data.dataFormat || "";
@@ -282,7 +374,6 @@ export class ModeviewComponent implements OnInit{
 
   drop2(event:any)
   {
-    debugger
     let data = JSON.parse(JSON.stringify(event.previousContainer.data[event.previousIndex]));
     if(event.previousContainer === event.container && event.event.target.id == event.container.id) {
       //delete this.table[data.parentID].children[event.previousIndex];
@@ -362,44 +453,23 @@ export class ModeviewComponent implements OnInit{
     this.dataSelected = data;
   }
 
-  save()
+  close()
   {
-    var a = this.table;
-    debugger;
+    var result = [];
+    this.table.forEach(elm=>{
+      result = result.concat(elm.children);
+    })
+    result.forEach(elm=>{
+      delete elm.icon
+      delete elm.text;
+      delete elm.textColor;
+      delete elm.value;
+    })
+    this.dialog.close(result);
   }
-  // saveDataTimeout = new Map();
-  // setTimeoutSaveData(data) {
-    
-  //   this.lstDataAdd.push(data);
-
-  //   clearTimeout(this.saveDataTimeout?.get("recID"));
-  //   this.saveDataTimeout?.delete(
-  //     this.saveDataTimeout?.get("recID")
-  //   );
-  //   this.saveDataTimeout.set(
-  //     "recID",
-  //     setTimeout(
-  //       this.onSave.bind(this, this.lstDataAdd),
-  //       2000
-  //     )
-  //   );
-  // }
-
-  // onSave(data:any) {
-  //   this.api
-  //     .execSv('BP', 'ERM.Business.BP', 'ProcessesStepsExtendInfoBusiness', 'SaveItemAsync', [
-  //      data
-  //     ])
-  //     .subscribe((res) => {
-  //       if (res) {
-  //         this.lstDataAdd = []
-  //       }
-  //     });
-  // }
 
   dataChange(e:any)
   {
-    debugger
     this.table[e?.columnOrder].children[e.columnNo] = e;
   }
 
