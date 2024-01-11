@@ -124,7 +124,7 @@ export class PopupAddDealComponent
 
   menuCoinsItems = {
     icon: 'icon-u_dollar-sign-alt',
-    text: 'Chi phí Cơ hội',
+    text: 'Chi phí ',
     name: 'tabBookingCost',
     subName: 'Opportunity Cost',
     subText: 'Opportunity Cost',
@@ -1735,7 +1735,7 @@ export class PopupAddDealComponent
   //----------------Cost Items -----------------//
 
   addCost() {
-    if (this.cost && !this.cost.itemName) {
+    if (this.cost && !this.cost.costItemName) {
       this.notificationsService.notify(
         'Chưa nhập nội dung chi phí, hãy hoàn thiện chi phí trước khi thêm chi phí mới !',
         '3'
@@ -1794,7 +1794,7 @@ export class PopupAddDealComponent
     if (this.costInfos?.length > 0) {
       this.costInfos?.forEach((cost) => {
         if (cost?.quantity && cost?.unitPrice)
-          cost.costAmt = cost?.quantity * cost?.unitPrice;
+          cost.amount = cost?.quantity * cost?.unitPrice;
         else cost.amount = 0;
         this.totalCost += cost.amount;
       });
