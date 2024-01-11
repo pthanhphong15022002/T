@@ -1723,13 +1723,12 @@ clickRF(){
         let extDocumentControls = this.extendInfos.filter(
           (x) =>
             x.fieldType == 'Attachment' &&
-            x.documentControl != null &&
-            x.documentControl?.trim() != ''
+            x.documentControl != null
         );
         if (extDocumentControls?.length > 0) {
           let lstDocumentControl = [];
           extDocumentControls.forEach((ele) => {
-            const documents = JSON.parse(ele.documentControl);
+            const documents = ele.documentControl ?? [];
             documents.forEach((res) => {
               var tmpDoc = {};
               tmpDoc['recID'] = Util.uid();
@@ -1748,6 +1747,7 @@ clickRF(){
         if (this.data?.steps[0]?.extendInfo) {
           this.data.steps[0].extendInfo = this.extendInfos;
         }
+        this.detectorRef.markForCheck();
       }
     });
   }
