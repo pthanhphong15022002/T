@@ -209,18 +209,18 @@ export class CM_Deals {
   customerName: string;
   customerCategory: string;
   applyProcess: boolean;
-  costItems: any = [];
+  dealCost: number = 0;
+  grossProfit: number = 0;
 }
 export class CM_CostItems {
   recID: string = Util.uid();
   transID: string;
-  itemType: string;
-  itemID: string;
-  itemName: string;
+  costItemID: string;
+  costItemName: string;
   available: number;
   quantity: number;
-  costPrice: number;
-  costAmt: number;
+  unitPrice: number; //giá
+  amount: number;
   status: string;
   note: string;
   sorting: number;

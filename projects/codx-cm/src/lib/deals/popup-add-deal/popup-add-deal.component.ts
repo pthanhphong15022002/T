@@ -256,8 +256,17 @@ export class PopupAddDealComponent
     if (this.action != this.actionAdd) {
       this.customerIDOld = this.deal?.customerID;
       this.customerID = this.deal?.customerID;
-      this.costInfos = this.deal?.costItems ?? [];
-      if (this.costInfos?.length > 0) this.calculateTotalCost();
+      this.codxCmService
+        .getCostItemsByTransID(this.deal.recID)
+        .subscribe((costs) => {
+          this.costInfos = costs ?? [];
+
+          if (this.costInfos?.length > 0) {
+            if (this.action === this.actionCopy)
+              this.costInfos.forEach((x) => (x.transID = this.deal.recID));
+            this.calculateTotalCost();
+          }
+        });
     }
     if (this.action === this.actionCopy) {
       this.deal.applyProcess =
@@ -1736,7 +1745,7 @@ export class PopupAddDealComponent
     let newCost = { ...this.tmpCost };
     newCost.transID = this.deal?.recID;
     newCost.quantity = 1;
-    newCost.costPrice = 0;
+    newCost.unitPrice = 0;
     if (!this.costInfos) this.costInfos = [];
 
     this.costInfos.push(newCost);
@@ -1763,16 +1772,16 @@ export class PopupAddDealComponent
           this.costInfos[index].quantity = evt?.data;
           break;
 
-        case 'costPrice':
-          this.costInfos[index].costPrice = evt?.data;
+        case 'unitPrice':
+          this.costInfos[index].unitPrice = evt?.data;
           break;
 
-        case 'itemName':
-          this.costInfos[index].itemName = evt?.data;
+        case 'costItemName':
+          this.costInfos[index].costItemName = evt?.data;
           break;
 
-        case 'itemID':
-          this.costInfos[index].itemID = evt?.data;
+        case 'costItemID':
+          this.costInfos[index].costItemID = evt?.data;
           break;
       }
 
@@ -1781,15 +1790,16 @@ export class PopupAddDealComponent
     }
   }
   calculateTotalCost() {
+    this.totalCost = 0;
     if (this.costInfos?.length > 0) {
-      this.totalCost = 0;
       this.costInfos?.forEach((cost) => {
-        if (cost?.quantity && cost?.costPrice)
-          cost.costAmt = cost?.quantity * cost?.costPrice;
-        else cost.costAmt = 0;
-        this.totalCost += cost.costAmt;
+        if (cost?.quantity && cost?.unitPrice)
+          cost.costAmt = cost?.quantity * cost?.unitPrice;
+        else cost.amount = 0;
+        this.totalCost += cost.amount;
       });
     }
+    this.deal['dealCost'] = this.totalCost;
   }
   //---------------------------------------------//
 }
