@@ -217,6 +217,7 @@ export class PopupAddDealComponent
     // add view from customer
     this.isviewCustomer = dt?.data?.isviewCustomer;
     this.customerView = dt?.data?.customerView;
+    this.viewOnly = this.action == 'view';
 
     if (this.isLoading) {
       this.formModel = dt?.data?.formMD;
@@ -255,8 +256,17 @@ export class PopupAddDealComponent
     if (this.action != this.actionAdd) {
       this.customerIDOld = this.deal?.customerID;
       this.customerID = this.deal?.customerID;
-      this.costInfos = this.deal?.costItems ?? [];
-      if (this.costInfos?.length > 0) this.calculateTotalCost();
+      this.codxCmService
+        .getCostItemsByTransID(this.deal.recID)
+        .subscribe((costs) => {
+          this.costInfos = costs ?? [];
+
+          if (this.costInfos?.length > 0) {
+            if (this.action === this.actionCopy)
+              this.costInfos.forEach((x) => (x.transID = this.deal.recID));
+            this.calculateTotalCost();
+          }
+        });
     }
     if (this.action === this.actionCopy) {
       this.deal.applyProcess =
@@ -1146,7 +1156,7 @@ export class PopupAddDealComponent
           (await this.getListInstanceSteps(this.deal.processID));
         !this.deal.applyProcess && (await this.getAutoNumber());
       }
-      if (this.action === this.actionEdit) {
+      if (this.action == this.actionEdit || this.action == 'view') {
         await this.getListContactByDealID(this.deal.recID);
       }
       if (
@@ -1203,7 +1213,11 @@ export class PopupAddDealComponent
             );
             return;
           }
-          if (this.deal.businessLineID && this.action !== this.actionEdit) {
+          if (
+            this.deal.businessLineID &&
+            this.action !== this.actionEdit &&
+            this.action != 'view'
+          ) {
             if (this.deal.processID) {
               let result = this.checkProcessInList(this.deal?.processID);
               if (result) {
@@ -1238,14 +1252,19 @@ export class PopupAddDealComponent
     this.itemTabsInput(this.ischeckFields(listInstanceSteps));
   }
   async getListInstanceSteps(processId: any) {
-    let data = [processId, this.deal?.refID, this.action, '1'];
+    //bùa vì code cũ của bảo
+    let action = this.action == 'view' ? 'edit' : this.action;
+    let data = [processId, this.deal?.refID, action, '1'];
     this.codxCmService.getInstanceSteps(data).subscribe(async (res) => {
       if (res && res.length > 0) {
         let obj = {
           id: processId,
           steps: res[0],
           permissions: res[1],
-          dealId: this.action !== this.actionEdit ? res[2] : this.deal.dealID,
+          dealId:
+            this.action !== this.actionEdit && this.action != 'view'
+              ? res[2]
+              : this.deal.dealID,
           processSetting: res[3],
         };
         let isExist = this.listMemorySteps.some((x) => x.id === processId);
@@ -1256,7 +1275,7 @@ export class PopupAddDealComponent
         this.getSettingFields(res[3], this.listInstanceSteps);
         this.listParticipants = [];
         this.listParticipants = JSON.parse(JSON.stringify(obj?.permissions));
-        if (this.action === this.actionEdit) {
+        if (this.action == this.actionEdit || this.action == 'view') {
           this.owner = this.deal.owner;
         } else {
           if (
@@ -1726,7 +1745,7 @@ export class PopupAddDealComponent
     let newCost = { ...this.tmpCost };
     newCost.transID = this.deal?.recID;
     newCost.quantity = 1;
-    newCost.costPrice = 0;
+    newCost.unitPrice = 0;
     if (!this.costInfos) this.costInfos = [];
 
     this.costInfos.push(newCost);
@@ -1753,16 +1772,16 @@ export class PopupAddDealComponent
           this.costInfos[index].quantity = evt?.data;
           break;
 
-        case 'costPrice':
-          this.costInfos[index].costPrice = evt?.data;
+        case 'unitPrice':
+          this.costInfos[index].unitPrice = evt?.data;
           break;
 
-        case 'itemName':
-          this.costInfos[index].itemName = evt?.data;
+        case 'costItemName':
+          this.costInfos[index].costItemName = evt?.data;
           break;
 
-        case 'itemID':
-          this.costInfos[index].itemID = evt?.data;
+        case 'costItemID':
+          this.costInfos[index].costItemID = evt?.data;
           break;
       }
 
@@ -1771,15 +1790,16 @@ export class PopupAddDealComponent
     }
   }
   calculateTotalCost() {
+    this.totalCost = 0;
     if (this.costInfos?.length > 0) {
-      this.totalCost = 0;
       this.costInfos?.forEach((cost) => {
-        if (cost?.quantity && cost?.costPrice)
-          cost.costAmt = cost?.quantity * cost?.costPrice;
-        else cost.costAmt = 0;
-        this.totalCost += cost.costAmt;
+        if (cost?.quantity && cost?.unitPrice)
+          cost.costAmt = cost?.quantity * cost?.unitPrice;
+        else cost.amount = 0;
+        this.totalCost += cost.amount;
       });
     }
+    this.deal['dealCost'] = this.totalCost;
   }
   //---------------------------------------------//
 }

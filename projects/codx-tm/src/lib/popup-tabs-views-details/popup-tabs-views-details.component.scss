@@ -122,7 +122,11 @@
                 overflow: auto;
             }
         }
+        &.tm-task-detail{
+            height: calc(100vh - 95px) !important;
+        }
     }
+    
 }
 .tm-detail .row.row-content{
     margin-left: 0!important;

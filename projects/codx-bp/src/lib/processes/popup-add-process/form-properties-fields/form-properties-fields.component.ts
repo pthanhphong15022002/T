@@ -83,9 +83,10 @@ export class FormPropertiesFieldsComponent implements OnInit {
       });
       if (this.lstStepFields?.length > 0) {
         this.lstStepFields.forEach((ele) => {
-          let dataForm = this.vllBP002.datas.find(
+          const vll = this.vllBP002.datas.find(
             (x) => x.value == ele.fieldType
           );
+          let dataForm = JSON.parse(JSON.stringify(vll));
           if (ele?.fieldType == 'Title') {
             this.dataCurrent = ele;
             this.dataFormat = JSON.parse(JSON.stringify(dataForm));
