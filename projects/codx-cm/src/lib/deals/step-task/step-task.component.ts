@@ -44,7 +44,7 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
   @Input() owner = '';
 
   @Input() isPause = false;
-  @Input() isDataLoading: any;
+  @Input() isDataLoading = false;
   // @Input() dataSelected: any;
   @Input() formModel: any;
   @Input() listInstanceStep: any[];
