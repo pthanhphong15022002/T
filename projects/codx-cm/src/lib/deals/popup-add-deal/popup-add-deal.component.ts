@@ -217,6 +217,7 @@ export class PopupAddDealComponent
     // add view from customer
     this.isviewCustomer = dt?.data?.isviewCustomer;
     this.customerView = dt?.data?.customerView;
+    this.viewOnly = this.action == 'view';
 
     if (this.isLoading) {
       this.formModel = dt?.data?.formMD;
@@ -1146,7 +1147,7 @@ export class PopupAddDealComponent
           (await this.getListInstanceSteps(this.deal.processID));
         !this.deal.applyProcess && (await this.getAutoNumber());
       }
-      if (this.action === this.actionEdit) {
+      if (this.action == this.actionEdit || this.action == 'view') {
         await this.getListContactByDealID(this.deal.recID);
       }
       if (
@@ -1203,7 +1204,11 @@ export class PopupAddDealComponent
             );
             return;
           }
-          if (this.deal.businessLineID && this.action !== this.actionEdit) {
+          if (
+            this.deal.businessLineID &&
+            this.action !== this.actionEdit &&
+            this.action != 'view'
+          ) {
             if (this.deal.processID) {
               let result = this.checkProcessInList(this.deal?.processID);
               if (result) {
@@ -1238,14 +1243,19 @@ export class PopupAddDealComponent
     this.itemTabsInput(this.ischeckFields(listInstanceSteps));
   }
   async getListInstanceSteps(processId: any) {
-    let data = [processId, this.deal?.refID, this.action, '1'];
+    //bùa vì code cũ của bảo
+    let action = this.action == 'view' ? 'edit' : this.action;
+    let data = [processId, this.deal?.refID, action, '1'];
     this.codxCmService.getInstanceSteps(data).subscribe(async (res) => {
       if (res && res.length > 0) {
         let obj = {
           id: processId,
           steps: res[0],
           permissions: res[1],
-          dealId: this.action !== this.actionEdit ? res[2] : this.deal.dealID,
+          dealId:
+            this.action !== this.actionEdit && this.action != 'view'
+              ? res[2]
+              : this.deal.dealID,
           processSetting: res[3],
         };
         let isExist = this.listMemorySteps.some((x) => x.id === processId);
@@ -1256,7 +1266,7 @@ export class PopupAddDealComponent
         this.getSettingFields(res[3], this.listInstanceSteps);
         this.listParticipants = [];
         this.listParticipants = JSON.parse(JSON.stringify(obj?.permissions));
-        if (this.action === this.actionEdit) {
+        if (this.action == this.actionEdit || this.action == 'view') {
           this.owner = this.deal.owner;
         } else {
           if (
