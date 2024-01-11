@@ -962,9 +962,9 @@ export class DealsComponent
     }
   }
 
-  viewDetail(deal,type="1") {
+  viewDetail(deal, type = '1') {
     setTimeout(() => {
-      if(deal){
+      if (deal) {
         let data = {
           formModel: this.view.formModel,
           dataView: deal,
@@ -1009,9 +1009,9 @@ export class DealsComponent
   }
   //end Kanaban
 
-  currentStep(deal,type="1") {
+  currentStep(deal, type = '1') {
     setTimeout(() => {
-      if(deal){
+      if (deal) {
         let data = {
           formModel: this.view.formModel,
           dataView: deal,
@@ -1605,7 +1605,6 @@ export class DealsComponent
   selectedChange(data) {
     // debugger;
     if (data || data?.data) this.dataSelected = data?.data ? data?.data : data;
-    
   }
   //#endregion
 
@@ -2500,6 +2499,4 @@ export class DealsComponent
     });
   }
   //--------------------------------------//
-
-  testSpeed() {}
 }

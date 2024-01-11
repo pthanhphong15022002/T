@@ -122,10 +122,10 @@ export class PopupAddDealComponent
     subText: 'Input information',
   };
 
-  menuCoinsItems = {
+  menuCostItems = {
     icon: 'icon-u_dollar-sign-alt',
     text: 'Chi phí ',
-    name: 'tabBookingCost',
+    name: 'CostItems',
     subName: 'Opportunity Cost',
     subText: 'Opportunity Cost',
   };
@@ -284,7 +284,7 @@ export class PopupAddDealComponent
   onInit(): void {}
 
   async ngAfterViewInit(): Promise<void> {
-    this.tabInfo = [this.menuGeneralInfo, this.menuCoinsItems];
+    this.tabInfo = [this.menuGeneralInfo, this.menuCostItems];
     this.tabContent = [this.tabGeneralInfoDetail, this.tabCostItems];
     if (this.action !== this.actionAdd || this.isviewCustomer) {
       if (this.isviewCustomer) {
@@ -427,7 +427,11 @@ export class PopupAddDealComponent
       }
       //lãi gộp
       if ($event.field == 'dealValueTo') {
-        this.deal['grossProfit'] = this.deal['dealValueTo'] - this.totalCost;
+        if (this.deal.dealValueTo) {
+          this.deal['grossProfit'] = this.deal.dealValueTo - this.totalCost;
+        } else {
+          this.deal['grossProfit'] = 0 - this.totalCost;
+        }
       }
     }
   }
@@ -608,6 +612,14 @@ export class PopupAddDealComponent
   }
 
   saveDeal() {
+    if (!this.checkValidateCost()) {
+      this.notificationsService.notify(
+        'Chưa hoàn thiện nội dung chi phí, hãy hoàn thiện để tiếp tục !',
+        '3'
+      );
+      return;
+    }
+
     if (!this.deal?.businessLineID) {
       this.notificationsService.notifyCode(
         'SYS009',
@@ -1800,6 +1812,26 @@ export class PopupAddDealComponent
       });
     }
     this.deal['dealCost'] = this.totalCost;
+    if (this.deal.dealValueTo) {
+      this.deal['grossProfit'] = this.deal.dealValueTo - this.totalCost;
+    } else {
+      this.deal['grossProfit'] = 0 - this.totalCost;
+    }
+  }
+
+  checkValidateCost() {
+    let check = true;
+    this.costInfos?.forEach((cost) => {
+      if (!cost.costItemName || cost.costItemName.trim() == '') {
+        check = false;
+        return;
+      }
+    });
+    return check;
+  }
+  tabChange(e) {
+    if (e?.nextId == 'CostItems') {
+    }
   }
   //---------------------------------------------//
 }
