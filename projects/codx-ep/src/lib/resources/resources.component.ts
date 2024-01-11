@@ -105,7 +105,10 @@ export class ResourcesComponent extends UIComponent {
   onInit(): void {
     this.getCacheData();
     if (this.codxService.asideMode == '2') this.hideMF = true;
-    if (this.funcID == EPCONST.FUNCID.S_Category) {
+    if (
+      this.funcID == EPCONST.FUNCID.S_Category ||
+      this.funcID == 'CMS0121_QTSC'
+    ) {
       this.popupComponent = PopupAddStationeryComponent;
     } else {
       this.popupComponent = PopupAddResourcesComponent;
@@ -136,6 +139,7 @@ export class ResourcesComponent extends UIComponent {
             case EPCONST.FUNCID.CA_Category:
               this.cardCategory();
               break;
+            case 'CMS0121_QTSC': //CRM cần
             case EPCONST.FUNCID.S_Category:
               this.stationeryCategory();
               break;
@@ -336,7 +340,7 @@ export class ResourcesComponent extends UIComponent {
         template: this.ownerCol,
       },
       {
-        field:'preparator',
+        field: 'preparator',
         headerText:
           this.resourceGridView?.preparator?.headerText || 'Preparator',
         //width: '15%',
@@ -395,13 +399,13 @@ export class ResourcesComponent extends UIComponent {
         field: 'note',
       },
       {
-        field:'linkID',
+        field: 'linkID',
         headerText: this.resourceGridView?.linkID?.headerText || 'LinkID',
         //width: '15%', //width:gv['Owner'].width,
         template: this.linkCol,
       },
       {
-        field:'owner',
+        field: 'owner',
         headerText: this.resourceGridView?.owner?.headerText || 'Owner',
         //width: '15%', //width:gv['Owner'].width,
         template: this.ownerCol,
@@ -514,7 +518,7 @@ export class ResourcesComponent extends UIComponent {
         headerText: this.resourceGridView?.note?.headerText || 'Note',
       },
       {
-        field:'owner',
+        field: 'owner',
         headerText: this.resourceGridView?.owner?.headerText || 'Owner',
         template: this.ownerCol,
       },
@@ -576,7 +580,10 @@ export class ResourcesComponent extends UIComponent {
     this.view.dataService.addNew().subscribe((res) => {
       let option = new SidebarModel();
       option.Width =
-        this.funcID == EPCONST.FUNCID.S_Category ? '800px' : '550px';
+        this.funcID == EPCONST.FUNCID.S_Category ||
+        this.funcID == 'CMS0121_QTSC'
+          ? '800px'
+          : '550px';
       option.DataService = this.view?.dataService;
       option.FormModel = this.formModel;
       this.view.dataService.dataSelected = res;
@@ -608,7 +615,10 @@ export class ResourcesComponent extends UIComponent {
         .subscribe((res) => {
           let option = new SidebarModel();
           option.Width =
-            this.funcID == EPCONST.FUNCID.S_Category ? '800px' : '550px';
+            this.funcID == EPCONST.FUNCID.S_Category ||
+            this.funcID == 'CMS0121_QTSC'
+              ? '800px'
+              : '550px';
           option.DataService = this.view?.dataService;
           option.FormModel = this.formModel;
           this.dialog = this.callfc.openSide(
@@ -638,7 +648,10 @@ export class ResourcesComponent extends UIComponent {
       this.view.dataService.copy().subscribe((res) => {
         let option = new SidebarModel();
         option.Width =
-          this.funcID == EPCONST.FUNCID.S_Category ? '800px' : '550px';
+          this.funcID == EPCONST.FUNCID.S_Category ||
+          this.funcID == 'CMS0121_QTSC'
+            ? '800px'
+            : '550px';
         option.DataService = this.view?.dataService;
         option.FormModel = this.formModel;
         this.dialog = this.callfc.openSide(

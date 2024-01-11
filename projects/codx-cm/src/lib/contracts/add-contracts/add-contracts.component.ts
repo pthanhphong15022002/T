@@ -405,6 +405,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
         } else if (this.recIDContract) {
           this.contracts = await this.getContractByRecID();
         }
+        this.getAutoNumber();
         delete this.contracts['id'];
         this.contracts.status = '1';
         this.contracts.contractID = ''

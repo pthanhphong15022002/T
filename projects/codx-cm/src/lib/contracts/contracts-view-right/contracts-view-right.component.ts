@@ -151,6 +151,7 @@ export class ContractsViewDetailComponent
   ngOnChanges(changes: SimpleChanges): void {
     this.loadTabs();
     if (changes?.contract && this.contract) {
+      this.listInsStep = null;
       this.setDataInput();
       this.contractService
         .getContactByRecID(this.contract?.contactID)
@@ -217,6 +218,8 @@ export class ContractsViewDetailComponent
   }
 
   getListInstanceStep() {
+    this.stepCurrent = null;
+    this.isHaveField = false;
     var data = [
       this.contract?.refID,
       this.contract?.processID,
@@ -225,17 +228,15 @@ export class ContractsViewDetailComponent
     ];
     this.codxCmService.getViewDetailInstanceStep(data).subscribe((res) => {
       if (res) {
-        this.listInsStep = res[0];
+        this.listInsStep = res[0] || [];
         this.isHaveField = res[1];
         if (this.listInsStep) {
           this.lstStepsOld = JSON.parse(JSON.stringify(this.listInsStep));
           this.getStepCurrent(this.contract);
         }
         this.checkCompletedInstance(this.contract?.status);
-      } else {
-        this.listInsStep = [];
-        this.stepCurrent = null;
-        this.isHaveField = false;
+      } else{
+        this.listInsStep  = [];
       }
     });
   }

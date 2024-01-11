@@ -33,6 +33,7 @@ export class CodxView2Component implements OnInit , AfterViewInit{
   @Output() btnClick = new EventEmitter();
   @Output() dataChange = new EventEmitter();
   @Output() selectedChange = new EventEmitter();
+  @Output() viewChange = new EventEmitter();
   request:DataRequest;
   viewList: Array<ViewModel> = [];
   fMoreFuncs: ButtonModel[];
@@ -167,7 +168,8 @@ export class CodxView2Component implements OnInit , AfterViewInit{
     this.viewList?.filter(function (v) {
       if (v.type == view.type) {
         v.active = true;
-        that.viewActive = v.id
+        that.viewActive = v.id;
+        that.viewChange.emit(v.id);
       }
       else v.active = false;
     });

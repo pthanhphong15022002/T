@@ -163,6 +163,14 @@ export class SalcoeffempComponent extends UIComponent implements OnInit, AfterVi
     }
   }
 
+  searchChanged(event) {
+    if(this.codxGridViewV2)
+    {
+      this.codxGridViewV2.dataService.searchText = event;
+      this.codxGridViewV2.refresh();
+    }
+  }
+
   //valueChange
   valueChange(event){
     if(event)

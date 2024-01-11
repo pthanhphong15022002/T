@@ -256,8 +256,8 @@ export class DealsComponent
 
   onLoading(e) {
     //reload filter
-    this.loadViewModel(); //--tạm cmt
-    this.loadDefaultSetting();
+    //this.loadViewModel(); //--tạm cmt
+    // this.loadDefaultSetting();
   }
 
   loadViewModel() {
@@ -305,23 +305,23 @@ export class DealsComponent
           panelLeftRef: this.dashBoard,
         },
       },
-      // {
-      //   //test view mới
-      //   id: 100,
-      //   type: ViewType.grid,
-      //   active: false,
-      //   sameData: true,
-      //   text: 'Lưới custorm column',
-      //   model: {
-      //     template2: this.templateMore,
-      //     groupSettings: { showDropArea: false, columns: ['customerName'] },
-      //     resources: this.columnGrids,
-      //     // frozenColumns: 1,
-      //   },
-      // },
+      {
+        //test view mới
+        id: 100,
+        type: ViewType.grid,
+        active: false,
+        sameData: true,
+        text: 'Lưới custorm column',
+        model: {
+          template2: this.templateMore,
+          groupSettings: { showDropArea: false, columns: ['customerName'] },
+          resources: this.columnGrids,
+        },
+      },
     ];
+    this.loadDefaultSetting();
 
-    //this.views = this.viewsDefault;
+    //this.views = this.viewsDefault; //--tạm cmt
 
     // this.cache.viewSettings(this.funcID).subscribe((views) => {
     //   this.viewsDefault.forEach((v, index) => {
@@ -380,12 +380,6 @@ export class DealsComponent
 
     if (this.funCrr != this.funcID) {
       this.funCrr = this.funcID;
-      // this.cache.functionList(this.funcID).subscribe((f) => {
-      //   if (f) {
-      //     this.funcIDCrr = f;
-      //     this.runMode = f?.runMode;
-      //   }
-      // });
     } else if (
       this.funcID == 'CM0201' &&
       this.viewCrr == 6 &&
@@ -614,15 +608,16 @@ export class DealsComponent
     this.vllStatus = this.gridViewSetup?.Status?.referedValue;
     this.vllApprove = this.gridViewSetup?.ApproveStatus?.referedValue;
     // lay grid view - view gird he thong
-    // let arrField = Object.values(this.gridViewSetup).filter(
-    //   (x: any) => x.isVisible
-    // );
-    // if (Array.isArray(arrField)) {
-    //   this.arrFieldIsVisible = arrField
-    //     .sort((x: any, y: any) => x.columnOrder - y.columnOrder)
-    //     .map((x: any) => x.fieldName);
-    // }
-    // this.getColumsGrid(this.gridViewSetup);
+
+    let arrField = Object.values(this.gridViewSetup).filter(
+      (x: any) => x.isVisible
+    );
+    if (Array.isArray(arrField)) {
+      this.arrFieldIsVisible = arrField
+        .sort((x: any, y: any) => x.columnOrder - y.columnOrder)
+        .map((x: any) => x.fieldName);
+    }
+    this.getColumsGrid(this.gridViewSetup);
   }
 
   getColorReason() {
@@ -644,6 +639,7 @@ export class DealsComponent
     return data?.status != '1' && data?.status != '2' && data?.status != '15';
   }
   clickMF(e, data) {
+    if (!data) return;
     this.dataSelected = data;
     this.titleAction = e.text;
     this.stepIdClick = '';
@@ -651,6 +647,7 @@ export class DealsComponent
       SYS03: () => this.edit(data),
       SYS04: () => this.copy(data),
       SYS02: () => this.delete(data),
+      SYS05: () => this.viewInfo(data),
       CM0201_1: () => this.moveStage(data),
       CM0201_2: () => this.startNow(data),
       CM0201_3: () => this.moveReason(data, true),
@@ -1537,6 +1534,37 @@ export class DealsComponent
     opt.data = [itemSelected.recID, null];
     return true;
   }
+
+  viewInfo(data) {
+    if (data) {
+      this.view.dataService.dataSelected = data;
+    }
+
+    // this.view.dataService
+    //   .edit(this.view.dataService.dataSelected)
+    //   .subscribe((res) => {
+    let option = new SidebarModel();
+    option.DataService = this.view.dataService;
+    this.funcID;
+    option.FormModel = this.view.formModel;
+    option.Width = '800px';
+    option.zIndex = 1001;
+    var formMD = new FormModel();
+
+    var obj = {
+      action: 'view',
+      formMD: formMD,
+      titleAction: this.formatTitleMore(this.titleAction),
+      gridViewSetup: this.gridViewSetup,
+      customerCategory: this.dataSelected?.customerCategory,
+    };
+    let dialogCustomDeal = this.callfc.openSide(
+      PopupAddDealComponent,
+      obj,
+      option
+    );
+    // });
+  }
   //#endregion
 
   //#region event
@@ -2059,6 +2087,7 @@ export class DealsComponent
     }
     //set activite
     let columnActiviti = {
+      isExternal: true,
       headerTemplate: this.headerTempAct,
       width: '250px',
       template: this.templateAct,
