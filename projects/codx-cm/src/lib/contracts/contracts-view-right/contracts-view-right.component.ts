@@ -151,6 +151,7 @@ export class ContractsViewDetailComponent
   ngOnChanges(changes: SimpleChanges): void {
     this.loadTabs();
     if (changes?.contract && this.contract) {
+      this.listInsStep = null
       this.setDataInput();
       this.contractService
         .getContactByRecID(this.contract?.contactID)
