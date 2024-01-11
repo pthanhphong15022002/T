@@ -1,4 +1,5 @@
 import {
+  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   ElementRef,
@@ -19,6 +20,7 @@ import {
   FormModel,
   NotificationsService,
   RequestOption,
+  SidebarModel,
   Util,
 } from 'codx-core';
 import { FormPropertiesFieldsComponent } from './form-properties-fields/form-properties-fields.component';
@@ -58,6 +60,9 @@ import {
   SwimLaneModel,
   cloneObject,
   randomId,
+  RulerSettingsModel,
+  SwimLane,
+  UndoRedo,
 } from '@syncfusion/ej2-angular-diagrams';
 import { ExpandMode, MenuEventArgs } from '@syncfusion/ej2-angular-navigations';
 import { log } from 'console';
@@ -65,12 +70,9 @@ import { environment } from 'src/environments/environment';
 import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
 import { CodxBpService } from '../../codx-bp.service';
 import { FormAdvancedSettingsComponent } from './form-advanced-settings/form-advanced-settings.component';
-import {
-  BP_Processes,
-  BP_Processes_Permissions,
-  BP_Processes_Steps,
-} from '../../models/BP_Processes.model';
-import { Subject, takeUntil, firstValueFrom } from 'rxjs';
+import { FormEditConnectorComponent } from './form-edit-connector/form-edit-connector.component';
+import { BP_Processes, BP_Processes_Permissions, BP_Processes_Steps } from '../../models/BP_Processes.model';
+import { Subject, takeUntil } from 'rxjs';
 import { ModeviewComponent } from '../../modeview/modeview.component';
 import { DynamicSettingControlComponent } from 'projects/codx-share/src/lib/components/dynamic-setting/dynamic-setting-control/dynamic-setting-control.component';
 Diagram.Inject(ConnectorEditing);
@@ -95,6 +97,7 @@ Diagram.Inject(ConnectorEditing);
     DiagramContextMenuService,
     ConnectorEditingService,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PopupAddProcessComponent {
   @ViewChild('status') status: ElementRef;
@@ -124,6 +127,7 @@ export class PopupAddProcessComponent {
     verticalGridlines: this.gridlines,
     constraints: SnapConstraints.All & ~SnapConstraints.ShowLines,
   };
+  rulerSettings: RulerSettingsModel = { showRulers: false, dynamicGrid: true }
   nodes: NodeModel[] = [
     // {
     //   id: 'swimlane',
@@ -266,9 +270,6 @@ export class PopupAddProcessComponent {
 
   menuDrag: any = [
     { id: 'swimlane', text: 'SwimLane', icon: 'icon-view_quilt' },
-    { id: 'connector', text: 'Connector', icon: 'icon-timeline' },
-    { id: 'start_end', text: 'Start/End', icon: 'icon-i-circle' },
-    { id: 'decision', text: 'Điều kiện', icon: 'icon-i-diamond' },
     { id: 'form', text: 'Forms', icon: 'icon-note_add' },
     { id: 'event', text: 'Sự kiện', icon: 'icon-i-calendar2-event-fill' },
     { id: 'email', text: 'Gửi mail', icon: 'icon-mail' },
@@ -276,7 +277,141 @@ export class PopupAddProcessComponent {
     { id: 'esign', text: 'Ký số', icon: 'icon-i-pen' },
     { id: 'image', text: 'hình ảnh', icon: 'icon-broken_image' },
   ];
+  documentClick(args: MouseEvent): void {
+    this.isDragging = true;
+    let target: HTMLElement = args.target as HTMLElement;
+    // custom code start
+    let selectedElement: HTMLCollection = document.getElementsByClassName('e-selected-style');
+    if (selectedElement.length) {
+        selectedElement[0].classList.remove('e-selected-style');
+    }
+    // custom code end
+    let drawingObject: NodeModel | ConnectorModel | any = null;
+    if(target.tagName == 'SPAN') target = target.parentElement;
+    if (target.classList.contains('image-pattern-style')) {
+        switch (target.id) {
+            case 'shape1':
+                drawingObject = { shape: { type: 'Basic', shape: 'Rectangle' } };
+                break;
+            case 'shape2':
+                drawingObject = { shape: { type: 'Basic', shape: 'Ellipse' } };
+                break;
+            case 'shape3':
+                drawingObject = { shape: { type: 'Basic', shape: 'Hexagon' } };
+                break;
+            case 'shape4':
+                drawingObject = { shape: { type: 'Basic', shape: 'Pentagon' } };
+                break;
+            case 'shape5':
+                drawingObject = { shape: { type: 'Basic', shape: 'Triangle' } };
+                break;
+            case 'straight':
+                drawingObject = { type: 'Straight' };
+                break;
+            case 'ortho':
+                drawingObject = { type: 'Orthogonal' };
+                break;
+            case 'cubic':
+                drawingObject = { type: 'Bezier' };
+                break;
+            case 'freehand':
+                drawingObject = { type: 'Freehand' };
+                break;
+            case 'path':
+                drawingObject = {
+                    shape: {
+                        type: 'Path',
+                        data: 'M540.3643,137.9336L546.7973,159.7016L570.3633,159.7296L550.7723,171.9366L558.9053,194.9966L540.3643,' +
+                            '179.4996L521.8223,194.9966L529.9553,171.9366L510.3633,159.7296L533.9313,159.7016L540.3643,137.9336z'
+                    }
+                };
+                break;
+            case 'image':
+                drawingObject = { shape: { type: 'Image', source: './assets/diagram/employees/Clayton.png' } };
+                break;
+            case 'svg':
+                drawingObject = { shape: { type: 'Native', content: this.getNativeContent() } };
+                break;
+            case 'text':
+                drawingObject = { shape: { type: 'Text' } };
+                break;
+            case 'swimlane':
+              let swimLane: NodeModel = {
+                id: this.makeid(10),
+                shape: {
+                  type: 'SwimLane',
+                  header: {
+                    height: 30,
+                    style: { fill: '#fff', textAlign: 'Left' },
+                    annotation: { content: 'Quy trình động' },
+                  },
+                  lanes: [
+                    {
+                      id: this.makeid(10),
+                      canMove: true,
+                      header: {
+                        height: 30,
+                        style: { fontSize: 14, fill: '#fff' },
+                        annotation: { content: 'Bước quy trình' },
+                      },
+                    },
+                  ],
+                  phases: [
+                    {
+                      id: this.makeid(10),
+                      header: { annotation: { content: '' } },
+                    },
+                  ],
+                  phaseSize: 0.5,
+                  orientation: 'Vertical',
+                  isLane: true,
+                },
+                style: { strokeColor: '#ffffff', fill: '#ffffff' },
+              };
+                drawingObject = swimLane
+                break;
+            default:
+                drawingObject = { shape:{type: 'HTML',
+                                 version: target.id}}
+                break;
+        }
+        if (drawingObject) {
+            this.diagram.drawingObject = drawingObject;
+            // custom code start
+            target.classList.add('e-selected-style');
+            // custom code end
+        }
+    }
+    this.diagram.tool =  DiagramTools.DrawOnce;
+    this.diagram.dataBind();
+}
+getNativeContent(): string {
+  let str: string = '<svg version="1.0" xmlns="http://www.w3.org/2000/svg" width="350.000000pt" ' +
+      'height="229.000000pt" viewBox="0 0 350.000000 229.000000" ' +
+      'preserveAspectRatio="xMidYMid meet"> <metadata>' +
+      ' Created by potrace 1.11, written by Peter Selinger 2001-2013' +
+      ' </metadata> <g transform="translate(0.000000,229.000000) scale(0.100000,-0.100000)"' +
+      ' fill="#de6ca9" stroke="none"><path d="M0 1145 l0 -1145 1750 0 1750 0 0 1145 0 1145' +
+      ' -1750 0 -1750 0 0 -1145z m1434 186 c19 -8 26 -18 26 -37 0 -24 -3 -26' +
+      ' -27 -19 -16 3 -58 9 -94 12 -63 5 -67 4 -88 -23 -23 -29 -21 -60 6 -81 8' +
+      ' -6 47 -19 86 -29 55 -13 80 -25 106 -51 31 -31 33 -37 29 -88 -8 -94 -69' +
+      ' -133 -193 -122 -90 7 -115 20 -115 58 0 26 3 30 18 24 91 -38 168 -41 204' +
+      ' -8 23 21 23 75 1 96 -10 8 -49 23 -88 33 -88 22 -135 63 -135 118 0 92 67 140' +
+      ' 181 131 31 -2 68 -9 83 -14z m854 -6 c38 -15 42 -21 42 -51 l0 -33 -47 25' +
+      ' c-41 22 -58 25 -115 22 -58 -3 -72 -8 -97 -32 -79 -75 -59 -259 32 -297 35' +
+      ' -15 106 -18 150 -6 26 7 27 10 27 67 l0 60 -50 0 c-47 0 -50 2 -50 25 0 25' +
+      ' 1 25 80 25 l81 0 -3 -97 -3 -98 -40 -20 c-22 -10 -65 -21 -95 -23 -153 -11' +
+      ' -242 74 -243 230 0 145 93 235 233 224 30 -2 74 -12 98 -21z m-638 -169 l67' +
+      ' -178 40 103 c22 57 53 139 69 182 28 75 29 77 62 77 19 0 32 -4 30 -9 -1 -5' +
+      ' -39 -104 -83 -220 l-80 -211 -37 0 c-35 0 -37 2 -56 53 -11 28 -48 124 -81 ' +
+      '211 -34 87 -61 163 -61 168 0 5 14 8 32 6 31 -3 32 -5 98 -182z" />' +
+      '</g> </svg>';
+  return str;
+}
 
+clickRF(){
+  this.diagram && this.diagram.refresh();
+}
   // SymbolPalette Properties
   public expandMode: ExpandMode = 'Multiple';
   public palettes: PaletteModel[] = [
@@ -662,6 +797,17 @@ export class PopupAddProcessComponent {
     ],
     showCustomMenuOnly: true,
   };
+
+  onDrop(e:any){
+
+    if(e.state=='Completed'){
+      console.log('drop',e);
+      setTimeout(() => {
+        this.diagram && this.diagram.refresh();
+      }, 100);
+    }
+  }
+
   dragEnter(e: any) {
     //console.log(e);
     //let objDragpane = document.querySelector('.dragarea').getBoundingClientRect();
@@ -805,7 +951,12 @@ export class PopupAddProcessComponent {
     this.targetItem = undefined;
     //this.diagram.dataBind()
   }
-
+  clickForm(){
+    let option = new SidebarModel;
+    option.FormModel = this.dialog?.formModel;
+    option.Width='550px'
+    this.callfc.openSide(FormEditConnectorComponent,'',option,'');
+  }
   logData(e) {
     console.log(e);
   }
@@ -818,6 +969,27 @@ export class PopupAddProcessComponent {
       this.diagram.remove(node);
       let connector = this.diagram.getConnectorObject(node.id);
       if (connector) this.diagram.removeData(connector as any);
+    }
+  }
+  nodeSelected:any ;
+  onSelect(e:any){
+    if(e.newValue && e.newValue.length == 1){
+      this.nodeSelected = e.newValue[0];
+    }
+    console.log('chọn nè',e);
+
+
+  }
+
+  formData:any={};
+  valueDataChange(e:any){
+    if(this.nodeSelected){
+
+      if(!this.formData[this.nodeSelected.id]){
+        this.formData[this.nodeSelected.id] = {};
+      }
+      this.formData[this.nodeSelected.id][e.field] = e.data;
+      console.log(this.formData);
     }
   }
 
@@ -844,6 +1016,7 @@ export class PopupAddProcessComponent {
   }
 
   contextMenuClick(args: MenuEventArgs): void {
+
     if (
       args.item.id === 'InsertLaneBefore' ||
       args.item.id === 'InsertLaneAfter'
@@ -922,8 +1095,12 @@ export class PopupAddProcessComponent {
     debugger;
   }
   mouseEnter(e: any) {
-    if (this.isDragging) this.targetItem = e.actualObject;
-    console.log(this.targetItem);
+    if (this.isDragging){
+      if(e.actualObject && e.actualObject.shape.type=='swimlane'){
+        this.targetItem = e.actualObject;
+      }
+    }
+
   }
   targetItem: any;
   isDragging: boolean = false;
@@ -931,14 +1108,22 @@ export class PopupAddProcessComponent {
     this.isDragging = true;
   }
   eleDraw(e: any) {
-    console.log('vẽ cục:   ', e);
+    if(e.state == 'Completed'){
+      this.isDragging = false;
+      console.log('ta gét',this.targetItem);
+      console.log('vẽ cục:   ', e);
+      setTimeout(() => {
+        this.diagram && this.diagram.refresh();
+      }, 100);
+    }
+
   }
   clickchoi() {
     console.log(this.diagram);
     let dataDiagram = this.diagram.saveDiagram();
     let obj = JSON.parse(dataDiagram);
     if (Object.keys(obj).length && obj.nodes) {
-      console.log(obj.nodes.toString());
+      console.log(obj.nodes);
     }
   }
   shape: any = { type: 'HTML', shape: 'Rectangle' };
@@ -983,6 +1168,7 @@ export class PopupAddProcessComponent {
     private bpSv: CodxBpService,
     private authStore: AuthStore,
     private notiSv: NotificationsService,
+    private elementRef: ElementRef,
     @Optional() dialog: DialogRef,
     @Optional() dt: DialogData
   ) {
@@ -1008,7 +1194,9 @@ export class PopupAddProcessComponent {
     this.getCacheCbxOrVll();
   }
 
-  ngAfterViewInit(): void {}
+  ngAfterViewInit(): void {
+
+  }
 
   onDestroy() {
     this.destroyFrom$.next();
@@ -1143,6 +1331,14 @@ export class PopupAddProcessComponent {
     // if (tabNo <= this.processTab && tabNo != this.currentTab) { //cmt tạm để làm cho xong rồi bắt sau
     this.updateNodeStatus(oldNo, newNo);
     this.currentTab = tabNo;
+    if(tabNo == 1){
+      setTimeout(()=>{
+        if(this.elementRef.nativeElement.querySelector('#appearance'))
+        this.elementRef.nativeElement.querySelector('#appearance').onclick = this.documentClick.bind(this);
+      },200)
+    }
+
+
     // }
     this.detectorRef.detectChanges();
   }
