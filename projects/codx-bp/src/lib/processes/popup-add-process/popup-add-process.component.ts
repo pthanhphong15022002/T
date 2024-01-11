@@ -70,8 +70,9 @@ import {
   BP_Processes_Permissions,
   BP_Processes_Steps,
 } from '../../models/BP_Processes.model';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, takeUntil, firstValueFrom } from 'rxjs';
 import { ModeviewComponent } from '../../modeview/modeview.component';
+import { DynamicSettingControlComponent } from 'projects/codx-share/src/lib/components/dynamic-setting/dynamic-setting-control/dynamic-setting-control.component';
 Diagram.Inject(ConnectorEditing);
 @Component({
   selector: 'lib-popup-add-process',
@@ -1404,27 +1405,47 @@ export class PopupAddProcessComponent {
   //#endregion
 
   //#region setting advanced - thiết lập nâng cao
-  popupAdvancedSetting() {
+  async popupAdvancedSetting() {
     let option = new DialogModel();
     option.zIndex = 1010;
-    option.FormModel = this.dialog.formModel;
+    option.FormModel = JSON.parse(JSON.stringify(this.dialog.formModel));
+    // let dataValue = await firstValueFrom(this.api
+    //   .execSv<any>('BG', 'BG', 'ScheduleTasksBusiness', 'GetScheduleTasksAsync', [
+    //     'ACP101',
+    //   ]));
+
     let data = {
-      process: this.data,
+      newSetting: this.data.settings ?? [],
+      lineType: '1',
+      tilte: 'Thiết lập nâng cao',
+      // settingFull: dataValue,
+      // dataValue: dataValue?.paraValues
     };
-    let popupDialog = this.callfc.openForm(
-      FormAdvancedSettingsComponent,
-      '',
-      700,
-      800,
-      '',
-      data,
-      '',
-      option
-    );
-    popupDialog.closed.subscribe((e) => {
-      if (e) {
-      }
-    });
+
+      this.callfc.openForm(
+        DynamicSettingControlComponent,
+        '',
+        700,
+        800,
+        '',
+        data,
+        '',
+        option
+      );
+    // let popupDialog = this.callfc.openForm(
+    //   FormAdvancedSettingsComponent,
+    //   '',
+    //   700,
+    //   800,
+    //   '',
+    //   data,
+    //   '',
+    //   option
+    // );
+    // popupDialog.closed.subscribe((e) => {
+    //   if (e) {
+    //   }
+    // });
   }
   //#endregion
   //#region form setting properties
