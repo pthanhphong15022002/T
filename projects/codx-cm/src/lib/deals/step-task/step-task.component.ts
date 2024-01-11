@@ -58,11 +58,13 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
   @Input() isHeightAuto = true;
   @Input() taskAdd;
   @Input() isViewStep = false;
+  @Input() isMoveStage = false;
 
   @Output() continueStep = new EventEmitter<any>();
   @Output() saveAssignTask = new EventEmitter<any>();
   @Output() changeProgress = new EventEmitter<any>();
   @Output() isSusscess = new EventEmitter<any>();
+  @Output() moveStage = new EventEmitter<any>();
   @ViewChild('viewReason', { static: true }) viewReason;
   dialogPopupReason: DialogRef;
   status = [];
@@ -585,5 +587,8 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
       }
       return data;
     }
+  }
+  nextStep(){
+    this.moveStage.emit(true);
   }
 }

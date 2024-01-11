@@ -605,6 +605,8 @@
         [listInstanceStep]="listInsStep"
         [dataCM]="deal"
         [applyFor]="'1'"
+        [isMoveStage]="true"
+        (moveStage)="moveStage($event)"
       ></step-task>
     </div>
   </div>

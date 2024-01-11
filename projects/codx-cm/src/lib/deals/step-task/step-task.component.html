@@ -38,6 +38,10 @@
       >
         <i class="icon-20 icon-add_task text-primary"></i>
       </div>
+      <div class="d-flex align-items-center mx-2 bg-primary rounded-pill btn-next-step px-2" (click)="nextStep()" *ngIf="isMoveStage">
+        <span class="icon-16 icon-play_arrow"></span>
+        <span>Chuyển giai đoạn</span>
+      </div>
       <div *ngIf="type == 'G'" class="me-3 value-30px">
         <codx-input
           type="valuelist"

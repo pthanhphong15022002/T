@@ -1017,6 +1017,7 @@ export class DealsComponent
           dataView: deal,
           isView: true,
           type,
+          view: this.view,
           // listInsStepStart: this.listInsStep,
         };
         let option = new DialogModel();

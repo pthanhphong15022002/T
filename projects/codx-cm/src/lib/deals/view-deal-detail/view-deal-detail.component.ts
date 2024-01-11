@@ -8,8 +8,9 @@ import {
 } from '@angular/core';
 import { CodxCmService } from '../../codx-cm.service';
 import { CM_Contracts, CM_Customers, CM_Deals } from '../../models/cm_model';
-import { ApiHttpService, CacheService, DialogData, DialogRef, FormModel, NotificationsService} from 'codx-core';
+import { ApiHttpService, CacheService, CallFuncService, DialogData, DialogRef, FormModel, NotificationsService, SidebarModel} from 'codx-core';
 import { ContractsService } from '../../contracts/service-contracts.service';
+import { PopupMoveStageComponent } from 'projects/codx-dp/src/lib/instances/popup-move-stage/popup-move-stage.component';
 
 @Component({
   selector: 'view-deal-detail',
@@ -50,7 +51,7 @@ export class ViewDealDetailComponent implements OnInit, OnChanges {
   listQuotations: any[] = [];
   isViewLink: boolean = false;
   type = "1"
-
+  view;
 
   viewSettings: any;
 
@@ -103,6 +104,7 @@ export class ViewDealDetailComponent implements OnInit, OnChanges {
     private notiService: NotificationsService,
     private changeDetectorRef: ChangeDetectorRef,
     private api: ApiHttpService,
+    private callFunc: CallFuncService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -111,6 +113,7 @@ export class ViewDealDetailComponent implements OnInit, OnChanges {
     this.contractRecId = dt?.data?.contactRecId;
     this.listInsStepStart = dt?.data?.listInsStepStart;
     this.type = dt?.data?.type;
+    this.view = dt?.data?.view;
     if(!this.dialog?.formModel){
       this.dialog.formModel = {
         entityName: "CM_Contracts",
@@ -451,6 +454,111 @@ export class ViewDealDetailComponent implements OnInit, OnChanges {
   //   this.changeDetectorRef.detectChanges();
   // }
 
+  moveStage(e) {
+    let data = this.deal;
+    let option = new SidebarModel();
+    option.DataService = this.view.dataService;
+    option.FormModel = this.view.formModel;
+    this.cache.functionList('DPT0402').subscribe((fun) => {
+      this.cache
+        .gridViewSetup(fun.formName, fun.gridViewName)
+        .subscribe((grvSt) => {
+          let formMD = new FormModel();
+          formMD.funcID = fun.functionID;
+          formMD.entityName = fun.entityName;
+          formMD.formName = fun.formName;
+          formMD.gridViewName = fun.gridViewName;
+          let oldStatus = data.status;
+          let oldStepId = data.stepID;
+          let stepReason = {
+            isUseFail: false,
+            isUseSuccess: false,
+          };
+          let dataCM = {
+            refID: data?.refID,
+            processID: data?.processID,
+            stepID: data?.stepID,
+            nextStep: '',
+            isCallInstance: true,
+            // listStepCbx: this.lstStepInstances,
+          };
+          let obj = {
+            formModel: formMD,
+            deal: data,
+            stepReason: stepReason,
+            headerTitle: "Chuyển giai đoạn",
+            applyFor: "1",
+            dataCM: dataCM,
+          };
+          let dialogMoveStage = this.callFunc.openForm(
+            PopupMoveStageComponent,
+            '',
+            850,
+            900,
+            '',
+            obj
+          );
+          dialogMoveStage.closed.subscribe((e) => {
+            // if (e && e.event != null) {
+            //   let instance = e.event?.instance;
+            //   let listSteps = e.event?.listStep;
+            //   let isMoveBackStage = e.event?.isMoveBackStage;
+            //   let tmpInstaceDTO = e.event?.tmpInstaceDTO;
+            //   if (isMoveBackStage) {
+            //     let dataUpdate = [
+            //       tmpInstaceDTO,
+            //       e.event?.comment,
+            //       e.event?.expectedClosed,
+            //       this.statusCodeID,
+            //       this.statusCodeCmt,
+            //     ];
+            //     this.codxCmService
+            //       .moveStageBackDataCM(dataUpdate)
+            //       .subscribe((res) => {
+            //         if (res) {
+            //           this.view.dataService.update(res, true).subscribe();
+            //           if (this.kanban) {
+            //             this.renderKanban(res);
+            //           }
+            //           if (this.detailViewDeal)
+            //             this.detailViewDeal.dataSelected = res;
+            //           this.detailViewDeal?.reloadListStep(listSteps);
+            //           this.detectorRef.detectChanges();
+            //         }
+            //       });
+            //   } else {
+            //     let dataUpdate = [
+            //       data.recID,
+            //       instance.stepID,
+            //       oldStepId,
+            //       oldStatus,
+            //       e.event?.comment,
+            //       e.event?.expectedClosed,
+            //       e.event?.permissionCM,
+            //     ];
+            //     this.codxCmService
+            //       .moveStageDeal(dataUpdate)
+            //       .subscribe((res) => {
+            //         if (res) {
+            //           this.view.dataService.update(res, true).subscribe();
+            //           if (this.kanban) {
+            //             this.renderKanban(res);
+            //           }
+            //           if (this.detailViewDeal)
+            //             this.detailViewDeal.dataSelected = res;
+            //           if (e.event.isReason != null) {
+            //             this.moveReason(res, e.event.isReason);
+            //           }
+            //           this.detailViewDeal?.reloadListStep(listSteps);
+            //           this.detectorRef.detectChanges();
+            //         }
+            //       });
+            //   }
+            // }
+          });
+        });
+    });
+  }
 }
 
 
