@@ -12,9 +12,9 @@
     ></codx-label>
   </div>
   <div class="d-flex justify-content-center w-100 top2">
-    <div class="container row">
+    <div class="container row" >
       <!-- LEFT -->
-      <div class="left col-3 h-100">
+      <div class="left col-3 h-100" *ngIf="type=='1'">
         <div class="">
           <div class="d-flex flex-column align-items-center">
             <div class="me-4" style="margin-top: 50px">
@@ -120,7 +120,7 @@
         </div>
       </div>
       <!-- RIGHT -->
-      <div class="right col-9 h-100">
+      <div class="right col-9 h-100" [ngClass]="type=='1' ? 'col-9': 'col-12'">
         <div class="top">
           <div class="d-flex">
             <div class="tab-scroll mb-4">
@@ -487,7 +487,7 @@
   <codx-no-data> </codx-no-data>
 </ng-template>
 <ng-template #information>
-  <div id="information" class="item-main mt-0">
+  <div id="information" class="item-main mt-0" *ngIf="type == '1'">
     <div class="d-flex align-items-center text-primary my-2">
       <span class="icon-i-clipboard icon-20 me-1 fw-bold"></span>
       <codx-label
@@ -500,7 +500,7 @@
     <ng-container [ngTemplateOutlet]="informationTemplate"></ng-container>
   </div>
 
-  <div id="fields" class="item-main">
+  <div id="fields" class="item-main" *ngIf="type == '1'">
     <div class="d-flex align-items-center text-primary my-2">
       <span class="icon-i-clipboard icon-20 me-1 fw-bold"></span>
       <codx-label
@@ -525,6 +525,68 @@
         (saveDataStep)="saveDataStep($event)"
       </codx-fields-detail-temp>
     </ng-container>
+  </div>
+
+  <!-- <div id="contact" class="item-main">
+    <div class="d-flex align-items-center text-primary my-2">
+      <span class="icon-add_to_photos icon-20 me-1 fw-bold"></span>
+      <codx-label
+        class="text-gray-600 ms-2 fs-5-sm fw-bold text-primary"
+        name="lblContanct"
+        [formModel]="dialog?.formModel"
+        [default]="'Liên hệ'"
+      ></codx-label>
+    </div>
+    <div>
+      <codx-list-contacts
+        #loadContactDeal
+        [selectAll]="false"
+        [funcID]="'CM0205'"
+        [objectID]="deal?.recID"
+        [objectName]="deal.dealName"
+        [customerID]="deal?.customerID"
+        [objectType]="'4'"
+        [type]="'formDetail'"
+        [hidenMF]="deal?.closed"
+        (contactEvent)="contactChange($event)"
+        (lstContactEmit)="lstContactEmit($event)"
+      ></codx-list-contacts>
+    </div>
+  </div> -->
+  <!-- <div id="opponent" class="item-main">
+    <div class="d-flex align-items-center text-primary my-2">
+      <span class="icon-add_to_photos icon-20 me-1 fw-bold"></span>
+      <codx-label
+        class="text-gray-600 ms-2 fs-5-sm fw-bold text-primary"
+        name="lblTitleOpponent"
+        [formModel]="dialog?.formModel"
+        [default]="'Đối thủ'"
+      ></codx-label>
+    </div>
+    <div>
+      <codx-tab-dealcompetitors
+        [dealID]="deal.recID"
+        [hidenMF]="deal.closed"
+      ></codx-tab-dealcompetitors>
+    </div>
+  </div> -->
+
+  <div id="opponent" class="item-main">
+    <div class="d-flex align-items-center text-primary my-2">
+      <span class="icon-add_to_photos icon-20 me-1 fw-bold"></span>
+      <codx-label
+        class="text-gray-600 ms-2 fs-5-sm fw-bold text-primary"
+        name="lblTitleOpponent"
+        [formModel]="dialog?.formModel"
+        [default]="'Đối thủ'"
+      ></codx-label>
+    </div>
+    <div>
+      <codx-tab-dealcompetitors
+        [dealID]="deal.recID"
+        [hidenMF]="deal.closed"
+      ></codx-tab-dealcompetitors>
+    </div>
   </div>
 
   <div id="tasks" class="item-main">
@@ -558,12 +620,14 @@
       ></codx-label>
     </div>
     <div class="row my-2">
-      <span
-        class="text-gray-600"
-        [innerHTML]="
-          deal?.memo | formatvalue : dialog?.formModel : 'Memo' | async
-        "
-      ></span>
+      <codx-tree-comment
+        [objectID]="deal?.recID"
+        [objectType]="dialog?.formModel?.entityName"
+        [actionType]="'C'"
+        [addNew]="true"
+        [funcID]="dialog?.formModel?.funcID"
+        (totalCommentChange)="changeCountFooter($event, 'comment')"
+      ></codx-tree-comment>
     </div>
   </div>
 </ng-template>

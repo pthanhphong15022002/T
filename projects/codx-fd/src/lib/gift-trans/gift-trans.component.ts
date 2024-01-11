@@ -144,4 +144,13 @@ export class GiftTransComponent extends UIComponent {
             }
         }
     }
+
+    changeDataMF(event: any) {
+        if (event?.length > 0 && this.funcID == "FDT092") {
+            const mf = event.find((i) => i.functionID === "SYS02");
+            if (mf) {
+              mf.disabled = true;
+            }
+        }
+    }
 }

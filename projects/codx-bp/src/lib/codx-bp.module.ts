@@ -62,7 +62,7 @@ export const routes: Routes = [
     children: [
       {
         path: 'modeview',
-        component: ModeviewComponent,
+        component: FormPropertiesFieldsComponent,
       },
     ],
   }
