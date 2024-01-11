@@ -790,7 +790,10 @@ export class ContractsComponent extends UIComponent {
           this.beforeDelete(option, contract.recID)
         )
         .subscribe((res: any) => {
-          if (res) {
+          if (res?.contractName && res?.contractID) {
+            this.view.dataService.add(res).subscribe();
+            this.view.currentView['schedule'].refresh();
+            this.detectorRef.markForCheck();
           }
         });
     }

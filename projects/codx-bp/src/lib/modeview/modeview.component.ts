@@ -71,7 +71,6 @@ export class ModeviewComponent implements OnInit {
 
   formatData(data:any)
   {
-    debugger
     var vlls = this.vllBP002.datas;
     data.forEach(elm => {
       var indexs = vlls.findIndex(x=>x.value == elm.fieldType);
@@ -470,8 +469,37 @@ export class ModeviewComponent implements OnInit {
 
   dataChange(e:any)
   {
-    this.table[e?.columnOrder].children[e.columnNo] = e;
+    if(e?.isDelete == true) {
+      this.table[e?.columnOrder].children = this.table[e?.columnOrder].children.filter(x=>x.columnNo != e.columnNo);
+      this.table = this.table.filter(x=>x.children != null && x.children.length>0);
+      this.resetIndex();
+      if(this.table[e?.columnOrder]?.children && this.table[e?.columnOrder].children.length > 0)
+      {
+        var stt = e.columnNo - 1;
+        if(stt < 0) stt = 0;
+        this.selectedItem(this.table[e?.columnOrder].children[stt]);
+      }
+      else {
+        var stt = (this.table[e?.columnOrder - 1].children.length) - 1;
+        if(stt < 0) stt = 0;
+        this.selectedItem(this.table[e?.columnOrder - 1].children[stt]);
+      }
+    }
+    else this.table[e?.columnOrder].children[e.columnNo] = e;
   }
+
+  resetIndex()
+  {
+    for(var i = 0 ; i < this.table.length ; i++)
+    {
+      this.table[i].columnOrder = i;
+      for(var y = 0 ; y < this.table[i].children.length ; y ++)
+      {
+        this.table[i].children[y].columnNo = y;
+        this.table[i].children[y].columnOrder = i;
+      }
+    }
+  } 
 
   xoa_dau(str) {
     str = str.replace(/à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ/g, "a");

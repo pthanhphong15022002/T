@@ -13,7 +13,7 @@
  }
  .main-right{
 	// flex: 1;
-	height: 55vh;
+	height: 49vh;
 	overflow-y: scroll;
 	overflow-x: hidden;
  }
@@ -27,3 +27,9 @@
 // 	box-shadow: 0 0px 5px 1px #a1a1a1;
 // 	border-radius: 3px;
 //   }
+.center{
+	position: absolute;
+	top: 50%;
+	transform: translateY(-50%);
+	width: 100%;
+}

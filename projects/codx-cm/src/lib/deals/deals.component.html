@@ -837,7 +837,31 @@
   ></span>
 </ng-template>
 
-<ng-template #templateCost let-data> Chi phí </ng-template>
+<ng-template #templateCost let-data>
+  <div>
+    <span
+      class="fs-7"
+      #dealCost
+      [innerHTML]="
+        data?.dealCost
+          | formatvalue : view.formModel : 'dealCost' : dealCost
+          | async
+      "
+    ></span>
+  </div>
+  <div *ngIf="data?.dealCost">
+    <codx-label
+      class="text-primary fs-7 cursor-pointer"
+      style="font-style: italic"
+      fiedName="viewDetailsCost"
+      [formName]="'CMDeals'"
+      [gridViewName]="'grvCMDeals'"
+      default="Xem chi tiết"
+      (click)="viewDetailsCost(data.recID)"
+    ></codx-label>
+  </div>
+</ng-template>
+
 <ng-template #headerTempAct let-data> Công việc </ng-template>
 
 <ng-template #templateAct let-data> Công việc </ng-template>

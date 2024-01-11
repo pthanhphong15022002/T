@@ -48,6 +48,7 @@ import { Internationalization } from '@syncfusion/ej2-base';
 import { ViewDealDetailComponent } from './view-deal-detail/view-deal-detail.component';
 import { CodxCommonService } from 'projects/codx-common/src/lib/codx-common.service';
 import { ExportData } from 'projects/codx-common/src/lib/models/ApproveProcess.model';
+import { PopupCostItemsComponent } from './popup-cost-items/popup-cost-items.component';
 
 @Component({
   selector: 'lib-deals',
@@ -1539,10 +1540,6 @@ export class DealsComponent
     if (data) {
       this.view.dataService.dataSelected = data;
     }
-
-    // this.view.dataService
-    //   .edit(this.view.dataService.dataSelected)
-    //   .subscribe((res) => {
     let option = new SidebarModel();
     option.DataService = this.view.dataService;
     this.funcID;
@@ -1563,7 +1560,6 @@ export class DealsComponent
       obj,
       option
     );
-    // });
   }
   //#endregion
 
@@ -1699,18 +1695,6 @@ export class DealsComponent
       this.dataSelected.status = res?.returnStatus;
       this.view.dataService.update(this.dataSelected).subscribe();
       if (this.kanban) this.kanban.updateCard(this.dataSelected);
-      // this.notificationsService.notifyCode('ES007');
-
-      // this.codxCmService
-      //   .getOneObject(this.dataSelected.recID, 'DealsBusiness')
-      //   .subscribe((q) => {
-      //     if (q) {
-      //       this.dataSelected = q;
-      //       this.view.dataService.update(this.dataSelected, true).subscribe();
-      //       if (this.kanban) this.kanban.updateCard(this.dataSelected);
-      //     }
-      //     this.notificationsService.notifyCode('ES007');
-      //   });
     }
   }
 
@@ -2491,6 +2475,26 @@ export class DealsComponent
   }
 
   //-------------GIRD NEW----------------//
-
+  viewDetailsCost(transID) {
+    this.codxCmService.getCostItemsByTransID(transID).subscribe((res) => {
+      if (res) {
+        let options = new DialogModel();
+        let obj = {
+          title: this.gridViewSetup?.DealCost?.headerText,
+          listCosts: res,
+        };
+        let dialogCost = this.callfc.openForm(
+          PopupCostItemsComponent,
+          '',
+          500,
+          700,
+          '',
+          obj,
+          null,
+          options
+        );
+      }
+    });
+  }
   //--------------------------------------//
 }

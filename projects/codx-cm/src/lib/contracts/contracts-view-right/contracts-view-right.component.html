@@ -1295,8 +1295,8 @@
       </div>
     </div>
   </div>
-  <div *ngIf="listContractInParentID?.length <= 0">
-    <codx-no-data></codx-no-data>
+  <div *ngIf="!listContractInParentID || listContractInParentID?.length <= 0" class="center">
+    <codx-no-data [mould]="2" [isLoading]="isLoadingContract"></codx-no-data>
   </div>
 </ng-template>
 
