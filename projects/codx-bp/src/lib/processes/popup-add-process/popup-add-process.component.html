@@ -350,43 +350,44 @@
             </button>
           </div>
         </div>
-        <div class="d-flex flex-wrap mt-5">
-          <ng-container
-            *ngIf="data.permissions != null && data.permissions?.length > 0"
-          >
-            <ng-container *ngFor="let perm of data.permissions; index as i">
-              <div
-                class="cursor-pointer has-action-menu-od me-5 d-flex align-items-center mt-1 mb-3 position-relative"
-              >
-                <div class="me-2">
-                  <codx-img
-                    [width]="20"
-                    [objectId]="perm.objectID"
-                    [objectName]="perm.objectName"
-                    objectType="AD_Users"
-                  >
-                  </codx-img>
-                </div>
-                <div class="text-gray-600 fw-bold">{{ perm.objectName }}</div>
-                <ng-container *ngIf="checkAssignRemove(i)">
-                  <div class="action-menu-od" (click)="removeUser(i)">
-                    <i class="icon-close text-danger icon-16"></i>
-                  </div>
-                </ng-container>
-              </div>
-            </ng-container>
-          </ng-container>
-
-          <div class="input-sm w-250px mb-3">
-            <codx-input
-              #inputUser
-              class="w-250px"
-              field="searchUser"
-              type="combobox"
-              refValue="Users"
-              (valueChange)="searchAddUsers($event)"
+        <div class="form-user">
+          <div class="d-flex flex-wrap">
+            <ng-container
+              *ngIf="data.permissions != null && data.permissions?.length > 0"
             >
-            </codx-input>
+              <ng-container *ngFor="let perm of data.permissions; index as i">
+                <div
+                  class="cursor-pointer has-action-menu-od me-5 d-flex align-items-center position-relative user-style line-clamp line-clamp-1"
+                >
+                  <div class="me-2">
+                    <codx-img
+                      [width]="20"
+                      [objectId]="perm.objectID"
+                      [objectName]="perm.objectName"
+                      objectType="AD_Users"
+                    >
+                    </codx-img>
+                  </div>
+                  <div class="text-gray-600 fw-bold">{{ perm.objectName }}</div>
+                  <ng-container *ngIf="checkAssignRemove(i)">
+                    <div class="action-menu-od" (click)="removeUser(i)">
+                      <i class="icon-close text-danger icon-16"></i>
+                    </div>
+                  </ng-container>
+                </div>
+              </ng-container>
+            </ng-container>
+
+            <div class="input-sm w-200px">
+              <codx-input
+                #inputUser
+                field="searchUser"
+                type="combobox"
+                refValue="Users"
+                (valueChange)="searchAddUsers($event)"
+              >
+              </codx-input>
+            </div>
           </div>
         </div>
       </div>
