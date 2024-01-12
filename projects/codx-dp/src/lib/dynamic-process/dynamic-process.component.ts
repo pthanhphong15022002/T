@@ -399,12 +399,15 @@ export class DynamicProcessComponent
   copy(data: any) {
     if (this.isCopy) {
       if (data) {
-        this.view.dataService.dataSelected = data;
-        this.oldIdProccess = this.view.dataService.dataSelected.recID;
-        // this.oldIdProccess = data.recID;
+        // cũ-BLV
+        //this.view.dataService.dataSelected = data;
+        // this.oldIdProccess = this.view.dataService.dataSelected.recID;
+        //Mới_VT
+        this.oldIdProccess = data.recID;
       }
       this.view.dataService.copy().subscribe((res) => {
-        //  this.view.dataService.dataSelected = res;
+        //Mới_VT
+        this.view.dataService.dataSelected = res;
         let dialogModel = new DialogModel();
         dialogModel.IsFull = true;
         dialogModel.zIndex = 999;
@@ -1272,7 +1275,8 @@ export class DynamicProcessComponent
   //setting trình kí
   settingSubmit(categoryID) {
     this.dpService
-      .getESCategoryByCategoryID(categoryID)
+      //.getESCategoryByCategoryID(categoryID)
+      .getESCategoryByCategoryIDType(categoryID, 'DP_Processes')
       .subscribe((item: any) => {
         if (item) {
           //gọi ko ra
