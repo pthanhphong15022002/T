@@ -36,6 +36,7 @@ export class InputNumberDurationComponent
   @Input() hourOld: any;
   @Input() textHour: any;
   @Input() noteHour: any;
+  @Input() disabled = false;
 
   @Output() eventInput = new EventEmitter<any>();
 

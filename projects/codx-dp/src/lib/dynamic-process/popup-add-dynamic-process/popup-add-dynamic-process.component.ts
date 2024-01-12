@@ -357,6 +357,8 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
   alertMessger = '';
   arrFieldDup = []; //mang field trung
 
+  viewOnly = false; //chỉ xem
+
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private api: ApiHttpService,
@@ -380,6 +382,8 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
     this.entityName = this.dialog.formModel.entityName;
     this.systemProcess = dt?.data?.systemProcess ?? '0';
     this.action = dt?.data?.action;
+    this.viewOnly = this.action == 'view';
+
     this.showID = dt?.data?.showID;
 
     this.userId = this.user?.userID;
@@ -507,6 +511,7 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
         this.setDefaultOwner();
         break;
       case 'edit':
+      case 'view':
         this.loadEx();
         this.loadWord();
         this.loadListApproverStep();
@@ -601,7 +606,7 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
     let userID = '';
     let userName = '';
     let check = false;
-    if (this.action == 'edit') {
+    if (this.action == 'edit' || this.action == 'view') {
       check = this.permissions.some(
         (x) => x.objectID == this.process.createdBy && x.roleType == 'C'
       );
@@ -2890,13 +2895,17 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
       if (!check) {
         this.listStepEdit.push(stepIDContain);
       }
-    }
-    if (this.action == 'edit') {
-      let check = this.listStepEdit.some((id) => id == stepIDPrevious);
-      if (!check) {
+      let check2 = this.listStepEdit.some((id) => id == stepIDPrevious);
+      if (!check2) {
         this.listStepEdit.push(stepIDPrevious);
       }
     }
+    // if (this.action == 'edit') {
+    //   let check = this.listStepEdit.some((id) => id == stepIDPrevious);
+    //   if (!check) {
+    //     this.listStepEdit.push(stepIDPrevious);
+    //   }
+    // }
 
     event.item.data.stepID = stepIDContain;
 
@@ -5152,15 +5161,17 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
     }
     return check;
   }
-  
-  getFieldInTask(strFieldID:string) {
+
+  getFieldInTask(strFieldID: string) {
     const listID = strFieldID?.split(';') || [];
     let fieldTile = '';
-    if(listID?.length > 0 && this.step?.fields?.length > 0){
-      for(const fieldID of listID){
-        let field = this.step?.fields?.find(x => x.recID == fieldID);
-        if(field){
-          fieldTile = fieldTile ? fieldTile + ", " + field?.title : field?.title ;
+    if (listID?.length > 0 && this.step?.fields?.length > 0) {
+      for (const fieldID of listID) {
+        let field = this.step?.fields?.find((x) => x.recID == fieldID);
+        if (field) {
+          fieldTile = fieldTile
+            ? fieldTile + ', ' + field?.title
+            : field?.title;
         }
       }
     }

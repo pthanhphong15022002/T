@@ -85,6 +85,8 @@ export class InstancesComponent
   @ViewChild('popupTemplate') popupTemplate!: TemplateRef<any>;
   @ViewChild('emptyTemplate') emptyTemplate!: TemplateRef<any>;
   @ViewChild('dashBoard') dashBoard!: TemplateRef<any>;
+  @ViewChild('toolbarTempDashboad')
+  toolbarTempDashboad!: TemplateRef<any>;
 
   @Output() valueListID = new EventEmitter<any>();
   @Output() listReasonBySteps = new EventEmitter<any>();
@@ -242,6 +244,7 @@ export class InstancesComponent
   tabControl = '';
   asideMode: string;
   isChangeOwner: boolean = false;
+  viewModeType: any;
 
   constructor(
     inject: Injector,
@@ -353,6 +356,7 @@ export class InstancesComponent
         reportType: 'D',
         // reportView: true,
         showFilter: true,
+        // toolbarTemplate: this.toolbarTempDashboad,
         model: {
           panelLeftRef: this.dashBoard,
         },
@@ -665,7 +669,7 @@ export class InstancesComponent
         if (this.kanban) {
           if (this.kanban?.dataSource?.length == 1) {
             this.kanban.refresh();
-          }else this.kanban?.updateCard(this.dataSelected);
+          } else this.kanban?.updateCard(this.dataSelected);
         }
         if (this.detailViewInstance) {
           this.detailViewInstance.dataSelect = this.dataSelected;
@@ -877,7 +881,7 @@ export class InstancesComponent
   }
 
   changeDataMF(e, data) {
-    if(!data) return;
+    if (!data) return;
     if (e != null && data != null) {
       if (data?.approveStatus == '3') {
         e.forEach((res) => {
@@ -891,7 +895,7 @@ export class InstancesComponent
             switch (res.functionID) {
               case 'SYS003':
                 if (
-                  (data.status != '2' && !this.isEditInstance(data) ) ||
+                  (data.status != '2' && !this.isEditInstance(data)) ||
                   data.closed ||
                   !data.permissionCloseInstances
                 )
@@ -909,7 +913,10 @@ export class InstancesComponent
                   res.disabled = true;
                 break;
               case 'DP09':
-                if ( !this.isReturnInstance(data) && this.checkMoreReason(data, null)) {
+                if (
+                  !this.isReturnInstance(data) &&
+                  this.checkMoreReason(data, null)
+                ) {
                   res.disabled = true;
                 }
                 break;
@@ -963,7 +970,14 @@ export class InstancesComponent
               // case 'SYS004':
               // case 'SYS002':
               case 'DP18':
-                if( (data.refID && data.refID !== this.guidEmpty) || data.closed ||data.status == '1' || data.status == '15' || data.status == '2'|| !this.isMoveProcess(data)) {
+                if (
+                  (data.refID && data.refID !== this.guidEmpty) ||
+                  data.closed ||
+                  data.status == '1' ||
+                  data.status == '15' ||
+                  data.status == '2' ||
+                  !this.isMoveProcess(data)
+                ) {
                   res.disabled = true;
                 }
                 break;
@@ -1173,17 +1187,21 @@ export class InstancesComponent
     return false;
   }
   isEditInstance(data) {
-    if(data.isAdminAll) {
+    if (data.isAdminAll) {
       return true;
     }
-    return data.permissionMoveInstances && this.process.allowEditInstanceControl;
+    return (
+      data.permissionMoveInstances && this.process.allowEditInstanceControl
+    );
   }
   isReturnInstance(data) {
     if (data.closed) return false;
-    if(data.isAdminAll) {
+    if (data.isAdminAll) {
       return true;
     }
-    return data.permissionMoveInstances && this.process.allowReturnInstanceControl;
+    return (
+      data.permissionMoveInstances && this.process.allowReturnInstanceControl
+    );
   }
 
   convertHtmlAgency(buID: any, test: any, test2: any) {
@@ -1435,7 +1453,8 @@ export class InstancesComponent
     });
     if (!this.crrFunc || this.crrFunc == this.funcID) {
       if (!this.crrFunc) this.crrFunc = this.funcID;
-      switch (e?.view.type) {
+      this.viewModeType = e?.view.type;
+      switch (this.viewModeType) {
         case 2:
           // this.showButtonAdd = true;
           this.viewsCurrent = 'd-';
@@ -1612,7 +1631,7 @@ export class InstancesComponent
         //xu ly data đổ về
         data = e.event?.instance;
         this.listStepInstances = e.event?.listStep;
-        if(!e.event.isMoveBackStage && e.event?.isReason != null) {
+        if (!e.event.isMoveBackStage && e.event?.isReason != null) {
           this.moveReason(null, data, e.event.isReason);
         }
         this.view.dataService.update(data).subscribe();
@@ -1918,7 +1937,7 @@ export class InstancesComponent
             e.event?.applyForMove,
             e.event?.ownerMove,
             e.event?.title,
-            'add',
+            'add'
           );
         }
         this.detectorRef.detectChanges();
@@ -2652,7 +2671,12 @@ export class InstancesComponent
     } else if (applyFor == '2' || applyFor == '3') {
       return this.callfc.openSide(PopupAddCasesComponent, obj, option);
     } else if (applyFor == '4') {
-      obj = { ...obj, type: 'DP', contractRefID: this.oldIdInstance, processID: this.processID };
+      obj = {
+        ...obj,
+        type: 'DP',
+        contractRefID: this.oldIdInstance,
+        processID: this.processID,
+      };
       option.FormModel = obj?.formMD;
       return this.callfc.openSide(AddContractsComponent, obj, option);
     }
@@ -2743,7 +2767,7 @@ export class InstancesComponent
           processMove: processMove,
           ownerMove: ownerMove,
           title: title,
-          recID: this.dataSelected?.recID
+          recID: this.dataSelected?.recID,
         };
         this.cache
           .gridViewSetup(fun.formName, fun.gridViewName)
@@ -2801,61 +2825,47 @@ export class InstancesComponent
   autoStartInstance() {
     this.startInstance(this.dataSelected);
   }
-  openMoveProcess(applyForMove,processMove,title,ownerMove,recId: '' ){
-    if (
-      applyForMove &&
-      processMove &&
-      this.process.applyFor !== applyForMove
-    ) {
+  openMoveProcess(applyForMove, processMove, title, ownerMove, recId: '') {
+    if (applyForMove && processMove && this.process.applyFor !== applyForMove) {
       this.moreFuncStart = this.moreFuncInstance.filter(
         (x) => x.functionID == 'SYS01'
       )[0];
-      this.addMoveProcess(
-        processMove,
-        applyForMove,
-        ownerMove,
-        title,
-        'add'
-      );
+      this.addMoveProcess(processMove, applyForMove, ownerMove, title, 'add');
     }
   }
   isMoveProcess(data) {
     let isOpenForm = false;
     let processID = '';
-    if(data.status === '3' || data.status === '4') {
+    if (data.status === '3' || data.status === '4') {
       isOpenForm = true;
       processID = this.stepSuccess?.newProcessID;
-     }
-     else if(data.status === '5' || data.status == '6') {
+    } else if (data.status === '5' || data.status == '6') {
       isOpenForm = true;
       processID = this.stepFail?.newProcessID;
-     }
-     let applyForMove = this.listProccessCbx.filter(x=>x.recID == processID)[0]?.applyFor;
-     return applyForMove !== this.process.applyFor;
+    }
+    let applyForMove = this.listProccessCbx.filter(
+      (x) => x.recID == processID
+    )[0]?.applyFor;
+    return applyForMove !== this.process.applyFor;
   }
   moveProcessBack(data) {
-   this.dataSelected = data;
-   let isOpenForm = false;
-   let processID = '';
-   if(data.status === '3' || data.status === '4') {
-    isOpenForm = true;
-    processID = this.stepSuccess?.newProcessID;
-   }
-   else if(data.status === '5' || data.status == '6') {
-    isOpenForm = true;
-    processID = this.stepFail?.newProcessID;
-   }
-   if(isOpenForm && processID !== this.guidEmpty ) {
-    let applyForMove = this.listProccessCbx.filter(x=>x.recID == processID)[0]?.applyFor;
-    if(applyForMove != this.process.applyFor) {
-      this.addMoveProcess(
-        processID,
-       applyForMove,
-       '',
-       data.title,
-       'add'
-     );
+    this.dataSelected = data;
+    let isOpenForm = false;
+    let processID = '';
+    if (data.status === '3' || data.status === '4') {
+      isOpenForm = true;
+      processID = this.stepSuccess?.newProcessID;
+    } else if (data.status === '5' || data.status == '6') {
+      isOpenForm = true;
+      processID = this.stepFail?.newProcessID;
     }
-   }
+    if (isOpenForm && processID !== this.guidEmpty) {
+      let applyForMove = this.listProccessCbx.filter(
+        (x) => x.recID == processID
+      )[0]?.applyFor;
+      if (applyForMove != this.process.applyFor) {
+        this.addMoveProcess(processID, applyForMove, '', data.title, 'add');
+      }
+    }
   }
 }
