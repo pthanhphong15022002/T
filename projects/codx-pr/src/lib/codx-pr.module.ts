@@ -35,6 +35,8 @@ import { ViewKowcodeComponent } from './request-kowds/view-kowcode/view-kowcode.
 
 import { PopupAddSalCoeffEmpComponent } from './salcoeffemp/popup/popup-add-salcoeffemp/popup-add-salcoeffemp.component';
 import { PopupCoppySalCoeffEmpComponent } from './salcoeffemp/popup/popup-coppy-salcoeffemp/popup-coppy-salcoeffemp.component';
+import { PayTExceptComponent } from './pay-texcept/pay-texcept.component';
+import { PopupAddPayTexceptComponent } from './pay-texcept/popup/popup-add-pay-texcept/popup-add-pay-texcept.component';
 
 export const routes: Routes = [
   {
@@ -81,8 +83,8 @@ export const routes: Routes = [
         component: SalcoeffempComponent,
       },
       {
-        path: 'SalCoeffEmp/:funcID',
-        component: SalcoeffempComponent,
+        path: 'PayTExcept/:funcID',
+        component: PayTExceptComponent,
       },
     ],
   },
@@ -100,7 +102,9 @@ const T_Component: Type<any>[] = [
   TotalKowDsComponent,
   ViewKowcodeComponent,
   PopupAddSalCoeffEmpComponent,
-  PopupCoppySalCoeffEmpComponent
+  PopupCoppySalCoeffEmpComponent,
+  PayTExceptComponent,
+  PopupAddPayTexceptComponent
 ];
 
 @NgModule({

@@ -1,0 +1,106 @@
+<codx-views #view
+    [views]="views"
+    idField="recID"
+    [service]="'HR'"
+    [autoLoad]="false"
+    [hideMoreFuncs]="false"
+    [autoSearch]="false"
+    (onActions)="onAction($event)"
+    (clickMF)="clickMF($event)"
+    (changeDataMF)="changeDataMF($event)"
+    (searchChanged)="searchChanged($event)">
+</codx-views>
+<!-- template left -->
+<ng-template #tmpLeft>
+    <codx-listview
+        [itemTemplate]="itemTemplateTree"
+        [entityName]="'HR_OrganizationUnits'"
+        [service]="'HR'"
+        type="treeView"
+        textField="orgUnitName"
+        [gridViewName]="'grvOrganizationUnits'"
+        [formName]="'OrganizationUnits'"
+        [idField]="'orgUnitID'"
+        [parentIdField]="'ParentID'"
+        [dataService]="dtServiceOrgUnit"
+        [enableCheck]="false"
+        [data]="null"
+        [selectFirst]="true"
+        (onSelectionChanged)="onSelectionChange($event)">
+    </codx-listview>
+</ng-template> 
+<!-- template right -->
+<ng-template #tmpRight>
+    <codx-gridview-v2
+        *ngIf="columnsGrid && columnsGrid.length > 0 && loading"
+        #codxGridViewV2
+        [entityName]="view.formModel?.entityName"
+        [columnsGrid]="columnsGrid"
+        [service]="'HR'"
+        [assemblyName]="'ERM.Business.PR'"
+        [className]="'PayTExceptBusiness'"
+        [method]="'LoadDataGridAsync'"
+        [dataValues]="dataValues"
+        [autoLoad]="true"
+        [checkboxSelect]="true"
+        [autoFitColumns]="true"
+        [hideMoreFunc]="true"
+        [height]="'100%'"
+        [idField]="'employeeID'"
+        (gridInit)="onDatabound()"
+        (onDoubleClick)="onDoubleClick($event)"
+        (onDatabound)="onDatabound()">
+    </codx-gridview-v2>
+</ng-template> 
+
+
+<!-- template item tree -->
+<ng-template #itemTemplateTree let-data>
+    <div class="d-flex align-items-center">
+        <span>{{data.orgUnitName}}</span>
+    </div>
+</ng-template>
+
+<!-- template column employee -->
+<ng-template #tmpColEmployee let-data>
+    <div class="p-2">
+        <codx-temp-full 
+        [dataItem]="data" 
+        [imageId]="data.employeeID" 
+        [imageObjName]="data.employeeName"
+        imageObjType="HR_Employees" 
+        [title]="data.employeeName"
+        [desc]="data.employeeID"
+        [desc2]="data.positionName">
+    </codx-temp-full>
+    </div>
+</ng-template>
+
+<!-- template column category -->
+<ng-template #tmpColCategory let-data>
+    <div class="d-flex flex-column">
+        <span class="fw-bold">{{data.exceptName}}</span>
+        <span>{{data.exceptCode}}</span>
+    </div>
+</ng-template>
+
+<!-- template column amountF -->
+<ng-template #tmpColAmountF let-data>
+    <div class="d-flex flex-column">
+        <span class="fw-bold" [innerHTML]="data?.amountF | formatvalue : view.formModel : 'amountF' | async"></span>
+    </div>
+</ng-template>
+
+<!-- template column genDate -->
+<ng-template #tmpColGenDate let-data>
+    <div class="d-flex flex-column">
+        <span class="fw-bold" [innerHTML]="data?.genDate | formatvalue : view.formModel : 'genDate'  | async"></span>
+    </div>
+</ng-template>
+
+<!-- template column dowCode -->
+<ng-template #tmpColDowCode let-data>
+    <div class="d-flex flex-column">
+        <span class="fw-bold">{{data.dowCode}}</span>
+    </div>
+</ng-template>
