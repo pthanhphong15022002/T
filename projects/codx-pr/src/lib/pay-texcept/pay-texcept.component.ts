@@ -1,32 +1,33 @@
-import { AfterViewInit, Component, Injector, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { AuthStore, ButtonModel, CRUDService, CodxGridviewV2Component, DataService, DialogModel, NotificationsService, SidebarModel, UIComponent, Util, ViewModel, ViewType } from 'codx-core';
-import { PopupAddSalCoeffEmpComponent } from './popup/popup-add-salcoeffemp/popup-add-salcoeffemp.component';
-import { PopupCoppySalCoeffEmpComponent } from './popup/popup-coppy-salcoeffemp/popup-coppy-salcoeffemp.component';
+import { AfterViewInit, Component, Injector, TemplateRef, ViewChild } from '@angular/core';
+import { AuthStore, CRUDService, CodxGridviewV2Component, DialogModel, NotificationsService, SidebarModel, UIComponent, Util, ViewModel, ViewType } from 'codx-core';
 import moment from 'moment';
 
 @Component({
-  selector: 'pr-salcoeffemp',
-  templateUrl: './salcoeffemp.component.html',
-  styleUrls: ['./salcoeffemp.component.css']
+  selector: 'pr-pay-texcept',
+  templateUrl: './pay-texcept.component.html',
+  styleUrls: ['./pay-texcept.component.css']
 })
-export class SalcoeffempComponent extends UIComponent implements OnInit, AfterViewInit{
+export class PayTExceptComponent extends UIComponent implements AfterViewInit {
+  
   views:ViewModel[];
-  dtServiceOrgUnit:CRUDService;
   columnsGrid:any[] = [];
+  gridViewSetup:any;
+  dtServiceOrgUnit:CRUDService;
   dataValues:any;
   filters:any = {};
   loading:boolean = false;
   userPermission:any;
-  lstSalCoeffs:any[] = [];
   mssgConfirm:string = "";
   @ViewChild("tmpLeft") tmpLeft:TemplateRef<any>;
   @ViewChild("tmpRight") tmpRight:TemplateRef<any>;
-  @ViewChild("tmpEmployee") tmpEmployee:TemplateRef<any>;
-  @ViewChild("tmpData") tmpData:TemplateRef<any>;
-  @ViewChild("tmpTooltip") tmpTooltip:TemplateRef<any>;
   @ViewChild("codxGridViewV2") codxGridViewV2 : CodxGridviewV2Component;
-  constructor
-  (
+  @ViewChild("tmpColEmployee") tmpColEmployee:TemplateRef<any>;
+  @ViewChild("tmpColCategory") tmpColCategory:TemplateRef<any>;
+  @ViewChild("tmpColAmountF") tmpColAmountF:TemplateRef<any>;
+  @ViewChild("tmpColGenDate") tmpColGenDate:TemplateRef<any>;
+  @ViewChild("tmpColDowCode") tmpColDowCode:TemplateRef<any>;
+
+  constructor(
     private injector:Injector,
     private notiSV: NotificationsService,
     private auth:AuthStore
@@ -38,9 +39,46 @@ export class SalcoeffempComponent extends UIComponent implements OnInit, AfterVi
     this.dtServiceOrgUnit.parentField = "ParentID";
   }
 
-  onInit(): void {
+  override onInit(): void {
     this.filters["DowCode"] = moment().format("YYYY/MM");
     this.dataValues = JSON.stringify(this.filters);
+    this.cache.gridViewSetup("PayTExcept","grvPayTExcept")
+    .subscribe((grd:any) => {
+      if(grd)
+      {
+        this.gridViewSetup = grd;
+        this.columnsGrid = [
+          {
+            field: 'employeeID',
+            template: this.tmpColEmployee,
+            headerText: this.gridViewSetup["EmployeeID"]?.description ,
+            width:250
+          },
+          {
+            field: 'exceptCode',
+            template: this.tmpColCategory,
+            headerText: this.gridViewSetup["ExceptCode"]?.description,
+            width:250
+          },
+          {
+            field: 'amountF',
+            template: this.tmpColAmountF,
+            headerText: this.gridViewSetup["AmountF"]?.description,
+          },
+          {
+            field: 'genDate',
+            template: this.tmpColGenDate,
+            headerText: this.gridViewSetup["GenDate"]?.description,
+          },
+          {
+            field: 'dowCode',
+            template: this.tmpColDowCode,
+            headerText: this.gridViewSetup["DowCode"]?.description,
+          },
+        ];
+        this.detectorRef.detectChanges();
+      }
+    });
     this.cache.message("HR049")
     .subscribe((mssg:any) => {
       if(mssg)
@@ -64,36 +102,8 @@ export class SalcoeffempComponent extends UIComponent implements OnInit, AfterVi
         }
       }
     ];
-    this.getColumns();
+    
     this.getUserPermission();
-    this.getListSalCoeff();
-    this.detectorRef.detectChanges();
-  }
-
-  // get columns grid
-  getColumns(){
-    this.api.execSv("HR","ERM.Business.LS","SalCoeffBusiness","GetAsync")
-    .subscribe((res:any) => {
-      this.columnsGrid.push(
-      {
-        field: 'employeeID',
-        template: this.tmpEmployee,
-        width:300
-      });
-      if(res.length > 0)
-      {
-        res.forEach(item => {
-          this.columnsGrid.push({
-            headerText: item.coeffName,
-            field:  item.coeffCode,
-            refField: 'coeffCode',
-            template:this.tmpData,
-            width:100
-          });
-        });
-      }
-      this.detectorRef.detectChanges();
-    });
   }
 
   // double click gridview
@@ -116,13 +126,13 @@ export class SalcoeffempComponent extends UIComponent implements OnInit, AfterVi
           option.Width = '550px';
           option.FormModel = this.view.formModel;
           option.DataService = this.view.dataService;
-          this.callfc.openSide(PopupAddSalCoeffEmpComponent,obj,option,this.view.funcID)
-          .closed.subscribe((res:any) => {
-            if(res.event)
-            {
-              this.codxGridViewV2?.refresh();
-            }
-          });
+          // this.callfc.openSide(PopupAddSalCoeffEmpComponent,obj,option,this.view.funcID)
+          // .closed.subscribe((res:any) => {
+          //   if(res.event)
+          //   {
+          //     this.codxGridViewV2?.refresh();
+          //   }
+          // });
         }
       });
     }
@@ -133,26 +143,11 @@ export class SalcoeffempComponent extends UIComponent implements OnInit, AfterVi
     if(event && event.data && event.data?.length > 0)
     {
       this.filters["DowCode"] = "";
-      this.filters["GroupSalCode"] = "";
+      this.filters["ExceptCode"] = "";
       event.data.forEach(x => this.filters[x.field] = x.value);
       this.dataValues = JSON.stringify(this.filters);
       this.detectorRef.detectChanges();
       this.codxGridViewV2?.refresh();
-    }
-  }
-
-  // select orgUnitID
-  onSelectionChange(event:any){
-    if(event && event?.data && event?.data?.orgUnitID &&  event?.data?.orgUnitID != this.filters["OrgUnitID"])
-    {
-      this.filters["OrgUnitID"] = event.data.orgUnitID;
-      this.dataValues = JSON.stringify(this.filters);
-      this.detectorRef.detectChanges();
-      this.codxGridViewV2?.refresh();
-    }
-    if(!this.loading)
-    {  this.loading = true;
-      this.detectorRef.detectChanges();
     }
   }
 
@@ -164,8 +159,25 @@ export class SalcoeffempComponent extends UIComponent implements OnInit, AfterVi
       this.codxGridViewV2.refresh();
     }
   }
+  
+  // select orgUnitID
+  onSelectionChange(event:any){
+    if(event && event.data && event.data.orgUnitID && event.data.orgUnitID != this.filters["OrgUnitID"])
+    {
+      this.filters["OrgUnitID"] = event.data.orgUnitID;
+      this.dataValues = JSON.stringify(this.filters);
+      this.detectorRef.detectChanges();
+      this.codxGridViewV2?.refresh();
+    }
+    if(!this.loading)
+    {  
+      this.loading = true;
+      this.detectorRef.detectChanges();
+    }
+  }
 
-  // valueChange
+
+  //valueChange
   valueChange(event){
     if(event)
     {
@@ -242,16 +254,16 @@ export class SalcoeffempComponent extends UIComponent implements OnInit, AfterVi
       option.Width = '550px';
       option.FormModel = this.view.formModel;
       option.DataService = this.view.dataService;
-      this.callfc.openSide(PopupCoppySalCoeffEmpComponent,obj,option,this.view.funcID)
-      .closed.subscribe((res:any) => {
-        if(res.event)
-        {
-          this.codxGridViewV2.refresh();
-        }
-      });
+      // this.callfc.openSide(PopupCoppySalCoeffEmpComponent,obj,option,this.view.funcID)
+      // .closed.subscribe((res:any) => {
+      //   if(res.event)
+      //   {
+      //     this.codxGridViewV2.refresh();
+      //   }
+      // });
     }
   }
-
+  
   // get uer permission
   getUserPermission() {
     this.api.execSv<any>(
@@ -266,22 +278,4 @@ export class SalcoeffempComponent extends UIComponent implements OnInit, AfterVi
     });
   }
 
-  // get LS_SalCoeff
-  getListSalCoeff(){
-    this.api.execSv("HR","LS","SalCoeffBusiness","GetAsync")
-    .subscribe((res:any) => {
-      if(res && res.length > 0)
-      {
-        this.lstSalCoeffs = res;
-      }
-    });
-  }
-
-  // clickShowTooltip
-  clickShowTooltip(){
-    let dialog = new DialogModel();
-    dialog.FormModel = this.view.formModel;
-    this.callfc.openForm(this.tmpTooltip,"",300,0,this.view.funcID,null,"",dialog);
-  }
-  
 }
