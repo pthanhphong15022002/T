@@ -45,6 +45,13 @@ export class ModeviewComponent implements OnInit {
     this.getVll();
   }
 
+  btnClick()
+  {
+    // $('#group_period input').on("click", function() {
+    //   alert(this.id);
+    //   });
+  }
+
   getVll()
   {
     let vll = this.shareService.loadValueList("BP002");

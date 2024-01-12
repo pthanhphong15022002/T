@@ -44,6 +44,7 @@ import { FormAdvancedSettingsComponent } from './processes/popup-add-process/for
 import { FormEditConnectorComponent } from './processes/popup-add-process/form-edit-connector/form-edit-connector.component';
 import { SplitterAllModule } from '@syncfusion/ej2-angular-layouts';
 import { DynamicSettingModule } from 'projects/codx-share/src/lib/components/dynamic-setting/dynamic-setting.module';
+import { PropertyShareComponent } from './modeview/properties/property-share/property-share.component';
 
 export const routes: Routes = [
   {
@@ -94,8 +95,9 @@ export const routes: Routes = [
     PropertyExpressionComponent,
     PropertyAttachmentComponent,
     PropertyComboboxComponent,
+    PropertyShareComponent,
+    
     FormEditConnectorComponent,
-
     FormSettingComboboxComponent,
     FormAdvancedSettingsComponent,
   ],
