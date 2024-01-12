@@ -80,6 +80,7 @@ export class PopupCostItemsComponent implements OnInit {
   deleteCost(index: number) {
     if (this.costInfos?.length > index) {
       this.costInfos?.splice(index, 1);
+      if (this.costInfos?.length == 0) this.cost = null;
       this.calculateTotalCost();
       this.detectorRef.detectChanges();
     }

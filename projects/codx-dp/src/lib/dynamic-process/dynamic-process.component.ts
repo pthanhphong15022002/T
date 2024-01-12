@@ -266,7 +266,7 @@ export class DynamicProcessComponent
             this.gridViewSetup = res;
             var obj = {
               action: 'add',
-              processNo: this.processNo,
+              // processNo: this.processNo,
               showID: this.showID,
               instanceNo: this.instanceNo,
               titleAction: this.titleAction,
@@ -401,8 +401,10 @@ export class DynamicProcessComponent
       if (data) {
         this.view.dataService.dataSelected = data;
         this.oldIdProccess = this.view.dataService.dataSelected.recID;
+        // this.oldIdProccess = data.recID;
       }
       this.view.dataService.copy().subscribe((res) => {
+        //  this.view.dataService.dataSelected = res;
         let dialogModel = new DialogModel();
         dialogModel.IsFull = true;
         dialogModel.zIndex = 999;
@@ -417,7 +419,7 @@ export class DynamicProcessComponent
             this.gridViewSetup = res;
             var obj = {
               action: 'copy',
-              processNo: this.processNo,
+              // processNo: this.processNo,
               showID: this.showID,
               instanceNo: this.instanceNo,
               conditionCopy: this.listClickedCoppy,
