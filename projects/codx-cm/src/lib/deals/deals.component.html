@@ -780,7 +780,8 @@
 </ng-template>
 
 <ng-template #templateSteps let-data>
-  <span class="step-current line-clamp line-clamp-1" (click)="currentStep(data, '2')">Giai đoạn hiện tại</span>
+  <view-step [stepID]="data?.stepID" (click)="currentStep(data, '2')"></view-step>
+  <!-- <span class="step-current line-clamp line-clamp-1" (click)="currentStep(data, '2')">Giai đoạn hiện tại</span> -->
   <!-- <span
       [innerHTML]="
         data.stepID

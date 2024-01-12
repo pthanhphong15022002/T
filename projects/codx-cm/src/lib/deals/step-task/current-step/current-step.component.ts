@@ -6,10 +6,11 @@ import {
   SimpleChanges,
   ChangeDetectorRef,
 } from '@angular/core';
-import { ApiHttpService, CacheService, DialogData, DialogRef, FormModel, NotificationsService} from 'codx-core';
+import { ApiHttpService, CacheService, CallFuncService, DialogData, DialogRef, FormModel, NotificationsService, SidebarModel} from 'codx-core';
 import { CM_Customers, CM_Deals } from '../../../models/cm_model';
 import { CodxCmService } from '../../../codx-cm.service';
 import { ContractsService } from '../../../contracts/service-contracts.service';
+import { PopupMoveStageComponent } from 'projects/codx-dp/src/lib/instances/popup-move-stage/popup-move-stage.component';
 
 @Component({
   selector: 'current-step',
@@ -49,21 +50,12 @@ export class CurrentStepComponent implements OnInit, OnChanges {
   listContracts: any[] = [];
   listQuotations: any[] = [];
   isViewLink: boolean = false;
-  type = "1"
-
+  view;
 
   viewSettings: any;
 
-  formModelCustomer = {
-    formName: 'CMCustomers',
-    entityName: 'CM_Customers',
-    gridViewName: 'grvCMCustomers',
-  };
-  formModelContact = {
-    formName: 'CMContacts',
-    entityName: 'CM_Contacts',
-    gridViewName: 'grvCMContacts',
-  };
+
+
   formModelQuotations: FormModel = {
     formName: 'CMQuotations',
     gridViewName: 'grvCMQuotations',
@@ -77,31 +69,20 @@ export class CurrentStepComponent implements OnInit, OnChanges {
 
   listTabLeft = [
     { id: 'listTabInformation', name: 'Thông tin cơ hội', icon: 'icon-info',type: '1' },
-    { id: 'listHistory', name: 'Lịch sử', icon: 'icon-i-clock-history',type: '1' },
-    { id: 'listFile', name: 'Đính kèm', icon: 'icon-i-paperclip',type: '1' },
-    { id: 'listAddTask', name: 'Giao việc', icon: 'icon-i-clipboard-check',type: '1' },
-    { id: 'listApprove', name: 'Ký, duyệt', icon: 'icon-edit-one',type: '1' },
-    { id: 'listLink', name: 'Liên kết', icon: 'icon-i-link',type: '1' },
   ];
   listTabInformation = [
-    { id: 'information', name: 'Thông tin chung', type: '1' },
-    { id: 'fields', name: 'Thông tin mở rộng', type: '1' },
-    // { id: 'contact', name: 'Liên hệ' },
-    { id: 'opponent', name: 'Đối thủ', type: '2' },
-    { id: 'tasks', name: 'Công việc', type: '2' },
-    { id: 'note', name: 'Ghi chú', type: '2' },
+    { id: 'costItems', name: 'Chi phí'},
+    { id: 'tasks', name: 'Công việc'},
+    { id: 'opponent', name: 'Đối thủ'},
+    { id: 'note', name: 'Ghi chú'},
   ];
-  listHistory = [{ id: 'history', name:'Lịch sử'}];
-  listFile = [{ id: 'file', name:'Đính kèm'}];
-  listAddTask = [{ id: 'addTask', name:'Giao việc'}];
-  listApprove = [{ id: 'approve', name:'Ký, duyệt'}];
-  listLink = [{ id: 'link', name:'Liên kết'}];
   constructor(
     private cache: CacheService,
     private codxCmService: CodxCmService,
     private contractService: ContractsService,
     private notiService: NotificationsService,
     private changeDetectorRef: ChangeDetectorRef,
+    private callFunc: CallFuncService,
     private api: ApiHttpService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
@@ -110,7 +91,7 @@ export class CurrentStepComponent implements OnInit, OnChanges {
     this.deal = dt?.data?.dataView;
     this.contractRecId = dt?.data?.contactRecId;
     this.listInsStepStart = dt?.data?.listInsStepStart;
-    this.type = dt?.data?.type;
+    this.view = dt?.data?.view;
     if(!this.dialog?.formModel){
       this.dialog.formModel = {
         entityName: "CM_Contracts",
@@ -119,9 +100,6 @@ export class CurrentStepComponent implements OnInit, OnChanges {
         funcID:"CM0204",
         gridViewName:"grvCMContracts",
       }
-    }
-    if(this.type == "2"){
-      this.listTabInformation = this.listTabInformation?.filter(x => x.type == "2");
     }
   }
   ngOnInit() {
@@ -240,6 +218,7 @@ export class CurrentStepComponent implements OnInit, OnChanges {
       block: 'start',
       inline: 'nearest',
     });
+    element.scrollTop += 100;
     this.changeDetectorRef.markForCheck();
   }
 
@@ -381,6 +360,112 @@ export class CurrentStepComponent implements OnInit, OnChanges {
         // name: this.grvSetupLead['LeadName']?.headerText,
       },
     };
+  }
+
+  moveStage(e) {
+    let data = this.deal;
+    let option = new SidebarModel();
+    option.DataService = this.view.dataService;
+    option.FormModel = this.view.formModel;
+    this.cache.functionList('DPT0402').subscribe((fun) => {
+      this.cache
+        .gridViewSetup(fun.formName, fun.gridViewName)
+        .subscribe((grvSt) => {
+          let formMD = new FormModel();
+          formMD.funcID = fun.functionID;
+          formMD.entityName = fun.entityName;
+          formMD.formName = fun.formName;
+          formMD.gridViewName = fun.gridViewName;
+          let oldStatus = data.status;
+          let oldStepId = data.stepID;
+          let stepReason = {
+            isUseFail: false,
+            isUseSuccess: false,
+          };
+          let dataCM = {
+            refID: data?.refID,
+            processID: data?.processID,
+            stepID: data?.stepID,
+            nextStep: '',
+            isCallInstance: true,
+            // listStepCbx: this.lstStepInstances,
+          };
+          let obj = {
+            formModel: formMD,
+            deal: data,
+            stepReason: stepReason,
+            headerTitle: "Chuyển giai đoạn",
+            applyFor: "1",
+            dataCM: dataCM,
+          };
+          let dialogMoveStage = this.callFunc.openForm(
+            PopupMoveStageComponent,
+            '',
+            850,
+            900,
+            '',
+            obj
+          );
+          dialogMoveStage.closed.subscribe((e) => {
+            // if (e && e.event != null) {
+            //   let instance = e.event?.instance;
+            //   let listSteps = e.event?.listStep;
+            //   let isMoveBackStage = e.event?.isMoveBackStage;
+            //   let tmpInstaceDTO = e.event?.tmpInstaceDTO;
+            //   if (isMoveBackStage) {
+            //     let dataUpdate = [
+            //       tmpInstaceDTO,
+            //       e.event?.comment,
+            //       e.event?.expectedClosed,
+            //       this.statusCodeID,
+            //       this.statusCodeCmt,
+            //     ];
+            //     this.codxCmService
+            //       .moveStageBackDataCM(dataUpdate)
+            //       .subscribe((res) => {
+            //         if (res) {
+            //           this.view.dataService.update(res, true).subscribe();
+            //           if (this.kanban) {
+            //             this.renderKanban(res);
+            //           }
+            //           if (this.detailViewDeal)
+            //             this.detailViewDeal.dataSelected = res;
+            //           this.detailViewDeal?.reloadListStep(listSteps);
+            //           this.detectorRef.detectChanges();
+            //         }
+            //       });
+            //   } else {
+            //     let dataUpdate = [
+            //       data.recID,
+            //       instance.stepID,
+            //       oldStepId,
+            //       oldStatus,
+            //       e.event?.comment,
+            //       e.event?.expectedClosed,
+            //       e.event?.permissionCM,
+            //     ];
+            //     this.codxCmService
+            //       .moveStageDeal(dataUpdate)
+            //       .subscribe((res) => {
+            //         if (res) {
+            //           this.view.dataService.update(res, true).subscribe();
+            //           if (this.kanban) {
+            //             this.renderKanban(res);
+            //           }
+            //           if (this.detailViewDeal)
+            //             this.detailViewDeal.dataSelected = res;
+            //           if (e.event.isReason != null) {
+            //             this.moveReason(res, e.event.isReason);
+            //           }
+            //           this.detailViewDeal?.reloadListStep(listSteps);
+            //           this.detectorRef.detectChanges();
+            //         }
+            //       });
+            //   }
+            // }
+          });
+        });
+    });
   }
 
 }

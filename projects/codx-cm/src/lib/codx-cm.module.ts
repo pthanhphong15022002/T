@@ -124,6 +124,7 @@ import { ViewInstancesComponent } from 'projects/codx-dp/src/lib/view-instances/
 import { CodxViewComponent } from './contracts/codx-view/codx-view.component';
 import { CurrentStepComponent } from './deals/step-task/current-step/current-step.component';
 import { PopupCostItemsComponent } from './deals/popup-cost-items/popup-cost-items.component';
+import { ViewStepComponent } from './deals/step-task/view-step/view-step.component';
 
 export const routes: Routes = [
   {
@@ -306,6 +307,7 @@ const T_Component: Type<any>[] = [
   ScrollSpyDirective,
   CodxViewComponent,
   CurrentStepComponent,
+  ViewStepComponent,
 ];
 
 @NgModule({

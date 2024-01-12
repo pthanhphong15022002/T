@@ -1021,14 +1021,13 @@ export class DealsComponent
           // listInsStepStart: this.listInsStep,
         };
         let option = new DialogModel();
-        option.IsFull = true;
         option.zIndex = 100;
         option.DataService = this.view.dataService;
         option.FormModel = this.view.formModel;
         let popupContract = this.callFunc.openForm(
-          ViewDealDetailComponent,
+          CurrentStepComponent,
           '',
-          null,
+          800,
           Util.getViewPort().height,
           '',
           data,

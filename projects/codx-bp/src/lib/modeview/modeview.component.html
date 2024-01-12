@@ -77,11 +77,11 @@
 
     <div class="d-flex justify-content-center w-100 h-100 bg-F5F8FA">
       <div
-        class="d-flex flex-column w-700px h-100 bg-white overflow-auto"
+        class="d-flex flex-column w-700px h-100 bg-white pb-4 overflow-auto"
       >
         <ng-container *ngTemplateOutlet="form ; context: { $implicit: table[0].children[0] }"></ng-container>
         <div
-          class="h-100 mt-2 px-4"
+          class="h-100 mt-2 px-4 "
           cdkDropList
           #tableList="cdkDropList"
           [cdkDropListData]="table"
