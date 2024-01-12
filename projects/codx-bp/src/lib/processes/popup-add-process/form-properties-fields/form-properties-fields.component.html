@@ -144,7 +144,7 @@
                       >
                         <div
                           class="d-flex align-items-center p-2 w-100 cursor-pointer"
-                          *ngFor="let subItem of item.children"
+                          *ngFor="let subItem of item.children; let j = index"
                           cdkDrag
                           [cdkDragDisabled]="subItem.value == 'Title'"
                           [cdkDragData]="item.name"

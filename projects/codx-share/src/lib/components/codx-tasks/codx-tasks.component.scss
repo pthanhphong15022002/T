@@ -37,7 +37,7 @@ codx-mfunc span {
   border-color: rgb(212, 216, 221);
 }
 
-codx-view-kanban .e-card .border {
+codx-view-kanban .e-card .border, codx-view-kanban .e-card .border:hover {
   border: 0 !important;
 }
 

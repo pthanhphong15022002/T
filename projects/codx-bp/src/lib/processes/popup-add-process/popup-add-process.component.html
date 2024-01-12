@@ -350,56 +350,78 @@
             </button>
           </div>
         </div>
-        <div class="d-flex flex-wrap mt-5">
-          <ng-container
-            *ngIf="data.permissions != null && data.permissions?.length > 0"
-          >
-            <ng-container *ngFor="let perm of data.permissions; index as i">
-              <div
-                class="cursor-pointer has-action-menu-od me-5 d-flex align-items-center mt-1 mb-3 position-relative"
-              >
-                <div class="me-2">
-                  <codx-img
-                    [width]="20"
-                    [objectId]="perm.objectID"
-                    [objectName]="perm.objectName"
-                    objectType="AD_Users"
-                  >
-                  </codx-img>
-                </div>
-                <div class="text-gray-600 fw-bold">{{ perm.objectName }}</div>
-                <ng-container *ngIf="checkAssignRemove(i)">
-                  <div class="action-menu-od" (click)="removeUser(i)">
-                    <i class="icon-close text-danger icon-16"></i>
-                  </div>
-                </ng-container>
-              </div>
-            </ng-container>
-          </ng-container>
-
-          <div class="input-sm w-250px mb-3">
-            <codx-input
-              #inputUser
-              class="w-250px"
-              field="searchUser"
-              type="combobox"
-              refValue="Users"
-              (valueChange)="searchAddUsers($event)"
+        <div class="form-user">
+          <div class="d-flex flex-wrap">
+            <ng-container
+              *ngIf="data.permissions != null && data.permissions?.length > 0"
             >
-            </codx-input>
+              <ng-container *ngFor="let perm of data.permissions; index as i">
+                <div
+                  class="cursor-pointer has-action-menu-od me-5 d-flex align-items-center position-relative user-style line-clamp line-clamp-1"
+                >
+                  <div class="me-2">
+                    <codx-img
+                      [width]="20"
+                      [objectId]="perm.objectID"
+                      [objectName]="perm.objectName"
+                      objectType="AD_Users"
+                    >
+                    </codx-img>
+                  </div>
+                  <div class="text-gray-600 fw-bold">{{ perm.objectName }}</div>
+                  <ng-container *ngIf="checkAssignRemove(i)">
+                    <div class="action-menu-od" (click)="removeUser(i)">
+                      <i class="icon-close icon-14"></i>
+                    </div>
+                  </ng-container>
+                </div>
+              </ng-container>
+            </ng-container>
+
+            <div class="input-sm w-200px">
+              <codx-input
+                #inputUser
+                field="searchUser"
+                type="combobox"
+                refValue="Users"
+                (valueChange)="searchAddUsers($event)"
+              >
+              </codx-input>
+            </div>
           </div>
         </div>
       </div>
     </div>
     <div class="info-right">
-      <ng-container *ngFor="let item of lstStepFields">
-        <codx-form-format-value
-          #formMatRef
-          [subItem]="item"
-          [showIconDrop]="false"
-          [isShowTextHeader]="true"
-        ></codx-form-format-value>
-      </ng-container>
+      <div
+        class="d-flex flex-column"
+        *ngFor="let item of lstShowExtends; let i = index"
+      >
+        <div
+          class="p-2"
+          *ngIf="item.width == '100'"
+          [style.width.%]="item.width"
+        >
+          <codx-form-format-value
+            #formMatRef
+            [subItem]="item.children[0]"
+            [showIconDrop]="false"
+            [isShowTextHeader]="true"
+          ></codx-form-format-value>
+        </div>
+        <div *ngIf="item.width != '100'" class="row p-2">
+          <ng-container *ngFor="let child of item.children">
+            <div [style.width.%]="item.width">
+              <codx-form-format-value
+                #formMatRef
+                [subItem]="child"
+                [showIconDrop]="false"
+                [isShowTextHeader]="true"
+              ></codx-form-format-value>
+            </div>
+          </ng-container>
+        </div>
+      </div>
     </div>
   </div>
 </ng-template>
@@ -477,15 +499,22 @@
     class="dp-step step-content container-fluid p-0 h-100"
     *ngIf="currentTab == 1"
   >
-    <button class="btn btn-danger" (click)="clickchoi()">Get JSON data</button>
+
+    <div class="container-fluid h-100 p-0 control-section diagram-drawing-tool">
+      <button class="btn btn-danger" (click)="clickchoi()">Get JSON data</button>
     <button class="btn btn-info ms-3" (click)="clickPan(true)">zoom Pan</button>
     <button class="btn btn-danger ms-3" (click)="clickPan(false)">
       stop zoom Pan
     </button>
-    <div class="container-fluid h-100 p-0">
-      <div class="row h-100">
-        <div style="width: 10%" class="dragarea">
-          <div
+    <button class="btn btn-success ms-3" (click)="clickForm()">
+      chỉnh nè
+    </button>
+    <button class="btn btn-success ms-3" (click)="clickRF()">
+      tải lại
+    </button>
+      <div class="row" style="height: calc(100% - 50px)">
+        <div style="width: 20%" class="dragarea property-section">
+          <!-- <div
             cdkDropList
             class="w-100 h-100 mt-5"
             style="background-color: #fff"
@@ -610,9 +639,67 @@
                 </ng-container>
               </div>
             </div>
-          </div>
+          </div> -->
+          <div class="property-panel-header">
+            Properties
         </div>
-        <div style="width: 90%; height: 100%" class="diagramzone">
+        <div class="row property-panel-content" id="appearance">
+            <div class="row row-header sb-child-row">
+                Shapes
+            </div>
+            <div class="row sb-child-row">
+                <div title="Retangle" class="image-pattern-style" id="shape1" style="background-image: url(https://ej2.syncfusion.com/angular/demos/assets/diagram/Images/drawingTool/basicshape/DrawingTool_1.png); margin-right: 3px">
+                </div>
+                <div title="Ellipse" class="image-pattern-style" id="shape2" style="background-image: url(https://ej2.syncfusion.com/angular/demos/assets/diagram/Images/drawingTool/basicshape/DrawingTool_2.png);  margin-right: 3px">
+                </div>
+                <div title="Hexagon" class="image-pattern-style" id="shape3" style="background-image: url(https://ej2.syncfusion.com/angular/demos/assets/diagram/Images/drawingTool/basicshape/DrawingTool_3.png); margin-right: 3px">
+                </div>
+            </div>
+            <div class="row sb-child-row">
+                <div title="Pentagon" class="image-pattern-style" id="shape4" style="background-image: url(https://ej2.syncfusion.com/angular/demos/assets/diagram/Images/drawingTool/basicshape/DrawingTool_4.png); margin-right: 3px">
+                </div>
+                <div title="Triangle" class="image-pattern-style" id="shape5" style="background-image: url(https://ej2.syncfusion.com/angular/demos/assets/diagram/Images/drawingTool/basicshape/DrawingTool_5.png);  margin-right: 3px">
+                </div>
+                <div title="Path" class="image-pattern-style" id="path" style="background-image: url(https://ej2.syncfusion.com/angular/demos/assets/diagram/Images/drawingTool/DrawingTool_6.png); margin-right: 3px">
+                </div>
+            </div>
+            <div class="row sb-child-row">
+                <div title="Image" class="image-pattern-style" id="image" style="background-image: url(https://ej2.syncfusion.com/angular/demos/assets/diagram/Images/drawingTool/DrawingTool_7.png); margin-right: 3px">
+                </div>
+                <div title="SVG" class="image-pattern-style" id="svg" style="background-image: url(https://ej2.syncfusion.com/angular/demos/assets/diagram/Images/drawingTool/DrawingTool_8.png); margin-right: 3px">
+                </div>
+                <div title="Text" class="image-pattern-style" id="text" style="background-image: url(https://ej2.syncfusion.com/angular/demos/assets/diagram/Images/drawingTool/DrawingTool_9.png); margin-right: 3px">
+                </div>
+            </div>
+            <div class="row row-header sb-child-row">
+                Connector
+            </div>
+            <div class="row sb-child-row">
+                <div class="image-pattern-style" id="straight" style="background-image: url(https://ej2.syncfusion.com/angular/demos/assets/diagram/Images/drawingTool/connector/Connectors_1.png); margin-right: 3px">
+                </div>
+                <div class="image-pattern-style" id="ortho" style="background-image: url(https://ej2.syncfusion.com/angular/demos/assets/diagram/Images/drawingTool/connector/Connectors_2.png); margin-right: 3px">
+                </div>
+                <div class="image-pattern-style" id="cubic" style="background-image: url(https://ej2.syncfusion.com/angular/demos/assets/diagram/Images/drawingTool/connector/Connectors_3.png); margin-right: 3px">
+                </div>
+                <br/>
+
+            </div>
+            <div class="row sb-child-row">
+                <div class="image-pattern-style" id="freehand" style="background-image: url(https://ej2.syncfusion.com/angular/demos/assets/diagram/Images/drawingTool/connector/freehand.png); ">
+                </div>
+            </div>
+            <div class="row row-header sb-child-row">
+              Customize
+            </div>
+            <div class="d-flex align-items-center image-pattern-style mt-1 " id="{{item.id}}" style=" margin-right: 3px"  *ngFor="let item of menuDrag">
+              <span><i class="me-3 icon-16" [ngClass]="item.icon"></i>{{item.text}}</span>
+            </div>
+            <!-- <div class="row" style="padding-top: 10px">
+                <ejs-checkbox id='checked' [(checked)]="continuousDraw" label='Continous Draw'></ejs-checkbox>
+            </div> -->
+        </div>
+        </div>
+        <div style="width: 80%; height: 100%" class="diagramzone">
           <ejs-diagram
             #diagram
             id="diagram"
@@ -620,10 +707,13 @@
             [snapSettings]="snapSettings"
             (created)="created()"
             (mouseEnter)="mouseEnter($event)"
-            (dragEnter)="eleDraw($event)"
+            (selectionChange)="onSelect($event)"
             [contextMenuSettings]="contextMenuSettings"
             (contextMenuOpen)="contextMenuOpen($event)"
             (contextMenuClick)="contextMenuClick($event)"
+            [rulerSettings]="rulerSettings"
+            (elementDraw)="eleDraw($event)"
+            (positionChange)="onDrop($event)"
           >
             <ng-template #nodeTemplate let-data>
               <ng-container [ngSwitch]="data.shape?.version">
@@ -718,8 +808,8 @@
         </div>
       </div>
       <div class="row h-100px d-flex align-items-center m-2">
-        <codx-input type="textarea" format="ed3"></codx-input>
-        <codx-input type="colorpicker"></codx-input>
+        <codx-input type="textarea" format="ed3" field="memo" (valueChange)="valueDataChange($event)"></codx-input>
+        <codx-input type="colorpicker" field="color" (valueChange)="valueDataChange($event)"></codx-input>
       </div>
       <div class="row h-30px">
         <div class="col d-flex align-items-center justify-content-end p-0">
