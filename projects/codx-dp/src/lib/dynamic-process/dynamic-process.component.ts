@@ -354,6 +354,48 @@ export class DynamicProcessComponent
           });
       });
   }
+  //chỉ xem
+  viewInfo(data: any) {
+    this.isButton = false;
+    if (data) {
+      this.view.dataService.dataSelected = data;
+    }
+
+    let dialogModel = new DialogModel();
+    dialogModel.IsFull = true;
+    dialogModel.zIndex = 999;
+    dialogModel.DataService = this.view?.dataService;
+    dialogModel.FormModel = JSON.parse(JSON.stringify(this.view.formModel));
+    this.cache
+      .gridViewSetup(
+        this.view.formModel.formName,
+        this.view.formModel.gridViewName
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.gridViewSetup = res;
+          var obj = {
+            action: 'view',
+            titleAction: this.titleAction,
+            gridViewSetup: this.gridViewSetup,
+            lstGroup: this.lstGroup,
+          };
+
+          let dialogView = this.callfc.openForm(
+            PopupAddDynamicProcessComponent,
+            '',
+            this.widthWin,
+            this.heightWin,
+            '',
+            obj,
+            '',
+            dialogModel
+          );
+        }
+        this.isButton = true;
+      });
+  }
+
   copy(data: any) {
     if (this.isCopy) {
       if (data) {
@@ -560,6 +602,9 @@ export class DynamicProcessComponent
         break;
       case 'SYS02':
         this.delete(data);
+        break;
+      case 'SYS05':
+        this.viewInfo(data);
         break;
       case 'DP01014':
       case 'DP02014':

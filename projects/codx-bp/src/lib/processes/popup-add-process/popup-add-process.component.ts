@@ -63,6 +63,8 @@ import {
   RulerSettingsModel,
   SwimLane,
   UndoRedo,
+  UserHandleModel,
+  SelectorModel,
 } from '@syncfusion/ej2-angular-diagrams';
 import { ExpandMode, MenuEventArgs } from '@syncfusion/ej2-angular-navigations';
 import { log } from 'console';
@@ -269,6 +271,9 @@ export class PopupAddProcessComponent {
   ];
 
   menuDrag: any = [
+    { id: 'connector', text: 'Connector', icon: 'icon-timeline' },
+    { id: 'start_end', text: 'Start/End', icon: 'icon-i-circle' },
+    { id: 'decision', text: 'Điều kiện', icon: 'icon-i-diamond' },
     { id: 'swimlane', text: 'SwimLane', icon: 'icon-view_quilt' },
     { id: 'form', text: 'Forms', icon: 'icon-note_add' },
     { id: 'event', text: 'Sự kiện', icon: 'icon-i-calendar2-event-fill' },
@@ -803,7 +808,7 @@ clickRF(){
     if(e.state=='Completed'){
       console.log('drop',e);
       setTimeout(() => {
-        this.diagram && this.diagram.refresh();
+        this.diagram && this.diagram.refreshDiagramLayer();
       }, 100);
     }
   }
@@ -942,7 +947,9 @@ clickRF(){
         // else this.diagram.add(model);
         this.diagram.add(model);
         if (this.targetItem && this.targetItem.isLane)
+        {
           this.diagram.addChild(this.targetItem, model.id);
+        }
         break;
     }
 
@@ -981,7 +988,29 @@ clickRF(){
 
   }
 
+  defaultData: any = JSON.parse(`[{"id":"diagram_id_TeizhRsl0s","shape":{"type":"SwimLane","header":{"style":{"fill":"#fff","strokeColor":"#CCCCCC","textAlign":"Left","gradient":{"type":"None"},"strokeWidth":1,"strokeDashArray":"","opacity":1},"annotation":{"id":"VCs5J","content":"Quy trình động"},"height":30,"id":"PC28g"},"lanes":[{"id":"diagram_id_ycL9JqN5xF","canMove":true,"height":500,"width":400,"header":{"style":{"fill":"#fff","strokeColor":"#CCCCCC","fontSize":14,"gradient":{"type":"None"},"strokeWidth":1,"strokeDashArray":"","opacity":1},"annotation":{"id":"S4iQc","content":"Bước quy trình"},"height":30,"id":"diagram_id_TeizhRsl0sdiagram_id_ycL9JqN5xF_0_header"},"style":{"fill":"#F9F9F9","strokeColor":"#CCCCCC","gradient":{"type":"None"},"strokeWidth":1,"strokeDashArray":"","opacity":1},"children":[{"id":"diagram_id_XbZlj321Ks","offsetX":296.9375,"offsetY":228,"width":100,"height":100,"margin":{"left":146.4375,"top":50,"right":0,"bottom":0},"style":{"fill":"white","strokeColor":"#000","strokeWidth":1,"strokeDashArray":"","opacity":1,"gradient":{"type":"None"}},"shape":{"type":"Bpmn","shape":"Event","event":{"event":"Start","trigger":"None"},"activity":{"subProcess":{}},"annotations":[]},"ports":[],"zIndex":6,"container":null,"visible":true,"horizontalAlignment":"Left","verticalAlignment":"Top","backgroundColor":"transparent","borderColor":"none","borderWidth":0,"rotateAngle":0,"pivot":{"x":0.5,"y":0.5},"flip":"None","wrapper":{"actualSize":{"width":100,"height":100},"offsetX":271.65625,"offsetY":225.75},"constraints":5240806,"annotations":[],"isExpanded":true,"expandIcon":{"shape":"None"},"fixedUserHandles":[],"flipMode":"All","tooltip":{"openOn":"Auto","content":"","isSticky":false},"inEdges":[],"outEdges":["diagram_id_4CI3Azdg1u"],"parentId":"diagram_id_TeizhRsl0sdiagram_id_ycL9JqN5xF0","processId":"","isPhase":false,"isLane":false},{"id":"diagram_id_UmWPwxt6U0","offsetX":263.28,"offsetY":438.13,"width":300,"height":163.75749999999994,"margin":{"left":38.06124999999997,"top":230.50125000000003,"right":0,"bottom":0},"style":{"fill":"white","strokeColor":"#000","gradient":{"type":"None"},"strokeWidth":1,"strokeDashArray":"","opacity":1,"textOverflow":"Wrap"},"shape":{"type":"HTML","content":"","version":"event"},"ports":[],"zIndex":8,"container":null,"visible":true,"horizontalAlignment":"Left","verticalAlignment":"Top","backgroundColor":"transparent","borderColor":"none","borderWidth":0,"rotateAngle":0,"pivot":{"x":0.5,"y":0.5},"flip":"None","wrapper":{"actualSize":{"width":300,"height":163.75749999999994},"offsetX":263.28,"offsetY":438.13},"annotations":[],"constraints":5240806,"isExpanded":true,"expandIcon":{"shape":"None"},"fixedUserHandles":[],"flipMode":"All","tooltip":{"openOn":"Auto","content":"","isSticky":false},"inEdges":["diagram_id_4CI3Azdg1u"],"outEdges":["diagram_id_c1Uz3Ot4lq"],"parentId":"diagram_id_TeizhRsl0sdiagram_id_ycL9JqN5xF0","processId":"","isPhase":false,"isLane":false}]},{"id":"diagram_id_XBzRMkZMwW","canMove":true,"height":500,"width":400,"header":{"style":{"fill":"#fff","strokeColor":"#CCCCCC","gradient":{"type":"None"},"strokeWidth":1,"strokeDashArray":"","opacity":1,"fontSize":14},"annotation":{"id":"RqmF1","content":"Bước quy trình"},"width":400,"height":30,"id":"diagram_id_TeizhRsl0sdiagram_id_XBzRMkZMwW_0_header"},"style":{"fill":"#F9F9F9","strokeColor":"#CCCCCC","gradient":{"type":"None"},"strokeWidth":1,"strokeDashArray":"","opacity":1},"children":[{"id":"diagram_id_Ny8cXJiDZR","offsetX":723.6990625000021,"offsetY":460,"width":300,"height":200,"margin":{"left":98.98031250000219,"top":234.25,"right":0,"bottom":0},"style":{"fill":"white","strokeColor":"#000","gradient":{"type":"None"},"strokeWidth":1,"strokeDashArray":"","opacity":1,"textOverflow":"Wrap"},"shape":{"type":"HTML","content":"","version":"form"},"ports":[],"zIndex":12,"container":null,"visible":true,"horizontalAlignment":"Left","verticalAlignment":"Top","backgroundColor":"transparent","borderColor":"none","borderWidth":0,"rotateAngle":0,"pivot":{"x":0.5,"y":0.5},"flip":"None","wrapper":{"actualSize":{"width":300,"height":200},"offsetX":723.6990625000021,"offsetY":460},"annotations":[],"constraints":5240806,"isExpanded":true,"expandIcon":{"shape":"None"},"fixedUserHandles":[],"flipMode":"All","tooltip":{"content":"","openOn":"Auto","isSticky":false},"inEdges":["diagram_id_c1Uz3Ot4lq"],"outEdges":["diagram_id_S54ukKmvdb"],"parentId":"diagram_id_TeizhRsl0sdiagram_id_XBzRMkZMwW0","processId":"","isPhase":false,"isLane":false}]},{"id":"diagram_id_SBl2Ptwe9F","canMove":true,"height":500,"width":400,"header":{"style":{"fill":"#fff","strokeColor":"#CCCCCC","gradient":{"type":"None"},"strokeWidth":1,"strokeDashArray":"","opacity":1,"fontSize":14},"annotation":{"id":"wsnRl","content":"Bước quy trình"},"width":400,"height":30,"id":"diagram_id_TeizhRsl0sdiagram_id_SBl2Ptwe9F_0_header"},"style":{"fill":"#F9F9F9","strokeColor":"#CCCCCC","gradient":{"type":"None"},"strokeWidth":1,"strokeDashArray":"","opacity":1},"children":[{"id":"diagram_id_7stMhzRYpM","offsetX":1149.4699999999998,"offsetY":460,"width":101.06124999999997,"height":160,"margin":{"left":224.22062500000004,"top":254.25,"right":0,"bottom":0},"style":{"fill":"white","strokeColor":"#000","gradient":{"type":"None"},"strokeWidth":1,"strokeDashArray":"","opacity":1,"textOverflow":"Wrap"},"shape":{"type":"HTML","content":"","version":"image"},"ports":[],"zIndex":18,"container":null,"visible":true,"horizontalAlignment":"Left","verticalAlignment":"Top","backgroundColor":"transparent","borderColor":"none","borderWidth":0,"rotateAngle":0,"pivot":{"x":0.5,"y":0.5},"flip":"None","wrapper":{"actualSize":{"width":101.06124999999997,"height":160},"offsetX":1195.2359374999996,"offsetY":460},"annotations":[],"constraints":5240806,"isExpanded":true,"expandIcon":{"shape":"None"},"fixedUserHandles":[],"flipMode":"All","tooltip":{"content":"","openOn":"Auto","isSticky":false},"inEdges":["diagram_id_S54ukKmvdb"],"outEdges":["diagram_id_62ykpcrk9r"],"parentId":"diagram_id_TeizhRsl0sdiagram_id_SBl2Ptwe9F0","processId":"","isPhase":false,"isLane":false},{"id":"diagram_id_3E9AipabBl","offsetX":1103.75,"offsetY":250.5,"width":100,"height":100,"margin":{"left":179.03125,"top":74.75,"right":0,"bottom":0},"style":{"fill":"white","strokeColor":"#000","strokeWidth":1,"strokeDashArray":"","opacity":1,"gradient":{"type":"None"}},"shape":{"type":"Bpmn","shape":"Event","event":{"event":"Start","trigger":"None"},"activity":{"subProcess":{}},"annotations":[]},"ports":[],"zIndex":19,"container":null,"visible":true,"horizontalAlignment":"Left","verticalAlignment":"Top","backgroundColor":"transparent","borderColor":"none","borderWidth":0,"rotateAngle":0,"pivot":{"x":0.5,"y":0.5},"flip":"None","wrapper":{"actualSize":{"width":100,"height":100},"offsetX":1149.5159374999998,"offsetY":250.5},"constraints":5240806,"annotations":[],"isExpanded":true,"expandIcon":{"shape":"None"},"fixedUserHandles":[],"flipMode":"All","tooltip":{"openOn":"Auto","content":"","isSticky":false},"inEdges":["diagram_id_62ykpcrk9r"],"outEdges":[],"parentId":"diagram_id_TeizhRsl0sdiagram_id_SBl2Ptwe9F0","processId":"","isPhase":false,"isLane":false}]}],"phases":[{"id":"diagram_id_YsL535MnLO","offset":489.25,"header":{"annotation":{"id":"diagram_id_YsL535MnLO","content":""},"id":"diagram_id_TeizhRsl0sdiagram_id_YsL535MnLO_header"},"style":{"fill":"#FFFFFF","strokeColor":"#CCCCCC","gradient":{"type":"None"},"strokeWidth":1,"strokeDashArray":"","opacity":1}}],"phaseSize":0.5,"orientation":"Vertical","isLane":true,"isPhase":false,"hasHeader":true},"height":519.25,"width":1389.9846874999998,"style":{"fill":"#ffffff","strokeColor":"#ffffff","gradient":{"type":"None"},"strokeWidth":1,"strokeDashArray":"","opacity":1},"offsetX":769.7110937499999,"offsetY":355.375,"ports":[],"container":{"type":"Grid","orientation":"Vertical"},"visible":true,"horizontalAlignment":"Left","verticalAlignment":"Top","backgroundColor":"transparent","borderColor":"none","borderWidth":0,"rotateAngle":0,"pivot":{"x":0.5,"y":0.5},"margin":{},"flip":"None","wrapper":{"actualSize":{"width":1389.9846874999998,"height":519.25},"offsetX":769.7110937499999,"offsetY":355.375},"annotations":[],"constraints":22018030,"isExpanded":true,"expandIcon":{"shape":"None"},"fixedUserHandles":[],"zIndex":4,"flipMode":"All","tooltip":{"openOn":"Auto"},"inEdges":[],"outEdges":[],"parentId":"","processId":"","isPhase":false,"isLane":false}]`)
+  defaultCnn:any = JSON.parse(`[{"id":"diagram_id_4CI3Azdg1u","sourcePoint":{"x":271.66,"y":275.75},"targetPoint":{"x":263.28,"y":356.25},"targetDecorator":{"shape":"Arrow","style":{"fill":"#757575","strokeColor":"#757575","strokeWidth":1,"strokeDashArray":"","opacity":1,"gradient":{"type":"None"}},"width":10,"height":10,"pivot":{"x":0,"y":0.5}},"style":{"strokeWidth":3,"strokeColor":"#757575","fill":"transparent","strokeDashArray":"","opacity":1,"gradient":{"type":"None"}},"type":"Bezier","shape":{"type":"None"},"sourceID":"diagram_id_XbZlj321Ks","zIndex":30,"targetID":"diagram_id_UmWPwxt6U0","sourcePortID":"","targetPortID":"","flip":"None","connectorSpacing":13,"segments":[{"type":"Bezier","vector1":{"angle":89.99462852064154,"distance":20.000000087890626},"vector2":{"angle":0,"distance":2.094999999999999},"point":{"x":267.47,"y":315.75},"orientation":"Vertical","point1":{"x":0,"y":0},"point2":{"x":0,"y":0}},{"type":"Bezier","vector1":{"angle":180,"distance":2.0950000000000273},"vector2":{"angle":270,"distance":20.250625000000014},"orientation":"Horizontal","point1":{"x":0,"y":0},"point2":{"x":0,"y":0}}],"sourceDecorator":{"shape":"None","width":10,"height":10,"pivot":{"x":0,"y":0.5},"style":{"fill":"black","strokeColor":"black","strokeWidth":1,"strokeDashArray":"","opacity":1,"gradient":{"type":"None"}}},"cornerRadius":0,"wrapper":{"actualSize":{"width":8.389053024379109,"height":79.4270213714313},"offsetX":267.46547348781047,"offsetY":315.4635106857156},"annotations":[],"fixedUserHandles":[],"ports":[],"visible":true,"flipMode":"All","constraints":994878,"hitPadding":10,"tooltip":{"openOn":"Auto","content":"","isSticky":false},"bezierSettings":{"controlPointsVisibility":14,"allowSegmentsReset":true},"connectionPadding":0,"sourcePadding":0,"targetPadding":0,"parentId":""},{"id":"diagram_id_c1Uz3Ot4lq","sourcePoint":{"x":413.28,"y":438.13},"targetPoint":{"x":573.7,"y":460},"targetDecorator":{"shape":"Arrow","style":{"fill":"#757575","strokeColor":"#757575","strokeWidth":1,"strokeDashArray":"","opacity":1,"gradient":{"type":"None"}},"width":10,"height":10,"pivot":{"x":0,"y":0.5}},"style":{"strokeWidth":3,"strokeColor":"#757575","fill":"transparent","strokeDashArray":"","opacity":1,"gradient":{"type":"None"}},"type":"Bezier","shape":{"type":"None"},"sourceID":"diagram_id_UmWPwxt6U0","zIndex":31,"targetID":"diagram_id_Ny8cXJiDZR","sourcePortID":"","targetPortID":"","flip":"None","connectorSpacing":13,"segments":[{"type":"Bezier","vector1":{"angle":359.99999999999994,"distance":40.00000000000006},"vector2":{"angle":270,"distance":5.467500000000001},"point":{"x":493.28,"y":449.065},"orientation":"Horizontal","point1":{"x":0,"y":0},"point2":{"x":0,"y":0}},{"type":"Bezier","vector1":{"angle":90,"distance":5.467500000000001},"vector2":{"angle":180,"distance":40.209531250001135},"orientation":"Vertical","point1":{"x":0,"y":0},"point2":{"x":0,"y":0}}],"sourceDecorator":{"shape":"None","width":10,"height":10,"pivot":{"x":0,"y":0.5},"style":{"fill":"black","strokeColor":"black","strokeWidth":1,"strokeDashArray":"","opacity":1,"gradient":{"type":"None"}}},"cornerRadius":0,"wrapper":{"actualSize":{"width":157.26197204832647,"height":21.853758919094048},"offsetX":491.9109860241632,"offsetY":449.056879459547},"annotations":[],"fixedUserHandles":[],"ports":[],"visible":true,"flipMode":"All","constraints":994878,"hitPadding":10,"tooltip":{"openOn":"Auto","content":"","isSticky":false},"connectionPadding":0,"bezierSettings":{"controlPointsVisibility":14,"allowSegmentsReset":true},"sourcePadding":0,"targetPadding":0,"parentId":""},{"id":"diagram_id_S54ukKmvdb","sourcePoint":{"x":873.7,"y":460},"targetPoint":{"x":1144.71,"y":460},"targetDecorator":{"shape":"Arrow","style":{"fill":"#757575","strokeColor":"#757575","strokeWidth":1,"strokeDashArray":"","opacity":1,"gradient":{"type":"None"}},"width":10,"height":10,"pivot":{"x":0,"y":0.5}},"style":{"strokeWidth":3,"strokeColor":"#757575","fill":"transparent","strokeDashArray":"","opacity":1,"gradient":{"type":"None"}},"type":"Bezier","shape":{"type":"None"},"sourceID":"diagram_id_Ny8cXJiDZR","zIndex":35,"targetID":"diagram_id_7stMhzRYpM","sourcePortID":"","targetPortID":"","flip":"None","connectorSpacing":13,"segments":[{"type":"Bezier","vector1":{"angle":360,"distance":20},"vector2":{"angle":179.99999999999997,"distance":20},"orientation":"Horizontal","point1":{"x":0,"y":0},"point2":{"x":0,"y":0}}],"sourceDecorator":{"shape":"None","width":10,"height":10,"pivot":{"x":0,"y":0.5},"style":{"fill":"black","strokeColor":"black","strokeWidth":1,"strokeDashArray":"","opacity":1,"gradient":{"type":"None"}}},"cornerRadius":0,"wrapper":{"actualSize":{"width":270.7752912665501,"height":3.410605131648481e-13},"offsetX":1009.0876456332751,"offsetY":460},"annotations":[],"fixedUserHandles":[],"ports":[],"visible":true,"flipMode":"All","constraints":994878,"hitPadding":10,"tooltip":{"openOn":"Auto","content":"","isSticky":false},"connectionPadding":0,"bezierSettings":{"controlPointsVisibility":14,"allowSegmentsReset":true},"sourcePadding":0,"targetPadding":0,"parentId":""},{"id":"diagram_id_62ykpcrk9r","sourcePoint":{"x":1195.24,"y":380},"targetPoint":{"x":1149.52,"y":300.5},"targetDecorator":{"shape":"Arrow","style":{"fill":"#757575","strokeColor":"#757575","strokeWidth":1,"strokeDashArray":"","opacity":1,"gradient":{"type":"None"}},"width":10,"height":10,"pivot":{"x":0,"y":0.5}},"style":{"strokeWidth":3,"strokeColor":"#757575","fill":"transparent","strokeDashArray":"","opacity":1,"gradient":{"type":"None"}},"type":"Bezier","shape":{"type":"None"},"sourceID":"diagram_id_7stMhzRYpM","zIndex":36,"targetID":"diagram_id_3E9AipabBl","sourcePortID":"","targetPortID":"","flip":"None","connectorSpacing":13,"segments":[{"type":"Bezier","vector1":{"angle":270.00596831034073,"distance":19.5000001057943},"vector2":{"angle":0,"distance":11.42999999999995},"point":{"x":1172.38,"y":341},"orientation":"Vertical","point1":{"x":0,"y":0},"point2":{"x":0,"y":0}},{"type":"Bezier","vector1":{"angle":180,"distance":11.430000000000064},"vector2":{"angle":89.99425273818039,"distance":20.250000101877756},"orientation":"Horizontal","point1":{"x":0,"y":0},"point2":{"x":0,"y":0}}],"sourceDecorator":{"shape":"None","width":10,"height":10,"pivot":{"x":0,"y":0.5},"style":{"fill":"black","strokeColor":"black","strokeWidth":1,"strokeDashArray":"","opacity":1,"gradient":{"type":"None"}}},"cornerRadius":0,"wrapper":{"actualSize":{"width":45.68675888982125,"height":78.67206392318258},"offsetX":1172.3966205550894,"offsetY":340.6639680384087},"annotations":[],"fixedUserHandles":[],"ports":[],"visible":true,"flipMode":"All","constraints":994878,"hitPadding":10,"tooltip":{"openOn":"Auto","content":"","isSticky":false},"bezierSettings":{"controlPointsVisibility":14,"allowSegmentsReset":true},"connectionPadding":0,"sourcePadding":0,"targetPadding":0,"parentId":""}]`)
   formData:any={};
+  handles: UserHandleModel[] = [
+    {
+      name: 'delete', pathData: "M 7.04 22.13 L 92.95 22.13 L 92.95 88.8 C 92.95 91.92 91.55 94.58 88.76 96.74 C 85.97 98.91 82.55 100 78.52 100 L 21.48 100 C 17.45 100 14.03 98.91 11.24 96.74 C 8.45 94.58 7.04 91.92 7.04 88.8 z M 32.22 0 L 67.78 0 L 75.17 5.47 L 100 5.47 L 100 16.67 L 0 16.67 L 0 5.47 L 24.83 5.47 z",
+      visible: true, offset: 0.5, side: 'Bottom', margin: { top: 0, bottom: 0, left: 0, right: 0 }
+  },
+//   {
+//     name: 'connect', pathData: "M 7.04 22.13 L 92.95 22.13 L 92.95 88.8 C 92.95 91.92 91.55 94.58 88.76 96.74 C 85.97 98.91 82.55 100 78.52 100 L 21.48 100 C 17.45 100 14.03 98.91 11.24 96.74 C 8.45 94.58 7.04 91.92 7.04 88.8 z M 32.22 0 L 67.78 0 L 75.17 5.47 L 100 5.47 L 100 16.67 L 0 16.67 L 0 5.47 L 24.83 5.47 z",
+//     visible: true, offset: 0.5, side: 'Right', margin: { top: 0, bottom: 0, left: 0, right: 0 }
+// }
+  ];
+  selectedItems: SelectorModel = {
+    userHandles: this.handles
+  };
+  getCustomTool: Function = this.getTool.bind(this);
+
+  public getTool(action: string) {
+  if (action == "delete") {
+      this.diagram.remove();
+  }
+  };
   valueDataChange(e:any){
     if(this.nodeSelected){
 
@@ -1034,6 +1063,7 @@ clickRF(){
         let existingLane: LaneModel = cloneObject(shape.lanes[0]);
         let newLane = existingLane;
         newLane.id = this.makeid(10);
+        newLane.children = [];
         newLane.header = {
           width: existingLane.header.width,
           height: existingLane.header.height,
@@ -1054,12 +1084,13 @@ clickRF(){
           newLane.header.height = existingLane.header.height;
         }
         if (args.item.id === 'InsertLaneBefore') {
-          this.diagram.addLanes(swimlane, [newLane], 0);
+          this.diagram.addLanes(swimlane, [newLane], index);
         } else {
-          this.diagram.addLanes(swimlane, [newLane], 0);
-          this.diagram.refresh();
+          this.diagram.addLanes(swimlane, [newLane], index +1);
+
         }
-        this.diagram.clearSelection();
+        this.diagram.refreshDiagramLayer();
+        //this.diagram.clearSelection();
       }
     } else if (args.item.id === 'Cut') {
       this.diagram.cut();
@@ -1096,8 +1127,10 @@ clickRF(){
   }
   mouseEnter(e: any) {
     if (this.isDragging){
-      if(e.actualObject && e.actualObject.shape.type=='swimlane'){
+      if(e.actualObject ){
         this.targetItem = e.actualObject;
+        console.log(this.targetItem);
+
       }
     }
 
@@ -1109,12 +1142,12 @@ clickRF(){
   }
   eleDraw(e: any) {
     if(e.state == 'Completed'){
-      this.isDragging = false;
-      console.log('ta gét',this.targetItem);
+      //this.isDragging = false;
+      //console.log('ta gét',this.targetItem);
       console.log('vẽ cục:   ', e);
-      setTimeout(() => {
-        this.diagram && this.diagram.refresh();
-      }, 100);
+      // setTimeout(() => {
+      //   this.diagram && this.diagram.refresh();
+      // }, 100);
     }
 
   }
@@ -1123,7 +1156,8 @@ clickRF(){
     let dataDiagram = this.diagram.saveDiagram();
     let obj = JSON.parse(dataDiagram);
     if (Object.keys(obj).length && obj.nodes) {
-      console.log(obj.nodes);
+      console.log(JSON.stringify(obj.nodes));
+      console.log(JSON.stringify(obj.connectors));
     }
   }
   shape: any = { type: 'HTML', shape: 'Rectangle' };

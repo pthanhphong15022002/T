@@ -2364,6 +2364,11 @@ export class DealsComponent
       //   elemnt.innerHTML = this.totalView;
       // }
     });
+
+    //chưa dùng đến nhưng chắc chắn có dùng
+    // this.getTotalFiels().subscribe((total) => {
+    //   console.log(total);
+    // });
   }
 
   getTotal() {
@@ -2384,6 +2389,39 @@ export class DealsComponent
         gridModel,
         this.exchangeRateDefault,
       ])
+      .pipe(
+        finalize(() => {
+          /*  this.onScrolling = this.loading = false;
+          this.loaded = true; */
+        }),
+        map((response: any) => {
+          return response;
+        })
+      );
+  }
+
+  ///Cái này dùng nhiều Field => làm trước
+  getTotalFiels() {
+    let service = 'CM';
+    let className = 'DealsBusiness'; //gan tam
+    let method = 'GetTotalFieldsAsync'; //gan tam
+
+    let dataObj = {
+      listKey: 'DealValue;DealValueTo;DealCost;GrossProfit', //tesst
+      exchRate: this.exchangeRateDefault,
+    };
+
+    let gridModel = new DataRequest();
+    gridModel.formName = this.view.formModel.formName;
+    gridModel.entityName = this.view.formModel.entityName;
+    gridModel.funcID = this.view.formModel.funcID;
+    gridModel.gridViewName = this.view.formModel.gridViewName;
+    gridModel.pageLoading = false;
+    gridModel.onlySetPermit = false; //goi qua phan quyền pes
+    gridModel.filter = this.view.dataService.filter;
+    gridModel.dataObj = JSON.stringify(dataObj);
+    return this.api
+      .execSv<any>(service, service, className, method, [gridModel])
       .pipe(
         finalize(() => {
           /*  this.onScrolling = this.loading = false;
