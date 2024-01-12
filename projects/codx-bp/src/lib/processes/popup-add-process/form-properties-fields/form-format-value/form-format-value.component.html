@@ -278,15 +278,18 @@
       <span class="fw-bold">{{ data.title }}</span>
       <span class="text-danger ms-2" *ngIf="data?.isRequired">(*)</span>
     </div>
-    <codx-input
-      class="d-flex align-items-center justify-content-between w-100 border mt-2 px-4 py-3 rd-3px"
-      [field]="data?.fieldName"
-      type="datetime"
-      [format]="data?.dataFormat"
-      [placeholder]="data?.description || ''"
-      [crrValue]="data?.defaultValue ?? ''"
-      [disabled]="true"
-    ></codx-input>
+    <div
+      class="w-100 mt-2"
+    >
+      <codx-input
+        [field]="data?.fieldName"
+        type="datetime"
+        [format]="data?.dataFormat"
+        [placeholder]="data?.description || ''"
+        [crrValue]="data?.defaultValue ?? ''"
+        [disabled]="true"
+      ></codx-input>
+    </div>
   </div>
 </ng-template>
 
@@ -303,7 +306,7 @@
       <span class="text-danger ms-2" *ngIf="data?.isRequired">(*)</span>
     </div>
     <div
-      *ngIf="data.documentControl == null || data.documentCotrol?.length == 0"
+      *ngIf="data.documentControl?.length == 0"
       class="d-flex align-items-center justify-content-between w-100 border-dotted mt-2 px-4 py-8 rd-5px bd-w-2px bg-item-lightest bc-item-lighter"
     >
       <div class="d-flex flex-column">
