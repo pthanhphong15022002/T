@@ -22,12 +22,17 @@
   (clickMF)="clickMF($event, dataSelected)"
 >
 </codx-views>
+<!-- [hideMoreFuncs]="viewModeType == 9" -->
 <!-- Dashboard -->
 <ng-template #dashBoard>
   <codx-instance-dashboard
     [vllStatus]="vllStatus"
     [processID]="processID"
   ></codx-instance-dashboard>
+  <!-- <new-dashboard-instances
+    [vllStatus]="vllStatus"
+    [processID]="processID"
+  ></new-dashboard-instances> -->
 </ng-template>
 
 <!-- KANBAN -->
@@ -308,9 +313,9 @@
 <ng-template #footer let-data>
   <div class="d-flex justify-content-between align-items-center mt-1">
     <div class="d-flex align-items-end codx-badge">
-        <ng-container *ngIf="data?.status == '2'; else default">
-          <div *ngFor="let item of listSteps">
-            <!-- <div
+      <ng-container *ngIf="data?.status == '2'; else default">
+        <div *ngFor="let item of listSteps">
+          <!-- <div
               *ngIf="item.stepID === data.stepID"
               [ngStyle]="{
                 'background-color':
@@ -332,40 +337,38 @@
               }}</span>
             </div> -->
 
-            <div
+          <div
             *ngIf="item?.stepID === data?.stepID"
-          [ngStyle]="{
-            'background-color': item['backgroundColor']
-          }"
-          class="me-1 badge badge-sm d-flex align-items-center mw-125px"
-        >
-          <span
-            [ngClass]="item['icon']"
-            [ngStyle]="{ color: item['iconColor'] }"
-            class="me-1"
-          ></span>
-          <span
-            class="text-ellipsis line-clamp line-clamp-1"
-            [ngbTooltip]="item?.stepName"
-            [ngStyle]="{ color: item['textColor'] }"
-            >{{ item?.stepName }}</span
+            [ngStyle]="{
+              'background-color': item['backgroundColor']
+            }"
+            class="me-1 badge badge-sm d-flex align-items-center mw-125px"
           >
-        </div>
+            <span
+              [ngClass]="item['icon']"
+              [ngStyle]="{ color: item['iconColor'] }"
+              class="me-1"
+            ></span>
+            <span
+              class="text-ellipsis line-clamp line-clamp-1"
+              [ngbTooltip]="item?.stepName"
+              [ngStyle]="{ color: item['textColor'] }"
+              >{{ item?.stepName }}</span
+            >
           </div>
-        </ng-container>
-    <ng-template #default>
-
-      <codx-vll
-      [name]="vllStatus"
-      [field]="'Status'"
-      [value]="data?.status"
-      [showText]="true"
-      [showBgColor]="true"
-      class="badge badge-light badge-sm"
-    >
-    </codx-vll>
+        </div>
+      </ng-container>
+      <ng-template #default>
+        <codx-vll
+          [name]="vllStatus"
+          [field]="'Status'"
+          [value]="data?.status"
+          [showText]="true"
+          [showBgColor]="true"
+          class="badge badge-light badge-sm"
+        >
+        </codx-vll>
       </ng-template>
-
 
       <div
         class="d-flex align-items-center text-gray-600 ms-2"
@@ -630,3 +633,5 @@
     </div>
   </div>
 </ng-template>
+
+<ng-template #toolbarTempDashboad> </ng-template>

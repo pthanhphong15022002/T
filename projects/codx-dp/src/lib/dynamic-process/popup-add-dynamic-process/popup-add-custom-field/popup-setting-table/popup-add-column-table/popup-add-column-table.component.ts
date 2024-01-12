@@ -696,7 +696,7 @@ export class PopupAddColumnTableComponent implements OnInit, AfterViewInit {
     } else {
       //cap nhật
       obj = {
-        autoNoCode: this.column.dataFormat,
+        autoNoCode: this.column.recID,
         description: 'DP_Instances_Steps_Field',
       };
     }
