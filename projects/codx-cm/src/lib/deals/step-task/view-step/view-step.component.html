@@ -1,0 +1,30 @@
+<div>
+  <div *ngIf="loading">
+    <ngx-skeleton-loader
+          style="width: 100%"
+          [theme]="{
+            width: '100%',
+            'border-radius': '20px',
+            height: '30px',
+            margin: '0px'
+          }"
+        ></ngx-skeleton-loader>
+  </div>
+  <div
+  *ngIf="!loading"
+  class="d-flex align-items-center justify-content-center step-current rounded-pill py-2 px-3"
+  [ngStyle]="{ 'background-color': step?.backgroundColor }"
+>
+  <span
+    [ngClass]="step?.icon"
+    class="me-1"
+    [ngStyle]="{ color: step?.iconColor }"
+  ></span>
+  <span
+    class="line-clamp line-clamp-1"
+    [ngStyle]="{ color: step?.textColor }"
+    [ngbTooltip]="step?.objectName"
+    >{{ step?.objectName }}</span
+  >
+</div>
+</div>
