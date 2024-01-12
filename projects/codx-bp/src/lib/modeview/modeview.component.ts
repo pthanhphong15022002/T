@@ -306,6 +306,8 @@ export class ModeviewComponent implements OnInit {
       {
         this.count.table ++;
         data.title += " " + this.count.table;
+        data.dataFormat = [];
+        data.dataFormat.push(this.genData())
         break;
       }
       case "Progress":
@@ -471,6 +473,7 @@ export class ModeviewComponent implements OnInit {
       delete elm.textColor;
       delete elm.value;
     })
+    debugger
     this.dialog.close(result);
   }
 
