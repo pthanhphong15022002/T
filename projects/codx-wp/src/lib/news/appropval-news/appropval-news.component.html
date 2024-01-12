@@ -1,5 +1,5 @@
 <codx-views #view 
-  *ngIf="function"
+  *ngIf="function && loadedApprover"
   [views]="views" 
   [funcID]="function.functionID"
   [entityName]="function.entityName"
@@ -9,7 +9,11 @@
   className="NewsBusiness"
   method="GetDataApproAsync"
   [selectedFirst]="true" 
-  (selectedChange)="selectedChange($event)">
+  (selectedChange)="selectedChange($event)"  
+  [predicates]="predicates"
+  [dataValues]="dataValues"
+  
+  >
 </codx-views>
 
 <ng-template #headerTemplate>

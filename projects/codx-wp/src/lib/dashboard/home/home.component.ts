@@ -47,8 +47,8 @@ export class HomeComponent extends UIComponent {
         }
       });
     });
-    this.predicatePortal = 'Category = @0 || Category = @1 || Category = @2';
-    this.dataValuePortal = `1;3;4`;
+    this.predicatePortal = '(Category = @0 || Category = @1 || Category = @2) &&(( ApproveStatus = null || ApproveStatus=@3) || (ApproveStatus!=@4 &&CreatedBy =@5))';
+    this.dataValuePortal = `1;3;4;5;4;` +this.user?.userID;
   }
 
 
