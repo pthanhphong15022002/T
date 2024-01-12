@@ -513,8 +513,8 @@
       tải lại
     </button>
       <div class="row" style="height: calc(100% - 50px)">
-        <div style="width: 20%" class="dragarea property-section">
-          <!-- <div
+        <div style="width: 15%" class="dragarea property-section">
+          <div
             cdkDropList
             class="w-100 h-100 mt-5"
             style="background-color: #fff"
@@ -560,22 +560,8 @@
                     </svg>
                   </ng-container>
                   <ng-container *ngSwitchCase="'decision'">
-                    <svg width="100" height="100">
-                      <rect
-                        x="50"
-                        y="20"
-                        width="150"
-                        height="150"
-                        style="
-                          fill: #fff;
-                          stroke: #ddd;
-                          stroke-width: 2;
-                          fill-opacity: 0.1;
-                          stroke-opacity: 0.9;
-                          rotate: 45deg;
-                        "
-                      />
-                    </svg>
+                    <div class="box" style="width:150px;">
+                    </div>
                   </ng-container>
                   <ng-container *ngSwitchCase="'connector'">
                     <span class="icon-35" [ngClass]="item.icon"></span>
@@ -639,8 +625,8 @@
                 </ng-container>
               </div>
             </div>
-          </div> -->
-          <div class="property-panel-header">
+          </div>
+          <!-- <div class="property-panel-header">
             Properties
         </div>
         <div class="row property-panel-content" id="appearance">
@@ -693,17 +679,18 @@
             </div>
             <div class="d-flex align-items-center image-pattern-style mt-1 " id="{{item.id}}" style=" margin-right: 3px"  *ngFor="let item of menuDrag">
               <span><i class="me-3 icon-16" [ngClass]="item.icon"></i>{{item.text}}</span>
-            </div>
+            </div> -->
             <!-- <div class="row" style="padding-top: 10px">
                 <ejs-checkbox id='checked' [(checked)]="continuousDraw" label='Continous Draw'></ejs-checkbox>
-            </div> -->
+            </div>
+        </div> -->
         </div>
-        </div>
-        <div style="width: 80%; height: 100%" class="diagramzone">
+        <div style="width: 85%; height: 100%" class="diagramzone">
           <ejs-diagram
             #diagram
             id="diagram"
-            [nodes]="nodes"
+            [nodes]="defaultData"
+            [connectors]="defaultCnn"
             [snapSettings]="snapSettings"
             (created)="created()"
             (mouseEnter)="mouseEnter($event)"
@@ -714,6 +701,8 @@
             [rulerSettings]="rulerSettings"
             (elementDraw)="eleDraw($event)"
             (positionChange)="onDrop($event)"
+            [selectedItems]="selectedItems"
+            [getCustomTool]="getCustomTool"
           >
             <ng-template #nodeTemplate let-data>
               <ng-container [ngSwitch]="data.shape?.version">
@@ -808,8 +797,8 @@
         </div>
       </div>
       <div class="row h-100px d-flex align-items-center m-2">
-        <codx-input type="textarea" format="ed3" field="memo" (valueChange)="valueDataChange($event)"></codx-input>
-        <codx-input type="colorpicker" field="color" (valueChange)="valueDataChange($event)"></codx-input>
+        <!-- <codx-input type="textarea" format="ed3" field="memo" (valueChange)="valueDataChange($event)"></codx-input>
+        <codx-input type="colorpicker" field="color" (valueChange)="valueDataChange($event)"></codx-input> -->
       </div>
       <div class="row h-30px">
         <div class="col d-flex align-items-center justify-content-end p-0">
