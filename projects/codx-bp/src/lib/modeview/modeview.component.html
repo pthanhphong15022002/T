@@ -7,7 +7,7 @@
   <div class="d-flex align-items-center justify-content-between border-bottom bg-white py-2 px-6">
     <codx-label default="Form nhập liệu" formName="fnBPModeView" fiedName="BPModeViewTitle" class="fs-4 fw-bold"></codx-label>
     <div class="d-flex align-items-center">
-      <div class="btn-group mt-2 bp-header-button-group" role="group" aria-label="Basic radio toggle button group">
+      <div id="group_period" class="btn-group mt-2 bp-header-button-group" role="group" aria-label="Basic radio toggle button group">
         <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" checked>
         <label class="btn btn-outline-secondary" for="btnradio1">
           <i class="icon-edit_square icon-20"></i>
@@ -276,7 +276,7 @@
                       <div class="d-flex align-items-center">
                         <i class="icon-drag_indicator me-2 cursor-move" cdkDragHandle></i>
                         <span class="fw-bold">{{data.title}}</span>
-                        
+                        <span class="text-danger ms-2" *ngIf="data.isRequired">(*)</span>
                       </div>
                       <ng-container *ngIf="data.controlType == 'Switch'">
                         <div class="form-switch">
@@ -308,6 +308,7 @@
                       <div class="d-flex align-items-center">
                         <i class="icon-drag_indicator me-2 cursor-move" cdkDragHandle></i>
                         <span class="fw-bold">{{data.title}}</span>
+                        <span class="text-danger ms-2" *ngIf="data.isRequired">(*)</span>
                       </div>
                       <div class="d-flex align-items-center justify-content-between w-100 border mt-2 px-4 py-3 rd-3px">
                         <span class="text-muted text-truncate mw-55px">{{data.defaultValue || data.description}}</span>
@@ -322,6 +323,7 @@
                       <div class="d-flex align-items-center">
                         <i class="icon-drag_indicator me-2 cursor-move" cdkDragHandle></i>
                         <span class="fw-bold">{{data.text}}</span>
+                        <span class="text-danger ms-2" *ngIf="data.isRequired">(*)</span>
                       </div>
                       <div class="d-flex align-items-center justify-content-between w-100 mt-2 px-4 py-3 rd-3px">
                         <ng-container *ngFor="let item of [].constructor(data.rank.maxValue); let i = index">
@@ -471,6 +473,9 @@
         <ng-container *ngSwitchCase="'Title'">
           <lib-property-form [data]="dataSelected" (dataChange)="dataChange($event)"></lib-property-form>
         </ng-container>
+        <ng-container *ngSwitchCase="'Share'">
+          <lib-property-share [data]="dataSelected" (dataChange)="dataChange($event)"></lib-property-share>
+        </ng-container>
         <ng-container *ngSwitchCase="'SubTitle'">
           <lib-property-text [data]="dataSelected" (dataChange)="dataChange($event)"></lib-property-text>
         </ng-container>
@@ -516,6 +521,10 @@
         <ng-container *ngSwitchCase="'ComboBox'">
           <lib-property-combobox [data]="dataSelected" (dataChange)="dataChange($event)"></lib-property-combobox>
         </ng-container>
+        <ng-container *ngSwitchCase="'Table'">
+          <lib-property-table [data]="dataSelected" (dataChange)="dataChange($event)"></lib-property-table>
+        </ng-container>
+        
       </ng-container>
     </div>
   </div>

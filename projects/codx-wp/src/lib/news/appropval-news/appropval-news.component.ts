@@ -27,6 +27,11 @@ export class AppropvalNewsComponent extends UIComponent {
   @ViewChild('headerTemplate') headerTemplate: TemplateRef<any>;
   @ViewChild('tmpDetail') tmpDetail: AppropvalNewsDetailComponent;
   tabAsside:any[] =[];
+  loadedApprover: boolean;
+  approvers: any;
+  haveApprovePermission=false;
+  approvePre='';
+  approveDv: any='';
   constructor(
     private injector: Injector,
     private auth: AuthStore,
@@ -52,6 +57,25 @@ export class AppropvalNewsComponent extends UIComponent {
               .subscribe((grd: any) => {
                 this.gridViewSetUp = grd;
             });
+            if((this.function.functionID =="WPT0213" ||this.function.functionID =="WPT0212")){
+              this.api.execSv(
+              "WP",
+              "WP",
+              'NewsBusiness',
+              'GetWPApproveRoleAsync',
+              [])
+              .subscribe((res: any) => {
+                if(res?.length>0){
+                  this.approvePre = res[0] ;
+                  this.approveDv = res[1];
+                }
+                this.loadDataTab();
+                this.loadedApprover =true;                
+              });
+            }
+            else{
+              this.loadDataTab();
+            }
           }
         });
       }
@@ -161,6 +185,11 @@ export class AppropvalNewsComponent extends UIComponent {
   clickTabApprove(item) {
     let predicates = [item.value ? "ApproveStatus = @0" : ""];
     let dataValues = [item.value];
+    if((this.function.functionID =="WPT0213" ||this.function.functionID =="WPT0212")&& this.approveDv?.length>0 && this.approvePre?.length>0)
+    {      
+      predicates = [item.value ? "ApproveStatus = @0" : "",this.approvePre];
+      dataValues = [item.value,this.approveDv];
+    }
     this.view.dataService.page = 0;
     this.view.dataService.setPredicates(predicates, dataValues);
     this.tabAsside.forEach((e) => {

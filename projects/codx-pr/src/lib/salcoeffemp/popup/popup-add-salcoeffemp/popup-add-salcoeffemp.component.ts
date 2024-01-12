@@ -1,7 +1,6 @@
 import { AfterViewInit, ChangeDetectorRef, Component, OnInit, Optional, ViewChild } from '@angular/core';
-import { Day } from '@syncfusion/ej2-angular-schedule';
 import { ApiHttpService, AuthStore, CRUDService, CacheService, CodxGridviewV2Component, DialogData, DialogRef, NotificationsService, Util } from 'codx-core';
-import { PR_SalCoeffCode } from '../../models/PR_SalCoeffCode';
+import { PR_SalCoeffCode } from '../../../models/PR_SalCoeffCode';
 
 @Component({
   selector: 'pr-popup-add-salcoeffemp',

@@ -45,6 +45,13 @@ export class ModeviewComponent implements OnInit {
     this.getVll();
   }
 
+  btnClick()
+  {
+    // $('#group_period input').on("click", function() {
+    //   alert(this.id);
+    //   });
+  }
+
   getVll()
   {
     let vll = this.shareService.loadValueList("BP002");
@@ -299,6 +306,7 @@ export class ModeviewComponent implements OnInit {
       {
         this.count.table ++;
         data.title += " " + this.count.table;
+        data.dataFormat = [];
         break;
       }
       case "Progress":
@@ -464,6 +472,7 @@ export class ModeviewComponent implements OnInit {
       delete elm.textColor;
       delete elm.value;
     })
+    debugger
     this.dialog.close(result);
   }
 
