@@ -380,6 +380,7 @@ export class DynamicProcessComponent
             gridViewSetup: this.gridViewSetup,
             lstGroup: this.lstGroup,
           };
+
           let dialogView = this.callfc.openForm(
             PopupAddDynamicProcessComponent,
             '',
@@ -391,6 +392,7 @@ export class DynamicProcessComponent
             dialogModel
           );
         }
+        this.isButton = true;
       });
   }
 
