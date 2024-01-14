@@ -428,10 +428,11 @@
       </codx-input>
     </div>
     <crud-cost-items
+    *ngIf="costInfos"
     [transID]="deal.recID"
     [costInfos]="costInfos"
     [isLoadedData]="true"
-    [viewOnly]="false"
+    [viewOnly]="viewOnly"
     (dataCostItems)="dataCostItems($event)"
     (totalDataCost)="totalDataCost($event)"
   ></crud-cost-items>

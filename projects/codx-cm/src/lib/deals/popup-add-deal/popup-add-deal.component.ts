@@ -186,12 +186,13 @@ export class PopupAddDealComponent
 
   arrCaculateField: any[] = [];
   isLoadedCF = false;
-  costInfos = [];
+  costInfos: any;
   totalCost = 0;
   grViewCost: any;
   tmpCost: CM_CostItems;
   viewOnly = false;
   cost: any;
+  copyTransID : any //copy transID cost
 
   constructor(
     private inject: Injector,
@@ -213,6 +214,7 @@ export class PopupAddDealComponent
     this.functionModule = dt?.data?.functionModule;
     this.model = { ApplyFor: '1' };
     this.gridViewSetup = dt?.data?.gridViewSetup;
+    this.copyTransID = dt?.data?.copyTransID
 
     // add view from customer
     this.isviewCustomer = dt?.data?.isviewCustomer;
@@ -256,16 +258,16 @@ export class PopupAddDealComponent
     if (this.action != this.actionAdd) {
       this.customerIDOld = this.deal?.customerID;
       this.customerID = this.deal?.customerID;
+      let transIDCost = this.action === this.actionCopy ? this.copyTransID : this.deal.recID ;
       this.codxCmService
-        .getCostItemsByTransID(this.deal.recID)
+        .getCostItemsByTransID(transIDCost)
         .subscribe((costs) => {
-          this.costInfos = costs ?? [];
-
-          if (this.costInfos?.length > 0) {
+          if (costs?.length > 0) {         
             if (this.action === this.actionCopy)
-              this.costInfos.forEach((x) => (x.transID = this.deal.recID));
-            this.calculateTotalCost();
+              costs.forEach((x) => (x.transID = this.deal.recID));
+            // this.calculateTotalCost(); //cux
           }
+          this.costInfos = costs ?? [];
         });
     }
     if (this.action === this.actionCopy) {
@@ -1746,80 +1748,80 @@ export class PopupAddDealComponent
 
   //----------------Cost Items -----------------//
 
-  addCost() {
-    if (this.cost && !this.cost.costItemName) {
-      this.notificationsService.notify(
-        'Chưa nhập nội dung chi phí, hãy hoàn thiện chi phí trước khi thêm chi phí mới !',
-        '3'
-      );
-      return;
-    }
-    
-    let newCost = new CM_CostItems();
-    newCost.transID = this.deal?.recID;
-    newCost.quantity = 1;
-    newCost.unitPrice = 0;
-    if (!this.costInfos) this.costInfos = [];
+  // addCost() {
+  //   if (this.cost && !this.cost.costItemName) {
+  //     this.notificationsService.notify(
+  //       'Chưa nhập nội dung chi phí, hãy hoàn thiện chi phí trước khi thêm chi phí mới !',
+  //       '3'
+  //     );
+  //     return;
+  //   }
 
-    this.costInfos.push(newCost);
-    this.cost = newCost;
-    this.calculateTotalCost();
-    this.detectorRef.detectChanges();
-  }
+  //   let newCost = new CM_CostItems();
+  //   newCost.transID = this.deal?.recID;
+  //   newCost.quantity = 1;
+  //   newCost.unitPrice = 0;
+  //   if (!this.costInfos) this.costInfos = [];
 
-  changeCost(evt: any) {
-    if (evt) {
-    }
-  }
-  deleteCost(index: number) {
-    if (this.costInfos?.length > index) {
-      this.costInfos?.splice(index, 1);
-      if (this.costInfos.length == 0) this.cost = null;
-      this.calculateTotalCost();
-      this.detectorRef.detectChanges();
-    }
-  }
-  editCost(evt: any, index: number) {
-    if (evt && this.costInfos?.length > index) {
-      switch (evt?.field) {
-        case 'quantity':
-          this.costInfos[index].quantity = evt?.data;
-          break;
+  //   this.costInfos.push(newCost);
+  //   this.cost = newCost;
+  //   this.calculateTotalCost();
+  //   this.detectorRef.detectChanges();
+  // }
 
-        case 'unitPrice':
-          this.costInfos[index].unitPrice = evt?.data;
-          break;
+  // changeCost(evt: any) {
+  //   if (evt) {
+  //   }
+  // }
+  // deleteCost(index: number) {
+  //   if (this.costInfos?.length > index) {
+  //     this.costInfos?.splice(index, 1);
+  //     if (this.costInfos.length == 0) this.cost = null;
+  //     this.calculateTotalCost();
+  //     this.detectorRef.detectChanges();
+  //   }
+  // }
+  // editCost(evt: any, index: number) {
+  //   if (evt && this.costInfos?.length > index) {
+  //     switch (evt?.field) {
+  //       case 'quantity':
+  //         this.costInfos[index].quantity = evt?.data;
+  //         break;
 
-        case 'costItemName':
-          this.costInfos[index].costItemName = evt?.data;
-          break;
+  //       case 'unitPrice':
+  //         this.costInfos[index].unitPrice = evt?.data;
+  //         break;
 
-        case 'costItemID':
-          this.costInfos[index].costItemID = evt?.data;
-          break;
-      }
+  //       case 'costItemName':
+  //         this.costInfos[index].costItemName = evt?.data;
+  //         break;
 
-      this.cost = this.costInfos[index];
-      this.calculateTotalCost();
-    }
-  }
-  calculateTotalCost() {
-    this.totalCost = 0;
-    if (this.costInfos?.length > 0) {
-      this.costInfos?.forEach((cost) => {
-        if (cost?.quantity && cost?.unitPrice)
-          cost.amount = cost?.quantity * cost?.unitPrice;
-        else cost.amount = 0;
-        this.totalCost += cost.amount;
-      });
-    }
-    this.deal['dealCost'] = this.totalCost;
-    if (this.deal.dealValueTo) {
-      this.deal['grossProfit'] = this.deal.dealValueTo - this.totalCost;
-    } else {
-      this.deal['grossProfit'] = 0 - this.totalCost;
-    }
-  }
+  //       case 'costItemID':
+  //         this.costInfos[index].costItemID = evt?.data;
+  //         break;
+  //     }
+
+  //     this.cost = this.costInfos[index];
+  //     this.calculateTotalCost();
+  //   }
+  // }
+  // calculateTotalCost() {
+  //   this.totalCost = 0;
+  //   if (this.costInfos?.length > 0) {
+  //     this.costInfos?.forEach((cost) => {
+  //       if (cost?.quantity && cost?.unitPrice)
+  //         cost.amount = cost?.quantity * cost?.unitPrice;
+  //       else cost.amount = 0;
+  //       this.totalCost += cost.amount;
+  //     });
+  //   }
+  //   this.deal['dealCost'] = this.totalCost;
+  //   if (this.deal.dealValueTo) {
+  //     this.deal['grossProfit'] = this.deal.dealValueTo - this.totalCost;
+  //   } else {
+  //     this.deal['grossProfit'] = 0 - this.totalCost;
+  //   }
+  // }
 
   checkValidateCost() {
     let check = true;
@@ -1836,11 +1838,11 @@ export class PopupAddDealComponent
     }
   }
 
-  dataCostItems(e){
-    this.costInfos = e
+  dataCostItems(e) {
+    this.costInfos = e;
   }
 
-  totalDataCost(e){
+  totalDataCost(e) {
     this.deal['dealCost'] = e;
     if (this.deal.dealValueTo) {
       this.deal['grossProfit'] = this.deal.dealValueTo - e;

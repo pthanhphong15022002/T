@@ -1417,6 +1417,7 @@ export class DealsComponent
       exchangeRateDefault: this.exchangeRateDefault,
       customerCategory:
         action === 'add' ? '' : this.dataSelected?.customerCategory,
+      copyTransID : this.oldIdDeal
     };
     let dialogCustomDeal = this.callfc.openSide(
       PopupAddDealComponent,
