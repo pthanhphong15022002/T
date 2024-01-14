@@ -2522,6 +2522,7 @@ export class DealsComponent
         let obj = {
           title: this.gridViewSetup?.DealCost?.headerText,
           listCosts: res,
+          transID : transID
         };
         let dialogCost = this.callfc.openForm(
           PopupCostItemsComponent,

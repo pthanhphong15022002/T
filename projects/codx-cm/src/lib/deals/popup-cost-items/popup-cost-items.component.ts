@@ -42,6 +42,7 @@ export class PopupCostItemsComponent implements OnInit {
       });
     this.dialog = dialog;
     this.costInfos = dt?.data?.listCosts;
+    this.transID = dt?.data?.transID;
     this.calculateTotalCost();
     this.title = dt?.data?.title;
   }
@@ -62,6 +63,7 @@ export class PopupCostItemsComponent implements OnInit {
       return;
     }
     let newCost = { ...this.tmpCost };
+    newCost.recID
     newCost.transID = this.transID;
     newCost.quantity = 1;
     newCost.unitPrice = 0;

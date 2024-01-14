@@ -1754,7 +1754,8 @@ export class PopupAddDealComponent
       );
       return;
     }
-    let newCost = { ...this.tmpCost };
+    
+    let newCost = new CM_CostItems();
     newCost.transID = this.deal?.recID;
     newCost.quantity = 1;
     newCost.unitPrice = 0;
@@ -1832,6 +1833,19 @@ export class PopupAddDealComponent
   }
   tabChange(e) {
     if (e?.nextId == 'CostItems') {
+    }
+  }
+
+  dataCostItems(e){
+    this.costInfos = e
+  }
+
+  totalDataCost(e){
+    this.deal['dealCost'] = e;
+    if (this.deal.dealValueTo) {
+      this.deal['grossProfit'] = this.deal.dealValueTo - e;
+    } else {
+      this.deal['grossProfit'] = 0 - e;
     }
   }
   //---------------------------------------------//
