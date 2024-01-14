@@ -1625,15 +1625,12 @@ export class PopupAddProcessComponent {
   clickRoles() {}
 
   removeUser(index) {
-    // let config = new AlertConfirmInputConfig();
-    // config.type = 'YesNo';
     this.notiSv
       .alertCode('SYS030')
       .pipe(takeUntil(this.destroyFrom$))
       .subscribe((x) => {
         if (x.event.status == 'Y') {
           this.data.permissions.splice(index, 1);
-          // this.changeDetectorRef.detectChanges();
           this.detectorRef.markForCheck();
         }
       });
@@ -1748,7 +1745,13 @@ export class PopupAddProcessComponent {
     //     this.detectorRef.markForCheck()
     //   }
     // });
-
+    if (this.extendInfos) {
+      this.extendInfos.forEach((element) => {
+        if (typeof element.documentControl == 'string') {
+          element.documentControl = JSON.parse(element.documentControl);
+        }
+      });
+    }
     let popupDialog = this.callfc.openForm(
       ModeviewComponent,
       '',
