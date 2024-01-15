@@ -1018,6 +1018,9 @@ export class DealsComponent
           isView: true,
           type,
           view: this.view,
+          statusCodeID: this.statusCodeID,
+          statusCodeCmt: this.statusCodeCmt,
+          detailViewDeal: this.detailViewDeal,
           // listInsStepStart: this.listInsStep,
         };
         let option = new DialogModel();

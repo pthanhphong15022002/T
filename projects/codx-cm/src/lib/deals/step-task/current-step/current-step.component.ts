@@ -53,7 +53,9 @@ export class CurrentStepComponent implements OnInit, OnChanges {
   view;
 
   viewSettings: any;
-
+  statusCodeID;
+  statusCodeCmt;
+  detailViewDeal;
 
 
   formModelQuotations: FormModel = {
@@ -91,6 +93,9 @@ export class CurrentStepComponent implements OnInit, OnChanges {
     this.deal = dt?.data?.dataView;
     this.contractRecId = dt?.data?.contactRecId;
     this.listInsStepStart = dt?.data?.listInsStepStart;
+    this.statusCodeID = dt?.data?.statusCodeID;
+    this.statusCodeCmt = dt?.data?.statusCodeCmt;
+    this.detailViewDeal = dt?.data?.detailViewDeal;
     this.view = dt?.data?.view;
     if(!this.dialog?.formModel){
       this.dialog.formModel = {
@@ -407,62 +412,62 @@ export class CurrentStepComponent implements OnInit, OnChanges {
             obj
           );
           dialogMoveStage.closed.subscribe((e) => {
-            // if (e && e.event != null) {
-            //   let instance = e.event?.instance;
-            //   let listSteps = e.event?.listStep;
-            //   let isMoveBackStage = e.event?.isMoveBackStage;
-            //   let tmpInstaceDTO = e.event?.tmpInstaceDTO;
-            //   if (isMoveBackStage) {
-            //     let dataUpdate = [
-            //       tmpInstaceDTO,
-            //       e.event?.comment,
-            //       e.event?.expectedClosed,
-            //       this.statusCodeID,
-            //       this.statusCodeCmt,
-            //     ];
-            //     this.codxCmService
-            //       .moveStageBackDataCM(dataUpdate)
-            //       .subscribe((res) => {
-            //         if (res) {
-            //           this.view.dataService.update(res, true).subscribe();
-            //           if (this.kanban) {
-            //             this.renderKanban(res);
-            //           }
-            //           if (this.detailViewDeal)
-            //             this.detailViewDeal.dataSelected = res;
-            //           this.detailViewDeal?.reloadListStep(listSteps);
-            //           this.detectorRef.detectChanges();
-            //         }
-            //       });
-            //   } else {
-            //     let dataUpdate = [
-            //       data.recID,
-            //       instance.stepID,
-            //       oldStepId,
-            //       oldStatus,
-            //       e.event?.comment,
-            //       e.event?.expectedClosed,
-            //       e.event?.permissionCM,
-            //     ];
-            //     this.codxCmService
-            //       .moveStageDeal(dataUpdate)
-            //       .subscribe((res) => {
-            //         if (res) {
-            //           this.view.dataService.update(res, true).subscribe();
-            //           if (this.kanban) {
-            //             this.renderKanban(res);
-            //           }
-            //           if (this.detailViewDeal)
-            //             this.detailViewDeal.dataSelected = res;
-            //           if (e.event.isReason != null) {
-            //             this.moveReason(res, e.event.isReason);
-            //           }
-            //           this.detailViewDeal?.reloadListStep(listSteps);
-            //           this.detectorRef.detectChanges();
-            //         }
-            //       });
-            //   }
-            // }
+            if (e && e.event != null) {
+              let instance = e.event?.instance;
+              let listSteps = e.event?.listStep;
+              let isMoveBackStage = e.event?.isMoveBackStage;
+              let tmpInstaceDTO = e.event?.tmpInstaceDTO;
+              if (isMoveBackStage) {
+                let dataUpdate = [
+                  tmpInstaceDTO,
+                  e.event?.comment,
+                  e.event?.expectedClosed,
+                  this.statusCodeID,
+                  this.statusCodeCmt,
+                ];
+                this.codxCmService
+                  .moveStageBackDataCM(dataUpdate)
+                  .subscribe((res) => {
+                    if (res) {
+                      this.view.dataService.update(res, true).subscribe();
+                      // if (this.kanban) {
+                      //   this.renderKanban(res);
+                      // }
+                      if (this.detailViewDeal)
+                        this.detailViewDeal.dataSelected = res;
+                      this.detailViewDeal?.reloadListStep(listSteps);
+                      this.changeDetectorRef.detectChanges();
+                    }
+                  });
+              } else {
+                let dataUpdate = [
+                  data.recID,
+                  instance.stepID,
+                  oldStepId,
+                  oldStatus,
+                  e.event?.comment,
+                  e.event?.expectedClosed,
+                  e.event?.permissionCM,
+                ];
+                this.codxCmService
+                  .moveStageDeal(dataUpdate)
+                  .subscribe((res) => {
+                    if (res) {
+                      this.view.dataService.update(res, true).subscribe();
+                      // if (this.kanban) {
+                      //   this.renderKanban(res);
+                      // }
+                      if (this.detailViewDeal)
+                        this.detailViewDeal.dataSelected = res;
+                      // if (e.event.isReason != null) {
+                      //   this.moveReason(res, e.event.isReason);
+                      // }
+                      this.detailViewDeal?.reloadListStep(listSteps);
+                      this.changeDetectorRef.detectChanges();
+                    }
+                  });
+              }
+            }
           });
         });
     });
