@@ -52,6 +52,8 @@ export class CodxInputCustomFieldComponent implements OnInit {
   @Input() refVersion = ''; //là recID của form Task
   @Input() refInstance = ''; //'63484925-9f24-11ee-a457-c025a5a4cd5d'; //'63484925-9f24-11ee-a457-c025a5a4cd5d'; //tesst; //là recID của Instance liên quan
   @Input() refStepID = ''; //là recID của step Ins liên quan
+  @Input() dataSourceRef: any; //data load để ref
+  @Input() isLoadDataRef = false;
 
   @Output() valueChangeCustom = new EventEmitter<any>();
   @Output() addFileCompleted = new EventEmitter<boolean>();
@@ -182,6 +184,18 @@ export class CodxInputCustomFieldComponent implements OnInit {
       );
       if (idx != -1)
         this.customField.dataValue = this.customField.versions[idx].dataValue;
+    }
+    //danh sach data chuyen qua
+    if (this.isLoadDataRef && this.dataSourceRef?.length > 0) {
+      let data = this.dataSourceRef.find(
+        (x) =>
+          x.fieldName == this.customField.fieldName &&
+          x.dataType == this.customField.dataType &&
+          x.dataFormat == this.customField.dataFormat &&
+          x.refValue == this.customField.refValue &&
+          x.refType == this.customField.refType
+      );
+      if (data) this.customField.dataValue = data.dataValue;
     }
 
     switch (this.customField.dataType) {
@@ -365,13 +379,13 @@ export class CodxInputCustomFieldComponent implements OnInit {
         }
         break;
       case 'N':
-        let idxE = e.data?.toString().toLowerCase().indexOf('e');
-        if (idxE != -1) {
-          this.notiService.notify(
-            'Số nhập vào quá lớn sẽ lưu giá trị gần đúng !',
-            '3'
-          );
-        }
+        // let idxE = e.data?.toString().toLowerCase().indexOf('e');
+        // if (idxE != -1) {
+        //   this.notiService.notify(
+        //     'Số nhập vào quá lớn sẽ lưu giá trị gần đúng !',
+        //     '3'
+        //   );
+        // }
         break;
     }
 
@@ -980,7 +994,34 @@ export class CodxInputCustomFieldComponent implements OnInit {
   //-------------- Data tham chiếu ---------------//
   //-----------------------------------------------//
   selectDataRef() {
-    if (this.refInstance) {
+    if (this.isLoadDataRef) {
+      if (this.dataSourceRef?.length > 0) {
+        let fields = [];
+        this.dataSourceRef.forEach((f) => {
+          if (!fields.some((x) => x.fieldName == f.fieldName) && f.dataValue) {
+            if (
+              (f.dataType == this.customField.dataType &&
+                f.refType == this.customField.refType &&
+                f.refValue == this.customField.refValue) ||
+              (this.customField.dataType == 'N' && f.dataType == 'CF')
+            ) {
+              fields.push(f);
+            }
+          }
+        });
+        if (fields?.length > 0) {
+          this.openPopupRef(fields);
+        } else
+          this.notiService.notify(
+            'Không có data phù hợp với trường được chọn ! Vui lòng nhập giá trị của bạn !',
+            '3'
+          );
+      } else
+        this.notiService.notify(
+          'Không có data phù hợp với trường được chọn ! Vui lòng nhập giá trị của bạn !',
+          '3'
+        );
+    } else if (this.refInstance) {
       this.api
         .exec<any>('DP', 'InstancesStepsBusiness', 'GetListFieldsAsync', [
           this.refInstance,
@@ -989,29 +1030,7 @@ export class CodxInputCustomFieldComponent implements OnInit {
         ])
         .subscribe((fiels) => {
           if (fiels?.length > 0) {
-            let dialogModel = new DialogModel();
-            dialogModel.zIndex = 1200;
-            let obj = {
-              listField: fiels,
-              field: this.customField,
-            };
-            let pop = this.callfc.openForm(
-              PopupSelectFieldReferenceComponent,
-              '',
-              500,
-              700,
-              null,
-              obj,
-              null,
-              dialogModel
-            );
-
-            pop.closed.subscribe((res) => {
-              if (res?.event) {
-                this.customField = res.event;
-                this.changeRef.detectChanges();
-              }
-            });
+            this.openPopupRef(fiels);
           } else
             this.notiService.notify(
               'Không có data phù hợp với trường được chọn ! Vui lòng nhập giá trị của bạn !',
@@ -1019,59 +1038,46 @@ export class CodxInputCustomFieldComponent implements OnInit {
             );
         });
     }
+  }
+  openPopupRef(fiels) {
+    let dialogModel = new DialogModel();
+    dialogModel.zIndex = 1200;
+    let obj = {
+      listField: fiels,
+      field: this.customField,
+    };
+    let pop = this.callfc.openForm(
+      PopupSelectFieldReferenceComponent,
+      '',
+      500,
+      700,
+      null,
+      obj,
+      null,
+      dialogModel
+    );
 
-    // if (this.listFieldRef?.length > 0) {
-    //   this.listFieldsSelect = this.listFieldRef.filter(
-    //     (x) =>
-    //       x.dataType == this.customField.dataType &&
-    //       x.refType == this.customField.refType &&
-    //       x.refValue == this.customField.refValue &&
-    //       x.dataValue
-    //   );
-    //   if (this.listFieldsSelect?.length > 0) {
-    //     let dialogModel = new DialogModel();
-    //     dialogModel.zIndex = 1200;
-    //     let obj = {
-    //       listField: this.listFieldsSelect,
-    //       field: this.customField,
-    //     };
-    //     let pop = this.callfc.openForm(
-    //       PopupSelectFieldReferenceComponent,
-    //       '',
-    //       500,
-    //       700,
-    //       null,
-    //       obj,
-    //       null,
-    //       dialogModel
-    //     );
-
-    //     pop.closed.subscribe((res) => {
-    //       if (res?.event) {
-    //         this.customField = res.event;
-    //         this.changeRef.detectChanges();
-    //       }
-    //     });
-    //   } else
-    //     this.notiService.notify(
-    //       'Không có data phù hợp với trường được chọn ! Vui lòng nhập giá trị của bạn !'
-    //     );
-    // }
+    pop.closed.subscribe((res) => {
+      if (res?.event) {
+        this.customField = res.event;
+        this.changeRef.detectChanges();
+      }
+    });
   }
 
-  loadDataRef() {
-    if (this.refInstance) {
-      this.api
-        .exec<any>('DP', 'DPInstances', 'GetListFieldsAsync', [
-          this.refInstance,
-          this.refStepID,
-          this.customField,
-        ])
-        .subscribe((res) => {
-          if (res) this.listFieldRef = res;
-        });
-    }
-  }
+  // loadDataRef() {
+  //   if (this.refInstance) {
+  //     this.api
+  //       .exec<any>('DP', 'DPInstances', 'GetListFieldsAsync', [
+  //         this.refInstance,
+  //         this.refStepID,
+  //         this.customField,
+  //       ])
+  //       .subscribe((res) => {
+  //         if (res) this.listFieldRef = res;
+  //       });
+  //   }
+  // }
   //----------------------------------------------//
 
   //rezisePopup --nếu có TA

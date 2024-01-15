@@ -336,21 +336,37 @@ export class JournalV2Component extends UIComponent implements OnInit {
   }
 
   delete(data): void {
+    let f = this.func.find((x) => x.value === data.journalType);
+    this.cache.functionList(f?.default).subscribe((func) => {
+      if (func) {
+        let arObj = func?.entityName.split('_');
+        let service = arObj[0];
+        let options = new DataRequest();
+        options.entityName = func?.entityName;
+        options.pageLoading = false;
+        options.predicates = 'JournalType=@0 and JournalNo=@1';
+        options.dataValues = data.journalType+';'+data.journalNo;
+        this.api
+        .execSv(service, 'Core', 'DataBusiness', 'LoadDataAsync', options)
+        .pipe(map((r) => r?.[0] ?? [])).subscribe((res:any)=>{
+          if (res.length > 0) {
+            this.notiService.notifyCode('AC0002', 0, `"${data.journalDesc}"`);
+          }else{
+            this.view.dataService.delete([data]).subscribe((res: any) => {});
+          }
+        })
+      }
+    })
+    
     // this.journalService.hasVouchers$(data).subscribe((hasVouchers) => {
     //   if (hasVouchers) {
     //     this.notiService.notifyCode('AC0002', 0, `"${data.journalDesc}"`);
     //     return;
     //   }
 
-    //   this.view.dataService.delete([data]).subscribe((res: any) => {
-    //     console.log(res);
-
-    //     if (res) {
-    //       this.journalService.deleteAutoNumber(data.autoNumber);
-    //       this.acService.deleteFile(data.recID, this.view.formModel.entityName);
-    //     }
-    //   });
+    
     // });
+    
   }
 
   addNewJournalSample(e, data){

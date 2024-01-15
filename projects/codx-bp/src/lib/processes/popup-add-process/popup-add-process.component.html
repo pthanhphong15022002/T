@@ -498,7 +498,7 @@
     *ngIf="currentTab == 1"
   >
 
-    <div class="container-fluid h-100 p-0 control-section diagram-drawing-tool">
+    <div class="container-fluid h-100 p-0 control-section diagram-drawing-tool p-1">
       <button class="btn btn-danger" (click)="clickchoi()">Get JSON data</button>
     <button class="btn btn-info ms-3" (click)="clickPan(true)">zoom Pan</button>
     <button class="btn btn-danger ms-3" (click)="clickPan(false)">
@@ -510,11 +510,11 @@
     <button class="btn btn-success ms-3" (click)="clickRF()">
       tải lại
     </button>
-      <div class="row" style="height: calc(100% - 50px)">
-        <div style="width: 15%" class="dragarea property-section">
+      <div class="row" style="height: calc(100% - 35px)">
+        <div style="width: 10%" class="dragarea property-section border ">
           <div
             cdkDropList
-            class="w-100 h-100 mt-5"
+            class="w-100 h-100 pt-5"
             style="background-color: #fff"
             [cdkDropListSortingDisabled]="true"
           >
@@ -683,7 +683,7 @@
             </div>
         </div> -->
         </div>
-        <div style="width: 85%; height: 100%" class="diagramzone">
+        <div style="width: 90%; height: 100%" class="diagramzone border ">
           <ejs-diagram
             #diagram
             id="diagram"

@@ -290,7 +290,7 @@ export class DealsComponent
         sameData: true,
         model: {
           template2: this.templateMore,
-          groupSettings: { showDropArea: false, columns: ['customerName'] },
+          //groupSettings: { showDropArea: false, columns: ['customerName'] },
         },
       },
       {
@@ -2055,6 +2055,9 @@ export class DealsComponent
             template = this.templateCost;
             break;
           case 'Status':
+            template = this.templateStatus;
+            break;
+          case 'StatusCodeID':
             template = this.templateStatus;
             break;
           default:

@@ -82,6 +82,7 @@ import {
 import { Subject, takeUntil } from 'rxjs';
 import { ModeviewComponent } from '../../modeview/modeview.component';
 import { DynamicSettingControlComponent } from 'projects/codx-share/src/lib/components/dynamic-setting/dynamic-setting-control/dynamic-setting-control.component';
+import { PopupPermissionsProcessesComponent } from './popup-permissions-processes/popup-permissions-processes.component';
 Diagram.Inject(ConnectorEditing);
 @Component({
   selector: 'lib-popup-add-process',
@@ -118,6 +119,7 @@ export class PopupAddProcessComponent {
     this.diagram.fitToPage();
     this.diagram.clearSelection();
     this.diagram.scrollSettings.canAutoScroll = true;
+
     //this.diagram.tool = DiagramTools.ZoomPan;
   }
   clickPan(isPan) {
@@ -827,6 +829,7 @@ export class PopupAddProcessComponent {
   }
 
   dragEnter(e: any) {
+    let ele = this.elementRef.nativeElement.querySelector('.diagramzone');
     //console.log(e);
     //let objDragpane = document.querySelector('.dragarea').getBoundingClientRect();
     //if(objDragpane && e.dropPoint.x < objDragpane.x) return;
@@ -902,6 +905,8 @@ export class PopupAddProcessComponent {
         this.diagram.addConnector(connector);
         break;
       case 'swimlane':
+        let height = 500;
+        if(ele) height = ele.offsetHeight
         let swimLane: NodeModel = {
           id: this.makeid(10),
           shape: {
@@ -915,8 +920,8 @@ export class PopupAddProcessComponent {
               {
                 id: this.makeid(10),
                 canMove: true,
-                height: 500,
-                width: 400,
+                height: height,
+                width: 800,
                 header: {
                   height: 30,
                   style: { fontSize: 14, fill: '#fff' },
@@ -935,8 +940,8 @@ export class PopupAddProcessComponent {
             orientation: 'Vertical',
             isLane: true,
           },
-          height: 500,
-          width: 400,
+          height: height,
+          width: 800,
           style: { strokeColor: '#ffffff', fill: '#ffffff' },
           offsetX: model.offsetX,
           offsetY: model.offsetY + 100,
@@ -1064,7 +1069,51 @@ export class PopupAddProcessComponent {
       this.diagram.remove();
     }
     if (action == 'add') {
-      console.log('thêm', this.diagram.selectedObject);
+      let newNode:any= cloneObject(this.nodeSelected);
+      newNode.id = this.makeid(10);
+       //newNode.children = [];
+       newNode.offsetY = newNode.offsetY+300;
+       if(newNode.parentId){
+        let prNode = this.diagram.nodes.find((x:any)=>x.id== newNode.parentId);
+        if(prNode){
+          newNode.parentId = undefined
+          this.diagram.add(newNode);
+          this.diagram.addChild(prNode,newNode.id);
+          setTimeout(()=>{
+            this.diagram.refreshDiagramLayer();
+            this.diagram.select(newNode);
+          },200)
+
+          return;
+          //prNode.height = prNode.height + 300;
+          // if((prNode as any).parentId){
+          //   let gpNode = this.diagram.nodes.find((x:any)=>x.id== (prNode as any).parentId);
+          //   if(gpNode){
+          //     //gpNode.height = gpNode.height+300
+          //     this.diagram.addNodeToLane(newNode,gpNode.id,prNode.id);
+          //   }
+          // }
+        }
+        else {
+          newNode.parentId = undefined;
+          this.diagram.add(newNode);
+          setTimeout(()=>{
+            this.diagram.refreshDiagramLayer();
+            this.diagram.select(newNode);
+          },200)
+        }
+       }
+       else {
+        newNode.parentId = undefined;
+        this.diagram.add(newNode);
+        setTimeout(()=>{
+          this.diagram.refreshDiagramLayer();
+          this.diagram.select(newNode);
+        },200)
+      }
+
+      //this.diagram.refreshDiagramLayer();
+      console.log('thêm', this.nodeSelected);
     }
     if (action == 'connect') {
       this.diagram.drawingObject.shape = {};
@@ -1074,6 +1123,7 @@ export class PopupAddProcessComponent {
         ? (this.diagram.drawingObject as any).type
         : 'Orthogonal';
       (this.diagram.drawingObject as any).sourceID = (this.drawNode as any).id;
+      this.diagram.tool = DiagramTools.DrawOnce;
       this.diagram.dataBind();
 
       // console.log('Nối',this.nodeSelected);
@@ -1596,7 +1646,7 @@ export class PopupAddProcessComponent {
         perm.full = true;
         perm.create = true;
         perm.assign = true;
-        perm.edit = true;
+        perm.update = true;
         perm.delete = true;
         perm.isActive = true;
 
@@ -1672,7 +1722,38 @@ export class PopupAddProcessComponent {
     return listPerm;
   }
 
-  clickRoles() {}
+  clickRoles() {
+    let title = this.gridViewSetup?.Permissions?.headerText ?? 'Phân quyền';
+    let formModel = new FormModel();
+    formModel.formName = 'DPProcessesPermissions';
+    formModel.gridViewName = 'grvDPProcessesPermissions';
+    formModel.entityName = 'DP_Processes_Permissions';
+    let dialogModel = new DialogModel();
+    dialogModel.zIndex = 999;
+    dialogModel.FormModel = formModel;
+    let obj = {
+      permissions: this.data.permissions ?? [],
+      title: title
+    }
+    let dialog = this.callfc.openForm(
+      PopupPermissionsProcessesComponent,
+      '',
+      950,
+      650,
+      '',
+      obj,
+      '',
+      dialogModel
+    );
+
+    dialog.closed.subscribe((e) => {
+      if (e?.event && e?.event.length > 0) {
+        this.data.permissions = e.event ?? [];
+        // this.changeDetectorRef.detectChanges();
+        this.detectorRef.markForCheck();
+      }
+    });
+  }
 
   removeUser(index) {
     this.notiSv
@@ -1747,54 +1828,6 @@ export class PopupAddProcessComponent {
     formModelField.entityName = 'DP_Steps_Fields';
     formModelField.userPermission = this.dialog?.formModel?.userPermission;
     option.FormModel = formModelField;
-    debugger;
-    // let data = {
-    //   process: this.data,
-    //   vllBP002: this.vllBP002,
-    //   lstStepFields: this.extendInfos,
-    //   isForm: true,
-    // };
-    // let popupDialog = this.callfc.openForm(
-    //   FormPropertiesFieldsComponent,
-    //   '',
-    //   null,
-    //   null,
-    //   '',
-    //   data,
-    //   '',
-    //   option
-    // );
-    // popupDialog.closed.subscribe((e) => {
-    //   if (e && e?.event) {
-    //     this.extendInfos =
-    //       e?.event?.length > 0 ? JSON.parse(JSON.stringify(e?.event)) : [];
-
-    //     let extDocumentControls = this.extendInfos.filter(x => x.fieldType == 'Attachment' && x.documentControl != null && x.documentControl?.trim() != '');
-    //     if(extDocumentControls?.length > 0){
-    //       let lstDocumentControl = [];
-    //       extDocumentControls.forEach((ele) => {
-    //         const documents = JSON.parse(ele.documentControl);
-    //         documents.forEach((res) => {
-    //           var tmpDoc = {};
-    //           tmpDoc['recID'] = Util.uid();
-    //           tmpDoc['stepNo'] = 1;
-    //           tmpDoc['fieldID'] = res.recID;
-    //           tmpDoc['title'] = res.title;
-    //           tmpDoc['memo'] = res.memo;
-    //           tmpDoc['isRequired'] = res.isRequired ?? false;
-    //           tmpDoc['count'] = res.count ?? 0;
-    //           tmpDoc['templateID'] = res.templateID;
-    //           lstDocumentControl.push(tmpDoc);
-    //         });
-    //       });
-    //       this.data.documentControl = JSON.stringify(lstDocumentControl);
-    //     }
-    //     if(this.data?.steps[0]?.extendInfo){
-    //       this.data.steps[0].extendInfo = this.extendInfos;
-    //     }
-    //     this.detectorRef.markForCheck()
-    //   }
-    // });
     if (this.extendInfos) {
       this.extendInfos.forEach((element) => {
         if (typeof element.documentControl == 'string') {
@@ -1849,17 +1882,17 @@ export class PopupAddProcessComponent {
               lstDocumentControl.push(tmpDoc);
             });
           });
-          this.data.documentControl = JSON.stringify(lstDocumentControl);
+          this.data.documentControl = lstDocumentControl.length > 0 ? JSON.stringify(lstDocumentControl) : null;
         }
 
         if (this.data?.steps[0]?.extendInfo) {
           this.extendInfos.forEach((element) => {
             if (typeof element.documentControl != 'string') {
-              element.documentControl = JSON.stringify(element.documentControl);
+              element.documentControl = element.documentControl?.length > 0 ? JSON.stringify(element.documentControl) : null;
             }
 
             if (typeof element.dataFormat != 'string') {
-              element.dataFormat = JSON.stringify(element.dataFormat);
+              element.dataFormat = element.dataFormat?.length > 0 ? JSON.stringify(element.dataFormat) : null;
             }
           });
 
