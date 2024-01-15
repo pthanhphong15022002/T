@@ -330,33 +330,34 @@ export class CodxApprovalComponent
     this.changeMF(this.allMFunc, data);
     //Duyệt SYS201 , Ký SYS202 , Đồng thuận SYS203 , Hoàn tất SYS204 , Từ chối SYS205 , Làm lại SYS206 , Khôi phục SY207
     var funcID = e?.functionID;
-    if(funcID =="SYS05"){
-      let dialogAP = this.callfc.openForm(
-        CoDxAddApproversComponent,
-        'Thêm mới',
-        700,
-        650,
-        '',
-      );
-      dialogAP.closed.subscribe(res=>{
-        if(res?.event){
-          let model = new ApproveProcess();
-          model.tranRecID = data?.recID;
-          let ap = new Approver();
-          ap.roleType = "U";
-          ap.approver= res?.event;
-          this.api.execSv(
-          'ES',
-          'ERM.Business.ES',
-          'ApprovalTransBusiness',
-          'ApproveAsync',
-          [model,ap]
-        );
-        }
-      });
+    // if(funcID =="SYS05"){
+    //   let dialogAP = this.callfc.openForm(
+    //     CoDxAddApproversComponent,
+    //     'Thêm mới',
+    //     700,
+    //     650,
+    //     '',
+    //   );
+    //   dialogAP.closed.subscribe(res=>{
+    //     if(res?.event){
+    //       let model = new ApproveProcess();
+    //       model.tranRecID = data?.recID;
+    //       let ap = new Approver();
+    //       ap.roleType = "U";
+    //       ap.approver= res?.event;
+    //       this.api.execSv(
+    //       'ES',
+    //       'ERM.Business.ES',
+    //       'ApprovalTransBusiness',
+    //       'ApproveAsync',
+    //       [model,ap]
+    //     );
+    //     }
+    //   });
 
-    }
-    else if (data.eSign == true) {
+    // }
+    // else 
+    if (data.eSign == true) {
       //Kys
       if (
         funcID == 'SYS201' ||

@@ -36,3 +36,14 @@
   padding: 2px;
   border-radius: 2px;
 }
+.no-data{
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 100%;
+}
+.btn-next-step{
+  background: var(--primary) !important;
+  color: white;
+  cursor: pointer;
+}

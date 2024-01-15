@@ -47,6 +47,7 @@ export class FormFormatValueComponent implements OnInit {
   };
   lstTables = [];
   hasIndexNo: boolean = false;
+  documentControl = [];
   constructor(
     private detectorRef: ChangeDetectorRef,
     private callFc: CallFuncService,
@@ -59,7 +60,7 @@ export class FormFormatValueComponent implements OnInit {
     this.loadData();
   }
 
-  loadSubItem(){}
+  loadSubItem() {}
 
   loadData() {
     if (this.subItem?.fieldType) {
@@ -70,15 +71,24 @@ export class FormFormatValueComponent implements OnInit {
         case 'Combobox':
           break;
         case 'Table':
-          if(this.subItem?.tableFormat){
+          if (this.subItem?.tableFormat) {
             const format = JSON.parse(this.subItem?.tableFormat);
             this.hasIndexNo = format?.hasIndexNo;
           }
           let tables = [];
-          if(this.subItem?.dataFormat){
-             tables = JSON.parse(this.subItem?.dataFormat);
+          if (this.subItem?.dataFormat) {
+            tables = typeof this.subItem?.dataFormat == 'string' ? JSON.parse(this.subItem?.dataFormat) : this.subItem?.dataFormat;
           }
           this.lstTables = JSON.parse(JSON.stringify(tables));
+          break;
+        case 'Attachment':
+          if (typeof this.subItem?.documentControl == 'string') {
+            if (this.subItem?.documentControl)
+              this.documentControl = JSON.parse(this.subItem.documentControl);
+          } else {
+            this.documentControl = this.subItem.documentControl ?? [];
+          }
+
           break;
       }
     }

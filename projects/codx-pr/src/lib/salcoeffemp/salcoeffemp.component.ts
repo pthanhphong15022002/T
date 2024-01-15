@@ -2,6 +2,7 @@ import { AfterViewInit, Component, Injector, OnInit, TemplateRef, ViewChild } fr
 import { AuthStore, ButtonModel, CRUDService, CodxGridviewV2Component, DataService, DialogModel, NotificationsService, SidebarModel, UIComponent, Util, ViewModel, ViewType } from 'codx-core';
 import { PopupAddSalCoeffEmpComponent } from './popup/popup-add-salcoeffemp/popup-add-salcoeffemp.component';
 import { PopupCoppySalCoeffEmpComponent } from './popup/popup-coppy-salcoeffemp/popup-coppy-salcoeffemp.component';
+import moment from 'moment';
 
 @Component({
   selector: 'pr-salcoeffemp',
@@ -9,13 +10,9 @@ import { PopupCoppySalCoeffEmpComponent } from './popup/popup-coppy-salcoeffemp/
   styleUrls: ['./salcoeffemp.component.css']
 })
 export class SalcoeffempComponent extends UIComponent implements OnInit, AfterViewInit{
-  
-
   views:ViewModel[];
-  buttonAdd:ButtonModel[];
   dtServiceOrgUnit:CRUDService;
   columnsGrid:any[] = [];
-  gridViewSetUp:any;
   dataValues:any;
   filters:any = {};
   loading:boolean = false;
@@ -42,8 +39,7 @@ export class SalcoeffempComponent extends UIComponent implements OnInit, AfterVi
   }
 
   onInit(): void {
-    let crrDate = new Date();
-    this.filters["DowCode"] = crrDate.getFullYear() + "/" + crrDate.getMonth() + 1;
+    this.filters["DowCode"] = moment().format("YYYY/MM");
     this.dataValues = JSON.stringify(this.filters);
     this.cache.message("HR049")
     .subscribe((mssg:any) => {
@@ -68,9 +64,6 @@ export class SalcoeffempComponent extends UIComponent implements OnInit, AfterVi
         }
       }
     ];
-    this.buttonAdd = [{
-      id: 'btnAdd',
-    }];
     this.getColumns();
     this.getUserPermission();
     this.getListSalCoeff();
@@ -135,7 +128,7 @@ export class SalcoeffempComponent extends UIComponent implements OnInit, AfterVi
     }
   }
 
-  // onAction -- filter change
+  // filter DowCode || GroupSalCode
   onAction(event){
     if(event && event.data && event.data?.length > 0)
     {
@@ -148,9 +141,9 @@ export class SalcoeffempComponent extends UIComponent implements OnInit, AfterVi
     }
   }
 
-  //selectionChange -- select orgUnitID
+  // select orgUnitID
   onSelectionChange(event:any){
-    if(event?.data?.orgUnitID)
+    if(event && event?.data && event?.data?.orgUnitID &&  event?.data?.orgUnitID != this.filters["OrgUnitID"])
     {
       this.filters["OrgUnitID"] = event.data.orgUnitID;
       this.dataValues = JSON.stringify(this.filters);
@@ -163,7 +156,16 @@ export class SalcoeffempComponent extends UIComponent implements OnInit, AfterVi
     }
   }
 
-  //valueChange
+  // searchChanged
+  searchChanged(event) {
+    if(this.codxGridViewV2)
+    {
+      this.codxGridViewV2.dataService.searchText = event;
+      this.codxGridViewV2.refresh();
+    }
+  }
+
+  // valueChange
   valueChange(event){
     if(event)
     {
@@ -174,7 +176,7 @@ export class SalcoeffempComponent extends UIComponent implements OnInit, AfterVi
     }
   }
 
-  // onDatabound -- set row count page
+  // set rowCount when grid refresh
   onDatabound(){
     this.view.dataService.rowCount = this.codxGridViewV2?.dataService.rowCount ?? 0;
     this.view.setBreadcrumbs();
@@ -250,7 +252,7 @@ export class SalcoeffempComponent extends UIComponent implements OnInit, AfterVi
     }
   }
 
-  // coppy từ KowDs -- get permission
+  // get uer permission
   getUserPermission() {
     this.api.execSv<any>(
       'HR',
@@ -264,7 +266,7 @@ export class SalcoeffempComponent extends UIComponent implements OnInit, AfterVi
     });
   }
 
-  // get list LS_SalCoeff
+  // get LS_SalCoeff
   getListSalCoeff(){
     this.api.execSv("HR","LS","SalCoeffBusiness","GetAsync")
     .subscribe((res:any) => {

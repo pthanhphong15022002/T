@@ -122,10 +122,10 @@ export class PopupAddDealComponent
     subText: 'Input information',
   };
 
-  menuCoinsItems = {
+  menuCostItems = {
     icon: 'icon-u_dollar-sign-alt',
-    text: 'Chi phí Cơ hội',
-    name: 'tabBookingCost',
+    text: 'Chi phí ',
+    name: 'CostItems',
     subName: 'Opportunity Cost',
     subText: 'Opportunity Cost',
   };
@@ -186,12 +186,13 @@ export class PopupAddDealComponent
 
   arrCaculateField: any[] = [];
   isLoadedCF = false;
-  costInfos = [];
+  costInfos: any;
   totalCost = 0;
   grViewCost: any;
   tmpCost: CM_CostItems;
   viewOnly = false;
   cost: any;
+  copyTransID : any //copy transID cost
 
   constructor(
     private inject: Injector,
@@ -213,10 +214,12 @@ export class PopupAddDealComponent
     this.functionModule = dt?.data?.functionModule;
     this.model = { ApplyFor: '1' };
     this.gridViewSetup = dt?.data?.gridViewSetup;
+    this.copyTransID = dt?.data?.copyTransID
 
     // add view from customer
     this.isviewCustomer = dt?.data?.isviewCustomer;
     this.customerView = dt?.data?.customerView;
+    this.viewOnly = this.action == 'view';
 
     if (this.isLoading) {
       this.formModel = dt?.data?.formMD;
@@ -255,7 +258,17 @@ export class PopupAddDealComponent
     if (this.action != this.actionAdd) {
       this.customerIDOld = this.deal?.customerID;
       this.customerID = this.deal?.customerID;
-      this.costInfos = this.deal?.costItems ?? [];
+      let transIDCost = this.action === this.actionCopy ? this.copyTransID : this.deal.recID ;
+      this.codxCmService
+        .getCostItemsByTransID(transIDCost)
+        .subscribe((costs) => {
+          if (costs?.length > 0) {         
+            if (this.action === this.actionCopy)
+              costs.forEach((x) => (x.transID = this.deal.recID));
+            // this.calculateTotalCost(); //cux
+          }
+          this.costInfos = costs ?? [];
+        });
     }
     if (this.action === this.actionCopy) {
       this.deal.applyProcess =
@@ -273,7 +286,7 @@ export class PopupAddDealComponent
   onInit(): void {}
 
   async ngAfterViewInit(): Promise<void> {
-    this.tabInfo = [this.menuGeneralInfo, this.menuCoinsItems];
+    this.tabInfo = [this.menuGeneralInfo, this.menuCostItems];
     this.tabContent = [this.tabGeneralInfoDetail, this.tabCostItems];
     if (this.action !== this.actionAdd || this.isviewCustomer) {
       if (this.isviewCustomer) {
@@ -412,6 +425,14 @@ export class PopupAddDealComponent
           );
         } else if ($event.data === null || $event.data === '') {
           this.deleteOwner('U', 'C', '0', this.deal.consultantID, $event.field);
+        }
+      }
+      //lãi gộp
+      if ($event.field == 'dealValueTo') {
+        if (this.deal.dealValueTo) {
+          this.deal['grossProfit'] = this.deal.dealValueTo - this.totalCost;
+        } else {
+          this.deal['grossProfit'] = 0 - this.totalCost;
         }
       }
     }
@@ -593,6 +614,14 @@ export class PopupAddDealComponent
   }
 
   saveDeal() {
+    if (!this.checkValidateCost()) {
+      this.notificationsService.notify(
+        'Chưa hoàn thiện nội dung chi phí, hãy hoàn thiện để tiếp tục !',
+        '3'
+      );
+      return;
+    }
+
     if (!this.deal?.businessLineID) {
       this.notificationsService.notifyCode(
         'SYS009',
@@ -1141,7 +1170,7 @@ export class PopupAddDealComponent
           (await this.getListInstanceSteps(this.deal.processID));
         !this.deal.applyProcess && (await this.getAutoNumber());
       }
-      if (this.action === this.actionEdit) {
+      if (this.action == this.actionEdit || this.action == 'view') {
         await this.getListContactByDealID(this.deal.recID);
       }
       if (
@@ -1198,7 +1227,11 @@ export class PopupAddDealComponent
             );
             return;
           }
-          if (this.deal.businessLineID && this.action !== this.actionEdit) {
+          if (
+            this.deal.businessLineID &&
+            this.action !== this.actionEdit &&
+            this.action != 'view'
+          ) {
             if (this.deal.processID) {
               let result = this.checkProcessInList(this.deal?.processID);
               if (result) {
@@ -1233,14 +1266,19 @@ export class PopupAddDealComponent
     this.itemTabsInput(this.ischeckFields(listInstanceSteps));
   }
   async getListInstanceSteps(processId: any) {
-    let data = [processId, this.deal?.refID, this.action, '1'];
+    //bùa vì code cũ của bảo
+    let action = this.action == 'view' ? 'edit' : this.action;
+    let data = [processId, this.deal?.refID, action, '1'];
     this.codxCmService.getInstanceSteps(data).subscribe(async (res) => {
       if (res && res.length > 0) {
         let obj = {
           id: processId,
           steps: res[0],
           permissions: res[1],
-          dealId: this.action !== this.actionEdit ? res[2] : this.deal.dealID,
+          dealId:
+            this.action !== this.actionEdit && this.action != 'view'
+              ? res[2]
+              : this.deal.dealID,
           processSetting: res[3],
         };
         let isExist = this.listMemorySteps.some((x) => x.id === processId);
@@ -1251,7 +1289,7 @@ export class PopupAddDealComponent
         this.getSettingFields(res[3], this.listInstanceSteps);
         this.listParticipants = [];
         this.listParticipants = JSON.parse(JSON.stringify(obj?.permissions));
-        if (this.action === this.actionEdit) {
+        if (this.action == this.actionEdit || this.action == 'view') {
           this.owner = this.deal.owner;
         } else {
           if (
@@ -1460,15 +1498,15 @@ export class PopupAddDealComponent
   // --------------------------lOad Tabs ----------------------- //
   itemTabsInput(check: boolean): void {
     let menuInput = this.tabInfo.findIndex(
-      (item) => item?.name === this.menuInputInfo?.name //Phúc gắn thêm name để nó lấy chính xác hơn.
+      (item) => item?.name == this.menuInputInfo?.name
     );
     let tabInput = this.tabContent.findIndex(
-      (item) => item === this.tabCustomFieldDetail
+      (item) => item == this.tabCustomFieldDetail
     );
     if (this.isShowField) {
       if (check && menuInput == -1 && tabInput == -1) {
-        this.tabInfo.splice(2, 0, this.menuInputInfo);
-        this.tabContent.splice(2, 0, this.tabCustomFieldDetail);
+        this.tabInfo.splice(3, 0, this.menuInputInfo);
+        this.tabContent.splice(3, 0, this.tabCustomFieldDetail);
       } else if (!check && menuInput != -1 && tabInput != -1) {
         this.tabInfo.splice(menuInput, 1);
         this.tabContent.splice(tabInput, 1);
@@ -1489,8 +1527,8 @@ export class PopupAddDealComponent
       (item) => item === this.tabGeneralContactDetail
     );
     if (check && menuContact == -1 && tabContact == -1) {
-      this.tabInfo.splice(1, 0, this.menuGeneralContact);
-      this.tabContent.splice(1, 0, this.tabGeneralContactDetail);
+      this.tabInfo.splice(2, 0, this.menuGeneralContact);
+      this.tabContent.splice(2, 0, this.tabGeneralContactDetail);
     } else if (!check && menuContact != -1 && tabContact != -1) {
       this.tabInfo.splice(menuContact, 1);
       this.tabContent.splice(tabContact, 1);
@@ -1710,72 +1748,107 @@ export class PopupAddDealComponent
 
   //----------------Cost Items -----------------//
 
-  addCost() {
-    if (this.cost && !this.cost.itemName) {
-      this.notificationsService.notify(
-        'Chưa nhập nội dung chi phí, hãy hoàn thiện chi phí trước khi thêm chi phí mới !',
-        '3'
-      );
-      return;
-    }
-    let newCost = { ...this.tmpCost };
-    newCost.transID = this.deal?.recID;
-    newCost.quantity = 1;
-    newCost.costPrice = 0;
-    if (!this.costInfos) this.costInfos = [];
+  // addCost() {
+  //   if (this.cost && !this.cost.costItemName) {
+  //     this.notificationsService.notify(
+  //       'Chưa nhập nội dung chi phí, hãy hoàn thiện chi phí trước khi thêm chi phí mới !',
+  //       '3'
+  //     );
+  //     return;
+  //   }
 
-    this.costInfos.push(newCost);
-    this.cost = newCost;
-    this.calculateTotalCost();
-    this.detectorRef.detectChanges();
-  }
+  //   let newCost = new CM_CostItems();
+  //   newCost.transID = this.deal?.recID;
+  //   newCost.quantity = 1;
+  //   newCost.unitPrice = 0;
+  //   if (!this.costInfos) this.costInfos = [];
 
-  changeCost(evt: any) {
-    if (evt) {
-    }
-  }
-  deleteCost(index: number) {
-    if (this.costInfos?.length > index) {
-      this.costInfos?.splice(index, 1);
-      this.calculateTotalCost();
-      this.detectorRef.detectChanges();
-    }
-  }
-  editCost(evt: any, index: number) {
-    if (evt && this.costInfos?.length > index) {
-      switch (evt?.field) {
-        case 'quantity':
-          this.costInfos[index].quantity = evt?.data;
-          break;
+  //   this.costInfos.push(newCost);
+  //   this.cost = newCost;
+  //   this.calculateTotalCost();
+  //   this.detectorRef.detectChanges();
+  // }
 
-        case 'costPrice':
-          this.costInfos[index].costPrice = evt?.data;
-          break;
+  // changeCost(evt: any) {
+  //   if (evt) {
+  //   }
+  // }
+  // deleteCost(index: number) {
+  //   if (this.costInfos?.length > index) {
+  //     this.costInfos?.splice(index, 1);
+  //     if (this.costInfos.length == 0) this.cost = null;
+  //     this.calculateTotalCost();
+  //     this.detectorRef.detectChanges();
+  //   }
+  // }
+  // editCost(evt: any, index: number) {
+  //   if (evt && this.costInfos?.length > index) {
+  //     switch (evt?.field) {
+  //       case 'quantity':
+  //         this.costInfos[index].quantity = evt?.data;
+  //         break;
 
-        case 'itemName':
-          this.costInfos[index].itemName = evt?.data;
-          break;
+  //       case 'unitPrice':
+  //         this.costInfos[index].unitPrice = evt?.data;
+  //         break;
 
-        case 'itemID':
-          this.costInfos[index].itemID = evt?.data;
-          break;
+  //       case 'costItemName':
+  //         this.costInfos[index].costItemName = evt?.data;
+  //         break;
+
+  //       case 'costItemID':
+  //         this.costInfos[index].costItemID = evt?.data;
+  //         break;
+  //     }
+
+  //     this.cost = this.costInfos[index];
+  //     this.calculateTotalCost();
+  //   }
+  // }
+  // calculateTotalCost() {
+  //   this.totalCost = 0;
+  //   if (this.costInfos?.length > 0) {
+  //     this.costInfos?.forEach((cost) => {
+  //       if (cost?.quantity && cost?.unitPrice)
+  //         cost.amount = cost?.quantity * cost?.unitPrice;
+  //       else cost.amount = 0;
+  //       this.totalCost += cost.amount;
+  //     });
+  //   }
+  //   this.deal['dealCost'] = this.totalCost;
+  //   if (this.deal.dealValueTo) {
+  //     this.deal['grossProfit'] = this.deal.dealValueTo - this.totalCost;
+  //   } else {
+  //     this.deal['grossProfit'] = 0 - this.totalCost;
+  //   }
+  // }
+
+  checkValidateCost() {
+    let check = true;
+    this.costInfos?.forEach((cost) => {
+      if (!cost.costItemName || cost.costItemName.trim() == '') {
+        check = false;
+        return;
       }
-
-      this.cost = this.costInfos[index];
-      this.calculateTotalCost();
+    });
+    return check;
+  }
+  tabChange(e) {
+    if (e?.nextId == 'CostItems') {
     }
   }
-  calculateTotalCost() {
-    if (this.costInfos?.length > 0) {
-      this.totalCost = 0;
-      this.costInfos?.forEach((cost) => {
-        if (cost?.quantity && cost?.costPrice)
-          cost.costAmt = cost?.quantity * cost?.costPrice;
-        else cost.costAmt = 0;
-        this.totalCost += cost.costAmt;
-      });
+
+  dataCostItems(e) {
+    this.costInfos = e;
+  }
+
+  totalDataCost(e) {
+    this.deal['dealCost'] = e;
+    if (this.deal.dealValueTo) {
+      this.deal['grossProfit'] = this.deal.dealValueTo - e;
+    } else {
+      this.deal['grossProfit'] = 0 - e;
     }
-    this.detectorRef.detectChanges();
   }
   //---------------------------------------------//
 }

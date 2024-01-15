@@ -23,8 +23,9 @@
             [formModel]="form.formModel"
             field="businessLineID"
             [crrValue]="deal?.businessLineID"
-            [disabled]="deal?.processID || action === actionEdit"
+            [disabled]="deal?.processID || action === actionEdit || viewOnly"
             [model]="{ ProcessID: deal?.processID }"
+            [disabled]="viewOnly"
             (valueChange)="valueChangeBusinessLine($event)"
           >
           </codx-input>
@@ -33,7 +34,7 @@
           <codx-input
             [formModel]="form.formModel"
             field="businessLineID"
-            [disabled]="action === actionEdit"
+            [disabled]="action === actionEdit || viewOnly"
             [crrValue]="deal?.businessLineID"
             (valueChange)="valueChangeBusinessLine($event)"
           >
@@ -49,16 +50,6 @@
           [Group]="form.formGroup"
         >
         </codx-label>
-        <!-- <codx-input
-          type="text"
-          field="dealID"
-          [crrValue]="deal?.dealID"
-          [disabled]="true"
-          (valueChange)="valueChange($event)"
-        >
-        </codx-input> -->
-        <!-- {deal?.dealID}
-{planceHolderAutoNumber} -->
         <codx-input
           field="dealID"
           type="text"
@@ -70,38 +61,6 @@
         ></codx-input>
       </div>
     </div>
-
-    <!-- <div class="col-6">
-      <div class="form-group">
-        <codx-label
-          [formModel]="form.formModel"
-          [Group]="form.formGroup"
-          fiedName="BusinessLineID"
-        >
-        </codx-label>
-        <div *ngIf="deal?.businessLineID && isViewAll; else viewAll">
-          <codx-input
-            [formModel]="form.formModel"
-            field="businessLineID"
-            [crrValue]="deal?.businessLineID"
-            [disabled]="deal?.processID || action === actionEdit"
-            [model]="{ ProcessID: deal?.processID }"
-            (valueChange)="valueChangeBusinessLine($event)"
-          >
-          </codx-input>
-        </div>
-        <ng-template #viewAll>
-          <codx-input
-            [formModel]="form.formModel"
-            field="businessLineID"
-            [disabled]="action === actionEdit"
-            [crrValue]="deal?.businessLineID"
-            (valueChange)="valueChangeBusinessLine($event)"
-          >
-          </codx-input>
-        </ng-template>
-      </div>
-    </div> -->
   </div>
   <div class="row">
     <div class="col-12">
@@ -117,7 +76,7 @@
           [Group]="form.formGroup"
           field="customerID"
           [refValue]="'CMCustomers'"
-          [disabled]="isviewCustomer"
+          [disabled]="isviewCustomer || viewOnly"
           (valueChange)="valueChange($event)"
         >
         </codx-input>
@@ -138,12 +97,14 @@
           [crrValue]="deal.dealName"
           [placeholder]="gridViewSetup?.DealName?.description"
           field="dealName"
+          [disabled]="viewOnly"
           (valueChange)="valueChange($event)"
         >
         </codx-input>
       </div>
     </div>
   </div>
+
   <div class="row">
     <div class="col-6">
       <div class="form-group">
@@ -157,38 +118,12 @@
           type="number"
           field="dealValue"
           [min]="0"
+          [placeholder]="gridViewSetup?.DealValue?.description"
           [crrValue]="deal?.dealValue"
+          [disabled]="viewOnly"
           (valueChange)="valueChange($event)"
         >
         </codx-input>
-        <!-- <codx-input
-            field="currencyID"
-            [formModel]="form.formModel"
-            [Group]="form.formGroup"
-            (valueChange)="valueChange($event)"
-          >
-          </codx-input> -->
-        <!-- <div class="d-flex flex-row">
-          <div class="col-8 pe-2">
-            <codx-input
-              type="number"
-              field="dealValue"
-              [min]="0"
-              [crrValue]="deal?.dealValue"
-              (valueChange)="valueChange($event)"
-            >
-            </codx-input>
-          </div>
-          <div class="col-4">
-            <codx-input
-              field="currencyID"
-              [formModel]="form.formModel"
-              [Group]="form.formGroup"
-              (valueChange)="valueChange($event)"
-            >
-            </codx-input>
-          </div>
-        </div> -->
       </div>
     </div>
 
@@ -204,6 +139,7 @@
           [formModel]="form.formModel"
           [Group]="form.formGroup"
           field="expectedClosed"
+          [disabled]="viewOnly"
           (valueChange)="valueChange($event)"
         >
         </codx-input>
@@ -246,6 +182,7 @@
             [formModel]="form.formModel"
             [placeholder]="gridViewSetup?.SalespersonID?.description"
             [crrValue]="owner"
+            [disabled]="viewOnly"
             (valueChange)="valueChangeOwner($event, viewOwnerDefault)"
           >
           </codx-input>
@@ -259,6 +196,7 @@
             [allowFiltering]="true"
             [filterType]="'Contains'"
             [value]="owner"
+            [enabled]="!viewOnly"
           ></ejs-combobox>
         </ng-template>
       </div>
@@ -275,6 +213,7 @@
           field="consultantID"
           [formModel]="form.formModel"
           [Group]="form.formGroup"
+          [disabled]="viewOnly"
           (valueChange)="valueChange($event)"
         >
         </codx-input>
@@ -294,6 +233,7 @@
           [formModel]="form.formModel"
           [crrValue]="deal?.industries"
           field="industries"
+          [disabled]="viewOnly"
           (valueChange)="valueChange($event)"
         >
         </codx-input>
@@ -312,6 +252,7 @@
           [formModel]="form.formModel"
           [Group]="form.formGroup"
           field="channelID"
+          [disabled]="viewOnly"
           (valueChange)="valueChange($event)"
         >
         </codx-input>
@@ -369,32 +310,14 @@
           [Group]="form.formGroup"
           field="note"
           [crrValue]="deal?.note"
+          [disabled]="viewOnly"
           (valueChange)="valueChange($event)"
         >
         </codx-input>
       </div>
     </div>
   </div>
-  <!-- <div class="row">
-    <div class="col-12">
-      <div class="form-group">
-        <codx-label
-          fiedName="Memo"
-          [formModel]="form.formModel"
-          [Group]="form.formGroup"
-        >
-        </codx-label>
-        <codx-input
-          [formModel]="form.formModel"
-          [Group]="form.formGroup"
-          field="memo"
-          [crrValue]="deal?.memo"
-          (valueChange)="valueChange($event)"
-        >
-        </codx-input>
-      </div>
-    </div>
-  </div> -->
+
   <div *ngIf="!isShowField">
     <ng-container *ngIf="listFields && listFields?.length > 0">
       <ng-container *ngFor="let item of listFields">
@@ -425,9 +348,15 @@
       type="button"
       button
       class="btn btn-primary ms-1"
+      [disabled]="viewOnly"
       (click)="saveDeal()"
     >
-      <codx-label default="Lưu"></codx-label>
+      <codx-label
+        fiedName="btbSave"
+        formName="CMDeals"
+        gridViewName="grvCMDeals"
+        default="Lưu"
+      ></codx-label>
     </button>
   </div>
 </ng-template>
@@ -467,6 +396,7 @@
           [customerID]="deal?.customerID"
           [formModel]="dialog.formModel"
           [isAdd]="action == actionAdd"
+          [disable]="viewOnly"
           (valueChangeCustom)="valueChangeCustom($event)"
           (addFileCompleted)="addFileCompleted($event)"
         >
@@ -478,7 +408,35 @@
 
 <ng-template #costItems let-form>
   <ng-container>
-    <div
+    <div class="form-group">
+      <codx-label
+        fiedName="DealValueTo"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
+        default="Ngân sách"
+      >
+      </codx-label>
+      <codx-input
+        type="number"
+        field="dealValueTo"
+        [min]="0"
+        [placeholder]="gridViewSetup?.DealValueTo?.description"
+        [crrValue]="deal?.dealValueTo"
+        [disabled]="viewOnly"
+        (valueChange)="valueChange($event)"
+      >
+      </codx-input>
+    </div>
+    <crud-cost-items
+    *ngIf="costInfos"
+    [transID]="deal.recID"
+    [costInfos]="costInfos"
+    [isLoadedData]="true"
+    [viewOnly]="viewOnly"
+    (dataCostItems)="dataCostItems($event)"
+    (totalDataCost)="totalDataCost($event)"
+  ></crud-cost-items>
+     <!-- <div
       class="d-flex justify-content-end align-items-center mb-2 border-bottom"
     >
       <div class="d-flex flex-row text-end align-items-end mb-3">
@@ -523,7 +481,7 @@
               <span class="d-flex flex-row justify-content-end"
                 ><codx-label
                   class="text-end"
-                  fiedName="costPrice"
+                  fiedName="unitPrice"
                   [formName]="'CMCostItems'"
                   [gridViewName]="'grvCMCostItems'"
                   default="Số tiền"
@@ -542,22 +500,15 @@
               <div class="">
                 <codx-inplace
                   type="text"
-                  field="itemName"
-                  [value]="cost?.itemName"
-                  [refValue]="grViewCost?.itemName?.referedValue"
+                  field="costItemName"
+                  [value]="cost?.costItemName"
+                  [refValue]="grViewCost?.costItemName?.referedValue"
                   [cssClass]="'mt-2 cost-input'"
-                  [emptyText]="grViewCost?.itemName?.description"
+                  [emptyText]="grViewCost?.costItemName?.description"
                   (valueChange)="editCost($event, i)"
+                  [disabled]="viewOnly"
                 ></codx-inplace>
-                <!-- <codx-inplace
-                  type="combobox"
-                  field="itemID"
-                  [value]="cost?.itemID"
-                  [refValue]="grViewCost?.itemID?.referedValue"
-                  [cssClass]="'mt-2 cost-input'"
-                  [emptyText]="grViewCost?.itemID?.description"
-                  (valueChange)="editCost($event, i)"
-                ></codx-inplace> -->
+              
               </div>
             </td>
 
@@ -571,6 +522,7 @@
                   [cssClass]="' pe-5 mt-2 text-center w-90 cost-input'"
                   [emptyText]="grViewCost?.quantity?.description"
                   (valueChange)="editCost($event, i)"
+                  [disabled]="viewOnly"
                 ></codx-inplace>
               </div>
             </td>
@@ -578,18 +530,20 @@
               <div class="">
                 <codx-inplace
                   type="number"
-                  field="costPrice"
+                  field="unitPrice"
                   [format]="'0'"
-                  [value]="cost?.costPrice"
+                  [value]="cost?.unitPrice"
                   class="text-end"
                   [cssClass]="'mt-2  text-end w-90 cost-input'"
-                  [emptyText]="grViewCost?.costPrice?.description"
+                  [emptyText]="grViewCost?.unitPrice?.description"
                   (valueChange)="editCost($event, i)"
+                  [disabled]="viewOnly"
                 ></codx-inplace>
               </div>
             </td>
             <td>
               <div
+                *ngIf="!viewOnly"
                 class="w-10 d-flex align-items-center justify-content-start py-3"
               >
                 <span
@@ -618,7 +572,7 @@
           </tr>
         </tbody>
       </table>
-    </div>
+    </div>  -->
   </ng-container>
 </ng-template>
 
@@ -635,6 +589,7 @@
     [footer]="footer"
     [data]="deal"
     (setTitle)="setTitle($event)"
+    (tabChange)="tabChange($event)"
   ></codx-layout-add>
 
   <ng-template #tabGeneralInfoDetail>
@@ -683,7 +638,7 @@
       (lstContactDeleteEmit)="lstContactDeleteEmit($event)"
       [objectType]="'4'"
       [objectName]="deal?.dealName"
-      [hidenMF]="false"
+      [hidenMF]="viewOnly"
       [type]="'formAdd'"
     ></codx-list-contacts>
   </ng-container>

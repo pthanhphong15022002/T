@@ -728,7 +728,7 @@
 </ng-template>
 <ng-template #templateStatus let-data>
   <div class="">
-    <codx-vll
+    <!-- <codx-vll
       [name]="vllStatus"
       [field]="'Status'"
       [value]="data?.status"
@@ -736,7 +736,16 @@
       [showBgColor]="true"
       class="badge badge-light badge-sm"
     >
-    </codx-vll>
+    </codx-vll> -->
+    <codx-label
+      class="text-primary fs-7 cursor-pointer"
+      style="font-style: italic"
+      fiedName="viewDetailsCost"
+      [formName]="'CMDeals'"
+      [gridViewName]="'grvCMDeals'"
+      default="Xem chi tiết"
+      (click)="currentStep(data, '2')"
+    ></codx-label>
   </div>
 </ng-template>
 
@@ -780,8 +789,16 @@
 </ng-template>
 
 <ng-template #templateSteps let-data>
-  Khanh kêu click hiện lên 3 cục ...
-  <span> </span>
+  <!-- <view-step [stepID]="data?.stepID" (click)="currentStep(data, '2')"></view-step> -->
+  <codx-label
+    class="text-primary fs-7 cursor-pointer"
+    style="font-style: italic"
+    fiedName="viewDetailsCost"
+    [formName]="'CMDeals'"
+    [gridViewName]="'grvCMDeals'"
+    default="Xem chi tiết"
+    (click)="currentStep(data, '2')"
+  ></codx-label>
 </ng-template>
 
 <ng-template #templateExpectedClosed let-data>
@@ -837,7 +854,31 @@
   ></span>
 </ng-template>
 
-<ng-template #templateCost let-data> Chi phí </ng-template>
+<ng-template #templateCost let-data>
+  <div>
+    <span
+      class="fs-7"
+      #dealCost
+      [innerHTML]="
+        data?.dealCost
+          | formatvalue : view.formModel : 'dealCost' : dealCost
+          | async
+      "
+    ></span>
+  </div>
+  <div *ngIf="data?.dealCost">
+    <codx-label
+      class="text-primary fs-7 cursor-pointer"
+      style="font-style: italic"
+      fiedName="viewDetailsCost"
+      [formName]="'CMDeals'"
+      [gridViewName]="'grvCMDeals'"
+      default="Xem chi tiết"
+      (click)="viewDetailsCost(data.recID)"
+    ></codx-label>
+  </div>
+</ng-template>
+
 <ng-template #headerTempAct let-data> Công việc </ng-template>
 
 <ng-template #templateAct let-data> Công việc </ng-template>

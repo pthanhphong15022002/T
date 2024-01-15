@@ -25,12 +25,13 @@
     assemblyName="Codx.RptBusiness.RP"
     className="ReportListBusiness"
     method="GetReportsByModuleAsync"
-    [dataRequest]="['R',module]"
+    [dataRequest]="['D',module]"
     [tmpItem]="tmp"
     [isAdd]="false"
     [tmpRightToolBar]="tmpRightToolBar"
     (dataChange)="dataChange($event)"
     (selectedChange)="cardClick($event)"
+    (viewChange)="viewChange($event)"
     [tmpHeader]="tmpHeader"
   >
   </codx-view2>
@@ -84,24 +85,45 @@
         </ng-container>
       </div>
     </div>
-   
+
   </ng-container>
 </ng-template>
 
 <ng-template #tmp let-data>
-  <div class="d-flex flex-column w-225px m-2 position-relative cursor-pointer ws-report-card " 
-  >
-    <codx-card-img
-      imgCss="h-150px rounded border-bottom"
-      cardCss="border rounded h-225px"
-      [imageSrc]="data?.background || imgDefault"
-      [footer]="footer"
+  <ng-container *ngIf="viewID == '1'">
+    <div class="d-flex flex-column w-225px m-2 position-relative cursor-pointer ws-report-card "
     >
-    </codx-card-img>
-  </div>
-  <ng-template #footer>
-    <ng-container *ngTemplateOutlet="tmpFooter ; context: { $implicit: data , bookmark:true}"></ng-container>
-  </ng-template>
+      <codx-card-img
+        imgCss="h-150px rounded border-bottom"
+        cardCss="border rounded h-225px"
+        [imageSrc]="data?.background || imgDefault"
+        [footer]="footer"
+      >
+      </codx-card-img>
+    </div>
+    <ng-template #footer>
+      <ng-container *ngTemplateOutlet="tmpFooter ; context: { $implicit: data , bookmark:true}"></ng-container>
+    </ng-template>
+  </ng-container>
+  <ng-container *ngIf="viewID == '2'">
+    <div class="d-flex align-items-center border-bottom p-4 cursor-pointer">
+      <div class="w-50px me-6">
+          <div [id]="'ws-report-bookmark' + data?.recID" class="d-flex align-items-center justify-content-center w-30px h-30px cursor-pointer border border-gray rounded-circle ms-2 ws-report-bookmark" [ngClass]="!data.isBookMark?'opacity-25':'opacity-100'"  (click)="setBookMark(data?.recID);$event.stopPropagation()">
+            <span class="icon-18 icon-bookmark text-warning"></span>
+          </div>
+        </div>
+      <div class="w-100">{{data.customName}}</div>
+      <div class="w-100">{{data.category}}</div>
+      <div class="d-flex flex-column w-200px">
+        <div class="d-flex align-items-center">
+          <i class="icon-i-star text-warning icon-14"></i>
+          <span class="text-warning ms-1 mt-2px">4.5</span>
+          <i class="icon-i-eye icon-18 ms-5"></i>
+          <span class="ms-1 mt-1px">{{data?.views}}</span>
+        </div>
+      </div>
+    </div>
+  </ng-container>
 </ng-template>
 
 
@@ -122,6 +144,6 @@
       <span class="icon-18 icon-bookmark text-warning"></span>
     </div>
   </div>
-  
+
 </ng-template>
 <ng-template #empty></ng-template>

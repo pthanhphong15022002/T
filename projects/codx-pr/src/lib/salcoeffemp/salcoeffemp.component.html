@@ -1,13 +1,14 @@
 <codx-views #view
     [views]="views"
     idField="recID"
-    [selectedFirst]="true"
     [service]="'HR'"
     [autoLoad]="false"
     [hideMoreFuncs]="false"
+    [autoSearch]="false"
     (onActions)="onAction($event)"
     (clickMF)="clickMF($event)"
-    (changeDataMF)="changeDataMF($event)">
+    (changeDataMF)="changeDataMF($event)"
+    (searchChanged)="searchChanged($event)">
 </codx-views>
 <!-- template left -->
 <ng-template #tmpLeft>
@@ -90,7 +91,8 @@
         </div>
     </div>
 </ng-template>
-<!-- template data -->
+
+<!-- template data column-->
 <ng-template #tmpData let-data>
     <span>{{data[data.column.field]}}</span>
 </ng-template>
@@ -111,6 +113,8 @@
         </div>
     </div>
 </ng-template>
+
+<!-- template popup LS_SalCoeff -->
 <ng-template #tmpTooltip let-dialog>
     <div class="container h-100 p-5">
         <div class="form-group">

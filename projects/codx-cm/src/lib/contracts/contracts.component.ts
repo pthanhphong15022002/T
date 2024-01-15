@@ -271,9 +271,11 @@ export class ContractsComponent extends UIComponent {
           res.isbookmark = false;
         }
         switch (res.functionID) {
-          case 'CM0204_21':
           case 'CM0204_3':
-            console.log(res);
+          case 'CM0204_17':
+          case 'CM0204_21':
+          case 'CM0204_22':
+            res.disabled = data?.closed;
             break;
           case 'SYS02':
             res.disabled = data?.delete
@@ -368,7 +370,7 @@ export class ContractsComponent extends UIComponent {
             res.disabled = !data?.closed;
             break;
           case 'CM0204_18': // thanh lý
-            res.disabled = data?.status == '17' && data?.disposalType != '1';
+            res.disabled = (data?.status == '17' && data?.disposalType != '1') || data?.closed;
             break;
           case 'CM0204_19': // đưa vào quy trình xử lý
             res.disabled = data?.full
@@ -788,7 +790,10 @@ export class ContractsComponent extends UIComponent {
           this.beforeDelete(option, contract.recID)
         )
         .subscribe((res: any) => {
-          if (res) {
+          if (res?.contractName && res?.contractID) {
+            this.view.dataService.add(res).subscribe();
+            this.view.currentView['schedule'].refresh();
+            this.detectorRef.markForCheck();
           }
         });
     }
@@ -1245,52 +1250,88 @@ export class ContractsComponent extends UIComponent {
       dialogModel
     );
     dialogStatus.closed.subscribe((e) => {
-      // if (e && e?.event != null) {
-      //   this.statusCodeID = e?.event?.statusDefault;
-      //   this.statusCodeCmt = e?.event?.statusCodecmt;
-      //   let status = e?.event?.status;
-      //   let message = e?.event?.message;
-      //   if (status && !this.dataSelected.applyProcess) {
-      //     this.dataSelected.status = status;
-      //   }
-      //   if (message) {
-      //     this.notificationsService.notifyCode(
-      //       message,
-      //       0,
-      //       "'" + this.dataSelected?.dealName + "'"
-      //     );
-      //     return;
-      //   }
-      //   if (this.dataSelected.applyProcess && e?.event?.isOpenForm) {
-      //     if (status) {
-      //       switch (status) {
-      //         case '2':
-      //           if (oldStatus == '1') {
-      //             this.startNow(this.dataSelected);
-      //           } else {
-      //             this.moveStage(this.dataSelected);
-      //           }
-      //           break;
-      //         case '1':
-      //           this.startNew(this.dataSelected);
-      //           break;
-      //         case '3':
-      //         case '5':
-      //           this.moveReason(this.dataSelected, status === '3');
-      //           break;
-      //       }
-      //     }
-      //   } else {
-      //     this.dataSelected.statusCodeID = this.statusCodeID;
-      //     this.dataSelected.statusCodeCmt = this.statusCodeCmt;
-      //     this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
-      //     this.view.dataService.dataSelected = this.dataSelected;
-      //     this.view.dataService.update(this.dataSelected, true).subscribe();
-      //     this.detectorRef.detectChanges();
-      //     this.notificationsService.notifyCode('SYS007');
-      //   }
-      // }
+      if (e && e?.event != null) {
+        this.statusCodeID = e?.event?.statusDefault;
+        this.statusCodeCmt = e?.event?.statusCodecmt;
+        let status = e?.event?.status;
+        let message = e?.event?.message;
+        if (status && !this.dataSelected.applyProcess) {
+          this.dataSelected.status = status;
+        }
+        if (message) {
+          this.notiService.notifyCode(
+            message,
+            0,
+            "'" + this.dataSelected?.dealName + "'"
+          );
+          return;
+        }
+        if (this.dataSelected.applyProcess && e?.event?.isOpenForm) {
+          if (status) {
+            switch (status) {
+              case '2':
+                if (oldStatus == '1') {
+                  this.startInstance(this.dataSelected);
+                } else {
+                  this.moveStage(this.dataSelected);
+                }
+                break;
+              case '1':
+                this.startNew(this.dataSelected);
+                break;
+              case '3':
+              case '5':
+                this.moveReason(this.dataSelected, status === '3');
+                break;
+            }
+          }
+        } else {
+          this.dataSelected.statusCodeID = this.statusCodeID;
+          this.dataSelected.statusCodeCmt = this.statusCodeCmt;
+          this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
+          this.view.dataService.dataSelected = this.dataSelected;
+          this.view.dataService.update(this.dataSelected, true).subscribe();
+          this.detectorRef.detectChanges();
+          this.notiService.notifyCode('SYS007');
+        }
+      }
     });
+  }
+
+  startNew(data) {
+    this.notiService
+      .alertCode('CM063', null, ['"' + data?.contractName + '"' || ''])
+      .subscribe((x) => {
+        if (x.event && x.event.status == 'Y') {
+          // this.startDeal(data);
+          this.cmService.startNewInstance([data.refID]).subscribe((res) => {
+            if (res) {
+              let dataUpdate = [
+                res[1],
+                null,
+                data?.expectedClosed,
+                this.statusCodeID,
+                this.statusCodeCmt,
+              ];
+              this.cmService
+                .moveStageBackDataCM(dataUpdate)
+                .subscribe((deal) => {
+                  if (deal) {
+                    this.dataSelected = deal;
+                    this.view.dataService
+                      .update(this.dataSelected, true)
+                      .subscribe();
+                    // if (this.detailViewDeal)
+                    //   this.detailViewDeal.dataSelected = this.dataSelected;
+                    // this.detailViewDeal?.reloadListStep(res[0]);
+                    // this.detectorRef.detectChanges();
+                    // this.resetStatusCode();
+                  }
+                });
+            }
+          });
+        }
+      });
   }
 
   // moveReason(data: any, isMoveSuccess: boolean) {

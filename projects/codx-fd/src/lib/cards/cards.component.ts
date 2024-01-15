@@ -189,26 +189,29 @@ export class CardsComponent extends UIComponent {
       });
     } else if (event.functionID === 'SYS02') {
       // delete
-      (this.view.dataService as CRUDService)
-        .delete([data])
-        .subscribe((res: any) => {
-          if (res && res.data) {
-            this.api
-              .execSv(
-                'FD',
-                'ERM.Business.FD',
-                'CardsBusiness',
-                'DeleteCardAsync',
-                data.recID
-              )
-              .subscribe((result) => {
-                if (result) {
-                  this.notiService.notifyCode('SYS008');
-                }
-              });
+      this.api.execSv('FD', 'ERM.Business.FD', 'CardsBusiness', 'GetCardInforAsync', [
+        data.recID,
+      ])
+      .subscribe((res: any) => {
+        if (res) {
+          const checkStatus = res.gifts?.find((i) => i.status === '2' || i.status === '3');
+          if (checkStatus) {
+            this.notiService.notifyCode('FD009');
+            return;
           }
-          this.detectorRef.detectChanges();
-        });
+
+          if(res.approveStatus == "1" || res.approveStatus == "2"){
+            this.notiService.notifyCode('FD010');
+            return;
+          }
+
+          if(res?.gifts?.length > 0 || res?.point > 0){
+            this.deleteConfirm(data);
+          } else {
+            this.deleteCardAPI(data);
+          }
+        }
+      });
     } else {
       var customData = {
         refID: '',
@@ -229,7 +232,36 @@ export class CardsComponent extends UIComponent {
     }
   }
 
-  deleteCard(card: any) {}
+  deleteConfirm(data) {
+    this.notiService.alertCode('FD011').subscribe((confirm) => {
+      if (confirm?.event && confirm?.event?.status == 'Y') {
+        this.deleteCardAPI(data);
+      }
+    });
+  }
+
+  deleteCardAPI(data){
+    (this.view.dataService as CRUDService)
+      .delete([data], false)
+      .subscribe((res: any) => {
+        if (res && res.data) {
+          this.api
+            .execSv(
+              'FD',
+              'ERM.Business.FD',
+              'CardsBusiness',
+              'DeleteCardAsync',
+              data.recID
+            )
+            .subscribe((result) => {
+              if (result) {
+                this.notiService.notifyCode('SYS008');
+              }
+            });
+        }
+        this.detectorRef.detectChanges();
+      });
+  }
 
   changeDataMF(event: any) {
     if (event?.length > 0) {

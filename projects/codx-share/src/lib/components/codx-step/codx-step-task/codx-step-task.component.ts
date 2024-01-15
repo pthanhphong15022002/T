@@ -1888,6 +1888,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       isUpdateParent: askUpdateParent,
       step: this.currentStep,
       isSave: this.isSaveProgress,
+      formModel: this.grvMoreFunction,
     };
     let popupTask = this.callfc.openForm(
       UpdateProgressComponent,

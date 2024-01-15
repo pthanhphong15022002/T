@@ -32,6 +32,7 @@ export const routes: Routes = [
         },
         {
           path: 'approvals/:funcID',
+          data: { noReuse: true },
           component: AppropvalNewsComponent,
         },
         {
@@ -60,6 +61,7 @@ export const routes: Routes = [
     children:[
       {
         path: ':funcID',
+        data: { noReuse: true },
         component: AppropvalNewsComponent,
     },
     ]

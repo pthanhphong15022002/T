@@ -122,6 +122,10 @@ import { FormatStatusCodePipe } from './pipes/format-status-code.pipe';
 import { ScrollSpyDirective } from './contracts/contracts-detail/scroll-spy.directive';
 import { ViewInstancesComponent } from 'projects/codx-dp/src/lib/view-instances/view-instances.component';
 import { CodxViewComponent } from './contracts/codx-view/codx-view.component';
+import { CurrentStepComponent } from './deals/step-task/current-step/current-step.component';
+import { PopupCostItemsComponent } from './deals/popup-cost-items/popup-cost-items.component';
+import { ViewStepComponent } from './deals/step-task/view-step/view-step.component';
+import { CostItemsComponent } from './deals/popup-cost-items/cost-items/cost-items.component';
 
 export const routes: Routes = [
   {
@@ -245,6 +249,8 @@ const T_Component: Type<any>[] = [
   CodxListDealsComponent,
   CodxTabDealcompetitorsComponent,
   PopupAddDealcompetitorComponent,
+  PopupCostItemsComponent,
+  CostItemsComponent,
   ViewDealcompetitorsComponent,
   QuotationsViewDetailComponent,
   CasesComponent,
@@ -302,6 +308,8 @@ const T_Component: Type<any>[] = [
   ViewLeadDetailComponent,
   ScrollSpyDirective,
   CodxViewComponent,
+  CurrentStepComponent,
+  ViewStepComponent,
 ];
 
 @NgModule({

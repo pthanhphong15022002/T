@@ -52,7 +52,7 @@
 
 <ng-template #body>
     <ng-container *ngIf="dataSource && (dataSource.length > 0) && tmpItem">
-        <ng-container *ngIf="viewActive == '1'">
+        <ng-container *ngIf="viewActive == '1' , else elseView">
             <div id="codx-view2-body" class="d-flex flex-wrap h-auto scroll-y codx-view2-body" [ngClass]="bodyCss">
                 <ng-container *ngFor="let item of dataSource">
                     <div (click)="selectedItem(item)">
@@ -61,18 +61,17 @@
                 </ng-container>
             </div>
         </ng-container>
-        <ng-container *ngIf="viewActive == '2'">
+
+        <ng-template #elseView>
             <div class="d-flex flex-column">
                 <ng-container *ngFor="let item of dataSource">
-                    <ng-container *ngTemplateOutlet="list ; context:{ $implicit: item }"></ng-container>
+                    <div (click)="selectedItem(item)">
+                        <ng-container *ngTemplateOutlet="tmpItem ; context:{ $implicit: item }"></ng-container>
+                    </div>
                 </ng-container>
             </div>
-        </ng-container>
+        </ng-template>
     </ng-container>
 </ng-template>
 
-<ng-template #list let-data>
-    <div class="d-flex align-items-center border-bottom p-4 cursor-pointer" (click)="selectedItem(data)">
-        {{data.customName}}
-    </div>
-</ng-template>
+
