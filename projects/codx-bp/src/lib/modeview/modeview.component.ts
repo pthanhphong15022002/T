@@ -324,6 +324,7 @@ export class ModeviewComponent implements OnInit {
             icon: vllText.icon,
             text: vllText.text,
             textColor : vllText.textColor,
+            value : vllText.value
           }
           data.dataFormat.push(col);
         }

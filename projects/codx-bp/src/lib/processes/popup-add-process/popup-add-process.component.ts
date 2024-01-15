@@ -1849,17 +1849,17 @@ export class PopupAddProcessComponent {
               lstDocumentControl.push(tmpDoc);
             });
           });
-          this.data.documentControl = JSON.stringify(lstDocumentControl);
+          this.data.documentControl = lstDocumentControl.length > 0 ? JSON.stringify(lstDocumentControl) : null;
         }
 
         if (this.data?.steps[0]?.extendInfo) {
           this.extendInfos.forEach((element) => {
             if (typeof element.documentControl != 'string') {
-              element.documentControl = JSON.stringify(element.documentControl);
+              element.documentControl = element.documentControl?.length > 0 ? JSON.stringify(element.documentControl) : null;
             }
 
             if (typeof element.dataFormat != 'string') {
-              element.dataFormat = JSON.stringify(element.dataFormat);
+              element.dataFormat = element.dataFormat?.length > 0 ? JSON.stringify(element.dataFormat) : null;
             }
           });
 
