@@ -77,7 +77,7 @@ export class FormFormatValueComponent implements OnInit {
           }
           let tables = [];
           if (this.subItem?.dataFormat) {
-            tables = JSON.parse(this.subItem?.dataFormat);
+            tables = typeof this.subItem?.dataFormat == 'string' ? JSON.parse(this.subItem?.dataFormat) : this.subItem?.dataFormat;
           }
           this.lstTables = JSON.parse(JSON.stringify(tables));
           break;

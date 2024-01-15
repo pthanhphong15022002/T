@@ -441,8 +441,7 @@
         <div class="dropzone-msg-title mb-2">
           <codx-label
             name="lblContentAddAvatar"
-            [formName]="'DPProcesses'"
-            [gridViewName]="'grvDPProcesses'"
+            [formModel]="dialog.formModel"
             default="Chọn hình ảnh"
             class="fw-bold"
           >
@@ -451,8 +450,7 @@
         <span class="dropzone-msg-desc">
           <codx-label
             name="lblRequiredAvatar"
-            [formName]="'DPProcesses'"
-            [gridViewName]="'grvDPProcesses'"
+            [formModel]="dialog.formModel"
             default="(Nên chọn hình ảnh có kích thước ...px đến ...px)"
             class="fw-bold"
           ></codx-label>
@@ -702,7 +700,8 @@
             (elementDraw)="eleDraw($event)"
             (positionChange)="onDrop($event)"
             [selectedItems]="selectedItems"
-            [getCustomTool]="getCustomTool"
+            (onUserHandleMouseDown)="userHandleClick($event)"
+            [drawingObject]=" { type: 'Orthogonal' }"
           >
             <ng-template #nodeTemplate let-data>
               <ng-container [ngSwitch]="data.shape?.version">

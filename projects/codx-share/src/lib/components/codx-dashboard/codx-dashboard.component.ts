@@ -47,6 +47,7 @@ import { NgxCaptureService } from 'ngx-capture';
   selector: 'codx-dashboard',
   templateUrl: 'codx-dashboard.component.html',
   styleUrls: ['codx-dashboard.component.scss'],
+  host: {class: 'h-100'}
 })
 export class CodxDashboardComponent implements OnInit, AfterViewInit {
   @HostListener('window:resize', ['$event'])
@@ -300,7 +301,7 @@ export class CodxDashboardComponent implements OnInit, AfterViewInit {
           new ResizeObserver(() => {
               timeout && clearTimeout(timeout);
              timeout = setTimeout(()=>{
-              if(this.objDashboard) this.objDashboard.refresh();
+              if(this.objDashboard && this.objDashboard.childPanels?.length) this.objDashboard.refresh();
             },200)
           }).observe(aside);
         }

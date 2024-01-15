@@ -4481,3 +4481,13 @@ codx-filter-form ejs-dropdownlist{
 .wp-contents-files{
   clear: both;
 }
+
+lib-deals .e-listview .e-list-group-item {
+  color:var(--gray-700);
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  -webkit-line-clamp: 1;
+  line-height: 28px;
+}

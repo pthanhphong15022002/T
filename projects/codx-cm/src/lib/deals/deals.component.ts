@@ -1018,6 +1018,9 @@ export class DealsComponent
           isView: true,
           type,
           view: this.view,
+          statusCodeID: this.statusCodeID,
+          statusCodeCmt: this.statusCodeCmt,
+          detailViewDeal: this.detailViewDeal,
           // listInsStepStart: this.listInsStep,
         };
         let option = new DialogModel();
@@ -2050,6 +2053,9 @@ export class DealsComponent
             break;
           case 'DealCost':
             template = this.templateCost;
+            break;
+          case 'Status':
+            template = this.templateStatus;
             break;
           default:
             break;
