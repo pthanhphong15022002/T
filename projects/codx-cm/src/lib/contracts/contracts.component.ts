@@ -1476,17 +1476,28 @@ export class ContractsComponent extends UIComponent {
 
   autoStart(event) {
     if (event) {
-      this.api
-        .exec<any>('DP', 'InstancesBusiness', 'StartInstanceAsync', [
-          this.dataSelected?.refID,
-        ])
-        .subscribe((res) => {
-          console.log(res);
-          if (res) {
-            this.listInsStep = res;
-          }
-        });
-    }
+      this.cmService
+      .startInstance([this.dataSelected?.refID, this.dataSelected?.recID, 'CM0204', 'CM_Contracts'])
+      .subscribe((resDP) => {
+        if (resDP) {
+          var datas = [this.dataSelected?.recID];
+          this.cmService.startContrart(datas).subscribe((res) => {
+            if (res) {
+              this.dataSelected = res;
+              this.dataSelected = JSON.parse(
+                JSON.stringify(this.dataSelected)
+              );
+              this.detailViewContract.reloadListStep(resDP[1]);
+              this.notiService.notifyCode('SYS007');
+              this.view.dataService
+                .update(this.dataSelected, true)
+                .subscribe();
+            }
+            this.detectorRef.detectChanges();
+          });
+        }
+      });
+    } 
   }
 
   loadParam() {
