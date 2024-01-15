@@ -346,17 +346,18 @@
                       <div class="d-flex align-items-center">
                         <i class="icon-drag_indicator me-2 cursor-move" cdkDragHandle></i>
                         <span class="fw-bold">{{data.title}}</span>
+                        <span class="text-danger ms-2" *ngIf="data.isRequired">(*)</span>
                       </div>
                       <table class="table table-bordered mt-2">
                         <thead>
                           <tr>
-                            <!-- <th scope="col">#</th> -->
+                            <th scope="col" *ngIf="data?.tableFormat?.hasIndexNo">#</th>
                             <th scope="col" *ngFor="let col of data.dataFormat">{{col.title}}</th>
                           </tr>
                         </thead>
                         <tbody>
                           <tr>
-                            <!-- <th scope="row"></th> -->
+                            <th scope="row" *ngIf="data?.tableFormat?.hasIndexNo"></th>
                             <td *ngFor="let col of data.dataFormat"></td>
                           </tr>
                         </tbody>
