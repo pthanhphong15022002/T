@@ -111,28 +111,29 @@
       <span class="fw-bold">{{ data.title }}</span>
       <span class="text-danger ms-2" *ngIf="data?.isRequired">(*)</span>
     </div>
-    <codx-input
-      *ngIf="data?.fieldType != 'Number'"
-      class="w-100 border mt-2 px-4 py-3 rd-3px"
-      [field]="data?.fieldName"
-      type="text"
-      [format]="data?.dataFormat"
-      [require]="data?.isRequired"
-      [placeholder]="data?.description || ''"
-      [crrValue]="data?.defaultValue"
-      [disabled]="true"
-    ></codx-input>
-    <codx-input
-      *ngIf="data?.fieldType == 'Number'"
-      class="w-100 border mt-2 px-4 py-3 rd-3px"
-      [field]="data?.fieldName"
-      type="number"
-      [format]="data?.dataFormat"
-      [require]="data?.isRequired"
-      [placeholder]="data?.description || ''"
-      [crrValue]="data?.defaultValue"
-      [disabled]="true"
-    ></codx-input>
+    <div class="w-100 mt-2">
+      <codx-input
+        *ngIf="data?.fieldType != 'Number'"
+        [field]="data?.fieldName"
+        type="text"
+        [format]="data?.dataFormat"
+        [require]="data?.isRequired"
+        [placeholder]="data?.description || ''"
+        [crrValue]="data?.defaultValue"
+        [disabled]="true"
+      ></codx-input>
+      <div class=""></div>
+      <codx-input
+        *ngIf="data?.fieldType == 'Number'"
+        [field]="data?.fieldName"
+        type="number"
+        [format]="data?.dataFormat"
+        [require]="data?.isRequired"
+        [placeholder]="data?.description || ''"
+        [crrValue]="data?.defaultValue"
+        [disabled]="true"
+      ></codx-input>
+    </div>
   </div>
 </ng-template>
 
@@ -278,9 +279,7 @@
       <span class="fw-bold">{{ data.title }}</span>
       <span class="text-danger ms-2" *ngIf="data?.isRequired">(*)</span>
     </div>
-    <div
-      class="w-100 mt-2"
-    >
+    <div class="w-100 mt-2">
       <codx-input
         [field]="data?.fieldName"
         type="datetime"
@@ -351,9 +350,7 @@
         />
       </div>
     </div>
-    <ng-container
-      *ngIf="documentControl && documentControl.length > 0"
-    >
+    <ng-container *ngIf="documentControl && documentControl.length > 0">
       <table class="table mt-2">
         <thead>
           <tr class="fw-bold bg-light">
