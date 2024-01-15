@@ -137,9 +137,8 @@ export class LoginDefaultComponent extends UIComponent {
               }, 1000);
             }
           } else if (z.event == 'WaitingLoginQRCode') {
-            let user = JSON.parse(z.data.user);
             let objData = {
-              userName: user.userName,
+              userName: z.data.userName,
             };
             let waitingLogin = this.callfc.openForm(
               WaitingLoginQrcodeComponent,

@@ -935,6 +935,7 @@ export class CodxAcService {
       if([MorfuncDefault.XuatDuLieu].includes(element.functionID)) element.disabled = true;
       element.isbookmark = true;
       if(type === '3' && element.functionID === 'ACT09')  element.disabled = false;
+      if(element.functionID === MorfuncDefault.Xem) element.disabled = true;
     },{})
   }
 

@@ -24,7 +24,7 @@ import {
   RequestOption,
   UIComponent,
 } from 'codx-core';
-import { Subject, lastValueFrom, takeUntil } from 'rxjs';
+import { Subject, lastValueFrom, map, takeUntil } from 'rxjs';
 import { CodxAcService, fmItemsColor, fmItemsProduction, fmItemsPurchase, fmItemsSales, fmItemsSize, fmItemsStyle, fmUMConversion } from '../../../codx-ac.service';
 import { toPascalCase } from '../../../utils';
 import { ItemsSizeAddComponent } from '../items-size-add/items-size-add.component';
@@ -106,9 +106,6 @@ export class ItemsAddComponent extends UIComponent {
   ];
   lblAdd: any;
   oDimGroup:any;
-  itemPurchase:any;
-  itemSales:any;
-  itemProduction:any;
   private destroy$ = new Subject<void>();
   constructor(
     inject: Injector,
@@ -182,9 +179,6 @@ export class ItemsAddComponent extends UIComponent {
     if(this.dataDefault.isEdit){
       this.api.exec('IV', 'ItemsBusiness', 'LoadInfoItemAsync', this.dataDefault.itemID).pipe(takeUntil(this.destroy$)).subscribe((res: any) => {
         if (res) {
-          this.itemPurchase = res?.itemPurchase || null;
-          this.itemSales = res?.itemSales || null;
-          this.itemProduction = res?.itemProduction || null;
           this.lstItemSize = res?.lstItemSize || [];
           this.lstItemStyle = res?.lstItemStyle || [];
           this.lstItemColor = res?.lstItemColor || [];
@@ -205,29 +199,29 @@ export class ItemsAddComponent extends UIComponent {
       }
     })
 
-    this.itemsPurchaseSV.addNew().subscribe((res: any) => {
-      if (res) {
-        this.fgItemsPurchase.patchValue(res);
-        this.fmItemsPurchase.currentData = res;
-        this.detectorRef.detectChanges();
-      }
-    })
+    // this.itemsPurchaseSV.addNew().subscribe((res: any) => {
+    //   if (res) {
+    //     this.fgItemsPurchase.patchValue(res);
+    //     this.fmItemsPurchase.currentData = res;
+    //     this.detectorRef.detectChanges();
+    //   }
+    // })
 
-    this.itemsSalesSV.addNew().subscribe((res: any) => {
-      if (res) {
-        this.fgItemsSales.patchValue(res);
-        this.fmItemsSales.currentData = res;
-        this.detectorRef.detectChanges();
-      }
-    })
+    // this.itemsSalesSV.addNew().subscribe((res: any) => {
+    //   if (res) {
+    //     this.fgItemsSales.patchValue(res);
+    //     this.fmItemsSales.currentData = res;
+    //     this.detectorRef.detectChanges();
+    //   }
+    // })
 
-    this.itemsProductionSV.addNew().subscribe((res: any) => {
-      if (res) {
-        this.fgItemsProduction.patchValue(res);
-        this.fmItemsProduction.currentData = res;
-        this.detectorRef.detectChanges();
-      }
-    })
+    // this.itemsProductionSV.addNew().subscribe((res: any) => {
+    //   if (res) {
+    //     this.fgItemsProduction.patchValue(res);
+    //     this.fmItemsProduction.currentData = res;
+    //     this.detectorRef.detectChanges();
+    //   }
+    // })
   }
   ngDoCheck() {
     this.detectorRef.detectChanges();
@@ -305,19 +299,63 @@ export class ItemsAddComponent extends UIComponent {
 
   //#region Function
   openFormItemSize(type){
-    if(!this.validateItemID()) return;
-    let data :any = {
-      headerText: (this.lblAdd + ' ' + (type === '1' ? 'quy cách đóng gói' : 'quy cách')).toUpperCase(),
-    };
-    let option = new DialogModel();
-    option.FormModel = this.fmItemsSize;
-    option.DataService = this.itemSizeSV;
-    this.itemSizeSV.addNew().subscribe((res: any) => {
+    this.form.form.save(null, 0, '', '', false)
+    .pipe(takeUntil(this.destroy$))
+    .subscribe((res: any) => {
+      if (!res) return;
+      if (res.hasOwnProperty('save')) {
+        if (res.save.hasOwnProperty('data') && !res.save.data) return;
+      }
+      if (res.hasOwnProperty('update')) {
+        if (res.update.hasOwnProperty('data') && !res.update.data) return;
+      }
+      this.itemSizeSV.addNew().subscribe((res: any) => {
+        if (res) {
+          res.itemID = this.form.form?.data?.itemID;
+          res.sizeType = type;
+          let data: any = {
+            headerText: (this.lblAdd + ' ' + (type === '1' ? 'quy cách đóng gói' : 'quy cách')).toUpperCase(),
+            dataDefault: { ...res }
+          };
+          this.cache.gridViewSetup(this.fmItemsSize.formName, this.fmItemsSize.gridViewName).subscribe((o) => {
+            let option = new DialogModel();
+            option.FormModel = this.fmItemsSize;
+            option.DataService = this.itemSizeSV;
+            let dialog = this.callfc.openForm(
+              ItemsSizeAddComponent,
+              '',
+              500,
+              480,
+              '',
+              data,
+              '',
+              option
+            );
+            dialog.closed.subscribe((res) => {
+              if (res.event != null) {
+                this.lstItemSize.push({ ...res?.event?.data });
+                this.detectorRef.detectChanges();
+              }
+            });
+          })
+        }
+      })
+    })
+  }
+
+  editItemSize(dataEdit,type){
+    this.itemSizeSV.edit({...dataEdit}).subscribe((res:any)=>{
       if (res) {
         res.itemID = this.form.form?.data?.itemID;
         res.sizeType = type;
-        data.dataDefault = {...res};
-        this.cache.gridViewSetup(this.fmItemsSize.formName,this.fmItemsSize.gridViewName).subscribe((o)=>{
+        let data: any = {
+          headerText: ('Chỉnh sửa' + ' ' + (type === '1' ? 'quy cách đóng gói' : 'quy cách')).toUpperCase(),
+          dataDefault: { ...res }
+        };
+        this.cache.gridViewSetup(this.fmItemsSize.formName, this.fmItemsSize.gridViewName).subscribe((o) => {
+          let option = new DialogModel();
+          option.FormModel = this.fmItemsSize;
+          option.DataService = this.itemSizeSV;
           let dialog = this.callfc.openForm(
             ItemsSizeAddComponent,
             '',
@@ -329,116 +367,304 @@ export class ItemsAddComponent extends UIComponent {
             option
           );
           dialog.closed.subscribe((res) => {
-            if (res.event != null) {
-              this.lstItemSize.push({...res?.event?.data});
+            if (res && res?.event) {
+              let data = res?.event?.data;
+              let index = this.lstItemSize.findIndex((x) => x.recID == data.recID);
+              if (index > -1) {
+                this.lstItemSize[index] = data;
+              }
               this.detectorRef.detectChanges();
             }
-          });
+          })
         })
       }
     })
+  }
+
+  deleteItemSize(dataDelete:any){
+    this.itemSizeSV.delete([dataDelete], true,null,null,null,null,null,false).pipe(takeUntil(this.destroy$)).subscribe((res: any) => {
+      if (res && !res?.error) {
+        let index = this.lstItemSize.findIndex((x) => x.recID == dataDelete.recID);
+        if (index > -1) {
+          this.lstItemSize.splice(index, 1);
+          this.detectorRef.detectChanges();
+        }
+      }
+    });
   }
 
   openFormItemStyle(){
-    if(!this.validateItemID()) return;
-    let data :any = {
-      headerText: (this.lblAdd + ' ' + 'thuộc tính').toUpperCase(),
-    };
-    let option = new DialogModel();
-    option.FormModel = this.fmItemsStyle;
-    option.DataService = this.itemStyleSV;
-    this.itemStyleSV.addNew().subscribe((res: any) => {
+    this.form.form.save(null, 0, '', '', false)
+    .pipe(takeUntil(this.destroy$))
+    .subscribe((res: any) => {
+      if (!res) return;
+      if (res.hasOwnProperty('save')) {
+        if (res.save.hasOwnProperty('data') && !res.save.data) return;
+      }
+      if (res.hasOwnProperty('update')) {
+        if (res.update.hasOwnProperty('data') && !res.update.data) return;
+      }
+      this.itemStyleSV.addNew().subscribe((res: any) => {
+        if (res) {
+          res.itemID = this.form.form?.data?.itemID;
+          let data :any = {
+            headerText: (this.lblAdd + ' ' + 'thuộc tính').toUpperCase(),
+            dataDefault:{...res}
+          };
+          this.cache.gridViewSetup(this.fmItemsStyle.formName,this.fmItemsStyle.gridViewName).subscribe((o)=>{
+            let option = new DialogModel();
+            option.FormModel = this.fmItemsStyle;
+            option.DataService = this.itemStyleSV;
+            let dialog = this.callfc.openForm(
+              ItemsStyleAddComponent,
+              '',
+              500,
+              300,
+              '',
+              data,
+              '',
+              option
+            );
+            dialog.closed.subscribe((res) => {
+              if (res.event != null) {
+                this.lstItemStyle.push({...res?.event?.data});
+                this.detectorRef.detectChanges();
+              }
+            });
+          })
+        }
+      })
+    })
+    
+  }
+
+  editItemStyle(dataEdit){
+    this.itemStyleSV.edit({...dataEdit}).subscribe((res:any)=>{
       if (res) {
         res.itemID = this.form.form?.data?.itemID;
-        data.dataDefault = {...res};
-        this.cache.gridViewSetup(this.fmItemsStyle.formName,this.fmItemsStyle.gridViewName).subscribe((o)=>{
-          let dialog = this.callfc.openForm(
-            ItemsStyleAddComponent,
-            '',
-            500,
-            300,
-            '',
-            data,
-            '',
-            option
-          );
-          dialog.closed.subscribe((res) => {
-            if (res.event != null) {
-              this.lstItemStyle.push({...res?.event?.data});
-              this.detectorRef.detectChanges();
-            }
-          });
-        })
+          let data :any = {
+            headerText: ('Chỉnh sửa' + ' ' + 'thuộc tính').toUpperCase(),
+            dataDefault:{...res}
+          };
+          this.cache.gridViewSetup(this.fmItemsStyle.formName,this.fmItemsStyle.gridViewName).subscribe((o)=>{
+            let option = new DialogModel();
+            option.FormModel = this.fmItemsStyle;
+            option.DataService = this.itemStyleSV;
+            let dialog = this.callfc.openForm(
+              ItemsStyleAddComponent,
+              '',
+              500,
+              300,
+              '',
+              data,
+              '',
+              option
+            );
+            dialog.closed.subscribe((res) => {
+              if (res && res?.event) {
+                let data = res?.event?.data;
+                let index = this.lstItemStyle.findIndex((x) => x.recID == data.recID);
+                if (index > -1) {
+                  this.lstItemStyle[index] = data;
+                }
+                this.detectorRef.detectChanges();
+              }
+            });
+          })
       }
     })
+  }
+
+  deleteItemStyle(dataDelete:any){
+    this.itemStyleSV.delete([dataDelete], true,null,null,null,null,null,false).pipe(takeUntil(this.destroy$)).subscribe((res: any) => {
+      if (res && !res?.error) {
+        let index = this.lstItemStyle.findIndex((x) => x.recID == dataDelete.recID);
+        if (index > -1) {
+          this.lstItemStyle.splice(index, 1);
+          this.detectorRef.detectChanges();
+        }
+      }
+    });
   }
 
   openFormItemColor(){
-    if(!this.validateItemID()) return;
-    let data :any = {
-      headerText: (this.lblAdd + ' ' + 'màu sắc').toUpperCase(),
-    };
-    let option = new DialogModel();
-    option.FormModel = this.fmItemsColor;
-    option.DataService = this.itemColorSV;
-    this.itemStyleSV.addNew().subscribe((res: any) => {
+    this.form.form.save(null, 0, '', '', false)
+    .pipe(takeUntil(this.destroy$))
+    .subscribe((res: any) => {
+      if (!res) return;
+      if (res.hasOwnProperty('save')) {
+        if (res.save.hasOwnProperty('data') && !res.save.data) return;
+      }
+      if (res.hasOwnProperty('update')) {
+        if (res.update.hasOwnProperty('data') && !res.update.data) return;
+      }
+      this.itemColorSV.addNew().subscribe((res: any) => {
+        if (res) {
+          res.itemID = this.form.form?.data?.itemID;
+          let data :any = {
+            headerText: (this.lblAdd + ' ' + 'màu sắc').toUpperCase(),
+            dataDefault:{...res}
+          };
+          this.cache.gridViewSetup(this.fmItemsColor.formName,this.fmItemsColor.gridViewName).subscribe((o)=>{
+            let option = new DialogModel();
+            option.FormModel = this.fmItemsColor;
+            option.DataService = this.itemColorSV;
+            let dialog = this.callfc.openForm(
+              ItemsColorAddComponent,
+              '',
+              500,
+              300,
+              '',
+              data,
+              '',
+              option
+            );
+            dialog.closed.subscribe((res) => {
+              if (res.event != null) {
+                this.lstItemColor.push({...res?.event?.data});
+                this.detectorRef.detectChanges();
+              }
+            });
+          })
+        }
+      })
+    })
+    // if(!this.validateItemID()) return;
+    // let data :any = {
+    //   headerText: (this.lblAdd + ' ' + 'màu sắc').toUpperCase(),
+    // };
+    // let option = new DialogModel();
+    // option.FormModel = this.fmItemsColor;
+    // option.DataService = this.itemColorSV;
+    // this.itemStyleSV.addNew().subscribe((res: any) => {
+    //   if (res) {
+    //     res.itemID = this.form.form?.data?.itemID;
+    //     data.dataDefault = {...res};
+    //     this.cache.gridViewSetup(this.fmItemsColor.formName,this.fmItemsColor.gridViewName).subscribe((o)=>{
+    //       let dialog = this.callfc.openForm(
+    //         ItemsColorAddComponent,
+    //         '',
+    //         500,
+    //         300,
+    //         '',
+    //         data,
+    //         '',
+    //         option
+    //       );
+    //       dialog.closed.subscribe((res) => {
+    //         if (res.event != null) {
+    //           this.lstItemColor.push({...res?.event?.data});
+    //           this.detectorRef.detectChanges();
+    //         }
+    //       });
+    //     })
+    //   }
+    // })
+  }
+
+  deleteItemColor(dataDelete:any){
+    this.itemColorSV.delete([dataDelete], true,null,null,null,null,null,false).pipe(takeUntil(this.destroy$)).subscribe((res: any) => {
+      if (res && !res?.error) {
+        let index = this.lstItemColor.findIndex((x) => x.recID == dataDelete.recID);
+        if (index > -1) {
+          this.lstItemColor.splice(index, 1);
+          this.detectorRef.detectChanges();
+        }
+      }
+    });
+  }
+
+  openFormConversion(){
+    this.form.form.save(null, 0, '', '', false)
+    .pipe(takeUntil(this.destroy$))
+    .subscribe((res: any) => {
+      if (!res) return;
+      if (res.hasOwnProperty('save')) {
+        if (res.save.hasOwnProperty('data') && !res.save.data) return;
+      }
+      if (res.hasOwnProperty('update')) {
+        if (res.update.hasOwnProperty('data') && !res.update.data) return;
+      }
+      this.UMConversionSV.addNew().subscribe((res: any) => {
+        if (res) {
+          res.itemID = this.form.form?.data?.itemID;
+          let data :any = {
+            headerText: (this.lblAdd + ' ' + 'đơn vị quy đổi').toUpperCase(),
+            dataDefault:{...res}
+          };
+          this.cache.gridViewSetup(this.fmUMConversion.formName,this.fmUMConversion.gridViewName).subscribe((o)=>{
+            let option = new DialogModel();
+            option.FormModel = this.fmUMConversion;
+            option.DataService = this.UMConversionSV;
+            let dialog = this.callfc.openForm(
+              ItemsConversionAddComponent,
+              '',
+              500,
+              400,
+              '',
+              data,
+              '',
+              option
+            );
+            dialog.closed.subscribe((res) => {
+              if (res.event != null) {
+                this.lstUMConversion.push({...res?.event?.data});
+                this.detectorRef.detectChanges();
+              }
+            });
+          })
+        }
+      })
+    })
+  }
+
+  editConversion(dataEdit){
+    this.UMConversionSV.edit({...dataEdit}).subscribe((res:any)=>{
       if (res) {
         res.itemID = this.form.form?.data?.itemID;
-        data.dataDefault = {...res};
-        this.cache.gridViewSetup(this.fmItemsColor.formName,this.fmItemsColor.gridViewName).subscribe((o)=>{
-          let dialog = this.callfc.openForm(
-            ItemsColorAddComponent,
-            '',
-            500,
-            300,
-            '',
-            data,
-            '',
-            option
-          );
-          dialog.closed.subscribe((res) => {
-            if (res.event != null) {
-              this.lstItemColor.push({...res?.event?.data});
-              this.detectorRef.detectChanges();
-            }
-          });
-        })
+          let data :any = {
+            headerText: (this.lblAdd + ' ' + 'đơn vị quy đổi').toUpperCase(),
+            dataDefault:{...res}
+          };
+          this.cache.gridViewSetup(this.fmUMConversion.formName,this.fmUMConversion.gridViewName).subscribe((o)=>{
+            let option = new DialogModel();
+            option.FormModel = this.fmUMConversion;
+            option.DataService = this.UMConversionSV;
+            let dialog = this.callfc.openForm(
+              ItemsConversionAddComponent,
+              '',
+              500,
+              400,
+              '',
+              data,
+              '',
+              option
+            );
+            dialog.closed.subscribe((res) => {
+              if (res && res?.event) {
+                let data = res?.event?.data;
+                let index = this.lstUMConversion.findIndex((x) => x.recID == data.recID);
+                if (index > -1) {
+                  this.lstUMConversion[index] = data;
+                }
+                this.detectorRef.detectChanges();
+              }
+            });
+          })
       }
     })
   }
 
-  openFormConversion(){
-    if(!this.validateItemID()) return;
-    let data :any = {
-      headerText: (this.lblAdd + ' ' + 'đơn vị quy đổi').toUpperCase(),
-    };
-    let option = new DialogModel();
-    option.FormModel = this.fmUMConversion;
-    option.DataService = this.UMConversionSV;
-    this.UMConversionSV.addNew().subscribe((res: any) => {
-      if (res) {
-        res.itemID = this.form.form?.data?.itemID;
-        data.dataDefault = {...res};
-        this.cache.gridViewSetup(this.fmUMConversion.formName,this.fmUMConversion.gridViewName).subscribe((o)=>{
-          let dialog = this.callfc.openForm(
-            ItemsConversionAddComponent,
-            '',
-            500,
-            350,
-            '',
-            data,
-            '',
-            option
-          );
-          dialog.closed.subscribe((res) => {
-            if (res.event != null) {
-              this.lstUMConversion.push({...res?.event?.data});
-              this.detectorRef.detectChanges();
-            }
-          });
-        })
+  deleteConversion(dataDelete:any){
+    this.UMConversionSV.delete([dataDelete], true,null,null,null,null,null,false).pipe(takeUntil(this.destroy$)).subscribe((res: any) => {
+      if (res && !res?.error) {
+        let index = this.lstUMConversion.findIndex((x) => x.recID == dataDelete.recID);
+        if (index > -1) {
+          this.lstUMConversion.splice(index, 1);
+          this.detectorRef.detectChanges();
+        }
       }
-    })
+    });
   }
   /**
    * *Ham thay doi title cho form
@@ -456,41 +682,169 @@ export class ItemsAddComponent extends UIComponent {
     this.form.setDisabled(strdisable);
   }
 
-  validateItemID(){
-    if(this.form.form?.data?.itemID?.trim() == '' || this.form.form?.data?.itemID?.trim() == undefined){
-      this.notification.notifyCode(
-        'SYS009',
-        0,
-        '"' + this.form.form.gridviewSetup['ItemID']?.headerText + '"'
-      );
-      return false;
-    }
-    return true;
-  }
-
-  tabChange(event){
-    if (this.form?.form?.data?.isEdit) {
-      if(event?.nextId.toLowerCase() === 'settings'){
+  tabChange(event,isload:any = false){
+    let tabname = event?.nextId.toLowerCase();
+    switch(tabname){
+      case 'settings':
         let data = this.eleCbxDimGroupID?.ComponentCurrent?.dataService?.data.find((x) =>x.DimGroupID == this.eleCbxDimGroupID?.ComponentCurrent?.value);
         if(data) this.oDimGroup = data;
-      }
-      if(event?.nextId.toLowerCase() === 'purchase'){
-        this.fmItemsPurchase.currentData = this.itemPurchase;
-        this.fgItemsPurchase.patchValue(this.itemPurchase);
-        this.detectorRef.detectChanges();
-      }
+        break;
+      case 'purchase':
+        if (this.form.form.data.isEdit) {
+          if (!this.fmItemsPurchase.currentData) {
+            let options = new DataRequest();
+            options.entityName = 'IV_ItemsPurchase';
+            options.pageLoading = false;
+            options.predicates = 'ItemID=@0';
+            options.dataValues = this.form.form.data.itemID;
+            this.api
+              .execSv('IV', 'Core', 'DataBusiness', 'LoadDataAsync', options)
+              .pipe(map((r) => r?.[0] ?? [])).subscribe((res: any) => {
+                this.fgItemsPurchase.patchValue(res[0]);
+                this.fmItemsPurchase.currentData = res[0];
+                this.detectorRef.detectChanges();
+              })
+          }
+        }else{
+          this.itemsPurchaseSV.addNew().subscribe((res: any) => {
+            if (res) {
+              this.fgItemsPurchase.patchValue(res);
+              this.fmItemsPurchase.currentData = res;
+              this.detectorRef.detectChanges();
+            }
+          })
+        }
+        break;
+      case 'sales':
+        if (this.form.form.data.isEdit) {
+          if (!this.fmItemsSales.currentData) {
+            let options = new DataRequest();
+            options.entityName = 'IV_ItemsSales';
+            options.pageLoading = false;
+            options.predicates = 'ItemID=@0';
+            options.dataValues = this.form.form.data.itemID;
+            this.api
+              .execSv('IV', 'Core', 'DataBusiness', 'LoadDataAsync', options)
+              .pipe(map((r) => r?.[0] ?? [])).subscribe((res: any) => {
+                this.fgItemsSales.patchValue(res[0]);
+                this.fmItemsSales.currentData = res[0];
+                this.detectorRef.detectChanges();
+              })
+          }
+        }else{
+          this.itemsSalesSV.addNew().subscribe((res: any) => {
+            if (res) {
+              this.fgItemsSales.patchValue(res);
+              this.fmItemsSales.currentData = res;
+              this.detectorRef.detectChanges();
+            }
+          })
+        }
+        
+        break;
+      case 'production':
+        if (this.form.form.data.isEdit) {
+          if (!this.fmItemsProduction.currentData) {
+            let options = new DataRequest();
+            options.entityName = 'IV_ItemsProduction';
+            options.pageLoading = false;
+            options.predicates = 'ItemID=@0';
+            options.dataValues = this.form.form.data.itemID;
+            this.api
+              .execSv('IV', 'Core', 'DataBusiness', 'LoadDataAsync', options)
+              .pipe(map((r) => r?.[0] ?? [])).subscribe((res: any) => {
+                this.fgItemsProduction.patchValue(res[0]);
+                this.fmItemsProduction.currentData = res[0];
+                this.detectorRef.detectChanges();
+              })
+          }
+        }else{
+          this.itemsProductionSV.addNew().subscribe((res: any) => {
+            if (res) {
+              this.fgItemsProduction.patchValue(res);
+              this.fmItemsProduction.currentData = res;
+              this.detectorRef.detectChanges();
+            }
+          })
+        }
+        break;
+    }
+    // if (!isload) {
+    //   event.preventDefault();
+    // }
+    // if (!this.fgItemsPurchase) {
+    //   this.fgItemsPurchase = this.codxService.buildFormGroup(
+    //     this.fmItemsPurchase.formName,
+    //     this.fmItemsPurchase.gridViewName,
+    //     this.fmItemsPurchase.entityName
+    //   );
+    //   this.itemsPurchaseSV.addNew().subscribe((res: any) => {
+    //     if (res) {
+    //       this.fgItemsPurchase.patchValue(res);
+    //       this.fmItemsPurchase.currentData = res;
+    //       this.detectorRef.detectChanges();
+    //       this.tabChange(event,true);
+    //     }
+    //   })
+    // }
+    // if (this.form?.form?.data?.isEdit) {
+    //   if(event?.nextId.toLowerCase() === 'settings'){
+    //     let data = this.eleCbxDimGroupID?.ComponentCurrent?.dataService?.data.find((x) =>x.DimGroupID == this.eleCbxDimGroupID?.ComponentCurrent?.value);
+    //     if(data) this.oDimGroup = data;
+    //   }
+    //   if(event?.nextId.toLowerCase() === 'purchase'){
+    //     this.fmItemsPurchase.currentData = this.itemPurchase;
+    //     this.fgItemsPurchase.patchValue(this.itemPurchase);
+    //     this.detectorRef.detectChanges();
+    //   }
   
-      if(event?.nextId.toLowerCase() === 'sales'){
-        this.fmItemsSales.currentData = this.itemSales;
-        this.fgItemsSales.patchValue(this.itemSales);
-        this.detectorRef.detectChanges();
-      }
+    //   if(event?.nextId.toLowerCase() === 'sales'){
+    //     this.fmItemsSales.currentData = this.itemSales;
+    //     this.fgItemsSales.patchValue(this.itemSales);
+    //     this.detectorRef.detectChanges();
+    //   }
   
-      if(event?.nextId.toLowerCase() === 'production'){
-        this.fmItemsProduction.currentData = this.itemProduction;
-        this.fgItemsProduction.patchValue(this.itemProduction);
-        this.detectorRef.detectChanges();
-      } 
+    //   if(event?.nextId.toLowerCase() === 'production'){
+    //     this.fmItemsProduction.currentData = this.itemProduction;
+    //     this.fgItemsProduction.patchValue(this.itemProduction);
+    //     this.detectorRef.detectChanges();
+    //   } 
+    // }
+  }
+  
+  changeDataMF(event:any){
+    event.reduce((pre,element) => {
+      if(!['SYS03','SYS02'].includes(element.functionID)) element.disabled = true;
+    },{})
+  }
+
+  clickMF(event:any,type:any,data:any){
+    switch (event.functionID) {
+      case 'SYS02':
+        if (type === 'active0' || type === 'active3') {
+          this.deleteItemSize(data);
+        }
+        if (type === 'active1') {
+          this.deleteItemStyle(data);
+        }
+        if (type === 'conversion') {
+          this.deleteConversion(data);
+        }
+        break;
+      case 'SYS03':
+        if (type === 'active0') {
+          this.editItemSize(data,'1');
+        }
+        if (type === 'active1') {
+          this.editItemStyle(data);
+        }
+        if (type === 'active3') {
+          this.editItemSize(data,'0');
+        }
+        if (type === 'conversion') {
+          this.editConversion(data);
+        }
+        break;
     }
   }
   //#endregion Function
