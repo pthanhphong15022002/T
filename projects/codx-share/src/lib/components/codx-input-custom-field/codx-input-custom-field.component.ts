@@ -365,13 +365,13 @@ export class CodxInputCustomFieldComponent implements OnInit {
         }
         break;
       case 'N':
-        let idxE = e.data?.toString().toLowerCase().indexOf('e');
-        if (idxE != -1) {
-          this.notiService.notify(
-            'Số nhập vào quá lớn sẽ lưu giá trị gần đúng !',
-            '3'
-          );
-        }
+        // let idxE = e.data?.toString().toLowerCase().indexOf('e');
+        // if (idxE != -1) {
+        //   this.notiService.notify(
+        //     'Số nhập vào quá lớn sẽ lưu giá trị gần đúng !',
+        //     '3'
+        //   );
+        // }
         break;
     }
 
