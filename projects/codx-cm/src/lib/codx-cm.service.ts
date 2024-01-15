@@ -1795,4 +1795,13 @@ export class CodxCmService {
       transID
     );
   }
+
+  getListFieldsRef(refInstance, refStepID = '', customField = null) {
+    return this.api.exec<any>(
+      'DP',
+      'InstancesStepsBusiness',
+      'GetListFieldsAsync',
+      [refInstance, refStepID, customField]
+    );
+  }
 }

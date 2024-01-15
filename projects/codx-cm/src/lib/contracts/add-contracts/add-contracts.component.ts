@@ -243,6 +243,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
   arrCaculateField: any[] = [];
   isLoadedCF = false;
   refInstance = ''; //Biến tham chiếu data từ cơ hội
+  dataSourceRef: any;
   //#endregion
 
   constructor(
@@ -347,7 +348,14 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
     ) {
       let data = this.inputDeal?.ComponentCurrent?.dataService.data;
       this.refInstance = data[0]?.RefID;
+      this.loadSoureRef();
     }
+  }
+
+  loadSoureRef() {
+    this.cmService.getListFieldsRef(this.refInstance).subscribe((lstF) => {
+      this.dataSourceRef = lstF;
+    });
   }
 
   //#region setData
@@ -703,6 +711,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
         break;
       case 'dealID':
         this.refInstance = event?.component?.itemsSelected[0]?.RefID;
+        this.loadSoureRef();
         if (!this.contracts.customerID && this.contracts?.dealID) {
           this.getCustomerByDealID(event?.data);
           this.setValueComboboxQuotation();
