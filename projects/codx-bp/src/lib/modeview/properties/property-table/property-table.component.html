@@ -21,7 +21,14 @@
                 <div class="d-flex align-items-center justify-content-between border-dotted-d3d6d9 p-2 mt-2" *ngFor="let item of data?.dataFormat">
                     <span>{{item.title}}</span>
                     <div class="d-flex align-items-center">
-                        <i class="icon-24" [ngClass]="item?.icon" [style.color]="item?.textColor"></i>
+                        <div ngbDropdown class="d-inline-block" container="body">
+                            <div class="cursor-pointer" id="dropdownBasic1" ngbDropdownToggle>
+                                <i class="icon-24" [ngClass]="item?.icon" [style.color]="item?.textColor"></i>
+                            </div>
+                            <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                                <button ngbDropdownItem [class.active]="item.value == item2.value" *ngFor="let item2 of vllBP008?.datas" (click)="selectedItem(item2)">{{item2.text}}</button>
+                            </div>
+                        </div>
                         <i class="ms-2 icon-18 icon-edit_square cursor-pointer" (click)="edit()"></i>
                     </div>
                 </div>
