@@ -843,6 +843,7 @@ export class ContractsComponent extends UIComponent {
             }
           }
         }
+        this.notiService.notifyCode('SYS006');
       } else if (contractAdd && action == 'copy') {
         if (contractAdd?.useType == '5') {
           this.view.dataService.remove(contractOld).subscribe();
@@ -852,6 +853,7 @@ export class ContractsComponent extends UIComponent {
           this.contractAppendix = res?.event;
           this.detectorRef.detectChanges();
         }
+        this.notiService.notifyCode('SYS006');
       }
     });
   }
