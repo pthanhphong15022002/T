@@ -1,4 +1,4 @@
-<codx-views
+<!-- <codx-views
   #view
   [views]="views"
   [autoLoad]="false"
@@ -8,39 +8,35 @@
 >
 </codx-views>
 
-<ng-template #template>
-  <div class="w-100 h-100 cm-chart" *ngIf="isLoaded">
-    <ng-container *ngIf="viewType == '1'">
-      <codx-dashboard
-        [templates]="dashBoard1"
-        [panels]="panels1"
-        [datas]="datas1"
-        [isEditMode]="isEditMode"
-        [cellSpacing]="[10, 10]"
-        [columns]="60"
-      ></codx-dashboard>
-    </ng-container>
+<ng-template #template> -->
+<div class="w-100 h-100 cm-chart">
+  <ng-container *ngIf="viewType == '1'">
+    <codx-dashboard
+      [templates]="dashBoard1"
+      [panels]="panels1"
+      [datas]="datas1"
+      [isEditMode]="isEditMode"
+      [cellSpacing]="[10, 10]"
+      [columns]="60"
+    ></codx-dashboard>
+  </ng-container>
 
-    <ng-container *ngIf="viewType == '2'">
-      <codx-dashboard
-        [templates]="dashBoard2"
-        [panels]="panels2"
-        [datas]="datas2"
-        [isEditMode]="isEditMode"
-        [cellSpacing]="[10, 10]"
-        [columns]="60"
-      ></codx-dashboard>
-    </ng-container>
+  <ng-container *ngIf="viewType == '2'">
+    <codx-dashboard
+      [templates]="dashBoard2"
+      [panels]="panels2"
+      [datas]="datas2"
+      [isEditMode]="isEditMode"
+      [cellSpacing]="[10, 10]"
+      [columns]="60"
+    ></codx-dashboard>
+  </ng-container>
+</div>
 
-    <ng-container *ngIf="funcID == 'CMD004' && isLoaded">
-      <cm-targets [viewDashboard]="true" [viewMode]="9"></cm-targets>
-    </ng-container>
-  </div>
-
-  <!-- <div class="w-100 h-100" *ngIf="!isLoaded">
+<!-- <div class="w-100 h-100" *ngIf="!isLoaded">
     <div id="loader"></div>
   </div> -->
-</ng-template>
+<!-- </ng-template> -->
 
 <!-------------Temp1 ------------->
 <ng-template #template1>
@@ -495,6 +491,10 @@
 
 <ng-template #template2>
   <div class="w-100 h-100" id="8" title="" style="overflow: hidden"></div>
+</ng-template>
+
+<ng-template #template2>
+  <div class="h-100" id="9" title="" style="overflow: hidden"></div>
 </ng-template>
 
 <ng-template #tempNoData>

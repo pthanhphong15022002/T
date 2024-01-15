@@ -103,7 +103,11 @@
 <ng-template #text let-data>
   <div class="d-flex flex-column w-100 mb-4">
     <div class="d-flex align-items-center" *ngIf="isShowTextHeader">
-      <i *ngIf="showIconDrop" class="icon-grid_round me-2 cursor-move" cdkDragHandle></i>
+      <i
+        *ngIf="showIconDrop"
+        class="icon-grid_round me-2 cursor-move"
+        cdkDragHandle
+      ></i>
       <span class="fw-bold">{{ data.title }}</span>
       <span class="text-danger ms-2" *ngIf="data?.isRequired">(*)</span>
     </div>
@@ -136,7 +140,11 @@
 <ng-template #valueList let-data>
   <div class="d-flex flex-column w-100 mb-4">
     <div class="d-flex align-items-center" *ngIf="isShowTextHeader">
-      <i *ngIf="showIconDrop" class="icon-grid_round me-2 cursor-move" cdkDragHandle></i>
+      <i
+        *ngIf="showIconDrop"
+        class="icon-grid_round me-2 cursor-move"
+        cdkDragHandle
+      ></i>
       <span class="fw-bold">{{ data.title }}</span>
       <span class="text-danger ms-2" *ngIf="data?.isRequired">(*)</span>
     </div>
@@ -213,7 +221,11 @@
   <div class="d-flex flex-column w-100 mb-4">
     <div class="d-flex justify-content-between">
       <div class="d-flex align-items-center" *ngIf="isShowTextHeader">
-        <i *ngIf="showIconDrop" class="icon-grid_round me-2 cursor-move" cdkDragHandle></i>
+        <i
+          *ngIf="showIconDrop"
+          class="icon-grid_round me-2 cursor-move"
+          cdkDragHandle
+        ></i>
         <span class="fw-bold">{{ data.title }}</span>
         <span class="text-danger ms-2" *ngIf="data?.isRequired">(*)</span>
       </div>
@@ -258,19 +270,26 @@
 <ng-template #datetime let-data>
   <div class="d-flex flex-column w-100 mb-4">
     <div class="d-flex align-items-center" *ngIf="isShowTextHeader">
-      <i *ngIf="showIconDrop" class="icon-grid_round me-2 cursor-move" cdkDragHandle></i>
+      <i
+        *ngIf="showIconDrop"
+        class="icon-grid_round me-2 cursor-move"
+        cdkDragHandle
+      ></i>
       <span class="fw-bold">{{ data.title }}</span>
       <span class="text-danger ms-2" *ngIf="data?.isRequired">(*)</span>
     </div>
-    <codx-input
-      class="d-flex align-items-center justify-content-between w-100 border mt-2 px-4 py-3 rd-3px"
-      [field]="data?.fieldName"
-      type="datetime"
-      [format]="data?.dataFormat"
-      [placeholder]="data?.description || ''"
-      [crrValue]="data?.defaultValue ?? ''"
-      [disabled]="true"
-    ></codx-input>
+    <div
+      class="w-100 mt-2"
+    >
+      <codx-input
+        [field]="data?.fieldName"
+        type="datetime"
+        [format]="data?.dataFormat"
+        [placeholder]="data?.description || ''"
+        [crrValue]="data?.defaultValue ?? ''"
+        [disabled]="true"
+      ></codx-input>
+    </div>
   </div>
 </ng-template>
 
@@ -278,21 +297,50 @@
 <ng-template #attachment let-data>
   <div class="d-flex flex-column w-100 mb-4">
     <div class="d-flex align-items-center" *ngIf="isShowTextHeader">
-      <i *ngIf="showIconDrop" class="icon-grid_round me-2 cursor-move" cdkDragHandle></i>
+      <i
+        *ngIf="showIconDrop"
+        class="icon-grid_round me-2 cursor-move"
+        cdkDragHandle
+      ></i>
       <span class="fw-bold">{{ data.title }}</span>
       <span class="text-danger ms-2" *ngIf="data?.isRequired">(*)</span>
     </div>
     <div
+      *ngIf="documentControl?.length == 0"
       class="d-flex align-items-center justify-content-between w-100 border-dotted mt-2 px-4 py-8 rd-5px bd-w-2px bg-item-lightest bc-item-lighter"
     >
       <div class="d-flex flex-column">
-        <span class="fw-bold">Chọn 1 file từ máy của bạn</span>
-        <span class="text-muted">Kéo thả tài liệu vào đây</span>
+        <span class="fw-bold">
+          <codx-label
+            formName="DynamicForms"
+            [gridViewName]="'grvDynamicForms' + data.controlType"
+            [name]="'lblAddOneFile'"
+            default="Chọn 1 file từ máy của bạn"
+            class="fw-bold"
+          ></codx-label>
+        </span>
+        <span class="text-muted">
+          <codx-label
+            formName="DynamicForms"
+            [gridViewName]="'grvDynamicForms' + data.controlType"
+            [name]="'lblDrawFile'"
+            default="Kéo thả tài liệu vào đây"
+            class="fw-bold"
+          ></codx-label
+        ></span>
       </div>
       <div
         class="d-flex align-items-center justify-content-between rounded bg-primary py-3 px-5"
       >
-        <span class="text-white">Chọn tập tin</span>
+        <span class="text-white"
+          ><codx-label
+            formName="DynamicForms"
+            [gridViewName]="'grvDynamicForms' + data.controlType"
+            [name]="'lblSelectFile'"
+            default="Chọn tập tin"
+            class="fw-bold"
+          ></codx-label
+        ></span>
         <img
           src="../../assets/themes/sys/default/img/BrowseLocal.svg"
           class="text-white ms-6"
@@ -303,6 +351,76 @@
         />
       </div>
     </div>
+    <ng-container
+      *ngIf="documentControl && documentControl.length > 0"
+    >
+      <table class="table mt-2">
+        <thead>
+          <tr class="fw-bold bg-light">
+            <th scope="col">
+              <codx-label
+                formName="DynamicForms"
+                [gridViewName]="'grvDynamicForms' + data.controlType"
+                [name]="'lblFileName'"
+                default="Tên file"
+                class="fw-bold"
+              ></codx-label>
+            </th>
+            <th scope="col">
+              <codx-label
+                formName="DynamicForms"
+                [gridViewName]="'grvDynamicForms' + data.controlType"
+                [name]="'lblTemplate'"
+                default="Template"
+                class="fw-bold"
+              ></codx-label>
+            </th>
+            <th scope="col">
+              <codx-label
+                formName="DynamicForms"
+                [gridViewName]="'grvDynamicForms' + data.controlType"
+                [name]="'lblRequiredFile'"
+                default="Bắt buộc"
+                class="fw-bold"
+              ></codx-label>
+            </th>
+            <th scope="col">
+              <codx-label
+                formName="DynamicForms"
+                [gridViewName]="'grvDynamicForms' + data.controlType"
+                [name]="'lblAttachFile'"
+                default="Đính kèm"
+                class="fw-bold"
+              ></codx-label>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            class="border-top cursor-pointer"
+            *ngFor="let item of documentControl"
+          >
+            <th>{{ item.title }}</th>
+            <td>
+              <div class="d-flex align-items-center">
+                <span>{{ item.count }}</span
+                ><i class="icon-i-file-earmark-text icon-20 ms-2"></i>
+              </div>
+            </td>
+            <td>
+              <input
+                class="form-check-input"
+                type="checkbox"
+                id="flexCheckChecked"
+                [checked]="item.isRequired"
+                disabled
+              />
+            </td>
+            <td><i class="icon-attach_file"></i></td>
+          </tr>
+        </tbody>
+      </table>
+    </ng-container>
   </div>
 </ng-template>
 
@@ -312,7 +430,11 @@
     class="d-flex align-items-center justify-content-between w-100 form-switch ps-0"
   >
     <div class="d-flex align-items-center" *ngIf="isShowTextHeader">
-      <i *ngIf="showIconDrop" class="icon-grid_round me-2 cursor-move" cdkDragHandle></i>
+      <i
+        *ngIf="showIconDrop"
+        class="icon-grid_round me-2 cursor-move"
+        cdkDragHandle
+      ></i>
       <span class="fw-bold">{{ data.title }}</span>
       <span class="text-danger ms-2" *ngIf="data?.isRequired">(*)</span>
     </div>
@@ -355,7 +477,11 @@
 <ng-template #share let-data>
   <div class="d-flex flex-column w-100 mb-4">
     <div class="d-flex align-items-center" *ngIf="isShowTextHeader">
-      <i *ngIf="showIconDrop" class="icon-grid_round me-2 cursor-move" cdkDragHandle></i>
+      <i
+        *ngIf="showIconDrop"
+        class="icon-grid_round me-2 cursor-move"
+        cdkDragHandle
+      ></i>
       <span class="fw-bold">{{ data.title }}</span>
       <span class="text-danger ms-2" *ngIf="data?.isRequired">(*)</span>
     </div>
@@ -372,7 +498,11 @@
 <ng-template #rank let-data>
   <div class="d-flex flex-column w-100 mb-4">
     <div class="d-flex align-items-center" *ngIf="isShowTextHeader">
-      <i *ngIf="showIconDrop" class="icon-grid_round me-2 cursor-move" cdkDragHandle></i>
+      <i
+        *ngIf="showIconDrop"
+        class="icon-grid_round me-2 cursor-move"
+        cdkDragHandle
+      ></i>
       <span class="fw-bold">{{ data.title }}</span>
       <span class="text-danger ms-2" *ngIf="data?.isRequired">(*)</span>
     </div>
@@ -419,22 +549,28 @@
 <ng-template #tables let-data>
   <div class="d-flex flex-column w-100 mb-4">
     <div class="d-flex align-items-center" *ngIf="isShowTextHeader">
-      <i *ngIf="showIconDrop" class="icon-grid_round me-2 cursor-move" cdkDragHandle></i>
+      <i
+        *ngIf="showIconDrop"
+        class="icon-grid_round me-2 cursor-move"
+        cdkDragHandle
+      ></i>
       <span class="fw-bold">{{ data.title }}</span>
       <span class="text-danger ms-2" *ngIf="data?.isRequired">(*)</span>
     </div>
     <table class="table table-bordered mt-2">
       <thead>
-        <tr >
-          <th *ngIf="hasIndexNo"><codx-label
-            [default]="
-              'STT'
-            "
-            [formName]="'DynamicForms'"
-            [gridViewName]="'grvDynamicFormsTitle' + dataCurrent?.fieldType"
-            [name]="'lblStt'"
-          ></codx-label></th>
-          <th *ngFor="let table of lstTables" scope="col">{{ table?.title }}</th>
+        <tr>
+          <th *ngIf="hasIndexNo">
+            <codx-label
+              [default]="'STT'"
+              [formName]="'DynamicForms'"
+              [gridViewName]="'grvDynamicFormsTitle' + dataCurrent?.fieldType"
+              [name]="'lblStt'"
+            ></codx-label>
+          </th>
+          <th *ngFor="let table of lstTables" scope="col">
+            {{ table?.title }}
+          </th>
         </tr>
       </thead>
       <tbody></tbody>
@@ -446,7 +582,11 @@
 <ng-template #progress let-data>
   <div class="d-flex flex-column w-100 mb-4">
     <div class="d-flex align-items-center" *ngIf="isShowTextHeader">
-      <i *ngIf="showIconDrop" class="icon-grid_round me-2 cursor-move" cdkDragHandle></i>
+      <i
+        *ngIf="showIconDrop"
+        class="icon-grid_round me-2 cursor-move"
+        cdkDragHandle
+      ></i>
       <span class="fw-bold">{{ data.title }}</span>
       <span class="text-danger ms-2" *ngIf="data?.isRequired">(*)</span>
     </div>
@@ -474,7 +614,11 @@
 <ng-template #email let-data>
   <div class="d-flex flex-column w-100 mb-4">
     <div class="d-flex align-items-center" *ngIf="isShowTextHeader">
-      <i *ngIf="showIconDrop" class="icon-grid_round me-2 cursor-move" cdkDragHandle></i>
+      <i
+        *ngIf="showIconDrop"
+        class="icon-grid_round me-2 cursor-move"
+        cdkDragHandle
+      ></i>
       <span class="fw-bold">{{ data.title }}</span>
       <span class="text-danger ms-2" *ngIf="data?.isRequired">(*)</span>
     </div>
@@ -497,7 +641,11 @@
 <ng-template #address let-data>
   <div class="d-flex flex-column w-100 mb-4">
     <div class="d-flex align-items-center" *ngIf="isShowTextHeader">
-      <i *ngIf="showIconDrop" class="icon-grid_round me-2 cursor-move" cdkDragHandle></i>
+      <i
+        *ngIf="showIconDrop"
+        class="icon-grid_round me-2 cursor-move"
+        cdkDragHandle
+      ></i>
       <span class="fw-bold">{{ data.title }}</span>
       <span class="text-danger ms-2" *ngIf="data?.isRequired">(*)</span>
     </div>
@@ -520,7 +668,11 @@
 <ng-template #expression let-data>
   <div class="d-flex flex-column w-100 mb-4">
     <div class="d-flex align-items-center" *ngIf="isShowTextHeader">
-      <i *ngIf="showIconDrop" class="icon-grid_round me-2 cursor-move" cdkDragHandle></i>
+      <i
+        *ngIf="showIconDrop"
+        class="icon-grid_round me-2 cursor-move"
+        cdkDragHandle
+      ></i>
       <span class="fw-bold">{{ data.title }}</span>
       <span class="text-danger ms-2" *ngIf="data?.isRequired">(*)</span>
     </div>
@@ -541,7 +693,11 @@
 <ng-template #phone let-data>
   <div class="d-flex flex-column w-100 mb-4">
     <div class="d-flex align-items-center" *ngIf="isShowTextHeader">
-      <i *ngIf="showIconDrop" class="icon-grid_round me-2 cursor-move" cdkDragHandle></i>
+      <i
+        *ngIf="showIconDrop"
+        class="icon-grid_round me-2 cursor-move"
+        cdkDragHandle
+      ></i>
       <span class="fw-bold">{{ data.title }}</span>
       <span class="text-danger ms-2" *ngIf="data?.isRequired">(*)</span>
     </div>

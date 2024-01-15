@@ -4,7 +4,7 @@
             <i class="icon-24" [style.color]="data?.textColor" [ngClass]="data?.icon"></i>
             <codx-label formName="DynamicForms" [fiedName]="'titles'" [default]="data?.text" class="fw-bold fs-5-sm ms-2 mt-1"></codx-label>
         </div>
-        <div class="cursor-pointer">
+        <div class="cursor-pointer" (click)="deleteValue()">
             <i class="icon-delete_outline"></i>
         </div>
     </div>
