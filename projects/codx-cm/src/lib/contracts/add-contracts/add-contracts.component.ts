@@ -351,6 +351,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
       this.loadSoureRef();
     }
   }
+
   loadSoureRef() {
     this.cmService.getListFieldsRef(this.refInstance).subscribe((lstF) => {
       this.dataSourceRef = lstF;
@@ -761,11 +762,10 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
         }
         break;
       case 'businessLineID':
-        if (event?.field == 'businessLineID' && event?.data) {
-          let processID = event?.component?.itemsSelected
-            ? event?.component?.itemsSelected[0]?.ProcessContractID
-            : null;
-          this.contracts.businessLineID = event?.data;
+        const itemsSelected = event?.component?.itemsSelected;
+        if (event?.field === 'businessLineID' && itemsSelected?.length > 0) {
+          const processID = itemsSelected[0]?.ProcessContractID || null;
+          this.contracts.businessLineID = event.data;
           if (processID) {
             this.contracts.processID = processID;
             this.contracts.applyProcess = true;
@@ -1260,7 +1260,6 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
         this.getSettingFields(res[3], this.listInstanceSteps);
         this.listParticipants = [];
         this.listParticipants = JSON.parse(JSON.stringify(obj?.permissions));
-
         this.changeDetectorRef.detectChanges();
       }
     });
