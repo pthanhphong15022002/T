@@ -12,7 +12,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { CacheService, DialogData, DialogRef, Util } from 'codx-core';
-import { FormFormatValueComponent } from './form-format-value/form-format-value.component';
+import { FormFormatValueComponent } from '../form-format-value/form-format-value.component';
 import { CodxBpService } from '../../../codx-bp.service';
 import { tempVllBP } from '../../../models/models';
 import { SettingFieldsComponent } from './setting-fields/setting-fields.component';

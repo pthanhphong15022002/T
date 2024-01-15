@@ -26,7 +26,7 @@ export class CodxView2Component implements OnInit , AfterViewInit{
   @Input() idFeild = 'recID';
   @Input() dataSource:any;
   @Input() bodyCss:any;
-  
+
   @Input() isAdd: boolean = true;
   @Input() isToolBar: boolean = true;
   @Input() dataRequest:any;
@@ -42,7 +42,7 @@ export class CodxView2Component implements OnInit , AfterViewInit{
     private ref : ChangeDetectorRef,
     private cache: CacheService,
     private api: ApiHttpService,
-  ) 
+  )
   {
     this.request = new DataRequest();
     this.request.page = 1;
@@ -56,18 +56,18 @@ export class CodxView2Component implements OnInit , AfterViewInit{
   setHeight()
   {
     if(!document.getElementById("view2-header")) return;
-    
+
     var h = document.getElementById("view2-header").offsetHeight;
 
     if(h > 0)
     {
       h += 90;
       let height = window.innerHeight - h;
-      document.getElementById("codx-view2-body").style.cssText = "height:" +height+"px !important";
+      if(document.getElementById("codx-view2-body")) document.getElementById("codx-view2-body").style.cssText = "height:" +height+"px !important";
     }
     else
     {
-      document.getElementById("codx-view2-body").style.cssText = "height:auto";
+      if(document.getElementById("codx-view2-body")) document.getElementById("codx-view2-body").style.cssText = "height:auto";
     }
   }
 
@@ -79,7 +79,7 @@ export class CodxView2Component implements OnInit , AfterViewInit{
     this.request.entityName = this.entityName;
     this.request.gridViewName = this.gridViewName;
     this.request.formName = this.formName;
-    this.viewList = 
+    this.viewList =
     [
       {
         id: '1',
@@ -118,12 +118,12 @@ export class CodxView2Component implements OnInit , AfterViewInit{
 
     if(!this.dataSource) this.loadData();
   }
-  
+
   ngOnChanges(changes: SimpleChanges) {
     if (
       changes['dataSource'] &&
       changes['dataSource']?.currentValue != changes['dataSource']?.previousValue
-    ) 
+    )
     {
       this.dataSource = changes['dataSource']?.currentValue;
       if(!this.dataSource) this.loadData();
@@ -141,7 +141,7 @@ export class CodxView2Component implements OnInit , AfterViewInit{
       }
     });
   }
-  
+
   fetch(): Observable<any>
   {
     return this.api.execSv(
@@ -157,12 +157,12 @@ export class CodxView2Component implements OnInit , AfterViewInit{
   {
 
   }
-  
+
   viewChanged(e:any)
   {
     this.acitveMenuView(e);
   }
-  
+
   acitveMenuView(view: ViewModel) {
     let that = this;
     this.viewList?.filter(function (v) {
@@ -178,7 +178,7 @@ export class CodxView2Component implements OnInit , AfterViewInit{
   {
 
   }
-  
+
   clickToolbarMore(e:any)
   {
 

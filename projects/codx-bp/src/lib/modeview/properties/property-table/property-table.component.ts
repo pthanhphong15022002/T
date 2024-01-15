@@ -1,13 +1,32 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { BasePropertyComponent } from '../base.component';
+import { isObservable } from 'rxjs';
 
 @Component({
   selector: 'lib-property-table',
   templateUrl: './property-table.component.html',
   styleUrls: ['./property-table.component.css']
 })
-export class PropertyTableComponent extends BasePropertyComponent{
+export class PropertyTableComponent extends BasePropertyComponent implements OnInit{
   isEdit = false;
+  vllBP008:any;
+  selectItem:any;
+  ngOnInit(): void {
+    this.default();
+  }
+
+  default()
+  {
+    var vll = this.shareService.loadValueList("BP008") as any;
+    if(isObservable(vll))
+    {
+      vll.subscribe(item=>{
+        this.vllBP008 = item;
+      })
+    }
+    else this.vllBP008 = vll;
+  }
+
   addCol()
   {
     var object = this.genData("Text");
@@ -42,7 +61,11 @@ export class PropertyTableComponent extends BasePropertyComponent{
     data.columnNo = 0;
     return data;
   }
-  
+
+  selectedItem(e:any)
+  {
+    this.selectItem = e;
+  }
   edit()
   {
     this.isEdit = !this.isEdit;

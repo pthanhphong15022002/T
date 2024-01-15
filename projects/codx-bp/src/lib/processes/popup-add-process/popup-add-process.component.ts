@@ -65,6 +65,7 @@ import {
   UndoRedo,
   UserHandleModel,
   SelectorModel,
+  SelectorConstraints,
 } from '@syncfusion/ej2-angular-diagrams';
 import { ExpandMode, MenuEventArgs } from '@syncfusion/ej2-angular-navigations';
 import { log } from 'console';
@@ -81,6 +82,7 @@ import {
 import { Subject, takeUntil } from 'rxjs';
 import { ModeviewComponent } from '../../modeview/modeview.component';
 import { DynamicSettingControlComponent } from 'projects/codx-share/src/lib/components/dynamic-setting/dynamic-setting-control/dynamic-setting-control.component';
+import { PopupPermissionsProcessesComponent } from './popup-permissions-processes/popup-permissions-processes.component';
 Diagram.Inject(ConnectorEditing);
 @Component({
   selector: 'lib-popup-add-process',
@@ -990,7 +992,24 @@ export class PopupAddProcessComponent {
     }
   }
   nodeSelected: any;
+  drawNode: any;
   onSelect(e: any) {
+    if (
+      e.newValue.length > 0 &&
+      (e.newValue[0] as ConnectorModel).sourceID === undefined
+    ) {
+      this.diagram.selectedItems = {
+        constraints: SelectorConstraints.All | SelectorConstraints.UserHandle,
+        userHandles: this.handles,
+      };
+      if (this.diagram.selectedItems.nodes.length > 0) {
+        this.drawNode =
+          this.diagram.selectedItems.nodes[
+            this.diagram.selectedItems.nodes.length - 1
+          ];
+      }
+      //return
+    }
     if (e.newValue && e.newValue.length == 1) {
       this.nodeSelected = e.newValue[0];
     }
@@ -1014,19 +1033,51 @@ export class PopupAddProcessComponent {
       side: 'Bottom',
       margin: { top: 0, bottom: 0, left: 0, right: 0 },
     },
-    //   {
-    //     name: 'connect', pathData: "M 7.04 22.13 L 92.95 22.13 L 92.95 88.8 C 92.95 91.92 91.55 94.58 88.76 96.74 C 85.97 98.91 82.55 100 78.52 100 L 21.48 100 C 17.45 100 14.03 98.91 11.24 96.74 C 8.45 94.58 7.04 91.92 7.04 88.8 z M 32.22 0 L 67.78 0 L 75.17 5.47 L 100 5.47 L 100 16.67 L 0 16.67 L 0 5.47 L 24.83 5.47 z",
-    //     visible: true, offset: 0.5, side: 'Right', margin: { top: 0, bottom: 0, left: 0, right: 0 }
-    // }
+    {
+      name: 'add',
+      pathData:
+        'M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm144 276c0 6.6-5.4 12-12 12h-92v92c0 6.6-5.4 12-12 12h-56c-6.6 0-12-5.4-12-12v-92h-92c-6.6 0-12-5.4-12-12v-56c0-6.6 5.4-12 12-12h92v-92c0-6.6 5.4-12 12-12h56c6.6 0 12 5.4 12 12v92h92c6.6 0 12 5.4 12 12v56z',
+      visible: true,
+      offset: 0.5,
+      side: 'Right',
+      margin: { top: 0, bottom: 0, left: 0, right: 0 },
+    },
+    {
+      name: 'connect',
+      pathData:
+        'M256 504C119 504 8 393 8 256S119 8 256 8s248 111 248 248-111 248-248 248zm28.9-143.6L209.4 288H392c13.3 0 24-10.7 24-24v-16c0-13.3-10.7-24-24-24H209.4l75.5-72.4c9.7-9.3 9.9-24.8.4-34.3l-11-10.9c-9.4-9.4-24.6-9.4-33.9 0L107.7 239c-9.4 9.4-9.4 24.6 0 33.9l132.7 132.7c9.4 9.4 24.6 9.4 33.9 0l11-10.9c9.5-9.5 9.3-25-.4-34.3z',
+      visible: true,
+      offset: 0.5,
+      side: 'Left',
+      margin: { top: 0, bottom: 0, left: 0, right: 0 },
+    },
   ];
   selectedItems: SelectorModel = {
     userHandles: this.handles,
   };
   getCustomTool: Function = this.getTool.bind(this);
 
+  userHandleClick(e: any) {
+    this.getTool(e.element.name);
+  }
   public getTool(action: string) {
     if (action == 'delete') {
       this.diagram.remove();
+    }
+    if (action == 'add') {
+      console.log('thêm', this.diagram.selectedObject);
+    }
+    if (action == 'connect') {
+      this.diagram.drawingObject.shape = {};
+      (this.diagram.drawingObject as any).type = (
+        this.diagram.drawingObject as any
+      ).type
+        ? (this.diagram.drawingObject as any).type
+        : 'Orthogonal';
+      (this.diagram.drawingObject as any).sourceID = (this.drawNode as any).id;
+      this.diagram.dataBind();
+
+      // console.log('Nối',this.nodeSelected);
     }
   }
   valueDataChange(e: any) {
@@ -1546,7 +1597,7 @@ export class PopupAddProcessComponent {
         perm.full = true;
         perm.create = true;
         perm.assign = true;
-        perm.edit = true;
+        perm.update = true;
         perm.delete = true;
         perm.isActive = true;
 
@@ -1622,7 +1673,38 @@ export class PopupAddProcessComponent {
     return listPerm;
   }
 
-  clickRoles() {}
+  clickRoles() {
+    let title = this.gridViewSetup?.Permissions?.headerText ?? 'Phân quyền';
+    let formModel = new FormModel();
+    formModel.formName = 'DPProcessesPermissions';
+    formModel.gridViewName = 'grvDPProcessesPermissions';
+    formModel.entityName = 'DP_Processes_Permissions';
+    let dialogModel = new DialogModel();
+    dialogModel.zIndex = 999;
+    dialogModel.FormModel = formModel;
+    let obj = {
+      permissions: this.data.permissions ?? [],
+      title: title
+    }
+    let dialog = this.callfc.openForm(
+      PopupPermissionsProcessesComponent,
+      '',
+      950,
+      650,
+      '',
+      obj,
+      '',
+      dialogModel
+    );
+
+    dialog.closed.subscribe((e) => {
+      if (e?.event && e?.event.length > 0) {
+        this.data.permissions = e.event ?? [];
+        // this.changeDetectorRef.detectChanges();
+        this.detectorRef.markForCheck();
+      }
+    });
+  }
 
   removeUser(index) {
     this.notiSv
@@ -1697,58 +1779,17 @@ export class PopupAddProcessComponent {
     formModelField.entityName = 'DP_Steps_Fields';
     formModelField.userPermission = this.dialog?.formModel?.userPermission;
     option.FormModel = formModelField;
-    debugger;
-    // let data = {
-    //   process: this.data,
-    //   vllBP002: this.vllBP002,
-    //   lstStepFields: this.extendInfos,
-    //   isForm: true,
-    // };
-    // let popupDialog = this.callfc.openForm(
-    //   FormPropertiesFieldsComponent,
-    //   '',
-    //   null,
-    //   null,
-    //   '',
-    //   data,
-    //   '',
-    //   option
-    // );
-    // popupDialog.closed.subscribe((e) => {
-    //   if (e && e?.event) {
-    //     this.extendInfos =
-    //       e?.event?.length > 0 ? JSON.parse(JSON.stringify(e?.event)) : [];
-
-    //     let extDocumentControls = this.extendInfos.filter(x => x.fieldType == 'Attachment' && x.documentControl != null && x.documentControl?.trim() != '');
-    //     if(extDocumentControls?.length > 0){
-    //       let lstDocumentControl = [];
-    //       extDocumentControls.forEach((ele) => {
-    //         const documents = JSON.parse(ele.documentControl);
-    //         documents.forEach((res) => {
-    //           var tmpDoc = {};
-    //           tmpDoc['recID'] = Util.uid();
-    //           tmpDoc['stepNo'] = 1;
-    //           tmpDoc['fieldID'] = res.recID;
-    //           tmpDoc['title'] = res.title;
-    //           tmpDoc['memo'] = res.memo;
-    //           tmpDoc['isRequired'] = res.isRequired ?? false;
-    //           tmpDoc['count'] = res.count ?? 0;
-    //           tmpDoc['templateID'] = res.templateID;
-    //           lstDocumentControl.push(tmpDoc);
-    //         });
-    //       });
-    //       this.data.documentControl = JSON.stringify(lstDocumentControl);
-    //     }
-    //     if(this.data?.steps[0]?.extendInfo){
-    //       this.data.steps[0].extendInfo = this.extendInfos;
-    //     }
-    //     this.detectorRef.markForCheck()
-    //   }
-    // });
     if (this.extendInfos) {
       this.extendInfos.forEach((element) => {
         if (typeof element.documentControl == 'string') {
           element.documentControl = JSON.parse(element.documentControl);
+        }
+
+        if (
+          typeof element.dataFormat == 'string' &&
+          element.fieldType == 'Table'
+        ) {
+          element.dataFormat = JSON.parse(element.dataFormat);
         }
       });
     }
@@ -1792,18 +1833,23 @@ export class PopupAddProcessComponent {
               lstDocumentControl.push(tmpDoc);
             });
           });
-          this.data.documentControl = JSON.stringify(lstDocumentControl);
+          this.data.documentControl = lstDocumentControl.length > 0 ? JSON.stringify(lstDocumentControl) : null;
         }
 
         if (this.data?.steps[0]?.extendInfo) {
           this.extendInfos.forEach((element) => {
             if (typeof element.documentControl != 'string') {
-              element.documentControl = JSON.stringify(element.documentControl);
+              element.documentControl = element.documentControl?.length > 0 ? JSON.stringify(element.documentControl) : null;
+            }
+
+            if (typeof element.dataFormat != 'string') {
+              element.dataFormat = element.dataFormat?.length > 0 ? JSON.stringify(element.dataFormat) : null;
             }
           });
+
           this.data.steps[0].extendInfo = this.extendInfos;
         }
-        this.detectorRef.markForCheck();
+        this.detectorRef.detectChanges();
       }
     });
   }
