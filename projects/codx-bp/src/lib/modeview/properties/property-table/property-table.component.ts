@@ -1,18 +1,23 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { BasePropertyComponent } from '../base.component';
 import { isObservable } from 'rxjs';
 
 @Component({
   selector: 'lib-property-table',
   templateUrl: './property-table.component.html',
-  styleUrls: ['./property-table.component.css']
+  styleUrls: ['./property-table.component.scss']
 })
-export class PropertyTableComponent extends BasePropertyComponent implements OnInit{
+export class PropertyTableComponent extends BasePropertyComponent implements OnInit , OnChanges{
+  
   isEdit = false;
   vllBP008:any;
-  selectItem:any;
+  dataEdit:any;
+
   ngOnInit(): void {
     this.default();
+  }
+  ngOnChanges(changes: SimpleChanges): void {
+    this.isEdit = false;
   }
 
   default()
@@ -39,14 +44,27 @@ export class PropertyTableComponent extends BasePropertyComponent implements OnI
     this.dataChange.emit(this.data);
   }
 
+  dataChangeTable(e:any)
+  {
+    if(e?.isDelete == true)
+    {
+      debugger
+    }
+  }
+
   genData(type:any)
   {
     var data = {} as any;
+    var vllText = this.vllBP008.datas.filter(x=>x.value == type)[0];
+    
     switch(type)
     {
       case "Text":
         {
-          
+          data.icon = vllText.icon;
+          data.text = vllText.text;
+          data.value = vllText.value;
+          break;
         }
     }
 
@@ -62,16 +80,20 @@ export class PropertyTableComponent extends BasePropertyComponent implements OnI
     return data;
   }
 
-  selectedItem(e:any)
+  selectedItem(e:any , index:any)
   {
-    this.selectItem = e;
+    this.data.dataFormat[index].icon = e?.icon;
+    this.data.dataFormat[index].text = e?.text;
+    this.data.dataFormat[index].value = e?.value;
   }
-  edit()
+  edit(e:any)
   {
     this.isEdit = !this.isEdit;
+    this.dataEdit = e;
+    this.ref.detectChanges();
   }
 
-  back()
+  backChange()
   {
     this.isEdit = !this.isEdit;
   }

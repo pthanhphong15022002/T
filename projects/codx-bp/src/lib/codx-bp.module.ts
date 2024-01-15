@@ -46,6 +46,7 @@ import { SplitterAllModule } from '@syncfusion/ej2-angular-layouts';
 import { DynamicSettingModule } from 'projects/codx-share/src/lib/components/dynamic-setting/dynamic-setting.module';
 import { PropertyShareComponent } from './modeview/properties/property-share/property-share.component';
 import { PropertyTableComponent } from './modeview/properties/property-table/property-table.component';
+import { PropertyDefaultTitleComponent } from './modeview/properties/property-default/property-default-title/property-default-title.component';
 
 export const routes: Routes = [
   {
@@ -83,6 +84,7 @@ export const routes: Routes = [
     FormatValuelistComponent,
 
     //Propreties
+    PropertyDefaultTitleComponent,
     PropertyValueListComponent,
     PropertyFormComponent,
     PropertyTextComponent,
