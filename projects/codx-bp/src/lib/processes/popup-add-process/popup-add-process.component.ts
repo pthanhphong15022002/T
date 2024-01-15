@@ -82,6 +82,7 @@ import {
 import { Subject, takeUntil } from 'rxjs';
 import { ModeviewComponent } from '../../modeview/modeview.component';
 import { DynamicSettingControlComponent } from 'projects/codx-share/src/lib/components/dynamic-setting/dynamic-setting-control/dynamic-setting-control.component';
+import { PopupPermissionsProcessesComponent } from './popup-permissions-processes/popup-permissions-processes.component';
 Diagram.Inject(ConnectorEditing);
 @Component({
   selector: 'lib-popup-add-process',
@@ -1596,7 +1597,7 @@ export class PopupAddProcessComponent {
         perm.full = true;
         perm.create = true;
         perm.assign = true;
-        perm.edit = true;
+        perm.update = true;
         perm.delete = true;
         perm.isActive = true;
 
@@ -1672,7 +1673,38 @@ export class PopupAddProcessComponent {
     return listPerm;
   }
 
-  clickRoles() {}
+  clickRoles() {
+    let title = this.gridViewSetup?.Permissions?.headerText ?? 'Phân quyền';
+    let formModel = new FormModel();
+    formModel.formName = 'DPProcessesPermissions';
+    formModel.gridViewName = 'grvDPProcessesPermissions';
+    formModel.entityName = 'DP_Processes_Permissions';
+    let dialogModel = new DialogModel();
+    dialogModel.zIndex = 999;
+    dialogModel.FormModel = formModel;
+    let obj = {
+      permissions: this.data.permissions ?? [],
+      title: title
+    }
+    let dialog = this.callfc.openForm(
+      PopupPermissionsProcessesComponent,
+      '',
+      950,
+      650,
+      '',
+      obj,
+      '',
+      dialogModel
+    );
+
+    dialog.closed.subscribe((e) => {
+      if (e?.event && e?.event.length > 0) {
+        this.data.permissions = e.event ?? [];
+        // this.changeDetectorRef.detectChanges();
+        this.detectorRef.markForCheck();
+      }
+    });
+  }
 
   removeUser(index) {
     this.notiSv
@@ -1747,54 +1779,6 @@ export class PopupAddProcessComponent {
     formModelField.entityName = 'DP_Steps_Fields';
     formModelField.userPermission = this.dialog?.formModel?.userPermission;
     option.FormModel = formModelField;
-    debugger;
-    // let data = {
-    //   process: this.data,
-    //   vllBP002: this.vllBP002,
-    //   lstStepFields: this.extendInfos,
-    //   isForm: true,
-    // };
-    // let popupDialog = this.callfc.openForm(
-    //   FormPropertiesFieldsComponent,
-    //   '',
-    //   null,
-    //   null,
-    //   '',
-    //   data,
-    //   '',
-    //   option
-    // );
-    // popupDialog.closed.subscribe((e) => {
-    //   if (e && e?.event) {
-    //     this.extendInfos =
-    //       e?.event?.length > 0 ? JSON.parse(JSON.stringify(e?.event)) : [];
-
-    //     let extDocumentControls = this.extendInfos.filter(x => x.fieldType == 'Attachment' && x.documentControl != null && x.documentControl?.trim() != '');
-    //     if(extDocumentControls?.length > 0){
-    //       let lstDocumentControl = [];
-    //       extDocumentControls.forEach((ele) => {
-    //         const documents = JSON.parse(ele.documentControl);
-    //         documents.forEach((res) => {
-    //           var tmpDoc = {};
-    //           tmpDoc['recID'] = Util.uid();
-    //           tmpDoc['stepNo'] = 1;
-    //           tmpDoc['fieldID'] = res.recID;
-    //           tmpDoc['title'] = res.title;
-    //           tmpDoc['memo'] = res.memo;
-    //           tmpDoc['isRequired'] = res.isRequired ?? false;
-    //           tmpDoc['count'] = res.count ?? 0;
-    //           tmpDoc['templateID'] = res.templateID;
-    //           lstDocumentControl.push(tmpDoc);
-    //         });
-    //       });
-    //       this.data.documentControl = JSON.stringify(lstDocumentControl);
-    //     }
-    //     if(this.data?.steps[0]?.extendInfo){
-    //       this.data.steps[0].extendInfo = this.extendInfos;
-    //     }
-    //     this.detectorRef.markForCheck()
-    //   }
-    // });
     if (this.extendInfos) {
       this.extendInfos.forEach((element) => {
         if (typeof element.documentControl == 'string') {

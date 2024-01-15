@@ -790,7 +790,8 @@
 
 <ng-template #templateSteps let-data>
   <!-- <view-step [stepID]="data?.stepID" (click)="currentStep(data, '2')"></view-step> -->
-  <codx-label
+  <div class="">
+    <codx-label
     class="text-primary fs-7 cursor-pointer"
     style="font-style: italic"
     fiedName="viewDetailsCost"
@@ -799,6 +800,7 @@
     default="Xem chi tiết"
     (click)="currentStep(data, '2')"
   ></codx-label>
+  </div>
 </ng-template>
 
 <ng-template #templateExpectedClosed let-data>
