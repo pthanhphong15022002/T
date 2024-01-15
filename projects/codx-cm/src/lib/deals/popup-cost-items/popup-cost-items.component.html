@@ -4,6 +4,7 @@
   [showHeader]="true"
   [headerText]="title"
   [body]="body"
+  (actionEvent)="actionEvent($event)"
 >
   <ng-template #body>
     <crud-cost-items
