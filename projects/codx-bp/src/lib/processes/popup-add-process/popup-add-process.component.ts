@@ -118,6 +118,7 @@ export class PopupAddProcessComponent {
     this.diagram.fitToPage();
     this.diagram.clearSelection();
     this.diagram.scrollSettings.canAutoScroll = true;
+
     //this.diagram.tool = DiagramTools.ZoomPan;
   }
   clickPan(isPan) {
@@ -827,6 +828,7 @@ export class PopupAddProcessComponent {
   }
 
   dragEnter(e: any) {
+    let ele = this.elementRef.nativeElement.querySelector('.diagramzone');
     //console.log(e);
     //let objDragpane = document.querySelector('.dragarea').getBoundingClientRect();
     //if(objDragpane && e.dropPoint.x < objDragpane.x) return;
@@ -902,6 +904,8 @@ export class PopupAddProcessComponent {
         this.diagram.addConnector(connector);
         break;
       case 'swimlane':
+        let height = 500;
+        if(ele) height = ele.offsetHeight
         let swimLane: NodeModel = {
           id: this.makeid(10),
           shape: {
@@ -915,8 +919,8 @@ export class PopupAddProcessComponent {
               {
                 id: this.makeid(10),
                 canMove: true,
-                height: 500,
-                width: 400,
+                height: height,
+                width: 800,
                 header: {
                   height: 30,
                   style: { fontSize: 14, fill: '#fff' },
@@ -935,8 +939,8 @@ export class PopupAddProcessComponent {
             orientation: 'Vertical',
             isLane: true,
           },
-          height: 500,
-          width: 400,
+          height: height,
+          width: 800,
           style: { strokeColor: '#ffffff', fill: '#ffffff' },
           offsetX: model.offsetX,
           offsetY: model.offsetY + 100,
@@ -1064,7 +1068,51 @@ export class PopupAddProcessComponent {
       this.diagram.remove();
     }
     if (action == 'add') {
-      console.log('thêm', this.diagram.selectedObject);
+      let newNode:any= cloneObject(this.nodeSelected);
+      newNode.id = this.makeid(10);
+       //newNode.children = [];
+       newNode.offsetY = newNode.offsetY+300;
+       if(newNode.parentId){
+        let prNode = this.diagram.nodes.find((x:any)=>x.id== newNode.parentId);
+        if(prNode){
+          newNode.parentId = undefined
+          this.diagram.add(newNode);
+          this.diagram.addChild(prNode,newNode.id);
+          setTimeout(()=>{
+            this.diagram.refreshDiagramLayer();
+            this.diagram.select(newNode);
+          },200)
+
+          return;
+          //prNode.height = prNode.height + 300;
+          // if((prNode as any).parentId){
+          //   let gpNode = this.diagram.nodes.find((x:any)=>x.id== (prNode as any).parentId);
+          //   if(gpNode){
+          //     //gpNode.height = gpNode.height+300
+          //     this.diagram.addNodeToLane(newNode,gpNode.id,prNode.id);
+          //   }
+          // }
+        }
+        else {
+          newNode.parentId = undefined;
+          this.diagram.add(newNode);
+          setTimeout(()=>{
+            this.diagram.refreshDiagramLayer();
+            this.diagram.select(newNode);
+          },200)
+        }
+       }
+       else {
+        newNode.parentId = undefined;
+        this.diagram.add(newNode);
+        setTimeout(()=>{
+          this.diagram.refreshDiagramLayer();
+          this.diagram.select(newNode);
+        },200)
+      }
+
+      //this.diagram.refreshDiagramLayer();
+      console.log('thêm', this.nodeSelected);
     }
     if (action == 'connect') {
       this.diagram.drawingObject.shape = {};
@@ -1074,6 +1122,7 @@ export class PopupAddProcessComponent {
         ? (this.diagram.drawingObject as any).type
         : 'Orthogonal';
       (this.diagram.drawingObject as any).sourceID = (this.drawNode as any).id;
+      this.diagram.tool = DiagramTools.DrawOnce;
       this.diagram.dataBind();
 
       // console.log('Nối',this.nodeSelected);
