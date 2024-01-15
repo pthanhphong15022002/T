@@ -7,17 +7,53 @@ import { BasePropertyComponent } from '../base.component';
   styleUrls: ['./property-table.component.css']
 })
 export class PropertyTableComponent extends BasePropertyComponent{
-  
+  isEdit = false;
   addCol()
   {
-    var object = 
-    {
-      customName : "Văn bản 1"
-    }
-
+    var object = this.genData("Text");
     this.data.dataFormat.push(object);
   }
+
+  changeValueTable(e:any)
+  {
+    this.data.tableFormat[e?.field] = e?.data;
+    this.dataChange.emit(this.data);
+  }
+
+  genData(type:any)
+  {
+    var data = {} as any;
+    switch(type)
+    {
+      case "Text":
+        {
+          
+        }
+    }
+
+    data.title = "Cột 1";
+    data.fieldName = "Cot_1";
+    data.description = null;
+    data.dataType = "String";
+    data.Format = "";
+    data.controlType = "TextBox";
+    data.isRequired = false;
+    data.defaultValue = null;
+    data.columnNo = 0;
+    return data;
+  }
+  
+  edit()
+  {
+    this.isEdit = !this.isEdit;
+  }
+
+  back()
+  {
+    this.isEdit = !this.isEdit;
+  }
 }
+
 
 // {
 //   "title": "Văn bản 1",

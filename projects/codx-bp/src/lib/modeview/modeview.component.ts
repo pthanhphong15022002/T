@@ -307,6 +307,27 @@ export class ModeviewComponent implements OnInit {
         this.count.table ++;
         data.title += " " + this.count.table;
         data.dataFormat = [];
+        var vllText = this.vllBP002.datas.filter(x=>x.value == "Text")[0];
+        for(var i = 0 ; i<3 ; i++)
+        {
+          var col = 
+          {
+            title : "Cột " + (i+1),
+            fieldName: "Cot_" + (i+1),
+            description: null,
+            dataType: "String",
+            dataFprmat: "",
+            controlType: "TextBox",
+            isRequired: false,
+            defaultValue: null,
+            columnNo:0,
+            icon: vllText.icon,
+            text: vllText.text,
+            textColor : vllText.textColor,
+          }
+          data.dataFormat.push(col);
+        }
+        
         break;
       }
       case "Progress":
@@ -382,7 +403,8 @@ export class ModeviewComponent implements OnInit {
   drop2(event:any)
   {
     let data = JSON.parse(JSON.stringify(event.previousContainer.data[event.previousIndex]));
-    if(event.previousContainer === event.container && event.event.target.id == event.container.id) {
+    if(event.previousContainer === event.container && event.event.target.id == event.container.id) 
+    {
       //delete this.table[data.parentID].children[event.previousIndex];
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
       for(var i = 0 ; i < event.container.data.length ; i++)
@@ -392,7 +414,7 @@ export class ModeviewComponent implements OnInit {
     } 
     else if(event.event.target.id != event.container.id)
     {
-      var object = 
+      let object = 
       {
         name: "",
         columnOrder: this.table.length,
@@ -403,12 +425,12 @@ export class ModeviewComponent implements OnInit {
 
       let index = this.table.findIndex(x=>x.columnOrder == data.columnOrder);
       this.table[index].children.splice(event.previousIndex, 1);
+      this.table = this.table.filter(x=>x.children != null && x.children.length>0);
       var ds = false;
       if(event.event.target.id != event.container.id) {
         
         if(this.dataSelected.columnOrder == object.children[0].columnOrder && this.dataSelected.columnNo == object.children[0].columnNo) ds = true;
-        object.columnOrder = object.children[0].columnOrder = this.table.length;
-        
+        object.columnOrder = object.children[0].columnOrder = this.table[this.table.length - 1].columnOrder + 1;
         this.table.push(object);
         
         if(ds) this.selectedItem(object.children[0])
@@ -462,6 +484,7 @@ export class ModeviewComponent implements OnInit {
 
   close()
   {
+    this.resetIndex();
     var result = [];
     this.table.forEach(elm=>{
       result = result.concat(elm.children);
@@ -472,7 +495,7 @@ export class ModeviewComponent implements OnInit {
       delete elm.textColor;
       delete elm.value;
     })
-    debugger
+ 
     this.dialog.close(result);
   }
 
