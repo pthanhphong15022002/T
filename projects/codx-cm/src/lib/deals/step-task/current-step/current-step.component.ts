@@ -51,6 +51,7 @@ export class CurrentStepComponent implements OnInit, OnChanges {
   listQuotations: any[] = [];
   isViewLink: boolean = false;
   view;
+  listCosts;
 
   viewSettings: any;
   statusCodeID;
@@ -121,11 +122,17 @@ export class CurrentStepComponent implements OnInit, OnChanges {
           this.vllStatusContract = this.grvSetupContract['Status'].referedValue;
         }
       });
-
+    this.getCostItemsByTransID(this.deal?.recID);
   }
   ngOnChanges(changes: SimpleChanges) {}
 
-
+  getCostItemsByTransID(transID) {
+    this.codxCmService.getCostItemsByTransID(transID).subscribe((res) => {
+      if (res) {
+        this.listCosts = res;
+      }
+    });
+  }
 
   getContract() {
     if (this.deal) {

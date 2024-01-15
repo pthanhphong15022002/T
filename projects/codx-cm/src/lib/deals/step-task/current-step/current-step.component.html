@@ -96,32 +96,12 @@
       </div>
     </div>
     <div>
-      <table class="table">
-        <thead>
-          <tr>
-            <th>Chi phí</th>
-            <th>Số lượng</th>
-            <th>Đơn giá</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>Tiền sản phẩm</td>
-            <td>10</td>
-            <td>100000000</td>
-          </tr>
-          <tr>
-            <td>Công lắp đặt</td>
-            <td>1</td>
-            <td>11111111</td>
-          </tr>
-          <tr>
-            <td>Tổng cộng</td>
-            <td>1</td>
-            <td>11111111</td>
-          </tr>
-        </tbody>
-      </table>
+      <crud-cost-items
+        [transID]="deal?.recID"
+        [costInfos]="listCosts"
+        [isLoadedData]="true"
+        [viewOnly]="true"
+      ></crud-cost-items>
     </div>
   </div>
   <div id="tasks" class="item-main">
