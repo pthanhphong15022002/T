@@ -991,9 +991,8 @@ export class PopupAddProcessComponent {
     }
   }
   nodeSelected: any;
-  drawNode:any
+  drawNode: any;
   onSelect(e: any) {
-
     if (
       e.newValue.length > 0 &&
       (e.newValue[0] as ConnectorModel).sourceID === undefined
@@ -1004,14 +1003,16 @@ export class PopupAddProcessComponent {
       };
       if (this.diagram.selectedItems.nodes.length > 0) {
         this.drawNode =
-        this.diagram.selectedItems.nodes[this.diagram.selectedItems.nodes.length - 1];
+          this.diagram.selectedItems.nodes[
+            this.diagram.selectedItems.nodes.length - 1
+          ];
       }
       //return
     }
     if (e.newValue && e.newValue.length == 1) {
       this.nodeSelected = e.newValue[0];
     }
-    console.log('chọn nè',e);
+    console.log('chọn nè', e);
   }
 
   defaultData: any = JSON.parse(
@@ -1023,51 +1024,64 @@ export class PopupAddProcessComponent {
   formData: any = {};
   handles: UserHandleModel[] = [
     {
-      name: 'delete', pathData: "M 7.04 22.13 L 92.95 22.13 L 92.95 88.8 C 92.95 91.92 91.55 94.58 88.76 96.74 C 85.97 98.91 82.55 100 78.52 100 L 21.48 100 C 17.45 100 14.03 98.91 11.24 96.74 C 8.45 94.58 7.04 91.92 7.04 88.8 z M 32.22 0 L 67.78 0 L 75.17 5.47 L 100 5.47 L 100 16.67 L 0 16.67 L 0 5.47 L 24.83 5.47 z",
-      visible: true, offset: 0.5, side: 'Bottom', margin: { top: 0, bottom: 0, left: 0, right: 0 }
-  },
-  {
-    name: 'add', pathData: "M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm144 276c0 6.6-5.4 12-12 12h-92v92c0 6.6-5.4 12-12 12h-56c-6.6 0-12-5.4-12-12v-92h-92c-6.6 0-12-5.4-12-12v-56c0-6.6 5.4-12 12-12h92v-92c0-6.6 5.4-12 12-12h56c6.6 0 12 5.4 12 12v92h92c6.6 0 12 5.4 12 12v56z",
-    visible: true, offset: 0.5, side: 'Right', margin: { top: 0, bottom: 0, left: 0, right: 0 }
-  },
-  {
-    name: 'connect', pathData: "M256 504C119 504 8 393 8 256S119 8 256 8s248 111 248 248-111 248-248 248zm28.9-143.6L209.4 288H392c13.3 0 24-10.7 24-24v-16c0-13.3-10.7-24-24-24H209.4l75.5-72.4c9.7-9.3 9.9-24.8.4-34.3l-11-10.9c-9.4-9.4-24.6-9.4-33.9 0L107.7 239c-9.4 9.4-9.4 24.6 0 33.9l132.7 132.7c9.4 9.4 24.6 9.4 33.9 0l11-10.9c9.5-9.5 9.3-25-.4-34.3z",
-    visible: true, offset: 0.5, side: 'Left', margin: { top: 0, bottom: 0, left: 0, right: 0 }
-  },
+      name: 'delete',
+      pathData:
+        'M 7.04 22.13 L 92.95 22.13 L 92.95 88.8 C 92.95 91.92 91.55 94.58 88.76 96.74 C 85.97 98.91 82.55 100 78.52 100 L 21.48 100 C 17.45 100 14.03 98.91 11.24 96.74 C 8.45 94.58 7.04 91.92 7.04 88.8 z M 32.22 0 L 67.78 0 L 75.17 5.47 L 100 5.47 L 100 16.67 L 0 16.67 L 0 5.47 L 24.83 5.47 z',
+      visible: true,
+      offset: 0.5,
+      side: 'Bottom',
+      margin: { top: 0, bottom: 0, left: 0, right: 0 },
+    },
+    {
+      name: 'add',
+      pathData:
+        'M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm144 276c0 6.6-5.4 12-12 12h-92v92c0 6.6-5.4 12-12 12h-56c-6.6 0-12-5.4-12-12v-92h-92c-6.6 0-12-5.4-12-12v-56c0-6.6 5.4-12 12-12h92v-92c0-6.6 5.4-12 12-12h56c6.6 0 12 5.4 12 12v92h92c6.6 0 12 5.4 12 12v56z',
+      visible: true,
+      offset: 0.5,
+      side: 'Right',
+      margin: { top: 0, bottom: 0, left: 0, right: 0 },
+    },
+    {
+      name: 'connect',
+      pathData:
+        'M256 504C119 504 8 393 8 256S119 8 256 8s248 111 248 248-111 248-248 248zm28.9-143.6L209.4 288H392c13.3 0 24-10.7 24-24v-16c0-13.3-10.7-24-24-24H209.4l75.5-72.4c9.7-9.3 9.9-24.8.4-34.3l-11-10.9c-9.4-9.4-24.6-9.4-33.9 0L107.7 239c-9.4 9.4-9.4 24.6 0 33.9l132.7 132.7c9.4 9.4 24.6 9.4 33.9 0l11-10.9c9.5-9.5 9.3-25-.4-34.3z',
+      visible: true,
+      offset: 0.5,
+      side: 'Left',
+      margin: { top: 0, bottom: 0, left: 0, right: 0 },
+    },
   ];
   selectedItems: SelectorModel = {
     userHandles: this.handles,
   };
   getCustomTool: Function = this.getTool.bind(this);
 
-  userHandleClick(e:any){
+  userHandleClick(e: any) {
     this.getTool(e.element.name);
   }
   public getTool(action: string) {
-    if (action == "delete") {
-        this.diagram.remove();
+    if (action == 'delete') {
+      this.diagram.remove();
     }
-    if (action == "add") {
-        console.log('thêm',this.diagram.selectedObject);
-
+    if (action == 'add') {
+      console.log('thêm', this.diagram.selectedObject);
     }
-    if (action == "connect") {
-
+    if (action == 'connect') {
       this.diagram.drawingObject.shape = {};
-      (this.diagram.drawingObject as any).type = (this.diagram.drawingObject as any).type
+      (this.diagram.drawingObject as any).type = (
+        this.diagram.drawingObject as any
+      ).type
         ? (this.diagram.drawingObject as any).type
         : 'Orthogonal';
       (this.diagram.drawingObject as any).sourceID = (this.drawNode as any).id;
       this.diagram.dataBind();
 
-
       // console.log('Nối',this.nodeSelected);
     }
-  };
-  valueDataChange(e:any){
-    if(this.nodeSelected){
-
-      if(!this.formData[this.nodeSelected.id]){
+  }
+  valueDataChange(e: any) {
+    if (this.nodeSelected) {
+      if (!this.formData[this.nodeSelected.id]) {
         this.formData[this.nodeSelected.id] = {};
       }
       this.formData[this.nodeSelected.id][e.field] = e.data;
@@ -1786,6 +1800,13 @@ export class PopupAddProcessComponent {
         if (typeof element.documentControl == 'string') {
           element.documentControl = JSON.parse(element.documentControl);
         }
+
+        if (
+          typeof element.dataFormat == 'string' &&
+          element.fieldType == 'Table'
+        ) {
+          element.dataFormat = JSON.parse(element.dataFormat);
+        }
       });
     }
     let popupDialog = this.callfc.openForm(
@@ -1836,10 +1857,15 @@ export class PopupAddProcessComponent {
             if (typeof element.documentControl != 'string') {
               element.documentControl = JSON.stringify(element.documentControl);
             }
+
+            if (typeof element.dataFormat != 'string') {
+              element.dataFormat = JSON.stringify(element.dataFormat);
+            }
           });
+
           this.data.steps[0].extendInfo = this.extendInfos;
         }
-        this.detectorRef.markForCheck();
+        this.detectorRef.detectChanges();
       }
     });
   }
