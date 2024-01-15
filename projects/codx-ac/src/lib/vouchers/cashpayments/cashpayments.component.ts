@@ -11,6 +11,7 @@ import {
   ButtonModel,
   DataRequest,
   DialogModel,
+  FormModel,
   NotificationsService,
   ResourceModel,
   SidebarModel,
@@ -22,7 +23,7 @@ import {
 } from 'codx-core';
 import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
 import { CashPaymentAddComponent } from './cashpayments-add/cashpayments-add.component';
-import { CodxAcService } from '../../codx-ac.service';
+import { CodxAcService, fmCashPaymentsLines, fmCashPaymentsLinesOneAccount, fmSettledInvoices, fmVATInvoices } from '../../codx-ac.service';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { ProgressBar } from '@syncfusion/ej2-angular-progressbar';
 import { CodxListReportsComponent } from 'projects/codx-share/src/lib/components/codx-list-reports/codx-list-reports.component';
@@ -64,6 +65,10 @@ export class CashPaymentsComponent extends UIComponent {
   bankReceiveName: any;
   viewActive:number = ViewType.listdetail;
   ViewType = ViewType;
+  fmCashpaymentLine: FormModel = fmCashPaymentsLines;
+  fmCashpaymentLineOne: FormModel = fmCashPaymentsLinesOneAccount;
+  fmSettledInvoices:FormModel = fmSettledInvoices;
+  fmVATInvoices:FormModel = fmVATInvoices;
   private destroy$ = new Subject<void>();
   constructor(
     private inject: Injector,
@@ -288,24 +293,24 @@ export class CashPaymentsComponent extends UIComponent {
             legalName: this.legalName, //? tên company
           };
           let optionSidebar = new SidebarModel();
-          optionSidebar.DataService = this.view?.dataService;
-          optionSidebar.FormModel = this.view?.formModel;
-          let dialog = this.callfc.openSide(
-            CashPaymentAddComponent,
-            data,
-            optionSidebar,
-            this.view.funcID
-          );
-          dialog.closed.subscribe((res) => {
-            if (res && res?.event) {
-              if (res?.event?.type === 'discard') {
-                if(this.view.dataService.data.length == 0){
-                  this.itemSelected = undefined;
-                  this.detectorRef.detectChanges();
-                } 
+            optionSidebar.DataService = this.view?.dataService;
+            optionSidebar.FormModel = this.view?.formModel;
+            let dialog = this.callfc.openSide(
+              CashPaymentAddComponent,
+              data,
+              optionSidebar,
+              this.view.funcID
+            );
+            dialog.closed.subscribe((res) => {
+              if (res && res?.event) {
+                if (res?.event?.type === 'discard') {
+                  if(this.view.dataService.data.length == 0){
+                    this.itemSelected = undefined;
+                    this.detectorRef.detectChanges();
+                  } 
+                }
               }
-            }
-          })
+            })
         }
       });
   }

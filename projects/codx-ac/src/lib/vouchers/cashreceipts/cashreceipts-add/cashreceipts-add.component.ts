@@ -55,6 +55,13 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
   nextTabIndex:any;
   refNo:any;
   refTotalAmt:any = 0;
+  editSettings:EditSettingsModel = {
+    allowAdding:false,
+    allowEditing:false,
+    allowDeleting:false,
+    allowEditOnDblClick:false,
+    allowNextRowEdit:false
+  }
   private destroy$ = new Subject<void>();
   constructor(
     inject: Injector,

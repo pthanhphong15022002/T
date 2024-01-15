@@ -154,15 +154,15 @@ export class ItemsComponent extends UIComponent {
           this.optionSidebar,
           this.view.funcID
         );
-        dialog.closed.subscribe((res) => {
-          if (res.event == null) {
-            if(data.dataDefault?.itemID?.trim() == '' || data.dataDefault?.itemID?.trim() == undefined) return;
-            this.view.dataService
-              .delete([data.dataDefault], false,null,null,null,null,null,false)
-              .pipe(takeUntil(this.destroy$))
-              .subscribe((res: any) => { });
-          }
-        });
+        // dialog.closed.subscribe((res) => {
+        //   if (res.event == null) {
+        //     if(data.dataDefault?.itemID?.trim() == '' || data.dataDefault?.itemID?.trim() == undefined) return;
+        //     this.view.dataService
+        //       .delete([data.dataDefault], false,null,null,null,null,null,false)
+        //       .pipe(takeUntil(this.destroy$))
+        //       .subscribe((res: any) => { });
+        //   }
+        // });
       }       
     });
   }

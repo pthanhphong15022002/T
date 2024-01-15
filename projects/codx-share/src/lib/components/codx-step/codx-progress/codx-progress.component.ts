@@ -67,6 +67,7 @@ export class UpdateProgressComponent implements OnInit, OnChanges {
     this.type = dt?.data?.type;
     this.step = dt?.data?.step;
     this.dataSource = dt?.data?.data;
+    this.formModel = dt?.data?.formModel || this.formModel;
     this.isSave =
       dt?.data?.isSave == undefined ? this.isSave : dt?.data?.isSave;
     this.isUpdateParent =
@@ -84,7 +85,7 @@ export class UpdateProgressComponent implements OnInit, OnChanges {
     this.note = this.dataSource['note'] || '';
     this.actualEnd = this.dataSource['actualEnd'] || null;
     this.progressData = Number(this.dataSource['progress'] || 0);
-    this.getgridViewSetup(this.dialog.formModel);
+    this.getgridViewSetup(this.formModel);
     this.disabledProgressInput = this.progressData == 100 ? true : false;
   }
 

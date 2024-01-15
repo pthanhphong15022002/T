@@ -4,6 +4,10 @@ import { ActivatedRoute } from '@angular/router';
 import { Thickness } from '@syncfusion/ej2-charts';
 import { ApiHttpService, CacheService, CallFuncService, AuthService, NotificationsService, DialogRef, DialogData, CRUDService, CodxFormComponent } from 'codx-core';
 import { tmpAddGiftTrans } from '../../models/tmpAddGiftTrans.model';
+import { CodxFdService } from '../../codx-fd.service';
+import { ComboBoxComponent } from '@syncfusion/ej2-angular-dropdowns';
+import { DataManager, Query } from '@syncfusion/ej2-data';
+import { EvoucherDetailComponent } from '../../evouchers/evoucher-detail/evoucher-detail.component';
 
 @Component({
   selector: 'lib-popup-add-gift',
@@ -45,6 +49,19 @@ export class PopupAddGiftComponent implements OnInit {
   quantityOld: number = 0;
   date = new Date();
 
+  dataEvoucher: any[] = [];
+  fields: Object = { text: 'productNm', value: 'productId' };
+  valueEvoucher: string = '';
+  request: any = {
+    page: 1,
+    pageSize: 10,
+    categoryID: 0,
+    brandID: 0,
+  }
+  loadingEvoucher: boolean = false;
+  totalPage: number = 1;
+  quantityEvoucher: number = 0;
+  @ViewChild("combobox") combobox: ComboBoxComponent;
 
   constructor(
     private api: ApiHttpService,
@@ -55,6 +72,7 @@ export class PopupAddGiftComponent implements OnInit {
     private notifySV: NotificationsService,
     private route: ActivatedRoute,
     private activeRouter: ActivatedRoute,
+    private fdService: CodxFdService,
     @Optional() dialogRef?: DialogRef,
     @Optional() dd?: DialogData) {
     this.dialogRef = dialogRef;
@@ -67,8 +85,13 @@ export class PopupAddGiftComponent implements OnInit {
     this.innitForm();
     this.getMyWalletInfor();
     this.getDataPattern(this.cardTypeDefault);
-    this.giftTrans.EntityName = "FD_GiftTrans";
-    this.giftTrans.EntityPer = "FD_GiftTrans";
+    if(this.funcID == "FDT092") {
+      this.giftTrans.EntityName = "FD_EGiftTrans";
+      this.giftTrans.EntityPer = "FD_EGiftTrans";
+    } else {
+      this.giftTrans.EntityName = "FD_GiftTrans";
+      this.giftTrans.EntityPer = "FD_GiftTrans";
+    }
     this.giftTrans.FunctionID = this.funcID;
 
     // this.route.params.subscribe((param: any) => {
@@ -86,7 +109,11 @@ export class PopupAddGiftComponent implements OnInit {
         if (func && func?.formName && func?.gridViewName && func?.entityName && func?.description) {
           this.title = func.description;
         }
-      })
+      });
+    
+    if(this.funcID == "FDT092") {
+      this.loadDataEvoucher();
+    }
   }
 
   getDataPattern(cardType: string) {
@@ -118,11 +145,40 @@ export class PopupAddGiftComponent implements OnInit {
       quantity: new FormControl(0),
       amount: new FormControl(0),
       status: new FormControl("1"),
-      siutuation: new FormControl(""),
+      situation: new FormControl(""),
     });
   }
 
   resetForm() { }
+
+  loadDataEvoucher() {
+    this.loadingEvoucher = true;
+    this.api
+      .execSv<any>('FD', 'FD', 'VouchersBusiness', 'GotITProductList', [
+        0,
+        0,
+        this.request.categoryID,
+        'asc',
+        this.request.brandID,
+        this.request.pageSize,
+        this.request.page,
+      ])
+      .subscribe((data) => {
+        if (data) {
+          if(data?.productList && data?.productList.length > 0) {
+            this.combobox.addItem(data.productList);
+          }
+          this.totalPage = data?.pagination?.totalPage;
+        }
+        this.loadingEvoucher = false;
+      });
+  }
+
+  selectEvoucher(event: any) {
+    if(event) {
+      this.valueEvoucher = event.itemData.productId;
+    }
+  }
 
   valueChange(event: any) {
     if (!event) return;
@@ -204,20 +260,26 @@ export class PopupAddGiftComponent implements OnInit {
   }
 
   save() {
+    if (!this.giftTrans.ItemID) {
+      this.notifySV.notify("Vui lòng chọn quà tặng");
+      return;
+    }
+    if (!this.giftTrans.UserID) {
+      this.notifySV.notifyCode("RS034")
+      return;
+    }
+    if (!this.giftTrans.Situation) {
+      this.notifySV.notify("Vui nhập nội dung");
+      return;
+    }
     this.api.execSv("FD", "ERM.Business.FD", "GiftTransBusiness", "AddGiftTransAsync", [this.giftTrans, this.isSharePortal])
       .subscribe((res: any) => {
-        if (res) {
-          let status = res[0];
-          if (status) {
-            this.notifySV.notify("Thêm thành công!");
-          }
-          else {
-            let message = res[1];
-            this.notifySV.notify(message);
-          }
-        }
-        else {
-          this.notifySV.notify("Thêm không thành công!")
+        if (res && res[0]) {
+          (this.dialogRef.dataService as CRUDService).add(res[0], 0).subscribe();
+          this.dialogRef.close();
+          this.notifySV.notifyCode('SYS006');
+        } else {
+          this.notifySV.notifyCode("SYS023");
         }
       });
   }
@@ -316,4 +378,54 @@ export class PopupAddGiftComponent implements OnInit {
   closeViewCard(dialogRef: DialogRef) {
     dialogRef.close();
   }
+
+  beforeOpen(args: any) {
+    setTimeout(()=>{
+      let list = (this.combobox as any).list;
+        if(list){
+          list.addEventListener('scroll',(e:any)=>{
+            if ((list!.scrollTop + (list as any).offsetHeight >= list!.scrollHeight)){
+              if(!this.loadingEvoucher){
+                if(this.request.page < this.totalPage){
+                  this.request.page++;
+                  this.loadDataEvoucher();
+                }
+              }
+            }
+          })
+        }
+    },50)
+  }
+
+  selectItem(item: any) {
+    const modal = this.callfc.openForm(EvoucherDetailComponent,"",900 , 800 , "" , {
+      productID : item.productId,
+      headerText: "Chi tiết thẻ quà tặng",
+      type: 'getPrice',
+      sizeSelected: null,
+      formName: "EGiftTrans",
+      funcID: this.funcID,
+      entityName: "FD_EGiftTrans",
+      quantity: 1,
+    })
+    modal.closed.subscribe((data:any)=>{
+      if(data?.event){
+        if(data.event?.role == "save" && data.event?.selectSize) {
+          this.quantityEvoucher = data.event?.data?.quantity;
+          this.giftTrans.Quantity = this.quantityEvoucher;
+
+          const amount = data.event?.data?.price * data.event?.data?.quantity
+          this.form.patchValue({ amount });
+          this.amount = amount;
+
+          this.giftTrans.ItemID = data.event?.data?.giftID;
+        } else {
+          this.valueEvoucher = '';
+        }
+      } else {
+        this.valueEvoucher = '';
+      }
+    })
+  }
 }
+

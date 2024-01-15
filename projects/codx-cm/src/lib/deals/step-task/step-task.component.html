@@ -38,6 +38,10 @@
       >
         <i class="icon-20 icon-add_task text-primary"></i>
       </div>
+      <div class="d-flex align-items-center mx-2 bg-primary rounded-pill btn-next-step px-2 py-1" (click)="nextStep()" *ngIf="isMoveStage">
+        <span class="icon-16 icon-play_arrow"></span>
+        <span>Chuyển giai đoạn</span>
+      </div>
       <div *ngIf="type == 'G'" class="me-3 value-30px">
         <codx-input
           type="valuelist"
@@ -88,11 +92,11 @@
 
 <ng-template #taskTem>
   <div *ngIf="isDataLoading || !type">
-    <div *ngFor="let step of [1, 2, 3]">
+    <div *ngFor="let step of [1, 2]" class="mt-5">
       <div class="d-flex align-items-center w-100">
         <ngx-skeleton-loader
           appearance="circle"
-          [theme]="{ width: '60px', height: '60px' }"
+          [theme]="{ width: '50px', height: '50px', 'margin-right': '10px'}"
         >
         </ngx-skeleton-loader>
         <ngx-skeleton-loader
@@ -100,18 +104,18 @@
           [theme]="{
             width: '100%',
             'border-radius': '5px',
-            height: '60px',
+            height: '50px',
             margin: '0px'
           }"
         ></ngx-skeleton-loader>
       </div>
-      <div style="padding-left: 70px; width: 100%">
+      <div style="width: 100%">
         <ngx-skeleton-loader
           style="width: 100%"
           [theme]="{
             width: '100%',
-            'border-radius': '10px',
-            height: '100px',
+            'border-radius': '5px',
+            height: '50px',
             margin: '0px'
           }"
         ></ngx-skeleton-loader>
@@ -119,13 +123,12 @@
           style="width: 100%"
           [theme]="{
             width: '100%',
-            'border-radius': '10px',
-            height: '100px',
+            'border-radius': '5px',
+            height: '50px',
             margin: '0px'
           }"
         ></ngx-skeleton-loader>
       </div>
-      <hr class="m-0 p-0" />
     </div>
   </div>
   <div *ngIf="!isDataLoading && listInstanceStepShow?.length > 0 && type">
@@ -264,8 +267,8 @@
       </div>
     </div>
   </div>
-  <div *ngIf="!isDataLoading && listInstanceStepShow?.length == 0">
-    <codx-no-data></codx-no-data>
+  <div *ngIf="!isDataLoading && (!listInstanceStepShow || listInstanceStepShow?.length == 0)" class="no-data">
+    <codx-no-data ></codx-no-data>
   </div>
 </ng-template>
 

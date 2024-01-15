@@ -44,7 +44,7 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
   @Input() owner = '';
 
   @Input() isPause = false;
-  @Input() isDataLoading: any;
+  @Input() isDataLoading = false;
   // @Input() dataSelected: any;
   @Input() formModel: any;
   @Input() listInstanceStep: any[];
@@ -58,11 +58,13 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
   @Input() isHeightAuto = true;
   @Input() taskAdd;
   @Input() isViewStep = false;
+  @Input() isMoveStage = false;
 
   @Output() continueStep = new EventEmitter<any>();
   @Output() saveAssignTask = new EventEmitter<any>();
   @Output() changeProgress = new EventEmitter<any>();
   @Output() isSusscess = new EventEmitter<any>();
+  @Output() moveStage = new EventEmitter<any>();
   @ViewChild('viewReason', { static: true }) viewReason;
   dialogPopupReason: DialogRef;
   status = [];
@@ -144,26 +146,35 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes?.listInstanceStep && changes?.listInstanceStep?.currentValue?.length > 0) {
-      this.listInstanceStepShow = this.listInstanceStep;
-      if (!['0', '1', '2','15'].includes(this.dataCM?.status)) {
-        this.stepIdReason =
-          this.listInstanceStep[this.listInstanceStep?.length - 1].stepID;
-        this.listStepReasonValue =
-          this.listInstanceStep[this.listInstanceStep.length - 1].reasons;
-          this.isShowSuccess =  true;
-      }
-      if (this.listInstanceStep?.length > 0) {
-        this.stepViews = [];
-        this.listInstanceStep.forEach((x) => {
-          if (!x.isFailStep && !x.isSuccessStep) {
-            let obj = {
-              stepName: x.stepName,
-              memo: x.memo,
-            };
-            this.stepViews.push(obj);
-          }
-        });
+    if (changes?.listInstanceStep) {
+      let listInStep = changes?.listInstanceStep?.currentValue;
+      this.listInstanceStepShow = [];
+      if(!listInStep){
+        this.isDataLoading = true;
+      }else if(listInStep?.length == 0){
+        this.isDataLoading = false;
+      }else{
+        this.isDataLoading = false;
+        this.listInstanceStepShow = this.listInstanceStep;
+        if (!['0', '1', '2','15'].includes(this.dataCM?.status)) {
+          this.stepIdReason =
+            this.listInstanceStep[this.listInstanceStep?.length - 1].stepID;
+          this.listStepReasonValue =
+            this.listInstanceStep[this.listInstanceStep.length - 1].reasons;
+            this.isShowSuccess =  true;
+        }
+        if (this.listInstanceStep?.length > 0) {
+          this.stepViews = [];
+          this.listInstanceStep.forEach((x) => {
+            if (!x.isFailStep && !x.isSuccessStep) {
+              let obj = {
+                stepName: x.stepName,
+                memo: x.memo,
+              };
+              this.stepViews.push(obj);
+            }
+          });
+        }
       }
     }
 
@@ -576,5 +587,8 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
       }
       return data;
     }
+  }
+  nextStep(){
+    this.moveStage.emit(true);
   }
 }

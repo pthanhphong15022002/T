@@ -19,6 +19,7 @@ export class CodxShareReportComponent extends WSUIComponent implements AfterView
   @Input() listModule:any;
   @Input() isToolBar:any = true;
 
+  viewID = "1";
   listReport:any;
   listReports: any;
   listBookMarks = [];
@@ -263,5 +264,10 @@ export class CodxShareReportComponent extends WSUIComponent implements AfterView
   selectMoreBookmark()
   {
     this.callFunc.openForm(BookmarkComponent,"",900,700,"",{listGroup:this.listGroupReport,listBookMarks:this.listBookMarks,type:'R'});
+  }
+
+  viewChange(e:any)
+  {
+    this.viewID = e;
   }
 }

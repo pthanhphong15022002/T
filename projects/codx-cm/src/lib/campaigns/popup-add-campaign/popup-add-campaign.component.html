@@ -45,7 +45,7 @@
             [objectId]="data?.recID"
             [objectType]="form.formModel.entityName"
             [objectName]="data?.campaignName"
-            [isAllowEdit]="true"
+            [isAllowEdit]="!isView"
             [isDefaulImg]="true"
             [imgOn]="data?.modifiedOn"
             (handleInput)="changeAvatar()"
@@ -61,6 +61,7 @@
         [field]="'campaignName'"
         [formModel]="form.formModel"
         [Group]="form.formGroup"
+        [disabled]="isView"
       ></codx-input>
     </div>
     <div class="form-group">
@@ -70,6 +71,7 @@
         [field]="'location'"
         [formModel]="form.formModel"
         [Group]="form.formGroup"
+        [disabled]="isView"
       ></codx-input>
     </div>
     <div class="form-group row">
@@ -80,6 +82,7 @@
           [field]="'budgetCost'"
           [formModel]="form.formModel"
           [Group]="form.formGroup"
+          [disabled]="isView"
         ></codx-input>
       </div>
       <div class="col-6">
@@ -89,6 +92,7 @@
           [field]="'expectedRevenue'"
           [formModel]="form.formModel"
           [Group]="form.formGroup"
+          [disabled]="isView"
         ></codx-input>
       </div>
     </div>
@@ -100,6 +104,7 @@
           [field]="'startDate'"
           [formModel]="form.formModel"
           [Group]="form.formGroup"
+          [disabled]="isView"
         ></codx-input>
       </div>
       <div class="col-6">
@@ -109,6 +114,7 @@
           [field]="'endDate'"
           [formModel]="form.formModel"
           [Group]="form.formGroup"
+          [disabled]="isView"
         ></codx-input>
       </div>
     </div>
@@ -119,6 +125,7 @@
         [field]="'owner'"
         [formModel]="form.formModel"
         [Group]="form.formGroup"
+        [disabled]="isView"
       ></codx-input>
     </div>
     <div class="form-group">
@@ -128,12 +135,13 @@
         [field]="'description'"
         [formModel]="form.formModel"
         [Group]="form.formGroup"
+        [disabled]="isView"
       ></codx-input>
     </div>
   </ng-container>
 </ng-template>
 <ng-template #footer>
-  <div class="d-flex justify-content-end">
+  <div class="d-flex justify-content-end" *ngIf="!isView">
     <button type="button" class="btn btn-primary" (click)="onSave()">
       <codx-label
         name="lblSave"

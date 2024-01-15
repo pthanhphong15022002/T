@@ -72,7 +72,10 @@ export class FormPropertiesFieldsComponent implements OnInit {
     this.type = dt?.data?.type;
     this.dataCurrent = dt?.data?.dataCurrent;
     this.vllBP002 = dt?.data?.vllBP002;
-    this.lstStepFields = dt?.data?.lstStepFields ?? [];
+    this.lstStepFields =
+      dt?.data?.lstStepFields != null
+        ? JSON.parse(JSON.stringify(dt?.data?.lstStepFields))
+        : [];
     this.isForm = dt?.data?.isForm ?? false;
   }
   ngOnInit(): void {
@@ -83,17 +86,18 @@ export class FormPropertiesFieldsComponent implements OnInit {
       });
       if (this.lstStepFields?.length > 0) {
         this.lstStepFields.forEach((ele) => {
-          let dataForm = this.vllBP002.datas.find(
-            (x) => x.value == ele.fieldType
-          );
+          const vll = this.vllBP002.datas.find((x) => x.value == ele.fieldType);
+          let dataForm = JSON.parse(JSON.stringify(vll));
           if (ele?.fieldType == 'Title') {
             this.dataCurrent = ele;
             this.dataFormat = JSON.parse(JSON.stringify(dataForm));
           }
           dataForm.recID = ele?.recID;
+          dataForm.coloumnOrder = ele.coloumnOrder;
+          dataForm.columnNo = ele.columnNo;
           this.table.push({
             name: '',
-            columnOrder: this.table.length,
+            columnOrder: ele.coloumnOrder,
             children: [dataForm],
           });
         });
@@ -129,6 +133,8 @@ export class FormPropertiesFieldsComponent implements OnInit {
         isRequired: true,
         defaultValue: null,
         description: isForm ? 'Câu trả lời' : '',
+        columnOrder: !isForm ? 0 : 1, //parent
+        columnNo: 0, //children
       };
 
       if (isForm) {
@@ -149,10 +155,15 @@ export class FormPropertiesFieldsComponent implements OnInit {
     this.dataFormat = dataVllTitle;
     this.dataCurrent = titleField;
 
-    const data = { ...this.dataFormat, recID: this.dataCurrent.recID };
+    const data = {
+      ...this.dataFormat,
+      recID: this.dataCurrent.recID,
+      columnOrder: titleField.columnOrder,
+      columnNo: titleField.columnNo,
+    };
     this.table.push({
       name: '',
-      columnOrder: this.table.length,
+      columnOrder: data.columnOrder,
       children: [data],
     });
     if (this.isForm) {
@@ -162,10 +173,15 @@ export class FormPropertiesFieldsComponent implements OnInit {
         true
       );
       lst.push(subTitleField);
-      const dataSub = { ...dataVllSubTitle, recID: subTitleField.recID };
+      const dataSub = {
+        ...dataVllSubTitle,
+        recID: subTitleField.recID,
+        columnOrder: subTitleField.columnOrder,
+        columnNo: subTitleField.columnNo,
+      };
       this.table.push({
         name: '',
-        columnOrder: this.table.length,
+        columnOrder: dataSub?.columnOrder,
         children: [dataSub],
       });
     }
@@ -217,36 +233,42 @@ export class FormPropertiesFieldsComponent implements OnInit {
       let data = JSON.parse(
         JSON.stringify(event.previousContainer.data[event.previousIndex])
       );
-      data.parentID = this.table.length;
+      data.columnOrder = event.currentIndex;
+      data.columnNo = 0;
       this.dataFormat = data;
       this.dataCurrent = JSON.parse(JSON.stringify(this.setDataFields(data)));
       data.recID = this.dataCurrent?.recID;
       let object = {
         name: '',
-        id: this.type != 'table' ? this.table.length : 0,
+        columnOrder: this.type != 'table' ? event.currentIndex : 0,
         children: [data],
       };
       if (this.type != 'table') {
-        this.lstStepFields.push(this.dataCurrent);
+        this.lstStepFields.splice(event.currentIndex, 0, this.dataCurrent);
         this.table.splice(event.currentIndex, 0, object);
+        for(let i = 0; i < this.table.length; i++){
+          this.table[i].columnOrder = i;
+          if(this.table[i].children?.length > 0){
+            let childern = this.table[i].children ?? [];
+            childern.forEach(element => {
+              element.columnOrder = i;
+            })
+            this.table[i].children = childern;
+          }
+        }
+        for(let i = 0; i < this.lstStepFields.length; i++){
+          this.lstStepFields[i].columnOrder = i;
+        }
       } else {
         if (this.lstStepFields?.length > 0) {
           this.lstStepFields[0] = this.dataCurrent;
           this.table[0] = object;
         } else {
-          this.lstStepFields.push(this.dataCurrent);
+          this.lstStepFields.splice(event.currentIndex, 0, this.dataCurrent);
           this.table.splice(event.currentIndex, 0, object);
         }
       }
     } else {
-      this.table[event.currentIndex].id = event.previousIndex;
-      this.table[event.previousIndex].id = event.currentIndex;
-      this.table[event.currentIndex].children.forEach((elm) => {
-        elm.parentID = event.previousIndex;
-      });
-      this.table[event.previousIndex].children.forEach((elm) => {
-        elm.parentID = event.currentIndex;
-      });
       moveItemInArray(
         event.container.data,
         event.previousIndex,
@@ -257,6 +279,8 @@ export class FormPropertiesFieldsComponent implements OnInit {
     this.table = this.table.filter(
       (x) => x.children != null && x.children.length > 0
     );
+    console.log('drop 1 - steps: ', this.lstStepFields);
+    console.log('drop 1 - tables: ',this.table);
     this.detectorRef.markForCheck();
   }
 
@@ -268,12 +292,23 @@ export class FormPropertiesFieldsComponent implements OnInit {
       event.previousContainer === event.container &&
       event.event.target.id == event.container.id
     ) {
-      //delete this.table[data.parentID].children[event.previousIndex];
       moveItemInArray(
         event.container.data,
         event.previousIndex,
         event.currentIndex
       );
+      // for(var i = 0 ; i < this.table[event.container.data[0].columnOrder].children.length ; i++)
+      // {
+      //   let parentOrder = event.container.data[0].columnOrder;
+      //   let children = this.table[event.container.data[0].columnOrder].children[i];
+      //   this.lstStepFields.forEach((ele) => {
+      //     if(children.recID == ele.recID){
+      //       ele.columnNo = i;
+      //       ele.columnOrder = parentOrder;
+      //     }
+      //   })
+      //   this.table[event.container.data[0].columnOrder].children[i].columnNo = i;
+      // }
     } else if (event.event.target.id != event.container.id) {
       var object = {
         name: '',
@@ -281,29 +316,53 @@ export class FormPropertiesFieldsComponent implements OnInit {
         children: [data],
       };
 
-      let index = this.table.findIndex((x) => x.id == data.parentID);
+      let index = this.table.findIndex((x) => x.columnOrder == data.columnOrder);
       this.table[index].children.splice(event.previousIndex, 1);
       if (event.event.target.id != event.container.id) {
-        (object.id = object.children[0].parentID = this.table.length),
+        (object.id = object.children[0].columnOrder = this.table.length),
           this.table.push(object);
       } else {
-        (object.id = object.children[0].parentID = data.parentID + 1),
-          this.table.splice(data.parentID + 1, 0, object);
+        (object.id = object.children[0].columnOrder = data.columnOrder + 1),
+          this.table.splice(data.columnOrder + 1, 0, object);
       }
     } else {
-      (event.previousContainer.data[event.previousIndex].parentID =
-        event.container.data[0].parentID),
-        transferArrayItem(
-          event.previousContainer.data,
-          event.container.data,
-          event.previousIndex,
-          event.currentIndex
-        );
-    }
+      event.previousContainer.data[event.previousIndex].columnOrder = event.container.data[0].columnOrder,
+      event.previousContainer.data[event.previousIndex].columnNo = event.currentIndex
+      transferArrayItem(
+        event.previousContainer.data,
+        event.container.data,
+        event.previousIndex,
+        event.currentIndex
+      );
 
+
+    }
     this.table = this.table.filter(
       (x) => x.children != null && x.children.length > 0
     );
+
+    for (let i = 0; i < this.table.length; i++) {
+      let children = this.table[i].children ?? [];
+      if (children?.length > 0) {
+        for (let j = 0; j < children?.length; j++) {
+          children[j].columnOrder = i;
+          children[j].columnNo = j;
+          let indx = this.lstStepFields.findIndex(
+            (x) => x.recID == children[j].recID
+          );
+          if (indx != -1) {
+            this.lstStepFields[indx].columnOrder = children[j].columnOrder;
+            this.lstStepFields[indx].columnNo = children[j].columnNo;
+          }
+        }
+      }
+      this.table[i].columnOrder = i;
+      this.table[i].children = children;
+    }
+
+    console.log('drop 2 - steps: ', this.lstStepFields);
+    console.log('drop 2 - tables: ',this.table);
+
     this.detectorRef.markForCheck();
   }
 
@@ -338,6 +397,8 @@ export class FormPropertiesFieldsComponent implements OnInit {
       recID: Util.uid(),
       fieldType: data.value,
       isRequired: false,
+      columnOrder: data.columnOrder,
+      columnNo: data.columnNo,
     };
 
     if (data.text) {

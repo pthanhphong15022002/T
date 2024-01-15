@@ -1,81 +1,69 @@
 import { Permission } from '@shared/models/file.model';
 
 export class BP_Processes {
-  id:string;
   recID: string;
-  category: string;
   processNo: string;
   processName: string;
   processName2: string;
-  processType: string;
-  memo: string;
+  category: string;
+  applyFor: string;
+  tags: string;
   groupID: string;
+  memo: string;
   status: string;
-  flowchart: string;
-  activedOn: Date;
+  approveControl: string;
+  publishOn: Date;
   expiredOn: Date;
-  stopOn: Date;
-  note: string;
-  url: string;
+  stop: boolean;
+  note: string;;
   revision: boolean;
   revisionID: string;
   versionNo: string;
-  versionOn: Date;
-  versions: BP_ProcessRevisions[];
-  permissions: BP_ProcessPermissions[];
-  phases: number;
-  activities: number;
+  versions: [];
+  lastNo: number;
+  permissions: BP_Processes_Permissions[];
+  steps: BP_Processes_Steps[];
+  rattings: [];
+  reminder:[];
+  settings: string;
+  eventControl: string;
+  documentControl: string;
   views: number;
   attachments: number;
   comments: number;
-  rattings: BP_ProcessesRating[];
-  positionID: string;
-  deptID: string;
-  divisionID: string;
-  companyID: string;
-  owner: string;
-  bUID: string;
-  approvedOn: Date;
-  approvedBy: string;
+  owner: string;;
+  buid: string;;
   createdOn: Date;
   createdBy: string;
   modifiedOn: Date;
   modifiedBy: string;
-  tags: string;
-  actived : boolean
 }
 
-export class BP_ProcessSteps {
+export class BP_Processes_Steps {
   id: string;
   recID: string;
-  processID: string;
+  stageID: string;
   parentID: string;
+  activityType: string;
   stepNo: number;
   stepName: string;
   stepName2: string;
-  stepType: string;
-  reference: string;
   memo: string;
   location: string;
   duration: number;
   interval: string;
-  perUnit: string;
-  eventBase: string;
   reminder: string;
-  isAlert: boolean;
-  isEmail: boolean;
+  eventControl: string;
+  extendInfo: Array<[]>;
+  dependences: Array<[]>;
   note: string;
-  color: string;
-  stopOn: Date;
+  owners: string;
   attachments: number;
   comments: number;
-  refID: string;
-  refLineID: string;
   createdOn: Date;
   createdBy: string;
   modifiedOn: Date;
   modifiedBy: string;
-  owners: Array<BP_ProcessOwners>;
 }
 export class BP_ProcessRevisions {
   recID: string;
@@ -112,7 +100,7 @@ export class tmpInforSentEMail {
   saveTemplate: boolean;
 }
 
-export class BP_ProcessPermissions {
+export class BP_Processes_Permissions {
   recID: string;
   id: string;
   objectName: string;
@@ -128,7 +116,9 @@ export class BP_ProcessPermissions {
   share: boolean;
   upload: boolean;
   allowPermit: boolean;
+  allowUpdateStatus: string;
   isActive: boolean;
+  autoCreate: string;
   download: boolean;
   publish: boolean;
   memberType: string;
@@ -139,7 +129,6 @@ export class BP_ProcessPermissions {
   approvalRule: string;
   approvedBy: string;
   approvedOn: Date;
-  autoCreate: boolean;
   createdOn: Date;
   createdBy: string;
   modifiedOn: Date;
@@ -149,7 +138,7 @@ export class BP_ProcessPermissions {
   memo: string;
 }
 
-export class BP_ProcessesRating{
+export class BP_ProcessesRating {
   id: string;
   recID: string;
   objectID: string;
@@ -160,7 +149,7 @@ export class BP_ProcessesRating{
   createdOn: Date;
 }
 
-export class tmpPermission{
+export class tmpPermission {
   recIDProcess: string;
   form: string;
   titleEmail: string;
@@ -171,28 +160,28 @@ export class tmpPermission{
   urlPath: string;
   reason: string;
   memo: string;
-  permissions: BP_ProcessPermissions[];
-  toPermission: BP_ProcessPermissions[];
-  byPermission: BP_ProcessPermissions[];
-  ccPermission: BP_ProcessPermissions[];
-  fromPermission: BP_ProcessPermissions[];
+  permissions: BP_Processes_Permissions[];
+  toPermission: BP_Processes_Permissions[];
+  byPermission: BP_Processes_Permissions[];
+  ccPermission: BP_Processes_Permissions[];
+  fromPermission: BP_Processes_Permissions[];
 }
 
-export class ColumnsModel{
-   allowDrop :boolean = true;
-   allowDrag :boolean = true;
-   allowToggle :boolean = false;
-   color :string;
-   dataValue : string
-   headerText :string;
-   isExpanded:boolean =false ;
-   keyField :string;
-   maxCount :number = 0
-   minCount :number = 0
-   predicate :string
-   showAddButton :boolean =false ;
-   showItemCount :boolean =false ;
-   dataColums : any;
+export class ColumnsModel {
+  allowDrop: boolean = true;
+  allowDrag: boolean = true;
+  allowToggle: boolean = false;
+  color: string;
+  dataValue: string;
+  headerText: string;
+  isExpanded: boolean = false;
+  keyField: string;
+  maxCount: number = 0;
+  minCount: number = 0;
+  predicate: string;
+  showAddButton: boolean = false;
+  showItemCount: boolean = false;
+  dataColums: any;
 }
 
 export class TabModel {
@@ -200,5 +189,5 @@ export class TabModel {
   textDefault: string;
   template?: any;
   isActive: boolean = false;
-  id :number
+  id: number;
 }

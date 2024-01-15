@@ -33,7 +33,7 @@ export class PopupChangeAllocationRateComponent implements OnInit {
   exchangeRate: number;
   targetSys: number;
   isCheckSave = false;
-
+  isView: boolean = false;
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private decimalPipe: DecimalPipe,
@@ -52,6 +52,7 @@ export class PopupChangeAllocationRateComponent implements OnInit {
     this.currencyID = data?.data?.currencyID;
     this.exchangeRate = data?.data?.exchangeRate;
     this.targetSys = data?.data?.targetSys;
+    this.isView = data?.data?.isView;
   }
 
   async ngOnInit() {
@@ -309,8 +310,10 @@ export class PopupChangeAllocationRateComponent implements OnInit {
   }
 
   dbClick(data, type) {
-    this.editingItem = data;
-    this.typeChange = type;
+    if (!this.isView) {
+      this.editingItem = data;
+      this.typeChange = type;
+    }
 
     this.changeDetectorRef.detectChanges();
   }

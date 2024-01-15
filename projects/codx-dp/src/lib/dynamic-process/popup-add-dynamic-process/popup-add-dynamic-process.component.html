@@ -270,6 +270,7 @@
           <div *ngIf="currentTab == 0"></div>
           <div>
             <button
+              [disabled]="viewOnly"
               *ngIf="currentTab != 3"
               type="button"
               [ngClass]="checkSaveNow() ? '' : 'disabled'"
@@ -297,6 +298,7 @@
 
             <button
               *ngIf="currentTab == 3"
+              [disabled]="viewOnly"
               type="button"
               class="btn btn-primary"
               (click)="onSave()"
@@ -374,6 +376,7 @@
               [crrValue]="process?.groupID"
               [refValue]="gridViewSetup?.GroupID?.referedValue"
               (valueChange)="valueChange($event)"
+              [disabled]="viewOnly"
             >
             </codx-input>
             <div
@@ -393,8 +396,7 @@
               >
               </codx-label>
             </div>
-            <!-- <codx-input field="processName" [crrValue]="process.processName" (valueChange)="valueChange($event)" [formModel]="formModel" [Group]="formGroup" >
-            </codx-input> -->
+
             <codx-input
               field="processName"
               [placeholder]="gridViewSetup['ProcessName']?.description"
@@ -404,6 +406,7 @@
               type="text"
               [crrValue]="process.processName"
               (valueChange)="valueChange($event)"
+              [disabled]="viewOnly"
             >
             </codx-input>
           </div>
@@ -416,8 +419,7 @@
               >
               </codx-label>
             </div>
-            <!-- <codx-input field="applyFor" [crrValue]="process.applyFor" (valueChange)="valueChange($event)" [formModel]="formModel" [Group]="formGroup">
-            </codx-input> -->
+
             <codx-input
               field="applyFor"
               type="valuelist"
@@ -429,7 +431,10 @@
               "
               (valueChange)="valueChange($event)"
               [disabled]="
-                action == 'edit' || systemProcess == '1' || systemProcess == '2'
+                action == 'edit' ||
+                systemProcess == '1' ||
+                systemProcess == '2' ||
+                viewOnly
               "
               [placeholder]="gridViewSetup['ApplyFor']?.description"
             >
@@ -444,14 +449,14 @@
               >
               </codx-label>
             </div>
-            <!-- <codx-input field="processName" [crrValue]="process.processName" (valueChange)="valueChange($event)" [formModel]="formModel" [Group]="formGroup" >
-            </codx-input> -->
+
             <codx-input
               field="autoName"
               type="text"
               [crrValue]="process.autoName"
               [placeholder]="gridViewSetup['AutoName']?.description"
               (valueChange)="valueChange($event)"
+              [disabled]="viewOnly"
             >
             </codx-input>
           </div>
@@ -482,7 +487,7 @@
               refType="3"
               refValue="DPBusinessLinesDeals"
               field="businessLineID"
-              [disabled]="action === 'edit' || systemProcess == '2'"
+              [disabled]="action === 'edit' || systemProcess == '2' || viewOnly"
               [model]="{ ProcessID: process?.recID }"
               [crrValue]="process?.businessLineID"
               (valueChange)="valueChangebusinessLineID($event)"
@@ -494,7 +499,7 @@
               refType="3"
               refValue="DPBusinessLinesContracts"
               field="businessLineID"
-              [disabled]="action === 'edit' || systemProcess == '2'"
+              [disabled]="action === 'edit' || systemProcess == '2' || viewOnly"
               [model]="{ ProcessContractID: process?.recID }"
               [crrValue]="process?.businessLineID"
               (valueChange)="valueChangebusinessLineID($event)"
@@ -565,6 +570,7 @@
           >
           </codx-label>
           <button
+            [disabled]="viewOnly"
             type="button"
             class="btn btn-icon btn-sm btn-light-primary me-2"
             (click)="sharePerm(controlShare, 'supervisor')"
@@ -573,6 +579,7 @@
           </button>
 
           <button
+            [disabled]="viewOnly"
             type="button"
             class="btn btn-icon btn-sm btn-light-primary me-2"
             (click)="clickRoles('O')"
@@ -616,6 +623,7 @@
           </div>
         </ng-container>
         <codx-input
+          *ngIf="!viewOnly"
           #inputUser
           class="min-w-250px"
           field="searchUser"
@@ -638,6 +646,7 @@
           >
           </codx-label>
           <button
+            [disabled]="viewOnly"
             type="button"
             class="btn btn-icon btn-sm btn-light-primary me-2"
             (click)="sharePerm(controlShare, 'participants')"
@@ -646,6 +655,7 @@
           </button>
 
           <button
+            [disabled]="viewOnly"
             type="button"
             class="btn btn-icon btn-sm btn-light-primary me-2"
             (click)="clickRoles('P')"
@@ -691,7 +701,7 @@
             </ng-container>
           </div>
         </ng-container>
-        <div class="input-sm w-250px mb-3">
+        <div class="input-sm w-250px mb-3" *ngIf="!viewOnly">
           <codx-input
             #inputUser
             class="w-250px"
@@ -716,6 +726,7 @@
           >
           </codx-label>
           <button
+            [disabled]="viewOnly"
             type="button"
             class="btn btn-icon btn-sm btn-light-primary me-2"
             (click)="sharePerm(controlShare, 'followers')"
@@ -723,6 +734,7 @@
             <i class="icon-person_add_alt_1 icon-16"></i>
           </button>
           <button
+            [disabled]="viewOnly"
             type="button"
             class="btn btn-icon btn-sm btn-light-primary me-2"
             (click)="clickRoles('F')"
@@ -762,13 +774,17 @@
             </div>
             <div class="text-gray-600 fw-bold">{{ perm.objectName }}</div>
             <ng-container *ngIf="checkAssignRemove(i)">
-              <div class="action-menu-od" (click)="removeUser(i)">
+              <div
+                *ngIf="!viewOnly"
+                class="action-menu-od"
+                (click)="removeUser(i)"
+              >
                 <i class="icon-close text-danger icon-16"></i>
               </div>
             </ng-container>
           </div>
         </ng-container>
-        <div class="input-sm w-250px mb-3">
+        <div class="input-sm w-250px mb-3" *ngIf="!viewOnly">
           <codx-input
             #inputUser
             field="searchUser"
@@ -796,13 +812,14 @@
               [checked]="process?.approveRule"
               field="approveRule"
               (valueChange)="valueChange($event)"
+              [disabled]="viewOnly"
             >
             </codx-input>
           </div>
           <button
             type="button"
             class="btn btn-icon btn-sm btn-light-primary me-2"
-            [disabled]="!process?.approveRule"
+            [disabled]="!process?.approveRule || viewOnly"
             (click)="clickSettingApprove()"
           >
             <i class="icon-settings icon-16"></i>
@@ -988,14 +1005,6 @@
               #autoNumberSetting
               class="position-relative col-lg-12 col-xl-8"
             >
-              <!-- <codx-input
-                type="text"
-                [crrValue]="instanceNoSetting"
-                [placeholder]="gridViewSetup['InstanceNoSetting']?.description"
-                (valueChange)="valueChangeAutoNoCode($event)"
-                field="instanceNoSetting"
-              >
-              </codx-input> -->
               <codx-input
                 type="text"
                 [crrValue]="instanceNoEx"
@@ -1007,16 +1016,9 @@
                 class="position-absolute cursor-pointer text-primary form-control-feedback"
                 style="top: 7px; right: 13px"
               >
-                <!-- <button
-                  type="button"
-                  class="btn btn-icon btn-sm btn-light-primary me-2 "
-                  (click)="openAutoNumPopup()"
-                >
-                  <i class="icon-settings icon-16"></i>
-                </button> -->
                 <i
                   class="icon-settings form-control-feedback text-hover-primary"
-                  (click)="openAutoNumPopup()"
+                  (click)="viewOnly ? '' : openAutoNumPopup()"
                 ></i>
               </div>
             </div>
@@ -1051,6 +1053,7 @@
                 [refValue]="gridViewSetup?.AddFieldsControl?.referedValue"
                 (valueChange)="valueChange($event)"
                 [placeholder]="gridViewSetup['AddFieldsControl']?.description"
+                [disabled]="viewOnly"
               >
               </codx-input>
             </div>
@@ -1078,6 +1081,7 @@
                   gridViewSetup?.AutoNameTabFields?.headerText
                 "
                 (valueChange)="valueChange($event)"
+                [disabled]="viewOnly"
               >
               </codx-input>
             </div>
@@ -1104,6 +1108,7 @@
                 [refValue]="gridViewSetup?.ViewMode?.referedValue"
                 (valueChange)="valueChange($event)"
                 [placeholder]="gridViewSetup['ViewMode']?.description"
+                [disabled]="viewOnly"
               >
               </codx-input>
             </div>
@@ -1129,6 +1134,7 @@
                 [refValue]="gridViewSetup?.ViewModeDetail?.referedValue"
                 (valueChange)="valueChange($event)"
                 [placeholder]="gridViewSetup['ViewModeDetail']?.description"
+                [disabled]="viewOnly"
               >
               </codx-input>
             </div>
@@ -1156,6 +1162,7 @@
                 [crrValue]="process.showInstanceControl"
                 (valueChange)="valueChange($event)"
                 field="showInstanceControl"
+                [disabled]="viewOnly"
               >
               </codx-input>
             </div>
@@ -1189,6 +1196,7 @@
                 (valueChange)="valueChange($event)"
                 [crrValue]="process.closeInstanceControl"
                 field="closeInstanceControl"
+                [disabled]="viewOnly"
               ></codx-input>
               <div
                 class="position-absolute text-gray-400"
@@ -1223,6 +1231,7 @@
                     [checked]="process?.allowCopy ?? false"
                     [crrValue]="process?.allowCopy"
                     (valueChange)="valueRadioInfo($event, 'AllowCopyView')"
+                    [disabled]="viewOnly"
                   >
                   </codx-input>
                 </div>
@@ -1236,6 +1245,7 @@
                     [checked]="!process?.allowCopy ?? false"
                     [crrValue]="process?.allowCopy"
                     (valueChange)="valueRadioInfo($event, 'AllowCopyView')"
+                    [disabled]="viewOnly"
                     readonly
                   >
                   </codx-input>
@@ -1268,6 +1278,7 @@
                     [checked]="process?.startInstanceControl ?? false"
                     [crrValue]="process?.startInstanceControl"
                     (valueChange)="valueRadioInfo($event, 'StartInstanceView')"
+                    [disabled]="viewOnly"
                   >
                   </codx-input>
                 </div>
@@ -1281,6 +1292,7 @@
                     [checked]="!process?.startInstanceControl ?? false"
                     [crrValue]="process?.startInstanceControl"
                     (valueChange)="valueRadioInfo($event, 'StartInstanceView')"
+                    [disabled]="viewOnly"
                     readonly
                   >
                   </codx-input>
@@ -1313,6 +1325,7 @@
                     [checked]="process?.allowEditInstanceControl ?? false"
                     [crrValue]="process?.allowEditInstanceControl"
                     (valueChange)="valueRadioInfo($event, 'EditInstanceView')"
+                    [disabled]="viewOnly"
                   >
                   </codx-input>
                 </div>
@@ -1326,6 +1339,7 @@
                     [checked]="!process?.allowEditInstanceControl ?? false"
                     [crrValue]="process?.allowEditInstanceControl"
                     (valueChange)="valueRadioInfo($event, 'EditInstanceView')"
+                    [disabled]="viewOnly"
                     readonly
                   >
                   </codx-input>
@@ -1358,6 +1372,7 @@
                     [checked]="process?.allowReturnInstanceControl ?? false"
                     [crrValue]="process?.allowReturnInstanceControl"
                     (valueChange)="valueRadioInfo($event, 'ReturnInstanceView')"
+                    [disabled]="viewOnly"
                   >
                   </codx-input>
                 </div>
@@ -1371,6 +1386,7 @@
                     [checked]="!process?.allowReturnInstanceControl ?? false"
                     [crrValue]="process?.allowReturnInstanceControl"
                     (valueChange)="valueRadioInfo($event, 'ReturnInstanceView')"
+                    [disabled]="viewOnly"
                     readonly
                   >
                   </codx-input>
@@ -1400,6 +1416,7 @@
                 [crrValue]="process.tabControl"
                 (valueChange)="valueChange($event)"
                 field="tabControl"
+                [disabled]="viewOnly"
               >
               </codx-input>
             </div>
@@ -1431,6 +1448,7 @@
                     [checked]="process?.allowCopy ?? false"
                     [crrValue]="process?.allowCopy"
                     (valueChange)="valueRadioInfo($event, 'AllowCopyView')"
+                    [disabled]="viewOnly"
                   >
                   </codx-input>
                 </div>
@@ -1444,6 +1462,7 @@
                     [checked]="!process?.allowCopy ?? false"
                     [crrValue]="process?.allowCopy"
                     (valueChange)="valueRadioInfo($event, 'AllowCopyView')"
+                    [disabled]="viewOnly"
                     readonly
                   >
                   </codx-input>
@@ -1477,6 +1496,7 @@
                     [checked]="process?.createTask ?? false"
                     [crrValue]="process?.createTask"
                     (valueChange)="valueRadioInfo($event, 'CreateTask')"
+                    [disabled]="viewOnly"
                   >
                   </codx-input>
                 </div>
@@ -1490,6 +1510,7 @@
                     [checked]="!process?.createTask ?? false"
                     [crrValue]="process?.createTask"
                     (valueChange)="valueRadioInfo($event, 'CreateTask')"
+                    [disabled]="viewOnly"
                     readonly
                   >
                   </codx-input>
@@ -1519,7 +1540,7 @@
                 refValue="DP025"
                 type="valuelist"
                 (valueChange)="valueChange($event)"
-                [disabled]="!process?.createTask"
+                [disabled]="!process?.createTask || viewOnly"
               >
               </codx-input>
             </div>
@@ -1577,6 +1598,7 @@
           type="textarea"
           [crrValue]="process?.memo"
           (valueChange)="valueChange($event)"
+          [disabled]="viewOnly"
         >
         </codx-input>
       </div>
@@ -1588,7 +1610,7 @@
 <ng-template #avatarProcess>
   <div
     class="dropzone dropzone-default dropzone-primary d-flex flex-center flex-column"
-    (click)="addAvatar()"
+    (click)="viewOnly ? '' : addAvatar()"
   >
     <div class="dropzone-msg dz-message needsclick">
       <ng-container *ngIf="linkAvatar != ''">
@@ -1689,6 +1711,7 @@
     cdkDropList
     class="list"
     (cdkDropListDropped)="dropCustomFile($event, null)"
+    [cdkDropListDisabled]="viewOnly"
   >
     <div cdkDropListGroup>
       <ng-container *ngFor="let item of datas">
@@ -1724,6 +1747,7 @@
               </div>
               <div class="d-flex align-items-center">
                 <button
+                  [disabled]="viewOnly"
                   [ngbTooltip]="titleAdd"
                   placement="top left bottom right"
                   type="button"
@@ -1736,6 +1760,7 @@
                 </button>
                 <span [ngbTooltip]="toolTipSetting">
                   <button
+                    [disabled]="viewOnly"
                     type="button"
                     class="btn btn-icon btn-sm btn-light-primary ms-2"
                     #p="ngbPopover"
@@ -1768,6 +1793,7 @@
               cdkDropList
               [cdkDropListData]="item?.fields || []"
               (cdkDropListDropped)="dropCustomFile($event, item.recID)"
+              [cdkDropListDisabled]="viewOnly"
             >
               <div
                 *ngIf="!item?.fields || item?.fields?.length == 0"
@@ -1778,6 +1804,7 @@
                 >
                   <div cdkDrag [cdkDragDisabled]="true" [cdkDragData]="null">
                     <button
+                      [disabled]="viewOnly"
                       type="button"
                       class="btn btn-outline-primary"
                       (click)="
@@ -1815,6 +1842,7 @@
                       >
                       </codx-input-custom-field>
                       <codx-mfunc
+                        *ngIf="!viewOnly"
                         [formModel]="formModelField"
                         (clickMF)="clickMFFields($event, item1, !haveTitle)"
                         (changeDataMF)="changeMFFields($event, item1)"
@@ -1973,7 +2001,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="d-flex align-items-start ms-6">
+                <div class="d-flex align-items-start ms-6" *ngIf="!viewOnly">
                   <button
                     type="button"
                     class="btn btn-icon btn-sm btn-outline-primary"
@@ -2123,12 +2151,18 @@
       ></codx-label>
     </h2>
     <button
+      [disabled]="viewOnly"
       type="button"
       class="btn btn-sm btn-outline-primary"
       (click)="openFormTemplet('add', null)"
     >
       <i class="icon-add icon-14 text-primary ms-n1"></i>
-      <codx-label [name]="'lblAdd'" [default]="'Thêm'"></codx-label>
+      <codx-label
+        [name]="'lblAddTemp'"
+        [formName]="'DPProcesses'"
+        [gridViewName]="'grvDPProcesses'"
+        [default]="'Thêm'"
+      ></codx-label>
     </button>
   </div>
 </ng-template>
@@ -2153,6 +2187,7 @@
         [checked]="process?.stepsColorMode"
         (valueChange)="valueChange($event)"
         field="stepsColorMode"
+        [disabled]="viewOnly"
       >
       </codx-input>
     </div>
@@ -2167,15 +2202,26 @@
             class="py-2 px-3 stage-header d-flex align-items-center justify-content-between"
           >
             <span class="fw-bold fs-5 text-dark">
-              <codx-label fiedName="step" default="Giai đoạn"></codx-label
+              <codx-label
+                fiedName="step"
+                [formName]="'DPProcesses'"
+                [gridViewName]="'grvDPProcesses'"
+                default="Giai đoạn"
+              ></codx-label
             ></span>
             <button
+              [disabled]="viewOnly"
               type="button"
               class="btn btn-sm btn-light-primary"
               (click)="openPopupStep('add')"
             >
               <i class="icon-add icon-14 ms-n1"></i>
-              <codx-label [name]="'lblAdd'" [default]="'Thêm'"></codx-label>
+              <codx-label
+                [name]="'lblAddStep'"
+                [formName]="'DPProcesses'"
+                [gridViewName]="'grvDPProcesses'"
+                [default]="'Thêm'"
+              ></codx-label>
             </button>
           </div>
           <div class="px-3 pb-1">
@@ -2185,6 +2231,7 @@
               style="width: 100%"
               [checked]="process?.instanceProgressControl"
               (valueChange)="valueChangeChecked($event, process)"
+              [disabled]="viewOnly"
             >
             </codx-input>
             <codx-label
@@ -2199,6 +2246,7 @@
           class="example-list stage-body-left-main"
           cdkDropList
           (cdkDropListDropped)="dropStep($event)"
+          [cdkDropListDisabled]="viewOnly"
         >
           <!-- danh sách giai đoạn -->
           <div class="stage-scroll" *ngIf="stepList?.length > 0">
@@ -2293,7 +2341,7 @@
                   </div>
                 </div>
                 <codx-mfunc
-                  *ngIf="viewStepCrr == viewStepCustom"
+                  *ngIf="viewStepCrr == viewStepCustom && !viewOnly"
                   [formModel]="formModelMF"
                   (clickMF)="clickMFStep($event, itemStep)"
                   [dataItem]="moreDefaut"
@@ -2339,7 +2387,7 @@
               </div>
 
               <codx-mfunc
-                *ngIf="formModelMF"
+                *ngIf="formModelMF && !viewOnly"
                 [dataItem]="moreDefaut"
                 [formModel]="formModelMF"
                 (changeDataMF)="changeDataMFReason($event)"
@@ -2378,7 +2426,7 @@
                 </div>
               </div>
               <codx-mfunc
-                *ngIf="formModelMF"
+                *ngIf="formModelMF && !viewOnly"
                 [type]="'hover'"
                 [dataItem]="moreDefaut"
                 [formModel]="formModelMF"
@@ -2479,7 +2527,9 @@
           </div>
           <div class="text-gray-600">
             <codx-label
-              fiedName="taskMemo"
+              name="taskMemo"
+              [formName]="'DPProcesses'"
+              [gridViewName]="'grvDPProcesses'"
               default="Công việc mặc định người phụ trách phải thực hiện trong
               giai đoạn"
               [formModel]="dialog.formModel"
@@ -2491,7 +2541,9 @@
           <div class="d-flex justify-content-end flex-column">
             <div class="text-gray-500 fs-7">
               <codx-label
-                fiedName="taskMemo"
+                name="desTaskMemo"
+                [formName]="'DPProcesses'"
+                [gridViewName]="'grvDPProcesses'"
                 default="Thời hạn công việc so với giai đoạn"
                 [formModel]="dialog.formModel"
               >
@@ -2504,6 +2556,7 @@
           </div>
           <div class="d-flex align-items-center ms-5">
             <button
+              [disabled]="viewOnly"
               type="button"
               class="btn btn-icon btn-sm btn-light-primary ms-2"
               (click)="openPopupChooseTask()"
@@ -2529,6 +2582,7 @@
           cdkDropList
           class="list"
           (cdkDropListDropped)="drop($event, taskGroupList, true)"
+          [cdkDropListDisabled]="viewOnly"
         >
           <div cdkDropListGroup>
             <ng-container *ngFor="let taskList of taskGroupList">
@@ -2613,7 +2667,7 @@
                       </div>
                     </div>
                     <codx-mfunc
-                      [formModel]="formModelMF"
+                      [formModel]="formModelMF && !viewOnly"
                       (clickMF)="clickMFTaskGroup($event, taskList)"
                       [dataItem]="moreDefaut"
                       [type]="'hover'"
@@ -2633,6 +2687,7 @@
                     cdkDropList
                     [cdkDropListData]="taskList?.task || []"
                     (cdkDropListDropped)="drop($event, taskList, false)"
+                    [cdkDropListDisabled]="viewOnly"
                     class="task ps-14"
                     [ngStyle]="taskList?.recID ? {} : {}"
                   >
@@ -2723,20 +2778,27 @@
                                 >
                                 </codx-label>
                               </div>
-                              <div *ngIf="task?.fieldID">
+                              <div
+                                class="d-flex align-items-center"
+                                *ngIf="task?.fieldID"
+                              >
                                 <codx-label
                                   class="text-gray-600 label-colon"
                                   fiedName="fields"
                                   [formModel]="formModelStep"
                                 >
                                 </codx-label>
-                                <span class="text-gray-600">
+                                <span
+                                  class="text-gray-600 line-clamp line-clamp-1"
+                                  [ngbTooltip]="getFieldInTask(task?.fieldID)"
+                                >
                                   {{ getFieldInTask(task?.fieldID) }}
                                 </span>
                               </div>
                             </div>
                           </div>
                           <codx-mfunc
+                            *ngIf="!viewOnly"
                             [formModel]="formModelMF"
                             (clickMF)="
                               clickMFTask($event, taskList?.task, task)
@@ -2799,6 +2861,7 @@
       </div>
       <div class="d-flex justify-content-center mt-3">
         <button
+          [disabled]="viewOnly"
           type="button"
           class="btn btn-outline-primary"
           (click)="openPopupChooseTask()"
@@ -3021,7 +3084,7 @@
     <button
       type="button"
       class="btn btn-primary"
-      [disabled]="isSaveStep"
+      [disabled]="isSaveStep || viewOnly"
       (click)="isEditReason ? editReason() : saveStep()"
     >
       <codx-label
@@ -3041,10 +3104,20 @@
     >
       <div class="d-flex flex-column">
         <div class="title text-primary fs-4 fw-bold">
-          <codx-label default="Tùy chỉnh giai đoạn"></codx-label>
+          <codx-label
+            name="tltCusReasonSuccess"
+            [formName]="'DPProcesses'"
+            [gridViewName]="'grvDPProcesses'"
+            default="Tùy chỉnh giai đoạn"
+          ></codx-label>
         </div>
         <div class="text-gray-600">
-          <codx-label default="Cách thức hoạt động của giai đoạn"></codx-label>
+          <codx-label
+            name="tltDesCusReasonSuccess"
+            [formName]="'DPProcesses'"
+            [gridViewName]="'grvDPProcesses'"
+            default="Cách thức hoạt động của giai đoạn"
+          ></codx-label>
         </div>
       </div>
       <div class="right">
@@ -3052,7 +3125,7 @@
           <button
             *ngIf="isShowstage"
             class="button-custom"
-            [disabled]="stepSuccess?.isUsed ? false : true"
+            [disabled]="stepSuccess?.isUsed && !viewOnly ? false : true"
             (click)="clickShow($event, 'setup-step')"
           >
             <span
@@ -3087,7 +3160,7 @@
                   style="width: 100%"
                   field="yes"
                   [label]="titleRadioYes"
-                  [disabled]="stepSuccess?.isUsed ? false : true"
+                  [disabled]="stepSuccess?.isUsed && !viewOnly ? false : true"
                   [checked]="stepSuccess?.reasonControl ?? false"
                   [crrValue]="stepSuccess?.reasonControl"
                   (valueChange)="
@@ -3104,7 +3177,7 @@
                   field="no"
                   [label]="titleRadioNo"
                   [checked]="!stepSuccess?.reasonControl ?? false"
-                  [disabled]="stepSuccess?.isUsed ? false : true"
+                  [disabled]="stepSuccess?.isUsed && !viewOnly ? false : true"
                   [crrValue]="stepSuccess?.reasonControl"
                   (valueChange)="
                     valueChangeRadio($event, viewStepReasonSuccess)
@@ -3131,7 +3204,7 @@
               field="applyFor"
               type="valuelist"
               [crrValue]="applyForSucess"
-              [disabled]="stepSuccess?.isUsed ? false : true"
+              [disabled]="stepSuccess?.isUsed && !viewOnly ? false : true"
               [refValue]="
                 applyForSucess != '5'
                   ? gridViewSetup?.ApplyFor?.referedValue
@@ -3151,12 +3224,17 @@
             <div class="text-dark fw-bold mb-1">
               <codx-label
                 fiedName="NewProcessID"
+                [formName]="'DP_Processes'"
+                [gridViewName]="'grvDPProcesses'"
                 [default]="gridViewSetupStep['NewProcessID']?.headerText"
               >
               </codx-label>
             </div>
             <codx-label
               class="text-gray-600"
+              name="tltSelectProcessAfterSuccess"
+              [formName]="'DP_Processes'"
+              [gridViewName]="'grvDPProcesses'"
               default="Chọn quy trình được chuyển đến khi nhiệm vụ được đánh
               dấu thành công"
             ></codx-label>
@@ -3175,7 +3253,7 @@
                   listCbxProccessSuccess
                 )
               "
-              [readonly]="stepSuccess.isUsed ? false : true"
+              [readonly]="stepSuccess.isUsed && !viewOnly ? false : true"
             >
             </ejs-combobox>
             <codx-label
@@ -3203,6 +3281,9 @@
         </div>
         <div class="text-gray-600">
           <codx-label
+            name="tltDesReasonSuccess"
+            [formName]="'DP_Processes'"
+            [gridViewName]="'grvDPProcesses'"
             default="Lý do nhiệm vụ được ghi nhận là thành công"
           ></codx-label>
         </div>
@@ -3211,7 +3292,7 @@
         <div class="group-button">
           <button
             class="button-custom"
-            [disabled]="stepSuccess?.isUsed ? false : true"
+            [disabled]="stepSuccess?.isUsed && !viewOnly ? false : true"
             (click)="openPopupReason(viewStepReasonSuccess, null, null)"
           >
             <span
@@ -3222,7 +3303,7 @@
           <button
             *ngIf="isShowstage"
             class="button-custom"
-            [disabled]="stepSuccess?.isUsed ? false : true"
+            [disabled]="stepSuccess?.isUsed && !viewOnly ? false : true"
             (click)="clickShow($event, 'reason-success')"
           >
             <span
@@ -3247,6 +3328,7 @@
                 <div *ngIf="stepSuccess.isUsed; else other_content">
                   {{ item?.reasonName }}
                   <codx-mfunc
+                    *ngIf="!viewOnly"
                     [formModel]="dialog.formModel"
                     (clickMF)="
                       clickMFReason($event, item, viewStepReasonSuccess)
@@ -3263,6 +3345,7 @@
               <div>
                 {{ item?.reasonName }}
                 <codx-mfunc
+                  *ngIf="!viewOnly"
                   [formModel]="dialog.formModel"
                   (clickMF)="clickMFReason($event, item, viewStepReasonSuccess)"
                   (changeDataMF)="changeReasonMF($event)"
@@ -3297,10 +3380,20 @@
     >
       <div class="d-flex flex-column">
         <div class="title text-primary fs-4 fw-bold">
-          <codx-label default="Tùy chỉnh giai đoạn"></codx-label>
+          <codx-label
+            name="tltCusReasonFail"
+            [formName]="'DPProcesses'"
+            [gridViewName]="'grvDPProcesses'"
+            default="Tùy chỉnh giai đoạn"
+          ></codx-label>
         </div>
         <div class="text-gray-600">
-          <codx-label default="Cách thức hoạt động của giai đoạn"></codx-label>
+          <codx-label
+            name="tltDesCusReasonFail"
+            [formName]="'DPProcesses'"
+            [gridViewName]="'grvDPProcesses'"
+            default="Cách thức hoạt động của giai đoạn"
+          ></codx-label>
         </div>
       </div>
       <div class="right">
@@ -3308,7 +3401,7 @@
           <button
             *ngIf="isShowstage"
             class="button-custom"
-            [disabled]="stepFail?.isUsed ? false : true"
+            [disabled]="stepFail?.isUsed && !viewOnly ? false : true"
             (click)="clickShow($event, 'setup-step')"
           >
             <span
@@ -3346,7 +3439,7 @@
                   [label]="titleRadioYes"
                   [checked]="stepFail?.reasonControl ?? false"
                   [crrValue]="stepFail?.reasonControl"
-                  [disabled]="stepFail?.isUsed ? false : true"
+                  [disabled]="stepFail?.isUsed && !viewOnly ? false : true"
                   (valueChange)="valueChangeRadio($event, viewStepReasonFail)"
                 >
                 </codx-input>
@@ -3359,7 +3452,7 @@
                   [checked]="!stepFail?.reasonControl"
                   [crrValue]="stepFail?.reasonControl ?? false"
                   [label]="titleRadioNo"
-                  [disabled]="stepFail?.isUsed ? false : true"
+                  [disabled]="stepFail?.isUsed && !viewOnly ? false : true"
                   (valueChange)="valueChangeRadio($event, viewStepReasonFail)"
                 >
                 </codx-input>
@@ -3382,7 +3475,7 @@
               field="applyFor"
               type="valuelist"
               [crrValue]="applyForFail"
-              [disabled]="stepFail?.isUsed ? false : true"
+              [disabled]="stepFail?.isUsed && !viewOnly ? false : true"
               [refValue]="
                 applyForFail != '5'
                   ? gridViewSetup?.ApplyFor?.referedValue
@@ -3419,7 +3512,7 @@
               [fields]="fieldCbxProccess"
               [placeholder]="gridViewSetupStep['NewProcessID']?.placeholder"
               (valueChange)="cbxChange($event, viewStepReasonFail)"
-              [readonly]="stepFail?.isUsed ? false : true"
+              [readonly]="stepFail?.isUsed && !viewOnly ? false : true"
               [value]="
                 moveProccessIsNull(stepFail?.newProcessID, listCbxProccessFail)
               "
@@ -3457,7 +3550,7 @@
         <div class="group-button">
           <button
             class="button-custom"
-            [disabled]="stepFail?.isUsed ? false : true"
+            [disabled]="stepFail?.isUsed && !viewOnly ? false : true"
             (click)="openPopupReason(viewStepReasonFail, null, null)"
           >
             <span
@@ -3467,7 +3560,7 @@
           </button>
           <button
             *ngIf="isShowstage"
-            [disabled]="stepFail?.isUsed ? false : true"
+            [disabled]="stepFail?.isUsed && !viewOnly ? false : true"
             class="button-custom"
             (click)="clickShow($event, 'reason-success')"
           >
@@ -3492,6 +3585,7 @@
               <div *ngIf="stepFail?.isUsed; else other_fail">
                 {{ item?.reasonName }}
                 <codx-mfunc
+                  *ngIf="!viewOnly"
                   [formModel]="dialog.formModel"
                   (clickMF)="clickMFReason($event, item, viewStepReasonFail)"
                   (changeDataMF)="changeReasonMF($event)"
@@ -3507,6 +3601,7 @@
             <div>
               {{ item?.reasonName }}
               <codx-mfunc
+                *ngIf="!viewOnly"
                 [formModel]="dialog.formModel"
                 (clickMF)="clickMFReason($event, item, viewStepReasonFail)"
                 (changeDataMF)="changeReasonMF($event)"
@@ -3581,6 +3676,7 @@
               >
               </codx-label>
               <button
+                [disabled]="viewOnly"
                 type="button"
                 class="btn btn-icon btn-sm btn-light-primary"
                 (click)="sharePerm(controlShare, 'participants-2')"
@@ -3682,6 +3778,7 @@
               >
               </codx-label>
               <button
+                [disabled]="viewOnly"
                 type="button"
                 class="btn btn-icon btn-sm btn-light-primary"
                 (click)="sharePerm(controlShare, 'involved')"
@@ -3760,10 +3857,20 @@
     >
       <div class="d-flex flex-column">
         <div class="title text-primary fs-4 fw-bold">
-          <codx-label name default="Tùy chỉnh giai đoạn"></codx-label>
+          <codx-label
+            name="tltCustomStep"
+            [formName]="'DPProcesses'"
+            [gridViewName]="'grvDPProcesses'"
+            default="Tùy chỉnh giai đoạn"
+          ></codx-label>
         </div>
         <div class="text-gray-600">
-          <codx-label name default="Cách thức hoạt động của giai đoạn">
+          <codx-label
+            name="tltDesCustomStep"
+            [formName]="'DPProcesses'"
+            [gridViewName]="'grvDPProcesses'"
+            default="Cách thức hoạt động của giai đoạn"
+          >
           </codx-label>
         </div>
       </div>
@@ -3815,6 +3922,7 @@
               refValue="DP019"
               [crrValue]="step.assignControl"
               (valueChange)="valueChangeAssignCtrl($event)"
+              [disabled]="viewOnly"
             >
             </codx-input>
           </div>
@@ -3840,6 +3948,7 @@
               refValue="DP020"
               [crrValue]="step.transferControl"
               (valueChange)="valueChangeTransferCtrl($event)"
+              [disabled]="viewOnly"
             >
             </codx-input>
           </div>
@@ -3918,6 +4027,7 @@
               [noteDay]="noteDay"
               [noteHour]="noteHour"
               (eventInput)="valueChangeDuration($event)"
+              [disabled]="viewOnly"
             >
             </codx-input-number-duration>
           </div>
@@ -3944,6 +4054,7 @@
                   [label]="titleCheckBoxSat"
                   [checked]="checkedSat"
                   (valueChange)="valueChangeDayoff($event, viewSaturday, '7')"
+                  [disabled]="viewOnly"
                 >
                 </codx-input>
               </div>
@@ -3956,6 +4067,7 @@
                   [checked]="checkedSun"
                   [label]="titleCheckBoxSun"
                   (valueChange)="valueChangeDayoff($event, viewSunday, '8')"
+                  [disabled]="viewOnly"
                 >
                 </codx-input>
               </div>
@@ -3983,6 +4095,7 @@
               refValue="DP021"
               [crrValue]="step.startControl"
               (valueChange)="valueChangeStartCtrl($event)"
+              [disabled]="viewOnly"
             >
             </codx-input>
           </div>
@@ -4010,6 +4123,7 @@
                   [checked]="step.durationControl"
                   [crrValue]="step.durationControl"
                   (valueChange)="valueChangeDuraCtrl($event, formDurationCtrl)"
+                  [disabled]="viewOnly"
                 >
                 </codx-input>
               </div>
@@ -4022,6 +4136,7 @@
                   [crrValue]="step.durationControl"
                   [label]="titleRadioNo"
                   (valueChange)="valueChangeDuraCtrl($event, formDurationCtrl)"
+                  [disabled]="viewOnly"
                 >
                 </codx-input>
               </div>
@@ -4050,6 +4165,7 @@
                   [checked]="step?.leadtimeControl"
                   [crrValue]="step?.leadtimeControl"
                   (valueChange)="valueChangeDuraCtrl($event, formLeaTimeCtrl)"
+                  [disabled]="viewOnly"
                 >
                 </codx-input>
               </div>
@@ -4062,6 +4178,7 @@
                   [crrValue]="step?.leadtimeControl"
                   [label]="titleRadioNo"
                   (valueChange)="valueChangeDuraCtrl($event, formLeaTimeCtrl)"
+                  [disabled]="viewOnly"
                 >
                 </codx-input>
               </div>
@@ -4099,6 +4216,7 @@
                   (valueChange)="
                     valueChangeApproveRoleCtrl($event, formStepsRoleCtrl)
                   "
+                  [disabled]="viewOnly"
                 >
                 </codx-input>
               </div>
@@ -4113,6 +4231,7 @@
                   (valueChange)="
                     valueChangeApproveRoleCtrl($event, formStepsRoleCtrl)
                   "
+                  [disabled]="viewOnly"
                 >
                 </codx-input>
               </div>
@@ -4151,6 +4270,7 @@
                   (valueChange)="
                     valueChangeApproveRoleCtrl($event, formTaskRoleCtrl)
                   "
+                  [disabled]="viewOnly"
                 >
                 </codx-input>
               </div>
@@ -4165,6 +4285,7 @@
                   (valueChange)="
                     valueChangeApproveRoleCtrl($event, formTaskRoleCtrl)
                   "
+                  [disabled]="viewOnly"
                 >
                 </codx-input>
               </div>
@@ -4226,6 +4347,7 @@
           [placeholder]
           [crrValue]="step.memo"
           (valueChange)="valueChangeMemo($event)"
+          [disabled]="viewOnly"
         >
         </codx-input>
       </div>
@@ -4256,6 +4378,7 @@
         type="text"
         [crrValue]="reason?.reasonName"
         (valueChange)="changeValueReaName($event, reason.recID)"
+        [disabled]="viewOnly"
       >
       </codx-input>
     </div>
@@ -4277,7 +4400,7 @@
     </button>
     <button
       type="button"
-      [disabled]="isClick"
+      [disabled]="isClick || viewOnly"
       class="btn btn-primary"
       (click)="addReason()"
     >
@@ -4365,7 +4488,12 @@
             default="Di chuyển"
           ></codx-label>
         </button>
-        <button type="button" class="btn btn-primary" (click)="reuseField()">
+        <button
+          type="button"
+          class="btn btn-primary"
+          (click)="reuseField()"
+          [disabled]="viewOnly"
+        >
           <codx-label
             name=" lblBtnReuse "
             [formName]="'DP_Processes'"

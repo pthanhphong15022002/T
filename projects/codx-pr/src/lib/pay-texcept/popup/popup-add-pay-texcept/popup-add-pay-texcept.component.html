@@ -1,0 +1,47 @@
+<codx-form [body]="body" [footer]="footer" [data]="data" [dialog]="dialog" [headerText]="headerText"></codx-form>
+
+
+<ng-template #body>
+    <div class="container">
+        <div class="row">
+            <div class="form-group">
+                <codx-label [formModel]="dialog?.formModel" name="lblEmployee" [default]="'Nhân viên'"></codx-label>
+                <codx-input [formModel]="dialog?.formModel" [field]="'employeeID'" [crrValue]="data.employeeID"></codx-input>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-6">
+                <div class="form-group">
+                    <codx-input [formModel]="dialog.formModel" field="genDate"></codx-input>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="form-group">
+                    <codx-input [formModel]="dialog.formModel" field="dowCode"></codx-input>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group">
+                <codx-input [formModel]="dialog.formModel" field="exceptCode"></codx-input>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group">
+                <codx-input [formModel]="dialog.formModel" field="amountF"></codx-input>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group">
+                <codx-input [formModel]="dialog.formModel" field="note"></codx-input>
+            </div>
+        </div>
+    </div>  
+
+</ng-template>
+
+<ng-template #footer>
+    <div class="d-flex justify-content-end w-100">
+        <button type="button" class="btn btn-primary" (click)="onSave()">Lưu</button>
+    </div>
+</ng-template>

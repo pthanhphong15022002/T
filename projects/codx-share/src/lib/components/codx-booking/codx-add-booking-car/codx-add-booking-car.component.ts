@@ -106,6 +106,8 @@ export class CodxAddBookingCarComponent
   listUserID = [];
   showAllResource: any;
   cbbResource = [];
+  oStartDate:any;
+  oEndDate:any;
   fields: Object = { text: 'resourceName', value: 'resourceID' };
   cbbResourceName: string;
 
@@ -601,7 +603,7 @@ export class CodxAddBookingCarComponent
   showAllResourceChange(evt: any) {
     if (evt != null) {
       this.showAllResource = evt;
-      this.getResourceForCurrentTime();
+      this.getResourceForCurrentTime(true);
       this.detectorRef.detectChanges();
     }
   }
@@ -1326,8 +1328,14 @@ export class CodxAddBookingCarComponent
     this.title = this.tmpTitle;
     this.detectorRef.detectChanges();
   }
-  getResourceForCurrentTime() {
-    this.codxBookingService
+  getResourceForCurrentTime(showAllChange=false) {
+    if(!this.haveEP) return;//Ko mua EP => ko cần lấy phòng khả dụng mà cho nhập dịa điểm
+    let getNewList = true;
+    if(!showAllChange){
+      if(this.oStartDate?.toString() == this.data?.startDate?.toString() && this.oEndDate?.toString() == this.data?.endDate?.toString()) getNewList = false;
+    }
+    if(getNewList){
+      this.codxBookingService
       .getAvailableResources(
         '2',
         this.data.startDate,
@@ -1373,6 +1381,8 @@ export class CodxAddBookingCarComponent
           this.detectorRef.detectChanges();
         }
       });
+    }
+    
   }
 
   filterArray(arr) {

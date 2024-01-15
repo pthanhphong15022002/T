@@ -357,6 +357,9 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
   alertMessger = '';
   arrFieldDup = []; //mang field trung
 
+  viewOnly = false; //chỉ xem
+  category: any;
+
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private api: ApiHttpService,
@@ -380,6 +383,8 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
     this.entityName = this.dialog.formModel.entityName;
     this.systemProcess = dt?.data?.systemProcess ?? '0';
     this.action = dt?.data?.action;
+    this.viewOnly = this.action == 'view';
+
     this.showID = dt?.data?.showID;
 
     this.userId = this.user?.userID;
@@ -507,6 +512,7 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
         this.setDefaultOwner();
         break;
       case 'edit':
+      case 'view':
         this.loadEx();
         this.loadWord();
         this.loadListApproverStep();
@@ -601,7 +607,7 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
     let userID = '';
     let userName = '';
     let check = false;
-    if (this.action == 'edit') {
+    if (this.action == 'edit' || this.action == 'view') {
       check = this.permissions.some(
         (x) => x.objectID == this.process.createdBy && x.roleType == 'C'
       );
@@ -2029,16 +2035,21 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
     }
   }
 
-  //Setting gửi duyệt
+  // -------------------------------------//
+  // ---------Setting gửi duyệt----------//
+  // -------------------------------------//
   async clickSettingApprove() {
-    let category;
     if (this.action == 'edit')
-      category = await firstValueFrom(
-        this.dpService.getESCategoryByCategoryID(this.process.processNo)
+      this.category = await firstValueFrom(
+        this.dpService.getESCategoryByCategoryIDType(
+          this.process.processNo,
+          'DP_Processes'
+        )
+        // this.dpService.getESCategoryByCategoryID(this.process.processNo)
       );
-    if (category) {
+    if (this.category) {
       //this.actionOpenFormApprove(category.recID);
-      this.actionOpenFormApprove2(category);
+      this.actionOpenFormApprove2(this.category);
     } else {
       //let transID = Util.uid();
       // this.actionOpenFormApprove(transID);
@@ -2058,15 +2069,15 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
                 )
               );
             }
-            category = res.data;
-            category.recID = res?.recID ?? Util.uid();
+            let category = res.data;
+            category.recID = res?.data?.recID ?? Util.uid();
             category.eSign = true; // Khanh bảo vậy mặc định luôn là kí sô
             category.category = 'DP_Processes';
             category.categoryID = this.process.processNo;
             category.categoryName = this.process.processName;
             category.createdBy = this.user.userID;
             category.owner = this.user.userID;
-            category.functionApproval = 'DP0204'; //'DP01'; Khanh đã đỏi fun
+            category.functionApproval = 'DP0204'; //'DP01'; Khanh đã đỏi func Mặc định
             category['refID'] = this.process.recID;
             this.actionOpenFormApprove2(category, true);
           }
@@ -2076,11 +2087,6 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
   // new setting
   //setting trình kí - lần 2
   actionOpenFormApprove2(item, isAdd = false) {
-    // this.dpService
-    //   .getESCategoryByCategoryID(categoryID)
-    //   .subscribe((item: any) => {
-    //     if (item) {
-    //gọi ko ra
     this.cache.functionList('ESS22').subscribe((f) => {
       if (f) {
         if (!f || !f.gridViewName || !f.formName) return;
@@ -2115,6 +2121,7 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
 
               popupEditES.closed.subscribe((res) => {
                 if (res?.event) {
+                  this.category = res?.event;
                   this.loadListApproverStep();
                   this.loadEx();
                   this.loadWord();
@@ -2126,8 +2133,6 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
       }
     });
   }
-  //  });
-  // }
 
   actionOpenFormApprove(transID) {
     let dialogModel = new DialogModel();
@@ -2192,6 +2197,8 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
     this.viewApproverStep = data;
     p.open();
   }
+
+  // -----------------END----------------//
   //Bieu mau
   clickViewTemp(temp) {}
   onScroll(e: any) {}
@@ -2890,13 +2897,17 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
       if (!check) {
         this.listStepEdit.push(stepIDContain);
       }
-    }
-    if (this.action == 'edit') {
-      let check = this.listStepEdit.some((id) => id == stepIDPrevious);
-      if (!check) {
+      let check2 = this.listStepEdit.some((id) => id == stepIDPrevious);
+      if (!check2) {
         this.listStepEdit.push(stepIDPrevious);
       }
     }
+    // if (this.action == 'edit') {
+    //   let check = this.listStepEdit.some((id) => id == stepIDPrevious);
+    //   if (!check) {
+    //     this.listStepEdit.push(stepIDPrevious);
+    //   }
+    // }
 
     event.item.data.stepID = stepIDContain;
 
@@ -5152,11 +5163,21 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
     }
     return check;
   }
-  getFieldInTask(strFieldID) {
-    let fieldTile = this.step?.fields?.filter((field) =>
-      strFieldID?.includes(field?.recID)
-    );
-    return fieldTile?.map((f) => f.title)?.join(', ') || '';
+
+  getFieldInTask(strFieldID: string) {
+    const listID = strFieldID?.split(';') || [];
+    let fieldTile = '';
+    if (listID?.length > 0 && this.step?.fields?.length > 0) {
+      for (const fieldID of listID) {
+        let field = this.step?.fields?.find((x) => x.recID == fieldID);
+        if (field) {
+          fieldTile = fieldTile
+            ? fieldTile + ', ' + field?.title
+            : field?.title;
+        }
+      }
+    }
+    return fieldTile;
   }
 
   openFormApprover(task) {

@@ -6,6 +6,7 @@ import { LayoutService, AuthService, ApiHttpService, CacheService, AuthStore } f
 import { Router } from '@angular/router';
 import { Component, OnInit, ViewChild, ElementRef, ChangeDetectorRef } from '@angular/core';
 import { CodxMwpService } from 'projects/codx-mwp/src/public-api';
+import { CodxShareService } from 'projects/codx-share/src/lib/codx-share.service';
 
 @Component({
   selector: 'app-my-team',
@@ -40,9 +41,11 @@ export class MyTeamComponent implements OnInit {
   online: any;
   offline: any;
   user:any = null;
+  eventPanelType:string;
   @ViewChild("ktAside", { static: true }) ktAside: ElementRef;
   @ViewChild("ktHeaderMobile", { static: true }) ktHeaderMobile: ElementRef;
   @ViewChild("ktHeader", { static: true }) ktHeader: ElementRef;
+  lstEmp=[];
 
   constructor(router: Router,
     private layout: LayoutService,
@@ -51,6 +54,7 @@ export class MyTeamComponent implements OnInit {
     private api: ApiHttpService,
     private dt: ChangeDetectorRef,
     protected cache: CacheService,
+    protected codxShareService: CodxShareService,
     //private cbxsv: ComboboxpopupService,
     private codx_mwp_service: CodxMwpService,
   ) 
@@ -83,7 +87,19 @@ export class MyTeamComponent implements OnInit {
     this.footerCSSClasses = this.layout.getStringCSSClasses("footer");
     this.headerCSSClasses = this.layout.getStringCSSClasses("header");
     this.headerHTMLAttributes = this.layout.getHTMLAttributes("header");
-    this.getMyTeam();
+    this.codxShareService
+      .getSettingValueWithOption('FTC', 'WPParameters',null,'1')
+      .subscribe((res) => {
+        if(res?.length>0){
+          this.eventPanelType = JSON.parse(res[0]?.dataValue)?.EventPanelType ?? '0';          
+        }
+        if(this.eventPanelType =='1'){
+          this.getBirthDayEmps();
+        }
+        else{
+          this.getMyTeam();
+        }
+      });
   }
 
   ngAfterViewInit(): void {
@@ -120,9 +136,24 @@ export class MyTeamComponent implements OnInit {
 
   pageIndex:number = 1;
   total:number = 0;
-  lstMyTeam:any[] = [];
+  lstMyTeam = [];
   scrolling:boolean = false;
   //get my team 
+  getBirthDayEmps(){
+    this.api
+    .execSv("HR",
+    "ERM.Business.HR",
+    "EmployeesBusiness",
+    "LoadBirthDayEmpsAsync",
+    [])
+    .subscribe((res:any) => {
+      if(res){
+        this.lstEmp=res;
+        this.dt.detectChanges();        
+        setInterval(() => this.showSlides(), 5000);
+      }
+    });
+  }
   getMyTeam(){
     this.api
     .execSv("HR",
@@ -199,5 +230,22 @@ export class MyTeamComponent implements OnInit {
   valueChange(value:any){
     debugger
     this.searchText = value.data;
+  }
+
+  slideIndex = 0;
+
+  showSlides() {
+    let i;
+    let slides = document.getElementsByClassName("mySlides") as HTMLCollectionOf<HTMLElement>;
+    if(slides?.length>0){
+      for (i = 0; i < slides.length; i++) {
+        slides[i].style.display = "none";  
+      }      
+      if (this.slideIndex >= slides.length) {this.slideIndex = 0}  
+      if(this.slideIndex >=0 && this.slideIndex<slides.length){
+        slides[this.slideIndex].style.display = "block";  
+      }      
+      this.slideIndex++;
+    }
   }
 }

@@ -1,0 +1,17 @@
+<codx-form
+  #form
+  [headerText]="title"
+  [openMore]="false"
+  [dialog]="dialog"
+  [formModel]="dialog.formModel"
+  [footer]="footer"
+  [body]="body"
+>
+  <ng-template #body>
+    <div *ngIf="isLoad">
+      <dynamic-setting-control #settingControl [formModel]="dialog.formModel"
+      (valueChanges)="valuechange($event)" ></dynamic-setting-control>
+    </div>
+  </ng-template>
+  <ng-template #footer></ng-template>
+</codx-form>

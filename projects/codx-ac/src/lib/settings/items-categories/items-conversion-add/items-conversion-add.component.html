@@ -42,7 +42,7 @@
             <codx-input field="conversion" [formModel]="dialog.formModel" [Group]="form?.formGroup"></codx-input>
         </div>
     </div>
-    <div *ngIf="!form?.data?.useFormula" class="row">
+    <div *ngIf="!form?.data?.useFormula && (form?.data?.fromUMID && form?.data?.toUMID)" class="row">
         <div class="form-group">
             <span>{{'1 '+form?.data?.fromUMID+' = '+form?.data?.conversion+' '+form?.data?.toUMID}}</span>
         </div>

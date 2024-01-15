@@ -55,6 +55,7 @@ export class ReceiptTransactionsTableComponent extends UIComponent {
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
         if (res) {
+          console.log(res);
           this.listVoucherLine = res;
           this.setTotalRecord();
           this.detectorRef.detectChanges();

@@ -79,11 +79,13 @@ export class ItemsConversionAddComponent extends UIComponent {
                 .pipe(takeUntil(this.destroy$))
                 .subscribe((res: any) => {
                   if (!res) return;
-                  if (res || res.save || res.update) {
-                    if (res || !res.save.error || !res.update.error) {
-                      this.dialog.close({data:this.form?.data});
-                    }
+                  if (res.hasOwnProperty('save')) {
+                    if (res.save.hasOwnProperty('data') && !res.save.data) return;
                   }
+                  if (res.hasOwnProperty('update')) {
+                    if (res.update.hasOwnProperty('data') && !res.update.data) return;
+                  }
+                  this.dialog.close({ data: this.form?.data });
                 })
             }
           });
@@ -92,11 +94,13 @@ export class ItemsConversionAddComponent extends UIComponent {
           .pipe(takeUntil(this.destroy$))
           .subscribe((res: any) => {
             if (!res) return;
-            if (res || res.save || res.update) {
-              if (res || !res.save.error || !res.update.error) {
-                this.dialog.close({data:this.form?.data});
-              }
+            if (res.hasOwnProperty('save')) {
+              if (res.save.hasOwnProperty('data') && !res.save.data) return;
             }
+            if (res.hasOwnProperty('update')) {
+              if (res.update.hasOwnProperty('data') && !res.update.data) return;
+            }
+            this.dialog.close({ data: this.form?.data });
           })
       }
     }

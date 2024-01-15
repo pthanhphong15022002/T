@@ -37,6 +37,9 @@ export class TextValuePipe implements PipeTransform {
         });
         return UrlUtil.modifiedByObj(_strMssg,_obj);;
       }
+      else{
+        value = res?.customName;
+      }
       return value;
     })); 
   }

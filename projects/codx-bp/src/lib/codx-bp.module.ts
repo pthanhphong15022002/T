@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 import { SharedModule } from '@shared/shared.module';
@@ -39,6 +39,13 @@ import { PropertyPhoneComponent } from './modeview/properties/property-phone/pro
 import { PropertyExpressionComponent } from './modeview/properties/property-expression/property-expression.component';
 import { PropertyAttachmentComponent } from './modeview/properties/property-attachment/property-attachment.component';
 import { FormSettingComboboxComponent } from './processes/popup-add-process/form-properties-fields/setting-fields/form-setting-combobox/form-setting-combobox.component';
+import { PropertyComboboxComponent } from './modeview/properties/property-combobox/property-combobox.component';
+import { FormAdvancedSettingsComponent } from './processes/popup-add-process/form-advanced-settings/form-advanced-settings.component';
+import { FormEditConnectorComponent } from './processes/popup-add-process/form-edit-connector/form-edit-connector.component';
+import { SplitterAllModule } from '@syncfusion/ej2-angular-layouts';
+import { DynamicSettingModule } from 'projects/codx-share/src/lib/components/dynamic-setting/dynamic-setting.module';
+import { PropertyShareComponent } from './modeview/properties/property-share/property-share.component';
+import { PropertyTableComponent } from './modeview/properties/property-table/property-table.component';
 
 export const routes: Routes = [
   {
@@ -57,7 +64,7 @@ export const routes: Routes = [
     children: [
       {
         path: 'modeview',
-        component: ModeviewComponent,
+        component: FormPropertiesFieldsComponent,
       },
     ],
   }
@@ -88,10 +95,13 @@ export const routes: Routes = [
     PropertyPhoneComponent,
     PropertyExpressionComponent,
     PropertyAttachmentComponent,
-
-
-
+    PropertyComboboxComponent,
+    PropertyShareComponent,
+    PropertyTableComponent,
+    
+    FormEditConnectorComponent,
     FormSettingComboboxComponent,
+    FormAdvancedSettingsComponent,
   ],
   imports: [
     CodxCoreModule.forRoot({ environment }),
@@ -113,8 +123,12 @@ export const routes: Routes = [
     CoreModule,
     PinchZoomModule,
     DiagramModule,
+    SplitterAllModule,
+    DynamicSettingModule
     // NgxImageZoomModule
   ],
   exports: [CodxBpComponent],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+
 })
 export class CodxBpModule {}

@@ -1,0 +1,61 @@
+<div class="position-relative w-100 h-100">
+    <div class="d-flex flex-column w-100 h-100 px-4 py-6">
+        <div class="d-flex align-items-center justify-content-between my-2">
+            <div class="d-flex align-items-center">
+                <i class="icon-24" [ngClass]="data?.icon" [style.color]="data?.textColor"></i>
+                <codx-label formName="DynamicForms" [fiedName]="'titles'" [default]="data?.text" class="fw-bold fs-5-sm ms-2 mt-1"></codx-label>
+            </div>
+            <div class="cursor-pointer" (click)="deleteValue()">
+                <i class="icon-delete_outline"></i>
+            </div>
+        </div>
+        <div class="mt-4">
+            <codx-label formName="DynamicForms" [gridViewName]="'grvDynamicForms' + data.controlType" [fiedName]="'title'" default="Tên ô nhập liệu" class="fw-bold"></codx-label>
+            <codx-input type="text" [crrValue]="data.title" field="title" (valueChange)="changeValue($event)"></codx-input>
+        </div>
+        <div class="border-top mt-8">
+            <div class="d-flex align-items-center mt-4">
+                <codx-label formName="DynamicForms" fiedName="lblColName" default="Danh sách cột" class="fw-bold"></codx-label>
+            </div>
+            <div class="d-flex flex-column m-4">
+                <div class="d-flex align-items-center justify-content-between border-dotted-d3d6d9 p-2 mt-2" *ngFor="let item of data?.dataFormat">
+                    <span>{{item.title}}</span>
+                    <div class="d-flex align-items-center">
+                        <div ngbDropdown class="d-inline-block" container="body">
+                            <div class="cursor-pointer" id="dropdownBasic1" ngbDropdownToggle>
+                                <i class="icon-24" [ngClass]="item?.icon" [style.color]="item?.textColor"></i>
+                            </div>
+                            <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                                <button ngbDropdownItem [class.active]="item.value == item2.value" *ngFor="let item2 of vllBP008?.datas" (click)="selectedItem(item2)">{{item2.text}}</button>
+                            </div>
+                        </div>
+                        <i class="ms-2 icon-18 icon-edit_square cursor-pointer" (click)="edit()"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex align-items-center m-4">
+                <button type="button" class="btn btn-light w-100" (click)="addCol()"><i class="icon-i-plus"></i> <codx-label formName="DynamicForms" fiedName="lblColAdd" default="Thêm cột"></codx-label></button>
+            </div>
+        </div>
+        <div class="border-top mt-8">
+            <div class="d-flex align-items-center mt-4">
+                <codx-input type="switch" [crrValue]="data?.tableFormat?.hasIndexNo" field="hasIndexNo" label="Có đánh STT dòng"  (valueChange)="changeValueTable($event)" class="mt-2"></codx-input>
+                <codx-label formName="DynamicForms"  [fiedName]="'hasIndexNo'" default="Có đánh STT dòng" class="fw-bold ms-2"></codx-label>
+            </div>
+            <div class="d-flex align-items-center mt-1">
+                <codx-input type="switch" [crrValue]="data.isRequired" field="isRequired" label="Bắt buộc"  (valueChange)="changeValue($event)" class="mt-2"></codx-input>
+                <codx-label formName="DynamicForms" [gridViewName]="'grvDynamicForms' + data.controlType" [fiedName]="'IsRequired'" default="Bắt buộc" class="fw-bold ms-2"></codx-label>
+            </div>
+            <div class="d-flex align-items-center mt-1">
+                <codx-input type="switch"  field="isRequired" label="Bắt buộc"  class="mt-2"></codx-input>
+                <codx-label formName="DynamicForms" [gridViewName]="'grvDynamicForms' + data.controlType" [fiedName]="'IsRequired'" default="Điều kiện hiển thị" class="fw-bold ms-2"></codx-label>
+            </div>
+        </div>
+    </div>
+    <div class="position-absolute top-0 w-100 h-100 bg-white" [ngClass]="isEdit?'visible':'invisible'">
+        <div class="d-flex align-items-center justify-content-between p-2">
+            <i class="icon-arrow_back cursor-pointer" (click)="back()"></i>
+        </div>
+    </div>
+</div>
+

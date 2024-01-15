@@ -1,49 +1,58 @@
 <codx-views #view
     [views]="views"
     idField="recID"
-    [selectedFirst]="true"
-    [button]="buttonAdd"
     [service]="'HR'"
-    (filterChange)="filterChange($event)">
+    [autoLoad]="false"
+    [hideMoreFuncs]="false"
+    [autoSearch]="false"
+    (onActions)="onAction($event)"
+    (clickMF)="clickMF($event)"
+    (changeDataMF)="changeDataMF($event)"
+    (searchChanged)="searchChanged($event)">
 </codx-views>
 <!-- template left -->
 <ng-template #tmpLeft>
-    <codx-treeview
+    <codx-listview
         [itemTemplate]="itemTemplateTree"
-        funcId="HRS0201"
-        entityName="HR_OrganizationUnits"
-        service="HR"
+        [entityName]="'HR_OrganizationUnits'"
+        [service]="'HR'"
         type="treeView"
         textField="orgUnitName"
-        gridViewName="grvOrganizationUnits"
-        formName="OrganizationUnits"
-        [enableCheck]="false"
-        [data]="null"
+        [gridViewName]="'grvOrganizationUnits'"
+        [formName]="'OrganizationUnits'"
         [idField]="'orgUnitID'"
         [parentIdField]="'ParentID'"
-        [dataService]="dataServiceHR">
-      </codx-treeview>
+        [dataService]="dtServiceOrgUnit"
+        [enableCheck]="false"
+        [data]="null"
+        [footerTemplate]="footerLeftPanel"
+        [selectFirst]="true"
+        (onSelectionChanged)="onSelectionChange($event)">
+    </codx-listview>
 </ng-template>
 <!-- template right -->
 <ng-template #tmpRight>
     <codx-gridview-v2
-    *ngIf="columnsGrid && columnsGrid.length > 0"
-    #codxGridViewV2
-    [formName]="'SalCoeffEmp'"
-    [gridViewName]="'grvSalCoeffEmpUI'"      
-    [entityName]="view.formModel.entityName"
-    [columnsGrid]="columnsGrid"
-    [service]="'HR'"
-    [assemblyName]="'ERM.Business.PR'"
-    [className]="'SalCoeffEmpBusiness'"
-    [method]="'LoadDataGridAsync'"
-    [dataSource]="dataSources"
-    [checkboxSelect]="true"
-    [autoFitColumns]="false"
-    [hideMoreFunc]="true"
-    [height]="'100%'"
-    [idField]="'employeeID'"
-    (onDoubleClick)="onDoubleClick($event)">
+        *ngIf="columnsGrid && columnsGrid.length > 0 && loading"
+        #codxGridViewV2
+        [formName]="'SalCoeffEmp'"
+        [gridViewName]="'grvSalCoeffEmpUI'"      
+        [entityName]="view.formModel?.entityName"
+        [columnsGrid]="columnsGrid"
+        [service]="'HR'"
+        [assemblyName]="'ERM.Business.PR'"
+        [className]="'SalCoeffEmpBusiness'"
+        [method]="'LoadDataGridAsync'"
+        [dataValues]="dataValues"
+        [autoLoad]="true"
+        [checkboxSelect]="true"
+        [autoFitColumns]="false"
+        [hideMoreFunc]="true"
+        [height]="'100%'"
+        [idField]="'employeeID'"
+        (gridInit)="onDatabound()"
+        (onDoubleClick)="onDoubleClick($event)"
+        (onDatabound)="onDatabound()">
     </codx-gridview-v2>
 </ng-template>
 
@@ -60,11 +69,11 @@
 
 <!-- template employee -->
 <ng-template #tmpEmployee let-data>
-    <div class="d-flex align-items-center p-2" *ngIf="data && data?.employee">
+    <div class="d-flex align-items-center p-2" *ngIf="data">
         <div class="me-4">
             <codx-img 
-                [objectId]="data.employee.employeeID" 
-                [objectName]="data.employee.employeeName"
+                [objectId]="data.employeeID" 
+                [objectName]="data.employeeName"
                 objectType="HR_Employees" 
                 [width]="30"
                 [imageType]="'circle'">
@@ -72,17 +81,57 @@
         </div>
         <div>
             <div class="align-items-center line-clamp line-clamp-1 mb-1">
-                <span class="fw-bold text-nowrap me-3">{{data.employee.employeeName}}</span>
+                <span class="fw-bold text-nowrap me-3">{{data.employeeName}}</span>
                 <i class="icon-qr_code_scanner text-danger icon-14 me-1"></i>
-                <span class="text-danger">{{ data.employee.employeeID }}</span>
+                <span class="text-danger">{{ data.employeeID }}</span>
             </div>
             <div>
-                <span class="text-gray-500">{{data.employee.positionName}}</span>
+                <span class="text-gray-500">{{data.positionName}}</span>
             </div>
         </div>
     </div>
 </ng-template>
-<!-- template data -->
+
+<!-- template data column-->
 <ng-template #tmpData let-data>
     <span>{{data[data.column.field]}}</span>
+</ng-template>
+
+<!-- template footerLeftPanel -->
+<ng-template #footerLeftPanel>
+    <div class="d-flex flex-column justify-content-start">
+        <div class="d-flex align-items-center">
+          <codx-input type="switch" [checked]="false" (valueChange)="valueChange($event)"></codx-input>
+          <codx-label [formModel]="view.formModel" [name]="'lblReadSaved'" [default]="'Chỉ đọc số liệu đã lưu'"
+            class="ms-2 text-primary">
+          </codx-label>
+        </div>
+        
+        <div class="d-flex flex-row align-items-center cursor-hover" (click)="clickShowTooltip()">
+          <span class="icon-sticky_note_2 text-primary me-1"></span>
+          <codx-label class="text-primary" name="lblExplanation" default="Chú thích hệ số" [formModel]="view.formModel"></codx-label>
+        </div>
+    </div>
+</ng-template>
+
+<!-- template popup LS_SalCoeff -->
+<ng-template #tmpTooltip let-dialog>
+    <div class="container h-100 p-5">
+        <div class="form-group">
+            <div class="d-flex align-items-center justify-content-between">
+                <h3 class="text-primary">CHÚ THÍCH</h3>
+                <button type="button" class="btn btn-icon btn-light" (click)="dialog.close()">
+                    <span class="icon-close icon-18"></span>
+                </button>
+            </div> 
+        </div>
+        <ng-container *ngFor="let item of lstSalCoeffs">
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-4">{{item.coeffCode}}:</div>
+                    <div class="col-4">{{item.coeffName}}</div>
+                </div>
+            </div>
+        </ng-container>
+    </div>
 </ng-template>
