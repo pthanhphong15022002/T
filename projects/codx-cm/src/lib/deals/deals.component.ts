@@ -1018,6 +1018,9 @@ export class DealsComponent
           isView: true,
           type,
           view: this.view,
+          statusCodeID: this.statusCodeID,
+          statusCodeCmt: this.statusCodeCmt,
+          detailViewDeal: this.detailViewDeal,
           // listInsStepStart: this.listInsStep,
         };
         let option = new DialogModel();
@@ -1417,6 +1420,7 @@ export class DealsComponent
       exchangeRateDefault: this.exchangeRateDefault,
       customerCategory:
         action === 'add' ? '' : this.dataSelected?.customerCategory,
+      copyTransID : this.oldIdDeal
     };
     let dialogCustomDeal = this.callfc.openSide(
       PopupAddDealComponent,
@@ -2050,6 +2054,9 @@ export class DealsComponent
           case 'DealCost':
             template = this.templateCost;
             break;
+          case 'Status':
+            template = this.templateStatus;
+            break;
           default:
             break;
         }
@@ -2522,6 +2529,7 @@ export class DealsComponent
         let obj = {
           title: this.gridViewSetup?.DealCost?.headerText,
           listCosts: res,
+          transID : transID
         };
         let dialogCost = this.callfc.openForm(
           PopupCostItemsComponent,

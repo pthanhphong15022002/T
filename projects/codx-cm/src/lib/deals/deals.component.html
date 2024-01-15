@@ -728,7 +728,7 @@
 </ng-template>
 <ng-template #templateStatus let-data>
   <div class="">
-    <codx-vll
+    <!-- <codx-vll
       [name]="vllStatus"
       [field]="'Status'"
       [value]="data?.status"
@@ -736,7 +736,16 @@
       [showBgColor]="true"
       class="badge badge-light badge-sm"
     >
-    </codx-vll>
+    </codx-vll> -->
+    <codx-label
+      class="text-primary fs-7 cursor-pointer"
+      style="font-style: italic"
+      fiedName="viewDetailsCost"
+      [formName]="'CMDeals'"
+      [gridViewName]="'grvCMDeals'"
+      default="Xem chi tiết"
+      (click)="currentStep(data, '2')"
+    ></codx-label>
   </div>
 </ng-template>
 
@@ -780,15 +789,16 @@
 </ng-template>
 
 <ng-template #templateSteps let-data>
-  <view-step [stepID]="data?.stepID" (click)="currentStep(data, '2')"></view-step>
-  <!-- <span class="step-current line-clamp line-clamp-1" (click)="currentStep(data, '2')">Giai đoạn hiện tại</span> -->
-  <!-- <span
-      [innerHTML]="
-        data.stepID
-          | formatvalue : view.formModel : 'StepID'
-          | async
-      "
-    ></span> -->
+  <!-- <view-step [stepID]="data?.stepID" (click)="currentStep(data, '2')"></view-step> -->
+  <codx-label
+    class="text-primary fs-7 cursor-pointer"
+    style="font-style: italic"
+    fiedName="viewDetailsCost"
+    [formName]="'CMDeals'"
+    [gridViewName]="'grvCMDeals'"
+    default="Xem chi tiết"
+    (click)="currentStep(data, '2')"
+  ></codx-label>
 </ng-template>
 
 <ng-template #templateExpectedClosed let-data>
