@@ -192,7 +192,7 @@ export class PopupAddDealComponent
   tmpCost: CM_CostItems;
   viewOnly = false;
   cost: any;
-  copyTransID : any //copy transID cost
+  copyTransID: any; //copy transID cost
 
   constructor(
     private inject: Injector,
@@ -214,7 +214,7 @@ export class PopupAddDealComponent
     this.functionModule = dt?.data?.functionModule;
     this.model = { ApplyFor: '1' };
     this.gridViewSetup = dt?.data?.gridViewSetup;
-    this.copyTransID = dt?.data?.copyTransID
+    this.copyTransID = dt?.data?.copyTransID;
 
     // add view from customer
     this.isviewCustomer = dt?.data?.isviewCustomer;
@@ -258,11 +258,12 @@ export class PopupAddDealComponent
     if (this.action != this.actionAdd) {
       this.customerIDOld = this.deal?.customerID;
       this.customerID = this.deal?.customerID;
-      let transIDCost = this.action === this.actionCopy ? this.copyTransID : this.deal.recID ;
+      let transIDCost =
+        this.action === this.actionCopy ? this.copyTransID : this.deal.recID;
       this.codxCmService
         .getCostItemsByTransID(transIDCost)
         .subscribe((costs) => {
-          if (costs?.length > 0) {         
+          if (costs?.length > 0) {
             if (this.action === this.actionCopy)
               costs.forEach((x) => (x.transID = this.deal.recID));
             // this.calculateTotalCost(); //cux
@@ -1147,40 +1148,40 @@ export class PopupAddDealComponent
   }
 
   async executeApiCalls() {
-    try {
-      if (this.isLoading) {
-        this.getGridViewSetup(
-          this.formModel.formName,
-          this.formModel.gridViewName
-        );
-        this.cache
-          .gridViewSetup('CMCostItems', 'grvCMCostItems')
-          .subscribe((grvCost) => {
-            if (grvCost) {
-              this.grViewCost = Util.camelizekeyObj(grvCost);
-            }
-          });
-      }
+    if (this.isLoading) {
+      this.getGridViewSetup(
+        this.formModel.formName,
+        this.formModel.gridViewName
+      );
+    }
 
-      if (this.action === this.actionAdd) {
-        this.loadExchangeRate();
-      }
-      if (this.action !== this.actionAdd) {
-        this.deal.applyProcess &&
-          (await this.getListInstanceSteps(this.deal.processID));
-        !this.deal.applyProcess && (await this.getAutoNumber());
-      }
-      if (this.action == this.actionEdit || this.action == 'view') {
-        await this.getListContactByDealID(this.deal.recID);
-      }
-      if (
-        this.action === this.actionAdd &&
-        this.deal.processID &&
-        this.isViewAll
-      ) {
-        await this.getBusinessLineByProcessID(this.deal.processID);
-      }
-    } catch (error) {}
+    this.cache
+      .gridViewSetup('CMCostItems', 'grvCMCostItems')
+      .subscribe((grvCost) => {
+        if (grvCost) {
+          this.grViewCost = Util.camelizekeyObj(grvCost);
+        }
+      });
+
+    if (this.action == this.actionAdd) {
+      this.loadExchangeRate();
+    }
+    if (this.action != this.actionAdd) {
+      this.deal.applyProcess &&
+        (await this.getListInstanceSteps(this.deal.processID));
+      !this.deal.applyProcess && (await this.getAutoNumber());
+    }
+
+    if (this.action == this.actionEdit || this.action == 'view') {
+      await this.getListContactByDealID(this.deal.recID);
+    }
+    if (
+      this.action == this.actionAdd &&
+      this.deal.processID &&
+      this.isViewAll
+    ) {
+      await this.getBusinessLineByProcessID(this.deal.processID);
+    }
   }
   async getParamatersProcessDefault() {
     let res = await firstValueFrom(
@@ -1229,7 +1230,7 @@ export class PopupAddDealComponent
           }
           if (
             this.deal.businessLineID &&
-            this.action !== this.actionEdit &&
+            this.action != this.actionEdit &&
             this.action != 'view'
           ) {
             if (this.deal.processID) {
@@ -1241,7 +1242,7 @@ export class PopupAddDealComponent
                 this.deal.endDate = this.HandleEndDate(
                   this.listInstanceSteps,
                   this.action,
-                  this.action !== this.actionEdit ||
+                  this.action != this.actionEdit ||
                     (this.action === this.actionEdit &&
                       (this.deal?.status == '1' || this.deal?.status == '15'))
                     ? null
@@ -1358,7 +1359,7 @@ export class PopupAddDealComponent
 
   // check valid
   checkProcessInList(processId) {
-    var result = this.listMemorySteps.filter((x) => x.id === processId)[0];
+    var result = this.listMemorySteps.filter((x) => x.id == processId)[0];
     if (result) {
       return result;
     }
