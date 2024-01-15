@@ -175,17 +175,17 @@ export class ModeviewComponent implements OnInit {
       }
 
       this.table.splice(event.currentIndex,0,object);
-      
+      this.selectedItem(object.children[0]);
       //this.setTimeoutSaveData(data);
     } else {
-      this.table[event.currentIndex].columnOrder = event.previousIndex;
-      this.table[event.previousIndex].columnOrder = event.currentIndex;
-      this.table[event.currentIndex].children.forEach(elm=>{
-        elm.columnOrder = event.previousIndex;
-      })
-      this.table[event.previousIndex].children.forEach(elm=>{
-        elm.columnOrder = event.currentIndex;
-      })
+      // this.table[event.currentIndex].columnOrder = event.previousIndex;
+      // this.table[event.previousIndex].columnOrder = event.currentIndex;
+      // this.table[event.currentIndex].children.forEach(elm=>{
+      //   elm.columnOrder = event.previousIndex;
+      // })
+      // this.table[event.previousIndex].children.forEach(elm=>{
+      //   elm.columnOrder = event.currentIndex;
+      // })
       moveItemInArray(
         event.container.data,
         event.previousIndex,

@@ -553,23 +553,25 @@
       ></codx-list-contacts>
     </div>
   </div> -->
-  <!-- <div id="opponent" class="item-main">
+  <div id="costItems" class="item-main">
     <div class="d-flex align-items-center text-primary my-2">
       <span class="icon-add_to_photos icon-20 me-1 fw-bold"></span>
       <codx-label
         class="text-gray-600 ms-2 fs-5-sm fw-bold text-primary"
         name="lblTitleOpponent"
         [formModel]="dialog?.formModel"
-        [default]="'Đối thủ'"
+        [default]="'Chi phí'"
       ></codx-label>
     </div>
     <div>
-      <codx-tab-dealcompetitors
-        [dealID]="deal.recID"
-        [hidenMF]="deal.closed"
-      ></codx-tab-dealcompetitors>
+      <crud-cost-items
+        [transID]="deal?.recID"
+        [costInfos]="listCosts"
+        [isLoadedData]="true"
+        [viewOnly]="true"
+      ></crud-cost-items>
     </div>
-  </div> -->
+  </div>
 
   <div id="opponent" class="item-main">
     <div class="d-flex align-items-center text-primary my-2">

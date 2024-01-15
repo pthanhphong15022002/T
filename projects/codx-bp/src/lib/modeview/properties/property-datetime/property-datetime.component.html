@@ -1,13 +1,5 @@
 <div class="d-flex flex-column w-100 h-100 px-4 py-6">
-    <div class="d-flex align-items-center justify-content-between my-2">
-        <div class="d-flex align-items-center">
-            <i class="icon-24" [style.color]="data?.textColor" [ngClass]="data?.icon"></i>
-            <codx-label formName="DynamicForms" [fiedName]="'titles'" [default]="data?.text" class="fw-bold fs-5-sm ms-2 mt-1"></codx-label>
-        </div>
-        <div class="cursor-pointer" (click)="deleteValue()">
-            <i class="icon-delete_outline"></i>
-        </div>
-    </div>
+    <lib-property-default-title [data]="data" [isBack]="isBack" (dataChange)="changeValue($event)" (back)="backDefault()"></lib-property-default-title>
     <div class="mt-4">
         <codx-label formName="DynamicForms" [gridViewName]="'grvDynamicForms' + data.controlType" [fiedName]="'title'" default="Tên ô nhập liệu" class="fw-bold"></codx-label>
         <codx-input type="text" [crrValue]="data.title" field="title" (valueChange)="changeValue($event)"></codx-input>

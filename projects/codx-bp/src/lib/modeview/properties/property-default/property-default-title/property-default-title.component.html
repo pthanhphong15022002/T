@@ -1,0 +1,10 @@
+<div class="d-flex align-items-center justify-content-between my-2">
+    <div class="d-flex align-items-center">
+        <i *ngIf="isBack" class="icon-arrow_back cursor-pointer me-2" (click)="backDefault()"></i>
+        <i class="icon-24" [ngClass]="data?.icon" [style.color]="data?.textColor"></i>
+        <codx-label formName="DynamicForms" [fiedName]="'titles'" [default]="data?.text" class="fw-bold fs-5-sm ms-2 mt-1"></codx-label>
+    </div>
+    <div class="cursor-pointer" (click)="deleteValue()">
+        <i class="icon-delete_outline"></i>
+    </div>
+</div>

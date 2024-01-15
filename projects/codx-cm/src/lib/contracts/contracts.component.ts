@@ -370,7 +370,7 @@ export class ContractsComponent extends UIComponent {
             res.disabled = !data?.closed;
             break;
           case 'CM0204_18': // thanh lý
-            res.disabled = (data?.status == '17' && data?.disposalType != '1') || data?.closed;
+            res.disabled = (data?.status == '17' && data?.disposalType == '1') || data?.closed;
             break;
           case 'CM0204_19': // đưa vào quy trình xử lý
             res.disabled = data?.full
