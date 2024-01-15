@@ -41,6 +41,7 @@ export class CurrentStepComponent implements OnInit, OnChanges {
 
   grvSetupQuotation;
   vllStatusQuotation;
+  type = "1";
 
 
   oCountFooter: any = {};
@@ -97,6 +98,7 @@ export class CurrentStepComponent implements OnInit, OnChanges {
     this.statusCodeID = dt?.data?.statusCodeID;
     this.statusCodeCmt = dt?.data?.statusCodeCmt;
     this.detailViewDeal = dt?.data?.detailViewDeal;
+    this.type = dt?.data?.type || "1";
     this.view = dt?.data?.view;
     if(!this.dialog?.formModel){
       this.dialog.formModel = {
@@ -113,6 +115,9 @@ export class CurrentStepComponent implements OnInit, OnChanges {
     this.tabRightSelect = this.listTabRight[0]?.id;
     this.tabLeftSelect = this.listTabLeft[0];
     this.listInsStep = this.listInsStepStart;
+    if(this.type != "1"){
+      this.listTabInformation = [{ id: 'tasks', name: 'Công việc'},];
+    }
     this.getContract();
     this.cache
       .gridViewSetup('CMContracts', 'grvCMContracts')
