@@ -702,7 +702,8 @@
             (elementDraw)="eleDraw($event)"
             (positionChange)="onDrop($event)"
             [selectedItems]="selectedItems"
-            [getCustomTool]="getCustomTool"
+            (onUserHandleMouseDown)="userHandleClick($event)"
+            [drawingObject]=" { type: 'Orthogonal' }"
           >
             <ng-template #nodeTemplate let-data>
               <ng-container [ngSwitch]="data.shape?.version">
