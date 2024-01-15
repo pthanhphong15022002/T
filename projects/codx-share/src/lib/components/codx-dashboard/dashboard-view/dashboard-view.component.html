@@ -25,7 +25,7 @@
     assemblyName="Codx.RptBusiness.RP"
     className="ReportListBusiness"
     method="GetReportsByModuleAsync"
-    [dataRequest]="['R',module]"
+    [dataRequest]="['D',module]"
     [tmpItem]="tmp"
     [isAdd]="false"
     [tmpRightToolBar]="tmpRightToolBar"
@@ -85,13 +85,13 @@
         </ng-container>
       </div>
     </div>
-   
+
   </ng-container>
 </ng-template>
 
 <ng-template #tmp let-data>
   <ng-container *ngIf="viewID == '1'">
-    <div class="d-flex flex-column w-225px m-2 position-relative cursor-pointer ws-report-card " 
+    <div class="d-flex flex-column w-225px m-2 position-relative cursor-pointer ws-report-card "
     >
       <codx-card-img
         imgCss="h-150px rounded border-bottom"
@@ -107,7 +107,7 @@
   </ng-container>
   <ng-container *ngIf="viewID == '2'">
     <div class="d-flex align-items-center border-bottom p-4 cursor-pointer">
-      <div class="w-50px me-6"> 
+      <div class="w-50px me-6">
           <div [id]="'ws-report-bookmark' + data?.recID" class="d-flex align-items-center justify-content-center w-30px h-30px cursor-pointer border border-gray rounded-circle ms-2 ws-report-bookmark" [ngClass]="!data.isBookMark?'opacity-25':'opacity-100'"  (click)="setBookMark(data?.recID);$event.stopPropagation()">
             <span class="icon-18 icon-bookmark text-warning"></span>
           </div>
@@ -144,6 +144,6 @@
       <span class="icon-18 icon-bookmark text-warning"></span>
     </div>
   </div>
-  
+
 </ng-template>
 <ng-template #empty></ng-template>
