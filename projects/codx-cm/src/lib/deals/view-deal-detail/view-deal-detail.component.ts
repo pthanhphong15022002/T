@@ -52,6 +52,7 @@ export class ViewDealDetailComponent implements OnInit, OnChanges {
   isViewLink: boolean = false;
   type = "1"
   view;
+  listCosts;
 
   viewSettings: any;
 
@@ -85,9 +86,9 @@ export class ViewDealDetailComponent implements OnInit, OnChanges {
     { id: 'listLink', name: 'Liên kết', icon: 'icon-i-link',type: '1' },
   ];
   listTabInformation = [
-    { id: 'information', name: 'Thông tin chung', type: '1' },
+    { id: 'information', name: 'Thông tin dự án', type: '1' },
+    { id: 'costItems', name: 'Chi phí'},
     { id: 'fields', name: 'Thông tin mở rộng', type: '1' },
-    // { id: 'contact', name: 'Liên hệ' },
     { id: 'opponent', name: 'Đối thủ', type: '2' },
     { id: 'tasks', name: 'Công việc', type: '2' },
     { id: 'note', name: 'Ghi chú', type: '2' },
@@ -141,11 +142,17 @@ export class ViewDealDetailComponent implements OnInit, OnChanges {
           this.vllStatusContract = this.grvSetupContract['Status'].referedValue;
         }
       });
-
+    this.getCostItemsByTransID(this.deal?.recID);
   }
   ngOnChanges(changes: SimpleChanges) {}
 
-
+  getCostItemsByTransID(transID) {
+    this.codxCmService.getCostItemsByTransID(transID).subscribe((res) => {
+      if (res) {
+        this.listCosts = res;
+      }
+    });
+  }
 
   getContract() {
     if (this.deal) {
