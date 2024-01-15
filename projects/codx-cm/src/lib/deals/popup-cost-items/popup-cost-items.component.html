@@ -6,13 +6,18 @@
   [body]="body"
 >
   <ng-template #body>
-    <div
+    <crud-cost-items
+      [transID]="transID"
+      [costInfos]="costInfos"
+      [isLoadedData]="true"
+      [viewOnly]="viewOnly"
+    ></crud-cost-items>
+    <!-- <div
       class="d-flex justify-content-end align-items-center mb-2 border-bottom"
     >
       <div class="d-flex flex-row text-end align-items-end mb-3">
         <button
           class="btn btn-sm btn-light-primary me-2 py-2 d-flex flex-row align-items-center"
-          [disabled]="viewOnly"
           (click)="addCost()"
         >
           <codx-label
@@ -141,7 +146,7 @@
           </tr>
         </tbody>
       </table>
-    </div>
+    </div> -->
   </ng-template>
   <ng-template #footer> </ng-template>
 </codx-form>

@@ -453,7 +453,7 @@ export class PopupAddReportComponent implements OnInit, AfterViewInit {
   setDataset() {
     this.api
       .execSv(
-        this.data.service,
+        this.data.service,//'rptrp',
         'Codx.RptBusiness',
         'ReportBusiness',
         'SetDatasetAsync',

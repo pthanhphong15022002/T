@@ -1021,14 +1021,13 @@ export class DealsComponent
           // listInsStepStart: this.listInsStep,
         };
         let option = new DialogModel();
-        option.IsFull = true;
         option.zIndex = 100;
         option.DataService = this.view.dataService;
         option.FormModel = this.view.formModel;
         let popupContract = this.callFunc.openForm(
-          ViewDealDetailComponent,
+          CurrentStepComponent,
           '',
-          null,
+          800,
           Util.getViewPort().height,
           '',
           data,
@@ -1418,6 +1417,7 @@ export class DealsComponent
       exchangeRateDefault: this.exchangeRateDefault,
       customerCategory:
         action === 'add' ? '' : this.dataSelected?.customerCategory,
+      copyTransID : this.oldIdDeal
     };
     let dialogCustomDeal = this.callfc.openSide(
       PopupAddDealComponent,
@@ -2523,6 +2523,7 @@ export class DealsComponent
         let obj = {
           title: this.gridViewSetup?.DealCost?.headerText,
           listCosts: res,
+          transID : transID
         };
         let dialogCost = this.callfc.openForm(
           PopupCostItemsComponent,

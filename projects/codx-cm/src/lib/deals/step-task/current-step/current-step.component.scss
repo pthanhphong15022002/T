@@ -1,5 +1,5 @@
 .container{
-   height: 100vh;
+   height: 96vh;
    .left{
       background-color: white;
       padding-right: 15px;
@@ -15,7 +15,7 @@
       border-radius: 5px 5px 0 0;
       }
       .main{
-         height: calc(100vh - 115px);
+         height: calc(100vh - 140px);
          overflow-y: auto;
          overflow-x: hidden;
          margin-right: -10px;
@@ -67,18 +67,19 @@
    background-color: #f3f3f3;
    border-radius: 5px;
  }
-//  .top1 {
-//    position: fixed;
-//    top: 0;
-//    left: 0;
-//    width: 100%;
-//    z-index: 1000; 
-//  }
-//  .top2 {
-//    position: fixed;
-//    top: 55px;
-//    z-index: 1000; 
-//  }
+ .top1 {
+   position: sticky;
+   top: 0;
+   left: 0;
+   width: 100%;
+   z-index: 1000; 
+ }
+ .top2 {
+   position: sticky;
+   top: 0px;
+   z-index: 1000; 
+    padding-top: 0px;
+ }
  
  .main::-webkit-scrollbar {
   width: 5px!important;
