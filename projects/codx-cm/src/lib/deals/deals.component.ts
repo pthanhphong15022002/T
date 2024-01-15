@@ -2057,6 +2057,9 @@ export class DealsComponent
           case 'Status':
             template = this.templateStatus;
             break;
+          case 'StatusCodeID':
+            template = this.templateStatus;
+            break;
           default:
             break;
         }
