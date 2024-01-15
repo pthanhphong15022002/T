@@ -1,10 +1,18 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
+import { CodxShareService } from "projects/codx-share/src/public-api";
 
 @Component({ template: '' })
-export abstract class BasePropertyComponent
+export abstract class BasePropertyComponent 
 {
     @Input() data: any;
     @Output() dataChange = new EventEmitter<any>();
+
+    constructor(
+      public shareService: CodxShareService
+    )
+    {
+
+    }
 
     changeValue(e:any)
     {
