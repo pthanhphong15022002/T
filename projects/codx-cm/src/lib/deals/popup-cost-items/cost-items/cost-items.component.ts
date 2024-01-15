@@ -22,9 +22,11 @@ export class CostItemsComponent implements OnInit {
   @Input() grViewCost: any;
   @Input() isAutoSave = false; // save ở đây và trả về
   @Input() viewOnly = false;
+  @Input() dealValueTo = 0;
 
   @Output() dataCostItems = new EventEmitter<any>();
   @Output() totalDataCost = new EventEmitter<any>();
+  @Output() dataDealValueTo = new EventEmitter<any>();
 
   cost: any;
   tmpCost: CM_CostItems;
