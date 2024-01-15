@@ -30,7 +30,8 @@ export class CostItemsComponent implements OnInit {
   tmpCost: CM_CostItems;
   totalCost = 0;
   action = 'edit';
-  formModel:any
+  formModel: any;
+  costIDOld = [];
 
   constructor(
     private api: ApiHttpService,
@@ -49,6 +50,7 @@ export class CostItemsComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.isLoadedData) {
+      this.costIDOld = this.costInfos.map((x) => x.recID);
       this.calculateTotalCost();
       return;
     }
@@ -60,6 +62,7 @@ export class CostItemsComponent implements OnInit {
     this.codxCmService.getCostItemsByTransID(this.transID).subscribe((res) => {
       if (res) {
         this.costInfos = res;
+        this.costIDOld = this.costInfos.map((x) => x.recID);
         this.calculateTotalCost();
       }
     });
@@ -83,9 +86,10 @@ export class CostItemsComponent implements OnInit {
 
     this.costInfos.push(newCost);
     this.cost = newCost;
+    this.calculateTotalCost();
     if (this.isAutoSave) {
       this.autoSaveData();
-    } else this.calculateTotalCost();
+    }
     this.detectorRef.detectChanges();
   }
 
@@ -98,8 +102,7 @@ export class CostItemsComponent implements OnInit {
       // if (this.costInfos?.length == 0) this.cost = null;
       if (this.isAutoSave) {
         this.cost = this.costInfos[index];
-        if(this.cost)
-        this.autoDeleted(index);
+        if (this.cost) this.autoDeleted(index);
       } else {
         this.costInfos?.splice(index, 1);
         this.calculateTotalCost();
@@ -144,18 +147,35 @@ export class CostItemsComponent implements OnInit {
         this.totalCost += cost.amount;
       });
     }
-    this.dataCostItems.emit(this.costInfos);
-    this.totalDataCost.emit(this.totalCost);
+    if (!this.isAutoSave) {
+      this.dataCostItems.emit(this.costInfos);
+      this.totalDataCost.emit(this.totalCost);
+    }
   }
 
   //save ở đây và trả về
   autoSaveData() {
-    if(this.validateCost()){
-      //save dong cost
+    if (this.validateCost()) {
+      //save cost
+      let methol = 'AddCostAsync';
+      let isAdd = true;
+      if (this.costIDOld.includes(this.cost.recID)) {
+        methol = 'EditCostAsync';
+        isAdd = false;
+      }
+      this.api
+        .exec<any>('CM', 'CostItemsBusiness', methol, this.cost)
+        .subscribe((res) => {
+          if (res) {
+            if (isAdd) this.costIDOld.push(res.recID);
+            this.dataCostItems.emit(this.costInfos);
+            this.totalDataCost.emit(this.totalCost);
+          }
+        });
     }
   }
-  validateCost(){
-    return true
+  validateCost() {
+    return true;
   }
 
   autoDeleted(index) {
@@ -164,9 +184,14 @@ export class CostItemsComponent implements OnInit {
       .subscribe((res) => {
         if (res) {
           this.costInfos?.splice(index, 1);
-           this.calculateTotalCost();
+          this.costIDOld = this.costIDOld.filter(
+            (x) => x.recID != this.cost.recID
+          );
+          this.cost = null;
+          this.calculateTotalCost();
+          this.dataCostItems.emit(this.costInfos);
+          this.totalDataCost.emit(this.totalCost);
         }
-      
       });
   }
   //---------------------------------------------//
