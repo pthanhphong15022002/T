@@ -50,7 +50,8 @@ export class CostItemsComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.isLoadedData) {
-      this.costIDOld = this.costInfos.map((x) => x.recID);
+      if (this.costInfos?.length > 0)
+        this.costIDOld = this.costInfos.map((x) => x.recID);
       this.calculateTotalCost();
       return;
     }

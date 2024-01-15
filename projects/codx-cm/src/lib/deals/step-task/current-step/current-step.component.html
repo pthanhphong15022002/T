@@ -11,17 +11,19 @@
       <!-- RIGHT -->
       <div class="right col-12 h-100">
         <div
-        (click)="close()"
-        class="cursor-pointer d-flex align-items-center py-5 mx-5 top1"
-      >
-        <span class="icon-20 icon-arrow_back text-primary me-2 fw-bold"></span>
-        <codx-label
-          class="fs-5 fw-bold me-2"
-          name="lblTitleViewDeal"
-          [formModel]="dialog?.formModel"
-          [default]="'Giai đoạn hiện tại'"
-        ></codx-label>
-      </div>
+          (click)="close()"
+          class="cursor-pointer d-flex align-items-center py-5 mx-5 top1"
+        >
+          <span
+            class="icon-20 icon-arrow_back text-primary me-2 fw-bold"
+          ></span>
+          <codx-label
+            class="fs-5 fw-bold me-2"
+            name="lblTitleViewDeal"
+            [formModel]="dialog?.formModel"
+            [default]="'Giai đoạn hiện tại'"
+          ></codx-label>
+        </div>
         <div class="top">
           <div class="d-flex">
             <div class="tab-scroll mb-4">
@@ -97,6 +99,7 @@
     </div>
     <div>
       <crud-cost-items
+        *ngIf="listCosts"
         [transID]="deal?.recID"
         [costInfos]="listCosts"
         [isLoadedData]="true"
