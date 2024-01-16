@@ -117,6 +117,8 @@ export class CodxEvoucherPopupComponent implements OnInit {
       sizeSelected = this.dataSelcected[index].selectedSize;
     }
 
+    let dialogModel: DialogModel = new DialogModel();
+    dialogModel.zIndex = this.zIndex + 1;
     const modal = this.callFunc.openForm(EvoucherDetailComponent,"",900 , 800 , "" , {
       productID : item.productId,
       headerText: "Chi tiết thẻ quà tặng",
@@ -126,7 +128,7 @@ export class CodxEvoucherPopupComponent implements OnInit {
       funcID: this.funcID,
       entityName: this.entityName,
       quantity: this.evoucherGift[index]?.quantity || 1,
-    })
+    }, null, dialogModel)
     modal.closed.subscribe((data:any)=>{
       if(data?.event){
         if(data.event?.role == "save" && data.event?.selectSize) {

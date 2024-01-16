@@ -175,17 +175,17 @@ export class ModeviewComponent implements OnInit {
       }
 
       this.table.splice(event.currentIndex,0,object);
-      
+      this.selectedItem(object.children[0]);
       //this.setTimeoutSaveData(data);
     } else {
-      this.table[event.currentIndex].columnOrder = event.previousIndex;
-      this.table[event.previousIndex].columnOrder = event.currentIndex;
-      this.table[event.currentIndex].children.forEach(elm=>{
-        elm.columnOrder = event.previousIndex;
-      })
-      this.table[event.previousIndex].children.forEach(elm=>{
-        elm.columnOrder = event.currentIndex;
-      })
+      // this.table[event.currentIndex].columnOrder = event.previousIndex;
+      // this.table[event.previousIndex].columnOrder = event.currentIndex;
+      // this.table[event.currentIndex].children.forEach(elm=>{
+      //   elm.columnOrder = event.previousIndex;
+      // })
+      // this.table[event.previousIndex].children.forEach(elm=>{
+      //   elm.columnOrder = event.currentIndex;
+      // })
       moveItemInArray(
         event.container.data,
         event.previousIndex,
@@ -307,6 +307,11 @@ export class ModeviewComponent implements OnInit {
         this.count.table ++;
         data.title += " " + this.count.table;
         data.dataFormat = [];
+        data.tableFormat = 
+        {
+          hasIndexNo: false,
+          sum : 0
+        }
         var vllText = this.vllBP002.datas.filter(x=>x.value == "Text")[0];
         for(var i = 0 ; i<3 ; i++)
         {
@@ -316,7 +321,6 @@ export class ModeviewComponent implements OnInit {
             fieldName: "Cot_" + (i+1),
             description: null,
             dataType: "String",
-            dataFprmat: "",
             controlType: "TextBox",
             isRequired: false,
             defaultValue: null,
@@ -324,7 +328,8 @@ export class ModeviewComponent implements OnInit {
             icon: vllText.icon,
             text: vllText.text,
             textColor : vllText.textColor,
-            value : vllText.value
+            value : vllText.value,
+            fieldType: "Text"
           }
           data.dataFormat.push(col);
         }
@@ -491,6 +496,17 @@ export class ModeviewComponent implements OnInit {
       result = result.concat(elm.children);
     })
     result.forEach(elm=>{
+      
+      if(elm.fieldType == "Table")
+      {
+        elm.dataFormat.forEach(elm2=>{
+          delete elm2.icon
+          delete elm2.text;
+          delete elm2.textColor;
+          delete elm2.value;
+        })
+      }
+      
       delete elm.icon
       delete elm.text;
       delete elm.textColor;

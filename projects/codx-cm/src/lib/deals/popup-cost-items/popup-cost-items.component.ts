@@ -168,4 +168,12 @@ export class PopupCostItemsComponent implements OnInit {
 
     return result;
   }
+
+  totalDataCost(e) {
+    this.totalCost = e;
+  }
+
+  actionEvent(e) {
+    debugger;
+  }
 }

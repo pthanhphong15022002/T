@@ -290,7 +290,7 @@ export class DealsComponent
         sameData: true,
         model: {
           template2: this.templateMore,
-          groupSettings: { showDropArea: false, columns: ['customerName'] },
+          //groupSettings: { showDropArea: false, columns: ['customerName'] },
         },
       },
       {
