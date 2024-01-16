@@ -23,6 +23,7 @@ export class CostItemsComponent implements OnInit {
   @Input() isAutoSave = false; // save ở đây và trả về
   @Input() viewOnly = false;
   @Input() dealValueTo = 0;
+  @Input() planceHolderDealValueTo = 'Nhập ngân sách'; //truyền plance hodeler cho ngân sách
 
   @Output() dataCostItems = new EventEmitter<any>();
   @Output() totalDataCost = new EventEmitter<any>();
@@ -196,6 +197,11 @@ export class CostItemsComponent implements OnInit {
           this.totalDataCost.emit(this.totalCost);
         }
       });
+  }
+
+  valueChange(e) {
+    this.dealValueTo = e.data;
+    this.dataDealValueTo.emit(this.dealValueTo);
   }
   //---------------------------------------------//
 }
