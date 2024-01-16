@@ -382,8 +382,8 @@ export class JournalsAddComponent extends UIComponent {
 
   onDisableTab(){
     let strdisable = '';
-    if(this.formJournal.form?.data?.journalName == '' || this.formJournal.form?.data?.journalName == null
-    || this.formJournal.form?.data?.journalType == '' || this.formJournal.form?.data?.journalType == null) strdisable +='1;2';
+    if((this.formJournal.form?.data?.journalName == '' || this.formJournal.form?.data?.journalName == null)
+    && (this.formJournal.form?.data?.journalType == '' || this.formJournal.form?.data?.journalType == null)) strdisable +='1;2';
     this.formJournal.setDisabled(strdisable);
   }
 

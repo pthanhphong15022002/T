@@ -124,6 +124,9 @@ import { ViewInstancesComponent } from 'projects/codx-dp/src/lib/view-instances/
 import { CodxViewComponent } from './contracts/codx-view/codx-view.component';
 import { CurrentStepComponent } from './deals/step-task/current-step/current-step.component';
 import { PopupCostItemsComponent } from './deals/popup-cost-items/popup-cost-items.component';
+import { ViewStepComponent } from './deals/step-task/view-step/view-step.component';
+import { CostItemsComponent } from './deals/popup-cost-items/cost-items/cost-items.component';
+import { CodxDashboardViewsComponent } from 'projects/codx-share/src/lib/components/codx-dashboard/dashboard-view/dashboard-view.component';
 
 export const routes: Routes = [
   {
@@ -173,6 +176,10 @@ export const routes: Routes = [
       {
         path: 'dashboard/:funcID',
         component: CmDashboardComponent,
+      },
+      {
+        path: 'dashboard-view/:funcID',
+        component: CodxDashboardViewsComponent,
       },
       {
         path: 'report/:funcID',
@@ -248,6 +255,7 @@ const T_Component: Type<any>[] = [
   CodxTabDealcompetitorsComponent,
   PopupAddDealcompetitorComponent,
   PopupCostItemsComponent,
+  CostItemsComponent,
   ViewDealcompetitorsComponent,
   QuotationsViewDetailComponent,
   CasesComponent,
@@ -306,6 +314,7 @@ const T_Component: Type<any>[] = [
   ScrollSpyDirective,
   CodxViewComponent,
   CurrentStepComponent,
+  ViewStepComponent,
 ];
 
 @NgModule({

@@ -710,9 +710,9 @@ export class HomeComponent extends UIComponent implements OnDestroy {
         this.dmSV.isSearchView = false;
         this.setDisableAddNewFolder();
         this.setBreadCumb();
-        if (this.funcID.includes('DMT00')) this.selectedFirst = true;
-        else this.selectedFirst = false;
-
+        // if (this.funcID.includes('DMT00')) this.selectedFirst = true;
+        // else this.selectedFirst = false;
+        this.selectedFirst = false
        
         if (
           this.funcID.includes('DMT06') ||
@@ -818,6 +818,7 @@ export class HomeComponent extends UIComponent implements OnDestroy {
         this.folderService.getBreadCumb(queryParams?._fo || queryParams?._f,type).subscribe(item=>{
           if(item)
           {
+              if(type == "folder") this.dmSV.folderID = queryParams?._fo;
               var breadcumb = [this.dmSV.menuActive.getValue()];
               var breadcumbLink = [""];
               breadcumb = breadcumb.concat(item[0]);
@@ -827,6 +828,7 @@ export class HomeComponent extends UIComponent implements OnDestroy {
               this.folderService.getFolder(breadcumbLink[breadcumbLink.length - 1]).subscribe(item=>{
                 if(item)
                 {
+                  this.view.dataService.dataSelected = item;
                   this.dmSV.getRight(item);
                   this.getDataFolder(item.recID);
                 }
@@ -1133,7 +1135,31 @@ export class HomeComponent extends UIComponent implements OnDestroy {
   //   .subscribe();
   // }
   onSelectionChanged($data, noTree = false) {
-    if ((this.funcID.includes('DMT00')) && $data.data.folderId == 'DM') return;
+    // if(this.dataSelectedFolder)
+    // {
+    //   this.dataSelectedFolder = null;
+    //   return;
+    // }
+    if(this.view.dataService.dataSelected.recID == $data.data.recID) {
+      return;
+    }
+    if ((this.funcID.includes('DMT00')) && $data.data.folderId == 'DM')
+    {
+      this.getDataFolder($data.data.recID);
+      var breadcumb = [];
+      var breadcumbLink = [];
+      breadcumb.push(this.dmSV.menuActive.getValue(), $data.data.folderName);
+      breadcumbLink.push('', $data.data.recID);
+      this.dmSV.breadcumbLink = breadcumbLink;
+      this.dmSV.breadcumb.next(breadcumb);
+      this.dmSV.getRight($data.data);
+      this.dmSV.folderName = $data.data.folderName;
+      this.dmSV.parentFolderId = $data.data.parentId;
+      this.dmSV.parentFolder.next($data.data);
+      this.dmSV.level = $data.data.level;
+      this.dmSV.folderID = $data.data.recID;
+      this.dmSV.folderId.next($data.data.recID);
+    };
     ScrollComponent.reinitialization();
     this.scrollTop();
     if (!$data || !$data?.data) return;
@@ -1823,7 +1849,6 @@ export class HomeComponent extends UIComponent implements OnDestroy {
         .alert("Thông báo", name, config)
         .closed.subscribe((x) => {
           if (x.event.status == 'Y') {
-            debugger
             this.listSeletcMulti = this.listSeletcMulti.filter(x=>x.read == true);
             listNo.forEach(elm => {
               var element = document.getElementById("dm-h-"+elm.recID);

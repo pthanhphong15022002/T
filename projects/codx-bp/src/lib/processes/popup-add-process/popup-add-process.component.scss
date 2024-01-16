@@ -88,8 +88,8 @@
   }
   .info-right {
     width: 60% !important;
+    margin-top: 50px;
     overflow: auto;
-    padding: 50px 80px 60px 80px;
   }
 }
 .action-menu-od {
@@ -220,3 +220,31 @@
   padding-left: 0px;
   padding-right: 0px;
 }
+
+.box {
+  background:
+   linear-gradient(to top right   ,rgb(128, 125, 122) 49.5%, transparent 50%) top right,
+   linear-gradient(to top left    ,rgb(54, 54, 54) 49.5%, transparent 50%) top left,
+   linear-gradient(to bottom right,rgb(122, 121, 119) 49.5%, transparent 50%) bottom right,
+   linear-gradient(to bottom left ,rgb(75, 73, 70) 49.5%, transparent 50%) bottom left;
+  background-size:50% 50%;
+  background-repeat:no-repeat;
+
+  width:100px;
+  display:inline-block;
+  margin:5px;
+}
+
+
+.box:before {
+  content:"";
+  display:block;
+  padding-top:57.73%;
+}
+
+.feed-box input.codx-text {
+  border: 0;
+  padding-left: 0;
+  background-color: transparent;
+}
+

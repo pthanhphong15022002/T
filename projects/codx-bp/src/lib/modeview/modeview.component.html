@@ -7,7 +7,7 @@
   <div class="d-flex align-items-center justify-content-between border-bottom bg-white py-2 px-6">
     <codx-label default="Form nhập liệu" formName="fnBPModeView" fiedName="BPModeViewTitle" class="fs-4 fw-bold"></codx-label>
     <div class="d-flex align-items-center">
-      <div class="btn-group mt-2 bp-header-button-group" role="group" aria-label="Basic radio toggle button group">
+      <div id="group_period" class="btn-group mt-2 bp-header-button-group" role="group" aria-label="Basic radio toggle button group">
         <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" checked>
         <label class="btn btn-outline-secondary" for="btnradio1">
           <i class="icon-edit_square icon-20"></i>
@@ -77,11 +77,11 @@
 
     <div class="d-flex justify-content-center w-100 h-100 bg-F5F8FA">
       <div
-        class="d-flex flex-column w-700px h-100 bg-white overflow-auto"
+        class="d-flex flex-column w-700px h-100 bg-white pb-4 overflow-auto"
       >
         <ng-container *ngTemplateOutlet="form ; context: { $implicit: table[0].children[0] }"></ng-container>
         <div
-          class="h-100 mt-2 px-4"
+          class="h-100 mt-2 px-4 "
           cdkDropList
           #tableList="cdkDropList"
           [cdkDropListData]="table"
@@ -276,7 +276,7 @@
                       <div class="d-flex align-items-center">
                         <i class="icon-drag_indicator me-2 cursor-move" cdkDragHandle></i>
                         <span class="fw-bold">{{data.title}}</span>
-                        
+                        <span class="text-danger ms-2" *ngIf="data.isRequired">(*)</span>
                       </div>
                       <ng-container *ngIf="data.controlType == 'Switch'">
                         <div class="form-switch">
@@ -308,6 +308,7 @@
                       <div class="d-flex align-items-center">
                         <i class="icon-drag_indicator me-2 cursor-move" cdkDragHandle></i>
                         <span class="fw-bold">{{data.title}}</span>
+                        <span class="text-danger ms-2" *ngIf="data.isRequired">(*)</span>
                       </div>
                       <div class="d-flex align-items-center justify-content-between w-100 border mt-2 px-4 py-3 rd-3px">
                         <span class="text-muted text-truncate mw-55px">{{data.defaultValue || data.description}}</span>
@@ -322,6 +323,7 @@
                       <div class="d-flex align-items-center">
                         <i class="icon-drag_indicator me-2 cursor-move" cdkDragHandle></i>
                         <span class="fw-bold">{{data.text}}</span>
+                        <span class="text-danger ms-2" *ngIf="data.isRequired">(*)</span>
                       </div>
                       <div class="d-flex align-items-center justify-content-between w-100 mt-2 px-4 py-3 rd-3px">
                         <ng-container *ngFor="let item of [].constructor(data.rank.maxValue); let i = index">
@@ -344,33 +346,19 @@
                       <div class="d-flex align-items-center">
                         <i class="icon-drag_indicator me-2 cursor-move" cdkDragHandle></i>
                         <span class="fw-bold">{{data.title}}</span>
+                        <span class="text-danger ms-2" *ngIf="data.isRequired">(*)</span>
                       </div>
                       <table class="table table-bordered mt-2">
                         <thead>
                           <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">First</th>
-                            <th scope="col">Last</th>
-                            <th scope="col">Handle</th>
+                            <th scope="col" *ngIf="data?.tableFormat?.hasIndexNo">#</th>
+                            <th scope="col" *ngFor="let col of data.dataFormat">{{col.title}}</th>
                           </tr>
                         </thead>
                         <tbody>
                           <tr>
-                            <th scope="row">1</th>
-                            <td>Mark</td>
-                            <td>Otto</td>
-                            <td>@mdo</td>
-                          </tr>
-                          <tr>
-                            <th scope="row">2</th>
-                            <td>Jacob</td>
-                            <td>Thornton</td>
-                            <td>@fat</td>
-                          </tr>
-                          <tr>
-                            <th scope="row">3</th>
-                            <td colspan="2">Larry the Bird</td>
-                            <td>@twitter</td>
+                            <th scope="row" *ngIf="data?.tableFormat?.hasIndexNo"></th>
+                            <td *ngFor="let col of data.dataFormat"></td>
                           </tr>
                         </tbody>
                       </table>
@@ -471,6 +459,9 @@
         <ng-container *ngSwitchCase="'Title'">
           <lib-property-form [data]="dataSelected" (dataChange)="dataChange($event)"></lib-property-form>
         </ng-container>
+        <ng-container *ngSwitchCase="'Share'">
+          <lib-property-share [data]="dataSelected" (dataChange)="dataChange($event)"></lib-property-share>
+        </ng-container>
         <ng-container *ngSwitchCase="'SubTitle'">
           <lib-property-text [data]="dataSelected" (dataChange)="dataChange($event)"></lib-property-text>
         </ng-container>
@@ -516,6 +507,10 @@
         <ng-container *ngSwitchCase="'ComboBox'">
           <lib-property-combobox [data]="dataSelected" (dataChange)="dataChange($event)"></lib-property-combobox>
         </ng-container>
+        <ng-container *ngSwitchCase="'Table'">
+          <lib-property-table [data]="dataSelected" (dataChange)="dataChange($event)"></lib-property-table>
+        </ng-container>
+        
       </ng-container>
     </div>
   </div>

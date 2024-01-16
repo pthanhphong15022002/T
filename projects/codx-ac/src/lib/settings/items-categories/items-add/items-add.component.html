@@ -121,18 +121,18 @@
 
 <ng-template #tabSettings>
   <ng-container *ngIf="oDimGroup?.Active0">
-    <div class="line-around-flex pb-3">
+    <div class="d-flex align-items-center justify-content-between mb-5">
       <codx-label style="font-size: 15px !important;" default="Quy cách đóng gói"
-        class="fw-bold text-primary me-2"></codx-label>
-      <button class="btn btn-icon btn-light-primary" (click)="openFormItemSize('1')">
-        <i class="icon-add_circle_outline icon-18"></i>
-      </button>
+      class="fw-bold text-primary me-2"></codx-label>
+    <button class="btn btn-icon btn-light-primary" (click)="openFormItemSize('1')">
+      <i class="icon-add_circle_outline icon-18"></i>
+    </button>
     </div>
     <div *ngIf="lstItemSize.length > 0" class="d-flex w-100 form-group">
       <ng-container *ngFor="let data of lstItemSize">
         <codx-card-img *ngIf="data?.sizeType == '1'" cardCss="dp-card-process border rounded-2 h-100 w-150px me-5" [imageId]="data.recID" [rootData]="data"
-          [imgOn]="data?.modifiedOn" [imageObjType]="'IV_ItemSizes'" imgCss="w-150px h-100px" [imageWidth]="1000"
-          [formModel]="dialog.formModel" [hideMF]="true" [titleTmp]="titleTmp">
+          [imgOn]="data?.modifiedOn" [imageObjType]="'IV_ItemSizes'" imgCss="w-150px h-150px" [imageWidth]="1000"
+          [formModel]="dialog.formModel" [titleTmp]="titleTmp" [dataItem]="data" (clickMF)="clickMF($event,'active0',data)" (changeDataMF)="changeDataMF($event)">
         </codx-card-img>
         <ng-template #titleTmp>
           <span class="fw-bold fs-6 w-100 text-center">
@@ -143,52 +143,64 @@
     </div>
   </ng-container>
   <ng-container *ngIf="oDimGroup?.Active1">
-    <div class="line-around-flex pb-3">
+    <div class="d-flex align-items-center justify-content-between mb-5">
       <codx-label style="font-size: 15px !important;" default="Thuộc tính"
-        class="fw-bold text-primary me-2"></codx-label>
-      <button class="btn btn-icon btn-light-primary" (click)="openFormItemStyle()">
-        <i class="icon-add_circle_outline icon-18"></i>
-      </button>
+      class="fw-bold text-primary me-2"></codx-label>
+    <button class="btn btn-icon btn-light-primary" (click)="openFormItemStyle()">
+      <i class="icon-add_circle_outline icon-18"></i>
+    </button>
     </div>
     <div *ngIf="lstItemStyle.length > 0" class="d-flex w-100 form-group">
       <ng-container *ngFor="let data of lstItemStyle">
-        <span class="badge ac-badge-light-primary me-2">{{data?.styleName}}</span>
+        <!-- <span class="badge badge-light-primary badge-lg">
+          <span>{{data?.styleName}}</span>
+          <i (click)="deleteItemStyle(data)" class="icon-close icon-16"></i>
+        </span> -->
+        <codx-card-img cardCss="dp-card-process border rounded-2 h-100 w-150px me-5" [imageId]="data.recID" [rootData]="data"
+          [imgOn]="data?.modifiedOn" [imageObjType]="'IV_ItemStyles'" imgCss="w-150px h-150px" [imageWidth]="1000"
+          [formModel]="dialog.formModel" [titleTmp]="titleTmp" [dataItem]="data" (clickMF)="clickMF($event,'active1',data)" (changeDataMF)="changeDataMF($event)">
+        </codx-card-img>
+        <ng-template #titleTmp>
+          <span class="fw-bold fs-6 w-100 text-center">
+            {{data?.styleName}}
+          </span>
+        </ng-template>
       </ng-container>
     </div>
   </ng-container>
 
   <ng-container *ngIf="oDimGroup?.Active2">
-    <div class="line-around-flex pb-3">
+    <div class="d-flex align-items-center justify-content-between mb-5">
       <codx-label style="font-size: 15px !important;" default="Màu sắc"
-        class="fw-bold text-primary me-2"></codx-label>
-      <button class="btn btn-icon btn-light-primary" (click)="openFormItemColor()">
-        <i class="icon-color_lens icon-18"></i>
-      </button>
+      class="fw-bold text-primary me-2"></codx-label>
+    <button class="btn btn-icon btn-light-primary" (click)="openFormItemColor()">
+      <i class="icon-add_circle_outline icon-18"></i>
+    </button>
     </div>
     <div *ngIf="lstItemColor.length > 0" class="d-flex w-100 form-group">
       <ng-container *ngFor="let data of lstItemColor">
-        <div [style.background-color]="data?.colorCode" class="w-50px h-50px position-relative me-5">
-          <!-- <button class="btn-icon btn-icon-badge">
-            <i class="icon-close icon-10"></i>
-          </button> -->
-        </div>
+        <span [style.background-color]="data?.colorCode" class="badge badge-lg w-15 me-2">
+          <div class="d-flex align-items-center justify-content-end w-100">
+            <i (click)="deleteItemColor(data)" class="icon-close icon-16 text-white"></i>
+          </div>
+        </span>
       </ng-container>
     </div>
   </ng-container>
   
   <ng-container *ngIf="oDimGroup?.Active3">
-    <div class="line-around-flex pb-3">
+    <div class="d-flex align-items-center justify-content-between mb-5">
       <codx-label style="font-size: 15px !important;" default="Quy cách"
-        class="fw-bold text-primary me-2"></codx-label>
-      <button class="btn btn-icon btn-light-primary" (click)="openFormItemSize('0')">
-        <i class="icon-add_circle_outline icon-18"></i>
-      </button>
+      class="fw-bold text-primary me-2"></codx-label>
+    <button class="btn btn-icon btn-light-primary" (click)="openFormItemSize('0')">
+      <i class="icon-add_circle_outline icon-18"></i>
+    </button>
     </div>
     <div *ngIf="lstItemSize.length > 0" class="d-flex w-100 form-group">
       <ng-container *ngFor="let data of lstItemSize">
         <codx-card-img *ngIf="data?.sizeType == '0'" cardCss="dp-card-process border rounded-2 h-100 w-150px me-5" [imageId]="data.recID" [rootData]="data"
           [imgOn]="data?.modifiedOn" [imageObjType]="'IV_ItemSizes'" imgCss="w-150px h-150px" [imageWidth]="1000"
-          [formModel]="dialog.formModel" [hideMF]="true" [titleTmp]="titleTmp">
+          [formModel]="dialog.formModel" [titleTmp]="titleTmp" [dataItem]="data" (clickMF)="clickMF($event,'active3',data)" (changeDataMF)="changeDataMF($event)">
         </codx-card-img>
         <ng-template #titleTmp>
           <span class="fw-bold fs-6 w-100 text-center">
@@ -198,19 +210,19 @@
       </ng-container>
     </div>
   </ng-container>
-  
-  <div class="line-around-flex pb-3">
+
+  <div class="d-flex align-items-center justify-content-between">
     <codx-label style="font-size: 15px !important;" default="Quy đổi đơn vị tính"
-      class="fw-bold text-primary me-2"></codx-label>
-    <button class="btn btn-icon btn-light-primary" (click)="openFormConversion()">
-      <i class="icon-add_circle_outline icon-18"></i>
-    </button>
+    class="fw-bold text-primary me-2"></codx-label>
+  <button class="btn btn-icon btn-light-primary" (click)="openFormConversion()">
+    <i class="icon-add_circle_outline icon-18"></i>
+  </button>
   </div>
   <div *ngIf="lstUMConversion.length > 0" class="d-flex w-100 form-group">
     <ng-container *ngFor="let data of lstUMConversion">
       <codx-card-img cardCss="dp-card-process border rounded-2 h-100 w-150px me-5" [imageId]="data.recID" [rootData]="data"
         [imgOn]="data?.modifiedOn" [imageObjType]="'BS_UMConversion'" imgCss="w-150px h-150px" [imageWidth]="1000"
-        [formModel]="dialog.formModel" [hideMF]="true" [titleTmp]="titleTmp">
+        [formModel]="dialog.formModel" [titleTmp]="titleTmp" [dataItem]="data" (clickMF)="clickMF($event,'conversion',data)" (changeDataMF)="changeDataMF($event)">
       </codx-card-img>
       <ng-template #titleTmp>
         <span *ngIf="data?.useFormula" class="fw-bold fs-6 w-100 text-center">

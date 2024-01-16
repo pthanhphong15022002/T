@@ -181,7 +181,7 @@ export class PopupAddLeadComponent
   autoNameTabFields: string;
   arrCaculateField: any[] = [];
   isLoadedCF = false;
-
+  isView: boolean = false;
   constructor(
     private inject: Injector,
     private changeDetectorRef: ChangeDetectorRef,
@@ -238,6 +238,7 @@ export class PopupAddLeadComponent
       this.contactId = this.lead.contactID;
     }
     // this.executeApiCalls();
+    this.isView = dt?.data?.isView ?? false;
     this.isCategory = this.lead.category == '1';
   }
 

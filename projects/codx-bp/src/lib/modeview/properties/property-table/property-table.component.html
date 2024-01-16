@@ -1,0 +1,98 @@
+<div class="position-relative w-100 h-100" *ngIf="data">
+    <div class="d-flex flex-column w-100 h-100 px-4 py-6">
+        <lib-property-default-title [data]="data" [isBack]="isBack" (dataChange)="changeValue($event)" (back)="backDefault()"></lib-property-default-title>
+        <div class="mt-4">
+            <codx-label formName="DynamicForms" [gridViewName]="'grvDynamicForms' + data?.controlType" [fiedName]="'title'" default="Tên ô nhập liệu" class="fw-bold"></codx-label>
+            <codx-input type="text" [crrValue]="data?.title" field="title" (valueChange)="changeValue($event)"></codx-input>
+        </div>
+        <div class="border-top mt-8">
+            <div class="d-flex align-items-center mt-4">
+                <codx-label formName="DynamicForms" fiedName="lblColName" default="Danh sách cột" class="fw-bold"></codx-label>
+            </div>
+            <div class="d-flex flex-column m-4">
+                <div class="d-flex align-items-center justify-content-between border-dotted-d3d6d9 p-2 mt-2" *ngFor="let item of data?.dataFormat , let i = index">
+                    <span>{{item.title}}</span>
+                    <div class="d-flex align-items-center dropdown-property-table">
+                        <div ngbDropdown class="d-inline-block" container="body" placement="left auto">
+                            <div class="cursor-pointer mt-1" id="dropdownBasic1" ngbDropdownToggle>
+                                <i class="icon-24" [ngClass]="item?.icon" [style.color]="item?.textColor"></i>
+                            </div>
+                            <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                                <button ngbDropdownItem [class.active]="item.value == item2.value" *ngFor="let item2 of vllBP008?.datas" (click)="selectedItem(item2 , i)"><i [ngClass]="item2.icon"></i><span class="ms-4">{{item2.text}}</span></button>
+                            </div>
+                        </div>
+                        <i class="ms-2 icon-18 icon-edit_square cursor-pointer" (click)="edit(item,i)"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex align-items-center m-4">
+                <button type="button" class="btn btn-light w-100" (click)="addCol()"><i class="icon-i-plus"></i> <codx-label formName="DynamicForms" fiedName="lblColAdd" default="Thêm cột"></codx-label></button>
+            </div>
+        </div>
+        <div class="border-top mt-8">
+            <div class="d-flex align-items-center mt-4">
+                <codx-input type="switch" [crrValue]="data?.tableFormat?.hasIndexNo" field="hasIndexNo" label="Có đánh STT dòng"  (valueChange)="changeValueTable($event)" class="mt-2"></codx-input>
+                <codx-label formName="DynamicForms"  [fiedName]="'hasIndexNo'" default="Có đánh STT dòng" class="fw-bold ms-2"></codx-label>
+            </div>
+            <div class="d-flex align-items-center mt-1">
+                <codx-input type="switch" [crrValue]="data.isRequired" field="isRequired" label="Bắt buộc"  (valueChange)="changeValue($event)" class="mt-2"></codx-input>
+                <codx-label formName="DynamicForms" [gridViewName]="'grvDynamicForms' + data.controlType" [fiedName]="'IsRequired'" default="Bắt buộc" class="fw-bold ms-2"></codx-label>
+            </div>
+            <div class="d-flex align-items-center mt-1">
+                <codx-input type="switch"  field="isRequired" label="Bắt buộc"  class="mt-2"></codx-input>
+                <codx-label formName="DynamicForms" [gridViewName]="'grvDynamicForms' + data.controlType" [fiedName]="'IsRequired'" default="Điều kiện hiển thị" class="fw-bold ms-2"></codx-label>
+            </div>
+        </div>
+    </div>
+    <div class="position-absolute top-0 w-100 bg-white" [ngClass]="isEdit?'h-100':'d-none h-0'">
+        <ng-container *ngIf="dataEdit">
+            <ng-container [ngSwitch]="dataEdit.value">
+                <ng-container *ngSwitchCase="'Text'">
+                    <lib-property-text [data]="dataEdit" (dataChange)="dataChangeTable($event)" [isBack]="true" (back)="backChange()" ></lib-property-text>
+                </ng-container>
+                <ng-container *ngSwitchCase="'ValueList'">
+                    <lib-property-valuelist [data]="dataEdit" (dataChange)="dataChangeTable($event)" [isBack]="true" (back)="backChange()" ></lib-property-valuelist>
+                </ng-container>
+                <ng-container *ngSwitchCase="'Title'">
+                    <lib-property-form [data]="dataEdit" (dataChange)="dataChangeTable($event)" [isBack]="true" (back)="backChange()" ></lib-property-form>
+                </ng-container>
+                <ng-container *ngSwitchCase="'DateTime'">
+                    <lib-property-datetime [data]="dataEdit" (dataChange)="dataChangeTable($event)" [isBack]="true" (back)="backChange()" ></lib-property-datetime>
+                </ng-container>
+                <ng-container *ngSwitchCase="'Number'">
+                    <lib-property-number [data]="dataEdit" (dataChange)="dataChangeTable($event)" [isBack]="true" (back)="backChange()"></lib-property-number>
+                </ng-container>
+                <ng-container *ngSwitchCase="'YesNo'">
+                    <lib-property-yesno [data]="dataEdit" (dataChange)="dataChangeTable($event)" [isBack]="true" (back)="backChange()"></lib-property-yesno>
+                </ng-container>
+                <ng-container *ngSwitchCase="'User'">
+                    <lib-property-user [data]="dataEdit" (dataChange)="dataChangeTable($event)" [isBack]="true" (back)="backChange()"></lib-property-user>
+                </ng-container>
+                <ng-container *ngSwitchCase="'Rank'">
+                    <lib-property-rank [data]="dataEdit" (dataChange)="dataChangeTable($event)" [isBack]="true" (back)="backChange()"></lib-property-rank>
+                </ng-container>
+                <ng-container *ngSwitchCase="'Progress'">
+                    <lib-property-progress [data]="dataEdit" (dataChange)="dataChangeTable($event)" [isBack]="true" (back)="backChange()"></lib-property-progress>
+                </ng-container>
+                <ng-container *ngSwitchCase="'Phone'">
+                    <lib-property-phone [data]="dataEdit" (dataChange)="dataChangeTable($event)" [isBack]="true" (back)="backChange()"></lib-property-phone>
+                </ng-container>
+                <ng-container *ngSwitchCase="'Email'">
+                    <lib-property-phone [data]="dataEdit" (dataChange)="dataChangeTable($event)" [isBack]="true" (back)="backChange()"></lib-property-phone>
+                </ng-container>
+                <ng-container *ngSwitchCase="'Address'">
+                    <lib-property-phone [data]="dataEdit" (dataChange)="dataChangeTable($event)" [isBack]="true" (back)="backChange()"></lib-property-phone>
+                </ng-container>
+                <ng-container *ngSwitchCase="'Expression'">
+                    <lib-property-expression [data]="dataEdit" (dataChange)="dataChangeTable($event)" [isBack]="true" (back)="backChange()"></lib-property-expression>
+                </ng-container>
+                <ng-container *ngSwitchCase="'Attachment'">
+                    <lib-property-attachment [data]="dataEdit" (dataChange)="dataChangeTable($event)" [isBack]="true" (back)="backChange()"></lib-property-attachment>
+                </ng-container>
+                <ng-container *ngSwitchCase="'ComboBox'">
+                    <lib-property-combobox [data]="dataEdit" (dataChange)="dataChangeTable($event)" [isBack]="true" (back)="backChange()"></lib-property-combobox>
+                </ng-container>
+            </ng-container>
+        </ng-container>
+    </div>
+</div>

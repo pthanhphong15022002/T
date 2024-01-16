@@ -14,6 +14,7 @@ import {
   SidebarModel,
   AuthService,
   CRUDService,
+  RequestOption,
 } from 'codx-core';
 import { PopupAddCardsComponent } from './popup-add-cards/popup-add-cards.component';
 import { CodxFdService } from '../codx-fd.service';
@@ -240,25 +241,21 @@ export class CardsComponent extends UIComponent {
     });
   }
 
+  beforeDel(opt: RequestOption) {
+    console.log(opt);
+    var itemSelected = opt.data[0];
+    opt.methodName = 'DeleteCardAsync';
+    opt.className = 'CardsBusiness';
+    opt.assemblyName = 'ERM.Business.FD';
+    opt.service = 'FD'
+    opt.data = itemSelected.recID;
+    return true;
+  }
+
   deleteCardAPI(data){
     (this.view.dataService as CRUDService)
-      .delete([data], false)
+      .delete([data], false,(opt) => this.beforeDel(opt))
       .subscribe((res: any) => {
-        if (res && res.data) {
-          this.api
-            .execSv(
-              'FD',
-              'ERM.Business.FD',
-              'CardsBusiness',
-              'DeleteCardAsync',
-              data.recID
-            )
-            .subscribe((result) => {
-              if (result) {
-                this.notiService.notifyCode('SYS008');
-              }
-            });
-        }
         this.detectorRef.detectChanges();
       });
   }

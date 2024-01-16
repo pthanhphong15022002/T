@@ -63,6 +63,9 @@ import {
   RulerSettingsModel,
   SwimLane,
   UndoRedo,
+  UserHandleModel,
+  SelectorModel,
+  SelectorConstraints,
 } from '@syncfusion/ej2-angular-diagrams';
 import { ExpandMode, MenuEventArgs } from '@syncfusion/ej2-angular-navigations';
 import { log } from 'console';
@@ -71,10 +74,15 @@ import { AttachmentComponent } from 'projects/codx-common/src/lib/component/atta
 import { CodxBpService } from '../../codx-bp.service';
 import { FormAdvancedSettingsComponent } from './form-advanced-settings/form-advanced-settings.component';
 import { FormEditConnectorComponent } from './form-edit-connector/form-edit-connector.component';
-import { BP_Processes, BP_Processes_Permissions, BP_Processes_Steps } from '../../models/BP_Processes.model';
+import {
+  BP_Processes,
+  BP_Processes_Permissions,
+  BP_Processes_Steps,
+} from '../../models/BP_Processes.model';
 import { Subject, takeUntil } from 'rxjs';
 import { ModeviewComponent } from '../../modeview/modeview.component';
 import { DynamicSettingControlComponent } from 'projects/codx-share/src/lib/components/dynamic-setting/dynamic-setting-control/dynamic-setting-control.component';
+import { PopupPermissionsProcessesComponent } from './popup-permissions-processes/popup-permissions-processes.component';
 Diagram.Inject(ConnectorEditing);
 @Component({
   selector: 'lib-popup-add-process',
@@ -97,7 +105,7 @@ Diagram.Inject(ConnectorEditing);
     DiagramContextMenuService,
     ConnectorEditingService,
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PopupAddProcessComponent {
   @ViewChild('status') status: ElementRef;
@@ -111,6 +119,7 @@ export class PopupAddProcessComponent {
     this.diagram.fitToPage();
     this.diagram.clearSelection();
     this.diagram.scrollSettings.canAutoScroll = true;
+
     //this.diagram.tool = DiagramTools.ZoomPan;
   }
   clickPan(isPan) {
@@ -127,7 +136,7 @@ export class PopupAddProcessComponent {
     verticalGridlines: this.gridlines,
     constraints: SnapConstraints.All & ~SnapConstraints.ShowLines,
   };
-  rulerSettings: RulerSettingsModel = { showRulers: false, dynamicGrid: true }
+  rulerSettings: RulerSettingsModel = { showRulers: false, dynamicGrid: true };
   nodes: NodeModel[] = [
     // {
     //   id: 'swimlane',
@@ -269,6 +278,9 @@ export class PopupAddProcessComponent {
   ];
 
   menuDrag: any = [
+    { id: 'connector', text: 'Connector', icon: 'icon-timeline' },
+    { id: 'start_end', text: 'Start/End', icon: 'icon-i-circle' },
+    { id: 'decision', text: 'Điều kiện', icon: 'icon-i-diamond' },
     { id: 'swimlane', text: 'SwimLane', icon: 'icon-view_quilt' },
     { id: 'form', text: 'Forms', icon: 'icon-note_add' },
     { id: 'event', text: 'Sự kiện', icon: 'icon-i-calendar2-event-fill' },
@@ -281,112 +293,121 @@ export class PopupAddProcessComponent {
     this.isDragging = true;
     let target: HTMLElement = args.target as HTMLElement;
     // custom code start
-    let selectedElement: HTMLCollection = document.getElementsByClassName('e-selected-style');
+    let selectedElement: HTMLCollection =
+      document.getElementsByClassName('e-selected-style');
     if (selectedElement.length) {
-        selectedElement[0].classList.remove('e-selected-style');
+      selectedElement[0].classList.remove('e-selected-style');
     }
     // custom code end
     let drawingObject: NodeModel | ConnectorModel | any = null;
-    if(target.tagName == 'SPAN') target = target.parentElement;
+    if (target.tagName == 'SPAN') target = target.parentElement;
     if (target.classList.contains('image-pattern-style')) {
-        switch (target.id) {
-            case 'shape1':
-                drawingObject = { shape: { type: 'Basic', shape: 'Rectangle' } };
-                break;
-            case 'shape2':
-                drawingObject = { shape: { type: 'Basic', shape: 'Ellipse' } };
-                break;
-            case 'shape3':
-                drawingObject = { shape: { type: 'Basic', shape: 'Hexagon' } };
-                break;
-            case 'shape4':
-                drawingObject = { shape: { type: 'Basic', shape: 'Pentagon' } };
-                break;
-            case 'shape5':
-                drawingObject = { shape: { type: 'Basic', shape: 'Triangle' } };
-                break;
-            case 'straight':
-                drawingObject = { type: 'Straight' };
-                break;
-            case 'ortho':
-                drawingObject = { type: 'Orthogonal' };
-                break;
-            case 'cubic':
-                drawingObject = { type: 'Bezier' };
-                break;
-            case 'freehand':
-                drawingObject = { type: 'Freehand' };
-                break;
-            case 'path':
-                drawingObject = {
-                    shape: {
-                        type: 'Path',
-                        data: 'M540.3643,137.9336L546.7973,159.7016L570.3633,159.7296L550.7723,171.9366L558.9053,194.9966L540.3643,' +
-                            '179.4996L521.8223,194.9966L529.9553,171.9366L510.3633,159.7296L533.9313,159.7016L540.3643,137.9336z'
-                    }
-                };
-                break;
-            case 'image':
-                drawingObject = { shape: { type: 'Image', source: './assets/diagram/employees/Clayton.png' } };
-                break;
-            case 'svg':
-                drawingObject = { shape: { type: 'Native', content: this.getNativeContent() } };
-                break;
-            case 'text':
-                drawingObject = { shape: { type: 'Text' } };
-                break;
-            case 'swimlane':
-              let swimLane: NodeModel = {
-                id: this.makeid(10),
-                shape: {
-                  type: 'SwimLane',
+      switch (target.id) {
+        case 'shape1':
+          drawingObject = { shape: { type: 'Basic', shape: 'Rectangle' } };
+          break;
+        case 'shape2':
+          drawingObject = { shape: { type: 'Basic', shape: 'Ellipse' } };
+          break;
+        case 'shape3':
+          drawingObject = { shape: { type: 'Basic', shape: 'Hexagon' } };
+          break;
+        case 'shape4':
+          drawingObject = { shape: { type: 'Basic', shape: 'Pentagon' } };
+          break;
+        case 'shape5':
+          drawingObject = { shape: { type: 'Basic', shape: 'Triangle' } };
+          break;
+        case 'straight':
+          drawingObject = { type: 'Straight' };
+          break;
+        case 'ortho':
+          drawingObject = { type: 'Orthogonal' };
+          break;
+        case 'cubic':
+          drawingObject = { type: 'Bezier' };
+          break;
+        case 'freehand':
+          drawingObject = { type: 'Freehand' };
+          break;
+        case 'path':
+          drawingObject = {
+            shape: {
+              type: 'Path',
+              data:
+                'M540.3643,137.9336L546.7973,159.7016L570.3633,159.7296L550.7723,171.9366L558.9053,194.9966L540.3643,' +
+                '179.4996L521.8223,194.9966L529.9553,171.9366L510.3633,159.7296L533.9313,159.7016L540.3643,137.9336z',
+            },
+          };
+          break;
+        case 'image':
+          drawingObject = {
+            shape: {
+              type: 'Image',
+              source: './assets/diagram/employees/Clayton.png',
+            },
+          };
+          break;
+        case 'svg':
+          drawingObject = {
+            shape: { type: 'Native', content: this.getNativeContent() },
+          };
+          break;
+        case 'text':
+          drawingObject = { shape: { type: 'Text' } };
+          break;
+        case 'swimlane':
+          let swimLane: NodeModel = {
+            id: this.makeid(10),
+            shape: {
+              type: 'SwimLane',
+              header: {
+                height: 30,
+                style: { fill: '#fff', textAlign: 'Left' },
+                annotation: { content: 'Quy trình động' },
+              },
+              lanes: [
+                {
+                  id: this.makeid(10),
+                  canMove: true,
                   header: {
                     height: 30,
-                    style: { fill: '#fff', textAlign: 'Left' },
-                    annotation: { content: 'Quy trình động' },
+                    style: { fontSize: 14, fill: '#fff' },
+                    annotation: { content: 'Bước quy trình' },
                   },
-                  lanes: [
-                    {
-                      id: this.makeid(10),
-                      canMove: true,
-                      header: {
-                        height: 30,
-                        style: { fontSize: 14, fill: '#fff' },
-                        annotation: { content: 'Bước quy trình' },
-                      },
-                    },
-                  ],
-                  phases: [
-                    {
-                      id: this.makeid(10),
-                      header: { annotation: { content: '' } },
-                    },
-                  ],
-                  phaseSize: 0.5,
-                  orientation: 'Vertical',
-                  isLane: true,
                 },
-                style: { strokeColor: '#ffffff', fill: '#ffffff' },
-              };
-                drawingObject = swimLane
-                break;
-            default:
-                drawingObject = { shape:{type: 'HTML',
-                                 version: target.id}}
-                break;
-        }
-        if (drawingObject) {
-            this.diagram.drawingObject = drawingObject;
-            // custom code start
-            target.classList.add('e-selected-style');
-            // custom code end
-        }
+              ],
+              phases: [
+                {
+                  id: this.makeid(10),
+                  header: { annotation: { content: '' } },
+                },
+              ],
+              phaseSize: 0.5,
+              orientation: 'Vertical',
+              isLane: true,
+            },
+            style: { strokeColor: '#ffffff', fill: '#ffffff' },
+          };
+          drawingObject = swimLane;
+          break;
+        default:
+          drawingObject = { shape: { type: 'HTML', version: target.id } };
+          break;
+      }
+      if (drawingObject) {
+        this.diagram.drawingObject = drawingObject;
+        // custom code start
+        target.classList.add('e-selected-style');
+        // custom code end
+      }
     }
-    this.diagram.tool =  DiagramTools.DrawOnce;
+    this.diagram.tool = DiagramTools.DrawOnce;
     this.diagram.dataBind();
-}
-getNativeContent(): string {
-  let str: string = '<svg version="1.0" xmlns="http://www.w3.org/2000/svg" width="350.000000pt" ' +
+  }
+  getNativeContent(): string {
+    let str: string =
+      '<svg version="1.0" xmlns="http://www.w3.org/2000/svg" width="350.000000pt" ' +
       'height="229.000000pt" viewBox="0 0 350.000000 229.000000" ' +
       'preserveAspectRatio="xMidYMid meet"> <metadata>' +
       ' Created by potrace 1.11, written by Peter Selinger 2001-2013' +
@@ -406,12 +427,12 @@ getNativeContent(): string {
       ' -39 -104 -83 -220 l-80 -211 -37 0 c-35 0 -37 2 -56 53 -11 28 -48 124 -81 ' +
       '211 -34 87 -61 163 -61 168 0 5 14 8 32 6 31 -3 32 -5 98 -182z" />' +
       '</g> </svg>';
-  return str;
-}
+    return str;
+  }
 
-clickRF(){
-  this.diagram && this.diagram.refresh();
-}
+  clickRF() {
+    this.diagram && this.diagram.refresh();
+  }
   // SymbolPalette Properties
   public expandMode: ExpandMode = 'Multiple';
   public palettes: PaletteModel[] = [
@@ -798,17 +819,17 @@ clickRF(){
     showCustomMenuOnly: true,
   };
 
-  onDrop(e:any){
-
-    if(e.state=='Completed'){
-      console.log('drop',e);
+  onDrop(e: any) {
+    if (e.state == 'Completed') {
+      console.log('drop', e);
       setTimeout(() => {
-        this.diagram && this.diagram.refresh();
+        this.diagram && this.diagram.refreshDiagramLayer();
       }, 100);
     }
   }
 
   dragEnter(e: any) {
+    let ele = this.elementRef.nativeElement.querySelector('.diagramzone');
     //console.log(e);
     //let objDragpane = document.querySelector('.dragarea').getBoundingClientRect();
     //if(objDragpane && e.dropPoint.x < objDragpane.x) return;
@@ -884,6 +905,8 @@ clickRF(){
         this.diagram.addConnector(connector);
         break;
       case 'swimlane':
+        let height = 500;
+        if(ele) height = ele.offsetHeight
         let swimLane: NodeModel = {
           id: this.makeid(10),
           shape: {
@@ -897,8 +920,8 @@ clickRF(){
               {
                 id: this.makeid(10),
                 canMove: true,
-                height: 500,
-                width: 400,
+                height: height,
+                width: 800,
                 header: {
                   height: 30,
                   style: { fontSize: 14, fill: '#fff' },
@@ -917,8 +940,8 @@ clickRF(){
             orientation: 'Vertical',
             isLane: true,
           },
-          height: 500,
-          width: 400,
+          height: height,
+          width: 800,
           style: { strokeColor: '#ffffff', fill: '#ffffff' },
           offsetX: model.offsetX,
           offsetY: model.offsetY + 100,
@@ -941,8 +964,9 @@ clickRF(){
         // if(swimlane)this.diagram.addNodeToLane(model,swimlane,laneID)
         // else this.diagram.add(model);
         this.diagram.add(model);
-        if (this.targetItem && this.targetItem.isLane)
+        if (this.targetItem && this.targetItem.isLane) {
           this.diagram.addChild(this.targetItem, model.id);
+        }
         break;
     }
 
@@ -951,11 +975,11 @@ clickRF(){
     this.targetItem = undefined;
     //this.diagram.dataBind()
   }
-  clickForm(){
-    let option = new SidebarModel;
+  clickForm() {
+    let option = new SidebarModel();
     option.FormModel = this.dialog?.formModel;
-    option.Width='550px'
-    this.callfc.openSide(FormEditConnectorComponent,'',option,'');
+    option.Width = '550px';
+    this.callfc.openSide(FormEditConnectorComponent, '', option, '');
   }
   logData(e) {
     console.log(e);
@@ -971,21 +995,143 @@ clickRF(){
       if (connector) this.diagram.removeData(connector as any);
     }
   }
-  nodeSelected:any ;
-  onSelect(e:any){
-    if(e.newValue && e.newValue.length == 1){
+  nodeSelected: any;
+  drawNode: any;
+  onSelect(e: any) {
+    if (
+      e.newValue.length > 0 &&
+      (e.newValue[0] as ConnectorModel).sourceID === undefined
+    ) {
+      this.diagram.selectedItems = {
+        constraints: SelectorConstraints.All | SelectorConstraints.UserHandle,
+        userHandles: this.handles,
+      };
+      if (this.diagram.selectedItems.nodes.length > 0) {
+        this.drawNode =
+          this.diagram.selectedItems.nodes[
+            this.diagram.selectedItems.nodes.length - 1
+          ];
+      }
+      //return
+    }
+    if (e.newValue && e.newValue.length == 1) {
       this.nodeSelected = e.newValue[0];
     }
-    console.log('chọn nè',e);
-
-
+    console.log('chọn nè', e);
   }
 
-  formData:any={};
-  valueDataChange(e:any){
-    if(this.nodeSelected){
+  defaultData: any = JSON.parse(
+    `[{"id":"diagram_id_TeizhRsl0s","shape":{"type":"SwimLane","header":{"style":{"fill":"#fff","strokeColor":"#CCCCCC","textAlign":"Left","gradient":{"type":"None"},"strokeWidth":1,"strokeDashArray":"","opacity":1},"annotation":{"id":"VCs5J","content":"Quy trình động"},"height":30,"id":"PC28g"},"lanes":[{"id":"diagram_id_ycL9JqN5xF","canMove":true,"height":500,"width":400,"header":{"style":{"fill":"#fff","strokeColor":"#CCCCCC","fontSize":14,"gradient":{"type":"None"},"strokeWidth":1,"strokeDashArray":"","opacity":1},"annotation":{"id":"S4iQc","content":"Bước quy trình"},"height":30,"id":"diagram_id_TeizhRsl0sdiagram_id_ycL9JqN5xF_0_header"},"style":{"fill":"#F9F9F9","strokeColor":"#CCCCCC","gradient":{"type":"None"},"strokeWidth":1,"strokeDashArray":"","opacity":1},"children":[{"id":"diagram_id_XbZlj321Ks","offsetX":296.9375,"offsetY":228,"width":100,"height":100,"margin":{"left":146.4375,"top":50,"right":0,"bottom":0},"style":{"fill":"white","strokeColor":"#000","strokeWidth":1,"strokeDashArray":"","opacity":1,"gradient":{"type":"None"}},"shape":{"type":"Bpmn","shape":"Event","event":{"event":"Start","trigger":"None"},"activity":{"subProcess":{}},"annotations":[]},"ports":[],"zIndex":6,"container":null,"visible":true,"horizontalAlignment":"Left","verticalAlignment":"Top","backgroundColor":"transparent","borderColor":"none","borderWidth":0,"rotateAngle":0,"pivot":{"x":0.5,"y":0.5},"flip":"None","wrapper":{"actualSize":{"width":100,"height":100},"offsetX":271.65625,"offsetY":225.75},"constraints":5240806,"annotations":[],"isExpanded":true,"expandIcon":{"shape":"None"},"fixedUserHandles":[],"flipMode":"All","tooltip":{"openOn":"Auto","content":"","isSticky":false},"inEdges":[],"outEdges":["diagram_id_4CI3Azdg1u"],"parentId":"diagram_id_TeizhRsl0sdiagram_id_ycL9JqN5xF0","processId":"","isPhase":false,"isLane":false},{"id":"diagram_id_UmWPwxt6U0","offsetX":263.28,"offsetY":438.13,"width":300,"height":163.75749999999994,"margin":{"left":38.06124999999997,"top":230.50125000000003,"right":0,"bottom":0},"style":{"fill":"white","strokeColor":"#000","gradient":{"type":"None"},"strokeWidth":1,"strokeDashArray":"","opacity":1,"textOverflow":"Wrap"},"shape":{"type":"HTML","content":"","version":"event"},"ports":[],"zIndex":8,"container":null,"visible":true,"horizontalAlignment":"Left","verticalAlignment":"Top","backgroundColor":"transparent","borderColor":"none","borderWidth":0,"rotateAngle":0,"pivot":{"x":0.5,"y":0.5},"flip":"None","wrapper":{"actualSize":{"width":300,"height":163.75749999999994},"offsetX":263.28,"offsetY":438.13},"annotations":[],"constraints":5240806,"isExpanded":true,"expandIcon":{"shape":"None"},"fixedUserHandles":[],"flipMode":"All","tooltip":{"openOn":"Auto","content":"","isSticky":false},"inEdges":["diagram_id_4CI3Azdg1u"],"outEdges":["diagram_id_c1Uz3Ot4lq"],"parentId":"diagram_id_TeizhRsl0sdiagram_id_ycL9JqN5xF0","processId":"","isPhase":false,"isLane":false}]},{"id":"diagram_id_XBzRMkZMwW","canMove":true,"height":500,"width":400,"header":{"style":{"fill":"#fff","strokeColor":"#CCCCCC","gradient":{"type":"None"},"strokeWidth":1,"strokeDashArray":"","opacity":1,"fontSize":14},"annotation":{"id":"RqmF1","content":"Bước quy trình"},"width":400,"height":30,"id":"diagram_id_TeizhRsl0sdiagram_id_XBzRMkZMwW_0_header"},"style":{"fill":"#F9F9F9","strokeColor":"#CCCCCC","gradient":{"type":"None"},"strokeWidth":1,"strokeDashArray":"","opacity":1},"children":[{"id":"diagram_id_Ny8cXJiDZR","offsetX":723.6990625000021,"offsetY":460,"width":300,"height":200,"margin":{"left":98.98031250000219,"top":234.25,"right":0,"bottom":0},"style":{"fill":"white","strokeColor":"#000","gradient":{"type":"None"},"strokeWidth":1,"strokeDashArray":"","opacity":1,"textOverflow":"Wrap"},"shape":{"type":"HTML","content":"","version":"form"},"ports":[],"zIndex":12,"container":null,"visible":true,"horizontalAlignment":"Left","verticalAlignment":"Top","backgroundColor":"transparent","borderColor":"none","borderWidth":0,"rotateAngle":0,"pivot":{"x":0.5,"y":0.5},"flip":"None","wrapper":{"actualSize":{"width":300,"height":200},"offsetX":723.6990625000021,"offsetY":460},"annotations":[],"constraints":5240806,"isExpanded":true,"expandIcon":{"shape":"None"},"fixedUserHandles":[],"flipMode":"All","tooltip":{"content":"","openOn":"Auto","isSticky":false},"inEdges":["diagram_id_c1Uz3Ot4lq"],"outEdges":["diagram_id_S54ukKmvdb"],"parentId":"diagram_id_TeizhRsl0sdiagram_id_XBzRMkZMwW0","processId":"","isPhase":false,"isLane":false}]},{"id":"diagram_id_SBl2Ptwe9F","canMove":true,"height":500,"width":400,"header":{"style":{"fill":"#fff","strokeColor":"#CCCCCC","gradient":{"type":"None"},"strokeWidth":1,"strokeDashArray":"","opacity":1,"fontSize":14},"annotation":{"id":"wsnRl","content":"Bước quy trình"},"width":400,"height":30,"id":"diagram_id_TeizhRsl0sdiagram_id_SBl2Ptwe9F_0_header"},"style":{"fill":"#F9F9F9","strokeColor":"#CCCCCC","gradient":{"type":"None"},"strokeWidth":1,"strokeDashArray":"","opacity":1},"children":[{"id":"diagram_id_7stMhzRYpM","offsetX":1149.4699999999998,"offsetY":460,"width":101.06124999999997,"height":160,"margin":{"left":224.22062500000004,"top":254.25,"right":0,"bottom":0},"style":{"fill":"white","strokeColor":"#000","gradient":{"type":"None"},"strokeWidth":1,"strokeDashArray":"","opacity":1,"textOverflow":"Wrap"},"shape":{"type":"HTML","content":"","version":"image"},"ports":[],"zIndex":18,"container":null,"visible":true,"horizontalAlignment":"Left","verticalAlignment":"Top","backgroundColor":"transparent","borderColor":"none","borderWidth":0,"rotateAngle":0,"pivot":{"x":0.5,"y":0.5},"flip":"None","wrapper":{"actualSize":{"width":101.06124999999997,"height":160},"offsetX":1195.2359374999996,"offsetY":460},"annotations":[],"constraints":5240806,"isExpanded":true,"expandIcon":{"shape":"None"},"fixedUserHandles":[],"flipMode":"All","tooltip":{"content":"","openOn":"Auto","isSticky":false},"inEdges":["diagram_id_S54ukKmvdb"],"outEdges":["diagram_id_62ykpcrk9r"],"parentId":"diagram_id_TeizhRsl0sdiagram_id_SBl2Ptwe9F0","processId":"","isPhase":false,"isLane":false},{"id":"diagram_id_3E9AipabBl","offsetX":1103.75,"offsetY":250.5,"width":100,"height":100,"margin":{"left":179.03125,"top":74.75,"right":0,"bottom":0},"style":{"fill":"white","strokeColor":"#000","strokeWidth":1,"strokeDashArray":"","opacity":1,"gradient":{"type":"None"}},"shape":{"type":"Bpmn","shape":"Event","event":{"event":"Start","trigger":"None"},"activity":{"subProcess":{}},"annotations":[]},"ports":[],"zIndex":19,"container":null,"visible":true,"horizontalAlignment":"Left","verticalAlignment":"Top","backgroundColor":"transparent","borderColor":"none","borderWidth":0,"rotateAngle":0,"pivot":{"x":0.5,"y":0.5},"flip":"None","wrapper":{"actualSize":{"width":100,"height":100},"offsetX":1149.5159374999998,"offsetY":250.5},"constraints":5240806,"annotations":[],"isExpanded":true,"expandIcon":{"shape":"None"},"fixedUserHandles":[],"flipMode":"All","tooltip":{"openOn":"Auto","content":"","isSticky":false},"inEdges":["diagram_id_62ykpcrk9r"],"outEdges":[],"parentId":"diagram_id_TeizhRsl0sdiagram_id_SBl2Ptwe9F0","processId":"","isPhase":false,"isLane":false}]}],"phases":[{"id":"diagram_id_YsL535MnLO","offset":489.25,"header":{"annotation":{"id":"diagram_id_YsL535MnLO","content":""},"id":"diagram_id_TeizhRsl0sdiagram_id_YsL535MnLO_header"},"style":{"fill":"#FFFFFF","strokeColor":"#CCCCCC","gradient":{"type":"None"},"strokeWidth":1,"strokeDashArray":"","opacity":1}}],"phaseSize":0.5,"orientation":"Vertical","isLane":true,"isPhase":false,"hasHeader":true},"height":519.25,"width":1389.9846874999998,"style":{"fill":"#ffffff","strokeColor":"#ffffff","gradient":{"type":"None"},"strokeWidth":1,"strokeDashArray":"","opacity":1},"offsetX":769.7110937499999,"offsetY":355.375,"ports":[],"container":{"type":"Grid","orientation":"Vertical"},"visible":true,"horizontalAlignment":"Left","verticalAlignment":"Top","backgroundColor":"transparent","borderColor":"none","borderWidth":0,"rotateAngle":0,"pivot":{"x":0.5,"y":0.5},"margin":{},"flip":"None","wrapper":{"actualSize":{"width":1389.9846874999998,"height":519.25},"offsetX":769.7110937499999,"offsetY":355.375},"annotations":[],"constraints":22018030,"isExpanded":true,"expandIcon":{"shape":"None"},"fixedUserHandles":[],"zIndex":4,"flipMode":"All","tooltip":{"openOn":"Auto"},"inEdges":[],"outEdges":[],"parentId":"","processId":"","isPhase":false,"isLane":false}]`
+  );
+  defaultCnn: any = JSON.parse(
+    `[{"id":"diagram_id_4CI3Azdg1u","sourcePoint":{"x":271.66,"y":275.75},"targetPoint":{"x":263.28,"y":356.25},"targetDecorator":{"shape":"Arrow","style":{"fill":"#757575","strokeColor":"#757575","strokeWidth":1,"strokeDashArray":"","opacity":1,"gradient":{"type":"None"}},"width":10,"height":10,"pivot":{"x":0,"y":0.5}},"style":{"strokeWidth":3,"strokeColor":"#757575","fill":"transparent","strokeDashArray":"","opacity":1,"gradient":{"type":"None"}},"type":"Bezier","shape":{"type":"None"},"sourceID":"diagram_id_XbZlj321Ks","zIndex":30,"targetID":"diagram_id_UmWPwxt6U0","sourcePortID":"","targetPortID":"","flip":"None","connectorSpacing":13,"segments":[{"type":"Bezier","vector1":{"angle":89.99462852064154,"distance":20.000000087890626},"vector2":{"angle":0,"distance":2.094999999999999},"point":{"x":267.47,"y":315.75},"orientation":"Vertical","point1":{"x":0,"y":0},"point2":{"x":0,"y":0}},{"type":"Bezier","vector1":{"angle":180,"distance":2.0950000000000273},"vector2":{"angle":270,"distance":20.250625000000014},"orientation":"Horizontal","point1":{"x":0,"y":0},"point2":{"x":0,"y":0}}],"sourceDecorator":{"shape":"None","width":10,"height":10,"pivot":{"x":0,"y":0.5},"style":{"fill":"black","strokeColor":"black","strokeWidth":1,"strokeDashArray":"","opacity":1,"gradient":{"type":"None"}}},"cornerRadius":0,"wrapper":{"actualSize":{"width":8.389053024379109,"height":79.4270213714313},"offsetX":267.46547348781047,"offsetY":315.4635106857156},"annotations":[],"fixedUserHandles":[],"ports":[],"visible":true,"flipMode":"All","constraints":994878,"hitPadding":10,"tooltip":{"openOn":"Auto","content":"","isSticky":false},"bezierSettings":{"controlPointsVisibility":14,"allowSegmentsReset":true},"connectionPadding":0,"sourcePadding":0,"targetPadding":0,"parentId":""},{"id":"diagram_id_c1Uz3Ot4lq","sourcePoint":{"x":413.28,"y":438.13},"targetPoint":{"x":573.7,"y":460},"targetDecorator":{"shape":"Arrow","style":{"fill":"#757575","strokeColor":"#757575","strokeWidth":1,"strokeDashArray":"","opacity":1,"gradient":{"type":"None"}},"width":10,"height":10,"pivot":{"x":0,"y":0.5}},"style":{"strokeWidth":3,"strokeColor":"#757575","fill":"transparent","strokeDashArray":"","opacity":1,"gradient":{"type":"None"}},"type":"Bezier","shape":{"type":"None"},"sourceID":"diagram_id_UmWPwxt6U0","zIndex":31,"targetID":"diagram_id_Ny8cXJiDZR","sourcePortID":"","targetPortID":"","flip":"None","connectorSpacing":13,"segments":[{"type":"Bezier","vector1":{"angle":359.99999999999994,"distance":40.00000000000006},"vector2":{"angle":270,"distance":5.467500000000001},"point":{"x":493.28,"y":449.065},"orientation":"Horizontal","point1":{"x":0,"y":0},"point2":{"x":0,"y":0}},{"type":"Bezier","vector1":{"angle":90,"distance":5.467500000000001},"vector2":{"angle":180,"distance":40.209531250001135},"orientation":"Vertical","point1":{"x":0,"y":0},"point2":{"x":0,"y":0}}],"sourceDecorator":{"shape":"None","width":10,"height":10,"pivot":{"x":0,"y":0.5},"style":{"fill":"black","strokeColor":"black","strokeWidth":1,"strokeDashArray":"","opacity":1,"gradient":{"type":"None"}}},"cornerRadius":0,"wrapper":{"actualSize":{"width":157.26197204832647,"height":21.853758919094048},"offsetX":491.9109860241632,"offsetY":449.056879459547},"annotations":[],"fixedUserHandles":[],"ports":[],"visible":true,"flipMode":"All","constraints":994878,"hitPadding":10,"tooltip":{"openOn":"Auto","content":"","isSticky":false},"connectionPadding":0,"bezierSettings":{"controlPointsVisibility":14,"allowSegmentsReset":true},"sourcePadding":0,"targetPadding":0,"parentId":""},{"id":"diagram_id_S54ukKmvdb","sourcePoint":{"x":873.7,"y":460},"targetPoint":{"x":1144.71,"y":460},"targetDecorator":{"shape":"Arrow","style":{"fill":"#757575","strokeColor":"#757575","strokeWidth":1,"strokeDashArray":"","opacity":1,"gradient":{"type":"None"}},"width":10,"height":10,"pivot":{"x":0,"y":0.5}},"style":{"strokeWidth":3,"strokeColor":"#757575","fill":"transparent","strokeDashArray":"","opacity":1,"gradient":{"type":"None"}},"type":"Bezier","shape":{"type":"None"},"sourceID":"diagram_id_Ny8cXJiDZR","zIndex":35,"targetID":"diagram_id_7stMhzRYpM","sourcePortID":"","targetPortID":"","flip":"None","connectorSpacing":13,"segments":[{"type":"Bezier","vector1":{"angle":360,"distance":20},"vector2":{"angle":179.99999999999997,"distance":20},"orientation":"Horizontal","point1":{"x":0,"y":0},"point2":{"x":0,"y":0}}],"sourceDecorator":{"shape":"None","width":10,"height":10,"pivot":{"x":0,"y":0.5},"style":{"fill":"black","strokeColor":"black","strokeWidth":1,"strokeDashArray":"","opacity":1,"gradient":{"type":"None"}}},"cornerRadius":0,"wrapper":{"actualSize":{"width":270.7752912665501,"height":3.410605131648481e-13},"offsetX":1009.0876456332751,"offsetY":460},"annotations":[],"fixedUserHandles":[],"ports":[],"visible":true,"flipMode":"All","constraints":994878,"hitPadding":10,"tooltip":{"openOn":"Auto","content":"","isSticky":false},"connectionPadding":0,"bezierSettings":{"controlPointsVisibility":14,"allowSegmentsReset":true},"sourcePadding":0,"targetPadding":0,"parentId":""},{"id":"diagram_id_62ykpcrk9r","sourcePoint":{"x":1195.24,"y":380},"targetPoint":{"x":1149.52,"y":300.5},"targetDecorator":{"shape":"Arrow","style":{"fill":"#757575","strokeColor":"#757575","strokeWidth":1,"strokeDashArray":"","opacity":1,"gradient":{"type":"None"}},"width":10,"height":10,"pivot":{"x":0,"y":0.5}},"style":{"strokeWidth":3,"strokeColor":"#757575","fill":"transparent","strokeDashArray":"","opacity":1,"gradient":{"type":"None"}},"type":"Bezier","shape":{"type":"None"},"sourceID":"diagram_id_7stMhzRYpM","zIndex":36,"targetID":"diagram_id_3E9AipabBl","sourcePortID":"","targetPortID":"","flip":"None","connectorSpacing":13,"segments":[{"type":"Bezier","vector1":{"angle":270.00596831034073,"distance":19.5000001057943},"vector2":{"angle":0,"distance":11.42999999999995},"point":{"x":1172.38,"y":341},"orientation":"Vertical","point1":{"x":0,"y":0},"point2":{"x":0,"y":0}},{"type":"Bezier","vector1":{"angle":180,"distance":11.430000000000064},"vector2":{"angle":89.99425273818039,"distance":20.250000101877756},"orientation":"Horizontal","point1":{"x":0,"y":0},"point2":{"x":0,"y":0}}],"sourceDecorator":{"shape":"None","width":10,"height":10,"pivot":{"x":0,"y":0.5},"style":{"fill":"black","strokeColor":"black","strokeWidth":1,"strokeDashArray":"","opacity":1,"gradient":{"type":"None"}}},"cornerRadius":0,"wrapper":{"actualSize":{"width":45.68675888982125,"height":78.67206392318258},"offsetX":1172.3966205550894,"offsetY":340.6639680384087},"annotations":[],"fixedUserHandles":[],"ports":[],"visible":true,"flipMode":"All","constraints":994878,"hitPadding":10,"tooltip":{"openOn":"Auto","content":"","isSticky":false},"bezierSettings":{"controlPointsVisibility":14,"allowSegmentsReset":true},"connectionPadding":0,"sourcePadding":0,"targetPadding":0,"parentId":""}]`
+  );
+  formData: any = {};
+  handles: UserHandleModel[] = [
+    {
+      name: 'delete',
+      pathData:
+        'M 7.04 22.13 L 92.95 22.13 L 92.95 88.8 C 92.95 91.92 91.55 94.58 88.76 96.74 C 85.97 98.91 82.55 100 78.52 100 L 21.48 100 C 17.45 100 14.03 98.91 11.24 96.74 C 8.45 94.58 7.04 91.92 7.04 88.8 z M 32.22 0 L 67.78 0 L 75.17 5.47 L 100 5.47 L 100 16.67 L 0 16.67 L 0 5.47 L 24.83 5.47 z',
+      visible: true,
+      offset: 0.5,
+      side: 'Bottom',
+      margin: { top: 0, bottom: 0, left: 0, right: 0 },
+    },
+    {
+      name: 'add',
+      pathData:
+        'M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm144 276c0 6.6-5.4 12-12 12h-92v92c0 6.6-5.4 12-12 12h-56c-6.6 0-12-5.4-12-12v-92h-92c-6.6 0-12-5.4-12-12v-56c0-6.6 5.4-12 12-12h92v-92c0-6.6 5.4-12 12-12h56c6.6 0 12 5.4 12 12v92h92c6.6 0 12 5.4 12 12v56z',
+      visible: true,
+      offset: 0.5,
+      side: 'Right',
+      margin: { top: 0, bottom: 0, left: 0, right: 0 },
+    },
+    {
+      name: 'connect',
+      pathData:
+        'M256 504C119 504 8 393 8 256S119 8 256 8s248 111 248 248-111 248-248 248zm28.9-143.6L209.4 288H392c13.3 0 24-10.7 24-24v-16c0-13.3-10.7-24-24-24H209.4l75.5-72.4c9.7-9.3 9.9-24.8.4-34.3l-11-10.9c-9.4-9.4-24.6-9.4-33.9 0L107.7 239c-9.4 9.4-9.4 24.6 0 33.9l132.7 132.7c9.4 9.4 24.6 9.4 33.9 0l11-10.9c9.5-9.5 9.3-25-.4-34.3z',
+      visible: true,
+      offset: 0.5,
+      side: 'Left',
+      margin: { top: 0, bottom: 0, left: 0, right: 0 },
+    },
+  ];
+  selectedItems: SelectorModel = {
+    userHandles: this.handles,
+  };
+  getCustomTool: Function = this.getTool.bind(this);
 
-      if(!this.formData[this.nodeSelected.id]){
+  userHandleClick(e: any) {
+    this.getTool(e.element.name);
+  }
+  public getTool(action: string) {
+    if (action == 'delete') {
+      this.diagram.remove();
+    }
+    if (action == 'add') {
+      let newNode:any= cloneObject(this.nodeSelected);
+      newNode.id = this.makeid(10);
+       //newNode.children = [];
+       newNode.offsetY = newNode.offsetY+300;
+       if(newNode.parentId){
+        let prNode = this.diagram.nodes.find((x:any)=>x.id== newNode.parentId);
+        if(prNode){
+          newNode.parentId = undefined
+          this.diagram.add(newNode);
+          this.diagram.addChild(prNode,newNode.id);
+          setTimeout(()=>{
+            this.diagram.refreshDiagramLayer();
+            this.diagram.select(newNode);
+          },200)
+
+          return;
+          //prNode.height = prNode.height + 300;
+          // if((prNode as any).parentId){
+          //   let gpNode = this.diagram.nodes.find((x:any)=>x.id== (prNode as any).parentId);
+          //   if(gpNode){
+          //     //gpNode.height = gpNode.height+300
+          //     this.diagram.addNodeToLane(newNode,gpNode.id,prNode.id);
+          //   }
+          // }
+        }
+        else {
+          newNode.parentId = undefined;
+          this.diagram.add(newNode);
+          setTimeout(()=>{
+            this.diagram.refreshDiagramLayer();
+            this.diagram.select(newNode);
+          },200)
+        }
+       }
+       else {
+        newNode.parentId = undefined;
+        this.diagram.add(newNode);
+        setTimeout(()=>{
+          this.diagram.refreshDiagramLayer();
+          this.diagram.select(newNode);
+        },200)
+      }
+
+      //this.diagram.refreshDiagramLayer();
+      console.log('thêm', this.nodeSelected);
+    }
+    if (action == 'connect') {
+      this.diagram.drawingObject.shape = {};
+      (this.diagram.drawingObject as any).type = (
+        this.diagram.drawingObject as any
+      ).type
+        ? (this.diagram.drawingObject as any).type
+        : 'Orthogonal';
+      (this.diagram.drawingObject as any).sourceID = (this.drawNode as any).id;
+      this.diagram.tool = DiagramTools.DrawOnce;
+      this.diagram.dataBind();
+
+      // console.log('Nối',this.nodeSelected);
+    }
+  }
+  valueDataChange(e: any) {
+    if (this.nodeSelected) {
+      if (!this.formData[this.nodeSelected.id]) {
         this.formData[this.nodeSelected.id] = {};
       }
       this.formData[this.nodeSelected.id][e.field] = e.data;
@@ -1016,7 +1162,6 @@ clickRF(){
   }
 
   contextMenuClick(args: MenuEventArgs): void {
-
     if (
       args.item.id === 'InsertLaneBefore' ||
       args.item.id === 'InsertLaneAfter'
@@ -1034,6 +1179,7 @@ clickRF(){
         let existingLane: LaneModel = cloneObject(shape.lanes[0]);
         let newLane = existingLane;
         newLane.id = this.makeid(10);
+        newLane.children = [];
         newLane.header = {
           width: existingLane.header.width,
           height: existingLane.header.height,
@@ -1054,12 +1200,12 @@ clickRF(){
           newLane.header.height = existingLane.header.height;
         }
         if (args.item.id === 'InsertLaneBefore') {
-          this.diagram.addLanes(swimlane, [newLane], 0);
+          this.diagram.addLanes(swimlane, [newLane], index);
         } else {
-          this.diagram.addLanes(swimlane, [newLane], 0);
-          this.diagram.refresh();
+          this.diagram.addLanes(swimlane, [newLane], index + 1);
         }
-        this.diagram.clearSelection();
+        this.diagram.refreshDiagramLayer();
+        //this.diagram.clearSelection();
       }
     } else if (args.item.id === 'Cut') {
       this.diagram.cut();
@@ -1095,12 +1241,12 @@ clickRF(){
     debugger;
   }
   mouseEnter(e: any) {
-    if (this.isDragging){
-      if(e.actualObject && e.actualObject.shape.type=='swimlane'){
+    if (this.isDragging) {
+      if (e.actualObject) {
         this.targetItem = e.actualObject;
+        console.log(this.targetItem);
       }
     }
-
   }
   targetItem: any;
   isDragging: boolean = false;
@@ -1108,22 +1254,22 @@ clickRF(){
     this.isDragging = true;
   }
   eleDraw(e: any) {
-    if(e.state == 'Completed'){
-      this.isDragging = false;
-      console.log('ta gét',this.targetItem);
+    if (e.state == 'Completed') {
+      //this.isDragging = false;
+      //console.log('ta gét',this.targetItem);
       console.log('vẽ cục:   ', e);
-      setTimeout(() => {
-        this.diagram && this.diagram.refresh();
-      }, 100);
+      // setTimeout(() => {
+      //   this.diagram && this.diagram.refresh();
+      // }, 100);
     }
-
   }
   clickchoi() {
     console.log(this.diagram);
     let dataDiagram = this.diagram.saveDiagram();
     let obj = JSON.parse(dataDiagram);
     if (Object.keys(obj).length && obj.nodes) {
-      console.log(obj.nodes);
+      console.log(JSON.stringify(obj.nodes));
+      console.log(JSON.stringify(obj.connectors));
     }
   }
   shape: any = { type: 'HTML', shape: 'Rectangle' };
@@ -1194,9 +1340,7 @@ clickRF(){
     this.getCacheCbxOrVll();
   }
 
-  ngAfterViewInit(): void {
-
-  }
+  ngAfterViewInit(): void {}
 
   onDestroy() {
     this.destroyFrom$.next();
@@ -1331,13 +1475,13 @@ clickRF(){
     // if (tabNo <= this.processTab && tabNo != this.currentTab) { //cmt tạm để làm cho xong rồi bắt sau
     this.updateNodeStatus(oldNo, newNo);
     this.currentTab = tabNo;
-    if(tabNo == 1){
-      setTimeout(()=>{
-        if(this.elementRef.nativeElement.querySelector('#appearance'))
-        this.elementRef.nativeElement.querySelector('#appearance').onclick = this.documentClick.bind(this);
-      },200)
+    if (tabNo == 1) {
+      setTimeout(() => {
+        if (this.elementRef.nativeElement.querySelector('#appearance'))
+          this.elementRef.nativeElement.querySelector('#appearance').onclick =
+            this.documentClick.bind(this);
+      }, 200);
     }
-
 
     // }
     this.detectorRef.detectChanges();
@@ -1502,7 +1646,7 @@ clickRF(){
         perm.full = true;
         perm.create = true;
         perm.assign = true;
-        perm.edit = true;
+        perm.update = true;
         perm.delete = true;
         perm.isActive = true;
 
@@ -1578,18 +1722,46 @@ clickRF(){
     return listPerm;
   }
 
-  clickRoles() {}
+  clickRoles() {
+    let title = this.gridViewSetup?.Permissions?.headerText ?? 'Phân quyền';
+    let formModel = new FormModel();
+    formModel.formName = 'DPProcessesPermissions';
+    formModel.gridViewName = 'grvDPProcessesPermissions';
+    formModel.entityName = 'DP_Processes_Permissions';
+    let dialogModel = new DialogModel();
+    dialogModel.zIndex = 999;
+    dialogModel.FormModel = formModel;
+    let obj = {
+      permissions: this.data.permissions ?? [],
+      title: title
+    }
+    let dialog = this.callfc.openForm(
+      PopupPermissionsProcessesComponent,
+      '',
+      950,
+      650,
+      '',
+      obj,
+      '',
+      dialogModel
+    );
+
+    dialog.closed.subscribe((e) => {
+      if (e?.event && e?.event.length > 0) {
+        this.data.permissions = e.event ?? [];
+        // this.changeDetectorRef.detectChanges();
+        this.detectorRef.markForCheck();
+      }
+    });
+  }
 
   removeUser(index) {
-    // let config = new AlertConfirmInputConfig();
-    // config.type = 'YesNo';
     this.notiSv
       .alertCode('SYS030')
       .pipe(takeUntil(this.destroyFrom$))
       .subscribe((x) => {
         if (x.event.status == 'Y') {
           this.data.permissions.splice(index, 1);
-          // this.changeDetectorRef.detectChanges();
           this.detectorRef.markForCheck();
         }
       });
@@ -1618,16 +1790,16 @@ clickRF(){
       // dataValue: dataValue?.paraValues
     };
 
-      this.callfc.openForm(
-        DynamicSettingControlComponent,
-        '',
-        700,
-        800,
-        '',
-        data,
-        '',
-        option
-      );
+    this.callfc.openForm(
+      DynamicSettingControlComponent,
+      '',
+      700,
+      800,
+      '',
+      data,
+      '',
+      option
+    );
     // let popupDialog = this.callfc.openForm(
     //   FormAdvancedSettingsComponent,
     //   '',
@@ -1656,55 +1828,20 @@ clickRF(){
     formModelField.entityName = 'DP_Steps_Fields';
     formModelField.userPermission = this.dialog?.formModel?.userPermission;
     option.FormModel = formModelField;
-    debugger;
-    // let data = {
-    //   process: this.data,
-    //   vllBP002: this.vllBP002,
-    //   lstStepFields: this.extendInfos,
-    //   isForm: true,
-    // };
-    // let popupDialog = this.callfc.openForm(
-    //   FormPropertiesFieldsComponent,
-    //   '',
-    //   null,
-    //   null,
-    //   '',
-    //   data,
-    //   '',
-    //   option
-    // );
-    // popupDialog.closed.subscribe((e) => {
-    //   if (e && e?.event) {
-    //     this.extendInfos =
-    //       e?.event?.length > 0 ? JSON.parse(JSON.stringify(e?.event)) : [];
+    if (this.extendInfos) {
+      this.extendInfos.forEach((element) => {
+        if (typeof element.documentControl == 'string') {
+          element.documentControl = JSON.parse(element.documentControl);
+        }
 
-    //     let extDocumentControls = this.extendInfos.filter(x => x.fieldType == 'Attachment' && x.documentControl != null && x.documentControl?.trim() != '');
-    //     if(extDocumentControls?.length > 0){
-    //       let lstDocumentControl = [];
-    //       extDocumentControls.forEach((ele) => {
-    //         const documents = JSON.parse(ele.documentControl);
-    //         documents.forEach((res) => {
-    //           var tmpDoc = {};
-    //           tmpDoc['recID'] = Util.uid();
-    //           tmpDoc['stepNo'] = 1;
-    //           tmpDoc['fieldID'] = res.recID;
-    //           tmpDoc['title'] = res.title;
-    //           tmpDoc['memo'] = res.memo;
-    //           tmpDoc['isRequired'] = res.isRequired ?? false;
-    //           tmpDoc['count'] = res.count ?? 0;
-    //           tmpDoc['templateID'] = res.templateID;
-    //           lstDocumentControl.push(tmpDoc);
-    //         });
-    //       });
-    //       this.data.documentControl = JSON.stringify(lstDocumentControl);
-    //     }
-    //     if(this.data?.steps[0]?.extendInfo){
-    //       this.data.steps[0].extendInfo = this.extendInfos;
-    //     }
-    //     this.detectorRef.markForCheck()
-    //   }
-    // });
-
+        if (
+          typeof element.dataFormat == 'string' &&
+          element.fieldType == 'Table'
+        ) {
+          element.dataFormat = JSON.parse(element.dataFormat);
+        }
+      });
+    }
     let popupDialog = this.callfc.openForm(
       ModeviewComponent,
       '',
@@ -1721,14 +1858,17 @@ clickRF(){
           res?.event?.length > 0 ? JSON.parse(JSON.stringify(res?.event)) : [];
         this.setLstExtends();
         let extDocumentControls = this.extendInfos.filter(
-          (x) =>
-            x.fieldType == 'Attachment' &&
-            x.documentControl != null
+          (x) => x.fieldType == 'Attachment' && x.documentControl != null
         );
         if (extDocumentControls?.length > 0) {
           let lstDocumentControl = [];
           extDocumentControls.forEach((ele) => {
-            const documents = ele.documentControl ?? [];
+            const documents =
+              typeof ele.documentControl == 'string'
+                ? ele.documentControl
+                  ? JSON.parse(ele.documentControl)
+                  : []
+                : ele.documentControl ?? [];
             documents.forEach((res) => {
               var tmpDoc = {};
               tmpDoc['recID'] = Util.uid();
@@ -1742,12 +1882,23 @@ clickRF(){
               lstDocumentControl.push(tmpDoc);
             });
           });
-          this.data.documentControl = JSON.stringify(lstDocumentControl);
+          this.data.documentControl = lstDocumentControl.length > 0 ? JSON.stringify(lstDocumentControl) : null;
         }
+
         if (this.data?.steps[0]?.extendInfo) {
+          this.extendInfos.forEach((element) => {
+            if (typeof element.documentControl != 'string') {
+              element.documentControl = element.documentControl?.length > 0 ? JSON.stringify(element.documentControl) : null;
+            }
+
+            if (typeof element.dataFormat != 'string') {
+              element.dataFormat = element.dataFormat?.length > 0 ? JSON.stringify(element.dataFormat) : null;
+            }
+          });
+
           this.data.steps[0].extendInfo = this.extendInfos;
         }
-        this.detectorRef.markForCheck();
+        this.detectorRef.detectChanges();
       }
     });
   }
@@ -1775,8 +1926,7 @@ clickRF(){
   handlerSave() {
     if (this.action == 'add' || this.action == 'copy') {
       this.onAdd();
-    }
-    {
+    } else {
       this.onUpdate();
     }
   }

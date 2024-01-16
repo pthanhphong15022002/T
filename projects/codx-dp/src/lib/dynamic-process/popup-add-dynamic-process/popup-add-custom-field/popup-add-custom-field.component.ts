@@ -1070,7 +1070,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
     } else {
       //cap nhật
       obj = {
-        autoNoCode: this.field.dataFormat,
+        autoNoCode: this.field.recID,
         description: 'DP_Instances_Steps_Field',
       };
     }

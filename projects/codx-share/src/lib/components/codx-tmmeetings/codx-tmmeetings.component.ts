@@ -451,6 +451,9 @@ export class CodxTmmeetingsComponent
       case 'SYS04':
         this.copy(data);
         break;
+      case 'SYS05':
+        this.viewMeeting(data);
+        break;
       case 'SYS02':
         this.delete(data);
         break;
@@ -589,6 +592,38 @@ export class CodxTmmeetingsComponent
         // }
       });
     });
+  }
+
+  viewMeeting(data){
+    if (data) {
+      this.view.dataService.dataSelected = data;
+    }
+    this.view.dataService
+      .edit(this.view.dataService.dataSelected)
+      .subscribe((res: any) => {
+        let option = new SidebarModel();
+        option.DataService = this.view?.dataService;
+        option.FormModel = this.view?.formModel;
+        option.Width = 'Auto';
+        if (this.projectID) {
+          this.disabledProject = true;
+        } else this.disabledProject = false;
+        let obj = {
+          action: 'edit',
+          titleAction: this.titleAction,
+          disabledProject: this.disabledProject,
+          isView: true
+        };
+        this.dialog = this.callfc.openSide(
+          PopupAddMeetingComponent,
+          obj,
+          option
+        );
+        this.dialog.closed.subscribe((e) => {
+          if (!e?.event) this.view.dataService.clear();
+
+        });
+      });
   }
 
   delete(data) {

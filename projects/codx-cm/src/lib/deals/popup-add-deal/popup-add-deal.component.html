@@ -427,8 +427,16 @@
       >
       </codx-input>
     </div>
-
-    <div
+    <crud-cost-items
+      *ngIf="costInfos"
+      [transID]="deal.recID"
+      [costInfos]="costInfos"
+      [isLoadedData]="true"
+      [viewOnly]="viewOnly"
+      (dataCostItems)="dataCostItems($event)"
+      (totalDataCost)="totalDataCost($event)"
+    ></crud-cost-items>
+    <!-- <div
       class="d-flex justify-content-end align-items-center mb-2 border-bottom"
     >
       <div class="d-flex flex-row text-end align-items-end mb-3">
@@ -500,15 +508,7 @@
                   (valueChange)="editCost($event, i)"
                   [disabled]="viewOnly"
                 ></codx-inplace>
-                <!-- <codx-inplace
-                  type="combobox"
-                  field="costItemID"
-                  [value]="cost?.costItemID"
-                  [refValue]="grViewCost?.costItemID?.referedValue"
-                  [cssClass]="'mt-2 cost-input'"
-                  [emptyText]="grViewCost?.costItemID?.description"
-                  (valueChange)="editCost($event, i)"
-                ></codx-inplace> -->
+              
               </div>
             </td>
 
@@ -572,7 +572,7 @@
           </tr>
         </tbody>
       </table>
-    </div>
+    </div>  -->
   </ng-container>
 </ng-template>
 

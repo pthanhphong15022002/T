@@ -725,6 +725,7 @@ export class LeadsComponent
     const functionMappings = {
       SYS03: () => this.edit(data),
       SYS04: () => this.copy(data),
+      SYS05: () => this.viewLead(data),
       SYS02: () => this.delete(data),
       CM0205_1: () => this.convertLead(data),
       CM0205_2: () => this.mergeLead(data),
@@ -911,6 +912,42 @@ export class LeadsComponent
       option.zIndex = 1001;
       this.openFormLead(formMD, option, 'copy');
     });
+  }
+
+  viewLead(data){
+    if (data) {
+      this.view.dataService.dataSelected = JSON.parse(JSON.stringify(data));
+    }
+    this.view.dataService
+      .edit(this.view.dataService.dataSelected)
+      .subscribe((res) => {
+        let option = new SidebarModel();
+        option.DataService = this.view.dataService;
+        option.FormModel = this.view.formModel;
+        option.Width = '800px';
+        option.zIndex = 1001;
+        var formMD = new FormModel();
+        var obj = {
+          action: 'edit',
+          formMD: formMD,
+          titleAction: this.formatTitleMore(this.titleAction),
+          applyFor: this.applyFor,
+          // processId: this.processId,
+          gridViewSetup: this.gridViewSetup,
+          listCategory: this.listCategory,
+          isView: true
+        };
+        let dialogCustomDeal = this.callfc.openSide(
+          PopupAddLeadComponent,
+          obj,
+          option
+        );
+        dialogCustomDeal.closed.subscribe((e) => {
+          if (e && e.event != null) {
+
+          }
+        });
+      });
   }
 
   delete(data: any) {

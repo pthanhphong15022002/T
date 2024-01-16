@@ -105,7 +105,7 @@ export class CodxReportViewDetailComponent
     this.router.params.subscribe((param: any) => {
       if (param['funcID']) {
         this.reportID = param['funcID'];
-
+        this.getReport(this.reportID);
       }
     });
 
@@ -216,7 +216,7 @@ export class CodxReportViewDetailComponent
               this.rootFunction.functionID,
           };
           this.pageTitle.setParent(parent);
-          this.setBreadCrumb(this.data);
+
           this.getReportList(this.data.moduleID, this.data.reportType);
         }
       });
@@ -249,7 +249,7 @@ export class CodxReportViewDetailComponent
         this.reportList = this.orgReportList.filter(
           (x: any) => x.recID != this.data.recID
         );
-
+        this.setBreadCrumb(this.data);
       });
   }
 
