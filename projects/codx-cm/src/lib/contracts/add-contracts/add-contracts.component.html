@@ -321,11 +321,8 @@
     </div>
   </div>
 
-  <div class="row form-group" *ngIf="['3','5'].includes(contracts?.useType)">
-    <codx-label
-      [formModel]="form?.formModel"
-      fiedName="parentID"
-    ></codx-label>
+  <div class="row form-group" *ngIf="['3', '5'].includes(contracts?.useType)">
+    <codx-label [formModel]="form?.formModel" fiedName="parentID"></codx-label>
     <codx-input
       field="parentID"
       [formModel]="form?.formModel"
@@ -552,6 +549,9 @@
             [customerID]="contracts?.customerID"
             [formModel]="dialog.formModel"
             [isAdd]="action == 'add'"
+            [refInstance]="refInstance"
+            [dataSourceRef]="dataSourceRef"
+            [isLoadDataRef]="true"
             (valueChangeCustom)="valueChangeCustom($event)"
             (addFileCompleted)="addFileCompleted($event)"
           >
@@ -645,6 +645,8 @@
           [formModel]="dialog.formModel"
           [isAdd]="action == 'add'"
           [refInstance]="refInstance"
+          [dataSourceRef]="dataSourceRef"
+          [isLoadDataRef]="true"
           (valueChangeCustom)="valueChangeCustom($event)"
           (addFileCompleted)="addFileCompleted($event)"
         >

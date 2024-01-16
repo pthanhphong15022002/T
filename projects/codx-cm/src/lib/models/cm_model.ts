@@ -209,6 +209,25 @@ export class CM_Deals {
   customerName: string;
   customerCategory: string;
   applyProcess: boolean;
+  dealCost: number = 0;
+  grossProfit: number = 0;
+}
+export class CM_CostItems {
+  recID: string = Util.uid();
+  transID: string;
+  costItemID: string;
+  costItemName: string;
+  available: number;
+  quantity: number;
+  unitPrice: number; //giá
+  amount: number;
+  status: string;
+  note: string;
+  sorting: number;
+  createdOn: Date;
+  createdBy: string;
+  modifiedOn: Date;
+  modifiedBy: string;
 }
 
 export class CM_Permissions {

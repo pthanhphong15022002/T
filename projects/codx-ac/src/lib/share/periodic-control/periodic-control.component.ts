@@ -94,13 +94,13 @@ export class PeriodicControlComponent extends UIComponent {
       if (id) {
         switch(id){
           case '1':
-            this.runPeriodic(this.dataDefault.refType,this.dataDefault.method,this.dataDefault.refID,'1',event.text);
+            this.runPeriodic(this.dataDefault.refType,this.dataDefault.refID,'1',event.text);
             break;
           case '2':
-            this.runPeriodic(this.dataDefault.refType,this.dataDefault.method,this.dataDefault.refID,'2',event.text);
+            this.runPeriodic(this.dataDefault.refType,this.dataDefault.refID,'2',event.text);
             break;
           case '3':
-            this.cancel(event.text,data);
+            this.runPeriodic(this.dataDefault.refType,this.dataDefault.refID,'3',event.text);
             break;
         }
       }
@@ -121,6 +121,17 @@ export class PeriodicControlComponent extends UIComponent {
           this.api.exec('AC','RunPeriodicBusiness','UpdateAsync',[this.dataDefault.refID,this.dataDefault.paraValues]).subscribe();
         }
       });
+  }
+
+  changeAutoSchedules(event:any){
+    this.dataDefault = event;
+    this.api
+      .execAction(
+        'BG_ScheduleTasks',
+        [this.dataDefault],
+        'UpdateAsync'
+      )
+      .subscribe((res:any)=>{});
   }
 
   requestEnded(event: any) {
@@ -149,7 +160,8 @@ export class PeriodicControlComponent extends UIComponent {
           let i = this.oData.findIndex(x => x.recID == item.recID);
           if(i == -1) this.oData.push(item);
         },this.oData)
-        if(res[0].length < this.view.dataService.request.pageSize) this.showAll = true;
+        let total = res[1];
+        if(this.oData.length <= total) this.showAll = true;
         this.detectorRef.detectChanges();
       }
     });
@@ -160,7 +172,6 @@ export class PeriodicControlComponent extends UIComponent {
   }
 
   changeDataMF(event:any,type='view'){
-    console.log(event);
     event.reduce((pre, element) => {
       element.isblur = false;
       element.isbookmark = true;
@@ -179,13 +190,15 @@ export class PeriodicControlComponent extends UIComponent {
   //   this.detectorRef.detectChanges();
   // }
 
-  runPeriodic(runtype:any,storeName:any,recID:any,runMode:any,text:any){
+  runPeriodic(runtype:any,recID:any,runMode:any,text:any){
+    let storeName = (runMode === '1' || runMode === '2') ? 'AC_spRunPeriodic' : 'AC_spCancelPeriodic';
     this.api.exec('AC','RunPeriodicBusiness','RunPeriodicAsync',[
       runtype,
       storeName,
       recID,
       runMode,
-      text
+      JSON.stringify(this.dataValue),
+      text,
     ]).pipe(takeUntil(this.destroy$))
     .subscribe((res:any)=>{
       if (res && !res.isError) {
@@ -200,15 +213,15 @@ export class PeriodicControlComponent extends UIComponent {
     })
   }
 
-  cancel(text:any,data:any){
-    this.api.exec('AC','RunPeriodicBusiness','CancelAsync',[data,this.dataDefault.refType,text]).subscribe((res:any)=>{
-      if (res) {
-        this.notification.notifyCode('AC0029', 0, text);
-      }else{
-        this.notification.notifyCode('AC0030', 0, text);
-      }
-    })
-  }
+  // cancel(text:any,data:any){
+  //   this.api.exec('AC','RunPeriodicBusiness','CancelAsync',[data,this.dataDefault.refType,text]).subscribe((res:any)=>{
+  //     if (res) {
+  //       this.notification.notifyCode('AC0029', 0, text);
+  //     }else{
+  //       this.notification.notifyCode('AC0030', 0, text);
+  //     }
+  //   })
+  // }
 
   showMFCancel(event:any){
     event.reduce((pre, element) => {
@@ -220,6 +233,5 @@ export class PeriodicControlComponent extends UIComponent {
       if(element.data?.buttonName != '3') element.disabled = true;
       }, {});
   }
-
-  //#endregion Functione
+  //#endregion Function
 }

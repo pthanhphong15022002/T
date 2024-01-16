@@ -105,6 +105,7 @@ export class CodxTasksComponent
   @ViewChild('headerTemp') headerTemp?: TemplateRef<any>;
   @ViewChild('popupToDoList') popupToDoList?: TemplateRef<any>;
   @ViewChild('viewGanttChart') viewGanttChart!: TemplateRef<any>;
+  @ViewChild('ganttItems') ganttItems!: TemplateRef<any>;
 
   views: Array<ViewModel> = [];
   viewsDefault: Array<ViewModel> = [];
@@ -514,7 +515,8 @@ export class CodxTasksComponent
         active: false,
         sameData: true,
         model: {
-          eventModel: this.taskSettings,
+          eventModel:this.taskSettings,
+          //template:this.ganttItems
         },
       },
     ];

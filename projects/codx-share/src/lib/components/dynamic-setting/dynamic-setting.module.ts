@@ -48,7 +48,7 @@ const T_Component: Type<any>[] = [
   PatternComponent,
   EditPatternComponent,
   DetailPolicyComponent,
-  
+  DynamicSettingControlComponent
 ];
 
 const T_Pipe: Type<any>[] = [
@@ -58,7 +58,6 @@ const T_Pipe: Type<any>[] = [
   ShareSettingPipe,
   BindValuePipe,
   PositionPipe,
-  DynamicSettingControlComponent
 ];
 
 @NgModule({

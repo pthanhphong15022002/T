@@ -73,6 +73,7 @@ export class ContractsViewDetailComponent
   listContractInParentID: CM_Contracts[] = [];
   isHaveField: boolean = false;
   listStepsProcess = [];
+  isLoadingContract = false;
 
   tabControl = [
     { name: 'History', textDefault: 'Lịch sử', isActive: true, template: null },
@@ -151,6 +152,7 @@ export class ContractsViewDetailComponent
   ngOnChanges(changes: SimpleChanges): void {
     this.loadTabs();
     if (changes?.contract && this.contract) {
+      this.listInsStep = null;
       this.setDataInput();
       this.contractService
         .getContactByRecID(this.contract?.contactID)
@@ -217,6 +219,8 @@ export class ContractsViewDetailComponent
   }
 
   getListInstanceStep() {
+    this.stepCurrent = null;
+    this.isHaveField = false;
     var data = [
       this.contract?.refID,
       this.contract?.processID,
@@ -225,17 +229,15 @@ export class ContractsViewDetailComponent
     ];
     this.codxCmService.getViewDetailInstanceStep(data).subscribe((res) => {
       if (res) {
-        this.listInsStep = res[0];
+        this.listInsStep = res[0] || [];
         this.isHaveField = res[1];
         if (this.listInsStep) {
           this.lstStepsOld = JSON.parse(JSON.stringify(this.listInsStep));
           this.getStepCurrent(this.contract);
         }
         this.checkCompletedInstance(this.contract?.status);
-      } else {
-        this.listInsStep = [];
-        this.stepCurrent = null;
-        this.isHaveField = false;
+      } else{
+        this.listInsStep  = [];
       }
     });
   }
@@ -370,7 +372,11 @@ export class ContractsViewDetailComponent
     this.contractLink = null;
     if(this.contract?.parentID){
       this.contractService.getContractByRecID(this.contract?.parentID).subscribe((res) => {
-        this.contractLink = res;
+        if(res){
+          this.contractLink = res || [];
+        }else{
+          this.contractLink = null;
+        }
       })
     }
   }
@@ -530,11 +536,15 @@ export class ContractsViewDetailComponent
   }
 
   getListCOntractByParentID(){
-    this.listContractInParentID = [];
+    this.listContractInParentID = null;
+    this.isLoadingContract = true;
     this.contractService.getContractByParentID([this.contract?.recID, this.contract?.parentID, this.contract?.useType]).subscribe((res)=>{
       if(res){
-        this.listContractInParentID = res;
+        this.listContractInParentID = res || [];
+      }else{
+        this.listContractInParentID = [];
       }
+      this.isLoadingContract = false;
     })
   }
   reloadListStep(listSteps: any) {

@@ -32,6 +32,7 @@ import {
 import { Subject, map, takeUntil } from 'rxjs';
 import { AC_PurchaseInvoicesLines } from '../../../models/AC_PurchaseInvoicesLines.model';
 import { AC_VATInvoices } from '../../../models/AC_VATInvoices.model';
+import { EditSettingsModel } from '@syncfusion/ej2-angular-grids';
 
 @Component({
   selector: 'lib-purchaseinvoices-add',
@@ -69,6 +70,13 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
   postDateControl:any;
   preData:any;
   nextTabIndex:number;
+  editSettings:EditSettingsModel = {
+    allowAdding:false,
+    allowEditing:false,
+    allowDeleting:false,
+    allowEditOnDblClick:false,
+    allowNextRowEdit:false
+  }
   private destroy$ = new Subject<void>();
   constructor(
     inject: Injector,

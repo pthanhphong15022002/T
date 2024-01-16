@@ -1,4 +1,4 @@
-<codx-views
+<!-- <codx-views
   #view
   [views]="views"
   [autoLoad]="false"
@@ -8,45 +8,42 @@
 >
 </codx-views>
 
-<ng-template #template>
-  <div class="w-100 h-100 cm-chart" *ngIf="isLoaded">
-    <ng-container *ngIf="viewType == '1'">
-      <codx-dashboard
-        [templates]="dashBoard1"
-        [panels]="panels1"
-        [datas]="datas1"
-        [isEditMode]="isEditMode"
-        [cellSpacing]="[10, 10]"
-        [columns]="60"
-      ></codx-dashboard>
-    </ng-container>
+<ng-template #template> -->
+<div class="w-100 h-100 cm-chart">
+  <ng-container *ngIf="viewType == '1'">
+    <codx-dashboard
+      [templates]="dashBoard1"
+      [panels]="panels1"
+      [datas]="datas1"
+      [isEditMode]="isEditMode"
+      [cellSpacing]="[10, 10]"
+      [columns]="60"
+    ></codx-dashboard>
+  </ng-container>
 
-    <ng-container *ngIf="viewType == '2'">
-      <codx-dashboard
-        [templates]="dashBoard2"
-        [panels]="panels2"
-        [datas]="datas2"
-        [isEditMode]="isEditMode"
-        [cellSpacing]="[10, 10]"
-        [columns]="60"
-      ></codx-dashboard>
-    </ng-container>
+  <ng-container *ngIf="viewType == '2'">
+    <codx-dashboard
+      [templates]="dashBoard2"
+      [panels]="panels2"
+      [datas]="datas2"
+      [isEditMode]="isEditMode"
+      [cellSpacing]="[10, 10]"
+      [columns]="60"
+    ></codx-dashboard>
+  </ng-container>
+</div>
 
-    <ng-container *ngIf="funcID == 'CMD004' && isLoaded">
-      <cm-targets [viewDashboard]="true" [viewMode]="9"></cm-targets>
-    </ng-container>
-  </div>
-
-  <!-- <div class="w-100 h-100" *ngIf="!isLoaded">
+<!-- <div class="w-100 h-100" *ngIf="!isLoaded">
     <div id="loader"></div>
   </div> -->
-</ng-template>
+<!-- </ng-template> -->
 
-<ng-template #templateDetail>
+<!-------------Temp1 ------------->
+<ng-template #template1>
   <div class="w-100 h-100" id="1" title=""></div>
 </ng-template>
 
-<ng-template #templateDetail>
+<ng-template #template1>
   <div class="w-100 h-100" id="2" title="Count chart - Đang thực hiện">
     <!-- <count-chart
       class="w-100 h-100"
@@ -59,7 +56,7 @@
   </div>
 </ng-template>
 
-<ng-template #templateDetail>
+<ng-template #template1>
   <div class="w-100 h-100" id="3" title="Count chart - Thành công">
     <!-- <count-chart
       class="w-100 h-100"
@@ -72,7 +69,7 @@
   </div>
 </ng-template>
 
-<ng-template #templateDetail>
+<ng-template #template1>
   <div class="w-100 h-100" id="4" title="Count chart - Thất bại">
     <!-- <count-chart
       class="w-100 h-100"
@@ -86,7 +83,7 @@
 </ng-template>
 
 <!-- Cơ hội theo giai đoan -->
-<ng-template #templateDetail>
+<ng-template #template1>
   <div
     class="h-100"
     id="5"
@@ -156,7 +153,7 @@
   </div>
 </ng-template>
 <!-- Top nhân viên -->
-<ng-template #templateDetail>
+<ng-template #template1>
   <div
     class="w-100 h-100"
     id="6"
@@ -234,7 +231,7 @@
 </ng-template>
 <!-- năng suất-->
 
-<ng-template #templateDetail>
+<ng-template #template1>
   <div
     class="w-100 h-100"
     id="7"
@@ -294,7 +291,7 @@
   </div>
 </ng-template>
 <!--Thành công-->
-<ng-template #templateDetail>
+<ng-template #template1>
   <div
     class="w-100 h-100"
     id="8"
@@ -347,7 +344,7 @@
   </div>
 </ng-template>
 <!--Thất bại-->
-<ng-template #templateDetail>
+<ng-template #template1>
   <div
     class="w-100 h-100"
     id="9"
@@ -401,7 +398,7 @@
 </ng-template>
 
 <!--Thống kê-->
-<ng-template #templateDetail>
+<ng-template #template1>
   <div
     class="w-100 h-100"
     id="10"
@@ -461,6 +458,43 @@
       </div>
     </div> -->
   </div>
+</ng-template>
+
+<!-------------Temp2 ------------->
+<ng-template #template2>
+  <div class="w-100 h-100" id="1" title=""></div>
+</ng-template>
+
+<ng-template #template2>
+  <div class="w-100 h-100" id="2" title=""></div>
+</ng-template>
+
+<ng-template #template2>
+  <div class="w-100 h-100" id="3" title=""></div>
+</ng-template>
+
+<ng-template #template2>
+  <div class="w-100 h-100" id="4" title=""></div>
+</ng-template>
+
+<ng-template #template2>
+  <div class="h-100" id="5" title="" style="overflow: hidden"></div>
+</ng-template>
+
+<ng-template #template2>
+  <div class="w-100 h-100" id="6" title="" style="overflow: hidden"></div>
+</ng-template>
+
+<ng-template #template2>
+  <div class="w-100 h-100" id="7" title="" style="overflow: hidden"></div>
+</ng-template>
+
+<ng-template #template2>
+  <div class="w-100 h-100" id="8" title="" style="overflow: hidden"></div>
+</ng-template>
+
+<ng-template #template2>
+  <div class="h-100" id="9" title="" style="overflow: hidden"></div>
 </ng-template>
 
 <ng-template #tempNoData>

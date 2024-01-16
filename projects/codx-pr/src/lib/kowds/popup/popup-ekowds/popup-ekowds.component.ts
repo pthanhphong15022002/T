@@ -65,6 +65,8 @@ export class PopupEkowdsComponent extends UIComponent implements OnInit{
   headTmpGrid1Col2: TemplateRef<any>;
   @ViewChild('form') form: CodxFormComponent;
 
+  @ViewChild('mfCol', { static: true })
+  mfCol: TemplateRef<any>;
   constructor(
     private injector: Injector,
     private cr: ChangeDetectorRef,
@@ -104,13 +106,7 @@ export class PopupEkowdsComponent extends UIComponent implements OnInit{
     let day = JSON.parse(JSON.stringify(data?.data?.selectedDate));
     this.selectedDate = new Date(this.currentYear, this.currentMonth, day);
     this.minDate = new Date(this.currentYear, this.currentMonth, 1);
-    this.maxDate =  new Date(this.currentYear, this.currentMonth, this.daysInMonth[this.currentMonth]);
-    console.log('current Month', this.currentMonth);
-    console.log('current Year', this.currentYear);
-    console.log('minDate', this.minDate);
-    console.log('maxDate', this.maxDate);
-    console.log('formModel', this.formModel);
-    console.log('selected Date', this.selectedDate);
+    this.maxDate =  new Date(this.currentYear, this.currentMonth, this.daysInMonth[this.currentMonth]);    
   }
 
 
@@ -151,9 +147,9 @@ export class PopupEkowdsComponent extends UIComponent implements OnInit{
           field: 'kowCode',
           allowEdit: true,
           controlType: 'combobox',
-          dataType: 'int',
+          dataType: 'string',
           headerTemplate: this.headTmpGrid1Col1,
-          referedType: 3,
+          referedType: 4,
           referedValue: 'HRKows',
           // template: this.tmpGrid1Col1,
           width: '150',
@@ -170,10 +166,8 @@ export class PopupEkowdsComponent extends UIComponent implements OnInit{
       ];
     }
     this.cache.valueList('HR057').subscribe((res) => {
-      console.log('doc cache ', res);
       this.vllObj1 = {...res.datas[0]}
       this.vllObj2 = {...res.datas[1]}
-      console.log('2 cai vll vua lay dc', this.vllObj1, this.vllObj2);
     })
 
   }
@@ -233,10 +227,11 @@ export class PopupEkowdsComponent extends UIComponent implements OnInit{
     }
 
     let lstDataSave = []
+    var dt = new Date();
     for(let i = 0; i < lstDate.length; i++){
       for(let j = 0; j < lstDataHandle.length; j++){
         let temp = {...lstDataHandle[j]}
-        temp.workDate = new Date(this.fromDateVal.getFullYear(), this.fromDateVal.getMonth(), lstDate[i]);
+        temp.workDate = new Date(this.fromDateVal.getFullYear(), this.fromDateVal.getMonth(), lstDate[i], dt.getHours(), dt.getMinutes(), dt.getSeconds(), dt.getMilliseconds());
         temp.recID = Util.uid();
         temp.updateColumns = ''
         temp.rootKowCode = ''
@@ -248,7 +243,9 @@ export class PopupEkowdsComponent extends UIComponent implements OnInit{
     console.log('list data cbi luu', lstDataSave);
     if(lstDataSave.length > 0){
       if(this.vllMode == '1'){
+
         this.addEmpKow(lstDataSave).subscribe((res) => {
+
           debugger
           if(res == true){
             this.notify.notifyCode('SYS006');

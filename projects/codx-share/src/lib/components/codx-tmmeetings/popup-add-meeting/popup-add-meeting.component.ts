@@ -100,7 +100,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
   isOtherModule = false; //neu tu modele khac truyen vao
   defaultRoleA = '';
   viewOnly = false;
-
+  isView: boolean = false;
   constructor(
     private changDetec: ChangeDetectorRef,
     private api: ApiHttpService,
@@ -127,7 +127,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
     this.preside = dt?.data?.preside; // người chủ trì, please not edit !
     this.reminder = this.meeting.reminder;
     if (this.preside) this.defaultRoleA = this.preside;
-
+    this.isView = dt?.data?.isView ?? false;
     this.cache
       .gridViewSetup(
         this.dialog.formModel.formName,
@@ -976,7 +976,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
   // }
 
   showPopover(p, userID) {
-    if (this.popover) this.popover.close();
+    if (this.popover || this.isView) this.popover.close();
     if (userID) this.idUserSelected = userID;
     p.open();
     this.popover = p;

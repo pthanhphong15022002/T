@@ -44,7 +44,6 @@ import { LayoutComponent } from '../_layout/layout.component';
 import { PopupAddCategoryComponent } from 'projects/codx-es/src/lib/setting/category/popup-add-category/popup-add-category.component';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { PopupReleaseProcessComponent } from './popup-release-process/popup-release-process.component';
-import { ProcessesPropertiesComponent } from '../processes-properties/processes-properties.component';
 
 @Component({
   selector: 'lib-dynamic-process',
@@ -267,7 +266,7 @@ export class DynamicProcessComponent
             this.gridViewSetup = res;
             var obj = {
               action: 'add',
-              processNo: this.processNo,
+              // processNo: this.processNo,
               showID: this.showID,
               instanceNo: this.instanceNo,
               titleAction: this.titleAction,
@@ -355,13 +354,60 @@ export class DynamicProcessComponent
           });
       });
   }
+  //chỉ xem
+  viewInfo(data: any) {
+    this.isButton = false;
+    if (data) {
+      this.view.dataService.dataSelected = data;
+    }
+
+    let dialogModel = new DialogModel();
+    dialogModel.IsFull = true;
+    dialogModel.zIndex = 999;
+    dialogModel.DataService = this.view?.dataService;
+    dialogModel.FormModel = JSON.parse(JSON.stringify(this.view.formModel));
+    this.cache
+      .gridViewSetup(
+        this.view.formModel.formName,
+        this.view.formModel.gridViewName
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.gridViewSetup = res;
+          var obj = {
+            action: 'view',
+            titleAction: this.titleAction,
+            gridViewSetup: this.gridViewSetup,
+            lstGroup: this.lstGroup,
+          };
+
+          let dialogView = this.callfc.openForm(
+            PopupAddDynamicProcessComponent,
+            '',
+            this.widthWin,
+            this.heightWin,
+            '',
+            obj,
+            '',
+            dialogModel
+          );
+        }
+        this.isButton = true;
+      });
+  }
+
   copy(data: any) {
     if (this.isCopy) {
       if (data) {
-        this.view.dataService.dataSelected = data;
-        this.oldIdProccess = this.view.dataService.dataSelected.recID;
+        // cũ-BLV
+        //this.view.dataService.dataSelected = data;
+        // this.oldIdProccess = this.view.dataService.dataSelected.recID;
+        //Mới_VT
+        this.oldIdProccess = data.recID;
       }
       this.view.dataService.copy().subscribe((res) => {
+        //Mới_VT
+        this.view.dataService.dataSelected = res;
         let dialogModel = new DialogModel();
         dialogModel.IsFull = true;
         dialogModel.zIndex = 999;
@@ -376,7 +422,7 @@ export class DynamicProcessComponent
             this.gridViewSetup = res;
             var obj = {
               action: 'copy',
-              processNo: this.processNo,
+              // processNo: this.processNo,
               showID: this.showID,
               instanceNo: this.instanceNo,
               conditionCopy: this.listClickedCoppy,
@@ -561,6 +607,9 @@ export class DynamicProcessComponent
         break;
       case 'SYS02':
         this.delete(data);
+        break;
+      case 'SYS05':
+        this.viewInfo(data);
         break;
       case 'DP01014':
       case 'DP02014':
@@ -1226,7 +1275,8 @@ export class DynamicProcessComponent
   //setting trình kí
   settingSubmit(categoryID) {
     this.dpService
-      .getESCategoryByCategoryID(categoryID)
+      //.getESCategoryByCategoryID(categoryID)
+      .getESCategoryByCategoryIDType(categoryID, 'DP_Processes')
       .subscribe((item: any) => {
         if (item) {
           //gọi ko ra

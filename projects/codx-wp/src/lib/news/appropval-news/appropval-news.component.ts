@@ -4,6 +4,7 @@ import { PopupAddPostComponent } from '../../dashboard/home/list-post/popup-add/
 import { PopupAddComponent } from '../popup/popup-add/popup-add.component';
 import { AppropvalNewsDetailComponent } from './appropval-news-detail/appropval-news-detail.component';
 import { PopupAddCommentComponent } from '../popup/popup-add-comment/popup-add-comment.component';
+import { CodxShareService } from 'projects/codx-share/src/lib/codx-share.service';
 
 @Component({
   selector: 'wp-appropval-news',
@@ -26,36 +27,115 @@ export class AppropvalNewsComponent extends UIComponent {
   @ViewChild('headerTemplate') headerTemplate: TemplateRef<any>;
   @ViewChild('tmpDetail') tmpDetail: AppropvalNewsDetailComponent;
   tabAsside:any[] =[];
+  loadedApprover = false;
+  approvers: any;
+  haveApprovePermission=false;
+  approvePre='';
+  approveDv: any='';
+  dataValues: any;
+  predicates: any;
   constructor(
     private injector: Injector,
     private auth: AuthStore,
     private callFuc: CallFuncService,
+    private codxShareService: CodxShareService,
     private notifySvr:NotificationsService
   ) 
   {
     super(injector);
     this.user = this.auth.get();
   }
-  onInit(): void {
+  onInit(): void {    
+     
     this.router.params.subscribe((param) => {
       if (param['funcID']) {
+        this.function = null ;
+        this.loadedApprover =false;  
+        this.detectorRef.detectChanges(); 
+
         this.cache.functionList(param['funcID'])
         .subscribe((func: any) => {
           if (func)
           {
             this.function = func;
-            this.loadDataTab();
             this.cache
               .gridViewSetup(func.formName, func.gridViewName)
               .subscribe((grd: any) => {
                 this.gridViewSetUp = grd;
             });
+            if((this.function.functionID =="WPT0213" ||this.function.functionID =="WPT0212")){//&& this.dataValues?.length ==0 && this.predicates?.length ==0
+              this.api.execSv(
+              "WP",
+              "WP",
+              'NewsBusiness',
+              'GetWPApproveRoleAsync',
+              [])
+              .subscribe((res: any) => {
+                if(res?.length>0){
+                  this.approvePre = res[0] ;
+                  this.approveDv = res[1];
+                  this.predicates = this.approvePre;
+                  this.dataValues =this.approveDv;
+                }
+                this.loadDataTab();
+                this.loadedApprover =true;  
+                this.detectorRef.detectChanges();              
+              });
+            }
+            else{
+              this.loadDataTab();
+              this.loadedApprover =true;   
+              this.detectorRef.detectChanges();       
+            }
           }
         });
       }
     });
   }
-
+  viewChanged(evt: any) {
+    
+    this.funcID = this.router.snapshot.params['funcID'];
+    this.function=null;    
+    this.loadedApprover =false;  
+    this.getValue();
+    this.detectorRef.detectChanges();  
+    // this.cache.functionList(this.funcID)
+    //     .subscribe((func: any) => {
+    //       if (func)
+    //       {
+    //         this.function = func;
+    //         this.cache
+    //           .gridViewSetup(func.formName, func.gridViewName)
+    //           .subscribe((grd: any) => {
+    //             this.gridViewSetUp = grd;
+    //         });
+    //         if((this.function.functionID =="WPT0213" ||this.function.functionID =="WPT0212")){
+    //           this.api.execSv(
+    //           "WP",
+    //           "WP",
+    //           'NewsBusiness',
+    //           'GetWPApproveRoleAsync',
+    //           [])
+    //           .subscribe((res: any) => {
+    //             if(res?.length>0){
+    //               this.approvePre = res[0] ;
+    //               this.approveDv = res[1];
+    //               this.predicates = this.approvePre;
+    //               this.dataValues =this.approveDv;
+    //             }
+    //             this.loadDataTab();
+    //             this.loadedApprover =true;  
+    //             this.detectorRef.detectChanges();              
+    //           });
+    //         }
+    //         else{
+    //           this.loadDataTab();
+    //           this.loadedApprover =true;   
+    //           this.detectorRef.detectChanges();       
+    //         }
+    //       }
+    //     });
+  }
   ngAfterViewInit(): void {
     this.views = [
       {
@@ -115,12 +195,18 @@ export class AppropvalNewsComponent extends UIComponent {
   // get data tab list
   loadDataTab() {
     if (this.function){
+      let preTab ="";
+      let dvTab ="";
+      if((this.function.functionID =="WPT0213" ||this.function.functionID =="WPT0212")){
+        preTab=this.approvePre;
+        dvTab=this.approveDv;
+      }
       this.api.execSv(
         this.service,
         this.assemblyName,
         'NewsBusiness',
         'GetDataTabApproAsync',
-        [this.function.functionID])
+        [this.function.functionID ,dvTab, preTab])
         .subscribe((res: any[]) => {
           if(res) 
           {
@@ -133,6 +219,12 @@ export class AppropvalNewsComponent extends UIComponent {
                 let ele = res.find(x => x.Status == tab.value);
                 tab.total = ele ? ele.Count : 0;
               }
+            });
+            this.detectorRef.detectChanges();
+          }
+          else{
+            this.tabAsside.map((tab: any) => {
+              tab.total = 0;
             });
             this.detectorRef.detectChanges();
           }
@@ -151,10 +243,31 @@ export class AppropvalNewsComponent extends UIComponent {
   
   // click tab approval
   clickTabApprove(item) {
-    let predicates = [item.value ? "ApproveStatus = @0" : ""];
-    let dataValues = [item.value];
+    let predicatesTab;
+    let dataValuesTab;
+    if((this.function.functionID =="WPT0213" ||this.function.functionID =="WPT0212")&& this.approveDv?.length>0 && this.approvePre?.length>0)
+    {      
+      if(item?.value?.length>0){
+        predicatesTab = ["ApproveStatus = @0",this.approvePre];
+        dataValuesTab = [item.value ,this.approveDv];
+      }
+      else{        
+        predicatesTab = [this.approvePre];
+        dataValuesTab = [this.approveDv];
+      }
+    }
+    else{
+      if(item?.value?.length>0){
+        predicatesTab = ["ApproveStatus = @0"];
+        dataValuesTab = [item.value];
+      }
+      else{        
+        predicatesTab = null;
+        dataValuesTab = null;
+      }
+    }
     this.view.dataService.page = 0;
-    this.view.dataService.setPredicates(predicates, dataValues);
+    this.view.dataService.setPredicates(predicatesTab, dataValuesTab);
     this.tabAsside.forEach((e) => {
         e.active = e.value === item.value ;
     });
@@ -227,7 +340,6 @@ export class AppropvalNewsComponent extends UIComponent {
       this.view.dataService
       .delete([data], true, (opt: any) => this.beforDeletedPost(opt, data.recID))
       .subscribe((res) => {
-        debugger
         let arrData = this.view.dataService.data;
         arrData.map(x => {
 
@@ -347,7 +459,8 @@ export class AppropvalNewsComponent extends UIComponent {
             descriptions: res.event.subject,
             category:res.event.category,
             approveControl:res.event.approveControl,
-            approveStatus:res.event.approvalStatus,
+            approveStatus:res.event.approveStatus,
+            status:res.event.status,
             createdBy:res.event.createdBy,
             createdOn:res.event.createdOn,
             modifiedBy:res.event.modifiedBy,

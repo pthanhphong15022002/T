@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 import { SharedModule } from '@shared/shared.module';
@@ -23,7 +23,7 @@ import { FormPropertiesFieldsComponent } from './processes/popup-add-process/for
 import { ConnectorEditing, DiagramModule, SymbolPaletteModule } from '@syncfusion/ej2-angular-diagrams';
 import { SettingFieldsComponent } from './processes/popup-add-process/form-properties-fields/setting-fields/setting-fields.component';
 import { environment } from 'src/environments/environment';
-import { FormFormatValueComponent } from './processes/popup-add-process/form-properties-fields/form-format-value/form-format-value.component';
+import { FormFormatValueComponent } from './processes/popup-add-process/form-format-value/form-format-value.component';
 import { ModeviewComponent } from './modeview/modeview.component';
 import { FormatValuelistComponent } from './processes/popup-add-process/form-properties-fields/format-valuelist/format-valuelist.component';
 import { PropertyValueListComponent } from './modeview/properties/property-valuelist/property-valuelist.component';
@@ -39,7 +39,15 @@ import { PropertyPhoneComponent } from './modeview/properties/property-phone/pro
 import { PropertyExpressionComponent } from './modeview/properties/property-expression/property-expression.component';
 import { PropertyAttachmentComponent } from './modeview/properties/property-attachment/property-attachment.component';
 import { FormSettingComboboxComponent } from './processes/popup-add-process/form-properties-fields/setting-fields/form-setting-combobox/form-setting-combobox.component';
+import { PropertyComboboxComponent } from './modeview/properties/property-combobox/property-combobox.component';
 import { FormAdvancedSettingsComponent } from './processes/popup-add-process/form-advanced-settings/form-advanced-settings.component';
+import { FormEditConnectorComponent } from './processes/popup-add-process/form-edit-connector/form-edit-connector.component';
+import { SplitterAllModule } from '@syncfusion/ej2-angular-layouts';
+import { DynamicSettingModule } from 'projects/codx-share/src/lib/components/dynamic-setting/dynamic-setting.module';
+import { PropertyShareComponent } from './modeview/properties/property-share/property-share.component';
+import { PropertyTableComponent } from './modeview/properties/property-table/property-table.component';
+import { PropertyDefaultTitleComponent } from './modeview/properties/property-default/property-default-title/property-default-title.component';
+import { PopupPermissionsProcessesComponent } from './processes/popup-add-process/popup-permissions-processes/popup-permissions-processes.component';
 
 export const routes: Routes = [
   {
@@ -58,7 +66,7 @@ export const routes: Routes = [
     children: [
       {
         path: 'modeview',
-        component: ModeviewComponent,
+        component: FormPropertiesFieldsComponent,
       },
     ],
   }
@@ -77,6 +85,7 @@ export const routes: Routes = [
     FormatValuelistComponent,
 
     //Propreties
+    PropertyDefaultTitleComponent,
     PropertyValueListComponent,
     PropertyFormComponent,
     PropertyTextComponent,
@@ -89,11 +98,14 @@ export const routes: Routes = [
     PropertyPhoneComponent,
     PropertyExpressionComponent,
     PropertyAttachmentComponent,
+    PropertyComboboxComponent,
+    PropertyShareComponent,
+    PropertyTableComponent,
 
-
-
+    FormEditConnectorComponent,
     FormSettingComboboxComponent,
-          FormAdvancedSettingsComponent,
+    FormAdvancedSettingsComponent,
+    PopupPermissionsProcessesComponent,
   ],
   imports: [
     CodxCoreModule.forRoot({ environment }),
@@ -115,8 +127,12 @@ export const routes: Routes = [
     CoreModule,
     PinchZoomModule,
     DiagramModule,
+    SplitterAllModule,
+    DynamicSettingModule
     // NgxImageZoomModule
   ],
   exports: [CodxBpComponent],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+
 })
 export class CodxBpModule {}

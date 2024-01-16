@@ -51,7 +51,7 @@ import { ContractsDetailComponent } from './contracts-detail/contracts-detail.co
 import { CodxCommonService } from 'projects/codx-common/src/lib/codx-common.service';
 import { ExportData } from 'projects/codx-common/src/lib/models/ApproveProcess.model';
 import { PopupPermissionsComponent } from '../popup-permissions/popup-permissions.component';
-
+import { PopupUpdateStatusComponent } from '../deals/popup-update-status/popup-update-status.component';
 
 @Component({
   selector: 'contracts-detail',
@@ -79,7 +79,8 @@ export class ContractsComponent extends UIComponent {
 
   @ViewChild('liquidationTmp') liquidationTmp: TemplateRef<any>;
 
-  @ViewChild('detailViewContract') detailViewContract: ContractsViewDetailComponent;
+  @ViewChild('detailViewContract')
+  detailViewContract: ContractsViewDetailComponent;
 
   listClicked = [];
   views: Array<ViewModel> = [];
@@ -162,10 +163,10 @@ export class ContractsComponent extends UIComponent {
   taskAdd;
   popupLiquidation;
   liquidation: CM_Contracts;
-  dataSelected:any;
+  dataSelected: any;
 
-  statusCodeID:any;
-  statusCodeCmt:any;
+  statusCodeID: any;
+  statusCodeCmt: any;
   processID = '';
   constructor(
     private inject: Injector,
@@ -264,31 +265,38 @@ export class ContractsComponent extends UIComponent {
       this.codxShareService.changeMFApproval(event, data?.unbounds);
     } else if (event != null) {
       event.forEach((res) => {
-        res.isblur = data?.approveStatus == '3' && res?.functionID != 'CM0204_2';
+        res.isblur =
+          data?.approveStatus == '3' && res?.functionID != 'CM0204_2';
         if (isDetail) {
           res.isbookmark = false;
         }
         switch (res.functionID) {
+          case 'CM0204_3':
+          case 'CM0204_17':
+          case 'CM0204_21':
+          case 'CM0204_22':
+            res.disabled = data?.closed;
+            break;
           case 'SYS02':
             res.disabled = data?.delete
-            ? data.closed ||
-               this.checkMoreReason(data) ||
-              (!data.applyProcess && ['3', '5'].includes(data.status))
-            : true;
+              ? data.closed ||
+                this.checkMoreReason(data) ||
+                (!data.applyProcess && ['3', '5'].includes(data.status))
+              : true;
             break;
           case 'SYS03':
             res.disabled = data?.write
-            ? data?.closed ||
-              this.checkMoreReason(data) ||
-              (!data.applyProcess && ['3', '5'].includes(data.status))
-            : true;
+              ? data?.closed ||
+                this.checkMoreReason(data) ||
+                (!data.applyProcess && ['3', '5'].includes(data.status))
+              : true;
             break;
           case 'SYS04':
             res.disabled = data?.write
-            ? data.closed ||
-              (data.status != '13' && this.checkMoreReason(data, false)) ||
-              (!data.applyProcess && ['3', '5'].includes(data.status))
-            : true;
+              ? data.closed ||
+                (data.status != '13' && this.checkMoreReason(data, false)) ||
+                (!data.applyProcess && ['3', '5'].includes(data.status))
+              : true;
 
             break;
           //Gửi duyệt
@@ -312,10 +320,6 @@ export class ContractsComponent extends UIComponent {
           case 'CM0204_4':
             res.disabled = true;
             break;
-          case 'CM0204_3': //tạo hợp đồng gia hạn
-            // res.disabled = data?.status == '1' || data?.closed;
-            break;
-          // case 'CM0204_17': //chia sẻ
           case 'CM0204_5': //Đã giao hàng
             res.disabled = true;
             break;
@@ -324,28 +328,40 @@ export class ContractsComponent extends UIComponent {
             break;
           case 'CM0204_8': // chuyển giai đoạn
             res.disabled =
-              !data?.applyProcess || data?.status == '1' || data?.closed || this.checkMoreReason(data);
+              !data?.applyProcess ||
+              data?.status == '1' ||
+              data?.closed ||
+              this.checkMoreReason(data);
             break;
           case 'CM0204_9': // bắt đầu
             res.disabled =
-              !data?.applyProcess || data?.status !== '1' || data?.closed || this.checkMoreReason(data);
+              !data?.applyProcess ||
+              data?.status !== '1' ||
+              data?.closed ||
+              this.checkMoreReason(data);
             break;
           case 'CM0204_10': // thành công
             res.disabled =
-              !data?.applyProcess || data?.status !== '2' || data?.closed || this.checkMoreReason(data);
+              !data?.applyProcess ||
+              data?.status !== '2' ||
+              data?.closed ||
+              this.checkMoreReason(data);
             break;
           case 'CM0204_11': // thất bại
             res.disabled =
-              !data?.applyProcess || data?.status !== '2' || data?.closed || this.checkMoreReason(data);
+              !data?.applyProcess ||
+              data?.status !== '2' ||
+              data?.closed ||
+              this.checkMoreReason(data);
             break;
           case 'CM0204_13': // thêm công việc
             res.disabled = data?.closed;
             break;
           case 'CM0204_14': // phân công người phụ trách
             res.disabled =
-            data?.alloweStatus == '1'
-              ? !['1', '2', '15'].includes(data.status) || data.closed
-              : true;
+              data?.alloweStatus == '1'
+                ? !['1', '2', '15'].includes(data.status) || data.closed
+                : true;
             break;
           case 'CM0204_15': // Đóng hợp đồng
             res.disabled = data?.closed;
@@ -354,20 +370,22 @@ export class ContractsComponent extends UIComponent {
             res.disabled = !data?.closed;
             break;
           case 'CM0204_18': // thanh lý
-            res.disabled = data?.status == '17' && data?.disposalType != '1';
+            res.disabled = (data?.status == '17' && data?.disposalType == '1') || data?.closed;
             break;
           case 'CM0204_19': // đưa vào quy trình xử lý
-            res.disabled =data?.full
-                      ? data?.closed ||
-                        data?.applyProcess ||
-                        this.checkMoreReason(data) ||
-                        (!data?.applyProcess && ['3', '5'].includes(data?.status))
-                      : true;
+            res.disabled = data?.full
+              ? data?.closed ||
+                data?.applyProcess ||
+                this.checkMoreReason(data) ||
+                (!data?.applyProcess && ['3', '5'].includes(data?.status))
+              : true;
             break;
           case 'CM0204_20': // không sử dụng quy trình
-            res.disabled =  data?.full
-            ? data?.closed || !data?.applyProcess || this.checkMoreReason(data)
-            : true;
+            res.disabled = data?.full
+              ? data?.closed ||
+                !data?.applyProcess ||
+                this.checkMoreReason(data)
+              : true;
             break;
         }
       });
@@ -377,7 +395,6 @@ export class ContractsComponent extends UIComponent {
     if (data?.isAdminAll && isShow) return false;
     return data?.status != '1' && data?.status != '2' && data?.status != '15';
   }
-
 
   clickMoreFunc(e) {
     this.clickMF(e.e, e.data);
@@ -459,7 +476,10 @@ export class ContractsComponent extends UIComponent {
         this.popupPermissions(data);
         break;
       case 'CM0204_21': // phụ lục
-      this.addContractAppendix(data);
+        this.addContractAppendix(data);
+        break;
+      case 'CM0204_22': //đổi trạng thái
+        this.changeStatus(data);
         break;
       default: {
         // var customData = {
@@ -527,7 +547,7 @@ export class ContractsComponent extends UIComponent {
       .subscribe((info) => {
         if (info.event.status == 'Y') {
           this.contractService
-            .closeContract([data?.recID,type])
+            .closeContract([data?.recID, type])
             .subscribe((res) => {
               if (res) {
                 data.closed = type;
@@ -687,20 +707,26 @@ export class ContractsComponent extends UIComponent {
 
   async addContract() {
     this.view.dataService.addNew().subscribe(async (res) => {
-      await this.openPopupContract(this.processID, 'add','contract',null, res);
+      await this.openPopupContract(
+        this.processID,
+        'add',
+        'contract',
+        null,
+        res
+      );
     });
   }
 
   async addContractAdjourn(data: CM_Contracts) {
     this.view.dataService.addNew().subscribe(async (res) => {
       let contracts = JSON.parse(JSON.stringify(data)) as CM_Contracts;
-      this.openPopupContract(null,'copy', 'extend', data, contracts);
+      this.openPopupContract(null, 'copy', 'extend', data, contracts);
     });
   }
 
   async addContractAppendix(data: CM_Contracts) {
     let contracts = JSON.parse(JSON.stringify(data)) as CM_Contracts;
-      this.openPopupContract(null, 'copy','appendix',data, contracts);
+    this.openPopupContract(null, 'copy', 'appendix', data, contracts);
   }
 
   async editContract(contract) {
@@ -716,7 +742,7 @@ export class ContractsComponent extends UIComponent {
   async copyContract(contract) {
     this.view.dataService.addNew().subscribe(async (res) => {
       let dataCopy = JSON.parse(JSON.stringify(contract));
-      this.openPopupContract(null, 'copy', 'contract',contract, dataCopy);
+      this.openPopupContract(null, 'copy', 'contract', contract, dataCopy);
     });
   }
 
@@ -764,13 +790,22 @@ export class ContractsComponent extends UIComponent {
           this.beforeDelete(option, contract.recID)
         )
         .subscribe((res: any) => {
-          if (res) {
+          if (res?.contractName && res?.contractID) {
+            this.view.dataService.add(res).subscribe();
+            this.view.currentView['schedule'].refresh();
+            this.detectorRef.markForCheck();
           }
         });
     }
   }
 
-  async openPopupContract(processID, action, type = 'contract',contractOld, contract) {
+  async openPopupContract(
+    processID,
+    action,
+    type = 'contract',
+    contractOld,
+    contract
+  ) {
     let data = {
       processID,
       action,
@@ -791,30 +826,34 @@ export class ContractsComponent extends UIComponent {
       option
     );
     popupContract.closed.subscribe((res) => {
-      let contractAdd = res?.event
-      if (contractAdd && action == "add" && contractAdd?.parentID){
-        let contractPrent = this.view.dataService?.data?.find(x => x.recID == contractAdd?.parentID);
-        if(contractPrent){
-          if(contractAdd?.useType == "5"){
+      let contractAdd = res?.event;
+      if (contractAdd && action == 'add' && contractAdd?.parentID) {
+        let contractPrent = this.view.dataService?.data?.find(
+          (x) => x.recID == contractAdd?.parentID
+        );
+        if (contractPrent) {
+          if (contractAdd?.useType == '5') {
             this.view.dataService.remove(contractPrent).subscribe();
             this.view.currentView['schedule'].refresh();
             this.detectorRef.detectChanges();
-          }else if(contractAdd?.useType == "3"){
-            if(contractPrent?.recID == this.dataSelected?.recID){
+          } else if (contractAdd?.useType == '3') {
+            if (contractPrent?.recID == this.dataSelected?.recID) {
               this.contractAppendix = res?.event?.contract;
               this.detectorRef.detectChanges();
             }
           }
         }
-      }else if(contractAdd && action == "copy"){
-        if(contractAdd?.useType == "5"){
+        this.notiService.notifyCode('SYS006');
+      } else if (contractAdd && action == 'copy') {
+        if (contractAdd?.useType == '5') {
           this.view.dataService.remove(contractOld).subscribe();
           this.view.currentView['schedule'].refresh();
           this.detectorRef.detectChanges();
-        }else if(contractAdd?.useType == "3"){
-          this.contractAppendix = res?.event;          
+        } else if (contractAdd?.useType == '3') {
+          this.contractAppendix = res?.event;
           this.detectorRef.detectChanges();
         }
+        this.notiService.notifyCode('SYS006');
       }
     });
   }
@@ -1109,7 +1148,6 @@ export class ContractsComponent extends UIComponent {
       });
   }
 
-
   moveStage(data: any) {
     let option = new SidebarModel();
     option.DataService = this.view.dataService;
@@ -1118,79 +1156,184 @@ export class ContractsComponent extends UIComponent {
       // this.cache
       //   .gridViewSetup(fun.formName, fun.gridViewName)
       //   .subscribe((grvSt) => {
-          let stepReason = {
-            isUseFail: false,
-            isUseSuccess: false,
-          };
-          let dataCM = {
-            refID: data?.refID,
-            processID: data?.processID,
-            stepID: data?.stepID,
-            nextStep: '',
-            isCallInstance: true,
-          };
-          let obj = {
-            formModel: this.view.formModel,
-            deal: data,
-            stepReason: stepReason,
-            headerTitle: this.actionName,
-            applyFor: '4',
-            dataCM: dataCM,
-          };
-          let dialogMoveStage = this.callfc.openForm(
-            PopupMoveStageComponent,
-            '',
-            850,
-            900,
-            '',
-            obj
-          );
-          dialogMoveStage.closed.subscribe((e) => {
-            if (e && e.event != null) {
-              let instance = e.event?.instance;
-              let listSteps = e.event?.listStep;
-              let isMoveBackStage = e.event?.isMoveBackStage;
-              let tmpInstaceDTO = e.event?.tmpInstaceDTO;
-              if (isMoveBackStage) {
-                let dataUpdate = [
-                  tmpInstaceDTO,
-                ];
-                this.cmService
-                  .moveStageBackContract(dataUpdate)
-                  .subscribe((res) => {
-                    if (res) {
-                      this.view.dataService.update(res, true).subscribe();
-                      if (this.detailViewContract) {
-                        this.detailViewContract.contract = this.dataSelected;
-                      }
-                      this.detailViewContract?.reloadListStep(listSteps);
-                      this.detectorRef.detectChanges();
-                    }
-                  });
-              } else {
-                let dataUpdate = [
-                  data.recID,
-                  instance.stepID,
-                ];
-                this.cmService
-                  .moveStageContract(dataUpdate)
-                  .subscribe((res) => {
-                    if (res) {
-                      this.view.dataService.update(res, true).subscribe();
-                     if (this.detailViewContract)
-                       this.detailViewContract.contract = res;
-                      if (e.event.isReason != null) {
-                        this.moveReason(res, e.event.isReason);
-                      }
-                      this.detailViewContract?.reloadListStep(listSteps);
-                      this.detectorRef.detectChanges();
-                    }
-                  });
+      let stepReason = {
+        isUseFail: false,
+        isUseSuccess: false,
+      };
+      let dataCM = {
+        refID: data?.refID,
+        processID: data?.processID,
+        stepID: data?.stepID,
+        nextStep: '',
+        isCallInstance: true,
+      };
+      let obj = {
+        formModel: this.view.formModel,
+        deal: data,
+        stepReason: stepReason,
+        headerTitle: this.actionName,
+        applyFor: '4',
+        dataCM: dataCM,
+      };
+      let dialogMoveStage = this.callfc.openForm(
+        PopupMoveStageComponent,
+        '',
+        850,
+        900,
+        '',
+        obj
+      );
+      dialogMoveStage.closed.subscribe((e) => {
+        if (e && e.event != null) {
+          let instance = e.event?.instance;
+          let listSteps = e.event?.listStep;
+          let isMoveBackStage = e.event?.isMoveBackStage;
+          let tmpInstaceDTO = e.event?.tmpInstaceDTO;
+          if (isMoveBackStage) {
+            let dataUpdate = [tmpInstaceDTO];
+            this.cmService
+              .moveStageBackContract(dataUpdate)
+              .subscribe((res) => {
+                if (res) {
+                  this.view.dataService.update(res, true).subscribe();
+                  if (this.detailViewContract) {
+                    this.detailViewContract.contract = this.dataSelected;
+                  }
+                  this.detailViewContract?.reloadListStep(listSteps);
+                  this.detectorRef.detectChanges();
+                }
+              });
+          } else {
+            let dataUpdate = [data.recID, instance.stepID];
+            this.cmService.moveStageContract(dataUpdate).subscribe((res) => {
+              if (res) {
+                this.view.dataService.update(res, true).subscribe();
+                if (this.detailViewContract)
+                  this.detailViewContract.contract = res;
+                if (e.event.isReason != null) {
+                  this.moveReason(res, e.event.isReason);
+                }
+                this.detailViewContract?.reloadListStep(listSteps);
+                this.detectorRef.detectChanges();
               }
-            }
+            });
+          }
+        }
         //  });
-        });
+      });
     });
+  }
+
+  changeStatus(data) {
+    let oldStatus = data?.status;
+    this.dataSelected = data;
+    let dialogModel = new DialogModel();
+    dialogModel.zIndex = 999;
+    dialogModel.FormModel = this.view.formModel;
+    let obj = {
+      statusDefault: this.dataSelected?.statusCodeID,
+      statusCodecmt: this.dataSelected?.statusCodeCmt,
+      applyProcess: this.dataSelected.applyProcess,
+      title: this.actionName,
+      recID: this.dataSelected.recID,
+      category: '4',
+      formModel: this.view?.formModel,
+      statusOld: this.dataSelected?.status,
+      owner: this.dataSelected.owner,
+    };
+    let dialogStatus = this.callfc.openForm(
+      PopupUpdateStatusComponent,
+      '',
+      500,
+      400,
+      '',
+      obj,
+      '',
+      dialogModel
+    );
+    dialogStatus.closed.subscribe((e) => {
+      if (e && e?.event != null) {
+        this.statusCodeID = e?.event?.statusDefault;
+        this.statusCodeCmt = e?.event?.statusCodecmt;
+        let status = e?.event?.status;
+        let message = e?.event?.message;
+        if (status && !this.dataSelected.applyProcess) {
+          this.dataSelected.status = status;
+        }
+        if (message) {
+          this.notiService.notifyCode(
+            message,
+            0,
+            "'" + this.dataSelected?.dealName + "'"
+          );
+          return;
+        }
+        if (this.dataSelected.applyProcess && e?.event?.isOpenForm) {
+          if (status) {
+            switch (status) {
+              case '2':
+                if (oldStatus == '1') {
+                  this.startInstance(this.dataSelected);
+                } else {
+                  this.moveStage(this.dataSelected);
+                }
+                break;
+              case '1':
+                this.startNew(this.dataSelected);
+                break;
+              case '3':
+              case '5':
+                this.moveReason(this.dataSelected, status === '3');
+                break;
+            }
+          }
+        } else {
+          this.dataSelected.statusCodeID = this.statusCodeID;
+          this.dataSelected.statusCodeCmt = this.statusCodeCmt;
+          this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
+          this.view.dataService.dataSelected = this.dataSelected;
+          this.view.dataService.update(this.dataSelected, true).subscribe();
+          this.detectorRef.detectChanges();
+          this.notiService.notifyCode('SYS007');
+        }
+      }
+    });
+  }
+
+  startNew(data) {
+    this.notiService
+      .alertCode('CM063', null, ['"' + data?.contractName + '"' || ''])
+      .subscribe((x) => {
+        if (x.event && x.event.status == 'Y') {
+          // this.startDeal(data);
+          this.cmService.startNewInstance([data.refID]).subscribe((res) => {
+            if (res) {
+              let dataUpdate = [
+                res[1],
+                null,
+                data?.expectedClosed,
+                this.statusCodeID,
+                this.statusCodeCmt,
+              ];
+              this.cmService
+                .moveStageBackDataCM(dataUpdate)
+                .subscribe((deal) => {
+                  if (deal) {
+                    this.dataSelected = deal;
+                    this.view.dataService
+                      .update(this.dataSelected, true)
+                      .subscribe();
+                    // if (this.detailViewDeal)
+                    //   this.detailViewDeal.dataSelected = this.dataSelected;
+                    // this.detailViewDeal?.reloadListStep(res[0]);
+                    // this.detectorRef.detectChanges();
+                    // this.resetStatusCode();
+                  }
+                });
+            }
+          });
+        }
+      });
   }
 
   // moveReason(data: any, isMoveSuccess: boolean) {
@@ -1308,15 +1451,21 @@ export class ContractsComponent extends UIComponent {
     dialogReason.closed.subscribe((e) => {
       if (e && e.event != null) {
         let listSteps = e.event?.listStep;
-    //    data = this.updateReasonContract(e.event?.instance, data, isMoveSuccess);
-        this.cmService.moveContractReason([ data.recID,isMoveSuccess ? '3' : '5',e?.event?.instance?.stepID]).subscribe((res) => {
-          if (res) {
-            data = res;
-            this.view.dataService.update(data, true).subscribe();
-            this.detailViewContract.reloadListStep(listSteps);
-            this.detectorRef.detectChanges();
-          }
-        });
+        //    data = this.updateReasonContract(e.event?.instance, data, isMoveSuccess);
+        this.cmService
+          .moveContractReason([
+            data.recID,
+            isMoveSuccess ? '3' : '5',
+            e?.event?.instance?.stepID,
+          ])
+          .subscribe((res) => {
+            if (res) {
+              data = res;
+              this.view.dataService.update(data, true).subscribe();
+              this.detailViewContract.reloadListStep(listSteps);
+              this.detectorRef.detectChanges();
+            }
+          });
         // }
       }
     });
@@ -1327,20 +1476,30 @@ export class ContractsComponent extends UIComponent {
   //   return contract;
   // }
 
-
   autoStart(event) {
     if (event) {
-      this.api
-        .exec<any>('DP', 'InstancesBusiness', 'StartInstanceAsync', [
-          this.dataSelected?.refID,
-        ])
-        .subscribe((res) => {
-          console.log(res);
-          if (res) {
-            this.listInsStep = res;
-          }
-        });
-    }
+      this.cmService
+      .startInstance([this.dataSelected?.refID, this.dataSelected?.recID, 'CM0204', 'CM_Contracts'])
+      .subscribe((resDP) => {
+        if (resDP) {
+          var datas = [this.dataSelected?.recID];
+          this.cmService.startContrart(datas).subscribe((res) => {
+            if (res) {
+              this.dataSelected = res;
+              this.dataSelected = JSON.parse(
+                JSON.stringify(this.dataSelected)
+              );
+              this.detailViewContract.reloadListStep(resDP[1]);
+              this.notiService.notifyCode('SYS007');
+              this.view.dataService
+                .update(this.dataSelected, true)
+                .subscribe();
+            }
+            this.detectorRef.detectChanges();
+          });
+        }
+      });
+    } 
   }
 
   loadParam() {
@@ -1501,7 +1660,11 @@ export class ContractsComponent extends UIComponent {
   }
 
   changeData(event) {
-    if (event?.field == 'disposalOn' || event?.field == 'debtClosingOn' || event?.field == 'disposalExpired') {
+    if (
+      event?.field == 'disposalOn' ||
+      event?.field == 'debtClosingOn' ||
+      event?.field == 'disposalExpired'
+    ) {
       this.liquidation[event?.field] = event?.data?.fromDate;
     } else {
       this.liquidation[event?.field] = event?.data;
@@ -1531,7 +1694,6 @@ export class ContractsComponent extends UIComponent {
     // this.isDataLoading = false;
     // this.changeDetectorRef.detectChanges();
   }
-
 }
 
 // this.columnGrids = [];

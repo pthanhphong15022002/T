@@ -314,59 +314,57 @@
       <div id="combobox" (click)="handleDivClick($event)">
         <div
           class="input-custom d-flex align-items-center justify-content-between position-relative"
+          [ngStyle]="showSelect ? {'border-color':'#cae8f1'} : {}"
         >
           <span
             [ngClass]="showSelect ? 'd-none' : ''"
-            class="popup-data"
-            class="ps-2 line-clamp line-clamp-1"
+            class="ps-2 line-clamp line-clamp-1 me-10"
           >
             {{ titleField }}
           </span>
 
-          <div>
-            <div
-              [ngClass]="showSelect ? '' : 'd-none'"
-              class="categories"
-              cdkDropListGroup
+          <div
+            [ngClass]="showSelect ? '' : 'd-none'"
+            class="categories me-10"
+            cdkDropListGroup
+          >
+            <ng-container
+              *ngFor="let field of listFieldIntask; let i = index"
             >
-              <ng-container
-                *ngFor="let field of listFieldIntask; let i = index"
+              <div
+                class="categories-item"
+                cdkDropList
+                cdkDropListOrientation="horizontal"
+                [cdkDropListData]="{ item: field, index: i }"
+                (cdkDropListDropped)="drop($event)"
               >
-                <div
-                  class="categories-item"
-                  cdkDropList
-                  cdkDropListOrientation="horizontal"
-                  [cdkDropListData]="{ item: field, index: i }"
-                  (cdkDropListDropped)="drop($event)"
-                >
-                  <div class="inner" cdkDrag>
-                    <div *cdkDragPlaceholder></div>
-                    <div
-                      [ngbTooltip]="field?.title"
-                      container="body"
-                      placement="top"
-                      class="d-flex justify-content-between align-items-center w-100 text-white inner-item"
+                <div class="inner" cdkDrag>
+                  <div *cdkDragPlaceholder></div>
+                  <div
+                    [ngbTooltip]="field?.title"
+                    container="body"
+                    placement="top"
+                    class="d-flex justify-content-between align-items-center w-100 text-white inner-item"
+                  >
+                    <span
+                      class="my-1 mx-2 line-clamp line-clamp-1"
+                      style="font-size: 12px; max-width: 100px"
+                      >{{ field?.title }}</span
                     >
-                      <span
-                        class="my-1 mx-2 line-clamp line-clamp-1"
-                        style="font-size: 12px; max-width: 100px"
-                        >{{ field?.title }}</span
-                      >
-                      <span
-                        class="icon-close icon-16 cursor-pointer fw-bold"
-                        (click)="removeField(field)"
-                      ></span>
-                    </div>
+                    <span
+                      class="icon-close icon-16 cursor-pointer fw-bold"
+                      (click)="removeField(field)"
+                    ></span>
                   </div>
                 </div>
-              </ng-container>
-            </div>
-            <div class="icon-combobox">
-              <span class="icon-18 icon-close"></span>
-              <span class="icon-18 icon-expand_more"></span>
-            </div>
+              </div>
+            </ng-container>
           </div>
 
+          <div class="icon-combobox">
+            <!-- <span class="icon-18 icon-close"></span> -->
+            <span class="icon-14 icon-expand_more-1"></span>
+          </div>
           <div>
             <span class="e-input-group-icon e-ddl-icon"></span>
           </div>
@@ -380,8 +378,8 @@
           >
             <span style="font-size: 14px">{{ item?.title }}</span>
           </div>
-          <div *ngIf="listFieldConvert?.length <= 0">
-            <span style="font-size: 14px; text-align: center"
+          <div *ngIf="listFieldConvert?.length <= 0" class="d-flex align-items-center justify-content-center">
+            <span style="font-size: 14px; margin-top:6px;"
               >Chưa có dữ liệu phát sinh</span
             >
           </div>

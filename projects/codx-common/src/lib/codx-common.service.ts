@@ -129,6 +129,20 @@ export class CodxCommonService {
       });
     });
   }
+  
+  //-------------------------------------------Role--------------------------------------------//
+  checkAdminModule(funcID: string) {
+    return this.api.execSv(
+      'SYS',
+      'ERM.Business.SYS',
+      'RolesBusiness',
+      'CheckAdminModuleAsync',
+      [funcID]
+    );
+  }
+
+  //-------------------------------------------------------------------------------------------//
+
 
   deleteByObjectsWithAutoCreate(
     objectIDs: string,

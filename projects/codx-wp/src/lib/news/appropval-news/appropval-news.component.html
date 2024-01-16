@@ -1,5 +1,5 @@
 <codx-views #view 
-  *ngIf="function"
+  *ngIf="function && loadedApprover"
   [views]="views" 
   [funcID]="function.functionID"
   [entityName]="function.entityName"
@@ -9,7 +9,11 @@
   className="NewsBusiness"
   method="GetDataApproAsync"
   [selectedFirst]="true" 
-  (selectedChange)="selectedChange($event)">
+  (selectedChange)="selectedChange($event)"  
+  [predicates]="predicates"
+  [dataValues]="dataValues"
+  
+  >
 </codx-views>
 
 <ng-template #headerTemplate>
@@ -50,7 +54,7 @@
     </codx-temp-full>
     <ng-template #desc2Temp let-data>
       <div>
-        <codx-vll [showText]="true" [showBgColor]="true" [name]="'WP008'" [value]="data?.status"
+        <codx-vll *ngIf="data?.status !=null" [showText]="true" [showBgColor]="true" [name]="'WP008'" [value]="data?.status"
         class="badge badge-light badge-md fs-7">
       </codx-vll>
       <codx-vll *ngIf="data?.approveStatus" [showText]="true" [showBgColor]="true" [name]="'WP007'" [value]="data?.approveStatus"
