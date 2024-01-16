@@ -270,6 +270,8 @@ export class PopupAddDealComponent
           }
           this.costInfos = costs ?? [];
         });
+    } else {
+      this.costInfos = [];
     }
     if (this.action === this.actionCopy) {
       this.deal.applyProcess =
