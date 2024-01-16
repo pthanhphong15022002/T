@@ -126,6 +126,7 @@ import { CurrentStepComponent } from './deals/step-task/current-step/current-ste
 import { PopupCostItemsComponent } from './deals/popup-cost-items/popup-cost-items.component';
 import { ViewStepComponent } from './deals/step-task/view-step/view-step.component';
 import { CostItemsComponent } from './deals/popup-cost-items/cost-items/cost-items.component';
+import { CodxDashboardViewsComponent } from 'projects/codx-share/src/lib/components/codx-dashboard/dashboard-view/dashboard-view.component';
 
 export const routes: Routes = [
   {
@@ -175,6 +176,10 @@ export const routes: Routes = [
       {
         path: 'dashboard/:funcID',
         component: CmDashboardComponent,
+      },
+      {
+        path: 'dashboard-view/:funcID',
+        component: CodxDashboardViewsComponent,
       },
       {
         path: 'report/:funcID',
