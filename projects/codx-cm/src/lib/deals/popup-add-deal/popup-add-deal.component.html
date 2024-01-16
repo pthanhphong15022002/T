@@ -428,15 +428,15 @@
       </codx-input>
     </div>
     <crud-cost-items
-    *ngIf="costInfos"
-    [transID]="deal.recID"
-    [costInfos]="costInfos"
-    [isLoadedData]="true"
-    [viewOnly]="viewOnly"
-    (dataCostItems)="dataCostItems($event)"
-    (totalDataCost)="totalDataCost($event)"
-  ></crud-cost-items>
-     <!-- <div
+      *ngIf="costInfos"
+      [transID]="deal.recID"
+      [costInfos]="costInfos"
+      [isLoadedData]="true"
+      [viewOnly]="viewOnly"
+      (dataCostItems)="dataCostItems($event)"
+      (totalDataCost)="totalDataCost($event)"
+    ></crud-cost-items>
+    <!-- <div
       class="d-flex justify-content-end align-items-center mb-2 border-bottom"
     >
       <div class="d-flex flex-row text-end align-items-end mb-3">
