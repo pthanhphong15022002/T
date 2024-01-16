@@ -1741,7 +1741,7 @@ export class CodxCmService {
   //#region
 
   getOneObject(recID, className) {
-    return this.api.exec<any>('DP', className, 'GetOneAsync', recID);
+    return this.api.exec<any>('CM', className, 'GetOneAsync', recID);
   }
   //#region getParamModule
   getParam(sformName, category) {
