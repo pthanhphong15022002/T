@@ -2,7 +2,9 @@ export const APICONSTANT = {
   SERVICES: {
     AD: 'AD',
     BS: 'BS',
+    BP: 'BP',
     CM: 'CM',
+    DP: 'DP',
     DM: 'DM',
     FED: 'FED',
     HR: 'HR',
@@ -10,11 +12,14 @@ export const APICONSTANT = {
     TENANT: 'TENANT',
     TM: 'TM',
     WP: 'WP',
+
   },
   ASSEMBLY: {
     AD: 'ERM.Business.AD',
     BS: 'ERM.Business.BS',
-    CM: 'ERM.Business.Core',
+    BP: 'ERM.Business.BP',
+    CM: 'ERM.Business.CM',
+    DP: 'ERM.Business.DP',
     DM: 'ERM.Business.DM',
     FED: 'ERM.Business.FED',
     HR: 'ERM.Business.HR',
