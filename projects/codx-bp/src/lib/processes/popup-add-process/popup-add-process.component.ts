@@ -116,6 +116,7 @@ export class PopupAddProcessComponent {
   dialog: any;
   data: BP_Processes;
   action = 'add';
+  processTabIndex = 0; //tab bước quy trình xử lý
   currentTab = 0; //Tab hiện tại
   processTab = 0; // Tổng bước đã quua
   newNode: number; //vị trí node mới
@@ -793,5 +794,10 @@ export class PopupAddProcessComponent {
     }
     op.data = data;
     return true;
+  }
+
+  activeTab(tab:any)
+  {
+    this.processTabIndex = tab;
   }
 }

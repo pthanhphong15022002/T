@@ -160,4 +160,16 @@
     }
   }
 }
-
+.step-process-tab
+{
+  height: 45px;
+  border-radius: 2px;
+  .active
+  {
+    background-color: white;
+    i
+    {
+      color: var(--primary-active);
+    }
+  }
+}
