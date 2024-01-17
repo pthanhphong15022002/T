@@ -1285,6 +1285,9 @@ export class ContractsComponent extends UIComponent {
               case '5':
                 this.moveReason(this.dataSelected, status === '3');
                 break;
+              case '17':
+                this.liquidationContract(data);
+                break;
             }
           }
         } else {

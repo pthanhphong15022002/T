@@ -143,7 +143,11 @@ export class PopupUpdateStatusComponent
     } else if (applyFor == '2' || applyFor == '3') {
       business = 'CasesBusiness';
       method = 'ChangeStatusCasesAsync';
-    } else if (applyFor == '5') {
+    }else if (applyFor == '4') {
+      business = 'ContractsBusiness';
+      method = 'ChangeStatusAsync';
+    }
+     else if (applyFor == '5') {
       business = 'LeadsBusiness';
       method = 'ChangeStatusLeadAsync';
     }
