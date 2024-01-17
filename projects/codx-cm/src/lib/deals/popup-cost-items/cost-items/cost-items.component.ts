@@ -235,6 +235,7 @@ export class CostItemsComponent implements OnInit {
           if (res) {
             this.dataDealValueTo.emit(this.dealValueTo);
             this.dealValueToOld = this.dealValueTo;
+            this.notiService.notifyCode('SYS007');
           }
         });
     }
