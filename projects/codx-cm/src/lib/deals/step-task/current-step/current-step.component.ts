@@ -1,3 +1,4 @@
+import { log } from 'console';
 import {
   OnInit,
   Optional,
@@ -65,7 +66,7 @@ export class CurrentStepComponent implements OnInit, OnChanges {
   statusCodeID;
   statusCodeCmt;
   detailViewDeal;
-
+  title = '';
   formModelQuotations: FormModel = {
     formName: 'CMQuotations',
     gridViewName: 'grvCMQuotations',
@@ -109,6 +110,7 @@ export class CurrentStepComponent implements OnInit, OnChanges {
     this.statusCodeID = dt?.data?.statusCodeID;
     this.statusCodeCmt = dt?.data?.statusCodeCmt;
     this.detailViewDeal = dt?.data?.detailViewDeal;
+    this.title = dt?.data?.title;
     this.type = dt?.data?.type || '1';
     this.view = dt?.data?.view;
     if (!this.dialog?.formModel) {
@@ -455,12 +457,10 @@ export class CurrentStepComponent implements OnInit, OnChanges {
                   .subscribe((res) => {
                     if (res) {
                       this.view.dataService.update(res, true).subscribe();
-                      // if (this.kanban) {
-                      //   this.renderKanban(res);
-                      // }
                       if (this.detailViewDeal)
                         this.detailViewDeal.dataSelected = res;
                       this.detailViewDeal?.reloadListStep(listSteps);
+                      this.getListInstanceStep(this.deal);
                       this.changeDetectorRef.detectChanges();
                     }
                   });
@@ -479,14 +479,9 @@ export class CurrentStepComponent implements OnInit, OnChanges {
                   .subscribe((res) => {
                     if (res) {
                       this.view.dataService.update(res, true).subscribe();
-                      // if (this.kanban) {
-                      //   this.renderKanban(res);
-                      // }
                       if (this.detailViewDeal)
                         this.detailViewDeal.dataSelected = res;
-                      // if (e.event.isReason != null) {
-                      //   this.moveReason(res, e.event.isReason);
-                      // }
+                      this.getListInstanceStep(this.deal);
                       this.detailViewDeal?.reloadListStep(listSteps);
                       this.changeDetectorRef.detectChanges();
                     }
@@ -496,5 +491,50 @@ export class CurrentStepComponent implements OnInit, OnChanges {
           });
         });
     });
+  }
+
+  startNow(e) {
+    if(e){
+      this.notiService
+      .alertCode('DP033', null, ['"' + this.deal?.dealName + '"' || ''])
+      .subscribe((x) => {
+        if (x.event && x.event.status == 'Y') {
+          this.startDeal(this.deal);
+        }
+      });
+    }
+  }
+
+  startDeal(data) {
+    this.codxCmService
+      .startInstance([data.refID, data.recID, 'CM0201', 'CM_Deals'])
+      .subscribe((resDP) => {
+        if (resDP) {
+          let datas = [data.recID, resDP[0]];
+          this.codxCmService.startDeal(datas).subscribe((res) => {
+            if (res) {
+              this.deal = res;
+              this.view.dataService.update(this.deal, true).subscribe();
+              if (this.detailViewDeal)
+                this.detailViewDeal.reloadListStep(resDP[1]);
+                this.getListInstanceStep(this.deal);
+              this.notiService.notifyCode('SYS007');
+            }
+            this.changeDetectorRef.markForCheck();
+          });
+        }
+      });
+  }
+
+  dataDealValueTo(e){
+    console.log(e); 
+  }
+
+  totalDataCost(e){
+    console.log(e); 
+  }
+
+  dataCostItems(e){
+    console.log(e); 
   }
 }

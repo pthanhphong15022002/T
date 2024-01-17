@@ -26,6 +26,8 @@ export class PopupCostItemsComponent implements OnInit {
   tmpCost: CM_CostItems;
   totalCost = 0;
   transID: string;
+  dealValueTo: any;
+  isUpdate = false;
 
   constructor(
     private api: ApiHttpService,
@@ -43,6 +45,7 @@ export class PopupCostItemsComponent implements OnInit {
     this.dialog = dialog;
     this.costInfos = dt?.data?.listCosts;
     this.transID = dt?.data?.transID;
+    this.dealValueTo = dt?.data?.dealValueTo;
     // this.calculateTotalCost();
     this.title = dt?.data?.title;
   }
@@ -171,9 +174,26 @@ export class PopupCostItemsComponent implements OnInit {
 
   totalDataCost(e) {
     this.totalCost = e;
+    this.isUpdate = true;
+  }
+  changeDealValueTo(e) {
+    this.dealValueTo = e;
+    this.isUpdate = true;
   }
 
   actionEvent(e) {
     debugger;
+  }
+
+  closePopup() {
+    if (this.viewOnly || !this.isUpdate) {
+      this.dialog.close();
+      return;
+    }
+    let obj = {
+      dealCost: this.totalCost,
+      dealValueTo: this.dealValueTo,
+    };
+    this.dialog.close(obj);
   }
 }

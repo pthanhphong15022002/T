@@ -43,7 +43,7 @@
                         <div class="form-group">
                             <codx-label [formModel]="dialog.formModel" name="Behavior" default="Qui tắc ứng xử">
                             </codx-label>
-                            <codx-input type="combobox" name="Behaviors_Grp" [Group]="form"
+                            <codx-input type="combobox" name="Behaviors_Grp" [Group]="form" [multiple]="true"
                                 [crrValue]="form.controls['behavior']?.value" field="behavior"
                                 [refValue]="'Behaviors_Grp'" (valueChange)="valueChange($event)">
                             </codx-input>
@@ -53,7 +53,7 @@
                         <div class="form-group">
                             <codx-label [formModel]="dialog.formModel" name="Behavior" default="Hành vi ứng xử">
                             </codx-label>
-                            <codx-input type="combobox" name="Behaviors" [Group]="form"
+                            <codx-input type="combobox" name="Behaviors" [Group]="form" [multiple]="true"
                                 [crrValue]="form.controls['behavior']?.value" field="behavior" [refValue]="'Behaviors'"
                                 (valueChange)="valueChange($event)">
                             </codx-input>
@@ -421,7 +421,7 @@
                     </div>
                 </div>
             </div>
-            <button type="button" class="btn btn-primary" (click)="Save()" [disabled]="isSaving">
+            <button type="button" class="btn btn-primary" (click)="Save()" [disabled]="isSaving || cointsError">
                 <codx-label [formModel]="dialog.formModel" name="lblFDSumbit" default="Thêm"></codx-label>
             </button>
         </div>

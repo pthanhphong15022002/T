@@ -2,7 +2,7 @@
   style="
     background-color: #f5f8fa;
     overflow: hidden;
-    height: 95vh;
+    height: 96vh;
     position: relative;
   "
 >
@@ -11,20 +11,20 @@
       <!-- RIGHT -->
       <div class="right col-12 h-100">
         <div
-          (click)="close()"
-          class="cursor-pointer d-flex align-items-center py-5 mx-5 top1"
+          class="d-flex align-items-center py-5 top1 justify-content-between"
         >
-          <span
-            class="icon-20 icon-arrow_back text-primary me-2 fw-bold"
-          ></span>
           <codx-label
             class="fs-5 fw-bold me-2"
             name="lblTitleViewDeal"
             [formModel]="dialog?.formModel"
-            [default]="'Giai đoạn hiện tại'"
+            [default]="title"
           ></codx-label>
+          <span
+            class="icon-20 icon-close cursor-pointer p-1"
+            (click)="close()"
+          ></span>
         </div>
-        <div class="top">
+        <div class="top" *ngIf="type == '1'">
           <div class="d-flex">
             <div class="tab-scroll mb-4">
               <div class="tab-horizone bg-white h-od-tab">
@@ -87,15 +87,6 @@
           [default]="'Chi phí'"
         ></codx-label>
       </div>
-      <div>
-        <button
-          type="button"
-          class="btn btn-outline-primary d-flex align-items-center btn-sm"
-        >
-          <span class="icon-u_dollar-sign-alt icon-18 me-1"></span>
-          <span>Thêm chi phí</span>
-        </button>
-      </div>
     </div>
     <div>
       <crud-cost-items
@@ -103,7 +94,11 @@
         [transID]="deal?.recID"
         [costInfos]="listCosts"
         [isLoadedData]="true"
-        [viewOnly]="true"
+        [viewOnly]="false"
+        [isAutoSave]=" true"
+        (dataDealValueTo)="dataDealValueTo($event)"
+        (totalDataCost)="totalDataCost($event)"
+        (dataCostItems)="dataCostItems($event)"
       ></crud-cost-items>
     </div>
   </div>
@@ -126,6 +121,7 @@
         [applyFor]="'1'"
         [isMoveStage]="true"
         (moveStage)="moveStage($event)"
+        (startStep)="startNow($event)"
       ></step-task>
     </div>
   </div>
@@ -148,7 +144,7 @@
     </div>
   </div>
 
-  <div id="note" class="item-main" *ngIf="type == '1'">
+  <div id="note" class="item-main mb-7" *ngIf="type == '1'">
     <div class="d-flex align-items-center text-primary my-2">
       <span class="icon-event_notes icon-20 me-1 fw-bold"></span>
       <codx-label
