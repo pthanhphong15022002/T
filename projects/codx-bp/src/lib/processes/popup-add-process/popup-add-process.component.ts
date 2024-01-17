@@ -73,7 +73,7 @@ import { environment } from 'src/environments/environment';
 import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
 import { CodxBpService } from '../../codx-bp.service';
 import { FormAdvancedSettingsComponent } from './form-advanced-settings/form-advanced-settings.component';
-import { FormEditConnectorComponent } from './form-edit-connector/form-edit-connector.component';
+import { FormEditConnectorComponent } from '../../../../../codx-share/src/lib/components/codx-diagram/form-edit-connector/form-edit-connector.component';
 import {
   BP_Processes,
   BP_Processes_Permissions,

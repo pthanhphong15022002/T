@@ -343,8 +343,13 @@ export const routes: Routes = [
     ],
   },
 ];
-
-const T_Component: Type<any>[] = [
+const T_Pipe = [
+  DatePipe,
+  GetHeaderTextPipe,
+  FilterPipe,
+  TimeAgoPipe
+]
+const T_Component = [
   LayoutComponent,
   EmpContactsComponent,
   EmployeesComponent,
@@ -368,11 +373,9 @@ const T_Component: Type<any>[] = [
   NoSubAsideComponent,
   OrgorganizationComponent,
   OrganizeDetailComponent,
-  FilterPipe,
   OrgchartDetailComponent,
   PopupAddOrganizationComponent,
   PopupAddPositionsComponent,
-  TimeAgoPipe,
   ReportinglineOrgChartComponent,
   ReportinglineDetailComponent,
   EmployeeListComponent,
@@ -462,10 +465,7 @@ const T_Component: Type<any>[] = [
   EmployeeQuitComponent,
   ViewDetailEquitComponent,
   HolidayComponent,
-
-  //Pipe
-  DatePipe,
-  GetHeaderTextPipe,
+ 
 ];
 @NgModule({
   imports: [
@@ -485,7 +485,7 @@ const T_Component: Type<any>[] = [
     SpeedDialModule,
   ],
   exports: [T_Component],
-  declarations: T_Component,
+  declarations: [T_Component,T_Pipe],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class CodxHRModule {

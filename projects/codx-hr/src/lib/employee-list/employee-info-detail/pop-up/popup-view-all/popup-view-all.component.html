@@ -12,7 +12,7 @@
     </ng-container> -->
 
     <div class="card-body p-0 employee-all" 
-    *ngIf="formModel && columnGrid; else emptyDataTemplate"
+    *ngIf="columnGrid && columnGrid.length > 0; else emptyDataTemplate"
     >
       <!-- <codx-gridview
         #gridView
@@ -31,7 +31,6 @@
 
       <codx-gridview-v2
       #gridView
-      [formModel]="formModel"
       [columnsGrid]="columnGrid"
       [service]="'HR'"
       [autoFitColumns]="false"

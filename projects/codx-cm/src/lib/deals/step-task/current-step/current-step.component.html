@@ -95,6 +95,10 @@
         [costInfos]="listCosts"
         [isLoadedData]="true"
         [viewOnly]="false"
+        [isAutoSave]=" true"
+        (dataDealValueTo)="dataDealValueTo($event)"
+        (totalDataCost)="totalDataCost($event)"
+        (dataCostItems)="dataCostItems($event)"
       ></crud-cost-items>
     </div>
   </div>

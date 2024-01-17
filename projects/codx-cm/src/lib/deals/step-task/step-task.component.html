@@ -40,7 +40,7 @@
       </div>
       <div *ngIf="isMoveStage">
         <div
-          *ngIf="dataCM?.status == '2'"
+          *ngIf="dataCM?.status != '1'"
           class="d-flex align-items-center mx-2 bg-primary rounded-pill btn-next-step px-2 py-1"
           (click)="nextStep()"
         >
@@ -48,7 +48,7 @@
           <span>Chuyển giai đoạn</span>
         </div>
         <div
-          *ngIf="dataCM?.status != '2'"
+          *ngIf="dataCM?.status == '1'"
           class="d-flex align-items-center mx-2 bg-primary rounded-pill btn-next-step px-2 py-1"
           (click)="startStepFunction()"
         >

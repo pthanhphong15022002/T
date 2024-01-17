@@ -41,7 +41,6 @@ import { PropertyAttachmentComponent } from './modeview/properties/property-atta
 import { FormSettingComboboxComponent } from './processes/popup-add-process/form-properties-fields/setting-fields/form-setting-combobox/form-setting-combobox.component';
 import { PropertyComboboxComponent } from './modeview/properties/property-combobox/property-combobox.component';
 import { FormAdvancedSettingsComponent } from './processes/popup-add-process/form-advanced-settings/form-advanced-settings.component';
-import { FormEditConnectorComponent } from './processes/popup-add-process/form-edit-connector/form-edit-connector.component';
 import { SplitterAllModule } from '@syncfusion/ej2-angular-layouts';
 import { DynamicSettingModule } from 'projects/codx-share/src/lib/components/dynamic-setting/dynamic-setting.module';
 import { PropertyShareComponent } from './modeview/properties/property-share/property-share.component';
@@ -103,7 +102,6 @@ export const routes: Routes = [
     PropertyShareComponent,
     PropertyTableComponent,
 
-    FormEditConnectorComponent,
     FormSettingComboboxComponent,
     FormAdvancedSettingsComponent,
     PopupPermissionsProcessesComponent,

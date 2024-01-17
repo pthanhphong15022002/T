@@ -2,7 +2,7 @@ import { Component, OnInit, AfterViewInit, ChangeDetectionStrategy, ViewEncapsul
 import { HierarchicalTreeService, MindMapService, RadialTreeService, ComplexHierarchicalTreeService, DataBindingService, SnappingService, PrintAndExportService, BpmnDiagramsService, SymmetricLayoutService, ConnectorBridgingService, UndoRedoService, LayoutAnimationService, DiagramContextMenuService, ConnectorEditingService, DiagramComponent, SymbolPaletteComponent, BpmnShapeModel, ConnectorModel, ContextMenuSettingsModel, DiagramBeforeMenuOpenEventArgs, DiagramTools, HeaderModel, LaneModel, NodeModel, PaletteModel, PortConstraints, PortVisibility, RulerSettingsModel, SelectorConstraints, SelectorModel, ShapeStyleModel, SnapConstraints, SnapSettingsModel, SwimLaneModel, UserHandleModel, cloneObject } from "@syncfusion/ej2-angular-diagrams";
 import { ExpandMode, MenuEventArgs } from "@syncfusion/ej2-angular-navigations";
 import { ApiHttpService, AuthStore, CacheService, CallFuncService, DialogData, DialogRef, NotificationsService, SidebarModel } from "codx-core";
-import { FormEditConnectorComponent } from "projects/codx-bp/src/lib/processes/popup-add-process/form-edit-connector/form-edit-connector.component";
+import { FormEditConnectorComponent } from "projects/codx-share/src/lib/components/codx-diagram/form-edit-connector/form-edit-connector.component";
 
 @Component({
   selector: 'codx-diagram',

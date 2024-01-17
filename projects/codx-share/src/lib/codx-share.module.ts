@@ -202,6 +202,7 @@ import { PopupSelectFieldReferenceComponent } from './components/codx-input-cust
 import { ViewGanttChartComponent } from './components/codx-tasks/view-gantt-chart/view-gantt-chart.component';
 import { CodxDiagramComponent } from './components/codx-diagram/codx-diagram.component';
 import { DiagramModule } from '@syncfusion/ej2-angular-diagrams';
+import { FormEditConnectorComponent } from './components/codx-diagram/form-edit-connector/form-edit-connector.component';
 
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
@@ -226,6 +227,7 @@ const T_Component: Type<any>[] = [
   CalendarNotesComponent,
   CalendarDateComponent,
   CodxDiagramComponent,
+  FormEditConnectorComponent,
   // LayoutNoAsideComponent,
   // LayoutOnlyHeaderComponent,
   // LayoutNoAsideToolbarFluidComponent,
