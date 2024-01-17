@@ -27,7 +27,6 @@ export class Layout2Component implements OnInit{
     if(isObservable(this.funcs))
     {
       this.funcs.subscribe(item=>{
-        debugger
       })
     }
   }
