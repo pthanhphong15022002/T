@@ -696,11 +696,10 @@ export class PopupAddCardsComponent implements OnInit {
         this.card.hasGifts = true;
         this.card.gifts = [...this.gifts, ...this.evoucher];
       }
-
       if (this.givePoint > 0) {
         this.card.hasPoints = true;
-        this.card.coins = this.givePoint;
       }
+      this.card.coins = this.givePoint;
 
       // if(this.parameter){
       //   // max send
@@ -850,6 +849,7 @@ export class PopupAddCardsComponent implements OnInit {
     if (this.parameter.MaxPointPerOnceControl === '1') {
       if (data > this.parameter.MaxPointPerOnce) {
         this.cointsError = "Vượt quá số xu cho phép tặng trong 1 lần";
+        this.givePoint = 0;
         return false;
       }
     }
@@ -874,11 +874,13 @@ export class PopupAddCardsComponent implements OnInit {
           this.parameter.MaxPoints +
           ' xu/' +
           unitName;
+          this.givePoint = 0;
         return false;
       }
     }
     if(data > this.myWallet?.coCoins){
       this.cointsError = "Số dư xu không đủ, số dư hiện tại là: " + this.myWallet?.coCoins + " xu";
+      this.givePoint = 0;
       return false;
     }
     return true;
