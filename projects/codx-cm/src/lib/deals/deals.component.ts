@@ -1021,6 +1021,7 @@ export class DealsComponent
           statusCodeID: this.statusCodeID,
           statusCodeCmt: this.statusCodeCmt,
           detailViewDeal: this.detailViewDeal,
+          title: type == '1' ? "Giai đoạn hiện tại" : "Hiện trạng"
           // listInsStepStart: this.listInsStep,
         };
         let option = new DialogModel();

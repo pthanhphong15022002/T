@@ -29,7 +29,7 @@
       </div>
     </div>
     <div class="right d-flex align-items-center">
-      <div  
+      <div
         *ngIf="!isViewStep"
         (click)="addTask()"
         class="d-flex align-items-center me-3 cursor-pointer"
@@ -38,9 +38,23 @@
       >
         <i class="icon-20 icon-add_task text-primary"></i>
       </div>
-      <div class="d-flex align-items-center mx-2 bg-primary rounded-pill btn-next-step px-2 py-1" (click)="nextStep()" *ngIf="isMoveStage">
-        <span class="icon-16 icon-play_arrow"></span>
-        <span>Chuyển giai đoạn</span>
+      <div *ngIf="isMoveStage">
+        <div
+          *ngIf="dataCM?.status == '2'"
+          class="d-flex align-items-center mx-2 bg-primary rounded-pill btn-next-step px-2 py-1"
+          (click)="nextStep()"
+        >
+          <span class="icon-16 icon-play_arrow me-1"></span>
+          <span>Chuyển giai đoạn</span>
+        </div>
+        <div
+          *ngIf="dataCM?.status != '2'"
+          class="d-flex align-items-center mx-2 bg-primary rounded-pill btn-next-step px-2 py-1"
+          (click)="startStepFunction()"
+        >
+          <span class="icon-16 icon-play_circle_outline me-1"></span>
+          <span>Bắt đầu ngay</span>
+        </div>
       </div>
       <div *ngIf="type == 'G'" class="me-3 value-30px">
         <codx-input
@@ -61,7 +75,11 @@
       </div>
     </div>
   </header>
-  <main class="main-step" [ngStyle]="{ height: taskHeight }" [ngClass]="isHeightAuto ? 'overflow-hidden': ''">
+  <main
+    class="main-step"
+    [ngStyle]="{ height: taskHeight }"
+    [ngClass]="isHeightAuto ? 'overflow-hidden' : ''"
+  >
     <ng-container
       *ngIf="type == 'S'"
       [ngTemplateOutlet]="taskTem"
@@ -96,7 +114,7 @@
       <div class="d-flex align-items-center w-100">
         <ngx-skeleton-loader
           appearance="circle"
-          [theme]="{ width: '50px', height: '50px', 'margin-right': '10px'}"
+          [theme]="{ width: '50px', height: '50px', 'margin-right': '10px' }"
         >
         </ngx-skeleton-loader>
         <ngx-skeleton-loader
@@ -173,7 +191,7 @@
       <div
         *ngIf="
           (instanceStep?.isFailStep || instanceStep?.isSuccessStep) &&
-          !['0', '1', '2','15','17'].includes(dataCM?.status)
+          !['0', '1', '2', '15', '17'].includes(dataCM?.status)
         "
       >
         <div>
@@ -208,7 +226,7 @@
                 <button class="button-custom" (click)="openPopupReason()">
                   <span
                     [ngClass]="
-                    dataCM?.closed
+                      dataCM?.closed
                         ? ''
                         : 'icon-edit icon-20 text-primary-600 py-2'
                     "
@@ -257,7 +275,9 @@
                 <span
                   class="text-dark fw-bold codx-textcontent"
                   [innerHTML]="
-                  instanceStep?.memo | formatvalue : formModel : 'Memo' | async
+                    instanceStep?.memo
+                      | formatvalue : formModel : 'Memo'
+                      | async
                   "
                 ></span>
               </div>
@@ -267,8 +287,14 @@
       </div>
     </div>
   </div>
-  <div *ngIf="!isDataLoading && (!listInstanceStepShow || listInstanceStepShow?.length == 0)" class="no-data">
-    <codx-no-data ></codx-no-data>
+  <div
+    *ngIf="
+      !isDataLoading &&
+      (!listInstanceStepShow || listInstanceStepShow?.length == 0)
+    "
+    class="no-data"
+  >
+    <codx-no-data></codx-no-data>
   </div>
 </ng-template>
 
@@ -280,7 +306,7 @@
       [typeTime]="typeTime"
       [instance]="dataCM"
       [listSteps]="listInstanceStepShow"
-      [isRoleAll]="dataCM?.alloweStatus || dataCM?.full "
+      [isRoleAll]="dataCM?.alloweStatus || dataCM?.full"
       [type]="'CM'"
     ></codx-step-chart>
   </div>
@@ -439,7 +465,7 @@
     </div>
   </div>
 </ng-template>
- <!-- <div class="ms-4">
+<!-- <div class="ms-4">
         <codx-dropdown-select
           cssPopup="h-250px w-300px"
           [isMulti]="false"
