@@ -229,6 +229,7 @@ export class ModeviewComponent implements OnInit {
         this.count.valueList ++;
         data.title += " " + this.count.valueList;
         data.refType = "2";
+        data.refValue = null;
         break;
       }
       case "ComboBox":

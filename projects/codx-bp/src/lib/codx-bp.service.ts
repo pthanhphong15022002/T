@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { APICONSTANT } from '@shared/constant/api-const';
 import { ApiHttpService, NotificationsService } from 'codx-core';
 import { DataRequest } from 'codx-core/public-api';
 import {
@@ -73,8 +74,8 @@ export class CodxBpService {
 
   genAutoNumber(funcID: any, entityName: string, key: any) {
     return this.api.execSv<any>(
-      'SYS',
-      'AD',
+      APICONSTANT.SERVICES.SYS,
+      APICONSTANT.ASSEMBLY.AD,
       'AutoNumbersBusiness',
       'GenAutoNumberAsync',
       [funcID, entityName, key]
@@ -112,8 +113,8 @@ export class CodxBpService {
 
   getPositionsByUserID(userID) {
     return this.api.execSv<any>(
-      'SYS',
-      'AD',
+      APICONSTANT.SERVICES.SYS,
+      APICONSTANT.ASSEMBLY.AD,
       'UsersBusiness',
       'GetUserByIDAsync',
       [userID]

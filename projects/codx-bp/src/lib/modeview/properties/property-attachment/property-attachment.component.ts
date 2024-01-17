@@ -9,6 +9,7 @@ import { AttachmentComponent } from 'projects/codx-common/src/lib/component/atta
   styleUrls: ['./property-attachment.component.css']
 })
 export class PropertyAttachmentComponent extends BasePropertyComponent{
+  selectedIndex = 0;
   @ViewChild('attachment') attachment: AttachmentComponent;
   
   addRow()
@@ -30,8 +31,9 @@ export class PropertyAttachmentComponent extends BasePropertyComponent{
     this.dataChange.emit(this.data);
   }
 
-  uploadFile(recID:any)
+  uploadFile(recID:any, index:any)
   {
+    this.selectedIndex = index;
     this.attachment.objectId = recID;
     this.attachment.uploadFile();
   }
@@ -39,6 +41,14 @@ export class PropertyAttachmentComponent extends BasePropertyComponent{
   valueChangeAttach(e:any,index:any)
   {
     this.data.documentControl[index][e?.field]= e?.data;
+    this.dataChange.emit(this.data);
+  }
+
+  fileSave(e:any)
+  {
+    let count = 1;
+    if(Array.isArray(e)) count = e.length;
+    this.data.documentControl[this.selectedIndex].count = count;
     this.dataChange.emit(this.data);
   }
 }
