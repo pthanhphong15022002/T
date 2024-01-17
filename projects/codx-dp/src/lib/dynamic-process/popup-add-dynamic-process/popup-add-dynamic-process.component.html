@@ -615,7 +615,7 @@
               </codx-img>
             </div>
             <div class="text-gray-600 fw-bold">{{ perm.objectName }}</div>
-            <ng-container *ngIf="checkAssignRemove(i)">
+            <ng-container *ngIf="checkAssignRemove(i) && !viewOnly">
               <div class="action-menu-od" (click)="removeUser(i)">
                 <i class="icon-close text-danger icon-16"></i>
               </div>
@@ -694,7 +694,7 @@
               </codx-img>
             </div>
             <div class="text-gray-600 fw-bold">{{ perm.objectName }}</div>
-            <ng-container *ngIf="checkAssignRemove(i)">
+            <ng-container *ngIf="checkAssignRemove(i) && !viewOnly">
               <div class="action-menu-od" (click)="removeUser(i)">
                 <i class="icon-close text-danger icon-16"></i>
               </div>
@@ -3730,7 +3730,7 @@
                   <span class="text-dark fw-bold ms-1">Owner</span>
                 </div>
 
-                <span class="mt-1 d-none">
+                <span class="mt-1 d-none" *ngIf="!viewOnly">
                   <a
                     (click)="removeRole(perm.objectID)"
                     style="cursor: pointer"
@@ -3833,7 +3833,7 @@
                   <span class="text-dark fw-bold ms-1">Owner</span>
                 </div>
 
-                <span class="mt-1 d-none">
+                <span class="mt-1 d-none" *ngIf="!viewOnly">
                   <a
                     (click)="deleteRoleInstep(step, role, true)"
                     style="cursor: pointer"

@@ -18,7 +18,7 @@
   <codx-tag
     [entityName]="dialog.formModel.entityName"
     [isEdit]="true"
-    [disabled]="false"
+    [disabled]="isView"
     [value]="meeting?.tags || ''"
     (valueChange)="valueChangeTags($event)"
   ></codx-tag>
@@ -34,6 +34,7 @@
       field="meetingName"
       type="text"
       [crrValue]="meeting?.meetingName"
+      [disabled]="isView"
       [placeholder]="gridViewSetup['MeetingName']?.description"
       (valueChange)="valueChange($event)"
     >
@@ -53,7 +54,7 @@
       <codx-input
         type="datetime"
         class="test-datetime"
-        [crrValue]="meeting?.startDate"
+        [crrValue]="meeting?.startDate" [disabled]="isView"
         (valueChange)="valueDateChange($event)"
         field="startDate"
         format="d"
@@ -74,7 +75,7 @@
         type="datetime"
         [crrValue]="startTime"
         format="t"
-        placeholder="pTimeFrom"
+        placeholder="pTimeFrom" [disabled]="isView"
         (valueChange)="valueStartTimeChange($event)"
       >
       </codx-input>
@@ -92,7 +93,7 @@
         type="datetime"
         [crrValue]="endTime"
         format="t"
-        placeholder="pTimeFrom"
+        placeholder="pTimeFrom" [disabled]="isView"
         (valueChange)="valueEndTimeChange($event)"
       >
       </codx-input>
@@ -104,7 +105,7 @@
         name="checkbox"
         label="Cả ngày"
         labelPosition="After"
-        [formModel]="dialog.formModel"
+        [formModel]="dialog.formModel" [disabled]="isView"
         (valueChange)="valueChangeCheckFullDay($event)"
         [crrValue]="isFullDay"
       >
@@ -120,7 +121,7 @@
     <codx-input
       field="location"
       type="text"
-      [placeholder]="gridViewSetup['Location']?.description"
+      [placeholder]="gridViewSetup['Location']?.description" [disabled]="isView"
       [crrValue]="meeting?.location"
       (valueChange)="valueChange($event)"
     >
@@ -143,6 +144,7 @@
       [fields]="fields"
       [placeholder]="gridViewSetup?.Location?.description"
       (valueChange)="cbxChange($event)"
+      [enabled]="!isView"
     ></ejs-dropdownlist>
   </div>
   <div class="form-group">
@@ -150,7 +152,7 @@
       <div class="d-flex me-2">
         <codx-label fiedName="Memo" [formModel]="dialog.formModel"> </codx-label>
       </div>
-      <button
+      <button [disabled]="isView"
         type="button"
         (click)="openPopupTemplate(meeting)"
         class="btn btn-icon btn-light"
@@ -165,6 +167,7 @@
       format="ed"
       height="150"
       [crrValue]="meeting?.memo"
+      [disabled]="isView"
       (valueChange)="changeMemo($event)"
       [placeholder]="gridViewSetup['Memo']?.description"
     >
@@ -184,7 +187,7 @@
         type="switch"
         [checked]="meeting?.isOnline"
         labelPosition="After"
-        [disabled]="false"
+        [disabled]="isView"
         class="test-switch"
         (valueChange)="valueChange($event)"
       >
@@ -199,7 +202,7 @@
     </div>
     <!--begin: btn-icon-->
     <span class="text-end align-items-end">
-      <button
+      <button [disabled]="isView"
         type="button"
         class="btn btn-clean btn-sm btn-icon btn-icon-md"
         (click)="openPopupLink(addLink)"
@@ -257,7 +260,7 @@
         [dataShared]="[]"
         [multiple]="true"
         [showInput]="false"
-        [disabled]="readOnly"
+        [disabled]="readOnly || isView"
       >
       </codx-input>
     </div>
@@ -350,6 +353,7 @@
       (valueChange)="eventApply($event)"
       [dataShared]="[]"
       multiple="true"
+      [disabled]="isView"
       [showInput]="false"
     >
     </codx-input>
@@ -383,7 +387,7 @@
           class="me-4"
           style="position: relative"
           popoverClass="userPopoverClass"
-          [ngbPopover]="popoverSelectRoles"
+          [ngbPopover]="isView ? null : popoverSelectRoles"
           placement="right"
           #p="ngbPopover"
           (mouseenter)="showPopover(p, item.objectID)"
@@ -420,10 +424,11 @@
               field="taskControl"
               (valueChange)="valueCbx(item.objectID, $event)"
               [crrValue]="item.taskControl"
+              [disabled]="isView"
             >
             </codx-input>
           </div>
-          <div
+          <div *ngIf="!isView"
             class="action-menu-od d-flex justify-content-center align-items-center cursor-pointer"
             (click)="onDeleteUser(i)"
           >
@@ -448,6 +453,7 @@
           [formModel]="dialog.formModel"
           [min]="0"
           field="reminder"
+          [disabled]="isView"
           (valueChange)="valueChange($event)"
           [crrValue]="meeting.reminder"
         ></codx-input>
@@ -490,6 +496,7 @@
           </div>
           <codx-input
             type="datetime"
+            [disabled]="isView"
             class="test-datetime"
             (valueChange)="valueDateChange($event)"
             [crrValue]="meeting?.fromDate"
@@ -507,6 +514,7 @@
           <codx-input
             type="datetime"
             class="test-datetime"
+            [disabled]="isView"
             [crrValue]="meeting?.toDate"
             (valueChange)="valueDateChange($event)"
             field="toDate"
@@ -525,7 +533,7 @@
           (valueChange)="valueChange($event)"
           [crrValue]="meeting.refID"
           loadFull="true"
-          [disabled]="disabledProject"
+          [disabled]="disabledProject || isView"
         >
         </codx-input>
         <!-- <codx-input field="refID" [formModel]="dialog.formModel" [Group]="form.formGroup"
@@ -540,7 +548,7 @@
 
 <ng-template #footer>
   <div class="d-flex justify-content-between">
-    <button
+    <button [disabled]="isView"
       type="button"
       class="btn btn-light-primary me-3"
       (click)="addFile($event)"
@@ -554,7 +562,7 @@
         ></codx-label>
       </span>
     </button>
-    <button type="button" class="btn btn-primary ms-1" (click)="onSave()">
+    <button [disabled]="isView" type="button" class="btn btn-primary ms-1" (click)="onSave()">
       <codx-label
         name="Save"
         [formModel]="dialog.formModel"
