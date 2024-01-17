@@ -1,6 +1,6 @@
 import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnInit, Optional, ViewEncapsulation } from "@angular/core";
 import { CallFuncService, ApiHttpService, CacheService, DialogRef, DialogData } from "codx-core";
-import { CodxBpService } from "../../../codx-bp.service";
+import { CodxBpService } from "../../../../../../codx-bp/src/lib/codx-bp.service";
 
 @Component({
   selector: 'codx-form-edit-connector',
@@ -30,7 +30,6 @@ constructor(
   private callfc: CallFuncService,
   private api: ApiHttpService,
   private cache: CacheService,
-  private bpSv: CodxBpService,
   private elementRef: ElementRef,
   @Optional() dialog: DialogRef,
   @Optional() dt: DialogData
