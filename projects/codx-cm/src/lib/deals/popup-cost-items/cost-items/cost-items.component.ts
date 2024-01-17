@@ -35,6 +35,7 @@ export class CostItemsComponent implements OnInit {
   action = 'edit';
   formModel: any;
   costIDOld = [];
+  dealValueToOld = 0;
 
   constructor(
     private api: ApiHttpService,
@@ -52,6 +53,7 @@ export class CostItemsComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.dealValueToOld = this.dealValueTo;
     if (this.isLoadedData) {
       if (this.costInfos?.length > 0)
         this.costIDOld = this.costInfos.map((x) => x.recID);
@@ -201,7 +203,27 @@ export class CostItemsComponent implements OnInit {
 
   valueChange(e) {
     this.dealValueTo = e.data;
-    this.dataDealValueTo.emit(this.dealValueTo);
   }
+  valueChangeDVT(e) {
+    // this.dealValueTo = e.data;
+    if (this.dealValueToOld == this.dealValueTo) return;
+    if (!this.isAutoSave) {
+      this.dataDealValueTo.emit(this.dealValueTo);
+      this.dealValueToOld = this.dealValueTo;
+    } else {
+      this.api
+        .exec<any>('CM', 'DealsBusiness', 'UpdateDealValueToAsync', [
+          this.transID,
+          this.dealValueTo,
+        ])
+        .subscribe((res) => {
+          if (res) {
+            this.dataDealValueTo.emit(this.dealValueTo);
+            this.dealValueToOld = this.dealValueTo;
+          }
+        });
+    }
+  }
+
   //---------------------------------------------//
 }
