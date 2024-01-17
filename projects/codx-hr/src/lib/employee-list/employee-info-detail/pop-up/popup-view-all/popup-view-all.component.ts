@@ -193,6 +193,7 @@ export class PopupViewAllComponent extends UIComponent implements OnInit {
     @Optional() data?: DialogData,
     @Optional() dataRef?: DialogRef
   ) {
+    debugger
     super(injector);
     this.dialogRef = dataRef;
     this.funcID = data?.data?.funcID;

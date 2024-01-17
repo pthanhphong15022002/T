@@ -430,14 +430,14 @@ export class PopupAddDealComponent
           this.deleteOwner('U', 'C', '0', this.deal.consultantID, $event.field);
         }
       }
-      //lãi gộp
-      if ($event.field == 'dealValueTo') {
-        if (this.deal.dealValueTo) {
-          this.deal['grossProfit'] = this.deal.dealValueTo - this.totalCost;
-        } else {
-          this.deal['grossProfit'] = 0 - this.totalCost;
-        }
-      }
+      // //lãi gộp
+      // if ($event.field == 'dealValueTo') {
+      //   if (this.deal.dealValueTo) {
+      //     this.deal['grossProfit'] = this.deal.dealValueTo - this.totalCost;
+      //   } else {
+      //     this.deal['grossProfit'] = 0 - this.totalCost;
+      //   }
+      // }
     }
   }
 
@@ -1851,6 +1851,16 @@ export class PopupAddDealComponent
       this.deal['grossProfit'] = this.deal.dealValueTo - e;
     } else {
       this.deal['grossProfit'] = 0 - e;
+    }
+  }
+
+  //lãi gộp
+  changeDealValueTo(e) {
+    this.deal.dealValueTo = e;
+    if (this.deal.dealValueTo) {
+      this.deal['grossProfit'] = this.deal.dealValueTo - this.totalCost;
+    } else {
+      this.deal['grossProfit'] = 0 - this.totalCost;
     }
   }
   //---------------------------------------------//
