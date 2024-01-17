@@ -199,6 +199,7 @@ export class DealsComponent
   taskAdd;
   applyApprover = '0';
   startLoad = false;
+  funcDefault = 'CM0201';
 
   constructor(
     private inject: Injector,
@@ -214,6 +215,7 @@ export class DealsComponent
     private callFunc: CallFuncService
   ) {
     super(inject);
+    this.executeApiCallFunctionID('CMDeals', 'grvCMDeals');
     this.user = this.authStore.get();
     this.funcID = this.activedRouter.snapshot.params['funcID'];
     this.queryParams = this.router.snapshot.queryParams;
@@ -229,12 +231,11 @@ export class DealsComponent
       this.functionModule = f.module;
       this.nameModule = f.customName;
     });
-    this.executeApiCallFunctionID('CMDeals', 'grvCMDeals');
+
     this.getColorReason();
     // this.processID = this.activedRouter.snapshot?.queryParams['processID'];
     // if (this.processID) this.dataObj = { processID: this.processID };
 
-    // this.getListStatusCode();
     this.codxCmService
       .getRecIDProcessDefault(this.applyFor)
       .subscribe((res) => {
@@ -258,7 +259,7 @@ export class DealsComponent
 
   onLoading(e) {
     //reload filter
-    // this.loadViewModel();
+    this.loadViewModel();
   }
 
   loadViewModel() {
@@ -678,17 +679,6 @@ export class DealsComponent
     if (executeFunction) {
       executeFunction();
     } else {
-      // let customData = {
-      //   refID: data.recID,
-      //   refType: 'CM_Deals',
-      // };
-
-      // if (data?.refID) {
-      //   customData = {
-      //     refID: data.processID,
-      //     refType: 'DP_Processes',
-      //   };
-      // }
       this.codxShareService.defaultMoreFunc(
         e,
         data,
@@ -696,7 +686,6 @@ export class DealsComponent
         this.view.formModel,
         this.view.dataService,
         this
-        //customData
       );
       this.detectorRef.detectChanges();
     }
@@ -1420,7 +1409,7 @@ export class DealsComponent
       exchangeRateDefault: this.exchangeRateDefault,
       customerCategory:
         action === 'add' ? '' : this.dataSelected?.customerCategory,
-      copyTransID : this.oldIdDeal
+      copyTransID: this.oldIdDeal,
     };
     let dialogCustomDeal = this.callfc.openSide(
       PopupAddDealComponent,
@@ -1786,7 +1775,7 @@ export class DealsComponent
 
   //-----------------------------change Filter -------------------------------//
   changeFilter() {
-    //change view filter
+    //change view filter => Lúc trước filter lỗi mới cần
     if (this.funcID != 'CM0201') {
       let idxBusinesLineOp = this.view.filterOptions.findIndex(
         (x) => x.fieldName == 'BusinessLineID'
@@ -2090,8 +2079,8 @@ export class DealsComponent
       // textAlign: 'center',
     };
     this.columnGrids.push(columnActiviti);
-
-    this.loadViewModel();
+    //sau
+    //this.loadViewModel();
   }
 
   autoStart(event) {
@@ -2532,7 +2521,7 @@ export class DealsComponent
         let obj = {
           title: this.gridViewSetup?.DealCost?.headerText,
           listCosts: res,
-          transID : transID
+          transID: transID,
         };
         let dialogCost = this.callfc.openForm(
           PopupCostItemsComponent,
