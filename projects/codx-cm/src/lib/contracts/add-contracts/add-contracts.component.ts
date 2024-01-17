@@ -808,28 +808,28 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
 
   valueChangeOwner(event) {
     this.contracts.owner = event?.data;
-    // console.log(event?.component?.itemsSelected[0]);
-    // let user = event?.component?.itemsSelected[0];
-    // if (!this.contracts.applyProcess && user) {
-    //   let permissions = new CM_Permissions();
-    //   permissions.recID = Util.uid();
-    //   permissions.objectID = user?.UserID;
-    //   permissions.objectName = user?.UserName;
-    //   permissions.objectType = 'U';
-    //   permissions.roleType = 'O';
-    //   permissions.memberType = '0';
-    //   permissions.full = true;
-    //   permissions.read = true;
-    //   permissions.edit = false;
-    //   permissions.create = false;
-    //   permissions.update = true;
-    //   permissions.assign = true;
-    //   permissions.delete = true;
-    //   permissions.share = false;
-    //   permissions.upload = true;
-    //   permissions.download = true;
-    //   this.contracts.permissions = [permissions];
-    // }
+    console.log(event?.component?.itemsSelected[0]);
+    let user = event?.component?.itemsSelected[0];
+    if (!this.contracts.applyProcess && user) {
+      let permissions = new CM_Permissions();
+      permissions.recID = Util.uid();
+      permissions.objectID = user?.UserID;
+      permissions.objectName = user?.UserName;
+      permissions.objectType = 'U';
+      permissions.roleType = 'O';
+      permissions.memberType = '0';
+      permissions.full = true;
+      permissions.read = true;
+      permissions.edit = false;
+      permissions.create = false;
+      permissions.update = true;
+      permissions.assign = true;
+      permissions.delete = true;
+      permissions.share = false;
+      permissions.upload = true;
+      permissions.download = true;
+      this.contracts.permissions = [permissions];
+    }
   }
 
   setValueComboboxDeal() {
