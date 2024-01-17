@@ -1,3 +1,4 @@
+import { log } from 'console';
 import {
   OnInit,
   Optional,
@@ -523,5 +524,17 @@ export class CurrentStepComponent implements OnInit, OnChanges {
           });
         }
       });
+  }
+
+  dataDealValueTo(e){
+    console.log(e); 
+  }
+
+  totalDataCost(e){
+    console.log(e); 
+  }
+
+  dataCostItems(e){
+    console.log(e); 
   }
 }
