@@ -7,7 +7,7 @@ import { CodxBpComponent } from './codx-bp.component';
 import { TesthtmlComponent } from './testhtml/testhtml.component';
 import { LayoutComponent } from './_layout/layout.component';
 import { ProcessesComponent } from './processes/processes.component';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbAccordionModule, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { CodxCoreModule } from 'codx-core';
 import { CoreModule } from '@core/core.module';
 import { HttpClientModule } from '@angular/common/http';
@@ -48,6 +48,7 @@ import { PropertyShareComponent } from './modeview/properties/property-share/pro
 import { PropertyTableComponent } from './modeview/properties/property-table/property-table.component';
 import { PropertyDefaultTitleComponent } from './modeview/properties/property-default/property-default-title/property-default-title.component';
 import { PopupPermissionsProcessesComponent } from './processes/popup-add-process/popup-permissions-processes/popup-permissions-processes.component';
+import { FormStepsFieldGridComponent } from './processes/popup-add-process/form-steps-field-grid/form-steps-field-grid.component';
 
 export const routes: Routes = [
   {
@@ -106,6 +107,7 @@ export const routes: Routes = [
     FormSettingComboboxComponent,
     FormAdvancedSettingsComponent,
     PopupPermissionsProcessesComponent,
+    FormStepsFieldGridComponent
   ],
   imports: [
     CodxCoreModule.forRoot({ environment }),
@@ -128,7 +130,8 @@ export const routes: Routes = [
     PinchZoomModule,
     DiagramModule,
     SplitterAllModule,
-    DynamicSettingModule
+    DynamicSettingModule,
+    NgbAccordionModule
     // NgxImageZoomModule
   ],
   exports: [CodxBpComponent],

@@ -127,7 +127,17 @@
           </div>
         </div>
       </div>
-      <div class="d-flex justify-content-end">
+      <div class="d-flex align-items-center justify-content-end">
+        <ng-container *ngIf="currentTab == 1">
+          <div class="d-flex mx-4 bg-gray-100 p-1 step-process-tab">
+            <div class="p-3 cursor-pointer" [class.active]="processTabIndex == 0" (click)="activeTab(0)">
+              <i class="icon-i-list-nested"></i>
+            </div>
+            <div class="p-3 cursor-pointer" [class.active]="processTabIndex == 1" (click)="activeTab(1)">
+              <i class="icon-account_tree"></i>
+            </div>
+          </div>
+        </ng-container>
         <div class="btn btn-sm btn-bg-white text-inverse-white mb-2">
           <i
             class="icon-close icon-18 text-hover-danger"
@@ -161,7 +171,12 @@
               id="pane_2"
               [ngClass]="currentTab == 1 ? 'active show' : ''"
             >
-              <ng-template [ngTemplateOutlet]="tmpStepFields"></ng-template>
+              <ng-container *ngIf="processTabIndex == 0">
+                <lib-form-steps-field-grid></lib-form-steps-field-grid>
+              </ng-container>
+              <ng-container *ngIf="processTabIndex == 1">
+                <ng-template [ngTemplateOutlet]="tmpStepFields"></ng-template>
+              </ng-container>
             </div>
             <div
               class="tab-pane fade"
