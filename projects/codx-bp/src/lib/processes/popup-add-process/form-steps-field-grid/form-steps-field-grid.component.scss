@@ -1,0 +1,32 @@
+.field-grid-collapse
+{
+
+}
+.row-grid-collapse
+{
+    color: #BEBEBE;
+}
+.row-grid-collapse:hover
+{
+    background-color: var(--primary-lighter);
+}
+.grid-collapse-default
+{
+    .accordion-item
+    {
+        border: none !important;
+    }
+    .accordion-button:not(.collapsed) , .accordion-button.collapsed
+    {
+        color: #BEBEBE !important;
+        background-color: white;
+    }
+    .accordion-button::after
+    {
+        width: 0 !important;
+    }
+    .accordion-body
+    {
+        padding: 0 17px;
+    }
+}
