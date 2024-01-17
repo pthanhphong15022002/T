@@ -90,7 +90,6 @@ export class ViewDealDetailComponent implements OnInit, OnChanges {
     { id: 'costItems', name: 'Chi phí'},
     { id: 'fields', name: 'Thông tin mở rộng', type: '1' },
     { id: 'opponent', name: 'Đối thủ', type: '2' },
-    { id: 'tasks', name: 'Công việc', type: '2' },
     { id: 'note', name: 'Ghi chú', type: '2' },
   ];
   listHistory = [{ id: 'history', name:'Lịch sử'}];

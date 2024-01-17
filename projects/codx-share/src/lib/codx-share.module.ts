@@ -200,6 +200,8 @@ import { SumColumnsTablePipe } from './components/codx-input-custom-field/codx-f
 import { ChangeMemoryCellsPipe } from './components/codx-input-custom-field/codx-fields-detail-temp/pipes-fields/change-memory-cells.pipe';
 import { PopupSelectFieldReferenceComponent } from './components/codx-input-custom-field/popup-select-field-reference/popup-select-field-reference.component';
 import { ViewGanttChartComponent } from './components/codx-tasks/view-gantt-chart/view-gantt-chart.component';
+import { CodxDiagramComponent } from './components/codx-diagram/codx-diagram.component';
+import { DiagramModule } from '@syncfusion/ej2-angular-diagrams';
 
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
@@ -223,6 +225,7 @@ const T_Component: Type<any>[] = [
   ImageGridComponent,
   CalendarNotesComponent,
   CalendarDateComponent,
+  CodxDiagramComponent,
   // LayoutNoAsideComponent,
   // LayoutOnlyHeaderComponent,
   // LayoutNoAsideToolbarFluidComponent,
@@ -453,6 +456,7 @@ const T_Pipe: Type<any>[] = [
     NgxCaptureModule,
     TooltipModule,
     TreeViewModule,
+    DiagramModule,
   ],
 })
 export class CodxShareModule {

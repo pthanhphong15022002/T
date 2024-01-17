@@ -1295,11 +1295,15 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
         this.multiple = true;
         break;
     }
-    this.callfc.openForm(share, '', 420, 600);
+    let option = new DialogModel();
+    option.zIndex = 1010;
+    this.callfc.openForm(share, '', 420, 600, null, null, null, option);
   }
 
   openPopupParticipants(popupParticipants) {
-    this.callfc.openForm(popupParticipants, '', 950, 650);
+    let option = new DialogModel();
+    option.zIndex = 1010;
+    this.callfc.openForm(popupParticipants, '', 950, 650, null, null, null, option);
   }
 
   searchAddUsers(e, type) {
