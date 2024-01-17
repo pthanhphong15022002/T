@@ -313,7 +313,7 @@ export class DealsComponent
         text: 'Lưới custorm column',
         model: {
           template2: this.templateMore,
-          groupSettings: { showDropArea: false, columns: ['customerName'] },
+          //groupSettings: { showDropArea: false, columns: ['customerName'] },
           resources: this.columnGrids,
           //frozenColumns: 1,
         },
