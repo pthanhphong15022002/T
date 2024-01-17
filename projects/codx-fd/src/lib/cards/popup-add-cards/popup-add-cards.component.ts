@@ -567,52 +567,9 @@ export class PopupAddCardsComponent implements OnInit {
       case 'coins':
         this.cointsError = "";
         if (data) {
-          if (this.parameter.MaxPointPerOnceControl === '1') {
-            if (data > this.parameter.MaxPointPerOnce) {
-              this.cointsError = "Vượt quá số xu cho phép tặng trong 1 lần";
-              return;
-              // this.notifySV.notify(
-              //   'Vượt quá số xu cho phép tặng trong 1 lần',
-              //   '3'
-              // );
-              // data = this.givePoint;
-              // this.form.patchValue({ coins: this.givePoint });
-            }
+          if(this.checkPolicyPoint(data)){
+            this.givePoint = data;
           }
-          if (data && this.parameter.MaxPointControl === '1') {
-            let unitName = '';
-            switch (this.parameter.MaxPointPeriod) {
-              case '1':
-                unitName = 'tuần';
-                break;
-              case '2':
-                unitName = 'tháng';
-                break;
-              case '3':
-                unitName = 'quý';
-                break;
-              case '4':
-                unitName = 'năm';
-                break;
-            }
-            if (this.reduceCoCoins + data > this.parameter.MaxPoints) {
-              this.cointsError = "Vượt quá số xu cho phép tặng: " +
-                this.parameter.MaxPoints +
-                ' xu/' +
-                unitName;
-              return;
-              // this.notifySV.notify(
-              //   'Vượt quá số xu cho phép tặng: ' +
-              //     this.parameter.MaxPoints +
-              //     ' xu/' +
-              //     unitName,
-              //   '3'
-              // );
-              // data = this.givePoint;
-              // this.form.patchValue({ coins: this.givePoint });
-            }
-          }
-          this.givePoint = data;
         } else {
           this.givePoint = 0;
         }
@@ -889,17 +846,51 @@ export class PopupAddCardsComponent implements OnInit {
     }
   }
 
+  checkPolicyPoint(data) {
+    if (this.parameter.MaxPointPerOnceControl === '1') {
+      if (data > this.parameter.MaxPointPerOnce) {
+        this.cointsError = "Vượt quá số xu cho phép tặng trong 1 lần";
+        return false;
+      }
+    }
+    if (data && this.parameter.MaxPointControl === '1') {
+      let unitName = '';
+      switch (this.parameter.MaxPointPeriod) {
+        case '1':
+          unitName = 'tuần';
+          break;
+        case '2':
+          unitName = 'tháng';
+          break;
+        case '3':
+          unitName = 'quý';
+          break;
+        case '4':
+          unitName = 'năm';
+          break;
+      }
+      if (this.reduceCoCoins + data > this.parameter.MaxPoints) {
+        this.cointsError = "Vượt quá số xu cho phép tặng: " +
+          this.parameter.MaxPoints +
+          ' xu/' +
+          unitName;
+        return false;
+      }
+    }
+    if(data > this.myWallet?.coCoins){
+      this.cointsError = "Số dư xu không đủ, số dư hiện tại là: " + this.myWallet?.coCoins + " xu";
+      return false;
+    }
+    return true;
+  }
+
   addPoint() {
     // max points
     let point = this.givePoint + 1;
-    if (this.parameter.MaxPointPerOnceControl === '1') {
-      if (point > this.parameter.MaxPointPerOnce) {
-        this.notifySV.notify('Vượt quá số xu cho phép tặng', '3');
-        return;
-      }
+    if(this.checkPolicyPoint(point)){
+      this.givePoint++;
+      this.dt.detectChanges();
     }
-    this.givePoint++;
-    this.dt.detectChanges();
   }
 
   clickAddGift() {
