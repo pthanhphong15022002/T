@@ -87,15 +87,6 @@
           [default]="'Chi phí'"
         ></codx-label>
       </div>
-      <div>
-        <button
-          type="button"
-          class="btn btn-outline-primary d-flex align-items-center btn-sm"
-        >
-          <span class="icon-u_dollar-sign-alt icon-18 me-1"></span>
-          <span>Thêm chi phí</span>
-        </button>
-      </div>
     </div>
     <div>
       <crud-cost-items
@@ -103,7 +94,7 @@
         [transID]="deal?.recID"
         [costInfos]="listCosts"
         [isLoadedData]="true"
-        [viewOnly]="true"
+        [viewOnly]="false"
       ></crud-cost-items>
     </div>
   </div>
