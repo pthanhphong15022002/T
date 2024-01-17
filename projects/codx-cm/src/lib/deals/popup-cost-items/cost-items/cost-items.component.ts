@@ -93,9 +93,9 @@ export class CostItemsComponent implements OnInit {
     this.costInfos.push(newCost);
     this.cost = newCost;
     this.calculateTotalCost();
-    if (this.isAutoSave) {
-      this.autoSaveData();
-    }
+    // if (this.isAutoSave) {
+    //   this.autoSaveData();
+    // }
     this.detectorRef.detectChanges();
   }
 
@@ -191,7 +191,8 @@ export class CostItemsComponent implements OnInit {
   }
   validateCost() {
     return (
-      this.cost && (!this.cost.costItemName || this.cost.costItem.trim() == '')
+      this.cost &&
+      (!this.cost.costItemName || this.cost?.costItemName.trim() == '')
     );
     // let check = this.costInfos.some(
     //   (x) => !x.costItemName || x.costItem.trim() == ''
