@@ -266,14 +266,15 @@
               </ng-container>
             </div>
             <div class="mt-3 ms-9">
-              <div class="mb-3">
+              <div class="mb-3 d-flex align-items-center">
                 <codx-label
-                  class="fs-6 fw-bold label-colon"
+                  class="fs-6 fw-bold label-colon mb-5"
                   fiedName="memo"
                   [formModel]="formModel"
+                  [default]="'Ghi chú'"
                 ></codx-label>
                 <span
-                  class="text-dark fw-bold codx-textcontent"
+                  class="text-dark fw-bold codx-textcontent p-0 m-0 reason"
                   [innerHTML]="
                     instanceStep?.memo
                       | formatvalue : formModel : 'Memo'
