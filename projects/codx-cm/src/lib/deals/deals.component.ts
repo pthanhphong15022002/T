@@ -314,7 +314,7 @@ export class DealsComponent
         text: 'Lưới custorm column',
         model: {
           template2: this.templateMore,
-          groupSettings: { showDropArea: false, columns: ['customerName'] },
+          //groupSettings: { showDropArea: false, columns: ['customerName'] },
           resources: this.columnGrids,
           //frozenColumns: 1,
         },
@@ -1010,6 +1010,7 @@ export class DealsComponent
           statusCodeID: this.statusCodeID,
           statusCodeCmt: this.statusCodeCmt,
           detailViewDeal: this.detailViewDeal,
+          title: type == '1' ? "Giai đoạn hiện tại" : "Hiện trạng"
           // listInsStepStart: this.listInsStep,
         };
         let option = new DialogModel();
