@@ -2,7 +2,7 @@
   style="
     background-color: #f5f8fa;
     overflow: hidden;
-    height: 95vh;
+    height: 96vh;
     position: relative;
   "
 >
@@ -11,18 +11,20 @@
       <!-- RIGHT -->
       <div class="right col-12 h-100">
         <div
-        (click)="close()"
-        class="cursor-pointer d-flex align-items-center py-5 mx-5 top1"
-      >
-        <span class="icon-20 icon-arrow_back text-primary me-2 fw-bold"></span>
-        <codx-label
-          class="fs-5 fw-bold me-2"
-          name="lblTitleViewDeal"
-          [formModel]="dialog?.formModel"
-          [default]="'Giai đoạn hiện tại'"
-        ></codx-label>
-      </div>
-        <div class="top">
+          class="d-flex align-items-center py-5 top1 justify-content-between"
+        >
+          <codx-label
+            class="fs-5 fw-bold me-2"
+            name="lblTitleViewDeal"
+            [formModel]="dialog?.formModel"
+            [default]="title"
+          ></codx-label>
+          <span
+            class="icon-20 icon-close cursor-pointer p-1"
+            (click)="close()"
+          ></span>
+        </div>
+        <div class="top" *ngIf="type == '1'">
           <div class="d-flex">
             <div class="tab-scroll mb-4">
               <div class="tab-horizone bg-white h-od-tab">
@@ -72,7 +74,7 @@
 </ng-template>
 
 <ng-template #information>
-  <div id="costItems" class="item-main mt-0">
+  <div id="costItems" class="item-main mt-0" *ngIf="type == '1'">
     <div class="d-flex align-items-center justify-content-between">
       <div class="d-flex align-items-center text-primary my-2">
         <span
@@ -85,45 +87,22 @@
           [default]="'Chi phí'"
         ></codx-label>
       </div>
-      <div>
-        <button
-          type="button"
-          class="btn btn-outline-primary d-flex align-items-center btn-sm"
-        >
-          <span class="icon-u_dollar-sign-alt icon-18 me-1"></span>
-          <span>Thêm chi phí</span>
-        </button>
-      </div>
     </div>
     <div>
-      <table class="table">
-        <thead>
-          <tr>
-            <th>Chi phí</th>
-            <th>Số lượng</th>
-            <th>Đơn giá</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>Tiền sản phẩm</td>
-            <td>10</td>
-            <td>100000000</td>
-          </tr>
-          <tr>
-            <td>Công lắp đặt</td>
-            <td>1</td>
-            <td>11111111</td>
-          </tr>
-          <tr>
-            <td>Tổng cộng</td>
-            <td>1</td>
-            <td>11111111</td>
-          </tr>
-        </tbody>
-      </table>
+      <crud-cost-items
+        *ngIf="listCosts"
+        [transID]="deal?.recID"
+        [costInfos]="listCosts"
+        [isLoadedData]="true"
+        [viewOnly]="false"
+        [isAutoSave]=" true"
+        (dataDealValueTo)="dataDealValueTo($event)"
+        (totalDataCost)="totalDataCost($event)"
+        (dataCostItems)="dataCostItems($event)"
+      ></crud-cost-items>
     </div>
   </div>
+
   <div id="tasks" class="item-main">
     <div class="d-flex align-items-center text-primary my-2">
       <span class="icon-i-box-arrow-in-right icon-20 me-1 fw-bold"></span>
@@ -142,11 +121,12 @@
         [applyFor]="'1'"
         [isMoveStage]="true"
         (moveStage)="moveStage($event)"
+        (startStep)="startNow($event)"
       ></step-task>
     </div>
   </div>
 
-  <div id="opponent" class="item-main">
+  <div id="opponent" class="item-main" *ngIf="type == '1'">
     <div class="d-flex align-items-center text-primary my-2">
       <span class="icon-add_to_photos icon-20 me-1 fw-bold"></span>
       <codx-label
@@ -164,7 +144,7 @@
     </div>
   </div>
 
-  <div id="note" class="item-main">
+  <div id="note" class="item-main mb-7" *ngIf="type == '1'">
     <div class="d-flex align-items-center text-primary my-2">
       <span class="icon-event_notes icon-20 me-1 fw-bold"></span>
       <codx-label

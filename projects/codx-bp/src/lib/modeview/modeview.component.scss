@@ -11,6 +11,14 @@
     padding: 20px;
   }
   
+  .table
+  {
+    margin-bottom: 0;
+  }
+  .table tbody tr:last-child th
+  {
+    border-bottom: 1px var(--gray-150) solid !important;
+  }
   .drap-copy {
     display: flex;
     border: solid 1px;

@@ -243,6 +243,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
   arrCaculateField: any[] = [];
   isLoadedCF = false;
   refInstance = ''; //Biến tham chiếu data từ cơ hội
+  dataSourceRef: any;
   //#endregion
 
   constructor(
@@ -347,7 +348,14 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
     ) {
       let data = this.inputDeal?.ComponentCurrent?.dataService.data;
       this.refInstance = data[0]?.RefID;
+      this.loadSoureRef();
     }
+  }
+
+  loadSoureRef() {
+    this.cmService.getListFieldsRef(this.refInstance).subscribe((lstF) => {
+      this.dataSourceRef = lstF;
+    });
   }
 
   //#region setData
@@ -703,6 +711,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
         break;
       case 'dealID':
         this.refInstance = event?.component?.itemsSelected[0]?.RefID;
+        this.loadSoureRef();
         if (!this.contracts.customerID && this.contracts?.dealID) {
           this.getCustomerByDealID(event?.data);
           this.setValueComboboxQuotation();
@@ -799,28 +808,28 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
 
   valueChangeOwner(event) {
     this.contracts.owner = event?.data;
-    // console.log(event?.component?.itemsSelected[0]);
-    // let user = event?.component?.itemsSelected[0];
-    // if (!this.contracts.applyProcess && user) {
-    //   let permissions = new CM_Permissions();
-    //   permissions.recID = Util.uid();
-    //   permissions.objectID = user?.UserID;
-    //   permissions.objectName = user?.UserName;
-    //   permissions.objectType = 'U';
-    //   permissions.roleType = 'O';
-    //   permissions.memberType = '0';
-    //   permissions.full = true;
-    //   permissions.read = true;
-    //   permissions.edit = false;
-    //   permissions.create = false;
-    //   permissions.update = true;
-    //   permissions.assign = true;
-    //   permissions.delete = true;
-    //   permissions.share = false;
-    //   permissions.upload = true;
-    //   permissions.download = true;
-    //   this.contracts.permissions = [permissions];
-    // }
+    console.log(event?.component?.itemsSelected[0]);
+    let user = event?.component?.itemsSelected[0];
+    if (!this.contracts.applyProcess && user) {
+      let permissions = new CM_Permissions();
+      permissions.recID = Util.uid();
+      permissions.objectID = user?.UserID;
+      permissions.objectName = user?.UserName;
+      permissions.objectType = 'U';
+      permissions.roleType = 'O';
+      permissions.memberType = '0';
+      permissions.full = true;
+      permissions.read = true;
+      permissions.edit = false;
+      permissions.create = false;
+      permissions.update = true;
+      permissions.assign = true;
+      permissions.delete = true;
+      permissions.share = false;
+      permissions.upload = true;
+      permissions.download = true;
+      this.contracts.permissions = [permissions];
+    }
   }
 
   setValueComboboxDeal() {

@@ -23,7 +23,13 @@ import {
 } from 'codx-core';
 import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
 import { CashPaymentAddComponent } from './cashpayments-add/cashpayments-add.component';
-import { CodxAcService, fmCashPaymentsLines, fmCashPaymentsLinesOneAccount, fmSettledInvoices, fmVATInvoices } from '../../codx-ac.service';
+import {
+  CodxAcService,
+  fmCashPaymentsLines,
+  fmCashPaymentsLinesOneAccount,
+  fmSettledInvoices,
+  fmVATInvoices,
+} from '../../codx-ac.service';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { ProgressBar } from '@syncfusion/ej2-angular-progressbar';
 import { CodxListReportsComponent } from 'projects/codx-share/src/lib/components/codx-list-reports/codx-list-reports.component';
@@ -54,21 +60,23 @@ export class CashPaymentsComponent extends UIComponent {
   legalName: any;
   dataDefault: any;
   hideFields: Array<any> = [];
-  button: ButtonModel[] = [{
-    //? nút thêm phiếu
-    id: 'btnAdd',
-    icon: 'icon-i-file-earmark-plus',
-  }];
+  button: ButtonModel[] = [
+    {
+      //? nút thêm phiếu
+      id: 'btnAdd',
+      icon: 'icon-i-file-earmark-plus',
+    },
+  ];
   bhLogin: boolean = false;
   bankPayID: any;
   bankNamePay: any;
   bankReceiveName: any;
-  viewActive:number = ViewType.listdetail;
+  viewActive: number = ViewType.listdetail;
   ViewType = ViewType;
   fmCashpaymentLine: FormModel = fmCashPaymentsLines;
   fmCashpaymentLineOne: FormModel = fmCashPaymentsLinesOneAccount;
-  fmSettledInvoices:FormModel = fmSettledInvoices;
-  fmVATInvoices:FormModel = fmVATInvoices;
+  fmSettledInvoices: FormModel = fmSettledInvoices;
+  fmVATInvoices: FormModel = fmVATInvoices;
   private destroy$ = new Subject<void>();
   constructor(
     private inject: Injector,
@@ -77,7 +85,7 @@ export class CashPaymentsComponent extends UIComponent {
     private codxCommonService: CodxCommonService,
     private shareService: CodxShareService,
     private notification: NotificationsService,
-    private tenant: TenantStore,
+    private tenant: TenantStore
   ) {
     super(inject);
     this.cache
@@ -89,26 +97,24 @@ export class CashPaymentsComponent extends UIComponent {
           this.legalName = res[0].legalName;
         }
       });
-    this.router.params
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((params) => {
-        this.journalNo = params?.journalNo;
-      });
+    this.router.params.pipe(takeUntil(this.destroy$)).subscribe((params) => {
+      this.journalNo = params?.journalNo;
+    });
   }
   //#endregion Constructor
 
   //#region Init
   onInit(): void {
-    if(!this.funcID) this.funcID = this.router.snapshot.params['funcID'];
+    if (!this.funcID) this.funcID = this.router.snapshot.params['funcID'];
     this.cache
-    .functionList(this.funcID)
-    .pipe(takeUntil(this.destroy$))
-    .subscribe((res) => {
-      if (res) {
-        this.headerText = res?.defaultName || res?.customName;
-        this.runmode = res?.runMode;
-      }
-    });
+      .functionList(this.funcID)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res) => {
+        if (res) {
+          this.headerText = res?.defaultName || res?.customName;
+          this.runmode = res?.runMode;
+        }
+      });
     this.getJournal();
   }
 
@@ -152,22 +158,21 @@ export class CashPaymentsComponent extends UIComponent {
         sameData: true,
         model: {
           template2: this.templateGrid,
-
         },
 
-        request:{service:'AC'},
-        subModel:{
-          entityName:'AC_CashPaymentsLines',
-          formName:'CashPaymentsLines',
-          gridviewName:'grvCashPaymentsLines',
-          parentField:'TransID',
-          parentNameField:'VoucherNo',
-          hideMoreFunc:true,
-          request:{
+        request: { service: 'AC' },
+        subModel: {
+          entityName: 'AC_CashPaymentsLines',
+          formName: 'CashPaymentsLines',
+          gridviewName: 'grvCashPaymentsLines',
+          parentField: 'TransID',
+          parentNameField: 'VoucherNo',
+          hideMoreFunc: true,
+          request: {
             service: 'AC',
           },
-          idField:'recID'
-        }
+          idField: 'recID',
+        },
       },
     ];
     this.acService.setChildLinks();
@@ -264,7 +269,7 @@ export class CashPaymentsComponent extends UIComponent {
   }
 
   viewChanged(view) {
-    if(view && view?.view?.type == this.viewActive) return;
+    if (view && view?.view?.type == this.viewActive) return;
     this.viewActive = view?.view?.type;
     this.detectorRef.detectChanges();
   }
@@ -293,24 +298,24 @@ export class CashPaymentsComponent extends UIComponent {
             legalName: this.legalName, //? tên company
           };
           let optionSidebar = new SidebarModel();
-            optionSidebar.DataService = this.view?.dataService;
-            optionSidebar.FormModel = this.view?.formModel;
-            let dialog = this.callfc.openSide(
-              CashPaymentAddComponent,
-              data,
-              optionSidebar,
-              this.view.funcID
-            );
-            dialog.closed.subscribe((res) => {
-              if (res && res?.event) {
-                if (res?.event?.type === 'discard') {
-                  if(this.view.dataService.data.length == 0){
-                    this.itemSelected = undefined;
-                    this.detectorRef.detectChanges();
-                  } 
+          optionSidebar.DataService = this.view?.dataService;
+          optionSidebar.FormModel = this.view?.formModel;
+          let dialog = this.callfc.openSide(
+            CashPaymentAddComponent,
+            data,
+            optionSidebar,
+            this.view.funcID
+          );
+          dialog.closed.subscribe((res) => {
+            if (res && res?.event) {
+              if (res?.event?.type === 'discard') {
+                if (this.view.dataService.data.length == 0) {
+                  this.itemSelected = undefined;
+                  this.detectorRef.detectChanges();
                 }
               }
-            })
+            }
+          });
         }
       });
   }
@@ -321,7 +326,7 @@ export class CashPaymentsComponent extends UIComponent {
    */
   editVoucher(dataEdit) {
     delete dataEdit.isReadOnly;
-    this.view.dataService.dataSelected = {...dataEdit};
+    this.view.dataService.dataSelected = { ...dataEdit };
     this.view.dataService
       .edit(dataEdit)
       .pipe(takeUntil(this.destroy$))
@@ -347,13 +352,13 @@ export class CashPaymentsComponent extends UIComponent {
         dialog.closed.subscribe((res) => {
           if (res && res?.event) {
             if (res?.event?.type === 'discard') {
-              if(this.view.dataService.data.length == 0){
+              if (this.view.dataService.data.length == 0) {
                 this.itemSelected = undefined;
                 this.detectorRef.detectChanges();
-              } 
+              }
             }
           }
-        })
+        });
       });
   }
 
@@ -396,13 +401,13 @@ export class CashPaymentsComponent extends UIComponent {
                 dialog.closed.subscribe((res) => {
                   if (res && res?.event) {
                     if (res?.event?.type === 'discard') {
-                      if(this.view.dataService.data.length == 0){
+                      if (this.view.dataService.data.length == 0) {
                         this.itemSelected = undefined;
                         this.detectorRef.detectChanges();
-                      } 
+                      }
                     }
                   }
-                })
+                });
                 this.view.dataService
                   .add(datas)
                   .pipe(takeUntil(this.destroy$))
@@ -437,8 +442,7 @@ export class CashPaymentsComponent extends UIComponent {
       optionSidebar,
       this.view.funcID
     );
-    dialog.closed.subscribe((res) => {
-    })
+    dialog.closed.subscribe((res) => {});
   }
 
   /**
@@ -451,10 +455,10 @@ export class CashPaymentsComponent extends UIComponent {
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
         if (res && !res?.error) {
-          if(this.view.dataService.data.length == 0){
+          if (this.view.dataService.data.length == 0) {
             this.itemSelected = undefined;
             this.detectorRef.detectChanges();
-          } 
+          }
         }
       });
   }
@@ -493,11 +497,17 @@ export class CashPaymentsComponent extends UIComponent {
    * @param data
    * @returns
    */
-  changeMFDetail(event: any,type: any = '') {
+  changeMFDetail(event: any, type: any = '') {
     console.log(event);
     let data = this.view?.dataService?.dataSelected;
     if (data) {
-      this.acService.changeMFCashPayment(event,data,type,this.journal,this.view.formModel);
+      this.acService.changeMFCashPayment(
+        event,
+        data,
+        type,
+        this.journal,
+        this.view.formModel
+      );
     }
   }
 
@@ -522,7 +532,7 @@ export class CashPaymentsComponent extends UIComponent {
             '',
             '',
             null,
-            JSON.stringify({ParentID:data.journalNo})
+            JSON.stringify({ ParentID: data.journalNo })
           )
           .pipe(takeUntil(this.destroy$))
           .subscribe((result: any) => {
@@ -670,7 +680,7 @@ export class CashPaymentsComponent extends UIComponent {
    * @param data
    */
   transferToBank(text, data) {
-    this.checkLogin((o) => {
+    this.checkLogin('970422', 'test', data, (o) => {
       if (o) {
         let tk = jsBh.decodeCookie('bankhub');
         this.api
@@ -686,8 +696,8 @@ export class CashPaymentsComponent extends UIComponent {
               data.status = '8';
               this.view.dataService.update(data).subscribe();
               this.notification.notifyCode('AC0029', 0, text);
-            }else{
-              this.notification.notify(res.data.data.result.message,'2');
+            } else {
+              this.notification.notify(res.data.data.result.message, '2');
             }
           });
       }
@@ -697,8 +707,8 @@ export class CashPaymentsComponent extends UIComponent {
   /**
    * *Hàm check đăng nhập
    */
-  checkLogin(func: any) {
-    return jsBh.login('test', (o) => {
+  checkLogin(bankcode, partner, data, func: any) {
+    return jsBh.login(bankcode, partner, data, (o) => {
       return func(o);
     });
   }

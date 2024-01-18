@@ -22,15 +22,20 @@ export class CostItemsComponent implements OnInit {
   @Input() grViewCost: any;
   @Input() isAutoSave = false; // save ở đây và trả về
   @Input() viewOnly = false;
-
+  @Input() dealValueTo = 0;
+  @Input() planceHolderDealValueTo = 'Nhập ngân sách'; //truyền plance hodeler cho ngân sách
+  @Input() maxHeight: any;
   @Output() dataCostItems = new EventEmitter<any>();
   @Output() totalDataCost = new EventEmitter<any>();
+  @Output() dataDealValueTo = new EventEmitter<any>();
 
   cost: any;
   tmpCost: CM_CostItems;
   totalCost = 0;
   action = 'edit';
-  formModel:any
+  formModel: any;
+  costIDOld = [];
+  dealValueToOld = 0;
 
   constructor(
     private api: ApiHttpService,
@@ -48,7 +53,10 @@ export class CostItemsComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.dealValueToOld = this.dealValueTo;
     if (this.isLoadedData) {
+      if (this.costInfos?.length > 0)
+        this.costIDOld = this.costInfos.map((x) => x.recID);
       this.calculateTotalCost();
       return;
     }
@@ -60,6 +68,7 @@ export class CostItemsComponent implements OnInit {
     this.codxCmService.getCostItemsByTransID(this.transID).subscribe((res) => {
       if (res) {
         this.costInfos = res;
+        this.costIDOld = this.costInfos.map((x) => x.recID);
         this.calculateTotalCost();
       }
     });
@@ -83,9 +92,10 @@ export class CostItemsComponent implements OnInit {
 
     this.costInfos.push(newCost);
     this.cost = newCost;
-    if (this.isAutoSave) {
-      this.autoSaveData();
-    } else this.calculateTotalCost();
+    this.calculateTotalCost();
+    // if (this.isAutoSave) {
+    //   this.autoSaveData();
+    // }
     this.detectorRef.detectChanges();
   }
 
@@ -95,13 +105,16 @@ export class CostItemsComponent implements OnInit {
   }
   deleteCost(index: number) {
     if (this.costInfos?.length > index) {
-      // if (this.costInfos?.length == 0) this.cost = null;
+      this.cost = this.costInfos[index];
       if (this.isAutoSave) {
-        this.cost = this.costInfos[index];
-        if(this.cost)
-        this.autoDeleted(index);
+        if (!this.costIDOld.includes(this.cost.recID)) {
+          this.cost = null;
+          return;
+        }
+        if (this.cost) this.autoDeleted(index);
       } else {
         this.costInfos?.splice(index, 1);
+        this.cost = null;
         this.calculateTotalCost();
       }
       this.detectorRef.detectChanges();
@@ -134,6 +147,7 @@ export class CostItemsComponent implements OnInit {
       } else this.calculateTotalCost();
     }
   }
+
   calculateTotalCost() {
     this.totalCost = 0;
     if (this.costInfos?.length > 0) {
@@ -144,18 +158,47 @@ export class CostItemsComponent implements OnInit {
         this.totalCost += cost.amount;
       });
     }
-    this.dataCostItems.emit(this.costInfos);
-    this.totalDataCost.emit(this.totalCost);
+    if (!this.isAutoSave) {
+      this.dataCostItems.emit(this.costInfos);
+      this.totalDataCost.emit(this.totalCost);
+    }
   }
 
   //save ở đây và trả về
   autoSaveData() {
-    if(this.validateCost()){
-      //save dong cost
+    if (!this.cost) return;
+    if (
+      this.cost &&
+      (!this.cost.costItemName || this.cost?.costItemName.trim() == '')
+    ) {
+      this.notiService.notify(
+        'Chưa nhập nội dung chi phí, hãy hoàn thiện chi phí trước khi thêm chi phí mới !',
+        '3'
+      );
+      return;
     }
+    //save cost
+    let methol = 'AddCostAsync';
+    let isAdd = true;
+    if (this.costIDOld.includes(this.cost.recID)) {
+      methol = 'EditCostAsync';
+      isAdd = false;
+    }
+    this.api
+      .exec<any>('CM', 'CostItemsBusiness', methol, this.cost)
+      .subscribe((res) => {
+        if (res) {
+          if (isAdd) this.costIDOld.push(res.recID);
+          this.dataCostItems.emit(this.costInfos);
+          this.totalDataCost.emit(this.totalCost);
+        }
+      });
   }
-  validateCost(){
-    return true
+  validateCost() {
+    // let check = this.costInfos.some(
+    //   (x) => !x.costItemName || x.costItem.trim() == ''
+    // );
+    //return !check;
   }
 
   autoDeleted(index) {
@@ -164,10 +207,41 @@ export class CostItemsComponent implements OnInit {
       .subscribe((res) => {
         if (res) {
           this.costInfos?.splice(index, 1);
-           this.calculateTotalCost();
+          this.costIDOld = this.costIDOld.filter(
+            (x) => x.recID != this.cost.recID
+          );
+          this.cost = null;
+          this.calculateTotalCost();
+          this.dataCostItems.emit(this.costInfos);
+          this.totalDataCost.emit(this.totalCost);
         }
-      
       });
   }
+
+  valueChange(e) {
+    this.dealValueTo = e.data;
+  }
+  valueChangeDVT(e) {
+    // this.dealValueTo = e.data;
+    if (this.dealValueToOld == this.dealValueTo) return;
+    if (!this.isAutoSave) {
+      this.dataDealValueTo.emit(this.dealValueTo);
+      this.dealValueToOld = this.dealValueTo;
+    } else {
+      this.api
+        .exec<any>('CM', 'DealsBusiness', 'UpdateDealValueToAsync', [
+          this.transID,
+          this.dealValueTo,
+        ])
+        .subscribe((res) => {
+          if (res) {
+            this.dataDealValueTo.emit(this.dealValueTo);
+            this.dealValueToOld = this.dealValueTo;
+            this.notiService.notifyCode('SYS007');
+          }
+        });
+    }
+  }
+
   //---------------------------------------------//
 }

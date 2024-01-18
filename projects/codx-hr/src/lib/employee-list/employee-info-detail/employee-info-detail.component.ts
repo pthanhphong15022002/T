@@ -901,7 +901,6 @@ export class EmployeeInfoDetailComponent extends UIComponent {
     if (this.funcID) {
       this.hrService.getFunctionList(this.funcID).subscribe((res) => {
         this.lstTab = res;
-        console.log('function list day ne', this.lstTab);
         for (let i = 0; i < res.length; i++) {
           switch (res[i].url) {
             case this.curriculumVitaeURL:
@@ -953,7 +952,6 @@ export class EmployeeInfoDetailComponent extends UIComponent {
         // Load full thong tin employee
         this.loadEmpFullInfo(this.employeeID).subscribe((res) => {
           if (res) {
-            console.log('thong tin nv', res[0]);
             this.infoPersonal = res[0];
             this.getManagerEmployeeInfoById();
             this.infoPersonal.PositionName = res[1];
@@ -2421,6 +2419,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
   }
 
   popupViewAllContract() {
+    debugger
     let opt = new DialogModel();
     opt.zIndex = 999;
     let popup = this.callfunc.openForm(
@@ -2455,6 +2454,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       }
     });
   }
+  
 
   popupViewAllWorkPermit() {
     let opt = new DialogModel();
@@ -2938,7 +2938,6 @@ export class EmployeeInfoDetailComponent extends UIComponent {
               if (!this.benefitFormodel) {
                 this.hrService.getFormModel(this.benefitFuncID).then((res) => {
                   this.benefitFormodel = res;
-
                   this.cache
                     .gridViewSetup(
                       this.benefitFormodel.formName,
@@ -4132,76 +4131,6 @@ export class EmployeeInfoDetailComponent extends UIComponent {
   }
 
   handleEBasicSalaries(
-    actionHeaderText,
-    actionType: string,
-    data: any,
-    isMulti = false
-  ) {
-    const t = this;
-    let option = new SidebarModel();
-    option.FormModel = this.eBasicSalaryFormmodel;
-    option.DataService = this.hrService.createCRUDService(
-      this.inject,
-      option.FormModel,
-      'HR'
-    );
-    option.Width = '550px';
-
-    if (actionType == 'add') {
-      option.DataService.addNew().subscribe((res) => {
-        if (res) {
-          data = res;
-          data.EffectedDate = null;
-          open();
-        }
-      });
-    } else open();
-
-    function open() {
-      let dialogAdd = t.callfunc.openSide(
-        CodxFormDynamicComponent,
-        {
-          formModel: option.FormModel,
-          data: data,
-          function: null,
-          dataService: option.DataService,
-          isView: actionType == 'view',
-          headerText:
-            actionHeaderText +
-            ' ' +
-            t.transText(t.eExperienceFuncID, t.lstFuncCurriculumVitae),
-        },
-        option
-      );
-      dialogAdd.closed.subscribe((res) => {
-        if (!res?.event) {
-          (t.basicSalaryGridview?.dataService as CRUDService)?.clear();
-        } else {
-          if (res.event) {
-            if (
-              t.checkIsNewestDate(
-                res.event.effectedDate,
-                res.event.expiredDate
-              ) == true
-            ) {
-              t.crrEBSalary = res.event;
-            } else {
-              if (data.employeeID) {
-                t.hrService
-                  .GetCurrentEBasicSalariesByEmployeeID(data.employeeID)
-                  .subscribe((dataEBaSlary) => {
-                    t.crrEBSalary = dataEBaSlary;
-                  });
-              }
-            }
-          }
-        }
-        t.df.detectChanges();
-      });
-    }
-  }
-
-  handleEBasicSalaries2(
     actionHeaderText,
     actionType: string,
     data: any,
@@ -7068,7 +6997,6 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       empRequest.predicates = 'EmployeeID=@0';
       empRequest.pageLoading = false;
       this.hrService.loadData('HR', empRequest).subscribe((res: any) => {
-        console.log('line manager', res);
         if (Array.isArray(res) && res[1] > 0) {
           this.lineManager = res[0][0];
           this.loadedLineManager = true;

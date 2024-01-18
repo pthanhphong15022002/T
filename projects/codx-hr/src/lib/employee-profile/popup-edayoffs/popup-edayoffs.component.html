@@ -9,8 +9,6 @@
   [dialog]="dialog"
   [data]="dayoffObj"
   >
-  <!-- [group]="form.formGroup"
-  *ngIf="isAfterRender" -->
   <ng-template #body>
     <ng-container *ngIf="form.formGroup">
     <div class="form-group row d-flex flex-row" *ngIf="fromListView">
@@ -45,22 +43,12 @@
             <span class="text-gray-700" *ngIf="empObj?.orgUnitName">{{
               empObj?.orgUnitName
             }}</span>
-            <!-- <div class="text-gray-700" *ngIf="empObj?.orgUnitID">
-              <span
-                [innerHTML]="
-                  empObj?.orgUnitID
-                    | formatvalue : formModel : 'orgUnitID'
-                    | async
-                "
-              ></span>
-            </div> -->
           </div>
         </div>
       </div>
       <div class="col-2 d-flex justify-content-end">
         <codx-input
-*ngIf="form.gridviewSetup.EmployeeID.allowPopup == true"
-
+          *ngIf="form.gridviewSetup.EmployeeID.allowPopup == true"
           [disabled]="disabledInput || isPortal"
           [showInput]="false"
           field="employeeID"
@@ -71,53 +59,27 @@
         </codx-input>
       </div>
     </div>
-    <!-- <div class="form-group row mt-5">
-      <div class="col-6">
-        <codx-label
-*ngIf="form.gridviewSetup.RegisteredDate.allowPopup == true"
-
-          fiedName="RegisteredDate"
-          [formModel]="form.formModel"
-        ></codx-label>
-        <codx-input
-*ngIf="form.gridviewSetup.RegisteredDate.allowPopup == true"
-
-          disabled="true"
-          field="registeredDate"
-          [formModel]="form.formModel"
-          [Group]="form.formGroup"
-        ></codx-input>
-      </div>
-      <div class="col-6">
-        <codx-label
-*ngIf="form.gridviewSetup.RegisteredBy.allowPopup == true"
-
-          fiedName="RegisteredBy"
-          [formModel]="form.formModel"
-        ></codx-label>
-        <codx-input
-*ngIf="form.gridviewSetup.RegisteredBy.allowPopup == true"
-
-          disabled="true"
-          field="registeredBy"
-          [formModel]="form.formModel"
-          [Group]="form.formGroup"
-        ></codx-input>
-      </div>
-    </div> -->
 
     <div class="form-group row">
       <codx-label
       *ngIf="form.gridviewSetup.KowID.allowPopup == true"
       fiedName="KowID" [formModel]="form.formModel"></codx-label>
-      <codx-input
-*ngIf="form.gridviewSetup.KowID.allowPopup == true"
-
+      <!-- <codx-input
+        *ngIf="form.gridviewSetup.KowID.allowPopup == true"
         [disabled]="disabledInput"
         field="kowID"
         [formModel]="form.formModel"
         [Group]="form.formGroup"
         (valueChange)="kowIDValuechange()"
+      ></codx-input> -->
+
+      <codx-input
+        *ngIf="form.gridviewSetup.KowID.allowPopup == true"
+        [disabled]="disabledInput"
+        field="kowID"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
+        (valueChange)="valueChange($event)"
       ></codx-input>
     </div>
 
@@ -133,7 +95,7 @@
           field="beginDate"
           [formModel]="form.formModel"
           [Group]="form.formGroup"
-          (valueChange)="valueChangedDate($event)"
+          (valueChange)="valueChange($event)"
         ></codx-input>
       </div>
       <div class="col-6">
@@ -141,13 +103,12 @@
         *ngIf="form.gridviewSetup.EndDate.allowPopup == true"
         fiedName="EndDate" [formModel]="form.formModel"></codx-label>
         <codx-input
-*ngIf="form.gridviewSetup.EndDate.allowPopup == true"
-
+          *ngIf="form.gridviewSetup.EndDate.allowPopup == true"
           [disabled]="disabledInput"
           field="endDate"
           [formModel]="form.formModel"
           [Group]="form.formGroup"
-          (valueChange)="valueChangedDate($event)"
+          (valueChange)="valueChange($event)"
         ></codx-input>
       </div>
     </div>
@@ -158,13 +119,12 @@
         *ngIf="form.gridviewSetup.PeriodType.allowPopup == true"
         fiedName="PeriodType" [formModel]="form.formModel"></codx-label>
         <codx-input
-*ngIf="form.gridviewSetup.PeriodType.allowPopup == true"
-
+          *ngIf="form.gridviewSetup.PeriodType.allowPopup == true"
           [disabled]="disabledInput"
           field="periodType"
           [formModel]="form.formModel"
           [Group]="form.formGroup"
-          (valueChange)="valueChangedDate($event)"
+          (valueChange)="valueChange($event)"
         ></codx-input>
       </div>
       <div class="col-6">

@@ -220,6 +220,7 @@ export class PopupEBasicSalariesComponent
 
             if (this.actionType != 'edit') {
               this.EBasicSalaryObj = res?.data;
+              this.EBasicSalaryObj.effectedDate = new Date();
             }
             this.loadedAutoNum = true;
 

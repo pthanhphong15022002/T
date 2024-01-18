@@ -229,8 +229,8 @@
                                         </div>
                                         <div class="mb-2">
                                             <span class="p-2 b rounded-pill"
-                                                [style.color]="item.status | vll:'L1428':'color' | async"
-                                                [style.background-color]="(item.status | vll:'L1428':'color' | async) + '30'">
+                                                [style.color]="item.status | vll:'L1428':'textColor' | async"
+                                                [style.background-color]="item.status | vll:'L1428':'color' | async">
                                                 {{item.status |vll:"L1428":"text" | async}}
                                             </span>
                                         </div>
@@ -330,8 +330,8 @@
                 <span>{{item.quantity}}</span>
             </div>
             <div class="d-flex mt-2">
-                <div class="px-2 b rounded-pill" [style.color]="item.status|vll:'L1428':'color'|async"
-                    [style.background-color]="(item.status|vll:'L1428':'color'|async)+'30'">
+                <div class="px-2 b rounded-pill" [style.color]="item.status|vll:'L1428':'textColor'|async"
+                    [style.background-color]="item.status|vll:'L1428':'color'|async">
                     {{item.status|vll:"L1428":"text"|async}}
                 </div>
             </div>

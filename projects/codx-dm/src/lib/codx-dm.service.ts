@@ -890,7 +890,6 @@ export class CodxDMService {
             e[i].disabled = true;
           }
         } else {
-          debugger
           if (modeView) {
             list = 'DMT0212;DMT0217;DMT0225;DMT0222';
             if (e[i].data != null && list.indexOf(e[i].data.functionID) == -1) {

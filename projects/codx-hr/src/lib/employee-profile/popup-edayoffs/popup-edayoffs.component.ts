@@ -19,6 +19,7 @@ import {
   UIComponent,
 } from 'codx-core';
 import { CalendarView } from '@syncfusion/ej2-angular-calendars';
+import { DateTime } from '@syncfusion/ej2-angular-charts';
 
 @Component({
   selector: 'lib-popup-edayoffs',
@@ -71,18 +72,20 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
     private hrSevice: CodxHrService,
     @Optional() dialog?: DialogRef,
     @Optional() data?: DialogData
-  ) {
+  ) 
+  {
     super(injector);
     this.dialog = dialog;
     this.headerText = data?.data?.headerText;
     this.funcID = data?.data?.funcID;
-
-    if (data?.data?.dayoffObj) {
+    if (data?.data?.dayoffObj) 
+    {
       this.dayoffObj = JSON.parse(JSON.stringify(data?.data?.dayoffObj));
       if (data?.data?.actionType === 'add') {
         this.dayoffObj.kowID = '';
       }
-    } else {
+    } else 
+    {
       this.dayoffObj = undefined;
     }
 
@@ -98,12 +101,6 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
 
     if (this.dayoffObj) {
       this.pregnancyFromVal = this.dayoffObj.pregnancyFrom;
-      if (this.dayoffObj.beginDate == '0001-01-01T00:00:00') {
-        this.dayoffObj.beginDate = null;
-      }
-      if (this.dayoffObj.endDate == '0001-01-01T00:00:00') {
-        this.dayoffObj.endDate = null;
-      }
     }
     this.formModel = dialog.formModel;
 
@@ -116,20 +113,6 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
 
   onInit(): void {
     this.initForm();
-
-    // this.hrSevice
-    //   .getFormGroup(
-    //     this.formModel.formName,
-    //     this.formModel.gridViewName,
-    //     this.formModel
-    //   )
-    //   .then((fg) => {
-    //     if (fg) {
-    //       this.form.formGroup = fg;
-    //       this.initForm();
-    //     }
-    //   });
-
     if (this.employId) this.getEmployeeInfoById(this.employId, 'employeeID');
     this.getGroupKowTypeView();
     if (this.dayoffObj?.kowID) this.checkViewKowTyeGroup();
@@ -139,7 +122,8 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
     this.hrSevice
       .getOrgUnitID(this.empObj?.orgUnitID ?? this.empObj?.emp?.orgUnitID)
       .subscribe((res) => {
-        if (this?.empObj) {
+        if (this.empObj) 
+        {
           this.empObj.orgUnitName = res.orgUnitName;
         }
       });
@@ -177,27 +161,22 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
         .subscribe((res: any) => {
           if (res) {
             this.dayoffObj = res?.data;
-            this.dayoffObj.beginDate = null; //yêu cầu require, không default
+            this.dayoffObj.beginDate = new Date(); 
             this.dayoffObj.endDate = null;
             this.dayoffObj.employeeID = this.employId;
             this.dayoffObj.periodType = '1';
-            // this.dayoffObj.totalSubDays = 0;
-            // this.formModel.currentData = this.dayoffObj;
-            // this.form.formGroup.patchValue(this.dayoffObj);
-            // this.isAfterRender = true;
             this.cr.detectChanges();
           }
         });
     } 
-    else {
+    else 
+    {
       if (
         this.actionType === 'edit' ||
         this.actionType === 'copy' ||
         this.actionType === 'view'
-      ) {
-        // this.form.formGroup.patchValue(this.dayoffObj);
-        // this.formModel.currentData = this.dayoffObj;
-        // this.isAfterRender = true;
+      ) 
+      {
         this.cr.detectChanges();
       }
     }
@@ -324,20 +303,38 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
     });
   }
 
-  //Change date and render days
-  valueChangedDate(evt: any) {
-    if (evt.field === 'beginDate') {
-      this.dayoffObj.beginDate = evt.data;
-      this.dayoffObj.endDate = evt.data;
-      this.form.formGroup.patchValue({ endDate: evt.data });
+  valueChange(event:any){
+    let field =  event.field;
+    let value = event.data;
+    switch(field)
+    {
+      case "beginDate":
+        this.dayoffObj["beginDate"] = new Date(value.getFullYear(),value.getMonth(),value.getDate(),new Date().getHours(),new Date().getMinutes());
+        break;
+      case "endDate":
+        this.dayoffObj["endDate"] = new Date(value.getFullYear(),value.getMonth(),value.getDate(),new Date().getHours(),new Date().getMinutes()); 
+        break;
+      case "periodType":
+        this.dayoffObj["periodType"] = value;
+        break;
+      case "kowID":
+        this.dayoffObj["kowID"] = value;
+        break;
     }
-    if (evt.field === 'endDate') {
-      this.dayoffObj.endDate = evt.data;
+    if (this.dayoffObj && this.dayoffObj?.kowID && this.dayoffObj?.endDate && this.dayoffObj?.beginDate && this.dayoffObj?.periodType) 
+    {
+      this.calculateDayOff(this.dayoffObj.beginDate,this.dayoffObj.endDate,this.dayoffObj.employeeID,this.dayoffObj.kowID,this.dayoffObj.periodType);
     }
+  }
 
-    if (this.dayoffObj.endDate && this.dayoffObj.beginDate && this.dayoffObj.periodType) {
-      this.HandleTotalDaysVal(this.dayoffObj.periodType);
-    }
+  // call HR_fnCalculateDayOff
+  calculateDayOff(fromDate:Date,toDate:Date,employeeID:string,kowID:string,periodType:string){
+    this.api.execSv("HR","HR","EDayOffsBusiness","CalculateDayOffAsync",[fromDate,toDate,employeeID,kowID,periodType])
+    .subscribe((res:any) => {
+      this.dayoffObj["totalDaysOff"] = res ?? 0;
+      this.form.formGroup.patchValue({totalDaysOff: this.dayoffObj["totalDaysOff"]});
+      this.cr.detectChanges();
+    });
   }
 
   dateCompare(beginDate, endDate) {
@@ -475,25 +472,21 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
     };
   }
   checkViewKowTyeGroup() {
-    if (this.dayoffObj['kowID']) {
+    debugger
+    if (this.dayoffObj['kowID']) 
+    {
       this.showInfoDayoffType = false;
-      for (let i in this.groupKowTypeView) {
-        this.groupKowTypeView[i].isShow = this.groupKowTypeView[
-          i
-        ].value.includes(this.dayoffObj['kowID']);
+      for (let i in this.groupKowTypeView) 
+      {
+        this.groupKowTypeView[i].isShow = this.groupKowTypeView[i].value.includes(this.dayoffObj['kowID']);
 
-        if (
-          this.groupKowTypeView[i].value.includes(this.dayoffObj['kowID']) ==
-          true
-        ) {
+        if (this.groupKowTypeView[i].value.includes(this.dayoffObj['kowID']) == true) 
+        {
           this.showInfoDayoffType = true;
         }
-
-        // this.groupKowTypeView[i].isShow = this.groupKowTypeView[
-        //   i
-        // ].value.includes(this.dayoffObj['kowID']);
       }
-    } else this.getGroupKowTypeView();
+    } 
+    else this.getGroupKowTypeView();
   }
   deletedKowGroupValue() {
     for (let i in this.groupKowTypeView) {

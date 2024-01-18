@@ -176,7 +176,6 @@ export class PayTExceptComponent extends UIComponent implements AfterViewInit {
     }
   }
 
-
   //valueChange
   valueChange(event){
     if(event)

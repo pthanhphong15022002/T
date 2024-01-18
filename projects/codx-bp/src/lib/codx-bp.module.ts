@@ -7,7 +7,7 @@ import { CodxBpComponent } from './codx-bp.component';
 import { TesthtmlComponent } from './testhtml/testhtml.component';
 import { LayoutComponent } from './_layout/layout.component';
 import { ProcessesComponent } from './processes/processes.component';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbAccordionModule, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { CodxCoreModule } from 'codx-core';
 import { CoreModule } from '@core/core.module';
 import { HttpClientModule } from '@angular/common/http';
@@ -41,12 +41,14 @@ import { PropertyAttachmentComponent } from './modeview/properties/property-atta
 import { FormSettingComboboxComponent } from './processes/popup-add-process/form-properties-fields/setting-fields/form-setting-combobox/form-setting-combobox.component';
 import { PropertyComboboxComponent } from './modeview/properties/property-combobox/property-combobox.component';
 import { FormAdvancedSettingsComponent } from './processes/popup-add-process/form-advanced-settings/form-advanced-settings.component';
-import { FormEditConnectorComponent } from './processes/popup-add-process/form-edit-connector/form-edit-connector.component';
 import { SplitterAllModule } from '@syncfusion/ej2-angular-layouts';
 import { DynamicSettingModule } from 'projects/codx-share/src/lib/components/dynamic-setting/dynamic-setting.module';
 import { PropertyShareComponent } from './modeview/properties/property-share/property-share.component';
 import { PropertyTableComponent } from './modeview/properties/property-table/property-table.component';
+import { PropertyDefaultTitleComponent } from './modeview/properties/property-default/property-default-title/property-default-title.component';
 import { PopupPermissionsProcessesComponent } from './processes/popup-add-process/popup-permissions-processes/popup-permissions-processes.component';
+import { FormStepsFieldGridComponent } from './processes/popup-add-process/form-steps-field-grid/form-steps-field-grid.component';
+import { FormTestDiagramComponent } from './processes/popup-add-process/form-test-diagram/form-test-diagram.component';
 
 export const routes: Routes = [
   {
@@ -84,6 +86,7 @@ export const routes: Routes = [
     FormatValuelistComponent,
 
     //Propreties
+    PropertyDefaultTitleComponent,
     PropertyValueListComponent,
     PropertyFormComponent,
     PropertyTextComponent,
@@ -100,10 +103,11 @@ export const routes: Routes = [
     PropertyShareComponent,
     PropertyTableComponent,
 
-    FormEditConnectorComponent,
     FormSettingComboboxComponent,
     FormAdvancedSettingsComponent,
     PopupPermissionsProcessesComponent,
+    FormStepsFieldGridComponent,
+    FormTestDiagramComponent
   ],
   imports: [
     CodxCoreModule.forRoot({ environment }),
@@ -126,7 +130,8 @@ export const routes: Routes = [
     PinchZoomModule,
     DiagramModule,
     SplitterAllModule,
-    DynamicSettingModule
+    DynamicSettingModule,
+    NgbAccordionModule
     // NgxImageZoomModule
   ],
   exports: [CodxBpComponent],

@@ -41,13 +41,12 @@ import { PopupAddPanelComponent } from './popup-add-panel/popup-add-panel.compon
 import { PopupSelectTemplateComponent } from './popup-select-template/popup-select-template.component';
 import { CircularGaugeComponent } from '@syncfusion/ej2-angular-circulargauge';
 import { ɵglobal as global } from '@angular/core';
-import { tap } from 'rxjs';
 import { NgxCaptureService } from 'ngx-capture';
 @Component({
   selector: 'codx-dashboard',
   templateUrl: 'codx-dashboard.component.html',
   styleUrls: ['codx-dashboard.component.scss'],
-  host: {class: 'h-100'}
+  host: {class: 'h-100 overflow-scroll'}
 })
 export class CodxDashboardComponent implements OnInit, AfterViewInit {
   @HostListener('window:resize', ['$event'])
