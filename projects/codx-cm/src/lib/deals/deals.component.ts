@@ -202,6 +202,7 @@ export class DealsComponent
   applyApprover = '0';
   startLoad = false;
   funcDefault = 'CM0201';
+  listKeyFieldSum = [];
 
   constructor(
     private inject: Injector,
@@ -611,13 +612,16 @@ export class DealsComponent
         this.vllStatus = this.gridViewSetup?.Status?.referedValue;
         this.vllApprove = this.gridViewSetup?.ApproveStatus?.referedValue;
         // lay grid view - view gird he thong
-
         let arrField = Object.values(this.gridViewSetup).filter(
           (x: any) => x.isVisible
         );
+
         if (Array.isArray(arrField)) {
           this.arrFieldIsVisible = arrField
             .sort((x: any, y: any) => x.columnOrder - y.columnOrder)
+            .map((x: any) => x.fieldName);
+          this.listKeyFieldSum = arrField
+            .filter((x: any) => x.summaryBottom == '1' || x.summaryTop == '1')
             .map((x: any) => x.fieldName);
         }
         this.getColumsGrid(this.gridViewSetup);
@@ -2361,14 +2365,11 @@ export class DealsComponent
     //   //   skeleton: 'n6',
     //   // });
     //   // this.totalView = nFormatter(total) + ' ' + this.currencyIDDefault;
-
     //   if (!Number.parseFloat(total)) total = 0;
     //   let objectDealValue = {
     //     dealValue: total,
     //   };
-
     //   this.view.currentView.sumData = objectDealValue;
-
     //   // let elemnt = document.querySelector('.sum-content');
     //   // if (elemnt) {
     //   //   elemnt.innerHTML = this.totalView;
@@ -2376,20 +2377,38 @@ export class DealsComponent
     // });
 
     //chưa dùng đến nhưng chắc chắn có dùng - đã dùng
-    this.getTotalFiels().subscribe((totals) => {
-      console.log(totals);
-      //if (!Number.parseFloat(total)) total = 0;
-      let objectDealValue = {
-        dealValue: totals.DeadValue ?? 0,
-        dealValueTo: totals.DealValueTo ?? 0,
-        dealCost: totals.DealCost ?? 0,
-        dealCostView: totals.DealCost ?? 0,
-        grossProfit: totals.GrossProfit ?? 0,
-        grossProfitView: totals.GrossProfit ?? 0,
-      };
+    if (this.listKeyFieldSum?.length > 0) {
+      //caái này xử lý tempView
+      let viewSum = JSON.parse(JSON.stringify(this.listKeyFieldSum));
 
-      this.view.currentView.sumData = objectDealValue;
-    });
+      let idxDealCostView = viewSum.findIndex((f) => f == 'DealCostView');
+      if (idxDealCostView != -1) {
+        viewSum.splice(idxDealCostView, 1);
+        viewSum.push('DealCost');
+      }
+
+      let idxGrossProfitView = viewSum.findIndex((f) => f == 'GrossProfitView');
+      if (idxGrossProfitView != -1) {
+        viewSum.splice(idxGrossProfitView, 1), viewSum.push('GrossProfit');
+      }
+
+      let fieldSum = [...new Set(viewSum)].join(';'); //lay các giá trị ko trung nhau
+
+      this.getTotalFiels(fieldSum).subscribe((totals) => {
+        if (totals) {
+          let objectDealValue = {};
+          this.listKeyFieldSum.forEach((f) => {
+            let fieldName = Util.camelize(f);
+            let fv = f;
+            if (fieldName == 'dealCostView') fv = 'DealCost';
+            if (fieldName == 'grossProfitView') fv = 'GrossProfit';
+
+            objectDealValue[fieldName] = totals[fv] ?? 0;
+          });
+          this.view.currentView.sumData = objectDealValue;
+        }
+      });
+    }
   }
 
   getTotal() {
@@ -2422,13 +2441,13 @@ export class DealsComponent
   }
 
   ///Cái này dùng nhiều Field => làm trước
-  getTotalFiels() {
+  getTotalFiels(listKey) {
     let service = 'CM';
     let className = 'DealsBusiness'; //gan tam
     let method = 'GetTotalFieldsAsync'; //gan tam
 
     let dataObj = {
-      listKey: 'DealValue;DealValueTo;DealCost;GrossProfit', //tesst
+      listKey: listKey, //'DealValue;DealValueTo;DealCost;GrossProfit', //tesst
       exchRate: this.exchangeRateDefault,
     };
 
