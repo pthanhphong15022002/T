@@ -2419,6 +2419,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
   }
 
   popupViewAllContract() {
+    debugger
     let opt = new DialogModel();
     opt.zIndex = 999;
     let popup = this.callfunc.openForm(
@@ -2453,6 +2454,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       }
     });
   }
+  
 
   popupViewAllWorkPermit() {
     let opt = new DialogModel();

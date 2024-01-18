@@ -10,6 +10,24 @@
 {
     background-color: var(--primary-lighter);
 }
+
+.grid-collapse
+{
+    .accordion-item
+    {
+        border: none !important;
+    }
+    .accordion-button
+    {
+        padding: 0 !important;
+    }
+    .accordion-button:not(.collapsed),.accordion-button.collapsed
+    {
+        color: black !important;
+        background-color: white;
+    }
+}
+
 .grid-collapse-default
 {
     .accordion-item

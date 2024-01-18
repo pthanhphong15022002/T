@@ -95,6 +95,8 @@ export class DealsComponent
   @ViewChild('templateStatusCode') templateStatusCode: TemplateRef<any>;
   @ViewChild('templateIndustries') templateIndustries: TemplateRef<any>;
   @ViewChild('templateCost') templateCost: TemplateRef<any>;
+  @ViewChild('templateGrossProfit') templateGrossProfit: TemplateRef<any>;
+
   @ViewChild('templateAct') templateAct: TemplateRef<any>;
   @ViewChild('headerTempAct') headerTempAct: TemplateRef<any>;
 
@@ -285,15 +287,15 @@ export class DealsComponent
           setColorHeader: true,
         },
       },
-      {
-        type: ViewType.grid,
-        active: false,
-        sameData: true,
-        model: {
-          template2: this.templateMore,
-          //groupSettings: { showDropArea: false, columns: ['customerName'] },
-        },
-      },
+      // {
+      //   type: ViewType.grid,
+      //   active: false,
+      //   sameData: true,
+      //   model: {
+      //     template2: this.templateMore,
+      //     //groupSettings: { showDropArea: false, columns: ['customerName'] },
+      //   },
+      // },
       {
         type: ViewType.chart,
         active: false,
@@ -305,13 +307,12 @@ export class DealsComponent
           panelLeftRef: this.dashBoard,
         },
       },
+      //quay lui quay tới quay lại cách ban đầu
       {
         //test view mới
-        id: 100,
         type: ViewType.grid,
         active: false,
         sameData: true,
-        text: 'Lưới custorm column',
         model: {
           template2: this.templateMore,
           //groupSettings: { showDropArea: false, columns: ['customerName'] },
@@ -1010,7 +1011,7 @@ export class DealsComponent
           statusCodeID: this.statusCodeID,
           statusCodeCmt: this.statusCodeCmt,
           detailViewDeal: this.detailViewDeal,
-          title: type == '1' ? "Giai đoạn hiện tại" : "Hiện trạng"
+          title: type == '1' ? 'Giai đoạn hiện tại' : 'Hiện trạng',
           // listInsStepStart: this.listInsStep,
         };
         let option = new DialogModel();
@@ -2038,16 +2039,24 @@ export class DealsComponent
         let template: any;
         let colums: any;
         switch (key) {
-          case 'StepID':
+          // case 'StepID':
+          case 'ProjectView': // thông tin dự án
             template = this.templateSteps;
             break;
-          case 'DealCost':
+          // case 'DealCost':
+          case 'DealCostView': //chi phí
             template = this.templateCost;
             break;
-          case 'Status':
+          // case 'GrossProfit':
+          case 'GrossProfitView': //lãi gộp
+            template = this.templateGrossProfit;
+            break;
+          // case 'Status':
+          case 'StatusCodeIDView': //hiện trạng
             template = this.templateStatus;
             break;
-          case 'StatusCodeID':
+          //case 'StatusCodeID'://hiện trạng
+          case 'StatusCodeIDView':
             template = this.templateStatus;
             break;
           default:
@@ -2071,15 +2080,16 @@ export class DealsComponent
         this.columnGrids.push(colums);
       });
     }
-    //set activite
-    let columnActiviti = {
-      isExternal: true,
-      headerTemplate: this.headerTempAct,
-      width: '250px',
-      template: this.templateAct,
-      // textAlign: 'center',
-    };
-    this.columnGrids.push(columnActiviti);
+    // //set activite - ko cần nữa
+    // let columnActiviti = {
+    //   isExternal: true,
+    //   headerTemplate: this.headerTempAct,
+    //   width: '250px',
+    //   template: this.templateAct,
+    //   // textAlign: 'center',
+    // };
+    // this.columnGrids.push(columnActiviti);
+
     //sau
     //this.loadViewModel();
   }
@@ -2344,31 +2354,42 @@ export class DealsComponent
     }
   }
   totalGirdView() {
-    this.getTotal().subscribe((total) => {
-      //không the format truyền qua
-      // let intl = new Internationalization();
-      // let nFormatter = intl.getNumberFormat({
-      //   skeleton: 'n6',
-      // });
-      // this.totalView = nFormatter(total) + ' ' + this.currencyIDDefault;
+    // this.getTotal().subscribe((total) => {
+    //   //không the format truyền qua
+    //   // let intl = new Internationalization();
+    //   // let nFormatter = intl.getNumberFormat({
+    //   //   skeleton: 'n6',
+    //   // });
+    //   // this.totalView = nFormatter(total) + ' ' + this.currencyIDDefault;
 
-      if (!Number.parseFloat(total)) total = 0;
+    //   if (!Number.parseFloat(total)) total = 0;
+    //   let objectDealValue = {
+    //     dealValue: total,
+    //   };
+
+    //   this.view.currentView.sumData = objectDealValue;
+
+    //   // let elemnt = document.querySelector('.sum-content');
+    //   // if (elemnt) {
+    //   //   elemnt.innerHTML = this.totalView;
+    //   // }
+    // });
+
+    //chưa dùng đến nhưng chắc chắn có dùng - đã dùng
+    this.getTotalFiels().subscribe((totals) => {
+      console.log(totals);
+      //if (!Number.parseFloat(total)) total = 0;
       let objectDealValue = {
-        dealValue: total,
+        dealValue: totals.DeadValue ?? 0,
+        dealValueTo: totals.DealValueTo ?? 0,
+        dealCost: totals.DealCost ?? 0,
+        dealCostView: totals.DealCost ?? 0,
+        grossProfit: totals.GrossProfit ?? 0,
+        grossProfitView: totals.GrossProfit ?? 0,
       };
 
       this.view.currentView.sumData = objectDealValue;
-
-      // let elemnt = document.querySelector('.sum-content');
-      // if (elemnt) {
-      //   elemnt.innerHTML = this.totalView;
-      // }
     });
-
-    //chưa dùng đến nhưng chắc chắn có dùng
-    // this.getTotalFiels().subscribe((total) => {
-    //   console.log(total);
-    // });
   }
 
   getTotal() {
@@ -2515,14 +2536,15 @@ export class DealsComponent
   }
 
   //-------------GIRD NEW----------------//
-  viewDetailsCost(transID) {
-    this.codxCmService.getCostItemsByTransID(transID).subscribe((res) => {
+  viewDetailsCost(data) {
+    this.codxCmService.getCostItemsByTransID(data.recID).subscribe((res) => {
       if (res) {
         let options = new DialogModel();
         let obj = {
           title: this.gridViewSetup?.DealCost?.headerText,
           listCosts: res,
-          transID: transID,
+          transID: data.recID,
+          dealValueTo: data.dealValueTo,
         };
         let dialogCost = this.callfc.openForm(
           PopupCostItemsComponent,
@@ -2534,6 +2556,14 @@ export class DealsComponent
           null,
           options
         );
+        dialogCost.closed.subscribe((e) => {
+          if (e && e.event) {
+            data.dealCost = e.event.dealCost;
+            data.dealValueTo = e.event.dealValueTo;
+            data.grossProfit = data.dealValueTo - data.dealCost;
+            this.view.dataService.update(data, true).subscribe();
+          }
+        });
       }
     });
   }

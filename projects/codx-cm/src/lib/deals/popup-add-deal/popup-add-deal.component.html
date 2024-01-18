@@ -408,7 +408,7 @@
 
 <ng-template #costItems let-form>
   <ng-container>
-    <div class="form-group">
+    <!-- <div class="form-group">
       <codx-label
         fiedName="DealValueTo"
         [formModel]="form.formModel"
@@ -426,15 +426,18 @@
         (valueChange)="valueChange($event)"
       >
       </codx-input>
-    </div>
+    </div> -->
     <crud-cost-items
       *ngIf="costInfos"
       [transID]="deal.recID"
       [costInfos]="costInfos"
       [isLoadedData]="true"
+      [dealValueTo]="deal?.dealValueTo"
+      [planceHolderDealValueTo]="gridViewSetup?.DealValueTo?.description"
       [viewOnly]="viewOnly"
       (dataCostItems)="dataCostItems($event)"
       (totalDataCost)="totalDataCost($event)"
+      (dataDealValueTo)="changeDealValueTo($event)"
     ></crud-cost-items>
     <!-- <div
       class="d-flex justify-content-end align-items-center mb-2 border-bottom"
