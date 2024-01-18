@@ -130,6 +130,7 @@ export class CodxReportViewDetailComponent
   ngOnChanges(changes: SimpleChanges): void {}
 
   ngAfterViewInit(): void {
+    debugger
     this.reportID && this.getReport(this.reportID);
     this.views = [
       {
@@ -157,12 +158,13 @@ export class CodxReportViewDetailComponent
 
   }
   viewChanged(e: any) {
-    this.viewBase.moreFuncs = this.moreFc;
+    //this.viewBase.moreFuncs = this.moreFc;
     let wrapper = document.querySelector('codx-wrapper');
     wrapper && wrapper.classList.add('p-0', 'px-1');
   }
   //get report by ID
   getReport(recID: string) {
+    debugger
     this.api
       .execSv(
         'rptrp',
@@ -432,18 +434,18 @@ export class CodxReportViewDetailComponent
     }
   }
 
-  itemSelect(e: any) {
-    if (e) {
-      this.data = e;
-      this.codxService.navigate(
-        '',
-        e.moduleID.toLowerCase() + '/report/detail/' + e.recID
-      );
-      this.reportList = this.orgReportList.filter(
-        (x: any) => x.recID != this.data.recID
-      );
-    }
-  }
+  // itemSelect(e: any) {
+  //   if (e) {
+  //     this.data = e;
+  //     this.codxService.navigate(
+  //       '',
+  //       e.moduleID.toLowerCase() + '/report/detail/' + e.recID
+  //     );
+  //     this.reportList = this.orgReportList.filter(
+  //       (x: any) => x.recID != this.data.recID
+  //     );
+  //   }
+  // }
 
   homeClick() {
     this.codxService.navigate(
