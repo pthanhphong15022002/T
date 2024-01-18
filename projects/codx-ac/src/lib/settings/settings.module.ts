@@ -23,8 +23,8 @@ import { FixedAssetsComponent } from './fixed-assets/fixed-assets.component';
 import { PopupAddFixedAssetComponent } from './fixed-assets/popup-add-fixed-asset/popup-add-fixed-asset.component';
 import { InventoryComponent } from './inventory/inventory.component';
 import { PopAddInventoryComponent } from './inventory/pop-add-inventory/pop-add-inventory.component';
-import { PopAddConversionComponent } from './unitsofmearsure/pop-add-conversion/pop-add-conversion.component';
-import { PopAddMearsureComponent } from './unitsofmearsure/pop-add-mearsure/pop-add-mearsure.component';
+import { ConversionAddComponent } from './unitsofmearsure/conversion-add/conversion-add.component';
+import { UnitsOfMearSureAdd } from './unitsofmearsure/unitsofmearsure-add/unitsofmearsure-add.component';
 import { UnitsofmearsureComponent } from './unitsofmearsure/unitsofmearsure.component';
 import { FiscalPeriodsComponent } from './fiscal-periods/fiscal-periods.component';
 import { PopAddFiscalPeriodsComponent } from './fiscal-periods/pop-add-fiscal-periods/pop-add-fiscal-periods.component';
@@ -166,8 +166,8 @@ var routes: Routes = [
     WarehousesComponent,
     WarehousesAddComponent,
     UnitsofmearsureComponent,
-    PopAddMearsureComponent,
-    PopAddConversionComponent,
+    UnitsOfMearSureAdd,
+    ConversionAddComponent,
     InventoryComponent,
     PopAddInventoryComponent,
     ItempostingaccountsComponent,
