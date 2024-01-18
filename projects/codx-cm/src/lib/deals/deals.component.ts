@@ -203,6 +203,7 @@ export class DealsComponent
   startLoad = false;
   funcDefault = 'CM0201';
   listKeyFieldSum = [];
+  objectSumValue = {};
 
   constructor(
     private inject: Injector,
@@ -2396,16 +2397,16 @@ export class DealsComponent
 
       this.getTotalFiels(fieldSum).subscribe((totals) => {
         if (totals) {
-          let objectDealValue = {};
+          // let objectDealValue = {};
           this.listKeyFieldSum.forEach((f) => {
             let fieldName = Util.camelize(f);
             let fv = f;
             if (fieldName == 'dealCostView') fv = 'DealCost';
             if (fieldName == 'grossProfitView') fv = 'GrossProfit';
 
-            objectDealValue[fieldName] = totals[fv] ?? 0;
+            this.objectSumValue[fieldName] = totals[fv] ?? 0;
           });
-          this.view.currentView.sumData = objectDealValue;
+          this.view.currentView.sumData = this.objectSumValue;
         }
       });
     }
@@ -2577,11 +2578,38 @@ export class DealsComponent
         );
         dialogCost.closed.subscribe((e) => {
           if (e && e.event) {
-            if (e.event?.isUpDealCost) data.dealCost = e.event.dealCost;
-            if (e.event?.isUpDealValueTo)
-              data.dealValueTo = e.event.dealValueTo;
-            data.grossProfit = data.dealValueTo - data.dealCost;
+            if (e.event?.isUpDealCost) {
+              let dealCost = e.event.dealCost;
+              this.objectSumValue['dealCost'] =
+                this.objectSumValue['dealCost'] ?? 0 - data.dealCost + dealCost;
+              this.objectSumValue['dealCostView'] =
+                this.objectSumValue['dealCostView'] ??
+                0 - data.dealCost + dealCost;
+              data.dealCost = dealCost;
+            }
+            if (e.event?.isUpDealValueTo) {
+              let dealValueTo = e.event.dealValueTo;
+              this.objectSumValue['dealValueTo'] =
+                this.objectSumValue['dealValueTo'] ??
+                0 - data.dealValueTo + dealValueTo;
+              //ko có
+              // this.objectSumValue['dealValueToView'] =
+              //   this.objectSumValue['dealValueToView'] ??
+              //   0 - data.dealValueTo + dealValueTo;
+              data.dealValueTo = dealValueTo;
+            }
+
+            let grossProfit = data.dealValueTo - data.dealCost;
+            this.objectSumValue['grossProfit'] =
+              this.objectSumValue['grossProfit'] ??
+              0 - data.dealValueTo + grossProfit;
+            this.objectSumValue['grossProfitView'] =
+              this.objectSumValue['grossProfitView'] ??
+              0 - data.dealValueTo + grossProfit;
+            data.grossProfit = grossProfit;
+
             this.view.dataService.update(data, true).subscribe();
+            this.view.currentView.sumData = this.objectSumValue;
           }
         });
       }
