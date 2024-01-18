@@ -1437,6 +1437,7 @@ export class DealsComponent
           this.kanban.refresh();
         }
         //   this.detailViewDeal.promiseAllAsync();
+        if (this.listKeyFieldSum?.length > 0) this.totalGirdView(); //tính lại tổng
         this.changeDetectorRef.detectChanges();
       }
     });
@@ -1499,6 +1500,7 @@ export class DealsComponent
               this.detailViewDeal.loadContactEdit();
             }
             this.isChangeOwner = ownerIdOld != e.event.owner;
+            if (this.listKeyFieldSum?.length > 0) this.totalGirdView(); //tính lại tổng
             this.changeDetectorRef.detectChanges();
           }
         });
@@ -2359,23 +2361,12 @@ export class DealsComponent
     }
   }
   totalGirdView() {
-    // this.getTotal().subscribe((total) => {
+    // Nó có tiền tệ khác nhau nên phải tính
     //   //không the format truyền qua
     //   // let intl = new Internationalization();
     //   // let nFormatter = intl.getNumberFormat({
     //   //   skeleton: 'n6',
     //   // });
-    //   // this.totalView = nFormatter(total) + ' ' + this.currencyIDDefault;
-    //   if (!Number.parseFloat(total)) total = 0;
-    //   let objectDealValue = {
-    //     dealValue: total,
-    //   };
-    //   this.view.currentView.sumData = objectDealValue;
-    //   // let elemnt = document.querySelector('.sum-content');
-    //   // if (elemnt) {
-    //   //   elemnt.innerHTML = this.totalView;
-    //   // }
-    // });
 
     //chưa dùng đến nhưng chắc chắn có dùng - đã dùng
     if (this.listKeyFieldSum?.length > 0) {
@@ -2580,18 +2571,18 @@ export class DealsComponent
           if (e && e.event) {
             if (e.event?.isUpDealCost) {
               let dealCost = e.event.dealCost;
-              this.objectSumValue['dealCost'] =
-                this.objectSumValue['dealCost'] ?? 0 - data.dealCost + dealCost;
-              this.objectSumValue['dealCostView'] =
-                this.objectSumValue['dealCostView'] ??
-                0 - data.dealCost + dealCost;
+              // this.objectSumValue['dealCost'] =
+              //   this.objectSumValue['dealCost'] ?? 0 - data.dealCost + dealCost;
+              // this.objectSumValue['dealCostView'] =
+              //   this.objectSumValue['dealCostView'] ??
+              //   0 - data.dealCost + dealCost;
               data.dealCost = dealCost;
             }
             if (e.event?.isUpDealValueTo) {
               let dealValueTo = e.event.dealValueTo;
-              this.objectSumValue['dealValueTo'] =
-                this.objectSumValue['dealValueTo'] ??
-                0 - data.dealValueTo + dealValueTo;
+              // this.objectSumValue['dealValueTo'] =
+              //   this.objectSumValue['dealValueTo'] ??
+              //   0 - data.dealValueTo + dealValueTo;
               //ko có
               // this.objectSumValue['dealValueToView'] =
               //   this.objectSumValue['dealValueToView'] ??
@@ -2600,16 +2591,18 @@ export class DealsComponent
             }
 
             let grossProfit = data.dealValueTo - data.dealCost;
-            this.objectSumValue['grossProfit'] =
-              this.objectSumValue['grossProfit'] ??
-              0 - data.grossProfit + grossProfit;
-            this.objectSumValue['grossProfitView'] =
-              this.objectSumValue['grossProfitView'] ??
-              0 - data.grossProfit + grossProfit;
+            // this.objectSumValue['grossProfit'] =
+            //   this.objectSumValue['grossProfit'] ??
+            //   0 - data.grossProfit + grossProfit;
+            // this.objectSumValue['grossProfitView'] =
+            //   this.objectSumValue['grossProfitView'] ??
+            //   0 - data.grossProfit + grossProfit;
             data.grossProfit = grossProfit;
 
             this.view.dataService.update(data, true).subscribe();
-            this.view.currentView.sumData = this.objectSumValue;
+            // this.view.currentView.sumData = this.objectSumValue;
+
+            if (this.listKeyFieldSum?.length > 0) this.totalGirdView(); //tính lại tổng chajy cuxng nhanh
           }
         });
       }
