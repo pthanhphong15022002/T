@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PopAddMearsureComponent } from './pop-add-mearsure.component';
+import { ConversionAddComponent } from './conversion-add.component';
 
-describe('PopAddMearsureComponent', () => {
-  let component: PopAddMearsureComponent;
-  let fixture: ComponentFixture<PopAddMearsureComponent>;
+describe('PopAddConversionComponent', () => {
+  let component: ConversionAddComponent;
+  let fixture: ComponentFixture<ConversionAddComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ PopAddMearsureComponent ]
+      declarations: [ ConversionAddComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(PopAddMearsureComponent);
+    fixture = TestBed.createComponent(ConversionAddComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
