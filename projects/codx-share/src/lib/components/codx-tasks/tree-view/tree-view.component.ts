@@ -45,7 +45,7 @@ export class TreeViewComponent implements OnInit, AfterViewInit {
   @Input() user: any;
   @Input() filter: any;
   @Input() favoriteID = '00000000-0000-0000-0000-000000000009';
-  @Input() favoriteName = 'Tất cả';
+  @Input() favoriteName = '';
   isShow = true;
   isClose = false;
   pageSize = 20;
