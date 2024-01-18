@@ -2692,6 +2692,7 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
                   }
                   if (obj.recID == this.fieldCrr.stepID)
                     obj.fields.push(this.fieldCrr);
+
                   if (this.action == 'edit') {
                     let check = this.listStepEdit.some(
                       (id) => id == obj?.recID
@@ -2868,12 +2869,55 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
 
   moveField() {
     this.dialogAccess.close();
+    //new
+    let stepIDContain = this.eventDrop.container.id;
+    if (stepIDContain[0] == 'v' && stepIDContain[1] == '-') {
+      stepIDContain = stepIDContain.substring(2);
+    }
+    let fieldNew =
+      this.eventDrop.previousContainer?.data[this.eventDrop.previousIndex];
+    let arrFieldNew = [];
+    //
     this.dropFieldsToStep(this.eventDrop, this.stepIDDrop);
+
+    if (fieldNew.dataType == 'CF') {
+      let dataFormart = fieldNew.dataFormat;
+      let arrFieldPer = this.eventDrop.previousContainer?.data;
+      let arrFieldCon = this.eventDrop.container?.data;
+      arrFieldPer.forEach((x) => {
+        let check =
+          (!arrFieldCon ||
+            arrFieldCon?.length == 0 ||
+            !arrFieldCon.some((c) => c.fieldName == x.fieldName)) &&
+          (x.dataType == 'N' || x.dataType == 'CF') &&
+          dataFormart.includes('[' + x.fieldName + ']');
+        if (check) {
+          let fieldNewCon = JSON.parse(JSON.stringify(x));
+          fieldNewCon.recID = Util.uid();
+          fieldNewCon.stepID = stepIDContain;
+          arrFieldNew.push(fieldNewCon);
+        }
+      });
+    }
+    this.stepList.forEach((x) => {
+      if (x.recID == stepIDContain) {
+        arrFieldNew.forEach((f) => {
+          x.fields.push(f);
+        });
+
+        if (this.action == 'edit') {
+          let check = this.listStepEdit.some((id) => id == x?.recID);
+          if (!check) {
+            this.listStepEdit.push(x?.recID);
+          }
+        }
+      }
+    });
   }
 
   reuseField() {
     this.dialogAccess.close();
-    //taoj field moi
+    //tao field moi
     let stepIDContain = this.eventDrop.container.id;
     if (stepIDContain[0] == 'v' && stepIDContain[1] == '-') {
       stepIDContain = stepIDContain.substring(2);
@@ -2886,18 +2930,41 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
     if (!fieldNew) return;
     fieldNew.recID = Util.uid();
     fieldNew.stepID = stepIDContain;
+    let arrFieldNew = [fieldNew];
+
+    if (fieldNew.dataType == 'CF') {
+      let dataFormart = fieldNew.dataFormat;
+      let arrFieldPer = this.eventDrop.previousContainer?.data;
+      let arrFieldCon = this.eventDrop.container?.data;
+      arrFieldPer.forEach((x) => {
+        let check =
+          (!arrFieldCon ||
+            arrFieldCon?.length == 0 ||
+            !arrFieldCon.some((c) => c.fieldName == x.fieldName)) &&
+          (x.dataType == 'N' || x.dataType == 'CF') &&
+          dataFormart.includes('[' + x.fieldName + ']');
+        if (check) {
+          let fieldNewCon = JSON.parse(JSON.stringify(x));
+          fieldNewCon.recID = Util.uid();
+          fieldNewCon.stepID = stepIDContain;
+          arrFieldNew.push(fieldNewCon);
+        }
+      });
+    }
 
     this.stepList.forEach((x) => {
       if (x.recID == stepIDContain) {
-        x.fields.push(fieldNew);
-        // if (this.action == 'edit') {
-        //   let check = this.listStepEdit.some(
-        //     (id) => id == x?.recID
-        //   );
-        //   if (!check) {
-        //     this.listStepEdit.push(x?.recID);
-        //   }
-        // }
+        arrFieldNew.forEach((f) => {
+          x.fields.push(f);
+        });
+
+        //x.fields.push(fieldNew);
+        if (this.action == 'edit') {
+          let check = this.listStepEdit.some((id) => id == x?.recID);
+          if (!check) {
+            this.listStepEdit.push(x?.recID);
+          }
+        }
       }
     });
   }
