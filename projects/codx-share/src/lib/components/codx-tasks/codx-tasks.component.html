@@ -33,10 +33,13 @@
 
 <ng-template #treeView>
   <share-tree-view
+    #viewTree
     [formModel]="view.formModel"
     [vllStatus]="vllStatus"
     [listRoles]="listRoles"
     [dataObj]="dataObj"
+    [filter]="view.dataService.filter"
+    [favoriteID]="view.dataService.favoriteID"
     [showMoreFunc]="showMoreFunc"
     (clickMoreFunction)="receiveMF($event)"
     (changeMoreFunction)="receiveChangeMF($event)"
@@ -239,10 +242,7 @@
     <div>{{ data?.taskName }}</div>
   </ng-template> -->
   <div class="d-flex flex-column flex-grow-1">
-    <div
-      *ngIf="setting?.tags"
-      class="d-flex align-items-center float-left"
-    >
+    <div *ngIf="setting?.tags" class="d-flex align-items-center float-left">
       <codx-tag
         [entityName]="view.formModel.entityName"
         [disabled]="true"
@@ -300,7 +300,7 @@
             </div>
           </div>
         </ng-container> -->
-        
+
         <!-- 
           <ng-container *ngIf="setting?.countObjects">
           <!-/- <codx-comment-temp
@@ -319,8 +319,7 @@
             [openViewPopup]="true"
           ></codx-attachment-temp> -/->
         </ng-container> 
-      -->
-      </div>
+      --></div>
       <div class="ms-3 h-25px" id="{{ data.taskID }}">
         <ng-container
           *ngIf="
@@ -950,9 +949,10 @@
 >
 </codx-views>
 <ng-template #ganttItems let-data>
-  <div class="border rounded-pill h-100 w-100 bg-warning text-truncate d-flex align-items-center" title="{{ data?.taskName }}" >
-    <span class="px-2">{{ data?.taskName }} | {{data.status}}</span>
+  <div
+    class="border rounded-pill h-100 w-100 bg-warning text-truncate d-flex align-items-center"
+    title="{{ data?.taskName }}"
+  >
+    <span class="px-2">{{ data?.taskName }} | {{ data.status }}</span>
   </div>
-
-
 </ng-template>

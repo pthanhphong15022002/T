@@ -143,7 +143,7 @@ export class PopupAddCardsComponent implements OnInit {
   showLabelAttachment = false;
   type = 'add';
   reduceCoCoins = 0;
-  cointsError = "";
+  cointsError = '';
   evoucher: any[] = [];
   evoucherSelected: any[] = [];
   isSaving = false;
@@ -280,16 +280,21 @@ export class PopupAddCardsComponent implements OnInit {
                 }
               });
             this.api
-              .execSv<any>('SYS', 'SYS', 'SettingValuesBusiness', 'GetByModuleAsync', [
-                'FDParameters',
-                'ActiveCoins',
-              ])
+              .execSv<any>(
+                'SYS',
+                'SYS',
+                'SettingValuesBusiness',
+                'GetByModuleAsync',
+                ['FDParameters', 'ActiveCoins']
+              )
               .subscribe((res) => {
                 if (res) {
                   let data = JSON.parse(res.dataValue);
                   if (data) {
                     // tỷ lệ giữa 1 xu và 1.000 vnđ
-                    this.exchangeRateEVoucher = parseInt(data.ExchangeRateEVoucher);
+                    this.exchangeRateEVoucher = parseInt(
+                      data.ExchangeRateEVoucher
+                    );
                   }
                 }
               });
@@ -421,6 +426,8 @@ export class PopupAddCardsComponent implements OnInit {
 
   valueChange(e: any) {
     console.log(e);
+    this.form.get(e.field).setValue(e.data);
+    //this.form.controls[e.field].value = e.data;
     // if (!e?.field || !e?.data) {
     //   return;
     // }
@@ -529,8 +536,6 @@ export class PopupAddCardsComponent implements OnInit {
                   });
               }
             });
-
-          
         }
         break;
 
@@ -565,9 +570,9 @@ export class PopupAddCardsComponent implements OnInit {
         }
         break;
       case 'coins':
-        this.cointsError = "";
+        this.cointsError = '';
         if (data) {
-          if(this.checkPolicyPoint(data)){
+          if (this.checkPolicyPoint(data)) {
             this.givePoint = data;
           }
         } else {
@@ -690,7 +695,7 @@ export class PopupAddCardsComponent implements OnInit {
       }
 
       if (
-        (this.gifts && this.gifts.length > 0 ) || 
+        (this.gifts && this.gifts.length > 0) ||
         (this.evoucher && this.evoucher.length > 0)
       ) {
         this.card.hasGifts = true;
@@ -848,7 +853,7 @@ export class PopupAddCardsComponent implements OnInit {
   checkPolicyPoint(data) {
     if (this.parameter.MaxPointPerOnceControl === '1') {
       if (data > this.parameter.MaxPointPerOnce) {
-        this.cointsError = "Vượt quá số xu cho phép tặng trong 1 lần";
+        this.cointsError = 'Vượt quá số xu cho phép tặng trong 1 lần';
         this.givePoint = 0;
         return false;
       }
@@ -870,16 +875,20 @@ export class PopupAddCardsComponent implements OnInit {
           break;
       }
       if (this.reduceCoCoins + data > this.parameter.MaxPoints) {
-        this.cointsError = "Vượt quá số xu cho phép tặng: " +
+        this.cointsError =
+          'Vượt quá số xu cho phép tặng: ' +
           this.parameter.MaxPoints +
           ' xu/' +
           unitName;
-          this.givePoint = 0;
+        this.givePoint = 0;
         return false;
       }
     }
-    if(data > this.myWallet?.coCoins){
-      this.cointsError = "Số dư xu không đủ, số dư hiện tại là: " + this.myWallet?.coCoins + " xu";
+    if (data > this.myWallet?.coCoins) {
+      this.cointsError =
+        'Số dư xu không đủ, số dư hiện tại là: ' +
+        this.myWallet?.coCoins +
+        ' xu';
       this.givePoint = 0;
       return false;
     }
@@ -889,7 +898,7 @@ export class PopupAddCardsComponent implements OnInit {
   addPoint() {
     // max points
     let point = this.givePoint + 1;
-    if(this.checkPolicyPoint(point)){
+    if (this.checkPolicyPoint(point)) {
       this.givePoint++;
       this.dt.detectChanges();
     }
@@ -983,7 +992,7 @@ export class PopupAddCardsComponent implements OnInit {
   }
 
   closeEvoucher(event) {
-    if(event){
+    if (event) {
       this.showPopupEvoucher = false;
       this.dt.detectChanges();
     }

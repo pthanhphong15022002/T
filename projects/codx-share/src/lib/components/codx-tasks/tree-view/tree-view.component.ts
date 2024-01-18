@@ -43,8 +43,13 @@ export class TreeViewComponent implements OnInit, AfterViewInit {
   @Input() showMoreFunc?: any;
   @Input() dataObj: any;
   @Input() user: any;
+  @Input() filter: any;
+  @Input() favoriteID = '00000000-0000-0000-0000-000000000009';
+  @Input() favoriteName = '';
   isShow = true;
   isClose = false;
+  pageSize = 20;
+  page = 1;
 
   vllPriority = 'TM005';
   dataTree: any[] = [];
@@ -74,9 +79,9 @@ export class TreeViewComponent implements OnInit, AfterViewInit {
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
-    if (this.codxService.activeFav) {
-      this.cache.favorite(this.codxService.activeFav).subscribe((x) => {
-        this.favorite = x?.favorite;
+    if (this.favoriteID) {
+      this.cache.favorite(this.favoriteID).subscribe((x) => {
+        this.favoriteName = x?.favorite;
       });
     }
   }
@@ -92,8 +97,10 @@ export class TreeViewComponent implements OnInit, AfterViewInit {
     this.gridModelTree.gridViewName = this.formModel.gridViewName;
     this.gridModelTree.treeField = 'ParentID';
     this.gridModelTree.dataObj = JSON.stringify(this.dataObj);
-    this.gridModelTree.pageSize = 20;
-    this.gridModelTree.page = 1;
+    this.gridModelTree.pageSize = this.pageSize;
+    this.gridModelTree.page = this.page;
+    this.gridModelTree.filter = this.filter;
+    this.gridModelTree.favoriteID = this.favoriteID;
     this.loadData();
     //cu ne
     // var gridModel = new DataRequest();
@@ -251,15 +258,17 @@ export class TreeViewComponent implements OnInit, AfterViewInit {
             this.dataTree = this.dataTree.concat(dataTreeNew);
         } else this.dataTree = dataTreeAll;
 
-        let breadCrumbs = [
-          {
-            title: this.favorite + ' (' + res[1] + ')',
-          },
-        ];
-
         this.loaded = true;
         this.isAllDatas = this.dataTree?.length == res[1];
+        // this.cache.favorite(this.gridModelTree.favoriteID).subscribe((f) => {
+        //   this.favorite = f?.favorite;
+        let breadCrumbs = [
+          {
+            title: this.favoriteName + ' ' + res[1] + '',
+          },
+        ];
         this.pageTitle.setBreadcrumbs(breadCrumbs);
+        // });
       } else {
         this.isAllDatas = true;
         this.loaded = true;
