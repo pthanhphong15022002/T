@@ -24,6 +24,7 @@ import {
 import { PopupAddProcessComponent } from './popup-add-process/popup-add-process.component';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { firstValueFrom } from 'rxjs';
+import { FormTestDiagramComponent } from './popup-add-process/form-test-diagram/form-test-diagram.component';
 
 @Component({
   selector: 'lib-processes',
@@ -220,6 +221,7 @@ export class ProcessesComponent
 
   //#region event more
   click(evt) {
+    debugger
     this.titleAction = evt.text;
     switch (evt.id) {
       case this.btnAdd:
@@ -241,6 +243,9 @@ export class ProcessesComponent
       case 'SYS04':
         this.copy(data);
         break;
+      case "SYS008":
+        this.openFormDiagram()
+      break;
       default: {
         this.codxShareService.defaultMoreFunc(
           e,
@@ -254,6 +259,12 @@ export class ProcessesComponent
         break;
       }
     }
+  }
+
+  openFormDiagram(){
+    let option = new DialogModel;
+    option.IsFull = true;
+    this.callfc.openForm(FormTestDiagramComponent,'',0,0,this.funcID,null,'',option);
   }
 
   changeDataMF(e, data) {}
