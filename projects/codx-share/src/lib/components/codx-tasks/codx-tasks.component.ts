@@ -2071,6 +2071,13 @@ export class CodxTasksComponent
         //   }
         // }
         break;
+      case 'changeFavorite':
+        if (this.viewTree) {
+          this.viewTree.gridModelTree.page = 1;
+          this.viewTree.gridModelTree.favoriteID = e.data.recID;
+          this.viewTree.loadData();
+        }
+        break;
     }
   }
 
