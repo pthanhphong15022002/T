@@ -2558,8 +2558,9 @@ export class DealsComponent
         );
         dialogCost.closed.subscribe((e) => {
           if (e && e.event) {
-            data.dealCost = e.event.dealCost;
-            data.dealValueTo = e.event.dealValueTo;
+            if (e.event?.isUpDealCost) data.dealCost = e.event.dealCost;
+            if (e.event?.isUpDealValueTo)
+              data.dealValueTo = e.event.dealValueTo;
             data.grossProfit = data.dealValueTo - data.dealCost;
             this.view.dataService.update(data, true).subscribe();
           }
