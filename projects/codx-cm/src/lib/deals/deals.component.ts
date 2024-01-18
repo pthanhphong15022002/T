@@ -2569,44 +2569,53 @@ export class DealsComponent
         );
         dialogCost.closed.subscribe((e) => {
           if (e && e.event) {
+            let dataOld = JSON.parse(JSON.stringify(data));
             if (e.event?.isUpDealCost) {
               let dealCost = e.event.dealCost;
-              // this.objectSumValue['dealCost'] =
-              //   this.objectSumValue['dealCost'] ?? 0 - data.dealCost + dealCost;
-              // this.objectSumValue['dealCostView'] =
-              //   this.objectSumValue['dealCostView'] ??
-              //   0 - data.dealCost + dealCost;
               data.dealCost = dealCost;
             }
             if (e.event?.isUpDealValueTo) {
               let dealValueTo = e.event.dealValueTo;
-              // this.objectSumValue['dealValueTo'] =
-              //   this.objectSumValue['dealValueTo'] ??
-              //   0 - data.dealValueTo + dealValueTo;
-              //ko có
-              // this.objectSumValue['dealValueToView'] =
-              //   this.objectSumValue['dealValueToView'] ??
-              //   0 - data.dealValueTo + dealValueTo;
               data.dealValueTo = dealValueTo;
             }
-
             let grossProfit = data.dealValueTo - data.dealCost;
-            // this.objectSumValue['grossProfit'] =
-            //   this.objectSumValue['grossProfit'] ??
-            //   0 - data.grossProfit + grossProfit;
-            // this.objectSumValue['grossProfitView'] =
-            //   this.objectSumValue['grossProfitView'] ??
-            //   0 - data.grossProfit + grossProfit;
             data.grossProfit = grossProfit;
 
             this.view.dataService.update(data, true).subscribe();
-            // this.view.currentView.sumData = this.objectSumValue;
 
             if (this.listKeyFieldSum?.length > 0) this.totalGirdView(); //tính lại tổng chajy cuxng nhanh
           }
         });
       }
     });
+  }
+
+  //render chứ ko call api  lại (Chua test nen chua gang)
+  renderSum(dataOld, dataNew) {
+    if (!this.listKeyFieldSum || this.listKeyFieldSum?.length == 0) return;
+    let exchangeRate = dataOld?.exchangeRate ?? dataNew?.exchangeRate;
+    if (!exchangeRate) exchangeRate = 1;
+    if (dataOld?.dealCost != dataNew?.dealCost) {
+      this.objectSumValue['dealCost'] =
+        this.objectSumValue['dealCost'] ??
+        0 + (dataNew?.dealCost ?? 0 - dataOld?.dealCost ?? 0) * exchangeRate;
+      this.objectSumValue['dealCostView'] =
+        this.objectSumValue['dealCostView'] ??
+        0 + (dataNew?.dealCost ?? 0 - dataOld?.dealCost ?? 0) * exchangeRate;
+    }
+    if (dataOld?.grossProfit != dataNew?.grossProfit) {
+      this.objectSumValue['grossProfit'] =
+        this.objectSumValue['grossProfit'] ??
+        0 +
+          (dataNew?.grossProfit ?? 0 - dataOld?.grossProfit ?? 0) *
+            exchangeRate;
+      this.objectSumValue['grossProfitView'] =
+        this.objectSumValue['grossProfitView'] ??
+        0 +
+          (dataNew?.grossProfit ?? 0 - dataOld?.grossProfit ?? 0) *
+            exchangeRate;
+    }
+    this.view.currentView.sumData = this.objectSumValue;
   }
   //--------------------------------------//
 }
