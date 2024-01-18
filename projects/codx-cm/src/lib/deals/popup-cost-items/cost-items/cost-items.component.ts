@@ -24,7 +24,7 @@ export class CostItemsComponent implements OnInit {
   @Input() viewOnly = false;
   @Input() dealValueTo = 0;
   @Input() planceHolderDealValueTo = 'Nhập ngân sách'; //truyền plance hodeler cho ngân sách
-
+  @Input() maxHeight: any;
   @Output() dataCostItems = new EventEmitter<any>();
   @Output() totalDataCost = new EventEmitter<any>();
   @Output() dataDealValueTo = new EventEmitter<any>();
@@ -35,6 +35,7 @@ export class CostItemsComponent implements OnInit {
   action = 'edit';
   formModel: any;
   costIDOld = [];
+  dealValueToOld = 0;
 
   constructor(
     private api: ApiHttpService,
@@ -52,6 +53,7 @@ export class CostItemsComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.dealValueToOld = this.dealValueTo;
     if (this.isLoadedData) {
       if (this.costInfos?.length > 0)
         this.costIDOld = this.costInfos.map((x) => x.recID);
@@ -91,9 +93,9 @@ export class CostItemsComponent implements OnInit {
     this.costInfos.push(newCost);
     this.cost = newCost;
     this.calculateTotalCost();
-    if (this.isAutoSave) {
-      this.autoSaveData();
-    }
+    // if (this.isAutoSave) {
+    //   this.autoSaveData();
+    // }
     this.detectorRef.detectChanges();
   }
 
@@ -103,12 +105,16 @@ export class CostItemsComponent implements OnInit {
   }
   deleteCost(index: number) {
     if (this.costInfos?.length > index) {
-      // if (this.costInfos?.length == 0) this.cost = null;
+      this.cost = this.costInfos[index];
       if (this.isAutoSave) {
-        this.cost = this.costInfos[index];
+        if (!this.costIDOld.includes(this.cost.recID)) {
+          this.cost = null;
+          return;
+        }
         if (this.cost) this.autoDeleted(index);
       } else {
         this.costInfos?.splice(index, 1);
+        this.cost = null;
         this.calculateTotalCost();
       }
       this.detectorRef.detectChanges();
@@ -141,6 +147,7 @@ export class CostItemsComponent implements OnInit {
       } else this.calculateTotalCost();
     }
   }
+
   calculateTotalCost() {
     this.totalCost = 0;
     if (this.costInfos?.length > 0) {
@@ -159,27 +166,39 @@ export class CostItemsComponent implements OnInit {
 
   //save ở đây và trả về
   autoSaveData() {
-    if (this.validateCost()) {
-      //save cost
-      let methol = 'AddCostAsync';
-      let isAdd = true;
-      if (this.costIDOld.includes(this.cost.recID)) {
-        methol = 'EditCostAsync';
-        isAdd = false;
-      }
-      this.api
-        .exec<any>('CM', 'CostItemsBusiness', methol, this.cost)
-        .subscribe((res) => {
-          if (res) {
-            if (isAdd) this.costIDOld.push(res.recID);
-            this.dataCostItems.emit(this.costInfos);
-            this.totalDataCost.emit(this.totalCost);
-          }
-        });
+    if (!this.cost) return;
+    if (
+      this.cost &&
+      (!this.cost.costItemName || this.cost?.costItemName.trim() == '')
+    ) {
+      this.notiService.notify(
+        'Chưa nhập nội dung chi phí, hãy hoàn thiện chi phí trước khi thêm chi phí mới !',
+        '3'
+      );
+      return;
     }
+    //save cost
+    let methol = 'AddCostAsync';
+    let isAdd = true;
+    if (this.costIDOld.includes(this.cost.recID)) {
+      methol = 'EditCostAsync';
+      isAdd = false;
+    }
+    this.api
+      .exec<any>('CM', 'CostItemsBusiness', methol, this.cost)
+      .subscribe((res) => {
+        if (res) {
+          if (isAdd) this.costIDOld.push(res.recID);
+          this.dataCostItems.emit(this.costInfos);
+          this.totalDataCost.emit(this.totalCost);
+        }
+      });
   }
   validateCost() {
-    return true;
+    // let check = this.costInfos.some(
+    //   (x) => !x.costItemName || x.costItem.trim() == ''
+    // );
+    //return !check;
   }
 
   autoDeleted(index) {
@@ -201,7 +220,28 @@ export class CostItemsComponent implements OnInit {
 
   valueChange(e) {
     this.dealValueTo = e.data;
-    this.dataDealValueTo.emit(this.dealValueTo);
   }
+  valueChangeDVT(e) {
+    // this.dealValueTo = e.data;
+    if (this.dealValueToOld == this.dealValueTo) return;
+    if (!this.isAutoSave) {
+      this.dataDealValueTo.emit(this.dealValueTo);
+      this.dealValueToOld = this.dealValueTo;
+    } else {
+      this.api
+        .exec<any>('CM', 'DealsBusiness', 'UpdateDealValueToAsync', [
+          this.transID,
+          this.dealValueTo,
+        ])
+        .subscribe((res) => {
+          if (res) {
+            this.dataDealValueTo.emit(this.dealValueTo);
+            this.dealValueToOld = this.dealValueTo;
+            this.notiService.notifyCode('SYS007');
+          }
+        });
+    }
+  }
+
   //---------------------------------------------//
 }

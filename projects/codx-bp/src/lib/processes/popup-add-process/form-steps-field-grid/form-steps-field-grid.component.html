@@ -1,0 +1,39 @@
+<div class="d-flex flex-column w-100 h-100 field-grid-collapse p-4">
+    <div class="grid-collapse" ngbAccordion *ngIf="listStage.length > 0">
+        <div ngbAccordionItem [collapsed]="false" *ngFor="let item of listStage">
+            <h2 ngbAccordionHeader>
+                <button ngbAccordionButton>{{item.stepName}}</button>
+            </h2>
+            <div ngbAccordionCollapse>
+                <div ngbAccordionBody>
+                    <ng-template>
+                       <div *ngFor="let item2 of item.child">
+                            {{item2.stepName}}
+                        </div>
+                    </ng-template>
+                </div>
+            </div>
+        </div>
+    </div>
+   
+    <div class="grid-collapse-default" ngbAccordion>
+        <div ngbAccordionItem [collapsed]="false">
+            <div class="w-100" ngbAccordionHeader>
+                <div class="d-flex align-items-center row-grid-collapse p-2" ngbAccordionButton (click)="addStages()">
+                    <i class="icon-i-plus"></i>
+                    <codx-label default="Thêm công đoạn" class="mx-2"></codx-label>
+                </div>
+            </div>
+            <div ngbAccordionCollapse>
+                <div ngbAccordionBody>
+                    <ng-template>
+                        <div class="d-flex align-items-center cursor-pointer w-100 p-2 row-grid-collapse">
+                            <i class="icon-i-plus icon-16"></i>
+                            <codx-label default="Thêm công việc" class="mx-1"></codx-label>
+                        </div>
+                    </ng-template>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

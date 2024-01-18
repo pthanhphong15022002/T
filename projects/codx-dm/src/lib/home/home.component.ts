@@ -48,7 +48,6 @@ import {
   AnimationSettingsModel,
   DialogComponent,
 } from '@syncfusion/ej2-angular-popups';
-import { E } from '@angular/cdk/keycodes';
 import { CreateFolderComponent } from '../createFolder/createFolder.component';
 import { MoveComponent } from '../move/move.component';
 
@@ -68,7 +67,7 @@ export class HomeComponent extends UIComponent implements OnDestroy {
   @ViewChild('attachment1') attachment1: AttachmentComponent;
   //  @ViewChild('attachment2') attachment2: AttachmentComponent;
   @ViewChild('attachment') attachment: AttachmentComponent;
-  @ViewChild('view') codxview!: any;
+  @ViewChild('view') codxview: any;
   @ViewChild('Dialog') public Dialog: DialogComponent;
 
   submenu: string;
@@ -402,6 +401,7 @@ export class HomeComponent extends UIComponent implements OnDestroy {
 
     this.dmSV.isRefreshTree.subscribe((res) => {
       if (
+        this.funcID &&
         !this.funcID.includes('DMT02') &&
         !this.funcID.includes('DMT03') &&
         !this.funcID.includes('DMT04')
@@ -610,7 +610,7 @@ export class HomeComponent extends UIComponent implements OnDestroy {
         this.views[1].icon = item.datas[4].icon;
         this.views[2].text = item.datas[0].text;
         this.views[2].icon = item.datas[0].icon;
-        this.view.views = this.views;
+        if(this.view?.views ) this.view.views = this.views;
         this.changeDetectorRef.detectChanges();
       }
     });
@@ -682,10 +682,13 @@ export class HomeComponent extends UIComponent implements OnDestroy {
 
     //if(this.funcID == "DMT06") this.view.page = null;
     this.viewActive = this.views.filter((x) => x.active == true)[0];
-    this.codxview.dataService.pageSize = 50;
-    this.codxview.dataService.pageLoading = false;
-    this.codxview.dataService.parentIdField = 'parentId';
-    this.dmSV.formModel = this.view.formModel;
+    if(this.codxview?.dataService)
+    {
+      this.codxview.dataService.pageSize = 50;
+      this.codxview.dataService.pageLoading = false;
+      this.codxview.dataService.parentIdField = 'parentId';
+    }
+    this.dmSV.formModel = this.view?.formModel;
     this.dmSV.dataService = this.view?.currentView?.dataService;
 
   
@@ -693,7 +696,6 @@ export class HomeComponent extends UIComponent implements OnDestroy {
 
     this.route.params.subscribe((params) => {
       if (params?.funcID) {
-       
         this.refeshData();
         this.loaded = false;
         this.hideMF = false;
@@ -705,7 +707,7 @@ export class HomeComponent extends UIComponent implements OnDestroy {
         this.folderService.options.funcID = this.funcID;
         this.fileService.options.funcID = this.funcID;
         this.viewActive.model.panelLeftHide = true;
-        this.view.dataService.dataSelected = null;
+        if(this.view?.dataService) this.view.dataService.dataSelected = null;
         this.views[2].model.panelLeftHide = false;
         this.dmSV.isSearchView = false;
         this.setDisableAddNewFolder();
@@ -728,15 +730,15 @@ export class HomeComponent extends UIComponent implements OnDestroy {
           this.funcID.includes('DMT00')
         ) {
           this.viewActive.model.panelLeftHide = false;
-          this.view.viewChange(this.viewActive);
+          if(this.view?.viewChange)this.view.viewChange(this.viewActive);
         } else if (
           this.funcID.includes('DMT06') ||
           this.funcID.includes('DMT07') ||
           this.funcID.includes('DMT08')
         ) {
           this.views[2].model.panelLeftHide = true;
-          this.view.viewChange(this.views[2]);
-        } else this.view.viewChange(this.viewActive);
+          if(this.view?.viewChange) this.view.viewChange(this.views[2]);
+        } else if(this.view?.viewChange) this.view.viewChange(this.viewActive);
 
         if (this.funcID.includes('DMT08')) {
           this.titleCreatedBy = 'Người xóa thư mục / tệp tin';
