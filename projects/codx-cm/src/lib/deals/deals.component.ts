@@ -2602,10 +2602,10 @@ export class DealsComponent
             let grossProfit = data.dealValueTo - data.dealCost;
             this.objectSumValue['grossProfit'] =
               this.objectSumValue['grossProfit'] ??
-              0 - data.dealValueTo + grossProfit;
+              0 - data.grossProfit + grossProfit;
             this.objectSumValue['grossProfitView'] =
               this.objectSumValue['grossProfitView'] ??
-              0 - data.dealValueTo + grossProfit;
+              0 - data.grossProfit + grossProfit;
             data.grossProfit = grossProfit;
 
             this.view.dataService.update(data, true).subscribe();
