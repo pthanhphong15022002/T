@@ -56,6 +56,7 @@ import {
 } from '@syncfusion/ej2-angular-progressbar';
 import { CodxShareService } from '../../codx-share.service';
 import { truncate } from 'fs/promises';
+import { TreeViewComponent } from './tree-view/tree-view.component';
 
 @Component({
   selector: 'codx-tasks-share', ///tên vậy để sửa lại sau
@@ -106,6 +107,7 @@ export class CodxTasksComponent
   @ViewChild('popupToDoList') popupToDoList?: TemplateRef<any>;
   @ViewChild('viewGanttChart') viewGanttChart!: TemplateRef<any>;
   @ViewChild('ganttItems') ganttItems!: TemplateRef<any>;
+  @ViewChild('viewTree') viewTree!: TreeViewComponent;
 
   views: Array<ViewModel> = [];
   viewsDefault: Array<ViewModel> = [];
@@ -515,7 +517,7 @@ export class CodxTasksComponent
         active: false,
         sameData: true,
         model: {
-          eventModel:this.taskSettings,
+          eventModel: this.taskSettings,
           //template:this.ganttItems
         },
       },
@@ -2032,6 +2034,12 @@ export class CodxTasksComponent
       //   this.viewTask(e?.data);
       //   break;
       case 'pined-filter':
+        if (this.viewTree) {
+          this.viewTree.gridModelTree.page = 1;
+          this.viewTree.gridModelTree.filter = this.view.dataService.filter;
+          this.viewTree.loadData();
+        }
+
         // var index = this.view.views.findIndex((x) => x.active == true);
         // if (index != 1) {
         //   let type = this.view.views[index].type;

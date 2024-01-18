@@ -43,8 +43,11 @@ export class TreeViewComponent implements OnInit, AfterViewInit {
   @Input() showMoreFunc?: any;
   @Input() dataObj: any;
   @Input() user: any;
+  @Input() filter: any;
   isShow = true;
   isClose = false;
+  pageSize = 20;
+  page = 1;
 
   vllPriority = 'TM005';
   dataTree: any[] = [];
@@ -92,8 +95,9 @@ export class TreeViewComponent implements OnInit, AfterViewInit {
     this.gridModelTree.gridViewName = this.formModel.gridViewName;
     this.gridModelTree.treeField = 'ParentID';
     this.gridModelTree.dataObj = JSON.stringify(this.dataObj);
-    this.gridModelTree.pageSize = 20;
-    this.gridModelTree.page = 1;
+    this.gridModelTree.pageSize = this.pageSize;
+    this.gridModelTree.page = this.page;
+    this.gridModelTree.filter = this.filter;
     this.loadData();
     //cu ne
     // var gridModel = new DataRequest();
