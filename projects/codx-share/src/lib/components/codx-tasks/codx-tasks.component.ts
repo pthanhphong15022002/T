@@ -2030,9 +2030,6 @@ export class CodxTasksComponent
           this.viewTask(e?.data);
         }
         break;
-      // case 'doubleClick':
-      //   this.viewTask(e?.data);
-      //   break;
       case 'pined-filter':
         if (this.viewTree) {
           this.viewTree.gridModelTree.page = 1;
@@ -2075,10 +2072,14 @@ export class CodxTasksComponent
         if (this.viewTree) {
           this.viewTree.gridModelTree.page = 1;
           this.viewTree.gridModelTree.favoriteID = e.data.recID;
+          this.viewTree.favoriteName = e.data.favorite;
           this.viewTree.loadData();
         }
         break;
     }
+  }
+  searchChanged(e) {
+    console.log(e);
   }
 
   viewTask(data) {
