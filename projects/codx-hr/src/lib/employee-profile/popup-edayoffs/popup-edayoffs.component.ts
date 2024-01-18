@@ -321,7 +321,7 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
         this.dayoffObj["kowID"] = value;
         break;
     }
-    if (this.dayoffObj && this.dayoffObj?.endDate && this.dayoffObj?.beginDate && this.dayoffObj?.periodType) 
+    if (this.dayoffObj && this.dayoffObj?.kowID && this.dayoffObj?.endDate && this.dayoffObj?.beginDate && this.dayoffObj?.periodType) 
     {
       this.calculateDayOff(this.dayoffObj.beginDate,this.dayoffObj.endDate,this.dayoffObj.employeeID,this.dayoffObj.kowID,this.dayoffObj.periodType);
     }
@@ -330,7 +330,7 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
   // call HR_fnCalculateDayOff
   calculateDayOff(fromDate:Date,toDate:Date,employeeID:string,kowID:string,periodType:string){
     this.api.execSv("HR","HR","EDayOffsBusiness","CalculateDayOffAsync",[fromDate,toDate,employeeID,kowID,periodType])
-    .subscribe((res:number) => {
+    .subscribe((res:any) => {
       this.dayoffObj["totalDaysOff"] = res ?? 0;
       this.form.formGroup.patchValue({totalDaysOff: this.dayoffObj["totalDaysOff"]});
       this.cr.detectChanges();

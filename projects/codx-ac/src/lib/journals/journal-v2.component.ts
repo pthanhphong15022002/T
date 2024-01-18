@@ -268,7 +268,8 @@ export class JournalV2Component extends UIComponent implements OnInit {
           res.isAdd = true;
           let data = {
             headerText: this.headerText,
-            oData:{...res}
+            oData:{...res},
+            mainFilterValue:this.mainFilterValue
           };
           let option = new SidebarModel();
           option.FormModel = this.view?.formModel;
@@ -294,7 +295,8 @@ export class JournalV2Component extends UIComponent implements OnInit {
         res.isEdit = true;
         let data = {
           headerText: this.headerText,
-          oData:{...res}
+          oData:{...res},
+          mainFilterValue:this.mainFilterValue
         };
         let option = new SidebarModel();
         option.FormModel = this.view?.formModel;
@@ -319,7 +321,8 @@ export class JournalV2Component extends UIComponent implements OnInit {
           res.isCopy = true;
           let data = {
             headerText: this.headerText,
-            oData:{...res}
+            oData:{...res},
+            mainFilterValue:this.mainFilterValue
           };
           let option = new SidebarModel();
           option.FormModel = this.view?.formModel;
@@ -357,16 +360,6 @@ export class JournalV2Component extends UIComponent implements OnInit {
         })
       }
     })
-    
-    // this.journalService.hasVouchers$(data).subscribe((hasVouchers) => {
-    //   if (hasVouchers) {
-    //     this.notiService.notifyCode('AC0002', 0, `"${data.journalDesc}"`);
-    //     return;
-    //   }
-
-    
-    // });
-    
   }
 
   addNewJournalSample(e, data){
