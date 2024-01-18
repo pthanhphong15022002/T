@@ -102,10 +102,10 @@ export const routes: Routes = [
       //   component: HomeComponent,
       //   data: { noReuse: true },
       // },
-      {
-        path: ':funcID/:fileID',
-        component: ViewFileDialogComponent,
-      },
+      // {
+      //   path: ':funcID/:fileID',
+      //   component: ViewFileDialogComponent,
+      // },
       {
         path: '**',
         redirectTo: 'error/404',

@@ -134,6 +134,7 @@
                   [cssClass]="'mt-2  text-end w-90 cost-input'"
                   [emptyText]="grViewCost?.unitPrice?.description"
                   (valueChange)="editCost($event, i)"
+                  (controlBlur)="valueChangeDVT($event)"
                   [disabled]="viewOnly"
                 ></codx-inplace>
               </div>
@@ -162,7 +163,7 @@
               ></codx-label>
             </td>
             <td class="text-end pe-5"></td>
-            <td class="text-end pe-5">
+            <td class="text-end pe-5 fw-bold">
               {{ totalCost }}
             </td>
             <td class="text-end"></td>

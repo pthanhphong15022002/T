@@ -79,10 +79,11 @@ import {
   BP_Processes_Permissions,
   BP_Processes_Steps,
 } from '../../models/BP_Processes.model';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, isObservable, takeUntil } from 'rxjs';
 import { ModeviewComponent } from '../../modeview/modeview.component';
 import { DynamicSettingControlComponent } from 'projects/codx-share/src/lib/components/dynamic-setting/dynamic-setting-control/dynamic-setting-control.component';
 import { PopupPermissionsProcessesComponent } from './popup-permissions-processes/popup-permissions-processes.component';
+import { CodxShareService } from 'projects/codx-share/src/public-api';
 Diagram.Inject(ConnectorEditing);
 @Component({
   selector: 'lib-popup-add-process',
@@ -123,6 +124,7 @@ export class PopupAddProcessComponent {
   oldNode: number; // Vị trí node cũ
   linkAvatar = '';
   vllBP002: any;
+  vllBP001: any;
   extendInfos = [];
   title = '';
   vllShare = '';
@@ -141,6 +143,7 @@ export class PopupAddProcessComponent {
     private bpSv: CodxBpService,
     private authStore: AuthStore,
     private notiSv: NotificationsService,
+    private shareService : CodxShareService,
     private elementRef: ElementRef,
     @Optional() dialog: DialogRef,
     @Optional() dt: DialogData
@@ -158,13 +161,14 @@ export class PopupAddProcessComponent {
       this.getAvatar(this.data?.recID, this.data?.processName);
       this.extendInfos =
         this.data?.steps?.length > 0
-          ? this.data?.steps?.filter((x) => x.activityType == '1')[0]
+          ? this.data?.steps?.filter((x) => x.activityType == 'Form')[0]
               ?.extendInfo
           : [];
       this.setLstExtends();
     } else {
     }
     this.getCacheCbxOrVll();
+    this.getVll();
   }
 
   ngAfterViewInit(): void {}
@@ -174,6 +178,22 @@ export class PopupAddProcessComponent {
     this.destroyFrom$.complete();
   }
 
+  getVll()
+  {
+    let vll = this.shareService.loadValueList("BP001") as any;
+    if(isObservable(vll))
+    {
+      vll.subscribe(item=>{
+        this.vllBP001 = item;
+        if(this.action == 'add') this.defaultStep();
+      })
+    }
+    else 
+    {
+      this.vllBP001 = vll;
+      if(this.action == 'add') this.defaultStep();
+    }
+  }
   //#region get or set default form
   getCacheCbxOrVll() {
     this.cache
@@ -184,7 +204,6 @@ export class PopupAddProcessComponent {
           this.vllBP002 = item;
           if (this.action == 'add') {
             this.setDefaultTitle();
-            this.defaultStep();
             this.setLstExtends();
           }
         }
@@ -241,15 +260,39 @@ export class PopupAddProcessComponent {
 
   defaultStep() {
     let lstStep = [];
-    var step = new BP_Processes_Steps();
-    step.recID = Util.uid();
-    step.stepNo = 1;
-    step.stepName = 'Bước 1';
-    step.activityType = '1';
-    step.stageID = step.recID;
-    step.parentID = this.data.recID;
-    step.extendInfo = this.extendInfos;
-    lstStep.push(step);
+    var stage = new BP_Processes_Steps();
+    var form = new BP_Processes_Steps();
+    var vllStage = this.vllBP001.datas.filter(x=>x.value == "Stage")[0];
+    var vllForm = this.vllBP001.datas.filter(x=>x.value == "Form")[0];    
+    
+    stage.recID = Util.uid();
+    stage.stepNo = 0;
+    stage.activityType = "Stage";
+    stage.stepName = vllStage.text + " 1";
+    stage.reminder = this.data.reminder;
+    stage.eventControl = null;
+    var processSetting = JSON.parse(this.data.settings);
+    stage.settings = JSON.stringify(
+    {
+      icon: "icon-i-bar-chart-steps",
+      color: "#0078FF",
+      backGround: "#EAF0FF",
+      allowDrag: processSetting?.allowDrag || false,
+      defaultProcess: processSetting?.defaultProcess || null,
+      completeControl: processSetting?.completeControl || null,
+      nextSteps: null,
+      sortBy: null,
+      totalControl: null
+    });
+
+    form.recID = Util.uid();
+    form.stepNo = 1;
+    form.stepName = vllForm.text + " 1";
+    form.activityType = "Form";
+    form.stageID = stage.recID;
+    form.parentID = stage.recID;
+    form.extendInfo = this.extendInfos;
+    lstStep.push(stage,form);
     this.data.steps = lstStep;
   }
 
@@ -348,8 +391,10 @@ export class PopupAddProcessComponent {
       (nodes[oldNode] as HTMLElement).classList.add('approve-disabled');
     }
   }
-  async continue(currentTab) {
-    if (currentTab == 0) {
+  async continue(currentTab:any) {
+    debugger
+    if (currentTab == 0) 
+    {
       //check điều kiện để continue
     }
     if (this.currentTab > 3) return;
@@ -357,10 +402,22 @@ export class PopupAddProcessComponent {
     let newNode = oldNode + 1;
     switch (currentTab) {
       case 0:
-        this.updateNodeStatus(oldNode, newNode);
-        this.currentTab++;
-        this.processTab == 0 && this.processTab++;
+      {
+        let that = this;
+        if(this.action == "add") 
+          this.saveProcessStep().subscribe(item=>{
+            that.updateNodeStatus(oldNode, newNode);
+            that.currentTab++;
+            that.processTab == 0 && this.processTab++;
+          });
+        else
+        {
+          this.updateNodeStatus(oldNode, newNode);
+          this.currentTab++;
+          this.processTab == 0 && this.processTab++;
+        }
         break;
+      }
       case 1:
         this.newNode = newNode;
         this.oldNode = oldNode;
@@ -712,7 +769,7 @@ export class PopupAddProcessComponent {
           this.data.documentControl = lstDocumentControl.length > 0 ? JSON.stringify(lstDocumentControl) : null;
         }
 
-        if (this.data?.steps[0]?.extendInfo) {
+        if (this.data?.steps[1]?.extendInfo) {
           this.extendInfos.forEach((element) => {
             if (typeof element.documentControl != 'string') {
               element.documentControl = element.documentControl?.length > 0 ? JSON.stringify(element.documentControl) : null;
@@ -723,7 +780,7 @@ export class PopupAddProcessComponent {
             }
           });
 
-          this.data.steps[0].extendInfo = this.extendInfos;
+          this.data.steps[1].extendInfo = this.extendInfos;
         }
         this.detectorRef.detectChanges();
       }
@@ -799,5 +856,10 @@ export class PopupAddProcessComponent {
   activeTab(tab:any)
   {
     this.processTabIndex = tab;
+  }
+
+  saveProcessStep()
+  {
+    return this.api.execSv("BP","BP","ProcessesBusiness","AddProcessAsync",this.data);
   }
 }

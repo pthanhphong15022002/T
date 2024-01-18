@@ -172,7 +172,7 @@
               [ngClass]="currentTab == 1 ? 'active show' : ''"
             >
               <ng-container *ngIf="processTabIndex == 0">
-                <lib-form-steps-field-grid></lib-form-steps-field-grid>
+                <lib-form-steps-field-grid [data]="data"></lib-form-steps-field-grid>
               </ng-container>
               <ng-container *ngIf="processTabIndex == 1">
                 <ng-template [ngTemplateOutlet]="tmpStepFields"></ng-template>
@@ -510,7 +510,6 @@
 <ng-template #tmpStepFields>
   <div
     class="dp-step step-content container-fluid p-0 h-100"
-    *ngIf="currentTab == 1"
   >
     <codx-diagram></codx-diagram>
   </div>

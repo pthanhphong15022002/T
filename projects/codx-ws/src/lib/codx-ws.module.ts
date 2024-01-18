@@ -81,6 +81,10 @@ import { SignFileComponent } from 'projects/codx-es/src/lib/sign-file/sign-file.
 import { CalendarsComponent } from 'projects/codx-cm/src/lib/calendars/calendars.component';
 import { SprintsComponent } from 'projects/codx-tm/src/lib/sprints/sprints.component';
 import { TMMeetingsComponent } from 'projects/codx-tm/src/lib/tmmeetings/tmmeetings.component';
+import { CodxDmModule } from 'projects/codx-dm/src/public-api';
+import { SearchingComponent as  SearchingODComponent} from 'projects/codx-od/src/lib/incomming/searching/searching.component';
+import { SearchingComponent as  SearchingDMComponent} from 'projects/codx-dm/src/lib/searching/searching.component';
+import { SearchingComponent as  SearchingESComponent} from 'projects/codx-es/src/lib/searching/searching.component';
 //import { CodxWpV2Module } from 'projects/codx-wp/src/lib/codx-wp-v2.module';
 const routes: Routes = [
   {
@@ -142,10 +146,7 @@ const routes: Routes = [
     //     component: EmployeeInfoDetailComponent,
     //   },
       
-      {
-        path: 'taskextends/:funcID',
-        component: TaskExtendsComponent,
-      },
+      
       
       
       // {
@@ -244,7 +245,7 @@ const routes: Routes = [
           },
           //Kho tài liệu
           {
-            path: 'files/:funcID',
+            path: 'wsfiles/:funcID',
             component: HomeDMComponent,
           },
           //Tuyên dương
@@ -315,6 +316,22 @@ const routes: Routes = [
             path: 'employeedetail/:funcID',
             component: EmployeeInfoDetailComponent,
           },
+          {
+            path: 'odsearching/:funcID',
+            component: SearchingODComponent,
+          },
+          {
+            path: 'dmsearching/:funcID',
+            component: SearchingDMComponent,
+          },
+          {
+            path: 'essearching/:funcID',
+            component: SearchingESComponent,
+          },
+          {
+            path: 'taskextends/:funcID',
+            component: TaskExtendsComponent,
+          },
           // //Tìm kiếm
           // {
           //   path: 'searching/:funcID',
@@ -380,6 +397,7 @@ const routes: Routes = [
         CodxCoreModule.forRoot({ environment }),
         //CodxShareModule,
         CodxEPModule,
+        CodxDmModule,
         CodxWpV2Module,
         AcModule,
         CodxHRModule,

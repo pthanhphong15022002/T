@@ -2354,31 +2354,42 @@ export class DealsComponent
     }
   }
   totalGirdView() {
-    this.getTotal().subscribe((total) => {
-      //không the format truyền qua
-      // let intl = new Internationalization();
-      // let nFormatter = intl.getNumberFormat({
-      //   skeleton: 'n6',
-      // });
-      // this.totalView = nFormatter(total) + ' ' + this.currencyIDDefault;
+    // this.getTotal().subscribe((total) => {
+    //   //không the format truyền qua
+    //   // let intl = new Internationalization();
+    //   // let nFormatter = intl.getNumberFormat({
+    //   //   skeleton: 'n6',
+    //   // });
+    //   // this.totalView = nFormatter(total) + ' ' + this.currencyIDDefault;
 
-      if (!Number.parseFloat(total)) total = 0;
+    //   if (!Number.parseFloat(total)) total = 0;
+    //   let objectDealValue = {
+    //     dealValue: total,
+    //   };
+
+    //   this.view.currentView.sumData = objectDealValue;
+
+    //   // let elemnt = document.querySelector('.sum-content');
+    //   // if (elemnt) {
+    //   //   elemnt.innerHTML = this.totalView;
+    //   // }
+    // });
+
+    //chưa dùng đến nhưng chắc chắn có dùng - đã dùng
+    this.getTotalFiels().subscribe((totals) => {
+      console.log(totals);
+      //if (!Number.parseFloat(total)) total = 0;
       let objectDealValue = {
-        dealValue: total,
+        dealValue: totals.DeadValue ?? 0,
+        dealValueTo: totals.DealValueTo ?? 0,
+        dealCost: totals.DealCost ?? 0,
+        dealCostView: totals.DealCost ?? 0,
+        grossProfit: totals.GrossProfit ?? 0,
+        grossProfitView: totals.GrossProfit ?? 0,
       };
 
       this.view.currentView.sumData = objectDealValue;
-
-      // let elemnt = document.querySelector('.sum-content');
-      // if (elemnt) {
-      //   elemnt.innerHTML = this.totalView;
-      // }
     });
-
-    //chưa dùng đến nhưng chắc chắn có dùng
-    // this.getTotalFiels().subscribe((total) => {
-    //   console.log(total);
-    // });
   }
 
   getTotal() {

@@ -19,7 +19,7 @@ export class PopupCostItemsComponent implements OnInit {
   dialog: DialogRef;
 
   title = 'Chi phí';
-  viewOnly = true;
+  viewOnly = false;
   costInfos = [];
   grViewCost: any;
   cost: any;
@@ -54,78 +54,6 @@ export class PopupCostItemsComponent implements OnInit {
     // console.log(num.toLocaleString('vi-VN'));
     // console.log(this.readNumber(23566666));
   }
-
-  //----------------Cost Items -----------------//
-
-  // addCost() {
-  //   if (this.cost && !this.cost.costItemName) {
-  //     this.notiService.notify(
-  //       'Chưa nhập nội dung chi phí, hãy hoàn thiện chi phí trước khi thêm chi phí mới !',
-  //       '3'
-  //     );
-  //     return;
-  //   }
-  //   let newCost = { ...this.tmpCost };
-  //   newCost.recID
-  //   newCost.transID = this.transID;
-  //   newCost.quantity = 1;
-  //   newCost.unitPrice = 0;
-  //   if (!this.costInfos) this.costInfos = [];
-
-  //   this.costInfos.push(newCost);
-  //   this.cost = newCost;
-  //   this.calculateTotalCost();
-  //   this.detectorRef.detectChanges();
-  // }
-
-  // changeCost(evt: any) {
-  //   if (evt) {
-  //   }
-  // }
-  // deleteCost(index: number) {
-  //   if (this.costInfos?.length > index) {
-  //     this.costInfos?.splice(index, 1);
-  //     if (this.costInfos?.length == 0) this.cost = null;
-  //     this.calculateTotalCost();
-  //     this.detectorRef.detectChanges();
-  //   }
-  // }
-  // editCost(evt: any, index: number) {
-  //   if (evt && this.costInfos?.length > index) {
-  //     switch (evt?.field) {
-  //       case 'quantity':
-  //         this.costInfos[index].quantity = evt?.data;
-  //         break;
-
-  //       case 'unitPrice':
-  //         this.costInfos[index].unitPrice = evt?.data;
-  //         break;
-
-  //       case 'costItemName':
-  //         this.costInfos[index].costItemName = evt?.data;
-  //         break;
-
-  //       case 'costItemID':
-  //         this.costInfos[index].costItemID = evt?.data;
-  //         break;
-  //     }
-
-  //     this.cost = this.costInfos[index];
-  //     this.calculateTotalCost();
-  //   }
-  // }
-  // calculateTotalCost() {
-  //   this.totalCost = 0;
-  //   if (this.costInfos?.length > 0) {
-  //     this.costInfos?.forEach((cost) => {
-  //       if (cost?.quantity && cost?.unitPrice)
-  //         cost.amount = cost?.quantity * cost?.unitPrice;
-  //       else cost.amount = 0;
-  //       this.totalCost += cost.amount;
-  //     });
-  //   }
-  // }
-  //---------------------------------------------//
 
   //đọc số cho vui
   readNumber(number) {

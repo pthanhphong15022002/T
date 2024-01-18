@@ -222,8 +222,9 @@ export class CodxDiagramComponent implements OnInit, AfterViewInit {
   ];
 
   menuDrag: any = [
-    { id: 'connector', text: 'Connector', icon: 'icon-timeline' },
-    { id: 'start_end', text: 'Start/End', icon: 'icon-i-circle' },
+    //{ id: 'connector', text: 'Connector', icon: 'icon-timeline' },
+    { id: 'start', text: 'Bắt đầu', icon: 'icon-i-circle' },
+    { id: 'end', text: 'Kết thúc', icon: 'icon-i-circle' },
     { id: 'decision', text: 'Điều kiện', icon: 'icon-i-diamond' },
     { id: 'swimlane', text: 'SwimLane', icon: 'icon-view_quilt' },
     { id: 'form', text: 'Forms', icon: 'icon-note_add' },
@@ -766,9 +767,9 @@ export class CodxDiagramComponent implements OnInit, AfterViewInit {
   onDrop(e: any) {
     if (e.state == 'Completed') {
       console.log('drop', e);
-      setTimeout(() => {
-        this.diagram && this.diagram.refreshDiagramLayer();
-      }, 100);
+      // setTimeout(() => {
+      //   this.diagram && this.diagram.refreshDiagramLayer();
+      // }, 100);
     }
   }
 
@@ -809,13 +810,28 @@ export class CodxDiagramComponent implements OnInit, AfterViewInit {
       model.offsetX - e.event.target.getBoundingClientRect().x;
     model.margin.top = model.offsetY - e.event.target.getBoundingClientRect().y;
     switch (e.item?.element?.nativeElement?.id) {
-      case 'start_end':
+      case 'start':
         model.shape = {
           type: 'Bpmn',
           shape: 'Event',
           // set the event type as End
           event: {
             event: 'Start',
+            trigger: 'None',
+          },
+        };
+        model.offsetY = model.offsetY - 50;
+        if (this.targetItem && this.targetItem.isLane && swimlane && laneID)
+          this.diagram.addNodeToLane(model, swimlane, laneID);
+        else this.diagram.add(model);
+        break;
+      case 'end':
+        model.shape = {
+          type: 'Bpmn',
+          shape: 'Event',
+          // set the event type as End
+          event: {
+            event: 'End',
             trigger: 'None',
           },
         };
@@ -1015,14 +1031,19 @@ export class CodxDiagramComponent implements OnInit, AfterViewInit {
     if (action == 'add') {
       let newNode:any= cloneObject(this.nodeSelected);
       newNode.id = this.makeid(10);
-       //newNode.children = [];
-       newNode.offsetY = newNode.offsetY+300;
+
+       if(newNode.isLane){
+        this.contextMenuClick({item:{id:'InsertLaneAfter'}} as any)
+       }
+       else{
+        newNode.offsetY = newNode.offsetY+300;
        newNode.wrapper.offsetY = newNode.offsetY;
        newNode.margin.top =  newNode.margin.top + 300
        if(newNode.parentId){
         let prNode = this.diagram.nodes.find((x:any)=>x.id== newNode.parentId);
         if(prNode){
           newNode.parentId = undefined
+
           this.diagram.add(newNode);
           this.diagram.addChild(prNode,newNode.id);
           let cnn:ConnectorModel =  {
@@ -1036,8 +1057,10 @@ export class CodxDiagramComponent implements OnInit, AfterViewInit {
           setTimeout(()=>{
             let item = this.diagram.getNodeObject(newNode.id);
             if(item){
+
+              //this.diagram.updateViewPort();
+
               this.diagram.select([item]);
-              this.diagram.drag(item, 200,300)
             }
 
 
@@ -1070,6 +1093,8 @@ export class CodxDiagramComponent implements OnInit, AfterViewInit {
         //   this.diagram.select(newNode);
         // },200)
       }
+       }
+
 
       //this.diagram.refreshDiagramLayer();
       console.log('thêm', this.nodeSelected);

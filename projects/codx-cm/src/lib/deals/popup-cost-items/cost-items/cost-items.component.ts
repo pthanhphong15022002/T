@@ -93,9 +93,9 @@ export class CostItemsComponent implements OnInit {
     this.costInfos.push(newCost);
     this.cost = newCost;
     this.calculateTotalCost();
-    if (this.isAutoSave) {
-      this.autoSaveData();
-    }
+    // if (this.isAutoSave) {
+    //   this.autoSaveData();
+    // }
     this.detectorRef.detectChanges();
   }
 
@@ -147,6 +147,7 @@ export class CostItemsComponent implements OnInit {
       } else this.calculateTotalCost();
     }
   }
+
   calculateTotalCost() {
     this.totalCost = 0;
     if (this.costInfos?.length > 0) {
@@ -165,7 +166,11 @@ export class CostItemsComponent implements OnInit {
 
   //save ở đây và trả về
   autoSaveData() {
-    if (!this.validateCost()) {
+    if (!this.cost) return;
+    if (
+      this.cost &&
+      (!this.cost.costItemName || this.cost?.costItemName.trim() == '')
+    ) {
       this.notiService.notify(
         'Chưa nhập nội dung chi phí, hãy hoàn thiện chi phí trước khi thêm chi phí mới !',
         '3'
@@ -190,9 +195,6 @@ export class CostItemsComponent implements OnInit {
       });
   }
   validateCost() {
-    return (
-      this.cost && (!this.cost.costItemName || this.cost.costItem.trim() == '')
-    );
     // let check = this.costInfos.some(
     //   (x) => !x.costItemName || x.costItem.trim() == ''
     // );
@@ -235,6 +237,7 @@ export class CostItemsComponent implements OnInit {
           if (res) {
             this.dataDealValueTo.emit(this.dealValueTo);
             this.dealValueToOld = this.dealValueTo;
+            this.notiService.notifyCode('SYS007');
           }
         });
     }
