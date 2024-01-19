@@ -25,7 +25,6 @@ export class FormStepsFieldGridComponent implements OnInit, OnChanges{
     this.formatData();
   }
   ngOnChanges(changes: SimpleChanges): void {
-    debugger
     if (
       changes['data'] &&
       changes['data']?.currentValue != changes['data']?.previousValue
@@ -42,7 +41,11 @@ export class FormStepsFieldGridComponent implements OnInit, OnChanges{
     {
       this.listStage = this.data.steps.filter(x=>!x.parentID);
       this.listStage.forEach(elm => {
-        elm.child = this.data.steps.filter(x=>x.parentID == elm.recID);
+        let list = this.data.steps.filter(x=>x.parentID == elm.recID);
+        list.forEach(elm2 => {
+          elm2.settings = typeof elm2?.settings === 'object' ? elm2.settings : (elm2?.settings ? JSON.parse(elm2.settings) : null);
+        });
+        elm.child = list;
       });
     }
   }

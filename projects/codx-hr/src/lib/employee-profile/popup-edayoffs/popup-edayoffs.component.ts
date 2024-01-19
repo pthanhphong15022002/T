@@ -8,6 +8,9 @@ import {
 } from '@angular/core';
 import { Component, OnInit, Optional, ViewChild } from '@angular/core';
 import {
+  ApiHttpService,
+  AuthStore,
+  CacheService,
   CodxFormComponent,
   CodxListviewComponent,
   CRUDService,
@@ -17,6 +20,7 @@ import {
   FormModel,
   NotificationsService,
   UIComponent,
+  Util,
 } from 'codx-core';
 import { CalendarView } from '@syncfusion/ej2-angular-calendars';
 import { DateTime } from '@syncfusion/ej2-angular-charts';
@@ -26,22 +30,18 @@ import { DateTime } from '@syncfusion/ej2-angular-charts';
   templateUrl: './popup-edayoffs.component.html',
   styleUrls: ['./popup-edayoffs.component.css'],
 })
-export class PopupEdayoffsComponent extends UIComponent implements OnInit {
+export class PopupEdayoffsComponent implements OnInit {
   formModel: FormModel;
-  // formGroup: FormGroup;
   dialog: DialogRef;
   lstPregnantType;
   dayoffObj: any;
   showInfoDayoffType = false;
-  //lstDayoffs: any;
   idField = 'RecID';
   successFlag = false;
-  //indexSelected
   isnormalPregnant = false;
   isNotNormalPregnant = false;
   actionType: string;
   employId: string;
-  // isAfterRender = false;
   headerText: string;
   start: CalendarView = 'Year';
   depth: CalendarView = 'Year';
@@ -51,9 +51,7 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
   empObj: any;
   disabledInput = false;
   isPortal: boolean;
-  // genderGrvSetup: any;
   allowToViewEmSelector: boolean = false;
-  //@ViewChild('listView') listView: CodxListviewComponent;
 
   knowType = {
     type1: ['N20', 'N22', 'N23', 'N24', 'N25', 'N26', 'N35'],
@@ -65,181 +63,157 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
   groupKowTypeView: any;
 
   fromListView: boolean = false;
+  funcID:string;
+  grdViewSetUp:any;
+  arrFieldRequired:any[];
+  user:any;
   constructor(
-    private injector: Injector,
-    private cr: ChangeDetectorRef,
+    private api:ApiHttpService,
+    private cache:CacheService,
+    private dt: ChangeDetectorRef,
     private notify: NotificationsService,
     private hrSevice: CodxHrService,
-    @Optional() dialog?: DialogRef,
-    @Optional() data?: DialogData
+    private auth:AuthStore,
+    @Optional() dialog: DialogRef,
+    @Optional() dialogData: DialogData
   ) 
   {
-    super(injector);
     this.dialog = dialog;
-    this.headerText = data?.data?.headerText;
-    this.funcID = data?.data?.funcID;
-    if (data?.data?.dayoffObj) 
-    {
-      this.dayoffObj = JSON.parse(JSON.stringify(data?.data?.dayoffObj));
-      if (data?.data?.actionType === 'add') {
-        this.dayoffObj.kowID = '';
-      }
-    } else 
-    {
-      this.dayoffObj = undefined;
-    }
-
-    this.fromListView = data?.data?.fromListView;
-    if (this.dayoffObj?.employeeID && this.fromListView) {
-      this.employId = this.dayoffObj?.employeeID;
-    } else this.employId = data?.data?.employeeID;
-    if (this.dayoffObj?.emp && this.fromListView) {
-      this.empObj = this.dayoffObj?.emp;
-    } else {
-      this.empObj = data?.data?.empObj || data?.data;
-    }
-
-    if (this.dayoffObj) {
-      this.pregnancyFromVal = this.dayoffObj.pregnancyFrom;
-    }
     this.formModel = dialog.formModel;
+    this.user = auth.get();
+    if (dialogData && dialogData?.data) 
+    {
+      this.headerText = dialogData.data.headerText;
+      this.funcID = dialogData.data.funcID;
+      this.fromListView = dialogData.data.fromListView;
+      this.actionType = dialogData.data.actionType;
+      this.isPortal = dialogData.data.isPortal;
+      if (this.actionType == 'view') this.disabledInput = true;
+      if(dialogData.data.dayoffObj) 
+      {
+        this.dayoffObj = JSON.parse(JSON.stringify(dialogData.data.dayoffObj));
+      }
+      if(dialogData.data.actionType === 'add') this.dayoffObj.kowID = '';
 
-    this.actionType = data?.data?.actionType;
-    this.isPortal = data?.data?.isPortal;
-    if (this.actionType == 'view') {
-      this.disabledInput = true;
-    }
+      if(this.dayoffObj && this.dayoffObj?.employeeID && this.fromListView) 
+        this.employId = this.dayoffObj.employeeID;
+      else 
+        this.employId = dialogData.data.employeeID;
+
+      if (this.dayoffObj) 
+        this.pregnancyFromVal = this.dayoffObj.pregnancyFrom;
+
+      if (this.dayoffObj && this.dayoffObj?.emp && this.fromListView) 
+        this.empObj = this.dayoffObj?.emp;
+      else 
+        this.empObj = dialogData?.data?.empObj || dialogData?.data;
+    } 
   }
 
-  onInit(): void {
+  ngOnInit(): void {
     this.initForm();
-    if (this.employId) this.getEmployeeInfoById(this.employId, 'employeeID');
-    this.getGroupKowTypeView();
-    if (this.dayoffObj?.kowID) this.checkViewKowTyeGroup();
+    if (this.employId) 
+      this.getEmployeeInfoById(this.employId, 'employeeID');
   }
 
   initForm() {
-    this.hrSevice
-      .getOrgUnitID(this.empObj?.orgUnitID ?? this.empObj?.emp?.orgUnitID)
+    if(this.empObj)
+    {
+      let orgUnitID = this.empObj.orgUnitID ?? this.empObj.emp?.orgUnitID;
+      this.hrSevice.getOrgUnitID(orgUnitID)
       .subscribe((res) => {
-        if (this.empObj) 
+        if (res) 
         {
           this.empObj.orgUnitName = res.orgUnitName;
         }
       });
+    }
+    // get gridViewSetup
+    this.cache.gridViewSetup(this.formModel.formName, this.formModel.gridViewName)
+    .subscribe((grv) => {
+      if(grv)
+      {
+        this.grdViewSetUp = grv;
+        let arrField = Object.values(grv).filter((x: any) => x.isRequire);
+        if (Array.isArray(arrField))
+          this.arrFieldRequired = arrField.map((x: any) => x.fieldName);
 
-    this.cache
-      .gridViewSetup(this.formModel.formName, this.formModel.gridViewName)
-      .subscribe((p) => {
-        this.cache
-          .valueList(p.NewChildBirthType.referedValue)
-          .subscribe((p) => {
-            this.lstPregnantType = p.datas;
-            if (this.dayoffObj) {
-              if (
-                this.dayoffObj.newChildBirthType ==
-                this.lstPregnantType[0].value
-              ) {
-                this.isnormalPregnant = true;
-              } else if (
-                this.dayoffObj.newChildBirthType ==
-                this.lstPregnantType[1].value
-              ) {
-                this.isNotNormalPregnant = true;
+        if(grv.NewChildBirthType && grv.NewChildBirthType?.referedValue)
+        {
+          this.cache.valueList(grv.NewChildBirthType.referedValue)
+          .subscribe((vll:any) => {
+            if(vll && vll?.datas && vll?.datas?.length > 0)
+            {
+              this.lstPregnantType = vll.datas;
+              if (this.dayoffObj) 
+              {
+                if(this.dayoffObj.newChildBirthType == this.lstPregnantType[0].value) 
+                  this.isnormalPregnant = true;
+                else if (this.dayoffObj.newChildBirthType == this.lstPregnantType[1].value) 
+                  this.isNotNormalPregnant = true;
               }
             }
           });
-      });
-
-    if (this.actionType == 'add') {
-      this.hrSevice
-        .getDataDefault(
-          this.formModel.funcID,
-          this.formModel.entityName,
-          this.idField
-        )
-        .subscribe((res: any) => {
-          if (res) {
-            this.dayoffObj = res?.data;
-            this.dayoffObj.beginDate = new Date(); 
-            this.dayoffObj.endDate = null;
-            this.dayoffObj.employeeID = this.employId;
-            this.dayoffObj.periodType = '1';
-            this.cr.detectChanges();
-          }
-        });
-    } 
-    else 
-    {
-      if (
-        this.actionType === 'edit' ||
-        this.actionType === 'copy' ||
-        this.actionType === 'view'
-      ) 
-      {
-        this.cr.detectChanges();
+        }
       }
-    }
+    });
+
+    if (this.actionType == 'add') 
+    {
+      this.hrSevice.getDataDefault(this.formModel.funcID,this.formModel.entityName,this.idField)
+      .subscribe((res: any) => {
+        if (res) 
+        {
+          this.dayoffObj = res.data;
+          this.dayoffObj.beginDate = new Date(); 
+          this.dayoffObj.endDate = new Date();
+          this.dayoffObj.employeeID = this.employId;
+          this.dt.detectChanges();
+        }
+      });
+    } 
   }
 
   UpdateFromDate(e) {
     this.pregnancyFromVal = e;
   }
 
+  // save form
   onSaveForm() {
-    if (this.form.formGroup.invalid) {
-      this.hrSevice.notifyInvalid(this.form.formGroup, this.formModel);
-      this.form.validation(false);
-      return;
-    }
-    if (this.isnormalPregnant == true && this.isNotNormalPregnant == false) {
-      this.dayoffObj.newChildBirthType = this.lstPregnantType[0].value;
-    } else if (
-      this.isNotNormalPregnant == true &&
-      this.isnormalPregnant == false
-    ) {
-      this.dayoffObj.newChildBirthType = this.lstPregnantType[1].value;
-    }
+    if (this.actionType === 'copy' || this.actionType === 'add') delete this.dayoffObj.recID;
     this.dayoffObj.pregnancyFrom = this.pregnancyFromVal;
-    if (this.actionType === 'copy' || this.actionType === 'add') {
-      delete this.dayoffObj.recID;
-    }
-    if (!this.dateCompare(this.dayoffObj.beginDate, this.dayoffObj.endDate)) {
-      this.hrSevice.notifyInvalidFromTo('EndDate', 'BeginDate', this.formModel);
-      return;
-    }
-
     this.dayoffObj.employeeID = this.employId;
-    this.dayoffObj.totalSubDays = 0;
-
-    this.deletedKowGroupValue();
-
-    if (this.actionType === 'add' || this.actionType === 'copy') {
-      this.hrSevice.AddEmployeeDayOffInfo(this.dayoffObj).subscribe((p) => {
-        if (p != null) {
-          this.dayoffObj.recID = p.recID;
-          this.notify.notifyCode('SYS006');
-          p.emp = this.empObj;
-          this.successFlag = true;
-          this.dialog && this.dialog.close(p);
-        }
-        // else this.notify.notifyCode('SYS023');
-      });
-    } else {
-      this.hrSevice.UpdateEmployeeDayOffInfo(this.dayoffObj).subscribe((p) => {
-        if (p != null) {
-          this.successFlag = true;
-          this.notify.notifyCode('SYS007');
-          p.emp = this.empObj;
-          this.dialog && this.dialog.close(p);
-          // this.lstDayoffs[this.indexSelected] = p;
-          // if(this.listView){
-          //   (this.listView.dataService as CRUDService).update(this.lstDayoffs[this.indexSelected]).subscribe()
-          // }
-        }
-        // else this.notify.notifyCode('SYS021');
-      });
+    this.dayoffObj.createdOn = new Date();
+    this.dayoffObj.createdBy = this.user.userID;
+    if(this.validate())
+    {
+      if (this.actionType === 'add' || this.actionType === 'copy') 
+      {
+        this.hrSevice.AddEmployeeDayOffInfo(this.dayoffObj).subscribe((res:any) => {
+          if (res) 
+          {
+            this.dayoffObj.recID = res.recID;
+            this.notify.notifyCode('SYS006');
+            res.emp = this.empObj;
+            this.successFlag = true;
+            this.dialog && this.dialog.close(res);
+          }
+        });
+      } 
+      else 
+      {
+        this.hrSevice.UpdateEmployeeDayOffInfo(this.dayoffObj).subscribe((res:any) => {
+          if (res) 
+          {
+            this.successFlag = true;
+            this.notify.notifyCode('SYS007');
+            res.emp = this.empObj;
+            this.dialog && this.dialog.close(res);
+          }
+        });
+      }
     }
+    
   }
 
   calTotalDayoff(evt) {
@@ -303,6 +277,7 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
     });
   }
 
+  // value change
   valueChange(event:any){
     let field =  event.field;
     let value = event.data;
@@ -333,7 +308,7 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
     .subscribe((res:any) => {
       this.dayoffObj["totalDaysOff"] = res ?? 0;
       this.form.formGroup.patchValue({totalDaysOff: this.dayoffObj["totalDaysOff"]});
-      this.cr.detectChanges();
+      this.dt.detectChanges();
     });
   }
 
@@ -387,7 +362,7 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
                     //signer: this.dayoffObj.signer,
                     signerPosition: this.dayoffObj.signerPosition,
                   });
-                  this.cr.detectChanges();
+                  this.dt.detectChanges();
                 }
               });
           } else {
@@ -399,7 +374,7 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
           }
         }
       }
-      this.cr.detectChanges();
+      this.dt.detectChanges();
     });
   }
   handleSelectEmp(evt) {
@@ -436,6 +411,7 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
   kowIDValuechange() {
     this.checkViewKowTyeGroup();
   }
+
   getGroupKowTypeView() {
     this.groupKowTypeView = {
       groupA: {
@@ -471,8 +447,8 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
       },
     };
   }
+  
   checkViewKowTyeGroup() {
-    debugger
     if (this.dayoffObj['kowID']) 
     {
       this.showInfoDayoffType = false;
@@ -488,14 +464,36 @@ export class PopupEdayoffsComponent extends UIComponent implements OnInit {
     } 
     else this.getGroupKowTypeView();
   }
-  deletedKowGroupValue() {
-    for (let i in this.groupKowTypeView) {
-      if (this.groupKowTypeView[i].isShow) continue;
-      else {
-        for (let j in this.groupKowTypeView[i].field) {
-          this.dayoffObj[this.groupKowTypeView[i].field[j]] = null;
+
+
+
+  // check validate submit form
+  validate():boolean{
+    if(!this.dayoffObj) return false;
+    if (this.arrFieldRequired && this.arrFieldRequired.length > 0) 
+    {
+      for (let index = 0; index < this.arrFieldRequired.length; index++) {
+        let field = this.arrFieldRequired[index];
+        if(!this.dayoffObj[Util.camelize(field)]) 
+        {
+          this.notify.notifyCode('SYS009', 0, this.grdViewSetUp[field].headerText);
+          return false;
         }
       }
     }
+    if(this.dayoffObj.beginDate > this.dayoffObj.endDate)
+    {
+      this.cache.message("HR003")
+      .subscribe((mssg:any) => {
+        if(mssg)
+        {
+          let message = mssg.defaultName ?? mssg.customName;
+          message = Util.stringFormat(message,this.grdViewSetUp["EndDate"].headerText,this.grdViewSetUp["BeginDate"].headerText);
+          this.notify.notify(message);
+        }
+      });
+      return false;
+    }
+    return true;
   }
 }
