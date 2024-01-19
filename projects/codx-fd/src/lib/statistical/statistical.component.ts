@@ -428,7 +428,9 @@ chartArea: Object = {
           }
 
         }
-
+        else{
+          this.isLoaded = true
+        }
       }
     });
     this.detectorRef.detectChanges();
@@ -594,9 +596,9 @@ chartArea: Object = {
           }
 
           this.detectorRef.detectChanges();
-          console.log(objEmp);
-          this.isLoaded = true;
+
         }
+        this.isLoaded = true;
       });
   }
 
@@ -891,11 +893,11 @@ chartArea: Object = {
             this.statByEmps.push(obj);
           }
           this.statByDepts = [...this.statByDepts]
-          console.log(this.statByDepts);
-          console.log(res);
-          this.isLoaded=true;
+
+
           this.detectorRef.detectChanges()
         }
+        this.isLoaded=true;
       });
   }
 
@@ -1303,6 +1305,7 @@ chartArea: Object = {
               });
 
       }
+      else this.isLoaded =true
     }
     if(e.type == 'reportItem'){
       this.reportItem = e.data;
@@ -1313,7 +1316,6 @@ chartArea: Object = {
   filterChange(e:any){
     this.isLoaded = false;
     this.objParams=e[1];
-    debugger
     this.reportItem &&  this.reloadAllChart();
   }
 
