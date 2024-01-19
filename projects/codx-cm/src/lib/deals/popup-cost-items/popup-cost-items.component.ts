@@ -27,7 +27,8 @@ export class PopupCostItemsComponent implements OnInit {
   totalCost = 0;
   transID: string;
   dealValueTo: any;
-  isUpdate = false;
+  isUpDealCost = false;
+  isUpDealValueTo = false;
 
   constructor(
     private api: ApiHttpService,
@@ -102,11 +103,11 @@ export class PopupCostItemsComponent implements OnInit {
 
   totalDataCost(e) {
     this.totalCost = e;
-    this.isUpdate = true;
+    this.isUpDealCost = true;
   }
   changeDealValueTo(e) {
     this.dealValueTo = e;
-    this.isUpdate = true;
+    this.isUpDealValueTo = true;
   }
 
   actionEvent(e) {
@@ -114,13 +115,15 @@ export class PopupCostItemsComponent implements OnInit {
   }
 
   closePopup() {
-    if (this.viewOnly || !this.isUpdate) {
+    if (this.viewOnly || (!this.isUpDealCost && !this.isUpDealValueTo)) {
       this.dialog.close();
       return;
     }
     let obj = {
       dealCost: this.totalCost,
+      isUpDealCost: this.isUpDealCost,
       dealValueTo: this.dealValueTo,
+      isUpDealValueTo: this.isUpDealValueTo,
     };
     this.dialog.close(obj);
   }

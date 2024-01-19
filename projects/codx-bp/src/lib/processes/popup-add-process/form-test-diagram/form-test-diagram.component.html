@@ -1,0 +1,16 @@
+<codx-form
+  #form
+  [headerText]="title"
+  [openMore]="false"
+  [dialog]="dialog"
+  [formModel]="dialog.formModel"
+  [footer]="footer"
+  [body]="body"
+>
+  <ng-template #body>
+    <div class="container-fluid h-100 w-100 p-0">
+      <codx-diagram></codx-diagram>
+    </div>
+  </ng-template>
+  <ng-template #footer></ng-template>
+</codx-form>

@@ -1353,5 +1353,6 @@ export class PopupAddCustomFieldComponent implements OnInit {
   openCaculate() {
     this.showCaculate = !this.showCaculate;
   }
+
   //-----------------end CACULATE FIELD------------------//
 }

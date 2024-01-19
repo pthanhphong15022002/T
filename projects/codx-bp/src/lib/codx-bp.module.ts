@@ -48,6 +48,7 @@ import { PropertyTableComponent } from './modeview/properties/property-table/pro
 import { PropertyDefaultTitleComponent } from './modeview/properties/property-default/property-default-title/property-default-title.component';
 import { PopupPermissionsProcessesComponent } from './processes/popup-add-process/popup-permissions-processes/popup-permissions-processes.component';
 import { FormStepsFieldGridComponent } from './processes/popup-add-process/form-steps-field-grid/form-steps-field-grid.component';
+import { FormTestDiagramComponent } from './processes/popup-add-process/form-test-diagram/form-test-diagram.component';
 
 export const routes: Routes = [
   {
@@ -105,7 +106,8 @@ export const routes: Routes = [
     FormSettingComboboxComponent,
     FormAdvancedSettingsComponent,
     PopupPermissionsProcessesComponent,
-    FormStepsFieldGridComponent
+    FormStepsFieldGridComponent,
+    FormTestDiagramComponent
   ],
   imports: [
     CodxCoreModule.forRoot({ environment }),
