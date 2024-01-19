@@ -1484,13 +1484,14 @@ export class DealsComponent
         dialogCustomDeal.closed.subscribe((e) => {
           if (e && e.event != null) {
             this.view.dataService.update(e.event, true).subscribe();
+            let dt = e.event;
+            this.dataSelected = dt;
             //up kaban
             if (
               this.kanban &&
               (dealValueOld != e.event?.dealValue ||
                 exchangeRateOld != e.event?.exchangeRate)
             ) {
-              let dt = e.event;
               let money =
                 dt.dealValue * dt.exchangeRate - dealValueOld * exchangeRateOld;
               this.renderTotal(dt.stepID, 'add', money);
@@ -1500,13 +1501,13 @@ export class DealsComponent
               // this.kanban.refreshUI();
               this.kanban.refresh();
             }
-            // if (this.detailViewDeal) {
-            //   this.detailViewDeal.dataSelected = JSON.parse(
-            //     JSON.stringify(this.dataSelected)
-            //   );
-            //   this.detailViewDeal?.promiseAllAsync();
-            //   this.detailViewDeal.loadContactEdit();
-            // }
+            if (this.detailViewDeal) {
+              this.detailViewDeal.dataSelected = JSON.parse(
+                JSON.stringify(this.dataSelected)
+              );
+              this.detailViewDeal?.promiseAllAsync();
+              this.detailViewDeal.loadContactEdit();
+            }
             this.isChangeOwner = ownerIdOld != e.event.owner;
             if (this.listKeyFieldSum?.length > 0) this.totalGirdView(); //tính lại tổng
             this.changeDetectorRef.detectChanges();
