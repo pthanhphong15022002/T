@@ -85,6 +85,7 @@ import { CodxDmModule } from 'projects/codx-dm/src/public-api';
 import { SearchingComponent as  SearchingODComponent} from 'projects/codx-od/src/lib/incomming/searching/searching.component';
 import { SearchingComponent as  SearchingDMComponent} from 'projects/codx-dm/src/lib/searching/searching.component';
 import { SearchingComponent as  SearchingESComponent} from 'projects/codx-es/src/lib/searching/searching.component';
+import { CodxCoModule } from 'projects/codx-co/src/public-api';
 //import { CodxWpV2Module } from 'projects/codx-wp/src/lib/codx-wp-v2.module';
 const routes: Routes = [
   {
@@ -97,7 +98,7 @@ const routes: Routes = [
       //   component: WorkspaceComponent,
       // },
       {
-        path: 'calendar/:funcID',
+        path: 'wscalendar/:funcID',
         component: COCalendarComponent,
       },
       {
@@ -403,7 +404,7 @@ const routes: Routes = [
         CodxHRModule,
         //CodxWpModule,
         //CodxWpV2Module,
-        
+        //CodxCoModule,
         AccordionModule,
         NgbDropdownModule,
         SpeedDialModule,

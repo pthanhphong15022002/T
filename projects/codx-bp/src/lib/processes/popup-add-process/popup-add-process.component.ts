@@ -292,6 +292,15 @@ export class PopupAddProcessComponent {
     form.stageID = stage.recID;
     form.parentID = stage.recID;
     form.extendInfo = this.extendInfos;
+    form.settings = JSON.stringify(
+    {
+      icon: vllForm.icon,
+      color: vllForm.color,
+      backGround: vllForm.textColor,
+      nextSteps: null,
+      sortBy: null,
+      totalControl: null
+    });
     lstStep.push(stage,form);
     this.data.steps = lstStep;
   }
