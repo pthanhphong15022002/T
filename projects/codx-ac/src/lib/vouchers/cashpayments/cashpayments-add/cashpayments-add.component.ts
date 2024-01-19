@@ -386,12 +386,14 @@ export class CashPaymentAddComponent extends UIComponent {
           return;
         } 
         let objectType = event?.component?.itemsSelected[0]?.ObjectType || '';
+        this.isPreventChange = true;
         this.formCashPayment.setValue('objectType',objectType,{});
         this.formCashPayment.setValue('bankAcctID',null,{});
         this.objectIDChange();
+        this.isPreventChange = false;
         break;
 
-      //* Tai khoan chi
+      //* Tai khoan nhan
       case 'bankacctid':
         let indexacc = this.eleCbxBankAcct?.ComponentCurrent?.dataService?.data.findIndex((x) => x.BankAcctID == this.eleCbxBankAcct?.ComponentCurrent?.value);
         if(value == '' || value == null || indexacc == -1){
@@ -399,6 +401,9 @@ export class CashPaymentAddComponent extends UIComponent {
           this.formCashPayment.setValue(field,null,{});
           this.isPreventChange = false;
         }
+        this.isPreventChange = true;
+        this.formCashPayment.setValue('objectID',event?.component?.itemsSelected[0]?.ObjectID || '',{});
+        this.isPreventChange = false;
         //this.bankAcctIDChange(field)
         break;
 
@@ -1053,22 +1058,22 @@ export class CashPaymentAddComponent extends UIComponent {
    */
   exchangeRateChange(field:any){
     this.api
-        .exec('AC', 'CashPaymentsBusiness', 'ValueChangedAsync', [
-          field,
-          this.formCashPayment.data,
-          ''
-        ])
-        .subscribe((res:any) => {
-          if (res) {
-            this.preData = {...this.formCashPayment?.data};
-            if (res?.isRefreshGrid) {
-              this.eleGridCashPayment.refresh();
-              this.formCashPayment.preData = { ...this.formCashPayment.data };
-              this.dialog.dataService.update(this.formCashPayment.data).subscribe();
-              this.detectorRef.detectChanges();
-            }
+      .exec('AC', 'CashPaymentsBusiness', 'ValueChangedAsync', [
+        field,
+        this.formCashPayment.data,
+        ''
+      ])
+      .subscribe((res: any) => {
+        if (res) {
+          this.preData = { ...this.formCashPayment?.data };
+          if (res?.isRefreshGrid) {
+            this.eleGridCashPayment.refresh();
+            this.formCashPayment.preData = { ...this.formCashPayment.data };
+            this.dialog.dataService.update(this.formCashPayment.data).subscribe();
+            this.detectorRef.detectChanges();
           }
-        });
+        }
+      });
   }
 
   /**
@@ -1095,6 +1100,26 @@ export class CashPaymentAddComponent extends UIComponent {
       }
     });
   }
+
+  // bankAcctIDChange(field:any){
+  //   this.api
+  //   .exec('AC', 'CashPaymentsBusiness', 'ValueChangedAsync', [
+  //     field,
+  //     this.formCashPayment.data,
+  //     ''
+  //   ])
+  //   .subscribe((res: any) => {
+  //     if (res) {
+  //       // this.preData = { ...this.formCashPayment?.data };
+  //       // if (res?.isRefreshGrid) {
+  //       //   this.eleGridCashPayment.refresh();
+  //       //   this.formCashPayment.preData = { ...this.formCashPayment.data };
+  //       //   this.dialog.dataService.update(this.formCashPayment.data).subscribe();
+  //       //   this.detectorRef.detectChanges();
+  //       // }
+  //     }
+  //   });
+  // }
 
   /**
    * *Hàm thêm dòng theo loại

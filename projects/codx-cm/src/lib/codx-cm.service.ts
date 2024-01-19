@@ -1000,6 +1000,14 @@ export class CodxCmService {
       data
     );
   }
+  updateProcessContract(data) {
+    return this.api.exec<any>(
+      'CM',
+      'ContractsBusiness',
+      'UpdateProcessContractAsync',
+      data
+    );
+  }
   updateProcessCase(data) {
     return this.api.exec<any>(
       'CM',

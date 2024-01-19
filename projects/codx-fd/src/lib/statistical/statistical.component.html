@@ -17,7 +17,7 @@
   <div class="container-fluid p-0" *ngIf="isLoaded && funcID=='FDD004'">
     <ng-container *ngTemplateOutlet="dashboardKudos"> </ng-container>
   </div>
-  <div class="container-fluid p-0" *ngIf="!isLoaded">
+  <div class="container-fluid p-0 h-100 " *ngIf="!isLoaded">
     <div class="section"*ngIf="!isLoaded" [ngClass]="!isLoaded ? 'visible':'invisible'" >
       <span class="loader"></span>
     </div>

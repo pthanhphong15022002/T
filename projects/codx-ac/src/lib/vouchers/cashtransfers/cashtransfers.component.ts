@@ -55,13 +55,13 @@ export class CashtransfersComponent extends UIComponent {
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
         if (res.length > 0) {
-          this.baseCurr = res[0].baseCurr; //? get đồng tiền hạch toán
+          this.baseCurr = res[0].baseCurr;
         }
       });
     this.router.params
       .pipe(takeUntil(this.destroy$))
       .subscribe((params) => {
-        this.journalNo = params?.journalNo; //? get số journal từ router
+        this.journalNo = params?.journalNo;
       });
     this.VATInvoiceSV = this.acService.createCRUDService(
       inject,

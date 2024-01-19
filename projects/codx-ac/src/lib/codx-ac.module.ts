@@ -121,6 +121,8 @@ import { DynamicSettingModule } from 'projects/codx-share/src/lib/components/dyn
 import { PeriodicControlComponent } from './share/periodic-control/periodic-control.component';
 import { FormatDatePipe } from './share/periodic-control/formatDate/format-date.pipe';
 import { ContractsComponent } from 'projects/codx-cm/src/lib/contracts/contracts.component';
+import { AssetJournalsComponent } from './vouchers/asset-journals/asset-journals.component';
+import { AssetJournalsAddComponent } from './vouchers/asset-journals/asset-journals-add/asset-journals-add.component';
 export const routes: Routes = [
   {
     path: '',
@@ -147,6 +149,11 @@ export const routes: Routes = [
       {
         path: 'cashpayments/:funcID/:journalNo',
         component: CashPaymentsComponent,
+        data: { noReuse: true },
+      },
+      {
+        path: 'assetjournals/:funcID/:journalNo',
+        component: AssetJournalsComponent,
         data: { noReuse: true },
       },
       {
@@ -472,6 +479,8 @@ export const routes: Routes = [
     CashtransfersAddComponent,
     PeriodicControlComponent,
     FormatDatePipe,
+    AssetJournalsComponent,
+    AssetJournalsAddComponent,
   ],
   exports: [RouterModule],
   providers: [AccumulationTooltipService],
