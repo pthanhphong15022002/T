@@ -149,8 +149,10 @@ export class MyTeamComponent implements OnInit {
     .subscribe((res:any) => {
       if(res){
         this.lstEmp=res;
-        this.dt.detectChanges();        
-        setInterval(() => this.showSlides(), 5000);
+        this.dt.detectChanges();     
+        if(this.lstEmp?.length>0)   {
+          this.showSlides();
+        }
       }
     });
   }
@@ -233,19 +235,22 @@ export class MyTeamComponent implements OnInit {
   }
 
   slideIndex = 0;
-
+  slides:any;
   showSlides() {
-    let i;
-    let slides = document.getElementsByClassName("mySlides") as HTMLCollectionOf<HTMLElement>;
-    if(slides?.length>0){
-      for (i = 0; i < slides.length; i++) {
-        slides[i].style.display = "none";  
+    if(this.slides==null || this.slides?.length==0){
+      this.slides = document.getElementsByClassName("mySlides") as HTMLCollectionOf<HTMLElement>;
+    }
+    let i;    
+    if(this.slides?.length>0){
+      for (i = 0; i < this.slides?.length; i++) {
+        this.slides[i].style.display = "none";  
       }      
-      if (this.slideIndex >= slides.length) {this.slideIndex = 0}  
-      if(this.slideIndex >=0 && this.slideIndex<slides.length){
-        slides[this.slideIndex].style.display = "block";  
+      if (this.slideIndex >= this.slides?.length) {this.slideIndex = 0}  
+      if(this.slideIndex >=0 && this.slideIndex<this.slides?.length){
+        this.slides[this.slideIndex].style.display = "block";  
       }      
       this.slideIndex++;
     }
+    setTimeout(() => this.showSlides(), 5000);
   }
 }

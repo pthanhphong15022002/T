@@ -560,6 +560,10 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
           case EPCONST.MFUNCID.Copy:
             this.copy(data);
             break;
+            
+          case EPCONST.MFUNCID.View:
+            this.viewDetail(data);
+            break;
           // Aproval Trans
           case EPCONST.MFUNCID.R_Release: //Gửi duyệt
           case EPCONST.MFUNCID.C_Release:
@@ -1289,23 +1293,51 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
 
   viewDetail(data: any) {
     if (data.resourceType == EPCONST.VLL.ResourceType.Stationery) {
-      return;
+        let dModel = new DialogModel();
+        dModel.IsFull = true;
+        dModel.FormModel = this.formModel;
+        dModel.DataService = this.view?.dataService;
+        let dialogStationery = this.callfc.openForm(
+          this.popupBookingComponent,
+          '',
+          null,
+          null,
+          null,
+          [
+            this.view.dataService.dataSelected,
+            EPCONST.MFUNCID.View,
+            this.popupTitle,
+          ],
+          '',
+          dModel
+        );
+        dialogStationery.closed.subscribe((returnData) => {
+          if (returnData?.event) {
+            //this.updateData(returnData?.event);
+          } else {
+            this.view.dataService.clear();
+          }
+        });
+      
     }
-    let option = new SidebarModel();
-    option.Width = '800px';
-    option.DataService = this.view?.dataService;
-    option.FormModel = this.formModel;
-    let inputParam = new EP_BookingInputParam();
-    inputParam.data = data;
-    inputParam.funcType = EPCONST.MFUNCID.Edit;
-    inputParam.popupTitle = 'Xem chi tiết';
-    inputParam.viewOnly = true;
-    let dialogview = this.callfc.openSide(
-      this.popupBookingComponent,
-      //inputParam,
-      [data, EPCONST.MFUNCID.Edit, 'Xem chi tiết', null, true],
-      option
-    );
+    else{
+      let option = new SidebarModel();
+      option.Width = '800px';
+      option.DataService = this.view?.dataService;
+      option.FormModel = this.formModel;
+      let inputParam = new EP_BookingInputParam();
+      inputParam.data = data;
+      inputParam.funcType = EPCONST.MFUNCID.Edit;
+      inputParam.popupTitle = 'Xem chi tiết';
+      inputParam.viewOnly = true;
+      let dialogview = this.callfc.openSide(
+        this.popupBookingComponent,
+        //inputParam,
+        [data, EPCONST.MFUNCID.Edit, 'Xem chi tiết', null, true],
+        option
+      );
+    }
+    
   }
 
   allocate(data: any) {

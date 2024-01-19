@@ -42,9 +42,6 @@ import { environment } from 'src/environments/environment';
 import { DispatchService } from '../../../../../codx-od/src/lib/services/dispatch.service';
 import { CodxShareService } from '../../codx-share.service';
 import { CodxCommonService } from 'projects/codx-common/src/lib/codx-common.service';
-import { log } from 'console';
-import { CoDxAddApproversComponent } from 'projects/codx-common/src/lib/component/codx-approval-procress/codx-add-approvers/codx-add-approvers.component';
-import { ApproveProcess, Approver } from 'projects/codx-common/src/lib/models/ApproveProcess.model';
 
 @Component({
   selector: 'codx-approval',
@@ -80,13 +77,12 @@ export class CodxApprovalComponent
   odService: DispatchService;
   codxShareService: CodxShareService;
   notifySvr: NotificationsService;
-  codxCommonService: CodxCommonService;
   callfunc: CallFuncService;
   esService: CodxEsService;
   routers: Router;
   allMFunc: any;
   hideMF: boolean = false;
-  constructor(inject: Injector) {
+  constructor(inject: Injector, private codxCommonService: CodxCommonService) {
     super(inject);
     this.routers = inject.get(Router);
     this.odService = inject.get(DispatchService);
@@ -326,37 +322,16 @@ export class CodxApprovalComponent
     this.detectorRef.detectChanges();
   }
   clickMF(e: any, data: any) {
-
     this.changeMF(this.allMFunc, data);
     //Duyệt SYS201 , Ký SYS202 , Đồng thuận SYS203 , Hoàn tất SYS204 , Từ chối SYS205 , Làm lại SYS206 , Khôi phục SY207
     var funcID = e?.functionID;
-    // if(funcID =="SYS05"){
-    //   let dialogAP = this.callfc.openForm(
-    //     CoDxAddApproversComponent,
-    //     'Thêm mới',
-    //     700,
-    //     650,
-    //     '',
-    //   );
-    //   dialogAP.closed.subscribe(res=>{
-    //     if(res?.event){
-    //       let model = new ApproveProcess();
-    //       model.tranRecID = data?.recID;
-    //       let ap = new Approver();
-    //       ap.roleType = "U";
-    //       ap.approver= res?.event;
-    //       this.api.execSv(
-    //       'ES',
-    //       'ERM.Business.ES',
-    //       'ApprovalTransBusiness',
-    //       'ApproveAsync',
-    //       [model,ap]
-    //     );
+    // if (funcID == 'SYS05') {
+    //   this.codxCommonService.codxAuthority(data.recID, (res: any) => {
+    //     if (res) {
+    //       this.valueChange(data);
     //     }
     //   });
-
-    // }
-    // else 
+    // } else 
     if (data.eSign == true) {
       //Kys
       if (
@@ -368,13 +343,6 @@ export class CodxApprovalComponent
         funcID == 'SYS202' ||
         funcID == 'SYS200'
       ) {
-        let option = new SidebarModel();
-        option.Width = '800px';
-        option.DataService = this.view?.dataService;
-        option.FormModel = this.view?.formModel;
-
-        console.log('oTrans', data);
-
         let dialogModel = new DialogModel();
         dialogModel.IsFull = true;
         let dialogApprove = this.callfunc.openForm(

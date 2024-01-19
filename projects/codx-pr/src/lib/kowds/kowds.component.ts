@@ -398,7 +398,7 @@ export class KowdsComponent extends UIComponent {
   }
   handleShowHideMF(event) {
     for (let i = 0; i < event.length; i++) {
-      if (event[i].functionID == 'SYS04') {
+      if (event[i].functionID == 'SYS04' || event[i].functionID == 'SYS05') {
         event[i].disabled = true;
       } else if (
         event[i].functionID == 'SYS104' &&

@@ -39,7 +39,10 @@
                 <ng-container *ngIf="posts[0]">
                   <div class="post">
                     <div class="w-100 position-relative">
-                      <codx-img imageType="square" [isDefaulImg]="true" [cssClass]="'image-300 w-100 pic-newshot'"
+                      <codx-img *ngIf="(posts[0]?.image | assetURL :true ) == true" imageType="square" [isDefaulImg]="true" [cssClass]="'image-300 w-100 pic-newshot'"
+                        [width]="480" [imgSource]="posts[0]?.image | assetURL">
+                      </codx-img>
+                      <codx-img *ngIf="(posts[0]?.image | assetURL :true ) == false" imageType="square" [isDefaulImg]="true" [cssClass]="'image-300 w-100 pic-newshot'"
                         [width]="480" [objectId]="posts[0].recID" [objectType]="'WP_News'" [referType]="'image'">
                       </codx-img>
                       <div *ngIf="posts[0].category" class="position-absolute bottom-0 end-0 mb-1">
@@ -93,7 +96,10 @@
                         <ng-container *ngIf="item;emptyVideo">
                           <div (click)="clickViewDetail(item)" class="video">
                             <div class="video-block">
-                              <codx-img [isDefaulImg]="true" [width]="250" imageType="square" [objectId]="item?.recID"
+                              <codx-img *ngIf="(item?.image | assetURL :true ) == true" [isDefaulImg]="true" [width]="250" imageType="square" 
+                              [imgSource]="item?.image | assetURL">
+                              </codx-img>
+                              <codx-img *ngIf="(item?.image | assetURL :true ) == false" [isDefaulImg]="true" [width]="250" imageType="square" [objectId]="item?.recID"
                                 objectType="WP_News" [referType]="'image'">
                               </codx-img>
                               <span class="video-title">{{item?.subject | maxlenght:200 }}</span>
@@ -124,7 +130,10 @@
   <div class="row mb-5 post" (click)="clickViewDetail(data)">
     <div class="col-4">
       <div class="w-100 position-relative cursor-pointer">
-        <codx-img imageType="square" [isDefaulImg]="true" [width]="180" [cssClass]="'image w-100'"
+        <codx-img *ngIf="(data?.image | assetURL :true ) == true" imageType="square" [isDefaulImg]="true" [width]="180" [cssClass]="'image w-100'"
+        [imgSource]="data?.image | assetURL">
+        </codx-img>
+        <codx-img *ngIf="(data?.image | assetURL :true ) == false" imageType="square" [isDefaulImg]="true" [width]="180" [cssClass]="'image w-100'"
           [objectId]="data?.recID" [objectType]="'WP_News'" [referType]="'image'">
         </codx-img>
         <div *ngIf="data?.category" class="position-absolute bottom-0 end-0">
@@ -168,7 +177,10 @@
   <ng-template #tmpData>
     <div (click)="clickViewDetail(item)" class="d-flex mb-1 p-3 post news-listpost rounded-2">
       <div class="w-250px h-150px me-4" style="overflow: hidden;">
-        <codx-img [width]="250" [isDefaulImg]="true" [cssClass]="'w-100 h-auto'" imageType="square"
+        <codx-img *ngIf="(item?.image | assetURL :true ) == true" [width]="250" [isDefaulImg]="true" [cssClass]="'w-100 h-auto'" imageType="square"
+        [imgSource]="item?.image | assetURL">
+        </codx-img>
+        <codx-img *ngIf="(item?.image | assetURL :true ) == false" [width]="250" [isDefaulImg]="true" [cssClass]="'w-100 h-auto'" imageType="square"
           [objectId]="item?.recID" objectType="WP_News" [referType]="'image'">
         </codx-img>
       </div>

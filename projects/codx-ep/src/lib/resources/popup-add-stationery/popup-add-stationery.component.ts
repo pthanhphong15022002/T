@@ -19,7 +19,12 @@ import {
   UIComponent,
 } from 'codx-core';
 import { CodxEpService } from 'projects/codx-ep/src/lib/codx-ep.service';
+import { EPCONST } from '../../codx-ep.constant';
 
+const _addMF = EPCONST.MFUNCID.Add;
+const _copyMF = EPCONST.MFUNCID.Copy;
+const _editMF = EPCONST.MFUNCID.Edit;
+const _viewMF = EPCONST.MFUNCID.View;
 @Component({
   selector: 'popup-add-stationery',
   templateUrl: './popup-add-stationery.component.html',
@@ -73,6 +78,8 @@ export class PopupAddStationeryComponent
   warehouseOwnerName: string = '';
   defaultWarehouse: string = '';
   isPriceVisible: boolean = false;
+  mfuncID: any;
+  viewOnly=false;
 
   constructor(
     injector: Injector,
@@ -84,6 +91,8 @@ export class PopupAddStationeryComponent
     this.data = dt?.data[0];
     this.isAdd = dt?.data[1];
     this.tmpTitle = dt?.data[2];
+    this.funcID = dt?.data[3];
+    this.mfuncID = dt?.data[4];
     this.dialogRef = dialog;
     this.formModel = this.dialogRef.formModel;
     if (this.isAdd) {
@@ -92,6 +101,9 @@ export class PopupAddStationeryComponent
       this.imgRecID = this.data.recID;
       this.defaultWarehouse = this.data.location;
       this.warehouseOwnerName = this.data.ownerName;
+    }
+    if(this.mfuncID==_viewMF){
+      this.viewOnly=true;
     }
   }
 
