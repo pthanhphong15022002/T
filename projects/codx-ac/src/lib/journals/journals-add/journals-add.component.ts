@@ -59,6 +59,7 @@ export class JournalsAddComponent extends UIComponent {
   comboboxValue:any;
   fieldSelected:any;
   oAutoNumber:any = [];
+  mainFilterValue:any;
   tabInfo: any[] = [ //? thiết lập tab hiển thị trên form
     { icon: 'icon-info', text: 'Thông tin chung', name: 'Description'},
     { icon: 'icon-settings', text: 'Thiết lập', name: 'Setting' },
@@ -80,6 +81,7 @@ export class JournalsAddComponent extends UIComponent {
     this.dialog = dialog;
     this.dialogData = dialogData;
     this.dataDefault = { ...dialogData.data?.oData };
+    this.mainFilterValue = dialogData.data?.mainFilterValue;
     this.preData = { ...dialogData.data?.oData };
     
   }
@@ -195,6 +197,7 @@ export class JournalsAddComponent extends UIComponent {
               if (res && res.length > 0) {
                 let data = res[0];
                 this.formJournal.form.setValue('journalDesc',data?.text,{});
+                this.onDisableTab();
               }else{
                 this.isPreventChange = true;
                 this.formJournal.form.formGroup.patchValue({ ...this.preData });
@@ -382,8 +385,11 @@ export class JournalsAddComponent extends UIComponent {
 
   onDisableTab(){
     let strdisable = '';
-    if((this.formJournal.form?.data?.journalName == '' || this.formJournal.form?.data?.journalName == null)
-    && (this.formJournal.form?.data?.journalType == '' || this.formJournal.form?.data?.journalType == null)) strdisable +='1;2';
+    if (this.mainFilterValue === '3') {
+      if(this.formJournal.form?.data?.journalType == '' || this.formJournal.form?.data?.journalType == null) strdisable +='1;2';
+    }else{
+      if(this.formJournal.form?.data?.journalName == '' || this.formJournal.form?.data?.journalName == null) strdisable +='1;2';
+    }
     this.formJournal.setDisabled(strdisable);
   }
 
