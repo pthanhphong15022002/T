@@ -204,6 +204,7 @@ export class CostItemsComponent implements OnInit {
           this.totalDataCost.emit(this.totalCost);
         } else {
           this.costInfos[index] = this.oldCost;
+          // this.notiService.notifyCode('SYS021');
         }
         this.isSavingData = false;
       });
@@ -256,6 +257,9 @@ export class CostItemsComponent implements OnInit {
             this.dataDealValueTo.emit(this.dealValueTo);
             this.dealValueToOld = this.dealValueTo;
             this.notiService.notifyCode('SYS007');
+          } else {
+            this.dealValueTo = this.dealValueToOld;
+            this.notiService.notifyCode('SYS021');
           }
           this.isSavingData = false;
         });
