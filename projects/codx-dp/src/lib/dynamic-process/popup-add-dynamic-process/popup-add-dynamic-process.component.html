@@ -509,7 +509,12 @@
         </div>
         <div class="col-6">
           <div class="form-group ms-5">
-            <codx-label name="lblAvatarProcess" default="Ảnh đại diện">
+            <codx-label
+              name="lblAvatarProcess"
+              [formName]="'DPProcesses'"
+              [gridViewName]="'grvDPProcesses'"
+              default="Ảnh đại diện"
+            >
             </codx-label>
             <ng-container [ngTemplateOutlet]="avatarProcess"></ng-container>
           </div>
