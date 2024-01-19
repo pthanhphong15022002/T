@@ -295,6 +295,14 @@ export class ApprovalsComponent extends UIComponent {
         if (fdt1002) {
           fdt1002.disabled = true;
         }
+        const fdt1003 = event.find((i) => i.functionID === 'FDT1003');
+        if (fdt1003) {
+          fdt1003.disabled = true;
+        }
+        const fdt1004 = event.find((i) => i.functionID === 'FDT1004');
+        if (fdt1004) {
+          fdt1004.disabled = true;
+        }
       }
     }
   }

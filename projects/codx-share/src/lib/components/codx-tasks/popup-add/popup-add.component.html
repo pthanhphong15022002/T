@@ -578,7 +578,8 @@
                       : showPoppoverDelete(p, null)
                   "
                   autoClose="outside"
-                  placement="right"
+                  placement="right left"
+                  container="body"
                 >
                   {{ item.text }}
                 </span>
@@ -736,21 +737,28 @@
 </ng-template>
 
 <ng-template #deleteToDo>
-  <ng-container>
-    <a
-      class="d-flex align-item-center"
-      (click)="onDeleteTodo(crrIndex)"
-      style="cursor: pointer"
-    >
-      <span class="icon-close icon-16 text-danger me-1"></span>
-      <codx-label
-        class="text-danger"
-        name="Delete"
-        formName="Tasks"
-        default="Xóa"
-      ></codx-label>
-    </a>
-  </ng-container>
+  <!-- <button
+    type="button"
+    class="btn btn-icon btn-sm btn-light-danger cursor-pointer"
+    (click)="onDeleteTodo(crrIndex)"
+  >
+    <i class="icon-close icon-16"></i>
+  </button> -->
+  <!-- cu -->
+
+  <a
+    class="d-flex align-item-center"
+    (click)="onDeleteTodo(crrIndex)"
+    style="cursor: pointer"
+  >
+    <span class="icon-close icon-16 text-danger me-1"></span>
+    <codx-label
+      class="text-danger"
+      name="Delete"
+      formName="Tasks"
+      default="Xóa"
+    ></codx-label>
+  </a>
 </ng-template>
 
 <ng-template #popoverSelectRoles>
