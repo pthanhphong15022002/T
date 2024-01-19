@@ -249,8 +249,9 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
   }
 
   handelContinueStep(event, step) {
-    
-    this.continueStep.emit({ isTaskEnd: event, step: step });
+    if(event){
+      this.nextStep();
+    }
   }
 
   // continueStep(isTaskEnd) {

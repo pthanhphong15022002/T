@@ -48,6 +48,7 @@ export class DealDetailComponent implements OnInit {
   // @Output() saveAssign = new EventEmitter<any>(); ko can tra ve
   @Output() changeProgress = new EventEmitter<any>();
   @Output() changeDataCustomers = new EventEmitter<any>();
+  @Output() moveStage = new EventEmitter<any>();
   @Input() isChangeViewDetails = true; //chỉ change khi view details
 
   @ViewChild('tabDetailView', { static: true })
@@ -878,6 +879,9 @@ export class DealDetailComponent implements OnInit {
   //#region edit customer
   editCustomer(data) {
     this.changeDataCustomers.emit({ data: data });
+  }
+  handelMoveStage(event){
+    this.moveStage.emit(event);
   }
   //#endregion
 }

@@ -2618,4 +2618,9 @@ export class DealsComponent
     this.view.currentView.sumData = this.objectSumValue;
   }
   //--------------------------------------//
+  handelMoveStage(event, contract){
+    if(event){
+      this.moveStage(contract);
+    }
+  }
 }
