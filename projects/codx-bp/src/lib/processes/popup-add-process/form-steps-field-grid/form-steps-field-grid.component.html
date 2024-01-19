@@ -1,14 +1,15 @@
 <div class="d-flex flex-column w-100 h-100 field-grid-collapse p-4">
     <div class="grid-collapse" ngbAccordion *ngIf="listStage.length > 0">
-        <div ngbAccordionItem [collapsed]="false" *ngFor="let item of listStage">
+        <div class="border-bottom py-4" ngbAccordionItem [collapsed]="false" *ngFor="let item of listStage">
             <h2 ngbAccordionHeader>
-                <button ngbAccordionButton>{{item.stepName}}</button>
+                <button ngbAccordionButton><span class="ms-7 fw-bold fs-5-sm">{{item.stepName}}</span></button>
             </h2>
             <div ngbAccordionCollapse>
                 <div ngbAccordionBody>
                     <ng-template>
-                       <div *ngFor="let item2 of item.child">
-                            {{item2.stepName}}
+                       <div class="row ps-15" *ngFor="let item2 of item.child">
+                            <div class="col">{{item2.stepName}}</div>
+                            <div class="col d-flex align-items-center"><i [class]="item2?.settings?.icon" [style.color]="item2?.settings?.color"></i><span class="mx-2">{{item2.activityType}}</span></div>
                         </div>
                     </ng-template>
                 </div>

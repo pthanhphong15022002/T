@@ -189,6 +189,7 @@ export class CostItemsComponent implements OnInit {
       .subscribe((res) => {
         if (res) {
           if (isAdd) this.costIDOld.push(res.recID);
+          this.calculateTotalCost();
           this.dataCostItems.emit(this.costInfos);
           this.totalDataCost.emit(this.totalCost);
         }
