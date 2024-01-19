@@ -1427,8 +1427,9 @@ export class DealsComponent
       if (e && e.event != null) {
         //this.view.dataService.update(e.event, true).subscribe();
         //up kaban nee đúng process
+        let dt = e.event;
+        this.dataSelected = dt;
         if (this.kanban && this.processIDKanban == e.event?.processID) {
-          let dt = e.event;
           let money = dt.dealValue * dt.exchangeRate;
           this.renderTotal(dt.stepID, 'add', money);
 
@@ -1436,6 +1437,13 @@ export class DealsComponent
           // this.kanban?.kanbanObj?.refreshHeader();
           this.kanban.refresh();
         }
+        // if (this.detailViewDeal) {
+        //   this.detailViewDeal.dataSelected = JSON.parse(
+        //     JSON.stringify(this.dataSelected)
+        //   );
+        //   this.detailViewDeal?.promiseAllAsync();
+        //   this.detailViewDeal.loadContactEdit();
+        // }
         //   this.detailViewDeal.promiseAllAsync();
         if (this.listKeyFieldSum?.length > 0) this.totalGirdView(); //tính lại tổng
         this.changeDetectorRef.detectChanges();
@@ -1476,13 +1484,14 @@ export class DealsComponent
         dialogCustomDeal.closed.subscribe((e) => {
           if (e && e.event != null) {
             this.view.dataService.update(e.event, true).subscribe();
+            let dt = e.event;
+            this.dataSelected = dt;
             //up kaban
             if (
               this.kanban &&
               (dealValueOld != e.event?.dealValue ||
                 exchangeRateOld != e.event?.exchangeRate)
             ) {
-              let dt = e.event;
               let money =
                 dt.dealValue * dt.exchangeRate - dealValueOld * exchangeRateOld;
               this.renderTotal(dt.stepID, 'add', money);
@@ -2560,7 +2569,7 @@ export class DealsComponent
         let dialogCost = this.callfc.openForm(
           PopupCostItemsComponent,
           '',
-          500,
+          600,
           700,
           '',
           obj,

@@ -228,18 +228,16 @@ export class DealDetailComponent implements OnInit {
     }
   }
 
-  async promiseAllAsync() {
+  promiseAllAsync() {
     this.isDataLoading = true;
-    try {
-      this.dataSelected.applyProcess && (await this.getListInstanceStep());
+      this.dataSelected.applyProcess && (this.getListInstanceStep());
       // await this.getListContactByDealID(
       //   this.dataSelected.recID,
       //   this.dataSelected?.categoryCustomer
       // );
-      await this.getTree(); //ve cay giao viec
-      await this.getLink();
-      await this.getContactByDeaID(this.dataSelected.recID);
-    } catch (error) {}
+      this.getTree(); //ve cay giao viec
+      this.getLink();
+      this.getContactByDeaID(this.dataSelected.recID);
   }
   reloadListStep(listSteps: any) {
     this.isDataLoading = true;
