@@ -1422,8 +1422,9 @@ export class DealsComponent
       if (e && e.event != null) {
         //this.view.dataService.update(e.event, true).subscribe();
         //up kaban nee đúng process
+        let dt = e.event;
+        this.dataSelected = dt;
         if (this.kanban && this.processIDKanban == e.event?.processID) {
-          let dt = e.event;
           let money = dt.dealValue * dt.exchangeRate;
           this.renderTotal(dt.stepID, 'add', money);
 
@@ -1431,6 +1432,13 @@ export class DealsComponent
           // this.kanban?.kanbanObj?.refreshHeader();
           this.kanban.refresh();
         }
+        // if (this.detailViewDeal) {
+        //   this.detailViewDeal.dataSelected = JSON.parse(
+        //     JSON.stringify(this.dataSelected)
+        //   );
+        //   this.detailViewDeal?.promiseAllAsync();
+        //   this.detailViewDeal.loadContactEdit();
+        // }
         //   this.detailViewDeal.promiseAllAsync();
         this.changeDetectorRef.detectChanges();
       }
@@ -1486,13 +1494,13 @@ export class DealsComponent
               // this.kanban.refreshUI();
               this.kanban.refresh();
             }
-            if (this.detailViewDeal) {
-              this.detailViewDeal.dataSelected = JSON.parse(
-                JSON.stringify(this.dataSelected)
-              );
-              this.detailViewDeal?.promiseAllAsync();
-              this.detailViewDeal.loadContactEdit();
-            }
+            // if (this.detailViewDeal) {
+            //   this.detailViewDeal.dataSelected = JSON.parse(
+            //     JSON.stringify(this.dataSelected)
+            //   );
+            //   this.detailViewDeal?.promiseAllAsync();
+            //   this.detailViewDeal.loadContactEdit();
+            // }
             this.isChangeOwner = ownerIdOld != e.event.owner;
             this.changeDetectorRef.detectChanges();
           }
