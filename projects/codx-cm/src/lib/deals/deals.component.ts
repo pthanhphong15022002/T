@@ -2569,7 +2569,7 @@ export class DealsComponent
         let dialogCost = this.callfc.openForm(
           PopupCostItemsComponent,
           '',
-          500,
+          600,
           700,
           '',
           obj,
