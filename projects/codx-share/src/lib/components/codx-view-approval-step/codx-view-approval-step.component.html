@@ -1,3 +1,4 @@
+<!--View step khi chưa gửi duyệt-->
 <div class="codx-approval step-signature-temp" *ngIf="process?.length > 0 && lstSttApproveStep.includes(approveStatus)">
   <ng-container *ngFor="let item of process; let index = index">
     <div class="codx-approval-step pb-3 step-approve">
@@ -5,33 +6,22 @@
         <div class="step-number border-success">{{ item?.stepNo }}</div>
         <div class="step-title text-gray-700 fw-bold fs-6 me-2">
           {{ item?.stepName ?? (item?.stepType | vll : "ES002" : "text" | async ) }}
-          <!-- {{ item?.stepType | vll : "ES002" : "text" | async }} -->
         </div>
-        <!-- <div class="step-title text-gray-700 fw-bold fs-6 me-2" *ngIf="item?.signatureType">|</div>
-        <div *ngIf="eSign" class="step-title text-gray-700 fw-bold fs-6 me-2" [innerHTML]="
-            item?.signatureType| vll : 'ES001' : 'text' | async
-          "></div>
-        <div class="text-gray-500 fs-6 me-2"> - </div>
-        <div class="text-gray-500 fs-6">
-          {{ item?.stepName ?? item?.stepNote }}
-        </div> -->
       </div>
       <div class="codx-approval-content ms-12 ps-1">
         <ng-container *ngFor="let approver of item?.approvers">
           <div class="d-flex justify-content-between align-items-start mb-2">
 
-            <codx-temp-full
-            [imageId]=" approver?.roleType =='U' ? approver?.approver : approver?.userID" [imageObjType]="'AD_Users'" [imageWidth]="30" 
-            [title]="approver?.userName ? approver?.userName : approver?.name ? approver?.name : approver?.approver ? (approver?.approver | vll : 'ES014' : 'text' | async) : (approver?.roleType | vll : 'ES014' : 'text' | async)"
-            [subTitle]=""            
-            [desc]="approver?.position ? approver?.position: approver?.roleType | vll : 'ES014' : 'text' | async"
-            [imageSrc]="(approver?.roleType !='U' && !approver?.userID) || approver?.roleType =='PA' || approver?.roleType == 'PE' ? './assets/themes/sys/default/img/' + (approver?.icon ? approver?.icon : 'share_default.svg') : null"
-            [imgCss]="(approver?.roleType !='U' && !approver?.userID) || approver?.roleType =='PA' || approver?.roleType == 'PE'|| approver?.roleType == 'PE'? 'w-30px p-2 me-3 user-mini-icon' :'w-35px me-3'"                          
-            
-            >
+            <codx-temp-full [imageId]=" approver?.roleType =='U' ? approver?.approver : approver?.userID"
+              [imageObjType]="'AD_Users'" [imageWidth]="30"
+              [title]="approver?.userName ? approver?.userName : approver?.name ? approver?.name : approver?.approver ? (approver?.approver | vll : 'ES014' : 'text' | async) : (approver?.roleType | vll : 'ES014' : 'text' | async)"
+              [subTitle]=""
+              [desc]="approver?.position ? approver?.position: approver?.roleType | vll : 'ES014' : 'text' | async"
+              [imageSrc]="(approver?.roleType !='U' && !approver?.userID) || approver?.roleType =='PA' || approver?.roleType == 'PE' ? './assets/themes/sys/default/img/' + (approver?.icon ? approver?.icon : 'share_default.svg') : null"
+              [imgCss]="(approver?.roleType !='U' && !approver?.userID) || approver?.roleType =='PA' || approver?.roleType == 'PE'|| approver?.roleType == 'PE'? 'w-30px p-2 me-3 user-mini-icon' :'w-35px me-3'">
             </codx-temp-full>
-            
-            
+
+
             <div class="d-flex align-items-center ms-6 flex-column flex-column">
               <div class="d-flex align-items-center ms-6 flex-column">
                 <codx-vll [value]="approver?.actived ? '1' : '0'" [name]="'ES031'" [showIcon]="true" [showText]="true"
@@ -40,13 +30,11 @@
                 <div class="text-dark fs-7"></div>
               </div>
             </div>
-          </div>                
+          </div>
           <div class="ps-45px mb-2 pt-1" *ngIf="approver?.userIDs">
-            <codx-imgs [objectId]=" approver?.userIDs"
-            objectType="AD_Users"
-            [numberImages]="3"
-            [width]="30"></codx-imgs>
-          </div>    
+            <codx-imgs [objectId]=" approver?.userIDs" objectType="AD_Users" [numberImages]="3"
+              [width]="30"></codx-imgs>
+          </div>
           <div class="d-flex align-items-center justify-content-between mb-3" *ngIf="approver?.leadtime != 0">
             <div class="d-flex w-250px">
               <div class="progress h-6px w-100 me-3" style="background-color: #e9ecef">
@@ -69,7 +57,8 @@
                     <codx-label></codx-label>
                   </span>
                   <span class="fw-bold me-1">
-                    <codx-label name="lblLeadtime" default="Dự kiến" formName="ApprovalSteps" gridViewName="grvApprovalSteps">
+                    <codx-label name="lblLeadtime" default="Dự kiến" formName="ApprovalSteps"
+                      gridViewName="grvApprovalSteps">
                     </codx-label>
                     :
                   </span>
@@ -80,7 +69,8 @@
                 |
                 <div class="d-flex text-nowrap ms-3">
                   <span class="fw-bold me-1">
-                    <codx-label name="lblDuration" default="Thực tế"  formName="ApprovalSteps" gridViewName="grvApprovalSteps">
+                    <codx-label name="lblDuration" default="Thực tế" formName="ApprovalSteps"
+                      gridViewName="grvApprovalSteps">
                     </codx-label>
                     :
                   </span>
@@ -95,119 +85,23 @@
   </ng-container>
 </div>
 
-
-<div class="codx-approval step-signature-temp"
-  *ngIf="process?.length > 0 && !lstSttApproveStep.includes(approveStatus)">
-  <ng-container *ngFor="let item of process; let index = index">
-    <div class="codx-approval-step pb-3 step-approve">
-      <div class="codx-approval-header d-flex align-items-center mb-3">
-        <div class="step-number border-success">{{ item?.stepNo }}</div>
-        <div class="step-title text-gray-700 fw-bold fs-6 me-2">
-          {{ item?.stepName  ?? (item?.stepType | vll : "ES002" : "text" | async )}}
+<!--View Trans khi đã gửi duyệt-->
+  <div class="codx-approval step-signature-temp"
+    *ngIf="process?.length > 0 && !lstSttApproveStep.includes(approveStatus)">
+    <ng-container *ngFor="let approver of process; let index = index">
+      <div class="pb-3 step-approve" [ngClass]="index < lastNomalNode ? 'codx-approval-step ':''">
+        <div  *ngIf=" approver?.stepNo != process[index-1]?.stepNo" class="codx-approval-header d-flex align-items-center mb-3">
+          <div  class="step-number border-success">{{ approver?.stepNo }}</div>
+          <div class="step-title text-gray-700 fw-bold fs-6 me-2">
+            {{ approver?.stepName ?? (approver?.stepType | vll : "ES002" : "text" | async )}}
+          </div>
         </div>
+        <codx-approver-step [trans]="approver"></codx-approver-step>
       </div>
-      <div class="codx-approval-content ms-17">
-        <ng-container *ngFor="let approver of item?.approvers">
-          <div class="d-flex justify-content-between align-items-start mb-3">
-            <codx-temp-full [imageId]="approver?.approverType !='PA' || approver?.roleType == 'PE' ? approver?.approver :null" [imageObjType]="'AD_Users'" [imageWidth]="35" 
-            [imageSrc]="approver?.approverType =='PA'|| approver?.roleType == 'PE' ? './assets/themes/sys/default/img/' + (approver?.icon ? approver?.icon : 'share_default.svg') : null"
-            [imgCss]="approver?.approverType =='PA'|| approver?.roleType == 'PE' ? 'w-30px p-2 me-3 user-mini-icon' :'w-35px me-3'"                          
-            
-            [title]="
-                approver?.name ??
-                approver?.approverName ??
-                (approver?.approver | vll : 'ES014' : 'text' | async)
-              " [desc]="approver?.position ??
-                  approver?.approverPosition"
-              >
-            </codx-temp-full>
-            
-            <div class="d-flex justify-content-between">
-              <div class="text-dark fs-7 me-4 mt-1" *ngIf="approver?.status == '3'">
-                {{ approver?.activedOn | amTimeAgo }}
-              </div>
-              <div class="d-flex flex-wrap">
-                <div class="d-flex mt-1" *ngIf="approver?.status == '5'">
-                  <!-- <codx-label
-                    fiedName="ApprovedOn"
-                    [formModel]="fmApprovalTrans"
-                  ></codx-label> -->
-                  <div class="d-flex text-dark fs-7 me-4">
-                    {{ approver?.approvedOn | fmDT }}
-                  </div>
-                </div>
+    </ng-container>
+  </div>
 
-                <codx-vll *ngIf="approver?.status != '1'" [value]="approver?.status + approver?.stepType"
-                  [name]="'ES030'" [showIcon]="true" [showText]="true" [showBgColor]="true" class="badge">
-                </codx-vll>
-              </div>
-
-              <div *ngIf="approver?.status == '1'"
-                class="d-flex align-items-center justify-content-between ms-6 flex-column">
-                <codx-vll [value]="approver?.actived ? '1' : '0'" [name]="'ES031'" [showIcon]="true" [showText]="true"
-                  [showBgColor]="true" class="badge">
-                </codx-vll>
-              </div>
-            </div>
-          </div>
-          
-          <div class="d-flex align-items-center justify-content-between mb-3" *ngIf="approver?.leadtime != 0">
-            <div class="d-flex w-250px">
-              <div class="progress h-6px w-100 me-3" style="background-color: #e9ecef">
-                <div role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" class="progress-bar"
-                  [ngClass]="
-                    approver?.leadtime < approver?.duration
-                      ? 'bg-danger'
-                      : 'bg-success'
-                  " [style]="
-                    'width:' +
-                    getPercent(approver?.leadtime, approver?.duration) +
-                    '%'
-                  "></div>
-              </div>
-            </div>
-            <ng-container>
-              <div class="d-flex me-3">
-                <div class="d-flex text-nowrap me-3">
-                  <span class="fw-bold me-1">
-                    <codx-label></codx-label>
-                  </span>
-                  <span class="fw-bold me-1">
-                    <codx-label name="lblLeadtime" default="Dự kiến" formName="ApprovalSteps" gridViewName="grvApprovalSteps">
-                    </codx-label>
-                    :
-                  </span>
-                  <span class="text-gray-600">
-                    {{ approver?.leadtime | number : ".2-2" }} h</span>
-                </div>
-
-                |
-                <div class="d-flex text-nowrap ms-3">
-                  <span class="fw-bold me-1">
-                    <codx-label name="lblDuration" default="Thực tế"  formName="ApprovalSteps" gridViewName="grvApprovalSteps">
-                    </codx-label>
-                    :
-                  </span>
-                  <span class="text-gray-600">{{ approver?.duration ?? 0 | number : ".2-2" }} h</span>
-                </div>
-              </div>
-            </ng-container>
-          </div>
-          <div class="bg-gray-100 bg-opacity-70 rounded-2 px-3 py-4 mb-3" *ngIf="
-              approver?.status != '3' &&
-              approver?.comment != '' &&
-              approver?.comment
-            ">
-            <div class="text-comment">
-              {{ approver?.comment }}
-            </div>
-          </div>
-        </ng-container>
-      </div>
-    </div>
-  </ng-container>
-</div>
-
+<!--View Trans đã hủy-->
 
 <div class="codx-approval step-signature-temp" *ngIf="canceledProcess?.length > 0 ">
   <div class="mb-4">
@@ -215,108 +109,374 @@
       name="lblCanceledTrans" (click)="showCanceledTrans(showCanceled)"></codx-label>
   </div>
   <ng-container *ngIf="showCanceled">
-    <ng-container *ngFor="let gr of canceledProcess">
-      <ng-container *ngFor="let item of gr; let index = index">
-        <div class="codx-approval-step pb-3 step-approve opacity-50">
-          <div class="codx-approval-header d-flex align-items-center mb-3">
-            <div class="step-number border-success">{{ item?.stepNo }}</div>
-            <div class="step-title text-gray-700 fw-bold fs-6 me-2">
-              {{ item?.stepName  ?? (item?.stepType | vll : "ES002" : "text" | async )}}
-            </div>            
-          </div>
-          <div class="codx-approval-content ms-17">
-            <ng-container *ngFor="let approver of item?.approvers">
-              <div class="d-flex justify-content-between align-items-start mb-3">
-                <codx-temp-full [imageId]="approver?.approverType !='PA'|| approver?.roleType == 'PE' ? approver?.approver :null" [imageObjType]="'AD_Users'" [imageWidth]="35" 
-                [imageSrc]="approver?.approverType =='PA'|| approver?.roleType == 'PE' ? './assets/themes/sys/default/img/' + (approver?.icon ? approver?.icon : 'share_default.svg') : null"
-            [imgCss]="approver?.approverType =='PA'|| approver?.roleType == 'PE' ? 'w-30px p-2 me-3 user-mini-icon' :'w-35px me-3'"                          
-            [title]="
-                  approver?.name ??
-                  approver?.approverName ??
-                  (approver?.approver | vll : 'ES014' : 'text' | async)
-                " [desc]="approver?.position ??
-                  approver?.approverPosition "
-                >
-                </codx-temp-full>
-                
-                <div class="d-flex justify-content-between">
-                  <div class="text-dark fs-7 me-4 mt-1" *ngIf="approver?.status == '3'">
-                    {{ approver?.activedOn | amTimeAgo }}
-                  </div>
-                  <div class="d-flex flex-wrap">
-                    <div class="d-flex mt-1" *ngIf="approver?.status == '5'">
-                      <div class="d-flex text-dark fs-7 me-4">
-                        {{ approver?.approvedOn | fmDT }}
-                      </div>
-                    </div>
-                    <codx-vll *ngIf="approver?.status != '1'" [value]="approver?.status + approver?.stepType"
-                      [name]="'ES030'" [showIcon]="true" [showText]="true" [showBgColor]="true" class="badge">
-                    </codx-vll>
-                  </div>
-
-                  <div *ngIf="approver?.status == '1'"
-                    class="d-flex align-items-center justify-content-between ms-6 flex-column">
-                    <codx-vll [value]="approver?.actived ? '1' : '0'" [name]="'ES031'" [showIcon]="true"
-                      [showText]="true" [showBgColor]="true" class="badge">
-                    </codx-vll>
-                  </div>
-                </div>
-              </div>
-              <div class="d-flex align-items-center justify-content-between mb-3" *ngIf="approver?.leadtime != 0">
-                <div class="d-flex w-250px">
-                  <div class="progress h-6px w-100 me-3" style="background-color: #e9ecef">
-                    <div role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"
-                      class="progress-bar" [ngClass]="
-                      approver?.leadtime < approver?.duration
-                        ? 'bg-danger'
-                        : 'bg-success'
-                    " [style]="
-                      'width:' +
-                      getPercent(approver?.leadtime, approver?.duration) +
-                      '%'
-                    "></div>
-                  </div>
-                </div>
-                <ng-container>
-                  <div class="d-flex me-3">
-                    <div class="d-flex text-nowrap me-3">
-                      <span class="fw-bold me-1">
-                        <codx-label></codx-label>
-                      </span>
-                      <span class="fw-bold me-1">
-                        <codx-label name="lblLeadtime" default="Dự kiến" formName="ApprovalSteps" gridViewName="grvApprovalSteps">
-                        </codx-label>
-                        :
-                      </span>
-                      <span class="text-gray-600">
-                        {{ approver?.leadtime | number : ".2-2" }} h</span>
-                    </div>
-
-                    |
-                    <div class="d-flex text-nowrap ms-3">
-                      <span class="fw-bold me-1">
-                        <codx-label name="lblDuration" default="Thực tế"  formName="ApprovalSteps" gridViewName="grvApprovalSteps">
-                        </codx-label>
-                        :
-                      </span>
-                      <span class="text-gray-600">{{ approver?.duration ?? 0 | number : ".2-2" }} h</span>
-                    </div>
-                  </div>
-                </ng-container>
-              </div>
-              <div class="bg-gray-100 bg-opacity-70 rounded-2 px-3 py-4 mb-3" *ngIf="
-                approver?.status != '3' &&
-                approver?.comment != '' &&
-                approver?.comment
-              ">
-                <div class="text-comment">
-                  {{ approver?.comment }}
-                </div>
-              </div>
-            </ng-container>
+    <ng-container *ngFor="let approver of canceledProcess; let index = index">
+      <div class=" opacity-50 pb-3 step-approve" [ngClass]="index < lastCancelNode ? 'codx-approval-step ':''">
+        <div *ngIf="approver?.refLineID==null || approver?.refLineID==guidEmpty" class="codx-approval-header d-flex align-items-center mb-3">
+          <div class="step-number border-success">{{ approver?.stepNo }}</div>
+          <div class="step-title text-gray-700 fw-bold fs-6 me-2">
+            {{ approver?.stepName ?? (approver?.stepType | vll : "ES002" : "text" | async )}}
           </div>
         </div>
-      </ng-container>
+        <codx-approver-step [trans]="approver"></codx-approver-step>
+      </div>
     </ng-container>
   </ng-container>
 </div>
+
+<!--View Trans khi đã gửi duyệt v2-->
+<ng-template>
+  <div class="codx-approval step-signature-temp"
+  *ngIf="process?.length > 0 && !lstSttApproveStep.includes(approveStatus)">
+  <ng-container *ngFor="let tran of process; let index = index">
+    <div class="codx-approval-step pb-2 step-approve w-100">
+      <div *ngIf="tran?.stepNo!= process[index-1]?.stepNo" class="codx-approval-header d-flex align-items-center">
+        <div class="step-number border-success">{{ tran?.stepNo }}</div>
+        <div class="step-title text-gray-700 fw-bold fs-6 me-2">
+          {{ tran?.stepName ?? (tran?.stepType | vll : "ES002" : "text" | async )}}
+        </div>
+      </div>
+      <div class="codx-approval-content  d-flex flex-row pt-2 w-100">
+        <div class="ms-17 w-100 flex-column d-flex ">
+          <div class=" flex-row d-flex">
+            <div class="d-flex flex-row justify-content-between align-items-center w-100">
+              <codx-temp-full [imageId]="tran?.approverType !='PA' || tran?.roleType == 'PE' ? tran?.approver :null"
+                [imageObjType]="'AD_Users'" [imageWidth]="35"
+                [imageSrc]="tran?.approverType =='PA'|| tran?.roleType == 'PE' ? './assets/themes/sys/default/img/' + (tran?.icon ? tran?.icon : 'share_default.svg') : null"
+                [imgCss]="tran?.approverType =='PA'|| tran?.roleType == 'PE' ? 'w-30px p-2 me-3 user-mini-icon' :'w-35px me-3'"
+                [title]="
+                    tran?.name ??
+                    tran?.approverName ??
+                    (tran?.approver | vll : 'ES014' : 'text' | async)
+                  " [desc]="tran?.position ??
+                      tran?.approverPosition">
+              </codx-temp-full>
+
+              <div class="d-flex flex-column align-items-end">
+                <div class="d-flex flex-row py-1">
+                  <div class="text-dark fs-7 me-4 mt-1" *ngIf="tran?.status == '3'">
+                    {{ tran?.activedOn | amTimeAgo }}
+                  </div>
+                  <div class="d-flex flex-wrap">
+                    <div class="d-flex mt-1" *ngIf="tran?.status == '5'">
+                      <div class="d-flex text-dark fs-7 me-4">
+                        {{ tran?.approvedOn | fmDT }}
+                      </div>
+                    </div>
+
+                    <codx-vll *ngIf="tran?.status != '1'" [value]="tran?.status + tran?.stepType" [name]="'ES030'"
+                      [showIcon]="true" [showText]="true" [showBgColor]="true" class="badge">
+                    </codx-vll>
+                  </div>
+
+                  <div *ngIf="tran?.status == '1'"
+                    class="d-flex align-items-center justify-content-between ms-6 flex-column">
+                    <codx-vll [value]="tran?.actived ? '1' : '0'" [name]="'ES031'" [showIcon]="true" [showText]="true"
+                      [showBgColor]="true" class="badge">
+                    </codx-vll>
+                  </div>
+                </div>
+
+                <div class="d-flex flex-column align-items-end py-1">
+                  <div class="d-flex flex-row align-items-center justify-content-between " *ngIf="tran?.leadtime != 0">
+                    <div class="d-flex w-250px">
+                      <div class="progress h-6px w-100 me-3" style="background-color: #e9ecef">
+                        <div role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"
+                          class="progress-bar" [ngClass]="
+                              tran?.leadtime < tran?.duration
+                                ? 'bg-danger'
+                                : 'bg-success'
+                            " [style]="
+                              'width:' +
+                              getPercent(tran?.leadtime, tran?.duration) +
+                              '%'
+                            "></div>
+                      </div>
+                    </div>
+                    <ng-container>
+                      <div class="d-flex me-3">
+                        <div class="d-flex text-nowrap me-3">
+                          <span class="fw-bold me-1">
+                            <codx-label></codx-label>
+                          </span>
+                          <span class="fw-bold me-1">
+                            <codx-label name="lblLeadtime" default="Dự kiến" formName="ApprovalSteps"
+                              gridViewName="grvApprovalSteps">
+                            </codx-label>
+                            :
+                          </span>
+                          <span class="text-gray-600">
+                            {{ tran?.leadtime | number : ".2-2" }} h</span>
+                        </div>
+
+                        |
+                        <div class="d-flex text-nowrap ms-3">
+                          <span class="fw-bold me-1">
+                            <codx-label name="lblDuration" default="Thực tế" formName="ApprovalSteps"
+                              gridViewName="grvApprovalSteps">
+                            </codx-label>
+                            :
+                          </span>
+                          <span class="text-gray-600">{{ tran?.duration ?? 0 | number : ".2-2" }} h</span>
+                        </div>
+                      </div>
+                    </ng-container>
+                  </div>
+                </div>
+                
+              </div>
+              
+            </div>
+          </div>
+          <div class="bg-gray-100 bg-opacity-70 rounded-2 px-3 py-4 mb-3" *ngIf="
+                    tran?.status != '3' &&
+                    tran?.comment != '' &&
+                    tran?.comment
+                  ">
+              <div class="text-comment">
+                {{ tran?.comment }}
+              </div>
+            </div>
+          <div *ngIf="tran?.items?.length>0" class="flex-column d-flex w-100">
+            <div class=" flex-row d-flex w-100" *ngFor="let item of tran?.items">
+              <div *ngIf="item==null;else tranAuuthority"></div>
+              <ng-template #tranAuuthority>
+                <div class="flex-column d-flex w-100">
+                  <div class=" flex-row d-flex w-100">
+                    <div class=" d-flex flex-row justify-content-center align-items-center">
+                      <div class=" ps-5 pe-5 icon-20 icon-supervisor_account "></div>
+                    </div>
+                    <div class="d-flex flex-row justify-content-between align-items-center w-100">
+                      <codx-temp-full
+                        [imageId]="item?.approverType !='PA' || item?.roleType == 'PE' ? item?.approver :null"
+                        [imageObjType]="'AD_Users'" [imageWidth]="35"
+                        [imageSrc]="item?.approverType =='PA'|| item?.roleType == 'PE' ? './assets/themes/sys/default/img/' + (item?.icon ? item?.icon : 'share_default.svg') : null"
+                        [imgCss]="item?.approverType =='PA'|| item?.roleType == 'PE' ? 'w-30px p-2 me-3 user-mini-icon' :'w-35px me-3'"
+                        [title]="
+                            item?.name ??
+                            item?.approverName ??
+                            (item?.approver | vll : 'ES014' : 'text' | async)
+                          " [desc]="item?.position ??
+                          item?.approverPosition">
+                      </codx-temp-full>
+  
+                      <div class="d-flex flex-column align-items-end">
+                        <div class="d-flex flex-row py-1">
+                          <div class="text-dark fs-7 me-4 mt-1" *ngIf="item?.status == '3'">
+                            {{ item?.activedOn | amTimeAgo }}
+                          </div>
+                          <div class="d-flex flex-wrap">
+                            <div class="d-flex mt-1" *ngIf="item?.status == '5'">
+                              <div class="d-flex text-dark fs-7 me-4">
+                                {{ item?.approvedOn | fmDT }}
+                              </div>
+                            </div>
+  
+                            <codx-vll *ngIf="item?.status != '1'" [value]="item?.status + item?.stepType" [name]="'ES030'"
+                              [showIcon]="true" [showText]="true" [showBgColor]="true" class="badge">
+                            </codx-vll>
+                          </div>
+  
+                          <div *ngIf="item?.status == '1'"
+                            class="d-flex align-items-center justify-content-between ms-6 flex-column">
+                            <codx-vll [value]="item?.actived ? '1' : '0'" [name]="'ES031'" [showIcon]="true"
+                              [showText]="true" [showBgColor]="true" class="badge">
+                            </codx-vll>
+                          </div>
+                        </div>
+  
+                        <div class="d-flex flex-colum align-items-end py-1">
+                          <div class="d-flex flex-row align-items-center justify-content-between "
+                            *ngIf="item?.leadtime != 0">
+                            <div class="d-flex w-250px">
+                              <div class="progress h-6px w-100 me-3" style="background-color: #e9ecef">
+                                <div role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"
+                                  class="progress-bar" [ngClass]="
+                                      item?.leadtime < item?.duration
+                                        ? 'bg-danger'
+                                        : 'bg-success'
+                                    " [style]="
+                                      'width:' +
+                                      getPercent(item?.leadtime, item?.duration) +
+                                      '%'
+                                    "></div>
+                              </div>
+                            </div>
+                            <ng-container>
+                              <div class="d-flex me-3">
+                                <div class="d-flex text-nowrap me-3">
+                                  <span class="fw-bold me-1">
+                                    <codx-label></codx-label>
+                                  </span>
+                                  <span class="fw-bold me-1">
+                                    <codx-label name="lblLeadtime" default="Dự kiến" formName="ApprovalSteps"
+                                      gridViewName="grvApprovalSteps">
+                                    </codx-label>
+                                    :
+                                  </span>
+                                  <span class="text-gray-600">
+                                    {{ item?.leadtime | number : ".2-2" }} h</span>
+                                </div>
+  
+                                |
+                                <div class="d-flex text-nowrap ms-3">
+                                  <span class="fw-bold me-1">
+                                    <codx-label name="lblDuration" default="Thực tế" formName="ApprovalSteps"
+                                      gridViewName="grvApprovalSteps">
+                                    </codx-label>
+                                    :
+                                  </span>
+                                  <span class="text-gray-600">{{ item?.duration ?? 0 | number : ".2-2" }} h</span>
+                                </div>
+                              </div>
+                            </ng-container>
+                          </div>
+  
+                          
+                        </div>
+                      </div>
+  
+                    </div>
+                   
+                  </div>
+                  <div class="bg-gray-100 bg-opacity-70 rounded-2 px-3 py-4 mb-3" *ngIf="
+                  item?.status != '3' &&
+                  item?.comment != '' &&
+                  item?.comment
+                ">
+              <div class="text-comment">
+                {{ item?.comment }}
+              </div>
+            </div>
+                </div>
+                
+              </ng-template>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </ng-container>
+</div>
+</ng-template>
+
+
+
+
+<!--View Trans đã hủy-->
+<ng-template>
+  <div class="codx-approval step-signature-temp" *ngIf="canceledProcess?.length > 0 ">
+    <div class="mb-4">
+      <codx-label class="fw-bold fs-6 text-primary py-2 cursor-pointer" default="Quy trình duyệt đã hủy"
+        name="lblCanceledTrans" (click)="showCanceledTrans(showCanceled)"></codx-label>
+    </div>
+    <ng-container *ngIf="showCanceled">
+      <ng-container *ngFor="let gr of canceledProcess">
+        <ng-container *ngFor="let item of gr; let index = index">
+          <div class="codx-approval-step pb-3 step-approve opacity-50">
+            <div class="codx-approval-header d-flex align-items-center mb-3">
+              <div class="step-number border-success">{{ item?.stepNo }}</div>
+              <div class="step-title text-gray-700 fw-bold fs-6 me-2">
+                {{ item?.stepName ?? (item?.stepType | vll : "ES002" : "text" | async )}}
+              </div>
+            </div>
+            <div class="codx-approval-content ms-17">
+              <ng-container *ngFor="let approver of item?.approvers">
+                <div class="d-flex justify-content-between align-items-start mb-3">
+                  <codx-temp-full
+                    [imageId]="approver?.approverType !='PA'|| approver?.roleType == 'PE' ? approver?.approver :null"
+                    [imageObjType]="'AD_Users'" [imageWidth]="35"
+                    [imageSrc]="approver?.approverType =='PA'|| approver?.roleType == 'PE' ? './assets/themes/sys/default/img/' + (approver?.icon ? approver?.icon : 'share_default.svg') : null"
+                    [imgCss]="approver?.approverType =='PA'|| approver?.roleType == 'PE' ? 'w-30px p-2 me-3 user-mini-icon' :'w-35px me-3'"
+                    [title]="
+                    approver?.name ??
+                    approver?.approverName ??
+                    (approver?.approver | vll : 'ES014' : 'text' | async)
+                  " [desc]="approver?.position ??
+                    approver?.approverPosition ">
+                  </codx-temp-full>
+  
+                  <div class="d-flex justify-content-between">
+                    <div class="text-dark fs-7 me-4 mt-1" *ngIf="approver?.status == '3'">
+                      {{ approver?.activedOn | amTimeAgo }}
+                    </div>
+                    <div class="d-flex flex-wrap">
+                      <div class="d-flex mt-1" *ngIf="approver?.status == '5'">
+                        <div class="d-flex text-dark fs-7 me-4">
+                          {{ approver?.approvedOn | fmDT }}
+                        </div>
+                      </div>
+                      <codx-vll *ngIf="approver?.status != '1'" [value]="approver?.status + approver?.stepType"
+                        [name]="'ES030'" [showIcon]="true" [showText]="true" [showBgColor]="true" class="badge">
+                      </codx-vll>
+                    </div>
+  
+                    <div *ngIf="approver?.status == '1'"
+                      class="d-flex align-items-center justify-content-between ms-6 flex-column">
+                      <codx-vll [value]="approver?.actived ? '1' : '0'" [name]="'ES031'" [showIcon]="true"
+                        [showText]="true" [showBgColor]="true" class="badge">
+                      </codx-vll>
+                    </div>
+                  </div>
+                </div>
+                <div class="d-flex align-items-center justify-content-between mb-3" *ngIf="approver?.leadtime != 0">
+                  <div class="d-flex w-250px">
+                    <div class="progress h-6px w-100 me-3" style="background-color: #e9ecef">
+                      <div role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"
+                        class="progress-bar" [ngClass]="
+                        approver?.leadtime < approver?.duration
+                          ? 'bg-danger'
+                          : 'bg-success'
+                      " [style]="
+                        'width:' +
+                        getPercent(approver?.leadtime, approver?.duration) +
+                        '%'
+                      "></div>
+                    </div>
+                  </div>
+                  <ng-container>
+                    <div class="d-flex me-3">
+                      <div class="d-flex text-nowrap me-3">
+                        <span class="fw-bold me-1">
+                          <codx-label></codx-label>
+                        </span>
+                        <span class="fw-bold me-1">
+                          <codx-label name="lblLeadtime" default="Dự kiến" formName="ApprovalSteps"
+                            gridViewName="grvApprovalSteps">
+                          </codx-label>
+                          :
+                        </span>
+                        <span class="text-gray-600">
+                          {{ approver?.leadtime | number : ".2-2" }} h</span>
+                      </div>
+  
+                      |
+                      <div class="d-flex text-nowrap ms-3">
+                        <span class="fw-bold me-1">
+                          <codx-label name="lblDuration" default="Thực tế" formName="ApprovalSteps"
+                            gridViewName="grvApprovalSteps">
+                          </codx-label>
+                          :
+                        </span>
+                        <span class="text-gray-600">{{ approver?.duration ?? 0 | number : ".2-2" }} h</span>
+                      </div>
+                    </div>
+                  </ng-container>
+                </div>
+                <div class="bg-gray-100 bg-opacity-70 rounded-2 px-3 py-4 mb-3" *ngIf="
+                  approver?.status != '3' &&
+                  approver?.comment != '' &&
+                  approver?.comment
+                ">
+                  <div class="text-comment">
+                    {{ approver?.comment }}
+                  </div>
+                </div>
+              </ng-container>
+            </div>
+          </div>
+        </ng-container>
+      </ng-container>
+    </ng-container>
+  </div>
+</ng-template>

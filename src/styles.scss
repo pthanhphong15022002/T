@@ -4495,3 +4495,7 @@ lib-deals .e-listview .e-list-group-item {
 lib-workspace .aside-menu .hover-scroll-overlay-y{
   height: calc(100% - 60px)!important;
 }
+tmdashboard .container-toolbar + .container-fluid,
+dmdashboard .container-toolbar + .container-fluid{
+  overflow-y: scroll;
+}

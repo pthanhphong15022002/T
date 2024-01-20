@@ -5,7 +5,7 @@
     <div class="form-group" *ngIf="grView?.resourceName?.allowPopup">
       <codx-label fiedName="ResourceName" [formModel]="form.formModel">
       </codx-label>
-      <codx-input ControlName="resourceName" [formModel]="form.formModel" [Group]="form.formGroup">
+      <codx-input ControlName="resourceName" [formModel]="form.formModel" [Group]="form.formGroup" [disabled]="viewOnly">
       </codx-input>
     </div>
 
@@ -13,20 +13,20 @@
       <div class="form-group col-4" *ngIf="grView?.ranking?.allowPopup">
         <codx-label fiedName="Ranking" [formModel]="form.formModel">
         </codx-label>
-        <codx-input ControlName="ranking" [formModel]="form.formModel" [Group]="form.formGroup">
+        <codx-input ControlName="ranking" [formModel]="form.formModel" [Group]="form.formGroup" [disabled]="viewOnly">
         </codx-input>
       </div>
 
       <div class="form-group col-4" *ngIf="grView?.capacity?.allowPopup">
         <codx-label fiedName="Capacity" [formModel]="form.formModel">
         </codx-label>
-        <codx-input [min]="0" ControlName="capacity" [formModel]="form.formModel" [Group]="form.formGroup">
+        <codx-input [min]="0" ControlName="capacity" [formModel]="form.formModel" [Group]="form.formGroup" [disabled]="viewOnly">
         </codx-input>
       </div>
       <div class="form-group col-4" *ngIf="grView?.sorting?.allowPopup">
         <codx-label fiedName="Sorting" [formModel]="form.formModel">
         </codx-label>
-        <codx-input ControlName="sorting" [formModel]="form.formModel" [Group]="form.formGroup">
+        <codx-input ControlName="sorting" [formModel]="form.formModel" [Group]="form.formGroup" [disabled]="viewOnly">
         </codx-input>
       </div>
     </div>
@@ -34,14 +34,14 @@
     <div class="row">
       <div class="form-group col-4" *ngIf="grView?.area?.allowPopup">
         <codx-label fiedName="Area" [formModel]="form.formModel"></codx-label>
-        <codx-input [min]="0" ControlName="area" [formModel]="form.formModel" [Group]="form.formGroup">
+        <codx-input [min]="0" ControlName="area" [formModel]="form.formModel" [Group]="form.formGroup" [disabled]="viewOnly">
         </codx-input>
       </div>
 
       <div class="form-group col-8" *ngIf="grView?.validateControl?.allowPopup">
         <codx-label fiedName="ValidateControl" [formModel]="form.formModel">
         </codx-label>
-        <codx-input ControlName="validateControl" [formModel]="form.formModel" [Group]="form.formGroup">
+        <codx-input ControlName="validateControl" [formModel]="form.formModel" [Group]="form.formGroup" [disabled]="viewOnly">
         </codx-input>
       </div>
     </div>
@@ -50,13 +50,13 @@
       <div class="col-6 form-group" *ngIf="grView?.companyID?.allowPopup">
         <codx-label fiedName="CompanyID" [formModel]="form.formModel">
         </codx-label>
-        <codx-input ControlName="companyID" [formModel]="form.formModel" [Group]="form.formGroup">
+        <codx-input ControlName="companyID" [formModel]="form.formModel" [Group]="form.formGroup" [disabled]="viewOnly">
         </codx-input>
       </div>
       <div class="form-group col-6" *ngIf="grView?.location?.allowPopup">
         <codx-label fiedName="Location" [formModel]="form.formModel">
         </codx-label>
-        <codx-input ControlName="location" [formModel]="form.formModel" [Group]="form.formGroup">
+        <codx-input ControlName="location" [formModel]="form.formModel" [Group]="form.formGroup" [disabled]="viewOnly">
         </codx-input>
       </div>
     </div>
@@ -64,7 +64,7 @@
     <div class="form-group" *ngIf="grView?.preparator?.allowPopup">
       <codx-label fiedName="Preparator" [formModel]="form.formModel">
       </codx-label>
-      <codx-input ControlName="preparator" [formModel]="form.formModel" [Group]="form.formGroup">
+      <codx-input ControlName="preparator" [formModel]="form.formModel" [Group]="form.formGroup" [disabled]="viewOnly">
       </codx-input>
     </div>
   </ng-template>
@@ -73,12 +73,12 @@
       <div class="form-group col-9" *ngIf="grView?.resourceName?.allowPopup">
         <codx-label fiedName="ResourceName" [formModel]="form.formModel">
         </codx-label>
-        <codx-input ControlName="resourceName" [formModel]="form.formModel" [Group]="form.formGroup">
+        <codx-input ControlName="resourceName" [formModel]="form.formModel" [Group]="form.formGroup" [disabled]="viewOnly">
         </codx-input>
       </div>
-      <div class="form-group col-3 d-flex align-items-end justify-content-start" *ngIf="grView?.useCard?.allowPopup">
-        <div class="d-flex justify-content-start align-items-center">
-          <codx-input class="ps-2" #checkbox class="test-switch" type="switch" [checked]="data?.useCard"
+      <div class="form-group col-3 d-flex align-items-start pt-5 justify-content-start" *ngIf="grView?.useCard?.allowPopup">
+        <div class="d-flex justify-content-start align-items-center pt-2">
+          <codx-input class="ps-2" #checkbox class="test-switch" type="switch" [checked]="data?.useCard" [disabled]="viewOnly"
             (valueChange)="valueUseCardChange($event)">
           </codx-input>
 
@@ -90,20 +90,20 @@
     <div class="row">
       <div class="col-4 form-group" *ngIf="grView?.code?.allowPopup">
         <codx-label fiedName="Code" [formModel]="form.formModel"> </codx-label>
-        <codx-input ControlName="code" [formModel]="form.formModel" [Group]="form.formGroup">
+        <codx-input ControlName="code" [formModel]="form.formModel" [Group]="form.formGroup" [disabled]="viewOnly">
         </codx-input>
       </div>
 
       <div class="col-4 form-group" *ngIf="grView?.capacity?.allowPopup">
         <codx-label fiedName="Capacity" [formModel]="form.formModel">
         </codx-label>
-        <codx-input [min]="0" ControlName="capacity" [formModel]="form.formModel" [Group]="form.formGroup">
+        <codx-input [min]="0" ControlName="capacity" [formModel]="form.formModel" [Group]="form.formGroup" [disabled]="viewOnly">
         </codx-input>
       </div>
       <div class="form-group col-4" *ngIf="grView?.sorting?.allowPopup">
         <codx-label fiedName="Sorting" [formModel]="form.formModel">
         </codx-label>
-        <codx-input ControlName="sorting" [formModel]="form.formModel" [Group]="form.formGroup">
+        <codx-input ControlName="sorting" [formModel]="form.formModel" [Group]="form.formGroup" [disabled]="viewOnly">
         </codx-input>
       </div>
 
@@ -114,14 +114,14 @@
       <div class="col-4 form-group" *ngIf="grView?.ranking?.allowPopup">
         <codx-label fiedName="Ranking" [formModel]="form.formModel">
         </codx-label>
-        <codx-input ControlName="ranking" [formModel]="form.formModel" [Group]="form.formGroup">
+        <codx-input ControlName="ranking" [formModel]="form.formModel" [Group]="form.formGroup" [disabled]="viewOnly">
         </codx-input>
       </div>
 
       <div class="form-group col-4" *ngIf="grView?.validateControl?.allowPopup">
         <codx-label fiedName="ValidateControl" [formModel]="form.formModel">
         </codx-label>
-        <codx-input ControlName="validateControl" [formModel]="form.formModel" [Group]="form.formGroup">
+        <codx-input ControlName="validateControl" [formModel]="form.formModel" [Group]="form.formGroup" [disabled]="viewOnly">
         </codx-input>
       </div>
 
@@ -131,14 +131,14 @@
       <div class="col-4 form-group" *ngIf="grView?.category?.allowPopup">
         <codx-label fiedName="Category" [formModel]="form.formModel">
         </codx-label>
-        <codx-input ControlName="category" [formModel]="form.formModel" [Group]="form.formGroup"
+        <codx-input ControlName="category" [formModel]="form.formModel" [Group]="form.formGroup" [disabled]="viewOnly"
           (valueChange)="changeCategory($event)">
         </codx-input>
       </div>
       <div class="col-8 form-group" *ngIf="grView?.companyID?.allowPopup">
         <codx-label fiedName="CompanyID" [formModel]="form.formModel">
         </codx-label>
-        <codx-input [disabled]="data?.category == '2'" ControlName="companyID" [formModel]="form.formModel"
+        <codx-input [disabled]="data?.category == '2' || viewOnly" ControlName="companyID" [formModel]="form.formModel"
           [Group]="form.formGroup">
         </codx-input>
       </div>
@@ -149,7 +149,7 @@
         <codx-label fiedName="LinkID" [formModel]="form.formModel">
         </codx-label>
 
-        <codx-input ControlName="linkID" [formModel]="form.formModel" [Group]="form.formGroup">
+        <codx-input ControlName="linkID" [formModel]="form.formModel" [Group]="form.formGroup"  [disabled]="viewOnly">
         </codx-input>
       </div>
     </div>
@@ -158,37 +158,43 @@
     <div class="form-group">
       <codx-label fiedName="ResourceName" [formModel]="form.formModel">
       </codx-label>
-      <codx-input ControlName="resourceName" [formModel]="form.formModel" [Group]="form.formGroup">
+      <codx-input ControlName="resourceName" [formModel]="form.formModel" [Group]="form.formGroup" [disabled]="viewOnly">
       </codx-input>
     </div>
 
     <div class="form-group">
       <codx-label default="Email" name="lblEmail"></codx-label>
-      <codx-input type="text" field="email" placeholder="Email" (valueChange)="emailChange($event)"
+      <codx-input type="text" field="email" placeholder="Email" (valueChange)="emailChange($event)" [disabled]="viewOnly"
         [crrValue]="data?.email">
       </codx-input>
     </div>
-
     <div class="row">
-      <div class="form-group">
-        <codx-label fiedName="CompanyID" [formModel]="form.formModel">
+      <div class="col-4 form-group" >
+        <codx-label fiedName="Category" [formModel]="form.formModel">
         </codx-label>
-        <codx-input [disabled]="data.category == 1 ? false : true" [Group]="form.formGroup" ControlName="companyID"
-          [formModel]="form.formModel">
+        <codx-input ControlName="category" [formModel]="form.formModel" [Group]="form.formGroup" [disabled]="viewOnly"
+          (valueChange)="changeCategory($event)">
         </codx-input>
       </div>
-    </div>
+      <div class="col-8 form-group">
+        <codx-label fiedName="CompanyID" [formModel]="form.formModel">
+        </codx-label>
+        <codx-input [disabled]="data?.category == '2' || viewOnly" ControlName="companyID" [formModel]="form.formModel"
+          [Group]="form.formGroup">
+        </codx-input>
+      </div>
+    </div>   
 
     <div class="row">
       <div class="col-9 form-group">
         <codx-label fiedName="LinkID" [formModel]="form.formModel"></codx-label>
-        <codx-input ControlName="linkID" [formModel]="form.formModel" [Group]="form.formGroup" 
+        <codx-input ControlName="linkID" [formModel]="form.formModel" [Group]="form.formGroup"  [disabled]="viewOnly"
           >
         </codx-input>
       </div>
       <div class="col-3 form-group">
         <codx-label fiedName="Code" [formModel]="form.formModel"> </codx-label>
-        <codx-input type="text" field="code" placeholder="Biển số" [crrValue]="data.code" [disabled]="true"
+        <codx-input type="text" field="code" placeholder="Biển số" [crrValue]="data?.code" [disabled]="true" [disabled]="viewOnly"
           (valueChange)="valueChange($event)">
         </codx-input>
       </div>
@@ -199,7 +205,7 @@
       <div class="col-6 form-group">
         <codx-label fiedName="ResourceID" [formModel]="form.formModel" default="Mã số thẻ">
         </codx-label>
-        <codx-input ControlName="resourceID" [formModel]="form.formModel" [Group]="form.formGroup"
+        <codx-input ControlName="resourceID" [formModel]="form.formModel" [Group]="form.formGroup" [disabled]="viewOnly"
           [disabled]="autoNumDisable">
         </codx-input>
       </div>
@@ -207,7 +213,7 @@
       <div class="col-6 form-group">
         <codx-label fiedName="Status" [formModel]="form.formModel">
         </codx-label>
-        <codx-input ControlName="status" [formModel]="form.formModel" [Group]="form.formGroup">
+        <codx-input ControlName="status" [formModel]="form.formModel" [Group]="form.formGroup" [disabled]="viewOnly">
         </codx-input>
       </div>
     </div>
@@ -216,7 +222,7 @@
       <div class="col-12 form-group">
         <codx-label fiedName="ResourceName" [formModel]="form.formModel" default="Tên thẻ xe">
         </codx-label>
-        <codx-input ControlName="resourceName" [formModel]="form.formModel" [Group]="form.formGroup">
+        <codx-input ControlName="resourceName" [formModel]="form.formModel" [Group]="form.formGroup" [disabled]="viewOnly">
         </codx-input>
       </div>
     </div>
@@ -240,13 +246,13 @@
 
     <div class="form-group" *ngIf="grView?.owner?.allowPopup">
       <codx-label fiedName="Owner" [formModel]="form.formModel"> </codx-label>
-      <codx-input ControlName="owner" [formModel]="form.formModel" [Group]="form.formGroup">
+      <codx-input ControlName="owner" [formModel]="form.formModel" [Group]="form.formGroup" [disabled]="viewOnly">
       </codx-input>
     </div>
     <div class="row" *ngIf="grView?.note?.allowPopup">
       <div class="form-group">
         <codx-label fiedName="Note" [formModel]="form.formModel"></codx-label>
-        <codx-input ControlName="note" [formModel]="form.formModel" [Group]="form.formGroup">
+        <codx-input ControlName="note" [formModel]="form.formModel" [Group]="form.formGroup" [disabled]="viewOnly">
         </codx-input>
       </div>
     </div>
@@ -257,7 +263,7 @@
 
     <div class="form-group upload-img">
       <codx-img #imageUpLoad [width]="100" imageType="circle" [objectType]="'EP_Resources'" aria-disabled="false"
-        [funcId]="formModel?.funcID" [isAllowEdit]="true" [objectId]="imgRecID" [objectName]="data.resourceName">
+        [funcId]="formModel?.funcID" [isAllowEdit]=" viewOnly ? false : true" [objectId]="imgRecID" [objectName]="data?.resourceName">
       </codx-img>
     </div>
   </ng-template>
@@ -266,7 +272,7 @@
     <div class="form-group d-flex flex-wrap align-items-center justify-content-between w-bold fs-7 mb-2">
       <codx-label name="lblEquipments" default="Thiết bị" [formModel]="form.formModel"></codx-label>
       <span class="text-end align-items-end">
-        <button type="button" class="btn btn-clean btn-sm btn-icon btn-icon-md" (click)="openPopupDevice(popupDevice)">
+        <button type="button" class="btn btn-clean btn-sm btn-icon btn-icon-md" (click)="openPopupDevice(popupDevice)"  [disabled]="viewOnly">
           <i class="icon-select_all text-primary text-hover-primary-dark icon-24"></i>
         </button>
       </span>
@@ -291,7 +297,7 @@
 
   <ng-template #footer>
     <div class="d-flex justify-content-end">
-      <button class="btn btn-primary" (click)="onSaveForm()">
+      <button class="btn btn-primary" (click)="onSaveForm()"  [disabled]="viewOnly">
         <codx-label name="lblSave" default="Lưu" [formModel]="form.formModel"></codx-label>
       </button>
     </div>
@@ -327,7 +333,7 @@
           <div class="d-flex justify-content-end align-items-center">
             <div class="form-check form-check-solid form-switch">
               <codx-input class="form-check-input w-35px h-20px" type="switch" id="googleswitch"
-                [checked]="item?.isSelected" (valueChange)="checkedChange($event, item)"></codx-input>
+                [checked]="item?.isSelected" (valueChange)="checkedChange($event, item)"  [disabled]="viewOnly"></codx-input>
               <label class="form-check-label" for="googleswitch"></label>
             </div>
           </div>

@@ -189,7 +189,11 @@ export class EmpContactsComponent extends UIComponent {
 
     this.detectorRef.detectChanges();
   }
-
+  changeDataMF(evt:any,data:any){
+    if(evt){
+      
+    }
+  }
   selectedChange(event: any): void {
     this.itemSelected = event?.data;
     this.detectorRef.detectChanges();

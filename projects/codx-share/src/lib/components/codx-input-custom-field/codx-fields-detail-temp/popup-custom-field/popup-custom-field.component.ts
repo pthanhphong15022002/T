@@ -174,6 +174,9 @@ export class PopupCustomFieldComponent implements OnInit {
   caculateField() {
     if (!this.arrCaculateField || this.arrCaculateField?.length == 0) return;
     let fieldsNum = this.fields.filter((x) => x.dataType == 'N');
+    // let fieldsNum = this.fields.filter(
+    //   (x) => x.dataType == 'N' || x.dataType == 'CF'
+    // );
     if (!fieldsNum || fieldsNum?.length == 0) return;
 
     this.arrCaculateField.forEach((obj) => {
@@ -184,17 +187,7 @@ export class PopupCustomFieldComponent implements OnInit {
           f.dataValue?.toString()
         ) {
           let dataValue = f.dataValue;
-          // //loai e
-          // let idxE = dataValue.toString().toLowerCase().indexOf('e');
-          // if (idxE != -1) {
-          //   let mu = dataValue
-          //     .toString()
-          //     .substring(idxE + 2, dataValue?.length);
-          //   dataValue =
-          //     Number.parseFloat(dataValue.toString().substring(0, idxE)) *
-          //     Math.pow(10, Number.parseInt(mu));
-          // }
-          // //
+
           if (f.dataFormat == 'P') dataValue = dataValue + '/100';
           dataFormat = dataFormat.replaceAll(
             '[' + f.fieldName + ']',
@@ -215,6 +208,15 @@ export class PopupCustomFieldComponent implements OnInit {
           );
           // this.fields[index].dataValue = obj.dataValue;
         }
+        // let fieldCFOnCF = this.arrCaculateField.filter((f) =>
+        //   f.dataFormat.includes('[' + obj.fieldName + ']')
+        // );
+        // if (fieldCFOnCF?.length > 0) {
+        //   fieldCFOnCF.forEach((x) => {
+        //     this.caculateField();
+        //   });
+        // }
+
         this.changeDetectorRef.detectChanges();
       }
     });

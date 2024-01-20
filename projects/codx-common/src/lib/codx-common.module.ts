@@ -82,6 +82,7 @@ import { CoDxGetTemplateSignFileComponent } from './component/codx-approval-proc
 import { CodxAiComponent } from './_layout/drawers/codx-ai/codx-ai.component';
 import { PresentationComponent } from './_layout/drawers/codx-ai/presentation/presentation.component';
 import { SubstringPipe } from './pipe/substring';
+import { AssetURLPipe } from './pipe/assetURL';
 //#endregion
 
 const T_Component: Type<any>[] = [
@@ -138,6 +139,7 @@ const T_Component: Type<any>[] = [
 
 const T_Pipe: Type<any>[] = [
   //#region Pipe
+  AssetURLPipe,
   ColorPipe,
   SecurePipe,
   DatetimePipe,

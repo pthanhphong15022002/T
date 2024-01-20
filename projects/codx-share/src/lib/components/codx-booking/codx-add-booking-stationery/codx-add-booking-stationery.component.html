@@ -171,18 +171,18 @@
           <div class="form-group col-4">
             <codx-label class="d-flex justify-content-start" fiedName="BookingOn" [formModel]="formModel">
             </codx-label>
-            <codx-input ControlName="bookingOn" [formModel]="formModel" [Group]="dialogAddBookingStationery">
+            <codx-input ControlName="bookingOn" [formModel]="formModel" [Group]="dialogAddBookingStationery"  [disabled]="viewOnly">
             </codx-input>
           </div>
           <div class="d-flex align-items-center form-group col-4">
-            <codx-input type="radio" name="category" field="category" [checked]="radioPersonalCheck"
+            <codx-input type="radio" name="category" field="category" [checked]="radioPersonalCheck"  [disabled]="viewOnly"
               [crrValue]="radioPersonalCheck" (valueChange)="personBooking($event)">
             </codx-input>
             <codx-vll class="ms-6 mt-6" [value]="'1'" [showText]="true" [showBgColor]="false" [name]="'EP018'">
             </codx-vll>
           </div>
           <div class="d-flex align-items-center form-group col-4">
-            <codx-input type="radio" name="category" field="category" [checked]="radioGroupCheck"
+            <codx-input type="radio" name="category" field="category" [checked]="radioGroupCheck"  [disabled]="viewOnly"
               [crrValue]="radioGroupCheck" (valueChange)="groupBooking($event)">
             </codx-input>
             <codx-vll class="ms-6 mt-6" [value]="'2'" [showText]="true" [showBgColor]="false" [name]="'EP018'">
@@ -195,13 +195,13 @@
             </codx-label>
             <codx-input [disabled]="data?.category == '1'" type="combobox"
               field="orgUnitID" refValue="OrganizationUnits" [crrValue]="dialogAddBookingStationery?.value.orgUnitID"
-              (valueChange)="valueChange($event)">
+              (valueChange)="valueChange($event)"  [disabled]="viewOnly">
             </codx-input>
           </div>
           <div class="form-group col-6">
             <codx-label class="d-flex justify-content-start" name="lblQtyEmp" default="Số lượng nhân viên">
             </codx-label>
-            <codx-input [disabled]="data?.category == '1'" type="number" field="attendees"
+            <codx-input [disabled]="data?.category == '1'" type="number" field="attendees"  [disabled]="viewOnly"
             [showSpinButton]="false" [crrValue]="data?.attendees" (valueChange)="valueChange($event)">
             </codx-input>
           </div>
@@ -210,7 +210,7 @@
           <div class="form-group col-12">
             <codx-label class="d-flex justify-content-start" fiedName="ReasonID" [formModel]="formModel">
             </codx-label>
-            <codx-input ControlName="reasonID" [formModel]="formModel" [Group]="dialogAddBookingStationery">
+            <codx-input ControlName="reasonID" [formModel]="formModel" [Group]="dialogAddBookingStationery"  [disabled]="viewOnly">
             </codx-input>
           </div>
         </div>
@@ -218,7 +218,7 @@
           <div class="form-group col-12">
             <codx-label class="d-flex justify-content-start" fiedName="Note" [formModel]="formModel">
             </codx-label>
-            <codx-input ControlName="note" [formModel]="formModel" [Group]="dialogAddBookingStationery">
+            <codx-input ControlName="note" [formModel]="formModel" [Group]="dialogAddBookingStationery" [disabled]="viewOnly">
             </codx-input>
           </div>
         </div>
@@ -254,7 +254,7 @@
             </div>
             <div class="d-flex justify-content-end w-150px">
               <codx-input class="bg-white w-100px" [cusButton]="true" [min]="0" [max]="100" type="number" field="quantity"
-                [crrValue]="item?.quantity" (valueChange)="valueChangeQtyStationery($event, item?.itemID)">
+                [crrValue]="item?.quantity" (valueChange)="valueChangeQtyStationery($event, item?.itemID)" [disabled]="viewOnly">
               </codx-input>
               <div class="ms-5 d-flex flex-column justify-content-center align-items-center me-5">
                 <span class="icon-close" role="button" (click)="deleteStationery(item?.itemID)"></span>
@@ -266,14 +266,14 @@
     </div>
   </div>
   <div class="d-flex justify-content-between">
-    <button class="btn btn-outline-primary" (click)="changeTab(1)">
+    <button class="btn btn-outline-primary" (click)="changeTab(1)"  [disabled]="viewOnly">
       <codx-label name="lblBack" default="Quay lại" [formModel]="formModel"></codx-label>
     </button>
     <div class="btn-group">
-      <button class="btn btn-outline-primary me-2" (click)="onSaveForm(true)">
+      <button class="btn btn-outline-primary me-2" (click)="onSaveForm(true)"  [disabled]="viewOnly">
         <codx-label name="lblApprove" default="Gửi duyệt" [formModel]="formModel"></codx-label>
       </button>
-      <button class="btn btn-primary" (click)="onSaveForm()">
+      <button class="btn btn-primary" (click)="onSaveForm()"  [disabled]="viewOnly">
         <codx-label name="lblSave" default="Lưu" [formModel]="formModel"></codx-label>
       </button>
     </div>

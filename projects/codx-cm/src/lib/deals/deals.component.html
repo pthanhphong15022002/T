@@ -588,6 +588,7 @@
     (changeDataCustomers)="editCustomer($event)"
     [isChangeOwner]="isChangeOwner"
     [taskAdd]="taskAdd"
+    (moveStage)="handelMoveStage($event, dataSelected)"
   >
   </codx-deal-detail>
   <!-- [isChangeViewDetails]="viewCrr == '2'" -- nó chưa change dc khi đổi view-->
