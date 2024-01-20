@@ -1,5 +1,25 @@
-<div class="d-flex flex-column w-100 h-100">
+<div class="d-flex flex-column w-100 h-100 p-4 bg-white w-400px">
     <div class="d-flex align-items-center justify-content-between">
-        
+        <div class="d-flex align-items-center">                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
+            <div class="d-flex align-items-center cursor-pointer" (click)="close()">
+                <i class="icon-arrow_back"></i>            
+            </div>
+            <i class="icon-24 mx-2" [ngClass]="vllDefault?.icon" [style.color]="vllDefault?.color"></i>
+            <span class="fs-5 fw-bold">{{vllDefault?.text}}</span>
+        </div>
+        <div class="d-flex align-items-center"> 
+            <i class="icon-22 icon-settings cursor-pointer"></i>
+            <i class="icon-22 icon-delete cursor-pointer ms-2"></i>    
+        </div>
+    </div>
+    <div class="d-flex flex-column w-100 h-100 py-4 overflow-auto">
+        <ng-container [ngSwitch]="activityType">
+            <ng-container *ngSwitchCase="'Stage'">
+                <lib-add-stage [type]="type" [vll]="vllBP001" [process]="process" [data]="data" (dataChange)="valueChange($event)"></lib-add-stage>
+            </ng-container>
+            <ng-container *ngSwitchCase="'Task'">
+                <lib-add-task [type]="type" [vll]="vllBP001" [process]="process" [stage]="stage" [parent]="parent" (dataChange)="valueChange($event)"></lib-add-task>
+            </ng-container>
+        </ng-container>
     </div>
 </div>
