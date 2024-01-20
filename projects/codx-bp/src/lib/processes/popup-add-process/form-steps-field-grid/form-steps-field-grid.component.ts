@@ -65,6 +65,10 @@ export class FormStepsFieldGridComponent implements OnInit, OnChanges{
 
   addEditStages(activityType:any,type:any,item:any = null,parent:any = null,stage:any = null)
   {
+    let lstParent = JSON.parse(JSON.stringify(this.listStage));
+    lstParent.forEach(elm=>{
+      delete elm.child;
+    })
     var obj = 
     {
       type: type,
@@ -72,13 +76,15 @@ export class FormStepsFieldGridComponent implements OnInit, OnChanges{
       process: this.data,
       data: item,
       parent: parent,
-      stage: stage
+      stage: stage,
+      listStage: lstParent
     }
     let option = new SidebarModel();
     option.Width = "Auto"
     let popup = this.callFunc.openSide(AddDefaultComponent,obj,option);
     popup.closed.subscribe(res=>
       {
+        debugger
         if(res?.event)
         {
           let dt = res?.event;
@@ -91,7 +97,11 @@ export class FormStepsFieldGridComponent implements OnInit, OnChanges{
           else
           {
             var index = this.listStage.findIndex(x=>x.recID == dt.parentID);
-            this.listStage[index].child.push(dt);
+            if(type == 'add') this.listStage[index].child.push(dt);
+            else {
+              var index2 = this.listStage[index].child.findIndex(x=>x.recID == dt.recID)
+              if(index2 >= 0) this.listStage[index].child[index2] = dt;
+            }
           }
           this.ref.detectChanges();
         }

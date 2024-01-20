@@ -12,6 +12,7 @@ export abstract class BaseFieldComponent
     @Input() parent: any;
     @Input() type: string = 'add';
     @Input() vll:any;
+    @Input() listStage = [];
     @Output() dataChange = new EventEmitter<any>();
     @Output() back = new EventEmitter<any>();
 

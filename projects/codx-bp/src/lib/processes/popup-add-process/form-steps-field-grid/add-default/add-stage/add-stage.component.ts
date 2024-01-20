@@ -48,7 +48,7 @@ export class AddStageComponent extends BaseFieldComponent implements OnInit {
   }
   ngOnInit(): void {
     if(this.type == 'add') this.defaultStep();
-    else this.data.settings = JSON.parse(this.data.settings);
+    else this.data.settings = typeof this.data.settings === 'string' ?  JSON.parse(this.data.settings) : this.data.settings;
   }
 
   defaultStep() {
@@ -75,6 +75,7 @@ export class AddStageComponent extends BaseFieldComponent implements OnInit {
       sortBy: null,
       totalControl: null
     };
+    this.dataChange.emit(this.data);
   }
 
   valueChange(e:any)
@@ -88,5 +89,9 @@ export class AddStageComponent extends BaseFieldComponent implements OnInit {
     this.data.settings[e?.field] = e?.data;
     this.dataChange.emit(this.data);
   }
-
+  valueChangeSetting2(e:any,field:any)
+  {
+    this.data.settings[field] = e?.target?.value;
+    this.dataChange.emit(this.data);
+  }
 }
