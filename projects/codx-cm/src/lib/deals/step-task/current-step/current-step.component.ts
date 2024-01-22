@@ -61,6 +61,8 @@ export class CurrentStepComponent implements OnInit, OnChanges {
   isViewLink: boolean = false;
   view;
   listCosts;
+  dealCostOld = 0;
+  isChangeCost = false;
 
   viewSettings: any;
   statusCodeID;
@@ -113,6 +115,7 @@ export class CurrentStepComponent implements OnInit, OnChanges {
     this.title = dt?.data?.title;
     this.type = dt?.data?.type || '1';
     this.view = dt?.data?.view;
+    this.dealCostOld = this.deal?.dealCost;
     if (!this.dialog?.formModel) {
       this.dialog.formModel = {
         entityName: 'CM_Contracts',
@@ -231,7 +234,7 @@ export class CurrentStepComponent implements OnInit, OnChanges {
   }
 
   close() {
-    this.dialog.close();
+    this.dialog.close(this.isChangeCost);
   }
 
   onSectionChange(data: any, index: number = -1) {
@@ -531,7 +534,12 @@ export class CurrentStepComponent implements OnInit, OnChanges {
   }
 
   totalDataCost(e){
-    console.log(e); 
+    if(typeof e == 'number'){
+      let difference = e - this.dealCostOld;
+      this.deal.dealCost = this.dealCostOld + difference;
+      this.view.dataService.update(this.deal, true).subscribe();
+      this.isChangeCost = true;
+    }
   }
 
   dataCostItems(e){
