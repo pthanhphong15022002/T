@@ -26,6 +26,7 @@ import {
   CacheService,
   CallFuncService,
   CodxService,
+  CRUDService,
   DataRequest,
   DialogModel,
   NotificationsService,
@@ -325,13 +326,16 @@ export class CodxApprovalComponent
     this.changeMF(this.allMFunc, data);
     //Duyệt SYS201 , Ký SYS202 , Đồng thuận SYS203 , Hoàn tất SYS204 , Từ chối SYS205 , Làm lại SYS206 , Khôi phục SY207
     var funcID = e?.functionID;
-    // if (funcID == 'SYS05') {
-    //   this.codxCommonService.codxAuthority(data.recID, (res: any) => {
-    //     if (res) {
-    //       this.valueChange(data);
-    //     }
-    //   });
-    // } else 
+    if (funcID == 'SYS209') {
+      this.codxCommonService.codxAuthority(data.recID, (res: any) => {
+        if (res) {
+          data.status="7";
+          (this.view?.dataService as CRUDService)?.update(data)?.subscribe();
+          this.detectorRef.detectChanges();
+          this.valueChange(data);
+        }
+      });
+    } else 
     if (data.eSign == true) {
       //Kys
       if (

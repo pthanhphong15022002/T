@@ -94,13 +94,14 @@ export class LoginDefaultComponent extends UIComponent {
   };
 
   public qrDisplayText?: DisplayTextModel;
+  interval: number;
 
   constructor(
     private injector: Injector,
     private df: ChangeDetectorRef,
     private realHub: RealHubService,
     private authService: AuthService,
-    private loginService: LoginService,
+    private loginService: LoginService
   ) {
     super(injector);
 
@@ -111,10 +112,9 @@ export class LoginDefaultComponent extends UIComponent {
   }
 
   onInit(): void {
-    
-  this.qrDisplayText = {
-    visibility: false
-  };
+    this.qrDisplayText = {
+      visibility: false,
+    };
 
     if (this.enableCaptcha == 0) {
       this.captChaValid = true;
@@ -251,7 +251,9 @@ export class LoginDefaultComponent extends UIComponent {
   }
 
   generateQR() {
-    console.log('hub', this.hubConnectionID);
+    this.qrTimeout = 0;
+    this.qrTimeoutMinutes = 0;
+    clearInterval(this.interval);
     this.api
       .execSv<string>(
         'SYS',
@@ -263,11 +265,6 @@ export class LoginDefaultComponent extends UIComponent {
           this.loginService.loginDevice.name,
           this.loginService.loginDevice.os,
           ';;',
-          // position.coords.accuracy +
-          //   ';' +
-          //   position.coords.latitude +
-          //   ';' +
-          //   position.coords.longitude,
           '1',
         ]
       )
@@ -277,13 +274,13 @@ export class LoginDefaultComponent extends UIComponent {
           // this.testQRContent = qrImg;
           this.qrTimeout = 180;
           this.qrBase64 = 'data:image/png;base64,' + qrImg;
-          let id = setInterval(
+          this.interval = setInterval(
             () => {
               this.qrTimeout -= 1;
               this.qrTimeoutMinutes = Math.floor(this.qrTimeout / 60);
               this.df.detectChanges();
               if (this.qrTimeout === 0) {
-                clearInterval(id);
+                clearInterval(this.interval);
               }
             },
             1000,
