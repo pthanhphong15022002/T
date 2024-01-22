@@ -82,6 +82,7 @@ import { CoDxGetTemplateSignFileComponent } from './component/codx-approval-proc
 import { CodxAiComponent } from './_layout/drawers/codx-ai/codx-ai.component';
 import { PresentationComponent } from './_layout/drawers/codx-ai/presentation/presentation.component';
 import { SubstringPipe } from './pipe/substring';
+import { DebounceDirective } from './directives/debounce-click.directive';
 //#endregion
 
 const T_Component: Type<any>[] = [
@@ -132,8 +133,7 @@ const T_Component: Type<any>[] = [
 
   //Ai Tool
   CodxAiComponent,
-  PresentationComponent
-  
+  PresentationComponent,
 ];
 
 const T_Pipe: Type<any>[] = [
@@ -159,8 +159,10 @@ const T_Pipe: Type<any>[] = [
   //#endregion
 ];
 
+const T_Directive: Type<any>[] = [DebounceDirective];
+
 @NgModule({
-  declarations: [T_Component, T_Pipe],
+  declarations: [T_Component, T_Pipe, T_Directive],
   imports: [
     CommonModule,
     CodxCoreModule,
@@ -177,6 +179,6 @@ const T_Pipe: Type<any>[] = [
     UploaderModule,
     DialogModule,
   ],
-  exports: [T_Component, T_Pipe],
+  exports: [T_Component, T_Pipe, T_Directive],
 })
 export class CodxCommonModule {}

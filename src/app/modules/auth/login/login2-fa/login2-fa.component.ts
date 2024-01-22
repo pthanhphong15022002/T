@@ -83,6 +83,7 @@ export class Login2FAComponent extends UIComponent implements AfterViewInit {
   email;
   unsubscribe: Subscription[] = [];
   session: string;
+  interval: any;
   @ViewChildren('ipotp') ipOTP: TemplateRef<any>;
   // #endregion
 
@@ -189,6 +190,9 @@ export class Login2FAComponent extends UIComponent implements AfterViewInit {
     }
   }
   generateQR() {
+    this.qrTimeout = 0;
+    this.qrTimeoutMinutes = 0;
+    clearInterval(this.interval);
     this.api
       .execSv<string>(
         'SYS',
@@ -215,14 +219,14 @@ export class Login2FAComponent extends UIComponent implements AfterViewInit {
 
           this.qrTimeout = 180;
           this.qrBase64 = 'data:image/png;base64,' + qrImg;
-          let id = setInterval(
+          this.interval = setInterval(
             () => {
               this.qrTimeout -= 1;
               this.qrTimeoutMinutes = Math.floor(this.qrTimeout / 60);
 
               this.detectorRef.detectChanges();
               if (this.qrTimeout === 0) {
-                clearInterval(id);
+                clearInterval(this.interval);
                 //console.log('het gio');
               }
             },
