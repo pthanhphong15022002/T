@@ -1303,6 +1303,15 @@ export class CodxEsService {
       [recID]
     );
   }
+  getApprovalTree(transID: string) {
+    return this.api.execSv(
+      'es',
+      'ERM.Business.ES',
+      'ApprovalTransBusiness',
+      'GetApprovalTreeAsync',
+      [transID]
+    );
+  }
 
   updateTransAwaitingStatus(transID, isFail) {
     return this.api.execSv(

@@ -36,6 +36,8 @@ export class CostItemsComponent implements OnInit {
   formModel: any;
   costIDOld = [];
   dealValueToOld = 0;
+  isSavingData = false;
+  oldCost: any;
 
   constructor(
     private api: ApiHttpService,
@@ -88,6 +90,7 @@ export class CostItemsComponent implements OnInit {
     newCost.transID = this.transID;
     newCost.quantity = 1;
     newCost.unitPrice = 0;
+    newCost.amount = 0;
     if (!this.costInfos) this.costInfos = [];
 
     this.costInfos.push(newCost);
@@ -123,27 +126,32 @@ export class CostItemsComponent implements OnInit {
 
   editCost(evt: any, index: number) {
     if (evt && this.costInfos?.length > index) {
+      this.cost = this.costInfos[index];
+      this.oldCost = JSON.parse(JSON.stringify(this.cost));
       switch (evt?.field) {
         case 'quantity':
-          this.costInfos[index].quantity = evt?.data;
+          this.cost.quantity = evt?.data;
           break;
 
         case 'unitPrice':
-          this.costInfos[index].unitPrice = evt?.data;
+          this.cost.unitPrice = evt?.data;
           break;
 
         case 'costItemName':
-          this.costInfos[index].costItemName = evt?.data;
+          this.cost.costItemName = evt?.data;
           break;
 
         case 'costItemID':
-          this.costInfos[index].costItemID = evt?.data;
+          this.cost.costItemID = evt?.data;
           break;
       }
+      if (this.cost?.quantity && this.cost?.unitPrice)
+        this.cost.amount = this.cost?.quantity * this.cost?.unitPrice;
+      else this.cost.amount = 0;
 
-      this.cost = this.costInfos[index];
+      this.costInfos[index] = this.cost;
       if (this.isAutoSave) {
-        this.autoSaveData();
+        this.autoSaveData(index);
       } else this.calculateTotalCost();
     }
   }
@@ -165,7 +173,7 @@ export class CostItemsComponent implements OnInit {
   }
 
   //save ở đây và trả về
-  autoSaveData() {
+  autoSaveData(index) {
     if (!this.cost) return;
     if (
       this.cost &&
@@ -184,15 +192,21 @@ export class CostItemsComponent implements OnInit {
       methol = 'EditCostAsync';
       isAdd = false;
     }
+    this.isSavingData = true;
     this.api
       .exec<any>('CM', 'CostItemsBusiness', methol, this.cost)
       .subscribe((res) => {
         if (res) {
           if (isAdd) this.costIDOld.push(res.recID);
+          this.costInfos[index] = res;
           this.calculateTotalCost();
           this.dataCostItems.emit(this.costInfos);
           this.totalDataCost.emit(this.totalCost);
+        } else {
+          this.costInfos[index] = this.oldCost;
+          // this.notiService.notifyCode('SYS021');
         }
+        this.isSavingData = false;
       });
   }
   validateCost() {
@@ -203,6 +217,7 @@ export class CostItemsComponent implements OnInit {
   }
 
   autoDeleted(index) {
+    this.isSavingData = true;
     this.api
       .exec<any>('CM', 'CostItemsBusiness', 'DeletedCostAsync', this.cost.recID)
       .subscribe((res) => {
@@ -216,6 +231,7 @@ export class CostItemsComponent implements OnInit {
           this.dataCostItems.emit(this.costInfos);
           this.totalDataCost.emit(this.totalCost);
         }
+        this.isSavingData = false;
       });
   }
 
@@ -223,12 +239,14 @@ export class CostItemsComponent implements OnInit {
     this.dealValueTo = e.data;
   }
   valueChangeDVT(e) {
-    // this.dealValueTo = e.data;
+    //this.dealValueTo = e.data;
     if (this.dealValueToOld == this.dealValueTo) return;
+
     if (!this.isAutoSave) {
       this.dataDealValueTo.emit(this.dealValueTo);
       this.dealValueToOld = this.dealValueTo;
     } else {
+      this.isSavingData = true;
       this.api
         .exec<any>('CM', 'DealsBusiness', 'UpdateDealValueToAsync', [
           this.transID,
@@ -239,7 +257,11 @@ export class CostItemsComponent implements OnInit {
             this.dataDealValueTo.emit(this.dealValueTo);
             this.dealValueToOld = this.dealValueTo;
             this.notiService.notifyCode('SYS007');
+          } else {
+            this.dealValueTo = this.dealValueToOld;
+            this.notiService.notifyCode('SYS021');
           }
+          this.isSavingData = false;
         });
     }
   }

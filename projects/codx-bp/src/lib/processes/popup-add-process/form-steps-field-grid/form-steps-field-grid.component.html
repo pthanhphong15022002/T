@@ -1,26 +1,50 @@
 <div class="d-flex flex-column w-100 h-100 field-grid-collapse p-4">
     <div class="grid-collapse" ngbAccordion *ngIf="listStage.length > 0">
-        <div class="border-bottom py-4" ngbAccordionItem [collapsed]="false" *ngFor="let item of listStage">
-            <h2 ngbAccordionHeader>
-                <button ngbAccordionButton><span class="ms-7 fw-bold fs-5-sm">{{item.stepName}}</span></button>
-            </h2>
+        <div class="border-bottom pt-4" ngbAccordionItem [collapsed]="false" *ngFor="let item of listStage">
+            <div class="d-flex align-items-center" ngbAccordionHeader>
+                <button ngbAccordionButton></button>
+                <div (click)="addEditStages('Stage','edit',item)"><span class="fw-bold fs-5-sm">{{item.stepName}}</span></div>
+            </div>
             <div ngbAccordionCollapse>
                 <div ngbAccordionBody>
                     <ng-template>
-                       <div class="row ps-15" *ngFor="let item2 of item.child">
-                            <div class="col">{{item2.stepName}}</div>
-                            <div class="col d-flex align-items-center"><i [class]="item2?.settings?.icon" [style.color]="item2?.settings?.color"></i><span class="mx-2">{{item2.activityType}}</span></div>
+                        <div class="d-flex flex-column">
+                            <div class="d-flex flex-column ps-14 pb-4" *ngFor="let item2 of item.child">
+                                <div class="d-flex align-items-center row cursor-pointer" (click)="addEditStages(item2.activityType,'edit',item2)">
+                                    <div class="col-2">{{item2.stepName}}</div>
+                                    <div class="col-1 d-flex align-items-center"><i [class]="item2?.settings?.icon" [style.color]="item2?.settings?.color"></i><span class="mx-2">{{item2.activityType}}</span></div>
+                                    <div class="col-4"><span>{{item2.memo}}</span></div>
+                                    <div class="col-2"><span>{{item2?.duration}}</span><span class="mx-1">{{item2?.interval | vll : 'VL004' : 'text' | async}}</span></div>
+                                     <div class="col-3">
+                                        <ng-container *ngIf="item2.owners && item2.owners.length>0">
+                                            <div class="d-flex rounded-circle align-items-center justify-content-center w-30px h-30px bp-cricle-user"><i class="icon-i-person-check"></i></div>
+                                        </ng-container>
+                                    </div>
+                                    
+                                    <!-- <div class="col-3">
+                                        <ng-container *ngIf="item2.owners && item2.owners.length>0">
+                                            <div class="d-flex border rounded"><i class="icon-attach_file"></i><span>{{item2.owners.length}}</span></div>
+                                        </ng-container>
+                                    </div> -->
+                                </div>
+                                <!-- <div class="d-flex align-items-center row-grid-collapse cursor-pointer" (click)="addEditStages('Task','add',null,item2,item)">
+                                    <codx-label default="Thêm công việc" class="my-2 ms-4" ></codx-label>
+                                </div> -->
+                            </div>
                         </div>
+                        <!-- <div class="d-flex align-items-center row-grid-collapse cursor-pointer" (click)="addEditStages('Task','add',null,item,item)">
+                            <codx-label default="Thêm công việc" class="my-2 ms-14" ></codx-label>
+                        </div> -->
                     </ng-template>
                 </div>
             </div>
         </div>
     </div>
    
-    <div class="grid-collapse-default" ngbAccordion>
+    <div class="grid-collapse-default py-4 px-2" ngbAccordion>
         <div ngbAccordionItem [collapsed]="false">
             <div class="w-100" ngbAccordionHeader>
-                <div class="d-flex align-items-center row-grid-collapse p-2" ngbAccordionButton (click)="addStages()">
+                <div class="d-flex align-items-center row-grid-collapse p-2" ngbAccordionButton (click)="addEditStages('Stage','add')">
                     <i class="icon-i-plus"></i>
                     <codx-label default="Thêm công đoạn" class="mx-2"></codx-label>
                 </div>
@@ -28,7 +52,7 @@
             <div ngbAccordionCollapse>
                 <div ngbAccordionBody>
                     <ng-template>
-                        <div class="d-flex align-items-center cursor-pointer w-100 p-2 row-grid-collapse">
+                        <div class="d-flex align-items-center cursor-pointer w-100 p-2 row-grid-collapse" (click)="addEditStages('Task','add',null,listStage[(listStage.length - 1)],listStage[(listStage.length - 1)])">
                             <i class="icon-i-plus icon-16"></i>
                             <codx-label default="Thêm công việc" class="mx-1"></codx-label>
                         </div>

@@ -91,12 +91,11 @@ export class PopupSignForApprovalComponent extends UIComponent {
 
     this.sfRecID = this.data.sfRecID;
     this.transRecID = this.data.transRecID;
-    this.esService.getSFByID(this.data?.oTrans?.transID).subscribe((res) => {
+    this.esService.getByRecID(this.data?.oTrans?.transID).subscribe((res:any) => {
       if (res) {
-        let sf = res?.signFile;
-
-        if (sf && sf.files) {
-          this.isEdited = sf.files[0]?.isEdited;
+        let sf = res;
+        if (sf && sf?.files) {
+          this.isEdited = sf?.files[0]?.isEdited;
         }
       }
     });

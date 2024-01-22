@@ -23,6 +23,10 @@ import { CodxEpService } from 'projects/codx-ep/src/lib/codx-ep.service';
 import { Device, Equipments } from 'projects/codx-ep/src/lib/models/equipments.model';
 import { EPCONST } from '../../codx-ep.constant';
 
+const _addMF = EPCONST.MFUNCID.Add;
+const _copyMF = EPCONST.MFUNCID.Copy;
+const _editMF = EPCONST.MFUNCID.Edit;
+const _viewMF = EPCONST.MFUNCID.View;
 @Component({
   selector: 'popup-add-resources',
   templateUrl: 'popup-add-resources.component.html',
@@ -54,6 +58,8 @@ export class PopupAddResourcesComponent extends UIComponent {
     ca_FuncID=EPCONST.FUNCID.CA_Category;
   autoNumDisable: boolean;
   moreDevice: number;
+  mfuncID: any;
+  viewOnly=false;
   constructor(
     injector: Injector,
     private authService: AuthService,
@@ -66,6 +72,7 @@ export class PopupAddResourcesComponent extends UIComponent {
     this.isAdd = dialogData?.data[1];
     this.headerText = dialogData?.data[2];
     this.funcID = dialogData?.data[3];
+    this.mfuncID = dialogData?.data[4];
     this.dialogRef = dialogRef;
     this.formModel = this.dialogRef?.formModel;
     if (this.isAdd) {
@@ -73,6 +80,9 @@ export class PopupAddResourcesComponent extends UIComponent {
       this.imgRecID = null;
     } else {
       this.imgRecID = this.data.recID;
+    }
+    if(this.mfuncID==_viewMF){
+      this.viewOnly=true;
     }
   }
 
@@ -164,6 +174,7 @@ export class PopupAddResourcesComponent extends UIComponent {
   changeCategory(event:any){
     if(event?.data && event?.data!='1'){
       this.data.companyID=null;
+      this.form?.formGroup?.patchValue({companyID:null});
       this.detectorRef.detectChanges();
     }
   }

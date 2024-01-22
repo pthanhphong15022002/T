@@ -60,11 +60,6 @@ export class ProcessesComponent
   constructor(
     inject: Injector,
     private bpService: CodxBpService,
-    private notification: NotificationsService,
-    private authStore: AuthStore,
-    private activedRouter: ActivatedRoute,
-    private fileService: FileService,
-    private routers: Router,
     private notiSv: NotificationsService,
     private codxShareService: CodxShareService,
   ) {
@@ -221,7 +216,6 @@ export class ProcessesComponent
 
   //#region event more
   click(evt) {
-    debugger
     this.titleAction = evt.text;
     switch (evt.id) {
       case this.btnAdd:

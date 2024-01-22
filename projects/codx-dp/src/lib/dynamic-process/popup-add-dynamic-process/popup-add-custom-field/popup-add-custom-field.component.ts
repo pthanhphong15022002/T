@@ -1315,6 +1315,9 @@ export class PopupAddCustomFieldComponent implements OnInit {
       this.arrFieldNum = this.stepList[idx].fields
         .filter((x) => x.dataType == 'N')
         .map((x) => x.fieldName);
+      // this.arrFieldNum = this.stepList[idx].fields
+      //   .filter((x) => x.dataType == 'N' || x.dataType == 'CF') //lafm them
+      //   .map((x) => x.fieldName);
     }
     if (!this.arrFieldNum || this.arrFieldNum?.length == 0)
       this.notiService.notify(
@@ -1326,11 +1329,6 @@ export class PopupAddCustomFieldComponent implements OnInit {
   popoverSelectField(p) {
     if (this.arrFieldNum?.length > 0) p.open();
     this.popover = p;
-    // else
-    //   this.notiService.notify(
-    //     'Bước thực hiện không có trường tùy chỉnh kiểu số !',
-    //     '3'
-    //   );
   }
 
   checkCaculateField() {

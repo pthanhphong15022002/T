@@ -61,6 +61,8 @@ export class CurrentStepComponent implements OnInit, OnChanges {
   isViewLink: boolean = false;
   view;
   listCosts;
+  dealCostOld = 0;
+  isChangeCost = false;
 
   viewSettings: any;
   statusCodeID;
@@ -88,10 +90,13 @@ export class CurrentStepComponent implements OnInit, OnChanges {
   ];
   listTabInformation = [
     { id: 'costItems', name: 'Chi phí' },
-    { id: 'tasks', name: 'Công việc' },
     { id: 'opponent', name: 'Đối thủ' },
     { id: 'note', name: 'Ghi chú' },
   ];
+  totalCost: any;
+  isUpDealCost = false;
+  dealValueTo: any;
+  isUpDealValueTo = false;
   constructor(
     private cache: CacheService,
     private codxCmService: CodxCmService,
@@ -113,6 +118,7 @@ export class CurrentStepComponent implements OnInit, OnChanges {
     this.title = dt?.data?.title;
     this.type = dt?.data?.type || '1';
     this.view = dt?.data?.view;
+    this.dealCostOld = this.deal?.dealCost;
     if (!this.dialog?.formModel) {
       this.dialog.formModel = {
         entityName: 'CM_Contracts',
@@ -231,7 +237,7 @@ export class CurrentStepComponent implements OnInit, OnChanges {
   }
 
   close() {
-    this.dialog.close();
+    this.dialog.close(this.isChangeCost);
   }
 
   onSectionChange(data: any, index: number = -1) {
@@ -525,16 +531,27 @@ export class CurrentStepComponent implements OnInit, OnChanges {
         }
       });
   }
-
-  dataDealValueTo(e){
-    console.log(e); 
+  
+  totalDataCost(e) {
+    this.totalCost = e;
+    this.isUpDealCost = true;
+  }
+  changeDealValueTo(e) {
+    this.dealValueTo = e;
+    this.isUpDealValueTo = true;
   }
 
-  totalDataCost(e){
-    console.log(e); 
-  }
-
-  dataCostItems(e){
-    console.log(e); 
+  closePopup() {
+    if ((!this.isUpDealCost && !this.isUpDealValueTo)) {
+      this.dialog.close();
+      return;
+    }
+    let obj = {
+      dealCost: this.totalCost,
+      isUpDealCost: this.isUpDealCost,
+      dealValueTo: this.dealValueTo,
+      isUpDealValueTo: this.isUpDealValueTo,
+    };
+    this.dialog.close(obj);
   }
 }

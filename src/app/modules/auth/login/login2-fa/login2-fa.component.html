@@ -83,25 +83,6 @@
         </div>
       </div>
       <ng-template #avatar></ng-template>
-      <!-- //nho xoa -->
-      <!-- <div class="qr-codx-msg mt-3 text-center">
-        <codx-label
-          class="fs-7 text-gray-600"
-          default="Chỉ dùng đăng nhập CoDX trên máy tính"
-        ></codx-label>
-        <button
-          type="button"
-          (click)="testQR()"
-          tabindex="-1"
-          class="btn link-dark text-decoration-none border border-primary btn-primary"
-        >
-          <codx-label
-            formModel=""
-            class="text-primary"
-            default="Test QR"
-          ></codx-label>
-        </button>
-      </div> -->
     </div>
     <div class="d-flex mt-3" *ngIf="qrTimeout > 0">
       <codx-label formModel="" default="Xác thực sẽ hết hạn sau "> </codx-label>
@@ -109,6 +90,12 @@
         {{ qrTimeoutMinutes }}:
         {{ qrTimeout % 60 }}
       </span>
+    </div>
+    <div class="d-flex mt-3" *ngIf="qrTimeout > 0">
+      <button class="btn link-dark border border-0 btn-primary" debounceClick (debounceClick)="generateQR()"
+        [debounceTime]="300">
+        <codx-label formModel="" default="Lấy mã mới"></codx-label>
+      </button>
     </div>
     <div class="qr-codx-guid d-flex flex-column text-center mt-3">
       <codx-label class="fw-bold text-dark fs-6"

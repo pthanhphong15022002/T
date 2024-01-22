@@ -277,7 +277,7 @@ export class PopupAddProcessComponent {
       icon: "icon-i-bar-chart-steps",
       color: "#0078FF",
       backGround: "#EAF0FF",
-      allowDrag: processSetting?.allowDrag || false,
+      allowDrag: processSetting?.allowDrag || null,
       defaultProcess: processSetting?.defaultProcess || null,
       completeControl: processSetting?.completeControl || null,
       nextSteps: null,

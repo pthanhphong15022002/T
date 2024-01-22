@@ -49,12 +49,15 @@ export class CodxViewApprovalStepComponent
   fmApprovalTrans: FormModel;
   fmApprovalStep: FormModel;
   gridViewSetup: any = {};
-
+  guidEmpty='00000000-0000-0000-0000-000000000000';
   positionDefault: string;
   lstSttApproveStep = ['1'];
   process: any = [];
   canceledProcess= [];
-  // lstStep: any = [];
+  tempTrans: any = [];
+  mappedTrans =[];
+  lastNomalNode: number;
+  lastCancelNode: number;
   constructor(
     private esService: CodxEsService,
     private shareService: CodxShareService,
@@ -75,6 +78,10 @@ export class CodxViewApprovalStepComponent
   }
 
   initForm() {
+    
+    this.process=[];
+    this.canceledProcess=[];
+    this.cr.detectChanges();   
     if (this.transID != null) {
       if (this.lstSttApproveStep.includes(this.approveStatus)) {
         this.esService.getFormModel('EST04').then((res) => {
@@ -113,7 +120,7 @@ export class CodxViewApprovalStepComponent
                       }
                     }
                   }                 
-                  this.process = tempListStep?.sort((a,b)=> a?.stepNo - b?.stepNo);;  
+                  this.process = tempListStep?.sort((a,b)=> a?.stepNo - b?.stepNo);  
                   this.cr.detectChanges();              
                 }                
                 else if(res[1]?.length>0){
@@ -139,18 +146,72 @@ export class CodxViewApprovalStepComponent
             if (res) this.fmApprovalTrans = res;
           });
         }
-        this.esService
-          .getApprovalTransByTransID(this.transID)
+        // this.esService
+        //   .getApprovalTransByTransID(this.transID)
+        //   .subscribe((res :any) => {
+        //     if (res) {
+        //       this.process = res?.activedTran[0];
+        //       this.canceledProcess = res?.canceledTran;
+        //       this.cr.detectChanges();
+        //     }
+        //   });
+        
+        this.process=[];
+        this.canceledProcess=[];
+        this.cr.detectChanges();
+        
+          this.esService
+          .getApprovalTree(this.transID)
           .subscribe((res :any) => {
-            if (res) {
-              this.process = res?.activedTran[0];
-              this.canceledProcess = res?.canceledTran;
+            if (res?.length==2) {
+              this.process=res[0];
+              this.canceledProcess=res[1];
+              this.lastNomalNode = this.process?.findLastIndex(x=>x.refLineID==null || x.refLineID==this.guidEmpty);
+              if(this.lastNomalNode== null){
+                this.lastNomalNode=this.process?.length-1;
+              }
+              this.lastCancelNode = this.process?.findLastIndex(x=>x.refLineID==null || x.refLineID==this.guidEmpty);
+              if(this.lastCancelNode== null){
+                this.lastCancelNode=this.canceledProcess?.length-1;
+              }
+              // this.mappedTrans=[];
+              // this.tempTrans = res;
+              // res?.forEach(tran=>{
+              //   let tempItem = this.mapAuthorityTran(tran.recID);
+              //   if(tempItem!=null){
+              //     this.process.push(tempItem);
+              //   }
+              // });
               this.cr.detectChanges();
             }
           });
       }
     }
   }  
+
+  mapAuthorityTran(recID){
+    if(!this.mappedTrans.includes(recID)){
+      let curTran = this.tempTrans.find(x=>x.recID == recID);
+      if(curTran!=null){
+        this.mappedTrans.push(curTran.recID);
+        let items = this.tempTrans.filter(x=>x.refLineID == recID);
+        if(items?.length>0){
+          items?.forEach(itemChild=>{
+            this.mappedTrans.push(itemChild.recID)
+            itemChild.items=[];
+            let child = this.mapAuthorityTran(itemChild?.recID);
+            if(child!=null){
+              itemChild.items?.push(child);
+            }
+          })
+          curTran.items = items;
+        }
+      }
+      return curTran;      
+    }
+    return null;
+  }
+
   showCanceledTrans(show:boolean){
     if(show!=null){
       this.showCanceled =!show;

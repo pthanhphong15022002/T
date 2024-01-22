@@ -6,10 +6,6 @@
 {
     color: #BEBEBE;
 }
-.row-grid-collapse:hover
-{
-    background-color: var(--primary-lighter);
-}
 
 .grid-collapse
 {
@@ -36,8 +32,12 @@
         color: black !important;
         background-color: white;
         margin: 0 13px;
+        width: 15px;
     }
-   
+    .accordion-body
+    {
+        padding: 15px 0px 0px 0px !important;
+    }
 }
 
 .grid-collapse-default
@@ -59,4 +59,12 @@
     {
         padding: 0 17px;
     }
+}
+.bp-cricle-user
+{
+    i
+    {
+        color: #AA7EFD;
+    }
+    background-color: #F7EAFF;
 }

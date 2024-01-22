@@ -414,6 +414,9 @@ export class ContractsComponent extends UIComponent {
       case 'SYS04':
         this.copyContract(data);
         break;
+      case 'SYS05':
+        this.viewContract(data);
+        break;
       case 'CM0204_3':
         //tạo hợp đồng gia hạn
         this.addContractAdjourn(data);
@@ -823,6 +826,11 @@ export class ContractsComponent extends UIComponent {
     this.view.dataService.edit(dataEdit).subscribe(async (res) => {
       this.openPopupContract(null, 'edit', 'contract', contract, dataEdit);
     });
+  }
+  async viewContract(contract) {
+    if (contract) {
+      this.openPopupContract(null, 'view', 'contract', contract, contract);
+    }
   }
 
   async copyContract(contract) {
@@ -1783,6 +1791,13 @@ export class ContractsComponent extends UIComponent {
     // this.isDataLoading = false;
     // this.changeDetectorRef.detectChanges();
   }
+
+  handelMoveStage(event, contract){
+    if(event){
+      this.moveStage(contract);
+    }
+  }
+
 }
 
 // this.columnGrids = [];

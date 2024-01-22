@@ -118,7 +118,8 @@ export class SignalRService {
     let codxChatContainer = document.getElementsByTagName(
       'codx-chat-container'
     );
-    if (Array.isArray(codxChatContainer)) {
+    let chatboxs = Array.from(codxChatContainer as HTMLCollectionOf<HTMLElement>)
+    if (chatboxs?.length>0) {
       Array.from(codxChatContainer).forEach((element) => {
         element.remove();
       });
