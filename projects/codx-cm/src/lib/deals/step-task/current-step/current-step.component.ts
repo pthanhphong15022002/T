@@ -93,6 +93,10 @@ export class CurrentStepComponent implements OnInit, OnChanges {
     { id: 'opponent', name: 'Đối thủ' },
     { id: 'note', name: 'Ghi chú' },
   ];
+  totalCost: any;
+  isUpDealCost = false;
+  dealValueTo: any;
+  isUpDealValueTo = false;
   constructor(
     private cache: CacheService,
     private codxCmService: CodxCmService,
@@ -527,21 +531,27 @@ export class CurrentStepComponent implements OnInit, OnChanges {
         }
       });
   }
-
-  dataDealValueTo(e){
-    console.log(e); 
+  
+  totalDataCost(e) {
+    this.totalCost = e;
+    this.isUpDealCost = true;
+  }
+  changeDealValueTo(e) {
+    this.dealValueTo = e;
+    this.isUpDealValueTo = true;
   }
 
-  totalDataCost(e){
-    if(typeof e == 'number'){
-      let difference = e - this.dealCostOld;
-      this.deal.dealCost = this.dealCostOld + difference;
-      this.view.dataService.update(this.deal, true).subscribe();
-      this.isChangeCost = true;
+  closePopup() {
+    if ((!this.isUpDealCost && !this.isUpDealValueTo)) {
+      this.dialog.close();
+      return;
     }
-  }
-
-  dataCostItems(e){
-    console.log(e); 
+    let obj = {
+      dealCost: this.totalCost,
+      isUpDealCost: this.isUpDealCost,
+      dealValueTo: this.dealValueTo,
+      isUpDealValueTo: this.isUpDealValueTo,
+    };
+    this.dialog.close(obj);
   }
 }

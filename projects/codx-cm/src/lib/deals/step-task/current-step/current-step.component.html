@@ -21,7 +21,7 @@
           ></codx-label>
           <span
             class="icon-20 icon-close cursor-pointer p-1"
-            (click)="close()"
+            (click)="closePopup()"
           ></span>
         </div>
         <div class="top" *ngIf="type == '1'">
@@ -96,9 +96,8 @@
         [isLoadedData]="true"
         [viewOnly]="false"
         [isAutoSave]=" true"
-        (dataDealValueTo)="dataDealValueTo($event)"
         (totalDataCost)="totalDataCost($event)"
-        (dataCostItems)="dataCostItems($event)"
+        (dataDealValueTo)="changeDealValueTo($event)"
       ></crud-cost-items>
     </div>
   </div>
