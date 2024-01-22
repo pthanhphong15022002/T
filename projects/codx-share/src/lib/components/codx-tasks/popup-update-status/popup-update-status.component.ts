@@ -32,6 +32,7 @@ export class PopupUpdateStatusComponent implements OnInit {
   title: string = 'Cập nhật tình trạng công việc ';
   funcID: any;
   crrCompleted: any;
+  isSave = true; // save luôn rồi trả về
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private api: ApiHttpService,
@@ -43,18 +44,19 @@ export class PopupUpdateStatusComponent implements OnInit {
     this.data = dt?.data;
     this.dialog = dialog;
     this.funcID = this.data.funcID;
-  }
-
-  ngOnInit(): void {
     this.task = JSON.parse(JSON.stringify(this.data?.taskAction));
     this.moreFunc = this.data.moreFunc;
     this.title = this.moreFunc.customName;
     this.maxHoursControl = this.data.maxHoursControl;
     this.maxHours = this.data.maxHours;
     this.updateControl = this.data.updateControl;
-    this.url = this.moreFunc.url;
+    this.url = this.moreFunc?.url;
     this.status = UrlUtil.getUrl('defaultValue', this.url);
     this.completedOn = moment(new Date()).toDate();
+    this.isSave = dt?.data?.isSave ?? this.isSave;
+  }
+
+  ngOnInit(): void {
     if (this.task.estimated > 0) {
       this.completed = this.task.estimated;
     } else {
@@ -145,38 +147,29 @@ export class PopupUpdateStatusComponent implements OnInit {
         return;
       }
     }
-    this.tmSv
-      .setStatusTask(
-        this.funcID,
-        this.task.taskID,
-        this.status,
-        this.completedOn,
-        this.completed,
-        this.comment
-      )
-      .subscribe((res) => {
-        if (res && res.length > 0) {
-          this.dialog.close(res);
-          this.notiService.notifyCode('TM009');
-          // if (this.task.category == '3' && this.status == '80') {
-          //   this.tmSv
-          //     .sendAlertMail(this.task.recID, 'TM_0004', this.funcID)
-          //     .subscribe();
-          // }
-          // if (this.status == '90') {
-          //   if (res[0]?.approveControl == '1')
-          //     this.tmSv
-          //       .sendAlertMail(this.task.recID, 'TM_0012', this.funcID)
-          //       .subscribe();
-          //   else
-          //     this.tmSv
-          //       .sendAlertMail(this.task.recID, 'TM_0005', this.funcID)
-          //       .subscribe();
-          // }
-        } else {
-          this.dialog.close();
-          this.notiService.notifyCode('TM008');
-        }
-      });
+    if (!this.isSave) {
+      this.task.completedOn = this.completedOn;
+      this.task.completed = this.completed;
+      this.dialog.close({ task: this.task, comnent: this.comment });
+      // this.notiService.notifyCode('TM009');
+    } else
+      this.tmSv
+        .setStatusTask(
+          this.funcID,
+          this.task.taskID,
+          this.status,
+          this.completedOn,
+          this.completed,
+          this.comment
+        )
+        .subscribe((res) => {
+          if (res && res.length > 0) {
+            this.dialog.close(res);
+            this.notiService.notifyCode('TM009');
+          } else {
+            this.dialog.close();
+            this.notiService.notifyCode('TM008');
+          }
+        });
   }
 }
