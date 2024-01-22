@@ -1,6 +1,7 @@
 import { ChangeDetectorRef, Component, Input, SimpleChanges, OnInit } from '@angular/core';
-import { ApiHttpService, CacheService, CallFuncService, CodxService, DataRequest, FormModel } from 'codx-core';
+import { ApiHttpService, CacheService, CallFuncService, CodxService, DataRequest, FormModel, TenantStore } from 'codx-core';
 import { Observable, finalize, map } from 'rxjs';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'codx-campaign-deals',
@@ -40,6 +41,8 @@ export class CampaignDealsComponent implements OnInit {
     private cache: CacheService,
     private callFc: CallFuncService,
     private codxService: CodxService,
+    private location: Location,
+    private tenantStore: TenantStore
     ){
 
   }
@@ -113,9 +116,16 @@ export class CampaignDealsComponent implements OnInit {
   //#region navigate
   onEdit(data){
     // this.cmSv.navigateCampaign.next({recID: data.recID});
-    this.codxService.navigate('', this.url, {
-      recID: data?.rowData?.recID,
-    });
+    const url1 = this.location.prepareExternalUrl(this.location.path());
+    const parser = document.createElement('a');
+    parser.href = url1;
+    const domain = parser.origin;
+    let tenant = this.tenantStore.get().tenant;
+
+    let url = `${domain}/${tenant}/${this.url}?predicate=RecID=@0&dataValue=${data?.rowData?.recID}`;
+    if(url){
+      window.open(url, '_blank');
+    }
   }
   //#endregion
 }
