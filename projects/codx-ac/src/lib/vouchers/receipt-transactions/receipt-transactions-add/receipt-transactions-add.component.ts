@@ -7,7 +7,7 @@ import { EditSettingsModel, row } from '@syncfusion/ej2-angular-grids';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
 import { CodxAcService, fmVouchersLines } from '../../../codx-ac.service';
 import { ActivatedRoute } from '@angular/router';
-import { Observable, Subject, takeUntil } from 'rxjs';
+import { Observable, Subject, map, takeUntil } from 'rxjs';
 import { itemMove } from '@syncfusion/ej2-angular-treemap';
 import { Validators } from '@angular/forms';
 import { IV_VouchersLines } from '../../../models/IV_VouchersLines.model';
@@ -34,6 +34,7 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
   journal: any;
   baseCurr: any;
   taxCurr:any;
+  postDateControl:any;
   fmVouchersLines:any = fmVouchersLines;
   tabInfo: TabModel[] = [ //? thiết lập footer
     { name: 'History', textDefault: 'Lịch sử', isActive: true },
@@ -73,6 +74,17 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
 
   onInit(): void {
     this.acService.setPopupSize(this.dialog, '100%', '100%');
+    this.cache
+      .viewSettingValues('ACParameters')
+      .pipe(
+        takeUntil(this.destroy$),
+        map((arr: any[]) => arr.find((a) => a.category === '1')),
+        map((data) => JSON.parse(data.dataValue))
+      ).subscribe((res:any)=>{
+        if (res) {
+          this.postDateControl = res?.PostedDateControl;
+        }
+      })
   }
 
   ngAfterViewInit() {
