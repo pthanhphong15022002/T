@@ -728,25 +728,28 @@
   </div>
 </ng-template>
 <ng-template #templateStatus let-data>
-  <div class="">
-    <!-- <codx-vll
-      [name]="vllStatus"
-      [field]="'Status'"
-      [value]="data?.status"
-      [showText]="true"
-      [showBgColor]="true"
-      class="badge badge-light badge-sm"
-    >
-    </codx-vll> -->
-    <codx-label
-      class="text-primary fs-7 cursor-pointer"
-      style="font-style: italic"
-      fiedName="viewDetailsCost"
-      [formName]="'CMDeals'"
-      [gridViewName]="'grvCMDeals'"
-      default="Xem chi tiết"
-      (click)="currentStep(data, '2')"
-    ></codx-label>
+  <div  class="d-flex justify-content-start">
+    <div class="d-flex flex-column align-items-center">
+      <!-- <codx-vll
+        [name]="vllStatus"
+        [field]="'Status'"
+        [value]="data?.status"
+        [showText]="true"
+        [showBgColor]="true"
+        class="badge badge-light badge-sm"
+      >
+      </codx-vll> -->
+      <view-step [stepID]="data?.stepID"></view-step>
+      <codx-label
+        class="text-primary fs-7 cursor-pointer"
+        style="font-style: italic"
+        fiedName="viewDetailsCost"
+        [formName]="'CMDeals'"
+        [gridViewName]="'grvCMDeals'"
+        default="Xem chi tiết"
+        (click)="currentStep(data, '2')"
+      ></codx-label>
+    </div>
   </div>
 </ng-template>
 
@@ -790,7 +793,6 @@
 </ng-template>
 
 <ng-template #templateSteps let-data>
-  <!-- <view-step [stepID]="data?.stepID" (click)="currentStep(data, '2')"></view-step> -->
   <div class="">
     <codx-label
       class="text-primary fs-7 cursor-pointer"

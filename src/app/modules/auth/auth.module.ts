@@ -25,6 +25,7 @@ import { AngularDeviceInformationService } from 'angular-device-information';
 import { Login2FAComponent } from './login/login2-fa/login2-fa.component';
 import { QRCodeGeneratorAllModule } from '@syncfusion/ej2-angular-barcode-generator';
 import { WaitingLoginQrcodeComponent } from './default/waiting-login-qrcode/waiting-login-qrcode.component';
+import { DebounceDirective } from './login/debounce-click.directive';
 
 @NgModule({
   declarations: [
@@ -41,6 +42,7 @@ import { WaitingLoginQrcodeComponent } from './default/waiting-login-qrcode/wait
     RedirectToComponent,
     Login2FAComponent,
     WaitingLoginQrcodeComponent,
+    DebounceDirective,
   ],
   imports: [
     CommonModule,
@@ -51,12 +53,9 @@ import { WaitingLoginQrcodeComponent } from './default/waiting-login-qrcode/wait
     SharedModule,
     CoreModule,
     ERMModule,
-    CodxCoreModule,
     AuthRoutingModule,
     CodxCoreModule.forRoot({ environment }),
   ],
-  providers: [
-    AngularDeviceInformationService,
-  ],
+  providers: [AngularDeviceInformationService],
 })
 export class AuthModule {}

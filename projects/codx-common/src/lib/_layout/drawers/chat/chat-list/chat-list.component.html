@@ -80,8 +80,8 @@
 <!-- template search chat -->
 <ng-template #itemTemplateSearch let-item>
     <div class="p-2" (click)="selectItemSeach(item)">
-        <ng-container *ngIf="item?.type != 'U' && item?.type == 'G';else tmpItem">
-            <codx-label [formModel]="" [name]="'lblHeader'" [default]="item?.name"></codx-label>
+        <ng-container *ngIf="item?.type == 'H';else tmpItem">
+            <codx-label class="fw-bold" [formModel]="" formName="Groups" gridViewName="grvGroups" [name]="'lbl'+item?.name" [default]="item?.name"></codx-label>
         </ng-container>
         <ng-template #tmpItem>
             <codx-temp-full [dataItem]="item" [title]="item?.name" [imageId]="item?.id" [imageObjName]="item?.groupName"

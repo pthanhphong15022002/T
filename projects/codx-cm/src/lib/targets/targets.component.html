@@ -152,7 +152,7 @@
             [selectedType]="'y'"
             [displayOption]="ops"
             cssClass="w-100"
-            (valueChange)="changeCalendar($event)"
+            (change)="changeCalendar($event)"
           ></codx-dropdown-calendar>
         </div>
         <div class="w-75px ms-2 input-32px" *ngIf="viewDataValue == '2'">
@@ -328,7 +328,7 @@
             [selectedType]="'y'"
             [displayOption]="ops"
             cssClass="w-100"
-            (valueChange)="changeCalendar($event)"
+            (change)="changeCalendar($event)"
           ></codx-dropdown-calendar>
         </div>
         <div class="w-75px ms-2 input-32px" *ngIf="viewDataValue == '2'">

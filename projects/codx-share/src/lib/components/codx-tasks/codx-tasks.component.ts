@@ -516,6 +516,7 @@ export class CodxTasksComponent
         type: ViewType.gantt,
         active: false,
         sameData: true,
+
         model: {
           eventModel: this.taskSettings,
           //template:this.ganttItems

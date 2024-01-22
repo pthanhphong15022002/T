@@ -13,6 +13,7 @@ import {
   CallFuncService,
   CodxDropdownCalendarComponent,
   DialogData,
+  DialogModel,
   DialogRef,
   NotificationsService,
   Util,
@@ -359,7 +360,9 @@ export class PopupAddTargetComponent {
 
   //#region TargetLine
   openPopup(share) {
-    this.callFc.openForm(share, '', 420, 600);
+    let option = new DialogModel();
+    option.zIndex = 1010;
+    this.callFc.openForm(share, '', 420, 600, null, null, null, option);
   }
   eventApply(e) {
     var id = '';
