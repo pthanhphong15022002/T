@@ -133,7 +133,7 @@ a:hover {
 	height: 380px;
 	
 	.e-tab-header{
-		margin-bottom: 15px;
+		margin-bottom: 5px;
 	}
 	.e-tab-header::before {
 		border: 0;
@@ -206,4 +206,8 @@ a:hover {
 .pass-policy codx-label{
 	font-family:Roboto!important;
 	font-size: 13px!important;
+}
+
+.login-signin{
+	height: 445px;
 }

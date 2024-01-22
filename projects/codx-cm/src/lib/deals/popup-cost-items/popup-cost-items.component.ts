@@ -115,7 +115,7 @@ export class PopupCostItemsComponent implements OnInit {
   }
 
   closePopup() {
-    if (this.viewOnly || (!this.isUpDealCost && this.isUpDealValueTo)) {
+    if (this.viewOnly || (!this.isUpDealCost && !this.isUpDealValueTo)) {
       this.dialog.close();
       return;
     }

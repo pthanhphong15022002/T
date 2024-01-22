@@ -309,6 +309,7 @@ export class EPApprovalComponent extends UIComponent {
         if (
           func.functionID == EPCONST.MFUNCID.Copy ||
           func.functionID == EPCONST.MFUNCID.C_CardTrans ||
+          func.functionID == EPCONST.MFUNCID.View ||
           func.functionID == EPCONST.MFUNCID.C_DriverAssign
         ) {
           func.disabled = true;

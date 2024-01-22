@@ -49,6 +49,9 @@ import { PropertyDefaultTitleComponent } from './modeview/properties/property-de
 import { PopupPermissionsProcessesComponent } from './processes/popup-add-process/popup-permissions-processes/popup-permissions-processes.component';
 import { FormStepsFieldGridComponent } from './processes/popup-add-process/form-steps-field-grid/form-steps-field-grid.component';
 import { FormTestDiagramComponent } from './processes/popup-add-process/form-test-diagram/form-test-diagram.component';
+import { AddDefaultComponent } from './processes/popup-add-process/form-steps-field-grid/add-default/add-default.component';
+import { AddStageComponent } from './processes/popup-add-process/form-steps-field-grid/add-default/add-stage/add-stage.component';
+import { AddTaskComponent } from './processes/popup-add-process/form-steps-field-grid/add-default/add-task/add-task.component';
 
 export const routes: Routes = [
   {
@@ -107,7 +110,12 @@ export const routes: Routes = [
     FormAdvancedSettingsComponent,
     PopupPermissionsProcessesComponent,
     FormStepsFieldGridComponent,
-    FormTestDiagramComponent
+    FormTestDiagramComponent,
+    AddDefaultComponent,
+
+
+    AddStageComponent,
+    AddTaskComponent
   ],
   imports: [
     CodxCoreModule.forRoot({ environment }),

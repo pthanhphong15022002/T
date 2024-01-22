@@ -202,6 +202,8 @@ export class DealsComponent
   applyApprover = '0';
   startLoad = false;
   funcDefault = 'CM0201';
+  listKeyFieldSum = [];
+  objectSumValue = {};
 
   constructor(
     private inject: Injector,
@@ -611,13 +613,16 @@ export class DealsComponent
         this.vllStatus = this.gridViewSetup?.Status?.referedValue;
         this.vllApprove = this.gridViewSetup?.ApproveStatus?.referedValue;
         // lay grid view - view gird he thong
-
         let arrField = Object.values(this.gridViewSetup).filter(
           (x: any) => x.isVisible
         );
+
         if (Array.isArray(arrField)) {
           this.arrFieldIsVisible = arrField
             .sort((x: any, y: any) => x.columnOrder - y.columnOrder)
+            .map((x: any) => x.fieldName);
+          this.listKeyFieldSum = arrField
+            .filter((x: any) => x.summaryBottom == '1' || x.summaryTop == '1')
             .map((x: any) => x.fieldName);
         }
         this.getColumsGrid(this.gridViewSetup);
@@ -1000,36 +1005,52 @@ export class DealsComponent
   //end Kanaban
 
   currentStep(deal, type = '1') {
-    setTimeout(() => {
-      if (deal) {
-        let data = {
-          formModel: this.view.formModel,
-          dataView: deal,
-          isView: true,
-          type,
-          view: this.view,
-          statusCodeID: this.statusCodeID,
-          statusCodeCmt: this.statusCodeCmt,
-          detailViewDeal: this.detailViewDeal,
-          title: type == '1' ? 'Giai đoạn hiện tại' : 'Hiện trạng',
-          // listInsStepStart: this.listInsStep,
-        };
-        let option = new DialogModel();
-        option.zIndex = 100;
-        option.DataService = this.view.dataService;
-        option.FormModel = this.view.formModel;
-        let popupContract = this.callFunc.openForm(
-          CurrentStepComponent,
-          '',
-          800,
-          Util.getViewPort().height,
-          '',
-          data,
-          '',
-          option
-        );
-      }
-    }, 100);
+    if (deal) {
+      let data = {
+        formModel: this.view.formModel,
+        dataView: deal,
+        isView: true,
+        type,
+        view: this.view,
+        statusCodeID: this.statusCodeID,
+        statusCodeCmt: this.statusCodeCmt,
+        detailViewDeal: this.detailViewDeal,
+        title: type == '1' ? 'Thông tin dự án' : 'Hiện trạng',
+        // listInsStepStart: this.listInsStep,
+      };
+      let option = new DialogModel();
+      option.zIndex = 100;
+      option.DataService = this.view.dataService;
+      option.FormModel = this.view.formModel;
+      let popup = this.callFunc.openForm(
+        CurrentStepComponent,
+        '',
+        800,
+        Util.getViewPort().height,
+        '',
+        data,
+        '',
+        option
+      );
+      popup.closed.subscribe((e) => {
+        if (e && e.event) {
+          if (e.event?.isUpDealCost) {
+            let dealCost = e.event.dealCost;
+            deal.dealCost = dealCost;
+          }
+          if (e.event?.isUpDealValueTo) {
+            let dealValueTo = e.event.dealValueTo;
+            deal.dealValueTo = dealValueTo;
+          }
+          let grossProfit = deal.dealValueTo - deal.dealCost;
+          deal.grossProfit = grossProfit;
+
+          this.view.dataService.update(deal, true).subscribe();
+
+          if (this.listKeyFieldSum?.length > 0) this.totalGirdView(); //tính lại tổng chajy cuxng nhanh
+        }
+      });
+    }
   }
 
   moveStage(data: any) {
@@ -1422,8 +1443,9 @@ export class DealsComponent
       if (e && e.event != null) {
         //this.view.dataService.update(e.event, true).subscribe();
         //up kaban nee đúng process
+        let dt = e.event;
+        this.dataSelected = dt;
         if (this.kanban && this.processIDKanban == e.event?.processID) {
-          let dt = e.event;
           let money = dt.dealValue * dt.exchangeRate;
           this.renderTotal(dt.stepID, 'add', money);
 
@@ -1431,7 +1453,15 @@ export class DealsComponent
           // this.kanban?.kanbanObj?.refreshHeader();
           this.kanban.refresh();
         }
+        // if (this.detailViewDeal) {
+        //   this.detailViewDeal.dataSelected = JSON.parse(
+        //     JSON.stringify(this.dataSelected)
+        //   );
+        //   this.detailViewDeal?.promiseAllAsync();
+        //   this.detailViewDeal.loadContactEdit();
+        // }
         //   this.detailViewDeal.promiseAllAsync();
+        if (this.listKeyFieldSum?.length > 0) this.totalGirdView(); //tính lại tổng
         this.changeDetectorRef.detectChanges();
       }
     });
@@ -1470,13 +1500,14 @@ export class DealsComponent
         dialogCustomDeal.closed.subscribe((e) => {
           if (e && e.event != null) {
             this.view.dataService.update(e.event, true).subscribe();
+            let dt = e.event;
+            this.dataSelected = dt;
             //up kaban
             if (
               this.kanban &&
               (dealValueOld != e.event?.dealValue ||
                 exchangeRateOld != e.event?.exchangeRate)
             ) {
-              let dt = e.event;
               let money =
                 dt.dealValue * dt.exchangeRate - dealValueOld * exchangeRateOld;
               this.renderTotal(dt.stepID, 'add', money);
@@ -1494,6 +1525,7 @@ export class DealsComponent
               this.detailViewDeal.loadContactEdit();
             }
             this.isChangeOwner = ownerIdOld != e.event.owner;
+            if (this.listKeyFieldSum?.length > 0) this.totalGirdView(); //tính lại tổng
             this.changeDetectorRef.detectChanges();
           }
         });
@@ -2354,42 +2386,46 @@ export class DealsComponent
     }
   }
   totalGirdView() {
-    // this.getTotal().subscribe((total) => {
+    // Nó có tiền tệ khác nhau nên phải tính
     //   //không the format truyền qua
     //   // let intl = new Internationalization();
     //   // let nFormatter = intl.getNumberFormat({
     //   //   skeleton: 'n6',
     //   // });
-    //   // this.totalView = nFormatter(total) + ' ' + this.currencyIDDefault;
-
-    //   if (!Number.parseFloat(total)) total = 0;
-    //   let objectDealValue = {
-    //     dealValue: total,
-    //   };
-
-    //   this.view.currentView.sumData = objectDealValue;
-
-    //   // let elemnt = document.querySelector('.sum-content');
-    //   // if (elemnt) {
-    //   //   elemnt.innerHTML = this.totalView;
-    //   // }
-    // });
 
     //chưa dùng đến nhưng chắc chắn có dùng - đã dùng
-    this.getTotalFiels().subscribe((totals) => {
-      console.log(totals);
-      //if (!Number.parseFloat(total)) total = 0;
-      let objectDealValue = {
-        dealValue: totals.DeadValue ?? 0,
-        dealValueTo: totals.DealValueTo ?? 0,
-        dealCost: totals.DealCost ?? 0,
-        dealCostView: totals.DealCost ?? 0,
-        grossProfit: totals.GrossProfit ?? 0,
-        grossProfitView: totals.GrossProfit ?? 0,
-      };
+    if (this.listKeyFieldSum?.length > 0) {
+      //caái này xử lý tempView
+      let viewSum = JSON.parse(JSON.stringify(this.listKeyFieldSum));
 
-      this.view.currentView.sumData = objectDealValue;
-    });
+      let idxDealCostView = viewSum.findIndex((f) => f == 'DealCostView');
+      if (idxDealCostView != -1) {
+        viewSum.splice(idxDealCostView, 1);
+        viewSum.push('DealCost');
+      }
+
+      let idxGrossProfitView = viewSum.findIndex((f) => f == 'GrossProfitView');
+      if (idxGrossProfitView != -1) {
+        viewSum.splice(idxGrossProfitView, 1), viewSum.push('GrossProfit');
+      }
+
+      let fieldSum = [...new Set(viewSum)].join(';'); //lay các giá trị ko trung nhau
+
+      this.getTotalFiels(fieldSum).subscribe((totals) => {
+        if (totals) {
+          // let objectDealValue = {};
+          this.listKeyFieldSum.forEach((f) => {
+            let fieldName = Util.camelize(f);
+            let fv = f;
+            if (fieldName == 'dealCostView') fv = 'DealCost';
+            if (fieldName == 'grossProfitView') fv = 'GrossProfit';
+
+            this.objectSumValue[fieldName] = totals[fv] ?? 0;
+          });
+          this.view.currentView.sumData = this.objectSumValue;
+        }
+      });
+    }
   }
 
   getTotal() {
@@ -2422,13 +2458,13 @@ export class DealsComponent
   }
 
   ///Cái này dùng nhiều Field => làm trước
-  getTotalFiels() {
+  getTotalFiels(listKey) {
     let service = 'CM';
     let className = 'DealsBusiness'; //gan tam
     let method = 'GetTotalFieldsAsync'; //gan tam
 
     let dataObj = {
-      listKey: 'DealValue;DealValueTo;DealCost;GrossProfit', //tesst
+      listKey: listKey, //'DealValue;DealValueTo;DealCost;GrossProfit', //tesst
       exchRate: this.exchangeRateDefault,
     };
 
@@ -2549,7 +2585,7 @@ export class DealsComponent
         let dialogCost = this.callfc.openForm(
           PopupCostItemsComponent,
           '',
-          500,
+          600,
           700,
           '',
           obj,
@@ -2558,15 +2594,58 @@ export class DealsComponent
         );
         dialogCost.closed.subscribe((e) => {
           if (e && e.event) {
-            if (e.event?.isUpDealCost) data.dealCost = e.event.dealCost;
-            if (e.event?.isUpDealValueTo)
-              data.dealValueTo = e.event.dealValueTo;
-            data.grossProfit = data.dealValueTo - data.dealCost;
+            let dataOld = JSON.parse(JSON.stringify(data));
+            if (e.event?.isUpDealCost) {
+              let dealCost = e.event.dealCost;
+              data.dealCost = dealCost;
+            }
+            if (e.event?.isUpDealValueTo) {
+              let dealValueTo = e.event.dealValueTo;
+              data.dealValueTo = dealValueTo;
+            }
+            let grossProfit = data.dealValueTo - data.dealCost;
+            data.grossProfit = grossProfit;
+
             this.view.dataService.update(data, true).subscribe();
+
+            if (this.listKeyFieldSum?.length > 0) this.totalGirdView(); //tính lại tổng chajy cuxng nhanh
           }
         });
       }
     });
   }
+
+  //render chứ ko call api  lại (Chua test nen chua gang)
+  renderSum(dataOld, dataNew) {
+    if (!this.listKeyFieldSum || this.listKeyFieldSum?.length == 0) return;
+    let exchangeRate = dataOld?.exchangeRate ?? dataNew?.exchangeRate;
+    if (!exchangeRate) exchangeRate = 1;
+    if (dataOld?.dealCost != dataNew?.dealCost) {
+      this.objectSumValue['dealCost'] =
+        this.objectSumValue['dealCost'] ??
+        0 + (dataNew?.dealCost ?? 0 - dataOld?.dealCost ?? 0) * exchangeRate;
+      this.objectSumValue['dealCostView'] =
+        this.objectSumValue['dealCostView'] ??
+        0 + (dataNew?.dealCost ?? 0 - dataOld?.dealCost ?? 0) * exchangeRate;
+    }
+    if (dataOld?.grossProfit != dataNew?.grossProfit) {
+      this.objectSumValue['grossProfit'] =
+        this.objectSumValue['grossProfit'] ??
+        0 +
+          (dataNew?.grossProfit ?? 0 - dataOld?.grossProfit ?? 0) *
+            exchangeRate;
+      this.objectSumValue['grossProfitView'] =
+        this.objectSumValue['grossProfitView'] ??
+        0 +
+          (dataNew?.grossProfit ?? 0 - dataOld?.grossProfit ?? 0) *
+            exchangeRate;
+    }
+    this.view.currentView.sumData = this.objectSumValue;
+  }
   //--------------------------------------//
+  handelMoveStage(event, contract){
+    if(event){
+      this.moveStage(contract);
+    }
+  }
 }

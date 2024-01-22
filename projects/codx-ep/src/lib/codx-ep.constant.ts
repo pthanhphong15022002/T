@@ -61,7 +61,7 @@ export const EPCONST = {
     Delete: 'SYS02',
     Edit: 'SYS03',
     Copy: 'SYS04',
-    View:'ViewEP',
+    View:'SYS05',
     //Room
     R_Reschedule:'EP4T1101',
     R_Invite:'EP4T1102',

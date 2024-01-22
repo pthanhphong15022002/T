@@ -3854,7 +3854,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
     request.funcID = this.eTimeCardFunc?.functionID;
     dataService.service = 'HR';
     dataService.request = request;
-
+    
     this.hrService.getFormModel(this.eTimeCardFunc.functionID).then((res) => {
       dataService.dataSelected = tempData;
       let option = new SidebarModel();

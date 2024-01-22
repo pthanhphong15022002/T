@@ -1,3 +1,4 @@
+import { CodxCommonService } from 'projects/codx-common/src/lib/codx-common.service';
 import { group } from 'console';
 import {
   AfterViewInit,
@@ -17,6 +18,7 @@ import {
   CodxListviewComponent,
   CRUDService,
   FormModel,
+  NotificationsService,
 } from 'codx-core';
 import { SignalRService } from '../services/signalr.service';
 import { CodxChatBoxComponent } from '../chat-box/chat-box.component';
@@ -47,8 +49,10 @@ export class CodxChatListComponent implements OnInit, AfterViewInit {
     private signalRSV: SignalRService,
     private cache: CacheService,
     private dt: ChangeDetectorRef,
+    private notificationsService: NotificationsService,
     private applicationRef: ApplicationRef,
     private callfc: CallFuncService,
+    private CodxCommonService: CodxCommonService,
     private auth: AuthStore
   ) {
     this.user = this.auth.get();
@@ -206,4 +210,46 @@ export class CodxChatListComponent implements OnInit, AfterViewInit {
       (this.codxListView.dataService as CRUDService).add(group).subscribe();
     }
   }
+  clickMF(type,data){
+    if(type && data){
+      switch(type){
+        case 'delete':{
+          this.notificationsService.alertCode('SYS030').subscribe((x) => {
+            if (x.event?.status == 'Y') {
+              this.CodxCommonService.deleteGroup(data.groupID).subscribe(res=>{
+              if(res){
+                (this.codxListView.dataService as CRUDService).remove(data).subscribe();
+                this.notificationsService.notifyCode('SYS008');
+              }
+            })
+            } 
+          });          
+          break;
+        }
+        case 'unFavorite':
+        case 'favorite':          
+          this.favorite(data,data?.isFavorite);
+          break;
+        
+      }
+    }
+  }
+  changeDataMF(evt,data){
+    if(evt){
+      
+    }
+  }
+  favorite(data,isFavorite =false){    
+  this.api
+      .execSv('WP', 'ERM.Business.WP', 'ContactFavoriteBusiness', 'CheckFavoriteAsync', [
+        data?.groupID2,!isFavorite
+      ])
+      .subscribe((res: any) => {
+        if(res){
+          data.isFavorite = !isFavorite;
+          this.dt.detectChanges();
+        }
+      });
+  }
+  
 }

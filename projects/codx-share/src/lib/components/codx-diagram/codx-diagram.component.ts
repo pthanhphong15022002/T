@@ -1040,8 +1040,9 @@ export class CodxDiagramComponent implements OnInit, AfterViewInit {
        newNode.wrapper.offsetY = newNode.offsetY;
        newNode.margin.top =  newNode.margin.top + 300
        if(newNode.parentId){
-        let prNode = this.diagram.nodes.find((x:any)=>x.id== newNode.parentId);
+        let prNode = this.diagram.getNodeObject(newNode.parentId);
         if(prNode){
+          prNode.height = prNode.height +300;
           newNode.parentId = undefined
 
           this.diagram.add(newNode);
@@ -1053,7 +1054,7 @@ export class CodxDiagramComponent implements OnInit, AfterViewInit {
            targetID: newNode.id,
           };
           this.diagram.add(cnn);
-          //this.diagram.updateViewPort();
+          this.diagram.reset();
           setTimeout(()=>{
             let item = this.diagram.getNodeObject(newNode.id);
             if(item){
