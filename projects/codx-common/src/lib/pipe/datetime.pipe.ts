@@ -19,6 +19,9 @@ export class DatetimePipe implements PipeTransform {
         if (showtime)
           format = "DD/MM/YYYY HH:mm"
         break;
+      case "dm":
+        format= "DD/MM"        
+        break;
       case "y":
         format = "YYYY"
         break;

@@ -52,7 +52,7 @@ export class BP_Processes_Steps {
   location: string;
   duration: number;
   interval: string;
-  reminder: string;
+  reminder: [];
   eventControl: string;
   extendInfo: Array<[]>;
   dependences: Array<[]>;
@@ -64,6 +64,7 @@ export class BP_Processes_Steps {
   createdBy: string;
   modifiedOn: Date;
   modifiedBy: string;
+  settings: string;
 }
 export class BP_ProcessRevisions {
   recID: string;

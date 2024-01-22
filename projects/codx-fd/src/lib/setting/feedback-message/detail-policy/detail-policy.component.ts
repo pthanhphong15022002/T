@@ -26,6 +26,7 @@ export class DetailPolicyComponent extends UIComponent implements OnInit {
   lstLines = [];
   policy;
   mode = 'add' || 'edit';
+  labelPoint = 'Xu';
   constructor(
     private modalService: NgbModal,
     private tenantStore: TenantStore,
@@ -42,6 +43,9 @@ export class DetailPolicyComponent extends UIComponent implements OnInit {
     if (!this.lstPolicyLines) this.lstPolicyLines = [];
     if (this.setting) {
       this.policy = this.setting.policy;
+      if(this.policy.category == '2') {
+        this.labelPoint = 'Điểm';
+      }
       // console.log('policyRecID ', this.policyRecID);
       console.log('policy ', this.setting.policy);
       switch (this.setting.referedType) {

@@ -46,6 +46,7 @@
       </ng-container>
       <ng-template #reportBolder>
         <codx-report-iframe
+          *ngIf="data"
           [service]="data?.service"
           [funcID]="data?.recID"
           [predicates]="predicate"

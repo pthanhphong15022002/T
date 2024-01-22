@@ -2419,6 +2419,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
   }
 
   popupViewAllContract() {
+    debugger
     let opt = new DialogModel();
     opt.zIndex = 999;
     let popup = this.callfunc.openForm(
@@ -2453,6 +2454,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       }
     });
   }
+  
 
   popupViewAllWorkPermit() {
     let opt = new DialogModel();
@@ -3852,7 +3854,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
     request.funcID = this.eTimeCardFunc?.functionID;
     dataService.service = 'HR';
     dataService.request = request;
-
+    
     this.hrService.getFormModel(this.eTimeCardFunc.functionID).then((res) => {
       dataService.dataSelected = tempData;
       let option = new SidebarModel();

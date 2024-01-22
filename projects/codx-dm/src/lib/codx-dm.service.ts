@@ -600,8 +600,6 @@ export class CodxDMService {
         this.notificationsService.notify('DM059');
         return;
       }
-      var dialogModel = new DialogModel();
-      dialogModel.IsFull = true;
     }
   }
 

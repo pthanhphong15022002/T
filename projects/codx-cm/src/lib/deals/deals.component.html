@@ -588,6 +588,7 @@
     (changeDataCustomers)="editCustomer($event)"
     [isChangeOwner]="isChangeOwner"
     [taskAdd]="taskAdd"
+    (moveStage)="handelMoveStage($event, dataSelected)"
   >
   </codx-deal-detail>
   <!-- [isChangeViewDetails]="viewCrr == '2'" -- nó chưa change dc khi đổi view-->
@@ -792,14 +793,14 @@
   <!-- <view-step [stepID]="data?.stepID" (click)="currentStep(data, '2')"></view-step> -->
   <div class="">
     <codx-label
-    class="text-primary fs-7 cursor-pointer"
-    style="font-style: italic"
-    fiedName="viewDetailsCost"
-    [formName]="'CMDeals'"
-    [gridViewName]="'grvCMDeals'"
-    default="Xem chi tiết"
-    (click)="currentStep(data, '1')"
-  ></codx-label>
+      class="text-primary fs-7 cursor-pointer"
+      style="font-style: italic"
+      fiedName="viewDetailsCost"
+      [formName]="'CMDeals'"
+      [gridViewName]="'grvCMDeals'"
+      default="Xem chi tiết"
+      (click)="currentStep(data, '1')"
+    ></codx-label>
   </div>
 </ng-template>
 
@@ -868,7 +869,7 @@
       "
     ></span>
   </div>
-  <div *ngIf="data?.dealCost">
+  <div>
     <codx-label
       class="text-primary fs-7 cursor-pointer"
       style="font-style: italic"
@@ -876,7 +877,31 @@
       [formName]="'CMDeals'"
       [gridViewName]="'grvCMDeals'"
       default="Xem chi tiết"
-      (click)="viewDetailsCost(data.recID)"
+      (click)="viewDetailsCost(data)"
+    ></codx-label>
+  </div>
+</ng-template>
+<ng-template #templateGrossProfit let-data>
+  <div>
+    <span
+      class="fs-7"
+      #grossProfit
+      [innerHTML]="
+        data?.grossProfit
+          | formatvalue : view.formModel : 'grossProfit' : grossProfit
+          | async
+      "
+    ></span>
+  </div>
+  <div>
+    <codx-label
+      class="text-primary fs-7 cursor-pointer"
+      style="font-style: italic"
+      name="viewDetailsGrossProfit"
+      [formName]="'CMDeals'"
+      [gridViewName]="'grvCMDeals'"
+      default="Xem chi tiết"
+      (click)="viewDetailsCost(data)"
     ></codx-label>
   </div>
 </ng-template>

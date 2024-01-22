@@ -267,9 +267,9 @@ export class ApprovalsComponent extends UIComponent {
           }
           this.detectorRef.detectChanges();
         });
-    } else if (event.functionID === 'FDT1001') {
+    } else if (event.functionID === 'FDT1003') {
       this.accept(data);
-    } else if (event.functionID === 'FDT1002') {
+    } else if (event.functionID === 'FDT1004') {
       this.notAccept(data);
     }
   }
@@ -294,6 +294,14 @@ export class ApprovalsComponent extends UIComponent {
         const fdt1002 = event.find((i) => i.functionID === 'FDT1002');
         if (fdt1002) {
           fdt1002.disabled = true;
+        }
+        const fdt1003 = event.find((i) => i.functionID === 'FDT1003');
+        if (fdt1003) {
+          fdt1003.disabled = true;
+        }
+        const fdt1004 = event.find((i) => i.functionID === 'FDT1004');
+        if (fdt1004) {
+          fdt1004.disabled = true;
         }
       }
     }

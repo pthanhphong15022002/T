@@ -131,7 +131,8 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
     | 'customer'
     | 'task'
     | 'appendix'
-    | 'extend';
+    | 'extend'
+    | 'view';
 
   listParticipants;
   objPermissions = {};
@@ -193,7 +194,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
   ];
 
   tabField = {
-    icon: 'icon-i-menu-button-wide',
+    icon: 'icon-event_note',
     text: 'Thông tin mở rộng',
     name: 'InputField',
     subName: 'Input field',
@@ -300,7 +301,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
     this.tabContent = [this.information, this.reference];
     if (this.type == 'task') {
       this.tabInfo.push({
-        icon: 'icon-more',
+        icon: 'icon-add_task',
         text: 'Công việc',
         name: 'General task',
         subName: 'General task',
@@ -407,6 +408,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
           this.mapDataInfield();
         }
         break;
+      case 'view':
       case 'edit':
         if (data) {
           this.contracts = data;
@@ -632,6 +634,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
         !this.disabledShowInput &&
         this.action !== 'edit' &&
         this.action !== 'extend' &&
+        this.action !== 'view' &&
         e
       ) {
         this.contracts.contractID = e?.data?.trim();
@@ -808,28 +811,28 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
 
   valueChangeOwner(event) {
     this.contracts.owner = event?.data;
-    // console.log(event?.component?.itemsSelected[0]);
-    // let user = event?.component?.itemsSelected[0];
-    // if (!this.contracts.applyProcess && user) {
-    //   let permissions = new CM_Permissions();
-    //   permissions.recID = Util.uid();
-    //   permissions.objectID = user?.UserID;
-    //   permissions.objectName = user?.UserName;
-    //   permissions.objectType = 'U';
-    //   permissions.roleType = 'O';
-    //   permissions.memberType = '0';
-    //   permissions.full = true;
-    //   permissions.read = true;
-    //   permissions.edit = false;
-    //   permissions.create = false;
-    //   permissions.update = true;
-    //   permissions.assign = true;
-    //   permissions.delete = true;
-    //   permissions.share = false;
-    //   permissions.upload = true;
-    //   permissions.download = true;
-    //   this.contracts.permissions = [permissions];
-    // }
+    console.log(event?.component?.itemsSelected[0]);
+    let user = event?.component?.itemsSelected[0];
+    if (!this.contracts.applyProcess && user) {
+      let permissions = new CM_Permissions();
+      permissions.recID = Util.uid();
+      permissions.objectID = user?.UserID;
+      permissions.objectName = user?.UserName;
+      permissions.objectType = 'U';
+      permissions.roleType = 'O';
+      permissions.memberType = '0';
+      permissions.full = true;
+      permissions.read = true;
+      permissions.edit = false;
+      permissions.create = false;
+      permissions.update = true;
+      permissions.assign = true;
+      permissions.delete = true;
+      permissions.share = false;
+      permissions.upload = true;
+      permissions.download = true;
+      this.contracts.permissions = [permissions];
+    }
   }
 
   setValueComboboxDeal() {
@@ -1241,15 +1244,15 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
   //#endregion
 
   getListInstanceSteps(processId: any) {
-    let data = [processId, this.contracts?.refID, this.action, '4'];
+    let action = this.action == 'view' ? 'edit' : this.action;
+    let data = [processId, this.contracts?.refID, action, '4'];
     this.cmService.getInstanceSteps(data).subscribe((res) => {
       if (res && res.length > 0) {
         let obj = {
           id: processId,
           steps: res[0],
           permissions: res[1],
-          contractID:
-            this.action !== 'edit' ? res[2] : this.contracts?.contractID,
+          contractID: action !== 'edit' ? res[2] : this.contracts?.contractID,
           processSetting: res[3],
         };
         let isExist = this.listMemorySteps.some((x) => x.id === processId);

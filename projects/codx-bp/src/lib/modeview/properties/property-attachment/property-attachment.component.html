@@ -18,7 +18,7 @@
             <tbody>
                 <tr class="border-top" *ngFor="let item of data.documentControl , let i = index">                
                     <th><codx-input type="text" placeholder="Tên File" field="title" [crrValue]="item.title" (valueChange)="valueChangeAttach($event,i)"></codx-input></th>
-                    <td><i class="icon-attach_file cursor-pointer" (click)="uploadFile(item.recID)"></i></td>
+                    <td><i class="icon-attach_file cursor-pointer" (click)="uploadFile(item.recID, i)"></i></td>
                     <td class="text-center"><codx-input type="checkbox" [checked]="item.isRequired" field="isRequired" (valueChange)="valueChangeAttach($event,i)"></codx-input></td>
                     <td><i class="icon-close cursor-pointer" (click)="deleteRow(i)"></i></td>
                 </tr>
@@ -44,7 +44,8 @@
 
 <codx-attachment 
   #attachment 
-  hideImageUpload="1" 
+  hideImageUpload="1"
+  hideImageThumb="1" 
   showMessage="0" 
   hideBtnSave="1" 
   hideFolder="1" 
@@ -57,5 +58,6 @@
   hideMoreF="0" 
   [idField]="'RecID'" 
   [objectType]="' BP_Processes_Steps_ExtendInfo'"
+  (fileSave)="fileSave($event)"
 >
 </codx-attachment>

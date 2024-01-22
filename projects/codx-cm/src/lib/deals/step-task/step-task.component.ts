@@ -65,6 +65,7 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
   @Output() changeProgress = new EventEmitter<any>();
   @Output() isSusscess = new EventEmitter<any>();
   @Output() moveStage = new EventEmitter<any>();
+  @Output() startStep = new EventEmitter<any>();
   @ViewChild('viewReason', { static: true }) viewReason;
   dialogPopupReason: DialogRef;
   status = [];
@@ -248,8 +249,9 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
   }
 
   handelContinueStep(event, step) {
-    
-    this.continueStep.emit({ isTaskEnd: event, step: step });
+    if(event){
+      this.nextStep();
+    }
   }
 
   // continueStep(isTaskEnd) {
@@ -590,5 +592,8 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
   }
   nextStep(){
     this.moveStage.emit(true);
+  }
+  startStepFunction(){
+    this.startStep.emit(true);
   }
 }

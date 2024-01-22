@@ -1,0 +1,109 @@
+<div class="d-flex flex-column w-100 h-100 bg-step-f-add-task">
+    <div class="d-flex flex-column mt-4">
+        <codx-label formName="fmBPFieldGrid" fiedName="lblTaskTitle" default="Giai đoạn thực hiện" class="fw-bold"></codx-label>
+        <!-- <codx-input type="text" field="stepName" [crrValue]="stage?.stepName" (valueChange)="valueChange($event)"></codx-input> -->
+    
+        <div ngbDropdown #myDrop="ngbDropdown" class="d-inline-block bp-ffg-dropdown">
+            <div class="d-flex align-items-center justify-content-between border p-2 w-100 rounder cursor-pointer" ngbDropdownToggle>
+                <span>{{stage?.stepName}}</span>
+                <i [ngClass]="!myDrop.isOpen() ? 'icon-i-chevron-down' : 'icon-i-chevron-up' "></i>
+            </div>
+			<div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+				<button ngbDropdownItem *ngFor="let item of listStage" [class.active]="stage.recID == item.recID" (click)="changeStage(item)">{{item.stepName}}</button>
+			</div>
+		</div>
+    </div>
+    <div class="d-flex flex-column mt-4">
+        <codx-label formName="fmBPFieldGrid" fiedName="lblTaskName" default="Tên công việc" class="fw-bold"></codx-label>
+        <codx-input type="text" field="stepName" [crrValue]="data?.stepName" (valueChange)="valueChange($event)"></codx-input>
+    </div>
+    <div class="d-flex flex-column mt-4">
+        <codx-label formName="fmBPFieldGrid" fiedName="lblTaskDes" default="Diễn giải" class="fw-bold"></codx-label>
+        <codx-input type="textarea" format="ed2" field="memo" [crrValue]="data?.memo" (valueChange)="valueChange($event)"></codx-input>
+    </div>
+    <div class="d-flex flex-column mt-4">
+        <codx-label formName="fmBPFieldGrid" fiedName="lblTaskDuration" default="Thời gian thực hiện" class="fw-bold"></codx-label>
+        <div class="d-flex align-items-center">
+            <codx-input type="number"  field="duration" [crrValue]="data?.duration" (valueChange)="valueChange($event)" [ngClass]="'w-80px'"></codx-input>
+            <codx-input type="valuelist" [refValue]="'VL004'" [crrValue]="data?.interval"  field="interval" (valueChange)="valueChange($event)" [ngClass]="'mx-2 w-80px'"></codx-input>
+        </div>
+    </div>
+    <div class="d-flex flex-column mt-4">
+        <codx-label formName="fmBPFieldGrid" fiedName="lblTaskLocation" default="Địa điểm" class="fw-bold"></codx-label>
+        <codx-input type="text" field="location" [crrValue]="data?.location" (valueChange)="valueChange($event)"></codx-input>
+    </div>
+    <div class="d-flex flex-column border-top mt-4 pt-4">
+        <div class="d-flex align-items-center justify-content-between">
+            <codx-label formName="fmBPFieldGrid" fiedName="lblTaskOwners" default="Người thực hiện" class="fw-bold"></codx-label>
+            <codx-input type="Combobox" [refValue]="'Share_Users'" [showInput]="false"
+                refType="P" field="popup"
+                (valueChange)="valueChangeUser($event)"    
+            >
+            </codx-input>
+        </div>
+        <div class="d-flex flex-column">
+            <div class="d-flex align-items-center justify-content-between mt-2" *ngFor="let item of listUses , let i = index">
+                <div class="d-flex align-items-center">
+                    <codx-img [objectId]="item?.objectID" [objectType]="'AD_Users'" [referType]="'avt'" [width]="30"></codx-img>
+                    <div class="d-flex flex-column ms-2">
+                        <span>{{item.objectName}}</span>
+                    </div>
+                </div>
+                <div class="cursor-pointer" (click)="deleteUser(i)">
+                    <i class="icon-close"></i>
+                </div>
+            </div>
+
+            <ng-container *ngIf="(activityType == 'Approve' || activityType == 'Check' || activityType == 'Sign') && listUses.length > 0">
+                <div class="d-flex align-items-center justify-content-between mt-4">
+                    <div class="d-flex align-items-center mt-4" *ngFor="let item of vllBP013.datas , let i = index">
+                        <input class="form-check-input" [id]="'radioAttachApprovel' + i" type="radio" name="radioAttachApprovel" [value]="item.value" [checked]="item.value == data?.settings?.completeControl" >
+                        <label class="form-check-label ms-2 fw-normal" [for]="'radioAttachApprovel' + i">
+                            {{item.text}}
+                        </label>
+                    </div>
+                </div>
+            </ng-container>
+        </div>
+    </div>
+    <ng-container *ngIf="activityType == 'Form'">
+        <div class="d-flex flex-column border-top mt-4 pt-4">
+            <codx-label formName="fmBPFieldGrid" fiedName="lblTaskSettingForm" default="Thiết lập Form" class="fw-bold"></codx-label>
+            <button type="button" class="btn btn-light w-100 mt-4" ><i class="icon-i-plus"></i> <codx-label formName="fmBPFieldGrid" fiedName="lblTaskSettings" default="Thiết lập form nhập liệu"></codx-label></button>
+        </div>
+        <div class="d-flex flex-column border-top mt-4 pt-4">
+            <div class="d-flex align-items-center justify-content-between mt-2">
+                <codx-label formName="fmBPFieldGrid" fiedName="lblTaskExport" default="Xuất khẩu nhập liệu" class="fw-bold"></codx-label>
+                <codx-input type="switch"></codx-input>
+            </div>
+            <button type="button" class="btn btn-light w-100 mt-4" ><i class="icon-i-plus"></i> <codx-label formName="fmBPFieldGrid" fiedName="lblTaskSelectFile" default="Chọn file template"></codx-label></button>
+        </div>
+    </ng-container>
+    <ng-container *ngIf="activityType == 'Task'">
+        <div class="d-flex flex-column border-top mt-4 pt-4">
+            <codx-label formName="fmBPFieldGrid" fiedName="lblTaskAttachment" default="Tài liệu đính kèm" class="fw-bold"></codx-label>
+            <div class="d-flex align-items-center justify-content-between px-4">
+                <button type="button" class="btn btn-light w-100 mt-4 me-1" ><i class="icon-i-file-earmark-text"></i> <codx-label formName="fmBPFieldGrid" fiedName="lblTaskAttachment1" default="Chọn từ quy trình"></codx-label></button>
+                <button type="button" class="btn btn-light w-100 mt-4 ms-1" ><i class="icon-attach_file"></i> <codx-label formName="fmBPFieldGrid" fiedName="lblTaskAttachment2" default="Đính kèm mới"></codx-label></button>
+            </div>
+        </div>
+        <div class="d-flex flex-column border-top mt-4 pt-4">
+            <codx-label formName="fmBPFieldGrid" fiedName="lblTaskCheckList" default="CheckList" class="fw-bold"></codx-label>
+            <div class="d-flex align-items-center mt-4">
+                <input class="form-check-input" type="checkbox">
+                <span class="mx-2">Thêm mục</span>
+            </div>
+        </div>
+    </ng-container>
+    <ng-container *ngIf="activityType == 'Approve' || activityType == 'Check' || activityType == 'Sign'">
+        <div class="d-flex flex-column border-top mt-4 pt-4">
+            <codx-label formName="fmBPFieldGrid" [fiedName]="'lblTaskAttachmentApproval'" [default]="'Tài liệu duyệt'" class="fw-bold" *ngIf="activityType == 'Approve'"></codx-label>
+            <codx-label formName="fmBPFieldGrid" [fiedName]="'lblTaskAttachmentCheck'" [default]="'Tài liệu kiểm tra'" class="fw-bold" *ngIf="activityType == 'Check'"></codx-label>
+            <codx-label formName="fmBPFieldGrid" [fiedName]="'lblTaskAttachmentSign'" [default]="'Tài liệu ký số'" class="fw-bold" *ngIf="activityType == 'Sign'"></codx-label>
+            <div class="d-flex align-items-center justify-content-between px-4">
+                <button type="button" class="btn btn-light w-100 mt-4 me-1" ><i class="icon-i-file-earmark-text"></i> <codx-label formName="fmBPFieldGrid" fiedName="lblTaskAttachment1" default="Chọn từ quy trình"></codx-label></button>
+                <button type="button" class="btn btn-light w-100 mt-4 ms-1" ><i class="icon-attach_file"></i> <codx-label formName="fmBPFieldGrid" fiedName="lblTaskAttachment2" default="Đính kèm mới"></codx-label></button>
+            </div>
+        </div>
+    </ng-container>
+</div>

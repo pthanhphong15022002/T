@@ -19,13 +19,16 @@ export class PopupCostItemsComponent implements OnInit {
   dialog: DialogRef;
 
   title = 'Chi phí';
-  viewOnly = true;
+  viewOnly = false;
   costInfos = [];
   grViewCost: any;
   cost: any;
   tmpCost: CM_CostItems;
   totalCost = 0;
   transID: string;
+  dealValueTo: any;
+  isUpDealCost = false;
+  isUpDealValueTo = false;
 
   constructor(
     private api: ApiHttpService,
@@ -43,6 +46,7 @@ export class PopupCostItemsComponent implements OnInit {
     this.dialog = dialog;
     this.costInfos = dt?.data?.listCosts;
     this.transID = dt?.data?.transID;
+    this.dealValueTo = dt?.data?.dealValueTo;
     // this.calculateTotalCost();
     this.title = dt?.data?.title;
   }
@@ -51,78 +55,6 @@ export class PopupCostItemsComponent implements OnInit {
     // console.log(num.toLocaleString('vi-VN'));
     // console.log(this.readNumber(23566666));
   }
-
-  //----------------Cost Items -----------------//
-
-  // addCost() {
-  //   if (this.cost && !this.cost.costItemName) {
-  //     this.notiService.notify(
-  //       'Chưa nhập nội dung chi phí, hãy hoàn thiện chi phí trước khi thêm chi phí mới !',
-  //       '3'
-  //     );
-  //     return;
-  //   }
-  //   let newCost = { ...this.tmpCost };
-  //   newCost.recID
-  //   newCost.transID = this.transID;
-  //   newCost.quantity = 1;
-  //   newCost.unitPrice = 0;
-  //   if (!this.costInfos) this.costInfos = [];
-
-  //   this.costInfos.push(newCost);
-  //   this.cost = newCost;
-  //   this.calculateTotalCost();
-  //   this.detectorRef.detectChanges();
-  // }
-
-  // changeCost(evt: any) {
-  //   if (evt) {
-  //   }
-  // }
-  // deleteCost(index: number) {
-  //   if (this.costInfos?.length > index) {
-  //     this.costInfos?.splice(index, 1);
-  //     if (this.costInfos?.length == 0) this.cost = null;
-  //     this.calculateTotalCost();
-  //     this.detectorRef.detectChanges();
-  //   }
-  // }
-  // editCost(evt: any, index: number) {
-  //   if (evt && this.costInfos?.length > index) {
-  //     switch (evt?.field) {
-  //       case 'quantity':
-  //         this.costInfos[index].quantity = evt?.data;
-  //         break;
-
-  //       case 'unitPrice':
-  //         this.costInfos[index].unitPrice = evt?.data;
-  //         break;
-
-  //       case 'costItemName':
-  //         this.costInfos[index].costItemName = evt?.data;
-  //         break;
-
-  //       case 'costItemID':
-  //         this.costInfos[index].costItemID = evt?.data;
-  //         break;
-  //     }
-
-  //     this.cost = this.costInfos[index];
-  //     this.calculateTotalCost();
-  //   }
-  // }
-  // calculateTotalCost() {
-  //   this.totalCost = 0;
-  //   if (this.costInfos?.length > 0) {
-  //     this.costInfos?.forEach((cost) => {
-  //       if (cost?.quantity && cost?.unitPrice)
-  //         cost.amount = cost?.quantity * cost?.unitPrice;
-  //       else cost.amount = 0;
-  //       this.totalCost += cost.amount;
-  //     });
-  //   }
-  // }
-  //---------------------------------------------//
 
   //đọc số cho vui
   readNumber(number) {
@@ -171,9 +103,28 @@ export class PopupCostItemsComponent implements OnInit {
 
   totalDataCost(e) {
     this.totalCost = e;
+    this.isUpDealCost = true;
+  }
+  changeDealValueTo(e) {
+    this.dealValueTo = e;
+    this.isUpDealValueTo = true;
   }
 
   actionEvent(e) {
     debugger;
+  }
+
+  closePopup() {
+    if (this.viewOnly || (!this.isUpDealCost && !this.isUpDealValueTo)) {
+      this.dialog.close();
+      return;
+    }
+    let obj = {
+      dealCost: this.totalCost,
+      isUpDealCost: this.isUpDealCost,
+      dealValueTo: this.dealValueTo,
+      isUpDealValueTo: this.isUpDealValueTo,
+    };
+    this.dialog.close(obj);
   }
 }

@@ -110,24 +110,24 @@
             </button>
           </div>
           <div
-          class="d-flex justify-content-end"
-          *ngIf="column.dataType == 'CF'"
-        >
-          <button
-            class="btn btn-sm btn-light-primary me-2"
-            type="button"
-            (click)="openCaculate()"
+            class="d-flex justify-content-end"
+            *ngIf="column.dataType == 'CF'"
           >
-            <i class="icon-calculate icon-16"></i>
-            <i
-              class="{{
-                showCaculate
-                  ? 'icon-keyboard_arrow_down'
-                  : 'icon-keyboard_arrow_right'
-              }} icon-16"
-            ></i>
-          </button>
-        </div>
+            <button
+              class="btn btn-sm btn-light-primary me-2"
+              type="button"
+              (click)="openCaculate()"
+            >
+              <i class="icon-calculate icon-16"></i>
+              <i
+                class="{{
+                  showCaculate
+                    ? 'icon-keyboard_arrow_down'
+                    : 'icon-keyboard_arrow_right'
+                }} icon-16"
+              ></i>
+            </button>
+          </div>
         </div>
         <!-- tính toán -->
         <ng-container
@@ -499,7 +499,7 @@
 
       <button
         type="button"
-        class="btn btn-icon btn-sm btn-light-primary me-2 cursor-pointer"
+        class="btn btn-icon btn-sm btn-light-danger me-2 cursor-pointer"
         (click)="delChart()"
       >
         {{ "Del" }}

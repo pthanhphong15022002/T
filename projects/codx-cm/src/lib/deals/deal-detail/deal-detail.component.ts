@@ -48,6 +48,7 @@ export class DealDetailComponent implements OnInit {
   // @Output() saveAssign = new EventEmitter<any>(); ko can tra ve
   @Output() changeProgress = new EventEmitter<any>();
   @Output() changeDataCustomers = new EventEmitter<any>();
+  @Output() moveStage = new EventEmitter<any>();
   @Input() isChangeViewDetails = true; //chỉ change khi view details
 
   @ViewChild('tabDetailView', { static: true })
@@ -227,18 +228,16 @@ export class DealDetailComponent implements OnInit {
     }
   }
 
-  async promiseAllAsync() {
+  promiseAllAsync() {
     this.isDataLoading = true;
-    try {
-      this.dataSelected.applyProcess && (await this.getListInstanceStep());
+      this.dataSelected.applyProcess && (this.getListInstanceStep());
       // await this.getListContactByDealID(
       //   this.dataSelected.recID,
       //   this.dataSelected?.categoryCustomer
       // );
-      await this.getTree(); //ve cay giao viec
-      await this.getLink();
-      await this.getContactByDeaID(this.dataSelected.recID);
-    } catch (error) {}
+      this.getTree(); //ve cay giao viec
+      this.getLink();
+      this.getContactByDeaID(this.dataSelected.recID);
   }
   reloadListStep(listSteps: any) {
     this.isDataLoading = true;
@@ -878,6 +877,9 @@ export class DealDetailComponent implements OnInit {
   //#region edit customer
   editCustomer(data) {
     this.changeDataCustomers.emit({ data: data });
+  }
+  handelMoveStage(event){
+    this.moveStage.emit(event);
   }
   //#endregion
 }
