@@ -16,6 +16,7 @@ import {
   FormModel,
   NotificationsService,
   SidebarModel,
+  Util,
 } from 'codx-core';
 import { CM_Customers, CM_Deals } from '../../../models/cm_model';
 import { CodxCmService } from '../../../codx-cm.service';
@@ -63,6 +64,7 @@ export class CurrentStepComponent implements OnInit, OnChanges {
   listCosts;
   dealCostOld = 0;
   isChangeCost = false;
+  widthDefault = '550'
 
   viewSettings: any;
   statusCodeID;
@@ -97,6 +99,8 @@ export class CurrentStepComponent implements OnInit, OnChanges {
   isUpDealCost = false;
   dealValueTo: any;
   isUpDealValueTo = false;
+  isZoomIn = false;
+  isZoomOut = false;
   constructor(
     private cache: CacheService,
     private codxCmService: CodxCmService,
@@ -147,6 +151,9 @@ export class CurrentStepComponent implements OnInit, OnChanges {
         }
       });
     this.getCostItemsByTransID(this.deal?.recID);
+    this.widthDefault = this.dialog.dialog.width
+    ? this.dialog.dialog.width.toString()
+    : '550';
   }
   ngOnChanges(changes: SimpleChanges) {}
 
@@ -553,5 +560,25 @@ export class CurrentStepComponent implements OnInit, OnChanges {
       isUpDealValueTo: this.isUpDealValueTo,
     };
     this.dialog.close(obj);
+  }
+  showMore() {
+    let isZoomOut = !this.isZoomOut;
+    let width = window.innerWidth.toString();
+    // tạm tắt
+    // if (isShowMore) {
+    //   let element = document.getElementById('table');
+    //   if (element) {
+    //     width = (element.offsetWidth + 50).toString();
+    //   }
+    // }
+    // if (Number.parseFloat(width) <= Number.parseFloat(this.widthDefault))
+    //   return;
+
+    this.isZoomOut = isZoomOut;
+    // if (Number.parseFloat(width) > Util.getViewPort().width - 100)
+    //   width = (Util.getViewPort().width - 100).toString();
+
+    this.dialog.setWidth(this.isZoomOut ? width : this.widthDefault);
+    this.changeDetectorRef.detectChanges();
   }
 }

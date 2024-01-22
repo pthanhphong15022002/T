@@ -28,7 +28,8 @@ import { tmpInstancesStepsReasons } from '../../models/tmpModel';
 import { falseLine } from '@syncfusion/ej2-gantt/src/gantt/base/css-constants';
 import { CM_Deals } from '../../models/cm_model';
 import { StepService } from 'projects/codx-share/src/lib/components/codx-step/step.service';
-
+import { CardRenderedEventArgs, CardSettingsModel, ColumnsModel, DialogSettingsModel } from '@syncfusion/ej2-angular-kanban';
+import { extend, addClass } from '@syncfusion/ej2-base';
 @Component({
   selector: 'step-task',
   templateUrl: './step-task.component.html',
@@ -111,6 +112,15 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
   user;
   isAddTask = false;
   dataTaskAdd;
+  listType: any = [];
+  listTask = [];
+  // formModel = {
+  //   "funcID": "DPT06",
+  //   "entityName": "DP_Processes",
+  //   "entityPer": "DP_Instances",
+  //   "formName": "DPInstances",
+  //   "gridViewName": "grvDPInstances",
+  // }
 
   constructor(
     private cache: CacheService,
@@ -176,6 +186,10 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
             }
           });
         }
+        this.listInstanceStepShow?.forEach((step) => {
+          this.listTask = [...this.listTask, ...step?.tasks];
+
+        })
       }
     }
 
@@ -596,4 +610,192 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
   startStepFunction(){
     this.startStep.emit(true);
   }
+  getObjectName(data) {
+    return data.roles.find((x) => x.objectID == data?.owner)?.objectName;
+  }
+  public cardSettings: CardSettingsModel = {
+    contentField: 'Summary',
+    headerField: 'Id',
+    tagsField: 'Tags',
+    grabberField: 'Color',
+    footerCssField: 'ClassName'
+  };
+
+  public dialogSettings: DialogSettingsModel = {
+    fields: [
+        { text: 'ID', key: 'Title', type: 'TextBox' },
+        { key: 'Status', type: 'DropDown' },
+        { key: 'Assignee', type: 'DropDown' },
+        { key: 'RankId', type: 'TextBox' },
+        { key: 'Summary', type: 'TextArea' }
+    ]
+};
+public getString(assignee: string) {
+  return assignee.match(/\b(\w)/g).join('').toUpperCase();
+}
+// public columns: ColumnsModel[] = [
+//   { headerText: 'To Do', keyField: 'Open', allowToggle: true },
+//   { headerText: 'In Progress', keyField: 'InProgress', allowToggle: true },
+//   { headerText: 'In Review', keyField: 'Review', allowToggle: true },
+//   { headerText: 'Done', keyField: 'Close', allowToggle: true }
+// ];
+cardRendered(args: CardRenderedEventArgs): void {
+  const val: string = (<{[key: string]: Object}>(args.data)).Priority as string;
+  addClass([args.element], val);
+}
+  kanbanData: Object[] = [
+    {
+      Id: 'Task 1',
+      Title: 'Task - 29001',
+      Status: ' a49a2391-a101-400c-ac45-c2c40cbcdee9',
+      Summary: 'Analyze the new requirements gathered from the customer.',
+      Type: 'Story',
+      Priority: 'Low',
+      Tags: 'Analyze,Customer',
+      Estimate: 3.5,
+      Assignee: 'Nancy Davloio',
+      RankId: 1,
+      Color: '#02897B',
+      ClassName: 'e-story, e-low, e-nancy-davloio',
+    },
+    {
+      Id: 'Task 2',
+      Title: 'Task - 29002',
+      Status: ' a49a2391-a101-400c-ac45-c2c40cbcdee9',
+      Summary: 'Improve application performance',
+      Type: 'Improvement',
+      Priority: 'Normal',
+      Tags: 'Improvement',
+      Estimate: 6,
+      Assignee: 'Andrew Fuller',
+      RankId: 2,
+      Color: '#673AB8',
+      ClassName: 'e-improvement, e-normal, e-andrew-fuller',
+    },
+    {
+      Id: 'Task 3',
+      Title: 'Task - 29003',
+      Status: ' 25e80568-288f-4981-af25-964c6d5e1f7e',
+      Summary: 'Arrange a web meeting with the customer to get new requirements.',
+      Type: 'Others',
+      Priority: 'Critical',
+      Tags: 'Meeting',
+      Estimate: 5.5,
+      Assignee: 'Janet Leverling',
+      RankId: 2,
+      Color: '#1F88E5',
+      ClassName: 'e-others, e-critical, e-janet-leverling',
+    },
+    {
+      Id: 'Task 4',
+      Title: 'Task - 29004',
+      Status: ' aceb053d-3673-4b6a-88b2-80a474a8d43b',
+      Summary: 'Fix the issues reported in the IE browser.',
+      Type: 'Bug',
+      Priority: 'Critical',
+      Tags: 'IE',
+      Estimate: 2.5,
+      Assignee: 'Janet Leverling',
+      RankId: 2,
+      Color: '#E64A19',
+      ClassName: 'e-bug, e-release, e-janet-leverling',
+    },
+    {
+      Id: 'Task 5',
+      Title: 'Task - 29005',
+      Status: 'aceb053d-3673-4b6a-88b2-80a474a8d43b',
+      Summary: 'Fix the issues reported by the customer.',
+      Type: 'Bug',
+      Priority: 'Low',
+      Tags: 'Customer',
+      Estimate: '3.5',
+      Assignee: 'Steven walker',
+      RankId: 1,
+      Color: '#E64A19',
+      ClassName: 'e-bug, e-low, e-steven-walker',
+    },
+    {
+      Id: 'Task 6',
+      Title: 'Task - 29007',
+      Status: 'Validate',
+      Summary: 'Validate new requirements',
+      Type: 'Improvement',
+      Priority: 'Low',
+      Tags: 'Validation',
+      Estimate: 1.5,
+      Assignee: 'Robert King',
+      RankId: 1,
+      Color: '#673AB8',
+      ClassName: 'e-improvement, e-low, e-robert-king',
+    },
+    {
+      Id: 'Task 7',
+      Title: 'Task - 29009',
+      Status: 'Review',
+      Summary: 'Fix the issues reported in Safari browser.',
+      Type: 'Bug',
+      Priority: 'Critical',
+      Tags: 'Fix,Safari',
+      Estimate: 1.5,
+      Assignee: 'Nancy Davloio',
+      RankId: 2,
+      Color: '#E64A19',
+      ClassName: 'e-bug, e-release, e-nancy-davloio',
+    },
+    {
+      Id: 'Task 8',
+      Title: 'Task - 29010',
+      Status: 'Close',
+      Summary: 'Test the application in the IE browser.',
+      Type: 'Story',
+      Priority: 'Low',
+      Tags: 'Review,IE',
+      Estimate: 5.5,
+      Assignee: 'Margaret hamilt',
+      RankId: 3,
+      Color: '#02897B',
+      ClassName: 'e-story, e-low, e-margaret-hamilt',
+    },
+    {
+      Id: 'Task 9',
+      Title: 'Task - 29011',
+      Status: 'Validate',
+      Summary: 'Validate the issues reported by the customer.',
+      Type: 'Story',
+      Priority: 'High',
+      Tags: 'Validation,Fix',
+      Estimate: 1,
+      Assignee: 'Steven walker',
+      RankId: 1,
+      Color: '#02897B',
+      ClassName: 'e-story, e-high, e-steven-walker',
+    },
+    {
+      Id: 'Task 10',
+      Title: 'Task - 29015',
+      Status: 'Open',
+      Summary: 'Show the retrieved data from the server in grid control.',
+      Type: 'Story',
+      Priority: 'High',
+      Tags: 'Database,SQL',
+      Estimate: 5.5,
+      Assignee: 'Margaret hamilt',
+      RankId: 4,
+      Color: '#02897B',
+      ClassName: 'e-story, e-high, e-margaret-hamilt',
+    },
+    {
+      Id: 'Task 11',
+      Title: 'Task - 29016',
+      Status: 'InProgress',
+      Summary: 'Fix cannot open user’s default database SQL error.',
+      Priority: 'Critical',
+      Type: 'Bug',
+      Tags: 'Database,Sql2008',
+      Estimate: 2.5,
+      Assignee: 'Janet Leverling',
+      RankId: 4,
+      Color: '#E64A19',
+      ClassName: 'e-bug, e-critical, e-janet-leverling',
+    },]
 }

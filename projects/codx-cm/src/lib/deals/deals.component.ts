@@ -1026,7 +1026,7 @@ export class DealsComponent
         CurrentStepComponent,
         '',
         800,
-        Util.getViewPort().height,
+        window.innerHeight,
         '',
         data,
         '',
