@@ -96,6 +96,7 @@ export class ContractsComponent extends UIComponent {
   actionName = '';
   isAddContract = true;
   contractAppendix;
+  readonly applyFor = '4';
 
   service = 'CM';
   entityName = 'CM_Contracts';
@@ -413,6 +414,9 @@ export class ContractsComponent extends UIComponent {
       case 'SYS04':
         this.copyContract(data);
         break;
+      case 'SYS05':
+        this.viewContract(data);
+        break;
       case 'CM0204_3':
         //tạo hợp đồng gia hạn
         this.addContractAdjourn(data);
@@ -481,6 +485,12 @@ export class ContractsComponent extends UIComponent {
       case 'CM0204_22': //đổi trạng thái
         this.changeStatus(data);
         break;
+        case 'CM0204_19': // đưa vào quy trình xử lý
+        this.updateProcess(data,true);
+        break;
+        case 'CM0204_20': // không sử dụng quy trình
+        this.updateProcess(data,false);
+        break;
       default: {
         // var customData = {
         //   refID: data.recID,
@@ -503,6 +513,85 @@ export class ContractsComponent extends UIComponent {
         break;
       }
     }
+  }
+
+  updateProcess(data, isCheck) {
+    this.notiService
+      .alertCode('DP033', null, [
+        '"' + data?.contractName + '" ' + this.actionName + ' ',
+      ])
+      .subscribe((x) => {
+        if (x.event && x.event.status == 'Y') {
+          this.checkOwner(data, isCheck);
+        }
+      });
+  }
+
+  checkOwner(data, isCheck) {
+    if (isCheck && data?.owner) {
+      let datas = [
+        data.processID,
+        data.businessLineID,
+        data.owner,
+        this.applyFor,
+      ];
+      this.cmService.isExistOwnerInProcess(datas).subscribe((res) => {
+        if (res) {
+          let dataUpdateProcess = [
+            data.recID,
+            data.status,
+            '',
+            isCheck,
+            data.owner,
+          ];
+          this.getApiUpdateProcess(dataUpdateProcess);
+        } else {
+          this.notiService
+            .alertCode('DP033', null, [
+              '"' +
+                data?.contractName +
+                '" ' +
+                'Người phụ trách không tồn tại trong quy trình' +
+                ' ',
+            ])
+            .subscribe((x) => {
+              if (x.event && x.event.status == 'Y') {
+                let dataUpdateProcess = [
+                  data.recID,
+                  data.status,
+                  '',
+                  isCheck,
+                  '',
+                ];
+                this.getApiUpdateProcess(dataUpdateProcess);
+              }
+            });
+        }
+      });
+    } else {
+      let dataUpdateProcess = [data.recID, data.status, '', isCheck];
+      this.getApiUpdateProcess(dataUpdateProcess);
+    }
+  }
+
+  getApiUpdateProcess(datas) {
+    this.cmService.updateProcessContract(datas).subscribe((res) => {
+      if (res) {
+        this.dataSelected = res;
+        this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
+        this.notiService.notifyCode('SYS007');
+        this.view.dataService.update(this.dataSelected, true).subscribe();
+        // if (this.dataSelected.applyProcess) {
+        //   this.detailViewDeal.promiseAllAsync();
+        // } else {
+        //   this.detailViewDeal.reloadListStep([]);
+        // }
+        // if (this.kanban) {
+        //   this.renderKanban(this.dataSelected);
+        // }
+      }
+      this.detectorRef.detectChanges();
+    });
   }
 
   popupPermissions(data) {
@@ -737,6 +826,11 @@ export class ContractsComponent extends UIComponent {
     this.view.dataService.edit(dataEdit).subscribe(async (res) => {
       this.openPopupContract(null, 'edit', 'contract', contract, dataEdit);
     });
+  }
+  async viewContract(contract) {
+    if (contract) {
+      this.openPopupContract(null, 'view', 'contract', contract, contract);
+    }
   }
 
   async copyContract(contract) {
@@ -1697,6 +1791,13 @@ export class ContractsComponent extends UIComponent {
     // this.isDataLoading = false;
     // this.changeDetectorRef.detectChanges();
   }
+
+  handelMoveStage(event, contract){
+    if(event){
+      this.moveStage(contract);
+    }
+  }
+
 }
 
 // this.columnGrids = [];

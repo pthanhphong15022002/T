@@ -3266,6 +3266,7 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
       this.notiService.alertCode('DP008').subscribe((x) => {
         if (x.event && x.event.status == 'Y') {
           this.handelDeleteStep(data);
+          this.changeDetectorRef.markForCheck();
         } else {
           return;
         }
@@ -3274,6 +3275,7 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
       this.notiService.alertCode('SYS030').subscribe((x) => {
         if (x.event && x.event.status == 'Y') {
           this.handelDeleteStep(data);
+          this.changeDetectorRef.markForCheck();
         }
       });
     }

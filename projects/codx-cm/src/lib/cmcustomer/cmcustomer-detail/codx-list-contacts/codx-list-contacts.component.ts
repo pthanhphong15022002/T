@@ -49,7 +49,11 @@ export class CodxListContactsComponent implements OnInit {
   @Output() contactEvent = new EventEmitter<any>();
 
   @Input() listContacts = [];
-  formModelContact: FormModel;
+  formModelContact: FormModel = {
+    formName: 'CMContacts',
+    gridViewName: 'grvCMContacts',
+    entityName: 'CM_Contacts',
+  };
   moreFuncEdit = '';
   moreFuncAdd = '';
   loaded: boolean;
@@ -107,7 +111,7 @@ export class CodxListContactsComponent implements OnInit {
 
   async ngOnInit() {
     // this.getListContacts();
-    this.formModelContact = await this.cmSv.getFormModel('CM0102');
+    // this.formModelContact = await this.cmSv.getFormModel('CM0102');
     this.cache.moreFunction('CoDXSystem', '').subscribe((res) => {
       if (res && res.length) {
         let m = res.find((x) => x.functionID == 'SYS01');
@@ -257,6 +261,7 @@ export class CodxListContactsComponent implements OnInit {
           case 'SYS002':
           case 'SYS001':
           case 'SYS04':
+          case 'SYS05':
             res.disabled = true;
             break;
           case 'CM0102_2':

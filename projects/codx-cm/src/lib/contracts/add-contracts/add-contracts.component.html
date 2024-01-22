@@ -201,6 +201,7 @@
         type="button"
         class="btn btn-light-primary me-3"
         (click)="addFile($event)"
+        [disabled]="action == 'view'"
       >
         <i class="icon-cloud_upload fs-5"></i
         ><span>
@@ -212,7 +213,7 @@
         </span>
       </button>
     </div>
-    <button type="button" button class="btn btn-primary ms-1" (click)="save()">
+    <button type="button" button class="btn btn-primary ms-1" (click)="save()"  [disabled]="action == 'view'">
       <codx-label
         name="lblSave"
         [formModel]="form?.formModel"
@@ -244,7 +245,7 @@
             planceHolderAutoNumber ?? grvSetup['ContractID'].headerText
           "
           [disabled]="
-            disabledShowInput || action === 'edit' || action === 'extend'
+            disabledShowInput || action === 'edit' || action === 'extend' || action === 'view'
           "
           (valueChange)="changeAutoNum($event)"
         ></codx-input>
@@ -263,6 +264,7 @@
           [formModel]="form.formModel"
           [crrValue]="contracts?.contractDate"
           (valueChange)="changeValueDate($event)"
+          [disabled]="action == 'view'"
         ></codx-input>
       </div>
     </div>
@@ -281,7 +283,7 @@
         [Group]="form.formGroup"
         [crrValue]="contracts?.businessLineID"
         (valueChange)="valueChangeCombobox($event)"
-        [disabled]="action == 'edit' || type == 'DP' || action == 'extend'"
+        [disabled]="action == 'edit' || type == 'DP' || action == 'extend' || action === 'view'"
       >
       </codx-input>
     </div>
@@ -301,6 +303,7 @@
         [Group]="form.formGroup"
         [crrValue]="contracts?.contractType"
         (valueChange)="valueChangeCombobox($event)"
+        [disabled]="action == 'view'"
       >
       </codx-input>
     </div>
@@ -315,7 +318,7 @@
         field="useType"
         [crrValue]="contracts?.useType"
         (valueChange)="valueChangeCombobox($event)"
-        [disabled]="disabledUserType"
+        [disabled]="disabledUserType || action === 'view'"
       >
       </codx-input>
     </div>
@@ -328,7 +331,7 @@
       [formModel]="form?.formModel"
       [crrValue]="contracts?.parentID"
       (valueChange)="valueChangeCombobox($event)"
-      [disabled]="type == 'appendix' || type == 'extend'"
+      [disabled]="type == 'appendix' || type == 'extend' || action === 'view'"
     ></codx-input>
   </div>
 
@@ -343,6 +346,7 @@
       [formModel]="form?.formModel"
       [crrValue]="contracts?.contractName"
       (valueChange)="valueChangeText($event)"
+      [disabled]="action == 'view'"
     ></codx-input>
   </div>
 
@@ -364,7 +368,8 @@
           type == 'deal' ||
           type == 'quotation' ||
           type == 'customer' ||
-          action == 'extend'
+          action == 'extend' || 
+          action === 'view'
         "
       >
       </codx-input>
@@ -384,6 +389,7 @@
         [formModel]="form?.formModel"
         [crrValue]="contracts?.contactID"
         (valueChange)="valueChangeCombobox($event)"
+        [disabled]="action == 'view'"
       >
       </codx-input>
     </div>
@@ -400,6 +406,7 @@
         refValue="DPUserProcess"
         [crrValue]="contracts?.owner"
         (valueChange)="valueChangeOwner($event)"
+        [disabled]="action == 'view'"
       >
       </codx-input>
       <div [ngClass]="contracts?.applyProcess ? 'd-none' : ''">
@@ -408,6 +415,7 @@
           [formModel]="dialog?.formModel"
           (valueChange)="valueChangeOwner($event)"
           [crrValue]="contracts?.owner"
+          [disabled]="action == 'view'"
         >
         </codx-input>
       </div>
@@ -426,6 +434,7 @@
         field="contractAmt"
         [crrValue]="contracts?.contractAmt"
         (valueChange)="valueChangeText($event)"
+        [disabled]="action == 'view'"
       >
       </codx-input>
     </div>
@@ -440,6 +449,7 @@
         field="pmtMethodID"
         [crrValue]="contracts?.pmtMethodID"
         (valueChange)="valueChangeCombobox($event)"
+        [disabled]="action == 'view'"
       >
       </codx-input>
     </div>
@@ -457,6 +467,7 @@
         field="interval"
         [crrValue]="contracts?.interval"
         (valueChange)="valueChangeText($event)"
+        [disabled]="action == 'view'"
       >
       </codx-input>
     </div>
@@ -471,6 +482,7 @@
         field="disposalBefore"
         [crrValue]="contracts?.disposalBefore"
         (valueChange)="valueChangeText($event)"
+        [disabled]="action == 'view'"
       >
       </codx-input>
     </div>
@@ -491,6 +503,7 @@
           type="datetime"
           [crrValue]="contracts?.effectiveFrom"
           (valueChange)="changeValueDate($event)"
+          [disabled]="action == 'view'"
         >
         </codx-input>
       </div>
@@ -510,6 +523,7 @@
           type="datetime"
           [crrValue]="contracts?.effectiveTo"
           (valueChange)="changeValueDate($event)"
+          [disabled]="action == 'view'"
         >
         </codx-input>
       </div>
@@ -531,6 +545,7 @@
         field="note"
         [crrValue]="contracts?.note || ''"
         (valueChange)="valueChangeText($event)"
+        [disabled]="action == 'view'"
       >
       </codx-input>
     </div>
@@ -554,6 +569,7 @@
             [isLoadDataRef]="true"
             (valueChangeCustom)="valueChangeCustom($event)"
             (addFileCompleted)="addFileCompleted($event)"
+            [disable]="action == 'view'"
           >
           </codx-input-custom-field>
         </div>
@@ -590,6 +606,7 @@
         allowMultiFile="1"
         referType="source"
         displayThumb="simple"
+        [hideDelete]="action == 'view' ? '1' : '0'"
       >
       </codx-attachment>
     </div>
@@ -609,7 +626,7 @@
       [formModel]="form.formModel"
       [Group]="form.formGroup"
       (valueChange)="valueChangeCombobox($event)"
-      [disabled]="type == 'deal'"
+      [disabled]="type == 'deal' || action === 'view'"
     >
     </codx-input>
   </div>
@@ -626,7 +643,7 @@
       [formModel]="form?.formModel"
       [Group]="form.formGroup"
       (valueChange)="valueChangeCombobox($event)"
-      [disabled]="type == 'quotation'"
+      [disabled]="type == 'quotation' || action === 'view'"
     ></codx-input>
   </div>
 </ng-template>
@@ -649,6 +666,7 @@
           [isLoadDataRef]="true"
           (valueChangeCustom)="valueChangeCustom($event)"
           (addFileCompleted)="addFileCompleted($event)"
+          [disable]="action == 'view'"
         >
         </codx-input-custom-field>
       </div>
@@ -798,6 +816,7 @@
       [objectName]="contracts?.contractName"
       [hidenMF]="false"
       [type]="'formAdd'"
+      [disabled]="action == 'view'"
     ></codx-list-contacts>
   </ng-container>
 </ng-template>

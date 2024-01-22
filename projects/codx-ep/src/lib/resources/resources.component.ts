@@ -206,6 +206,9 @@ export class ResourcesComponent extends UIComponent {
       case EPCONST.MFUNCID.Copy:
         this.copy(data);
         break;
+      case EPCONST.MFUNCID.View:
+        this.viewDetail(data);
+        break;
       case EPCONST.MFUNCID.CA_GetCard:
         this.cardTrans(EPCONST.FUNCID.CA_Get, event?.text, data);
         break;
@@ -628,6 +631,41 @@ export class ResourcesComponent extends UIComponent {
               false,
               this.popupTitle,
               this.funcID,
+            ],
+            option
+          );
+          this.dialog.closed.subscribe((x) => {
+            if (!x.event) this.view.dataService.clear();
+            if (x?.event) {
+              x.event.modifiedOn = new Date();
+              this.view.dataService.update(x.event).subscribe();
+            }
+          });
+        });
+    }
+  }
+  viewDetail(obj?) {
+    if (obj) {
+      this.view.dataService.dataSelected = obj;
+      this.view.dataService
+        .edit(this.view.dataService.dataSelected)
+        .subscribe((res) => {
+          let option = new SidebarModel();
+          option.Width =
+            this.funcID == EPCONST.FUNCID.S_Category ||
+            this.funcID == 'CMS0121_QTSC'
+              ? '800px'
+              : '550px';
+          option.DataService = this.view?.dataService;
+          option.FormModel = this.formModel;
+          this.dialog = this.callfc.openSide(
+            this.popupComponent,
+            [
+              this.view?.dataService?.dataSelected,
+              false,
+              this.popupTitle,
+              this.funcID,
+              EPCONST.MFUNCID.View,
             ],
             option
           );

@@ -131,7 +131,7 @@
         <ng-container *ngIf="currentTab == 1">
           <div class="d-flex mx-4 bg-gray-100 p-1 step-process-tab">
             <div class="p-3 cursor-pointer" [class.active]="processTabIndex == 0" (click)="activeTab(0)">
-              <i class="icon-i-list-nested"></i>
+              <i class="icon-i-bar-chart-steps"></i>
             </div>
             <div class="p-3 cursor-pointer" [class.active]="processTabIndex == 1" (click)="activeTab(1)">
               <i class="icon-account_tree"></i>
@@ -147,7 +147,7 @@
       </div>
     </div>
     <div class="stepper-body pt-4 px-4">
-      <div class="card shadow-none border-0 rounded-2 mx-auto w-100 h-100">
+      <div class="card shadow-none rounded-0 border-0 mx-auto w-100 h-100">
         <div
           class="scroll-y"
           class="dp-step step-content"

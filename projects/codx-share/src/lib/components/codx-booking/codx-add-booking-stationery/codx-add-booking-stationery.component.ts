@@ -13,11 +13,12 @@ import {
   CRUDService,
   AuthService,
 } from 'codx-core';
-const _copyMF = 'SYS04';
-const _addMF = 'SYS01';
-const _editMF = 'SYS03';
-const _EPParameters = 'EPParameters';
-const _EPStationeryParameters = 'EPStationeryParameters';
+const _addMF = EPCONST.MFUNCID.Add;
+const _copyMF = EPCONST.MFUNCID.Copy;
+const _editMF = EPCONST.MFUNCID.Edit;
+const _viewMF = EPCONST.MFUNCID.View;
+const _EPParameters =  EPCONST.PARAM.EPParameters;
+const _EPStationeryParameters = EPCONST.PARAM.EPStationeryParameters;
 import { CodxBookingService } from '../codx-booking.service';
 import { BookingItems, GridModels } from '../codx-booking.model';
 import { EPCONST } from 'projects/codx-ep/src/lib/codx-ep.constant';
@@ -79,6 +80,7 @@ export class CodxAddBookingStationeryComponent extends UIComponent {
   subFuncID = EPCONST.FUNCID.S_Category;
   lstWarehourse=[];
   autoComfirm =EPCONST.APPROVALRULE.NotHaved;
+  viewOnly=false;
   constructor(
     private injector: Injector,
     private auth: AuthStore,
@@ -99,6 +101,9 @@ export class CodxAddBookingStationeryComponent extends UIComponent {
       this.data.attendees=1;
     } else {
       this.isAddNew = false;
+      if (this.funcType == _viewMF){
+        this.viewOnly=true;
+      }
     }
     this.formModel = dialogRef?.formModel;
     this.funcID = this.formModel.funcID;
@@ -327,6 +332,7 @@ export class CodxAddBookingStationeryComponent extends UIComponent {
   }
 
   deleteStationery(itemID: any) {
+    if(this.viewOnly) return;
     if (itemID) {
       this.cart = this.cart.filter((item) => {
         return item?.itemID != itemID;

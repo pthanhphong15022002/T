@@ -1006,6 +1006,7 @@
                   [customerName]="customerName"
                   [ownerInstance]="dataSelected?.owner"
                   [taskAdd]="taskAdd"
+                  (moveStage)="handelMoveStage($event)"
                 ></step-task>
             </ng-template>
           </e-tabitem>
