@@ -90,7 +90,6 @@ export class CurrentStepComponent implements OnInit, OnChanges {
   ];
   listTabInformation = [
     { id: 'costItems', name: 'Chi phí' },
-    { id: 'tasks', name: 'Công việc' },
     { id: 'opponent', name: 'Đối thủ' },
     { id: 'note', name: 'Ghi chú' },
   ];
