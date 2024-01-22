@@ -1,4 +1,3 @@
-import { DomSanitizer } from '@angular/platform-browser';
 import {
   Component,
   OnInit,
@@ -20,6 +19,7 @@ import {
   DialogRef,
   NotificationsService,
   RequestOption,
+  UrlUtil,
   Util,
 } from 'codx-core';
 import moment from 'moment';
@@ -32,9 +32,10 @@ import {
   TM_Tasks,
 } from '../model/task.model';
 import { CodxTasksService } from '../codx-tasks.service';
-import { tmpReferences } from '../../../models/assign-task.model';
 import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
 import { AttachmentService } from 'projects/codx-common/src/lib/component/attachment/attachment.service';
+import { PopupUpdateStatusComponent } from '../popup-update-status/popup-update-status.component';
+import { firstValueFrom } from 'rxjs';
 @Component({
   selector: 'app-popup-add',
   templateUrl: './popup-add.component.html',
@@ -166,6 +167,8 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   tabControlExtend = [
     { name: 'History', textDefault: 'Lịch sử', isActive: true },
   ];
+  moreFuncList: any;
+  comnentUpdateStatus = '';
 
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
@@ -613,7 +616,8 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
           let attachments = Array.isArray(res) ? res.length : 1;
           if (this.action == 'edit') {
             this.task.attachments += attachments;
-            this.updateTask();
+            this.checkUpdateStatusTask();
+            // this.updateTask();
           } else {
             this.task.attachments = attachments;
             this.addTask();
@@ -621,8 +625,10 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
         }
       });
     else {
-      if (this.action == 'edit') this.updateTask();
-      else this.addTask();
+      if (this.action == 'edit') {
+        this.checkUpdateStatusTask();
+        //this.updateTask();
+      } else this.addTask();
     }
   }
 
@@ -637,6 +643,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
         this.listTodo,
         null,
         this.recIDTodoDelete.join(';'),
+        this.comnentUpdateStatus,
       ];
     } else {
       op.method = 'AddTaskAsync';
@@ -689,7 +696,129 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
         });
     }
   }
+  //update xử lý thêm
+  //update Status task goal
+  async checkUpdateStatusTask() {
+    if (!this.listTodo || this.listTodo?.length == 0) {
+      // if (this.task.status == '90') {
+      //   this.task.status = '20';
+      //   this.task.completedOn = null;
+      //   this.task.completed = null;
+      // }
+      this.updateTask();
+      return;
+    }
+    let doNotcheck = this.listTodo.some(
+      (x) => x.status == this.STATUS_TASK_GOAL.NotChecked
+    );
+    if (!doNotcheck) {
+      this.notiService.alertCode('TM080').subscribe(async (res) => {
+        if (res.event.status == 'Y') {
+          //event truoc khi update
+          if (this.task.status == '05') {
+            this.notiService.notifyCode('TM020');
+            this.updateTask();
+            return;
+          }
+          if (this.task.status == '00') {
+            this.notiService.notifyCode('TM060');
+            this.updateTask();
+            return;
+          }
+          if (this.task.approveStatus == '3') {
+            this.notiService.notifyCode('TM024');
+            this.updateTask();
+            return;
+          }
+          if (
+            this.task.approveStatus == '4' ||
+            this.task.approveStatus == '5'
+          ) {
+            this.notiService.notifyCode('TM025');
+            this.updateTask();
+            return;
+          }
 
+          this.task.status = '90';
+          this.task.percentage = 100;
+          if (!this.moreFuncList) {
+            //lấy theo more chung=> get Fun nhiều lúc thiếu more
+            this.moreFuncList = await firstValueFrom(
+              this.cache.moreFunction('MyTasks', 'grvMyTasks')
+            );
+          }
+          let moreFunc = this.moreFuncList.find(
+            (x) =>
+              UrlUtil.getUrl('defaultValue', x?.url) == this.task.status &&
+              UrlUtil.getUrl('defaultField', x?.url) == 'Status'
+          );
+
+          if (this.param.UpdateControl == '1' && moreFunc) {
+            let option = new DialogModel();
+            option.zIndex = 2000;
+
+            let obj = {
+              moreFunc: moreFunc,
+              taskAction: this.task,
+              funcID: this.functionID,
+              updateControl: this.param.UpdateControl,
+              maxHoursControl: this.param.MaxHoursControl,
+              maxHours: this.param.MaxHours,
+              isSave: false,
+            };
+
+            let dialogUp = this.callFC.openForm(
+              PopupUpdateStatusComponent,
+              '',
+              500,
+              350,
+              '',
+              obj,
+              '',
+              option
+            );
+            dialogUp.closed.subscribe((e) => {
+              if (e?.event) {
+                this.task = e.event?.task;
+                this.comnentUpdateStatus = e.event?.comment;
+                this.updateTask();
+              }
+            });
+          } else {
+            this.upCompleteOn();
+            this.updateTask();
+          }
+        } else this.updateTask();
+      });
+    } else this.updateTask();
+  }
+
+  //UpCompleteDay => update ngày nếu ko mở form :v
+  upCompleteOn() {
+    var completedOn = moment(new Date()).toDate();
+    if (this.task.estimated > 0) {
+      this.task.completed = this.task.estimated;
+    } else {
+      var timeStart = moment(
+        new Date(
+          this.task.startOn
+            ? this.task.startOn
+            : this.task.startDate
+            ? this.task.startDate
+            : this.task.createdOn
+        )
+      ).toDate();
+      let time = (
+        (completedOn.getTime() - timeStart.getTime()) /
+        3600000
+      ).toFixed(2);
+      this.task.completed = Number.parseFloat(
+        Number.parseFloat(time).toFixed(2)
+      );
+    }
+  }
+
+  //update - call API
   updateTask() {
     if (this.task.category == '3') {
       this.notiService.alertCode('TM015').subscribe((res) => {
@@ -748,6 +877,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
         this.listTodo,
         null,
         this.recIDTodoDelete.join(';'),
+        this.comnentUpdateStatus,
       ])
       .subscribe((res: any) => {
         this.isClickSave = false;

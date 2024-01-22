@@ -164,7 +164,7 @@ export class CodxTMService {
     );
   }
 
-  update(data) {
+  updateTMTask(data) {
     return this.api.execSv<any>(
       'TM',
       'TM',
