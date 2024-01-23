@@ -1666,9 +1666,10 @@ export class DealsComponent
       });
     } else {
       if (this.applyApprover == '1') this.approvalTransAction(dt, 'ES_CM0503');
-      this.notificationsService.notifyCode(
-        'Thiết lập hệ thống chưa bật chức năng ký duyệt !'
-      );
+      else
+        this.notificationsService.notifyCode(
+          'Thiết lập hệ thống chưa bật chức năng ký duyệt !'
+        );
     }
   }
 
@@ -1704,11 +1705,11 @@ export class DealsComponent
       category,
       this.view.formModel.entityName,
       this.view.formModel.funcID,
-      data?.title,
+      data?.dealName, //tên nè,
       this.releaseCallback.bind(this),
       null,
       null,
-      null,
+      null, //this.view.formModel.entityName // thích đổi mãi
       null,
       null,
       exportData
@@ -2643,8 +2644,8 @@ export class DealsComponent
     this.view.currentView.sumData = this.objectSumValue;
   }
   //--------------------------------------//
-  handelMoveStage(event, contract){
-    if(event){
+  handelMoveStage(event, contract) {
+    if (event) {
       this.moveStage(contract);
     }
   }

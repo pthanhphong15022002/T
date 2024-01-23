@@ -914,7 +914,7 @@ export class LeadsComponent
     });
   }
 
-  viewLead(data){
+  viewLead(data) {
     if (data) {
       this.view.dataService.dataSelected = JSON.parse(JSON.stringify(data));
     }
@@ -935,7 +935,7 @@ export class LeadsComponent
           // processId: this.processId,
           gridViewSetup: this.gridViewSetup,
           listCategory: this.listCategory,
-          isView: true
+          isView: true,
         };
         let dialogCustomDeal = this.callfc.openSide(
           PopupAddLeadComponent,
@@ -944,7 +944,6 @@ export class LeadsComponent
         );
         dialogCustomDeal.closed.subscribe((e) => {
           if (e && e.event != null) {
-
           }
         });
       });
@@ -1952,26 +1951,10 @@ export class LeadsComponent
       });
     } else {
       if (this.applyApprover == '1') this.approvalTransAction(dt, 'ES_CM0504');
-      this.notificationsService.notifyCode(
-        'Thiết lập hệ thống chưa bật chức năng ký duyệt !'
-      );
-
-      // this.codxCmService.getParam('CMParameters', '4').subscribe((res) => {
-      //   if (res) {
-      //     let dataValue = JSON.parse(res.dataValue);
-      //     if (Array.isArray(dataValue)) {
-      //       let setting = dataValue.find((x) => x.Category == 'CM_Leads');
-      //       if (setting) {
-      //         if (setting['ApprovalRule'] == '1')
-      //           this.approvalTransAction(dt, 'ES_CM0504');
-      //         else
-      //           this.notificationsService.notifyCode(
-      //             'Thiết lập hệ thống chưa bật chức năng ký duyệt !'
-      //           );
-      //       }
-      //     }
-      //   }
-      // });
+      else
+        this.notificationsService.notifyCode(
+          'Thiết lập hệ thống chưa bật chức năng ký duyệt !'
+        );
     }
   }
   approvalTransAction(data, categoryID) {
@@ -2002,11 +1985,11 @@ export class LeadsComponent
       category,
       this.view.formModel.entityName,
       this.view.formModel.funcID,
-      data?.title,
+      data?.leadName, //tên nè,
       this.releaseCallback.bind(this),
       null,
       null,
-      null,
+      null, //this.view.formModel.entityName // thích đổi mãi
       null,
       null,
       exportData
