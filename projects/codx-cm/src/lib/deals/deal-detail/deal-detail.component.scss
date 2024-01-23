@@ -6,20 +6,22 @@
   white-space: nowrap !important;
 }
 
-// .line-clamp-menu {
-//   display: inline-block!important;
-//   -webkit-line-clamp: 1;
-//   -webkit-box-orient: vertical;
-//   overflow: hidden;
-//   text-overflow: ellipsis;
-//   white-space: nowrap;
-// }
-:host ::ng-deep codx-lead-detail .codx-detail-body ejs-tab .e-content {
-  overflow: hidden;
+
+lib-deals codx-deal-detail .codx-detail-main {
+  padding-bottom: 0 !important;
+  background-color: #ff9472;
 }
-:host ::ng-deep codx-lead-detail .codx-detail-body {
-  overflow: hidden;
+
+:host ::ng-deep .codx-detail-main {
+  height: 100% !important;
+  overflow: hidden !important;
 }
+
+.croll-m-5 {
+  height: calc(100vh - 480px) !important;
+  overflow: auto !important;
+}
+
 .color-theme{
   background: var(--primary-active)!important;
   border-radius: 10px;

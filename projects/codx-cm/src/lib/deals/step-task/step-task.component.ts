@@ -10,6 +10,7 @@ import {
   OnInit,
   Output,
   SimpleChanges,
+  TemplateRef,
   ViewChild,
 } from '@angular/core';
 import {
@@ -21,6 +22,8 @@ import {
   DialogRef,
   FormModel,
   NotificationsService,
+  ResourceModel,
+  ViewModel,
 } from 'codx-core';
 import { CodxStepTaskComponent } from 'projects/codx-share/src/lib/components/codx-step/codx-step-task/codx-step-task.component';
 import { CodxCmService } from '../../codx-cm.service';
@@ -35,9 +38,11 @@ import { extend, addClass } from '@syncfusion/ej2-base';
   templateUrl: './step-task.component.html',
   styleUrls: ['./step-task.component.scss'],
 })
-export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
+export class StepTaskComponent  implements OnInit, AfterViewInit, OnChanges {
   @ViewChild('task') task: CodxStepTaskComponent;
   @ViewChild('popupGuide') popupGuide;
+  @ViewChild('cardKanban') cardKanban: TemplateRef<any>;
+  @ViewChild('viewColumKaban') viewColumKaban: TemplateRef<any>;
   applyProcess = false; // 2 = hợp đồng
   @Input() dataCM; // CM_Customers, CM_Deal, CM_Lead, CM_Case, CM_Contracts
   @Input() isAdmin = false;
@@ -122,6 +127,17 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
   //   "gridViewName": "grvDPInstances",
   // }
 
+  service = 'DP';
+  assemblyName = 'ERM.Business.DP';
+  entityName2 = 'DP_Processes';
+  className = 'ProcessesBusiness';
+  method = 'LoadDataColumnsAsync';
+  idField = 'recID';
+  views: Array<ViewModel> = [];
+  request: ResourceModel;
+  resourceKanban: ResourceModel;
+  funcID = '';
+
   constructor(
     private cache: CacheService,
     private api: ApiHttpService,
@@ -154,6 +170,22 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
       )
       .subscribe((res) => {});
     this.taskHeight = this.isHeightAuto ? 'auto' : 'this.taskHeight';
+    this.request = new ResourceModel();
+    this.request.service = 'DP';
+    this.request.assemblyName = 'DP';
+    this.request.className = 'ProcessesBusiness';
+    this.request.method = 'LoadDataColumnsAsync';
+    this.request.idField = 'recID';
+    this.request.dataObj = {processID: this.dataCM?.processID};
+
+    this.resourceKanban = new ResourceModel();
+    this.resourceKanban.service = 'DP';
+    this.resourceKanban.assemblyName = 'DP';
+    this.resourceKanban.className = 'ProcessesBusiness';
+    this.resourceKanban.method = 'GetColumnsKanbanAsync';
+    this.resourceKanban.dataObj = {processID: this.dataCM?.processID};;
+
+    this.funcID = 'DPT06';
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -233,7 +265,25 @@ export class StepTaskComponent implements OnInit, AfterViewInit, OnChanges {
       console.log(computedWidth);
       
     }
+    this.views = [
+      {
+        id: '6',
+        type: 6,
+        active: false,
+        sameData: false,
+        request: this.request,
+        request2: this.resourceKanban,
+        model: {
+          template: this.cardKanban,
+          template2: this.viewColumKaban,
+          setColorHeader: true,
+        },
+      },
+    ];
+
+    this.changeDetectorRef.detectChanges();
   }
+
   changeValue(e) {
     this.type = e.data;
   }
