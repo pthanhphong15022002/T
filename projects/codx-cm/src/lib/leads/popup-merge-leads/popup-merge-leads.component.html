@@ -125,7 +125,7 @@
           >
           </codx-img>
         </div>
-        <div class="w-20 d-flex" *ngIf="leadOne?.recID">
+        <div class="w-20 d-flex">
           <div class="w-10">
             <span
               class="d-flex"
@@ -1914,7 +1914,7 @@
         </div>
       </div>
     </div>
-    <div class="mt-2">
+    <div class="mt-2" *ngIf="leadNew.category == '1'">
       <codx-label
         name="lblContacts"
         class="h4 text-dark text-primary fw-bold"
