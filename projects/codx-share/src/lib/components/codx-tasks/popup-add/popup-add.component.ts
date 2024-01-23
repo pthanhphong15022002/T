@@ -643,7 +643,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
         this.listTodo,
         null,
         this.recIDTodoDelete.join(';'),
-        null,
+        this.comnentUpdateStatus,
       ];
     } else {
       op.method = 'AddTaskAsync';

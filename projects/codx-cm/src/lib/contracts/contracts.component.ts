@@ -371,7 +371,9 @@ export class ContractsComponent extends UIComponent {
             res.disabled = !data?.closed;
             break;
           case 'CM0204_18': // thanh lý
-            res.disabled = (data?.status == '17' && data?.disposalType == '1') || data?.closed;
+            res.disabled =
+              (data?.status == '17' && data?.disposalType == '1') ||
+              data?.closed;
             break;
           case 'CM0204_19': // đưa vào quy trình xử lý
             res.disabled = data?.full
@@ -485,11 +487,11 @@ export class ContractsComponent extends UIComponent {
       case 'CM0204_22': //đổi trạng thái
         this.changeStatus(data);
         break;
-        case 'CM0204_19': // đưa vào quy trình xử lý
-        this.updateProcess(data,true);
+      case 'CM0204_19': // đưa vào quy trình xử lý
+        this.updateProcess(data, true);
         break;
-        case 'CM0204_20': // không sử dụng quy trình
-        this.updateProcess(data,false);
+      case 'CM0204_20': // không sử dụng quy trình
+        this.updateProcess(data, false);
         break;
       default: {
         // var customData = {
@@ -1019,8 +1021,9 @@ export class ContractsComponent extends UIComponent {
             if (process.approveRule)
               this.approvalTransAction(dt, process.processNo);
             else
-              this.notiService.notifyCode(
-                'Quy trình đang thực hiện chưa bật chức năng ký duyệt !'
+              this.notiService.notify(
+                'Quy trình đang thực hiện chưa bật chức năng ký duyệt !',
+                '3'
               );
           } else {
             this.notiService.notifyCode('DP040');
@@ -1028,9 +1031,11 @@ export class ContractsComponent extends UIComponent {
         });
       } else {
         if (this.approveRule == '1') this.approvalTransAction(dt, 'ES_CM0502');
-        this.notiService.notifyCode(
-          'Thiết lập hệ thống chưa bật chức năng ký duyệt !'
-        );
+        else
+          this.notiService.notify(
+            'Thiết lập hệ thống chưa bật chức năng ký duyệt !',
+            '3'
+          );
       }
     }
   }
@@ -1075,11 +1080,11 @@ export class ContractsComponent extends UIComponent {
       category,
       this.view.formModel.entityName,
       this.view.formModel.funcID,
-      data?.title,
+      data?.contractName, //tên nè
       this.releaseCallback.bind(this),
       null,
       null,
-      null,
+      null, //this.view.formModel.entityName, ///thích đổi mãi
       null,
       null,
       exportData
@@ -1576,27 +1581,32 @@ export class ContractsComponent extends UIComponent {
   autoStart(event) {
     if (event) {
       this.cmService
-      .startInstance([this.dataSelected?.refID, this.dataSelected?.recID, 'CM0204', 'CM_Contracts'])
-      .subscribe((resDP) => {
-        if (resDP) {
-          var datas = [this.dataSelected?.recID];
-          this.cmService.startContrart(datas).subscribe((res) => {
-            if (res) {
-              this.dataSelected = res;
-              this.dataSelected = JSON.parse(
-                JSON.stringify(this.dataSelected)
-              );
-              this.detailViewContract.reloadListStep(resDP[1]);
-              this.notiService.notifyCode('SYS007');
-              this.view.dataService
-                .update(this.dataSelected, true)
-                .subscribe();
-            }
-            this.detectorRef.detectChanges();
-          });
-        }
-      });
-    } 
+        .startInstance([
+          this.dataSelected?.refID,
+          this.dataSelected?.recID,
+          'CM0204',
+          'CM_Contracts',
+        ])
+        .subscribe((resDP) => {
+          if (resDP) {
+            var datas = [this.dataSelected?.recID];
+            this.cmService.startContrart(datas).subscribe((res) => {
+              if (res) {
+                this.dataSelected = res;
+                this.dataSelected = JSON.parse(
+                  JSON.stringify(this.dataSelected)
+                );
+                this.detailViewContract.reloadListStep(resDP[1]);
+                this.notiService.notifyCode('SYS007');
+                this.view.dataService
+                  .update(this.dataSelected, true)
+                  .subscribe();
+              }
+              this.detectorRef.detectChanges();
+            });
+          }
+        });
+    }
   }
 
   loadParam() {
@@ -1792,12 +1802,11 @@ export class ContractsComponent extends UIComponent {
     // this.changeDetectorRef.detectChanges();
   }
 
-  handelMoveStage(event, contract){
-    if(event){
+  handelMoveStage(event, contract) {
+    if (event) {
       this.moveStage(contract);
     }
   }
-
 }
 
 // this.columnGrids = [];

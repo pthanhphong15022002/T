@@ -39,7 +39,7 @@
             </codx-input>
           </div>
         </div>
-        <div class="col-4">
+        <div *ngIf="lstApprover?.length>1" class="col-4">
           <div class="form-group">
             <codx-label fiedName="ApproveMode" [formModel]="formModel">
             </codx-label>

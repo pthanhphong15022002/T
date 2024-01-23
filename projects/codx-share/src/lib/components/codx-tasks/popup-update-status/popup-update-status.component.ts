@@ -150,7 +150,7 @@ export class PopupUpdateStatusComponent implements OnInit {
     if (!this.isSave) {
       this.task.completedOn = this.completedOn;
       this.task.completed = this.completed;
-      this.dialog.close({ task: this.task, comnent: this.comment });
+      this.dialog.close({ task: this.task, comment: this.comment });
       // this.notiService.notifyCode('TM009');
     } else
       this.tmSv

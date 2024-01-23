@@ -1026,7 +1026,7 @@ export class DealsComponent
         CurrentStepComponent,
         '',
         800,
-        Util.getViewPort().height,
+        window.innerHeight,
         '',
         data,
         '',
@@ -1657,8 +1657,9 @@ export class DealsComponent
           if (process.approveRule)
             this.approvalTransAction(dt, process.processNo);
           else
-            this.notificationsService.notifyCode(
-              'Quy trình đang thực hiện chưa bật chức năng ký duyệt !'
+            this.notificationsService.notify(
+              'Quy trình đang thực hiện chưa bật chức năng ký duyệt !',
+              '3'
             );
         } else {
           this.notificationsService.notifyCode('DP040');
@@ -1666,9 +1667,11 @@ export class DealsComponent
       });
     } else {
       if (this.applyApprover == '1') this.approvalTransAction(dt, 'ES_CM0503');
-      this.notificationsService.notifyCode(
-        'Thiết lập hệ thống chưa bật chức năng ký duyệt !'
-      );
+      else
+        this.notificationsService.notify(
+          'Thiết lập hệ thống chưa bật chức năng ký duyệt !',
+          '3'
+        );
     }
   }
 
@@ -1704,11 +1707,11 @@ export class DealsComponent
       category,
       this.view.formModel.entityName,
       this.view.formModel.funcID,
-      data?.title,
+      data?.dealName, //tên nè,
       this.releaseCallback.bind(this),
       null,
       null,
-      null,
+      null, //this.view.formModel.entityName // thích đổi mãi
       null,
       null,
       exportData
@@ -2070,30 +2073,33 @@ export class DealsComponent
         let field = Util.camelize(key);
         let template: any;
         let colums: any;
-        switch (key) {
-          // case 'StepID':
-          case 'ProjectView': // thông tin dự án
-            template = this.templateSteps;
-            break;
-          // case 'DealCost':
-          case 'DealCostView': //chi phí
-            template = this.templateCost;
-            break;
-          // case 'GrossProfit':
-          case 'GrossProfitView': //lãi gộp
-            template = this.templateGrossProfit;
-            break;
-          // case 'Status':
-          case 'StatusCodeIDView': //hiện trạng
-            template = this.templateStatus;
-            break;
-          //case 'StatusCodeID'://hiện trạng
-          case 'StatusCodeIDView':
-            template = this.templateStatus;
-            break;
-          default:
-            break;
+        if (grvSetup[key].isTemplate != '0') {
+          switch (key) {
+            case 'StepID':
+            case 'ProjectView': // thông tin dự án
+              template = this.templateSteps;
+              break;
+            case 'DealCost':
+            case 'DealCostView': //chi phí
+              template = this.templateCost;
+              break;
+            case 'GrossProfit':
+            case 'GrossProfitView': //lãi gộp
+              template = this.templateGrossProfit;
+              break;
+            case 'Status':
+            case 'StatusCodeIDView': //hiện trạng
+            // template = this.templateStatus;
+            // break;
+            case 'StatusCodeID': //hiện trạng
+            case 'StatusCodeIDView':
+              template = this.templateStatus;
+              break;
+            default:
+              break;
+          }
         }
+
         if (template) {
           colums = {
             field: field,
@@ -2643,8 +2649,8 @@ export class DealsComponent
     this.view.currentView.sumData = this.objectSumValue;
   }
   //--------------------------------------//
-  handelMoveStage(event, contract){
-    if(event){
+  handelMoveStage(event, contract) {
+    if (event) {
       this.moveStage(contract);
     }
   }

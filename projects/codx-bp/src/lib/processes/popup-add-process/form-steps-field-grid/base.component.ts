@@ -6,6 +6,7 @@ import { CodxShareService } from "projects/codx-share/src/public-api";
 export abstract class BaseFieldComponent
 {
     user:any;
+    @Input() formModel;
     @Input() data: any;
     @Input() process: any;
     @Input() stage: any;

@@ -25,7 +25,7 @@ export const environment = {
     icon: '',
     logo: '',
     appleStore: '',
-    playStore: ''
+    playStore: '',
   },
   asideMode: '1',
   externalLogin: {
@@ -55,5 +55,20 @@ export const environment = {
     messagingSenderId: '319703529330',
     appId: '1:319703529330:web:d0569f86d85524c1ca0feb',
     measurementId: 'G-HH40VHYRF0',
+  },
+  serviceMapping: {
+    RP: {
+      service: 'rptrp',
+      assemblyName: 'Codx.RptBusiness.RP',
+    },
+    LS: {
+      service: 'HR',
+    },
+    TS: {
+      service: 'HR',
+    },
+    PR: {
+      service: 'HR',
+    },
   },
 };
