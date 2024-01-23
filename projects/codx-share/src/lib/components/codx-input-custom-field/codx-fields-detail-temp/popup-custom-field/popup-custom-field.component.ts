@@ -171,7 +171,7 @@ export class PopupCustomFieldComponent implements OnInit {
   }
 
   //----------------------CACULATE---------------------------//
-  caculateField() {
+  caculateField(field = null) {
     if (!this.arrCaculateField || this.arrCaculateField?.length == 0) return;
     let fieldsNum = this.fields.filter((x) => x.dataType == 'N');
     // let fieldsNum = this.fields.filter(
@@ -181,6 +181,11 @@ export class PopupCustomFieldComponent implements OnInit {
 
     this.arrCaculateField.forEach((obj) => {
       let dataFormat = obj.dataFormat;
+      // let check = field == null ? true : obj.recID == field.recID;
+      // if (!check) return;
+      // if (field != null && fieldName != null && dataValue != null)
+      //   dataFormat.replaceAll('[' + fieldName + ']', dataValue);
+
       fieldsNum.forEach((f) => {
         if (
           dataFormat.includes('[' + f.fieldName + ']') &&
@@ -213,7 +218,7 @@ export class PopupCustomFieldComponent implements OnInit {
         // );
         // if (fieldCFOnCF?.length > 0) {
         //   fieldCFOnCF.forEach((x) => {
-        //     this.caculateField();
+        //     this.caculateField(x, obj.fieldName, obj.dataValue);
         //   });
         // }
 

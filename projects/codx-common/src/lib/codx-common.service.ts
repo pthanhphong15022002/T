@@ -955,9 +955,10 @@ deleteGroup(recID: string) {
         'ApprovalTransBusiness',
         'AuthorityAsync',
         [model,res?.event]
-        ).subscribe(authority=>{
-          if(authority){
-            releaseCallback && releaseCallback(null,null);
+        ).subscribe((authority :ResponseModel)=>{
+          if(authority?.rowCount >0 && authority.msgCodeError==null){
+            this.notiService.notifyCode('SYS034');
+            releaseCallback && releaseCallback(authority,null);
           }
         });
       }

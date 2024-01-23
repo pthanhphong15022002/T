@@ -16,6 +16,7 @@ import {
   FormModel,
   NotificationsService,
   SidebarModel,
+  Util,
 } from 'codx-core';
 import { CM_Customers, CM_Deals } from '../../../models/cm_model';
 import { CodxCmService } from '../../../codx-cm.service';
@@ -61,6 +62,9 @@ export class CurrentStepComponent implements OnInit, OnChanges {
   isViewLink: boolean = false;
   view;
   listCosts;
+  dealCostOld = 0;
+  isChangeCost = false;
+  widthDefault = '550'
 
   viewSettings: any;
   statusCodeID;
@@ -88,10 +92,15 @@ export class CurrentStepComponent implements OnInit, OnChanges {
   ];
   listTabInformation = [
     { id: 'costItems', name: 'Chi phí' },
-    { id: 'tasks', name: 'Công việc' },
     { id: 'opponent', name: 'Đối thủ' },
     { id: 'note', name: 'Ghi chú' },
   ];
+  totalCost: any;
+  isUpDealCost = false;
+  dealValueTo: any;
+  isUpDealValueTo = false;
+  isZoomIn = false;
+  isZoomOut = false;
   constructor(
     private cache: CacheService,
     private codxCmService: CodxCmService,
@@ -113,6 +122,7 @@ export class CurrentStepComponent implements OnInit, OnChanges {
     this.title = dt?.data?.title;
     this.type = dt?.data?.type || '1';
     this.view = dt?.data?.view;
+    this.dealCostOld = this.deal?.dealCost;
     if (!this.dialog?.formModel) {
       this.dialog.formModel = {
         entityName: 'CM_Contracts',
@@ -141,6 +151,9 @@ export class CurrentStepComponent implements OnInit, OnChanges {
         }
       });
     this.getCostItemsByTransID(this.deal?.recID);
+    this.widthDefault = this.dialog.dialog.width
+    ? this.dialog.dialog.width.toString()
+    : '550';
   }
   ngOnChanges(changes: SimpleChanges) {}
 
@@ -231,7 +244,7 @@ export class CurrentStepComponent implements OnInit, OnChanges {
   }
 
   close() {
-    this.dialog.close();
+    this.dialog.close(this.isChangeCost);
   }
 
   onSectionChange(data: any, index: number = -1) {
@@ -525,16 +538,47 @@ export class CurrentStepComponent implements OnInit, OnChanges {
         }
       });
   }
-
-  dataDealValueTo(e){
-    console.log(e); 
+  
+  totalDataCost(e) {
+    this.totalCost = e;
+    this.isUpDealCost = true;
+  }
+  changeDealValueTo(e) {
+    this.dealValueTo = e;
+    this.isUpDealValueTo = true;
   }
 
-  totalDataCost(e){
-    console.log(e); 
+  closePopup() {
+    if ((!this.isUpDealCost && !this.isUpDealValueTo)) {
+      this.dialog.close();
+      return;
+    }
+    let obj = {
+      dealCost: this.totalCost,
+      isUpDealCost: this.isUpDealCost,
+      dealValueTo: this.dealValueTo,
+      isUpDealValueTo: this.isUpDealValueTo,
+    };
+    this.dialog.close(obj);
   }
+  showMore() {
+    let isZoomOut = !this.isZoomOut;
+    let width = window.innerWidth.toString();
+    // tạm tắt
+    // if (isShowMore) {
+    //   let element = document.getElementById('table');
+    //   if (element) {
+    //     width = (element.offsetWidth + 50).toString();
+    //   }
+    // }
+    // if (Number.parseFloat(width) <= Number.parseFloat(this.widthDefault))
+    //   return;
 
-  dataCostItems(e){
-    console.log(e); 
+    this.isZoomOut = isZoomOut;
+    // if (Number.parseFloat(width) > Util.getViewPort().width - 100)
+    //   width = (Util.getViewPort().width - 100).toString();
+
+    this.dialog.setWidth(this.isZoomOut ? width : this.widthDefault);
+    this.changeDetectorRef.detectChanges();
   }
 }

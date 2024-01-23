@@ -1005,36 +1005,52 @@ export class DealsComponent
   //end Kanaban
 
   currentStep(deal, type = '1') {
-    setTimeout(() => {
-      if (deal) {
-        let data = {
-          formModel: this.view.formModel,
-          dataView: deal,
-          isView: true,
-          type,
-          view: this.view,
-          statusCodeID: this.statusCodeID,
-          statusCodeCmt: this.statusCodeCmt,
-          detailViewDeal: this.detailViewDeal,
-          title: type == '1' ? 'Giai đoạn hiện tại' : 'Hiện trạng',
-          // listInsStepStart: this.listInsStep,
-        };
-        let option = new DialogModel();
-        option.zIndex = 100;
-        option.DataService = this.view.dataService;
-        option.FormModel = this.view.formModel;
-        let popupContract = this.callFunc.openForm(
-          CurrentStepComponent,
-          '',
-          800,
-          Util.getViewPort().height,
-          '',
-          data,
-          '',
-          option
-        );
-      }
-    }, 100);
+    if (deal) {
+      let data = {
+        formModel: this.view.formModel,
+        dataView: deal,
+        isView: true,
+        type,
+        view: this.view,
+        statusCodeID: this.statusCodeID,
+        statusCodeCmt: this.statusCodeCmt,
+        detailViewDeal: this.detailViewDeal,
+        title: type == '1' ? 'Thông tin dự án' : 'Hiện trạng',
+        // listInsStepStart: this.listInsStep,
+      };
+      let option = new DialogModel();
+      option.zIndex = 100;
+      option.DataService = this.view.dataService;
+      option.FormModel = this.view.formModel;
+      let popup = this.callFunc.openForm(
+        CurrentStepComponent,
+        '',
+        800,
+        window.innerHeight,
+        '',
+        data,
+        '',
+        option
+      );
+      popup.closed.subscribe((e) => {
+        if (e && e.event) {
+          if (e.event?.isUpDealCost) {
+            let dealCost = e.event.dealCost;
+            deal.dealCost = dealCost;
+          }
+          if (e.event?.isUpDealValueTo) {
+            let dealValueTo = e.event.dealValueTo;
+            deal.dealValueTo = dealValueTo;
+          }
+          let grossProfit = deal.dealValueTo - deal.dealCost;
+          deal.grossProfit = grossProfit;
+
+          this.view.dataService.update(deal, true).subscribe();
+
+          if (this.listKeyFieldSum?.length > 0) this.totalGirdView(); //tính lại tổng chajy cuxng nhanh
+        }
+      });
+    }
   }
 
   moveStage(data: any) {
