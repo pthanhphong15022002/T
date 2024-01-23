@@ -22,12 +22,11 @@
         </div>
         <div class="col-6 form-group">
           <codx-label fiedName="FiscalYear" [formModel]="dialog.formModel"></codx-label>
-          <!-- <codx-input field="fiscalYear" [formModel]="dialog.formModel"
-            [Group]="formJournal?.form?.formGroup"></codx-input> -->
-            <!-- bùa fiscalyear -->
+          <codx-input field="fiscalYear" [formModel]="dialog.formModel"
+            [Group]="formJournal?.form?.formGroup" ></codx-input>
             <!-- <codx-input #periodID field="periodID" (valueChange)="valueChange($event)" type="combobox"></codx-input> -->
-            <ejs-combobox [dataSource]="fiscalYears" [value]="formJournal?.form?.data?.fiscalYear" (change)="valueChange($event,'fiscalYear')">
-            </ejs-combobox>
+            <!-- <ejs-combobox [dataSource]="fiscalYears" [value]="formJournal?.form?.data?.fiscalYear" (change)="valueChange($event,'fiscalYear')">
+            </ejs-combobox> -->
         </div>
         <div class="col-6 form-group">
           <codx-label fiedName="PeriodID" [formModel]="dialog.formModel"></codx-label>
