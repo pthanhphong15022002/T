@@ -176,11 +176,11 @@ export const routes: Routes = [
         component: ImportEInvoicesComponent,
         data: { noReuse: true },
       },
-      {
-        path: 'cashtranfers/:funcID/:journalNo',
-        component: CashtransfersComponent,
-        data: { noReuse: true },
-      },
+      // {
+      //   path: 'cashtranfers/:funcID/:journalNo',
+      //   component: CashtransfersComponent,
+      //   data: { noReuse: true },
+      // },
       {
         path: 'dashboard/:funcID',
         component: DashboardComponent,
@@ -223,7 +223,7 @@ export const routes: Routes = [
         data: { noReuse: true },
       },
       {
-        path: 'updatingtheledger/:funcID',
+        path: 'RunPosting/:funcID',
         //component: UpdateTheLedgerComponent,
         component: PeriodicControlComponent,
         data: { noReuse: true },
