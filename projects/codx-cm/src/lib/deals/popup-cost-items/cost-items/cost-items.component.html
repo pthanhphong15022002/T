@@ -162,8 +162,23 @@
               ></codx-label>
             </td>
             <td class="text-end pe-5"></td>
-            <td class="text-end pe-5 fw-bold">
+            <td class="text-end pe-5 fw-bold" *ngIf="totalCost == 0">
               {{ totalCost }}
+            </td>
+            <td class="text-end pe-5 fw-bold" *ngIf="totalCost != 0">
+              <span
+                #formatDealCost
+                [innerHTML]="
+                  totalCost
+                    | formatvalue
+                      : formModel
+                      : 'DealCost'
+                      : formatDealCost
+                      : 'CMDeals'
+                      : 'grvCMDeals'
+                    | async
+                "
+              ></span>
             </td>
             <td class="text-end"></td>
           </tr>
