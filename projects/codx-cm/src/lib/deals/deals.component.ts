@@ -1657,8 +1657,9 @@ export class DealsComponent
           if (process.approveRule)
             this.approvalTransAction(dt, process.processNo);
           else
-            this.notificationsService.notifyCode(
-              'Quy trình đang thực hiện chưa bật chức năng ký duyệt !'
+            this.notificationsService.notify(
+              'Quy trình đang thực hiện chưa bật chức năng ký duyệt !',
+              '3'
             );
         } else {
           this.notificationsService.notifyCode('DP040');
@@ -1667,8 +1668,9 @@ export class DealsComponent
     } else {
       if (this.applyApprover == '1') this.approvalTransAction(dt, 'ES_CM0503');
       else
-        this.notificationsService.notifyCode(
-          'Thiết lập hệ thống chưa bật chức năng ký duyệt !'
+        this.notificationsService.notify(
+          'Thiết lập hệ thống chưa bật chức năng ký duyệt !',
+          '3'
         );
     }
   }
