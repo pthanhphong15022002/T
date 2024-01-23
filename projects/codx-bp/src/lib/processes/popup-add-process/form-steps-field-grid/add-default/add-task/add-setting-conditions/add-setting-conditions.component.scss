@@ -1,0 +1,115 @@
+.btn-circle {
+    width: 25px;
+    height: 25px;
+    text-align: center !important;
+    line-height: 1.428571429;
+    border-radius: 25px !important;
+    border: 1px solid #000;
+  }
+  
+  .on-active {
+    background-color: #3699ff !important;
+    color: #fff;
+  }
+  
+  .container{
+    &.non-padding{
+      padding: 0 !important;
+    }
+  }
+  
+  .row{
+    &.non-padding{
+      padding-left: 0 !important;
+    }
+  }
+  
+  .border-leftside{
+    border-left: 2px solid salmon;
+  }
+  
+  
+  #queryBuilderEle .e-contextmenu-wrapper {
+      ul {
+          font-weight: 400;
+          list-style-image: none;
+          list-style-position: outside;
+          list-style-type: none;
+          margin: 0;
+          overflow: hidden;
+          user-select: none;
+          font-size: 14px;
+          padding: 0;
+          border: 1px solid #dee2e6;
+          border-radius: 4px;
+          box-shadow: 0 16px 48pxrgba(0,0,0,.175);
+          display: none;
+          min-width: 80px !important;
+          position: absolute;
+          border-radius: 25px;
+      }
+  }
+  #queryBuilderEle .e-contextmenu-container {
+      ul {
+          font-weight: 400;
+          list-style-image: none;
+          list-style-position: outside;
+          list-style-type: none;
+          margin: 0;
+          overflow: hidden;
+          user-select: none;
+          font-size: 14px;
+          padding: 0;
+          border: 1px solid #dee2e6;
+          border-radius: 4px;
+          box-shadow: 0 16px 48pxrgba(0,0,0,.175);
+          display: none;
+          min-width: 80px !important;
+          position: absolute;
+          border-radius: 25px;
+      }
+  }
+  
+  
+  #queryBuilderEle .e-contextmenu-wrapper {
+      ul {
+          .e-menu-item {
+              cursor: pointer;
+              position: relative;
+              height: 32px;
+              line-height: 32px;
+              padding: 0px 10px;
+              float: left;
+          }
+      }
+  }
+  #queryBuilderEle .e-contextmenu-container {
+      ul {
+          .e-menu-item {
+              cursor: pointer;
+              position: relative;
+              height: 32px;
+              line-height: 32px;
+              padding: 0px 10px;
+              float: left;
+          }
+      }
+  }
+.add-s-con-dropdown
+{
+    .tab-content 
+    {
+        width: 100%;
+        .tab-pane
+        {
+            width: 100%;
+           
+        }
+
+    }
+}
+.div-active
+{
+    background-color: var(--primary-lighter);
+    color: var(--primary-active);
+}

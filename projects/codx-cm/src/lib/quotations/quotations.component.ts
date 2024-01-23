@@ -702,11 +702,11 @@ export class QuotationsComponent extends UIComponent implements OnInit {
       category,
       this.view.formModel.entityName,
       this.view.formModel.funcID,
-      data?.title,
+      data?.quotationName, //tên nè,
       this.releaseCallback.bind(this),
       null,
       null,
-      null,
+      null, ////this.view.formModel.entityName // thích đổi mãi
       null,
       null,
       exportData

@@ -20,6 +20,7 @@ import {
   FormModel,
   NotificationsService,
   SidebarModel,
+  TenantStore,
   Util,
 } from 'codx-core';
 import { Observable, finalize, firstValueFrom, map } from 'rxjs';
@@ -28,6 +29,7 @@ import { CodxCmService } from '../../../codx-cm.service';
 import { PopupAddLeadComponent } from '../../../leads/popup-add-lead/popup-add-lead.component';
 import { PopupConvertLeadComponent } from '../../../leads/popup-convert-lead/popup-convert-lead.component';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'codx-campaign-contacts',
@@ -91,7 +93,9 @@ export class CampaignContactsComponent implements OnInit {
     private codxService: CodxService,
     private cmSv: CodxCmService,
     private notiSv: NotificationsService,
-    private codxShareService: CodxShareService
+    private codxShareService: CodxShareService,
+    private location: Location,
+    private tenantStore: TenantStore
   ) {}
   async ngOnInit() {
     this.cache.moreFunction('CoDXSystem', '').subscribe((res) => {
@@ -254,7 +258,7 @@ export class CampaignContactsComponent implements OnInit {
         field: field,
         headerTemplate: this.headerStatusCusLead,
         template: this.tempStatusCusLead,
-        width: grid?.field?.width > 0? grid?.field?.width : 150,
+        width: grid?.field?.width > 0 ? grid?.field?.width : 150,
       },
       {
         field: 'called',
@@ -336,6 +340,7 @@ export class CampaignContactsComponent implements OnInit {
         switch (res.functionID) {
           case 'SYS03':
           case 'SYS04':
+          case 'SYS05':
             res.disabled = true;
             break;
           case 'CM0301_2_1':
@@ -355,11 +360,32 @@ export class CampaignContactsComponent implements OnInit {
   //#endregion
 
   //#region navigate
-  clickNavigate(data) {
+  async clickNavigate(data) {
     // this.cmSv.navigateCampaign.next({recID: data.recID});
-    this.codxService.navigate('', this.url, {
-      recID: data?.rowData?.objectID,
-    });
+    const url1 = this.location.prepareExternalUrl(this.location.path());
+    const parser = document.createElement('a');
+    parser.href = url1;
+    const domain = parser.origin;
+    let tenant = this.tenantStore.get().tenant;
+    if(this.objectType == '1'){
+      let customer = await firstValueFrom(this.cmSv.getOneObject(data?.rowData?.objectID, 'CustomersBusiness'));
+      let funcID = 'CM0101';
+      if(customer?.category == '1'){
+        funcID = 'CM0101';
+      }else{
+        funcID = 'CM0105';
+      }
+      const res = await firstValueFrom(this.cache.functionList(funcID));
+      this.url = res?.url;
+
+    }
+    let url = `${domain}/${tenant}/${this.url}?predicate=RecID=@0&dataValue=${data?.rowData?.objectID}`;
+    if(url){
+      window.open(url, '_blank');
+    }
+    // this.codxService.navigate('', this.url, {
+    //   recID: data?.rowData?.objectID,
+    // });
   }
   //#endregion
 

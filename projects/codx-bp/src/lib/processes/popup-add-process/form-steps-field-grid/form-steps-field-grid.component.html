@@ -11,21 +11,27 @@
                         <div class="d-flex flex-column">
                             <div class="d-flex flex-column ps-14 pb-4" *ngFor="let item2 of item.child">
                                 <div class="d-flex align-items-center row cursor-pointer" (click)="addEditStages(item2.activityType,'edit',item2)">
-                                    <div class="col-2">{{item2.stepName}}</div>
-                                    <div class="col-1 d-flex align-items-center"><i [class]="item2?.settings?.icon" [style.color]="item2?.settings?.color"></i><span class="mx-2">{{item2.activityType}}</span></div>
-                                    <div class="col-4"><span>{{item2.memo}}</span></div>
-                                    <div class="col-2"><span>{{item2?.duration}}</span><span class="mx-1">{{item2?.interval | vll : 'VL004' : 'text' | async}}</span></div>
-                                     <div class="col-3">
-                                        <ng-container *ngIf="item2.owners && item2.owners.length>0">
-                                            <div class="d-flex rounded-circle align-items-center justify-content-center w-30px h-30px bp-cricle-user"><i class="icon-i-person-check"></i></div>
-                                        </ng-container>
-                                    </div>
-                                    
-                                    <!-- <div class="col-3">
-                                        <ng-container *ngIf="item2.owners && item2.owners.length>0">
-                                            <div class="d-flex border rounded"><i class="icon-attach_file"></i><span>{{item2.owners.length}}</span></div>
-                                        </ng-container>
-                                    </div> -->
+                                    <ng-container *ngIf="item2.activityType != 'Conditions'">
+                                        <div class="col-1"></div>
+                                        <div class="col-2">{{item2.stepName}}</div>
+                                        <div class="col-1 d-flex align-items-center"><i [class]="item2?.settings?.icon" [style.color]="item2?.settings?.color"></i><span class="mx-2">{{item2.activityType}}</span></div>
+                                        <div class="col-4"><span>{{item2.memo}}</span></div>
+                                        <div class="col-2"><span>{{item2?.duration}}</span><span class="mx-1">{{item2?.interval | vll : 'VL004' : 'text' | async}}</span></div>
+                                        <div class="col-1">
+                                            <ng-container *ngIf="item2.owners && item2.owners.length>0">
+                                                <div class="d-flex rounded-circle align-items-center justify-content-center w-30px h-30px bp-cricle-user"><i class="icon-i-person-check"></i></div>
+                                            </ng-container>
+                                        </div>
+                                        <div class="col-1 d-flex justify-content-end">
+                                            <ng-container *ngIf="item2.attachments && item2.attachments >0">
+                                                <div class="d-flex align-items-center justify-content-center position-relative border rounded w-30px p-2"><i class="icon-attach_file"></i><div class="d-flex align-items-center justify-content-center position-absolute bp-attach-number rounded-circle">{{item2.attachments}}</div></div>
+                                            </ng-container>
+                                        </div>
+                                    </ng-container>
+                                    <ng-container *ngIf="item2.activityType == 'Conditions'">
+                                        <div class="row" *ngFor="let item3 of item2?.settings?.nextSteps" [innerHTML]="getNextStepHTML(item2 , item3.nextStepID)">
+                                        </div>
+                                    </ng-container>
                                 </div>
                                 <!-- <div class="d-flex align-items-center row-grid-collapse cursor-pointer" (click)="addEditStages('Task','add',null,item2,item)">
                                     <codx-label default="Thêm công việc" class="my-2 ms-4" ></codx-label>
