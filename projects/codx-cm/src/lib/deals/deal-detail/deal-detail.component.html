@@ -547,7 +547,7 @@
               </div>
             </ng-template>
             <ng-template #content>
-              <div class="d-flex flex-column mt-4">
+              <div class="mt-5 p-2" [ngClass]="isShow ? '': 'croll-m-5'" style="overflow-x: hidden !important;">
                 <div class="text-dark text-primary fw-bold fs-6 mb-3">
                   <codx-label default="Thông tin chung"></codx-label>
                 </div>
@@ -940,7 +940,7 @@
               </div>
             </ng-template>
             <ng-template #content>
-              <div class="mt-4">
+              <div class="mt-5 p-2" [ngClass]="isShow ? '': 'croll-m-5'" style="overflow-x: hidden !important;">
                 <codx-list-contacts
                   #loadContactDeal
                   [selectAll]="false"
@@ -970,7 +970,7 @@
               </div>
             </ng-template>
             <ng-template #content>
-              <div class="mt-4">
+              <div class="mt-5 p-2" [ngClass]="isShow ? '': 'croll-m-5'" style="overflow-x: hidden !important;">
                 <codx-tab-dealcompetitors
                   [dealID]="dataSelected.recID"
                   [hidenMF]="!dataSelected?.write || dataSelected.closed"
@@ -991,6 +991,7 @@
               </div>
             </ng-template>
             <ng-template #content let-data="value">
+              <div class="mt-5 p-2" [ngClass]="isShow ? '': 'croll-m-5'" style="overflow-x: hidden !important;">
                 <step-task
                   [entityName]="'CM_Deals'"
                   [isDataLoading]="isDataLoading"
@@ -1008,6 +1009,8 @@
                   [taskAdd]="taskAdd"
                   (moveStage)="handelMoveStage($event)"
                 ></step-task>
+              </div>
+
             </ng-template>
           </e-tabitem>
           <e-tabitem>
@@ -1023,7 +1026,7 @@
               </div>
             </ng-template>
             <ng-template #content let-data>
-              <div class="tab-comt mt-4">
+              <div class="tab-comt mt-5 p-2" [ngClass]="isShow ? '': 'croll-m-5'" style="overflow-x: hidden !important;">
                 <div class="tab_container">
                   <codx-tree-comment
                     [objectID]="dataSelected.recID"

@@ -239,98 +239,98 @@ export class CodxFieldsDetailTempComponent implements OnInit {
     } else this.elmIDCrr = null;
   }
 
-  valueChangeCustom(event) {
-    if (event && event.data) {
-      var result = event.e?.data;
-      var field = event.data;
-      this.dataValueOld = field.dataValue;
-      switch (field.dataType) {
-        case 'D':
-          result = event.e?.data.fromDate;
-          break;
-        case 'P':
-        case 'R':
-        case 'A':
-        case 'C':
-        case 'L':
-        case 'TA':
-        case 'PA':
-          result = event?.e;
-          break;
-      }
-      field.dataValue = result;
-      // if (field.dataType == 'TA')
-      //   field.formatData = JSON.parse(JSON.stringify(field.formatData));
-      this.saveField(field);
-    }
-  }
+  // valueChangeCustom(event) {
+  //   if (event && event.data) {
+  //     var result = event.e?.data;
+  //     var field = event.data;
+  //     this.dataValueOld = field.dataValue;
+  //     switch (field.dataType) {
+  //       case 'D':
+  //         result = event.e?.data.fromDate;
+  //         break;
+  //       case 'P':
+  //       case 'R':
+  //       case 'A':
+  //       case 'C':
+  //       case 'L':
+  //       case 'TA':
+  //       case 'PA':
+  //         result = event?.e;
+  //         break;
+  //     }
+  //     field.dataValue = result;
+  //     // if (field.dataType == 'TA')
+  //     //   field.formatData = JSON.parse(JSON.stringify(field.formatData));
+  //     this.saveField(field);
+  //   }
+  // }
 
-  checkFormat(field) {
-    if (field.dataType == 'T') {
-      if (field.dataFormat == 'E') {
-        var validEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-        if (!field.dataValue.toLowerCase().match(validEmail)) {
-          this.cache.message('SYS037').subscribe((res) => {
-            if (res) {
-              var errorMessage = res.customName || res.defaultName;
-              this.notiService.notify(errorMessage, '2');
-            }
-          });
-          return false;
-        }
-      }
-      if (field.dataFormat == 'P') {
-        var validPhone = /(((09|03|07|08|05)+([0-9]{8})|(01+([0-9]{9})))\b)/;
-        if (!field.dataValue.toLowerCase().match(validPhone)) {
-          this.cache.message('RS030').subscribe((res) => {
-            if (res) {
-              var errorMessage = res.customName || res.defaultName;
-              this.notiService.notify(errorMessage, '2');
-            }
-          });
-          return false;
-        }
-      }
-    }
-    return true;
-  }
-  saveField(field) {
-    let check = true;
-    let checkFormat = true;
+  // checkFormat(field) {
+  //   if (field.dataType == 'T') {
+  //     if (field.dataFormat == 'E') {
+  //       var validEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+  //       if (!field.dataValue.toLowerCase().match(validEmail)) {
+  //         this.cache.message('SYS037').subscribe((res) => {
+  //           if (res) {
+  //             var errorMessage = res.customName || res.defaultName;
+  //             this.notiService.notify(errorMessage, '2');
+  //           }
+  //         });
+  //         return false;
+  //       }
+  //     }
+  //     if (field.dataFormat == 'P') {
+  //       var validPhone = /(((09|03|07|08|05)+([0-9]{8})|(01+([0-9]{9})))\b)/;
+  //       if (!field.dataValue.toLowerCase().match(validPhone)) {
+  //         this.cache.message('RS030').subscribe((res) => {
+  //           if (res) {
+  //             var errorMessage = res.customName || res.defaultName;
+  //             this.notiService.notify(errorMessage, '2');
+  //           }
+  //         });
+  //         return false;
+  //       }
+  //     }
+  //   }
+  //   return true;
+  // }
+  // saveField(field) {
+  //   let check = true;
+  //   let checkFormat = true;
 
-    if (!field.dataValue || field.dataValue?.toString().trim() == '') {
-      if (field.isRequired) {
-        this.notiService.notifyCode('SYS009', 0, '"' + field.title + '"');
-        check = false;
-      }
-    } else checkFormat = this.checkFormat(field);
+  //   if (!field.dataValue || field.dataValue?.toString().trim() == '') {
+  //     if (field.isRequired) {
+  //       this.notiService.notifyCode('SYS009', 0, '"' + field.title + '"');
+  //       check = false;
+  //     }
+  //   } else checkFormat = this.checkFormat(field);
 
-    if (!check || !checkFormat) return;
-    if (this.isSaving) return;
-    this.isSaving = true;
-    this.actionSaveCF.emit(true);
-    let data = [field.stepID, [field]];
-    this.api
-      .exec<any>(
-        'DP',
-        'InstancesStepsBusiness',
-        'UpdateInstanceStepFielsByStepIDAsync',
-        data
-      )
-      .subscribe((res) => {
-        let idx = this.dataStep.fields.findIndex((x) => x.recID == field.recID);
-        this.isSaving = false;
-        this.actionSaveCF.emit(false);
-        if (res) {
-          if (idx != -1) this.dataStep.fields[idx].dataValue = field.dataValue;
-          this.notiService.notifyCode('SYS007');
-          this.clickInput(this.elmIDCrr);
-          this.inputElmIDCF.emit(null);
-        } else {
-          this.notiService.notifyCode('SYS021');
-          if (idx != -1)
-            this.dataStep.fields[idx].dataValue = this.dataValueOld;
-        }
-      });
-  }
+  //   if (!check || !checkFormat) return;
+  //   if (this.isSaving) return;
+  //   this.isSaving = true;
+  //   this.actionSaveCF.emit(true);
+  //   let data = [field.stepID, [field],null];
+  //   this.api
+  //     .exec<any>(
+  //       'DP',
+  //       'InstancesStepsBusiness',
+  //       'UpdateInstanceStepFielsByStepIDAsync',
+  //       data
+  //     )
+  //     .subscribe((res) => {
+  //       let idx = this.dataStep.fields.findIndex((x) => x.recID == field.recID);
+  //       this.isSaving = false;
+  //       this.actionSaveCF.emit(false);
+  //       if (res) {
+  //         if (idx != -1) this.dataStep.fields[idx].dataValue = field.dataValue;
+  //         this.notiService.notifyCode('SYS007');
+  //         this.clickInput(this.elmIDCrr);
+  //         this.inputElmIDCF.emit(null);
+  //       } else {
+  //         this.notiService.notifyCode('SYS021');
+  //         if (idx != -1)
+  //           this.dataStep.fields[idx].dataValue = this.dataValueOld;
+  //       }
+  //     });
+  // }
 }
