@@ -11,7 +11,7 @@
       </div>
       <div class="d-flex align-items-center">
         <codx-mfunc [formModel]="view.formModel" [isToolBar]="true" type="view"
-          (changeDataMF)="changeDataMF($event,'view')" (clickMF)="clickMF($event)"></codx-mfunc>
+          (changeDataMF)="changeDataMF($event,'M')" (clickMF)="clickMF($event)"></codx-mfunc>
       </div>
     </div>
     <div class="h-100 overflow-auto">
@@ -101,7 +101,7 @@
                         <div class="d-flex ms-4 justify-content-end category-control w-250px min-w-250px">
                           <div class="d-flex flex-column">
                             <codx-mfunc [formModel]="view.formModel" [isToolBar]="true" type="view" [dataItem]="item"
-                              (changeDataMF)="showMFCancel($event)" (clickMF)="clickMF($event,item)"></codx-mfunc>
+                            (changeDataMF)="changeDataMF($event,'D')" (clickMF)="clickMF($event,item)"></codx-mfunc>
                             <span class="badge ac-badge-light-primary mb-3">
                               Đã hoàn tất
                             </span>

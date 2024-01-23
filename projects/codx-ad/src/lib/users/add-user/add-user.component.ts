@@ -48,7 +48,6 @@ export class AddUserComponent extends UIComponent implements OnInit {
   @ViewChild('firstComment') firstComment: TemplateRef<any>;
   @ViewChild('userGroup') userGroup?: CodxInputComponent;
   private destroy$ = new Subject<void>(); //? list observable hủy các subscribe api
-
   title = '';
   header = '';
   dialog!: DialogRef;
@@ -87,7 +86,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
   //employeeID first change
   isEmpIDNotNull: boolean = false;
   isSaas = false;
-  unWelcomeUser:any;
+  unWelcomeUser: any;
   constructor(
     private injector: Injector,
     private changeDetector: ChangeDetectorRef,
@@ -104,6 +103,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
     this.formType = dt?.data?.formType;
     this.data = dialog.dataService!.dataSelected;
     this.dataCopy = dt?.data?.dataCopy;
+    this.funcID = dt?.data?.funcID;
     this.adUser = JSON.parse(JSON.stringify(this.data));
     if (this.formType == 'invite') {
       this.isSaved = false;
@@ -219,7 +219,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
     (this.form.form as CodxFormComponent).setRequire(lsRequire);
   }
 
-  openPopup(item: any) {
+  openRoles(item: any) {
     if (this.form.formGroup.valid) {
       this.dataUG = this.userGroup.ComponentCurrent.dataService.data;
       if (
@@ -341,7 +341,6 @@ export class AddUserComponent extends UIComponent implements OnInit {
       'addUserRoles' ||
       'changeAvatar' ||
       'closePopup',
-    // addToGroup: boolean,
     isOverrideRoles: boolean,
     item?: any
   ) {
@@ -350,20 +349,22 @@ export class AddUserComponent extends UIComponent implements OnInit {
         .save((opt: any) => this.beforeSave(opt), 0, '', '', true)
         .pipe(takeUntil(this.destroy$))
         .subscribe((res) => {
-          if (!res?.error) {
+          if (res) {
             if (!this.isSaved) {
-              if(this.unWelcomeUser == null){
-                this.codxShareService.getSettingValueWithOption('F','WPParameters',null,'1').subscribe(settings=>{
-                  if(settings?.length>0 && settings[0]?.dataValue){
-                    let wpSetting = JSON.parse(settings[0]?.dataValue);
-                    if(wpSetting){
-                      this.unWelcomeUser = wpSetting?.UnWelcomeUser =="1" ? false : true;
-                      this.welcomeUserPost();
+              if (this.unWelcomeUser == null) {
+                this.codxShareService
+                  .getSettingValueWithOption('F', 'WPParameters', null, '1')
+                  .subscribe((settings) => {
+                    if (settings?.length > 0 && settings[0]?.dataValue) {
+                      let wpSetting = JSON.parse(settings[0]?.dataValue);
+                      if (wpSetting) {
+                        this.unWelcomeUser =
+                          wpSetting?.UnWelcomeUser == '1' ? false : true;
+                        this.welcomeUserPost();
+                      }
                     }
-                  }
-                })
-              }
-              else{
+                  });
+              } else {
                 this.welcomeUserPost();
               }
               if (res.save) {
@@ -460,8 +461,8 @@ export class AddUserComponent extends UIComponent implements OnInit {
     };
   }
 
-  welcomeUserPost(){
-    if(this.unWelcomeUser){
+  welcomeUserPost() {
+    if (this.unWelcomeUser) {
       this.getHTMLFirstPost(this.adUser);
       this.adService.createFirstPost(this.tmpPost).subscribe();
     }

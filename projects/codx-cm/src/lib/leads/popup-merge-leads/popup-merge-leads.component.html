@@ -125,7 +125,7 @@
           >
           </codx-img>
         </div>
-        <div class="w-20 d-flex" *ngIf="leadOne?.recID">
+        <div class="w-20 d-flex">
           <div class="w-10">
             <span
               class="d-flex"
@@ -946,21 +946,16 @@
                 ></codx-input>
               </span>
             </div>
-            <div
-              *ngFor="let item of leadOne?.industries?.split(';'); index as i"
-              class="d-inline"
-            >
+
+            <div class="d-inline">
               <span
                 class="text-gray-700"
                 [innerHTML]="
-                  item | formatvalue : dialog.formModel : 'Industries' | async
+                  leadOne?.industries
+                    | formatvalue : dialog.formModel : 'Industries'
+                    | async
                 "
-              ></span
-              ><span
-                class="me-1"
-                *ngIf="i < leadOne?.industries?.split(';').length - 1"
-                >,</span
-              >
+              ></span>
               <!-- {{ dataSelected?.segmentID }} -->
             </div>
           </div>
@@ -983,21 +978,15 @@
                 ></codx-input>
               </span>
             </div>
-            <div
-              *ngFor="let item of leadTwo?.industries?.split(';'); index as i"
-              class="d-inline"
-            >
+            <div class="d-inline">
               <span
                 class="text-gray-700"
                 [innerHTML]="
-                  item | formatvalue : dialog.formModel : 'Industries' | async
+                  leadTwo?.industries
+                    | formatvalue : dialog.formModel : 'Industries'
+                    | async
                 "
-              ></span
-              ><span
-                class="me-1"
-                *ngIf="i < leadTwo?.industries?.split(';').length - 1"
-                >,</span
-              >
+              ></span>
             </div>
           </div>
         </div>
@@ -1019,21 +1008,15 @@
                 ></codx-input>
               </span>
             </div>
-            <div
-              *ngFor="let item of leadThree?.industries?.split(';'); index as i"
-              class="d-inline"
-            >
+            <div class="d-inline">
               <span
                 class="text-gray-700"
                 [innerHTML]="
-                  item | formatvalue : dialog.formModel : 'Industries' | async
+                  leadThree?.industries
+                    | formatvalue : dialog.formModel : 'Industries'
+                    | async
                 "
-              ></span
-              ><span
-                class="me-1"
-                *ngIf="i < leadThree?.industries?.split(';').length - 1"
-                >,</span
-              >
+              ></span>
             </div>
           </div>
         </div>
@@ -1914,7 +1897,7 @@
         </div>
       </div>
     </div>
-    <div class="mt-2">
+    <div class="mt-2" *ngIf="leadNew.category == '1'">
       <codx-label
         name="lblContacts"
         class="h4 text-dark text-primary fw-bold"
