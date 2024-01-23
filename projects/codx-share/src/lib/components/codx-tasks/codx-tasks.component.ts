@@ -1898,8 +1898,9 @@ export class CodxTasksComponent
             if (
               !data.write ||
               (data.category == '2' &&
-                data.parentID == null &&
-                data.createdBy != this.user?.userID) ||
+                !(
+                  data.parentID == null && data.createdBy == this.user?.userID
+                )) ||
               data.status == '90' ||
               this.funcID == 'TMT0402' ||
               this.funcID == 'TMT0401' ||
