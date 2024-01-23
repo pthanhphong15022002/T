@@ -2073,30 +2073,33 @@ export class DealsComponent
         let field = Util.camelize(key);
         let template: any;
         let colums: any;
-        switch (key) {
-          // case 'StepID':
-          case 'ProjectView': // thông tin dự án
-            template = this.templateSteps;
-            break;
-          // case 'DealCost':
-          case 'DealCostView': //chi phí
-            template = this.templateCost;
-            break;
-          // case 'GrossProfit':
-          case 'GrossProfitView': //lãi gộp
-            template = this.templateGrossProfit;
-            break;
-          // case 'Status':
-          case 'StatusCodeIDView': //hiện trạng
-            template = this.templateStatus;
-            break;
-          //case 'StatusCodeID'://hiện trạng
-          case 'StatusCodeIDView':
-            template = this.templateStatus;
-            break;
-          default:
-            break;
+        if (grvSetup[key].isTemplate != '0') {
+          switch (key) {
+            case 'StepID':
+            case 'ProjectView': // thông tin dự án
+              template = this.templateSteps;
+              break;
+            case 'DealCost':
+            case 'DealCostView': //chi phí
+              template = this.templateCost;
+              break;
+            case 'GrossProfit':
+            case 'GrossProfitView': //lãi gộp
+              template = this.templateGrossProfit;
+              break;
+            case 'Status':
+            case 'StatusCodeIDView': //hiện trạng
+            // template = this.templateStatus;
+            // break;
+            case 'StatusCodeID': //hiện trạng
+            case 'StatusCodeIDView':
+              template = this.templateStatus;
+              break;
+            default:
+              break;
+          }
         }
+
         if (template) {
           colums = {
             field: field,
