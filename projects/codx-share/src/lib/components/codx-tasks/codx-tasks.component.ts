@@ -680,7 +680,10 @@ export class CodxTasksComponent
       this.notiService.notifyCode('TM017');
       return;
     }
-    if (data.category == '2') {
+    if (
+      data.category == '2' &&
+      !(data.parentID == null && data.createdBy == this.user.userID)
+    ) {
       this.notiService.notifyCode('TM018');
       return;
     }
@@ -1894,7 +1897,9 @@ export class CodxTasksComponent
           case 'SYS02':
             if (
               !data.write ||
-              data.category == '2' ||
+              (data.category == '2' &&
+                data.parentID == null &&
+                data.createdBy != this.user?.userID) ||
               data.status == '90' ||
               this.funcID == 'TMT0402' ||
               this.funcID == 'TMT0401' ||
