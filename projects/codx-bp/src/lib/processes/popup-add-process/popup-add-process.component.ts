@@ -292,6 +292,9 @@ export class PopupAddProcessComponent {
     form.stageID = stage.recID;
     form.parentID = stage.recID;
     form.extendInfo = this.extendInfos;
+    form.memo = "";
+    form.duration = 0;
+    form.interval = "1";
     form.settings = JSON.stringify(
     {
       icon: vllForm.icon,
@@ -413,18 +416,12 @@ export class PopupAddProcessComponent {
     switch (currentTab) {
       case 0:
       {
-        let that = this;
-        if(this.action == "add")
-          this.saveProcessStep().subscribe(item=>{
-            that.updateNodeStatus(oldNode, newNode);
-            that.currentTab++;
-            that.processTab == 0 && this.processTab++;
-          });
-        else
-        {
-          this.updateNodeStatus(oldNode, newNode);
-          this.currentTab++;
-          this.processTab == 0 && this.processTab++;
+        this.updateNodeStatus(oldNode, newNode);
+        this.currentTab++;
+        this.processTab == 0 && this.processTab++;
+        if(this.action == "add") {
+          this.data = {...this.data};
+          this.saveProcessStep().subscribe();
         }
         break;
       }
@@ -736,6 +733,7 @@ export class PopupAddProcessComponent {
         }
       });
     }
+    debugger
     let popupDialog = this.callfc.openForm(
       ModeviewComponent,
       '',

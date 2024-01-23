@@ -1,15 +1,21 @@
-import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { BaseFieldComponent } from '../../base.component';
 import { BP_Processes_Steps } from 'projects/codx-bp/src/lib/models/BP_Processes.model';
-import { Util } from 'codx-core';
+import { DialogModel, Util } from 'codx-core';
+import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
+import { AddSettingConditionsComponent } from './add-setting-conditions/add-setting-conditions.component';
+import { ModeviewComponent } from 'projects/codx-bp/src/lib/modeview/modeview.component';
 
 @Component({
   selector: 'lib-add-task',
   templateUrl: './add-task.component.html',
   styleUrls: ['./add-task.component.scss']
 })
-export class AddTaskComponent extends BaseFieldComponent implements OnInit , OnChanges{
+export class AddTaskComponent extends BaseFieldComponent implements OnInit , OnChanges {
+  @ViewChild('attachment') attachment: AttachmentComponent;
+  @ViewChild('attachment2') attachment2: AttachmentComponent;
   @Input() activityType: any;
+  isNewForm = false;
   listUses = [];
   vllBP013 =
   {
@@ -55,16 +61,16 @@ export class AddTaskComponent extends BaseFieldComponent implements OnInit , OnC
     var vllStage = this.vll.datas.filter(x=>x.value == "Task")[0];
     this.data = new BP_Processes_Steps();
     this.data.recID = Util.uid();
-    this.data.stepNo = this.parent.child.length;
+    this.data.stepNo = this.process.steps.length;
     this.data.stageID = this.stage.recID;
     this.data.parentID = this.parent.recID;
     this.data.activityType = "Task";
-    this.data.stepName = vllStage.text + " " + (this.data.stepNo + 1);
+    this.data.stepName = vllStage.text + " " + (this.parent.child.length + 1);
     this.data.reminder = this.process.reminder;
     this.data.eventControl = null;
     this.data.interval = "1";
     this.data.memo = "";
-    this.data.duration = "0";
+    this.data.duration = 0;
     this.data.location = "";
     this.data.settings = 
     {
@@ -83,6 +89,44 @@ export class AddTaskComponent extends BaseFieldComponent implements OnInit , OnC
     this.data.settings.color = vllStage.color;
     this.data.settings.backGround = vllStage.textColor;
     this.data.activityType = this.activityType;
+
+    if(this.data.activityType == "Form" && (!this.data.extendInfo || this.data.extendInfo.length == 0))
+    {
+      this.isNewForm = true;
+      this.data.extendInfo = 
+      [
+        {
+            recID: Util.uid(),
+            fieldName: "Ten_bieu_mau",
+            title: "Tên biểu mẫu",
+            dataType: "String",
+            fieldType: "Title",
+            controlType: "TextBox",
+            isRequired: true,
+            defaultValue: null,
+            description: "",
+            columnOrder: 0,
+            columnNo: 0
+        },
+        {
+            recID: "c3f6287e-3e7b-4395-99db-e72dc0479117",
+            fieldName: "Mo_ta_ngan_gon",
+            title: "Mô tả ngắn gọn",
+            dataType: "String",
+            fieldType: "SubTitle",
+            controlType: "TextBox",
+            isRequired: true,
+            defaultValue: "Mô tả ngắn gọn",
+            description: "Câu trả lời",
+            columnOrder: 1,
+            columnNo: 0
+        }
+      ]
+    }
+    else if(this.data.activityType == "Conditions" && !this.data.settings.nextSteps)
+    {
+      this.data.settings.nextSteps = [];
+    }
   }
   valueChange(e:any)
   {
@@ -122,5 +166,72 @@ export class AddTaskComponent extends BaseFieldComponent implements OnInit , OnC
     this.data.stageID = this.stage.recID;
     this.data.parentID = this.parent.recID;
     this.dataChange.emit(this.data);
+  }
+
+  openAttach1()
+  {
+    this.attachment.uploadFile();
+  }
+  openAttach2()
+  {
+    this.attachment2.uploadFile();
+  }
+  fileSave(e:any)
+  {
+    if(Array.isArray(e)) this.data.attachments = e.length;
+    else this.data.attachments = 1;
+    this.dataChange.emit(this.data);
+  }
+  fileDelete(e:any)
+  {
+    this.data.attachments --;
+    this.dataChange.emit(this.data);
+  }
+  openFormSetting(val:any=null , index = null)
+  {
+    let option = new DialogModel();
+    option.FormModel = this.formModel;
+    let listForm = this.process.steps.filter(x=>x.stepNo < this.data.stepNo && x.activityType == 'Form');
+    let dataSteps = this.process.steps.filter(x=>x.activityType != "Stage" && x.activityType != "Conditions" && x.activityType != "StartEnd");
+    let popupDialog = this.callFuc.openForm(AddSettingConditionsComponent,"",700,700,"",{forms: listForm,dataStep:val,listSteps:dataSteps},"",option);
+    popupDialog.closed.subscribe((res) => {
+      if (res?.event) {
+        if(typeof index === 'number') this.data.settings.nextSteps[index] = res?.event;
+        else this.data.settings.nextSteps.push(res?.event);
+        this.dataChange.emit(this.data);
+      }
+    })
+  }
+  openFormModeView()
+  {
+    let option = new DialogModel();
+    option.IsFull = true;
+    option.zIndex = 1010;
+    let popupDialog = this.callFuc.openForm(
+      ModeviewComponent,
+      '',
+      null,
+      null,
+      '',
+      this.data.extendInfo,
+      '',
+      option
+    );
+    popupDialog.closed.subscribe((res) => {
+      if (res?.event) {
+        this.isNewForm = false;
+        this.data.extendInfo = res?.event?.length > 0 ? JSON.parse(JSON.stringify(res?.event)) : [];
+        this.dataChange.emit(this.data);
+      }
+    })
+  }
+  getNextStepHTML(id:any)
+  {
+    let data = this.process.steps.filter(x=>x.recID == id)[0];
+    if(data)
+    {
+      return '<i class="'+data.settings.icon+'" style="color:'+data.settings.color+'"></i><span class="ms-2">'+data.stepName+'</span>'
+    }
+    return "";
   }
 }
