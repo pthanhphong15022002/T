@@ -204,7 +204,7 @@ export class DealsComponent
   funcDefault = 'CM0201';
   listKeyFieldSum = [];
   objectSumValue = {};
-
+  dealConfirm: string = '1';
   constructor(
     private inject: Injector,
     private cacheSv: CacheService,
@@ -2001,9 +2001,26 @@ export class DealsComponent
           this.titleAction?.toLocaleLowerCase(),
           "'" + data?.dealName + "'"
         )
-        .subscribe((x) => {
+        .subscribe(async (x) => {
           if (x?.event?.status == 'Y') {
-            this.startDeal(data);
+            const ins = await firstValueFrom(this.api.execSv<any>('DP','ERM.Business.DP','InstancesBusiness','GetAsync',[data.refID]));
+            if(ins?.status == '1' || ins?.status == '0'){
+              this.startDeal(data);
+            }else{
+              let datas = [data.recID, ins?.endDate];
+              this.codxCmService.startDeal(datas).subscribe((res) => {
+                if (res) {
+                  this.dataSelected = res;
+                  this.dataSelected = JSON.parse(JSON.stringify(this.dataSelected));
+                  this.view.dataService.update(this.dataSelected, true).subscribe();
+                  if (this.kanban) this.kanban.updateCard(this.dataSelected);
+                  if (this.detailViewDeal)
+                    // this.detailViewDeal.reloadListStep(resDP[1]);
+                  this.notificationsService.notifyCode('SYS007');
+                }
+                this.detectorRef.detectChanges();
+              });
+            }
           } else {
             this.codxCmService
               .confirmOrRefuse(data?.recID, check, '')
@@ -2202,6 +2219,7 @@ export class DealsComponent
       if (dataParam1) {
         let paramDefault = JSON.parse(dataParam1.dataValue);
         this.currencyIDDefault = paramDefault['DefaultCurrency'] ?? 'VND';
+        this.dealConfirm = paramDefault['DealConfirm'] ?? '1';
         this.gridDetailView = paramDefault?.GridDetailView || '2';
         this.exchangeRateDefault = 1; //cai nay chua hop ly neu exchangeRateDefault nos tinh ti le theo dong tien khac thi sao ba
         if (this.currencyIDDefault != 'VND') {

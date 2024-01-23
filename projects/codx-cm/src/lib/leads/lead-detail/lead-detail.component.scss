@@ -19,12 +19,23 @@
 //   color: #a78515;
 // }
 
-:host ::ng-deep codx-lead-detail .codx-detail-body {
-  overflow: hidden;
-}
 .color-theme{
   background: var(--primary-active)!important;
   border-radius: 10px;
   padding: 5px;
   color: white !important;
+}
+
+:host ::ng-deep .codx-detail-main {
+  height: 100% !important;
+}
+
+lib-leads codx-lead-detail .codx-detail-main {
+  padding-bottom: 0 !important;
+  background-color: #ff9472;
+}
+
+.croll-m-5 {
+  height: calc(100vh - 430px) !important;
+  overflow: auto !important;
 }

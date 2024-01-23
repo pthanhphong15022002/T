@@ -149,7 +149,7 @@ export class PopupCustomFieldComponent implements OnInit {
     if (!check || !checkFormat) return;
     if (this.isSaving) return;
     this.isSaving = true;
-    let data = [this.fields[0]?.stepID, this.fields];
+    let data = [this.fields[0]?.stepID, this.fields, this.taskID];
     this.api
       .exec<any>(
         'DP',
@@ -171,7 +171,7 @@ export class PopupCustomFieldComponent implements OnInit {
   }
 
   //----------------------CACULATE---------------------------//
-  caculateField(field = null) {
+  caculateField(versionID = null) {
     if (!this.arrCaculateField || this.arrCaculateField?.length == 0) return;
     let fieldsNum = this.fields.filter((x) => x.dataType == 'N');
     // let fieldsNum = this.fields.filter(
@@ -192,6 +192,10 @@ export class PopupCustomFieldComponent implements OnInit {
           f.dataValue?.toString()
         ) {
           let dataValue = f.dataValue;
+          if (versionID) {
+            let ver = f?.version?.find((x) => x.refID == versionID);
+            if (ver) dataValue = ver?.dataValue;
+          }
 
           if (f.dataFormat == 'P') dataValue = dataValue + '/100';
           dataFormat = dataFormat.replaceAll(
@@ -233,7 +237,7 @@ export class PopupCustomFieldComponent implements OnInit {
   upDataVersion(field, value) {
     field.dataValue = value;
     if (this.taskID) {
-      if (field?.versions?.length > 0 && this.taskID) {
+      if (field?.versions?.length > 0) {
         let idx = field?.versions.findIndex((x) => x.refID == this.taskID);
         if (idx != -1) field.versions[idx].dataValue = value;
         else {
