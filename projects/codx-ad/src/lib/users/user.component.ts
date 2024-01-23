@@ -200,6 +200,7 @@ export class UserComponent extends UIComponent {
   add(email = null) {
     this.view.dataService.addNew().subscribe((res: any) => {
       var obj = {
+        funcID: this.funcID,
         formType: 'add',
         headerText: this.headerText,
         email: email,
@@ -239,6 +240,7 @@ export class UserComponent extends UIComponent {
       .edit(this.view.dataService.dataSelected)
       .subscribe((res: any) => {
         var obj = {
+          funcID: this.funcID,
           formType: formType,
           headerText: this.headerText,
         };

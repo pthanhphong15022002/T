@@ -92,14 +92,14 @@ export class PeriodicControlComponent extends UIComponent {
     if(event?.data){
       let id = event?.data?.buttonName;
       if (id) {
-        switch(id){
-          case '1':
+        switch(id.toLowerCase()){
+          case 'm1':
             this.runPeriodic(this.dataDefault.refType,this.dataDefault.refID,'1',event.text);
             break;
-          case '2':
+          case 'm2':
             this.runPeriodic(this.dataDefault.refType,this.dataDefault.refID,'2',event.text);
             break;
-          case '3':
+          case 'd3':
             this.runPeriodic(this.dataDefault.refType,this.dataDefault.refID,'3',event.text);
             break;
         }
@@ -171,14 +171,14 @@ export class PeriodicControlComponent extends UIComponent {
     return item.recID;
   }
 
-  changeDataMF(event:any,type='view'){
+  changeDataMF(event:any,type){
     event.reduce((pre, element) => {
       element.isblur = false;
       element.isbookmark = true;
       if(this.functionType === 'P'){
         if (element.functionID.includes('SYS')) element.disabled = true;
       }
-      if(type === 'view' && element.data?.buttonName === '3') element.disabled = true;
+      if(type != element.data.tabControl) element.disabled = true;
       }, {});
   }
 
@@ -222,16 +222,5 @@ export class PeriodicControlComponent extends UIComponent {
   //     }
   //   })
   // }
-
-  showMFCancel(event:any){
-    event.reduce((pre, element) => {
-      element.isblur = false;
-      element.isbookmark = false;
-      if(this.functionType === 'P'){
-        if (element.functionID.includes('SYS')) element.disabled = true;
-      }
-      if(element.data?.buttonName != '3') element.disabled = true;
-      }, {});
-  }
   //#endregion Function
 }

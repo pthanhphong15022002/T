@@ -329,7 +329,6 @@ export class CodxShareService {
   
                     dataService.update(data).subscribe();
                     this.notificationsService.notifyCode('SYS007');
-                    //afterSave(data.statusApproval);// Chung CMT trước đo rồi
                     afterSave(data);
                   } else this.notificationsService.notify(res2?.msgCodeError);
                 });

@@ -167,12 +167,16 @@ export class CodxChatListComponent implements OnInit, AfterViewInit {
     }
     this.dt.detectChanges();
   }
-
+  hideChatList(){
+    document?.getElementById('chatbox-dropdownPopup')?.remove();
+      
+  }
   //select goup chat
   selectItem(group: any) {
     this.signalRSV.sendData(CHAT.BE_FUNC.LoadGroup, group?.groupID);
     group.message.isRead = true;
     this.dt.detectChanges();
+    this.hideChatList();
     this.api
       .execSv(
         'WP',
