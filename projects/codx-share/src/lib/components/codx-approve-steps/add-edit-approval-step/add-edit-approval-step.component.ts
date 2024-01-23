@@ -725,7 +725,9 @@ export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
       // appr.confirmControl = this.confirmControl;
       // appr.allowEditAreas = this.allowEditAreas;
     });
-
+    if(this.lstApprover?.length==1){
+      this.currentApproveMode ='1';
+    }
     this.dialogApprovalStep?.patchValue({
       approveMode: this.currentApproveMode,
       approvers: this.lstApprover,
