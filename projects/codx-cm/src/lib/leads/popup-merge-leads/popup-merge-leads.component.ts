@@ -117,24 +117,33 @@ export class PopupMergeLeadsComponent implements OnInit {
     this.leadNew.contactID = Util.uid();
     this.leadNew.memo = this.leadNew.memo ?? '';
     this.leadNew.note = this.leadNew.note ?? '';
-    this.recIDLead = this.leadOne?.recID;
-    this.recIDAvt = this.leadOne?.contactID;
-    this.nameContact = this.leadOne.contactName;
-    this.nameLead = this.leadOne?.leadName;
-    this.modifyOn = this.leadOne?.modifiedOn;
-    this.modifyOnContact = this.leadOne?.modifiedOn;
+    this.leadNew.category = this.leadNew.category ?? '1';
+    if(this.leadNew.category == '1'){
+      this.recIDLead = this.leadOne?.recID;
+      this.recIDAvt = this.leadOne?.contactID;
+      this.nameContact = this.leadOne.contactName;
+      this.nameLead = this.leadOne?.leadName;
+      this.modifyOn = this.leadOne?.modifiedOn;
+      this.modifyOnContact = this.leadOne?.modifiedOn;
+    }
     if (!this.isMulti) {
       this.leadThree.recID = null;
       this.leadTwo.recID = null;
     }
-    this.lstLeadCbxOne = await this.getCbxLead(null, null);
+    this.lstLeadCbxOne = await this.getCbxLead(
+      null,
+      null,
+      this.leadOne.category
+    );
     this.lstLeadCbxTwo = await this.getCbxLead(
       this.leadOne?.recID,
-      this.leadThree?.recID
+      this.leadThree?.recID,
+      this.leadOne.category
     );
     this.lstLeadCbxThree = await this.getCbxLead(
       this.leadOne?.recID,
-      this.leadTwo?.recID
+      this.leadTwo?.recID,
+      this.leadOne.category
     );
     // if (this.leadOne) {
     //   this.lstContactOne = await this.getContacts(this.leadOne?.recID);
@@ -163,13 +172,22 @@ export class PopupMergeLeadsComponent implements OnInit {
     lst = await firstValueFrom(this.cmSv.getListAddress(entityName, recID));
     return lst;
   }
-  async getCbxLead(id1, id2) {
+  async getCbxLead(id1, id2, category) {
     var options = new DataRequest();
     options.entityName = 'CM_Leads';
-    options.predicates =
-      '(Status.Equals(@0) or Status.Equals(@1)) and !RecID.Equals(@2) and !RecID.Equals(@3) and IsDuplicated==false';
+    options.predicates = `(Status=@0 or Status=@1) and RecID!=@2 and RecID!=@3 and IsDuplicated==false and Closed==false and ${
+      category ? 'Category=@4' : 'Category==NULL'
+    }`;
     options.dataValues =
-      '0' + ';' + '1' + ';' + (id1 ?? Util.uid()) + ';' + (id2 ?? Util.uid());
+      '15' +
+      ';' +
+      '1' +
+      ';' +
+      (id1 ?? Util.uid()) +
+      ';' +
+      (id2 ?? Util.uid()) +
+      (category ? ';' + category : '');
+
     options.pageLoading = false;
     var lst = await firstValueFrom(this.cmSv.loadDataAsync('CM', options));
     lst =
@@ -322,7 +340,8 @@ export class PopupMergeLeadsComponent implements OnInit {
             this.leadTwo = this.lstLeadCbxTwo[index];
             this.lstLeadCbxThree = await this.getCbxLead(
               this.leadOne?.recID,
-              this.leadTwo?.recID
+              this.leadTwo?.recID,
+              this.leadOne.category
             );
             this.lstContactTwo = await this.getContacts(this.leadTwo?.recID);
             this.lstAddressTwo = await this.getListAddress(
@@ -339,7 +358,8 @@ export class PopupMergeLeadsComponent implements OnInit {
 
             this.lstLeadCbxTwo = await this.getCbxLead(
               this.leadOne?.recID,
-              this.leadThree?.recID
+              this.leadThree?.recID,
+              this.leadOne.category
             );
             this.lstContactThree = await this.getContacts(
               this.leadThree?.recID
@@ -356,7 +376,8 @@ export class PopupMergeLeadsComponent implements OnInit {
         this.leadTwo = null;
         this.lstLeadCbxThree = await this.getCbxLead(
           this.leadOne?.recID,
-          this.leadTwo?.recID
+          this.leadTwo?.recID,
+          this.leadOne.category
         );
         this.lstContactTwo = [];
       } else {
@@ -364,7 +385,8 @@ export class PopupMergeLeadsComponent implements OnInit {
         this.lstContactThree = [];
         this.lstLeadCbxTwo = await this.getCbxLead(
           this.leadOne?.recID,
-          this.leadThree?.recID
+          this.leadThree?.recID,
+          this.leadOne.category
         );
       }
     }
