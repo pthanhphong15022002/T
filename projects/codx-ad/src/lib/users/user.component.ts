@@ -94,6 +94,7 @@ export class UserComponent extends UIComponent {
 
   headerText = '';
   clickMF(e: any, data?: any) {
+    if (data) this.view.dataService.dataSelected = data;
     this.headerText = e.text;
     switch (e.functionID) {
       case 'SYS03':
@@ -102,9 +103,6 @@ export class UserComponent extends UIComponent {
       case 'SYS04':
         this.copy(data);
         break;
-      // case 'SYS02':
-      //   this.delete(data);
-      //   break;
       case 'ADS0501':
         this.stop(data);
         break;
@@ -178,7 +176,7 @@ export class UserComponent extends UIComponent {
                 dataMF = res;
                 dataMF = dataMF.filter((y) => y.functionID == 'SYS01');
                 this.headerText = dataMF[0].customName;
-                this.edit(x.event?.formType, x.event?.data);
+                this.invite(x.event?.data);
               } else if (x.event?.formType == 'edit') {
                 dataMF = res;
                 dataMF = dataMF.filter((y) => y.functionID == 'SYS03');
@@ -204,6 +202,7 @@ export class UserComponent extends UIComponent {
         formType: 'add',
         headerText: this.headerText,
         email: email,
+        data: res,
       };
       let option = new SidebarModel();
       option.DataService = this.view?.dataService;
@@ -211,11 +210,35 @@ export class UserComponent extends UIComponent {
       option.Width = 'Auto'; // s k thấy gửi từ ben đây,
       let dialog = this.callfunc.openSide(AddUserComponent, obj, option);
       dialog.closed.subscribe((e) => {
-        if (!e?.event) this.view.dataService.clear();
         if (e?.event) {
+          e.event.modifiedOn = new Date();
+          this.view.dataService.update(e.event).subscribe();
           this.changeDetectorRef.detectChanges();
         }
       });
+    });
+  }
+
+  invite(data) {
+    data['isNew'] = true;
+    var obj = {
+      funcID: this.funcID,
+      formType: 'invite',
+      data: data,
+      headerText: this.headerText,
+    };
+    this.view.dataService.addDatas.set(data.recID, data);
+    let option = new SidebarModel();
+    option.DataService = this.view?.dataService;
+    option.FormModel = this.view?.formModel;
+    option.Width = 'Auto'; // s k thấy gửi từ ben đây,
+    let dialog = this.callfunc.openSide(AddUserComponent, obj, option);
+    dialog.closed.subscribe((e) => {
+      if (e?.event) {
+        e.event.modifiedOn = new Date();
+        this.view.dataService.update(e.event).subscribe();
+        this.changeDetectorRef.detectChanges();
+      }
     });
   }
 
@@ -233,31 +256,26 @@ export class UserComponent extends UIComponent {
   }
 
   edit(formType: string, data?) {
-    if (data) {
-      this.view.dataService.dataSelected = data;
-    }
-    this.view.dataService
-      .edit(this.view.dataService.dataSelected)
-      .subscribe((res: any) => {
-        var obj = {
-          funcID: this.funcID,
-          formType: formType,
-          headerText: this.headerText,
-        };
-        let option = new SidebarModel();
-        option.DataService = this.view?.currentView?.dataService;
-        option.FormModel = this.view?.currentView?.formModel;
-        option.Width = 'Auto';
-        let dialog = this.callfunc.openSide(AddUserComponent, obj, option);
-        dialog.closed.subscribe((x) => {
-          if (!x?.event) this.view.dataService.clear();
-          if (x.event) {
-            x.event.modifiedOn = new Date();
-            this.view.dataService.update(x.event).subscribe();
-            this.changeDetectorRef.detectChanges();
-          }
-        });
+    this.view.dataService.edit(data).subscribe((res: any) => {
+      var obj = {
+        funcID: this.funcID,
+        formType: formType,
+        data: res,
+        headerText: this.headerText,
+      };
+      let option = new SidebarModel();
+      option.DataService = this.view?.currentView?.dataService;
+      option.FormModel = this.view?.currentView?.formModel;
+      option.Width = 'Auto';
+      let dialog = this.callfunc.openSide(AddUserComponent, obj, option);
+      dialog.closed.subscribe((e) => {
+        if (e?.event) {
+          e.event.modifiedOn = new Date();
+          this.view.dataService.update(e.event).subscribe();
+          this.changeDetectorRef.detectChanges();
+        }
       });
+    });
   }
 
   viewInfo(formType: string, data?) {
@@ -275,7 +293,7 @@ export class UserComponent extends UIComponent {
     this.callfunc.openSide(AddUserComponent, obj, option);
   }
 
-  copy(data?) {
+  copy(data?: any) {
     if (data) {
       this.view.dataService.dataSelected = data;
     }
