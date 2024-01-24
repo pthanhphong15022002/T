@@ -40,7 +40,8 @@ export class ProcessesComponent
   templateListCard: TemplateRef<any>;
   @ViewChild('headerTemplate') headerTemplate: TemplateRef<any>;
   @ViewChild('templateMore') templateMore: TemplateRef<any>;
-
+  @ViewChild('templateList') templateList?: TemplateRef<any>;
+  @ViewChild('headerTemplateList') headerTemplateList?: TemplateRef<any>;
   views: Array<ViewModel> = [];
   moreFuncs: Array<ButtonModel> = [];
   button?: ButtonModel[];
@@ -84,9 +85,15 @@ export class ProcessesComponent
         sameData: true,
         model: {
           template2: this.templateMore,
-          groupSettings: { showDropArea: false, columns: ['groupID'] },
-          //resources: this.columnGrids,
-          // frozenColumns: 1,
+        },
+      },
+      {
+        type: ViewType.list,
+        sameData: true,
+        active: false,
+        model: {
+          template: this.templateList,
+          headerTemplate: this.headerTemplateList,
         },
       },
     ];
