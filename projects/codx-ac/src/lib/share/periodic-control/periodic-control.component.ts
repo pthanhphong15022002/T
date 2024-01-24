@@ -18,7 +18,7 @@ export class PeriodicControlComponent extends UIComponent {
   showLess:any = false;
   oData: any = [];
   functionType:any;
-  dataDefault:any;
+  settingFull:any;
   displayMode:any;
   @ViewChild('template') template?: TemplateRef<any>;
   private destroy$ = new Subject<void>();
@@ -34,12 +34,14 @@ export class PeriodicControlComponent extends UIComponent {
     if (!this.funcID) this.funcID = this.router.snapshot.params['funcID'];
     this.api.execSv('BG', 'BG', 'ScheduleTasksBusiness', 'GetScheduleTasksAsync', this.funcID).subscribe((res: any) => {
       if (res) {
-        this.dataDefault = res;
+        this.settingFull = res;
         this.setting = res?.paras || [];
         this.dataValue = JSON.parse(res?.paraValues);
         this.title = res?.taskName;
+        this.detectorRef.detectChanges();
       }else{
         this.setting = [];
+        this.detectorRef.detectChanges();
       }
     });
     this.cache.functionList(this.funcID).subscribe((res:any)=>{
@@ -92,15 +94,15 @@ export class PeriodicControlComponent extends UIComponent {
     if(event?.data){
       let id = event?.data?.buttonName;
       if (id) {
-        switch(id){
-          case '1':
-            this.runPeriodic(this.dataDefault.refType,this.dataDefault.refID,'1',event.text);
+        switch(id.toLowerCase()){
+          case 'm1':
+            this.runPeriodic(this.settingFull.refType,this.settingFull.refID,'1',event.text);
             break;
-          case '2':
-            this.runPeriodic(this.dataDefault.refType,this.dataDefault.refID,'2',event.text);
+          case 'm2':
+            this.runPeriodic(this.settingFull.refType,this.settingFull.refID,'2',event.text);
             break;
-          case '3':
-            this.runPeriodic(this.dataDefault.refType,this.dataDefault.refID,'3',event.text);
+          case 'd3':
+            this.runPeriodic(this.settingFull.refType,this.settingFull.refID,'3',event.text);
             break;
         }
       }
@@ -109,26 +111,26 @@ export class PeriodicControlComponent extends UIComponent {
 
   valuechange(event:any){
     this.dataValue[event.field] = event.data;
-    this.dataDefault.paraValues = JSON.stringify(this.dataValue);
+    this.settingFull.paraValues = JSON.stringify(this.dataValue);
     this.api
       .execAction(
         'BG_ScheduleTasks',
-        [this.dataDefault],
+        [this.settingFull],
         'UpdateAsync'
       )
       .subscribe((res:any)=>{
         if (res) {
-          this.api.exec('AC','RunPeriodicBusiness','UpdateAsync',[this.dataDefault.refID,this.dataDefault.paraValues]).subscribe();
+          this.api.exec('AC','RunPeriodicBusiness','UpdateAsync',[this.settingFull.refID,this.settingFull.paraValues]).subscribe();
         }
       });
   }
 
-  changeAutoSchedules(event:any){
-    this.dataDefault = event;
+  changeAutoSchedules(event:any){ 
+    this.settingFull = event;
     this.api
       .execAction(
         'BG_ScheduleTasks',
-        [this.dataDefault],
+        [this.settingFull],
         'UpdateAsync'
       )
       .subscribe((res:any)=>{});
@@ -171,14 +173,15 @@ export class PeriodicControlComponent extends UIComponent {
     return item.recID;
   }
 
-  changeDataMF(event:any,type='view'){
+  changeDataMF(event:any,type){
+    console.log(event);
     event.reduce((pre, element) => {
       element.isblur = false;
-      element.isbookmark = true;
+      if(type === 'M') element.isbookmark = true;
       if(this.functionType === 'P'){
         if (element.functionID.includes('SYS')) element.disabled = true;
       }
-      if(type === 'view' && element.data?.buttonName === '3') element.disabled = true;
+      if(type != element.data.tabControl) element.disabled = true;
       }, {});
   }
 
@@ -222,16 +225,5 @@ export class PeriodicControlComponent extends UIComponent {
   //     }
   //   })
   // }
-
-  showMFCancel(event:any){
-    event.reduce((pre, element) => {
-      element.isblur = false;
-      element.isbookmark = false;
-      if(this.functionType === 'P'){
-        if (element.functionID.includes('SYS')) element.disabled = true;
-      }
-      if(element.data?.buttonName != '3') element.disabled = true;
-      }, {});
-  }
   //#endregion Function
 }

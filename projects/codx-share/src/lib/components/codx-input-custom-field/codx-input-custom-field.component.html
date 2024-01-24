@@ -723,7 +723,7 @@
   <ng-container *ngIf="customField.dataType == 'CF'">
     <codx-input
       [field]="customField.fieldName"
-      type="text"
+      [type]="customField.dataValue ? 'number' : 'text'"
       [placeholder]="customField.note || customField.dataFormat"
       [crrValue]="dataValueCaculate"
       [disabled]="true"

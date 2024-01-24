@@ -1,6 +1,20 @@
-import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { AESCryptoService, ApiHttpService, AuthStore, CodxService, NotificationsService } from 'codx-core';
+import {
+  AESCryptoService,
+  ApiHttpService,
+  AuthStore,
+  CodxService,
+  NotificationsService,
+} from 'codx-core';
 import { CodxShareService } from '../../codx-share.service';
 import { isObservable } from 'rxjs';
 import { FormControl, FormGroup } from '@angular/forms';
@@ -8,18 +22,18 @@ import { FormControl, FormGroup } from '@angular/forms';
 @Component({
   selector: 'codx-auth-file',
   templateUrl: './codx-auth-file.component.html',
-  styleUrls: ['./codx-auth-file.component.scss']
+  styleUrls: ['./codx-auth-file.component.scss'],
 })
-export class CodxAuthFileComponent implements OnInit{
-  data:any;
+export class CodxAuthFileComponent implements OnInit {
+  data: any;
   authGroup: FormGroup;
-  otpTimeout:number = 0;
-  otpMinutes:number = 0;
+  otpTimeout: number = 0;
+  otpMinutes: number = 0;
   otpReSend = false;
   isSend = false;
-  sessionID = "";
+  sessionID = '';
 
-  @Input() recID:any;
+  @Input() recID: any;
   @Output() resultEvent: EventEmitter<any> = new EventEmitter();
 
   constructor(
@@ -31,11 +45,10 @@ export class CodxAuthFileComponent implements OnInit{
     private ref: ChangeDetectorRef,
     private auth: AuthStore,
     private codxService: CodxService
-  )
-  {
+  ) {
     this.authGroup = new FormGroup({
       email: new FormControl(),
-      password: new FormControl()
+      password: new FormControl(),
     });
   }
 
@@ -43,97 +56,106 @@ export class CodxAuthFileComponent implements OnInit{
     this.getParams();
   }
 
-  multiPaste(e:any)
-  {
-    navigator.clipboard.readText()
-    .then(text => {
-      var data = text.split('');
-      [].forEach.call(document.querySelectorAll(".ws-input"), (node, index) => {
-         node.value = data[index];
-       });
-    })
-    .catch(err => {
-      console.error('Failed to read clipboard contents: ', err);
-    });
-   
+  multiPaste(event: ClipboardEvent) {
+    const pastedText = event.clipboardData.getData('text');
+    this.clearAllInputs();
+    this.populateInputs(pastedText);
   }
 
-  inputInsideOtpInput(el) {
-    if (el.value.length > 1){
-        el.value = el.value[el.value.length - 1];
+  clearAllInputs() {
+    for (let i = 1; i <= 6; i++) {
+      this.setInputValue(`input${i}`, '');
     }
-    try {
-        if(el.value == null || el.value == ""){
-            this.focusOnInput(el.previousElementSibling);
-        }else {
-            this.focusOnInput(el.nextElementSibling);
-        }
-    }catch (e) {
-        console.log(e);
-    }
-}
-
-  focusOnInput(ele){
-    ele.focus();
-    let val = ele.value;
-    ele.value = "";
-    // ele.value = val;
-    setTimeout(()=>{
-        ele.value = val;
-    })
   }
 
-  getParams()
-  {
-    if(!this.recID)
-    {
+  populateInputs(text: string) {
+    for (let i = 0; i < text.length && i < 6; i++) {
+      this.setInputValue(`input${i + 1}`, text[i]);
+    }
+  }
+
+  inputInsideOtpInput(input: HTMLInputElement) {
+    if (input.value.length > 1) {
+      input.value = input.value[input.value.length - 1];
+    }
+
+    if (input.value !== null && input.value !== "") {
+      this.focusOnNextInput(input);
+    } else {
+      this.focusOnPreviousInput(input);
+    }
+  }
+
+  focusOnPreviousInput(currentInput: HTMLInputElement) {
+    if (currentInput && currentInput.previousElementSibling) {
+      (currentInput.previousElementSibling as HTMLInputElement).focus();
+    }
+  }
+
+  focusOnNextInput(currentInput: HTMLInputElement) {
+    if (currentInput && currentInput.nextElementSibling) {
+      (currentInput.nextElementSibling as HTMLInputElement).focus();
+    }
+  }
+
+  setInputValue(inputId: string, value: string) {
+    const inputElement = document.getElementById(inputId) as HTMLInputElement;
+    if (inputElement) {
+      inputElement.value = value;
+    }
+    this.focusOnNextInput(inputElement);
+  }
+
+  getParams() {
+    if (!this.recID) {
       this.router.queryParams.subscribe((queryParams) => {
         if (queryParams?._k) {
           let recID = this.aesCrypto.decode(queryParams?._k);
           this.loadData(recID);
         }
       });
-    }
-    else this.loadData(this.recID);
+    } else this.loadData(this.recID);
   }
 
-  loadData(recID:any)
-  {
+  loadData(recID: any) {
     let paras = [recID];
-    let keyRoot = "AuthFile" + recID;
-    let share = this.shareService.loadDataCache(paras,keyRoot,"BG","BG","SharingsBusiness","GetItemSharingAsync");
-    if(isObservable(share))
-    {
-      share.subscribe((item:any)=>{
+    let keyRoot = 'AuthFile' + recID;
+    let share = this.shareService.loadDataCache(
+      paras,
+      keyRoot,
+      'BG',
+      'BG',
+      'SharingsBusiness',
+      'GetItemSharingAsync'
+    );
+    if (isObservable(share)) {
+      share.subscribe((item: any) => {
         this.data = item;
-        if(this.data.shareType == "0" && this.data.pwType == "0") this.resultEvent.emit(this.data);
-      })
-    }
-    else {
+        if (this.data.shareType == '0' && this.data.pwType == '0')
+          this.resultEvent.emit(this.data);
+      });
+    } else {
       this.data = share;
-      if(this.data.shareType == "0" && this.data.pwType == "0") this.resultEvent.emit(this.data);
+      if (this.data.shareType == '0' && this.data.pwType == '0')
+        this.resultEvent.emit(this.data);
     }
   }
 
   //Gửi OTP
-  sendOTP()
-  {
+  sendOTP() {
     //Kiểm tra xem đã nhập mail chưa?
-    if((!this.otpReSend && this.isSend) || !this.validate()) return;
-    
+    if ((!this.otpReSend && this.isSend) || !this.validate()) return;
+
     //shareType : 1 - Kiểm tra đối tượng có nằm trong danh sách được chia sẻ không?
-    if(this.data.shareType == "1")
-    {
+    if (this.data.shareType == '1') {
       var validateSO = this.validateSO();
-      if(isObservable(validateSO))
-      {
-        validateSO.subscribe(item=>{
-          if(item) this.generateOTP(); 
-          else this.notifySvr.notifyCode("BG001");
-        })
+      if (isObservable(validateSO)) {
+        validateSO.subscribe((item) => {
+          if (item) this.generateOTP();
+          else this.notifySvr.notifyCode('BG001');
+        });
       }
-    }
-    else this.generateOTP();
+    } else this.generateOTP();
   }
 
   generateOTP() {
@@ -143,7 +165,7 @@ export class CodxAuthFileComponent implements OnInit{
         'ERM.Business.AD',
         'UsersBusiness',
         'GenOTPLoginAsync',
-        [this.authGroup.controls['email'].value,true]
+        [this.authGroup.controls['email'].value, true]
       )
       .subscribe((success) => {
         if (success) {
@@ -170,18 +192,15 @@ export class CodxAuthFileComponent implements OnInit{
   }
 
   //validate
-  validate()
-  {
+  validate() {
     var arr = [];
-    if(!this.authGroup.value?.email) arr.push("Email");
-    else if(!this.validateEmail(this.authGroup.value?.email))
-    {
+    if (!this.authGroup.value?.email) arr.push('Email');
+    else if (!this.validateEmail(this.authGroup.value?.email)) {
       this.notifySvr.notifyCode('SYS037');
       return false;
-    } 
+    }
 
-    if(arr.length> 0)
-    {
+    if (arr.length > 0) {
       var name = arr.join(' , ');
       this.notifySvr.notifyCode('SYS009', 0, name);
       return false;
@@ -191,12 +210,19 @@ export class CodxAuthFileComponent implements OnInit{
   }
 
   //Kiểm tra có nằm trong danh sách đối tượng cụ thể
-  validateSO()
-  {
-    if(!this.authGroup.value?.email) return this.notifySvr.notifyCode('SYS009', 0, "Email");
-    else if(!this.validateEmail(this.authGroup.value?.email)) return this.notifySvr.notifyCode('SYS037');
-    
-    return this.api.execSv("BG","BG","SharingsBusiness","ValidatePermisstionAsync",[this.data.recID,this.authGroup.value?.email])
+  validateSO() {
+    if (!this.authGroup.value?.email)
+      return this.notifySvr.notifyCode('SYS009', 0, 'Email');
+    else if (!this.validateEmail(this.authGroup.value?.email))
+      return this.notifySvr.notifyCode('SYS037');
+
+    return this.api.execSv(
+      'BG',
+      'BG',
+      'SharingsBusiness',
+      'ValidatePermisstionAsync',
+      [this.data.recID, this.authGroup.value?.email]
+    );
 
     // if(Array.isArray(this.data.permissions))
     // {
@@ -212,106 +238,103 @@ export class CodxAuthFileComponent implements OnInit{
       /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
     );
   };
-  
+
   validURL(str) {
-    var pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
-      '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
-      '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
-      '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // port and path
-      '(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
-      '(\\#[-a-z\\d_]*)?$','i'); // fragment locator
+    var pattern = new RegExp(
+      '^(https?:\\/\\/)?' + // protocol
+        '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
+        '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
+        '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
+        '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
+        '(\\#[-a-z\\d_]*)?$',
+      'i'
+    ); // fragment locator
     return !!pattern.test(str);
   }
 
-  confirm()
-  {
-    if(this.data?.shareType == '1' && this.data?.pwType == '0') this.confirmNoPW();
-    else if(this.data?.pwType == '1') this.confirmOTP();
-    else if(this.data?.pwType == '2') this.confirmPW();
+  confirm() {
+    if (this.data?.shareType == '1' && this.data?.pwType == '0')
+      this.confirmNoPW();
+    else if (this.data?.pwType == '1') this.confirmOTP();
+    else if (this.data?.pwType == '2') this.confirmPW();
   }
 
-  confirmOTP()
-  {
-    var inputs = document.getElementsByClassName( 'ws-input' );
-    var otp  = [].map.call(inputs, function( input ) {
+  confirmOTP() {
+    var inputs = document.getElementsByClassName('ws-input');
+    var otp = [].map
+      .call(inputs, function (input) {
         return input.value;
-    }).join( '' );
+      })
+      .join('');
 
-    if(!otp) 
-    {
+    if (!otp) {
       this.notifySvr.notifyCode('SYS009', 0, 'Mã xác thực');
       return;
     }
 
     this.api
+      .execSv<any>('SYS', 'ERM.Business.AD', 'UsersBusiness', 'VerifyAuthOTP', [
+        otp,
+        this.authGroup.controls['email'].value,
+        this.sessionID,
+      ])
+      .subscribe((res) => {
+        if (!res) this.notifySvr.notifyCode('ES014');
+        else this.loginGuest();
+      });
+  }
+
+  loginGuest() {
+    this.api
+      .execSv('SYS', 'AD', 'UsersBusiness', 'CreateUserNoLoginAsync', '')
+      .subscribe((item: any) => {
+        if (item) {
+          this.auth.set(item);
+          if (this.validURL(this.data.url)) window.location = this.data.url;
+          else this.resultEvent.emit(this.data);
+          //this.codxService.navigate('', this.data.url);
+        }
+      });
+  }
+  confirmNoPW() {
+    if (!this.authGroup.value?.email)
+      return this.notifySvr.notifyCode('SYS009', 0, 'Email');
+
+    var validateSO = this.validateSO();
+    if (isObservable(validateSO)) {
+      validateSO.subscribe((item) => {
+        if (item) this.loginGuest();
+        else this.notifySvr.notifyCode('BG001');
+      });
+    }
+  }
+
+  confirmPW() {
+    if (!this.authGroup.value?.password)
+      this.notifySvr.notifyCode('SYS009', 0, 'Mật khẩu xác thực');
+    else if (this.data?.shareType == '1') {
+      var validateSO = this.validateSO();
+      if (isObservable(validateSO)) {
+        validateSO.subscribe((item) => {
+          if (item) this.confirmValiPw();
+          else this.notifySvr.notifyCode('BG001');
+        });
+      }
+    } else this.confirmValiPw();
+  }
+
+  confirmValiPw() {
+    this.api
       .execSv<any>(
-        'SYS',
-        'ERM.Business.AD',
-        'UsersBusiness',
-        'VerifyAuthOTP',
-        [otp,this.authGroup.controls['email'].value,this.sessionID]
+        'BG',
+        'ERM.Business.BG',
+        'SharingsBusiness',
+        'VerifyAuthAsync',
+        [this.data?.recID, this.authGroup.controls['password'].value]
       )
       .subscribe((res) => {
-        if(!res) this.notifySvr.notifyCode("ES014");
+        if (!res) this.notifySvr.notifyCode('ES014');
         else this.loginGuest();
-      })
-  }
-
-  loginGuest()
-  {
-    this.api.execSv("SYS","AD","UsersBusiness","CreateUserNoLoginAsync","").subscribe((item:any)=>{
-      if(item) {
-        this.auth.set(item);
-        if(this.validURL(this.data.url)) window.location = this.data.url;
-        else this.resultEvent.emit(this.data);
-        //this.codxService.navigate('', this.data.url);
-      }
-    });
-  }
-  confirmNoPW()
-  {
-    if(!this.authGroup.value?.email) return this.notifySvr.notifyCode('SYS009', 0, "Email");
-    
-    var validateSO = this.validateSO();
-    if(isObservable(validateSO))
-    {
-      validateSO.subscribe(item=>{
-        if(item) this.loginGuest();
-        else this.notifySvr.notifyCode("BG001");
-      })
-    }
-  }
-  
-  confirmPW()
-  {
-    if(!this.authGroup.value?.password) this.notifySvr.notifyCode('SYS009', 0, 'Mật khẩu xác thực');
-    else if(this.data?.shareType == "1")
-    {
-      var validateSO = this.validateSO();
-      if(isObservable(validateSO))
-      {
-        validateSO.subscribe(item=>{
-          if(item) this.confirmValiPw();
-          else this.notifySvr.notifyCode("BG001");
-        })
-      }
-    }
-    else this.confirmValiPw();
-  }
-
-  confirmValiPw()
-  {
-    this.api
-    .execSv<any>(
-      'BG',
-      'ERM.Business.BG',
-      'SharingsBusiness',
-      'VerifyAuthAsync',
-      [this.data?.recID,this.authGroup.controls['password'].value]
-    )
-    .subscribe((res) => {
-      if(!res) this.notifySvr.notifyCode("ES014");
-      else this.loginGuest();
-    })
+      });
   }
 }

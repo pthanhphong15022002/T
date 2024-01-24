@@ -14,7 +14,6 @@ export class AddDefaultComponent extends BaseFieldComponent implements OnInit {
   activityType = 'Stage';
   vllBP001:any;
   vllDefault:any;
- 
 
   constructor(
     public inject: Injector,
@@ -24,6 +23,7 @@ export class AddDefaultComponent extends BaseFieldComponent implements OnInit {
   {
     super(inject);
     this.dialog = dialog;
+    this.formModel = this.dialog?.formModel;
     if(dt?.data?.data) this.data = JSON.parse(JSON.stringify(dt.data.data));
     if(dt?.data?.process) this.process = dt.data.process;
     if(dt?.data?.type) this.type = dt.data.type;
@@ -62,7 +62,7 @@ export class AddDefaultComponent extends BaseFieldComponent implements OnInit {
   {
     this.data = e;
   }
-
+ 
   close()
   {
     //this.data.settings = JSON.stringify(this.data.settings);

@@ -48,12 +48,10 @@ export class AddUserComponent extends UIComponent implements OnInit {
   @ViewChild('firstComment') firstComment: TemplateRef<any>;
   @ViewChild('userGroup') userGroup?: CodxInputComponent;
   private destroy$ = new Subject<void>(); //? list observable hủy các subscribe api
-
   title = '';
   header = '';
   dialog!: DialogRef;
   dialogRole: DialogRef;
-  data: any;
   readOnly = false;
   // isAddMode = true;
   user: any;
@@ -64,15 +62,11 @@ export class AddUserComponent extends UIComponent implements OnInit {
   countListViewChooseRoleService: number = 0;
   viewChooseRole: tmpformChooseRole[] = [];
   viewChooseRoleTemp: tmpformChooseRole[] = [];
-  // lstChangeModule: tmpTNMD[] = [];
   formModel: FormModel;
   formType: any;
   gridViewSetup: any = [];
-  // checkBtnAdd = false;
-  // saveSuccess = false;
   isSaved = false;
-  isSaving = false; //calling api
-
+  isSaving = false;
   dataAfterSave: any;
   countOpenPopRoles = 0;
   formUser: FormGroup;
@@ -87,7 +81,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
   //employeeID first change
   isEmpIDNotNull: boolean = false;
   isSaas = false;
-  unWelcomeUser:any;
+  unWelcomeUser: any;
   constructor(
     private injector: Injector,
     private changeDetector: ChangeDetectorRef,
@@ -102,38 +96,34 @@ export class AddUserComponent extends UIComponent implements OnInit {
     super(injector);
     this.isSaas = environment.saas == 1;
     this.formType = dt?.data?.formType;
-    this.data = dialog.dataService!.dataSelected;
+    this.adUser = { ...dt?.data?.data };
     this.dataCopy = dt?.data?.dataCopy;
-    this.adUser = JSON.parse(JSON.stringify(this.data));
+    this.funcID = dt?.data?.funcID;
     if (this.formType == 'invite') {
       this.isSaved = false;
-      this.viewChooseRole = this.data?.chooseRoles;
-      this.adUser.chooseRoles = this.viewChooseRole;
-      if (this.data?.chooseRoles)
+      this.viewChooseRole = this.adUser?.chooseRoles;
+      if (this.adUser?.chooseRoles)
         this.viewChooseRoleTemp = JSON.parse(
-          JSON.stringify(this.data?.chooseRoles)
+          JSON.stringify(this.adUser?.chooseRoles)
         );
       this.adUser['phone'] = this.adUser.mobile;
       this.countListViewChoose();
     } else if (this.formType == 'edit') {
       this.isSaved = true;
-
-      this.viewChooseRole = this.data?.chooseRoles;
-      this.adUser.chooseRoles = this.viewChooseRole;
-      if (this.data?.chooseRoles)
+      this.viewChooseRole = this.adUser?.chooseRoles;
+      if (this.adUser?.chooseRoles)
         this.viewChooseRoleTemp = JSON.parse(
-          JSON.stringify(this.data?.chooseRoles)
+          JSON.stringify(this.adUser?.chooseRoles)
         );
       this.adUser['phone'] = this.adUser.mobile;
       this.countListViewChoose();
     } else if (this.formType == 'view') {
       this.isSaved = true;
       this.isSaving = true;
-      this.viewChooseRole = this.data?.chooseRoles;
       this.adUser.chooseRoles = this.viewChooseRole;
-      if (this.data?.chooseRoles)
+      if (this.adUser?.chooseRoles)
         this.viewChooseRoleTemp = JSON.parse(
-          JSON.stringify(this.data?.chooseRoles)
+          JSON.stringify(this.adUser?.chooseRoles)
         );
       this.countListViewChoose();
     } else if (this.formType == 'copy') {
@@ -219,7 +209,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
     (this.form.form as CodxFormComponent).setRequire(lsRequire);
   }
 
-  openPopup(item: any) {
+  openRoles(item: any) {
     if (this.form.formGroup.valid) {
       this.dataUG = this.userGroup.ComponentCurrent.dataService.data;
       if (
@@ -341,7 +331,6 @@ export class AddUserComponent extends UIComponent implements OnInit {
       'addUserRoles' ||
       'changeAvatar' ||
       'closePopup',
-    // addToGroup: boolean,
     isOverrideRoles: boolean,
     item?: any
   ) {
@@ -350,20 +339,22 @@ export class AddUserComponent extends UIComponent implements OnInit {
         .save((opt: any) => this.beforeSave(opt), 0, '', '', true)
         .pipe(takeUntil(this.destroy$))
         .subscribe((res) => {
-          if (!res?.error) {
+          if (res) {
             if (!this.isSaved) {
-              if(this.unWelcomeUser == null){
-                this.codxShareService.getSettingValueWithOption('F','WPParameters',null,'1').subscribe(settings=>{
-                  if(settings?.length>0 && settings[0]?.dataValue){
-                    let wpSetting = JSON.parse(settings[0]?.dataValue);
-                    if(wpSetting){
-                      this.unWelcomeUser = wpSetting?.UnWelcomeUser =="1" ? false : true;
-                      this.welcomeUserPost();
+              if (this.unWelcomeUser == null) {
+                this.codxShareService
+                  .getSettingValueWithOption('F', 'WPParameters', null, '1')
+                  .subscribe((settings) => {
+                    if (settings?.length > 0 && settings[0]?.dataValue) {
+                      let wpSetting = JSON.parse(settings[0]?.dataValue);
+                      if (wpSetting) {
+                        this.unWelcomeUser =
+                          wpSetting?.UnWelcomeUser == '1' ? false : true;
+                        this.welcomeUserPost();
+                      }
                     }
-                  }
-                })
-              }
-              else{
+                  });
+              } else {
                 this.welcomeUserPost();
               }
               if (res.save) {
@@ -385,7 +376,6 @@ export class AddUserComponent extends UIComponent implements OnInit {
                     .updateFileDirectReload(this.adUser.userID)
                     .subscribe((result) => {
                       if (result) {
-                        this.loadData.emit();
                         this.dialog.close(this.adUser);
                       }
                     });
@@ -460,8 +450,8 @@ export class AddUserComponent extends UIComponent implements OnInit {
     };
   }
 
-  welcomeUserPost(){
-    if(this.unWelcomeUser){
+  welcomeUserPost() {
+    if (this.unWelcomeUser) {
       this.getHTMLFirstPost(this.adUser);
       this.adService.createFirstPost(this.tmpPost).subscribe();
     }
