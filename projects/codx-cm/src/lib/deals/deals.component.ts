@@ -856,8 +856,7 @@ export class DealsComponent
         break;
       case 'dbClick':
         //xư lý dbClick
-        if (this.viewCrr != 11) this.viewDetail(e.data);
-        else if (e?.data?.rowData) this.viewDetail(e?.data?.rowData);
+        this.viewDetail(e.data?.rowData);
         break;
       //chang fiter
       case 'pined-filter':
@@ -957,50 +956,48 @@ export class DealsComponent
     }
   }
 
-  viewDetail(deal, type = '1') {
-    setTimeout(() => {
-      if (deal) {
-        let data = {
-          formModel: this.view.formModel,
-          dataView: deal,
-          isView: true,
-          type,
-          // listInsStepStart: this.listInsStep,
-        };
-        let option = new DialogModel();
-        option.IsFull = true;
-        option.zIndex = 100;
-        option.DataService = this.view.dataService;
-        option.FormModel = this.view.formModel;
-        let popupContract = this.callFunc.openForm(
-          ViewDealDetailComponent,
-          '',
-          null,
-          null,
-          '',
-          data,
-          '',
-          option
-        );
-      }
-    }, 100);
-    // this.dataSelected = data;
-    // let option = new DialogModel();
-    // option.IsFull = true;
-    // option.zIndex = 999;
-    // let temView =
-    //   this.gridDetailView == '2' ? this.templateViewDetail : this.popDetail;
-    // this.popupViewDeal = this.callfc.openForm(
-    //   temView,
-    //   '',
-    //   Util.getViewPort().width,
-    //   Util.getViewPort().height,
-    //   '',
-    //   null,
-    //   '',
-    //   option
-    // );
-    // this.popupViewDeal.closed.subscribe((e) => {});
+  viewDetail(deal) {
+    if (deal) {
+      let data = {
+        formModel: this.view.formModel,
+        dataView: deal,
+        isView: true,
+      };
+      let option = new DialogModel();
+      option.IsFull = true;
+      option.zIndex = 100;
+      option.DataService = this.view.dataService;
+      option.FormModel = this.view.formModel;
+      let popup = this.callFunc.openForm(
+        ViewDealDetailComponent,
+        '',
+        null,
+        null,
+        '',
+        data,
+        '',
+        option
+      );
+      popup.closed.subscribe((e) => {
+        if (e && e.event) {
+          if (e.event?.isUpDealCost) {
+            let dealCost = e.event.dealCost;
+            deal.dealCost = dealCost;
+          }
+          if (e.event?.isUpDealValueTo) {
+            let dealValueTo = e.event.dealValueTo;
+            deal.dealValueTo = dealValueTo;
+          }
+          let grossProfit = deal.dealValueTo - deal.dealCost;
+          deal.grossProfit = grossProfit;
+
+          this.view.dataService.update(deal, true).subscribe();
+
+          if (this.listKeyFieldSum?.length > 0) this.totalGirdView(); //tính lại tổng chajy cuxng nhanh
+        }
+      });
+    }
+   
   }
   //end Kanaban
 

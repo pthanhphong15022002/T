@@ -1818,7 +1818,7 @@ export class CodxCmService {
       'CM',
       'ContractsBusiness',
       'SendMailAsync',
-      data
+      [data]
     );
   }
 
