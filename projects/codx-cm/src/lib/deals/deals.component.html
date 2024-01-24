@@ -728,9 +728,10 @@
   </div>
 </ng-template>
 <ng-template #templateStatus let-data>
-  <div  class="d-flex justify-content-start">
-    <div class="d-flex flex-column align-items-center">
-      <!-- <codx-vll
+  <div class="d-flex justify-content-start">
+    <div class="d-flex flex-column">
+      <codx-vll
+        *ngIf="data?.status != '2'"
         [name]="vllStatus"
         [field]="'Status'"
         [value]="data?.status"
@@ -738,15 +739,15 @@
         [showBgColor]="true"
         class="badge badge-light badge-sm"
       >
-      </codx-vll> -->
-      <view-step [stepID]="data?.stepID"></view-step>
+      </codx-vll>
+      <view-step [stepID]="data?.stepID" *ngIf="data?.status == '2'"></view-step>
       <codx-label
-        class="text-primary fs-7 cursor-pointer"
+        class="text-primary fs-7 cursor-pointer mt-1"
         style="font-style: italic"
         fiedName="viewDetailsCost"
         [formName]="'CMDeals'"
         [gridViewName]="'grvCMDeals'"
-        default="Xem chi tiết"
+        default="Chi tiết"
         (click)="currentStep(data, '2')"
       ></codx-label>
     </div>
@@ -800,7 +801,7 @@
       fiedName="viewDetailsCost"
       [formName]="'CMDeals'"
       [gridViewName]="'grvCMDeals'"
-      default="Xem chi tiết"
+      default="Chi tiết"
       (click)="currentStep(data, '1')"
     ></codx-label>
   </div>
@@ -878,7 +879,7 @@
       fiedName="viewDetailsCost"
       [formName]="'CMDeals'"
       [gridViewName]="'grvCMDeals'"
-      default="Xem chi tiết"
+      default="Chi tiết"
       (click)="viewDetailsCost(data)"
     ></codx-label>
   </div>
@@ -902,7 +903,7 @@
       name="viewDetailsGrossProfit"
       [formName]="'CMDeals'"
       [gridViewName]="'grvCMDeals'"
-      default="Xem chi tiết"
+      default="Chi tiết"
       (click)="viewDetailsCost(data)"
     ></codx-label>
   </div>

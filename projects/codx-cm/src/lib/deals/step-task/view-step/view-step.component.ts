@@ -17,7 +17,7 @@ export class ViewStepComponent implements OnInit, OnChanges  {
   }
 
   ngOnInit(): void {
-    throw new Error('Method not implemented.');
+
   }
 
 

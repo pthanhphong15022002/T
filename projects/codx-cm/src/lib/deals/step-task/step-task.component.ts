@@ -130,7 +130,7 @@ export class StepTaskComponent  implements OnInit, AfterViewInit, OnChanges {
   service = 'DP';
   assemblyName = 'ERM.Business.DP';
   entityName2 = 'DP_Processes';
-  className = 'ProcessesBusiness';
+  className = 'InstancesStepsBusiness';
   method = 'LoadDataColumnsAsync';
   idField = 'recID';
   views: Array<ViewModel> = [];

@@ -174,9 +174,10 @@ export class PeriodicControlComponent extends UIComponent {
   }
 
   changeDataMF(event:any,type){
+    console.log(event);
     event.reduce((pre, element) => {
       element.isblur = false;
-      element.isbookmark = true;
+      if(type === 'M') element.isbookmark = true;
       if(this.functionType === 'P'){
         if (element.functionID.includes('SYS')) element.disabled = true;
       }

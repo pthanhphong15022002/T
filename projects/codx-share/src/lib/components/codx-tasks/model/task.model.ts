@@ -214,7 +214,7 @@ export class tmpTaskResource {
   share: boolean;
   positionName: string = '';
   departmentName: string = '';
-  // status: string = '';
+  status: string = '';
 }
 
 export class TM_TaskExtends {
