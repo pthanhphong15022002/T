@@ -14,7 +14,7 @@ import { OverlayModule } from '@angular/cdk/overlay';
 import { CoreModule } from '@core/core.module';
 import { SliderModule } from '@syncfusion/ej2-angular-inputs';
 import { CodxShareModule } from 'projects/codx-share/src/public-api';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModule, NgbProgressbar } from '@ng-bootstrap/ng-bootstrap';
 import { DiagramAllModule } from '@syncfusion/ej2-angular-diagrams';
 import { ChartAllModule } from '@syncfusion/ej2-angular-charts';
 import { DateRangePickerModule } from '@syncfusion/ej2-angular-calendars';

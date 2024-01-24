@@ -7,8 +7,12 @@ import {
   CodxGridviewV2Component,
   CodxService,
   DataRequest,
+  DialogModel,
+  DialogRef,
   FormModel,
   NotificationsService,
+  RealHub,
+  RealHubService,
   ResourceModel,
   SidebarModel,
   UIComponent,
@@ -83,6 +87,9 @@ export class KowdsComponent extends UIComponent {
   @ViewChild('tempEmployee', { static: true }) tempEmployee: TemplateRef<any>;
   @ViewChild('tempKowTotal', { static: true }) tempKowTotal: TemplateRef<any>;
   @ViewChild('tempKow', { static: true }) tempKow: TemplateRef<any>;
+
+  @ViewChild('tmpPopupKowD') tmpPopupKowD: TemplateRef<any>;
+
   dtService: CRUDService;
   cbbKowCode: any;
   loadedTotalGrid = false;
@@ -98,7 +105,8 @@ export class KowdsComponent extends UIComponent {
     public override codxService: CodxService,
     private callfunc: CallFuncService,
     private notify: NotificationsService,
-    private routeActive: ActivatedRoute
+    private routeActive: ActivatedRoute,
+    private realHub: RealHubService,
   ) {
     super(inject);
     this.funcID = this.routeActive.snapshot.params['funcID'];
@@ -119,7 +127,10 @@ export class KowdsComponent extends UIComponent {
     let tempDate = new Date();
     this.filterMonth = tempDate.getMonth();
     this.filterYear = tempDate.getFullYear();
-    this.filterDowCode = this.filterYear + '/' + (this.filterMonth +1);
+    if(this.filterMonth + 1 < 10)
+      this.filterDowCode = this.filterYear + '/0' + (this.filterMonth + 1);
+    else
+      this.filterDowCode = this.filterYear + '/' + (this.filterMonth + 1);
 
     this.initHeaderText();
 
@@ -151,6 +162,38 @@ export class KowdsComponent extends UIComponent {
         id: 'btnAdd',
       },
     ];
+
+    this.realHub.start("hr").then((x: RealHub) => {
+      if(x)
+      {
+        x.$subjectReal.asObservable().subscribe((z) => {
+          // process 
+          if(z && (z.event == 'GenKowDsAsync') && z.message == this.session) 
+          {
+            let idx = z.data["id"] - 1;
+            let value =  z.data["value"];
+            let iteration =  z.data["iteration"];
+            let totalIteration =  z.data["totalIteration"];
+
+            if(this.processObj[idx])
+            {
+              this.processObj[idx].value = value.toFixed(2);
+              this.processObj[idx].iteration = iteration;
+              this.processObj[idx].totalIteration = totalIteration;
+            }
+            if(value == 100)
+            {
+              setTimeout(() => {
+                this.clickRemoveProcess(idx);
+              },3000);
+            }
+            this.detectorRef.detectChanges();
+          }
+        });
+      }
+    });
+
+    
   }
 
   ngAfterViewInit(): void {
@@ -396,36 +439,52 @@ export class KowdsComponent extends UIComponent {
       this.loadDataInGrid();
     }
   }
+
+  
   handleShowHideMF(event) {
-    for (let i = 0; i < event.length; i++) {
-      if (event[i].functionID == 'SYS04') {
-        event[i].disabled = true;
-      } else if (
-        event[i].functionID == 'SYS104' &&
-        (this.userPermission?.write != 0 ||
-          this.userPermission?.isAdmin == true)
-      ) {
-        event[i].disabled = false;
-      } else if (
-        event[i].functionID == 'SYS102' &&
-        (this.userPermission?.delete != 0 ||
-          this.userPermission?.isAdmin == true)
-      ) {
-        event[i].disabled = false;
-      }
+    if(event && event.length > 0)
+    {
+      event.forEach((mfc:any) => 
+      {
+        switch(mfc.functionID)
+        {
+          case "SYS104":
+            if(this.userPermission?.write != 0 || this.userPermission?.isAdmin == true)
+            {
+              mfc.disabled = false;
+              mfc.isbookmark = true;
+            }
+          break;
+          case "SYS102":
+            if(this.userPermission?.delete != 0 || this.userPermission?.isAdmin == true)
+            {
+              mfc.disabled = false;
+              mfc.isbookmark = true;
+            }
+          break;
+          case "HRTPro18A14":
+            if(this.modeView == 1 && this.userPermission?.write != 0 || this.userPermission?.isAdmin == true)
+            {
+              mfc.disabled = false;
+              mfc.isbookmark = true;
+              mfc.isblur = false;
+            }
+            else
+            {
+              mfc.disabled = true;
+            }
+          break;
+          default:
+            mfc.disabled = true;
+            break;
+        }
+      });
     }
   }
+
+  // clikc morefunction
   clickMF(event) {
     switch (event.functionID) {
-      // case 'SYS04': //copy
-      // break;
-      // case 'SYS02': //delete
-      // let lstEmpID2 = this.calendarGrid.arrSelectedRows.map((data) => {
-      //   return data.employeeID;
-      // })
-
-      // console.log('lst emp map dc', lstEmpID2);
-      // break;
       case 'SYS104':
         if (this.calendarGrid.arrSelectedRows.length > 1) {
           this.notify.notifyCode('HR038');
@@ -433,7 +492,8 @@ export class KowdsComponent extends UIComponent {
         } else if (this.calendarGrid.arrSelectedRows.length < 0) {
           this.notify.notifyCode('HR040');
           return;
-        } else {
+        } else 
+        {
           this.handleCopyEmpKows(
             'Sao chép',
             'copy',
@@ -460,20 +520,37 @@ export class KowdsComponent extends UIComponent {
           }
         });
         break;
+      case 'HRTPro18A14':
+        this.openPopupGenKowD();
+        break;
     }
   }
   //---------------------------------------------------------------------------------//
   //-----------------------------------Custom Event----------------------------------//
   //---------------------------------------------------------------------------------//
 
+  modeView:number = 1; // 1: Chi tiết theo ngày; 2: Bảng công tổng hợp
   switchModeView(mode) {
-    if (mode == 1) {
+    if (mode == 1) 
+    {
       this.viewDetailData = true;
       this.viewStatistic = false;
-    } else if (mode == 2) {
+    } 
+    else if (mode == 2) 
+    {
       this.viewStatistic = true;
       this.viewDetailData = false;
     }
+    let elements = document.getElementsByClassName("icon-system_update_alt");
+    if(elements.length > 0)
+    {
+      let btn = elements[0].parentElement;
+      if(btn)
+      {
+        mode == 1 ? btn.classList.remove("d-none") : btn.classList.add("d-none");
+      }
+    }
+    this.modeView = mode;
     this.detectorRef.detectChanges();
     this.loadDataInGrid();
   }
@@ -490,9 +567,7 @@ export class KowdsComponent extends UIComponent {
       }
     });
   }
-  debug(data) {
-    let x = data;
-  }
+  
   handleSearch(event) {
     if (event == '') {
       if (this.viewDetailData == true) {
@@ -836,4 +911,100 @@ export class KowdsComponent extends UIComponent {
       [this.funcID, this.entityName]
     );
   }
+
+  openPopupGenKowD(){
+    let arrIdx = this.calendarGrid.selectedIndexes;
+    if(arrIdx && arrIdx.length > 0)
+    {
+      let dialog = new DialogModel();
+      dialog.FormModel = this.view.formModel;
+      this.kowDOption = "1";
+      this.callfc.openForm(this.tmpPopupKowD,"",500,300,"",null,"",dialog);
+    }
+    else this.notify.notifyCode("HR040");
+    
+  } 
+
+  kowDOption:string;
+  kowCode:string;
+  valueChange(event){
+    let field = event.field;
+    let value = event.data;
+    switch(field)
+    {
+      case "kowDOption":
+        this.kowDOption = value;
+      break;
+      case "kowCode":
+        this.kowCode = value;
+      break;
+    }
+  }
+
+
+  clickBtn(dialog:DialogRef){
+    if(!this.filterDowCode)
+    {
+      this.notify.notify("Vui lòng chọn kỳ công");
+      return;
+    }
+    if(!this.kowCode)
+    {
+      this.notify.notifyCode("HR041");
+      return;
+    }
+    let empIDs = this.calendarGrid.selectedIndexes.map(idx => this.calendarGrid.dataSource[idx].EmployeeID);
+    if(empIDs.length > 0)
+    {
+      this.processObj = [];
+      this.genKowD(empIDs.join(";"),this.filterDowCode,this.kowCode);
+      dialog.close();
+    }
+    else this.notify.notifyCode("HR040");
+  }
+
+  processing:boolean = false;
+  processObj:any[] = [];
+  session:string = "";
+  // click gen kowd with dowCode and kowCode
+  genKowD(employeeID:any,dowCode:string,kowCode:string){
+    if(employeeID && dowCode && kowCode)
+    {
+      this.api.execSv("HR","PR","KowDsBusiness","GenKowDsAsync",[employeeID,dowCode,kowCode])
+      .subscribe((res:boolean) => {
+        if(res)
+        {
+          this.session = res[0];
+          for (let index = 0; index < res[1]; index++) {
+              let obj = {
+                id : index + 1,
+                value : 0,
+                iteration: 0,
+                totalIteration: 0,
+              };
+            this.processObj.push(obj);
+          }
+          this.processing = true;
+          this.detectorRef.detectChanges();
+        }
+      });
+    }
+    
+  }
+
+  // click remove proccess
+  clickRemoveProcess(idx:number){
+    if(idx > -1 && idx < this.processObj.length)
+    {
+      this.processObj.splice(idx,1);
+      if(this.processObj.length == 0)
+      {
+        this.processing = false;
+        this.calendarGrid.refresh();
+      }
+      this.detectorRef.detectChanges();
+    }
+  }
+
+
 }
