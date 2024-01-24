@@ -46,6 +46,7 @@ export class ContractsViewDetailComponent
   @Output() isSusscess = new EventEmitter<any>();
   @Output() clickMoreFunc = new EventEmitter<any>();
   @Output() changeProgress = new EventEmitter<any>();
+  @Output() moveStage = new EventEmitter<any>();
 
   quotations: CM_Quotations;
   listPayment: CM_ContractsPayments[] = [];
@@ -558,4 +559,7 @@ export class ContractsViewDetailComponent
     this.stepCurrent = this.listInsStep.filter(x=>x.stepID == data.stepID)[0];
   }
 
+  handelMoveStage(event){
+    this.moveStage.emit(event);
+  }
 }

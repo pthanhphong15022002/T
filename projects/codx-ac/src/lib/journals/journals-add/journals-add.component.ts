@@ -89,13 +89,6 @@ export class JournalsAddComponent extends UIComponent {
 
   //#region Init
   onInit(): void {
-    this.acService
-      .loadComboboxData$('FiscalPeriods', 'AC')
-      .subscribe((periods) => {
-        this.fiscalYears = [
-          ...new Set(periods.map((p) => Number(p.FiscalYear))),
-        ];
-      });
     this.getVll('AC122','vllAC122');
     this.getVll('AC107','vllAC107');
     this.getVll('AC104','vllAC104');

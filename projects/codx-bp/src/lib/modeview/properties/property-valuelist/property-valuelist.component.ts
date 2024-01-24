@@ -8,7 +8,7 @@ import { firstValueFrom } from 'rxjs';
   styleUrls: ['./property-valuelist.component.css']
 })
 export class PropertyValueListComponent extends BasePropertyComponent implements OnChanges {
- 
+
   dropdown = true;
   checkbox = false;
   lstVll = [];
@@ -23,7 +23,7 @@ export class PropertyValueListComponent extends BasePropertyComponent implements
      if (
       changes['data'] &&
       changes['data']?.currentValue != changes['data']?.previousValue
-    ) 
+    )
     {
       if(this.data.refType == "2C") this.checkbox = true;
       else this.dropdown = true;
@@ -60,7 +60,7 @@ export class PropertyValueListComponent extends BasePropertyComponent implements
       this.default();
     }
   }
-  
+
   formatVll()
   {
     let arr = [];
@@ -68,7 +68,7 @@ export class PropertyValueListComponent extends BasePropertyComponent implements
     let max = Math.max(...arr.map(i => i.length))
     for(var i = 0 ; i < max ; i++)
     {
-      var obj = 
+      var obj =
       {
         iconSet : this.crr.iconSet[i],
         customValues: this.crr.text[i],
@@ -79,10 +79,10 @@ export class PropertyValueListComponent extends BasePropertyComponent implements
     }
   }
 
-  async createVll() 
+  async createVll()
   {
     var processNo = await firstValueFrom(
-      this.bpService.genAutoNumber('DP0204', 'DP_Processes', 'ProcessNo')
+      this.bpService.genAutoNumber('BPT01', 'BP_Processes', 'ProcessNo')
     );
     this.vll.listName ='BPF' + processNo + '-' + this.lstVll.length;
     this.vll.language = this.user.language;
@@ -100,11 +100,11 @@ export class PropertyValueListComponent extends BasePropertyComponent implements
         this.dataChange.emit(this.data);
       }
     })
-   
+
   }
   default()
-  { 
-    var obj = 
+  {
+    var obj =
     {
       iconSet : null,
       customValues: "",
@@ -118,7 +118,7 @@ export class PropertyValueListComponent extends BasePropertyComponent implements
   {
     this.lstVll[index][e.field] = e?.data;
     this.crr[e.field][index] = e?.data;
-    if(this.vll && this.vll?.listName && this.crr.text[index]) 
+    if(this.vll && this.vll?.listName && this.crr.text[index])
     {
       this.vll.iconSet = this.crr.iconSet.slice(0,(this.lstVll.length - 1)).join(";");
       this.vll.colorSet = this.crr.colorSet.slice(0,(this.lstVll.length - 1)).join(";");
@@ -155,7 +155,7 @@ export class PropertyValueListComponent extends BasePropertyComponent implements
     );
   }
 
-  
+
   onSave(data:any) {
     this.api.execSv('SYS', 'ERM.Business.SYS', 'ValueListBusiness', 'EditValuelistCustomsAsync',data).subscribe();
   }

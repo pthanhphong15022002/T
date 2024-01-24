@@ -149,7 +149,7 @@ export class PopupCustomFieldComponent implements OnInit {
     if (!check || !checkFormat) return;
     if (this.isSaving) return;
     this.isSaving = true;
-    let data = [this.fields[0]?.stepID, this.fields];
+    let data = [this.fields[0]?.stepID, this.fields, this.taskID];
     this.api
       .exec<any>(
         'DP',
@@ -171,30 +171,32 @@ export class PopupCustomFieldComponent implements OnInit {
   }
 
   //----------------------CACULATE---------------------------//
-  caculateField() {
+  caculateField(versionID = null) {
     if (!this.arrCaculateField || this.arrCaculateField?.length == 0) return;
     let fieldsNum = this.fields.filter((x) => x.dataType == 'N');
+    // let fieldsNum = this.fields.filter(
+    //   (x) => x.dataType == 'N' || x.dataType == 'CF'
+    // );
     if (!fieldsNum || fieldsNum?.length == 0) return;
 
     this.arrCaculateField.forEach((obj) => {
       let dataFormat = obj.dataFormat;
+      // let check = field == null ? true : obj.recID == field.recID;
+      // if (!check) return;
+      // if (field != null && fieldName != null && dataValue != null)
+      //   dataFormat.replaceAll('[' + fieldName + ']', dataValue);
+
       fieldsNum.forEach((f) => {
         if (
           dataFormat.includes('[' + f.fieldName + ']') &&
           f.dataValue?.toString()
         ) {
           let dataValue = f.dataValue;
-          // //loai e
-          // let idxE = dataValue.toString().toLowerCase().indexOf('e');
-          // if (idxE != -1) {
-          //   let mu = dataValue
-          //     .toString()
-          //     .substring(idxE + 2, dataValue?.length);
-          //   dataValue =
-          //     Number.parseFloat(dataValue.toString().substring(0, idxE)) *
-          //     Math.pow(10, Number.parseInt(mu));
-          // }
-          // //
+          if (versionID) {
+            let ver = f?.version?.find((x) => x.refID == versionID);
+            if (ver) dataValue = ver?.dataValue;
+          }
+
           if (f.dataFormat == 'P') dataValue = dataValue + '/100';
           dataFormat = dataFormat.replaceAll(
             '[' + f.fieldName + ']',
@@ -215,6 +217,15 @@ export class PopupCustomFieldComponent implements OnInit {
           );
           // this.fields[index].dataValue = obj.dataValue;
         }
+        // let fieldCFOnCF = this.arrCaculateField.filter((f) =>
+        //   f.dataFormat.includes('[' + obj.fieldName + ']')
+        // );
+        // if (fieldCFOnCF?.length > 0) {
+        //   fieldCFOnCF.forEach((x) => {
+        //     this.caculateField(x, obj.fieldName, obj.dataValue);
+        //   });
+        // }
+
         this.changeDetectorRef.detectChanges();
       }
     });
@@ -226,7 +237,7 @@ export class PopupCustomFieldComponent implements OnInit {
   upDataVersion(field, value) {
     field.dataValue = value;
     if (this.taskID) {
-      if (field?.versions?.length > 0 && this.taskID) {
+      if (field?.versions?.length > 0) {
         let idx = field?.versions.findIndex((x) => x.refID == this.taskID);
         if (idx != -1) field.versions[idx].dataValue = value;
         else {

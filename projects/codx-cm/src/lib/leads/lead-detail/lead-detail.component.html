@@ -604,7 +604,7 @@
               </div>
             </ng-template>
             <ng-template #content>
-              <div class="d-flex flex-column mt-4">
+              <div class="mt-5" [ngClass]="isShow ? '': 'croll-m-5'" style="overflow-x: hidden !important;">
                 <div class="text-dark text-primary fw-bold fs-6 mb-3">
                   <codx-label
                     default="Thông tin chung"

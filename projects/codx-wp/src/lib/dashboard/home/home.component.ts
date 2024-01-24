@@ -47,8 +47,9 @@ export class HomeComponent extends UIComponent {
         }
       });
     });
-    this.predicatePortal = '(Category = @0 || Category = @1 || Category = @2) &&(( ApproveStatus = null || ApproveStatus=@3) || (ApproveStatus!=@4 &&CreatedBy =@5))';
-    this.dataValuePortal = `1;3;4;5;4;` +this.user?.userID;
+    this.predicatePortal = '(Category = @0 || Category = @1 || Category = @2) && (ApproveControl=@3 || ( ApproveControl=@4 && (ApproveStatus=@5 || (ApproveStatus != @6 && CreatedBy =@7))))';
+    //'(Category = @1 || Category = @3 || Category = @4) && (ApproveControl=@0 || ( ApproveControl=@1 && (ApproveStatus=@5 || (ApproveStatus != @4 && CreatedBy =@Me))))'
+    this.dataValuePortal = `1;3;4;0;1;5;4;` +this.user?.userID;
   }
 
 

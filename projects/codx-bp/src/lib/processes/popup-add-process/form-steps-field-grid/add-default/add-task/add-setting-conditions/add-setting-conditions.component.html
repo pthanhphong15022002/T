@@ -1,0 +1,222 @@
+<codx-form
+  headerText="Thiết lập điều kiện"
+  subHeaderText=""
+  [body]="body"
+  [footer]="footer"
+  [dialog]="dialog"
+>
+
+</codx-form>
+<ng-template popup adde #body>
+    <div class="d-flex flex-column container non-padding h-100" id="queryBuilderEle">
+        <div class="d-flex flex-column mt-4">
+            <codx-label formName="fmBPFieldGrid" fiedName="lblTaskName" default="Tên điều kiện" class="fw-bold"></codx-label>
+            <codx-input type="text" field="stepName" [crrValue]="predicateName" (valueChange)="changeName($event)"></codx-input>
+        </div>
+        <div class="row h-100 pt-4">
+            <div class="container h-100 overflow-hidden" id="queryAdvanceEle" #queryAdvanceEle>
+            <div class="row non-padding mt-3 " [id]="idx" *ngFor="let item of filters.filters; let idx = index;">
+                <ejs-contextmenu target="#{{idx}}" [items]="menuItems" (select)="itemSelect($event,item,idx)"></ejs-contextmenu>
+                <div class="col-12 py-2 px-4 bg-light w-100">
+                <div class="container p-0  my-3" *ngFor="let child of item.filters; let indx = index;">
+                    <div class="row non-padding">
+                        <div class="col-3">
+                            <div #myDrop="ngbDropdown" ngbDropdown container="boby" class="d-inline-block w-100">
+                                <div class="d-flex align-items-center cursor-pointer justify-content-between w-100 border p-2 bg-white" ngbDropdownToggle>
+                                    <span class="mx-2">{{child?.item?.defaultValue || child?.field || 'Điều kiện lọc'}}</span>
+                                    <i class="icon-16" [ngClass]="!myDrop.isOpen() ? 'icon-i-chevron-down' : 'icon-i-chevron-up' "></i>
+                                </div>
+                                <div ngbDropdownMenu aria-labelledby="dropdownBasic1" class="add-s-con-dropdown w-500px rounded-0">
+                                    <div class="d-flex h-100">
+                                        <div ngbNav #nav="ngbNav" [(activeId)]="activeNav" class="nav-pills flex-column h-100" orientation="vertical">
+                                            <ng-container [ngbNavItem]="'top'+i" *ngFor="let item of listForm , let i = index">
+                                                <button class="w-200px border-0 rounded-0 text-start" ngbNavLink>{{item.stepName}}</button>
+                                                <ng-template ngbNavContent>
+                                                    <div class="d-flex flex-column w-100 h-100 overflow-auto">
+                                                        <div class="p-2 cursor-pointer" [ngClass]="child.field == item2.fieldName ? 'div-active' : ''" *ngFor="let item2 of item.extendInfo" (click)="myDrop.close();fieldChange(child,item2)">{{item2.fieldName}}</div>
+                                                    </div>
+                                                </ng-template>
+                                            </ng-container>
+                                        </div>
+                                    
+                                        <div [ngbNavOutlet]="nav" class="ms-4"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-9 d-flex align-items-center" *ngIf="child.field">
+                            <ng-container [ngSwitch]="child.item['dataType']">
+                            <ng-container *ngSwitchCase="'String'">
+                                <div class="w-25" *ngIf="child.field">
+                                <codx-input type="valuelist" class="w-100" refValue="SYS030" [placeholder]="'chọn...'" field="operator"
+                                [crrValue]="child.operator?.toUpperCase() || ''" (valueChange)="valueChange(child,$event)">
+        
+                                </codx-input>
+                                </div>
+                                <div class="w-75 ps-5" *ngIf="!child.item.refType">
+                                <codx-input
+                                    type="text"
+                                    [className]="'border'"
+                                    [field]="child.item.controlName"
+                                    [placeholder]="child.item.title"
+                                    [crrValue]="child?.value || ''"
+                                    (valueChange)="valueFieldChange(child,$event)"
+                                ></codx-input>
+                                </div>
+                                <div class="w-75 ps-5" *ngIf="child.item.refType == '3'">
+                                <codx-input
+                                    type="combobox"
+                                    [field]="child.item.controlName"
+                                    [placeholder]="child.item.title"
+                                    [crrValue]="child.value"
+                                    [refValue]="child.item.refValue"
+                                    (valueChange)="valueFieldChange(child,$event)"
+                                >
+                                </codx-input>
+                                </div>
+                                <div class="w-75 ps-5" *ngIf="child.item.refType == '2'">
+                                <codx-input
+                                    type="valuelist"
+                                    [field]="child.item.controlName"
+                                    [placeholder]="child.item.title"
+                                    [crrValue]="child.value"
+                                    [refValue]="child.item.refValue"
+                                    (valueChange)="valueFieldChange(child,$event)"
+                                >
+                                </codx-input>
+                                </div>
+                            </ng-container>
+        
+                            <ng-container *ngSwitchCase="'DateTime'">
+                                <div class="w-25" *ngIf="child.field">
+                                <codx-input type="valuelist" class="w-100" refValue="SYS032" [placeholder]="'chọn...'" field="operator"
+                                [crrValue]="child.operator?.toUpperCase() || ''" (valueChange)="valueChange(child,$event)">
+        
+                                </codx-input>
+                                </div>
+                                <div class="w-75 ps-5">
+                                <codx-input  class="form-control test-datetime"
+                                type="dateTime" style="width:100%" format="d" [crrValue]="child.value"
+                                (valueChange)="valueFieldChange(child,$event)"></codx-input>
+                                </div>
+        
+                            </ng-container>
+                            <ng-container *ngSwitchCase="'Int'">
+                                <div class="w-25" *ngIf="child.field">
+                                <codx-input type="valuelist" class="w-100" refValue="SYS031" [placeholder]="'chọn...'" field="operator"
+                                [crrValue]="child.operator?.toUpperCase() || ''" (valueChange)="valueChange(child,$event)">
+        
+                                </codx-input>
+                                </div>
+                                <div class="w-75 ps-5">
+                                <codx-input
+                                        type="number"
+                                        [field]="child.item.controlName"
+                                        [crrValue]="child.value"
+                                        (valueChange)="valueFieldChange(child,$event)"
+                                    ></codx-input>
+                                </div>
+                            </ng-container>
+                            <ng-container *ngSwitchCase="'Decimal'">
+                                <div class="w-25" *ngIf="child.field">
+                                <codx-input type="valuelist" class="w-100" refValue="SYS031" [placeholder]="'chọn...'" field="operator"
+                                [crrValue]="child.operator?.toUpperCase()" (valueChange)="valueChange(child,$event)">
+        
+                                </codx-input>
+                                </div>
+                                <div class="w-75 ps-5">
+                                <codx-input
+                                        type="number"
+                                        [field]="child.item.controlName"
+                                        [crrValue]="child.value"
+                                        (valueChange)="valueFieldChange(child,$event)"
+                                    ></codx-input>
+                                </div>
+                            </ng-container>
+                            <ng-container *ngSwitchCase="'Bool'">
+                                <div class="w-25" *ngIf="child.field">
+                                <codx-input type="valuelist" class="w-100" refValue="SYS030" [placeholder]="'chọn...'" field="operator"
+                                [crrValue]="child.operator?.toUpperCase()" (valueChange)="valueChange(child,$event)">
+        
+                                </codx-input>
+                                </div>
+                                <div class="w-75 ps-5">
+                                <codx-input
+                                        type="checkBox"
+                                        [field]="child.item.controlName"
+                                        [crrValue]="child.value"
+                                        (valueChange)="valueFieldChange(child,$event)"
+                                    ></codx-input>
+                                </div>
+                            </ng-container>
+                            <ng-container *ngSwitchDefault>
+                                <div class="w-75 ps-5">
+                                <codx-input
+                                        type="text"
+                                        [field]="child.item.controlName"
+                                        [crrValue]="child.value"
+                                        (valueChange)="valueFieldChange(child,$event)"
+                                    ></codx-input>
+                                </div>
+                            </ng-container>
+                            </ng-container>
+                            <div class="d-flex justify-content-start mt-1">
+                                <i
+                                    class="icon-close ms-2"
+                                    (click)="deleteChildItem(item, indx)"
+                                >
+                                </i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="float-start w-100px my-5">
+                    <div class="d-flex align-items-center cursor-pointer " (click)="addChildItem(item)">
+                        <i class="icon-i-plus"></i>
+                        <codx-label name="lblAnd" default="Và" class="ms-2"></codx-label>
+                    </div>
+                <!-- <codx-input type="valuelist" class="w-100px" refValue="SYS024" field="logic"
+                [crrValue]="item.logic" (valueChange)="valueChange(item,$event);"></codx-input> -->
+                </div>
+                </div>
+                <div class="float-start mt-5">
+                <button type="button" class="btn btn-outline-dark" (click)="addItem()">
+                    <codx-label name="lblOr" default="Hoặc"></codx-label>
+                </button>
+                </div>
+            </div>
+            <div class="float-start mt-5" *ngIf="!filters.filters || filters.filters.length ==0">
+                <button type="button" class="btn btn-sm btn-primary" (click)="addItem()">
+                <codx-label name="lblAddCondition" default="Thêm điều kiện"></codx-label>
+                </button>
+            </div>
+            </div>
+        </div>
+    </div>
+</ng-template>
+<ng-template #footer>
+<div class="d-flex w-100">
+    <div class="d-flex align-items-center float-start w-100">
+        <codx-label formName="fmBPFieldGrid" fiedName="lblTaskNextSteps" default="Hành động xử lý tiếp theo" class="fw-bold me-2"></codx-label>
+        <div ngbDropdown #myDrop2="ngbDropdown" class="d-inline-block bp-ffg-dropdown">
+            <div class="d-flex align-items-center justify-content-between border p-2 w-200px rounder cursor-pointer" ngbDropdownToggle>
+                <span>{{nextStepDefault?.stepName || "Chọn hành động"}}</span>
+                <i [ngClass]="!myDrop2.isOpen() ? 'icon-i-chevron-down' : 'icon-i-chevron-up' "></i>
+            </div>
+			<div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+				<button [class.active]="nextStepDefault?.recID == item.recID" ngbDropdownItem *ngFor="let item of listSteps"  (click)="changeSteps(item)">{{item.stepName}}</button>
+			</div>
+		</div>
+    </div>
+    <div class="float-end"  *ngIf="isPopup">
+        <button class="btn btn-primary" (click)="saveForm()">
+            <codx-label
+            name="lblSave"
+            [formModel]="dialog.formModel"
+            default="Lưu"
+            ></codx-label>
+        </button>
+    </div>
+
+</div>
+</ng-template>

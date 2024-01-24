@@ -136,6 +136,7 @@ export class TM_Tasks {
   startTime: string;
   endDate: Date;
   startedOn: Date;
+  startOn: Date;
   percentage: number;
   completed: number;
   completedOn: any;
@@ -213,6 +214,7 @@ export class tmpTaskResource {
   share: boolean;
   positionName: string = '';
   departmentName: string = '';
+  status: string = '';
 }
 
 export class TM_TaskExtends {

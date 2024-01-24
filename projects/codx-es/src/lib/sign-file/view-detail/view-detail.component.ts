@@ -681,6 +681,9 @@ export class ViewDetailComponent extends UIDetailComponent implements OnInit {
         this.view.dataService.update(datas).subscribe();
         this.notify.notifyCode('SYS034');
       }
+      else{        
+        this.notify.notifyCode(res?.msgCodeError);
+      }
     });
   }
 

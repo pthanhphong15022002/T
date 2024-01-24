@@ -128,6 +128,7 @@ export class ReportComponent extends WSUIComponent{
 
   formatData2(data:any)
   {
+    if(this.listGroupReport.length > 1) this.listGroupReport = this.listGroupReport.slice(0,1);
     this.listGroupReport = this.listGroupReport.concat(data);
   }
 

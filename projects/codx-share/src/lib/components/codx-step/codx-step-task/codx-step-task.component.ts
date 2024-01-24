@@ -79,7 +79,6 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   @Input() stepId: any;
   @Input() formModel: FormModel;
   @Input() instanceStep: DP_Instances_Steps;
-  @Input() listInstanceStep: DP_Instances_Steps[];
   @Input() groupTaskAdd: DP_Instances_Steps_TaskGroups;
   @Input() taskAdd;
   @Input() entityName;
@@ -91,7 +90,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   @Input() isRoleAll = true;
   @Input() isOnlyView = true; // đang ở giai đoạn nào
   @Input() isShowFile = true;
-  @Input() isDeepCopy = true; // copy sâu
+  @Input() isDeepCopy = false; // copy sâu
   @Input() isAddTask = false;
   @Input() isShowStep = false;
   @Input() isShowElement = true; // thu gọn mở rộng group, task trong step
@@ -117,7 +116,6 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   @Input() contractName: string;
   @Input() leadName: string;
   @Input() instanceName: string;
-  @Input() entity = 'DP';
 
   @Output() saveAssign = new EventEmitter<any>();
   @Output() continueStep = new EventEmitter<any>();
@@ -203,6 +201,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   titleLanguageEdit = '';
   widthTask = 'auto';
   isFirstTime = true;
+  transferControl = '0';
   //#endregion
   constructor(
     private cache: CacheService,
@@ -286,6 +285,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       }
       if (this.isOnlyView) {
         this.getTaskEnd();
+        this.getTransferControlStep();
       }
       this.isShowElement = this.isShowStep ? this.isOnlyView : true;
     }
@@ -328,6 +328,21 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
       );
     }
     this.changeDetectorRef.markForCheck();
+  }
+
+  getTransferControlStep() {
+    if (this.processID && this.currentStep?.stepID) {
+      this.api
+        .exec<any>('DP', 'ProcessesBusiness', 'GetTransferControlStepAsync', [
+          this.processID,
+          this.currentStep?.stepID,
+        ])
+        .subscribe((res) => {
+          if (res) {
+            this.transferControl = res;
+          }
+        });
+    }
   }
 
   ngAfterViewInit() {
@@ -1866,6 +1881,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         (data?.taskType == 'Q' || data?.taskType == 'CO') &&
         !data?.objectLinked
       ) {
+        this.notiService.notify('Hợp đồng chưa được tạo', '3');
         return;
       }
       let checkTaskLink = this.stepService.checkTaskLink(
@@ -2068,9 +2084,19 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
           );
           index >= 0 && groupFind?.task?.splice(index, 1, dataCopy);
         }
-        if (dataProgress?.progressTask == 100) {
-          let isTaskEnd = dataProgress.taskID == this.idTaskEnd ? true : false;
-          this.continueStep.emit(isTaskEnd);
+        if (dataProgress?.progressTask == 100 && this.transferControl != '0') {
+          if (this.transferControl == '2') {
+            let isTaskEnd =
+              dataProgress.taskID == this.idTaskEnd ? true : false;
+            if (isTaskEnd) {
+              this.continueStep.emit(true);
+            }
+          } else if (this.transferControl == '1') {
+            let check = this.currentStep?.tasks?.some((x) => x?.progress < 100);
+            if (!check) {
+              this.continueStep.emit(true);
+            }
+          }
         }
         //Bắt đầu công việc khi công việc cha hoàn tất
         if (dataProgress?.progressTask == 100) {
@@ -2903,9 +2929,6 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
               }
             }
           });
-          console.log(res);
-          console.log(this.listGroupTask);
-          console.log(this.currentStep);
         }
       });
   }

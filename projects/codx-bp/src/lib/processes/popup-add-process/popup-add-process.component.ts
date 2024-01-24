@@ -188,7 +188,7 @@ export class PopupAddProcessComponent {
         if(this.action == 'add') this.defaultStep();
       })
     }
-    else 
+    else
     {
       this.vllBP001 = vll;
       if(this.action == 'add') this.defaultStep();
@@ -263,8 +263,8 @@ export class PopupAddProcessComponent {
     var stage = new BP_Processes_Steps();
     var form = new BP_Processes_Steps();
     var vllStage = this.vllBP001.datas.filter(x=>x.value == "Stage")[0];
-    var vllForm = this.vllBP001.datas.filter(x=>x.value == "Form")[0];    
-    
+    var vllForm = this.vllBP001.datas.filter(x=>x.value == "Form")[0];
+
     stage.recID = Util.uid();
     stage.stepNo = 0;
     stage.activityType = "Stage";
@@ -277,7 +277,7 @@ export class PopupAddProcessComponent {
       icon: "icon-i-bar-chart-steps",
       color: "#0078FF",
       backGround: "#EAF0FF",
-      allowDrag: processSetting?.allowDrag || false,
+      allowDrag: processSetting?.allowDrag || null,
       defaultProcess: processSetting?.defaultProcess || null,
       completeControl: processSetting?.completeControl || null,
       nextSteps: null,
@@ -292,6 +292,9 @@ export class PopupAddProcessComponent {
     form.stageID = stage.recID;
     form.parentID = stage.recID;
     form.extendInfo = this.extendInfos;
+    form.memo = "";
+    form.duration = 0;
+    form.interval = "1";
     form.settings = JSON.stringify(
     {
       icon: vllForm.icon,
@@ -303,6 +306,7 @@ export class PopupAddProcessComponent {
     });
     lstStep.push(stage,form);
     this.data.steps = lstStep;
+    this.setLstExtends();
   }
 
   setLstExtends() {
@@ -402,7 +406,7 @@ export class PopupAddProcessComponent {
   }
   async continue(currentTab:any) {
     debugger
-    if (currentTab == 0) 
+    if (currentTab == 0)
     {
       //check điều kiện để continue
     }
@@ -412,18 +416,12 @@ export class PopupAddProcessComponent {
     switch (currentTab) {
       case 0:
       {
-        let that = this;
-        if(this.action == "add") 
-          this.saveProcessStep().subscribe(item=>{
-            that.updateNodeStatus(oldNode, newNode);
-            that.currentTab++;
-            that.processTab == 0 && this.processTab++;
-          });
-        else
-        {
-          this.updateNodeStatus(oldNode, newNode);
-          this.currentTab++;
-          this.processTab == 0 && this.processTab++;
+        this.updateNodeStatus(oldNode, newNode);
+        this.currentTab++;
+        this.processTab == 0 && this.processTab++;
+        if(this.action == "add") {
+          this.data = {...this.data};
+          this.saveProcessStep().subscribe();
         }
         break;
       }
@@ -735,6 +733,7 @@ export class PopupAddProcessComponent {
         }
       });
     }
+    debugger
     let popupDialog = this.callfc.openForm(
       ModeviewComponent,
       '',

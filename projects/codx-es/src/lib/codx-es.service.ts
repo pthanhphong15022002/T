@@ -1303,6 +1303,15 @@ export class CodxEsService {
       [recID]
     );
   }
+  getApprovalTree(transID: string) {
+    return this.api.execSv(
+      'es',
+      'ERM.Business.ES',
+      'ApprovalTransBusiness',
+      'GetApprovalTreeAsync',
+      [transID]
+    );
+  }
 
   updateTransAwaitingStatus(transID, isFail) {
     return this.api.execSv(
@@ -1518,20 +1527,19 @@ export class CodxEsService {
     );
   }
   //#endregion
-  getSignContracts(sfID, fileID, fileUrl, stepNo): Observable<any> {
-    let data = [sfID, fileID, fileUrl, stepNo];
+  getSignContracts(sfID, fileID, fileUrl, stepNo): Observable<any> {    
     return this.api.execSv(
-      'es',
+      'ES',
       'ERM.Business.ES',
       'ApprovalTransBusiness',
       'GetSignContracts',
-      data
+      [sfID, fileID, fileUrl, stepNo]
     );
   }
 
   removeCA() {
     return this.api.execSv(
-      'es',
+      'ES',
       'ERM.Business.ES',
       'ApprovalTransBusiness',
       'RemoveCAAsync',

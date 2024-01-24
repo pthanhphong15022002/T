@@ -29,59 +29,12 @@
             {{ item?.text }}
           </button>
         </ng-container>
-        <!-- <button
-          type="button"
-          class="btn btn-sm btn-bg-primary text-inverse-primary me-2 mb-2 min-w-60px rounded-4"
-          [disabled]="!canOpenSubPopup || !isConfirm"
-          (click)="clickOpenPopupADR(5)"
-        >
-          <codx-vll [name]="'ES002'" [value]="data?.stepType" [showText]="true">
-          </codx-vll>
-        </button>
-        <button
-          type="button"
-          class="btn btn-sm btn-bg-danger text-inverse-danger me-2 mb-2 min-w-60px rounded-4"
-          [disabled]="!canOpenSubPopup || !isConfirm"
-          (click)="clickOpenPopupADR(4)"
-        >
-          <codx-label
-            name="lblDeny"
-            [formModel]="formModel"
-            default="Từ chối"
-          ></codx-label>
-        </button>
-        <button
-          type="button"
-          class="btn btn-sm btn-bg-warning text-inverse-warning me-2 mb-2 min-w-60px rounded-4"
-          [disabled]="!canOpenSubPopup || !isConfirm"
-          (click)="clickOpenPopupADR(2)"
-        >
-          <codx-label
-            name="lblRedo"
-            [formModel]="formModel"
-            default="Làm lại"
-          ></codx-label>
-        </button> -->
-
-        <!-- <button
-          type="button"
-          class="btn btn-sm btn-bg-danger text-inverse-danger me-2 mb-2 min-w-60px rounded-4"
-          [disabled]="!canOpenSubPopup"
-          (click)="clickUSB()"
-        >
-          <codx-label
-            name="lblDeny"
-            [formModel]="formModel"
-            default="USB"
-          ></codx-label>
-        </button> -->
 
         <div class="btn btn-sm btn-bg-white text-inverse-white mb-2">
           <i class="icon-close icon-18" (click)="close()"></i>
         </div>
       </div>
     </div>
-    <!-- [curSignerType]="oApprovalTrans?.approverType" -->
 
     <div class="stepper-body pt-2 w-100">
       <lib-pdf
@@ -167,11 +120,5 @@
     >
     </codx-input>
     {{ "ES011" | mssg | async }}
-    <!-- <codx-label
-      name="lblConfirmSeen"
-      [formModel]=""
-      [default]="'Xác nhận đã xem văn bản'"
-      class="text-header"
-    ></codx-label> -->
   </div>
 </ng-template>

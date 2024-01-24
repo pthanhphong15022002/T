@@ -180,6 +180,13 @@ export class RoleDetailComponent
 
           this.dataRole = res[1];
           this.dataAdv = res[2];
+          if (res.length > 3 && res[3]) {
+            let dicValueList = res[3];
+            for (const property in dicValueList) {
+              this.cache.setValueList(property, dicValueList[property]);
+            }
+          }
+
           this.df.detectChanges();
         }
       });

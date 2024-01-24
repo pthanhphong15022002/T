@@ -15,13 +15,13 @@
         <i class="text-primary icon-settings icon-20 me-3"></i>
         <h3 class="list-header mx-0 my-0">{{headerText}}</h3>
       </div>
-      <div *ngIf="autoSchedule">
+      <div *ngIf="newSetting.length && autoSchedule">
         <div class="d-flex align-items-center justify-content-center">
           <codx-label class="fw-bold me-3" style="white-space: nowrap !important" default="Chạy tự động">
           </codx-label>
-          <codx-input field="stop" [crrValue]="this.settingFull.stop" (valueChange)="changeAutoSchedule($event)" type="switch" class="me-3 mt-1">
+          <codx-input field="stop" [crrValue]="this.settingFull?.stop" (valueChange)="changeAutoSchedule($event)" type="switch" class="me-3 mt-1">
           </codx-input>
-          <button [disabled]="!this.settingFull.stop" (click)="openForm()" type="button" class="btn btn-icon btn-light-primary" role="button">
+          <button [disabled]="!this.settingFull?.stop" (click)="openForm()" type="button" class="btn btn-icon btn-light-primary" role="button">
             <span class="icon-18 icon-edit-one"></span>
           </button>
         </div>

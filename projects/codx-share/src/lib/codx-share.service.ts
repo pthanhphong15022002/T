@@ -247,10 +247,7 @@ export class CodxShareService {
       case 'SYS206':
       case 'SYS200': {
         if (data?.unbounds?.eSign == true) {
-          let option = new SidebarModel();
-          option.Width = '800px';
-          option.DataService = dataService;
-          option.FormModel = formModel;
+          
           let dialogModel = new DialogModel();
           dialogModel.IsFull = true;
 
@@ -332,7 +329,6 @@ export class CodxShareService {
   
                     dataService.update(data).subscribe();
                     this.notificationsService.notifyCode('SYS007');
-                    //afterSave(data.statusApproval);// Chung CMT trước đo rồi
                     afterSave(data);
                   } else this.notificationsService.notify(res2?.msgCodeError);
                 });
@@ -372,7 +368,7 @@ export class CodxShareService {
           (res: any) => {
             if (!res?.msgCodeError) {
               data.unbounds.statusApproval = res?.status;
-              //Cập nhật lại status duyệt
+              //Cập nhật lại status ủy
               var index = dataService.data.findIndex(
                 (x) => x.transID == data.recID
               );
@@ -383,6 +379,28 @@ export class CodxShareService {
               this.notificationsService.notifyCode('SYS007');
             } else this.notificationsService.notify(res?.msgCodeError);
           }
+        );
+        break;
+      }
+      //Ủy quyền
+      case 'SYS209': {
+        this.codxCommonService.codxAuthority(
+          data?.unbounds?.approvalRecID,
+          (res :any)=>{
+            if (!res?.msgCodeError) {
+              data.unbounds.statusApproval = res?.returnStatus;
+              //Cập nhật lại status duyệt
+              var index = dataService?.data?.findIndex(
+                (x) => x?.transID == data?.recID
+              );
+              if (index >= 0)
+                dataService.data[index].unbounds.statusApproval = res?.returnStatus;
+              afterSave(data);
+              dataService.update(data).subscribe();
+              this.notificationsService.notifyCode('SYS007');
+            } else this.notificationsService.notify(res?.msgCodeError);
+          },
+
         );
         break;
       }
@@ -1296,6 +1314,12 @@ export class CodxShareService {
       text: 'Làm lại',
       color: '#FFA800',
     };
+    // var authority = {
+    //   functionID: 'SYS209',
+    //   text: 'Ủy quyền',
+    //   color: '#FFA800',
+    // };
+    //listApproveMF.push(ll, tc,authority);
     listApproveMF.push(ll, tc);
     return listApproveMF;
   }

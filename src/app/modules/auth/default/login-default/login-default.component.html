@@ -20,7 +20,7 @@
                   <!--end::Login Header-->
                   <!--begin::Login Sign in form-->
                   <div class="login-signin text-dark">
-                    <div class="text-start mb-10 mt-3">
+                    <div class="text-start mb-5 mt-9">
                       <h3 class="fw-bolder fs-2">
                         <codx-label fiedName="Title" formModel="" default="Chào mừng bạn
                                                 đến với chúng tôi"></codx-label>
@@ -60,7 +60,7 @@
                               <form class="form fv-plugins-bootstrap fv-plugins-framework" method="post"
                                 (ngSubmit)="submit('otp')" [formGroup]="loginForm"
                                 class="form fv-plugins-bootstrap fv-plugins-framework" novalidate="novalidate">
-                                <div class="form-group mb-5 fv-plugins-icon-container">
+                                <div class="form-group mb-5 fv-plugins-icon-container mt-5">
                                   <label class="fw-bold">
                                     <codx-label fiedName="Account" formModel="" default="Tài khoản"></codx-label>
                                   </label>
@@ -162,37 +162,24 @@
                                   <div class="qr-codx-msg mt-3 text-center">
                                     <codx-label class="fs-7 text-gray-600"
                                       default="Chỉ dùng đăng nhập CoDX trên máy tính"></codx-label>
-                                    <!-- <button
-                                      type="button"
-                                      (click)="testQR()"
-                                      tabindex="-1"
-                                      class="btn link-dark text-decoration-none border border-primary btn-primary"
-                                    >
-                                      <codx-label
-                                        formModel=""
-                                        class="text-primary"
-                                        default="Test QR"
-                                      ></codx-label>
-                                    </button> -->
                                   </div>
                                 </div>
                                 <div class="d-flex align-items-center" *ngIf="qrTimeout > 0">
                                   <codx-label formModel="" default="Xác thực sẽ hết hạn sau ">
                                   </codx-label>
-                                  <span class="ms-2 fw-bold text-danger">
+                                  <span class="ms-1 link-primary cursor-pointer" (click)="generateQR()">
+                                    (<codx-label formModel="" default="Lấy mã mới"></codx-label>)
+                                  </span>
+                                  <span class="ms-1 fw-bold text-danger">
                                     {{ qrTimeoutMinutes }}:{{ qrTimeout % 60 }}
                                   </span>
+                                </div>
+                                <div class="d-flex mt-3" >
+                                  
                                 </div>
                                 <div class="qr-codx-guid d-flex flex-column text-center mt-2">
                                   <codx-label class="fw-bold text-dark fs-6"
                                     default="Sử dụng ứng dụng CoDX trên điện thoại để quét mã QR"></codx-label>
-                                  <!-- <button
-                                    clas="btn btn-primary"
-                                    (click)="openScanQRGuid()"
-                                    tabindex="-1"
-                                  >
-                                    
-                                  </button> -->
                                   <div class="mt-3">
                                     <button type="button" class="btn btn-primary" (click)="openScanQRGuid()">
                                       <codx-label class="text-primary" default="Hướng dẫn quét"></codx-label>
@@ -210,7 +197,7 @@
                       <form class="form fv-plugins-bootstrap fv-plugins-framework" method="post" (ngSubmit)="submit('')"
                         [formGroup]="loginForm" class="form fv-plugins-bootstrap fv-plugins-framework"
                         novalidate="novalidate">
-                        <div class="form-group mb-5 fv-plugins-icon-container">
+                        <div class="form-group mb-5 fv-plugins-icon-container mt-5">
                           <label class="fw-bold">
                             <codx-label fiedName="Account" formModel="" default="Tài khoản"></codx-label>
                           </label>
@@ -293,7 +280,7 @@
                   <!--end::Login Sign in form-->
                 </div>
                 <!--begin: Aside footer for desktop-->
-                <div class="d-flex flex-column-auto justify-content-between" [class]="externalLogin ? 'mt-5' : 'mt-15'">
+                <div class="d-flex flex-column-auto justify-content-between" [class]="externalLogin ? 'mt-5' : 'mt-5'">
                   <div class="text-gray-700 order-2 order-sm-1 my-2">
                     Khi đăng nhập, bạn đồng ý với các
                     <a href="#" class="link-dark"> điều kiện và điều khoản</a>
@@ -324,17 +311,21 @@
               </div>
               <div class="d-flex align-items-center">
                 <div class="d-flex flex-column align-items-center" *ngIf="environment.layout.appleStore">
-                  <ejs-qrcodegenerator width="120px" height="120px" mode="SVG" [displayText] = 'qrDisplayText' value="{{environment.layout.appleStore}}"></ejs-qrcodegenerator>
-                  <a href="{{environment.layout.appleStore}}" style="position:relative;bottom:25px;"><img class="mx-3 h-60px cursor-pointer" src="./assets/themes/sys/default/img/appstore.png" /></a>
+                  <ejs-qrcodegenerator width="120px" height="120px" mode="SVG" [displayText]='qrDisplayText'
+                    value="{{environment.layout.appleStore}}"></ejs-qrcodegenerator>
+                  <a href="{{environment.layout.appleStore}}" style="position:relative;bottom:25px;"><img
+                      class="mx-3 h-60px cursor-pointer" src="./assets/themes/sys/default/img/appstore.png" /></a>
                 </div>
                 <div class="d-flex flex-column align-items-center" *ngIf="environment.layout.playStore">
-                  <ejs-qrcodegenerator width="120px" height="120px" mode="SVG" [displayText] = 'qrDisplayText' value="{{environment.layout.playStore}}"></ejs-qrcodegenerator>
-                  <a href="{{environment.layout.playStore}}" style="position:relative;bottom:25px;"><img class="h-55px cursor-pointer" src="./assets/themes/sys/default/img/chplay.png"/></a>
+                  <ejs-qrcodegenerator width="120px" height="120px" mode="SVG" [displayText]='qrDisplayText'
+                    value="{{environment.layout.playStore}}"></ejs-qrcodegenerator>
+                  <a href="{{environment.layout.playStore}}" style="position:relative;bottom:25px;"><img
+                      class="h-55px cursor-pointer" src="./assets/themes/sys/default/img/chplay.png" /></a>
                 </div>
               </div>
               <!--end::Content body-->
             </div>
-            
+
             <!--end::Content-->
           </div>
         </div>
@@ -360,7 +351,7 @@
                     </a>
                   </div>
                   <div class="login-signin text-dark">
-                    <div class="text-start mb-10 mt-3">
+                    <div class="text-start mb-5 mt-9">
                       <h3 class="fw-bolder fs-2">
                         <codx-label fiedName="ChangePassword" formModel="" default="Thay đổi mật khẩu"></codx-label>
                       </h3>
@@ -368,7 +359,7 @@
                     <span #Error></span>
                     <form method="post" id="frm_erm_login" (ngSubmit)="submitChangePass()" [formGroup]="changePassForm"
                       class="form fv-plugins-bootstrap fv-plugins-framework" novalidate="novalidate">
-                      <div class="form-group mb-5 fv-plugins-icon-container" #groupemail>
+                      <div class="form-group mb-5 fv-plugins-icon-container mt-5" #groupemail>
                         <label class="fw-bold">
                           <codx-label fiedName="Account" formModel="" default="Tài khoản"></codx-label></label>
                         <div class="d-flex align-items-center form-control form-control-solid form-control-lg px-3">
@@ -481,7 +472,7 @@
                     </form>
                   </div>
                 </div>
-                <div class="d-flex flex-column-auto justify-content-between mt-15">
+                <div class="d-flex flex-column-auto justify-content-between mt-5">
                   <div class="text-gray-700 order-2 order-sm-1 my-2">
                     Khi đăng nhập, bạn đồng ý với các<a href="#" class="text-underline link-dark">
                       điều kiện và điều khoản</a><br />
@@ -530,13 +521,13 @@
                     </a>
                   </div>
                   <div class="login-signin text-dark">
-                    <div class="text-start mb-10 mt-3">
+                    <div class="text-start mb-5 mt-9">
                       <h3 class="fw-bolder fs-2">Tạo mật khẩu</h3>
                     </div>
                     <span #Error></span>
                     <form method="post" id="frm_erm_login" (ngSubmit)="submitFirstLogin()" [formGroup]="firstLoginForm"
                       class="form fv-plugins-bootstrap fv-plugins-framework" novalidate="novalidate">
-                      <div class="form-group mb-5 fv-plugins-icon-container" #groupemail>
+                      <div class="form-group mb-5 fv-plugins-icon-container mt-5" #groupemail>
                         <label class="fw-bold">
                           <codx-label fiedName="Account" formModel="" default="Tài khoản"></codx-label></label>
                         <div class="d-flex align-items-center form-control form-control-solid form-control-lg px-3">
@@ -595,7 +586,7 @@
                     </form>
                   </div>
                 </div>
-                <div class="d-flex flex-column-auto justify-content-between mt-15">
+                <div class="d-flex flex-column-auto justify-content-between mt-5">
                   <div class="text-gray-700 order-2 order-sm-1 my-2">
                     Khi đăng nhập, bạn đồng ý với các<a href="#" class="text-underline link-dark">
                       điều kiện và điều khoản</a><br />
@@ -645,14 +636,14 @@
                     </a>
                   </div>
                   <div class="login-signin text-dark">
-                    <div class="text-start mb-10 mt-10">
+                    <div class="text-start mb-6 mt-10">
                       <h3 class="fw-bold">
                         <codx-label fiedName="activeTenantLabel" formModel=""
                           default="Kích hoạt tài khoản"></codx-label>
                       </h3>
                     </div>
                     <span #Error></span>
-                    <div class="form-group mb-5 fv-plugins-icon-container">
+                    <div class="form-group mb-5 fv-plugins-icon-container mt-5">
                       <label class="fw-bold">
                         <codx-label fiedName="Account" formModel="" default="Tài khoản"></codx-label></label>
                       <div class="d-flex align-items-center form-control form-control-solid form-control-lg px-3">
@@ -681,7 +672,7 @@
                     </form> -->
                   </div>
                 </div>
-                <div class="d-flex flex-column-auto justify-content-between mt-15">
+                <div class="d-flex flex-column-auto justify-content-between mt-5">
                   <div class="text-gray-700 order-2 order-sm-1 my-2">
                     Khi đăng nhập, bạn đồng ý với các<a href="#" class="text-underline link-dark">
                       điều kiện và điều khoản</a><br />
