@@ -493,6 +493,9 @@ export class ContractsComponent extends UIComponent {
       case 'CM0204_20': // không sử dụng quy trình
         this.updateProcess(data, false);
         break;
+      // case 'SYS004': // không sử dụng quy trình
+      //   this.sendMail(data);
+      //   break;
       default: {
         // var customData = {
         //   refID: data.recID,
@@ -515,6 +518,14 @@ export class ContractsComponent extends UIComponent {
         break;
       }
     }
+  }
+
+  sendMail(data){
+    this.cmService.sendMail(data).subscribe(res => {
+      if(res){
+
+      }
+    });
   }
 
   updateProcess(data, isCheck) {
@@ -1021,8 +1032,9 @@ export class ContractsComponent extends UIComponent {
             if (process.approveRule)
               this.approvalTransAction(dt, process.processNo);
             else
-              this.notiService.notifyCode(
-                'Quy trình đang thực hiện chưa bật chức năng ký duyệt !'
+              this.notiService.notify(
+                'Quy trình đang thực hiện chưa bật chức năng ký duyệt !',
+                '3'
               );
           } else {
             this.notiService.notifyCode('DP040');
@@ -1031,8 +1043,9 @@ export class ContractsComponent extends UIComponent {
       } else {
         if (this.approveRule == '1') this.approvalTransAction(dt, 'ES_CM0502');
         else
-          this.notiService.notifyCode(
-            'Thiết lập hệ thống chưa bật chức năng ký duyệt !'
+          this.notiService.notify(
+            'Thiết lập hệ thống chưa bật chức năng ký duyệt !',
+            '3'
           );
       }
     }

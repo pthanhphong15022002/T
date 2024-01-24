@@ -429,11 +429,13 @@ export class PopupSignForApprovalComponent extends UIComponent {
         switch (this.signerInfo?.supplier) {
           //usb
           case '5': {
+            let urlUpload = this.pdfView?.env.urlUpload+'/';
+            let shortFileURL = this.pdfView?.curFileUrl?.replace(urlUpload,'');
             this.esService
               .getSignContracts(
                 this.sfRecID,
                 this.pdfView.curFileID,
-                this.pdfView.curFileUrl,
+                shortFileURL,
                 this.stepNo
               )
               .subscribe(async (lstContract) => {

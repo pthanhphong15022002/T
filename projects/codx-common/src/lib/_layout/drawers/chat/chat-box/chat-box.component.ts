@@ -462,7 +462,7 @@ export class CodxChatBoxComponent implements OnInit, AfterViewInit {
       this.message = "";
       this.isReply = false;
       this.replyTo = "";
-      this.blocked = false;
+      this.blocked = false;this.mssgReply=null;
       this.dt.detectChanges();
     }
   }

@@ -6,9 +6,10 @@ import {
   SimpleChanges,
   ChangeDetectorRef,
 } from '@angular/core';
+import { Location } from '@angular/common';
 import { CodxCmService } from '../../codx-cm.service';
 import { CM_Contracts, CM_Customers, CM_Deals } from '../../models/cm_model';
-import { ApiHttpService, CacheService, CallFuncService, DialogData, DialogRef, FormModel, NotificationsService, SidebarModel} from 'codx-core';
+import { ApiHttpService, CacheService, CallFuncService, DialogData, DialogRef, FormModel, NotificationsService, SidebarModel, TenantStore} from 'codx-core';
 import { ContractsService } from '../../contracts/service-contracts.service';
 import { PopupMoveStageComponent } from 'projects/codx-dp/src/lib/instances/popup-move-stage/popup-move-stage.component';
 
@@ -103,6 +104,8 @@ export class ViewDealDetailComponent implements OnInit, OnChanges {
     private contractService: ContractsService,
     private notiService: NotificationsService,
     private changeDetectorRef: ChangeDetectorRef,
+    private location: Location,
+    private tenantStore: TenantStore,
     private api: ApiHttpService,
     private callFunc: CallFuncService,
     @Optional() dt?: DialogData,
@@ -564,6 +567,24 @@ export class ViewDealDetailComponent implements OnInit, OnChanges {
           });
         });
     });
+  }
+
+  viewContact(){
+    if (this.deal.currencyID) {
+      const url1 = this.location.prepareExternalUrl(this.location.path());
+      const parser = document.createElement('a');
+      parser.href = url1;
+      const domain = parser.origin;
+
+      let tenant = this.tenantStore.get().tenant;
+      let url = `${domain}/${tenant}/cm/customers/CM0101?predicate=RecID=@0&dataValue=${this.deal.customerID}`;
+      if(url){
+        window.open(url, '_blank');
+      }
+      return;
+    } else {
+      this.notiService.notify('Khách hàng không tồn tại', '3');
+    }
   }
 }
 
