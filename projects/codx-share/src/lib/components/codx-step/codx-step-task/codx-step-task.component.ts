@@ -117,7 +117,6 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
   @Input() leadName: string;
   @Input() instanceName: string;
 
-
   @Output() saveAssign = new EventEmitter<any>();
   @Output() continueStep = new EventEmitter<any>();
   @Output() isChangeProgress = new EventEmitter<any>();
@@ -331,18 +330,18 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
     this.changeDetectorRef.markForCheck();
   }
 
-  getTransferControlStep(){
-    if(this.processID && this.currentStep?.stepID){
-      this.api.exec<any>(
-        'DP',
-        'ProcessesBusiness',
-        'GetTransferControlStepAsync',
-        [this.processID, this.currentStep?.stepID]
-      ).subscribe((res) => {
-        if(res){
-          this.transferControl = res;
-        }
-      })
+  getTransferControlStep() {
+    if (this.processID && this.currentStep?.stepID) {
+      this.api
+        .exec<any>('DP', 'ProcessesBusiness', 'GetTransferControlStepAsync', [
+          this.processID,
+          this.currentStep?.stepID,
+        ])
+        .subscribe((res) => {
+          if (res) {
+            this.transferControl = res;
+          }
+        });
     }
   }
 
@@ -1882,7 +1881,7 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
         (data?.taskType == 'Q' || data?.taskType == 'CO') &&
         !data?.objectLinked
       ) {
-        this.notiService.notify('Hợp đồng chưa được tạo',"3");
+        this.notiService.notify('Hợp đồng chưa được tạo', '3');
         return;
       }
       let checkTaskLink = this.stepService.checkTaskLink(
@@ -2085,15 +2084,16 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
           );
           index >= 0 && groupFind?.task?.splice(index, 1, dataCopy);
         }
-        if (dataProgress?.progressTask == 100 && this.transferControl != "0") {
-          if(this.transferControl == "2"){
-            let isTaskEnd = dataProgress.taskID == this.idTaskEnd ? true : false;
-            if(isTaskEnd){
+        if (dataProgress?.progressTask == 100 && this.transferControl != '0') {
+          if (this.transferControl == '2') {
+            let isTaskEnd =
+              dataProgress.taskID == this.idTaskEnd ? true : false;
+            if (isTaskEnd) {
               this.continueStep.emit(true);
             }
-          }else if(this.transferControl == "1"){
-            let check = this.currentStep?.tasks?.some(x => x?.progress < 100);
-            if(!check){
+          } else if (this.transferControl == '1') {
+            let check = this.currentStep?.tasks?.some((x) => x?.progress < 100);
+            if (!check) {
               this.continueStep.emit(true);
             }
           }
@@ -2929,9 +2929,6 @@ export class CodxStepTaskComponent implements OnInit, OnChanges {
               }
             }
           });
-          console.log(res);
-          console.log(this.listGroupTask);
-          console.log(this.currentStep);
         }
       });
   }

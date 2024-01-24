@@ -52,7 +52,6 @@ export class AddUserComponent extends UIComponent implements OnInit {
   header = '';
   dialog!: DialogRef;
   dialogRole: DialogRef;
-  data: any;
   readOnly = false;
   // isAddMode = true;
   user: any;
@@ -63,15 +62,11 @@ export class AddUserComponent extends UIComponent implements OnInit {
   countListViewChooseRoleService: number = 0;
   viewChooseRole: tmpformChooseRole[] = [];
   viewChooseRoleTemp: tmpformChooseRole[] = [];
-  // lstChangeModule: tmpTNMD[] = [];
   formModel: FormModel;
   formType: any;
   gridViewSetup: any = [];
-  // checkBtnAdd = false;
-  // saveSuccess = false;
   isSaved = false;
-  isSaving = false; //calling api
-
+  isSaving = false;
   dataAfterSave: any;
   countOpenPopRoles = 0;
   formUser: FormGroup;
@@ -101,39 +96,34 @@ export class AddUserComponent extends UIComponent implements OnInit {
     super(injector);
     this.isSaas = environment.saas == 1;
     this.formType = dt?.data?.formType;
-    this.data = dialog.dataService!.dataSelected;
+    this.adUser = { ...dt?.data?.data };
     this.dataCopy = dt?.data?.dataCopy;
     this.funcID = dt?.data?.funcID;
-    this.adUser = JSON.parse(JSON.stringify(this.data));
     if (this.formType == 'invite') {
       this.isSaved = false;
-      this.viewChooseRole = this.data?.chooseRoles;
-      this.adUser.chooseRoles = this.viewChooseRole;
-      if (this.data?.chooseRoles)
+      this.viewChooseRole = this.adUser?.chooseRoles;
+      if (this.adUser?.chooseRoles)
         this.viewChooseRoleTemp = JSON.parse(
-          JSON.stringify(this.data?.chooseRoles)
+          JSON.stringify(this.adUser?.chooseRoles)
         );
       this.adUser['phone'] = this.adUser.mobile;
       this.countListViewChoose();
     } else if (this.formType == 'edit') {
       this.isSaved = true;
-
-      this.viewChooseRole = this.data?.chooseRoles;
-      this.adUser.chooseRoles = this.viewChooseRole;
-      if (this.data?.chooseRoles)
+      this.viewChooseRole = this.adUser?.chooseRoles;
+      if (this.adUser?.chooseRoles)
         this.viewChooseRoleTemp = JSON.parse(
-          JSON.stringify(this.data?.chooseRoles)
+          JSON.stringify(this.adUser?.chooseRoles)
         );
       this.adUser['phone'] = this.adUser.mobile;
       this.countListViewChoose();
     } else if (this.formType == 'view') {
       this.isSaved = true;
       this.isSaving = true;
-      this.viewChooseRole = this.data?.chooseRoles;
       this.adUser.chooseRoles = this.viewChooseRole;
-      if (this.data?.chooseRoles)
+      if (this.adUser?.chooseRoles)
         this.viewChooseRoleTemp = JSON.parse(
-          JSON.stringify(this.data?.chooseRoles)
+          JSON.stringify(this.adUser?.chooseRoles)
         );
       this.countListViewChoose();
     } else if (this.formType == 'copy') {
@@ -386,7 +376,6 @@ export class AddUserComponent extends UIComponent implements OnInit {
                     .updateFileDirectReload(this.adUser.userID)
                     .subscribe((result) => {
                       if (result) {
-                        this.loadData.emit();
                         this.dialog.close(this.adUser);
                       }
                     });
