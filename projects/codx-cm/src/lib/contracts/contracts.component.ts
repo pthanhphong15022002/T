@@ -493,6 +493,9 @@ export class ContractsComponent extends UIComponent {
       case 'CM0204_20': // không sử dụng quy trình
         this.updateProcess(data, false);
         break;
+      // case 'SYS004': // không sử dụng quy trình
+      //   this.sendMail(data);
+      //   break;
       default: {
         // var customData = {
         //   refID: data.recID,
@@ -515,6 +518,14 @@ export class ContractsComponent extends UIComponent {
         break;
       }
     }
+  }
+
+  sendMail(data){
+    this.cmService.sendMail(data).subscribe(res => {
+      if(res){
+
+      }
+    });
   }
 
   updateProcess(data, isCheck) {
