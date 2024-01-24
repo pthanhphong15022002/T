@@ -167,15 +167,15 @@
                                 <div class="d-flex align-items-center" *ngIf="qrTimeout > 0">
                                   <codx-label formModel="" default="Xác thực sẽ hết hạn sau ">
                                   </codx-label>
-                                  <span class="ms-2 fw-bold text-danger">
+                                  <span class="ms-1 link-primary cursor-pointer" (click)="generateQR()">
+                                    (<codx-label formModel="" default="Lấy mã mới"></codx-label>)
+                                  </span>
+                                  <span class="ms-1 fw-bold text-danger">
                                     {{ qrTimeoutMinutes }}:{{ qrTimeout % 60 }}
                                   </span>
                                 </div>
-                                <div class="d-flex mt-3" *ngIf="qrTimeout > 0">
-                                  <button class="btn link-dark border border-0 btn-primary" debounceClick
-                                    (debounceClick)="generateQR()" [debounceTime]="300">
-                                    <codx-label formModel="" default="Lấy mã mới"></codx-label>
-                                  </button>
+                                <div class="d-flex mt-3" >
+                                  
                                 </div>
                                 <div class="qr-codx-guid d-flex flex-column text-center mt-2">
                                   <codx-label class="fw-bold text-dark fs-6"
