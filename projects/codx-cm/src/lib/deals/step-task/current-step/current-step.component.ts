@@ -81,7 +81,11 @@ export class CurrentStepComponent implements OnInit, OnChanges {
     gridViewName: 'grvCMLeads',
     entityName: 'CM_Leads',
   };
-
+  formModelContact = {
+    formName: 'CMContacts',
+    entityName: 'CM_Contacts',
+    gridViewName: 'grvCMContacts',
+  };
   listTabLeft = [
     {
       id: 'listTabInformation',
@@ -90,10 +94,13 @@ export class CurrentStepComponent implements OnInit, OnChanges {
       type: '1',
     },
   ];
+
   listTabInformation = [
-    { id: 'costItems', name: 'Chi phí' },
-    { id: 'opponent', name: 'Đối thủ' },
-    { id: 'note', name: 'Ghi chú' },
+    { id: 'information', name: 'Thông tin dự án'},
+    { id: 'costItems', name: 'Chi phí'},
+    { id: 'fields', name: 'Thông tin mở rộng'},
+    { id: 'opponent', name: 'Đối thủ'},
+    { id: 'note', name: 'Ghi chú'},
   ];
   totalCost: any;
   isUpDealCost = false;
