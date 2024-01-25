@@ -90,7 +90,7 @@
                                 <div [ngClass]="user?.userID == item?.createdBy ?'bg-mssg-send':'bg-mssg-recive'"
                                     class="ps-4 pe-4 py-2 rounded-3 sender-mssg d-flex align-items-end justify-content-end w-100 position-relative">
                                     <div class="mssg-box">
-                                        <div *ngIf="group?.groupType == '2' && user?.userID == item?.createdBy && (idx == 0 || (idx > 0 && (arrMessages[idx-1]?.messageType=='3' || item?.createdName != arrMessages[idx-1]?.createdName )))"
+                                        <div *ngIf="group?.groupType == '2' && user?.userID != item?.createdBy && (idx == 0 || (idx > 0 && (arrMessages[idx-1]?.messageType=='3' || item?.createdName != arrMessages[idx-1]?.createdName )))"
                                             class="pb-1 mssg-owner fs-8 text-gray-600 "> {{item?.createdName}} 
                                         </div>
                                         <div *ngIf="item?.refID && item?.messageType == '4'" class="mssg-reply  d-flex flex-row pb-2">
@@ -108,9 +108,8 @@
                                             <div class="mssg-reply-info d-flex flex-column justify-content-start d-flex align-items-start">
                                                 <div class="mssg-sender fw-bolder text-gray-700">
                                                     {{item?.refContent?.createdName}}</div>
-                                                <div *ngIf="item?.refContent?.content !=null"
-                                                    class="mssg-reply-text fs-6 text-gray-500">
-                                                    {{item?.refContent?.content ??item?.refContent?.refFileName}}
+                                                <div class="mssg-reply-text fs-6 text-gray-500">
+                                                    {{ item?.refContent?.content ?? item?.refFileName}}
                                                 </div>
                                                 <div *ngIf="item?.refContent?.type == '2' && item?.refFileType != 'image'&& item?.refFileType != 'video'">
                                                     <codx-view-files [objectID]="item?.refID" [objectType]="'WP_Messages'"
