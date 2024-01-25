@@ -306,9 +306,7 @@
     </div>
     <div class="w-15 p-3 d-flex flex-wrap">
       <ng-container *ngIf="data?.permissions?.length > 0">
-        <div
-          *ngFor="let item of data?.permissions; let i = index"
-        >
+        <div *ngFor="let item of data?.permissions; let i = index">
           <ng-container *ngIf="i < 2">
             <span class="position-relative m-w-90">
               <span class="d-flex align-items-center bagde-per me-1 mb-1">
@@ -341,6 +339,7 @@
         <div class="me-3">
           <codx-img
             [objectId]="data.createdBy"
+            [objectName]="data.userName"
             [objectType]="'AD_Users'"
             [width]="35"
           >
@@ -348,15 +347,10 @@
         </div>
         <div class="d-flex flex-column w-100">
           <div class="d-flex flex-column">
-            <div
-              class="fw-bold fs-6 text-dark line-clamp line-clamp-1"
-              [innerHTML]="
-                data?.createdBy
-                  | formatvalue : view.formModel : 'CreatedBy'
-                  | async
-              "
-            ></div>
-            <div class="text-gray-500">Trưởng phòng nhân sự</div>
+            <div class="fw-bold fs-6 text-dark line-clamp line-clamp-1">
+              {{ data.userName }}
+            </div>
+            <div class="text-gray-500">{{ data.positionName }}</div>
           </div>
         </div>
       </div>
