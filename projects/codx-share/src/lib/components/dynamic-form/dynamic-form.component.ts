@@ -87,38 +87,48 @@ export class DynamicFormComponent extends UIComponent {
         id: 'btnAdd',
       },
     ];
-    if(this.funcID == "FDS025"){
-      this.getGridViewSetup();
-    }
-  }
-
-  getGridViewSetup() {
-    this.cache.gridViewSetup("FDIndustries", "grvFDIndustries").subscribe((grv) => {
-      if(grv){
-        const colums = {
-          field: Util.camelize("Note"),
-          headerText: grv["Note"].headerText,
-          width: grv["Note"].width,
-          template: this.note,
-        };
-        this.columnsGrid.push(colums);
-      }
-    });
   }
 
   ngAfterViewInit(): void {
-    this.views = [
-      {
-        type: ViewType.grid,
-        sameData: true,
-        active: true,
-        model: {
-          resources: this.columnsGrid,
-          template2: this.morefunction,
-          //frozenColumns: 1,
+    if(this.funcID == "FDS025"){
+      this.cache.gridViewSetup("FDIndustries", "grvFDIndustries").subscribe((grv) => {
+        if(grv){
+          const colums = {
+            field: Util.camelize("Note"),
+            headerText: grv["Note"].headerText,
+            width: grv["Note"].width,
+            template: this.note,
+          };
+          this.columnsGrid = [colums];
+          this.views = [
+            {
+              type: ViewType.grid,
+              sameData: true,
+              active: true,
+              model: {
+                resources: this.columnsGrid,
+                template2: this.morefunction,
+                //frozenColumns: 1,
+              },
+            },
+          ];
+        }
+      });
+    } else {
+      this.views = [
+        {
+          type: ViewType.grid,
+          sameData: true,
+          active: true,
+          model: {
+            //resources: this.columnsGrid,
+            template2: this.morefunction,
+            //frozenColumns: 1,
+          },
         },
-      },
-    ];
+      ];
+    }
+    
 
     // console.log('view ne', this.views);
     // console.log('view base ne', this.viewBase);
