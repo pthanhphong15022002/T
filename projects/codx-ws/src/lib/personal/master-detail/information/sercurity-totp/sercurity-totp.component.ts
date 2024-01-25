@@ -115,6 +115,7 @@ export class SercurityTOTPComponent implements OnInit , AfterViewInit {
         [data,this.twoFA]
       )
       .subscribe((res) => {
+        debugger
         if(res) this.dialog.close(true);
         else this.dialog.close(false);
       });

@@ -158,6 +158,10 @@ export class PopupAddProcessComponent {
   }
 
   ngOnInit(): void {
+
+  }
+
+  ngAfterViewInit(): void {
     if (this.action == 'edit') {
       this.getAvatar(this.data?.recID, this.data?.processName);
       this.extendInfos =
@@ -170,9 +174,8 @@ export class PopupAddProcessComponent {
     }
     this.getCacheCbxOrVll();
     this.getVll();
+    this.detectorRef.detectChanges();
   }
-
-  ngAfterViewInit(): void {}
 
   onDestroy() {
     this.destroyFrom$.next();
@@ -425,6 +428,9 @@ export class PopupAddProcessComponent {
         this.updateNodeStatus(oldNode, newNode);
         this.processTab++;
         this.currentTab++;
+        this.updateProcessStep().subscribe(item=>{
+          this.dialog.dataService.update(item, true).subscribe();
+        });
         break;
       case 2:
         this.updateNodeStatus(oldNode, newNode);
@@ -854,7 +860,15 @@ export class PopupAddProcessComponent {
     let data = [];
     op.className = 'ProcessesBusiness';
     op.service = 'BP';
+    if(this.data?.steps?.length > 0){
+      this.data?.steps?.forEach((ele) => {
+        if(typeof ele.settings !== 'string'){
+          ele.settings = JSON.stringify(ele.settings);
+        }
+      });
+    }
     data = [this.data];
+
     if (this.action == 'add' || this.action == 'copy') {
       op.methodName = 'AddProcessAsync';
     } else {
@@ -876,5 +890,15 @@ export class PopupAddProcessComponent {
       'AddProcessAsync',
       this.data
     );
+  }
+  updateProcessStep()
+  {
+    let result = JSON.parse(JSON.stringify(this.data));
+    result.steps.forEach((elm :any)=>{
+      delete elm.child;
+
+      if(typeof elm.settings === 'object')  elm.settings = JSON.stringify(elm.settings);
+    })
+    return this.api.execSv("BP","BP","ProcessesBusiness","UpdateProcessAsync",result);
   }
 }

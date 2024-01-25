@@ -41,6 +41,7 @@ import {
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { Login2FAComponent } from './login2-fa/login2-fa.component';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
+import { WaitingLoginQrcodeComponent } from '../default/waiting-login-qrcode/waiting-login-qrcode.component';
 
 @Component({
   selector: 'app-login',
@@ -157,21 +158,39 @@ export class LoginComponent extends UIComponent implements OnInit, OnDestroy {
     this.initForm();
 
     // get return url from route parameters or default to '/'
-    this.returnUrl =
-      this.router.snapshot.queryParams['returnUrl'.toString()] || '/';
+    this.returnUrl = this.router.snapshot.queryParams['returnUrl'.toString()] || '/';
+
     this.realHub.start('ad').then((x: RealHub) => {
-      let t = this;
-      x.$subjectReal.asObservable().subscribe((z) => {
-        if (z.event == 'Connected') {
-          t.hubConnectionID = x.hub["_connectionId"];
-        }
-      })
-      //let t = this;
-      //t.hubConnectionID =x.hub["_connectionId"];
-      // x.hub.invoke('GetConnectionId').then(function (connectionId) {
-      //   t.realHub['hubConnectionID'] = connectionId;
-      //   t.hubConnectionID = connectionId;
-      // });
+      if (x) {
+        x.$subjectReal.asObservable().subscribe((z) => {
+          if (z.event == 'Connected') {
+            this.hubConnectionID = x.hub["_connectionId"];
+          } else if (z.event == 'AcceptLoginQR') {
+            if (z.data?.hubConnection == this.hubConnectionID) {
+              this.authService.setLogin(JSON.parse(z.data.user));
+              this.realHub.stop();
+              setTimeout(() => {
+                window.location.href = z.data?.host + z.data?.tenant;
+              }, 1000);
+            }
+          } else if (z.event == 'WaitingLoginQRCode') {
+            let objData = {
+              userName: z.data.userName,
+            };
+            let waitingLogin = this.callfc.openForm(
+              WaitingLoginQrcodeComponent,
+              '',
+              400,
+              600,
+              '',
+              objData
+            );
+            waitingLogin.closed.subscribe();
+          } else if (z.event == 'CancelLoginQR') {
+            window.location.reload();
+          }
+        });
+      }
     });
   }
 
