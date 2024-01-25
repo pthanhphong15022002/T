@@ -46,6 +46,8 @@ export class TreeViewComponent implements OnInit, AfterViewInit {
   @Input() filter: any;
   @Input() favoriteID = '00000000-0000-0000-0000-000000000009';
   @Input() favoriteName = '';
+  @Input() searchText: any;
+
   isShow = true;
   isClose = false;
   pageSize = 20;
@@ -101,6 +103,7 @@ export class TreeViewComponent implements OnInit, AfterViewInit {
     this.gridModelTree.page = this.page;
     this.gridModelTree.filter = this.filter;
     this.gridModelTree.favoriteID = this.favoriteID;
+    this.gridModelTree.searchText = this.searchText;
     this.loadData();
     //cu ne
     // var gridModel = new DataRequest();

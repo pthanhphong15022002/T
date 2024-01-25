@@ -40,6 +40,7 @@
     [dataObj]="dataObj"
     [filter]="view.dataService.filter"
     [favoriteID]="view.dataService.favoriteID"
+    [searchText]="view.dataService.searchText"
     [showMoreFunc]="showMoreFunc"
     (clickMoreFunction)="receiveMF($event)"
     (changeMoreFunction)="receiveChangeMF($event)"
@@ -724,14 +725,28 @@
       container="body"
       autoClose="outside"
     >
-      <codx-imgs
-        [isToolTip]="false"
-        [width]="25"
-        [objectId]="data?.assignTo"
-        objectType="AD_Users"
-        [numberImages]="3"
+      <ng-container
+        *ngFor="let assgin of data?.assignTo?.split(';'); let i = index"
       >
-      </codx-imgs>
+        <ng-container *ngIf="i < 2">
+          <codx-img [width]="25" [objectId]="assgin" objectType="AD_Users"></codx-img>
+        </ng-container>
+        <ng-container *ngIf="i == 2">
+          <div
+            class="symbol symbol-25px symbol-circle"
+            ng-reflect-ng-class="symbol-circle,"
+          >
+            <div
+              class="align-items-center d-flex h-25px justify-content-center rounded-circle text-white w-25px"
+              style="background-color: rgb(160 161 161);"
+            >
+              <span style="font-size: 14px">
+                {{ data?.assignTo?.split(';')?.length - 3 }}+</span
+              >
+            </div>
+          </div>
+        </ng-container>
+      </ng-container>
     </div>
     <div *ngIf="data.category == '2'">
       <codx-imgs
