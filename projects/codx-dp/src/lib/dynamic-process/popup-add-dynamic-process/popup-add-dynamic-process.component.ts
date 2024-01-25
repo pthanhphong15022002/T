@@ -3867,6 +3867,10 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
   }
 
   async changeDataMF(e, type, step?) {
+    if(type == 'group'){
+      console.log('ok');
+      
+    }
     if (e != null) {
       e.forEach((res) => {
         switch (res.functionID) {

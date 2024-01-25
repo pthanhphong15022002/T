@@ -134,7 +134,10 @@
                                                     [format]="item?.fileType == 'image'||item?.fileType == 'video'?'grid':''"
                                                     (selectFile)="clickViewFile($event)">
                                                 </codx-view-files>
-
+                                                <!-- time -->
+                                                <ng-container *ngIf="idx == arrMessages?.length - 1 || item?.createdBy != arrMessages[idx+1]?.createdBy">
+                                                    <div class="d-block text-start fw-light">{{item?.createdOn | date:'hh:mm'}}</div>
+                                                </ng-container>
                                             </div>
                                             <!--Deleted-->
                                             <ng-container *ngIf="item?.messageType == '5'">

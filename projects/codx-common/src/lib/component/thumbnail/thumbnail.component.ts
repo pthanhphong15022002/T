@@ -140,17 +140,20 @@ export class ThumbnailComponent implements OnInit, OnChanges {
     return data;
   }
 
-  openPermission(data) {
-    this.dmSV.dataFileEditing = data;
-    this.callfc.openForm(
-      RolesComponent,
-      this.titleRolesDialog,
-      950,
-      650,
-      '',
-      [''],
-      ''
-    );
+  openPermission(data:any) {
+    this.fileService.getFile(data.recID).subscribe((item) => {
+      this.dmSV.dataFileEditing = item;
+      this.callfc.openForm(
+        RolesComponent,
+        this.titleRolesDialog,
+        950,
+        650,
+        '',
+        [''],
+        ''
+      );
+    });
+   
   }
 
   hideMore() {
@@ -335,15 +338,17 @@ export class ThumbnailComponent implements OnInit, OnChanges {
   }
 
   editfile(file, multi = false, index = 0) {
-    this.callfc.openForm(
-      EditFileComponent,
-      this.titleEditFileDialog,
-      800,
-      800,
-      '',
-      ['', file],
-      ''
-    );
+    this.fileService.getFile(file.recID).subscribe((item) => {
+      this.callfc.openForm(
+        EditFileComponent,
+        this.titleEditFileDialog,
+        800,
+        800,
+        '',
+        ['', item],
+        ''
+      );
+    })
   }
 
   formatBytes(bytes, decimals = 2) {

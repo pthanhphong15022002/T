@@ -1812,4 +1812,14 @@ export class CodxCmService {
       [refInstance, refStepID, customField]
     );
   }
+
+  sendMail(data) {
+    return this.api.exec<any>(
+      'CM',
+      'ContractsBusiness',
+      'SendMailAsync',
+      [data]
+    );
+  }
+
 }

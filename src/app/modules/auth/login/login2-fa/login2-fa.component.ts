@@ -106,14 +106,7 @@ export class Login2FAComponent extends UIComponent implements AfterViewInit {
     this.cache.valueList('SYS060').subscribe((vll) => {
       this.lstOptions = vll?.datas.filter((x) => x.value != '1');
     });
-
-    if (this.hubConnectionID == '') {
-      this.realHub.start('ad').then(() => {
-        this.hubConnectionID = this.realHub['hubConnectionID'];
-      });
-    }
     this.generateQR();
-    //console.log(this.loginDevice);
   }
 
   ngAfterViewInit() {
@@ -190,6 +183,7 @@ export class Login2FAComponent extends UIComponent implements AfterViewInit {
     }
   }
   generateQR() {
+    console.log('hubConnectionID: ', this.hubConnectionID)
     this.qrTimeout = 0;
     this.qrTimeoutMinutes = 0;
     clearInterval(this.interval);

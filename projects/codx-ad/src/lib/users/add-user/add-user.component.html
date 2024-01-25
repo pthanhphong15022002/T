@@ -11,8 +11,9 @@
   <ng-container *ngIf="form?.formGroup">
     <div class="mt-3 pb-5">
       <codx-img #imageUpload class="image-inpt-wrapper fullImage" [width]="90" [funcId]="funcID"
-        [objectId]="adUser.userID" [objectType]="'AD_Users'" [isAllowEdit]="true" [isDefaulImg]="true"
-        [parentType]="'AD_Users'" [parentID]="adUser.userID" [imgOn]="date" (handleInput)="changeAvatar()">
+        [objectId]="adUser.userID" [objectName]="adUser.userName" [objectType]="'AD_Users'" [isAllowEdit]="true"
+        [isDefaulImg]="true" [parentType]="'AD_Users'" [parentID]="adUser.userID" [imgOn]="date"
+        (handleInput)="changeAvatar()">
       </codx-img>
     </div>
     <div class="row mx-0 mt-3">
