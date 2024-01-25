@@ -1,5 +1,5 @@
 <div
-  class="d-flex flex-row align-items-top p-2 border-bottom"
+  class="d-flex flex-row align-items-top p-4 border-bottom"
   (dblclick)="dbClick(data)"
 >
   <div class="me-5">
@@ -29,52 +29,85 @@
       </div>
     </div>
   </div>
-  <div class="w-30 me-5">
-    <div class="text-dark fw-bold fs-6 line-clamp line-clamp-2">
-      {{ data.meetingName }}
+  <div class="d-flex justify-content-between w-80">
+    <div class="d-flex justify-content-start w-70">
+      <div class="d-flex flex-column">
+        <div class="d-flex">
+          <div class="text-dark fw-bold fs-6 line-clamp line-clamp-2">
+            {{ data.meetingName }}
+          </div>
+          <div *ngIf="data.tags" class="ms-2">
+            <codx-tag
+              [entityName]="formModel.entityName"
+              [disabled]="true"
+              [isEdit]="false"
+              [value]="data.tags"
+            >
+            </codx-tag>
+          </div>
+        </div>
+        <div class="justify-content-start mt-2">
+          <div [innerHTML]="data.memo"></div>
+        </div>
+        <div class="mt-3 d-flex justify-content-start">
+          <div
+            [ngbPopover]="popperAttachment"
+            #p="ngbPopover"
+            [openDelay]="500"
+            (mouseenter)="p.open()"
+            (mouseleave)="p.close()"
+            placement="right left"
+            style="position: absolute"
+          >
+            <codx-attachment-temp
+              [objectID]="data?.recID"
+              [formModel]="formModel"
+              [viewType]="1"
+              referType="source"
+            ></codx-attachment-temp>
+          </div>
+          <div
+            class="fw-bold d-flex align-items-center"
+            *ngIf="data?.isOnline"
+            style="margin-left: 40px"
+          >
+            <i
+              class="icon-insert_link text-primary text-hover-primary-dark icon-16 me-2"
+            ></i>
+            <a href="">{{ data?.link }}</a>
+          </div>
+          <ng-template #popperAttachment>
+            <span>
+              <codx-label
+                name="lblAttachment"
+                [formModel]="formModel"
+                default="Tài liệu đính kèm"
+              ></codx-label>
+            </span>
+          </ng-template>
+        </div>
+      </div>
     </div>
-    <div class="justify-content-start" style="margin-top: 10px">
-      <codx-temp-full
-        cardCss="card-template"
-        [imageId]="data.userID"
-        imageObjType="AD_Users"
-        [titleTmp]="titleTmp"
-        [desc]="convertHtmlAgency(data.positionName)"
-        [dataItem]="data"
-      >
-      </codx-temp-full>
+    <div class="d-flex justify-content-end w-30">
+      <div class="d-flex flex-column">
+        <div class="d-flex flex-wrap" style="font-weight: 400">
+          <div class="label-colon">
+            {{ roleTypeA | vll : "CO001" : "text" | async }}
+          </div>
+          <span class="me-1">:</span>
+          <span>{{ objectNameA }}</span>
+        </div>
+        <div class="d-flex justify-content-end mt-3">
+          <codx-imgs
+            [width]="30"
+            [objectId]="objectID"
+            objectType="AD_Users"
+            [numberImages]="4"
+          >
+          </codx-imgs>
+        </div>
+      </div>
     </div>
-  </div>
-  <div class="w-25 me-5">
-    <div [innerHTML]="data.memo"></div>
-  </div>
-  <div class="w-15 me-5">
-    <div *ngIf="data.tags">
-      <codx-tag
-        [entityName]="formModel.entityName"
-        [disabled]="true"
-        [isEdit]="false"
-        [value]="data.tags"
-      >
-      </codx-tag>
-    </div>
-  </div>
-  <div class="w-15 me-5 pt-12">
-    <codx-imgs
-      [width]="30"
-      [objectId]="objectID"
-      objectType="AD_Users"
-      [numberImages]="4"
-      (mouseenter)="popoverEmpList(popoverList)"
-      [ngbPopover]="popEmpList"
-      popoverClass="empPopoverClass"
-      #popoverList="ngbPopover"
-      placement="bottom"
-      container="body"
-      autoClose="outside"
-      [openDelay]="500"
-    >
-    </codx-imgs>
   </div>
   <div class="w-5px" *ngIf="showMF">
     <codx-mfunc
@@ -87,39 +120,39 @@
     >
     </codx-mfunc>
   </div>
-</div>
 
-<ng-template #titleTmp>
-  <div class="text-dark fw-bolder line-clamp line-clamp-1 me-2">
-    {{ data.userName }}
-  </div>
-</ng-template>
+  <ng-template #titleTmp>
+    <div class="text-dark fw-bolder line-clamp line-clamp-1 me-2">
+      {{ data.userName }}
+    </div>
+  </ng-template>
 
-<ng-template #popEmpList>
-  <div class="fw-bold">
-    <codx-label
-      name="Resouces"
-      [formModel]="formModel"
-      default="Danh sách phân công cho"
-    ></codx-label>
-    <span>{{ "(" + data.permissions.length + ")" }}</span>
-  </div>
-  <!-- <div>
+  <ng-template #popEmpList>
+    <div class="fw-bold">
+      <codx-label
+        name="Resouces"
+        [formModel]="formModel"
+        default="Danh sách phân công cho"
+      ></codx-label>
+      <span>{{ "(" + data.permissions.length + ")" }}</span>
+    </div>
+    <!-- <div>
     <codx-searchbar *ngIf="data.resources.length > 0" (searchEvent)="searchName($event)"></codx-searchbar>
   </div> -->
-  <div
-    class="d-flex align-items-start user-card p-3"
-    *ngFor="let item of data.permissions"
-  >
-    <div class="me-3">
-      <div>
-        <codx-img class="" [objectId]="item?.objectID" objectType="AD_Users">
-        </codx-img>
+    <div
+      class="d-flex align-items-start user-card p-3"
+      *ngFor="let item of data.permissions"
+    >
+      <div class="me-3">
+        <div>
+          <codx-img class="" [objectId]="item?.objectID" objectType="AD_Users">
+          </codx-img>
+        </div>
+      </div>
+      <div class="d-flex flex-column flex-grow-1">
+        <div class="text-dark fw-bold">{{ item?.objectName }}</div>
+        <div class="text-gray-600 fs-7">{{ item?.positionName }}</div>
       </div>
     </div>
-    <div class="d-flex flex-column flex-grow-1">
-      <div class="text-dark fw-bold">{{ item?.objectName }}</div>
-      <div class="text-gray-600 fs-7">{{ item?.positionName }}</div>
-    </div>
-  </div>
-</ng-template>
+  </ng-template>
+</div>
