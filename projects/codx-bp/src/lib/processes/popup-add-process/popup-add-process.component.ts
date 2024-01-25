@@ -158,6 +158,10 @@ export class PopupAddProcessComponent {
   }
 
   ngOnInit(): void {
+
+  }
+
+  ngAfterViewInit(): void {
     if (this.action == 'edit') {
       this.getAvatar(this.data?.recID, this.data?.processName);
       this.extendInfos =
@@ -170,9 +174,8 @@ export class PopupAddProcessComponent {
     }
     this.getCacheCbxOrVll();
     this.getVll();
+    this.detectorRef.detectChanges();
   }
-
-  ngAfterViewInit(): void {}
 
   onDestroy() {
     this.destroyFrom$.next();
