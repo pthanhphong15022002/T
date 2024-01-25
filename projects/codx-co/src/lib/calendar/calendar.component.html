@@ -1,248 +1,243 @@
-<codx-views #view [views]="views" [toolbarDisplay]="false" [autoLoad]="false">
-</codx-views>
-<ng-template #templateLeft>
-  <div class="rounded-3 p-0 position-relative h-100">
-    <div class="d-flex w-100 h-100">
-      <!-- template left -->
-      <div class="w-350px min-w-350px h-100 border-right">
-        <div class="calendar-left">
-            <div class="cal-main">
-              <!-- Lịch công ty -->
-              <ng-container *ngIf="calendarID == 'COT01'">
-                <div class="d-flex flex-column p-3">
-                  <div class="fs-3">
-                    <codx-label
-                      fiedName="CO_Organizations"
-                      default="Sơ đồ tổ chức"
-                      class="fw-bold">
-                    </codx-label>
-                  </div>
-                  <div class="h-100 px-0">
-                    <codx-listview 
-                      [dataService]="HRRequest" 
-                      [itemTemplate]="orgUnitTemplate" 
-                      [emptyTemplate]="dataEmpty"
-                      funcID="HRT01" 
-                      [entityName]="'HR_OrganizationUnits'"
-                      [selectFirst]="true"
-                      [type]="'treeView'"
-                      (onSelectionChanged)="selectOrgUnit($event)">
-                    </codx-listview>
-                  </div>
+<div class="rounded-3 p-0 position-relative h-100">
+  <div class="d-flex w-100 h-100">
+    <!-- template left -->
+    <div class="w-350px min-w-350px h-100 border-right">
+      <div class="calendar-left">
+          <div class="cal-main">
+            <!-- Lịch công ty -->
+            <ng-container *ngIf="calendarID == 'COT01'">
+              <div class="d-flex flex-column p-3">
+                <div class="fs-3">
+                  <codx-label
+                    fiedName="CO_Organizations"
+                    default="Sơ đồ tổ chức"
+                    class="fw-bold">
+                  </codx-label>
                 </div>
-              </ng-container>
-              <!-- Lịch nhóm -->
-              <ng-container *ngIf="calendarID == 'COT02'">
-                <div class="d-flex flex-column w-100 p-3">
-                  <div class="fs-3 w-100">
-                    <codx-label
-                      fiedName="CO_Groups"
-                      default="Danh sách nhóm"
-                      class="fw-bold">
-                    </codx-label>
-                  </div>
-                  <div class="w-100 h-100 py-2 overflow-auto">
-                    <ng-container *ngIf="loadUserGroup">
-                      <ng-container *ngIf="lstUserGroups?.length > 0; else dataEmpty">
-                        <div class="list-group" #eleListGroup>
-                          <ng-container *ngFor="let item of lstUserGroups">
-                            <p class="list-group-item list-group-item-action cursor-pointer border-0" #eleItem (click)="selectGroupUser(item,eleListGroup,eleItem)">{{item.groupName}}</p>
-                          </ng-container>
-                        </div>
-                      </ng-container>
-                    </ng-container>
-                  </div>
+                <div class="h-100 px-0">
+                  <codx-listview 
+                    [dataService]="HRRequest" 
+                    [itemTemplate]="orgUnitTemplate" 
+                    [emptyTemplate]="dataEmpty"
+                    funcID="HRT01" 
+                    [entityName]="'HR_OrganizationUnits'"
+                    [selectFirst]="true"
+                    [type]="'treeView'"
+                    (onSelectionChanged)="selectOrgUnit($event)">
+                  </codx-listview>
                 </div>
-              </ng-container>
-              <!-- Lịch cá nhân -->
-              <ng-container *ngIf="calendarID == 'COT03'">
-                <div class="d-flex flex-column">
-                  <ejs-calendar
-                      #ejCalendar
-                      cssClass="width-calendar"
-                      class="e-customStyle w-100 h-100 mw-100"
-                      [locale]="locale"
-                      [firstDayOfWeek]="1"
-                      [value]="selectedDate"
-                      (change)="changeDay($event)"
-                      (navigated)="changeMonth($event)"
-                      (renderDayCell)="renderDayCell($event)">
-                    </ejs-calendar>
-                </div>
-              </ng-container>
-            </div>
-            <!-- Calendar Setting -->
-            <div class="cal-setting p-3 pb-2 border-top">
-              <div class="d-flex justify-content-between fs-4 pb-2 w-100">
-                <codx-label
-                  fiedName="CO_Events"
-                  default="Danh sách sự kiện"
-                  class="fw-bold">
-                </codx-label>
-                <button class="btn btn-icon btn-primary me-1"
-                  (click)="openPopupSetting()">
-                  <i class="icon-settings text-white icon-18"></i>
-                </button>
-              </div>
-              <div class="w-100 cal-setting-content px-3 ">
-                <ng-container *ngIf="settingCalendars">
-                  <ng-container *ngFor="let item of settingCalendars">
-                    <div class="d-flex py-2 align-items-center w-100">
-                      <div class="w-5px me-2">
-                        <li
-                        [ngStyle]="
-                        {
-                          'color':item.ShowColor,
-                          'background-color':item.ShowColor
-                        }">
-                        </li>
-                      </div>
-                      <div class="show-list-event w-100">
-                        <codx-vll
-                          [showText]="true"
-                          [showBgColor]="false"
-                          name="WP006"
-                          [value]="item.Template.TransType">
-                        </codx-vll>
-                      </div>
-                      <div class="show-event-check me-2 w-50px d-flex justify-content-end">
-                        <codx-input
-                          type="checkbox"
-                          [field]="item.Template.TransType"
-                          [checked]="item.ShowEvent === '1'"
-                          labelPosition="Before"
-                          [disabled]="false"
-                          class="test-check"
-                          (valueChange)="valueChange($event)">
-                        </codx-input>
-                      </div>
-                    </div>
-                  </ng-container>
-                </ng-container>
-              </div>
-            </div>
-        </div>
-        <div class="w-100 cal-footer border-top">
-          <div class="row mx-0 nav">
-            <div class="col-4 py-2 nav-item d-flex flex-column align-items-center"
-              [ngClass]="{ active: calendarID == 'COT03' }"
-              (click)="changeCalendarType('COT03')">
-              <span class="text-center">
-                <i class="icon-i-person icon-20"></i>
-              </span>
-              <div class="user-select-none">
-                <codx-label
-                  fiedName="CO_MyCalendar"
-                  default="Cá nhân"
-                  class="fw-bold">
-                </codx-label>
-              </div>
-            </div>
-
-            <div class="col-4 py-2 nav-item d-flex flex-column align-items-center"
-              [ngClass]="{ active: calendarID == 'COT02' }"
-              (click)="changeCalendarType('COT02')">
-              <span class="text-center">
-                <i class="icon-i-people icon-20"></i>
-              </span>
-              <div class="user-select-none">
-                <codx-label
-                  fiedName="CO_GroupCalendar"
-                  default="Nhóm"
-                  class="fw-bold">
-                </codx-label>
-              </div>
-            </div>
-            <div class="col-4 py-2 nav-item d-flex flex-column align-items-center"
-              [ngClass]="{ active: calendarID == 'COT01' }"
-              (click)="changeCalendarType('COT01')">
-              <span class="text-center">
-                <i class="icon-i-diagram-3 icon-20"></i>
-              </span>
-              <div class="user-select-none">
-                <codx-label
-                  fiedName="CO_CompanyCalendar"
-                  default="Công ty"
-                  class="fw-bold">
-                </codx-label>
-              </div>
-            </div> 
-            <!-- chờ có chức năng thì mở cmt -->
-            <!-- <div 
-              class="d-flex flex-column justify-content-between nav-item disabled"
-            >
-              <span class="text-center">
-                <i class="icon-i-gear icon-24"></i>
-              </span>
-              <div class="user-select-none"><codx-label
-                fiedName="CO_Settings"
-                default="Thiết lập"
-                class="fw-bold">
-              </codx-label></div>
-            </div> -->
-            <!-- <ng-container *ngFor="let func of lstCalendars">
-              <div class="col cursor-pointer"
-                [class.active]="calendarID === func.functionID"
-                (click)="changeCalendarType(func.functionID)">
-                <p class="text-center">
-                  <i class="icon-i-person icon-24"></i>
-                </p>
-                <p>{{func.customName}}</p>
               </div>
             </ng-container>
-            
-            <div class="col disabled">
-              <p class="text-center">
-                <i class="icon-i-gear icon-24"></i>
-              </p>
-              <p class="cursor-pointer">Thiết lập</p>
-            </div> -->
+            <!-- Lịch nhóm -->
+            <ng-container *ngIf="calendarID == 'COT02'">
+              <div class="d-flex flex-column w-100 p-3">
+                <div class="fs-3 w-100">
+                  <codx-label
+                    fiedName="CO_Groups"
+                    default="Danh sách nhóm"
+                    class="fw-bold">
+                  </codx-label>
+                </div>
+                <div class="w-100 h-100 py-2 overflow-auto">
+                  <ng-container *ngIf="loadUserGroup">
+                    <ng-container *ngIf="lstUserGroups?.length > 0; else dataEmpty">
+                      <div class="list-group" #eleListGroup>
+                        <ng-container *ngFor="let item of lstUserGroups">
+                          <p class="list-group-item list-group-item-action cursor-pointer border-0" #eleItem (click)="selectGroupUser(item,eleListGroup,eleItem)">{{item.groupName}}</p>
+                        </ng-container>
+                      </div>
+                    </ng-container>
+                  </ng-container>
+                </div>
+              </div>
+            </ng-container>
+            <!-- Lịch cá nhân -->
+            <ng-container *ngIf="calendarID == 'COT03'">
+              <div class="d-flex flex-column">
+                <ejs-calendar
+                    #ejCalendar
+                    cssClass="width-calendar"
+                    class="e-customStyle w-100 h-100 mw-100"
+                    [locale]="locale"
+                    [firstDayOfWeek]="1"
+                    [value]="selectedDate"
+                    (change)="changeDay($event)"
+                    (navigated)="changeMonth($event)"
+                    (renderDayCell)="renderDayCell($event)">
+                  </ejs-calendar>
+              </div>
+            </ng-container>
           </div>
+          <!-- Calendar Setting -->
+          <div class="cal-setting p-3 pb-2 border-top">
+            <div class="d-flex justify-content-between fs-4 pb-2 w-100">
+              <codx-label
+                fiedName="CO_Events"
+                default="Danh sách sự kiện"
+                class="fw-bold">
+              </codx-label>
+              <button class="btn btn-icon btn-primary me-1"
+                (click)="openPopupSetting()">
+                <i class="icon-settings text-white icon-18"></i>
+              </button>
+            </div>
+            <div class="w-100 cal-setting-content px-3 ">
+              <ng-container *ngIf="settingCalendars">
+                <ng-container *ngFor="let item of settingCalendars">
+                  <div class="d-flex py-2 align-items-center w-100">
+                    <div class="w-5px me-2">
+                      <li
+                      [ngStyle]="
+                      {
+                        'color':item.ShowColor,
+                        'background-color':item.ShowColor
+                      }">
+                      </li>
+                    </div>
+                    <div class="show-list-event w-100">
+                      <codx-vll
+                        [showText]="true"
+                        [showBgColor]="false"
+                        name="WP006"
+                        [value]="item.Template.TransType">
+                      </codx-vll>
+                    </div>
+                    <div class="show-event-check me-2 w-50px d-flex justify-content-end">
+                      <codx-input
+                        type="checkbox"
+                        [field]="item.Template.TransType"
+                        [checked]="item.ShowEvent === '1'"
+                        labelPosition="Before"
+                        [disabled]="false"
+                        class="test-check"
+                        (valueChange)="valueChange($event)">
+                      </codx-input>
+                    </div>
+                  </div>
+                </ng-container>
+              </ng-container>
+            </div>
+          </div>
+      </div>
+      <div class="w-100 cal-footer border-top">
+        <div class="row mx-0 nav">
+          <div class="col-4 py-2 nav-item d-flex flex-column align-items-center"
+            [ngClass]="{ active: calendarID == 'COT03' }"
+            (click)="changeCalendarType('COT03')">
+            <span class="text-center">
+              <i class="icon-i-person icon-20"></i>
+            </span>
+            <div class="user-select-none">
+              <codx-label
+                fiedName="CO_MyCalendar"
+                default="Cá nhân"
+                class="fw-bold">
+              </codx-label>
+            </div>
+          </div>
+
+          <div class="col-4 py-2 nav-item d-flex flex-column align-items-center"
+            [ngClass]="{ active: calendarID == 'COT02' }"
+            (click)="changeCalendarType('COT02')">
+            <span class="text-center">
+              <i class="icon-i-people icon-20"></i>
+            </span>
+            <div class="user-select-none">
+              <codx-label
+                fiedName="CO_GroupCalendar"
+                default="Nhóm"
+                class="fw-bold">
+              </codx-label>
+            </div>
+          </div>
+          <div class="col-4 py-2 nav-item d-flex flex-column align-items-center"
+            [ngClass]="{ active: calendarID == 'COT01' }"
+            (click)="changeCalendarType('COT01')">
+            <span class="text-center">
+              <i class="icon-i-diagram-3 icon-20"></i>
+            </span>
+            <div class="user-select-none">
+              <codx-label
+                fiedName="CO_CompanyCalendar"
+                default="Công ty"
+                class="fw-bold">
+              </codx-label>
+            </div>
+          </div> 
+          <!-- chờ có chức năng thì mở cmt -->
+          <!-- <div 
+            class="d-flex flex-column justify-content-between nav-item disabled"
+          >
+            <span class="text-center">
+              <i class="icon-i-gear icon-24"></i>
+            </span>
+            <div class="user-select-none"><codx-label
+              fiedName="CO_Settings"
+              default="Thiết lập"
+              class="fw-bold">
+            </codx-label></div>
+          </div> -->
+          <!-- <ng-container *ngFor="let func of lstCalendars">
+            <div class="col cursor-pointer"
+              [class.active]="calendarID === func.functionID"
+              (click)="changeCalendarType(func.functionID)">
+              <p class="text-center">
+                <i class="icon-i-person icon-24"></i>
+              </p>
+              <p>{{func.customName}}</p>
+            </div>
+          </ng-container>
+          
+          <div class="col disabled">
+            <p class="text-center">
+              <i class="icon-i-gear icon-24"></i>
+            </p>
+            <p class="cursor-pointer">Thiết lập</p>
+          </div> -->
         </div>
-        
       </div>
-      <!-- template right -->
-      <div class="bg-white h-100 calender-viewmain">
-        <co-calendar-center 
-          #calendarCenter 
-          [selectedDate]="selectedDate"
-          [statusColor]="statusColor"
-          [isOutSource]="true" 
-          [currentView]="'TimelineMonth'"
-          [events]="lstEvents" 
-          [eventModel]="eventModel"
-          [eventTemplate]="eventTemplate"
-          [popupEventTemplate]="popupEventTemplate"
-          [resources]="lstResources"
-          [resourceModel]="resourceModel"
-          [resourceTemplate]="resourceTemplate"
-          [moreFuncTemplate]="moreFuncTemplate"
-          [dFormModel]="dFormModel"
-          (evtChangeDate)="changeDay($event)"
-          (evtChangeMonth)="changeMonth($event)">
-        </co-calendar-center>
-      </div>
+      
+    </div>
+    <!-- template right -->
+    <div class="bg-white h-100 calender-viewmain">
+      <co-calendar-center 
+        #calendarCenter 
+        [selectedDate]="selectedDate"
+        [statusColor]="statusColor"
+        [isOutSource]="true" 
+        [currentView]="'TimelineMonth'"
+        [events]="lstEvents" 
+        [eventModel]="eventModel"
+        [eventTemplate]="eventTemplate"
+        [popupEventTemplate]="popupEventTemplate"
+        [resources]="lstResources"
+        [resourceModel]="resourceModel"
+        [resourceTemplate]="resourceTemplate"
+        [moreFuncTemplate]="moreFuncTemplate"
+        [dFormModel]="dFormModel"
+        (evtChangeDate)="changeDay($event)"
+        (evtChangeMonth)="changeMonth($event)">
+      </co-calendar-center>
     </div>
   </div>
-  <div class="calendar-btnadd" *ngIf="speedDialItems?.length > 0">
-    <button
-      #speeddial
-      ejs-speeddial
-      [items]="speedDialItems"
-      [itemTemplate]="itemTemplate"
-      openIconCss="icon-add icon-22"
-      cssClass="e-primary"
-      (clicked)="addEditEvent(addMoreFunc,{ transType:$event?.item?.id })"
-    >
-    <ng-template #itemTemplate let-items>
-      <div class="itemlist">
-        <span class="text">{{ items.text }}</span>
-      </div>
-    </ng-template>
-    </button>
-  </div>
-</ng-template>
-
+</div>
+<div class="calendar-btnadd" *ngIf="speedDialItems?.length > 0">
+  <button
+    #speeddial
+    ejs-speeddial
+    [items]="speedDialItems"
+    [itemTemplate]="itemTemplate"
+    openIconCss="icon-add icon-22"
+    cssClass="e-primary"
+    (clicked)="addEditEvent(addMoreFunc,{ transType:$event?.item?.id })"
+  >
+  <ng-template #itemTemplate let-items>
+    <div class="itemlist">
+      <span class="text">{{ items.text }}</span>
+    </div>
+  </ng-template>
+  </button>
+</div>
 <!-- resource template -->
 <ng-template #resourceTemplate let-data>
   <div class="d-flex flex-row ms-5 align-items-center">
