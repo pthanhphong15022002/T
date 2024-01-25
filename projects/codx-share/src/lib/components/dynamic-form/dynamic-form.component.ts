@@ -40,6 +40,7 @@ import { CodxShareService } from '../../codx-share.service';
 export class DynamicFormComponent extends UIComponent {
   @ViewChild('view') viewBase: ViewsComponent;
   @ViewChild('morefunction') morefunction: TemplateRef<any>;
+  @ViewChild('note') note: TemplateRef<any>;
   service: string;
   entityName: string;
   predicate: string;
@@ -86,6 +87,23 @@ export class DynamicFormComponent extends UIComponent {
         id: 'btnAdd',
       },
     ];
+    if(this.funcID == "FDS025"){
+      this.getGridViewSetup();
+    }
+  }
+
+  getGridViewSetup() {
+    this.cache.gridViewSetup("FDIndustries", "grvFDIndustries").subscribe((grv) => {
+      if(grv){
+        const colums = {
+          field: Util.camelize("Note"),
+          headerText: grv["Note"].headerText,
+          width: grv["Note"].width,
+          template: this.note,
+        };
+        this.columnsGrid.push(colums);
+      }
+    });
   }
 
   ngAfterViewInit(): void {
@@ -95,7 +113,7 @@ export class DynamicFormComponent extends UIComponent {
         sameData: true,
         active: true,
         model: {
-          //resources: this.columnsGrid,
+          resources: this.columnsGrid,
           template2: this.morefunction,
           //frozenColumns: 1,
         },
