@@ -267,9 +267,9 @@
 
     <!--begin::Item-->
 
-    <div class="d-flex justify-content-between align-items-top mt-1">
-      <div class="d-flex align-items-center me-2 codx-badge">
-        <!-- <ng-container *ngIf="setting?.processBar">
+    <div class="d-flex justify-content-between align-items-center mt-1 mb-2">
+     <!--  <div class="d-flex align-items-center me-2 codx-badge">
+        <ng-container *ngIf="setting?.processBar">
           <div
             class="control-section me-2"
             placement="top left right bottom"
@@ -320,7 +320,32 @@
             [openViewPopup]="true"
           ></codx-attachment-temp> -/->
         </ng-container>
-      --></div>
+      </div>-->
+      <div>
+        <div
+          class=""
+          *ngIf="data.memo || data.memo2"
+        >
+          <div
+            class="d-flex align-items-center me-3 text-primary"
+            (click)="clickShow($event, data.recID)"
+          >
+            <span>
+              <codx-label
+                name="lblDescripsionDetails"
+                [formModel]="view.formModel"
+                default="Mô tả chi tiết"
+              >
+              </codx-label
+            ></span>
+            <span
+              id="icon-{{ data.recID }}"
+              class="icon-keyboard_arrow_right icon-16 align-item-center justify-content-center"
+            >
+            </span>
+          </div>
+        </div>
+      </div>
       <div class="ms-3 h-25px" id="{{ data.taskID }}">
         <ng-container
           *ngIf="
@@ -361,32 +386,7 @@
       </div>
     </div>
     <!--end::Item-->
-    <div
-      class="w-100 m-3 flex-column text-center"
-      *ngIf="data.memo || data.memo2"
-    >
-      <div class="justify-content-between">
-        <div></div>
-        <div
-          class="d-flex justify-content-end me-3 text-primary"
-          (click)="clickShow($event, data.recID)"
-        >
-          <span>
-            <codx-label
-              name="lblDescripsionDetails"
-              [formModel]="view.formModel"
-              default="Mô tả chi tiết"
-            >
-            </codx-label
-          ></span>
-          <span
-            id="icon-{{ data.recID }}"
-            class="icon-keyboard_arrow_right icon-14 align-item-center justify-content-center"
-          >
-          </span>
-        </div>
-      </div>
-    </div>
+    
     <div
       id="{{ data.recID }}"
       class="w-100 border-description border-gray-300 rounded-2 px-1 mb-1 hidden-main"

@@ -187,7 +187,7 @@
       <div class="w-100 d-flex flex-column">
         <div class="text-dark news-title fs-5 fw-bold">{{item?.subject}}</div>
         <div class="w-100 mt-1 text-gray-400">{{ item?.createdOn | fmDT }}</div>
-        <div class="d-block text-gray-700 mt-1" *ngIf="item?.subContent">
+        <div class="text-gray-700 mt-1 line-clamp line-clamp-3" *ngIf="item?.subContent">
           {{item?.subContent | maxlenght:500}}
         </div>
       </div>
