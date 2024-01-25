@@ -41,7 +41,6 @@ export class DynamicSettingControlComponent extends UIComponent{
       this.tilte= data.data?.tilte;
       this.dataValue = data.data?.dataValue;
       this.settingFull = data.data?.settingFull;
-      this.detectorRef.detectChanges();
     }
   }
   //#endregion Contrucstor

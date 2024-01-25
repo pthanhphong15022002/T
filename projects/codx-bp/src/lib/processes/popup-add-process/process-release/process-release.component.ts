@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, OnInit, Optional, TemplateRef, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ApiHttpService, ButtonModel, CallFuncService, DialogData, DialogRef, ResourceModel, ViewModel, ViewType } from 'codx-core';
+import { ApiHttpService, ButtonModel, CallFuncService, DialogData, DialogRef, ResourceModel, SidebarModel, ViewModel, ViewType } from 'codx-core';
 import { AddProcessDefaultComponent } from './add-process-default/add-process-default.component';
 
 @Component({
@@ -89,6 +89,10 @@ export class ProcessReleaseComponent implements OnInit , AfterViewInit{
 
   add()
   {
-    this.callFunc.openSide(AddProcessDefaultComponent,this.process)
+    var option = new SidebarModel();
+    option.FormModel = {
+      funcID : this.funcID
+    }
+    this.callFunc.openSide(AddProcessDefaultComponent,this.process,option)
   }
 }
