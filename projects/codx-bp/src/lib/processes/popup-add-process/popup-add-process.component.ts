@@ -854,7 +854,15 @@ export class PopupAddProcessComponent {
     let data = [];
     op.className = 'ProcessesBusiness';
     op.service = 'BP';
+    if(this.data?.steps?.length > 0){
+      this.data?.steps?.forEach((ele) => {
+        if(typeof ele.settings !== 'string'){
+          ele.settings = JSON.stringify(ele.settings);
+        }
+      });
+    }
     data = [this.data];
+
     if (this.action == 'add' || this.action == 'copy') {
       op.methodName = 'AddProcessAsync';
     } else {
