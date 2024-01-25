@@ -1,4 +1,5 @@
 import { ChangeDetectorRef, Component, EventEmitter, Injector, Input, OnChanges, Output, SimpleChanges } from "@angular/core";
+import { DomSanitizer } from "@angular/platform-browser";
 import { ApiHttpService, AuthStore, CallFuncService } from "codx-core";
 import { CodxShareService } from "projects/codx-share/src/public-api";
 
@@ -6,6 +7,7 @@ import { CodxShareService } from "projects/codx-share/src/public-api";
 export abstract class BaseFieldComponent
 {
     user:any;
+    @Input() formModel;
     @Input() data: any;
     @Input() process: any;
     @Input() stage: any;
@@ -21,6 +23,7 @@ export abstract class BaseFieldComponent
     protected shareService: CodxShareService;
     protected ref: ChangeDetectorRef;
     protected callFuc: CallFuncService;
+    protected sanitizer: DomSanitizer;
     constructor(inject: Injector)
     {
       this.authstore = inject.get(AuthStore);
@@ -29,6 +32,7 @@ export abstract class BaseFieldComponent
       this.ref = inject.get(ChangeDetectorRef);
       this.callFuc = inject.get(CallFuncService);
       this.user = this.authstore.get();
+      this.sanitizer = inject.get(DomSanitizer);
     }
 
 }

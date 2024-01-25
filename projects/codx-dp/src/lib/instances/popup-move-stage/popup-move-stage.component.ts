@@ -190,6 +190,7 @@ export class PopupMoveStageComponent implements OnInit {
   }
 
   async getListMoveStage() {
+    this.isLockStep = true;
     let datas = [
       this.recID,
       this.processID,
@@ -228,6 +229,7 @@ export class PopupMoveStageComponent implements OnInit {
         }
         this.changeDetectorRef.detectChanges();
       }
+      this.isLockStep = false;
     });
   }
   removeReasonInStepsAuto(isUseSuccess, isUseFail, listStepCbx) {

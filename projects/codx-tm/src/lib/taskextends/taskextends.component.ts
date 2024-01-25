@@ -141,7 +141,8 @@ export class TaskExtendsComponent
         if (
           x.functionID == 'SYS04' ||
           x.functionID == 'SYS03' ||
-          x.functionID == 'SYS02'
+          x.functionID == 'SYS02' ||
+          x.functionID == 'SYS05'
         ) {
           x.disabled = true;
         }

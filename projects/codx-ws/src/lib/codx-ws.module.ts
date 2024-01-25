@@ -402,6 +402,7 @@ const routes: Routes = [
         CodxWpV2Module,
         AcModule,
         CodxHRModule,
+        CodxCoModule,
         //CodxWpModule,
         //CodxWpV2Module,
         //CodxCoModule,

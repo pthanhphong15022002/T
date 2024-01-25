@@ -9,23 +9,14 @@
                 <div ngbAccordionBody>
                     <ng-template>
                         <div class="d-flex flex-column">
-                            <div class="d-flex flex-column ps-14 pb-4" *ngFor="let item2 of item.child">
-                                <div class="d-flex align-items-center row cursor-pointer" (click)="addEditStages(item2.activityType,'edit',item2)">
-                                    <div class="col-2">{{item2.stepName}}</div>
-                                    <div class="col-1 d-flex align-items-center"><i [class]="item2?.settings?.icon" [style.color]="item2?.settings?.color"></i><span class="mx-2">{{item2.activityType}}</span></div>
-                                    <div class="col-4"><span>{{item2.memo}}</span></div>
-                                    <div class="col-2"><span>{{item2?.duration}}</span><span class="mx-1">{{item2?.interval | vll : 'VL004' : 'text' | async}}</span></div>
-                                     <div class="col-3">
-                                        <ng-container *ngIf="item2.owners && item2.owners.length>0">
-                                            <div class="d-flex rounded-circle align-items-center justify-content-center w-30px h-30px bp-cricle-user"><i class="icon-i-person-check"></i></div>
-                                        </ng-container>
-                                    </div>
-                                    
-                                    <!-- <div class="col-3">
-                                        <ng-container *ngIf="item2.owners && item2.owners.length>0">
-                                            <div class="d-flex border rounded"><i class="icon-attach_file"></i><span>{{item2.owners.length}}</span></div>
-                                        </ng-container>
-                                    </div> -->
+                            <div class="d-flex flex-column ps-14 pb-4" *ngFor="let item2 of item.child" (click)="addEditStages(item2.activityType,'edit',item2)">
+                                <div class="d-flex flex-column">
+                                    <ng-container *ngTemplateOutlet="tmpRow; context: { $implicit: item2 }"></ng-container>
+                                    <ng-container *ngIf="item2.activityType == 'Conditions'" >
+                                        <div class="d-flex align-items-center cursor-pointer w-100 pt-2"  *ngFor="let item3 of item2?.child">
+                                            <ng-container *ngTemplateOutlet="tmpRow; context: { $implicit: item3 , b:true}"></ng-container>
+                                        </div>
+                                    </ng-container>
                                 </div>
                                 <!-- <div class="d-flex align-items-center row-grid-collapse cursor-pointer" (click)="addEditStages('Task','add',null,item2,item)">
                                     <codx-label default="Thêm công việc" class="my-2 ms-4" ></codx-label>
@@ -62,3 +53,24 @@
         </div>
     </div>
 </div>
+
+<ng-template #tmpRow let-data let-isCon="b" let-index="c">
+    <div class="row d-flex align-items-center cursor-pointer w-100" >
+        <div class="col-3 d-flex align-items-center"><div class="w-30px"><i *ngIf="isCon" class="icon-arrow_right_alt"></i><i *ngIf="data?.activityType == 'Conditions'" [class]="data?.settings?.icon" [style.color]="data?.settings?.color"></i></div><span [class.me-2]="data?.reasonCon">{{data?.reasonCon ? (data?.reasonCon + " : ") : ""}}</span><span>{{data?.stepName}}</span></div>
+        <ng-container *ngIf="data?.activityType != 'Conditions'">
+            <div class="col-1 d-flex align-items-center"><i [class]="data?.settings?.icon" [style.color]="data?.settings?.color"></i><span class="mx-2">{{data.activityType}}</span></div>
+            <div class="col-4"><span>{{data?.memo}}</span></div>
+            <div class="col-2"><span>{{data?.duration}}</span><span class="mx-1">{{data?.interval | vll : 'VL004' : 'text' | async}}</span></div>
+            <div class="col-1">
+                <ng-container *ngIf="data.owners && data.owners.length>0">
+                    <div class="d-flex rounded-circle align-items-center justify-content-center w-30px h-30px bp-cricle-user"><i class="icon-i-person-check"></i></div>
+                </ng-container>
+            </div>
+            <div class="col-1 d-flex justify-content-end">
+                <ng-container *ngIf="data.attachments && data.attachments >0">
+                    <div class="d-flex align-items-center justify-content-center position-relative border rounded w-30px p-2"><i class="icon-attach_file"></i><div class="d-flex align-items-center justify-content-center position-absolute bp-attach-number rounded-circle">{{data.attachments}}</div></div>
+                </ng-container>
+            </div>
+        </ng-container>
+    </div>
+</ng-template>

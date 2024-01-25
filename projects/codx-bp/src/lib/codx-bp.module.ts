@@ -52,6 +52,9 @@ import { FormTestDiagramComponent } from './processes/popup-add-process/form-tes
 import { AddDefaultComponent } from './processes/popup-add-process/form-steps-field-grid/add-default/add-default.component';
 import { AddStageComponent } from './processes/popup-add-process/form-steps-field-grid/add-default/add-stage/add-stage.component';
 import { AddTaskComponent } from './processes/popup-add-process/form-steps-field-grid/add-default/add-task/add-task.component';
+import { AddSettingConditionsComponent } from './processes/popup-add-process/form-steps-field-grid/add-default/add-task/add-setting-conditions/add-setting-conditions.component';
+import { NextStepHTMLPipe } from './processes/popup-add-process/form-steps-field-grid/nextStepHtml.pipe';
+import { ProcessReleaseComponent } from './processes/popup-add-process/process-release/process-release.component';
 
 export const routes: Routes = [
   {
@@ -62,7 +65,13 @@ export const routes: Routes = [
         path: 'processes/:funcID',
         component: ProcessesComponent,
         data: { noReuse: true },
-      }]
+      },
+      {
+        path: 'instances/:funcID/:id',
+        component: ProcessReleaseComponent,
+        data: { noReuse: true },
+      }
+    ]
   },
   {
     path: '',
@@ -115,7 +124,12 @@ export const routes: Routes = [
 
 
     AddStageComponent,
-    AddTaskComponent
+    AddTaskComponent,
+    AddSettingConditionsComponent,
+    NextStepHTMLPipe,
+    
+
+    ProcessReleaseComponent
   ],
   imports: [
     CodxCoreModule.forRoot({ environment }),

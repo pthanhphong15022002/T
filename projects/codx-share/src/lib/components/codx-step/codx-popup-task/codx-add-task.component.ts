@@ -624,8 +624,8 @@ export class CodxAddTaskComponent implements OnInit {
             this.isBoughtTM = lstModule?.some(
               (md) =>
                 !md?.boughtModule?.refID &&
-                md.bought &&
                 md.boughtModule?.moduleID == 'TM1'
+                // && md.bought
             );
             this.stepsTasks.createTask = this.isBoughtTM;
           }

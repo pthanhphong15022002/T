@@ -41,6 +41,7 @@ export class DynamicSettingControlComponent extends UIComponent{
       this.tilte= data.data?.tilte;
       this.dataValue = data.data?.dataValue;
       this.settingFull = data.data?.settingFull;
+      this.detectorRef.detectChanges();
     }
   }
   //#endregion Contrucstor
@@ -48,9 +49,14 @@ export class DynamicSettingControlComponent extends UIComponent{
   //#region Init
   onInit() {
     if (!this.dialog) {
-      this.setting = this.settingFull?.paras;
-      this.newSetting = this.setting.filter(x => x.lineType == this.lineType);
-      this.dataValue = JSON.parse(this.settingFull?.paraValues);
+      if (this.settingFull) {
+        this.setting = this.settingFull?.paras;
+        if (this.setting) {
+          this.newSetting = this.setting.filter(x => x.lineType == this.lineType);
+        }
+        this.dataValue = JSON.parse(this.settingFull?.paraValues);
+        this.detectorRef.detectChanges();
+      }
     } 
   }
 

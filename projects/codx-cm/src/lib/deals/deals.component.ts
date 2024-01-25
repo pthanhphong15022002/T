@@ -204,7 +204,7 @@ export class DealsComponent
   funcDefault = 'CM0201';
   listKeyFieldSum = [];
   objectSumValue = {};
-
+  dealConfirm: string = '1';
   constructor(
     private inject: Injector,
     private cacheSv: CacheService,
@@ -856,8 +856,7 @@ export class DealsComponent
         break;
       case 'dbClick':
         //xư lý dbClick
-        if (this.viewCrr != 11) this.viewDetail(e.data);
-        else if (e?.data?.rowData) this.viewDetail(e?.data?.rowData);
+        this.viewDetail(e.data?.rowData);
         break;
       //chang fiter
       case 'pined-filter':
@@ -957,50 +956,48 @@ export class DealsComponent
     }
   }
 
-  viewDetail(deal, type = '1') {
-    setTimeout(() => {
-      if (deal) {
-        let data = {
-          formModel: this.view.formModel,
-          dataView: deal,
-          isView: true,
-          type,
-          // listInsStepStart: this.listInsStep,
-        };
-        let option = new DialogModel();
-        option.IsFull = true;
-        option.zIndex = 100;
-        option.DataService = this.view.dataService;
-        option.FormModel = this.view.formModel;
-        let popupContract = this.callFunc.openForm(
-          ViewDealDetailComponent,
-          '',
-          null,
-          null,
-          '',
-          data,
-          '',
-          option
-        );
-      }
-    }, 100);
-    // this.dataSelected = data;
-    // let option = new DialogModel();
-    // option.IsFull = true;
-    // option.zIndex = 999;
-    // let temView =
-    //   this.gridDetailView == '2' ? this.templateViewDetail : this.popDetail;
-    // this.popupViewDeal = this.callfc.openForm(
-    //   temView,
-    //   '',
-    //   Util.getViewPort().width,
-    //   Util.getViewPort().height,
-    //   '',
-    //   null,
-    //   '',
-    //   option
-    // );
-    // this.popupViewDeal.closed.subscribe((e) => {});
+  viewDetail(deal) {
+    if (deal) {
+      let data = {
+        formModel: this.view.formModel,
+        dataView: deal,
+        isView: true,
+      };
+      let option = new DialogModel();
+      option.IsFull = true;
+      option.zIndex = 100;
+      option.DataService = this.view.dataService;
+      option.FormModel = this.view.formModel;
+      let popup = this.callFunc.openForm(
+        ViewDealDetailComponent,
+        '',
+        null,
+        null,
+        '',
+        data,
+        '',
+        option
+      );
+      popup.closed.subscribe((e) => {
+        if (e && e.event) {
+          if (e.event?.isUpDealCost) {
+            let dealCost = e.event.dealCost;
+            deal.dealCost = dealCost;
+          }
+          if (e.event?.isUpDealValueTo) {
+            let dealValueTo = e.event.dealValueTo;
+            deal.dealValueTo = dealValueTo;
+          }
+          let grossProfit = deal.dealValueTo - deal.dealCost;
+          deal.grossProfit = grossProfit;
+
+          this.view.dataService.update(deal, true).subscribe();
+
+          if (this.listKeyFieldSum?.length > 0) this.totalGirdView(); //tính lại tổng chajy cuxng nhanh
+        }
+      });
+    }
+   
   }
   //end Kanaban
 
@@ -1657,8 +1654,9 @@ export class DealsComponent
           if (process.approveRule)
             this.approvalTransAction(dt, process.processNo);
           else
-            this.notificationsService.notifyCode(
-              'Quy trình đang thực hiện chưa bật chức năng ký duyệt !'
+            this.notificationsService.notify(
+              'Quy trình đang thực hiện chưa bật chức năng ký duyệt !',
+              '3'
             );
         } else {
           this.notificationsService.notifyCode('DP040');
@@ -1666,9 +1664,11 @@ export class DealsComponent
       });
     } else {
       if (this.applyApprover == '1') this.approvalTransAction(dt, 'ES_CM0503');
-      this.notificationsService.notifyCode(
-        'Thiết lập hệ thống chưa bật chức năng ký duyệt !'
-      );
+      else
+        this.notificationsService.notify(
+          'Thiết lập hệ thống chưa bật chức năng ký duyệt !',
+          '3'
+        );
     }
   }
 
@@ -1704,11 +1704,11 @@ export class DealsComponent
       category,
       this.view.formModel.entityName,
       this.view.formModel.funcID,
-      data?.title,
+      data?.dealName, //tên nè,
       this.releaseCallback.bind(this),
       null,
       null,
-      null,
+      null, //this.view.formModel.entityName // thích đổi mãi
       null,
       null,
       exportData
@@ -1998,9 +1998,38 @@ export class DealsComponent
           this.titleAction?.toLocaleLowerCase(),
           "'" + data?.dealName + "'"
         )
-        .subscribe((x) => {
+        .subscribe(async (x) => {
           if (x?.event?.status == 'Y') {
-            this.startDeal(data);
+            const ins = await firstValueFrom(
+              this.api.execSv<any>(
+                'DP',
+                'ERM.Business.DP',
+                'InstancesBusiness',
+                'GetAsync',
+                [data.refID]
+              )
+            );
+            if (ins?.status == '1' || ins?.status == '0') {
+              this.startDeal(data);
+            } else {
+              let datas = [data.recID, ins?.endDate];
+              this.codxCmService.startDeal(datas).subscribe((res) => {
+                if (res) {
+                  this.dataSelected = res;
+                  this.dataSelected = JSON.parse(
+                    JSON.stringify(this.dataSelected)
+                  );
+                  this.view.dataService
+                    .update(this.dataSelected, true)
+                    .subscribe();
+                  if (this.kanban) this.kanban.updateCard(this.dataSelected);
+                  if (this.detailViewDeal)
+                    // this.detailViewDeal.reloadListStep(resDP[1]);
+                    this.notificationsService.notifyCode('SYS007');
+                }
+                this.detectorRef.detectChanges();
+              });
+            }
           } else {
             this.codxCmService
               .confirmOrRefuse(data?.recID, check, '')
@@ -2070,30 +2099,33 @@ export class DealsComponent
         let field = Util.camelize(key);
         let template: any;
         let colums: any;
-        switch (key) {
-          // case 'StepID':
-          case 'ProjectView': // thông tin dự án
-            template = this.templateSteps;
-            break;
-          // case 'DealCost':
-          case 'DealCostView': //chi phí
-            template = this.templateCost;
-            break;
-          // case 'GrossProfit':
-          case 'GrossProfitView': //lãi gộp
-            template = this.templateGrossProfit;
-            break;
-          // case 'Status':
-          case 'StatusCodeIDView': //hiện trạng
-            template = this.templateStatus;
-            break;
-          //case 'StatusCodeID'://hiện trạng
-          case 'StatusCodeIDView':
-            template = this.templateStatus;
-            break;
-          default:
-            break;
+        if (grvSetup[key].isTemplate != '0') {
+          switch (key) {
+            case 'StepID':
+            case 'ProjectView': // thông tin dự án
+              template = this.templateSteps;
+              break;
+            case 'DealCost':
+            case 'DealCostView': //chi phí
+              template = this.templateCost;
+              break;
+            case 'GrossProfit':
+            case 'GrossProfitView': //lãi gộp
+              template = this.templateGrossProfit;
+              break;
+            case 'Status':
+            case 'StatusCodeIDView': //hiện trạng
+            // template = this.templateStatus;
+            // break;
+            case 'StatusCodeID': //hiện trạng
+            case 'StatusCodeIDView':
+              template = this.templateStatus;
+              break;
+            default:
+              break;
+          }
         }
+
         if (template) {
           colums = {
             field: field,
@@ -2196,6 +2228,7 @@ export class DealsComponent
       if (dataParam1) {
         let paramDefault = JSON.parse(dataParam1.dataValue);
         this.currencyIDDefault = paramDefault['DefaultCurrency'] ?? 'VND';
+        this.dealConfirm = paramDefault['DealConfirm'] ?? '1';
         this.gridDetailView = paramDefault?.GridDetailView || '2';
         this.exchangeRateDefault = 1; //cai nay chua hop ly neu exchangeRateDefault nos tinh ti le theo dong tien khac thi sao ba
         if (this.currencyIDDefault != 'VND') {
@@ -2495,71 +2528,77 @@ export class DealsComponent
   editCustomer(event) {
     if (event && event?.data) {
       this.dataSelected = event?.data;
-      this.codxCmService
-        .getOneObject(event?.data?.customerID, 'CustomersBusiness')
-        .subscribe((ele) => {
-          if (ele) {
-            let tempData = JSON.parse(JSON.stringify(ele));
-            var dataService = new CRUDService(this.inject);
-            let formModel = new FormModel();
-            formModel.formName =
-              tempData?.category == '1' ? 'CMCustomers' : 'CMPersonalCustomers';
-            formModel.gridViewName =
-              tempData?.category == '1'
-                ? 'grvCMCustomers'
-                : 'grvCMPersonalCustomers';
-            formModel.entityName = 'CM_Customers';
-            formModel.funcID = tempData?.category == '1' ? 'CM0101' : 'CM0105';
-            formModel.userPermission = this.view?.formModel?.userPermission;
-            let request = new DataRequest(
-              formModel.formName,
-              formModel?.gridViewName,
-              formModel?.entityName
-            );
-            request.funcID = formModel?.funcID;
-            dataService.service = 'CM';
-            dataService.request = request;
-            dataService.dataSelected = tempData;
-            dataService.updateDatas.set(tempData.recID, tempData);
-            let option = new SidebarModel();
-            option.FormModel = formModel;
-            option.Width = '800px';
-            this.cache
-              .gridViewSetup(formModel.formName, formModel.gridViewName)
-              .subscribe((grid) => {
-                let dialogAdd = this.callfc.openSide(
-                  CodxFormDynamicComponent,
-                  {
-                    formModel: option.FormModel,
-                    data: tempData,
-                    dataService: dataService,
-                    titleMore: this.moreEdit,
-                    isAddMode: false,
-                  },
-                  option
-                );
-                dialogAdd.closed.subscribe((e) => {
-                  if (e && e?.event && e?.event?.update) {
-                    const dataCus = e?.event?.update?.data;
-                    this.dataSelected.customerName = dataCus?.customerName;
-                    this.dataSelected.industries = dataCus?.industries;
-                    this.dataSelected.shortName = dataCus?.shortName;
-                    if (this.detailViewDeal) {
-                      this.detailViewDeal.dataSelected = JSON.parse(
-                        JSON.stringify(this.dataSelected)
-                      );
-                    }
-
-                    this.view.dataService
-                      .update(this.dataSelected, true)
-                      .subscribe();
-                    this.detectorRef.detectChanges();
-                  }
-                });
-              });
-          }
-        });
+      this.popupCustomer(event?.data);
     }
+  }
+
+  popupCustomer(data, isView = false) {
+    this.codxCmService
+      .getOneObject(data?.customerID, 'CustomersBusiness')
+      .subscribe((ele) => {
+        if (ele) {
+          let tempData = JSON.parse(JSON.stringify(ele));
+          var dataService = new CRUDService(this.inject);
+          let formModel = new FormModel();
+          formModel.formName =
+            tempData?.category == '1' ? 'CMCustomers' : 'CMPersonalCustomers';
+          formModel.gridViewName =
+            tempData?.category == '1'
+              ? 'grvCMCustomers'
+              : 'grvCMPersonalCustomers';
+          formModel.entityName = 'CM_Customers';
+          formModel.funcID = tempData?.category == '1' ? 'CM0101' : 'CM0105';
+          formModel.userPermission = this.view?.formModel?.userPermission;
+          let request = new DataRequest(
+            formModel.formName,
+            formModel?.gridViewName,
+            formModel?.entityName
+          );
+          request.funcID = formModel?.funcID;
+          dataService.service = 'CM';
+          dataService.request = request;
+          dataService.dataSelected = tempData;
+          dataService.updateDatas.set(tempData.recID, tempData);
+          let option = new SidebarModel();
+          option.FormModel = formModel;
+          option.Width = '800px';
+          option.zIndex = 1001;
+          this.cache
+            .gridViewSetup(formModel.formName, formModel.gridViewName)
+            .subscribe((grid) => {
+              let dialogAdd = this.callfc.openSide(
+                CodxFormDynamicComponent,
+                {
+                  formModel: option.FormModel,
+                  data: tempData,
+                  dataService: dataService,
+                  titleMore: this.moreEdit,
+                  isAddMode: false,
+                  isView: isView,
+                },
+                option
+              );
+              dialogAdd.closed.subscribe((e) => {
+                if (e && e?.event && e?.event?.update) {
+                  const dataCus = e?.event?.update?.data;
+                  this.dataSelected.customerName = dataCus?.customerName;
+                  this.dataSelected.industries = dataCus?.industries;
+                  this.dataSelected.shortName = dataCus?.shortName;
+                  if (this.detailViewDeal) {
+                    this.detailViewDeal.dataSelected = JSON.parse(
+                      JSON.stringify(this.dataSelected)
+                    );
+                  }
+
+                  this.view.dataService
+                    .update(this.dataSelected, true)
+                    .subscribe();
+                  this.detectorRef.detectChanges();
+                }
+              });
+            });
+        }
+      });
   }
   //#endregion
   async addTask(data) {
@@ -2643,8 +2682,8 @@ export class DealsComponent
     this.view.currentView.sumData = this.objectSumValue;
   }
   //--------------------------------------//
-  handelMoveStage(event, contract){
-    if(event){
+  handelMoveStage(event, contract) {
+    if (event) {
       this.moveStage(contract);
     }
   }
