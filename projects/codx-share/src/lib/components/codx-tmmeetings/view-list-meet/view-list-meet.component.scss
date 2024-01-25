@@ -2,8 +2,8 @@
   width: 5% !important;
 }
 
-.w-10 {
-  width: 10% !important;
+.w-70 {
+  width: 70% !important;
 
 }
 
@@ -16,8 +16,8 @@
 
 }
 
-.w-25 {
-  width: 25% !important;
+.w-80 {
+  width: 80% !important;
 
 }
 
@@ -53,4 +53,11 @@
 
 .label-status .text-dark {
   font-size: 13px !important;
+}
+
+.footer-att {
+  position: absolute;
+  bottom: 10px;
+  right: 20px;
+  width: 25px;
 }

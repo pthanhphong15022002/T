@@ -680,6 +680,24 @@
           <div class="w-150px min-w-150px">
             <codx-label
               class="label-colon text-gray-600 codx-textlabel"
+              fiedName="IssuedBy"
+              [formModel]="formModel"
+            >
+            </codx-label>
+          </div>
+          <div
+            class="text-dark fw-bold codx-textcontent"
+            [innerHTML]="
+              dataSelected?.issuedBy
+                | formatvalue : formModel : 'IssuedBy'
+                | async
+            "
+          ></div>
+        </div>
+        <div class="mb-5px d-flex align-items-top">
+          <div class="w-150px min-w-150px">
+            <codx-label
+              class="label-colon text-gray-600 codx-textlabel"
               fiedName="EthnicGroup"
               [formModel]="formModel"
             >

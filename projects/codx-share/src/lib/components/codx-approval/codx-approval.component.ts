@@ -303,6 +303,10 @@ export class CodxApprovalComponent
       (x: { functionID: string }) => x.functionID == 'SYS207'
     );
     bm[0].disabled = true;
+    
+    var view = data.filter((x: { functionID: string }) => x.functionID == 'SYS05');    
+    if (view?.length) view[0].disabled = true;
+    
     if (datas.status != '3') {
       this.api
         .execSv<any>(
