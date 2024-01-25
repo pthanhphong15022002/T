@@ -15,13 +15,12 @@ import {
   ValidationErrors,
   ValidatorFn,
 } from '@angular/forms';
-import { RealHub, RealHubService, AuthService, UIComponent } from 'codx-core';
+import { UIComponent } from 'codx-core';
 import { environment } from 'src/environments/environment';
 import { Modal } from 'bootstrap';
 import { SelectEventArgs } from '@syncfusion/ej2-angular-navigations';
 import { LoginService } from '@modules/auth/login/login.service';
 import { DisplayTextModel } from '@syncfusion/ej2-angular-barcode-generator';
-import { WaitingLoginQrcodeComponent } from '../waiting-login-qrcode/waiting-login-qrcode.component';
 
 @Component({
   selector: 'codx-login',
@@ -99,8 +98,6 @@ export class LoginDefaultComponent extends UIComponent {
   constructor(
     private injector: Injector,
     private df: ChangeDetectorRef,
-    private realHub: RealHubService,
-    private authService: AuthService,
     private loginService: LoginService
   ) {
     super(injector);
@@ -124,37 +121,6 @@ export class LoginDefaultComponent extends UIComponent {
         this.captChaValid = captChaControl.valid;
       });
     }
-
-    this.realHub.start('ad').then((x: RealHub) => {
-      if (x) {
-        x.$subjectReal.asObservable().subscribe((z) => {
-          if (z.event == 'AcceptLoginQR') {
-            if (z.data?.hubConnection == this.hubConnectionID) {
-              this.authService.setLogin(JSON.parse(z.data.user));
-              this.realHub.stop();
-              setTimeout(() => {
-                window.location.href = z.data?.host + z.data?.tenant;
-              }, 1000);
-            }
-          } else if (z.event == 'WaitingLoginQRCode') {
-            let objData = {
-              userName: z.data.userName,
-            };
-            let waitingLogin = this.callfc.openForm(
-              WaitingLoginQrcodeComponent,
-              '',
-              400,
-              600,
-              '',
-              objData
-            );
-            waitingLogin.closed.subscribe();
-          } else if (z.event == 'CancelLoginQR') {
-            window.location.reload();
-          }
-        });
-      }
-    });
   }
 
   ngOnDestroy() {
@@ -251,6 +217,7 @@ export class LoginDefaultComponent extends UIComponent {
   }
 
   generateQR() {
+    console.log('hubConnectionID: ', this.hubConnectionID)
     this.qrTimeout = 0;
     this.qrTimeoutMinutes = 0;
     clearInterval(this.interval);

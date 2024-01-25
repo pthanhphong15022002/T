@@ -96,16 +96,12 @@ export class AddUserComponent extends UIComponent implements OnInit {
     super(injector);
     this.isSaas = environment.saas == 1;
     this.formType = dt?.data?.formType;
-    this.adUser = { ...dt?.data?.data };
+    this.adUser = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
     this.dataCopy = dt?.data?.dataCopy;
     this.funcID = dt?.data?.funcID;
     if (this.formType == 'invite') {
       this.isSaved = false;
-      this.viewChooseRole = this.adUser?.chooseRoles;
-      if (this.adUser?.chooseRoles)
-        this.viewChooseRoleTemp = JSON.parse(
-          JSON.stringify(this.adUser?.chooseRoles)
-        );
+      this.adUser.administrator = false;
       this.adUser['phone'] = this.adUser.mobile;
       this.countListViewChoose();
     } else if (this.formType == 'edit') {
@@ -458,16 +454,6 @@ export class AddUserComponent extends UIComponent implements OnInit {
   }
   reloadAvatar(data: any): void {
     this.imageUpload?.reloadImageWhenUpload();
-  }
-
-  valueChangeM(data) {
-    this.adUser[data.field] = data.data;
-  }
-  valueChangeU(data) {
-    this.adUser[data.field] = data.data;
-  }
-  valueChangeP(data) {
-    this.adUser[data.field] = data.data;
   }
 
   valueEmp(data) {

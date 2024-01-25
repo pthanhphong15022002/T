@@ -356,6 +356,10 @@ export class CodxTasksService {
         service = 'DP';
         className = 'InstancesBusiness';
         break;
+      case 'DP_Activities':
+        service = 'DP';
+        className = 'ActivitiesBusiness';
+        break;
       case 'OM_OKRs':
         service = 'OM';
         className = 'OKRBusiness';

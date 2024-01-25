@@ -536,6 +536,27 @@
     </div>
   </div>
 
+  <div id="tasks" class="item-main">
+    <div class="d-flex align-items-center text-primary my-2">
+      <span class="icon-i-box-arrow-in-right icon-20 me-1 fw-bold"></span>
+      <codx-label
+        class="text-gray-600 ms-2 fs-5-sm fw-bold text-primary"
+        name="lblTitleTask"
+        [formModel]="dialog?.formModel"
+        [default]="'Công việc'"></codx-label>
+    </div>
+    <div>
+      <step-task
+        [entityName]="'CM_Deals'"
+        [listInstanceStep]="listInsStep"
+        [dataCM]="deal"
+        [applyFor]="'1'"
+        [isMoveStage]="true"
+        (moveStage)="moveStage($event)"
+        (startStep)="startNow($event)"></step-task>
+    </div>
+  </div>
+
   <div id="fields" class="item-main">
     <div class="d-flex align-items-center text-primary my-2">
       <span class="icon-i-clipboard icon-20 me-1 fw-bold"></span>

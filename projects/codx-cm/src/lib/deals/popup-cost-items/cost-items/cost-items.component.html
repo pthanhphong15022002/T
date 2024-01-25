@@ -114,7 +114,6 @@
                 <codx-inplace
                   type="number"
                   field="quantity"
-                  [format]="'0'"
                   [value]="cost?.quantity"
                   [cssClass]="' pe-5 mt-2 text-center w-90 cost-input'"
                   [emptyText]="grViewCost?.quantity?.description"
@@ -123,12 +122,12 @@
                 ></codx-inplace>
               </div>
             </td>
+            <!-- [format]="formatNum" -->
             <td class="text-end">
               <div class="">
                 <codx-inplace
                   type="number"
                   field="unitPrice"
-                  [format]="'0'"
                   [value]="cost?.unitPrice"
                   class="text-end"
                   [cssClass]="'mt-2  text-end w-90 cost-input'"

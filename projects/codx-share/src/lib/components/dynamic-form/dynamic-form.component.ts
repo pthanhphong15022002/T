@@ -40,6 +40,7 @@ import { CodxShareService } from '../../codx-share.service';
 export class DynamicFormComponent extends UIComponent {
   @ViewChild('view') viewBase: ViewsComponent;
   @ViewChild('morefunction') morefunction: TemplateRef<any>;
+  @ViewChild('note') note: TemplateRef<any>;
   service: string;
   entityName: string;
   predicate: string;
@@ -89,18 +90,45 @@ export class DynamicFormComponent extends UIComponent {
   }
 
   ngAfterViewInit(): void {
-    this.views = [
-      {
-        type: ViewType.grid,
-        sameData: true,
-        active: true,
-        model: {
-          //resources: this.columnsGrid,
-          template2: this.morefunction,
-          //frozenColumns: 1,
+    if(this.funcID == "FDS025"){
+      this.cache.gridViewSetup("FDIndustries", "grvFDIndustries").subscribe((grv) => {
+        if(grv){
+          const colums = {
+            field: Util.camelize("Note"),
+            headerText: grv["Note"].headerText,
+            width: grv["Note"].width,
+            template: this.note,
+          };
+          this.columnsGrid = [colums];
+          this.views = [
+            {
+              type: ViewType.grid,
+              sameData: true,
+              active: true,
+              model: {
+                resources: this.columnsGrid,
+                template2: this.morefunction,
+                //frozenColumns: 1,
+              },
+            },
+          ];
+        }
+      });
+    } else {
+      this.views = [
+        {
+          type: ViewType.grid,
+          sameData: true,
+          active: true,
+          model: {
+            //resources: this.columnsGrid,
+            template2: this.morefunction,
+            //frozenColumns: 1,
+          },
         },
-      },
-    ];
+      ];
+    }
+    
 
     // console.log('view ne', this.views);
     // console.log('view base ne', this.viewBase);
