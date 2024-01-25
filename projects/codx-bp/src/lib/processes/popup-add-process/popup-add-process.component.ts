@@ -143,13 +143,14 @@ export class PopupAddProcessComponent {
     private bpSv: CodxBpService,
     private authStore: AuthStore,
     private notiSv: NotificationsService,
-    private shareService : CodxShareService,
+    private shareService: CodxShareService,
     private elementRef: ElementRef,
     @Optional() dialog: DialogRef,
     @Optional() dt: DialogData
   ) {
     this.dialog = dialog;
-    if(dialog.dataService.dataSelected) this.data = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
+    if (dialog.dataService.dataSelected)
+      this.data = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
     this.action = dt?.data?.action;
     this.title = dt?.data?.title;
     this.user = this.authStore.get();
@@ -157,6 +158,10 @@ export class PopupAddProcessComponent {
   }
 
   ngOnInit(): void {
+
+  }
+
+  ngAfterViewInit(): void {
     if (this.action == 'edit') {
       this.getAvatar(this.data?.recID, this.data?.processName);
       this.extendInfos =
@@ -169,29 +174,24 @@ export class PopupAddProcessComponent {
     }
     this.getCacheCbxOrVll();
     this.getVll();
+    this.detectorRef.detectChanges();
   }
-
-  ngAfterViewInit(): void {}
 
   onDestroy() {
     this.destroyFrom$.next();
     this.destroyFrom$.complete();
   }
 
-  getVll()
-  {
-    let vll = this.shareService.loadValueList("BP001") as any;
-    if(isObservable(vll))
-    {
-      vll.subscribe(item=>{
+  getVll() {
+    let vll = this.shareService.loadValueList('BP001') as any;
+    if (isObservable(vll)) {
+      vll.subscribe((item) => {
         this.vllBP001 = item;
-        if(this.action == 'add') this.defaultStep();
-      })
-    }
-    else
-    {
+        if (this.action == 'add') this.defaultStep();
+      });
+    } else {
       this.vllBP001 = vll;
-      if(this.action == 'add') this.defaultStep();
+      if (this.action == 'add') this.defaultStep();
     }
   }
   //#region get or set default form
@@ -262,49 +262,47 @@ export class PopupAddProcessComponent {
     let lstStep = [];
     var stage = new BP_Processes_Steps();
     var form = new BP_Processes_Steps();
-    var vllStage = this.vllBP001.datas.filter(x=>x.value == "Stage")[0];
-    var vllForm = this.vllBP001.datas.filter(x=>x.value == "Form")[0];
+    var vllStage = this.vllBP001.datas.filter((x) => x.value == 'Stage')[0];
+    var vllForm = this.vllBP001.datas.filter((x) => x.value == 'Form')[0];
 
     stage.recID = Util.uid();
     stage.stepNo = 0;
-    stage.activityType = "Stage";
-    stage.stepName = vllStage.text + " 1";
+    stage.activityType = 'Stage';
+    stage.stepName = vllStage.text + ' 1';
     stage.reminder = this.data.reminder;
     stage.eventControl = null;
     var processSetting = JSON.parse(this.data.settings);
-    stage.settings = JSON.stringify(
-    {
-      icon: "icon-i-bar-chart-steps",
-      color: "#0078FF",
-      backGround: "#EAF0FF",
+    stage.settings = JSON.stringify({
+      icon: 'icon-i-bar-chart-steps',
+      color: '#0078FF',
+      backGround: '#EAF0FF',
       allowDrag: processSetting?.allowDrag || null,
       defaultProcess: processSetting?.defaultProcess || null,
       completeControl: processSetting?.completeControl || null,
       nextSteps: null,
       sortBy: null,
-      totalControl: null
+      totalControl: null,
     });
 
     form.recID = Util.uid();
     form.stepNo = 1;
-    form.stepName = vllForm.text + " 1";
-    form.activityType = "Form";
+    form.stepName = vllForm.text + ' 1';
+    form.activityType = 'Form';
     form.stageID = stage.recID;
     form.parentID = stage.recID;
     form.extendInfo = this.extendInfos;
-    form.memo = "";
+    form.memo = '';
     form.duration = 0;
-    form.interval = "1";
-    form.settings = JSON.stringify(
-    {
+    form.interval = '1';
+    form.settings = JSON.stringify({
       icon: vllForm.icon,
       color: vllForm.color,
       backGround: vllForm.textColor,
       nextSteps: null,
       sortBy: null,
-      totalControl: null
+      totalControl: null,
     });
-    lstStep.push(stage,form);
+    lstStep.push(stage, form);
     this.data.steps = lstStep;
     this.setLstExtends();
   }
@@ -353,6 +351,7 @@ export class PopupAddProcessComponent {
 
   //#region setting created tab
   clickTab(tabNo: number) {
+    if (this.currentTab == tabNo) return;
     let newNo = tabNo;
     let oldNo = this.currentTab;
     // if (tabNo <= this.processTab && tabNo != this.currentTab) { //cmt tạm để làm cho xong rồi bắt sau
@@ -404,23 +403,21 @@ export class PopupAddProcessComponent {
       (nodes[oldNode] as HTMLElement).classList.add('approve-disabled');
     }
   }
-  async continue(currentTab:any) {
-    debugger
-    if (currentTab == 0)
-    {
+  async continue(currentTab: any) {
+    debugger;
+    if (currentTab == 0) {
       //check điều kiện để continue
     }
     if (this.currentTab > 3) return;
     let oldNode = currentTab;
     let newNode = oldNode + 1;
     switch (currentTab) {
-      case 0:
-      {
+      case 0: {
         this.updateNodeStatus(oldNode, newNode);
         this.currentTab++;
         this.processTab == 0 && this.processTab++;
-        if(this.action == "add") {
-          this.data = {...this.data};
+        if (this.action == 'add') {
+          this.data = { ...this.data };
           this.saveProcessStep().subscribe();
         }
         break;
@@ -431,6 +428,9 @@ export class PopupAddProcessComponent {
         this.updateNodeStatus(oldNode, newNode);
         this.processTab++;
         this.currentTab++;
+        this.updateProcessStep().subscribe(item=>{
+          this.dialog.dataService.update(item, true).subscribe();
+        });
         break;
       case 2:
         this.updateNodeStatus(oldNode, newNode);
@@ -624,8 +624,8 @@ export class PopupAddProcessComponent {
     dialogModel.FormModel = formModel;
     let obj = {
       permissions: this.data.permissions ?? [],
-      title: title
-    }
+      title: title,
+    };
     let dialog = this.callfc.openForm(
       PopupPermissionsProcessesComponent,
       '',
@@ -733,7 +733,7 @@ export class PopupAddProcessComponent {
         }
       });
     }
-    debugger
+    debugger;
     let popupDialog = this.callfc.openForm(
       ModeviewComponent,
       '',
@@ -774,17 +774,26 @@ export class PopupAddProcessComponent {
               lstDocumentControl.push(tmpDoc);
             });
           });
-          this.data.documentControl = lstDocumentControl.length > 0 ? JSON.stringify(lstDocumentControl) : null;
+          this.data.documentControl =
+            lstDocumentControl.length > 0
+              ? JSON.stringify(lstDocumentControl)
+              : null;
         }
 
         if (this.data?.steps[1]?.extendInfo) {
           this.extendInfos.forEach((element) => {
             if (typeof element.documentControl != 'string') {
-              element.documentControl = element.documentControl?.length > 0 ? JSON.stringify(element.documentControl) : null;
+              element.documentControl =
+                element.documentControl?.length > 0
+                  ? JSON.stringify(element.documentControl)
+                  : null;
             }
 
             if (typeof element.dataFormat != 'string') {
-              element.dataFormat = element.dataFormat?.length > 0 ? JSON.stringify(element.dataFormat) : null;
+              element.dataFormat =
+                element.dataFormat?.length > 0
+                  ? JSON.stringify(element.dataFormat)
+                  : null;
             }
           });
 
@@ -851,7 +860,15 @@ export class PopupAddProcessComponent {
     let data = [];
     op.className = 'ProcessesBusiness';
     op.service = 'BP';
+    if(this.data?.steps?.length > 0){
+      this.data?.steps?.forEach((ele) => {
+        if(typeof ele.settings !== 'string'){
+          ele.settings = JSON.stringify(ele.settings);
+        }
+      });
+    }
     data = [this.data];
+
     if (this.action == 'add' || this.action == 'copy') {
       op.methodName = 'AddProcessAsync';
     } else {
@@ -861,13 +878,27 @@ export class PopupAddProcessComponent {
     return true;
   }
 
-  activeTab(tab:any)
-  {
+  activeTab(tab: any) {
     this.processTabIndex = tab;
   }
 
-  saveProcessStep()
+  saveProcessStep() {
+    return this.api.execSv(
+      'BP',
+      'BP',
+      'ProcessesBusiness',
+      'AddProcessAsync',
+      this.data
+    );
+  }
+  updateProcessStep()
   {
-    return this.api.execSv("BP","BP","ProcessesBusiness","AddProcessAsync",this.data);
+    let result = JSON.parse(JSON.stringify(this.data));
+    result.steps.forEach((elm :any)=>{
+      delete elm.child;
+
+      if(typeof elm.settings === 'object')  elm.settings = JSON.stringify(elm.settings);
+    })
+    return this.api.execSv("BP","BP","ProcessesBusiness","UpdateProcessAsync",result);
   }
 }

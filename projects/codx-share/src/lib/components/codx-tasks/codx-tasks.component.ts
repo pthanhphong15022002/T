@@ -2002,7 +2002,8 @@ export class CodxTasksComponent
               x.disabled = true;
             break;
           case 'SYS05': //Bổ sung theo task chị Nhị issue - tắt mf xem tất cả các view duyệt - 24/01/2024 (Phúc làm)
-            if(this.funcID == 'TMT0403' || this.funcID == 'TMT0402') x.disabled = true;
+            if (this.funcID == 'TMT0403' || this.funcID == 'TMT0402')
+              x.disabled = true;
             break;
         }
       });
@@ -2083,6 +2084,13 @@ export class CodxTasksComponent
           this.viewTree.gridModelTree.page = 1;
           this.viewTree.gridModelTree.favoriteID = e.data.recID;
           this.viewTree.favoriteName = e.data.favorite;
+          this.viewTree.loadData();
+        }
+        break;
+      case 'search':
+        if (this.viewTree) {
+          this.viewTree.gridModelTree.page = 1;
+          this.viewTree.gridModelTree.searchText = e.data;
           this.viewTree.loadData();
         }
         break;

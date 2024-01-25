@@ -4499,3 +4499,19 @@ tmdashboard .container-toolbar + .container-fluid,
 dmdashboard .container-toolbar + .container-fluid{
   overflow-y: scroll;
 }
+codx-filter-form{
+  .ps-4{
+    padding-left: 10px!important;
+  }
+  .row.p-2{
+    padding-left: 0px!important;
+  }
+  .fillter-card-body .collapse{
+    padding-left: 47px!important;
+  }
+}
+
+.w-500px.dropdown-menu{
+  max-height: calc(100vh - 50px);
+  overflow: auto;
+}

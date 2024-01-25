@@ -23,7 +23,7 @@
             <div class="d-flex flex-column border border-dotted py-2 px-4 my-4 border-w-2px" *ngFor="let item of data?.settings?.nextSteps , let idnext = index">
                 <div class="d-flex align-items-center justify-content-between border-bottom pb-2">
                     <span class="fw-bold">{{item?.predicateName}}</span>
-                    <i class="icon-edit_square"  (click)="openFormSetting(item,idnext)"></i>
+                    <i class="icon-edit_square cursor-pointer"  (click)="openFormSetting(item,idnext)"></i>
                 </div>
                 <div class="d-flex flex-column pt-2">
                     <ng-container *ngIf="item?.nextStepID , else elsNextStep">
@@ -43,7 +43,7 @@
         </div>
         <div class="d-flex flex-column mt-4">
             <codx-label formName="fmBPFieldGrid" fiedName="lblTaskDes" default="Diễn giải" class="fw-bold"></codx-label>
-            <codx-input type="textarea" format="ed2" field="memo" [crrValue]="data?.memo" (valueChange)="valueChange($event)"></codx-input>
+            <codx-input type="textarea" format="ed2" field="memo" [crrValue]="data?.memo" (valueChange)="valueChange($event)" [ngClass]="'w-100'"></codx-input>
         </div>
         <div class="d-flex flex-column mt-4">
             <codx-label formName="fmBPFieldGrid" fiedName="lblTaskDuration" default="Thời gian thực hiện" class="fw-bold"></codx-label>
@@ -81,7 +81,7 @@
                 <ng-container *ngIf="(activityType == 'Approve' || activityType == 'Check' || activityType == 'Sign') && listUses.length > 0">
                     <div class="d-flex align-items-center justify-content-between mt-4">
                         <div class="d-flex align-items-center mt-4" *ngFor="let item of vllBP013.datas , let i = index">
-                            <input class="form-check-input" [id]="'radioAttachApprovel' + i" type="radio" name="radioAttachApprovel" [value]="item.value" [checked]="item.value == data?.settings?.completeControl" >
+                            <input class="form-check-input" [id]="'radioAttachApprovel' + i" type="radio" name="radioAttachApprovel" [value]="item.value" [checked]="item.value == data?.settings?.approveMode" (change)="valueChangeRadio($event)">
                             <label class="form-check-label ms-2 fw-normal" [for]="'radioAttachApprovel' + i">
                                 {{item.text}}
                             </label>
