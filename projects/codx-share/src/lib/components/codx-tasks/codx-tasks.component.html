@@ -729,8 +729,7 @@
         *ngFor="let assgin of data?.assignTo?.split(';'); let i = index"
       >
         <ng-container *ngIf="i < 2">
-          <codx-img [width]="25" [objectId]="assgin" objectType="AD_Users">
-          </codx-img>
+          <codx-img [width]="25" [objectId]="assgin" objectType="AD_Users"></codx-img>
         </ng-container>
         <ng-container *ngIf="i == 2">
           <div
