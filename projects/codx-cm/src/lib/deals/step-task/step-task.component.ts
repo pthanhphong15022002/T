@@ -104,6 +104,7 @@ export class StepTaskComponent  implements OnInit, AfterViewInit, OnChanges {
   isShow = false;
   isShowSuccess = false;
   isShowFail = false;
+  isRoleFull = false;
   moreDefaut = {
     share: true,
     write: true,
@@ -130,7 +131,7 @@ export class StepTaskComponent  implements OnInit, AfterViewInit, OnChanges {
   service = 'DP';
   assemblyName = 'ERM.Business.DP';
   entityName2 = 'DP_Processes';
-  className = 'ProcessesBusiness';
+  className = 'InstancesStepsBusiness';
   method = 'LoadDataColumnsAsync';
   idField = 'recID';
   views: Array<ViewModel> = [];
@@ -227,10 +228,15 @@ export class StepTaskComponent  implements OnInit, AfterViewInit, OnChanges {
 
     if (changes?.dataCM) {
       this.type = this.dataCM.viewModeDetail || 'S';
+      this.isAdmin = false;
       if (!this.isAdmin) {
         this.isAdmin =
           this.dataCM?.full ||
           this.dataCM?.owner == this.user?.userID;
+        if(!this.isAdmin){
+          let checkRole = this.dataCM?.permissions?.some(x => x?.objectID == this.user?.userID && x?.memberType == "1");
+          this.isAdmin = checkRole ? true : false;
+        }
       }
       if(this.entityName == 'CM_Customers'){
         this.applyProcess = false;

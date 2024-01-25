@@ -4499,3 +4499,35 @@ tmdashboard .container-toolbar + .container-fluid,
 dmdashboard .container-toolbar + .container-fluid{
   overflow-y: scroll;
 }
+codx-filter-form{
+  .ps-4{
+    padding-left: 10px!important;
+  }
+  .row.p-2{
+    padding-left: 0px!important;
+  }
+  .fillter-card-body .collapse{
+    padding-left: 47px!important;
+  }
+}
+
+.w-500px.dropdown-menu{
+  max-height: calc(100vh - 50px);
+  overflow: auto;
+}
+
+.feed-box input.e-input{
+  border-color: transparent!important;
+  border: 0!important;
+  background-color: transparent!important;
+}
+.z-101{
+  z-index: 100!important;
+}
+// app-list-post #newfeed codx-listview > .card-body.p-0{
+//   overflow:hidden !important;
+//   border:1px aqua solid!important
+// }
+codx-listview .container-fluid.p-1{
+  padding: 0!important;
+}

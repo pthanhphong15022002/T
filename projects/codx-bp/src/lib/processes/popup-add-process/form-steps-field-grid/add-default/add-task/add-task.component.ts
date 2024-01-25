@@ -22,21 +22,21 @@ export class AddTaskComponent extends BaseFieldComponent implements OnInit , OnC
     datas:
     [
       {
-        value : 0,
+        value : 1,
         text: "Đại diện "
       },
       {
-        value : 1,
+        value : 2,
         text: "Song song"
       },
       {
-        value : 2,
+        value : 3,
         text: "Tuần tự"
       },
     ]
   }
   ngOnChanges(changes: SimpleChanges): void {
-    if(changes['activityType'].currentValue != changes['activityType'].previousValue)
+    if(changes?.activityType && changes['activityType'].currentValue != changes['activityType'].previousValue)
     {
       this.activityType = changes['activityType'].currentValue;
       if(this.data) this.changeActivity()
@@ -123,10 +123,8 @@ export class AddTaskComponent extends BaseFieldComponent implements OnInit , OnC
         }
       ]
     }
-    else if(this.data.activityType == "Conditions" && !this.data.settings.nextSteps)
-    {
-      this.data.settings.nextSteps = [];
-    }
+    else if(this.data.activityType == "Conditions" && !this.data.settings.nextSteps) this.data.settings.nextSteps = [];
+    else if((this.data.activityType == "Sign" || this.data.activityType == "Check") && !this.data?.settings?.approveMode) this.data.settings.approveMode = 1;
   }
   valueChange(e:any)
   {
@@ -230,8 +228,13 @@ export class AddTaskComponent extends BaseFieldComponent implements OnInit , OnC
     let data = this.process.steps.filter(x=>x.recID == id)[0];
     if(data)
     {
-      return '<i class="'+data.settings.icon+'" style="color:'+data.settings.color+'"></i><span class="ms-2">'+data.stepName+'</span>'
+      return this.sanitizer
+      .bypassSecurityTrustHtml('<i class="'+data.settings.icon+'" style="color:'+data.settings.color+'"></i><span class="ms-2">'+data.stepName+'</span>')
     }
     return "";
+  }
+  valueChangeRadio(e:any)
+  {
+    this.data.settings.approveMode = e?.target?.value;
   }
 }
