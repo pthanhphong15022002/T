@@ -88,6 +88,7 @@ export class ViewDealDetailComponent implements OnInit, OnChanges {
   listTabInformation = [
     { id: 'information', name: 'Thông tin dự án'},
     { id: 'costItems', name: 'Chi phí'},
+    { id: 'task', name: 'Công việc'},
     { id: 'fields', name: 'Thông tin mở rộng'},
     { id: 'opponent', name: 'Đối thủ'},
     { id: 'note', name: 'Ghi chú'},
@@ -101,6 +102,7 @@ export class ViewDealDetailComponent implements OnInit, OnChanges {
   isUpDealCost = false;
   dealValueTo: any;
   isUpDealValueTo = false;
+  detailViewDeal;
   constructor(
     private cache: CacheService,
     private codxCmService: CodxCmService,
@@ -119,6 +121,7 @@ export class ViewDealDetailComponent implements OnInit, OnChanges {
     this.contractRecId = dt?.data?.contactRecId;
     this.listInsStepStart = dt?.data?.listInsStepStart;
     this.view = dt?.data?.view;
+    this.detailViewDeal = dt?.data?.detailViewDeal;
     if(!this.dialog?.formModel){
       this.dialog.formModel = {
         entityName: "CM_Contracts",
@@ -606,6 +609,37 @@ export class ViewDealDetailComponent implements OnInit, OnChanges {
       isUpDealValueTo: this.isUpDealValueTo,
     };
     this.dialog.close(obj);
+  }
+  startNow(e) {
+    if(e){
+      this.notiService
+      .alertCode('DP033', null, ['"' + this.deal?.dealName + '"' || ''])
+      .subscribe((x) => {
+        if (x.event && x.event.status == 'Y') {
+          this.startDeal(this.deal);
+        }
+      });
+    }
+  }
+  startDeal(data) {
+    this.codxCmService
+      .startInstance([data.refID, data.recID, 'CM0201', 'CM_Deals'])
+      .subscribe((resDP) => {
+        if (resDP) {
+          let datas = [data.recID, resDP[0]];
+          this.codxCmService.startDeal(datas).subscribe((res) => {
+            if (res) {
+              this.deal = res;
+              this.view.dataService.update(this.deal, true).subscribe();
+              if (this.detailViewDeal)
+                this.detailViewDeal.reloadListStep(resDP[1]);
+                this.getListInstanceStep(this.deal);
+              this.notiService.notifyCode('SYS007');
+            }
+            this.changeDetectorRef.markForCheck();
+          });
+        }
+      });
   }
 }
 
