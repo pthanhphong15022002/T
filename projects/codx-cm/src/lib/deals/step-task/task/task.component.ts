@@ -754,18 +754,18 @@ export class TaskComponent implements OnInit, AfterViewInit, OnChanges {
     var task = new TM_Tasks();
     task.taskName = data.taskName;
     task.refID = data?.recID;
-    task.refType = 'DP_Instances_Steps_Tasks';
+    task.refType = 'DP_Activities'; //'DP_Instances_Steps_Tasks';
     task.dueDate = data?.endDate;
     task.sessionID = this.objectID;
-    let dataReferences = [
-      {
-        recIDReferences: data.recID,
-        refType: 'DP_Instances_Steps_Tasks',
-        createdOn: data.createdOn,
-        memo: data.taskName,
-        createdBy: data.createdBy,
-      },
-    ];
+    // let dataReferences = [
+    //   {
+    //     recIDReferences: data.recID,
+    //     refType: 'DP_Activities', //'DP_Instances_Steps_Tasks',
+    //     createdOn: data.createdOn,
+    //     memo: data.taskName,
+    //     createdBy: data.createdBy,
+    //   },
+    // ];
     let assignModel: AssignTaskModel = {
       vllRole: 'TM001',
       title: moreFunc.customName,
