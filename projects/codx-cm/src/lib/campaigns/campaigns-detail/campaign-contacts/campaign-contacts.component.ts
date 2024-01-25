@@ -340,6 +340,7 @@ export class CampaignContactsComponent implements OnInit {
         switch (res.functionID) {
           case 'SYS03':
           case 'SYS04':
+          case 'SYS05':
             res.disabled = true;
             break;
           case 'CM0301_2_1':

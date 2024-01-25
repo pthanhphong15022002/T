@@ -26,7 +26,7 @@ export class EmployeeListByOrgComponent {
   @Output() gridViewDataService: EventEmitter<any> = new EventEmitter();
   totalEmployee: number = 0;
   sysMoreFunc: any[] = [];
-  columnsGrid;
+  columnsGrid: any[];
   columnsGridContact;
   manager: any = null;
   @ViewChild('grid') grid: CodxGridviewV2Component;

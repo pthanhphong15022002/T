@@ -64,7 +64,7 @@
                 <ng-template #tmpMessage>
                     <div class="message"  [attr.scroll]="idx == arrMessages?.length - 1 ? (chatBoxBody | srollPipe) : null">
                         <ng-container *ngIf="user.userID == item?.createdBy;else reciverMssg">
-                            <div class="d-flex align-items-end justify-content-end w-100 position-relative">
+                            <div class="d-flex align-items-end justify-content-end w-100 position-relative" id="senderMssg">
                                 <ng-container *ngIf="item?.messageType != '5'">
                                     <div class="message-function">
                                        <div class="d-flex align-items-center cursor-pointer fw-bold me-2">
@@ -100,14 +100,14 @@
                                        </div>
                                     </div>
                                 </ng-container>
-                                <div class="max-w-250px d-flex flex-column align-items-end">
+                                <div class="max-w-250px d-flex flex-column align-items-end bg-whitesmoke">
                                     <ng-container *ngIf="item?.messageType == '5';else tmpSendContent">
                                         <span>{{mssgDeleted}}</span>
                                     </ng-container>
                                     <ng-template #tmpSendContent>
                                         <!-- message reply -->
                                         <ng-container *ngIf="item?.refID">
-                                            <div class="w-fit-content bg-mssg-reply text-break text-justify mb-1 p-2 rounded-1">
+                                            <div class="w-fit-content  mx-2 my-2 bg-mssg-reply text-break text-justify mb-1 p-2 rounded-1">
                                                 <span class="d-block text-gray-600 fs-8">{{item?.refContent.createdName}}</span>
                                                 <ng-container *ngIf="item?.refContent.content">
                                                     <span class="d-block">{{item?.refContent.content}}</span>
@@ -128,7 +128,7 @@
                                             <div class="w-fit-content bg-mssg-send text-break text-justify text-white p-2 rounded-1">
                                                 {{item?.message}}
                                                 <ng-container *ngIf="idx == arrMessages?.length - 1 || item?.createdBy != arrMessages[idx+1]?.createdBy">
-                                                    <span class="d-block text-end fw-light">{{item?.createdOn | date:'hh:mm'}}</span>
+                                                    <span class="d-block text-end fs-7">{{item?.createdOn | date:'hh:mm'}}</span>
                                                 </ng-container>
                                             </div>
                                         </ng-container>     
@@ -136,7 +136,7 @@
                                 </div>
                                 <!-- files -->
                                 <ng-container *ngIf="item?.messageType == '2'" >
-                                    <div class="max-w-250px">
+                                    <div class="max-w-250px w-250px">
                                         <codx-view-files 
                                             [objectID]="item?.recID" 
                                             [objectType]="'WP_Messages'" 
@@ -145,7 +145,7 @@
                                             (selectFile)="clickViewFile($event)">
                                         </codx-view-files>
                                         <ng-container *ngIf="idx == arrMessages?.length - 1 || item?.createdBy != arrMessages[idx+1]?.createdBy">
-                                            <div class="d-block text-end fw-light">{{item?.createdOn | date:'hh:mm'}}</div>
+                                            <div class="d-block text-end fs-7">{{item?.createdOn | date:'hh:mm'}}</div>
                                         </ng-container>
                                     </div>
                                 </ng-container>
@@ -170,7 +170,7 @@
                         </ng-container>
                          <!-- reciver message -->
                         <ng-template #reciverMssg>
-                            <div class="d-flex align-items-end justify-content-start">
+                            <div class="d-flex align-items-end justify-content-start " id="reciverMssg">
                                 <div class="me-2">
                                     <codx-img 
                                         [objectId]="item?.createdBy" 
@@ -208,7 +208,7 @@
                                             <div class="text-break text-justify">
                                                 {{item?.message}}
                                                 <ng-container *ngIf="idx == arrMessages?.length - 1 || item?.createdBy != arrMessages[idx+1]?.createdBy">
-                                                    <span class="d-block text-start fw-light">{{item?.createdOn | date:'hh:mm'}}</span>
+                                                    <span class="d-block text-start fs-7">{{item?.createdOn | date:'hh:mm'}}</span>
                                                 </ng-container>
                                             </div>
                                         </ng-container>    
@@ -224,7 +224,7 @@
                                                 </codx-view-files>
                                                 <!-- time -->
                                                 <ng-container *ngIf="idx == arrMessages?.length - 1 || item?.createdBy != arrMessages[idx+1]?.createdBy">
-                                                    <div class="d-block text-start fw-light">{{item?.createdOn | date:'hh:mm'}}</div>
+                                                    <div class="d-block text-start fs-7">{{item?.createdOn | date:'hh:mm'}}</div>
                                                 </ng-container>
                                             </div>
                                         </ng-container>  

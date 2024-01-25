@@ -680,7 +680,10 @@ export class CodxTasksComponent
       this.notiService.notifyCode('TM017');
       return;
     }
-    if (data.category == '2') {
+    if (
+      data.category == '2' &&
+      !(data.parentID == null && data.createdBy == this.user.userID)
+    ) {
       this.notiService.notifyCode('TM018');
       return;
     }
@@ -1894,7 +1897,10 @@ export class CodxTasksComponent
           case 'SYS02':
             if (
               !data.write ||
-              data.category == '2' ||
+              (data.category == '2' &&
+                !(
+                  data.parentID == null && data.createdBy == this.user?.userID
+                )) ||
               data.status == '90' ||
               this.funcID == 'TMT0402' ||
               this.funcID == 'TMT0401' ||
@@ -1994,6 +2000,9 @@ export class CodxTasksComponent
               data.status == '05'
             )
               x.disabled = true;
+            break;
+          case 'SYS05': //Bổ sung theo task chị Nhị issue - tắt mf xem tất cả các view duyệt - 24/01/2024 (Phúc làm)
+            if(this.funcID == 'TMT0403' || this.funcID == 'TMT0402') x.disabled = true;
             break;
         }
       });
