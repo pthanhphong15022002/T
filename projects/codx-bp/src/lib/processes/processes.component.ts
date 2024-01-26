@@ -252,7 +252,6 @@ export class ProcessesComponent
         this.codxService.navigate('',"/bp/instances/BPT011/"+this.itemSelected.recID);
         break;
       }
-      break;
       default: {
         this.codxShareService.defaultMoreFunc(
           e,
@@ -262,7 +261,6 @@ export class ProcessesComponent
           this.view.dataService,
           this
         );
-        // this.df.detectChanges();
         break;
       }
     }
