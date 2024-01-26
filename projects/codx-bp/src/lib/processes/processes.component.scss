@@ -138,7 +138,7 @@
 
 .contain-1 {
   position: absolute;
-  background: #808080;
+  background-color: #a2c4eb !important;
   width: 25px;
   height: 25px;
   border-radius: 50%;
@@ -168,6 +168,15 @@
 }
 .m-w-90 {
   max-width: 90% !important;
+}
+
+.m-w-70 {
+  max-width: 70% !important;
+
+}
+
+.m-w-30{
+  max-width: 30% !important;
 }
 
 .bagde-per {

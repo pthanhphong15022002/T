@@ -1,4 +1,4 @@
-<codx-views [toolbarDisplay]="false" #view [views]="views" service="AC" entityName="AC_Journals" predicates="Status=@0"
+<codx-views class="ac-animation-none" [toolbarDisplay]="false" #view [views]="views" service="AC" entityName="AC_Journals" predicates="Status=@0"
   [dataValues]="mainFilterValue ?? '1'" [autoLoad]="true">
 </codx-views>
 
@@ -41,21 +41,21 @@
     <div class="row" data-kt-scroll="true" data-kt-scroll-activate="{default: true}" data-kt-scroll-height="auto"
       data-kt-scroll-dependencies=".hhder, .header" data-kt-scroll-wrappers=".wrapper" data-kt-scroll-offset="0px">
       <div [style]="viewActive == ViewType.list ? '' : 'display: none;'" class="h-100">
-        <codx-listview class="h-100 d-block animate__animated animate__slideInRight py-5" type="listView" funcId="ACT"
+        <codx-listview class="h-100 overflow-auto" type="listView" funcId="ACT"
           service="AC" [entityName]="view.entityName" [dataService]="view.dataService"
           [itemTemplate]="listItemTemplate" (onSelectionChanged)="onSelectedViewList($event)">
         </codx-listview>
       </div>
 
-      <div [style]="viewActive == ViewType.smallcard ? '' : 'display: none;'" *ngIf="viewActive == ViewType.smallcard" class="h-100">
-        <codx-listview class="h-100 d-block animate__animated animate__slideInRight py-5" [selectFirst]="true" 
+      <div [style]="viewActive == ViewType.smallcard ? '' : 'display: none;'" class="h-100">
+        <codx-listview class="h-100" [selectFirst]="true" 
           [itemTemplate]="templateListCard" type="cardView" funcId="ACT" service="AC" [entityName]="view.entityName"
           [dataService]="view.dataService">
         </codx-listview>
       </div>
 
       <div class="h-100" [style]="viewActive == ViewType.grid ? '' : 'display: none;'">
-        <codx-gridview-v2 class="h-100 d-block animate__animated animate__slideInRight py-5" #grid (onSelected)="onSelected($event)"
+        <codx-gridview-v2 class="h-100" #grid (onSelected)="onSelected($event)"
           [formName]="view.formModel.formName" [gridViewName]="view.formModel.gridViewName" [rowHeight]="40" (onDoubleClick)="onDoubleClick($event)"
           [entityName]="view.formModel.entityName" [templateMore]="moreTemplate" service="AC" [isMainView]="true"
           [dataSource]="view.dataService.data">
