@@ -99,7 +99,7 @@
                 *ngFor="let item of data?.permissions; let i = index"
               >
                 <ng-container *ngIf="i < 2">
-                  <div style="position: relative; margin-top: 7px;" [ngbTooltip]="permTooltip">
+                  <div style="position: relative; margin-top: 6px;" [ngbTooltip]="permTooltip">
                     <codx-imgs
                       [objectId]="item?.objectID"
                       [objectName]="item?.objectName"
