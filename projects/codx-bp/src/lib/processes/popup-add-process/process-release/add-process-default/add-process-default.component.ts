@@ -1,6 +1,6 @@
 import { Component, OnInit, Optional } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { DialogData, DialogRef, Util } from 'codx-core';
+import { ApiHttpService, DialogData, DialogRef, Util } from 'codx-core';
 import { CodxBpService } from 'projects/codx-bp/src/public-api';
 import { firstValueFrom } from 'rxjs';
 
@@ -23,6 +23,7 @@ export class AddProcessDefaultComponent implements OnInit{
     entityName: 'BP_Instances'
   }
   constructor(
+    private api: ApiHttpService,
     private bpService: CodxBpService,
     @Optional() dialog: DialogRef,
     @Optional() dt: DialogData
@@ -95,15 +96,45 @@ export class AddProcessDefaultComponent implements OnInit{
         this.bpService.genAutoNumber(this.formModel?.funcID, this.formModel.entityName, "InstanceNo")
       );
     }
-   
-    var data = 
+    var stageF = this.process.steps.filter(x=>x.activityType == "Stage")[0];
+    var stage = 
+    {
+      recID: Util.uid(),
+      instanceID: instanceNo,
+      applyFor: this.process?.applyFor,
+      status: "1",
+      taskType: stageF?.activityType,
+      taskName: stageF?.stepName,
+      memo: stageF.memo,
+      location: stageF.location,
+      interval: stageF.interval,
+      duration: stageF.duration,
+      settings: stageF.settings,
+      stepID: stageF.recID
+    }
+    var step = 
+    {
+      recID: Util.uid(),
+      instanceID: instanceNo,
+      applyFor: this.process?.applyFor,
+      status: "1",
+      taskType: this.data?.activityType,
+      taskName: this.data?.stepName,
+      memo: this.data.memo,
+      location: this.data.location,
+      interval: this.data.interval,
+      duration: this.data.duration,
+      settings: JSON.stringify(this.data.settings),
+      stepID: this.data.recID
+    }
+    let data = 
     {
       processID : this.process?.recID,
       instanceNo : instanceNo,
       title: valueForm.mo_ta_ngan_gon,
       status: "1",
-      currentStage: null,
-      currentStep: null,
+      currentStage: stageF.recID,
+      currentStep: step.recID,
       lastUpdate: null,
       closed: false,
       closedOn: null,
@@ -112,6 +143,13 @@ export class AddProcessDefaultComponent implements OnInit{
       progress: null,
       actualStart: null,
     }
-    debugger
+   
+   var listTask = JSON.stringify([stage,step]);
+    //Luu process Task
+    this.api.execSv("BP","BP","ProcessTasksBusiness","SaveListTaskAsync",listTask).subscribe();
+    //Luu Instanes
+    this.api.execSv("BP","BP","ProcessInstancesBusiness","SaveInsAsync",data).subscribe(item=>{
+      this.dialog.close(data)
+    });
   }
 }

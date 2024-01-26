@@ -247,7 +247,7 @@ export class ProcessesComponent
       case "SYS008":
         this.openFormDiagram();
         break;
-      case "BPT109":
+      case "BPT0101":
       {
         this.codxService.navigate('',"/bp/instances/BPT011/"+this.itemSelected.recID);
         break;
