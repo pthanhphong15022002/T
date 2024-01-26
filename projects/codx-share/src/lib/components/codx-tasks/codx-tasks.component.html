@@ -267,9 +267,9 @@
 
     <!--begin::Item-->
 
-    <div class="d-flex justify-content-between align-items-top mt-1">
-      <div class="d-flex align-items-center me-2 codx-badge">
-        <!-- <ng-container *ngIf="setting?.processBar">
+    <div class="d-flex justify-content-between align-items-center mt-1 mb-2">
+     <!--  <div class="d-flex align-items-center me-2 codx-badge">
+        <ng-container *ngIf="setting?.processBar">
           <div
             class="control-section me-2"
             placement="top left right bottom"
@@ -320,7 +320,32 @@
             [openViewPopup]="true"
           ></codx-attachment-temp> -/->
         </ng-container>
-      --></div>
+      </div>-->
+      <div>
+        <div
+          class=""
+          *ngIf="data.memo || data.memo2"
+        >
+          <div
+            class="d-flex align-items-center me-3 text-primary"
+            (click)="clickShow($event, data.recID)"
+          >
+            <span>
+              <codx-label
+                name="lblDescripsionDetails"
+                [formModel]="view.formModel"
+                default="Mô tả chi tiết"
+              >
+              </codx-label
+            ></span>
+            <span
+              id="icon-{{ data.recID }}"
+              class="icon-keyboard_arrow_right icon-16 align-item-center justify-content-center"
+            >
+            </span>
+          </div>
+        </div>
+      </div>
       <div class="ms-3 h-25px" id="{{ data.taskID }}">
         <ng-container
           *ngIf="
@@ -361,32 +386,7 @@
       </div>
     </div>
     <!--end::Item-->
-    <div
-      class="w-100 m-3 flex-column text-center"
-      *ngIf="data.memo || data.memo2"
-    >
-      <div class="justify-content-between">
-        <div></div>
-        <div
-          class="d-flex justify-content-end me-3 text-primary"
-          (click)="clickShow($event, data.recID)"
-        >
-          <span>
-            <codx-label
-              name="lblDescripsionDetails"
-              [formModel]="view.formModel"
-              default="Mô tả chi tiết"
-            >
-            </codx-label
-          ></span>
-          <span
-            id="icon-{{ data.recID }}"
-            class="icon-keyboard_arrow_right icon-14 align-item-center justify-content-center"
-          >
-          </span>
-        </div>
-      </div>
-    </div>
+    
     <div
       id="{{ data.recID }}"
       class="w-100 border-description border-gray-300 rounded-2 px-1 mb-1 hidden-main"
@@ -725,14 +725,28 @@
       container="body"
       autoClose="outside"
     >
-      <codx-imgs
-        [isToolTip]="false"
-        [width]="25"
-        [objectId]="data?.assignTo"
-        objectType="AD_Users"
-        [numberImages]="3"
+      <ng-container
+        *ngFor="let assgin of data?.assignTo?.split(';'); let i = index"
       >
-      </codx-imgs>
+        <ng-container *ngIf="i < 2">
+          <codx-img [width]="25" [objectId]="assgin" objectType="AD_Users"></codx-img>
+        </ng-container>
+        <ng-container *ngIf="i == 2">
+          <div
+            class="symbol symbol-25px symbol-circle"
+            ng-reflect-ng-class="symbol-circle,"
+          >
+            <div
+              class="align-items-center d-flex h-25px justify-content-center rounded-circle text-white w-25px"
+              style="background-color: rgb(160 161 161);"
+            >
+              <span style="font-size: 14px">
+                {{ data?.assignTo?.split(';')?.length - 3 }}+</span
+              >
+            </div>
+          </div>
+        </ng-container>
+      </ng-container>
     </div>
     <div *ngIf="data.category == '2'">
       <codx-imgs

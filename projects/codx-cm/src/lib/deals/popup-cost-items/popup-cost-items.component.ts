@@ -1,4 +1,10 @@
-import { ChangeDetectorRef, Component, OnInit, Optional } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+  Optional,
+  ViewChild,
+} from '@angular/core';
 import {
   ApiHttpService,
   CacheService,
@@ -9,6 +15,7 @@ import {
 } from 'codx-core';
 import { CM_CostItems } from '../../models/cm_model';
 import { dateToInt } from '@syncfusion/ej2-angular-spreadsheet';
+import { CostItemsComponent } from './cost-items/cost-items.component';
 
 @Component({
   selector: 'lib-popup-cost-items',
@@ -16,6 +23,7 @@ import { dateToInt } from '@syncfusion/ej2-angular-spreadsheet';
   styleUrls: ['./popup-cost-items.component.css'],
 })
 export class PopupCostItemsComponent implements OnInit {
+  @ViewChild('costItems') costItems: CostItemsComponent;
   dialog: DialogRef;
 
   title = 'Chi phí';
@@ -114,7 +122,16 @@ export class PopupCostItemsComponent implements OnInit {
     debugger;
   }
 
-  closePopup() {
+  closePopup(timeOut = 500) {
+    // if (this.costItems && this.costItems.isSavingData) {
+    //   setTimeout(() => {
+    //     if (timeOut > 1000) return;
+    //     timeOut += 500;
+    //     this.closePopup(timeOut);
+    //     console.log(timeOut);
+    //   }, timeOut);
+    //   return;
+    // }
     if (this.viewOnly || (!this.isUpDealCost && !this.isUpDealValueTo)) {
       this.dialog.close();
       return;

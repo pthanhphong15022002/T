@@ -38,6 +38,10 @@
 </codx-mfunc> -->
 </ng-template>
 
+<ng-template #note let-data>
+  <codx-label [innerHTML]="data?.note"></codx-label>
+</ng-template>
+
 <ng-template #tabRef>
   <codx-tabs
     [entityName]="view.formModel.entityName"
