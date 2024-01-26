@@ -190,16 +190,16 @@ codx-chat-box.active{
 }
 
 .message-function{
-    display: none;
+    opacity: 0;
 }
 .codx-message:hover{
     .message-function{
-        display: block;
+        opacity: 1;
     }
 }
 .message:hover{
     .message-function{
-        display: block;
+        opacity: 1;
     }
 }
 .codx-message-text{
@@ -341,10 +341,16 @@ codx-chat-box.active{
     padding: 0px;
 }
 
-
-
+.w-250px{
+    width: 250px !important;
+}
+.min-w-150px{
+    
+    min-width: 150px !important;
+}
 .bg-mssg-send{
-    background-color: var(--bs-primary-rgb);
+    //background-color: var(--bs-primary-rgb);
+    background-color: #eceffe !important;
 }
 
 .max-w-250px{
@@ -357,15 +363,21 @@ codx-chat-box.active{
 }
 
 .bg-mssg-recive{
-    background-color:var(--gray-150);
+    //background-color:var(--gray-150);
+    background-color: #f1f2f5 !important;
+
 }
 
 .bg-mssg-reply{
-    background-color: var(--gray-150);
+    //background-color: var(--gray-150);
+    background-color: #eceffe !important;
 }
 .w-fit-content{
     width: fit-content;
 }
 .bg-whitesmoke{
     background-color: #F5F5F5 !important;
+}
+.reply-span{
+    border-left: 3px solid;
 }

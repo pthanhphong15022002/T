@@ -535,7 +535,10 @@ export class ModeviewComponent implements OnInit {
         this.selectedItem(this.table[e?.columnOrder - 1].children[stt]);
       }
     }
-    else this.table[e?.columnOrder].children[e.columnNo] = e;
+    else {
+      e.fieldName = this.formatTitle(e.title);
+      this.table[e?.columnOrder].children[e.columnNo] = e;
+    }
   }
 
   resetIndex()

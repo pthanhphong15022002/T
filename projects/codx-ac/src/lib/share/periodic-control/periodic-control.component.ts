@@ -174,7 +174,6 @@ export class PeriodicControlComponent extends UIComponent {
   }
 
   changeDataMF(event:any,type){
-    console.log(event);
     event.reduce((pre, element) => {
       element.isblur = false;
       if(type === 'M') element.isbookmark = true;

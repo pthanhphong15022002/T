@@ -200,7 +200,9 @@ export class CodxChatBoxComponent implements OnInit, AfterViewInit {
     }
     // get valuelist vote
     this.cache.valueList('L1480').subscribe((vll: any) => {
-      if (vll?.datas) this.vllL1480 = vll.datas;
+      if (vll?.datas) {
+        this.vllL1480 = vll.datas;
+      } 
     });
     // get mssage deleted
     this.cache.message('CHAT002').subscribe((res: any) => {
@@ -604,6 +606,9 @@ export class CodxChatBoxComponent implements OnInit, AfterViewInit {
   clickVoteMssg(mssg: any, vote: any) {
     this.signalR.sendData(CHAT.BE_FUNC.ReactMessage, this.groupID, mssg.recID, vote.value);
     this.dt.detectChanges();
+  }
+  defaultReact(mssg:any){
+    this.clickVoteMssg(mssg,this.vllL1480[0]);
   }
 
   replyTo: string = '';

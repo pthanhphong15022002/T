@@ -241,6 +241,7 @@ export enum MorfuncSale {
   KhoiPhuc = 'ACT060507',
   In = 'ACT060508',
   KiemTraHopLe = 'ACT060503',
+  demo = 'ACT060501'
 }
 
 export enum MorfuncVoucher {
@@ -655,31 +656,31 @@ export class CodxAcService {
         switch (data?.status) {
           case '1':
             if (!data?.validated) {
-              if(![MorfuncSale.KiemTraHopLe, MorfuncSale.In].includes(element.functionID)) element.disabled = true;
+              if(![MorfuncSale.KiemTraHopLe, MorfuncSale.In,MorfuncSale.demo].includes(element.functionID)) element.disabled = true;
             }else{
               if (journal.approvalControl == '0') {
-                if(![MorfuncSale.GhiSo,MorfuncSale.In].includes(element.functionID)) element.disabled = true;
+                if(![MorfuncSale.GhiSo,MorfuncSale.In,MorfuncSale.demo].includes(element.functionID)) element.disabled = true;
               }else{
-                if(![MorfuncSale.GuiDuyet,MorfuncSale.In].includes(element.functionID)) element.disabled = true;
+                if(![MorfuncSale.GuiDuyet,MorfuncSale.In,MorfuncSale.demo].includes(element.functionID)) element.disabled = true;
               }
             }
             break;
 
           case '2':
-            if(![MorfuncSale.KiemTraHopLe,MorfuncSale.In].includes(element.functionID)) element.disabled = true;
+            if(![MorfuncSale.KiemTraHopLe,MorfuncSale.In,MorfuncSale.demo].includes(element.functionID)) element.disabled = true;
             break;
 
           case '3':
-            if(![MorfuncSale.HuyDuyet,MorfuncSale.In].includes(element.functionID)) element.disabled = true;
+            if(![MorfuncSale.HuyDuyet,MorfuncSale.In,MorfuncSale.demo].includes(element.functionID)) element.disabled = true;
             break;
 
           case '5':
           case '9':
-            if(![MorfuncSale.GhiSo,MorfuncSale.In].includes(element.functionID)) element.disabled = true;
+            if(![MorfuncSale.GhiSo,MorfuncSale.In,MorfuncSale.demo].includes(element.functionID)) element.disabled = true;
             break;
 
           case '6':
-            if(![MorfuncSale.KhoiPhuc,MorfuncSale.In].includes(element.functionID)) element.disabled = true;
+            if(![MorfuncSale.KhoiPhuc,MorfuncSale.In,MorfuncSale.demo].includes(element.functionID)) element.disabled = true;
             break;
 
           default:

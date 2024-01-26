@@ -962,6 +962,7 @@ export class DealsComponent
         formModel: this.view.formModel,
         dataView: deal,
         isView: true,
+        detailViewDeal: this.detailViewDeal,
       };
       let option = new DialogModel();
       option.IsFull = true;
