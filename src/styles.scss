@@ -21,10 +21,10 @@
 .fs-body{
   font-size: var(--fs-body);
 }
-.e-control, .e-css, .e-listview, .e-splitter.e-splitter-horizontal .e-pane, 
+.e-control, .e-css, .e-listview, .e-splitter.e-splitter-horizontal .e-pane,
 .e-splitter.e-splitter-vertical .e-pane {
   font-family: 'Roboto', Segoe UI, serif;
-  
+
 }
 .e-device .e-dlg-content,
 .e-device .e-dlg-content * {
@@ -1702,6 +1702,7 @@ codx-processsteps .e-card-wrapper {
   overflow: hidden;
   white-space: normal;
   -webkit-line-clamp: 1;
+  padding-left: 10px;
 }
 
 codx-filter-form .e-item.e-active .card.w-100.rounded-0 {
@@ -2717,12 +2718,12 @@ codx-calendar {
 .card-hover-shadow:hover,.codx_cardimg:hover,.codx_cardcenter:hover,
 .card-hover-shadow:focus,.codx_cardimg:focus,.codx_cardcenter:focus {
     -webkit-box-shadow: 0px 0px 24px #0000001f!important;
-    box-shadow: 0px 0px 20px #0000001f!important;            
+    box-shadow: 0px 0px 20px #0000001f!important;
     transition: all .2s;
 }
 lib-test-journal {
   .codx_cardimg:hover, .codx_cardimg:focus{
-    box-shadow: 2px 2px 26px #00000045!important; 
+    box-shadow: 2px 2px 26px #00000045!important;
   }
 }
 //
@@ -4234,7 +4235,7 @@ codx-aside-v2.aside-v2-lighter{
     //   display: none!important;
     // }
   }
-  
+
   #kt_aside_menu div.mx-6{
     margin-left:10px!important;
     margin-right:10px!important;
@@ -4441,7 +4442,7 @@ process-views-tabs-details{
       }
     }
   }
-} 
+}
 codx-page-title ul.breadcrumb{
   .dropdown-item{
     cursor: pointer;
@@ -4470,7 +4471,7 @@ codx-filter-form ejs-dropdownlist{
     display: flex;
     align-items: center;
   }
-} 
+}
 .h-450px.w-300px.dropdown-menu{
   max-height:calc(100vh - 150px) ;
 }

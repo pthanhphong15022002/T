@@ -50,7 +50,7 @@ export class FormStepsFieldGridComponent implements OnInit, OnChanges{
       this.listStage = this.data.steps.filter(x=>!x.parentID);
       this.count -= this.listStage.length;
       this.listStage.forEach(elm => {
-        elm.child = this.getListChild(elm);
+        elm.child = this.getListChild(elm) || [];
       });
     }
   }
@@ -63,6 +63,7 @@ export class FormStepsFieldGridComponent implements OnInit, OnChanges{
     this.count -= list.length;
     list.forEach(elm2 => {
       elm2.settings = typeof elm2?.settings === 'object' ? elm2.settings : (elm2?.settings ? JSON.parse(elm2.settings) : null);
+      elm2.owners = typeof elm2?.owners === 'object' ? elm2.owners : (elm2?.owners ? JSON.parse(elm2.owners) : null);
       elm2.child = this.getListChild(elm2);
 
       if(elm2.activityType == "Conditions" && elm2.child && elm2.child.length>0)
