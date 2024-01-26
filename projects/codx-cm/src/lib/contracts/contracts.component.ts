@@ -523,7 +523,7 @@ export class ContractsComponent extends UIComponent {
   sendMail(data){
     this.cmService.sendMail(data).subscribe(res => {
       if(res){
-
+        
       }
     });
   }

@@ -155,7 +155,7 @@ export class CodxDashboardViewsComponent
 
   formatListGroupReport()
   {
-    var obj = 
+    var obj =
     {
       functionID : "All",
       customName : "Tất cả"
@@ -190,6 +190,7 @@ export class CodxDashboardViewsComponent
           [e.recID]
         )
         .subscribe();
+
       this.codxService.navigate('', this.module.toLowerCase() + '/dashboard/' + e.recID);
     }
   }
@@ -283,7 +284,7 @@ export class CodxDashboardViewsComponent
     this.listDashboards = JSON.parse(JSON.stringify(results));
     this.formatData(this.listDashboard);
   }
-  
+
   formatData(data:any)
   {
     let vll = this.shareService.loadValueList("RP001") as any;

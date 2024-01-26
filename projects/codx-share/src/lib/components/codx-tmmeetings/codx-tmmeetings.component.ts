@@ -550,11 +550,11 @@ export class CodxTmmeetingsComponent
         );
         this.dialog.closed.subscribe((e) => {
           if (!e?.event) this.view.dataService.clear();
-          // if (e?.event == null)
-          //   this.view.dataService.delete(
-          //     [this.view.dataService.dataSelected],
-          //     false
-          //   );
+          if (e && e.event != null) {
+            this.view.dataService.update(e.event, true).subscribe();
+            this.detectorRef.detectChanges();
+            // this.detectorRef.markForCheck();
+          }
         });
       });
   }

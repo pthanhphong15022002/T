@@ -302,6 +302,18 @@
           </codx-input>
         </div>
       </div>
+      <div class="form-group" (mouseenter)="closePopover()">
+        <codx-label [formModel]="form.formModel" fiedName="IssuedBy">
+        </codx-label>
+        <codx-input
+          (mouseenter)="closePopover()"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          field="issuedBy"
+          [disabled]="isView"
+        >
+        </codx-input>
+      </div>
       <div class="row" (mouseenter)="closePopover()">
         <div class="col-6 form-group" (mouseenter)="closePopover()">
           <codx-label [formModel]="form.formModel" fiedName="EthnicGroup">

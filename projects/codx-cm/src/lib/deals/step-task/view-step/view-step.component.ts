@@ -13,11 +13,10 @@ export class ViewStepComponent implements OnInit, OnChanges  {
   constructor(
     private api: ApiHttpService,
   ) {
-   
+
   }
 
   ngOnInit(): void {
-    throw new Error('Method not implemented.');
   }
 
 
