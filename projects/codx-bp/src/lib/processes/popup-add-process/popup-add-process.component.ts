@@ -895,7 +895,16 @@ export class PopupAddProcessComponent {
     } else {
       op.methodName = 'UpdateProcessAsync';
     }
-    op.data = data;
+
+    let result = JSON.parse(JSON.stringify(this.data));
+    result.steps.forEach((elm :any)=>{
+      delete elm.child;
+
+      if(typeof elm.settings === 'object')  elm.settings = JSON.stringify(elm.settings);
+      if(typeof elm.owners === 'object')  elm.owners = JSON.stringify(elm.owners);
+    })
+
+    op.data = result;
     return true;
   }
 

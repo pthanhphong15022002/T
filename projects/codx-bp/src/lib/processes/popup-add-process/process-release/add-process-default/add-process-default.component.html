@@ -38,18 +38,34 @@
                         </codx-label> 
                         <span *ngIf="child.isRequired" class="text-danger mx-2">(*)</span>
                     </div>
-                    <codx-input
-                        [formName]="formModel.formName" 
-                        [gridViewName]="formModel.gridViewName + child.fieldType"
-                        [type]="(child?.controlType | addProcessDefaultPrice : child?.controlType : child?.dataType : child?.dataFormat: child?.refType)"
-                        [refValue]="child.refValue"
-                        [refType]="child.refType" 
-                        [field]="getField(child?.fieldName)"
-                        [placeholder]="child?.description"
-                        [Group]="dynamicFormsForm"
-                        [ControlName]="child?.fieldName"
-                        >
-                    </codx-input>
+                    
+                    <ng-container [ngSwitch]="child?.fieldType">
+                        <ng-container *ngSwitchCase="'Attachment'">
+                            <codx-attachment #attachment
+                                [hideDes]="'1'"
+                                hideImageUpload="0"
+                                [formModel]="formModel"
+                                [objectId]="dataIns.recID" 
+                                hideBtnSave="1" hideFolder="1"
+                                referType="source"
+                               >
+                            </codx-attachment>
+                        </ng-container>
+                        <ng-container *ngSwitchDefault>
+                            <codx-input
+                                [formName]="formModel.formName" 
+                                [gridViewName]="formModel.gridViewName + child.fieldType"
+                                [type]="(child?.controlType | addProcessDefaultPrice : child?.controlType : child?.dataType : child?.dataFormat: child?.refType)"
+                                [refValue]="child.refValue"
+                                [refType]="child.refType" 
+                                [field]="getField(child?.fieldName)"
+                                [placeholder]="child?.description"
+                                [Group]="dynamicFormsForm"
+                                [ControlName]="child?.fieldName"
+                                >
+                            </codx-input>
+                        </ng-container>
+                    </ng-container>
                 </div>
             </div>
         </ng-container>

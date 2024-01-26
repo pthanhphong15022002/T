@@ -1,6 +1,6 @@
 import { Component, OnInit, Optional } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { ApiHttpService, DialogData, DialogRef, Util } from 'codx-core';
+import { ApiHttpService, AuthStore, DialogData, DialogRef, Util } from 'codx-core';
 import { CodxBpService } from 'projects/codx-bp/src/public-api';
 import { firstValueFrom } from 'rxjs';
 
@@ -13,6 +13,7 @@ export class AddProcessDefaultComponent implements OnInit{
   dynamicFormsForm: FormGroup;
   process:any;
   data:any;
+  dataIns:any = {};
   dialog:any;
   table:any
   formModel = 
@@ -22,14 +23,16 @@ export class AddProcessDefaultComponent implements OnInit{
     gridViewName: 'grvDynamicForms',
     entityName: 'BP_Instances'
   }
+  user:any;
   constructor(
+    private auth: AuthStore,
     private api: ApiHttpService,
     private bpService: CodxBpService,
     @Optional() dialog: DialogRef,
     @Optional() dt: DialogData
   )
   {
-   
+    this.user = auth.get();
     this.dynamicFormsForm = new FormGroup({});
     this.process = dt?.data;
     this.dialog = dialog;
@@ -41,6 +44,7 @@ export class AddProcessDefaultComponent implements OnInit{
 
   getData()
   {
+    this.dataIns.recID = Util.uid();
     this.data = this.process.steps.filter(x=>x.activityType == "Form")[0];
     this.data.settings = typeof this.data.settings === 'string' ? JSON.parse(this.data.settings) : this.data.settings;
     this.formatData()
@@ -127,29 +131,30 @@ export class AddProcessDefaultComponent implements OnInit{
       settings: JSON.stringify(this.data.settings),
       stepID: this.data.recID
     }
-    let data = 
-    {
-      processID : this.process?.recID,
-      instanceNo : instanceNo,
-      title: valueForm.mo_ta_ngan_gon,
-      status: "1",
-      currentStage: stageF.recID,
-      currentStep: step.recID,
-      lastUpdate: null,
-      closed: false,
-      closedOn: null,
-      startDate: null,
-      endDate: null,
-      progress: null,
-      actualStart: null,
-    }
+
+
+    this.dataIns.processID = this.process?.recID,
+    this.dataIns.instanceNo = instanceNo,
+    this.dataIns.title= valueForm.mo_ta_ngan_gon,
+    this.dataIns.status= "1",
+    this.dataIns.currentStage= stageF.recID,
+    this.dataIns.currentStep= step.recID,
+    this.dataIns.lastUpdate= null,
+    this.dataIns.closed= false,
+    this.dataIns.closedOn= null,
+    this.dataIns.startDate= null,
+    this.dataIns.endDate= null,
+    this.dataIns.progress= null,
+    this.dataIns.actualStart= null,
+    this.dataIns.createdOn= new Date(),
+    this.dataIns.createdBy= this.user?.userID
    
    var listTask = JSON.stringify([stage,step]);
     //Luu process Task
     this.api.execSv("BP","BP","ProcessTasksBusiness","SaveListTaskAsync",listTask).subscribe();
     //Luu Instanes
-    this.api.execSv("BP","BP","ProcessInstancesBusiness","SaveInsAsync",data).subscribe(item=>{
-      this.dialog.close(data)
+    this.api.execSv("BP","BP","ProcessInstancesBusiness","SaveInsAsync",this.dataIns).subscribe(item=>{
+      this.dialog.close(this.dataIns)
     });
   }
 }
