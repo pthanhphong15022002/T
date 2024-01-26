@@ -168,7 +168,7 @@ export class KowdsComponent extends UIComponent {
       {
         x.$subjectReal.asObservable().subscribe((z) => {
           // process 
-          if(z && (z.event == 'GenKowDsAsync') && z.message == this.session) 
+          if(z && (z.event == 'GenKowDsAsync' || z.event == 'UpDateDayOffToKowD') && z.message == this.session) 
           {
             let idx = z.data["id"] - 1;
             let value =  z.data["value"];
@@ -440,7 +440,6 @@ export class KowdsComponent extends UIComponent {
     }
   }
 
-  
   handleShowHideMF(event) {
     if(event && event.length > 0)
     {
@@ -925,8 +924,8 @@ export class KowdsComponent extends UIComponent {
     
   } 
 
-  kowDOption:string;
-  kowCode:string;
+  kowDOption:string = "";
+  kowCode:string = "";
   valueChange(event){
     let field = event.field;
     let value = event.data;
@@ -948,16 +947,24 @@ export class KowdsComponent extends UIComponent {
       this.notify.notify("Vui lòng chọn kỳ công");
       return;
     }
-    if(!this.kowCode)
-    {
-      this.notify.notifyCode("HR041");
-      return;
-    }
     let empIDs = this.calendarGrid.selectedIndexes.map(idx => this.calendarGrid.dataSource[idx].EmployeeID);
     if(empIDs.length > 0)
     {
-      this.processObj = [];
-      this.genKowD(empIDs.join(";"),this.filterDowCode,this.kowCode);
+      if(this.kowDOption == "1")
+      {
+        if(!this.kowCode)
+        {
+          this.notify.notifyCode("HR041");
+          return;
+        }
+        this.processObj = [];
+        this.genKowD(empIDs.join(";"),this.filterDowCode,this.kowCode);
+      }
+      else if(this.kowDOption == "2")
+      {
+        this.processObj = [];
+        this.updateDayOffToKowD(empIDs.join(";"),this.filterDowCode);
+      }
       dialog.close();
     }
     else this.notify.notifyCode("HR040");
@@ -966,11 +973,11 @@ export class KowdsComponent extends UIComponent {
   processing:boolean = false;
   processObj:any[] = [];
   session:string = "";
-  // click gen kowd with dowCode and kowCode
-  genKowD(employeeID:any,dowCode:string,kowCode:string){
-    if(employeeID && dowCode && kowCode)
+  // click gen kowDs with dowCode and kowCode
+  genKowD(employeeIDs:any,dowCode:string,kowCode:string){
+    if(employeeIDs && dowCode && kowCode)
     {
-      this.api.execSv("HR","PR","KowDsBusiness","GenKowDsAsync",[employeeID,dowCode,kowCode])
+      this.api.execSv("HR","PR","KowDsBusiness","GenKowDsAsync",[employeeIDs,dowCode,kowCode])
       .subscribe((res:boolean) => {
         if(res)
         {
@@ -989,9 +996,32 @@ export class KowdsComponent extends UIComponent {
         }
       });
     }
-    
   }
 
+  // click update data dayOff to KowDs
+  updateDayOffToKowD(employeeIDs:any,dowCode:string){
+    if(employeeIDs && dowCode)
+    {
+      this.api.execSv("HR","PR","KowDsBusiness","UpDateDayOffToKowDAsync",[employeeIDs,dowCode])
+      .subscribe((res:boolean) => {
+        if(res)
+        {
+          this.session = res[0];
+          for (let index = 0; index < res[1]; index++) {
+              let obj = {
+                id : index + 1,
+                value : 0,
+                iteration: 0,
+                totalIteration: 0,
+              };
+            this.processObj.push(obj);
+          }
+          this.processing = true;
+          this.detectorRef.detectChanges();
+        }
+      });
+    }
+  }
   // click remove proccess
   clickRemoveProcess(idx:number){
     if(idx > -1 && idx < this.processObj.length)

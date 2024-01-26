@@ -1369,7 +1369,8 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       this.df.detectChanges();
     }
 
-    if (!this.eCertificateColumnGrid) {
+    if (!this.eCertificateColumnGrid) 
+    {
       this.hrService.getHeaderText(this.eCertificateFuncID).then((res) => {
         this.eCertificateHeaderText = res;
         this.eCertificateColumnGrid = [
@@ -2592,6 +2593,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
         case this.curriculumVitaeFuncID:
           for (let i = 0; i < res.length; i++) {
             if (res[i].url == this.eInfoURL) {
+              debugger
               this.eInfoFuncID = res[i].functionID;
               this.eInfoFunc = res[i];
               if (!this.eInfoHeaderText || !this.eInfoFormModel) {
