@@ -35,15 +35,23 @@
 
 <ng-template #cardKanban let-data let-setting="setting">
   <div class="d-flex flex-column p-4">
-    <span>{{data.title}}</span>
-    <div class="d-flex align-items-center justify-content-between">
-      <codx-vll
-        [name]="'BP014'"
-        [value]="data?.status"
-        [showText]="true"
-        [showIcon]="true"
-      >
-      </codx-vll>
+    <span class="fw-bold">{{data.title}}</span>
+    <div class="d-flex align-items-center justify-content-between mt-2">
+      <div class="d-flex align-items-center">
+        <codx-vll
+          [name]="'BP014'"
+          [value]="data?.status"
+          [showText]="true"
+          [showIcon]="true"
+          class="badge badge-light badge-md"
+        >
+        </codx-vll>
+        <span class="mx-2">Ngày tạo : </span>
+        <span>{{data.createdOn | date: 'dd/MM/yyyy'}}</span>
+      </div>
+      <codx-img  [objectId]="data?.createdBy"
+      objectType="AD_Users" [width]="40" [imageType]="'circle'" >
+    </codx-img>
     </div>
   </div>
 </ng-template>
