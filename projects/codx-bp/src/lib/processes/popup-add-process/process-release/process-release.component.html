@@ -1,11 +1,6 @@
 <codx-views
   #view
   [funcID]="funcID"
-  service="BP"
-  assemblyName="ERM.Business.BP"
-  entityName="BP_Processes"
-  className="ProcessesBusiness"
-  [method]="'GetAsync'"
   [views]="views"
   [button]="button"
   (buttonClick)="click($event)"
@@ -36,4 +31,19 @@
         </span>
       </div>
     </div>
+</ng-template>
+
+<ng-template #cardKanban let-data let-setting="setting">
+  <div class="d-flex flex-column p-4">
+    <span>{{data.title}}</span>
+    <div class="d-flex align-items-center justify-content-between">
+      <codx-vll
+        [name]="'BP014'"
+        [value]="data?.status"
+        [showText]="true"
+        [showIcon]="true"
+      >
+      </codx-vll>
+    </div>
+  </div>
 </ng-template>
