@@ -179,7 +179,7 @@ export class StepTaskComponent  implements OnInit, AfterViewInit, OnChanges {
     this.resourceKanban.method = 'GetColumnsKanbanAsync';
     this.resourceKanban.dataObj = {processID: this.dataCM?.processID};;
 
-    this.funcID = 'DPT06';
+    this.funcID = 'CM0201';
   }
 
   ngOnChanges(changes: SimpleChanges): void {
