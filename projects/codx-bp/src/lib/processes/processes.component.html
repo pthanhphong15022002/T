@@ -99,7 +99,7 @@
                 *ngFor="let item of data?.permissions; let i = index"
               >
                 <ng-container *ngIf="i < 2">
-                  <div style="position: relative" [ngbTooltip]="permTooltip">
+                  <div style="position: relative; margin-top: 6px;" [ngbTooltip]="permTooltip">
                     <codx-imgs
                       [objectId]="item?.objectID"
                       [objectName]="item?.objectName"
@@ -142,10 +142,16 @@
                     placement="right bottom top"
                     container="body"
                     autoClose="outside"
-                    class="contain-1"
                   >
                     <div class="view-all symbol symbol-25px symbol-circle">
-                      <span> {{ data?.permissions?.length - 2 }}+ </span>
+                      <codx-img
+                        [objectId]="data?.permissions[2]"
+                        objectType="AD_Users"
+                        width="25"
+                      ></codx-img>
+                      <span class="contain-1">
+                        {{ data?.permissions?.length - 2 }}+
+                      </span>
                     </div>
                   </div>
                 </ng-container>
@@ -309,8 +315,19 @@
         <div *ngFor="let item of data?.permissions; let i = index">
           <ng-container *ngIf="i < 2">
             <span class="position-relative m-w-90">
-              <span class="d-flex align-items-center bagde-per me-1 mb-1">
-                {{ item?.objectName }}
+              <span class="d-flex align-items-center bagde-per mb-1 w-100">
+                <span
+                  class="line-clamp line-clamp-1"
+                  [ngbPopover]="item?.objectName"
+                  #pObj="ngbPopover"
+                  [openDelay]="500"
+                  (mouseenter)="PopoverDetail($event, pObj, item, 'objectName')"
+                  (mouseleave)="pObj.close()"
+                  placement="bottom right top"
+                  [popoverClass]="item.recID"
+                >
+                  {{ item?.objectName }}</span
+                >
               </span>
             </span>
           </ng-container>
@@ -324,10 +341,16 @@
               placement="right bottom top"
               container="body"
               autoClose="outside"
-              class="contain-1"
             >
               <div class="view-all symbol symbol-25px symbol-circle">
-                <span> {{ data?.permissions?.length - 2 }}+ </span>
+                <codx-img
+                  [objectId]="data?.permissions[2]"
+                  objectType="AD_Users"
+                  width="25"
+                ></codx-img>
+                <span class="contain-1">
+                  {{ data?.permissions?.length - 2 }}+
+                </span>
               </div>
             </div>
           </ng-container>
