@@ -734,12 +734,12 @@
         <ng-container *ngIf="i == 2">
           <div class="view-all symbol symbol-25px symbol-circle">
             <codx-img
-              [objectId]="data?.assignTo[2]"
+              [objectId]="assgin"
               objectType="AD_Users"
               width="25"
             ></codx-img>
             <span class="contain-1">
-              {{ assgin?.length - 2 }}+
+              {{ data?.assignTo?.split(';')?.length - 2 }}+
             </span>
           </div>
         </ng-container>
