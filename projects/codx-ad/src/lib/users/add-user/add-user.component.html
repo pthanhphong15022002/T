@@ -40,14 +40,13 @@
     <div class="form-group">
       <codx-label fiedName="UserName" [formModel]="form?.formModel">
       </codx-label>
-      <codx-input field="userName" [crrValue]="adUser.userName" (valueChange)="valueChangeU($event)"
-        [Group]="form.formGroup" [formModel]="form.formModel" [disabled]="formType == 'view'">
+      <codx-input field="userName" [crrValue]="adUser.userName" [Group]="form.formGroup" [formModel]="form.formModel"
+        [disabled]="formType == 'view'">
       </codx-input>
     </div>
     <div class="form-group">
       <codx-label fiedName="BUID" [formModel]="form?.formModel"> </codx-label>
-      <codx-input field="buid" (valueChange)="valueBU($event)" [Group]="form.formGroup" [formModel]="form.formModel"
-        [disabled]="formType == 'view'">
+      <codx-input field="buid" [Group]="form.formGroup" [formModel]="form.formModel" [disabled]="formType == 'view'">
       </codx-input>
     </div>
     <div *ngIf="userGroupVisible" class="form-group">
@@ -62,20 +61,19 @@
       <div class="form-group col-6 ps-0">
         <codx-label fiedName="Email" [formModel]="form?.formModel">
         </codx-label>
-        <codx-input field="email" [Group]="form.formGroup" [formModel]="form.formModel"
-          (valueChange)="valueChangeM($event)" [disabled]="true" *ngIf="
+        <codx-input field="email" [Group]="form.formGroup" [formModel]="form.formModel" [disabled]="true" *ngIf="
             formType == 'edit' || formType == 'invite' || formType == 'view'
           ">
         </codx-input>
-        <codx-input field="email" [Group]="form.formGroup" [formModel]="form.formModel"
-          (valueChange)="valueChangeM($event)" [disabled]="isSaas" *ngIf="formType == 'add' || formType == 'copy'">
+        <codx-input field="email" [Group]="form.formGroup" [formModel]="form.formModel" [disabled]="isSaas"
+          *ngIf="formType == 'add' || formType == 'copy'">
         </codx-input>
       </div>
       <div class="form-group col-6 pe-0">
         <codx-label fiedName="Mobile" [formModel]="form?.formModel">
         </codx-label>
-        <codx-input field="mobile" (valueChange)="valueChangeP($event)" [Group]="form.formGroup"
-          [formModel]="form.formModel" [disabled]="formType == 'view'">
+        <codx-input field="mobile" [Group]="form.formGroup" [formModel]="form.formModel"
+          [disabled]="formType == 'view'">
         </codx-input>
       </div>
     </div>

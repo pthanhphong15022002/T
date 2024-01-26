@@ -149,8 +149,7 @@ export class PopupAddProcessComponent {
     @Optional() dt: DialogData
   ) {
     this.dialog = dialog;
-    if (dialog.dataService.dataSelected)
-      this.data = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
+    if (dialog.dataService.dataSelected) this.data = JSON.parse(JSON.stringify(dialog.dataService.dataSelected));
     this.action = dt?.data?.action;
     this.title = dt?.data?.title;
     this.user = this.authStore.get();
@@ -158,9 +157,22 @@ export class PopupAddProcessComponent {
   }
 
   ngOnInit(): void {
-
+    this.genData();
   }
 
+  genData()
+  {
+    if(this.action == 'add')
+    {
+      this.data.settings = [
+        {
+          fieldName : "InstanceNoControl",
+          fieldValue: "0"
+        }
+      ];
+      this.data.category = "1";
+    }
+  }
   ngAfterViewInit(): void {
     if (this.action == 'edit') {
       this.getAvatar(this.data?.recID, this.data?.processName);
@@ -271,14 +283,23 @@ export class PopupAddProcessComponent {
     stage.stepName = vllStage.text + ' 1';
     stage.reminder = this.data.reminder;
     stage.eventControl = null;
-    var processSetting = JSON.parse(this.data.settings);
+    var processallowDrag = null;
+    var processDefaultProcess = null;
+    var processCompleteControl = null;
+    if(this.data.settings && this.data.settings.length > 0)
+    {
+      processallowDrag =  this.data.settings.filter(x=>x.fieldName == "AllowDrag")[0];
+      processDefaultProcess = this.data.settings.filter(x=>x.fieldName == "DefaultProcess")[0];
+      processCompleteControl = this.data.settings.filter(x=>x.fieldName == "CompleteControl")[0];
+    }
+   
     stage.settings = JSON.stringify({
       icon: 'icon-i-bar-chart-steps',
       color: '#0078FF',
       backGround: '#EAF0FF',
-      allowDrag: processSetting?.allowDrag || null,
-      defaultProcess: processSetting?.defaultProcess || null,
-      completeControl: processSetting?.completeControl || null,
+      allowDrag: processallowDrag?.fieldValue || null,
+      defaultProcess: processDefaultProcess?.defaultProcess || null,
+      completeControl: processCompleteControl?.completeControl || null,
       nextSteps: null,
       sortBy: null,
       totalControl: null,
@@ -898,6 +919,7 @@ export class PopupAddProcessComponent {
       delete elm.child;
 
       if(typeof elm.settings === 'object')  elm.settings = JSON.stringify(elm.settings);
+      if(typeof elm.owners === 'object')  elm.owners = JSON.stringify(elm.owners);
     })
     return this.api.execSv("BP","BP","ProcessesBusiness","UpdateProcessAsync",result);
   }

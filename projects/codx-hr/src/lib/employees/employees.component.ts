@@ -72,7 +72,8 @@ export class EmployeesComponent extends UIComponent {
     private injector: Injector,
     private notifiSV: NotificationsService,
     private df: ChangeDetectorRef,
-    private shareService: CodxShareService
+    private shareService: CodxShareService,
+    private hrService: CodxHrService,
   ) {
     super(injector);
   }
@@ -207,8 +208,13 @@ export class EmployeesComponent extends UIComponent {
           popup.closed.subscribe((res: any) => {
             if (res?.event) {
               let data = res.event;
-              this.view.dataService.add(data, 0).subscribe();
-              this.detectorRef.detectChanges();
+              this.hrService.getProvincesNameByProvincesName2Async(data.birthPlace).subscribe((res: any) => {
+                if (res) {
+                  data.birthPlaceName = res;
+                  this.view.dataService.add(data, 0).subscribe();
+                  this.detectorRef.detectChanges();
+                }
+              });
             }
           });
         }
