@@ -38,6 +38,7 @@ export class CostItemsComponent implements OnInit {
   dealValueToOld = 0;
   isSavingData = false;
   oldCost: any;
+  // formatNum = '#,##0';
 
   constructor(
     private api: ApiHttpService,
@@ -46,6 +47,7 @@ export class CostItemsComponent implements OnInit {
     private detectorRef: ChangeDetectorRef,
     private codxCmService: CodxCmService
   ) {
+    // this.checkPointFormat();
     if (!this.grViewCost)
       this.cache
         .gridViewSetup('CMCostItems', 'grvCMCostItems')
@@ -112,6 +114,7 @@ export class CostItemsComponent implements OnInit {
       if (this.isAutoSave) {
         if (!this.costIDOld.includes(this.cost.recID)) {
           this.cost = null;
+          this.costInfos?.splice(index, 1);
           return;
         }
         if (this.cost) this.autoDeleted(index);
@@ -267,4 +270,19 @@ export class CostItemsComponent implements OnInit {
   }
 
   //---------------------------------------------//
+
+  // checkPointFormat() {
+  //   let point = ',';
+  //   const string1 = '1,23'; //parFloat
+  //   const string2 = '1.23';
+  //   const result = Number.parseFloat(string1) - Number.parseFloat(string2); //string1.localeCompare(string2);
+  //   if (result > 0) {
+  //     //'Dấu , phân tách phần thập phân 1,234 - 1' , dau . tách phần nguyên
+  //     point = '.';
+  //   } else {
+  //     //'Dấu . phân tách phần thập phân 1-1.23', , dau , tách phần nguyên
+  //     point = ',';
+  //   }
+  //   this.formatNum = '#' + point + '##0';
+  // }
 }

@@ -234,7 +234,6 @@ export class ProcessesComponent
   clickMF(e, data) {
     this.itemSelected = data;
     this.titleAction = e.text;
-    debugger
     switch (e.functionID) {
       case 'SYS03':
         this.edit(data);
@@ -248,7 +247,7 @@ export class ProcessesComponent
       case "SYS008":
         this.openFormDiagram();
         break;
-      case "BPT109":
+      case "BPT0101":
       {
         this.codxService.navigate('',"/bp/instances/BPT011/"+this.itemSelected.recID);
         break;
