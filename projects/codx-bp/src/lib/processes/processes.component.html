@@ -326,13 +326,7 @@
               <span class="d-flex align-items-center bagde-per mb-1 w-100">
                 <span
                   class="line-clamp line-clamp-1"
-                  [ngbPopover]="item?.objectName"
-                  #pObj="ngbPopover"
-                  [openDelay]="500"
-                  (mouseenter)="PopoverDetail($event, pObj, item, 'objectName')"
-                  (mouseleave)="pObj.close()"
-                  placement="bottom right top"
-                  [popoverClass]="item.recID"
+                  [ngbTooltip]="item?.objectName"
                 >
                   {{ item?.objectName }}</span
                 >
