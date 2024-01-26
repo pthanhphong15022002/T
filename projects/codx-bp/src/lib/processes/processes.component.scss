@@ -137,16 +137,17 @@
 }
 
 .contain-1 {
+  position: absolute;
+  background: #808080;
   width: 25px;
   height: 25px;
-  background: gray;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  top: 0px;
+  opacity: 0.8;
   color: white;
-  font-weight: 400;
-  margin-bottom: 6px;
 }
 
 .h-35px {
