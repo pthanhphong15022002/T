@@ -60,11 +60,13 @@
     </ng-container>
 
     <div *ngIf="columnsGrid" class="h-100 employee-grid" [ngClass]="showManager? 'manager-gridview': 'no-manager-gridview'">
-        <codx-gridview-v2 #grid [formModel]="formModel" [columnsGrid]="columnsGrid" [service]="service"
+        <codx-gridview-v2 #grid [columnsGrid]="columnsGrid" [service]="service"
             [entityName]="entityName" [assemblyName]="assemblyName" [className]="className" [method]="method"
-            [dataValues]="orgUnitID" [autoLoad]="false" [showRowNumber]="showRowNumber" [idField]="idField"
+            [dataValues]="orgUnitID" [autoLoad]="true" [showRowNumber]="showRowNumber" [idField]="idField"
             [predicates]="predicates" [rowHeight]="rowHeight" [autoFitColumns]="false" [allowResizing]="true"
-            [allowFiltering]="false" [allowSorting]="false" [hideMoreFunc]="true" (valueProperty)="getRefreshFlag($event)"></codx-gridview-v2>
+            [allowFiltering]="false" [allowSorting]="false" [hideMoreFunc]="true" (valueProperty)="getRefreshFlag($event)"
+            [emptyDataTemplate]="emptyDataTemplate"
+        ></codx-gridview-v2>
     </div>
 </div>
 
@@ -92,7 +94,7 @@
                     {{data.positionName? data.positionName : data.positionID}}
                     <ng-template #positionContactTooltip>
                         <div class="d-flex flex-column">
-                            <span class="label-text-color">{{grvSetup['PositionID'].headerText}}</span>
+                            <span class="label-text-color">{{grvSetup['PositionID']?.headerText}}</span>
                             <span *ngIf="positionContactField.scrollHeight > positionContactField.clientHeight"
                                 class="text-gray-600">{{data.positionName? data.positionName : data.positionID}}</span>
                         </div>
@@ -204,7 +206,7 @@
                     data.positionID}}</span>
                 <ng-template #positionTooltip>
                     <div class="d-flex flex-column">
-                        <span class="label-text-color">{{grvSetup['PositionID'].headerText}}</span>
+                        <span class="label-text-color">{{grvSetup['PositionID']?.headerText}}</span>
                         <span *ngIf="positionField.scrollHeight > positionField.clientHeight"
                             class="text-gray-600">{{data.positionName? data.positionName : data.positionID}}</span>
                     </div>
@@ -214,7 +216,7 @@
                 <span [ngbTooltip]="orgUnitTooltip">{{data.orgUnitName? data.orgUnitName : data.orgUnitID}}</span>
                 <ng-template #orgUnitTooltip>
                     <div class="d-flex flex-column">
-                        <span class="label-text-color">{{grvSetup['OrgUnitID'].headerText}}</span>
+                        <span class="label-text-color">{{grvSetup['OrgUnitID']?.headerText}}</span>
                         <span *ngIf="orgUnitField.scrollHeight > orgUnitField.clientHeight"
                             class="text-gray-600">{{data.orgUnitName? data.orgUnitName :
                             data.orgUnitID}}</span>
@@ -229,7 +231,7 @@
                 <span *ngIf="data.divisionID">{{data.divisionName? data.divisionName: data.divisionID }}</span>
                 <ng-template #departmentTooltip>
                     <div class="d-flex flex-column">
-                        <span class="label-text-color">{{grvSetup['DepartmentID'].headerText}}</span>
+                        <span class="label-text-color">{{grvSetup['DepartmentID']?.headerText}}</span>
                         <span *ngIf="data.departmentID != data.orgUnitID 
                   && departmentField.scrollHeight > departmentField.clientHeight">
                             {{data.departmentName? data.departmentName :
@@ -251,17 +253,17 @@
                     [innerHTML]="data.email | formatvalue : view.formModel : 'email' | async">
                 </span>
                 <ng-template #emailTooltip>
-                    <span>{{grvSetup['Email'].headerText}}</span>
+                    <span>{{grvSetup['Email']?.headerText}}</span>
                     <!-- <span>{{data.email}}</span> -->
                 </ng-template>
             </div>
             <div class="d-flex align-items-center">
-                <span class="data-text-color" [ngbTooltip]="data.phone? grvSetup?.Phone.headerText : null"
+                <span class="data-text-color" [ngbTooltip]="data.phone? grvSetup?.Phone?.headerText : null"
                     [innerHTML]="data.phone | formatvalue : view.formModel : 'phone' | async">
                 </span>
             </div>
             <div class="d-flex align-items-center">
-                <span class="data-text-color" [ngbTooltip]="data.mobile? grvSetup?.Mobile.headerText : null"
+                <span class="data-text-color" [ngbTooltip]="data.mobile? grvSetup?.Mobile?.headerText : null"
                     [innerHTML]="data.mobile | formatvalue : view.formModel : 'mobile' | async">
                 </span>
             </div>
@@ -279,7 +281,7 @@
                     <span class="data-text-color">{{ data.birthday | fmDT}}</span>
                 </ng-container>
                 <ng-template #noBirthday>
-                    <span class="place-holder">{{grvSetup?.Birthday.headerText}}</span>
+                    <span class="place-holder">{{grvSetup?.Birthday?.headerText}}</span>
                 </ng-template>
             </div>
             <div class="d-flex align-items-center">
@@ -305,7 +307,7 @@
                     </ng-template>
                 </div>
                 <ng-template #noDegreeName>
-                    <span class="place-holder">{{grvSetup['DegreeName'].headerText}}</span>
+                    <span class="place-holder">{{grvSetup['DegreeName']?.headerText}}</span>
                 </ng-template>
             </div>
         </div>
@@ -328,7 +330,7 @@
                     <span class="text-gray-700">{{data.joinedOn | fmDT}}</span>
                 </ng-container>
                 <ng-template #noJoinedOn>
-                    <span class="place-holder">{{grvSetup['JoinedOn'].headerText}}</span>
+                    <span class="place-holder">{{grvSetup['JoinedOn']?.headerText}}</span>
                 </ng-template>
             </div>
             <div class="align-items-center">
@@ -339,7 +341,7 @@
                     <span class="text-gray-700">{{ data.senioritydate | timeAgo }}</span>
                 </ng-container>
                 <ng-template #noSeniorityDate>
-                    <span class="place-holder">{{grvSetup['Senioritydate'].headerText}}</span>
+                    <span class="place-holder">{{grvSetup['Senioritydate']?.headerText}}</span>
                 </ng-template>
             </div>
         </div>

@@ -51,7 +51,6 @@ export class ViewDealDetailComponent implements OnInit, OnChanges {
   listContracts: any[] = [];
   listQuotations: any[] = [];
   isViewLink: boolean = false;
-  type = "1"
   view;
   listCosts;
 
@@ -79,25 +78,31 @@ export class ViewDealDetailComponent implements OnInit, OnChanges {
   };
 
   listTabLeft = [
-    { id: 'listTabInformation', name: 'Thông tin cơ hội', icon: 'icon-info',type: '1' },
-    { id: 'listHistory', name: 'Lịch sử', icon: 'icon-i-clock-history',type: '1' },
-    { id: 'listFile', name: 'Đính kèm', icon: 'icon-i-paperclip',type: '1' },
-    { id: 'listAddTask', name: 'Giao việc', icon: 'icon-i-clipboard-check',type: '1' },
-    { id: 'listApprove', name: 'Ký, duyệt', icon: 'icon-edit-one',type: '1' },
-    { id: 'listLink', name: 'Liên kết', icon: 'icon-i-link',type: '1' },
+    { id: 'listTabInformation', name: 'Thông tin cơ hội', icon: 'icon-info'},
+    { id: 'listHistory', name: 'Lịch sử', icon: 'icon-i-clock-history'},
+    { id: 'listFile', name: 'Đính kèm', icon: 'icon-i-paperclip'},
+    { id: 'listAddTask', name: 'Giao việc', icon: 'icon-i-clipboard-check'},
+    { id: 'listApprove', name: 'Ký, duyệt', icon: 'icon-edit-one'},
+    { id: 'listLink', name: 'Liên kết', icon: 'icon-i-link'},
   ];
   listTabInformation = [
-    { id: 'information', name: 'Thông tin dự án', type: '1' },
+    { id: 'information', name: 'Thông tin dự án'},
     { id: 'costItems', name: 'Chi phí'},
-    { id: 'fields', name: 'Thông tin mở rộng', type: '1' },
-    { id: 'opponent', name: 'Đối thủ', type: '2' },
-    { id: 'note', name: 'Ghi chú', type: '2' },
+    { id: 'task', name: 'Công việc'},
+    { id: 'fields', name: 'Thông tin mở rộng'},
+    { id: 'opponent', name: 'Đối thủ'},
+    { id: 'note', name: 'Ghi chú'},
   ];
   listHistory = [{ id: 'history', name:'Lịch sử'}];
   listFile = [{ id: 'file', name:'Đính kèm'}];
   listAddTask = [{ id: 'addTask', name:'Giao việc'}];
   listApprove = [{ id: 'approve', name:'Ký, duyệt'}];
   listLink = [{ id: 'link', name:'Liên kết'}];
+  totalCost: any;
+  isUpDealCost = false;
+  dealValueTo: any;
+  isUpDealValueTo = false;
+  detailViewDeal;
   constructor(
     private cache: CacheService,
     private codxCmService: CodxCmService,
@@ -115,8 +120,8 @@ export class ViewDealDetailComponent implements OnInit, OnChanges {
     this.deal = dt?.data?.dataView;
     this.contractRecId = dt?.data?.contactRecId;
     this.listInsStepStart = dt?.data?.listInsStepStart;
-    this.type = dt?.data?.type;
     this.view = dt?.data?.view;
+    this.detailViewDeal = dt?.data?.detailViewDeal;
     if(!this.dialog?.formModel){
       this.dialog.formModel = {
         entityName: "CM_Contracts",
@@ -125,9 +130,6 @@ export class ViewDealDetailComponent implements OnInit, OnChanges {
         funcID:"CM0204",
         gridViewName:"grvCMContracts",
       }
-    }
-    if(this.type == "2"){
-      this.listTabInformation = this.listTabInformation?.filter(x => x.type == "2");
     }
   }
   ngOnInit() {
@@ -585,6 +587,59 @@ export class ViewDealDetailComponent implements OnInit, OnChanges {
     } else {
       this.notiService.notify('Khách hàng không tồn tại', '3');
     }
+  }
+
+  totalDataCost(e) {
+    this.totalCost = e;
+    this.isUpDealCost = true;
+  }
+  changeDealValueTo(e) {
+    this.dealValueTo = e;
+    this.isUpDealValueTo = true;
+  }
+  closePopup() {
+    if ((!this.isUpDealCost && !this.isUpDealValueTo)) {
+      this.dialog.close();
+      return;
+    }
+    let obj = {
+      dealCost: this.totalCost,
+      isUpDealCost: this.isUpDealCost,
+      dealValueTo: this.dealValueTo,
+      isUpDealValueTo: this.isUpDealValueTo,
+    };
+    this.dialog.close(obj);
+  }
+  startNow(e) {
+    if(e){
+      this.notiService
+      .alertCode('DP033', null, ['"' + this.deal?.dealName + '"' || ''])
+      .subscribe((x) => {
+        if (x.event && x.event.status == 'Y') {
+          this.startDeal(this.deal);
+        }
+      });
+    }
+  }
+  startDeal(data) {
+    this.codxCmService
+      .startInstance([data.refID, data.recID, 'CM0201', 'CM_Deals'])
+      .subscribe((resDP) => {
+        if (resDP) {
+          let datas = [data.recID, resDP[0]];
+          this.codxCmService.startDeal(datas).subscribe((res) => {
+            if (res) {
+              this.deal = res;
+              this.view.dataService.update(this.deal, true).subscribe();
+              if (this.detailViewDeal)
+                this.detailViewDeal.reloadListStep(resDP[1]);
+                this.getListInstanceStep(this.deal);
+              this.notiService.notifyCode('SYS007');
+            }
+            this.changeDetectorRef.markForCheck();
+          });
+        }
+      });
   }
 }
 

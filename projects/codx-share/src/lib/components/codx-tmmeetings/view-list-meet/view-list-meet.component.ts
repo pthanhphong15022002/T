@@ -15,6 +15,7 @@ import {
   ViewsComponent,
   Util,
   CodxService,
+  CacheService,
 } from 'codx-core';
 import { ActivatedRoute } from '@angular/router';
 import { CO_Permissions } from '../models/CO_Meetings.model';
@@ -46,12 +47,14 @@ export class ViewListMeetComponent implements OnInit {
   widthWin: any;
   heightWin: any;
   showMF: boolean = true;
-
+  roleTypeA: string = '';
+  objectNameA: string = '';
   constructor(
     private activedRouter: ActivatedRoute,
     private callFc: CallFuncService,
     private detectorRef: ChangeDetectorRef,
     private codxService: CodxService,
+    private cache: CacheService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -79,6 +82,10 @@ export class ViewListMeetComponent implements OnInit {
     var id = '';
     this.permissions.forEach((e) => {
       id += e.objectID + ';';
+      if(e.roleType == 'A'){
+        this.roleTypeA = e?.roleType;
+        this.objectNameA = e?.objectName;
+      }
     });
     if (id != '') {
       this.objectID = id.substring(0, id.length - 1);

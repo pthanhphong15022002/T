@@ -235,7 +235,7 @@ export class SignFileComponent extends UIComponent {
         break;
     }
   }
-
+  
   addNew(evt?) {
     this.view.dataService.addNew().subscribe((res) => {
       let option = new SidebarModel();
@@ -327,6 +327,10 @@ export class SignFileComponent extends UIComponent {
       var del = e.filter((x: { functionID: string }) => x.functionID == 'SYS02');
       var copy = e.filter((x: { functionID: string }) => x.functionID == 'SYS04');    
       if (copy?.length) copy[0].disabled = true;
+      
+      var view = e.filter((x: { functionID: string }) => x.functionID == 'SYS05');    
+      if (view?.length) view[0].disabled = true;
+
       var release = e.filter(
         (x: { functionID: string }) => x.functionID == 'EST01105'
       );

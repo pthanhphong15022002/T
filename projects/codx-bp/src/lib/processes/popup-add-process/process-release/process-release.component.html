@@ -1,0 +1,39 @@
+<codx-views
+  #view
+  [funcID]="funcID"
+  service="BP"
+  assemblyName="ERM.Business.BP"
+  entityName="BP_Processes"
+  className="ProcessesBusiness"
+  [method]="'GetAsync'"
+  [views]="views"
+  [button]="button"
+  (buttonClick)="click($event)"
+>
+</codx-views>
+
+<ng-template #viewColumKaban let-data>
+    <div
+      class="d-flex align-items-center justify-content-between cursor-pointer w-100 has-actions-menu h-100"
+      [id]="data?.keyField"
+      [ngStyle]="{ 'background-color': data?.colorText }"
+    >
+      <div class="line-colums d-flex align-items-center">
+        <span
+          [ngClass]="data?.icon"
+          [ngStyle]="{ color: data?.color }"
+          class="me-1"
+        >
+        </span>
+        <span
+          class="fs-6"
+          [ngStyle]="{ color: data?.color}"
+          [ngbTooltip]="data.headerText"
+          container="body"
+          placement="bottom"
+        >
+          {{ data?.headerText }}
+        </span>
+      </div>
+    </div>
+</ng-template>

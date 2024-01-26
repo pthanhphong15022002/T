@@ -28,9 +28,7 @@ import { FolderInfo } from '@shared/models/folder.model';
 import { FolderService } from '@shared/services/folder.service';
 import { FileService } from '@shared/services/file.service';
 import { CodxDMService } from '../codx-dm.service';
-import { SystemDialogService } from 'projects/codx-common/src/lib/component/viewFileDialog/systemDialog.service';
 import { FileInfo, FileUpload, ItemInterval } from '@shared/models/file.model';
-import { resetInfiniteBlocks } from '@syncfusion/ej2-grids';
 
 @Component({
   selector: 'move',
@@ -441,7 +439,6 @@ export class MoveComponent implements OnInit {
           if(item.status == 0) {
             if(that.selection == 1)
             {
-              debugger
               that.dmSV.listFiles = that.dmSV.listFiles.filter(x=>!this.id.includes(x.recID));
               that.dmSV.listFolder = that.dmSV.listFolder.filter(x=>!this.id.includes(x.recID));
               this.dmSV.ChangeDataView.next(true);

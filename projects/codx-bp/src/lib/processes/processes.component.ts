@@ -40,7 +40,8 @@ export class ProcessesComponent
   templateListCard: TemplateRef<any>;
   @ViewChild('headerTemplate') headerTemplate: TemplateRef<any>;
   @ViewChild('templateMore') templateMore: TemplateRef<any>;
-
+  @ViewChild('templateList') templateList?: TemplateRef<any>;
+  @ViewChild('headerTemplateList') headerTemplateList?: TemplateRef<any>;
   views: Array<ViewModel> = [];
   moreFuncs: Array<ButtonModel> = [];
   button?: ButtonModel[];
@@ -84,9 +85,15 @@ export class ProcessesComponent
         sameData: true,
         model: {
           template2: this.templateMore,
-          groupSettings: { showDropArea: false, columns: ['groupID'] },
-          //resources: this.columnGrids,
-          // frozenColumns: 1,
+        },
+      },
+      {
+        type: ViewType.list,
+        sameData: true,
+        active: false,
+        model: {
+          template: this.templateList,
+          headerTemplate: this.headerTemplateList,
         },
       },
     ];
@@ -238,7 +245,13 @@ export class ProcessesComponent
         this.copy(data);
         break;
       case "SYS008":
-        this.openFormDiagram()
+        this.openFormDiagram();
+        break;
+      case "BPT109":
+      {
+        this.codxService.navigate('',"/bp/instances/BPT011/"+this.itemSelected.recID);
+        break;
+      }
       break;
       default: {
         this.codxShareService.defaultMoreFunc(

@@ -2681,5 +2681,15 @@ export class CodxHrService {
       [employeeID, alYear]
     );
   }
+
+  getProvincesNameByProvincesName2Async(name: string) {
+    return this.api.execSv(
+      'BS',
+      'ERM.Business.BS',
+      'ProvincesBusiness',
+      'GetProvincesNameByProvincesName2Async',
+      [name]
+    );
+  }
   //#endregion
 }

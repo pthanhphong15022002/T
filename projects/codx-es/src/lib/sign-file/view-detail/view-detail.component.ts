@@ -380,6 +380,9 @@ export class ViewDetailComponent extends UIDetailComponent implements OnInit {
         (x: { functionID: string }) => x.functionID == 'EST01105'
       );
 
+      var view = e.filter((x: { functionID: string }) => x.functionID == 'SYS05');    
+      if (view?.length) view[0].disabled = true;
+      
       if (bookmarked == true) {
         if (bm?.length) bm[0].disabled = true;
         if (unbm?.length) unbm[0].disabled = false;

@@ -25,7 +25,7 @@ export class BP_Processes {
   steps: BP_Processes_Steps[];
   rattings: [];
   reminder:[];
-  settings: string;
+  settings: any;
   eventControl: string;
   documentControl: string;
   views: number;

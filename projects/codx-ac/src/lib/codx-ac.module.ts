@@ -142,11 +142,6 @@ export const routes: Routes = [
         component: CodxReportViewDetailComponent,
       },
       {
-        path: 'periodic/:funcID',
-        component: PeriodicComponent,
-        data: { noReuse: true },
-      },
-      {
         path: 'cashpayments/:funcID/:journalNo',
         component: CashPaymentsComponent,
         data: { noReuse: true },
@@ -222,89 +217,68 @@ export const routes: Routes = [
       //   component: PeriodicControlComponent,
       //   data: { noReuse: true },
       // },
+      /// xu lí đinh ki
       {
-        path: 'CloseInventory/:funcID',
-        //component: RunPeriodicComponent,
-        component: PeriodicControlComponent,
-        data: { noReuse: true },
-      },
-      {
-        path: 'AdjustInventory/:funcID',
-        //component: RunPeriodicComponent,
-        component: PeriodicControlComponent,
-        data: { noReuse: true },
-      },
-      {
-        path: 'RunPosting/:funcID',
-        //component: UpdateTheLedgerComponent,
-        component: PeriodicControlComponent,
-        data: { noReuse: true },
-      },
-      {
-        path: 'AdjustExchRate/:funcID',
-        //component: UpdateTheLedgerComponent,
-        component: PeriodicControlComponent,
-        data: { noReuse: true },
-      },
-      {
-        path: 'RunDepreciation/:funcID',
-        //component: DepreciatingFixedAssetsComponent,
-        component: PeriodicControlComponent,
-        data: { noReuse: true },
-      },
-      {
-        path: 'AllocatePrepaidExpenses/:funcID',
-        //component: AllocateToolsComponent,
-        component: PeriodicControlComponent,
-        data: { noReuse: true },
-      },
-      {
-        path: 'SimulateInventory/:funcID',
-        //component: DeductPrepaidExpensesComponent,
-        component: PeriodicControlComponent,
-        data: { noReuse: true },
-      },
-      {
-        path: 'CalculateInterest/:funcID',
-        //component: DeductInterestExpensesComponent,
-        component: PeriodicControlComponent,
-        data: { noReuse: true },
-      },
-      {
-        path: 'RunAllocation/:funcID',
-        //component: ClosingTransactionComponent,
-        component: PeriodicControlComponent,
-        data: { noReuse: true },
-      },
-      {
-        path: 'RunCosting/:funcID',
-        //component: CalculatingCostOfProductComponent,
-        component: PeriodicControlComponent,
-        data: { noReuse: true },
-      },
-      {
-        path: 'RunExchDifference/:funcID',
-        //component: ExchangeRateTransactionComponent,
-        component: PeriodicControlComponent,
-        data: { noReuse: true },
-      },
-      {
-        path: 'CloseInvoices/:funcID',
-        //component: InvoiceSetlementComponent,
-        component: PeriodicControlComponent,
-        data: { noReuse: true },
-      },
-      {
-        path: 'RunTransfering/:funcID',
-        //component: ClosingDataComponent,
-        component: PeriodicControlComponent,
-        data: { noReuse: true },
-      },
-      {
-        path: 'CloseFiscalPeriod/:funcID',
-        //component: ClosingDataComponent,
-        component: PeriodicControlComponent,
-        data: { noReuse: true },
+        path: 'periodic/:funcID',
+        component: PeriodicComponent,
+        children:[
+          {
+            path: 'RunPosting/:funcID',
+            component: PeriodicControlComponent,
+          },
+          {
+            path: 'CloseInventory/:funcID',
+            component: PeriodicControlComponent,
+          },
+          {
+            path: 'AdjustInventory/:funcID',
+            component: PeriodicControlComponent,
+          },
+          {
+            path: 'AdjustExchRate/:funcID',
+            component: PeriodicControlComponent,
+          },
+          {
+            path: 'RunDepreciation/:funcID',
+            component: PeriodicControlComponent,
+          },
+          {
+            path: 'AllocatePrepaidExpenses/:funcID',
+            component: PeriodicControlComponent,
+          },
+          {
+            path: 'SimulateInventory/:funcID',
+            component: PeriodicControlComponent,
+          },
+          {
+            path: 'CalculateInterest/:funcID',
+            component: PeriodicControlComponent,
+          },
+          {
+            path: 'RunAllocation/:funcID',
+            component: PeriodicControlComponent,
+          },
+          {
+            path: 'RunCosting/:funcID',
+            component: PeriodicControlComponent,
+          },
+          {
+            path: 'RunExchDifference/:funcID',
+            component: PeriodicControlComponent,
+          },
+          {
+            path: 'CloseInvoices/:funcID',
+            component: PeriodicControlComponent,
+          },
+          {
+            path: 'RunTransfering/:funcID',
+            component: PeriodicControlComponent,
+          },
+          {
+            path: 'CloseFiscalPeriod/:funcID',
+            component: PeriodicControlComponent,
+          },
+        ]
       },
       {
         path: 'warehousetransfers/:funcID/:journalNo',

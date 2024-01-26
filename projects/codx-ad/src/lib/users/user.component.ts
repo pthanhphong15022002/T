@@ -35,6 +35,7 @@ import { CodxAdService } from '../codx-ad.service';
 import { environment } from 'src/environments/environment';
 import { PleaseUseComponent } from './please-use/please-use.component';
 import { PopActiveAccountComponent } from './pop-active-account/pop-active-account.component';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'lib-user',
@@ -47,6 +48,7 @@ export class UserComponent extends UIComponent {
   @ViewChild('itemTemplate') itemTemplate: TemplateRef<any>;
   @ViewChild('view') codxView!: any;
   @ViewChild('please_use') please_use: TemplateRef<any>;
+
   itemSelected: any;
   dialog!: DialogRef;
   button?: ButtonModel[];
@@ -209,13 +211,12 @@ export class UserComponent extends UIComponent {
       option.FormModel = this.view?.formModel;
       option.Width = 'Auto'; // s k thấy gửi từ ben đây,
       let dialog = this.callfunc.openSide(AddUserComponent, obj, option);
-      dialog.closed.subscribe((e) => {
-        if (e?.event) {
-          e.event.modifiedOn = new Date();
-          this.view.dataService.update(e.event).subscribe();
-          this.changeDetectorRef.detectChanges();
-        }
-      });
+      // dialog.closed.subscribe((e) => {
+      //   if (e?.event) {
+      //     e.event.modifiedOn = new Date();
+      //     this.changeDetectorRef.detectChanges();
+      //   }
+      // });
     });
   }
 
@@ -233,13 +234,16 @@ export class UserComponent extends UIComponent {
     option.FormModel = this.view?.formModel;
     option.Width = 'Auto'; // s k thấy gửi từ ben đây,
     let dialog = this.callfunc.openSide(AddUserComponent, obj, option);
-    dialog.closed.subscribe((e) => {
-      if (e?.event) {
-        e.event.modifiedOn = new Date();
-        this.view.dataService.update(e.event).subscribe();
-        this.changeDetectorRef.detectChanges();
-      }
-    });
+    // dialog.closed.subscribe((e) => {
+    //   if (e?.event) {
+    //     e.event.modifiedOn = new Date();
+    //     this.view.dataService
+    //       .update(e.event)
+    //       .subscribe((res) => {
+    //         this.changeDetectorRef.detectChanges();
+    //       });
+    //   }
+    // });
   }
 
   delete(data: any) {
@@ -264,15 +268,15 @@ export class UserComponent extends UIComponent {
         headerText: this.headerText,
       };
       let option = new SidebarModel();
-      option.DataService = this.view?.currentView?.dataService;
-      option.FormModel = this.view?.currentView?.formModel;
+      option.DataService = this.view?.dataService;
+      option.FormModel = this.view?.formModel;
       option.Width = 'Auto';
       let dialog = this.callfunc.openSide(AddUserComponent, obj, option);
       dialog.closed.subscribe((e) => {
         if (e?.event) {
-          e.event.modifiedOn = new Date();
-          this.view.dataService.update(e.event).subscribe();
-          this.changeDetectorRef.detectChanges();
+          option.DataService.update(
+            JSON.parse(JSON.stringify(e.event))
+          ).subscribe();
         }
       });
     });

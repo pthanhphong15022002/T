@@ -8,7 +8,7 @@
     [footer]="footer"
     [dialog]="dialog"
     [openMore]="true"
-    [tabContent]="[tabDescip, tabResources, tabOpen, tabJob]"
+    [tabContent]="[tabDescip, tabResources, tabOpen]"
     (setTitle)="setTitle($event)"
     [data]="meeting"
   ></codx-layout-add>
@@ -54,7 +54,8 @@
       <codx-input
         type="datetime"
         class="test-datetime"
-        [crrValue]="meeting?.startDate" [disabled]="isView"
+        [crrValue]="meeting?.startDate"
+        [disabled]="isView"
         (valueChange)="valueDateChange($event)"
         field="startDate"
         format="d"
@@ -75,7 +76,8 @@
         type="datetime"
         [crrValue]="startTime"
         format="t"
-        placeholder="pTimeFrom" [disabled]="isView"
+        placeholder="pTimeFrom"
+        [disabled]="isView"
         (valueChange)="valueStartTimeChange($event)"
       >
       </codx-input>
@@ -93,7 +95,8 @@
         type="datetime"
         [crrValue]="endTime"
         format="t"
-        placeholder="pTimeFrom" [disabled]="isView"
+        placeholder="pTimeFrom"
+        [disabled]="isView"
         (valueChange)="valueEndTimeChange($event)"
       >
       </codx-input>
@@ -105,7 +108,8 @@
         name="checkbox"
         label="Cả ngày"
         labelPosition="After"
-        [formModel]="dialog.formModel" [disabled]="isView"
+        [formModel]="dialog.formModel"
+        [disabled]="isView"
         (valueChange)="valueChangeCheckFullDay($event)"
         [crrValue]="isFullDay"
       >
@@ -121,7 +125,8 @@
     <codx-input
       field="location"
       type="text"
-      [placeholder]="gridViewSetup['Location']?.description" [disabled]="isView"
+      [placeholder]="gridViewSetup['Location']?.description"
+      [disabled]="isView"
       [crrValue]="meeting?.location"
       (valueChange)="valueChange($event)"
     >
@@ -150,9 +155,11 @@
   <div class="form-group">
     <div class="d-flex align-items-end justify-content-between mb-2">
       <div class="d-flex me-2">
-        <codx-label fiedName="Memo" [formModel]="dialog.formModel"> </codx-label>
+        <codx-label fiedName="Memo" [formModel]="dialog.formModel">
+        </codx-label>
       </div>
-      <button [disabled]="isView"
+      <button
+        [disabled]="isView"
         type="button"
         (click)="openPopupTemplate(meeting)"
         class="btn btn-icon btn-light"
@@ -202,7 +209,8 @@
     </div>
     <!--begin: btn-icon-->
     <span class="text-end align-items-end">
-      <button [disabled]="isView"
+      <button
+        [disabled]="isView"
         type="button"
         class="btn btn-clean btn-sm btn-icon btn-icon-md"
         (click)="openPopupLink(addLink)"
@@ -218,7 +226,9 @@
   <!--end::Label-->
   <!--begin::Input-->
   <div class="d-flex align-items-center fw-bold">
-    <a href="" *ngIf="meeting?.isOnline">{{ meeting?.link }}</a>
+    <a href="{{ meeting?.link }}" *ngIf="meeting?.isOnline">{{
+      meeting?.link
+    }}</a>
   </div>
   <!--end::Input-->
   <!-- <ng-container>
@@ -239,56 +249,86 @@
                 </div>
               </ng-container> -->
   <ng-container>
-    <div class="d-flex align-items-center justify-content-between mt-4 mb-2">
-      <div class="d-flex align-items-center">
-        <span class="icon-person icon-18 me-2 text-primary"></span>
-        <div class="text-primary">
-          <codx-label
-            class="fw-bold fs-6"
-            fiedName="Permissions"
-            [formModel]="dialog.formModel"
-            default="Người tham gia"
-          >
-          </codx-label>
+    <div class="extend-function" *ngIf="meeting?.meetingType == '1'">
+      <hr />
+      <div class="d-flex justify-content-center" (click)="showPlan = !showPlan">
+        <div class="d-flex align-items-center w-auto extend-title">
+          <span class="text-primary text-hover-primary_darker fw-bold me-1">
+            <codx-label
+              name="Plan"
+              [formModel]="dialog.formModel"
+              default="Công việc review"
+            ></codx-label>
+          </span>
+          <span
+            *ngIf="showPlan"
+            class="icon-keyboard_arrow_down icon-16 text-primary text-hover-primary_darker"
+          ></span>
+          <span
+            *ngIf="!showPlan"
+            class="icon-keyboard_arrow_up icon-16 text-primary text-hover-primary_darker"
+          ></span>
         </div>
       </div>
-      <codx-input
-        type="Share"
-        refValue="TM003"
-        (valueChange)="eventApply($event)"
-        field="permissions"
-        [dataShared]="[]"
-        [multiple]="true"
-        [showInput]="false"
-        [disabled]="readOnly || isView"
-      >
-      </codx-input>
     </div>
-    <div class="d-flex flex-wrap">
-      <div class="">
-        <ng-container *ngIf="listUserID.length > 0">
-          <codx-imgs
-            class="flex symbol-40px"
-            [objectId]="listUserID.join(';')"
-            objectType="AD_Users"
-            [numberImages]="5"
-          >
-          </codx-imgs>
-        </ng-container>
-      </div>
-      <!-- <ng-container *ngFor="let item of resources">
-        <div class="d-flex justify-content-between align-items-center rounded-pill bg-light p-2 ps-0 h-30px mt-2 me-2">
-          <div class="me-3">
-            <codx-img class="me-2" [objectId]="item.resourceID" objectType="AD_Users" [width]="25">
-            </codx-img>
-            <span>{{ item.resourceName }}</span>
+
+    <ng-container *ngIf="meeting?.meetingType == '1' && showPlan">
+      <div class="form-group row mt-3">
+        <div class="col-6">
+          <div>
+            <codx-label fiedName="FromDate" [formModel]="dialog.formModel">
+            </codx-label>
           </div>
-          <a (click)="onDeleteUser(item)" class="text-hover-danger d-flex align-items-center">
-            <span class="icon-close icon-16"></span>
-          </a>
+          <codx-input
+            type="datetime"
+            [disabled]="isView"
+            class="test-datetime"
+            (valueChange)="valueDateChange($event)"
+            [crrValue]="meeting?.fromDate"
+            field="fromDate"
+            placeholder="datetime"
+            format="F"
+          >
+          </codx-input>
         </div>
-      </ng-container> -->
-    </div>
+        <div class="col-6">
+          <div>
+            <codx-label fiedName="ToDate" [formModel]="dialog.formModel">
+            </codx-label>
+          </div>
+          <codx-input
+            type="datetime"
+            class="test-datetime"
+            [disabled]="isView"
+            [crrValue]="meeting?.toDate"
+            (valueChange)="valueDateChange($event)"
+            field="toDate"
+            format="F"
+            placeholder="datetime"
+          >
+          </codx-input>
+        </div>
+      </div>
+      <div class="form-group mt-3">
+        <codx-label fiedName="RefID" [formModel]="dialog.formModel">
+        </codx-label>
+        <codx-input
+          type="combobox"
+          field="refID"
+          refValue="TMProjects"
+          (valueChange)="valueChange($event)"
+          [crrValue]="meeting.refID"
+          loadFull="true"
+          [disabled]="disabledProject || isView"
+        >
+        </codx-input>
+        <!-- <codx-input field="refID" [formModel]="dialog.formModel" [Group]="form.formGroup"
+                      (valueChange)="valueChange($event)" [disabled]="disabledProject">
+                    </codx-input>
+                    dung cái này dính edit ko view được
+                   -->
+      </div>
+    </ng-container>
   </ng-container>
   <ng-container>
     <div
@@ -428,7 +468,8 @@
             >
             </codx-input>
           </div>
-          <div *ngIf="!isView"
+          <div
+            *ngIf="!isView"
             class="action-menu-od d-flex justify-content-center align-items-center cursor-pointer"
             (click)="onDeleteUser(i)"
           >
@@ -462,93 +503,10 @@
   </ng-container>
 </ng-template>
 
-<ng-template #tabJob>
-  <ng-container>
-    <div class="extend-function" *ngIf="meeting?.meetingType == '1'">
-      <hr />
-      <div class="d-flex justify-content-center" (click)="showPlan = !showPlan">
-        <div class="d-flex align-items-center w-auto extend-title">
-          <span class="text-primary text-hover-primary_darker fw-bold me-1">
-            <codx-label
-              name="Plan"
-              [formModel]="dialog.formModel"
-              default="Công việc review"
-            ></codx-label>
-          </span>
-          <span
-            *ngIf="showPlan"
-            class="icon-keyboard_arrow_down icon-16 text-primary text-hover-primary_darker"
-          ></span>
-          <span
-            *ngIf="!showPlan"
-            class="icon-keyboard_arrow_up icon-16 text-primary text-hover-primary_darker"
-          ></span>
-        </div>
-      </div>
-    </div>
-
-    <ng-container *ngIf="meeting?.meetingType == '1' && showPlan">
-      <div class="form-group row mt-3">
-        <div class="col-6">
-          <div>
-            <codx-label fiedName="FromDate" [formModel]="dialog.formModel">
-            </codx-label>
-          </div>
-          <codx-input
-            type="datetime"
-            [disabled]="isView"
-            class="test-datetime"
-            (valueChange)="valueDateChange($event)"
-            [crrValue]="meeting?.fromDate"
-            field="fromDate"
-            placeholder="datetime"
-            format="F"
-          >
-          </codx-input>
-        </div>
-        <div class="col-6">
-          <div>
-            <codx-label fiedName="ToDate" [formModel]="dialog.formModel">
-            </codx-label>
-          </div>
-          <codx-input
-            type="datetime"
-            class="test-datetime"
-            [disabled]="isView"
-            [crrValue]="meeting?.toDate"
-            (valueChange)="valueDateChange($event)"
-            field="toDate"
-            format="F"
-            placeholder="datetime"
-          >
-          </codx-input>
-        </div>
-      </div>
-      <div class="form-group mt-3">
-        <codx-label fiedName="RefID" [formModel]="dialog.formModel"> </codx-label>
-        <codx-input
-          type="combobox"
-          field="refID"
-          refValue="TMProjects"
-          (valueChange)="valueChange($event)"
-          [crrValue]="meeting.refID"
-          loadFull="true"
-          [disabled]="disabledProject || isView"
-        >
-        </codx-input>
-        <!-- <codx-input field="refID" [formModel]="dialog.formModel" [Group]="form.formGroup"
-          (valueChange)="valueChange($event)" [disabled]="disabledProject">
-        </codx-input>
-        dung cái này dính edit ko view được
-       -->
-      </div>
-    </ng-container>
-  </ng-container>
-</ng-template>
-
 <ng-template #footer>
   <div class="d-flex justify-content-between">
-    <button [disabled]="isView"
+    <button
+      [disabled]="isView"
       type="button"
       class="btn btn-light-primary me-3"
       (click)="addFile($event)"
@@ -562,7 +520,12 @@
         ></codx-label>
       </span>
     </button>
-    <button [disabled]="isView" type="button" class="btn btn-primary ms-1" (click)="onSave()">
+    <button
+      [disabled]="isView"
+      type="button"
+      class="btn btn-primary ms-1"
+      (click)="onSave()"
+    >
       <codx-label
         name="Save"
         [formModel]="dialog.formModel"

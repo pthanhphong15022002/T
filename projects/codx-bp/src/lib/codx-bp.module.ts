@@ -53,6 +53,9 @@ import { AddDefaultComponent } from './processes/popup-add-process/form-steps-fi
 import { AddStageComponent } from './processes/popup-add-process/form-steps-field-grid/add-default/add-stage/add-stage.component';
 import { AddTaskComponent } from './processes/popup-add-process/form-steps-field-grid/add-default/add-task/add-task.component';
 import { AddSettingConditionsComponent } from './processes/popup-add-process/form-steps-field-grid/add-default/add-task/add-setting-conditions/add-setting-conditions.component';
+import { ProcessReleaseComponent } from './processes/popup-add-process/process-release/process-release.component';
+import { AddProcessDefaultComponent } from './processes/popup-add-process/process-release/add-process-default/add-process-default.component';
+import { AddProcessDefaultPrice } from './processes/popup-add-process/process-release/add-process-default/add-process-default.pipe';
 
 export const routes: Routes = [
   {
@@ -63,7 +66,13 @@ export const routes: Routes = [
         path: 'processes/:funcID',
         component: ProcessesComponent,
         data: { noReuse: true },
-      }]
+      },
+      {
+        path: 'instances/:funcID/:id',
+        component: ProcessReleaseComponent,
+        data: { noReuse: true },
+      }
+    ]
   },
   {
     path: '',
@@ -113,11 +122,14 @@ export const routes: Routes = [
     FormStepsFieldGridComponent,
     FormTestDiagramComponent,
     AddDefaultComponent,
-
+    AddProcessDefaultComponent,
 
     AddStageComponent,
     AddTaskComponent,
-    AddSettingConditionsComponent
+    AddSettingConditionsComponent,
+    AddProcessDefaultPrice,
+
+    ProcessReleaseComponent
   ],
   imports: [
     CodxCoreModule.forRoot({ environment }),
