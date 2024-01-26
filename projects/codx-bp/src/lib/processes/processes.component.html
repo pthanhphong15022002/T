@@ -99,7 +99,10 @@
                 *ngFor="let item of data?.permissions; let i = index"
               >
                 <ng-container *ngIf="i < 2">
-                  <div style="position: relative" [ngbTooltip]="permTooltip">
+                  <div
+                    style="position: relative; margin-top: 6px"
+                    [ngbTooltip]="permTooltip"
+                  >
                     <codx-imgs
                       [objectId]="item?.objectID"
                       [objectName]="item?.objectName"
@@ -142,10 +145,16 @@
                     placement="right bottom top"
                     container="body"
                     autoClose="outside"
-                    class="contain-1"
                   >
                     <div class="view-all symbol symbol-25px symbol-circle">
-                      <span> {{ data?.permissions?.length - 2 }}+ </span>
+                      <codx-img
+                        [objectId]="data?.permissions[2]"
+                        objectType="AD_Users"
+                        width="25"
+                      ></codx-img>
+                      <span class="contain-1">
+                        {{ data?.permissions?.length - 2 }}+
+                      </span>
                     </div>
                   </div>
                 </ng-container>
@@ -306,13 +315,23 @@
     </div>
     <div class="w-15 p-3 d-flex flex-wrap">
       <ng-container *ngIf="data?.permissions?.length > 0">
-        <div *ngFor="let item of data?.permissions; let i = index">
+        <ng-container *ngFor="let item of data?.permissions; let i = index">
           <ng-container *ngIf="i < 2">
-            <span class="position-relative m-w-90">
-              <span class="d-flex align-items-center bagde-per me-1 mb-1">
-                {{ item?.objectName }}
+            <div
+              class="position-relative"
+              [ngClass]="
+                data?.permissions?.length > 2 && i == 1 ? 'm-w-70' : 'm-w-90'
+              "
+            >
+              <span class="d-flex align-items-center bagde-per mb-1 w-100">
+                <span
+                  class="line-clamp line-clamp-1"
+                  [ngbTooltip]="item?.objectName"
+                >
+                  {{ item?.objectName }}</span
+                >
               </span>
-            </span>
+            </div>
           </ng-container>
           <ng-container *ngIf="i == 2">
             <div
@@ -324,14 +343,14 @@
               placement="right bottom top"
               container="body"
               autoClose="outside"
-              class="contain-1"
+              class="m-w-30 text-hover-primary"
             >
-              <div class="view-all symbol symbol-25px symbol-circle">
-                <span> {{ data?.permissions?.length - 2 }}+ </span>
-              </div>
+              <span class="d-flex align-items-center bagde-per fw-bold">
+                ...
+              </span>
             </div>
           </ng-container>
-        </div>
+        </ng-container>
       </ng-container>
     </div>
     <div class="w-20 p-3">
