@@ -170,7 +170,7 @@ export class StepTaskComponent  implements OnInit, AfterViewInit, OnChanges {
     this.request.className = 'InstancesStepsBusiness';
     this.request.method = 'LoadDataColumnsAsync';
     this.request.idField = 'recID';
-    this.request.dataObj = {instanceID: this.dataCM?.refID};
+    this.request.dataObj = {processID: this.dataCM?.processID};
 
     this.resourceKanban = new ResourceModel();
     this.resourceKanban.service = 'DP';
