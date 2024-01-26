@@ -577,7 +577,6 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
       name: 'Permissions',
     },
     { icon: 'icon-playlist_add_check', text: 'Mở rộng', name: 'Open' },
-    { icon: 'icon-work_outline', text: 'Công việc review', name: 'Job' },
   ];
 
   setTitle(e: any) {
