@@ -292,7 +292,7 @@ export class PopupAddProcessComponent {
       processDefaultProcess = this.data.settings.filter(x=>x.fieldName == "DefaultProcess")[0];
       processCompleteControl = this.data.settings.filter(x=>x.fieldName == "CompleteControl")[0];
     }
-   
+
     stage.settings = JSON.stringify({
       icon: 'icon-i-bar-chart-steps',
       color: '#0078FF',
@@ -827,7 +827,6 @@ export class PopupAddProcessComponent {
   //#endregion
 
   async onSave() {
-    this.data.category = '1';
     // this.countValidate = this.bpSv.checkValidate(this.gridViewSetup, this.data);
     // if (this.countValidate > 0) return;
 
