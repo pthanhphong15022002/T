@@ -34,7 +34,7 @@
 </ng-template>
 
 <ng-template #cardKanban let-data let-setting="setting">
-  <div class="d-flex flex-column p-4">
+  <div class="d-flex flex-column p-4" (dblclick)="openFormDetail(data)">
     <span class="fw-bold">{{data.title}}</span>
     <div class="d-flex align-items-center justify-content-between mt-2">
       <div class="d-flex align-items-center">
@@ -50,7 +50,7 @@
         <span>{{data.createdOn | date: 'dd/MM/yyyy'}}</span>
       </div>
       <codx-img  [objectId]="data?.createdBy"
-      objectType="AD_Users" [width]="40" [imageType]="'circle'" >
+      objectType="AD_Users" [width]="30" [imageType]="'circle'" >
     </codx-img>
     </div>
   </div>

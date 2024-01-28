@@ -522,7 +522,7 @@ export class PopupAddProcessComponent {
   sharePerm(share) {
     this.listCombobox = {};
     this.multiple = true;
-    this.vllShare = 'DP0331';
+    this.vllShare = 'BP017';
     this.typeShare = '1';
     this.multiple = true;
     let option = new DialogModel();

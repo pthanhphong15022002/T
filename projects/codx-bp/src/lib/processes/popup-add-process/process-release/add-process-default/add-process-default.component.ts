@@ -1,7 +1,8 @@
-import { Component, OnInit, Optional } from '@angular/core';
+import { Component, OnInit, Optional, ViewChild } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ApiHttpService, AuthStore, DialogData, DialogRef, Util } from 'codx-core';
 import { CodxBpService } from 'projects/codx-bp/src/public-api';
+import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
 import { firstValueFrom } from 'rxjs';
 
 @Component({
@@ -10,6 +11,7 @@ import { firstValueFrom } from 'rxjs';
   styleUrls: ['./add-process-default.component.css']
 })
 export class AddProcessDefaultComponent implements OnInit{
+  @ViewChild('attachment') attachment: AttachmentComponent;
   dynamicFormsForm: FormGroup;
   process:any;
   data:any;
@@ -23,6 +25,7 @@ export class AddProcessDefaultComponent implements OnInit{
     gridViewName: 'grvDynamicForms',
     entityName: 'BP_Instances'
   }
+  subTitle:any;
   user:any;
   constructor(
     private auth: AuthStore,
@@ -56,6 +59,7 @@ export class AddProcessDefaultComponent implements OnInit{
     let extendInfo = JSON.parse(JSON.stringify(this.data.extendInfo));
     extendInfo.forEach(element => {
       if(element.fieldType != "Title") this.dynamicFormsForm.addControl(element.fieldName.toLowerCase(), new FormControl(element.defaultValue));
+      if(element.fieldType == "SubTitle") this.subTitle = element.fieldName.toLowerCase();
       var index = list.findIndex(x=>x.columnOrder == element.columnOrder)
       if(index >= 0)
       {
@@ -114,7 +118,17 @@ export class AddProcessDefaultComponent implements OnInit{
       interval: stageF.interval,
       duration: stageF.duration,
       settings: stageF.settings,
-      stepID: stageF.recID
+      stepID: stageF.recID,
+      eventControl: stageF?.eventControl,	
+      extendInfo: stageF?.extendInfo,	
+      documentControl : stageF?.documentControl,	
+      reminder: stageF?.reminder,
+      checkList: stageF?.checkList,
+      note: stageF?.note,
+      attachments: stageF?.attachments,
+      comments: stageF?.comments,
+      isOverDue : stageF?.isOverDue,	
+      owners: stageF?.owners,
     }
     var step = 
     {
@@ -129,13 +143,23 @@ export class AddProcessDefaultComponent implements OnInit{
       interval: this.data.interval,
       duration: this.data.duration,
       settings: JSON.stringify(this.data.settings),
-      stepID: this.data.recID
+      stepID: this.data.recID,
+      eventControl: this.data?.eventControl,	
+      extendInfo: this.data?.extendInfo,	
+      documentControl : this.data?.documentControl,	
+      reminder: this.data?.reminder,
+      checkList: this.data?.checkList,
+      note: this.data?.note,
+      attachments: this.data?.attachments,
+      comments: this.data?.comments,
+      isOverDue : this.data?.isOverDue,	
+      owners: this.data?.owners,
     }
 
 
     this.dataIns.processID = this.process?.recID,
     this.dataIns.instanceNo = instanceNo,
-    this.dataIns.title= valueForm.mo_ta_ngan_gon,
+    this.dataIns.title= valueForm[this.subTitle],
     this.dataIns.status= "1",
     this.dataIns.currentStage= stageF.recID,
     this.dataIns.currentStep= step.recID,
@@ -147,14 +171,18 @@ export class AddProcessDefaultComponent implements OnInit{
     this.dataIns.progress= null,
     this.dataIns.actualStart= null,
     this.dataIns.createdOn= new Date(),
-    this.dataIns.createdBy= this.user?.userID
-   
-   var listTask = JSON.stringify([stage,step]);
+    this.dataIns.createdBy = this.user?.userID,
+    this.dataIns.duration = this.process?.duration
+    this.dataIns.datas = JSON.stringify(valueForm)
+    var listTask = JSON.stringify([stage,step]);
     //Luu process Task
     this.api.execSv("BP","BP","ProcessTasksBusiness","SaveListTaskAsync",listTask).subscribe();
     //Luu Instanes
     this.api.execSv("BP","BP","ProcessInstancesBusiness","SaveInsAsync",this.dataIns).subscribe(item=>{
       this.dialog.close(this.dataIns)
     });
+
+    if(this.attachment.fileUploadList && this.attachment.fileUploadList.length > 0)
+      (await this.attachment.saveFilesObservable()).subscribe();
   }
 }

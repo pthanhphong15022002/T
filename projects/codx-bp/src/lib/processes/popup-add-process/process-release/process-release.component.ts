@@ -1,7 +1,8 @@
 import { AfterViewInit, Component, OnInit, Optional, TemplateRef, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ApiHttpService, ButtonModel, CallFuncService, DialogData, DialogRef, ResourceModel, SidebarModel, ViewModel, ViewType, ViewsComponent } from 'codx-core';
+import { ApiHttpService, ButtonModel, CallFuncService, DialogData, DialogModel, DialogRef, ResourceModel, SidebarModel, ViewModel, ViewType, ViewsComponent } from 'codx-core';
 import { AddProcessDefaultComponent } from './add-process-default/add-process-default.component';
+import { ProcessReleaseDetailComponent } from './process-release-detail/process-release-detail.component';
 
 @Component({
   selector: 'lib-process-release',
@@ -31,9 +32,7 @@ export class ProcessReleaseComponent implements OnInit , AfterViewInit{
       if(!this.recID) this.recID = param['id'];
    });
   }
-  log(data:any){
-    console.log(data)
-  }
+
   ngAfterViewInit(): void {
     
     this.button = [
@@ -112,6 +111,12 @@ export class ProcessReleaseComponent implements OnInit , AfterViewInit{
         (this.view.currentView as any).kanban.addCard(res?.event)
       }
     })
+  }
 
+  openFormDetail(dt:any)
+  {
+    var option = new DialogModel();
+    option.IsFull = true;
+    let popup = this.callFunc.openForm(ProcessReleaseDetailComponent,"",850,600,"",{data:dt,process:this.process},"",option);
   }
 }
