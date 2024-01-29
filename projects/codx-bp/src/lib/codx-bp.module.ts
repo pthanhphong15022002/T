@@ -57,6 +57,7 @@ import { ProcessReleaseComponent } from './processes/popup-add-process/process-r
 import { AddProcessDefaultComponent } from './processes/popup-add-process/process-release/add-process-default/add-process-default.component';
 import { AddProcessDefaultPrice } from './processes/popup-add-process/process-release/add-process-default/add-process-default.pipe';
 import { ProcessReleaseDetailComponent } from './processes/popup-add-process/process-release/process-release-detail/process-release-detail.component';
+import { ViewListInstancesComponent } from './processes/popup-add-process/process-release/view-list-instances/view-list-instances.component';
 
 export const routes: Routes = [
   {
@@ -131,7 +132,8 @@ export const routes: Routes = [
     AddProcessDefaultPrice,
 
     ProcessReleaseComponent,
-    ProcessReleaseDetailComponent
+    ProcessReleaseDetailComponent,
+    ViewListInstancesComponent
   ],
   imports: [
     CodxCoreModule.forRoot({ environment }),
