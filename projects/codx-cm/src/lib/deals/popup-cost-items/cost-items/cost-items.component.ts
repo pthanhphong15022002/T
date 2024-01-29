@@ -114,6 +114,7 @@ export class CostItemsComponent implements OnInit {
       if (this.isAutoSave) {
         if (!this.costIDOld.includes(this.cost.recID)) {
           this.cost = null;
+          this.costInfos?.splice(index, 1);
           return;
         }
         if (this.cost) this.autoDeleted(index);

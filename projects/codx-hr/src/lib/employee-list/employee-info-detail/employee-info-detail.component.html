@@ -2313,7 +2313,7 @@
             <div class="row mb-5">
               <div class="col">
                 <div class="text-gray-600 pb-1">
-                  <codx-label fiedName="GroupSalCode" [formModel]="eInfoFormModel" [setRequire]="false">
+                  <codx-label name="GroupSalCode" [formModel]="eInfoFormModel" [setRequire]="false">
                   </codx-label>
                 </div>
                 <div class="d-flex align-items-center">
@@ -2326,7 +2326,7 @@
               </div>
               <div class="col">
                 <div class="text-gray-600 pb-1">
-                  <codx-label fiedName="CurrencyID" [formModel]="eInfoFormModel" [setRequire]="false">
+                  <codx-label name="CurrencyID" [formModel]="eInfoFormModel" [setRequire]="false">
                   </codx-label>
                 </div>
                 <div class="d-flex align-items-center">
@@ -2340,7 +2340,7 @@
               </div>
               <div class="col">
                 <div class="text-gray-600 pb-1">
-                  <codx-label fiedName="TaxTableID" [formModel]="eInfoFormModel" [setRequire]="false">
+                  <codx-label name="TaxTableID" [formModel]="eInfoFormModel" [setRequire]="false">
                   </codx-label>
                 </div>
                 <div class="d-flex align-items-center">
@@ -2357,7 +2357,7 @@
             <div class="row mb-5">
               <div class="col-4">
                 <div class="text-gray-600 pb-1">
-                  <codx-label fiedName="IsSettleTax" [formModel]="eInfoFormModel" [setRequire]="false">
+                  <codx-label name="IsSettleTax" [formModel]="eInfoFormModel" [setRequire]="false">
                   </codx-label>
                 </div>
                 <div class="d-flex align-items-center">
@@ -5494,22 +5494,18 @@
 </ng-template>
 
 <ng-template #headTempCertificate2>
-  <codx-label [formModel]="eCertificateFormModel" [name]="'lblCertificateGridCol2'" [default]="
-      eCertificateHeaderText['TrainSupplierID']
-    " class="fw-bold fs-6 text-gray-800">
-    [default]="
-    eCertificateHeaderText['TrainSupplierID'] +
-    ' | ' +
-    eCertificateHeaderText['Ranking']
-    "
-  </codx-label>
+  <codx-label [formModel]="eCertificateFormModel" name="TrainSupplierID" [default]="'Nơi đào tạo'" ></codx-label>
+  <span class="mx-1">|</span> 
+  <codx-label [formModel]="eCertificateFormModel" name="Ranking" [default]="'Xếp loại'" ></codx-label>
+
+
 </ng-template>
 
 <ng-template #headTempCertificate3>
-  <codx-label [formModel]="eCertificateFormModel" [default]="
-      'Thời hạn chứng chỉ'
-    " [name]="'lblCertificateGridCol3'" class="fw-bold fs-6 text-gray-800">
-  </codx-label>
+  <codx-label [formModel]="eCertificateFormModel" name="IssuedDate" [default]="'Ngày cấp'" ></codx-label>
+  <!-- custom lblExpiredDate vì trong gridviewsetup ko có headerText Thời hạn -->
+  <codx-label [formModel]="eCertificateFormModel" name="lblExpiredDate" [default]="'Thời hạn'" ></codx-label> 
+
 </ng-template>
 
 <ng-template #headTempSkill1>

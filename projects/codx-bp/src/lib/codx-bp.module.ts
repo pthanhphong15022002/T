@@ -56,6 +56,7 @@ import { AddSettingConditionsComponent } from './processes/popup-add-process/for
 import { ProcessReleaseComponent } from './processes/popup-add-process/process-release/process-release.component';
 import { AddProcessDefaultComponent } from './processes/popup-add-process/process-release/add-process-default/add-process-default.component';
 import { AddProcessDefaultPrice } from './processes/popup-add-process/process-release/add-process-default/add-process-default.pipe';
+import { ProcessReleaseDetailComponent } from './processes/popup-add-process/process-release/process-release-detail/process-release-detail.component';
 
 export const routes: Routes = [
   {
@@ -129,7 +130,8 @@ export const routes: Routes = [
     AddSettingConditionsComponent,
     AddProcessDefaultPrice,
 
-    ProcessReleaseComponent
+    ProcessReleaseComponent,
+    ProcessReleaseDetailComponent
   ],
   imports: [
     CodxCoreModule.forRoot({ environment }),

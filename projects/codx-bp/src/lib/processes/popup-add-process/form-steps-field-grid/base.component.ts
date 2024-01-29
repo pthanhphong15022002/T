@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, EventEmitter, Injector, Input, OnChanges, Output, SimpleChanges } from "@angular/core";
 import { DomSanitizer } from "@angular/platform-browser";
-import { ApiHttpService, AuthStore, CallFuncService } from "codx-core";
+import { ApiHttpService, AuthStore, CallFuncService, NotificationsService } from "codx-core";
 import { CodxShareService } from "projects/codx-share/src/public-api";
 
 @Component({ template: '' })
@@ -24,6 +24,8 @@ export abstract class BaseFieldComponent
     protected ref: ChangeDetectorRef;
     protected callFuc: CallFuncService;
     protected sanitizer: DomSanitizer;
+    protected notifySvr: NotificationsService;
+    
     constructor(inject: Injector)
     {
       this.authstore = inject.get(AuthStore);
@@ -33,6 +35,7 @@ export abstract class BaseFieldComponent
       this.callFuc = inject.get(CallFuncService);
       this.user = this.authstore.get();
       this.sanitizer = inject.get(DomSanitizer);
+      this.notifySvr = inject.get(NotificationsService);
     }
 
 }

@@ -19,7 +19,8 @@ export class PropertyAttachmentComponent extends BasePropertyComponent{
       recID : Util.uid(),
       title : "",
       isRequired: false,
-      count : 0
+      count : 0,
+      isList: "1"
     }
     this.data.documentControl.push(data);
     this.dataChange.emit(this.data);

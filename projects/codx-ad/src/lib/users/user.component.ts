@@ -211,12 +211,14 @@ export class UserComponent extends UIComponent {
       option.FormModel = this.view?.formModel;
       option.Width = 'Auto'; // s k thấy gửi từ ben đây,
       let dialog = this.callfunc.openSide(AddUserComponent, obj, option);
-      // dialog.closed.subscribe((e) => {
-      //   if (e?.event) {
-      //     e.event.modifiedOn = new Date();
-      //     this.changeDetectorRef.detectChanges();
-      //   }
-      // });
+      dialog.closed.subscribe((e) => {
+        if (e?.event) {
+          if (e.event.type == 'changedAvatar')
+            option.DataService.update(
+              JSON.parse(JSON.stringify(e.event.user))
+            ).subscribe();
+        }
+      });
     });
   }
 
@@ -234,16 +236,14 @@ export class UserComponent extends UIComponent {
     option.FormModel = this.view?.formModel;
     option.Width = 'Auto'; // s k thấy gửi từ ben đây,
     let dialog = this.callfunc.openSide(AddUserComponent, obj, option);
-    // dialog.closed.subscribe((e) => {
-    //   if (e?.event) {
-    //     e.event.modifiedOn = new Date();
-    //     this.view.dataService
-    //       .update(e.event)
-    //       .subscribe((res) => {
-    //         this.changeDetectorRef.detectChanges();
-    //       });
-    //   }
-    // });
+    dialog.closed.subscribe((e) => {
+      if (e?.event) {
+        if (e?.event?.type == 'changedAvatar')
+          option.DataService.update(
+            JSON.parse(JSON.stringify(e?.event?.user))
+          ).subscribe();
+      }
+    });
   }
 
   delete(data: any) {
@@ -274,9 +274,10 @@ export class UserComponent extends UIComponent {
       let dialog = this.callfunc.openSide(AddUserComponent, obj, option);
       dialog.closed.subscribe((e) => {
         if (e?.event) {
-          option.DataService.update(
-            JSON.parse(JSON.stringify(e.event))
-          ).subscribe();
+          if (e?.event?.type == 'changedAvatar')
+            option.DataService.update(
+              JSON.parse(JSON.stringify(e?.event?.user))
+            ).subscribe();
         }
       });
     });
@@ -316,10 +317,12 @@ export class UserComponent extends UIComponent {
       option.FormModel = this.view?.currentView?.formModel;
       option.Width = 'Auto';
       let dialog = this.callfunc.openSide(AddUserComponent, obj, option);
-      dialog.closed.subscribe((x) => {
-        if (x.event) {
-          x.event.modifiedOn = new Date();
-          this.view.dataService.update(x.event).subscribe();
+      dialog.closed.subscribe((e) => {
+        if (e?.event) {
+          if (e?.event?.type == 'changedAvatar')
+            option.DataService.update(
+              JSON.parse(JSON.stringify(e?.event?.user))
+            ).subscribe();
         }
       });
     });
