@@ -52,37 +52,37 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
 
 
   headerText: string;
-  dialog: DialogRef; 
+  dialog: DialogRef;
   dialogData?: any;
   dataDefault: any;
   journal: any;
   baseCurr: any;
-  taxCurr:any;
-  fmPurchaseInvoicesLines:any = fmPurchaseInvoicesLines
-  fmVATInvoices:any = fmVATInvoices
+  taxCurr: any;
+  fmPurchaseInvoicesLines: any = fmPurchaseInvoicesLines
+  fmVATInvoices: any = fmVATInvoices
   tabInfo: TabModel[] = [ //? thiết lập footer
     { name: 'History', textDefault: 'Lịch sử', isActive: false },
     { name: 'Comment', textDefault: 'Thảo luận', isActive: false },
     { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
     { name: 'References', textDefault: 'Liên kết', isActive: false },
   ];
-  isPreventChange:any = false;
-  postDateControl:any;
-  preData:any;
-  nextTabIndex:number;
-  editSettings:EditSettingsModel = {
-    allowAdding:false,
-    allowEditing:false,
-    allowDeleting:false,
-    allowEditOnDblClick:false,
-    allowNextRowEdit:false
+  isPreventChange: any = false;
+  postDateControl: any;
+  preData: any;
+  nextTabIndex: number;
+  editSettings: EditSettingsModel = {
+    allowAdding: false,
+    allowEditing: false,
+    allowDeleting: false,
+    allowEditOnDblClick: false,
+    allowNextRowEdit: false
   }
   private destroy$ = new Subject<void>();
   constructor(
     inject: Injector,
     private acService: CodxAcService,
     private notification: NotificationsService,
-    private tranform : DatePipe,
+    private tranform: DatePipe,
     @Optional() dialog?: DialogRef,
     @Optional() dialogData?: DialogData
   ) {
@@ -106,7 +106,7 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
         takeUntil(this.destroy$),
         map((arr: any[]) => arr.find((a) => a.category === '1')),
         map((data) => JSON.parse(data.dataValue))
-      ).subscribe((res:any)=>{
+      ).subscribe((res: any) => {
         if (res) {
           this.taxCurr = res?.TaxCurr;
           this.postDateControl = res?.PostedDateControl;
@@ -114,7 +114,7 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
       })
   }
 
-  ngAfterViewInit(): void {}
+  ngAfterViewInit(): void { }
 
   onAfterInitForm(event) {
     this.setValidateForm();
@@ -134,17 +134,17 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
    * *Hàm thiết lập lưới trước khi init
    * @param eleGrid 
    */
-  beforeInitGridPurchaseInvoices(eleGrid:CodxGridviewV2Component) {
+  beforeInitGridPurchaseInvoices(eleGrid: CodxGridviewV2Component) {
     let hideFields = [];
     //* Thiết lập ẩn hiện các cột theo sổ nhật ký
     if (this.dialogData?.data.hideFields && this.dialogData?.data.hideFields.length > 0) {
       hideFields = [...this.dialogData?.data.hideFields]; //? get danh sách các field ẩn được truyền vào từ dialogdata
     }
-    let setting = this.acService.getSettingFromJournal(eleGrid,this.journal,this.formPurchaseInvoices?.data,this.baseCurr,hideFields);
+    let setting = this.acService.getSettingFromJournal(eleGrid, this.journal, this.formPurchaseInvoices?.data, this.baseCurr, hideFields);
     eleGrid = setting[0];
     hideFields = setting[1];
 
-    if(this.formPurchaseInvoices?.data?.currencyID == this.baseCurr){ //? nếu không sử dụng ngoại tệ
+    if (this.formPurchaseInvoices?.data?.currencyID == this.baseCurr) { //? nếu không sử dụng ngoại tệ
       hideFields.push('PurcAmt2');
       hideFields.push('DiscAmt2');
       hideFields.push('NetAmt2');
@@ -186,7 +186,7 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
    * @param event 
    */
   changeSubType(event?: any) {
-    this.formPurchaseInvoices.setValue('subType',event.data[0],{});
+    this.formPurchaseInvoices.setValue('subType', event.data[0], {});
     this.detectorRef.detectChanges();
     if (this.elementTabDetail) {
       this.showHideTabDetail(this.formPurchaseInvoices?.data?.subType, this.elementTabDetail);
@@ -198,34 +198,36 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
    * @param event 
    */
   valueChangeMaster(event: any) {
-    if(this.isPreventChange){
+    if (this.isPreventChange) {
       return;
     }
     let field = event?.field || event?.ControlName;
     let value = event?.data || event?.crrValue;
-    this.formPurchaseInvoices.setValue('updateColumns','',{});
+    this.formPurchaseInvoices.setValue('updateColumns', '', {});
     switch (field.toLowerCase()) {
       case 'objectid':
         let indexob = this.eleCbxObjectID?.ComponentCurrent?.dataService?.data.findIndex((x) => x.ObjectID == this.eleCbxObjectID?.ComponentCurrent?.value);
-        if(value == '' || value == null || indexob == -1){
+        if (value == '' || value == null || indexob == -1) {
           this.isPreventChange = true;
           let memo = this.getMemoMaster();
-          this.formPurchaseInvoices.setValue(field,null,{});
+          this.formPurchaseInvoices.setValue(field, null, {});
           this.formPurchaseInvoices.setValue('objectName', null, {});
           this.formPurchaseInvoices.setValue('objectType', null, {});
           this.formPurchaseInvoices.setValue('address', null, {});
           this.formPurchaseInvoices.setValue('taxCode', null, {});
-          this.formPurchaseInvoices.setValue('warehouseID',null, {});
+          this.formPurchaseInvoices.setValue('warehouseID', null, {});
           this.formPurchaseInvoices.setValue('pmtMethodID', null, {});
           this.formPurchaseInvoices.setValue('pmtTermID', null, {});
           this.formPurchaseInvoices.setValue('delModeID', null, {});
+          this.formPurchaseInvoices.data.pmtMethodName = null;
+          this.formPurchaseInvoices.data.pmtTermName = null;
           this.formPurchaseInvoices.setValue('memo', memo, {});
           this.detectorRef.detectChanges();
           this.isPreventChange = false;
           return;
-        } 
+        }
         let objectType = event?.component?.itemsSelected[0]?.ObjectType || '';
-        this.formPurchaseInvoices.setValue('objectType',objectType,{});
+        this.formPurchaseInvoices.setValue('objectType', objectType, {});
         let memo2 = this.getMemoMaster();
         this.formPurchaseInvoices.setValue('memo', memo2, {});
         this.objectIDChange(field);
@@ -233,7 +235,7 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
 
       case 'currencyid':
         let indexcr = this.eleCbxCurrencyID?.ComponentCurrent?.dataService?.data.findIndex((x) => x.CurrencyID == this.eleCbxCurrencyID?.ComponentCurrent?.value);
-        if(value == '' || value == null || indexcr == -1){
+        if (value == '' || value == null || indexcr == -1) {
           this.isPreventChange = true;
           this.formPurchaseInvoices.setValue(field, this.preData?.currencyID, {});
           if (this.preData?.currencyID != null) {
@@ -245,16 +247,16 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
           this.detectorRef.detectChanges();
         }
         let valueCurrency = {
-          PreCurrency:  event?.component?.dataService?.currentComponent?.previousItemData?.CurrencyID || ''
+          PreCurrency: event?.component?.dataService?.currentComponent?.previousItemData?.CurrencyID || ''
         };
-        this.currencyIDChange(field,valueCurrency);
+        this.currencyIDChange(field, valueCurrency);
         break;
 
       case 'exchangerate':
-        if(value == null){
+        if (value == null) {
           this.isPreventChange = true;
           setTimeout(() => {
-            this.formPurchaseInvoices.setValue(field,this.preData?.exchangeRate,{});
+            this.formPurchaseInvoices.setValue(field, this.preData?.exchangeRate, {});
             this.isPreventChange = false;
             this.detectorRef.detectChanges();
           }, 50);
@@ -265,44 +267,56 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
           }
           return;
         }
-        if(this.preData?.exchangeRate == this.formPurchaseInvoices?.data?.exchangeRate) return;
+        if (this.preData?.exchangeRate == this.formPurchaseInvoices?.data?.exchangeRate) return;
         this.exchangeRateChange(field);
         break;
 
-        case 'voucherdate':
-          if(value == null) return;
-          this.voucherDateChange(field);
-          break;
+      case 'voucherdate':
+        if (value == null) return;
+        this.voucherDateChange(field);
+        break;
 
-        case 'taxexchrate':
-          if(value == null){
-            this.isPreventChange = true;
-            setTimeout(() => {
-              this.formPurchaseInvoices.setValue(field,this.preData?.taxExchrate,{});
-              this.isPreventChange = false;
-              this.detectorRef.detectChanges();
-            }, 50);
-            return;
-          }
-          if(this.preData?.taxExchrate == this.formPurchaseInvoices?.data?.taxExchrate) return;
-          this.taxExchRateChange(field);
-          break;
-      // case 'currencyid':
-      //   this.currencyIDChange(field);
-      //   break;
-      // case 'exchangerate':
-      //   this.exchangeRateChange(field);
-      //   break;
-      // case 'taxexchrate':
-      //   this.taxExchRateChange(field);
-      //   break;
-      // case 'voucherdate':
-      //   this.voucherDateChange(field);
-      //   break;
+      case 'taxexchrate':
+        if (value == null) {
+          this.isPreventChange = true;
+          setTimeout(() => {
+            this.formPurchaseInvoices.setValue(field, this.preData?.taxExchrate, {});
+            this.isPreventChange = false;
+            this.detectorRef.detectChanges();
+          }, 50);
+          return;
+        }
+        if (this.preData?.taxExchrate == this.formPurchaseInvoices?.data?.taxExchrate) return;
+        this.taxExchRateChange(field);
+        break;
       case 'invoiceno':
       case 'invoicedate':
         let memo = this.getMemoMaster(event?.component?.format);
-        this.formPurchaseInvoices.setValue('memo',memo,{});
+        this.formPurchaseInvoices.setValue('memo', memo, {});
+        break;
+      case 'pmtmethodid':
+        let indexpmtmethod = event?.component?.dataService?.data.findIndex((x) => x.PmtMethodID == event.data);
+        if (value == '' || value == null || indexpmtmethod == -1) {
+          this.formPurchaseInvoices.data.pmtMethodName = null;
+          return;
+        }
+        this.formPurchaseInvoices.data.pmtMethodName = event?.component?.dataService?.data[indexpmtmethod].PmtMethodName;
+        break;
+      case 'pmttermid':
+        let indexpmtterm = event?.component?.dataService?.data.findIndex((x) => x.PmtTermID == event.data);
+        if (value == '' || value == null || indexpmtterm == -1) {
+          this.formPurchaseInvoices.data.pmtTermName = null;
+          return;
+        }
+        this.formPurchaseInvoices.data.pmtTermName = event?.component?.dataService?.data[indexpmtterm].PmtTermName;
+        break;
+      case 'buyer':
+        let indexbuyer = event?.component?.dataService?.data.findIndex((x) => x.ObjectID == event.data);
+        if (value == '' || value == null || indexbuyer == -1) {
+          this.formPurchaseInvoices.data.buyerName = null;
+          return;
+        }
+        this.formPurchaseInvoices.data.buyerName = event?.component?.dataService?.data[indexbuyer].ObjectName;
         break;
     }
   }
@@ -322,14 +336,14 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
       event.field,
       this.formPurchaseInvoices.data,
       oLine,
-    ]).pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
+    ]).pipe(takeUntil(this.destroy$)).subscribe((res: any) => {
       if (res) {
         Object.assign(oLine, res);
         oLine = this.genFixedDims(oLine);
         oLine.updateColumns = '';
         this.detectorRef.detectChanges();
         this.eleGridPurchaseInvoice.endProcess();
-        
+
       }
     })
   }
@@ -341,9 +355,8 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
   valueChangeLineVATInvoices(event: any) {
     let oLine = event.data;
     if (event.field.toLowerCase() === 'goods') {
-      this.formPurchaseInvoices.data.unbounds = {
-        itemID: event?.itemData?.ItemID,
-      };
+      oLine.itemID = event?.itemData?.ItemID;
+      this.detectorRef.detectChanges();
     }
     this.eleGridVatInvoices.startProcess();
     this.api.exec('AC', 'VATInvoicesBusiness', 'ValueChangeAsync', [
@@ -351,7 +364,7 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
       this.formPurchaseInvoices.data,
       oLine,
       event.field
-    ]).pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
+    ]).pipe(takeUntil(this.destroy$)).subscribe((res: any) => {
       if (res) {
         Object.assign(oLine, res);
         this.detectorRef.detectChanges();
@@ -365,7 +378,7 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
    * @returns
    */
   onAddLine(typeBtn) {
-    this.formPurchaseInvoices.save(null, 0, '', '', false)
+    this.formPurchaseInvoices.save(null, 0, '', '', false, { allowCompare: false })
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
         if (!res) return;
@@ -376,16 +389,16 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
           if (res.update.hasOwnProperty('data') && !res.update.data) return;
         }
         if (this.eleGridPurchaseInvoice && this.elementTabDetail?.selectingID == '0') {
-          this.eleGridPurchaseInvoice.saveRow((res:any)=>{ //? save lưới trước
-            if(res){
+          this.eleGridPurchaseInvoice.saveRow((res: any) => { //? save lưới trước
+            if (res) {
               this.addRowDetailByType(typeBtn);
             }
           })
           return;
         }
         if (this.eleGridVatInvoices && this.elementTabDetail?.selectingID == '1') {
-          this.eleGridVatInvoices.saveRow((res:any)=>{ //? save lưới trước
-            if(res){
+          this.eleGridVatInvoices.saveRow((res: any) => { //? save lưới trước
+            if (res) {
               this.addRowDetailByType(typeBtn);
             }
           })
@@ -399,7 +412,7 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
    * @param event
    */
   onTabSelectedDetail(event) {
-    switch(event?.selectedIndex){
+    switch (event?.selectedIndex) {
       case 0:
         if (this.eleGridPurchaseInvoice && this.eleGridPurchaseInvoice.isEdit) {
           event.cancel = true;
@@ -423,7 +436,7 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
   /**
    * *Hàm hủy chứng từ
    */
-  onDiscardVoucher(){
+  onDiscardVoucher() {
     if (this.formPurchaseInvoices && this.formPurchaseInvoices.data._isEdit) {
       this.notification.alertCode('AC0010', null).subscribe((res) => {
         if (res.event.status === 'Y') {
@@ -440,7 +453,7 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
             });
         }
       });
-    }else{
+    } else {
       this.dialog.close();
       this.onDestroy();
     }
@@ -450,40 +463,40 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
    * *Hàm lưu chứng từ
    * @param type 
    */
-  onSaveVoucher(type){
-    this.formPurchaseInvoices.save(null, 0, '', '', false)
-    .pipe(takeUntil(this.destroy$))
-    .subscribe((res: any) => {
-      if (!res) return;
-      if (res.hasOwnProperty('save')) {
-        if (res.save.hasOwnProperty('data') && !res.save.data) return;
-      }
-      if (res.hasOwnProperty('update')) {
-        if (res.update.hasOwnProperty('data') && !res.update.data) return;
-      }
-      if ((this.eleGridPurchaseInvoice || this.eleGridPurchaseInvoice?.isEdit) && this.elementTabDetail?.selectingID == '0') { 
-        this.eleGridPurchaseInvoice.saveRow((res:any)=>{ //? save lưới trước
-          if(res){
-            this.saveVoucher(type);
-          }
-        })
-        return;
-      }
-      if ((this.eleGridVatInvoices || this.eleGridVatInvoices?.isEdit) && this.elementTabDetail?.selectingID == '1') {
-        this.eleGridVatInvoices.saveRow((res:any)=>{ //? save lưới trước
-          if(res){
-            this.saveVoucher(type);
-          }
-        })
-        return;
-      }  
-    });
+  onSaveVoucher(type) {
+    this.formPurchaseInvoices.save(null, 0, '', '', false, { allowCompare: false })
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res: any) => {
+        if (!res) return;
+        if (res.hasOwnProperty('save')) {
+          if (res.save.hasOwnProperty('data') && !res.save.data) return;
+        }
+        if (res.hasOwnProperty('update')) {
+          if (res.update.hasOwnProperty('data') && !res.update.data) return;
+        }
+        if ((this.eleGridPurchaseInvoice || this.eleGridPurchaseInvoice?.isEdit) && this.elementTabDetail?.selectingID == '0') {
+          this.eleGridPurchaseInvoice.saveRow((res: any) => { //? save lưới trước
+            if (res) {
+              this.saveVoucher(type);
+            }
+          })
+          return;
+        }
+        if ((this.eleGridVatInvoices || this.eleGridVatInvoices?.isEdit) && this.elementTabDetail?.selectingID == '1') {
+          this.eleGridVatInvoices.saveRow((res: any) => { //? save lưới trước
+            if (res) {
+              this.saveVoucher(type);
+            }
+          })
+          return;
+        }
+      });
   }
 
   /**
    * lưu chứng từ
    */
-  saveVoucher(type){
+  saveVoucher(type) {
     this.api
       .exec('AC', 'PurchaseInvoicesBusiness', 'UpdateVoucherAsync', [
         this.formPurchaseInvoices.data,
@@ -496,31 +509,31 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
           if (type == 'save') {
             this.onDestroy();
             this.dialog.close();
-          }else{
+          } else {
             this.api
-            .exec('AC', 'PurchaseInvoicesBusiness', 'SetDefaultAsync', [
-              this.dialogData.data?.oData,
-              this.journal,
-            ])
-            .subscribe((res: any) => {
-              if (res) {
-                res.data.isAdd = true;
-                this.formPurchaseInvoices.refreshData({...res.data});
-                setTimeout(() => {
-                  this.refreshGrid();
-                }, 100);
-                this.detectorRef.detectChanges();
-              }
-            });
+              .exec('AC', 'PurchaseInvoicesBusiness', 'SetDefaultAsync', [
+                this.dialogData.data?.oData,
+                this.journal,
+              ])
+              .subscribe((res: any) => {
+                if (res) {
+                  res.data.isAdd = true;
+                  this.formPurchaseInvoices.refreshData({ ...res.data });
+                  setTimeout(() => {
+                    this.refreshGrid();
+                  }, 100);
+                  this.detectorRef.detectChanges();
+                }
+              });
           }
           if (this.formPurchaseInvoices.data.isAdd || this.formPurchaseInvoices.data.isCopy)
             this.notification.notifyCode('SYS006');
-          else 
+          else
             this.notification.notifyCode('SYS007');
-          
+
         }
-        if(this.eleGridPurchaseInvoice && this.eleGridPurchaseInvoice?.isSaveOnClick) this.eleGridPurchaseInvoice.isSaveOnClick = false;
-        if(this.eleGridVatInvoices && this.eleGridVatInvoices.isSaveOnClick) this.eleGridVatInvoices.isSaveOnClick = false;
+        if (this.eleGridPurchaseInvoice && this.eleGridPurchaseInvoice?.isSaveOnClick) this.eleGridPurchaseInvoice.isSaveOnClick = false;
+        if (this.eleGridVatInvoices && this.eleGridVatInvoices.isSaveOnClick) this.eleGridVatInvoices.isSaveOnClick = false;
       });
   }
   //#endregion Method
@@ -546,20 +559,20 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
    */
   addLine() {
     let oLine = this.setDefaultLine();
-    this.eleGridPurchaseInvoice.addRow(oLine,this.eleGridPurchaseInvoice.dataSource.length);
+    this.eleGridPurchaseInvoice.addRow(oLine, this.eleGridPurchaseInvoice.dataSource.length);
   }
 
   /**
    * *Hàm set data mặc định từ master khi thêm dòng mới
    */
   setDefaultLine() {
-    let model : any = new AC_PurchaseInvoicesLines();
+    let model: any = new AC_PurchaseInvoicesLines();
     let oLine = Util.camelizekeyObj(model);
     oLine.transID = this.formPurchaseInvoices.data.recID;
     oLine.idiM4 = this.formPurchaseInvoices.data.warehouseID;
     oLine.note = this.formPurchaseInvoices.data.memo;
     oLine = this.genFixedDims(oLine);
-    oLine = this.acService.getDataSettingFromJournal(oLine,this.journal);
+    oLine = this.acService.getDataSettingFromJournal(oLine, this.journal);
     return oLine;
   }
 
@@ -572,84 +585,86 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
     oLine.transID = this.formPurchaseInvoices.data.recID;
     oLine.objectID = this.formPurchaseInvoices.data.objectID;
     oLine.objectName = this.formPurchaseInvoices.data.objectName;
-    this.eleGridVatInvoices.addRow(oLine,this.eleGridVatInvoices.dataSource.length);
+    this.eleGridVatInvoices.addRow(oLine, this.eleGridVatInvoices.dataSource.length);
   }
 
   /**
    * *Hàm change đối tượng
    * @param field 
    */
-  objectIDChange(field:any){
+  objectIDChange(field: any) {
     this.api.exec('AC', 'PurchaseInvoicesBusiness', 'ValueChangedAsync', [
       field,
       this.formPurchaseInvoices.data,
     ])
-    .pipe(takeUntil(this.destroy$))
-    .subscribe((res: any) => {
-      if (res) {
-        this.isPreventChange = true;
-        this.formPurchaseInvoices.setValue('objectName',(res?.data?.objectName),{});
-        this.formPurchaseInvoices.setValue('objectType',(res?.data?.objectType),{});
-        this.formPurchaseInvoices.setValue('address',(res?.data?.address),{});
-        this.formPurchaseInvoices.setValue('taxCode',(res?.data?.taxCode),{});
-        this.formPurchaseInvoices.setValue('warehouseID',(res?.data?.warehouseID),{});
-        this.formPurchaseInvoices.setValue('pmtMethodID',(res?.data?.pmtMethodID),{});
-        this.formPurchaseInvoices.setValue('pmtTermID',(res?.data?.pmtTermID),{});
-        this.formPurchaseInvoices.setValue('delModeID',(res?.data?.delModeID),{});
-        this.formPurchaseInvoices.setValue('currencyID',(res?.data?.currencyID),{});
-        this.formPurchaseInvoices.setValue('exchangeRate',(res?.data?.exchangeRate),{});
-        this.formPurchaseInvoices.setValue('taxExchRate',(res?.data?.taxExchRate),{});
-        this.formPurchaseInvoices.setValue('multi',(res?.data?.multi),{});
-        if (this.eleGridPurchaseInvoice.dataSource.length) {
-          this.formPurchaseInvoices.preData = {...this.formPurchaseInvoices.data};
-          this.dialog.dataService.update(this.formPurchaseInvoices.data).subscribe();
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res: any) => {
+        if (res) {
+          this.isPreventChange = true;
+          this.formPurchaseInvoices.setValue('objectName', (res?.data?.objectName), {});
+          this.formPurchaseInvoices.setValue('objectType', (res?.data?.objectType), {});
+          this.formPurchaseInvoices.setValue('address', (res?.data?.address), {});
+          this.formPurchaseInvoices.setValue('taxCode', (res?.data?.taxCode), {});
+          this.formPurchaseInvoices.setValue('warehouseID', (res?.data?.warehouseID), {});
+          this.formPurchaseInvoices.setValue('pmtMethodID', (res?.data?.pmtMethodID), {});
+          this.formPurchaseInvoices.setValue('pmtTermID', (res?.data?.pmtTermID), {});
+          this.formPurchaseInvoices.setValue('delModeID', (res?.data?.delModeID), {});
+          this.formPurchaseInvoices.setValue('currencyID', (res?.data?.currencyID), {});
+          this.formPurchaseInvoices.setValue('exchangeRate', (res?.data?.exchangeRate), {});
+          this.formPurchaseInvoices.setValue('taxExchRate', (res?.data?.taxExchRate), {});
+          this.formPurchaseInvoices.data.pmtMethodName = res?.data?.pmtMethodName;
+          this.formPurchaseInvoices.data.pmtTermName = res?.data?.pmtTermName;
+          this.formPurchaseInvoices.setValue('multi', (res?.data?.multi), {});
+          if (this.eleGridPurchaseInvoice.dataSource.length) {
+            this.formPurchaseInvoices.preData = { ...this.formPurchaseInvoices.data };
+            this.dialog.dataService.update(this.formPurchaseInvoices.data).subscribe();
+          }
+          if (res?.isRefreshGrid) {
+            this.showHideColumn();
+            this.eleGridPurchaseInvoice.refresh();
+          }
+          this.isPreventChange = false;
+          this.detectorRef.detectChanges();
         }
-        if (res?.isRefreshGrid) {
-          this.showHideColumn();
-          this.eleGridPurchaseInvoice.refresh();
-        }
-        this.isPreventChange = false;
-        this.detectorRef.detectChanges();
-      }
-    })
+      })
   }
 
   /**
    * *Hàm change tiền tệ
    * @param field 
    */
-  currencyIDChange(field:any,obj:any){
+  currencyIDChange(field: any, obj: any) {
     this.api.exec('AC', 'PurchaseInvoicesBusiness', 'ValueChangedAsync', [
       field,
       this.formPurchaseInvoices.data,
       JSON.stringify(obj)
     ])
-    .pipe(takeUntil(this.destroy$))
-    .subscribe((res: any) => {
-      if (res) {      
-        this.isPreventChange = true;
-        this.formPurchaseInvoices.setValue('exchangeRate',res?.data?.exchangeRate,{});
-        this.preData = {...this.formPurchaseInvoices?.data};
-        if (this.eleGridPurchaseInvoice.dataSource.length) {
-          this.formPurchaseInvoices.preData = {...this.formPurchaseInvoices.data};
-          this.dialog.dataService.update(this.formPurchaseInvoices.data).subscribe();
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res: any) => {
+        if (res) {
+          this.isPreventChange = true;
+          this.formPurchaseInvoices.setValue('exchangeRate', res?.data?.exchangeRate, {});
+          this.preData = { ...this.formPurchaseInvoices?.data };
+          if (this.eleGridPurchaseInvoice.dataSource.length) {
+            this.formPurchaseInvoices.preData = { ...this.formPurchaseInvoices.data };
+            this.dialog.dataService.update(this.formPurchaseInvoices.data).subscribe();
+          }
+          if (res?.isRefreshGrid) {
+            this.showHideColumn();
+            setTimeout(() => {
+              this.eleGridPurchaseInvoice.refresh();
+            }, 100);
+          }
+          this.isPreventChange = false;
         }
-        if (res?.isRefreshGrid) {
-          this.showHideColumn();
-          setTimeout(() => {
-            this.eleGridPurchaseInvoice.refresh();
-          }, 100);
-        }
-        this.isPreventChange = false;
-      }
-    })
+      })
   }
 
   /**
    * *Hàm change tỷ giá
    * @param field 
    */
-  exchangeRateChange(field:any){
+  exchangeRateChange(field: any) {
     this.api
       .exec('AC', 'PurchaseInvoicesBusiness', 'ValueChangedAsync', [
         field,
@@ -673,7 +688,7 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
    * *Hàm change tỷ giá tính thuế
    * @param field 
    */
-  taxExchRateChange(field:any){
+  taxExchRateChange(field: any) {
     this.api
       .exec('AC', 'PurchaseInvoicesBusiness', 'ValueChangedAsync', [
         field,
@@ -697,25 +712,25 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
    * *Hàm change ngày chứng từ
    * @param field 
    */
-  voucherDateChange(field){
+  voucherDateChange(field) {
     this.api.exec('AC', 'PurchaseInvoicesBusiness', 'ValueChangedAsync', [
       field,
       this.formPurchaseInvoices.data,
       ''
     ])
-    .pipe(takeUntil(this.destroy$))
-    .subscribe((res: any) => {
-      if (res) {
-        this.formPurchaseInvoices.setValue('exchangeRate',res?.data?.exchangeRate,{});
-        this.preData = {...this.formPurchaseInvoices?.data};
-        if (res?.isRefreshGrid) {
-          this.eleGridPurchaseInvoice.refresh();
-          this.formPurchaseInvoices.preData = { ...this.formPurchaseInvoices.data };
-          this.dialog.dataService.update(this.formPurchaseInvoices.data).subscribe();
-          this.detectorRef.detectChanges();
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res: any) => {
+        if (res) {
+          this.formPurchaseInvoices.setValue('exchangeRate', res?.data?.exchangeRate, {});
+          this.preData = { ...this.formPurchaseInvoices?.data };
+          if (res?.isRefreshGrid) {
+            this.eleGridPurchaseInvoice.refresh();
+            this.formPurchaseInvoices.preData = { ...this.formPurchaseInvoices.data };
+            this.dialog.dataService.update(this.formPurchaseInvoices.data).subscribe();
+            this.detectorRef.detectChanges();
+          }
         }
-      }
-    });
+      });
   }
 
   /**
@@ -748,7 +763,7 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
       }
     }
   }
-  
+
   /**
    * *Hàm ẩn hiện các cột theo đồng tiền hạch toán
    */
@@ -763,33 +778,33 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
       let hNetAmt2 = false;
       let hMiscAmt2 = false;
 
-      if(this.journal.useDutyTax && this.formPurchaseInvoices.data.currencyID != this.baseCurr){
+      if (this.journal.useDutyTax && this.formPurchaseInvoices.data.currencyID != this.baseCurr) {
         hSalesTaxAmt2 = true;
-      } 
-      this.eleGridPurchaseInvoice.showHideColumns(['SalesTaxAmt2'],hSalesTaxAmt2);
+      }
+      this.eleGridPurchaseInvoice.showHideColumns(['SalesTaxAmt2'], hSalesTaxAmt2);
 
-      if(this.journal.useExciseTax && this.formPurchaseInvoices.data.currencyID != this.baseCurr){
+      if (this.journal.useExciseTax && this.formPurchaseInvoices.data.currencyID != this.baseCurr) {
         hExciseTaxAmt2 = true;
-      } 
-      this.eleGridPurchaseInvoice.showHideColumns(['ExciseTaxAmt2'],hExciseTaxAmt2);
+      }
+      this.eleGridPurchaseInvoice.showHideColumns(['ExciseTaxAmt2'], hExciseTaxAmt2);
 
-      if(this.journal.vatControl && this.formPurchaseInvoices.data.currencyID != this.baseCurr){
+      if (this.journal.vatControl && this.formPurchaseInvoices.data.currencyID != this.baseCurr) {
         hVATAmt2 = true;
         hVATBase2 = true;
-      } 
-      this.eleGridPurchaseInvoice.showHideColumns(['VATAmt2'],hVATAmt2);
-      this.eleGridPurchaseInvoice.showHideColumns(['VATBase2'],hVATBase2);
+      }
+      this.eleGridPurchaseInvoice.showHideColumns(['VATAmt2'], hVATAmt2);
+      this.eleGridPurchaseInvoice.showHideColumns(['VATBase2'], hVATBase2);
 
-      if(this.formPurchaseInvoices.data.currencyID != this.baseCurr){
+      if (this.formPurchaseInvoices.data.currencyID != this.baseCurr) {
         hPurcAmt2 = true;
         hDiscAmt2 = true;
         hNetAmt2 = true;
         hMiscAmt2 = true;
       }
-      this.eleGridPurchaseInvoice.showHideColumns(['PurcAmt2'],hPurcAmt2);
-      this.eleGridPurchaseInvoice.showHideColumns(['DiscAmt2'],hDiscAmt2);
-      this.eleGridPurchaseInvoice.showHideColumns(['NetAmt2'],hNetAmt2);
-      this.eleGridPurchaseInvoice.showHideColumns(['MiscAmt2'],hMiscAmt2);
+      this.eleGridPurchaseInvoice.showHideColumns(['PurcAmt2'], hPurcAmt2);
+      this.eleGridPurchaseInvoice.showHideColumns(['DiscAmt2'], hDiscAmt2);
+      this.eleGridPurchaseInvoice.showHideColumns(['NetAmt2'], hNetAmt2);
+      this.eleGridPurchaseInvoice.showHideColumns(['MiscAmt2'], hMiscAmt2);
 
       this.refreshGrid();
     }
@@ -798,13 +813,13 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
   /**
    * *Hàm refresh grid
    */
-  refreshGrid(){
-    if(this.eleGridPurchaseInvoice){
+  refreshGrid() {
+    if (this.eleGridPurchaseInvoice) {
       this.eleGridPurchaseInvoice.dataSource = [];
       this.eleGridPurchaseInvoice.refresh();
     }
 
-    if(this.eleGridVatInvoices){
+    if (this.eleGridVatInvoices) {
       this.eleGridVatInvoices.dataSource = [];
       this.eleGridVatInvoices.refresh();
     }
@@ -824,14 +839,14 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
         this.dialog.dataService.update(this.formPurchaseInvoices.data).subscribe();
         break;
       case 'closeEdit': //? khi thoát dòng
-      if (this.eleGridPurchaseInvoice && this.eleGridPurchaseInvoice.rowDataSelected) {
-        this.eleGridPurchaseInvoice.rowDataSelected = null;
-      }
-      if(this.eleGridPurchaseInvoice.isSaveOnClick) this.eleGridPurchaseInvoice.isSaveOnClick = false; //? trường save row nhưng chưa tới actioncomplete
-      setTimeout(() => {
-        let element = document.getElementById('btnAddPur'); //? focus lại nút thêm dòng
-        element.focus();
-      }, 100);
+        if (this.eleGridPurchaseInvoice && this.eleGridPurchaseInvoice.rowDataSelected) {
+          this.eleGridPurchaseInvoice.rowDataSelected = null;
+        }
+        if (this.eleGridPurchaseInvoice.isSaveOnClick) this.eleGridPurchaseInvoice.isSaveOnClick = false; //? trường save row nhưng chưa tới actioncomplete
+        setTimeout(() => {
+          let element = document.getElementById('btnAddPur'); //? focus lại nút thêm dòng
+          element.focus();
+        }, 100);
         break;
     }
 
@@ -848,17 +863,22 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
         break;
       case 'add':
       case 'update':
+        this.setInvoiceNo();
         this.dialog.dataService.update(this.formPurchaseInvoices.data).subscribe();
         break;
       case 'closeEdit': //? khi thoát dòng
-      if (this.eleGridVatInvoices && this.eleGridVatInvoices.rowDataSelected) {
-        this.eleGridVatInvoices.rowDataSelected = null;
-      }
-      if(this.eleGridVatInvoices.isSaveOnClick) this.eleGridVatInvoices.isSaveOnClick = false; //? trường save row nhưng chưa tới actioncomplete
-      setTimeout(() => {
-        let element = document.getElementById('btnAddVAT'); //? focus lại nút thêm dòng
-        element.focus();
-      }, 100);
+        if (this.eleGridVatInvoices && this.eleGridVatInvoices.rowDataSelected) {
+          this.eleGridVatInvoices.rowDataSelected = null;
+        }
+        if (this.eleGridVatInvoices.isSaveOnClick) this.eleGridVatInvoices.isSaveOnClick = false; //? trường save row nhưng chưa tới actioncomplete
+        setTimeout(() => {
+          let element = document.getElementById('btnAddVAT'); //? focus lại nút thêm dòng
+          element.focus();
+        }, 100);
+        break;
+      case 'delete':
+        this.setInvoiceNo();
+        this.dialog.dataService.update(this.formPurchaseInvoices.data).subscribe();
         break;
     }
   }
@@ -877,10 +897,10 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
   /**
    * *Hàm set validate cho form
    */
-  setValidateForm(){
-    let lstRequire :any = [];
+  setValidateForm() {
+    let lstRequire: any = [];
     if (this.journal.assignRule == '2') {
-      lstRequire.push({field : 'VoucherNo',isDisable : false,require:false});
+      lstRequire.push({ field: 'VoucherNo', isDisable: false, require: false });
     }
     this.formPurchaseInvoices.setRequire(lstRequire);
   }
@@ -890,10 +910,10 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
    * @param data 
    * @returns 
    */
-  beforeSaveRowPurchase(event:any){
+  beforeSaveRowPurchase(event: any) {
     if (event.rowData) {
       if (event.rowData.quantity == 0 || event.rowData.quantity < 0) {
-        this.eleGridPurchaseInvoice.showErrorField('quantity','E0341');
+        this.eleGridPurchaseInvoice.showErrorField('quantity', 'E0341');
         event.cancel = true;
         return;
       }
@@ -910,15 +930,15 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
    * @param data 
    * @returns 
    */
-  beforeSaveRowVATInvoice(event:any){
+  beforeSaveRowVATInvoice(event: any) {
     if (event.rowData) {
       if (event.rowData.quantity == 0 || event.rowData.quantity < 0) {
-        this.eleGridVatInvoices.showErrorField('quantity','E0341');
+        this.eleGridVatInvoices.showErrorField('quantity', 'E0341');
         event.cancel = true;
         return;
       }
       if (event.rowData.unitPrice == 0 || event.rowData.unitPrice < 0) {
-        this.eleGridVatInvoices.showErrorField('unitPrice','E0730');
+        this.eleGridVatInvoices.showErrorField('unitPrice', 'E0730');
         event.cancel = true;
         return;
       }
@@ -934,7 +954,7 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
       if (element.functionID == 'SYS104' || element.functionID == 'SYS102') {
         element.disabled = false;
         element.isbookmark = false;
-      }else{
+      } else {
         element.disabled = true;
       }
     });
@@ -946,8 +966,8 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
    */
   copyRow(data) {
     if (this.eleGridPurchaseInvoice && this.elementTabDetail?.selectingID == '0') {
-      this.eleGridPurchaseInvoice.saveRow((res:any)=>{ //? save lưới trước
-        if(res){
+      this.eleGridPurchaseInvoice.saveRow((res: any) => { //? save lưới trước
+        if (res) {
           data.recID = Util.uid();
           data.index = this.eleGridPurchaseInvoice.dataSource.length;
           delete data?._oldData;
@@ -957,8 +977,8 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
     }
 
     if (this.eleGridVatInvoices && this.elementTabDetail?.selectingID == '2') {
-      this.eleGridVatInvoices.saveRow((res:any)=>{ //? save lưới trước
-        if(res){
+      this.eleGridVatInvoices.saveRow((res: any) => { //? save lưới trước
+        if (res) {
           data.recID = Util.uid();
           data.index = this.eleGridVatInvoices.dataSource.length;
           delete data?._oldData;
@@ -974,16 +994,16 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
    */
   deleteRow(data) {
     if (this.eleGridPurchaseInvoice && this.elementTabDetail?.selectingID == '0') {
-      this.eleGridPurchaseInvoice.saveRow((res:any)=>{ //? save lưới trước
-        if(res){
+      this.eleGridPurchaseInvoice.saveRow((res: any) => { //? save lưới trước
+        if (res) {
           this.eleGridPurchaseInvoice.deleteRow(data);
         }
       })
     }
 
     if (this.eleGridVatInvoices && this.elementTabDetail?.selectingID == '2') {
-      this.eleGridVatInvoices.saveRow((res:any)=>{ //? save lưới trước
-        if(res){
+      this.eleGridVatInvoices.saveRow((res: any) => { //? save lưới trước
+        if (res) {
           this.eleGridVatInvoices.deleteRow(data);
         }
       })
@@ -994,7 +1014,7 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
    * *Hàm get ghi chú từ lí do chi + đối tượng + tên người nhận
    * @returns
    */
-  getMemoMaster(format:any = '') {
+  getMemoMaster(format: any = '') {
     let newMemo = ''; //? tên ghi chú mới
     let objectName = ''; //? tên đối tượng
     let invoiceno = '';
@@ -1002,8 +1022,8 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
     let indexObject = this.eleCbxObjectID?.ComponentCurrent?.dataService?.data.findIndex((x) => x.ObjectID == this.eleCbxObjectID?.ComponentCurrent?.value);
     if (indexObject > -1) {
       objectName = 'Mua hàng của ' + this.eleCbxObjectID?.ComponentCurrent?.dataService?.data[indexObject].ObjectName;
-      if(this.formPurchaseInvoices?.data?.invoiceNo) invoiceno = 'theo hóa đơn ' + this.formPurchaseInvoices?.data?.invoiceNo;
-      if(this.formPurchaseInvoices?.data?.invoiceDate) invoicedate = 'ngày ' + this.tranform.transform(this.formPurchaseInvoices?.data?.invoiceDate,format);
+      if (this.formPurchaseInvoices?.data?.invoiceNo) invoiceno = 'theo hóa đơn ' + this.formPurchaseInvoices?.data?.invoiceNo;
+      if (this.formPurchaseInvoices?.data?.invoiceDate) invoicedate = 'ngày ' + this.tranform.transform(this.formPurchaseInvoices?.data?.invoiceDate, format);
       newMemo = objectName + ' ' + invoiceno + ' ' + invoicedate;
     }
     return newMemo;
@@ -1013,13 +1033,13 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
   onClick(e) {
     if (
       (e.target.closest('.e-grid') == null &&
-      e.target.closest('.e-popup') == null &&
-      e.target.closest('.edit-value') == null) && 
+        e.target.closest('.e-popup') == null &&
+        e.target.closest('.edit-value') == null) &&
       e.target.closest('button') == null
     ) {
       if (this.eleGridPurchaseInvoice && this.eleGridPurchaseInvoice?.gridRef?.isEdit) {
-        this.eleGridPurchaseInvoice.saveRow((res:any)=>{ //? save lưới trước
-          if(res){
+        this.eleGridPurchaseInvoice.saveRow((res: any) => { //? save lưới trước
+          if (res) {
             this.eleGridPurchaseInvoice.isSaveOnClick = false;
             setTimeout(() => {
               if ((e.target as HTMLElement).tagName.toLowerCase() === 'input') {
@@ -1031,8 +1051,8 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
         })
       }
       if (this.eleGridVatInvoices && this.eleGridVatInvoices?.gridRef?.isEdit) {
-        this.eleGridVatInvoices.saveRow((res:any)=>{ //? save lưới trước
-          if(res){
+        this.eleGridVatInvoices.saveRow((res: any) => { //? save lưới trước
+          if (res) {
             this.eleGridVatInvoices.isSaveOnClick = false;
             setTimeout(() => {
               if ((e.target as HTMLElement).tagName.toLowerCase() === 'input') {
@@ -1043,6 +1063,16 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
           }
         })
       }
+    }
+  }
+
+  setInvoiceNo() {
+    if (this.eleGridVatInvoices.dataSource.length) {
+      let invoiceNo = '';
+      this.eleGridVatInvoices.dataSource.reduce((pre, item) => {
+        invoiceNo += item.invoiceNo + ',';
+      }, {})
+      this.formPurchaseInvoices.data.invoiceNo = invoiceNo.substring(0, invoiceNo.lastIndexOf(',') + 0);
     }
   }
   //#endregion Function

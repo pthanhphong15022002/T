@@ -867,6 +867,174 @@ export class EmployeeInfoDetailComponent extends UIComponent {
   LoadedEInfo = false;
   //#endregion
 
+  @ViewChild('eDiseasesGridView') eDiseasesGrid: CodxGridviewV2Component;
+  @ViewChild('eAwardGridView') AwardGrid: CodxGridviewV2Component;
+  @ViewChild('eDisciplineGridView') eDisciplineGrid: CodxGridviewV2Component;
+  @ViewChild('businessTravelGrid') businessTravelGrid: CodxGridviewV2Component;
+  @ViewChild('eTrainCourseGridView') eTrainCourseGrid: CodxGridviewV2Component;
+  @ViewChild('eSkillGridViewID') skillGrid: CodxGridviewV2Component;
+  @ViewChild('eCertificateGridView') eCertificateGrid: CodxGridviewV2Component;
+  @ViewChild('eExperienceGridView') eExperienceGrid: CodxGridviewV2Component;
+  @ViewChild('eAssetGridView') eAssetGrid: CodxGridviewV2Component;
+  @ViewChild('eHealthsGridView') eHealthsGrid: CodxGridviewV2Component;
+  @ViewChild('eVaccinesGridView') eVaccinesGrid: CodxGridviewV2Component;
+  @ViewChild('gridView') eBenefitGrid: CodxGridviewV2Component;
+  @ViewChild('eDegreeGridView') eDegreeGrid: CodxGridviewV2Component;
+  @ViewChild('dayoffGridView') dayoffGrid: CodxGridviewV2Component;
+  @ViewChild('templateBenefitID', { static: true })
+  templateBenefitID: TemplateRef<any>;
+  @ViewChild('templateBenefitAmt', { static: true })
+  templateBenefitAmt: TemplateRef<any>;
+  @ViewChild('templateBenefitEffected', { static: true })
+  templateBenefitEffected: TemplateRef<any>;
+  @ViewChild('filterTemplateBenefit', { static: true })
+  filterTemplateBenefit: TemplateRef<any>;
+
+  @ViewChild('templateEDegreeGridCol1', { static: true })
+  templateEDegreeGridCol1: TemplateRef<any>;
+  @ViewChild('templateEDegreeGridCol2', { static: true })
+  templateEDegreeGridCol2: TemplateRef<any>;
+  @ViewChild('templateEDegreeGridCol3', { static: true })
+  templateEDegreeGridCol3: TemplateRef<any>;
+  @ViewChild('templateEDegreeGridMoreFunc', { static: true })
+  templateEDegreeGridMoreFunc: TemplateRef<any>;
+  @ViewChild('headTempDegree1', { static: true })
+  headTempDegree1: TemplateRef<any>;
+  @ViewChild('headTempDegree2', { static: true })
+  headTempDegree2: TemplateRef<any>;
+  @ViewChild('headTempDegree3', { static: true })
+  headTempDegree3: TemplateRef<any>;
+
+  @ViewChild('tempCol1EHealthGrid', { static: true })
+  tempCol1EHealthGrid: TemplateRef<any>;
+  @ViewChild('tempCol2EHealthGrid', { static: true })
+  tempCol2EHealthGrid: TemplateRef<any>;
+  @ViewChild('tempCol3EHealthGrid', { static: true })
+  tempCol3EHealthGrid: TemplateRef<any>;
+  @ViewChild('headTempHealth1', { static: true })
+  headTempHealth1: TemplateRef<any>;
+  @ViewChild('headTempHealth2', { static: true })
+  headTempHealth2: TemplateRef<any>;
+  @ViewChild('headTempHealth3', { static: true })
+  headTempHealth3: TemplateRef<any>;
+
+  @ViewChild('tempEVaccineGridCol1', { static: true })
+  tempEVaccineGridCol1: TemplateRef<any>;
+  @ViewChild('tempEVaccineGridCol2', { static: true })
+  tempEVaccineGridCol2: TemplateRef<any>;
+  @ViewChild('tempEVaccineGridCol3', { static: true })
+  tempEVaccineGridCol3: TemplateRef<any>;
+  @ViewChild('headTempVaccine1', { static: true })
+  headTempVaccine1: TemplateRef<any>;
+  @ViewChild('headTempVaccine2', { static: true })
+  headTempVaccine2: TemplateRef<any>;
+  @ViewChild('headTempVaccine3', { static: true })
+  headTempVaccine3: TemplateRef<any>;
+
+  @ViewChild('templateECertificateGridCol1', { static: true })
+  templateECertificateGridCol1: TemplateRef<any>;
+  @ViewChild('templateECertificateGridCol2', { static: true })
+  templateECertificateGridCol2: TemplateRef<any>;
+  @ViewChild('templateECertificateGridCol3', { static: true })
+  templateECertificateGridCol3: TemplateRef<any>;
+  @ViewChild('headTempCertificate1', { static: true })
+  headTempCertificate1: TemplateRef<any>;
+  @ViewChild('headTempCertificate2', { static: true })
+  headTempCertificate2: TemplateRef<any>;
+  @ViewChild('headTempCertificate3', { static: true })
+  headTempCertificate3: TemplateRef<any>;
+
+  @ViewChild('templateESkillGridCol1', { static: true })
+  templateESkillGridCol1: TemplateRef<any>;
+  @ViewChild('templateESkillGridCol2', { static: true })
+  templateESkillGridCol2: TemplateRef<any>;
+  @ViewChild('templateESkillGridCol3', { static: true })
+  templateESkillGridCol3: TemplateRef<any>;
+  @ViewChild('headTempSkill1', { static: true })
+  headTempSkill1: TemplateRef<any>;
+  @ViewChild('headTempSkill2', { static: true })
+  headTempSkill2: TemplateRef<any>;
+  @ViewChild('headTempSkill3', { static: true })
+  headTempSkill3: TemplateRef<any>;
+
+  @ViewChild('templateEAssetCol1', { static: true })
+  templateEAssetCol1: TemplateRef<any>;
+  @ViewChild('templateEAssetCol2', { static: true })
+  templateEAssetCol2: TemplateRef<any>;
+  @ViewChild('templateEAssetCol3', { static: true })
+  templateEAssetCol3: TemplateRef<any>;
+
+  @ViewChild('templateEExperienceGridCol4', { static: true })
+  templateEExperienceGridCol4: TemplateRef<any>;
+
+  @ViewChild('templateTrainCourseGridCol1', { static: true })
+  templateTrainCourseGridCol1: TemplateRef<any>;
+  @ViewChild('templateTrainCourseGridCol2', { static: true })
+  templateTrainCourseGridCol2: TemplateRef<any>;
+  @ViewChild('templateTrainCourseGridCol3', { static: true })
+  templateTrainCourseGridCol3: TemplateRef<any>;
+  @ViewChild('headTempTrainCourse1', { static: true })
+  headTempTrainCourse1: TemplateRef<any>;
+  @ViewChild('headTempTrainCourse2', { static: true })
+  headTempTrainCourse2: TemplateRef<any>;
+  @ViewChild('headTempTrainCourse3', { static: true })
+  headTempTrainCourse3: TemplateRef<any>;
+
+  @ViewChild('templateBusinessTravelGridCol1', { static: true })
+  templateBusinessTravelGridCol1: TemplateRef<any>;
+  @ViewChild('templateBusinessTravelGridCol2', { static: true })
+  templateBusinessTravelGridCol2: TemplateRef<any>;
+  @ViewChild('templateBusinessTravelGridCol3', { static: true })
+  templateBusinessTravelGridCol3: TemplateRef<any>;
+  @ViewChild('headTempBusinessTravel1', { static: true })
+  headTempBusinessTravel1: TemplateRef<any>;
+  @ViewChild('headTempBusinessTravel2', { static: true })
+  headTempBusinessTravel2: TemplateRef<any>;
+  @ViewChild('headTempBusinessTravel3', { static: true })
+  headTempBusinessTravel3: TemplateRef<any>;
+
+  @ViewChild('templateAwardGridCol1', { static: true })
+  templateAwardGridCol1: TemplateRef<any>;
+  @ViewChild('templateAwardGridCol2', { static: true })
+  templateAwardGridCol2: TemplateRef<any>;
+  @ViewChild('templateAwardGridCol3', { static: true })
+  templateAwardGridCol3: TemplateRef<any>;
+  @ViewChild('headTempAwards1', { static: true })
+  headTempAwards1: TemplateRef<any>;
+  @ViewChild('headTempAwards2', { static: true })
+  headTempAwards2: TemplateRef<any>;
+  @ViewChild('headTempAwards3', { static: true })
+  headTempAwards3: TemplateRef<any>;
+
+  @ViewChild('templateDisciplineGridCol1', { static: true })
+  templateDisciplineGridCol1: TemplateRef<any>;
+  @ViewChild('templateDisciplineGridCol2', { static: true })
+  templateDisciplineGridCol2: TemplateRef<any>;
+  @ViewChild('templateDisciplineGridCol3', { static: true })
+  templateDisciplineGridCol3: TemplateRef<any>;
+  @ViewChild('headTempDisciplines1', { static: true })
+  headTempDisciplines1: TemplateRef<any>;
+  @ViewChild('headTempDisciplines2', { static: true })
+  headTempDisciplines2: TemplateRef<any>;
+  @ViewChild('headTempDisciplines3', { static: true })
+  headTempDisciplines3: TemplateRef<any>;
+
+  @ViewChild('templateDiseasesGridCol1', { static: true })
+  templateDiseasesGridCol1: TemplateRef<any>;
+  @ViewChild('templateDiseasesGridCol2', { static: true })
+  templateDiseasesGridCol2: TemplateRef<any>;
+  @ViewChild('templateDiseasesGridCol3', { static: true })
+  templateDiseasesGridCol3: TemplateRef<any>;
+  @ViewChild('headTempDiseases1', { static: true })
+  headTempDiseases1: TemplateRef<any>;
+  @ViewChild('headTempDiseases2', { static: true })
+  headTempDiseases2: TemplateRef<any>;
+  @ViewChild('headTempDiseases3', { static: true })
+  headTempDiseases3: TemplateRef<any>;
+
+  // hãy code vào đây nếu bạn là người fix bug - chứ ở trên tui không biết họ đang code cái gì
+  payrollFM:FormModel = null;  // THÔNG TIN TÍNH LƯƠNG
+
   constructor(
     private inject: Injector,
     private routeActive: ActivatedRoute,
@@ -897,7 +1065,6 @@ export class EmployeeInfoDetailComponent extends UIComponent {
     this.layout.setLogo(null);
     //ẩn số đếm tổng nhân viên
     this.pageTitle.setBreadcrumbs([]);
-
     if (this.funcID) {
       this.hrService.getFunctionList(this.funcID).subscribe((res) => {
         this.lstTab = res;
@@ -1017,6 +1184,21 @@ export class EmployeeInfoDetailComponent extends UIComponent {
     this.initHeaderText();
   }
 
+
+
+  ngAfterViewInit(): void {
+    this.views = [
+      {
+        type: ViewType.content,
+        active: true,
+        model: {
+          panelRightRef: this.panelContent,
+        },
+      },
+    ];
+    this.formModel = this.view.formModel;
+  }
+
   handleShowHideMfWs(evt, func) {
     if (func.isPortal == false) {
       //Được add/edit, ko delete
@@ -1042,27 +1224,12 @@ export class EmployeeInfoDetailComponent extends UIComponent {
     }
   }
 
-  ngAfterViewInit(): void {
-    this.views = [
-      {
-        type: ViewType.content,
-        active: true,
-        model: {
-          panelRightRef: this.panelContent,
-        },
-      },
-    ];
-    this.formModel = this.view.formModel;
-  }
   eInfoHeaderText: any = null;
   initFormModel() {
     this.hrService.getFormModel(this.eAssetFuncID).then((res) => {
       this.eAssetFormModel = res;
       this.cache
-        .gridViewSetup(
-          this.eAssetFormModel.formName,
-          this.eAssetFormModel.gridViewName
-        )
+        .gridViewSetup(this.eAssetFormModel.formName,this.eAssetFormModel.gridViewName)
         .subscribe((res) => {
           this.eAssetGrvSetup = res;
           let dataRequest = new DataRequest();
@@ -2588,12 +2755,12 @@ export class EmployeeInfoDetailComponent extends UIComponent {
 
   clickTab(funcList: any) {
     this.crrFuncTab = funcList.functionID;
-    this.hrService.getFunctionList(this.crrFuncTab).subscribe((res) => {
+    this.hrService.getFunctionList(this.crrFuncTab)
+    .subscribe((res) => {
       switch (this.crrFuncTab) {
         case this.curriculumVitaeFuncID:
           for (let i = 0; i < res.length; i++) {
             if (res[i].url == this.eInfoURL) {
-              debugger
               this.eInfoFuncID = res[i].functionID;
               this.eInfoFunc = res[i];
               if (!this.eInfoHeaderText || !this.eInfoFormModel) {
@@ -2661,7 +2828,6 @@ export class EmployeeInfoDetailComponent extends UIComponent {
           if (!this.active[0]) {
             this.active[0] = this.eInfoFuncID;
           }
-
           this.lstFuncCurriculumVitae = res;
           this.lstBtnAdd = [];
           for (let i = 0; i < res.length; i++) {
@@ -5286,8 +5452,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       );
     }
 
-    // dataService.updateDatas.set(tempData.recID, tempData);
-    // this.openFormEVaccine(actionHeaderText, actionType, dataService, tempData, data);
+    
   }
 
   openFormEVaccine(actionHeaderText, actionType, dataService, tempData, data) {
@@ -5437,46 +5602,32 @@ export class EmployeeInfoDetailComponent extends UIComponent {
   loadDataWhenChangeEmp() {
     switch (this.crrFuncTab) {
       case this.curriculumVitaeFuncID:
-        // this.lstBtnAdd = this.lstFuncID.filter(
-        //   (p) =>
-        //     (p.parentID == this.curriculumVitaeFuncID ||
-        //       p.parentID == this.legalInfoFuncID ||
-        //       p.parentID == this.foreignWorkerFuncID) &&
-        //     p.entityName != this.view.formModel.entityName
-        // );
+        
         break;
       case this.jobInfoFuncID:
-        // this.lstBtnAdd = this.lstFuncJobInfo;
-        // this.lstBtnAdd = this.lstBtnAdd.filter(
-        //   (p) => p.entityName != this.view.formModel.entityName
-        // );
+      
         break;
       case this.salaryBenefitInfoFuncID:
-        // this.lstBtnAdd = this.lstFuncSalaryBenefit;
+        
         this.initEmpSalary();
         break;
       case this.workingProcessInfoFuncID:
-        // this.lstBtnAdd = this.lstFuncHRProcess;
+     
         this.initEmpProcess();
         break;
       case this.knowledgeInfoFuncID:
-        // this.lstBtnAdd = this.lstFuncKnowledge;
+       
         this.initEmpKnowledge();
         break;
       case this.healthInfoFuncID:
-        // this.lstBtnAdd = this.lstFuncHealth;
+     
         break;
-      // case this.quitJobInfoFuncID:
-      //   this.lstBtnAdd = this.lstFuncQuitJob;
-      //   break;
+
     }
   }
 
   nextEmp() {
     if (this.listEmp.length <= this.totalCount) {
-      // console.log('vi tri tim trong mang', this.listEmp.findIndex(
-      //   (x: any) => this.employeeID == x['EmployeeID']
-      // ))
       this.crrIndex += 1;
       if (this.fromView == 'listView') {
         if (
@@ -5504,9 +5655,6 @@ export class EmployeeInfoDetailComponent extends UIComponent {
         } else {
           this.navigateEmp(0);
         }
-        // if (this.crrIndex > -1 && this.crrIndex != this.listEmp.length - 1) {
-        //   this.navigateEmp(0);
-        // }
       } else if (this.fromView == 'gridView') {
         if (this.crrIndex == this.listEmp.length) {
           this.request.page += 1;
@@ -5523,32 +5671,6 @@ export class EmployeeInfoDetailComponent extends UIComponent {
           this.navigateEmp(0);
         }
       }
-      // if(this.crrIndex == this.listEmp.length - 1){
-      //   // lộc note: sao em kg dùng cái request luôn mà phải clone ra 1 request mới? thiếu search text + fillter từ DSNV ngoài
-
-      //   // let requestNewEmpPage = new DataRequest();
-      //   // requestNewEmpPage.entityName = this.request.entityName;
-      //   // requestNewEmpPage.gridViewName = this.request.gridViewName;
-      //   // requestNewEmpPage.page = this.request.page + 1;
-      //   // requestNewEmpPage.predicate = this.request.predicate;
-      //   // requestNewEmpPage.dataValue = this.request.dataValue;
-      //   // requestNewEmpPage.selector = "EmployeeID;";
-      //   // requestNewEmpPage.pageSize = this.request.pageSize;
-      //   this.request.page += 1;
-
-      //   this.hrService.loadData('HR', this.request).subscribe((res) =>{
-      //     if(res && res[0].length > 0){
-      //       this.listEmp.push(...res[0])
-      //       this.navigateEmp(0, true);
-      //     }
-      //     else{
-      //       this.navigateEmp(0);
-      //     }
-      //   })
-      // }
-      // if (this.crrIndex > -1 && this.crrIndex != this.listEmp.length - 1) {
-      //   this.navigateEmp(0);
-      // }
       this.loadDataWhenChangeEmp();
       this.refreshGridViews();
     }
@@ -5593,170 +5715,7 @@ export class EmployeeInfoDetailComponent extends UIComponent {
     }
   }
 
-  @ViewChild('eDiseasesGridView') eDiseasesGrid: CodxGridviewV2Component;
-  @ViewChild('eAwardGridView') AwardGrid: CodxGridviewV2Component;
-  @ViewChild('eDisciplineGridView') eDisciplineGrid: CodxGridviewV2Component;
-  @ViewChild('businessTravelGrid') businessTravelGrid: CodxGridviewV2Component;
-  @ViewChild('eTrainCourseGridView') eTrainCourseGrid: CodxGridviewV2Component;
-  @ViewChild('eSkillGridViewID') skillGrid: CodxGridviewV2Component;
-  @ViewChild('eCertificateGridView') eCertificateGrid: CodxGridviewV2Component;
-  @ViewChild('eExperienceGridView') eExperienceGrid: CodxGridviewV2Component;
-  @ViewChild('eAssetGridView') eAssetGrid: CodxGridviewV2Component;
-  @ViewChild('eHealthsGridView') eHealthsGrid: CodxGridviewV2Component;
-  @ViewChild('eVaccinesGridView') eVaccinesGrid: CodxGridviewV2Component;
-  @ViewChild('gridView') eBenefitGrid: CodxGridviewV2Component;
-  @ViewChild('eDegreeGridView') eDegreeGrid: CodxGridviewV2Component;
-  @ViewChild('dayoffGridView') dayoffGrid: CodxGridviewV2Component;
-  @ViewChild('templateBenefitID', { static: true })
-  templateBenefitID: TemplateRef<any>;
-  @ViewChild('templateBenefitAmt', { static: true })
-  templateBenefitAmt: TemplateRef<any>;
-  @ViewChild('templateBenefitEffected', { static: true })
-  templateBenefitEffected: TemplateRef<any>;
-  @ViewChild('filterTemplateBenefit', { static: true })
-  filterTemplateBenefit: TemplateRef<any>;
-
-  @ViewChild('templateEDegreeGridCol1', { static: true })
-  templateEDegreeGridCol1: TemplateRef<any>;
-  @ViewChild('templateEDegreeGridCol2', { static: true })
-  templateEDegreeGridCol2: TemplateRef<any>;
-  @ViewChild('templateEDegreeGridCol3', { static: true })
-  templateEDegreeGridCol3: TemplateRef<any>;
-  @ViewChild('templateEDegreeGridMoreFunc', { static: true })
-  templateEDegreeGridMoreFunc: TemplateRef<any>;
-  @ViewChild('headTempDegree1', { static: true })
-  headTempDegree1: TemplateRef<any>;
-  @ViewChild('headTempDegree2', { static: true })
-  headTempDegree2: TemplateRef<any>;
-  @ViewChild('headTempDegree3', { static: true })
-  headTempDegree3: TemplateRef<any>;
-
-  @ViewChild('tempCol1EHealthGrid', { static: true })
-  tempCol1EHealthGrid: TemplateRef<any>;
-  @ViewChild('tempCol2EHealthGrid', { static: true })
-  tempCol2EHealthGrid: TemplateRef<any>;
-  @ViewChild('tempCol3EHealthGrid', { static: true })
-  tempCol3EHealthGrid: TemplateRef<any>;
-  @ViewChild('headTempHealth1', { static: true })
-  headTempHealth1: TemplateRef<any>;
-  @ViewChild('headTempHealth2', { static: true })
-  headTempHealth2: TemplateRef<any>;
-  @ViewChild('headTempHealth3', { static: true })
-  headTempHealth3: TemplateRef<any>;
-
-  @ViewChild('tempEVaccineGridCol1', { static: true })
-  tempEVaccineGridCol1: TemplateRef<any>;
-  @ViewChild('tempEVaccineGridCol2', { static: true })
-  tempEVaccineGridCol2: TemplateRef<any>;
-  @ViewChild('tempEVaccineGridCol3', { static: true })
-  tempEVaccineGridCol3: TemplateRef<any>;
-  @ViewChild('headTempVaccine1', { static: true })
-  headTempVaccine1: TemplateRef<any>;
-  @ViewChild('headTempVaccine2', { static: true })
-  headTempVaccine2: TemplateRef<any>;
-  @ViewChild('headTempVaccine3', { static: true })
-  headTempVaccine3: TemplateRef<any>;
-
-  @ViewChild('templateECertificateGridCol1', { static: true })
-  templateECertificateGridCol1: TemplateRef<any>;
-  @ViewChild('templateECertificateGridCol2', { static: true })
-  templateECertificateGridCol2: TemplateRef<any>;
-  @ViewChild('templateECertificateGridCol3', { static: true })
-  templateECertificateGridCol3: TemplateRef<any>;
-  @ViewChild('headTempCertificate1', { static: true })
-  headTempCertificate1: TemplateRef<any>;
-  @ViewChild('headTempCertificate2', { static: true })
-  headTempCertificate2: TemplateRef<any>;
-  @ViewChild('headTempCertificate3', { static: true })
-  headTempCertificate3: TemplateRef<any>;
-
-  @ViewChild('templateESkillGridCol1', { static: true })
-  templateESkillGridCol1: TemplateRef<any>;
-  @ViewChild('templateESkillGridCol2', { static: true })
-  templateESkillGridCol2: TemplateRef<any>;
-  @ViewChild('templateESkillGridCol3', { static: true })
-  templateESkillGridCol3: TemplateRef<any>;
-  @ViewChild('headTempSkill1', { static: true })
-  headTempSkill1: TemplateRef<any>;
-  @ViewChild('headTempSkill2', { static: true })
-  headTempSkill2: TemplateRef<any>;
-  @ViewChild('headTempSkill3', { static: true })
-  headTempSkill3: TemplateRef<any>;
-
-  @ViewChild('templateEAssetCol1', { static: true })
-  templateEAssetCol1: TemplateRef<any>;
-  @ViewChild('templateEAssetCol2', { static: true })
-  templateEAssetCol2: TemplateRef<any>;
-  @ViewChild('templateEAssetCol3', { static: true })
-  templateEAssetCol3: TemplateRef<any>;
-
-  @ViewChild('templateEExperienceGridCol4', { static: true })
-  templateEExperienceGridCol4: TemplateRef<any>;
-
-  @ViewChild('templateTrainCourseGridCol1', { static: true })
-  templateTrainCourseGridCol1: TemplateRef<any>;
-  @ViewChild('templateTrainCourseGridCol2', { static: true })
-  templateTrainCourseGridCol2: TemplateRef<any>;
-  @ViewChild('templateTrainCourseGridCol3', { static: true })
-  templateTrainCourseGridCol3: TemplateRef<any>;
-  @ViewChild('headTempTrainCourse1', { static: true })
-  headTempTrainCourse1: TemplateRef<any>;
-  @ViewChild('headTempTrainCourse2', { static: true })
-  headTempTrainCourse2: TemplateRef<any>;
-  @ViewChild('headTempTrainCourse3', { static: true })
-  headTempTrainCourse3: TemplateRef<any>;
-
-  @ViewChild('templateBusinessTravelGridCol1', { static: true })
-  templateBusinessTravelGridCol1: TemplateRef<any>;
-  @ViewChild('templateBusinessTravelGridCol2', { static: true })
-  templateBusinessTravelGridCol2: TemplateRef<any>;
-  @ViewChild('templateBusinessTravelGridCol3', { static: true })
-  templateBusinessTravelGridCol3: TemplateRef<any>;
-  @ViewChild('headTempBusinessTravel1', { static: true })
-  headTempBusinessTravel1: TemplateRef<any>;
-  @ViewChild('headTempBusinessTravel2', { static: true })
-  headTempBusinessTravel2: TemplateRef<any>;
-  @ViewChild('headTempBusinessTravel3', { static: true })
-  headTempBusinessTravel3: TemplateRef<any>;
-
-  @ViewChild('templateAwardGridCol1', { static: true })
-  templateAwardGridCol1: TemplateRef<any>;
-  @ViewChild('templateAwardGridCol2', { static: true })
-  templateAwardGridCol2: TemplateRef<any>;
-  @ViewChild('templateAwardGridCol3', { static: true })
-  templateAwardGridCol3: TemplateRef<any>;
-  @ViewChild('headTempAwards1', { static: true })
-  headTempAwards1: TemplateRef<any>;
-  @ViewChild('headTempAwards2', { static: true })
-  headTempAwards2: TemplateRef<any>;
-  @ViewChild('headTempAwards3', { static: true })
-  headTempAwards3: TemplateRef<any>;
-
-  @ViewChild('templateDisciplineGridCol1', { static: true })
-  templateDisciplineGridCol1: TemplateRef<any>;
-  @ViewChild('templateDisciplineGridCol2', { static: true })
-  templateDisciplineGridCol2: TemplateRef<any>;
-  @ViewChild('templateDisciplineGridCol3', { static: true })
-  templateDisciplineGridCol3: TemplateRef<any>;
-  @ViewChild('headTempDisciplines1', { static: true })
-  headTempDisciplines1: TemplateRef<any>;
-  @ViewChild('headTempDisciplines2', { static: true })
-  headTempDisciplines2: TemplateRef<any>;
-  @ViewChild('headTempDisciplines3', { static: true })
-  headTempDisciplines3: TemplateRef<any>;
-
-  @ViewChild('templateDiseasesGridCol1', { static: true })
-  templateDiseasesGridCol1: TemplateRef<any>;
-  @ViewChild('templateDiseasesGridCol2', { static: true })
-  templateDiseasesGridCol2: TemplateRef<any>;
-  @ViewChild('templateDiseasesGridCol3', { static: true })
-  templateDiseasesGridCol3: TemplateRef<any>;
-  @ViewChild('headTempDiseases1', { static: true })
-  headTempDiseases1: TemplateRef<any>;
-  @ViewChild('headTempDiseases2', { static: true })
-  headTempDiseases2: TemplateRef<any>;
-  @ViewChild('headTempDiseases3', { static: true })
-  headTempDiseases3: TemplateRef<any>;
+  
 
   valueChangeFilterBenefit(evt) {
     this.filterByBenefitIDArr = evt.data;
@@ -5868,17 +5827,6 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       opt
     );
     popup.closed.subscribe((res) => {
-      // Do popup view all có sử dụng filter nên sẽ ko tiện lấy giá trị mới nhất
-      // trả về từ popupview all nữa
-      // if (res?.event) {
-      //   if (res?.event == 'none') {
-      //     this.listCrrBenefit = null;
-      //   } else {
-      //     this.listCrrBenefit = res.event;
-      //   }
-      //   this.df.detectChanges();
-      // }
-
       // Thay vào đó gọi api lấy lại tất cả benefit mới nhất luôn
       this.hrService.GetCurrentBenefit(this.employeeID).subscribe((res) => {
         if (res) {
@@ -5888,40 +5836,8 @@ export class EmployeeInfoDetailComponent extends UIComponent {
       });
     });
 
-    // this.headerTextBenefit =
-    //   this.getFormHeader(this.benefitFuncID) + ' | ' + 'Tất cả';
-    // let option = new DialogModel();
-    // option.zIndex = 999;
-    // option.DataService = this.view.dataService;
-    // option.FormModel = this.view.formModel;
-    // this.dialogViewBenefit = this.callfc.openForm(
-    //   this.templateViewBenefit,
-    //   '',
-    //   850,
-    //   550,
-    //   '',
-    //   null,
-    //   '',
-    //   option
-    // );
-    // this.dialogViewBenefit.closed.subscribe((res) => {
-    //   if (res?.event) {
-    //     this.view.dataService.update(res.event[0]).subscribe((res) => {});
-    //   }
-    //   this.df.detectChanges();
-    // });
+    
   }
-
-  // RenderDataFromPopup(event) {
-  //   if (event.isRenderDelete === true) {
-  //     this.hrService.GetCurrentBenefit(this.employeeID).subscribe((res) => {
-  //       if (res) {
-  //         this.listCrrBenefit = res;
-  //         this.df.detectChanges();
-  //       }
-  //     });
-  //   }
-  // }
 
   valueChangeViewAllEBenefit(evt) {
     this.popupViewBenefit();
@@ -7178,4 +7094,43 @@ export class EmployeeInfoDetailComponent extends UIComponent {
     return this.eExperiencesCRUD;
   }
   //#endregion
+
+
+  // get formModel
+  getFormModelByFuncID(funcID:string){
+    if(funcID)
+    {
+      switch(funcID)
+      {
+        case "": //TAB SƠ YẾU LÍ LỊCH
+        break;
+        case "": //TAB THÔNG TIN NHÂN VIÊN
+        break;
+        case "": //TAB LƯƠNG PHÚC LỢI
+        break;
+        case "": //TAB QUÁ TRÌNH NHÂN SỰ
+        break;
+        case "": //TAB KIẾN THỨC
+        break;
+        case "": //TAB SỨC KHỎE
+        break;
+        case "": //TAB THÔI VIỆC
+        break;
+      }
+    }
+  }
+
+  //get child function by parent functionID
+  getChildFunction(parentFuncID:string){
+    if(parentFuncID)
+    {
+      this.api.execSv('SYS','SYS','FunctionListBusiness','GetByParentAsync',[parentFuncID, true])
+      .subscribe((res:any) => {
+        if(res && res.length > 0)
+        {
+
+        }
+      });
+    }
+  }
 }
