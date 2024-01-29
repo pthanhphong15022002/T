@@ -1,4 +1,9 @@
-<div *ngIf="codxService.asideMode != '2' || show" ngbDropdown class="d-block" [ngClass]="buttonMarginClass">
+<div
+  *ngIf="codxService.asideMode != '2' || show"
+  ngbDropdown
+  class="d-block"
+  [ngClass]="buttonMarginClass"
+>
   <button
     type="button"
     class="btn btn-icon btn-clean"
@@ -27,15 +32,15 @@
             class="col-6"
             *ngFor="let md of lstModule | groupmodoule : group.groupID"
           >
-            <!-- <a
+            <a
               *ngIf="md._itemHome"
               href="javascript:;"
               (click)="codxService.navigate(null, '/')"
               class="d-flex align-items-center hover-light py-2"
             >
               <img
-                class="w-25px"
-                lazyLoad="../../../assets/Icons_Final/home.svg"
+                class="w-25px h-25px"
+                lazyLoad="../../../assets/themes/sys/default/img/header_home.svg"
                 alt=""
               />
               <span class="text-nowrap text-gray-700 text-center ms-2">
@@ -45,7 +50,7 @@
                   default="Trang chủ"
                 ></codx-label>
               </span>
-            </a> -->
+            </a>
             <a
               *ngIf="!md._itemHome"
               (click)="
