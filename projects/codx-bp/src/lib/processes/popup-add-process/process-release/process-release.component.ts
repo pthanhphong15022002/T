@@ -103,8 +103,9 @@ export class ProcessReleaseComponent implements OnInit , AfterViewInit{
     this.request.assemblyName = 'BP';
     this.request.className = 'ProcessInstancesBusiness';
     this.request.method = 'GetListInstancesAsync';
-    this.request.idField = 'recID';
+    this.request.idField = 'currentStage';
     this.request.dataObj = this.dataObj;
+
 
     this.resourceKanban = new ResourceModel();
     this.resourceKanban.service = 'BP';
