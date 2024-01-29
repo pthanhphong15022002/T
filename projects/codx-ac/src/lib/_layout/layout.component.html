@@ -3,9 +3,11 @@
 <ng-container *ngIf="user">
   <div class="d-flex flex-column flex-root">
     <div class="page d-flex flex-row flex-column-fluid">
-      <codx-aside *ngIf="codxService.asideDisplay" [className]="codxService.asideMode == '2' ? 'FormSettingsBusiness' : null"
-      [method]="codxService.asideMode == '2' ? 'GetFormSettingAsync' : null" [dataValue]="codxService.asideMode == '2' ? 'AC' : null">
+      <codx-aside *ngIf="codxService.asideDisplay">
       </codx-aside>
+      <!-- <codx-aside *ngIf="codxService.asideDisplay" [className]="codxService.asideMode == '2' ? 'FormSettingsBusiness' : null"
+      [method]="codxService.asideMode == '2' ? 'GetFormSettingAsync' : null" [dataValue]="codxService.asideMode == '2' ? 'AC' : null">
+      </codx-aside> -->
 
       <div class="wrapper d-flex flex-column flex-row-fluid">
         <codx-header

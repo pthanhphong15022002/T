@@ -903,4 +903,10 @@ export class CM_Contracts {
   disposalCmt: Date; //Ngày thanh lý
   displayed: boolean; //Ngày thanh lý
   disposalExpired: boolean; //Ngày thanh lý
+
+  isMail: boolean;
+  isAlert: boolean;
+  emailTemplate: string;
+  mssgCode: string;
+  expirationAlertTime: number;
 }

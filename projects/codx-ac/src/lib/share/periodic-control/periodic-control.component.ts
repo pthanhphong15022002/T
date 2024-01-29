@@ -1,6 +1,8 @@
 import { ChangeDetectionStrategy, Component, Injector, TemplateRef, ViewChild } from '@angular/core';
-import { NotificationsService, UIComponent, ViewModel, ViewType } from 'codx-core';
+import { FormModel, NotificationsService, UIComponent, ViewModel, ViewType } from 'codx-core';
 import { Subject, takeUntil } from 'rxjs';
+import { PeriodicComponent } from '../../periodic/periodic.component';
+import { TreeMapModule } from '@syncfusion/ej2-angular-treemap';
 
 @Component({
   selector: 'lib-periodic-control',
@@ -8,7 +10,7 @@ import { Subject, takeUntil } from 'rxjs';
   styleUrls: ['./periodic-control.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PeriodicControlComponent extends UIComponent {
+export class PeriodicControlComponent extends UIComponent{
   //#region Contrucstor
   views: Array<ViewModel> = [];
   setting: any;
@@ -20,6 +22,10 @@ export class PeriodicControlComponent extends UIComponent {
   functionType:any;
   settingFull:any;
   displayMode:any;
+  formModel:FormModel = {};
+  isViewResult:any = false;
+  titleResult:any;
+  sessionID:any;
   @ViewChild('template') template?: TemplateRef<any>;
   private destroy$ = new Subject<void>();
   constructor(
@@ -47,6 +53,9 @@ export class PeriodicControlComponent extends UIComponent {
     this.cache.functionList(this.funcID).subscribe((res:any)=>{
       this.functionType = res?.functionType;
       this.displayMode = res?.displayMode;
+      this.formModel.formName = res?.formName;
+      this.formModel.entityName = res?.entityName;
+      this.formModel.gridViewName = res?.gridViewName;
     })
   }
 
@@ -100,6 +109,9 @@ export class PeriodicControlComponent extends UIComponent {
             break;
           case 'm2':
             this.runPeriodic(this.settingFull.refType,this.settingFull.refID,'2',event.text);
+            break;
+          case 'd1':
+            this.viewResult(data, event.text);
             break;
           case 'd3':
             this.runPeriodic(this.settingFull.refType,this.settingFull.refID,'3',event.text);
@@ -224,5 +236,17 @@ export class PeriodicControlComponent extends UIComponent {
   //     }
   //   })
   // }
+
+  viewResult(data: any, text: any) {
+    this.sessionID = data.recID;
+    this.titleResult = text;
+    this.isViewResult = true;
+    this.detectorRef.detectChanges();
+  }
+
+  onBack(){
+    this.isViewResult = false;
+    this.detectorRef.detectChanges();
+  }
   //#endregion Function
 }
