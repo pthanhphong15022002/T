@@ -27,3 +27,9 @@
       flex: 1 1 auto; 
     }
  }
+ .icon-email{
+	color: var(--primary);
+ }
+.icon-email:hover{
+	color: var(--primary-active);
+ }

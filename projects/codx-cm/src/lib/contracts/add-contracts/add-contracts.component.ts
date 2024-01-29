@@ -42,6 +42,7 @@ import { CodxListContactsComponent } from '../../cmcustomer/cmcustomer-detail/co
 import { PopupAddCategoryComponent } from 'projects/codx-es/src/lib/setting/category/popup-add-category/popup-add-category.component';
 import { CustomFieldService } from 'projects/codx-share/src/lib/components/codx-input-custom-field/custom-field.service';
 import { ActivatedRoute } from '@angular/router';
+import { CodxEmailComponent } from 'projects/codx-share/src/lib/components/codx-email/codx-email.component';
 
 @Component({
   selector: 'add-contracts',
@@ -1855,6 +1856,38 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
       op.data = [this.contracts];
     }
     return true;
+  }
+  valueChangeChecked(event, data) {
+    if (event) {
+      data[event.field] = event?.data || false;
+    }
+  }
+  handelMailContract() {
+    let data = {
+      dialog: this.dialog,
+      formGroup: null,
+      templateID: this.contracts?.emailTemplate,
+      showIsTemplate: true,
+      showIsPublish: true,
+      showSendLater: true,
+      files: null,
+      isAddNew: false,
+      notSendMail: true,
+    };
+
+    let popEmail = this.callfunc.openForm(
+      CodxEmailComponent,
+      '',
+      800,
+      screen.height,
+      '',
+      data
+    );
+    popEmail.closed.subscribe((res) => {
+      if (res && res.event) {
+        this.contracts.emailTemplate = res.event?.recID ? res.event?.recID : '';
+      }
+    });
   }
   //#endregion
 }
