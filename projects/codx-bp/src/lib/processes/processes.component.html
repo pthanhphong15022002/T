@@ -69,13 +69,12 @@
             ></div>
           </div>
           <div class="d-flex justify-content-start footerCard-item mb-2">
-            Chuẩn
-            <!-- <span
+            <span
               class="text-gray-600"
               [innerHTML]="
-                data?.applyFor | formatvalue : view.formModel : 'applyFor' | async
+                data?.category | formatvalue : view.formModel : 'Category' | async
               "
-            ></span> -->
+            ></span>
           </div>
           <div class="d-flex justify-content-between h-35px">
             <div
@@ -326,13 +325,7 @@
               <span class="d-flex align-items-center bagde-per mb-1 w-100">
                 <span
                   class="line-clamp line-clamp-1"
-                  [ngbPopover]="item?.objectName"
-                  #pObj="ngbPopover"
-                  [openDelay]="500"
-                  (mouseenter)="PopoverDetail($event, pObj, item, 'objectName')"
-                  (mouseleave)="pObj.close()"
-                  placement="bottom right top"
-                  [popoverClass]="item.recID"
+                  [ngbTooltip]="item?.objectName"
                 >
                   {{ item?.objectName }}</span
                 >
@@ -349,9 +342,11 @@
               placement="right bottom top"
               container="body"
               autoClose="outside"
-              class="m-w-30"
+              class="m-w-30 text-hover-primary"
             >
-              <span class="d-flex align-items-center bagde-per fw-bold"> ... </span>
+              <span class="d-flex align-items-center bagde-per fw-bold">
+                ...
+              </span>
             </div>
           </ng-container>
         </ng-container>

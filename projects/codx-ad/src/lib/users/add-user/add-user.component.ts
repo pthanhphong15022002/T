@@ -372,10 +372,13 @@ export class AddUserComponent extends UIComponent implements OnInit {
                     .updateFileDirectReload(this.adUser.userID)
                     .subscribe((result) => {
                       if (result) {
-                        this.dialog.close(this.adUser);
+                        this.dialog.close({
+                          user: this.adUser,
+                          type: 'changedAvatar',
+                        });
                       }
                     });
-                } else this.dialog.close(this.adUser);
+                } else this.dialog.close({ user: this.adUser, type: '' });
                 break;
               }
               case 'addToGroup': {
