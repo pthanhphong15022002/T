@@ -69,6 +69,11 @@ export class DP_Processes {
   allowReturnInstanceControl: boolean;
   createTask: boolean;
   dependRule: string;
+  isMail: boolean;
+  isAlert: boolean;
+  emailTemplate: string;
+  mssgCode: string;
+  expirationAlertTime: number;
 }
 
 export class DP_Processes_Permission {

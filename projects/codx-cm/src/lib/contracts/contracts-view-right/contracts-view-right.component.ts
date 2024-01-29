@@ -23,6 +23,7 @@ import { Location } from '@angular/common';
 import { CodxCmService } from '../../codx-cm.service';
 import { ContractsService } from '../service-contracts.service';
 import { DialogData, DialogRef, FormModel, NotificationsService, TenantStore, UIComponent } from 'codx-core';
+import { CodxEmailComponent } from 'projects/codx-share/src/lib/components/codx-email/codx-email.component';
 @Component({
   selector: 'contracts-view-detail',
   templateUrl: './contracts-view-right.component.html',
@@ -561,5 +562,32 @@ export class ContractsViewDetailComponent
 
   handelMoveStage(event){
     this.moveStage.emit(event);
+  }
+  handelMailContract() {
+    let data = {
+      dialog: this.dialog,
+      formGroup: null,
+      templateID: this.contract?.emailTemplate,
+      showIsTemplate: true,
+      showIsPublish: true,
+      showSendLater: true,
+      files: null,
+      isAddNew: false,
+      notSendMail: true,
+    };
+
+    let popEmail = this.callfc.openForm(
+      CodxEmailComponent,
+      '',
+      800,
+      screen.height,
+      '',
+      data
+    );
+    popEmail.closed.subscribe((res) => {
+      if (res && res.event) {
+        this.contract.emailTemplate = res.event?.recID ? res.event?.recID : '';
+      }
+    });
   }
 }

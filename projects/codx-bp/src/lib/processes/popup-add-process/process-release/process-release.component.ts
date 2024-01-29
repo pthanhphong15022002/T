@@ -168,9 +168,28 @@ export class ProcessReleaseComponent implements OnInit, AfterViewInit {
           this.editItem();
           break;
         }
+        
+      //start
+      case "BPT01011":
+        {
+          this.startProcess();
+          break;
+        }
     }
   }
-
+  startProcess(){
+      this.api.execSv(
+        'BP', 
+        'ERM.Business.BP',
+        'ProcessesBusiness',
+        'StartProcessAsync',
+        [this.view?.dataService?.dataSelected?.processID]
+      ).subscribe(res=>{
+        if(res){
+        }
+      });
+    
+  }
   addItem()
   {
     this.view.dataService.addNew().subscribe(item=>{

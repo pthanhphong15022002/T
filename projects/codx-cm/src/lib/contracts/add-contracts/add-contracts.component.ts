@@ -1274,6 +1274,12 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
     this.itemTabsInput(this.ischeckFields(listInstanceSteps));
   }
 
+  setTempSendMail(processSetting){
+    if(processSetting?.isMail){
+
+    }
+  }
+
   setAutoNameTabFields(autoNameTabFields) {
     this.nameTabFieldsSetting = autoNameTabFields;
     if (this.tabField) {
