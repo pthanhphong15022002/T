@@ -47,7 +47,7 @@ export class ProcessReleaseComponent implements OnInit, AfterViewInit {
   assemblyName = 'ERM.Business.BP';
   entityName = 'BP_Instances';
   className = 'ProcessInstancesBusiness';
-  idField = 'recID';
+  idField = 'currentStage';
   method = 'GetListInstancesAsync';
   dataObj: any;
   //#endregion
@@ -124,12 +124,12 @@ export class ProcessReleaseComponent implements OnInit, AfterViewInit {
       processID: this.recID,
     };
 
-    this.request = new ResourceModel();
-    this.request.service = 'BP';
-    this.request.assemblyName = 'BP';
-    this.request.className = 'ProcessInstancesBusiness';
-    this.request.method = 'GetListInstancesAsync';
-    this.request.idField = 'currentStage';
+    // this.request = new ResourceModel();
+    // this.request.service = 'BP';
+    // this.request.assemblyName = 'BP';
+    // this.request.className = 'ProcessInstancesBusiness';
+    // this.request.method = 'GetListInstancesAsync';
+    // this.request.idField = 'currentStage';
 
     this.resourceKanban = new ResourceModel();
     this.resourceKanban.service = 'BP';
@@ -197,5 +197,10 @@ export class ProcessReleaseComponent implements OnInit, AfterViewInit {
         else (this.view.currentView as any).kanban.updateCard(res?.event);
       }
     })
+  }
+
+  viewChange(e:any)
+  {
+    
   }
 }

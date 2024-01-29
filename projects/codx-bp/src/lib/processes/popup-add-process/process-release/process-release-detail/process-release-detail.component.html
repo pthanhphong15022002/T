@@ -56,11 +56,12 @@
                                                 <i [class]="item?.settings?.icon" [style.color]="item?.settings?.color"></i>
                                                 <span class="fw-bold mx-2 bg-row-text-active">{{item.stepName}}</span>
                                             </div>
-                                            <div class="d-flex align-items-center">
+                                            <div class="d-flex align-items-center my-2">
                                                 <codx-label [formName]="formModel?.formName" fiedName="lblProcessReDetailTimeStart" default="Kế hoạch:" class="text-gray-300"></codx-label>
-                                                <span class="fw-bold">{{data?.duration}}</span>
-                                                <codx-label [formName]="formModel?.formName" fiedName="lblProcessReDetailTimeActual" default="Thực tế:" class="text-gray-300"></codx-label>
+                                                <span class="fw-bold mx-1">{{data?.duration}}</span>
                                                 <span class="mx-1">{{data?.interval | vll : 'VL004' : 'text' | async}}</span>
+                                                <codx-label [formName]="formModel?.formName" fiedName="lblProcessReDetailTimeActual" default="Thực tế:" class="text-gray-300 ms-2"></codx-label>
+                                               
                                             </div>
                                         </div>
                                     </div>
