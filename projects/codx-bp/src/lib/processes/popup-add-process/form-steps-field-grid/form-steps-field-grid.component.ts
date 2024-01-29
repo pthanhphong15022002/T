@@ -127,8 +127,6 @@ export class FormStepsFieldGridComponent implements OnInit, OnChanges{
               if(index2 >= 0) this.listStage[index].child[index2] = dt;
               if(indexP >= 0) this.data.steps[indexP] = dt;
             }
-
-          
           }
           this.ref.detectChanges();
         }

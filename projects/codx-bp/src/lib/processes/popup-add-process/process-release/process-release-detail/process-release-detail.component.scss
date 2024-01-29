@@ -74,3 +74,36 @@
     height: 12px;
     color: #005DC7;
 }
+.prd-nav
+{
+    .nav-tabs
+    {
+        border: none !important;
+    }
+    .nav-link
+    {
+        color: black !important;
+    }
+    .nav-link.active
+    {
+        border: none !important;
+        border-bottom: 3px solid var(--primary-active) !important;
+        color: var(--primary-active) !important;
+    }
+    .nav-link:not(.active):hover , .nav-link:not(.active):focus
+    {
+        border: none !important;
+    }
+} 
+.bg-row-text-active
+{
+    color: var(--primary-active);
+}
+.bg-row-active
+{
+    background-color: var(--primary-lighter);
+    i
+    {
+        font-size: 18px;
+    }
+}

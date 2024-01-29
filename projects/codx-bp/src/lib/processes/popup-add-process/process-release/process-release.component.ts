@@ -47,7 +47,7 @@ export class ProcessReleaseComponent implements OnInit, AfterViewInit {
   assemblyName = 'ERM.Business.BP';
   entityName = 'BP_Instances';
   className = 'ProcessInstancesBusiness';
-  idField = 'recID';
+  idField = 'currentStage';
   method = 'GetListInstancesAsync';
   dataObj: any;
   //#endregion
@@ -124,12 +124,12 @@ export class ProcessReleaseComponent implements OnInit, AfterViewInit {
       processID: this.recID,
     };
 
-    this.request = new ResourceModel();
-    this.request.service = 'BP';
-    this.request.assemblyName = 'BP';
-    this.request.className = 'ProcessInstancesBusiness';
-    this.request.method = 'GetListInstancesAsync';
-    this.request.idField = 'currentStage';
+    // this.request = new ResourceModel();
+    // this.request.service = 'BP';
+    // this.request.assemblyName = 'BP';
+    // this.request.className = 'ProcessInstancesBusiness';
+    // this.request.method = 'GetListInstancesAsync';
+    // this.request.idField = 'currentStage';
 
     this.resourceKanban = new ResourceModel();
     this.resourceKanban.service = 'BP';
@@ -144,40 +144,63 @@ export class ProcessReleaseComponent implements OnInit, AfterViewInit {
   click(evt: ButtonModel) {
     switch (evt.id) {
       case 'btnAdd':
-        this.add();
+        this.addItem();
         break;
     }
   }
 
-  add() {
-    var option = new SidebarModel();
-    option.FormModel = {
-      funcID: this.funcID,
-    };
-    let popup = this.callFunc.openSide(
-      AddProcessDefaultComponent,
-      this.process,
-      option
-    );
-    popup.closed.subscribe((res) => {
-      if (res?.event) {
-        (this.view.currentView as any).kanban.addCard(res?.event);
-      }
-    });
-  }
-
-  openFormDetail(dt: any) {
+  openFormDetail(dt:any)
+  {
     var option = new DialogModel();
     option.IsFull = true;
-    let popup = this.callFunc.openForm(
-      ProcessReleaseDetailComponent,
-      '',
-      850,
-      600,
-      '',
-      { data: dt, process: this.process },
-      '',
-      option
-    );
+    option.FormModel = this.view.formModel;
+    let popup = this.callFunc.openForm(ProcessReleaseDetailComponent,"",850,600,"",{data:dt,process:this.process},"",option);
+  }
+
+  clickMF(e:any)
+  {
+    var funcID = e?.functionID;
+    switch(funcID)
+    {
+      //edit
+      case "SYS03":
+        {
+          this.editItem();
+          break;
+        }
+    }
+  }
+
+  addItem()
+  {
+    this.view.dataService.addNew().subscribe(item=>{
+      this.popUpAddEdit(item,'add');
+    })
+  }
+
+  editItem()
+  {
+    this.popUpAddEdit(this.view.dataService.dataSelected,'edit');
+  }
+
+  popUpAddEdit(item:any,type:any)
+  {
+    var option = new SidebarModel();
+    option.FormModel = {
+      funcID : this.funcID
+    }
+    let popup = this.callFunc.openSide(AddProcessDefaultComponent,{process: this.process, dataIns: item, type:type},option);
+    popup.closed.subscribe(res=>{
+      if(res?.event)
+      {
+        if(type == 'add') (this.view.currentView as any).kanban.addCard(res?.event);
+        else (this.view.currentView as any).kanban.updateCard(res?.event);
+      }
+    })
+  }
+
+  viewChange(e:any)
+  {
+    
   }
 }
