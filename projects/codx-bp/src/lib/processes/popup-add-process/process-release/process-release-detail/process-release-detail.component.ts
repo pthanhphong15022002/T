@@ -14,7 +14,8 @@ export class ProcessReleaseDetailComponent implements OnInit{
   process:any;
   listStage = [];
   count = 0;
-  currentStep:any
+  currentStep:any;
+  formModel:any;
   constructor(
     private api: ApiHttpService,
     @Optional() dialog: DialogRef,
@@ -22,6 +23,7 @@ export class ProcessReleaseDetailComponent implements OnInit{
   ) 
   {
     this.dialog = dialog;
+    this.formModel = dialog.formModel;
     this.data = dt?.data?.data;
     this.process =  JSON.parse(JSON.stringify(dt?.data?.process));
   }
@@ -48,9 +50,8 @@ export class ProcessReleaseDetailComponent implements OnInit{
       this.count -= this.listStage.length;
       this.listStage.forEach(elm => {
         elm.child = this.getListChild(elm) || [];
+        elm.settings = typeof elm?.settings === 'object' ? elm.settings : (elm?.settings ? JSON.parse(elm.settings) : null);
       });
-
-      debugger
     }
   }
 
@@ -68,7 +69,7 @@ export class ProcessReleaseDetailComponent implements OnInit{
       if(this.currentStep.stepID == elm2.recID)
       {
         elm2.owners = typeof this.currentStep?.owners === 'object' ? this.currentStep.owners : (this.currentStep?.owners ? JSON.parse(this.currentStep.owners) : null);
-        elm2.owners =  elm2.owners.map((u) => u.objectID).join(';');
+        elm2.owners =  elm2?.owners ? elm2.owners.map((u) => u.objectID).join(';') : "";
         elm2.startDate = this.currentStep.startDate ? moment(this.currentStep.startDate).format('dd/MM/yyyy') : 'dd/MM/yyyy';
         elm2.endDate = this.currentStep.endDate ? moment(this.currentStep.endDate).format('dd/MM/yyyy') : 'dd/MM/yyyy';
         elm2.actualStart = this.currentStep.actualStart ? moment(this.currentStep.actualStart).format('dd/MM/yyyy') : 'dd/MM/yyyy';

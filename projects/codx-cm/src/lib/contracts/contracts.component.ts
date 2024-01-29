@@ -520,10 +520,9 @@ export class ContractsComponent extends UIComponent {
     }
   }
 
-  sendMail(data){
-    this.cmService.sendMail(data).subscribe(res => {
-      if(res){
-        
+  sendMail(data) {
+    this.cmService.sendMail(data).subscribe((res) => {
+      if (res) {
       }
     });
   }
@@ -1089,13 +1088,13 @@ export class ContractsComponent extends UIComponent {
       this.view.service,
       data,
       category,
-      this.view.formModel.entityName,
+      'CM_Contracts', //this.view.formModel.entityName,
       this.view.formModel.funcID,
       data?.contractName, //tên nè
       this.releaseCallback.bind(this),
       null,
       null,
-      null, //this.view.formModel.entityName, ///thích đổi mãi
+      'CM_Contracts', //null, //this.view.formModel.entityName, ///thích đổi mãi
       null,
       null,
       exportData
