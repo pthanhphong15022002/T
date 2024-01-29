@@ -32,7 +32,7 @@
             class="col-6"
             *ngFor="let md of lstModule | groupmodoule : group.groupID"
           >
-            <a
+            <!-- <a
               *ngIf="md._itemHome"
               href="javascript:;"
               (click)="codxService.navigate(null, '/')"
@@ -50,7 +50,7 @@
                   default="Trang chủ"
                 ></codx-label>
               </span>
-            </a>
+            </a> -->
             <a
               *ngIf="!md._itemHome"
               (click)="
