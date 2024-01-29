@@ -4,9 +4,18 @@
   [views]="views"
   [button]="button"
   (buttonClick)="click($event)"
+  [service]="service"
+  [entityName]="entityName"
+  [idField]="idField"
+  [funcID]="funcID"
+  [assemblyName]="assemblyName"
+  [className]="className"
+  [method]="method"
+  [dataObj]="dataObj"
 >
 </codx-views>
 
+<!--VIEW KANBAN-->
 <ng-template #viewColumKaban let-data>
     <div
       class="d-flex align-items-center justify-content-between cursor-pointer w-100 has-actions-menu h-100"
@@ -55,3 +64,59 @@
     </div>
   </div>
 </ng-template>
+<!--END VIEW KANBAN-->
+
+<!--VIEW LIST-->
+<ng-template #headerTemplateList let-data>
+  <div class="d-flex w-100 ps-2 pe-4 m-2" style="background: #e3ecf1">
+    <div class="w-30 text-dark fw-bold p-3 fw-500">
+      <codx-label
+        fiedName="list_Title"
+        [setRequire]="false"
+        [formModel]="view.formModel"
+        [default]="'Yêu cầu'"
+      ></codx-label>
+    </div>
+    <div class="w-10 text-dark fw-bold p-3 fw-500">
+      <codx-label
+        fiedName="list_CurrentStage"
+        [setRequire]="false"
+        [formModel]="view.formModel"
+        [default]="'Giai đoạn'"
+      ></codx-label>
+    </div>
+    <div class="w-15 text-dark fw-bold p-3 fw-500">
+      <codx-label
+        fiedName="list_Status"
+        [setRequire]="false"
+        [formModel]="view.formModel"
+        [default]="'Trình trạng'"
+      ></codx-label>
+    </div>
+    <div class="w-15 text-dark fw-bold p-3 fw-500">
+      <codx-label
+        fiedName="list_Demurrage"
+        [setRequire]="false"
+        [formModel]="view.formModel"
+        [default]="'Trễ hạn?'"
+      ></codx-label>
+    </div>
+    <div class="w-20 text-dark fw-bold p-3 fw-500">
+      <codx-label
+        fiedName="list_ExecutionTime"
+        [setRequire]="false"
+        [formModel]="view.formModel"
+        [default]="'Thời gian thực hiện'"
+      ></codx-label>
+    </div>
+    <div class="w-10 text-dark fw-bold p-3 fw-500">
+      <codx-label
+        fiedName="list_CreatedBy"
+        [setRequire]="false"
+        [formModel]="view.formModel"
+        [default]="'Người tạo'"
+      ></codx-label>
+    </div>
+  </div>
+</ng-template>
+<!--END VIEW LIST-->

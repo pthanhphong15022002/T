@@ -13,6 +13,8 @@ export class ProcessReleaseComponent implements OnInit , AfterViewInit{
   @ViewChild('view') view: ViewsComponent;
   @ViewChild('viewColumKaban') viewColumKaban!: TemplateRef<any>;
   @ViewChild('cardKanban') cardKanban!: TemplateRef<any>;
+  @ViewChild('templateList') templateList?: TemplateRef<any>;
+  @ViewChild('headerTemplateList') headerTemplateList?: TemplateRef<any>;
   views: Array<ViewModel> = [];
   recID:any;
   funcID:any;
@@ -20,6 +22,16 @@ export class ProcessReleaseComponent implements OnInit , AfterViewInit{
   resourceKanban?: ResourceModel;
   button?: ButtonModel[];
   process:any;
+
+  //#region setting methods
+  service = 'BP';
+  assemblyName = 'ERM.Business.BP';
+  entityName = 'BP_Instances';
+  className = 'ProcessInstancesBusiness';
+  idField = 'recID';
+  method = 'GetListInstancesAsync';
+  dataObj: any;
+  //#endregion
   constructor(
     private api: ApiHttpService,
     private callFunc: CallFuncService,
@@ -34,7 +46,7 @@ export class ProcessReleaseComponent implements OnInit , AfterViewInit{
   }
 
   ngAfterViewInit(): void {
-    
+
     this.button = [
       {
         id: 'btnAdd',
@@ -53,7 +65,16 @@ export class ProcessReleaseComponent implements OnInit , AfterViewInit{
           template: this.cardKanban,
           template2: this.viewColumKaban,
         }
-      }
+      },
+      {
+        type: ViewType.list,
+        sameData: true,
+        active: false,
+        model: {
+          template: this.templateList,
+          headerTemplate: this.headerTemplateList,
+        },
+      },
       // request: this.request,
       // request2: this.resourceKanban,
       // // toolbarTemplate: this.footerButton,
@@ -73,12 +94,17 @@ export class ProcessReleaseComponent implements OnInit , AfterViewInit{
   }
 
   ngOnInit(): void {
+    this.dataObj = {
+      processID: this.recID,
+    }
+
     this.request = new ResourceModel();
     this.request.service = 'BP';
     this.request.assemblyName = 'BP';
     this.request.className = 'ProcessInstancesBusiness';
     this.request.method = 'GetListInstancesAsync';
-    this.request.idField = 'currentStage';
+    this.request.idField = 'recID';
+    this.request.dataObj = this.dataObj;
 
     this.resourceKanban = new ResourceModel();
     this.resourceKanban.service = 'BP';
