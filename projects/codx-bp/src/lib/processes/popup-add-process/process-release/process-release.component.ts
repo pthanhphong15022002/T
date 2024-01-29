@@ -179,7 +179,7 @@ export class ProcessReleaseComponent implements OnInit, AfterViewInit {
   }
   startProcess(){
       this.api.execSv(
-        'BP',
+        'BP', 
         'ERM.Business.BP',
         'ProcessesBusiness',
         'StartProcessAsync',
