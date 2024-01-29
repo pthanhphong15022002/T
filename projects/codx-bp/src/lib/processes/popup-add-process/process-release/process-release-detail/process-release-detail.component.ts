@@ -69,7 +69,7 @@ export class ProcessReleaseDetailComponent implements OnInit{
       if(this.currentStep.stepID == elm2.recID)
       {
         elm2.owners = typeof this.currentStep?.owners === 'object' ? this.currentStep.owners : (this.currentStep?.owners ? JSON.parse(this.currentStep.owners) : null);
-        elm2.owners =  elm2.owners.map((u) => u.objectID).join(';');
+        elm2.owners =  elm2?.owners ? elm2.owners.map((u) => u.objectID).join(';') : "";
         elm2.startDate = this.currentStep.startDate ? moment(this.currentStep.startDate).format('dd/MM/yyyy') : 'dd/MM/yyyy';
         elm2.endDate = this.currentStep.endDate ? moment(this.currentStep.endDate).format('dd/MM/yyyy') : 'dd/MM/yyyy';
         elm2.actualStart = this.currentStep.actualStart ? moment(this.currentStep.actualStart).format('dd/MM/yyyy') : 'dd/MM/yyyy';
