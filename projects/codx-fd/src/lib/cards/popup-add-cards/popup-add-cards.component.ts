@@ -1,4 +1,3 @@
-import { Sorting } from '@syncfusion/ej2-pivotview';
 import {
   ChangeDetectorRef,
   Component,
@@ -9,8 +8,6 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
-import { Permission } from '@shared/models/file.model';
-import { Dialog } from '@syncfusion/ej2-angular-popups';
 import {
   ApiHttpService,
   AuthService,
@@ -23,16 +20,13 @@ import {
   NotificationsService,
   UserModel,
   Util,
-  ViewsComponent,
 } from 'codx-core';
 import { FD_Permissions } from '../../models/FD_Permissionn.model';
 import { FED_Card } from '../../models/FED_Card.model';
-import { CardType, Valuelist } from '../../models/model';
 import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
 import { tmpPost } from '../../models/tmpPost.model';
 import { CodxFdService } from '../../codx-fd.service';
 import { zip } from 'rxjs';
-import moment from 'moment';
 
 @Component({
   selector: 'lib-popup-add-cards',
@@ -172,7 +166,9 @@ export class PopupAddCardsComponent implements OnInit {
     this.loadDataAsync(this.funcID);
     this.getMessageNoti('SYS009');
     this.getMyWallet(this.user.userID);
-    console.log('this.card', this.card);
+    if (this.type !== 'copy') {
+      this.setUserReportInListShare();
+    }
   }
 
   loadDataAsync(funcID: string) {
@@ -425,7 +421,6 @@ export class PopupAddCardsComponent implements OnInit {
   }
 
   valueChange(e: any) {
-    console.log(e);
     this.form.get(e.field).setValue(e.data);
     //this.form.controls[e.field].value = e.data;
     // if (!e?.field || !e?.data) {
@@ -434,7 +429,6 @@ export class PopupAddCardsComponent implements OnInit {
 
     let data = e.data;
     let field = e.field;
-    console.log(field);
     switch (field) {
       case 'rating':
         this.rating = data;
@@ -778,6 +772,18 @@ export class PopupAddCardsComponent implements OnInit {
     this.callfc.openForm(content, '', 420, window.innerHeight);
   }
 
+  setUserReportInListShare(){
+    this.fdService.getReportUserByEmployeeID(this.user.employee?.employeeID).subscribe((emp: any) => {
+      if(emp) {
+        const obj = new FD_Permissions();
+        obj.objectID = emp.domainUser;
+        obj.objectName = emp.employeeName;
+        obj.objectType ="U";
+        this.lstShare.push(obj);
+      }
+    });
+  }
+
   eventApply(event: any) {
     if (!event) {
       return;
@@ -874,12 +880,15 @@ export class PopupAddCardsComponent implements OnInit {
           unitName = 'năm';
           break;
       }
-      if (this.reduceCoCoins + data > this.parameter.MaxPoints) {
+      if(
+          (this.reduceCoCoins + data < 0) ||
+          (this.reduceCoCoins + data > Number.parseInt(this.parameter.MaxPoints))
+        ) {
         this.cointsError =
           'Vượt quá số xu cho phép tặng: ' +
           this.parameter.MaxPoints +
           ' xu/' +
-          unitName;
+          unitName + ' (Hiện tại bạn đã tặng: ' + -this.reduceCoCoins + ' xu/' + unitName + ')';
         this.givePoint = 0;
         return false;
       }

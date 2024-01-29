@@ -219,6 +219,8 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
           this.formPurchaseInvoices.setValue('pmtMethodID', null, {});
           this.formPurchaseInvoices.setValue('pmtTermID', null, {});
           this.formPurchaseInvoices.setValue('delModeID', null, {});
+          this.formPurchaseInvoices.data.pmtMethodName = null;
+          this.formPurchaseInvoices.data.pmtTermName = null;
           this.formPurchaseInvoices.setValue('memo', memo, {});
           this.detectorRef.detectChanges();
           this.isPreventChange = false;
@@ -304,6 +306,24 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
         let memo = this.getMemoMaster(event?.component?.format);
         this.formPurchaseInvoices.setValue('memo',memo,{});
         break;
+      case 'pmtmethodid':
+        let indexpmtmethod = event?.component?.dataService?.data.findIndex((x) => x.PmtMethodID == event.data);
+        if (indexpmtmethod > -1) {
+          this.formPurchaseInvoices.data.pmtTermName = event?.component?.dataService?.data[indexpmtmethod].PmtMethodName;
+        }
+        break;
+      case 'pmttermid':
+        let indexpmtterm = event?.component?.dataService?.data.findIndex((x) => x.PmtTermID == event.data);
+        if (indexpmtterm > -1) {
+          this.formPurchaseInvoices.data.pmtTermName = event?.component?.dataService?.data[indexpmtterm].PmtTermName;
+        }
+        break;
+      case 'buyer':
+        let indexbuyer = event?.component?.dataService?.data.findIndex((x) => x.ObjectID == event.data);
+        if (indexbuyer > -1) {
+          this.formPurchaseInvoices.data.buyerName = event?.component?.dataService?.data[indexbuyer].ObjectName;
+        }
+        break;
     }
   }
 
@@ -341,9 +361,8 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
   valueChangeLineVATInvoices(event: any) {
     let oLine = event.data;
     if (event.field.toLowerCase() === 'goods') {
-      this.formPurchaseInvoices.data.unbounds = {
-        itemID: event?.itemData?.ItemID,
-      };
+      oLine.itemID = event?.itemData?.ItemID;
+      this.detectorRef.detectChanges();
     }
     this.eleGridVatInvoices.startProcess();
     this.api.exec('AC', 'VATInvoicesBusiness', 'ValueChangeAsync', [
@@ -365,7 +384,7 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
    * @returns
    */
   onAddLine(typeBtn) {
-    this.formPurchaseInvoices.save(null, 0, '', '', false)
+    this.formPurchaseInvoices.save(null, 0, '', '', false,{allowCompare:false})
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
         if (!res) return;
@@ -451,7 +470,7 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
    * @param type 
    */
   onSaveVoucher(type){
-    this.formPurchaseInvoices.save(null, 0, '', '', false)
+    this.formPurchaseInvoices.save(null, 0, '', '', false,{allowCompare:false})
     .pipe(takeUntil(this.destroy$))
     .subscribe((res: any) => {
       if (!res) return;
@@ -599,6 +618,8 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
         this.formPurchaseInvoices.setValue('currencyID',(res?.data?.currencyID),{});
         this.formPurchaseInvoices.setValue('exchangeRate',(res?.data?.exchangeRate),{});
         this.formPurchaseInvoices.setValue('taxExchRate',(res?.data?.taxExchRate),{});
+        this.formPurchaseInvoices.data.pmtMethodName = res?.data?.pmtMethodName;
+        this.formPurchaseInvoices.data.pmtTermName = res?.data?.pmtTermName;
         this.formPurchaseInvoices.setValue('multi',(res?.data?.multi),{});
         if (this.eleGridPurchaseInvoice.dataSource.length) {
           this.formPurchaseInvoices.preData = {...this.formPurchaseInvoices.data};
@@ -848,6 +869,7 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
         break;
       case 'add':
       case 'update':
+        this.setInvoiceNo();
         this.dialog.dataService.update(this.formPurchaseInvoices.data).subscribe();
         break;
       case 'closeEdit': //? khi thoát dòng
@@ -859,6 +881,10 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
         let element = document.getElementById('btnAddVAT'); //? focus lại nút thêm dòng
         element.focus();
       }, 100);
+        break;
+      case 'delete':
+        this.setInvoiceNo();
+        this.dialog.dataService.update(this.formPurchaseInvoices.data).subscribe();
         break;
     }
   }
@@ -1043,6 +1069,16 @@ export class PurchaseinvoicesAddComponent extends UIComponent implements OnInit 
           }
         })
       }
+    }
+  }
+
+  setInvoiceNo(){
+    if (this.eleGridVatInvoices.dataSource.length) {
+      let invoiceNo = '';
+      this.eleGridVatInvoices.dataSource.reduce((pre,item) => {
+        invoiceNo += item.invoiceNo+',';
+      },{})
+      this.formPurchaseInvoices.data.invoiceNo = invoiceNo.substring(0, invoiceNo.lastIndexOf(',') + 0);
     }
   }
   //#endregion Function

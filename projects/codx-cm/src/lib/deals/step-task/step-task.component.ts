@@ -120,13 +120,6 @@ export class StepTaskComponent  implements OnInit, AfterViewInit, OnChanges {
   dataTaskAdd;
   listType: any = [];
   listTask = [];
-  // formModel = {
-  //   "funcID": "DPT06",
-  //   "entityName": "DP_Processes",
-  //   "entityPer": "DP_Instances",
-  //   "formName": "DPInstances",
-  //   "gridViewName": "grvDPInstances",
-  // }
 
   service = 'DP';
   assemblyName = 'ERM.Business.DP';
@@ -174,7 +167,7 @@ export class StepTaskComponent  implements OnInit, AfterViewInit, OnChanges {
     this.request = new ResourceModel();
     this.request.service = 'DP';
     this.request.assemblyName = 'DP';
-    this.request.className = 'ProcessesBusiness';
+    this.request.className = 'InstancesStepsBusiness';
     this.request.method = 'LoadDataColumnsAsync';
     this.request.idField = 'recID';
     this.request.dataObj = {processID: this.dataCM?.processID};
@@ -186,7 +179,7 @@ export class StepTaskComponent  implements OnInit, AfterViewInit, OnChanges {
     this.resourceKanban.method = 'GetColumnsKanbanAsync';
     this.resourceKanban.dataObj = {processID: this.dataCM?.processID};;
 
-    this.funcID = 'DPT06';
+    this.funcID = 'CM0201';
   }
 
   ngOnChanges(changes: SimpleChanges): void {

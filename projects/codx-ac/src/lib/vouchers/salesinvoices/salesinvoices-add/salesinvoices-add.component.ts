@@ -19,7 +19,7 @@ import {
   Util,
 } from 'codx-core';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
-import { CodxAcService, fmSalesInvoicesLines } from '../../../codx-ac.service';
+import { CodxAcService, fmSalesInvoicesLines, fmVATInvoices } from '../../../codx-ac.service';
 import {
   IJournal,
   Vll067,
@@ -29,6 +29,7 @@ import { Subject, map, takeUntil } from 'rxjs';
 import { TabComponent } from '@syncfusion/ej2-angular-navigations';
 import { AC_SalesInvoicesLines } from '../../../models/AC_SalesInvoicesLines.model';
 import { EditSettingsModel } from '@syncfusion/ej2-angular-grids';
+import { AC_VATInvoices } from '../../../models/AC_VATInvoices.model';
 
 @Component({
   selector: 'lib-salesinvoices-add',
@@ -38,9 +39,10 @@ import { EditSettingsModel } from '@syncfusion/ej2-angular-grids';
 })
 export class SalesinvoicesAddComponent extends UIComponent{
   //#region Constructor
-  @ViewChild('eleGridSalesInvoice') eleGridSalesInvoice: CodxGridviewV2Component; //? element codx-grv2 lưới SalesInvoice
+  @ViewChild('eleGridSalesInvoice') eleGridSalesInvoice: CodxGridviewV2Component;
+  @ViewChild('eleGridVatInvoices') eleGridVatInvoices: CodxGridviewV2Component;
   @ViewChild('formSalesInvoice') public formSalesInvoice: CodxFormComponent;
-  @ViewChild('elementTabDetail') elementTabDetail: any; //? element object các tab detail(chi tiết,hóa đơn GTGT)
+  @ViewChild('elementTabDetail') elementTabDetail: any;
   @ViewChild('eleCbxObjectID') eleCbxObjectID: any;
   @ViewChild('eleCbxCurrencyID') eleCbxCurrencyID: any;
 
@@ -69,6 +71,7 @@ export class SalesinvoicesAddComponent extends UIComponent{
     allowEditOnDblClick:false,
     allowNextRowEdit:false
   }
+  fmVATInvoices:any = fmVATInvoices
   private destroy$ = new Subject<void>(); //? list observable hủy các subscribe api
 
   constructor(
@@ -201,6 +204,26 @@ export class SalesinvoicesAddComponent extends UIComponent{
   }
 
   /**
+   * *Hàm check validate trước khi save line (VATInvoice)
+   * @param data 
+   * @returns 
+   */
+  beforeSaveRowVATInvoice(event:any){
+    if (event.rowData) {
+      if (event.rowData.quantity == 0 || event.rowData.quantity < 0) {
+        this.eleGridVatInvoices.showErrorField('quantity','E0341');
+        event.cancel = true;
+        return;
+      }
+      if (event.rowData.unitPrice == 0 || event.rowData.unitPrice < 0) {
+        this.eleGridVatInvoices.showErrorField('unitPrice','E0730');
+        event.cancel = true;
+        return;
+      }
+    }
+  }
+
+  /**
    * *Hàm hủy các observable api
    */
   onDestroy() {
@@ -276,6 +299,8 @@ export class SalesinvoicesAddComponent extends UIComponent{
           this.formSalesInvoice.setValue('pmtTermID', null, {});
           this.formSalesInvoice.setValue('delModeID', null, {});
           this.formSalesInvoice.setValue('memo', memo, {});
+          this.formSalesInvoice.data.pmtMethodName = null;
+          this.formSalesInvoice.data.pmtTermName = null;
           this.detectorRef.detectChanges();
           this.isPreventChange = false;
           return;
@@ -329,15 +354,24 @@ export class SalesinvoicesAddComponent extends UIComponent{
         if (value == null) return;
         this.voucherDateChange(field);
         break;
-      // case 'currencyid':
-      //   this.currencyIDChange(field);
-      //   break;
-      // case 'exchangerate':
-      //   this.exchangeRateChange(field);
-      //   break;
-      // case 'voucherdate':
-      //   this.voucherDateChange(field);
-      //   break;
+      case 'pmtmethodid':
+        let indexpmtmethod = event?.component?.dataService?.data.findIndex((x) => x.PmtMethodID == event.data);
+        if (indexpmtmethod > -1) {
+          this.formSalesInvoice.data.pmtTermName = event?.component?.dataService?.data[indexpmtmethod].PmtMethodName;
+        }
+        break;
+      case 'pmttermid':
+        let indexpmtterm = event?.component?.dataService?.data.findIndex((x) => x.PmtTermID == event.data);
+        if (indexpmtterm > -1) {
+          this.formSalesInvoice.data.pmtTermName = event?.component?.dataService?.data[indexpmtterm].PmtTermName;
+        }
+        break;
+      case 'salespersonid':
+        let indexsalesperson = event?.component?.dataService?.data.findIndex((x) => x.SalespersonID == event.data);
+        if (indexsalesperson > -1) {
+          this.formSalesInvoice.data.salespersonName = event?.component?.dataService?.data[indexsalesperson].SalespersonName;
+        }
+        break;
     }
   }
 
@@ -367,11 +401,36 @@ export class SalesinvoicesAddComponent extends UIComponent{
   }
 
   /**
+   * *Hàm xử lí change lưới VATInvoices
+   * @param event 
+   */
+  valueChangeLineVATInvoices(event: any) {
+    let oLine = event.data;
+    if (event.field.toLowerCase() === 'goods') {
+      oLine.itemID = event?.itemData?.ItemID;
+      this.detectorRef.detectChanges();
+    }
+    this.eleGridVatInvoices.startProcess();
+    this.api.exec('AC', 'VATInvoicesBusiness', 'ValueChangeAsync', [
+      'AC_SalesInvoices',
+      this.formSalesInvoice.data,
+      oLine,
+      event.field
+    ]).pipe(takeUntil(this.destroy$)).subscribe((res:any)=>{
+      if (res) {
+        Object.assign(oLine, res);
+        this.detectorRef.detectChanges();
+        this.eleGridVatInvoices.endProcess();
+      }
+    })
+  }
+
+  /**
    * *Hàm thêm dòng cho các lưới
    * @returns
    */
   onAddLine(typeBtn) {
-    this.formSalesInvoice.save(null, 0, '', '', false)
+    this.formSalesInvoice.save(null, 0, '', '', false,{allowCompare:false})
     .pipe(takeUntil(this.destroy$))
     .subscribe((res: any) => {
       if (!res) return;
@@ -383,6 +442,14 @@ export class SalesinvoicesAddComponent extends UIComponent{
       }
       if (this.eleGridSalesInvoice && this.elementTabDetail?.selectingID == '0') {
         this.eleGridSalesInvoice.saveRow((res:any)=>{ //? save lưới trước
+          if(res){
+            this.addRowDetailByType(typeBtn);
+          }
+        })
+        return;
+      }
+      if (this.eleGridVatInvoices && this.elementTabDetail?.selectingID == '1') {
+        this.eleGridVatInvoices.saveRow((res:any)=>{ //? save lưới trước
           if(res){
             this.addRowDetailByType(typeBtn);
           }
@@ -426,7 +493,7 @@ export class SalesinvoicesAddComponent extends UIComponent{
    * @param type 
    */
   onSaveVoucher(type){
-    this.formSalesInvoice.save(null, 0, '', '', false)
+    this.formSalesInvoice.save(null, 0, '', '', false,{allowCompare:false})
     .pipe(takeUntil(this.destroy$))
     .subscribe((res: any) => {
       if (!res) return;
@@ -502,6 +569,9 @@ export class SalesinvoicesAddComponent extends UIComponent{
       case '1':
         this.addLine();
         break;
+      case '2':
+        this.addLineVatInvoices();
+        break;
     }
   }
 
@@ -526,6 +596,18 @@ export class SalesinvoicesAddComponent extends UIComponent{
     oLine = this.acService.getDataSettingFromJournal(oLine,this.journal);
     return oLine;
   }
+
+  /**
+   * *Hàm thêm dòng hóa đơn GTGT
+   */
+  addLineVatInvoices() {
+    let model = new AC_VATInvoices();
+    let oLine = Util.camelizekeyObj(model);
+    oLine.transID = this.formSalesInvoice.data.recID;
+    oLine.objectID = this.formSalesInvoice.data.objectID;
+    oLine.objectName = this.formSalesInvoice.data.objectName;
+    this.eleGridVatInvoices.addRow(oLine,this.eleGridVatInvoices.dataSource.length);
+  }
   
   /**
    * *Hàm các sự kiện của lưới cashpayment
@@ -549,6 +631,37 @@ export class SalesinvoicesAddComponent extends UIComponent{
         let element = document.getElementById('btnAddSale'); //? focus lại nút thêm dòng
         element.focus();
       }, 100);
+        break;
+    }
+  }
+
+  /**
+   * *Hàm các sự kiện của lưới cashpayment
+   * @param event
+   */
+  onActionGridVatInvoice(event: any) {
+    switch (event.type) {
+      case 'autoAdd': //? tự động thêm dòng
+        this.onAddLine('2');
+        break;
+      case 'add':
+      case 'update':
+        this.setInvoiceNo();
+        this.dialog.dataService.update(this.formSalesInvoice.data).subscribe();
+        break;
+      case 'closeEdit': //? khi thoát dòng
+      if (this.eleGridVatInvoices && this.eleGridVatInvoices.rowDataSelected) {
+        this.eleGridVatInvoices.rowDataSelected = null;
+      }
+      if(this.eleGridVatInvoices.isSaveOnClick) this.eleGridVatInvoices.isSaveOnClick = false; //? trường save row nhưng chưa tới actioncomplete
+      setTimeout(() => {
+        let element = document.getElementById('btnAddVAT'); //? focus lại nút thêm dòng
+        element.focus();
+      }, 100);
+        break;
+      case 'delete':
+        this.setInvoiceNo();
+        this.dialog.dataService.update(this.formSalesInvoice.data).subscribe();
         break;
     }
   }
@@ -580,6 +693,8 @@ export class SalesinvoicesAddComponent extends UIComponent{
         this.formSalesInvoice.setValue('consultantID',(res?.ConsultantID || ''),{});
         this.formSalesInvoice.setValue('salespersonID',(res?.salespersonID || ''),{});
         this.formSalesInvoice.setValue('multi',(res?.data?.multi),{});
+        this.formSalesInvoice.data.pmtMethodName = res?.data?.pmtMethodName;
+        this.formSalesInvoice.data.pmtTermName = res?.data?.pmtTermName;
         if (this.eleGridSalesInvoice.dataSource.length) {
           this.formSalesInvoice.preData = {...this.formSalesInvoice.data};
           this.dialog.dataService.update(this.formSalesInvoice.data).subscribe();
@@ -832,6 +947,16 @@ export class SalesinvoicesAddComponent extends UIComponent{
       newMemo = objectName;
     }
     return newMemo;
+  }
+
+  setInvoiceNo(){
+    if (this.eleGridVatInvoices.dataSource.length) {
+      let invoiceNo = '';
+      this.eleGridVatInvoices.dataSource.reduce((pre,item) => {
+        invoiceNo += item.invoiceNo+',';
+      },{})
+      this.formSalesInvoice.data.invoiceNo = invoiceNo.substring(0, invoiceNo.lastIndexOf(',') + 0);
+    }
   }
   
   @HostListener('click', ['$event']) //? focus out grid

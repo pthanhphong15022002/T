@@ -49,7 +49,7 @@
             <codx-label formName="fmBPFieldGrid" fiedName="lblTaskDuration" default="Thời gian thực hiện" class="fw-bold"></codx-label>
             <div class="d-flex align-items-center">
                 <codx-input type="number"  field="duration" [crrValue]="data?.duration" (valueChange)="valueChange($event)" [ngClass]="'w-80px'"></codx-input>
-                <codx-input type="valuelist" [refValue]="'VL004'" [crrValue]="data?.interval"  field="interval" (valueChange)="valueChange($event)" [ngClass]="'mx-2 w-80px'"></codx-input>
+                <codx-input type="valuelist" [refValue]="'BP019'" [crrValue]="data?.interval"  field="interval" (valueChange)="valueChange($event)" [ngClass]="'mx-2 w-80px'"></codx-input>
             </div>
         </div>
         <div class="d-flex flex-column mt-4">
@@ -107,11 +107,53 @@
                 </ng-container>
             </div>
             <div class="d-flex flex-column border-top mt-4 pt-4 ">
-                <div class="d-flex align-items-center justify-content-between mt-2">
+                <div class="d-flex align-items-center justify-content-between mt-2 pb-2">
                     <codx-label formName="fmBPFieldGrid" fiedName="lblTaskExport" default="Xuất khẩu nhập liệu" class="fw-bold"></codx-label>
-                    <codx-input type="switch"></codx-input>
+                    <codx-input type="switch" field="isTemplate" [crrValue]="data?.settings?.isTemplate" (valueChange)="valueChangeSetting($event)"></codx-input>
                 </div>
-                <button type="button" class="btn btn-light w-100 mt-4" ><i class="icon-i-plus"></i> <codx-label formName="fmBPFieldGrid" fiedName="lblTaskSelectFile" default="Chọn file template"></codx-label></button>
+                <ng-container *ngIf="data?.settings?.template?.templateID , else tmpTemplate">
+                    <div class="d-flex align-items-center justify-content-between cursor-pointer py-2">
+                        <div class="d-flex align-items-center w-100" (click)="addTemplate('edit',data?.settings?.template?.templateType)">
+                            <i
+                                *ngIf="data?.settings?.template?.templateType == 'excel'"
+                                class="fa-solid fa-file-excel fs-2 me-3"
+                                style="color: #347442"
+                            >
+                            </i>
+                            <i
+                                *ngIf="data?.settings?.template?.templateType == 'word'"
+                                class="fa-solid fa-file-word fs-2 me-3"
+                                style="color: #005dc7"
+                            >
+                            </i>
+                            <span>{{data?.settings?.template?.templateName}}</span>
+                        </div>
+                        <i class="icon-close" (click)="deleteTemplate()"></i>
+                    </div>
+                </ng-container>
+                <ng-template #tmpTemplate>
+                    <div ngbDropdown class="d-inline-block">
+                        <button ngbDropdownToggle [disabled]="data?.settings?.isTemplate ? false : true" type="button" class="btn btn-light w-100 mt-4"><i class="icon-i-plus"></i> <codx-label formName="fmBPFieldGrid" fiedName="lblTaskSelectFile" default="Chọn file template"></codx-label></button>
+                        <div class="w-100" ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                           <div ngbDropdownItem class="d-flex align-items-center" (click)="addTemplate('add','excel')">
+                                <i
+                                    class="fa-solid fa-file-excel fs-2 me-3"
+                                    style="color: #347442"
+                                >
+                                </i>
+                                <span>Excel</span>
+                            </div>
+                            <div ngbDropdownItem class="d-flex align-items-center" (click)="addTemplate('add','word')">
+                                <i
+                                class="fa-solid fa-file-word fs-2 me-3"
+                                style="color: #005dc7"
+                              ></i>
+                                <span>Word</span>
+                            </div>
+                        </div>
+                    </div>
+                </ng-template>
+               
             </div>
         </ng-container>
         <ng-container *ngIf="activityType == 'Task'">
@@ -130,9 +172,15 @@
             </div>
             <div class="d-flex flex-column border-top mt-4 pt-4">
                 <codx-label formName="fmBPFieldGrid" fiedName="lblTaskCheckList" default="CheckList" class="fw-bold"></codx-label>
-                <div class="d-flex align-items-center mt-4">
-                    <input class="form-check-input" type="checkbox">
-                    <span class="mx-2">Thêm mục</span>
+                <ng-container *ngFor="let cl of checkList , let indexC = index ">
+                    <div class="d-flex align-items-center mt-4">
+                        <input class="form-check-input" type="checkbox" disabled>
+                        <input class="mx-2 form-control" [value]="cl" placeholder="Thêm mục" (change)="valueChangeCheckList($event,indexC)" />
+                    </div>
+                </ng-container>
+                <div class="d-flex align-items-center mt-4 cursor-pointer">
+                    <input class="form-check-input" type="checkbox" disabled>
+                    <codx-label [default]="'Thêm mục'"  class="mx-2" (click)="addCheckList()"></codx-label>
                 </div>
             </div>
         </ng-container>

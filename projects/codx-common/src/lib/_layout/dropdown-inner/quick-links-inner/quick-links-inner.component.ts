@@ -39,6 +39,7 @@ export class QuickLinksInnerComponent {
           this.lstGroup.push(obj);
         });
       }
+      //this.lstModule.push({ _itemHome: true, groupID: '', saleGroup: '' });
       this.lstGroup.unshift({ groupID: '', groupName: '' });
     });
   }
