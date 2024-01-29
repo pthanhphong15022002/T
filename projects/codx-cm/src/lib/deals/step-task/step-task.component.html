@@ -862,7 +862,7 @@
   <ng-template #footerKanban let-data>
     <div
       *ngIf="data.type"
-      class="d-flex bg-footer {{ data?.color ? '' : 'bg-light-warning' }}"
+      class="d-flex bg-footer {{ data?.color ? '' : 'bg-light-warning' }} footer-cald"
       [style.background]="data?.color"
     >
       <div class="d-flex flex-column w-100 p-3">

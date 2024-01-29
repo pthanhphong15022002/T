@@ -1,7 +1,8 @@
-import { Component, OnInit, Optional } from '@angular/core';
+import { Component, OnInit, Optional, ViewChild } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { DialogData, DialogRef, Util } from 'codx-core';
+import { ApiHttpService, AuthStore, DialogData, DialogRef, Util } from 'codx-core';
 import { CodxBpService } from 'projects/codx-bp/src/public-api';
+import { AttachmentComponent } from 'projects/codx-common/src/lib/component/attachment/attachment.component';
 import { firstValueFrom } from 'rxjs';
 
 @Component({
@@ -10,9 +11,11 @@ import { firstValueFrom } from 'rxjs';
   styleUrls: ['./add-process-default.component.css']
 })
 export class AddProcessDefaultComponent implements OnInit{
+  @ViewChild('attachment') attachment: AttachmentComponent;
   dynamicFormsForm: FormGroup;
   process:any;
   data:any;
+  dataIns:any = {};
   dialog:any;
   table:any
   formModel = 
@@ -22,13 +25,17 @@ export class AddProcessDefaultComponent implements OnInit{
     gridViewName: 'grvDynamicForms',
     entityName: 'BP_Instances'
   }
+  subTitle:any;
+  user:any;
   constructor(
+    private auth: AuthStore,
+    private api: ApiHttpService,
     private bpService: CodxBpService,
     @Optional() dialog: DialogRef,
     @Optional() dt: DialogData
   )
   {
-   
+    this.user = auth.get();
     this.dynamicFormsForm = new FormGroup({});
     this.process = dt?.data;
     this.dialog = dialog;
@@ -40,6 +47,7 @@ export class AddProcessDefaultComponent implements OnInit{
 
   getData()
   {
+    this.dataIns.recID = Util.uid();
     this.data = this.process.steps.filter(x=>x.activityType == "Form")[0];
     this.data.settings = typeof this.data.settings === 'string' ? JSON.parse(this.data.settings) : this.data.settings;
     this.formatData()
@@ -51,6 +59,7 @@ export class AddProcessDefaultComponent implements OnInit{
     let extendInfo = JSON.parse(JSON.stringify(this.data.extendInfo));
     extendInfo.forEach(element => {
       if(element.fieldType != "Title") this.dynamicFormsForm.addControl(element.fieldName.toLowerCase(), new FormControl(element.defaultValue));
+      if(element.fieldType == "SubTitle") this.subTitle = element.fieldName.toLowerCase();
       var index = list.findIndex(x=>x.columnOrder == element.columnOrder)
       if(index >= 0)
       {
@@ -95,23 +104,85 @@ export class AddProcessDefaultComponent implements OnInit{
         this.bpService.genAutoNumber(this.formModel?.funcID, this.formModel.entityName, "InstanceNo")
       );
     }
-   
-    var data = 
+    var stageF = this.process.steps.filter(x=>x.activityType == "Stage")[0];
+    var stage = 
     {
-      processID : this.process?.recID,
-      instanceNo : instanceNo,
-      title: valueForm.mo_ta_ngan_gon,
+      recID: Util.uid(),
+      instanceID: instanceNo,
+      applyFor: this.process?.applyFor,
       status: "1",
-      currentStage: null,
-      currentStep: null,
-      lastUpdate: null,
-      closed: false,
-      closedOn: null,
-      startDate: null,
-      endDate: null,
-      progress: null,
-      actualStart: null,
+      taskType: stageF?.activityType,
+      taskName: stageF?.stepName,
+      memo: stageF.memo,
+      location: stageF.location,
+      interval: stageF.interval,
+      duration: stageF.duration,
+      settings: stageF.settings,
+      stepID: stageF.recID,
+      eventControl: stageF?.eventControl,	
+      extendInfo: stageF?.extendInfo,	
+      documentControl : stageF?.documentControl,	
+      reminder: stageF?.reminder,
+      checkList: stageF?.checkList,
+      note: stageF?.note,
+      attachments: stageF?.attachments,
+      comments: stageF?.comments,
+      isOverDue : stageF?.isOverDue,	
+      owners: stageF?.owners,
     }
-    debugger
+    var step = 
+    {
+      recID: Util.uid(),
+      instanceID: instanceNo,
+      applyFor: this.process?.applyFor,
+      status: "1",
+      taskType: this.data?.activityType,
+      taskName: this.data?.stepName,
+      memo: this.data.memo,
+      location: this.data.location,
+      interval: this.data.interval,
+      duration: this.data.duration,
+      settings: JSON.stringify(this.data.settings),
+      stepID: this.data.recID,
+      eventControl: this.data?.eventControl,	
+      extendInfo: this.data?.extendInfo,	
+      documentControl : this.data?.documentControl,	
+      reminder: this.data?.reminder,
+      checkList: this.data?.checkList,
+      note: this.data?.note,
+      attachments: this.data?.attachments,
+      comments: this.data?.comments,
+      isOverDue : this.data?.isOverDue,	
+      owners: this.data?.owners,
+    }
+
+
+    this.dataIns.processID = this.process?.recID,
+    this.dataIns.instanceNo = instanceNo,
+    this.dataIns.title= valueForm[this.subTitle],
+    this.dataIns.status= "1",
+    this.dataIns.currentStage= stageF.recID,
+    this.dataIns.currentStep= step.recID,
+    this.dataIns.lastUpdate= null,
+    this.dataIns.closed= false,
+    this.dataIns.closedOn= null,
+    this.dataIns.startDate= null,
+    this.dataIns.endDate= null,
+    this.dataIns.progress= null,
+    this.dataIns.actualStart= null,
+    this.dataIns.createdOn= new Date(),
+    this.dataIns.createdBy = this.user?.userID,
+    this.dataIns.duration = this.process?.duration
+    this.dataIns.datas = JSON.stringify(valueForm)
+    var listTask = JSON.stringify([stage,step]);
+    //Luu process Task
+    this.api.execSv("BP","BP","ProcessTasksBusiness","SaveListTaskAsync",listTask).subscribe();
+    //Luu Instanes
+    this.api.execSv("BP","BP","ProcessInstancesBusiness","SaveInsAsync",this.dataIns).subscribe(item=>{
+      this.dialog.close(this.dataIns)
+    });
+
+    if(this.attachment.fileUploadList && this.attachment.fileUploadList.length > 0)
+      (await this.attachment.saveFilesObservable()).subscribe();
   }
 }

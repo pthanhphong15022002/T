@@ -49,8 +49,8 @@ export class PropertyComboboxComponent extends BasePropertyComponent implements 
   let popupDialog = this.callFuc.openForm(
     FormSettingComboboxComponent,
     '',
-    650,
-    600,
+    900,
+    700,
     '',
     data,
     '',

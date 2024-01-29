@@ -247,12 +247,11 @@ export class ProcessesComponent
       case "SYS008":
         this.openFormDiagram();
         break;
-      case "BPT109":
+      case "BPT0101":
       {
         this.codxService.navigate('',"/bp/instances/BPT011/"+this.itemSelected.recID);
         break;
       }
-      break;
       default: {
         this.codxShareService.defaultMoreFunc(
           e,
@@ -262,7 +261,6 @@ export class ProcessesComponent
           this.view.dataService,
           this
         );
-        // this.df.detectChanges();
         break;
       }
     }
