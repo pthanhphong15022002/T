@@ -827,7 +827,7 @@ export class TMDashboardComponent extends UIComponent implements AfterViewInit {
         return accumulator + object.completed;
       }, 0);
     }
-    return 0;
+    return 1;
   }
 
 
