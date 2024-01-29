@@ -522,7 +522,7 @@ export class PopupAddProcessComponent {
   sharePerm(share) {
     this.listCombobox = {};
     this.multiple = true;
-    this.vllShare = 'DP0331';
+    this.vllShare = 'BP017';
     this.typeShare = '1';
     this.multiple = true;
     let option = new DialogModel();
@@ -900,7 +900,6 @@ export class PopupAddProcessComponent {
       delete elm.child;
 
       if(typeof elm.settings === 'object')  elm.settings = JSON.stringify(elm.settings);
-      if(typeof elm.owners === 'object')  elm.owners = JSON.stringify(elm.owners);
     })
 
     op.data = result;
@@ -925,9 +924,7 @@ export class PopupAddProcessComponent {
     let result = JSON.parse(JSON.stringify(this.data));
     result.steps.forEach((elm :any)=>{
       delete elm.child;
-
       if(typeof elm.settings === 'object')  elm.settings = JSON.stringify(elm.settings);
-      if(typeof elm.owners === 'object')  elm.owners = JSON.stringify(elm.owners);
     })
     return this.api.execSv("BP","BP","ProcessesBusiness","UpdateProcessAsync",result);
   }
