@@ -46,28 +46,26 @@
 <!-- Start: TmpBody -->
 <ng-template #TmpBody>
   <!-- Start: Tab General -->
-  <div>
-    <ejs-tab>
-      <e-tabitems>
-        <e-tabitem>
-          <ng-template #headerText>
-            <div class="d-flex align-items-top me-2 mt-2">
-              <i class="icon-info icon-18 me-2"></i>
-              <codx-label class="fw-bold" style="font-size: 14px !important" fiedName="lblGeneral"
-                [formModel]="dialog.formModel" default="Thông tin chung"></codx-label>
-            </div>
-          </ng-template>
-          <ng-template #content>
-            <ng-container *ngTemplateOutlet="TmpTabGeneral"></ng-container>
-          </ng-template>
-        </e-tabitem>
-      </e-tabitems>
-    </ejs-tab>
-  </div>
+  <ejs-tab>
+    <e-tabitems>
+      <e-tabitem>
+        <ng-template #headerText>
+          <div class="d-flex align-items-top me-2 mt-2">
+            <i class="icon-info icon-18 me-2"></i>
+            <codx-label class="fw-bold" style="font-size: 14px !important" fiedName="lblGeneral"
+              [formModel]="dialog.formModel" default="Thông tin chung"></codx-label>
+          </div>
+        </ng-template>
+        <ng-template #content>
+          <ng-container *ngTemplateOutlet="TmpTabGeneral"></ng-container>
+        </ng-template>
+      </e-tabitem>
+    </e-tabitems>
+  </ejs-tab>
   <!-- End: Tab General -->
 
   <!-- Start: Tab Detail -->
-  <div class="mt-2" style="height: calc(100vh - 370px) !important">
+  <div class="mt-2" style="height: calc(100vh - 385px) !important">
     <!-- Start: Tab Detail -->
     <ejs-tab #elementTabDetail (selecting)="onTabSelectedDetail($event)">
       <e-tabitems>
@@ -197,11 +195,9 @@
                 <codx-label #elelblObjectID style="white-space: nowrap !important" fiedName="Memo"
                   [formModel]="formGeneral.formModel" default="Đối tượng">
                 </codx-label>
-                <div class="ac-input">
-                  <codx-input [disabled]="formGeneral.data?.isReadOnly ? true : false" #eleCbxObjectID
+                <codx-input [disabled]="formGeneral.data?.isReadOnly ? true : false" #eleCbxObjectID
                     [Group]="formGeneral.formGroup" [formModel]="dialog.formModel" field="memo">
                   </codx-input>
-                </div>
               </div>
             </div>
           </div>
@@ -279,14 +275,22 @@
                   [Group]="formGeneral.formGroup" field="postedDate" [formModel]="dialog.formModel"
                   (valueChange)="valueChangeMaster($event)">
                 </codx-input> -->
-                <codx-vll *ngIf="formGeneral.data?.status == '1'" [formModel]="dialog.formModel" [field]="'Status'"
+                <!-- <codx-vll *ngIf="formGeneral.data?.status == '1'" [formModel]="dialog.formModel" [field]="'Status'"
                   [value]="formGeneral.data?.validated ? '1' : '7'" [showText]="true" [showBgColor]="true"
                   class="badge badge-light badge-sm">
                 </codx-vll>
                 <codx-vll *ngIf="formGeneral.data?.status != '1'" [formModel]="dialog.formModel" [field]="'Status'"
                   [value]="formGeneral.data?.status" [showText]="true" [showBgColor]="true"
                   class="badge badge-light badge-lg">
-                </codx-vll>
+                </codx-vll> -->
+                <codx-input *ngIf="formGeneral.data?.status == '1'" [disabled]="true"
+                  field="status" [formModel]="dialog.formModel" [crrValue]="formGeneral.data?.validated ? '1' : '7'"
+                  (valueChange)="valueChangeMaster($event)">
+                </codx-input>
+                <codx-input *ngIf="formGeneral.data?.status != '1'" [disabled]="true"
+                  field="status" [formModel]="dialog.formModel" [crrValue]="formGeneral.data?.status"
+                  (valueChange)="valueChangeMaster($event)">
+                </codx-input>
               </div>
             </div>
           </div>

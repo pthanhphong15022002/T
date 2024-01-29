@@ -18,6 +18,28 @@
         <div class="line-clamp line-clamp-1 me-3 fs-4 fw-bold text-uppercase mt-1">
           {{ headerText }}
         </div>
+        <ng-container>
+          <ng-container *ngIf="!formPurchaseInvoices.data.isReadOnly">
+            <div *ngIf="formPurchaseInvoices && !formPurchaseInvoices?.data?.validated"
+              class="d-flex align-items-center">
+              <i class="icon-arrow_drop_down_circle icon-16 mt-1"></i>
+              <div style="margin-left: -5px;" class="input-circle h-20px input-border-0 w-400px mb-1">
+                <codx-dropdown-select #eleCbxSubType [showFooter]="false" [isToolbar]="false"
+                  [cssClass]="'rounded-pill border-1'" cssPopup="h-350px w-550px" [isMulti]="false" type="valuelist"
+                  field="subType" [refValue]="formPurchaseInvoices?.gridviewSetup['SubType']?.referedValue"
+                  [value]="formPurchaseInvoices?.data?.subType" emptyText="Loại phiếu"
+                  (valueChange)="changeSubType($event)"></codx-dropdown-select>
+              </div>
+            </div>
+          </ng-container>
+          <span
+            *ngIf="(formPurchaseInvoices.data?.validated) || (formPurchaseInvoices.data?.isReadOnly)">
+            <codx-vll [name]="formPurchaseInvoices?.gridviewSetup['SubType']?.referedValue" [formModel]="dialog.formModel"
+              [field]="'SubType'" [value]="formPurchaseInvoices?.data?.subType" [showText]="true" [showBgColor]="true"
+              class="badge badge-light-primary badge-sm mt-1">
+            </codx-vll>
+          </span>
+        </ng-container>
         <!-- <div class="input-circle input-sm" *ngIf="formPurchaseInvoices?.formGroup">
           <span class="me-2">
             <codx-vll *ngIf="formPurchaseInvoices.data?.status == '1'" [formModel]="dialog.formModel" [field]="'Status'"
@@ -39,28 +61,6 @@
         </div>
       </div>
     </div>
-    <ng-container>
-      <ng-container *ngIf="!formPurchaseInvoices.data.isReadOnly">
-        <div *ngIf="formPurchaseInvoices && !formPurchaseInvoices?.data?.validated" style="margin-left: 35px"
-          class="d-flex align-items-center">
-          <i class="icon-arrow_drop_down_circle icon-16 mt-1"></i>
-          <div style="margin-left: -5px;" class="input-circle h-20px input-border-0 w-400px mb-1">
-            <codx-dropdown-select #eleCbxSubType [showFooter]="false" [isToolbar]="false"
-              [cssClass]="'rounded-pill border-1'" cssPopup="h-350px w-550px" [isMulti]="false" type="valuelist"
-              field="subType" [refValue]="formPurchaseInvoices?.gridviewSetup['SubType']?.referedValue"
-              [value]="formPurchaseInvoices?.data?.subType" emptyText="Loại phiếu"
-              (valueChange)="changeSubType($event)"></codx-dropdown-select>
-          </div>
-        </div>
-      </ng-container>
-      <span style="margin-left: 30px"
-        *ngIf="(formPurchaseInvoices.data?.validated) || (formPurchaseInvoices.data?.isReadOnly)">
-        <codx-vll [name]="formPurchaseInvoices?.gridviewSetup['SubType']?.referedValue" [formModel]="dialog.formModel"
-          [field]="'SubType'" [value]="formPurchaseInvoices?.data?.subType" [showText]="true" [showBgColor]="true"
-          class="badge badge-light-primary badge-sm mt-1">
-        </codx-vll>
-      </span>
-    </ng-container>
   </div>
 </ng-template>
 <!-- End: Sub toolbar -->
@@ -68,28 +68,26 @@
 <!-- Start: TmpBody -->
 <ng-template #TmpBody>
   <!-- Start: Tab General -->
-  <div>
-    <ejs-tab>
-      <e-tabitems>
-        <e-tabitem>
-          <ng-template #headerText>
-            <div class="d-flex align-items-top me-2 mt-2">
-              <i class="icon-info icon-18 me-2"></i>
-              <codx-label class="fw-bold" style="font-size: 14px !important" fiedName="lblGeneral"
-                [formModel]="dialog.formModel" default="Thông tin chung"></codx-label>
-            </div>
-          </ng-template>
-          <ng-template #content>
-            <ng-container *ngTemplateOutlet="TmpTabGeneral"></ng-container>
-          </ng-template>
-        </e-tabitem>
-      </e-tabitems>
-    </ejs-tab>
-  </div>
+  <ejs-tab>
+    <e-tabitems>
+      <e-tabitem>
+        <ng-template #headerText>
+          <div class="d-flex align-items-top me-2 mt-2">
+            <i class="icon-info icon-18 me-2"></i>
+            <codx-label class="fw-bold" style="font-size: 14px !important" fiedName="lblGeneral"
+              [formModel]="dialog.formModel" default="Thông tin chung"></codx-label>
+          </div>
+        </ng-template>
+        <ng-template #content>
+          <ng-container *ngTemplateOutlet="TmpTabGeneral"></ng-container>
+        </ng-template>
+      </e-tabitem>
+    </e-tabitems>
+  </ejs-tab>
   <!-- End: Tab General -->
 
   <!-- Start: Tab Detail -->
-  <div class="mt-2" style="height: calc(100vh - 430px) !important;">
+  <div class="mt-3" style="height: calc(100vh - 415px) !important;">
     <ejs-tab #elementTabDetail (created)="createTabDetail($event,elementTabDetail)"
       (selecting)="onTabSelectedDetail($event)">
       <e-tabitems>
@@ -149,19 +147,17 @@
     class="codx-detail-footer dialog-footer align-items-center collape" *ngIf="formPurchaseInvoices.data">
     <div *ngIf="!formPurchaseInvoices.data.isReadOnly"
       class="d-flex align-items-center justify-content-end btn-ac-footer mt-1">
-      <button id="btncancle" [shortcut]="'alt+c'" [autoClick]="true"
-        *ngIf="!formPurchaseInvoices.data?.validated" type="button"
-        class="btn btn-md btn-danger me-2"
-        (keydown.enter)="onDiscardVoucher(); $event.preventDefault()" (click)="onDiscardVoucher()">
+      <button id="btncancle" [shortcut]="'alt+c'" [autoClick]="true" *ngIf="!formPurchaseInvoices.data?.validated"
+        type="button" class="btn btn-md btn-danger me-2" (keydown.enter)="onDiscardVoucher(); $event.preventDefault()"
+        (click)="onDiscardVoucher()">
         <div class="d-flex align-items-center">
           <i class="icon-cancel icon-16"></i>
           <codx-label class="fw-normal" fiedName="lblDiscard" default="Hủy bỏ"></codx-label>
         </div>
       </button>
-      <button id="btnsaveas" [shortcut]="'alt+shift+s'" [autoClick]="true"
-        type="button"
-        class="btn btn-md btn-primary me-2"
-        (keydown.enter)="onSaveVoucher('saveadd'); $event.preventDefault()" (click)="onSaveVoucher('saveadd')">
+      <button id="btnsaveas" [shortcut]="'alt+shift+s'" [autoClick]="true" type="button"
+        class="btn btn-md btn-primary me-2" (keydown.enter)="onSaveVoucher('saveadd'); $event.preventDefault()"
+        (click)="onSaveVoucher('saveadd')">
         <div class="d-flex align-items-center">
           <i class="icon-add_to_photos icon-16"></i>
           <codx-label class="fw-normal" fiedName="lblSaveAndClear" default="Lưu & Thêm"></codx-label>
@@ -190,7 +186,7 @@
       <div style="flex-wrap: nowrap;" class="row d-flex overflow-auto">
         <div class="col-9" style="min-width: 1200px;">
           <div class="row">
-            <div class="col-2" style="width: 220px;"> 
+            <div class="col-2" style="width: 220px;">
               <div class="form-group">
                 <codx-label fiedName="ObjectID" [formModel]="dialog.formModel">
                 </codx-label>
@@ -279,12 +275,13 @@
                 <codx-label style="white-space: nowrap !important" fiedName="Buyer" [formModel]="dialog.formModel">
                 </codx-label>
                 <codx-input [disabled]="formPurchaseInvoices.data?.isReadOnly ? true : false"
-                  [Group]="formPurchaseInvoices.formGroup" field="buyer" [formModel]="dialog.formModel">
+                  [Group]="formPurchaseInvoices.formGroup" field="buyer" [formModel]="dialog.formModel"
+                  (valueChange)="valueChangeMaster($event)">
                 </codx-input>
               </div>
             </div>
-            <div [ngClass]="formPurchaseInvoices?.data?.subType == '2' ? 'd-none' : ''"
-              class="col-3" style="width: 380px;">
+            <div [ngClass]="formPurchaseInvoices?.data?.subType == '2' ? 'd-none' : ''" class="col-3"
+              style="width: 380px;">
               <div class="form-group">
                 <codx-label style="white-space: nowrap !important" fiedName="InvoiceForm"
                   [formModel]="dialog.formModel">
@@ -294,8 +291,8 @@
                 </codx-input>
               </div>
             </div>
-            <div [ngClass]="formPurchaseInvoices?.data?.subType == '2' ? 'd-none' : ''"
-              class="col-1" style="width: 150px;">
+            <div [ngClass]="formPurchaseInvoices?.data?.subType == '2' ? 'd-none' : ''" class="col-1"
+              style="width: 150px;">
               <div class="form-group">
                 <codx-label style="white-space: nowrap !important" fiedName="InvoiceSeriNo"
                   [formModel]="dialog.formModel">
@@ -305,8 +302,8 @@
                 </codx-input>
               </div>
             </div>
-            <div [ngClass]="formPurchaseInvoices?.data?.subType == '2' ? 'd-none' : ''"
-              class="col-1" style="width: 150px;">
+            <div [ngClass]="formPurchaseInvoices?.data?.subType == '2' ? 'd-none' : ''" class="col-1"
+              style="width: 150px;">
               <div class="form-group">
                 <codx-label style="white-space: nowrap !important" fiedName="InvoiceNo" [formModel]="dialog.formModel">
                 </codx-label>
@@ -316,8 +313,8 @@
                 </codx-input>
               </div>
             </div>
-            <div [ngClass]="formPurchaseInvoices?.data?.subType == '2' ? 'd-none' : ''"
-              class="col-2" style="width: 160px;">
+            <div [ngClass]="formPurchaseInvoices?.data?.subType == '2' ? 'd-none' : ''" class="col-2"
+              style="width: 160px;">
               <div class="form-group">
                 <codx-label style="white-space: nowrap !important" fiedName="InvoiceDate"
                   [formModel]="dialog.formModel">
@@ -358,12 +355,11 @@
             </div>
             <div class="col-3" style="width: 160px;">
               <div class="form-group">
-                <codx-label style="white-space: nowrap !important" fiedName="VoucherNo"
-                  [formModel]="dialog.formModel">
+                <codx-label style="white-space: nowrap !important" fiedName="VoucherNo" [formModel]="dialog.formModel">
                 </codx-label>
-                <codx-input
-                  [Group]="formPurchaseInvoices.formGroup" field="voucherNo" [formModel]="dialog.formModel"
-                  (valueChange)="valueChangeMaster($event)" [disabled]="(journal?.assignRule != '0' || formPurchaseInvoices.data?.isReadOnly)">
+                <codx-input [Group]="formPurchaseInvoices.formGroup" field="voucherNo" [formModel]="dialog.formModel"
+                  (valueChange)="valueChangeMaster($event)"
+                  [disabled]="(journal?.assignRule != '0' || formPurchaseInvoices.data?.isReadOnly)">
                 </codx-input>
               </div>
             </div>
@@ -371,8 +367,7 @@
           <div *ngIf="journal" class="row justify-content-end">
             <div class="col-3" style="width: 160px;">
               <div class="form-group">
-                <codx-label style="white-space: nowrap !important" fiedName="CurrencyID"
-                  [formModel]="dialog.formModel">
+                <codx-label style="white-space: nowrap !important" fiedName="CurrencyID" [formModel]="dialog.formModel">
                 </codx-label>
                 <codx-input #cbxCurrencyID
                   [disabled]="(!journal.multiCurrency) || (formPurchaseInvoices.data?.isReadOnly ? true : false)"
@@ -399,10 +394,10 @@
           <div class="row justify-content-end">
             <div class="col-3" style="width: 160px;">
               <div class="form-group mb-0">
-                <codx-label style="white-space: nowrap !important" fiedName="PostedDate"
-                  [formModel]="dialog.formModel">
+                <codx-label style="white-space: nowrap !important" fiedName="PostedDate" [formModel]="dialog.formModel">
                 </codx-label>
-                <codx-input [disabled]="(formPurchaseInvoices.data?.isReadOnly || postDateControl != '1') ? true : false"
+                <codx-input
+                  [disabled]="(formPurchaseInvoices.data?.isReadOnly || postDateControl != '1') ? true : false"
                   [Group]="formPurchaseInvoices.formGroup" field="postedDate" [formModel]="dialog.formModel"
                   (valueChange)="valueChangeMaster($event)">
                 </codx-input>
@@ -410,20 +405,28 @@
             </div>
             <div class="col-3" style="width: 160px;">
               <div class="form-group mb-0 d-flex" style="flex-direction: column;">
-                <codx-label style="white-space: nowrap !important" fiedName="Status"
-                  [formModel]="dialog.formModel">
+                <codx-label style="white-space: nowrap !important" fiedName="Status" [formModel]="dialog.formModel">
                 </codx-label>
                 <!-- <codx-input [disabled]="(formPurchaseInvoices.data?.isReadOnly || postDateControl != '1') ? true : false"
                   [Group]="formPurchaseInvoices.formGroup" field="postedDate" [formModel]="dialog.formModel"
                   (valueChange)="valueChangeMaster($event)">
                 </codx-input> -->
-                <codx-vll *ngIf="formPurchaseInvoices.data?.status == '1'" [formModel]="dialog.formModel" [field]="'Status'"
-                  [value]="formPurchaseInvoices.data?.validated ? '1' : '7'" [showText]="true" [showBgColor]="true"
-                  class="badge badge-light badge-sm">
+                <!-- <codx-vll *ngIf="formPurchaseInvoices.data?.status == '1'" [formModel]="dialog.formModel"
+                  [field]="'Status'" [value]="formPurchaseInvoices.data?.validated ? '1' : '7'" [showText]="true"
+                  [showBgColor]="true" class="badge badge-light badge-sm">
                 </codx-vll>
-                <codx-vll *ngIf="formPurchaseInvoices.data?.status != '1'" [formModel]="dialog.formModel" [field]="'Status'"
-                  [value]="formPurchaseInvoices.data?.status" [showText]="true" [showBgColor]="true" class="badge badge-light badge-lg">
-                </codx-vll>
+                <codx-vll *ngIf="formPurchaseInvoices.data?.status != '1'" [formModel]="dialog.formModel"
+                  [field]="'Status'" [value]="formPurchaseInvoices.data?.status" [showText]="true" [showBgColor]="true"
+                  class="badge badge-light badge-lg">
+                </codx-vll> -->
+                <codx-input *ngIf="formPurchaseInvoices.data?.status == '1'" [disabled]="true"
+                  field="status" [formModel]="dialog.formModel" [crrValue]="formPurchaseInvoices.data?.validated ? '1' : '7'"
+                  >
+                </codx-input>
+                <codx-input *ngIf="formPurchaseInvoices.data?.status != '1'" [disabled]="true"
+                  field="status" [formModel]="dialog.formModel" [crrValue]="formPurchaseInvoices.data?.status"
+                  >
+                </codx-input>
               </div>
             </div>
           </div>

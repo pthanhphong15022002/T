@@ -1806,6 +1806,11 @@ export class CodxTasksComponent
       case 'TMT030117':
         this.openExtendsAction(e.data, data);
         break;
+      case 'SYS008':
+          if(this.view.viewActiveType == ViewType.kanban){
+            this.view.currentView.openSetting();
+          }
+      break;
       default: {
         this.codxShareService.defaultMoreFunc(
           e,
@@ -2005,6 +2010,8 @@ export class CodxTasksComponent
             if (this.funcID == 'TMT0403' || this.funcID == 'TMT0402')
               x.disabled = true;
             break;
+
+
         }
       });
     }

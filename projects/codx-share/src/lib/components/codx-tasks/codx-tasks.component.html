@@ -386,7 +386,7 @@
       </div>
     </div>
     <!--end::Item-->
-    
+
     <div
       id="{{ data.recID }}"
       class="w-100 border-description border-gray-300 rounded-2 px-1 mb-1 hidden-main"
@@ -732,18 +732,15 @@
           <codx-img [width]="25" [objectId]="assgin" objectType="AD_Users"></codx-img>
         </ng-container>
         <ng-container *ngIf="i == 2">
-          <div
-            class="symbol symbol-25px symbol-circle"
-            ng-reflect-ng-class="symbol-circle,"
-          >
-            <div
-              class="align-items-center d-flex h-25px justify-content-center rounded-circle text-white w-25px"
-              style="background-color: rgb(160 161 161);"
-            >
-              <span style="font-size: 14px">
-                {{ data?.assignTo?.split(';')?.length - 3 }}+</span
-              >
-            </div>
+          <div class="view-all symbol symbol-25px symbol-circle">
+            <codx-img
+              [objectId]="assgin"
+              objectType="AD_Users"
+              width="25"
+            ></codx-img>
+            <span class="contain-1">
+              {{ data?.assignTo?.split(';')?.length - 2 }}+
+            </span>
           </div>
         </ng-container>
       </ng-container>

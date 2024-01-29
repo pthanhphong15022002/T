@@ -70,7 +70,6 @@ export class NoteSliderComponent extends UIComponent implements OnInit {
     this.dialog = dialog;
     //chưa biết Nguyên viết gì ??
     var dataSv = new CRUDService(injector);
-    dataSv.request.pageSize = 10;
     dataSv.idField = 'recID';
     this.dtService = dataSv;
     this.cache.functionList('WPT08').subscribe(func=>{

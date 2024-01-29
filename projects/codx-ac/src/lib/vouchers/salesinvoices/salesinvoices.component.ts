@@ -6,8 +6,24 @@ import {
   TemplateRef,
   ViewChild,
 } from '@angular/core';
-import { AuthStore, ButtonModel, DataRequest, DialogModel, NotificationsService, SidebarModel, TenantStore, UIComponent, ViewModel, ViewType } from 'codx-core';
-import { BehaviorSubject, Subject, distinctUntilKeyChanged, takeUntil } from 'rxjs';
+import {
+  AuthStore,
+  ButtonModel,
+  DataRequest,
+  DialogModel,
+  NotificationsService,
+  SidebarModel,
+  TenantStore,
+  UIComponent,
+  ViewModel,
+  ViewType,
+} from 'codx-core';
+import {
+  BehaviorSubject,
+  Subject,
+  distinctUntilKeyChanged,
+  takeUntil,
+} from 'rxjs';
 import { SalesinvoicesAddComponent } from './salesinvoices-add/salesinvoices-add.component';
 import { CodxAcService } from '../../codx-ac.service';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
@@ -21,14 +37,13 @@ import { CodxListReportsComponent } from 'projects/codx-share/src/lib/components
   styleUrls: ['./salesinvoices.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SalesinvoicesComponent extends UIComponent
-{
+export class SalesinvoicesComponent extends UIComponent {
   //#region Constructor
   @ViewChild('templateDetailLeft') templateDetailLeft?: TemplateRef<any>; //? template view danh sách chi tiết (trái)
   @ViewChild('templateDetailRight') templateDetailRight: TemplateRef<any>; //? template view danh sách chi tiết (phải)
   @ViewChild('listTemplate') listTemplate?: TemplateRef<any>; //? template view danh sách
   @ViewChild('templateGrid') templateGrid?: TemplateRef<any>; //? template view lưới
-  
+
   views: Array<ViewModel> = []; // model view
   headerText: any; //? tên tiêu đề truyền cho form thêm mới
   runmode: any;
@@ -40,11 +55,14 @@ export class SalesinvoicesComponent extends UIComponent
   baseCurr: any; //? đồng tiền hạch toán
   dataDefault: any; //? data default của phiếu
   hideFields: Array<any> = []; //? array field được ẩn lấy từ journal
-  button: ButtonModel[] = [{ //? nút thêm phiếu
-    id: 'btnAdd',
-    icon: 'icon-i-file-earmark-plus',
-  }];
-  viewActive:number = ViewType.listdetail;
+  button: ButtonModel[] = [
+    {
+      //? nút thêm phiếu
+      id: 'btnAdd',
+      icon: 'icon-i-file-earmark-plus',
+    },
+  ];
+  viewActive: number = ViewType.listdetail;
   ViewType = ViewType;
   private destroy$ = new Subject<void>(); //? list observable hủy các subscribe api
 
@@ -55,7 +73,7 @@ export class SalesinvoicesComponent extends UIComponent
     private shareService: CodxShareService,
     private codxCommonService: CodxCommonService,
     private notification: NotificationsService,
-    private tenant: TenantStore,
+    private tenant: TenantStore
   ) {
     super(inject);
     this.cache
@@ -66,11 +84,9 @@ export class SalesinvoicesComponent extends UIComponent
           this.baseCurr = res[0].baseCurr; //? get đồng tiền hạch toán
         }
       });
-    this.router.params
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((params) => {
-        this.journalNo = params?.journalNo; //? get số journal từ router
-      });
+    this.router.params.pipe(takeUntil(this.destroy$)).subscribe((params) => {
+      this.journalNo = params?.journalNo; //? get số journal từ router
+    });
   }
   //#endregion Constructor
 
@@ -124,22 +140,21 @@ export class SalesinvoicesComponent extends UIComponent
         sameData: true,
         model: {
           template2: this.templateGrid,
-
         },
 
-        request:{service:'AC'},
-        subModel:{
-          entityName:'AC_SalesInvoicesLines',
-          formName:'SalesInvoicesLines',
-          gridviewName:'grvSalesInvoicesLines',
-          parentField:'TransID',
-          parentNameField:'VoucherNo',
-          hideMoreFunc:true,
-          request:{
+        request: { service: 'AC' },
+        subModel: {
+          entityName: 'AC_SalesInvoicesLines',
+          formName: 'SalesInvoicesLines',
+          gridviewName: 'grvSalesInvoicesLines',
+          parentField: 'TransID',
+          parentNameField: 'VoucherNo',
+          hideMoreFunc: true,
+          request: {
             service: 'AC',
           },
-          idField:'recID'
-        }
+          idField: 'recID',
+        },
       },
     ];
     this.acService.setChildLinks();
@@ -217,6 +232,9 @@ export class SalesinvoicesComponent extends UIComponent
       case 'ACT060508':
         this.printVoucher(data, e.functionID); //? in chứng từ
         break;
+      case 'ACT060501':
+        this.EInvoices(data, e.functionID); //? hóa đơn điện tử
+        break;
     }
   }
 
@@ -226,12 +244,18 @@ export class SalesinvoicesComponent extends UIComponent
    * @param data
    * @returns
    */
-  changeMFDetail(event: any,type: any = '') {
+  changeMFDetail(event: any, type: any = '') {
     let data = this.view.dataService.dataSelected;
     if (data) {
-      this.acService.changeMFSale(event,data,type,this.journal,this.view.formModel);
+      this.acService.changeMFSale(
+        event,
+        data,
+        type,
+        this.journal,
+        this.view.formModel
+      );
     }
-}
+  }
 
   /**
    * * Hàm get data và get dữ liệu chi tiết của chứng từ khi được chọn
@@ -256,7 +280,7 @@ export class SalesinvoicesComponent extends UIComponent
   }
 
   viewChanged(view) {
-    if(view && view?.view?.type == this.viewActive) return;
+    if (view && view?.view?.type == this.viewActive) return;
     this.viewActive = view?.view?.type;
     this.detectorRef.detectChanges();
   }
@@ -295,13 +319,13 @@ export class SalesinvoicesComponent extends UIComponent
           dialog.closed.subscribe((res) => {
             if (res && res?.event) {
               if (res?.event?.type === 'discard') {
-                if(this.view.dataService.data.length == 0){
+                if (this.view.dataService.data.length == 0) {
                   this.itemSelected = undefined;
                   this.detectorRef.detectChanges();
-                } 
+                }
               }
             }
-          })
+          });
         }
       });
   }
@@ -312,7 +336,7 @@ export class SalesinvoicesComponent extends UIComponent
    */
   editVoucher(dataEdit) {
     delete dataEdit.isReadOnly;
-    this.view.dataService.dataSelected = {...dataEdit};
+    this.view.dataService.dataSelected = { ...dataEdit };
     this.view.dataService.dataSelected = dataEdit;
     this.view.dataService
       .edit(dataEdit)
@@ -338,13 +362,13 @@ export class SalesinvoicesComponent extends UIComponent
         dialog.closed.subscribe((res) => {
           if (res && res?.event) {
             if (res?.event?.type === 'discard') {
-              if(this.view.dataService.data.length == 0){
+              if (this.view.dataService.data.length == 0) {
                 this.itemSelected = undefined;
                 this.detectorRef.detectChanges();
-              } 
+              }
             }
           }
-        })
+        });
       });
   }
 
@@ -386,13 +410,13 @@ export class SalesinvoicesComponent extends UIComponent
                 dialog.closed.subscribe((res) => {
                   if (res && res?.event) {
                     if (res?.event?.type === 'discard') {
-                      if(this.view.dataService.data.length == 0){
+                      if (this.view.dataService.data.length == 0) {
                         this.itemSelected = undefined;
                         this.detectorRef.detectChanges();
-                      } 
+                      }
                     }
                   }
-                })
+                });
                 this.view.dataService
                   .add(datas)
                   .pipe(takeUntil(this.destroy$))
@@ -413,10 +437,10 @@ export class SalesinvoicesComponent extends UIComponent
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
         if (res && !res?.error) {
-          if(this.view.dataService.data.length == 0){
+          if (this.view.dataService.data.length == 0) {
             this.itemSelected = undefined;
             this.detectorRef.detectChanges();
-          } 
+          }
         }
       });
   }
@@ -444,8 +468,7 @@ export class SalesinvoicesComponent extends UIComponent
       optionSidebar,
       this.view.funcID
     );
-    dialog.closed.subscribe((res) => {
-    })
+    dialog.closed.subscribe((res) => {});
   }
 
   /**
@@ -454,7 +477,10 @@ export class SalesinvoicesComponent extends UIComponent
    */
   validateVourcher(text: any, data: any) {
     this.api
-      .exec('AC', 'SalesInvoicesBusiness', 'ValidateVourcherAsync', [data,text])
+      .exec('AC', 'SalesInvoicesBusiness', 'ValidateVourcherAsync', [
+        data,
+        text,
+      ])
       .subscribe((res: any) => {
         if (res[1]) {
           this.itemSelected = res[0];
@@ -471,7 +497,7 @@ export class SalesinvoicesComponent extends UIComponent
    */
   postVoucher(text: any, data: any) {
     this.api
-      .exec('AC', 'SalesInvoicesBusiness', 'PostVourcherAsync', [data,text])
+      .exec('AC', 'SalesInvoicesBusiness', 'PostVourcherAsync', [data, text])
       .subscribe((res: any) => {
         if (res[1]) {
           this.itemSelected = res[0];
@@ -488,7 +514,7 @@ export class SalesinvoicesComponent extends UIComponent
    */
   unPostVoucher(text: any, data: any) {
     this.api
-      .exec('AC', 'SalesInvoicesBusiness', 'UnPostVourcherAsync', [data,text])
+      .exec('AC', 'SalesInvoicesBusiness', 'UnPostVourcherAsync', [data, text])
       .subscribe((res: any) => {
         if (res[1]) {
           this.itemSelected = res[0];
@@ -598,15 +624,38 @@ export class SalesinvoicesComponent extends UIComponent
    */
   printVoucher(data: any, reportID: any, reportType: string = 'V') {
     let params = {
-      Recs:data?.recID,
-    }
-    this.shareService.printReport(reportID,reportType,params,this.view?.formModel);    
+      Recs: data?.recID,
+    };
+    this.shareService.printReport(
+      reportID,
+      reportType,
+      params,
+      this.view?.formModel
+    );
   }
 
-   /**
+  EInvoices(data: any, functionID: string) {
+    var lstID = [data.recID];
+    this.api
+      .execSv(
+        'AC',
+        'ERM.Business.AC',
+        'SalesInvoicesBusiness',
+        'GetDataInvoiceAsync',
+        [lstID, true, true]
+      )
+      .subscribe((res: any) => {
+        if (res) {
+          // this.journal = res[0]; // data journal
+          // this.hideFields = res[1]; // array field ẩn từ sổ nhật kí
+        }
+      });
+  }
+
+  /**
    * *Hàm mở form báo cáo
    */
-   openFormReportVoucher(data: any, reportList: any) {
+  openFormReportVoucher(data: any, reportList: any) {
     var obj = {
       data: data,
       reportList: reportList,
