@@ -14,7 +14,8 @@ export class ProcessReleaseDetailComponent implements OnInit{
   process:any;
   listStage = [];
   count = 0;
-  currentStep:any
+  currentStep:any;
+  formModel:any;
   constructor(
     private api: ApiHttpService,
     @Optional() dialog: DialogRef,
@@ -22,6 +23,7 @@ export class ProcessReleaseDetailComponent implements OnInit{
   ) 
   {
     this.dialog = dialog;
+    this.formModel = dialog.formModel;
     this.data = dt?.data?.data;
     this.process =  JSON.parse(JSON.stringify(dt?.data?.process));
   }
@@ -48,9 +50,8 @@ export class ProcessReleaseDetailComponent implements OnInit{
       this.count -= this.listStage.length;
       this.listStage.forEach(elm => {
         elm.child = this.getListChild(elm) || [];
+        elm.settings = typeof elm?.settings === 'object' ? elm.settings : (elm?.settings ? JSON.parse(elm.settings) : null);
       });
-
-      debugger
     }
   }
 
