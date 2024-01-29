@@ -259,9 +259,11 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
         if(value == '' || value == null || indexcb == -1){
           this.isPreventChange = true;
           this.formCashReceipt.setValue(field,null,{});
+          this.formCashReceipt.data.cashBookName = null;
           this.isPreventChange = false;
           return;
         } 
+        this.formCashReceipt.data.cashBookName = event?.component?.itemsSelected[0]?.CashBookName;
         let valueCashbook = {
           PreOffsetAcctID : event?.component?.dataService?.currentComponent?.previousItemData?.CashAcctID || '',
           CurOffsetAcctID : event?.component?.itemsSelected[0]?.CashAcctID || ''
@@ -277,9 +279,11 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
           let memo = this.getMemoMaster();
           this.formCashReceipt.setValue(field,null,{});
           this.formCashReceipt.setValue('memo',memo,{});
+          this.formCashReceipt.data.reasonName = null;
           this.isPreventChange = false;
           return;
         } 
+        this.formCashReceipt.data.reasonName = event?.component?.itemsSelected[0]?.ReasonName;
         let valueReason = {
           PreReasonID:  event?.component?.dataService?.currentComponent?.previousItemData?.ReasonID || '',
           Note: event?.component?.itemsSelected[0]?.ReasonName || '',
@@ -310,11 +314,13 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
           this.formCashReceipt.setValue(field,null,{});
           this.formCashReceipt.setValue('objectType',null,{});
           this.formCashReceipt.setValue('memo',memo,{});
+          this.formCashReceipt.data.objectName = null;
           this.isPreventChange = false;
           return;
         } 
         let objectType = event?.component?.itemsSelected[0]?.ObjectType || '';
         this.formCashReceipt.setValue('objectType',objectType,{});
+        this.formCashReceipt.data.objectName = event?.component?.itemsSelected[0]?.ObjectName;
         this.objectIDChange();
         break;
 
@@ -505,7 +511,7 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
    * @returns
    */
   onAddLine() {
-    this.formCashReceipt.save(null, 0, '', '', false)
+    this.formCashReceipt.save(null, 0, '', '', false,{allowCompare:false})
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
         if (!res) return;
@@ -602,7 +608,7 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
    * @returns
    */
   onSaveVoucher(type) {
-    this.formCashReceipt.save(null, 0, '', '', false)
+    this.formCashReceipt.save(null, 0, '', '', false,{allowCompare:false})
     .pipe(takeUntil(this.destroy$))
     .subscribe((res: any) => {
       if (!res) return;
