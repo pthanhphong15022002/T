@@ -556,11 +556,13 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
   GetProcesIDDefault() {
     if (this.processIdDefault) {
       this.contracts.processID = this.processIdDefault;
+      this.getSettingMail(this.contracts.processID);
     } else {
       this.contractService.GetProcessIdDefault('4').subscribe((res) => {
         if (res) {
           this.contracts.processID = res?.recID;
           this.processIdDefault = res?.recID;
+          this.getSettingMail(this.contracts.processID);
         } else {
           this.notiService.notify(
             'Chưa có quy trình hợp đồng được thiết lập, vui lòng thiết lập quy trình hợp đồng mặc định',
@@ -774,7 +776,13 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
             this.contracts.processID = processID;
             this.contracts.applyProcess = true;
             this.getListInstanceSteps(processID);
+            this.getSettingMail(processID);
           } else {
+            this.contracts.emailTemplate = '';
+            this.contracts.isAlert = false;
+            this.contracts.isMail = false;
+            this.contracts.expirationAlertTime = 0;
+            this.contracts.mssgCode = '';
             this.itemTabsInput(false);
             if (this.isApplyProcess) {
               this.GetProcesIDDefault();
@@ -1244,6 +1252,24 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
 
   //#endregion
 
+  getSettingMail(processID){
+    this.contractService.getSettingMailByProcessID(processID).subscribe(res => {
+      if(res){
+        this.contracts.isAlert = res[0];
+        this.contracts.mssgCode = res[1];
+        this.contracts.isMail = res[2];
+        this.contracts.expirationAlertTime = res[4];
+        if(this.contracts?.isMail){
+          this.contractService.copyTempMail([res[3], this.contracts?.emailTemplate]).subscribe(res => {
+            if(res){
+              this.contracts.emailTemplate = res;
+            }
+          })
+        }
+      }
+    })
+  }
+
   getListInstanceSteps(processId: any) {
     let action = this.action == 'view' ? 'edit' : this.action;
     let data = [processId, this.contracts?.refID, action, '4'];
@@ -1275,11 +1301,19 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
     this.itemTabsInput(this.ischeckFields(listInstanceSteps));
   }
 
-  setTempSendMail(processSetting){
-    if(processSetting?.isMail){
-
-    }
-  }
+  // setTempSendMail(processSetting){
+  //   this.contracts.isAlert = processSetting?.isAlert;
+  //   this.contracts.isMail = processSetting?.isMail;
+  //   this.contracts.expirationAlertTime = processSetting?.expirationAlertTime;
+  //   this.contracts.mssgCode = processSetting?.mssgCode;
+  //   if(this.contracts?.isMail){
+  //     this.contractService.copyTempMail([processSetting?.emailTemplate, this.contracts?.emailTemplate]).subscribe(res => {
+  //       if(res){
+  //         this.contracts.emailTemplate = res;
+  //       }
+  //     })
+  //   }
+  // }
 
   setAutoNameTabFields(autoNameTabFields) {
     this.nameTabFieldsSetting = autoNameTabFields;

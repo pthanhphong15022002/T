@@ -22,7 +22,7 @@ import { firstValueFrom } from 'rxjs';
 import { Location } from '@angular/common';
 import { CodxCmService } from '../../codx-cm.service';
 import { ContractsService } from '../service-contracts.service';
-import { DialogData, DialogRef, FormModel, NotificationsService, TenantStore, UIComponent } from 'codx-core';
+import { CallFuncService, DialogData, DialogModel, DialogRef, FormModel, NotificationsService, TenantStore, UIComponent } from 'codx-core';
 import { CodxEmailComponent } from 'projects/codx-share/src/lib/components/codx-email/codx-email.component';
 @Component({
   selector: 'contracts-view-detail',
@@ -35,6 +35,7 @@ export class ContractsViewDetailComponent
 {
   @ViewChild('quotationsTab') quotationsTab: TemplateRef<any>;
   @ViewChild('contractLinkTem') contractLinkTem: TemplateRef<any>;
+  @ViewChild('notificationTemp') notificationTemp: TemplateRef<any>;
   @Input() taskAdd;
   @Input() formModel: FormModel;
   @Input() listInsStepStart = [];
@@ -76,6 +77,8 @@ export class ContractsViewDetailComponent
   isHaveField: boolean = false;
   listStepsProcess = [];
   isLoadingContract = false;
+  notificationPopup;
+
 
   tabControl = [
     { name: 'History', textDefault: 'Lịch sử', isActive: true, template: null },
@@ -137,6 +140,7 @@ export class ContractsViewDetailComponent
     private contractService: ContractsService,
     private notiService: NotificationsService,
     private changeDetectorRef: ChangeDetectorRef,
+    private callFunc: CallFuncService,
     @Optional() dialog?: DialogRef,
     @Optional() dt?: DialogData,
   ) {
@@ -594,5 +598,20 @@ export class ContractsViewDetailComponent
     if (event) {
       data[event.field] = event?.data || false;
     }
+  }
+
+  notificationContract() {
+    let opt = new DialogModel();
+    opt.zIndex = 1115;
+    this.notificationPopup = this.callFunc.openForm(
+      this.notificationTemp,
+      '',
+      400,
+      400,
+      '',
+      null,
+      '',
+      opt
+    );
   }
 }

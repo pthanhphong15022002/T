@@ -356,7 +356,7 @@
     </div>
 
     <div class="row my-1">
-      <div class="col-6">
+      <div class="col-6 d-flex align-items-center">
         <codx-label
           class="label-colon text-gray-600 codx-textlabel"
           fiedName="interval"
@@ -396,6 +396,13 @@
               | async
           "
         ></span>
+        <div class="d-flex align-items-end">
+          <span
+            class="icon-18 icon-notifications cursor-pointer"
+            [ngbTooltip]="'Thiết lập thông báo'"
+            (click)="notificationContract()"
+          ></span>
+        </div>
       </div>
 
       <div class="col-6">
@@ -418,7 +425,7 @@
     </div>
 
     <!-- Thông báo -->
-    <div class="d-flex align-items-center">
+    <!-- <div class="d-flex align-items-center">
       <codx-label
         class="label-colon text-gray-600 codx-textlabel"
         fiedName="notification"
@@ -427,9 +434,9 @@
         default="Thông báo sắp hết hạn hợp đồng"
       >
       </codx-label>
-      <span>Trước {{contract?.expirationAlertTime}} ngày.</span>
+      <span>Trước {{ contract?.expirationAlertTime }} ngày.</span>
       <div class="ms-1">
-        <codx-input 
+        <codx-input
           class="check-circle me-1 mt-1"
           field="isAlert"
           type="checkbox"
@@ -446,7 +453,7 @@
         <span>,</span>
       </div>
       <div class="ms-1">
-        <codx-input 
+        <codx-input
           class="check-circle me-1 mt-1"
           field="isMail"
           type="checkbox"
@@ -462,9 +469,13 @@
         ></codx-label>
       </div>
       <div class="ms-1 d-flex align-items-end">
-        <span class="icon-18 icon-email cursor-pointer" [ngbTooltip]="'Thiết lập Mail'" (click)="handelMailContract()"></span>
+        <span
+          class="icon-18 icon-email cursor-pointer"
+          [ngbTooltip]="'Thiết lập Mail'"
+          (click)="handelMailContract()"
+        ></span>
       </div>
-    </div>
+    </div> -->
     <!-- <div class="row">
       <div class="col-6">
         <codx-label
@@ -1784,6 +1795,82 @@
     </div>
   </div>
 </ng-template>
+
+<ng-template #notificationTemp let-data>
+  <div class="liquidation p-5">
+    <div class="header-liquidation w-100">
+      <div class="d-flex justify-content-between w-100">
+        <span class="fs-5 fw-bold">Thiết lâp thông báo</span>
+        <button
+          class="button-close d-flex"
+          style="border: none; outline: none; background: none"
+          (click)="notificationPopup.close()"
+        >
+          <i class="icon-close icon-18 text-hover-danger p-1"></i>
+        </button>
+      </div>
+    </div>
+
+    <div class="main-liquidation pt-3">
+      <div class="form-group">
+        <div class="d-flex align-items-center">
+          <codx-label
+            class="label-colon text-gray-600 codx-textlabel"
+            fiedName="emailTemplate"
+            [formModel]="formModel"
+            [setRequire]="false"
+            default="Thiết lập mail"
+          ></codx-label>
+          <span
+            class="icon-18 icon-email cursor-pointer"
+            [ngbTooltip]="'Thiết lập Mail'"
+            (click)="handelMailContract()"
+          ></span>
+        </div>
+      </div>
+      <div class="form-group">
+        <codx-label
+          class="label-colon text-gray-600 codx-textlabel"
+          fiedName="isMail"
+          [formModel]="formModel"
+          [setRequire]="false"
+          default="Gởi mail"
+        >
+        </codx-label>
+        <span *ngIf="contract?.isMail">Có</span>
+        <span *ngIf="!contract?.isMail">Không</span>
+      </div>
+
+      <div class="form-group">
+        <codx-label
+          class="label-colon text-gray-600 codx-textlabel"
+          fiedName="isAlert"
+          [formModel]="formModel"
+          [setRequire]="false"
+          default="Thông báo"
+        >
+        </codx-label>
+        <span *ngIf="contract?.isAlert">Có</span>
+        <span *ngIf="!contract?.isAlert">Không</span>
+      </div>
+
+      <div class="form-group">
+        <codx-label
+          class="label-colon text-gray-600 codx-textlabel"
+          fiedName="expirationAlertTime"
+          [formModel]="formModel"
+          [setRequire]="false"
+          default="Thời gian thông báo (ngày)"
+        >
+        </codx-label>
+        <span>{{ contract?.expirationAlertTime }}</span>
+      </div>
+      <!-- End thông báo -->
+    </div>
+    <div class="footer-liquidation w-100 d-flex justify-content-end"></div>
+  </div>
+</ng-template>
+
 <!-- ----------------------😒------------------------------>
 <!-- <div class="container_detail mt-1">
   <div class="d-flex justify-content-between">
