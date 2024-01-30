@@ -590,4 +590,9 @@ export class ContractsViewDetailComponent
       }
     });
   }
+  valueChangeChecked(event, data) {
+    if (event) {
+      data[event.field] = event?.data || false;
+    }
+  }
 }
