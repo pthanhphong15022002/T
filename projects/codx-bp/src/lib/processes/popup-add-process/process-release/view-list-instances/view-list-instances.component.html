@@ -40,12 +40,19 @@
     <div
       class="progress-list"
       [style.backgroundColor]="
-        dataSelected.title == 'Tuyển dụng vị trí kế toán tổng hợp năm 2023'
+        dataSelected.progress && dataSelected.progress > 0
           ? '#1fa65c'
           : ''
       "
     >
-      <span>Đang thực hiện (65%)</span>
+      <span class="me-1"> <codx-vll
+        [name]="'BP014'"
+        [value]="dataSelected?.status"
+        [showText]="true"
+        [showIcon]="false"
+        [showBgColor]="false"
+      ></codx-vll></span>
+      <span>({{ (dataSelected.progress ?? 0)  + '%' }})</span>
     </div>
     <div class="mt-1 d-flex justify-content-between">
       <div class="d-flex justify-content-start">
