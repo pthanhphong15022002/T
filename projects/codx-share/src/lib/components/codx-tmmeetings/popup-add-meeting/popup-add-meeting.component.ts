@@ -941,6 +941,12 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
   }
 
   lstDelete = [];
+  checkDeleteUser(item){
+    if(item?.roleType == 'A'){
+      return false;
+    }
+    return true;
+  }
   onDeleteUser(index, list: CO_Permissions[] = null) {
     if (list == null) {
       if (
