@@ -96,7 +96,7 @@
 </ng-template>
 
 <ng-template #footer let-data>
-  <div class="d-flex justify-content-center h-50px">
+  <div class="d-flex justify-content-center h-30px">
     <codx-imgs
       [objectId]="getResourceID(data)"
       objectType="AD_Users"
@@ -105,7 +105,7 @@
     >
     </codx-imgs>
   </div>
-  <div class="footer-tag">
+  <div class="footer-tag mt-2">
     <div class="d-flex align-items-center justify-content-between">
       <div class="tag-1line" *ngIf="data.tags">
         <codx-tag
