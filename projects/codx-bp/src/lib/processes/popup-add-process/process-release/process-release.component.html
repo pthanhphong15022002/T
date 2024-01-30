@@ -49,7 +49,7 @@
 <ng-template #cardKanban let-data let-setting="setting">
   <div class="d-flex flex-column p-4" (dblclick)="openFormDetail(data)">
     <div class="fw-bold fs-5">{{ data.title }}</div>
-    <div class="d-flex fs-7 mt-2" *ngIf="data?.startDate || data?.endDate">
+    <div class="d-flex fs-7 mt-2">
       <codx-label
         class="label-colon text-gray-800"
         fiedName="kanban_PlanTime"
@@ -58,24 +58,22 @@
         [default]="'Kết hoạch'"
       ></codx-label>
       <div class="text-gray-600 d-flex">
-        <div
-          [innerHTML]="
-            data?.startDate
-              | formatvalue : view.formModel : 'StartDate'
-              | async
-          "
-        ></div>
-        <div class="ms-1 me-1">-</div>
-        <div
-          [innerHTML]="
-            data?.endDate
-              | formatvalue : view.formModel : 'EndDate'
-              | async
-          "
-        ></div>
+        <div *ngIf="data.startDate">
+          <span>{{ data.startDate | date : "dd/MM/yyyy" }}</span>
+        </div>
+        <div *ngIf="!data.startDate">
+          <span class="place-holder">dd/mm/yyyy</span>
+        </div>
+        <span class="ms-1 me-1">-</span>
+        <div *ngIf="data.endDate">
+          <span>{{ data.endDate | date : "dd/MM/yyyy" }}</span>
+        </div>
+        <div *ngIf="!data.endDate">
+          <span class="place-holder">dd/mm/yyyy</span>
+        </div>
       </div>
     </div>
-    <div class="d-flex fs-7 mt-2" *ngIf="data?.actualStart || data?.actualEnd">
+    <div class="d-flex fs-7 mt-2">
       <codx-label
         class="label-colon text-gray-800"
         fiedName="kanban_ActualTime"
@@ -84,26 +82,22 @@
         [default]="'Thực tế'"
       ></codx-label>
       <div class="text-gray-600 d-flex">
-        <div
-          [innerHTML]="
-            data?.actualStart
-              | formatvalue : view.formModel : 'ActualStart'
-              | async
-          "
-        ></div>
-        <div class="ms-1 me-1">-</div>
-        <div
-          [innerHTML]="
-            data?.actualEnd
-              | formatvalue : view.formModel : 'ActualEnd'
-              | async
-          "
-        ></div>
+        <div *ngIf="data.actualStart">
+          <span>{{ data.actualStart | date : "dd/MM/yyyy" }}</span>
+        </div>
+        <div *ngIf="!data.actualStart">
+          <span class="place-holder">dd/mm/yyyy</span>
+        </div>
+        <span class="ms-1 me-1">-</span>
+        <div *ngIf="data.actualEnd">
+          <span>{{ data.actualEnd | date : "dd/MM/yyyy" }}</span>
+        </div>
+        <div *ngIf="!data.actualEnd">
+          <span class="place-holder">dd/mm/yyyy</span>
+        </div>
       </div>
     </div>
-    <div class="mt-2 fs-7 text-danger">
-      Quá hạn: 2 ngày
-    </div>
+    <div class="mt-2 fs-7 text-danger">Quá hạn: 2 ngày</div>
     <div class="d-flex justify-content-between align-items-center mt-2">
       <div class="d-flex align-items-center">
         <codx-vll
@@ -209,17 +203,19 @@
     </div>
     <div class="d-flex align-items-center mb-2">
       <span class="icon-16 icon-i-calendar-event me-2"></span>
-      <span
-        [innerHTML]="
-          data?.startDate | formatvalue : view.formModel : 'StartDate' | async
-        "
-      ></span>
+      <div *ngIf="data.startDate">
+        <span>{{ data.startDate | date : "dd/MM/yyyy" }}</span>
+      </div>
+      <div *ngIf="!data.startDate">
+        <span class="place-holder">dd/mm/yyyy</span>
+      </div>
       <span class="ms-1 me-1">-</span>
-      <span
-        [innerHTML]="
-          data?.endDate | formatvalue : view.formModel : 'EndDate' | async
-        "
-      ></span>
+      <div *ngIf="data.endDate">
+        <span>{{ data.endDate | date : "dd/MM/yyyy" }}</span>
+      </div>
+      <div *ngIf="!data.endDate">
+        <span class="place-holder">dd/mm/yyyy</span>
+      </div>
     </div>
     <div class="d-flex justify-content-between align-items-center">
       <div class="d-flex align-items-center">
