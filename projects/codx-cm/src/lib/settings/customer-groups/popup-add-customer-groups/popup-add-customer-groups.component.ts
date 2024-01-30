@@ -22,6 +22,7 @@ export class PopupAddCustomerGroupsComponent implements OnInit, AfterViewInit {
   planceHolderAutoNumber = '';
   disabledShowInput = false;
   gridViewSetup: any;
+  isView: boolean = false;
   constructor(
     private cache: CacheService,
     private api: ApiHttpService,
@@ -34,6 +35,7 @@ export class PopupAddCustomerGroupsComponent implements OnInit, AfterViewInit {
     this.headerText = dt?.data?.headerText;
     this.action = dt?.data?.action;
     this.gridViewSetup = dt?.data?.gridViewSetup;
+    this.isView = dt?.data?.isView ?? false;
   }
 
   ngAfterViewInit(): void {}

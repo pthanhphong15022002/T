@@ -127,7 +127,7 @@ export class AddProcessDefaultComponent implements OnInit{
         var stage = 
         {
           recID: Util.uid(),
-          instanceID: instanceNo,
+          instanceID: this.dataIns.recID,
           applyFor: this.process?.applyFor,
           status: "1",
           taskType: stageF?.activityType,
@@ -152,7 +152,7 @@ export class AddProcessDefaultComponent implements OnInit{
         var step = 
         {
           recID: Util.uid(),
-          instanceID: instanceNo,
+          instanceID: this.dataIns.recID,
           applyFor: this.process?.applyFor,
           status: "1",
           taskType: this.data?.activityType,
