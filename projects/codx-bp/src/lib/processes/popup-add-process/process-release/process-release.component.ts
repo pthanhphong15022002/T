@@ -14,6 +14,7 @@ import {
   DialogData,
   DialogModel,
   DialogRef,
+  NotificationsService,
   ResourceModel,
   SidebarModel,
   ViewModel,
@@ -57,6 +58,7 @@ export class ProcessReleaseComponent implements OnInit, AfterViewInit {
     private api: ApiHttpService,
     private callFunc: CallFuncService,
     private router: ActivatedRoute,
+    private notifiSer: NotificationsService,
     @Optional() dialog: DialogRef,
     @Optional() dt: DialogData
   ) {
@@ -183,9 +185,10 @@ export class ProcessReleaseComponent implements OnInit, AfterViewInit {
         'ERM.Business.BP',
         'ProcessesBusiness',
         'StartProcessAsync',
-        [this.view?.dataService?.dataSelected?.processID]
+        [this.view?.dataService?.dataSelected?.recID]
       ).subscribe(res=>{
         if(res){
+          this.notifiSer.notifyCode("SYS034");
         }
       });
     
