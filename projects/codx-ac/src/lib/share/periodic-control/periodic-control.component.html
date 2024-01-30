@@ -103,10 +103,10 @@
                   <hr class="ms-9 my-0" style="margin-top: -1px;">
                 </ng-container>
               </ng-container>
-              <div *ngIf="oData.length && oData.length > 1"
+              <div *ngIf="showAll"
                 class="d-flex align-items-center justify-content-center mt-5">
                 <div>
-                  <button [disabled]="showAll" (click)="loadData()" type="button"
+                  <button (click)="loadData()" type="button"
                     class="btn btn-md btn-light-primary me-3" style="border: 1px solid var(--primary-dark) !important">
                     <div class="d-flex align-items-center">
                       <i class="icon-i-arrows-expand icon-16"></i>

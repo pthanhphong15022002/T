@@ -51,6 +51,12 @@ export class ProcessReleaseDetailComponent implements OnInit{
       this.listStage.forEach(elm => {
         elm.child = this.getListChild(elm) || [];
         elm.settings = typeof elm?.settings === 'object' ? elm.settings : (elm?.settings ? JSON.parse(elm.settings) : null);
+        if(elm.child && elm.child.length>0)
+        {
+          elm.countTask = elm.child.length;
+          elm.countCompleted = (elm.child.filter(x=>x.status == "3") || []).length || 0;
+          elm.percentCompleted = (elm.countCompleted / elm.countTask) * 100;
+        }
       });
     }
   }
@@ -63,19 +69,19 @@ export class ProcessReleaseDetailComponent implements OnInit{
     this.count -= list.length;
     list.forEach(elm2 => {
       elm2.settings = typeof elm2?.settings === 'object' ? elm2.settings : (elm2?.settings ? JSON.parse(elm2.settings) : null);
-      elm2.owners = null;
       elm2.child = this.getListChild(elm2);
       if(this.listTask && this.listTask.length > 0)
       {
         var index = this.listTask.findIndex(x=>x.stepID == elm2.recID);
         if(index >= 0)
         {
-          elm2.owners = typeof this.listTask[index]?.owners === 'object' ? this.listTask[index].owners : (this.listTask[index]?.owners ? JSON.parse(this.listTask[index].owners) : null);
-          elm2.owners =  elm2?.owners ? elm2.owners.map((u) => u.objectID).join(';') : "";
+          elm2.permissions = typeof this.listTask[index]?.permissions === 'object' ? this.listTask[index].permissions : (this.listTask[index]?.permissions ? JSON.parse(this.listTask[index].permissions) : null);
+          elm2.permissions =  elm2?.permissions ? elm2.permissions.map((u) => u.objectID).join(';') : "";
           elm2.startDate = this.listTask[index].startDate ? moment(this.listTask[index].startDate).format('dd/MM/yyyy') : 'dd/MM/yyyy';
           elm2.endDate = this.listTask[index].endDate ? moment(this.listTask[index].endDate).format('dd/MM/yyyy') : 'dd/MM/yyyy';
           elm2.actualStart = this.listTask[index].actualStart ? moment(this.listTask[index].actualStart).format('dd/MM/yyyy') : 'dd/MM/yyyy';
           elm2.actualEnd = this.listTask[index].actualEnd ? moment(this.listTask[index].actualEnd).format('dd/MM/yyyy') : 'dd/MM/yyyy';
+          elm2.status = this.listTask[index].status;
         }
       }
     
