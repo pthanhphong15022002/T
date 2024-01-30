@@ -208,30 +208,6 @@
             </div>
           </div>
         </div>
-      </div>
-      <div class="mb-2 mt-5" (mouseenter)="closePopover()">
-        <codx-label
-          (mouseenter)="closePopover()"
-          name="lblSystemInfo"
-          class="fs-6 text-dark text-primary fw-bold"
-          default="Thông tin mặc định"
-          [formModel]="form.formModel"
-        >
-        </codx-label>
-        <div class="row mt-3" (mouseenter)="closePopover()">
-          <div class="form-group" (mouseenter)="closePopover()">
-            <codx-label [formModel]="form.formModel" fiedName="ChannelID">
-            </codx-label>
-            <codx-input
-              (mouseenter)="closePopover()"
-              [formModel]="form.formModel"
-              [Group]="form.formGroup"
-              field="channelID"
-              [disabled]="isView"
-            >
-            </codx-input>
-          </div>
-        </div>
         <div class="row form-group" (mouseenter)="closePopover()">
           <div class="col-6" (mouseenter)="closePopover()">
             <div class="form-group" (mouseenter)="closePopover()">
@@ -260,6 +236,31 @@
             </div>
           </div>
         </div>
+      </div>
+      <div class="mb-2 mt-5" (mouseenter)="closePopover()">
+        <codx-label
+          (mouseenter)="closePopover()"
+          name="lblSystemInfo"
+          class="fs-6 text-dark text-primary fw-bold"
+          default="Thông tin mặc định"
+          [formModel]="form.formModel"
+        >
+        </codx-label>
+        <div class="row mt-3" (mouseenter)="closePopover()">
+          <div class="form-group" (mouseenter)="closePopover()">
+            <codx-label [formModel]="form.formModel" fiedName="ChannelID">
+            </codx-label>
+            <codx-input
+              (mouseenter)="closePopover()"
+              [formModel]="form.formModel"
+              [Group]="form.formGroup"
+              field="channelID"
+              [disabled]="isView"
+            >
+            </codx-input>
+          </div>
+        </div>
+
       </div>
     </ng-container>
     <ng-container *ngIf="funcID == 'CM0102'" (mouseenter)="closePopover()">
