@@ -4,6 +4,7 @@ import {
   AuthStore,
   ButtonModel,
   CallFuncService,
+  CodxFormDynamicComponent,
   LayoutService,
   NotificationsService,
   RequestOption,
@@ -67,9 +68,11 @@ export class CustomerGroupsComponent extends UIComponent {
   }
 
   onInit(): void {
-    this.buttons = [{
-      id: 'btnAdd',
-    }];
+    this.buttons = [
+      {
+        id: 'btnAdd',
+      },
+    ];
   }
 
   ngAfterViewInit(): void {
@@ -149,7 +152,11 @@ export class CustomerGroupsComponent extends UIComponent {
   }
 
   viewChanged(evt: any, view: ViewsComponent) {}
+  selectedChange(data) {
+    this.dataSelected = data?.data ? data?.data : data;
 
+    this.detectorRef.detectChanges();
+  }
   click(evt: ButtonModel) {
     switch (evt.id) {
       case 'btnAdd':
@@ -169,6 +176,9 @@ export class CustomerGroupsComponent extends UIComponent {
         break;
       case 'SYS04':
         this.copy(evt, data);
+        break;
+      case 'SYS05':
+        this.viewDetail(evt, data);
         break;
       default: {
         this.codxShareService.defaultMoreFunc(
@@ -299,6 +309,38 @@ export class CustomerGroupsComponent extends UIComponent {
         }
       });
     });
+  }
+
+  viewDetail(evt, data) {
+    if (data) {
+      this.view.dataService.dataSelected = data;
+      this.view.dataService
+        .edit(this.view.dataService.dataSelected)
+        .subscribe((res) => {
+          this.dataSelected = this.view.dataService.dataSelected;
+          let option = new SidebarModel();
+          option.Width = '550px';
+          option.DataService = this.view?.dataService;
+          option.FormModel = this.view?.formModel;
+          let customName =
+            this.funcList?.customName || this.funcList?.description || '';
+          let popupEdit = this.callfunc.openSide(
+            PopupAddCustomerGroupsComponent,
+            {
+              data: data,
+              action: 'edit',
+              headerText:
+                evt.text +
+                ' ' +
+                customName.charAt(0).toLowerCase() +
+                customName.slice(1),
+              gridViewSetup: this.gridViewSetup,
+              isView: true
+            },
+            option
+          );
+        });
+    }
   }
 
   delete(data) {
