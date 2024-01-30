@@ -146,6 +146,8 @@ import { CasesComponent } from 'projects/codx-cm/src/lib/cases/cases.component';
 import { ViewInstancesComponent } from 'projects/codx-dp/src/lib/view-instances/view-instances.component';
 import { ContractsComponent } from 'projects/codx-cm/src/lib/contracts/contracts.component';
 import { GetHeaderTextPipe } from './pipe/get-header-text.pipe';
+import { PersonalInfoComponent } from './employee-list/employee-info-detail/component/personal-info/personal-info.component';
+import { LegalInfoComponent } from './employee-list/employee-info-detail/component/legal-info/legal-info.component';
 export const routes: Routes = [
   {
     path: '',
@@ -465,6 +467,8 @@ const T_Component = [
   EmployeeQuitComponent,
   ViewDetailEquitComponent,
   HolidayComponent,
+  PersonalInfoComponent,
+  LegalInfoComponent
  
 ];
 @NgModule({

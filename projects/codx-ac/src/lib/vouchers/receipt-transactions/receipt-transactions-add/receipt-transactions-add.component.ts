@@ -164,9 +164,11 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
           let memo = this.getMemoMaster();
           this.formVouchers.setValue(field,null,{});
           this.formVouchers.setValue('memo',memo,{});
+          this.formVouchers.data.reasonName = null;
           this.isPreventChange = false;
           return;
         } 
+        this.formVouchers.data.reasonName = event?.component?.itemsSelected[0]?.ReasonName;
         let memo = this.getMemoMaster();
         this.formVouchers.setValue('memo',memo,{});
         break;
@@ -178,9 +180,11 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
           this.formVouchers.setValue(field,null,{});
           this.formVouchers.setValue('objectType',null,{});
           this.formVouchers.setValue('memo',memo,{});
+          this.formVouchers.data.objectName = null;
           this.isPreventChange = false;
           return;
         } 
+        this.formVouchers.data.objectName = event?.component?.itemsSelected[0]?.ObjectName;
         let objectType = event?.component?.itemsSelected[0]?.ObjectType || '';
         this.formVouchers.setValue('objectType',objectType,{});
         let memo2 = this.getMemoMaster();
@@ -194,11 +198,37 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
           let memo = this.getMemoMaster();
           this.formVouchers.setValue(field,null,{});
           this.formVouchers.setValue('memo',memo,{});
+          this.formVouchers.data.requesterName = null;
           this.isPreventChange = false;
           return;
-        } 
+        }
+        this.formVouchers.data.requesterName = event?.component?.itemsSelected[0]?.ObjectName;
         let memo3 = this.getMemoMaster();
         this.formVouchers.setValue('memo',memo3,{});
+        break;
+      case 'warehouseid':
+        let indexwarehouse = event?.component?.dataService?.data.findIndex((x) => x.WarehouseID == event.data);
+        if (value == '' || value == null || indexwarehouse == -1) {
+          this.formVouchers.data.warehouseName = null;
+          return;
+        }
+        this.formVouchers.data.warehouseName = event?.component?.dataService?.data[indexwarehouse].WarehouseName;
+        break;
+      case 'dim1':
+        let indexdim1 = event?.component?.dataService?.data.findIndex((x) => x.ProfitCenterID == event.data);
+        if (value == '' || value == null || indexdim1 == -1) {
+          this.formVouchers.data.diM1Name = null;
+          return;
+        }
+        this.formVouchers.data.diM1Name = event?.component?.dataService?.data[indexdim1].ProfitCenterName;
+        break;
+      case 'dim2':
+        let indexdim2 = event?.component?.dataService?.data.findIndex((x) => x.CostCenterID == event.data);
+        if (value == '' || value == null || indexdim2 == -1) {
+          this.formVouchers.data.diM2Name = null;
+          return;
+        }
+        this.formVouchers.data.diM2Name = event?.component?.dataService?.data[indexdim2].CostCenterName;
         break;
     }
   }
@@ -225,7 +255,7 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
   }
 
   onAddLine() {
-    this.formVouchers.save(null, 0, '', '', false)
+    this.formVouchers.save(null, 0, '', '', false,{allowCompare:false})
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
         if (!res) return;
@@ -279,7 +309,7 @@ export class ReceiptTransactionsAddComponent extends UIComponent implements OnIn
    * @param type 
    */
   onSaveVoucher(type){
-    this.formVouchers.save(null, 0, '', '', false)
+    this.formVouchers.save(null, 0, '', '', false,{allowCompare:false})
     .pipe(takeUntil(this.destroy$))
     .subscribe((res: any) => {
       if (!res) return;

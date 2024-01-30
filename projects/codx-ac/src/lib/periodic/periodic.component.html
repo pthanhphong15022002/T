@@ -7,9 +7,9 @@
 </ng-template>
 
 <ng-template #tmpContent let-data>
-  <div class="w-100 d-flex align-items-center justify-content-between p-3 mb-2">
+  <div class="w-100 d-flex align-items-center justify-content-between p-3">
     <div class="d-flex align-items-center">
-      <div *ngIf="codxService.asideMode == '2'" class="d-flex align-items-end flex-wrap mt-6 ms-3">
+      <div *ngIf="codxService.asideMode == '2'" class="d-flex align-items-end flex-wrap">
         <div class="d-flex align-items-center">
           <a (click)="onFirst()">
             <div class="fs-5 text-dark fw-bold my-0 me-1 cursor-pointer">
@@ -19,7 +19,7 @@
           <div class="breadcumb-item h-30px d-flex align-items-center breadcumb-full">
             <ng-container *ngFor="let item of breadcumb;let i = index">
               <span class="icon-keyboard_arrow_right text-gray-700 icon-18"></span>
-              <a (click)="onNavigate(i)" class="cursor-pointer">
+              <a class="cursor-pointer">
                 <span class="text-gray-600 text-nowrap text-fix-100px">{{item.title}}</span>
               </a>
             </ng-container>
@@ -36,12 +36,12 @@
     </div>
   </div>
 
-  <codx-listview [ngClass]="numbreadcumb == 0 ? '' : 'd-none'" [selectFirst]="true" [itemTemplate]="templateListCard"
+  <codx-listview class="p-3" [ngClass]="numbreadcumb == 0 ? '' : 'd-none'" [selectFirst]="true" [itemTemplate]="templateListCard"
     type="cardView" [funcId]="funcID" service="AC" [entityName]="view.entityName" [dataService]="view.dataService">
   </codx-listview>
 
   <ng-container *ngIf="numbreadcumb == 1">
-    <div class="h-100 overflow-auto d-block animate__animated animate__slideInRight">
+    <!-- <div class="h-100 overflow-auto d-block animate__animated animate__slideInRight">
       <div class="d-flex container w-60 mb-5">
         <div class="bg-body rounded-3 p-6 flex-grow-1 overflow-auto">
           <dynamic-setting-control [settingFull]="this.settingFull" (valueChanges)="valuechange($event)"
@@ -125,9 +125,6 @@
                             <div class="d-flex flex-column">
                               <codx-mfunc [formModel]="fmChildren" [isToolBar]="true" type="view" [dataItem]="item"
                                 (changeDataMF)="changeDataMF($event,'D')" (clickMF)="clickMF($event,item)"></codx-mfunc>
-                              <!-- <span class="badge ac-badge-light-primary mb-3">
-                                Đã hoàn tất
-                              </span>                           -->
                             </div>
                           </div>
                         </div>
@@ -153,8 +150,8 @@
           </div>
         </div>
       </ng-container>
-    </div>
-    <!-- <router-outlet></router-outlet> -->
+    </div> -->
+    <router-outlet></router-outlet>
   </ng-container>
   <ng-container *ngIf="numbreadcumb == 2">
     <codx-gridview-v2 class="h-100 d-block animate__animated animate__slideInRight" #eleGrid formName="Depreciations" idField="recID" [hideMoreFunc]="true" [loadFull]="false"

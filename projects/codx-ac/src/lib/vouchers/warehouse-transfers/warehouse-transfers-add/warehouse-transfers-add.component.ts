@@ -141,30 +141,53 @@ export class WarehouseTransfersAddComponent extends UIComponent {
     switch (field.toLowerCase()) {
       case 'reasonid':
         let indexrs = this.eleCbxReasonID?.ComponentCurrent?.dataService?.data.findIndex((x) => x.ReasonID == this.eleCbxReasonID?.ComponentCurrent?.value);
+        let memo = '';
         if (value == '' || value == null || indexrs == -1) {
           this.isPreventChange = true;
-          let memo = this.getMemoMaster();
           this.formWareHouse.setValue(field, null, {});
-          this.formWareHouse.setValue('memo', memo, {});
+          this.formWareHouse.data.reasonName = null;
           this.isPreventChange = false;
           return;
         } 
-        let memo = this.getMemoMaster();
+        this.formWareHouse.data.reasonName = event?.component?.itemsSelected[0]?.ReasonName;
+        memo = this.getMemoMaster();
         this.formWareHouse.setValue('memo',memo,{});
         break;
       case 'fromwhid':
-      case 'towhid':
-        let index = this.eleCbxFromWHID?.ComponentCurrent?.dataService?.data.findIndex((x) => x.WarehouseID == this.eleCbxFromWHID?.ComponentCurrent?.value);
-        if (value == '' || value == null || index == -1) {
+        let indexfromwhid = event?.component?.dataService?.data.findIndex((x) => x.WarehouseID == event.data);
+        let memo2 = '';
+        if (value == '' || value == null || indexfromwhid == -1) {
           this.isPreventChange = true;
-          let memo = this.getMemoMaster();
           this.formWareHouse.setValue(field, null, {});
-          this.formWareHouse.setValue('memo', memo, {});
+          this.formWareHouse.data.fromWHIDName = null;
           this.isPreventChange = false;
           return;
         }
-        let memo2 = this.getMemoMaster();
-        this.formWareHouse.setValue('memo',memo2,{});
+        this.formWareHouse.data.fromWHIDName = event?.component?.dataService?.data[indexfromwhid].WarehouseName;
+        memo2 = this.getMemoMaster();
+        this.formWareHouse.setValue('memo', memo2, {});
+        break;
+      case 'towhid':
+        let indextowhid = event?.component?.dataService?.data.findIndex((x) => x.WarehouseID == event.data);
+        let memo3 = '';
+        if (value == '' || value == null || indextowhid == -1) {
+          this.isPreventChange = true;
+          this.formWareHouse.setValue(field, null, {});
+          this.formWareHouse.data.toWHIDName = null;
+          this.isPreventChange = false;
+          return;
+        }
+        this.formWareHouse.data.toWHIDName = event?.component?.dataService?.data[indextowhid].WarehouseName;
+        memo3 = this.getMemoMaster();
+        this.formWareHouse.setValue('memo', memo3, {});
+        break;
+      case 'requester':
+        let indexrq = event?.component?.dataService?.data.findIndex((x) => x.ObjectID == event.data);
+        if(value == '' || value == null || indexrq == -1){
+          this.formWareHouse.data.requesterName = null;
+          return;
+        }
+        this.formWareHouse.data.requesterName = event?.component?.itemsSelected[0]?.ObjectName;
         break;
     }
   }
@@ -245,7 +268,7 @@ export class WarehouseTransfersAddComponent extends UIComponent {
    * @param type 
    */
   onSaveVoucher(type) {
-    this.formWareHouse.save(null, 0, '', '', false)
+    this.formWareHouse.save(null, 0, '', '', false,{allowCompare:false})
     .pipe(takeUntil(this.destroy$))
     .subscribe((res: any) => {
       if (!res) return;
@@ -325,7 +348,7 @@ export class WarehouseTransfersAddComponent extends UIComponent {
   //#region Function
 
   onAddLine(type) {
-    this.formWareHouse.save(null, 0, '', '', false)
+    this.formWareHouse.save(null, 0, '', '', false,{allowCompare:false})
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
         if (!res) return;

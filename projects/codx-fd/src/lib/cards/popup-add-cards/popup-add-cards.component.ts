@@ -166,7 +166,9 @@ export class PopupAddCardsComponent implements OnInit {
     this.loadDataAsync(this.funcID);
     this.getMessageNoti('SYS009');
     this.getMyWallet(this.user.userID);
-    console.log('this.card', this.card);
+    if (this.type !== 'copy') {
+      this.setUserReportInListShare();
+    }
   }
 
   loadDataAsync(funcID: string) {
@@ -768,6 +770,18 @@ export class PopupAddCardsComponent implements OnInit {
 
   openFormShare(content: any) {
     this.callfc.openForm(content, '', 420, window.innerHeight);
+  }
+
+  setUserReportInListShare(){
+    this.fdService.getReportUserByEmployeeID(this.user.employee?.employeeID).subscribe((emp: any) => {
+      if(emp) {
+        const obj = new FD_Permissions();
+        obj.objectID = emp.domainUser;
+        obj.objectName = emp.employeeName;
+        obj.objectType ="U";
+        this.lstShare.push(obj);
+      }
+    });
   }
 
   eventApply(event: any) {

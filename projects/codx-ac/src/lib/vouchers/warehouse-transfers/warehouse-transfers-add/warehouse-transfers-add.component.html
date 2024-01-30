@@ -16,18 +16,28 @@
                 <div class="line-clamp line-clamp-1 me-3 fs-4 fw-bold text-uppercase mt-1">
                     {{ headerText }}
                 </div>
-                <!-- <div class="input-circle input-sm" *ngIf="formWareHouse?.formGroup">
-                    <span class="me-2">
-                        <codx-vll *ngIf="formWareHouse.data?.status == '1'" [formModel]="dialog.formModel"
-                            [field]="'Status'" [value]="formWareHouse.data?.validated ? '1' : '7'" [showText]="true"
-                            [showBgColor]="true" class="badge badge-light badge-sm">
-                        </codx-vll>
-                        <codx-vll *ngIf="formWareHouse.data?.status != '1'" [formModel]="dialog.formModel"
-                            [field]="'Status'" [value]="formWareHouse.data?.status" [showText]="true"
-                            [showBgColor]="true" class="badge badge-light badge-sm">
+                <ng-container>
+                    <ng-container *ngIf="!formWareHouse.data.isReadOnly">
+                        <div *ngIf="formWareHouse && !formWareHouse?.data?.validated"
+                            class="d-flex align-items-center">
+                            <i class="icon-arrow_drop_down_circle icon-16 mt-1"></i>
+                            <div style="margin-left: -5px" class="input-circle h-20px input-border-0 w-400px mb-1">
+                                <codx-dropdown-select #eleCbxSubType [showFooter]="false" [isToolbar]="false"
+                                    [cssClass]="'rounded-pill border-1'" cssPopup="h-350px w-550px" [isMulti]="false"
+                                    type="valuelist" field="subType"
+                                    [refValue]="formWareHouse?.gridviewSetup['SubType']?.referedValue"
+                                    [value]="formWareHouse?.data?.subType" emptyText="Loại phiếu"
+                                    (valueChange)="changeSubType($event)"></codx-dropdown-select>
+                            </div>
+                        </div>
+                    </ng-container>
+                    <span *ngIf="formWareHouse.data?.validated || formWareHouse.data?.isReadOnly">
+                        <codx-vll [name]="formWareHouse?.gridviewSetup['SubType'].referedValue"
+                            [formModel]="dialog.formModel" [field]="'SubType'" [value]="formWareHouse.data?.subType"
+                            [showText]="true" [showBgColor]="true" class="badge badge-light-primary badge-sm mt-1">
                         </codx-vll>
                     </span>
-                </div> -->
+                </ng-container>
             </div>
             <div class="d-flex align-items-center me-3">
                 <div class="ms-2">
@@ -37,50 +47,26 @@
                 </div>
             </div>
         </div>
-        <ng-container>
-            <ng-container *ngIf="!formWareHouse.data.isReadOnly">
-                <div *ngIf="formWareHouse && !formWareHouse?.data?.validated" style="margin-left: 35px"
-                    class="d-flex align-items-center">
-                    <i class="icon-arrow_drop_down_circle icon-16 mt-1"></i>
-                    <div style="margin-left: -5px" class="input-circle h-20px input-border-0 w-400px mb-1">
-                        <codx-dropdown-select #eleCbxSubType [showFooter]="false" [isToolbar]="false"
-                            [cssClass]="'rounded-pill border-1'" cssPopup="h-350px w-550px" [isMulti]="false"
-                            type="valuelist" field="subType"
-                            [refValue]="formWareHouse?.gridviewSetup['SubType']?.referedValue"
-                            [value]="formWareHouse?.data?.subType" emptyText="Loại phiếu"
-                            (valueChange)="changeSubType($event)"></codx-dropdown-select>
-                    </div>
-                </div>
-            </ng-container>
-            <span style="margin-left: 30px" *ngIf="formWareHouse.data?.validated || formWareHouse.data?.isReadOnly">
-                <codx-vll [name]="formWareHouse?.gridviewSetup['SubType'].referedValue" [formModel]="dialog.formModel"
-                    [field]="'SubType'" [value]="formWareHouse.data?.subType" [showText]="true" [showBgColor]="true"
-                    class="badge badge-light-primary badge-sm mt-1">
-                </codx-vll>
-            </span>
-        </ng-container>
     </div>
 </ng-template>
 
 <ng-template #TmpBody>
-    <div>
-        <ejs-tab>
-            <e-tabitems>
-                <e-tabitem>
-                    <ng-template #headerText>
-                        <div class="d-flex align-items-top me-2 mt-2">
-                            <i class="icon-info icon-18 me-2"></i>
-                            <codx-label class="fw-bold" style="font-size: 14px !important" fiedName="lblGeneral"
-                                [formModel]="dialog.formModel" default="Thông tin chung"></codx-label>
-                        </div>
-                    </ng-template>
-                    <ng-template #content>
-                        <ng-container *ngTemplateOutlet="TmpTabGeneral"></ng-container>
-                    </ng-template>
-                </e-tabitem>
-            </e-tabitems>
-        </ejs-tab>
-    </div>
+    <ejs-tab>
+        <e-tabitems>
+            <e-tabitem>
+                <ng-template #headerText>
+                    <div class="d-flex align-items-top me-2 mt-2">
+                        <i class="icon-info icon-18 me-2"></i>
+                        <codx-label class="fw-bold" style="font-size: 14px !important" fiedName="lblGeneral"
+                            [formModel]="dialog.formModel" default="Thông tin chung"></codx-label>
+                    </div>
+                </ng-template>
+                <ng-template #content>
+                    <ng-container *ngTemplateOutlet="TmpTabGeneral"></ng-container>
+                </ng-template>
+            </e-tabitem>
+        </e-tabitems>
+    </ejs-tab>
 
     <!-- Start: Tab Detail -->
     <div class="mt-2" style="height: calc(100vh - 395px) !important">
@@ -122,19 +108,17 @@
         class="codx-detail-footer dialog-footer align-items-center collape" *ngIf="formWareHouse.data">
         <div *ngIf="!formWareHouse.data.isReadOnly"
             class="d-flex align-items-center justify-content-end btn-ac-footer mt-1">
-            <button id="btncancle" [shortcut]="'alt+c'" [autoClick]="true"
-                *ngIf="!formWareHouse.data?.validated" type="button"
-                class="btn btn-md btn-danger me-2"
+            <button id="btncancle" [shortcut]="'alt+c'" [autoClick]="true" *ngIf="!formWareHouse.data?.validated"
+                type="button" class="btn btn-md btn-danger me-2"
                 (keydown.enter)="onDiscardVoucher(); $event.preventDefault()" (click)="onDiscardVoucher()">
                 <div class="d-flex align-items-center">
                     <i class="icon-cancel icon-16"></i>
                     <codx-label class="fw-normal" fiedName="lblDiscard" default="Hủy bỏ"></codx-label>
                 </div>
             </button>
-            <button id="btnsaveas" [shortcut]="'alt+shift+s'" [autoClick]="true"
-                type="button"
-                class="btn btn-md btn-primary me-2"
-                (keydown.enter)="onSaveVoucher('saveadd'); $event.preventDefault()" (click)="onSaveVoucher('saveadd')">
+            <button id="btnsaveas" [shortcut]="'alt+shift+s'" [autoClick]="true" type="button"
+                class="btn btn-md btn-primary me-2" (keydown.enter)="onSaveVoucher('saveadd'); $event.preventDefault()"
+                (click)="onSaveVoucher('saveadd')">
                 <div class="d-flex align-items-center">
                     <i class="icon-add_to_photos icon-16"></i>
                     <codx-label class="fw-normal" fiedName="lblSaveAndClear" default="Lưu & Thêm"></codx-label>
@@ -267,14 +251,21 @@
                         [Group]="formWareHouse.formGroup" field="postedDate" [formModel]="dialog.formModel"
                         (valueChange)="valueChangeMaster($event)">
                       </codx-input> -->
-                                <codx-vll *ngIf="formWareHouse.data?.status == '1'" [formModel]="dialog.formModel"
+                                <!-- <codx-vll *ngIf="formWareHouse.data?.status == '1'" [formModel]="dialog.formModel"
                                     [field]="'Status'" [value]="formWareHouse.data?.validated ? '1' : '7'"
                                     [showText]="true" [showBgColor]="true" class="badge badge-light badge-sm">
                                 </codx-vll>
                                 <codx-vll *ngIf="formWareHouse.data?.status != '1'" [formModel]="dialog.formModel"
                                     [field]="'Status'" [value]="formWareHouse.data?.status" [showText]="true"
                                     [showBgColor]="true" class="badge badge-light badge-lg">
-                                </codx-vll>
+                                </codx-vll> -->
+                                <codx-input *ngIf="formWareHouse.data?.status == '1'" [disabled]="true" field="status"
+                                    [formModel]="dialog.formModel"
+                                    [crrValue]="formWareHouse.data?.validated ? '1' : '7'">
+                                </codx-input>
+                                <codx-input *ngIf="formWareHouse.data?.status != '1'" [disabled]="true" field="status"
+                                    [formModel]="dialog.formModel" [crrValue]="formWareHouse.data?.status">
+                                </codx-input>
                             </div>
                         </div>
                     </div>
@@ -396,8 +387,7 @@
 <ng-template #TmpTabLine>
     <div class="tablinetranfer-content header-table-ac position-relative">
         <codx-gridview-v2 #eleGridIssue [showEmptyRecord]="false" gridLines="Both" [autoFitColumns]="true"
-            [formName]="fmIssueTransfersLines.formName"
-            [gridViewName]="fmIssueTransfersLines.gridViewName"
+            [formName]="fmIssueTransfersLines.formName" [gridViewName]="fmIssueTransfersLines.gridViewName"
             [hideMoreFunc]="formWareHouse.data?.isReadOnly ? true : false"
             [editSettings]="formWareHouse.data?.isReadOnly ? editSettings : {}" [templateMore]="templateMore"
             [entityName]="fmIssueTransfersLines.entityName" predicates="TransID=@0"

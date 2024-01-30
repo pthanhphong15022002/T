@@ -634,7 +634,23 @@ export class SalesinvoicesComponent extends UIComponent {
     );
   }
 
-  EInvoices(data: any, functionID: string) {}
+  EInvoices(data: any, functionID: string) {
+    var lstID = [data.recID];
+    this.api
+      .execSv(
+        'AC',
+        'ERM.Business.AC',
+        'SalesInvoicesBusiness',
+        'GetDataInvoiceAsync',
+        [lstID, true, true]
+      )
+      .subscribe((res: any) => {
+        if (res) {
+          // this.journal = res[0]; // data journal
+          // this.hideFields = res[1]; // array field ẩn từ sổ nhật kí
+        }
+      });
+  }
 
   /**
    * *Hàm mở form báo cáo

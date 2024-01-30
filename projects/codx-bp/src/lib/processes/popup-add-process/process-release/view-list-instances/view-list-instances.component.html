@@ -1,0 +1,133 @@
+<div class="d-flex align-items-center border-bottom" *ngIf="dataSelected">
+  <div class="w-30 p-3 ps-5 d-flex flex-column">
+    <div
+      class="fw-bold"
+      [innerHTML]="
+        dataSelected?.title | formatvalue : formModel : 'Title' | async
+      "
+    ></div>
+    <div class="text-gray-700 d-flex">
+      <codx-label
+        class="label-colon"
+        fiedName="CreatedOn"
+        [setRequire]="false"
+        [formModel]="formModel"
+        [default]="'Ngày tạo'"
+      ></codx-label>
+      <div
+        class="ps-5"
+        [innerHTML]="
+          dataSelected?.createdOn
+            | formatvalue : formModel : 'CreatedOn'
+            | async
+        "
+      ></div>
+    </div>
+  </div>
+  <div class="w-15 p-3">
+    <div class="group-steps">
+      <div class="d-flex arrow-steps flex-container">
+        <ng-container *ngFor="let item of lstStages; let i = index">
+          <div
+            style="flex-grow: 1; cursor: pointer"
+            [ngClass]="getColor(item)"
+          ></div>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+  <div class="w-15 p-3">
+    <div
+      class="progress-list"
+      [style.backgroundColor]="
+        dataSelected.title == 'Tuyển dụng vị trí kế toán tổng hợp năm 2023'
+          ? '#1fa65c'
+          : ''
+      "
+    >
+      <span>Đang thực hiện (65%)</span>
+    </div>
+    <div class="mt-1 d-flex justify-content-between">
+      <div class="d-flex justify-content-start">
+        <span class="fw-bold me-1">134/167</span>
+        <span class="text-gray-600">hoàn tất</span>
+      </div>
+      <div class="d-flex justify-content-end">
+        <span class="fw-bold me-1">12</span>
+        <span class="text-gray-600">trễ hạn</span>
+      </div>
+    </div>
+  </div>
+  <div class="w-25 p-3 d-flex flex-column">
+    <div class="d-flex">
+      <codx-label
+        class="label-colon text-gray-800"
+        fiedName="PlanTime"
+        [setRequire]="false"
+        [formModel]="formModel"
+        [default]="'Kết hạch'"
+      ></codx-label>
+      <div class="text-gray-600 d-flex">
+        <div
+          [innerHTML]="
+            dataSelected?.startDate
+              | formatvalue : formModel : 'StartDate'
+              | async
+          "
+        ></div>
+        <div class="ms-1 me-1">-</div>
+        <div
+          [innerHTML]="
+            dataSelected?.endDate | formatvalue : formModel : 'EndDate' | async
+          "
+        ></div>
+      </div>
+    </div>
+    <div class="d-flex">
+      <codx-label
+        class="label-colon text-gray-800"
+        fiedName="ActualTime"
+        [setRequire]="false"
+        [formModel]="formModel"
+        [default]="'Thực tế'"
+      ></codx-label>
+      <div class="text-gray-600 d-flex">
+        <div
+          [innerHTML]="
+            dataSelected?.actualStart
+              | formatvalue : formModel : 'ActualStart'
+              | async
+          "
+        ></div>
+        <div class="ms-1 me-1">-</div>
+        <div
+          [innerHTML]="
+            dataSelected?.actualEnd
+              | formatvalue : formModel : 'ActualEnd'
+              | async
+          "
+        ></div>
+      </div>
+    </div>
+  </div>
+  <div class="w-15 p-3">
+    <div class="d-flex justify-content-start align-items-center">
+      <div class="me-3">
+        <codx-img
+          [objectId]="dataSelected.createdBy"
+          [objectType]="'AD_Users'"
+          [width]="35"
+        >
+        </codx-img>
+      </div>
+      <div class="d-flex flex-column w-100">
+        <div class="d-flex flex-column">
+          <div class="fw-bold fs-6 text-dark line-clamp line-clamp-1">
+            {{ dataSelected.userName }}
+          </div>
+          <div class="text-gray-500">{{ dataSelected.positionName }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

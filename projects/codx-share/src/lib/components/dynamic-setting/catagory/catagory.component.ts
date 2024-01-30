@@ -997,6 +997,7 @@ export class CatagoryComponent implements OnInit {
 
   //hàm dùng để custom xử lý sau khi lưu setting value cho các trường hợp đặc thù.
   updateCustom(dataVale: any, setting: any) {
+    debugger;
     if (!dataVale || !setting) return;
     switch (setting.reference.toLowerCase()) {
       case 'updatecompanysettings':
@@ -1014,6 +1015,10 @@ export class CatagoryComponent implements OnInit {
         //       .subscribe();
         //   }
         // });
+        break;
+      case "updatedowcode": // HR: update kỳ công cho nhân sự
+        let lstFuncID = ["PRT01","PRT03","PRTPro18"];
+        this.api.execSv("SYS","SYS","GridViewSetupBusiness","HRUpdateGridViewSetUpAsync",[lstFuncID,dataVale[setting.fieldName]]).subscribe();
         break;
     }
   }
