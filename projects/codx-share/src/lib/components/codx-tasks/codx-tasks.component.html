@@ -268,7 +268,7 @@
     <!--begin::Item-->
 
     <div class="d-flex justify-content-between align-items-center mt-1 mb-2">
-     <!--  <div class="d-flex align-items-center me-2 codx-badge">
+      <!--  <div class="d-flex align-items-center me-2 codx-badge">
         <ng-container *ngIf="setting?.processBar">
           <div
             class="control-section me-2"
@@ -302,7 +302,7 @@
           </div>
         </ng-container> -->
 
-        <!--
+      <!--
           <ng-container *ngIf="setting?.countObjects">
           <!-/- <codx-comment-temp
             [objectID]="data.recID"
@@ -322,10 +322,7 @@
         </ng-container>
       </div>-->
       <div>
-        <div
-          class=""
-          *ngIf="data.memo || data.memo2"
-        >
+        <div class="" *ngIf="data.memo || data.memo2">
           <div
             class="d-flex align-items-center me-3 text-primary"
             (click)="clickShow($event, data.recID)"
@@ -386,7 +383,7 @@
       </div>
     </div>
     <!--end::Item-->
-    
+
     <div
       id="{{ data.recID }}"
       class="w-100 border-description border-gray-300 rounded-2 px-1 mb-1 hidden-main"
@@ -725,28 +722,26 @@
       container="body"
       autoClose="outside"
     >
-      <ng-container
-        *ngFor="let assgin of data?.assignTo?.split(';'); let i = index"
-      >
-        <ng-container *ngIf="i < 2">
-          <codx-img [width]="25" [objectId]="assgin" objectType="AD_Users"></codx-img>
-        </ng-container>
-        <ng-container *ngIf="i == 2">
-          <div
-            class="symbol symbol-25px symbol-circle"
-            ng-reflect-ng-class="symbol-circle,"
-          >
-            <div
-              class="align-items-center d-flex h-25px justify-content-center rounded-circle text-white w-25px"
-              style="background-color: rgb(160 161 161);"
-            >
-              <span style="font-size: 14px">
-                {{ data?.assignTo?.split(';')?.length - 3 }}+</span
-              >
-            </div>
-          </div>
+    <ng-container *ngIf="data?.assignTo">
+      <ng-container *ngIf="data.assignTo.split(';').length <= 3; else viewAll">
+        <ng-container *ngFor="let assign of data.assignTo.split(';'); let i = index">
+          <ng-container *ngIf="i < 3">
+            <codx-img [width]="25" [objectId]="assign" objectType="AD_Users"></codx-img>
+          </ng-container>
         </ng-container>
       </ng-container>
+      <ng-template #viewAll>
+        <ng-container *ngFor="let assign of data.assignTo.split(';'); let i = index">
+          <ng-container *ngIf="i < 2">
+            <codx-img [width]="25" [objectId]="assign" objectType="AD_Users"></codx-img>
+          </ng-container>
+        </ng-container>
+        <div class="view-all symbol symbol-25px symbol-circle">
+          <codx-img [width]="25" [objectId]="data.assignTo.split(';')[2]" objectType="AD_Users"></codx-img>
+          <span class="contain-1">{{ data.assignTo.split(';').length - 2 }}+</span>
+        </div>
+      </ng-template>
+    </ng-container>
     </div>
     <div *ngIf="data.category == '2'">
       <codx-imgs

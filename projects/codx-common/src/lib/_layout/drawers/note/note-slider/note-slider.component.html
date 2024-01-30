@@ -9,9 +9,9 @@
                 <i class="icon-sort_A-Z icon-18" (click)="sortDataByDESC()" *ngIf="checkSortASC == true"></i>
             </div>
         </div>
-        <div class="d-flex flex-column">
-            <div class="notes">
-                <codx-listview [itemTemplate]="template" #listview [funcId]="'MWP00941'" entityName="WP_Notes"
+        <div class="d-flex flex-column" style="height: calc(100vh - 110px);">
+            <div class="notes h-100">
+                <codx-listview [itemTemplate]="template" #listview [funcId]="'WPT08'" entityName="WP_Notes"
                     gridViewName="'grvNotes'" service="WP" type="listView" [predicate]="predicate" formName="Notes"
                     [dataValue]="dataValue" [dataService]="dtService">
                 </codx-listview>
@@ -69,7 +69,7 @@
                         <div class="note-date format-date d-flex justify-content-end">
                             <span #createdOn class=" text-primary" [innerHTML]="item.createdOn | fmDT: 'dmy'"></span>
                             <!-- <span #createdOn class=" text-primary" [innerHTML]="item.createdOn | formatvalue: listview.formModel : 'createdOn' : createdOn | async"></span>-->
-                        </div> 
+                        </div>
 
                     </div>
                     <div class="py-3 px-5" *ngIf="item.noteType == 'check' || item.noteType == 'list'">

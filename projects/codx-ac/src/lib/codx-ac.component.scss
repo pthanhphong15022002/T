@@ -72,15 +72,15 @@
 }
 
 .tabline-content .e-content {
-    height: calc(100vh - 500px) !important;
+    height: calc(100vh - 485px) !important;
 }
 
 .tablinevoucher-content .e-content {
-    height: calc(100vh - 465px) !important;
+    height: calc(100vh - 450px) !important;
 }
 
 .tablinegeneral-content .e-content {
-    height: calc(100vh - 440px) !important;
+    height: calc(100vh - 455px) !important;
 }
 
 .tablinetranfer-content .e-content {
@@ -242,32 +242,32 @@
     border-bottom: none !important;
 }
 
-.ac-form {
-    animation-name: slideRight;
-    animation-duration: 0.3s !important;
-    animation-fill-mode: both !important;
-    animation-timing-function: ease;
-    width: 100% !important;
-    height: 100% !important;
-    position: absolute !important;
-    will-change: transform;
-}
+// .ac-form {
+//     animation-name: slideRight;
+//     animation-duration: 0.3s !important;
+//     animation-fill-mode: both !important;
+//     animation-timing-function: ease;
+//     width: 100% !important;
+//     height: 100% !important;
+//     position: absolute !important;
+//     will-change: transform;
+// }
 
-@keyframes slideRight {
-    0% {
-        transform: translate3d(100%, 0, 0);
-        width: 100% !important;
-        height: 100% !important;
-        position: absolute !important;
-    }
+// @keyframes slideRight {
+//     0% {
+//         transform: translate3d(100%, 0, 0);
+//         width: 100% !important;
+//         height: 100% !important;
+//         position: absolute !important;
+//     }
 
-    100% {
-        transform: translate3d(0, 0, 0);
-        width: 100% !important;
-        height: 100% !important;
-        position: absolute !important;
-    }
-}
+//     100% {
+//         transform: translate3d(0, 0, 0);
+//         width: 100% !important;
+//         height: 100% !important;
+//         position: absolute !important;
+//     }
+// }
 
 /* css aniamtion slide form */
 

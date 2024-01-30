@@ -1,0 +1,136 @@
+.w-30 {
+  width: 30% !important;
+}
+.w-10 {
+  width: 10% !important;
+}
+.w-15 {
+  width: 15% !important;
+}
+.w-20 {
+  width: 20% !important;
+}
+
+.w-25 {
+  width: 25% !important;
+}
+.w-5 {
+  width: 5% !important;
+}
+
+.group-steps {
+	width: 100%;
+  overflow: hidden;
+  padding-bottom: 5px;
+}
+
+.arrow-steps .step {
+	margin-right: 4px;
+	height: 22px;
+	position: relative;
+	-moz-user-select: none;
+  background-color: #d9e3f7;
+	-ms-user-select: none;
+	user-select: none;
+	transition: background-color 0.2s ease;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	padding-top: 2px;
+}
+.arrow-steps .step:after,
+.arrow-steps .step:before {
+	content: " ";
+	position: absolute;
+	top: 0;
+	right: -17px;
+	width: 0;
+	height: 0;
+	border-top: 12px solid transparent;
+	border-bottom: 10px solid transparent;
+	border-left: 17px solid #d9e3f7;
+	z-index: 2;
+	transition: border-color 0.2s ease;
+}
+
+.arrow-steps .step:last-child:after {
+	display: none;
+}
+
+.arrow-steps .step:hover {
+	background-color: var(--primary-light);
+	color: var(--primary-dark);
+	transition: 0.2s;
+}
+
+.arrow-steps .step:hover::after,
+.arrow-steps .step:hover::before {
+	border-left-color: var(--primary-light);
+	border-right-color: var(--primary-light);
+	transition: 0.2s;
+}
+
+
+.arrow-steps .step:before {
+	right: auto;
+	left: 0;
+	border-left: 17px solid #fff !important;
+	z-index: 0;
+}
+
+.arrow-steps .step:first-child:before {
+	border: none;
+}
+
+.arrow-steps .step:first-child {
+	border-radius: 5px 0 0 5px;
+}
+
+.arrow-steps .step:last-child {
+	border-radius: 0 5px 5px 0;
+}
+
+.arrow-steps .step span {
+	position: relative;
+}
+
+
+.arrow-steps .step.done span:before {
+	opacity: 1;
+	-webkit-transition: opacity 0.3s ease 0.5s;
+	-moz-transition: opacity 0.3s ease 0.5s;
+	-ms-transition: opacity 0.3s ease 0.5s;
+	transition: opacity 0.3s ease 0.5s;
+}
+
+.arrow-steps .step.current {
+	color: #fff;
+	background-color: #3699ff;
+}
+
+.arrow-steps .step.current:after {
+	border-left: 17px solid #3699ff;
+}
+.arrow-steps .step.old {
+	color: #fff;
+	background-color: #1fa65c;
+}
+
+.arrow-steps .step.old:after {
+	border-left: 17px solid #1fa65c;
+}
+
+.custom-horizontal-rule {
+  border-bottom:  3px solid ;
+  border-bottom-color: var(--primary-active) !important;
+}
+
+.progress-list{
+  width: 100%;
+  height: 30px;
+  background: #e4e1e1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 3px;
+}

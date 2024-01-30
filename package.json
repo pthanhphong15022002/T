@@ -39,6 +39,7 @@
     "@syncfusion/ej2-angular-calendars": "^24.1.41",
     "@syncfusion/ej2-angular-charts": "^24.1.41",
     "@syncfusion/ej2-angular-circulargauge": "^24.1.41",
+    "@syncfusion/ej2-angular-lineargauge": "^24.1.41",
     "@syncfusion/ej2-angular-diagrams": "^24.1.41",
     "@syncfusion/ej2-angular-documenteditor": "^24.1.41",
     "@syncfusion/ej2-angular-dropdowns": "^24.1.41",

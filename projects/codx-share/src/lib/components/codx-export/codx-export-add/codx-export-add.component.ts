@@ -91,7 +91,7 @@ export class CodxExportAddComponent implements OnInit, OnChanges {
     } else if (this.action == 'edit') {
       this.headerText = 'Chỉnh sửa ' + this.type + ' Template';
     }
-    this.data = dialog.dataService;
+    this.data = dialog.dataService || dt.data?.data;
     this.dialog = dialog;
   }
 

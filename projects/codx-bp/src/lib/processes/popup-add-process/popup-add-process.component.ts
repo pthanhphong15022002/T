@@ -292,7 +292,7 @@ export class PopupAddProcessComponent {
       processDefaultProcess = this.data.settings.filter(x=>x.fieldName == "DefaultProcess")[0];
       processCompleteControl = this.data.settings.filter(x=>x.fieldName == "CompleteControl")[0];
     }
-   
+
     stage.settings = JSON.stringify({
       icon: 'icon-i-bar-chart-steps',
       color: '#0078FF',
@@ -522,7 +522,7 @@ export class PopupAddProcessComponent {
   sharePerm(share) {
     this.listCombobox = {};
     this.multiple = true;
-    this.vllShare = 'DP0331';
+    this.vllShare = 'BP017';
     this.typeShare = '1';
     this.multiple = true;
     let option = new DialogModel();
@@ -827,7 +827,6 @@ export class PopupAddProcessComponent {
   //#endregion
 
   async onSave() {
-    this.data.category = '1';
     // this.countValidate = this.bpSv.checkValidate(this.gridViewSetup, this.data);
     // if (this.countValidate > 0) return;
 
@@ -895,7 +894,15 @@ export class PopupAddProcessComponent {
     } else {
       op.methodName = 'UpdateProcessAsync';
     }
-    op.data = data;
+
+    let result = JSON.parse(JSON.stringify(this.data));
+    result.steps.forEach((elm :any)=>{
+      delete elm.child;
+
+      if(typeof elm.settings === 'object')  elm.settings = JSON.stringify(elm.settings);
+    })
+
+    op.data = result;
     return true;
   }
 
@@ -917,9 +924,7 @@ export class PopupAddProcessComponent {
     let result = JSON.parse(JSON.stringify(this.data));
     result.steps.forEach((elm :any)=>{
       delete elm.child;
-
       if(typeof elm.settings === 'object')  elm.settings = JSON.stringify(elm.settings);
-      if(typeof elm.owners === 'object')  elm.owners = JSON.stringify(elm.owners);
     })
     return this.api.execSv("BP","BP","ProcessesBusiness","UpdateProcessAsync",result);
   }

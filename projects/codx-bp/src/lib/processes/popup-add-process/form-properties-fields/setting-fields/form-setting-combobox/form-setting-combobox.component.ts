@@ -6,11 +6,14 @@ import {
 } from '@angular/core';
 import { ComboBoxComponent } from '@syncfusion/ej2-angular-dropdowns';
 import {
+  ApiHttpService,
   CacheService,
   CodxInputComponent,
   DialogData,
   DialogRef,
 } from 'codx-core';
+import { CodxBpService } from 'projects/codx-bp/src/public-api';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'lib-form-setting-combobox',
@@ -35,9 +38,19 @@ export class FormSettingComboboxComponent {
     value: 'fieldName',
   };
   gridViewSetup: any;
-  lstDatas = [];
   datas: any = {};
+  tableName:any;
+  linkFunction:any;
+  cbb:any;
+  listFields:any;
+  displayNembers:any;
+  fieldFilters:any;
+  fieldSortings:any;
+  sortingDirection:any;
+  headerTexts:any;
   constructor(
+    private api: ApiHttpService,
+    private bpService: CodxBpService,
     private cache: CacheService,
     private detectorRef: ChangeDetectorRef,
     @Optional() dialog: DialogRef,
@@ -46,115 +59,86 @@ export class FormSettingComboboxComponent {
     this.dialog = dialog;
     this.data = JSON.parse(JSON.stringify(dt?.data?.data));
     this.titleAction = dt?.data?.title;
-    this.lstDatas =
-      dt?.data?.lstCbx?.length > 0
-        ? JSON.parse(JSON.stringify(dt?.data?.lstCbx))
-        : [];
   }
 
   ngOnInit(): void {
-    //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
-    //Add 'implements OnInit' to the class.
-    this.cache
-      .gridViewSetup(
-        this.dialog.formModel.formName,
-        this.dialog.formModel.gridViewName
-      )
-      .subscribe((grid) => {
-        if (grid) {
-          this.gridViewSetup = grid;
-          this.setLstGrid();
-        }
-      });
+    var id = this.data;
+    debugger
   }
 
-  setLstGrid() {
-    for (var key in this.gridViewSetup) {
-      let field = this.gridViewSetup[key];
-      this.lstGrids.push(field);
-    }
-  }
 
   //#region value change
   valueChange(e) {
-    if(e && e?.data){
-      this.data[e?.field] = e?.data;
+    // if(e && e?.data){
+    //   this.data[e?.field] = e?.data;
+    // }
+
+    if(e?.field == "tableName" && e?.component?.itemsSelected && e?.component?.itemsSelected[0])
+    {
+      this.getDataCombobox(e?.data)
+      this.tableName = e?.component?.itemsSelected[0].TableName;
+      this.linkFunction = ""
     }
   }
 
+  getDataCombobox(data:any)
+  {
+    this.cache.combobox(data).subscribe(item=>{
+      if(item)
+      {
+        this.cbb = item;
+        this.listFields = item.tableFields.split(";");
+        this.displayNembers = item.displayMembers.split(";");
+        this.fieldFilters = item.fieldFilter.split(";");
+        this.fieldSortings = item.fieldSorting.split(";");
+        this.sortingDirection = item.sortingDirection.split(";");
+        this.headerTexts = item.columnHeader.split(";");
+        for(var i = 0 ; i < this.listFields.length ; i++)
+        {
+          var obj = 
+          {
+            fieldName: this.listFields[i],
+            headerText: this.headerTexts[i] || '',
+            isDisplay: this.displayNembers.some(x=>x==this.listFields[i]),
+            isFilter: this.fieldFilters.some(x=>x==this.listFields[i]),
+            isSort: this.fieldSortings.some(x=>x==this.listFields[i]),
+            sortingDirection: this.sortingDirection[i] || ''
+          }
+
+          if(!this.displayNembers[i]) this.displayNembers[i] = "";
+          if(!this.fieldFilters[i]) this.fieldFilters[i] = "";
+          if(!this.fieldSortings[i]) this.fieldSortings[i] = "";
+          if(!this.sortingDirection[i]) this.sortingDirection[i] = "";
+          if(!this.headerTexts[i]) this.headerTexts[i] = "";
+          this.lstGrids.push(obj);
+        }
+
+        this.addNewRow();
+      }
+    })
+  }
   //#region combobox
-  cbxContact(e, index) {
-    if (e && e?.itemData && e?.value != null && e?.value?.trim() != '') {
-      const data = e?.itemData;
-      if (index != -1) {
-        if (this.lstDatas[index]) {
-          this.lstDatas[index]['fieldName'] = data?.fieldName;
-          this.lstDatas[index]['headerText'] = data?.headerText;
-        }
-      } else {
-        let tmp = {};
-        tmp['fieldName'] = data?.fieldName;
-        tmp['headerText'] = data?.headerText;
-        tmp['allowShow'] = this.datas?.allowShow ?? false;
-        tmp['allowSave'] = this.datas?.allowSave ?? false;
-        tmp['allowFilter'] = this.datas?.allowFilter ?? false;
-        this.lstDatas.push(tmp);
-        const idxGrid = this.lstGrids.findIndex(
-          (x) => x.fieldName == tmp['fieldName']
-        );
-        if (idxGrid != -1) {
-          this.lstGrids.splice(idxGrid, 1);
-        }
 
-        this.datas = {};
-        if (this.cbxNew) {
-          this.cbxNew.value = '';
-          this.cbxNew.dataSource = this.lstGrids;
-          this.cbxNew.refresh();
-        }
-        if (this.cbx) {
-          this.cbx.dataSource = this.lstGrids;
-          this.cbx.refresh();
-        }
-      }
-    } else {
-      if (index != -1) {
-        const fieldName = this.lstDatas[index]?.fieldName;
-        const idxGrid = this.lstGrids.findIndex(
-          (x) => x.fieldName == fieldName
-        );
-        if (idxGrid == -1) {
-          for (let key in this.gridViewSetup) {
-            if (key == fieldName) {
-              this.lstGrids.push(this.gridViewSetup[key]);
-            }
-          }
-          if (this.cbxNew) {
-            this.cbxNew.dataSource = this.lstGrids;
-            this.cbxNew.refresh();
-          }
-          if (this.cbx) {
-            this.cbx.dataSource = this.lstGrids;
-            this.cbx.refresh();
-          }
-        }
-        this.lstDatas.splice(index, 1);
-      }
+  addNewRow()
+  {
+    var obj = 
+    {
+      fieldName: '',
+      headerText: '',
+      isDisplay: false,
+      isFilter: false,
+      isSort: false,
+      sortingDirection: ''
     }
-    this.detectorRef.detectChanges();
+    var i = this.lstGrids.length;
+    this.listFields[i] = "";
+    this.displayNembers[i] = "";
+    this.fieldFilters[i] = "";
+    this.fieldSortings[i] = "";
+    this.sortingDirection[i] = "";
+    this.headerTexts[i] = "";
+    this.lstGrids.push(obj);
   }
-
-  valueChangeCheckBox(e, index) {
-    if (e) {
-      if (index != -1) {
-        this.lstDatas[index][e?.field] = e?.data ?? false;
-      } else {
-        this.datas[e?.field] = e?.data ?? false;
-      }
-      this.detectorRef.detectChanges();
-    }
-  }
-
   onComboBoxFocus(event: any, type, cbx): void {
     // Mở danh sách thả xuống khi ô input được focus
     if (cbx) {
@@ -166,11 +150,74 @@ export class FormSettingComboboxComponent {
   isActived(value) {}
 
   //#region  save
-  onSave() {
-    if(this.lstDatas?.length > 0){
-      this.data.dataFormat = JSON.stringify(this.lstDatas);
+  async onSave() {
+    // if(this.lstDatas?.length > 0){
+    //   this.data.dataFormat = JSON.stringify(this.lstDatas);
+    // }
+    let i =this.listFields.length -1;
+    if(!this.listFields[i])
+    {
+      this.listFields.splice(i,1);
+      this.displayNembers.splice(i,1);
+      this.fieldFilters.splice(i,1);
+      this.fieldSortings.splice(i,1);
+      this.sortingDirection.splice(i,1);
+      this.headerTexts.splice(i,1);
     }
-    this.dialog.close(this.data);
+    var processNo = await firstValueFrom(
+      this.bpService.genAutoNumber('BPT01', 'BP_Processes', 'ProcessNo')
+    );
+    this.cbb.comboboxName = 'BPCBB' + processNo;
+    this.cbb.comboboxType = this.data.refType;
+    this.cbb.tableFields = this.listFields.join(";");
+    this.cbb.displayMembers = this.displayNembers.join(";");
+    this.cbb.fieldSorting = this.fieldSortings.join(";");
+    this.cbb.sortingDirection = this.sortingDirection.join(";");
+    this.cbb.fieldFilter = this.fieldFilters.join(";");
+    this.cbb.columnHeader = this.headerTexts.join(";");
+   
+    //Lưu Cbb
+    this.api.execSv("SYS","SYS","ComboboxListBusiness","AddComboboxAsync",this.cbb).subscribe(item=>{
+      if(item)
+      {
+        this.data.refValue = this.cbb.comboboxName;
+        this.dialog.close(this.data);
+      }
+      
+    })
+  }
+
+  valueChangeGrid(e:any , field:any , index:any , item:any = null)
+  { 
+    if(field == "displayNembers")
+    {
+      if(e?.currentTarget.checked) this.displayNembers.splice(index,0,item);
+      else this.displayNembers = this.displayNembers.filter(x=>x != item);
+    }
+    else if(field == "fieldName")
+    {
+      this.listFields[index] = e?.target?.value;
+      if(index == this.lstGrids.length -1) this.addNewRow();
+    }
+    else if(field == "headerText")
+    {
+      this.headerTexts[index] = e?.target?.value;
+    }
+    else if(field == "fieldSortings")
+    {
+      if(e?.currentTarget.checked) this.fieldSortings.splice(index,0,item);
+      else this.fieldSortings = this.fieldSortings.filter(x=>x != item);
+    }
+    else if(field == "fieldFilters")
+    {
+      if(e?.currentTarget.checked) this.fieldFilters.splice(index,0,item);
+      else this.fieldFilters = this.fieldFilters.filter(x=>x != item);
+    }
+    else if(field =="sortingDirection")
+    {
+      this.sortingDirection[index] = e?.target?.value;
+    }
+    else this.cbb[field] = e?.target?.value
   }
   //#endregion
 }

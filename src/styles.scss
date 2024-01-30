@@ -4532,3 +4532,15 @@ codx-filter-form{
 codx-listview .container-fluid.p-1{
   padding: 0!important;
 }
+
+.card-group .card-item.selected{
+  box-shadow: none!important;
+  border-radius: inherit!important;
+  .codx_cardcenter{
+    border-color: var(--primary)!important;
+    background-color: var(--primary-lightest);
+  }
+}
+.metings-kanban .card-body{
+  padding: 8px!important;
+}

@@ -493,4 +493,14 @@ export class CodxFdService {
       ]
     );
   }
+
+  getReportUserByEmployeeID(employeeID: string) {
+    return this.api.execSv(
+      'HR',
+      'HR',
+      'EmployeesBusiness',
+      'GetReportUserByEmployeeIDAsync',
+      [employeeID]
+    );
+  }
 }

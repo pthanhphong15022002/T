@@ -19,7 +19,7 @@
       type="text"
       field="title"
       [crrValue]="data?.title ?? ''"
-      (valueChange)="valueChange($event)"
+      [disabled]="true"   
     ></codx-input>
   </div>
   <div class="form-group">
@@ -33,7 +33,7 @@
       field="description"
       type="text"
       [crrValue]="data?.description ?? ''"
-      (valueChange)="valueChange($event)"
+      [disabled]="true"      
     ></codx-input>
   </div>
   <div class="form-group row">
@@ -45,10 +45,9 @@
         default="Chọn danh sách từ hệ thống"
       ></codx-label>
       <codx-input
-        field="refType"
+        field="tableName"
         type="combobox"
-        refValue="ComboBox"
-        [crrValue]="data?.refType ?? ''"
+        refValue="BPCBBBP2401-0061"
         (valueChange)="valueChange($event)"
       ></codx-input>
     </div>
@@ -60,10 +59,11 @@
         default="Chọn bảng dữ liệu liên kết"
       ></codx-label>
       <codx-input
-        field="refValue"
+        field="refType"
         type="combobox"
-        refValue=""
-        [crrValue]="data?.refValue ?? ''"
+        refValue="EntityName"
+        [disabled]="true"
+        [crrValue]="tableName"
         (valueChange)="valueChange($event)"
       ></codx-input>
     </div>
@@ -111,132 +111,104 @@
         </button>
       </div>
     </div>
-    <div class="col-11">
-      <table class="table">
-        <thead class="thead-light">
-          <tr class="fw-bold">
-            <th scope="col-4 d-flex justify-content-center align-items-center">
-              <codx-label
-                default="Tên trường dữ liệu"
-                name="lblFNameTable"
-                [formName]="'DynamicForms'"
-                [gridViewName]="'grvDynamicFormsTitle' + data?.fieldType"
-              ></codx-label>
-            </th>
-            <th scope="col-2 d-flex justify-content-center align-items-center">
-              <codx-label
-                default="Hiển thị"
-                name="lblShowTable"
-                [formName]="'DynamicForms'"
-                [gridViewName]="'grvDynamicFormsTitle' + data?.fieldType"
-              ></codx-label>
-            </th>
-            <th scope="col-2 d-flex justify-content-center align-items-center">
-              <codx-label
-                default="Lưu"
-                name="lblSaveTable"
-                [formName]="'DynamicForms'"
-                [gridViewName]="'grvDynamicFormsTitle' + data?.fieldType"
-              ></codx-label>
-            </th>
-            <th scope="col-2 d-flex justify-content-center align-items-center">
-              <codx-label
-                default="Lọc"
-                name="lblFilterTable"
-                [formName]="'DynamicForms'"
-                [gridViewName]="'grvDynamicFormsTitle' + data?.fieldType"
-              ></codx-label>
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          <ng-container *ngIf="lstDatas?.length > 0">
-            <tr *ngFor="let item of lstDatas; index as i">
-              <td scope="row" style="border: none; padding: 0;">
-                <ejs-combobox
-                  #cbx
-                  class="w-100 custom-combobox"
-                  [dataSource]="lstGrids"
-                  [fields]="fields"
-                  [value]="item?.headerText"
-                  [allowFiltering]="false"
-                  (change)="cbxContact($event, i)"
-                  (focus)="onComboBoxFocus($event, 'cbx', cbx)"
-                >
-                </ejs-combobox>
-              </td>
-              <td>
-                <codx-input
-                  field="allowShow"
-                  type="checkbox"
-                  [crrValue]="item?.allowShow ?? false"
-                  (valueChange)="valueChangeCheckBox($event, i)"
-                ></codx-input>
-              </td>
-              <td>
-                <codx-input
-                  field="allowSave"
-                  type="checkbox"
-                  [crrValue]="item?.allowSave ?? false"
-                  (valueChange)="valueChangeCheckBox($event, i)"
-                ></codx-input>
-              </td>
-              <td>
-                <codx-input
-                  field="allowFilter"
-                  type="checkbox"
-                  [crrValue]="item?.allowFilter ?? false"
-                  (valueChange)="valueChangeCheckBox($event, i)"
-                ></codx-input>
-              </td>
-            </tr>
-          </ng-container>
-          <tr>
-            <td scope="row" style="border: none; padding: 0;">
-              <ejs-combobox
-                #cbxNew
-                class="w-100 custom-combobox"
-                [dataSource]="lstGrids"
-                [fields]="fields"
-                [value]="datas?.fieldName ?? ''"
-                [allowFiltering]="false"
-                [placeholder]="'Chọn trường nhập liệu'"
-                (change)="cbxContact($event, -1)"
-                (focus)="onComboBoxFocus($event, 'cbxNew', cbxNew)"
-              >
-              </ejs-combobox>
-            </td>
-            <td>
-              <codx-input
-                #allowShowNew
-                field="allowShow"
-                type="checkbox"
-                [crrValue]="datas?.allowShow ?? false"
-                (valueChange)="valueChangeCheckBox($event, -1)"
-              ></codx-input>
-            </td>
-            <td>
-              <codx-input
-                #allowSaveNew
-                field="allowSave"
-                type="checkbox"
-                [crrValue]="datas?.allowSave ?? false"
-                (valueChange)="valueChangeCheckBox($event, -1)"
-              ></codx-input>
-            </td>
-            <td>
-              <codx-input
-                #allowFilterNew
-                field="allowFilter"
-                type="checkbox"
-                [crrValue]="datas?.allowFilter ?? false"
-                (valueChange)="valueChangeCheckBox($event, -1)"
-              ></codx-input>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+    <div class="d-flex flex-column w-100">
+        <div class="row bg-light py-2 me-3">
+          <div class="col-2">
+            <codx-label
+              default="Tên trường dữ liệu"
+              name="lblFNameTable"
+              [formName]="'DynamicForms'"
+              [gridViewName]="'grvDynamicFormsTitle' + data?.fieldType"
+            ></codx-label>
+          </div>
+          <div class="col-2">
+            <codx-label
+              default="Tiêu đề"
+              name="lblFNameTable"
+              [formName]="'DynamicForms'"
+              [gridViewName]="'grvDynamicFormsHeaderText'"
+            ></codx-label>
+          </div>
+          <div class="col-1 d-flex justify-content-center align-items-center">
+            <codx-label
+              default="Xem"
+              name="lblShowTable"
+              [formName]="'DynamicForms'"
+              [gridViewName]="'grvDynamicFormsTitleDisplay'"
+            ></codx-label>
+          </div>
+          <div class="col-1 d-flex justify-content-center align-items-center">
+            <codx-label
+              default="Giá trị"
+              name="lblShowTable"
+              [formName]="'DynamicForms'"
+              [gridViewName]="'grvDynamicFormsTitle' + data?.fieldType"
+            ></codx-label>
+          </div>
+          <div class="col-2 d-flex justify-content-center align-items-center">
+            <codx-label
+              default="Hiển thị"
+              name="lblSaveTable"
+              [formName]="'DynamicForms'"
+              [gridViewName]="'grvDynamicFormsTitle' + data?.fieldType"
+            ></codx-label>
+          </div>
+          <div class="col-1 d-flex justify-content-center align-items-center">
+            <codx-label
+              default="Lọc"
+              name="lblFilterTable"
+              [formName]="'DynamicForms'"
+              [gridViewName]="'grvDynamicFormsTitle' + data?.fieldType"
+            ></codx-label>
+          </div>
+          <div class="col-1 d-flex justify-content-center align-items-center">
+            <codx-label
+              default="Sắp xếp"
+              name="lblFilterTable"
+              [formName]="'DynamicForms'"
+              [gridViewName]="'grvDynamicFormsTitleSort'"
+            ></codx-label>
+          </div>
+          <div class="col-2 d-flex justify-content-center align-items-center">
+            <codx-label
+              default="Chiều xắp xếp"
+              name="lblFilterTable"
+              [formName]="'DynamicForms'"
+              [gridViewName]="'grvDynamicFormsTitleSortDic'"
+            ></codx-label>
+          </div>
+        </div>
+        <ng-container *ngIf="lstGrids?.length > 0">
+          <div class="d-flex flex-column w-100 overflow-auto h-265px">
+            <div class="row w-100 py-2 border-bottom" *ngFor="let item of lstGrids; index as i">
+              <div class="col-2 pe-0">
+                <input class="border w-100" [placeholder]="'Tên trường dữ liệu'" type="text" [value]="item.fieldName" (change)="valueChangeGrid($event,'fieldName',i)"/>
+              </div>
+              <div class="col-2 pe-0">
+                <input class="border w-100" [placeholder]="'Tiêu đề'" type="text" [value]="item.headerText" (change)="valueChangeGrid($event,'headerText',i)"/>
+              </div>
+              <div class="col-1 d-flex justify-content-center align-items-center">
+                <input type="checkbox"  [checked]="item.isDisplay" (change)="valueChangeGrid($event,'displayNembers',i,item.fieldName)"/>
+              </div>
+              <div class="col-1 d-flex justify-content-center align-items-center">
+                <input type="radio" name="DynamicFormsValueMember" [value]="item.fieldName" [checked]="cbb.valueMember == item.fieldName" (change)="valueChangeGrid($event,'valueMember',i)"/>
+              </div>
+              <div class="col-1 d-flex justify-content-center align-items-center">
+                <input type="radio" name="DynamicFormsViewMember" [value]="item.fieldName" [checked]="cbb.viewMember == item.fieldName" (change)="valueChangeGrid($event,'viewMember',i)"/>
+              </div>
+              <div class="col-1 d-flex justify-content-center align-items-center">
+                <input type="checkbox"  [checked]="item.isFilter" (change)="valueChangeGrid($event,'fieldFilters',i,item.fieldName)"/>
+              </div>
+              <div class="col-2 d-flex justify-content-center align-items-center">
+                <input type="checkbox" [value]="item.fieldName" [checked]="item.isSort" (change)="valueChangeGrid($event,'fieldSortings',i,item.fieldName)"/>
+              </div>
+              <div class="col-2 d-flex justify-content-center align-items-center pe-0">
+                <input class="border w-100" type="text" [value]="item.sortingDirection" (change)="valueChangeGrid($event,'sortingDirection',i)"/>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+      </div>
   </div>
 </ng-template>
 <ng-template #footer>

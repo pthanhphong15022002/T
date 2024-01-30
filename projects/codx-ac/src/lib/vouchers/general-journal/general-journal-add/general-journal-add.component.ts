@@ -216,9 +216,11 @@ export class GeneralJournalAddComponent extends UIComponent {
           let memo = this.getMemoMaster();
           this.formGeneral.setValue(field,null,{});
           this.formGeneral.setValue('memo',memo,{});
+          this.formGeneral.data.reasonName = null;
           this.isPreventChange = false;
           return;
         } 
+        this.formGeneral.data.reasonName = event?.component?.itemsSelected[0]?.ReasonName;
         let valueReason = {
           PreReasonID:  event?.component?.dataService?.currentComponent?.previousItemData?.ReasonID || '',
           Note: event?.component?.itemsSelected[0]?.ReasonName || '',
@@ -237,12 +239,14 @@ export class GeneralJournalAddComponent extends UIComponent {
           this.formGeneral.setValue('objectType',null,{});
           this.formGeneral.setValue('memo',memo,{});
           this.formGeneral.setValue('bankAcctID',null,{});
+          this.formGeneral.data.objectName = null;
           this.isPreventChange = false;
           return;
         } 
         let objectType = event?.component?.itemsSelected[0]?.ObjectType || '';
         this.formGeneral.setValue('objectType',objectType,{});
         this.formGeneral.setValue('bankAcctID',null,{});
+        this.formGeneral.data.objectName = event?.component?.itemsSelected[0]?.ObjectName;
         this.objectIDChange();
         break;
 
@@ -455,7 +459,7 @@ export class GeneralJournalAddComponent extends UIComponent {
    * @returns
    */
   onAddLine() {
-    this.formGeneral.save(null, 0, '', '', false)
+    this.formGeneral.save(null, 0, '', '', false,{allowCompare:false})
       .pipe(takeUntil(this.destroy$))
       .subscribe((res: any) => {
         if (!res) return;
@@ -560,7 +564,7 @@ export class GeneralJournalAddComponent extends UIComponent {
    * @returns
    */
   onSaveVoucher(type) {
-    this.formGeneral.save(null, 0, '', '', false)
+    this.formGeneral.save(null, 0, '', '', false,{allowCompare:false})
     .pipe(takeUntil(this.destroy$))
     .subscribe((res: any) => {
       if (!res) return;
