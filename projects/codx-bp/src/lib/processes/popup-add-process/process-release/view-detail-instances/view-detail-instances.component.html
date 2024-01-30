@@ -12,7 +12,7 @@
           class="container_detail d-flex justify-content-between w-100 h-100"
         >
           <div class="d-flex flex-column justify-content-start w-70">
-            <div class="fw-bold fs-6">{{ dataSelected?.title }}</div>
+            <div class="fw-bold fs-5">{{ dataSelected?.title }}</div>
             <div class="mt-3 d-flex align-items-center">
               <codx-label
                 class="fw-bold"
@@ -21,21 +21,19 @@
                 [formModel]="formModel"
                 fiedName="detail_StartEnd"
               ></codx-label>
-              <span
-                [innerHTML]="
-                  dataSelected.startDate
-                    | formatvalue : formModel : 'StartDate'
-                    | async
-                "
-              ></span>
+              <div *ngIf="dataSelected.startDate">
+                <span>{{ dataSelected.startDate | date : "dd/MM/yyyy" }}</span>
+              </div>
+              <div *ngIf="!dataSelected.startDate">
+                <span class="place-holder">dd/mm/yyyy</span>
+              </div>
               <span class="ms-1 me-1">-</span>
-              <span
-                [innerHTML]="
-                  dataSelected.endDate
-                    | formatvalue : formModel : 'EndDate'
-                    | async
-                "
-              ></span>
+              <div *ngIf="dataSelected.endDate">
+                <span>{{ dataSelected.endDate | date : "dd/MM/yyyy" }}</span>
+              </div>
+              <div *ngIf="!dataSelected.endDate">
+                <span class="place-holder">dd/mm/yyyy</span>
+              </div>
             </div>
             <div class="mt-3 d-flex align-items-center">
               <codx-label
@@ -45,21 +43,19 @@
                 [formModel]="formModel"
                 fiedName="detail_actualStartEnd"
               ></codx-label>
-              <span
-                [innerHTML]="
-                  dataSelected.actualStart
-                    | formatvalue : formModel : 'ActualStart'
-                    | async
-                "
-              ></span>
+              <div *ngIf="dataSelected.actualStart">
+                <span>{{ dataSelected.actualStart | date : "dd/MM/yyyy" }}</span>
+              </div>
+              <div *ngIf="!dataSelected.actualStart">
+                <span class="place-holder">dd/mm/yyyy</span>
+              </div>
               <span class="ms-1 me-1">-</span>
-              <span
-                [innerHTML]="
-                  dataSelected.actualEnd
-                    | formatvalue : formModel : 'ActualEnd'
-                    | async
-                "
-              ></span>
+              <div *ngIf="dataSelected.actualEnd">
+                <span>{{ dataSelected.actualEnd | date : "dd/MM/yyyy" }}</span>
+              </div>
+              <div *ngIf="!dataSelected.actualEnd">
+                <span class="place-holder">dd/mm/yyyy</span>
+              </div>
             </div>
             <div class="mt-3 d-flex align-items-center">
               <codx-label
@@ -108,7 +104,7 @@
             </div>
             <div class="ms-2" style="margin-top: 6px">
               <codx-progressbar
-                [progress]="'50'"
+                [progress]="dataSelected?.progress"
                 [stype]="2"
                 [size]="50"
               ></codx-progressbar>

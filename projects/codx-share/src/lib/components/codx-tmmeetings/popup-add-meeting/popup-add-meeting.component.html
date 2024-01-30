@@ -422,7 +422,7 @@
     <div
       class="d-flex align-items-center justify-content-between has-action-menu-od user-nav-item py-2 border-bottom"
     >
-      <div class="d-flex align-items-top">
+      <div class="d-flex justify-content-start align-items-top w-80">
         <div
           class="me-4"
           style="position: relative"
@@ -453,30 +453,30 @@
         </div>
       </div>
 
-      <ng-container>
-        <div class="d-flex align-items-start">
-          <div class="d-flex align-item-center">
-            <codx-input
-              type="checkbox"
-              name="taskControl"
-              class="check-sys d-block text-right"
-              ngDefaultControl
-              field="taskControl"
-              (valueChange)="valueCbx(item.objectID, $event)"
-              [crrValue]="item.taskControl"
-              [disabled]="isView"
-            >
-            </codx-input>
-          </div>
+      <div class="d-flex align-items-start justify-content-end w-30">
+        <div class="w-70 d-flex justify-content-end">
+          <codx-input
+            type="checkbox"
+            name="taskControl"
+            class="check-sys d-block text-right"
+            ngDefaultControl
+            field="taskControl"
+            (valueChange)="valueCbx(item.objectID, $event)"
+            [crrValue]="item.taskControl"
+            [disabled]="isView"
+          >
+          </codx-input>
+        </div>
+        <div class="w-30">
           <div
-            *ngIf="!isView"
+            *ngIf="!isView && checkDeleteUser(item)"
             class="action-menu-od d-flex justify-content-center align-items-center cursor-pointer"
             (click)="onDeleteUser(i)"
           >
             <i class="icon-close text-danger icon-16"></i>
           </div>
         </div>
-      </ng-container>
+      </div>
     </div>
   </ng-container>
 </ng-template>
