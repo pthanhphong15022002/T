@@ -4543,4 +4543,7 @@ codx-listview .container-fluid.p-1{
 }
 .metings-kanban .card-body{
   padding: 8px!important;
+  .text-gray-700.line-clamp{
+    -webkit-line-clamp: 2;
+  }
 }
