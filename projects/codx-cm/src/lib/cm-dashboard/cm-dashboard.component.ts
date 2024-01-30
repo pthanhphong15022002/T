@@ -75,6 +75,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   isLoaded: boolean = false;
   titLeModule = '';
 
+  ///MY SALE + GROUP SALE================================
   //Industry
   dataSourceIndustry = [];
 
@@ -264,7 +265,14 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
 
   //dash board deals
   tmpDashBoardDeals = [];
-  //end
+  //thông số thiết lập
+  toppSuccessFail = 7; //top thành công thất bại
+  winReason = 7; //top lý do thành công
+  loseReason = 7; //top lý do thất bại
+  employeeProductivity = 7; //top năng suất nhân viên
+  //====================================================================
+
+  //TAGET DASHBOARD ====================================================
   //chart sales pipeline
   lstAlls = [];
   lstSalesStages = [];
@@ -430,15 +438,113 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   tabActiveReson = 'btReasonSucess';
   textTitle = '';
 
-  //end
-  //thông số thiết lập
-  toppSuccessFail = 7; //top thành công thất bại
-  winReason = 7; //top lý do thành công
-  loseReason = 7; //top lý do thất bại
-  employeeProductivity = 7; //top năng suất nhân viên
+  //===================================================================
 
-  //INOUT DASHBOARD
+  //===============INOUT DASHBOARD=====================================
   year = 2023;
+  //////TESTTTTTT
+  //Chart pie tronn
+  pieChartInQTSC = [
+    { x: '2022', y: 3 },
+    { x: '2023', y: 3 },
+  ];
+  pieChartOutQTSC = [
+    { x: '2022', y: 7 },
+    { x: '2023', y: 3 },
+  ];
+  pieChartIn = [
+    { x: 'Giới thiệu', y: 7 },
+    { x: 'Điện thoại', y: 7 },
+    { x: 'Website', y: 3 },
+  ];
+  pieChartOut = [
+    { x: 'Tài chính khó khăn', y: 7 },
+    { x: 'Kết thúc dự án', y: 3 },
+    { x: 'Chuyển đổi pháp nhân', y: 3 },
+    { x: 'Giải thể', y: 3 },
+    { x: 'Chuyển địa điểm', y: 3 },
+  ];
+
+  pieChartClassify = [
+    { x: 'Phân loại khách hàng ', y: 7 },
+    { x: 'Khách hàng nội khu', y: 3 },
+  ];
+
+  legendSettingsIn = {
+    visible: false,
+  };
+  tooltipInOut = {
+    enable: true,
+  };
+  //end pie
+  listEnterpriseNew = [
+    {
+      quarter: '1',
+      quarterName: 'Q1',
+      businessType: '1',
+      businessTypeName: 'DNTN',
+    },
+    {
+      quarter: '1',
+      quarterName: 'Q1',
+      businessType: '1',
+      businessTypeName: 'DNTN',
+    },
+    {
+      quarter: '1',
+      quarterName: 'Q1',
+      businessType: '1',
+      businessTypeName: 'DNTN',
+    },
+    {
+      quarter: '2',
+      quarterName: 'Q2',
+      businessType: '2',
+      businessTypeName: 'DNNN',
+    },
+    // {
+    //   quarter: '3',
+    //   quarterName: 'Q3',
+    //   businessType: '2',
+    //   businessTypeName: 'DNNN',
+    // },
+    // {
+    //   quarter: '4',
+    //   quarterName: 'Q4',
+    //   businessType: '2',
+    //   businessTypeName: 'DNNN',
+    // },
+  ];
+  chartDataColumn = [
+    { country: 'Quý 1', gold: 50, silver: 75, red: 80 },
+    { country: 'Quý 2', gold: 40, silver: 20, red: 80 },
+    { country: 'Quý 3', gold: 70, silver: 45, red: 80 },
+    { country: 'Quý 4', gold: 40, silver: 20, red: 80 },
+    { country: 'Tổng cộng', gold: 70, silver: 45, red: 80 },
+  ];
+
+  primaryXAxisColumn = {
+    interval: 1,
+    valueType: 'Category',
+    title: '',
+  };
+  primaryYAxisColumn = {
+    title: 'Tổng số',
+    minimum: 0,
+    // maximum: 100,
+    interval: 20,
+    // lineStyle: { width: 0 },
+    majorTickLines: { width: 0 },
+    majorGridLines: { width: 1 },
+    minorGridLines: { width: 1 },
+    minorTickLines: { width: 0 },
+  };
+  titleTest = 'Olympic Medals';
+  ///END TEST
+  listCountEnterprise = [];
+  countNewPriEnterprise = 0;
+  countNewStateEnterprise = 0;
+  countNewEnterprise = 0;
 
   constructor(
     inject: Injector,
@@ -473,7 +579,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     );
 
     this.panelsDeals3 = JSON.parse(
-      '[{"id":"13.1636284528927885_layout","row":0,"col":0,"sizeX":30,"sizeY":20,"minSizeX":30,"minSizeY":20,"maxSizeX":null,"maxSizeY":null},{"id":"23.5801149283702021_layout","row":0,"col":30,"sizeX":30,"sizeY":20,"minSizeX":30,"minSizeY":20,"maxSizeX":null,"maxSizeY":null},{"id":"33.6937258303982936_layout","row":20,"col":0,"sizeX":30,"sizeY":20,"minSizeX":30,"minSizeY":20,"maxSizeX":null,"maxSizeY":null},{"id":"43.5667390469747078_layout","row":20,"col":30,"sizeX":30,"sizeY":20,"minSizeX":30,"minSizeY":20,"maxSizeX":null,"maxSizeY":null},{"id":"53.4199281088325755_layout","row":40,"col":0,"sizeX":30,"sizeY":20,"minSizeX":30,"minSizeY":20,"maxSizeX":null,"maxSizeY":null},{"id":"63.4592017601751599_layout","row":40,"col":30,"sizeX":30,"sizeY":20,"minSizeX":30,"minSizeY":20,"maxSizeX":null,"maxSizeY":null},{"id":"73.14683256767762543_layout","row":40,"col":0,"sizeX":30,"sizeY":20,"minSizeX":30,"minSizeY":20,"maxSizeX":null,"maxSizeY":null},{"id":"83.21519762020964252_layout","row":60,"col":30,"sizeX":30,"sizeY":20,"minSizeX":30,"minSizeY":20,"maxSizeX":null,"maxSizeY":null},{"id":"93.21519762020964252_layout","row":80,"col":0,"sizeX":30,"sizeY":20,"minSizeX":30,"minSizeY":20,"maxSizeX":null,"maxSizeY":null}]'
+      '[{"id":"13.1636284528927885_layout","row":0,"col":0,"sizeX":30,"sizeY":25,"minSizeX":30,"minSizeY":25,"maxSizeX":null,"maxSizeY":null},{"id":"23.5801149283702021_layout","row":0,"col":30,"sizeX":30,"sizeY":25,"minSizeX":30,"minSizeY":25,"maxSizeX":null,"maxSizeY":null},{"id":"33.6937258303982936_layout","row":25,"col":0,"sizeX":30,"sizeY":25,"minSizeX":30,"minSizeY":25,"maxSizeX":null,"maxSizeY":null},{"id":"43.5667390469747078_layout","row":25,"col":30,"sizeX":30,"sizeY":25,"minSizeX":30,"minSizeY":25,"maxSizeX":null,"maxSizeY":null},{"id":"53.4199281088325755_layout","row":50,"col":0,"sizeX":30,"sizeY":25,"minSizeX":30,"minSizeY":25,"maxSizeX":null,"maxSizeY":null},{"id":"63.4592017601751599_layout","row":50,"col":30,"sizeX":30,"sizeY":25,"minSizeX":30,"minSizeY":25,"maxSizeX":null,"maxSizeY":null},{"id":"73.14683256767762543_layout","row":75,"col":0,"sizeX":30,"sizeY":25,"minSizeX":30,"minSizeY":25,"maxSizeX":null,"maxSizeY":null},{"id":"83.21519762020964252_layout","row":75,"col":30,"sizeX":30,"sizeY":25,"minSizeX":30,"minSizeY":25,"maxSizeX":null,"maxSizeY":null},{"id":"93.21519762020964252_layout","row":100,"col":0,"sizeX":30,"sizeY":20,"minSizeX":30,"minSizeY":20,"maxSizeX":null,"maxSizeY":null}]'
     );
     this.datasDeals3 = JSON.parse(
       '[{"panelId":"13.1636284528927885_layout","data":"1"},{"panelId":"23.5801149283702021_layout","data":"2"},{"panelId":"33.6937258303982936_layout","data":"3"},{"panelId":"43.5667390469747078_layout","data":"4"},{"panelId":"53.4199281088325755_layout","data":"5"},{"panelId":"63.4592017601751599_layout","data":"6"},{"panelId":"73.14683256767762543_layout","data":"7"},{"panelId":"83.21519762020964252_layout","data":"8"},{"panelId":"93.21519762020964252_layout","data":"9"}]'
@@ -1011,6 +1117,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
           requets
         )
         .subscribe((res) => {
+          this.getListEnterpriseNew(); //test
           if (res) {
             //xu ly nv
 
@@ -2750,5 +2857,31 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
 
   //------------------IN-OUT-DASHBOARD---------------//
   viewDashBoardsInOut(res) {}
+
+  getListEnterpriseNew(dataSet = this.listEnterpriseNew) {
+    this.listCountEnterprise = [];
+    if (!dataSet || dataSet?.length == 0) return;
+    let listEnterpriseNew = this.groupBy(dataSet, 'quarter');
+    this.countNewEnterprise = dataSet?.length;
+    if (listEnterpriseNew) {
+      this.vllQuaters?.forEach((qt) => {
+        let key = qt.value;
+        let obj = {
+          quarter: qt.text,
+          quarterName: qt?.text,
+          countNew: listEnterpriseNew[key]?.length ?? 0,
+          countPrivateEnterprise:
+            dataSet?.filter((x) => x.businessType == '1' && x.quarter == key)
+              ?.length ?? 0,
+          countStateEnterprises:
+            dataSet?.filter((x) => x.businessType == '2' && x.quarter == key)
+              ?.length ?? 0,
+        };
+        this.countNewPriEnterprise += obj.countPrivateEnterprise ?? 0;
+        this.countNewStateEnterprise += obj.countStateEnterprises ?? 0;
+        this.listCountEnterprise.push(obj);
+      });
+    }
+  }
   //------------------------------------------------//
 }
