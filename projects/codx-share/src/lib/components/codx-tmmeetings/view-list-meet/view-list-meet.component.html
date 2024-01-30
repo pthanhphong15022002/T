@@ -67,14 +67,15 @@
             ></codx-attachment-temp>
           </div>
           <div
-            class="fw-bold d-flex align-items-center"
+            class="fw-bold d-flex align-items-center cursor-pointer"
             *ngIf="data?.isOnline && data?.link"
-            style="margin-right: 10px"
+            style="margin-left: 40px"
+            (click)="openLinkMeeting(data)"
           >
             <i
               class="icon-insert_link text-primary text-hover-primary-dark icon-16 me-2"
             ></i>
-            <a href="">{{ data?.link }}</a>
+            <span class="text-primary">{{ data?.link }}</span>
           </div>
           <ng-template #popperAttachment>
             <span>
