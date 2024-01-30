@@ -1,0 +1,170 @@
+<codx-views
+  #view
+  [views]="views"
+  [funcID]="funcID"
+  [service]="service"
+  [assemblyName]="assemblyName"
+  [entityName]="entityName"
+  [className]="className"
+  [method]="method"
+  [button]="button"
+  (buttonClick)="click($event)"
+  [idField]="idField"
+  [selectedFirst]="true"
+  (selectedChange)="selectedChange($event)"
+  (viewChanging)="viewChanging($event)"
+  (viewChanged)="viewChanged($event)"
+  (clickMF)="clickMF($event, itemSelected)"
+>
+</codx-views>
+
+<!-- header -->
+<ng-template #headerTemplate let-data>
+  <div class="d-flex w-100 ps-2 pe-4">
+    <div class="w-40 text-dark fw-bold p-3 fw-500">
+      <codx-label
+        fiedName="lblProjectName"
+        [setRequire]="false"
+        [formModel]="view.formModel"
+        [default]="'Tên dự án'"
+      ></codx-label>
+    </div>
+    <div class="w-25 text-dark fw-bold p-3 fw-500">
+      <codx-label
+        fiedName="lblProjectType"
+        [setRequire]="false"
+        [formModel]="view.formModel"
+        [default]="'Phân loại'"
+      ></codx-label>
+    </div>
+    <div class="w-25 text-dark fw-bold p-3 fw-500">
+      <codx-label
+        fiedName="lblScheduleFinishDate"
+        [setRequire]="false"
+        [formModel]="view.formModel"
+        [default]="'Ngày hết hạn'"
+      ></codx-label>
+    </div>
+    <div class="w-25 text-dark fw-bold p-3 fw-500">
+      <codx-label
+        fiedName="lblStatus"
+        [setRequire]="false"
+        [formModel]="view.formModel"
+        [default]="'Tình Trạng'"
+      ></codx-label>
+    </div>
+    <div class="w-25 text-dark fw-bold p-3 fw-500">
+      <codx-label
+        fiedName="lblMembers"
+        [setRequire]="false"
+        [formModel]="view.formModel"
+        [default]="'Thành viên'"
+      ></codx-label>
+    </div>
+    <div class="w-25 text-dark fw-bold p-3 fw-500">
+      <codx-label
+        fiedName="lblProjectManeger"
+        [setRequire]="false"
+        [formModel]="view.formModel"
+        [default]="'Quản lý'"
+      ></codx-label>
+    </div>
+  </div>
+</ng-template>
+<!-- end header -->
+<!-- template list -->
+<ng-template #templateList let-data>
+  <div class="d-flex align-items-center border-bottom">
+    <!-- ProjectName -->
+    <div class="w-40 p-3 ps-5">
+      <div class="d-flex align-items-center cursor-pointer hover-active">
+        <div class="d-flex flex-column me-4">
+          <ng-container *ngIf="data.projectName">
+            <div class="mt-1 mx-auto">
+              <span>{{ data.projectName }}</span>
+            </div>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+    <!-- Phân loại-->
+    <div class="w-25 p-3">
+      <div class="d-flex flex-column">
+        <div class="d-flex mb-1">
+          {{ data.projectType }}
+          <codx-vll
+            [name]="grvSetup['ProjectType']?.referedValue"
+            [value]="data.projectType"
+            [showBgColor]="true"
+            [showText]="true"
+            [className]="'badge badge-sm badge-inline'"
+          >
+          </codx-vll>
+        </div>
+      </div>
+    </div>
+    <!-- ngày hết hạn -->
+    <div class="w-25 p-3">
+      <div class="d-flex flex-column">
+        <span class="data-text-color">{{
+          data.scheduleFinishDate | fmDT
+        }}</span>
+      </div>
+    </div>
+    <!-- Tình trạng -->
+    <div class="w-25 p-3 h-100">
+      <div class="w-100 h-50px">
+        <div class="w-100 d-flex align-items-center" *ngIf="!data.taskStatus">
+          Chưa có công việc liên quan...
+        </div>
+        <div class="d-flex flex-column w-100  h-40px  align-items-center" *ngIf="data.taskStatus">
+          <div class="w-100 h-30px">
+            <ejs-progressbar
+            [id]="data[idField]"
+            [type]="'Linear'"
+            [maximum]="100"
+            [minimum]="0"
+            [value]="data.taskStatus.done > 0 ? (data.taskStatus.done/data.taskStatus.count) * 100 : 0"
+            [width]="'100%'"
+            [trackThickness]="30"
+            [progressThickness]="30"
+            [height]="'40'"
+            [animation]="{enable: true, duration: 500, delay: 0}"
+            [showProgressValue]="true"
+            trackColor="#d0ddea"
+            progressColor="#1E90FF"
+            cornerRadius="Round4px"
+            (textRender)="textRender($event,data.taskStatus)"
+          >
+          </ejs-progressbar>
+          </div>
+          <div class="w-100 d-flex align-items-center pt-5 px-2">
+            <div class="w-50 d-flex float-start">
+              <b>{{data.taskStatus.done}}/{{data.taskStatus.count}}</b> &nbsp; hoàn thành
+            </div>
+            <div class="w-50 d-flex justify-content-end">
+              <b>{{data.taskStatus.isOverdue}}</b> &nbsp; quá hạn
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Thành viên-->
+    <div class="w-25 p-3">
+      <div class="d-flex has-action-menu justify-content-between w-100">
+        <codx-img  [objectId]="data.projectManeger" [objectName]="data.permitions"
+            objectType="AD_Users" [width]="40">
+          </codx-img>
+      </div>
+    </div>
+    <!-- Quản lý-->
+    <div class="w-25 p-3">
+      <div class="d-flex has-action-menu justify-content-between w-100">
+        <codx-img  [objectId]="data.permissions" [objectName]="data.projectName"
+            objectType="AD_Users" [width]="40">
+          </codx-img>
+      </div>
+    </div>
+  </div>
+</ng-template>
+<!-- end template list -->
