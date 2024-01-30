@@ -1,0 +1,222 @@
+
+<codx-layout-add #form [title]="title" [tabInfo]=" tabInfo " [formModel]="formModel"
+  [footer]="footer" [dialog]="dialogRef"  [openMore]="false" [templateExtend]="expand"
+  [tabContent]=" [ tabGeneralInfo, tabMembers, tabSettings ]" [data]="data">
+
+</codx-layout-add>
+
+<ng-template #expand>
+  <codx-tabs #tabModel [entityName]="'PM_Projects'" [objectID]="data?.recID" [funcID]="formModel?.funcID"
+    [dataTree]="[]" [TabControl]="tabControl" [transID]="data?.recID" [dataTree]="data?.tasks ? data?.tasks : []"
+    [approveStatus]="data?.approveStatus" [addPermissions]="listFilePermission" [isEdit]="true"></codx-tabs>
+</ng-template>
+<ng-template #tabGeneralInfo>
+  <ng-container *ngIf="form && form?.formGroup">
+    <div class="form-group upload-img">
+      <codx-img #imageUpLoad [width]="100" imageType="circle" [objectType]="'PM_Projects'" aria-disabled="false"
+        [funcId]="formModel?.funcID" [isAllowEdit]="true" [objectId]="imgRecID" [objectName]="data?.projectName">
+      </codx-img>
+    </div>
+    <div class="form-group ps-0">
+      <codx-label fiedName="ProjectName" [formModel]="form.formModel">
+      </codx-label>
+      <codx-input field="projectName" [crrValue]="data?.projectName" type="text"
+        [disabled]="viewOnly" (valueChange)="valueChange($event)">
+      </codx-input>
+    </div>
+    <div class="form-group ps-0">
+      <codx-label fiedName="Memo" [formModel]="form.formModel" default="Mô tả">
+      </codx-label>
+      <codx-input field="memo" [crrValue]="data?.memo" type="textarea" format="ed3"
+        [disabled]="viewOnly" (valueChange)="valueChange($event)">
+      </codx-input>
+    </div>
+    <div class="row">
+      <div class="col-6 form-group" >
+        <codx-label fiedName="StartDate" [formModel]="form.formModel">
+        </codx-label>
+        <codx-input type="datetime" class="test-datetime" field="startDate" [crrValue]="data.startDate" format="d"
+          (valueChange)="valueDateChange($event)"  [disabled]="viewOnly">
+        </codx-input>
+      </div>
+      <div class="col-6 form-group" >
+        <codx-label fiedName="FinishDate" [formModel]="form.formModel">
+        </codx-label>
+        <codx-input type="datetime" class="test-datetime" field="finishDate" [crrValue]="data.finishDate" format="d"
+          (valueChange)="valueDateChange($event)"  [disabled]="viewOnly">
+        </codx-input>
+      </div>
+    </div>
+    <div class="form-group ps-0">
+      <codx-label fiedName="ProjectType" [formModel]="form.formModel">
+      </codx-label>
+      <codx-input field="projectType" [crrValue]="data?.projectType" type="valuelist" refType="2" refValue=""
+        [disabled]="viewOnly" (valueChange)="valueChange($event)">
+      </codx-input>
+    </div>
+    <div class="row">
+      <div class="col-6 form-group" >
+        <codx-label fiedName="CustomerID" [formModel]="form.formModel">
+        </codx-label>
+        <codx-input field="customerID" [crrValue]="data?.customerID" type="combobox" refType="3" refValue=""
+        [disabled]="viewOnly" (valueChange)="valueChange($event)">
+      </codx-input>
+      </div>
+      <div class="col-6 form-group" >
+        <codx-label fiedName="Location" [formModel]="form.formModel">
+        </codx-label>
+        <codx-input field="location" [crrValue]="data?.location" type="text"
+        [disabled]="viewOnly" (valueChange)="valueChange($event)">
+      </codx-input>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-6 form-group" >
+        <codx-label fiedName="ProjectID" [formModel]="form.formModel">
+        </codx-label>
+        <codx-input field="projectID" [crrValue]="data?.projectID" type="text"
+        [disabled]="viewOnly" (valueChange)="valueChange($event)">
+      </codx-input>
+      </div>
+      <div class="col-6 form-group" >
+        <codx-label fiedName="Priority" [formModel]="form.formModel">
+        </codx-label>
+        <codx-input field="priority" [crrValue]="data?.priority" type="valuelist" refType="2" refValue=""
+        [disabled]="viewOnly" (valueChange)="valueChange($event)">
+        </codx-input>
+      </div>
+    </div>
+    <div class="col-4 form-group" >
+      <codx-tag [entityName]="formModel.entityName" field="tag" [value]="data.tag" (valueChange)="valueChange($event)"></codx-tag>
+    </div>
+  </ng-container>
+</ng-template>
+
+<ng-template #tabMembers>
+  <ng-container *ngIf="form && form.formGroup">
+    <div class="d-flex justify-content-start align-items-center" >
+      <div class="">
+        <codx-label fiedName="Attendees" [formModel]="form.formModel">
+        </codx-label>
+      </div>
+      <div class="">
+        <span class="me-2">:</span>
+        <span class="fw-bold">{{ attendeesNumber }}</span>
+      </div>
+    </div>
+
+    <div class="separator my-5"></div>
+    <div class="d-flex justify-content-between">
+      <div class="d-flex flex-row justify-content-start">
+        <ng-container *ngFor="let item of listRoles">
+          <div class="d-flex align-items-center justify-content-start me-4">
+            <span [inlineSVG]="'./assets/themes/ep/default/img/'+ item?.icon"></span>
+            <div class="fs-8 text-gray-500 ms-1">{{ item?.text }}</div>
+          </div>
+        </ng-container>
+      </div>
+
+      <div class="d-flex flex-row text-end align-items-end">
+        <div class="mx-2">
+          <codx-input type="Share" refValue="TM003"  field="resources" (valueChange)="shareInputChange($event)"
+            [dataShared]="[]" [multiple]="true" [showInput]="false" [disabled]="viewOnly">
+          </codx-input>
+        </div>
+      </div>
+    </div>
+    <div class="d-flex justify-content-between align-items-center mt-4 mb-2" id="Members">
+      <div class="fw-bold">
+        <codx-label name="lblMembers" default="Thành viên">
+        </codx-label>
+      </div>
+      <div class="fw-bold me-5 pe-3">
+        <span>
+          {{ "1" | vll : "EP017" : "text" | async }}
+        </span>
+      </div>
+    </div>
+
+    <div class="d-flex align-items-center mb-4 pb-2 position-relative" *ngFor="let item of members">
+      <div class="symbol symbol-30px symbol-circle me-4">
+        <codx-img [width]="30" [objectId]="item?.userID" objectType="AD_Users"></codx-img>
+        <div role="button" class="pe-auto" (click)="showPopover(p, item?.userID)">
+          <span popoverClass="userPopoverClass" [ngbPopover]="!viewOnly?popoverSelectRoles:null" placement="right"
+            #p="ngbPopover" autoClose="outside" class="position-absolute attendees-tag"
+            [inlineSVG]="'./assets/themes/ep/default/img/'+ item?.icon">
+          </span>
+        </div>
+      </div>
+
+      <div class="d-flex flex-column flex-grow-1">
+        <div class="text-dark fw-bold fs-6 fw-bolder">
+          {{ item?.userName }}
+        </div>
+        <div>
+          <span class="text-muted">{{
+            item?.roleType | vll : "EP009" : "text" | async
+            }}</span>
+        </div>
+      </div>
+
+      <div class="d-flex flex-column justify-content-center align-items-center me-5">
+        <codx-input type="checkbox" [checked]="item?.optional"
+          [disabled]="viewOnly">
+        </codx-input>
+      </div>
+
+
+    </div>
+
+  </ng-container>
+</ng-template>
+<ng-template #tabSettings>
+  hahahaha
+</ng-template>
+
+<ng-template #footer>
+  <ng-container *ngIf="form && form.formGroup">
+    <div class="d-flex justify-content-end">
+      <!-- <button
+        class="btn btn-sm btn-outline btn-outline-primary btn-active-light-primary d-flex flex-row">
+        <span class="icon-cloud_upload btn-text-primary me-2"></span>
+        <codx-label fiedName="lblUploadFile" default="Đính kèm" [formModel]="form.formModel"></codx-label>
+      </button> -->
+      <div class="btn-group">
+        <!-- <button class="btn btn-outline-primary me-2">
+          <codx-label name="lblApprove" default="Gửi duyệt" [formModel]="formModel"></codx-label>
+        </button> -->
+        <button class="btn btn-primary" >
+          <codx-label name="lblSave" default="Lưu" [formModel]="formModel"></codx-label>
+        </button>
+      </div>
+    </div>
+  </ng-container>
+</ng-template>
+
+<ng-template #popoverSelectRoles>
+  <div class="d-flex flex-column mb-1 w-150px">
+    <ng-container *ngIf="members && members.length > 0 ">
+      <ng-container *ngFor="let item of listRoles">
+        <div class="d-flex align-items-center btn btn-sm btn-white cursor-pointer"
+          >
+          <span [inlineSVG]="'./assets/themes/ep/default/img/'+ item?.icon"></span>
+          <div class="fs-7 ms-2 text-gray-600">
+            {{ item?.text }}
+          </div>
+        </div>
+      </ng-container>
+    </ng-container>
+
+    <ng-container *ngIf="members && members?.length == 0">
+      <ng-container>
+        <div class="d-flex align-items-center btn btn-sm btn-white cursor-pointer"
+          >
+          <span [inlineSVG]="'./assets/themes/ep/default/img/'+ listRoles[0]?.icon"></span>
+          <div class="fs-7 ms-2 text-gray-600">
+            {{ listRoles[0].text }}
+          </div>
+        </div>
+      </ng-container>
+    </ng-container>
+  </div>
+</ng-template>

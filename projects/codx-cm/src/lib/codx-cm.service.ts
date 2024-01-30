@@ -1817,7 +1817,7 @@ export class CodxCmService {
     return this.api.exec<any>(
       'CM',
       'ContractsBusiness',
-      'SendExpiredEmailsAsync',
+      'SendDueDateEmailAsync',
       [data]
     );
   }
