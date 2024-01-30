@@ -204,6 +204,7 @@ import { CodxDiagramComponent } from './components/codx-diagram/codx-diagram.com
 import { DiagramModule } from '@syncfusion/ej2-angular-diagrams';
 import { FormEditConnectorComponent } from './components/codx-diagram/form-edit-connector/form-edit-connector.component';
 import { CodxApproverStepComponent } from './components/codx-view-approval-step/codx-approver-step/codx-approver-step.component';
+import { ViewContentScheduleMeetingsComponent } from './components/codx-tmmeetings/view-content-schedule-meetings/view-content-schedule-meetings.component';
 
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
@@ -423,6 +424,7 @@ const T_Pipe: Type<any>[] = [
     CodxDateComponent,
     LayoutComponent,
     T_Pipe,
+    ViewContentScheduleMeetingsComponent,
   ],
   exports: [T_Component, T_Pipe, CodxCommonModule],
   imports: [

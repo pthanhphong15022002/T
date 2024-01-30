@@ -213,7 +213,13 @@
         </span>
       </button>
     </div>
-    <button type="button" button class="btn btn-primary ms-1" (click)="save()"  [disabled]="action == 'view'">
+    <button
+      type="button"
+      button
+      class="btn btn-primary ms-1"
+      (click)="save()"
+      [disabled]="action == 'view'"
+    >
       <codx-label
         name="lblSave"
         [formModel]="form?.formModel"
@@ -245,7 +251,10 @@
             planceHolderAutoNumber ?? grvSetup['ContractID'].headerText
           "
           [disabled]="
-            disabledShowInput || action === 'edit' || action === 'extend' || action === 'view'
+            disabledShowInput ||
+            action === 'edit' ||
+            action === 'extend' ||
+            action === 'view'
           "
           (valueChange)="changeAutoNum($event)"
         ></codx-input>
@@ -283,7 +292,12 @@
         [Group]="form.formGroup"
         [crrValue]="contracts?.businessLineID"
         (valueChange)="valueChangeCombobox($event)"
-        [disabled]="action == 'edit' || type == 'DP' || action == 'extend' || action === 'view'"
+        [disabled]="
+          action == 'edit' ||
+          type == 'DP' ||
+          action == 'extend' ||
+          action === 'view'
+        "
       >
       </codx-input>
     </div>
@@ -368,7 +382,7 @@
           type == 'deal' ||
           type == 'quotation' ||
           type == 'customer' ||
-          action == 'extend' || 
+          action == 'extend' ||
           action === 'view'
         "
       >
@@ -552,7 +566,7 @@
   </div>
 
   <!-- Thông báo -->
-  <div class="d-flex align-items-center mb-2">
+  <!-- <div class="d-flex align-items-center mb-2">
     <codx-label
       class="label-colon text-gray-600 codx-textlabel"
       fiedName="notification"
@@ -561,9 +575,9 @@
       default="Thông báo sắp hết hạn hợp đồng"
     >
     </codx-label>
-    <span>Trước {{contracts?.expirationAlertTime}} ngày.</span>
+    <span>Trước {{ contracts?.expirationAlertTime }} ngày.</span>
     <div class="ms-1">
-      <codx-input 
+      <codx-input
         class="check-circle me-1 mt-1"
         field="isAlert"
         type="checkbox"
@@ -580,7 +594,7 @@
       <span>,</span>
     </div>
     <div class="ms-1">
-      <codx-input 
+      <codx-input
         class="check-circle me-1 mt-1"
         field="isMail"
         type="checkbox"
@@ -596,7 +610,79 @@
       ></codx-label>
     </div>
     <div class="ms-1 d-flex align-items-end">
-      <span class="icon-18 icon-email cursor-pointer" [ngbTooltip]="'Thiết lập Mail'" (click)="handelMailContract()"></span>
+      <span
+        class="icon-18 icon-email cursor-pointer"
+        [ngbTooltip]="'Thiết lập Mail'"
+        (click)="handelMailContract()"
+      ></span>
+    </div>
+  </div> -->
+
+  <div class="form-group row">
+    <div class="col-6">
+      <codx-label
+        [formModel]="dialog?.formModel"
+        fiedName="expirationAlertTime"
+        default="Thời hạn hợp đồng"
+      ></codx-label>
+      <codx-input
+        [formModel]="dialog?.formModel"
+        field="expirationAlertTime"
+        [crrValue]="contracts?.expirationAlertTime"
+        (valueChange)="valueChangeText($event)"
+        [disabled]="action == 'view'"
+      >
+      </codx-input>
+    </div>
+    <div class="col-6">
+      <codx-label
+        fiedName="notification"
+        [formModel]="formModel"
+        [setRequire]="false"
+        default="Thiết lập thông báo"
+      ></codx-label>
+      <div class="d-flex align-items-center mt-2">
+        <div>
+          <codx-input
+            class="check-circle me-1 mt-1"
+            field="isAlert"
+            type="checkbox"
+            [checked]="contracts?.isAlert"
+            (valueChange)="valueChangeChecked($event, contracts)"
+          ></codx-input>
+          <codx-label
+            fiedName="isAlertTitle"
+            [formName]="'DPProcesses'"
+            [gridViewName]="'grvDPProcesses'"
+            [setRequire]="false"
+            [default]="'Thông báo'"
+          ></codx-label>
+          <span>,</span>
+        </div>
+        <div class="ms-5">
+          <codx-input
+            class="check-circle me-2 mt-1"
+            field="isMail"
+            type="checkbox"
+            [checked]="contracts?.isMail"
+            (valueChange)="valueChangeChecked($event, contracts)"
+          ></codx-input>
+          <codx-label
+            fiedName="isMailTitle"
+            [formName]="'DPProcesses'"
+            [gridViewName]="'grvDPProcesses'"
+            [setRequire]="false"
+            [default]="'Mail'"
+          ></codx-label>
+        </div>
+        <div class="ms-1 d-flex align-items-end">
+          <span
+            class="icon-18 icon-email cursor-pointer"
+            [ngbTooltip]="'Thiết lập Mail'"
+            (click)="handelMailContract()"
+          ></span>
+        </div>
+      </div>
     </div>
   </div>
 

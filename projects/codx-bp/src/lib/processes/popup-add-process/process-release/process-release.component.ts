@@ -1,5 +1,6 @@
 import {
   AfterViewInit,
+  ChangeDetectorRef,
   Component,
   OnInit,
   Optional,
@@ -56,13 +57,14 @@ export class ProcessReleaseComponent implements OnInit, AfterViewInit {
   method = 'GetListInstancesAsync';
   dataObj: any;
   //#endregion
-
+  dataSelected: any;
   lstSteps = [];
   constructor(
     private api: ApiHttpService,
     private callFunc: CallFuncService,
     private router: ActivatedRoute,
     private notifiSer: NotificationsService,
+    private detectorRef: ChangeDetectorRef,
     @Optional() dialog: DialogRef,
     @Optional() dt: DialogData
   ) {
@@ -158,6 +160,12 @@ export class ProcessReleaseComponent implements OnInit, AfterViewInit {
     this.getProcess();
   }
 
+  selectedChange(data) {
+    this.dataSelected = data?.data ? data?.data : data;
+
+    this.detectorRef.detectChanges();
+  }
+
   click(evt: ButtonModel) {
     switch (evt.id) {
       case 'btnAdd':
@@ -206,9 +214,10 @@ export class ProcessReleaseComponent implements OnInit, AfterViewInit {
         'ProcessesBusiness',
         'StartProcessAsync',
         [this.view?.dataService?.dataSelected?.recID]
-      ).subscribe(res=>{
-        if(res){
-          this.notifiSer.notifyCode("SYS034");
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.notifiSer.notifyCode('SYS034');
         }
       });
   }

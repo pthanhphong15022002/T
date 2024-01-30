@@ -16,7 +16,7 @@ export class PeriodicControlComponent extends UIComponent{
   setting: any;
   dataValue: any = {};
   title: any = '';
-  showAll: any = false;
+  showAll: any = true;
   showLess:any = false;
   oData: any = [];
   functionType:any;
@@ -153,10 +153,10 @@ export class PeriodicControlComponent extends UIComponent{
       if (event.data.length) {
         let data = event.data[0];
         this.oData = [data];
-        if(event.data.length == 1) this.showAll = true;
+        if(event.data.length == 1) this.showAll = false;
         this.detectorRef.detectChanges();
       }else{
-        this.showAll = true;
+        this.showAll = false;
       }
     }
   }
@@ -175,7 +175,7 @@ export class PeriodicControlComponent extends UIComponent{
           if(i == -1) this.oData.push(item);
         },this.oData)
         let total = res[1];
-        if(this.oData.length <= total) this.showAll = true;
+        if(this.oData.length <= total) this.showAll = false;
         this.detectorRef.detectChanges();
       }
     });
