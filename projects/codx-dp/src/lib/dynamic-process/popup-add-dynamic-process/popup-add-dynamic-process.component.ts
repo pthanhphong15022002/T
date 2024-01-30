@@ -5383,4 +5383,33 @@ export class PopupAddDynamicProcessComponent implements OnInit, OnDestroy {
     }
     this.changeDetectorRef.markForCheck();
   }
+
+  handelMailContract() {
+    let data = {
+      dialog: this.dialog,
+      formGroup: null,
+      templateID: this.process?.emailTemplate,
+      showIsTemplate: true,
+      showIsPublish: true,
+      showSendLater: true,
+      files: null,
+      isAddNew: this.action == 'edit' && this.process?.emailTemplate ? false : true,
+      notSendMail: true,
+    };
+
+    let popEmail = this.callfc.openForm(
+      CodxEmailComponent,
+      '',
+      800,
+      screen.height,
+      '',
+      data
+    );
+    popEmail.closed.subscribe((res) => {
+      if (res && res.event) {
+        this.process.emailTemplate = res.event?.recID ? res.event?.recID : '';
+      }
+    });
+  }
+
 }
