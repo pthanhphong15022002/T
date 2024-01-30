@@ -14,7 +14,7 @@ export class ProcessReleaseDetailComponent implements OnInit{
   process:any;
   listStage = [];
   count = 0;
-  currentStep:any;
+  listTask:any;
   formModel:any;
   constructor(
     private api: ApiHttpService,
@@ -32,10 +32,10 @@ export class ProcessReleaseDetailComponent implements OnInit{
   }
   getData()
   {
-    this.api.execSv("BP","BP","ProcessTasksBusiness","GetItemByCurrentStepAsync",this.data.currentStep).subscribe(item=>{
+    this.api.execSv("BP","BP","ProcessTasksBusiness","GetItemsByInstanceIDAsync",this.data.recID).subscribe(item=>{
       if(item)
       {
-        this.currentStep = item;
+        this.listTask = item;
         this.formatData();
       }
     })
@@ -65,16 +65,20 @@ export class ProcessReleaseDetailComponent implements OnInit{
       elm2.settings = typeof elm2?.settings === 'object' ? elm2.settings : (elm2?.settings ? JSON.parse(elm2.settings) : null);
       elm2.owners = null;
       elm2.child = this.getListChild(elm2);
-
-      if(this.currentStep.stepID == elm2.recID)
+      if(this.listTask && this.listTask.length > 0)
       {
-        elm2.owners = typeof this.currentStep?.owners === 'object' ? this.currentStep.owners : (this.currentStep?.owners ? JSON.parse(this.currentStep.owners) : null);
-        elm2.owners =  elm2?.owners ? elm2.owners.map((u) => u.objectID).join(';') : "";
-        elm2.startDate = this.currentStep.startDate ? moment(this.currentStep.startDate).format('dd/MM/yyyy') : 'dd/MM/yyyy';
-        elm2.endDate = this.currentStep.endDate ? moment(this.currentStep.endDate).format('dd/MM/yyyy') : 'dd/MM/yyyy';
-        elm2.actualStart = this.currentStep.actualStart ? moment(this.currentStep.actualStart).format('dd/MM/yyyy') : 'dd/MM/yyyy';
-        elm2.actualEnd = this.currentStep.actualEnd ? moment(this.currentStep.actualEnd).format('dd/MM/yyyy') : 'dd/MM/yyyy';
+        var index = this.listTask.findIndex(x=>x.stepID == elm2.recID);
+        if(index >= 0)
+        {
+          elm2.owners = typeof this.listTask[index]?.owners === 'object' ? this.listTask[index].owners : (this.listTask[index]?.owners ? JSON.parse(this.listTask[index].owners) : null);
+          elm2.owners =  elm2?.owners ? elm2.owners.map((u) => u.objectID).join(';') : "";
+          elm2.startDate = this.listTask[index].startDate ? moment(this.listTask[index].startDate).format('dd/MM/yyyy') : 'dd/MM/yyyy';
+          elm2.endDate = this.listTask[index].endDate ? moment(this.listTask[index].endDate).format('dd/MM/yyyy') : 'dd/MM/yyyy';
+          elm2.actualStart = this.listTask[index].actualStart ? moment(this.listTask[index].actualStart).format('dd/MM/yyyy') : 'dd/MM/yyyy';
+          elm2.actualEnd = this.listTask[index].actualEnd ? moment(this.listTask[index].actualEnd).format('dd/MM/yyyy') : 'dd/MM/yyyy';
+        }
       }
+    
       if(elm2.activityType == "Conditions" && elm2.child && elm2.child.length>0)
       {
         for(var i =0 ; i< elm2.child.length ; i++)

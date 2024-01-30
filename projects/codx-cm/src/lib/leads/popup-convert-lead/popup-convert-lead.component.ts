@@ -461,10 +461,27 @@ export class PopupConvertLeadComponent implements OnInit {
           this.customer.provinceID = lstDis?.ProvinceID;
           this.customer.districtID = lstDis?.DistrictID;
           this.customer.wardID = lstDis?.WardID;
+          this.customer.countryID = lstDis?.CountryID;
+
         } else {
           this.customer.provinceID = null;
           this.customer.districtID = null;
           this.customer.wardID = null;
+          this.customer.countryID = null;
+        }
+        if(this.customer?.countryID == null || this.customer?.countryID?.trim() == ''){
+          if(this.customer.provinceID){
+            let province = await firstValueFrom(
+              this.api.execSv<any>(
+                'BS',
+                'ERM.Business.BS',
+                'ProvincesBusiness',
+                'GetOneProvinceAsync',
+                [this.customer.provinceID]
+              )
+            );
+            this.customer.countryID = province?.countryID;
+          }
         }
       }
 

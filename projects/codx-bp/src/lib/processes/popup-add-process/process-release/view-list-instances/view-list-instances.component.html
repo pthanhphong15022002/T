@@ -24,10 +24,10 @@
       ></div>
     </div>
   </div>
-  <div class="w-10 p-3">
+  <div class="w-15 p-3">
     <div class="group-steps">
       <div class="d-flex arrow-steps flex-container">
-        <ng-container *ngFor="let item of lstStages let i = index">
+        <ng-container *ngFor="let item of lstStages; let i = index">
           <div
             style="flex-grow: 1; cursor: pointer"
             [ngClass]="getColor(item)"
@@ -36,8 +36,28 @@
       </div>
     </div>
   </div>
-  <div class="w-15 p-3"></div>
-  <div class="w-5 p-3 d-flex flex-wrap"></div>
+  <div class="w-15 p-3">
+    <div
+      class="progress-list"
+      [style.backgroundColor]="
+        dataSelected.title == 'Tuyển dụng vị trí kế toán tổng hợp năm 2023'
+          ? '#1fa65c'
+          : ''
+      "
+    >
+      <span>Đang thực hiện (65%)</span>
+    </div>
+    <div class="mt-1 d-flex justify-content-between">
+      <div class="d-flex justify-content-start">
+        <span class="fw-bold me-1">134/167</span>
+        <span class="text-gray-600">hoàn tất</span>
+      </div>
+      <div class="d-flex justify-content-end">
+        <span class="fw-bold me-1">12</span>
+        <span class="text-gray-600">trễ hạn</span>
+      </div>
+    </div>
+  </div>
   <div class="w-25 p-3 d-flex flex-column">
     <div class="d-flex">
       <codx-label
@@ -102,15 +122,10 @@
       </div>
       <div class="d-flex flex-column w-100">
         <div class="d-flex flex-column">
-          <div
-            class="fw-bold fs-6 text-dark line-clamp line-clamp-1"
-            [innerHTML]="
-              dataSelected?.createdBy
-                | formatvalue : formModel : 'CreatedBy'
-                | async
-            "
-          ></div>
-          <!-- <div class="text-gray-500">{{ dataSelected.positionName }}</div> -->
+          <div class="fw-bold fs-6 text-dark line-clamp line-clamp-1">
+            {{ dataSelected.userName }}
+          </div>
+          <div class="text-gray-500">{{ dataSelected.positionName }}</div>
         </div>
       </div>
     </div>

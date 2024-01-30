@@ -5,6 +5,7 @@
   (buttonClick)="click($event)"
   (clickMF)="clickMF($event)"
   (viewChanging)="viewChange($event)"
+  (selectedChange)="selectedChange($event)"
   [service]="service"
   [entityName]="entityName"
   [idField]="idField"
@@ -84,7 +85,7 @@
         [default]="'Yêu cầu'"
       ></codx-label>
     </div>
-    <div class="w-10 text-dark fw-bold p-3 fw-500">
+    <div class="w-15 text-dark fw-bold p-3 fw-500">
       <codx-label
         fiedName="list_CurrentStage"
         [setRequire]="false"
@@ -98,14 +99,6 @@
         [setRequire]="false"
         [formModel]="view.formModel"
         [default]="'Trình trạng'"
-      ></codx-label>
-    </div>
-    <div class="w-5 text-dark fw-bold p-3 fw-500">
-      <codx-label
-        fiedName="list_Demurrage"
-        [setRequire]="false"
-        [formModel]="view.formModel"
-        [default]="'Trễ hạn?'"
       ></codx-label>
     </div>
     <div class="w-25 text-dark fw-bold p-3 fw-500">
@@ -128,6 +121,75 @@
 </ng-template>
 
 <ng-template #templateList let-data>
-  <lib-view-list-instances [dataSelected]="data" [formModel]="view.formModel" [lstStages]="lstSteps"></lib-view-list-instances>
+  <lib-view-list-instances
+    [dataSelected]="data"
+    [formModel]="view.formModel"
+    [lstStages]="lstSteps"
+  ></lib-view-list-instances>
 </ng-template>
 <!--END VIEW LIST-->
+
+<!--VIEW DETAIL-->
+<ng-template #itemTemplate let-data>
+  <div class="d-flex flex-column w-100 card-template border-bottom p-3 list-task">
+    <div class="d-flex justify-content-between mb-2 w-100">
+      <div class="w-90 d-flex justify-content-start">
+        <span class="fw-bold">{{ data.title }}</span>
+      </div>
+      <div class="w-10 d-flex justify-content-end">
+        <span
+          class="icon-notifications icon-18 expired"
+        >
+        </span>
+      </div>
+    </div>
+    <div class="d-flex align-items-center mb-2">
+      <span [innerHTML]="data?.currentStage | customStages : lstSteps"></span>
+    </div>
+    <div class="d-flex align-items-center mb-2">
+      <span class="icon-16 icon-i-calendar-event me-2"></span>
+      <span
+        [innerHTML]="
+          data?.startDate
+            | formatvalue : view.formModel : 'StartDate'
+            | async
+        "
+      ></span>
+      <span class="ms-1 me-1">-</span>
+      <span
+      [innerHTML]="
+        data?.endDate
+          | formatvalue : view.formModel : 'EndDate'
+          | async
+      "
+    ></span>
+    </div>
+    <div class="d-flex justify-content-between align-items-center">
+      <div class="d-flex align-items-center">
+        <codx-vll
+          [name]="'BP014'"
+          [value]="data?.status"
+          [showText]="true"
+          [showIcon]="true"
+          class="badge badge-light badge-md"
+        >
+        </codx-vll>
+        <div class="text-gray-600">
+          <codx-label fiedName="CreatedOn" default="Ngày tạo" [formModel]="view.formModel" class="label-colon"></codx-label>
+          <span>{{ data.createdOn | date : "dd/MM/yyyy" }}</span>
+        </div>
+      </div>
+      <codx-img
+        [objectId]="data?.createdBy"
+        objectType="AD_Users"
+        [width]="30"
+        [imageType]="'circle'"
+      >
+      </codx-img>
+    </div>
+  </div>
+</ng-template>
+<ng-template #templateDetail>
+  <lib-view-detail-instances [dataSelected]="dataSelected" [formModel]="view.formModel" [lstSteps]="lstSteps"></lib-view-detail-instances>
+</ng-template>
+<!--END VIEW DETAIL-->

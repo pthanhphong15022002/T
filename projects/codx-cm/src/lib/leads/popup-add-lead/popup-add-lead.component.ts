@@ -434,10 +434,26 @@ export class PopupAddLeadComponent
         this.lead.provinceID = lstDis?.ProvinceID;
         this.lead.districtID = lstDis?.DistrictID;
         //  this.lead.wardID = lstDis?.WardID;
+        this.lead.countryID = lstDis?.CountryID;
       } else {
         this.lead.provinceID = null;
         this.lead.districtID = null;
+        this.lead.processID = null;
         //    this.lead.wardID = null;
+      }
+      if(this.lead?.countryID == null || this.lead?.countryID?.trim() == ''){
+        if(this.lead.provinceID){
+          let province = await firstValueFrom(
+            this.api.execSv<any>(
+              'BS',
+              'ERM.Business.BS',
+              'ProvincesBusiness',
+              'GetOneProvinceAsync',
+              [this.lead.provinceID]
+            )
+          );
+          this.lead.countryID = province?.countryID;
+        }
       }
     }
 
