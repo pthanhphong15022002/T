@@ -34,6 +34,10 @@ export class ProcessReleaseComponent implements OnInit, AfterViewInit {
   @ViewChild('cardKanban') cardKanban!: TemplateRef<any>;
   @ViewChild('templateList') templateList?: TemplateRef<any>;
   @ViewChild('headerTemplateList') headerTemplateList?: TemplateRef<any>;
+  @ViewChild('templateDetail')
+  templateDetail: TemplateRef<any>;
+  @ViewChild('itemTemplate')
+  itemTemplate: TemplateRef<any>;
   views: Array<ViewModel> = [];
   recID: any;
   funcID: any;
@@ -76,7 +80,7 @@ export class ProcessReleaseComponent implements OnInit, AfterViewInit {
     this.views = [
       {
         type: ViewType.kanban,
-        active: true,
+        active: false,
         sameData: false,
         request: this.request,
         request2: this.resourceKanban,
@@ -92,6 +96,16 @@ export class ProcessReleaseComponent implements OnInit, AfterViewInit {
         model: {
           template: this.templateList,
           headerTemplate: this.headerTemplateList,
+        },
+      },
+      {
+        type: ViewType.listdetail,
+        active: true,
+        sameData: true,
+        // toolbarTemplate: this.footerButton,
+        model: {
+          template: this.itemTemplate,
+          panelRightRef: this.templateDetail,
         },
       },
       // request: this.request,
@@ -129,7 +143,8 @@ export class ProcessReleaseComponent implements OnInit, AfterViewInit {
     // this.request.assemblyName = 'BP';
     // this.request.className = 'ProcessInstancesBusiness';
     // this.request.method = 'GetListInstancesAsync';
-    // this.request.idField = 'currentStage';
+    // this.request.idField = 'recID';
+    // this.request.dataObj = this.dataObj;
 
     this.resourceKanban = new ResourceModel();
     this.resourceKanban.service = 'BP';
@@ -149,77 +164,80 @@ export class ProcessReleaseComponent implements OnInit, AfterViewInit {
     }
   }
 
-  openFormDetail(dt:any)
-  {
+  openFormDetail(dt: any) {
     var option = new DialogModel();
     option.IsFull = true;
     option.FormModel = this.view.formModel;
-    let popup = this.callFunc.openForm(ProcessReleaseDetailComponent,"",850,600,"",{data:dt,process:this.process},"",option);
+    let popup = this.callFunc.openForm(
+      ProcessReleaseDetailComponent,
+      '',
+      850,
+      600,
+      '',
+      { data: dt, process: this.process },
+      '',
+      option
+    );
   }
 
-  clickMF(e:any)
-  {
+  clickMF(e: any) {
     var funcID = e?.functionID;
-    switch(funcID)
-    {
+    switch (funcID) {
       //edit
-      case "SYS03":
-        {
-          this.editItem();
-          break;
-        }
-        
+      case 'SYS03': {
+        this.editItem();
+        break;
+      }
+
       //start
-      case "BPT01011":
-        {
-          this.startProcess();
-          break;
-        }
+      case 'BPT01011': {
+        this.startProcess();
+        break;
+      }
     }
   }
-  startProcess(){
-      this.api.execSv(
-        'BP', 
+  startProcess() {
+    this.api
+      .execSv(
+        'BP',
         'ERM.Business.BP',
         'ProcessesBusiness',
         'StartProcessAsync',
         [this.view?.dataService?.dataSelected?.processID]
-      ).subscribe(res=>{
-        if(res){
+      )
+      .subscribe((res) => {
+        if (res) {
         }
       });
-    
   }
-  addItem()
-  {
-    this.view.dataService.addNew().subscribe(item=>{
-      this.popUpAddEdit(item,'add');
-    })
+  addItem() {
+    this.view.dataService.addNew().subscribe((item) => {
+      this.popUpAddEdit(item, 'add');
+    });
   }
 
-  editItem()
-  {
-    this.popUpAddEdit(this.view.dataService.dataSelected,'edit');
+  editItem() {
+    this.popUpAddEdit(this.view.dataService.dataSelected, 'edit');
   }
 
-  popUpAddEdit(item:any,type:any)
-  {
+  popUpAddEdit(item: any, type: any) {
     var option = new SidebarModel();
     option.FormModel = {
-      funcID : this.funcID
-    }
-    let popup = this.callFunc.openSide(AddProcessDefaultComponent,{process: this.process, dataIns: item, type:type},option);
-    popup.closed.subscribe(res=>{
-      if(res?.event)
-      {
-        if(type == 'add') (this.view.currentView as any).kanban.addCard(res?.event);
+      funcID: this.funcID,
+    };
+    let popup = this.callFunc.openSide(
+      AddProcessDefaultComponent,
+      { process: this.process, dataIns: item, type: type },
+      option
+    );
+    popup.closed.subscribe((res) => {
+      if (res?.event) {
+        if (type == 'add')
+          (this.view.currentView as any).kanban.addCard(res?.event);
         else (this.view.currentView as any).kanban.updateCard(res?.event);
       }
-    })
+    });
   }
 
-  viewChange(e:any)
-  {
-    
-  }
+  viewChange(e: any) {}
 }

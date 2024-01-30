@@ -1,5 +1,11 @@
 import { firstValueFrom } from 'rxjs';
-import { Component, OnInit, Optional, ViewChild } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+  Optional,
+  ViewChild,
+} from '@angular/core';
 import {
   DialogRef,
   DialogData,
@@ -50,6 +56,7 @@ export class PopupAddressComponent implements OnInit {
     private api: ApiHttpService,
     private notiService: NotificationsService,
     private cmSv: CodxCmService,
+    private detectorRef: ChangeDetectorRef,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -74,6 +81,22 @@ export class PopupAddressComponent implements OnInit {
     this.lstAddress = dt?.data?.listAddress;
   }
 
+  ngAfterViewInit(): void {
+    if (this.form && this.form?.formGroup) {
+      this.form.formGroup.patchValue({
+        countryID: this.data?.countryID,
+        provinceID: this.data?.provinceID,
+        districtID: this.data?.districtID,
+        wardID: this.data?.wardID,
+      });
+    }
+    if (this.action == 'edit') {
+      this.setNameAdress();
+      this.checkAddressName = !!this.data.address;
+    }
+    this.detectorRef.checkNoChanges();
+  }
+
   async ngOnInit() {
     if (this.action == 'add') {
       if (this.lstAddress != null && this.lstAddress.length > 0) {
@@ -87,10 +110,7 @@ export class PopupAddressComponent implements OnInit {
       }
       this.data.recID = Guid.newGuid();
     }
-    if (this.action == 'edit') {
-      this.setNameAdress();
-      this.checkAddressName = !!this.data.address;
-    }
+
     var param = await firstValueFrom(
       this.cache.viewSettingValues('CMParameters')
     );
@@ -103,57 +123,64 @@ export class PopupAddressComponent implements OnInit {
     this.leverSetting = lever;
   }
 
-  setNameAdress() {
+  async setNameAdress() {
+    this.setCountry();
+    this.setProvince();
+    this.setDistrict();
+
+    // if(this.data.countryID != null && this.data.countryID.trim() != ''){
+    //   this.api.execSv<any>('BS','ERM.Business.BS','CountriesBusiness','GetAsync',this.data.countryID).subscribe(res =>{
+    //     this.nameCountry = res;
+    //   })
+    // }
+  }
+
+  async setCountry(){
     if (this.data.countryID != null && this.data.countryID.trim() != '') {
-      this.api
-        .execSv<any>(
+      let country = await firstValueFrom(
+        this.api.execSv<any>(
           'BS',
           'ERM.Business.BS',
           'CountriesBusiness',
           'GetAsync',
           this.data?.countryID
         )
-        .subscribe((res) => {
-          if (res) {
-            this.nameCountry = res?.countryName;
-          }
-        });
+      );
+
+      this.nameCountry = country?.countryName;
     }
+  }
+
+  async setProvince(){
     if (this.data.provinceID != null && this.data.provinceID.trim() != '') {
-      this.api
-        .execSv<any>(
+      let province = await firstValueFrom(
+        this.api.execSv<any>(
           'BS',
           'ERM.Business.BS',
           'ProvincesBusiness',
           'GetAsync',
           this.data?.provinceID
         )
-        .subscribe((res) => {
-          if (res) {
-            this.nameProvince = res?.name;
-          }
-        });
+      );
+
+      this.nameProvince = province?.name;
     }
+  }
+
+  async setDistrict(){
     if (this.data.districtID != null && this.data.districtID.trim() != '') {
-      this.api
-        .execSv<any>(
+      var district = await firstValueFrom(
+        this.api.execSv<any>(
           'BS',
           'ERM.Business.BS',
           'DistrictsBusiness',
           'GetAsync',
           this.data?.districtID
         )
-        .subscribe((res) => {
-          if (res) {
-            this.nameDistrict = res?.districtName;
-          }
-        });
+      );
+
+      this.nameDistrict = district?.districtName;
     }
-    // if(this.data.countryID != null && this.data.countryID.trim() != ''){
-    //   this.api.execSv<any>('BS','ERM.Business.BS','CountriesBusiness','GetAsync',this.data.countryID).subscribe(res =>{
-    //     this.nameCountry = res;
-    //   })
-    // }
   }
 
   onSave() {
@@ -222,7 +249,6 @@ export class PopupAddressComponent implements OnInit {
       this.dialog.close(this.data);
     } else {
       if (this.action == 'add') {
-
         this.cmSv.addOneAddress(this.data).subscribe((res) => {
           if (res) {
             this.dialog.close(res);
@@ -336,6 +362,7 @@ export class PopupAddressComponent implements OnInit {
         this.setAdressName();
       }
     }
+    this.detectorRef.detectChanges();
   }
 
   async checkAdressName() {
@@ -350,25 +377,52 @@ export class PopupAddressComponent implements OnInit {
         [this.data.address, this.leverSetting]
       )
     );
-    if (json != null && json.trim() != '' && json != "null") {
+    if (json != null && json.trim() != '' && json != 'null') {
       let lstDis = JSON.parse(json);
-      if (this.data.provinceID != lstDis?.ProvinceID)
+      if (this.data.provinceID != lstDis?.ProvinceID){
         this.data.provinceID = lstDis?.ProvinceID ?? null;
-      if (this.data.districtID != lstDis?.DistrictID)
+        this.setProvince();
+      }
+      if (this.data.districtID != lstDis?.DistrictID){
         this.data.districtID = lstDis?.DistrictID ?? null;
+        this.setDistrict();
+      }
       if (this.data.wardID != lstDis?.WardID)
         this.data.wardID = lstDis?.WardID ?? null;
+      this.data.countryID = lstDis?.CountryID ?? null;
+      this.setCountry();
     } else {
       this.data.provinceID = null;
       this.data.districtID = null;
       this.data.wardID = null;
+      this.data.countryID = null;
     }
+
+    if (this.data?.countryID == null || this.data?.countryID?.trim() == '') {
+      if (this.data.provinceID) {
+        let province = await firstValueFrom(
+          this.api.execSv<any>(
+            'BS',
+            'ERM.Business.BS',
+            'ProvincesBusiness',
+            'GetOneProvinceAsync',
+            [this.data.provinceID]
+          )
+        );
+        this.data.countryID = province?.countryID;
+        this.setCountry();
+      }
+    }
+
     this.form.formGroup.patchValue({
+      countryID: this.data?.countryID,
       provinceID: this.data?.provinceID,
       districtID: this.data?.districtID,
       wardID: this.data?.wardID,
     });
+
     // this.cmSv.checkValidateSetting(this.data, this.leverSetting, this.gridViewSetup);
+    this.detectorRef.detectChanges();
   }
 
   checkEventListen() {

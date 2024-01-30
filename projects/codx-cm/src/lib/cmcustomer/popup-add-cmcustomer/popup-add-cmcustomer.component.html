@@ -231,18 +231,34 @@
             >
             </codx-input>
           </div>
-          <!-- <div class="col-6">
-            <div class="form-group">
+        </div>
+        <div class="row form-group" (mouseenter)="closePopover()">
+          <div class="col-6" (mouseenter)="closePopover()">
+            <div class="form-group" (mouseenter)="closePopover()">
               <codx-label [formModel]="form.formModel" fiedName="SegmentID">
               </codx-label>
               <codx-input
                 [formModel]="form.formModel"
                 [Group]="form.formGroup"
                 field="segmentID"
+                [disabled]="isView"
               >
               </codx-input>
             </div>
-          </div> -->
+          </div>
+          <div class="col-6" (mouseenter)="closePopover()">
+            <div class="form-group" (mouseenter)="closePopover()">
+              <codx-label [formModel]="form.formModel" fiedName="BusinessType">
+              </codx-label>
+              <codx-input
+                [formModel]="form.formModel"
+                [Group]="form.formGroup"
+                field="businessType"
+                [disabled]="isView"
+              >
+              </codx-input>
+            </div>
+          </div>
         </div>
       </div>
     </ng-container>

@@ -84,7 +84,7 @@
         [default]="'Yêu cầu'"
       ></codx-label>
     </div>
-    <div class="w-10 text-dark fw-bold p-3 fw-500">
+    <div class="w-15 text-dark fw-bold p-3 fw-500">
       <codx-label
         fiedName="list_CurrentStage"
         [setRequire]="false"
@@ -98,14 +98,6 @@
         [setRequire]="false"
         [formModel]="view.formModel"
         [default]="'Trình trạng'"
-      ></codx-label>
-    </div>
-    <div class="w-5 text-dark fw-bold p-3 fw-500">
-      <codx-label
-        fiedName="list_Demurrage"
-        [setRequire]="false"
-        [formModel]="view.formModel"
-        [default]="'Trễ hạn?'"
       ></codx-label>
     </div>
     <div class="w-25 text-dark fw-bold p-3 fw-500">
@@ -131,3 +123,10 @@
   <lib-view-list-instances [dataSelected]="data" [formModel]="view.formModel" [lstStages]="lstSteps"></lib-view-list-instances>
 </ng-template>
 <!--END VIEW LIST-->
+
+<!--VIEW DETAIL-->
+<ng-template #itemTemplate let-data>
+</ng-template>
+<ng-template #templateDetail>
+</ng-template>
+<!--END VIEW DETAIL-->
