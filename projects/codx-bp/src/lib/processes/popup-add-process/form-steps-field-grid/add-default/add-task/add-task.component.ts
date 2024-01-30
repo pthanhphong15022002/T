@@ -55,7 +55,7 @@ export class AddTaskComponent extends BaseFieldComponent implements OnInit , OnC
   {
     if(this.data) {
       this.stage = this.listStage.filter(x=>x.recID == this.data.stageID)[0];
-      this.listUses = this.data.owners || [];
+      this.listUses = this.data.permissions || [];
     }
   }
   default()
@@ -154,20 +154,21 @@ export class AddTaskComponent extends BaseFieldComponent implements OnInit , OnC
           {
             objectID: element.id,
             objectName: element.text,
-            objectType: "U"
+            objectType: "U",
+            roleType: 'O'
           }
         )
       });
     }
 
-    this.data.owners = this.listUses;
+    this.data.permissions = this.listUses;
     this.dataChange.emit(this.data);
   }
 
   deleteUser(index:any)
   {
     this.listUses.splice(index,1);
-    this.data.owners = this.listUses;
+    this.data.permissions = this.listUses;
     this.dataChange.emit(this.data);
   }
 
