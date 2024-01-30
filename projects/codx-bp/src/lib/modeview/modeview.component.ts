@@ -251,7 +251,15 @@ export class ModeviewComponent implements OnInit {
       {
         this.count.attachment ++;
         data.title += " " + this.count.attachment;
-        data.documentControl = [];
+        var obj = 
+        {
+          recID : Util.uid(),
+          title : data.title,
+          isRequired: false,
+          count : 0,
+          isList: "0"
+        }
+        data.documentControl = [obj];
         break;
       }
       case "Number":

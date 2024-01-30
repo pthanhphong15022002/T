@@ -1,6 +1,8 @@
 import { Component, OnInit, Optional } from '@angular/core';
-import { ApiHttpService, DialogData, DialogRef } from 'codx-core';
+import { ApiHttpService, CacheService, DialogData, DialogRef } from 'codx-core';
 import moment from 'moment';
+import { CodxShareService } from 'projects/codx-share/src/public-api';
+import { isObservable } from 'rxjs';
 
 @Component({
   selector: 'lib-process-release-detail',
@@ -16,7 +18,10 @@ export class ProcessReleaseDetailComponent implements OnInit{
   count = 0;
   listTask:any;
   formModel:any;
+  info:any;
   constructor(
+    private shareService: CodxShareService,
+    private cache: CacheService,
     private api: ApiHttpService,
     @Optional() dialog: DialogRef,
     @Optional() dt: DialogData
@@ -29,6 +34,21 @@ export class ProcessReleaseDetailComponent implements OnInit{
   }
   ngOnInit(): void {
     this.getData();
+    this.getInfo();
+  }
+  getInfo()
+  {
+    let paras = [this.data.createdBy];
+    let keyRoot = 'UserInfo' + this.data.createdBy;
+    let info = this.shareService.loadDataCache(paras,keyRoot,"SYS","AD",'UsersBusiness','GetOneUserByUserIDAsync');
+    if(isObservable(info))
+    {
+      info.subscribe(item=>{
+        this.info = item;
+      })
+    }
+    else this.info = info;
+  
   }
   getData()
   {
@@ -51,6 +71,7 @@ export class ProcessReleaseDetailComponent implements OnInit{
       this.listStage.forEach(elm => {
         elm.child = this.getListChild(elm) || [];
         elm.settings = typeof elm?.settings === 'object' ? elm.settings : (elm?.settings ? JSON.parse(elm.settings) : null);
+        elm.countTask = 0;
         if(elm.child && elm.child.length>0)
         {
           elm.countTask = elm.child.length;
@@ -58,6 +79,7 @@ export class ProcessReleaseDetailComponent implements OnInit{
           elm.percentCompleted = (elm.countCompleted / elm.countTask) * 100;
         }
       });
+      this.data.countTask = this.listStage.reduce((n, {countTask}) => n + countTask, 0);
     }
   }
 
