@@ -1,4 +1,4 @@
-<div class="d-flex align-items-center border-bottom" *ngIf="dataSelected">
+<div class="d-flex align-items-center border-bottom" *ngIf="dataSelected" (dblclick)="dbClick(dataSelected)">
   <div class="w-30 p-3 ps-5 d-flex flex-column">
     <div
       class="fw-bold fs-5"
@@ -14,14 +14,9 @@
         [formModel]="formModel"
         [default]="'Ngày tạo'"
       ></codx-label>
-      <div
-        class="ps-5"
-        [innerHTML]="
-          dataSelected?.createdOn
-            | formatvalue : formModel : 'CreatedOn'
-            | async
-        "
-      ></div>
+      <div class="ps-5">
+        <span>{{ dataSelected.createdOn | date : "dd/MM/yyyy" }}</span>
+      </div>
     </div>
   </div>
   <div class="w-15 p-3">
@@ -40,28 +35,40 @@
     <div
       class="progress-list"
       [style.backgroundColor]="
-        dataSelected.progress && dataSelected.progress > 0
-          ? '#1fa65c'
-          : ''
+        dataSelected.progress && dataSelected.progress > 0 ? '#1fa65c' : ''
       "
     >
-      <span class="me-1"> <codx-vll
-        [name]="'BP014'"
-        [value]="dataSelected?.status"
-        [showText]="true"
-        [showIcon]="false"
-        [showBgColor]="false"
-      ></codx-vll></span>
-      <span>({{ (dataSelected.progress ?? 0)  + '%' }})</span>
+      <span class="me-1">
+        <codx-vll
+          [name]="'BP014'"
+          [value]="dataSelected?.status"
+          [showText]="true"
+          [showIcon]="false"
+          [showBgColor]="false"
+        ></codx-vll
+      ></span>
+      <span>({{ (dataSelected.progress ?? 0) + "%" }})</span>
     </div>
     <div class="mt-1 d-flex justify-content-between">
       <div class="d-flex justify-content-start">
-        <span class="fw-bold me-1">134/167</span>
-        <span class="text-gray-600">hoàn tất</span>
+        <span class="fw-bold me-1">{{ countTaskDone }}/{{ countTask }}</span>
+        <span class="text-gray-600"
+          ><codx-label
+            default="trễ hạn"
+            [formModel]="formModel"
+            fiedName="list_TaskDone"
+          ></codx-label
+        ></span>
       </div>
       <div class="d-flex justify-content-end">
-        <span class="fw-bold me-1">12</span>
-        <span class="text-gray-600">trễ hạn</span>
+        <span class="fw-bold me-1">{{ countOverDueTask }}</span>
+        <span class="text-gray-600"
+          ><codx-label
+            default="trễ hạn"
+            [formModel]="formModel"
+            fiedName="list_OverDueTask"
+          ></codx-label
+        ></span>
       </div>
     </div>
   </div>

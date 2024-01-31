@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ApiHttpService } from 'codx-core';
 
 @Component({
@@ -10,16 +10,38 @@ export class ViewListInstancesComponent {
   @Input() dataSelected: any;
   @Input() formModel: any;
   @Input() lstStages = [];
-
+  @Output() dbClickEvent = new EventEmitter<any>();
   countCurrent = 1;
-
+  countTask = 0;
+  countTaskDone = 0;
+  countOverDueTask = 0;
   constructor(private api: ApiHttpService){
 
   };
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.getTaskByInstanceID();
+  }
 
+  getTaskByInstanceID(){
+    this.api
+   .execSv<any>(
+        'BP',
+        'ERM.Business.BP',
+        'ProcessTasksBusiness',
+        'GetItemsByInstanceIDAsync',
+        [this.dataSelected?.recID]
+      )
+   .subscribe((res) => {
+        if (res) {
+          this.countTask = res?.length ?? 0; //Tổng task của nhiệm vụ
 
+          //Task done -> đợi ba mapping
+
+          //task quá hạn -> đợi ba
+        }
+      });
+  }
 
   getColor(data) {
     let color = 'step'; // Mặc định là 'step'
@@ -43,5 +65,9 @@ export class ViewListInstancesComponent {
       }
     }
     return color; // Trả về lớp CSS
+  }
+
+  dbClick(data){
+    this.dbClickEvent.emit({data: data});
   }
 }
