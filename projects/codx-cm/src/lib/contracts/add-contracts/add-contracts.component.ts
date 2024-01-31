@@ -673,6 +673,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
 
   //#region change Input
   valueChangeText(event) {
+    let valueOld = this.contracts[event?.field];
     this.contracts[event?.field] = event?.data;
     if (event?.field == 'contractName') {
       this.contracts[event?.field] = this.stepService.capitalizeFirstLetter(
@@ -686,7 +687,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
       }
       this.checkPhone = !this.checkPhone;
     }
-    if (event?.field == 'interval') {
+    if (event?.field == 'interval' && event?.data != valueOld) {
       const startDate = new Date(this.contracts?.effectiveFrom) || new Date();
       let interval = parseInt(event?.data || 0);
       this.contracts.effectiveTo = new Date(
