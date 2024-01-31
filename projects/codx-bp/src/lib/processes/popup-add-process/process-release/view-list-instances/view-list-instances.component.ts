@@ -1,5 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ApiHttpService } from 'codx-core';
+import { CodxShareService } from 'projects/codx-share/src/public-api';
+import { isObservable } from 'rxjs';
 
 @Component({
   selector: 'lib-view-list-instances',
@@ -15,12 +17,46 @@ export class ViewListInstancesComponent {
   countTask = 0;
   countTaskDone = 0;
   countOverDueTask = 0;
-  constructor(private api: ApiHttpService){
+  info: any;
+  constructor(private api: ApiHttpService, private shareService: CodxShareService){
 
   };
 
   ngOnInit(): void {
     this.getTaskByInstanceID();
+    this.getProcess();
+    this.getInfo();
+  }
+
+  getProcess() {
+    if(this.lstStages == null || this.lstStages?.length == 0){
+      this.api
+      .execSv<any>('BP', 'BP', 'ProcessesBusiness', 'GetAsync', this.dataSelected.processID)
+      .subscribe((item) => {
+        if (item) {
+          const process = item;
+          this.lstStages = process?.steps?.filter(
+            (x) => x.activityType == 'Stage'
+          );
+        }
+      });
+    }
+
+  }
+
+  getInfo()
+  {
+    let paras = [this.dataSelected.createdBy];
+    let keyRoot = 'UserInfo' + this.dataSelected.createdBy;
+    let info = this.shareService.loadDataCache(paras,keyRoot,"SYS","AD",'UsersBusiness','GetOneUserByUserIDAsync');
+    if(isObservable(info))
+    {
+      info.subscribe(item=>{
+        this.info = item;
+      })
+    }
+    else this.info = info;
+
   }
 
   getTaskByInstanceID(){
