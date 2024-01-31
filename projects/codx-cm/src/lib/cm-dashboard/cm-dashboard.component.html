@@ -2024,47 +2024,14 @@
         </tr>
       </thead>
       <tbody>
-        <ng-container>
-          <tr
-            style="border-bottom: 1px solid var(--bs-border-color) !important"
-          >
-            <td class="text-center">Q1</td>
-            <td class="text-center">1</td>
-            <td class="text-center">2</td>
-            <td class="text-center">3</td>
-          </tr>
-
-          <tr
-            style="border-bottom: 1px solid var(--bs-border-color) !important"
-          >
-            <td class="text-center">Q1</td>
-            <td class="text-center">1</td>
-            <td class="text-center">2</td>
-            <td class="text-center">3</td>
-          </tr>
-          <tr
-            style="border-bottom: 1px solid var(--bs-border-color) !important"
-          >
-            <td class="text-center">Q1</td>
-            <td class="text-center">1</td>
-            <td class="text-center">2</td>
-            <td class="text-center">3</td>
-          </tr>
-          <tr
-            style="border-bottom: 1px solid var(--bs-border-color) !important"
-          >
-            <td class="text-center">Q1</td>
-            <td class="text-center">1</td>
-            <td class="text-center">2</td>
-            <td class="text-center">3</td>
+        <ng-container *ngFor="let item of listAreaIn">
+          <tr>
+            <td class="text-center">{{ item?.quarterName }}</td>
+            <td class="text-center">{{ item?.totalArea }}</td>
+            <td class="text-center">{{ item?.totalRentalArea }}</td>
+            <td class="text-center">{{ item?.totalUpAndDownArea }}</td>
           </tr>
         </ng-container>
-        <tr style="border-bottom: 1px solid var(--bs-border-color) !important">
-          <td class="text-center">TC</td>
-          <td class="text-center">10</td>
-          <td class="text-center">20</td>
-          <td class="text-center">30</td>
-        </tr>
       </tbody>
     </table>
     <div class="text-center fs-2">
@@ -2086,28 +2053,28 @@
         <!--   [title]="titleTest" -->
         <e-series-collection>
           <e-series
-            [dataSource]="chartDataColumn"
+            [dataSource]="listAreaIn"
             type="Column"
             columnSpacing="0.25"
             columnWidth="1"
-            xName="country"
-            yName="gold"
+            xName="quarterName"
+            yName="totalArea"
           ></e-series>
           <e-series
-            [dataSource]="chartDataColumn"
+            [dataSource]="listAreaIn"
             type="Column"
-            xName="country"
+            xName="quarterName"
             columnSpacing="0.25"
             columnWidth="1"
-            yName="silver"
+            yName="totalRentalArea"
           ></e-series>
           <e-series
-            [dataSource]="chartDataColumn"
+            [dataSource]="listAreaIn"
             type="Column"
-            xName="country"
+            xName="quarterName"
             columnSpacing="0.25"
             columnWidth="1"
-            yName="red"
+            yName="totalUpAndDownArea"
           ></e-series>
         </e-series-collection>
       </ejs-chart>
@@ -2159,46 +2126,14 @@
         </tr>
       </thead>
       <tbody>
-        <ng-container>
-          <tr
-            style="border-bottom: 1px solid var(--bs-border-color) !important"
-          >
-            <td class="text-center">Q1</td>
-            <td class="text-center">1</td>
-            <td class="text-center">2</td>
-            <td class="text-center">3</td>
-          </tr>
-          <tr
-            style="border-bottom: 1px solid var(--bs-border-color) !important"
-          >
-            <td class="text-center">Q1</td>
-            <td class="text-center">1</td>
-            <td class="text-center">2</td>
-            <td class="text-center">3</td>
-          </tr>
-          <tr
-            style="border-bottom: 1px solid var(--bs-border-color) !important"
-          >
-            <td class="text-center">Q1</td>
-            <td class="text-center">1</td>
-            <td class="text-center">2</td>
-            <td class="text-center">3</td>
-          </tr>
-          <tr
-            style="border-bottom: 1px solid var(--bs-border-color) !important"
-          >
-            <td class="text-center">Q1</td>
-            <td class="text-center">1</td>
-            <td class="text-center">2</td>
-            <td class="text-center">3</td>
+        <ng-container *ngFor="let item of listAreaOut">
+          <tr>
+            <td class="text-center">{{ item?.quarterName }}</td>
+            <td class="text-center">{{ item?.totalArea }}</td>
+            <td class="text-center">{{ item?.totalRentalArea }}</td>
+            <td class="text-center">{{ item?.totalUpAndDownArea }}</td>
           </tr>
         </ng-container>
-        <tr style="border-bottom: 1px solid var(--bs-border-color) !important">
-          <td class="text-center">TC</td>
-          <td class="text-center">10</td>
-          <td class="text-center">20</td>
-          <td class="text-center">30</td>
-        </tr>
       </tbody>
     </table>
     <div class="text-center fs-2 mt-3">
@@ -2220,28 +2155,28 @@
         <!--   [title]="titleTest" -->
         <e-series-collection>
           <e-series
-            [dataSource]="chartDataColumn"
+            [dataSource]="listAreaOut"
             type="Column"
             columnSpacing="0.25"
             columnWidth="1"
-            xName="country"
-            yName="gold"
+            xName="quarterName"
+            yName="totalArea"
           ></e-series>
           <e-series
-            [dataSource]="chartDataColumn"
+            [dataSource]="listAreaOut"
             type="Column"
-            xName="country"
+            xName="quarterName"
             columnSpacing="0.25"
             columnWidth="1"
-            yName="silver"
+            yName="totalRentalArea"
           ></e-series>
           <e-series
-            [dataSource]="chartDataColumn"
+            [dataSource]="listAreaOut"
             type="Column"
-            xName="country"
+            xName="quarterName"
             columnSpacing="0.25"
             columnWidth="1"
-            yName="red"
+            yName="totalUpAndDownArea"
           ></e-series>
         </e-series-collection>
       </ejs-chart>
