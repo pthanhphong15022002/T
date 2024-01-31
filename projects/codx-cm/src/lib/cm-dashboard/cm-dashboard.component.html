@@ -35,6 +35,17 @@
     <ng-container *ngIf="funcID == 'CMD004' && isLoaded">
       <cm-targets [viewDashboard]="true" [viewMode]="9"></cm-targets>
     </ng-container>
+
+    <ng-container *ngIf="funcID == 'CMDQTSC007'">
+      <codx-dashboard
+        [templates]="dashBoardInOut"
+        [panels]="panelsDeals3"
+        [datas]="datasDeals3"
+        [isEditMode]="isEditMode"
+        [cellSpacing]="[10, 10]"
+        [columns]="60"
+      ></codx-dashboard>
+    </ng-container>
   </div>
 
   <!-- <div class="w-100 h-100" *ngIf="!isLoaded">
@@ -1740,6 +1751,937 @@
 <!---------------------------------------------------------------------------------------------------------->
 <!---------------------------------------------------------------------------------------------------------->
 
+<!---------------------------------------------------------------------------------------------------------->
+<!---------------------------------------------------------------------------------------------------------->
+<!---------------------------------------------------------------------------------------------------------->
+<ng-template #templateInOut>
+  <div class="w-100 h-100" id="1">
+    <div>
+      <codx-label
+        class="fw-bold"
+        name="lblChartIn"
+        formName="CMInOutDashboard"
+        gridViewName="grvCMInOutDashboard"
+        default="Doanh nghiệp mới năm "
+      ></codx-label>
+      <span class="fw-bold" [innerHTML]="year"></span>
+    </div>
+    <table style="table-layout: fixed" class="table mb-0">
+      <thead class="border-gray-200 table-thead-ac">
+        <tr class="border-bottom">
+          <th class="w-40 border-bottom text-center"></th>
+          <th class="w-15 border-bottom text-center">
+            <codx-label
+              name="lblTableTotal"
+              formName="CMInOutDashboard"
+              gridViewName="grvCMInOutDashboard"
+              default="Tổng số DN"
+            ></codx-label>
+          </th>
+          <th class="w-15 border-bottom text-center">
+            <codx-label
+              name="lblTableDNTN"
+              formName="CMInOutDashboard"
+              gridViewName="grvCMInOutDashboard"
+              default="DNTN"
+            ></codx-label>
+          </th>
+          <th class="w-15 border-bottom text-center">
+            <codx-label
+              name="lblTableDNNN"
+              formName="CMInOutDashboard"
+              gridViewName="grvCMInOutDashboard"
+              default="DNNN"
+            ></codx-label>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <ng-container *ngFor="let item of listCountEnterprise">
+          <tr>
+            <td class="text-center">{{ item?.quarterName }}</td>
+            <td class="text-center">{{ item?.countAll }}</td>
+            <td class="text-center">{{ item?.countPrivateEnterprises }}</td>
+            <td class="text-center">{{ item?.countStateEnterprises }}</td>
+          </tr>
+        </ng-container>
+      </tbody>
+    </table>
+
+    <div class="text-center fs-2 mt-3">
+      <codx-label
+        class="fw-bold"
+        name="lblChartIn"
+        formName="CMInOutDashboard"
+        gridViewName="grvCMInOutDashboard"
+        default="Doanh nghiệp mới năm "
+      ></codx-label>
+      <span class="fw-bold" [innerHTML]="year"></span>
+    </div>
+    <div class="">
+      <ejs-chart
+        id="chart-container-1"
+        [primaryXAxis]="primaryXAxisColumn"
+        [primaryYAxis]="primaryYAxisColumn"
+        [tooltip]="tooltipInOut"
+      >
+        <!--   [title]="titleTest" -->
+        <e-series-collection>
+          <e-series
+            [dataSource]="listCountEnterprise"
+            type="Column"
+            columnSpacing="0.25"
+            columnWidth="1"
+            xName="quarterName"
+            yName="countAll"
+          ></e-series>
+          <e-series
+            [dataSource]="listCountEnterprise"
+            type="Column"
+            xName="quarterName"
+            columnSpacing="0.25"
+            columnWidth="1"
+            yName="countPrivateEnterprises"
+          ></e-series>
+          <e-series
+            [dataSource]="listCountEnterprise"
+            type="Column"
+            xName="quarterName"
+            columnSpacing="0.25"
+            columnWidth="1"
+            yName="countStateEnterprises"
+          ></e-series>
+        </e-series-collection>
+      </ejs-chart>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #templateInOut>
+  <div class="w-100 h-100" id="2">
+    <div>
+      <codx-label
+        class="fw-bold"
+        name="lblChartOut"
+        formName="CMInOutDashboard"
+        gridViewName="grvCMInOutDashboard"
+        default="Doanh nghiệp thanh lý HĐ năm "
+      ></codx-label>
+      <span class="fw-bold" [innerHTML]="year"></span>
+    </div>
+
+    <table style="table-layout: fixed" class="table mb-0">
+      <thead class="border-gray-200 table-thead-ac">
+        <tr class="border-bottom">
+          <th class="w-40 border-bottom"></th>
+          <th class="w-15 border-bottom">
+            <codx-label
+              name="lblTableTotal"
+              formName="CMInOutDashboard"
+              gridViewName="grvCMInOutDashboard"
+              default="Tổng số DN"
+            ></codx-label>
+          </th>
+          <th class="w-15 border-bottom">
+            <codx-label
+              name="lblTableDNTN"
+              formName="CMInOutDashboard"
+              gridViewName="grvCMInOutDashboard"
+              default="DNTN"
+            ></codx-label>
+          </th>
+          <th class="w-15 border-bottom">
+            <codx-label
+              name="lblTableDNNN"
+              formName="CMInOutDashboard"
+              gridViewName="grvCMInOutDashboard"
+              default="DNNN"
+            ></codx-label>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <ng-container *ngFor="let item of listCountEnterpriseOut">
+          <tr>
+            <td class="text-center">{{ item?.quarterName }}</td>
+            <td class="text-center">{{ item?.countAll }}</td>
+            <td class="text-center">{{ item?.countPrivateEnterprises }}</td>
+            <td class="text-center">{{ item?.countStateEnterprises }}</td>
+          </tr>
+        </ng-container>
+      </tbody>
+    </table>
+
+    <div class="text-center fs-2 mt-3">
+      <codx-label
+        class="fw-bold"
+        name="lblChartIn"
+        formName="CMInOutDashboard"
+        gridViewName="grvCMInOutDashboard"
+        default="Doanh nghiệp thanh lý HĐ năm "
+      ></codx-label>
+      <span class="fw-bold" [innerHTML]="year"></span>
+    </div>
+    <div class="">
+      <ejs-chart
+        id="chart-container-2"
+        [primaryXAxis]="primaryXAxisColumn"
+        [primaryYAxis]="primaryYAxisColumn"
+      >
+        <!--   [title]="titleTest" -->
+        <e-series-collection>
+          <e-series
+            [dataSource]="listCountEnterpriseOut"
+            type="Column"
+            columnSpacing="0.25"
+            columnWidth="1"
+            xName="quarterName"
+            yName="countAll"
+          ></e-series>
+          <e-series
+            [dataSource]="listCountEnterpriseOut"
+            type="Column"
+            xName="quarterName"
+            columnSpacing="0.25"
+            columnWidth="1"
+            yName="countPrivateEnterprises"
+          ></e-series>
+          <e-series
+            [dataSource]="listCountEnterpriseOut"
+            type="Column"
+            xName="quarterName"
+            columnSpacing="0.25"
+            columnWidth="1"
+            yName="countStateEnterprises"
+          ></e-series>
+        </e-series-collection>
+      </ejs-chart>
+    </div>
+  </div>
+</ng-template>
+
+<!-- Diên tích tăng giảm -->
+<ng-template #templateInOut>
+  <div class="w-100 h-100" id="3">
+    <div>
+      <codx-label
+        class="fw-bold"
+        name="lblChartExtend"
+        formName="CMInOutDashboard"
+        gridViewName="grvCMInOutDashboard"
+        default="Diện tích bán mới /mở rộng"
+      ></codx-label>
+    </div>
+
+    <table style="table-layout: fixed" class="table mb-0">
+      <thead class="border-gray-200 table-thead-ac">
+        <tr class="border-bottom">
+          <th class="w-40 border-bottom"></th>
+          <th class="w-15 border-bottom">
+            <codx-label
+              name="lblTotalAreaNew"
+              formName="CMInOutDashboard"
+              gridViewName="grvCMInOutDashboard"
+              default="Tổng số diện tích bán mới"
+            ></codx-label>
+          </th>
+          <th class="w-15 border-bottom">
+            <codx-label
+              name="lblAreaNew"
+              formName="CMInOutDashboard"
+              gridViewName="grvCMInOutDashboard"
+              default="Diện tích bán mới"
+            ></codx-label>
+          </th>
+          <th class="w-15 border-bottom">
+            <codx-label
+              name="lblAreaExtend"
+              formName="CMInOutDashboard"
+              gridViewName="grvCMInOutDashboard"
+              default="Diện tích mở rộng"
+            ></codx-label>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <ng-container>
+          <tr
+            style="border-bottom: 1px solid var(--bs-border-color) !important"
+          >
+            <td class="text-center">Q1</td>
+            <td class="text-center">1</td>
+            <td class="text-center">2</td>
+            <td class="text-center">3</td>
+          </tr>
+
+          <tr
+            style="border-bottom: 1px solid var(--bs-border-color) !important"
+          >
+            <td class="text-center">Q1</td>
+            <td class="text-center">1</td>
+            <td class="text-center">2</td>
+            <td class="text-center">3</td>
+          </tr>
+          <tr
+            style="border-bottom: 1px solid var(--bs-border-color) !important"
+          >
+            <td class="text-center">Q1</td>
+            <td class="text-center">1</td>
+            <td class="text-center">2</td>
+            <td class="text-center">3</td>
+          </tr>
+          <tr
+            style="border-bottom: 1px solid var(--bs-border-color) !important"
+          >
+            <td class="text-center">Q1</td>
+            <td class="text-center">1</td>
+            <td class="text-center">2</td>
+            <td class="text-center">3</td>
+          </tr>
+        </ng-container>
+        <tr style="border-bottom: 1px solid var(--bs-border-color) !important">
+          <td class="text-center">TC</td>
+          <td class="text-center">10</td>
+          <td class="text-center">20</td>
+          <td class="text-center">30</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="text-center fs-2">
+      <codx-label
+        class="fw-bold"
+        name="lblChartIn"
+        formName="CMInOutDashboard"
+        gridViewName="grvCMInOutDashboard"
+        default="Doanh nghiệp thanh lý HĐ năm "
+      ></codx-label>
+      <span class="fw-bold" [innerHTML]="year"></span>
+    </div>
+    <div class="">
+      <ejs-chart
+        id="chart-container-3"
+        [primaryXAxis]="primaryXAxisColumn"
+        [primaryYAxis]="primaryYAxisColumn"
+      >
+        <!--   [title]="titleTest" -->
+        <e-series-collection>
+          <e-series
+            [dataSource]="chartDataColumn"
+            type="Column"
+            columnSpacing="0.25"
+            columnWidth="1"
+            xName="country"
+            yName="gold"
+          ></e-series>
+          <e-series
+            [dataSource]="chartDataColumn"
+            type="Column"
+            xName="country"
+            columnSpacing="0.25"
+            columnWidth="1"
+            yName="silver"
+          ></e-series>
+          <e-series
+            [dataSource]="chartDataColumn"
+            type="Column"
+            xName="country"
+            columnSpacing="0.25"
+            columnWidth="1"
+            yName="red"
+          ></e-series>
+        </e-series-collection>
+      </ejs-chart>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #templateInOut>
+  <div class="w-100 h-100" id="4">
+    <div>
+      <codx-label
+        class="fw-bold"
+        name="lblChartLiquidation"
+        formName="CMInOutDashboard"
+        gridViewName="grvCMInOutDashboard"
+        default="Diện tích thanh lý /giảm"
+      ></codx-label>
+      <span class="fw-bold" [innerHTML]="year"></span>
+    </div>
+
+    <table style="table-layout: fixed" class="table mb-0">
+      <thead class="border-gray-200 table-thead-ac">
+        <tr class="border-bottom">
+          <th class="w-40 border-bottom text-center"></th>
+          <th class="w-15 border-bottom text-center">
+            <codx-label
+              name="lblTableLiquidation"
+              formName="CMInOutDashboard"
+              gridViewName="grvCMInOutDashboard"
+              default="Tổng số DN"
+            ></codx-label>
+          </th>
+          <th class="w-15 border-bottom text-center">
+            <codx-label
+              name="lblTableDNTN"
+              formName="CMInOutDashboard"
+              gridViewName="grvCMInOutDashboard"
+              default="DNTN"
+            ></codx-label>
+          </th>
+          <th class="w-15 border-bottom text-center">
+            <codx-label
+              name="lblTableDNNN"
+              formName="CMInOutDashboard"
+              gridViewName="grvCMInOutDashboard"
+              default="DNNN"
+            ></codx-label>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <ng-container>
+          <tr
+            style="border-bottom: 1px solid var(--bs-border-color) !important"
+          >
+            <td class="text-center">Q1</td>
+            <td class="text-center">1</td>
+            <td class="text-center">2</td>
+            <td class="text-center">3</td>
+          </tr>
+          <tr
+            style="border-bottom: 1px solid var(--bs-border-color) !important"
+          >
+            <td class="text-center">Q1</td>
+            <td class="text-center">1</td>
+            <td class="text-center">2</td>
+            <td class="text-center">3</td>
+          </tr>
+          <tr
+            style="border-bottom: 1px solid var(--bs-border-color) !important"
+          >
+            <td class="text-center">Q1</td>
+            <td class="text-center">1</td>
+            <td class="text-center">2</td>
+            <td class="text-center">3</td>
+          </tr>
+          <tr
+            style="border-bottom: 1px solid var(--bs-border-color) !important"
+          >
+            <td class="text-center">Q1</td>
+            <td class="text-center">1</td>
+            <td class="text-center">2</td>
+            <td class="text-center">3</td>
+          </tr>
+        </ng-container>
+        <tr style="border-bottom: 1px solid var(--bs-border-color) !important">
+          <td class="text-center">TC</td>
+          <td class="text-center">10</td>
+          <td class="text-center">20</td>
+          <td class="text-center">30</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="text-center fs-2 mt-3">
+      <codx-label
+        class="fw-bold"
+        name="lblChartIn"
+        formName="CMInOutDashboard"
+        gridViewName="grvCMInOutDashboard"
+        default="Doanh nghiệp thanh lý HĐ năm "
+      ></codx-label>
+      <span class="fw-bold" [innerHTML]="year"></span>
+    </div>
+    <div class="">
+      <ejs-chart
+        id="chart-container-4"
+        [primaryXAxis]="primaryXAxisColumn"
+        [primaryYAxis]="primaryYAxisColumn"
+      >
+        <!--   [title]="titleTest" -->
+        <e-series-collection>
+          <e-series
+            [dataSource]="chartDataColumn"
+            type="Column"
+            columnSpacing="0.25"
+            columnWidth="1"
+            xName="country"
+            yName="gold"
+          ></e-series>
+          <e-series
+            [dataSource]="chartDataColumn"
+            type="Column"
+            xName="country"
+            columnSpacing="0.25"
+            columnWidth="1"
+            yName="silver"
+          ></e-series>
+          <e-series
+            [dataSource]="chartDataColumn"
+            type="Column"
+            xName="country"
+            columnSpacing="0.25"
+            columnWidth="1"
+            yName="red"
+          ></e-series>
+        </e-series-collection>
+      </ejs-chart>
+    </div>
+  </div>
+</ng-template>
+
+<!-- Số liệu DN vào QTSC ( 2022 -2023) -->
+<ng-template #templateInOut>
+  <div class="w-100 h-100" id="5" style="overflow: hidden">
+    <div>
+      <codx-label
+        class="fw-bold"
+        name="lblChartLiquidation"
+        formName="CMInOutDashboard"
+        gridViewName="grvCMInOutDashboard"
+        default="Số liệu DN vào QTSC "
+      ></codx-label>
+      <span
+        class="fw-bold"
+        [innerHTML]="'(' + (year - 1) + '-' + year + ')'"
+      ></span>
+    </div>
+
+    <table style="table-layout: fixed" class="table mb-0">
+      <thead class="border-gray-200 table-thead-ac">
+        <tr class="border-bottom">
+          <th class="w-40 border-bottom text-center"></th>
+          <th class="w-15 border-bottom text-center">
+            <codx-label
+              name="lblTableLiquidation"
+              formName="CMInOutDashboard"
+              gridViewName="grvCMInOutDashboard"
+              default="Tổng số DN năm "
+            ></codx-label>
+            <span class="fw-bold" [innerHTML]="year"></span>
+          </th>
+          <th class="w-15 border-bottom text-center">
+            <codx-label
+              class="fw-bold"
+              name="lblTableDNTN"
+              formName="CMInOutDashboard"
+              gridViewName="grvCMInOutDashboard"
+              default="Tổng số DN năm "
+            ></codx-label>
+            <span class="fw-bold" [innerHTML]="year - 1"></span>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <ng-container *ngFor="let item of listQTSCIn">
+          <tr style="">
+            <td class="text-center">{{ item?.quarterName }}</td>
+            <td class="text-center">{{ item?.countNow }}</td>
+            <td class="text-center">{{ item?.countOld }}</td>
+          </tr>
+        </ng-container>
+      </tbody>
+    </table>
+    <div class="text-center fs-2 mt-3">
+      <codx-label
+        class="fw-bold"
+        name="lblChartLiquidation"
+        formName="CMInOutDashboard"
+        gridViewName="grvCMInOutDashboard"
+        default="Số liệu DN vào QTSC "
+      ></codx-label>
+    </div>
+    <div>
+      <ejs-accumulationchart
+        id="chart-container-5"
+        [legendSettings]="legendSettingsIn"
+        [tooltip]="
+          listQTSCIn[0]?.countOld == 0 && listQTSCIn[0]?.countNow == 0
+            ? ''
+            : tooltipInOut
+        "
+      >
+        <e-accumulation-series-collection>
+          <e-accumulation-series
+            [dataSource]="pieChartInQTSC"
+            xName="year"
+            yName="count"
+            radius="100%"
+          ></e-accumulation-series>
+        </e-accumulation-series-collection>
+      </ejs-accumulationchart>
+    </div>
+  </div>
+</ng-template>
+
+<!-- Số liệu DN ra QTSC ( 2022 -2023) -->
+<ng-template #templateInOut>
+  <div class="w-100 h-100" id="6" style="overflow: hidden">
+    <div>
+      <codx-label
+        class="fw-bold"
+        name="lblChartLiquidation"
+        formName="CMInOutDashboard"
+        gridViewName="grvCMInOutDashboard"
+        default="Số liệu DN ra QTSC "
+      ></codx-label>
+      <span
+        class="fw-bold"
+        [innerHTML]="'(' + (year - 1) + '-' + year + ')'"
+      ></span>
+    </div>
+
+    <table style="table-layout: fixed" class="table mb-0">
+      <thead class="border-gray-200 table-thead-ac">
+        <tr class="border-bottom">
+          <th class="w-40 border-bottom text-center"></th>
+          <th class="w-15 border-bottom text-center">
+            <codx-label
+              name="lblTableLiquidation"
+              formName="CMInOutDashboard"
+              gridViewName="grvCMInOutDashboard"
+              default="Tổng số DN năm "
+            ></codx-label>
+            <span class="fw-bold" [innerHTML]="year"></span>
+          </th>
+          <th class="w-15 border-bottom text-center">
+            <codx-label
+              class="fw-bold"
+              name="lblTableDNTN"
+              formName="CMInOutDashboard"
+              gridViewName="grvCMInOutDashboard"
+              default="Tổng số DN năm "
+            ></codx-label>
+            <span class="fw-bold" [innerHTML]="year - 1"></span>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <ng-container>
+          <ng-container *ngFor="let item of listQTSCOut">
+            <tr style="">
+              <td class="text-center">{{ item?.quarterName }}</td>
+              <td class="text-center">{{ item?.countNow }}</td>
+              <td class="text-center">{{ item?.countOld }}</td>
+            </tr>
+          </ng-container>
+        </ng-container>
+      </tbody>
+    </table>
+    <div class="text-center fs-2">
+      <codx-label
+        class="fw-bold"
+        name="lblChartLiquidation"
+        formName="CMInOutDashboard"
+        gridViewName="grvCMInOutDashboard"
+        default="Số liệu DN ra QTSC "
+      ></codx-label>
+    </div>
+    <div>
+      <ejs-accumulationchart
+        id="chart-container-6"
+        [legendSettings]="legendSettingsIn"
+        [tooltip]="tooltipInOut"
+      >
+        <e-accumulation-series-collection>
+          <e-accumulation-series
+            [dataSource]="pieChartOutQTSC"
+            xName="year"
+            yName="count"
+            radius="100%"
+          ></e-accumulation-series>
+        </e-accumulation-series-collection>
+      </ejs-accumulationchart>
+    </div>
+  </div>
+</ng-template>
+
+<!-- THỐNG KÊ NGUỒN KHÁCH HÀNG VÀO -->
+<ng-template #templateInOut>
+  <div class="w-100 h-100" id="7" style="overflow-y: hiden">
+    <div>
+      <codx-label
+        class="fw-bold"
+        name="lblChartChanelIn"
+        formName="CMInOutDashboard"
+        gridViewName="grvCMInOutDashboard"
+        default="THỐNG KÊ NGUỒN KHÁCH HÀNG VÀO"
+      ></codx-label>
+    </div>
+
+    <table style="table-layout: fixed" class="table mb-0">
+      <thead class="border-gray-200 table-thead-ac">
+        <tr class="border-bottom">
+          <th class="w-15 border-bottom text-center">
+            <codx-label
+              name="lblTableLiquidation"
+              formName="CMInOutDashboard"
+              gridViewName="grvCMInOutDashboard"
+              default="Nguồn khách hàng"
+            ></codx-label>
+          </th>
+          <th class="w-15 border-bottom text-center">
+            <codx-label
+              class="fw-bold"
+              name="lblTableDNTN"
+              formName="CMInOutDashboard"
+              gridViewName="grvCMInOutDashboard"
+              default="Giới thiệu"
+            ></codx-label>
+          </th>
+          <th class="w-15 border-bottom text-center">
+            <codx-label
+              class="fw-bold"
+              name="lblTableDNTN"
+              formName="CMInOutDashboard"
+              gridViewName="grvCMInOutDashboard"
+              default="Điện thoại"
+            ></codx-label>
+          </th>
+          <th class="w-15 border-bottom text-center">
+            <codx-label
+              class="fw-bold"
+              name="lblTableDNTN"
+              formName="CMInOutDashboard"
+              gridViewName="grvCMInOutDashboard"
+              default="Website"
+            ></codx-label>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <ng-container>
+          <tr
+            style="border-bottom: 1px solid var(--bs-border-color) !important"
+          >
+            <td class="text-center">Q1</td>
+            <td class="text-center">1</td>
+            <td class="text-center">2</td>
+            <td class="text-center">2</td>
+          </tr>
+          <tr
+            style="border-bottom: 1px solid var(--bs-border-color) !important"
+          >
+            <td class="text-center">Q1</td>
+            <td class="text-center">1</td>
+            <td class="text-center">2</td>
+            <td class="text-center">2</td>
+          </tr>
+          <tr
+            style="border-bottom: 1px solid var(--bs-border-color) !important"
+          >
+            <td class="text-center">Q1</td>
+            <td class="text-center">1</td>
+            <td class="text-center">2</td>
+            <td class="text-center">2</td>
+          </tr>
+          <tr
+            style="border-bottom: 1px solid var(--bs-border-color) !important"
+          >
+            <td class="text-center">Q1</td>
+            <td class="text-center">1</td>
+            <td class="text-center">2</td>
+            <td class="text-center">2</td>
+          </tr>
+        </ng-container>
+        <tr style="border-bottom: 1px solid var(--bs-border-color) !important">
+          <td class="text-center">Tổng</td>
+          <td class="text-center">10</td>
+          <td class="text-center">20</td>
+          <td class="text-center">2</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="text-center fs-2">
+      <codx-label
+        class="fw-bold"
+        name="lblChartLiquidation"
+        formName="CMInOutDashboard"
+        gridViewName="grvCMInOutDashboard"
+        default="Số liệu DN ra QTSC "
+      ></codx-label>
+    </div>
+    <div>
+      <ejs-accumulationchart
+        id="chart-container-7"
+        [legendSettings]="legendSettingsIn"
+        [tooltip]="tooltipInOut"
+      >
+        <e-accumulation-series-collection>
+          <e-accumulation-series
+            [dataSource]="pieChartIn"
+            xName="x"
+            yName="y"
+            radius="100%"
+          ></e-accumulation-series>
+        </e-accumulation-series-collection>
+      </ejs-accumulationchart>
+    </div>
+  </div>
+</ng-template>
+<!-- //THỐNG KÊ NGUỒN KHÁCH HÀNG RA -->
+<ng-template #templateInOut>
+  <div class="w-100 h-100" id="8" style="overflow: hidden">
+    <div>
+      <codx-label
+        class="fw-bold"
+        name="lblChartChanelOut"
+        formName="CMInOutDashboard"
+        gridViewName="grvCMInOutDashboard"
+        default="THỐNG KÊ NGUỒN KHÁCH HÀNG RA"
+      ></codx-label>
+    </div>
+
+    <table style="table-layout: fixed" class="table mb-0">
+      <thead class="border-gray-200 table-thead-ac">
+        <tr class="border-bottom">
+          <th class="w-15 border-bottom">
+            <codx-label
+              class="fw-bold"
+              name=""
+              formName="CMInOutDashboard"
+              gridViewName="grvCMInOutDashboard"
+              default="Nguyên nhân thanh lý"
+            ></codx-label>
+          </th>
+          <ng-container *ngFor="let item of pieChartOutDisposalCmt">
+            <th class="w-15 border-bottom text-center">
+              {{ item?.disposalCmtName }}
+            </th>
+          </ng-container>
+        </tr>
+      </thead>
+      <tbody>
+        <ng-container *ngFor="let quar of vllQuaters">
+          <tr style="">
+            <td class="text-center">{{ quar.text }}</td>
+            <ng-container *ngFor="let item of pieChartOutDisposalCmt">
+              <td class="text-center">{{ item["countQ" + quar.value] }}</td>
+            </ng-container>
+          </tr>
+        </ng-container>
+        <tr style="">
+          <td class="text-center">Tổng</td>
+          <ng-container *ngFor="let item of pieChartOutDisposalCmt">
+            <td class="text-center">{{ item.count }}</td>
+          </ng-container>
+        </tr>
+      </tbody>
+    </table>
+    <div class="text-center fs-2">
+      <codx-label
+        class="fw-bold"
+        name="lblChartLiquidation"
+        formName="CMInOutDashboard"
+        gridViewName="grvCMInOutDashboard"
+        default="Số liệu DN ra QTSC "
+      ></codx-label>
+    </div>
+    <div>
+      <ejs-accumulationchart
+        id="chart-container-8"
+        [legendSettings]="legendSettingsIn"
+        [tooltip]="tooltipInOut"
+      >
+        <e-accumulation-series-collection>
+          <e-accumulation-series
+            [dataSource]="pieChartOutDisposalCmt"
+            xName="disposalCmtName"
+            yName="count"
+            radius="100%"
+          ></e-accumulation-series>
+        </e-accumulation-series-collection>
+      </ejs-accumulationchart>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #templateInOut>
+  <div class="w-100 h-100" id="9">
+    <div>
+      <codx-label
+        class="fw-bold"
+        name="lblChartClassifyCustomer"
+        formName="CMInOutDashboard"
+        gridViewName="grvCMInOutDashboard"
+        default="PHÂN LOẠI KHÁCH HÀNG"
+      ></codx-label>
+    </div>
+
+    <table style="table-layout: fixed" class="table mb-0">
+      <thead class="border-gray-200 table-thead-ac">
+        <tr class="border-bottom">
+          <th class="w-15 border-bottom">
+            <codx-label
+              class="fw-bold"
+              name=""
+              formName="CMInOutDashboard"
+              gridViewName="grvCMInOutDashboard"
+              default="Phân loại khách hàng"
+            ></codx-label>
+          </th>
+          <th class="w-15 border-bottom">
+            <codx-label
+              class="fw-bold"
+              name=""
+              formName="CMInOutDashboard"
+              gridViewName="grvCMInOutDashboard"
+              default="Khách hàng mới"
+            ></codx-label>
+          </th>
+          <th class="w-15 border-bottom">
+            <codx-label
+              class="fw-bold"
+              name=""
+              formName="CMInOutDashboard"
+              gridViewName="grvCMInOutDashboard"
+              default="Khách hàng nội khu"
+            ></codx-label>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <ng-container>
+          <tr
+            style="border-bottom: 1px solid var(--bs-border-color) !important"
+          >
+            <td class="text-center">Q1</td>
+            <td class="text-center">1</td>
+            <td class="text-center">2</td>
+          </tr>
+        </ng-container>
+      </tbody>
+    </table>
+    <div class="text-center fs-2">
+      <codx-label
+        class="fw-bold"
+        name="lblChartClassifyCustomer"
+        formName="CMInOutDashboard"
+        gridViewName="grvCMInOutDashboard"
+        default="PHÂN LOẠI KHÁCH HÀNG"
+      ></codx-label>
+    </div>
+    <div>
+      <ejs-accumulationchart
+        id="chart-container-9"
+        [legendSettings]="legendSettingsIn"
+        [tooltip]="tooltipInOut"
+      >
+        <e-accumulation-series-collection>
+          <e-accumulation-series
+            [dataSource]="pieChartClassify"
+            xName="x"
+            yName="y"
+            radius="100%"
+          ></e-accumulation-series>
+        </e-accumulation-series-collection>
+      </ejs-accumulationchart>
+    </div>
+  </div>
+</ng-template>
+
+<!---------------------------------------------------------------------------------------------------------->
+<!---------------------------------------------------------------------------------------------------------->
+<!---------------------------------------------------------------------------------------------------------->
 <ng-template #noData>
   <codx-no-data [size]="150"></codx-no-data>
 </ng-template>

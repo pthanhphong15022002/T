@@ -38,6 +38,7 @@ import { CodxEiModule } from 'projects/codx-ei/src/public-api';
 import { LayoutTenantComponent } from '@modules/auth/tenants/layout/layout.component';
 import { SosComponent } from '@pages/sos/sos.component';
 import { CodxContainersComponent } from './codx-containers/codx-containers.component';
+import { CodxPmModule } from 'projects/codx-pm/src/public-api';
 
 registerLocaleData(localeVi);
 
@@ -112,6 +113,7 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
     CodxEiModule.forRoot({ environment }),
     CodxEsModule.forRoot({ environment }),
     CodxDpModule.forRoot({ environment }),
+    CodxPmModule.forRoot({ environment }),
     CodxShareModule,
     AppRoutingModule,
     NgxSkeletonLoaderModule.forRoot({

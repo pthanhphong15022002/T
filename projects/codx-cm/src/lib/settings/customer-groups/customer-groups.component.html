@@ -11,9 +11,12 @@
   [button]="buttons"
   [className]="className"
   [method]="method"
+  (selectedChange)="selectedChange($event)"
   (buttonClick)="click($event)"
   (viewChanged)="viewChanged($event, view)"
   (onLoading)="onLoading($event)"
+  (changeDataMF)="changeDataMF($event, dataSelected)"
+  (clickMF)="clickMF($event, dataSelected)"
 >
 </codx-views>
 

@@ -4532,3 +4532,23 @@ codx-filter-form{
 codx-listview .container-fluid.p-1{
   padding: 0!important;
 }
+.selected{
+  box-shadow: none!important;
+  border-radius: inherit!important;
+}
+codx-view-list-card .card-group .card-item.selected{
+  .codx_cardcenter{
+    border-color: var(--primary)!important;
+    background-color: var(--primary-lightest);
+  }
+}
+.metings-kanban .card-body{
+  padding: 8px!important;
+  .text-gray-700.line-clamp{
+    -webkit-line-clamp: 2;
+  }
+}
+.card-item.selected .card.border{
+  border-color: var(--primary)!important;
+  background-color: var(--primary-lightest);
+}

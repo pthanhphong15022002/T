@@ -1,6 +1,8 @@
 import { Component, OnInit, Optional } from '@angular/core';
-import { ApiHttpService, DialogData, DialogRef } from 'codx-core';
+import { ApiHttpService, CacheService, DialogData, DialogRef } from 'codx-core';
 import moment from 'moment';
+import { CodxShareService } from 'projects/codx-share/src/public-api';
+import { isObservable } from 'rxjs';
 
 @Component({
   selector: 'lib-process-release-detail',
@@ -14,26 +16,46 @@ export class ProcessReleaseDetailComponent implements OnInit{
   process:any;
   listStage = [];
   count = 0;
-  currentStep:any
+  listTask:any;
+  formModel:any;
+  info:any;
   constructor(
+    private shareService: CodxShareService,
+    private cache: CacheService,
     private api: ApiHttpService,
     @Optional() dialog: DialogRef,
     @Optional() dt: DialogData
   ) 
   {
     this.dialog = dialog;
+    this.formModel = dialog.formModel;
     this.data = dt?.data?.data;
     this.process =  JSON.parse(JSON.stringify(dt?.data?.process));
   }
   ngOnInit(): void {
     this.getData();
+    this.getInfo();
+  }
+  getInfo()
+  {
+    let paras = [this.data.createdBy];
+    let keyRoot = 'UserInfo' + this.data.createdBy;
+    let info = this.shareService.loadDataCache(paras,keyRoot,"SYS","AD",'UsersBusiness','GetOneUserByUserIDAsync');
+    if(isObservable(info))
+    {
+      info.subscribe(item=>{
+        this.info = item;
+      })
+    }
+    else this.info = info;
+  
   }
   getData()
   {
-    this.api.execSv("BP","BP","ProcessTasksBusiness","GetItemByCurrentStepAsync",this.data.currentStep).subscribe(item=>{
+    this.api.execSv("BP","BP","ProcessTasksBusiness","GetItemsByInstanceIDAsync",this.data.recID).subscribe(item=>{
       if(item)
       {
-        this.currentStep = item;
+        this.listTask = item;
         this.formatData();
       }
     })
@@ -48,9 +70,16 @@ export class ProcessReleaseDetailComponent implements OnInit{
       this.count -= this.listStage.length;
       this.listStage.forEach(elm => {
         elm.child = this.getListChild(elm) || [];
+        elm.settings = typeof elm?.settings === 'object' ? elm.settings : (elm?.settings ? JSON.parse(elm.settings) : null);
+        elm.countTask = 0;
+        if(elm.child && elm.child.length>0)
+        {
+          elm.countTask = elm.child.length;
+          elm.countCompleted = (elm.child.filter(x=>x.status == "3") || []).length || 0;
+          elm.percentCompleted = (elm.countCompleted / elm.countTask) * 100;
+        }
       });
-
-      debugger
+      this.data.countTask = this.listStage.reduce((n, {countTask}) => n + countTask, 0);
     }
   }
 
@@ -62,18 +91,22 @@ export class ProcessReleaseDetailComponent implements OnInit{
     this.count -= list.length;
     list.forEach(elm2 => {
       elm2.settings = typeof elm2?.settings === 'object' ? elm2.settings : (elm2?.settings ? JSON.parse(elm2.settings) : null);
-      elm2.owners = null;
       elm2.child = this.getListChild(elm2);
-
-      if(this.currentStep.stepID == elm2.recID)
+      if(this.listTask && this.listTask.length > 0)
       {
-        elm2.owners = typeof this.currentStep?.owners === 'object' ? this.currentStep.owners : (this.currentStep?.owners ? JSON.parse(this.currentStep.owners) : null);
-        elm2.owners =  elm2.owners.map((u) => u.objectID).join(';');
-        elm2.startDate = this.currentStep.startDate ? moment(this.currentStep.startDate).format('dd/MM/yyyy') : 'dd/MM/yyyy';
-        elm2.endDate = this.currentStep.endDate ? moment(this.currentStep.endDate).format('dd/MM/yyyy') : 'dd/MM/yyyy';
-        elm2.actualStart = this.currentStep.actualStart ? moment(this.currentStep.actualStart).format('dd/MM/yyyy') : 'dd/MM/yyyy';
-        elm2.actualEnd = this.currentStep.actualEnd ? moment(this.currentStep.actualEnd).format('dd/MM/yyyy') : 'dd/MM/yyyy';
+        var index = this.listTask.findIndex(x=>x.stepID == elm2.recID);
+        if(index >= 0)
+        {
+          elm2.permissions = typeof this.listTask[index]?.permissions === 'object' ? this.listTask[index].permissions : (this.listTask[index]?.permissions ? JSON.parse(this.listTask[index].permissions) : null);
+          elm2.permissions =  elm2?.permissions ? elm2.permissions.map((u) => u.objectID).join(';') : "";
+          elm2.startDate = this.listTask[index].startDate ? moment(this.listTask[index].startDate).format('dd/MM/yyyy') : 'dd/MM/yyyy';
+          elm2.endDate = this.listTask[index].endDate ? moment(this.listTask[index].endDate).format('dd/MM/yyyy') : 'dd/MM/yyyy';
+          elm2.actualStart = this.listTask[index].actualStart ? moment(this.listTask[index].actualStart).format('dd/MM/yyyy') : 'dd/MM/yyyy';
+          elm2.actualEnd = this.listTask[index].actualEnd ? moment(this.listTask[index].actualEnd).format('dd/MM/yyyy') : 'dd/MM/yyyy';
+          elm2.status = this.listTask[index].status;
+        }
       }
+    
       if(elm2.activityType == "Conditions" && elm2.child && elm2.child.length>0)
       {
         for(var i =0 ; i< elm2.child.length ; i++)

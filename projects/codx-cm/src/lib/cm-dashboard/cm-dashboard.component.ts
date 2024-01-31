@@ -38,6 +38,7 @@ import { filter, reduce } from 'rxjs';
 import { CodxCmService } from '../codx-cm.service';
 import { Variant } from '@syncfusion/ej2-notifications';
 import { ConsoleLogger } from '@microsoft/signalr/dist/esm/Utils';
+import moment from 'moment';
 
 @Component({
   selector: 'lib-cm-dashboard',
@@ -47,8 +48,9 @@ import { ConsoleLogger } from '@microsoft/signalr/dist/esm/Utils';
 export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   @ViewChildren('templateDeals') dashBoardDeals: QueryList<any>;
   @ViewChildren('templateTarget') dashBoardTaget: QueryList<any>;
-  @ViewChild('template') template: TemplateRef<any>;
+  @ViewChildren('templateInOut') dashBoardInOut: QueryList<any>;
 
+  @ViewChild('template') template: TemplateRef<any>;
   @ViewChild('accumulationPipe') accumulationPipe: AccumulationChartComponent;
   @ViewChild('noData') noData: TemplateRef<any>;
   @ViewChild('filterTemplate') filterTemplate: TemplateRef<any>;
@@ -65,12 +67,16 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   panelsDeals2: any;
   datasDeals2: any;
 
+  panelsDeals3: any;
+  datasDeals3: any;
+
   arrVllStatus: any = [];
   vllStatus = '';
   dataDashBoard: any;
   isLoaded: boolean = false;
   titLeModule = '';
 
+  ///MY SALE + GROUP SALE================================
   //Industry
   dataSourceIndustry = [];
 
@@ -260,7 +266,14 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
 
   //dash board deals
   tmpDashBoardDeals = [];
-  //end
+  //thông số thiết lập
+  toppSuccessFail = 7; //top thành công thất bại
+  winReason = 7; //top lý do thành công
+  loseReason = 7; //top lý do thất bại
+  employeeProductivity = 7; //top năng suất nhân viên
+  //====================================================================
+
+  //TAGET DASHBOARD ====================================================
   //chart sales pipeline
   lstAlls = [];
   lstSalesStages = [];
@@ -426,12 +439,114 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   tabActiveReson = 'btReasonSucess';
   textTitle = '';
 
-  //end
-  //thông số thiết lập
-  toppSuccessFail = 7; //top thành công thất bại
-  winReason = 7; //top lý do thành công
-  loseReason = 7; //top lý do thất bại
-  employeeProductivity = 7; //top năng suất nhân viên
+  //===================================================================
+
+  //===============INOUT DASHBOARD=====================================
+  year = 2023;
+  //////TESTTTTTT
+  //Chart pie tronn
+  pieChartInQTSC = [
+    { year: '2022', count: 3 },
+    { year: '2023', count: 3 },
+  ];
+  pieChartOutQTSC = [
+    { year: '2022', count: 7 },
+    { year: '2023', count: 3 },
+  ];
+  pieChartIn = [
+    { x: 'Giới thiệu', y: 7 },
+    { x: 'Điện thoại', y: 7 },
+    { x: 'Website', y: 3 },
+  ];
+  pieChartOutDisposalCmt = [];
+  pieChartInChanel = [];
+
+  pieChartClassify = [
+    { x: 'Phân loại khách hàng ', y: 7 },
+    { x: 'Khách hàng nội khu', y: 3 },
+  ];
+
+  legendSettingsIn = {
+    visible: false,
+  };
+  tooltipInOut = {
+    enable: true,
+  };
+  //end pie
+  listEnterpriseNew = [
+    {
+      quarter: '1',
+      quarterName: 'Q1',
+      businessType: '1',
+      businessTypeName: 'DNTN',
+    },
+    {
+      quarter: '1',
+      quarterName: 'Q1',
+      businessType: '1',
+      businessTypeName: 'DNTN',
+    },
+    {
+      quarter: '1',
+      quarterName: 'Q1',
+      businessType: '1',
+      businessTypeName: 'DNTN',
+    },
+    {
+      quarter: '2',
+      quarterName: 'Q2',
+      businessType: '2',
+      businessTypeName: 'DNNN',
+    },
+    // {
+    //   quarter: '3',
+    //   quarterName: 'Q3',
+    //   businessType: '2',
+    //   businessTypeName: 'DNNN',
+    // },
+    // {
+    //   quarter: '4',
+    //   quarterName: 'Q4',
+    //   businessType: '2',
+    //   businessTypeName: 'DNNN',
+    // },
+  ];
+  chartDataColumn = [
+    { country: 'Quý 1', gold: 50, silver: 75, red: 80 },
+    { country: 'Quý 2', gold: 40, silver: 20, red: 80 },
+    { country: 'Quý 3', gold: 70, silver: 45, red: 80 },
+    { country: 'Quý 4', gold: 40, silver: 20, red: 80 },
+    { country: 'Tổng cộng', gold: 70, silver: 45, red: 80 },
+  ];
+
+  primaryXAxisColumn = {
+    interval: 1,
+    valueType: 'Category',
+    title: '',
+  };
+  primaryYAxisColumn = {
+    title: 'Tổng số',
+    minimum: 0,
+    // maximum: 100,
+    interval: 20,
+    // lineStyle: { width: 0 },
+    majorTickLines: { width: 0 },
+    majorGridLines: { width: 1 },
+    minorGridLines: { width: 1 },
+    minorTickLines: { width: 0 },
+  };
+  titleTest = 'Olympic Medals';
+  ///END TEST
+  //In
+  listCountEnterprise = [];
+  //Out
+  listCountEnterpriseOut = [];
+  //InOut may nam
+  listQTSCIn = [];
+  listQTSCOut = [];
+  //Nguồn + va lý do Out
+  listInByChanel = [];
+  listOutByDisposalCmt = [];
 
   constructor(
     inject: Injector,
@@ -464,28 +579,17 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     this.datasDeals2 = JSON.parse(
       '[{"panelId":"12.1636284528927885_layout","data":"1"},{"panelId":"22.5801149283702021_layout","data":"2"},{"panelId":"32.6937258303982936_layout","data":"3"},{"panelId":"42.5667390469747078_layout","data":"4"},{"panelId":"52.4199281088325755_layout","data":"5"},{"panelId":"62.4592017601751599_layout","data":"6"},{"panelId":"72.14683256767762543_layout","data":"7"},{"panelId":"82.36639064171709834_layout","data":"8"},{"panelId":"92.06496875406606994_layout","data":"9"},{"panelId":"102.21519762020962552_layout","data":"10"},{"panelId":"112.21519762020964252_layout","data":"11"}]'
     );
+
+    this.panelsDeals3 = JSON.parse(
+      '[{"id":"13.1636284528927885_layout","row":0,"col":0,"sizeX":30,"sizeY":25,"minSizeX":30,"minSizeY":25,"maxSizeX":null,"maxSizeY":null},{"id":"23.5801149283702021_layout","row":0,"col":30,"sizeX":30,"sizeY":25,"minSizeX":30,"minSizeY":25,"maxSizeX":null,"maxSizeY":null},{"id":"33.6937258303982936_layout","row":25,"col":0,"sizeX":30,"sizeY":25,"minSizeX":30,"minSizeY":25,"maxSizeX":null,"maxSizeY":null},{"id":"43.5667390469747078_layout","row":25,"col":30,"sizeX":30,"sizeY":25,"minSizeX":30,"minSizeY":25,"maxSizeX":null,"maxSizeY":null},{"id":"53.4199281088325755_layout","row":50,"col":0,"sizeX":30,"sizeY":25,"minSizeX":30,"minSizeY":25,"maxSizeX":null,"maxSizeY":null},{"id":"63.4592017601751599_layout","row":50,"col":30,"sizeX":30,"sizeY":25,"minSizeX":30,"minSizeY":25,"maxSizeX":null,"maxSizeY":null},{"id":"73.14683256767762543_layout","row":75,"col":0,"sizeX":30,"sizeY":25,"minSizeX":30,"minSizeY":25,"maxSizeX":null,"maxSizeY":null},{"id":"83.21519762020964252_layout","row":75,"col":30,"sizeX":30,"sizeY":25,"minSizeX":30,"minSizeY":25,"maxSizeX":null,"maxSizeY":null},{"id":"93.21519762020964252_layout","row":100,"col":0,"sizeX":30,"sizeY":20,"minSizeX":30,"minSizeY":20,"maxSizeX":null,"maxSizeY":null}]'
+    );
+    this.datasDeals3 = JSON.parse(
+      '[{"panelId":"13.1636284528927885_layout","data":"1"},{"panelId":"23.5801149283702021_layout","data":"2"},{"panelId":"33.6937258303982936_layout","data":"3"},{"panelId":"43.5667390469747078_layout","data":"4"},{"panelId":"53.4199281088325755_layout","data":"5"},{"panelId":"63.4592017601751599_layout","data":"6"},{"panelId":"73.14683256767762543_layout","data":"7"},{"panelId":"83.21519762020964252_layout","data":"8"},{"panelId":"93.21519762020964252_layout","data":"9"}]'
+    );
+
     this.primaryXAxisY = {
       title: this.language == 'VN' ? 'Tháng' : 'Month',
     };
-    // this.primaryXAxisY = {
-    //   title: null,
-    //   interval: Browser.isDevice ? 2 : 1,
-    //   labelIntersectAction: 'Rotate45',
-    //   valueType: 'Category',
-    //   majorGridLines: { width: 0 }, minorGridLines: { width: 0 },
-    //   majorTickLines: { width: 0 }, minorTickLines: { width: 0 },
-    //   lineStyle: { width: 0 },
-    // };
-    // this.primaryYAxisY = {
-    //   title: this.currencyID,
-    //   minimum: 0,
-    //   maximum: maximum,
-    //   interval: interval,
-    //   lineStyle: { width: 0 },
-    //   majorTickLines: { width: 0 }, majorGridLines: { width: 1 },
-    //   minorGridLines: { width: 1 }, minorTickLines: { width: 0 },
-    //   labelFormat: '{value}',
-    // };
   }
 
   ngAfterViewInit() {
@@ -515,25 +619,14 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
           let method: string = '';
           switch (this.reportID) {
             case 'CMD001':
-              //dashboard moi
-              //dashboard moi
-              // this.getDashBoardTargets();
-              this.isLoaded = true;
               this.getDataset('GetDashBoardTargetAsync', null, null, null);
               break;
             // nhom chua co tam
             case 'CMD002':
-              // code cũ chạy tạm
-              //this.getDataDashboard();
               this.getDataset('GetReportSourceAsync', null, null, null);
               break;
             //ca nhan chua co ne de vay
             case 'CMD003':
-              // code cũ chạy tạm
-              // let predicates = 'Owner =@0';
-              // let dataValues = this.user.userID;
-              // // this.getDataDashboard(predicates, dataValues);
-              //test DataSet
               this.getDataset(
                 'GetReportSourceAsync',
                 null,
@@ -561,32 +654,32 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     if (!this.funcID) return;
     switch (this.funcID) {
       case 'CMD001':
-        //dashboard moi
-        // this.getDashBoardTargets();
         method = 'GetDashBoardTargetAsync';
-        this.getDataset(method, param);
+        this.getDataset('SalesDataSetBusiness', method, param);
         break;
       // nhom chua co tam
       case 'CMD002':
-        //this.getDataDashboard(predicates, dataValues, param);
-        this.getDataset('GetReportSourceAsync', param);
+        this.getDataset('SalesDataSetBusiness', 'GetReportSourceAsync', param);
         break;
       //ca nha chua co ne de vay
       case 'CMD003':
-        // let length = dataValues.split(';')?.length ?? 0;
-
-        // let predicate =
-        //   length == 0 ? 'Owner =@' + length : ' and ' + 'Owner =@' + length;
-        // let dataValue = length == 0 ? this.user.userID : ';' + this.user.userID;
-
-        // predicates += predicate;
-        // dataValues += dataValue;
-        // this.getDataDashboard(predicates, dataValues, param);
-        this.getDataset('GetReportSourceAsync', param);
+        this.getDataset('SalesDataSetBusiness', 'GetReportSourceAsync', param);
         break;
       // target
       case 'CMD004':
         this.isLoaded = true;
+        break;
+      case 'CMDQTSC007':
+        this.year = new Date().getUTCFullYear();
+        if (param && param?.ToDate) {
+          this.year = moment(param?.ToDate).toDate().getFullYear();
+          debugger;
+        }
+        this.getDataset(
+          'QTSCNumberInAndOutBusiness',
+          'GetReportSourceAsync',
+          param
+        );
         break;
     }
     this.detectorRef.detectChanges();
@@ -595,104 +688,6 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   getNameStatus(status) {
     return this.arrVllStatus.filter((x) => x.value == status)[0]?.text;
   }
-
-  //
-  // getDataDashboard(predicates?: string, dataValues?: string, params?: any) {
-  //   this.isLoaded = false;
-  //   let model = new GridModels();
-  //   model.funcID = this.funcID;
-  //   model.entityName = 'CM_Deals';
-  //   model.predicates = predicates;
-  //   model.dataValues = dataValues;
-  //   this.api
-  //     .exec('CM', 'DealsBusiness', 'GetDataDashBoardAsync', [model, params])
-  //     .subscribe((res) => {
-  //       this.dataDashBoard = res;
-  //       if (res) {
-  //         this.countNew = this.dataDashBoard?.counts?.countNew;
-  //         this.countProcessing = this.dataDashBoard?.counts?.countProcessing;
-  //         this.countSuccess = this.dataDashBoard?.counts?.countSuccess;
-  //         this.countFail = this.dataDashBoard?.counts?.countFail;
-
-  //         if (this.dataDashBoard.countsBussinessLines) {
-  //           this.palette = this.dataDashBoard.countsBussinessLines?.map(
-  //             (x) => x.color
-  //           );
-  //           this.dataSourceBussnessLine =
-  //             this.dataDashBoard.countsBussinessLines?.map((x) => {
-  //               let data = {
-  //                 color: x.color,
-  //                 businessLineName: x.businessLineName,
-  //                 quantity: x.quantity,
-  //                 percentage: x.percentage,
-  //               };
-  //               return data;
-  //             });
-  //           //chart
-  //           this.chartBussnessLine = this.dataDashBoard.countsBussinessLines;
-  //         }
-  //         this.dataStatisticTarget =
-  //           this.dataDashBoard.countsStatisticTargetBussinessLine ?? [];
-  //         if (this.dataStatisticTarget.length > 0) {
-  //           let maxTarget = Math.max(
-  //             ...this.dataStatisticTarget.map((o) => o.totalTarget)
-  //           );
-  //           this.primaryXAxisRatio.maximum =
-  //             maxTarget + 2 * Math.floor(maxTarget / 10);
-  //           this.primaryXAxisRatio.interval = Math.floor(
-  //             this.primaryXAxisRatio.maximum / 10
-  //           );
-
-  //           let maxDealValue = Math.max(
-  //             ...this.dataStatisticTarget.map((o) => o.totalDealValue)
-  //           );
-
-  //           this.primaryYAxisRatio.maximum =
-  //             maxDealValue + 2 * Math.floor(maxDealValue / 10);
-  //           this.primaryYAxisRatio.interval = Math.floor(
-  //             this.primaryYAxisRatio.maximum / 10
-  //           );
-  //         }
-  //         this.maxOwners = this.dataDashBoard?.countsOwnersTopHightToLow ?? [];
-  //         this.minOwners = this.dataDashBoard?.countsOwnersTopLowToHight ?? [];
-  //         this.productivityOwner =
-  //           this.dataDashBoard.countsProductivityOwner ?? [];
-  //         this.dataSourcePyStatus =
-  //           this.dataDashBoard?.countsConversionRate?.filter(
-  //             (x) => !x.type || x.type == 'Status'
-  //           ) ?? [];
-  //         this.dataSourcePyStage =
-  //           this.dataDashBoard?.countsConversionRate?.filter(
-  //             (x) => !x.type || x.type == 'Stage'
-  //           ) ?? [];
-
-  //         this.dataSourceIndustry = this.dataDashBoard?.countsIndustries ?? [];
-  //         this.paletteIndustry = this.dataDashBoard.countsIndustries?.map(
-  //           (x) => x.color
-  //         );
-  //         const dashBoardTarget = this.dataDashBoard?.dashBoardTargets;
-  //         if (dashBoardTarget?.quarterDashBoard) {
-  //           this.piedata = dashBoardTarget?.quarterDashBoard?.map((x) => {
-  //             let data = {
-  //               x: x?.nameQuarter,
-  //               y: x?.probability,
-  //               text: x?.target,
-  //               quarter: x?.target,
-  //               year: x?.year,
-  //             };
-  //             return data;
-  //           });
-  //         }
-  //       } else {
-  //         this.resetData();
-  //       }
-  //       setTimeout(() => {
-  //         this.isLoaded = true;
-  //       }, 500);
-  //     });
-
-  //   this.detectorRef.detectChanges();
-  // }
 
   getDashBoardTargets() {
     this.isLoaded = false;
@@ -947,9 +942,16 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
       this.arrReport = e.data;
       if (this.arrReport.length) {
         let pattern =
-        /^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$/gi;
-        if(this.arrReport.length > 1 && !this.reportID.match(pattern)){
-          this.codxService.navigate('',`${this.view.function?.module ? this.view.function?.module.toLocaleLowerCase() : 'cm'}/dashboard-view/${this.reportID}`);
+          /^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$/gi;
+        if (this.arrReport.length > 1 && !this.reportID.match(pattern)) {
+          this.codxService.navigate(
+            '',
+            `${
+              this.view.function?.module
+                ? this.view.function?.module.toLocaleLowerCase()
+                : 'cm'
+            }/dashboard-view/${this.reportID}`
+          );
           return;
         }
         this.cache
@@ -1001,15 +1003,17 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
 
                 switch (this.funcID) {
                   case 'CMD001':
-                    //dashboard moi
-                    // this.getDashBoardTargets();
-                    this.getDataset('GetDashBoardTargetAsync');
+                    this.getDataset(
+                      'SalesDataSetBusiness',
+                      'GetDashBoardTargetAsync'
+                    );
                     break;
                   // nhom chua co tam
                   case 'CMD002':
-                    // cu
-                    // this.getDataDashboard();
-                    this.getDataset('GetReportSourceAsync');
+                    this.getDataset(
+                      'SalesDataSetBusiness',
+                      'GetReportSourceAsync'
+                    );
                     break;
                   //ca nhan chua co ne de vay
                   case 'CMD003':
@@ -1017,11 +1021,21 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
                     // let dataValues = this.user.userID;
                     // this.getDataDashboard(predicates, dataValues);
                     //test DataSet
-                    this.getDataset('GetReportSourceAsync');
+                    this.getDataset(
+                      'SalesDataSetBusiness',
+                      'GetReportSourceAsync'
+                    );
                     break;
                   // target
                   case 'CMD004':
                     this.isLoaded = true;
+                    break;
+                  case 'CMDQTSC007':
+                    this.year = new Date().getUTCFullYear();
+                    this.getDataset(
+                      'QTSCNumberInAndOutBusiness',
+                      'GetReportSourceAsync'
+                    );
                     break;
                 }
 
@@ -1058,6 +1072,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
 
   ///-------------------------Get DATASET---------------------------------------------//
   getDataset(
+    className: string,
     method: string,
     parameters = null,
     predicate = null,
@@ -1075,7 +1090,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
         .execSv<any[]>(
           'rptcm',
           'Codx.RptBusiness.CM',
-          'SalesDataSetBusiness',
+          className, //'SalesDataSetBusiness',
           method,
           requets
         )
@@ -1086,16 +1101,14 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
             switch (this.funcID) {
               case 'CMD001':
                 this.getSalesDashBoards(res);
-
                 break;
               case 'CMD002':
-              // this.changeMySales(res);
-              // break;
               case 'CMD003':
                 this.changeMySales(res);
                 break;
-              //case 'CMD001':
-              //  break;
+              case 'CMDQTSC007':
+                this.viewDashBoardsInOut(res);
+                break;
             }
           }
           setTimeout(() => {
@@ -2818,4 +2831,265 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     e.text = template;
   }
   //end
+
+  //------------------IN-OUT-DASHBOARD---------------//
+  viewDashBoardsInOut(dataSet) {
+    let dataSetOut = dataSet.filter((x) => x.status == '17');
+    let dataSetIn = dataSet.filter((x) => x.approveStatus == '5');
+    let dataSetInCrr = dataSetIn?.filter((x) => x.yearApproved == this.year);
+    let dataSetOutCrr = dataSetOut?.filter((x) => x.yearDisposal == this.year);
+    //out
+    this.getListEnterpriseInOut(dataSetOutCrr, false);
+    //in
+    this.getListEnterpriseInOut(dataSetInCrr, true);
+
+    //out-in old now
+    this.getCompartInOut(dataSetOut, false);
+    //in
+    this.getCompartInOut(dataSetIn, true);
+    //Thanh lý
+    this.getOutByDisCmt(dataSetOutCrr);
+  }
+
+  getListEnterpriseInOut(dataSet, isIn = true) {
+    if (isIn) {
+      this.listCountEnterprise = [];
+    } else this.listCountEnterpriseOut = [];
+
+    if (!dataSet || dataSet?.length == 0) {
+      this.vllQuaters?.forEach((qt) => {
+        let obj = {
+          quarter: qt.value,
+          quarterName: qt?.text,
+          countAll: 0,
+          countPrivateEnterprises: 0,
+          countStateEnterprises: 0,
+        };
+        if (isIn) {
+          this.listCountEnterprise.push(obj);
+        } else {
+          this.listCountEnterpriseOut.push(obj);
+        }
+      });
+      let objTotal = {
+        quarter: 100,
+        quarterName: 'Tổng cộng',
+        countAll: 0,
+        countPrivateEnterprises: 0,
+        countStateEnterprises: 0,
+      };
+      if (isIn) {
+        this.listCountEnterprise.push(objTotal);
+      } else {
+        this.listCountEnterpriseOut.push(objTotal);
+      }
+      return;
+    }
+
+    let countEnterprise = dataSet?.length;
+    let countPriEnterprise = 0;
+    let countStateEnterprise = 0;
+    let fieldGroup = isIn ? 'quarterApproved' : 'quarterDisposal';
+    let listEnterpriseNew = this.groupBy(dataSet, fieldGroup);
+
+    if (listEnterpriseNew) {
+      this.vllQuaters?.forEach((qt) => {
+        let key = qt.value;
+        let obj = {
+          quarter: key,
+          quarterName: qt?.text,
+          countAll: listEnterpriseNew[key]?.length ?? 0,
+          countPrivateEnterprises:
+            dataSet?.filter((x) => x.businessType == '1' && x.quarter == key)
+              ?.length ?? 0,
+          countStateEnterprises:
+            dataSet?.filter((x) => x.businessType == '2' && x.quarter == key)
+              ?.length ?? 0,
+        };
+
+        countPriEnterprise += obj.countPrivateEnterprises ?? 0;
+        countStateEnterprise += obj.countStateEnterprises ?? 0;
+        if (isIn) {
+          this.listCountEnterprise.push(obj);
+        } else {
+          this.listCountEnterpriseOut.push(obj);
+        }
+      });
+
+      let objTotal = {
+        quarter: 100,
+        quarterName: 'Tổng cộng',
+        countAll: countEnterprise,
+        countPrivateEnterprises: countPriEnterprise,
+        countStateEnterprises: countStateEnterprise,
+      };
+
+      if (isIn) {
+        this.listCountEnterprise.push(objTotal);
+      } else {
+        this.listCountEnterpriseOut.push(objTotal);
+      }
+    }
+  }
+  //CRM079
+  getCompartInOut(dataSet, isIn = true) {
+    if (isIn) {
+      this.listQTSCIn = [];
+    } else this.listQTSCOut = [];
+    let yearOld = this.year - 1;
+    if (!dataSet || dataSet?.length == 0) {
+      let objTotal = {
+        quarter: 100,
+        quarterName: 'Tổng DN vào QTSC',
+        countOld: 0,
+        countNow: 0,
+      };
+      let arrChart = [
+        {
+          year: yearOld.toString(),
+          count: 1,
+        },
+        {
+          year: this.year.toString(),
+          count: 1,
+        },
+      ];
+      if (isIn) {
+        this.listQTSCIn.push(objTotal);
+        this.pieChartInQTSC = arrChart;
+      } else {
+        this.listQTSCOut.push(objTotal);
+        this.pieChartOutQTSC = arrChart;
+      }
+
+      this.vllQuaters?.forEach((qt) => {
+        let obj = {
+          quarter: qt.value,
+          quarterName: qt?.text,
+          countOld: 0,
+          countNow: 0,
+        };
+        if (isIn) {
+          this.listQTSCIn.push(obj);
+        } else {
+          this.listQTSCOut.push(obj);
+        }
+      });
+      return;
+    }
+
+    let fieldGroup = isIn ? 'quarterApproved' : 'quarterDisposal';
+    let listEnterpriseNew = this.groupBy(dataSet, fieldGroup);
+
+    let objTotal = {
+      quarter: 100,
+      quarterName: 'Tổng DN vào QTSC',
+      countOld:
+        dataSet?.filter((x) =>
+          isIn ? x.yearApproved == yearOld : x.yearDisposal == yearOld
+        )?.length ?? 0,
+      countNow:
+        dataSet?.filter((x) =>
+          isIn ? x.yearApproved == this.year : x.yearDisposal == this.year
+        )?.length ?? 0,
+    };
+    let arrChart = [
+      {
+        year: yearOld.toString(),
+        count: objTotal.countOld ?? 0,
+      },
+      {
+        year: this.year.toString(),
+        count: objTotal.countNow ?? 0,
+      },
+    ];
+    if (isIn) {
+      this.listQTSCIn.push(objTotal);
+      this.pieChartInQTSC = arrChart;
+    } else {
+      this.listQTSCOut.push(objTotal);
+      this.pieChartOutQTSC = arrChart;
+    }
+
+    if (listEnterpriseNew) {
+      this.vllQuaters?.forEach((qt) => {
+        let key = qt.value;
+        let obj = {
+          quarter: key,
+          quarterName: qt?.text,
+          countOld:
+            dataSet?.filter(
+              (x) =>
+                x.quarter == key &&
+                (isIn ? x.yearApproved == yearOld : x.yearDisposal == yearOld)
+            )?.length ?? 0,
+          countNow:
+            dataSet?.filter(
+              (x) =>
+                x.quarter == key &&
+                (isIn
+                  ? x.yearApproved == this.year
+                  : x.yearDisposal == this.year)
+            )?.length ?? 0,
+        };
+
+        if (isIn) {
+          this.listQTSCIn.push(obj);
+        } else {
+          this.listQTSCOut.push(obj);
+        }
+      });
+    }
+  }
+  //nguon
+  getInbyChanel(dataSet) {
+    let listData = this.groupBy(dataSet, 'disposalCmt');
+    if (listData) {
+      for (let key in listData) {
+        let item = {
+          channelID: key,
+          channelName: listData[key][0].channelName,
+          count: listData[key].length ?? 0,
+          countQ1:
+            listData[key]?.filter((x) => x.quarterApproved == '1')?.length ?? 0,
+          countQ2:
+            listData[key]?.filter((x) => x.quarterApproved == '2')?.length ?? 0,
+          countQ3:
+            listData[key]?.filter((x) => x.quarterApproved == '3')?.length ?? 0,
+          countQ4:
+            listData[key]?.filter((x) => x.quarterApproved == '4')?.length ?? 0,
+        };
+        this.pieChartInChanel.push(item);
+      }
+    }
+  }
+
+  //Thanh lý
+  getOutByDisCmt(dataSet) {
+    this.listOutByDisposalCmt = [];
+    this.pieChartOutDisposalCmt = [];
+    if (!dataSet || dataSet?.length == 0) {
+      return;
+    }
+    let listData = this.groupBy(dataSet, 'disposalCmt');
+    if (listData) {
+      for (let key in listData) {
+        let item = {
+          disposalCmt: key,
+          disposalCmtName: listData[key][0].disposalCmtName,
+          count: listData[key].length ?? 0,
+          countQ1:
+            listData[key]?.filter((x) => x.quarterDisposal == '1')?.length ?? 0,
+          countQ2:
+            listData[key]?.filter((x) => x.quarterDisposal == '2')?.length ?? 0,
+          countQ3:
+            listData[key]?.filter((x) => x.quarterDisposal == '3')?.length ?? 0,
+          countQ4:
+            listData[key]?.filter((x) => x.quarterDisposal == '4')?.length ?? 0,
+        };
+        this.pieChartOutDisposalCmt.push(item);
+      }
+    }
+  }
+  //------------------------------------------------//
 }

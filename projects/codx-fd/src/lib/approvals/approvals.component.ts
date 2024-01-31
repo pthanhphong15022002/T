@@ -267,9 +267,9 @@ export class ApprovalsComponent extends UIComponent {
           }
           this.detectorRef.detectChanges();
         });
-    } else if (event.functionID === 'FDT1003') {
+    } else if (event.functionID === 'FDT1001') {
       this.accept(data);
-    } else if (event.functionID === 'FDT1004') {
+    } else if (event.functionID === 'FDT1002') {
       this.notAccept(data);
     }
   }

@@ -493,9 +493,9 @@ export class ContractsComponent extends UIComponent {
       case 'CM0204_20': // không sử dụng quy trình
         this.updateProcess(data, false);
         break;
-      // case 'SYS004': // không sử dụng quy trình
-      //   this.sendMail(data);
-      //   break;
+      case 'SYS004': // không sử dụng quy trình
+        this.sendMail(data);
+        break;
       default: {
         // var customData = {
         //   refID: data.recID,
@@ -520,10 +520,9 @@ export class ContractsComponent extends UIComponent {
     }
   }
 
-  sendMail(data){
-    this.cmService.sendMail(data).subscribe(res => {
-      if(res){
-        
+  sendMail(data) {
+    this.cmService.sendMail(data).subscribe((res) => {
+      if (res) {
       }
     });
   }
@@ -1089,13 +1088,13 @@ export class ContractsComponent extends UIComponent {
       this.view.service,
       data,
       category,
-      this.view.formModel.entityName,
+      'CM_Contracts', //this.view.formModel.entityName,
       this.view.formModel.funcID,
       data?.contractName, //tên nè
       this.releaseCallback.bind(this),
       null,
       null,
-      null, //this.view.formModel.entityName, ///thích đổi mãi
+      'CM_Contracts', //null, //this.view.formModel.entityName, ///thích đổi mãi
       null,
       null,
       exportData

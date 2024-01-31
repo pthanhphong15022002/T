@@ -1504,6 +1504,82 @@
           </div>
         </div>
       </div>
+
+      <div class="form-group margin-form mb-4" *ngIf="process.applyFor == '4'">
+        <div class="row">
+          <div class="col-6">
+            <codx-label
+              fiedName="Notification"
+              [formName]="'DPProcesses'"
+              [gridViewName]="'grvDPProcesses'"
+              [setRequire]="false"
+              [default]="'Thông báo sắp hết hạn'"
+            >
+            </codx-label>
+          </div>
+          <div class="col-6 d-flex align-items-center">
+            <div class=" me-4">
+              <codx-input
+                class="check-circle me-1 mt-1"
+                field="isAlert"
+                type="checkbox"
+                [checked]="process?.isAlert"
+                (valueChange)="valueChangeChecked($event, process)"
+              ></codx-input>
+              <codx-label
+                fiedName="checkbox"
+                [formName]="'DPProcesses'"
+                [gridViewName]="'grvDPProcesses'"
+                [setRequire]="false"
+                [default]="'Thông báo'"
+              ></codx-label>
+            </div>
+            <div class="me-4">
+              <codx-input 
+                class="check-circle me-1 mt-1"
+                field="isMail"
+                type="checkbox"
+                [checked]="process?.isMail"
+                (valueChange)="valueChangeChecked($event, process)"
+              ></codx-input>
+              <codx-label
+                fiedName="isMail"
+                [formName]="'DPProcesses'"
+                [gridViewName]="'grvDPProcesses'"
+                [setRequire]="false"
+                [default]="'Mail'"
+              ></codx-label>
+            </div>
+            <span class="icon-18 icon-email cursor-pointer" [ngbTooltip]="'Thiết lập Mail'" (click)="handelMailContract()"></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group margin-form mb-4" *ngIf="process.applyFor == '4'">
+        <div class="row">
+          <div class="col-6">
+            <codx-label
+              fiedName="expirationAlertTime"
+              [formName]="'DPProcesses'"
+              [gridViewName]="'grvDPProcesses'"
+              [default]="'Thời gian cảnh báo quá hạn(ngày)'"
+              [setRequire]="false"
+            >
+            </codx-label>
+          </div>
+          <div class="col-6 row">
+            <div class="col-lg-12 col-xl-8">
+              <codx-input
+                field="expirationAlertTime"
+                type="number"
+                [crrValue]="process?.expirationAlertTime"
+                (valueChange)="valueChange($event)"
+              >
+              </codx-input>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
   <!--Hướng dẫn làm việc với quy trình-->
