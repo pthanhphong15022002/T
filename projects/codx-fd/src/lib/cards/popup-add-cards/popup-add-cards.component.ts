@@ -69,7 +69,7 @@ export class PopupAddCardsComponent implements OnInit {
   funcID: string = '';
   gridViewName: string = '';
   formName: string = '';
-  shareControl: string = '1';
+  shareControl: string = 'U';
   entityName: string = 'FD_Cards';
   refValue: string = 'Behaviors_Grp';
   createNewfeed: boolean = false;
@@ -802,6 +802,7 @@ export class PopupAddCardsComponent implements OnInit {
         obj.objectName = emp.employeeName;
         obj.objectType ="U";
         this.objectType = "U";
+        this.shareControl = "U";
         this.lstShare.push(obj);
       }
     });
