@@ -76,7 +76,7 @@
 <ng-template #templateList let-data>
   <div class="d-flex align-items-center border-bottom">
     <!-- ProjectName -->
-    <div class="w-40 p-3 ps-5">
+    <div class="w-40 p-5">
       <div class="d-flex align-items-center cursor-pointer hover-active">
         <div class="d-flex flex-column me-4">
           <ng-container *ngIf="data.projectName">
@@ -88,7 +88,7 @@
       </div>
     </div>
     <!-- Phân loại-->
-    <div class="w-25 p-3">
+    <div class="w-25 p-5">
       <div class="d-flex flex-column">
         <div class="d-flex mb-1">
           {{ data.projectType }}
@@ -104,7 +104,7 @@
       </div>
     </div>
     <!-- ngày hết hạn -->
-    <div class="w-25 p-3">
+    <div class="w-25 p-5">
       <div class="d-flex flex-column">
         <span class="data-text-color">{{
           data.scheduleFinishDate | fmDT
@@ -112,7 +112,7 @@
       </div>
     </div>
     <!-- Tình trạng -->
-    <div class="w-25 p-3 h-100">
+    <div class="w-25 p-5 h-100">
       <div class="w-100 h-50px">
         <div class="w-100 d-flex align-items-center" *ngIf="!data.taskStatus">
           Chưa có công việc liên quan...
@@ -150,17 +150,17 @@
       </div>
     </div>
     <!-- Thành viên-->
-    <div class="w-25 p-3">
+    <div class="w-25 p-5">
       <div class="d-flex has-action-menu justify-content-between w-100">
-        <codx-img  [objectId]="data.projectManeger" [objectName]="data.permitions"
+        <codx-img  [objectId]="data.permissions" [objectName]="data.projectName"
             objectType="AD_Users" [width]="40">
           </codx-img>
       </div>
     </div>
     <!-- Quản lý-->
-    <div class="w-25 p-3">
+    <div class="w-25 p-5">
       <div class="d-flex has-action-menu justify-content-between w-100">
-        <codx-img  [objectId]="data.permissions" [objectName]="data.projectName"
+        <codx-img  [objectId]="data.projectManeger" [objectName]="data.projectManeger"
             objectType="AD_Users" [width]="40">
           </codx-img>
       </div>
