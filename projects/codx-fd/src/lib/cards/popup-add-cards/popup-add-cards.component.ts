@@ -92,7 +92,6 @@ export class PopupAddCardsComponent implements OnInit {
 
   isWalletReciver: boolean = false;
   showNavigationArrows: boolean = false;
-  readOnly: boolean = false;
   showPopupGift: boolean = false;
   showPopupEvoucher: boolean = false;
 
@@ -166,9 +165,30 @@ export class PopupAddCardsComponent implements OnInit {
     this.loadDataAsync(this.funcID);
     this.getMessageNoti('SYS009');
     this.getMyWallet(this.user.userID);
-    if (this.type !== 'copy') {
+    if (this.type == 'add') {
       this.setUserReportInListShare();
     }
+    if (this.type == 'detail') {
+      this.getCardInfor();
+    }
+  }
+
+  getCardInfor() {
+    this.api
+      .execSv('FD', 'ERM.Business.FD', 'CardsBusiness', 'GetCardInforAsync', [
+        this.card.recID,
+      ])
+      .subscribe((res: any) => {
+        if (res) {
+          console.log(res);
+          this.evoucher = res.gifts?.filter((x: any) => x.category == '4');
+          this.gifts = res.gifts?.filter((x: any) => x.category == '1');
+          this.givePoint = res.point;
+          this.form.patchValue({ coins: this.givePoint });
+          this.lstShare = res.listShare;
+          this.dt.detectChanges();
+        }
+      });
   }
 
   loadDataAsync(funcID: string) {
@@ -411,7 +431,9 @@ export class PopupAddCardsComponent implements OnInit {
       situation: new FormControl(
         this.card?.situation ? this.card?.situation : ''
       ),
-      industry: new FormControl(null),
+      industry: new FormControl(
+        this.card?.industry ? this.card?.industry : ''
+      ),
       patternID: new FormControl(''),
       rating: new FormControl(''),
       giftID: new FormControl(''),
