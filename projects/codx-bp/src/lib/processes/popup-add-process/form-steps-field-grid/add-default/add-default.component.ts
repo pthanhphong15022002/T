@@ -62,11 +62,15 @@ export class AddDefaultComponent extends BaseFieldComponent implements OnInit {
   {
     this.data = e;
   }
- 
+
+  valueChangeProcess(e:any)
+  {
+    this.process = e;
+  }
   close()
   {
     //this.data.settings = JSON.stringify(this.data.settings);
-    this.dialog.close(this.data);
+    this.dialog.close({data: this.data , process: this.process});
   }
 
   changeActivity(e:any)
