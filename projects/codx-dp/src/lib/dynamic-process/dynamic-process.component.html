@@ -180,71 +180,134 @@
             <div class="ms-auto">
               <div class="d-flex position-relative">
                 <ng-container
-                  *ngFor="let item of data?.permissions; let i = index"
+                  *ngIf="data?.permissions.length <= 3; else viewAll"
                 >
-                  <ng-container *ngIf="i < 2">
-                    <div style="position: relative" [ngbTooltip]="permTooltip">
-                      <codx-imgs
-                        [objectId]="item?.objectID"
-                        [objectName]="item?.objectName"
-                        objectType="AD_Users"
-                        [isToolTip]="false"
-                        [width]="25"
-                        [numberImages]="2"
+                  <ng-container
+                    *ngFor="let item of data?.permissions; let i = index"
+                  >
+                    <ng-container *ngIf="i < 3">
+                      <div
+                        style="position: relative; margin-top: 6px"
+                        [ngbTooltip]="permTooltip"
                       >
-                      </codx-imgs>
-                      <ng-template #permTooltip>
-                        <div class="d-flex align-items-start">
-                          <div class="me-3">
-                            <div style="position: relative">
-                              <codx-img
-                                [width]="30"
-                                class=""
-                                [objectId]="item?.objectID"
-                                [objectName]="item?.objectName"
-                                objectType="AD_Users"
-                              >
-                              </codx-img>
-                            </div>
-                          </div>
-                          <div class="d-flex flex-column flex-grow-1">
-                            <div class="text-dark fw-bold">
-                              {{ item?.objectName }}
-                            </div>
-                            <!-- <div class="text-gray-700 fs-7">
-                              {{ popoverTempImgs(item) }}
-                            </div> -->
-                            <ng-container *ngFor="let role of lstVllRoles">
-                              <div
-                                class="text-gray-700 fs-7"
-                                *ngIf="role.value == item?.roleType"
-                              >
-                                {{ role.text }}
+                        <codx-img
+                          [objectId]="item?.objectID"
+                          [objectName]="item?.objectName"
+                          objectType="AD_Users"
+                          [width]="25"
+                        >
+                        </codx-img>
+                        <ng-template #permTooltip>
+                          <div class="d-flex align-items-start">
+                            <div class="me-3">
+                              <div style="position: relative">
+                                <codx-img
+                                  [width]="30"
+                                  class=""
+                                  [objectId]="item?.objectID"
+                                  [objectName]="item?.objectName"
+                                  objectType="AD_Users"
+                                >
+                                </codx-img>
                               </div>
-                            </ng-container>
+                            </div>
+                            <div class="d-flex flex-column flex-grow-1">
+                              <div class="text-dark fw-bold">
+                                {{ item?.objectName }}
+                              </div>
+                              <!-- <div class="text-gray-700 fs-7">
+                                {{ popoverTempImgs(item) }}
+                              </div> -->
+                              <ng-container *ngFor="let role of lstVllRoles">
+                                <div
+                                  class="text-gray-700 fs-7"
+                                  *ngIf="role.value == item?.roleType"
+                                >
+                                  {{ role.text }}
+                                </div>
+                              </ng-container>
+                            </div>
                           </div>
-                        </div>
-                      </ng-template>
-                    </div>
-                  </ng-container>
-                  <ng-container *ngIf="i == 2">
-                    <div
-                      id="{{ data.recID }}"
-                      (click)="popoverEmpList(popoverCategory2, data)"
-                      popoverClass="processPopoverClass"
-                      [ngbPopover]="popEmpList"
-                      #popoverCategory2="ngbPopover"
-                      placement="right bottom top"
-                      container="body"
-                      autoClose="outside"
-                      class="contain-1"
-                    >
-                      <div class="view-all symbol symbol-25px symbol-circle">
-                        {{ data?.permissions?.length - 2 }}+
+                        </ng-template>
                       </div>
-                    </div>
+                    </ng-container>
                   </ng-container>
                 </ng-container>
+                <ng-template #viewAll>
+                  <ng-container
+                    *ngFor="let item of data?.permissions; let i = index"
+                  >
+                    <ng-container *ngIf="i < 2">
+                      <div
+                        style="position: relative; margin-top: 6px"
+                        [ngbTooltip]="permTooltip"
+                      >
+                        <codx-img
+                          [objectId]="item?.objectID"
+                          [objectName]="item?.objectName"
+                          objectType="AD_Users"
+                          [width]="25"
+                        >
+                        </codx-img>
+                        <ng-template #permTooltip>
+                          <div class="d-flex align-items-start">
+                            <div class="me-3">
+                              <div style="position: relative">
+                                <codx-img
+                                  [width]="30"
+                                  class=""
+                                  [objectId]="item?.objectID"
+                                  [objectName]="item?.objectName"
+                                  objectType="AD_Users"
+                                >
+                                </codx-img>
+                              </div>
+                            </div>
+                            <div class="d-flex flex-column flex-grow-1">
+                              <div class="text-dark fw-bold">
+                                {{ item?.objectName }}
+                              </div>
+                              <!-- <div class="text-gray-700 fs-7">
+                                {{ popoverTempImgs(item) }}
+                              </div> -->
+                              <ng-container *ngFor="let role of lstVllRoles">
+                                <div
+                                  class="text-gray-700 fs-7"
+                                  *ngIf="role.value == item?.roleType"
+                                >
+                                  {{ role.text }}
+                                </div>
+                              </ng-container>
+                            </div>
+                          </div>
+                        </ng-template>
+                      </div>
+                    </ng-container>
+                  </ng-container>
+                  <div
+                    id="{{ data.recID }}"
+                    (click)="popoverEmpList(popoverCategory2, data)"
+                    popoverClass="processPopoverClass"
+                    [ngbPopover]="popEmpList"
+                    #popoverCategory2="ngbPopover"
+                    placement="right bottom top"
+                    container="body"
+                    autoClose="outside"
+                    style="margin-top: 6px"
+                  >
+                    <div class="view-all symbol symbol-25px symbol-circle">
+                      <codx-img
+                        [objectId]="data?.permissions[2]"
+                        objectType="AD_Users"
+                        width="25"
+                      ></codx-img>
+                      <span class="contain-1">
+                        {{ data?.permissions?.length - 2 }}+
+                      </span>
+                    </div>
+                  </div>
+                </ng-template>
+
               </div>
             </div>
           </div>

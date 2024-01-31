@@ -97,7 +97,22 @@
         </div>
       </div>
     </div>
-    <div class="mt-2 fs-7 text-danger">Quá hạn: 2 ngày</div>
+    <div
+      class="mt-2 fs-7 text-danger d-flex align-items-center"
+      *ngIf="
+        data.endDate && (data?.actualEnd | checkDuedateValue : data?.endDate)
+      "
+    >
+      <codx-label
+        [formModel]="view.formModel"
+        default="Quá hạn"
+        class="label-colon"
+        name="lblDueDateIns"
+      ></codx-label>
+      <span class="ms=2">
+        {{data.endDate && (data?.actualEnd | checkDuedateValue : data?.endDate : 'text')}}
+      </span>
+    </div>
     <div class="d-flex justify-content-between align-items-center mt-2">
       <div class="d-flex align-items-center">
         <codx-vll
@@ -195,8 +210,24 @@
       <div class="w-90 d-flex justify-content-start">
         <span class="fw-bold fs-5">{{ data.title }}</span>
       </div>
-      <div class="w-10 d-flex justify-content-end">
-        <span class="icon-notifications icon-18 expired"> </span>
+      <div
+        class="w-10 d-flex justify-content-end"
+        *ngIf="
+          data.endDate && (data?.actualEnd | checkDuedateValue : data?.endDate)
+        "
+      >
+        <span
+          class="icon-notifications icon-18 text-danger"
+          [ngbTooltip]="tempDueDate"
+        >
+        </span>
+        <ng-template #tempDueDate>
+          <codx-label
+            [formModel]="view.formModel"
+            default="Quá hạn"
+            name="lbltempDueDateIns"
+          ></codx-label>
+        </ng-template>
       </div>
     </div>
     <div class="d-flex align-items-center mb-2">

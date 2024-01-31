@@ -9,8 +9,13 @@
   [data]="data"
 >
   <ng-template #header>
-    <div class="d-flex align-items-center justify-content-between w-100 px-3 py-4">
-      <div class="d-flex justify-content-start flex-column w-100">aaa</div>
+    <div
+      class="d-flex align-items-center justify-content-between w-100 px-3 py-4"
+    >
+      <div class="d-flex justify-content-start flex-column w-100">
+        <span class="fw-bold fs-3 mt-1">{{ title }}</span>
+        <span class="text-gray-500 fw-bold">{{ subTitle }}</span>
+      </div>
       <div
         class="d-flex justify-content-end cursor-pointer"
         (click)="dialog.close()"
@@ -20,7 +25,7 @@
     </div>
   </ng-template>
   <ng-template #body>
-    <div class="form-group">
+    <div class="form-group mt-4 pt-4">
       <codx-label
         [formModel]="form.formModel"
         fiedName="TaskName"
@@ -34,7 +39,7 @@
       >
       </codx-input>
     </div>
-    <div class="form-group">
+    <div class="form-group mt-4 pt-4">
       <codx-label
         [formModel]="form.formModel"
         fiedName="Memo"
@@ -48,7 +53,37 @@
       >
       </codx-input>
     </div>
-    <div class="form-group">
+    <div class="form-group row mt-4 pt-4">
+      <div class="col-6">
+        <codx-label
+          [formModel]="form.formModel"
+          fiedName="StartDate"
+          default="Ngày bắt đầu"
+        >
+        </codx-label>
+        <codx-input
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          field="startDate"
+        >
+        </codx-input>
+      </div>
+      <div class="col-6">
+        <codx-label
+          [formModel]="form.formModel"
+          fiedName="EndDate"
+          default="Ngày kết thúc"
+        >
+        </codx-label>
+        <codx-input
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          field="endDate"
+        >
+        </codx-input>
+      </div>
+    </div>
+    <div class="form-group mt-4 pt-4">
       <codx-label
         [formModel]="form.formModel"
         fiedName="Owner"
@@ -74,7 +109,52 @@
         </div>
       </div>
     </div>
-    <div class="form-group">
+    <div class="mt-4 pt-4">
+      <div class="d-flex flex-column">
+        <div class="d-flex">
+          <codx-label
+            [formModel]="form.formModel"
+            fiedName="lblTaskCheckList"
+            default="Danhh sách kiểm tra"
+            class="fw-bold"
+          ></codx-label>
+        </div>
+
+        <ng-container *ngIf="checkList?.length > 0">
+          <ng-container *ngFor="let cl of checkList; let indexC = index">
+            <div class="d-flex align-items-center mt-4">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                [value]="cl?.status == '1' ? true : false"
+                (change)="valueChangeCb($event, indexC)"
+              />
+              <input
+                class="mx-2 form-control"
+                [value]="cl?.taskName"
+                placeholder="Thêm mục"
+                (change)="valueChangeCheckList($event, indexC)"
+                style="border: none"
+              />
+            </div>
+          </ng-container>
+        </ng-container>
+
+        <div class="d-flex align-items-center mt-4 cursor-pointer">
+          <input class="form-check-input" type="checkbox" disabled />
+          <codx-label
+            [default]="'Thêm mục'"
+            [formModel]="form.formModel"
+            fiedName="addCheckList"
+            class="mx-2 text-gray-500"
+            style="margin-left: 16px !important"
+            (click)="addCheckList()"
+          ></codx-label>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group mt-4 pt-4">
       <codx-label
         name="lblAttachments"
         [formModel]="dialog.formModel"
