@@ -70,6 +70,8 @@ import { ViewDetailInstancesComponent } from './processes/popup-add-process/proc
 import { PopupBpTasksComponent } from './processes/popup-add-process/process-release/popup-bp-tasks/popup-bp-tasks.component';
 import { MyInstancesComponent } from './my-instances/my-instances.component';
 import { CheckDuedateValuePipe } from './pipes/check-duedate-value.pipe';
+import { BpTasksComponent } from './bp-tasks/bp-tasks.component';
+import { ViewListBpTasksComponent } from './bp-tasks/view-list-bp-tasks/view-list-bp-tasks.component';
 
 export const routes: Routes = [
   {
@@ -89,6 +91,11 @@ export const routes: Routes = [
       {
         path: 'myinstances/:funcID',
         component: MyInstancesComponent,
+        data: { noReuse: true },
+      },
+      {
+        path: 'bptasks/:funcID',
+        component: BpTasksComponent,
         data: { noReuse: true },
       },
     ],
@@ -158,6 +165,8 @@ export const routes: Routes = [
 
     MyInstancesComponent,
     CheckDuedateValuePipe,
+    BpTasksComponent,
+    ViewListBpTasksComponent,
   ],
   imports: [
     CodxCoreModule.forRoot({ environment }),
