@@ -14,7 +14,7 @@ import { PinchZoomModule } from '@meddv/ngx-pinch-zoom';
 import { NgbModule, NgbAccordionModule } from '@ng-bootstrap/ng-bootstrap';
 import { SharedModule } from '@shared/shared.module';
 import { DiagramModule } from '@syncfusion/ej2-angular-diagrams';
-import { LinearGaugeModule  } from '@syncfusion/ej2-angular-lineargauge';
+// import { LinearGaugeModule  } from '@syncfusion/ej2-angular-lineargauge';
 import { SplitterAllModule } from '@syncfusion/ej2-angular-layouts';
 import { TabModule, AccordionModule } from '@syncfusion/ej2-angular-navigations';
 import { DynamicSettingModule } from 'projects/codx-share/src/lib/components/dynamic-setting/dynamic-setting.module';

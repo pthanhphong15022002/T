@@ -17,10 +17,10 @@ export class PropertyAttachmentComponent extends BasePropertyComponent{
     var data = 
     {
       recID : Util.uid(),
-      title : "",
+      title : this.data.title,
       isRequired: false,
       count : 0,
-      isList: "1"
+      isList: "0"
     }
     this.data.documentControl.push(data);
     this.dataChange.emit(this.data);
