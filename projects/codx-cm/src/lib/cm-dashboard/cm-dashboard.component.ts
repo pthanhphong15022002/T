@@ -2907,11 +2907,13 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
           quarterName: qt?.text,
           countAll: listEnterpriseNew[key]?.length ?? 0,
           countPrivateEnterprises:
-            dataSet?.filter((x) => x.businessType == '1' && x.quarter == key)
-              ?.length ?? 0,
+            dataSet?.filter(
+              (x) => x.businessType == '1' && x[fieldGroup] == key
+            )?.length ?? 0,
           countStateEnterprises:
-            dataSet?.filter((x) => x.businessType == '2' && x.quarter == key)
-              ?.length ?? 0,
+            dataSet?.filter(
+              (x) => x.businessType == '2' && x[fieldGroup] == key
+            )?.length ?? 0,
         };
 
         countPriEnterprise += obj.countPrivateEnterprises ?? 0;
