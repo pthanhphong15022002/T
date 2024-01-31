@@ -3168,7 +3168,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
       for (let key in listData) {
         let item = {
           disposalCmt: key,
-          disposalCmtName: listData[key][0].disposalCmtName,
+          disposalReasonName: listData[key][0].disposalReasonName,
           count: listData[key].length ?? 0,
           countQ1:
             listData[key]?.filter((x) => x.quarterDisposal == '1')?.length ?? 0,
