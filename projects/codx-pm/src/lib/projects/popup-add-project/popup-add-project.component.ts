@@ -70,10 +70,12 @@ export class PopupAddProjectComponent extends UIComponent {
     this.formModel = this.dialogRef?.formModel;
     this.funcID = this.formModel?.funcID;
     this.data = dialogData.data[0];
+    this.funcType = dialogData.data[1];
+    this.user=this.authStore.get();
   }
 
   override onInit(): void {
-
+    this.initForm();
   }
 
   valueChange(e:any){
@@ -89,7 +91,7 @@ export class PopupAddProjectComponent extends UIComponent {
   }
 
   initForm(){
-    this.cache.valueList('EP009').subscribe((res) => {
+    this.cache.valueList('PM003').subscribe((res) => {
       if (res && res?.datas.length > 0) {
         let tmpArr = [];
         tmpArr = res.datas;
@@ -102,8 +104,8 @@ export class PopupAddProjectComponent extends UIComponent {
         if (this.funcType == 'add' || this.funcType == 'copy') {
           let people = this.authService.userValue;
           let tmpResource :any={};
-          tmpResource.userID = people?.userID;
-          tmpResource.userName = people?.userName;
+          tmpResource.objectID = people?.userID;
+          tmpResource.objectName = people?.userName;
           tmpResource.status = '1';
           tmpResource.roleType = '1';
           tmpResource.optional = false;
@@ -160,8 +162,109 @@ export class PopupAddProjectComponent extends UIComponent {
         }
       }
     });
-   debugger
+   if(listUserID){
+    this.valueUser(listUserID);
+   }
+  }
+  valueUser(resourceID) {
+    if (resourceID != '') {
+      if (this.members != null) {
+        let user = this.members;
+        let array = resourceID.split(';');
+        let id = '';
+        let arrayNew = [];
+        user.forEach((e) => {
+          id += e.objectID + ';';
+        });
+        if (id != '') {
+          id = id.substring(0, id.length - 1);
+
+          array.forEach((element) => {
+            if (!id.split(';').includes(element)) arrayNew.push(element);
+          });
+        }
+        if (arrayNew.length > 0) {
+          resourceID = arrayNew.join(';');
+          id += ';' + resourceID;
+          this.getListUser(resourceID);
+        }
+      } else {
+        this.getListUser(resourceID);
+      }
+    }
   }
 
+  listUserID:any=[]
+  getListUser(resource) {
+    while (resource.includes(' ')) {
+      resource = resource.replace(' ', '');
+    }
+    var arrUser = resource.split(';');
+    this.listUserID = this.listUserID.concat(arrUser);
+    this.api
+      .execSv<any>(
+        'HR',
+        'ERM.Business.HR',
+        'EmployeesBusiness',
+        'GetListEmployeesByUserIDAsync',
+        JSON.stringify(resource.split(';'))
+      )
+      .subscribe((res) => {
+        if (res && res.length > 0) {
+          for (var i = 0; i < res.length; i++) {
+            let emp = res[i];
+            var tmpResource:any={};
+            if (emp.userID == this.user.userID) {
+              tmpResource.objectID = emp?.userID;
+              tmpResource.objectName = emp?.userName;
+              tmpResource.positionName = emp?.positionName;
+              tmpResource.objectType = 'U';
+              tmpResource.roleType = '1';
+              tmpResource.optional = false;
+              this.listRoles.forEach((element) => {
+                if (element.value == tmpResource.roleType) {
+                  tmpResource.icon = element.icon;
+                  tmpResource.roleName = element.text;
+                }
+              });
+              this.members.push(tmpResource);
+            } else {
+              tmpResource.objectID = emp?.userID;
+              tmpResource.objectName = emp?.userName;
+              tmpResource.positionName = emp?.positionName;
+              tmpResource.objectType = 'U';
+              tmpResource.roleType = '3';
+              tmpResource.optional = false;
+              this.listRoles.forEach((element) => {
+                if (element.value == tmpResource.roleType) {
+                  tmpResource.icon = element.icon;
+                  tmpResource.roleName = element.text;
+                }
+              });
+              this.members.push(tmpResource);
+            }
+          }
+          this.members.forEach((item) => {
+            if (item.userID != this.curUser?.userID) {
+              this.members.push(item);
+            }
+          });
+          this.members = this.filterArray(this.members);
+          this.data.permissions = this.members;
+          this.attendeesNumber = this.data.permissions.length;
+          this.detectorRef.detectChanges();
+        }
+      });
+  }
+
+  filterArray(arr) {
+    return [...new Map(arr.map((item) => [item['userID'], item])).values()];
+  }
+
+  saveForm(){
+    console.log(this.data);
+    this.dialogRef.close();
+
+  }
 
 }
