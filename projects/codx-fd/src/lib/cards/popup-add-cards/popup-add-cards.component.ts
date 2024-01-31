@@ -801,6 +801,7 @@ export class PopupAddCardsComponent implements OnInit {
         obj.objectID = emp.domainUser;
         obj.objectName = emp.employeeName;
         obj.objectType ="U";
+        this.objectType = "U";
         this.lstShare.push(obj);
       }
     });
