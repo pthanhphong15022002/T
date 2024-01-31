@@ -69,6 +69,7 @@ import { CustomStagesPipe } from './pipes/customStages.pipe';
 import { ViewDetailInstancesComponent } from './processes/popup-add-process/process-release/view-detail-instances/view-detail-instances.component';
 import { PopupBpTasksComponent } from './processes/popup-add-process/process-release/popup-bp-tasks/popup-bp-tasks.component';
 import { MyInstancesComponent } from './my-instances/my-instances.component';
+import { CheckDuedateValuePipe } from './pipes/check-duedate-value.pipe';
 
 export const routes: Routes = [
   {
@@ -155,7 +156,8 @@ export const routes: Routes = [
     ViewDetailInstancesComponent,
     PopupBpTasksComponent,
 
-    MyInstancesComponent
+    MyInstancesComponent,
+    CheckDuedateValuePipe,
   ],
   imports: [
     CodxCoreModule.forRoot({ environment }),
