@@ -443,6 +443,14 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
 
   //===============INOUT DASHBOARD=====================================
   year = 2023;
+  legendSettingsColumn = {
+    visible: true,
+  };
+  tooltipChartColumn = {
+    enable: true,
+    shared: true,
+    // format: '${point.x} : <b>${point.y}</b>',
+  };
   //////TESTTTTTT
   //Chart pie tronn
   pieChartInQTSC = [
@@ -462,12 +470,12 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   pieChartInChanel = [];
 
   pieChartClassify = [
-    { x: 'Phân loại khách hàng ', y: 7 },
-    { x: 'Khách hàng nội khu', y: 3 },
+    { classification: 'Khách hàng mới ', count: 7 },
+    { classification: 'Khách hàng nội khu', count: 3 },
   ];
 
-  legendSettingsIn = {
-    visible: false,
+  legendSettingsCircle = {
+    visible: true,
   };
   tooltipInOut = {
     enable: true,
@@ -523,12 +531,19 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     minorGridLines: { width: 1 },
     minorTickLines: { width: 0 },
   };
-  titleTest = 'Olympic Medals';
+
   ///END TEST
+  titleTotalAll = 'Tổng cộng';
+  titleRentalAreaIn = 'Diện tích bán mới';
+  titleRentalAreaOut = 'Diện tích thanh lý';
+  titleUpAndDownAreaIn = 'Diện tích mở rộng';
+  titleUpAndDownAreaOut = 'Diện tích giảm';
+
   //In
   listCountEnterprise = [];
   //Out
   listCountEnterpriseOut = [];
+
   //InOut may nam
   listQTSCIn = [];
   listQTSCOut = [];
@@ -2846,9 +2861,10 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     let dataSetInCrr = dataSetIn?.filter((x) => x.yearApproved == this.year);
     let dataSetOutCrr = dataSetOut?.filter((x) => x.yearDisposal == this.year);
     //out
-    this.getListEnterpriseInOut(dataSetOutCrr, false);
+    this.getListEnterpriseInOutNew(dataSetOutCrr, false);
     //in
-    this.getListEnterpriseInOut(dataSetInCrr, true);
+    this.getListEnterpriseInOutNew(dataSetInCrr, true);
+
     //tang
     this.getAreaInOut(dataSetInCrr, true);
     //  giam
@@ -2859,10 +2875,12 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     this.getCompartInOut(dataSetIn, true);
     //Thanh lý
     this.getOutByDisCmt(dataSetOutCrr);
-    //
+    //PHÂN LOẠI KHÁCH HÀNG
+    this.getChartClassify(dataSetIn?.filter((x) => x.yearApproved < this.year));
   }
+  //DNNT TN
 
-  getListEnterpriseInOut(dataSet, isIn = true) {
+  getListEnterpriseInOutNew(dataSet, isIn) {
     if (isIn) {
       this.listCountEnterprise = [];
     } else this.listCountEnterpriseOut = [];
@@ -2873,33 +2891,33 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
           quarter: qt.value,
           quarterName: qt?.text,
           countAll: 0,
-          countPrivateEnterprises: 0,
-          countStateEnterprises: 0,
         };
+        this.dataBusinessType.forEach(
+          (type) => (obj['countEnterprises' + type.value] = 0)
+        );
         if (isIn) {
           this.listCountEnterprise.push(obj);
         } else {
           this.listCountEnterpriseOut.push(obj);
         }
       });
-      let objTotal = {
+      let objTotalNull = {
         quarter: 100,
         quarterName: 'Tổng cộng',
         countAll: 0,
-        countPrivateEnterprises: 0,
-        countStateEnterprises: 0,
       };
+      this.dataBusinessType.forEach(
+        (type) => (objTotalNull['countEnterprises' + type.value] = 0)
+      );
       if (isIn) {
-        this.listCountEnterprise.push(objTotal);
+        this.listCountEnterprise.push(objTotalNull);
       } else {
-        this.listCountEnterpriseOut.push(objTotal);
+        this.listCountEnterpriseOut.push(objTotalNull);
       }
+
       return;
     }
 
-    let countEnterprise = dataSet?.length;
-    let countPriEnterprise = 0;
-    let countStateEnterprise = 0;
     let fieldGroup = isIn ? 'quarterApproved' : 'quarterDisposal';
     let listEnterpriseNew = this.groupBy(dataSet, fieldGroup);
 
@@ -2910,18 +2928,14 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
           quarter: key,
           quarterName: qt?.text,
           countAll: listEnterpriseNew[key]?.length ?? 0,
-          countPrivateEnterprises:
-            dataSet?.filter(
-              (x) => x.businessType == '1' && x[fieldGroup] == key
-            )?.length ?? 0,
-          countStateEnterprises:
-            dataSet?.filter(
-              (x) => x.businessType == '2' && x[fieldGroup] == key
-            )?.length ?? 0,
         };
-
-        countPriEnterprise += obj.countPrivateEnterprises ?? 0;
-        countStateEnterprise += obj.countStateEnterprises ?? 0;
+        this.dataBusinessType.forEach(
+          (type) =>
+            (obj['countEnterprises' + type.value] =
+              dataSet?.filter(
+                (x) => x.businessType == type.value && x[fieldGroup] == key
+              )?.length ?? 0)
+        );
         if (isIn) {
           this.listCountEnterprise.push(obj);
         } else {
@@ -2932,10 +2946,13 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
       let objTotal = {
         quarter: 100,
         quarterName: 'Tổng cộng',
-        countAll: countEnterprise,
-        countPrivateEnterprises: countPriEnterprise,
-        countStateEnterprises: countStateEnterprise,
+        countAll: dataSet?.length,
       };
+      this.dataBusinessType.forEach(
+        (type) =>
+          (objTotal['countEnterprises' + type.value] =
+            dataSet?.filter((x) => x.businessType == type.value)?.length ?? 0)
+      );
 
       if (isIn) {
         this.listCountEnterprise.push(objTotal);
@@ -3055,8 +3072,6 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     }
   }
 
-  getCompartInOutNew(dataSet) {}
-
   //diên tích vào ra
   getAreaInOut(dataSet, isIn = true) {
     if (isIn) {
@@ -3159,7 +3174,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
       for (let key in listData) {
         let item = {
           channelID: key,
-          channelName: listData[key][0].channelName,
+          channelName: listData[key][0].channelName ?? 'Other',
           count: listData[key].length ?? 0,
           countQ1:
             listData[key]?.filter((x) => x.quarterApproved == '1')?.length ?? 0,
@@ -3201,6 +3216,39 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
         this.pieChartOutDisposalCmt.push(item);
       }
     }
+  }
+  //PHÂN LOẠI KHÁCH HÀNG -pieChartClassify
+  getChartClassify(dataSet) {
+    // this.pieChartClassify = [];
+    // if (!dataSet || dataSet?.length == 0) {
+    //   this.pieChartClassify = [
+    //     {
+    //       classification: 'Khách hàng mới',
+    //       count: 0,
+    //     },
+    //     {
+    //       classification: 'Khách hàng nội khu',
+    //       count: 0,
+    //     },
+    //   ];
+    //   return;
+    // }
+    this.pieChartClassify = [
+      {
+        classification: 'Khách hàng mới',
+        count:
+          !dataSet || dataSet?.length == 0
+            ? 0
+            : dataSet.filter((x) => x.isCustomerNew)?.length ?? 0,
+      },
+      {
+        classification: 'Khách hàng nội khu',
+        count:
+          !dataSet || dataSet?.length == 0
+            ? 0
+            : dataSet.filter((x) => !x.isCustomerNew)?.length ?? 0,
+      },
+    ];
   }
   //------------------------------------------------//
 }
