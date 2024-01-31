@@ -65,10 +65,10 @@
                 [formModel]="formModel"
                 fiedName="detail_CreatedBy"
               ></codx-label>
-              <span>{{ dataSelected?.userName }}</span>
+              <span>{{ info?.userName }}</span>
               <span class="ms-1 me-1">|</span>
-              <span>{{ dataSelected?.positionName }}</span>
-              <span class="ms-1 me-1" *ngIf="dataSelected?.positionName"
+              <span>{{ info?.positionName }}</span>
+              <span class="ms-1 me-1" *ngIf="info?.positionName"
                 >|</span
               >
               <span>{{ dataSelected.createdOn | date : "dd/MM/yyyy" }}</span>

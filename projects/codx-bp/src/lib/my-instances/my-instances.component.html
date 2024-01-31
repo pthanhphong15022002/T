@@ -1,0 +1,68 @@
+<codx-views
+  #view
+  [funcID]="funcID"
+  service="BP"
+  assemblyName="ERM.Business.BP"
+  entityName="BP_Instances"
+  className="ProcessInstancesBusiness"
+  [method]="'GetListInstancesAsync'"
+  [views]="views"
+  [autoLoad]="true"
+  idField="recID"
+  [predicates]="predicates"
+  [dataValues]="dataValues"
+  (selectedChange)="selectedChange($event)"
+>
+</codx-views>
+
+<ng-template #headerTemplateList let-data>
+  <div class="d-flex w-100 ps-2 pe-4 m-2" style="background: #e3ecf1">
+    <div class="w-30 text-dark fw-bold p-3 fw-500">
+      <codx-label
+        fiedName="list_Title"
+        [setRequire]="false"
+        [formModel]="view.formModel"
+        [default]="'Yêu cầu'"
+      ></codx-label>
+    </div>
+    <div class="w-15 text-dark fw-bold p-3 fw-500">
+      <codx-label
+        fiedName="list_CurrentStage"
+        [setRequire]="false"
+        [formModel]="view.formModel"
+        [default]="'Giai đoạn'"
+      ></codx-label>
+    </div>
+    <div class="w-15 text-dark fw-bold p-3 fw-500">
+      <codx-label
+        fiedName="list_Status"
+        [setRequire]="false"
+        [formModel]="view.formModel"
+        [default]="'Trình trạng'"
+      ></codx-label>
+    </div>
+    <div class="w-25 text-dark fw-bold p-3 fw-500">
+      <codx-label
+        fiedName="list_ExecutionTime"
+        [setRequire]="false"
+        [formModel]="view.formModel"
+        [default]="'Thời gian thực hiện'"
+      ></codx-label>
+    </div>
+    <div class="w-15 text-dark fw-bold p-3 fw-500">
+      <codx-label
+        fiedName="list_CreatedBy"
+        [setRequire]="false"
+        [formModel]="view.formModel"
+        [default]="'Người tạo'"
+      ></codx-label>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #templateList let-data>
+  <lib-view-list-instances
+    [dataSelected]="data"
+    [formModel]="view.formModel"
+  ></lib-view-list-instances>
+</ng-template>

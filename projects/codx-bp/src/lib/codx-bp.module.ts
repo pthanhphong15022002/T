@@ -12,7 +12,10 @@ import { CodxCoreModule } from 'codx-core';
 import { CoreModule } from '@core/core.module';
 import { HttpClientModule } from '@angular/common/http';
 import { OverlayModule } from '@angular/cdk/overlay';
-import { AccordionModule, TabModule } from '@syncfusion/ej2-angular-navigations';
+import {
+  AccordionModule,
+  TabModule,
+} from '@syncfusion/ej2-angular-navigations';
 import { CommonModule } from '@angular/common';
 import { LayoutNoAsideComponent } from 'projects/codx-common/src/lib/_layout/_noAside/_noAside.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
@@ -20,7 +23,11 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 import { PinchZoomModule } from '@meddv/ngx-pinch-zoom';
 import { PopupAddProcessComponent } from './processes/popup-add-process/popup-add-process.component';
 import { FormPropertiesFieldsComponent } from './processes/popup-add-process/form-properties-fields/form-properties-fields.component';
-import { ConnectorEditing, DiagramModule, SymbolPaletteModule } from '@syncfusion/ej2-angular-diagrams';
+import {
+  ConnectorEditing,
+  DiagramModule,
+  SymbolPaletteModule,
+} from '@syncfusion/ej2-angular-diagrams';
 import { SettingFieldsComponent } from './processes/popup-add-process/form-properties-fields/setting-fields/setting-fields.component';
 import { environment } from 'src/environments/environment';
 import { FormFormatValueComponent } from './processes/popup-add-process/form-format-value/form-format-value.component';
@@ -60,6 +67,8 @@ import { ProcessReleaseDetailComponent } from './processes/popup-add-process/pro
 import { ViewListInstancesComponent } from './processes/popup-add-process/process-release/view-list-instances/view-list-instances.component';
 import { CustomStagesPipe } from './pipes/customStages.pipe';
 import { ViewDetailInstancesComponent } from './processes/popup-add-process/process-release/view-detail-instances/view-detail-instances.component';
+import { PopupBpTasksComponent } from './processes/popup-add-process/process-release/popup-bp-tasks/popup-bp-tasks.component';
+import { MyInstancesComponent } from './my-instances/my-instances.component';
 
 export const routes: Routes = [
   {
@@ -75,8 +84,13 @@ export const routes: Routes = [
         path: 'instances/:funcID/:id',
         component: ProcessReleaseComponent,
         data: { noReuse: true },
-      }
-    ]
+      },
+      {
+        path: 'myinstances/:funcID',
+        component: MyInstancesComponent,
+        data: { noReuse: true },
+      },
+    ],
   },
   {
     path: '',
@@ -87,7 +101,7 @@ export const routes: Routes = [
         component: FormPropertiesFieldsComponent,
       },
     ],
-  }
+  },
 ];
 @NgModule({
   declarations: [
@@ -138,8 +152,10 @@ export const routes: Routes = [
     ViewListInstancesComponent,
 
     CustomStagesPipe,
-      ViewDetailInstancesComponent
+    ViewDetailInstancesComponent,
+    PopupBpTasksComponent,
 
+    MyInstancesComponent
   ],
   imports: [
     CodxCoreModule.forRoot({ environment }),
@@ -163,11 +179,10 @@ export const routes: Routes = [
     DiagramModule,
     SplitterAllModule,
     DynamicSettingModule,
-    NgbAccordionModule
+    NgbAccordionModule,
     // NgxImageZoomModule
   ],
   exports: [CodxBpComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
-
 })
 export class CodxBpModule {}
