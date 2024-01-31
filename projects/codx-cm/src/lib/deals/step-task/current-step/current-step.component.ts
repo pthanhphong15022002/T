@@ -20,7 +20,7 @@ import {
   SidebarModel,
   Util,
 } from 'codx-core';
-import { CM_Customers, CM_Deals } from '../../../models/cm_model';
+import { CM_Contacts, CM_Customers, CM_Deals } from '../../../models/cm_model';
 import { CodxCmService } from '../../../codx-cm.service';
 import { ContractsService } from '../../../contracts/service-contracts.service';
 import { PopupMoveStageComponent } from 'projects/codx-dp/src/lib/instances/popup-move-stage/popup-move-stage.component';
@@ -73,6 +73,8 @@ export class CurrentStepComponent implements OnInit, OnChanges {
   statusCodeCmt;
   detailViewDeal;
   title = '';
+  consultant;
+  salesperson;
   formModelQuotations: FormModel = {
     formName: 'CMQuotations',
     gridViewName: 'grvCMQuotations',
@@ -98,11 +100,15 @@ export class CurrentStepComponent implements OnInit, OnChanges {
   ];
 
   listTabInformation = [
-    { id: 'information', name: 'Thông tin dự án'},
-    { id: 'costItems', name: 'Chi phí'},
-    { id: 'fields', name: 'Thông tin mở rộng'},
-    { id: 'opponent', name: 'Đối thủ'},
-    { id: 'note', name: 'Ghi chú'},
+    { id: 'sales', name: 'Sales team', icon: "icon-people_alt"},
+    { id: 'costItems', name: 'Chi phí', icon: "icon-add_to_photos"},
+    { id: 'contact', name: 'Người quyết định', icon: "icon-contact_phone"},
+    { id: 'information', name: 'Nhu cầu', icon: "icon-add_box"},
+    { id: 'opponent', name: 'Đối thủ', icon: "icon-i-people-fill"},
+
+
+    // { id: 'fields', name: 'Thông tin mở rộng', icon: "icon-"},
+    // { id: 'note', name: 'Ghi chú', icon: "icon-"},
   ];
   totalCost: any;
   isUpDealCost = false;
@@ -149,7 +155,7 @@ export class CurrentStepComponent implements OnInit, OnChanges {
     this.tabLeftSelect = this.listTabLeft[0];
     this.listInsStep = this.listInsStepStart;
     if (this.type != '1') {
-      this.listTabInformation = [{ id: 'tasks', name: 'Công việc' }];
+      this.listTabInformation = [{ id: 'tasks', name: 'Công việc', icon:"icon-i-list-task" }];
     }
     this.getContract();
     this.cache
@@ -164,6 +170,19 @@ export class CurrentStepComponent implements OnInit, OnChanges {
     this.widthDefault = this.dialog.dialog.width
     ? this.dialog.dialog.width.toString()
     : '550';   
+
+    let listUserID = JSON.stringify([this.deal?.salespersonID, this.deal?.consultantID]);
+
+    this.api
+    .exec<any>('HR', 'EmployeesBusiness', 'GetListEmployeesByUserIDAsync', [listUserID])
+    .subscribe((res) => {
+      if(res){
+        this.consultant = res.find(x => x.userID == this.deal?.consultantID);
+        this.salesperson = res.find(x => x.userID == this.deal?.salespersonID);
+      }
+      console.log(res);
+      
+    });
   }
   
   ngOnChanges(changes: SimpleChanges) {}

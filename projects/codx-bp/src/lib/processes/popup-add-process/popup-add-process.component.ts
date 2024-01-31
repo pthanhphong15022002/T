@@ -819,7 +819,7 @@ export class PopupAddProcessComponent {
               }
               else
               {
-                if(element.documentControl.length >0)
+                if(element.documentControl && element.documentControl.length >0)
                 {
                   var doc = JSON.parse(JSON.stringify(this.data.documentControl));
                   element.documentControl.forEach(docu=>{
