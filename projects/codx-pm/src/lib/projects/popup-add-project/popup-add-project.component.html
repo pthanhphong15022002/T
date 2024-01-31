@@ -14,7 +14,7 @@
   <ng-container *ngIf="form && form?.formGroup">
     <div class="form-group upload-img">
       <codx-img #imageUpLoad [width]="100" imageType="circle" [objectType]="'PM_Projects'" aria-disabled="false"
-        [funcId]="formModel?.funcID" [isAllowEdit]="true" [objectId]="imgRecID" [objectName]="data?.projectName">
+        [funcId]="formModel?.funcID" [isAllowEdit]="true" [objectId]="data?.recID" [objectName]="data?.projectName">
       </codx-img>
     </div>
     <div class="form-group ps-0">
@@ -131,7 +131,7 @@
       </div>
       <div class="fw-bold me-5 pe-3">
         <span>
-          {{ "1" | vll : "PM003" : "text" | async }}
+          {{ "PM" | vll : "PM003" : "text" | async }}
         </span>
       </div>
     </div>
@@ -139,21 +139,21 @@
     <div class="d-flex align-items-center mb-4 pb-2 position-relative" *ngFor="let item of members">
       <div class="symbol symbol-30px symbol-circle me-4">
         <codx-img [width]="30" [objectId]="item?.objectID" objectType="AD_Users" [objectName]="item?.objectName"></codx-img>
-        <div role="button" class="pe-auto" (click)="showPopover(p, item?.userID)">
+        <div role="button" class="pe-auto" (click)="showPopover(p, item?.objectID)" *ngIf="item.icon">
           <span popoverClass="userPopoverClass" [ngbPopover]="!viewOnly?popoverSelectRoles:null" placement="right"
             #p="ngbPopover" autoClose="outside" class="position-absolute attendees-tag"
-            [inlineSVG]="'./assets/themes/pm/default/img/'+ item?.icon">
+            [inlineSVG]="'./assets/themes/pm/default/img/'+ item?.icon" >
           </span>
         </div>
       </div>
 
       <div class="d-flex flex-column flex-grow-1">
         <div class="text-dark fw-bold fs-6 fw-bolder">
-          {{ item?.userName }}
+          {{ item?.objectName }}
         </div>
         <div>
           <span class="text-muted">{{
-            item?.roleType | vll : "EP009" : "text" | async
+            item?.roleType | vll : "PM003" : "text" | async
             }}</span>
         </div>
       </div>
