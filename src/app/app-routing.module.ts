@@ -290,6 +290,14 @@ var childAuthRoutes: Routes = [
         (m) => m.CodxTnModule
       ),
   },
+  {
+    path: 'pm',
+    canActivate: [AuthGuard],
+    loadChildren: () =>
+      import('projects/codx-pm/src/lib/codx-pm.module').then(
+        (m) => m.CodxPmModule
+      ),
+  },
 ];
 
 var childPublicRoutes: Routes = [

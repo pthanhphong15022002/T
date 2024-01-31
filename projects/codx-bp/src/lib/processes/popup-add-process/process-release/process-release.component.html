@@ -48,8 +48,57 @@
 
 <ng-template #cardKanban let-data let-setting="setting">
   <div class="d-flex flex-column p-4" (dblclick)="openFormDetail(data)">
-    <span class="fw-bold">{{ data.title }}</span>
-    <div class="d-flex align-items-center justify-content-between mt-2">
+    <div class="fw-bold fs-5">{{ data.title }}</div>
+    <div class="d-flex fs-7 mt-2">
+      <codx-label
+        class="label-colon text-gray-800"
+        fiedName="kanban_PlanTime"
+        [setRequire]="false"
+        [formModel]="view.formModel"
+        [default]="'Kế hoạch'"
+      ></codx-label>
+      <div class="text-gray-600 d-flex">
+        <div *ngIf="data.startDate">
+          <span>{{ data.startDate | date : "dd/MM/yyyy" }}</span>
+        </div>
+        <div *ngIf="!data.startDate">
+          <span class="place-holder">dd/mm/yyyy</span>
+        </div>
+        <span class="ms-1 me-1">-</span>
+        <div *ngIf="data.endDate">
+          <span>{{ data.endDate | date : "dd/MM/yyyy" }}</span>
+        </div>
+        <div *ngIf="!data.endDate">
+          <span class="place-holder">dd/mm/yyyy</span>
+        </div>
+      </div>
+    </div>
+    <div class="d-flex fs-7 mt-2">
+      <codx-label
+        class="label-colon text-gray-800"
+        fiedName="kanban_ActualTime"
+        [setRequire]="false"
+        [formModel]="view.formModel"
+        [default]="'Thực tế'"
+      ></codx-label>
+      <div class="text-gray-600 d-flex">
+        <div *ngIf="data.actualStart">
+          <span>{{ data.actualStart | date : "dd/MM/yyyy" }}</span>
+        </div>
+        <div *ngIf="!data.actualStart">
+          <span class="place-holder">dd/mm/yyyy</span>
+        </div>
+        <span class="ms-1 me-1">-</span>
+        <div *ngIf="data.actualEnd">
+          <span>{{ data.actualEnd | date : "dd/MM/yyyy" }}</span>
+        </div>
+        <div *ngIf="!data.actualEnd">
+          <span class="place-holder">dd/mm/yyyy</span>
+        </div>
+      </div>
+    </div>
+    <div class="mt-2 fs-7 text-danger">Quá hạn: 2 ngày</div>
+    <div class="d-flex justify-content-between align-items-center mt-2">
       <div class="d-flex align-items-center">
         <codx-vll
           [name]="'BP014'"
@@ -59,8 +108,15 @@
           class="badge badge-light badge-md"
         >
         </codx-vll>
-        <span class="mx-2">Ngày tạo : </span>
-        <span>{{ data.createdOn | date : "dd/MM/yyyy" }}</span>
+        <div class="text-gray-600">
+          <codx-label
+            fiedName="CreatedOn"
+            default="Ngày tạo"
+            [formModel]="view.formModel"
+            class="label-colon"
+          ></codx-label>
+          <span>{{ data.createdOn | date : "dd/MM/yyyy" }}</span>
+        </div>
       </div>
       <codx-img
         [objectId]="data?.createdBy"
@@ -131,16 +187,15 @@
 
 <!--VIEW DETAIL-->
 <ng-template #itemTemplate let-data>
-  <div class="d-flex flex-column w-100 card-template border-bottom p-3 list-task">
+  <div
+    class="d-flex flex-column w-100 card-template border-bottom p-3 list-task"
+  >
     <div class="d-flex justify-content-between mb-2 w-100">
       <div class="w-90 d-flex justify-content-start">
-        <span class="fw-bold">{{ data.title }}</span>
+        <span class="fw-bold fs-5">{{ data.title }}</span>
       </div>
       <div class="w-10 d-flex justify-content-end">
-        <span
-          class="icon-notifications icon-18 expired"
-        >
-        </span>
+        <span class="icon-notifications icon-18 expired"> </span>
       </div>
     </div>
     <div class="d-flex align-items-center mb-2">
@@ -148,21 +203,19 @@
     </div>
     <div class="d-flex align-items-center mb-2">
       <span class="icon-16 icon-i-calendar-event me-2"></span>
-      <span
-        [innerHTML]="
-          data?.startDate
-            | formatvalue : view.formModel : 'StartDate'
-            | async
-        "
-      ></span>
+      <div *ngIf="data.startDate">
+        <span>{{ data.startDate | date : "dd/MM/yyyy" }}</span>
+      </div>
+      <div *ngIf="!data.startDate">
+        <span class="place-holder">dd/mm/yyyy</span>
+      </div>
       <span class="ms-1 me-1">-</span>
-      <span
-      [innerHTML]="
-        data?.endDate
-          | formatvalue : view.formModel : 'EndDate'
-          | async
-      "
-    ></span>
+      <div *ngIf="data.endDate">
+        <span>{{ data.endDate | date : "dd/MM/yyyy" }}</span>
+      </div>
+      <div *ngIf="!data.endDate">
+        <span class="place-holder">dd/mm/yyyy</span>
+      </div>
     </div>
     <div class="d-flex justify-content-between align-items-center">
       <div class="d-flex align-items-center">
@@ -175,7 +228,12 @@
         >
         </codx-vll>
         <div class="text-gray-600">
-          <codx-label fiedName="CreatedOn" default="Ngày tạo" [formModel]="view.formModel" class="label-colon"></codx-label>
+          <codx-label
+            fiedName="CreatedOn"
+            default="Ngày tạo"
+            [formModel]="view.formModel"
+            class="label-colon"
+          ></codx-label>
           <span>{{ data.createdOn | date : "dd/MM/yyyy" }}</span>
         </div>
       </div>
@@ -190,6 +248,10 @@
   </div>
 </ng-template>
 <ng-template #templateDetail>
-  <lib-view-detail-instances [dataSelected]="dataSelected" [formModel]="view.formModel" [lstSteps]="lstSteps"></lib-view-detail-instances>
+  <lib-view-detail-instances
+    [dataSelected]="dataSelected"
+    [formModel]="view.formModel"
+    [lstSteps]="lstSteps"
+  ></lib-view-detail-instances>
 </ng-template>
 <!--END VIEW DETAIL-->

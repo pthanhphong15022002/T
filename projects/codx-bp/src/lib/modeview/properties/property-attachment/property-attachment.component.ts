@@ -17,7 +17,7 @@ export class PropertyAttachmentComponent extends BasePropertyComponent{
     var data = 
     {
       recID : Util.uid(),
-      title : "",
+      title : this.data.title,
       isRequired: false,
       count : 0,
       isList: "1"

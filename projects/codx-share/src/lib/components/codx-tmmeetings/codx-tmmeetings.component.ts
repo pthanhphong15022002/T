@@ -204,7 +204,7 @@ export class CodxTmmeetingsComponent
         model: {
           eventModel: this.fields,
           //resourceModel: this.resourceField,
-          // template: this.eventTemplate,
+          template: this.eventTemplate,
           // template4: this.resourceHeader,// schenmoi can
           template6: this.mfButton, //header
           template2: this.headerTemp,
@@ -594,7 +594,7 @@ export class CodxTmmeetingsComponent
     });
   }
 
-  viewMeeting(data){
+  viewMeeting(data) {
     if (data) {
       this.view.dataService.dataSelected = data;
     }
@@ -612,7 +612,7 @@ export class CodxTmmeetingsComponent
           action: 'edit',
           titleAction: this.titleAction,
           disabledProject: this.disabledProject,
-          isView: true
+          isView: true,
         };
         this.dialog = this.callfc.openSide(
           PopupAddMeetingComponent,
@@ -621,7 +621,6 @@ export class CodxTmmeetingsComponent
         );
         this.dialog.closed.subscribe((e) => {
           if (!e?.event) this.view.dataService.clear();
-
         });
       });
   }
@@ -834,9 +833,13 @@ export class CodxTmmeetingsComponent
     return current_day;
   }
   openLinkMeeting(data) {
-    window.open(data?.link);
+    if (data?.link) {
+      window.open(data?.link, '_blank');
+    }
   }
-
+  openLink(e) {
+    this.openLinkMeeting(e?.data);
+  }
   selectedChange(meeting: any) {
     this.itemSelected = meeting?.data ? meeting?.data : meeting;
     this.detectorRef.detectChanges();
