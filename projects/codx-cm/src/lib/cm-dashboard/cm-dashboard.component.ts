@@ -498,18 +498,6 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
       businessType: '2',
       businessTypeName: 'DNNN',
     },
-    // {
-    //   quarter: '3',
-    //   quarterName: 'Q3',
-    //   businessType: '2',
-    //   businessTypeName: 'DNNN',
-    // },
-    // {
-    //   quarter: '4',
-    //   quarterName: 'Q4',
-    //   businessType: '2',
-    //   businessTypeName: 'DNNN',
-    // },
   ];
   chartDataColumn = [
     { country: 'Quý 1', gold: 50, silver: 75, red: 80 },
@@ -547,6 +535,8 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   //Nguồn + va lý do Out
   listInByChanel = [];
   listOutByDisposalCmt = [];
+  dataBusinessType = [];
+  //======================================================================
 
   constructor(
     inject: Injector,
@@ -670,10 +660,15 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
         this.isLoaded = true;
         break;
       case 'CMDQTSC007':
+        if (!this.dataBusinessType || this.dataBusinessType?.length == 0)
+          this.cache.valueList('CRM079').subscribe((vll) => {
+            if (vll && vll?.datas) {
+              this.dataBusinessType = vll?.datas;
+            }
+          });
         this.year = new Date().getUTCFullYear();
         if (param && param?.ToDate) {
           this.year = moment(param?.ToDate).toDate().getFullYear();
-          debugger;
         }
         this.getDataset(
           'QTSCNumberInAndOutBusiness',
@@ -1032,6 +1027,15 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
                     break;
                   case 'CMDQTSC007':
                     this.year = new Date().getUTCFullYear();
+                    if (
+                      !this.dataBusinessType ||
+                      this.dataBusinessType?.length == 0
+                    )
+                      this.cache.valueList('CRM079').subscribe((vll) => {
+                        if (vll && vll?.datas) {
+                          this.dataBusinessType = vll?.datas;
+                        }
+                      });
                     this.getDataset(
                       'QTSCNumberInAndOutBusiness',
                       'GetReportSourceAsync'
@@ -3041,6 +3045,9 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
       });
     }
   }
+
+  getCompartInOutNew(dataSet) {}
+
   //nguon
   getInbyChanel(dataSet) {
     let listData = this.groupBy(dataSet, 'disposalCmt');
