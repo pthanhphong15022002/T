@@ -1,5 +1,5 @@
-import { ChangeDetectorRef, Component, Injector, Optional } from "@angular/core";
-import { AuthService, AuthStore, CacheService, DialogData, DialogRef, FormModel, NotificationsService, UIComponent } from "codx-core";
+import { ChangeDetectorRef, Component, Injector, Optional, ViewChild } from "@angular/core";
+import { AuthService, AuthStore, CacheService, DialogData, DialogRef, FormModel, ImageViewerComponent, NotificationsService, UIComponent } from "codx-core";
 import { CodxCommonService } from "projects/codx-common/src/lib/codx-common.service";
 import { CodxBookingService } from "projects/codx-share/src/lib/components/codx-booking/codx-booking.service";
 import { CodxShareService } from "projects/codx-share/src/public-api";
@@ -10,6 +10,9 @@ import { CodxShareService } from "projects/codx-share/src/public-api";
   styleUrls: ['./popup-add-project.component.scss'],
 })
 export class PopupAddProjectComponent extends UIComponent {
+
+  @ViewChild('imageUpLoad') imageUpload: ImageViewerComponent;
+
   data: any;
   funcType: any;
   tmpTitle: any;
@@ -52,6 +55,8 @@ export class PopupAddProjectComponent extends UIComponent {
   members:any=[];
   listRoles:any=[];
   curUser:any;
+
+
   constructor(
     injector: Injector,
     private notificationsService: NotificationsService,
@@ -79,11 +84,11 @@ export class PopupAddProjectComponent extends UIComponent {
   }
 
   valueChange(e:any){
-
+    this.data[e.field]=e.data;
   }
 
   valueDateChange(e:any){
-
+    this.data[e.field]=e.data.fromDate;
   }
 
   showPopover(e:any,dat:any){
@@ -107,7 +112,7 @@ export class PopupAddProjectComponent extends UIComponent {
           tmpResource.objectID = people?.userID;
           tmpResource.objectName = people?.userName;
           tmpResource.status = '1';
-          tmpResource.roleType = '1';
+          tmpResource.roleType = 'PM';
           tmpResource.optional = false;
           tmpResource.quantity = 1;
           this.listRoles.forEach((element) => {
@@ -120,6 +125,7 @@ export class PopupAddProjectComponent extends UIComponent {
           this.members.push(tmpResource);
           this.data.attendees =  this.members?.length;
           this.attendeesNumber = this.data.attendees;
+          if(this.data && !this.data.projectManager) this.data.projectManager = this.user.userID;
           this.changeDetectorRef.detectChanges();
         } else {
 
@@ -164,6 +170,8 @@ export class PopupAddProjectComponent extends UIComponent {
     });
    if(listUserID){
     this.valueUser(listUserID);
+    console.log(this.members);
+
    }
   }
   valueUser(resourceID) {
@@ -219,7 +227,7 @@ export class PopupAddProjectComponent extends UIComponent {
               tmpResource.objectName = emp?.userName;
               tmpResource.positionName = emp?.positionName;
               tmpResource.objectType = 'U';
-              tmpResource.roleType = '1';
+              tmpResource.roleType = 'PM';
               tmpResource.optional = false;
               this.listRoles.forEach((element) => {
                 if (element.value == tmpResource.roleType) {
@@ -233,7 +241,7 @@ export class PopupAddProjectComponent extends UIComponent {
               tmpResource.objectName = emp?.userName;
               tmpResource.positionName = emp?.positionName;
               tmpResource.objectType = 'U';
-              tmpResource.roleType = '3';
+              tmpResource.roleType = 'M';
               tmpResource.optional = false;
               this.listRoles.forEach((element) => {
                 if (element.value == tmpResource.roleType) {
@@ -258,13 +266,49 @@ export class PopupAddProjectComponent extends UIComponent {
   }
 
   filterArray(arr) {
-    return [...new Map(arr.map((item) => [item['userID'], item])).values()];
+    return [...new Map(arr.map((item) => [item['objectID'], item])).values()];
   }
 
   saveForm(){
-    console.log(this.data);
-    this.dialogRef.close();
+    let returnData:any;
+    this.dialogRef.dataService.dataSelected = this.data;
+    this.dialogRef.dataService
+    .save()
+    .subscribe((res) => {
+      if (res?.save || res?.update) {
+        if (!res.save) {
+          returnData = res?.update;
+        } else {
+          returnData = res?.save;
+        }
+        if (!returnData?.error) {
+          if (this.imageUpload?.imageUpload?.item) {
+            this.imageUpload
+              .updateFileDirectReload(returnData.data.recID)
+              .subscribe((result) => {
+                if (result) {
+                  //xử lí nếu upload ảnh thất bại
+                  //...
+                  this.dialogRef && this.dialogRef.close(returnData.data);
+                }
+                else{
+
+                  this.dialogRef && this.dialogRef.close(returnData.data);
+                }
+              });
+          } else {
+            this.dialogRef && this.dialogRef.close(returnData.data);
+          }
+        }
+      } else {
+        //Trả lỗi từ backend.
+        return;
+      }
+    });
+
 
   }
+
+
 
 }

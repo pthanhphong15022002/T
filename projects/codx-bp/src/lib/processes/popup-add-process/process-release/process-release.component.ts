@@ -200,7 +200,6 @@ export class ProcessReleaseComponent implements OnInit, AfterViewInit {
         break;
       }
       case 'SYS05':
-        this.popupTasks();
         break;
       //start
       case 'BPT01011': {
@@ -250,26 +249,6 @@ export class ProcessReleaseComponent implements OnInit, AfterViewInit {
           (this.view.currentView as any).kanban.addCard(res?.event);
         else (this.view.currentView as any).kanban.updateCard(res?.event);
       }
-    });
-  }
-
-  popupTasks(){
-    var option = new SidebarModel();
-    option.FormModel = {
-      formName: 'BPTasks',
-      gridViewName: 'grvBPTasks',
-      entityName: 'BP_Tasks',
-      entityPer: this.view?.formModel?.entityPer
-    };
-    option.zIndex = 1010;
-    const obj = { data: this.view?.dataService?.dataSelected };
-    let popup = this.callFunc.openSide(
-      PopupBpTasksComponent,
-      obj,
-      option
-    );
-    popup.closed.subscribe((res) => {
-
     });
   }
 

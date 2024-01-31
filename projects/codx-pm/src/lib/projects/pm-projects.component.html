@@ -79,11 +79,57 @@
     <div class="w-40 p-5">
       <div class="d-flex align-items-center cursor-pointer hover-active">
         <div class="d-flex flex-column me-4">
-          <ng-container *ngIf="data.projectName">
-            <div class="mt-1 mx-auto">
-              <span>{{ data.projectName }}</span>
-            </div>
-          </ng-container>
+          <codx-img [funcId]="funcID" [objectId]="data.recID" [objectName]="data.projectName"
+            objectType="PM_Projects" [width]="40">
+          </codx-img>
+
+        </div>
+        <div class="d-flex flex-column">
+          <div #nameField
+            class="align-items-center line-clamp line-clamp-1 mb-1">
+            <span class="fw-bold fs-6 me-3 text-nowrap item-active" >
+              {{data.projectName}}</span>
+
+
+          </div>
+          <div #positionField *ngIf="data.positionID" class="text-gray-600 mb-1 fs-7 line-clamp line-clamp-1">
+            <span [ngbTooltip]="positionTooltip">{{data.positionName? data.positionName : data.positionID}}</span>
+            <ng-template #positionTooltip>
+              <div class="d-flex flex-column">
+                <span class="label-text-color">{{grvSetup['PositionID']?.headerText}}</span>
+                <span *ngIf="positionField.scrollHeight > positionField.clientHeight"
+                  class="text-gray-600">{{data.positionName? data.positionName : data.positionID}}</span>
+              </div>
+            </ng-template>
+          </div>
+          <div #orgUnitField *ngIf="data.orgUnitID" class="text-gray-700 mb-1 line-clamp line-clamp-1">
+            <span [ngbTooltip]="orgUnitTooltip">{{data.orgUnitName? data.orgUnitName : data.orgUnitID}}</span>
+            <ng-template #orgUnitTooltip>
+              <div class="d-flex flex-column">
+                <span class="label-text-color">{{grvSetup['OrgUnitID']?.headerText}}</span>
+                <span *ngIf="orgUnitField.scrollHeight > orgUnitField.clientHeight"
+                  class="text-gray-600">{{data.orgUnitName? data.orgUnitName : data.orgUnitID}}</span>
+              </div>
+            </ng-template>
+          </div>
+          <div #departmentField [ngbTooltip]="departmentTooltip"
+            class="text-gray-600 align-items-center line-clamp line-clamp-1">
+            <span *ngIf="data.departmentID != data.orgUnitID">
+              {{data.departmentName? data.departmentName :data.departmentID}}</span>
+            <span *ngIf="data?.departmentID && data.divisionID" class="text-gray-400 mx-1">,</span>
+            <span *ngIf="data.divisionID">{{data.divisionName? data.divisionName: data.divisionID }}</span>
+            <ng-template #departmentTooltip>
+              <div class="d-flex flex-column">
+                <span class="label-text-color">{{grvSetup['DepartmentID']?.headerText}}</span>
+                <span *ngIf="data.departmentID != data.orgUnitID
+                  && departmentField.scrollHeight > departmentField.clientHeight">
+                  {{data.departmentName? data.departmentName :
+                  data.departmentID}}</span>
+                <span *ngIf="data.divisionID && departmentField.scrollHeight > departmentField.clientHeight">
+                  {{data.divisionName? data.divisionName: data.divisionID }}</span>
+              </div>
+            </ng-template>
+          </div>
         </div>
       </div>
     </div>
@@ -106,16 +152,24 @@
     <!-- ngày hết hạn -->
     <div class="w-25 p-5">
       <div class="d-flex flex-column">
-        <span class="data-text-color">{{
-          data.scheduleFinishDate | fmDT
-        }}</span>
+        <div class="d-flex w-100 align-items-center">
+          <div class="fw-bold"> <codx-label fiedName="Schedule" [formModel]="formModel" default="Kế hoạch">
+          </codx-label>: </div> &nbsp;{{data.finishDate | fmDT}}
+        </div>
+        <div class="d-flex w-100 align-items-center mt-2">
+          <div class="fw-bold"> <codx-label fiedName="Actual" [formModel]="formModel" default="Thực tế">
+          </codx-label>: </div>&nbsp; {{
+            data.actualFinishDate | fmDT
+          }}
+        </div>
+
       </div>
     </div>
     <!-- Tình trạng -->
     <div class="w-25 p-5 h-100">
       <div class="w-100 h-50px">
         <div class="w-100 d-flex align-items-center" *ngIf="!data.taskStatus">
-          Chưa có công việc liên quan...
+          Chưa có công việc...
         </div>
         <div class="d-flex flex-column w-100  h-40px  align-items-center" *ngIf="data.taskStatus">
           <div class="w-100 h-30px">
@@ -131,7 +185,7 @@
             [height]="'40'"
             [animation]="{enable: true, duration: 500, delay: 0}"
             [showProgressValue]="true"
-            trackColor="#d0ddea"
+            trackColor="#f2f2f2"
             progressColor="#1E90FF"
             cornerRadius="Round4px"
             (textRender)="textRender($event,data.taskStatus)"
@@ -152,15 +206,15 @@
     <!-- Thành viên-->
     <div class="w-25 p-5">
       <div class="d-flex has-action-menu justify-content-between w-100">
-        <codx-img  [objectId]="data.permissions" [objectName]="data.projectName"
-            objectType="AD_Users" [width]="40">
-          </codx-img>
+        <codx-imgs  [objectId]="getMembers(data,'objectID')"
+            objectType="AD_Users" [width]="40"  [numberImages]="4" *ngIf="data.permissions">
+          </codx-imgs>
       </div>
     </div>
     <!-- Quản lý-->
     <div class="w-25 p-5">
       <div class="d-flex has-action-menu justify-content-between w-100">
-        <codx-img  [objectId]="data.projectManeger" [objectName]="data.projectManeger"
+        <codx-img  [objectId]="data.projectManager" [objectName]="data.projectManager"
             objectType="AD_Users" [width]="40">
           </codx-img>
       </div>
