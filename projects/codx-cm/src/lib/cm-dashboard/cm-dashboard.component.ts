@@ -2849,13 +2849,17 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     this.getListEnterpriseInOut(dataSetOutCrr, false);
     //in
     this.getListEnterpriseInOut(dataSetInCrr, true);
-
+    //tang
+    this.getAreaInOut(dataSetInCrr, true);
+    //  giam
+    this.getAreaInOut(dataSetInCrr, false);
     //out-in old now
     this.getCompartInOut(dataSetOut, false);
     //in
     this.getCompartInOut(dataSetIn, true);
     //Thanh lý
     this.getOutByDisCmt(dataSetOutCrr);
+    //
   }
 
   getListEnterpriseInOut(dataSet, isIn = true) {
@@ -3029,13 +3033,13 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
           countOld:
             dataSet?.filter(
               (x) =>
-                x.quarter == key &&
+                x[fieldGroup] == key &&
                 (isIn ? x.yearApproved == yearOld : x.yearDisposal == yearOld)
             )?.length ?? 0,
           countNow:
             dataSet?.filter(
               (x) =>
-                x.quarter == key &&
+                x[fieldGroup] == key &&
                 (isIn
                   ? x.yearApproved == this.year
                   : x.yearDisposal == this.year)
@@ -3056,83 +3060,96 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   //diên tích vào ra
   getAreaInOut(dataSet, isIn = true) {
     if (isIn) {
-      this.listCountEnterprise = [];
-    } else this.listCountEnterpriseOut = [];
+      this.listAreaIn = [];
+    } else this.listAreaOut = [];
 
     if (!dataSet || dataSet?.length == 0) {
       this.vllQuaters?.forEach((qt) => {
         let obj = {
           quarter: qt.value,
           quarterName: qt?.text,
-          countAll: 0,
-          countPrivateEnterprises: 0,
-          countStateEnterprises: 0,
+          totalArea: 0,
+          totalRentalArea: 0,
+          totalUpAndDownArea: 0,
         };
         if (isIn) {
-          this.listCountEnterprise.push(obj);
+          this.listAreaIn.push(obj);
         } else {
-          this.listCountEnterpriseOut.push(obj);
+          this.listAreaOut.push(obj);
         }
       });
       let objTotal = {
         quarter: 100,
         quarterName: 'Tổng cộng',
-        countAll: 0,
-        countPrivateEnterprises: 0,
-        countStateEnterprises: 0,
+        totalArea: 0,
+        totalRentalArea: 0,
+        totalUpAndDownArea: 0,
       };
       if (isIn) {
-        this.listCountEnterprise.push(objTotal);
+        this.listAreaIn.push(objTotal);
       } else {
-        this.listCountEnterpriseOut.push(objTotal);
+        this.listAreaOut.push(objTotal);
       }
       return;
     }
 
-    let countEnterprise = dataSet?.length;
-    let countPriEnterprise = 0;
-    let countStateEnterprise = 0;
     let fieldGroup = isIn ? 'quarterApproved' : 'quarterDisposal';
+    let fieldFiter = isIn ? 'expandedArea' : 'decreasedArea';
     let listEnterpriseNew = this.groupBy(dataSet, fieldGroup);
 
+    let totalRentalArea = this.total(dataSet, 'rentalArea');
+    let totalUpAndDownArea = this.total(dataSet, fieldFiter);
+    let totalArea = totalRentalArea + totalUpAndDownArea;
     if (listEnterpriseNew) {
       this.vllQuaters?.forEach((qt) => {
         let key = qt.value;
         let obj = {
           quarter: key,
           quarterName: qt?.text,
-          countAll: listEnterpriseNew[key]?.length ?? 0,
-          countPrivateEnterprises:
-            dataSet?.filter((x) => x.businessType == '1' && x.quarter == key)
-              ?.length ?? 0,
-          countStateEnterprises:
-            dataSet?.filter((x) => x.businessType == '2' && x.quarter == key)
-              ?.length ?? 0,
+          totalArea: 0,
+          totalRentalArea: this.total(
+            dataSet?.filter((x) => x[fieldGroup] == key),
+            'rentalArea'
+          ),
+          totalUpAndDownArea: this.total(
+            dataSet?.filter((x) => x[fieldGroup] == key),
+            fieldFiter
+          ),
         };
 
-        countPriEnterprise += obj.countPrivateEnterprises ?? 0;
-        countStateEnterprise += obj.countStateEnterprises ?? 0;
+        // countPriEnterprise += obj.countPrivateEnterprises ?? 0;
+        // countStateEnterprise += obj.countStateEnterprises ?? 0;
         if (isIn) {
-          this.listCountEnterprise.push(obj);
+          this.listAreaIn.push(obj);
         } else {
-          this.listCountEnterpriseOut.push(obj);
+          this.listAreaOut.push(obj);
         }
       });
 
       let objTotal = {
         quarter: 100,
         quarterName: 'Tổng cộng',
-        countAll: countEnterprise,
-        countPrivateEnterprises: countPriEnterprise,
-        countStateEnterprises: countStateEnterprise,
+        totalArea: totalArea,
+        totalRentalArea: totalRentalArea,
+        totalUpAndDownArea: totalUpAndDownArea,
       };
 
       if (isIn) {
-        this.listCountEnterprise.push(objTotal);
+        this.listAreaIn.push(objTotal);
       } else {
-        this.listCountEnterpriseOut.push(objTotal);
+        this.listAreaOut.push(objTotal);
       }
     }
+  }
+
+  total(dataSet, fieldName) {
+    let total = 0;
+    if (dataSet?.length > 0) {
+      dataSet.forEach((x) => {
+        total += Number.parseFloat(x[fieldName]) ?? 0;
+      });
+    }
+    return total;
   }
 
   //nguon
