@@ -1,8 +1,9 @@
 import { ChangeDetectionStrategy, Component, Injector, TemplateRef, ViewChild } from '@angular/core';
-import { FormModel, NotificationsService, UIComponent, ViewModel, ViewType } from 'codx-core';
+import { FormModel, NotificationsService, UIComponent, UrlUtil, ViewModel, ViewType } from 'codx-core';
 import { Subject, takeUntil } from 'rxjs';
 import { PeriodicComponent } from '../../periodic/periodic.component';
 import { TreeMapModule } from '@syncfusion/ej2-angular-treemap';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'lib-periodic-control',
@@ -23,14 +24,16 @@ export class PeriodicControlComponent extends UIComponent{
   settingFull:any;
   displayMode:any;
   formModel:FormModel = {};
-  isViewResult:any = false;
   titleResult:any;
-  sessionID:any;
+  functionID:any;
+  breadcumb: any = [];
+  numbreadcumb:any = 1;
   @ViewChild('template') template?: TemplateRef<any>;
   private destroy$ = new Subject<void>();
   constructor(
     private inject: Injector,
     private notification: NotificationsService,
+    private route: Router,
   ) {
     super(inject);
   }
@@ -56,6 +59,15 @@ export class PeriodicControlComponent extends UIComponent{
       this.formModel.formName = res?.formName;
       this.formModel.entityName = res?.entityName;
       this.formModel.gridViewName = res?.gridViewName;
+      let urlRedirect = '/' + UrlUtil.getTenant();
+      if (res && res.url && res.url.charAt(0) != '/') urlRedirect += '/ac/periodic/ACP/';
+      urlRedirect += res.formName + '/' + res.functionID;
+      let link = {
+        title: res?.defaultName || res?.customName,
+        url:urlRedirect,
+        numbreadcumb:this.numbreadcumb
+      }
+      this.breadcumb.push(link);
     })
   }
 
@@ -111,7 +123,7 @@ export class PeriodicControlComponent extends UIComponent{
             this.runPeriodic(this.settingFull.refType,this.settingFull.refID,'2',event.text);
             break;
           case 'd1':
-            this.viewResult(data, event.text);
+            this.viewResult(data, event);
             break;
           case 'd3':
             this.runPeriodic(this.settingFull.refType,this.settingFull.refID,'3',event.text);
@@ -237,16 +249,12 @@ export class PeriodicControlComponent extends UIComponent{
   //   })
   // }
 
-  viewResult(data: any, text: any) {
-    this.sessionID = data.recID;
-    this.titleResult = text;
-    this.isViewResult = true;
-    this.detectorRef.detectChanges();
-  }
-
-  onBack(){
-    this.isViewResult = false;
-    this.detectorRef.detectChanges();
+  viewResult(data: any, event: any) {
+    if (event.data.url) {
+      let urlRedirect = '/' + UrlUtil.getTenant() + '/';
+      urlRedirect += event.data.url + '/' + event.functionID;
+      this.route.navigate([urlRedirect], { queryParams: { sessionID: data.recID } });
+    }
   }
   //#endregion Function
 }
