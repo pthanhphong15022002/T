@@ -3033,13 +3033,13 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
           countOld:
             dataSet?.filter(
               (x) =>
-                x.quarter == key &&
+                x[fieldGroup] == key &&
                 (isIn ? x.yearApproved == yearOld : x.yearDisposal == yearOld)
             )?.length ?? 0,
           countNow:
             dataSet?.filter(
               (x) =>
-                x.quarter == key &&
+                x[fieldGroup] == key &&
                 (isIn
                   ? x.yearApproved == this.year
                   : x.yearDisposal == this.year)
