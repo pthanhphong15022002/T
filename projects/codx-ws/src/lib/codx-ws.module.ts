@@ -1,11 +1,10 @@
-import { NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { CodxWsComponent } from './codx-ws.component';
 import { RouterModule, Routes } from '@angular/router';
 import { LayoutComponent } from './_layout/layout.component';
 import { WorkspaceComponent } from './workspace/workspace.component';
 import { CodxCoreModule } from 'codx-core';
 import { environment } from 'src/environments/environment';
-//import { CodxShareModule } from 'projects/codx-share/src/public-api';
 import { ProgressAnnotationService } from '@syncfusion/ej2-angular-progressbar';
 import { CodxWsHeaderComponent } from './_layout/codx-ws-header/codx-ws-header.component';
 import { CalendarComponent } from './calendar/calendar.component';
@@ -86,6 +85,8 @@ import { SearchingComponent as  SearchingODComponent} from 'projects/codx-od/src
 import { SearchingComponent as  SearchingDMComponent} from 'projects/codx-dm/src/lib/searching/searching.component';
 import { SearchingComponent as  SearchingESComponent} from 'projects/codx-es/src/lib/searching/searching.component';
 import { CodxCoModule } from 'projects/codx-co/src/public-api';
+import { CodxWpModule } from 'projects/codx-wp/src/public-api';
+import { CodxShareModule } from 'projects/codx-share/src/public-api';
 //import { CodxWpV2Module } from 'projects/codx-wp/src/lib/codx-wp-v2.module';
 const routes: Routes = [
   {
@@ -106,12 +107,12 @@ const routes: Routes = [
         component: PersonalComponent,
         //component: PersonalComponent,
       },
-      
+
       {
         path: 'wsapprovals/:funcID',
         component: ApprovalsComponentWS,
       },
-     
+
       {
         path: 'bookingstationery/:funcID',
         data: { noReuse: true },
@@ -146,10 +147,10 @@ const routes: Routes = [
     //     path: 'employeedetail/:funcID',
     //     component: EmployeeInfoDetailComponent,
     //   },
-      
-      
-      
-      
+
+
+
+
       // {
       //   path: '',
       //   component: LayoutNoasideAcComponent,
@@ -224,7 +225,7 @@ const routes: Routes = [
         redirectTo: 'error/404',
       },
     ],
-    
+
   },
   {
     path:'',
@@ -338,7 +339,7 @@ const routes: Routes = [
           //   path: 'searching/:funcID',
           //   component: SearchingComponent,
           // },
-          
+
         ]
       },
       {
@@ -396,7 +397,7 @@ const routes: Routes = [
         CommonModule,
         RouterModule.forChild(routes),
         CodxCoreModule.forRoot({ environment }),
-        //CodxShareModule,
+        CodxShareModule,
         CodxEPModule,
         CodxDmModule,
         CodxWpV2Module,
@@ -413,5 +414,6 @@ const routes: Routes = [
         TabAllModule,
         CodxCommonModule
     ]
+
 })
 export class CodxWsModule {}

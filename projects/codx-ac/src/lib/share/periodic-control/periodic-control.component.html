@@ -3,7 +3,7 @@
   (requestEnded)="requestEnded($event)" (viewChanged)="viewChanged($event)">
 </codx-views>
 <ng-template #template let-data>
-  <ng-container *ngIf="setting && !isViewResult">
+  <ng-container *ngIf="setting">
     <div class="w-100 d-flex align-items-center justify-content-between p-3 mb-2">
       <div class="d-flex align-items-center w-100 justify-content-end">
         <codx-mfunc *ngIf="setting.length" [formModel]="view.formModel" [isToolBar]="true" type="view"
@@ -119,16 +119,6 @@
           </div>
         </div>
       </ng-container>
-    </div>
-  </ng-container>
-  <ng-container *ngIf="isViewResult">
-    <div class="d-flex align-items-center w-100 p-3">
-      <span (click)="onBack()" class="logo justify-content-start svg-icon svg-icon-1 icon-arrow_back cursor-pointer me-2 text-primary"></span>
-      <span class="text-dark">{{titleResult}}</span>
-    </div>
-    <div class="h-100">
-      <codx-gridview-v2 class="h-100 d-block animate__animated animate__slideInRight" #eleGrid formName="Depreciations" idField="recID" [hideMoreFunc]="true" [loadFull]="false"
-      gridViewName="grvDepreciations" entityName="AM_Depreciations" predicates="SessionID=@0" [dataValues]="sessionID" service="AM"></codx-gridview-v2>
     </div>
   </ng-container>
 </ng-template>

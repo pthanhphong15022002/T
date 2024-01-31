@@ -1,4 +1,6 @@
 import { ChangeDetectorRef, Component, Input, SimpleChanges } from '@angular/core';
+import { CodxShareService } from 'projects/codx-share/src/public-api';
+import { isObservable } from 'rxjs';
 
 @Component({
   selector: 'lib-view-detail-instances',
@@ -13,8 +15,8 @@ export class ViewDetailInstancesComponent {
   loaded: boolean;
   id: any;
   isShow = false;
-
-  constructor(private changeDetectorRef: ChangeDetectorRef) {}
+  info: any;
+  constructor(private changeDetectorRef: ChangeDetectorRef, private shareService: CodxShareService) {}
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['dataSelected']) {
@@ -28,6 +30,7 @@ export class ViewDetailInstancesComponent {
         this.dataSelected = JSON.parse(
           JSON.stringify(changes['dataSelected'].currentValue)
         );
+        this.getInfo();
         this.loaded = true;
 
       }
@@ -37,6 +40,21 @@ export class ViewDetailInstancesComponent {
   clickShowTab(isShow) {
     this.isShow = isShow;
     this.changeDetectorRef.detectChanges();
+  }
+
+  getInfo()
+  {
+    let paras = [this.dataSelected.createdBy];
+    let keyRoot = 'UserInfo' + this.dataSelected.createdBy;
+    let info = this.shareService.loadDataCache(paras,keyRoot,"SYS","AD",'UsersBusiness','GetOneUserByUserIDAsync');
+    if(isObservable(info))
+    {
+      info.subscribe(item=>{
+        this.info = item;
+      })
+    }
+    else this.info = info;
+
   }
 
 }

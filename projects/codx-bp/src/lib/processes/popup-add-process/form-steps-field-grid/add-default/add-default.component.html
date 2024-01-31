@@ -29,7 +29,7 @@
                 <lib-add-stage [type]="type" [vll]="vllBP001" [process]="process" [formModel]="formModel" [data]="data" (dataChange)="valueChange($event)"></lib-add-stage>
             </ng-container>
             <ng-container *ngSwitchDefault>
-                <lib-add-task [type]="type" [activityType]="activityType" [vll]="vllBP001" [process]="process" [formModel]="formModel" [data]="data" [stage]="stage" [parent]="parent" [listStage]="listStage" (dataChange)="valueChange($event)"></lib-add-task>
+                <lib-add-task [type]="type" [activityType]="activityType" [vll]="vllBP001" [process]="process" [formModel]="formModel" [data]="data" [stage]="stage" [parent]="parent" [listStage]="listStage" (dataChange)="valueChange($event)" (dataChangeProcess)="valueChangeProcess($event)"></lib-add-task>
             </ng-container>
         </ng-container>
     </div>

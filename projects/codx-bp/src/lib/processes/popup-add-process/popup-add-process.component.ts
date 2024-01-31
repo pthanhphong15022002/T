@@ -425,7 +425,6 @@ export class PopupAddProcessComponent {
     }
   }
   async continue(currentTab: any) {
-    debugger;
     if (currentTab == 0) {
       //check điều kiện để continue
     }
@@ -522,7 +521,7 @@ export class PopupAddProcessComponent {
   sharePerm(share) {
     this.listCombobox = {};
     this.multiple = true;
-    this.vllShare = 'BP017';
+    this.vllShare = 'BP016';
     this.typeShare = '1';
     this.multiple = true;
     let option = new DialogModel();
@@ -754,7 +753,6 @@ export class PopupAddProcessComponent {
         }
       });
     }
-    debugger;
     let popupDialog = this.callfc.openForm(
       ModeviewComponent,
       '',
@@ -770,39 +768,73 @@ export class PopupAddProcessComponent {
         this.extendInfos =
           res?.event?.length > 0 ? JSON.parse(JSON.stringify(res?.event)) : [];
         this.setLstExtends();
-        let extDocumentControls = this.extendInfos.filter(
-          (x) => x.fieldType == 'Attachment' && x.documentControl != null
-        );
-        if (extDocumentControls?.length > 0) {
-          let lstDocumentControl = [];
-          extDocumentControls.forEach((ele) => {
-            const documents =
-              typeof ele.documentControl == 'string'
-                ? ele.documentControl
-                  ? JSON.parse(ele.documentControl)
-                  : []
-                : ele.documentControl ?? [];
-            documents.forEach((res) => {
-              var tmpDoc = {};
-              tmpDoc['recID'] = Util.uid();
-              tmpDoc['stepNo'] = 1;
-              tmpDoc['fieldID'] = res.recID;
-              tmpDoc['title'] = res.title;
-              tmpDoc['memo'] = res.memo;
-              tmpDoc['isRequired'] = res.isRequired ?? false;
-              tmpDoc['count'] = res.count ?? 0;
-              tmpDoc['templateID'] = res.templateID;
-              lstDocumentControl.push(tmpDoc);
-            });
-          });
-          this.data.documentControl =
-            lstDocumentControl.length > 0
-              ? JSON.stringify(lstDocumentControl)
-              : null;
-        }
-
+        // let extDocumentControls = this.extendInfos.filter(
+        //   (x) => x.fieldType == 'Attachment' && x.documentControl != null
+        // );
+        // if (extDocumentControls?.length > 0) {
+        //   let lstDocumentControl = [];
+        //   extDocumentControls.forEach((ele) => {
+        //     const documents =
+        //       typeof ele.documentControl == 'string'
+        //         ? ele.documentControl
+        //           ? JSON.parse(ele.documentControl)
+        //           : []
+        //         : ele.documentControl ?? [];
+        //     documents.forEach((res) => {
+        //       var tmpDoc = {};
+        //       tmpDoc['recID'] = Util.uid();
+        //       tmpDoc['stepNo'] = 1;
+        //       tmpDoc['fieldID'] = res.recID;
+        //       tmpDoc['title'] = res.title;
+        //       tmpDoc['memo'] = res.memo;
+        //       tmpDoc['isRequired'] = res.isRequired ?? false;
+        //       tmpDoc['count'] = res.count ?? 0;
+        //       tmpDoc['templateID'] = res.templateID;
+        //       lstDocumentControl.push(tmpDoc);
+        //     });
+        //   });
+        //   this.data.documentControl =
+        //     lstDocumentControl.length > 0
+        //       ? JSON.stringify(lstDocumentControl)
+        //       : null;
+        // }
         if (this.data?.steps[1]?.extendInfo) {
           this.extendInfos.forEach((element) => {
+            if(element.controlType == "Attachment")
+            {
+              if(!this.data.documentControl)
+              {
+                var obj = 
+                {
+                  recID : Util.uid(),
+                  title : element.title,
+                  isRequired: false,
+                  count : 0,
+                  isList: "0",
+                  stepNo: this.data?.steps[1].stepNo,
+                  fieldID: this.data?.steps[1].recID,
+                  memo: this.data?.steps[1].memo,
+                }
+                this.data.documentControl = [obj];
+              }
+              else
+              {
+                if(element.documentControl && element.documentControl.length >0)
+                {
+                  var doc = JSON.parse(JSON.stringify(this.data.documentControl));
+                  element.documentControl.forEach(docu=>{
+                    docu.stepNo =  this.data?.steps[1].stepNo;
+                    docu.fieldID = this.data?.steps[1].recID;
+                    docu.memo = this.data?.steps[1].memo;
+                    var index = doc.findIndex(x=>x.recID == docu.recID);
+                    if(index>=0) doc[index] = docu;
+                    else doc.push(docu);
+                  })
+                  this.data.documentControl = doc;
+                }
+              }
+            }
+
             if (typeof element.documentControl != 'string') {
               element.documentControl =
                 element.documentControl?.length > 0

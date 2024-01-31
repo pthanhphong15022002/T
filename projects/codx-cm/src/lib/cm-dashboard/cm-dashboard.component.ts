@@ -498,18 +498,6 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
       businessType: '2',
       businessTypeName: 'DNNN',
     },
-    // {
-    //   quarter: '3',
-    //   quarterName: 'Q3',
-    //   businessType: '2',
-    //   businessTypeName: 'DNNN',
-    // },
-    // {
-    //   quarter: '4',
-    //   quarterName: 'Q4',
-    //   businessType: '2',
-    //   businessTypeName: 'DNNN',
-    // },
   ];
   chartDataColumn = [
     { country: 'Quý 1', gold: 50, silver: 75, red: 80 },
@@ -547,6 +535,11 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   //Nguồn + va lý do Out
   listInByChanel = [];
   listOutByDisposalCmt = [];
+  dataBusinessType = [];
+  //InOut diện tích
+  listAreaIn = [];
+  listAreaOut = [];
+  //======================================================================
 
   constructor(
     inject: Injector,
@@ -670,10 +663,15 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
         this.isLoaded = true;
         break;
       case 'CMDQTSC007':
+        if (!this.dataBusinessType || this.dataBusinessType?.length == 0)
+          this.cache.valueList('CRM079').subscribe((vll) => {
+            if (vll && vll?.datas) {
+              this.dataBusinessType = vll?.datas;
+            }
+          });
         this.year = new Date().getUTCFullYear();
         if (param && param?.ToDate) {
           this.year = moment(param?.ToDate).toDate().getFullYear();
-          debugger;
         }
         this.getDataset(
           'QTSCNumberInAndOutBusiness',
@@ -1032,6 +1030,15 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
                     break;
                   case 'CMDQTSC007':
                     this.year = new Date().getUTCFullYear();
+                    if (
+                      !this.dataBusinessType ||
+                      this.dataBusinessType?.length == 0
+                    )
+                      this.cache.valueList('CRM079').subscribe((vll) => {
+                        if (vll && vll?.datas) {
+                          this.dataBusinessType = vll?.datas;
+                        }
+                      });
                     this.getDataset(
                       'QTSCNumberInAndOutBusiness',
                       'GetReportSourceAsync'
@@ -2842,13 +2849,17 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     this.getListEnterpriseInOut(dataSetOutCrr, false);
     //in
     this.getListEnterpriseInOut(dataSetInCrr, true);
-
+    //tang
+    this.getAreaInOut(dataSetInCrr, true);
+    //  giam
+    this.getAreaInOut(dataSetInCrr, false);
     //out-in old now
     this.getCompartInOut(dataSetOut, false);
     //in
     this.getCompartInOut(dataSetIn, true);
     //Thanh lý
     this.getOutByDisCmt(dataSetOutCrr);
+    //
   }
 
   getListEnterpriseInOut(dataSet, isIn = true) {
@@ -2900,11 +2911,13 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
           quarterName: qt?.text,
           countAll: listEnterpriseNew[key]?.length ?? 0,
           countPrivateEnterprises:
-            dataSet?.filter((x) => x.businessType == '1' && x.quarter == key)
-              ?.length ?? 0,
+            dataSet?.filter(
+              (x) => x.businessType == '1' && x[fieldGroup] == key
+            )?.length ?? 0,
           countStateEnterprises:
-            dataSet?.filter((x) => x.businessType == '2' && x.quarter == key)
-              ?.length ?? 0,
+            dataSet?.filter(
+              (x) => x.businessType == '2' && x[fieldGroup] == key
+            )?.length ?? 0,
         };
 
         countPriEnterprise += obj.countPrivateEnterprises ?? 0;
@@ -3020,13 +3033,13 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
           countOld:
             dataSet?.filter(
               (x) =>
-                x.quarter == key &&
+                x[fieldGroup] == key &&
                 (isIn ? x.yearApproved == yearOld : x.yearDisposal == yearOld)
             )?.length ?? 0,
           countNow:
             dataSet?.filter(
               (x) =>
-                x.quarter == key &&
+                x[fieldGroup] == key &&
                 (isIn
                   ? x.yearApproved == this.year
                   : x.yearDisposal == this.year)
@@ -3041,6 +3054,104 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
       });
     }
   }
+
+  getCompartInOutNew(dataSet) {}
+
+  //diên tích vào ra
+  getAreaInOut(dataSet, isIn = true) {
+    if (isIn) {
+      this.listAreaIn = [];
+    } else this.listAreaOut = [];
+
+    if (!dataSet || dataSet?.length == 0) {
+      this.vllQuaters?.forEach((qt) => {
+        let obj = {
+          quarter: qt.value,
+          quarterName: qt?.text,
+          totalArea: 0,
+          totalRentalArea: 0,
+          totalUpAndDownArea: 0,
+        };
+        if (isIn) {
+          this.listAreaIn.push(obj);
+        } else {
+          this.listAreaOut.push(obj);
+        }
+      });
+      let objTotal = {
+        quarter: 100,
+        quarterName: 'Tổng cộng',
+        totalArea: 0,
+        totalRentalArea: 0,
+        totalUpAndDownArea: 0,
+      };
+      if (isIn) {
+        this.listAreaIn.push(objTotal);
+      } else {
+        this.listAreaOut.push(objTotal);
+      }
+      return;
+    }
+
+    let fieldGroup = isIn ? 'quarterApproved' : 'quarterDisposal';
+    let fieldFiter = isIn ? 'expandedArea' : 'decreasedArea';
+    let listEnterpriseNew = this.groupBy(dataSet, fieldGroup);
+
+    let totalRentalArea = this.total(dataSet, 'rentalArea');
+    let totalUpAndDownArea = this.total(dataSet, fieldFiter);
+    let totalArea = totalRentalArea + totalUpAndDownArea;
+    if (listEnterpriseNew) {
+      this.vllQuaters?.forEach((qt) => {
+        let key = qt.value;
+        let obj = {
+          quarter: key,
+          quarterName: qt?.text,
+          totalArea: 0,
+          totalRentalArea: this.total(
+            dataSet?.filter((x) => x[fieldGroup] == key),
+            'rentalArea'
+          ),
+          totalUpAndDownArea: this.total(
+            dataSet?.filter((x) => x[fieldGroup] == key),
+            fieldFiter
+          ),
+        };
+
+        // countPriEnterprise += obj.countPrivateEnterprises ?? 0;
+        // countStateEnterprise += obj.countStateEnterprises ?? 0;
+        if (isIn) {
+          this.listAreaIn.push(obj);
+        } else {
+          this.listAreaOut.push(obj);
+        }
+      });
+
+      let objTotal = {
+        quarter: 100,
+        quarterName: 'Tổng cộng',
+        totalArea: totalArea,
+        totalRentalArea: totalRentalArea,
+        totalUpAndDownArea: totalUpAndDownArea,
+      };
+
+      if (isIn) {
+        this.listAreaIn.push(objTotal);
+      } else {
+        this.listAreaOut.push(objTotal);
+      }
+    }
+  }
+
+  total(dataSet, fieldName) {
+    let total = 0;
+    if (dataSet?.length > 0) {
+      dataSet.forEach((x) => {
+        total += Number.parseFloat(x[fieldName]) ?? 0;
+      });
+    }
+    return total;
+  }
+
   //nguon
   getInbyChanel(dataSet) {
     let listData = this.groupBy(dataSet, 'disposalCmt');
@@ -3071,12 +3182,12 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     if (!dataSet || dataSet?.length == 0) {
       return;
     }
-    let listData = this.groupBy(dataSet, 'disposalCmt');
+    let listData = this.groupBy(dataSet, 'disposalReason');
     if (listData) {
       for (let key in listData) {
         let item = {
           disposalCmt: key,
-          disposalCmtName: listData[key][0].disposalCmtName,
+          disposalReasonName: listData[key][0].disposalReasonName,
           count: listData[key].length ?? 0,
           countQ1:
             listData[key]?.filter((x) => x.quarterDisposal == '1')?.length ?? 0,
