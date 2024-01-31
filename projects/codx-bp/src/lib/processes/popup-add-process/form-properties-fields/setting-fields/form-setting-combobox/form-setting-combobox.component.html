@@ -202,6 +202,10 @@
                   (focus)="onComboBoxFocus($event, 'cbx', cbx)"
                   (change)="valueChangeGrid($event,'fieldName',i)"
                 >
+                <ng-template #itemTemplate="" let-data>
+                  <!--set the value to itemTemplate property-->
+                  <span class='item' [title]="data.fieldName + ' - ' + data.headerText"><span class='name'> {{data.fieldName}}</span> - <span class ='city'>{{data.headerText}}</span></span>
+                </ng-template>
                 </ejs-combobox>
               </div>
               <div class="col-2 pe-0">
