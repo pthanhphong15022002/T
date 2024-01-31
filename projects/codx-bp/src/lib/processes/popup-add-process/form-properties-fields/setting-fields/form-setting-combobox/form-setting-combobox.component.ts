@@ -111,9 +111,9 @@ export class FormSettingComboboxComponent {
         this.listFields = item.tableFields.split(";");
         this.displayNembers = item.displayMembers.split(";");
         this.fieldFilters = item.fieldFilter.split(";");
-        this.fieldSortings = item.fieldSorting.split(";");
-        this.sortingDirection = item.sortingDirection.split(";");
-        this.headerTexts = item.columnHeader.split(";");
+        this.fieldSortings = (item.fieldSorting || "").split(";");
+        this.sortingDirection = (item.sortingDirection || "").split(";");
+        this.headerTexts = (item.columnHeader || "").split(";");
         for(var i = 0 ; i < this.listFields.length ; i++)
         {
           var obj = 

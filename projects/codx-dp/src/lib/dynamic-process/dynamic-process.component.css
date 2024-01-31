@@ -55,13 +55,15 @@
 }
 
 .contain-1 {
+  position: absolute;
+  background-color: #808080b8 !important;
   width: 25px;
   height: 25px;
-  background: gray;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  top: 0px;
   color: white;
-  font-weight: 400;
+  font-weight: bold;
 }

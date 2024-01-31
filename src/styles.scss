@@ -4552,3 +4552,8 @@ codx-view-list-card .card-group .card-item.selected{
   border-color: var(--primary)!important;
   background-color: var(--primary-lightest);
 }
+lib-general-journal{
+  codx-view-list-detail .codx-detail-main{
+    padding-bottom: 0;
+  }
+}
