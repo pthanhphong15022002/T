@@ -27,7 +27,7 @@ export class BP_Processes {
   reminder:[];
   settings: any;
   eventControl: string;
-  documentControl: string;
+  documentControl: any;
   views: number;
   attachments: number;
   comments: number;

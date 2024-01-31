@@ -16,6 +16,7 @@ export abstract class BaseFieldComponent
     @Input() vll:any;
     @Input() listStage = [];
     @Output() dataChange = new EventEmitter<any>();
+    @Output() dataChangeProcess = new EventEmitter<any>();
     @Output() back = new EventEmitter<any>();
 
     protected authstore!: AuthStore;

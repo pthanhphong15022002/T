@@ -20,7 +20,7 @@ export class PropertyAttachmentComponent extends BasePropertyComponent{
       title : this.data.title,
       isRequired: false,
       count : 0,
-      isList: "0"
+      isList: "1"
     }
     this.data.documentControl.push(data);
     this.dataChange.emit(this.data);

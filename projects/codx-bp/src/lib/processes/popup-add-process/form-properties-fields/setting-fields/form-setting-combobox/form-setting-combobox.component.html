@@ -47,7 +47,7 @@
       <codx-input
         field="tableName"
         type="combobox"
-        refValue="BPCBBBP2401-0061"
+        [refValue]="data?.refValue || 'BPComboboxList'"
         (valueChange)="valueChange($event)"
       ></codx-input>
     </div>
