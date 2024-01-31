@@ -34,9 +34,10 @@ export class FormSettingComboboxComponent {
   filter: any;
   lstGrids = [];
   fields = {
-    text: 'headerText',
+    text: 'fieldName',
     value: 'fieldName',
   };
+  lstGrids2 = []
   gridViewSetup: any;
   datas: any = {};
   tableName:any;
@@ -62,11 +63,33 @@ export class FormSettingComboboxComponent {
   }
 
   ngOnInit(): void {
-    var id = this.data;
-    debugger
+    if(this.data.refValue)
+    {
+      this.getDataCombobox(this.data.refValue);
+    }
   }
 
+  getGridView(formName:any , gridViewName:any)
+  {
+   this.cache
+   .gridViewSetup(
+    formName,
+    gridViewName
+   )
+   .subscribe((grid) => {
+     if (grid) {
+       this.gridViewSetup = grid;
+       this.setLstGrid();
+     }
+   });
+  }
 
+  setLstGrid() {
+    for (var key in this.gridViewSetup) {
+      let field = this.gridViewSetup[key];
+      this.lstGrids2.push(field);
+    }
+  }
   //#region value change
   valueChange(e) {
     // if(e && e?.data){
@@ -76,8 +99,6 @@ export class FormSettingComboboxComponent {
     if(e?.field == "tableName" && e?.component?.itemsSelected && e?.component?.itemsSelected[0])
     {
       this.getDataCombobox(e?.data)
-      this.tableName = e?.component?.itemsSelected[0].TableName;
-      this.linkFunction = ""
     }
   }
 
@@ -112,11 +133,22 @@ export class FormSettingComboboxComponent {
           if(!this.headerTexts[i]) this.headerTexts[i] = "";
           this.lstGrids.push(obj);
         }
-
         this.addNewRow();
+        this.tableName = item.tableName;
+        var linkFunction = item.linkFunction;
+        if(linkFunction)
+        {
+          this.cache.functionList(linkFunction).subscribe(item=>{
+            if(item)
+            {
+              this.getGridView(item.formName,item.gridViewName);
+            }
+          })
+        }
       }
     })
   }
+
   //#region combobox
 
   addNewRow()
@@ -164,10 +196,17 @@ export class FormSettingComboboxComponent {
       this.sortingDirection.splice(i,1);
       this.headerTexts.splice(i,1);
     }
-    var processNo = await firstValueFrom(
-      this.bpService.genAutoNumber('BPT01', 'BP_Processes', 'ProcessNo')
-    );
-    this.cbb.comboboxName = 'BPCBB' + processNo;
+    var processNo = ""
+
+    if(!this.data.refValue)
+    {
+      processNo = await firstValueFrom(
+        this.bpService.genAutoNumber('BPT01', 'BP_Processes', 'ProcessNo')
+      );
+    }
+    this.fieldSortings = this.fieldSortings.filter(x=>x);
+    this.sortingDirection = this.sortingDirection.filter(x=>x);
+    this.cbb.comboboxName = !this.data.refValue ? ('BPCBB' + processNo) : this.cbb.comboboxName;
     this.cbb.comboboxType = this.data.refType;
     this.cbb.tableFields = this.listFields.join(";");
     this.cbb.displayMembers = this.displayNembers.join(";");
@@ -175,15 +214,18 @@ export class FormSettingComboboxComponent {
     this.cbb.sortingDirection = this.sortingDirection.join(";");
     this.cbb.fieldFilter = this.fieldFilters.join(";");
     this.cbb.columnHeader = this.headerTexts.join(";");
-   
+    this.cbb.entityAttributes= this.cbb.tableFields;
+    this.cbb.isUserDefined = true;
     //Lưu Cbb
-    this.api.execSv("SYS","SYS","ComboboxListBusiness","AddComboboxAsync",this.cbb).subscribe(item=>{
+    var method = "AddComboboxAsync";
+    if(this.data.refValue) method = "UpdateComboboxAsync";
+    this.api.execSv("SYS","SYS","ComboboxListBusiness",method,this.cbb).subscribe(item=>{
       if(item)
       {
-        this.data.refValue = this.cbb.comboboxName;
+        if(!this.data?.refValue) this.data.refValue = this.cbb.comboboxName;
+        this.cache.setCombobox(this.data.refValue,this.cbb)
         this.dialog.close(this.data);
       }
-      
     })
   }
 
@@ -196,7 +238,10 @@ export class FormSettingComboboxComponent {
     }
     else if(field == "fieldName")
     {
-      this.listFields[index] = e?.target?.value;
+      var headerText = this.gridViewSetup[e?.value].headerText;
+      this.listFields[index] = e?.value;
+      this.headerTexts[index] = headerText;
+      this.lstGrids[index].headerText = headerText;
       if(index == this.lstGrids.length -1) this.addNewRow();
     }
     else if(field == "headerText")

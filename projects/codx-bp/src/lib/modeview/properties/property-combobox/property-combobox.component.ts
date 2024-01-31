@@ -59,7 +59,7 @@ export class PropertyComboboxComponent extends BasePropertyComponent implements 
   popupDialog.closed.subscribe((dg) => {
     if (dg && dg?.event) {
       this.data = dg?.event;
-      this.listCbx = JSON.parse(this.data.dataFormat);
+      //this.listCbx = JSON.parse(this.data.dataFormat);
       this.dataChange.emit(this.data);
     }
   });

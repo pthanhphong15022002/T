@@ -44,12 +44,21 @@
         [name]="'lblRefType'"
         default="Chọn danh sách từ hệ thống"
       ></codx-label>
-      <codx-input
-        field="tableName"
-        type="combobox"
-        [refValue]="data?.refValue || 'BPComboboxList'"
-        (valueChange)="valueChange($event)"
-      ></codx-input>
+      <ng-container *ngIf="!data?.refValue">
+        <codx-input
+          field="tableName"
+          type="combobox"
+          [refValue]="'BPComboboxList'"
+          (valueChange)="valueChange($event)"
+        ></codx-input>
+      </ng-container>
+      <ng-container *ngIf="data?.refValue">
+        <codx-input
+          type="text"
+          [crrValue]="cbb?.comboboxName"
+          [disabled]="true"
+        ></codx-input>
+      </ng-container>
     </div>
     <div class="col-4">
       <codx-label
@@ -182,10 +191,21 @@
           <div class="d-flex flex-column w-100 overflow-auto h-265px">
             <div class="row w-100 py-2 border-bottom" *ngFor="let item of lstGrids; index as i">
               <div class="col-2 pe-0">
-                <input class="border w-100" [placeholder]="'Tên trường dữ liệu'" type="text" [value]="item.fieldName" (change)="valueChangeGrid($event,'fieldName',i)"/>
+                <!-- <input class="border w-100" [placeholder]="'Tên trường dữ liệu'" type="text" [value]="item.fieldName" (change)="valueChangeGrid($event,'fieldName',i)"/> -->
+                <ejs-combobox
+                  #cbx
+                  class="w-100 border"
+                  [dataSource]="lstGrids2"
+                  [fields]="fields"
+                  [value]="item.fieldName"
+                  [allowFiltering]="false"
+                  (focus)="onComboBoxFocus($event, 'cbx', cbx)"
+                  (change)="valueChangeGrid($event,'fieldName',i)"
+                >
+                </ejs-combobox>
               </div>
               <div class="col-2 pe-0">
-                <input class="border w-100" [placeholder]="'Tiêu đề'" type="text" [value]="item.headerText" (change)="valueChangeGrid($event,'headerText',i)"/>
+                <input class="border w-100 h-100" [placeholder]="'Tiêu đề'" type="text" [value]="item.headerText" (change)="valueChangeGrid($event,'headerText',i)"/>
               </div>
               <div class="col-1 d-flex justify-content-center align-items-center">
                 <input type="checkbox"  [checked]="item.isDisplay" (change)="valueChangeGrid($event,'displayNembers',i,item.fieldName)"/>
