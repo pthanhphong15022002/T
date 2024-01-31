@@ -2491,7 +2491,7 @@
               default="Nguyên nhân thanh lý"
             ></codx-label>
           </th>
-          <ng-container *ngFor="let item of pieChartOutDisposalCmt">
+          <ng-container *ngFor="let item of pieChartOutDisposalReason">
             <th class="w-15 border-bottom text-center">
               {{ item?.disposalReasonName }}
             </th>
@@ -2502,14 +2502,14 @@
         <ng-container *ngFor="let quar of vllQuaters">
           <tr>
             <td class="text-center">{{ quar.text }}</td>
-            <ng-container *ngFor="let item of pieChartOutDisposalCmt">
+            <ng-container *ngFor="let item of pieChartOutDisposalReason">
               <td class="text-center">{{ item["countQ" + quar.value] }}</td>
             </ng-container>
           </tr>
         </ng-container>
         <tr>
           <td class="text-center">{{ titleTotalAll }}</td>
-          <ng-container *ngFor="let item of pieChartOutDisposalCmt">
+          <ng-container *ngFor="let item of pieChartOutDisposalReason">
             <td class="text-center">{{ item.count }}</td>
           </ng-container>
         </tr>
@@ -2532,7 +2532,7 @@
       >
         <e-accumulation-series-collection>
           <e-accumulation-series
-            [dataSource]="pieChartOutDisposalCmt"
+            [dataSource]="pieChartOutDisposalReason"
             xName="disposalReasonName"
             yName="count"
             radius="100%"

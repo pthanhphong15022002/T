@@ -34,10 +34,8 @@ import {
   ITextRenderEventArgs,
   ITooltipRenderEventArgs,
 } from '@syncfusion/ej2-angular-charts';
-import { filter, reduce } from 'rxjs';
+
 import { CodxCmService } from '../codx-cm.service';
-import { Variant } from '@syncfusion/ej2-notifications';
-import { ConsoleLogger } from '@microsoft/signalr/dist/esm/Utils';
 import moment from 'moment';
 
 @Component({
@@ -466,7 +464,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     { x: 'Điện thoại', y: 7 },
     { x: 'Website', y: 3 },
   ];
-  pieChartOutDisposalCmt = [];
+  pieChartOutDisposalReason = [];
   pieChartInChanel = [];
 
   pieChartClassify = [
@@ -2874,7 +2872,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     //in
     this.getCompartInOut(dataSetIn, true);
     //Thanh lý
-    this.getOutByDisCmt(dataSetOutCrr);
+    this.getOutByDisReason(dataSetOutCrr);
     //PHÂN LOẠI KHÁCH HÀNG
     this.getChartClassify(dataSetIn?.filter((x) => x.yearApproved < this.year));
   }
@@ -3169,7 +3167,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
 
   //nguon
   getInbyChanel(dataSet) {
-    let listData = this.groupBy(dataSet, 'disposalCmt');
+    let listData = this.groupBy(dataSet, 'channelID');
     if (listData) {
       for (let key in listData) {
         let item = {
@@ -3191,9 +3189,9 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   }
 
   //Thanh lý
-  getOutByDisCmt(dataSet) {
+  getOutByDisReason(dataSet) {
     this.listOutByDisposalCmt = [];
-    this.pieChartOutDisposalCmt = [];
+    this.pieChartOutDisposalReason = [];
     if (!dataSet || dataSet?.length == 0) {
       return;
     }
@@ -3202,7 +3200,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
       for (let key in listData) {
         let item = {
           disposalCmt: key,
-          disposalReasonName: listData[key][0].disposalReasonName,
+          disposalReasonName: listData[key][0].disposalReasonName ?? 'Other',
           count: listData[key].length ?? 0,
           countQ1:
             listData[key]?.filter((x) => x.quarterDisposal == '1')?.length ?? 0,
@@ -3213,7 +3211,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
           countQ4:
             listData[key]?.filter((x) => x.quarterDisposal == '4')?.length ?? 0,
         };
-        this.pieChartOutDisposalCmt.push(item);
+        this.pieChartOutDisposalReason.push(item);
       }
     }
   }
