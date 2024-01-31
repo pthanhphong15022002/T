@@ -55,7 +55,7 @@ export class AddTaskComponent extends BaseFieldComponent implements OnInit , OnC
   {
     if(this.data) {
       this.stage = this.listStage.filter(x=>x.recID == this.data.stageID)[0];
-      this.listUses = this.data.owners || [];
+      this.listUses = this.data.permissions || [];
     }
   }
   default()
@@ -154,20 +154,21 @@ export class AddTaskComponent extends BaseFieldComponent implements OnInit , OnC
           {
             objectID: element.id,
             objectName: element.text,
-            objectType: "U"
+            objectType: "U",
+            roleType: 'O'
           }
         )
       });
     }
 
-    this.data.owners = this.listUses;
+    this.data.permissions = this.listUses;
     this.dataChange.emit(this.data);
   }
 
   deleteUser(index:any)
   {
     this.listUses.splice(index,1);
-    this.data.owners = this.listUses;
+    this.data.permissions = this.listUses;
     this.dataChange.emit(this.data);
   }
 
@@ -181,10 +182,38 @@ export class AddTaskComponent extends BaseFieldComponent implements OnInit , OnC
 
   openAttach1()
   {
+    var documentControl = 
+    {
+      recID : Util.uid(),
+      title : this.data.stepName,
+      isRequired: false,
+      count : 0,
+      isList: "0",
+      stepNo: this.data?.stepNo,
+      fieldID: this.data?.recID,
+      memo: this.data?.memo,
+    }
+    this.process.documentControl.push(documentControl);
+    this.dataChangeProcess.emit(this.process);
+    this.attachment.objectId = documentControl.recID;
     this.attachment.uploadFile();
   }
   openAttach2()
   {
+    var documentControl = 
+    {
+      recID : Util.uid(),
+      title : this.data.stepName,
+      isRequired: false,
+      count : 0,
+      isList: "0",
+      stepNo: this.data?.stepNo,
+      fieldID: this.data?.recID,
+      memo: this.data?.memo,
+    }
+    this.process.documentControl.push(documentControl);
+    this.dataChangeProcess.emit(this.process);
+    this.attachment2.objectId = documentControl.recID;
     this.attachment2.uploadFile();
   }
   fileSave(e:any)
@@ -302,6 +331,25 @@ export class AddTaskComponent extends BaseFieldComponent implements OnInit , OnC
             templateID: res?.event[0].recID,
             templateName: res?.event[0].templateName
           }
+          if(val == 'add')
+          {
+            var documentControl = 
+            {
+              recID : Util.uid(),
+              title : this.data.stepName,
+              isRequired: false,
+              count : 0,
+              isList: "0",
+              stepNo: this.data?.stepNo,
+              fieldID: this.data?.recID,
+              memo: this.data?.memo,
+              templateID: res?.event[0].recID,
+              templateType: type
+            }
+            this.process.documentControl.push(documentControl);
+          }
+         
+          this.dataChangeProcess.emit(this.process);
           this.dataChange.emit(this.data);
         }
       })

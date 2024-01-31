@@ -161,7 +161,10 @@ export class CardsComponent extends UIComponent {
         option.Width = '550px';
         this.callfc.openSide(
           PopupAddCardsComponent,
-          { funcID: this.funcID },
+          { 
+            funcID: this.funcID,
+            type: 'add',
+          },
           option
         );
       } else this.notiService.notifyCode('FD001');
@@ -169,7 +172,22 @@ export class CardsComponent extends UIComponent {
   }
 
   clickMF(event: any, data: any) {
-    if (event.functionID === 'SYS04') {
+    if(event.functionID === 'SYS05'){
+      let option = new SidebarModel();
+      option.DataService = this.view.dataService;
+      option.FormModel = this.view.formModel;
+      option.Width = '550px';
+      this.callfc.openSide(
+        PopupAddCardsComponent,
+        {
+          funcID: this.funcID,
+          data: data,
+          title: 'Xem chi tiết phiếu',
+          type: 'detail',
+        },
+        option
+      );
+    } else if (event.functionID === 'SYS04') {
       this.fdService.checkValidAdd(this.cardType).subscribe((res: any) => {
         if (!res.error) {
           let option = new SidebarModel();

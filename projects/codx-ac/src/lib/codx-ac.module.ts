@@ -33,7 +33,6 @@ import { PopAddDeductPrepaidExpensesComponent } from './periodic/deduct-prepaid-
 import { DepreciatingFixedAssetsComponent } from './periodic/depreciating-fixed-assets/depreciating-fixed-assets.component';
 import { PopAddDepreciatingFixedAssetsComponent } from './periodic/depreciating-fixed-assets/pop-add-depreciating-fixed-assets/pop-add-depreciating-fixed-assets.component';
 import { PeriodicComponent } from './periodic/periodic.component';
-import { RunPeriodicComponent } from './periodic/run-periodic/run-periodic.component';
 import { UpdateTheLedgerComponent } from './periodic/update-the-ledger/update-the-ledger.component';
 import { NameByIdPipe } from './pipes/name-by-id.pipe';
 import { ReplacePipe } from './pipes/replace.pipe';
@@ -115,7 +114,6 @@ import { LeadsComponent } from 'projects/codx-cm/src/lib/leads/leads.component';
 import { ViewInstancesComponent } from 'projects/codx-dp/src/lib/view-instances/view-instances.component';
 import { CashtransfersComponent } from './vouchers/cashtransfers/cashtransfers.component';
 import { CashtransfersAddComponent } from './vouchers/cashtransfers/cashtransfers-add/cashtransfers-add.component';
-import { RunPeriodicAddComponent } from './periodic/run-periodic/run-periodic-add/run-periodic-add.component';
 import { DynamicSettingControlComponent } from 'projects/codx-share/src/lib/components/dynamic-setting/dynamic-setting-control/dynamic-setting-control.component';
 import { DynamicSettingModule } from 'projects/codx-share/src/lib/components/dynamic-setting/dynamic-setting.module';
 import { PeriodicControlComponent } from './share/periodic-control/periodic-control.component';
@@ -123,6 +121,7 @@ import { FormatDatePipe } from './share/periodic-control/formatDate/format-date.
 import { ContractsComponent } from 'projects/codx-cm/src/lib/contracts/contracts.component';
 import { AssetJournalsComponent } from './vouchers/asset-journals/asset-journals.component';
 import { AssetJournalsAddComponent } from './vouchers/asset-journals/asset-journals-add/asset-journals-add.component';
+import { RunDepreciationComponent } from './periodic/rundepreciation/rundepreciation.component';
 export const routes: Routes = [
   {
     path: '',
@@ -241,6 +240,10 @@ export const routes: Routes = [
           {
             path: 'RunDepreciation/:funcID',
             component: PeriodicControlComponent,
+          },
+          {
+            path: 'RunDepreciation/ViewResult/:funcID/:morfunc',
+            component: RunDepreciationComponent,
           },
           {
             path: 'AllocatePrepaidExpenses/:funcID',
@@ -408,8 +411,6 @@ export const routes: Routes = [
     ReportsComponent,
     Group067Component,
     GroupShareComponent,
-    RunPeriodicComponent,
-    RunPeriodicAddComponent,
     SuggestionAdd,
     ReplacePipe,
     UpdateTheLedgerComponent,
@@ -479,6 +480,7 @@ export const routes: Routes = [
     FormatDatePipe,
     AssetJournalsComponent,
     AssetJournalsAddComponent,
+    RunDepreciationComponent
   ],
   exports: [RouterModule],
   providers: [AccumulationTooltipService],

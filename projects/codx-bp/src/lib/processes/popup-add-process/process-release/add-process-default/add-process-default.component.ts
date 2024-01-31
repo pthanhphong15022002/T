@@ -148,6 +148,7 @@ export class AddProcessDefaultComponent implements OnInit{
           comments: stageF?.comments,
           isOverDue : stageF?.isOverDue,	
           owners: stageF?.owners,
+          permissions: stageF?.owners,
         }
         var step = 
         {
@@ -173,6 +174,7 @@ export class AddProcessDefaultComponent implements OnInit{
           comments: this.data?.comments,
           isOverDue : this.data?.isOverDue,	
           owners: this.data?.owners,
+          permissions: this.data?.owners,
         }
     
     

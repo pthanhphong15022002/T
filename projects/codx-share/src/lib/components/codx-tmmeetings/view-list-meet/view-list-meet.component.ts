@@ -32,6 +32,7 @@ export class ViewListMeetComponent implements OnInit {
   @Output() changeMF = new EventEmitter<any>();
   @Output() clickMoreFunction = new EventEmitter<any>();
   @Output() viewDetail = new EventEmitter<any>();
+  @Output() openLink = new EventEmitter<any>();
   @ViewChild('view') view!: ViewsComponent;
 
   month: any;
@@ -142,5 +143,9 @@ export class ViewListMeetComponent implements OnInit {
   }
   dbClick(data) {
     this.viewDetail.emit(data);
+  }
+
+  openLinkMeeting(data){
+    this.openLink.emit(data)
   }
 }

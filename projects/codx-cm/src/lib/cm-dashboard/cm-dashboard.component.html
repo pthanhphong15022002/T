@@ -1769,8 +1769,8 @@
     <table style="table-layout: fixed" class="table mb-0">
       <thead class="border-gray-200 table-thead-ac">
         <tr class="border-bottom">
-          <th class="w-40 border-bottom"></th>
-          <th class="w-15 border-bottom">
+          <th class="w-40 border-bottom text-center"></th>
+          <th class="w-15 border-bottom text-center">
             <codx-label
               name="lblTableTotal"
               formName="CMInOutDashboard"
@@ -1778,7 +1778,12 @@
               default="Tổng số DN"
             ></codx-label>
           </th>
-          <th class="w-15 border-bottom">
+          <ng-container *ngFor="let item of dataBusinessType">
+            <th class="w-15 border-bottom text-center">
+              {{ item?.text }}
+            </th>
+          </ng-container>
+          <!-- <th class="w-15 border-bottom text-center">
             <codx-label
               name="lblTableDNTN"
               formName="CMInOutDashboard"
@@ -1786,35 +1791,29 @@
               default="DNTN"
             ></codx-label>
           </th>
-          <th class="w-15 border-bottom">
+          <th class="w-15 border-bottom text-center">
             <codx-label
               name="lblTableDNNN"
               formName="CMInOutDashboard"
               gridViewName="grvCMInOutDashboard"
               default="DNNN"
             ></codx-label>
-          </th>
+          </th> -->
         </tr>
       </thead>
       <tbody>
         <ng-container *ngFor="let item of listCountEnterprise">
           <tr>
             <td class="text-center">{{ item?.quarterName }}</td>
-            <td class="text-center">{{ item?.countNew }}</td>
-            <td class="text-center">{{ item?.countPrivateEnterprise }}</td>
+            <td class="text-center">{{ item?.countAll }}</td>
+            <td class="text-center">{{ item?.countPrivateEnterprises }}</td>
             <td class="text-center">{{ item?.countStateEnterprises }}</td>
           </tr>
         </ng-container>
-        <tr>
-          <td class="text-center">TC</td>
-          <td class="text-center">{{ countNewEnterprise }}</td>
-          <td class="text-center">{{ countNewPriEnterprise }}</td>
-          <td class="text-center">{{ countNewStateEnterprise }}</td>
-        </tr>
       </tbody>
     </table>
 
-    <div class="text-center fs-2">
+    <div class="text-center fs-2 mt-3">
       <codx-label
         class="fw-bold"
         name="lblChartIn"
@@ -1829,33 +1828,44 @@
         id="chart-container-1"
         [primaryXAxis]="primaryXAxisColumn"
         [primaryYAxis]="primaryYAxisColumn"
+        [tooltip]="tooltipInOut"
       >
         <!--   [title]="titleTest" -->
         <e-series-collection>
           <e-series
-            [dataSource]="chartDataColumn"
+            [dataSource]="listCountEnterprise"
             type="Column"
             columnSpacing="0.25"
             columnWidth="1"
-            xName="country"
-            yName="gold"
+            xName="quarterName"
+            yName="countAll"
           ></e-series>
           <e-series
-            [dataSource]="chartDataColumn"
+            [dataSource]="listCountEnterprise"
             type="Column"
-            xName="country"
+            xName="quarterName"
             columnSpacing="0.25"
             columnWidth="1"
-            yName="silver"
+            yName="countPrivateEnterprises"
           ></e-series>
           <e-series
-            [dataSource]="chartDataColumn"
+            [dataSource]="listCountEnterprise"
             type="Column"
-            xName="country"
+            xName="quarterName"
             columnSpacing="0.25"
             columnWidth="1"
-            yName="red"
+            yName="countStateEnterprises"
           ></e-series>
+          <!-- <ng-container *ngFor="let item of dataBusinessType">
+            <e-series
+              [dataSource]="listCountEnterprise"
+              type="Column"
+              xName="quarterName"
+              columnSpacing="0.25"
+              columnWidth="1"
+              yName="{{ 'countBusinessType' + item.value }}"
+            ></e-series>
+          </ng-container> -->
         </e-series-collection>
       </ejs-chart>
     </div>
@@ -1887,7 +1897,12 @@
               default="Tổng số DN"
             ></codx-label>
           </th>
-          <th class="w-15 border-bottom">
+          <ng-container *ngFor="let item of dataBusinessType">
+            <th class="w-15 border-bottom text-center">
+              {{ item?.text }}
+            </th>
+          </ng-container>
+          <!-- <th class="w-15 border-bottom">
             <codx-label
               name="lblTableDNTN"
               formName="CMInOutDashboard"
@@ -1902,28 +1917,22 @@
               gridViewName="grvCMInOutDashboard"
               default="DNNN"
             ></codx-label>
-          </th>
+          </th> -->
         </tr>
       </thead>
       <tbody>
-        <ng-container *ngFor="let item of listCountEnterprise">
+        <ng-container *ngFor="let item of listCountEnterpriseOut">
           <tr>
             <td class="text-center">{{ item?.quarterName }}</td>
-            <td class="text-center">{{ item?.countNew }}</td>
-            <td class="text-center">{{ item?.countPrivateEnterprise }}</td>
+            <td class="text-center">{{ item?.countAll }}</td>
+            <td class="text-center">{{ item?.countPrivateEnterprises }}</td>
             <td class="text-center">{{ item?.countStateEnterprises }}</td>
           </tr>
         </ng-container>
-        <tr>
-          <td class="text-center">TC</td>
-          <td class="text-center">{{ countNewEnterprise }}</td>
-          <td class="text-center">{{ countNewPriEnterprise }}</td>
-          <td class="text-center">{{ countNewStateEnterprise }}</td>
-        </tr>
       </tbody>
     </table>
 
-    <div class="text-center fs-2">
+    <div class="text-center fs-2 mt-3">
       <codx-label
         class="fw-bold"
         name="lblChartIn"
@@ -1942,28 +1951,28 @@
         <!--   [title]="titleTest" -->
         <e-series-collection>
           <e-series
-            [dataSource]="chartDataColumn"
+            [dataSource]="listCountEnterpriseOut"
             type="Column"
             columnSpacing="0.25"
             columnWidth="1"
-            xName="country"
-            yName="gold"
+            xName="quarterName"
+            yName="countAll"
           ></e-series>
           <e-series
-            [dataSource]="chartDataColumn"
+            [dataSource]="listCountEnterpriseOut"
             type="Column"
-            xName="country"
+            xName="quarterName"
             columnSpacing="0.25"
             columnWidth="1"
-            yName="silver"
+            yName="countPrivateEnterprises"
           ></e-series>
           <e-series
-            [dataSource]="chartDataColumn"
+            [dataSource]="listCountEnterpriseOut"
             type="Column"
-            xName="country"
+            xName="quarterName"
             columnSpacing="0.25"
             columnWidth="1"
-            yName="red"
+            yName="countStateEnterprises"
           ></e-series>
         </e-series-collection>
       </ejs-chart>
@@ -1971,6 +1980,7 @@
   </div>
 </ng-template>
 
+<!-- Diên tích tăng giảm -->
 <ng-template #templateInOut>
   <div class="w-100 h-100" id="3">
     <div>
@@ -2121,8 +2131,8 @@
     <table style="table-layout: fixed" class="table mb-0">
       <thead class="border-gray-200 table-thead-ac">
         <tr class="border-bottom">
-          <th class="w-40 border-bottom"></th>
-          <th class="w-15 border-bottom">
+          <th class="w-40 border-bottom text-center"></th>
+          <th class="w-15 border-bottom text-center">
             <codx-label
               name="lblTableLiquidation"
               formName="CMInOutDashboard"
@@ -2130,7 +2140,7 @@
               default="Tổng số DN"
             ></codx-label>
           </th>
-          <th class="w-15 border-bottom">
+          <th class="w-15 border-bottom text-center">
             <codx-label
               name="lblTableDNTN"
               formName="CMInOutDashboard"
@@ -2138,7 +2148,7 @@
               default="DNTN"
             ></codx-label>
           </th>
-          <th class="w-15 border-bottom">
+          <th class="w-15 border-bottom text-center">
             <codx-label
               name="lblTableDNNN"
               formName="CMInOutDashboard"
@@ -2191,7 +2201,7 @@
         </tr>
       </tbody>
     </table>
-    <div class="text-center fs-2">
+    <div class="text-center fs-2 mt-3">
       <codx-label
         class="fw-bold"
         name="lblChartIn"
@@ -2259,8 +2269,8 @@
     <table style="table-layout: fixed" class="table mb-0">
       <thead class="border-gray-200 table-thead-ac">
         <tr class="border-bottom">
-          <th class="w-40 border-bottom"></th>
-          <th class="w-15 border-bottom">
+          <th class="w-40 border-bottom text-center"></th>
+          <th class="w-15 border-bottom text-center">
             <codx-label
               name="lblTableLiquidation"
               formName="CMInOutDashboard"
@@ -2269,7 +2279,7 @@
             ></codx-label>
             <span class="fw-bold" [innerHTML]="year"></span>
           </th>
-          <th class="w-15 border-bottom">
+          <th class="w-15 border-bottom text-center">
             <codx-label
               class="fw-bold"
               name="lblTableDNTN"
@@ -2282,44 +2292,16 @@
         </tr>
       </thead>
       <tbody>
-        <tr style="border-bottom: 1px solid var(--bs-border-color) !important">
-          <td class="text-center">Tổng DN vào QTSC</td>
-          <td class="text-center">10</td>
-          <td class="text-center">20</td>
-        </tr>
-        <ng-container>
-          <tr
-            style="border-bottom: 1px solid var(--bs-border-color) !important"
-          >
-            <td class="text-center">Q1</td>
-            <td class="text-center">1</td>
-            <td class="text-center">2</td>
-          </tr>
-          <tr
-            style="border-bottom: 1px solid var(--bs-border-color) !important"
-          >
-            <td class="text-center">Q1</td>
-            <td class="text-center">1</td>
-            <td class="text-center">2</td>
-          </tr>
-          <tr
-            style="border-bottom: 1px solid var(--bs-border-color) !important"
-          >
-            <td class="text-center">Q1</td>
-            <td class="text-center">1</td>
-            <td class="text-center">2</td>
-          </tr>
-          <tr
-            style="border-bottom: 1px solid var(--bs-border-color) !important"
-          >
-            <td class="text-center">Q1</td>
-            <td class="text-center">1</td>
-            <td class="text-center">2</td>
+        <ng-container *ngFor="let item of listQTSCIn">
+          <tr>
+            <td class="text-center">{{ item?.quarterName }}</td>
+            <td class="text-center">{{ item?.countNow }}</td>
+            <td class="text-center">{{ item?.countOld }}</td>
           </tr>
         </ng-container>
       </tbody>
     </table>
-    <div class="text-center fs-2">
+    <div class="text-center fs-2 mt-3">
       <codx-label
         class="fw-bold"
         name="lblChartLiquidation"
@@ -2332,12 +2314,17 @@
       <ejs-accumulationchart
         id="chart-container-5"
         [legendSettings]="legendSettingsIn"
+        [tooltip]="
+          listQTSCIn[0]?.countOld == 0 && listQTSCIn[0]?.countNow == 0
+            ? ''
+            : tooltipInOut
+        "
       >
         <e-accumulation-series-collection>
           <e-accumulation-series
             [dataSource]="pieChartInQTSC"
-            xName="x"
-            yName="y"
+            xName="year"
+            yName="count"
             radius="100%"
           ></e-accumulation-series>
         </e-accumulation-series-collection>
@@ -2366,8 +2353,8 @@
     <table style="table-layout: fixed" class="table mb-0">
       <thead class="border-gray-200 table-thead-ac">
         <tr class="border-bottom">
-          <th class="w-40 border-bottom"></th>
-          <th class="w-15 border-bottom">
+          <th class="w-40 border-bottom text-center"></th>
+          <th class="w-15 border-bottom text-center">
             <codx-label
               name="lblTableLiquidation"
               formName="CMInOutDashboard"
@@ -2376,7 +2363,7 @@
             ></codx-label>
             <span class="fw-bold" [innerHTML]="year"></span>
           </th>
-          <th class="w-15 border-bottom">
+          <th class="w-15 border-bottom text-center">
             <codx-label
               class="fw-bold"
               name="lblTableDNTN"
@@ -2389,40 +2376,14 @@
         </tr>
       </thead>
       <tbody>
-        <tr style="border-bottom: 1px solid var(--bs-border-color) !important">
-          <td class="text-center">Tổng DN vào QTSC</td>
-          <td class="text-center">10</td>
-          <td class="text-center">20</td>
-        </tr>
         <ng-container>
-          <tr
-            style="border-bottom: 1px solid var(--bs-border-color) !important"
-          >
-            <td class="text-center">Q1</td>
-            <td class="text-center">1</td>
-            <td class="text-center">2</td>
-          </tr>
-          <tr
-            style="border-bottom: 1px solid var(--bs-border-color) !important"
-          >
-            <td class="text-center">Q1</td>
-            <td class="text-center">1</td>
-            <td class="text-center">2</td>
-          </tr>
-          <tr
-            style="border-bottom: 1px solid var(--bs-border-color) !important"
-          >
-            <td class="text-center">Q1</td>
-            <td class="text-center">1</td>
-            <td class="text-center">2</td>
-          </tr>
-          <tr
-            style="border-bottom: 1px solid var(--bs-border-color) !important"
-          >
-            <td class="text-center">Q1</td>
-            <td class="text-center">1</td>
-            <td class="text-center">2</td>
-          </tr>
+          <ng-container *ngFor="let item of listQTSCOut">
+            <tr>
+              <td class="text-center">{{ item?.quarterName }}</td>
+              <td class="text-center">{{ item?.countNow }}</td>
+              <td class="text-center">{{ item?.countOld }}</td>
+            </tr>
+          </ng-container>
         </ng-container>
       </tbody>
     </table>
@@ -2444,8 +2405,8 @@
         <e-accumulation-series-collection>
           <e-accumulation-series
             [dataSource]="pieChartOutQTSC"
-            xName="x"
-            yName="y"
+            xName="year"
+            yName="count"
             radius="100%"
           ></e-accumulation-series>
         </e-accumulation-series-collection>
@@ -2470,7 +2431,7 @@
     <table style="table-layout: fixed" class="table mb-0">
       <thead class="border-gray-200 table-thead-ac">
         <tr class="border-bottom">
-          <th class="w-15 border-bottom">
+          <th class="w-15 border-bottom text-center">
             <codx-label
               name="lblTableLiquidation"
               formName="CMInOutDashboard"
@@ -2478,7 +2439,7 @@
               default="Nguồn khách hàng"
             ></codx-label>
           </th>
-          <th class="w-15 border-bottom">
+          <th class="w-15 border-bottom text-center">
             <codx-label
               class="fw-bold"
               name="lblTableDNTN"
@@ -2487,7 +2448,7 @@
               default="Giới thiệu"
             ></codx-label>
           </th>
-          <th class="w-15 border-bottom">
+          <th class="w-15 border-bottom text-center">
             <codx-label
               class="fw-bold"
               name="lblTableDNTN"
@@ -2496,7 +2457,7 @@
               default="Điện thoại"
             ></codx-label>
           </th>
-          <th class="w-15 border-bottom">
+          <th class="w-15 border-bottom text-center">
             <codx-label
               class="fw-bold"
               name="lblTableDNTN"
@@ -2602,104 +2563,27 @@
               default="Nguyên nhân thanh lý"
             ></codx-label>
           </th>
-          <th class="w-15 border-bottom">
-            <codx-label
-              class="fw-bold"
-              name=""
-              formName="CMInOutDashboard"
-              gridViewName="grvCMInOutDashboard"
-              default="Tài chính khó khăn/ nhân sự"
-            ></codx-label>
-          </th>
-          <th class="w-15 border-bottom">
-            <codx-label
-              class="fw-bold"
-              name=""
-              formName="CMInOutDashboard"
-              gridViewName="grvCMInOutDashboard"
-              default="Kết thúc dự án"
-            ></codx-label>
-          </th>
-          <th class="w-15 border-bottom">
-            <codx-label
-              class="fw-bold"
-              name=""
-              formName="CMInOutDashboard"
-              gridViewName="grvCMInOutDashboard"
-              default="Chuyển đổi pháp nhân"
-            ></codx-label>
-          </th>
-          <th class="w-15 border-bottom">
-            <codx-label
-              class="fw-bold"
-              name=""
-              formName="CMInOutDashboard"
-              gridViewName="grvCMInOutDashboard"
-              default="Giải thể "
-            ></codx-label>
-          </th>
-          <th class="w-15 border-bottom">
-            <codx-label
-              class="fw-bold"
-              name=""
-              formName="CMInOutDashboard"
-              gridViewName="grvCMInOutDashboard"
-              default="Chuyển địa điểm"
-            ></codx-label>
-          </th>
+          <ng-container *ngFor="let item of pieChartOutDisposalCmt">
+            <th class="w-15 border-bottom text-center">
+              {{ item?.disposalReasonName }}
+            </th>
+          </ng-container>
         </tr>
       </thead>
       <tbody>
-        <ng-container>
-          <tr
-            style="border-bottom: 1px solid var(--bs-border-color) !important"
-          >
-            <td class="text-center">Q1</td>
-            <td class="text-center">1</td>
-            <td class="text-center">2</td>
-            <td class="text-center">2</td>
-            <td class="text-center">2</td>
-            <td class="text-center">2</td>
-          </tr>
-          <tr
-            style="border-bottom: 1px solid var(--bs-border-color) !important"
-          >
-            <td class="text-center">Q1</td>
-            <td class="text-center">1</td>
-            <td class="text-center">2</td>
-            <td class="text-center">2</td>
-            <td class="text-center">2</td>
-            <td class="text-center">2</td>
-          </tr>
-
-          <tr
-            style="border-bottom: 1px solid var(--bs-border-color) !important"
-          >
-            <td class="text-center">Q1</td>
-            <td class="text-center">1</td>
-            <td class="text-center">2</td>
-            <td class="text-center">2</td>
-            <td class="text-center">2</td>
-            <td class="text-center">2</td>
-          </tr>
-          <tr
-            style="border-bottom: 1px solid var(--bs-border-color) !important"
-          >
-            <td class="text-center">Q1</td>
-            <td class="text-center">1</td>
-            <td class="text-center">2</td>
-            <td class="text-center">2</td>
-            <td class="text-center">2</td>
-            <td class="text-center">2</td>
+        <ng-container *ngFor="let quar of vllQuaters">
+          <tr>
+            <td class="text-center">{{ quar.text }}</td>
+            <ng-container *ngFor="let item of pieChartOutDisposalCmt">
+              <td class="text-center">{{ item["countQ" + quar.value] }}</td>
+            </ng-container>
           </tr>
         </ng-container>
-        <tr style="border-bottom: 1px solid var(--bs-border-color) !important">
+        <tr>
           <td class="text-center">Tổng</td>
-          <td class="text-center">10</td>
-          <td class="text-center">20</td>
-          <td class="text-center">2</td>
-          <td class="text-center">2</td>
-          <td class="text-center">2</td>
+          <ng-container *ngFor="let item of pieChartOutDisposalCmt">
+            <td class="text-center">{{ item.count }}</td>
+          </ng-container>
         </tr>
       </tbody>
     </table>
@@ -2720,9 +2604,9 @@
       >
         <e-accumulation-series-collection>
           <e-accumulation-series
-            [dataSource]="pieChartOut"
-            xName="x"
-            yName="y"
+            [dataSource]="pieChartOutDisposalCmt"
+            xName="disposalReasonName"
+            yName="count"
             radius="100%"
           ></e-accumulation-series>
         </e-accumulation-series-collection>
@@ -2755,7 +2639,12 @@
               default="Phân loại khách hàng"
             ></codx-label>
           </th>
-          <th class="w-15 border-bottom">
+          <ng-container *ngFor="let item of pieChartClassify">
+            <th class="w-15 border-bottom text-center">
+              {{ item?.x }}
+            </th>
+          </ng-container>
+          <!-- <th class="w-15 border-bottom">
             <codx-label
               class="fw-bold"
               name=""
@@ -2772,17 +2661,16 @@
               gridViewName="grvCMInOutDashboard"
               default="Khách hàng nội khu"
             ></codx-label>
-          </th>
+          </th> -->
         </tr>
       </thead>
       <tbody>
         <ng-container>
-          <tr
-            style="border-bottom: 1px solid var(--bs-border-color) !important"
-          >
-            <td class="text-center">Q1</td>
-            <td class="text-center">1</td>
-            <td class="text-center">2</td>
+          <tr>
+            <td class="text-center"></td>
+            <ng-container *ngFor="let item of pieChartClassify">
+              <td class="text-center">{{ item?.y }}</td>
+            </ng-container>
           </tr>
         </ng-container>
       </tbody>
