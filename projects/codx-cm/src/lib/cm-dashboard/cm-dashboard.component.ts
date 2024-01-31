@@ -536,6 +536,9 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   listInByChanel = [];
   listOutByDisposalCmt = [];
   dataBusinessType = [];
+  //InOut diện tích
+  listAreaIn = [];
+  listAreaOut = [];
   //======================================================================
 
   constructor(
@@ -3048,6 +3051,88 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
 
   getCompartInOutNew(dataSet) {}
 
+  //diên tích vào ra
+  getAreaInOut(dataSet, isIn = true) {
+    if (isIn) {
+      this.listCountEnterprise = [];
+    } else this.listCountEnterpriseOut = [];
+
+    if (!dataSet || dataSet?.length == 0) {
+      this.vllQuaters?.forEach((qt) => {
+        let obj = {
+          quarter: qt.value,
+          quarterName: qt?.text,
+          countAll: 0,
+          countPrivateEnterprises: 0,
+          countStateEnterprises: 0,
+        };
+        if (isIn) {
+          this.listCountEnterprise.push(obj);
+        } else {
+          this.listCountEnterpriseOut.push(obj);
+        }
+      });
+      let objTotal = {
+        quarter: 100,
+        quarterName: 'Tổng cộng',
+        countAll: 0,
+        countPrivateEnterprises: 0,
+        countStateEnterprises: 0,
+      };
+      if (isIn) {
+        this.listCountEnterprise.push(objTotal);
+      } else {
+        this.listCountEnterpriseOut.push(objTotal);
+      }
+      return;
+    }
+
+    let countEnterprise = dataSet?.length;
+    let countPriEnterprise = 0;
+    let countStateEnterprise = 0;
+    let fieldGroup = isIn ? 'quarterApproved' : 'quarterDisposal';
+    let listEnterpriseNew = this.groupBy(dataSet, fieldGroup);
+
+    if (listEnterpriseNew) {
+      this.vllQuaters?.forEach((qt) => {
+        let key = qt.value;
+        let obj = {
+          quarter: key,
+          quarterName: qt?.text,
+          countAll: listEnterpriseNew[key]?.length ?? 0,
+          countPrivateEnterprises:
+            dataSet?.filter((x) => x.businessType == '1' && x.quarter == key)
+              ?.length ?? 0,
+          countStateEnterprises:
+            dataSet?.filter((x) => x.businessType == '2' && x.quarter == key)
+              ?.length ?? 0,
+        };
+
+        countPriEnterprise += obj.countPrivateEnterprises ?? 0;
+        countStateEnterprise += obj.countStateEnterprises ?? 0;
+        if (isIn) {
+          this.listCountEnterprise.push(obj);
+        } else {
+          this.listCountEnterpriseOut.push(obj);
+        }
+      });
+
+      let objTotal = {
+        quarter: 100,
+        quarterName: 'Tổng cộng',
+        countAll: countEnterprise,
+        countPrivateEnterprises: countPriEnterprise,
+        countStateEnterprises: countStateEnterprise,
+      };
+
+      if (isIn) {
+        this.listCountEnterprise.push(objTotal);
+      } else {
+        this.listCountEnterpriseOut.push(objTotal);
+      }
+    }
+  }
+
   //nguon
   getInbyChanel(dataSet) {
     let listData = this.groupBy(dataSet, 'disposalCmt');
@@ -3078,7 +3163,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     if (!dataSet || dataSet?.length == 0) {
       return;
     }
-    let listData = this.groupBy(dataSet, 'disposalCmt');
+    let listData = this.groupBy(dataSet, 'disposalReason');
     if (listData) {
       for (let key in listData) {
         let item = {
