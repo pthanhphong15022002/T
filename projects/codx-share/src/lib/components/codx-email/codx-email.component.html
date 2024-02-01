@@ -419,7 +419,7 @@
         >
         </codx-input>
       </div>
-      <div class="mb-1 input-sm w-400px">
+      <div class="d-flex align-items-center mb-1 input-sm">
         <codx-input
           class="w-400px"
           type="combobox"
@@ -429,7 +429,14 @@
           (valueChange)="valueChange($event)"
           [formModel]="formModel"
         ></codx-input>
+        <div class="ms-2 cursor-pointer" (click)="showHide()">
+          <img src="./assets/themes/sys/default/img/chatbot.svg" class="w-40px"/>
+        </div>
       </div>
+    </div>
+    <div class="d-flex align-items-center mt-4" [ngClass]="showAI ? 'visible' : 'invisible h-0px'">
+      <codx-input type="textarea" format="ed2" [crrValue]="''" placeholder="Nhập yêu cầu nội dung cần tạo" (valueChange)="createContentEmail($event)"></codx-input>
+      <span *ngIf="isLoadingAI" class="ms-2">Đang xử lý ...</span>
     </div>
     <div class="d-flex justify-content-between align-items-end mt-4">
       <div>
@@ -539,13 +546,15 @@
         </div>
       </div>
     </div>
+
+   
   </ng-template>
 
   <ng-template #footer>
     <div class="d-flex flex-column">
       <div class="d-flex align-items-center justify-content-between mb-3">
         <div class="d-flex algin-items-center">
-          <div class="d-flex align-items-top me-5" *ngIf="showIsTemplate">
+          <div class="d-flex align-items-center me-5" *ngIf="showIsTemplate">
             <codx-label
               class="me-2 fw-bold"
               fiedName="IsTemplate"
@@ -563,7 +572,7 @@
             </div>
           </div>
           <div
-            class="d-flex align-items-top me-5"
+            class="d-flex align-items-center me-5"
             [style.visibility]="
               showIsPublish && saveIsTemplate == true ? 'visible' : 'hidden'
             "
@@ -586,7 +595,7 @@
           </div>
         </div>
         <div class="d-flex align-items-center">
-          <div class="d-flex align-items-top me-5" *ngIf="showSendLater">
+          <div class="d-flex align-items-center me-5" *ngIf="showSendLater">
             <codx-label
               class="me-2 fw-bold"
               [formModel]="formModel"
