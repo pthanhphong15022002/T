@@ -199,9 +199,8 @@ export class AddNoteComponent implements OnInit {
       this.countValueChange++;
       let date = new Date(event.data.fromDate);
       let crr = date;
-      if (crr != this.currentDate.toLocaleDateString()) {
-        this.currentDate = crr;
-      }
+      this.currentDate = crr;
+
       if (this.countValueChange == 1) {
         // let date1 = new Date(e.data.fromDate);
         // let crr1 = date1.toLocaleDateString();
@@ -435,7 +434,7 @@ export class AddNoteComponent implements OnInit {
     if (this.listNote.length != 0) this.note.checkList = this.listNote;
     if (this.note.checkList != null) this.note.checkList.pop();
     this.note.fileCount = this.listFileUpload?.length;
-    debugger
+    debugger;
     let recID = this.note?.transID ?? this.note?.recID; // where recID mà truyền transID what?
     this.api
       .exec<any>('ERM.Business.WP', 'NotesBusiness', 'UpdateNoteAsync', [
@@ -484,9 +483,7 @@ export class AddNoteComponent implements OnInit {
           }
           this.noteService.data.next(object);
           this.dialog.close(dtNew);
-        }
-        else
-        {
+        } else {
           this.dialog.close(null);
         }
       });
