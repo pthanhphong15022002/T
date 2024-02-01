@@ -181,7 +181,7 @@ export class LeadsComponent
     private callFunc: CallFuncService
   ) {
     super(inject);
-    this.getGridViewSetup('CMLeads', 'grvCMLeads')
+    this.getGridViewSetup('CMLeads', 'grvCMLeads');
     if (!this.funcID) {
       this.funcID = this.activedRouter.snapshot.params['funcID'];
     }
@@ -271,13 +271,13 @@ export class LeadsComponent
           this.gridViewSetup['Status'].referedValue ?? this.vllStatus;
         this.vllApprove =
           this.gridViewSetup['ApproveStatus'].referedValue ?? this.vllApprove;
-          let arrField = Object.values(this.gridViewSetup).filter(
-            (x: any) => x.isVisible
-          );
-  
-          this.arrFieldIsVisible = arrField
-            .sort((x: any, y: any) => x.columnOrder - y.columnOrder)
-            .map((x: any) => x.fieldName);
+        let arrField = Object.values(this.gridViewSetup).filter(
+          (x: any) => x.isVisible
+        );
+
+        this.arrFieldIsVisible = arrField
+          .sort((x: any, y: any) => x.columnOrder - y.columnOrder)
+          .map((x: any) => x.fieldName);
         this.getColumsGrid(this.gridViewSetup);
       }
     });
@@ -2031,7 +2031,7 @@ export class LeadsComponent
       this.releaseCallback.bind(this),
       null,
       null,
-      null, //this.view.formModel.entityName // thích đổi mãi
+      'CM_Leads', //this.view.formModel.entityName // thích đổi mãi
       null,
       null,
       exportData
