@@ -1,0 +1,311 @@
+<codx-form
+  #form
+  [customToolbar]="header"
+  [body]="body"
+  [openMore]="false"
+  [dialog]="dialog"
+  [formModel]="dialog.formModel"
+  [footer]="footer"
+  [data]="data"
+>
+  <ng-template #header>
+    <div
+      class="d-flex align-items-center justify-content-between w-100 px-3 py-4"
+    >
+      <div class="d-flex justify-content-start flex-column w-100">
+        <span class="fw-bold fs-3 mt-1">{{ title }}</span>
+        <span class="text-gray-500 fw-bold">{{ subTitle }}</span>
+      </div>
+      <div
+        class="d-flex justify-content-end cursor-pointer"
+        (click)="dialog.close()"
+      >
+        <i class="icon-close"></i>
+      </div>
+    </div>
+  </ng-template>
+  <ng-template #body>
+    <div class="form-group mt-4 pt-4" *ngIf="form.formGroup">
+      <codx-label
+        [formModel]="form.formModel"
+        fiedName="TaskName"
+        default="Tên công việc"
+      >
+      </codx-label>
+      <codx-input
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
+        field="taskName"
+      >
+      </codx-input>
+    </div>
+    <div class="form-group mt-4 pt-4">
+      <codx-label
+        [formModel]="form.formModel"
+        fiedName="Memo"
+        default="Diễn giải"
+      >
+      </codx-label>
+      <codx-input
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
+        field="memo"
+      >
+      </codx-input>
+    </div>
+    <div class="form-group row mt-4 pt-4" *ngIf="data?.activityType == 'Task'">
+      <div class="col-6">
+        <codx-label
+          [formModel]="form.formModel"
+          fiedName="StartDate"
+          default="Ngày bắt đầu"
+        >
+        </codx-label>
+        <codx-input
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          field="startDate"
+        >
+        </codx-input>
+      </div>
+      <div class="col-6">
+        <codx-label
+          [formModel]="form.formModel"
+          fiedName="EndDate"
+          default="Ngày kết thúc"
+        >
+        </codx-label>
+        <codx-input
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          field="endDate"
+        >
+        </codx-input>
+      </div>
+    </div>
+    <div class="form-group mt-4 pt-4">
+      <codx-label
+        [formModel]="form.formModel"
+        fiedName="Owner"
+        default="Người yêu cầu"
+      >
+      </codx-label>
+      <div class="d-flex justify-content-start align-items-center">
+        <div class="me-3">
+          <codx-img
+            [objectId]="data?.createdBy"
+            [objectType]="'AD_Users'"
+            [width]="35"
+          >
+          </codx-img>
+        </div>
+        <div class="d-flex flex-column w-100">
+          <div class="d-flex flex-column">
+            <div class="fw-bold fs-6 text-dark line-clamp line-clamp-1">
+              {{ info?.userName }}
+            </div>
+            <div class="text-gray-500">{{ info?.positionName }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="mt-4 pt-4" *ngIf="data?.activityType == 'Task'">
+      <div class="d-flex flex-column">
+        <div class="d-flex">
+          <codx-label
+            [formModel]="form.formModel"
+            fiedName="lblTaskCheckList"
+            default="Danhh sách kiểm tra"
+            class="fw-bold"
+          ></codx-label>
+        </div>
+
+        <ng-container *ngIf="checkList?.length > 0">
+          <ng-container *ngFor="let cl of checkList; let indexC = index">
+            <div class="d-flex align-items-center mt-4">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                [value]="cl?.status == '1' ? true : false"
+                (change)="valueChangeCb($event, indexC)"
+              />
+              <input
+                class="mx-2 form-control"
+                [value]="cl?.taskName"
+                placeholder="Thêm mục"
+                (change)="valueChangeCheckList($event, indexC)"
+                style="border: none"
+              />
+            </div>
+          </ng-container>
+        </ng-container>
+
+        <div class="d-flex align-items-center mt-4 cursor-pointer">
+          <input class="form-check-input" type="checkbox" disabled />
+          <codx-label
+            [default]="'Thêm mục'"
+            [formModel]="form.formModel"
+            fiedName="addCheckList"
+            class="mx-2 text-gray-500"
+            style="margin-left: 16px !important"
+            (click)="addCheckList()"
+          ></codx-label>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group mt-4 pt-4">
+      <codx-label
+        name="lblAttachments"
+        [formModel]="dialog.formModel"
+        default="Tài liệu đính kèm"
+      >
+      </codx-label>
+      <codx-attachment
+        #attachment
+        [objectType]="dialog.formModel.entityName"
+        [objectId]="data?.recID"
+        hideFolder="1"
+        hideImageUpload="0"
+        hideImageThumb="0"
+        hideUploadBtn="1"
+        [showMessage]="0"
+        hideDes="1"
+        type="inline"
+        allowMultiFile="1"
+        referType="source"
+        [formModel]="dialog.formModel"
+        (fileAdded)="fileAdded($event)"
+        (fileCount)="getfileCount($event)"
+        displayThumb="full"
+      >
+      </codx-attachment>
+    </div>
+  </ng-template>
+  <ng-template #footer>
+    <div class="d-flex justify-content-between">
+      <button
+        type="button"
+        class="btn btn-outline-primary me-3"
+        (click)="addFile($event)"
+      >
+        <i class="icon-cloud_upload fs-5"></i
+        ><span>
+          <codx-label
+            name="lblUploadFile"
+            [formName]="dialog?.formModel?.formName"
+            [gridViewName]="
+              dialog?.formModel?.gridViewName + data?.activityType
+            "
+            default="Đính kèm"
+          ></codx-label>
+        </span>
+      </button>
+      <ng-container *ngIf="data?.activityType == 'Approve'" [ngTemplateOutlet]="buttonApprove"></ng-container>
+      <ng-container *ngIf="data?.activityType == 'Check'" [ngTemplateOutlet]="buttonCheck"></ng-container>
+      <ng-container *ngIf="data?.activityType == 'Task'" [ngTemplateOutlet]="buttonTask"></ng-container>
+      <ng-container *ngIf="data?.activityType == 'Sign'" [ngTemplateOutlet]="buttonSign"></ng-container>
+      <ng-template #buttonApprove>
+        <div class="d-flex justify-content-end">
+          <button type="button" class="btn btn-light-primary ms-1">
+            <codx-label
+              [name]="'lblbt1' + data?.activityType"
+              [formName]="dialog?.formModel?.formName"
+              [gridViewName]="
+                dialog?.formModel?.gridViewName + data?.activityType
+              "
+              default="Trả về"
+            ></codx-label>
+          </button>
+          <button type="button" class="btn btn-primary ms-1" (click)="onSave()">
+            <codx-label
+              [name]="'lblbt2' + data?.activityType"
+              [formName]="dialog?.formModel?.formName"
+              [gridViewName]="
+                dialog?.formModel?.gridViewName + data?.activityType
+              "
+              default="Đã duyệt"
+            ></codx-label>
+          </button>
+        </div>
+      </ng-template>
+
+      <ng-template #buttonCheck>
+        <div class="d-flex justify-content-end">
+          <button type="button" class="btn btn-light-primary ms-1">
+            <codx-label
+              [name]="'lblbt1' + data?.activityType"
+              [formName]="dialog?.formModel?.formName"
+              [gridViewName]="
+                dialog?.formModel?.gridViewName + data?.activityType
+              "
+              default="Trả về"
+            ></codx-label>
+          </button>
+          <button type="button" class="btn btn-primary ms-1" (click)="onSave()">
+            <codx-label
+              [name]="'lblbt2' + data?.activityType"
+              [formName]="dialog?.formModel?.formName"
+              [gridViewName]="
+                dialog?.formModel?.gridViewName + data?.activityType
+              "
+              default="Đã kiểm tra"
+            ></codx-label>
+          </button>
+        </div>
+      </ng-template>
+
+      <ng-template #buttonTask>
+        <div class="d-flex justify-content-end">
+          <button type="button" class="btn btn-light-primary ms-1">
+            <codx-label
+              [name]="'lblbt1' + data?.activityType"
+              [formName]="dialog?.formModel?.formName"
+              [gridViewName]="
+                dialog?.formModel?.gridViewName + data?.activityType
+              "
+              default="Cập nhật tiến độ"
+            ></codx-label>
+          </button>
+          <button type="button" class="btn btn-primary ms-1" (click)="onSave()">
+            <codx-label
+              [name]="'lblbt2' + data?.activityType"
+              [formName]="dialog?.formModel?.formName"
+              [gridViewName]="
+                dialog?.formModel?.gridViewName + data?.activityType
+              "
+              default="Hoàn tất"
+            ></codx-label>
+          </button>
+        </div>
+      </ng-template>
+
+      <ng-template #buttonSign>
+        <div class="d-flex justify-content-end">
+          <button type="button" class="btn btn-light-primary ms-1">
+            <codx-label
+              [name]="'lblbt1' + data?.activityType"
+              [formName]="dialog?.formModel?.formName"
+              [gridViewName]="
+                dialog?.formModel?.gridViewName + data?.activityType
+              "
+              default="Trả về"
+            ></codx-label>
+          </button>
+          <button type="button" class="btn btn-primary ms-1" (click)="onSave()">
+            <codx-label
+              [name]="'lblbt2' + data?.activityType"
+              [formName]="dialog?.formModel?.formName"
+              [gridViewName]="
+                dialog?.formModel?.gridViewName + data?.activityType
+              "
+              default="Đã kiểm tra"
+            ></codx-label>
+          </button>
+        </div>
+      </ng-template>
+    </div>
+  </ng-template>
+</codx-form>
+
+

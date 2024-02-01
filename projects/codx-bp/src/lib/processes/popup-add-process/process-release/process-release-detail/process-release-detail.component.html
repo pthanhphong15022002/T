@@ -80,7 +80,7 @@
                                                 <span class="fw-bold me-1 ms-2">{{data?.duration}}</span>
                                                 <span class="mx-1 ms-6">{{data?.interval | vll : 'VL004' : 'text' | async}}</span>
                                                 <codx-label [formName]="formModel?.formName" fiedName="lblProcessReDetailTimeActual" default="Thực tế:" class="text-gray-500 ms-2"></codx-label>
-                                               
+
                                             </div>
                                         </div>
                                         <div class="d-flex flex-column w-200px">
@@ -146,7 +146,7 @@
     </div>
 </div>
 <ng-template #tmpRow let-data let-isCon="b" let-index="c">
-    <div class="row d-flex align-items-center cursor-pointer w-100" >
+    <div class="row d-flex align-items-center cursor-pointer w-100" (click)="popupTasks(data, 'edit')">
         <div class="col-1 d-flex align-items-center">
             <i [class]="data?.settings?.icon" [style.color]="data?.settings?.color"></i><span class="mx-2">{{data.activityType}}</span>
         </div>

@@ -371,9 +371,7 @@ export class ContractsComponent extends UIComponent {
             res.disabled = !data?.closed;
             break;
           case 'CM0204_18': // thanh lý
-            res.disabled =
-              (data?.status == '17' && data?.disposalType == '1') ||
-              data?.closed;
+            res.disabled = data?.status == '17' || data?.closed;
             break;
           case 'CM0204_19': // đưa vào quy trình xử lý
             res.disabled = data?.full
@@ -517,6 +515,27 @@ export class ContractsComponent extends UIComponent {
         this.detectorRef.detectChanges();
         break;
       }
+    }
+  }
+
+  afterSave(e?: any, that: any = null) {
+    if (e) {
+      if (e?.funcID == 'SYS004') {
+        if (e?.result?.isSendMail) {
+          this.addTaskMail(e);
+          this.notiService.notifyCode('SYS006');
+        } else {
+          this.notiService.notify('Gửi mail thất bại', '3');
+        }
+      }
+      let appoverStatus = e?.unbounds?.statusApproval;
+      if (
+        appoverStatus != null &&
+        appoverStatus != this.dataSelected?.approveStatus
+      ) {
+        this.dataSelected.approveStatus = appoverStatus;
+      }
+      this.view.dataService.update(this.dataSelected).subscribe();
     }
   }
 
@@ -694,27 +713,6 @@ export class ContractsComponent extends UIComponent {
           this.listPaymentHistory = [];
         }
       });
-  }
-
-  afterSave(e?: any, that: any = null) {
-    if (e) {
-      if (e?.funcID == 'SYS004') {
-        if (e?.result?.isSendMail) {
-          this.addTaskMail(e);
-          this.notiService.notifyCode('SYS006');
-        } else {
-          this.notiService.notify('Gửi mail thất bại', '3');
-        }
-      }
-      let appoverStatus = e?.unbounds?.statusApproval;
-      if (
-        appoverStatus != null &&
-        appoverStatus != this.dataSelected?.approveStatus
-      ) {
-        this.dataSelected.approveStatus = appoverStatus;
-      }
-      this.view.dataService.update(this.dataSelected).subscribe();
-    }
   }
 
   addTaskMail(e) {
@@ -1107,7 +1105,7 @@ export class ContractsComponent extends UIComponent {
       this.dataSelected.approveStatus = res?.returnStatus;
       this.dataSelected.status = res?.returnStatus;
       this.view.dataService.update(this.dataSelected).subscribe();
-      this.notiService.notifyCode('ES007');
+      // this.notiService.notifyCode('ES007');
       // this.cmService
       //   .getOneObject(this.itemSelected.recID, 'ContractsBusiness')
       //   .subscribe((q) => {

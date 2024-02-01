@@ -52,9 +52,12 @@
                     (click)="navChange(item.id, 0, $event.target)">
                     <a
                       class="nav-link"
-                      [ngClass]="item.id == tabRightSelect ? 'active' : ''">
-                      <div class="text-uppercase fw-bold">
-                        {{ item?.name }}
+                      [ngClass]="item.id == tabRightSelect ? 'active' : ''"
+                    >
+                      <div class="text-uppercase fw-bold d-flex align-items-center">
+                        <span class="icon-18 me-1" [ngClass]="item?.icon"></span>
+                        <span>{{ item?.name }}</span>
+                        
                       </div>
                     </a>
                   </li>
@@ -87,17 +90,17 @@
 </ng-template>
 
 <ng-template #information>
-  <div id="information" class="item-main mt-0" *ngIf="type == '1'">
+  <div id="sales" class="item-main mt-0" *ngIf="type == '1'">
     <div class="d-flex align-items-center text-primary my-2">
-      <span class="icon-i-clipboard icon-20 me-1 fw-bold"></span>
+      <span class="icon-people_alt icon-20 me-1 fw-bold"></span>
       <codx-label
         class="text-gray-600 ms-2 fs-5-sm fw-bold text-primary"
         name="lblTitleInformation"
         [formModel]="dialog?.formModel"
-        [default]="'Thông tin dự án'"
+        [default]="'Sales team'"
       ></codx-label>
     </div>
-    <ng-container [ngTemplateOutlet]="informationTemplate"></ng-container>
+    <ng-container [ngTemplateOutlet]="salesTemplate"></ng-container>
   </div>
 
   <div id="costItems" class="item-main mt-0"  *ngIf="type == '1'">
@@ -127,7 +130,65 @@
     </div>
   </div>
 
-  <div id="fields" class="item-main" *ngIf="type == '1'">
+  <div id="contact" class="item-main mt-0"  *ngIf="type == '1'">
+    <div class="d-flex align-items-center justify-content-between">
+      <div class="d-flex align-items-center text-primary my-2">
+        <span
+          class="icon-u_dollar-sign-alt icon-18 py-2 icon-20 me-1 fw-bold"></span>
+        <codx-label
+          class="text-gray-600 ms-2 fs-5-sm fw-bold text-primary"
+          name="lblTitleContact"
+          [formModel]="dialog?.formModel"
+          [default]="'Người quyết định'"></codx-label>
+      </div>
+    </div>
+    <div>
+      <codx-list-contacts
+        #loadContactDeal
+        [selectAll]="false"
+        [funcID]="'CM0201'"
+        [objectID]="deal?.recID"
+        [customerID]="deal?.customerID"
+        [objectType]="'4'"
+        [objectName]="deal?.dealName"
+        [type]="'formAdd'"
+        [hidenMF]="false"
+      ></codx-list-contacts>
+    </div>
+    <div class="row my-2 ms-1 me-2">
+      <codx-tree-comment
+        [objectID]="deal?.recID"
+        [objectType]="dialog?.formModel?.entityName"
+        [actionType]="'C'"
+        [addNew]="true"
+        [funcID]="dialog?.formModel?.funcID"
+        (totalCommentChange)="changeCountFooter($event, 'comment')"></codx-tree-comment>
+    </div>
+  </div>
+
+  <div id="information" class="item-main mt-0" *ngIf="type == '1'">
+    <div class="d-flex align-items-center text-primary my-2">
+      <span class="icon-i-clipboard icon-20 me-1 fw-bold"></span>
+      <codx-label
+        class="text-gray-600 ms-2 fs-5-sm fw-bold text-primary"
+        name="lblTitleInformation"
+        [formModel]="dialog?.formModel"
+        [default]="'Nhu cầu'"
+      ></codx-label>
+    </div>
+    <ng-container [ngTemplateOutlet]="informationTemplate"></ng-container>
+    <div class="row my-2 ms-1 me-2">
+      <codx-tree-comment
+        [objectID]="deal?.recID"
+        [objectType]="dialog?.formModel?.entityName"
+        [actionType]="'C'"
+        [addNew]="true"
+        [funcID]="dialog?.formModel?.funcID"
+        (totalCommentChange)="changeCountFooter($event, 'comment')"></codx-tree-comment>
+    </div>
+  </div>
+
+  <!-- <div id="fields" class="item-main" *ngIf="type == '1'">
     <div class="d-flex align-items-center text-primary my-2">
       <span class="icon-i-clipboard icon-20 me-1 fw-bold"></span>
       <codx-label
@@ -152,7 +213,7 @@
         (saveDataStep)="saveDataStep($event)"
       </codx-fields-detail-temp>
     </ng-container>
-  </div>
+  </div> -->
 
   <div id="tasks" class="item-main" *ngIf="type != '1'">
     <div class="d-flex align-items-center text-primary my-2">
@@ -191,7 +252,7 @@
     </div>
   </div>
 
-  <div id="note" class="item-main mb-7" *ngIf="type == '1'">
+  <!-- <div id="note" class="item-main mb-7" *ngIf="type == '1'">
     <div class="d-flex align-items-center text-primary my-2">
       <span class="icon-event_notes icon-20 me-1 fw-bold"></span>
       <codx-label
@@ -209,13 +270,13 @@
         [funcID]="dialog?.formModel?.funcID"
         (totalCommentChange)="changeCountFooter($event, 'comment')"></codx-tree-comment>
     </div>
-  </div>
+  </div> -->
 </ng-template>
 
 <!-- Thông tin chung -->
 <ng-template #informationTemplate>
   <div>
-    <div class="row my-2">
+    <!-- <div class="row my-2">
       <div class="col-6">
         <div class="mb-1">
           <codx-label
@@ -307,7 +368,6 @@
             ></codx-label>
           </div>
           <div class="d-flex justify-content-end">
-            <!-- [ngbTooltip]="tooltipSalesperson" -->
             <div
               style="position: relative"
               *ngIf="deal?.salespersonID"
@@ -321,13 +381,6 @@
               >
               </codx-img>
               <div style="position: absolute; right: 0px; bottom: 0px">
-                <!-- <span
-                ><img
-                  src="/assets/themes/cm/default/img/{{
-                    getIcon('3')
-                  }}"
-                  alt=""
-              /></span> -->
               </div>
             </div>
             <div style="position: relative" *ngIf="deal?.consultantID">
@@ -340,19 +393,12 @@
               >
               </codx-imgs>
               <div style="position: absolute; right: 0px; bottom: 0px">
-                <!-- <span
-                ><img
-                  src="/assets/themes/cm/default/img/{{
-                    getIcon('5')
-                  }}"
-                  alt=""
-              /></span> -->
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
     <div class="row my-2">
       <div class="col-6">
         <codx-label
@@ -471,7 +517,7 @@
       </div>
     </div>
 
-    <div class="row my-2">
+    <!-- <div class="row my-2">
       <div class="col-6">
         <codx-label
           class="label-colon text-gray-600 codx-textlabel"
@@ -507,6 +553,108 @@
           "
         ></span>
       </div>
+    </div> -->
+  </div>
+</ng-template>
+
+<ng-template #salesTemplate>
+  <div class="d-flex align-items-top">
+    <div style="min-width: 160px;">
+      <codx-label
+        class="text-gray-600 label-colon ms-2 fs-5-sm"
+        fiedName="salespersonID"
+        [formModel]="dialog?.formModel"
+        [setRequire]="false"
+      ></codx-label>
     </div>
+   
+    <div class="d-flex align-items-top mt-2">
+      <codx-imgs
+        class="me-3 d-flex align-items-center"
+        [width]="50"
+        ojectType="AD_Users"
+        [numberImages]="1"
+        [isToolTip]="true"
+        [objectId]="deal?.salespersonID"
+      >
+      </codx-imgs>
+      <div>
+        <div class="fw-bold">
+          {{salesperson?.userName}}
+        </div>
+        <div>
+          <span
+            [innerHTML]="
+              salesperson?.positionName
+                | formatvalue : formModelContact : 'JobTitle'
+                | async
+            "
+          ></span>
+        </div>
+        <div class="d-flex">
+          <span
+            class="text-gray-600 fs-7 me-3"
+            [innerHTML]="salesperson?.phone | formatvalue : formModelContact : 'mobile' | async"
+          ></span>
+          <span
+            class="text-gray-600 fs-7"
+            [innerHTML]="salesperson?.email | formatvalue : formModelContact : 'personalEmail' | async"
+          ></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="d-flex align-items-top mt-5">
+    <div style="min-width: 160px;">
+      <codx-label
+        class="text-gray-600 label-colon ms-2 fs-5-sm"
+        fiedName="consultantID"
+        [formModel]="dialog?.formModel"
+      ></codx-label>
+    </div>
+    <div class="d-flex align-items-top mt-2">
+      <codx-imgs
+        class="me-3 d-flex align-items-center"
+        [width]="50"
+        ojectType="AD_Users"
+        [numberImages]="1"
+        [isToolTip]="true"
+        [objectId]="deal?.consultantID"
+      ></codx-imgs>
+      <div>
+        <div class="fw-bold">
+          {{consultant?.userName}}
+        </div>
+        <div>
+          <span
+            [innerHTML]="
+              consultant?.positionName
+                | formatvalue : formModelContact : 'JobTitle'
+                | async
+            "
+          ></span>
+        </div>
+        <div class="d-flex">
+          <span
+            class="text-gray-600 fs-7 me-3"
+            [innerHTML]="consultant?.phone | formatvalue : formModelContact : 'mobile' | async"
+          ></span>
+          <span
+            class="text-gray-600 fs-7"
+            [innerHTML]="consultant?.email | formatvalue : formModelContact : 'personalEmail' | async"
+          ></span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row my-2 ms-1 me-2">
+    <codx-tree-comment
+      [objectID]="deal?.recID"
+      [objectType]="dialog?.formModel?.entityName"
+      [actionType]="'C'"
+      [addNew]="true"
+      [funcID]="dialog?.formModel?.funcID"
+      (totalCommentChange)="changeCountFooter($event, 'comment')"></codx-tree-comment>
   </div>
 </ng-template>

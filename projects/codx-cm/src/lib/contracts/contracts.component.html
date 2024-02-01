@@ -48,9 +48,17 @@
     <div class="d-flex align-items-center text-gray-700 mb-1">
       <span class="icon-corporate_fare icon-16 me-1"></span>
       <span
+        #customerID
         class="codx-textcontent line-clamp line-clamp-1"
         [innerHTML]="
-          data?.customerID | formatvalue : view.formModel : 'CustomerID' | async
+          data?.customerID
+            | formatvalue
+              : view.formModel
+              : 'CustomerID'
+              : customerID
+              : 'CMContracts'
+              : 'grvCMContracts'
+            | async
         "
       ></span>
     </div>
@@ -148,7 +156,7 @@
     (clickMoreFunc)="clickMoreFunc($event)"
     (changeProgress)="autoStart($event)"
     (isSusscess)="autoOpenPopupSusscess($event)"
-    (moveStage)="handelMoveStage($event,dataSelected)"
+    (moveStage)="handelMoveStage($event, dataSelected)"
   ></contracts-view-detail>
 </ng-template>
 
@@ -336,7 +344,7 @@
       </div>
 
       <div class="row form-group">
-        <div class="col-6 ">
+        <div class="col-6">
           <codx-label
             [formModel]="view?.formModel"
             fiedName="disposalOn"
@@ -363,51 +371,32 @@
       </div>
 
       <div class="row form-group">
-        <div class="col-6 ">
+        <div class="col-6">
           <codx-label
-          [formModel]="view?.formModel"
-          fiedName="disposalExpired"
-          [crrValue]="liquidation?.disposalExpired"
-        ></codx-label>
-        <codx-input
-          class="me-3"
-          field="disposalExpired"
-          [formModel]="view?.formModel"
-          (valueChange)="changeData($event)"
-          [crrValue]="liquidation?.disposalExpired"
-        ></codx-input>
+            [formModel]="view?.formModel"
+            fiedName="disposalExpired"
+            [crrValue]="liquidation?.disposalExpired"
+          ></codx-label>
+          <codx-input
+            class="me-3"
+            field="disposalExpired"
+            [formModel]="view?.formModel"
+            (valueChange)="changeData($event)"
+            [crrValue]="liquidation?.disposalExpired"
+          ></codx-input>
         </div>
-        <div class="col-6 ">
+        <div class="col-6">
           <codx-label
-          [formModel]="view?.formModel"
-          fiedName="disposalType"
-          [crrValue]="liquidation?.disposalType"
-        ></codx-label>
-        <codx-input
-          class="me-3"
-          field="disposalType"
-          [formModel]="view?.formModel"
-          (valueChange)="changeData($event)"
-          [crrValue]="liquidation?.disposalType"
-        ></codx-input>
+            [formModel]="view?.formModel"
+            fiedName="pmtMethodID"
+          ></codx-label>
+          <codx-input
+            field="pmtMethodID"
+            [formModel]="view?.formModel"
+            (valueChange)="changeData($event)"
+            [crrValue]="liquidation?.pmtMethodID"
+          ></codx-input>
         </div>
-      </div>
-
-      <div class="form-group">
-        
-      </div>
-
-      <div class="form-group">
-        <codx-label
-          [formModel]="view?.formModel"
-          fiedName="pmtMethodID"
-        ></codx-label>
-        <codx-input
-          field="pmtMethodID"
-          [formModel]="view?.formModel"
-          (valueChange)="changeData($event)"
-          [crrValue]="liquidation?.pmtMethodID"
-        ></codx-input>
       </div>
       <div class="form-group">
         <codx-label
@@ -428,6 +417,10 @@
         ></codx-label>
         <codx-input
           field="disposalCmt"
+          type="textarea"
+          headerposition="none"
+          format="ed"
+          height="100"
           [formModel]="view?.formModel"
           (valueChange)="changeData($event)"
           [crrValue]="liquidation?.disposalCmt"

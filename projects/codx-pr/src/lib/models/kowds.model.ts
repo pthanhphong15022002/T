@@ -1,4 +1,4 @@
-export class Kowds{
+export class TS_KowDs{
     recID: string;
     employeeID: string;
     kowCode: string;
@@ -6,7 +6,7 @@ export class Kowds{
     dayNum: number;
     groupSal: number;
 
-    constructor(recID, employeeID, kowCode, dayNum, dowCode, groupSal){
+    constructor(recID, employeeID, dowCode, kowCode, dayNum, groupSal){
         this.recID = recID;
         this.employeeID = employeeID;
         this.kowCode = kowCode;

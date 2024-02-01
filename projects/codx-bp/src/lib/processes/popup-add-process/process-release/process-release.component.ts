@@ -198,7 +198,8 @@ export class ProcessReleaseComponent implements OnInit, AfterViewInit {
         this.editItem();
         break;
       }
-
+      case 'SYS05':
+        break;
       //start
       case 'BPT01011': {
         this.startProcess();
@@ -251,4 +252,12 @@ export class ProcessReleaseComponent implements OnInit, AfterViewInit {
   }
 
   viewChange(e: any) {}
+
+  //#region event view list
+  dbClickEvent(e){
+    if(e && e?.data){
+      this.openFormDetail(e?.data);
+    }
+  }
+  //#endregion event view list
 }

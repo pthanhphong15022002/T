@@ -136,4 +136,12 @@ export class ProjectsComponent
     }
   }
 
+  getMembers(data:any,field:string){
+    if(data.permissions && data.permissions.length){
+      let arr = data.permissions.map((x:any)=>x[field]);
+      arr =arr.join(';')
+      return arr;
+    }
+    return data.permissions;
+  }
 }
