@@ -281,8 +281,7 @@ export class KowdsComponent extends UIComponent {
       .subscribe((res:any) => {
         if (res && res?.event?.status == 'Y') 
         {
-          debugger
-          let strEmpIDs = this.codxGrvDetailDay.selectedIndexes.map((idx) => this.codxGrvDetailDay[idx].EmployeeID).join(";");
+          let strEmpIDs = this.codxGrvDetailDay.selectedIndexes.map((idx) => this.codxGrvDetailDay.dataSource[idx].EmployeeID).join(";");
           this.api.execSv<any>(
             'HR',
             'PR',

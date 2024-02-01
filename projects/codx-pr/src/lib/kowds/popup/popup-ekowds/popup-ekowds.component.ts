@@ -150,25 +150,11 @@ export class PopupEkowdsComponent implements OnInit, AfterViewInit {
       return;
     }
     if(!this.codxGridview || this.codxGridview?.dataSource?.length == 0){
-      if(this.modeSaveData == "1")
-      {
-        this.notiSV.notifyCode("HR041");
+      this.notiSV.notifyCode("HR041");
         return;
-      }
-      else
-      {
-        // confirm ghi đè data
-        this.notiSV.alertCode("HR042").subscribe((confirm:any) => {
-          if(confirm && confirm.event.status == "Y")
-          {
-
-          }
-        });
-      } 
     }
     else
     {
-      debugger
       let kowDs = this.codxGridview.dataSource.map(x => ({ "kowCode": x.kowCode,"dayNum":x.dayNum}));
       this.api.execSv("HR","PR","KowDsBusiness","UpdateKowDByDayAsync",[this.employeeID,this.dowCode,Util.toUTC00(this.beginDate),Util.toUTC00(this.endDate),this.modeSaveData,kowDs])
       .subscribe((res:any) => {
