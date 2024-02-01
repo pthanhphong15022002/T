@@ -2874,7 +2874,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     //Thanh lý
     this.getOutByDisReason(dataSetOutCrr);
     //PHÂN LOẠI KHÁCH HÀNG
-    this.getChartClassify(dataSetIn?.filter((x) => x.yearApproved < this.year));
+    this.getChartClassify(dataSetInCrr);
   }
   //DNNT TN
 
