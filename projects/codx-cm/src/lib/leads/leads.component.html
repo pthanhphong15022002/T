@@ -528,3 +528,40 @@
   </ng-template>
 </div> -->
 </ng-template>
+
+
+<ng-template #templateCustommer let-data>
+  <div class="">
+    <codx-label
+      class="text-primary fs-7 cursor-pointer"
+      style="font-style: italic"
+      fiedName="viewDetailsCost"
+      [formName]="'CMDeals'"
+      [gridViewName]="'grvCMDeals'"
+      default="Chi tiết"
+    ></codx-label>
+  </div>
+</ng-template>
+
+<ng-template #templateStatus let-data>
+  <div class="d-flex flex-column">
+    <div>
+      <codx-vll
+        [name]="gridViewSetup?.Status?.referedValue"
+        [field]="'Status'"
+        [value]="data?.status"
+        [showText]="true"
+        [showBgColor]="true"
+        class="badge badge-light badge-sm"
+      ></codx-vll>
+    </div>
+    <codx-label
+      class="text-primary fs-7 cursor-pointer mt-1"
+      style="font-style: italic"
+      fiedName="viewDetailsCost"
+      [formName]="'CMDeals'"
+      [gridViewName]="'grvCMDeals'"
+      default="Chi tiết"
+    ></codx-label>
+  </div>
+</ng-template>

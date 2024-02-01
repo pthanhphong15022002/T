@@ -1,5 +1,5 @@
-import { ChangeDetectorRef, Component, Injector, OnInit, Optional } from '@angular/core';
-import { CallFuncService, DialogData, DialogRef, FormModel, NotificationsService, UIComponent } from 'codx-core';
+import { AfterViewInit, ChangeDetectorRef, Component, Injector, OnInit, Optional } from '@angular/core';
+import { ApiHttpService, CacheService, CallFuncService, DialogData, DialogRef, FormModel, NotificationsService, UIComponent } from 'codx-core';
 import { CodxHrService } from 'projects/codx-hr/src/public-api';
 
 @Component({
@@ -7,156 +7,158 @@ import { CodxHrService } from 'projects/codx-hr/src/public-api';
   templateUrl: './popup-copy-ekowds.component.html',
   styleUrls: ['./popup-copy-ekowds.component.css']
 })
-export class PopupCopyEkowdsComponent extends UIComponent implements OnInit {
+export class PopupCopyEkowdsComponent implements OnInit,AfterViewInit {
+
   dialog: DialogRef;
-  actionType: string;
-  formModel: FormModel;
-  headerText: string;
-  dataObj: any;
-  dowCode: any = '2023/12';
-  vllMode = '1';
-  employeeId: string;
-  vllObj1 : any;
-  vllObj2 : any;
-  lstCopyEmpID: any = [];
-  isHidden = true;
-  currentCbxValue: any;
-
-  resourceEmployeeInfo: any;
-
-  copyEmployeesInfo: any;
-
+  headerText:string = "Sao chép Dữ liệu công";
+  dataObj:any;
+  dowCode:string;
+  vllHR057:any;
+  modeSaveData:string = "1";
+  fromEmp:any;
+  toEmps:string = "";
+  lstToEmp:any = [];
+  showCBB:boolean = false;
+  width: number = 720;
+  height: number = window.innerHeight;
   constructor(
-    private injector: Injector,
-    private cr: ChangeDetectorRef,
+    private api:ApiHttpService,
+    private cache:CacheService,
     private notify: NotificationsService,
-    private df: ChangeDetectorRef,
-    private hrSevice: CodxHrService,
-    private callfunc: CallFuncService,
-    @Optional() dialog?: DialogRef,
-    @Optional() data?: DialogData
-  ) {
-    super(injector);
-    this.dialog = dialog;
-    this.formModel = dialog?.formModel;
-    this.headerText = data?.data?.headerText;
-    this.funcID = data?.data?.funcID;
-    this.actionType = data?.data?.actionType;
-    // this.dataObj = JSON.parse(JSON.stringify(data?.data?.dataObj));
-    this.employeeId = JSON.parse(JSON.stringify(data?.data?.employeeId));
-    if(data?.data?.dowCode){
-      this.dowCode = JSON.parse(JSON.stringify(data?.data?.dowCode));
+    private dt: ChangeDetectorRef,
+    private callFCSV: CallFuncService,
+    @Optional() dialogRef?: DialogRef,
+    @Optional() dialogData?: DialogData
+  ) 
+  {
+    this.dialog = dialogRef;
+    this.fromEmp = dialogData.data?.data;
+    this.dowCode = dialogData.data?.dowCode;
+    this.headerText = dialogData.data?.headerText;
+  }
+  ngOnInit(): void {
+    this.cache.valueList('HR057')
+    .subscribe((vll) => {
+      if(vll)
+      {
+        this.vllHR057 = vll.datas;
+      }
+    });
+  }
+  ngAfterViewInit(): void {
+  }
+
+  // value input change
+  valueInputChange(event:any){
+    this.modeSaveData = event.data;
+  }
+
+    // valueCbbChange
+  valueCbbChange(event:any){
+    if(event && event.dataSelected)
+    {
+      this.lstToEmp =  [...event.dataSelected];
+      this.toEmps = event.id;
+      this.dt.detectChanges();
     }
   }
 
-  onInit(): void {
-    this.cache.valueList('HR057').subscribe((res) => {
-      console.log('doc cache ', res);
-      this.vllObj1 = {...res.datas[0]}
-      this.vllObj2 = {...res.datas[1]}
-    })
-
-    this.getListEmpInfo(this.employeeId).subscribe((res) => {
-      this.resourceEmployeeInfo = res[0];
-    })
+  //openPopupEmployees()
+  openPopupEmployees(){
+    this.showCBB = !this.showCBB;
+    this.dt.detectChanges();
   }
 
-  deleteEmp(emp){
-    let index = this.copyEmployeesInfo.indexOf(emp);
-    if(index != -1){
-      this.copyEmployeesInfo.splice(index, 1);
-    }
-    let indexInIDsArr = this.lstCopyEmpID.indexOf(emp.employeeID);
-    if(indexInIDsArr != -1){
-      this.lstCopyEmpID.splice(indexInIDsArr, 1);
-      this.currentCbxValue = this.lstCopyEmpID.join(';')
-    }
-  }
+  // deleteEmp(emp){
+  //   let index = this.copyEmployeesInfo.indexOf(emp);
+  //   if(index != -1){
+  //     this.copyEmployeesInfo.splice(index, 1);
+  //   }
+  //   let indexInIDsArr = this.lstCopyEmpID.indexOf(emp.employeeID);
+  //   if(indexInIDsArr != -1){
+  //     this.lstCopyEmpID.splice(indexInIDsArr, 1);
+  //     this.currentCbxValue = this.lstCopyEmpID.join(';')
+  //   }
+  // }
 
-  onSelectVllVal(evt, data){
-    if(data == '1'){
-      this.vllMode = '1';
-    }
-    else this.vllMode = '2';
-  }
+  // onSelectVllVal(evt, data){
+  //   if(data == '1'){
+  //     this.vllMode = '1';
+  //   }
+  //   else this.vllMode = '2';
+  // }
 
   onSaveForm(){
-    if(this.lstCopyEmpID.length < 1){
+    if(!this.lstToEmp || this.lstToEmp.length == 0)
+    {
       this.notify.notifyCode('HR040');
       return;
     }
-    this.notify.alertCode('HR043', null, this.dowCode, this.resourceEmployeeInfo.emp.employeeName).subscribe((x) => {
-      if(x.event?.status == 'Y'){
-        if(this.vllMode == '1'){
-          this.copyEmpsKows().subscribe((res) => {
-            if(res == true){
-              this.notify.notifyCode('SYS006');
-              this.dialog && this.dialog.close(true);
-            }
-            else this.notify.notifyCode('SYS023');
-          })
-        }
-        else if(this.vllMode == '2'){
-          this.deleteEmpsKowsByDowCode().subscribe((res) =>{
-            this.copyEmpsKows().subscribe((res) => {
-              debugger
-              if(res == true){
-                this.notify.notifyCode('SYS006');
-                this.dialog && this.dialog.close(true);
-              }
-              else this.notify.notifyCode('SYS023');
-            })
-          })
-        }
+    this.notify.alertCode('HR043',null, this.dowCode, this.fromEmp.employeeName)
+    .subscribe((res:any) => {
+      if(res && res?.event?.status == 'Y')
+      {
+        // coppy data
+        let employeeIDs = this.lstToEmp.map(x => x.EmployeeID).join(";");
+        this.api.execSv("HR","PR","KowDsBusiness","CoppyDataToEmployeeAsync",[this.fromEmp.employeeID,employeeIDs,this.dowCode,this.modeSaveData])
+        .subscribe((res:any)=>{
+          if(res)
+          {
+            this.notify.notifyCode("SYS007");
+            this.dialog.close(true);
+          }
+          else this.notify.notifyCode("SYS021");
+        });
       }
     })
   }
 
-  onClickHideComboboxPopup(event){
-    this.isHidden = true;
-    if(event == null){
 
-    }
-    else if(event.id){
-      this.lstCopyEmpID = event.id.split(';')
-      this.currentCbxValue = event.id;
-      this.getListEmpInfo(event.id).subscribe((res) => {
-        this.copyEmployeesInfo = res;
-      })
-    }
-  }
+  // onClickHideComboboxPopup(event){
+  //   this.isHidden = true;
+  //   if(event == null){
 
-  onclickOpenComboboxEmp(){
-    this.isHidden = false;
-  }
+  //   }
+  //   else if(event.id){
+  //     this.lstCopyEmpID = event.id.split(';')
+  //     this.currentCbxValue = event.id;
+  //     this.getListEmpInfo(event.id).subscribe((res) => {
+  //       this.copyEmployeesInfo = res;
+  //     })
+  //   }
+  // }
 
-  getListEmpInfo(data) {
-    return this.api.execSv<any>(
-      'HR',
-      'ERM.Business.PR',
-      'KowDsBusiness',
-      'GetEmpsInfoAsync',
-      [data]
-    );
-  }
+  // onclickOpenComboboxEmp(){
+  //   this.isHidden = false;
+  // }
 
-  deleteEmpsKowsByDowCode(){
-    return this.api.execSv<any>(
-      'HR',
-      'ERM.Business.PR',
-      'KowDsBusiness',
-      'DeleteEmpKowAsyncByDowCodeAsync',
-      [this.lstCopyEmpID, this.dowCode]
-    );
-  }
+  // getListEmpInfo(data) {
+  //   return this.api.execSv<any>(
+  //     'HR',
+  //     'ERM.Business.PR',
+  //     'KowDsBusiness',
+  //     'GetEmpsInfoAsync',
+  //     [data]
+  //   );
+  // }
 
-  copyEmpsKows(){
-    return this.api.execSv<any>(
-      'HR',
-      'ERM.Business.PR',
-      'KowDsBusiness',
-      'CopyEmpKowAsync',
-      [this.employeeId,this.lstCopyEmpID.join(';'), this.dowCode]
-    );
-  }
+  // deleteEmpsKowsByDowCode(){
+  //   return this.api.execSv<any>(
+  //     'HR',
+  //     'ERM.Business.PR',
+  //     'KowDsBusiness',
+  //     'DeleteEmpKowAsyncByDowCodeAsync',
+  //     [this.lstCopyEmpID, this.dowCode]
+  //   );
+  // }
+
+  // copyEmpsKows(){
+  //   return this.api.execSv<any>(
+  //     'HR',
+  //     'ERM.Business.PR',
+  //     'KowDsBusiness',
+  //     'CopyEmpKowAsync',
+  //     [this.employeeId,this.lstCopyEmpID.join(';'), this.dowCode]
+  //   );
+  // }
 }

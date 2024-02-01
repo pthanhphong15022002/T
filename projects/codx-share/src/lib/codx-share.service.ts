@@ -247,7 +247,6 @@ export class CodxShareService {
       case 'SYS206':
       case 'SYS200': {
         if (data?.unbounds?.eSign == true) {
-          
           let dialogModel = new DialogModel();
           dialogModel.IsFull = true;
 
@@ -285,6 +284,7 @@ export class CodxShareService {
               data.unbounds.statusApproval = x.event?.returnStatus;
               data.unbounds.isLastStep = x.event?.isLastStep;
               dataService.update(data).subscribe();
+              afterSave(data);
               that?.reloadFile();
             }
           });
@@ -308,64 +308,69 @@ export class CodxShareService {
           );
           if (dialog) {
             dialog.closed.subscribe((res) => {
-              if(res?.event){
+              if (res?.event) {
                 let oComment = res?.event;
-                this.codxCommonService.codxApprove(
-                  data?.unbounds?.approvalRecID,
-                  status,
-                  oComment?.comment,
-                  oComment?.reasonID,
-                  null
-                ).subscribe((res2: any) => {
-                  if (!res2?.msgCodeError) {
-                    data.unbounds.statusApproval = status ?? res2?.returnStatus;
-                    //Cập nhật lại status duyệt
-                    var index = dataService.data.findIndex(
-                      (x) => x.transID == data.recID
-                    );
-                    if (index >= 0)
-                      dataService.data[index].unbounds.statusApproval =
+                this.codxCommonService
+                  .codxApprove(
+                    data?.unbounds?.approvalRecID,
+                    status,
+                    oComment?.comment,
+                    oComment?.reasonID,
+                    null
+                  )
+                  .subscribe((res2: any) => {
+                    if (!res2?.msgCodeError) {
+                      data.unbounds.statusApproval =
                         status ?? res2?.returnStatus;
-  
-                    dataService.update(data).subscribe();
-                    this.notificationsService.notifyCode('SYS007');
-                    afterSave(data);
-                  } else this.notificationsService.notify(res2?.msgCodeError);
-                });
+                      //Cập nhật lại status duyệt
+                      var index = dataService.data.findIndex(
+                        (x) => x.transID == data.recID
+                      );
+                      if (index >= 0)
+                        dataService.data[index].unbounds.statusApproval =
+                          status ?? res2?.returnStatus;
+
+                      dataService.update(data).subscribe();
+                      this.notificationsService.notifyCode('SYS007');
+                      afterSave(data);
+                    } else this.notificationsService.notify(res2?.msgCodeError);
+                  });
               }
-              
             });
           } else {
-            this.codxCommonService.codxApprove(
-              data?.unbounds?.approvalRecID,
-              status,
-              null,
-              null,
-              null
-            ).subscribe((res2: any) => {
-              if (!res2?.msgCodeError) {
-                data.unbounds.statusApproval = status ?? res2?.returnStatus;
-                //Cập nhật lại status duyệt
-                var index = dataService.data.findIndex(
-                  (x) => x.transID == data.recID
-                );
-                if (index >= 0)
-                  dataService.data[index].unbounds.statusApproval =
-                    status ?? res2?.returnStatus;
+            this.codxCommonService
+              .codxApprove(
+                data?.unbounds?.approvalRecID,
+                status,
+                null,
+                null,
+                null
+              )
+              .subscribe((res2: any) => {
+                if (!res2?.msgCodeError) {
+                  data.unbounds.statusApproval = status ?? res2?.returnStatus;
+                  //Cập nhật lại status duyệt
+                  var index = dataService.data.findIndex(
+                    (x) => x.transID == data.recID
+                  );
+                  if (index >= 0)
+                    dataService.data[index].unbounds.statusApproval =
+                      status ?? res2?.returnStatus;
 
-                dataService.update(data).subscribe();
+                  dataService.update(data).subscribe();
 
-                this.notificationsService.notifyCode('SYS007');
-                afterSave(data);
-              } else this.notificationsService.notify(res2?.msgCodeError);
-            });
+                  this.notificationsService.notifyCode('SYS007');
+                  afterSave(data);
+                } else this.notificationsService.notify(res2?.msgCodeError);
+              });
           }
         }
         break;
       }
       case 'SYS207': {
-        this.codxCommonService.codxUndo(data?.unbounds?.approvalRecID, null).subscribe(
-          (res: any) => {
+        this.codxCommonService
+          .codxUndo(data?.unbounds?.approvalRecID, null)
+          .subscribe((res: any) => {
             if (!res?.msgCodeError) {
               data.unbounds.statusApproval = res?.status;
               //Cập nhật lại status ủy
@@ -378,15 +383,14 @@ export class CodxShareService {
               dataService.update(data).subscribe();
               this.notificationsService.notifyCode('SYS007');
             } else this.notificationsService.notify(res?.msgCodeError);
-          }
-        );
+          });
         break;
       }
       //Ủy quyền
       case 'SYS209': {
         this.codxCommonService.codxAuthority(
           data?.unbounds?.approvalRecID,
-          (res :any)=>{
+          (res: any) => {
             if (!res?.msgCodeError) {
               data.unbounds.statusApproval = res?.returnStatus;
               //Cập nhật lại status duyệt
@@ -394,13 +398,13 @@ export class CodxShareService {
                 (x) => x?.transID == data?.recID
               );
               if (index >= 0)
-                dataService.data[index].unbounds.statusApproval = res?.returnStatus;
+                dataService.data[index].unbounds.statusApproval =
+                  res?.returnStatus;
               afterSave(data);
               dataService.update(data).subscribe();
               this.notificationsService.notifyCode('SYS007');
             } else this.notificationsService.notify(res?.msgCodeError);
-          },
-
+          }
         );
         break;
       }
@@ -648,7 +652,7 @@ export class CodxShareService {
       [templateID]
     );
   }
-  
+
   getEmailTemplateType(templateType: string) {
     return this.api.execSv<any>(
       'SYS',
@@ -719,13 +723,18 @@ export class CodxShareService {
     );
   }
 
-  getOrCreateSignature(email: string, signatureType: string,supplier: string, userID: string) {
+  getOrCreateSignature(
+    email: string,
+    signatureType: string,
+    supplier: string,
+    userID: string
+  ) {
     return this.api.execSv<any>(
       'ES',
       'ERM.Business.ES',
       'SignaturesBusiness',
       'GetApproverSignatureAsync',
-      [email, signatureType,supplier,userID]
+      [email, signatureType, supplier, userID]
     );
   }
 
@@ -1481,7 +1490,7 @@ export class CodxShareService {
       [transID, isSettingMode, dynamicApprovers]
     );
   }
-  getStepsByTransID(transID :any) {
+  getStepsByTransID(transID: any) {
     return this.api.execSv<any>(
       'ES',
       'ES',
@@ -1490,7 +1499,7 @@ export class CodxShareService {
       [transID]
     );
   }
-  addCustomStep(steps:any) {
+  addCustomStep(steps: any) {
     return this.api.execSv<any>(
       'ES',
       'ES',
@@ -1537,7 +1546,7 @@ export class CodxShareService {
       [option, formName, transType, category]
     );
   }
-  
+
   //Lấy icon Folder/File
   getIconFile(ex: string) {
     if (!ex) return 'file.svg';
@@ -1646,28 +1655,37 @@ export class CodxShareService {
         // let rpOpenReportUI = function (recID, module) {
         //   let url = `/${tenantName}/${module}/report/detail/${recID}?params=${paramURL}`;
         //   window.open(url);
-              
+
         // };
         if (rpList?.length > 1) {
           this.rpViewReportList(rpList, formModel, params);
         } else if (rpList?.length == 1) {
           //rpOpenReportUI(rpList[0]?.recID, rpList[0]?.moduleID?.toLowerCase());
-          this.popupPrintRP(rpList[0],params);
+          this.popupPrintRP(rpList[0], params);
         }
       }
     });
   }
-  popupPrintRP(rpList :any, params :any){    
+  popupPrintRP(rpList: any, params: any) {
     let paramURL = encodeURIComponent(JSON.stringify(params));
-    let dialogModel = new DialogModel;
-    dialogModel.IsFull=false;
-    dialogModel.DataService=null;
-    let printDialog = this.callfunc.openForm(CodxReportPopupViewDetailComponent,rpList.customName,1080, 720,rpList?.recID,{isPopup:true,reportList: rpList, params:paramURL},"",dialogModel );
+    let dialogModel = new DialogModel();
+    dialogModel.IsFull = false;
+    dialogModel.DataService = null;
+    let printDialog = this.callfunc.openForm(
+      CodxReportPopupViewDetailComponent,
+      rpList.customName,
+      1080,
+      720,
+      rpList?.recID,
+      { isPopup: true, reportList: rpList, params: paramURL },
+      '',
+      dialogModel
+    );
   }
   rpViewReportList(
     reportList: any,
     formModel: any,
-    params: any,
+    params: any
     //rpOpenReportUI: (recID: string, moduleID: string) => void
   ) {
     let moduleID = reportList[0]?.moduleID?.toLowerCase();
@@ -1693,8 +1711,8 @@ export class CodxShareService {
     dialogViewRP.closed.subscribe((res) => {
       if (res?.event) {
         let tenantName = this.tenant.getName();
-        //rpOpenReportUI(res?.event?.recID, moduleID);        
-        this.popupPrintRP(res?.event,params);
+        //rpOpenReportUI(res?.event?.recID, moduleID);
+        this.popupPrintRP(res?.event, params);
       }
     });
   }
@@ -1721,8 +1739,8 @@ export class Approvers {
   userID: string;
   userName: string;
   orgUnitName: string;
-  idCardType:string;
-  idCardNo:string;
+  idCardType: string;
+  idCardNo: string;
 }
 
 //#endregion

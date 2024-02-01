@@ -76,6 +76,8 @@ export class CodxAddressCmComponent implements OnInit {
           if (changes['id']?.currentValue == this.idOld) return;
           this.idOld = changes['id']?.currentValue;
           this.getListAddress();
+        }else{
+          this.idOld = changes['id']?.currentValue;
         }
       } else {
         if (!this.loaded) this.loaded = true;

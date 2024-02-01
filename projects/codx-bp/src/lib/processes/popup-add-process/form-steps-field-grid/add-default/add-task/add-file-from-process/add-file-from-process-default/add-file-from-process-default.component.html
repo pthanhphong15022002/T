@@ -1,0 +1,46 @@
+<div class="d-flex flex-column w-100 h-100 overflow-auto grid-collapse" ngbAccordion>
+    <ng-container *ngIf="dataList && dataList.length > 0 , else elsetmp">
+        <div class="pt-4" ngbAccordionItem [collapsed]="false" *ngFor="let item of dataList">
+            <div class="d-flex align-items-center" ngbAccordionHeader>
+                <button ngbAccordionButton></button>
+                <div ><span class="fw-bold fs-5-sm">{{item.stageName}}</span></div>
+            </div>
+            <div ngbAccordionCollapse>
+                <div ngbAccordionBody>
+                    <ng-template>
+                        <div class="d-flex flex-column ps-13 pb-4" *ngFor="let item2 of item.child">
+                            <span class="mt-1 fw-bold">{{item2.stepName}}</span>
+                            <div class="d-flex justify-content-between align-items-center ps-8 pb-4 mt-2 cursor-pointer border-bottom" (click)="selectedItem(item)">
+                                <codx-thumbnail  
+                                    [files]="item2?.files" 
+                                    displayThumb="simple" 
+                                    [hideDelete]="'1'"
+                                    [hideMoreF]="'0'" 
+                                    [isClick]="false" 
+                                >
+                                </codx-thumbnail>
+                                <i *ngIf="item2.recID == selected?.recID" class="icon-i-check-circle-fill"></i>
+                            </div>
+                        </div>
+                    </ng-template>
+                </div>
+            </div>
+        </div>
+    </ng-container>
+    <ng-template #elsetmp>
+        <div class="container h-100vh">
+            <div class="list-empty card card-flush h-100">
+              <div class="d-flex flex-column flex-center justify-content-center">
+                <img
+                  src="../assets/themes/sys/default/img/DataEmpty.svg"
+                  class="w-200px"
+                />
+                <div class="fw-bold mt-1 text-center">
+                  {{ "SYS011" | mssg | async }}
+                </div>
+                <!-- <div class="mt-2 text-center">Chưa có dữ liệu phát sinh.</div> -->
+              </div>
+            </div>
+          </div>
+    </ng-template>
+</div>

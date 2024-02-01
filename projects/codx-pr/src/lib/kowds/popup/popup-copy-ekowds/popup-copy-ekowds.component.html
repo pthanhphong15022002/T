@@ -1,183 +1,90 @@
-<ng-container *ngIf="resourceEmployeeInfo">
-  <codx-form
-    #form
+<codx-form
     [headerText]="headerText"
     [body]="body"
-    [formModel]="formModel"
     [footer]="footer"
-    [dialog]="dialog"
-    [data]="resourceEmployeeInfo"
-  >
-    <!-- [group]="form.formGroup"
-        *ngIf="isAfterRender" -->
-    <ng-template #body>
-      <ng-container *ngIf="form.formGroup">
-        <div class="form-group mt-5 d-flex flex-row" *ngIf="vllObj1">
-          <input
-            [checked]="vllMode === vllObj1.value"
-            name="filterVll"
-            type="radio"
-            [value]="vllObj1.value"
-            (change)="onSelectVllVal($event, vllObj1.value)"
-          />
-          <!-- <codx-input 
-          type="radio"
-          [checked]="vllMode === vllObj1.value"
-          (valueChange)="onSelectVllVal($event, vllObj1.value)"
-        ></codx-input> -->
-          <codx-label
-            class="ms-3"
-            [default]="vllObj1.text"
-            [name]="'lblModeVll1'"
-            [formModel]="formModel"
-          ></codx-label>
-        </div>
-
-        <div class="form-group mt-5 d-flex flex-row" *ngIf="vllObj2">
-          <input
-            [checked]="vllMode === vllObj2.value"
-            name="filterVll"
-            type="radio"
-            [value]="vllObj2.value"
-            (change)="onSelectVllVal($event, vllObj2.value)"
-          />
-
-          <!-- <codx-input 
-          type="radio"
-          [checked]="vllMode === vllObj2.value"
-          (valueChange)="onSelectVllVal($event, vllObj2.value)"
-        ></codx-input> -->
-          <codx-label
-            class="ms-3"
-            [default]="vllObj2.text"
-            [name]="'lblModeVll2'"
-            [formModel]="formModel"
-          ></codx-label>
-        </div>
-
-        <!-- <div class="form-group row mt-5">
-          <codx-label
-            fiedName="EmployeeID"
-            [formModel]="form.formModel"
-          ></codx-label>
+    [dialog]="dialog">
+</codx-form>
+<ng-template #body>
+  <div class="container">
+    <div class="form-group">
+      <ng-container *ngIf="vllHR057 && vllHR057.length > 0">
+        <ng-container *ngFor="let item of vllHR057">
           <codx-input
-            field="employeeID"
-            [multiple]="true"
-            [formModel]="form.formModel"
-            [Group]="form.formGroup"
-          ></codx-input>
-        </div> -->
-
-        <div class="form-group row">
-            <codx-label
-            default="Từ nhân viên"
-            [name]="'lblFromEmp'"
-            [formModel]="form.formModel"
-            >
-          </codx-label>
-        </div>
-
-        <div>
-            <div class="d-flex align-items-center w-100" >
-                <div class="p-3 ps-5"
-                >
-                    <div class="d-flex align-items-center">
-                      <div class="d-flex flex-column me-4">
-                        <codx-img [funcId]="'HRT03a1'" [objectId]="resourceEmployeeInfo?.emp?.employeeID" [objectName]="resourceEmployeeInfo?.emp?.employeeName"
-                          objectType="HR_Employees" [width]="40"
-                          [imageType]="'circle'"
-                          class="pic-emloyee"
-                          >
-                        </codx-img>
-                      </div>
-                      <div class="d-flex flex-column">
-                          <div
-                          class="align-items-center">
-                          <span class="fw-bold fs-6 me-3 text-nowrap">
-                            {{resourceEmployeeInfo?.emp?.employeeName}}</span>
-                        </div>
-                        <div>
-                          {{resourceEmployeeInfo?.positionName}}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-        </div>
-
-        <div class="form-group mt-4 d-flex align-items-center justify-content-between mb-3">
-            <codx-label
-            default="Đến nhân viên"
-            [name]="'lblToEmp'"
-            [formModel]="form.formModel"
-            >
-          </codx-label>
-
-          <button type="button"
-          class="btn btn-icon btn-sm"
-            (click)="onclickOpenComboboxEmp()"
-            >
-          <span class="icon-person_add_alt_1 icon-16"></span>
-        </button>
-        </div>
-
-        <codx-combobox-popup
-            *ngIf="!isHidden"
-            [comboboxName]="'Employees'"
-            [multiple]="true"
-            [width]="600"
-            [height]="500"
-            [value]="currentCbxValue"
-            (clickSave)="onClickHideComboboxPopup($event)"
-            >
-        </codx-combobox-popup>
-
-        <div *ngFor="let data of copyEmployeesInfo">
-            <div class="d-flex p-1 align-items-center justify-content-between">
-                <div class="d-flex align-items-center w-100" >
-                    <div class="p-3 ps-5"
-                    >
-                        <div class="d-flex align-items-center">
-                          <div class="d-flex flex-column me-4">
-                            <codx-img [funcId]="'HRT03a1'" [objectId]="data?.emp?.employeeID" [objectName]="data?.emp?.employeeName"
-                              objectType="HR_Employees" [width]="40"
-                              [imageType]="'circle'"
-                              class="pic-emloyee"
-                              >
-                            </codx-img>
-                          </div>
-                          <div class="d-flex flex-column">
-                              <div
-                              class="align-items-center line-clamp line-clamp-1 mb-1">
-                              <span class="fw-bold fs-6 me-3 text-nowrap">
-                                {{data?.emp?.employeeName}}</span>
-                            </div>
-                            <div>
-                              {{data?.positionName}}
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                <div type="button" class="btn btn-sm btn-icon btn-light-primary" (click)="deleteEmp(data)">
-                    <i class="icon-close icon-16"></i>
-                </div>
-            </div>
-        </div>
+            [checked]="item.value == 1"
+            [field]="'vllHR057'"
+            name="checked"
+            type="radio"
+            [crrValue]="item.value"
+            [label]="item.text"
+            [labelPosition]="'after'"
+            (valueChange)="valueInputChange($event)">
+          </codx-input>
+        </ng-container>
       </ng-container>
-    </ng-template>
-  </codx-form>
-
-  <ng-template #footer>
-    <div class="d-flex justify-content-end">
-      <button class="btn btn-primary" (click)="onSaveForm()">
-        <i class="icon-save"></i>
-        <codx-label
-          default="Lưu"
-          name="lblSave"
-          [formModel]="form.formModel"
-        ></codx-label>
-      </button>
     </div>
-  </ng-template>
+
+    <div class="form-group">
+      <codx-label [formModel]="dialog?.formModel" name="lblFromEmployee" [default]="'Từ nhân viên'" class="mb-2"></codx-label>
+      <div class="ps-4">
+          <codx-temp-full 
+              *ngIf="fromEmp"
+              [dataItem]="fromEmp" 
+              [imageId]="fromEmp.employeeID" 
+              [imageObjName]="fromEmp.employeeName" 
+              [imageObjType]="'HR_Employees'" 
+              [title]="fromEmp.employeeName"
+              [desc]="fromEmp.positionName"
+              [hideMF]="true">
+          </codx-temp-full>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <div class="d-flex align-items-center justify-content-between">
+          <codx-label [formModel]="dialog?.formModel" name="lblEmployees" [default]="'Đến Nhân viên'"></codx-label>
+          <button type="button" class="btn btn-icon btn-light" (click)="openPopupEmployees()">
+              <span class="icon-person_add icon-18"></span>
+          </button>
+      </div>
+      <ng-container *ngIf="lstToEmp">
+          <div class="row ps-4">
+              <ng-container *ngFor="let item of lstToEmp">
+                  <div class="p-2">
+                      <codx-temp-full 
+                        [dataItem]="item" 
+                        [imageId]="item.EmployeeID" 
+                        [imageObjName]="item.EmployeeName" 
+                        [imageObjType]="'HR_Employees'" 
+                        [title]="item.EmployeeName"
+                        [hideMF]="true">
+                    </codx-temp-full>
+                  </div>
+              </ng-container>
+          </div>
+      </ng-container>
+    </div>
+  </div>
+</ng-template>
+<ng-template #footer>
+  <div class="d-flex justify-content-end">
+    <button class="btn btn-primary" (click)="onSaveForm()">
+      <i class="icon-save"></i>
+      <codx-label
+        default="Lưu"
+        name="lblSave"
+        [formModel]="dialog.formModel"
+      ></codx-label>
+    </button>
+  </div>
+</ng-template>
+
+<ng-container *ngIf="showCBB">
+  <codx-combobox-popup 
+      [comboboxName]="'Employees'" 
+      [multiple]="true"
+      [width]="width"
+      [height]="height" 
+      [value]="toEmps"
+      (clickSave)="valueCbbChange($event)">
+  </codx-combobox-popup>
 </ng-container>
