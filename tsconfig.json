@@ -99,6 +99,9 @@
         "dist/codx-om/codx-om",
         "dist/codx-om"
       ],
+      "codx-pm": [
+        "dist/codx-pm"
+      ],
       "codx-pr": [
         "dist/codx-pr"
       ],

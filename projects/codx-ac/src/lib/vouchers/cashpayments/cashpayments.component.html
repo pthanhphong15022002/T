@@ -43,7 +43,7 @@
       </div>
       <div>
         <span class="fw-bold line-clamp line-clamp-1 fs-6 text-uppercase"
-          [innerHTML]="(data?.totalAmt | tranformValueNumber : (data?.currencyID !=  baseCurr ? 'S' : 'B') | async)+' '+data?.currencyID"></span>
+          [innerHTML]="(data?.totalDR | tranformValueNumber : (data?.currencyID !=  baseCurr ? 'S' : 'B') | async)+' '+data?.currencyID"></span>
       </div>
     </div>
     <div class="d-flex justify-content-between">

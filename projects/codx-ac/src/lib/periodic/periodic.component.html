@@ -19,7 +19,7 @@
           <div class="breadcumb-item h-30px d-flex align-items-center breadcumb-full">
             <ng-container *ngFor="let item of breadcumb;let i = index">
               <span class="icon-keyboard_arrow_right text-gray-700 icon-18"></span>
-              <a (click)="onNavigate(i)" class="cursor-pointer">
+              <a (click)="onNavigate(item)" class="cursor-pointer">
                 <span class="text-gray-600 text-nowrap text-fix-100px">{{item.title}}</span>
               </a>
             </ng-container>
@@ -30,136 +30,13 @@
     <div *ngIf="numbreadcumb == 0" class="d-flex align-items-center">
       <codx-searchbar class="me-1 w-300px"></codx-searchbar>
     </div>
-    <div *ngIf="numbreadcumb == 1" class="d-flex align-items-center">
-      <codx-mfunc *ngIf="setting && setting.length" [formModel]="fmChildren" [isToolBar]="true" type="view"
-        (changeDataMF)="changeDataMF($event,'M')" (clickMF)="clickMF($event)"></codx-mfunc>
-    </div>
   </div>
-
-  <codx-listview class="p-3" [ngClass]="numbreadcumb == 0 ? '' : 'd-none'" [selectFirst]="true" [itemTemplate]="templateListCard"
+  <div *ngIf="numbreadcumb == 0" class="h-100 bg-body rounded-3">
+    <codx-listview class="p-3" [selectFirst]="true" [itemTemplate]="templateListCard"
     type="cardView" [funcId]="funcID" service="AC" [entityName]="view.entityName" [dataService]="view.dataService">
   </codx-listview>
-
-  <ng-container *ngIf="numbreadcumb == 1">
-    <div class="h-100 overflow-auto d-block animate__animated animate__slideInRight">
-      <div class="d-flex container w-60 mb-5">
-        <div class="bg-body rounded-3 p-6 flex-grow-1 overflow-auto">
-          <dynamic-setting-control [settingFull]="this.settingFull" (valueChanges)="valuechange($event)"
-            (changeAutoSchedules)="changeAutoSchedules($event)"></dynamic-setting-control>
-        </div>
-      </div>
-      <ng-container *ngIf="setting && setting.length">
-        <div class="d-flex container w-60 ">
-          <div class="bg-body rounded-3 p-6 flex-grow-1">
-            <div style="padding: 0px 15px 0px 20px;">
-              <div class="list-group">
-                <div style="align-items: center;" class="d-flex justify-content-between">
-                  <div style="align-items: center;" class="d-flex w-100">
-                    <i class="text-primary icon-i-calendar4-event icon-16 me-3"></i>
-                    <h3 class="list-header mx-0 my-0">Lần chạy sau cùng</h3>
-                  </div>
-                  <div class="d-flex ms-4 justify-content-end category-control w-250px min-w-250px">
-                  </div>
-                </div>
-              </div>
-              <div *ngIf="!oData.length" class="list-content">
-                <div style="justify-content: center !important;
-                display: flex;
-                align-items: center;
-                flex-direction: column !important;">
-                  <img style="width: 13%;" src="../assets/themes/sys/default/img/DataEmpty.svg" />
-                  <div class="fs-6 text-dark mt-2 text-center">
-                    {{ "SYS011" | mssg | async }}
-                  </div>
-                </div>
-              </div>
-              <ng-container *ngIf="oData.length">
-                <ng-container *ngFor="let item of oData;trackBy: trackByFn">
-                  <div>
-                    <div style="padding-left: 2rem;" class="list-content">
-                      <div class="list-item py-3">
-                        <div class="d-flex justify-content-between">
-                          <div class="d-flex flex-column w-100">
-                            <div class="fw-bold text-dark mb-1">
-                              <span #runDate [innerHTML]="
-                                          item?.runDate
-                                          | dateformat
-                                        " class="me-3"></span>
-                              <ng-container *ngIf="displayMode && displayMode === '1'">
-                                <span *ngIf="item?.runMode === '1'" class="badge ac-badge-light-warning">
-                                  Mô phỏng
-                                </span>
-                                <span *ngIf="item?.runMode === '2'" class="badge ac-badge-light-success">
-                                  Chính thức
-                                </span>
-                              </ng-container>
-                            </div>
-                            <div class="text-dark mb-1">
-                              <span class="mt-1">{{title+' tháng '}}</span>
-                              <span class="me-3 mt-1">{{item?.runDate | formatDate}}</span>
-                            </div>
-                            <div class="text-gray-500 setting-description mb-1">
-                              <span>Thực hiện bởi: </span>
-                              <ng-container>
-                                <span *ngIf="item?.createdBy">{{
-                                  item?.createdBy
-                                  }}</span>
-                                <span *ngIf="
-                                  (item?.createdBy == '' || item?.createdBy == null) &&
-                                  view?.gridViewSetup
-                                " class="place-holder line-clamp line-clamp-1 fs-6 me-2">
-                                  {{ view?.gridViewSetup["CreatedBy"].headerText }}
-                                </span>
-                              </ng-container>
-                              <span> | </span>
-                              <span>Ngày: </span>
-                              <span #runDate [innerHTML]="item?.runDate | dateformat"></span>
-                            </div>
-                            <div>
-                              <span class="badge ac-badge-light-primary">
-                                Đã hoàn tất
-                              </span>
-                            </div>
-                          </div>
-                          <div class="d-flex ms-4 justify-content-end category-control w-250px min-w-250px">
-                            <div class="d-flex flex-column">
-                              <codx-mfunc [formModel]="fmChildren" [isToolBar]="true" type="view" [dataItem]="item"
-                                (changeDataMF)="changeDataMF($event,'D')" (clickMF)="clickMF($event,item)"></codx-mfunc>
-                              <!-- <span class="badge ac-badge-light-primary mb-3">
-                                Đã hoàn tất
-                              </span>                           -->
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <hr class="ms-9 my-0" style="margin-top: -1px;">
-                </ng-container>
-              </ng-container>
-              <div *ngIf="oData.length && oData.length > 1"
-                class="d-flex align-items-center justify-content-center mt-5">
-                <div>
-                  <button [disabled]="showAll" (click)="loadData()" type="button"
-                    class="btn btn-md btn-light-primary me-3" style="border: 1px solid var(--primary-dark) !important">
-                    <div class="d-flex align-items-center">
-                      <i class="icon-i-arrows-expand icon-16"></i>
-                      <codx-label class="fw-normal" fiedName="lblSaveAndClear" default="Xem thêm"></codx-label>
-                    </div>
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </ng-container>
-    </div>
-    <!-- <router-outlet></router-outlet> -->
-  </ng-container>
-  <ng-container *ngIf="numbreadcumb == 2">
-    <codx-gridview-v2 class="h-100 d-block animate__animated animate__slideInRight" #eleGrid formName="Depreciations" idField="recID" [hideMoreFunc]="true" [loadFull]="false"
-      gridViewName="grvDepreciations" entityName="AM_Depreciations" predicates="SessionID=@0" [dataValues]="sessionID" service="AM"></codx-gridview-v2>
-  </ng-container>
+  </div>
+  <router-outlet (activate)="activate($event)" (deactivate)="deactivate($event)"></router-outlet>
 </ng-template>
 
 <ng-template #templateListCard let-data>

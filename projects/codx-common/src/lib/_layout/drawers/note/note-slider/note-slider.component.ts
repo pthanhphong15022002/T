@@ -42,7 +42,7 @@ export class NoteSliderComponent extends UIComponent implements OnInit {
   typeList = 'note-drawer';
   headerText = "";
   dialog: DialogRef;
-  predicate = 'CreatedBy=@0';
+  predicate = 'CreatedBy=@0 and IsNote==true';
   dataValue = '';
   editMF: any;
   deleteMF: any;

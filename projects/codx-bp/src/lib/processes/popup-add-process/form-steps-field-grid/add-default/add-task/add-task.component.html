@@ -41,7 +41,7 @@
             <codx-label formName="fmBPFieldGrid" fiedName="lblTaskName" default="Tên công việc" class="fw-bold"></codx-label>
             <codx-input type="text" field="stepName" [crrValue]="data?.stepName" (valueChange)="valueChange($event)"></codx-input>
         </div>
-        <div class="d-flex flex-column mt-4">
+        <div class="d-flex flex-column mt-4" *ngIf="activityType != 'Email'">
             <codx-label formName="fmBPFieldGrid" fiedName="lblTaskDes" default="Diễn giải" class="fw-bold"></codx-label>
             <codx-input type="textarea" format="ed2" field="memo" [crrValue]="data?.memo" (valueChange)="valueChange($event)" [ngClass]="'w-100'"></codx-input>
         </div>
@@ -52,7 +52,7 @@
                 <codx-input type="valuelist" [refValue]="'BP019'" [crrValue]="data?.interval"  field="interval" (valueChange)="valueChange($event)" [ngClass]="'mx-2 w-80px'"></codx-input>
             </div>
         </div>
-        <div class="d-flex flex-column mt-4">
+        <div class="d-flex flex-column mt-4" *ngIf="activityType != 'Email'">
             <codx-label formName="fmBPFieldGrid" fiedName="lblTaskLocation" default="Địa điểm" class="fw-bold"></codx-label>
             <codx-input type="text" field="location" [crrValue]="data?.location" (valueChange)="valueChange($event)"></codx-input>
         </div>
@@ -160,13 +160,26 @@
             <div class="d-flex flex-column border-top mt-4 pt-4">
                 <codx-label formName="fmBPFieldGrid" fiedName="lblTaskAttachment" default="Tài liệu đính kèm" class="fw-bold"></codx-label>
                 <div class="d-flex align-items-center justify-content-between px-4">
-                    <button type="button" class="btn btn-light w-100 mt-4 me-1" ><i class="icon-i-file-earmark-text"></i> <codx-label formName="fmBPFieldGrid" fiedName="lblTaskAttachment1" default="Chọn từ quy trình"></codx-label></button>
+                    <button type="button" class="btn btn-light w-100 mt-4 me-1" (click)="openFormFileProcess()"><i class="icon-i-file-earmark-text"></i> <codx-label formName="fmBPFieldGrid" fiedName="lblTaskAttachment1" default="Chọn từ quy trình"></codx-label></button>
                     <button type="button" class="btn btn-light w-100 mt-4 ms-1" (click)="openAttach1()"><i class="icon-attach_file"></i> <codx-label formName="fmBPFieldGrid" fiedName="lblTaskAttachment2" default="Đính kèm mới"></codx-label></button>
+                </div>
+                <div class="mt-6">
+                    <div class="d-flex flex-column px-4" *ngFor="let item of listDocument">
+                        <span>{{item.title}}</span>
+                        <codx-thumbnail  
+                            [files]="item?.files" 
+                            displayThumb="simple" 
+                            [hideDelete]="'1'"
+                            [hideMoreF]="'0'" 
+                            [isClick]="false" 
+                        >
+                        </codx-thumbnail>
+                    </div>
                 </div>
                 <div class="mt-6">
                     <codx-attachment #attachment hideImageUpload="0" showMessage="0" hideBtnSave="1" hideFolder="1" hideUploadBtn="1"
                     hideDes="1"  [allowMultiFile]="1" [idBrowse]="'add'" [hideDelete]="'0'" hideMoreF="0" [formModel]="formModel" 
-                    [idField]="'RecID'" [isSaveSelected]="'1'" [objectId]="data?.recID" [objectType]="formModel?.entityName" (fileSave)="fileSave($event)" (fileDelete)="fileDelete($event)">
+                    [idField]="'RecID'" [hideImageThumb]="'1'" [isSaveSelected]="'1'" [objectId]="data?.recID" [objectType]="formModel?.entityName" (fileSave)="fileSave($event)" (fileDelete)="fileDelete($event)">
                     </codx-attachment>
                 </div>
             </div>
@@ -199,6 +212,12 @@
                     [idField]="'RecID'" [isSaveSelected]="'1'" [objectId]="data?.recID" [objectType]="formModel?.entityName" (fileSave)="fileSave($event)" (fileDelete)="fileDelete($event)">
                     </codx-attachment>
                 </div>
+            </div>
+        </ng-container>
+        <ng-container *ngIf="activityType == 'Email'">
+            <div class="d-flex flex-column border-top mt-4 pt-4">
+                <codx-label formName="fmBPFieldGrid" fiedName="lblTaskSettingEmail" default="Mẫu email" class="fw-bold"></codx-label>
+                <button type="button" class="btn btn-light w-100 mt-4 cursor-pointer"><i class="icon-email"></i> <codx-label formName="fmBPFieldGrid" fiedName="lblTaskSettingsEditEmail" default="Thiết lập/chỉnh sửa mẫu email"></codx-label></button>
             </div>
         </ng-container>
     </ng-container>

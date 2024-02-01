@@ -76,11 +76,29 @@ export class ContractsService {
     );
   }
 
+  getSettingMailByProcessID(ID) {
+    return this.api.exec<any>(
+      'DP',
+      'ProcessesBusiness',
+      'GetSettingMailAsync',
+      ID
+    );
+  }
+
   getCustomerBydealID(data) {
     return this.api.exec<any>(
       'CM',
       'ContractsBusiness',
       'GetCustomerBydealIDAsync',
+      data
+    );
+  }
+
+  copyTempMail(data) {
+    return this.api.exec<any>(
+      'AD',
+      'EmailTemplatesBusiness',
+      'CopyEmailTemplatesAsync',
       data
     );
   }

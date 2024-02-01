@@ -25,9 +25,15 @@
       <i class="icon-add_shopping_cart icon-18 me-2 text-primary"></i>
       <span
         class="fw-bold fs-6"
+        #BusinessLineID
         [innerHTML]="
           contract?.businessLineID
-            | formatvalue : formModel : 'BusinessLineID'
+            | formatvalue
+              : formModel
+              : 'Owner'
+              : BusinessLineID
+              : 'CMContracts'
+              : 'grvCMContracts'
             | async
         "
       ></span>
@@ -49,9 +55,15 @@
           <div class="d-flex flex-column">
             <div
               class="text-dark codx-textcontent fw-bold"
+              #customerID
               [innerHTML]="
                 contract?.customerID
-                  | formatvalue : formModel : 'CustomerID'
+                  | formatvalue
+                    : formModel
+                    : 'CustomerID'
+                    : customerID
+                    : 'CMContracts'
+                    : 'grvCMContracts'
                   | async
               "
             ></div>
@@ -66,17 +78,29 @@
           <span class="icon-monetization_on icon-18 me-1 text-warning"></span>
           <span
             class="fs-5 fw-bold"
+            #ContractAmt
             [innerHTML]="
               contract?.contractAmt
-                | formatvalue : formModel : 'ContractAmt'
+                | formatvalue
+                  : formModel
+                  : 'ContractAmt'
+                  : ContractAmt
+                  : 'CMContracts'
+                  : 'grvCMContracts'
                 | async
             "
           ></span>
           <span
             class="fs-5 fw-bold ms-1"
+            #CurrencyID
             [innerHTML]="
               contract?.currencyID
-                | formatvalue : formModel : 'CurrencyID'
+                | formatvalue
+                  : formModel
+                  : 'CurrencyID'
+                  : CurrencyID
+                  : 'CMContracts'
+                  : 'grvCMContracts'
                 | async
             "
           ></span>
@@ -85,9 +109,15 @@
           <span class="icon-av_timer icon-16 text-gray-600 me-1"></span>
           <span
             class="text-gray-600"
+            #CreatedOn
             [innerHTML]="
               contract?.createdOn
-                | formatvalue : formModel : 'CreatedOn'
+                | formatvalue
+                  : formModel
+                  : 'CreatedOn'
+                  : CreatedOn
+                  : 'CMContracts'
+                  : 'grvCMContracts'
                 | async
             "
           ></span>
@@ -99,42 +129,39 @@
       <div class="col-6">
         <div class="d-flex justify-content-end align-items-center mb-2">
           <div
-          *ngIf="
-            contract?.status == '2' && stepCurrent;
-            else statusDefault
-          "
-          [ngStyle]="{
-            'background-color': stepCurrent?.backgroundColor
-          }"
-          class="badge badge-sm d-flex align-items-center me-0"
-        >
-          <span
-            [ngClass]="stepCurrent?.icon"
+            *ngIf="contract?.status == '2' && stepCurrent; else statusDefault"
             [ngStyle]="{
-              color: stepCurrent?.iconColor
+              'background-color': stepCurrent?.backgroundColor
             }"
-            class="me-1"
-          ></span>
-          <span
-            class="text-ellipsis line-clamp line-clamp-2"
-            [ngbTooltip]="stepCurrent?.stepName"
-            [ngStyle]="{
-              color: stepCurrent.textColor
-            }"
-            >{{ stepCurrent?.stepName }}</span
+            class="badge badge-sm d-flex align-items-center me-0"
           >
-        </div>
-        <ng-template #statusDefault>
-          <codx-vll
-          [name]="vllStatus"
-          [field]="'Status'"
-          [value]="contract?.status"
-          [showText]="true"
-          [showBgColor]="true"
-          class="me-0 badge badge-primary badge-sm"
-        >
-        </codx-vll>
-        </ng-template>
+            <span
+              [ngClass]="stepCurrent?.icon"
+              [ngStyle]="{
+                color: stepCurrent?.iconColor
+              }"
+              class="me-1"
+            ></span>
+            <span
+              class="text-ellipsis line-clamp line-clamp-2"
+              [ngbTooltip]="stepCurrent?.stepName"
+              [ngStyle]="{
+                color: stepCurrent.textColor
+              }"
+              >{{ stepCurrent?.stepName }}</span
+            >
+          </div>
+          <ng-template #statusDefault>
+            <codx-vll
+              [name]="vllStatus"
+              [field]="'Status'"
+              [value]="contract?.status"
+              [showText]="true"
+              [showBgColor]="true"
+              class="me-0 badge badge-primary badge-sm"
+            >
+            </codx-vll>
+          </ng-template>
         </div>
       </div>
     </div>
@@ -147,6 +174,7 @@
             fiedName="contactID"
             [formModel]="formModel"
             [setRequire]="false"
+            default="Người đại diện"
           >
           </codx-label>
         </div>
@@ -227,6 +255,7 @@
             fiedName="owner"
             [formModel]="formModel"
             [setRequire]="false"
+            default="Người phụ trách"
           >
           </codx-label>
         </div>
@@ -239,8 +268,16 @@
           ></codx-imgs>
           <span
             class="text-dark fw-bold codx-textcontent ms-2 mb-2"
+            #owner
             [innerHTML]="
-              contract?.owner | formatvalue : formModel : 'Owner' | async
+              contract?.owner
+                | formatvalue
+                  : formModel
+                  : 'Owner'
+                  : owner
+                  : 'CMContracts'
+                  : 'grvCMContracts'
+                | async
             "
           ></span>
         </div>
@@ -327,13 +364,20 @@
           fiedName="contractID"
           [formModel]="formModel"
           [setRequire]="false"
+          default="Số hợp đồng"
         >
         </codx-label>
         <span
+          #contractID
           class="text-dark fw-bold codx-textcontent"
           [innerHTML]="
             contract?.contractID
-              | formatvalue : formModel : 'ContractID'
+              | formatvalue
+                : formModel
+                : 'ContractID'
+                : contractID
+                : 'CMContracts'
+                : 'grvCMContracts'
               | async
           "
         ></span>
@@ -345,13 +389,20 @@
           fiedName="contractType"
           [formModel]="formModel"
           [setRequire]="false"
+          default="Loại hợp đồng"
         >
         </codx-label>
         <span
+          #contractType
           class="text-dark fw-bold codx-textcontent"
           [innerHTML]="
             contract?.contractType
-              | formatvalue : formModel : 'ContractType'
+              | formatvalue
+                : formModel
+                : 'ContractType'
+                : contractType
+                : 'CMContracts'
+                : 'grvCMContracts'
               | async
           "
         ></span>
@@ -359,19 +410,26 @@
     </div>
 
     <div class="row my-1">
-      <div class="col-6">
+      <div class="col-6 d-flex align-items-center">
         <codx-label
           class="label-colon text-gray-600 codx-textlabel"
           fiedName="interval"
           [formModel]="formModel"
           [setRequire]="false"
+          default="Thời hạn hợp đồng (tháng)"
         >
         </codx-label>
         <span
+          #interval
           class="text-dark fw-bold codx-textcontent"
           [innerHTML]="
             contract?.interval || 0
-              | formatvalue : formModel : 'Interval'
+              | formatvalue
+                : formModel
+                : 'Interval'
+                : interval
+                : 'CMContracts'
+                : 'grvCMContracts'
               | async
           "
         ></span>
@@ -383,22 +441,41 @@
         >
         </codx-label>
         <span
+          #effectiveFrom
           class="text-dark fw-bold codx-textcontent"
           [innerHTML]="
             contract?.effectiveFrom
-              | formatvalue : formModel : 'EffectiveFrom'
+              | formatvalue
+                : formModel
+                : 'EffectiveFrom'
+                : effectiveFrom
+                : 'CMContracts'
+                : 'grvCMContracts'
               | async
           "
         ></span>
         <span class="px-1">-</span>
         <span
+          #effectiveTo
           class="text-dark fw-bold codx-textcontent"
           [innerHTML]="
             contract?.effectiveTo
-              | formatvalue : formModel : 'EffectiveTo'
+              | formatvalue
+                : formModel
+                : 'EffectiveTo'
+                : effectiveTo
+                : 'CMContracts'
+                : 'grvCMContracts'
               | async
           "
         ></span>
+        <div class="d-flex align-items-end">
+          <span
+            class="icon-18 icon-notifications cursor-pointer"
+            [ngbTooltip]="'Thiết lập thông báo'"
+            (click)="notificationContract()"
+          ></span>
+        </div>
       </div>
 
       <div class="col-6">
@@ -407,18 +484,134 @@
           fiedName="pmtMethodID"
           [formModel]="formModel"
           [setRequire]="false"
+          default="Phương thức thanh toán"
         >
         </codx-label>
         <span
+          #pmtMethodID
           class="text-dark fw-bold codx-textcontent"
           [innerHTML]="
             contract?.pmtMethodID
-              | formatvalue : formModel : 'PmtMethodID'
+              | formatvalue
+                : formModel
+                : 'PmtMethodID'
+                : pmtMethodID
+                : 'CMContracts'
+                : 'grvCMContracts'
               | async
           "
         ></span>
       </div>
     </div>
+
+    <!-- Thông báo -->
+    <!-- <div class="d-flex align-items-center">
+      <codx-label
+        class="label-colon text-gray-600 codx-textlabel"
+        fiedName="notification"
+        [formModel]="formModel"
+        [setRequire]="false"
+        default="Thông báo sắp hết hạn hợp đồng"
+      >
+      </codx-label>
+      <span>Trước {{ contract?.expirationAlertTime }} ngày.</span>
+      <div class="ms-1">
+        <codx-input
+          class="check-circle me-1 mt-1"
+          field="isAlert"
+          type="checkbox"
+          [checked]="contract?.isAlert"
+          (valueChange)="valueChangeChecked($event, contract)"
+        ></codx-input>
+        <codx-label
+          fiedName="isAlertTitle"
+          [formName]="'DPProcesses'"
+          [gridViewName]="'grvDPProcesses'"
+          [setRequire]="false"
+          [default]="'Thông báo'"
+        ></codx-label>
+        <span>,</span>
+      </div>
+      <div class="ms-1">
+        <codx-input
+          class="check-circle me-1 mt-1"
+          field="isMail"
+          type="checkbox"
+          [checked]="contract?.isMail"
+          (valueChange)="valueChangeChecked($event, contract)"
+        ></codx-input>
+        <codx-label
+          fiedName="isMailTitle"
+          [formName]="'DPProcesses'"
+          [gridViewName]="'grvDPProcesses'"
+          [setRequire]="false"
+          [default]="'Mail'"
+        ></codx-label>
+      </div>
+      <div class="ms-1 d-flex align-items-end">
+        <span
+          class="icon-18 icon-email cursor-pointer"
+          [ngbTooltip]="'Thiết lập Mail'"
+          (click)="handelMailContract()"
+        ></span>
+      </div>
+    </div> -->
+    <!-- <div class="row">
+      <div class="col-6">
+        <codx-label
+          class="label-colon text-gray-600 codx-textlabel"
+          fiedName="isMail"
+          [formModel]="formModel"
+          [setRequire]="false"
+          default="Gởi mail"
+        >
+        </codx-label>
+        <span *ngIf="contract?.isMail">Có</span>
+        <span *ngIf="!contract?.isMail">Không</span>
+      </div>
+      <div class="col-6">
+        <codx-label
+          class="label-colon text-gray-600 codx-textlabel"
+          fiedName="isAlert"
+          [formModel]="formModel"
+          [setRequire]="false"
+          default="Thông báo"
+        >
+        </codx-label>
+        <span *ngIf="contract?.isAlert">Có</span>
+        <span *ngIf="!contract?.isAlert">Không</span>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-6">
+        <codx-label
+          class="label-colon text-gray-600 codx-textlabel"
+          fiedName="expirationAlertTime"
+          [formModel]="formModel"
+          [setRequire]="false"
+          default="Thời gian thông báo (ngày)"
+        >
+        </codx-label>
+        <span>{{ contract?.expirationAlertTime }}</span>
+      </div>
+      <div class="col-6">
+        <div class="d-flex align-items-center">
+          <codx-label
+            class="label-colon text-gray-600 codx-textlabel"
+            fiedName="emailTemplate"
+            [formModel]="formModel"
+            [setRequire]="false"
+            default="Thiết lập mail"
+          ></codx-label>
+          <span
+            class="icon-18 icon-email cursor-pointer"
+            [ngbTooltip]="'Thiết lập Mail'"
+            (click)="handelMailContract()"
+          ></span>
+        </div>
+      </div>
+    </div> -->
+    <!-- End thông báo -->
   </div>
 
   <div class="mt-2">
@@ -453,8 +646,7 @@
           [dataStep]="item"
           [showColumnControl]="showColumnControl(item.stepID)"
           [isUpdate]="
-            ['1', '2', '15','17'].includes(contract.status) &&
-            !contract.closed
+            ['1', '2', '15', '17'].includes(contract.status) && !contract.closed
           "
           [objectIdParent]="contract.recID"
           [customerID]="contract.customerID"
@@ -1195,7 +1387,6 @@
         ></span>
       </div>
     </div>
-
   </div>
   <div *ngIf="!contract?.disposalID">
     <codx-no-data></codx-no-data>
@@ -1221,9 +1412,11 @@
       <div class="ms-5">
         <div class="d-flex align-items-center justify-content-between">
           <div class="d-flex align-items-center">
-            <span [ngbTooltip]="contractNameTmp" class="fs-5-sm">{{ contract?.contractName }}</span>
-            <span  class="mx-2">-</span>
-            <span [ngbTooltip]="contractIDTmp">{{contract?.contractID}}</span>
+            <span [ngbTooltip]="contractNameTmp" class="fs-5-sm">{{
+              contract?.contractName
+            }}</span>
+            <span class="mx-2">-</span>
+            <span [ngbTooltip]="contractIDTmp">{{ contract?.contractID }}</span>
             <ng-template #contractIDTmp>
               <codx-label
                 class="text-gray-600"
@@ -1296,7 +1489,10 @@
       </div>
     </div>
   </div>
-  <div *ngIf="!listContractInParentID || listContractInParentID?.length <= 0" class="center">
+  <div
+    *ngIf="!listContractInParentID || listContractInParentID?.length <= 0"
+    class="center"
+  >
     <codx-no-data [mould]="2" [isLoading]="isLoadingContract"></codx-no-data>
   </div>
 </ng-template>
@@ -1679,6 +1875,82 @@
     </div>
   </div>
 </ng-template>
+
+<ng-template #notificationTemp let-data>
+  <div class="liquidation p-5">
+    <div class="header-liquidation w-100">
+      <div class="d-flex justify-content-between w-100">
+        <span class="fs-5 fw-bold">Thiết lâp thông báo</span>
+        <button
+          class="button-close d-flex"
+          style="border: none; outline: none; background: none"
+          (click)="notificationPopup.close()"
+        >
+          <i class="icon-close icon-18 text-hover-danger p-1"></i>
+        </button>
+      </div>
+    </div>
+
+    <div class="main-liquidation pt-3">
+      <div class="form-group">
+        <div class="d-flex align-items-center">
+          <codx-label
+            class="label-colon text-gray-600 codx-textlabel"
+            fiedName="emailTemplate"
+            [formModel]="formModel"
+            [setRequire]="false"
+            default="Thiết lập mail"
+          ></codx-label>
+          <span
+            class="icon-18 icon-email cursor-pointer"
+            [ngbTooltip]="'Thiết lập Mail'"
+            (click)="handelMailContract()"
+          ></span>
+        </div>
+      </div>
+      <div class="form-group">
+        <codx-label
+          class="label-colon text-gray-600 codx-textlabel"
+          fiedName="isMail"
+          [formModel]="formModel"
+          [setRequire]="false"
+          default="Gởi mail"
+        >
+        </codx-label>
+        <span *ngIf="contract?.isMail">Có</span>
+        <span *ngIf="!contract?.isMail">Không</span>
+      </div>
+
+      <div class="form-group">
+        <codx-label
+          class="label-colon text-gray-600 codx-textlabel"
+          fiedName="isAlert"
+          [formModel]="formModel"
+          [setRequire]="false"
+          default="Thông báo"
+        >
+        </codx-label>
+        <span *ngIf="contract?.isAlert">Có</span>
+        <span *ngIf="!contract?.isAlert">Không</span>
+      </div>
+
+      <div class="form-group">
+        <codx-label
+          class="label-colon text-gray-600 codx-textlabel"
+          fiedName="expirationAlertTime"
+          [formModel]="formModel"
+          [setRequire]="false"
+          default="Thời gian thông báo (ngày)"
+        >
+        </codx-label>
+        <span>{{ contract?.expirationAlertTime }}</span>
+      </div>
+      <!-- End thông báo -->
+    </div>
+    <div class="footer-liquidation w-100 d-flex justify-content-end"></div>
+  </div>
+</ng-template>
+
 <!-- ----------------------😒------------------------------>
 <!-- <div class="container_detail mt-1">
   <div class="d-flex justify-content-between">

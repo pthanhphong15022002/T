@@ -70,7 +70,7 @@ export class CodxTabsComponent implements OnInit, OnChanges {
   @Input() transID: string;
   @Input() approveStatus: string;
 
-  @Input() referType: string = 'attach';
+  @Input() referType: string = '';
 
   private all: TabModel[] = [
     {

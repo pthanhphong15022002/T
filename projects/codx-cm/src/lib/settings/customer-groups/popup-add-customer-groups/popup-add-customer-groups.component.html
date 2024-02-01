@@ -18,6 +18,7 @@
             refValue="L1470"
             field="icon"
             [crrValue]="data?.icon"
+            [disabled]="isView"
             (valueChange)="valueChange($event)"
           >
           </codx-input>
@@ -31,6 +32,7 @@
             [modeSwitcher]="false"
             [crrValue]="data?.iconColor"
             field="iconColor"
+            [disabled]="isView"
             (valueChange)="valueChange($event)"
           >
           </codx-input>
@@ -50,7 +52,7 @@
               ? planceHolderAutoNumber
               : gridViewSetup?.['CustGroupID']?.description
           "
-          [disabled]="disabledShowInput || action == 'edit'"
+          [disabled]="disabledShowInput || action == 'edit' || isView"
           [crrValue]="data?.custGroupID"
           (valueChange)="valueChange($event)"
           [field]="'custGroupID'"
@@ -64,6 +66,7 @@
           [formModel]="form.formModel"
           [Group]="form.formGroup"
           [field]="'custGroupName'"
+          [disabled]="isView"
         >
         </codx-input>
       </div>
@@ -74,6 +77,7 @@
           [formModel]="form.formModel"
           [Group]="form.formGroup"
           [field]="'note'"
+          [disabled]="isView"
         >
         </codx-input>
       </div>
@@ -81,7 +85,12 @@
   </ng-template>
   <ng-template #footer>
     <div class="d-flex justify-content-end">
-      <button type="button" class="btn btn-primary" (click)="onSave()">
+      <button
+        type="button"
+        class="btn btn-primary"
+        [disabled]="isView"
+        (click)="onSave()"
+      >
         <codx-label
           name="lblSave"
           [formModel]="dialog.formModel"

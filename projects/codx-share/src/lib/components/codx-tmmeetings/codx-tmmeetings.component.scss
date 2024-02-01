@@ -3,7 +3,6 @@
 //   font-size: xx-large;
 // }
 .tm-meeting {
-
   .footer-tag {
     position: absolute;
     bottom: 10px;
@@ -47,13 +46,33 @@
     height: 60px !important;
   }
 
-  .e-kanban .e-kanban-content .e-content-row .e-content-cells .e-card-wrapper .e-card:focus,
-  .e-kanban .e-kanban-content .e-content-row .e-content-cells .e-card-container .e-card:focus {
+  .e-kanban
+    .e-kanban-content
+    .e-content-row
+    .e-content-cells
+    .e-card-wrapper
+    .e-card:focus,
+  .e-kanban
+    .e-kanban-content
+    .e-content-row
+    .e-content-cells
+    .e-card-container
+    .e-card:focus {
     border-color: rgb(194, 202, 202);
   }
 
-  .e-kanban .e-kanban-content .e-content-row .e-content-cells .e-card-wrapper .e-card:hover,
-  .e-kanban .e-kanban-content .e-content-row .e-content-cells .e-card-container .e-card:hover {
+  .e-kanban
+    .e-kanban-content
+    .e-content-row
+    .e-content-cells
+    .e-card-wrapper
+    .e-card:hover,
+  .e-kanban
+    .e-kanban-content
+    .e-content-row
+    .e-content-cells
+    .e-card-container
+    .e-card:hover {
     border-color: rgb(212, 216, 221);
   }
 
@@ -76,9 +95,21 @@
   }
 
   .tag-1line {
-
     .d-flex.flex-wrap {
       flex-wrap: nowrap !important;
     }
   }
+}
+.online-url {
+  text-decoration: underline;
+  font-style: italic;
+  cursor: pointer;
+}
+
+.file-attach {
+  position: absolute !important;
+  bottom: 2px;
+  /* right: auto; */
+  left: 9px;
+  width: 25px;
 }

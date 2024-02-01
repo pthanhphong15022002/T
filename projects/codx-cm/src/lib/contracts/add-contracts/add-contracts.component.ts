@@ -42,6 +42,7 @@ import { CodxListContactsComponent } from '../../cmcustomer/cmcustomer-detail/co
 import { PopupAddCategoryComponent } from 'projects/codx-es/src/lib/setting/category/popup-add-category/popup-add-category.component';
 import { CustomFieldService } from 'projects/codx-share/src/lib/components/codx-input-custom-field/custom-field.service';
 import { ActivatedRoute } from '@angular/router';
+import { CodxEmailComponent } from 'projects/codx-share/src/lib/components/codx-email/codx-email.component';
 
 @Component({
   selector: 'add-contracts',
@@ -555,11 +556,13 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
   GetProcesIDDefault() {
     if (this.processIdDefault) {
       this.contracts.processID = this.processIdDefault;
+      this.getSettingMail(this.contracts.processID);
     } else {
       this.contractService.GetProcessIdDefault('4').subscribe((res) => {
         if (res) {
           this.contracts.processID = res?.recID;
           this.processIdDefault = res?.recID;
+          this.getSettingMail(this.contracts.processID);
         } else {
           this.notiService.notify(
             'Chưa có quy trình hợp đồng được thiết lập, vui lòng thiết lập quy trình hợp đồng mặc định',
@@ -670,6 +673,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
 
   //#region change Input
   valueChangeText(event) {
+    let valueOld = this.contracts[event?.field];
     this.contracts[event?.field] = event?.data;
     if (event?.field == 'contractName') {
       this.contracts[event?.field] = this.stepService.capitalizeFirstLetter(
@@ -683,7 +687,7 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
       }
       this.checkPhone = !this.checkPhone;
     }
-    if (event?.field == 'interval') {
+    if (event?.field == 'interval' && event?.data != valueOld) {
       const startDate = new Date(this.contracts?.effectiveFrom) || new Date();
       let interval = parseInt(event?.data || 0);
       this.contracts.effectiveTo = new Date(
@@ -773,7 +777,13 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
             this.contracts.processID = processID;
             this.contracts.applyProcess = true;
             this.getListInstanceSteps(processID);
+            this.getSettingMail(processID);
           } else {
+            this.contracts.emailTemplate = '';
+            this.contracts.isAlert = false;
+            this.contracts.isMail = false;
+            this.contracts.expirationAlertTime = 0;
+            this.contracts.mssgCode = '';
             this.itemTabsInput(false);
             if (this.isApplyProcess) {
               this.GetProcesIDDefault();
@@ -1243,6 +1253,24 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
 
   //#endregion
 
+  getSettingMail(processID){
+    this.contractService.getSettingMailByProcessID(processID).subscribe(res => {
+      if(res){
+        this.contracts.isAlert = res[0];
+        this.contracts.mssgCode = res[1];
+        this.contracts.isMail = res[2];
+        this.contracts.expirationAlertTime = res[4];
+        if(this.contracts?.isMail){
+          this.contractService.copyTempMail([res[3], this.contracts?.emailTemplate]).subscribe(res => {
+            if(res){
+              this.contracts.emailTemplate = res;
+            }
+          })
+        }
+      }
+    })
+  }
+
   getListInstanceSteps(processId: any) {
     let action = this.action == 'view' ? 'edit' : this.action;
     let data = [processId, this.contracts?.refID, action, '4'];
@@ -1273,6 +1301,20 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
     this.setAutoNameTabFields(processSetting?.autoNameTabFields);
     this.itemTabsInput(this.ischeckFields(listInstanceSteps));
   }
+
+  // setTempSendMail(processSetting){
+  //   this.contracts.isAlert = processSetting?.isAlert;
+  //   this.contracts.isMail = processSetting?.isMail;
+  //   this.contracts.expirationAlertTime = processSetting?.expirationAlertTime;
+  //   this.contracts.mssgCode = processSetting?.mssgCode;
+  //   if(this.contracts?.isMail){
+  //     this.contractService.copyTempMail([processSetting?.emailTemplate, this.contracts?.emailTemplate]).subscribe(res => {
+  //       if(res){
+  //         this.contracts.emailTemplate = res;
+  //       }
+  //     })
+  //   }
+  // }
 
   setAutoNameTabFields(autoNameTabFields) {
     this.nameTabFieldsSetting = autoNameTabFields;
@@ -1849,6 +1891,38 @@ export class AddContractsComponent implements OnInit, AfterViewInit {
       op.data = [this.contracts];
     }
     return true;
+  }
+  valueChangeChecked(event, data) {
+    if (event) {
+      data[event.field] = event?.data || false;
+    }
+  }
+  handelMailContract() {
+    let data = {
+      dialog: this.dialog,
+      formGroup: null,
+      templateID: this.contracts?.emailTemplate,
+      showIsTemplate: true,
+      showIsPublish: true,
+      showSendLater: true,
+      files: null,
+      isAddNew: false,
+      notSendMail: true,
+    };
+
+    let popEmail = this.callfunc.openForm(
+      CodxEmailComponent,
+      '',
+      800,
+      screen.height,
+      '',
+      data
+    );
+    popEmail.closed.subscribe((res) => {
+      if (res && res.event) {
+        this.contracts.emailTemplate = res.event?.recID ? res.event?.recID : '';
+      }
+    });
   }
   //#endregion
 }

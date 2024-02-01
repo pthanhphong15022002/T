@@ -60,11 +60,11 @@
 </div>
 <ng-template #post>
     <div class="pt-4">
-        <!-- <app-list-post 
-            [predicate]="predicatePortal" 
-            [dataValue]="dataValuePortal" 
+        <app-list-post
+            [predicate]="predicatePortal"
+            [dataValue]="dataValuePortal"
         >
-        </app-list-post> -->
+        </app-list-post>
         <div class="container h-100vh">
             <div class="list-empty card card-flush h-100">
               <div class="d-flex flex-column flex-center justify-content-center">
@@ -117,7 +117,6 @@
                     [itemTemplate]="tmpNoteBook"
                     type="cardView"
                     formName="NoteBooks"
-                    funcId="MWP0094"
                     service="WP"
                 >
               </codx-listview>
@@ -138,17 +137,16 @@
                 </div>
             </div>
             <div class="ws-notebook h-100">
-                <codx-listview 
-                    #listViewStorages       
+                <codx-listview
+                    #listViewStorages
                     [service]="'WP'"
-                    entityName="WP_Storages" 
-                    formName="Storages" 
-                    gridViewName="grvStorages" 
+                    entityName="WP_Storages"
+                    formName="Storages"
+                    gridViewName="grvStorages"
                     [predicate]="predicateNoteBook"
-                    [dataValue]="dataValueNoteBook" 
-                    [itemTemplate]="tmpStorage" 
-                    type="cardView" 
-                    [funcId]="'MWP009'"
+                    [dataValue]="dataValueNoteBook"
+                    [itemTemplate]="tmpStorage"
+                    type="cardView"
                 >
                 </codx-listview>
             </div>
@@ -168,9 +166,9 @@
             </div>
         </div>
         <div class="has-action-menu w-100">
-            <codx-mfunc 
-                [formModel]="listViewNoteBooks.formModel" 
-                [dataItem]="data" 
+            <codx-mfunc
+                [formModel]="listViewNoteBooks.formModel"
+                [dataItem]="data"
                 type="hover"
                 (clickMF)="clickMFNoteBook($event,data)"
             >
@@ -187,9 +185,9 @@
             <span class="fs-8 text-gray-500">{{data.createdOn | date:'dd/MM/yyyy' }}</span>
         </div>
         <div class="has-action-menu w-100">
-            <codx-mfunc 
-                [formModel]="listViewStorages.formModel" 
-                [dataItem]="data" 
+            <codx-mfunc
+                [formModel]="listViewStorages.formModel"
+                [dataItem]="data"
                 type="hover"
                 (clickMF)="clickMFStorage($event,data)"
             >

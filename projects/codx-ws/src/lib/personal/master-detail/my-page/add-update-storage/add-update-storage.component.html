@@ -1,35 +1,38 @@
 <codx-form
+  #form
   [headerText]="headerText"
   [body]="body"
   [footer]="footer"
   [dialog]="dialogRef"
-  [formModel]="formModel"
+  [formModel]="dialogRef.formModel"
   [data]="data"
 >
-  <ng-template popup add #body>
-    <ng-container *ngIf="formModel?.funcID">
+  <ng-template #body>
+    <ng-container *ngIf="form.formGroup">
       <div class="form-group">
         <codx-label
           [fiedName]="'Title'"
-          [formModel]="formModel"
-          default="Tên kho lưu trữ">
+          [formModel]="form.formModel"
+          default="Tên kho lưu trữ"
+        >
         </codx-label>
         <codx-input
           field="title"
-          [formModel]="formModel"
+          [formModel]="form.formModel"
           [crrValue]="data?.title"
-          (valueChange)="valueChange($event)">
+          (valueChange)="valueChange($event)"
+        >
         </codx-input>
       </div>
       <div class="form-group">
         <codx-label
           [fiedName]="'Memo'"
-          [formModel]="formModel"
+          [formModel]="form.formModel"
           default="Diễn giải"
         ></codx-label>
         <codx-input
           field="memo"
-          [formModel]="formModel"
+          [formModel]="form.formModel"
           [crrValue]="data?.memo"
           (valueChange)="valueChange($event)"
         >
@@ -37,47 +40,79 @@
       </div>
       <div class="form-group">
         <codx-label
-          [fiedName]="'Icon'"
-          [formModel]="formModel"
+          [fiedName]="'avata'"
+          [formModel]="form.formModel"
           default="Hình hiển thị"
         >
         </codx-label>
-        <div class="upload-img d-flex mode-edit mt-3">
-          <codx-img
-            #imageUpLoad
-            [width]="100"
-            [funcId]="funcID"
-            [isDefaulImg]="action == 'add'"
-            [isAllowEdit]="true"
-            [objectId]="data?.recID"
-            [objectType]="'WP_Storages'"
-            [objectName]="data?.title"
-            referType="image"
-            (handleInput)="handleInput()"
-          >
-          </codx-img>
+        <div
+          class="dropzone dropzone-default dropzone-primary d-flex flex-center flex-column"
+          (click)="addAvatar()"
+        >
+          <div class="dropzone-msg dz-message needsclick">
+            <ng-container *ngIf="linkAvatar != '' && linkAvatar">
+              <img [src]="linkAvatar" class="image-maxsize" />
+            </ng-container>
+            <ng-container *ngIf="linkAvatar == '' || linkAvatar == null">
+              <div class="dropzone-msg-title mb-2">
+                <i class="icon-image icon-30"></i>
+              </div>
+              <div class="dropzone-msg-title mb-2">
+                <codx-label
+                  name="lblContentAddAvatar"
+                  [formModel]="dialogRef.formModel"
+                  default="Chọn hình ảnh"
+                  class="fw-bold"
+                >
+                </codx-label>
+              </div>
+              <span class="dropzone-msg-desc">
+                <codx-label
+                  name="lblRequiredAvatar"
+                  [formModel]="dialogRef.formModel"
+                  default="(Nên chọn hình ảnh có kích thước ...px đến ...px)"
+                  class="fw-bold"
+                ></codx-label>
+              </span>
+            </ng-container>
+          </div>
         </div>
+        <codx-attachment
+          #imageAvatar
+          [objectType]="'WP_Storages'"
+          [objectId]="data?.recID"
+          [formModel]="dialogRef.formModel"
+          [functionID]="'WS00626'"
+          hideFolder="1"
+          hideImageUpload="1"
+          hideImageThumb="1"
+          hideUploadBtn="1"
+          hideDes="1"
+          type="inline"
+          allowMultiFile="0"
+          allowExtensions=".jpg,.png"
+          [isSaveSelected]="0"
+          (fileAdded)="fileImgAdded($event)"
+          displayThumb="full"
+          showMessage="0"
+          category="0"
+        >
+        </codx-attachment>
       </div>
     </ng-container>
   </ng-template>
 
   <ng-template #footer>
-    <ng-container *ngIf="formModel?.funcID">
-      <div class="d-flex justify-content-end">
-        <ng-container *ngIf="!readOnly">
-          <button
-          type="button"
-          class="btn btn-primary ms-1"
-          (click)="submit()">
+    <div class="d-flex justify-content-end">
+      <ng-container *ngIf="!readOnly">
+        <button type="button" class="btn btn-primary ms-1" (click)="submit()">
           <codx-label
             name="lblSave"
-            [formModel]="formModel"
+            [formModel]="form.formModel"
             default="Lưu"
           ></codx-label>
         </button>
-        </ng-container>
-        
-      </div>
-    </ng-container>
+      </ng-container>
+    </div>
   </ng-template>
 </codx-form>

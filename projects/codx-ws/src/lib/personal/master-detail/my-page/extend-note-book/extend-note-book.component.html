@@ -17,7 +17,7 @@
             #codxview2
             service="WP"
             [entityName]="formModel?.entityName"
-            [gridViewName]="formModel?.gridViewName" 
+            [gridViewName]="formModel?.gridViewName"
             [formName]="formModel?.formName"
             [predicate]="'CreatedBy=@0'"
             [dataValue]="user?.userID"
@@ -30,17 +30,17 @@
 
 <ng-template #tmp let-item>
     <codx-card-img
-        (click)="openDetailPage(item?.recID)" 
+        (click)="openDetailPage(item?.recID)"
         [dataItem]="item"
-        cardCss="border card-img-mwp img-storage w-225px h-200px ms-4 mt-2" 
-        [title]="item.title" 
-        icoTitleCss="icon-archive icon-16" 
+        cardCss="border card-img-mwp img-storage w-225px h-200px ms-4 mt-2"
+        [title]="item.title"
+        icoTitleCss="icon-archive icon-16"
         [desc2]="item.memo"
         [imageObjName]="item.title"
         [imageId]="item.recID"
         [imageReferType]="'image'"
-        [imageObjType]="'WP_NoteBooks'" 
-        imgCss="h-150px w-100 mb-2" 
+        [imageObjType]="'WP_NoteBooks'"
+        imgCss="h-150px w-100 mb-2"
         [imageWidth]="200"
         [formModel]="formModel"
         [typeMF]="'hover'"

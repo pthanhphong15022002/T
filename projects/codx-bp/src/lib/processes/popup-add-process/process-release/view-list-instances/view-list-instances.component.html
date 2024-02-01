@@ -1,7 +1,11 @@
-<div class="d-flex align-items-center border-bottom" *ngIf="dataSelected">
+<div
+  class="d-flex align-items-center border-bottom"
+  *ngIf="dataSelected"
+  (dblclick)="dbClick(dataSelected)"
+>
   <div class="w-30 p-3 ps-5 d-flex flex-column">
     <div
-      class="fw-bold"
+      class="fw-bold fs-5"
       [innerHTML]="
         dataSelected?.title | formatvalue : formModel : 'Title' | async
       "
@@ -14,20 +18,15 @@
         [formModel]="formModel"
         [default]="'Ngày tạo'"
       ></codx-label>
-      <div
-        class="ps-5"
-        [innerHTML]="
-          dataSelected?.createdOn
-            | formatvalue : formModel : 'CreatedOn'
-            | async
-        "
-      ></div>
+      <div class="ps-5">
+        <span>{{ dataSelected.createdOn | date : "dd/MM/yyyy" }}</span>
+      </div>
     </div>
   </div>
-  <div class="w-10 p-3">
+  <div class="w-15 p-3">
     <div class="group-steps">
       <div class="d-flex arrow-steps flex-container">
-        <ng-container *ngFor="let item of lstStages let i = index">
+        <ng-container *ngFor="let item of lstStages; let i = index">
           <div
             style="flex-grow: 1; cursor: pointer"
             [ngClass]="getColor(item)"
@@ -36,31 +35,87 @@
       </div>
     </div>
   </div>
-  <div class="w-15 p-3"></div>
-  <div class="w-5 p-3 d-flex flex-wrap"></div>
+  <div class="w-15 p-3">
+    <div class="container-progress">
+      <div
+        class="progress-list"
+        [style.backgroundColor]="
+          dataSelected?.endDate
+            ? (dataSelected?.actualEnd
+              | checkDuedateValue : dataSelected?.endDate)
+              ? '#dc3545'
+              : 'rgb(172 240 202)'
+            : progress > 0
+            ? 'rgb(172 240 202)'
+            : ''
+        "
+        role="progressbar"
+        [style.width]="progress + '%'"
+        aria-valuenow="50"
+        aria-valuemin="0"
+        aria-valuemax="100"
+      ></div>
+      <div class="progress-text">
+        <span class="me-1">
+          <codx-vll
+            [name]="'BP014'"
+            [value]="dataSelected?.status"
+            [showText]="true"
+            [showIcon]="false"
+            [showBgColor]="false"
+          >
+          </codx-vll>
+        </span>
+        <span>({{ progress + "%" }})</span>
+      </div>
+    </div>
+
+    <div class="mt-1 d-flex justify-content-between">
+      <div class="d-flex justify-content-start">
+        <span class="fw-bold me-1">{{ countTaskDone }}/{{ countTask }}</span>
+        <span class="text-gray-600"
+          ><codx-label
+            default="hoàn tất"
+            [formModel]="formModel"
+            fiedName="list_TaskDone"
+          ></codx-label
+        ></span>
+      </div>
+      <div class="d-flex justify-content-end">
+        <span class="fw-bold me-1">{{ countOverDueTask }}</span>
+        <span class="text-gray-600"
+          ><codx-label
+            default="trễ hạn"
+            [formModel]="formModel"
+            fiedName="list_OverDueTask"
+          ></codx-label
+        ></span>
+      </div>
+    </div>
+  </div>
   <div class="w-25 p-3 d-flex flex-column">
     <div class="d-flex">
       <codx-label
         class="label-colon text-gray-800"
-        fiedName="PlanTime"
+        fiedName="list_PlanTime"
         [setRequire]="false"
         [formModel]="formModel"
-        [default]="'Kết hạch'"
+        [default]="'Kế hoạch'"
       ></codx-label>
       <div class="text-gray-600 d-flex">
-        <div
-          [innerHTML]="
-            dataSelected?.startDate
-              | formatvalue : formModel : 'StartDate'
-              | async
-          "
-        ></div>
-        <div class="ms-1 me-1">-</div>
-        <div
-          [innerHTML]="
-            dataSelected?.endDate | formatvalue : formModel : 'EndDate' | async
-          "
-        ></div>
+        <div *ngIf="dataSelected.startDate">
+          <span>{{ dataSelected.startDate | date : "dd/MM/yyyy" }}</span>
+        </div>
+        <div *ngIf="!dataSelected.startDate">
+          <span class="place-holder">dd/mm/yyyy</span>
+        </div>
+        <span class="ms-1 me-1">-</span>
+        <div *ngIf="dataSelected.endDate">
+          <span>{{ dataSelected.endDate | date : "dd/MM/yyyy" }}</span>
+        </div>
+        <div *ngIf="!dataSelected.endDate">
+          <span class="place-holder">dd/mm/yyyy</span>
+        </div>
       </div>
     </div>
     <div class="d-flex">
@@ -72,21 +127,19 @@
         [default]="'Thực tế'"
       ></codx-label>
       <div class="text-gray-600 d-flex">
-        <div
-          [innerHTML]="
-            dataSelected?.actualStart
-              | formatvalue : formModel : 'ActualStart'
-              | async
-          "
-        ></div>
-        <div class="ms-1 me-1">-</div>
-        <div
-          [innerHTML]="
-            dataSelected?.actualEnd
-              | formatvalue : formModel : 'ActualEnd'
-              | async
-          "
-        ></div>
+        <div *ngIf="dataSelected.actualStart">
+          <span>{{ dataSelected.actualStart | date : "dd/MM/yyyy" }}</span>
+        </div>
+        <div *ngIf="!dataSelected.actualStart">
+          <span class="place-holder">dd/mm/yyyy</span>
+        </div>
+        <span class="ms-1 me-1">-</span>
+        <div *ngIf="dataSelected.actualEnd">
+          <span>{{ dataSelected.actualEnd | date : "dd/MM/yyyy" }}</span>
+        </div>
+        <div *ngIf="!dataSelected.actualEnd">
+          <span class="place-holder">dd/mm/yyyy</span>
+        </div>
       </div>
     </div>
   </div>
@@ -102,15 +155,10 @@
       </div>
       <div class="d-flex flex-column w-100">
         <div class="d-flex flex-column">
-          <div
-            class="fw-bold fs-6 text-dark line-clamp line-clamp-1"
-            [innerHTML]="
-              dataSelected?.createdBy
-                | formatvalue : formModel : 'CreatedBy'
-                | async
-            "
-          ></div>
-          <!-- <div class="text-gray-500">{{ dataSelected.positionName }}</div> -->
+          <div class="fw-bold fs-6 text-dark line-clamp line-clamp-1">
+            {{ info?.userName }}
+          </div>
+          <div class="text-gray-500">{{ info?.positionName }}</div>
         </div>
       </div>
     </div>

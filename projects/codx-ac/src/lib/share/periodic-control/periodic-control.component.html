@@ -1,120 +1,119 @@
-<!-- <codx-views class="ac-views" #view idField="recID" [views]="views" service="AC" [entityName]="view?.entityName"
+<codx-views class="ac-views" #view idField="recID" [views]="views" service="AC" [entityName]="view?.entityName" [hideMoreFuncs]="true"
   [toolbarDisplay]="false" [autoLoad]="true" assemblyName="AC" className="RunPeriodicBusiness" service="AC" method="GetDataAsync"
   (requestEnded)="requestEnded($event)" (viewChanged)="viewChanged($event)">
 </codx-views>
 <ng-template #template let-data>
   <ng-container *ngIf="setting">
     <div class="w-100 d-flex align-items-center justify-content-between p-3 mb-2">
-      <div class="d-flex align-items-center">
-        <codx-page-title class="d-flex"></codx-page-title>
-      </div>
-      <div class="d-flex align-items-center">
+      <div class="d-flex align-items-center w-100 justify-content-end">
         <codx-mfunc *ngIf="setting.length" [formModel]="view.formModel" [isToolBar]="true" type="view"
           (changeDataMF)="changeDataMF($event,'M')" (clickMF)="clickMF($event)"></codx-mfunc>
       </div>
     </div>
-    <div class="h-100 overflow-auto">
+    <div class="h-100 overflow-auto d-block animate__animated animate__slideInRight">
       <div class="d-flex container w-60 mb-5">
         <div class="bg-body rounded-3 p-6 flex-grow-1 overflow-auto">
-          <dynamic-setting-control [settingFull]="this.settingFull" [formModel]="view.formModel"
-            (valueChanges)="valuechange($event)"
+          <dynamic-setting-control [settingFull]="this.settingFull" (valueChanges)="valuechange($event)"
             (changeAutoSchedules)="changeAutoSchedules($event)"></dynamic-setting-control>
         </div>
       </div>
-      <ng-container *ngIf="setting.length">
+      <ng-container *ngIf="setting && setting.length">
         <div class="d-flex container w-60 ">
           <div class="bg-body rounded-3 p-6 flex-grow-1">
-            <div class="list-group">
-              <div style="align-items: center;" class="d-flex justify-content-between">
-                <div style="align-items: center;" class="d-flex w-100">
-                  <i class="text-primary icon-i-calendar4-event icon-16 me-3"></i>
-                  <h3 class="list-header mx-0 my-0">Lần chạy sau cùng</h3>
-                </div>
-                <div class="d-flex ms-4 justify-content-end category-control w-250px min-w-250px">
-                </div>
-              </div>
-            </div>
-            <div *ngIf="!oData.length" class="list-content">
-              <div style="justify-content: center !important;
-              display: flex;
-              align-items: center;
-              flex-direction: column !important;">
-                <img style="width: 13%;" src="../assets/themes/sys/default/img/DataEmpty.svg" />
-                <div class="fs-6 text-dark mt-2 text-center">
-                  {{ "SYS011" | mssg | async }}
+            <div style="padding: 0px 15px 0px 20px;">
+              <div class="list-group">
+                <div style="align-items: center;" class="d-flex justify-content-between">
+                  <div style="align-items: center;" class="d-flex w-100">
+                    <i class="text-primary icon-i-calendar4-event icon-16 me-3"></i>
+                    <h3 class="list-header mx-0 my-0">Lần chạy sau cùng</h3>
+                  </div>
+                  <div class="d-flex ms-4 justify-content-end category-control w-250px min-w-250px">
+                  </div>
                 </div>
               </div>
-            </div>
-            <ng-container *ngIf="oData.length">
-              <ng-container *ngFor="let item of oData;trackBy: trackByFn">
-                <div>
-                  <div style="padding-left: 2rem;" class="list-content">
-                    <div class="list-item py-3">
-                      <div class="d-flex justify-content-between">
-                        <div class="d-flex flex-column w-100">
-                          <div class="fw-bold text-dark">
-                            <span #runDate [innerHTML]="
-                                        item?.runDate
-                                          | formatvalue : view.formModel : 'runDate' : runDate
-                                          | async
-                                      " class="me-3"></span>
-                            <ng-container *ngIf="displayMode && displayMode === '1'">
-                              <span *ngIf="item?.runMode === '1'" class="badge ac-badge-light-warning">
-                                Mô phỏng
+              <div *ngIf="!oData.length" class="list-content">
+                <div style="justify-content: center !important;
+                display: flex;
+                align-items: center;
+                flex-direction: column !important;">
+                  <img style="width: 13%;" src="../assets/themes/sys/default/img/DataEmpty.svg" />
+                  <div class="fs-6 text-dark mt-2 text-center">
+                    {{ "SYS011" | mssg | async }}
+                  </div>
+                </div>
+              </div>
+              <ng-container *ngIf="oData.length">
+                <ng-container *ngFor="let item of oData;trackBy: trackByFn">
+                  <div>
+                    <div style="padding-left: 2rem;" class="list-content">
+                      <div class="list-item py-3">
+                        <div class="d-flex justify-content-between">
+                          <div class="d-flex flex-column w-100">
+                            <div class="fw-bold text-dark mb-1">
+                              <span #runDate [innerHTML]="
+                                          item?.runDate
+                                          | dateformat
+                                        " class="me-3"></span>
+                              <ng-container *ngIf="displayMode && displayMode === '1'">
+                                <span *ngIf="item?.runMode === '1'" class="badge ac-badge-light-warning">
+                                  Mô phỏng
+                                </span>
+                                <span *ngIf="item?.runMode === '2'" class="badge ac-badge-light-success">
+                                  Chính thức
+                                </span>
+                              </ng-container>
+                            </div>
+                            <div class="text-dark mb-1">
+                              <span class="mt-1">{{title+' tháng '}}</span>
+                              <span class="me-3 mt-1">{{item?.runDate | formatDate}}</span>
+                            </div>
+                            <div class="text-gray-500 setting-description mb-1">
+                              <span>Thực hiện bởi: </span>
+                              <ng-container>
+                                <span *ngIf="item?.createdBy">{{
+                                  item?.createdBy
+                                  }}</span>
+                                <span *ngIf="
+                                  (item?.createdBy == '' || item?.createdBy == null) &&
+                                  view?.gridViewSetup
+                                " class="place-holder line-clamp line-clamp-1 fs-6 me-2">
+                                  {{ view?.gridViewSetup["CreatedBy"].headerText }}
+                                </span>
+                              </ng-container>
+                              <span> | </span>
+                              <span>Ngày: </span>
+                              <span #runDate [innerHTML]="item?.runDate | dateformat"></span>
+                            </div>
+                            <div>
+                              <span class="badge ac-badge-light-primary">
+                                Đã hoàn tất
                               </span>
-                              <span *ngIf="item?.runMode === '2'" class="badge ac-badge-light-success">
-                                Chính thức
-                              </span>
-                            </ng-container>
+                            </div>
                           </div>
-                          <div class="text-dark">
-                            <span class="mt-1">{{title+' tháng '}}</span>
-                            <span class="me-3 mt-1">{{item?.runDate | formatDate}}</span>
-                          </div>
-                          <div class="text-gray-500 pt-1 setting-description">
-                            <span>Thực hiện bởi: </span>
-                            <ng-container>
-                              <span *ngIf="item?.createdBy">{{
-                                item?.createdBy
-                                }}</span>
-                              <span *ngIf="
-                                (item?.createdBy == '' || item?.createdBy == null) &&
-                                view?.gridViewSetup
-                              " class="place-holder line-clamp line-clamp-1 fs-6 me-2">
-                                {{ view?.gridViewSetup["CreatedBy"].headerText }}
-                              </span>
-                            </ng-container>
-                            <span> | </span>
-                            <span>Ngày: </span>
-                            <span #runDate
-                              [innerHTML]="item?.runDate | formatvalue : view.formModel : 'runDate' : runDate | async"></span>
-                          </div>
-                        </div>
-                        <div class="d-flex ms-4 justify-content-end category-control w-250px min-w-250px">
-                          <div class="d-flex flex-column">
-                            <codx-mfunc [formModel]="view.formModel" [isToolBar]="true" type="view" [dataItem]="item"
-                            (changeDataMF)="changeDataMF($event,'D')" (clickMF)="clickMF($event,item)"></codx-mfunc>
-                            <span class="badge ac-badge-light-primary mb-3">
-                              Đã hoàn tất
-                            </span>
+                          <div class="d-flex ms-4 justify-content-end category-control w-250px min-w-250px">
+                            <div class="d-flex flex-column">
+                              <codx-mfunc [formModel]="formModel" [isToolBar]="true" type="view" [dataItem]="item"
+                                (changeDataMF)="changeDataMF($event,'D')" (clickMF)="clickMF($event,item)"></codx-mfunc>
+                            </div>
                           </div>
                         </div>
                       </div>
                     </div>
                   </div>
-                </div>
-                <hr class="ms-9 my-0" style="margin-top: -1px;">
+                  <hr class="ms-9 my-0" style="margin-top: -1px;">
+                </ng-container>
               </ng-container>
-            </ng-container>
-            <div *ngIf="oData.length && oData.length > 1" class="d-flex align-items-center justify-content-center mt-5">
-              <div>
-                <button [disabled]="showAll" (click)="loadData()" type="button"
-                  class="btn btn-md btn-light-primary me-3" style="border: 1px solid var(--primary-dark) !important">
-                  <div class="d-flex align-items-center">
-                    <i class="icon-i-arrows-expand icon-16"></i>
-                    <codx-label class="fw-normal" fiedName="lblSaveAndClear" default="Xem thêm"></codx-label>
-                  </div>
-                </button>
+              <div *ngIf="showAll"
+                class="d-flex align-items-center justify-content-center mt-5">
+                <div>
+                  <button (click)="loadData()" type="button"
+                    class="btn btn-md btn-light-primary me-3" style="border: 1px solid var(--primary-dark) !important">
+                    <div class="d-flex align-items-center">
+                      <i class="icon-i-arrows-expand icon-16"></i>
+                      <codx-label class="fw-normal" fiedName="lblSaveAndClear" default="Xem thêm"></codx-label>
+                    </div>
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -122,132 +121,4 @@
       </ng-container>
     </div>
   </ng-container>
-</ng-template> -->
-<div class="h-100 overflow-auto">
-  <div class="d-flex container w-60 mb-5">
-    <div class="bg-body rounded-3 p-6 flex-grow-1 overflow-auto">
-      <dynamic-setting-control [settingFull]="this.settingFull" [formModel]="view.formModel"
-        (valueChanges)="valuechange($event)"
-        (changeAutoSchedules)="changeAutoSchedules($event)"></dynamic-setting-control>
-    </div>
-  </div>
-  <ng-container *ngIf="setting.length">
-    <div class="d-flex container w-60 ">
-      <div class="bg-body rounded-3 p-6 flex-grow-1">
-        <div class="list-group">
-          <div style="align-items: center;" class="d-flex justify-content-between">
-            <div style="align-items: center;" class="d-flex w-100">
-              <i class="text-primary icon-i-calendar4-event icon-16 me-3"></i>
-              <h3 class="list-header mx-0 my-0">Lần chạy sau cùng</h3>
-            </div>
-            <div class="d-flex ms-4 justify-content-end category-control w-250px min-w-250px">
-              <!-- <button [disabled]="showLess" (click)="loadData()" type="button" class="btn btn-md btn-light-primary"
-              style="border: 1px solid var(--primary-dark) !important">
-              <div class="d-flex align-items-center">
-                <i class="icon-i-arrows-collapse icon-16"></i>
-                <codx-label class="fw-normal" fiedName="lblSaveAndClear" default="Thu gọn"></codx-label>
-              </div>
-          </button> -->
-            </div>
-          </div>
-        </div>
-        <div *ngIf="!oData.length" class="list-content">
-          <div style="justify-content: center !important;
-          display: flex;
-          align-items: center;
-          flex-direction: column !important;">
-            <img style="width: 13%;" src="../assets/themes/sys/default/img/DataEmpty.svg" />
-            <div class="fs-6 text-dark mt-2 text-center">
-              {{ "SYS011" | mssg | async }}
-            </div>
-          </div>
-        </div>
-        <ng-container *ngIf="oData.length">
-          <ng-container *ngFor="let item of oData;trackBy: trackByFn">
-            <div>
-              <div style="padding-left: 2rem;" class="list-content">
-                <div class="list-item py-3">
-                  <div class="d-flex justify-content-between">
-                    <div class="d-flex flex-column w-100">
-                      <div class="fw-bold text-dark">
-                        <span #runDate [innerHTML]="
-                                    item?.runDate
-                                      | formatvalue : view.formModel : 'runDate' : runDate
-                                      | async
-                                  " class="me-3"></span>
-                        <ng-container *ngIf="displayMode && displayMode === '1'">
-                          <span *ngIf="item?.runMode === '1'" class="badge ac-badge-light-warning">
-                            Mô phỏng
-                          </span>
-                          <span *ngIf="item?.runMode === '2'" class="badge ac-badge-light-success">
-                            Chính thức
-                          </span>
-                        </ng-container>
-                      </div>
-                      <div class="text-dark">
-                        <span class="mt-1">{{title+' tháng '}}</span>
-                        <span class="me-3 mt-1">{{item?.runDate | formatDate}}</span>
-                      </div>
-                      <div class="text-gray-500 pt-1 setting-description">
-                        <span>Thực hiện bởi: </span>
-                        <ng-container>
-                          <span *ngIf="item?.createdBy">{{
-                            item?.createdBy
-                            }}</span>
-                          <span *ngIf="
-                            (item?.createdBy == '' || item?.createdBy == null) &&
-                            view?.gridViewSetup
-                          " class="place-holder line-clamp line-clamp-1 fs-6 me-2">
-                            {{ view?.gridViewSetup["CreatedBy"].headerText }}
-                          </span>
-                        </ng-container>
-                        <span> | </span>
-                        <span>Ngày: </span>
-                        <span #runDate
-                          [innerHTML]="item?.runDate | formatvalue : view.formModel : 'runDate' : runDate | async"></span>
-                      </div>
-                    </div>
-                    <div class="d-flex ms-4 justify-content-end category-control w-250px min-w-250px">
-                      <div class="d-flex flex-column">
-                        <codx-mfunc [formModel]="view.formModel" [isToolBar]="true" type="view" [dataItem]="item"
-                        (changeDataMF)="changeDataMF($event,'D')" (clickMF)="clickMF($event,item)"></codx-mfunc>
-                        <span class="badge ac-badge-light-primary mb-3">
-                          Đã hoàn tất
-                        </span>
-                        <!-- <button (click)="cancel(item)" type="button" class="btn btn-md btn-danger">
-                        <div class="d-flex align-items-center">
-                          <i class="icon-cancel icon-16"></i>
-                          <codx-label class="fw-normal" default="Hủy"></codx-label>
-                        </div>
-                      </button> -->
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <hr class="ms-9 my-0" style="margin-top: -1px;">
-          </ng-container>
-        </ng-container>
-        <div *ngIf="oData.length && oData.length > 1" class="d-flex align-items-center justify-content-center mt-5">
-          <div>
-            <button [disabled]="showAll" (click)="loadData()" type="button"
-              class="btn btn-md btn-light-primary me-3" style="border: 1px solid var(--primary-dark) !important">
-              <div class="d-flex align-items-center">
-                <i class="icon-i-arrows-expand icon-16"></i>
-                <codx-label class="fw-normal" fiedName="lblSaveAndClear" default="Xem thêm"></codx-label>
-              </div>
-            </button>
-            <!-- <button *ngIf="showLess" (click)="onCollaple()" type="button" class="btn btn-md btn-light-primary"
-            style="border: 1px solid var(--primary-dark) !important">
-            <div class="d-flex align-items-center">
-              <i class="icon-i-arrows-collapse icon-16"></i>
-              <codx-label class="fw-normal" fiedName="lblSaveAndClear" default="Thu gọn"></codx-label>
-            </div>
-          </button> -->
-          </div>
-        </div>
-      </div>
-    </div>
-  </ng-container>
-</div>
+</ng-template>

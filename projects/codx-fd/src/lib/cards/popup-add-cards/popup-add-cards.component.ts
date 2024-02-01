@@ -1,4 +1,5 @@
 import {
+  AfterViewInit,
   ChangeDetectorRef,
   Component,
   OnInit,
@@ -34,10 +35,12 @@ import { zip } from 'rxjs';
   styleUrls: ['./popup-add-cards.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class PopupAddCardsComponent implements OnInit {
+export class PopupAddCardsComponent implements OnInit, AfterViewInit {
   @ViewChild('popupViewCard') popupViewCard: TemplateRef<any>;
   @ViewChild('attachment') attachment: AttachmentComponent;
   @ViewChild('inputReceiver') inputReceiver: CodxInputComponent;
+  @ViewChild('templateContentCard') templateContentCard: TemplateRef<any>;
+  @ViewChild('templateGiftAndPoint') templateGiftAndPoint: TemplateRef<any>;
 
   dialog: DialogRef;
   form: FormGroup;
@@ -69,7 +72,7 @@ export class PopupAddCardsComponent implements OnInit {
   funcID: string = '';
   gridViewName: string = '';
   formName: string = '';
-  shareControl: string = '1';
+  shareControl: string = 'U';
   entityName: string = 'FD_Cards';
   refValue: string = 'Behaviors_Grp';
   createNewfeed: boolean = false;
@@ -92,7 +95,6 @@ export class PopupAddCardsComponent implements OnInit {
 
   isWalletReciver: boolean = false;
   showNavigationArrows: boolean = false;
-  readOnly: boolean = false;
   showPopupGift: boolean = false;
   showPopupEvoucher: boolean = false;
 
@@ -141,6 +143,10 @@ export class PopupAddCardsComponent implements OnInit {
   evoucher: any[] = [];
   evoucherSelected: any[] = [];
   isSaving = false;
+  tabInfo: any[] = [];
+  tabContent: any[] = [];
+
+
 
   constructor(
     private api: ApiHttpService,
@@ -160,15 +166,58 @@ export class PopupAddCardsComponent implements OnInit {
     this.dialog = dialogRef;
     this.user = this.auth.userValue;
   }
+  ngAfterViewInit(): void {
+    this.tabInfo = [
+      {
+        icon: 'icon-article',
+        text: 'Nội dung thiệp',
+        name: 'InfoCard',
+        subName: 'Info Card',
+        subText: 'Info Card',
+      },
+      {
+        icon: 'icon-i-gift',
+        text: 'Tặng quà/xu',
+        name: 'GiftAndPoint',
+        subName: 'Gift And Point',
+        subText: 'Gift And Point',
+      }
+    ];
+    this.tabContent = [
+      this.templateContentCard,
+      this.templateGiftAndPoint
+    ];
+  }
 
   ngOnInit(): void {
     this.initForm();
     this.loadDataAsync(this.funcID);
     this.getMessageNoti('SYS009');
     this.getMyWallet(this.user.userID);
-    if (this.type !== 'copy') {
+    if (this.type == 'add') {
       this.setUserReportInListShare();
     }
+    if (this.type == 'detail') {
+      this.getCardInfor();
+    }
+  }
+
+  getCardInfor() {
+    this.api
+      .execSv('FD', 'ERM.Business.FD', 'CardsBusiness', 'GetCardInforAsync', [
+        this.card.recID,
+      ])
+      .subscribe((res: any) => {
+        if (res) {
+          console.log(res);
+          this.evoucher = res.gifts?.filter((x: any) => x.category == '4');
+          this.gifts = res.gifts?.filter((x: any) => x.category == '1');
+          this.givePoint = res.point;
+          this.form.patchValue({ coins: this.givePoint });
+          this.lstShare = res.listShare;
+          this.dt.detectChanges();
+        }
+      });
   }
 
   loadDataAsync(funcID: string) {
@@ -411,7 +460,9 @@ export class PopupAddCardsComponent implements OnInit {
       situation: new FormControl(
         this.card?.situation ? this.card?.situation : ''
       ),
-      industry: new FormControl(null),
+      industry: new FormControl(
+        this.card?.industry ? this.card?.industry : ''
+      ),
       patternID: new FormControl(''),
       rating: new FormControl(''),
       giftID: new FormControl(''),
@@ -779,6 +830,8 @@ export class PopupAddCardsComponent implements OnInit {
         obj.objectID = emp.domainUser;
         obj.objectName = emp.employeeName;
         obj.objectType ="U";
+        this.objectType = "U";
+        this.shareControl = "U";
         this.lstShare.push(obj);
       }
     });

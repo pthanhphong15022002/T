@@ -1,745 +1,12 @@
-<!-- <codx-form [dialog]="dialog" [body]="body" [footer]="footer" [subHeader]="subheader"></codx-form> -->
-
-<codx-form
-  headerText="{{ title }}"
-  [subHeader]="subheader"
-  [body]="body"
+<codx-layout-add
+  [title]="title"
+  [tabInfo]="tabInfo"
+  [formModel]="dialog.formModel"
   [footer]="footer"
   [dialog]="dialog"
-  [formModel]="dialog.formModel"
-></codx-form>
-
-<ng-template #subheader>
-  <div
-    class="offcanvas-header d-flex align-items-center justify-content-between w-100"
-    kt-hidden-height="46"
-  >
-    <div></div>
-    <div class="btn-extand mt-2 d-flex justify-content-end me-2">
-      <a class="text-gray-700 text-hover-primary d-flex align-items-center">
-        <span class="text-dark">
-          <codx-label
-            [formModel]="dialog.formModel"
-            name="lblFD_Extend"
-            default="Mở rộng"
-          ></codx-label>
-        </span>
-        <span class="icon-login icon-18 ms-2"></span>
-      </a>
-    </div>
-  </div>
-</ng-template>
-<ng-template #body>
-  <div class="content d-flex flex-column flex-column-fluid py-0">
-    <div class="extend-main">
-      <ng-container
-        *ngIf="
-          cardType != CARDTYPE_EMNUM.SuggestionImprovement &&
-          cardType != CARDTYPE_EMNUM.Share &&
-          cardType != CARDTYPE_EMNUM.Radio
-        "
-      >
-        <div class="form-group">
-          <codx-label
-            [formModel]="dialog.formModel"
-            name="Receiver"
-            default="Người nhận"
-          >
-          </codx-label>
-          <!-- <codx-input type="combobox" name="Users" class=" form-control borderless p-0"
-                        [crrValue]="form.controls['receiver'].value" [loadFull]="true" field="receiver"
-                        (valueChange)="valueChange($event)" refValue="Users">
-                    </codx-input> -->
-          <codx-input
-            #inputReceiver
-            ControlName="receiver"
-            [formModel]="dialog.formModel"
-            [Group]="form"
-            (valueChange)="valueChange($event)"
-            field="receiver"
-          >
-          </codx-input>
-        </div>
-      </ng-container>
-      <ng-container *ngIf="parameter && parameter.RuleSelected">
-        <ng-container [ngSwitch]="parameter.RuleSelected">
-          <ng-container *ngSwitchCase="0"> </ng-container>
-          <ng-container *ngSwitchCase="1">
-            <div class="form-group">
-              <codx-label
-                [formModel]="dialog.formModel"
-                name="Behavior"
-                default="Qui tắc ứng xử"
-              >
-              </codx-label>
-              <codx-input
-                type="combobox"
-                name="Behaviors_Grp"
-                [multiple]="true"
-                [crrValue]="
-                  form.controls['behavior'] && form.controls['behavior'].value
-                    ? form.controls['behavior'].value
-                    : ''
-                "
-                field="behavior"
-                [refValue]="'Behaviors_Grp'"
-                (valueChange)="valueChange($event)"
-              >
-              </codx-input>
-            </div>
-          </ng-container>
-          <ng-container *ngSwitchCase="2">
-            <div class="form-group">
-              <codx-label
-                [formModel]="dialog.formModel"
-                name="Behavior"
-                default="Hành vi ứng xử"
-              >
-              </codx-label>
-              <codx-input
-                type="combobox"
-                name="Behaviors"
-                [multiple]="true"
-                [crrValue]="
-                  form.controls['behavior'] && form.controls['behavior'].value
-                    ? form.controls['behavior'].value
-                    : ''
-                "
-                field="behavior"
-                [refValue]="'Behaviors'"
-                (valueChange)="valueChange($event)"
-              >
-              </codx-input>
-            </div>
-          </ng-container>
-        </ng-container>
-      </ng-container>
-      <ng-container
-        *ngIf="
-          cardType == CARDTYPE_EMNUM.SuggestionImprovement ||
-          cardType == CARDTYPE_EMNUM.Share
-        "
-      >
-        <div class="form-group">
-          <codx-label
-            [formModel]="dialog.formModel"
-            name="Industry"
-            default="Lĩnh vực"
-          ></codx-label>
-          <!-- <codx-input type="combobox" name="Industries" field="industry" [refValue]="'Industries'"
-                        [crrValue]="form.controls['industry'].value" (valueChange)="valueChange($event)">
-                    </codx-input> -->
-
-          <codx-input
-            ControlName="industry"
-            [formModel]="dialog.formModel"
-            [Group]="form"
-            (valueChange)="valueChange($event)"
-            field="industry"
-          >
-          </codx-input>
-        </div>
-        <div class="form-group">
-          <codx-label
-            [formModel]="dialog.formModel"
-            name="Receiver"
-            default="Người nhận"
-          ></codx-label>
-          <div *ngIf="userReciver" class="mt-2 d-flex align-items-center">
-            <codx-img
-              [objectId]="userReciver"
-              objectType="AD_Users"
-              [width]="35"
-            >
-            </codx-img>
-            <span *ngIf="userReciverName" class="ms-3 text-dark font-size-lg">{{
-              userReciverName
-            }}</span>
-          </div>
-        </div>
-      </ng-container>
-      <ng-container *ngIf="cardType == CARDTYPE_EMNUM.Radio">
-        <div class="form-group">
-          <div class="d-flex align-items-center justify-content-between mt-4">
-            <codx-label
-              [formModel]="dialog.formModel"
-              field="lblSendTo"
-              default="Gửi đến"
-            >
-            </codx-label>
-            <a
-              class="btn btn-icon btn-sm btn-light-primary"
-              (click)="openFormShare(controlShare)"
-            >
-              <span class="icon-person_add_alt_1 icon-16"></span>
-            </a>
-          </div>
-          <ng-container
-            *ngIf="
-              objectType == '1' ||
-                objectType == '2' ||
-                objectType == '3' ||
-                objectType == '4' ||
-                objectType == '5' ||
-                objectType == '6' ||
-                objectType == '9';
-              else tmpShare
-            "
-          >
-            <div class="d-flex mt-2">
-              <div
-                class="bg-gray-200 rounded-5 p-2 px-4 d-flex align-items-center fd-shareuser"
-              >
-                <codx-vll
-                  [name]="'FD001'"
-                  [value]="shareControl"
-                  [showIcon]="true"
-                  [showText]="true"
-                  [path]="'assets/themes/sys/default/img/'"
-                  [showBgColor]="true"
-                >
-                </codx-vll>
-              </div>
-            </div>
-          </ng-container>
-          <ng-template #tmpShare>
-            <ng-container *ngIf="lstShare">
-              <div class="d-flex mt-2">
-                <div class="user-mini-group float-left">
-                  <div
-                    class="user-mini-item me-3 mb-1"
-                    *ngFor="let item of lstShare"
-                  >
-                    <div
-                      class="d-flex align-items-center py-2 px-3 rounded-5 bg-gray-100 mw-350px"
-                    >
-                      <codx-img
-                        class="me-2 h-20px"
-                        [width]="20"
-                        [isDefaulImg]="true"
-                        [objectId]="item.objectID"
-                        objectType="AD_Users"
-                      >
-                      </codx-img>
-                      <div class="text-gray-700 line-clamp line-clamp-1">
-                        {{ item.objectName }}
-                      </div>
-                      <span
-                        class="icon-close icon-16 ms-3 text-danger"
-                        (click)="removeUser(item)"
-                      ></span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </ng-container>
-          </ng-template>
-        </div>
-      </ng-container>
-      <div class="form-group">
-        <codx-label
-          [formModel]="dialog.formModel"
-          name="Situation"
-          default="Nội dung"
-        >
-        </codx-label>
-
-        <codx-input
-          type="textarea"
-          headerposition="none"
-          format="ed"
-          height="150"
-          ControlName="situation"
-          field="situation"
-          [Group]="form"
-        >
-        </codx-input>
-        <!-- <codx-input class="form-control" type="textarea" [crrValue]="form.controls['situation'].value"
-                    field="situation" (valueChange)="valueChange($event)">
-                </codx-input> -->
-      </div>
-      <ng-container
-        *ngIf="
-          cardType == CARDTYPE_EMNUM.Thankyou ||
-          cardType == CARDTYPE_EMNUM.CommentForChange
-        "
-      >
-        <div class="checkbox-inline mb-3 check-1 d-flex">
-          <ng-container *ngIf="lstRating">
-            <div class="me-3" *ngFor="let item of lstRating">
-              <codx-input
-                [crrValue]="item.value"
-                [label]="item.text"
-                type="radio"
-                field="rating"
-                name="radioRating"
-                (valueChange)="valueChange($event)"
-              >
-              </codx-input>
-            </div>
-          </ng-container>
-        </div>
-      </ng-container>
-      <ng-container *ngIf="cardType != CARDTYPE_EMNUM.Radio">
-        <div class="form-group">
-          <div class="d-flex align-items-center justify-content-between mt-4">
-            <codx-label
-              [formModel]="dialog.formModel"
-              name="Permissions"
-              default="Chia sẻ đến"
-            >
-            </codx-label>
-            <a
-              class="btn btn-icon btn-sm btn-light-primary"
-              (click)="openFormShare(controlShare)"
-            >
-              <span class="icon-person_add_alt_1 icon-16"></span>
-            </a>
-          </div>
-          <ng-container
-            *ngIf="
-              objectType == '1' ||
-                objectType == '2' ||
-                objectType == '3' ||
-                objectType == '4' ||
-                objectType == '5' ||
-                objectType == '6' ||
-                objectType == '9';
-              else tmpShare
-            "
-          >
-            <div class="d-flex mt-2">
-              <div
-                class="bg-gray-200 rounded-5 p-2 px-4 d-flex align-items-center fd-shareuser"
-              >
-                <codx-vll
-                  [name]="'FD001'"
-                  [value]="shareControl"
-                  [showIcon]="true"
-                  [showText]="true"
-                  [path]="'assets/themes/sys/default/img/'"
-                  [showBgColor]="true"
-                >
-                </codx-vll>
-              </div>
-            </div>
-          </ng-container>
-          <ng-template #tmpShare>
-            <ng-container *ngIf="lstShare">
-              <div class="mt-2">
-                <div class="user-mini-group float-left">
-                  <div
-                    class="user-mini-item me-3 mb-1"
-                    *ngFor="let item of lstShare"
-                  >
-                    <div
-                      class="d-flex align-items-center py-2 px-3 rounded-5 bg-gray-100 mw-350px"
-                    >
-                      <codx-img
-                        class="me-2 h-20px"
-                        [width]="20"
-                        [isDefaulImg]="true"
-                        [objectId]="item.objectID"
-                        objectType="AD_Users"
-                      >
-                      </codx-img>
-                      <div class="text-gray-700 line-clamp line-clamp-1">
-                        {{ item.objectName }}
-                      </div>
-                      <span
-                        class="icon-close icon-16 ms-3 text-danger"
-                        (click)="removeUser(item)"
-                      ></span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </ng-container>
-          </ng-template>
-        </div>
-      </ng-container>
-      <div class="clear"></div>
-      <ng-container
-        *ngIf="
-          cardType != CARDTYPE_EMNUM.Share && cardType != CARDTYPE_EMNUM.Radio
-        "
-      >
-        <div
-          class="d-flex align-items-center justify-content-between mb-3 mt-9"
-        >
-          <div class="text-dark fw-bold">
-            <codx-label
-              [formModel]="dialog.formModel"
-              name="Pattern"
-              default="Chọn thiệp"
-            >
-            </codx-label>
-          </div>
-          <div
-            class="text-right text-primary cursor-pointer"
-            (click)="previewCard()"
-          >
-            <codx-label
-              [formModel]="dialog.formModel"
-              name="lblPreView"
-              default="Xem trước"
-            >
-            </codx-label>
-          </div>
-        </div>
-        <div>
-          <ngb-carousel
-            #carousel
-            [pauseOnFocus]="true"
-            [pauseOnHover]="true"
-            [wrap]="false"
-            [interval]="false"
-            [keyboard]="false"
-            [showNavigationIndicators]="false"
-            [showNavigationArrows]="true"
-          >
-            <ng-template ngbSlide *ngFor="let slide of slides">
-              <div
-                class="d-flex flex-wrap align-items-center justify-content-center"
-              >
-                <ng-container *ngFor="let itemChild of slide">
-                  <div class="mb-3 fd-parttern-item me-5 position-relative">
-                    <ng-container
-                      *ngIf="itemChild.backgroundColor; else noBackgroundColor"
-                    >
-                      <div
-                        class="w-100 h-100 rounded-2"
-                        [style.background-color]="itemChild.backgroundColor"
-                        (click)="selectCard(itemChild)"
-                      ></div>
-                    </ng-container>
-                    <ng-template #noBackgroundColor>
-                      <codx-img
-                        [objectId]="itemChild.recID"
-                        [funcId]="funcID"
-                        [isDefaulImg]="true"
-                        [imageType]="'square'"
-                        referType="image"
-                        objectType="FD_Patterns"
-                        [width]="100"
-                        (click)="selectCard(itemChild)"
-                      >
-                      </codx-img>
-                    </ng-template>
-                    <i
-                      *ngIf="itemChild.patternID == patternSelected.patternID"
-                      class="icon-i-check2-circle pattern-selected"
-                    ></i>
-                  </div>
-                </ng-container>
-              </div>
-            </ng-template>
-          </ngb-carousel>
-        </div>
-      </ng-container>
-      <ng-container *ngIf="parameter && cardType != CARDTYPE_EMNUM.Radio">
-        <ng-container *ngIf="parameter.HasGifts && parameter.HasGifts == '1'">
-          <div class="d-flex align-items-center justify-content-between mt-4">
-            <div class="d-flex align-items-center">
-              <div class="fw-bold fs-6">
-                <codx-label
-                  [formModel]="dialog.formModel"
-                  name="HasGifts"
-                  default="Quà tặng"
-                ></codx-label>
-              </div>
-            </div>
-            <div
-              class="d-flex align-items-center py-1"
-              style="white-space: nowrap"
-            >
-              <ng-container *ngIf="amount">
-                <span
-                  ><codx-label
-                    [formModel]="dialog.formModel"
-                    name="lblfFDTotalPrice"
-                    default="Tổng xu"
-                  ></codx-label
-                  >: {{ amount }}</span
-                >
-              </ng-container>
-
-              <button
-                type="button"
-                class="cursor-pointer btn btn-icon btn-light-primary"
-                style="margin-left: 5px"
-                (click)="clickAddGift()"
-              >
-                <span class="icon-add icon-18"></span>
-              </button>
-              <ng-container *ngIf="showPopupGift">
-                <codx-combobox-popup
-                  [comboboxName]="'FDGifts'"
-                  [multiple]="true"
-                  [width]="width"
-                  [height]="height"
-                  [value]="giftIDs"
-                  [itemTemplate]="itemTemplate"
-                  (clickSave)="getGiftInfor($event)"
-                >
-                </codx-combobox-popup>
-                <ng-template #itemTemplate let-data>
-                  <div class="d-flex align-items-center user-card mb-5">
-                    <span class="me-4">
-                      <codx-img
-                        class="rounded-2"
-                        [objectId]="data.GiftID"
-                        [objectType]="'FD_Gifts'"
-                        imageType="square"
-                        [width]="35"
-                      ></codx-img>
-                    </span>
-                    <div class="d-flex flex-column">
-                      <div class="text-dark fw-bold">
-                        {{ data.GiftName }}
-                      </div>
-                      <span class="fw-bold text-dark">
-                        <codx-label default="Giá"></codx-label>
-                        <span>: {{ data.Price }}</span>
-                      </span>
-                    </div>
-                  </div>
-                </ng-template>
-              </ng-container>
-            </div>
-          </div>
-          <ng-container *ngFor="let data of gifts; index as i">
-            <div class="d-flex align-items-center user-card mb-5">
-              <span class="me-4">
-                <codx-img
-                  class="rounded-2"
-                  [objectId]="data.giftID"
-                  [objectType]="'FD_Gifts'"
-                  imageType="square"
-                  [width]="35"
-                ></codx-img>
-                <!-- <codx-img *ngIf="data.gift.category == '3' || data.gift.category == '4'"
-                                    class="rounded-2" [imgSource]="data.gift.image" [objectType]="'FD_Gifts'"
-                                    imageType="square" [width]="35"></codx-img> -->
-              </span>
-              <div class="d-flex flex-column">
-                <div class="text-dark fw-bold">
-                  {{ data.giftName }}
-                </div>
-                <span class="fw-bold text-dark">
-                  <codx-label
-                    [formModel]="dialog.formModel"
-                    name="lblGroup"
-                    default="Nhóm"
-                  ></codx-label>
-                  <span>: {{ data.groupName }}</span>
-                </span>
-                <div class="text-dark fw-bold">
-                  {{ data.price }}
-                </div>
-              </div>
-              <div
-                class="d-flex align-items-center"
-                style="margin-left: auto; margin-right: 0"
-              >
-                <codx-label
-                  [formModel]="dialog.formModel"
-                  name="lblFDQuantityGifts"
-                  default="SL: "
-                >
-                </codx-label>
-                <codx-input
-                  style="margin-left: 5px"
-                  ControlName="number"
-                  [min]="1"
-                  [step]="1"
-                  [max]="data.availableQty"
-                  [formModel]="dialog.formModel"
-                  type="number"
-                  field="quantity"
-                  [crrValue]="data.quantity"
-                  (valueChange)="updateQuantity($event, i)"
-                >
-                </codx-input>
-              </div>
-            </div>
-          </ng-container>
-
-          <!-- evoucher -->
-          <div class="d-flex align-items-center justify-content-between mt-4">
-            <div class="d-flex align-items-center">
-              <div class="fw-bold fs-6">
-                <codx-label
-                  [formModel]="dialog.formModel"
-                  default="Quà tặng evoucher"
-                ></codx-label>
-              </div>
-            </div>
-            <div
-              class="d-flex align-items-center py-1"
-              style="white-space: nowrap"
-            >
-              <ng-container *ngIf="amountEvoucher">
-                <span
-                  ><codx-label
-                    [formModel]="dialog.formModel"
-                    name="lblfFDTotalPrice"
-                    default="Tổng xu"
-                  ></codx-label
-                  >: {{ amountEvoucher }}</span
-                >
-              </ng-container>
-
-              <button
-                type="button"
-                class="cursor-pointer btn btn-icon btn-light-primary"
-                style="margin-left: 5px"
-                (click)="clickAddEvoucher()"
-              >
-                <span class="icon-add icon-18"></span>
-              </button>
-              <ng-container *ngIf="showPopupEvoucher">
-                <codx-evoucher-popup
-                  (onSaveData)="saveEvoucher($event)"
-                  (onClose)="closeEvoucher($event)"
-                  [width]="widthEvoucher"
-                  [height]="height"
-                  [dataSelcected]="evoucherSelected"
-                  [evoucherGift]="evoucher"
-                  [formName]="formName"
-                  [funcID]="funcID"
-                  [entityName]="entityName"
-                >
-                </codx-evoucher-popup>
-              </ng-container>
-            </div>
-          </div>
-          <ng-container *ngFor="let data of evoucher; index as i">
-            <div class="d-flex align-items-center user-card mb-5">
-              <span class="me-4">
-                <img
-                  src="{{ data?.image }}"
-                  alt="evoucher"
-                  class="rounded-2"
-                  style="height: 35px; width: 35px"
-                />
-              </span>
-              <div class="d-flex flex-column">
-                <div class="text-dark fw-bold">
-                  {{ data?.giftName }}
-                </div>
-                <div class="text-dark fw-bold">
-                  {{ data?.price * data?.quantity }} Xu
-                </div>
-              </div>
-              <div
-                class="d-flex align-items-center"
-                style="margin-left: auto; margin-right: 0"
-              >
-                <codx-label
-                  [formModel]="dialog.formModel"
-                  name="lblFDQuantityGifts"
-                  default="SL: "
-                >
-                </codx-label>
-                <codx-input
-                  style="margin-left: 5px"
-                  ControlName="number"
-                  [min]="1"
-                  [step]="1"
-                  [formModel]="dialog.formModel"
-                  type="number"
-                  field="quantity"
-                  [crrValue]="data?.quantity"
-                  [disabled]="true"
-                >
-                </codx-input>
-              </div>
-            </div>
-          </ng-container>
-        </ng-container>
-        <ng-container *ngIf="parameter.HasPoints && parameter.HasPoints == '1'">
-          <div class="row mt-8">
-            <div class="col-6 form-group">
-              <codx-label
-                [formModel]="dialog.formModel"
-                name="lblHasPoints"
-                default="Quỹ cho"
-              >
-              </codx-label>
-              <!-- <div class="d-flex justify-content-evenly align-items-center rounded-1 border border-gray-200">
-                                <button class="btn btn-icon btn-sm btn-white" type="button" (click)="subPoint()">
-                                    <span class="icon-remove icon-18"></span>
-                                </button>
-                                <codx-input type="text" [disabled]="true" class="text-center" [crrValue]="givePoint"
-                                    readonly [className]="'border-none'" [min]="0">
-                                </codx-input>
-                                <button class="btn btn-icon btn-sm btn-white" type="button" (click)="addPoint()">
-                                    <span class="icon-add icon-18 "></span>
-                                </button>
-                            </div> -->
-              <!-- <codx-input type="number" [crrValue]="givePoint" [min]="0" 
-                                [step]="1" field="coins" (valueChange)="valueChange($event)">
-                            </codx-input> -->
-              <codx-input
-                ControlName="number"
-                [formModel]="dialog.formModel"
-                [Group]="form"
-                type="number"
-                field="coins"
-                [min]="0"
-                [step]="1"
-                (valueChange)="valueChange($event)"
-              >
-              </codx-input>
-              <div
-                *ngIf="cointsError"
-                class="errorMessage text-danger ms-3"
-                data-field="taskName"
-              >
-                {{ cointsError }}
-              </div>
-            </div>
-          </div>
-        </ng-container>
-      </ng-container>
-    </div>
-  </div>
-  <div
-    class="d-flex align-items-center nav-item w-100 mb-1"
-    *ngIf="showLabelAttachment"
-  >
-    <div class="d-flex align-items-center mb-2">
-      <span class="icon-attach_file icon-18 me-2 text-primary"></span>
-      <div class="fw-bold text-primary">
-        <codx-label name="lblAttachments" default="Tài liệu đính kèm">
-        </codx-label>
-      </div>
-    </div>
-  </div>
-  <div>
-    <codx-attachment
-      #attachment
-      [objectType]="dialog.formModel.entityName"
-      [objectId]="card?.recID"
-      hideFolder="1"
-      hideImageUpload="0"
-      hideImageThumb="0"
-      hideUploadBtn="1"
-      [showMessage]="0"
-      hideDes="1"
-      type="inline"
-      allowMultiFile="1"
-      referType="application"
-      [formModel]="dialog.formModel"
-      [functionID]="funcID"
-      (fileAdded)="fileAdded($event)"
-      (fileCount)="getfileCount($event)"
-      displayThumb="full"
-    >
-    </codx-attachment>
-  </div>
-</ng-template>
+  [tabContent]="tabContent"
+  [data]="card"
+></codx-layout-add>
 
 <ng-template #footer>
   <div class="offcanvas-footer">
@@ -748,7 +15,7 @@
         <button
           type="button"
           class="btn btn-light-primary me-3"
-          [disabled]="readOnly"
+          [disabled]="type == 'detail'"
           (click)="addFile($event)"
         >
           <i class="icon-cloud_upload fs-5"></i
@@ -770,6 +37,7 @@
               style="margin-left: 5px"
               id="checked"
               [(checked)]="createNewfeed"
+              [disabled]="type == 'detail'"
             ></ejs-switch>
           </div>
         </div>
@@ -778,7 +46,7 @@
         type="button"
         class="btn btn-primary"
         (click)="Save()"
-        [disabled]="isSaving || cointsError"
+        [disabled]="isSaving || cointsError || type == 'detail'"
       >
         <codx-label
           [formModel]="dialog.formModel"
@@ -901,4 +169,736 @@
     (eventApply)="eventApply($event)"
   >
   </codx-share>
+</ng-template>
+
+
+<ng-template #templateContentCard>
+  <div class="content d-flex flex-column flex-column-fluid py-0">
+    <div class="extend-main">
+      <ng-container
+        *ngIf="
+          cardType != CARDTYPE_EMNUM.SuggestionImprovement &&
+          cardType != CARDTYPE_EMNUM.Share &&
+          cardType != CARDTYPE_EMNUM.Radio
+        "
+      >
+        <div class="form-group">
+          <codx-label
+            [formModel]="dialog.formModel"
+            name="Receiver"
+            default="Người nhận"
+          >
+          </codx-label>
+          <!-- <codx-input type="combobox" name="Users" class=" form-control borderless p-0"
+                        [crrValue]="form.controls['receiver'].value" [loadFull]="true" field="receiver"
+                        (valueChange)="valueChange($event)" refValue="Users">
+                    </codx-input> -->
+          <codx-input
+            #inputReceiver
+            ControlName="receiver"
+            [formModel]="dialog.formModel"
+            [Group]="form"
+            [disabled]="type == 'detail'"
+            (valueChange)="valueChange($event)"
+            field="receiver"
+          >
+          </codx-input>
+        </div>
+      </ng-container>
+      <ng-container *ngIf="parameter && parameter.RuleSelected">
+        <ng-container [ngSwitch]="parameter.RuleSelected">
+          <ng-container *ngSwitchCase="0"> </ng-container>
+          <ng-container *ngSwitchCase="1">
+            <div class="form-group">
+              <codx-label
+                [formModel]="dialog.formModel"
+                name="Behavior"
+                default="Qui tắc ứng xử"
+              >
+              </codx-label>
+              <codx-input
+                type="combobox"
+                name="Behaviors_Grp"
+                [disabled]="type == 'detail'"
+                [multiple]="true"
+                [crrValue]="
+                  form.controls['behavior'] && form.controls['behavior'].value
+                    ? form.controls['behavior'].value
+                    : ''
+                "
+                field="behavior"
+                [refValue]="'Behaviors_Grp'"
+                (valueChange)="valueChange($event)"
+              >
+              </codx-input>
+            </div>
+          </ng-container>
+          <ng-container *ngSwitchCase="2">
+            <div class="form-group">
+              <codx-label
+                [formModel]="dialog.formModel"
+                name="Behavior"
+                default="Hành vi ứng xử"
+              >
+              </codx-label>
+              <codx-input
+                type="combobox"
+                name="Behaviors"
+                [multiple]="true"
+                [disabled]="type == 'detail'"
+                [crrValue]="
+                  form.controls['behavior'] && form.controls['behavior'].value
+                    ? form.controls['behavior'].value
+                    : ''
+                "
+                field="behavior"
+                [refValue]="'Behaviors'"
+                (valueChange)="valueChange($event)"
+              >
+              </codx-input>
+            </div>
+          </ng-container>
+        </ng-container>
+      </ng-container>
+      <ng-container
+        *ngIf="
+          cardType == CARDTYPE_EMNUM.SuggestionImprovement ||
+          cardType == CARDTYPE_EMNUM.Share
+        "
+      >
+        <div class="form-group">
+          <codx-label
+            [formModel]="dialog.formModel"
+            name="Industry"
+            default="Lĩnh vực"
+          ></codx-label>
+          <!-- <codx-input type="combobox" name="Industries" field="industry" [refValue]="'Industries'"
+                        [crrValue]="form.controls['industry'].value" (valueChange)="valueChange($event)">
+                    </codx-input> -->
+
+          <codx-input
+            ControlName="industry"
+            [disabled]="type == 'detail'"
+            [formModel]="dialog.formModel"
+            [Group]="form"
+            [crrValue]="
+                  form.controls['industry'] && form.controls['industry'].value
+                    ? form.controls['industry'].value
+                    : ''
+                "
+            (valueChange)="valueChange($event)"
+            field="industry"
+          >
+          </codx-input>
+        </div>
+        <div class="form-group">
+          <codx-label
+            [formModel]="dialog.formModel"
+            name="Receiver"
+            default="Người nhận"
+          ></codx-label>
+          <div *ngIf="userReciver" class="mt-2 d-flex align-items-center">
+            <codx-img
+              [objectId]="userReciver"
+              objectType="AD_Users"
+              [width]="35"
+            >
+            </codx-img>
+            <span *ngIf="userReciverName" class="ms-3 text-dark font-size-lg">{{
+              userReciverName
+            }}</span>
+          </div>
+        </div>
+      </ng-container>
+      <ng-container *ngIf="cardType == CARDTYPE_EMNUM.Radio">
+        <div class="form-group">
+          <div class="d-flex align-items-center justify-content-between mt-4">
+            <codx-label
+              [formModel]="dialog.formModel"
+              field="lblSendTo"
+              default="Gửi đến"
+            >
+            </codx-label>
+            <a
+              *ngIf="type != 'detail'"
+              class="btn btn-icon btn-sm btn-light-primary"
+              (click)="openFormShare(controlShare)"
+            >
+              <span class="icon-person_add_alt_1 icon-16"></span>
+            </a>
+          </div>
+          <ng-container
+            *ngIf="
+              objectType == '1' ||
+                objectType == '2' ||
+                objectType == '3' ||
+                objectType == '4' ||
+                objectType == '5' ||
+                objectType == '6' ||
+                objectType == '9';
+              else tmpShare
+            "
+          >
+            <div class="d-flex mt-2">
+              <div
+                class="bg-gray-200 rounded-5 p-2 px-4 d-flex align-items-center fd-shareuser"
+              >
+                <codx-vll
+                  [name]="'FD001'"
+                  [value]="shareControl"
+                  [showIcon]="true"
+                  [showText]="true"
+                  [path]="'assets/themes/sys/default/img/'"
+                  [showBgColor]="true"
+                >
+                </codx-vll>
+              </div>
+            </div>
+          </ng-container>
+          <ng-template #tmpShare>
+            <ng-container *ngIf="lstShare">
+              <div class="d-flex mt-2">
+                <div class="user-mini-group float-left">
+                  <div
+                    class="user-mini-item me-3 mb-1"
+                    *ngFor="let item of lstShare"
+                  >
+                    <div
+                      class="d-flex align-items-center py-2 px-3 rounded-5 bg-gray-100 mw-350px"
+                    >
+                      <codx-img
+                        class="me-2 h-20px"
+                        [width]="20"
+                        [isDefaulImg]="true"
+                        [objectId]="item.objectID"
+                        objectType="AD_Users"
+                      >
+                      </codx-img>
+                      <div class="text-gray-700 line-clamp line-clamp-1">
+                        {{ item.objectName }}
+                      </div>
+                      <span
+                        *ngIf="type != 'detail'"
+                        class="icon-close icon-16 ms-3 text-danger"
+                        (click)="removeUser(item)"
+                      ></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </ng-container>
+          </ng-template>
+        </div>
+      </ng-container>
+      <div class="form-group">
+        <codx-label
+          [formModel]="dialog.formModel"
+          name="Situation"
+          default="Nội dung"
+        >
+        </codx-label>
+
+        <codx-input
+          type="textarea"
+          headerposition="none"
+          format="ed"
+          height="150"
+          ControlName="situation"
+          field="situation"
+          [Group]="form"
+          [disabled]="type == 'detail'"
+        >
+        </codx-input>
+        <!-- <codx-input class="form-control" type="textarea" [crrValue]="form.controls['situation'].value"
+                    field="situation" (valueChange)="valueChange($event)">
+                </codx-input> -->
+      </div>
+      <ng-container
+        *ngIf="
+          cardType == CARDTYPE_EMNUM.Thankyou ||
+          cardType == CARDTYPE_EMNUM.CommentForChange
+        "
+      >
+        <div class="checkbox-inline mb-3 check-1 d-flex">
+          <ng-container *ngIf="lstRating">
+            <div class="me-3" *ngFor="let item of lstRating">
+              <codx-input
+                [crrValue]="item.value"
+                [label]="item.text"
+                [disabled]="type == 'detail'"
+                type="radio"
+                field="rating"
+                name="radioRating"
+                (valueChange)="valueChange($event)"
+              >
+              </codx-input>
+            </div>
+          </ng-container>
+        </div>
+      </ng-container>
+      <ng-container *ngIf="cardType != CARDTYPE_EMNUM.Radio">
+        <div class="form-group">
+          <div class="d-flex align-items-center justify-content-between mt-4">
+            <codx-label
+              [formModel]="dialog.formModel"
+              name="Permissions"
+              default="Chia sẻ đến"
+            >
+            </codx-label>
+            <button
+              type="button"
+              class="cursor-pointer btn btn-icon btn-light-primary"
+              style="margin-left: 5px"
+              (click)="openFormShare(controlShare)"
+              [disabled]="type == 'detail'"
+            >
+              <span class="icon-person_add_alt_1 icon-16"></span>
+            </button>
+          </div>
+          <ng-container
+            *ngIf="
+              objectType == '1' ||
+                objectType == '2' ||
+                objectType == '3' ||
+                objectType == '4' ||
+                objectType == '5' ||
+                objectType == '6' ||
+                objectType == '9';
+              else tmpShare
+            "
+          >
+            <div class="d-flex mt-2">
+              <div
+                class="bg-gray-200 rounded-5 p-2 px-4 d-flex align-items-center fd-shareuser"
+              >
+                <codx-vll
+                  [name]="'FD001'"
+                  [value]="shareControl"
+                  [showIcon]="true"
+                  [showText]="true"
+                  [path]="'assets/themes/sys/default/img/'"
+                  [showBgColor]="true"
+                >
+                </codx-vll>
+              </div>
+            </div>
+          </ng-container>
+          <ng-template #tmpShare>
+            <ng-container *ngIf="lstShare">
+              <div class="mt-2">
+                <div class="user-mini-group float-left">
+                  <div
+                    class="user-mini-item me-3 mb-1"
+                    *ngFor="let item of lstShare"
+                  >
+                    <div
+                      class="d-flex align-items-center py-2 px-3 rounded-5 bg-gray-100 mw-350px"
+                    >
+                      <codx-img
+                        class="me-2 h-20px"
+                        [width]="20"
+                        [isDefaulImg]="true"
+                        [objectId]="item.objectID"
+                        objectType="AD_Users"
+                      >
+                      </codx-img>
+                      <div class="text-gray-700 line-clamp line-clamp-1">
+                        {{ item.objectName }}
+                      </div>
+                      <span
+                        *ngIf="type != 'detail'"
+                        class="icon-close icon-16 ms-3 text-danger"
+                        (click)="removeUser(item)"
+                      ></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </ng-container>
+          </ng-template>
+        </div>
+      </ng-container>
+      <div class="clear"></div>
+      <ng-container
+        *ngIf="
+          cardType != CARDTYPE_EMNUM.Share && cardType != CARDTYPE_EMNUM.Radio
+        "
+      >
+        <div
+          class="d-flex align-items-center justify-content-between mb-3 mt-9"
+        >
+          <div class="text-dark fw-bold">
+            <codx-label
+              [formModel]="dialog.formModel"
+              name="Pattern"
+              default="Chọn thiệp"
+            >
+            </codx-label>
+          </div>
+          <div
+            class="text-right text-primary cursor-pointer"
+            (click)="previewCard()"
+          >
+            <codx-label
+              [formModel]="dialog.formModel"
+              name="lblPreView"
+              default="Xem trước"
+            >
+            </codx-label>
+          </div>
+        </div>
+        <div>
+          <ngb-carousel
+            #carousel
+            [pauseOnFocus]="true"
+            [pauseOnHover]="true"
+            [wrap]="false"
+            [interval]="false"
+            [keyboard]="false"
+            [showNavigationIndicators]="false"
+            [showNavigationArrows]="true"
+          >
+            <ng-template ngbSlide *ngFor="let slide of slides">
+              <div
+                class="d-flex flex-wrap align-items-center justify-content-center"
+              >
+                <ng-container *ngFor="let itemChild of slide">
+                  <div class="mb-3 fd-parttern-item me-5 position-relative">
+                    <ng-container
+                      *ngIf="itemChild.backgroundColor; else noBackgroundColor"
+                    >
+                      <div
+                        class="w-100 h-100 rounded-2"
+                        [style.background-color]="itemChild.backgroundColor"
+                        (click)="selectCard(itemChild)"
+                      ></div>
+                    </ng-container>
+                    <ng-template #noBackgroundColor>
+                      <codx-img
+                        [objectId]="itemChild.recID"
+                        [funcId]="funcID"
+                        [isDefaulImg]="true"
+                        [imageType]="'square'"
+                        referType="image"
+                        objectType="FD_Patterns"
+                        [width]="100"
+                        (click)="selectCard(itemChild)"
+                      >
+                      </codx-img>
+                    </ng-template>
+                    <i
+                      *ngIf="itemChild.patternID == patternSelected.patternID"
+                      class="icon-i-check2-circle pattern-selected"
+                    ></i>
+                  </div>
+                </ng-container>
+              </div>
+            </ng-template>
+          </ngb-carousel>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+  <div
+    class="d-flex align-items-center nav-item w-100 mb-1"
+    *ngIf="showLabelAttachment"
+  >
+    <div class="d-flex align-items-center mb-2">
+      <span class="icon-attach_file icon-18 me-2 text-primary"></span>
+      <div class="fw-bold text-primary">
+        <codx-label name="lblAttachments" default="Tài liệu đính kèm">
+        </codx-label>
+      </div>
+    </div>
+    <div>
+      <codx-attachment
+        #attachment
+        [objectType]="dialog.formModel.entityName"
+        [objectId]="card?.recID"
+        hideFolder="1"
+        hideImageUpload="0"
+        hideImageThumb="0"
+        hideUploadBtn="1"
+        [showMessage]="0"
+        hideDes="1"
+        type="inline"
+        allowMultiFile="1"
+        referType="application"
+        [formModel]="dialog.formModel"
+        [functionID]="funcID"
+        (fileAdded)="fileAdded($event)"
+        (fileCount)="getfileCount($event)"
+        displayThumb="full"
+      >
+      </codx-attachment>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #templateGiftAndPoint>
+  <div class="content d-flex flex-column flex-column-fluid py-0">
+    <div class="extend-main">
+      <ng-container *ngIf="parameter && cardType != CARDTYPE_EMNUM.Radio">
+        <ng-container *ngIf="parameter.HasGifts && parameter.HasGifts == '1'">
+          <div class="d-flex align-items-center justify-content-between mt-4">
+            <div class="d-flex align-items-center">
+              <div class="fw-bold fs-6">
+                <codx-label
+                  [formModel]="dialog.formModel"
+                  name="HasGifts"
+                  default="Quà tặng"
+                ></codx-label>
+              </div>
+            </div>
+            <div
+              class="d-flex align-items-center py-1"
+              style="white-space: nowrap"
+            >
+              <ng-container *ngIf="amount">
+                <span
+                  ><codx-label
+                    [formModel]="dialog.formModel"
+                    name="lblfFDTotalPrice"
+                    default="Tổng xu"
+                  ></codx-label
+                  >: {{ amount }}</span
+                >
+              </ng-container>
+
+              <button
+                type="button"
+                class="cursor-pointer btn btn-icon btn-light-primary"
+                style="margin-left: 5px"
+                (click)="clickAddGift()"
+                [disabled]="type == 'detail'"
+              >
+                <span class="icon-add icon-18"></span>
+              </button>
+              <ng-container *ngIf="showPopupGift">
+                <codx-combobox-popup
+                  [comboboxName]="'FDGifts'"
+                  [multiple]="true"
+                  [width]="width"
+                  [height]="height"
+                  [value]="giftIDs"
+                  [itemTemplate]="itemTemplate"
+                  (clickSave)="getGiftInfor($event)"
+                >
+                </codx-combobox-popup>
+                <ng-template #itemTemplate let-data>
+                  <div class="d-flex align-items-center user-card mb-5">
+                    <span class="me-4">
+                      <codx-img
+                        class="rounded-2"
+                        [objectId]="data.GiftID"
+                        [objectType]="'FD_Gifts'"
+                        imageType="square"
+                        [width]="35"
+                      ></codx-img>
+                    </span>
+                    <div class="d-flex flex-column">
+                      <div class="text-dark fw-bold">
+                        {{ data.GiftName }}
+                      </div>
+                      <span class="fw-bold text-dark">
+                        <codx-label default="Giá"></codx-label>
+                        <span>: {{ data.Price }}</span>
+                      </span>
+                    </div>
+                  </div>
+                </ng-template>
+              </ng-container>
+            </div>
+          </div>
+          <ng-container *ngFor="let data of gifts; index as i">
+            <div class="d-flex align-items-center user-card mb-5">
+              <span class="me-4">
+                <codx-img
+                  class="rounded-2"
+                  [objectId]="data.giftID"
+                  [objectType]="'FD_Gifts'"
+                  imageType="square"
+                  [width]="35"
+                ></codx-img>
+                <!-- <codx-img *ngIf="data.gift.category == '3' || data.gift.category == '4'"
+                                    class="rounded-2" [imgSource]="data.gift.image" [objectType]="'FD_Gifts'"
+                                    imageType="square" [width]="35"></codx-img> -->
+              </span>
+              <div class="d-flex flex-column">
+                <div class="text-dark fw-bold">
+                  {{ data.giftName }}
+                </div>
+                <span *ngIf="data?.groupName" class="fw-bold text-dark">
+                  <codx-label
+                    [formModel]="dialog.formModel"
+                    name="lblGroup"
+                    default="Nhóm"
+                  ></codx-label>
+                  <span>: {{ data.groupName }}</span>
+                </span>
+                <span class="fw-bold text-dark">
+                  <span>{{ data.price }} Xu</span>
+                </span>
+              </div>
+              <div
+                class="d-flex align-items-center"
+                style="margin-left: auto; margin-right: 0"
+              >
+                <codx-label
+                  [formModel]="dialog.formModel"
+                  name="lblFDQuantityGifts"
+                  default="SL: "
+                >
+                </codx-label>
+                <codx-input
+                  style="margin-left: 5px"
+                  ControlName="number"
+                  [min]="1"
+                  [step]="1"
+                  [max]="type == 'detail' ? data.quantity : data.availableQty"
+                  [formModel]="dialog.formModel"
+                  type="number"
+                  field="quantity"
+                  [crrValue]="data.quantity"
+                  (valueChange)="updateQuantity($event, i)"
+                  [disabled]="type == 'detail'"
+                >
+                </codx-input>
+              </div>
+            </div>
+          </ng-container>
+
+          <!-- evoucher -->
+          <div class="d-flex align-items-center justify-content-between mt-4">
+            <div class="d-flex align-items-center">
+              <div class="fw-bold fs-6">
+                <codx-label
+                  [formModel]="dialog.formModel"
+                  default="Quà tặng evoucher"
+                ></codx-label>
+              </div>
+            </div>
+            <div
+              class="d-flex align-items-center py-1"
+              style="white-space: nowrap"
+            >
+              <ng-container *ngIf="amountEvoucher">
+                <span
+                  ><codx-label
+                    [formModel]="dialog.formModel"
+                    name="lblfFDTotalPrice"
+                    default="Tổng xu"
+                  ></codx-label
+                  >: {{ amountEvoucher }}</span
+                >
+              </ng-container>
+
+              <button
+                type="button"
+                class="cursor-pointer btn btn-icon btn-light-primary"
+                style="margin-left: 5px"
+                (click)="clickAddEvoucher()"
+                [disabled]="type == 'detail'"
+              >
+                <span class="icon-add icon-18"></span>
+              </button>
+              <ng-container *ngIf="showPopupEvoucher">
+                <codx-evoucher-popup
+                  (onSaveData)="saveEvoucher($event)"
+                  (onClose)="closeEvoucher($event)"
+                  [width]="widthEvoucher"
+                  [height]="height"
+                  [dataSelcected]="evoucherSelected"
+                  [evoucherGift]="evoucher"
+                  [formName]="formName"
+                  [funcID]="funcID"
+                  [entityName]="entityName"
+                >
+                </codx-evoucher-popup>
+              </ng-container>
+            </div>
+          </div>
+          <ng-container *ngFor="let data of evoucher; index as i">
+            <div class="d-flex align-items-center user-card mb-5">
+              <span class="me-4">
+                <img
+                  src="{{ data?.image }}"
+                  alt="evoucher"
+                  class="rounded-2"
+                  style="height: 35px; width: 35px"
+                />
+              </span>
+              <div class="d-flex flex-column">
+                <div class="text-dark fw-bold">
+                  {{ data?.giftName }}
+                </div>
+                <div class="text-dark fw-bold">
+                  {{ data?.price * data?.quantity }} Xu
+                </div>
+              </div>
+              <div
+                class="d-flex align-items-center"
+                style="margin-left: auto; margin-right: 0"
+              >
+                <codx-label
+                  [formModel]="dialog.formModel"
+                  name="lblFDQuantityGifts"
+                  default="SL: "
+                >
+                </codx-label>
+                <codx-input
+                  style="margin-left: 5px"
+                  ControlName="number"
+                  [min]="1"
+                  [step]="1"
+                  [formModel]="dialog.formModel"
+                  type="number"
+                  field="quantity"
+                  [crrValue]="data?.quantity"
+                  [disabled]="true"
+                >
+                </codx-input>
+              </div>
+            </div>
+          </ng-container>
+        </ng-container>
+        <ng-container *ngIf="parameter.HasPoints && parameter.HasPoints == '1'">
+          <div class="row mt-8">
+            <div class="col-6 form-group">
+              <codx-label
+                [formModel]="dialog.formModel"
+                name="lblHasPoints"
+                default="Quỹ cho"
+              >
+              </codx-label>
+              <codx-input
+                ControlName="number"
+                [formModel]="dialog.formModel"
+                [Group]="form"
+                type="number"
+                field="coins"
+                [min]="0"
+                [step]="1"
+                (valueChange)="valueChange($event)"
+                [disabled]="type == 'detail'"
+                [crrValue]="
+                  form.controls['coins'] && form.controls['coins'].value
+                    ? form.controls['coins'].value
+                    : ''
+                "
+              >
+              </codx-input>
+              <div
+                *ngIf="cointsError"
+                class="errorMessage text-danger ms-3"
+                data-field="taskName"
+              >
+                {{ cointsError }}
+              </div>
+            </div>
+          </div>
+        </ng-container>
+      </ng-container>
+    </div>
+  </div>
 </ng-template>
