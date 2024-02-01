@@ -6,34 +6,7 @@
 >
 </codx-form>
 <ng-template #body>
-    <div class="d-flex flex-column w-100 h-100 overflow-auto grid-collapse" ngbAccordion>
-        <div class="border-bottom pt-4" ngbAccordionItem [collapsed]="false" *ngFor="let item of documentControl">
-            <div class="d-flex align-items-center" ngbAccordionHeader>
-                <button ngbAccordionButton></button>
-                <div ><span class="fw-bold fs-5-sm">{{item.stageName}}</span></div>
-            </div>
-            <div ngbAccordionCollapse>
-                <div ngbAccordionBody>
-                    <ng-template>
-                        <div class="d-flex flex-column ps-13 pb-4">
-                            <span class="mt-1 fw-bold">{{item.stepName}}</span>
-                            <div class="d-flex justify-content-between align-items-center ps-8 mt-2 cursor-pointer" (click)="selectedItem(item)">
-                                <codx-thumbnail  
-                                    [files]="item?.files" 
-                                    displayThumb="simple" 
-                                    [hideDelete]="'1'"
-                                    [hideMoreF]="'0'" 
-                                    [isClick]="false" 
-                                >
-                                </codx-thumbnail>
-                                <i *ngIf="item.recID == selected?.recID" class="icon-i-check-circle-fill"></i>
-                            </div>
-                        </div>
-                    </ng-template>
-                </div>
-            </div>
-        </div>
-    </div>
+    <lib-add-file-from-process-default [data]="data" [step]="step" [formModel]="formModel" (selectedChange)="selectedChange($event)"></lib-add-file-from-process-default>
 </ng-template>
 <ng-template #footer>
     <div class="d-flex justify-content-end">
