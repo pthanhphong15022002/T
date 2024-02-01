@@ -73,6 +73,7 @@ import { CheckDuedateValuePipe } from './pipes/check-duedate-value.pipe';
 import { BpTasksComponent } from './bp-tasks/bp-tasks.component';
 import { ViewListBpTasksComponent } from './bp-tasks/view-list-bp-tasks/view-list-bp-tasks.component';
 import { PopupBpTasksComponent } from './bp-tasks/popup-bp-tasks/popup-bp-tasks.component';
+import { AddFileFromProcessDefaultComponent } from './processes/popup-add-process/form-steps-field-grid/add-default/add-task/add-file-from-process/add-file-from-process-default/add-file-from-process-default.component';
 
 export const routes: Routes = [
   {
@@ -156,7 +157,8 @@ export const routes: Routes = [
     AddSettingConditionsComponent,
     AddProcessDefaultPrice,
     AddFileFromProcessComponent,
-
+    AddFileFromProcessDefaultComponent,
+    
     ProcessReleaseComponent,
     ProcessReleaseDetailComponent,
     ViewListInstancesComponent,
