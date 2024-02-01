@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { isObservable } from 'rxjs';
 
@@ -10,6 +10,7 @@ import { isObservable } from 'rxjs';
 export class ViewListBpTasksComponent {
   @Input() dataSelected: any;
   @Input() formModel: any;
+  @Output() dbClickEvent = new EventEmitter<any>();
   info: any;
   constructor(private shareService: CodxShareService) {}
 
@@ -29,5 +30,9 @@ export class ViewListBpTasksComponent {
         this.info = item;
       });
     } else this.info = info;
+  }
+
+  dbClick(data){
+    this.dbClickEvent.emit({data: data});
   }
 }

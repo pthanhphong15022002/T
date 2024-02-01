@@ -1,9 +1,9 @@
 import { Component, OnInit, Optional } from '@angular/core';
 import { ApiHttpService, CacheService, CallFuncService, DialogData, DialogRef, SidebarModel } from 'codx-core';
 import moment from 'moment';
+import { PopupBpTasksComponent } from 'projects/codx-bp/src/lib/bp-tasks/popup-bp-tasks/popup-bp-tasks.component';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { isObservable } from 'rxjs';
-import { PopupBpTasksComponent } from '../popup-bp-tasks/popup-bp-tasks.component';
 
 @Component({
   selector: 'lib-process-release-detail',
