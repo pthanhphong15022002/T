@@ -123,6 +123,7 @@ import { FormatDatePipe } from './share/periodic-control/formatDate/format-date.
 import { ContractsComponent } from 'projects/codx-cm/src/lib/contracts/contracts.component';
 import { AssetJournalsComponent } from './vouchers/asset-journals/asset-journals.component';
 import { AssetJournalsAddComponent } from './vouchers/asset-journals/asset-journals-add/asset-journals-add.component';
+import { CategoriesComponent } from './categories/categories.component';
 export const routes: Routes = [
   {
     path: '',
@@ -479,6 +480,7 @@ export const routes: Routes = [
     FormatDatePipe,
     AssetJournalsComponent,
     AssetJournalsAddComponent,
+    CategoriesComponent,
   ],
   exports: [RouterModule],
   providers: [AccumulationTooltipService],
