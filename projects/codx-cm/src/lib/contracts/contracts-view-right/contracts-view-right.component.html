@@ -25,9 +25,15 @@
       <i class="icon-add_shopping_cart icon-18 me-2 text-primary"></i>
       <span
         class="fw-bold fs-6"
+        #BusinessLineID
         [innerHTML]="
           contract?.businessLineID
-            | formatvalue : formModel : 'BusinessLineID'
+            | formatvalue
+              : formModel
+              : 'Owner'
+              : BusinessLineID
+              : 'CMContracts'
+              : 'grvCMContracts'
             | async
         "
       ></span>
@@ -49,9 +55,15 @@
           <div class="d-flex flex-column">
             <div
               class="text-dark codx-textcontent fw-bold"
+              #customerID
               [innerHTML]="
                 contract?.customerID
-                  | formatvalue : formModel : 'CustomerID'
+                  | formatvalue
+                    : formModel
+                    : 'CustomerID'
+                    : customerID
+                    : 'CMContracts'
+                    : 'grvCMContracts'
                   | async
               "
             ></div>
@@ -66,17 +78,29 @@
           <span class="icon-monetization_on icon-18 me-1 text-warning"></span>
           <span
             class="fs-5 fw-bold"
+            #ContractAmt
             [innerHTML]="
               contract?.contractAmt
-                | formatvalue : formModel : 'ContractAmt'
+                | formatvalue
+                  : formModel
+                  : 'ContractAmt'
+                  : ContractAmt
+                  : 'CMContracts'
+                  : 'grvCMContracts'
                 | async
             "
           ></span>
           <span
             class="fs-5 fw-bold ms-1"
+            #CurrencyID
             [innerHTML]="
               contract?.currencyID
-                | formatvalue : formModel : 'CurrencyID'
+                | formatvalue
+                  : formModel
+                  : 'CurrencyID'
+                  : CurrencyID
+                  : 'CMContracts'
+                  : 'grvCMContracts'
                 | async
             "
           ></span>
@@ -85,9 +109,15 @@
           <span class="icon-av_timer icon-16 text-gray-600 me-1"></span>
           <span
             class="text-gray-600"
+            #CreatedOn
             [innerHTML]="
               contract?.createdOn
-                | formatvalue : formModel : 'CreatedOn'
+                | formatvalue
+                  : formModel
+                  : 'CreatedOn'
+                  : CreatedOn
+                  : 'CMContracts'
+                  : 'grvCMContracts'
                 | async
             "
           ></span>
@@ -144,6 +174,7 @@
             fiedName="contactID"
             [formModel]="formModel"
             [setRequire]="false"
+            default="Người đại diện"
           >
           </codx-label>
         </div>
@@ -224,6 +255,7 @@
             fiedName="owner"
             [formModel]="formModel"
             [setRequire]="false"
+            default="Người phụ trách"
           >
           </codx-label>
         </div>
@@ -236,8 +268,16 @@
           ></codx-imgs>
           <span
             class="text-dark fw-bold codx-textcontent ms-2 mb-2"
+            #owner
             [innerHTML]="
-              contract?.owner | formatvalue : formModel : 'Owner' | async
+              contract?.owner
+                | formatvalue
+                  : formModel
+                  : 'Owner'
+                  : owner
+                  : 'CMContracts'
+                  : 'grvCMContracts'
+                | async
             "
           ></span>
         </div>
