@@ -158,7 +158,7 @@ export class CardsComponent extends UIComponent {
         let option = new SidebarModel();
         option.DataService = this.view.dataService;
         option.FormModel = this.view.formModel;
-        option.Width = '550px';
+        option.Width = '800px';
         this.callfc.openSide(
           PopupAddCardsComponent,
           { 
@@ -176,7 +176,7 @@ export class CardsComponent extends UIComponent {
       let option = new SidebarModel();
       option.DataService = this.view.dataService;
       option.FormModel = this.view.formModel;
-      option.Width = '550px';
+      option.Width = '800px';
       this.callfc.openSide(
         PopupAddCardsComponent,
         {
@@ -193,7 +193,7 @@ export class CardsComponent extends UIComponent {
           let option = new SidebarModel();
           option.DataService = this.view.dataService;
           option.FormModel = this.view.formModel;
-          option.Width = '550px';
+          option.Width = '800px';
           this.callfc.openSide(
             PopupAddCardsComponent,
             {

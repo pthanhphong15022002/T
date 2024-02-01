@@ -129,7 +129,7 @@ export class CodxCommonService {
       });
     });
   }
-  
+
   //-------------------------------------------Role--------------------------------------------//
   checkAdminModule(funcID: string) {
     return this.api.execSv(
@@ -141,19 +141,18 @@ export class CodxCommonService {
     );
   }
 
-//-------------------------------------------WP--------------------------------------------//
-deleteGroup(recID: string) {
-  return this.api.execSv(
-    'WP',
-    'ERM.Business.WP',
-    'GroupBusiness',
-    'DeleteGroupAsync',
-    [recID]
-  );
-}
+  //-------------------------------------------WP--------------------------------------------//
+  deleteGroup(recID: string) {
+    return this.api.execSv(
+      'WP',
+      'ERM.Business.WP',
+      'GroupBusiness',
+      'DeleteGroupAsync',
+      [recID]
+    );
+  }
 
-//-------------------------------------------------------------------------------------------//
-
+  //-------------------------------------------------------------------------------------------//
 
   deleteByObjectsWithAutoCreate(
     objectIDs: string,
@@ -710,6 +709,7 @@ deleteGroup(recID: string) {
                         approveProcess,
                         lstFile
                       );
+                      debugger;
                       if (lstFile?.length > 0) {
                         this.apOpenPopupSignFile(
                           approveProcess,
@@ -911,9 +911,9 @@ deleteGroup(recID: string) {
   codxApprove(
     tranRecID: any, //RecID của ES_ApprovalTrans hiện hành
     status: string, //Trạng thái
-    reasonID: string=null, //Mã lí do (ko bắt buộc)
-    comment: string=null, //Bình luận (ko bắt buộc)
-    userID: string=null, //Người thực hiện (ko bắt buộc)
+    reasonID: string = null, //Mã lí do (ko bắt buộc)
+    comment: string = null, //Bình luận (ko bắt buộc)
+    userID: string = null //Người thực hiện (ko bắt buộc)
   ): Observable<any> {
     let approveProcess = new ApproveProcess();
     approveProcess.tranRecID = tranRecID;
@@ -932,8 +932,8 @@ deleteGroup(recID: string) {
   }
   //-------------------------------------------Uỷ quyền--------------------------------------------//
   codxAuthority(
-    tranRecID: any, //RecID của ES_ApprovalTrans hiện hành    
-    releaseCallback: (response: ResponseModel, component: any) => void, //Hàm xử lí kết quả trả về
+    tranRecID: any, //RecID của ES_ApprovalTrans hiện hành
+    releaseCallback: (response: ResponseModel, component: any) => void //Hàm xử lí kết quả trả về
   ) {
     let approveProcess = new ApproveProcess();
     approveProcess.tranRecID = tranRecID;
@@ -942,27 +942,29 @@ deleteGroup(recID: string) {
       '',
       500,
       250,
-      '',
+      ''
     );
-    dialogAP.closed.subscribe(res=>{
-      if(res?.event){
+    dialogAP.closed.subscribe((res) => {
+      if (res?.event) {
         let model = new ApproveProcess();
         model.tranRecID = tranRecID;
-        
-        this.api.execSv(
-        'ES',
-        'ERM.Business.ES',
-        'ApprovalTransBusiness',
-        'AuthorityAsync',
-        [model,res?.event]
-        ).subscribe((authority :ResponseModel)=>{
-          if(authority?.rowCount >0 && authority.msgCodeError==null){
-            this.notiService.notifyCode('SYS034');
-            releaseCallback && releaseCallback(authority,null);
-          }
-        });
+
+        this.api
+          .execSv(
+            'ES',
+            'ERM.Business.ES',
+            'ApprovalTransBusiness',
+            'AuthorityAsync',
+            [model, res?.event]
+          )
+          .subscribe((authority: ResponseModel) => {
+            if (authority?.rowCount > 0 && authority.msgCodeError == null) {
+              this.notiService.notifyCode('SYS034');
+              releaseCallback && releaseCallback(authority, null);
+            }
+          });
       }
-    });   
+    });
   }
   //#endregion Codx Quy trình duyệt
 

@@ -450,7 +450,7 @@ export class ViewDetailComponent extends UIDetailComponent implements OnInit {
         //Biến động , tự custom
         var customData = {
           refID: '',
-          refType: this.formModel?.entityName,
+          refType: this.view?.formModel?.entityName,
           dataSource: datas,
         };
 
@@ -458,8 +458,8 @@ export class ViewDetailComponent extends UIDetailComponent implements OnInit {
           val,
           datas,
           null,
-          this.formModel,
-          this.view.dataService,
+          this.view?.formModel,
+          this.view?.dataService,
           this,
           customData
         );
