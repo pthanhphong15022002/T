@@ -69,6 +69,7 @@ import { CustomStagesPipe } from './pipes/customStages.pipe';
 import { ViewDetailInstancesComponent } from './processes/popup-add-process/process-release/view-detail-instances/view-detail-instances.component';
 import { PopupBpTasksComponent } from './processes/popup-add-process/process-release/popup-bp-tasks/popup-bp-tasks.component';
 import { MyInstancesComponent } from './my-instances/my-instances.component';
+import { AddFileFromProcessComponent } from './processes/popup-add-process/form-steps-field-grid/add-default/add-task/add-file-from-process/add-file-from-process.component';
 
 export const routes: Routes = [
   {
@@ -146,6 +147,7 @@ export const routes: Routes = [
     AddTaskComponent,
     AddSettingConditionsComponent,
     AddProcessDefaultPrice,
+    AddFileFromProcessComponent,
 
     ProcessReleaseComponent,
     ProcessReleaseDetailComponent,
