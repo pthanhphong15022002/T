@@ -39,8 +39,7 @@ export class SalcoeffempComponent extends UIComponent implements OnInit, AfterVi
   }
 
   onInit(): void {
-    this.filters["DowCode"] = moment().format("YYYY/MM");
-    this.dataValues = JSON.stringify(this.filters);
+    this.getCurrentDowCode();
     this.cache.message("HR049")
     .subscribe((mssg:any) => {
       if(mssg)
@@ -70,6 +69,18 @@ export class SalcoeffempComponent extends UIComponent implements OnInit, AfterVi
     this.detectorRef.detectChanges();
   }
 
+  // get CurrentPayrollDow
+  getCurrentDowCode(){
+    this.api.execSv("SYS","SYS","SettingValuesBusiness","GetParameterByHRAsync",["PRParameters","1"])
+    .subscribe((res:any) => {
+      if(res)
+      {
+        let setting = JSON.parse(res)
+        this.filters["DowCode"] = setting["CurrentPayrollDow"];
+      }
+    });
+  }
+
   // get columns grid
   getColumns(){
     this.api.execSv("HR","ERM.Business.LS","SalCoeffBusiness","GetAsync")
@@ -78,17 +89,15 @@ export class SalcoeffempComponent extends UIComponent implements OnInit, AfterVi
       {
         field: 'employeeID',
         template: this.tmpEmployee,
-        width:300
       });
       if(res.length > 0)
       {
         res.forEach(item => {
           this.columnsGrid.push({
             headerText: item.coeffName,
-            field:  item.coeffCode,
+            field: item.coeffCode,
             refField: 'coeffCode',
             template:this.tmpData,
-            width:100
           });
         });
       }

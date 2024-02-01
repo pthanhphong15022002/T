@@ -25,6 +25,7 @@ import { PopupEkowdsComponent } from './popup/popup-ekowds/popup-ekowds.componen
 import { PopupCopyEkowdsComponent } from './popup/popup-copy-ekowds/popup-copy-ekowds.component';
 import { KowdsScheduleComponent } from './kowds-schedule/kowds-schedule.component';
 import { ViewKowcodeComponent } from '../request-kowds/view-kowcode/view-kowcode.component';
+import moment from 'moment';
 
 @Component({
   selector: 'pr-kowds',
@@ -32,73 +33,39 @@ import { ViewKowcodeComponent } from '../request-kowds/view-kowcode/view-kowcode
   styleUrls: ['./kowds.component.css'],
 })
 export class KowdsComponent extends UIComponent {
-  daysOfWeek = [
-    'Chủ nhật',
-    'Thứ hai',
-    'Thứ ba',
-    'Thứ tư',
-    'Thứ năm',
-    'Thứ sáu',
-    'Thứ bảy',
-  ];
-  days = [];
-  daysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-  gridDataSource: any = [];
-  gridDataSourceStatistic: any = [];
+
   views: Array<ViewModel>;
-  request: any = null;
-  requestTitle: any = null;
-  buttonAdd: ButtonModel[];
-  lstHrKow: any = [];
-  viewActive: string = '';
   orgUnitID: string = '';
-  formModelEmployee;
   rowCountCalendarGrid: any;
-  filterDowCode: any = '2023/12';
-  filterGroupSalCode: any = '';
-  filterOrgUnit: any;
-  filterMonth: any;
-  filterYear: any;
-  scheduleEvent?: ResourceModel;
-  scheduleHeader?: ResourceModel;
-  itemSelected: any;
-  lstEmp: any = [];
-  viewDetailData = true;
-  viewStatistic = false;
-  timeKeepingMode: any;
-  calendarGridColumns: any = [];
-  columnTotalKow = [];
-  isOnlyReadSavedData = false;
+  detailByDayColoumns: any = [];
+  summaryColumns = [];
   dataValues: any;
-  entityName: any;
-  addHeaderText;
-  editHeaderText;
   userPermission: any;
-  formHeaderText;
-  grvSetup: any;
-  arrSearchField: any = [];
-  gridKow: any;
-  @ViewChild('tempDayHeader', { static: true }) tempDayHeader: TemplateRef<any>;
-  @ViewChild('calendarGrid') calendarGrid: CodxGridviewV2Component;
-  @ViewChild('gridTotal') gridTotal: CodxGridviewV2Component;
-  @ViewChild('tempTree') tempTree: TemplateRef<any>;
+  dtService: CRUDService;
+  loadedGridSummary:boolean = false;
+  loadedGridDetail: boolean = false;;
+  function: any;
+  vllDayOfWeek:any = [];
+  detailByDateRowCount:number = 0;
+  summaryKowDRowCount:number = 0;
+  messageHR060:string = "HR060";
+  filters:any = {};
+  vllHR033:any = {};
+  lstHRKow:any = [];
+  kowDOption:string = "";
+  kowCode:string = "";
+  modeView:number = 1; // 1: Chi tiết theo ngày; 2: Bảng công tổng hợp
+  mssgConfirmDelete:string = "HR039";
+
+  @ViewChild('codxGrvDetailDay') codxGrvDetailDay: CodxGridviewV2Component;
+  @ViewChild('codxGrvSummaryKow') codxGrvSummaryKow: CodxGridviewV2Component;
   @ViewChild('leftPanel') leftPanel: TemplateRef<any>;
   @ViewChild('tmpPanelRight') tmpPanelRight: TemplateRef<any>;
-  @ViewChild('tempEmployee', { static: true }) tempEmployee: TemplateRef<any>;
-  @ViewChild('tempKowTotal', { static: true }) tempKowTotal: TemplateRef<any>;
-  @ViewChild('tempKow', { static: true }) tempKow: TemplateRef<any>;
-
+  @ViewChild('tempEmployee') tempEmployee: TemplateRef<any>;
+  @ViewChild('tempCellSummary') tempCellSummary: TemplateRef<any>;
+  @ViewChild('tempCellDetail') tempCellDetail: TemplateRef<any>;
   @ViewChild('tmpPopupKowD') tmpPopupKowD: TemplateRef<any>;
-
-  dtService: CRUDService;
-  cbbKowCode: any;
-  loadedTotalGrid = false;
-  gridTotalFM: FormModel;
-  setHeighted = false;
-  funcList: any;
-  weekDayVLL = [];
-  showCalendarGrid=false;
-  loadedCalendarGrid: boolean;
+  @ViewChild("tmpPopupNoteKow") tmpPopupNoteKow:TemplateRef<any>;
   constructor(
     inject: Injector,
     private hrService: CodxHrService,
@@ -107,62 +74,40 @@ export class KowdsComponent extends UIComponent {
     private notify: NotificationsService,
     private routeActive: ActivatedRoute,
     private realHub: RealHubService,
-  ) {
+  ) 
+  {
     super(inject);
     this.funcID = this.routeActive.snapshot.params['funcID'];
     this.dtService = new CRUDService(inject);
     this.dtService.idField = 'orgUnitID';
   }
 
-  //---------------------------------------------------------------------------------//
-  //-----------------------------------Base Func-------------------------------------//
-  //---------------------------------------------------------------------------------//
+
   onInit(): void {
-    this.gridTotalFM = new FormModel();
-    this.gridTotalFM.formName = 'KowDs';
-    this.gridTotalFM.gridViewName = 'grvKowDsUIByKow';
-    this.gridTotalFM.entityName = 'TS_KowDs';
-    this.loadGridTotal();
-
-    let tempDate = new Date();
-    this.filterMonth = tempDate.getMonth();
-    this.filterYear = tempDate.getFullYear();
-    if(this.filterMonth + 1 < 10)
-      this.filterDowCode = this.filterYear + '/0' + (this.filterMonth + 1);
-    else
-      this.filterDowCode = this.filterYear + '/' + (this.filterMonth + 1);
-
-    this.initHeaderText();
-
-    this.getTimeKeepingMode().subscribe((res) => {
-      this.timeKeepingMode = res.timeKeepingMode;
-      if (this.timeKeepingMode == '2') {
-        this.viewStatistic = false;
-        this.viewDetailData = true;
-      }
-    });
-
-    this.cache.functionList(this.funcID).subscribe((res) => {
-      this.funcList = res;
-      this.formHeaderText = res?.description ?? 'Bảng công tháng';
-      this.entityName = res?.entityName;
-      this.getUserPermission().subscribe((res2) => {
-        this.userPermission = res2;
-      });
-    });
-
-    this.hrService.getFormModel('HRT03a1').then((res) => {
-      if (res) {
-        this.formModelEmployee = res;
-      }
-    });
-
-    this.buttonAdd = [
+    //cache valuelist
+    this.cache.valueList("HR033").subscribe((vll:any) => {
+      if(vll && vll.datas)
       {
-        id: 'btnAdd',
-      },
-    ];
+        vll.datas.forEach((element) => {
+          this.vllHR033[element.value] = element;
+        });
+      }
+    });
+    // get messgae
+    this.cache.message("HR060").subscribe((mssg:any) => {
+      if(mssg)
+        this.messageHR060 = mssg.customName ?? mssg.defaultName;
+    });
+    // get messgae
+    this.cache.message("HR039").subscribe((mssg:any) => {
+      if(mssg)
+        this.mssgConfirmDelete = mssg.customName ?? mssg.defaultName;
+    });
 
+    // get user permission
+    this.getUserPermission(this.funcID);
+
+    // hub proccess
     this.realHub.start("hr").then((x: RealHub) => {
       if(x)
       {
@@ -192,8 +137,6 @@ export class KowdsComponent extends UIComponent {
         });
       }
     });
-
-    
   }
 
   ngAfterViewInit(): void {
@@ -206,241 +149,33 @@ export class KowdsComponent extends UIComponent {
         model: {
           panelRightRef: this.tmpPanelRight,
           panelLeftRef: this.leftPanel,
-          widthLeft: 300,
           collapsed: true,
           resizable: true,
         },
       },
     ];
-  }
-  afterRenderList() {
-    if (!this.setHeighted) {
-      let html = document
-        ?.getElementById('chartOrg')
-        ?.getElementsByClassName('card-body');
-      if (html?.length > 0) {
-        let body = Array.from(html as HTMLCollectionOf<HTMLElement>)[0];
-        body.style.height = body.offsetHeight - 50 + 'px';
-      }
-      this.setHeighted = true;
-      this.detectorRef.detectChanges();
-    }
-  }
-  //---------------------------------------------------------------------------------//
-  //-----------------------------------Get Cache Data--------------------------------//
-  //---------------------------------------------------------------------------------//
-  // getCacheData(){
+    this.getCurrentDowCode();
+    this.getColSummaryKowd();
 
-  // }
-
-  //---------------------------------------------------------------------------------//
-  //-----------------------------------Get Data Func---------------------------------//
-  //---------------------------------------------------------------------------------//
-
-  loadGridTotal() {
-    this.cache
-      .gridViewSetup('KowDs', 'grvKowDsUIByKow')
-      .subscribe((res: any) => {
-        if (res) {
-          this.columnTotalKow = [];
-          this.gridKow = Util.camelizekeyObj(res);
-          for (let field in this.gridKow) {
-            if (this.gridKow[field]?.fieldName == 'EmployeeID') {
-              this.columnTotalKow.push({
-                width:300,
-                template: this.tempEmployee,
-                field: 'employeeID',
-              });
-            } else if (this.gridKow[field]?.fieldName == 'KowCode') {
-              let gridModel = new DataRequest();
-              gridModel.pageLoading = false;
-              gridModel.comboboxName = this.gridKow[field]?.referedValue;
-              this.api
-                .execSv(
-                  'HR',
-                  'ERM.Business.Core',
-                  'DataBusiness',
-                  'LoadDataCbxAsync',
-                  [gridModel]
-                )
-                .subscribe((cbx: any) => {
-                  if (cbx && cbx[0] != null) {
-                    this.cbbKowCode = JSON.parse(cbx[0]);
-                    if (this.cbbKowCode?.length > 0) {
-                      this.cbbKowCode.forEach((kow) => {
-                        this.columnTotalKow.push({
-                          headerText: kow?.KowID,
-                          template: this.tempKowTotal,
-                          field: kow?.KowID,
-                          refField: 'kowCode',
-                        });
-                      });
-                    }
-                    this.loadedTotalGrid = true;
-                    this.detectorRef.detectChanges();
-                  }
-                });
-            }
-          }
-        }
-      });
   }
 
-  createMonthColumn(){
-    let dates = new Date(this.filterYear, this.filterMonth+1, 0)?.getDate();
-    let weekDay;
-    for (let day = 1; day <= dates; day++) {
-      if (day == 1) {
-        weekDay = new Date(
-          this.filterYear,
-          this.filterMonth,
-          1
-        ).getDay();
-      } else {
-        weekDay = weekDay >= 6 ? 0 : weekDay + 1;
+  // get CurrentPayrollDow
+  getCurrentDowCode(){
+    this.api.execSv("SYS","SYS","SettingValuesBusiness","GetParameterByHRAsync",["PRParameters","1"])
+    .subscribe((res:any) => {
+      if(res)
+      {
+        let setting = JSON.parse(res)
+        this.filters["DowCode"] = setting["CurrentPayrollDow"];
+        this.dataValues = JSON.stringify(this.filters);
+        this.getColGridDetailDay();
       }
-      let dayInWeek = this.weekDayVLL?.find((x) => x.value == weekDay)?.text ?? '';
-      this.calendarGridColumns.push({
-        field: day.toString(),
-        refField: 'workDate',
-        headerTemplate: ` ${dayInWeek}
-            <div> ${day} </div> `,
-        template: this.tempKow,
-      });
-    }
-    this.loadedCalendarGrid=true;
-    this.detectorRef.detectChanges();
+    });
   }
 
-  loadDataInGrid(reloadColumn = false) {
-    if (this.viewDetailData == true) {
-      if (!this.calendarGridColumns.length || reloadColumn) {
-        this.calendarGridColumns = [];
-        this.loadedCalendarGrid=false;
-        this.detectorRef.detectChanges();
-        this.calendarGridColumns.push({
-          width:300,
-          template: this.tempEmployee,
-          field: 'employeeID',
-        });
-        
-        if (this.weekDayVLL?.length == 0) {
-          this.cache.valueList('L0012').subscribe((vll) => {
-            if (vll) {
-              this.weekDayVLL = vll?.datas;
-              this.createMonthColumn();
-            }
-          });
-        } else {
-          this.createMonthColumn();          
-        }
-      }
 
-      if (this.calendarGrid ) {
-        this.calendarGrid.refresh(true);
-      }
-    } else if (this.viewStatistic == true) {
-      if (!this.columnTotalKow.length) {
-        this.columnTotalKow = [];
-        this.cache
-          .gridViewSetup('KowDs', 'grvKowDsUIByKow')
-          .subscribe((res: any) => {
-            if (res) {
-              this.columnTotalKow = [];
-              this.gridKow = Util.camelizekeyObj(res);
-              for (let field in this.gridKow) {
-                if (this.gridKow[field]?.fieldName == 'EmployeeID') {
-                  this.columnTotalKow.push({
-                    headerTemplate: 'Nhân viên',
-                    template: this.tempEmployee,
-                    field: 'employeeID',
-                  });
-                } else if (this.gridKow[field]?.fieldName == 'KowCode') {
-                  let gridModel = new DataRequest();
-                  gridModel.pageLoading = false;
-                  gridModel.comboboxName = this.gridKow[field]?.referedValue;
-                  this.api
-                    .execSv(
-                      'HR',
-                      'ERM.Business.Core',
-                      'DataBusiness',
-                      'LoadDataCbxAsync',
-                      [gridModel]
-                    )
-                    .subscribe((cbx: any) => {
-                      if (cbx && cbx[0] != null) {
-                        this.cbbKowCode = JSON.parse(cbx[0]);
-                        if (this.cbbKowCode?.length > 0) {
-                          this.cbbKowCode.forEach((kow) => {
-                            this.columnTotalKow.push({
-                              headerText: kow?.KowID,
-                              template: this.tempKowTotal,
-                              field: kow?.KowID,
-                              refField: 'kowCode',
-                            });
-                          });
-                        }
-                        this.detectorRef.detectChanges();
-                      }
-                    });
-                }
-              }
-            }
-          });
-      }
-      if (this.gridTotal) {
-        this.gridTotal.refresh(true);
-      }
-      
-    }
-    this.detectorRef.detectChanges();
-  }
-
-  onLoadedData(event) {
-    if (this.view?.gridViewSetup != null) {
-      this.grvSetup = this.view.gridViewSetup;
-      let arrObj = Object.keys(this.view?.gridViewSetup).map((key) => ({
-        [key]: this.view?.gridViewSetup[key],
-      }));
-      let arrTemp = arrObj.map((item) => {
-        let key = Object.keys(item);
-        if (item[key[0]].isQuickSearch) {
-          return key;
-        }
-        return null;
-      });
-      this.arrSearchField = [];
-      for (let i = 0; i < arrTemp.length; i++) {
-        if (
-          arrTemp[i] != null &&
-          this.arrSearchField.indexOf(arrTemp[i][0]) == -1
-        ) {
-          let str = arrTemp[i][0];
-          this.arrSearchField.push(Util.camelize(str));
-        }
-      }
-    }
-  }
-  //---------------------------------------------------------------------------------//
-  //-----------------------------------Base Event------------------------------------//
-  //---------------------------------------------------------------------------------//
-  onChangeIsReadSavedData(event) {
-    if (event.data != null) {
-      this.isOnlyReadSavedData = event.data;
-      this.dataValues = [
-        this.filterOrgUnit,
-        this.filterMonth +1,
-        this.filterYear,
-        this.filterGroupSalCode,
-        this.filterDowCode,
-        this.isOnlyReadSavedData.toString(),
-      ].join(';');
-      this.detectorRef.detectChanges();
-      this.loadDataInGrid();
-    }
-  }
-
-  handleShowHideMF(event) {
+  // show/hide moreFunc
+  changeDataMF(event) {
     if(event && event.length > 0)
     {
       event.forEach((mfc:any) => 
@@ -481,65 +216,103 @@ export class KowdsComponent extends UIComponent {
     }
   }
 
-  // clikc morefunction
+  // click MF
   clickMF(event) {
-    switch (event.functionID) {
-      case 'SYS104':
-        if (this.calendarGrid.arrSelectedRows.length > 1) {
-          this.notify.notifyCode('HR038');
-          return;
-        } else if (this.calendarGrid.arrSelectedRows.length < 0) {
-          this.notify.notifyCode('HR040');
-          return;
-        } else 
-        {
-          this.handleCopyEmpKows(
-            'Sao chép',
-            'copy',
-            this.calendarGrid.arrSelectedRows[0]
-          );
-        }
+    switch (event.functionID) 
+    {
+      case 'SYS104': // coppy
+        this.coppy();
         break;
-      case 'SYS102':
-        let lstEmpID = this.calendarGrid.arrSelectedRows.map((data) => {
-          return data.employeeID;
-        });
-
-        this.notify.alertCode('SYS030').subscribe((x) => {
-          if (x.event?.status == 'Y') {
-            this.deleteEmpKowByDowCode(
-              lstEmpID.join(';'),
-              this.filterDowCode
-            ).subscribe((res) => {
-              if (res == true) {
-                this.notify.notifyCode('SYS008');
-                this.calendarGrid.refresh();
-              }
-            });
-          }
-        });
+      case 'SYS102': // delete
+        this.delete();
         break;
-      case 'HRTPro18A14':
+      case 'HRTPro18A14': // update KowD
         this.openPopupGenKowD();
         break;
     }
   }
-  //---------------------------------------------------------------------------------//
-  //-----------------------------------Custom Event----------------------------------//
-  //---------------------------------------------------------------------------------//
 
-  modeView:number = 1; // 1: Chi tiết theo ngày; 2: Bảng công tổng hợp
-  switchModeView(mode) {
-    if (mode == 1) 
-    {
-      this.viewDetailData = true;
-      this.viewStatistic = false;
-    } 
-    else if (mode == 2) 
-    {
-      this.viewStatistic = true;
-      this.viewDetailData = false;
+  // open popup coppy
+  coppy(){
+    if (this.codxGrvDetailDay?.selectedIndexes?.length < 1) {
+      this.notify.notifyCode('HR040');
+      return;
     }
+    else if (this.codxGrvDetailDay?.selectedIndexes?.length > 1) 
+    {
+      this.notify.notifyCode('HR038');
+      return;
+    } 
+    else if(this.codxGrvDetailDay?.selectedIndexes?.length == 1)
+    {
+      let data = this.codxGrvDetailDay.dataSource[this.codxGrvDetailDay.selectedIndexes];
+      let option = new SidebarModel();
+      option.FormModel = this.view.formModel;
+      option.Width = '550px';
+      let emp = {
+        employeeID: data.EmployeeID,
+        employeeName: data.EmployeeName,
+        positionName: data.PositionName,
+      };
+      let dialog = this.callfunc.openSide(
+        PopupCopyEkowdsComponent,
+        {
+          data: emp,
+          dowCode: this.filters["DowCode"],
+          headerText: 'Sao chép dữ liệu công',
+        },
+        option
+      );
+
+      dialog.closed.subscribe((res) => {
+        if (res && res?.event) 
+        {
+          this.refeshGrid();
+        }
+      });
+    }
+  }
+
+  // delete data
+  delete(){
+    if(this.codxGrvDetailDay.selectedIndexes.length > 0)
+    {
+      this.notify.alertCode('HR039',null,this.filters["DowCode"])
+      .subscribe((res:any) => {
+        if (res && res?.event?.status == 'Y') 
+        {
+          debugger
+          let strEmpIDs = this.codxGrvDetailDay.selectedIndexes.map((idx) => this.codxGrvDetailDay[idx].EmployeeID).join(";");
+          this.api.execSv<any>(
+            'HR',
+            'PR',
+            'KowDsBusiness',
+            'DeteleByEmpIDAsync',
+            [strEmpIDs,this.filters["DowCode"]]
+          ).subscribe((res) => {
+            if(res) 
+            {
+              this.notify.notifyCode('SYS008');
+              this.refeshGrid();
+            }
+            else this.notify.notifyCode('SYS022');
+          });
+        }
+      });
+    }
+    else this.notify.notifyCode('HR040');
+  }
+
+  // searchChanged
+  searchChanged(event:any){
+    this.codxGrvDetailDay.dataService.searchText = event;
+    this.codxGrvSummaryKow.dataService.searchText = event;
+    this.refeshGrid();
+  }
+
+  //change mode view grid
+  switchModeView(mode) {
+    this.modeView = mode;
     let elements = document.getElementsByClassName("icon-system_update_alt");
     if(elements.length > 0)
     {
@@ -549,284 +322,66 @@ export class KowdsComponent extends UIComponent {
         mode == 1 ? btn.classList.remove("d-none") : btn.classList.add("d-none");
       }
     }
-    this.modeView = mode;
     this.detectorRef.detectChanges();
-    this.loadDataInGrid();
+    
   }
 
-  initHeaderText() {
-    this.cache.moreFunction('CoDXSystem', '').subscribe((res) => {
-      if (res) {
-        if (res[0]) {
-          this.addHeaderText = res[0].customName;
-        }
-        if (res[2]) {
-          this.editHeaderText = res[2].customName;
-        }
-      }
-    });
-  }
-  
-  handleSearch(event) {
-    if (event == '') {
-      if (this.viewDetailData == true) {
-        this.calendarGrid.refresh();
-      }
-    } else {
-      let data = this.calendarGrid.dataSource;
-      let resData = [];
-      if (this.viewDetailData == true) {
-        let data = this.calendarGrid.dataSource;
-        for (let i = 0; i < this.arrSearchField.length; i++) {
-          for (let j = 0; j < data.length; j++) {
-            if (data[j][this.arrSearchField[i]] == event) {
-              resData.push(data[j]);
-            }
-          }
-        }
-      }
-      this.calendarGrid.dataSource = resData;
-    }
-  }
-
-  doubleClickGrid(event) {
-    let data = event.rowData[event.column.field];
-    let employeeId = event?.rowData?.EmployeeID;
-    if (this.userPermission.write != 0 || this.userPermission.isAdmin == true) {
-      this.handleEmpKows(
-        this.editHeaderText,
-        'edit',
-        data,
-        employeeId,
-        event.column.field
-      );
-    }
-  }
-
-  onSelectionChangedTreeOrg(evt) {
-    this.afterRenderList();
-    this.filterOrgUnit = evt?.data?.orgUnitID;
-    this.dataValues = [
-      this.filterOrgUnit,
-      this.filterMonth +1,
-      this.filterYear,
-      this.filterGroupSalCode,
-      this.filterDowCode,
-      this.isOnlyReadSavedData.toString(),
-    ].join(';');
-    this.detectorRef.detectChanges();
-    this.loadDataInGrid();
-  }
-
-  btnClick(event) {
-    if (this.userPermission.write != 0 || this.userPermission.isAdmin == true) {
-      this.handleEmpKows(this.addHeaderText, 'add', null, null, new Date());
-    }
-  }
-
-  handleKowColor(dataArr) {
-    for (let i = 0; i < dataArr.length; i++) {
-      for (let j = 0; j < this.lstHrKow.length; j++) {
-        if (dataArr[i].kowCode == this.lstHrKow[j].kowID) {
-          dataArr[i].background = this.lstHrKow[j].background;
-          dataArr[i].fontColor = this.lstHrKow[j].fontColor;
-        }
-      }
-    }
-  }
-
-  viewChanged(event: any) {
-    // if (this.viewActive !== event.view.id) {
-    //   // if (this.viewActive !== event.view.id && this.flagLoaded) {
-    //   if (event?.view?.id === '1') {
-    //     this.view.dataService.data = [];
-    //     this.view.dataService.parentIdField = '';
-    //   } else {
-    //     this.view.dataService.parentIdField = 'ParentID';
-    //   }
-    //   if (
-    //     this.view.currentView.dataService &&
-    //     this.view.currentView.dataService.currentComponent
-    //   ) {
-    //     this.view.currentView.dataService.data = [];
-    //     this.view.currentView.dataService.currentComponent.dicDatas = {};
-    //   }
-    //   //check update data when CRUD or not
-    //   // this.flagLoaded = false;
-    //   this.view.dataService.page = 0;
-    //   //Prevent load data when click same id
-    //   this.viewActive = event.view.id;
-    //   this.view.currentView.dataService.load().subscribe();
-    //   //this.view.dataService.load().subscribe();
-    // }
-  }
-
-  onAction(event) {
-    // thay doi gia tri filter
-    if (event.type == 'pined-filter') {
-      let oldFilterDow = this.filterDowCode;
-      let oldFilterGroupSal = this.filterGroupSalCode;
-      if (event?.data?.length > 0) {
-        let dowCode = event?.data?.find((x) => x.field == 'DowCode');
-        this.filterDowCode = dowCode?.value ?? null;
-
-        let temp = this.filterDowCode?.split('/');
-        this.filterMonth = temp[1] - 1;
-        this.filterYear = temp[0];
-
-        let groupSC = event?.data?.find((x) => x.field == 'GroupSalCode');
-        this.filterGroupSalCode = groupSC?.value ?? null;
-      } else {
-        this.filterMonth = null;
-        this.filterYear = null;
-        this.filterDowCode = null;
-        this.filterGroupSalCode = null;
-      }
+  // selected orgUnitID
+  onSelectionChanged(event) {
+    if(event && event?.data && event?.data?.orgUnitID && event.data.orgUnitID != this.filters["OrgUnitID"])
+    {
+      this.filters["OrgUnitID"] = event.data.orgUnitID;
+      this.dataValues = JSON.stringify(this.filters);
       this.detectorRef.detectChanges();
-      if (
-        this.filterDowCode != oldFilterDow ||
-        this.filterGroupSalCode != oldFilterGroupSal
-      ) {
-        if (this.viewDetailData == true) {
-          this.loadDataInGrid(true);
-        }
-      }
+      this.refeshGrid();
     }
   }
 
-  onSelectionChanged(evt) {}
-
-  handleColHeader(data) {
-    let searchStr = 'workDate';
-    let date = parseInt(data.field.replace(searchStr, ''));
-    let day = new Date(this.filterYear, this.filterMonth, date);
-    let dayOfWeek = day.getDay();
-    return this.daysOfWeek[dayOfWeek];
-  }
-  //---------------------------------------------------------------------------------//
-  //-----------------------------------Validate Func---------------------------------//
-  //---------------------------------------------------------------------------------//
-
-  //---------------------------------------------------------------------------------//
-  //-----------------------------------Logic Func-------------------------------------//
-  //---------------------------------------------------------------------------------//
-
-  //---------------------------------------------------------------------------------//
-  //-----------------------------------Custom Func-----------------------------------//
-  //---------------------------------------------------------------------------------//
-
-  //---------------------------------------------------------------------------------//
-  //-----------------------------------Popup-----------------------------------------//
-  //---------------------------------------------------------------------------------//
-
-  explanPopup() {
-    let dialogKowCode = this.callfc.openForm(
-      ViewKowcodeComponent,
-      '',
-      350,
-      500,
-      null,
-      this.cbbKowCode
-    );
+  // thay doi gia tri filter
+  onAction(event) {
+    if(event && event.data && event.data?.length > 0)
+    {
+      this.filters["DowCode"] = "";
+      this.filters["GroupSalCode"] = "";
+      event.data.forEach(x => this.filters[x.field] = x.value);
+      this.dataValues = JSON.stringify(this.filters);
+      this.detectorRef.detectChanges();
+      this.refeshGrid();
+    }
   }
 
-  handleEmpKows(
-    actionHeaderText,
-    actionType: string,
-    data: any,
-    employeeId,
-    date
-  ) {
-    let option = new SidebarModel();
-    option.FormModel = this.view.formModel;
-    option.Width = '550px';
-    let dialog = this.callfunc.openSide(
-      PopupEkowdsComponent,
-      {
-        funcID: this.funcID,
-        headerText: actionHeaderText + ' ' + this.formHeaderText,
-        dataObj: data,
-        employeeId: employeeId,
-        selectedDate: date,
-        crrYear: this.filterYear,
-        crrMonth: this.filterMonth,
-        dowCode: this.filterDowCode,
-      },
-      option
-    );
+  // click open popup note
+  openPopupNote() {
+    if(this.lstHRKow && this.lstHRKow?.length > 0)
+    {
+      this.callfc.openForm(this.tmpPopupNoteKow,'',300,500);
+    }
+  }
 
-    dialog.closed.subscribe((res) => {
-      if (res?.event) {
-        if (this.viewDetailData == true) {
-          this.calendarGrid.refresh();
-        } else if (this.viewStatistic == true) {
-          this.gridTotal.refresh();
-        }
+
+  // double click on codxGrvDetailDay
+  doubleClick(event:any) {
+    if(this.view && event && event?.column)
+    {
+      let year = Number.parseInt(this.filters["DowCode"].split("/")[0]) , month = Number.parseInt(this.filters["DowCode"].split("/")[1]) - 1;
+      let obj = {
+        headerText:"Dữ liệu công theo ngày",
+        employeeID : event.rowData.EmployeeID,
+        dowCode: this.filters["DowCode"],
+        workDate:  new Date(year,month,event.column?.field),
+        userPermission: this.userPermission
       }
-    });
-  }
-
-  handleCopyEmpKows(actionHeaderText, actionType: string, data: any) {
-    let option = new SidebarModel();
-    option.FormModel = this.view.formModel;
-    option.Width = '550px';
-    let dialog = this.callfunc.openSide(
-      PopupCopyEkowdsComponent,
-      {
-        funcID: this.funcID,
-        employeeId: data.employeeID,
-        dowCode: this.filterDowCode,
-        // headerText: actionHeaderText + ' ' + this.formHeaderText,
-        headerText: 'Sao chép dữ liệu công',
-        dataObj: data,
-      },
-      option
-    );
-
-    dialog.closed.subscribe((res) => {
-      if (res?.event) {
-        if (this.viewDetailData == true) {
-          this.calendarGrid.refresh();
-        } else if (this.viewStatistic == true) {
-          this.gridTotal.refresh();
+      let option = new SidebarModel();
+      option.FormModel = this.view.formModel;
+      option.Width = '550px';
+      this.callfunc.openSide(PopupEkowdsComponent,obj,option)
+      .closed.subscribe((res:any) => {
+        if(res && res.event)
+        {
+          this.refeshGrid();
         }
-      }
-    });
-  }
-
-  getEmpList() {
-    console.log(
-      'chay ham get emp',
-      this.filterOrgUnit,
-      this.filterMonth,
-      this.filterYear
-    );
-    return this.api.execSv<any>(
-      'HR',
-      'ERM.Business.HR',
-      'EmployeesBusiness',
-      'GetEmpByOrgUnitIDAsync',
-      [this.filterOrgUnit, this.filterMonth, this.filterYear]
-    );
-  }
-
-  getLstEmpKowStatistic(data) {
-    return this.api.execSv<any>(
-      'HR',
-      'ERM.Business.PR',
-      'KowDsBusiness',
-      'GetListEmpKowStatisticAsync',
-      [data, this.filterMonth, this.filterYear]
-    );
-  }
-
-  getTimeKeepingMode() {
-    return this.api.execSv<any>(
-      'HR',
-      'ERM.Business.PR',
-      'KowDsBusiness',
-      'GetTimeKeepingModeAsync'
-    );
+      });
+    }
   }
 
   copyEmpKow(empIDResources, empIDsCopy, dowCode) {
@@ -839,80 +394,97 @@ export class KowdsComponent extends UIComponent {
     );
   }
 
-  deleteEmpKowByDowCode(empIDS, dowCode) {
-    return this.api.execSv<any>(
-      'HR',
-      'ERM.Business.PR',
-      'KowDsBusiness',
-      'DeleteEmpKowAsyncByDowCodeAsync',
-      [empIDS, dowCode]
-    );
+
+  //get user permission function
+  getUserPermission(funcID) {
+    this.cache.functionList(funcID).subscribe((func:any) => {
+      if(func)
+      {
+        this.function = func;
+        this.api.execSv(
+          'HR',
+          'Core',
+          'DataBusiness',
+          'GetUserPermissionAsync',
+          [funcID, func.entityName]
+        )
+        .subscribe((permisison:any) => 
+        {
+          this.userPermission = permisison;
+          this.detectorRef.detectChanges();
+        });
+      }
+    });
   }
 
-  getHrKows() {
-    return this.api.execSv<any>(
-      'HR',
-      'ERM.Business.PR',
-      'KowDsBusiness',
-      'GetHrKows',
-      []
-    );
+  //onDatabound(modeView)
+  onDatabound(type){
+    if(type == 1)
+      this.detailByDateRowCount = this.codxGrvDetailDay.dataService.rowCount;
+    else
+      this.summaryKowDRowCount = this.codxGrvSummaryKow.dataService.rowCount;
   }
 
-  testAPILoadDetailData() {
-    console.log(
-      'chay ham get emp',
-      this.filterOrgUnit,
-      this.filterMonth,
-      this.filterYear
-    );
-    return this.api.execSv<any>(
-      'HR',
-      'ERM.Business.PR',
-      'KowDsBusiness',
-      'LoadDataForGridAsync',
-      []
-    );
+  // get column grid for gridview detail by day
+  getColGridDetailDay(){
+    this.detailByDayColoumns.push({
+      template: this.tempEmployee,
+      field: 'employeeID'
+    });
+    let year = Number.parseInt(this.filters["DowCode"].split("/")[0]), month = Number.parseInt(this.filters["DowCode"].split("/")[1]) - 1;              
+    let dayNums = new Date(year, month + 1, 0).getDate();
+    for (let day = 1; day <= dayNums; day++) 
+    {
+      let dayOffWeek =  this.capitalize(moment(new Date(year,month,day)).format('dddd'));
+      this.detailByDayColoumns.push({
+        field: day.toString(),
+        refField: 'workDate',
+        headerTemplate: 
+        `<div class="text-center">
+          <div class="text-gray">${dayOffWeek}</div>
+          <div class="fw-bold text-dark">${day}</div>
+        </div>`,
+        template: this.tempCellDetail
+      });
+    }
+    this.loadedGridDetail = true;
+    this.detectorRef.detectChanges();
   }
 
-  testAPILoadStatisticData() {
-    console.log(
-      'chay ham get emp',
-      this.filterOrgUnit,
-      this.filterMonth,
-      this.filterYear
-    );
-    return this.api.execSv<any>(
-      'HR',
-      'ERM.Business.PR',
-      'KowDsBusiness',
-      'LoadDataForGridStatisticAsync',
-      []
-    );
+  capitalize(text:string):string
+  {
+    return text[0].toUpperCase() + text.slice(1);
   }
 
-  getFunctionList(funcID: string) {
-    return this.api.execSv<any>(
-      'SYS',
-      'SYS',
-      'FunctionListBusiness',
-      'GetByParentAsync',
-      [funcID, true]
-    );
+  // get column grid for gridview summary kowd
+  getColSummaryKowd(){
+    this.summaryColumns = [];
+    this.summaryColumns.push({
+      template: this.tempEmployee,
+      field: 'employeeID'
+    });
+    this.api.execSv("HR","HR","KOWsBusiness","GetAsync")
+    .subscribe((res:any) => {
+        if (res && res?.length > 0) 
+        {
+          this.lstHRKow = res;
+          this.lstHRKow.forEach((kow) => {
+            this.summaryColumns.push({
+              headerTemplate: `<div class="fw-bolder text-primary text-center">${kow.kowID}</div>`,
+              template: this.tempCellSummary,
+              field: kow.kowID,
+              refField: 'kowCode'
+            });
+          });
+          this.loadedGridSummary = true;
+          this.detectorRef.detectChanges();
+        }
+    });
   }
 
-  getUserPermission() {
-    return this.api.execSv<any>(
-      'HR',
-      'ERM.Business.PR',
-      'KowDsBusiness',
-      'GetUserPermission',
-      [this.funcID, this.entityName]
-    );
-  }
-
+  // open popup gen KowD or fill dayoff to KowD
   openPopupGenKowD(){
-    let arrIdx = this.calendarGrid.selectedIndexes;
+    let arrIdx = this.codxGrvDetailDay.selectedIndexes;
     if(arrIdx && arrIdx.length > 0)
     {
       let dialog = new DialogModel();
@@ -924,8 +496,7 @@ export class KowdsComponent extends UIComponent {
     
   } 
 
-  kowDOption:string = "";
-  kowCode:string = "";
+  // value input change
   valueChange(event){
     let field = event.field;
     let value = event.data;
@@ -933,21 +504,33 @@ export class KowdsComponent extends UIComponent {
     {
       case "kowDOption":
         this.kowDOption = value;
-      break;
+        break;
       case "kowCode":
         this.kowCode = value;
-      break;
+        break;
+      case "isReadData":
+        this.filters["IsReadSaved"] = event.data;
+        this.dataValues = JSON.stringify(this.filters);
+        this.detectorRef.detectChanges();
+        this.refeshGrid();
+        break;
     }
   }
 
+  //refesh codxGrid
+  refeshGrid(){
+    this.codxGrvDetailDay?.refresh();
+    this.codxGrvSummaryKow?.refresh();
+  }
 
+  // click gen KowD or Fill DayOff to KowD
   clickBtn(dialog:DialogRef){
-    if(!this.filterDowCode)
+    if(!this.filters["DowCode"])
     {
       this.notify.notify("Vui lòng chọn kỳ công");
       return;
     }
-    let empIDs = this.calendarGrid.selectedIndexes.map(idx => this.calendarGrid.dataSource[idx].EmployeeID);
+    let empIDs = this.codxGrvDetailDay.selectedIndexes.map(idx => this.codxGrvDetailDay.dataSource[idx].EmployeeID);
     if(empIDs.length > 0)
     {
       if(this.kowDOption == "1")
@@ -958,18 +541,18 @@ export class KowdsComponent extends UIComponent {
           return;
         }
         this.processObj = [];
-        this.genKowD(empIDs.join(";"),this.filterDowCode,this.kowCode);
+        this.genKowD(empIDs.join(";"),this.filters["DowCode"],this.kowCode);
       }
       else if(this.kowDOption == "2")
       {
         this.processObj = [];
-        this.updateDayOffToKowD(empIDs.join(";"),this.filterDowCode);
+        this.updateDayOffToKowD(empIDs.join(";"),this.filters["DowCode"]);
       }
       dialog.close();
     }
     else this.notify.notifyCode("HR040");
   }
-
+  
   processing:boolean = false;
   processObj:any[] = [];
   session:string = "";
@@ -1022,6 +605,7 @@ export class KowdsComponent extends UIComponent {
       });
     }
   }
+
   // click remove proccess
   clickRemoveProcess(idx:number){
     if(idx > -1 && idx < this.processObj.length)
@@ -1030,7 +614,7 @@ export class KowdsComponent extends UIComponent {
       if(this.processObj.length == 0)
       {
         this.processing = false;
-        this.calendarGrid.refresh();
+        this.refeshGrid();
       }
       this.detectorRef.detectChanges();
     }
