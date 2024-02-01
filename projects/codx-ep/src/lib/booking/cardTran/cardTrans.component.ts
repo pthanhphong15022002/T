@@ -84,7 +84,7 @@ export class CardTransComponent
           //Biến động , tự custom
           var customData = {
             refID: '',
-            refType: this.formModel?.entityName,
+            refType: this.view?.formModel?.entityName,
             dataSource: data,
           };
 
@@ -92,7 +92,7 @@ export class CardTransComponent
             event,
             data,
             null,
-            this.formModel,
+            this.view?.formModel,
             this.view?.dataService,
             this,
             customData
