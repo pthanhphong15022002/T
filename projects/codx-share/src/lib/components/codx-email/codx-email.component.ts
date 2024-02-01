@@ -98,7 +98,7 @@ export class CodxEmailComponent implements OnInit {
 
   email?: email;
   option?: option;
-
+  dataAI:any;
   public cssClass: string = 'e-list-template';
 
   //(1)(2)(3)(4) => ưu tiên get danh sách
@@ -833,15 +833,18 @@ export class CodxEmailComponent implements OnInit {
 
   onActionComplete(args: any): void {}
 
-  // Gợi ý nội dung email bằng AI 
-  createContentEmail(e:any)
+  valueChangeContentEmail(e:any)
   {
-    this.isLoadingAI = true;
-    let data = {
+    this.dataAI = {
       content : e?.data,
     };
-    let prompt = `Mẫu promt (tiếng Việt): Bạn hãy tạo email dạng html theo nội dung ${e?.data}.`;
-    this.fetch(data,prompt).then((res:any) => 
+  }
+  // Gợi ý nội dung email bằng AI 
+  createContentEmail()
+  {
+    this.isLoadingAI = true;
+    let prompt = `Mẫu promt (tiếng Việt): Bạn hãy tạo email dạng html theo nội dung ${this.dataAI.content}.`;
+    this.fetch(this.dataAI,prompt).then((res:any) => 
       {
         this.data.message = res.data.Data;
         this.isLoadingAI = false;
