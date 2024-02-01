@@ -40,8 +40,30 @@ export class PayTExceptComponent extends UIComponent implements AfterViewInit {
   }
 
   override onInit(): void {
-    this.filters["DowCode"] = moment().format("YYYY/MM");
-    this.dataValues = JSON.stringify(this.filters);
+    this.getCurrentDowCode();
+    this.cache.message("HR049")
+    .subscribe((mssg:any) => {
+      if(mssg)
+      {
+        this.mssgConfirm = mssg.defaultName ?? mssg.customName;
+      }
+    });
+  }
+
+  ngAfterViewInit(): void {
+    this.views = [
+      {
+        type:ViewType.content,
+        showFilter:true,
+        sameData:false,
+        model:{
+          panelLeftRef: this.tmpLeft,
+          panelRightRef: this.tmpRight,
+          collapsed: true,
+          resizable: true
+        }
+      }
+    ];
     this.cache.gridViewSetup("PayTExcept","grvPayTExcept")
     .subscribe((grd:any) => {
       if(grd)
@@ -79,33 +101,20 @@ export class PayTExceptComponent extends UIComponent implements AfterViewInit {
         this.detectorRef.detectChanges();
       }
     });
-    this.cache.message("HR049")
-    .subscribe((mssg:any) => {
-      if(mssg)
-      {
-        this.mssgConfirm = mssg.defaultName ?? mssg.customName;
-      }
-    });
-  }
-
-  ngAfterViewInit(): void {
-    this.views = [
-      {
-        type:ViewType.content,
-        showFilter:true,
-        sameData:false,
-        model:{
-          panelLeftRef: this.tmpLeft,
-          panelRightRef: this.tmpRight,
-          collapsed: true,
-          resizable: true
-        }
-      }
-    ];
-    
     this.getUserPermission();
   }
 
+  // get CurrentPayrollDow
+  getCurrentDowCode(){
+    this.api.execSv("SYS","SYS","SettingValuesBusiness","GetParameterByHRAsync",["PRParameters","1"])
+    .subscribe((res:any) => {
+      if(res)
+      {
+        let setting = JSON.parse(res)
+        this.filters["DowCode"] = setting["CurrentPayrollDow"];
+      }
+    });
+  }
   // double click gridview
   onDoubleClick(event){
     if(this.userPermission.write == "9"|| this.userPermission.isAdmin)

@@ -36,7 +36,7 @@
       <cm-targets [viewDashboard]="true" [viewMode]="9"></cm-targets>
     </ng-container>
 
-    <ng-container *ngIf="funcID == 'CMDQTSC007'">
+    <ng-container *ngIf="funcID == 'CMDQTSC007' || funcID == 'CMDQTSC008'">
       <codx-dashboard
         [templates]="dashBoardInOut"
         [panels]="panelsDeals3"
@@ -2155,11 +2155,20 @@
   <div class="w-100 h-100" id="5" style="overflow: hidden">
     <div>
       <codx-label
+        *ngIf="isQTSC"
         class="fw-bold"
-        name="lblChartLiquidation"
+        name="lblChartCompareInQTSC"
         formName="CMInOutDashboard"
         gridViewName="grvCMInOutDashboard"
-        default="Số liệu DN vào QTSC "
+        default="Số liệu DN ra QTSC"
+      ></codx-label>
+      <codx-label
+        *ngIf="!isQTSC"
+        class="fw-bold"
+        name="lblChartCompareInAll"
+        formName="CMInOutDashboard"
+        gridViewName="grvCMInOutDashboard"
+        default="Số liệu DN ra Toàn Khu"
       ></codx-label>
       <span
         class="fw-bold"
@@ -2204,11 +2213,20 @@
     </table>
     <div class="text-center fs-2 mt-3">
       <codx-label
+        *ngIf="isQTSC"
         class="fw-bold"
-        name="lblChartLiquidation"
+        name="lblChartCompareInQTSC"
         formName="CMInOutDashboard"
         gridViewName="grvCMInOutDashboard"
-        default="Số liệu DN vào QTSC "
+        default="Số liệu DN ra QTSC"
+      ></codx-label>
+      <codx-label
+        *ngIf="!isQTSC"
+        class="fw-bold"
+        name="lblChartCompareInAll"
+        formName="CMInOutDashboard"
+        gridViewName="grvCMInOutDashboard"
+        default="Số liệu DN ra Toàn Khu"
       ></codx-label>
     </div>
     <div>
@@ -2235,11 +2253,20 @@
   <div class="w-100 h-100" id="6" style="overflow: hidden">
     <div>
       <codx-label
+        *ngIf="isQTSC"
         class="fw-bold"
-        name="lblChartLiquidation"
+        name="lblChartOutQTSC"
         formName="CMInOutDashboard"
         gridViewName="grvCMInOutDashboard"
-        default="Số liệu DN ra QTSC "
+        default="Số liệu DN ra QTSC"
+      ></codx-label>
+      <codx-label
+        *ngIf="!isQTSC"
+        class="fw-bold"
+        name="lblChartOutAll"
+        formName="CMInOutDashboard"
+        gridViewName="grvCMInOutDashboard"
+        default="Số liệu DN ra Toàn Khu"
       ></codx-label>
       <span
         class="fw-bold"
@@ -2286,11 +2313,20 @@
     </table>
     <div class="text-center fs-2 mt-3">
       <codx-label
+        *ngIf="isQTSC"
         class="fw-bold"
-        name="lblChartLiquidation"
+        name="lblChartOutQTSC"
         formName="CMInOutDashboard"
         gridViewName="grvCMInOutDashboard"
-        default="Số liệu DN ra QTSC "
+        default="Số liệu DN ra QTSC"
+      ></codx-label>
+      <codx-label
+        *ngIf="!isQTSC"
+        class="fw-bold"
+        name="lblChartOutAll"
+        formName="CMInOutDashboard"
+        gridViewName="grvCMInOutDashboard"
+        default="Số liệu DN ra Toàn Khu"
       ></codx-label>
     </div>
     <div>
@@ -2362,11 +2398,20 @@
     </table>
     <div class="text-center fs-2 mt-3">
       <codx-label
+        *ngIf="isQTSC"
         class="fw-bold"
-        name="lblChartLiquidation"
+        name="lblChartLiquidationInQTSC"
         formName="CMInOutDashboard"
         gridViewName="grvCMInOutDashboard"
-        default="Số liệu DN ra QTSC "
+        default="Số liệu DN vào QTSC"
+      ></codx-label>
+      <codx-label
+        *ngIf="!isQTSC"
+        class="fw-bold"
+        name="lblChartLiquidationInAll"
+        formName="CMInOutDashboard"
+        gridViewName="grvCMInOutDashboard"
+        default="Số liệu DN vào Toàn Khu"
       ></codx-label>
     </div>
     <div>
@@ -2438,11 +2483,20 @@
     </table>
     <div class="text-center fs-2 mt-3">
       <codx-label
+        *ngIf="isQTSC"
         class="fw-bold"
-        name="lblChartLiquidation"
+        name="lblChartLiquidationOutQTSC"
         formName="CMInOutDashboard"
         gridViewName="grvCMInOutDashboard"
-        default="Số liệu DN ra QTSC "
+        default="Số liệu DN ra QTSC"
+      ></codx-label>
+      <codx-label
+        *ngIf="!isQTSC"
+        class="fw-bold"
+        name="lblChartLiquidationOutAll"
+        formName="CMInOutDashboard"
+        gridViewName="grvCMInOutDashboard"
+        default="Số liệu DN ra Toàn Khu"
       ></codx-label>
     </div>
     <div>

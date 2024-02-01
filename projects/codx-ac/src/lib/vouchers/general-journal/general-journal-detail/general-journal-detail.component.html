@@ -102,7 +102,7 @@
             <codx-label class="fw-bold label-colon text-nowrap" fiedName="Memo" [formModel]="formModel">
             </codx-label>
             <div>
-              <span *ngIf="isShowMore" id="eleMemo" class="text-gray-600 line-clamp line-clamp-2">{{itemSelected?.memo}}</span>
+              <span *ngIf="isShowMore" id="eleMemo" class="text-gray-600 h-40px line-clamp line-clamp-2">{{itemSelected?.memo}}</span>
               <span *ngIf="isShowLess" class="text-gray-600 me-3">{{itemSelected?.memo}}</span>
               <span *ngIf="(itemSelected?.memo == '' || itemSelected?.memo == null) && gridViewSetup"
                 class="place-holder text-gray-600 line-clamp line-clamp-1 me-3">{{gridViewSetup['Memo'].headerText}}</span>

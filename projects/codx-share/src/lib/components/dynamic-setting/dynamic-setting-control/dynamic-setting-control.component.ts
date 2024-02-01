@@ -15,6 +15,7 @@ export class DynamicSettingControlComponent extends UIComponent{
   @Input() formModel: any;
   @Input() autoSchedule: boolean = true;
   @Input() headerText: any = 'Thiết lập tham số';
+  @Input() showHeaderText: any = true;
   @Output() valueChanges: EventEmitter<any> = new EventEmitter();
   @Output() changeAutoSchedules: EventEmitter<any> = new EventEmitter();
   oldDataValue: any = {};

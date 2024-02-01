@@ -1,209 +1,115 @@
-<ng-container *ngIf="dataObj">
-    <codx-form
-        #form
-        [headerText] = "headerText"
-        [body]="body"
-        [formModel]="formModel"
-        [footer]="footer"
-        [dialog]="dialog"
-        [data]="dataObj"
-        >
-        <!-- [group]="form.formGroup"
-        *ngIf="isAfterRender" -->
-    <ng-template #body>
-    <ng-container *ngIf="form.formGroup">
-      <div class="form-group mt-5 d-flex flex-row " *ngIf="vllObj1">
-        <input [checked]="vllMode === vllObj1.value" name="filterVll" type="radio" [value]="vllObj1.value" (change)="onSelectVllVal($event, vllObj1.value)">
-        <!-- <codx-input 
-          type="radio"
-          [checked]="vllMode === vllObj1.value"
-          (valueChange)="onSelectVllVal($event, vllObj1.value)"
-        ></codx-input> -->
+<codx-form
+  [headerText]="headerText"
+  [body]="body"
+  [footer]="footer"
+  [dialog]="dialog"
+></codx-form>
+
+<!-- template body -->
+<ng-template #body>
+  <div class="container">
+    <div class="form-group">
+      <ng-container *ngIf="vllHR057 && vllHR057.length > 0">
+        <ng-container *ngFor="let item of vllHR057">
+          <codx-input
+            [checked]="item.value == 1"
+            [field]="'vllHR057'"
+            name="checked"
+            type="radio"
+            [crrValue]="item.value"
+            [label]="item.text"
+            [labelPosition]="'after'"
+            (valueChange)="valueChange($event)">
+          </codx-input>
+        </ng-container>
+      </ng-container>
+    </div>
+
+    <div class="form-group">
+      <codx-label
+        fiedName="EmployeeID"
+        [formModel]="dialog?.formModel"
+        [default]="'Nhân viên'"
+        class="fw-bold"
+      ></codx-label>
+      <codx-input
+        [formModel]="dialog?.formModel"
+        [field]="'employeeID'"
+        [crrValue]="employeeID"
+        [multiple]="true"
+        (valueChange)="valueChange($event)"
+      ></codx-input>
+    </div>
+
+    <div class="form-group">
+      <div>
         <codx-label
-        class ="ms-3"
-          [default]="vllObj1.text"
-          [name]="'lblModeVll1'"
-          [formModel]="formModel"
+          [name]="'lblDateByDay'"
+          [formModel]="dialog?.formModel"
+          [default]="'Dữ liệu công theo ngày'"
+          class="fw-bold"
         ></codx-label>
       </div>
-  
-      <div class="form-group mt-5 d-flex flex-row" *ngIf="vllObj2">
-        <input [checked]="vllMode === vllObj2.value" name="filterVll" type="radio" [value]="vllObj2.value" (change)="onSelectVllVal($event, vllObj2.value)">
-
-        <!-- <codx-input 
-          type="radio"
-          [checked]="vllMode === vllObj2.value"
-          (valueChange)="onSelectVllVal($event, vllObj2.value)"
-        ></codx-input> -->
-        <codx-label
-        class ="ms-3"
-          [default]="vllObj2.text"
-          [name]="'lblModeVll2'"
-          [formModel]="formModel"
-        ></codx-label>
+      <div id="control_wrapper">
+        <ejs-daterangepicker
+          [min]="minDate"
+          [max]="maxDate"
+          [minDays]="1"
+          [maxDays]="maxDays"
+          [startDate]="workDate"
+          [endDate]="workDate"
+          (valueChange)="dateRangePickerChange($event)">
+        </ejs-daterangepicker>
       </div>
-  
-          <div class="form-group row mt-5">
-              <codx-label
-              fiedName="EmployeeID"
-              [formModel]="form.formModel"
-          ></codx-label>
-          <codx-input 
-            field="employeeID"
-            [multiple]="true"
-              [formModel]="form.formModel"
-              [Group]="form.formGroup"
-          ></codx-input>
-          </div>
+    </div>
 
-          <div class="form-group row">
-            <div class="col-6">
-              <div>
-                <codx-label
-                  default="Dữ liệu công theo ngày"
-                  [name]="'lblDayDataaa'"
-                  [formModel]="form.formModel"
-                  >
-                </codx-label>
-              </div>
-              <div class="control-section">
-                  <div id="control_wrapper">
-                    <ejs-daterangepicker 
-                    [min]='minDate' 
-                    [max]='maxDate' 
-                    [startDate]='selectedDate'
-                    [endDate]='selectedDate'
-                    (valueChange)="onChangeCalFromTo($event)">
-                    </ejs-daterangepicker>
-                  </div>
-            </div>
-            </div>
-          </div>
-          
-          <!-- <div class="form-group row mt-5">
-              <codx-label
-              fiedName="WorkDate"
-              [formModel]="form.formModel"
-          ></codx-label>
-          <codx-input 
-              field="workDate"
-              [formModel]="form.formModel"
-              [Group]="form.formGroup"
-          ></codx-input>
-          </div> -->
-  
-          <div class="form-group row" *ngIf="loadGridview1 == true">
-            <!-- [formModel]="formModel"
-            [formName]="formModel.formName"
-            [entityName]="formModel.entityName"
-            [gridViewName]="formModel.gridViewName" -->
-              <codx-gridview-v2
-              #gridView1
-              [columnsGrid]="columnGrid1"
-              [hideMoreFunc]="true"
-              [editSettings]="editSettings"
-              [autoFitColumns]="false"
-              [height]="'100%'"
-              [rowHeight]="45"
-              [dataSource]="dataSourceGridView1"
-              (onAddNew)="onAddNewGrid1($event)"
-              [autoAddRow]="true"
-              (onEdit)="onEditGrid1($event)"
-              (onDelete)="onDeleteGrid1($event)"
-              >
-  
-              </codx-gridview-v2>
-  
-                <div class="d-flex justify-content-end mt-2">
-                  <button
-                  class="btn btn-sm btn-light-primary"
-                  (click)="addRowGrid1()"
-                >
-            <i class="icon-add icon-16 ms-n1"></i>
-                <codx-label
-                name="lblAddBtnGrid1"
-                default="Thêm"
-                [formModel]="form.formModel"
-              >
-            </codx-label>
-                </button>
-                </div>
-            </div>
+    <div class="form-group">
+      <ng-container *ngIf="columnGrids && columnGrids?.length > 0">
+        <codx-gridview-v2
+          #codxGridview
+          [columnsGrid]="columnGrids"
+          [editSettings]="editSettings"
+          [templateMore]="tmpMoreFunc"
+          [editOnClick]="true"
+          [autoAddRow]="false"
+          [showEmptyRecord]="false"
+          [autoLoad]="false"
+          [dataSource]="dataSources"
+          [idField]="'recID'"
+          (cellChanged)="valueCellChange($event)">
+        </codx-gridview-v2>
+      </ng-container>
+    </div>
     
-    </ng-container>
-    </ng-template>
-    </codx-form>
-    
-    
-    <ng-template #footer>
-        <div class="d-flex justify-content-end">
-            <button class="btn btn-primary" (click)="onSaveForm()">
-                <i class="icon-save"></i>
-            <codx-label default="Lưu" name="lblSave" [formModel]="form.formModel"></codx-label>
-            </button>
-        </div>
-    </ng-template>
-    </ng-container>
+    <div class="form-group">
+      <div class="d-flex justify-content-end">
+        <button class="btn btn-sm btn-light-primary" (click)="addNewRowGrid()">
+          <i class="icon-add icon-16 ms-n1"></i>
+          <codx-label [formModel]="dialog.formModel" name="lblAdd"  [default]="'Thêm'"></codx-label>
+        </button>
+      </div>
+    </div>
+  </div>
 
+</ng-template>
 
-    <ng-template #headTmpGrid1Col1>
-        <codx-label
-          [formModel]="form.formModel"
-          [name]="'lblGridCol1'"
-          default="Loại công"
-          class="fw-bold fs-6 text-gray-800"
-        >
-        </codx-label>
-      </ng-template>
-      
-      <ng-template #headTmpGrid1Col2>
-        <codx-label
-          [formModel]="form.formModel"
-          [name]="'lblGridCol2'"
-          default="Số công"
-          class="fw-bold fs-6 text-gray-800"
-        >
-        </codx-label>
-      </ng-template>
-      
-      <ng-template #tmpGrid1Col1 let-data>
-        <div class="d-flex align-items-center mb-2">
-          {{data.kowCode}}
-        </div>
-      </ng-template>
-      <ng-template #mfCol let-data>
-        <div class="d-flex align-items-start me-3">
-          <div ngbDropdown class="dropdown">
-            <span ngbDropdownToggle type="button" id="dropdownMenuButton1" aria-haspopup="true"
-              aria-expanded="false">
-              <span class="icon-more_vert icon-18"></span>
-            </span>
-            <div ngbDropdownMenu aria-labelledby="dropdownMenuButton1">
-              <a ngbDropdownItem class="dropdown-item">
-                <div class="d-flex align-items-center cursor-pointer" >
-                  <span class="icon-edit text-primary icon-16"></span>
-                  <span class="ms-2"><codx-label name="lblEdit" default="Chỉnh sửa"></codx-label> </span>
-                </div>
-              </a>
-              <a ngbDropdownItem class="dropdown-item">
-                <div class="d-flex align-items-center cursor-pointer" >
-                  <span class="icon-delete text-danger icon-16"></span>
-                  <span class="ms-2"><codx-label name="lblDelete" default="Xóa"></codx-label></span>
-                </div>
-              </a>
-            </div>
-          </div>
-        </div>
-      </ng-template>
-      <ng-template #tmpGrid1Col2 let-data>
-        <div class="d-flex align-items-center mb-2 has-action-menu">
-          {{data.dayNum}}
-          <codx-mfunc
-          [dataItem]="data"
-          [formModel]="form.formModel"
-          (clickMF)="clickMF($event, data)"
-          (changeDataMF)="changeDataMF($event)"
-          type="hover"
-        ></codx-mfunc>
-        </div>
-      </ng-template>
+<!-- template footer -->
+<ng-template #footer>
+  <div class="d-flex justify-content-end">
+    <button class="btn btn-primary" (click)="onSaveForm()">
+      <i class="icon-save"></i>
+      <codx-label [formModel]="dialog.formModel" name="lblSave" [default]="'Lưu'"></codx-label>
+    </button>
+  </div>
+</ng-template>
+
+<!-- template moreFC -->
+<ng-template #tmpMoreFunc let-data>
+  <codx-mfunc
+      [dataItem]="data"
+      [formModel]="dialog?.formModel"
+      (clickMF)="clickMF($event, data)"
+      (changeDataMF)="changeDataMF($event)"
+      type="hover"
+  ></codx-mfunc>
+</ng-template>
