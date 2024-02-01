@@ -676,6 +676,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
         this.isLoaded = true;
         break;
       case 'CMDQTSC007':
+      case 'CMDQTSC008':
         if (!this.dataBusinessType || this.dataBusinessType?.length == 0)
           this.cache.valueList('CRM079').subscribe((vll) => {
             if (vll && vll?.datas) {
@@ -1042,6 +1043,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
                     this.isLoaded = true;
                     break;
                   case 'CMDQTSC007':
+                  case 'CMDQTSC008':
                     this.year = new Date().getUTCFullYear();
                     if (
                       !this.dataBusinessType ||
@@ -1127,6 +1129,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
                 this.changeMySales(res);
                 break;
               case 'CMDQTSC007':
+              case 'CMDQTSC008':
                 this.viewDashBoardsInOut(res);
                 break;
             }
@@ -3169,6 +3172,10 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
 
   //nguon
   getInByChanel(dataSet) {
+    this.pieChartInChanel = [];
+    if (!dataSet || dataSet?.length == 0) {
+      return;
+    }
     let listData = this.groupBy(dataSet, 'channelID');
     if (listData) {
       for (let key in listData) {
@@ -3192,7 +3199,6 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
 
   //Thanh lý
   getOutByDisReason(dataSet) {
-    this.listOutByDisposalCmt = [];
     this.pieChartOutDisposalReason = [];
     if (!dataSet || dataSet?.length == 0) {
       return;

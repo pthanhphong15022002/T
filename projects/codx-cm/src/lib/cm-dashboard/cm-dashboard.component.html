@@ -36,7 +36,7 @@
       <cm-targets [viewDashboard]="true" [viewMode]="9"></cm-targets>
     </ng-container>
 
-    <ng-container *ngIf="funcID == 'CMDQTSC007'">
+    <ng-container *ngIf="funcID == 'CMDQTSC007' || funcID == 'CMDQTSC008'">
       <codx-dashboard
         [templates]="dashBoardInOut"
         [panels]="panelsDeals3"
