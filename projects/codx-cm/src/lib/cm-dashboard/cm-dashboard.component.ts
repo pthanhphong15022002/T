@@ -2871,6 +2871,8 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     this.getCompartInOut(dataSetOut, false);
     //in
     this.getCompartInOut(dataSetIn, true);
+    //nguồn
+    this.getInByChanel(dataSetInCrr);
     //Thanh lý
     this.getOutByDisReason(dataSetOutCrr);
     //PHÂN LOẠI KHÁCH HÀNG
@@ -3166,7 +3168,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   }
 
   //nguon
-  getInbyChanel(dataSet) {
+  getInByChanel(dataSet) {
     let listData = this.groupBy(dataSet, 'channelID');
     if (listData) {
       for (let key in listData) {
@@ -3215,6 +3217,7 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
       }
     }
   }
+
   //PHÂN LOẠI KHÁCH HÀNG -pieChartClassify
   getChartClassify(dataSet) {
     // this.pieChartClassify = [];
