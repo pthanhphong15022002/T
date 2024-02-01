@@ -324,13 +324,20 @@
           fiedName="contractID"
           [formModel]="formModel"
           [setRequire]="false"
+          default="Số hợp đồng"
         >
         </codx-label>
         <span
+          #contractID
           class="text-dark fw-bold codx-textcontent"
           [innerHTML]="
             contract?.contractID
-              | formatvalue : formModel : 'ContractID'
+              | formatvalue
+                : formModel
+                : 'ContractID'
+                : contractID
+                : 'CMContracts'
+                : 'grvCMContracts'
               | async
           "
         ></span>
@@ -342,13 +349,20 @@
           fiedName="contractType"
           [formModel]="formModel"
           [setRequire]="false"
+          default="Loại hợp đồng"
         >
         </codx-label>
         <span
+          #contractType
           class="text-dark fw-bold codx-textcontent"
           [innerHTML]="
             contract?.contractType
-              | formatvalue : formModel : 'ContractType'
+              | formatvalue
+                : formModel
+                : 'ContractType'
+                : contractType
+                : 'CMContracts'
+                : 'grvCMContracts'
               | async
           "
         ></span>
@@ -362,13 +376,20 @@
           fiedName="interval"
           [formModel]="formModel"
           [setRequire]="false"
+          default="Thời hạn hợp đồng (tháng)"
         >
         </codx-label>
         <span
+          #interval
           class="text-dark fw-bold codx-textcontent"
           [innerHTML]="
             contract?.interval || 0
-              | formatvalue : formModel : 'Interval'
+              | formatvalue
+                : formModel
+                : 'Interval'
+                : interval
+                : 'CMContracts'
+                : 'grvCMContracts'
               | async
           "
         ></span>
@@ -380,19 +401,31 @@
         >
         </codx-label>
         <span
+          #effectiveFrom
           class="text-dark fw-bold codx-textcontent"
           [innerHTML]="
             contract?.effectiveFrom
-              | formatvalue : formModel : 'EffectiveFrom'
+              | formatvalue
+                : formModel
+                : 'EffectiveFrom'
+                : effectiveFrom
+                : 'CMContracts'
+                : 'grvCMContracts'
               | async
           "
         ></span>
         <span class="px-1">-</span>
         <span
+          #effectiveTo
           class="text-dark fw-bold codx-textcontent"
           [innerHTML]="
             contract?.effectiveTo
-              | formatvalue : formModel : 'EffectiveTo'
+              | formatvalue
+                : formModel
+                : 'EffectiveTo'
+                : effectiveTo
+                : 'CMContracts'
+                : 'grvCMContracts'
               | async
           "
         ></span>
@@ -411,13 +444,20 @@
           fiedName="pmtMethodID"
           [formModel]="formModel"
           [setRequire]="false"
+          default="Phương thức thanh toán"
         >
         </codx-label>
         <span
+          #pmtMethodID
           class="text-dark fw-bold codx-textcontent"
           [innerHTML]="
             contract?.pmtMethodID
-              | formatvalue : formModel : 'PmtMethodID'
+              | formatvalue
+                : formModel
+                : 'PmtMethodID'
+                : pmtMethodID
+                : 'CMContracts'
+                : 'grvCMContracts'
               | async
           "
         ></span>
