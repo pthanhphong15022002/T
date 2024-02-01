@@ -2215,11 +2215,7 @@
       <ejs-accumulationchart
         id="chart-container-5"
         [legendSettings]="legendSettingsCircle"
-        [tooltip]="
-          listQTSCIn[0]?.countOld == 0 && listQTSCIn[0]?.countNow == 0
-            ? ''
-            : tooltipInOut
-        "
+        [tooltip]="tooltipInOut"
       >
         <e-accumulation-series-collection>
           <e-accumulation-series
