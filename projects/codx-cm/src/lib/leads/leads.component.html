@@ -544,9 +544,19 @@
 </ng-template>
 
 <ng-template #templateStatus let-data>
-  <div class="">
+  <div class="d-flex flex-column">
+    <div>
+      <codx-vll
+        [name]="gridViewSetup?.Status?.referedValue"
+        [field]="'Status'"
+        [value]="data?.status"
+        [showText]="true"
+        [showBgColor]="true"
+        class="badge badge-light badge-sm"
+      ></codx-vll>
+    </div>
     <codx-label
-      class="text-primary fs-7 cursor-pointer"
+      class="text-primary fs-7 cursor-pointer mt-1"
       style="font-style: italic"
       fiedName="viewDetailsCost"
       [formName]="'CMDeals'"
