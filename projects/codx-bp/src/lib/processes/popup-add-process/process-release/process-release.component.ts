@@ -24,7 +24,6 @@ import {
 } from 'codx-core';
 import { AddProcessDefaultComponent } from './add-process-default/add-process-default.component';
 import { ProcessReleaseDetailComponent } from './process-release-detail/process-release-detail.component';
-import { PopupBpTasksComponent } from './popup-bp-tasks/popup-bp-tasks.component';
 
 @Component({
   selector: 'lib-process-release',

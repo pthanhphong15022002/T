@@ -1,13 +1,17 @@
 <div
   class="d-flex align-items-center border-bottom ps-2 pe-4"
   *ngIf="dataSelected"
+  (dblclick)="dbClick(dataSelected)"
 >
-  <div class="w-5">
-    <span
-      class="icon-notifications icon-18 text-danger"
+  <div class="w-5 d-flex align-items-center">
+    <div
+      *ngIf="
+        dataSelected.endDate &&
+        (dataSelected?.actualEnd | checkDuedateValue : dataSelected?.endDate)
+      "
+      class="icon-notifications icon-18 text-danger d-flex align-items-center"
       [ngbTooltip]="tempDueDate"
-    >
-    </span>
+    ></div>
     <ng-template #tempDueDate>
       <codx-label
         [formModel]="formModel"
@@ -16,7 +20,7 @@
       ></codx-label>
     </ng-template>
   </div>
-  <div class="w-10">
+  <div class="w-10 d-flex align-items-center">
     <codx-vll
       [name]="'BP001'"
       [value]="dataSelected?.activityType"
@@ -25,12 +29,12 @@
     >
     </codx-vll>
   </div>
-  <div class="w-20">
+  <div class="w-20 d-flex align-items-center">
     <div class="fw-bold">
       {{ dataSelected?.taskName }}
     </div>
   </div>
-  <div class="w-25">
+  <div class="w-25 d-flex align-items-center">
     {{ dataSelected?.memo }}
   </div>
   <div class="w-25">
@@ -87,7 +91,7 @@
       </div>
     </div>
   </div>
-  <div class="w-10">
+  <div class="w-10 d-flex align-items-center">
     <codx-vll
       [name]="'BP014'"
       [value]="dataSelected?.status"
@@ -97,7 +101,7 @@
     >
     </codx-vll>
   </div>
-  <div class="w-15">
+  <div class="w-15 d-flex align-items-center">
     <div class="d-flex justify-content-start align-items-center">
       <div class="me-3">
         <codx-img
@@ -119,5 +123,12 @@
   </div>
   <div class="w-15"></div>
   <div class="w-15"></div>
-  <div class="w-10"></div>
+  <div class="w-10 d-flex align-items-center">
+    <codx-attachment-temp
+      [objectID]="dataSelected?.recID"
+      [formModel]="formModel"
+      [viewType]="1"
+      referType="source"
+    ></codx-attachment-temp>
+  </div>
 </div>
