@@ -68,6 +68,7 @@ import { ViewListInstancesComponent } from './processes/popup-add-process/proces
 import { CustomStagesPipe } from './pipes/customStages.pipe';
 import { ViewDetailInstancesComponent } from './processes/popup-add-process/process-release/view-detail-instances/view-detail-instances.component';
 import { MyInstancesComponent } from './my-instances/my-instances.component';
+import { AddFileFromProcessComponent } from './processes/popup-add-process/form-steps-field-grid/add-default/add-task/add-file-from-process/add-file-from-process.component';
 import { CheckDuedateValuePipe } from './pipes/check-duedate-value.pipe';
 import { BpTasksComponent } from './bp-tasks/bp-tasks.component';
 import { ViewListBpTasksComponent } from './bp-tasks/view-list-bp-tasks/view-list-bp-tasks.component';
@@ -154,6 +155,7 @@ export const routes: Routes = [
     AddTaskComponent,
     AddSettingConditionsComponent,
     AddProcessDefaultPrice,
+    AddFileFromProcessComponent,
 
     ProcessReleaseComponent,
     ProcessReleaseDetailComponent,
