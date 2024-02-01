@@ -16,7 +16,9 @@
 
 <ng-template #headerTemplateList let-data>
   <div class="d-flex ps-2 pe-4 m-2 w-100" style="background: #c1c8cc">
-    <div class="w-5"></div>
+    <div class="w-5">
+      <div></div>
+    </div>
     <div class="w-10 text-dark fw-bold p-3 fw-500">
       <codx-label
         fiedName="list_ActivityType"
@@ -95,5 +97,6 @@
   <lib-view-list-bp-tasks
     [dataSelected]="data"
     [formModel]="view.formModel"
+    (dbClickEvent)="dbClickEvent($event)"
   ></lib-view-list-bp-tasks>
 </ng-template>
