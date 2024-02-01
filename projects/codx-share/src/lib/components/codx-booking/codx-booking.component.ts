@@ -599,11 +599,10 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
             break;
           default:
             //Biến động , tự custom
-            let fm = {...this.formModel}
-            fm.entityName = "EP_Bookings";
+            
             var customData = {
               refID: '',
-              refType: fm.entityName,//this.formModel?.entityName,
+              refType: this.view?.formModel?.entityName,
               dataSource: data,
             };
 
@@ -611,7 +610,7 @@ export class CodxBookingComponent extends UIComponent implements AfterViewInit {
               event,
               data,
               null,
-              fm,
+              this.view?.formModel,
               this.view?.dataService,
               this,
               customData

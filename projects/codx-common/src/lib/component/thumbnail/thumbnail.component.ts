@@ -45,6 +45,7 @@ export class ThumbnailComponent implements OnInit, OnChanges {
   @Input() objectID = '';
   @Input() isReferType: boolean = false;
   @Input() isOpenFile: boolean = false;
+  @Input() isClick: boolean = true;
   @Input() isFristVer = false;
   @Input() tmpRight?: TemplateRef<any>;
   @Input() tmpCustomMFc?: TemplateRef<any>;
@@ -117,7 +118,8 @@ export class ThumbnailComponent implements OnInit, OnChanges {
     this.userID = this.authStore.get().userID;
   }
 
-  ngOnChanges(changes: SimpleChanges) {}
+  ngOnChanges(changes: SimpleChanges) {
+  }
 
   //Lấy version đầu tiên
   formatFristVersion(data) {

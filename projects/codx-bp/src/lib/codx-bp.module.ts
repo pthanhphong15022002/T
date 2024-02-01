@@ -67,9 +67,12 @@ import { ProcessReleaseDetailComponent } from './processes/popup-add-process/pro
 import { ViewListInstancesComponent } from './processes/popup-add-process/process-release/view-list-instances/view-list-instances.component';
 import { CustomStagesPipe } from './pipes/customStages.pipe';
 import { ViewDetailInstancesComponent } from './processes/popup-add-process/process-release/view-detail-instances/view-detail-instances.component';
-import { PopupBpTasksComponent } from './processes/popup-add-process/process-release/popup-bp-tasks/popup-bp-tasks.component';
 import { MyInstancesComponent } from './my-instances/my-instances.component';
+import { AddFileFromProcessComponent } from './processes/popup-add-process/form-steps-field-grid/add-default/add-task/add-file-from-process/add-file-from-process.component';
 import { CheckDuedateValuePipe } from './pipes/check-duedate-value.pipe';
+import { BpTasksComponent } from './bp-tasks/bp-tasks.component';
+import { ViewListBpTasksComponent } from './bp-tasks/view-list-bp-tasks/view-list-bp-tasks.component';
+import { PopupBpTasksComponent } from './bp-tasks/popup-bp-tasks/popup-bp-tasks.component';
 
 export const routes: Routes = [
   {
@@ -89,6 +92,11 @@ export const routes: Routes = [
       {
         path: 'myinstances/:funcID',
         component: MyInstancesComponent,
+        data: { noReuse: true },
+      },
+      {
+        path: 'bptasks/:funcID',
+        component: BpTasksComponent,
         data: { noReuse: true },
       },
     ],
@@ -147,6 +155,7 @@ export const routes: Routes = [
     AddTaskComponent,
     AddSettingConditionsComponent,
     AddProcessDefaultPrice,
+    AddFileFromProcessComponent,
 
     ProcessReleaseComponent,
     ProcessReleaseDetailComponent,
@@ -158,6 +167,8 @@ export const routes: Routes = [
 
     MyInstancesComponent,
     CheckDuedateValuePipe,
+    BpTasksComponent,
+    ViewListBpTasksComponent,
   ],
   imports: [
     CodxCoreModule.forRoot({ environment }),

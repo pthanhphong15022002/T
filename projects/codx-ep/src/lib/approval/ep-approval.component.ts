@@ -487,7 +487,7 @@ export class EPApprovalComponent extends UIComponent {
             evt,
             data,
             null,
-            this.formModel,
+            this.view?.formModel,
             this.view?.dataService,
             this,
             customData
