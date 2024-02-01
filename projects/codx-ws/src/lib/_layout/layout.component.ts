@@ -66,8 +66,8 @@ export class LayoutComponent extends LayoutBaseComponent {
   SetBreadCumb(funcID:any,data:any)
   {
     var d = data.filter(x=>x.functionID == funcID)[0];
-    var parentID1 = data.filter(x=>x.functionID == d.parentID)[0];
-    var parentID2 = data.filter(x=>x.functionID == parentID1.parentID)[0];
+    var parentID1 = data.filter(x=>x.functionID == d?.parentID)[0];
+    var parentID2 = data.filter(x=>x.functionID == parentID1?.parentID)[0];
     if(parentID2 && parentID2.functionType != "M")
     {
       this.codxWsService.listBreadCumb.length = 0;

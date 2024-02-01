@@ -14,7 +14,7 @@
   <ng-container *ngIf="form && form?.formGroup">
     <div class="form-group upload-img">
       <codx-img #imageUpLoad [width]="100" imageType="circle" [objectType]="'PM_Projects'" aria-disabled="false"
-        [funcId]="formModel?.funcID" [isAllowEdit]="true" [objectId]="imgRecID" [objectName]="data?.projectName">
+        [funcId]="formModel?.funcID" [isAllowEdit]="true" [objectId]="data?.recID" [objectName]="data?.projectName">
       </codx-img>
     </div>
     <div class="form-group ps-0">
@@ -87,7 +87,7 @@
       </div>
     </div>
     <div class="col-4 form-group" >
-      <codx-tag [entityName]="formModel.entityName" field="tag" [value]="data.tag" (valueChange)="valueChange($event)"></codx-tag>
+      <codx-tag [entityName]="formModel.entityName" field="tags" [value]="data.tags" (valueChange)="valueChange($event)"></codx-tag>
     </div>
   </ng-container>
 </ng-template>
@@ -96,7 +96,7 @@
   <ng-container *ngIf="form && form.formGroup">
     <div class="d-flex justify-content-start align-items-center" >
       <div class="">
-        <codx-label fiedName="Attendees" [formModel]="form.formModel">
+        <codx-label fiedName="lblMembers" [formModel]="form.formModel" default="Thành viên">
         </codx-label>
       </div>
       <div class="">
@@ -110,7 +110,7 @@
       <div class="d-flex flex-row justify-content-start">
         <ng-container *ngFor="let item of listRoles">
           <div class="d-flex align-items-center justify-content-start me-4">
-            <span [inlineSVG]="'./assets/themes/ep/default/img/'+ item?.icon"></span>
+            <span [inlineSVG]="'./assets/themes/pm/default/img/'+ item?.icon"></span>
             <div class="fs-8 text-gray-500 ms-1">{{ item?.text }}</div>
           </div>
         </ng-container>
@@ -118,7 +118,7 @@
 
       <div class="d-flex flex-row text-end align-items-end">
         <div class="mx-2">
-          <codx-input type="Share" refValue="TM003"  field="resources" (valueChange)="shareInputChange($event)"
+          <codx-input type="Share" refValue="PM002"  field="members" (valueChange)="shareInputChange($event)"
             [dataShared]="[]" [multiple]="true" [showInput]="false" [disabled]="viewOnly">
           </codx-input>
         </div>
@@ -126,43 +126,43 @@
     </div>
     <div class="d-flex justify-content-between align-items-center mt-4 mb-2" id="Members">
       <div class="fw-bold">
-        <codx-label name="lblMembers" default="Thành viên">
+        <codx-label name="lblMembers" default="Thành viên" [formModel]="form.formModel">
         </codx-label>
       </div>
       <div class="fw-bold me-5 pe-3">
         <span>
-          {{ "1" | vll : "EP017" : "text" | async }}
+          {{ "PM" | vll : "PM003" : "text" | async }}
         </span>
       </div>
     </div>
 
     <div class="d-flex align-items-center mb-4 pb-2 position-relative" *ngFor="let item of members">
       <div class="symbol symbol-30px symbol-circle me-4">
-        <codx-img [width]="30" [objectId]="item?.userID" objectType="AD_Users"></codx-img>
-        <div role="button" class="pe-auto" (click)="showPopover(p, item?.userID)">
+        <codx-img [width]="30" [objectId]="item?.objectID" objectType="AD_Users" [objectName]="item?.objectName"></codx-img>
+        <div role="button" class="pe-auto" (click)="showPopover(p, item?.objectID)" *ngIf="item.icon">
           <span popoverClass="userPopoverClass" [ngbPopover]="!viewOnly?popoverSelectRoles:null" placement="right"
             #p="ngbPopover" autoClose="outside" class="position-absolute attendees-tag"
-            [inlineSVG]="'./assets/themes/ep/default/img/'+ item?.icon">
+            [inlineSVG]="'./assets/themes/pm/default/img/'+ item?.icon" >
           </span>
         </div>
       </div>
 
       <div class="d-flex flex-column flex-grow-1">
         <div class="text-dark fw-bold fs-6 fw-bolder">
-          {{ item?.userName }}
+          {{ item?.objectName }}
         </div>
         <div>
           <span class="text-muted">{{
-            item?.roleType | vll : "EP009" : "text" | async
+            item?.roleType | vll : "PM003" : "text" | async
             }}</span>
         </div>
       </div>
 
-      <div class="d-flex flex-column justify-content-center align-items-center me-5">
+      <!-- <div class="d-flex flex-column justify-content-center align-items-center me-5">
         <codx-input type="checkbox" [checked]="item?.optional"
           [disabled]="viewOnly">
         </codx-input>
-      </div>
+      </div> -->
 
 
     </div>
@@ -186,7 +186,7 @@
           <codx-label name="lblApprove" default="Gửi duyệt" [formModel]="formModel"></codx-label>
         </button> -->
         <button class="btn btn-primary" >
-          <codx-label name="lblSave" default="Lưu" [formModel]="formModel"></codx-label>
+          <codx-label name="lblSave" default="Lưu" [formModel]="formModel" (click)="saveForm()"></codx-label>
         </button>
       </div>
     </div>
@@ -199,7 +199,7 @@
       <ng-container *ngFor="let item of listRoles">
         <div class="d-flex align-items-center btn btn-sm btn-white cursor-pointer"
           >
-          <span [inlineSVG]="'./assets/themes/ep/default/img/'+ item?.icon"></span>
+          <span [inlineSVG]="'./assets/themes/pm/default/img/'+ item?.icon"></span>
           <div class="fs-7 ms-2 text-gray-600">
             {{ item?.text }}
           </div>

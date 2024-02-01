@@ -113,6 +113,7 @@ export class CashPaymentAddComponent extends UIComponent {
   refTotalAmt: any = 0;
   preData: any;
   isload: any = false;
+  totalAmount:any = 0;
   private destroy$ = new Subject<void>(); //? list observable hủy các subscribe api
   constructor(
     inject: Injector,
@@ -1523,11 +1524,12 @@ export class CashPaymentAddComponent extends UIComponent {
       case 'add':
       case 'update':
       case 'delete':
-        if (this.formCashPayment.data.validated) {
-          this.formCashPayment.setValue('validated', false, {});
-          this.dialog.dataService.update(this.formCashPayment.data).subscribe();
+        if(this.formCashPayment.data.totalAmt != 0){
+          let total = this?.eleGridCashPayment.dataSource.reduce((sum, data:any) => sum + data?.dr,0);
+          if(total > this.formCashPayment.data.totalAmt) this.notification.notifyCode('AC0012');
         }
         if(this.formCashPayment.data.journalType.toLowerCase() ==='bp') this.loadInfoTranfer();
+
         break;
       case 'closeEdit':
         if (this.eleGridCashPayment && this.eleGridCashPayment.rowDataSelected) {
@@ -1770,15 +1772,14 @@ export class CashPaymentAddComponent extends UIComponent {
       this.ownerReceive = this.eleCbxObjectID?.ComponentCurrent?.dataService?.data[indexObject].ObjectName; //? lấy tên chủ tài khoản
     }
 
-    let total = 0;
     if (this.eleGridCashPayment && this.eleGridCashPayment.dataSource.length) {
-      total = this?.eleGridCashPayment.dataSource.reduce((sum, data:any) => sum + data?.dr,0);
+      this.totalAmount = this?.eleGridCashPayment.dataSource.reduce((sum, data:any) => sum + data?.dr,0);
     }
     this.api
       .exec('BS', 'BanksBusiness', 'GetBankInfoAsync', [
         this.bankAcctIDPay,
         this.bankAcctIDReceive,
-        total,
+        this.formCashPayment.data.totalDR,
         this.formCashPayment.data.currencyID
       ])
       .pipe(takeUntil(this.destroy$))

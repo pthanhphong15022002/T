@@ -1,5 +1,5 @@
-import { ChangeDetectorRef, Component, Injector, Optional } from "@angular/core";
-import { AuthService, AuthStore, CacheService, DialogData, DialogRef, FormModel, NotificationsService, UIComponent } from "codx-core";
+import { ChangeDetectorRef, Component, Injector, Optional, ViewChild } from "@angular/core";
+import { AuthService, AuthStore, CacheService, DialogData, DialogRef, FormModel, ImageViewerComponent, NotificationsService, UIComponent } from "codx-core";
 import { CodxCommonService } from "projects/codx-common/src/lib/codx-common.service";
 import { CodxBookingService } from "projects/codx-share/src/lib/components/codx-booking/codx-booking.service";
 import { CodxShareService } from "projects/codx-share/src/public-api";
@@ -10,6 +10,9 @@ import { CodxShareService } from "projects/codx-share/src/public-api";
   styleUrls: ['./popup-add-project.component.scss'],
 })
 export class PopupAddProjectComponent extends UIComponent {
+
+  @ViewChild('imageUpLoad') imageUpload: ImageViewerComponent;
+
   data: any;
   funcType: any;
   tmpTitle: any;
@@ -52,6 +55,8 @@ export class PopupAddProjectComponent extends UIComponent {
   members:any=[];
   listRoles:any=[];
   curUser:any;
+
+
   constructor(
     injector: Injector,
     private notificationsService: NotificationsService,
@@ -70,18 +75,20 @@ export class PopupAddProjectComponent extends UIComponent {
     this.formModel = this.dialogRef?.formModel;
     this.funcID = this.formModel?.funcID;
     this.data = dialogData.data[0];
+    this.funcType = dialogData.data[1];
+    this.user=this.authStore.get();
   }
 
   override onInit(): void {
-
+    this.initForm();
   }
 
   valueChange(e:any){
-
+    this.data[e.field]=e.data;
   }
 
   valueDateChange(e:any){
-
+    this.data[e.field]=e.data.fromDate;
   }
 
   showPopover(e:any,dat:any){
@@ -89,7 +96,7 @@ export class PopupAddProjectComponent extends UIComponent {
   }
 
   initForm(){
-    this.cache.valueList('EP009').subscribe((res) => {
+    this.cache.valueList('PM003').subscribe((res) => {
       if (res && res?.datas.length > 0) {
         let tmpArr = [];
         tmpArr = res.datas;
@@ -102,10 +109,10 @@ export class PopupAddProjectComponent extends UIComponent {
         if (this.funcType == 'add' || this.funcType == 'copy') {
           let people = this.authService.userValue;
           let tmpResource :any={};
-          tmpResource.userID = people?.userID;
-          tmpResource.userName = people?.userName;
+          tmpResource.objectID = people?.userID;
+          tmpResource.objectName = people?.userName;
           tmpResource.status = '1';
-          tmpResource.roleType = '1';
+          tmpResource.roleType = 'PM';
           tmpResource.optional = false;
           tmpResource.quantity = 1;
           this.listRoles.forEach((element) => {
@@ -118,6 +125,7 @@ export class PopupAddProjectComponent extends UIComponent {
           this.members.push(tmpResource);
           this.data.attendees =  this.members?.length;
           this.attendeesNumber = this.data.attendees;
+          if(this.data && !this.data.projectManager) this.data.projectManager = this.user.userID;
           this.changeDetectorRef.detectChanges();
         } else {
 
@@ -160,8 +168,147 @@ export class PopupAddProjectComponent extends UIComponent {
         }
       }
     });
-   debugger
+   if(listUserID){
+    this.valueUser(listUserID);
+    console.log(this.members);
+
+   }
   }
+  valueUser(resourceID) {
+    if (resourceID != '') {
+      if (this.members != null) {
+        let user = this.members;
+        let array = resourceID.split(';');
+        let id = '';
+        let arrayNew = [];
+        user.forEach((e) => {
+          id += e.objectID + ';';
+        });
+        if (id != '') {
+          id = id.substring(0, id.length - 1);
+
+          array.forEach((element) => {
+            if (!id.split(';').includes(element)) arrayNew.push(element);
+          });
+        }
+        if (arrayNew.length > 0) {
+          resourceID = arrayNew.join(';');
+          id += ';' + resourceID;
+          this.getListUser(resourceID);
+        }
+      } else {
+        this.getListUser(resourceID);
+      }
+    }
+  }
+
+  listUserID:any=[]
+  getListUser(resource) {
+    while (resource.includes(' ')) {
+      resource = resource.replace(' ', '');
+    }
+    var arrUser = resource.split(';');
+    this.listUserID = this.listUserID.concat(arrUser);
+    this.api
+      .execSv<any>(
+        'HR',
+        'ERM.Business.HR',
+        'EmployeesBusiness',
+        'GetListEmployeesByUserIDAsync',
+        JSON.stringify(resource.split(';'))
+      )
+      .subscribe((res) => {
+        if (res && res.length > 0) {
+          for (var i = 0; i < res.length; i++) {
+            let emp = res[i];
+            var tmpResource:any={};
+            if (emp.userID == this.user.userID) {
+              tmpResource.objectID = emp?.userID;
+              tmpResource.objectName = emp?.userName;
+              tmpResource.positionName = emp?.positionName;
+              tmpResource.objectType = 'U';
+              tmpResource.roleType = 'PM';
+              tmpResource.optional = false;
+              this.listRoles.forEach((element) => {
+                if (element.value == tmpResource.roleType) {
+                  tmpResource.icon = element.icon;
+                  tmpResource.roleName = element.text;
+                }
+              });
+              this.members.push(tmpResource);
+            } else {
+              tmpResource.objectID = emp?.userID;
+              tmpResource.objectName = emp?.userName;
+              tmpResource.positionName = emp?.positionName;
+              tmpResource.objectType = 'U';
+              tmpResource.roleType = 'M';
+              tmpResource.optional = false;
+              this.listRoles.forEach((element) => {
+                if (element.value == tmpResource.roleType) {
+                  tmpResource.icon = element.icon;
+                  tmpResource.roleName = element.text;
+                }
+              });
+              this.members.push(tmpResource);
+            }
+          }
+          this.members.forEach((item) => {
+            if (item.userID != this.curUser?.userID) {
+              this.members.push(item);
+            }
+          });
+          this.members = this.filterArray(this.members);
+          this.data.permissions = this.members;
+          this.attendeesNumber = this.data.permissions.length;
+          this.detectorRef.detectChanges();
+        }
+      });
+  }
+
+  filterArray(arr) {
+    return [...new Map(arr.map((item) => [item['objectID'], item])).values()];
+  }
+
+  saveForm(){
+    let returnData:any;
+    this.dialogRef.dataService.dataSelected = this.data;
+    this.dialogRef.dataService
+    .save()
+    .subscribe((res) => {
+      if (res?.save || res?.update) {
+        if (!res.save) {
+          returnData = res?.update;
+        } else {
+          returnData = res?.save;
+        }
+        if (!returnData?.error) {
+          if (this.imageUpload?.imageUpload?.item) {
+            this.imageUpload
+              .updateFileDirectReload(returnData.data.recID)
+              .subscribe((result) => {
+                if (result) {
+                  //xử lí nếu upload ảnh thất bại
+                  //...
+                  this.dialogRef && this.dialogRef.close(returnData.data);
+                }
+                else{
+
+                  this.dialogRef && this.dialogRef.close(returnData.data);
+                }
+              });
+          } else {
+            this.dialogRef && this.dialogRef.close(returnData.data);
+          }
+        }
+      } else {
+        //Trả lỗi từ backend.
+        return;
+      }
+    });
+
+
+  }
+
 
 
 }

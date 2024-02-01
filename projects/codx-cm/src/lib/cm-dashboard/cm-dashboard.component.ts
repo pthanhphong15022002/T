@@ -34,10 +34,9 @@ import {
   ITextRenderEventArgs,
   ITooltipRenderEventArgs,
 } from '@syncfusion/ej2-angular-charts';
-import { filter, reduce } from 'rxjs';
+
 import { CodxCmService } from '../codx-cm.service';
-import { Variant } from '@syncfusion/ej2-notifications';
-import { ConsoleLogger } from '@microsoft/signalr/dist/esm/Utils';
+import moment from 'moment';
 
 @Component({
   selector: 'lib-cm-dashboard',
@@ -442,36 +441,39 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
 
   //===============INOUT DASHBOARD=====================================
   year = 2023;
+  legendSettingsColumn = {
+    visible: true,
+  };
+  tooltipChartColumn = {
+    enable: true,
+    shared: true,
+    // format: '${point.x} : <b>${point.y}</b>',
+  };
   //////TESTTTTTT
   //Chart pie tronn
   pieChartInQTSC = [
-    { x: '2022', y: 3 },
-    { x: '2023', y: 3 },
+    { year: '2022', count: 3 },
+    { year: '2023', count: 3 },
   ];
   pieChartOutQTSC = [
-    { x: '2022', y: 7 },
-    { x: '2023', y: 3 },
+    { year: '2022', count: 7 },
+    { year: '2023', count: 3 },
   ];
   pieChartIn = [
     { x: 'Giới thiệu', y: 7 },
     { x: 'Điện thoại', y: 7 },
     { x: 'Website', y: 3 },
   ];
-  pieChartOut = [
-    { x: 'Tài chính khó khăn', y: 7 },
-    { x: 'Kết thúc dự án', y: 3 },
-    { x: 'Chuyển đổi pháp nhân', y: 3 },
-    { x: 'Giải thể', y: 3 },
-    { x: 'Chuyển địa điểm', y: 3 },
-  ];
+  pieChartOutDisposalReason = [];
+  pieChartInChanel = [];
 
   pieChartClassify = [
-    { x: 'Phân loại khách hàng ', y: 7 },
-    { x: 'Khách hàng nội khu', y: 3 },
+    { classification: 'Khách hàng mới ', count: 7 },
+    { classification: 'Khách hàng nội khu', count: 3 },
   ];
 
-  legendSettingsIn = {
-    visible: false,
+  legendSettingsCircle = {
+    visible: true,
   };
   tooltipInOut = {
     enable: true,
@@ -502,18 +504,6 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
       businessType: '2',
       businessTypeName: 'DNNN',
     },
-    // {
-    //   quarter: '3',
-    //   quarterName: 'Q3',
-    //   businessType: '2',
-    //   businessTypeName: 'DNNN',
-    // },
-    // {
-    //   quarter: '4',
-    //   quarterName: 'Q4',
-    //   businessType: '2',
-    //   businessTypeName: 'DNNN',
-    // },
   ];
   chartDataColumn = [
     { country: 'Quý 1', gold: 50, silver: 75, red: 80 },
@@ -539,12 +529,30 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     minorGridLines: { width: 1 },
     minorTickLines: { width: 0 },
   };
-  titleTest = 'Olympic Medals';
+
   ///END TEST
+  titleTotalAll = 'Tổng cộng';
+  titleRentalAreaIn = 'Diện tích bán mới';
+  titleRentalAreaOut = 'Diện tích thanh lý';
+  titleUpAndDownAreaIn = 'Diện tích mở rộng';
+  titleUpAndDownAreaOut = 'Diện tích giảm';
+
+  //In
   listCountEnterprise = [];
-  countNewPriEnterprise = 0;
-  countNewStateEnterprise = 0;
-  countNewEnterprise = 0;
+  //Out
+  listCountEnterpriseOut = [];
+
+  //InOut may nam
+  listQTSCIn = [];
+  listQTSCOut = [];
+  //Nguồn + va lý do Out
+  listInByChanel = [];
+  listOutByDisposalCmt = [];
+  dataBusinessType = [];
+  //InOut diện tích
+  listAreaIn = [];
+  listAreaOut = [];
+  //======================================================================
 
   constructor(
     inject: Injector,
@@ -588,25 +596,6 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
     this.primaryXAxisY = {
       title: this.language == 'VN' ? 'Tháng' : 'Month',
     };
-    // this.primaryXAxisY = {
-    //   title: null,
-    //   interval: Browser.isDevice ? 2 : 1,
-    //   labelIntersectAction: 'Rotate45',
-    //   valueType: 'Category',
-    //   majorGridLines: { width: 0 }, minorGridLines: { width: 0 },
-    //   majorTickLines: { width: 0 }, minorTickLines: { width: 0 },
-    //   lineStyle: { width: 0 },
-    // };
-    // this.primaryYAxisY = {
-    //   title: this.currencyID,
-    //   minimum: 0,
-    //   maximum: maximum,
-    //   interval: interval,
-    //   lineStyle: { width: 0 },
-    //   majorTickLines: { width: 0 }, majorGridLines: { width: 1 },
-    //   minorGridLines: { width: 1 }, minorTickLines: { width: 0 },
-    //   labelFormat: '{value}',
-    // };
   }
 
   ngAfterViewInit() {
@@ -636,25 +625,14 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
           let method: string = '';
           switch (this.reportID) {
             case 'CMD001':
-              //dashboard moi
-              //dashboard moi
-              // this.getDashBoardTargets();
-              this.isLoaded = true;
               this.getDataset('GetDashBoardTargetAsync', null, null, null);
               break;
             // nhom chua co tam
             case 'CMD002':
-              // code cũ chạy tạm
-              //this.getDataDashboard();
               this.getDataset('GetReportSourceAsync', null, null, null);
               break;
             //ca nhan chua co ne de vay
             case 'CMD003':
-              // code cũ chạy tạm
-              // let predicates = 'Owner =@0';
-              // let dataValues = this.user.userID;
-              // // this.getDataDashboard(predicates, dataValues);
-              //test DataSet
               this.getDataset(
                 'GetReportSourceAsync',
                 null,
@@ -698,6 +676,16 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
         this.isLoaded = true;
         break;
       case 'CMDQTSC007':
+        if (!this.dataBusinessType || this.dataBusinessType?.length == 0)
+          this.cache.valueList('CRM079').subscribe((vll) => {
+            if (vll && vll?.datas) {
+              this.dataBusinessType = vll?.datas;
+            }
+          });
+        this.year = new Date().getUTCFullYear();
+        if (param && param?.ToDate) {
+          this.year = moment(param?.ToDate).toDate().getFullYear();
+        }
         this.getDataset(
           'QTSCNumberInAndOutBusiness',
           'GetReportSourceAsync',
@@ -1054,6 +1042,16 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
                     this.isLoaded = true;
                     break;
                   case 'CMDQTSC007':
+                    this.year = new Date().getUTCFullYear();
+                    if (
+                      !this.dataBusinessType ||
+                      this.dataBusinessType?.length == 0
+                    )
+                      this.cache.valueList('CRM079').subscribe((vll) => {
+                        if (vll && vll?.datas) {
+                          this.dataBusinessType = vll?.datas;
+                        }
+                      });
                     this.getDataset(
                       'QTSCNumberInAndOutBusiness',
                       'GetReportSourceAsync'
@@ -1117,7 +1115,6 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
           requets
         )
         .subscribe((res) => {
-          this.getListEnterpriseNew(); //test
           if (res) {
             //xu ly nv
 
@@ -2856,32 +2853,400 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
   //end
 
   //------------------IN-OUT-DASHBOARD---------------//
-  viewDashBoardsInOut(res) {}
+  viewDashBoardsInOut(dataSet) {
+    let dataSetOut = dataSet.filter((x) => x.status == '17');
+    let dataSetIn = dataSet.filter((x) => x.approveStatus == '5');
+    let dataSetInCrr = dataSetIn?.filter((x) => x.yearApproved == this.year);
+    let dataSetOutCrr = dataSetOut?.filter((x) => x.yearDisposal == this.year);
+    //out
+    this.getListEnterpriseInOutNew(dataSetOutCrr, false);
+    //in
+    this.getListEnterpriseInOutNew(dataSetInCrr, true);
 
-  getListEnterpriseNew(dataSet = this.listEnterpriseNew) {
-    this.listCountEnterprise = [];
-    if (!dataSet || dataSet?.length == 0) return;
-    let listEnterpriseNew = this.groupBy(dataSet, 'quarter');
-    this.countNewEnterprise = dataSet?.length;
+    //tang
+    this.getAreaInOut(dataSetInCrr, true);
+    //  giam
+    this.getAreaInOut(dataSetInCrr, false);
+    //out-in old now
+    this.getCompartInOut(dataSetOut, false);
+    //in
+    this.getCompartInOut(dataSetIn, true);
+    //Thanh lý
+    this.getOutByDisReason(dataSetOutCrr);
+    //PHÂN LOẠI KHÁCH HÀNG
+    this.getChartClassify(dataSetIn?.filter((x) => x.yearApproved < this.year));
+  }
+  //DNNT TN
+
+  getListEnterpriseInOutNew(dataSet, isIn) {
+    if (isIn) {
+      this.listCountEnterprise = [];
+    } else this.listCountEnterpriseOut = [];
+
+    if (!dataSet || dataSet?.length == 0) {
+      this.vllQuaters?.forEach((qt) => {
+        let obj = {
+          quarter: qt.value,
+          quarterName: qt?.text,
+          countAll: 0,
+        };
+        this.dataBusinessType.forEach(
+          (type) => (obj['countEnterprises' + type.value] = 0)
+        );
+        if (isIn) {
+          this.listCountEnterprise.push(obj);
+        } else {
+          this.listCountEnterpriseOut.push(obj);
+        }
+      });
+      let objTotalNull = {
+        quarter: 100,
+        quarterName: 'Tổng cộng',
+        countAll: 0,
+      };
+      this.dataBusinessType.forEach(
+        (type) => (objTotalNull['countEnterprises' + type.value] = 0)
+      );
+      if (isIn) {
+        this.listCountEnterprise.push(objTotalNull);
+      } else {
+        this.listCountEnterpriseOut.push(objTotalNull);
+      }
+
+      return;
+    }
+
+    let fieldGroup = isIn ? 'quarterApproved' : 'quarterDisposal';
+    let listEnterpriseNew = this.groupBy(dataSet, fieldGroup);
+
     if (listEnterpriseNew) {
       this.vllQuaters?.forEach((qt) => {
         let key = qt.value;
         let obj = {
-          quarter: qt.text,
+          quarter: key,
           quarterName: qt?.text,
-          countNew: listEnterpriseNew[key]?.length ?? 0,
-          countPrivateEnterprise:
-            dataSet?.filter((x) => x.businessType == '1' && x.quarter == key)
-              ?.length ?? 0,
-          countStateEnterprises:
-            dataSet?.filter((x) => x.businessType == '2' && x.quarter == key)
-              ?.length ?? 0,
+          countAll: listEnterpriseNew[key]?.length ?? 0,
         };
-        this.countNewPriEnterprise += obj.countPrivateEnterprise ?? 0;
-        this.countNewStateEnterprise += obj.countStateEnterprises ?? 0;
-        this.listCountEnterprise.push(obj);
+        this.dataBusinessType.forEach(
+          (type) =>
+            (obj['countEnterprises' + type.value] =
+              dataSet?.filter(
+                (x) => x.businessType == type.value && x[fieldGroup] == key
+              )?.length ?? 0)
+        );
+        if (isIn) {
+          this.listCountEnterprise.push(obj);
+        } else {
+          this.listCountEnterpriseOut.push(obj);
+        }
+      });
+
+      let objTotal = {
+        quarter: 100,
+        quarterName: 'Tổng cộng',
+        countAll: dataSet?.length,
+      };
+      this.dataBusinessType.forEach(
+        (type) =>
+          (objTotal['countEnterprises' + type.value] =
+            dataSet?.filter((x) => x.businessType == type.value)?.length ?? 0)
+      );
+
+      if (isIn) {
+        this.listCountEnterprise.push(objTotal);
+      } else {
+        this.listCountEnterpriseOut.push(objTotal);
+      }
+    }
+  }
+  //CRM079
+  getCompartInOut(dataSet, isIn = true) {
+    if (isIn) {
+      this.listQTSCIn = [];
+    } else this.listQTSCOut = [];
+    let yearOld = this.year - 1;
+    if (!dataSet || dataSet?.length == 0) {
+      let objTotal = {
+        quarter: 100,
+        quarterName: 'Tổng DN vào QTSC',
+        countOld: 0,
+        countNow: 0,
+      };
+      let arrChart = [
+        {
+          year: yearOld.toString(),
+          count: 1,
+        },
+        {
+          year: this.year.toString(),
+          count: 1,
+        },
+      ];
+      if (isIn) {
+        this.listQTSCIn.push(objTotal);
+        this.pieChartInQTSC = arrChart;
+      } else {
+        this.listQTSCOut.push(objTotal);
+        this.pieChartOutQTSC = arrChart;
+      }
+
+      this.vllQuaters?.forEach((qt) => {
+        let obj = {
+          quarter: qt.value,
+          quarterName: qt?.text,
+          countOld: 0,
+          countNow: 0,
+        };
+        if (isIn) {
+          this.listQTSCIn.push(obj);
+        } else {
+          this.listQTSCOut.push(obj);
+        }
+      });
+      return;
+    }
+
+    let fieldGroup = isIn ? 'quarterApproved' : 'quarterDisposal';
+    let listEnterpriseNew = this.groupBy(dataSet, fieldGroup);
+
+    let objTotal = {
+      quarter: 100,
+      quarterName: 'Tổng DN vào QTSC',
+      countOld:
+        dataSet?.filter((x) =>
+          isIn ? x.yearApproved == yearOld : x.yearDisposal == yearOld
+        )?.length ?? 0,
+      countNow:
+        dataSet?.filter((x) =>
+          isIn ? x.yearApproved == this.year : x.yearDisposal == this.year
+        )?.length ?? 0,
+    };
+    let arrChart = [
+      {
+        year: yearOld.toString(),
+        count: objTotal.countOld ?? 0,
+      },
+      {
+        year: this.year.toString(),
+        count: objTotal.countNow ?? 0,
+      },
+    ];
+    if (isIn) {
+      this.listQTSCIn.push(objTotal);
+      this.pieChartInQTSC = arrChart;
+    } else {
+      this.listQTSCOut.push(objTotal);
+      this.pieChartOutQTSC = arrChart;
+    }
+
+    if (listEnterpriseNew) {
+      this.vllQuaters?.forEach((qt) => {
+        let key = qt.value;
+        let obj = {
+          quarter: key,
+          quarterName: qt?.text,
+          countOld:
+            dataSet?.filter(
+              (x) =>
+                x[fieldGroup] == key &&
+                (isIn ? x.yearApproved == yearOld : x.yearDisposal == yearOld)
+            )?.length ?? 0,
+          countNow:
+            dataSet?.filter(
+              (x) =>
+                x[fieldGroup] == key &&
+                (isIn
+                  ? x.yearApproved == this.year
+                  : x.yearDisposal == this.year)
+            )?.length ?? 0,
+        };
+
+        if (isIn) {
+          this.listQTSCIn.push(obj);
+        } else {
+          this.listQTSCOut.push(obj);
+        }
       });
     }
+  }
+
+  //diên tích vào ra
+  getAreaInOut(dataSet, isIn = true) {
+    if (isIn) {
+      this.listAreaIn = [];
+    } else this.listAreaOut = [];
+
+    if (!dataSet || dataSet?.length == 0) {
+      this.vllQuaters?.forEach((qt) => {
+        let obj = {
+          quarter: qt.value,
+          quarterName: qt?.text,
+          totalArea: 0,
+          totalRentalArea: 0,
+          totalUpAndDownArea: 0,
+        };
+        if (isIn) {
+          this.listAreaIn.push(obj);
+        } else {
+          this.listAreaOut.push(obj);
+        }
+      });
+      let objTotal = {
+        quarter: 100,
+        quarterName: 'Tổng cộng',
+        totalArea: 0,
+        totalRentalArea: 0,
+        totalUpAndDownArea: 0,
+      };
+      if (isIn) {
+        this.listAreaIn.push(objTotal);
+      } else {
+        this.listAreaOut.push(objTotal);
+      }
+      return;
+    }
+
+    let fieldGroup = isIn ? 'quarterApproved' : 'quarterDisposal';
+    let fieldFiter = isIn ? 'expandedArea' : 'decreasedArea';
+    let listEnterpriseNew = this.groupBy(dataSet, fieldGroup);
+
+    let totalRentalArea = this.total(dataSet, 'rentalArea');
+    let totalUpAndDownArea = this.total(dataSet, fieldFiter);
+    let totalArea = totalRentalArea + totalUpAndDownArea;
+    if (listEnterpriseNew) {
+      this.vllQuaters?.forEach((qt) => {
+        let key = qt.value;
+        let obj = {
+          quarter: key,
+          quarterName: qt?.text,
+          totalArea: 0,
+          totalRentalArea: this.total(
+            dataSet?.filter((x) => x[fieldGroup] == key),
+            'rentalArea'
+          ),
+          totalUpAndDownArea: this.total(
+            dataSet?.filter((x) => x[fieldGroup] == key),
+            fieldFiter
+          ),
+        };
+
+        // countPriEnterprise += obj.countPrivateEnterprises ?? 0;
+        // countStateEnterprise += obj.countStateEnterprises ?? 0;
+        if (isIn) {
+          this.listAreaIn.push(obj);
+        } else {
+          this.listAreaOut.push(obj);
+        }
+      });
+
+      let objTotal = {
+        quarter: 100,
+        quarterName: 'Tổng cộng',
+        totalArea: totalArea,
+        totalRentalArea: totalRentalArea,
+        totalUpAndDownArea: totalUpAndDownArea,
+      };
+
+      if (isIn) {
+        this.listAreaIn.push(objTotal);
+      } else {
+        this.listAreaOut.push(objTotal);
+      }
+    }
+  }
+
+  total(dataSet, fieldName) {
+    let total = 0;
+    if (dataSet?.length > 0) {
+      dataSet.forEach((x) => {
+        total += Number.parseFloat(x[fieldName]) ?? 0;
+      });
+    }
+    return total;
+  }
+
+  //nguon
+  getInbyChanel(dataSet) {
+    let listData = this.groupBy(dataSet, 'channelID');
+    if (listData) {
+      for (let key in listData) {
+        let item = {
+          channelID: key,
+          channelName: listData[key][0].channelName ?? 'Other',
+          count: listData[key].length ?? 0,
+          countQ1:
+            listData[key]?.filter((x) => x.quarterApproved == '1')?.length ?? 0,
+          countQ2:
+            listData[key]?.filter((x) => x.quarterApproved == '2')?.length ?? 0,
+          countQ3:
+            listData[key]?.filter((x) => x.quarterApproved == '3')?.length ?? 0,
+          countQ4:
+            listData[key]?.filter((x) => x.quarterApproved == '4')?.length ?? 0,
+        };
+        this.pieChartInChanel.push(item);
+      }
+    }
+  }
+
+  //Thanh lý
+  getOutByDisReason(dataSet) {
+    this.listOutByDisposalCmt = [];
+    this.pieChartOutDisposalReason = [];
+    if (!dataSet || dataSet?.length == 0) {
+      return;
+    }
+    let listData = this.groupBy(dataSet, 'disposalReason');
+    if (listData) {
+      for (let key in listData) {
+        let item = {
+          disposalCmt: key,
+          disposalReasonName: listData[key][0].disposalReasonName ?? 'Other',
+          count: listData[key].length ?? 0,
+          countQ1:
+            listData[key]?.filter((x) => x.quarterDisposal == '1')?.length ?? 0,
+          countQ2:
+            listData[key]?.filter((x) => x.quarterDisposal == '2')?.length ?? 0,
+          countQ3:
+            listData[key]?.filter((x) => x.quarterDisposal == '3')?.length ?? 0,
+          countQ4:
+            listData[key]?.filter((x) => x.quarterDisposal == '4')?.length ?? 0,
+        };
+        this.pieChartOutDisposalReason.push(item);
+      }
+    }
+  }
+  //PHÂN LOẠI KHÁCH HÀNG -pieChartClassify
+  getChartClassify(dataSet) {
+    // this.pieChartClassify = [];
+    // if (!dataSet || dataSet?.length == 0) {
+    //   this.pieChartClassify = [
+    //     {
+    //       classification: 'Khách hàng mới',
+    //       count: 0,
+    //     },
+    //     {
+    //       classification: 'Khách hàng nội khu',
+    //       count: 0,
+    //     },
+    //   ];
+    //   return;
+    // }
+    this.pieChartClassify = [
+      {
+        classification: 'Khách hàng mới',
+        count:
+          !dataSet || dataSet?.length == 0
+            ? 0
+            : dataSet.filter((x) => x.isCustomerNew)?.length ?? 0,
+      },
+      {
+        classification: 'Khách hàng nội khu',
+        count:
+          !dataSet || dataSet?.length == 0
+            ? 0
+            : dataSet.filter((x) => !x.isCustomerNew)?.length ?? 0,
+      },
+    ];
   }
   //------------------------------------------------//
 }

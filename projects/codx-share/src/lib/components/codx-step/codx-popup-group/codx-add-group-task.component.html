@@ -39,13 +39,13 @@
         >
         </codx-label>
         <codx-input
-          [disabled]="taskGroup?.isTaskDefault"
-          field="startDate"
-          (valueChange)="changeValueDate($event, taskGroup)"
-          [crrValue]="taskGroup?.startDate"
-          type="datetime"
           format="F"
+          type="datetime"
+          field="startDate"
           [disabled]="true"
+          [crrValue]="taskGroup?.startDate"
+          [disabled]="taskGroup?.isTaskDefault"
+          (valueChange)="changeValueDate($event, taskGroup)"
         >
         </codx-input>
       </div>

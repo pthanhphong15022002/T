@@ -1,6 +1,9 @@
 import { Component, OnInit, Optional } from '@angular/core';
-import { ApiHttpService, DialogData, DialogRef } from 'codx-core';
+import { ApiHttpService, CacheService, CallFuncService, DialogData, DialogRef, SidebarModel } from 'codx-core';
 import moment from 'moment';
+import { CodxShareService } from 'projects/codx-share/src/public-api';
+import { isObservable } from 'rxjs';
+import { PopupBpTasksComponent } from '../popup-bp-tasks/popup-bp-tasks.component';
 
 @Component({
   selector: 'lib-process-release-detail',
@@ -16,11 +19,15 @@ export class ProcessReleaseDetailComponent implements OnInit{
   count = 0;
   listTask:any;
   formModel:any;
+  info:any;
   constructor(
+    private shareService: CodxShareService,
+    private cache: CacheService,
     private api: ApiHttpService,
+    private callFc: CallFuncService,
     @Optional() dialog: DialogRef,
     @Optional() dt: DialogData
-  ) 
+  )
   {
     this.dialog = dialog;
     this.formModel = dialog.formModel;
@@ -29,6 +36,21 @@ export class ProcessReleaseDetailComponent implements OnInit{
   }
   ngOnInit(): void {
     this.getData();
+    this.getInfo();
+  }
+  getInfo()
+  {
+    let paras = [this.data.createdBy];
+    let keyRoot = 'UserInfo' + this.data.createdBy;
+    let info = this.shareService.loadDataCache(paras,keyRoot,"SYS","AD",'UsersBusiness','GetOneUserByUserIDAsync');
+    if(isObservable(info))
+    {
+      info.subscribe(item=>{
+        this.info = item;
+      })
+    }
+    else this.info = info;
+
   }
   getData()
   {
@@ -51,6 +73,7 @@ export class ProcessReleaseDetailComponent implements OnInit{
       this.listStage.forEach(elm => {
         elm.child = this.getListChild(elm) || [];
         elm.settings = typeof elm?.settings === 'object' ? elm.settings : (elm?.settings ? JSON.parse(elm.settings) : null);
+        elm.countTask = 0;
         if(elm.child && elm.child.length>0)
         {
           elm.countTask = elm.child.length;
@@ -58,13 +81,14 @@ export class ProcessReleaseDetailComponent implements OnInit{
           elm.percentCompleted = (elm.countCompleted / elm.countTask) * 100;
         }
       });
+      this.data.countTask = this.listStage.reduce((n, {countTask}) => n + countTask, 0);
     }
   }
 
   getListChild(elm:any)
   {
-    if(this.count == 0) return; 
-    
+    if(this.count == 0) return;
+
     let list = this.process.steps.filter(x=>x.parentID == elm.recID);
     this.count -= list.length;
     list.forEach(elm2 => {
@@ -84,7 +108,7 @@ export class ProcessReleaseDetailComponent implements OnInit{
           elm2.status = this.listTask[index].status;
         }
       }
-    
+
       if(elm2.activityType == "Conditions" && elm2.child && elm2.child.length>0)
       {
         for(var i =0 ; i< elm2.child.length ; i++)
@@ -94,7 +118,28 @@ export class ProcessReleaseDetailComponent implements OnInit{
         }
       }
     });
-    
+
     return list;
+  }
+
+  popupTasks(dataStep, action){
+    var option = new SidebarModel();
+    option.FormModel = {
+      formName: 'BPTasks',
+      gridViewName: 'grvBPTasks',
+      entityName: 'BP_Tasks',
+    };
+    option.zIndex = 1010;
+    let data = this.listTask.find(x => x.stepID == dataStep.recID);
+    let subTitle = this.data?.title;
+    const obj = { data: data, dataIns: this.data, subTitle: subTitle, action: action};
+    let popup = this.callFc.openSide(
+      PopupBpTasksComponent,
+      obj,
+      option
+    );
+    popup.closed.subscribe((res) => {
+
+    });
   }
 }

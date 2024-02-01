@@ -228,7 +228,7 @@ export class ResourcesComponent extends UIComponent {
         //Biến động , tự custom
         var customData = {
           refID: '',
-          refType: this.formModel?.entityName,
+          refType: this.view?.entityName,
           dataSource: data,
         };
 
@@ -236,7 +236,7 @@ export class ResourcesComponent extends UIComponent {
           event,
           data,
           null,
-          this.formModel,
+          this.view?.formModel,
           this.view?.dataService,
           this,
           customData

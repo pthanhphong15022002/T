@@ -1,0 +1,123 @@
+<div
+  class="d-flex align-items-center border-bottom ps-2 pe-4"
+  *ngIf="dataSelected"
+>
+  <div class="w-5">
+    <span
+      class="icon-notifications icon-18 text-danger"
+      [ngbTooltip]="tempDueDate"
+    >
+    </span>
+    <ng-template #tempDueDate>
+      <codx-label
+        [formModel]="formModel"
+        default="Quá hạn"
+        name="lbltempDueDateIns"
+      ></codx-label>
+    </ng-template>
+  </div>
+  <div class="w-10">
+    <codx-vll
+      [name]="'BP001'"
+      [value]="dataSelected?.activityType"
+      [showText]="true"
+      [showIcon]="true"
+    >
+    </codx-vll>
+  </div>
+  <div class="w-20">
+    <div class="fw-bold">
+      {{ dataSelected?.taskName }}
+    </div>
+  </div>
+  <div class="w-25">
+    {{ dataSelected?.memo }}
+  </div>
+  <div class="w-25">
+    <div class="d-flex">
+      <codx-label
+        class="label-colon text-gray-800"
+        fiedName="list_PlanTime"
+        [setRequire]="false"
+        [formModel]="formModel"
+        [default]="'Kế hoạch'"
+      ></codx-label>
+      <div class="text-gray-600 d-flex">
+        <div *ngIf="dataSelected.startDate">
+          <span>{{ dataSelected.startDate | date : "dd/MM/yyyy" }}</span>
+        </div>
+        <div *ngIf="!dataSelected.startDate">
+          <span class="place-holder">dd/mm/yyyy</span>
+        </div>
+        <span class="ms-1 me-1">-</span>
+        <div *ngIf="dataSelected.endDate">
+          <span>{{ dataSelected.endDate | date : "dd/MM/yyyy" }}</span>
+        </div>
+        <div *ngIf="!dataSelected.endDate">
+          <span class="place-holder">dd/mm/yyyy</span>
+        </div>
+        <span class="ms-1 me-1">|</span>
+        <span>2 giờ</span>
+      </div>
+    </div>
+    <div class="d-flex">
+      <codx-label
+        class="label-colon text-gray-800"
+        fiedName="ActualTime"
+        [setRequire]="false"
+        [formModel]="formModel"
+        [default]="'Thực tế'"
+      ></codx-label>
+      <div class="text-gray-600 d-flex">
+        <div *ngIf="dataSelected.actualStart">
+          <span>{{ dataSelected.actualStart | date : "dd/MM/yyyy" }}</span>
+        </div>
+        <div *ngIf="!dataSelected.actualStart">
+          <span class="place-holder">dd/mm/yyyy</span>
+        </div>
+        <span class="ms-1 me-1">-</span>
+        <div *ngIf="dataSelected.actualEnd">
+          <span>{{ dataSelected.actualEnd | date : "dd/MM/yyyy" }}</span>
+        </div>
+        <div *ngIf="!dataSelected.actualEnd">
+          <span class="place-holder">dd/mm/yyyy</span>
+        </div>
+        <span class="ms-1 me-1">|</span>
+        <span>2 giờ</span>
+      </div>
+    </div>
+  </div>
+  <div class="w-10">
+    <codx-vll
+      [name]="'BP014'"
+      [value]="dataSelected?.status"
+      [showText]="true"
+      [showIcon]="true"
+      class="badge badge-light badge-md"
+    >
+    </codx-vll>
+  </div>
+  <div class="w-15">
+    <div class="d-flex justify-content-start align-items-center">
+      <div class="me-3">
+        <codx-img
+          [objectId]="dataSelected.createdBy"
+          [objectType]="'AD_Users'"
+          [width]="35"
+        >
+        </codx-img>
+      </div>
+      <div class="d-flex flex-column w-100">
+        <div class="d-flex flex-column">
+          <div class="fw-bold fs-6 text-dark line-clamp line-clamp-1">
+            {{ info?.userName }}
+          </div>
+          <div class="text-gray-500">{{ info?.positionName }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="w-15"></div>
+  <div class="w-15"></div>
+  <div class="w-10"></div>
+</div>

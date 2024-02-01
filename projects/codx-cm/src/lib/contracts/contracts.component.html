@@ -380,26 +380,6 @@
         <div class="col-6 ">
           <codx-label
           [formModel]="view?.formModel"
-          fiedName="disposalType"
-          [crrValue]="liquidation?.disposalType"
-        ></codx-label>
-        <codx-input
-          class="me-3"
-          field="disposalType"
-          [formModel]="view?.formModel"
-          (valueChange)="changeData($event)"
-          [crrValue]="liquidation?.disposalType"
-        ></codx-input>
-        </div>
-      </div>
-
-      <div class="form-group">
-        
-      </div>
-
-      <div class="form-group">
-        <codx-label
-          [formModel]="view?.formModel"
           fiedName="pmtMethodID"
         ></codx-label>
         <codx-input
@@ -408,6 +388,7 @@
           (valueChange)="changeData($event)"
           [crrValue]="liquidation?.pmtMethodID"
         ></codx-input>
+        </div>
       </div>
       <div class="form-group">
         <codx-label
@@ -428,6 +409,10 @@
         ></codx-label>
         <codx-input
           field="disposalCmt"
+          type="textarea"
+          headerposition="none"
+          format="ed"
+          height="100"
           [formModel]="view?.formModel"
           (valueChange)="changeData($event)"
           [crrValue]="liquidation?.disposalCmt"

@@ -103,7 +103,8 @@ export class FormStepsFieldGridComponent implements OnInit, OnChanges{
       {
         if(res?.event)
         {
-          let dt = res?.event;
+          this.data = res?.event?.process;
+          let dt = res?.event?.data;
           if(dt.activityType == "Stage")
           {
             var index = this.listStage.findIndex(x=>x.recID == dt.recID);
