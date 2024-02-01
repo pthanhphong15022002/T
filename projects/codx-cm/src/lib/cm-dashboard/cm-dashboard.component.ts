@@ -3172,6 +3172,10 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
 
   //nguon
   getInByChanel(dataSet) {
+    this.pieChartInChanel = [];
+    if (!dataSet || dataSet?.length == 0) {
+      return;
+    }
     let listData = this.groupBy(dataSet, 'channelID');
     if (listData) {
       for (let key in listData) {
@@ -3195,7 +3199,6 @@ export class CmDashboardComponent extends UIComponent implements AfterViewInit {
 
   //Thanh lý
   getOutByDisReason(dataSet) {
-    this.listOutByDisposalCmt = [];
     this.pieChartOutDisposalReason = [];
     if (!dataSet || dataSet?.length == 0) {
       return;
