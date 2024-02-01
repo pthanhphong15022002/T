@@ -2159,11 +2159,13 @@
         name="lblChartLiquidation"
         formName="CMInOutDashboard"
         gridViewName="grvCMInOutDashboard"
-        default="Số liệu DN vào QTSC "
+        default="Số liệu DN vào "
       ></codx-label>
       <span
         class="fw-bold"
-        [innerHTML]="'(' + (year - 1) + '-' + year + ')'"
+        [innerHTML]="
+          (isQTSC ? 'QTSC' : 'Toàn Khu') + '(' + (year - 1) + '-' + year + ')'
+        "
       ></span>
     </div>
 
@@ -2208,8 +2210,9 @@
         name="lblChartLiquidation"
         formName="CMInOutDashboard"
         gridViewName="grvCMInOutDashboard"
-        default="Số liệu DN vào QTSC "
+        default="Số liệu DN vào "
       ></codx-label>
+      <span class="fw-bold" [innerHTML]="isQTSC ? 'QTSC' : 'Toàn Khu'"></span>
     </div>
     <div>
       <ejs-accumulationchart
@@ -2239,11 +2242,13 @@
         name="lblChartLiquidation"
         formName="CMInOutDashboard"
         gridViewName="grvCMInOutDashboard"
-        default="Số liệu DN ra QTSC "
+        default="Số liệu DN ra "
       ></codx-label>
       <span
         class="fw-bold"
-        [innerHTML]="'(' + (year - 1) + '-' + year + ')'"
+        [innerHTML]="
+          (isQTSC ? 'QTSC' : 'Toàn Khu') + '(' + (year - 1) + '-' + year + ')'
+        "
       ></span>
     </div>
 
@@ -2290,8 +2295,9 @@
         name="lblChartLiquidation"
         formName="CMInOutDashboard"
         gridViewName="grvCMInOutDashboard"
-        default="Số liệu DN ra QTSC "
+        default="Số liệu DN ra "
       ></codx-label>
+      <span class="fw-bold" [innerHTML]="isQTSC ? 'QTSC' : 'Toàn Khu'"></span>
     </div>
     <div>
       <ejs-accumulationchart
