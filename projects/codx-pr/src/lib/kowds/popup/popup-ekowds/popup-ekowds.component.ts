@@ -3,6 +3,7 @@ import { ApiHttpService, CRUDService, CacheService, CallFuncService, CodxFormCom
 import { EditSettingsModel } from '@syncfusion/ej2-angular-grids';
 import { TS_KowDs } from '../../../models/kowds.model';
 import moment from 'moment';
+import { DateTime } from '@syncfusion/ej2-angular-charts';
 @Component({
   selector: 'pr-popup-ekowds',
   templateUrl: './popup-ekowds.component.html',
@@ -88,12 +89,23 @@ export class PopupEkowdsComponent implements OnInit, AfterViewInit {
         this.columnGrids.push(field2);
       }
     });
+    this.getDataKowD(this.employeeID,this.dowCode,this.workDate);
   }
 
   ngAfterViewInit(): void {
     
   }
-
+  // get kowD by workDate
+  getDataKowD(employeeID:string,dowCode:string,workDate:Date){
+    this.api.execSv("HR","PR","KowDsBusiness","GetDataByWorkDateAsync",[employeeID,dowCode,Util.toUTC00(workDate)])
+    .subscribe((res:any) => {
+      if(!res)
+        res = [];
+      this.dataSources = [...res];
+      this.dt.detectChanges();
+      this.codxGridview?.refresh();
+    });
+  }
 
   //value input change
   valueChange(event:any){
@@ -114,8 +126,8 @@ export class PopupEkowdsComponent implements OnInit, AfterViewInit {
   valueCellChange(event:any){
     if(event.field == "kowCode")
     {
-      let isCount = this.codxGridview.dataSource.filter(x => x.kowCode == event.value).length;
-      if(isCount > 1)
+      let count = this.codxGridview.dataSource.filter(x => x.kowCode == event.value).length;
+      if(count > 1)
       {
         this.notiSV.notifyCode("HR050");
         this.codxGridview.rowDataSelected.kowCode = "";
@@ -149,49 +161,54 @@ export class PopupEkowdsComponent implements OnInit, AfterViewInit {
       this.notiSV.notifyCode("HR040");
       return;
     }
-    if(!this.codxGridview || this.codxGridview?.dataSource?.length == 0){
-      this.notiSV.notifyCode("HR041");
-        return;
-    }
-    else
+    if(!this.codxGridview || this.codxGridview?.dataSource?.length == 0)
     {
-      let kowDs = this.codxGridview.dataSource.map(x => ({ "kowCode": x.kowCode,"dayNum":x.dayNum}));
-      this.api.execSv("HR","PR","KowDsBusiness","UpdateKowDByDayAsync",[this.employeeID,this.dowCode,Util.toUTC00(this.beginDate),Util.toUTC00(this.endDate),this.modeSaveData,kowDs])
-      .subscribe((res:any) => {
-        if(res)
-        {
-          this.notiSV.notify("Lưu thành công");
-          this.dialog.close(true);
-        }
-        else
-          this.notiSV.notify("Cập nhật không thành công");
-      });
-    }
-  }
-
-  //validate
-  validate(){
-    if(!this.employeeID){
-      this.notiSV.notifyCode("HR040");
-      return false;
-    }
-    if(!this.codxGridview || this.codxGridview?.dataSource?.length == 0){
       if(this.modeSaveData == "1")
       {
         this.notiSV.notifyCode("HR041");
-        return false;
+        return;
       }
-      else
+      else if(this.modeSaveData == "2")
       {
-        this.notiSV.alertCode("HR042").subscribe((confirm:any) => {
-          if(confirm && confirm.event.status == "Y")
-            return true;
-          else return false; 
+        this.notiSV.alertCode("HR042")
+        .subscribe((confirm:any) => {
+          if(confirm && confirm?.event?.status == "Y")
+          {
+            let beginDate = Util.toUTC00(this.beginDate), endDate = Util.toUTC00(this.endDate);
+            this.deleteData(this.employeeID,this.dowCode,beginDate,endDate);
+          }
         });
-      } 
-
+      }
     }
-    return true;
+    else this.saveData();
+  }
+
+  // save data
+  saveData(){
+    let kowDs = this.codxGridview.dataSource.map(x => ({ "kowCode": x.kowCode,"dayNum":x.dayNum}));
+    let beginDate = Util.toUTC00(this.beginDate), endDate = Util.toUTC00(this.endDate);
+    this.api.execSv("HR","PR","KowDsBusiness","UpdateKowDByDayAsync",[this.employeeID,this.dowCode,beginDate,endDate,this.modeSaveData,kowDs])
+    .subscribe((res:any) => {
+      if(res)
+      {
+        this.notiSV.notifyCode("SYS007");
+        this.dialog.close(true);
+      }
+      else this.notiSV.notifyCode("SYS021");
+    });
+  }
+
+  // delete data
+  deleteData(employeeIDs:string,dowCode:string,beginDate:Date,endDate:Date){
+    this.api.execSv("HR","PR","KowDsBusiness","DeteleByTimeAsync",[employeeIDs,dowCode,beginDate,endDate])
+    .subscribe((res:any) => {
+      if(res)
+      {
+        this.notiSV.notifyCode("SYS008");
+        this.dialog.close(true);
+      }
+      else this.notiSV.notifyCode("SYS022");
+    });
   }
 
   // click MFC
