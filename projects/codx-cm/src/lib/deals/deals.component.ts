@@ -998,7 +998,6 @@ export class DealsComponent
         }
       });
     }
-   
   }
   //end Kanaban
 
@@ -1709,7 +1708,7 @@ export class DealsComponent
       this.releaseCallback.bind(this),
       null,
       null,
-      null, //this.view.formModel.entityName // thích đổi mãi
+      "CM_Deals", //null thích đổi mãi
       null,
       null,
       exportData

@@ -1,0 +1,20 @@
+<codx-form
+    [headerText]="'Chọn từ quy trình'"
+    [dialog]="dialog"
+    [body]="body"
+    [footer]="footer"
+>
+</codx-form>
+<ng-template #body>
+    <lib-add-file-from-process-default [data]="data" [step]="step" [formModel]="formModel" (selectedChange)="selectedChange($event)"></lib-add-file-from-process-default>
+</ng-template>
+<ng-template #footer>
+    <div class="d-flex justify-content-end">
+        <button class="btn btn-primary" (click)="save()">
+            <codx-label
+            name="lblSave"
+            default="Lưu"
+            ></codx-label>
+        </button>
+    </div>
+</ng-template>

@@ -18,9 +18,11 @@ export class ViewListInstancesComponent {
   countTaskDone = 0;
   countOverDueTask = 0;
   info: any;
-  constructor(private api: ApiHttpService, private shareService: CodxShareService){
-
-  };
+  progress = 0;
+  constructor(
+    private api: ApiHttpService,
+    private shareService: CodxShareService
+  ) {}
 
   ngOnInit(): void {
     this.getTaskByInstanceID();
@@ -29,52 +31,91 @@ export class ViewListInstancesComponent {
   }
 
   getProcess() {
-    if(this.lstStages == null || this.lstStages?.length == 0){
+    if (this.lstStages == null || this.lstStages?.length == 0) {
       this.api
-      .execSv<any>('BP', 'BP', 'ProcessesBusiness', 'GetAsync', this.dataSelected.processID)
-      .subscribe((item) => {
-        if (item) {
-          const process = item;
-          this.lstStages = process?.steps?.filter(
-            (x) => x.activityType == 'Stage'
-          );
-        }
-      });
+        .execSv<any>(
+          'BP',
+          'BP',
+          'ProcessesBusiness',
+          'GetAsync',
+          this.dataSelected.processID
+        )
+        .subscribe((item) => {
+          if (item) {
+            const process = item;
+            this.lstStages = process?.steps?.filter(
+              (x) => x.activityType == 'Stage'
+            );
+          }
+        });
     }
-
   }
 
-  getInfo()
-  {
+  getInfo() {
     let paras = [this.dataSelected.createdBy];
     let keyRoot = 'UserInfo' + this.dataSelected.createdBy;
-    let info = this.shareService.loadDataCache(paras,keyRoot,"SYS","AD",'UsersBusiness','GetOneUserByUserIDAsync');
-    if(isObservable(info))
-    {
-      info.subscribe(item=>{
+    let info = this.shareService.loadDataCache(
+      paras,
+      keyRoot,
+      'SYS',
+      'AD',
+      'UsersBusiness',
+      'GetOneUserByUserIDAsync'
+    );
+    if (isObservable(info)) {
+      info.subscribe((item) => {
         this.info = item;
-      })
-    }
-    else this.info = info;
-
+      });
+    } else this.info = info;
   }
 
-  getTaskByInstanceID(){
+  getTaskByInstanceID() {
     this.api
-   .execSv<any>(
+      .execSv<any>(
         'BP',
         'ERM.Business.BP',
         'ProcessTasksBusiness',
         'GetItemsByInstanceIDAsync',
         [this.dataSelected?.recID]
       )
-   .subscribe((res) => {
+      .subscribe((res) => {
         if (res) {
-          this.countTask = res?.length ?? 0; //Tổng task của nhiệm vụ
+          const tasks = res.filter(
+            (x) =>
+              ![
+                'Stage',
+                'Group',
+                'StartEnd',
+                'Conditions',
+                'Timer',
+                'AI',
+                'SubProcess',
+              ].includes(x.activityType)
+          );
+          this.countTask = tasks?.length ?? 0; //Tổng task của nhiệm vụ
 
+          tasks.forEach((ele) => {
+            if (ele.status == '90') {
+              //Task done
+              this.countTaskDone++;
+            }
+            if (ele.endDate) {
+              //task quá hạn
+              if (ele.actualEnDate) {
+                if (new Date(ele.endDate) < new Date(ele.actualEnDate))
+                  this.countOverDueTask++;
+              } else {
+                if (new Date(ele.endDate) < new Date())
+                  this.countOverDueTask++;
+              }
+            }
+
+            if(this.countTask > 0) {
+              let rate = (this.countTaskDone / this.countTask) * 100;
+              this.progress = rate > 0 ? Math.round(rate) : 0;
+            }
+          });
           //Task done -> đợi ba mapping
-
-          //task quá hạn -> đợi ba
         }
       });
   }
@@ -103,7 +144,7 @@ export class ViewListInstancesComponent {
     return color; // Trả về lớp CSS
   }
 
-  dbClick(data){
-    this.dbClickEvent.emit({data: data});
+  dbClick(data) {
+    this.dbClickEvent.emit({ data: data });
   }
 }

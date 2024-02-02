@@ -213,10 +213,9 @@ export class UserComponent extends UIComponent {
       let dialog = this.callfunc.openSide(AddUserComponent, obj, option);
       dialog.closed.subscribe((e) => {
         if (e?.event) {
-          if (e.event.type == 'changedAvatar')
-            option.DataService.update(
-              JSON.parse(JSON.stringify(e.event.user))
-            ).subscribe();
+          option.DataService.update(
+            JSON.parse(JSON.stringify(e.event.user))
+          ).subscribe();
         }
       });
     });
@@ -238,10 +237,9 @@ export class UserComponent extends UIComponent {
     let dialog = this.callfunc.openSide(AddUserComponent, obj, option);
     dialog.closed.subscribe((e) => {
       if (e?.event) {
-        if (e?.event?.type == 'changedAvatar')
-          option.DataService.update(
-            JSON.parse(JSON.stringify(e?.event?.user))
-          ).subscribe();
+        option.DataService.update(
+          JSON.parse(JSON.stringify(e?.event?.user))
+        ).subscribe();
       }
     });
   }
@@ -274,10 +272,9 @@ export class UserComponent extends UIComponent {
       let dialog = this.callfunc.openSide(AddUserComponent, obj, option);
       dialog.closed.subscribe((e) => {
         if (e?.event) {
-          if (e?.event?.type == 'changedAvatar')
-            option.DataService.update(
-              JSON.parse(JSON.stringify(e?.event?.user))
-            ).subscribe();
+          option.DataService.update(
+            JSON.parse(JSON.stringify(e?.event?.user))
+          ).subscribe();
         }
       });
     });
@@ -319,10 +316,9 @@ export class UserComponent extends UIComponent {
       let dialog = this.callfunc.openSide(AddUserComponent, obj, option);
       dialog.closed.subscribe((e) => {
         if (e?.event) {
-          if (e?.event?.type == 'changedAvatar')
-            option.DataService.update(
-              JSON.parse(JSON.stringify(e?.event?.user))
-            ).subscribe();
+          option.DataService.update(
+            JSON.parse(JSON.stringify(e?.event?.user))
+          ).subscribe();
         }
       });
     });

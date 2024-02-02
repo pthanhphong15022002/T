@@ -121,7 +121,9 @@ import { FormatDatePipe } from './share/periodic-control/formatDate/format-date.
 import { ContractsComponent } from 'projects/codx-cm/src/lib/contracts/contracts.component';
 import { AssetJournalsComponent } from './vouchers/asset-journals/asset-journals.component';
 import { AssetJournalsAddComponent } from './vouchers/asset-journals/asset-journals-add/asset-journals-add.component';
+import { CategoriesComponent } from './categories/categories.component';
 import { RunDepreciationComponent } from './periodic/rundepreciation/rundepreciation.component';
+import { NewvoucherComponent } from './share/add-newvoucher/newvoucher.component';
 export const routes: Routes = [
   {
     path: '',
@@ -220,7 +222,7 @@ export const routes: Routes = [
       {
         path: 'periodic/:funcID',
         component: PeriodicComponent,
-        children:[
+        children: [
           {
             path: 'RunPosting/:funcID',
             component: PeriodicControlComponent,
@@ -281,7 +283,7 @@ export const routes: Routes = [
             path: 'CloseFiscalPeriod/:funcID',
             component: PeriodicControlComponent,
           },
-        ]
+        ],
       },
       {
         path: 'warehousetransfers/:funcID/:journalNo',
@@ -480,7 +482,9 @@ export const routes: Routes = [
     FormatDatePipe,
     AssetJournalsComponent,
     AssetJournalsAddComponent,
-    RunDepreciationComponent
+    CategoriesComponent,
+    RunDepreciationComponent,
+    NewvoucherComponent,
   ],
   exports: [RouterModule],
   providers: [AccumulationTooltipService],

@@ -1,0 +1,15 @@
+<codx-form #formCashPayment [headerText]="'Nhập số chứng từ mới'" [body]="TmpBody" [footer]="TmpFooter" [formModel]="dialog.formModel" [dialog]="dialog" [openMore]="false">
+</codx-form>
+<ng-template #TmpBody>
+    <codx-input field="voucherNo" (valueChange)="valueChange($event)">
+    </codx-input>
+</ng-template>
+<ng-template #TmpFooter>
+    <div class="d-flex align-items-center justify-content-end btn-ac-footer mt-1">
+      <button id="btnsave" type="button" tab-index=""
+        class="btn btn-md btn-primary" style="border: 1px solid var(--primary-dark) !important"
+        (click)="onSave()">
+        <codx-label class="fw-normal" fiedName="lblSave" default="Tiếp tục"></codx-label>
+      </button>
+    </div>
+  </ng-template>

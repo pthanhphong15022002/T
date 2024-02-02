@@ -1,57 +1,81 @@
-<codx-views #view [views]="views" [selectedFirst]="true" idField="recID" [button]="buttonAdd"
-  (selectedChange)="onSelectionChanged($event)" (buttonClick)="btnClick($event)" (onActions)="onAction($event)"
-  (clickMF)="clickMF($event)" [titleToolBarTmp]="breadCumbs" [autoSearch]="false" (searchChanged)="handleSearch($event)"
-  [service]="'HR'" (changeDataMF)="handleShowHideMF($event)">
+<codx-views #view 
+  [views]="views" 
+  [selectedFirst]="true" 
+  idField="recID" 
+  [service]="'HR'" 
+  [titleToolBarTmp]="titleToolBarTmp" 
+  [autoSearch]="false" 
+  (selectedChange)="onSelectionChanged($event)" 
+  (onActions)="onAction($event)"
+  (clickMF)="clickMF($event)" 
+  (searchChanged)="searchChanged($event)"
+  (changeDataMF)="changeDataMF($event)">
 </codx-views>
-<ng-template #footerLeftPanel>
-  <div class="d-flex flex-column justify-content-start">
-    <div class="cursor-pointer" *ngIf="viewDetailData == true && calendarGrid">
-      <codx-input type="switch" [checked]="isOnlyReadSavedData"
-        (valueChange)="onChangeIsReadSavedData($event)"></codx-input>
-      <codx-label [formModel]="view.formModel" [name]="'lblOnlyReadSavedData'" [default]="'Chỉ đọc số liệu đã lưu'"
-        class="ms-2 text-primary">
-      </codx-label>
-    </div>
-    
-    <div class="cursor-pointer d-flex flex-row align-items-center" *ngIf="calendarGrid || gridTotal" (click)="explanPopup()">
-      <span class="icon-sticky_note_2 pe-1 text-primary"></span>
-      <codx-label class="text-primary fw-bold" name="lblExplanation" default="Chú thích bảng công"
-        [formName]="funcList?.formName" [gridViewName]="funcList?.gridViewName"></codx-label>
-    </div>
-    <!--<div *ngIf="calendarGrid || gridTotal" class="btn-group" ngbDropdown role="group" container="body">
-      
-      <a role="button" (click)=" explanPopup()" class=" text-primary">
-        <div class="pt-2 d-flex flex-row align-items-center">
-          <span class="icon-sticky_note_2 pe-1"></span>
-          <codx-label default="Chú thích loại công" name="lblNote" [formModel]="view.formModel">
-          </codx-label>
-        </div>
-      </a>
-       <a id="show_menu" role="button" (click)=" explanPopup()" class="dropdown-toggle-split dropdown-toggle-click" ngbDropdownToggle>
-        <div class="py-1 d-flex flex-row align-items-center">
-          <span class="icon-sticky_note_2"></span>
-          <codx-label default="Chú thích loại công" name="lblNote" [formModel]="view.formModel">
-          </codx-label>
-        </div>
-      </a>
-      <div class="dropdown-menu" ngbDropdownMenu>
-        <div>
-          <view-kowcode></view-kowcode>
-        </div>
-      </div> 
-    </div>-->
-  </div>
 
+<!-- template custom Title ToolBar -->
+<ng-template #titleToolBarTmp>
+  <div class="d-flex align-items-center" *ngIf="view">
+    <div class="d-flex align-items-center me-2">
+      <codx-label [formModel]="view.formModel" [name]="'lblbreadCumbs'" [default]="function?.customName" class="fw-bold fs-4" ></codx-label>
+      <span class="icon-navigate_next"></span>
+    </div>
+    <div class="d-flex align-items-center">
+      <div [class]="modeView == 1? 'text-primary': 'text-muted'">
+        <codx-label [formModel]="view.formModel" [name]="'lblbreadCumbs2'" [default]="'Chi tiết theo ngày'" (click)="switchModeView(1)" class="fw-bold fs-4 ms-2 cursor-pointer" [class]="modeView == 1 ? 'text-primary' : 'text-muted'">
+        </codx-label>
+        <span class="fw-bolder">({{modeView == 1 ? detailByDateRowCount : 0}})</span>
+      </div>
+      <span class="ms-2 fw-bold fs-4">|</span>
+      <div [class]="modeView == 2 ? 'text-primary': 'text-muted'">
+        <codx-label [formModel]="view.formModel" [name]="'lblKowDSummary'" [default]="'Bảng công tổng hợp'" (click)="switchModeView(2)" class="ms-2 fw-bold fs-4 cursor-pointer" [class]="modeView == 2 ? 'text-primary': 'text-muted'">
+        </codx-label>
+        <span class="fw-bolder">({{modeView == 2 ? summaryKowDRowCount: 0}})</span>
+      </div>
+    </div>
+  </div>
 </ng-template>
+
+<!-- template panel left -->
 <ng-template #leftPanel let-data>
-  <codx-listview id="chartOrg" #chartOrg [itemTemplate]="tempTree" funcId="" entityName="HR_OrganizationUnits"
-    service="HR" type="treeView" assemblyName="ERM.Business.HR" className="OrganizationUnitsBusiness"
-    textField="orgUnitName" gridViewName="grvOrganizationUnits" formName="OrganizationUnits" [enableCheck]="false"
-    [method]="'GetDataOrgAsync'" idField="orgUnitID" [dataService]="dtService"
-    (onSelectionChanged)="onSelectionChangedTreeOrg($event)" [footerTemplate]="footerLeftPanel">
+  <codx-listview 
+    id="chartOrg" 
+    #chartOrg 
+    [itemTemplate]="tempTree" 
+    type="treeView" 
+    entityName="HR_OrganizationUnits"
+    service="HR" 
+    assemblyName="ERM.Business.HR" 
+    className="OrganizationUnitsBusiness"
+    [method]="'GetDataOrgAsync'" 
+    textField="orgUnitName" 
+    gridViewName="grvOrganizationUnits" 
+    formName="OrganizationUnits" 
+    [enableCheck]="false"
+    [selectFirst]="true"
+    idField="orgUnitID" 
+    [dataService]="dtService"
+    [footerTemplate]="footerLeftPanel"
+    (onSelectionChanged)="onSelectionChanged($event)" >
   </codx-listview>
 </ng-template>
 
+<!-- template footer panel left -->
+<ng-template #footerLeftPanel>
+  <div class="d-flex flex-column justify-content-start">
+    <div class="cursor-pointer">
+      <codx-input type="switch" field="isReadData" [checked]="false" (valueChange)="valueChange($event)"></codx-input>
+      <codx-label [formModel]="view.formModel" [name]="'lblIsReadData'" [default]="'Chỉ đọc số liệu đã lưu'" class="ms-2 text-primary">
+      </codx-label>
+    </div>
+    <div class="cursor-pointer d-flex flex-row align-items-center" (click)="openPopupNote()">
+      <span class="icon-sticky_note_2 pe-1 text-primary"></span>
+      <codx-label class="text-primary fw-bold"  [formModel]="view.formModel" name="lblExplanation" [default]="'Chú thích bảng công'" ></codx-label>
+    </div>
+  </div>
+
+</ng-template>
+
+<!-- template tree HR_OrgUnit -->
 <ng-template #tempTree let-data>
   <div class="d-flex align-items-top py-1">
     <i class="icon-home me-2"></i>
@@ -59,22 +83,48 @@
   </div>
 </ng-template>
 
+<!-- template panel right -->
 <ng-template #tmpPanelRight>
-  <div class="h-100">
-    <div [ngClass]="!(modeView == 1 )? 'd-none' :'d-block'">
-      <codx-gridview-v2 *ngIf=" calendarGridColumns.length > 0" #calendarGrid [formName]="view.formModel?.formName"
-        [entityName]="view.formModel?.entityName" [gridViewName]="'grvKowDsUIByDay'" [columnsGrid]="calendarGridColumns"
-        [service]="'HR'" [assemblyName]="'PR'" [checkboxSelect]="true" [className]="'KowDsBusiness'" [predicates]=""
-        [dataValues]="dataValues" [autoFitColumns]="false" [hideMoreFunc]="true"
-        (onDoubleClick)="doubleClickGrid($event)" [height]="'100%'" [method]="'LoadDataForGridAsync'"
-        [idField]="'employeeID'" (onDatabound)="onLoadedData($event)"></codx-gridview-v2>
+  <ng-container *ngIf="dataValues">
+    <div class="w-100 h-100" [ngClass]="modeView == 1 ? 'd-block' : 'd-none'">
+      <codx-gridview-v2 *ngIf="detailByDayColoumns && detailByDayColoumns?.length > 0 && loadedGridDetail" 
+        #codxGrvDetailDay 
+        [formName]="'KowDs'"
+        [gridViewName]="'grvKowDsUIByDay'"
+        [columnsGrid]="detailByDayColoumns"
+        [entityName]="view?.formModel?.entityName" 
+        [checkboxSelect]="true" 
+        [hideMoreFunc]="true"
+        [autoLoad]="true"
+        [dataValues]="dataValues" 
+        [service]="'HR'"
+        [assemblyName]="'PR'"
+        [className]="'KowDsBusiness'" 
+        [method]="'LoadDataGridDetailAsync'"
+        [idField]="'employeeID'" 
+        (onDoubleClick)="grvDetailDoubleClick($event)"
+        (onDatabound)="onDatabound(1)">
+      </codx-gridview-v2>
     </div>
-    <div [ngClass]="!(modeView == 2 ) ? 'd-none' :'d-block'">
-      <codx-gridview-v2 #gridTotal *ngIf="columnTotalKow?.length > 0 && loadedTotalGrid && dataValues"
-        [columnsGrid]="columnTotalKow" [autoFitColumns]="false" [gridViewName]="'grvKowDsUIByKow'"
-        [formModel]="gridTotalFM" [formName]="'KowDs'" [hideMoreFunc]="true" [height]="'100%'" [service]="'HR'"
-        [assemblyName]="'PR'" [className]="'KowDsBusiness'" [predicates]="" [method]="'LoadDataForGridStatisticAsync'"
-        [dataValues]="dataValues" [idField]="'employeeID'" (onDoubleClick)="doubleClickGrid($event)"></codx-gridview-v2>
+    <div class="w-100 h-100" [ngClass]="modeView == 2 ? 'd-block' : 'd-none'">
+      <codx-gridview-v2 *ngIf="summaryColumns && summaryColumns?.length > 0 && loadedGridSummary"
+        #codxGrvSummaryKow 
+        [formName]="'KowDs'"
+        [gridViewName]="'grvKowDsUIByKow'"
+        [columnsGrid]="summaryColumns" 
+        [entityName]="view?.formModel?.entityName" 
+        [checkboxSelect]="true" 
+        [hideMoreFunc]="true"
+        [autoLoad]="true"
+        [dataValues]="dataValues" 
+        [service]="'HR'"
+        [assemblyName]="'PR'" 
+        [className]="'KowDsBusiness'" 
+        [method]="'LoadDataGridSummaryAsync'"
+        [idField]="'employeeID'" 
+        (onDatabound)="onDatabound(2)"
+        (onDoubleClick)="grvSummaryDoubleClick($event)">
+      </codx-gridview-v2>
     </div>
     <!-- process loading -->
     <ng-container *ngIf="processing">
@@ -90,76 +140,79 @@
               <ngb-progressbar class="w-100 mb-3" type="primary" [value]="item.value" [striped]="true" [animated]="true">
                 <i class="text-white">{{item.value}}%</i>
               </ngb-progressbar>
-              <ng-container *ngIf="item.iteration > 0 && item.totalIteration > 0">
+              <!-- <ng-container *ngIf="item.iteration > 0 && item.totalIteration > 0">
                 <span class="text-gray fw-italic">{{item.iteration}}/{{item.totalIteration}}</span>
-              </ng-container>
+              </ng-container> -->
             </div>
           </div>
         </ng-container>
       </div>
     </ng-container>
-  </div>
+  </ng-container>
 </ng-template>
 
-<ng-template #breadCumbs>
-  <codx-label [formModel]="view.formModel" [name]="'lblbreadCumbs'" [default]="formHeaderText" class="fw-bold fs-4">
-  </codx-label>
-  <span *ngIf="timeKeepingMode == '2'">
-    <span class="icon-navigate_next px-1"></span>
-    <codx-label [formModel]="view.formModel" [name]="'lblbreadCumbs2'" [default]="'Chi tiết theo ngày '"
-      (click)="switchModeView(1)" class="ms-2 fw-bold fs-4 text-primary">
-    </codx-label>
-    <span class="ms-2 fw-bold fs-4 text-primary"> | </span>
-    <codx-label [formModel]="view.formModel" [name]="'lblbreadCumbs3'" [default]="'Bảng công tổng hợp'"
-      (click)="switchModeView(2)" class="ms-2 fw-bold fs-4 text-primary">
-    </codx-label>
-  </span>
-</ng-template>
-
-<ng-template #tempKow let-data>
-  <div>
-    <div class="d-flex flex-wrap" *ngIf="data[data?.column?.field]?.length>0">
-      <div *ngFor="let item of data[data?.column?.field]">
-        <div class="w-40px py-1 text-center mx-1 my-1"
-          [ngClass]="[item?.kowCode?.length == 1 ? 'bg-warning' : item?.kowCode?.length == 2 ? 'bg-success':'bg-info']">
-          {{item?.value}}</div>
-      </div>
-    </div>
-    <div *ngIf="data[data?.column?.field]?.length==0">
-      <div>{{"0"}}</div>
-    </div>
-  </div>
-</ng-template>
-
-<ng-template #tempKowTotal let-data>
-  <div *ngIf="data && data[data?.column?.field]">
-    {{data[data?.column?.field]}}
-  </div>
-</ng-template>
-
+<!-- template column employee -->
 <ng-template #tempEmployee let-data>
   <div class="d-flex align-items-center w-100">
     <div class="p-3 ps-5">
       <div class="d-flex align-items-center">
         <div class="d-flex flex-column me-4">
-          <codx-img [funcId]="'HRT03a1'" [objectId]="data?.EmployeeID" [objectName]="data?.EmployeeName"
+          <codx-img [objectId]="data?.EmployeeID" [objectName]="data?.EmployeeName"
             objectType="HR_Employees" [width]="40" [imageType]="'circle'" class="pic-emloyee">
           </codx-img>
         </div>
         <div class="d-flex flex-column">
-          <div class="align-items-center line-clamp line-clamp-1 mb-1">
-            <span class="fw-bold fs-6 me-3 text-nowrap">
-              {{data?.EmployeeName}}</span>
-            <i class="icon-qr_code_scanner text-danger icon-14 me-1"></i>
-            <span class="text-danger">{{ data?.EmployeeID }}</span>
-          </div>
-          <div>
-            {{data?.PositionName}}
-          </div>
+          <div class="fw-bold fs-6 line-clamp line-clamp-1 mb-1">{{data?.EmployeeName}}</div>
+          <div class="text-dark mb-1">{{data?.EmployeeID}}</div>
+          <div class="text-gray-600 fs-7 mb-1">{{data?.PositionName}}</div>
         </div>
       </div>
     </div>
   </div>
+</ng-template>
+
+<!-- template column kowd -->
+<ng-template #tempCellDetail let-data>
+  <div class="d-flex align-items-center">
+    <ng-container *ngIf="data[data?.column?.field]?.length > 0">
+      <ng-container *ngFor="let item of data[data.column.field];let idx = index"> 
+        <div class="text-center p-1 me-2 text-dark" [ngStyle]="{'background-color':vllHR033[item.KowType]?.color}" >
+          <span>{{item.DayNum}} {{item.KowCode}}</span>
+        </div>
+      </ng-container>
+    </ng-container>
+  </div>
+</ng-template>
+
+<ng-template #tempCellSummary let-data>
+  <div class="text-dark text-center">
+    {{data[data?.column?.field]}}
+  </div>
+</ng-template>
+
+<!-- template popup note HR_Kows -->
+<ng-template #tmpPopupNoteKow let-dialog>
+  <div class="container p-4">
+    <div class="form-group">
+      <div class="d-flex align-items-center justify-content-between">
+          <codx-label [formModel]="view.formModel" name="lblNote" [default]="'Chú thích'" class="fs-3 fw-bold text-primary"></codx-label>
+          <button type="button" class="btn btn-icon btn-light" (click)="dialog?.close()">
+              <span class="icon-close icon-18"></span>
+          </button>
+      </div> 
+    </div>
+    <div class="form-group ps-2">
+      <ng-container *ngIf="lstHRKow && lstHRKow.length > 0 && vllHR033">
+        <div *ngFor="let item of lstHRKow" class="d-flex flex-column py-2">
+            <div class="d-flex align-items-center">
+                <div class="w-40px fw-bold text-center p-1 me-4" [ngStyle]="{'background-color':vllHR033[item.kowType]?.color}">{{item.kowID}}</div>
+                <div class="text-dark">{{item.kowName}}</div>
+            </div>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+  
 </ng-template>
 
 <!-- template popup gen kowd -->
@@ -178,18 +231,23 @@
     <div class="row">
       <div class="form-group">
         <div class="d-flex align-items-center justify-content-between">
-          <codx-input 
-            type="radio" 
-            name="genKowD" 
-            field="kowDOption" 
-            [checked]="true" 
-            [crrValue]="'1'" 
-            label="Gán công mặt định" 
-            labelPosition="after" 
-            [formModel]="dialog.formModel" 
-            (valueChange)="valueChange($event)">
-          </codx-input>
+          <div>
+            <codx-input 
+              type="radio" 
+              name="genKowD" 
+              field="kowDOption" 
+              [checked]="true" 
+              [crrValue]="'1'" 
+              label="Gán công mặt định" 
+              labelPosition="after" 
+              [formModel]="dialog.formModel" 
+              (valueChange)="valueChange($event)">
+            </codx-input>
+          </div>
           <codx-input type="combobox" [refValue]="'HRKows'" field="kowCode" (valueChange)="valueChange($event)"></codx-input>
+        </div>
+        <div class="mt-2 ps-4">
+          <p class="text-gray-600">{{messageHR060}}</p>
         </div>
       </div>
     </div>
@@ -211,7 +269,9 @@
     <div class="row mt-4">
       <div class="form-group">
         <div class="d-flex justify-content-end">
-          <button type="button" class="btn btn-primary" (click)="clickBtn(dialog)">Thực hiện</button>
+          <button type="button" class="btn btn-primary" (click)="clickBtn(dialog)" [disabled]="!(userPermission && (userPermission.isAdmin || userPermission.write == '9'))">
+            <codx-label [formModel]="view?.formModel" name="lblExcute" [default]="'Thực hiện'"></codx-label>
+          </button>
         </div>
       </div>
     </div>

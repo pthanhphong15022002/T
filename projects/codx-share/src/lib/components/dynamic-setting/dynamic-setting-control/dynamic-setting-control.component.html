@@ -11,7 +11,7 @@
 <ng-template #body>
   <div class="list-group">
     <div *ngIf="!dialog" class="d-flex align-items-center justify-content-between">
-      <div style="align-items: center;" class="d-flex">
+      <div *ngIf="showHeaderText" style="align-items: center;" class="d-flex">
         <i class="text-primary icon-settings icon-20 me-3"></i>
         <h3 class="list-header mx-0 my-0">{{headerText}}</h3>
       </div>

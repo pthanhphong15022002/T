@@ -539,7 +539,7 @@ export class WorkspaceComponent extends WSUIComponent{
       {
         headers: 
         {
-          'api_key': "NjQxOTNlOTFlMjhjOTFjMjYMjViYjAxZTFiMzgZGYxZDlkMzcZjkNDYxMTlmMjkZTkMWUOWIZTFlZg",
+          'api_key': "OTcNmUMmYxNDQzNJmMWQMDgxMTAMWJiMDYYTUZjANWUxZTgwOTBiNzQyNGYNMOGIOTENGFhNg",
           'Content-Type': 'multipart/form-data'
         }
       })

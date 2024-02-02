@@ -28,6 +28,7 @@ import {
   DialogRef,
   AuthStore,
   CallFuncService,
+  Util,
 } from 'codx-core';
 import { CodxCmService } from '../codx-cm.service';
 import { CM_Customers, CM_Leads, CM_Permissions } from '../models/cm_model';
@@ -77,6 +78,10 @@ export class LeadsComponent
   @ViewChild('footerButton') footerButton?: TemplateRef<any>;
   @ViewChild('templateMore') templateMore?: TemplateRef<any>;
   @ViewChild('detailViewLead') detailViewLead: LeadDetailComponent;
+
+  @ViewChild('templateStatus') templateStatus: TemplateRef<any>;
+  @ViewChild('templateCustommer') templateCustommer: TemplateRef<any>;
+  @ViewChild('templateCustomer') tempCustomer: TemplateRef<any>;
   // @ViewChild('popUpQuestionCopy', { static: true }) popUpQuestionCopy;
   // dialogQuestionCopy: DialogRef;
   dialogViewLead: DialogRef;
@@ -156,12 +161,16 @@ export class LeadsComponent
   isLoading = false;
   hideMoreFC = false;
   applyProcess: boolean = true;
+  arrFieldIsVisible: any[];
+  popupViewCustommer: DialogRef;
 
   // const set value
   readonly btnAdd: string = 'btnAdd';
   readonly applyFor: any = '5';
   readonly fieldCbxStatus = { text: 'text', value: 'value' };
   readonly fieldCbxStatusCode = { text: 'text', value: 'value' };
+  dataView: any;
+  
 
   constructor(
     private inject: Injector,
@@ -176,6 +185,7 @@ export class LeadsComponent
     private callFunc: CallFuncService
   ) {
     super(inject);
+    this.getGridViewSetup('CMLeads', 'grvCMLeads');
     if (!this.funcID) {
       this.funcID = this.activedRouter.snapshot.params['funcID'];
     }
@@ -199,7 +209,7 @@ export class LeadsComponent
   }
 
   async ngAfterViewInit() {
-    this.loadViewModel();
+    // this.loadViewModel();
     let param = await firstValueFrom(
       this.cache.viewSettingValues('CMParameters')
     );
@@ -239,6 +249,82 @@ export class LeadsComponent
     this.getListStatusCode();
     this.afterLoad();
   }
+
+  getFuncID(funcID) {
+    this.cache.functionList(funcID).subscribe((f) => {
+      if (f) {
+        this.funcIDCrr = f;
+        this.runMode = f?.runMode;
+        // this.getGridViewSetup(
+        //   this.funcIDCrr.formName,
+        //   this.funcIDCrr.gridViewName
+        // );
+        this.getMoreFunction(
+          this.funcIDCrr.formName,
+          this.funcIDCrr.gridViewName
+        );
+      }
+    });
+  }
+
+  getGridViewSetup(formName, gridViewName) {
+    this.cache.gridViewSetup(formName, gridViewName).subscribe((res) => {
+      if (res) {
+        this.gridViewSetup = res;
+        this.vllStatus =
+          this.gridViewSetup['Status'].referedValue ?? this.vllStatus;
+        this.vllApprove =
+          this.gridViewSetup['ApproveStatus'].referedValue ?? this.vllApprove;
+        let arrField = Object.values(this.gridViewSetup).filter(
+          (x: any) => x.isVisible
+        );
+
+        this.arrFieldIsVisible = arrField
+          .sort((x: any, y: any) => x.columnOrder - y.columnOrder)
+          .map((x: any) => x.fieldName);
+        this.getColumsGrid(this.gridViewSetup);
+      }
+    });
+  }
+
+  getColumsGrid(grvSetup) {
+    this.columnGrids = [];
+    this.arrFieldIsVisible.forEach((key) => {
+      let field = Util.camelize(key);
+      let template: any;
+      let colums: any;
+      if (grvSetup[key].isTemplate != '0') {
+        switch (key) {
+          case 'StatusCodeIDView': // hiện trạng
+            template = this.templateStatus;
+            break;
+          case 'CustomerID': // khách hàng
+            template = this.templateCustommer;
+            break;
+          default:
+            break;
+        }
+      }
+
+      if (template) {
+        colums = {
+          field: field,
+          headerText: grvSetup[key].headerText,
+          width: grvSetup[key].width,
+          template: template,
+          // textAlign: 'center',
+        };
+      } else {
+        colums = {
+          field: field,
+          headerText: grvSetup[key].headerText,
+          width: grvSetup[key].width,
+        };
+      }
+      this.columnGrids.push(colums);
+    });
+  }
+
   getValuelistStatus() {
     this.cache.valueList('CRM041').subscribe((func) => {
       if (func) {
@@ -294,35 +380,6 @@ export class LeadsComponent
     });
   }
 
-  getGridViewSetup(formName, gridViewName) {
-    this.cache.gridViewSetup(formName, gridViewName).subscribe((res) => {
-      if (res) {
-        this.gridViewSetup = res;
-        this.vllStatus =
-          this.gridViewSetup['Status'].referedValue ?? this.vllStatus;
-        this.vllApprove =
-          this.gridViewSetup['ApproveStatus'].referedValue ?? this.vllApprove;
-      }
-    });
-  }
-  getFuncID(funcID) {
-    //bua tam
-    // if (funcID == 'CM0504') funcID = 'CM0205';
-    this.cache.functionList(funcID).subscribe((f) => {
-      if (f) {
-        this.funcIDCrr = f;
-        this.runMode = f?.runMode;
-        this.getGridViewSetup(
-          this.funcIDCrr.formName,
-          this.funcIDCrr.gridViewName
-        );
-        this.getMoreFunction(
-          this.funcIDCrr.formName,
-          this.funcIDCrr.gridViewName
-        );
-      }
-    });
-  }
   getMoreFunction(formName, gridViewName) {
     this.cache.moreFunction(formName, gridViewName).subscribe((res) => {
       if (res && res.length > 0) {
@@ -332,7 +389,7 @@ export class LeadsComponent
   }
 
   onLoading(e) {
-    // this.loadViewModel();
+    this.loadViewModel();
   }
 
   loadViewModel() {
@@ -346,25 +403,12 @@ export class LeadsComponent
           panelRightRef: this.templateDetail,
         },
       },
-      // {
-      //   type: ViewType.kanban,
-      //   active: false,
-      //   sameData: false,
-      //   request: this.request,
-      //   request2: this.resourceKanban,
-      //   // toolbarTemplate: this.footerButton,
-      //   model: {
-      //     template: this.cardKanban,
-      //     template2: this.viewColumKaban,
-      //     setColorHeader: true,
-      //   },
-      // },
       {
         type: ViewType.grid,
         active: false,
         sameData: true,
         model: {
-          // resources: this.columnGrids,
+          resources: this.columnGrids,
           template2: this.templateMore,
           // frozenColumns: 1,
         },
@@ -1991,7 +2035,7 @@ export class LeadsComponent
       this.releaseCallback.bind(this),
       null,
       null,
-      null, //this.view.formModel.entityName // thích đổi mãi
+      'CM_Leads', //this.view.formModel.entityName // thích đổi mãi
       null,
       null,
       exportData
@@ -2126,4 +2170,21 @@ export class LeadsComponent
         }
       });
   }
+
+  viewCustomer(data) {
+    this.dataView = data;
+    let opt = new DialogModel();
+    opt.zIndex = 1015;
+    this.popupViewCustommer = this.callFunc.openForm(
+      this.tempCustomer,
+      '',
+      500,
+      600,
+      '',
+      null,
+      '',
+      opt
+    );
+  }
+
 }

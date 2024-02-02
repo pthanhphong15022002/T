@@ -6,6 +6,7 @@ import { AttachmentComponent } from 'projects/codx-common/src/lib/component/atta
 import { AddSettingConditionsComponent } from './add-setting-conditions/add-setting-conditions.component';
 import { ModeviewComponent } from 'projects/codx-bp/src/lib/modeview/modeview.component';
 import { CodxExportAddComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export-add/codx-export-add.component';
+import { AddFileFromProcessComponent } from './add-file-from-process/add-file-from-process.component';
 
 @Component({
   selector: 'lib-add-task',
@@ -37,6 +38,8 @@ export class AddTaskComponent extends BaseFieldComponent implements OnInit , OnC
       },
     ]
   }
+
+  listDocument = [];
   ngOnChanges(changes: SimpleChanges): void {
     if(changes?.activityType && changes['activityType'].currentValue != changes['activityType'].previousValue)
     {
@@ -56,8 +59,31 @@ export class AddTaskComponent extends BaseFieldComponent implements OnInit , OnC
     if(this.data) {
       this.stage = this.listStage.filter(x=>x.recID == this.data.stageID)[0];
       this.listUses = this.data.permissions || [];
+      this.listDocument = this.process.documentControl.filter(x=>x.stepNo == this.data.stepNo);
+      let i = 0 ;
+      this.listDocument.forEach(elm=>{
+        var fieldID =  elm.fieldID;
+        if(elm.refStepNo)
+        {
+          var index = this.process.documentControl.findIndex(x=>x.recID == elm.refStepID);
+          if(index>=0) fieldID = this.process.documentControl[index].fieldID;
+        }
+        this.getFile(fieldID , i)
+      })
     }
   }
+
+  getFile(recID:any,index:any)
+  {
+    let i = index;
+    this.api.execSv("DM","DM","FileBussiness","GetFileByObjectIDAsync",[recID + ";",this.formModel.entityName]).subscribe(item=>{
+      if(item)
+      {
+        this.listDocument[i].files = item;
+      }
+    })
+  }
+
   default()
   {
     var vllStage = this.vll.datas.filter(x=>x.value == "Task")[0];
@@ -188,14 +214,14 @@ export class AddTaskComponent extends BaseFieldComponent implements OnInit , OnC
       title : this.data.stepName,
       isRequired: false,
       count : 0,
-      isList: "0",
+      listType: "1",
       stepNo: this.data?.stepNo,
       fieldID: this.data?.recID,
       memo: this.data?.memo,
     }
     this.process.documentControl.push(documentControl);
+    this.listDocument.push(documentControl);
     this.dataChangeProcess.emit(this.process);
-    this.attachment.objectId = documentControl.recID;
     this.attachment.uploadFile();
   }
   openAttach2()
@@ -206,14 +232,13 @@ export class AddTaskComponent extends BaseFieldComponent implements OnInit , OnC
       title : this.data.stepName,
       isRequired: false,
       count : 0,
-      isList: "0",
+      listType: "1",
       stepNo: this.data?.stepNo,
       fieldID: this.data?.recID,
       memo: this.data?.memo,
     }
     this.process.documentControl.push(documentControl);
     this.dataChangeProcess.emit(this.process);
-    this.attachment2.objectId = documentControl.recID;
     this.attachment2.uploadFile();
   }
   fileSave(e:any)
@@ -339,7 +364,7 @@ export class AddTaskComponent extends BaseFieldComponent implements OnInit , OnC
               title : this.data.stepName,
               isRequired: false,
               count : 0,
-              isList: "0",
+              listType: "0",
               stepNo: this.data?.stepNo,
               fieldID: this.data?.recID,
               memo: this.data?.memo,
@@ -370,35 +395,76 @@ export class AddTaskComponent extends BaseFieldComponent implements OnInit , OnC
   deleteTemplate()
   {
     var config = new AlertConfirmInputConfig();
-        config.type = 'YesNo';
-        //SYS003
-        this.notifySvr
-          .alert('Thông báo', 'Bạn có chắc chắn muốn xóa ?', config)
-          .closed.subscribe((x) => {
-            if (x.event.status == 'Y') {
-              var className =
-              this.data?.settings?.template?.templateType == 'excel'
-                  ? 'ExcelTemplatesBusiness'
-                  : 'WordTemplatesBusiness';
-              this.api
-                .execSv(
-                  "SYS",
-                  'AD',
-                  className,
-                  'DeleteIDAsync',
-                  this.data.settings.template.templateID
-                )
-                .subscribe((item) => {
-                  if (item) {
-                    this.notifySvr.notifyCode('RS002');
-                    delete this.data.settings.template;
-                    this.data.settings.isTemplate = false;
-                    this.dataChange.emit(this.data);
-                  } else {
-                    this.notifySvr.notifyCode('SYS022');
-                  }
-                });
+    config.type = 'YesNo';
+    //SYS003
+    this.notifySvr
+    .alert('Thông báo', 'Bạn có chắc chắn muốn xóa ?', config)
+    .closed.subscribe((x) => {
+      if (x.event.status == 'Y') {
+        var className =
+        this.data?.settings?.template?.templateType == 'excel'
+            ? 'ExcelTemplatesBusiness'
+            : 'WordTemplatesBusiness';
+        this.api
+          .execSv(
+            "SYS",
+            'AD',
+            className,
+            'DeleteIDAsync',
+            this.data.settings.template.templateID
+          )
+          .subscribe((item) => {
+            if (item) {
+              this.notifySvr.notifyCode('RS002');
+              delete this.data.settings.template;
+              this.data.settings.isTemplate = false;
+              this.dataChange.emit(this.data);
+            } else {
+              this.notifySvr.notifyCode('SYS022');
             }
           });
+      }
+    });
   }
+
+  openFormFileProcess()
+  {
+    let option = new DialogModel();
+    option.FormModel = this.formModel;
+    let popup = this.callFuc
+    .openForm(
+      AddFileFromProcessComponent,
+      null,
+      800,
+      700,
+      null,
+      {
+        process: this.process,
+        step: this.data,
+        listDocument: this.listDocument
+      },
+      '',
+      option
+    );
+    popup.closed.subscribe(res=>{
+      if(res?.event)
+      {
+        var documentControl =
+        {
+          recID : Util.uid(),
+          title : this.data.stepName,
+          isRequired: false,
+          count : 0,
+          isList: "0",
+          stepNo: this.data?.stepNo,
+          fieldID: this.data?.recID,
+          memo: this.data?.memo,
+          refStepNo: res?.event?.stepNo,
+          refStepID: res?.event?.recID
+        }
+        this.process.documentControl.push(documentControl);
+        this.dataChangeProcess.emit(this.process);
+      }
+    })
+  } 
 }

@@ -1,0 +1,102 @@
+<codx-views
+  #view
+  [funcID]="funcID"
+  service="BP"
+  assemblyName="ERM.Business.BP"
+  entityName="BP_Tasks"
+  className="ProcessTasksBusiness"
+  [method]="'GetListBPTasksAsync'"
+  [views]="views"
+  [autoLoad]="true"
+  idField="recID"
+  (selectedChange)="selectedChange($event)"
+  [hideMoreFuncs]="true"
+>
+</codx-views>
+
+<ng-template #headerTemplateList let-data>
+  <div class="d-flex ps-2 pe-4 m-2 w-100" style="background: #c1c8cc">
+    <div class="w-5">
+      <div></div>
+    </div>
+    <div class="w-10 text-dark fw-bold p-3 fw-500">
+      <codx-label
+        fiedName="list_ActivityType"
+        [setRequire]="false"
+        [formModel]="view.formModel"
+        [default]="'Loại công việc'"
+      ></codx-label>
+    </div>
+    <div class="w-20 text-dark fw-bold p-3 fw-500">
+      <codx-label
+        fiedName="list_TaskName"
+        [setRequire]="false"
+        [formModel]="view.formModel"
+        [default]="'Tên công việc'"
+      ></codx-label>
+    </div>
+    <div class="w-25 text-dark fw-bold p-3 fw-500">
+      <codx-label
+        fiedName="list_Memo"
+        [setRequire]="false"
+        [formModel]="view.formModel"
+        [default]="'Nội dung công việc'"
+      ></codx-label>
+    </div>
+    <div class="w-25 text-dark fw-bold p-3 fw-500">
+      <codx-label
+        fiedName="list_StartDate"
+        [setRequire]="false"
+        [formModel]="view.formModel"
+        [default]="'Thời gian thực hiện'"
+      ></codx-label>
+    </div>
+    <div class="w-10 text-dark fw-bold p-3 fw-500">
+      <codx-label
+        fiedName="list_Status"
+        [setRequire]="false"
+        [formModel]="view.formModel"
+        [default]="'Trình trạng'"
+      ></codx-label>
+    </div>
+    <div class="w-15 text-dark fw-bold p-3 fw-500">
+      <codx-label
+        fiedName="list_CreatedBy"
+        [setRequire]="false"
+        [formModel]="view.formModel"
+        [default]="'Người tạo'"
+      ></codx-label>
+    </div>
+    <div class="w-15 text-dark fw-bold p-3 fw-500">
+      <codx-label
+        fiedName="list_Process"
+        [setRequire]="false"
+        [formModel]="view.formModel"
+        [default]="'Quy trình'"
+      ></codx-label>
+    </div>
+    <div class="w-15 text-dark fw-bold p-3 fw-500">
+      <codx-label
+        fiedName="list_Request"
+        [setRequire]="false"
+        [formModel]="view.formModel"
+        [default]="'Yêu cầu'"
+      ></codx-label>
+    </div>
+    <div class="w-10 text-dark fw-bold p-3 fw-500">
+      <codx-label
+        fiedName="list_Attachment"
+        [setRequire]="false"
+        [formModel]="view.formModel"
+        [default]="'Đính kèm'"
+      ></codx-label>
+    </div>
+  </div>
+</ng-template>
+<ng-template #templateList let-data>
+  <lib-view-list-bp-tasks
+    [dataSelected]="data"
+    [formModel]="view.formModel"
+    (dbClickEvent)="dbClickEvent($event)"
+  ></lib-view-list-bp-tasks>
+</ng-template>

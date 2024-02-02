@@ -48,7 +48,6 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
     { name: 'References', textDefault: 'Liên kết', isActive: false },
   ];
   baseCurr: any; 
-  legalName: any; 
   isPreventChange:any = false;
   postDateControl:any;
   preData:any;
@@ -78,7 +77,6 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
     this.dataDefault = { ...dialogData.data?.oData }; 
     this.journal = { ...dialogData.data?.journal }; 
     this.baseCurr = dialogData.data?.baseCurr;
-    this.legalName = this.dialogData.data?.legalName;
   }
   //#endregion Contructor
 
@@ -1283,8 +1281,12 @@ export class CashreceiptsAddComponent extends UIComponent implements OnInit {
         this.onAddLine();
         break;
       case 'add':
-      case 'update': //? sau khi thêm dòng thành công
-        
+      case 'update':
+      case 'delete':
+        if(this.formCashReceipt.data.totalAmt != 0){
+          let total = this?.eleGridCashReceipt.dataSource.reduce((sum, data:any) => sum + data?.dr,0);
+          if(total > this.formCashReceipt.data.totalAmt) this.notification.notifyCode('AC0012');
+        }
         break;
       case 'closeEdit': //? khi thoát dòng
       if (this.eleGridCashReceipt && this.eleGridCashReceipt.rowDataSelected) {

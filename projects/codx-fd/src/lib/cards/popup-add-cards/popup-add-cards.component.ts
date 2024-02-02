@@ -1,4 +1,5 @@
 import {
+  AfterViewInit,
   ChangeDetectorRef,
   Component,
   OnInit,
@@ -34,10 +35,12 @@ import { zip } from 'rxjs';
   styleUrls: ['./popup-add-cards.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class PopupAddCardsComponent implements OnInit {
+export class PopupAddCardsComponent implements OnInit, AfterViewInit {
   @ViewChild('popupViewCard') popupViewCard: TemplateRef<any>;
   @ViewChild('attachment') attachment: AttachmentComponent;
   @ViewChild('inputReceiver') inputReceiver: CodxInputComponent;
+  @ViewChild('templateContentCard') templateContentCard: TemplateRef<any>;
+  @ViewChild('templateGiftAndPoint') templateGiftAndPoint: TemplateRef<any>;
 
   dialog: DialogRef;
   form: FormGroup;
@@ -69,7 +72,7 @@ export class PopupAddCardsComponent implements OnInit {
   funcID: string = '';
   gridViewName: string = '';
   formName: string = '';
-  shareControl: string = '1';
+  shareControl: string = 'U';
   entityName: string = 'FD_Cards';
   refValue: string = 'Behaviors_Grp';
   createNewfeed: boolean = false;
@@ -140,6 +143,10 @@ export class PopupAddCardsComponent implements OnInit {
   evoucher: any[] = [];
   evoucherSelected: any[] = [];
   isSaving = false;
+  tabInfo: any[] = [];
+  tabContent: any[] = [];
+
+
 
   constructor(
     private api: ApiHttpService,
@@ -158,6 +165,43 @@ export class PopupAddCardsComponent implements OnInit {
     this.type = dd.data.type;
     this.dialog = dialogRef;
     this.user = this.auth.userValue;
+  }
+  ngAfterViewInit(): void {
+    if(this.cardType != this.CARDTYPE_EMNUM.Radio) {
+      this.tabInfo = [
+        {
+          icon: 'icon-article',
+          text: 'Nội dung thiệp',
+          name: 'InfoCard',
+          subName: 'Info Card',
+          subText: 'Info Card',
+        },
+        {
+          icon: 'icon-i-gift',
+          text: 'Tặng quà/xu',
+          name: 'GiftAndPoint',
+          subName: 'Gift And Point',
+          subText: 'Gift And Point',
+        }
+      ];
+      this.tabContent = [
+        this.templateContentCard,
+        this.templateGiftAndPoint
+      ];
+    } else {
+      this.tabInfo = [
+        {
+          icon: 'icon-article',
+          text: 'Nội dung thiệp',
+          name: 'InfoCard',
+          subName: 'Info Card',
+          subText: 'Info Card',
+        }
+      ];
+      this.tabContent = [
+        this.templateContentCard,
+      ];
+    }
   }
 
   ngOnInit(): void {
@@ -186,6 +230,10 @@ export class PopupAddCardsComponent implements OnInit {
           this.givePoint = res.point;
           this.form.patchValue({ coins: this.givePoint });
           this.lstShare = res.listShare;
+          if(this.lstShare.length > 0) {
+            this.shareControl = this.lstShare[0].objectType;
+            this.objectType = this.lstShare[0].objectType;
+          }
           this.dt.detectChanges();
         }
       });
@@ -801,6 +849,8 @@ export class PopupAddCardsComponent implements OnInit {
         obj.objectID = emp.domainUser;
         obj.objectName = emp.employeeName;
         obj.objectType ="U";
+        this.objectType = "U";
+        this.shareControl = "U";
         this.lstShare.push(obj);
       }
     });

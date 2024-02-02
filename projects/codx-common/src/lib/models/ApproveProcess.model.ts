@@ -15,8 +15,10 @@ export class ApproveProcess {
   approvers: Array<Approver>; //Danh sách userID của Approver
   category: any; //ES_Category của nghiệp vụ
   title: string; //Tiêu đề
+  cert: string; //Certificate (viettel)
   curComponent: any;//this: component gọi hàm
   template: any;//ES_SignFile Template 
+  supplier: any;//Nhà cung cấp chữ ký :1:Codx;3:VNPT;4:Viettel;5:USB
   exportData: ExportData;//biến lấy data export (funcID: Để lấy bộ EntityName,FormName,GridViewName; recID : Để lấy ra data cần Export)
   customParam:string;//Json string chứa tham số tùy chỉnh (Ex:JSON.stringify({ParentID:"xxxxx"}))
 }
