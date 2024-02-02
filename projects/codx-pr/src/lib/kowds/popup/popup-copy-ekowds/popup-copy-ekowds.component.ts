@@ -11,7 +11,7 @@ export class PopupCopyEkowdsComponent implements OnInit,AfterViewInit {
 
   dialog: DialogRef;
   headerText:string = "Sao chép Dữ liệu công";
-  dataObj:any;
+  userPermission:any;
   dowCode:string;
   vllHR057:any;
   modeSaveData:string = "1";
@@ -35,6 +35,8 @@ export class PopupCopyEkowdsComponent implements OnInit,AfterViewInit {
     this.fromEmp = dialogData.data?.data;
     this.dowCode = dialogData.data?.dowCode;
     this.headerText = dialogData.data?.headerText;
+    this.userPermission = dialogData.data?.userPermission;
+
   }
   ngOnInit(): void {
     this.cache.valueList('HR057')

@@ -15,6 +15,7 @@
   (viewChanging)="viewChanging($event)"
   (viewChanged)="viewChanged($event)"
   (clickMF)="clickMF($event, itemSelected)"
+  (doubleClick)="onDbClick($event)"
 >
 </codx-views>
 
@@ -92,13 +93,13 @@
 
 
           </div>
-          <div #positionField *ngIf="data.positionID" class="text-gray-600 mb-1 fs-7 line-clamp line-clamp-1">
-            <span [ngbTooltip]="positionTooltip">{{data.positionName? data.positionName : data.positionID}}</span>
+          <div #positionField *ngIf="data.projectID" class="text-gray-600 mb-1 fs-7 line-clamp line-clamp-1">
+            <span [ngbTooltip]="positionTooltip">{{data.projectID? data.projectID : data.projectName}}</span>
             <ng-template #positionTooltip>
               <div class="d-flex flex-column">
-                <span class="label-text-color">{{grvSetup['PositionID']?.headerText}}</span>
+                <span class="label-text-color">{{grvSetup['ProjectID']?.headerText}}</span>
                 <span *ngIf="positionField.scrollHeight > positionField.clientHeight"
-                  class="text-gray-600">{{data.positionName? data.positionName : data.positionID}}</span>
+                  class="text-gray-600">{{data.projectID? data.projectID : data.projectName}}</span>
               </div>
             </ng-template>
           </div>
