@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { isObservable } from 'rxjs';
 
@@ -7,13 +7,15 @@ import { isObservable } from 'rxjs';
   templateUrl: './view-list-bp-tasks.component.html',
   styleUrls: ['./view-list-bp-tasks.component.css'],
 })
-export class ViewListBpTasksComponent {
+export class ViewListBpTasksComponent implements OnInit {
   @Input() dataSelected: any;
   @Input() formModel: any;
   @Output() dbClickEvent = new EventEmitter<any>();
   info: any;
   constructor(private shareService: CodxShareService) {}
-
+  ngOnInit(): void {
+    this.getInfo();
+  }
   getInfo() {
     let paras = [this.dataSelected.createdBy];
     let keyRoot = 'UserInfo' + this.dataSelected.createdBy;

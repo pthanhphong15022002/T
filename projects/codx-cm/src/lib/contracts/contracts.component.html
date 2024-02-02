@@ -466,6 +466,59 @@
           [crrValue]="liquidation?.disposalCmt"
         ></codx-input>
       </div>
+
+      <div class="form-group">
+        <codx-label
+          [formModel]="view?.formModel"
+          fiedName="disposalNewAddress"
+          default="Liên hệ/địa chỉ mới"
+        ></codx-label>
+        <codx-input
+          field="disposalNewAddress"
+          [formModel]="view?.formModel"
+          (valueChange)="changeData($event)"
+          [crrValue]="liquidation?.disposalNewAddress"
+        ></codx-input>
+      </div>
+      <div class="form-group">
+        <codx-label
+          [formModel]="view?.formModel"
+          fiedName="disposalNewContac"
+          default="Tên người liên hệ"
+        ></codx-label>
+        <codx-input
+          field="disposalNewContac"
+          [formModel]="view?.formModel"
+          (valueChange)="changeData($event)"
+          [crrValue]="liquidation?.disposalNewContac"
+        ></codx-input>
+      </div>
+      <div class="form-group">
+        <codx-label
+          [formModel]="view?.formModel"
+          fiedName="disposalEmail"
+          default="Email"
+        ></codx-label>
+        <codx-input
+          field="disposalEmail"
+          [formModel]="view?.formModel"
+          (valueChange)="changeData($event)"
+          [crrValue]="liquidation?.disposalEmail"
+        ></codx-input>
+      </div>
+      <div class="form-group">
+        <codx-label
+          [formModel]="view?.formModel"
+          fiedName="disposalPhone"
+          default="Điện thoại"
+        ></codx-label>
+        <codx-input
+          field="disposalPhone"
+          [formModel]="view?.formModel"
+          (valueChange)="changeData($event)"
+          [crrValue]="liquidation?.disposalPhone"
+        ></codx-input>
+      </div>
     </div>
     <div class="footer-liquidation w-100 d-flex justify-content-end">
       <button

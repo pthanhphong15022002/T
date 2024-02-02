@@ -16,6 +16,7 @@ import { AddUpdateNoteBookComponent } from './add-update-note-book/add-update-no
 import { AddUpdateStorageComponent } from './add-update-storage/add-update-storage.component';
 import { DetailStorageComponent } from './detail-storage/detail-storage.component';
 import { ExtendStorageComponent } from './extend-storage/extend-storage.component';
+import { ExtendNoteBookComponent } from './extend-note-book/extend-note-book.component';
 
 @Component({
   selector: 'lib-my-page',
@@ -143,13 +144,18 @@ export class MyPageComponent implements OnInit {
   }
 
   extendStorage() {
-    // var option = new DialogModel();
-    // option.IsFull = true;
-    // this.callfc.openForm(ExtendStorageComponent,"",null,null,"","","",option);
-    this.codxService.navigate('', '/ws/storage');
+    var option = new DialogModel();
+    option.IsFull = true;
+    option.zIndex = 1010;
+    this.callfc.openForm(ExtendStorageComponent,"",null,null,"","","",option);
+    // this.codxService.navigate('', '/ws/storage');
   }
 
   extendNoteBook() {
+    // var option = new DialogModel();
+    // option.IsFull = true;
+    // option.zIndex = 1010;
+    // this.callfc.openForm(ExtendNoteBookComponent,"",null,null,"","","",option);
     this.codxService.navigate('', '/ws/notebook');
   }
 
