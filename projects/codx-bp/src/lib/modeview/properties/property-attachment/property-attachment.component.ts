@@ -17,7 +17,7 @@ export class PropertyAttachmentComponent extends BasePropertyComponent{
     var data = 
     {
       recID : Util.uid(),
-      title : this.data.title,
+      title : '',
       isRequired: false,
       count : 0,
       listType: "2"
@@ -48,7 +48,29 @@ export class PropertyAttachmentComponent extends BasePropertyComponent{
   fileSave(e:any)
   {
     let count = 1;
-    if(Array.isArray(e)) count = e.length;
+    if(Array.isArray(e))
+    {
+      count = e.length;
+      this.data.documentControl[this.selectedIndex].files = [];
+      e.forEach(elm=>{
+        var obj = 
+        {
+          fileID : elm.recID,
+          type: '0'
+        }
+        this.data.documentControl[this.selectedIndex].files.push(obj);
+      })
+  
+    } 
+    else
+    {
+      var obj = 
+      {
+        fileID : e.recID,
+        type: '0'
+      }
+      this.data.documentControl[this.selectedIndex].files = [obj];
+    }
     this.data.documentControl[this.selectedIndex].count = count;
     this.dataChange.emit(this.data);
   }
