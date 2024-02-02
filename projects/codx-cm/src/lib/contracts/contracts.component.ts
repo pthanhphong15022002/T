@@ -371,9 +371,9 @@ export class ContractsComponent extends UIComponent {
           case 'CM0204_16': // mở lại hợp đồng
             res.disabled = !data?.closed;
             break;
-          // case 'CM0204_18': // thanh lý
-          //   res.disabled = data?.status == '17' || data?.closed;
-          //   break;
+          case 'CM0204_18': // thanh lý
+            res.disabled = data?.status == '17' || data?.closed;
+            break;
           case 'CM0204_19': // đưa vào quy trình xử lý
             res.disabled = data?.full
               ? data?.closed ||
